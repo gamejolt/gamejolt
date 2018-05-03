@@ -51,7 +51,6 @@ type FormGameDevlogPostModel = FiresidePost & {
 	poll_item10: string;
 
 	scheduled_timezone: string;
-	is_scheduled: boolean;
 };
 
 @View
@@ -143,7 +142,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	}
 
 	get isScheduling() {
-		return this.formModel.is_scheduled;
+		return this.formModel.isScheduled;
 	}
 
 	async onInit() {
@@ -211,15 +210,6 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
-
-		if (this.model!.status == FiresidePost.STATUS_SCHEDULED ||
-			(this.model!.status == FiresidePost.STATUS_DRAFT && this.model!.scheduled_for !== null && this.model!.scheduled_for! > 0)) {
-			this.setField('scheduled_for', this.model!.scheduled_for);
-			this.setField('is_scheduled', true);
-		}
-		else {
-			this.setField('scheduled_for', startOfDay(addWeeks(Date.now(), 1)).getTime());
-		}
 	}
 
 	private timezoneByName(timezone: string) {
@@ -274,6 +264,10 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	}
 
 	async onSubmit() {
+		// if the post is scheduled, default submit action is draft
+		if (this.isScheduling) {
+			this.setField('status', FiresidePost.STATUS_DRAFT);
+		}
 		this.setField('poll_duration', this.duration * 60); // site-api expects duration in seconds.
 		return this.formModel.$save();
 	}
@@ -283,11 +277,13 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	}
 
 	addSchedule() {
-		this.setField('is_scheduled', true);
+		if (this.formModel.scheduled_for === null) {
+			this.setField('scheduled_for', startOfDay(addWeeks(Date.now(), 1)).getTime());
+		}
 		this.now = Date.now();
 	}
 
 	stopScheduling() {
-		this.setField('is_scheduled', false);
+		this.setField('scheduled_for', null);
 	}
 }

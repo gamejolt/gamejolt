@@ -417,7 +417,7 @@
 	</app-form-button>
 
 	<app-button
-		v-if="model.status !== FiresidePost.STATUS_ACTIVE"
+		v-if="model.status !== FiresidePost.STATUS_ACTIVE && !isScheduling"
 		trans
 		:disabled="!valid"
 		@click.prevent="onDraftSubmit()"
