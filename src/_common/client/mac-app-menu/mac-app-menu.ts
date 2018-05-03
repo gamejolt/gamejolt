@@ -17,7 +17,7 @@ export class AppClientMacAppMenu extends Vue {
 			// If we should just minimize instead of quitting.
 			// Many applications on mac just minimize instead of actually close.
 			if (intent !== 'quit') {
-				Client.close();
+				Client.hide();
 			} else {
 				Client.quit();
 			}

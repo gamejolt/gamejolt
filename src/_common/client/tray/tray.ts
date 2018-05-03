@@ -43,7 +43,7 @@ export class AppClientTray extends Vue {
 			if (this.isClientGreedy) {
 				this.isClosed = true;
 				this.isMinimized = false;
-				win.hide();
+				Client.hide();
 			} else {
 				// Otherwise actually quit.
 				Client.quit();

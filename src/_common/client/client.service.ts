@@ -31,10 +31,10 @@ export class Client {
 	}
 
 	/**
-	 * A soft close. It won't quit the whole app.
+	 * Just hides the window. Mostly useful on Mac to hide on soft quit.
 	 */
-	static close() {
-		win.close();
+	static hide() {
+		win.hide();
 	}
 
 	/**
@@ -42,8 +42,8 @@ export class Client {
 	 */
 	static show() {
 		win.show();
-		win.focus();
 		win.restore();
+		win.focus();
 	}
 
 	/**
