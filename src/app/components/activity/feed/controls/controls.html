@@ -4,6 +4,12 @@
 		<div class="-manage" v-if="shouldShowManage">
 			<hr>
 
+			<span class="-manage-stats" v-if="shouldShowManageControls && post.status === FiresidePost.STATUS_SCHEDULED">
+				<translate>This post is scheduled to be published in</translate>
+				<br>
+				<translate>Like 2 days fam</translate>
+			</span>
+
 			<span class="-manage-controls" v-if="shouldShowManageControls">
 				<app-button
 					v-if="post.status === FiresidePost.STATUS_DRAFT" @click="publishPost"

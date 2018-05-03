@@ -212,7 +212,8 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
 
-		if (this.model!.status == FiresidePost.STATUS_SCHEDULED) {
+		if (this.model!.status == FiresidePost.STATUS_SCHEDULED ||
+			(this.model!.status == FiresidePost.STATUS_DRAFT && this.model!.scheduled_for !== null && this.model!.scheduled_for! > 0)) {
 			this.setField('scheduled_for', this.model!.scheduled_for);
 			this.setField('is_scheduled', true);
 		}

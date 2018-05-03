@@ -405,7 +405,10 @@
 	</div>
 
 	<app-form-button :disabled="!valid">
-		<template v-if="model.status !== FiresidePost.STATUS_ACTIVE">
+		<template v-if="isScheduling">
+			<translate>Schedule</translate>
+		</template>
+		<template v-else-if="model.status !== FiresidePost.STATUS_ACTIVE">
 			<translate>Publish</translate>
 		</template>
 		<template v-else>
