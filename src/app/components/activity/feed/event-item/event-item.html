@@ -24,7 +24,22 @@
 		</div>
 
 		<div class="timeline-list-item-meta">
-			<app-time-ago :date="eventItem.added_on" />
+			<template v-if="shouldShowScheduled">
+				<span class="tag" style="vertical-align: middle">
+					<app-jolticon icon="calendar-grid" />
+					<translate>Scheduled</translate>
+				</span>
+
+				<app-time-ago
+					:date="post.scheduled_for"
+					without-suffix
+					/>
+			</template>
+			<template v-else>
+				<app-time-ago
+					:date="eventItem.added_on"
+					/>
+			</template>
 
 			<template v-if="post && post.type === 'media'">
 				<span class="dot-separator"></span>

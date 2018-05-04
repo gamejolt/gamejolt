@@ -43,6 +43,20 @@
 							<translate>Draft Posts</translate>
 						</router-link>
 					</li>
+					<li>
+						<router-link
+							:to="{
+								name: 'dash.games.manage.devlog',
+								params: {
+									tab: 'scheduled',
+								},
+							}"
+							active-class="active"
+							:exact="true"
+							>
+							<translate>Scheduled Posts</translate>
+						</router-link>
+					</li>
 				</ul>
 			</nav>
 
@@ -71,6 +85,9 @@
 						</template>
 						<template v-else-if="_tab === 'draft'">
 							<p><translate>You don't have any draft posts.</translate></p>
+						</template>
+						<template v-else-if="_tab === 'scheduled'">
+							<p><translate>You don't have any scheduled posts.</translate></p>
 						</template>
 					</div>
 
