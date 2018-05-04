@@ -23,7 +23,10 @@ import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jol
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppFormLegend } from '../../../../../lib/gj-lib-client/components/form-vue/legend/legend';
 import { FormOnSubmitSuccess } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { TimezoneData, Timezone } from '../../../../../lib/gj-lib-client/components/timezone/timezone.service';
+import {
+	TimezoneData,
+	Timezone,
+} from '../../../../../lib/gj-lib-client/components/timezone/timezone.service';
 import { AppFormControlDate } from '../../../../../lib/gj-lib-client/components/form-vue/control/date/date';
 import * as startOfDay from 'date-fns/start_of_day';
 import * as addWeeks from 'date-fns/add_weeks';
@@ -49,8 +52,6 @@ type FormGameDevlogPostModel = FiresidePost & {
 	poll_item8: string;
 	poll_item9: string;
 	poll_item10: string;
-
-	scheduled_timezone: string;
 };
 
 @View
@@ -63,7 +64,7 @@ type FormGameDevlogPostModel = FiresidePost & {
 		AppUserAvatarImg,
 		AppExpand,
 		AppJolticon,
-		AppFormControlDate
+		AppFormControlDate,
 	},
 	directives: {
 		AppFocusWhen,
@@ -128,16 +129,16 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	}
 
 	get scheduledTimezoneOffset() {
-		if (!this.formModel.scheduled_timezone) {
+		if (!this.formModel.scheduled_for_timezone) {
 			return 0;
 		}
 
-		const saleTz = this.timezoneByName(this.formModel.scheduled_timezone);
-		if (!saleTz) {
-			console.warn('Could not find timezone offset for: ' + saleTz);
+		const tz = this.timezoneByName(this.formModel.scheduled_for_timezone);
+		if (!tz) {
+			console.warn('Could not find timezone offset for: ' + tz);
 			return 0;
 		} else {
-			return saleTz.o * 1000;
+			return tz.o * 1000;
 		}
 	}
 
@@ -146,25 +147,6 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	}
 
 	async onInit() {
-		this.now = Date.now();
-
-		// Auto-detect timezone.
-		this.setField('scheduled_timezone', determine().name());
-
-		// Get timezones list.
-		this.timezones = await Timezone.getGroupedTimezones();
-		for (let region in this.timezones) {
-			for (let tz of this.timezones[region]) {
-				let offset = '';
-				if (tz.o > 0) {
-					offset = `+${tz.o / 3600}:00`;
-				} else if (tz.o < 0) {
-					offset = `-${-tz.o / 3600}:00`;
-				}
-				tz.label = `(UTC${offset}) ${tz.i}`;
-			}
-		}
-
 		const model = this.model!;
 
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
@@ -201,6 +183,8 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 				this.setField(('poll_item' + (i + 1)) as any, poll.items[i].text);
 			}
 		}
+
+		this.fetchTimezones();
 	}
 
 	onLoad(payload: any) {
@@ -210,6 +194,22 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
+	}
+
+	private async fetchTimezones() {
+		// Get timezones list.
+		this.timezones = await Timezone.getGroupedTimezones();
+		for (let region in this.timezones) {
+			for (let tz of this.timezones[region]) {
+				let offset = '';
+				if (tz.o > 0) {
+					offset = `+${tz.o / 3600}:00`;
+				} else if (tz.o < 0) {
+					offset = `-${-tz.o / 3600}:00`;
+				}
+				tz.label = `(UTC${offset}) ${tz.i}`;
+			}
+		}
 	}
 
 	private timezoneByName(timezone: string) {
@@ -258,6 +258,19 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.setField('poll_item_count', this.formModel.poll_item_count + 1);
 	}
 
+	async addSchedule() {
+		if (this.formModel.scheduled_for === null) {
+			this.setField('scheduled_for', startOfDay(addWeeks(Date.now(), 1)).getTime());
+		}
+
+		this.now = Date.now();
+		this.setField('scheduled_for_timezone', determine().name());
+	}
+
+	stopScheduling() {
+		this.setField('scheduled_for', null);
+	}
+
 	onDraftSubmit() {
 		this.setField('status', FiresidePost.STATUS_DRAFT);
 		this.$refs.form.submit();
@@ -274,16 +287,5 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 
 	onSubmitSuccess() {
 		Object.assign(this.model as FiresidePost, this.formModel);
-	}
-
-	addSchedule() {
-		if (this.formModel.scheduled_for === null) {
-			this.setField('scheduled_for', startOfDay(addWeeks(Date.now(), 1)).getTime());
-		}
-		this.now = Date.now();
-	}
-
-	stopScheduling() {
-		this.setField('scheduled_for', null);
 	}
 }

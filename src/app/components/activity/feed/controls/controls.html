@@ -6,8 +6,9 @@
 
 			<span class="-manage-controls" v-if="shouldShowManageControls">
 				<app-button
-					v-if="post.status === FiresidePost.STATUS_DRAFT" @click="publishPost"
+					v-if="canPublish"
 					primary
+					@click="publishPost"
 					>
 					<translate>Publish</translate>
 				</app-button>

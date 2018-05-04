@@ -286,7 +286,7 @@
 			</app-form-legend>
 
 			<app-form-group
-				name="scheduled_timezone"
+				name="scheduled_for_timezone"
 				:label="$gettext( `Timezone` )"
 				>
 				<p class="help-block">
@@ -299,11 +299,11 @@
 
 				<app-form-control-select>
 					<optgroup
-						v-for="(timezones, region) in timezones"
+						v-for="(timezones, region) of timezones"
 						:label="region"
 						>
 						<option
-							v-for="timezone in timezones"
+							v-for="timezone of timezones"
 							:value="timezone.i"
 							>
 							{{ timezone.label }}
@@ -334,7 +334,7 @@
 				trans
 				@click.prevent="stopScheduling()"
 				>
-				<translate>Stop scheduling</translate>
+				<translate>Remove Scheduling</translate>
 			</app-button>
 		</div>
 	</div>
