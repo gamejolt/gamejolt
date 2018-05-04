@@ -267,7 +267,8 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.setField('scheduled_for_timezone', determine().name());
 	}
 
-	stopScheduling() {
+	removeSchedule() {
+		this.setField('scheduled_for_timezone', null);
 		this.setField('scheduled_for', null);
 	}
 
