@@ -90,7 +90,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	maxWidth = 0;
 	maxHeight = 0;
 	isShowingMoreOptions = false;
-	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = {};
+	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = null as any;
 	now = 0;
 
 	readonly FiresidePost = FiresidePost;
@@ -147,6 +147,8 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	}
 
 	async onInit() {
+		await this.fetchTimezones();
+
 		const model = this.model!;
 
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
@@ -183,8 +185,6 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 				this.setField(('poll_item' + (i + 1)) as any, poll.items[i].text);
 			}
 		}
-
-		this.fetchTimezones();
 	}
 
 	onLoad(payload: any) {
