@@ -10,7 +10,7 @@ const win = gui.Window.get();
 class Updater {
 	static readonly CHECK_INTERVAL = 15 * 60 * 1000; // 15min currently
 	private manifestPath: string;
-	private instance: SelfUpdaterInstance;
+	private instance?: SelfUpdaterInstance;
 
 	constructor() {
 		let cwd = path.dirname(process.execPath);
@@ -35,7 +35,7 @@ class Updater {
 			}
 
 			console.log('Sending checkForUpdates...');
-			const checked = await this.instance.checkForUpdates();
+			const checked = await this.instance!.checkForUpdates();
 			if (!checked) {
 				throw new Error('Failed to check for updates');
 			}
@@ -48,7 +48,7 @@ class Updater {
 	async update() {
 		console.log('running update from client updater');
 		if (store.state.clientLibrary.clientUpdateStatus === 'ready') {
-			return await this.instance.updateApply();
+			return await this.instance!.updateApply();
 		}
 		return false;
 	}
@@ -60,7 +60,7 @@ class Updater {
 				this.setClientUpdateStatus('none');
 			})
 			.on('updateAvailable', () => {
-				this.instance
+				this.instance!
 					.updateBegin()
 					.catch((err: Error) => {
 						console.error(err);

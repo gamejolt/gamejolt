@@ -45,7 +45,7 @@
   version "0.0.28"
   resolved "https://registry.yarnpkg.com/@types/favico.js/-/favico.js-0.0.28.tgz#bb7b7caa118217318d034666920d687a58d65eeb"
 
-"@types/fs-readdir-recursive@^1.0.0":
+"@types/fs-readdir-recursive@1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@types/fs-readdir-recursive/-/fs-readdir-recursive-1.0.0.tgz#404f77bdadc6b90cccd3f04d15f6dd85cdde38ef"
 
@@ -2636,6 +2636,12 @@ follow-redirects@1.2.6, follow-redirects@^1.2.5:
   dependencies:
     debug "^3.1.0"
 
+follow-redirects@1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.4.1.tgz#d8120f4518190f55aac65bb6fc7b85fcd666d6aa"
+  dependencies:
+    debug "^3.1.0"
+
 for-each@^0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/for-each/-/for-each-0.3.2.tgz#2c40450b9348e97f281322593ba96704b9abd4d4"
@@ -2740,7 +2746,7 @@ fs-extra@^4.0.2:
     jsonfile "^4.0.0"
     universalify "^0.1.0"
 
-fs-readdir-recursive@^1.1.0:
+fs-readdir-recursive@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/fs-readdir-recursive/-/fs-readdir-recursive-1.1.0.tgz#e32fc030a2ccee44a6b5371308da54be0b397d27"
 
