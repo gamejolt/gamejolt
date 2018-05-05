@@ -115,7 +115,7 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 			return null;
 		}
 
-		return new Date(this.formModel.sale_start + this.saleTimezoneOffset);
+		return new Date(this.formModel.sale_start);
 	}
 
 	get saleEndLocal() {
@@ -123,7 +123,7 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 			return null;
 		}
 
-		return new Date(this.formModel.sale_end + this.saleTimezoneOffset);
+		return new Date(this.formModel.sale_end);
 	}
 
 	get loadUrl() {

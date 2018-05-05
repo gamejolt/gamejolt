@@ -377,14 +377,14 @@
 						<th><translate>Start</translate></th>
 						<td>
 							{{ saleStartLocal | date('medium') }}
-							<app-time-ago :date="promotionalPricing.start" class="text-muted small" />
+							<app-time-ago :date="promotionalPricing.start" is-future class="text-muted small" />
 						</td>
 					</tr>
 					<tr>
 						<th><translate>End</translate></th>
 						<td>
 							{{ saleEndLocal | date('medium') }}
-							<app-time-ago :date="promotionalPricing.end" class="text-muted small" />
+							<app-time-ago :date="promotionalPricing.end" is-future class="text-muted small" />
 						</td>
 					</tr>
 					<tr>
