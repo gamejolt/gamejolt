@@ -1,17 +1,16 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .account-popover
 	min-width: 250px
-
 	$account-popover-padding = 10px
 
 	h4
 		margin: 0
-		color: $gray-lightest
 
 	small
 		display: block
-		color: $gray-light
+		color: $dark-theme-fg-muted
 
 	.user-box-exp
 		margin-top: -10px
@@ -21,10 +20,10 @@
 		padding: 10px $account-popover-padding
 
 	&-separator
+		theme-prop('background-color', 'bg-subtle')
 		margin: 10px $account-popover-padding
 		height: 1px
 		line-height: 1px
-		background-color: $gray-dark
 
 	&-currency
-		color: $gj-green
+		theme-prop('color', 'highlight')

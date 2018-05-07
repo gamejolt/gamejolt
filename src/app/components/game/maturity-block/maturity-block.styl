@@ -1,7 +1,7 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .game-maturity-block
-
 	@media $media-sm-up
 		text-align: center
 
@@ -11,11 +11,10 @@
 		margin-bottom: $line-height-computed
 
 	h4
-		color: $gj-pink
+		theme-prop('color', 'notice')
 
 		@media $media-xs
 			margin-top: 0
-
 
 	>>> .game-ogrs
 		margin: 0 auto
@@ -26,6 +25,3 @@
 		&.no-descriptors
 			float: none !important
 			width: 88px
-
-		&-descriptors
-			background-color: $gray-lightest

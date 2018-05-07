@@ -1,10 +1,9 @@
 <app-modal>
 
 	<div class="modal-controls">
-		<button class="btn btn-danger-outline" @click="modal.dismiss()">
-			<app-jolticon icon="remove" />
+		<app-button @click="modal.dismiss()">
 			<translate>Close</translate>
-		</button>
+		</app-button>
 	</div>
 
 	<div class="modal-header">
@@ -17,34 +16,38 @@
 	<div class="modal-body">
 		<template v-if="canModerate">
 			<template v-if="chat.canModerate(room, user, 'mute')">
-				<span class="btn btn-outline"
+				<app-button
 					v-if="!user.isMutedRoom"
+					type="span"
 					@click="mute"
 					>
 					<translate>Mute</translate>
-				</span>
-				<span class="btn btn-outline"
+				</app-button>
+				<app-button
 					v-else
+					type="span"
 					@click="unmute"
 					>
 					<translate>Unmute</translate>
-				</span>
+				</app-button>
 			</template>
 
 			<template v-if="chat.canModerate(room, user, 'mod')">
-				<span class="btn btn-outline"
+				<app-button
 					v-if="!user.isMod"
+					type="span"
 					@click="mod"
 					>
 					<translate>Mod</translate>
-				</span>
+				</app-button>
 
-				<span class="btn btn-outline"
+				<app-button
 					v-else
+					type="span"
 					@click="demod"
 					>
 					<translate>Demod</translate>
-				</span>
+				</app-button>
 			</template>
 		</template>
 		<template v-else>

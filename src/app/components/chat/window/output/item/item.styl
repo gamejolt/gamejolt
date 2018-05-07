@@ -1,5 +1,5 @@
 @require '~styles/variables'
-@require '../../../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .chat-window-message
 	position: relative
@@ -18,7 +18,7 @@
 		z-index: 1
 
 		> img
-			border-radius: $border-radius-base
+			rounded-corners()
 
 	&-container
 		margin-left: 35px + 20px
@@ -34,12 +34,12 @@
 		vertical-align: bottom
 
 	&-username
-		color: $text-muted
+		theme-prop('color', 'fg-muted')
 		font-size: $font-size-tiny
 
 	&-time
+		theme-prop('color', 'fg-muted')
 		margin-left: 5px
-		color: $text-muted
 		font-size: $font-size-tiny
 
 	// This ridiculousness is so that we can show <pre> tags full bleed even if they're in fade-collapsers.
@@ -53,12 +53,14 @@
 
 		// Some different styling for the fade collapse.
 		.fade-collapse-collapsed
+			theme-prop('border-bottom-color', 'light')
 			margin-bottom: 5px
-			border-bottom: 1px dashed $gray-light
+			border-bottom-width: 1px
+			border-bottom-style: dashed
 
 			&::before
+				theme-prop('background', 'darker', true)
 				max-height: 5px !important
-				background: $gray-darker !important
 
 		// Only shown during fade-collapse of messages that are too long.
 		.hidden-text-expander
@@ -69,11 +71,11 @@
 
 		// Only show mod tools on larger screens
 		@media $media-sm-up
+			theme-prop('background-color', 'darker')
 			position: absolute
 			top: 0
 			right: 0
 			padding: 2px
-			background-color: $gray-darker
 			z-index: 2
 
 			../:hover &
@@ -81,25 +83,22 @@
 
 	&-content
 		display: block
-
 		// If we don't break words then it can make the window too large to try
 		// to fit in the text. We also try to hyphenate.
 		// Note: hyphens only works on Chrome in Mac and Android.
 		// Luckily this is mostly where it matters.
 		word-wrap: break-word
 		hyphens: auto
-
 		// Add in the padding again.
 		padding-left: 35px + 10px + $chat-room-window-padding
 		padding-right: 34px + 1px + $chat-room-window-padding
-
 		// Try to limit the effects of what zalgo text can do to chat.
 		overflow: hidden
 
 	// System chat messages.
 	// Robo-Jolt and such.
 	.chat-msg-type-system
-		color: $gray
+		theme-prop('color', 'gray')
 		font-style: italic
 
 		span

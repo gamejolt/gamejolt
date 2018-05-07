@@ -1,36 +1,36 @@
 <div class="package-card-buttons">
 
 	<!-- Messaging for weird cases... -->
-	<div class="alert alert-info" v-if="downloadableUnsupported">
+	<div class="alert" v-if="downloadableUnsupported">
 		<p>
-			<app-jolticon icon="notice" :warning="true" />
+			<app-jolticon icon="notice" notice />
 			<translate>This package can not be installed on your system.</translate>
 		</p>
 	</div>
 
-	<div class="alert alert-info" v-if="downloadableUnsupportedHasQuickPlay">
+	<div class="alert" v-if="downloadableUnsupportedHasQuickPlay">
 		<p>
-			<app-jolticon icon="notice" :warning="true" />
+			<app-jolticon icon="notice" notice />
 			<translate>This package can not be installed on your system, but can be quick played in the client.</translate>
 		</p>
 	</div>
 
 	<template v-if="localPackage">
-		<div class="alert alert-warning" v-if="localPackage.install_state === PatchState.DOWNLOAD_FAILED">
+		<div class="alert alert-notice" v-if="localPackage.install_state === PatchState.DOWNLOAD_FAILED">
 			<p>
 				<app-jolticon icon="notice" />
 				<translate>Oh no! We couldn't download this package. Perhaps check that you're still online?</translate>
 			</p>
 		</div>
 
-		<div class="alert alert-warning" v-if="localPackage.install_state === PatchState.UNPACK_FAILED">
+		<div class="alert alert-notice" v-if="localPackage.install_state === PatchState.UNPACK_FAILED">
 			<p>
 				<app-jolticon icon="notice" />
 				<translate>Oh no! We couldn't unpack this package after downloading it. Maybe try again?</translate>
 			</p>
 		</div>
 
-		<div class="alert alert-success" v-if="localPackage.isRunning">
+		<div class="alert alert-highlight" v-if="localPackage.isRunning">
 			<p>
 				<app-jolticon icon="play" />
 				<translate>You are currently running this package. Some options have been disabled while it's open.</translate>
@@ -39,11 +39,15 @@
 	</template>
 
 	<!-- Able to install game -->
-	<button class="btn btn-success-outline" v-if="canInstall && !localPackage" @click="installClick( card.downloadableBuild )">
-		<app-jolticon icon="download-box" />
+	<app-button
+		v-if="canInstall && !localPackage"
+		primary
+		icon="download-box"
+		@click="installClick( card.downloadableBuild )"
+		>
 		<translate>Install</translate>
 		<small>({{ card.downloadableBuild.primary_file.filesize | filesize }})</small>
-	</button>
+	</app-button>
 
 	<!-- Game is installing or installed -->
 	<template v-if="localPackage">
@@ -51,52 +55,73 @@
 		<template v-if="localPackage.isPatching">
 
 			<app-expand :when="localPackage.isDownloading || localPackage.isUnpacking">
-				<div class="alert alert-info">
+				<div class="alert">
 					<app-client-install-progress :local-package="localPackage" />
 				</div>
 			</app-expand>
 
 			<template v-if="localPackage.isPatchQueued">
-				<span class="tag tag-blue big">
+				<span class="tag big">
 					<translate>QUEUED</translate>
 				</span>
 			</template>
 			<template v-else>
-
-				<button v-if="!localPackage.isPatchPaused" @click="pauseInstall()" class="btn btn-outline">
-					<app-jolticon icon="pause" />
+				<app-button
+					v-if="!localPackage.isPatchPaused"
+					@click="pauseInstall()"
+					>
 					<translate>Pause</translate>
-				</button>
-
-				<button v-else @click="resumeInstall()" class="btn btn-outline">
-					<app-jolticon icon="play-small" />
+				</app-button>
+				<app-button
+					v-else
+					primary
+					@click="resumeInstall()"
+					>
 					<translate>Resume</translate>
-				</button>
+				</app-button>
 			</template>
 		</template>
 
 		<!-- Game failed to install -->
-		<button v-if="localPackage.didInstallFail" @click="retryInstall()" class="btn btn-outline">
+		<app-button
+			v-if="localPackage.didInstallFail"
+			primary
+			@click="retryInstall()"
+			>
 			<translate>Retry Install</translate>
-		</button>
+		</app-button>
 
 		<!-- Game failed to update -->
-		<button v-if="localPackage.didUpdateFail" @click="retryInstall()" class="btn btn-outline">
+		<app-button
+			v-if="localPackage.didUpdateFail"
+			primary
+			@click="retryInstall()"
+			>
 			<translate>Retry Update</translate>
-		</button>
+		</app-button>
 
 		<!--
 			Can only cancel installs, not updates.
 		-->
-		<button v-if="localPackage.install_state" @click="cancelInstall()" v-app-tooltip="$gettext('Cancel Installation')" class="btn btn-danger-outline btn-sparse">
-			<app-jolticon icon="remove" />
-		</button>
+		<app-button
+			v-if="localPackage.install_state"
+			circle
+			icon="remove"
+			:trans="!overlay"
+			@click="cancelInstall()"
+			v-app-tooltip="$gettext('Cancel Installation')"
+			/>
 
 		<!-- Game is installed -->
-		<button v-if="localPackage.isSettled && !localPackage.isRunning" @click="launchPackage()" class="btn btn-primary-outline">
-			<app-jolticon icon="play" />
+		<app-button
+			v-if="localPackage.isSettled && !localPackage.isRunning"
+			primary
+			solid
+			icon="play"
+			@click="launchPackage()"
+			>
 			<translate>Launch</translate>
-		</button>
+		</app-button>
 
 	</template>
 
@@ -104,27 +129,24 @@
 		Browser quick play
 		We hide this as soon as they install the game.
 	-->
-	<template v-else-if="card.browserBuild">
-		<button @click="buildClick(card.browserBuild)" class="btn btn-primary-outline">
-			<app-jolticon icon="play" />
-			<translate>Quick Play</translate>
-			<app-jolticon icon="addon" :class="`jolticon-${card.showcasedBrowserIcon}`" />
-		</button>
-	</template>
-
-	<!--
-		If this package only has "Other" builds, then we make it look like a download
-		button with a [...] after.
-		If the package has normal builds too, then we just show it as a more options sparse button.
-	-->
-	<button
-		v-if="card.extraBuilds.length || (localPackage && !localPackage.install_state)"
-		v-app-popover-trigger="`game-package-card-more-options-${ package.id }`"
-		v-app-track-event="`game-package-card:more-options`" class="btn btn-outline"
+	<app-button
+		v-else-if="card.browserBuild"
+		primary
+		icon="play"
+		@click="buildClick(card.browserBuild)"
 		>
-		<app-jolticon icon="ellipsis-h" />
-		<translate>options</translate>
-	</button>
+		<translate>Quick Play</translate>
+		<app-jolticon icon="addon" :class="`jolticon-${card.showcasedBrowserIcon}`" />
+	</app-button>
+
+	<app-button
+		v-if="card.extraBuilds.length || (localPackage && !localPackage.install_state)"
+		circle
+		icon="ellipsis-v"
+		:trans="!overlay"
+		v-app-popover-trigger="`game-package-card-more-options-${ package.id }`"
+		v-app-track-event="`game-package-card:more-options`"
+		/>
 
 	<app-popover :popover-id="`game-package-card-more-options-${package.id}`">
 
@@ -143,7 +165,7 @@
 						In client, if a package is installed, allow them to remove.
 					-->
 					<a @click="uninstall()" :class="{ disabled: localPackage.isRunning }" class="list-group-item has-icon warning">
-						<app-jolticon icon="remove" :warning="true" />
+						<app-jolticon icon="remove" notice />
 						<translate>Uninstall</translate>
 					</a>
 				</template>

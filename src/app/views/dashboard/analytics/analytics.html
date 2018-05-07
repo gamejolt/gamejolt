@@ -107,7 +107,10 @@
 
 		<div slot="controls" :class="{ 'text-right': !Screen.isXs }">
 			<div class="analytics-month-selector" v-if="period === 'monthly'">
-				<router-link class="btn btn-outline btn-sparse"
+				<app-button
+					circle
+					trans
+					icon="chevron-left"
 					:to="{
 						name: 'dash.analytics',
 						params: $route.params,
@@ -119,16 +122,17 @@
 						},
 					}"
 					replace
-					>
-					<app-jolticon icon="chevron-left" />
-				</router-link>
+					/>
 
 				<strong>
 					{{ startTime | date( 'MMMM YYYY' ) }}
 				</strong>
 
-				<router-link class="btn btn-outline btn-sparse"
+				<app-button
 					v-if="now > endTime"
+					circle
+					trans
+					icon="chevron-right"
 					:to="{
 						name: 'dash.analytics',
 						params: $route.params,
@@ -140,9 +144,7 @@
 						},
 					}"
 					replace
-					>
-					<app-jolticon icon="chevron-right" />
-				</router-link>
+					/>
 			</div>
 		</div>
 
@@ -165,7 +167,8 @@
 						:key="metric.key"
 						>
 
-						<router-link class="stat-graph-overlay"
+						<router-link
+							class="stat-graph-overlay"
 							:to="{
 								name: 'dash.analytics',
 								params: { metricKey: metric.key },
@@ -174,12 +177,6 @@
 							replace
 							active-class="active"
 							>
-
-							<app-graph
-								v-if="period === 'monthly' && metricData[ metric.key ]"
-								:dataset="metricData[ metric.key ].graph"
-								:background-variant="true"
-								/>
 
 							<div class="stat-big">
 								<div class="stat-big-label">
@@ -194,6 +191,12 @@
 									</template>
 								</div>
 							</div>
+
+							<app-graph
+								v-if="period === 'monthly' && metricData[ metric.key ]"
+								:dataset="metricData[ metric.key ].graph"
+								:background-variant="true"
+								/>
 						</router-link>
 
 					</div>

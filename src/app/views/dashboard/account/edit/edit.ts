@@ -21,15 +21,15 @@ export default class RouteDashAccountEdit extends BaseRouteComponent {
 	@RouteMutation setHeading: RouteStore['setHeading'];
 
 	get routeTitle() {
-		return this.$gettext(`dash.profile.edit.page_title`);
+		return this.$gettext(`Edit Your Profile`);
 	}
 
 	routeInit() {
-		this.setHeading(this.$gettext('dash.profile.edit.heading'));
+		this.setHeading(this.$gettext('Edit Your Profile'));
 	}
 
 	onProfileSaved() {
-		Growls.success(this.$gettext(`Your information has been updated. Right on!`));
+		Growls.success(this.$gettext(`Your profile has been updated. Right on!`));
 		Scroll.to(0);
 	}
 }

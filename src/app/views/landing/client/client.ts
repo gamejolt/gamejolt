@@ -14,6 +14,7 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
 
 const ManifestUrl = 'https://d.gamejolt.net/data/client/manifest-2.json';
 
@@ -22,6 +23,7 @@ const ManifestUrl = 'https://d.gamejolt.net/data/client/manifest-2.json';
 	name: 'RouteLandingClient',
 	components: {
 		AppJolticon,
+		AppThemeSvg,
 	},
 	directives: {
 		AppTrackEvent,

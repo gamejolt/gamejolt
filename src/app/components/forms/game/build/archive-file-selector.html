@@ -1,9 +1,8 @@
 <app-modal>
 	<div class="modal-controls">
-		<button class="btn btn-danger-outline" @click="close()">
-			<app-jolticon icon="remove" />
+		<app-button @click="close()">
 			<translate>dash.games.releases.builds.launch_options.file_selector.cancel_button</translate>
-		</button>
+		</app-button>
 	</div>
 
 	<div class="modal-header">
@@ -37,7 +36,7 @@
 			</div>
 		</div>
 
-		<div v-else class="alert alert-warning" v-translate>
+		<div v-else class="alert alert-notice" v-translate>
 			dash.games.releases.builds.launch_options.file_selector.no_files_html
 		</div>
 

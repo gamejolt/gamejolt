@@ -1,4 +1,5 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .game-filtering-input
 	position: relative
@@ -8,16 +9,16 @@
 		padding-right: 32px
 
 	> .jolticon
+		theme-prop('color', 'lighter')
 		position: absolute
 		top: 9px
 		left: 9px
-		color: $gray-lighter
 
 	> a
+		theme-prop('color', 'lighter')
 		position: absolute
 		top: 6px
 		right: 7px
-		color: $gray-lighter
 
 		&:hover
 			color: $black

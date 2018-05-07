@@ -1,9 +1,10 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .-multiline-notice
+	theme-prop('color', 'light')
 	margin-bottom: 5px
 	font-size: $font-size-small
-	color: $gray-light
 
 .-container
 	position: relative
@@ -16,7 +17,7 @@ textarea
 	color: $white
 
 	@media $media-sm-up
-		background-color: $gray-dark
+		theme-prop('background-color', 'dark')
 
 .-button
 	display: none
@@ -26,8 +27,8 @@ textarea
 		margin-right: 70px
 
 	.-button
+		theme-prop('color', 'gray')
 		display: block
 		position: absolute
 		top: 7px
 		right: 5px
-		color: $gray

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./sidebar.html?style=./sidebar.styl';
+import View from '!view!./sidebar.html';
 
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';

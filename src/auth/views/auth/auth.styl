@@ -1,5 +1,5 @@
 @require '~styles/variables'
-@require '../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 #auth-container
 	position: absolute
@@ -9,7 +9,7 @@
 	left: 0
 
 	&.has-cover-img
-		text-shadow: 1px 1px 1px rgba( $black, 0.3 )
+		text-shadow: 1px 1px 1px rgba($black, 0.3)
 
 .auth-scroll-container
 	scrollable()
@@ -34,8 +34,7 @@
 		margin-top: 100px
 
 	a
-		&
-		&:hover
+		&, &:hover
 			border-bottom: 0 !important
 
 	img

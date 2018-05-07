@@ -1,14 +1,12 @@
 @require '~styles/variables'
-@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .redlight-landing-body
-
 	$redlight-red = #ff3300
 
 	.fill-black
-
 		h1, h2, h3
 			color: $redlight-red
 
 		a
-			link-underlines( $redlight-red, $black, $black )
+			link-underlines($redlight-red, $black, $black)

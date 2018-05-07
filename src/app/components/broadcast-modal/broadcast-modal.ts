@@ -8,8 +8,6 @@ import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/
 import { AppTimeAgo } from '../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppWidgetCompiler } from '../../../lib/gj-lib-client/components/widget-compiler/widget-compiler';
 import { AppFiresidePostLikeWidget } from '../../../lib/gj-lib-client/components/fireside/post/like/widget/widget';
-import { AppSocialTwitterShare } from '../../../lib/gj-lib-client/components/social/twitter/share/share';
-import { AppSocialFacebookLike } from '../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { BaseModal } from '../../../lib/gj-lib-client/components/modal/base';
 import { AppCommentWidgetLazy } from '../lazy';
 import { AppPollVoting } from '../poll/voting/voting';
@@ -22,8 +20,6 @@ import { AppPollVoting } from '../poll/voting/voting';
 		AppWidgetCompiler,
 		AppFiresidePostLikeWidget,
 		AppPollVoting,
-		AppSocialTwitterShare,
-		AppSocialFacebookLike,
 		AppCommentWidget: AppCommentWidgetLazy,
 	},
 })

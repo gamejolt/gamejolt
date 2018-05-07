@@ -3,7 +3,7 @@
 
 		<div class="row" v-if="!orders.length">
 			<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-				<div class="alert alert-info">
+				<div class="alert">
 					<translate>You haven't bought any games on the site yet. Once you do, you'll be able to see all of your orders here and the details for each order.</translate>
 				</div>
 			</div>
@@ -39,7 +39,7 @@
 						{{ order.completed_on | date( 'mediumDate' ) }}
 					</td>
 					<td class="text-right">
-						<span class="tag tag-pink" v-if="order._is_refunded">
+						<span class="tag tag-notice" v-if="order._is_refunded">
 							<translate>Refunded</translate>
 						</span>
 						{{ order.total_amount | currency }}

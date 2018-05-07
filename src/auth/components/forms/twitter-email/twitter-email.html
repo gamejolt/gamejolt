@@ -20,20 +20,20 @@
 	</app-form-group>
 	<br>
 
-	<div class="alert alert-warning anim-fade-in-enlarge no-animate-leave"
+	<div class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
 		v-if="duplicateEmail"
 		v-translate
 		>
 		auth.linked_account.twitter.finalize.duplicate_email_error_html
 	</div>
-	<div class="alert alert-warning anim-fade-in-enlarge no-animate-leave"
+	<div class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
 		v-if="rateLimit"
 		v-translate
 		>
 		Sorry, you can't register another account yet. Try again later.
 	</div>
 
-	<app-form-button icon="chevron-right" class="btn-block btn-dark-variant">
+	<app-form-button block>
 		<translate>auth.linked_account.twitter.finalize.submit_button</translate>
 	</app-form-button>
 

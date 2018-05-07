@@ -5,7 +5,7 @@
 		v-app-track-event="`search:history:open`"
 		>
 		<app-jolticon icon="search" />
-		<app-jolticon icon="trans-down caret" />
+		<app-jolticon icon="trans-down" class="caret" />
 	</a>
 
 	<app-popover
@@ -19,7 +19,7 @@
 				<translate>search.recent.popover_heading</translate>
 			</div>
 
-			<div class="alert alert-warning" v-if="!recentSearches.length">
+			<div class="alert alert-notice" v-if="!recentSearches.length">
 				<translate>search.recent.none</translate>
 			</div>
 

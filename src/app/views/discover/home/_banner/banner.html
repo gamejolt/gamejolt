@@ -38,8 +38,11 @@
 				<div class="-controls">
 					<div class="row">
 						<div :class="shouldShowFollow ? 'col-xs-6' : 'col-xs-12'">
-							<router-link
+							<app-button
 								v-if="!Screen.isXs && !item.custom_url"
+								lg
+								overlay
+								:block="shouldShowFollow"
 								:to="{
 									name: 'discover.games.view.overview',
 									params: {
@@ -47,31 +50,28 @@
 										slug: item.game.slug,
 									},
 								}"
-								class="btn btn-outline btn-lg btn-overlay-variant"
-								:class="{
-									'btn-block': shouldShowFollow,
-								}"
 								v-app-track-event="`home:banner:${item.game.id}`"
 								>
 								<translate>View Game</translate>
-							</router-link>
-							<a
+							</app-button>
+							<app-button
 								v-else-if="item.custom_url"
+								lg
+								overlay
+								:block="shouldShowFollow || Screen.isXs"
 								:href="item.custom_url"
 								target="_blank"
-								class="btn btn-outline btn-lg btn-overlay-variant"
-								:class="{
-									'btn-block': shouldShowFollow || Screen.isXs,
-								}"
 								v-app-track-event="`home:banner-custom:${item.game.id}`"
 								>
 								{{ item.custom_text }}
-							</a>
+							</app-button>
 						</div>
 						<div class="col-xs-6" v-if="shouldShowFollow">
 							<app-game-follow-widget
 								:game="item.game"
-								class="btn-block btn-lg btn-outline btn-overlay-variant"
+								block
+								lg
+								overlay
 								v-app-track-event="`home:banner:follow-${item.game.id}`"
 								/>
 						</div>

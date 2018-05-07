@@ -1,13 +1,11 @@
 @require '~styles/variables'
-@require '../../../../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .route-discover-games-view-scores-list
-
 	// Put some extra spacing in here because of the affixed game header.
 	.gj-scroll-affixed .score-tables-list
 		margin-top: $shell-top-nav-height + 10px !important
 
 	.score-tables-list
-
 		.list-group-item-text
 			text-overflow()

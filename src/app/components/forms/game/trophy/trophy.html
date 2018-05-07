@@ -14,11 +14,14 @@
 
 		<br>
 
-		<div>
-			<button class="btn btn-danger-outline" @click.prevent="clearImage">
-				<app-jolticon icon="remove" />
+		<div class="clearfix">
+			<app-button
+				class="pull-right"
+				trans
+				@click.prevent="clearImage"
+				>
 				<translate>Clear Image</translate>
-			</button>
+			</app-button>
 		</div>
 	</div>
 
@@ -106,7 +109,7 @@
 		<app-form-control-toggle />
 	</app-form-group>
 
-	<app-form-button :icon="method">
+	<app-form-button>
 		<translate>dash.games.trophies.form.save_button</translate>
 	</app-form-button>
 </app-form>

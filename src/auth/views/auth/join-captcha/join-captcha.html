@@ -6,7 +6,7 @@
 
 	<br>
 	<app-grecaptcha-widget @response="onRecaptchaResponse"/><br>
-	<div class="alert alert-warning" v-if="serverErrors">
+	<div class="alert alert-notice" v-if="serverErrors">
 		<translate v-if="serverErrors.token">
 			Oh no, your sign-up session has expired!
 		</translate>
@@ -23,12 +23,12 @@
 			Something weird happened!
 		</translate>
 		<br>
-		<button
-			class="btn"
+		<app-button
+			primary
 			@click="retryJoin"
 			v-if="!serverErrors['rate-limit']"
 			>
 			<translate>Retry</translate>
-		</button>
+		</app-button>
 	</div>
 </div>

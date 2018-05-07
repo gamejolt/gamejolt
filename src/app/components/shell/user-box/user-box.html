@@ -15,10 +15,14 @@
 	</div>
 	<div class="user-box-exp-progress">
 		<app-jolticon icon="exp" />
-		<div class="progress progress-thin progress-green"
+		<app-progress-bar
+			thin
+			:percent="app.user.level_next_percentage"
 			v-app-tooltip="`${app.user.level_next_percentage}% progress to next level`"
+			/>
+		<!-- <div class="progress progress-thin progress-green"
 			>
 			<div class="progress-bar" :style="{ width: app.user.level_next_percentage + '%' }"></div>
-		</div>
+		</div> -->
 	</div>
 </div>

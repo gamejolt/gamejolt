@@ -47,17 +47,16 @@
 
 	<template v-if="formModel.avatar_media_item && !hasFormErrors">
 		<div>
-			<app-form-button icon="edit">
+			<app-form-button>
 				<translate>Save Crop</translate>
 			</app-form-button>
 
-			<button
-				class="btn btn-danger-outline"
+			<app-button
+				trans
 				@click.prevent.stop="clearAvatar()"
 				>
-				<app-jolticon icon="remove" />
 				<translate>Remove Avatar</translate>
-			</button>
+			</app-button>
 		</div>
 
 		<br>
@@ -68,15 +67,13 @@
 		name="disable_gravatar"
 		:label="$gettext( `Disable Gravatar?` )"
 		>
-
+		<app-form-control-toggle class="pull-right" @changed="gravatarToggled()" />
 		<p class="help-block">
 			<translate>By default we fallback to using Gravatar if you have one. If you would like to disable the Gravatar fallback, you can toggle this on.</translate>
 			<a href="https://gravatar.com" target="_blank" class="link-help">
 				<translate>What is Gravatar?</translate>
 			</a>
 		</p>
-
-		<app-form-control-toggle @changed="gravatarToggled()" />
 	</app-form-group>
 
 </app-form>

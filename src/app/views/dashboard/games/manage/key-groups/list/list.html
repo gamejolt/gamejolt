@@ -42,7 +42,7 @@
 									</div>
 
 									<div class="card-meta">
-										<span class="tag tag-blue">
+										<span class="tag">
 											<template v-if="group.type === KeyGroup.TYPE_ANONYMOUS">
 												<translate>Unrestricted (Anonymous)</translate>
 											</template>
@@ -70,7 +70,7 @@
 											({{ group.viewed_count / group.key_count | number( { style: 'percent', maximumFractionDigits: 2 } ) }})
 										</div>
 										<app-progress-bar
-											:thin="true"
+											thin
 											:percent="group.viewed_count / group.key_count * 100"
 											/>
 										<br>
@@ -81,7 +81,7 @@
 											({{ group.claimed_count / group.key_count | number( { style: 'percent', maximumFractionDigits: 2 } ) }})
 										</div>
 										<app-progress-bar
-											:thin="true"
+											thin
 											:percent="group.claimed_count / group.key_count * 100"
 											/>
 									</div>
@@ -90,15 +90,15 @@
 							</div>
 
 							<div class="card-controls">
-								<router-link class="btn btn-outline"
+								<app-button
+									primary
 									:to="{
 										name: 'dash.games.manage.key-groups.edit',
 										params: { keyGroupId: group.id },
 									}"
 									>
-									<app-jolticon icon="cog" />
 									<translate>Manage</translate>
-								</router-link>
+								</app-button>
 							</div>
 						</app-card-list-item>
 

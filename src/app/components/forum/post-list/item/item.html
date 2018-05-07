@@ -14,7 +14,7 @@
 		@inview="onInviewChange( true )"
 		@outview="onInviewChange( false )"
 		>
-		<a class="forum-post-replied-to-btn"
+		<a class="forum-post-replied-to-button"
 			v-if="!isReply && post.parent_post_id"
 			@click="loadParentPost"
 			>
@@ -104,7 +104,7 @@
 				<a class="list-group-item has-icon"
 					@click="report"
 					>
-					<app-jolticon icon="flag" class="warning" />
+					<app-jolticon icon="flag" notice />
 					<translate>Report Post</translate>
 				</a>
 				<template v-if="app.user.permission_level > 0">
@@ -134,19 +134,19 @@
 
 	<template v-if="!isReply" slot="controls">
 
-		<button
-			class="btn btn-outline btn-sparse btn-circle"
+		<app-button
 			v-if="!topic.is_locked && app.user"
+			circle
+			icon="reply"
 			v-app-tooltip="$gettext( 'Reply' )"
 			:disabled="isEditing"
 			@click="reply"
-			>
-			<app-jolticon icon="reply" />
-		</button>
+			/>
 
-		<a
+		<app-button
 			v-if="post.replies_count && !isEditing"
-			class="btn btn-trans"
+			type="a"
+			trans
 			@click="toggleReplies"
 			>
 			<translate
@@ -156,7 +156,7 @@
 				>
 				+%{ count } reply
 			</translate>
-		</a>
+		</app-button>
 
 	</template>
 

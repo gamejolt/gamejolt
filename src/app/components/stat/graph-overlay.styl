@@ -1,4 +1,5 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .stat-graph-overlay
 	display: block
@@ -6,6 +7,7 @@
 	margin-bottom: $line-height-computed
 
 	&::before
+		theme-prop('background-color', 'light')
 		display: block
 		content: ''
 		position: absolute
@@ -14,7 +16,6 @@
 		bottom: 0
 		height: 3px
 		opacity: 0
-		background-color: $gray-light
 		transition: opacity 300ms
 		z-index: 1
 
@@ -23,8 +24,7 @@
 		padding-bottom: 3px
 
 		&.active
-			&
-			&:hover
+			&, &:hover
 				&::before
 					transition: none
 					opacity: 1
@@ -39,14 +39,11 @@
 
 	// Duplicate so it's more "important" than the scoped graph styles.
 	.graph.graph
-		position: absolute
 		padding: 0
 		margin: 0
-		left: -3px
-		right: -2px
+		margin-top: 5px
 		bottom: 0
-		height: 50px
-		z-index: 0
+		height: 25px
 
 		&-line .chart
-			height: 50px
+			height: 25px

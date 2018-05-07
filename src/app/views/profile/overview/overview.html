@@ -3,71 +3,29 @@
 	<!--
 		If this user is banned, we show very little.
 	-->
-	<section class="section fill-pink" v-if="!user.status">
+	<section class="section fill-notice" v-if="!user.status">
 		<div class="container">
-			<div>
+			<p>
 				<translate>profile.banned_message_html</translate>
-			</div>
+			</p>
 
 			<app-expand :when="userFriendship && userFriendship.state === UserFriendship.STATE_FRIENDS">
-				<br>
-				<hr class="underbar">
-				<div>
+				<p>
 					<strong><translate>This user was your friend.</translate></strong>
 					<br>
 					<translate>If you remove them from your friends list, you will no longer be able to access your chat history with them.</translate>
-				</div>
-				<br>
-				<button
-					class="btn"
+				</p>
+
+				<app-button
+					solid
 					@click="$emit( 'remove-friend' )"
 					>
-					<app-jolticon icon="friend-remove-2 warning" />
 					<translate>profile.remove_friend_button</translate>
-				</button>
+				</app-button>
 			</app-expand>
 		</div>
 	</section>
 	<template v-else>
-
-		<!-- Currently Playing -->
-		<!-- TODO -->
-		<!-- <section v-if="activeGameSession" class="section fill-pink">
-			<div class="container">
-				<h2 class="section-header">
-					<translate>profile.playing_heading</translate>
-				</h2>
-				<div class="row">
-					<div class="col-xs-8 col-sm-10 col-sm-push-2">
-						<h5 class="sans-margin">
-							<router-link
-								class="link-unstyled"
-								:to="{
-									name: 'discover.games.overview',
-									params: { slug: activeGameSession.game.slug, id: activeGameSession.game.id },
-								}"
-								>
-								<strong>{{ activeGameSession.game.title }}</strong>
-							</router-link>
-						</h5>
-						<div class="small">
-							<app-time-ago :date="activeGameSession.opened_on" :without-suffix="true" />
-						</div>
-					</div>
-					<div class="col-xs-4 col-sm-2 col-sm-pull-10">
-						<router-link
-							class="link-block"
-							:to="{
-								name: 'discover.games.overview',
-								params: { slug: activeGameSession.game.slug, id: activeGameSession.game.id },
-							}"
-							>
-							<app-game-thumbnail-img :game="activeGameSession.game" />
-						</router-link>
-					</div>
-				</div>
-			</div>
-		</section> -->
 
 		<section class="section">
 			<div class="container">
@@ -77,37 +35,39 @@
 						<!-- Friend Requests -->
 						<template v-if="userFriendship">
 							<app-expand :when="userFriendship.state === UserFriendship.STATE_REQUEST_SENT" :animate-initial="true">
-								<div class="alert alert-info">
+								<div class="alert">
 									<p>
 										<translate :translate-params="{ username: '@' + userFriendship.target_user.username }">
 											Friend request to %{ username } pending acceptance.
 										</translate>
 									</p>
-									<a class="btn btn-danger" @click="$emit( 'cancel-friend-request' )">
-										<app-jolticon icon="remove" />
+									<app-button @click="$emit( 'cancel-friend-request' )">
 										<translate>profile.friend_request_cancel</translate>
-									</a>
+									</app-button>
 								</div>
 							</app-expand>
 
 							<app-expand :when="userFriendship.state === UserFriendship.STATE_REQUEST_RECEIVED" :animate-initial="true">
-								<div class="alert alert-info">
+								<div class="alert">
 									<p>
 										<translate :translate-params="{ username: '@' + userFriendship.user.username }">
 											%{ username } would like to be your friend.
 										</translate>
 									</p>
-									<a class="btn" @click="$emit( 'accept-friend-request' )">
-										<app-jolticon icon="friend-add-2" />
+									<app-button
+										primary
+										solid
+										@click="$emit( 'accept-friend-request' )"
+										>
 										<translate>profile.friend_request_accept</translate>
-									</a>
-									<a class="btn btn-danger"
+									</app-button>
+									<app-button
+										trans
 										@click="$emit( 'reject-friend-request' )"
 										v-app-tooltip="$gettext( 'profile.friend_request_decline_tooltip' )"
 										>
-										<app-jolticon icon="remove" />
 										<translate>profile.friend_request_decline</translate>
-									</a>
+									</app-button>
 								</div>
 							</app-expand>
 						</template>
@@ -218,33 +178,32 @@
 						<br>
 
 						<!-- Add Friend -->
-						<button
+						<app-button
 							v-if="app.user && user.id !== app.user.id && !userFriendship && !user.is_verified"
-							class="btn btn-outline btn-block"
+							block
 							@click="$emit( 'send-friend-request' )"
 							>
-							<app-jolticon icon="friend-add-2" />
 							<translate>profile.friend_request_button</translate>
-						</button>
+						</app-button>
 
-						<router-link
+						<app-button
 							v-if="gamesCount > 0"
-							class="btn btn-outline btn-block"
+							block
 							:to="{
 								name: 'library.collection.developer',
 								params: { id: user.username },
 							}"
 							>
 							{{ gamesCount | number }} Games
-						</router-link>
+						</app-button>
 
-						<router-link
+						<app-button
 							v-if="videosCount > 0"
-							class="btn btn-outline btn-block"
+							block
 							:to="{ name: 'profile.videos.list' }"
 							>
 							{{ videosCount | number }} Videos
-						</router-link>
+						</app-button>
 
 					</div>
 					<div class="col-xs-12 col-md-8 col-lg-7 pull-left" style="clear: left">
@@ -259,7 +218,6 @@
 									<translate>profile.developer_games_teaser_heading_small</translate>
 								</small>
 							</h2>
-							<hr class="underbar">
 
 							<div class="scrollable-grid-xs">
 								<div class="row">
@@ -283,7 +241,6 @@
 									<translate>Latest Videos</translate>
 								</router-link>
 							</h2>
-							<hr class="underbar">
 
 							<div class="row">
 								<div

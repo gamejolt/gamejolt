@@ -17,7 +17,7 @@
 				{{ order.id }}
 			</p>
 
-			<div class="alert alert-warning" v-if="order._is_refunded">
+			<div class="alert alert-notice" v-if="order._is_refunded">
 				<translate
 					:translate-params="{
 						date: date( firstRefund.created_on, 'medium' ),
@@ -124,7 +124,7 @@
 
 			<div v-for="item of order.items" :key="item.id">
 				<h4>
-					<span class="tag tag-pink" v-if="item.is_refunded">
+					<span class="tag tag-notice" v-if="item.is_refunded">
 						<translate>Refunded</translate>
 					</span>
 					{{ item.sellable.title }}

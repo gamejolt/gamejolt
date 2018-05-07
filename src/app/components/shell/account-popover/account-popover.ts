@@ -16,6 +16,12 @@ import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-sto
 import { Store } from '../../../store/index';
 import { UserTokenModal } from '../../user/token-modal/token-modal.service';
 import * as _ClientMod from '../../../../_common/client/client.service';
+import {
+	ThemeState,
+	ThemeMutation,
+	ThemeStore,
+} from '../../../../lib/gj-lib-client/components/theme/theme.store';
+import { Settings } from '../../../../_common/settings/settings.service';
 
 let ClientMod: typeof _ClientMod | undefined;
 if (GJ_IS_CLIENT) {
@@ -39,6 +45,8 @@ if (GJ_IS_CLIENT) {
 })
 export class AppShellAccountPopover extends Vue {
 	@State app: AppStore;
+	@ThemeState isDark: ThemeStore['isDark'];
+	@ThemeMutation setDark: ThemeStore['setDark'];
 
 	walletAmount: number | false = false;
 
@@ -58,6 +66,11 @@ export class AppShellAccountPopover extends Vue {
 
 	showToken() {
 		UserTokenModal.show();
+	}
+
+	toggleDark() {
+		Settings.set('theme-dark', !this.isDark);
+		this.setDark(!this.isDark);
 	}
 
 	async getWallet() {

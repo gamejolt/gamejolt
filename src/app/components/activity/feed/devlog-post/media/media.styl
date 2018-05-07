@@ -1,4 +1,5 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .devlog-post-media
 	&-embed
@@ -13,22 +14,23 @@
 		transition: transform 300ms $strong-ease-out
 
 		&-item
+			rounded-corners()
+			theme-prop('background-color', 'bg-offset')
 			display: inline-block
 			vertical-align: middle
 			width: 100%
-			background-color: $gray-lightest
-			border-radius: $border-radius-base
 
 			>>> img
+				rounded-corners()
 				display: block
 				width: 100%
 				height: auto
-				border-radius: $border-radius-base
 
 			>>> video
-				border-radius: $border-radius-base
+				rounded-corners()
 
 	&-prev, &-next
+		theme-prop('background-color', 'darker')
 		display: none
 		position: absolute
 		top: 50%
@@ -38,12 +40,11 @@
 		margin-top: -(@height / 2)
 		color: $white
 		text-align: center
-		background-color: $gray-darker
 		z-index: 2
 		user-select: none
 
 		&:hover
-			color: $gj-green
+			theme-prop('color', 'highlight')
 
 		@media $media-sm-up
 			display: block

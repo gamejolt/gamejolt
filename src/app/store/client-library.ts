@@ -12,14 +12,11 @@ import {
 	Uninstaller,
 } from 'client-voodoo';
 import * as fs from 'fs';
-import * as nwGui from 'nw.gui';
 
 import * as _Updater from '../../_common/client/updater/updater';
 let Updater: typeof _Updater | undefined;
 if (GJ_WITH_UPDATER) {
 	Updater = require('../../_common/client/updater/updater');
-	console.log('Updater: ');
-	console.log(Updater);
 }
 
 import * as path from 'path';
@@ -724,7 +721,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 	@VuexAction
 	private async launcherInit() {
-		const pidDir = path.resolve(nwGui.App.dataPath, 'game-pids');
+		const pidDir = path.resolve(nw.App.dataPath, 'game-pids');
 		Config.setPidDir(pidDir);
 
 		try {

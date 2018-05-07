@@ -34,7 +34,7 @@
 	<fieldset>
 		<legend><translate>Builds</translate></legend>
 
-		<div class="alert alert-warning" v-if="!builds.length">
+		<div class="alert alert-notice" v-if="!builds.length">
 			<translate>You don't have any builds in this release yet. You won't be able to publish until you put some in.</translate>
 		</div>
 
@@ -57,7 +57,7 @@
 
 		<br>
 
-		<div class="alert alert-warning sans-margin" v-if="areBuildsLockedByJam">
+		<div class="alert alert-notice sans-margin" v-if="areBuildsLockedByJam">
 			<app-jolticon icon="notice" />
 			<strong><translate>Your game is part of a jam that locks builds during voting.</translate></strong>
 			<translate>You will not be able to add new builds until the voting period ends.</translate>
@@ -89,7 +89,7 @@
 					:builds="builds"
 					@submit="onBuildAdded"
 					/>
-				 <div v-else class="alert alert-info">
+				 <div v-else class="alert">
 					<translate>Browser builds can not currently be uploaded to games that are for sale.</translate>
 				</div>
 			</div>
@@ -100,51 +100,45 @@
 	<hr>
 
 	<template v-if="model.status !== GameRelease.STATUS_PUBLISHED">
-		<button
-			class="btn btn-success"
+		<app-button
+			primary
+			solid
 			:disabled="!valid || !builds.length"
 			@click.prevent="savePublished()"
 			>
-			<app-jolticon :icon="method" />
 			<translate>Publish Release</translate>
-		</button>
+		</app-button>
 
-		<button
-			class="btn btn-outline"
+		<app-button
 			:disabled="!valid || !builds.length"
 			@click.prevent="saveDraft()"
 			>
 			<translate>Save Draft</translate>
-		</button>
+		</app-button>
 	</template>
 	<template v-else>
-		<button
-			class="btn"
+		<app-button
 			:disabled="!valid || !builds.length"
 			@click.prevent="save()"
 			>
-			<app-jolticon icon="edit" />
 			<translate>Save Release</translate>
-		</button>
+		</app-button>
 	</template>
 
 
 	<div :class="{ 'pull-right': !Screen.isXs }">
 		<br class="visible-xs">
 
-		<button
-			class="btn btn-outline"
+		<app-button
+			trans
 			v-if="model.status === GameRelease.STATUS_PUBLISHED"
 			@click.prevent="unpublish()"
 			>
 			<translate>Unpublish Release</translate>
-		</button>
+		</app-button>
 
-		<button
-			class="btn btn-danger-outline"
-			@click.prevent="remove()"
-			>
+		<app-button trans @click.prevent="remove()">
 			<translate>Remove Release</translate>
-		</button>
+		</app-button>
 	</div>
 </app-form>

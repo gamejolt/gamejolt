@@ -1,5 +1,5 @@
 @require '~styles/variables'
-@require '../../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .activity-feed-controls
 	margin-bottom: $line-height-computed
@@ -22,5 +22,5 @@
 		margin-bottom: 0
 
 .-manage-stats
+	theme-prop('color', 'fg-muted')
 	font-size: $font-size-small
-	color: $text-muted

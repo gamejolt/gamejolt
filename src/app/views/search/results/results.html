@@ -17,9 +17,12 @@
 			<div class="container-lg">
 
 				<div class="clearfix">
-					<router-link class="btn btn-outline pull-right" :to="{ name: 'search.users', query: { q: query } }">
+					<app-button
+						class="pull-right"
+						:to="{ name: 'search.users', query: { q: query } }"
+						>
 						<translate>search.results.view_all_link</translate>
-					</router-link>
+					</app-button>
 					<h3 class="section-header">
 						<router-link class="link-unstyled" :to="{ name: 'search.users', query: { q: query } }">
 							<translate>search.results.users_heading</translate>
@@ -46,9 +49,12 @@
 				<!-- Devlogs -->
 				<template v-if="payload.devlogs && payload.devlogs.length">
 					<div class="clearfix">
-						<router-link class="btn btn-outline pull-right" :to="{ name: 'search.devlogs', query: { q: query } }">
+						<app-button
+							class="pull-right"
+							:to="{ name: 'search.devlogs', query: { q: query } }"
+							>
 							<translate>search.results.view_all_link</translate>
-						</router-link>
+						</app-button>
 						<h3 class="section-header">
 							<router-link class="link-unstyled" :to="{ name: 'search.devlogs', query: { q: query } }">
 								<translate>Devlogs</translate>
@@ -75,9 +81,12 @@
 				<!-- Games -->
 				<template v-if="payload.games && payload.games.length">
 					<div class="clearfix">
-						<router-link class="btn btn-outline pull-right" :to="{ name: 'search.games', query: { q: query } }">
+						<app-button
+							class="pull-right"
+							:to="{ name: 'search.games', query: { q: query } }"
+							>
 							<translate>search.results.view_all_link</translate>
-						</router-link>
+						</app-button>
 						<h3 class="section-header">
 							<router-link class="link-unstyled" :to="{ name: 'search.games', query: { q: query } }">
 								<translate>search.results.games_heading</translate>

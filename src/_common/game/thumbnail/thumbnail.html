@@ -8,7 +8,7 @@
 		@outview="outView"
 		>
 		<div
-			class="-controls"
+			class="-controls theme-dark"
 			v-if="app.user && Screen.isLg && isHydrated"
 			@click.prevent
 			>
@@ -18,23 +18,28 @@
 			<template v-if="shouldShowControls">
 				<app-game-follow-widget
 					:game="game"
-					:sparse="true"
+					overlay
+					circle
 					event-label="game-thumb"
 					/>
 
 				<app-game-playlist-add-to-widget
 					:game="game"
+					overlay
+					circle
 					event-label="game-thumb"
 					/>
 			</template>
 
 			<template v-if="showModTools">
-				<button class="btn btn-sparse"
+				<app-button
+					overlay
+					circle
+					icon="cog"
 					v-app-popover-trigger="`game-mod-tools-${game.id}`"
 					@click.prevent
 					>
-					<app-jolticon icon="cog" />
-				</button>
+				</app-button>
 				<app-popover
 					:popover-id="`game-mod-tools-${game.id}`"
 					:append-to-body="true"
@@ -71,7 +76,7 @@
 		<div class="-meta">
 
 			<div
-				class="-pricing"
+				class="-pricing fill-offset"
 				v-if="game._has_packages && !hidePricing"
 				:class="{
 					'-pricing-owned': isOwned,
@@ -80,11 +85,6 @@
 				>
 				<template v-if="!isOwned">
 					<template v-if="sellableType === 'paid'">
-						<div class="-pricing-sale-percentage"
-							v-if="sale"
-							>
-							-{{ salePercentageOff }}%
-						</div>
 						<div class="-pricing-container">
 							<div class="-pricing-amount-old"
 								v-if="sale"
@@ -94,6 +94,11 @@
 							<div class="-pricing-amount">
 								{{ pricingAmount }}
 							</div>
+						</div>
+						<div class="-pricing-sale-percentage"
+							v-if="sale"
+							>
+							-{{ salePercentageOff }}%
 						</div>
 					</template>
 					<span class="-pricing-tag" v-else-if="sellableType === 'pwyw'">

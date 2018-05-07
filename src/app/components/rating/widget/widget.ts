@@ -22,7 +22,6 @@ import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/eve
 export class AppRatingWidget extends Vue {
 	@Prop(Object) game: Game;
 	@Prop(Object) rating?: GameRating;
-	@Prop(Boolean) big?: boolean;
 
 	clearLabel = '';
 	hovered = 0;
@@ -47,6 +46,15 @@ export class AppRatingWidget extends Vue {
 			return this.$gettext('rating.five');
 		}
 		return undefined;
+	}
+
+	isHovered(i: number) {
+		return this.hovered >= i;
+	}
+
+	isSelected(i: number) {
+		// Don't how any selected when hovering.
+		return this.hovered === 0 && this.gameRating && this.gameRating.rating >= i;
 	}
 
 	hover(index?: number) {

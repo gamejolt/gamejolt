@@ -1,20 +1,19 @@
 <span
-	class="topic-upvote-btn"
+	class="topic-upvote-button"
 	v-if="canUpvote"
 	v-app-auth-required
 	>
-	<button
-		class="btn btn-outline btn-sparse btn-circle"
-		:class="{
-			'active btn-success': isUpvoted
-		}"
+	<app-button
+		primary
+		circle
+		icon="thumbs-up"
+		:solid="isUpvoted"
 		@click="onUpvoteClick"
 		v-app-tooltip="upvoteTooltip"
 		v-app-track-event="`topic-upvote-widget:click`"
-		>
-		<app-jolticon icon="thumbs-up" />
-	</button>
-	<span class="blip light filled" v-if="upvoteCount > 0">
+		/>
+
+	<span class="blip filled" v-if="upvoteCount > 0">
 		<span class="blip-caret"></span>
 		<span class="blip-count">{{ upvoteCount | number }}</span>
 	</span>

@@ -1,10 +1,14 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
 .page-cut
+	theme-prop('background-color', 'bg')
 	position: relative
 	text-align: center
 	padding-bottom: $grid-gutter-width
-	background-color: $white
 
 	&::before
+		theme-prop('border-top-color', 'bg-subtle')
 		content: ''
 		position: absolute
 		top: 18px
@@ -12,13 +16,11 @@
 		right: 0
 		height: 0
 		line-height: 0
-		border-top: 2px dashed $gray-lighter
+		border-top-width: 2px
+		border-top-style: dashed
 		overflow: hidden
 
-	.btn
+	.button
+		theme-prop('background-color', 'bg', true)
 		position: relative
-		background-color: $white
 		z-index: 2
-
-		&:hover
-			background-color: $black

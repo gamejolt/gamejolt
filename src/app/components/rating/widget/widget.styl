@@ -1,68 +1,49 @@
 @require '~styles/variables'
-@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .rating-widget
 	clearfix()
-	position: relative
 	display: inline-block
 
-	&-icons
-		display: inline-block
-		margin-right: 20px
+.-icons
+	display: flex
+	align-items: center
+	justify-content: center
 
-		.rating-widget-big &
-			margin-right: 40px
+.-bubble
+	display: flex
+	margin-right: 3px
+	width: 30px
+	height: 30px
+	align-items: center
+	justify-content: center
+	border-radius: 50%
+	cursor: pointer
+	user-select: none
 
-	&-clear
-		position: absolute
-		bottom: 4px
-		right: 0
-		width: 20px
-		text-align: center
-		color: $gray-light
-		cursor: pointer
-
-		.rating-widget-dark &
-			color: $gray-lightest
-
-		.rating-widget-big &
-			width: 40px
-			right: 5px
-
-		.jolticon
-			display: none
-			cursor: pointer
-
-			@media $media-mobile
-				display: block
-
-			&:hover
-				color: $gj-pink
-
-			.rating-widget:hover &
-				display: block
-
-	&-icon
-		float: left
-		cursor: pointer
+	.jolticon
 		margin: 0 !important
+		cursor: pointer
 
-		&
-		.rating-widget-icons:hover &
-			color: $gray-lighter
+	&.-hover, &.-selected
+		theme-prop('background-color', 'highlight')
+		theme-prop('color', 'highlight-fg')
 
-			.rating-widget-dark &
-				color: $gray-lightest
+.-clear
+	theme-prop('color', 'fg-muted')
+	width: 40px
+	text-align: center
+	cursor: pointer
 
-		&.hover
-			color: $gj-blue !important
+	.jolticon
+		display: none
+		cursor: pointer
 
-			.rating-widget-dark &
-				color: $gj-green !important
+		@media $media-mobile
+			display: block
 
-		&.selected
-			color: $gj-blue
+		&:hover
+			theme-prop('color', 'notice')
 
-			.rating-widget-dark &
-				color: $gj-green
-
+		.rating-widget:hover &
+			display: block

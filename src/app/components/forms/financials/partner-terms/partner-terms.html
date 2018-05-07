@@ -2,7 +2,7 @@
 
 	<legend>
 		<span v-if="hasSignedPartnerAgreement" class="pull-right done-icon" v-app-tooltip="$gettext( `You have completed this section.` )">
-			<app-jolticon icon="check" :big="true" />
+			<app-jolticon icon="check" big />
 		</span>
 		<translate>Partner Agreement</translate>
 	</legend>
@@ -18,16 +18,16 @@
 			</div>
 			<br>
 
-			<button
-				class="btn btn-primary-outline"
+			<app-button
+				primary
 				@click.prevent="showAgreement = true"
 				>
 				<translate>Show Partner Agreement</translate>
-			</button>
+			</app-button>
 		</div>
 
 		<div class="form-group" v-if="!hasSignedSomeAgreement || showAgreement">
-			<div class="tos-scroller overlay-scrollbar overlay-scrollbar-light">
+			<div class="tos-scroller overlay-scrollbar">
 				<div v-html="termsTemplate"></div>
 			</div>
 			<br>
@@ -40,13 +40,14 @@
 			</div>
 			<br>
 
-			<button
-				class="btn btn-success-outline"
+			<app-button
+				primary
+				solid
 				:disabled="!checked"
 				@click.prevent="onAccept()"
 				>
 				<translate>I Agree</translate>
-			</button>
+			</app-button>
 		</div>
 
 	</div>

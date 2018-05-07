@@ -17,7 +17,6 @@ import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popo
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { AppScoreboardSelector } from '../scoreboard-selector/scoreboard-selector';
-import { AppScoreFeed } from '../feed/feed';
 
 @View
 @Component({
@@ -27,7 +26,6 @@ import { AppScoreFeed } from '../feed/feed';
 		AppScoreboardSelector,
 		AppScoreList,
 		AppUserAvatar,
-		AppScoreFeed,
 	},
 	directives: {
 		AppPopoverTrigger,

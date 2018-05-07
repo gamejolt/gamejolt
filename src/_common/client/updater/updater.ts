@@ -4,8 +4,7 @@ import { SelfUpdater, SelfUpdaterInstance } from 'client-voodoo';
 import { store } from '../../../app/store/index';
 import { ClientUpdateStatus } from '../../../app/store/client-library';
 
-import * as gui from 'nw.gui';
-const win = gui.Window.get();
+const win = nw.Window.get();
 
 class Updater {
 	static readonly CHECK_INTERVAL = 15 * 60 * 1000; // 15min currently

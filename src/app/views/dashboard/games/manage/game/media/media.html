@@ -36,7 +36,7 @@
 
 			<template v-if="tab === 'image'">
 
-				<div class="alert alert-info full-bleed-xs">
+				<div class="alert full-bleed-xs">
 					<div v-translate>
 						dash.games.media.add.image.page_help_html
 					</div>
@@ -56,7 +56,7 @@
 			</template>
 			<template v-else-if="tab === 'video'">
 
-				<div class="alert alert-info full-bleed-xs">
+				<div class="alert full-bleed-xs">
 					<div v-translate>
 						dash.games.media.add.video.page_help_html
 					</div>
@@ -76,7 +76,7 @@
 			</template>
 			<template v-else-if="tab === 'sketchfab'">
 
-				<div class="alert alert-info full-bleed-xs">
+				<div class="alert full-bleed-xs">
 					<p>
 						<translate>With Sketchfab you can embed 3D content from your game in the browser. You can also view that content from any Virtual Reality headset. AMAZING!</translate>
 					</p>
@@ -133,13 +133,13 @@
 									</div>
 									<div class="card-meta">
 										<div class="tag"><translate>Image</translate></div>
-										<button
-											class="btn btn-sm btn-outline"
+										<app-button
+											sm
 											@click.stop="Clipboard.copy( Environment.baseUrl + item.getUrl( game ) )"
 											v-app-tooltip="$gettext( `Copy the direct link to view this image on your game page.` )"
 											>
 											<translate>Copy Link</translate>
-										</button>
+										</app-button>
 									</div>
 								</template>
 								<template v-else-if="item.media_type === 'video'">
@@ -148,25 +148,25 @@
 									</div>
 									<div class="card-meta">
 										<div class="tag"><translate>Video</translate></div>
-										<button
-											class="btn btn-sm btn-outline"
+										<app-button
+											sm
 											@click.stop="Clipboard.copy( Environment.baseUrl + item.getUrl( game ) )"
 											v-app-tooltip="$gettext( `Copy the direct link to view this video on your game page.` )"
 											>
 											<translate>Copy Link</translate>
-										</button>
+										</app-button>
 									</div>
 								</template>
 								<template v-else-if="item.media_type === 'sketchfab'">
 									<div class="card-meta">
 										<div class="tag">Sketchfab</div>
-										<button
-											class="btn btn-sm btn-outline"
+										<app-button
+											sm
 											@click.stop="Clipboard.copy( Environment.baseUrl + item.getUrl( game ) )"
 											v-app-tooltip="$gettext( `Copy the direct link to view this sketchfab model on your game page.` )"
 											>
 											<translate>Copy Link</translate>
-										</button>
+										</app-button>
 									</div>
 								</template>
 

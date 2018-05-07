@@ -21,8 +21,8 @@
 		<app-client-history-navigator v-if="GJ_IS_CLIENT" />
 
 		<router-link class="navbar-item" :to="{ name: 'discover.home' }">
-			<img v-if="!Screen.isMobile" src="~img/game-jolt-logo.svg" alt="Game Jolt">
-			<img v-if="Screen.isMobile" src="~img/jolt.svg" alt="Game Jolt">
+			<app-theme-svg v-if="!Screen.isMobile" src="~img/game-jolt-logo.svg" alt="" />
+			<app-theme-svg v-if="Screen.isMobile" src="~img/jolt.svg" alt="" />
 		</router-link>
 
 		<div class="navbar-separator hidden-xs"></div>
@@ -63,7 +63,7 @@
 					v-app-tooltip.bottom="$gettext( `Activity` )"
 					v-app-track-event="`top-nav:activity:toggle`"
 					>
-					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
+					<span class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
 						v-if="notificationCount > 0"
 						>
 						{{ notificationCount < 100 ? notificationCount : '99+' }}
@@ -80,7 +80,7 @@
 					v-app-tooltip.bottom="$gettext( `Friend Requests` )"
 					v-app-track-event="`top-nav:friend-requests:toggle`"
 					>
-					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
+					<span class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
 						v-if="friendRequestCount"
 						>
 						{{ friendRequestCount }}
@@ -183,7 +183,7 @@
 					"
 					v-app-track-event="`top-nav:chat:toggle`"
 					>
-					<span class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
+					<span class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
 						v-if="chat.friendNotificationsCount"
 						>
 						{{ chat.friendNotificationsCount }}

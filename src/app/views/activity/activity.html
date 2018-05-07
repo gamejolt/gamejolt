@@ -27,7 +27,7 @@
 					<router-link :to="{ name: 'activity', params: { tab: 'activity' } }" active-class="active">
 						<app-jolticon icon="feed" class="hidden-xs" />
 						<translate>Feed</translate>
-						<span class="tag tag-pink" v-if="activityUnreadCount > 0">
+						<span class="tag tag-highlight" v-if="activityUnreadCount > 0">
 							{{ activityUnreadCount < 100 ? activityUnreadCount : '99+' }}
 						</span>
 					</router-link>
@@ -36,7 +36,7 @@
 					<router-link :to="{ name: 'activity', params: { tab: 'notifications' } }" active-class="active">
 						<app-jolticon icon="notifications" class="hidden-xs" />
 						<translate>Notifications</translate>
-						<span class="tag tag-pink" v-if="notificationsUnreadCount > 0">
+						<span class="tag tag-highlight" v-if="notificationsUnreadCount > 0">
 							{{ notificationsUnreadCount < 100 ? notificationsUnreadCount : '99+' }}
 						</span>
 					</router-link>
@@ -62,7 +62,7 @@
 								:show-ads="tab === 'activity'"
 								/>
 
-							<div class="alert alert-info" v-else>
+							<div class="alert" v-else>
 								<template v-if="tab === 'activity'">
 									<p>
 										<translate>You don't have any activity yet. Follow games to stay up to date on their latest development!</translate>

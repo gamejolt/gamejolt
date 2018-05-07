@@ -49,7 +49,7 @@
 
 				<app-expand :when="!formModel.country_code">
 					<br>
-					<div class="alert alert-info sans-margin-bottom">
+					<div class="alert sans-margin-bottom">
 						<p><translate>If you do not see your country above, all is not lost! We can still manually approve your account.</translate></p>
 						<p>
 							<a href="https://goo.gl/forms/igg8T9dQnZLT2c1l2" target="_blank"><translate>Request manual approval here.</translate></a>
@@ -62,21 +62,21 @@
 
 		<div v-if="account.is_stripe_initialized">
 
-			<div class="alert alert-info">
+			<div class="alert">
 				<p>
 					<translate>This information is needed for tax purposes as well as account verification. We use Stripe to store and verify this data.</translate>
 					<a href="https://help.gamejolt.com/why-tax-forms" class="link-help" target="_blank"><translate>Learn more</translate></a>
 				</p>
 			</div>
 
-			<div class="alert alert-warning" v-if="isVerificationPending">
+			<div class="alert alert-notice" v-if="isVerificationPending">
 				<p>
 					<strong><translate>Stripe is in the process of verifying your details.</translate></strong>
 					<translate>This can take anywhere from a few minutes to a few days. We'll contact you when the verification process is complete and if Stripe requires additional supporting documents (such as a photo ID) in order to identify you. Hang tight!</translate>
 				</p>
 			</div>
 
-			<div class="alert alert-warning" v-if="requiresVerificationDocument">
+			<div class="alert alert-notice" v-if="requiresVerificationDocument">
 				<p>
 					<strong><translate>Stripe needs additional identification documents in order to verify your account.</translate></strong>
 					<translate>Please enter them below.</translate>
@@ -139,7 +139,7 @@
 				</template>
 			</h4>
 
-			<div class="alert alert-info" v-if="account.status === 'unverified'">
+			<div class="alert" v-if="account.status === 'unverified'">
 				<p v-if="account.type === 'individual'">
 					<translate>Please fill in your personal information.</translate>
 				</p>
@@ -194,7 +194,7 @@
 
 				<h4><translate>Additional Owners</translate></h4>
 
-				<div class="alert alert-info">
+				<div class="alert">
 					<p>
 						<translate>In Single Euro Payments Area member countries, we are required to collect and verify information about anybody that owns at least 25% of the company, in addition to the representative.</translate>
 						<a href="https://en.wikipedia.org/wiki/Single_Euro_Payments_Area" target="_blank">
@@ -214,13 +214,12 @@
 					-->
 					<h5 class="clearfix" v-if="account.status === 'unverified'">
 						<div class="pull-right">
-							<button
-								class="btn btn-danger-outline btn-sparse"
+							<app-button
 								v-if="getStripeField( `legal_entity.additional_owners.${ i }.verification.status` ) !== 'verified'"
+								sparse
+								icon="remove"
 								@click.prevent="removeAdditionalOwner( i )"
-								>
-								<app-jolticon icon="remove" />
-							</button>
+								/>
 						</div>
 
 						<span>
@@ -257,10 +256,9 @@
 				<!-- Add additional owner -->
 				<div class="clearfix">
 					<div class="pull-right" v-if="formModel.additional_owners_count <= 3">
-						<button class="btn btn-outline" @click.prevent="addAdditionalOwner()">
-							<app-jolticon icon="add" />
+						<app-button @click.prevent="addAdditionalOwner()">
 							<translate>Add Additional Owner</translate>
-						</button>
+						</app-button>
 					</div>
 				</div>
 
@@ -331,7 +329,7 @@
 			There may be a specific error message, or a generic one.
 		-->
 		<app-expand :when="!!genericError">
-			<div class="alert alert-warning">
+			<div class="alert alert-notice">
 				<p v-if="genericError !== true">{{ genericError }}</p>
 				<p v-else-if="!account.is_stripe_initialized"><translate>Something went wrong. Please check that you've entered everything correctly.</translate></p>
 				<p v-else><translate>Something went wrong. Please check that you've entered everything correctly. This is usually because of an invalid zip/postal code, or invalid SSN/EIN.</translate></p>
@@ -340,10 +338,7 @@
 
 		<app-loading v-if="state.isProcessing" :label="$gettext( `Processing...` )" />
 
-		<app-form-button
-			v-if="!isComplete && !isVerificationPending"
-			icon="chevron-right"
-			>
+		<app-form-button v-if="!isComplete && !isVerificationPending">
 			<translate>Save and Continue</translate>
 		</app-form-button>
 

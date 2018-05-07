@@ -14,7 +14,7 @@
 					:class="{ active: chat.room && chat.room.id === room.id }"
 					:title="room.title"
 					>
-					<span class="tag tag-pink notifications-tag"
+					<span class="tag tag-highlight notifications-tag"
 						v-if="chat.roomId === room.id && Chat.roomNotifications"
 						>
 						{{ Chat.roomNotifications | number }}
@@ -64,10 +64,10 @@
 			</ul>
 		</nav>
 
-		<div class="alert alert-warning" v-if="friendsTab === 'all' && !friends">
+		<div class="alert" v-if="friendsTab === 'all' && !friends">
 			<translate>No friends yet.</translate>
 		</div>
-		<div class="alert alert-warning" v-else-if="friendsTab === 'online' && !friends">
+		<div class="alert" v-else-if="friendsTab === 'online' && !friends">
 			<translate>No friends are online.</translate>
 		</div>
 		<app-chat-user-list

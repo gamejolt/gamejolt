@@ -2,7 +2,7 @@
 
 	<a
 		v-if="genre"
-		class="tag tag-pink game-filtering-tag"
+		class="tag tag-highlight game-filtering-tag"
 		@click="clearGenre"
 		>
 		<strong>
@@ -24,7 +24,7 @@
 				v-for="(option, index) of value"
 				:key="index"
 				>
-				<a class="tag tag-pink game-filtering-tag" @click="removeFilterOption( filter, option )">
+				<a class="tag tag-highlight game-filtering-tag" @click="removeFilterOption( filter, option )">
 					<strong>{{ GameFilteringContainer.definitions[ filter ].label }}:</strong>
 					{{ GameFilteringContainer.definitions[ filter ].options[ option ] }}
 					<app-jolticon icon="remove" />
@@ -36,7 +36,7 @@
 		<template
 			v-else-if="GameFilteringContainer.definitions[ filter ].type === 'radio'"
 			>
-			<a class="tag tag-pink game-filtering-tag" @click="removeFilterOption( filter, value )">
+			<a class="tag tag-highlight game-filtering-tag" @click="removeFilterOption( filter, value )">
 				<strong>{{ GameFilteringContainer.definitions[ filter ].label }}:</strong>
 				{{ GameFilteringContainer.definitions[ filter ].options[ value ] }}
 				<app-jolticon icon="remove" />

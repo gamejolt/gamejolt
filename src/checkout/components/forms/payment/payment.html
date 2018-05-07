@@ -46,7 +46,7 @@
 		:class="{ 'has-cards': cards.length }"
 		:when="!formModel.selectedCard || !cards.length"
 		>
-		<div class="well fill-lightest">
+		<div class="well fill-offset">
 			<div class="row">
 				<div class="col-sm-6 col-centered">
 					<div class="form-payment-card">
@@ -219,14 +219,15 @@
 	<br>
 
 	<app-expand :when="!!stripeError">
-		<div class="alert alert-warning">
+		<div class="alert alert-notice">
 			{{ stripeError }}
 		</div>
 	</app-expand>
 
 	<app-form-button
 		v-if="!valid || (calculatedTax && !state.isProcessing)"
-		class="btn-block btn-lg"
+		lg
+		block
 		:disabled="!valid"
 		>
 		Pay {{ order.amount + taxAmount | currency }}

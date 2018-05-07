@@ -35,7 +35,7 @@
 			</app-progress-bar>
 		</div>
 
-		<div v-if="poll.is_private" class="alert alert-info">
+		<div v-if="poll.is_private" class="alert">
 			<translate>The results of this poll are private.</translate>
 		</div>
 	</template>
@@ -43,13 +43,12 @@
 	<div>
 		<template v-if="!showResults">
 			<span v-app-auth-required>
-				<button
-					class="btn btn-outline"
+				<app-button
 					:disabled="!chosenItemId || isProcessing"
 					@click="vote(chosenItemId)"
 					>
 					<translate>Vote</translate>
-				</button>
+				</app-button>
 			</span>
 			&nbsp;
 		</template>

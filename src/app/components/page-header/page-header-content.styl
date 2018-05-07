@@ -1,5 +1,5 @@
 @require '~styles/variables'
-@require '../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .page-header
 	$spotlight-size = $page-header-spotlight-size + $page-header-spotlight-margin
@@ -10,11 +10,11 @@
 
 	&-cover.has-cover-image
 		.page-header-cover-buttons
-			.btn
+			.button
 				margin: 0 5px
 
 		.text-muted
-			color: $gray-lightest
+			theme-prop('color', 'lightest')
 
 		.link-muted
 			color: rgba($white, 0.6)
@@ -26,14 +26,8 @@
 			background-color: rgba($white, 0.5)
 			box-shadow: 1px 1px 1px rgba($black, 0.3)
 
-		.meter-low .meter-blip-filled
-			background-color: $gj-pink
-
-		.meter-mid .meter-blip-filled
+		.meter-blip-filled
 			background-color: $white
-
-		.meter-high .meter-blip-filled
-			background-color: $gj-green
 
 	&-content
 		h1, h2, h3
@@ -69,8 +63,10 @@
 				margin-top: 11px !important
 
 			../ .gj-scroll-affixed
-				background-color: $gray-dark
-				border-bottom: 2px solid $gray
+				theme-prop('border-bottom-color', 'darker')
+				theme-prop('background-color', 'gray')
+				border-bottom-width: 2px
+				border-bottom-style: solid
 				z-index: $zindex-nav-scroll-affixed
 				margin-top: $shell-top-nav-height !important
 

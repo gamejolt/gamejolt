@@ -65,12 +65,12 @@
 		>
 		<div class="col-sm-9">
 
-			<div class="alert alert-success full-bleed-xs" v-if="templateEnabled">
+			<div class="alert full-bleed-xs" v-if="templateEnabled">
 				<p><strong><translate>Your site is turned on and active.</translate></strong></p>
 				<p><translate>You can customize it using the site editor below.</translate></p>
 			</div>
 
-			<div class="alert alert-success full-bleed-xs" v-if="staticEnabled">
+			<div class="alert full-bleed-xs" v-if="staticEnabled">
 				<p><strong><translate>Your static site is turned on and active.</translate></strong></p>
 				<p><translate>You can upload new static site builds at any time.</translate></p>
 			</div>
@@ -78,13 +78,13 @@
 		</div>
 		<div class="col-sm-3">
 			<div class="clearfix">
-				<button
-					class="btn btn-danger-outline anim-fade-in no-animate-leave pull-right"
+				<app-button
+					class="anim-fade-in no-animate-leave pull-right"
 					@click="disable()"
 					v-app-tooltip="$gettext(`This will turn your Site off completely and it will no longer be accessible.`)"
 					>
 					<translate>Disable</translate>
-				</button>
+				</app-button>
 			</div>
 			<br>
 		</div>

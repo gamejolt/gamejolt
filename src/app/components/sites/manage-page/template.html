@@ -1,6 +1,6 @@
 <div>
 	<div
-		class="well fill-lightest text-center"
+		class="well fill-offset text-center"
 		v-if="!enabled"
 		>
 		<div class="row">
@@ -10,41 +10,39 @@
 					<translate>Use one of our pre-built templates and customize it to your style.</translate>
 				</p>
 
-				<button
-					class="btn btn-success-outline"
+				<app-button
+					primary
 					@click="enable()"
 					v-app-tooltip="staticEnabled ? $gettext('This will disable your static site and use a customizable template instead.') : undefined"
 					>
 					<translate>Turn On</translate>
-				</button>
+				</app-button>
 
 			</div>
 		</div>
 	</div>
 	<div v-else>
 
-		<div class="alert alert-warning visible-xs full-bleed-xs">
+		<div class="alert alert-notice visible-xs full-bleed-xs">
 			<p><translate>The site editor doesn't work on mobile devices at this time.</translate></p>
 		</div>
 
 		<div class="hidden-xs">
-			<a
-				class="btn btn-outline anim-fade-in no-animate-leave stagger"
+			<app-button
+				class="anim-fade-in no-animate-leave stagger"
 				:href="themeEditorLocation"
 				target="_blank"
 				>
-				<app-jolticon icon="cog" />
 				<translate>Customize Theme</translate>
-			</a>
+			</app-button>
 
-			<a
-				class="btn btn-outline anim-fade-in no-animate-leave stagger"
+			<app-button
+				class="anim-fade-in no-animate-leave stagger"
 				:href="contentEditorLocation"
 				target="_blank"
 				>
-				<app-jolticon icon="edit" />
 				<translate>Edit Content</translate>
-			</a>
+			</app-button>
 		</div>
 
 		<h2>

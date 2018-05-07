@@ -140,23 +140,25 @@
 		class="hidden-xs"
 		v-if="$route.name !== 'dash.games.manage.game.wizard-finish'"
 		>
-		<button
-			class="btn btn-success-outline btn-block"
+		<app-button
 			v-if="game.status === Game.STATUS_HIDDEN"
+			primary
+			block
 			:disabled="!canPublish"
 			@click="publish"
 			>
 			<translate>Publish</translate>
-		</button>
+		</app-button>
 
-		<button
-			class="btn btn-outline btn-block"
+		<app-button
 			v-if="isWizard"
+			primary
+			block
 			@click="saveDraft"
 			>
 			<translate class="visible-lg">Save Draft</translate>
 			<translate class="visible-md">Save</translate>
-		</button>
+		</app-button>
 	</app-game-perms>
 
 </div>

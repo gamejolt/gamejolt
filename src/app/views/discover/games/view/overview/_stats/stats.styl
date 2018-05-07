@@ -1,3 +1,6 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
 .route-game-stats
 	margin-bottom: $line-height-computed
 
@@ -10,16 +13,14 @@
 		> table
 			margin-bottom: 0
 
-			> tbody > tr > th
-			> tbody > tr > td
+			> tbody > tr > th, > tbody > tr > td
 				border-top: 0
 
-	.rating-breakdown-label
-	.rating-breakdown-count
+	.rating-breakdown-label, .rating-breakdown-count
 		width: 1px
 
 	.rating-breakdown-count
-		color: $text-muted
+		theme-prop('color', 'fg-muted')
 		font-size: $font-size-small
 		text-align: right
 

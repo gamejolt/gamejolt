@@ -1,5 +1,5 @@
 @require '~styles/variables'
-@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .chat-window-wrap
 	position: fixed
@@ -51,8 +51,8 @@
 		width: auto !important
 
 .chat-window-users
+	theme-prop('background-color', 'darkest')
 	position: relative
-	background-color: $gray-darkest
 	z-index: 1
 	// Always show the scrollbar.
 	// This fixes a bug where it was flashing the scrollbar in and out on Chrome.
@@ -83,9 +83,9 @@
  * Chat Window Header
  */
 .chat-window-header-wrap
+	theme-prop('color', 'light')
 	flex: 0 0 auto
 	width: 100%
-	color: $gray-light
 	font-size: 14px
 
 .chat-window-header
@@ -105,15 +105,15 @@
 		height: 45px
 
 		img
+			rounded-corners()
 			display: block
 			width: 45px
 			height: 45px
-			border-radius: $border-radius-base
 
 .chat-window-header-controls
 	float: right
 
-	> .btn
+	> .button
 		position: relative
 		vertical-align: top
 		margin-left: 5px
@@ -128,8 +128,10 @@
 	padding: $chat-room-window-padding
 
 .chat-window-send-container
+	theme-prop('background-color', 'darker')
+	theme-prop('border-top-color', 'dark')
 	width: 100%
 	flex: 0 0 auto
-	background-color: $gray-darker
-	border-top: 1px solid $gray-dark
+	border-top-width: 1px
+	border-top-style: solid
 	padding: $chat-room-window-padding

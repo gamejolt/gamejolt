@@ -1,5 +1,5 @@
 @require '~styles/variables'
-@require '../../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .chat-user
 	height: 50px
@@ -11,7 +11,7 @@
 
 	&-list-meta
 		text-overflow()
-		color: $text-muted
+		theme-prop('color', 'fg-muted')
 		font-size: $font-size-small
 
 	&-moderate
@@ -21,9 +21,6 @@
 		&-moderate-action
 			display: inline-block
 			opacity: 0
-
-			&:hover .jolticon
-				color: $gj-blue !important
 
 	&-role
 		float: none !important
@@ -38,10 +35,10 @@
 		position: relative
 
 		img
+			rounded-corners()
 			display: inline-block
 			width: 25px
 			vertical-align: middle
-			border-radius: $border-radius-base
 
 		.chat-user-status
 			position: absolute
@@ -53,10 +50,10 @@
 			border-radius: 100%
 
 			&.online
-				background-color: $gj-green
+				theme-prop('background-color', 'highlight')
 
 			&.in-game
-				background-color: $gj-pink
+				theme-prop('background-color', 'fg')
 
 			&.offline
-				background-color: $gray-lightest
+				theme-prop('background-color', 'bg-offset')

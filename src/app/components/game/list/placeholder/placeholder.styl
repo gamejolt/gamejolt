@@ -1,10 +1,10 @@
 @require '~styles/variables'
-@require '../../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 @require '../item/item'
 
 .-thumb
-	background-color: $gray-lightest
-	border-radius: $border-radius-base
+	rounded-corners()
+	theme-prop('background-color', 'bg-offset')
 
 .-placeholder
 	&-title

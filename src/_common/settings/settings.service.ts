@@ -1,4 +1,3 @@
-import * as nwGui from 'nw.gui';
 import * as nodePath from 'path';
 
 const STORAGE_PREFIX = 'settings.';
@@ -11,12 +10,19 @@ interface Setting {
 }
 
 const defaultSettings: { [k: string]: Setting } = {
+	'theme-dark': {
+		type: 'boolean',
+		val: false,
+	},
+	'theme-always-ours': {
+		type: 'boolean',
+		val: false,
+	},
 	'game-install-dir': {
 		type: 'string',
 		val: () => {
-			const gui = require('nw.gui') as typeof nwGui;
 			const path = require('path') as typeof nodePath;
-			const dataPath = gui.App.dataPath;
+			const dataPath = nw.App.dataPath;
 
 			return path.join(dataPath, 'Games');
 		},

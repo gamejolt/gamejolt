@@ -7,7 +7,6 @@
 	v-shortkey="[ 'm' ]"
 	@shortkey="toggleLeftPane"
 	>
-
 	<!--
 		Gotta put any popovers out of the content area.
 		This is so that we can scroll on the Y axis, but overflow on the X.
@@ -203,7 +202,11 @@
 		</div>
 	</app-popover>
 
-	<div class="shell-sidebar-content fill-darkest scrollable overlay-scrollbar">
+	<app-scroll-scroller
+		overlay
+		:hide-scrollbar="!isLeftPaneVisible"
+		class="shell-sidebar-content fill-darkest"
+		>
 
 		<ul class="shell-nav">
 			<li class="offline-disable">
@@ -215,7 +218,7 @@
 					v-app-track-event="`sidebar:activity`"
 					>
 					<span
-						class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
+						class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
 						v-if="notificationCount > 0"
 						>
 						{{ notificationCount < 100 ? notificationCount : '99+' }}
@@ -490,14 +493,15 @@
 				</div>
 
 				<div class="nav-controls">
-					<a
-						class="btn btn-outline btn-block offline-disable"
+					<app-button
+						primary
+						block
+						class="offline-disable"
 						@click="showAddPlaylistModal"
 						v-app-track-event="`sidebar:playlist-add`"
 						>
-						<app-jolticon icon="add" />
 						<translate>library.nav.new_playlist_button</translate>
-					</a>
+					</app-button>
 				</div>
 
 				<div class="nav-controls" v-if="collections.length">
@@ -553,5 +557,5 @@
 
 		</template>
 
-	</div>
+	</app-scroll-scroller>
 </div>

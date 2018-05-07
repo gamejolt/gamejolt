@@ -17,13 +17,13 @@
 					<h5 class="forum-topic-list-item-title">
 
 						<!-- Notifications -->
-						<span class="tag tag-pink" v-if="!!topic.notifications.length">
+						<span class="tag tag-highlight" v-if="!!topic.notifications.length">
 							{{ topic.notifications.length | number }}
 						</span>
 
 						<!-- Pinned -->
 						<span v-if="topic.is_sticky" v-app-tooltip="$gettext( `This topic is pinned.` )">
-							<app-jolticon icon="thumbtack" class="active" />
+							<app-jolticon icon="thumbtack" highlight />
 						</span>
 
 						<!-- Locked -->
