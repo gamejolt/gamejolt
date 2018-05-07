@@ -1,7 +1,14 @@
 <div class="devlog-post-view">
 
-	<div class="tiny text-muted">
+	<div class="tiny text-muted" v-if="post.status === STATUS_ACTIVE">
 		<app-time-ago :date="post.published_on" />
+	</div>
+	<div class="tiny text-muted" v-else-if="post.isScheduled">
+		<span class="tag" style="vertical-align: middle">
+			<app-jolticon icon="calendar-grid" />
+			<translate>Scheduled</translate>
+		</span>
+		<app-time-ago :date="post.scheduled_for" without-suffix />
 	</div>
 
 	<h2 class="section-header">

@@ -31,4 +31,6 @@ export class AppDevlogPostView extends Vue {
 	@Prop(FiresidePost) post: FiresidePost;
 	@Prop(Boolean) showGameInfo?: boolean;
 	@Prop(Boolean) inModal?: boolean;
+
+	readonly STATUS_ACTIVE = FiresidePost.STATUS_ACTIVE;
 }
