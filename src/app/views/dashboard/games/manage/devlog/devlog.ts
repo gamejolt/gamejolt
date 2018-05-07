@@ -59,7 +59,7 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 	getTabForPost(post: FiresidePost) {
 		if (post.isScheduled) {
 			return 'scheduled';
-		} else if (post.status === FiresidePost.STATUS_DRAFT) {
+		} else if (post.isDraft) {
 			return 'draft';
 		} else {
 			// null = active

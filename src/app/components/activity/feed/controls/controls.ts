@@ -114,9 +114,7 @@ export class AppActivityFeedControls extends Vue {
 	}
 
 	get canPublish() {
-		return (
-			this.post && this.post.status === FiresidePost.STATUS_DRAFT && !this.post.isScheduled
-		);
+		return this.post && this.post.isDraft && !this.post.isScheduled;
 	}
 
 	// TODO: Figure out if this can be collapsed into the same func as "showManageControls"
