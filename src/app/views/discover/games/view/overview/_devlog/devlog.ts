@@ -114,9 +114,7 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 				resourceId: this.game.id,
 			});
 
-			this.fetchComments({
-				store: this.commentStore,
-			});
+			this.fetchComments(this.commentStore);
 		}
 	}
 
