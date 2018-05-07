@@ -20,6 +20,15 @@ import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jol
 import { FormGameBuild } from '../build/build';
 import { FormGameNewBuild } from '../new-build/new-build';
 import { AppCardList } from '../../../../../lib/gj-lib-client/components/card/list/list';
+import {
+	Timezone,
+	TimezoneData,
+} from '../../../../../lib/gj-lib-client/components/timezone/timezone.service';
+import * as startOfDay from 'date-fns/start_of_day';
+import * as addWeeks from 'date-fns/add_weeks';
+import { determine } from 'jstimezonedetect';
+import { AppFormControlDate } from '../../../../../lib/gj-lib-client/components/form-vue/control/date/date';
+import { AppFormLegend } from '../../../../../lib/gj-lib-client/components/form-vue/legend/legend';
 
 type GameReleaseFormModel = GameRelease & {
 	should_publish: boolean;
@@ -32,6 +41,8 @@ type GameReleaseFormModel = GameRelease & {
 		AppCardList,
 		FormGameBuild,
 		FormGameNewBuild,
+		AppFormControlDate,
+		AppFormLegend,
 	},
 })
 export class FormGameRelease extends BaseForm<GameReleaseFormModel>
@@ -51,6 +62,8 @@ export class FormGameRelease extends BaseForm<GameReleaseFormModel>
 	};
 
 	buildForms: FormGameBuild[] = [];
+	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = null as any;
+	now = 0;
 
 	readonly Screen = Screen;
 	readonly GameRelease = GameRelease;
@@ -59,7 +72,27 @@ export class FormGameRelease extends BaseForm<GameReleaseFormModel>
 		return `/web/dash/developer/games/releases/save/${this.game.id}/${this.package.id}`;
 	}
 
-	onInit() {
+	get scheduledTimezoneOffset() {
+		if (!this.formModel.scheduled_for_timezone) {
+			return 0;
+		}
+
+		const tz = this.timezoneByName(this.formModel.scheduled_for_timezone);
+		if (!tz) {
+			console.warn('Could not find timezone offset for: ' + tz);
+			return 0;
+		} else {
+			return tz.o * 1000;
+		}
+	}
+
+	get isScheduling() {
+		return this.formModel.isScheduled;
+	}
+
+	async onInit() {
+		await this.fetchTimezones();
+
 		this.setField('game_id', this.game.id);
 		this.setField('game_package_id', this.package.id);
 	}
@@ -87,7 +120,10 @@ export class FormGameRelease extends BaseForm<GameReleaseFormModel>
 	updateBuildLaunchOptions(build: GameBuild, launchOptions: GameBuildLaunchOption[]) {
 		// Remove old ones for build.
 		if (this.launchOptions && this.launchOptions.length) {
-			arrayRemove(this.launchOptions, launchOption => launchOption.game_build_id === build.id);
+			arrayRemove(
+				this.launchOptions,
+				launchOption => launchOption.game_build_id === build.id
+			);
 		}
 
 		// If no new ones, skip.
@@ -167,5 +203,45 @@ export class FormGameRelease extends BaseForm<GameReleaseFormModel>
 		if (this.game) {
 			this.game.assign(response.game);
 		}
+	}
+
+	async addSchedule() {
+		if (this.formModel.scheduled_for === null) {
+			this.setField('scheduled_for', startOfDay(addWeeks(Date.now(), 1)).getTime());
+		}
+
+		this.now = Date.now();
+		this.setField('scheduled_for_timezone', determine().name());
+	}
+
+	removeSchedule() {
+		this.setField('scheduled_for_timezone', null);
+		this.setField('scheduled_for', null);
+	}
+
+	private async fetchTimezones() {
+		// Get timezones list.
+		this.timezones = await Timezone.getGroupedTimezones();
+		for (let region in this.timezones) {
+			for (let tz of this.timezones[region]) {
+				let offset = '';
+				if (tz.o > 0) {
+					offset = `+${tz.o / 3600}:00`;
+				} else if (tz.o < 0) {
+					offset = `-${-tz.o / 3600}:00`;
+				}
+				tz.label = `(UTC${offset}) ${tz.i}`;
+			}
+		}
+	}
+
+	private timezoneByName(timezone: string) {
+		for (let region in this.timezones) {
+			const tz = this.timezones[region].find(_tz => _tz.i === timezone);
+			if (tz) {
+				return tz;
+			}
+		}
+		return null;
 	}
 }

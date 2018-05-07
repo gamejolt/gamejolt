@@ -31,6 +31,77 @@
 
 	</app-form-group>
 
+	<div v-if="model.status !== GameRelease.STATUS_PUBLISHED">
+		<div v-if="!isScheduling">
+			<app-button
+				@click.prevent="addSchedule()"
+				>
+				<translate>Schedule Release</translate>
+			</app-button>
+		</div>
+		<div class="well fill-offset full-bleed" v-else-if="isScheduling && timezones">
+			<fieldset>
+				<app-form-legend compact>
+					<translate>Schedule publishing of release</translate>
+				</app-form-legend>
+
+				<app-form-group
+					name="scheduled_for_timezone"
+					:label="$gettext( `Timezone` )"
+					>
+					<p class="help-block">
+						<translate>All time selection below will use this timezone.</translate>
+					</p>
+
+					<p class="help-block">
+						<strong><translate>Should auto-detect, but if it doesn't, choose your closest city.</translate></strong>
+					</p>
+
+					<app-form-control-select>
+						<optgroup
+							v-for="(timezones, region) of timezones"
+							:label="region"
+							>
+							<option
+								v-for="timezone of timezones"
+								:value="timezone.i"
+								>
+								{{ timezone.label }}
+							</option>
+						</optgroup>
+					</app-form-control-select>
+
+					<app-form-control-errors />
+				</app-form-group>
+
+				<app-form-group
+					name="scheduled_for"
+					:label="$gettext( `Date and time` )"
+					>
+					<app-form-control-date
+						:timezone-offset="scheduledTimezoneOffset"
+						:rules="{
+							min_date: now,
+						}"
+						/>
+					<app-form-control-errors :label="$gettext(`scheduled for`)" />
+				</app-form-group>
+
+			</fieldset>
+
+			<div class="text-right">
+				<app-button
+					trans
+					@click.prevent="removeSchedule()"
+					>
+					<translate>Remove Scheduling</translate>
+				</app-button>
+			</div>
+		</div>
+	</div>
+
+
+
 	<fieldset>
 		<legend><translate>Builds</translate></legend>
 
@@ -103,6 +174,18 @@
 		<app-button
 			primary
 			solid
+			v-if="isScheduling"
+			:disabled="!valid || !builds.length"
+			@click.prevent="saveDraft()"
+			>
+			<translate>Schedule release</translate>
+		</app-button>
+
+
+		<app-button
+			primary
+			solid
+			v-if="!isScheduling"
 			:disabled="!valid || !builds.length"
 			@click.prevent="savePublished()"
 			>
@@ -110,6 +193,7 @@
 		</app-button>
 
 		<app-button
+			v-if="!isScheduling"
 			:disabled="!valid || !builds.length"
 			@click.prevent="saveDraft()"
 			>
