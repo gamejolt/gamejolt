@@ -5,6 +5,7 @@ import View from '!view!./base.html';
 import { AppClientTray } from '../tray/tray';
 import { AppClientMacAppMenu } from '../mac-app-menu/mac-app-menu';
 import { Device } from '../../../lib/gj-lib-client/components/device/device.service';
+import { AppClientUpdater } from '../updater/updater';
 
 /**
  * Includes the base components needed by all sections for client.
@@ -12,6 +13,7 @@ import { Device } from '../../../lib/gj-lib-client/components/device/device.serv
 @View
 @Component({
 	components: {
+		AppClientUpdater,
 		AppClientTray,
 		AppClientMacAppMenu,
 	},

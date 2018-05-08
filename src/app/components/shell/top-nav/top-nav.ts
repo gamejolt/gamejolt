@@ -9,7 +9,6 @@ import { Connection } from '../../../../lib/gj-lib-client/components/connection/
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppShellAccountPopover } from '../account-popover/account-popover';
 import { AppFriendRequestPopover } from '../../friend/request-popover/request-popover';
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
@@ -19,7 +18,6 @@ import { ChatClient } from '../../chat/client';
 import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
 
 let components: any = {
-	AppJolticon,
 	AppUserAvatarImg,
 	AppShellAccountPopover,
 	AppFriendRequestPopover,
@@ -60,20 +58,4 @@ export class AppShellTopNav extends Vue {
 
 	@Action toggleRightPane: Store['toggleRightPane'];
 	@Action toggleLeftPane: Store['toggleLeftPane'];
-
-	get clientUpdateState() {
-		if (!GJ_IS_CLIENT) {
-			return 'none';
-		}
-
-		return (this.$store as Store).state.clientLibrary.clientUpdateStatus;
-	}
-
-	updateApply() {
-		console.log('applying');
-		if (GJ_IS_CLIENT && GJ_WITH_UPDATER) {
-			console.log('client dispatch');
-			(this.$store as Store).dispatch('clientLibrary/updateClient');
-		}
-	}
 }

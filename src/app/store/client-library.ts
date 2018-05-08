@@ -91,8 +91,6 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	private _bootstrapPromise: Promise<void> | null = null;
 	private _bootstrapPromiseResolver: Function = null as any;
 
-	private _clientUpdateStatus: ClientUpdateStatus = 'none';
-
 	// Localdb variables
 	packages: LocalDbPackage[] = [];
 	games: LocalDbGame[] = [];
@@ -105,9 +103,8 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	isLauncherReady = false;
 	currentlyPlaying: LocalDbPackage[] = [];
 
-	get clientUpdateStatus() {
-		return this._clientUpdateStatus;
-	}
+	// Client updater
+	clientUpdateStatus: ClientUpdateStatus = 'none';
 
 	get packagesById() {
 		return arrayIndexBy(this.packages, 'id');
@@ -218,7 +215,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	@VuexMutation
 	setClientUpdateStatus(status: Mutations['clientLibrary/setClientUpdateStatus']) {
 		console.log('set client update state: ' + status);
-		this._clientUpdateStatus = status;
+		this.clientUpdateStatus = status;
 	}
 
 	/**
