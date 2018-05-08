@@ -1,16 +1,23 @@
 platform:
   - x86
 
+environment:
+  GOPATH: C:\gopath
+  GOVERSION: 1.9.3
+
 branches:
   only:
     - client-build
 
 install:
-  - ps: Install-Product node 8.9.1
+  - rmdir C:\go /s /q
+  - appveyor DownloadFile https://storage.googleapis.com/golang/go%GOVERSION%.windows-amd64.msi
+  - msiexec /i go%GOVERSION%.windows-amd64.msi /q
+  - ps: Install-Product node 8.11.1
   - npm install -g yarn
   - git submodule update --init --recursive
   - choco install -y InnoSetup
-  - set PATH="C:\ProgramData\chocolatey\bin";%PATH%
+  - set PATH="C:\ProgramData\chocolatey\bin";C:\go\bin;C:\gopath\bin;%PATH%
 
 build_script:
   - yarn
