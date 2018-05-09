@@ -27,11 +27,13 @@ import {
 	RouteResolve,
 } from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
+import { AppTimeAgo } from '../../../../../../../../lib/gj-lib-client/components/time/ago/ago';
 
 @View
 @Component({
 	name: 'RouteDashGamesManageGamePackagesEdit',
 	components: {
+		AppTimeAgo,
 		AppJolticon,
 		AppNavTabList,
 		AppLoading,

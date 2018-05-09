@@ -188,12 +188,25 @@
 						<div class="card-meta">
 							<span
 								class="tag tag-notice"
-								v-if="release.status === GameRelease.STATUS_HIDDEN"
+								v-if="release.status === GameRelease.STATUS_HIDDEN && !release.isScheduled"
 								v-app-tooltip="$gettext( `dash.games.packages.manage.releases.hidden_tooltip` )"
 								>
 								<app-jolticon icon="inactive" />
 								<translate>dash.games.packages.manage.releases.hidden_tag</translate>
 							</span>
+							<span
+								class="tag tag-notice"
+								v-if="release.status === GameRelease.STATUS_HIDDEN && release.isScheduled"
+								v-app-tooltip="$gettext( `dash.games.packages.manage.releases.hidden_tooltip` )"
+								>
+								<app-jolticon icon="calendar-grid" />
+								<translate>Scheduled</translate>
+							</span>
+
+							<app-time-ago v-if="release.status === GameRelease.STATUS_HIDDEN && release.isScheduled" 
+								:date="release.scheduled_for" 
+								without-suffix
+								/>
 
 							<span
 								class="tag tag-highlight"
