@@ -13,6 +13,7 @@
 
 				<app-button
 					block
+					trans
 					@click.stop="Clipboard.copy( Environment.baseUrl + item.getUrl( game ) )"
 					v-app-tooltip="copyLinkTooltip"
 					>
