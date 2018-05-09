@@ -19,8 +19,6 @@ import {
 })
 export class FormUserHeader extends BaseForm<User> implements FormOnLoad {
 	modelClass = User;
-	reloadOnSubmit = true;
-	warnOnDiscard = false;
 	saveMethod: '$saveHeader' = '$saveHeader';
 
 	maxFilesize = 0;

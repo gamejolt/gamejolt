@@ -18,6 +18,10 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import {
+	ThemeMutation,
+	ThemeStore,
+} from '../../../../../lib/gj-lib-client/components/theme/theme.store';
 
 @View
 @Component({
@@ -39,6 +43,7 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 	@RouteState isWizard: RouteStore['isWizard'];
 
 	@RouteMutation populate: RouteStore['populate'];
+	@ThemeMutation setPageTheme: ThemeStore['setPageTheme'];
 
 	storeName = RouteStoreName;
 	storeModule = RouteStore;
@@ -60,5 +65,10 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 
 	routed($payload: any) {
 		this.populate($payload);
+		this.setPageTheme(this.game.theme || null);
+	}
+
+	routeDestroy() {
+		this.setPageTheme(null);
 	}
 }

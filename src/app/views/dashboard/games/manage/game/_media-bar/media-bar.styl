@@ -1,0 +1,46 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.-items
+	padding: 20px 0
+	white-space: nowrap
+	text-align: center
+
+.-add
+	rounded-corners()
+	theme-prop('border-color', 'lighter')
+	display: inline-block
+	vertical-align: top
+	border-width: 2px
+	border-style: dashed
+	margin-right: 15px
+	margin-left: 15px
+
+	@media $media-sm-up
+		margin-right: 20px
+		margin-left: 20px
+
+	&:hover
+		theme-prop('border-color', 'highlight')
+		theme-prop('color', 'highlight')
+
+.-add-inner
+	display: flex
+	align-items: center
+	justify-content: center
+
+.-item
+	margin-left: 0 !important
+
+.-item-hover
+	display: none
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	cursor: pointer !important
+	z-index: 100
+
+	.-item:hover &
+		display: block

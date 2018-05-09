@@ -8,8 +8,10 @@ import { AppExpand } from '../../../../../../lib/gj-lib-client/components/expand
 import { AppManageGameNav } from './_nav/nav';
 import { AppNavTabList } from '../../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import { AppMediaItemCover } from '../../../../../../_common/media-item/cover/cover';
-import { AppMediaBar } from '../../../../../../lib/gj-lib-client/components/media-bar/media-bar';
 import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppEditableOverlay } from '../../../../../../lib/gj-lib-client/components/editable-overlay/editable-overlay';
+import { GameHeaderModal } from '../../../../../components/game/header-modal/header-modal.service';
+import { AppManageGameMediaBar } from './_media-bar/media-bar';
 
 @View
 @Component({
@@ -17,9 +19,10 @@ import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/componen
 	components: {
 		AppExpand,
 		AppManageGameNav,
+		AppManageGameMediaBar,
 		AppNavTabList,
+		AppEditableOverlay,
 		AppMediaItemCover,
-		AppMediaBar,
 	},
 })
 export default class RouteDashGamesManageGame extends BaseRouteComponent {
@@ -31,4 +34,8 @@ export default class RouteDashGamesManageGame extends BaseRouteComponent {
 
 	readonly Game = Game;
 	readonly Screen = Screen;
+
+	showEditHeader() {
+		GameHeaderModal.show(this.game);
+	}
 }

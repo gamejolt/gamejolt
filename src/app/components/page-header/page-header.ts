@@ -31,7 +31,7 @@ export class AppPageHeader extends Vue {
 	readonly Screen = Screen;
 
 	get hasSpotlight() {
-		return !!this.$slots['spotlight'];
+		return !!this.$slots['spotlight'] && !Screen.isXs;
 	}
 
 	get hasNav() {
