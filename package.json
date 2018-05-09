@@ -24,9 +24,9 @@
 		"@types/node": "8.0.53",
 		"@types/nw.gui": "0.0.20",
 		"@types/phoenix": "0.0.4",
+		"@types/simplebar": "2.4.1",
 		"@types/stripe": "2.0.2",
 		"@types/ua-parser-js": "0.7.32",
-		"@types/simplebar": "2.4.1",
 		"autosize": "4.0.2",
 		"chart.js": "2.7.1",
 		"codemirror": "5.32.0",
@@ -51,6 +51,7 @@
 		"prettier": "1.8.2",
 		"reflect-metadata": "0.1.12",
 		"rxjs": "5.5.2",
+		"simplebar": "2.6.1",
 		"smoothscroll-polyfill": "0.4.0",
 		"spectrum-colorpicker": "1.8.0",
 		"text-mask-addons": "3.7.1",
@@ -74,8 +75,7 @@
 		"vuedraggable": "2.16.0",
 		"vuex": "3.0.1",
 		"vuex-class": "0.3.0",
-		"vuex-router-sync": "5.0.0",
-		"simplebar": "2.6.1"
+		"vuex-router-sync": "5.0.0"
 	},
 	"optionalDependencies": {
 		"appdmg": "0.5.2"
