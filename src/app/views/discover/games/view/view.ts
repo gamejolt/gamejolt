@@ -37,6 +37,10 @@ import {
 	RouteResolve,
 	BaseRouteComponent,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import {
+	ThemeMutation,
+	ThemeStore,
+} from '../../../../../lib/gj-lib-client/components/theme/theme.store';
 
 @View
 @Component({
@@ -78,6 +82,8 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	@RouteMutation showMultiplePackagesMessage: RouteStore['showMultiplePackagesMessage'];
 	@RouteMutation acceptCollaboratorInvite: RouteStore['acceptCollaboratorInvite'];
 	@RouteMutation declineCollaboratorInvite: RouteStore['declineCollaboratorInvite'];
+
+	@ThemeMutation setPageTheme: ThemeStore['setPageTheme'];
 
 	storeName = RouteStoreName;
 	storeModule = RouteStore;
@@ -176,6 +182,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 	routed($payload: any) {
 		this.bootstrap($payload);
+		this.setPageTheme(this.game.theme || null);
 
 		// If the game has a GA tracking ID, then we attach it to this
 		// scope so all page views within get tracked.
@@ -186,6 +193,8 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	}
 
 	routeDestroy() {
+		this.setPageTheme(null);
+
 		if (this.ratingCallback) {
 			EventBus.off('GameRating.changed', this.ratingCallback);
 			this.ratingCallback = undefined;

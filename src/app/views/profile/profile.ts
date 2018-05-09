@@ -102,7 +102,7 @@ export default class RouteProfile extends BaseRouteComponent {
 		}
 	}
 
-	destroyed() {
+	routeDestroy() {
 		this.setPageTheme(null);
 	}
 

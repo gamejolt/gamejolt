@@ -91,14 +91,13 @@
 			name="partner_visibility"
 			:label="$gettext( `Partner Visibility` )"
 			>
+			<app-form-control-toggle class="pull-right" :disabled="!hasSalesPerms" />
 			<p class="help-block">
 				<translate>Enabling this will allow partners to access this package even if it's marked as Private or your game is a Devlog-only project.</translate>
 				<router-link :to="{ name: 'landing.partners' }" class="link-help" target="_blank">
 					<translate>What is a Game Jolt Partner?</translate>
 				</router-link>
 			</p>
-
-			<app-form-control-toggle :disabled="!hasSalesPerms" />
 		</app-form-group>
 
 		<app-form-group

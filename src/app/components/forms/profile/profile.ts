@@ -18,6 +18,7 @@ import {
 	ThemeMutation,
 	ThemeStore,
 } from '../../../../lib/gj-lib-client/components/theme/theme.store';
+import { Theme } from '../../../../lib/gj-lib-client/components/theme/theme.model';
 
 @View
 @Component({
@@ -69,6 +70,7 @@ export class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSub
 	}
 
 	onThemeChanged() {
-		this.setFormTheme(this.formModel.theme || null);
+		// Default would be the default theme for site.
+		this.setFormTheme(this.formModel.theme || new Theme());
 	}
 }

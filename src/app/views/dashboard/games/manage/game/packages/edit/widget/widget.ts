@@ -26,7 +26,10 @@ export default class RouteDashGamesManageGamePackagesEditWidget extends BaseRout
 	@RouteResolve()
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
-			'/web/dash/developer/games/packages/preview/' + route.params.id + '/' + route.params.packageId
+			'/web/dash/developer/games/packages/preview/' +
+				route.params.id +
+				'/' +
+				route.params.packageId
 		);
 	}
 
@@ -42,13 +45,14 @@ export default class RouteDashGamesManageGamePackagesEditWidget extends BaseRout
 			return;
 		}
 
-		console.log(Environment.widgetHost);
 		this.widgetUrl = Environment.widgetHost + '/package/v1?key=' + this.sellable.key;
 		if (this.theme === 'light') {
 			this.widgetUrl += '&theme=light';
 		}
 
 		this.widgetCode =
-			'<iframe src="' + this.widgetUrl + '" frameborder="0" width="500" height="245"></iframe>';
+			'<iframe src="' +
+			this.widgetUrl +
+			'" frameborder="0" width="500" height="245"></iframe>';
 	}
 }
