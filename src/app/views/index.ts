@@ -8,7 +8,6 @@ import { routeActivity } from './activity/activity.route';
 import { routeLibrary } from './library/library.route';
 import { routeSettings } from './settings/settings.route';
 import { routeForums } from './forums/forums.route';
-import { routeRadio } from './radio/radio.route';
 import { routeDash } from './dashboard/dashboard.route';
 import { routeStyleguide } from './styleguide/styleguide.route';
 import { routeTestAds } from './test-ads/test-ads.route';
@@ -22,7 +21,6 @@ const routes = [
 	routeSettings,
 	routeLanding,
 	routeForums,
-	routeRadio,
 	routeLegal,
 	routeDash,
 	routeStyleguide,
