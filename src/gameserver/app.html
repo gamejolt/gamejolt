@@ -1,0 +1,20 @@
+<div v-if="build" class="fill-darker">
+	<app-theme />
+
+	<div
+		class="-build-embed"
+		:style="{
+			width: build.embed_width + 'px',
+			height: build.embed_height + 'px',
+		}"
+		>
+
+		<app-embed-flash v-if="build.type === GameBuild.TYPE_FLASH" />
+		<app-embed-html v-if="build.type === GameBuild.TYPE_HTML" />
+		<app-embed-unity v-if="build.type === GameBuild.TYPE_UNITY" />
+		<app-embed-silverlight v-if="build.type === GameBuild.TYPE_SILVERLIGHT" />
+		<app-embed-applet v-if="build.type === GameBuild.TYPE_APPLET" />
+		<app-embed-rom v-if="build.type === GameBuild.TYPE_ROM" />
+	</div>
+
+</div>

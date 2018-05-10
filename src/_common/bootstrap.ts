@@ -16,19 +16,21 @@ import { Settings } from './settings/settings.service';
  * Bootstraps common services and returns a "createApp" function that our entry point can call to
  * get what it needs.
  */
-export function bootstrapCommon(store: VuexStore, router: VueRouter, appComponent: typeof Vue) {
+export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, router?: VueRouter) {
 	if (store.state.theme) {
 		store.commit('theme/setDark', Settings.get('theme-dark'));
 		store.commit('theme/setAlwaysOurs', Settings.get('theme-always-ours'));
 	}
 
-	Meta.init(router);
 	Payload.init(store);
-	Referrer.init(router);
-	Analytics.initRouter(router);
 	Connection.init(store);
 
-	hijackLinks(router, 'gamejolt.com');
+	if (router) {
+		Meta.init(router);
+		Referrer.init(router);
+		Analytics.initRouter(router);
+		hijackLinks(router, 'gamejolt.com');
+	}
 
 	// Common components.
 	Vue.component('AppButton', AppButton);
