@@ -387,23 +387,6 @@
 					</router-link>
 				</li>
 
-				<li class="offline-disable" v-if="recommendedCollection">
-					<router-link
-						:to="recommendedCollection.routeLocation"
-						active-class="active"
-						v-app-track-event="`sidebar:collection:recommended`"
-						>
-						<span class="shell-nav-icon"
-							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Daily Mix' ) : ''"
-							>
-							<app-jolticon icon="pedestals-numbers" />
-						</span>
-						<span class="shell-nav-label">
-							<translate>Daily Mix</translate>
-						</span>
-					</router-link>
-				</li>
-
 				<li class="offline-disable" v-if="ownedCollection">
 					<router-link
 						:to="ownedCollection.routeLocation"

@@ -61,7 +61,6 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 	followedCollection: GameCollection | null = null;
 	developerCollection: GameCollection | null = null;
 	ownedCollection: GameCollection | null = null;
-	recommendedCollection: GameCollection | null = null;
 	bundleCollections: GameCollection[] = [];
 
 	/**
@@ -109,9 +108,6 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 		this.ownedCollection = payload.ownedCollection
 			? new GameCollection(payload.ownedCollection)
 			: null;
-		this.recommendedCollection = payload.recommendedCollection
-			? new GameCollection(payload.recommendedCollection)
-			: null;
 		this.bundleCollections = GameCollection.populate(payload.bundleCollections);
 	}
 
@@ -121,7 +117,6 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 		this.followedCollection = null;
 		this.developerCollection = null;
 		this.ownedCollection = null;
-		this.recommendedCollection = null;
 		this.bundleCollections = [];
 	}
 
@@ -282,7 +277,9 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 			return true;
 		} catch (e) {
 			Growls.error(
-				Translate.$gettext(`Error! Error! This game could not be removed from the playlist.`)
+				Translate.$gettext(
+					`Error! Error! This game could not be removed from the playlist.`
+				)
 			);
 		}
 
