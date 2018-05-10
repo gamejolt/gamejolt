@@ -212,11 +212,13 @@ export class FormGameRelease extends BaseForm<GameReleaseFormModel>
 
 		this.now = Date.now();
 		this.setField('scheduled_for_timezone', determine().name());
+		this.changed = true;
 	}
 
 	removeSchedule() {
 		this.setField('scheduled_for_timezone', null);
 		this.setField('scheduled_for', null);
+		this.changed = true;
 	}
 
 	private async fetchTimezones() {
