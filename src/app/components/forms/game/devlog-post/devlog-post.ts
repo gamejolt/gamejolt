@@ -231,10 +231,13 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		for (let i = 0; i < this.MAX_POLL_ITEMS; i++) {
 			this.setField(('poll_item' + (i + 1)) as any, '');
 		}
+
+		this.changed = true;
 	}
 
 	async removePoll() {
 		this.setField('poll_item_count', 0);
+		this.changed = true;
 	}
 
 	removePollItem(idx: number) {
@@ -247,6 +250,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		}
 
 		this.setField('poll_item_count', this.formModel.poll_item_count - 1);
+		this.changed = true;
 	}
 
 	addPollItem() {
@@ -256,6 +260,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 
 		this.setField(('poll_item' + (this.formModel.poll_item_count + 1)) as any, '');
 		this.setField('poll_item_count', this.formModel.poll_item_count + 1);
+		this.changed = true;
 	}
 
 	async addSchedule() {
@@ -265,11 +270,13 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 
 		this.now = Date.now();
 		this.setField('scheduled_for_timezone', determine().name());
+		this.changed = true;
 	}
 
 	removeSchedule() {
 		this.setField('scheduled_for_timezone', null);
 		this.setField('scheduled_for', null);
+		this.changed = true;
 	}
 
 	onDraftSubmit() {
