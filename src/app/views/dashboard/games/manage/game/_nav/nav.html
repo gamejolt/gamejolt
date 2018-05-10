@@ -98,6 +98,17 @@
 		<app-game-perms tag="li" required="all">
 			<router-link
 				:to="{
+					name: 'dash.games.manage.game.linkedAccounts',
+					query: $route.query,
+				}"
+				active-class="active"
+				>
+				<translate>Linked Accounts</translate>
+			</router-link>
+		</app-game-perms>
+		<app-game-perms tag="li" required="all">
+			<router-link
+				:to="{
 					name: 'dash.games.manage.game.settings',
 					query: $route.query,
 				}"
