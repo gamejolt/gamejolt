@@ -28,7 +28,6 @@ export default class RouteLibraryOverview extends BaseRouteComponent {
 	@LibraryState followedCollection: LibraryStore['followedCollection'];
 	@LibraryState developerCollection: LibraryStore['developerCollection'];
 	@LibraryState ownedCollection: LibraryStore['ownedCollection'];
-	@LibraryState recommendedCollection: LibraryStore['recommendedCollection'];
 	@LibraryState collections: LibraryStore['collections'];
 
 	readonly Connection = Connection;
@@ -80,10 +79,6 @@ export default class RouteLibraryOverview extends BaseRouteComponent {
 
 		if (this.ownedCollection) {
 			main.push(this.ownedCollection);
-		}
-
-		if (this.recommendedCollection) {
-			main.push(this.recommendedCollection);
 		}
 
 		return main;
