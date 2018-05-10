@@ -33,9 +33,6 @@ export default class AppGameMediaItemEditModal extends BaseModal {
 	@Prop(Object) item: Media;
 	@Prop(Function) onRemove: GameMediaItemEditModalRemoveCallback;
 
-	readonly Environment = Environment;
-	readonly Clipboard = Clipboard;
-
 	get copyLinkTooltip() {
 		if (this.item.media_type === 'image') {
 			return this.$gettext(`Copy the direct link to view this image on your game page.`);
@@ -93,6 +90,10 @@ export default class AppGameMediaItemEditModal extends BaseModal {
 
 		this.onRemove();
 		this.modal.dismiss();
+	}
+
+	copyLink() {
+		Clipboard.copy(Environment.baseUrl + this.item.getUrl(this.game));
 	}
 
 	onMediaEdited(item: Media) {

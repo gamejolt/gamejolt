@@ -1,14 +1,21 @@
 <app-modal>
 
 	<div class="modal-controls">
+		<app-button
+			trans
+			@click="remove()"
+			>
+			{{ removeText }}
+		</app-button>
+
 		<app-button @click="modal.dismiss()">
 			<translate>Close</translate>
 		</app-button>
 	</div>
 
 	<div class="modal-body">
-		<div class="row">
-			<div class="col-sm-4 col-sm-push-8">
+		<!-- <div class="row"> -->
+			<!-- <div class="col-sm-4">
 				<br>
 
 				<app-button
@@ -27,8 +34,8 @@
 					>
 					{{ removeText }}
 				</app-button>
-			</div>
-			<div class="col-sm-8 col-sm-pull-4">
+			</div> -->
+			<!-- <div class="col-sm-8"> -->
 				<form-game-image
 					v-if="item.media_type === 'image'"
 					:game="game"
@@ -52,6 +59,16 @@
 
 				<hr>
 
+				<p class="text-right">
+					<app-button
+						trans
+						@click.stop="copyLink()"
+						v-app-tooltip="copyLinkTooltip"
+						>
+						<translate>Copy Link</translate>
+					</app-button>
+				</p>
+
 				<template v-if="item.media_type === 'image'">
 					<div class="text-center">
 						<img
@@ -72,8 +89,8 @@
 						:sketchfab-id="item.sketchfab_id"
 						/>
 				</template>
-			</div>
-		</div>
+			<!-- </div> -->
+		<!-- </div> -->
 	</div>
 
 </app-modal>
