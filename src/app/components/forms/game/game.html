@@ -108,11 +108,13 @@
 				<app-form-control-errors />
 			</app-form-group>
 
-			<!-- Gotta set keys for these since the data comes in async, vue
-			doesn't properly recheck the selected value after the categories
-			change. -->
+			<!--
+				Gotta set keys for these since the data comes in async, vue
+				doesn't properly recheck the selected value after the categories
+				change.
+			-->
 			<app-form-group
-				:key="!!categories"
+				v-if="categories"
 				name="category"
 				:label="$gettext( `dash.games.form.category_label` )"
 				>
@@ -134,7 +136,7 @@
 			</app-form-group>
 
 			<app-form-group
-				:key="!!engines"
+				v-if="engines"
 				name="creation_tool"
 				:label="$gettext( `dash.games.form.engine_label` )"
 				>
@@ -182,7 +184,7 @@
 
 			<template v-if="hasSalesPerms">
 				<app-form-group name="referrals_enabled" :label="$gettext( `Add to partner system?` )">
-					<app-form-control-toggle />
+					<app-form-control-toggle class="pull-right" />
 
 					<div class="help-block">
 						<div>

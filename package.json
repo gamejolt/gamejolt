@@ -4,7 +4,6 @@
 	"scripts": {
 		"postinstall": "sh ./git-hooks/setup-hooks.sh",
 		"dev": "gulp watch",
-		"build": "gulp --production",
 		"translations": "gulp translations:compile",
 		"client": "nw build/dev-client",
 		"client-build-win": "gulp --production --client --arch=32",
@@ -17,7 +16,6 @@
 		"@types/autosize": "3.0.6",
 		"@types/chart.js": "2.7.0",
 		"@types/codemirror": "0.0.51",
-		"@types/cropperjs": "1.1.0",
 		"@types/express": "4.0.39",
 		"@types/favico.js": "0.0.28",
 		"@types/grecaptcha": "2.0.34",
@@ -26,15 +24,16 @@
 		"@types/node": "8.0.53",
 		"@types/nw.gui": "0.0.20",
 		"@types/phoenix": "0.0.4",
+		"@types/qs": "6.5.1",
+		"@types/simplebar": "2.4.1",
 		"@types/stripe": "2.0.2",
 		"@types/ua-parser-js": "0.7.32",
-		"@types/simplebar": "2.4.1",
-		"autosize": "4.0.0",
+		"autosize": "4.0.2",
 		"chart.js": "2.7.1",
 		"codemirror": "5.32.0",
 		"core-js": "2.5.1",
-		"cropperjs": "1.1.3",
-		"css-element-queries": "0.4.0",
+		"cropperjs": "1.3.5",
+		"css-element-queries": "1.0.2",
 		"date-fns": "1.29.0",
 		"decompress-zip": "0.3.0",
 		"dexie": "2.0.1",
@@ -51,8 +50,10 @@
 		"phoenix": "1.3.0",
 		"pofile": "1.0.9",
 		"prettier": "1.8.2",
-		"reflect-metadata": "0.1.10",
+		"qs": "6.5.2",
+		"reflect-metadata": "0.1.12",
 		"rxjs": "5.5.2",
+		"simplebar": "2.6.1",
 		"smoothscroll-polyfill": "0.4.0",
 		"spectrum-colorpicker": "1.8.0",
 		"text-mask-addons": "3.7.1",
@@ -63,21 +64,20 @@
 		"ua-parser-js": "0.7.17",
 		"v-tooltip": "2.0.0-rc.23",
 		"vee-validate": "2.0.0-rc.7",
-		"vue": "2.5.10",
-		"vue-class-component": "6.1.1",
-		"vue-color": "2.4.3",
+		"vue": "2.5.16",
+		"vue-class-component": "6.2.0",
+		"vue-color": "2.4.6",
 		"vue-gettext": "github:gamejolt/vue-gettext#lazy",
 		"vue-property-decorator": "6.0.0",
 		"vue-router": "3.0.1",
-		"vue-server-renderer": "2.5.10",
+		"vue-server-renderer": "2.5.16",
 		"vue-shortkey": "2.2.1",
-		"vue-template-compiler": "2.5.10",
+		"vue-template-compiler": "2.5.16",
 		"vue-touch": "2.0.0-beta.4",
-		"vuedraggable": "2.15.0",
+		"vuedraggable": "2.16.0",
 		"vuex": "3.0.1",
 		"vuex-class": "0.3.0",
-		"vuex-router-sync": "5.0.0",
-		"simplebar": "2.6.1"
+		"vuex-router-sync": "5.0.0"
 	},
 	"optionalDependencies": {
 		"appdmg": "0.5.2"
@@ -85,8 +85,7 @@
 	"dependencies": {
 		"axios": "0.17.1",
 		"client-voodoo": "2.0.4",
-		"nwjs-snappy-updater": "1.1.0",
-		"polished": "^1.9.2"
+		"nwjs-snappy-updater": "1.1.0"
 	},
 	"main": "app://game-jolt-client/index.html#/",
 	"window": {
@@ -104,10 +103,8 @@
 		"plugin": true
 	},
 	"clientManifestUrl": "https://d.gamejolt.net/data/client/manifest-2.json",
-	"chromium-args":
-		"--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
-	"user-agent":
-		"GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
+	"chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
+	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
 	"platformOverrides": {
 		"linux": {
 			"main": "app://game-jolt-client/package/index.html#/",

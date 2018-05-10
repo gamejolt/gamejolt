@@ -1,6 +1,6 @@
 <div>
 
-	<section class="alert alert-notice alert-well sans-margin-bottom" v-if="game.status === Game.STATUS_HIDDEN">
+	<section class="alert alert-well sans-margin-bottom" v-if="game.status === Game.STATUS_HIDDEN">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-10 col-lg-8 col-centered" :class="{ 'text-center': Screen.isDesktop }">
@@ -13,14 +13,35 @@
 		</div>
 	</section>
 
-	<app-expand :when="$route.name === 'dash.games.manage.game.header'" v-if="game.header_media_item">
-		<app-media-item-cover
-			:media-item="game.header_media_item"
-			/>
+	<app-expand :when="$route.name === 'dash.games.manage.game.design'">
+		<app-editable-overlay @click="showEditHeader()">
+			<span slot="overlay">
+				<translate v-if="!game.header_media_item">Upload Game Header</translate>
+				<translate v-else>Change Header</translate>
+			</span>
+
+			<!--
+				If no header yet, show their highlight color with a min-height.
+			-->
+			<div
+				class="fill-highlight"
+				:style="{
+					'min-height': !game.header_media_item ? '200px' : '',
+				}"
+				>
+				<app-media-item-cover
+					v-if="game.header_media_item"
+					:media-item="game.header_media_item"
+					/>
+			</div>
+		</app-editable-overlay>
 	</app-expand>
 
-	<app-expand :when="$route.name === 'dash.games.manage.game.media' && media.length > 0">
-		<app-media-bar :media-items="media" />
+	<app-expand :when="$route.name === 'dash.games.manage.game.design'">
+		<app-manage-game-media-bar
+			:game="game"
+			:media-items="media"
+			/>
 	</app-expand>
 
 	<div class="container" v-if="Screen.isMobile">

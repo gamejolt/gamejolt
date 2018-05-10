@@ -48,11 +48,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 	@RouteState canPublish: RouteStore['canPublish'];
 
 	@RouteAction publish: RouteStore['publish'];
-	@RouteAction cancel: RouteStore['cancel'];
 	@RouteAction uncancel: RouteStore['uncancel'];
-	@RouteAction hide: RouteStore['hide'];
-	@RouteAction removeGame: RouteStore['removeGame'];
-	@RouteAction leaveProject: RouteStore['leaveProject'];
 
 	viewCount = 0;
 	downloadCount = 0;

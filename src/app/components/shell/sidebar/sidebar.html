@@ -164,17 +164,6 @@
 					</router-link>
 				</li>
 				<li>
-					<router-link
-						:to="{ name: 'radio' }"
-						v-app-track-event="`sidebar:radio`"
-						>
-						<span class="shell-nav-icon">
-							<app-jolticon icon="radio" />
-						</span>
-						<translate>Radio</translate>
-					</router-link>
-				</li>
-				<li>
 					<a
 						:href="Environment.firesideBaseUrl"
 						target="_blank"
@@ -394,23 +383,6 @@
 						</span>
 						<span class="shell-nav-label">
 							<translate>library.nav.followed</translate>
-						</span>
-					</router-link>
-				</li>
-
-				<li class="offline-disable" v-if="recommendedCollection">
-					<router-link
-						:to="recommendedCollection.routeLocation"
-						active-class="active"
-						v-app-track-event="`sidebar:collection:recommended`"
-						>
-						<span class="shell-nav-icon"
-							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Daily Mix' ) : ''"
-							>
-							<app-jolticon icon="pedestals-numbers" />
-						</span>
-						<span class="shell-nav-label">
-							<translate>Daily Mix</translate>
 						</span>
 					</router-link>
 				</li>

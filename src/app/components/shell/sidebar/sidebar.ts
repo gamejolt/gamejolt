@@ -47,7 +47,6 @@ export class AppShellSidebar extends Vue {
 	@LibraryState bundleCollections: LibraryStore['bundleCollections'];
 	@LibraryState developerCollection: LibraryStore['developerCollection'];
 	@LibraryState followedCollection: LibraryStore['followedCollection'];
-	@LibraryState recommendedCollection: LibraryStore['recommendedCollection'];
 	@LibraryState ownedCollection: LibraryStore['ownedCollection'];
 	@LibraryState collections: LibraryStore['collections'];
 	@LibraryState playlistFolders: LibraryStore['playlistFolders'];

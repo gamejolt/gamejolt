@@ -7,6 +7,7 @@ import {
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
+import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
 
 @View
 @Component({
@@ -16,7 +17,6 @@ import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/component
 })
 export class FormGameHeader extends BaseForm<Game> implements FormOnLoad {
 	modelClass = Game;
-	resetOnSubmit = true;
 	saveMethod = '$saveHeader' as '$saveHeader';
 
 	maxFilesize = 0;
@@ -24,6 +24,10 @@ export class FormGameHeader extends BaseForm<Game> implements FormOnLoad {
 	maxAspectRatio = 0;
 	minWidth = 0;
 	maxWidth = 0;
+
+	$refs: {
+		form: AppForm;
+	};
 
 	get loadUrl() {
 		return `/web/dash/developer/games/header/save/${this.model!.id}`;
@@ -35,5 +39,11 @@ export class FormGameHeader extends BaseForm<Game> implements FormOnLoad {
 		this.maxAspectRatio = payload.maxAspectRatio;
 		this.minWidth = payload.minWidth;
 		this.maxWidth = payload.maxWidth;
+	}
+
+	headerSelected() {
+		if (this.formModel.file) {
+			this.$refs.form.submit();
+		}
 	}
 }

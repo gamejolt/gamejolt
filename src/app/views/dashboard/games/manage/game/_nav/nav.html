@@ -37,54 +37,16 @@
 				<translate>Description</translate>
 			</router-link>
 		</app-game-perms>
-		<app-game-perms tag="li" required="details">
-			<router-link
-				:to="{
-					name: 'dash.games.manage.game.maturity',
-					query: $route.query,
-				}"
-				active-class="active"
-				>
-				<app-manage-game-nav-required :is-complete="!!game.tigrs_age" />
-				<translate>Maturity</translate>
-			</router-link>
-		</app-game-perms>
 		<app-game-perms tag="li" required="media">
 			<router-link
 				:to="{
-					name: 'dash.games.manage.game.thumbnail',
+					name: 'dash.games.manage.game.design',
 					query: $route.query,
 				}"
 				active-class="active"
 				>
 				<app-manage-game-nav-required :is-complete="!!game.thumbnail_media_item" />
-				<translate>Thumbnail</translate>
-			</router-link>
-		</app-game-perms>
-		<app-game-perms tag="li" required="media">
-			<router-link
-				:to="{
-					name: 'dash.games.manage.game.header',
-					query: $route.query,
-				}"
-				active-class="active"
-				>
-				<translate>Header</translate>
-			</router-link>
-		</app-game-perms>
-		<app-game-perms
-			tag="li"
-			required="media"
-			v-if="!isWizard || !game._is_devlog"
-			>
-			<router-link
-				:to="{
-					name: 'dash.games.manage.game.media',
-					query: $route.query,
-				}"
-				active-class="active"
-				>
-				<translate>Media</translate>
+				<translate>Design</translate>
 			</router-link>
 		</app-game-perms>
 		<app-game-perms
@@ -104,6 +66,18 @@
 				>
 				<app-manage-game-nav-required v-if="!game._is_devlog" :is-complete="game.has_active_builds" />
 				<translate>Packages</translate>
+			</router-link>
+		</app-game-perms>
+		<app-game-perms tag="li" required="details">
+			<router-link
+				:to="{
+					name: 'dash.games.manage.game.maturity',
+					query: $route.query,
+				}"
+				active-class="active"
+				>
+				<app-manage-game-nav-required :is-complete="!!game.tigrs_age" />
+				<translate>Maturity</translate>
 			</router-link>
 		</app-game-perms>
 		<app-game-perms

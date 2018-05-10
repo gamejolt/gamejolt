@@ -49,29 +49,12 @@
 			</template>
 		</div>
 
-		<div class="-thumb">
-			<div class="inner">
-				<app-jolticon icon="game" />
-
-				<template v-if="isBootstrapped">
-					<app-game-thumbnail-img
-						:game="game"
-						:class="{
-							loaded: isThumbnailLoaded,
-						}"
-						@loaded="onThumbnailLoad"
-						/>
-
-					<app-video
-						v-if="hasVideo"
-						:poster="game.thumbnail_media_item.mediaserver_url"
-						:webm="game.thumbnail_media_item.mediaserver_url_webm"
-						:mp4="game.thumbnail_media_item.mediaserver_url_mp4"
-						:should-play="shouldPlayVideo"
-						/>
-				</template>
-			</div>
-		</div>
+		<app-game-thumbnail-img
+			class="-thumb"
+			:game="game"
+			:hide-media="!isBootstrapped"
+			:animate="shouldAnimate"
+			/>
 
 		<div class="-meta">
 

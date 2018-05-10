@@ -36,12 +36,12 @@ import {
 	CommentMutations,
 	CommentStore,
 } from '../../lib/gj-lib-client/components/comment/comment-store';
-import { ContentFocus } from '../../_common/content-focus/content-focus.service';
 import {
 	ThemeActions,
 	ThemeMutations,
 	ThemeStore,
 } from '../../lib/gj-lib-client/components/theme/theme.store';
+import { ContentFocus } from '../../lib/gj-lib-client/components/content-focus/content-focus.service';
 
 export type Actions = AppActions &
 	ThemeActions &

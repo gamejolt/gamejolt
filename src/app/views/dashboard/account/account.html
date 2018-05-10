@@ -19,6 +19,7 @@
 		</p>
 
 		<app-editable-overlay
+			v-if="!Screen.isXs"
 			slot="spotlight"
 			class="-fill"
 			@click="showEditAvatar()"
@@ -107,6 +108,20 @@
 
 				</div>
 				<div class="col-xs-12 col-sm-9 col-md-10">
+					<template v-if="Screen.isXs && $route.name === 'dash.account.edit'">
+						<app-editable-overlay
+							class="-avatar-xs"
+							@click="showEditAvatar()"
+							>
+							<translate slot="overlay">Change</translate>
+							<app-user-avatar
+								:user="app.user"
+								/>
+						</app-editable-overlay>
+
+						<hr>
+					</template>
+
 					<router-view />
 				</div>
 			</div>
