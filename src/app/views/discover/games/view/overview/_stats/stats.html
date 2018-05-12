@@ -1,6 +1,6 @@
 <div class="route-game-stats">
 	<div class="row">
-		<div class="col-xs-4 stat-big stat-big-smaller">
+		<div class="col-xs-3 stat-big stat-big-smaller">
 
 			<div class="stat-big-label">
 				<translate>games.view.stats.views_label</translate>
@@ -16,7 +16,7 @@
 			</div>
 
 		</div>
-		<div class="col-xs-4 stat-big stat-big-smaller" v-if="game.sellable && game.sellable.type !== 'paid'">
+		<div class="col-xs-3 stat-big stat-big-smaller" v-if="game.sellable && game.sellable.type !== 'paid'">
 
 			<div class="stat-big-label">
 				<translate>games.view.stats.downloads_plays_label</translate>
@@ -41,7 +41,7 @@
 			</div>
 
 		</div>
-		<div class="col-xs-4 stat-big stat-big-smaller">
+		<div class="col-xs-6 stat-big stat-big-smaller">
 
 			<div class="stat-big-label">
 				<translate>games.view.stats.ratings_label</translate>
@@ -56,14 +56,21 @@
 			<div class="stat-big-digit">
 				<app-lazy-placeholder :when="!!game">
 					<span class="lazy-placeholder"></span>
-					<a
-						v-if="game.ratings_enabled"
-						class="link-unstyled"
-						@click="isShowingRatingBreakdown = !isShowingRatingBreakdown"
-						:title="number( game.rating_count || 0 )"
-						>
-						{{ fuzzynumber( game.rating_count || 0 ) }}
-					</a>
+					<template v-if="game.ratings_enabled">
+						<a
+							class="link-unstyled"
+							@click="isShowingRatingBreakdown = !isShowingRatingBreakdown"
+							v-app-tooltip="ratingTooltip"
+							>
+							{{ fuzzynumber( game.rating_count || 0 ) }}
+							&nbsp;
+							<app-meter
+								style="display: inline-block"
+								big
+								:rating="game.avg_rating"
+								/>
+						</a>
+					</template>
 					<translate v-if="!game.ratings_enabled" class="text-upper">
 						Off
 					</translate>

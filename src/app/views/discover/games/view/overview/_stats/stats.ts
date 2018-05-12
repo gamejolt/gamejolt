@@ -10,6 +10,7 @@ import { AppLazyPlaceholder } from '../../../../../../../lib/gj-lib-client/compo
 import { AppExpand } from '../../../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/components/progress/bar/bar';
 import { RouteState, RouteStore } from '../../view.store';
+import { AppMeter } from '../../../../../../../lib/gj-lib-client/components/meter/meter';
 
 @View
 @Component({
@@ -18,6 +19,7 @@ import { RouteState, RouteStore } from '../../view.store';
 		AppLazyPlaceholder,
 		AppExpand,
 		AppProgressBar,
+		AppMeter,
 	},
 	directives: {
 		AppTooltip,
@@ -57,6 +59,10 @@ export class AppDiscoverGamesViewOverviewStats extends Vue {
 		}
 
 		return false;
+	}
+
+	get ratingTooltip() {
+		return number(this.game.rating_count || 0) + ' rating(s), avg: ' + this.game.avg_rating;
 	}
 
 	get ratingStrings() {
