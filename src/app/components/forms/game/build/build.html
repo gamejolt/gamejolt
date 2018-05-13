@@ -244,7 +244,21 @@
 					</p>
 
 					<div class="row">
-						<div class="col-sm-6">
+
+						<div class="col-sm-4">
+							<app-form-group
+								name="embed_fit_to_screen"
+								:label="$gettext( `Fit application to screen?` )"
+								>
+
+								<app-form-control-toggle
+									@changed="onBuildFieldChanged"
+									/>
+									
+							</app-form-group>
+						</div>
+
+						<div class="col-sm-4" v-if="!isFitToScreen">
 							<app-form-group
 								name="embed_width"
 								:label="$gettext( `dash.games.builds.form.width_label` )"
@@ -257,7 +271,7 @@
 								<app-form-control-errors :ignore-dirty="true" />
 							</app-form-group>
 						</div>
-						<div class="col-sm-6">
+						<div class="col-sm-4" v-if="!isFitToScreen">
 							<app-form-group
 								name="embed_height"
 								:label="$gettext( `dash.games.builds.form.height_label` )"
@@ -270,6 +284,7 @@
 								<app-form-control-errors :ignore-dirty="true" />
 							</app-form-group>
 						</div>
+
 					</div>
 
 					<app-form-group
