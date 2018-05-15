@@ -6,7 +6,7 @@ import { router } from './views/index';
 import { App } from './app';
 import { bootstrapCommon } from '../_common/bootstrap';
 
-export const createApp = bootstrapCommon(store, router, App);
+export const createApp = bootstrapCommon(App, store, router);
 
 if (GJ_IS_CLIENT) {
 	require('./bootstrap-client');

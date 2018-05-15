@@ -4,6 +4,7 @@
 		'has-controls': hasControls,
 		'has-spotlight': hasSpotlight,
 		'has-nav': hasNav && !hideNav,
+		'-cover-auto-height': coverAutoHeight,
 	}"
 	>
 
@@ -15,11 +16,13 @@
 		}"
 		>
 
-		<app-media-item-cover
-			v-if="!!coverMediaItem"
-			:media-item="coverMediaItem"
-			:max-height="coverMaxHeight"
-			/>
+		<div class="-cover-img" v-if="!!coverMediaItem">
+			<app-media-item-cover
+				:media-item="coverMediaItem"
+				:max-height="coverMaxHeight"
+				:blur="blurHeader"
+				/>
+		</div>
 
 		<div
 			class="page-header-cover-buttons"
@@ -75,8 +78,11 @@
 	<app-autoscroll-anchor
 		v-if="hasNav && !hideNav"
 		:anchor-key="autoscrollAnchorKey"
+		:disabled="disableAutoscrollAnchor"
 		>
-		<app-scroll-affix :should-affix="shouldAffixNav && Screen.isLg && Screen.height > 750">
+		<app-scroll-affix
+			:should-affix="shouldAffixNav && Screen.isLg && Screen.height > 750"
+			>
 			<section class="section page-header-nav">
 				<div class="container">
 

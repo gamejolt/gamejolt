@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="svg5533"
+   version="1.1"
+   viewBox="0 0 21.166666 4.2333335"
+   height="16"
+   width="80">
+  <defs
+     id="defs5527" />
+  <metadata
+     id="metadata5530">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>T. Gantt</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer2">
+    <path
+       id="path951"
+       transform="scale(0.26458333)"
+       d="M 1,0 V 1 H 0 V 2 L 1,3 3,1 2,0 Z M 7,0 6,1 8,3 9,2 V 1 H 8 V 0 Z m 32,0 v 1 h -1 v 1 l 1,1 2,-2 -1,-1 z m 6,0 -1,1 2,2 1,-1 V 1 H 46 V 0 Z m 5,0 v 1 h -1 v 1 l 1,1 2,-2 -1,-1 z m 6,0 -1,1 2,2 1,-1 V 1 H 57 V 0 Z m 4,0 v 1 l 1,1 1,-1 -1,-1 z m 12,0 v 1 h -1 v 1 l 1,1 2,-2 -1,-1 z m 6,0 -1,1 2,2 1,-1 V 1 H 79 V 0 Z M 3,2 2,3 3,4 H 4 V 3 Z M 6,2 5,3 V 4 H 6 L 7,3 Z m 35,0 -1,1 1,1 h 1 V 3 Z m 3,0 -1,1 v 1 h 1 l 1,-1 z m 8,0 -1,1 1,1 h 1 V 3 Z m 3,0 -1,1 v 1 h 1 l 1,-1 z m 8,0 -1,1 1,1 h 1 V 3 Z m 11,0 -1,1 1,1 h 1 V 3 Z m 3,0 -1,1 v 1 h 1 l 1,-1 z m -3,3 -1,1 1,1 1,-1 V 5 Z m -2,1 -1,1 v 1 h 1 v 1 h 1 l 1,-1 z m 6,0 -1,1 2,2 1,-1 V 7 H 79 V 6 Z m 1,3 H 78 L 77,8 76,9 v 1 h 1 v 1 h -1 v 1 h -1 v -1 h -1 v -1 h -3 v 1 L 71.648438,11.501953 71,12 v 1 L 71.515625,13.453125 71,14 v 1 h 1 v 1 h 7 v -1 h 1 V 14 L 79.421875,13.453125 80,13 V 12 L 79.388672,11.535156 80,11 V 10 Z M 3,8 2,9 H 1 l -1,1 v 1 L 0.52929688,11.46875 0,12 v 1 L 0.59570312,13.386719 0,14 v 2 H 3 V 14 L 2.3164062,13.486328 3,13 V 12 L 2.3808594,11.46875 3,11 V 10 H 4 V 9 Z M 6,8 5,9 v 1 h 1 v 1 L 6.6191406,11.46875 6,12 v 1 L 6.6835938,13.486328 6,14 v 2 H 9 V 14 L 8.4042969,13.386719 9,13 V 12 L 8.4707031,11.46875 9,11 V 10 L 8,9 H 7 Z m 35,0 -1,1 h -1 l -1,1 v 1 L 38.529297,11.46875 38,12 v 1 L 38.595703,13.386719 38,14 v 2 h 3 V 14 L 40.316406,13.486328 41,13 V 12 L 40.380859,11.46875 41,11 v -1 h 1 V 9 Z m 3,0 -1,1 v 1 h 1 v 1 L 44.619141,11.46875 44,12 v 1 L 44.683594,13.486328 44,14 v 2 h 3 V 14 L 46.404297,13.386719 47,13 V 12 L 46.470703,11.46875 47,11 V 10 L 46,9 h -1 z m 19,0 -1,1 h -1 l -1,1 v 1 L 60.599609,11.535156 60,12 v 1 L 60.765625,13.453125 60,14 v 2 h 9 V 14 L 68.439453,13.652344 69,13 V 12 H 63 L 62.386719,11.402344 63,11 v -1 h 1 V 9 Z m -51,1 -1,1 v 1 L 11.675781,11.568359 11,12 v 1 L 11.578125,13.585938 11,14 v 2 h 9 V 14 L 19.318359,13.453125 20,13 V 12 H 15 V 11 H 14 V 10 L 13,9 Z m 11,0 -1,1 v 1 L 22.675781,11.568359 22,12 v 1 L 22.578125,13.585938 22,14 v 2 h 9 V 14 L 30.318359,13.453125 31,13 V 12 H 26 V 11 H 25 V 10 L 24,9 Z m 27,0 -1,1 v 1 L 49.617188,11.501953 49,12 v 1 L 49.419922,13.386719 49,14 v 1 h 1 v 1 h 7 v -1 h 1 V 14 L 57.224609,13.386719 58,13 V 12 L 57.324219,11.46875 58,11 V 10 L 57,9 h -1 l -1,1 v 1 h -1 v 1 H 53 V 11 H 52 V 10 L 51,9 Z"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;vector-effect:none;fill:#2f7f6f;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:41.71699905;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate" />
+    <path
+       id="rect832"
+       transform="scale(0.26458333)"
+       d="M 2,0 V 1 H 1 V 2 H 0 v 8 H 3 V 9 h 3 v 1 H 9 V 2 H 8 V 1 H 7 V 0 Z m 9,0 v 10 h 3 V 0 Z m 11,0 v 10 h 3 V 0 Z m 18,0 v 1 h -1 v 1 h -1 v 8 h 3 V 9 h 3 v 1 h 3 V 2 H 46 V 1 H 45 V 0 Z m 11,0 v 1 h -1 v 1 h -1 v 8 h 3 V 3 h 3 v 2 h 3 V 2 H 57 V 1 H 56 V 0 Z m 10,0 v 1 h -1 v 9 h 3 V 9 h 6 V 6 H 63 V 3 h 6 V 0 Z m 12,0 v 1 h -1 v 1 h -1 v 5 h 1 v 1 h 1 v 1 h 4 v 1 h 3 V 8 H 79 V 7 H 78 V 6 H 74 V 3 h 3 v 2 h 3 V 2 H 79 V 1 H 78 V 0 Z M 3,3 H 6 V 6 H 3 Z m 38,0 h 3 v 3 h -3 z m 12,3 v 3 h 2 v 1 h 3 V 6 Z M 0,11 v 1 h 3 v -1 z m 6,0 v 1 h 3 v -1 z m 5,0 v 1 h 3 v -1 z m 11,0 v 1 h 3 v -1 z m 16,0 v 1 h 3 v -1 z m 6,0 v 1 h 3 v -1 z m 5,0 v 1 h 3 v -1 z m 6,0 v 1 h 3 v -1 z m 5,0 v 1 h 3 v -1 z m 11,0 v 1 h 3 v -1 z m 6,0 v 1 h 3 V 11 Z M 0,13 v 1 h 3 v -1 z m 6,0 v 1 h 3 v -1 z m 5,0 v 1 h 9 v -1 z m 11,0 v 1 h 9 v -1 z m 16,0 v 1 h 3 v -1 z m 6,0 v 1 h 3 v -1 z m 5,0 v 1 h 9 v -1 z m 11,0 v 1 h 9 v -1 z m 11,0 v 1 h 9 v -1 z"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;vector-effect:none;fill:#ccff00;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:41.71699905;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate" />
+  </g>
+</svg>

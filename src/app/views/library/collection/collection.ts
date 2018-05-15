@@ -34,6 +34,10 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import {
+	ThemeMutation,
+	ThemeStore,
+} from '../../../../lib/gj-lib-client/components/theme/theme.store';
 
 const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
 
@@ -72,6 +76,8 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	@LibraryAction unfollowGame: LibraryStore['unfollowGame'];
 	@LibraryAction editPlaylist: LibraryStore['editPlaylist'];
 	@LibraryAction removePlaylist: LibraryStore['removePlaylist'];
+
+	@ThemeMutation setPageTheme: ThemeStore['setPageTheme'];
 
 	type = '';
 	followerCount = 0;
@@ -221,8 +227,18 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			this.user = this.playlist.user;
 		}
 
+		if (this.user) {
+			this.setPageTheme(this.user.theme || null);
+		} else {
+			this.setPageTheme(null);
+		}
+
 		this.processMeta($payload);
 		this.mixPlaylist();
+	}
+
+	routeDestroy() {
+		this.setPageTheme(null);
 	}
 
 	private processMeta($payload: any) {
@@ -301,7 +317,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		const action = shouldRefresh ? 'refresh-mix' : 'mix';
 
 		this.isLoadingRecommended = true;
-		const payload = await Api.sendRequest(`/web/library/games/${action}/` + this.type + '/' + id);
+		const payload = await Api.sendRequest(
+			`/web/library/games/${action}/` + this.type + '/' + id
+		);
 		this.recommendedGames = Game.populate(payload.games);
 		this.isLoadingRecommended = false;
 	}

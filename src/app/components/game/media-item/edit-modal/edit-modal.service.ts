@@ -17,6 +17,7 @@ export class GameMediaItemEditModal {
 				item,
 				onRemove,
 			},
+			size: 'sm'
 		});
 	}
 }
