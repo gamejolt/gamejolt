@@ -15,6 +15,8 @@ export class AppEmbedUnity extends Vue {
 	@State build: Store['build'];
 	@State username: Store['username'];
 	@State token: Store['token'];
+	@State embedWidth: Store['embedWidth'];
+	@State embedHeight: Store['embedHeight'];
 
 	isMissing = false;
 	isBroken = false;
@@ -46,8 +48,8 @@ export class AppEmbedUnity extends Vue {
 		};
 
 		const config: any = {
-			width: build.embed_width,
-			height: build.embed_height,
+			width: this.embedWidth,
+			height: this.embedHeight,
 			params: {
 				enableDebugging: '0',
 			},

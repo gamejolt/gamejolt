@@ -55,6 +55,39 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	username = '';
 	token = '';
 
+	get embedWidth() {
+		if (!this.build) {
+			return undefined;
+		}
+
+		return this.build.embed_fit_to_screen ? '100%' : this.build.embed_width;
+	}
+
+	get embedHeight() {
+		if (!this.build) {
+			return undefined;
+		}
+
+		return this.build.embed_fit_to_screen ? '100%' : this.build.embed_height;
+	}
+
+	// The "style" ones are for use in stylesheets (requires the 'px' unit).
+	get embedWidthStyle() {
+		if (!this.build) {
+			return undefined;
+		}
+
+		return this.build.embed_fit_to_screen ? '100%' : this.build.embed_width + 'px';
+	}
+
+	get embedHeightStyle() {
+		if (!this.build) {
+			return undefined;
+		}
+
+		return this.build.embed_fit_to_screen ? '100%' : this.build.embed_height + 'px';
+	}
+
 	@VuexAction
 	async bootstrap() {
 		Api.apiHost = Environment.gameserverApiHost;

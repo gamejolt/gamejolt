@@ -10,4 +10,6 @@ import { Store } from '../../../store/index';
 export class AppEmbedHtml extends Vue {
 	@State url: Store['url'];
 	@State build: Store['build'];
+	@State embedWidth: Store['embedWidth'];
+	@State embedHeight: Store['embedHeight'];
 }
