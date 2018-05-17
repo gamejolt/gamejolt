@@ -12,6 +12,8 @@ export class AppEmbedFlash extends Vue {
 	@State build: Store['build'];
 	@State username: Store['username'];
 	@State token: Store['token'];
+	@State embedWidth: Store['embedWidth'];
+	@State embedHeight: Store['embedHeight'];
 
 	get query() {
 		if (this.username && this.token) {

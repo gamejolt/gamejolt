@@ -14,4 +14,6 @@ export class AppEmbedApplet extends Vue {
 	@State token: Store['token'];
 	@State javaArchive: Store['javaArchive'];
 	@State javaCodebase: Store['javaCodebase'];
+	@State embedWidth: Store['embedWidth'];
+	@State embedHeight: Store['embedHeight'];
 }

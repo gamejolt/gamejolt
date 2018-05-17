@@ -229,7 +229,7 @@
 					</app-expand>
 
 					<app-expand :when="!model.primary_file.is_archive">
-						<div class="alert sans-margin-bottom" v-translate>
+						<div v-translate>
 							dash.games.releases.builds.launch_options.standalone_info_html
 						</div>
 					</app-expand>
@@ -239,72 +239,77 @@
 					Browser Embed Dimensions
 				-->
 				<div v-if="isBrowserBased">
-					<p class="help-block" v-translate>
-						dash.games.builds.form.dimensions_help_html
-					</p>
+					<app-form-group
+						name="embed_fit_to_screen"
+						:label="$gettext( `Fit to screen?` )"
+						>
 
-					<div class="row">
+						<app-form-control-toggle
+							class="pull-right"
+							@changed="onBuildFieldChanged"
+							/>
 
-						<div class="col-sm-4">
-							<app-form-group
-								name="embed_fit_to_screen"
-								:label="$gettext( `Fit application to screen?` )"
-								>
+						<p class="help-block">
+							<translate>If your game can stretch to fit the browser viewport, you can turn this option on to take up the whole available space.</translate>
+						</p>
 
-								<app-form-control-toggle
-									@changed="onBuildFieldChanged"
-									/>
-									
-							</app-form-group>
+					</app-form-group>
+
+					<template v-if="!isFitToScreen">
+						<hr>
+
+						<p class="help-block" v-translate>
+							dash.games.builds.form.dimensions_help_html
+						</p>
+
+						<div class="row">
+							<div class="col-sm-6">
+								<app-form-group
+									name="embed_width"
+									:label="$gettext( `dash.games.builds.form.width_label` )"
+									>
+									<app-form-control
+										class="input-sm"
+										type="number"
+										@changed="onBuildFieldChanged"
+										/>
+									<app-form-control-errors :ignore-dirty="true" />
+								</app-form-group>
+							</div>
+							<div class="col-sm-6">
+								<app-form-group
+									name="embed_height"
+									:label="$gettext( `dash.games.builds.form.height_label` )"
+									>
+									<app-form-control
+										class="input-sm"
+										type="number"
+										@changed="onBuildFieldChanged"
+										/>
+									<app-form-control-errors :ignore-dirty="true" />
+								</app-form-group>
+							</div>
 						</div>
-
-						<div class="col-sm-4" v-if="!isFitToScreen">
-							<app-form-group
-								name="embed_width"
-								:label="$gettext( `dash.games.builds.form.width_label` )"
-								>
-								<app-form-control
-									class="input-sm"
-									type="number"
-									@changed="onBuildFieldChanged"
-									/>
-								<app-form-control-errors :ignore-dirty="true" />
-							</app-form-group>
-						</div>
-						<div class="col-sm-4" v-if="!isFitToScreen">
-							<app-form-group
-								name="embed_height"
-								:label="$gettext( `dash.games.builds.form.height_label` )"
-								>
-								<app-form-control
-									class="input-sm"
-									type="number"
-									@changed="onBuildFieldChanged"
-									/>
-								<app-form-control-errors :ignore-dirty="true" />
-							</app-form-group>
-						</div>
-
-					</div>
+					</template>
 
 					<app-form-group
 						name="https_enabled"
 						:label="$gettext( `HTTPS support?` )"
 						>
+						<app-form-control-toggle
+							class="pull-right"
+							@changed="onBuildFieldChanged"
+							/>
+
 						<p class="help-block">
 							<translate>If your game doesn't work on HTTPS you can disable this and we'll serve it over HTTP instead.</translate>
 						</p>
 
-						<app-expand :when="!formModel.https_enabled">
-							<p class="help-block">
-								<strong><translate>It's highly recommended to get your game working on HTTPS!</translate></strong>
-								<translate>In order for your game to continue working on Game Jolt we need to pop it out into a new browser window when the user clicks to play it. This results in a worse user experience, but ensures that your game will still continue to be available on the site.</translate>
-							</p>
-						</app-expand>
-
-						<app-form-control-toggle
-							@changed="onBuildFieldChanged"
-							/>
+						<div class="alert alert-notice" v-if="!formModel.https_enabled">
+							<app-jolticon icon="notice" />
+							<strong><translate>It's highly recommended to get your game working on HTTPS!</translate></strong>
+							<translate>In order for your game to continue working on Game Jolt we need to pop it out into a new browser window when the user clicks to play it. This results in a worse user experience, but ensures that your game will still continue to be available on the site.</translate>
+						</div>
 					</app-form-group>
 				</div>
 
@@ -322,7 +327,8 @@
 						/>
 				</app-form-group>
 
-				<div class="alert alert-notice"
+				<div
+					class="alert alert-notice"
 					v-if="model.type === GameBuild.TYPE_UNITY"
 					>
 					<app-jolticon icon="notice" />
@@ -330,16 +336,11 @@
 					<translate>Please consider exporting to WebGL instead.</translate>
 				</div>
 
-				<div class="alert"
-					v-if="isBrowserBased"
-					:class="{
-						'sans-margin-bottom': !hasBrowserError
-					}"
-					>
+				<p v-if="isBrowserBased">
 					<app-jolticon icon="notice" />
 					<strong><translate>Be sure to remove or block ads from showing in your browser games.</translate></strong>
 					<translate>We serve our own ads and share the revenue with developers. Domain names to block: gamejolt.com, *.gamejolt.com, gamejolt.net, *.gamejolt.net</translate>
-				</div>
+				</p>
 
 				<p class="sans-margin" v-if="model.type === GameBuild.TYPE_ROM">
 					<app-jolticon icon="info-circle" />

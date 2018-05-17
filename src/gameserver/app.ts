@@ -43,6 +43,8 @@ export class App extends Vue {
 	@State game: Game;
 	@State package: GamePackage;
 	@State build: GameBuild;
+	@State embedWidthStyle: Store['embedWidthStyle'];
+	@State embedHeightStyle: Store['embedHeightStyle'];
 
 	@Action bootstrap: Store['bootstrap'];
 
