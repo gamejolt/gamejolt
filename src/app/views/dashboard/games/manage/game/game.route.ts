@@ -12,7 +12,7 @@ import { routeDashGamesManageGameMaturity } from './maturity/maturity.route';
 import { routeDashGamesManageGameWizardFinish } from './wizard-finish/wizard-finish.route';
 import { routeDashGamesManageGamePackageReleaseEdit } from './packages/release/edit/edit.route';
 import { routeDashGamesManageGameDesign } from './design/design.route';
-import { routeDashGamesManageGameLinkedAccounts } from './linkedAccounts/linkedAccounts.route';
+import { routeDashGamesManageGameLinkedAccounts } from './linked-accounts/linked-accounts.route';
 
 export const routeDashGamesManageGame: RouteConfig = {
 	path: '/dashboard/games/:id(\\d+)',

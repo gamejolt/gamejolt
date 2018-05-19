@@ -1,0 +1,13 @@
+<div class="row">
+
+	<div class="row">
+		<app-linked-account
+			provider="facebook"
+			:account="facebookAccount" />
+		<app-linked-account
+			provider="twitter"
+			:account="twitterAccount"
+			@sync="onSync" />
+	</div>
+
+</div>
