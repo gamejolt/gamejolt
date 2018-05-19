@@ -65,10 +65,21 @@ export default class RouteProfile extends BaseRouteComponent {
 
 	@RouteResolve()
 	async routeResolve(this: undefined, route: Route) {
-		const intentRedirect = IntentService.checkRoute(route, {
-			intent: 'follow-user',
-			message: Translate.$gettext(`You're now following this user.`),
-		});
+		const intentRedirect = IntentService.checkRoute(
+			route,
+			{
+				intent: 'follow-user',
+				message: Translate.$gettext(`You're now following this user.`),
+			},
+			{
+				intent: 'accept-friend-request',
+				message: Translate.$gettext(`You are now friends with this user!`),
+			},
+			{
+				intent: 'decline-friend-request',
+				message: Translate.$gettext(`You've declined this user's friend request.`),
+			}
+		);
 		if (intentRedirect) {
 			return intentRedirect;
 		}
