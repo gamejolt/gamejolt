@@ -40,7 +40,7 @@ import {
 } from '../../../../lib/gj-lib-client/components/theme/theme.store';
 import { Jam } from '../../../../lib/gj-lib-client/components/jam/jam.model';
 
-const MixableTypes = ['followed', 'playlist', 'owned', 'developer', 'jam'];
+const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
 const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 
 @View
