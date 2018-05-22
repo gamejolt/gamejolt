@@ -343,9 +343,12 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 
 	@Watch('formModel.embed_width')
 	@Watch('formModel.embed_height')
+	@Watch('formModel.embed_fit_to_screen')
 	onDimensionsChanged() {
 		const hasError =
-			this.isBrowserBased && (!this.formModel.embed_width || !this.formModel.embed_height);
+			this.isBrowserBased &&
+			!this.isFitToScreen &&
+			(!this.formModel.embed_width || !this.formModel.embed_height);
 
 		if (hasError) {
 			this.setCustomError('browser');
