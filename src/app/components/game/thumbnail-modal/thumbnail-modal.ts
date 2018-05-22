@@ -4,7 +4,6 @@ import View from '!view!./thumbnail-modal.html';
 import { FormGameThumbnail } from '../../forms/game/thumbnail/thumbnail';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { BaseModal } from '../../../../lib/gj-lib-client/components/modal/base';
-import { MediaItem } from '../../../../lib/gj-lib-client/components/media-item/media-item-model';
 
 @View
 @Component({

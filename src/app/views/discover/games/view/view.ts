@@ -13,7 +13,6 @@ import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/
 import { AppDiscoverGamesViewNav } from './_nav/nav';
 import { AppDiscoverGamesViewControls } from './_controls/controls';
 import { AppGameOgrsTag } from '../../../../components/game/ogrs/tag';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppGameMaturityBlock } from '../../../../components/game/maturity-block/maturity-block';

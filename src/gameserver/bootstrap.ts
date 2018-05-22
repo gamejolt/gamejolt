@@ -5,4 +5,7 @@ import { store } from './store/index';
 import { App } from './app';
 import { bootstrapCommon } from '../_common/bootstrap';
 
-export const createApp = bootstrapCommon(App, store);
+const _createApp = bootstrapCommon(App, store);
+export function createApp() {
+	return { app: _createApp(), store };
+}
