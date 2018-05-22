@@ -46,6 +46,13 @@ export class AppGameCollectionFollowWidget extends Vue {
 	}
 
 	get tooltip() {
+		if (
+			this.collection.type === GameCollection.TYPE_DEVELOPER ||
+			this.collection.type === GameCollection.TYPE_JAM
+		) {
+			return undefined;
+		}
+
 		return this.isFollowing
 			? this.$gettext('library.collection.unfollow_button_tooltip')
 			: this.$gettext('library.collection.follow_button_tooltip');

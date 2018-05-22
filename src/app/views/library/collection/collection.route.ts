@@ -8,6 +8,7 @@ const routes: Array<[string, string]> = [
 	['recommended', '/@:id/recommended'],
 	['bundle', '/library/bundle/:slug/:id(\\d+)/games'],
 	['tag', '/tag/:id'],
+	['jam', '/jam/:id/games'],
 ];
 
 export const routeLibraryCollectionRoutes: RouteConfig[] = routes.map(route => {

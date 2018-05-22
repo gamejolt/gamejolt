@@ -24,7 +24,7 @@
 			<span class="shell-nav-label" v-else>
 				{{ collection.name }}
 
-				<small v-if="collection.from_subscription">
+				<small v-if="collection.from_subscription && collection.owner">
 					<translate>library.by</translate>
 					@{{ collection.owner.username }}
 				</small>

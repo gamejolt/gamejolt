@@ -27,8 +27,8 @@ export class AppShellSidebarCollectionList extends Vue {
 		}
 
 		return this.collections.sort((a, b) => {
-			const aVal = a.type === 'developer' ? a.owner.username : a.name;
-			const bVal = b.type === 'developer' ? b.owner.username : b.name;
+			const aVal = a.type === 'developer' && a.owner ? a.owner.username : a.name;
+			const bVal = b.type === 'developer' && b.owner ? b.owner.username : b.name;
 			return stringSort(aVal, bVal);
 		});
 	}
@@ -37,7 +37,7 @@ export class AppShellSidebarCollectionList extends Vue {
 	 * We compare the collection's name or owner's name if it's a subscription.
 	 * This way they can search for "cros" and get cros's games if they're following.
 	 */
-	filterComparator(item: any) {
+	filterComparator(item: GameCollection) {
 		let actual: string;
 		let expected = this.filter.toLowerCase();
 
@@ -46,7 +46,7 @@ export class AppShellSidebarCollectionList extends Vue {
 			return true;
 		}
 
-		if (item.from_subscription) {
+		if (item.from_subscription && item.owner) {
 			actual = item.owner.username.toLowerCase();
 			if (actual.indexOf(expected) !== -1) {
 				return true;

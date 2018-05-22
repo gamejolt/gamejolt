@@ -189,6 +189,26 @@
 							<p class="text-muted small">{{ bundle.description }}</p>
 						</template>
 
+						<!--
+							Jam
+						-->
+						<template v-else-if="type === 'jam'">
+							<h1>{{ jam.name }}</h1>
+							<p class="text-muted small">
+								<translate :translate-params="{ jam: jam.name }">
+									These are the jam games entered into %{ jam }.
+								</translate>
+							</p>
+							<p>
+								<app-button
+									:href="jam.fullUrl"
+									target="_blank"
+									>
+									<translate>View Jam Page</translate>
+								</app-button>
+							</p>
+						</template>
+
 					</div>
 				</transition>
 

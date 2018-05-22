@@ -16,6 +16,7 @@
 	<template v-if="!circle">
 		<template v-if="!isFollowing">
 			<translate v-if="collection.type === 'developer'">Follow Developer</translate>
+			<translate v-else-if="collection.type === 'jam'">Follow Jam</translate>
 			<translate v-else>Follow Playlist</translate>
 		</template>
 		<template v-else>
