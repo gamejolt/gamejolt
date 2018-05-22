@@ -238,10 +238,6 @@
 							</template>
 						</div>
 
-						<div class="card-content" v-if="package.description">
-							{{ package.description }}
-						</div>
-
 						<div class="card-controls" v-if="hasBuildsPerms || hasAnalyticsPerms">
 							<app-game-perms required="builds">
 								<app-button
