@@ -476,19 +476,17 @@
 					</app-button>
 				</div>
 
-				<div class="nav-controls" v-if="collections.length">
-					<input type="search"
+				<div class="nav-controls" v-if="collections.length > 0">
+					<input
+						type="search"
 						class="form-control"
 						:placeholder="$gettext( `library.nav.filter_playlists_placeholder` )"
 						v-model="playlistFilterQuery"
 						>
 				</div>
-
-				<template v-if="!collections.length">
-					<div class="alert fill-gray" v-translate>
-						library.nav.no_playlists_html
-					</div>
-				</template>
+				<div class="alert fill-gray" v-else>
+					<div v-translate>library.nav.no_playlists_html</div>
+				</div>
 
 				<!--
 					Playlist Folders
