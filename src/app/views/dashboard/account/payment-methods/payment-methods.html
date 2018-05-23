@@ -1,0 +1,13 @@
+<div class="row">
+
+	<div
+		v-for="paymentSource in paymentSources"
+		:key="paymentSource.id">
+		<app-credit-card
+			:paymentSource="paymentSource"
+			:preview="false"
+			@remove="onRemove"
+			/>
+	</div>
+
+</div>
