@@ -33,6 +33,10 @@ export default class RouteDashAccountPaymentMethods extends BaseRouteComponent {
 		return this.$gettext(`Payment Methods`);
 	}
 
+	get hasPaymentSources() {
+		return this.paymentSources.length > 0;
+	}
+
 	routeInit() {
 		this.setHeading(this.$gettext('Payment Methods'));
 	}

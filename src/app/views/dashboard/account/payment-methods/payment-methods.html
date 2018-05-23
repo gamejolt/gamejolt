@@ -1,13 +1,19 @@
 <div class="row">
 
-	<div
-		v-for="paymentSource in paymentSources"
-		:key="paymentSource.id">
-		<app-credit-card
-			:paymentSource="paymentSource"
-			:preview="false"
-			@remove="onRemove"
-			/>
+	<div v-if="hasPaymentSources">
+		<div
+			v-if="hasPaymentSources"
+			v-for="paymentSource in paymentSources"
+			:key="paymentSource.id">
+			<app-credit-card
+				:paymentSource="paymentSource"
+				:preview="false"
+				@remove="onRemove"
+				/>
+		</div>
+	</div>
+	<div v-else>
+		We have no recorded payment methods for you.
 	</div>
 
 </div>
