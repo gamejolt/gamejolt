@@ -9,6 +9,7 @@ import {
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading/fade/fade';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 
 interface FormModel extends User {
 	notifications: string[];
@@ -19,6 +20,7 @@ interface FormModel extends User {
 	components: {
 		AppFormControlToggle,
 		AppLoadingFade,
+		AppJolticon,
 	},
 })
 export class FormEmailPreferences extends BaseForm<FormModel>
