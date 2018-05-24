@@ -32,5 +32,11 @@ export class App extends Vue {
 
 	mounted() {
 		loadCurrentLanguage(this);
+
+		// Any time they login/sign up again in Client we want to mark the terms change as being
+		// seen.
+		if (GJ_IS_CLIENT) {
+			localStorage.setItem('banner:terms-change-05232018', '');
+		}
 	}
 }
