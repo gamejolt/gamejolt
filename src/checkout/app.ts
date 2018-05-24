@@ -17,6 +17,7 @@ import { loadCurrentLanguage } from '../utils/translations';
 import { Store } from './store/index';
 import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
 import { AppTheme } from '../lib/gj-lib-client/components/theme/theme';
+import { AppCookieBanner } from '../_common/cookie/banner/banner';
 
 let components: any = {
 	AppTheme,
@@ -26,6 +27,7 @@ let components: any = {
 	AppModals,
 	AppUserBar,
 	AppJolticon,
+	AppCookieBanner,
 };
 
 let ClientHistoryNavigatorMod: typeof _ClientHistoryNavigatorMod | undefined;
