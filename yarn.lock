@@ -1130,9 +1130,9 @@ clean-css@4.1.9, clean-css@4.1.x, clean-css@^4.1.9:
   dependencies:
     source-map "0.5.x"
 
-client-voodoo@2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/client-voodoo/-/client-voodoo-2.0.3.tgz#c7d647a92cb5ba3da762b85071c530c2fe55349a"
+client-voodoo@2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/client-voodoo/-/client-voodoo-2.0.4.tgz#be7f4f9f62c49804efb61639f6a0f284ae0c983b"
   dependencies:
     JSONStream "github:gamejolt/JSONStream#no-shebang"
     follow-redirects "1.2.6"
