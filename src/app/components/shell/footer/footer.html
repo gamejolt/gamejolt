@@ -62,6 +62,11 @@
 									<translate>Jams</translate>
 								</a>
 							</li>
+							<li>
+								<router-link :to="{ name: 'forums.landing.overview' }">
+									<translate>Forums</translate>
+								</router-link>
+							</li>
 						</ol>
 					</div>
 					<div class="col-xs-4">
@@ -90,11 +95,6 @@
 								<a href="https://www.redbubble.com/people/gamejolt/shop" target="_blank">
 									<translate>Merch</translate>
 								</a>
-							</li>
-							<li>
-								<router-link :to="{ name: 'forums.landing.overview' }">
-									<translate>Forums</translate>
-								</router-link>
 							</li>
 							<li>
 								<a href="https://github.com/gamejolt" target="_blank">
@@ -138,6 +138,11 @@
 							<li>
 								<router-link :to="{ name: 'legal.privacy' }">
 									<translate>legal.privacy</translate>
+								</router-link>
+							</li>
+							<li v-if="!GJ_IS_CLIENT">
+								<router-link :to="{ name: 'legal.cookies' }">
+									<translate>Cookie Policy</translate>
 								</router-link>
 							</li>
 						</ol>

@@ -13,6 +13,7 @@ import { User } from '../lib/gj-lib-client/components/user/user.model';
 import { date } from '../lib/gj-lib-client/vue/filters/date';
 import { loadCurrentLanguage } from '../utils/translations';
 import { Store } from './store/index';
+import { AppCookieBanner } from '../_common/cookie/banner/banner';
 
 @View
 @Component({
@@ -22,6 +23,7 @@ import { Store } from './store/index';
 		AppGrowls,
 		AppModals,
 		AppUserBar,
+		AppCookieBanner,
 	},
 	filters: {
 		date,

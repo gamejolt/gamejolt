@@ -7,11 +7,13 @@ import { Connection } from '../lib/gj-lib-client/components/connection/connectio
 import { AppLoadingBar } from '../lib/gj-lib-client/components/loading/bar/bar';
 import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 import { loadCurrentLanguage } from '../utils/translations';
+import { AppCookieBanner } from '../_common/cookie/banner/banner';
 
 let components: any = {
 	AppLoadingBar,
 	AppGrowls,
 	AppErrorPage,
+	AppCookieBanner,
 };
 
 if (GJ_IS_CLIENT) {

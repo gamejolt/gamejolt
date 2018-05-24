@@ -44,6 +44,9 @@
 			<a class="link-unstyled anim-fade-in stagger" :href="Environment.baseUrl + '/privacy'" target="_blank">
 				<translate>auth.legal.privacy</translate>
 			</a>
+			<a class="link-unstyled anim-fade-in stagger" :href="Environment.baseUrl + '/cookies'" target="_blank" v-if="!GJ_IS_CLIENT">
+				<translate>Cookie Policy</translate>
+			</a>
 
 			<app-translate-lang-selector />
 		</div>
