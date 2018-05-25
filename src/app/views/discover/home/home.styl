@@ -1,19 +1,19 @@
 @require '~styles/variables'
-@require '~styles-lib/mixins'
 
-.route-discover-home
-	.header-heart
-		theme-prop('color', 'highlight')
+.-channel-list
+	white-space: nowrap
+	text-align: center
+	padding-top: ($grid-gutter-width / 2)
+	padding-bottom: ($grid-gutter-width / 2)
 
-	.channel-list
-		overflow-x: auto
-		white-space: nowrap
-		text-align: center
+	@media $media-xs
+		padding-top: ($grid-gutter-width-xs / 2)
+		padding-bottom: ($grid-gutter-width-xs / 2)
 
-		&-item
-			display: inline-block
-			width: 130px
-			margin: 0 10px
+	&-item
+		display: inline-block
+		width: 130px
+		margin: 0 10px
 
-		>>> .channel-thumbnail
-			margin-bottom: 0
+	>>> .channel-thumbnail
+		margin-bottom: 0

@@ -15,7 +15,6 @@ import { AppGameGridPlaceholder } from '../../../components/game/grid/placeholde
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
 import { Store } from '../../../store/index';
-import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Channels } from '../../../components/channel/channels-service';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
@@ -25,6 +24,7 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { AppScrollScroller } from '../../../../lib/gj-lib-client/components/scroll/scroller/scroller';
 
 export interface DiscoverRow {
 	title: string;
@@ -43,9 +43,9 @@ export interface DiscoverRow {
 		AppGameGrid,
 		AppGameGridPlaceholder,
 		AppChannelThumbnail,
-		AppAdPlacement,
 		AppAuthJoin: AppAuthJoinLazy,
 		AppDiscoverHomeBanner,
+		AppScrollScroller,
 	},
 	directives: {
 		AppTrackEvent,
