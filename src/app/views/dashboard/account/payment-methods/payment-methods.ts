@@ -10,7 +10,7 @@ import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service
 import { RouteMutation, RouteStore } from '../account.store';
 import { AppCreditCard } from '../../../../../lib/gj-lib-client/components/payment-source/credit-card';
 import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { ModalCreditCardRemove } from '../../../../../lib/gj-lib-client/components/modal/credit-card-remove/credit-card-remove-service';
+import { ModalCreditCardRemove } from '../../../../../lib/gj-lib-client/components/payment-source/credit-card-remove-modal/credit-card-remove-modal-service';
 
 @View
 @Component({
