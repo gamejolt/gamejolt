@@ -63,20 +63,18 @@ export default class RouteDashAccountPaymentMethods extends BaseRouteComponent {
 			return;
 		}
 
-		if (source) {
-			const response = await source.$remove();
-			if (response.success) {
-				this.paymentSources = PaymentSource.populate(response.paymentSources);
-				Growls.success(
-					this.$gettext('The Credit Card has been successfully removed.'),
-					this.$gettext('Remove Credit Card')
-				);
-			} else {
-				Growls.error(
-					this.$gettext('Failed to remove the Credit Card.'),
-					this.$gettext('Error')
-				);
-			}
+		const response = await source.$remove();
+		if (response.success) {
+			this.paymentSources = PaymentSource.populate(response.paymentSources);
+			Growls.success(
+				this.$gettext('The Credit Card has been successfully removed.'),
+				this.$gettext('Remove Credit Card')
+			);
+		} else {
+			Growls.error(
+				this.$gettext('Failed to remove the Credit Card.'),
+				this.$gettext('Error')
+			);
 		}
 	}
 }
