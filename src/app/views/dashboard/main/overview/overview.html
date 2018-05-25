@@ -489,6 +489,20 @@
 					</router-link>
 					<router-link
 						class="list-group-item has-icon"
+						:to="{ name: 'dash.account.billing-address' }"
+						>
+						<app-jolticon icon="at-sign" />
+						<translate>Billing Address</translate>
+					</router-link>
+					<router-link
+						class="list-group-item has-icon"
+						:to="{ name: 'dash.account.payment-methods' }"
+						>
+						<app-jolticon icon="credit-card" />
+						<translate>Payment Methods</translate>
+					</router-link>
+					<router-link
+						class="list-group-item has-icon"
 						:to="{ name: 'dash.account.financials' }"
 						>
 						<app-jolticon icon="cog" />
