@@ -50,6 +50,7 @@ export class AppShellTopNav extends Vue {
 	@State friendRequestCount: Store['friendRequestCount'];
 	@State isLeftPaneVisible: Store['isLeftPaneVisible'];
 	@State isRightPaneVisible: Store['isRightPaneVisible'];
+	@State hasSidebar: Store['hasSidebar'];
 
 	friendRequestsShowing = false;
 	userMenuShowing = false;

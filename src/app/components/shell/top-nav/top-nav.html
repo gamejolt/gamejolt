@@ -3,7 +3,7 @@
 	<div class="navbar-left">
 
 		<!-- Mobile Menu Toggle -->
-		<ul class="navbar-items">
+		<ul class="navbar-items" v-if="hasSidebar">
 			<li>
 				<a
 					:class="{ active: isLeftPaneVisible }"
@@ -112,20 +112,20 @@
 		</ul>
 
 		<!-- Login/Join Buttons -->
-		<ul class="navbar-items" v-if="!app.user">
-			<li>
-				<a :href="Environment.authBaseUrl + '/login'" v-app-track-event="`top-nav:login:click`">
-					<app-jolticon class="hidden-xs" icon="sign-in" />
-					<translate>nav.login</translate>
-				</a>
-			</li>
-			<li>
-				<a :href="Environment.authBaseUrl + '/join'" v-app-track-event="`top-nav:join:click`">
-					<app-jolticon class="hidden-xs" icon="friends" />
-					<translate>nav.join</translate>
-				</a>
-			</li>
-		</ul>
+		<template v-if="!app.user">
+			<ul class="navbar-items">
+				<li>
+					<a :href="Environment.authBaseUrl + '/login'" v-app-track-event="`top-nav:login:click`">
+						<translate>nav.login</translate>
+					</a>
+				</li>
+				<li>
+					<a :href="Environment.authBaseUrl + '/join'" v-app-track-event="`top-nav:join:click`">
+						<translate>Sign Up</translate>
+					</a>
+				</li>
+			</ul>
+		</template>
 
 		<div class="navbar-separator" v-if="chat || Connection.isOffline"></div>
 
