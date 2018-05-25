@@ -8,6 +8,7 @@ import { AppAuthRequired } from '../../../../../lib/gj-lib-client/components/aut
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { GameCollection } from '../collection.model';
 import { LibraryState, LibraryStore, LibraryAction } from '../../../../store/library';
+import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 
 @View
 @Component({
@@ -24,6 +25,7 @@ export class AppGameCollectionFollowWidget extends Vue {
 	@Prop(Boolean) circle?: boolean;
 	@Prop(Boolean) block?: boolean;
 
+	@AppState user: AppStore['user'];
 	@LibraryState collections: LibraryStore['collections'];
 	@LibraryAction followCollection: LibraryStore['followCollection'];
 	@LibraryAction unfollowCollection: LibraryStore['unfollowCollection'];
@@ -67,6 +69,10 @@ export class AppGameCollectionFollowWidget extends Vue {
 	}
 
 	async onClick() {
+		if (!this.user || this.isProcessing) {
+			return;
+		}
+
 		this.isProcessing = true;
 
 		if (this.isFollowing) {
