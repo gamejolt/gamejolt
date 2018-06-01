@@ -100,24 +100,12 @@
 							/>
 
 						<template v-if="(
-							user.facebook_id
-							|| user.twitch_id
+							user.twitch_id
 							|| user.twitter_id
 							|| user.google_id
 							|| user.web_site
 							)"
 							>
-							<div v-if="user.facebook_id">
-								<a
-									class="link-unstyled"
-									:href="`http://facebook.com/${user.facebook_id}`"
-									target="_blank"
-									>
-									<app-jolticon icon="facebook" />
-									{{ user.facebook_name }}
-								</a>
-							</div>
-
 							<div v-if="user.twitter_id">
 								<a
 									class="link-unstyled"

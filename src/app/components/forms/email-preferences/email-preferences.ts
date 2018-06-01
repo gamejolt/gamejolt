@@ -2,81 +2,108 @@ import { Component } from 'vue-property-decorator';
 import View from '!view!./email-preferences.html';
 
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { BaseForm } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnInit,
+	FormOnBeforeSubmit,
+} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
+import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading/fade/fade';
+
+interface FormModel extends User {
+	notifications: string[];
+}
 
 @View
 @Component({
 	components: {
 		AppFormControlToggle,
+		AppLoadingFade,
 	},
 })
-export class FormEmailPreferences extends BaseForm<User> {
-	modelClass = User;
+export class FormEmailPreferences extends BaseForm<FormModel>
+	implements FormOnInit, FormOnBeforeSubmit {
+	modelClass = User as any;
 	saveMethod: '$saveEmailPreferences' = '$saveEmailPreferences';
+
+	isTogglingEmails = false;
 
 	get notificationTypes() {
 		return [
 			{
-				key: 'notify_comment_replies',
-				label: this.$gettext('dash.email_prefs.notify_comment_replies_label'),
-				help: this.$gettext('dash.email_prefs.notify_comment_replies_help'),
-			},
-			{
-				key: 'notify_forum_posts',
-				label: this.$gettext('dash.email_prefs.notify_forum_posts_label'),
-				help: this.$gettext('dash.email_prefs.notify_forum_posts_help'),
-			},
-			{
-				key: 'notify_followed_game_updates',
-				label: this.$gettext('dash.email_prefs.notify_followed_game_updates_label'),
-				help: this.$gettext('dash.email_prefs.notify_followed_game_updates_help'),
-			},
-			{
-				key: 'notify_friendships',
-				label: this.$gettext('dash.email_prefs.notify_friendships_label'),
-				help: this.$gettext('dash.email_prefs.notify_friendships_help'),
-			},
-			{
-				key: 'notify_private_messages',
-				label: this.$gettext('dash.email_prefs.notify_private_messages_label'),
-				help: this.$gettext('dash.email_prefs.notify_private_messages_help'),
-			},
-			{
-				key: 'notify_comments',
-				label: this.$gettext('dash.email_prefs.notify_comments_label'),
-				help: this.$gettext('dash.email_prefs.notify_comments_help'),
-			},
-			{
-				key: 'notify_ratings',
-				label: this.$gettext('dash.email_prefs.notify_ratings_label'),
-				help: this.$gettext('dash.email_prefs.notify_ratings_help'),
-			},
-			{
-				key: 'notify_game_follows',
-				label: this.$gettext('dash.email_prefs.notify_game_follows_label'),
-				help: this.$gettext('dash.email_prefs.notify_game_follows_help'),
-			},
-			{
 				key: 'notify_user_follows',
-				label: this.$gettext('User Follows'),
-				help: this.$gettext('Get emails when other users follow you.'),
-			},
-			{
-				key: 'notify_sales',
-				label: this.$gettext('Sales'),
-				help: this.$gettext('Get emails when someone buys your games.'),
-			},
-			{
-				key: 'notify_collaborator_invites',
-				label: this.$gettext('Collaborator Invites'),
-				help: this.$gettext('Get emails when you are invited to collaborate.'),
+				label: this.$gettext(`When someone follows you.`),
 			},
 			{
 				key: 'notify_mentions',
-				label: this.$gettext('Mentions'),
-				help: this.$gettext('Get emails when you are mentioned.'),
+				label: this.$gettext(`When you're mentioned through a @mention.`),
+			},
+			{
+				key: 'notify_comment_replies',
+				label: this.$gettext(`When someone replies to one of your comments.`),
+			},
+			{
+				key: 'notify_followed_game_updates',
+				label: this.$gettext(`New posts from stuff you follow.`),
+			},
+			{
+				key: 'notify_friendships',
+				label: this.$gettext(`When someone sends you a friend request.`),
+			},
+			{
+				key: 'notify_private_messages',
+				label: this.$gettext(`When someone sends you a private message.`),
+			},
+			{
+				key: 'notify_comments',
+				label: this.$gettext(`When someone comments on one of your games or posts.`),
+			},
+			{
+				key: 'notify_ratings',
+				label: this.$gettext(`When someone rates one of your games.`),
+			},
+			{
+				key: 'notify_game_follows',
+				label: this.$gettext(`When someone follows one of your games.`),
+			},
+			{
+				key: 'notify_sales',
+				label: this.$gettext(`When someone buys one of your games.`),
+			},
+			{
+				key: 'notify_collaborator_invites',
+				label: this.$gettext(`When you're invited to collaborate on a game.`),
+			},
+			{
+				key: 'notify_forum_posts',
+				label: this.$gettext(`When someone replies to a forum topic you're following.`),
 			},
 		];
+	}
+
+	get emailsDisabled() {
+		return this.model!.newsletter === false;
+	}
+
+	onInit() {
+		const notifications = [];
+		for (const i of this.notificationTypes) {
+			if ((this.formModel as any)[i.key]) {
+				notifications.push(i.key);
+			}
+		}
+		this.setField('notifications', notifications);
+	}
+
+	onBeforeSubmit() {
+		for (const i of this.notificationTypes) {
+			this.setField(i.key as any, this.formModel.notifications.indexOf(i.key) !== -1);
+		}
+	}
+
+	async toggleEmails(state: boolean) {
+		this.isTogglingEmails = true;
+		await this.model!.$toggleEmails(state);
+		this.isTogglingEmails = false;
 	}
 }

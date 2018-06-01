@@ -8,6 +8,7 @@ import { AppAuthRequired } from '../../../../../lib/gj-lib-client/components/aut
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { GameCollection } from '../collection.model';
 import { LibraryState, LibraryStore, LibraryAction } from '../../../../store/library';
+import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 
 @View
 @Component({
@@ -24,6 +25,7 @@ export class AppGameCollectionFollowWidget extends Vue {
 	@Prop(Boolean) circle?: boolean;
 	@Prop(Boolean) block?: boolean;
 
+	@AppState user: AppStore['user'];
 	@LibraryState collections: LibraryStore['collections'];
 	@LibraryAction followCollection: LibraryStore['followCollection'];
 	@LibraryAction unfollowCollection: LibraryStore['unfollowCollection'];
@@ -46,6 +48,13 @@ export class AppGameCollectionFollowWidget extends Vue {
 	}
 
 	get tooltip() {
+		if (
+			this.collection.type === GameCollection.TYPE_DEVELOPER ||
+			this.collection.type === GameCollection.TYPE_JAM
+		) {
+			return undefined;
+		}
+
 		return this.isFollowing
 			? this.$gettext('library.collection.unfollow_button_tooltip')
 			: this.$gettext('library.collection.follow_button_tooltip');
@@ -60,6 +69,10 @@ export class AppGameCollectionFollowWidget extends Vue {
 	}
 
 	async onClick() {
+		if (!this.user || this.isProcessing) {
+			return;
+		}
+
 		this.isProcessing = true;
 
 		if (this.isFollowing) {

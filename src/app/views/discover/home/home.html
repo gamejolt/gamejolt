@@ -1,18 +1,23 @@
-<div class="route-discover-home">
+<div>
 
 	<app-discover-home-banner
 		v-if="featuredItem"
 		:item="featuredItem"
 		/>
 
-	<section class="section section-thin fill-darker overlay-scrollbar channel-list">
-		<div class="channel-list-item"
-			v-for="channel of channels"
-			:key="channel.id"
-			>
-			<app-channel-thumbnail :channel="channel.id" />
-		</div>
-	</section>
+	<div class="fill-darker">
+		<app-scroll-scroller horizontal overlay>
+			<div class="-channel-list">
+				<div
+					class="-channel-list-item"
+					v-for="channel of channels"
+					:key="channel.id"
+					>
+					<app-channel-thumbnail :channel="channel.id" />
+				</div>
+			</div>
+		</app-scroll-scroller>
+	</div>
 
 	<section class="section">
 		<div class="container-lg">
@@ -54,8 +59,6 @@
 		</div>
 	</section>
 
-	<app-ad-placement pos="bottom" />
-
 	<section class="section fill-offset" v-if="isLoaded && !app.user">
 		<div class="container">
 
@@ -65,7 +68,7 @@
 
 			<div class="text-center">
 				<p class="lead">
-					<translate>Do you love indie games as much as we do?</translate>
+					<translate>Do you love games as much as we do?</translate>
 				</p>
 			</div>
 

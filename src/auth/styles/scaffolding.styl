@@ -1,11 +1,12 @@
 // Use border instead of underlines so that icons work well in the link.
 #content a
-	border-bottom: 1px solid $white
 	text-decoration: none
 
-	&.button, &.link-unstyled
+	&.button, &.link-unstyled, &.link-muted
 		border-bottom: 0
 
-	&:hover, &.link-unstyled:hover
+	&:hover, &.link-unstyled:hover, &.link-muted:hover
+		theme-prop('border-bottom-color', 'fg-muted')
 		text-decoration: none
-		border-bottom: 1px solid $white
+		border-bottom-width: 1px
+		border-bottom-style: solid

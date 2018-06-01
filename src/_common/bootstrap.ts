@@ -39,12 +39,10 @@ export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, rout
 	return () => {
 		bootstrapAppTranslations();
 
-		const app = new Vue({
+		return new Vue({
 			store,
 			router,
 			render: h => h(appComponent),
 		});
-
-		return { app, store, router };
 	};
 }

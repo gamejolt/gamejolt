@@ -4,13 +4,16 @@
 		'is-client-offline': Connection.isClientOffline,
 		'left-pane-visible': isLeftPaneVisible,
 		'right-pane-visible': isRightPaneVisible,
+		'no-sidebar': !hasSidebar,
 		'has-banner': shouldShowBanner,
 	}"
 	>
 
 	<app-shell-banner />
 	<app-shell-top-nav />
-	<app-shell-sidebar />
+	<app-shell-sidebar
+		v-if="hasSidebar"
+		/>
 
 	<app-shell-body>
 		<slot />

@@ -110,7 +110,8 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 	get isDeprecated() {
 		return (
 			this.model &&
-			(this.model.type === GameBuild.TYPE_APPLET || this.model.type === GameBuild.TYPE_SILVERLIGHT)
+			(this.model.type === GameBuild.TYPE_APPLET ||
+				this.model.type === GameBuild.TYPE_SILVERLIGHT)
 		);
 	}
 
@@ -189,6 +190,10 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 			[GameBuild.EMULATOR_CPC]: this.$gettext('Amstrad CPC'),
 			[GameBuild.EMULATOR_MSX]: this.$gettext('MSX'),
 		};
+	}
+
+	get isFitToScreen() {
+		return this.formModel && this.formModel.embed_fit_to_screen;
 	}
 
 	created() {

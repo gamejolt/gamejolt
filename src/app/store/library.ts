@@ -67,14 +67,24 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 	 * These are their followed developer playlists.
 	 */
 	get developerPlaylists() {
-		return this.collections.filter(item => item.type === 'developer');
+		return this.collections.filter(item => item.type === GameCollection.TYPE_DEVELOPER);
+	}
+
+	/**
+	 * These are their followed jams.
+	 */
+	get jamPlaylists() {
+		return this.collections.filter(item => item.type === GameCollection.TYPE_JAM);
 	}
 
 	/**
 	 * These are playlists that don't belong to a folder.
 	 */
 	get mainPlaylists() {
-		return this.collections.filter(item => item.type !== 'developer');
+		return this.collections.filter(
+			item =>
+				item.type !== GameCollection.TYPE_DEVELOPER && item.type !== GameCollection.TYPE_JAM
+		);
 	}
 
 	/**
@@ -90,6 +100,14 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 			folders.developers = new GamePlaylistFolder(
 				Translate.$gettext('Followed Developers'),
 				developerPlaylists
+			);
+		}
+
+		const jamPlaylists: GameCollection[] = this.jamPlaylists;
+		if (jamPlaylists.length) {
+			folders.developers = new GamePlaylistFolder(
+				Translate.$gettext('Followed Jams'),
+				jamPlaylists
 			);
 		}
 

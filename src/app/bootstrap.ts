@@ -10,7 +10,10 @@ import { GamePlayModal } from '../lib/gj-lib-client/components/game/play-modal/p
 import { Ads } from '../lib/gj-lib-client/components/ad/ads.service';
 import { bootstrapCommon } from '../_common/bootstrap';
 
-export const createApp = bootstrapCommon(App, store, router);
+const _createApp = bootstrapCommon(App, store, router);
+export function createApp() {
+	return { app: _createApp(), store, router };
+}
 
 if (GJ_IS_CLIENT) {
 	require('./bootstrap-client');
