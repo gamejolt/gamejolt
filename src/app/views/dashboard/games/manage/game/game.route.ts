@@ -13,6 +13,7 @@ import { routeDashGamesManageGameWizardFinish } from './wizard-finish/wizard-fin
 import { routeDashGamesManageGamePackageReleaseEdit } from './packages/release/edit/edit.route';
 import { routeDashGamesManageGameDesign } from './design/design.route';
 import { routeDashGamesManageGameLinkedAccounts } from './linked-accounts/linked-accounts.route';
+import { routeDashGamesManageGameLinkedAccountsLinkCallback } from './linked-accounts/link-callback/link-callback.route';
 
 export const routeDashGamesManageGame: RouteConfig = {
 	path: '/dashboard/games/:id(\\d+)',
@@ -32,5 +33,6 @@ export const routeDashGamesManageGame: RouteConfig = {
 		routeDashGamesManageGamePackageReleaseEdit,
 		routeDashGamesManageGameMaturity,
 		routeDashGamesManageGameWizardFinish,
+		routeDashGamesManageGameLinkedAccountsLinkCallback,
 	],
 };

@@ -7,9 +7,13 @@ import {
 	RouteResolve,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { RouteState, RouteStore } from '../../../../../discover/games/view/view.store';
+import { RouteState, RouteStore } from '../../manage.store';
 import { AppLinkedAccount } from '../../../../../../../lib/gj-lib-client/components/linked-account/linked-account';
-import { LinkedAccount } from '../../../../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
+import {
+	LinkedAccount,
+	Provider,
+} from '../../../../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
+import { LinkedAccounts } from '../../../../../../../lib/gj-lib-client/components/linked-account/linked-accounts.service';
 
 @View
 @Component({
@@ -65,5 +69,13 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 
 	onSync(e: Event) {
 		console.log('EMIT SYNC', e);
+	}
+
+	onLink(e: Event, provider: Provider) {
+		LinkedAccounts.link(
+			this.$router,
+			provider,
+			'/web/dash/developer/games/linked-accounts/link/' + this.game.id + '/'
+		);
 	}
 }
