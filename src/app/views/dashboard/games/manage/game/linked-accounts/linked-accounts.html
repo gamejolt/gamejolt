@@ -3,7 +3,10 @@
 	<div class="row">
 		<app-linked-account
 			provider="facebook"
-			:account="facebookAccount" />
+			:account="facebookAccount"
+			@sync="onSync"
+			@link="onLink"
+			@unlink="onUnlink" />
 		<app-linked-account
 			provider="twitter"
 			:account="twitterAccount"
