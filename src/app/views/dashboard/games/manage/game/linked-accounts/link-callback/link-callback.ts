@@ -54,8 +54,9 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 		const providerName = LinkedAccount.getProviderDisplayName(provider);
 		if (!$payload.success || !$payload.account) {
 			Growls.error(
-				this.$gettextInterpolate('Unable to link your %{ provider } account', {
+				this.$gettextInterpolate('Unable to link your %{ provider } account to %{ game }', {
 					provider: providerName,
+					game: this.game.title,
 				})
 			);
 		} else {
@@ -65,8 +66,12 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 				case LinkedAccount.PROVIDER_TWITTER:
 					Growls.success(
 						this.$gettextInterpolate(
-							'Your %{ provider } account (@%{ name }) has been linked',
-							{ provider: providerName, name: account.name }
+							'Your %{ provider } account (@%{ name }) has been linked to %{ game }',
+							{
+								provider: providerName,
+								name: account.name,
+								game: this.game.title,
+							}
 						),
 						this.$gettext('Account Linked')
 					);
