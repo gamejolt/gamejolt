@@ -68,10 +68,6 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		this.accounts = LinkedAccount.populate($payload.accounts);
 	}
 
-	onSync(e: Event) {
-		console.log('EMIT SYNC', e);
-	}
-
 	async onLink(_e: Event, provider: Provider) {
 		await LinkedAccounts.link(
 			this.$router,
