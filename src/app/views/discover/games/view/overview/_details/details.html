@@ -61,5 +61,17 @@
 				<translate>Game Web Site</translate>
 			</a>
 		</li>
+		<li v-if="facebookAccount">
+			<app-jolticon icon="facebook" />
+			<a :href="facebookAccount.platformLink" target="_blank">
+				{{ facebookAccount.name }}
+			</a>
+		</li>
+		<li v-if="twitterAccount">
+			<app-jolticon icon="twitter-bird" />
+			<a :href="twitterAccount.platformLink" target="_blank">
+				@{{ twitterAccount.name }}
+			</a>
+		</li>
 	</ul>
 </div>
