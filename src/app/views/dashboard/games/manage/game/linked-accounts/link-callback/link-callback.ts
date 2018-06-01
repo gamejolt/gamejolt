@@ -75,6 +75,7 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 						),
 						this.$gettext('Account Linked')
 					);
+					break;
 				case LinkedAccount.PROVIDER_FACEBOOK:
 				case LinkedAccount.PROVIDER_GOOGLE:
 				case LinkedAccount.PROVIDER_TWITCH:
@@ -89,6 +90,7 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 						),
 						this.$gettext('Account Linked')
 					);
+					break;
 			}
 		}
 
