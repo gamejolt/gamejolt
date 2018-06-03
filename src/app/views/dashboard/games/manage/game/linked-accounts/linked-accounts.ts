@@ -1,6 +1,6 @@
 import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./linked-accounts.html';
+import View from '!view!./linked-accounts.html?style=./linked-accounts.styl';
 
 import {
 	BaseRouteComponent,
@@ -15,6 +15,7 @@ import {
 } from '../../../../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
 import { LinkedAccounts } from '../../../../../../../lib/gj-lib-client/components/linked-account/linked-accounts.service';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
+import { ModalFacebookPageSelector } from '../../../../../../../lib/gj-lib-client/components/linked-account/facebook-page-selector-modal/facebook-page-selector-modal-service';
 
 @View
 @Component({
@@ -101,6 +102,95 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 					provider: providerName,
 				})
 			);
+		}
+	}
+
+	async onSelectFacebookPage() {
+		if (!this.facebookAccount) {
+			return;
+		}
+
+		const modalResult = await ModalFacebookPageSelector.show(
+			this.$gettext('Select a page you want to post to with this account'),
+			this.facebookAccount,
+			this.$gettext('Select Facebook Page'),
+			'ok'
+		);
+
+		if (modalResult) {
+			// do not send if the page was already selected
+			// check id AND name to make sure they didn't change the name and want to sync it
+			if (
+				this.facebookAccount.facebookSelectedPage &&
+				modalResult.id === this.facebookAccount.facebookSelectedPage.id &&
+				modalResult.name === this.facebookAccount.facebookSelectedPage.name
+			) {
+				return;
+			}
+
+			const payload = await Api.sendRequest(
+				'/web/dash/developer/games/linked-accounts/link-facebook-page/' +
+					this.game.id +
+					'/' +
+					this.facebookAccount.id +
+					'/' +
+					modalResult.id
+			);
+
+			if (payload.success) {
+				if (payload.accounts) {
+					// update accounts
+					this.accounts = LinkedAccount.populate(payload.accounts);
+				}
+
+				Growls.success(
+					this.$gettextInterpolate('Changed the selected Facebook page to %{ title }.', {
+						title: modalResult.name,
+					}),
+					this.$gettext('Select Facebook Page')
+				);
+			} else {
+				Growls.error(
+					this.$gettext(
+						'Failed to change to new Facebook page. Try to Sync your Facebook account.'
+					)
+				);
+			}
+		}
+	}
+
+	async onUnlinkFacebookPage() {
+		if (!this.facebookAccount || !this.facebookAccount.facebookSelectedPage) {
+			return;
+		}
+
+		const tempPageName = this.facebookAccount.facebookSelectedPage.name;
+
+		const payload = await Api.sendRequest(
+			'/web/dash/developer/games/linked-accounts/unlink-facebook-page/' +
+				this.game.id +
+				'/' +
+				this.facebookAccount.id
+		);
+
+		if (payload.success) {
+			if (payload.accounts) {
+				// update accounts
+				this.accounts = LinkedAccount.populate(payload.accounts);
+			}
+
+			Growls.success(
+				this.$gettextInterpolate(
+					`The Facebook Page %{ title } has been unlinked from %{ game }.`,
+					{
+						title: tempPageName,
+						game: this.game.title,
+					}
+				),
+				this.$gettext('Facebook Page Unlinked')
+			);
+		} else {
+			Growls.error(this.$gettext(`Could not unlink your Facebook page.`));
 		}
 	}
 }

@@ -61,10 +61,10 @@
 				<translate>Game Web Site</translate>
 			</a>
 		</li>
-		<li v-if="facebookAccount">
+		<li v-if="facebookAccount && facebookAccount.facebookSelectedPage">
 			<app-jolticon icon="facebook" />
-			<a :href="facebookAccount.platformLink" target="_blank">
-				{{ facebookAccount.name }}
+			<a :href="facebookAccount.facebookPageUrl" target="_blank">
+				{{ facebookAccount.facebookSelectedPage.name }}
 			</a>
 		</li>
 		<li v-if="twitterAccount">
