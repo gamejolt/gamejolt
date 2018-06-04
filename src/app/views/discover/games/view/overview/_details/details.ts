@@ -38,4 +38,10 @@ export class AppDiscoverGamesViewOverviewDetails extends Vue {
 			);
 		}
 	}
+
+	get tumblrAccount() {
+		if (this.game.linkedAccounts) {
+			return this.game.linkedAccounts.find(l => l.provider === LinkedAccount.PROVIDER_TUMBLR);
+		}
+	}
 }

@@ -73,5 +73,11 @@
 				@{{ twitterAccount.name }}
 			</a>
 		</li>
+		<li v-if="tumblrAccount && tumblrAccount.tumblrSelectedBlog">
+			<app-jolticon icon="tumblr" />
+			<a :href="tumblrAccount.tumblrSelectedBlog.url" target="_blank">
+				{{ tumblrAccount.tumblrSelectedBlog.title }}
+			</a>
+		</li>
 	</ul>
 </div>

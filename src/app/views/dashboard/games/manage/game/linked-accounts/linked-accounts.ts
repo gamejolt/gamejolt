@@ -16,6 +16,7 @@ import {
 import { LinkedAccounts } from '../../../../../../../lib/gj-lib-client/components/linked-account/linked-accounts.service';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { ModalFacebookPageSelector } from '../../../../../../../lib/gj-lib-client/components/linked-account/facebook-page-selector-modal/facebook-page-selector-modal-service';
+import { ModalTumblrBlogSelector } from '../../../../../../../lib/gj-lib-client/components/linked-account/tumblr-blog-selector-modal/tumblr-blog-selector-modal-service';
 
 @View
 @Component({
@@ -202,6 +203,94 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 			);
 		} else {
 			Growls.error(this.$gettext(`Could not unlink your Facebook page.`));
+		}
+	}
+
+	async onSelectTumblrBlog() {
+		if (!this.tumblrAccount) {
+			return;
+		}
+
+		const modalResult = await ModalTumblrBlogSelector.show(
+			this.$gettext('Select a blog you want to post to with this account'),
+			this.tumblrAccount,
+			this.$gettext('Select Tumblr Blog'),
+			'ok'
+		);
+
+		if (modalResult) {
+			// do not send if the same blog was already selected
+			if (
+				this.tumblrAccount.tumblrSelectedBlog &&
+				JSON.stringify(modalResult) ===
+					JSON.stringify(this.tumblrAccount.tumblrSelectedBlog)
+			) {
+				return;
+			}
+
+			const payload = await Api.sendRequest(
+				'/web/dash/developer/games/linked-accounts/link-tumblr-blog/' +
+					this.game.id +
+					'/' +
+					this.tumblrAccount.id +
+					'/' +
+					modalResult.name
+			);
+
+			if (payload.success) {
+				if (payload.accounts) {
+					// update accounts
+					this.accounts = LinkedAccount.populate(payload.accounts);
+				}
+
+				Growls.success(
+					this.$gettextInterpolate('Changed the selected Tumblr blog to %{ title }.', {
+						title: modalResult.title,
+					}),
+					this.$gettext('Select Tumblr Blog')
+				);
+			} else {
+				Growls.error(
+					this.$gettext(
+						'Failed to change to new Tumblr blog. Try to Sync your Tumblr account.'
+					)
+				);
+			}
+		}
+	}
+
+	async onUnlinkTumblrBlog() {
+		if (!this.tumblrAccount || !this.tumblrAccount.tumblrSelectedBlog) {
+			return;
+		}
+
+		const tempBlogTitle = this.tumblrAccount.tumblrSelectedBlog.title;
+
+		const payload = await Api.sendRequest(
+			'/web/dash/developer/games/linked-accounts/unlink-tumblr-blog/' +
+				this.game.id +
+				'/' +
+				this.tumblrAccount.id
+		);
+
+		if (payload.success) {
+			if (payload.accounts) {
+				// update accounts
+				this.accounts = LinkedAccount.populate(payload.accounts);
+			}
+
+			Growls.success(
+				this.$gettextInterpolate(
+					`The Tumblr Blog %{ title } has been unlinked from %{ game }.`,
+					{
+						title: tempBlogTitle,
+						game: this.game.title,
+					}
+				),
+				this.$gettext('Tumblr Blog Unlinked')
+			);
+		} else {
+			Growls.error(this.$gettext(`Could not unlink your Tumblr Blog.`));
 		}
 	}
 }
