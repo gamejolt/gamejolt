@@ -79,6 +79,7 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 				case LinkedAccount.PROVIDER_FACEBOOK:
 				case LinkedAccount.PROVIDER_GOOGLE:
 				case LinkedAccount.PROVIDER_TWITCH:
+				case LinkedAccount.PROVIDER_TUMBLR:
 					Growls.success(
 						this.$gettextInterpolate(
 							'Your %{ provider } account (%{ name }) has been linked to %{ game }',

@@ -65,6 +65,17 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		return null;
 	}
 
+	get tumblrAccount() {
+		if (this.accounts) {
+			for (const account of this.accounts) {
+				if (account.provider === LinkedAccount.PROVIDER_TUMBLR) {
+					return account;
+				}
+			}
+		}
+		return null;
+	}
+
 	routed($payload: any) {
 		this.accounts = LinkedAccount.populate($payload.accounts);
 	}
