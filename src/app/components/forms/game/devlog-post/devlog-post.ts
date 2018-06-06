@@ -30,6 +30,10 @@ import {
 import { AppFormControlDate } from '../../../../../lib/gj-lib-client/components/form-vue/control/date/date';
 import * as startOfDay from 'date-fns/start_of_day';
 import * as addWeeks from 'date-fns/add_weeks';
+import { LinkedAccount } from '../../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
+import { AppLoading } from '../../../../../lib/gj-lib-client/vue/components/loading/loading';
+import { arrayRemove } from '../../../../../lib/gj-lib-client/utils/array';
 
 type FormGameDevlogPostModel = FiresidePost & {
 	keyGroups: KeyGroup[];
@@ -65,6 +69,7 @@ type FormGameDevlogPostModel = FiresidePost & {
 		AppExpand,
 		AppJolticon,
 		AppFormControlDate,
+		AppLoading,
 	},
 	directives: {
 		AppFocusWhen,
@@ -92,6 +97,9 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	isShowingMoreOptions = false;
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = null as any;
 	now = 0;
+	userLinkedAccounts: LinkedAccount[] | null = null;
+	gameLinkedAccounts: LinkedAccount[] | null = null;
+	isLoadingLinkedAccounts = false;
 
 	readonly FiresidePost = FiresidePost;
 	readonly GameVideo = GameVideo;
@@ -146,6 +154,17 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		return this.formModel.isScheduled;
 	}
 
+	get isPublishingToPlatforms() {
+		return !this.isPublished && this.formModel.publish_to_platforms !== null;
+	}
+
+	get canEditOwnerLinkedAccounts() {
+		// only the owner can edit
+		if (this.user) {
+			return this.formModel.user.id === this.user.id;
+		}
+	}
+
 	async onInit() {
 		await this.fetchTimezones();
 
@@ -184,6 +203,10 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 			for (let i = 0; i < poll.items.length; i++) {
 				this.setField(('poll_item' + (i + 1)) as any, poll.items[i].text);
 			}
+		}
+
+		if (this.isPublishingToPlatforms) {
+			await this.loadLinkedAccounts();
 		}
 	}
 
@@ -277,6 +300,93 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.setField('scheduled_for_timezone', null);
 		this.setField('scheduled_for', null);
 		this.changed = true;
+	}
+
+	async loadLinkedAccounts() {
+		this.isLoadingLinkedAccounts = true;
+
+		const payload = await Api.sendRequest(
+			'/web/dash/developer/games/devlog/linked-accounts/' + this.model!.id
+		);
+		if (payload.game_accounts) {
+			this.gameLinkedAccounts = LinkedAccount.populate(payload.game_accounts);
+		} else {
+			this.gameLinkedAccounts = [];
+		}
+		if (payload.user_accounts) {
+			this.userLinkedAccounts = LinkedAccount.populate(payload.user_accounts);
+		} else {
+			this.userLinkedAccounts = [];
+		}
+
+		this.isLoadingLinkedAccounts = false;
+	}
+
+	async addPublishingToPlatforms() {
+		// sets default data to target platforms to show dialog
+		this.setField('publish_to_platforms', '');
+		this.changed = true;
+
+		// load data
+		await this.loadLinkedAccounts();
+	}
+
+	removePublishingToPlatforms() {
+		this.setField('publish_to_platforms', null);
+		this.changed = true;
+	}
+
+	getLinkedAccountIdenfifier(id: number) {
+		if (this.gameLinkedAccounts) {
+			for (const account of this.gameLinkedAccounts) {
+				if (account.id == id) {
+					const identifier = 'game_' + account.provider;
+					return identifier;
+				}
+			}
+		}
+		if (this.userLinkedAccounts) {
+			for (const account of this.userLinkedAccounts) {
+				if (account.id == id) {
+					const identifier = 'owner_' + account.provider;
+					return identifier;
+				}
+			}
+		}
+	}
+
+	isLinkedAccountActive(id: number) {
+		if (this.formModel.publish_to_platforms !== null) {
+			const platforms = this.formModel.publish_to_platforms
+				.split(',')
+				.filter(s => s.length > 0);
+			const identifier = this.getLinkedAccountIdenfifier(id);
+			if (identifier) {
+				return platforms.indexOf(identifier) !== -1;
+			}
+		}
+	}
+
+	changeLinkedAccount(id: number) {
+		if (this.formModel.publish_to_platforms !== null) {
+			const isActive = this.isLinkedAccountActive(id);
+			const identifier = this.getLinkedAccountIdenfifier(id);
+
+			if (identifier) {
+				const platforms = this.formModel.publish_to_platforms
+					.split(',')
+					.filter(s => s.length > 0);
+
+				if (isActive) {
+					arrayRemove(platforms, s => s === identifier);
+					this.setField('publish_to_platforms', platforms.join(','));
+				} else {
+					platforms.push(identifier);
+					this.setField('publish_to_platforms', platforms.join(','));
+				}
+			}
+			this.changed = true;
+		}
 	}
 
 	onDraftSubmit() {

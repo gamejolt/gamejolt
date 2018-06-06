@@ -121,6 +121,14 @@
 				v-app-tooltip="$gettext(`Schedule your post`)"
 				@click.prevent="addSchedule()"
 				/>
+
+			<app-button
+				v-if="!isPublishingToPlatforms"
+				sparse
+				icon="share-airplane"
+				v-app-tooltip="$gettext(`Publish to social media`)"
+				@click.prevent="addPublishingToPlatforms()"
+				/>
 		</div>
 		<br>
 	</template>
@@ -335,6 +343,63 @@
 				@click.prevent="removeSchedule()"
 				>
 				<translate>Remove Scheduling</translate>
+			</app-button>
+		</div>
+	</div>
+	<div class="well fill-offset full-bleed" v-if="isPublishingToPlatforms">
+		<fieldset>
+			<app-form-legend compact>
+				<translate>Publish your post to social media</translate>
+			</app-form-legend>
+
+			<app-loading v-if="isLoadingLinkedAccounts" />
+			<div v-else>
+				<p class="help-block">
+					<translate>Linked Accounts from this post's owner (You) and the game show up here.</translate><br />
+					<translate>To link more, visit the Linked Accounts sections on your user profile or this game's dashboard.</translate>
+				</p>
+				<strong><translate>Game's Linked Accounts</translate></strong>
+				<div v-for="account of gameLinkedAccounts"
+					:key="account.id"
+					:value="account.id">
+					<input type="checkbox" 
+						:value="account.id"
+						:id="account.id"
+						:checked="isLinkedAccountActive(account.id)"
+						@change="changeLinkedAccount($event.target.value)"/>
+					<app-jolticon
+						v-app-tooltip="account.displayName"
+						:icon="account.icon" />
+					<label :for="account.id">{{account.name}}</label>
+				</div>
+				<strong><translate>Post owner's Linked Accounts</translate></strong>
+				<p class="help-block" v-if="!canEditOwnerLinkedAccounts">
+					Only the owner of this post can edit this section.
+				</p>
+				<div v-for="account of userLinkedAccounts"
+					:key="account.id"
+					:value="account.id">
+					<input type="checkbox" 
+						:value="account.id"
+						:id="account.id"
+						:disabled="!canEditOwnerLinkedAccounts"
+						:checked="isLinkedAccountActive(account.id)"
+						@change="changeLinkedAccount($event.target.value)"/>
+					<app-jolticon
+						v-app-tooltip="account.displayName"
+						:icon="account.icon" />
+					<label :for="account.id">{{account.name}}</label>
+				</div>
+			</div>
+
+		</fieldset>
+
+		<div class="text-right">
+			<app-button
+				trans
+				@click.prevent="removePublishingToPlatforms()"
+				>
+				<translate>Remove</translate>
 			</app-button>
 		</div>
 	</div>
