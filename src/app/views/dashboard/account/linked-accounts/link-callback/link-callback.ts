@@ -20,10 +20,10 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 	@RouteResolve()
 	async routeResolve(this: undefined, route: Route) {
 		let url;
-		if (route.params.provider === LinkedAccount.PROVIDER_YOUTUBE) {
+		if (route.params.provider === LinkedAccount.PROVIDER_YOUTUBE_CHANNEL) {
 			url =
-				'/web/dash/linked-accounts/youtube-channel-link-callback/' +
-				route.params.provider +
+				'/web/dash/linked-accounts/link-youtube-channel-callback/' +
+				LinkedAccount.PROVIDER_YOUTUBE + // replace with actual youtube id for backend
 				'?code=' +
 				route.query.code +
 				'&state=' +
@@ -128,6 +128,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 						);
 					}
 					break;
+				case LinkedAccount.PROVIDER_YOUTUBE_CHANNEL:
 				case LinkedAccount.PROVIDER_YOUTUBE:
 					{
 						const channel = new YoutubeChannel($payload.channel);

@@ -120,7 +120,17 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 		}
 	}
 
-	async linkYouTubeChannel() {}
+	async linkYouTubeChannel() {
+		if (!this.user) {
+			return;
+		}
+
+		await LinkedAccounts.link(
+			this.$router,
+			'',
+			'/web/dash/linked-accounts/link-youtube-channel'
+		);
+	}
 
 	async unlinkYouTubeChannel(channel: YoutubeChannel) {
 		if (!this.user) {
