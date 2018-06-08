@@ -1,0 +1,62 @@
+<div>
+	<div class="row linked-accounts-list">
+        <app-linked-account
+            :account="facebookAccount"
+            provider="facebook"
+			@link="onLink" />
+        <app-linked-account
+            :account="twitterAccount"
+            provider="twitter"
+			@link="onLink" />
+        <app-linked-account
+            :account="googleAccount"
+            provider="google"
+			@link="onLink" />
+        <app-linked-account
+            :account="twitchAccount"
+            provider="twitch"
+			@link="onLink" />
+    </div>
+
+	<div class="row">
+		<div class="col-md-8 col-lg-6">
+			<h3><translate>YouTube Channels</translate></h3>
+
+			<p class="page-help">
+				<translate>You can link your YouTube channels in order to post video comments on games.</translate>
+			</p>
+
+			<div class="list-group" v-if="channels.length > 0">
+				<div
+					class="list-group-item clearfix"
+					v-for="channel of channels"
+					:key="channel.id"
+					>
+					<div class="pull-right">
+						<app-button
+							trans
+							@click="unlinkYoutube( channel )"
+							>
+							<translate>Unlink</translate>
+						</app-button>
+					</div>
+					<strong>
+						<a :href="`https://www.youtube.com/channel/${ channel.channel_id }`" target="_blank">
+							{{ channel.title }}
+						</a>
+					</strong>
+				</div>
+			</div>
+
+			<div>
+				<app-button
+					primary
+					icon="link"
+					@click="link( 'youtube-channel' )"
+					>
+					<translate>Link YouTube Channel</translate>
+				</app-button>
+			</div>
+		</div>
+	</div>
+</div>

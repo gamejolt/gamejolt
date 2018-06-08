@@ -7,6 +7,7 @@ import { routeDashAccountLinkedAccountsList } from './linked-accounts/list/list.
 import { routeDashAccountLinkedAccountsLinking } from './linked-accounts/linking/linking.route';
 import { routeDashAccountLinkedAccountsLinkCallback } from './linked-accounts/link-callback/link-callback.route';
 import { routeDashAccountFinancials } from './financials/financials.route';
+import { routeDashAccountLinkedAccounts } from './linked-accounts/linked-accounts.route';
 
 export const routeDashAccount: RouteConfig = {
 	path: '/dashboard',
@@ -16,7 +17,8 @@ export const routeDashAccount: RouteConfig = {
 		routeDashAccountEdit,
 		routeDashAccountEmailPreferences,
 		routeDashAccountChangePassword,
-		routeDashAccountLinkedAccountsList,
+		routeDashAccountLinkedAccounts,
+		// routeDashAccountLinkedAccountsList,
 		routeDashAccountLinkedAccountsLinking,
 		routeDashAccountLinkedAccountsLinkCallback,
 		routeDashAccountFinancials,
