@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import View from '!view!./linked-accounts.html?style=./linked-accounts.styl';
+import View from '!view!./linked-accounts.html';
 
 import {
 	BaseRouteComponent,
