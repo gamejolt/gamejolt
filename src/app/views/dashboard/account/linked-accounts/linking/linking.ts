@@ -90,6 +90,6 @@ export default class RouteDashAccountLinkedAccountsLinking extends BaseRouteComp
 	failed() {
 		Growls.error(this.$gettext('Could not link.'), this.$gettext('Link Failed'));
 
-		this.$router.push({ name: 'dash.account.linked-accounts.list' });
+		this.$router.push({ name: 'dash.account.linked-accounts' });
 	}
 }

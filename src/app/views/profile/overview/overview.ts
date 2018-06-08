@@ -26,6 +26,10 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppUserLevelWidget } from '../../../components/user/level-widget/level-widget';
 import { Store } from '../../../store/index';
+import {
+	Provider,
+	LinkedAccount,
+} from '../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
 
 @View
 @Component({
@@ -55,9 +59,16 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	@State app: Store['app'];
 
+	static readonly PROVIDERS: Provider[] = [
+		LinkedAccount.PROVIDER_TWITTER,
+		LinkedAccount.PROVIDER_GOOGLE,
+		LinkedAccount.PROVIDER_TWITCH,
+	];
+
 	developerGames: Game[] = [];
 	youtubeChannels: YoutubeChannel[] = [];
 	videos: CommentVideo[] = [];
+	linkedAccounts: LinkedAccount[] = [];
 
 	showFullDescription = false;
 	canToggleDescription = false;
@@ -98,5 +109,10 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		this.developerGames = Game.populate($payload.developerGamesTeaser);
 		this.youtubeChannels = YoutubeChannel.populate($payload.youtubeChannels);
 		this.videos = CommentVideo.populate($payload.videos);
+		if (this.user.linkedAccounts) {
+			this.linkedAccounts = RouteProfileOverview.PROVIDERS.filter(p =>
+				this.user.linkedAccounts!.some(l => l.provider === p)
+			).map(p => this.user.linkedAccounts!.find(l => l.provider === p)!);
+		}
 	}
 }

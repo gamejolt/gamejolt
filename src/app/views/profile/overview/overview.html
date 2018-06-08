@@ -99,57 +99,29 @@
 							:user="user"
 							/>
 
-						<template v-if="(
-							user.twitch_id
-							|| user.twitter_id
-							|| user.google_id
-							|| user.web_site
-							)"
-							>
-							<div v-if="user.twitter_id">
+						<template v-if="user.linkedAccounts.length">
+							<div v-for="account of linkedAccounts" :key="account.id">
 								<a
 									class="link-unstyled"
-									:href="`http://twitter.com/${user.twitter_screenname}`"
+									:href="account.platformLink"
 									target="_blank"
 									>
-									<app-jolticon icon="twitter-bird" />
-									@{{ user.twitter_screenname }}
-								</a>
-							</div>
-
-							<div v-if="user.google_id">
-								<a
-									class="link-unstyled"
-									:href="`https://plus.google.com/${user.google_id}`"
-									target="_blank"
-									>
-									<app-jolticon icon="google-plus" />
-									{{ user.google_nickname }}
-								</a>
-							</div>
-
-							<div v-if="user.twitch_id">
-								<a
-									class="link-unstyled"
-									:href="`https://twitch.tv/${user.twitch_name}`"
-									target="_blank"
-									>
-									<app-jolticon icon="twitch" />
-									{{ user.twitch_name }}
-								</a>
-							</div>
-
-							<div v-if="user.web_site">
-								<a
-									class="link-unstyled"
-									:href="user.web_site"
-									target="_blank"
-									>
-									<app-jolticon icon="link" />
-									<translate>Website</translate>
+									<app-jolticon :icon="account.icon" />
+									<span v-if="account.provider === 'twitter'">@</span>{{ account.name }}
 								</a>
 							</div>
 						</template>
+
+						<div v-if="user.web_site">
+							<a
+								class="link-unstyled"
+								:href="user.web_site"
+								target="_blank"
+								>
+								<app-jolticon icon="link" />
+								<translate>Website</translate>
+							</a>
+						</div>
 						<template v-if="youtubeChannels.length">
 							<div v-for="channel of youtubeChannels" :key="channel.id">
 								<a
