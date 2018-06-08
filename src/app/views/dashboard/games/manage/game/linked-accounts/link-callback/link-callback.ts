@@ -8,6 +8,7 @@ import { RouteState, RouteStore } from '../../../manage.store';
 import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { LinkedAccount } from '../../../../../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
+import { CreateElement } from 'vue';
 
 @Component({
 	name: 'RouteDashGamesManageGameLinkedAccountsLinkCallback',
@@ -98,5 +99,9 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 		this.$router.push({
 			name: 'dash.games.manage.game.linked-accounts',
 		});
+	}
+
+	render(h: CreateElement) {
+		return h('div');
 	}
 }

@@ -45,31 +45,21 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 	}
 
 	get twitterAccount() {
-		if (this.accounts) {
-			for (const account of this.accounts) {
-				if (account.provider === LinkedAccount.PROVIDER_TWITTER) {
-					return account;
-				}
-			}
-		}
-		return null;
+		return this.getAccount(LinkedAccount.PROVIDER_TWITTER);
 	}
 
 	get facebookAccount() {
-		if (this.accounts) {
-			for (const account of this.accounts) {
-				if (account.provider === LinkedAccount.PROVIDER_FACEBOOK) {
-					return account;
-				}
-			}
-		}
-		return null;
+		return this.getAccount(LinkedAccount.PROVIDER_FACEBOOK);
 	}
 
 	get tumblrAccount() {
+		return this.getAccount(LinkedAccount.PROVIDER_TUMBLR);
+	}
+
+	getAccount(provider: string) {
 		if (this.accounts) {
 			for (const account of this.accounts) {
-				if (account.provider === LinkedAccount.PROVIDER_TUMBLR) {
+				if (account.provider === provider) {
 					return account;
 				}
 			}
