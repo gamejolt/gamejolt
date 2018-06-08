@@ -82,7 +82,8 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 	async onUnlink(_e: Event, provider: Provider) {
 		// TODO: client
 		const response = await Api.sendRequest(
-			'/web/dash/developer/games/linked-accounts/unlink/' + this.game.id + '/' + provider
+			'/web/dash/developer/games/linked-accounts/unlink/' + this.game.id + '/' + provider,
+			{}
 		);
 
 		const providerName = LinkedAccount.getProviderDisplayName(provider);

@@ -3,19 +3,23 @@
         <app-linked-account
             :account="facebookAccount"
             provider="facebook"
-			@link="onLink" />
+			@link="onLink"
+            @unlink="onUnlink" />
         <app-linked-account
             :account="twitterAccount"
             provider="twitter"
-			@link="onLink" />
+			@link="onLink"
+            @unlink="onUnlink" />
         <app-linked-account
             :account="googleAccount"
             provider="google"
-			@link="onLink" />
+			@link="onLink"
+            @unlink="onUnlink" />
         <app-linked-account
             :account="twitchAccount"
             provider="twitch"
-			@link="onLink" />
+			@link="onLink"
+            @unlink="onUnlink" />
     </div>
 
 	<div class="row">
