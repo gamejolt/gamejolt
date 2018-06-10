@@ -107,16 +107,16 @@ class TermsChangeBanner extends Banner {
 			return false;
 		}
 
-		return localStorage.getItem(this.StorageKey) === null;
+		return !window.localStorage[this.StorageKey];
 	}
 
 	async onClick() {
 		router.push({ name: 'legal.privacy' });
-		localStorage.setItem(this.StorageKey, '');
+		window.localStorage[this.StorageKey] =  Date.now();
 	}
 
 	onClose() {
-		localStorage.setItem(this.StorageKey, '');
+		window.localStorage[this.StorageKey] =  Date.now();
 	}
 }
 
