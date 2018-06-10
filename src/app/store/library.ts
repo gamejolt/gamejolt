@@ -105,7 +105,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 
 		const jamPlaylists: GameCollection[] = this.jamPlaylists;
 		if (jamPlaylists.length) {
-			folders.developers = new GamePlaylistFolder(
+			folders.jams = new GamePlaylistFolder(
 				Translate.$gettext('Followed Jams'),
 				jamPlaylists
 			);
