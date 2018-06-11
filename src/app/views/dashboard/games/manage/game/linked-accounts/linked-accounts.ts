@@ -87,9 +87,12 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 			this.facebookAccount.facebookSelectedPage
 		) {
 			const confirmRemoval = await ModalConfirm.show(
-				'Do you really want to unlink your Facebook account? Your Facebook Page "' +
-					this.facebookAccount.facebookSelectedPage.name +
-					'" will also be unlinked in the process.',
+				this.$gettextInterpolate(
+					'Do you really want to unlink your Facebook account? Your Facebook Page "%{ title }" will also be unlinked in the process.',
+					{
+						title: this.facebookAccount.facebookSelectedPage.name,
+					}
+				),
 				undefined,
 				'yes'
 			);
@@ -102,9 +105,12 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 			this.tumblrAccount.tumblrSelectedBlog
 		) {
 			const confirmRemoval = await ModalConfirm.show(
-				'Do you really want to unlink your Tumblr account? Your Tumblr Blog "' +
-					this.tumblrAccount.tumblrSelectedBlog.title +
-					'" will also be unlinked in the process.',
+				this.$gettextInterpolate(
+					'Do you really want to unlink your Tumblr account? Your Tumblr Blog "%{ title }" will also be unlinked in the process.',
+					{
+						title: this.tumblrAccount.tumblrSelectedBlog.title,
+					}
+				),
 				undefined,
 				'yes'
 			);
