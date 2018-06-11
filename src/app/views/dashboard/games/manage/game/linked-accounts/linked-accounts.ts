@@ -17,6 +17,7 @@ import { LinkedAccounts } from '../../../../../../../lib/gj-lib-client/component
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { ModalFacebookPageSelector } from '../../../../../../../lib/gj-lib-client/components/linked-account/facebook-page-selector-modal/facebook-page-selector-modal-service';
 import { ModalTumblrBlogSelector } from '../../../../../../../lib/gj-lib-client/components/linked-account/tumblr-blog-selector-modal/tumblr-blog-selector-modal-service';
+import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 
 @View
 @Component({
@@ -80,6 +81,38 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 	}
 
 	async onUnlink(_e: Event, provider: Provider) {
+		if (
+			provider === LinkedAccount.PROVIDER_FACEBOOK &&
+			this.facebookAccount &&
+			this.facebookAccount.facebookSelectedPage
+		) {
+			const confirmRemoval = await ModalConfirm.show(
+				'Do you really want to unlink your Facebook account? Your Facebook Page "' +
+					this.facebookAccount.facebookSelectedPage.name +
+					'" will also be unlinked in the process.',
+				undefined,
+				'yes'
+			);
+			if (!confirmRemoval) {
+				return;
+			}
+		} else if (
+			provider === LinkedAccount.PROVIDER_TUMBLR &&
+			this.tumblrAccount &&
+			this.tumblrAccount.tumblrSelectedBlog
+		) {
+			const confirmRemoval = await ModalConfirm.show(
+				'Do you really want to unlink your Tumblr account? Your Tumblr Blog "' +
+					this.tumblrAccount.tumblrSelectedBlog.title +
+					'" will also be unlinked in the process.',
+				undefined,
+				'yes'
+			);
+			if (!confirmRemoval) {
+				return;
+			}
+		}
+
 		// TODO: client
 		const response = await Api.sendRequest(
 			'/web/dash/developer/games/linked-accounts/unlink/' + this.game.id + '/' + provider,
