@@ -403,6 +403,9 @@
 			</app-button>
 		</div>
 	</div>
+	<div class="alert" v-if="hasPublishedToPlatforms">
+		<translate>Any edits made to this post will not be reflected on the posts on your social media.</translate>
+	</div>
 
 	<!--
 		Can only modify access control before it's published for the first time.'

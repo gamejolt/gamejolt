@@ -165,6 +165,10 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		}
 	}
 
+	get hasPublishedToPlatforms() {
+		return this.isPublished && this.formModel.publish_to_platforms !== null;
+	}
+
 	async onInit() {
 		await this.fetchTimezones();
 
