@@ -113,7 +113,6 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 			}
 		}
 
-		// TODO: client
 		const response = await Api.sendRequest(
 			'/web/dash/developer/games/linked-accounts/unlink/' + this.game.id + '/' + provider,
 			{}
