@@ -42,6 +42,7 @@ import {
 	ThemeStore,
 } from '../../lib/gj-lib-client/components/theme/theme.store';
 import { ContentFocus } from '../../lib/gj-lib-client/components/content-focus/content-focus.service';
+import { splitNoSidebar } from '../components/split-test/split-test-service';
 
 export type Actions = AppActions &
 	ThemeActions &
@@ -145,6 +146,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		return this.isLeftPaneOverlayed && !Screen.isLg;
 	}
 
+	get hasSidebar() {
+		return Screen.isXs || this.app.user || !splitNoSidebar(this.route);
+	}
+
 	@VuexAction
 	async bootstrap() {
 		const prevResolver = bootstrapResolver;
@@ -242,6 +247,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async toggleLeftPane() {
+		if (!this.hasSidebar) {
+			return;
+		}
+
 		this._toggleLeftPane();
 		this._checkBackdrop();
 		Settings.set('sidebar', this.isLeftPaneSticky);

@@ -3,10 +3,8 @@
 @require '../../../lib/gj-lib-client/components/auth/auth-form'
 
 #auth-container
-
 	&.has-cover-img
-		.error
-		.alert
+		.error, .alert
 			text-shadow: none
 
 	// We want all the forms in the auth section to match the auth-form styling.
@@ -15,10 +13,6 @@
 
 		.form-group
 			@extend .anim-fade-in-up
-
-	// Match the button heights to the auth-form input heights.
-	button
-		height: 40px
 
 	.loading
 		color: $white
@@ -31,8 +25,7 @@
 		margin-bottom: 10px
 
 	.auth-line-thru
-		&::before
-		&::after
+		&::before, &::after
 			border-color: rgba($white, 0.5)
 
 	.auth-page-links

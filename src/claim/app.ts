@@ -14,6 +14,7 @@ import { date } from '../lib/gj-lib-client/vue/filters/date';
 import { loadCurrentLanguage } from '../utils/translations';
 import { Store } from './store/index';
 import { AppTheme } from '../lib/gj-lib-client/components/theme/theme';
+import { AppCookieBanner } from '../_common/cookie/banner/banner';
 
 @View
 @Component({
@@ -24,6 +25,7 @@ import { AppTheme } from '../lib/gj-lib-client/components/theme/theme';
 		AppGrowls,
 		AppModals,
 		AppUserBar,
+		AppCookieBanner,
 	},
 	filters: {
 		date,
