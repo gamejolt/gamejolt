@@ -99,41 +99,30 @@
 							:user="user"
 							/>
 
-						<template v-if="user.linkedAccounts.length">
-							<div v-for="account of linkedAccounts" :key="account.id">
-								<a
-									class="link-unstyled"
-									:href="account.platformLink"
-									target="_blank"
-									>
+						<ul class="list-unstyled">
+							<li v-if="user.web_site">
+								<app-jolticon icon="world" />
+								<a :href="user.web_site" target="_blank">
+									<translate>Website</translate>
+								</a>
+							</li>
+							<template v-if="linkedAccounts.length">
+								<li v-for="account of linkedAccounts" :key="account.id">
 									<app-jolticon :icon="account.icon" />
-									<span v-if="account.provider === 'twitter'">@</span>{{ account.name }}
-								</a>
-							</div>
-						</template>
-
-						<div v-if="user.web_site">
-							<a
-								class="link-unstyled"
-								:href="user.web_site"
-								target="_blank"
-								>
-								<app-jolticon icon="link" />
-								<translate>Website</translate>
-							</a>
-						</div>
-						<template v-if="youtubeChannels.length">
-							<div v-for="channel of youtubeChannels" :key="channel.id">
-								<a
-									class="link-unstyled"
-									:href="`https://www.youtube.com/channel/${channel.channel_id}`"
-									target="_blank"
-									>
+									<a :href="account.platformLink" target="_blank">
+										<span v-if="account.provider === 'twitter'">@</span>{{ account.name }}
+									</a>
+								</li>
+							</template>
+							<template v-if="youtubeChannels.length">
+								<li v-for="channel of youtubeChannels" :key="channel.id">
 									<app-jolticon icon="youtube" />
-									{{ channel.title }}
-								</a>
-							</div>
-						</template>
+									<a :href="channel.link" target="_blank">
+										{{ channel.title }}
+									</a>
+								</li>
+							</template>
+						</ul>
 
 						<br>
 
