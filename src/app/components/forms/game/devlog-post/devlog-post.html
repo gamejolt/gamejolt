@@ -358,6 +358,13 @@
 					<translate>Linked Accounts from this post's owner (You) and the game show up here.</translate><br />
 					<translate>To link more, visit the Linked Accounts sections on your user profile or this game's dashboard.</translate>
 				</p>
+				<div class="alert" v-if="platformRestrictions.length">
+					<app-jolticon icon="exclamation-circle" />
+					<div v-for="restriction of platformRestrictions" 
+						:key="restriction.topic">
+						{{getPlatformRestrictionTitle(restriction)}}
+					</div>
+				</div>
 				<strong><translate>Game's Linked Accounts</translate></strong>
 				<div v-for="account of gameLinkedAccounts"
 					:key="account.id"

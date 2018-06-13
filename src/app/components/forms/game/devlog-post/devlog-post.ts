@@ -58,6 +58,11 @@ type FormGameDevlogPostModel = FiresidePost & {
 	poll_item10: string;
 };
 
+type PlatformRestriction = {
+	topic: string;
+	provider: string;
+};
+
 @View
 @Component({
 	components: {
@@ -100,6 +105,8 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	userLinkedAccounts: LinkedAccount[] | null = null;
 	gameLinkedAccounts: LinkedAccount[] | null = null;
 	isLoadingLinkedAccounts = false;
+	platformRestrictions: PlatformRestriction[] = [];
+	restrictionCheckIntervalHandle?: NodeJS.Timer;
 
 	readonly FiresidePost = FiresidePost;
 	readonly GameVideo = GameVideo;
@@ -107,6 +114,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	readonly MAX_POLL_ITEMS = 10;
 	readonly MIN_DURATION = 5;
 	readonly MAX_DURATION = 20160;
+	readonly RESTRICTION_POLL_INTERVAL = 5000;
 
 	get loadUrl() {
 		return `/web/dash/developer/games/devlog/save/${this.model!.game.id}/${this.model!.id}`;
@@ -211,6 +219,13 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 
 		if (this.isPublishingToPlatforms) {
 			await this.loadLinkedAccounts();
+		}
+
+		if (!this.isPublished) {
+			this.restrictionCheckIntervalHandle = setInterval(
+				this.checkPlatformRestrictions,
+				this.RESTRICTION_POLL_INTERVAL
+			);
 		}
 	}
 
@@ -333,6 +348,9 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 
 		// load data
 		await this.loadLinkedAccounts();
+
+		// run check
+		await this.checkPlatformRestrictions();
 	}
 
 	removePublishingToPlatforms() {
@@ -371,7 +389,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		}
 	}
 
-	changeLinkedAccount(id: number) {
+	async changeLinkedAccount(id: number) {
 		if (this.formModel.publish_to_platforms !== null) {
 			const isActive = this.isLinkedAccountActive(id);
 			const identifier = this.getLinkedAccountIdenfifier(id);
@@ -388,6 +406,9 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 					platforms.push(identifier);
 					this.setField('publish_to_platforms', platforms.join(','));
 				}
+
+				// run check
+				await this.checkPlatformRestrictions();
 			}
 			this.changed = true;
 		}
@@ -409,5 +430,68 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 
 	onSubmitSuccess() {
 		Object.assign(this.model as FiresidePost, this.formModel);
+	}
+
+	async checkPlatformRestrictions() {
+		if (this.isPublishingToPlatforms) {
+			const payload = await Api.sendRequest(
+				'/web/dash/developer/games/devlog/check-platform-restrictions/' + this.formModel.id,
+				{
+					title: this.formModel.title,
+					content: this.formModel.content_markdown,
+					publish_to_platforms: this.formModel.publish_to_platforms,
+				}
+			);
+			if (payload.success) {
+				this.platformRestrictions = [];
+				for (const restrictionData of payload.restrictions) {
+					this.platformRestrictions.push({
+						topic: restrictionData.topic,
+						provider: restrictionData.provider,
+					});
+				}
+			}
+		}
+	}
+
+	getPlatformRestrictionTitle(restriction: PlatformRestriction) {
+		const providerPrefix = LinkedAccount.getProviderDisplayName(restriction.provider) + ': ';
+		const restrictionKey = restriction.provider + '-' + restriction.topic;
+		switch (restrictionKey) {
+			case 'twitter-title-too-long':
+				return providerPrefix + 'The post title is too long for a tweet.';
+			case 'twitter-gif-file-size-too-large':
+				return (
+					providerPrefix +
+					'The attached animated GIF file can only be up to 15 MB in size.'
+				);
+			case 'twitter-too-many-media-items-1-animation':
+				return providerPrefix + 'Only one animated GIF file is supported per tweet.';
+			case 'twitter-too-many-media-items-4-images':
+				return providerPrefix + 'Only up to 4 images are supported per tweet.';
+			case 'twitter-image-file-size-too-large':
+				return providerPrefix + 'Any attached image file can only be up to 5 MB in size.';
+			case 'twitter-too-many-hashtags':
+				return (
+					providerPrefix +
+					'Only the first 3 hashtags will be taken into account, your post has more.'
+				);
+			case 'facebook-media-item-photo-too-large':
+				return providerPrefix + 'Any attached photo can only be up to 10 MB in size.';
+			case 'tumblr-media-item-photo-too-large':
+				return providerPrefix + 'Any attached photo can only be up to 10 MB in size.';
+		}
+
+		// we do not have the restriction listed here, try and make the topic somewhat readable
+		const message = restriction.topic.split('-');
+		return providerPrefix + message;
+	}
+
+	destroyed() {
+		// clean up the check interval
+		if (this.restrictionCheckIntervalHandle) {
+			clearInterval(this.restrictionCheckIntervalHandle);
+			this.restrictionCheckIntervalHandle = undefined;
+		}
 	}
 }
