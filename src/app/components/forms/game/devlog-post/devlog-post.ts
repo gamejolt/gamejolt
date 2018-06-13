@@ -414,6 +414,25 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		}
 	}
 
+	getGameLinkedAccountDisplayName(account: LinkedAccount) {
+		switch (account.provider) {
+			case LinkedAccount.PROVIDER_FACEBOOK:
+				if (account.facebookSelectedPage) {
+					return account.facebookSelectedPage.name;
+				} else {
+					return undefined;
+				}
+			case LinkedAccount.PROVIDER_TUMBLR:
+				if (account.tumblrSelectedBlog) {
+					return account.tumblrSelectedBlog.title;
+				} else {
+					return undefined;
+				}
+			default:
+				return account.name;
+		}
+	}
+
 	onDraftSubmit() {
 		this.setField('status', FiresidePost.STATUS_DRAFT);
 		this.$refs.form.submit();
