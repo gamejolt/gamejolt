@@ -8,15 +8,14 @@ import {
 import { PaymentSource } from '../../../../../lib/gj-lib-client/components/payment-source/payment-source.model';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { RouteMutation, RouteStore } from '../account.store';
-import { AppCreditCard } from '../../../../../lib/gj-lib-client/components/payment-source/credit-card';
-import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { ModalCreditCardRemove } from '../../../../../lib/gj-lib-client/components/payment-source/credit-card-remove-modal/credit-card-remove-modal-service';
+import { arrayRemove } from '../../../../../lib/gj-lib-client/utils/array';
+import { AppUserPaymentSourceCard } from '../../../../components/user/payment-source/card/card';
 
 @View
 @Component({
 	name: 'RouteDashAccountPaymentMethods',
 	components: {
-		AppCreditCard,
+		AppUserPaymentSourceCard,
 	},
 })
 export default class RouteDashAccountPaymentMethods extends BaseRouteComponent {
@@ -38,43 +37,14 @@ export default class RouteDashAccountPaymentMethods extends BaseRouteComponent {
 	}
 
 	routeInit() {
-		this.setHeading(this.$gettext('Payment Methods'));
+		this.setHeading(this.routeTitle);
 	}
 
 	routed($payload: any) {
 		this.paymentSources = PaymentSource.populate($payload.paymentSources);
 	}
 
-	async onRemove(_e: Event, id: number) {
-		const source = this.paymentSources.find(s => s.id === id);
-
-		if (!source) {
-			return;
-		}
-
-		const result = await ModalCreditCardRemove.show(
-			this.$gettext(`Are you sure you want to remove this Credit Card?`),
-			source,
-			'Confirm...',
-			'yes'
-		);
-
-		if (!result) {
-			return;
-		}
-
-		const response = await source.$remove();
-		if (response.success) {
-			this.paymentSources = PaymentSource.populate(response.paymentSources);
-			Growls.success(
-				this.$gettext('The Credit Card has been successfully removed.'),
-				this.$gettext('Remove Credit Card')
-			);
-		} else {
-			Growls.error(
-				this.$gettext('Failed to remove the Credit Card.'),
-				this.$gettext('Error')
-			);
-		}
+	onRemove(source: PaymentSource) {
+		arrayRemove(this.paymentSources, i => i.id === source.id);
 	}
 }

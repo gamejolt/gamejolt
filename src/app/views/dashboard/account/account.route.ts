@@ -8,7 +8,7 @@ import { routeDashAccountLinkedAccountsLinking } from './linked-accounts/linking
 import { routeDashAccountLinkedAccountsLinkCallback } from './linked-accounts/link-callback/link-callback.route';
 import { routeDashAccountFinancials } from './financials/financials.route';
 import { routeDashAccountPaymentMethods } from './payment-methods/payment-methods.route';
-import { routeDashAccountBillingAddress } from './billing-address/billing-address.route';
+import { routeDashAccountAddresses } from './addresses/addresses.route';
 
 export const routeDashAccount: RouteConfig = {
 	path: '/dashboard',
@@ -23,6 +23,6 @@ export const routeDashAccount: RouteConfig = {
 		routeDashAccountLinkedAccountsLinkCallback,
 		routeDashAccountFinancials,
 		routeDashAccountPaymentMethods,
-		routeDashAccountBillingAddress,
+		routeDashAccountAddresses,
 	],
 };

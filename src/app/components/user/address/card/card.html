@@ -1,0 +1,47 @@
+<app-card>
+
+	<a class="card-remove" @click="remove()" v-if="showRemove">
+		<app-jolticon icon="remove" />
+	</a>
+
+	<div v-if="address.fullname" class="card-title">
+		<h5>{{ address.fullname }}</h5>
+	</div>
+
+	<div class="card-content">
+		<div v-if="address.street1">
+			{{ address.street1 }}
+		</div>
+
+		<div v-if="address.street2">
+			{{ address.street2 }}
+		</div>
+
+		<div>
+			<template v-if="address.city">
+				{{ address.city }}
+			</template>
+			<template v-if="address.region">
+				{{ region }}
+			</template>
+			<template v-if="address.postcode">
+				{{ address.postcode }}
+			</template>
+		</div>
+
+		<div v-if="address.country">
+			{{ country }}
+		</div>
+	</div>
+
+	<div class="card-controls">
+		<app-button
+			@click="edit()"
+			primary
+			solid
+			>
+			<translate>Edit</translate>
+		</app-button>
+	</div>
+
+</app-card>

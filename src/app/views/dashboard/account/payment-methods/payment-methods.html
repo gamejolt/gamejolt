@@ -1,19 +1,24 @@
-<div class="row">
+<div class="row" v-if="routeBootstrapped">
 
-	<div v-if="hasPaymentSources">
+	<template v-if="hasPaymentSources">
 		<div
-			v-if="hasPaymentSources"
-			v-for="paymentSource in paymentSources"
-			:key="paymentSource.id">
-			<app-credit-card
-				:paymentSource="paymentSource"
-				:preview="false"
-				@remove="onRemove"
+			v-for="paymentSource of paymentSources"
+			:key="paymentSource.id"
+			class="col-md-6"
+			>
+			<app-user-payment-source-card
+				:payment-source="paymentSource"
+				show-remove
+				@remove="onRemove(paymentSource)"
 				/>
 		</div>
-	</div>
-	<div v-else>
-		We have no recorded payment methods for you.
-	</div>
+	</template>
+	<template v-else>
+		<div class="col-md-6 col-centered">
+			<p class="lead text-center">
+				<translate>You do not have any payment methods saved yet.</translate>
+			</p>
+		</div>
+	</template>
 
 </div>
