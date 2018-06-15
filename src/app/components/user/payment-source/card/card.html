@@ -1,0 +1,32 @@
+<app-card class="payment-source-credit-card">
+	<a class="card-remove" @click="remove()" v-if="showRemove">
+		<app-jolticon icon="remove" />
+	</a>
+
+	<div class="-icon">
+		<app-jolticon
+			icon="credit-card"
+			big
+			/>
+	</div>
+
+	<div class="-body">
+		<div class="card-title">
+			<h5>
+				<translate>Credit Card</translate>
+			</h5>
+		</div>
+
+		<div class="card-meta">
+			<span class="tag">
+				{{ paymentSource.brand }}
+			</span>
+			****
+			{{ paymentSource.last4 }}
+
+			<span class="dot-separator" />
+			{{ expires }}
+		</div>
+
+	</div>
+</app-card>
