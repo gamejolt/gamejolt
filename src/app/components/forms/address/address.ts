@@ -17,7 +17,9 @@ export class FormAddress extends BaseForm<UserAddress> {
 	onCountryChange() {
 		this.regions = Geo.getRegions(this.formModel.country) || null;
 		if (this.regions) {
-			this.setField('region', this.regions[0].code); // Default to first.
+			if (!this.regions.some(r => r.code === this.formModel.region)) {
+				this.setField('region', this.regions[0].code); // Default to first.
+			}
 		} else if (!this.initialLoad) {
 			// accept the initial value in this field
 			this.setField('region', '');
