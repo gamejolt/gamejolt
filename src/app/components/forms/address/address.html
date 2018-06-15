@@ -1,20 +1,24 @@
 <app-form name="userAddressForm">
 
-	<app-form-group
-		name="country"
-		:label="$gettext( 'Country' )"
-		>
-		<app-form-control-select>
-			<option
-				v-for="country of countries"
-				:key="country.code"
-				:value="country.code"
+	<div class="row">
+		<div class="col-sm-6">
+			<app-form-group
+				name="country"
+				:label="$gettext( 'Country' )"
 				>
-				{{ country.name }}
-			</option>
-		</app-form-control-select>
-		<app-form-control-errors />
-	</app-form-group>
+				<app-form-control-select>
+					<option
+						v-for="country of countries"
+						:key="country.code"
+						:value="country.code"
+						>
+						{{ country.name }}
+					</option>
+				</app-form-control-select>
+				<app-form-control-errors />
+			</app-form-group>
+		</div>
+	</div>
 
     <app-form-group
         name="street1"

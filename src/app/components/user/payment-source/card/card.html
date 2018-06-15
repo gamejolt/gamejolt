@@ -17,15 +17,22 @@
 			</h5>
 		</div>
 
-		<div class="card-meta">
-			<span class="tag">
-				{{ paymentSource.brand }}
-			</span>
-			****
-			{{ paymentSource.last4 }}
+		<div class="card-content">
+			<div>
+				<span class="tag">
+					{{ paymentSource.brand }}
+				</span>
+				****
+				{{ paymentSource.last4 }}
 
-			<span class="dot-separator" />
-			{{ expires }}
+				<span class="dot-separator" />
+				{{ expires }}
+			</div>
+
+			<template v-if="paymentSource.user_address">
+				<br>
+				<app-user-address-details :address="paymentSource.user_address" />
+			</template>
 		</div>
 
 	</div>

@@ -5,11 +5,13 @@ import { AppCard } from '../../../../../lib/gj-lib-client/components/card/card';
 import { PaymentSource } from '../../../../../lib/gj-lib-client/components/payment-source/payment-source.model';
 import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
+import { AppUserAddressDetails } from '../../address/details/details';
 
 @View
 @Component({
 	components: {
 		AppCard,
+		AppUserAddressDetails,
 	},
 })
 export class AppUserPaymentSourceCard extends Vue {
