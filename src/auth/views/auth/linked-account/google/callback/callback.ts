@@ -18,7 +18,10 @@ export default class RouteAuthLinkedAccountGoogleCallback extends BaseRouteCompo
 	@RouteResolve()
 	routeResolve(this: undefined, route: Route) {
 		const { code, state } = route.query;
-		return Api.sendRequest('/web/auth/google/callback?code=' + code + '&state=' + state, {});
+		return Api.sendRequest(
+			'/web/auth/linked-accounts/link_callback/google?code=' + code + '&state=' + state,
+			{}
+		);
 	}
 
 	routed($payload: any) {
