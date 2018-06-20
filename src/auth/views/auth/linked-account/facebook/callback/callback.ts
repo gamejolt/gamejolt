@@ -18,7 +18,10 @@ export default class RouteAuthLinkedAccountFacebookCallback extends BaseRouteCom
 	@RouteResolve()
 	routeResolve(this: undefined, route: Route) {
 		const { code, state } = route.query;
-		return Api.sendRequest('/web/auth/facebook/callback?code=' + code + '&state=' + state, {});
+		return Api.sendRequest(
+			'/web/auth/linked-accounts/link_callback/facebook?code=' + code + '&state=' + state,
+			{}
+		);
 	}
 
 	routed($payload: any) {
