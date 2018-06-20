@@ -85,11 +85,8 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 			return;
 		}
 
-		try {
-			const response = await Api.sendRequest(
-				'/web/dash/linked-accounts/unlink/' + provider,
-				{}
-			);
+		const response = await Api.sendRequest('/web/dash/linked-accounts/unlink/' + provider, {});
+		if (response.success) {
 			this.accounts = LinkedAccount.populate(response.accounts);
 			const providerName = LinkedAccount.getProviderDisplayName(provider);
 			Growls.success(
@@ -99,9 +96,9 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 				),
 				Translate.$gettext('Account Unlinked')
 			);
-		} catch (error) {
+		} else {
 			// If they don't have a password, we have to show them a modal to set it.
-			if (error === 'no-password') {
+			if (response.reason === 'no-password') {
 				const result = await UserSetPasswordModal.show();
 				if (!result) {
 					return;
