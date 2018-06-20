@@ -17,9 +17,9 @@ import {
 export default class RouteAuthLinkedAccountTwitterCallback extends BaseRouteComponent {
 	@RouteResolve()
 	routeResolve(this: undefined, route: Route) {
-		const { oauth_verifier, state } = route.query;
+		const { code, state } = route.query;
 		return Api.sendRequest(
-			'/web/auth/twitter/callback?oauth_verifier=' + oauth_verifier + '&state=' + state,
+			'/web/auth/linked-accounts/link_callback/twitter?code=' + code + '&state=' + state,
 			{}
 		);
 	}
