@@ -18,7 +18,10 @@ export default class RouteAuthLinkedAccountTwitchCallback extends BaseRouteCompo
 	@RouteResolve()
 	routeResolve(this: undefined, route: Route) {
 		const { code, state } = route.query;
-		return Api.sendRequest('/web/auth/twitch/callback?code=' + code + '&state=' + state, {});
+		return Api.sendRequest(
+			'/web/auth/linked-accounts/link_callback/twitch?code=' + code + '&state=' + state,
+			{}
+		);
 	}
 
 	routed($payload: any) {
