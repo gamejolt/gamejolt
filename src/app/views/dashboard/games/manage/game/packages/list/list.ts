@@ -9,7 +9,6 @@ import { Sellable } from '../../../../../../../../lib/gj-lib-client/components/s
 import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Growls } from '../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppJolticon } from '../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { currency } from '../../../../../../../../lib/gj-lib-client/vue/filters/currency';
 import { AppCardList } from '../../../../../../../../lib/gj-lib-client/components/card/list/list';
@@ -21,12 +20,12 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 
 @View
 @Component({
 	name: 'RouteDashGamesManageGamePackagesList',
 	components: {
-		AppJolticon,
 		AppCardList,
 		AppCardListDraggable,
 		AppCardListItem,
@@ -77,7 +76,7 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 	routed($payload: any) {
 		if ($payload.packages && !$payload.packages.length) {
 			if (this.game.hasPerms('all')) {
-				this.$router.push({
+				this.$router.replace({
 					name: 'dash.games.manage.game.packages.add',
 					params: {
 						id: this.game.id + '',
@@ -99,6 +98,10 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 	saveSort(packages: GamePackage[]) {
 		this.packages = packages;
 		GamePackage.$saveSort(this.game.id, this.packagesSort);
+	}
+
+	addPackage() {
+		GamePackageEditModal.show(this.game);
 	}
 
 	async removePackage(pkg: GamePackage) {

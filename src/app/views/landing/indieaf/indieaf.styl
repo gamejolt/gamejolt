@@ -1,8 +1,7 @@
 @require '~styles/variables'
-@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 @require '../../../../lib/gj-lib-client/components/button/button'
-
-@import url('https://fonts.googleapis.com/css?family=Megrim');
+@import url('https://fonts.googleapis.com/css?family=Megrim')
 
 .route-landing-indieaf
 	background-color: #0f0005
@@ -31,7 +30,6 @@
 			max-height: 800px
 
 		@media $media-xs
-
 			.lead
 				top: 20px
 				font-size: 45px
@@ -76,13 +74,10 @@
 			margin-top: 140px
 
 		@media $media-xs
-
-			h2
-			.spacer
+			h2, .spacer
 				margin-top: 80px
 
 	.indieaf-vs
-
 		&-row
 			clearfix()
 			position: relative
@@ -121,25 +116,24 @@
 			font-weight: bold
 			text-align: right
 
-	.btn-af
-		button-variant(
-			background: $gj-blue,
-			color: $white,
-			icon-color: $white,
-			outline-color: $gj-blue,
-			active-background: rgba($gj-pink, 0.4),
-			active-color: $white,
-			addon-color: $white,
-			outline-addon-color: $white,
-		)
-
-	.btn-af-outline
+	.button-af
+		rounded-corners()
+		display: inline-block
+		text-transform: uppercase
+		vertical-align: middle
+		cursor: pointer
+		outline: 0
+		white-space: nowrap
+		text-decoration: none !important
+		user-select: none
+		font-weight: bold
 		color: $gj-pink !important
-		border-width: $button-outline-border-size
+		border-width: 2px
 		border-style: solid
+		border-color: $gj-blue
 		line-height: 60px
-		padding-left: $button-padding-horizontal - @border-width
-		padding-right: @padding-left
+		padding-left: 20px
+		padding-right: 20px
 		text-shadow: 0 0 8px $gj-pink
 		box-shadow: 0 0 8px $gj-blue
 		font-size: 25px
@@ -147,4 +141,6 @@
 
 		&:hover
 			box-shadow: 0 0 8px $gj-pink
-
+			border-color: $gj-pink
+			background-color: rgba($gj-pink, 0.4)
+			color: $white !important

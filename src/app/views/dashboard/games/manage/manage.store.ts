@@ -39,9 +39,7 @@ type Actions = {
 type Mutations = {
 	populate: any;
 	populateMedia: any[];
-	addVideo: any;
-	addSketchfab: any;
-	addImages: any[];
+	addMedia: (GameScreenshot | GameVideo | GameSketchfab)[];
 	removeMedia: Media;
 	updateMedia: Media[];
 	finishWizard: undefined;
@@ -51,22 +49,19 @@ const STATE_PREFIX = 'dash.games.manage.game';
 
 const TRANSITION_MAP: any = {
 	details: 'description',
-	description: 'maturity',
-	maturity: 'thumbnail',
-	thumbnail: 'header',
-	header: 'media',
-	media: 'packages.list',
-	packages: 'music',
+	description: 'design',
+	design: 'packages.list',
+	packages: 'maturity',
+	maturity: 'music',
 	music: 'settings',
 	settings: 'wizard-finish',
 };
 
 const TRANSITION_MAP_DEVLOG: any = {
 	details: 'description',
-	description: 'maturity',
-	maturity: 'thumbnail',
-	thumbnail: 'header',
-	header: 'settings',
+	description: 'design',
+	design: 'maturity',
+	maturity: 'settings',
 	settings: 'wizard-finish',
 };
 
@@ -132,7 +127,9 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexMutation
 	populate(payload: Mutations['populate']) {
 		this.game = new Game(payload.game);
-		this.collaboration = payload.collaboration ? new GameCollaborator(payload.collaboration) : null;
+		this.collaboration = payload.collaboration
+			? new GameCollaborator(payload.collaboration)
+			: null;
 		this.isWizard = !!window.sessionStorage.getItem(WizardKey);
 	}
 
@@ -147,19 +144,9 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	addVideo(video: Mutations['addVideo']) {
-		this.media.unshift(instantiateMediaItem(video));
-	}
-
-	@VuexMutation
-	addSketchfab(sketchfab: Mutations['addSketchfab']) {
-		this.media.unshift(instantiateMediaItem(sketchfab));
-	}
-
-	@VuexMutation
-	addImages(images: Mutations['addImages']) {
-		for (const image of images) {
-			this.media.unshift(instantiateMediaItem(image));
+	addMedia(media: Mutations['addMedia']) {
+		for (const item of media) {
+			this.media.unshift(item);
 		}
 	}
 
@@ -293,7 +280,9 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexAction
 	async removeGame() {
-		const result = await ModalConfirm.show(Translate.$gettext('dash.games.remove_confirmation'));
+		const result = await ModalConfirm.show(
+			Translate.$gettext('dash.games.remove_confirmation')
+		);
 		if (!result) {
 			return;
 		}

@@ -29,7 +29,8 @@ export default (context: any) => {
 				for (const component of matchedComponents as any[]) {
 					const name = component.extendOptions.name;
 					componentState[name] =
-						component.extendOptions.__RESOLVER__ && component.extendOptions.__RESOLVER__.payload;
+						component.extendOptions.__RESOLVER__ &&
+						component.extendOptions.__RESOLVER__.payload;
 				}
 
 				console.log(`data fetch: ${Date.now() - s}ms`);

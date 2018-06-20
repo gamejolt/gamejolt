@@ -21,34 +21,33 @@
 	</app-form-group>
 
 	<app-expand :when="isFnafDetected">
-		<div class="alert alert-warning">
+		<div class="alert alert-notice">
 			<div v-translate>
 				dash.games.add.fnaf_autotag_message_html
 			</div>
 
 			<app-game-perms required="details" tag="div" class="alert-actions">
-				<button
-					class="btn btn-success-outline"
+				<app-button
+					primary
+					icon="tag"
 					@click="addAutotag( 'fnaf' )"
 					>
-					<app-jolticon icon="tag" />
 					<translate>dash.games.add.fnaf_autotag_accept</translate>
-				</button>
+				</app-button>
 
-				<button
-					class="btn btn-outline"
+				<app-button
+					trans
 					@click="skipAutotag"
 					>
-					<app-jolticon icon="remove" />
 					<translate>dash.games.add.fnaf_autotag_reject</translate>
-				</button>
+				</app-button>
 			</app-game-perms>
 		</div>
 	</app-expand>
 
 	<app-game-perms required="details">
 		<app-dash-game-wizard-controls v-if="!isFnafDetected">
-			<app-form-button icon="edit">
+			<app-form-button>
 				<translate>Save Description</translate>
 			</app-form-button>
 		</app-dash-game-wizard-controls>

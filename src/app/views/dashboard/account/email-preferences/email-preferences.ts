@@ -1,3 +1,4 @@
+import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./email-preferences.html';
 
@@ -9,6 +10,8 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { IntentService } from '../../../../components/intent/intent.service';
+import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
 
 @View
 @Component({
@@ -23,7 +26,15 @@ export default class RouteDashAccountEmailPreferences extends BaseRouteComponent
 	user: User = null as any;
 
 	@RouteResolve()
-	routeResolve() {
+	async routeResolve(this: undefined, route: Route) {
+		const intentRedirect = IntentService.checkRoute(route, {
+			intent: 'unsubscribe',
+			message: Translate.$gettext(`We have updated your email preferences.`),
+		});
+		if (intentRedirect) {
+			return intentRedirect;
+		}
+
 		return Api.sendRequest('/web/dash/email-preferences');
 	}
 

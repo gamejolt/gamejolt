@@ -1,8 +1,7 @@
 <div v-if="routeBootstrapped">
-	<section class="section section-has-nav fill-lightest">
+	<section class="section section-has-nav fill-darker">
 		<div class="container">
 
-			<!-- TODO(collaborators) when this is now showing the spacing is off -->
 			<app-game-perms :game="game" required="devlogs">
 				<h4 class="section-header">
 					<translate>Add Post</translate>
@@ -44,6 +43,20 @@
 							<translate>Draft Posts</translate>
 						</router-link>
 					</li>
+					<li>
+						<router-link
+							:to="{
+								name: 'dash.games.manage.devlog',
+								params: {
+									tab: 'scheduled',
+								},
+							}"
+							active-class="active"
+							:exact="true"
+							>
+							<translate>Scheduled Posts</translate>
+						</router-link>
+					</li>
 				</ul>
 			</nav>
 
@@ -64,7 +77,7 @@
 						@postremoved="onPostRemoved"
 						/>
 
-					<div class="alert alert-info"
+					<div class="alert"
 						v-else
 						>
 						<template v-if="_tab === 'active'">
@@ -72,6 +85,9 @@
 						</template>
 						<template v-else-if="_tab === 'draft'">
 							<p><translate>You don't have any draft posts.</translate></p>
+						</template>
+						<template v-else-if="_tab === 'scheduled'">
+							<p><translate>You don't have any scheduled posts.</translate></p>
 						</template>
 					</div>
 

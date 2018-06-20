@@ -23,9 +23,9 @@ import { Store } from '../../store/index';
 export class AppSiteEditor extends Vue {
 	@State tab: Store['tab'];
 	@State site: Store['site'];
-	@State templates: Store['templates'];
+	@State('siteTemplates') templates: Store['siteTemplates'];
 	@State currentTemplateId: Store['currentTemplateId'];
-	@State theme: Store['theme'];
+	@State('siteTheme') theme: Store['siteTheme'];
 	@State isLoaded: Store['isLoaded'];
 	@State isDirty: Store['isDirty'];
 

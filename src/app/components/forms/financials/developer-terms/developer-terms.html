@@ -2,7 +2,7 @@
 
 	<legend>
 		<span v-if="hasSignedDeveloperAgreement" class="pull-right done-icon" v-app-tooltip="$gettext( `You have completed this section.` )">
-			<app-jolticon icon="check" :big="true" />
+			<app-jolticon icon="check" big />
 		</span>
 		<translate>Developer Distribution Agreement</translate>
 	</legend>
@@ -40,37 +40,37 @@
 			</div>
 			<br>
 
-			<button
-				class="btn btn-primary-outline"
-				@click.prevent="showAgreement = true"
+			<app-button
 				v-if="!showAgreement"
+				primary
+				@click.prevent="showAgreement = true"
 				>
 				<translate>Show Developer Distribution Agreement</translate>
-			</button>
+			</app-button>
 		</div>
 
 	</div>
 
 	<div class="form-group" v-if="hasSignedOldDeveloperAgreement">
-		<div class="alert alert-warning">
+		<div class="alert alert-notice">
 			<translate>You have signed an older version of the Distribution Agreement. To be able to include your games in the Partner Program you must accept the new agreement.</translate>
 			<router-link :to="{ name: 'landing.partners' }">
 				<translate>Learn more about the Partner Program</translate>
 			</router-link>
 		</div>
 
-		<button
-			class="btn btn-primary-outline"
-			@click.prevent="showAgreement = true"
+		<app-button
 			v-if="!showAgreement"
+			primary
+			@click.prevent="showAgreement = true"
 			>
 			<translate>Show New Distribution Agreement</translate>
-		</button>
+		</app-button>
 
 		<!--
 			Show a diff between the terms.
 		-->
-		<div class="alert alert-info" v-if="showAgreement">
+		<div class="alert" v-if="showAgreement">
 			<p>
 				<translate>We publicly track and version all of our terms.</translate>
 				<a :href="agreementDiffLink" target="_blank">
@@ -81,7 +81,7 @@
 	</div>
 
 	<div class="form-group" v-if="shouldShowAgreement">
-		<div class="tos-scroller overlay-scrollbar overlay-scrollbar-light">
+		<div class="tos-scroller overlay-scrollbar">
 			<div v-html="termsTemplate"></div>
 		</div>
 		<br>
@@ -94,13 +94,14 @@
 		</div>
 		<br>
 
-		<button
-			class="btn btn-success-outline"
+		<app-button
+			primary
+			solid
 			:disabled="!checked"
 			@click.prevent="onAccept()"
 			>
 			<translate>I Agree</translate>
-		</button>
+		</app-button>
 	</div>
 
 </fieldset>

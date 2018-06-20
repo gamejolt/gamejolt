@@ -124,7 +124,7 @@
 			<label>
 				<app-form-control-checkbox :value="pkg.id" />
 				<span v-if="pkg.visibility === GamePackage.VISIBILITY_PRIVATE"
-					class="tag tag-pink"
+					class="tag tag-notice"
 					v-app-tooltip="$gettext( `This package is private, but will be accessible in this key group if you assign it.` )"
 					>
 					<translate>Private</translate>
@@ -135,7 +135,7 @@
 	</app-form-group>
 
 	<app-expand :when="serverErrors['num-keys']">
-		<div class="alert alert-warning">
+		<div class="alert alert-notice">
 			<translate
 				:translate-params="{
 					max: number( 20000 ),
@@ -146,10 +146,7 @@
 		</div>
 	</app-expand>
 
-	<app-form-button
-		v-if="!!formModel.type && changed && arePackagesChosen"
-		:icon="method"
-		>
+	<app-form-button v-if="!!formModel.type && changed && arePackagesChosen">
 		<translate>Save Key Group</translate>
 	</app-form-button>
 

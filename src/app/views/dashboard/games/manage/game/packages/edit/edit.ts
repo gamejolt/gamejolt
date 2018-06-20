@@ -26,11 +26,14 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
+import { AppTimeAgo } from '../../../../../../../../lib/gj-lib-client/components/time/ago/ago';
 
 @View
 @Component({
 	name: 'RouteDashGamesManageGamePackagesEdit',
 	components: {
+		AppTimeAgo,
 		AppJolticon,
 		AppNavTabList,
 		AppLoading,
@@ -57,7 +60,6 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 	previewSellable: Sellable | null = null;
 	previewData: GamePackagePayloadModel | null = null;
 	buildsProcessingCount = 0;
-	isShowingPackageEdit = false;
 	isLoadingPreview = false;
 	isAddingRelease = false;
 
@@ -97,7 +99,6 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 
 		this.previewData = null;
 		this.previewPackage = null;
-		this.isShowingPackageEdit = false;
 
 		this.loadPreview();
 	}
@@ -106,7 +107,10 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 		this.isLoadingPreview = true;
 
 		const response = await Api.sendRequest(
-			'/web/dash/developer/games/packages/preview/' + this.package.game_id + '/' + this.package.id,
+			'/web/dash/developer/games/packages/preview/' +
+				this.package.game_id +
+				'/' +
+				this.package.id,
 			null,
 			{ detach: true }
 		);
@@ -132,7 +136,9 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 		}
 	}
 
-	onEdited() {
+	async editPackage() {
+		// Keep our preview in sync.
+		await GamePackageEditModal.show(this.game, this.package, this.sellable);
 		this.loadPreview();
 	}
 

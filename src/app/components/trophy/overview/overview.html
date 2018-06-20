@@ -78,21 +78,20 @@
 				</router-link>
 			</p>
 
-			<div class="alert alert-warning" v-if="showInvisibleTrophyMessage">
+			<div class="alert alert-notice" v-if="showInvisibleTrophyMessage">
 				<translate>trophies.invisible_trophies_message</translate>
 			</div>
 
 			<p>
-				<router-link
-					class="btn btn-outline btn-block-xs"
+				<app-button
+					blockXs
 					:to="{
 						name: 'discover.games.view.trophies.list',
 						params: { slug: game.slug, id: game.id },
 					}"
 					>
-					<app-jolticon icon="media-list" />
 					<translate>trophies.overview.view_more_button</translate>
-				</router-link>
+				</app-button>
 			</p>
 
 		</div>

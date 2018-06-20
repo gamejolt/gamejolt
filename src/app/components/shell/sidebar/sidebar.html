@@ -7,7 +7,6 @@
 	v-shortkey="[ 'm' ]"
 	@shortkey="toggleLeftPane"
 	>
-
 	<!--
 		Gotta put any popovers out of the content area.
 		This is so that we can scroll on the Y axis, but overflow on the X.
@@ -165,17 +164,6 @@
 					</router-link>
 				</li>
 				<li>
-					<router-link
-						:to="{ name: 'radio' }"
-						v-app-track-event="`sidebar:radio`"
-						>
-						<span class="shell-nav-icon">
-							<app-jolticon icon="radio" />
-						</span>
-						<translate>Radio</translate>
-					</router-link>
-				</li>
-				<li>
 					<a
 						:href="Environment.firesideBaseUrl"
 						target="_blank"
@@ -203,7 +191,11 @@
 		</div>
 	</app-popover>
 
-	<div class="shell-sidebar-content fill-darkest scrollable overlay-scrollbar">
+	<app-scroll-scroller
+		overlay
+		:hide-scrollbar="!isLeftPaneVisible"
+		class="shell-sidebar-content fill-darkest"
+		>
 
 		<ul class="shell-nav">
 			<li class="offline-disable">
@@ -215,7 +207,7 @@
 					v-app-track-event="`sidebar:activity`"
 					>
 					<span
-						class="notification-tag tag tag-pink anim-fade-enter anim-fade-leave"
+						class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
 						v-if="notificationCount > 0"
 						>
 						{{ notificationCount < 100 ? notificationCount : '99+' }}
@@ -395,23 +387,6 @@
 					</router-link>
 				</li>
 
-				<li class="offline-disable" v-if="recommendedCollection">
-					<router-link
-						:to="recommendedCollection.routeLocation"
-						active-class="active"
-						v-app-track-event="`sidebar:collection:recommended`"
-						>
-						<span class="shell-nav-icon"
-							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Daily Mix' ) : ''"
-							>
-							<app-jolticon icon="pedestals-numbers" />
-						</span>
-						<span class="shell-nav-label">
-							<translate>Daily Mix</translate>
-						</span>
-					</router-link>
-				</li>
-
 				<li class="offline-disable" v-if="ownedCollection">
 					<router-link
 						:to="ownedCollection.routeLocation"
@@ -490,29 +465,28 @@
 				</div>
 
 				<div class="nav-controls">
-					<a
-						class="btn btn-outline btn-block offline-disable"
+					<app-button
+						primary
+						block
+						class="offline-disable"
 						@click="showAddPlaylistModal"
 						v-app-track-event="`sidebar:playlist-add`"
 						>
-						<app-jolticon icon="add" />
 						<translate>library.nav.new_playlist_button</translate>
-					</a>
+					</app-button>
 				</div>
 
-				<div class="nav-controls" v-if="collections.length">
-					<input type="search"
+				<div class="nav-controls" v-if="collections.length > 0">
+					<input
+						type="search"
 						class="form-control"
 						:placeholder="$gettext( `library.nav.filter_playlists_placeholder` )"
 						v-model="playlistFilterQuery"
 						>
 				</div>
-
-				<template v-if="!collections.length">
-					<div class="alert fill-gray" v-translate>
-						library.nav.no_playlists_html
-					</div>
-				</template>
+				<div class="alert fill-gray" v-else>
+					<div v-translate>library.nav.no_playlists_html</div>
+				</div>
 
 				<!--
 					Playlist Folders
@@ -553,5 +527,5 @@
 
 		</template>
 
-	</div>
+	</app-scroll-scroller>
 </div>

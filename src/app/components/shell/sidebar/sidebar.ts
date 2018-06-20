@@ -17,6 +17,7 @@ import { Store } from '../../../store/index';
 import { AppShellSidebarCollectionList } from './collection-list';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
 import { LibraryStore, LibraryAction, LibraryState } from '../../../store/library';
+import { AppScrollScroller } from '../../../../lib/gj-lib-client/components/scroll/scroller/scroller';
 
 @View
 @Component({
@@ -26,6 +27,7 @@ import { LibraryStore, LibraryAction, LibraryState } from '../../../store/librar
 		AppUserAvatarImg,
 		AppShellSidebarCollectionList,
 		AppExpand,
+		AppScrollScroller,
 	},
 	directives: {
 		AppPopoverTrigger,
@@ -45,7 +47,6 @@ export class AppShellSidebar extends Vue {
 	@LibraryState bundleCollections: LibraryStore['bundleCollections'];
 	@LibraryState developerCollection: LibraryStore['developerCollection'];
 	@LibraryState followedCollection: LibraryStore['followedCollection'];
-	@LibraryState recommendedCollection: LibraryStore['recommendedCollection'];
 	@LibraryState ownedCollection: LibraryStore['ownedCollection'];
 	@LibraryState collections: LibraryStore['collections'];
 	@LibraryState playlistFolders: LibraryStore['playlistFolders'];

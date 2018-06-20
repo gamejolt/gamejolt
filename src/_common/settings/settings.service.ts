@@ -11,6 +11,14 @@ interface Setting {
 }
 
 const defaultSettings: { [k: string]: Setting } = {
+	'theme-dark': {
+		type: 'boolean',
+		val: false,
+	},
+	'theme-always-ours': {
+		type: 'boolean',
+		val: false,
+	},
 	'game-install-dir': {
 		type: 'string',
 		val: () => {

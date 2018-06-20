@@ -1,7 +1,7 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .add-to-playlist-popover
-
 	.loading
 		margin-top: $line-height-computed
 
@@ -9,12 +9,10 @@
 		margin-bottom: 0 !important
 
 	&-playlists
-
 		.jolticon
 			display: none
 
 		.list-group-item
-
 			&.playlist-no-game
 				.jolticon-playlist
 					display: inline-block
@@ -24,20 +22,18 @@
 						display: none
 
 					.jolticon-add
+						theme-prop('color', 'highlight')
 						display: inline-block
-						color: $gj-green
 
 			&.playlist-has-game
 				.jolticon-check
+					theme-prop('color', 'highlight')
 					display: inline-block
-					color: $gj-green
 
 				&:hover
 					.jolticon-check
 						display: none
 
 					.jolticon-remove
+						theme-prop('color', 'notice')
 						display: inline-block
-						color: $gj-pink
-
-

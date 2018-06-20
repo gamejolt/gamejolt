@@ -1,8 +1,10 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .route-forums
-
 	.forum-section-header
-		padding-bottom: (($line-height-computed / 2) - 1)
+		theme-prop('border-bottom-color', 'bg-subtle')
+		padding-bottom: ($line-height-computed / 2) - 1
 		margin: ($line-height-computed * 2) 0 $line-height-computed
-		border-bottom: 1px solid $page-header-border-color
+		border-bottom-width: 1px
+		border-bottom-style: solid

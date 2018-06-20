@@ -27,16 +27,16 @@
 		name="ads_enabled"
 		:label="$gettext( `dash.games.settings.ads_label` )"
 		>
+		<app-form-control-toggle class="pull-right" />
 		<div class="help-block" v-translate>
 			dash.games.settings.ads_help_html
 		</div>
-		<app-form-control-toggle />
 	</app-form-group>
 	<div v-else class="form-group">
 		<label class="control-label">
 			<translate>dash.games.settings.ads_label</translate>
 		</label>
-		<div class="alert alert-info">
+		<div class="alert">
 			<translate v-if="hasPackagesForSale">
 				We don't show ads on Marketplace game pages (even for pay what you want games).
 			</translate>
@@ -46,36 +46,39 @@
 		</div>
 	</div>
 
-
 	<app-form-group
 		name="comments_enabled"
 		:label="$gettext( `dash.games.settings.comments_label` )"
 		>
+		<app-form-control-toggle class="pull-right" />
 		<div class="help-block" v-translate>
 			dash.games.settings.comments_help_html
 		</div>
-		<app-form-control-toggle />
 	</app-form-group>
 
 	<app-form-group
 		name="ratings_enabled"
 		:label="$gettext( `dash.games.settings.ratings_label` )"
 		>
-		<div class="alert alert-info" v-if="model._is_devlog">
-			<app-jolticon icon="notice" class="warning" />
-			<span v-translate>
-				<b>Users can't rate devlog-only games.</b> Enable or disable ratings for when you're ready to transition to early access or a complete game.
-			</span>
+		<app-form-control-toggle class="pull-right" />
+
+		<div class="clearfix" v-if="model._is_devlog">
+			<br>
+			<div class="alert">
+				<app-jolticon icon="notice" notice />
+				<span v-translate>
+					<b>Users can't rate devlog-only games.</b> Enable or disable ratings for when you're ready to transition to early access or a complete game.
+				</span>
+			</div>
 		</div>
 
 		<div class="help-block" v-translate>
 			dash.games.settings.ratings_help_html
 		</div>
-		<app-form-control-toggle />
 	</app-form-group>
 
 	<app-dash-game-wizard-controls>
-		<app-form-button icon="edit">
+		<app-form-button>
 			<translate>dash.games.settings.save_button</translate>
 		</app-form-button>
 	</app-dash-game-wizard-controls>

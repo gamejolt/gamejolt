@@ -16,6 +16,7 @@ import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/
 import { AppSearch } from '../../search/search';
 import { Store } from '../../../store/index';
 import { ChatClient } from '../../chat/client';
+import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
 
 let components: any = {
 	AppJolticon,
@@ -23,6 +24,7 @@ let components: any = {
 	AppShellAccountPopover,
 	AppFriendRequestPopover,
 	AppSearch,
+	AppThemeSvg,
 };
 
 if (GJ_IS_CLIENT) {
@@ -48,6 +50,7 @@ export class AppShellTopNav extends Vue {
 	@State friendRequestCount: Store['friendRequestCount'];
 	@State isLeftPaneVisible: Store['isLeftPaneVisible'];
 	@State isRightPaneVisible: Store['isRightPaneVisible'];
+	@State hasSidebar: Store['hasSidebar'];
 
 	friendRequestsShowing = false;
 	userMenuShowing = false;

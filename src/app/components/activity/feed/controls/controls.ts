@@ -113,6 +113,10 @@ export class AppActivityFeedControls extends Vue {
 		return this.post && this.game && this.showEditControls && this.hasDevlogsPerms;
 	}
 
+	get canPublish() {
+		return this.post && this.post.isDraft && !this.post.isScheduled;
+	}
+
 	// TODO: Figure out if this can be collapsed into the same func as "showManageControls"
 	get shouldShowStats() {
 		return (

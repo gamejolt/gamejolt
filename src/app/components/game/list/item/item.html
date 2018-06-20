@@ -3,10 +3,11 @@
 		:to="url"
 		v-app-track-event="eventLabel ? 'game-list:click:' + eventLabel : undefined"
 		>
-		<app-game-thumbnail-img
-			class="-thumb"
-			:game="game"
-			/>
+		<div class="-thumb">
+			<app-game-thumbnail-img
+				:game="game"
+				/>
+		</div>
 	</router-link>
 
 	<div class="-meta">

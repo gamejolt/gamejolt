@@ -1,9 +1,10 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .-video-embed
+	rounded-corners()
+	theme-prop('background-color', 'bg-offset')
 	position: relative
-	background-color: $gray-lightest
-	border-radius: $border-radius-base
 
 	a
 		display: block
@@ -19,5 +20,5 @@
 	background-size: cover
 
 // It's a thumbnail first, then after clicking it becomes an iframe embed.
-.-thumb, >>> iframe
-	border-radius: $border-radius-base
+.-thumb, .-video-embed >>> iframe
+	rounded-corners()

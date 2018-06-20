@@ -5,7 +5,7 @@
 			<translate>dash.games.api.settings.heading</translate>
 		</h2>
 
-		<div class="alert alert-warning" v-translate>
+		<div class="alert alert-notice" v-translate>
 			dash.games.api.settings.page_alert_html
 		</div>
 
@@ -36,10 +36,9 @@
 								</a>
 							</p>
 
-							<a class="btn btn-outline" @click="generateNewKey">
-								<app-jolticon icon="claim" />
+							<app-button @click="generateNewKey">
 								<translate>dash.games.api.settings.key_generate_button</translate>
-							</a>
+							</app-button>
 						</td>
 					</tr>
 				</tbody>

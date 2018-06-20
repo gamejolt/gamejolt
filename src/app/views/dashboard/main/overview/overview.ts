@@ -82,6 +82,7 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 		'has_friend',
 	];
 
+	readonly number = number;
 	readonly Game = Game;
 	readonly Screen = Screen;
 	readonly Environment = Environment;

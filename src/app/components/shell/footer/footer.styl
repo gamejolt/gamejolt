@@ -1,17 +1,15 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 #footer
+	theme-prop('background-color', 'darkest')
 	position: relative
-	background-color: $gray-darkest
 	background-image: url('../shell-bg.png')
 	background-repeat: repeat
 	z-index: $zindex-footer
 
 	@media $media-xs
 		text-align: center
-
-	hr
-		border-color: $gray-dark
 
 .footer
 	&-ad .ad-inner
@@ -25,7 +23,7 @@
 			font-size: $font-size-small
 
 		> li > a
-			color: $text-muted
+			theme-prop('color', 'fg-muted')
 
 			&:hover
 				color: $white

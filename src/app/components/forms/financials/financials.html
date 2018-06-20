@@ -1,6 +1,6 @@
 <app-form name="financialsForm" class="form-dashboard-financials" ref="form">
 	<template v-if="!isVerified">
-		<div class="alert alert-info">
+		<div class="alert">
 			<translate>Before you can use the Marketplace, we'll need to gather some details from you. This will ensure that your account is completely set up and ready to run smoothly on the Game Jolt Marketplace.</translate>
 		</div>
 
@@ -12,26 +12,28 @@
 
 			<div class="row">
 				<div class="col-xs-6">
-					<button class="btn btn-block"
-						:class="whichAgreement === 'developer' ? 'btn-success' : 'btn-outline'"
+					<app-button
+						block
+						:solid="whichAgreement === 'developer'"
 						@click.prevent="whichAgreement = 'developer'"
 						>
 						<translate>I'm a game developer</translate>
-					</button>
+					</app-button>
 				</div>
 				<div class="col-xs-6">
-					<button class="btn btn-block"
-						:class="whichAgreement === 'partner' ? 'btn-success' : 'btn-outline'"
+					<app-button
+						block
+						:solid="whichAgreement === 'partner'"
 						@click.prevent="whichAgreement = 'partner'"
 						>
 						<translate>I'm a partner</translate>
-					</button>
+					</app-button>
 				</div>
 			</div>
 		</fieldset>
 	</template>
 
-	<div class="alert alert-success" v-if="isVerified">
+	<div class="alert" v-if="isVerified">
 		<app-jolticon icon="check" />
 		<translate>Your account is ready for the Game Jolt Marketplace! You can set additional options below.</translate>
 	</div>
@@ -62,7 +64,7 @@
 	<fieldset v-if="account">
 		<legend>
 			<span v-if="user.paypal_id" class="pull-right done-icon" v-app-tooltip="$gettext( `You have completed this section.` )">
-				<app-jolticon icon="check big" />
+				<app-jolticon icon="check" big />
 			</span>
 			<translate>PayPal Account</translate>
 		</legend>
@@ -79,13 +81,10 @@
 				<br>
 			</div>
 
-			<button
-				class="btn btn-primary-outline"
-				@click.prevent="linkPayPal()"
-				>
+			<app-button @click.prevent="linkPayPal()">
 				<template v-if="!user.paypal_id"><translate>Link PayPal Account</translate></template>
 				<template v-else><translate>Change PayPal Account</translate></template>
-			</button>
+			</app-button>
 		</div>
 
 	</fieldset>
@@ -96,7 +95,7 @@
 	<fieldset v-if="account && user.paypal_id">
 		<legend>
 			<span v-if="isVerified" class="pull-right done-icon" v-app-tooltip="$gettext( `You have completed this section.` )">
-				<app-jolticon icon="check" :big="true" />
+				<app-jolticon icon="check" big />
 			</span>
 			<translate>Marketplace Account</translate>
 		</legend>
@@ -105,7 +104,7 @@
 			v-if="!account.skip_stripe"
 			/>
 
-		<div class="alert alert-info" v-if="account.skip_stripe">
+		<div class="alert" v-if="account.skip_stripe">
 			<p>
 				<translate>You've been manually approved for the Marketplace.</translate>
 			</p>
@@ -218,10 +217,7 @@
 
 	</fieldset>
 
-	<app-form-button
-		v-if="isVerified"
-		icon="edit"
-		>
+	<app-form-button v-if="isVerified">
 		<translate>Save</translate>
 	</app-form-button>
 </app-form>

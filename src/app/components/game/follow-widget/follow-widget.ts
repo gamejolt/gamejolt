@@ -5,7 +5,6 @@ import View from '!view!./follow-widget.html';
 
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
@@ -18,7 +17,6 @@ import { Popover } from '../../../../lib/gj-lib-client/components/popover/popove
 @View
 @Component({
 	components: {
-		AppJolticon,
 		AppUserFollowWidget,
 		AppPopover,
 	},
@@ -27,14 +25,14 @@ import { Popover } from '../../../../lib/gj-lib-client/components/popover/popove
 		AppTrackEvent,
 		AppTooltip,
 	},
-	filters: {
-		number,
-	},
 })
 export class AppGameFollowWidget extends Vue {
 	@Prop(Game) game: Game;
-	@Prop(Boolean) sparse?: boolean;
-	@Prop(Boolean) outline?: boolean;
+	@Prop(Boolean) overlay?: boolean;
+	@Prop(Boolean) circle?: boolean;
+	@Prop(Boolean) block?: boolean;
+	@Prop(Boolean) lg?: boolean;
+	@Prop(Boolean) solid?: boolean;
 	@Prop(String) eventLabel?: string;
 	@Prop(Boolean) showUserFollow?: boolean;
 
@@ -56,22 +54,24 @@ export class AppGameFollowWidget extends Vue {
 		return `game-follow-widget-user-follow-${this.game.id}`;
 	}
 
-	get btnClasses() {
-		let classes: string[] = [];
+	get badge() {
+		return !this.circle && this.game.follower_count ? number(this.game.follower_count) : '';
+	}
 
-		if (this.sparse) {
-			classes.push('btn-sparse');
+	get tooltip() {
+		return !this.game.is_following
+			? this.$gettext(
+					`Follow this game to add it to your Library and be notified when new posts are added.`
+				)
+			: undefined;
+	}
+
+	get icon() {
+		if (!this.circle) {
+			return '';
 		}
 
-		if (this.game.is_following) {
-			classes.push('btn-success active');
-		} else {
-			if (this.outline) {
-				classes.push('btn-success-outline');
-			}
-		}
-
-		return classes;
+		return !this.game.is_following ? 'subscribe' : 'subscribed';
 	}
 
 	async onClick() {

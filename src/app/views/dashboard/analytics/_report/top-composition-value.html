@@ -6,7 +6,7 @@
 	-->
 	<div :class="reportData.graph !== null ? 'col-sm-8' : 'col-xs-12'">
 
-		<div class="alert alert-info" v-if="!reportData.hasData">
+		<div class="alert" v-if="!reportData.hasData">
 			<translate>No data yet.</translate>
 		</div>
 

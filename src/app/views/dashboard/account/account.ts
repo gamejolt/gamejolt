@@ -1,6 +1,6 @@
 import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./account.html';
+import View from '!view!./account.html?style=./account.styl';
 
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -16,6 +16,9 @@ import {
 import { AppMutation, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
 import { AppMediaItemCover } from '../../../../_common/media-item/cover/cover';
+import { UserHeaderModal } from '../../../components/user/header-modal/header-modal.service';
+import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
+import { AppEditableOverlay } from '../../../../lib/gj-lib-client/components/editable-overlay/editable-overlay';
 
 @View
 @Component({
@@ -26,6 +29,7 @@ import { AppMediaItemCover } from '../../../../_common/media-item/cover/cover';
 		AppUserAvatar,
 		AppExpand,
 		AppMediaItemCover,
+		AppEditableOverlay,
 	},
 })
 export default class RouteDashAccount extends BaseRouteComponent {
@@ -48,5 +52,13 @@ export default class RouteDashAccount extends BaseRouteComponent {
 	routed(payload: any) {
 		// This will set our user with more fields required for managing it.
 		this.setUser(payload.user);
+	}
+
+	showEditHeader() {
+		UserHeaderModal.show();
+	}
+
+	showEditAvatar() {
+		UserAvatarModal.show();
 	}
 }

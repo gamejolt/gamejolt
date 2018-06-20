@@ -28,6 +28,7 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../lib/gj-lib-client/components/route/route-component';
+import { ThemeMutation, ThemeStore } from '../../../lib/gj-lib-client/components/theme/theme.store';
 
 @View
 @Component({
@@ -50,6 +51,7 @@ export default class RouteProfile extends BaseRouteComponent {
 	@Prop(String) username: string;
 
 	@State app: Store['app'];
+	@ThemeMutation setPageTheme: ThemeStore['setPageTheme'];
 
 	user: User | null = null;
 	headerMediaItem: MediaItem | null = null;
@@ -65,10 +67,21 @@ export default class RouteProfile extends BaseRouteComponent {
 
 	@RouteResolve()
 	async routeResolve(this: undefined, route: Route) {
-		const intentRedirect = IntentService.checkRoute(route, {
-			intent: 'follow-user',
-			message: Translate.$gettext(`You're now following this user.`),
-		});
+		const intentRedirect = IntentService.checkRoute(
+			route,
+			{
+				intent: 'follow-user',
+				message: Translate.$gettext(`You're now following this user.`),
+			},
+			{
+				intent: 'accept-friend-request',
+				message: Translate.$gettext(`You are now friends with this user!`),
+			},
+			{
+				intent: 'decline-friend-request',
+				message: Translate.$gettext(`You've declined this user's friend request.`),
+			}
+		);
 		if (intentRedirect) {
 			return intentRedirect;
 		}
@@ -80,6 +93,7 @@ export default class RouteProfile extends BaseRouteComponent {
 		Ads.setAdUnit('devprofile');
 
 		this.user = new User($payload.user);
+		this.setPageTheme(this.user.theme || null);
 
 		this.headerMediaItem = $payload.headerMediaItem
 			? new MediaItem($payload.headerMediaItem)
@@ -97,6 +111,10 @@ export default class RouteProfile extends BaseRouteComponent {
 		} else {
 			this.userFriendship = null;
 		}
+	}
+
+	routeDestroy() {
+		this.setPageTheme(null);
 	}
 
 	acceptFriendRequest() {

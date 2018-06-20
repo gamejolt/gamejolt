@@ -1,4 +1,5 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .chat-window-message
 	&-content
@@ -18,8 +19,8 @@
 
 		// Overwrite for dark theme
 		code, pre
+			theme-prop('background-color', 'darkest')
 			color: inherit
-			background-color: $gray-darkest
 			border: 0
 
 		// If this pre tag is the first part of the first message, be sure to move it down past the avatar.

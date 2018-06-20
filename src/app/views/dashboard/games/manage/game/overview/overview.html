@@ -3,22 +3,22 @@
 	<div class="row">
 		<div class="col-lg-8">
 
-			<div class="alert alert-success" v-if="game.is_published">
+			<div class="alert alert-highlight" v-if="game.is_published">
 				<app-jolticon icon="check" />
 				<translate>This game page is published to the site.</translate>
 			</div>
 
 			<!-- Show a little message if they still have builds being processed. -->
-			<div class="alert alert-info" v-if="hasBuildsProcessing">
+			<div class="alert" v-if="hasBuildsProcessing">
 				<app-progress-poller
 					:url="`/web/dash/developer/games/poll-build-progress/${ game.id }`"
 					@complete="onAllBuildsProcessed"
 					/>
 
 				<app-progress-bar
-					:thin="true"
+					thin
+					active
 					:percent="100"
-					:active="true"
 					variant="striped"
 					/>
 
@@ -31,39 +31,39 @@
 			</div>
 
 			<app-expand :when="!game.is_published && canPublish">
-				<div class="alert alert-success">
+				<div class="alert alert-highlight">
 					<p>
 						<translate>Your game page is ready to publish to the site for all to see!</translate>
 					</p>
 
 					<app-game-perms required="all" tag="div" class="alert-actions">
-						<button
-							class="btn btn-success-outline btn-block btn-dark-variant"
+						<app-button
+							primary
+							block
 							v-app-tooltip="$gettext( `dash.games.overview.todo_info_publish_button_tooltip` )"
 							@click="publish"
 							>
-							<app-jolticon icon="active" />
 							<translate>dash.games.overview.todo_info_publish_button</translate>
-						</button>
+						</app-button>
 					</app-game-perms>
 				</div>
 			</app-expand>
 
 			<app-expand :when="game.canceled">
-				<div class="alert alert-info">
+				<div class="alert">
 					<p>
 						<translate>Your game is set as being a canceled game. You can transition back to a normal game page at any time!</translate>
 					</p>
 
 					<app-game-perms required="all" tag="div" class="alert-actions">
-						<button
-							class="btn btn-success-outline btn-block btn-dark-variant"
+						<app-button
+							primary
+							block
 							v-app-tooltip="$gettext( `This will make your game active again.` )"
 							@click="uncancel"
 							>
-							<app-jolticon icon="active" />
 							<translate>Uncancel Game</translate>
-						</button>
+						</app-button>
 					</app-game-perms>
 				</div>
 			</app-expand>
@@ -151,114 +151,16 @@
 	</div>
 
 	<app-game-perms required="analytics" tag="div" class="visible-xs">
-		<router-link
-			class="btn btn-outline btn-block"
+		<app-button
+			block
+			icon="chart"
 			:to="{
 				name: 'dash.analytics',
 				params: { resource: 'Game', resourceId: game.id },
 			}"
 			>
-			<app-jolticon icon="chart" />
 			<translate>View Game Analytics</translate>
-		</router-link>
+		</app-button>
 	</app-game-perms>
-
-	<div class="row">
-		<div class="col-lg-8">
-
-			<template v-if="user.id !== game.developer.id">
-				<h2>
-					<translate>Danger Zone</translate>
-					<app-jolticon icon="notice big warning" />
-				</h2>
-
-				<h4>
-					<translate>Leave Project</translate>
-				</h4>
-
-				<div class="page-help">
-					<p>
-						<translate>You are currently a collaborator on this project. Leaving the project will revoke all management access to the game, including any devlog posts you may have written for it.</translate>
-					</p>
-				</div>
-
-				<button
-					class="btn btn-danger-outline"
-					@click="leaveProject"
-					>
-					<translate>Leave Project</translate>
-				</button>
-			</template>
-			<template v-else>
-				<h2>
-					<translate>Development Stage</translate>
-				</h2>
-
-				<app-game-dev-stage-selector :game="game" />
-
-				<h2>
-					<translate>Danger Zone</translate>
-					<app-jolticon icon="notice big warning" />
-				</h2>
-
-				<app-expand :when="game.status !== Game.STATUS_HIDDEN">
-					<h4>
-						<translate>Hide Game</translate>
-					</h4>
-
-					<div class="page-help">
-						<p><translate>Your game page is currently published and active. You can hide it to remove it from the game listings. People with the link will still be able to view it.</translate></p>
-					</div>
-
-					<button
-						class="btn btn-danger-outline"
-						@click="hide"
-						>
-						<translate>Hide Game</translate>
-					</button>
-				</app-expand>
-
-				<app-expand :when="!game.canceled">
-					<h4>
-						<translate>Cancel Game</translate>
-					</h4>
-
-					<div class="page-help">
-						<p><translate>Canceling your game will signal to everyone that you're no longer working on it. People will still be able to view the game page and access your published packages, but it will not show in game listings.</translate></p>
-						<p><translate>If you've transitioned development off of Game Jolt, you must remove your game instead.</translate></p>
-					</div>
-
-					<button
-						class="btn btn-danger-outline"
-						@click="cancel"
-						>
-						<translate>Cancel Game</translate>
-					</button>
-				</app-expand>
-
-				<h4>
-					<translate>Remove Game</translate>
-				</h4>
-
-				<div class="page-help">
-					<p v-translate>
-						Removing your game page will remove it from the site completely. <b>This is permanent!</b>
-					</p>
-				</div>
-
-				<div class="alert alert-info" v-if="game.has_sales">
-					<translate>You can't remove games with active sales at this time.</translate>
-				</div>
-
-				<button
-					class="btn btn-danger-outline"
-					@click="removeGame"
-					:disabled="game.has_sales"
-					>
-					<translate>Remove Game</translate>
-				</button>
-			</template>
-		</div>
-	</div>
 
 </div>

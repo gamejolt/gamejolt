@@ -1,8 +1,8 @@
 @require '~styles/variables'
-@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .user-box-exp
-	color: $gray-light
+	color: $dark-theme-fg-muted
 	margin-bottom: 10px
 
 	&-stats
@@ -18,20 +18,19 @@
 			position: relative
 			top: 7px
 
-		em
-		strong
+		em, strong
 			display: inline-block
 			margin: 5px
 
 		em
+			theme-prop('color', 'highlight')
 			font-family: $font-family-heading
 			font-size: $font-size-large
 			font-style: normal
 			font-weight: 300
-			color: $gj-green
 
 		strong
-			color: $white
+			color: $dark-theme-fg
 			font-size: $font-size-small
 			font-weight: bold
 
@@ -42,16 +41,16 @@
 			a
 				display: inline-block
 				padding: 0 5px
-				color: $white
+				color: $dark-theme-fg
 
 				&:hover
-					color: $gj-blue
+					theme-prop('color', 'highlight')
 
 	&-progress
 		clearfix()
 
 		> .jolticon
-			color: $white
+			theme-prop('color', 'highlight')
 			float: left
 
 		.progress
@@ -59,4 +58,3 @@
 			top: 5px
 			margin-left: 30px
 			margin-bottom: 0
-			background-color: $gray-darkest

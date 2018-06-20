@@ -4,9 +4,8 @@
 	</p>
 
 	<app-progress-bar
+		thin
 		:percent="(packageProgress.progress || 0) * 100.0"
-		:thin="true"
-		:variant="localPackage.isInstalling ? 'success' : 'darker'"
 		:indeterminate="localPackage.isUnpacking"
 		:active="localPackage.isUnpacking"
 

@@ -14,28 +14,26 @@
 
 	<div class="col-sm-8 col-sm-pull-4">
 
-		<div class="alert alert-info" v-if="game._is_devlog">
-			<app-jolticon icon="notice" class="warning" />
+		<div class="alert" v-if="game._is_devlog">
+			<app-jolticon icon="notice" notice />
 			<b><translate>Public packages do not show on devlog-only game pages.</translate></b>
 			<translate>You are only able to create private packages for testers while your game page is only a devlog. Once you publish your game page into early access or as a complete game, your public packages will show.</translate>
 		</div>
 
 
-		<div class="alert alert-info" v-if="!packages.length">
+		<div class="alert" v-if="!packages.length">
 			<p v-if="hasAllPerms"><translate>You haven't added any packages yet.</translate></p>
 			<p v-else><translate>This game hasn't got any packages yet, and you don't have permissions to create any.</translate></p>
 		</div>
 
 		<app-game-perms required="all" tag="div">
-			<router-link
-				class="btn btn-success-outline btn-block"
-				:to="{
-					name: 'dash.games.manage.game.packages.add',
-				}"
+			<app-button
+				primary
+				block
+				@click="addPackage()"
 				>
-				<app-jolticon icon="add" />
 				<translate>dash.games.packages.add_package_button</translate>
-			</router-link>
+			</app-button>
 		</app-game-perms>
 		<br>
 
@@ -78,7 +76,7 @@
 					<div class="card-meta">
 
 						<span
-							class="tag tag-active"
+							class="tag tag-highlight"
 							v-if="sellables[ package.id ] && sellables[ package.id ].primary"
 							v-app-tooltip="$gettext( `We use the primary package to determine the price to show on game listings.` )"
 							>
@@ -86,7 +84,7 @@
 						</span>
 
 						<span
-							class="tag tag-pink"
+							class="tag tag-notice"
 							v-if="package.visibility === GamePackage.VISIBILITY_PRIVATE"
 							v-app-tooltip="$gettext( `This package will only be available to you and any keys that have access.` )"
 							>
@@ -94,7 +92,7 @@
 						</span>
 
 						<template v-if="sellables[ package.id ] && sellables[ package.id ].type === 'pwyw'">
-							<span class="tag tag-blue">
+							<span class="tag">
 								<translate>Pay What You Want</translate>
 							</span>
 							<span class="dot-separator"></span>
@@ -110,7 +108,7 @@
 							</template>
 						</template>
 						<template v-else-if="sellables[ package.id ] && sellables[ package.id ].type === 'paid'">
-							<span class="tag tag-blue">
+							<span class="tag">
 								<translate>Paid</translate>
 							</span>
 							<span class="dot-separator"></span>
@@ -121,7 +119,7 @@
 							{{ sellables[ package.id ].pricings[0].amount | currency }}
 						</template>
 						<template v-else>
-							<span class="tag tag-blue">
+							<span class="tag">
 								<translate>Free</translate>
 							</span>
 						</template>
@@ -134,38 +132,35 @@
 
 					<div class="card-controls">
 						<app-game-perms required="builds">
-							<router-link
-								class="btn btn-outline"
+							<app-button
+								primary
 								:to="{
 									name: 'dash.games.manage.game.packages.edit',
 									params: { packageId: package.id },
 								}"
 								>
-								<app-jolticon icon="cog" />
 								<translate>Manage</translate>
-							</router-link>
+							</app-button>
 						</app-game-perms>
-						<router-link
-							class="btn btn-outline"
+						<app-button
+							trans
 							:to="{
 								name: 'dash.games.manage.game.packages.edit.widget',
 								params: { packageId: package.id },
 							}"
 							>
-							<app-jolticon icon="plug" />
 							<translate>Widget</translate>
-						</router-link>
+						</app-button>
 						<app-game-perms required="analytics">
-							<router-link
-								class="btn btn-outline"
+							<app-button
+								trans
 								:to="{
 									name: 'dash.analytics',
 									params: { resource: 'Game_Package', resourceId: package.id },
 								}"
 								>
-								<app-jolticon icon="chart" />
 								<translate>Analytics</translate>
-							</router-link>
+							</app-button>
 						</app-game-perms>
 					</div>
 

@@ -41,15 +41,11 @@ export default class RouteProfileLibrary extends BaseRouteComponent {
 		this.collections = GameCollection.populate($payload.collections);
 
 		const followedCollection = new GameCollection($payload.followedCollection);
-		const ownedCollection = new GameCollection($payload.ownedCollection);
-		const recommendedCollection = new GameCollection($payload.recommendedCollection);
 
 		const developerCollection = $payload.developerCollection
 			? new GameCollection($payload.developerCollection)
 			: null;
 
-		this.collections.unshift(recommendedCollection);
-		this.collections.unshift(ownedCollection);
 		this.collections.unshift(followedCollection);
 
 		if (developerCollection) {

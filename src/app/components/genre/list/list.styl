@@ -1,7 +1,7 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 @media $media-xs
-
 	.genre-list
 		overflow-x: scroll
 		white-space: nowrap
@@ -16,8 +16,8 @@
 
 	&.active
 		.genre-list-genre-label
-			background-color: $gj-dark-green
-			color: $gj-green
+			theme-prop('background-color', 'highlight')
+			theme-prop('color', 'highlight-fg')
 
 	img
 		width: 116px * 0.5
@@ -32,4 +32,4 @@
 
 	&:hover
 		.genre-list-genre-label
-			color: $gj-green
+			theme-prop('color', 'highlight')

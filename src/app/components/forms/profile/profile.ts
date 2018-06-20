@@ -13,6 +13,12 @@ import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppFormControlMarkdown } from '../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
+import { AppFormControlTheme } from '../../../../lib/gj-lib-client/components/form-vue/control/theme/theme';
+import {
+	ThemeMutation,
+	ThemeStore,
+} from '../../../../lib/gj-lib-client/components/theme/theme.store';
+import { Theme } from '../../../../lib/gj-lib-client/components/theme/theme.model';
 
 @View
 @Component({
@@ -21,6 +27,7 @@ import { AppFormControlMarkdown } from '../../../../lib/gj-lib-client/components
 		AppExpand,
 		AppJolticon,
 		AppFormControlMarkdown,
+		AppFormControlTheme,
 	},
 })
 export class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSubmitError {
@@ -28,12 +35,11 @@ export class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSub
 	resetOnSubmit = true;
 	reloadOnSubmit = true;
 
+	@ThemeMutation setFormTheme: ThemeStore['setFormTheme'];
+
 	usernameChangedOn = 0;
 	usernameTimeLeft = 0;
 	usernameDuration = '';
-	nameChangedOn = 0;
-	nameTimeLeft = 0;
-	nameDuration = '';
 	isBioLocked = false;
 
 	Environment = Environment;
@@ -42,18 +48,16 @@ export class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSub
 		return '/web/dash/profile/save';
 	}
 
+	destroyed() {
+		this.setFormTheme(null);
+	}
+
 	onLoad(payload: any) {
 		this.usernameChangedOn = payload.usernameChangedOn;
 		this.usernameTimeLeft = payload.usernameTimeLeft;
-		this.nameChangedOn = payload.nameChangedOn;
-		this.nameTimeLeft = payload.nameTimeLeft;
 
 		if (this.usernameTimeLeft) {
 			this.usernameDuration = distanceInWordsToNow(Date.now() + this.usernameTimeLeft);
-		}
-
-		if (this.nameTimeLeft) {
-			this.nameDuration = distanceInWordsToNow(Date.now() + this.nameTimeLeft);
 		}
 
 		this.isBioLocked = payload.isBioLocked;
@@ -63,5 +67,10 @@ export class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSub
 		if (response.errors && response.errors['bio-locked']) {
 			this.isBioLocked = true;
 		}
+	}
+
+	onThemeChanged() {
+		// Default would be the default theme for site.
+		this.setFormTheme(this.formModel.theme || new Theme());
 	}
 }

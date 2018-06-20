@@ -46,9 +46,9 @@
 					<div class="navbar-right">
 						<div class="navbar-controls">
 
-							<button class="btn btn-success-outline" @click="save()">
+							<app-button primary solid @click="save()">
 								<translate>Save</translate>
-							</button>
+							</app-button>
 
 						</div>
 					</div>
@@ -59,6 +59,7 @@
 			<div
 				class="
 					site-editor-sidebar
+					fill-dark
 					scrollable
 					overlay-scrollbar
 					anim-fade-enter-left
@@ -83,10 +84,6 @@
 						/>
 
 					<template v-if="!!currentTemplateId">
-						<h3>
-							<translate>Customize Theme</translate>
-						</h3>
-
 						<div v-for="templateId of [ currentTemplateId ]" :key="templateId">
 							<app-theme-editor
 								window-id="site-editor-iframe"
@@ -103,6 +100,7 @@
 			<div
 				class="
 					site-editor-bottom
+					fill-dark
 					scrollable
 					overlay-scrollbar
 					anim-fade-enter-up

@@ -6,6 +6,7 @@ import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service
 import { store } from './index';
 import { Analytics } from '../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Settings } from '../../_common/settings/settings.service';
+import { router } from '../views/index';
 
 export const BannerStoreNamespace = 'banner';
 export const BannerState = namespace(BannerStoreNamespace, State);
@@ -94,9 +95,34 @@ class OfflineBanner extends Banner {
 	}
 }
 
+class TermsChangeBanner extends Banner {
+	readonly StorageKey = 'banner:terms-change-05232018';
+
+	get message() {
+		return Translate.$gettext(`Game Jolt has a new Privacy Policy. <em>Learn More</em>`);
+	}
+
+	get isActive() {
+		if (GJ_IS_SSR) {
+			return false;
+		}
+
+		return !window.localStorage[this.StorageKey];
+	}
+
+	async onClick() {
+		router.push({ name: 'legal.privacy' });
+		window.localStorage[this.StorageKey] =  Date.now();
+	}
+
+	onClose() {
+		window.localStorage[this.StorageKey] =  Date.now();
+	}
+}
+
 @VuexModule()
 export class BannerStore extends VuexStore<BannerStore, BannerActions, BannerMutations> {
-	banners: Banner[] = [new NotificationsBanner(), new OfflineBanner()];
+	banners: Banner[] = [new TermsChangeBanner(), new NotificationsBanner(), new OfflineBanner()];
 
 	get shouldShowBanner() {
 		return !!this.currentBanner;

@@ -1,5 +1,5 @@
 @require '~styles/variables'
-@require '../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
 .forum-topic-list-item
 	clearfix()
@@ -13,8 +13,8 @@
 			font-size: $font-size-base
 
 	&-author
+		theme-prop('color', 'fg-muted')
 		font-size: $font-size-small
-		color: $text-muted
 
 		a
 			font-weight: bold

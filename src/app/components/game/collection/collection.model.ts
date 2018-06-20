@@ -3,6 +3,7 @@ import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
 import { appStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { Jam } from '../../../../lib/gj-lib-client/components/jam/jam.model';
 
 export class GameCollection extends Model {
 	static readonly TYPE_FOLLOWED = 'followed';
@@ -12,6 +13,7 @@ export class GameCollection extends Model {
 	static readonly TYPE_PLAYLIST = 'playlist';
 	static readonly TYPE_BUNDLE = 'bundle';
 	static readonly TYPE_TAG = 'tag';
+	static readonly TYPE_JAM = 'jam';
 
 	static readonly USER_TYPES = [
 		GameCollection.TYPE_FOLLOWED,
@@ -26,8 +28,9 @@ export class GameCollection extends Model {
 	slug: string;
 	img_thumbnail: string;
 	from_subscription: boolean;
-	owner: User;
+	owner?: User;
 	playlist?: GamePlaylist;
+	jam?: Jam;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -43,6 +46,10 @@ export class GameCollection extends Model {
 
 		if (data.playlist) {
 			this.playlist = new GamePlaylist(data.playlist);
+		}
+
+		if (data.jam) {
+			this.jam = new Jam(data.jam);
 		}
 	}
 
@@ -60,7 +67,7 @@ export class GameCollection extends Model {
 
 	getTitle() {
 		let title = this.name;
-		if (this.from_subscription) {
+		if (this.from_subscription && this.owner) {
 			title += ' - @' + this.owner.username;
 		}
 		return title;

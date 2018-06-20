@@ -34,9 +34,13 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import {
+	ThemeMutation,
+	ThemeStore,
+} from '../../../../lib/gj-lib-client/components/theme/theme.store';
+import { Jam } from '../../../../lib/gj-lib-client/components/jam/jam.model';
 
 const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
-
 const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 
 @View
@@ -73,12 +77,15 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	@LibraryAction editPlaylist: LibraryStore['editPlaylist'];
 	@LibraryAction removePlaylist: LibraryStore['removePlaylist'];
 
+	@ThemeMutation setPageTheme: ThemeStore['setPageTheme'];
+
 	type = '';
 	followerCount = 0;
 
 	collection: GameCollection | null = null;
 	bundle: GameBundle | null = null;
 	playlist: GamePlaylist | null = null;
+	jam: Jam | null = null;
 	user: User | null = null;
 
 	filtering: GameFilteringContainer | null = null;
@@ -132,48 +139,63 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		if (this.metaTitle) {
 			return this.metaTitle;
 		} else if (this.type) {
-			if (this.type === 'followed') {
-				const params = { user: '@' + this.user!.username };
-				if (this.collection!.isOwner) {
+			if (this.type === GameCollection.TYPE_FOLLOWED && this.user && this.collection) {
+				const params = { user: '@' + this.user.username };
+				if (this.collection.isOwner) {
 					return this.$gettext('Your Followed Games');
 				} else {
 					return this.$gettextInterpolate('Games Followed by %{ user }', params);
 				}
-			} else if (this.type === 'playlist') {
+			} else if (
+				this.type === GameCollection.TYPE_PLAYLIST &&
+				this.playlist &&
+				this.user &&
+				this.collection
+			) {
 				const params = {
-					playlist: this.playlist!.name,
-					user: '@' + this.user!.username,
+					playlist: this.playlist.name,
+					user: '@' + this.user.username,
 				};
-				if (this.collection!.isOwner) {
-					return this.playlist!.name;
+				if (this.collection.isOwner) {
+					return this.playlist.name;
 				} else {
 					return this.$gettextInterpolate('%{ playlist } by %{ user }', params);
 				}
-			} else if (this.type === 'developer') {
-				const params = { user: '@' + this.user!.username };
-				if (this.collection!.isOwner) {
+			} else if (
+				this.type === GameCollection.TYPE_DEVELOPER &&
+				this.user &&
+				this.collection
+			) {
+				const params = { user: '@' + this.user.username };
+				if (this.collection.isOwner) {
 					return this.$gettext('Your Games');
 				} else {
 					return this.$gettextInterpolate('Games by %{ user }', params);
 				}
-			} else if (this.type === 'owned') {
-				const params = { user: '@' + this.user!.username };
-				if (this.collection!.isOwner) {
+			} else if (this.type === GameCollection.TYPE_OWNED && this.user && this.collection) {
+				const params = { user: '@' + this.user.username };
+				if (this.collection.isOwner) {
 					return this.$gettext('Your Owned Games');
 				} else {
 					return this.$gettextInterpolate('Games Owned by %{ user }', params);
 				}
-			} else if (this.type === 'recommended') {
-				const params = { user: '@' + this.user!.username };
-				if (this.collection!.isOwner) {
+			} else if (
+				this.type === GameCollection.TYPE_RECOMMENDED &&
+				this.collection &&
+				this.user
+			) {
+				const params = { user: '@' + this.user.username };
+				if (this.collection.isOwner) {
 					return this.$gettext('Your Daily Mix');
 				} else {
 					return this.$gettextInterpolate('Daily Mix for %{ user }', params);
 				}
-			} else if (this.type === 'bundle') {
-				return this.bundle!.title;
-			} else if (this.type === 'tag') {
+			} else if (this.type === GameCollection.TYPE_BUNDLE && this.bundle) {
+				return this.bundle.title;
+			} else if (this.type === GameCollection.TYPE_TAG) {
 				return `#${this.tag}`;
+			} else if (this.type === GameCollection.TYPE_JAM && this.jam) {
+				return 'Jam games entered into ' + this.jam.name;
 			}
 		}
 
@@ -211,6 +233,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 		this.followerCount = $payload.followerCount || 0;
 		this.bundle = $payload.bundle ? new GameBundle($payload.bundle) : null;
+		this.jam = $payload.jam ? new Jam($payload.jam) : null;
 
 		this.user = null;
 		if (this.type === 'followed' || this.type === 'owned' || this.type === 'recommended') {
@@ -221,8 +244,18 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			this.user = this.playlist.user;
 		}
 
+		if (this.user) {
+			this.setPageTheme(this.user.theme || null);
+		} else {
+			this.setPageTheme(null);
+		}
+
 		this.processMeta($payload);
 		this.mixPlaylist();
+	}
+
+	routeDestroy() {
+		this.setPageTheme(null);
 	}
 
 	private processMeta($payload: any) {
@@ -264,7 +297,11 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	}
 
 	get shouldShowFollowers() {
-		return this.type !== 'bundle' && this.type !== 'tag' && this.type !== 'owned';
+		return (
+			this.type !== GameCollection.TYPE_BUNDLE &&
+			this.type !== GameCollection.TYPE_TAG &&
+			this.type !== GameCollection.TYPE_OWNED
+		);
 	}
 
 	get shouldShowFollow() {
@@ -301,7 +338,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		const action = shouldRefresh ? 'refresh-mix' : 'mix';
 
 		this.isLoadingRecommended = true;
-		const payload = await Api.sendRequest(`/web/library/games/${action}/` + this.type + '/' + id);
+		const payload = await Api.sendRequest(
+			`/web/library/games/${action}/` + this.type + '/' + id
+		);
 		this.recommendedGames = Game.populate(payload.games);
 		this.isLoadingRecommended = false;
 	}

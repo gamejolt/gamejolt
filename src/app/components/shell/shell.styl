@@ -1,12 +1,12 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
-html
+html, body
 	// Firefox uses this color to blank the screen before it renders. It's
 	// better to use this than constantly flicker black while rendering.
-	background-color: $shell-body-content-bg
+	theme-prop('background-color', 'bg')
 
 body
-	background-color: $gray-darkest
 	background-image: url('./shell-bg.png')
 	background-repeat: repeat
 	min-height: 100vh

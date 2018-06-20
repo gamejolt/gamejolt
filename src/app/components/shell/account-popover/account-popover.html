@@ -14,7 +14,8 @@
 				:to="{ name: 'profile.overview', params: { username: app.user.username } }"
 				v-app-track-event="`account-popover:profile`"
 				>
-				<h4 class="account-popover-heading"
+				<h4
+					class="account-popover-heading"
 					:title="$gettext( `View Profile` )"
 					>
 					{{ app.user.display_name }}
@@ -61,17 +62,27 @@
 				>
 				<translate>Settings</translate>
 			</router-link>
+			<a
+				class="list-group-item"
+				v-app-track-event="`account-popover:dark`"
+				@click="toggleDark()"
+				>
+				<small class="pull-right text-muted">
+					<translate v-if="isDark">on</translate>
+					<translate v-else>off</translate>
+				</small>
+				<translate>Dark Mode</translate>
+			</a>
 		</div>
 
 		<div class="account-popover-button offline-disable">
-			<router-link
-				class="btn btn-outline btn-block"
-				:to="{ name: 'dash.games.add' }"
+			<app-button
+				block
 				v-app-track-event="`account-popover:add-game`"
+				:to="{ name: 'dash.games.add' }"
 				>
-				<app-jolticon icon="add" />
 				<translate>Add Game</translate>
-			</router-link>
+			</app-button>
 		</div>
 
 		<div class="account-popover-separator"></div>
@@ -116,7 +127,7 @@
 					@click="logout"
 					v-app-track-event="`account-popover:logout`"
 					>
-					<app-jolticon class="warning" icon="logout" />
+					<app-jolticon icon="logout" notice />
 					<translate>Logout</translate>
 				</a>
 			</div>
@@ -132,7 +143,7 @@
 							@click="logout"
 							v-app-track-event="`account-popover:logout`"
 							>
-							<app-jolticon class="warning" icon="logout" />
+							<app-jolticon icon="logout" notice />
 							<translate>Logout</translate>
 						</a>
 					</div>
@@ -144,7 +155,7 @@
 						<a class="list-group-item"
 							@click="quit()"
 							>
-							<app-jolticon class="warning" icon="remove" />
+							<app-jolticon icon="remove" notice />
 							<translate>Quit</translate>
 						</a>
 					</div>

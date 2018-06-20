@@ -1,6 +1,8 @@
 <div
 	class="trophy-completion alert"
-	:class="achieved > 0 ? 'alert-info fill-dark' : 'alert-warning'"
+	:class="{
+		'alert-dark': achieved > 0
+	}"
 	>
 
 	<template v-if="achieved > 0">
@@ -17,9 +19,8 @@
 		<br>
 
 		<app-progress-bar
+			thin
 			:percent="completionRate"
-			:thin="true"
-			variant="darker"
 			/>
 
 		<div class="clearfix">

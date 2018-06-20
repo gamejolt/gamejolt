@@ -5,24 +5,30 @@
 			<hr>
 
 			<span class="-manage-controls" v-if="shouldShowManageControls">
-				<button class="btn btn-success-outline" v-if="post.status === FiresidePost.STATUS_DRAFT" @click="publishPost">
-					<app-jolticon icon="check" />
+				<app-button
+					v-if="canPublish"
+					primary
+					@click="publishPost"
+					>
 					<translate>Publish</translate>
-				</button>
-				<button class="btn btn-outline" @click="showEdit">
-					<app-jolticon icon="edit" />
+				</app-button>
+				<app-button
+					@click="showEdit"
+					>
 					<translate>Edit</translate>
-				</button>
-				<button class="btn btn-outline btn-sparse" v-app-popover-trigger="`activity-feed-controls-options-${post.id}`">
-					<app-jolticon icon="ellipsis-h" />
-				</button>
+				</app-button>
+				<app-button
+					sparse
+					icon="ellipsis-v"
+					v-app-popover-trigger="`activity-feed-controls-options-${post.id}`"
+					/>
 
 				<app-popover :popover-id="`activity-feed-controls-options-${post.id}`">
 					<div class="list-group list-group-dark">
 						<a class="list-group-item has-icon"
 							@click="removePost"
 							>
-							<app-jolticon icon="remove" class="warning" />
+							<app-jolticon icon="remove" notice />
 							<translate>Remove Post</translate>
 						</a>
 					</div>
@@ -67,15 +73,15 @@
 				/>
 
 			<template v-if="!showComments">
-				<button
-					class="btn btn-outline btn-sparse btn-circle"
+				<app-button
+					icon="comment"
+					circle
 					@click="openComments()"
 					v-app-tooltip="$gettext( 'View Comments' )"
-					>
-					<app-jolticon icon="comment" />
-				</button>
+					/>
+
 				<span
-					class="blip light filled"
+					class="blip filled"
 					v-if="commentsCount > 0"
 					>
 					<span class="blip-caret"></span>
@@ -85,13 +91,12 @@
 				</span>
 			</template>
 
-			<button
-				class="btn btn-outline btn-sparse btn-circle"
+			<app-button
+				icon="share-airplane"
+				circle
 				v-app-popover-trigger="sharePopoverId"
 				v-app-tooltip="$gettext( 'Share' )"
-				>
-				<app-jolticon icon="share" />
-			</button>
+				/>
 
 			<app-popover
 				:popover-id="sharePopoverId"
@@ -114,9 +119,12 @@
 							/>
 					</div>
 
-					<button class="btn btn-outline btn-block" @click="copyShareUrl">
+					<app-button
+						block
+						@click="copyShareUrl"
+						>
 						<translate>Copy Permalink</translate>
-					</button>
+					</app-button>
 				</div>
 
 			</app-popover>
@@ -124,7 +132,6 @@
 		<div class="-controls" v-else-if="video">
 			<app-comment-video-like-widget
 				:video="video"
-				sparse
 				circle
 				/>
 		</div>

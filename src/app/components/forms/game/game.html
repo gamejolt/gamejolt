@@ -18,13 +18,14 @@
 		<br>
 
 		<div>
-			<a
-				class="btn btn-success-outline btn-block"
-				@click="acceptRules"
+			<app-button
+				type="a"
+				primary
+				block
+				@click.prevent="acceptRules"
 				>
-				<app-jolticon icon="checkbox" />
 				<translate>dash.games.add.rules_accept_button</translate>
-			</a>
+			</app-button>
 		</div>
 
 	</div>
@@ -107,11 +108,13 @@
 				<app-form-control-errors />
 			</app-form-group>
 
-			<!-- Gotta set keys for these since the data comes in async, vue
-			doesn't properly recheck the selected value after the categories
-			change. -->
+			<!--
+				Gotta set keys for these since the data comes in async, vue
+				doesn't properly recheck the selected value after the categories
+				change.
+			-->
 			<app-form-group
-				:key="!!categories"
+				v-if="categories"
 				name="category"
 				:label="$gettext( `dash.games.form.category_label` )"
 				>
@@ -133,7 +136,7 @@
 			</app-form-group>
 
 			<app-form-group
-				:key="!!engines"
+				v-if="engines"
 				name="creation_tool"
 				:label="$gettext( `dash.games.form.engine_label` )"
 				>
@@ -181,7 +184,7 @@
 
 			<template v-if="hasSalesPerms">
 				<app-form-group name="referrals_enabled" :label="$gettext( `Add to partner system?` )">
-					<app-form-control-toggle />
+					<app-form-control-toggle class="pull-right" />
 
 					<div class="help-block">
 						<div>
@@ -205,7 +208,7 @@
 						-->
 						<div v-if="account && account.tos_signed_developer === 1">
 							<br>
-							<div class="alert alert-warning">
+							<div class="alert alert-notice">
 								<translate>You must sign the new Distribution Agreement which covers the terms for the Partner Program before your games will become available in the Partner Program.</translate>
 								<router-link :to="{ name: 'dash.account.financials' }">
 									<translate>Click here to view the new Distribution Agreement</translate>
@@ -219,10 +222,7 @@
 		</fieldset>
 
 		<app-dash-game-wizard-controls>
-			<app-form-button
-				v-if="method === 'edit'"
-				icon="edit"
-				>
+			<app-form-button v-if="method === 'edit'">
 				<translate>Save Details</translate>
 			</app-form-button>
 		</app-dash-game-wizard-controls>

@@ -36,9 +36,16 @@ import {
 	CommentMutations,
 	CommentStore,
 } from '../../lib/gj-lib-client/components/comment/comment-store';
-import { ContentFocus } from '../../_common/content-focus/content-focus.service';
+import {
+	ThemeActions,
+	ThemeMutations,
+	ThemeStore,
+} from '../../lib/gj-lib-client/components/theme/theme.store';
+import { ContentFocus } from '../../lib/gj-lib-client/components/content-focus/content-focus.service';
+import { splitNoSidebar } from '../components/split-test/split-test-service';
 
 export type Actions = AppActions &
+	ThemeActions &
 	LibraryActions &
 	BannerActions &
 	CommentActions &
@@ -57,6 +64,7 @@ export type Actions = AppActions &
 	};
 
 export type Mutations = AppMutations &
+	ThemeMutations &
 	LibraryMutations &
 	BannerMutations &
 	CommentMutations &
@@ -83,6 +91,7 @@ export let tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = r
 
 const modules: any = {
 	app: appStore,
+	theme: new ThemeStore(),
 	library: new LibraryStore(),
 	banner: new BannerStore(),
 	comment: new CommentStore(),
@@ -99,6 +108,7 @@ if (GJ_IS_CLIENT) {
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
 	app: AppStore;
+	theme: ThemeStore;
 	library: LibraryStore;
 	banner: BannerStore;
 	comment: CommentStore;
@@ -134,6 +144,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	get shouldShowLeftPaneBackdrop() {
 		return this.isLeftPaneOverlayed && !Screen.isLg;
+	}
+
+	get hasSidebar() {
+		return Screen.isXs || this.app.user || !splitNoSidebar(this.route);
 	}
 
 	@VuexAction
@@ -233,6 +247,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async toggleLeftPane() {
+		if (!this.hasSidebar) {
+			return;
+		}
+
 		this._toggleLeftPane();
 		this._checkBackdrop();
 		Settings.set('sidebar', this.isLeftPaneSticky);

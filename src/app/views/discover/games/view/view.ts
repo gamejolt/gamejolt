@@ -13,14 +13,12 @@ import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/
 import { AppDiscoverGamesViewNav } from './_nav/nav';
 import { AppDiscoverGamesViewControls } from './_controls/controls';
 import { AppGameOgrsTag } from '../../../../components/game/ogrs/tag';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppGameMaturityBlock } from '../../../../components/game/maturity-block/maturity-block';
 import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { AppGameCoverButtons } from '../../../../components/game/cover-buttons/cover-buttons';
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { AppMeter } from '../../../../../lib/gj-lib-client/components/meter/meter';
 import { RouteStoreName, RouteState, RouteAction, RouteStore, RouteMutation } from './view.store';
 import { EventBus } from '../../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { Store } from '../../../../store/index';
@@ -37,6 +35,10 @@ import {
 	RouteResolve,
 	BaseRouteComponent,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import {
+	ThemeMutation,
+	ThemeStore,
+} from '../../../../../lib/gj-lib-client/components/theme/theme.store';
 
 @View
 @Component({
@@ -48,7 +50,6 @@ import {
 		AppDiscoverGamesViewNav,
 		AppDiscoverGamesViewControls,
 		AppGameOgrsTag,
-		AppMeter,
 		AppTimeAgo,
 		AppGameMaturityBlock,
 		AppGameCoverButtons,
@@ -79,6 +80,8 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	@RouteMutation acceptCollaboratorInvite: RouteStore['acceptCollaboratorInvite'];
 	@RouteMutation declineCollaboratorInvite: RouteStore['declineCollaboratorInvite'];
 
+	@ThemeMutation setPageTheme: ThemeStore['setPageTheme'];
+
 	storeName = RouteStoreName;
 	storeModule = RouteStore;
 
@@ -104,10 +107,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		return this.roleNames[this.collaboratorInvite.role as string] || '';
 	}
 
-	get ratingTooltip() {
-		return number(this.game.rating_count || 0) + ' rating(s), avg: ' + this.game.avg_rating;
-	}
-
 	get shouldShowCoverButtons() {
 		// Only show cover buttons on the overview page.
 		return (
@@ -116,6 +115,10 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 				this.packages.length > 0) ||
 			this.game.hasPerms()
 		);
+	}
+
+	get shouldShowFullCover() {
+		return Screen.isXs || this.$route.name === 'discover.games.view.overview';
 	}
 
 	@RouteResolve({ lazy: true, cache: true, cacheTag: 'view' })
@@ -176,6 +179,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 	routed($payload: any) {
 		this.bootstrap($payload);
+		this.setPageTheme(this.game.theme || null);
 
 		// If the game has a GA tracking ID, then we attach it to this
 		// scope so all page views within get tracked.
@@ -186,6 +190,8 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	}
 
 	routeDestroy() {
+		this.setPageTheme(null);
+
 		if (this.ratingCallback) {
 			EventBus.off('GameRating.changed', this.ratingCallback);
 			this.ratingCallback = undefined;

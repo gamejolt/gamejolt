@@ -1,15 +1,14 @@
 <app-modal>
 
 	<div class="modal-controls">
-		<button class="btn btn-danger-outline" @click="modal.dismiss()">
-			<app-jolticon icon="remove" />
+		<app-button @click="modal.dismiss()">
 			<translate>Close</translate>
-		</button>
+		</app-button>
 	</div>
 
 	<div class="modal-header">
 		<h2 class="modal-title">
-			<app-jolticon icon="token" :big="true" />
+			<app-jolticon icon="token" big />
 			<translate v-if="!isChanging">Your Game Token</translate>
 			<translate v-else>Change Game Token</translate>
 		</h2>
@@ -52,10 +51,13 @@
 	</div>
 
 	<div class="modal-footer">
-		<button class="btn btn-outline anim-fade-enter anim-fade-leave" @click="showChangeForm" v-if="!isChanging">
-			<app-jolticon icon="edit" />
+		<app-button
+			v-if="!isChanging"
+			class="anim-fade-enter anim-fade-leave"
+			@click="showChangeForm"
+			>
 			<translate>Change Game Token</translate>
-		</button>
+		</app-button>
 	</div>
 
 </app-modal>

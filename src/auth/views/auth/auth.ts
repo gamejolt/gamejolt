@@ -11,6 +11,7 @@ import { Connection } from '../../../lib/gj-lib-client/components/connection/con
 import { AppTranslateLangSelector } from '../../../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
 import { Auth } from '../../../lib/gj-lib-client/components/auth/auth.service';
 import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
+import { AppThemeSvg } from '../../../lib/gj-lib-client/components/theme/svg/svg';
 
 export function loggedUserBlock() {
 	// Redirect right away if they are logged in.
@@ -28,6 +29,7 @@ export function loggedUserBlock() {
 	components: {
 		AppCoverImg,
 		AppTranslateLangSelector,
+		AppThemeSvg,
 	},
 	async beforeRouteEnter(_to, _from, next) {
 		await store.dispatch('bootstrap');

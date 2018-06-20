@@ -18,7 +18,7 @@ $fireside-post-line-height-computed = floor($fireside-post-line-height-computed_
 		letter-spacing: 0
 
 	a
-		link-underlines($text-color, $white, $gray-lighter)
+		link-underlines(var(--theme-link), var(--theme-bg), var(--theme-link-hover))
 
 	// We have to cancel the link-underlines styling.
 	.hashtag
@@ -37,4 +37,4 @@ $fireside-post-line-height-computed = floor($fireside-post-line-height-computed_
 		font-style: normal
 
 	img, iframe
-		border-radius: $border-radius-base
+		rounded-corners()

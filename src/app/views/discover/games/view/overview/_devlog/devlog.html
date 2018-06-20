@@ -14,7 +14,7 @@
 				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
 					<div
 						v-if="game.canceled"
-						class="alert alert-warning full-bleed-xs"
+						class="alert alert-notice full-bleed-xs"
 						v-translate
 						>
 						This devlog project has been <b>canceled</b>. You can still follow it if you'd like to be notified in the case that development continues.
@@ -24,8 +24,7 @@
 						v-for="msg of customGameMessages"
 						class="alert full-bleed-xs"
 						:class="{
-							'alert-info': msg.type === 'info',
-							'alert-warning': msg.type === 'alert',
+							'alert-notice': msg.type === 'alert',
 						}"
 						>
 						<app-jolticon icon="notice" />
@@ -56,9 +55,9 @@
 								:comments="comments"
 								/>
 
-							<router-link
+							<app-button
 								v-if="commentsCount > 2"
-								class="btn btn-outline btn-block"
+								block
 								:to="{ name: 'discover.games.view.comments' }"
 								>
 								<translate
@@ -66,7 +65,7 @@
 									>
 									+%{ count } more
 								</translate>
-							</router-link>
+							</app-button>
 						</template>
 
 						<!-- Make some room for the description below -->
@@ -125,13 +124,14 @@
 						</app-fade-collapse>
 
 						<div class="page-cut" v-if="canToggleDescription">
-							<button class="btn btn-outline"
+							<app-button
+								trans
 								@click="toggleDescription()"
 								v-app-track-event="`game-profile:show-full-description`"
 								>
 								<translate v-if="!showDescription">Show More</translate>
 								<translate v-else>Less</translate>
-							</button>
+							</app-button>
 						</div>
 					</div>
 
@@ -179,7 +179,7 @@
 							show-ads
 							/>
 
-						<div v-else class="alert alert-info">
+						<div v-else class="alert">
 							<translate>This devlog doesn't have any posts yet.</translate>
 						</div>
 

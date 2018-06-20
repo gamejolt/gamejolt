@@ -2,18 +2,18 @@
 	<div class="container">
 
 		<template v-if="!game.path">
-			<div class="alert alert-info">
+			<div class="alert">
 				<p><translate>In order to set up a custom site for your game, you first have to set a URL path in your game details page.</translate></p>
 				<div class="alert-actions">
-					<router-link
-						class="btn btn-outline btn-dark-variant"
+					<app-button
+						primary
 						:to="{
 							name: 'dash.games.manage.game.details',
 							params: { id: game.id },
 						}"
 						>
 						<translate>Edit Game Details</translate>
-					</router-link>
+					</app-button>
 				</div>
 			</div>
 			<br>

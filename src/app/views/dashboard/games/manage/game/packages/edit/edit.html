@@ -54,7 +54,7 @@
 		<div class="row">
 			<div class="col-sm-8">
 
-				<div class="alert alert-warning"
+				<div class="alert alert-notice"
 					v-if="game._is_devlog && package.visibility === GamePackage.VISIBILITY_PUBLIC"
 					>
 					<app-jolticon icon="notice" />
@@ -78,28 +78,15 @@
 				</h3>
 
 				<app-game-perms tag="div" required="sales">
-					<button
-						class="btn btn-outline btn-block"
-						@click="isShowingPackageEdit = !isShowingPackageEdit"
+					<app-button
+						primary
+						block
+						@click="editPackage()"
 						>
-						<app-jolticon icon="edit" />
-						<translate v-if="!isShowingPackageEdit">Edit Package Details</translate>
-						<translate v-else>Hide Package Details</translate>
-					</button>
+						Edit Package Details
+					</app-button>
 					<br>
 				</app-game-perms>
-
-				<app-expand :when="isShowingPackageEdit">
-					<form-game-package
-						:model="package"
-						:game="game"
-						:sellable="sellable"
-						@submit="onEdited"
-						@salecanceled="onEdited"
-						/>
-
-					<br>
-				</app-expand>
 
 				<app-loading v-if="isLoadingPreview" />
 				<template v-else>
@@ -117,7 +104,7 @@
 							@complete="onBuildsProcessed( $event )"
 							/>
 
-						<div class="alert alert-info">
+						<div class="alert">
 							<app-jolticon icon="notice" />
 							<translate>This package has builds that are still processing. They will be available in the package as soon as they're finished processing.</translate>
 						</div>
@@ -147,20 +134,20 @@
 
 			<div class="col-sm-8 col-sm-pull-4">
 
-				<div class="alert alert-warning" v-if="!releases.length">
+				<div class="alert alert-notice" v-if="!releases.length">
 					<p><translate>There are no releases in this package yet.</translate></p>
 					<p><translate>Add a release to this package in order to upload builds/files to it.</translate></p>
 				</div>
 
 				<app-game-perms tag="div" required="builds">
-					<button
-						class="btn btn-success-outline btn-block"
+					<app-button
+						primary
+						block
 						@click="newRelease"
 						:disabled="isAddingRelease"
 						>
-						<app-jolticon icon="add" />
 						<translate>New Release</translate>
-					</button>
+					</app-button>
 					<br>
 				</app-game-perms>
 
@@ -169,7 +156,6 @@
 					<app-card
 						v-for="release of releases"
 						:key="release.id"
-						:is-inactive="release.status === GameRelease.STATUS_HIDDEN"
 						>
 
 						<app-game-perms required="builds">
@@ -200,15 +186,33 @@
 						</div>
 
 						<div class="card-meta">
-							<span class="tag"
-								v-if="release.status === GameRelease.STATUS_HIDDEN"
-								v-app-tooltip="$gettext( `dash.games.packages.manage.releases.hidden_tooltip` )"
-								>
-								<app-jolticon icon="inactive" />
-								<translate>dash.games.packages.manage.releases.hidden_tag</translate>
-							</span>
+							<template v-if="release.status === GameRelease.STATUS_HIDDEN">
+								<span
+									class="tag"
+									v-if="!release.isScheduled"
+									v-app-tooltip="$gettext( `dash.games.packages.manage.releases.hidden_tooltip` )"
+									>
+									<app-jolticon icon="inactive" />
+									<translate>Draft</translate>
+								</span>
+								<template v-else>
+									<span
+										class="tag tag-notice"
+										v-app-tooltip="$gettext( `This release is scheduled and will be published to your game page in the future.` )"
+										>
+										<app-jolticon icon="calendar-grid" />
+										<translate>Scheduled</translate>
+									</span>
 
-							<span class="tag tag-active"
+									<app-time-ago
+										:date="release.scheduled_for"
+										without-suffix
+										/>
+								</template>
+							</template>
+
+							<span
+								class="tag tag-highlight"
 								v-if="release.status === GameRelease.STATUS_PUBLISHED"
 								v-app-tooltip="$gettext( `dash.games.packages.manage.releases.published_tooltip` )"
 								>
@@ -234,35 +238,29 @@
 							</template>
 						</div>
 
-						<div class="card-content" v-if="package.description">
-							{{ package.description }}
-						</div>
-
 						<div class="card-controls" v-if="hasBuildsPerms || hasAnalyticsPerms">
 							<app-game-perms required="builds">
-								<router-link
-									class="btn btn-outline"
+								<app-button
+									primary
 									:to="{
 										name: 'dash.games.manage.game.packages.release.edit',
 										params: { packageId: package.id, releaseId: release.id },
 									}"
 									>
-									<app-jolticon icon="edit" />
 									<translate>Edit Release</translate>
-								</router-link>
+								</app-button>
 							</app-game-perms>
 
 							<app-game-perms required="analytics">
-								<router-link
-									class="btn btn-outline"
+								<app-button
+									trans
 									:to="{
 										name: 'dash.analytics',
 										params: { resource: 'Game_Release', resourceId: release.id },
 									}"
 									>
-									<app-jolticon icon="chart" />
 									<translate>Analytics</translate>
-								</router-link>
+								</app-button>
 							</app-game-perms>
 						</div>
 

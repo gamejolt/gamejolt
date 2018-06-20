@@ -5,13 +5,16 @@
 			<div class="text-center">
 				<p>
 					<router-link :to="{ name: 'landing.client' }" v-app-track-event="`footer:client-promo`">
-						<img src="~img/game-jolt-client-logo.svg" alt="Game Jolt Client">
+						<app-theme-svg src="~img/game-jolt-client-logo.svg" alt="Game Jolt Client" />
 					</router-link>
 				</p>
 				<p>
-					<router-link :to="{ name: 'landing.client' }" class="btn btn-primary">
+					<app-button
+						primary
+						:to="{ name: 'landing.client' }"
+						>
 						<translate>Get It Now</translate>
-					</router-link>
+					</app-button>
 				</p>
 			</div>
 
@@ -22,7 +25,7 @@
 
 		<div class="footer-jolt" v-if="Screen.isXs">
 			<router-link :to="{ name: 'discover.home' }">
-				<img src="~img/jolt.svg" alt="Game Jolt" width="68" height="72">
+				<app-theme-svg src="~img/jolt.svg" alt="" width="68" height="72" />
 			</router-link>
 		</div>
 
@@ -58,14 +61,14 @@
 								</a>
 							</li>
 							<li>
-								<router-link :to="{ name: 'radio' }">
-									<translate>Radio</translate>
-								</router-link>
-							</li>
-							<li>
 								<a href="http://jams.gamejolt.com" target="_blank">
 									<translate>Jams</translate>
 								</a>
+							</li>
+							<li>
+								<router-link :to="{ name: 'forums.landing.overview' }">
+									<translate>Forums</translate>
+								</router-link>
 							</li>
 						</ol>
 					</div>
@@ -95,11 +98,6 @@
 								<a href="https://www.redbubble.com/people/gamejolt/shop" target="_blank">
 									<translate>Merch</translate>
 								</a>
-							</li>
-							<li>
-								<router-link :to="{ name: 'forums.landing.overview' }">
-									<translate>Forums</translate>
-								</router-link>
 							</li>
 							<li>
 								<a href="https://github.com/gamejolt" target="_blank">
@@ -145,6 +143,11 @@
 									<translate>legal.privacy</translate>
 								</router-link>
 							</li>
+							<li v-if="!GJ_IS_CLIENT">
+								<router-link :to="{ name: 'legal.cookies' }">
+									<translate>Cookie Policy</translate>
+								</router-link>
+							</li>
 						</ol>
 					</div>
 				</div>
@@ -156,18 +159,22 @@
 		<div class="clearfix">
 			<div class="footer-jolt" v-if="!Screen.isXs">
 				<router-link :to="{ name: 'discover.home' }">
-					<img src="~img/jolt.svg" alt="Game Jolt" width="68" height="72">
+					<app-theme-svg src="~img/jolt.svg" alt="" width="68" height="72" />
 				</router-link>
 			</div>
 			<div class="footer-meta">
 
 				<p>
-					<a class="btn btn-sparse" href="https://twitter.com/gamejolt" target="_blank">
-						<app-jolticon icon="twitter-bird" />
-					</a>
-					<a class="btn btn-sparse" href="https://facebook.com/gamejolt" target="_blank">
-						<app-jolticon icon="facebook" />
-					</a>
+					<app-button
+						sparse
+						icon="twitter-bird"
+						href="https://twitter.com/gamejolt" target="_blank"
+						/>
+					<app-button
+						sparse
+						icon="facebook"
+						href="https://facebook.com/gamejolt" target="_blank"
+						/>
 				</p>
 
 				<p class="tiny">

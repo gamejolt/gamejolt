@@ -1,4 +1,5 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .manage-game-nav-required
 	@media $media-md
@@ -11,8 +12,8 @@
 
 .incomplete
 	.jolticon
-		color: $gj-pink !important
+		theme-prop('color', 'fg-muted', true)
 
 .complete
 	.jolticon
-		color: $gj-dark-green !important
+		theme-prop('color', 'link', true)

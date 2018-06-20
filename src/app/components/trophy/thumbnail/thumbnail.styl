@@ -1,16 +1,10 @@
 @require '~styles/variables'
-
-$trophy-thumbnail-border-width = 3px
-$trophy-thumbnail-color = $gray-lighter
-$trophy-thumbnail-border-color = $black
-$trophy-thumbnail-achieved-color = $white
-$trophy-thumbnail-achieved-border-color = $gj-blue
-$trophy-thumbnail-max-width = 75px
+@require '~styles-lib/mixins'
 
 .trophy-thumbnail
-	padding: $trophy-thumbnail-border-width
-	background-color: $trophy-thumbnail-border-color
-	border-radius: $border-radius-base
+	rounded-corners()
+	padding: 3px
+	background-color: $black
 	text-align: center
 
 .trophy-thumbnail-img
@@ -20,19 +14,18 @@ $trophy-thumbnail-max-width = 75px
 	overflow: hidden
 
 .trophy-thumbnail-img-inner
+	theme-prop('background-color', 'dark')
 	position: absolute
 	top: 0
 	left: 0
 	right: 0
 	bottom: 0
-	background-color: $gray-dark
 
 	> .img-responsive
 		display: block
 		width: 100%
 
-.trophy-thumbnail-img-1x
-.trophy-thumbnail-img-2x
+.trophy-thumbnail-img-1x, .trophy-thumbnail-img-2x
 	position: absolute
 	top: 50%
 	left: 50%
@@ -47,14 +40,14 @@ $trophy-thumbnail-max-width = 75px
 
 .trophy-thumbnail-difficulty
 	display: block
-	padding-top: $trophy-thumbnail-border-width // match the border
+	padding-top: 3px // match the border
 	font-size: $font-size-tiny
 	text-align: center
 	text-transform: uppercase
-	color: $trophy-thumbnail-color
+	color: $dark-theme-fg
 
 .trophy-thumbnail-achieved
-	background-color: $trophy-thumbnail-achieved-border-color
+	theme-prop('background-color', 'highlight')
 
 	.trophy-thumbnail-difficulty
-		color: $trophy-thumbnail-achieved-color
+		theme-prop('color', 'highlight-fg')

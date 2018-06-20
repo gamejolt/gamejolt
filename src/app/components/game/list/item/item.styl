@@ -1,7 +1,7 @@
 @require '~styles/variables'
-@require '../../../../../lib/gj-lib-client/stylus/common/mixins'
+@require '~styles-lib/mixins'
 
-$game-list-item-thumb-width = 120px
+$game-list-item-thumb-width = 145px
 
 .game-list-item
 	clearfix()
@@ -12,15 +12,14 @@ $game-list-item-thumb-width = 120px
 	width: $game-list-item-thumb-width
 	height: $game-list-item-thumb-width * 0.5625
 
-	>>> img
-		border-radius: $border-radius-base
-
 .-meta
 	margin-left: $game-list-item-thumb-width + 10px
 
 .-title
 	display: block
 	font-weight: bold
+	margin-top: 3px
+	margin-bottom: 3px
 
 .-dev
 	display: block

@@ -1,28 +1,29 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .route-landing-client
 	overflow-x: hidden
 	overflow-y: hidden
 
 	.highlight-rows
-
 		@media $media-sm-up
 			section
 				padding: 60px 0
 
 		.jolticon
+			theme-prop('color', 'highlight', true)
 			margin-left: 0
 			margin-right: 10px
-			color: $gj-green !important
 			vertical-align: middle
 
 		p
+			theme-prop('color', 'lightest')
 			font-size: 1.2em
 			line-height: 1.6
 			font-weight: 300
-			color: $gray-lightest
 
 		img
+			rounded-corners()
 			border: 2px solid $white
 
 	section.client-presentation
@@ -44,6 +45,7 @@
 		overflow: hidden
 
 		&::before
+			theme-prop('background-color', 'dark')
 			content: ''
 			display: block
 			position: absolute
@@ -51,16 +53,17 @@
 			left: -30%
 			width: 160%
 			height: 400px
-			background-color: $gray-dark
 			z-index: 0
-			transform: rotate( -8deg )
+			transform: rotate(-8deg)
 
 		.container
 			z-index: 1
 
 		img
+			theme-prop('border-color', 'gray')
 			margin-top: 20px
-			border: 2px solid $gray
+			border-width: 2px
+			border-style: solid
 
 	section.features-stripe
 		margin-top: 150px
@@ -69,12 +72,13 @@
 		z-index: 2
 
 		&, h5
-			color: $gray-darkest
+			theme-prop('color', 'highlight-fg')
 
 		h5
 			margin-top: 0
 
 		&::before
+			theme-prop('background-color', 'highlight')
 			content: ''
 			display: block
 			position: absolute
@@ -82,9 +86,8 @@
 			bottom: -60px
 			left: -30%
 			width: 160%
-			background-color: $gj-green
 			z-index: 0
-			transform: rotate( 8deg )
+			transform: rotate(8deg)
 
 		.container
 			position: relative
@@ -92,7 +95,8 @@
 
 	@media $media-xs
 		.features-stripe-col
-			margin-bottom: ($grid-gutter-width)
+			margin-bottom: $grid-gutter-width
+
 			&:last-child
 				margin-bottom: 0
 
@@ -106,6 +110,7 @@
 			color: $white
 
 		&::before
+			theme-prop('background-color', 'darkest')
 			content: ''
 			display: block
 			position: absolute
@@ -113,9 +118,8 @@
 			bottom: -40px
 			left: -30%
 			width: 160%
-			background-color: $gj-pink
 			z-index: 0
-			transform: rotate( -8deg )
+			transform: rotate(-8deg)
 
 		.container
 			position: relative
@@ -123,6 +127,7 @@
 
 	@media $media-xs
 		.download-footer-col
-			margin-bottom: ($grid-gutter-width)
+			margin-bottom: $grid-gutter-width
+
 			&:last-child
 				margin-bottom: 0

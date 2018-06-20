@@ -45,17 +45,16 @@
 		</template>
 
 		<template slot="controls">
-			<router-link
-				class="btn btn-outline btn-block"
+			<app-button
+				block
 				:to="{
 					name: 'profile.overview',
 					params: { username: app.user.username },
 				}"
 				v-app-track-event="`dash:overview:view-profile`"
 				>
-				<app-jolticon icon="user" />
 				<translate>dash.overview.view_profile_button</translate>
-			</router-link>
+			</app-button>
 		</template>
 
 	</app-page-header>

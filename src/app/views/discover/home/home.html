@@ -1,67 +1,23 @@
-<div class="route-discover-home">
+<div>
 
 	<app-discover-home-banner
 		v-if="featuredItem"
 		:item="featuredItem"
 		/>
 
-	<!-- <section
-		v-if="isLoaded && !app.user"
-		class="section landing-header text-center"
-		>
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
-
-					<p class="lead">Find the indie games you <app-jolticon icon="heart" :big="true" class="header-heart" /> and directly support the developers that make them</p>
-
-					<p>
-						<router-link class="btn btn-outline btn-sm"
-							:to="{ name: 'landing.learn' }"
-							v-app-track-event="`home:header-learn-more`"
-							>
-							<translate>Learn More</translate>
-						</router-link>
-					</p>
-					<br>
-
-					<router-link class="btn btn-primary-outline btn-block-xs"
-						:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
-						v-app-track-event="`home:header-browse-games`"
-						>
-						<translate>Browse Games</translate>
-					</router-link>
-
-					<span class="hidden-xs">
-						&nbsp;&nbsp;&nbsp;
-						<em>or</em>
-						&nbsp;&nbsp;&nbsp;
-					</span>
-
-					<br class="visible-xs">
-
-					<router-link
-						class="btn btn-outline btn-block-xs"
-						:to="{ name: 'dash.games.add' }"
-						v-app-track-event="`home:header-add-game`"
-						v-app-auth-required
-						>
-						<translate>Add Your Game</translate>
-					</router-link>
-
+	<div class="fill-darker">
+		<app-scroll-scroller horizontal overlay>
+			<div class="-channel-list">
+				<div
+					class="-channel-list-item"
+					v-for="channel of channels"
+					:key="channel.id"
+					>
+					<app-channel-thumbnail :channel="channel.id" />
 				</div>
 			</div>
-		</div>
-	</section> -->
-
-	<section class="section section-thin fill-darker overlay-scrollbar channel-list">
-		<div class="channel-list-item"
-			v-for="channel of channels"
-			:key="channel.id"
-			>
-			<app-channel-thumbnail :channel="channel.id" />
-		</div>
-	</section>
+		</app-scroll-scroller>
+	</div>
 
 	<section class="section">
 		<div class="container-lg">
@@ -88,8 +44,8 @@
 				/>
 
 			<div class="page-cut">
-				<router-link
-					class="btn btn-outline"
+				<app-button
+					trans
 					:to="{
 						name: 'discover.games.list._fetch',
 						params: { section: null }
@@ -97,15 +53,13 @@
 					v-app-track-event="`home:more-btn:browse`"
 					>
 					<translate>Browse More Games</translate>
-				</router-link>
+				</app-button>
 			</div>
 
 		</div>
 	</section>
 
-	<app-ad-placement pos="bottom" />
-
-	<section class="section fill-lightest" v-if="isLoaded && !app.user">
+	<section class="section fill-offset" v-if="isLoaded && !app.user">
 		<div class="container">
 
 			<h1 class="section-header text-center">
@@ -114,7 +68,7 @@
 
 			<div class="text-center">
 				<p class="lead">
-					<translate>Do you love indie games as much as we do?</translate>
+					<translate>Do you love games as much as we do?</translate>
 				</p>
 			</div>
 

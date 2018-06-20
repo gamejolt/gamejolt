@@ -6,4 +6,7 @@ import { router } from './views/index';
 import { App } from './app';
 import { bootstrapCommon } from '../_common/bootstrap';
 
-export const createApp = bootstrapCommon(store, router, App);
+const _createApp = bootstrapCommon(App, store, router);
+export function createApp() {
+	return { app: _createApp(), store, router };
+}

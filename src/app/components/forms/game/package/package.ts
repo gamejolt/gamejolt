@@ -17,7 +17,6 @@ import { SellablePricing } from '../../../../../lib/gj-lib-client/components/sel
 import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppLoadingFade } from '../../../../../lib/gj-lib-client/components/loading/fade/fade';
 import {
 	TimezoneData,
@@ -28,6 +27,8 @@ import { currency } from '../../../../../lib/gj-lib-client/vue/filters/currency'
 import { AppFormControlDate } from '../../../../../lib/gj-lib-client/components/form-vue/control/date/date';
 import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppGamePerms } from '../../../game/perms/perms';
+import { AppFormLegend } from '../../../../../lib/gj-lib-client/components/form-vue/legend/legend';
+import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 
 type FormGamePackageModel = GamePackage & {
 	primary: boolean;
@@ -43,11 +44,12 @@ type FormGamePackageModel = GamePackage & {
 @View
 @Component({
 	components: {
-		AppJolticon,
+		AppFormLegend,
 		AppLoadingFade,
 		AppFormControlToggle,
 		AppFormControlDate,
 		AppGamePerms,
+		AppTimeAgo,
 	},
 	filters: {
 		date,
@@ -113,7 +115,7 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 			return null;
 		}
 
-		return new Date(this.formModel.sale_start + this.saleTimezoneOffset);
+		return new Date(this.formModel.sale_start);
 	}
 
 	get saleEndLocal() {
@@ -121,7 +123,7 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 			return null;
 		}
 
-		return new Date(this.formModel.sale_end + this.saleTimezoneOffset);
+		return new Date(this.formModel.sale_end);
 	}
 
 	get loadUrl() {
@@ -208,9 +210,13 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 
 				this.originalPricing = SellablePricing.getOriginalPricing(this.pricings) || null;
 
-				this.promotionalPricing = SellablePricing.getPromotionalPricing(this.pricings) || null;
+				this.promotionalPricing =
+					SellablePricing.getPromotionalPricing(this.pricings) || null;
 
-				this.setField('price', this.originalPricing ? this.originalPricing.amount / 100 : 0);
+				this.setField(
+					'price',
+					this.originalPricing ? this.originalPricing.amount / 100 : 0
+				);
 
 				if (this.promotionalPricing) {
 					this.setField('sale_timezone', this.promotionalPricing.timezone);
@@ -246,7 +252,9 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 		this.isProcessing = true;
 
 		const params = [this.formModel.game_id, this.formModel.id];
-		await Api.sendRequest('/web/dash/developer/games/packages/cancel-sales/' + params.join('/'));
+		await Api.sendRequest(
+			'/web/dash/developer/games/packages/cancel-sales/' + params.join('/')
+		);
 
 		this.promotionalPricing = null;
 		this.setField('sale_timezone', determine().name());
@@ -260,71 +268,3 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 		this.$emit('salecancel', this.formModel);
 	}
 }
-
-// angular
-// 	.module('App.Forms.Dashboard')
-// 	.directive('gjFormDashboardGamePackage', function(
-// 		$state,
-// 		Form,
-// 		App,
-// 		Api,
-// 		Game_Package,
-// 		Sellable,
-// 		Sellable_Pricing,
-// 		Timezone,
-// 		ModalConfirm,
-// 		gettextCatalog
-// 	) {
-// 		var form = new Form({
-// 			model: 'Game_Package',
-// 			template: require('./package.html'),
-// 			resetOnSubmit: true,
-// 		});
-
-// 		form.this.game = '=gjGame';
-// 		form.this.sellable = '=gjSellable';
-// 		form.this.package = '=gjGamePackage';
-// 		form.this.saleCanceled = '&saleCanceled';
-
-// 		form.onInit = function(this) {
-// 			// Api.sendRequest(
-// 			// 	'/web/dash/developer/games/packages/save/' + params.join('/')
-// 			// ).then(function(payload) {
-
-// 			// });
-
-// 			// Only do this first load.
-// 			if (!this.isLoaded) {
-
-// 				this.$watch('formModel.sale_start_now', function(val) {
-// 					// If the form control isn't on the page, then this won't be defined.
-// 					// We only want to do this logic if the control is visible (when they first set up sale).
-// 					if (typeof val === 'undefined') {
-// 						return;
-// 					}
-
-// 					if (val) {
-// 						this.formModel.sale_start = Date.now();
-// 					} else {
-// 						this.formModel.sale_start = moment()
-// 							.add(1, 'day')
-// 							.startOf('day')
-// 							.valueOf();
-// 					}
-// 				});
-
-// 			}
-// 		};
-
-// 		form.onSubmitSuccess = function(this, response) {
-// 			if (this.sellable) {
-// 				this.sellable.assign(response.sellable);
-// 			}
-
-// 			if (this.game) {
-// 				this.game.assign(response.game);
-// 			}
-// 		};
-
-// 		return form;
-// 	});

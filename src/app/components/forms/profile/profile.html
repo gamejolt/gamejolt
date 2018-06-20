@@ -1,5 +1,18 @@
 <app-form name="profileForm">
 	<app-form-group
+		name="theme"
+		:label="$gettext(`Color Theme`)"
+		>
+		<app-form-control-theme
+			class="pull-right"
+			@changed="onThemeChanged()"
+			/>
+		<p class="help-block">
+			<translate>Setting a theme will change how Game Jolt looks for you. When other people view your profile, they'll also be switched to your theme.</translate>
+		</p>
+	</app-form-group>
+
+	<app-form-group
 		v-if="!usernameTimeLeft"
 		name="username"
 		:label="$gettext( `dash.profile.edit.username_label` )"
@@ -26,7 +39,7 @@
 		</p>
 
 		<app-expand :when="formModel.username !== model.username">
-			<div class="alert alert-info">
+			<div class="alert">
 				<translate>Changing your username will change your public profile URL. Any current links to your old profile URL will not automatically redirect to your new profile URL.</translate>
 			</div>
 		</app-expand>
@@ -47,7 +60,6 @@
 	</div>
 
 	<app-form-group
-		v-if="!nameTimeLeft"
 		name="name"
 		:label="$gettext( `dash.profile.edit.display_name_label` )"
 		:optional="true"
@@ -71,18 +83,6 @@
 		</p>
 	</app-form-group>
 
-	<div class="form-group" v-else>
-		<label class="control-label"><translate>dash.profile.edit.display_name_label</translate></label>
-		<p class="form-control-static">{{ formModel.name }}</p>
-		<p class="help-block">
-			<translate>You can only change your display name once a week.</translate>
-			<br>
-			<translate :translate-params="{ duration: nameDuration }">
-				You have %{ duration } left until you can change it again.
-			</translate>
-		</p>
-	</div>
-
 	<app-form-group
 		name="web_site"
 		:label="$gettext( `dash.profile.edit.website_label` )"
@@ -103,10 +103,6 @@
 		:optional="true"
 		>
 
-		<p class="help-block" v-translate>
-			dash.profile.edit.description_help_html
-		</p>
-
 		<app-form-control-markdown
 			preview-class="user-compiled-description"
 			preview-url="/web/dash/profile/preview-description"
@@ -124,7 +120,7 @@
 
 	</app-form-group>
 
-	<app-form-button icon="edit">
+	<app-form-button>
 		<translate>dash.profile.edit.submit_button</translate>
 	</app-form-button>
 </app-form>

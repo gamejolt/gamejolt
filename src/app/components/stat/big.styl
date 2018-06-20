@@ -16,21 +16,22 @@
 	font-weight: bold
 
 	a
+		theme-prop('border-bottom-color', 'bg-subtle')
 		text-decoration: none
-		border-bottom: 3px solid $gray-lighter
+		border-bottom-width: 3px
+		border-bottom-style: solid
 		color: inherit
 
 		&:hover
+			theme-prop('border-bottom-color', 'link')
 			text-decoration: none
-			border-color: $black
 
 .stat-big-highlight
-	color: $gj-green
+	theme-prop('color', 'link')
 
 .stat-big-label
-	color: $text-muted
+	theme-prop('color', 'fg-muted')
 
 	// For inactive editable accordion items, we need to make ourselves a lighter gray.
 	.card-inactive &
-		color: $gray-lighter
-
+		theme-prop('color', 'lighter')

@@ -1,15 +1,12 @@
 @require './variables'
 @require '~styles/variables'
-@require '../../../lib/gj-lib-client/stylus/common/mixins'
-
-$-zindex-img = 1
-$-zindex-video = 2
-$-zindex-controls = 3
+@require '~styles-lib/mixins'
 
 .game-thumbnail
 	position: relative
 	display: block
 	margin-bottom: $grid-gutter-width-xs
+	color: inherit
 
 	@media $media-sm-up
 		margin-bottom: $grid-gutter-width
@@ -18,61 +15,11 @@ $-zindex-controls = 3
 	position: absolute
 	top: 5px
 	right: 5px
-	z-index: $-zindex-controls
+	z-index: 10
 	display: none
 
 	.game-thumbnail:hover &
 		display: block
-
-.game-thumbnail-img
-	opacity: 0
-	transition: opacity 500ms
-
-	&.loaded
-		opacity: 1
-
-.-thumb
-	position: relative
-	height: 0
-	padding-top: 56.25% // HD 16:9
-	overflow: hidden
-	background-color: $gray-lightest
-	border-radius: $border-radius-base
-
-	.fill-dark &, .fill-darker &, .fill-darkest &
-		background-color: $black
-
-	> .inner
-		position: absolute
-		top: 0
-		left: 0
-		width: 100%
-		height: 100%
-
-	.jolticon
-		position: absolute
-		font-size: 16px * 4
-		left: 50%
-		margin-left: -(@font-size / 2)
-		top: @left
-		margin-top: @margin-left
-		color: $gray-lighter
-
-	>>>
-		img, .video
-			position: absolute !important
-			top: 0
-			left: 0
-			display: block
-			width: 100%
-			height: 100%
-			border-radius: $border-radius-base
-
-		img
-			z-index: $-zindex-img
-
-		.video
-			z-index: $-zindex-video
 
 .-meta
 	position: relative
@@ -85,8 +32,8 @@ $-zindex-controls = 3
 
 .-dev
 	text-overflow()
+	theme-prop('color', 'fg-muted')
 	margin-left: $game-thumbnail-avatar-size + $game-thumbnail-meta-spacing
-	color: $text-muted
 	font-weight: bold
 	font-size: $font-size-h6
 
@@ -96,10 +43,6 @@ $-zindex-controls = 3
 	margin-left: $game-thumbnail-avatar-size + $game-thumbnail-meta-spacing
 	line-height: 1.3
 	font-weight: bold
-	color: $gray-darker
-
-	.fill-dark &, .fill-darker &, .fill-darkest &
-		color: $gray-lightest
 
 .-meta-extra
 	clear: both
@@ -117,47 +60,34 @@ $-zindex-controls = 3
 	display: inline-block
 	margin-right: $game-thumbnail-meta-spacing
 
-.-tag
-	.fill-dark &, .fill-darker &, .fill-darkest &
-		background-color: $gray-dark
-		color: $white
-
 .-pricing
+	rounded-corners()
 	float: right
 	height: 30px
 	line-height: @height
 	margin-left: $game-thumbnail-meta-spacing
 	padding: 0 10px
 	text-align: center
-	border-radius: $border-radius-base
-	background-color: $gray-dark
 
 	&-owned
-		background-color: $gj-green
-		color: $black
+		theme-prop('background-color', 'highlight')
+		theme-prop('color', 'highlight-fg')
 
 		& ^[-1]-tag
 			color: inherit
 
 	&-amount
-		color: $white
 		font-size: $font-size-small
 		font-weight: bold
-
-	&-currency
-		color: $gray-lighter
 
 	&-decimal
 		font-size: $font-size-small
 
 	&-tag
-		color: $white
+		theme-prop('color', 'fg')
 		font-size: $font-size-tiny
 		font-weight: bold
 		text-transform: uppercase
-
-		&.muted
-			color: $gray-lighter
 
 	// This is way too complex.
 	&-sale
@@ -166,20 +96,20 @@ $-zindex-controls = 3
 
 		.-pricing
 			&-sale-percentage
+				theme-prop('color', 'highlight')
+				theme-prop('background-color', 'gray')
 				display: inline-block
 				vertical-align: top
-				margin-left: -10px
-				margin-right: 10px
-				padding-left: 10px
+				margin-right: -10px
+				margin-left: 10px
 				padding-right: 10px
+				padding-left: 10px
 				height: 36px
 				line-height: @height
 				font-size: $font-size-small
 				font-weight: bold
-				background-color: $gj-green
-				border-top-left-radius: $border-radius-base
-				border-bottom-left-radius: $border-radius-base
-				color: $black
+				border-top-right-radius: $border-radius-base
+				border-bottom-right-radius: $border-radius-base
 
 			&-container
 				display: inline-block
@@ -192,8 +122,15 @@ $-zindex-controls = 3
 				line-height: 20px
 
 			&-amount-old
-				color: $gray-lighter
+				theme-prop('color', 'fg-muted')
 				text-decoration: line-through
 				font-size: $font-size-tiny
 				line-height: 10px
 				vertical-align: text-bottom
+
+// Text color
+.-title
+	theme-prop('color', 'fg')
+
+	.game-thumbnail:hover &
+		theme-prop('color', 'link')

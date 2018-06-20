@@ -3,7 +3,7 @@
 	<section class="section landing-header text-center">
 		<div class="container">
 			<h1>
-				<img class="bolt" src="~img/jolt.svg">
+				<app-theme-svg class="bolt" src="~img/jolt.svg" alt="" />
 				Partners
 			</h1>
 
@@ -11,9 +11,9 @@
 				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 					<p class="lead">Promote indie games on your YouTube and Twitch channels and earn revenue when people buy the game!</p>
 
-					<a class="btn btn-primary-outline" href="https://docs.google.com/a/gamejolt.com/forms/d/1d_5jMXtKa8rYndFy1lZhzdiArdhZp6kycX-h1IOwjAU" target="_blank">
+					<app-button primary href="https://docs.google.com/a/gamejolt.com/forms/d/1d_5jMXtKa8rYndFy1lZhzdiArdhZp6kycX-h1IOwjAU" target="_blank">
 						Apply Now
-					</a>
+					</app-button>
 				</div>
 			</div>
 		</div>
@@ -29,7 +29,7 @@
 					<div class="col-sm-6 col-md-4">
 
 						<div class="landing-graphic">
-							<img src="./supporting-indies.svg" alt="">
+							<app-theme-svg src="./supporting-indies.svg" alt="" />
 						</div>
 
 						<h4 class="text-center">Indies supporting indies</h4>
@@ -41,7 +41,7 @@
 					<div class="col-sm-6 col-md-4">
 
 						<div class="landing-graphic">
-							<img src="./revenue-share.svg" alt="">
+							<app-theme-svg src="./revenue-share.svg" alt="" />
 						</div>
 
 						<h4 class="text-center">Revenue Share</h4>
@@ -55,7 +55,7 @@
 					<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 
 						<div class="landing-graphic">
-							<img src="./access-any-game.svg" alt="">
+							<app-theme-svg src="./access-any-game.svg" alt="" />
 						</div>
 
 						<h4 class="text-center">Access any game</h4>
@@ -97,9 +97,9 @@
 
 						<p>If it's an existing game, you will have to opt it in. Simply go to your <router-link :to="{ name: 'dash.main.overview' }">Dashboard</router-link>, click to manage your game, click <strong>Details</strong> on the left, and you will see the option to include your game into the program.</p>
 
-						<a class="btn btn-primary-outline btn-block" href="https://docs.google.com/a/gamejolt.com/forms/d/1d_5jMXtKa8rYndFy1lZhzdiArdhZp6kycX-h1IOwjAU" target="_blank">
+						<app-button primary block href="https://docs.google.com/a/gamejolt.com/forms/d/1d_5jMXtKa8rYndFy1lZhzdiArdhZp6kycX-h1IOwjAU" target="_blank">
 							Apply Now
-						</a>
+						</app-button>
 
 					</div>
 				</div>
