@@ -40,6 +40,13 @@ export default class RouteAuthLinkedAccountTwitchCallback extends BaseRouteCompo
 						`The email address on this Twitch account is already in use. Perhaps you already have an account?`
 					),
 				});
+			} else if ($payload.reason && $payload.reason === 'no-unique-username') {
+				Growls.error({
+					sticky: true,
+					message: this.$gettext(
+						`Could not create a username for your account. Perhaps you already have an account?`
+					),
+				});
 			} else {
 				Growls.error({
 					sticky: true,
