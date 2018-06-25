@@ -1,7 +1,7 @@
 <div>
 	<div class="activity-feed-controls timeline-list-item-controls">
 
-		<div class="-manage" v-if="shouldShowManage">
+		<div class="-manage" v-if="shouldShowManageSection">
 			<hr>
 
 			<span class="-manage-controls" v-if="shouldShowManageControls">
@@ -66,6 +66,12 @@
 		</div>
 
 		<div class="-controls" v-if="post && post.status === FiresidePost.STATUS_ACTIVE">
+
+			<app-comment-add-button
+				v-if="showCommentAddButton && !hasDevlogsPerms"
+				resource="Fireside_Post"
+				:resource-id="post.id"
+				/>
 
 			<app-fireside-post-like-widget
 				:post="post"
