@@ -15,12 +15,18 @@ $game-list-item-thumb-width = 145px
 .-meta
 	margin-left: $game-list-item-thumb-width + 10px
 
-.-title
+.-spacing
 	display: block
-	font-weight: bold
 	margin-top: 3px
 	margin-bottom: 3px
 
+.-title
+	font-weight: bold
+
 .-dev
-	display: block
+	text-overflow()
+	font-size: $font-size-small
+
+.-followers
+	text-overflow()
 	font-size: $font-size-small
