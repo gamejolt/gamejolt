@@ -19,4 +19,4 @@ Translations are done by the community. If you want to participate, feel free to
 	- `./node_modules/.bin/gulp translations:compile`
 	- `yarn run dev`
 
-That should set up a tiny server that hosts the website for you on your computer at http://localhost:8080. Open that URL up in a web browser and you should have Game Jolt running!
+That should set up a tiny server that hosts the website for you on your computer at [localhost:8080](http://localhost:8080.) Open that URL up in a web browser and you should have Game Jolt running!
