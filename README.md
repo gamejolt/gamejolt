@@ -6,7 +6,7 @@ We wanted to make it open source so everyone can get visibility into what we are
 
 ### Translations
 
-Translations are done by the community. If you want to participate, feel free to join at https://poeditor.com/join/project/B4nWT6EgnD.
+Translations are done by the community. If you want to participate, feel free to join [here](https://poeditor.com/join/project/B4nWT6EgnD).
 
 ### Building
 
