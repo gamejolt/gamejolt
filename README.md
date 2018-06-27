@@ -12,7 +12,7 @@ Translations are done by the community. If you want to participate, feel free to
 
 - Install NodeJS v6+
 - Install Yarn
-- Run in terminal:
+- Run in terminal (Git Bash on Windows):
 	- `git submodule init`
 	- `git submodule update`
 	- `yarn`
