@@ -2,9 +2,7 @@
 
 This is the whole frontend for Game Jolt. It powers the site and the client.
 
-We wanted to make it open source so everyone can get visibility into what we are working on. Browse
-the code to see how Game Jolt is put together. Feel free to offer suggestions on how to do things
-better, as well as contributing your own code. I'll get a better guide on how to contribute soon.
+We wanted to make it open source so everyone can get visibility into what we are working on. Browse the code to see how Game Jolt is put together. Feel free to offer suggestions on how to do things better, as well as contributing your own code. I'll get a better guide on how to contribute soon.
 
 ## Contributing
 
