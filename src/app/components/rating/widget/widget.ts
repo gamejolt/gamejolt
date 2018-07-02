@@ -22,50 +22,31 @@ import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/eve
 export class AppRatingWidget extends Vue {
 	@Prop(Object) game: Game;
 	@Prop(Object) rating?: GameRating;
+	@Prop(Number) totalUpvotes: Number;
 
 	clearLabel = '';
 	hovered = 0;
 	isProcessing = false;
 	gameRating = this.rating;
 
+	get upvoteCount() {
+		return this.totalUpvotes;
+	}
+
+	get hasUpvoted() {
+		return this.rating && this.rating.rating > 0;
+	}
+
+	get hasDownvoted() {
+		return this.rating && this.rating.rating === 0;
+	}
+
 	@Watch('rating')
 	newRating(rating: GameRating) {
 		this.gameRating = rating;
 	}
 
-	getTooltip(index: number) {
-		if (index === 1) {
-			return this.$gettext('rating.one');
-		} else if (index === 2) {
-			return this.$gettext('rating.two');
-		} else if (index === 3) {
-			return this.$gettext('rating.three');
-		} else if (index === 4) {
-			return this.$gettext('rating.four');
-		} else if (index === 5) {
-			return this.$gettext('rating.five');
-		}
-		return undefined;
-	}
-
-	isHovered(i: number) {
-		return this.hovered >= i;
-	}
-
-	isSelected(i: number) {
-		// Don't how any selected when hovering.
-		return this.hovered === 0 && this.gameRating && this.gameRating.rating >= i;
-	}
-
-	hover(index?: number) {
-		if (typeof index === 'undefined') {
-			this.hovered = 0;
-		} else {
-			this.hovered = index;
-		}
-	}
-
-	async select(index: number) {
+	async updateVote(rating: number) {
 		if (this.isProcessing) {
 			return;
 		}
@@ -74,7 +55,7 @@ export class AppRatingWidget extends Vue {
 
 		const gameRating = new GameRating({
 			game_id: this.game.id,
-			rating: index,
+			rating: rating,
 		});
 
 		await gameRating.$save();
@@ -86,19 +67,80 @@ export class AppRatingWidget extends Vue {
 		EventBus.emit('GameRating.changed', this.game.id);
 	}
 
-	async clear() {
-		if (this.isProcessing || !this.gameRating) {
-			return;
-		}
-
-		this.isProcessing = true;
-
-		await this.gameRating.$remove();
-
-		this.gameRating = undefined;
-		this.isProcessing = false;
-
-		this.$emit('changed', undefined);
-		EventBus.emit('GameRating.changed', this.game.id);
+	upvote() {
+		this.updateVote(GameRating.RATING_UPVOTE);
 	}
+
+	downvote() {
+		this.updateVote(GameRating.RATING_DOWNVOTE);
+	}
+
+	// getTooltip(index: number) {
+	// 	if (index === 1) {
+	// 		return this.$gettext('rating.one');
+	// 	} else if (index === 2) {
+	// 		return this.$gettext('rating.two');
+	// 	} else if (index === 3) {
+	// 		return this.$gettext('rating.three');
+	// 	} else if (index === 4) {
+	// 		return this.$gettext('rating.four');
+	// 	} else if (index === 5) {
+	// 		return this.$gettext('rating.five');
+	// 	}
+	// 	return undefined;
+	// }
+
+	// isHovered(i: number) {
+	// 	return this.hovered >= i;
+	// }
+
+	// isSelected(i: number) {
+	// 	// Don't how any selected when hovering.
+	// 	return this.hovered === 0 && this.gameRating && this.gameRating.rating >= i;
+	// }
+
+	// hover(index?: number) {
+	// 	if (typeof index === 'undefined') {
+	// 		this.hovered = 0;
+	// 	} else {
+	// 		this.hovered = index;
+	// 	}
+	// }
+
+	// async select(index: number) {
+	// 	if (this.isProcessing) {
+	// 		return;
+	// 	}
+
+	// 	this.isProcessing = true;
+
+	// 	const gameRating = new GameRating({
+	// 		game_id: this.game.id,
+	// 		rating: index,
+	// 	});
+
+	// 	await gameRating.$save();
+
+	// 	this.gameRating = gameRating;
+	// 	this.isProcessing = false;
+
+	// 	this.$emit('changed', gameRating);
+	// 	EventBus.emit('GameRating.changed', this.game.id);
+	// }
+
+	// async clear() {
+	// 	if (this.isProcessing || !this.gameRating) {
+	// 		return;
+	// 	}
+
+	// 	this.isProcessing = true;
+
+	// 	await this.gameRating.$remove();
+
+	// 	this.gameRating = undefined;
+	// 	this.isProcessing = false;
+
+	// 	this.$emit('changed', undefined);
+	// 	EventBus.emit('GameRating.changed', this.game.id);
+	// }
 }
