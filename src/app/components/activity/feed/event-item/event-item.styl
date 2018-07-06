@@ -1,5 +1,41 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
+.-byline
+	text-overflow()
+
+.-byline-name
+	margin-right: 2px
+	font-weight: bold
+
+.-byline-to
+	text-overflow()
+	display: block
+	font-weight: bold
+
+	@media $media-sm-up
+		display: inline
+
+.-meta
+	margin-bottom: 1em
+
+.-title
+	font-size: $font-size-h4
+	// Override link color
+	theme-prop('color', 'fg')
+	display: block
+	font-weight: bold
+	margin-bottom: $line-height-computed
+
+/* .tag
+		margin-right: 5px
+
+.-meta-slot
+	float: right
+	margin-left: 5px
+
+	>>> .tag
+		vertical-align: middle */
 .-poll
 	margin-top: $line-height-computed
 	margin-bottom: $line-height-computed

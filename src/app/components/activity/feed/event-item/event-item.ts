@@ -59,12 +59,16 @@ export class AppActivityFeedEventItem extends Vue {
 	readonly Screen = Screen;
 	readonly EventItem = EventItem;
 
+	get isThreadView() {
+		return !Screen.isXs;
+	}
+
 	get eventItem() {
 		return this.item.feedItem as EventItem;
 	}
 
 	get post() {
-		if (this.eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
+		if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
 			return this.eventItem.action as FiresidePost;
 		}
 	}
@@ -92,7 +96,7 @@ export class AppActivityFeedEventItem extends Vue {
 			return (this.eventItem.action as CommentVideo).comment.user;
 		} else if (this.eventItem.type === EventItem.TYPE_GAME_PUBLISH) {
 			return (this.eventItem.action as Game).developer;
-		} else if (this.eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
+		} else if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
 			const post = this.eventItem.action as FiresidePost;
 			if (post.game && post.as_game_owner) {
 				return post.game.developer;
@@ -116,17 +120,19 @@ export class AppActivityFeedEventItem extends Vue {
 					id: game.id,
 				},
 			};
-		} else if (this.eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
+		} else if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
+			// TODO(userposts)
 			const post = this.post!;
-			const game = this.game!;
-			return {
-				name: 'discover.games.view.devlog.view',
-				params: {
-					slug: game.slug,
-					id: game.id,
-					postSlug: post.slug,
-				},
-			};
+			if (this.game) {
+				return {
+					name: 'discover.games.view.devlog.view',
+					params: {
+						slug: this.game.slug,
+						id: this.game.id,
+						postSlug: post.slug,
+					},
+				};
+			}
 		}
 
 		return '';

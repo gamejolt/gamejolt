@@ -5,7 +5,6 @@ import { routeProfileVideosList } from './videos/list/list.route';
 import { routeProfileLibrary } from './library/library.route';
 
 export const routeProfile: RouteConfig = {
-	name: 'profile',
 	path: '/@:username',
 	props: true,
 	component: () => import(/* webpackChunkName: "routeProfile" */ './profile'),

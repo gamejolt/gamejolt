@@ -1,4 +1,8 @@
-<app-timeline-list-item is-thread :is-new="isNew" :is-active="isActive">
+<app-timeline-list-item
+	:is-thread="isThreadView"
+	:is-new="isNew"
+	:is-active="isActive"
+	>
 
 	<app-user-avatar-img
 		slot="bubble"
@@ -7,23 +11,7 @@
 
 	<div class="event-item">
 
-		<div @click.capture="onClick">
-			<router-link :to="link" class="timeline-list-item-title">
-				<strong>
-					<template v-if="eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD">
-						{{ post.title }}
-					</template>
-					<template v-else-if="eventItem.type === EventItem.TYPE_GAME_PUBLISH">
-						{{ game.title }}
-					</template>
-					<template v-else-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD">
-						{{ eventItem.action.title }}
-					</template>
-				</strong>
-			</router-link>
-		</div>
-
-		<div class="timeline-list-item-meta">
+		<!-- <div class="timeline-list-item-meta">
 			<template v-if="shouldShowScheduled">
 				<span class="tag" style="vertical-align: middle">
 					<app-jolticon icon="calendar-grid" />
@@ -53,9 +41,73 @@
 					{{ game.title }}
 				</router-link>
 			</template>
-		</div>
+		</div> -->
 
 		<div class="timeline-list-item-details">
+			<div class="-byline">
+				<router-link
+					class="-byline-name link-unstyled"
+					:to="{
+						name: 'profile.overview',
+						params: { username: user.username },
+					}"
+					>
+					{{ user.display_name }}
+				</router-link>
+
+				<small class="-byline-username text-muted">
+					@{{ user.username }}
+				</small>
+
+				<span v-if="game && feed.showGameInfo" class="-byline-to">
+					<app-jolticon icon="share" />
+					<router-link :to="gameUrl" class="link-unstyled">
+						{{ game.title }}
+					</router-link>
+				</span>
+			</div>
+
+
+			<div class="-meta small text-muted">
+				<template v-if="shouldShowScheduled">
+					<span class="tag" style="vertical-align: middle">
+						<app-jolticon icon="calendar-grid" />
+						<translate>Scheduled</translate>
+					</span>
+
+					<app-time-ago
+						:date="post.scheduled_for"
+						without-suffix
+						/>
+				</template>
+				<template v-else>
+					<app-time-ago
+						:date="eventItem.added_on"
+						/>
+				</template>
+
+				<template v-if="post && post.type === 'media'">
+					<span class="dot-separator" />
+					<app-jolticon icon="screenshot" class="middle" />
+					{{ post.media.length | number }}
+				</template>
+			</div>
+
+			<div @click.capture="onClick">
+				<router-link :to="link" class="-title">
+					<strong>
+						<template v-if="eventItem.type === EventItem.TYPE_POST_ADD">
+							{{ post.title }}
+						</template>
+						<template v-else-if="eventItem.type === EventItem.TYPE_GAME_PUBLISH">
+							{{ game.title }}
+						</template>
+						<template v-else-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD">
+							{{ eventItem.action.title }}
+						</template>
+					</strong>
+				</router-link>
+			</div>
 
 			<app-activity-feed-comment-video
 				v-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD"

@@ -18,7 +18,7 @@
 
 				<app-button
 					solid
-					@click="$emit( 'remove-friend' )"
+					@click="removeFriend()"
 					>
 					<translate>profile.remove_friend_button</translate>
 				</app-button>
@@ -41,7 +41,7 @@
 											Friend request to %{ username } pending acceptance.
 										</translate>
 									</p>
-									<app-button @click="$emit( 'cancel-friend-request' )">
+									<app-button @click="cancelFriendRequest()">
 										<translate>profile.friend_request_cancel</translate>
 									</app-button>
 								</div>
@@ -57,13 +57,13 @@
 									<app-button
 										primary
 										solid
-										@click="$emit( 'accept-friend-request' )"
+										@click="acceptFriendRequest()"
 										>
 										<translate>profile.friend_request_accept</translate>
 									</app-button>
 									<app-button
 										trans
-										@click="$emit( 'reject-friend-request' )"
+										@click="rejectFriendRequest()"
 										v-app-tooltip="$gettext( 'profile.friend_request_decline_tooltip' )"
 										>
 										<translate>profile.friend_request_decline</translate>
@@ -91,13 +91,15 @@
 							>
 						</a>
 
+						<hr>
+
 					</div>
 					<div class="col-xs-12 col-md-4 pull-right">
 
-						<app-user-level-widget
+						<!-- <app-user-level-widget
 							v-if="!Screen.isXs"
 							:user="user"
-							/>
+							/> -->
 
 						<template v-if="(
 							user.twitch_id
@@ -169,7 +171,7 @@
 						<app-button
 							v-if="app.user && user.id !== app.user.id && !userFriendship && !user.is_verified"
 							block
-							@click="$emit( 'send-friend-request' )"
+							@click="sendFriendRequest()"
 							>
 							<translate>profile.friend_request_button</translate>
 						</app-button>
@@ -196,8 +198,10 @@
 					</div>
 					<div class="col-xs-12 col-md-8 col-lg-7 pull-left" style="clear: left">
 
+						<router-view />
+
 						<!-- Games -->
-						<template v-if="gamesCount > 0">
+						<!-- <template v-if="gamesCount > 0">
 							<h2>
 								<router-link class="link-unstyled" :to="{ name: 'library.collection.developer', params: { id: user.username } }">
 									<translate>profile.developer_games_teaser_heading</translate>
@@ -220,10 +224,10 @@
 									</div>
 								</div>
 							</div>
-						</template>
+						</template> -->
 
 						<!-- Videos -->
-						<template v-if="videosCount > 0">
+						<!-- <template v-if="videosCount > 0">
 							<h2>
 								<router-link class="link-unstyled" :to="{ name: 'profile.videos.list' }">
 									<translate>Latest Videos</translate>
@@ -239,7 +243,7 @@
 									<app-comment-video-thumbnail :video="video" />
 								</div>
 							</div>
-						</template>
+						</template> -->
 
 					</div>
 				</div>

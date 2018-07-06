@@ -24,12 +24,13 @@ export class ActivityFeedItem {
 			// We have to spoof this as an event item.
 			const post = this.feedItem;
 			this.feedItem = new EventItem({
-				type: EventItem.TYPE_DEVLOG_POST_ADD,
+				type: EventItem.TYPE_POST_ADD,
 				added_on: dateVal,
 				scroll_id: post.scroll_id,
 				action_resource_model: post,
 				from_resource_model: post.user,
-				to_resource_model: post.game,
+				// Game posts will have a game, user posts just post to their user.
+				to_resource_model: post.game || post.user,
 			});
 		} else if (this.feedItem instanceof Notification) {
 			this.type = 'notification';
@@ -44,17 +45,14 @@ export class ActivityFeedItem {
 	}
 
 	$viewed() {
-		if (
-			this.feedItem instanceof EventItem &&
-			this.feedItem.type === EventItem.TYPE_DEVLOG_POST_ADD
-		) {
+		if (this.feedItem instanceof EventItem && this.feedItem.type === EventItem.TYPE_POST_ADD) {
 			(this.feedItem.action as FiresidePost).$viewed();
 		}
 	}
 
 	$expanded() {
 		if (this.feedItem instanceof EventItem) {
-			if (this.feedItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
+			if (this.feedItem.type === EventItem.TYPE_POST_ADD) {
 				(this.feedItem.action as FiresidePost).$expanded();
 			} else if (this.feedItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
 				(this.feedItem.action as CommentVideo).$viewed();

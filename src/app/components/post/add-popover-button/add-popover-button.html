@@ -1,0 +1,35 @@
+<span>
+	<app-button
+		primary
+		solid
+		v-app-popover-trigger="`add-post`"
+		>
+		<translate>Add Post</translate>
+	</app-button>
+
+	<app-popover
+		popover-id="add-post"
+		>
+		<div class="list-group">
+			<a class="list-group-item has-icon" @click="showAddModal( 'text' )">
+				<app-jolticon icon="blog-article" />
+				<translate>Text</translate>
+			</a>
+
+			<a class="list-group-item has-icon" @click="showAddModal( 'media' )">
+				<app-jolticon icon="screenshot" />
+				<translate>Media</translate>
+			</a>
+
+			<a class="list-group-item has-icon" @click="showAddModal( 'video' )">
+				<app-jolticon icon="video" />
+				<translate>Video</translate>
+			</a>
+
+			<a class="list-group-item has-icon" @click="showAddModal( 'sketchfab' )">
+				<app-jolticon icon="sketchfab" />
+				Sketchfab
+			</a>
+		</div>
+	</app-popover>
+</span>

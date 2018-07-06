@@ -101,7 +101,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	readonly MAX_DURATION = 20160;
 
 	get loadUrl() {
-		return `/web/dash/developer/games/devlog/save/${this.model!.game.id}/${this.model!.id}`;
+		return `/web/dash/posts/save/${this.model!.id}`;
 	}
 
 	get isPublished() {

@@ -6,16 +6,21 @@ import { Game } from '../../../../../lib/gj-lib-client/components/game/game.mode
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { DevlogPostEditModal } from '../edit-modal/edit-modal-service';
+import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
 
 @View
 @Component({})
 export class AppDevlogPostAdd extends Vue {
-	@Prop(Game) game: Game;
+	@Prop(Game) game?: Game;
+	@Prop(User) user?: User;
 
 	async showAddModal(type: string) {
-		const response = await Api.sendRequest(
-			`/web/dash/developer/games/devlog/new-post/${this.game.id}/${type}`
-		);
+		let url = `/web/dash/posts/new-post/${type}`;
+		if (this.game) {
+			url += '/' + this.game.id;
+		}
+
+		const response = await Api.sendRequest(url);
 
 		let post: FiresidePost | undefined = new FiresidePost(response.post);
 

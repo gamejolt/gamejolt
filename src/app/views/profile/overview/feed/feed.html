@@ -1,0 +1,75 @@
+<div>
+	<div class="clearfix">
+		<div class="pull-left">
+			<nav class="platform-list inline">
+				<ul>
+					<li>
+						<router-link
+							:to="{
+								name: 'profile.overview',
+								params: {
+									sub: null,
+								},
+							}"
+							active-class="active"
+							:exact="true"
+							>
+							<translate>Posts</translate>
+						</router-link>
+					</li>
+					<li>
+						<router-link
+							:to="{
+								name: 'profile.overview',
+								params: {
+									sub: 'draft-posts',
+								},
+							}"
+							active-class="active"
+							:exact="true"
+							>
+							<translate>Draft</translate>
+						</router-link>
+					</li>
+					<li>
+						<router-link
+							:to="{
+								name: 'profile.overview',
+								params: {
+									sub: 'scheduled-posts',
+								},
+							}"
+							active-class="active"
+							:exact="true"
+							>
+							<translate>Scheduled</translate>
+						</router-link>
+					</li>
+				</ul>
+			</nav>
+		</div>
+		<div class="pull-right">
+			<app-devlog-post-add-popover-button
+				v-if="isOwner"
+				:user="user"
+				/>
+		</div>
+	</div>
+
+	<app-activity-feed-placeholder v-if="!feed" />
+	<div v-else>
+
+		<app-activity-feed
+			v-if="feed.hasItems"
+			:feed="feed"
+			show-edit-controls
+			show-ads
+			show-game-info
+			/>
+
+		<div v-else class="alert">
+			<translate>This user hasn't posted anything yet.</translate>
+		</div>
+
+	</div>
+</div>
