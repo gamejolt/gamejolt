@@ -1,61 +1,24 @@
 <div class="rating-widget">
 
-	<!-- <span class="-icons">
-		<span
-			v-for="i of [ 1, 2, 3, 4, 5 ]"
-			class="-bubble"
-			:class="{
-				'-hover': isHovered(i),
-				'-selected': isSelected(i),
-			}"
-			@mouseenter="hover( i )"
-			@mouseleave="hover()"
-			@click="select( i )"
-			v-app-tooltip="getTooltip( i )"
-			v-app-track-event="`game-rating:rate:${i}`"
-			>
-			<app-jolticon
-				icon="gamejolt"
-				class="-icon"
-				/>
-		</span>
-
-		<span class="-clear">
-			<transition>
-				<span
-					v-if="gameRating && gameRating.rating"
-					class="anim-fade-in-enlarge anim-fade-leave"
-					@click="clear"
-					v-app-track-event="`game-rating:clear`"
-					>
-					<app-jolticon
-						icon="remove"
-						v-app-tooltip="$gettext( 'rating.clear' )"
-						/>
-				</span>
-			</transition>
-		</span>
-	</span> -->
-
 	<app-button
 		icon="thumbs-up"
 		circle
-		:primary="hasUpvoted"
-		:solid="hasUpvoted"
-		@click="upvote()"
+		:primary="hasLiked"
+		:solid="hasLiked"
+		@click="like()"
 		/>
 
-	<span class="blip light filled" v-if="upvoteCount > 0">
+	<span class="blip light filled" v-if="likeCount > 0">
 		<span class="blip-caret"></span>
-		<span class="blip-count">{{ upvoteCount }}</span>
+		<span class="blip-count">{{ likeCount }}</span>
 	</span>
 
 	<app-button
 		icon="thumbs-down"
 		circle
-		:primary="hasDownvoted"
-		:solid="hasDownvoted"
-		@click="downvote()"
+		:primary="hasDisliked"
+		:solid="hasDisliked"
+		@click="dislike()"
 		/>
 
 </div>

@@ -22,22 +22,22 @@ import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/eve
 export class AppRatingWidget extends Vue {
 	@Prop(Object) game: Game;
 	@Prop(Object) rating?: GameRating;
-	@Prop(Number) totalUpvotes: Number;
+	@Prop(Number) totalLikes: Number;
 
 	clearLabel = '';
 	hovered = 0;
 	isProcessing = false;
 	gameRating = this.rating;
 
-	get upvoteCount() {
-		return this.totalUpvotes;
+	get likeCount() {
+		return this.totalLikes;
 	}
 
-	get hasUpvoted() {
+	get hasLiked() {
 		return this.rating && this.rating.rating > 0;
 	}
 
-	get hasDownvoted() {
+	get hasDisliked() {
 		return this.rating && this.rating.rating === 0;
 	}
 
@@ -67,12 +67,12 @@ export class AppRatingWidget extends Vue {
 		EventBus.emit('GameRating.changed', this.game.id);
 	}
 
-	upvote() {
-		this.updateVote(GameRating.RATING_UPVOTE);
+	like() {
+		this.updateVote(GameRating.RATING_LIKE);
 	}
 
-	downvote() {
-		this.updateVote(GameRating.RATING_DOWNVOTE);
+	dislike() {
+		this.updateVote(GameRating.RATING_DISLIKE);
 	}
 
 	// getTooltip(index: number) {

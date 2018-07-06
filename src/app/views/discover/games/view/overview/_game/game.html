@@ -44,31 +44,11 @@
 							<!--
 								Can't rate your own games! Remember that.
 							-->
-							<!-- <template v-if="app.user && !hasAnyPerms && game.ratings_enabled && game.can_user_rate">
-								<h2 class="rating-widget-label">
-									<template v-if="!!userRating">
-										<translate>Your Rating</translate>
-									</template>
-									<template v-else>
-										<translate>Rate Game</translate>
-									</template>
-								</h2>
-
-								<hr class="underbar">
-
-								<div>
-									<app-rating-widget
-										:game="game"
-										:rating="userRating"
-										/>
-								</div>
-								<br>
-							</template> -->
 							<div>
 								<app-rating-widget
 									:game="game"
 									:rating="userRating"
-									:totalUpvotes="game.upvote_count"
+									:totalLikes="game.like_count"
 									/>
 							</div>
 							<br>

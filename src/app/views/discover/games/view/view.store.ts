@@ -122,7 +122,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	collaboratorInvite: GameCollaborator | null = null;
 
 	userRating: GameRating | null = null;
-	upvoteCount = 0;
+	likeCount = 0;
 
 	mediaItems: (GameScreenshot | GameVideo | GameSketchfab)[] = [];
 	songs: GameSong[] = [];
@@ -366,7 +366,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexMutation
 	processRatingPayload(payload: Mutations['processRatingPayload']) {
 		this.userRating = payload.userRating ? new GameRating(payload.userRating) : null;
-		this.game.upvote_count = payload.upvoteCount;
+		this.game.like_count = payload.likeCount;
 	}
 
 	@VuexMutation
