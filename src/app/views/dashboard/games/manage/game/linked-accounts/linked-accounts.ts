@@ -154,8 +154,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		const modalResult = await ModalFacebookPageSelector.show(
 			this.$gettext('Select a page you want to post to with this account'),
 			this.facebookAccount,
-			this.$gettext('Select Facebook Page'),
-			'ok'
+			this.$gettext('Select Facebook Page')
 		);
 
 		if (modalResult) {
@@ -243,8 +242,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		const modalResult = await ModalTumblrBlogSelector.show(
 			this.$gettext('Select a blog you want to post to with this account'),
 			this.tumblrAccount,
-			this.$gettext('Select Tumblr Blog'),
-			'ok'
+			this.$gettext('Select Tumblr Blog')
 		);
 
 		if (modalResult) {
