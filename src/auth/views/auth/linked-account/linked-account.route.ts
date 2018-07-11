@@ -1,7 +1,6 @@
 import { RouteConfig } from 'vue-router';
 
 import { routeAuthLinkedAccountTwitterCallback } from './twitter/callback/callback.route';
-import { routeAuthLinkedAccountTwitterFinalize } from './twitter/finalize/finalize.route';
 import { routeAuthLinkedAccountPoll } from './poll/poll.route';
 import { routeAuthLinkedAccountFacebookCallback } from './facebook/callback/callback.route';
 import { routeAuthLinkedAccountGoogleCallback } from './google/callback/callback.route';
@@ -18,7 +17,6 @@ export const routeAuthLinkedAccount: RouteConfig = {
 	children: [
 		routeAuthLinkedAccountPoll,
 		routeAuthLinkedAccountTwitterCallback,
-		routeAuthLinkedAccountTwitterFinalize,
 		routeAuthLinkedAccountFacebookCallback,
 		routeAuthLinkedAccountGoogleCallback,
 		routeAuthLinkedAccountTwitchCallback,

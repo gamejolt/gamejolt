@@ -26,13 +26,13 @@ export default class RouteAuthLinkedAccountTwitterCallback extends BaseRouteComp
 
 	routed($payload: any) {
 		if (!$payload.success) {
-			// If they don't have an account yet, let's create one for them. For
-			// Twitter, they need to fill out their email address, so take them
-			// to the page to do that.
-			if ($payload.reason && $payload.reason === 'no-account') {
-				this.$router.push({
-					name: 'auth.linked-account.twitter.finalize',
-					params: { state: this.$route.query.state },
+			if ($payload.reason && $payload.reason === 'no-email') {
+				Growls.error({
+					sticky: true,
+					title: this.$gettext('Login failed'),
+					message: this.$gettext(
+						'There is no verified email address associated with your Twitter account.'
+					),
 				});
 			} else {
 				Growls.error({
@@ -40,8 +40,8 @@ export default class RouteAuthLinkedAccountTwitterCallback extends BaseRouteComp
 					title: this.$gettext('auth.linked_account.twitter.failed_growl_title'),
 					message: this.$gettext('auth.linked_account.twitter.failed_growl'),
 				});
-				this.$router.push({ name: 'auth.join' });
 			}
+			this.$router.push({ name: 'auth.join' });
 			return;
 		}
 
