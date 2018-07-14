@@ -4,7 +4,7 @@
 
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-10 col-md-8 col-lg-7" :class="{ 'col-centered': Screen.isMobile }">
+			<div class="col-sm-10 col-md-8" :class="{ 'col-centered': Screen.isMobile }">
 				<section class="section">
 
 					<app-devlog-post-view-placeholder v-if="!post" />
@@ -12,7 +12,7 @@
 
 				</section>
 			</div>
-			<div class="col-md-4 col-lg-5" v-if="Screen.isDesktop">
+			<div class="col-md-4" v-if="Screen.isDesktop">
 				<div class="desktop-ad-spot">
 					<app-ad class="pull-right" pos="top" />
 				</div>
