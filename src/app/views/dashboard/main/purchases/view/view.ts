@@ -6,7 +6,6 @@ import { Geo } from '../../../../../../lib/gj-lib-client/components/geo/geo.serv
 import { OrderPayment } from '../../../../../../lib/gj-lib-client/components/order/payment/payment.model';
 import { date } from '../../../../../../lib/gj-lib-client/vue/filters/date';
 import { Order } from '../../../../../../lib/gj-lib-client/components/order/order.model';
-import { OrderPaymentRefund } from '../../../../../../lib/gj-lib-client/components/order/payment/refund/refund.model';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GamePackage } from '../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { arrayIndexBy, arrayGroupBy } from '../../../../../../lib/gj-lib-client/utils/array';
