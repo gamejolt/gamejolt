@@ -39,7 +39,7 @@
 		<div class="container">
 			<div class="row">
 
-				<div class="col-md-8 pull-left" style="clear: left">
+				<div class="col-xs-12 col-md-8 pull-left" style="clear: left">
 					<template v-if="!Screen.isXs && game.comments_enabled && (app.user || commentsCount)">
 						<app-comment-widget-add
 							v-if="app.user"
@@ -138,7 +138,7 @@
 					<div class="-spacer"></div>
 				</div>
 
-				<div class="col-md-4 pull-right" style="clear: right">
+				<div class="col-xs-12 col-md-4 pull-right" style="clear: right">
 					<h2 class="section-header" :class="{ 'h4': Screen.isXs }">
 						<translate>You Might Also Like</translate>
 					</h2>
@@ -155,7 +155,7 @@
 					<div class="-spacer"></div>
 				</div>
 
-				<div class="col-md-8 pull-left" style="clear: left">
+				<div class="col-xs-12 col-md-8 pull-left" style="clear: left">
 					<app-game-perms :game="game" required="devlogs">
 						<h5 class="sans-margin-top">
 							<translate>Add Post</translate>
