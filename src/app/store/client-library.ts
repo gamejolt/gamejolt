@@ -13,12 +13,6 @@ import {
 } from 'client-voodoo';
 import * as fs from 'fs';
 
-import * as _Updater from '../../_common/client/updater/updater';
-let Updater: typeof _Updater | undefined;
-if (GJ_WITH_UPDATER) {
-	Updater = require('../../_common/client/updater/updater');
-}
-
 import * as path from 'path';
 import Vue from 'vue';
 import { Action, Mutation, namespace, State } from 'vuex-class';
@@ -52,6 +46,8 @@ import {
 	LocalDbPackageRunState,
 } from '../components/client/local-db/package/package.model';
 import { fuzzysearch } from '../../lib/gj-lib-client/utils/string';
+import { SelfUpdaterInstance, SelfUpdater } from 'client-voodoo';
+import * as os from 'os';
 
 export const ClientLibraryState = namespace('clientLibrary', State);
 export const ClientLibraryAction = namespace('clientLibrary', Action);
@@ -62,6 +58,7 @@ export type ClientUpdateStatus = 'checking' | 'none' | 'fetching' | 'ready' | 'e
 // These are only the public actions/mutations.
 export type Actions = {
 	'clientLibrary/bootstrap': undefined;
+	'clientLibrary/checkForClientUpdates': undefined;
 	'clientLibrary/updateClient': undefined;
 	'clientLibrary/packageInstall': [
 		Game,
@@ -79,7 +76,6 @@ export type Actions = {
 };
 
 export type Mutations = {
-	'clientLibrary/setClientUpdateStatus': ClientUpdateStatus;
 	'clientLibrary/checkQueueSettings': undefined;
 	'clientLibrary/syncInit': undefined;
 	'clientLibrary/syncSetInterval': NodeJS.Timer;
@@ -105,6 +101,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 	// Client updater
 	clientUpdateStatus: ClientUpdateStatus = 'none';
+	private _updaterInstance: SelfUpdaterInstance | null = null;
 
 	get packagesById() {
 		return arrayIndexBy(this.packages, 'id');
@@ -153,6 +150,14 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		return currentProgress / numPatching;
 	}
 
+	get clientManifestPath() {
+		let cwd = path.dirname(process.execPath);
+		if (os.type() === 'Darwin') {
+			cwd = path.resolve(cwd, '../../../../../../');
+		}
+		return path.resolve(cwd, '..', '.manifest');
+	}
+
 	@VuexAction
 	async bootstrap() {
 		if (this._bootstrapPromise) {
@@ -179,6 +184,12 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		this.syncCheck();
 		setInterval(() => this.syncCheck(), 60 * 60 * 1000); // 1hr currently
 
+		console.log('Is GJ updater enabled? ' + (GJ_WITH_UPDATER ? 'yes' : 'no'));
+		if (GJ_WITH_UPDATER) {
+			this.checkForClientUpdates();
+			setInterval(() => this.checkForClientUpdates(), 45 * 60 * 1000); // 45min currently
+		}
+
 		this._bootstrapPromiseResolver();
 	}
 
@@ -196,26 +207,124 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexAction
-	async updateClient() {
+	async checkForClientUpdates() {
+		if (!GJ_WITH_UPDATER) {
+			return;
+		}
+
 		try {
-			console.log('updateClient in clientLibrary store: ' + JSON.stringify(GJ_WITH_UPDATER));
-			if (GJ_WITH_UPDATER) {
-				const updateStarted = await Updater!.default.update();
-				if (!updateStarted) {
-					throw new Error('Failed to apply the update');
-				}
+			console.log('Checking for client update with the new updater.');
+
+			this._setClientUpdateStatus('checking');
+
+			await this._ensureUpdaterInstance();
+
+			console.log('Sending checkForClientUpdates...');
+			const checked = await this._updaterInstance!.checkForUpdates();
+			if (!checked) {
+				throw new Error('Failed to check for updates');
 			}
 		} catch (err) {
 			console.error(err);
-			this.setClientUpdateStatus('error');
+			this._setClientUpdateStatus('error');
 		}
-		return false;
+	}
+
+	@VuexAction
+	async updateClient() {
+		if (!GJ_WITH_UPDATER) {
+			return;
+		}
+
+		try {
+			console.log('updateClient in clientLibrary store: ' + JSON.stringify(GJ_WITH_UPDATER));
+			let updateStarted = false;
+			if (this.clientUpdateStatus === 'ready') {
+				await this._ensureUpdaterInstance();
+				updateStarted = await this._updaterInstance!.updateApply();
+			}
+
+			if (!updateStarted) {
+				throw new Error('Failed to apply the update');
+			}
+		} catch (err) {
+			console.error(err);
+			this._setClientUpdateStatus('error');
+		}
 	}
 
 	@VuexMutation
-	setClientUpdateStatus(status: Mutations['clientLibrary/setClientUpdateStatus']) {
+	private _setClientUpdateStatus(status: ClientUpdateStatus) {
 		console.log('set client update state: ' + status);
 		this.clientUpdateStatus = status;
+	}
+
+	@VuexMutation
+	private _setUpdaterInstance(instance: SelfUpdaterInstance | null) {
+		this._updaterInstance = instance;
+	}
+
+	@VuexAction
+	private async _ensureUpdaterInstance(): Promise<void> {
+		if (!this._updaterInstance) {
+			console.log('Attaching selfupdater instance for manifest ' + this.clientManifestPath);
+
+			const thisInstance = await SelfUpdater.attach(this.clientManifestPath);
+			this._setUpdaterInstance(thisInstance);
+
+			thisInstance
+				.on('noUpdateAvailable', () => {
+					this._setClientUpdateStatus('none');
+				})
+				.on('updateAvailable', () => {
+					thisInstance
+						.updateBegin()
+						.catch((err: Error) => {
+							console.error(err);
+							this._setClientUpdateStatus('error');
+						})
+						.then(began => {
+							if (!began) {
+								throw new Error('Failed to begin update');
+							}
+						});
+				})
+				.on('updateBegin', () => {
+					this._setClientUpdateStatus('fetching');
+				})
+				.on('updateReady', () => {
+					this._setClientUpdateStatus('ready');
+				})
+				.on('updateApply', () => {
+					nw.Window.get().close(true);
+				})
+				.on('updateFailed', (reason: string) => {
+					console.error('Failed to update. Joltron says: ' + reason);
+					this._setClientUpdateStatus('error');
+				})
+				.on('fatal', (err: Error) => {
+					console.error(err);
+					this._setClientUpdateStatus('error');
+
+					this._disposeUpdaterInstance(thisInstance);
+				});
+		}
+	}
+
+	@VuexAction
+	private async _disposeUpdaterInstance(instance: SelfUpdaterInstance) {
+		// Try to cleanly disconnect and dispose of the controller so we can try again with a new one.
+		try {
+			instance.controller.disconnect();
+		} catch (err) {}
+
+		// If somehow we failed to disconnect and are processing events even after receiving a fatal event
+		instance.removeAllListeners();
+
+		// Setting the instance to null allows the updater to retry with a new one.
+		if (this._updaterInstance === instance) {
+			this._setUpdaterInstance(null);
+		}
 	}
 
 	/**
@@ -870,14 +979,14 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 		const builds = this.packages.map(i => i.build);
 
-		const os = Device.os();
-		const arch = Device.arch();
+		const deviceOs = Device.os();
+		const deviceArch = Device.arch();
 
 		const request: any = {
 			games: {},
 			builds: {},
-			os: os,
-			arch: arch,
+			os: deviceOs,
+			arch: deviceArch,
 		};
 
 		// The modified_on fields are what tells us if the client has up to date info
