@@ -9,6 +9,9 @@ import {
 } from '../../../lib/gj-lib-client/utils/vuex';
 import { SelfUpdaterInstance, SelfUpdater } from 'client-voodoo';
 import * as os from 'os';
+import * as nwGui from 'nw.gui';
+import * as fs from 'fs';
+import { db } from '../../../app/components/client/local-db/local-db.service';
 
 export const ClientState = namespace('client', State);
 export const ClientAction = namespace('client', Action);
@@ -52,7 +55,16 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 
 		this._startBootstrap();
 
-		console.log('Is GJ updater enabled? ' + (GJ_WITH_UPDATER ? 'yes' : 'no'));
+		// We want to run the migration before updating because the next update is not guaranteed to have the migration logic,
+		// so user data might be lost. On the other hand, we mustn't error out on migration because we need to be able to update
+		// the client if there's a bug with the migration itself.
+		try {
+			await this._migrateFrom0_12_3();
+		} catch (e) {
+			console.error('Caught error in migration:');
+			console.error(e);
+		}
+
 		if (GJ_WITH_UPDATER) {
 			this.checkForClientUpdates();
 			setInterval(() => this.checkForClientUpdates(), 45 * 60 * 1000); // 45min currently
@@ -66,6 +78,52 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 		this._bootstrapPromise = new Promise(resolve => {
 			this._bootstrapPromiseResolver = resolve;
 		});
+	}
+
+	@VuexAction
+	private async _migrateFrom0_12_3() {
+		// The new dataPath is moved to Default folder inside what used to be the dataPath on 0.12.3
+		const migrationFile = path.join(nwGui.App.dataPath, '..', '0.12.3-migration.json');
+		if (fs.existsSync(migrationFile)) {
+			console.log('Migrating data from 0.12.3');
+
+			const migrationDataStr = fs.readFileSync(migrationFile, { encoding: 'utf8' });
+			if (!migrationDataStr) {
+				console.warn('The migration data file is empty, possibly lost some data :(');
+			} else {
+				let data = null;
+				try {
+					data = JSON.parse(migrationDataStr);
+				} catch (e) {
+					console.warn(
+						'The migration data could not be parsed, possibly lost some data :('
+					);
+					console.error(e);
+				}
+
+				if (data && data.indexeddb && data.localStorage) {
+					db.packages.clear();
+					db.games.clear();
+					localStorage.clear();
+
+					const indexeddb = data.indexeddb;
+					await Promise.all([
+						db.packages.bulkPut(Object.values(indexeddb.packages)),
+						db.games.bulkPut(Object.values(indexeddb.games)),
+					]);
+
+					for (let key of Object.keys(data.localStorage)) {
+						localStorage.setItem(key, data.localStorage[key]);
+					}
+
+					fs.unlinkSync(migrationFile);
+				} else {
+					console.warn(
+						'The migration data wasnt structured as expected, possibly lost some data :('
+					);
+				}
+			}
+		}
 	}
 
 	@VuexAction
