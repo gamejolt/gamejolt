@@ -1,5 +1,6 @@
 {
 	"name": "game-jolt-client",
+	"version": "0.1.0",
 	"main": "app://game-jolt-client/index.html#/",
 	"window": {
 		"show": false
