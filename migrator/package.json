@@ -1,0 +1,7 @@
+{
+	"name": "game-jolt-client",
+	"main": "app://game-jolt-client/index.html#/",
+	"window": {
+		"show": false
+	}
+}
