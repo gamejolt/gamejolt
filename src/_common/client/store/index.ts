@@ -11,7 +11,7 @@ import { SelfUpdaterInstance, SelfUpdater } from 'client-voodoo';
 import * as os from 'os';
 import * as nwGui from 'nw.gui';
 import * as fs from 'fs';
-import { db } from '../../../app/components/client/local-db/local-db.service';
+import { LocalDb } from '../../../app/components/client/local-db/local-db.service';
 
 export const ClientState = namespace('client', State);
 export const ClientAction = namespace('client', Action);
@@ -35,6 +35,8 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 	private _bootstrapPromise: Promise<void> | null = null;
 	private _bootstrapPromiseResolver: Function = null as any;
 
+	private db: LocalDb = null as any;
+
 	// Client updater
 	clientUpdateStatus: ClientUpdateStatus = 'none';
 	private _updaterInstance: SelfUpdaterInstance | null = null;
@@ -54,6 +56,9 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 		}
 
 		this._startBootstrap();
+
+		const db = await LocalDb.instance();
+		this._useLocalDb(db);
 
 		// We want to run the migration before updating because the next update is not guaranteed to have the migration logic,
 		// so user data might be lost. On the other hand, we mustn't error out on migration because we need to be able to update
@@ -80,6 +85,11 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 		});
 	}
 
+	@VuexMutation
+	private _useLocalDb(db: LocalDb) {
+		this.db = db;
+	}
+
 	@VuexAction
 	private async _migrateFrom0_12_3() {
 		// The new dataPath is moved to Default folder inside what used to be the dataPath on 0.12.3
@@ -102,15 +112,19 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 				}
 
 				if (data && data.indexeddb && data.localStorage) {
-					db.packages.clear();
-					db.games.clear();
+					await this.db.packages.clear();
+					await this.db.games.clear();
 					localStorage.clear();
 
 					const indexeddb = data.indexeddb;
-					await Promise.all([
-						db.packages.bulkPut(Object.values(indexeddb.packages)),
-						db.games.bulkPut(Object.values(indexeddb.games)),
-					]);
+
+					for (let gameId in indexeddb.games) {
+						this.db.games.put(indexeddb.games[gameId]);
+					}
+					for (let packageId in indexeddb.packages) {
+						this.db.packages.put(indexeddb.packages[packageId]);
+					}
+					await Promise.all([this.db.games.save(), this.db.packages.save()]);
 
 					for (let key of Object.keys(data.localStorage)) {
 						localStorage.setItem(key, data.localStorage[key]);
