@@ -55,6 +55,13 @@ const config = {
 			title: 'Edit Site - Game Jolt',
 			crawl: false,
 		},
+		downgrade: {
+			title: 'Downgrade - Game Jolt',
+			server: false,
+			client: true,
+			crawl: false,
+			bodyClass: 'fill-darkest',
+		},
 	},
 	translations: 'site-translations',
 	translationSections: {

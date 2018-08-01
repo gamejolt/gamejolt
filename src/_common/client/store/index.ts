@@ -9,9 +9,9 @@ import {
 } from '../../../lib/gj-lib-client/utils/vuex';
 import { SelfUpdaterInstance, SelfUpdater } from 'client-voodoo';
 import * as os from 'os';
-import * as nwGui from 'nw.gui';
 import * as fs from 'fs';
 import { LocalDb } from '../../../app/components/client/local-db/local-db.service';
+import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 
 export const ClientState = namespace('client', State);
 export const ClientAction = namespace('client', Action);
@@ -60,19 +60,16 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 		const db = await LocalDb.instance();
 		this._useLocalDb(db);
 
-		// We want to run the migration before updating because the next update is not guaranteed to have the migration logic,
-		// so user data might be lost. On the other hand, we mustn't error out on migration because we need to be able to update
-		// the client if there's a bug with the migration itself.
+		if (GJ_WITH_UPDATER) {
+			this.checkForClientUpdates();
+			setInterval(() => this.checkForClientUpdates(), 45 * 60 * 1000); // 45min currently
+		}
+
 		try {
 			await this._migrateFrom0_12_3();
 		} catch (e) {
 			console.error('Caught error in migration:');
 			console.error(e);
-		}
-
-		if (GJ_WITH_UPDATER) {
-			this.checkForClientUpdates();
-			setInterval(() => this.checkForClientUpdates(), 45 * 60 * 1000); // 45min currently
 		}
 
 		this._bootstrapPromiseResolver();
@@ -93,7 +90,9 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 	@VuexAction
 	private async _migrateFrom0_12_3() {
 		// The new dataPath is moved to Default folder inside what used to be the dataPath on 0.12.3
-		const migrationFile = path.join(nwGui.App.dataPath, '..', '0.12.3-migration.json');
+		const oldDataPath = path.join(nw.App.dataPath, '..');
+		const migrationFile = path.join(oldDataPath, '0.12.3-migration.json');
+
 		if (fs.existsSync(migrationFile)) {
 			console.log('Migrating data from 0.12.3');
 
@@ -130,12 +129,18 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 						localStorage.setItem(key, data.localStorage[key]);
 					}
 
+					fs.writeFileSync(path.join(nw.App.dataPath, '0.12.3-migrated'), '');
 					fs.unlinkSync(migrationFile);
 				} else {
 					console.warn(
 						'The migration data wasnt structured as expected, possibly lost some data :('
 					);
 				}
+			}
+		} else if (fs.existsSync(path.join(oldDataPath, 'IndexedDB'))) {
+			if (!fs.existsSync(path.join(nw.App.dataPath, '0.12.3-migrated'))) {
+				console.warn('Running from new version without exporting the 0.12.3 data.');
+				window.location.href = Environment.clientForceDowngradeUrl;
 			}
 		}
 	}
