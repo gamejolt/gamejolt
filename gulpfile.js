@@ -55,6 +55,10 @@ const config = {
 			title: 'Edit Site - Game Jolt',
 			crawl: false,
 		},
+		gameserver: {
+			title: 'Playing Game - Game Jolt',
+			crawl: false,
+		},
 		downgrade: {
 			title: 'Downgrade - Game Jolt',
 			server: false,

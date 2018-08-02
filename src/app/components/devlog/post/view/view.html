@@ -1,7 +1,27 @@
 <div class="devlog-post-view">
 
 	<div class="tiny text-muted">
-		<app-time-ago :date="post.published_on" />
+		<app-time-ago
+			v-if="post.isActive"
+			:date="post.published_on"
+			/>
+		<template v-else-if="post.isScheduled">
+			<span
+				class="tag"
+				style="vertical-align: middle"
+				>
+				<app-jolticon icon="calendar-grid" />
+				<translate>Scheduled</translate>
+			</span>
+			<app-time-ago :date="post.scheduled_for" without-suffix />
+		</template>
+		<span
+			v-else-if="post.isDraft"
+			class="tag"
+			style="vertical-align: middle"
+			>
+			<translate>Draft</translate>
+		</span>
 	</div>
 
 	<h2 class="section-header">

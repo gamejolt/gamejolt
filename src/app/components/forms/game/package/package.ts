@@ -115,7 +115,7 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 			return null;
 		}
 
-		return new Date(this.formModel.sale_start + this.saleTimezoneOffset);
+		return new Date(this.formModel.sale_start);
 	}
 
 	get saleEndLocal() {
@@ -123,7 +123,7 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 			return null;
 		}
 
-		return new Date(this.formModel.sale_end + this.saleTimezoneOffset);
+		return new Date(this.formModel.sale_end);
 	}
 
 	get loadUrl() {
@@ -268,71 +268,3 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 		this.$emit('salecancel', this.formModel);
 	}
 }
-
-// angular
-// 	.module('App.Forms.Dashboard')
-// 	.directive('gjFormDashboardGamePackage', function(
-// 		$state,
-// 		Form,
-// 		App,
-// 		Api,
-// 		Game_Package,
-// 		Sellable,
-// 		Sellable_Pricing,
-// 		Timezone,
-// 		ModalConfirm,
-// 		gettextCatalog
-// 	) {
-// 		var form = new Form({
-// 			model: 'Game_Package',
-// 			template: require('./package.html'),
-// 			resetOnSubmit: true,
-// 		});
-
-// 		form.this.game = '=gjGame';
-// 		form.this.sellable = '=gjSellable';
-// 		form.this.package = '=gjGamePackage';
-// 		form.this.saleCanceled = '&saleCanceled';
-
-// 		form.onInit = function(this) {
-// 			// Api.sendRequest(
-// 			// 	'/web/dash/developer/games/packages/save/' + params.join('/')
-// 			// ).then(function(payload) {
-
-// 			// });
-
-// 			// Only do this first load.
-// 			if (!this.isLoaded) {
-
-// 				this.$watch('formModel.sale_start_now', function(val) {
-// 					// If the form control isn't on the page, then this won't be defined.
-// 					// We only want to do this logic if the control is visible (when they first set up sale).
-// 					if (typeof val === 'undefined') {
-// 						return;
-// 					}
-
-// 					if (val) {
-// 						this.formModel.sale_start = Date.now();
-// 					} else {
-// 						this.formModel.sale_start = moment()
-// 							.add(1, 'day')
-// 							.startOf('day')
-// 							.valueOf();
-// 					}
-// 				});
-
-// 			}
-// 		};
-
-// 		form.onSubmitSuccess = function(this, response) {
-// 			if (this.sellable) {
-// 				this.sellable.assign(response.sellable);
-// 			}
-
-// 			if (this.game) {
-// 				this.game.assign(response.game);
-// 			}
-// 		};
-
-// 		return form;
-// 	});

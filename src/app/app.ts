@@ -7,6 +7,7 @@ import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { loadCurrentLanguage } from '../utils/translations';
 import { AppTheme } from '../lib/gj-lib-client/components/theme/theme';
+import { AppCookieBanner } from '../_common/cookie/banner/banner';
 
 @View
 @Component({
@@ -14,6 +15,7 @@ import { AppTheme } from '../lib/gj-lib-client/components/theme/theme';
 		AppTheme,
 		AppShell,
 		AppErrorPage,
+		AppCookieBanner,
 	},
 })
 export class App extends Vue {

@@ -24,7 +24,7 @@ import {
 	},
 })
 export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
-	@Prop(String) tab: 'draft' | undefined;
+	@Prop(String) tab: 'draft' | 'scheduled' | undefined;
 
 	@RouteState game: RouteStore['game'];
 
@@ -56,13 +56,19 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 		});
 	}
 
-	onPostAdded(post: FiresidePost) {
-		// If they added into a different status, then switch tabs.
-		if (this._tab !== post.status) {
-			this.gotoPost(post);
-			return;
+	getTabForPost(post: FiresidePost) {
+		if (post.isScheduled) {
+			return 'scheduled';
+		} else if (post.isDraft) {
+			return 'draft';
+		} else {
+			// null = active
+			return null;
 		}
+	}
 
+	onPostAdded(post: FiresidePost) {
+		this.gotoPost(post);
 		this.feed.prepend([post]);
 	}
 
@@ -74,12 +80,19 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 		this.gotoPost(post);
 	}
 
-	onPostRemoved(post: FiresidePost) {
-		this.feed.remove(post);
+	onPostRemoved(_post: FiresidePost) {
+		// do nothing
 	}
 
 	private gotoPost(post: FiresidePost) {
-		const tab = post.status === 'active' ? null : post.status;
+		const tab = this.getTabForPost(post);
+
+		// We always reload the scheduled posts page. Since it works based on a date that can change
+		// we need to refresh the feed to properly sort everything agian.
+		if (tab !== 'scheduled' && this._tab === tab) {
+			return;
+		}
+
 		const location = {
 			name: this.$route.name,
 			params: Object.assign({}, this.$route.params, { tab }),

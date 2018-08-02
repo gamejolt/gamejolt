@@ -1,0 +1,13 @@
+@require '~styles/variables'
+
+.-build-embed
+	margin: 0
+	padding: 0
+
+	// This fixes issues where they don't set a body bg color.
+	// https://github.com/gamejolt/next-issue-tracker/issues/241
+	> iframe
+		margin: 0
+		padding: 0
+		background-color: $white
+		border: 0

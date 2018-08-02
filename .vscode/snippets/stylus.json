@@ -1,0 +1,10 @@
+{
+	"variables": {
+		"prefix": "variables",
+		"body": ["@require '~styles/variables'"]
+	},
+	"mixins": {
+		"prefix": "mixins",
+		"body": ["@require '~styles-lib/mixins'"]
+	}
+}

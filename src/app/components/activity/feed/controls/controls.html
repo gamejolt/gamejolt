@@ -1,13 +1,14 @@
 <div>
 	<div class="activity-feed-controls timeline-list-item-controls">
 
-		<div class="-manage" v-if="shouldShowManage">
+		<div class="-manage" v-if="shouldShowManageSection">
 			<hr>
 
 			<span class="-manage-controls" v-if="shouldShowManageControls">
 				<app-button
-					v-if="post.status === FiresidePost.STATUS_DRAFT" @click="publishPost"
+					v-if="canPublish"
 					primary
+					@click="publishPost"
 					>
 					<translate>Publish</translate>
 				</app-button>
@@ -66,6 +67,12 @@
 
 		<div class="-controls" v-if="post && post.status === FiresidePost.STATUS_ACTIVE">
 
+			<app-comment-add-button
+				v-if="showCommentAddButton && !hasDevlogsPerms && Screen.isDesktop"
+				resource="Fireside_Post"
+				:resource-id="post.id"
+				/>
+
 			<app-fireside-post-like-widget
 				:post="post"
 				circle
@@ -91,7 +98,7 @@
 			</template>
 
 			<app-button
-				icon="share"
+				icon="share-airplane"
 				circle
 				v-app-popover-trigger="sharePopoverId"
 				v-app-tooltip="$gettext( 'Share' )"

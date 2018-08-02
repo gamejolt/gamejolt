@@ -279,7 +279,7 @@
 					</app-button>
 				</div>
 
-				<template v-if="games.length > 0">
+				<div v-if="games.length > 0">
 					<br>
 
 					<app-card
@@ -339,7 +339,7 @@
 							<translate>Expand All</translate>
 						</app-button>
 					</div>
-				</template>
+				</div>
 
 				<!--
 					Video Comments
@@ -348,7 +348,7 @@
 					<translate>Your Video Comments</translate>
 				</h2>
 
-				<template v-if="!videos.length">
+				<div v-if="!videos.length">
 					<div class="page-help">
 						<p><translate>Are you a let's player? Add your YouTube videos through video comments!</translate></p>
 					</div>
@@ -358,8 +358,8 @@
 							<translate>Learn More</translate>
 						</app-button>
 					</div>
-				</template>
-				<template v-else>
+				</div>
+				<div v-else>
 					<div class="row">
 						<div class="col-xs-6" v-for="video of videos.slice( 0, 4 )" :key="video.id">
 							<app-comment-video-thumbnail :video="video" />
@@ -375,7 +375,7 @@
 							<translate>View All</translate>
 						</app-button>
 					</div>
-				</template>
+				</div>
 
 				<!--
 					Game Jams
@@ -405,7 +405,7 @@
 					</app-button>
 				</div>
 
-				<template v-if="jams.length > 0">
+				<div v-if="jams.length > 0">
 					<br>
 
 					<app-card
@@ -453,7 +453,7 @@
 							<translate>Expand All</translate>
 						</app-button>
 					</div>
-				</template>
+				</div>
 
 			</div>
 
@@ -486,6 +486,20 @@
 						>
 						<app-jolticon icon="email" />
 						<translate>Email Preferences</translate>
+					</router-link>
+					<router-link
+						class="list-group-item has-icon"
+						:to="{ name: 'dash.account.payment-methods' }"
+						>
+						<app-jolticon icon="credit-card" />
+						<translate>Payment Methods</translate>
+					</router-link>
+					<router-link
+						class="list-group-item has-icon"
+						:to="{ name: 'dash.account.addresses' }"
+						>
+						<app-jolticon icon="world" />
+						<translate>Saved Addresses</translate>
 					</router-link>
 					<router-link
 						class="list-group-item has-icon"

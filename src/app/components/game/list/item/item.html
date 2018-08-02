@@ -3,15 +3,16 @@
 		:to="url"
 		v-app-track-event="eventLabel ? 'game-list:click:' + eventLabel : undefined"
 		>
-		<app-game-thumbnail-img
-			class="-thumb"
-			:game="game"
-			/>
+		<div class="-thumb">
+			<app-game-thumbnail-img
+				:game="game"
+				/>
+		</div>
 	</router-link>
 
 	<div class="-meta">
 		<router-link
-			class="-title link-unstyled"
+			class="-title -spacing link-unstyled"
 			:to="url"
 			:title="game.title"
 			v-app-track-event="eventLabel ? 'game-list:click:' + eventLabel : undefined"
@@ -20,7 +21,7 @@
 		</router-link>
 
 		<router-link
-			class="-dev link-muted"
+			class="-dev -spacing link-muted"
 			:to="{
 				name: 'profile.overview',
 				params: { username: game.developer.username }
@@ -28,7 +29,18 @@
 			:title="`${game.developer.display_name} (@${game.developer.username})`"
 			v-app-track-event="eventLabel ? 'game-list:dev:' + eventLabel : undefined"
 			>
-			{{ game.developer.display_name }}
+			<translate>by</translate>
+			<strong>{{ game.developer.display_name }}</strong>
 		</router-link>
+
+		<div class="-followers -spacing text-muted">
+			<translate
+				:translate-n="game.follower_count || 0"
+				:translate-params="{ count: number( game.follower_count || 0 ) }"
+				translate-plural="%{ count } followers"
+				>
+				%{ count } followers
+			</translate>
+		</div>
 	</div>
 </div>

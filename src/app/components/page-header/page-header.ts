@@ -20,18 +20,21 @@ import { AppMediaItemCover } from '../../../_common/media-item/cover/cover';
 export class AppPageHeader extends Vue {
 	@Prop(Object) coverMediaItem?: MediaItem;
 	@Prop(Number) coverMaxHeight?: number;
+	@Prop(Boolean) coverAutoHeight?: boolean;
 	@Prop(Boolean) hideNav?: boolean;
 	@Prop(Boolean) shouldAffixNav?: boolean;
 	@Prop(Boolean) spotlightDark?: boolean;
+	@Prop(Boolean) blurHeader?: boolean;
 	@Prop({ type: String, default: 'col-xs-12' })
 	colClasses?: string;
 	@Prop() autoscrollAnchorKey: any;
+	@Prop(Boolean) disableAutoscrollAnchor: any;
 	@Prop(Boolean) showCoverButtons?: boolean;
 
 	readonly Screen = Screen;
 
 	get hasSpotlight() {
-		return !!this.$slots['spotlight'];
+		return !!this.$slots['spotlight'] && !Screen.isXs;
 	}
 
 	get hasNav() {

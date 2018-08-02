@@ -61,24 +61,24 @@
 								</a>
 							</li>
 							<li>
-								<router-link :to="{ name: 'radio' }">
-									<translate>Radio</translate>
-								</router-link>
-							</li>
-							<li>
 								<a href="http://jams.gamejolt.com" target="_blank">
 									<translate>Jams</translate>
 								</a>
+							</li>
+							<li>
+								<router-link :to="{ name: 'forums.landing.overview' }">
+									<translate>Forums</translate>
+								</router-link>
 							</li>
 						</ol>
 					</div>
 					<div class="col-xs-4">
 						<ol class="list-unstyled footer-link-list">
-							<!--<li>
-								<router-link :to="{ name: 'landing.developers">
-									<translate>Developers</translate>
+							<li>
+								<router-link :to="{ name: 'landing.game-api' }">
+									<translate>Game API</translate>
 								</router-link>
-							</li>-->
+							</li>
 							<li>
 								<router-link :to="{ name: 'landing.marketplace' }">
 									<translate>Marketplace</translate>
@@ -89,20 +89,10 @@
 									<translate>Partners</translate>
 								</router-link>
 							</li>
-							<!--<li>
-								<router-link :to="{ name: 'landing.game-api' }">
-									<translate>Game API</translate>
-								</router-link>
-							</li>-->
 							<li>
 								<a href="https://www.redbubble.com/people/gamejolt/shop" target="_blank">
 									<translate>Merch</translate>
 								</a>
-							</li>
-							<li>
-								<router-link :to="{ name: 'forums.landing.overview' }">
-									<translate>Forums</translate>
-								</router-link>
 							</li>
 							<li>
 								<a href="https://github.com/gamejolt" target="_blank">
@@ -146,6 +136,11 @@
 							<li>
 								<router-link :to="{ name: 'legal.privacy' }">
 									<translate>legal.privacy</translate>
+								</router-link>
+							</li>
+							<li v-if="!GJ_IS_CLIENT">
+								<router-link :to="{ name: 'legal.cookies' }">
+									<translate>Cookie Policy</translate>
 								</router-link>
 							</li>
 						</ol>

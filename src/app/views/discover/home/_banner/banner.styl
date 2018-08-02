@@ -1,10 +1,15 @@
 @require '~styles/variables'
 
+-gutter()
+	padding-left: ($grid-gutter-width-xs / 2)
+	padding-right: ($grid-gutter-width-xs / 2)
+
+	@media $media-sm-up
+		padding-left: ($grid-gutter-width / 2)
+		padding-right: ($grid-gutter-width / 2)
+
 .-banner
 	position: relative
-
-	.container
-		z-index: 2
 
 .-click
 	position: absolute
@@ -14,13 +19,42 @@
 	left: 0
 	z-index: 1
 
-.-controls
+.-main
 	position: relative
-	z-index: 2
+	margin-left: -($grid-gutter-width-xs / 2)
+	margin-right: -($grid-gutter-width-xs / 2)
 
-.-info
-	margin-top: 30px
+	@media $media-sm-up
+		display: flex
+		align-items: center
+		justify-content: center
+		margin-left: -($grid-gutter-width / 2)
+		margin-right: -($grid-gutter-width / 2)
+
+.-logo
+	-gutter()
 	text-align: center
 
-	@media $media-xs
-		margin-top: 20px
+	@media $media-sm-up
+		width: 60%
+
+.-info
+	-gutter()
+	margin-top: $line-height-computed
+	text-align: center
+
+	@media $media-sm-up
+		margin-top: 0
+		width: 40%
+		text-align: left
+
+	&-full
+		margin-top: 0
+		width: 100%
+		max-width: 500px
+		text-align: center
+
+.-controls
+	position: relative
+	// Put this over the click.
+	z-index: 2

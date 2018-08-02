@@ -2,10 +2,6 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-$-zindex-img = 1
-$-zindex-video = 2
-$-zindex-controls = 3
-
 .game-thumbnail
 	position: relative
 	display: block
@@ -19,58 +15,11 @@ $-zindex-controls = 3
 	position: absolute
 	top: 5px
 	right: 5px
-	z-index: $-zindex-controls
+	z-index: 10
 	display: none
 
 	.game-thumbnail:hover &
 		display: block
-
-.game-thumbnail-img
-	opacity: 0
-	transition: opacity 500ms
-
-	&.loaded
-		opacity: 1
-
-.-thumb
-	rounded-corners()
-	theme-prop('background-color', 'bg-offset')
-	position: relative
-	height: 0
-	padding-top: 56.25% // HD 16:9
-	overflow: hidden
-
-	> .inner
-		position: absolute
-		top: 0
-		left: 0
-		width: 100%
-		height: 100%
-
-	.jolticon
-		theme-prop('color', 'bg-subtle')
-		position: absolute
-		font-size: 16px * 4
-		left: 50%
-		margin-left: -(@font-size / 2)
-		top: @left
-		margin-top: @margin-left
-
-	>>>
-		img, .video
-			rounded-corners()
-			position: absolute !important
-			top: 0
-			left: 0
-			display: block
-			width: 100%
-			height: 100%
-
-		img
-			z-index: $-zindex-img
-
-		.video
-			z-index: $-zindex-video
 
 .-meta
 	position: relative

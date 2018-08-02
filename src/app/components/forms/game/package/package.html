@@ -91,14 +91,13 @@
 			name="partner_visibility"
 			:label="$gettext( `Partner Visibility` )"
 			>
+			<app-form-control-toggle class="pull-right" :disabled="!hasSalesPerms" />
 			<p class="help-block">
 				<translate>Enabling this will allow partners to access this package even if it's marked as Private or your game is a Devlog-only project.</translate>
 				<router-link :to="{ name: 'landing.partners' }" class="link-help" target="_blank">
 					<translate>What is a Game Jolt Partner?</translate>
 				</router-link>
 			</p>
-
-			<app-form-control-toggle :disabled="!hasSalesPerms" />
 		</app-form-group>
 
 		<app-form-group
@@ -377,14 +376,14 @@
 						<th><translate>Start</translate></th>
 						<td>
 							{{ saleStartLocal | date('medium') }}
-							<app-time-ago :date="promotionalPricing.start" class="text-muted small" />
+							<app-time-ago :date="promotionalPricing.start" is-future class="text-muted small" />
 						</td>
 					</tr>
 					<tr>
 						<th><translate>End</translate></th>
 						<td>
 							{{ saleEndLocal | date('medium') }}
-							<app-time-ago :date="promotionalPricing.end" class="text-muted small" />
+							<app-time-ago :date="promotionalPricing.end" is-future class="text-muted small" />
 						</td>
 					</tr>
 					<tr>

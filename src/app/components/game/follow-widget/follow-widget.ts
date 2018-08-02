@@ -32,6 +32,7 @@ export class AppGameFollowWidget extends Vue {
 	@Prop(Boolean) circle?: boolean;
 	@Prop(Boolean) block?: boolean;
 	@Prop(Boolean) lg?: boolean;
+	@Prop(Boolean) solid?: boolean;
 	@Prop(String) eventLabel?: string;
 	@Prop(Boolean) showUserFollow?: boolean;
 

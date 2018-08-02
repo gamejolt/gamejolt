@@ -9,7 +9,7 @@ import { Order } from '../../../../../../lib/gj-lib-client/components/order/orde
 import { OrderPaymentRefund } from '../../../../../../lib/gj-lib-client/components/order/payment/refund/refund.model';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GamePackage } from '../../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { arrayIndexBy } from '../../../../../../lib/gj-lib-client/utils/array';
+import { arrayIndexBy, arrayGroupBy } from '../../../../../../lib/gj-lib-client/utils/array';
 import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppGameThumbnailImg } from '../../../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import { currency } from '../../../../../../lib/gj-lib-client/vue/filters/currency';
@@ -32,10 +32,8 @@ import {
 })
 export default class RouteDashMainPurchasesView extends BaseRouteComponent {
 	order: Order = null as any;
-	packagesBySellable: any = null;
-	games: any = null;
-
-	firstRefund: OrderPaymentRefund | null = null;
+	packages: GamePackage[] = [];
+	games: Game[] = [];
 
 	readonly Geo = Geo;
 	readonly OrderPayment = OrderPayment;
@@ -56,22 +54,24 @@ export default class RouteDashMainPurchasesView extends BaseRouteComponent {
 		return null;
 	}
 
+	get gamesById() {
+		return arrayIndexBy(this.games, 'id');
+	}
+
+	get packagesBySellable() {
+		return arrayGroupBy(this.packages, 'sellable_id');
+	}
+
+	get firstRefund() {
+		if (this.order._is_refunded && this.order.payments[0] && this.order.payments[0].refunds) {
+			return this.order.payments[0].refunds[0];
+		}
+		return null;
+	}
+
 	routed($payload: any) {
 		this.order = new Order($payload.order);
-		this.games = arrayIndexBy(Game.populate($payload.games), 'id');
-
-		const packages: GamePackage[] = GamePackage.populate($payload.packages);
-		this.packagesBySellable = {};
-		for (const _package of packages) {
-			if (!this.packagesBySellable[_package.sellable_id]) {
-				this.packagesBySellable[_package.sellable_id] = [];
-			}
-			this.packagesBySellable[_package.sellable_id].push(_package);
-		}
-
-		this.firstRefund = null;
-		if (this.order._is_refunded && this.order.payments[0] && this.order.payments[0].refunds) {
-			this.firstRefund = this.order.payments[0].refunds[0];
-		}
+		this.games = Game.populate($payload.games);
+		this.packages = GamePackage.populate($payload.packages);
 	}
 }

@@ -3,7 +3,7 @@
 	<div class="navbar-left">
 
 		<!-- Mobile Menu Toggle -->
-		<ul class="navbar-items">
+		<ul class="navbar-items" v-if="hasSidebar">
 			<li>
 				<a
 					:class="{ active: isLeftPaneVisible }"
@@ -44,19 +44,8 @@
 
 		<ul class="navbar-items" v-if="app.user">
 
-			<li class="hidden-xs">
-				<router-link
-					:to="{ name: GJ_IS_CLIENT ? 'library.installed' : 'library.overview' }"
-					:class="{ active: $route.name.indexOf( 'library' ) === 0 }"
-					v-app-tooltip.bottom="$gettext( `Your Game Library` )"
-					v-app-track-event="`top-nav:library`"
-					>
-					<app-jolticon icon="books" />
-				</router-link>
-			</li>
-
 			<!-- Activity -->
-			<li v-if="!Connection.isClientOffline">
+			<li v-if="!Connection.isClientOffline" key="activity">
 				<router-link
 					:to="{ name: 'activity', params: { tab: 'activity' } }"
 					:class="{ active: $route.name.indexOf( 'activity' ) === 0 }"
@@ -73,7 +62,7 @@
 			</li>
 
 			<!-- Friend Requests -->
-			<li v-if="!Connection.isClientOffline">
+			<li v-if="!Connection.isClientOffline" key="friend-requests">
 				<a
 					:class="{ active: friendRequestsShowing }"
 					v-app-popover-trigger="`friend-requests`"
@@ -94,53 +83,8 @@
 				</app-friend-request-popover>
 			</li>
 
-			<!-- User Menu -->
-			<li>
-				<a class="navbar-avatar"
-					:class="{ active: userMenuShowing }"
-					v-app-popover-trigger="`account-popover`"
-					v-app-track-event="`top-nav:user-menu:toggle`"
-					>
-					<app-user-avatar-img :user="app.user" />
-				</a>
-				<app-shell-account-popover
-					@shown="userMenuShowing = true"
-					@hidden="userMenuShowing = false"
-					>
-				</app-shell-account-popover>
-			</li>
-		</ul>
-
-		<!-- Login/Join Buttons -->
-		<ul class="navbar-items" v-if="!app.user">
-			<li>
-				<a :href="Environment.authBaseUrl + '/login'" v-app-track-event="`top-nav:login:click`">
-					<app-jolticon class="hidden-xs" icon="sign-in" />
-					<translate>nav.login</translate>
-				</a>
-			</li>
-			<li>
-				<a :href="Environment.authBaseUrl + '/join'" v-app-track-event="`top-nav:join:click`">
-					<app-jolticon class="hidden-xs" icon="friends" />
-					<translate>nav.join</translate>
-				</a>
-			</li>
-		</ul>
-
-		<div class="navbar-separator" v-if="chat || Connection.isOffline"></div>
-
-		<!-- Connection Status -->
-		<span
-			v-if="Connection.isOffline"
-			class="navbar-item disconnected-icon"
-			v-app-tooltip.left="$gettext( `We're having trouble connecting to Game Jolt.` )"
-			>
-			<app-jolticon icon="offline" />
-		</span>
-
-		<!-- Chat -->
-		<ul class="navbar-items" v-if="chat">
-			<li>
+			<!-- Chat -->
+			<li v-if="chat" key="chat">
 				<a
 					:class="{ active: isRightPaneVisible }"
 					@click="toggleRightPane"
@@ -159,7 +103,50 @@
 					<app-jolticon icon="user-messages" />
 				</a>
 			</li>
+
+			<!-- Connection Status -->
+			<li v-if="Connection.isOffline" key="offline">
+				<span
+					class="navbar-item disconnected-icon"
+					v-app-tooltip.left="$gettext( `We're having trouble connecting to Game Jolt.` )"
+					>
+					<app-jolticon icon="offline" />
+				</span>
+			</li>
+
+			<!-- User Menu -->
+			<li key="account">
+				<a
+					class="navbar-avatar"
+					:class="{ active: userMenuShowing }"
+					v-app-popover-trigger="`account-popover`"
+					v-app-track-event="`top-nav:user-menu:toggle`"
+					>
+					<app-user-avatar-img :user="app.user" />
+				</a>
+				<app-shell-account-popover
+					@shown="userMenuShowing = true"
+					@hidden="userMenuShowing = false"
+					>
+				</app-shell-account-popover>
+			</li>
 		</ul>
+
+		<!-- Login/Join Buttons -->
+		<template v-if="!app.user">
+			<ul class="navbar-items">
+				<li>
+					<a :href="Environment.authBaseUrl + '/login'" v-app-track-event="`top-nav:login:click`">
+						<translate>nav.login</translate>
+					</a>
+				</li>
+				<li>
+					<a :href="Environment.authBaseUrl + '/join'" v-app-track-event="`top-nav:join:click`">
+						<translate>Sign Up</translate>
+					</a>
+				</li>
+			</ul>
+		</template>
 
 	</div>
 

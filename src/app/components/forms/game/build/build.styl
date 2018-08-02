@@ -17,12 +17,11 @@
 		bottom: 0
 		left: 0
 		content: ''
-		background-color: rgba( $white, 0.5 )
+		background-color: rgba($white, 0.5)
 		z-index: 2
 		display: flex
 		align-items: center
 		justify-content: center
-
 		animation-name: fade-in
 		animation-duration: 500ms
 		animation-delay: 200ms
@@ -35,18 +34,17 @@
 	.stat-big.stat-big-smaller
 		margin-bottom: 0
 
-	>>> .form-group,
-	>>> .help-block,
-	.alert
+	>>> .help-block, .alert
 		margin-bottom: ($line-height-computed / 2)
+
+	>>> .form-group
+		margin-bottom: $line-height-computed
 
 	&-submit-button
 		margin-top: ($line-height-computed / 2)
 
 	>>> .downloadable-platforms
-
-		&.form-group
-		.form-group
+		&.form-group, .form-group
 			margin-left: 0
 			margin-right: 0
 

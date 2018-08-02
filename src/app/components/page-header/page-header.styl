@@ -134,3 +134,38 @@ $-cover-buttons-height = $button-md-line-height + 20px
 
 		@media $media-lg
 			margin-bottom: 0
+
+.-cover-img
+	@media $media-sm-up
+		&::after
+			content: ''
+			position: absolute
+			bottom: 0
+			left: 0
+			right: 0
+			height: 150px
+			background-image: linear-gradient(to bottom, transparent 0, rgba($black, 0.3) 70%, rgba($black, 0.6) 100%)
+			z-index: 0
+
+.-cover-auto-height
+	.page-header-cover
+		&.has-cover-image
+			position: relative
+			padding-top: 20px
+
+			.page-header-content
+				position: static
+
+			.-cover-img
+				display: flex
+				position: absolute
+				top: 0
+				right: 0
+				bottom: 0
+				left: 0
+				justify-content: center
+				align-items: center
+				overflow: hidden
+
+			&.has-cover-buttons
+				padding-top: $-cover-buttons-height + 20px

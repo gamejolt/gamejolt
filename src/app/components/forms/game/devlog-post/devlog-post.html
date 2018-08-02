@@ -104,18 +104,27 @@
 		</app-form-group>
 	</div>
 
-	<template v-if="!isPublished && !hasPoll">
+	<template v-if="!isPublished && (!hasPoll || !isScheduling)">
 		<div>
 			<app-button
+			 	v-if="!hasPoll"
 				sparse
 				icon="pedestals-numbers"
 				v-app-tooltip="$gettext(`Add poll`)"
 				@click.prevent="createPoll()"
 				/>
+
+			<app-button
+				v-if="!isScheduling"
+				sparse
+				icon="calendar-plus"
+				v-app-tooltip="$gettext(`Schedule your post`)"
+				@click.prevent="addSchedule()"
+				/>
 		</div>
 		<br>
 	</template>
-	<div class="well fill-offset full-bleed" v-else-if="hasPoll">
+	<div class="well fill-offset full-bleed" v-if="hasPoll">
 		<fieldset>
 			<app-form-legend compact>
 				<translate>Set up poll</translate>
@@ -270,6 +279,65 @@
 			</app-button>
 		</div>
 	</div>
+	<div class="well fill-offset full-bleed" v-if="isScheduling && timezones">
+		<fieldset>
+			<app-form-legend compact>
+				<translate>Schedule publishing of post</translate>
+			</app-form-legend>
+
+			<app-form-group
+				name="scheduled_for_timezone"
+				:label="$gettext( `Timezone` )"
+				>
+				<p class="help-block">
+					<translate>All time selection below will use this timezone.</translate>
+				</p>
+
+				<p class="help-block">
+					<strong><translate>Should auto-detect, but if it doesn't, choose your closest city.</translate></strong>
+				</p>
+
+				<app-form-control-select>
+					<optgroup
+						v-for="(timezones, region) of timezones"
+						:label="region"
+						>
+						<option
+							v-for="timezone of timezones"
+							:value="timezone.i"
+							>
+							{{ timezone.label }}
+						</option>
+					</optgroup>
+				</app-form-control-select>
+
+				<app-form-control-errors />
+			</app-form-group>
+
+			<app-form-group
+				name="scheduled_for"
+				:label="$gettext( `Date and time` )"
+				>
+				<app-form-control-date
+					:timezone-offset="scheduledTimezoneOffset"
+					:rules="{
+						min_date: now,
+					}"
+					/>
+				<app-form-control-errors :label="$gettext(`scheduled for`)" />
+			</app-form-group>
+
+		</fieldset>
+
+		<div class="text-right">
+			<app-button
+				trans
+				@click.prevent="removeSchedule()"
+				>
+				<translate>Remove Scheduling</translate>
+			</app-button>
+		</div>
+	</div>
 
 	<!--
 		Can only modify access control before it's published for the first time.'
@@ -337,7 +405,10 @@
 	</div>
 
 	<app-form-button :disabled="!valid">
-		<template v-if="model.status !== FiresidePost.STATUS_ACTIVE">
+		<template v-if="isScheduling">
+			<translate>Schedule</translate>
+		</template>
+		<template v-else-if="model.status !== FiresidePost.STATUS_ACTIVE">
 			<translate>Publish</translate>
 		</template>
 		<template v-else>
@@ -346,7 +417,7 @@
 	</app-form-button>
 
 	<app-button
-		v-if="model.status !== FiresidePost.STATUS_ACTIVE"
+		v-if="model.status !== FiresidePost.STATUS_ACTIVE && !isScheduling"
 		trans
 		:disabled="!valid"
 		@click.prevent="onDraftSubmit()"

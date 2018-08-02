@@ -1,4 +1,4 @@
-<div class="route-purchases-view">
+<div class="route-purchases-view" v-if="routeBootstrapped">
 
 	<section class="section">
 		<div class="container">
@@ -17,7 +17,11 @@
 				{{ order.id }}
 			</p>
 
-			<div class="alert alert-notice" v-if="order._is_refunded">
+			<!--
+				If the order was canceled but without a refund (just disabled), then we can't show
+				this.
+			-->
+			<div class="alert alert-notice" v-if="order._is_refunded && firstRefund">
 				<translate
 					:translate-params="{
 						date: date( firstRefund.created_on, 'medium' ),
@@ -143,13 +147,14 @@
 								:to="{
 									name: 'discover.games.view.overview',
 									params: {
-										slug: games[ firstPackage.game_id ].slug,
+										slug: gamesById[ firstPackage.game_id ].slug,
 										id: firstPackage.game_id,
 									},
 								}"
 								>
 								<app-game-thumbnail-img
-									:game="games[ firstPackage.game_id ]"
+									animate
+									:game="gamesById[ firstPackage.game_id ]"
 									/>
 							</router-link>
 						</div>
@@ -159,12 +164,12 @@
 									:to="{
 										name: 'discover.games.view.overview',
 										params: {
-											slug: games[ firstPackage.game_id ].slug,
+											slug: gamesById[ firstPackage.game_id ].slug,
 											id: firstPackage.game_id,
 										},
 									}"
 									>
-									{{ games[ firstPackage.game_id ].title }}
+									{{ gamesById[ firstPackage.game_id ].title }}
 								</router-link>
 								<br>
 								<span class="small">
@@ -172,10 +177,10 @@
 									<router-link
 										:to="{
 											name: 'profile.overview',
-											params: { username: games[ firstPackage.game_id ].developer.username }
+											params: { username: gamesById[ firstPackage.game_id ].developer.username }
 										}"
 										>
-										{{ games[ firstPackage.game_id ].developer.display_name }}
+										{{ gamesById[ firstPackage.game_id ].developer.display_name }}
 									</router-link>
 								</span>
 							<p>
@@ -186,7 +191,7 @@
 
 							<div class="small text-muted">
 								<div v-for="package of packagesBySellable[ item.sellable.id ]" :key="package.id">
-									- {{ package.title || games[ package.game_id ].title }}
+									- {{ package.title || gamesById[ package.game_id ].title }}
 								</div>
 							</div>
 						</div>

@@ -6,6 +6,7 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../lib/gj-lib-client/components/route/route-component';
+import { Ads } from '../../../lib/gj-lib-client/components/ad/ads.service';
 
 @View
 @Component({
@@ -15,5 +16,9 @@ export default class RouteLegal extends BaseRouteComponent {
 	@RouteResolve()
 	routeResolve() {
 		return User.touch();
+	}
+
+	routeInit() {
+		Ads.isPageDisabled = true;
 	}
 }

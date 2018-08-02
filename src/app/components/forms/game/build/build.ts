@@ -110,7 +110,8 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 	get isDeprecated() {
 		return (
 			this.model &&
-			(this.model.type === GameBuild.TYPE_APPLET || this.model.type === GameBuild.TYPE_SILVERLIGHT)
+			(this.model.type === GameBuild.TYPE_APPLET ||
+				this.model.type === GameBuild.TYPE_SILVERLIGHT)
 		);
 	}
 
@@ -189,6 +190,10 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 			[GameBuild.EMULATOR_CPC]: this.$gettext('Amstrad CPC'),
 			[GameBuild.EMULATOR_MSX]: this.$gettext('MSX'),
 		};
+	}
+
+	get isFitToScreen() {
+		return this.formModel && this.formModel.embed_fit_to_screen;
 	}
 
 	created() {
@@ -338,9 +343,12 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 
 	@Watch('formModel.embed_width')
 	@Watch('formModel.embed_height')
+	@Watch('formModel.embed_fit_to_screen')
 	onDimensionsChanged() {
 		const hasError =
-			this.isBrowserBased && (!this.formModel.embed_width || !this.formModel.embed_height);
+			this.isBrowserBased &&
+			!this.isFitToScreen &&
+			(!this.formModel.embed_width || !this.formModel.embed_height);
 
 		if (hasError) {
 			this.setCustomError('browser');

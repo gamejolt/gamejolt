@@ -1,8 +1,10 @@
 import { Model } from '../../../lib/gj-lib-client/components/model/model.service';
 import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
+import { Jam } from '../../../lib/gj-lib-client/components/jam/jam.model';
 
 export class FeaturedItem extends Model {
-	game: Game;
+	game?: Game;
+	jam?: Jam;
 	content: string;
 	back_url: string;
 	front_url: string;
@@ -15,6 +17,10 @@ export class FeaturedItem extends Model {
 
 		if (data.game) {
 			this.game = new Game(data.game);
+		}
+
+		if (data.jam) {
+			this.jam = new Jam(data.jam);
 		}
 	}
 }

@@ -186,14 +186,30 @@
 						</div>
 
 						<div class="card-meta">
-							<span
-								class="tag tag-notice"
-								v-if="release.status === GameRelease.STATUS_HIDDEN"
-								v-app-tooltip="$gettext( `dash.games.packages.manage.releases.hidden_tooltip` )"
-								>
-								<app-jolticon icon="inactive" />
-								<translate>dash.games.packages.manage.releases.hidden_tag</translate>
-							</span>
+							<template v-if="release.status === GameRelease.STATUS_HIDDEN">
+								<span
+									class="tag"
+									v-if="!release.isScheduled"
+									v-app-tooltip="$gettext( `dash.games.packages.manage.releases.hidden_tooltip` )"
+									>
+									<app-jolticon icon="inactive" />
+									<translate>Draft</translate>
+								</span>
+								<template v-else>
+									<span
+										class="tag tag-notice"
+										v-app-tooltip="$gettext( `This release is scheduled and will be published to your game page in the future.` )"
+										>
+										<app-jolticon icon="calendar-grid" />
+										<translate>Scheduled</translate>
+									</span>
+
+									<app-time-ago
+										:date="release.scheduled_for"
+										without-suffix
+										/>
+								</template>
+							</template>
 
 							<span
 								class="tag tag-highlight"
@@ -220,10 +236,6 @@
 									%{ count } build
 								</translate>
 							</template>
-						</div>
-
-						<div class="card-content" v-if="package.description">
-							{{ package.description }}
 						</div>
 
 						<div class="card-controls" v-if="hasBuildsPerms || hasAnalyticsPerms">

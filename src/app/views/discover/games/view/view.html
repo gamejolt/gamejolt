@@ -1,4 +1,5 @@
-<div class="route-discover-games-view"
+<div
+	class="route-discover-games-view"
 	v-if="game"
 	>
 
@@ -33,6 +34,9 @@
 			:should-affix-nav="$route.name !== 'discover.games.view.download'"
 			:autoscroll-anchor-key="game.id"
 			:show-cover-buttons="shouldShowCoverButtons"
+			:blur-header="!shouldShowFullCover"
+			:cover-auto-height="!shouldShowFullCover"
+			:disable-autoscroll-anchor="!Screen.isXs"
 			>
 
 			<template slot="cover-buttons" v-if="shouldShowCoverButtons">
@@ -104,46 +108,6 @@
 					{{ game.developer.display_name }}
 					<small>@{{ game.developer.username }}</small>
 				</router-link>
-
-				<!--
-					Hide on mobile to keep it clean.
-					They can view in the game details.
-				-->
-				<span class="small hidden-xs" v-if="game.published_on">
-					<span class="dot-separator"></span>
-					<router-link
-						:to="{
-							name: 'discover.games.list._fetch-date',
-							params: {
-								section: 'by-date',
-								date: date( game.published_on, 'YYYY-MM-DD' ),
-							},
-						}"
-						>
-						<app-time-ago :date="game.published_on" />
-					</router-link>
-				</span>
-
-				<template v-if="game.tigrs_age || game.ratings_enabled">
-					<span class="dot-separator hidden-xs hidden-sm"></span>
-					<br class="visible-xs visible-sm">
-					<br class="visible-xs visible-sm">
-
-					<app-game-ogrs-tag
-						v-if="game.tigrs_age"
-						:game="game"
-						/>
-
-					<template v-if="!game._is_devlog && game.ratings_enabled">
-						<span class="dot-separator"></span>
-						<app-meter
-							:big="true"
-							:dark="true"
-							:rating="game.avg_rating"
-							v-app-tooltip="ratingTooltip"
-							/>
-					</template>
-				</template>
 			</div>
 
 		</app-page-header>
