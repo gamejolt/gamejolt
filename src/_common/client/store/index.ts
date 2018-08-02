@@ -7,7 +7,7 @@ import {
 	VuexMutation,
 	VuexStore,
 } from '../../../lib/gj-lib-client/utils/vuex';
-import { SelfUpdaterInstance, SelfUpdater } from 'client-voodoo';
+import { SelfUpdaterInstance, SelfUpdater, Logger } from 'client-voodoo';
 import * as os from 'os';
 import * as fs from 'fs';
 import { LocalDb } from '../../../app/components/client/local-db/local-db.service';
@@ -57,13 +57,15 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 
 		this._startBootstrap();
 
-		const db = await LocalDb.instance();
-		this._useLocalDb(db);
+		Logger.hijack(console);
 
 		if (GJ_WITH_UPDATER) {
 			this.checkForClientUpdates();
 			setInterval(() => this.checkForClientUpdates(), 45 * 60 * 1000); // 45min currently
 		}
+
+		const db = await LocalDb.instance();
+		this._useLocalDb(db);
 
 		try {
 			await this._migrateFrom0_12_3();
