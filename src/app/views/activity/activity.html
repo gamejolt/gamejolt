@@ -3,7 +3,7 @@
 	<app-page-header
 		:class="{ '-header': shouldShowHeaderImage }"
 		:should-affix-nav="true"
-		col-classes="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7"
+		col-classes="col-md-8 col-centered"
 		>
 
 		<img
@@ -49,7 +49,7 @@
 	<section class="section">
 		<div class="container">
 			<div class="row">
-				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
+				<div class="col-md-8 col-centered">
 
 					<app-activity-feed-placeholder v-if="!feed" />
 					<div v-else>
