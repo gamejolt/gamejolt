@@ -31,10 +31,7 @@ export class AppDiscoverGamesViewOverviewStats extends Vue {
 	@RouteState profileCount: RouteStore['profileCount'];
 	@RouteState downloadCount: RouteStore['downloadCount'];
 	@RouteState playCount: RouteStore['playCount'];
-	@RouteState ratingBreakdown: RouteStore['ratingBreakdown'];
 	@RouteState packages: RouteStore['packages'];
-
-	isShowingRatingBreakdown = false;
 
 	number = number;
 	fuzzynumber = fuzzynumber;
@@ -59,19 +56,5 @@ export class AppDiscoverGamesViewOverviewStats extends Vue {
 		}
 
 		return false;
-	}
-
-	get ratingTooltip() {
-		return number(this.game.rating_count || 0) + ' rating(s), avg: ' + this.game.avg_rating;
-	}
-
-	get ratingStrings() {
-		return [
-			this.$gettext('rating.five'),
-			this.$gettext('rating.four'),
-			this.$gettext('rating.three'),
-			this.$gettext('rating.two'),
-			this.$gettext('rating.one'),
-		];
 	}
 }
