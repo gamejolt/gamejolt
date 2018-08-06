@@ -5,6 +5,7 @@
 		circle
 		:primary="hasLiked"
 		:solid="hasLiked"
+		:disabled="isProcessing"
 		@click="like()"
 		/>
 
@@ -18,6 +19,7 @@
 		circle
 		:primary="hasDisliked"
 		:solid="hasDisliked"
+		:disabled="isProcessing"
 		@click="dislike()"
 		/>
 

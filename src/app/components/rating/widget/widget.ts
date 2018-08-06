@@ -34,11 +34,11 @@ export class AppRatingWidget extends Vue {
 	}
 
 	get hasLiked() {
-		return this.rating && this.rating.rating > 0;
+		return this.rating && this.rating.rating === GameRating.RATING_LIKE;
 	}
 
 	get hasDisliked() {
-		return this.rating && this.rating.rating === 0;
+		return this.rating && this.rating.rating === GameRating.RATING_DISLIKE;
 	}
 
 	@Watch('rating')
@@ -53,17 +53,25 @@ export class AppRatingWidget extends Vue {
 
 		this.isProcessing = true;
 
-		const gameRating = new GameRating({
-			game_id: this.game.id,
-			rating: rating,
-		});
+		// when a rating with the same value already exists, remove it instead
+		if (this.rating && this.rating.rating === rating) {
+			await this.rating.$remove();
 
-		await gameRating.$save();
+			this.gameRating = undefined;
+		} else {
+			const gameRating = new GameRating({
+				game_id: this.game.id,
+				rating: rating,
+			});
 
-		this.gameRating = gameRating;
+			await gameRating.$save();
+
+			this.gameRating = gameRating;
+		}
+
 		this.isProcessing = false;
+		this.$emit('changed', this.gameRating);
 
-		this.$emit('changed', gameRating);
 		EventBus.emit('GameRating.changed', this.game.id);
 	}
 
