@@ -24,6 +24,7 @@ import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppDiscoverGamesViewOverviewRecommended } from '../_recommended/recommended';
+import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
 import {
 	CommentStore,
 	CommentState,
@@ -41,6 +42,7 @@ import {
 		AppLazyPlaceholder,
 		AppFadeCollapse,
 		AppGamePackageCard,
+		AppRatingWidget,
 		AppGameSoundtrackCard,
 		AppCommentPeek,
 		AppMediaBar,
@@ -70,6 +72,7 @@ export class AppDiscoverGamesViewOverviewDevlog extends Vue {
 	@RouteState partner: RouteStore['partner'];
 	@RouteState partnerKey: RouteStore['partnerKey'];
 	@RouteState customGameMessages: RouteStore['customGameMessages'];
+	@RouteState userRating: RouteStore['userRating'];
 
 	@RouteState showDescription: RouteStore['showDescription'];
 	@RouteState canToggleDescription: RouteStore['canToggleDescription'];

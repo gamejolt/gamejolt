@@ -139,6 +139,15 @@
 				</div>
 
 				<div class="col-xs-12 col-md-4 pull-right" style="clear: right">
+					<div>
+						<app-rating-widget
+							:game="game"
+							:rating="userRating"
+							:totalLikes="game.like_count"
+							/>
+					</div>
+					<br />
+
 					<h2 class="section-header" :class="{ 'h4': Screen.isXs }">
 						<translate>You Might Also Like</translate>
 					</h2>

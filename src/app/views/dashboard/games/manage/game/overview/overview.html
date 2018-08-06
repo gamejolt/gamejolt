@@ -107,11 +107,8 @@
 							<translate>Likes</translate>
 						</div>
 						<div class="stat-big-digit">
-							<template v-if="game.like_count">
+							<template>
 								{{ game.like_count | number }}
-							</template>
-							<template v-if="!game.like_count">
-								<translate>dash.games.overview.stats_na</translate>
 							</template>
 						</div>
 					</div>
