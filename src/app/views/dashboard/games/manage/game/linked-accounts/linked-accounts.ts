@@ -57,6 +57,10 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		return this.getAccount(LinkedAccount.PROVIDER_TUMBLR);
 	}
 
+	get discordAccount() {
+		return this.getAccount(LinkedAccount.PROVIDER_DISCORD);
+	}
+
 	getAccount(provider: string) {
 		if (this.accounts) {
 			for (const account of this.accounts) {

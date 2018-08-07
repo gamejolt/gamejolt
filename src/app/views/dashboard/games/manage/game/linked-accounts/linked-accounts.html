@@ -49,6 +49,12 @@
 			@link="onLink"
 			@unlink="onUnlink" />
 		<app-linked-account
+			provider="discord"
+			:account="discordAccount"
+			@sync="onLink"
+			@link="onLink"
+			@unlink="onUnlink" />
+		<app-linked-account
 			provider="tumblr"
 			:account="tumblrAccount"
 			@sync="onLink"
