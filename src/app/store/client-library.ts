@@ -284,7 +284,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			const localPackage = this.packages[packageId];
 			if (localPackage.isPatching && !localPackage.isPatchPaused) {
 				promises.push(this.installerRetry(localPackage));
-			} else if (localPackage.isRemoving) {
+			} else if (localPackage.isRemoving || localPackage.didRemoveFail) {
 				promises.push(this.packageUninstall([localPackage, false]));
 			}
 		}

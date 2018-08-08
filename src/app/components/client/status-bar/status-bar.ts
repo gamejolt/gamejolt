@@ -7,7 +7,7 @@ import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-li
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { ClientState, ClientStore, ClientAction } from '../../../../_common/client/store/index';
+import { store as clientStore } from '../../../../_common/client/store';
 
 @View
 @Component({
@@ -28,8 +28,10 @@ export class AppClientStatusBar extends Vue {
 	@ClientLibraryState numPatching: ClientLibraryStore['numPatching'];
 	@ClientLibraryState currentlyPlaying: ClientLibraryStore['currentlyPlaying'];
 	@ClientLibraryState currentlyPatching: ClientLibraryStore['currentlyPatching'];
-	@ClientState clientUpdateStatus: ClientStore['clientUpdateStatus'];
-	@ClientAction updateClient: ClientStore['updateClient'];
+
+	get clientUpdateStatus() {
+		return clientStore.state.clientUpdateStatus;
+	}
 
 	get isShowing() {
 		return this.numPatching > 0 || this.numPlaying > 0 || this.hasUpdate;
@@ -45,6 +47,10 @@ export class AppClientStatusBar extends Vue {
 
 	get hasUpdate() {
 		return this.clientUpdateStatus === 'ready';
+	}
+
+	async updateClient() {
+		await clientStore.dispatch('updateClient');
 	}
 
 	@Watch('isShowing', { immediate: true })

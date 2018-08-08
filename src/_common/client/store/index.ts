@@ -42,7 +42,7 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 	private _updaterInstance: SelfUpdaterInstance | null = null;
 
 	get clientManifestPath() {
-		let cwd = path.dirname(process.execPath);
+		let cwd = nw.App.startPath;
 		if (os.type() === 'Darwin') {
 			cwd = path.resolve(cwd, '../../../../../../');
 		}

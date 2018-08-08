@@ -162,6 +162,10 @@ export class LocalDbPackage extends LocalDbModel<LocalDbPackage> {
 		);
 	}
 
+	get didRemoveFail() {
+		return this.remove_state === LocalDbPackageRemoveState.REMOVE_FAILED;
+	}
+
 	get isRunning() {
 		return this.run_state || !!this.running_pid;
 	}
