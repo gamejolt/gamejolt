@@ -96,7 +96,7 @@
 	"main": "chrome-extension://game-jolt-client/index.html#/",
 	"domain": "game-jolt-client",
 	"window": {
-		"show": true,
+		"show": false,
 		"width": 1250,
 		"height": 700,
 		"min_height": 400,

@@ -12,6 +12,7 @@ import * as os from 'os';
 import * as fs from 'fs';
 import { LocalDb } from '../../../app/components/client/local-db/local-db.service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
+import { Client } from '../client.service';
 
 export const ClientState = namespace('client', State);
 export const ClientAction = namespace('client', Action);
@@ -243,6 +244,9 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 				})
 				.on('updateApply', () => {
 					nw.Window.get().close(true);
+				})
+				.on('openRequested', () => {
+					Client.show();
 				})
 				.on('updateFailed', (reason: string) => {
 					console.error('Failed to update. Joltron says: ' + reason);
