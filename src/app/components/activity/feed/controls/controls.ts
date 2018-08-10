@@ -18,7 +18,7 @@ import { AppSocialTwitterShare } from '../../../../../lib/gj-lib-client/componen
 import { AppSocialFacebookLike } from '../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { Store } from '../../../../store/index';
 import { DevlogPostEditModal } from '../../../devlog/post/edit-modal/edit-modal-service';
-import { FormCommentLazy, AppCommentWidgetLazy } from '../../../lazy';
+import { AppCommentWidgetLazy } from '../../../lazy';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { AppCommentVideoLikeWidget } from '../../../../../lib/gj-lib-client/components/comment/video/like-widget/like-widget';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
@@ -30,6 +30,7 @@ import {
 	CommentMutation,
 	CommentStoreModel,
 } from '../../../../../lib/gj-lib-client/components/comment/comment-store';
+import { AppCommentAddButton } from '../../../../../lib/gj-lib-client/components/comment/add-button/add-button';
 
 @View
 @Component({
@@ -37,8 +38,8 @@ import {
 		AppJolticon,
 		AppPopover,
 		AppGameFollowWidget,
-		AppCommentWidgetAdd: FormCommentLazy,
 		AppCommentWidget: AppCommentWidgetLazy,
+		AppCommentAddButton,
 		AppFiresidePostLikeWidget,
 		AppCommentVideoLikeWidget,
 		AppSocialTwitterShare,
@@ -61,6 +62,7 @@ export class AppActivityFeedControls extends Vue {
 	@Prop({ type: Boolean, default: true })
 	showExtraInfo: boolean;
 	@Prop(Boolean) showComments?: boolean;
+	@Prop(Boolean) showCommentAddButton?: boolean;
 	@Prop(Boolean) inModal?: boolean;
 
 	@State app: Store['app'];
@@ -105,7 +107,7 @@ export class AppActivityFeedControls extends Vue {
 		);
 	}
 
-	get shouldShowManage() {
+	get shouldShowManageSection() {
 		return this.shouldShowManageControls || this.shouldShowStats;
 	}
 

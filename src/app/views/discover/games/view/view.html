@@ -108,25 +108,6 @@
 					{{ game.developer.display_name }}
 					<small>@{{ game.developer.username }}</small>
 				</router-link>
-
-				<!--
-					Hide on mobile to keep it clean.
-					They can view in the game details.
-				-->
-				<span class="small hidden-xs" v-if="game.published_on">
-					<span class="dot-separator"></span>
-					<router-link
-						:to="{
-							name: 'discover.games.list._fetch-date',
-							params: {
-								section: 'by-date',
-								date: date( game.published_on, 'YYYY-MM-DD' ),
-							},
-						}"
-						>
-						<app-time-ago :date="game.published_on" />
-					</router-link>
-				</span>
 			</div>
 
 		</app-page-header>

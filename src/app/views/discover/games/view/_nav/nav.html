@@ -5,7 +5,8 @@
 			<li v-if="!game._is_devlog">
 				<router-link
 					:to="{ name: 'discover.games.view.overview' }"
-					:class="{ active: $route.name === 'discover.games.view.overview' }"
+					active-class="active"
+					exact
 					>
 					<translate>games.view.overview_tab</translate>
 				</router-link>
@@ -14,7 +15,8 @@
 			<li v-if="game._is_devlog">
 				<router-link
 					:to="{ name: 'discover.games.view.overview' }"
-					:class="{ active: $route.name === 'discover.games.view.overview' || $route.name === 'discover.games.view.devlog.view' }"
+					active-class="active"
+					exact
 					>
 					<translate>Devlog</translate>
 					<span class="badge">{{ postsCount | number }}</span>
@@ -25,6 +27,7 @@
 				<router-link
 					:to="{ name: 'discover.games.view.devlog.list' }"
 					active-class="active"
+					exact
 					>
 					<translate>Devlog</translate>
 					<span class="badge">{{ postsCount | number }}</span>

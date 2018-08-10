@@ -12,10 +12,14 @@
 		</div>
 	</app-fade-collapse>
 
-	<a class="hidden-text-expander"
-		v-if="canToggleContent"
-		@click="toggleFull"
-		>
-	</a>
+	<div class="page-cut" style="padding-bottom: 0" v-if="canToggleContent">
+		<app-button
+			trans
+			@click="toggleFull()"
+			>
+			<translate v-if="!item.isOpen">more</translate>
+			<translate v-else>less</translate>
+		</app-button>
+	</div>
 
 </div>

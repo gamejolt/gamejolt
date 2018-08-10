@@ -44,19 +44,8 @@
 
 		<ul class="navbar-items" v-if="app.user">
 
-			<li class="hidden-xs">
-				<router-link
-					:to="{ name: GJ_IS_CLIENT ? 'library.installed' : 'library.overview' }"
-					:class="{ active: $route.name.indexOf( 'library' ) === 0 }"
-					v-app-tooltip.bottom="$gettext( `Your Game Library` )"
-					v-app-track-event="`top-nav:library`"
-					>
-					<app-jolticon icon="books" />
-				</router-link>
-			</li>
-
 			<!-- Activity -->
-			<li v-if="!Connection.isClientOffline">
+			<li v-if="!Connection.isClientOffline" key="activity">
 				<router-link
 					:to="{ name: 'activity', params: { tab: 'activity' } }"
 					:class="{ active: $route.name.indexOf( 'activity' ) === 0 }"
@@ -73,7 +62,7 @@
 			</li>
 
 			<!-- Friend Requests -->
-			<li v-if="!Connection.isClientOffline">
+			<li v-if="!Connection.isClientOffline" key="friend-requests">
 				<a
 					:class="{ active: friendRequestsShowing }"
 					v-app-popover-trigger="`friend-requests`"
@@ -94,9 +83,41 @@
 				</app-friend-request-popover>
 			</li>
 
+			<!-- Chat -->
+			<li v-if="chat" key="chat">
+				<a
+					:class="{ active: isRightPaneVisible }"
+					@click="toggleRightPane"
+					v-app-tooltip.left="
+						app.user
+							? $gettext( `Chat and Friends List (c)` )
+							: $gettext( `Chat (c)` )
+					"
+					v-app-track-event="`top-nav:chat:toggle`"
+					>
+					<span class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
+						v-if="chat.friendNotificationsCount"
+						>
+						{{ chat.friendNotificationsCount }}
+					</span>
+					<app-jolticon icon="user-messages" />
+				</a>
+			</li>
+
+			<!-- Connection Status -->
+			<li v-if="Connection.isOffline" key="offline">
+				<span
+					class="navbar-item disconnected-icon"
+					v-app-tooltip.left="$gettext( `We're having trouble connecting to Game Jolt.` )"
+					>
+					<app-jolticon icon="offline" />
+				</span>
+			</li>
+
 			<!-- User Menu -->
-			<li>
-				<a class="navbar-avatar"
+			<li key="account">
+				<a
+					class="navbar-avatar"
 					:class="{ active: userMenuShowing }"
 					v-app-popover-trigger="`account-popover`"
 					v-app-track-event="`top-nav:user-menu:toggle`"
@@ -126,40 +147,6 @@
 				</li>
 			</ul>
 		</template>
-
-		<div class="navbar-separator" v-if="chat || Connection.isOffline"></div>
-
-		<!-- Connection Status -->
-		<span
-			v-if="Connection.isOffline"
-			class="navbar-item disconnected-icon"
-			v-app-tooltip.left="$gettext( `We're having trouble connecting to Game Jolt.` )"
-			>
-			<app-jolticon icon="offline" />
-		</span>
-
-		<!-- Chat -->
-		<ul class="navbar-items" v-if="chat">
-			<li>
-				<a
-					:class="{ active: isRightPaneVisible }"
-					@click="toggleRightPane"
-					v-app-tooltip.left="
-						app.user
-							? $gettext( `Chat and Friends List (c)` )
-							: $gettext( `Chat (c)` )
-					"
-					v-app-track-event="`top-nav:chat:toggle`"
-					>
-					<span class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
-						v-if="chat.friendNotificationsCount"
-						>
-						{{ chat.friendNotificationsCount }}
-					</span>
-					<app-jolticon icon="user-messages" />
-				</a>
-			</li>
-		</ul>
 
 	</div>
 

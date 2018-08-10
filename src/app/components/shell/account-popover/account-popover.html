@@ -14,7 +14,8 @@
 				:to="{ name: 'profile.overview', params: { username: app.user.username } }"
 				v-app-track-event="`account-popover:profile`"
 				>
-				<h4 class="account-popover-heading"
+				<h4
+					class="account-popover-heading"
 					:title="$gettext( `View Profile` )"
 					>
 					{{ app.user.display_name }}
@@ -45,7 +46,7 @@
 				:to="{ name: Screen.isXs ? 'dash.account-mobile-nav' : 'dash.account.edit' }"
 				v-app-track-event="`account-popover:account`"
 				>
-				<translate>Edit Profile</translate>
+				<translate>Edit Account</translate>
 			</router-link>
 			<a
 				class="list-group-item offline-disable"
