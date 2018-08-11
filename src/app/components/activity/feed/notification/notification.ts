@@ -53,11 +53,9 @@ export class AppActivityFeedNotification extends Vue {
 		}
 
 		return (
-			[
-				Notification.TYPE_COMMENT_ADD,
-				Notification.TYPE_COMMENT_ADD_OBJECT_OWNER,
-				Notification.TYPE_GAME_RATING_ADD,
-			].indexOf(this.notification.type) !== -1
+			[Notification.TYPE_COMMENT_ADD, Notification.TYPE_COMMENT_ADD_OBJECT_OWNER].indexOf(
+				this.notification.type
+			) !== -1
 		);
 	}
 
