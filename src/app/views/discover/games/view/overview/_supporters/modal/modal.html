@@ -1,0 +1,35 @@
+<app-modal>
+
+	<div class="modal-controls">
+		<app-button @click="modal.dismiss()">
+			<translate>Close</translate>
+		</app-button>
+	</div>
+
+	<div class="modal-header">
+		<h2 class="modal-title">
+			{{ title }}
+		</h2>
+	</div>
+
+	<div class="modal-body">
+
+		<template v-if="users.length">
+			<div v-for="user of users" :key="user.id">
+				{{ user.display_name }}
+			</div>
+		</template>
+		<app-loading v-if="loading" class="loading-centered" />
+
+		<div v-if="shouldShowLoadMore" class="page-cut">
+			<app-button
+				trans
+				@click="loadMore"
+				>
+				<translate>Load More</translate>
+			</app-button>
+		</div>
+
+	</div>
+
+</app-modal>

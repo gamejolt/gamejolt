@@ -28,10 +28,12 @@
 	</div>
 
 	<div class="-all">
-		<app-button trans>
+		<app-button
+			trans
+			@click="onClickViewAll">
 			<translate>View All</translate>
 			<small>
-				({{ supporters.length | number }})
+				({{ supporterCount }})
 			</small>
 		</app-button>
 	</div>

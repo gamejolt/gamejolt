@@ -126,7 +126,9 @@
 						</div>
 
 						<template v-if="supporters.length > 0">
-							<app-discover-games-view-overview-supporters :supporters="supporters" />
+							<app-discover-games-view-overview-supporters
+								:supporters="supporters"
+								:supporterCount="supporterCount" />
 						</template>
 
 						<hr>

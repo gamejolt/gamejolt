@@ -133,6 +133,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	playCount = 0;
 	developerGamesCount = 0;
 	supporters: User[] = [];
+	supporterCount = 0;
 	recommendedGames: Game[] = [];
 
 	canToggleDescription = false;
@@ -325,6 +326,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.developerGamesCount = payload.developerGamesCount || 0;
 
 		this.supporters = User.populate(payload.supporters);
+		this.supporterCount = payload.supporterCount;
 
 		this.videoComments = CommentVideo.populate(payload.videoComments);
 		this.videoCommentsCount = payload.videoCommentsCount || 0;

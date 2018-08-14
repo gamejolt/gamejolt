@@ -108,6 +108,7 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@RouteState twitterShareMessage: RouteStore['twitterShareMessage'];
 	@RouteState feed: RouteStore['feed'];
 	@RouteState supporters: RouteStore['supporters'];
+	@RouteState supporterCount: RouteStore['supporterCount'];
 	@RouteState videoComments: RouteStore['videoComments'];
 	@RouteState videoCommentsCount: RouteStore['videoCommentsCount'];
 	@RouteState shouldShowMultiplePackagesMessage: RouteStore['shouldShowMultiplePackagesMessage'];
