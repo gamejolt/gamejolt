@@ -11,36 +11,6 @@
 				</router-link>
 			</li>
 
-			<!-- <li v-if="game._is_devlog">
-				<router-link
-					:to="{ name: 'discover.games.view.overview' }"
-					:class="{ active: $route.name === 'discover.games.view.overview' || $route.name === 'discover.games.view.devlog.view' }"
-					>
-					<translate>Devlog</translate>
-					<span class="badge">{{ postsCount | number }}</span>
-				</router-link>
-			</li>
-
-			<li v-if="!game._is_devlog && postsCount > 0">
-				<router-link
-					:to="{ name: 'discover.games.view.devlog.list' }"
-					active-class="active"
-					>
-					<translate>Devlog</translate>
-					<span class="badge">{{ postsCount | number }}</span>
-				</router-link>
-			</li> -->
-
-			<li v-if="game.comments_enabled">
-				<router-link
-					:to="{ name: 'discover.games.view.comments' }"
-					active-class="active"
-					>
-					<translate>Comments</translate>
-					<span class="badge">{{ commentsCount | number }}</span>
-				</router-link>
-			</li>
-
 			<li v-if="hasScores">
 				<router-link
 					:to="{

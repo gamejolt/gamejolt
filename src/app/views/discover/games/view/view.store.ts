@@ -135,8 +135,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	supporters: User[] = [];
 	recommendedGames: Game[] = [];
 
-	showDescription = false;
 	canToggleDescription = false;
+	showDetails = false;
 
 	videoComments: CommentVideo[] = [];
 	videoCommentsCount = 0;
@@ -242,10 +242,11 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexMutation
 	bootstrapGame(gameId: Mutations['bootstrapGame']) {
 		this.game = Registry.find<Game>('Game', gameId) as any;
-		this.showDescription = false;
+		this.showDetails = false;
 		this.isOverviewLoaded = false;
 		this.recommendedGames = [];
 		this.mediaItems = [];
+		this.supporters = [];
 		setAds(this.game);
 	}
 
@@ -303,7 +304,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 			this.feed = ActivityFeedService.bootstrap(EventItem.populate(payload.posts), {
 				type: 'EventItem',
 				url: `/web/discover/games/devlog/posts/${this.game.id}`,
-				// noAutoload: !this.game._is_devlog,
 			});
 		}
 
@@ -383,13 +383,13 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	toggleDescription() {
-		this.showDescription = !this.showDescription;
+	setCanToggleDescription(flag: Mutations['setCanToggleDescription']) {
+		this.canToggleDescription = flag;
 	}
 
 	@VuexMutation
-	setCanToggleDescription(flag: Mutations['setCanToggleDescription']) {
-		this.canToggleDescription = flag;
+	toggleDetails() {
+		this.showDetails = !this.showDetails;
 	}
 
 	@VuexMutation

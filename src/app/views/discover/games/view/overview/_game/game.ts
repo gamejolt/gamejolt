@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import View from '!view!./game.html?style=./game.styl';
 
@@ -16,7 +16,6 @@ import { AppLazyPlaceholder } from '../../../../../../../lib/gj-lib-client/compo
 import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppGamePackageCard } from '../../../../../../../lib/gj-lib-client/components/game/package/card/card';
-import { AppCommentVideoThumbnail } from '../../../../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
 import { AppGameGrid } from '../../../../../../components/game/grid/grid';
 import { AppTrophyOverview } from '../../../../../../components/trophy/overview/overview';
 import { RouteState, RouteMutation, RouteStore, RouteAction } from '../../view.store';
@@ -28,30 +27,39 @@ import { AppUserAvatarImg } from '../../../../../../../lib/gj-lib-client/compone
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { AppGameGridPlaceholder } from '../../../../../../components/game/grid/placeholder/placeholder';
 import { AppMediaBar } from '../../../../../../../lib/gj-lib-client/components/media-bar/media-bar';
-import { AppCommentWidgetLazy, AppActivityFeedLazy } from '../../../../../../components/lazy';
+import { AppActivityFeedLazy } from '../../../../../../components/lazy';
 import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/add';
 import { AppGameList } from '../../../../../../components/game/list/list';
-import { AppCommentPeek } from '../../../../../../components/comment/peek/peek';
-import { AppCommentOverview } from '../../../../../../components/comment/overview/overview';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
-import { AppDiscoverGamesViewOverviewDetailsBar } from '../_details-bar/details-bar';
 import { AppGameThumbnail } from '../../../../../../../_common/game/thumbnail/thumbnail';
 import {
 	CommentState,
 	CommentStore,
+	CommentStoreModel,
+	CommentMutation,
+	CommentAction,
 } from '../../../../../../../lib/gj-lib-client/components/comment/comment-store';
+import { AppDiscoverGamesViewOverviewRecommended } from '../_recommended/recommended';
+import { CommentModal } from '../../../../../../../lib/gj-lib-client/components/comment/modal/modal.service';
+import { AppDiscoverGamesViewOverviewStats } from '../_stats/stats';
+import { AppCommentAddButton } from '../../../../../../../lib/gj-lib-client/components/comment/add-button/add-button';
+import { AppCommentOverview } from '../../../../../../components/comment/overview/overview';
+import { AppDiscoverGamesViewOverviewDetails } from '../_details/details';
+import { AppDiscoverGamesViewOverviewSupporters } from '../_supporters/supporters';
 
 @View
 @Component({
 	components: {
-		AppDiscoverGamesViewOverviewDetailsBar,
+		AppDiscoverGamesViewOverviewDetails,
+		AppDiscoverGamesViewOverviewStats,
+		AppDiscoverGamesViewOverviewRecommended,
+		AppDiscoverGamesViewOverviewSupporters,
 		AppAd,
 		AppAdPlacement,
 		AppGameGrid,
 		AppGameGridPlaceholder,
 		AppGameList,
-		AppCommentPeek,
 		AppRatingWidget,
 		AppCard,
 		AppJolticon,
@@ -60,12 +68,11 @@ import {
 		AppGameOgrs,
 		AppGamePackageCard,
 		AppGameSoundtrackCard,
-		AppCommentVideoThumbnail,
 		AppTrophyOverview,
 		AppScoreOverview,
 		AppUserAvatarImg,
 		AppMediaBar,
-		AppCommentWidget: AppCommentWidgetLazy,
+		AppCommentAddButton,
 		AppCommentOverview,
 		AppActivityFeed: AppActivityFeedLazy,
 		AppDevlogPostAdd,
@@ -84,6 +91,9 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@State app: Store['app'];
 
 	@CommentState getCommentStore: CommentStore['getCommentStore'];
+	@CommentAction lockCommentStore: CommentStore['lockCommentStore'];
+	@CommentMutation releaseCommentStore: CommentStore['releaseCommentStore'];
+	@CommentAction fetchComments: CommentStore['fetchComments'];
 
 	@RouteState isOverviewLoaded: RouteStore['isOverviewLoaded'];
 	@RouteState game: RouteStore['game'];
@@ -101,6 +111,7 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@RouteState videoComments: RouteStore['videoComments'];
 	@RouteState videoCommentsCount: RouteStore['videoCommentsCount'];
 	@RouteState shouldShowMultiplePackagesMessage: RouteStore['shouldShowMultiplePackagesMessage'];
+	@RouteState postsCount: RouteStore['postsCount'];
 	@RouteState trophiesCount: RouteStore['trophiesCount'];
 	@RouteState hasScores: RouteStore['hasScores'];
 	@RouteState trophiesPayload: RouteStore['trophiesPayload'];
@@ -111,12 +122,14 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 
 	@RouteAction loadVideoComments: RouteStore['loadVideoComments'];
 
-	@RouteState showDescription: RouteStore['showDescription'];
+	@RouteState showDetails: RouteStore['showDetails'];
+	@RouteMutation toggleDetails: RouteStore['toggleDetails'];
 	@RouteState canToggleDescription: RouteStore['canToggleDescription'];
-	@RouteMutation toggleDescription: RouteStore['toggleDescription'];
 	@RouteMutation setCanToggleDescription: RouteStore['setCanToggleDescription'];
 
 	@RouteMutation addPost: RouteStore['addPost'];
+
+	commentStore: CommentStoreModel | null = null;
 
 	readonly Screen = Screen;
 	readonly Environment = Environment;
@@ -137,9 +150,36 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 		return this.hasScores && this.trophiesCount;
 	}
 
+	get comments() {
+		return this.commentStore ? this.commentStore.parentComments : [];
+	}
+
 	get commentsCount() {
-		const store = this.getCommentStore('Game', this.game.id);
-		return store ? store.count : 0;
+		return this.commentStore ? this.commentStore.count : 0;
+	}
+
+	@Watch('game.id', { immediate: true })
+	@Watch('game.comments_enabled')
+	async onGameChange() {
+		if (this.game && this.game.comments_enabled) {
+			if (this.commentStore) {
+				this.releaseCommentStore(this.commentStore);
+			}
+
+			this.commentStore = await this.lockCommentStore({
+				resource: 'Game',
+				resourceId: this.game.id,
+			});
+
+			this.fetchComments({ store: this.commentStore });
+		}
+	}
+
+	destroyed() {
+		if (this.commentStore) {
+			this.releaseCommentStore(this.commentStore);
+			this.commentStore = null;
+		}
 	}
 
 	copyPartnerLink() {
@@ -150,5 +190,9 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 
 	onPostAdded(post: FiresidePost) {
 		this.addPost(post);
+	}
+
+	showComments() {
+		CommentModal.show({ resource: 'Game', resourceId: this.game.id });
 	}
 }
