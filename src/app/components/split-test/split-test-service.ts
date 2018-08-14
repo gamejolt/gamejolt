@@ -1,9 +1,5 @@
 import { Route } from 'vue-router';
 
-export function splitNoSidebar(route: Route) {
-	return getClientSideVariation(route, 'split:no-sidebar') === 2;
-}
-
 function getPayloadVariation(route: Route, payload: any, experiment: string): number {
 	let variation = checkHardcoded(route, experiment);
 	if (variation !== -1) {

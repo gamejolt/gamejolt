@@ -5,7 +5,8 @@
 			<li>
 				<router-link
 					:to="{ name: 'discover.games.view.overview' }"
-					:class="{ active: $route.name === 'discover.games.view.overview' }"
+					active-class="active"
+					exact
 					>
 					<translate>games.view.overview_tab</translate>
 				</router-link>

@@ -64,14 +64,5 @@ export class AppShell extends Vue {
 			this.clearPanes();
 			next();
 		});
-
-		// Only record the split test if it's not XS size and they're a guest.
-		if (!Screen.isXs && !this.app.user) {
-			if (this.hasSidebar) {
-				Analytics.trackEvent('split:no-sidebar', 'has-sidebar');
-			} else {
-				Analytics.trackEvent('split:no-sidebar', 'no-sidebar');
-			}
-		}
 	}
 }
