@@ -91,7 +91,7 @@
 	},
 	"dependencies": {
 		"axios": "0.17.1",
-		"client-voodoo": "github:gamejolt/client-voodoo#selfupdater"
+		"client-voodoo": "github:gamejolt/client-voodoo"
 	},
 	"main": "chrome-extension://game-jolt-client/index.html#/",
 	"domain": "game-jolt-client",
