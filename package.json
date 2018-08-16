@@ -86,7 +86,7 @@
 		"client-voodoo": "2.0.4",
 		"nwjs-snappy-updater": "1.1.0"
 	},
-	"main": "app://game-jolt-client/index.html#/",
+	"main": "app://game-jolt-client/client.html#/upgrade",
 	"window": {
 		"show": true,
 		"width": 1250,
@@ -106,14 +106,14 @@
 	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
 	"platformOverrides": {
 		"linux": {
-			"main": "app://game-jolt-client/package/index.html#/",
+			"main": "app://game-jolt-client/package/client.html#/upgrade",
 			"window": {
 				"toolbar": false,
 				"icon": "package/static-assets/client/icon-256x256.png"
 			}
 		},
 		"win": {
-			"main": "app://game-jolt-client/package/index.html#/",
+			"main": "app://game-jolt-client/package/client.html#/upgrade",
 			"window": {
 				"toolbar": false,
 				"icon": "package/static-assets/client/icon-256x256.png"

@@ -1,4 +1,5 @@
 import * as gui from 'nw.gui';
+import { Environment } from '../../lib/gj-lib-client/components/environment/environment.service';
 const win = gui.Window.get();
 
 export class Client {
@@ -30,6 +31,8 @@ export class Client {
 			console.info('Started explicitly. Force showing the window.');
 			this.show();
 		}
+
+		window.location.href = Environment.clientSectionBaseUrl + '/upgrade';
 	}
 
 	/**

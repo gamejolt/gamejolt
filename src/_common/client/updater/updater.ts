@@ -6,12 +6,6 @@ import * as path from 'path';
 import * as os from 'os';
 import { Window } from 'nw.gui';
 import { Config } from 'client-voodoo';
-import { db } from '../../../app/components/client/local-db/local-db.service';
-import { LocalDbPackage } from '../../../app/components/client/local-db/package/package.model';
-import { LocalDbGame } from '../../../app/components/client/local-db/game/game.model';
-import * as fs from 'fs';
-import * as nwGui from 'nw.gui';
-import { arrayIndexBy } from '../../../lib/gj-lib-client/utils/array';
 
 class Updater {
 	static readonly CHECK_INTERVAL = 15 * 60 * 1000; // 15min currently
@@ -47,10 +41,6 @@ class Updater {
 
 		console.log('New version of client. Updating...');
 
-		// This is to ensure we can write the migration file before updating. We abort otherwise with an exception.
-		const migrationFile = path.join(nwGui.App.dataPath, '0.12.3-migration.json');
-		fs.writeFileSync(migrationFile, '');
-
 		// If we're on windows, we need to make sure to release the mutex we have on it.
 		// This is so we can clean up the node_modules folder without the mutex binding being in use by the fs.
 		if (process.platform === 'win32') {
@@ -64,25 +54,6 @@ class Updater {
 			console.log('Update aborted.');
 			return;
 		}
-
-		console.log('Saving indexeddb and localStorage...');
-		const [packages, games] = await Promise.all([
-			// Need these type hints because dexie returns its own Dexie.Promises.
-			db.packages.toArray() as Promise<LocalDbPackage[]>,
-			db.games.toArray() as Promise<LocalDbGame[]>,
-		]);
-
-		const indexeddbData = {
-			games: arrayIndexBy(games, 'id'),
-			packages: arrayIndexBy(packages, 'id'),
-		};
-
-		const migrationData = {
-			indexeddb: indexeddbData,
-			localStorage: localStorage,
-		};
-
-		fs.writeFileSync(migrationFile, JSON.stringify(migrationData), { encoding: 'utf8' });
 
 		console.log('Updated! Reloading...');
 		const win = Window.get();

@@ -7,7 +7,7 @@ import { ClientUser } from './user/user.service';
 export function bootstrapCommonClient(store: VuexStore) {
 	initClientApiInterceptors();
 	Client.init();
-	ClientUser.init(store);
+	// ClientUser.init(store);
 
 	Vue.use(vue => {
 		(vue.prototype as any).GJ_IS_CLIENT = GJ_IS_CLIENT;

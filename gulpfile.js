@@ -54,6 +54,11 @@ const config = {
 			title: 'Edit Site - Game Jolt',
 			crawl: false,
 		},
+		client: {
+			title: 'Game Jolt',
+			client: true,
+			crawl: false,
+		},
 	},
 	translations: 'site-translations',
 	translationSections: {
