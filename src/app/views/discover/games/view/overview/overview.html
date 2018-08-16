@@ -12,7 +12,46 @@
 		<div class="container">
 
 			<div class="row">
-				<div class="col-xs-12 col-md-8">
+				<div
+					v-if="hasStatsSection"
+					:class="Screen.isMobile ? leftColClass : rightColClass"
+					>
+					<div class="row">
+						<div
+							class="col-xs-12 col-sm-6 col-md-12"
+							:class="{
+								'col-sm-push-6 col-md-push-0': hasRatingSection,
+							}"
+							>
+							<app-discover-games-view-overview-stats />
+						</div>
+						<div
+							v-if="hasRatingSection"
+							class="col-xs-12 col-sm-6 col-sm-pull-6 col-md-12 col-md-pull-0"
+							>
+							<h3 class="section-header">
+								<template v-if="!!userRating">
+									<translate>Your Rating</translate>
+								</template>
+								<template v-else>
+									<translate>Rate Game</translate>
+								</template>
+							</h3>
+
+							<div>
+								<app-rating-widget
+									:game="game"
+									:rating="userRating"
+									/>
+							</div>
+
+						</div>
+					</div>
+
+					<br>
+				</div>
+
+				<div :class="leftColClass">
 					<!--
 						Convenience Messaging
 						This needs to be a div instead of a template or vue 2.4.4 complains about a
@@ -128,10 +167,11 @@
 						<template v-if="supporters.length > 0">
 							<app-discover-games-view-overview-supporters
 								:supporters="supporters"
-								:supporterCount="supporterCount" />
+								:supporterCount="supporterCount"
+								/>
 						</template>
 
-						<hr>
+						<div class="-spacer" />
 					</template>
 
 					<div v-if="!game.description_compiled">
@@ -188,8 +228,7 @@
 					</div>
 
 					<template v-if="feed">
-
-						<br>
+						<div class="-spacer" />
 
 						<app-game-perms :game="game" required="devlogs">
 							<h5 class="sans-margin-top">
@@ -213,34 +252,11 @@
 
 				</div>
 
-				<div class="col-xs-12 col-md-4">
-
-					<div class="row">
-						<div class="col-xs-12 col-sm-6 col-sm-push-6 col-md-12 col-md-push-0">
-							<app-discover-games-view-overview-stats />
-						</div>
-						<div class="col-xs-12 col-sm-6 col-sm-pull-6 col-md-12 col-md-pull-0">
-							<template v-if="app.user && !hasAnyPerms && game.ratings_enabled && game.can_user_rate">
-								<h3 class="section-header">
-									<template v-if="!!userRating">
-										<translate>Your Rating</translate>
-									</template>
-									<template v-else>
-										<translate>Rate Game</translate>
-									</template>
-								</h3>
-
-								<div>
-									<app-rating-widget
-										:game="game"
-										:rating="userRating"
-										/>
-								</div>
-							</template>
-						</div>
-					</div>
-
-					<br>
+				<!--
+					We don't show this whole section on phones.
+					We instead show in the game nav.
+				-->
+				<div :class="rightColClass" v-if="!Screen.isMobile">
 					<h3 class="section-header">
 						<translate>Recommended</translate>
 					</h3>

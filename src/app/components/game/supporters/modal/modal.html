@@ -8,15 +8,24 @@
 
 	<div class="modal-header">
 		<h2 class="modal-title">
-			{{ title }}
+			<translate
+				:translate-n="supporterCount"
+				:translate-params="{ count: number(supporterCount) }"
+				translate-plural="%{ count } supporters"
+				>
+				1 supporter
+			</translate>
 		</h2>
+		<p>
+			<translate>The kind people that supported by paying more than the minimum.</translate>
+		</p>
 	</div>
 
 	<div class="modal-body">
 
-		<div v-for="user of users" :key="user.id">
-			{{ user.display_name }}
-		</div>
+		<app-user-list
+			:users="users"
+			/>
 
 		<app-loading v-if="isLoading" centered />
 

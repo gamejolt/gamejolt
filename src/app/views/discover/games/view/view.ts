@@ -1,59 +1,43 @@
-import { Route } from 'vue-router';
-import { Component, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import View from '!view!./view.html';
-import './view-content.styl';
-
-import { enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppPageHeader } from '../../../../components/page-header/page-header';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { AppDiscoverGamesViewNav } from './_nav/nav';
-import { AppDiscoverGamesViewControls } from './_controls/controls';
-import { AppGameOgrsTag } from '../../../../components/game/ogrs/tag';
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
-import { AppGameMaturityBlock } from '../../../../components/game/maturity-block/maturity-block';
-import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
-import { AppGameCoverButtons } from '../../../../components/game/cover-buttons/cover-buttons';
-import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { RouteStoreName, RouteState, RouteAction, RouteStore, RouteMutation } from './view.store';
-import { EventBus } from '../../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
-import { Store } from '../../../../store/index';
+import { CommentAction, CommentMutation, CommentState, CommentStore, CommentStoreModel } from 'game-jolt-frontend-lib/components/comment/comment-store';
+import { Component, Prop } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
+import { EventBus } from '../../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
+import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
+import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
-import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { AppUserFollowWidget } from '../../../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
-import { AppGamePerms } from '../../../../components/game/perms/perms';
-import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
+import { BaseRouteComponent, RouteResolve } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { ThemeMutation, ThemeStore } from '../../../../../lib/gj-lib-client/components/theme/theme.store';
+import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
+import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
+import { enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';
+import { AppGameCoverButtons } from '../../../../components/game/cover-buttons/cover-buttons';
+import { AppGameMaturityBlock } from '../../../../components/game/maturity-block/maturity-block';
+import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
-import {
-	RouteResolve,
-	BaseRouteComponent,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import {
-	ThemeMutation,
-	ThemeStore,
-} from '../../../../../lib/gj-lib-client/components/theme/theme.store';
+import { AppPageHeader } from '../../../../components/page-header/page-header';
+import './view-content.styl';
+import { RouteAction, RouteMutation, RouteState, RouteStore, RouteStoreName } from './view.store';
+import { AppDiscoverGamesViewControls } from './_controls/controls';
+import { AppDiscoverGamesViewNav } from './_nav/nav';
+
 
 @View
 @Component({
 	name: 'RouteDiscoverGamesView',
 	components: {
-		AppJolticon,
 		AppPageHeader,
 		AppUserAvatar,
 		AppDiscoverGamesViewNav,
 		AppDiscoverGamesViewControls,
-		AppGameOgrsTag,
-		AppTimeAgo,
 		AppGameMaturityBlock,
 		AppGameCoverButtons,
-		AppUserFollowWidget,
 		AppGamePerms,
 	},
 	directives: {
@@ -61,33 +45,36 @@ import {
 	},
 })
 export default class RouteDiscoverGamesView extends BaseRouteComponent {
-	@Prop() id: string;
+	@Prop() id!: string;
 
-	@RouteState game: RouteStore['game'];
-	@RouteState userPartnerKey: RouteStore['userPartnerKey'];
-	@RouteState partner: RouteStore['partner'];
-	@RouteState partnerKey: RouteStore['partnerKey'];
-	@RouteState packages: RouteStore['packages'];
-	@RouteState collaboratorInvite: RouteStore['collaboratorInvite'];
-	@RouteState downloadableBuilds: RouteStore['downloadableBuilds'];
-	@RouteState browserBuilds: RouteStore['browserBuilds'];
-	@RouteState installableBuilds: RouteStore['installableBuilds'];
+	@RouteState game!: RouteStore['game'];
+	@RouteState partner!: RouteStore['partner'];
+	@RouteState partnerKey!: RouteStore['partnerKey'];
+	@RouteState packages!: RouteStore['packages'];
+	@RouteState collaboratorInvite!: RouteStore['collaboratorInvite'];
+	@RouteState downloadableBuilds!: RouteStore['downloadableBuilds'];
+	@RouteState browserBuilds!: RouteStore['browserBuilds'];
+	@RouteState installableBuilds!: RouteStore['installableBuilds'];
 
-	@RouteAction bootstrap: RouteStore['bootstrap'];
-	@RouteAction refreshRatingInfo: RouteStore['refreshRatingInfo'];
-	@RouteMutation bootstrapGame: RouteStore['bootstrapGame'];
-	@RouteMutation showMultiplePackagesMessage: RouteStore['showMultiplePackagesMessage'];
-	@RouteMutation acceptCollaboratorInvite: RouteStore['acceptCollaboratorInvite'];
-	@RouteMutation declineCollaboratorInvite: RouteStore['declineCollaboratorInvite'];
+	@RouteAction bootstrap!: RouteStore['bootstrap'];
+	@RouteAction refreshRatingInfo!: RouteStore['refreshRatingInfo'];
+	@RouteMutation bootstrapGame!: RouteStore['bootstrapGame'];
+	@RouteMutation showMultiplePackagesMessage!: RouteStore['showMultiplePackagesMessage'];
+	@RouteMutation acceptCollaboratorInvite!: RouteStore['acceptCollaboratorInvite'];
+	@RouteMutation declineCollaboratorInvite!: RouteStore['declineCollaboratorInvite'];
 
-	@ThemeMutation setPageTheme: ThemeStore['setPageTheme'];
+	@ThemeMutation setPageTheme!: ThemeStore['setPageTheme'];
+
+	@CommentState getCommentStore!: CommentStore['getCommentStore'];
+	@CommentAction lockCommentStore!: CommentStore['lockCommentStore'];
+	@CommentMutation releaseCommentStore!: CommentStore['releaseCommentStore'];
+	@CommentMutation setCommentCount!: CommentStore['setCommentCount'];
 
 	storeName = RouteStoreName;
 	storeModule = RouteStore;
 
-	@State app: Store['app'];
+	commentStore: CommentStoreModel | null = null;
 
-	readonly date = date;
 	readonly Screen = Screen;
 
 	private ratingCallback?: Function;
@@ -177,7 +164,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		}
 	}
 
-	routed($payload: any) {
+	async routed($payload: any) {
 		this.bootstrap($payload);
 		this.setPageTheme(this.game.theme || null);
 
@@ -187,6 +174,13 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 			Analytics.attachAdditionalPageTracker(this.game.ga_tracking_id);
 			this.gaTrackingId = this.game.ga_tracking_id;
 		}
+
+		if (this.commentStore) {
+			this.releaseCommentStore(this.commentStore);
+			this.commentStore = null;
+		}
+		this.commentStore = await this.lockCommentStore({resource: 'Game', resourceId: this.game.id});
+		this.setCommentCount({store: this.commentStore, count: $payload.commentsCount || 0});
 	}
 
 	routeDestroy() {
@@ -199,6 +193,11 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 		if (this.game && this.game.ga_tracking_id) {
 			Analytics.detachAdditionalPageTracker(this.game.ga_tracking_id);
+		}
+
+		if (this.commentStore) {
+			this.releaseCommentStore(this.commentStore);
+			this.commentStore = null;
 		}
 	}
 

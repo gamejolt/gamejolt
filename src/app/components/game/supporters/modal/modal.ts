@@ -1,11 +1,12 @@
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./modal.html';
-
-import { BaseModal } from '../../../../../../../../lib/gj-lib-client/components/modal/base';
-import { AppLoading } from '../../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { User } from '../../../../../../../../lib/gj-lib-client/components/user/user.model';
-import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { RouteState, RouteStore } from '../../../view.store';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { AppLoading } from 'game-jolt-frontend-lib/vue/components/loading/loading';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Component, Prop } from 'vue-property-decorator';
+import { AppUserList } from '../../../user/list/list';
 
 const UsersPerPage = 20;
 
@@ -13,17 +14,18 @@ const UsersPerPage = 20;
 @Component({
 	components: {
 		AppLoading,
+		AppUserList,
 	},
 })
 export default class AppSupportersModal extends BaseModal {
-	@Prop(Array) supporters: User[];
-	@Prop(Number) supporterCount: number;
+	@Prop(Game) game!: Game;
+	@Prop(Number) supporterCount!: number;
 
-	@RouteState game: RouteStore['game'];
+	readonly number = number;
 
 	reachedEnd = false;
-	currentPage = 1; // start with the first page already loaded
 	isLoading = false;
+	currentPage = 0;
 	users: User[] = [];
 
 	get title() {
@@ -37,8 +39,7 @@ export default class AppSupportersModal extends BaseModal {
 	}
 
 	async created() {
-		this.users = this.supporters;
-		this.reachedEnd = this.users.length === this.supporterCount;
+		await this.loadMore();
 	}
 
 	async loadMore() {

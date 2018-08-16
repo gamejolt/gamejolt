@@ -1,21 +1,24 @@
-import { User } from '../../../../../../../../lib/gj-lib-client/components/user/user.model';
-import { Modal } from '../../../../../../../../lib/gj-lib-client/components/modal/modal.service';
-import { asyncComponentLoader } from '../../../../../../../../lib/gj-lib-client/utils/utils';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
 
 interface GameSupportersModalOptions {
+	game: Game;
 	supporters: User[];
 	supporterCount: number;
 }
 
 export class GameSupportersModal {
 	static async show(options: GameSupportersModalOptions) {
-		const { supporters, supporterCount } = options;
+		const { game, supporters, supporterCount } = options;
 		return await Modal.show<void>({
 			component: () =>
 				asyncComponentLoader(
 					import(/* webpackChunkName: "GameSupportersModal" */ './modal')
 				),
 			props: {
+				game,
 				supporters,
 				supporterCount,
 			},

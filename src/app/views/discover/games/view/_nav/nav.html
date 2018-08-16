@@ -12,6 +12,15 @@
 				</router-link>
 			</li>
 
+			<li v-if="game.comments_enabled && Screen.isMobile">
+				<a @click="showComments()">
+					<translate>Comments</translate>
+					<span class="badge" v-if="commentsCount">
+						{{ commentsCount | number }}
+					</span>
+				</a>
+			</li>
+
 			<li v-if="hasScores">
 				<router-link
 					:to="{
@@ -61,7 +70,7 @@
 			</app-game-perms>
 			<a class="list-group-item has-icon"
 				v-if="app.user && !hasAnyPerms"
-				@click="report"
+				@click="report()"
 				>
 				<app-jolticon icon="flag" notice />
 				<translate>games.view.report_game_button</translate>
