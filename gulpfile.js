@@ -19,8 +19,7 @@ const config = {
 				theme_color: '#191919',
 				display: 'standalone',
 				start_url: './?utm_source=web_app_manifest',
-				icons: [
-					{
+				icons: [{
 						src: 'icon-128x128.png',
 						size: 128,
 					},
@@ -59,9 +58,8 @@ const config = {
 			title: 'Playing Game - Game Jolt',
 			crawl: false,
 		},
-		downgrade: {
-			title: 'Downgrade - Game Jolt',
-			server: false,
+		client: {
+			title: 'Game Jolt',
 			client: true,
 			crawl: false,
 			bodyClass: 'fill-darkest',
@@ -92,32 +90,32 @@ gulp.task(
 	'client:push-releases',
 	shell.task([
 		'aws s3 cp ' +
-			releaseDir +
-			'/linux64.tar.gz ' +
-			s3Dir +
-			'/game-jolt-client.tar.gz --acl public-read',
+		releaseDir +
+		'/linux64.tar.gz ' +
+		s3Dir +
+		'/game-jolt-client.tar.gz --acl public-read',
 		'aws s3 cp ' +
-			releaseDir +
-			'/linux64-package.zip ' +
-			s3Dir +
-			'/linux64-package.zip --acl public-read',
+		releaseDir +
+		'/linux64-package.zip ' +
+		s3Dir +
+		'/linux64-package.zip --acl public-read',
 
 		'aws s3 cp ' + releaseDir + '/osx.dmg ' + s3Dir + '/GameJoltClient.dmg --acl public-read',
 		'aws s3 cp ' +
-			releaseDir +
-			'/osx64-package.zip ' +
-			s3Dir +
-			'/osx64-package.zip --acl public-read',
+		releaseDir +
+		'/osx64-package.zip ' +
+		s3Dir +
+		'/osx64-package.zip --acl public-read',
 
 		'aws s3 cp ' +
-			releaseDir +
-			'/Setup.exe ' +
-			s3Dir +
-			'/GameJoltClientSetup.exe --acl public-read',
+		releaseDir +
+		'/Setup.exe ' +
+		s3Dir +
+		'/GameJoltClientSetup.exe --acl public-read',
 		'aws s3 cp ' +
-			releaseDir +
-			'/win32-package.zip ' +
-			s3Dir +
-			'/win32-package.zip --acl public-read',
+		releaseDir +
+		'/win32-package.zip ' +
+		s3Dir +
+		'/win32-package.zip --acl public-read',
 	])
 );
