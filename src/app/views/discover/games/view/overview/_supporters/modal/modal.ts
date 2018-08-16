@@ -7,6 +7,8 @@ import { User } from '../../../../../../../../lib/gj-lib-client/components/user/
 import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { RouteState, RouteStore } from '../../../view.store';
 
+const UsersPerPage = 20;
+
 @View
 @Component({
 	components: {
@@ -19,11 +21,9 @@ export default class AppSupportersModal extends BaseModal {
 
 	@RouteState game: RouteStore['game'];
 
-	static readonly USERS_PER_PAGE = 20;
-
 	reachedEnd = false;
 	currentPage = 1; // start with the first page already loaded
-	loading = false;
+	isLoading = false;
 	users: User[] = [];
 
 	get title() {
@@ -33,7 +33,7 @@ export default class AppSupportersModal extends BaseModal {
 	}
 
 	get shouldShowLoadMore() {
-		return !this.loading && !this.reachedEnd;
+		return !this.isLoading && !this.reachedEnd;
 	}
 
 	async created() {
@@ -42,23 +42,23 @@ export default class AppSupportersModal extends BaseModal {
 	}
 
 	async loadMore() {
-		this.currentPage++;
-		this._loadPage();
-	}
-
-	private async _loadPage() {
-		this.loading = true;
-		let requestUrl = '/web/discover/games/supporters/' + this.game.id + '/' + this.currentPage;
-		const payload = await Api.sendRequest(requestUrl);
-		if (payload.success) {
-			const newUsers = User.populate(payload.users);
-			this.users = this.users.concat(newUsers);
-			if (newUsers.length < AppSupportersModal.USERS_PER_PAGE) {
-				this.reachedEnd = true;
-			}
-		} else {
-			this.currentPage--;
+		if (this.isLoading) {
+			return;
 		}
-		this.loading = false;
+
+		this.isLoading = true;
+		++this.currentPage;
+		const payload = await Api.sendRequest(
+			'/web/discover/games/supporters/' + this.game.id + '?page=' + this.currentPage
+		);
+
+		const users = User.populate(payload.supporters);
+		this.users = this.users.concat(users);
+
+		if (users.length < UsersPerPage || users.length === this.supporterCount) {
+			this.reachedEnd = true;
+		}
+
+		this.isLoading = false;
 	}
 }

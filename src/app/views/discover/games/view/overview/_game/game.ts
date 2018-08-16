@@ -90,14 +90,15 @@ import { AppDiscoverGamesViewOverviewSupporters } from '../_supporters/supporter
 export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@State app: Store['app'];
 
-	@CommentState getCommentStore: CommentStore['getCommentStore'];
-	@CommentAction lockCommentStore: CommentStore['lockCommentStore'];
-	@CommentMutation releaseCommentStore: CommentStore['releaseCommentStore'];
-	@CommentAction fetchComments: CommentStore['fetchComments'];
+	// @CommentState getCommentStore: CommentStore['getCommentStore'];
+	// @CommentAction lockCommentStore: CommentStore['lockCommentStore'];
+	// @CommentMutation releaseCommentStore: CommentStore['releaseCommentStore'];
+	// @CommentAction fetchComments: CommentStore['fetchComments'];
 
 	@RouteState isOverviewLoaded: RouteStore['isOverviewLoaded'];
 	@RouteState game: RouteStore['game'];
 	@RouteState mediaItems: RouteStore['mediaItems'];
+	@RouteState overviewComments: RouteStore['overviewComments'];
 	@RouteState recommendedGames: RouteStore['recommendedGames'];
 	@RouteState userRating: RouteStore['userRating'];
 	@RouteState songs: RouteStore['songs'];
@@ -109,8 +110,8 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@RouteState feed: RouteStore['feed'];
 	@RouteState supporters: RouteStore['supporters'];
 	@RouteState supporterCount: RouteStore['supporterCount'];
-	@RouteState videoComments: RouteStore['videoComments'];
-	@RouteState videoCommentsCount: RouteStore['videoCommentsCount'];
+	// @RouteState videoComments: RouteStore['videoComments'];
+	// @RouteState videoCommentsCount: RouteStore['videoCommentsCount'];
 	@RouteState shouldShowMultiplePackagesMessage: RouteStore['shouldShowMultiplePackagesMessage'];
 	@RouteState postsCount: RouteStore['postsCount'];
 	@RouteState trophiesCount: RouteStore['trophiesCount'];
@@ -121,7 +122,7 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 	@RouteState hasReleasesSection: RouteStore['hasReleasesSection'];
 	@RouteState customGameMessages: RouteStore['customGameMessages'];
 
-	@RouteAction loadVideoComments: RouteStore['loadVideoComments'];
+	// @RouteAction loadVideoComments: RouteStore['loadVideoComments'];
 
 	@RouteState showDetails: RouteStore['showDetails'];
 	@RouteMutation toggleDetails: RouteStore['toggleDetails'];
@@ -130,7 +131,7 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 
 	@RouteMutation addPost: RouteStore['addPost'];
 
-	commentStore: CommentStoreModel | null = null;
+	// commentStore: CommentStoreModel | null = null;
 
 	readonly Screen = Screen;
 	readonly Environment = Environment;
@@ -151,37 +152,13 @@ export class AppDiscoverGamesViewOverviewGame extends Vue {
 		return this.hasScores && this.trophiesCount;
 	}
 
-	get comments() {
-		return this.commentStore ? this.commentStore.parentComments : [];
-	}
+	// get comments() {
+	// 	return this.commentStore ? this.commentStore.parentComments : [];
+	// }
 
-	get commentsCount() {
-		return this.commentStore ? this.commentStore.count : 0;
-	}
-
-	@Watch('game.id', { immediate: true })
-	@Watch('game.comments_enabled')
-	async onGameChange() {
-		if (this.game && this.game.comments_enabled) {
-			if (this.commentStore) {
-				this.releaseCommentStore(this.commentStore);
-			}
-
-			this.commentStore = await this.lockCommentStore({
-				resource: 'Game',
-				resourceId: this.game.id,
-			});
-
-			this.fetchComments({ store: this.commentStore });
-		}
-	}
-
-	destroyed() {
-		if (this.commentStore) {
-			this.releaseCommentStore(this.commentStore);
-			this.commentStore = null;
-		}
-	}
+	// get commentsCount() {
+	// 	return this.commentStore ? this.commentStore.count : 0;
+	// }
 
 	copyPartnerLink() {
 		if (this.partnerLink) {

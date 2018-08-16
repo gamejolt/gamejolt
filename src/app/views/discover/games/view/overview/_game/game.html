@@ -263,9 +263,6 @@
 
 						<h3 class="section-header">
 							<translate>Comments</translate>
-							<small v-if="commentsCount">
-								({{ commentsCount | number }})
-							</small>
 						</h3>
 
 						<app-comment-add-button
@@ -274,7 +271,7 @@
 							/>
 
 						<app-comment-overview
-							:comments="comments"
+							:comments="overviewComments"
 							/>
 					</template>
 				</div>

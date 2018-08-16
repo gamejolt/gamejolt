@@ -32,6 +32,7 @@ import {
 import { ActivityFeedContainer } from '../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { router } from '../../../index';
+import { Comment } from '../../../../../lib/gj-lib-client/components/comment/comment-model';
 
 export const RouteStoreName = 'gameRoute';
 export const RouteState = namespace(RouteStoreName, State);
@@ -138,6 +139,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	canToggleDescription = false;
 	showDetails = false;
+
+	overviewComments: Comment[] = [];
 
 	videoComments: CommentVideo[] = [];
 	videoCommentsCount = 0;
@@ -248,6 +251,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.recommendedGames = [];
 		this.mediaItems = [];
 		this.supporters = [];
+		this.videoComments = [];
+		this.overviewComments = [];
 		setAds(this.game);
 	}
 
@@ -327,6 +332,8 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 		this.supporters = User.populate(payload.supporters);
 		this.supporterCount = payload.supporterCount;
+
+		this.overviewComments = Comment.populate(payload.comments);
 
 		this.videoComments = CommentVideo.populate(payload.videoComments);
 		this.videoCommentsCount = payload.videoCommentsCount || 0;
