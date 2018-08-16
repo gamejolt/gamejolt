@@ -18,10 +18,10 @@ import { AppTrackEvent } from '../../../../../../lib/gj-lib-client/components/an
 	},
 })
 export class AppGameCollectionGridItem extends Vue {
-	@Prop(GameCollection) collection: GameCollection;
+	@Prop(GameCollection) collection!: GameCollection;
 	@Prop(String) eventLabel?: string;
 
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	get notOwner() {
 		return this.collection.from_subscription || !this.collection.isOwner;

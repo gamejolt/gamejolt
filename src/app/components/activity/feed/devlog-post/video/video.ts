@@ -13,8 +13,8 @@ import { AppActivityFeedVideo } from '../../_video/video';
 	},
 })
 export class AppActivityFeedDevlogPostVideo extends Vue {
-	@Prop(ActivityFeedItem) item: ActivityFeedItem;
-	@Prop(FiresidePost) post: FiresidePost;
+	@Prop(ActivityFeedItem) item!: ActivityFeedItem;
+	@Prop(FiresidePost) post!: FiresidePost;
 	@Prop(Boolean) isHydrated?: boolean;
 
 	get video() {

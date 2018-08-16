@@ -16,12 +16,12 @@ import { AppClientGameButtons } from '../../game-buttons/game-buttons';
 	},
 })
 export class AppClientGameCoverButtons extends Vue {
-	@Prop(Game) game: Game;
-	@Prop(Array) downloadableBuilds: GameBuild[];
-	@Prop(Array) browserBuilds: GameBuild[];
-	@Prop(Array) installableBuilds: GameBuild[];
+	@Prop(Game) game!: Game;
+	@Prop(Array) downloadableBuilds!: GameBuild[];
+	@Prop(Array) browserBuilds!: GameBuild[];
+	@Prop(Array) installableBuilds!: GameBuild[];
 
-	@ClientLibraryState findActiveForGame: ClientLibraryStore['findActiveForGame'];
+	@ClientLibraryState findActiveForGame!: ClientLibraryStore['findActiveForGame'];
 
 	get localPackage() {
 		return this.findActiveForGame(this.game.id);

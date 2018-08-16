@@ -33,7 +33,7 @@ export class FormGameThumbnail extends BaseForm<FormModel> implements FormOnLoad
 	maxHeight = 0;
 	cropAspectRatio = 0;
 
-	$refs: {
+	$refs!: {
 		form: AppForm;
 	};
 

@@ -16,5 +16,5 @@ import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ag
 	},
 })
 export class AppCommentPeek extends Vue {
-	@Prop(Array) comments: Comment[];
+	@Prop(Array) comments!: Comment[];
 }

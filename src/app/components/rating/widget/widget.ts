@@ -20,7 +20,7 @@ import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/eve
 	},
 })
 export class AppRatingWidget extends Vue {
-	@Prop(Object) game: Game;
+	@Prop(Object) game!: Game;
 	@Prop(Object) rating?: GameRating;
 
 	clearLabel = '';

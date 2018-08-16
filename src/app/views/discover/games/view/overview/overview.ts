@@ -23,12 +23,12 @@ import { CommentModal } from '../../../../../../lib/gj-lib-client/components/com
 	},
 })
 export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
-	@Prop() id: string;
+	@Prop() id!: string;
 
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
-	@RouteMutation bootstrapFeed: RouteStore['bootstrapFeed'];
-	@RouteMutation processOverviewPayload: RouteStore['processOverviewPayload'];
+	@RouteMutation bootstrapFeed!: RouteStore['bootstrapFeed'];
+	@RouteMutation processOverviewPayload!: RouteStore['processOverviewPayload'];
 
 	@RouteResolve({ lazy: true, cache: true })
 	routeResolve(this: undefined, route: Route) {

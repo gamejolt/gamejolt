@@ -6,14 +6,14 @@ export class ChatMessage {
 	static readonly TypeNormal = 0;
 	static readonly TypeSystem = 1;
 
-	id: number;
-	type: ChatMessageType;
-	userId: number;
-	user: ChatUser;
-	roomId: number;
-	contentRaw: string;
-	content: string;
-	loggedOn: Date;
+	id!: number;
+	type!: ChatMessageType;
+	userId!: number;
+	user!: ChatUser;
+	roomId!: number;
+	contentRaw!: string;
+	content!: string;
+	loggedOn!: Date;
 	combine?: boolean;
 	dateSplit?: boolean;
 

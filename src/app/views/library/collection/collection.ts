@@ -67,17 +67,17 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 	},
 })
 export default class RouteLibraryCollection extends BaseRouteComponent {
-	@Prop(String) id: string;
+	@Prop(String) id!: string;
 
-	@State app: Store['app'];
-	@LibraryState collections: LibraryStore['collections'];
+	@State app!: Store['app'];
+	@LibraryState collections!: LibraryStore['collections'];
 
-	@LibraryAction removeGameFromPlaylist: LibraryStore['removeGameFromPlaylist'];
-	@LibraryAction unfollowGame: LibraryStore['unfollowGame'];
-	@LibraryAction editPlaylist: LibraryStore['editPlaylist'];
-	@LibraryAction removePlaylist: LibraryStore['removePlaylist'];
+	@LibraryAction removeGameFromPlaylist!: LibraryStore['removeGameFromPlaylist'];
+	@LibraryAction unfollowGame!: LibraryStore['unfollowGame'];
+	@LibraryAction editPlaylist!: LibraryStore['editPlaylist'];
+	@LibraryAction removePlaylist!: LibraryStore['removePlaylist'];
 
-	@ThemeMutation setPageTheme: ThemeStore['setPageTheme'];
+	@ThemeMutation setPageTheme!: ThemeStore['setPageTheme'];
 
 	type = '';
 	followerCount = 0;

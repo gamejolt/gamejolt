@@ -54,7 +54,8 @@ export class ChatClient {
 	 * it when entering the chat again.
 	 */
 	get sessionRoomId(): number | undefined {
-		return sessionStorage['chat:room'] ? parseInt(sessionStorage['chat:room'], 10) : undefined;
+		const roomId = sessionStorage.getItem('chat:room');
+		return roomId ? parseInt(roomId, 10) : undefined;
 	}
 
 	set sessionRoomId(roomId: number | undefined) {

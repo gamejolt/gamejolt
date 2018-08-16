@@ -18,14 +18,14 @@ import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading
 	},
 })
 export class AppClientIntro extends Vue {
-	@AppState user: AppStore['user'];
+	@AppState user!: AppStore['user'];
 
 	shouldShowLogo = false;
 	shouldShowLoading = false;
 	shouldTransitionOut = false;
 	initialStateChangeResolver: Function = null as any;
 
-	$refs: {
+	$refs!: {
 		wrap: HTMLDivElement;
 	};
 

@@ -60,16 +60,16 @@ export class AppActivityFeedControls extends Vue {
 	@Prop(Boolean) showGameInfo?: boolean;
 	@Prop(Boolean) showEditControls?: boolean;
 	@Prop({ type: Boolean, default: true })
-	showExtraInfo: boolean;
+	showExtraInfo!: boolean;
 	@Prop(Boolean) showComments?: boolean;
 	@Prop(Boolean) showCommentAddButton?: boolean;
 	@Prop(Boolean) inModal?: boolean;
 
-	@State app: Store['app'];
-	@CommentState getCommentStore: CommentStore['getCommentStore'];
-	@CommentAction lockCommentStore: CommentStore['lockCommentStore'];
-	@CommentMutation releaseCommentStore: CommentStore['releaseCommentStore'];
-	@CommentMutation setCommentCount: CommentStore['setCommentCount'];
+	@State app!: Store['app'];
+	@CommentState getCommentStore!: CommentStore['getCommentStore'];
+	@CommentAction lockCommentStore!: CommentStore['lockCommentStore'];
+	@CommentMutation releaseCommentStore!: CommentStore['releaseCommentStore'];
+	@CommentMutation setCommentCount!: CommentStore['setCommentCount'];
 
 	commentStore: CommentStoreModel | null = null;
 	isShowingShare = false;

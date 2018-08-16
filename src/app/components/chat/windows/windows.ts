@@ -14,6 +14,6 @@ import { Store } from '../../../store/index';
 	},
 })
 export class AppChatWindows extends Vue {
-	@State chat: ChatClient;
-	@State isRightPaneVisible: Store['isRightPaneVisible'];
+	@State chat!: ChatClient;
+	@State isRightPaneVisible!: Store['isRightPaneVisible'];
 }

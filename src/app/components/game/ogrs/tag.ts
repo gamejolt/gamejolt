@@ -12,7 +12,7 @@ import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/
 	},
 })
 export class AppGameOgrsTag extends Vue {
-	@Prop(Game) game: Game;
+	@Prop(Game) game!: Game;
 	@Prop(Boolean) full?: boolean;
 
 	get imgTag() {

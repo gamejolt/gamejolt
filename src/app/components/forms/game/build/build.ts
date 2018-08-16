@@ -64,14 +64,16 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 	resetOnSubmit = true;
 	reloadOnSubmit = true;
 
-	@Prop(Game) game: Game;
-	@Prop(GamePackage) package: GamePackage;
-	@Prop(GameRelease) release: GameRelease;
-	@Prop(Array) releaseLaunchOptions: GameBuildLaunchOption[];
-	@Prop(Object) buildDownloadCounts: { [buildId: number]: number };
-	@Prop(Array) builds: GameBuild[];
+	@Prop(Game) game!: Game;
+	@Prop(GamePackage) package!: GamePackage;
+	@Prop(GameRelease) release!: GameRelease;
+	@Prop(Array) releaseLaunchOptions!: GameBuildLaunchOption[];
+	@Prop(Object) buildDownloadCounts!: {
+		[buildId: number]: number;
+	};
+	@Prop(Array) builds!: GameBuild[];
 
-	private releaseForm: FormGameRelease;
+	private releaseForm!: FormGameRelease;
 
 	maxFilesize = 0;
 	restrictedPlatforms: string[] = [];
@@ -85,7 +87,7 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 	readonly number = number;
 	readonly GameBuild = GameBuild;
 
-	$refs: {
+	$refs!: {
 		form: AppForm;
 	};
 

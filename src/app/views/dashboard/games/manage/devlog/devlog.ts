@@ -24,9 +24,9 @@ import {
 	},
 })
 export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
-	@Prop(String) tab: 'draft' | 'scheduled' | undefined;
+	@Prop(String) tab!: 'draft' | 'scheduled' | undefined;
 
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	feed: ActivityFeedContainer = null as any;
 

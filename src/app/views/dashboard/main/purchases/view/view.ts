@@ -6,7 +6,6 @@ import { Geo } from '../../../../../../lib/gj-lib-client/components/geo/geo.serv
 import { OrderPayment } from '../../../../../../lib/gj-lib-client/components/order/payment/payment.model';
 import { date } from '../../../../../../lib/gj-lib-client/vue/filters/date';
 import { Order } from '../../../../../../lib/gj-lib-client/components/order/order.model';
-import { OrderPaymentRefund } from '../../../../../../lib/gj-lib-client/components/order/payment/refund/refund.model';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GamePackage } from '../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { arrayIndexBy, arrayGroupBy } from '../../../../../../lib/gj-lib-client/utils/array';
@@ -63,7 +62,12 @@ export default class RouteDashMainPurchasesView extends BaseRouteComponent {
 	}
 
 	get firstRefund() {
-		if (this.order._is_refunded && this.order.payments[0] && this.order.payments[0].refunds) {
+		if (
+			this.order._is_refunded &&
+			this.order.payments &&
+			this.order.payments[0] &&
+			this.order.payments[0].refunds
+		) {
 			return this.order.payments[0].refunds[0];
 		}
 		return null;

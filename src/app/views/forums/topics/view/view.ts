@@ -72,7 +72,7 @@ import {
 	},
 })
 export default class RouteForumsTopicsView extends BaseRouteComponent {
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	topic: ForumTopic = null as any;
 	channel: ForumChannel = null as any;

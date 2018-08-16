@@ -42,13 +42,13 @@ if (GJ_IS_CLIENT) {
 	},
 })
 export class AppShellTopNav extends Vue {
-	@State app: Store['app'];
-	@State chat: ChatClient;
-	@State notificationCount: Store['notificationCount'];
-	@State friendRequestCount: Store['friendRequestCount'];
-	@State isLeftPaneVisible: Store['isLeftPaneVisible'];
-	@State isRightPaneVisible: Store['isRightPaneVisible'];
-	@State hasSidebar: Store['hasSidebar'];
+	@State app!: Store['app'];
+	@State chat!: ChatClient;
+	@State notificationCount!: Store['notificationCount'];
+	@State friendRequestCount!: Store['friendRequestCount'];
+	@State isLeftPaneVisible!: Store['isLeftPaneVisible'];
+	@State isRightPaneVisible!: Store['isRightPaneVisible'];
+	@State hasSidebar!: Store['hasSidebar'];
 
 	friendRequestsShowing = false;
 	userMenuShowing = false;
@@ -57,6 +57,6 @@ export class AppShellTopNav extends Vue {
 	readonly Screen = Screen;
 	readonly Connection = Connection;
 
-	@Action toggleRightPane: Store['toggleRightPane'];
-	@Action toggleLeftPane: Store['toggleLeftPane'];
+	@Action toggleRightPane!: Store['toggleRightPane'];
+	@Action toggleLeftPane!: Store['toggleLeftPane'];
 }

@@ -15,7 +15,7 @@ import { AppUserAddressDetails } from '../../address/details/details';
 	},
 })
 export class AppUserPaymentSourceCard extends Vue {
-	@Prop(PaymentSource) paymentSource: PaymentSource;
+	@Prop(PaymentSource) paymentSource!: PaymentSource;
 	@Prop(Boolean) showRemove?: boolean;
 
 	@Emit('remove')

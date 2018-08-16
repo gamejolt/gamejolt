@@ -12,10 +12,10 @@ import { ClientLibraryStore, ClientLibraryState } from '../../../../store/client
 	},
 })
 export class AppClientStatusBarPatchItem extends Vue {
-	@Prop(Number) packageId: number;
+	@Prop(Number) packageId!: number;
 
-	@ClientLibraryState packages: ClientLibraryStore['packages'];
-	@ClientLibraryState numPatching: ClientLibraryStore['numPatching'];
+	@ClientLibraryState packages!: ClientLibraryStore['packages'];
+	@ClientLibraryState numPatching!: ClientLibraryStore['numPatching'];
 
 	get pkg() {
 		return this.packages.find(i => i.id === this.packageId);

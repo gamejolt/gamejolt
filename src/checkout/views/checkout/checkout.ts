@@ -24,10 +24,10 @@ import {
 	},
 })
 export default class RouteCheckout extends BaseRouteComponent {
-	cards: any[];
-	sellable: Sellable;
-	order: Order;
-	game: Game;
+	cards!: any[];
+	sellable!: Sellable;
+	order!: Order;
+	game!: Game;
 
 	Environment = Environment;
 

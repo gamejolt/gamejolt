@@ -16,7 +16,7 @@ import { AppGraph } from '../../../../../lib/gj-lib-client/components/graph/grap
 	},
 })
 export class AppAnalyticsReportTopComposition extends Vue {
-	@Prop(Object) reportData: any;
+	@Prop(Object) reportData!: any;
 
 	readonly Screen = Screen;
 }

@@ -27,7 +27,7 @@ const DownloadDelay = 3000;
 	},
 })
 export default class RouteDiscoverGamesViewDownloadSoundtrack extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	src: string | null = null;
 

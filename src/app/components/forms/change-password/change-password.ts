@@ -18,7 +18,7 @@ type FormModel = {
 @Component({})
 export class FormChangePassword extends BaseForm<FormModel> implements FormOnInit, FormOnSubmit {
 	@Prop({ type: Boolean, default: true })
-	requiresOld: boolean;
+	requiresOld!: boolean;
 
 	warnOnDiscard = false;
 	resetOnSubmit = true;

@@ -28,7 +28,7 @@ import { AppPollVoting } from '../../../poll/voting/voting';
 	},
 })
 export class AppDevlogPostView extends Vue {
-	@Prop(FiresidePost) post: FiresidePost;
+	@Prop(FiresidePost) post!: FiresidePost;
 	@Prop(Boolean) showGameInfo?: boolean;
 	@Prop(Boolean) inModal?: boolean;
 }

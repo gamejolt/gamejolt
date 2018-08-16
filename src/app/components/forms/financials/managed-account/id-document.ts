@@ -16,7 +16,7 @@ import Vue from 'vue';
 	},
 })
 export class AppFinancialsManagedAccountIdDocument extends Vue {
-	@Prop(String) namePrefix: string;
+	@Prop(String) namePrefix!: string;
 
 	parent: FormFinancialsManagedAccount = null as any;
 	created() {

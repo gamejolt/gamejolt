@@ -31,7 +31,7 @@ import { AppGameDevStageSelector } from './dev-stage-selector/dev-stage-selector
 	},
 })
 export class FormGame extends BaseForm<Game> implements FormOnInit, FormOnLoad {
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	// We need to reset all the "is published", "has builds" stuff.
 	modelClass = Game;

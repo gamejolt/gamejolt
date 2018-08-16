@@ -22,7 +22,7 @@ import { AppAuthJoinLazy } from '../../../components/lazy';
 	},
 })
 export default class RouteLandingIndieaf extends BaseRouteComponent {
-	@AppState user: AppStore['user'];
+	@AppState user!: AppStore['user'];
 
 	state: 'bogus' | 'indie' = 'bogus';
 

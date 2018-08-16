@@ -23,11 +23,12 @@ export type BannerMutations = {
 abstract class Banner {
 	abstract message: string;
 	abstract isActive: boolean;
+
+	type = 'info';
+	isClosed = false;
+
 	onClick?(): void;
 	onClose?(): void;
-
-	type: string = 'info';
-	isClosed = false;
 
 	get canClick() {
 		return !!this.onClick;
@@ -107,16 +108,16 @@ class TermsChangeBanner extends Banner {
 			return false;
 		}
 
-		return !window.localStorage[this.StorageKey];
+		return !window.localStorage.getItem(this.StorageKey);
 	}
 
 	async onClick() {
 		router.push({ name: 'legal.privacy' });
-		window.localStorage[this.StorageKey] =  Date.now();
+		window.localStorage.setItem(this.StorageKey, Date.now() + '');
 	}
 
 	onClose() {
-		window.localStorage[this.StorageKey] =  Date.now();
+		window.localStorage.setItem(this.StorageKey, Date.now() + '');
 	}
 }
 

@@ -18,7 +18,7 @@ import {
 	name: 'RouteLandingGameApiDoc',
 })
 export default class RouteLandingGameApiDoc extends BaseRouteComponent {
-	@Prop(String) path: string;
+	@Prop(String) path!: string;
 
 	content = '';
 

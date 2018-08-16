@@ -35,7 +35,7 @@ import {
 	},
 })
 export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	songs: GameSong[] = [];
 	isAdding = false;

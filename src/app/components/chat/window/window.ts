@@ -32,13 +32,13 @@ import { AppScrollInviewParent } from '../../../../lib/gj-lib-client/components/
 	},
 })
 export class AppChatWindow extends Vue {
-	@Prop(ChatRoom) room: ChatRoom;
-	@Prop(Array) messages: ChatMessage[];
+	@Prop(ChatRoom) room!: ChatRoom;
+	@Prop(Array) messages!: ChatMessage[];
 	@Prop(ChatUserCollection) users?: ChatUserCollection;
 
-	@State chat: ChatClient;
+	@State chat!: ChatClient;
 
-	@Action toggleRightPane: Store['toggleRightPane'];
+	@Action toggleRightPane!: Store['toggleRightPane'];
 
 	isShowingUsers = false;
 	isDescriptionCollapsed = false;

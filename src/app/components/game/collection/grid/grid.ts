@@ -12,6 +12,6 @@ import { AppGameCollectionGridItem } from './item/item';
 	},
 })
 export class AppGameCollectionGrid extends Vue {
-	@Prop(Array) collections: GameCollection[];
+	@Prop(Array) collections!: GameCollection[];
 	@Prop(String) eventLabel?: string;
 }

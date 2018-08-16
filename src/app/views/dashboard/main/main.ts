@@ -24,5 +24,5 @@ import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/rou
 	},
 })
 export default class RouteDashMain extends BaseRouteComponent {
-	@State app: Store['app'];
+	@State app!: Store['app'];
 }

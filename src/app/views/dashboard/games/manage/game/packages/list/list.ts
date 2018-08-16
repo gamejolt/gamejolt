@@ -40,7 +40,7 @@ import { GamePackageEditModal } from '../../../../../../../components/game/packa
 	},
 })
 export default class RouteDashGamesManageGamePackagesList extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	packages: GamePackage[] = [];
 	sellables: { [x: number]: Sellable } = {};

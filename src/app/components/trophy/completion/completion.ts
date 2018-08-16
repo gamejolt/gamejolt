@@ -17,9 +17,9 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 	},
 })
 export class AppTrophyCompletion extends Vue {
-	@Prop(Number) total: number;
-	@Prop(Number) achieved: number;
-	@Prop(Number) experience: number;
+	@Prop(Number) total!: number;
+	@Prop(Number) achieved!: number;
+	@Prop(Number) experience!: number;
 
 	number = number;
 

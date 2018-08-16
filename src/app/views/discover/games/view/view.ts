@@ -61,31 +61,31 @@ import {
 	},
 })
 export default class RouteDiscoverGamesView extends BaseRouteComponent {
-	@Prop() id: string;
+	@Prop() id!: string;
 
-	@RouteState game: RouteStore['game'];
-	@RouteState userPartnerKey: RouteStore['userPartnerKey'];
-	@RouteState partner: RouteStore['partner'];
-	@RouteState partnerKey: RouteStore['partnerKey'];
-	@RouteState packages: RouteStore['packages'];
-	@RouteState collaboratorInvite: RouteStore['collaboratorInvite'];
-	@RouteState downloadableBuilds: RouteStore['downloadableBuilds'];
-	@RouteState browserBuilds: RouteStore['browserBuilds'];
-	@RouteState installableBuilds: RouteStore['installableBuilds'];
+	@RouteState game!: RouteStore['game'];
+	@RouteState userPartnerKey!: RouteStore['userPartnerKey'];
+	@RouteState partner!: RouteStore['partner'];
+	@RouteState partnerKey!: RouteStore['partnerKey'];
+	@RouteState packages!: RouteStore['packages'];
+	@RouteState collaboratorInvite!: RouteStore['collaboratorInvite'];
+	@RouteState downloadableBuilds!: RouteStore['downloadableBuilds'];
+	@RouteState browserBuilds!: RouteStore['browserBuilds'];
+	@RouteState installableBuilds!: RouteStore['installableBuilds'];
 
-	@RouteAction bootstrap: RouteStore['bootstrap'];
-	@RouteAction refreshRatingInfo: RouteStore['refreshRatingInfo'];
-	@RouteMutation bootstrapGame: RouteStore['bootstrapGame'];
-	@RouteMutation showMultiplePackagesMessage: RouteStore['showMultiplePackagesMessage'];
-	@RouteMutation acceptCollaboratorInvite: RouteStore['acceptCollaboratorInvite'];
-	@RouteMutation declineCollaboratorInvite: RouteStore['declineCollaboratorInvite'];
+	@RouteAction bootstrap!: RouteStore['bootstrap'];
+	@RouteAction refreshRatingInfo!: RouteStore['refreshRatingInfo'];
+	@RouteMutation bootstrapGame!: RouteStore['bootstrapGame'];
+	@RouteMutation showMultiplePackagesMessage!: RouteStore['showMultiplePackagesMessage'];
+	@RouteMutation acceptCollaboratorInvite!: RouteStore['acceptCollaboratorInvite'];
+	@RouteMutation declineCollaboratorInvite!: RouteStore['declineCollaboratorInvite'];
 
-	@ThemeMutation setPageTheme: ThemeStore['setPageTheme'];
+	@ThemeMutation setPageTheme!: ThemeStore['setPageTheme'];
 
 	storeName = RouteStoreName;
 	storeModule = RouteStore;
 
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	readonly date = date;
 	readonly Screen = Screen;

@@ -12,7 +12,7 @@ declare var global: NodeJS.Global & {
 
 @Component({})
 export class AppClientTray extends Vue {
-	@State app: AppStore;
+	@State app!: AppStore;
 
 	isFocused = false;
 	isMinimized = false;

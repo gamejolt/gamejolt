@@ -115,7 +115,8 @@ export class SiteAnalyticsReport {
 				component.total = response.total;
 
 				if (component.type === 'sum' || component.type === 'average') {
-					component.hasData = typeof component.data !== 'undefined' && component.data !== null;
+					component.hasData =
+						typeof component.data !== 'undefined' && component.data !== null;
 				} else {
 					component.hasData = component.data && Object.keys(component.data).length > 0;
 				}
@@ -209,7 +210,9 @@ export class SiteAnalyticsReport {
 			// Rating is a special case of top composition. We want to keep processing it as { key: value } and not convert it.
 			if (field !== 'rating') {
 				data = [];
-				Object.entries(response.result).forEach(([key, val]) => {
+				Object.entries(response.result).forEach((kv: any) => {
+					let [key, val] = kv;
+
 					switch (analyzer) {
 						case 'top-composition-sum':
 							val = val.sum;
@@ -269,7 +272,7 @@ export class SiteAnalyticsReport {
 
 			// country code => country name
 			if (field === 'country') {
-				Object.values(response.result).forEach(val => {
+				Object.values(response.result).forEach((val: any) => {
 					if (val.label === 'other') {
 						val.label = Translate.$gettext('Unknown');
 					} else {
@@ -284,7 +287,10 @@ export class SiteAnalyticsReport {
 				for (let i = 0; i < Math.min(response.result.length, 3); i++) {
 					const dataEntry = response.result[i];
 					graph.push({
-						label: typeof dataEntry.label === 'object' ? dataEntry.label.value : dataEntry.label,
+						label:
+							typeof dataEntry.label === 'object'
+								? dataEntry.label.value
+								: dataEntry.label,
 						value: dataEntry.value,
 					});
 				}

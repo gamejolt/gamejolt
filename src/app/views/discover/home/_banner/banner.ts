@@ -24,9 +24,9 @@ import { AppTheme } from '../../../../../lib/gj-lib-client/components/theme/them
 	},
 })
 export class AppDiscoverHomeBanner extends Vue {
-	@Prop(FeaturedItem) item: FeaturedItem;
+	@Prop(FeaturedItem) item!: FeaturedItem;
 
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	readonly Screen = Screen;
 

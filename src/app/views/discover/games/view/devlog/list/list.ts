@@ -39,10 +39,10 @@ import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 	},
 })
 export default class RouteDiscoverGamesViewDevlogList extends BaseRouteComponent {
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
-	@RouteState game: RouteStore['game'];
-	@RouteMutation addPost: RouteStore['addPost'];
+	@RouteState game!: RouteStore['game'];
+	@RouteMutation addPost!: RouteStore['addPost'];
 
 	feed: ActivityFeedContainer | null = null;
 

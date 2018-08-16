@@ -40,7 +40,7 @@ import {
 	},
 })
 export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	trophies: GameTrophy[] = [];
 	isAdding: { [x: number]: boolean } = {};

@@ -14,7 +14,7 @@ import { Screen } from '../../../../../lib/gj-lib-client/components/screen/scree
 	},
 })
 export class AppAnalyticsReportTopCompositionValue extends Vue {
-	@Prop(Object) reportData: any;
+	@Prop(Object) reportData!: any;
 
 	readonly Screen = Screen;
 }

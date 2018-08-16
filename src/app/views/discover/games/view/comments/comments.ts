@@ -18,7 +18,7 @@ import { AppCommentWidgetLazy } from '../../../../../components/lazy';
 	},
 })
 export default class RouteDiscoverGamesViewComments extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	readonly Screen = Screen;
 

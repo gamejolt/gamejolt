@@ -24,7 +24,7 @@ import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analy
 	},
 })
 export class AppForumTopicUpvoteWidget extends Vue {
-	@Prop(ForumTopic) topic: ForumTopic;
+	@Prop(ForumTopic) topic!: ForumTopic;
 
 	get canUpvote() {
 		return this.topic.can_upvote;

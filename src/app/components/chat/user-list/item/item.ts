@@ -23,12 +23,12 @@ import { ChatModerateUserModal } from '../../moderate-user-modal/moderate-user-m
 	},
 })
 export class AppChatUserListItem extends Vue {
-	@Prop(ChatUser) user: ChatUser;
+	@Prop(ChatUser) user!: ChatUser;
 	@Prop(ChatRoom) room?: ChatRoom;
 	@Prop(Boolean) showPm?: boolean;
 	@Prop(Boolean) showModTools?: boolean;
 
-	@State chat: ChatClient;
+	@State chat!: ChatClient;
 
 	isInview = false;
 

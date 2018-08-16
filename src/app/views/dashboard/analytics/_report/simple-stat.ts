@@ -13,5 +13,5 @@ import { currency } from '../../../../../lib/gj-lib-client/vue/filters/currency'
 	},
 })
 export class AppAnalyticsReportSimpleStat extends Vue {
-	@Prop(Object) reportData: any;
+	@Prop(Object) reportData!: any;
 }

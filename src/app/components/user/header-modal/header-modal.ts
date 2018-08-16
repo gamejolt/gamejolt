@@ -14,7 +14,7 @@ import { ModalConfirm } from '../../../../lib/gj-lib-client/components/modal/con
 	},
 })
 export default class AppUserHeaderModal extends BaseModal {
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	async clearHeader() {
 		const result = await ModalConfirm.show(

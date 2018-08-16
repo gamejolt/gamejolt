@@ -23,11 +23,11 @@ import { store as clientStore } from '../../../../_common/client/store';
 	},
 })
 export class AppClientStatusBar extends Vue {
-	@ClientLibraryState gamesById: ClientLibraryStore['gamesById'];
-	@ClientLibraryState numPlaying: ClientLibraryStore['numPlaying'];
-	@ClientLibraryState numPatching: ClientLibraryStore['numPatching'];
-	@ClientLibraryState currentlyPlaying: ClientLibraryStore['currentlyPlaying'];
-	@ClientLibraryState currentlyPatching: ClientLibraryStore['currentlyPatching'];
+	@ClientLibraryState gamesById!: ClientLibraryStore['gamesById'];
+	@ClientLibraryState numPlaying!: ClientLibraryStore['numPlaying'];
+	@ClientLibraryState numPatching!: ClientLibraryStore['numPatching'];
+	@ClientLibraryState currentlyPlaying!: ClientLibraryStore['currentlyPlaying'];
+	@ClientLibraryState currentlyPatching!: ClientLibraryStore['currentlyPatching'];
 
 	get clientUpdateStatus() {
 		return clientStore.state.clientUpdateStatus;

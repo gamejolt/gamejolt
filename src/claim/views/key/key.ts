@@ -26,9 +26,9 @@ import {
 	},
 })
 export default class RouteKey extends BaseRouteComponent {
-	@Prop(String) accessKey: string;
+	@Prop(String) accessKey!: string;
 
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	// Use payload here so that the children can be reactive to it.
 	payload = null as any;

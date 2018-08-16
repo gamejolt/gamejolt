@@ -13,7 +13,7 @@ import { Location } from 'vue-router';
 	},
 })
 export class AppChannelThumbnail extends Vue {
-	@Prop(String) channel: string;
+	@Prop(String) channel!: string;
 
 	get channelInfo() {
 		return Channels.channels.find(i => i.id === this.channel)!;

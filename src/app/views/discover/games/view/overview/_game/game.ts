@@ -75,42 +75,42 @@ import {
 	},
 })
 export class AppDiscoverGamesViewOverviewGame extends Vue {
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
-	@CommentState getCommentStore: CommentStore['getCommentStore'];
+	@CommentState getCommentStore!: CommentStore['getCommentStore'];
 
-	@RouteState isOverviewLoaded: RouteStore['isOverviewLoaded'];
-	@RouteState game: RouteStore['game'];
-	@RouteState mediaItems: RouteStore['mediaItems'];
-	@RouteState recommendedGames: RouteStore['recommendedGames'];
-	@RouteState userRating: RouteStore['userRating'];
-	@RouteState songs: RouteStore['songs'];
-	@RouteState userPartnerKey: RouteStore['userPartnerKey'];
-	@RouteState partnerLink: RouteStore['partnerLink'];
-	@RouteState partner: RouteStore['partner'];
-	@RouteState partnerKey: RouteStore['partnerKey'];
-	@RouteState twitterShareMessage: RouteStore['twitterShareMessage'];
-	@RouteState feed: RouteStore['feed'];
-	@RouteState supporters: RouteStore['supporters'];
-	@RouteState videoComments: RouteStore['videoComments'];
-	@RouteState videoCommentsCount: RouteStore['videoCommentsCount'];
-	@RouteState shouldShowMultiplePackagesMessage: RouteStore['shouldShowMultiplePackagesMessage'];
-	@RouteState trophiesCount: RouteStore['trophiesCount'];
-	@RouteState hasScores: RouteStore['hasScores'];
-	@RouteState trophiesPayload: RouteStore['trophiesPayload'];
-	@RouteState scoresPayload: RouteStore['scoresPayload'];
-	@RouteState packages: RouteStore['packages'];
-	@RouteState hasReleasesSection: RouteStore['hasReleasesSection'];
-	@RouteState customGameMessages: RouteStore['customGameMessages'];
+	@RouteState isOverviewLoaded!: RouteStore['isOverviewLoaded'];
+	@RouteState game!: RouteStore['game'];
+	@RouteState mediaItems!: RouteStore['mediaItems'];
+	@RouteState recommendedGames!: RouteStore['recommendedGames'];
+	@RouteState userRating!: RouteStore['userRating'];
+	@RouteState songs!: RouteStore['songs'];
+	@RouteState userPartnerKey!: RouteStore['userPartnerKey'];
+	@RouteState partnerLink!: RouteStore['partnerLink'];
+	@RouteState partner!: RouteStore['partner'];
+	@RouteState partnerKey!: RouteStore['partnerKey'];
+	@RouteState twitterShareMessage!: RouteStore['twitterShareMessage'];
+	@RouteState feed!: RouteStore['feed'];
+	@RouteState supporters!: RouteStore['supporters'];
+	@RouteState videoComments!: RouteStore['videoComments'];
+	@RouteState videoCommentsCount!: RouteStore['videoCommentsCount'];
+	@RouteState shouldShowMultiplePackagesMessage!: RouteStore['shouldShowMultiplePackagesMessage'];
+	@RouteState trophiesCount!: RouteStore['trophiesCount'];
+	@RouteState hasScores!: RouteStore['hasScores'];
+	@RouteState trophiesPayload!: RouteStore['trophiesPayload'];
+	@RouteState scoresPayload!: RouteStore['scoresPayload'];
+	@RouteState packages!: RouteStore['packages'];
+	@RouteState hasReleasesSection!: RouteStore['hasReleasesSection'];
+	@RouteState customGameMessages!: RouteStore['customGameMessages'];
 
-	@RouteAction loadVideoComments: RouteStore['loadVideoComments'];
+	@RouteAction loadVideoComments!: RouteStore['loadVideoComments'];
 
-	@RouteState showDescription: RouteStore['showDescription'];
-	@RouteState canToggleDescription: RouteStore['canToggleDescription'];
-	@RouteMutation toggleDescription: RouteStore['toggleDescription'];
-	@RouteMutation setCanToggleDescription: RouteStore['setCanToggleDescription'];
+	@RouteState showDescription!: RouteStore['showDescription'];
+	@RouteState canToggleDescription!: RouteStore['canToggleDescription'];
+	@RouteMutation toggleDescription!: RouteStore['toggleDescription'];
+	@RouteMutation setCanToggleDescription!: RouteStore['setCanToggleDescription'];
 
-	@RouteMutation addPost: RouteStore['addPost'];
+	@RouteMutation addPost!: RouteStore['addPost'];
 
 	readonly Screen = Screen;
 	readonly Environment = Environment;

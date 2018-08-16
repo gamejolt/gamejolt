@@ -26,8 +26,8 @@ import {
 	},
 })
 export default class RouteSearchResults extends BaseRouteComponent {
-	@Prop(Object) payload: any;
-	@Prop(String) query: string;
+	@Prop(Object) payload!: any;
+	@Prop(String) query!: string;
 
 	readonly Search = Search;
 	readonly Screen = Screen;

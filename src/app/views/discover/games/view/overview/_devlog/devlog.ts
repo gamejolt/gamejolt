@@ -56,33 +56,33 @@ import {
 	},
 })
 export class AppDiscoverGamesViewOverviewDevlog extends Vue {
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
-	@RouteState isOverviewLoaded: RouteStore['isOverviewLoaded'];
-	@RouteState game: RouteStore['game'];
-	@RouteState mediaItems: RouteStore['mediaItems'];
-	@RouteState songs: RouteStore['songs'];
-	@RouteState twitterShareMessage: RouteStore['twitterShareMessage'];
-	@RouteState feed: RouteStore['feed'];
-	@RouteState packages: RouteStore['packages'];
-	@RouteState hasReleasesSection: RouteStore['hasReleasesSection'];
-	@RouteState recommendedGames: RouteStore['recommendedGames'];
-	@RouteState partner: RouteStore['partner'];
-	@RouteState partnerKey: RouteStore['partnerKey'];
-	@RouteState customGameMessages: RouteStore['customGameMessages'];
+	@RouteState isOverviewLoaded!: RouteStore['isOverviewLoaded'];
+	@RouteState game!: RouteStore['game'];
+	@RouteState mediaItems!: RouteStore['mediaItems'];
+	@RouteState songs!: RouteStore['songs'];
+	@RouteState twitterShareMessage!: RouteStore['twitterShareMessage'];
+	@RouteState feed!: RouteStore['feed'];
+	@RouteState packages!: RouteStore['packages'];
+	@RouteState hasReleasesSection!: RouteStore['hasReleasesSection'];
+	@RouteState recommendedGames!: RouteStore['recommendedGames'];
+	@RouteState partner!: RouteStore['partner'];
+	@RouteState partnerKey!: RouteStore['partnerKey'];
+	@RouteState customGameMessages!: RouteStore['customGameMessages'];
 
-	@RouteState showDescription: RouteStore['showDescription'];
-	@RouteState canToggleDescription: RouteStore['canToggleDescription'];
-	@RouteMutation toggleDescription: RouteStore['toggleDescription'];
-	@RouteMutation setCanToggleDescription: RouteStore['setCanToggleDescription'];
+	@RouteState showDescription!: RouteStore['showDescription'];
+	@RouteState canToggleDescription!: RouteStore['canToggleDescription'];
+	@RouteMutation toggleDescription!: RouteStore['toggleDescription'];
+	@RouteMutation setCanToggleDescription!: RouteStore['setCanToggleDescription'];
 
-	@RouteMutation addPost: RouteStore['addPost'];
+	@RouteMutation addPost!: RouteStore['addPost'];
 
-	@CommentState getCommentStore: CommentStore['getCommentStore'];
-	@CommentAction fetchComments: CommentStore['fetchComments'];
-	@CommentAction lockCommentStore: CommentStore['lockCommentStore'];
-	@CommentMutation releaseCommentStore: CommentStore['releaseCommentStore'];
-	@CommentMutation onCommentAdd: CommentStore['onCommentAdd'];
+	@CommentState getCommentStore!: CommentStore['getCommentStore'];
+	@CommentAction fetchComments!: CommentStore['fetchComments'];
+	@CommentAction lockCommentStore!: CommentStore['lockCommentStore'];
+	@CommentMutation releaseCommentStore!: CommentStore['releaseCommentStore'];
+	@CommentMutation onCommentAdd!: CommentStore['onCommentAdd'];
 
 	headingColClasses = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-2';
 	contentColClasses = 'col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-7';

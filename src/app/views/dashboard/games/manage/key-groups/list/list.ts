@@ -34,7 +34,7 @@ import {
 	},
 })
 export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	keyGroups: KeyGroup[] = [];
 	packages: GamePackage[] = [];

@@ -37,11 +37,11 @@ import {
 	},
 })
 export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent {
-	@Prop(String) type: 'best' | 'user';
+	@Prop(String) type!: 'best' | 'user';
 
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	scoreTables: GameScoreTable[] = [];
 	scoreTable: GameScoreTable | null = null;

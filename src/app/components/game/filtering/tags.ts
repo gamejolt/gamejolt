@@ -14,7 +14,7 @@ import { Genre } from '../../genre/genre';
 	},
 })
 export class AppGameFilteringTags extends Vue {
-	@Prop(Object) filtering: GameFilteringContainer;
+	@Prop(Object) filtering!: GameFilteringContainer;
 
 	readonly GameFilteringContainer = GameFilteringContainer;
 	readonly Genre = Genre;

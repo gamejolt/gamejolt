@@ -49,15 +49,15 @@ export class FormGameRelease extends BaseForm<GameReleaseFormModel>
 	implements FormOnInit, FormOnLoad, FormOnSubmitSuccess {
 	modelClass = GameRelease as any;
 
-	@Prop(Game) game: Game;
-	@Prop(GamePackage) package: GamePackage;
-	@Prop(Array) builds: GameBuild[];
-	@Prop(Array) launchOptions: GameBuildLaunchOption[];
-	@Prop(Object) buildDownloadCounts: { [buildId: number]: number };
-	@Prop(Boolean) areBuildsLockedByJam: boolean;
-	@Prop(Boolean) areWebBuildsLockedBySellable: boolean;
+	@Prop(Game) game!: Game;
+	@Prop(GamePackage) package!: GamePackage;
+	@Prop(Array) builds!: GameBuild[];
+	@Prop(Array) launchOptions!: GameBuildLaunchOption[];
+	@Prop(Object) buildDownloadCounts!: { [buildId: number]: number };
+	@Prop(Boolean) areBuildsLockedByJam!: boolean;
+	@Prop(Boolean) areWebBuildsLockedBySellable!: boolean;
 
-	$refs: {
+	$refs!: {
 		form: AppForm;
 	};
 

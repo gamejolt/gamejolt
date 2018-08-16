@@ -51,7 +51,7 @@ export class FormFinancials extends BaseForm<FormModel>
 	resetOnSubmit = true;
 	reloadOnSubmit = true;
 
-	$refs: {
+	$refs!: {
 		form: AppForm;
 	};
 
@@ -64,9 +64,9 @@ export class FormFinancials extends BaseForm<FormModel>
 	user: User = null as any;
 	partner: ReferralEntry | null = null;
 
-	maxWallet: number;
-	maxPayout: number;
-	minWithdraw: number;
+	maxWallet = 0;
+	maxPayout = 0;
+	minWithdraw = 0;
 
 	currency = currency;
 

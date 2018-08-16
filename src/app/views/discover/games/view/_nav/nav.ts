@@ -34,15 +34,15 @@ import {
 	},
 })
 export class AppDiscoverGamesViewNav extends Vue {
-	@RouteState game: RouteStore['game'];
-	@RouteState postsCount: RouteStore['postsCount'];
-	@RouteState trophiesCount: RouteStore['trophiesCount'];
-	@RouteState hasScores: RouteStore['hasScores'];
-	@RouteState primaryScoreTable: RouteStore['primaryScoreTable'];
+	@RouteState game!: RouteStore['game'];
+	@RouteState postsCount!: RouteStore['postsCount'];
+	@RouteState trophiesCount!: RouteStore['trophiesCount'];
+	@RouteState hasScores!: RouteStore['hasScores'];
+	@RouteState primaryScoreTable!: RouteStore['primaryScoreTable'];
 
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
-	@CommentState getCommentStore: CommentStore['getCommentStore'];
+	@CommentState getCommentStore!: CommentStore['getCommentStore'];
 
 	Environment = Environment;
 

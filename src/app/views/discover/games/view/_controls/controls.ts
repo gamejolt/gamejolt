@@ -14,5 +14,5 @@ import { RouteState, RouteStore } from '../view.store';
 	},
 })
 export class AppDiscoverGamesViewControls extends Vue {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 }

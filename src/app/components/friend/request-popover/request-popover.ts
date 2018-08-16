@@ -23,8 +23,8 @@ type Tab = 'requests' | 'pending';
 	},
 })
 export class AppFriendRequestPopover extends Vue {
-	@Mutation setFriendRequestCount: Store['setFriendRequestCount'];
-	@AppState user: AppStore['user'];
+	@Mutation setFriendRequestCount!: Store['setFriendRequestCount'];
+	@AppState user!: AppStore['user'];
 
 	isShown = false;
 	isLoading = true;
@@ -34,7 +34,7 @@ export class AppFriendRequestPopover extends Vue {
 	outgoing: UserFriendship[] = [];
 
 	// Don't set default value so it doesn't watch.
-	private inviewParent: AppScrollInviewParent;
+	private inviewParent?: AppScrollInviewParent;
 
 	get requests() {
 		return this.activeTab === 'requests' ? this.incoming : this.outgoing;

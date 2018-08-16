@@ -11,7 +11,7 @@ import { BaseModal } from '../../../../../lib/gj-lib-client/components/modal/bas
 	},
 })
 export default class AppUserAddressEditModal extends BaseModal {
-	@Prop(UserAddress) address: UserAddress;
+	@Prop(UserAddress) address!: UserAddress;
 
 	onSaved(address: UserAddress) {
 		this.modal.resolve(address);

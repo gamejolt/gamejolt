@@ -36,9 +36,9 @@ import { CommentModal } from '../../../../../../../lib/gj-lib-client/components/
 	},
 })
 export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent {
-	@Prop() postSlug: string;
+	@Prop() postSlug!: string;
 
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	post: FiresidePost | null = null;
 

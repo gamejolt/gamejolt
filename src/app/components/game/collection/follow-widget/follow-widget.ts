@@ -19,16 +19,16 @@ import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/service
 	},
 })
 export class AppGameCollectionFollowWidget extends Vue {
-	@Prop(GameCollection) collection: GameCollection;
+	@Prop(GameCollection) collection!: GameCollection;
 	@Prop(Number) followerCount?: number;
 	@Prop(Boolean) overlay?: boolean;
 	@Prop(Boolean) circle?: boolean;
 	@Prop(Boolean) block?: boolean;
 
-	@AppState user: AppStore['user'];
-	@LibraryState collections: LibraryStore['collections'];
-	@LibraryAction followCollection: LibraryStore['followCollection'];
-	@LibraryAction unfollowCollection: LibraryStore['unfollowCollection'];
+	@AppState user!: AppStore['user'];
+	@LibraryState collections!: LibraryStore['collections'];
+	@LibraryAction followCollection!: LibraryStore['followCollection'];
+	@LibraryAction unfollowCollection!: LibraryStore['unfollowCollection'];
 
 	isProcessing = false;
 

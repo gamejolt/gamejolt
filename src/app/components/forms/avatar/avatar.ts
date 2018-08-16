@@ -43,7 +43,7 @@ export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
 	readonly filesize = filesize;
 	readonly Screen = Screen;
 
-	$refs: {
+	$refs!: {
 		form: AppForm;
 	};
 

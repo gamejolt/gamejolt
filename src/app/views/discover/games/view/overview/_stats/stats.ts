@@ -26,13 +26,13 @@ import { AppMeter } from '../../../../../../../lib/gj-lib-client/components/mete
 	},
 })
 export class AppDiscoverGamesViewOverviewStats extends Vue {
-	@RouteState isOverviewLoaded: RouteStore['isOverviewLoaded'];
-	@RouteState game: RouteStore['game'];
-	@RouteState profileCount: RouteStore['profileCount'];
-	@RouteState downloadCount: RouteStore['downloadCount'];
-	@RouteState playCount: RouteStore['playCount'];
-	@RouteState ratingBreakdown: RouteStore['ratingBreakdown'];
-	@RouteState packages: RouteStore['packages'];
+	@RouteState isOverviewLoaded!: RouteStore['isOverviewLoaded'];
+	@RouteState game!: RouteStore['game'];
+	@RouteState profileCount!: RouteStore['profileCount'];
+	@RouteState downloadCount!: RouteStore['downloadCount'];
+	@RouteState playCount!: RouteStore['playCount'];
+	@RouteState ratingBreakdown!: RouteStore['ratingBreakdown'];
+	@RouteState packages!: RouteStore['packages'];
 
 	isShowingRatingBreakdown = false;
 

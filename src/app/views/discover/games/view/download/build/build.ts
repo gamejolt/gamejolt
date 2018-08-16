@@ -44,10 +44,10 @@ const DownloadDelay = 3000;
 	},
 })
 export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
-	@RouteState userRating: RouteStore['userRating'];
+	@RouteState game!: RouteStore['game'];
+	@RouteState userRating!: RouteStore['userRating'];
 
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	src: string | null = null;
 	build: GameBuild = null as any;

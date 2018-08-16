@@ -32,7 +32,7 @@ import {
 	},
 })
 export default class RouteDashGamesManageCollaborators extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	collaborators: GameCollaborator[] = [];
 	activeCollaborator: GameCollaborator | null = null;
