@@ -61,7 +61,6 @@ export class AppClientTray extends Vue {
 
 		if (this.isClosed || this.isMinimized || !this.isFocused) {
 			Client.show();
-			this.isMinimized = false;
 			this.isClosed = false;
 		} else {
 			// If the window is being shown and is focused, let's minimize it.
@@ -90,12 +89,13 @@ export class AppClientTray extends Vue {
 			AppClientTray.hook.menuBuilder(menu);
 		}
 
-		menu.append(
-			new nw.MenuItem({
-				label: this.$gettext('Quit'),
-				click: () => Client.quit(),
-			})
-		);
+		const quitItem = new nw.MenuItem({
+			label: this.$gettext('Quit'),
+		});
+
+		quitItem.on('click', () => Client.quit());
+
+		menu.append(quitItem);
 
 		tray.menu = menu;
 		global.tray = tray;
