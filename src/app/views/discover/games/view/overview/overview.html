@@ -60,7 +60,7 @@
 					<div v-if="customGameMessages.length">
 						<div
 							key="wip"
-							v-else-if="game.canceled"
+							v-if="game.canceled"
 							class="alert alert-notice full-bleed-xs"
 							v-translate
 							>
