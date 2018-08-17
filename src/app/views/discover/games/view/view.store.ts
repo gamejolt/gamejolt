@@ -32,6 +32,7 @@ import {
 import { ActivityFeedContainer } from '../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { router } from '../../../index';
+import { Comment } from '../../../../../lib/gj-lib-client/components/comment/comment-model';
 
 export const RouteStoreName = 'gameRoute';
 export const RouteState = namespace(RouteStoreName, State);
@@ -133,10 +134,13 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	playCount = 0;
 	developerGamesCount = 0;
 	supporters: User[] = [];
+	supporterCount = 0;
 	recommendedGames: Game[] = [];
 
-	showDescription = false;
 	canToggleDescription = false;
+	showDetails = false;
+
+	overviewComments: Comment[] = [];
 
 	videoComments: CommentVideo[] = [];
 	videoCommentsCount = 0;
@@ -242,10 +246,13 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexMutation
 	bootstrapGame(gameId: Mutations['bootstrapGame']) {
 		this.game = Registry.find<Game>('Game', gameId) as any;
-		this.showDescription = false;
+		this.showDetails = false;
 		this.isOverviewLoaded = false;
 		this.recommendedGames = [];
 		this.mediaItems = [];
+		this.supporters = [];
+		this.videoComments = [];
+		this.overviewComments = [];
 		setAds(this.game);
 	}
 
@@ -303,7 +310,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 			this.feed = ActivityFeedService.bootstrap(EventItem.populate(payload.posts), {
 				type: 'EventItem',
 				url: `/web/discover/games/devlog/posts/${this.game.id}`,
-				noAutoload: !this.game._is_devlog,
 			});
 		}
 
@@ -325,6 +331,9 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.developerGamesCount = payload.developerGamesCount || 0;
 
 		this.supporters = User.populate(payload.supporters);
+		this.supporterCount = payload.supporterCount;
+
+		this.overviewComments = Comment.populate(payload.comments);
 
 		this.videoComments = CommentVideo.populate(payload.videoComments);
 		this.videoCommentsCount = payload.videoCommentsCount || 0;
@@ -383,13 +392,13 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	toggleDescription() {
-		this.showDescription = !this.showDescription;
+	setCanToggleDescription(flag: Mutations['setCanToggleDescription']) {
+		this.canToggleDescription = flag;
 	}
 
 	@VuexMutation
-	setCanToggleDescription(flag: Mutations['setCanToggleDescription']) {
-		this.canToggleDescription = flag;
+	toggleDetails() {
+		this.showDetails = !this.showDetails;
 	}
 
 	@VuexMutation

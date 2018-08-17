@@ -1,0 +1,38 @@
+<div class="-supporters">
+	<h4 class="-heading">
+		<translate>Supporters</translate>
+		<app-jolticon
+			class="text-muted"
+			icon="help-circle"
+			v-app-tooltip="$gettext(`The kind people that supported by paying more than the minimum. Sorted by amount contributed.`)"
+			/>
+	</h4>
+
+	<div class="-list">
+		<div class="-list-fade" />
+		<div
+			class="-supporter"
+			v-for="user of supporters.slice(0, 16)"
+			:key="user.id"
+			>
+			<router-link
+				class="user-avatar"
+				:to="user.url"
+				>
+				<app-user-avatar-img
+					:user="user"
+					v-app-tooltip="`${user.display_name} (@${user.username})`"
+					/>
+			</router-link>
+		</div>
+	</div>
+
+	<div class="-all">
+		<app-button
+			trans
+			@click="viewAll()"
+			>
+			<translate>View All</translate>
+		</app-button>
+	</div>
+</div>

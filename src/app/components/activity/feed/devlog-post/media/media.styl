@@ -35,7 +35,7 @@
 		position: absolute
 		top: 50%
 		height: 80px
-		width: 50px
+		width: $grid-gutter-width
 		line-height: @height
 		margin-top: -(@height / 2)
 		color: $white
@@ -50,11 +50,11 @@
 			display: block
 
 	&-prev
-		left: -50px
+		left: -($grid-gutter-width)
 		border-top-left-radius: $border-radius-base
 		border-bottom-left-radius: $border-radius-base
 
 	&-next
-		right: -50px
+		right: -($grid-gutter-width)
 		border-top-right-radius: $border-radius-base
 		border-bottom-right-radius: $border-radius-base

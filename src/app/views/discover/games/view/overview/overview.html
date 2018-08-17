@@ -1,0 +1,299 @@
+<div class="route-game-overview">
+
+	<!-- Media Bar -->
+	<app-media-bar
+		v-if="game.media_count"
+		:media-items="mediaItems"
+		/>
+
+	<app-ad-placement hidden-xs pos="top" />
+
+	<section class="section">
+		<div class="container">
+
+			<div class="row">
+				<div
+					v-if="hasStatsSection"
+					:class="Screen.isMobile ? leftColClass : rightColClass"
+					>
+					<div class="row">
+						<div
+							class="col-xs-12 col-sm-6 col-md-12"
+							:class="{
+								'col-sm-push-6 col-md-push-0': hasRatingSection,
+							}"
+							>
+							<app-discover-games-view-overview-stats />
+						</div>
+						<div
+							v-if="hasRatingSection"
+							class="col-xs-12 col-sm-6 col-sm-pull-6 col-md-12 col-md-pull-0"
+							>
+							<h3 class="section-header">
+								<template v-if="!!userRating">
+									<translate>Your Rating</translate>
+								</template>
+								<template v-else>
+									<translate>Rate Game</translate>
+								</template>
+							</h3>
+
+							<div>
+								<app-rating-widget
+									:game="game"
+									:rating="userRating"
+									/>
+							</div>
+
+						</div>
+					</div>
+
+					<br>
+				</div>
+
+				<div :class="leftColClass">
+					<!--
+						Convenience Messaging
+						This needs to be a div instead of a template or vue 2.4.4 complains about a
+						patched vnode not existing.
+					-->
+					<div v-if="customGameMessages.length">
+						<br class="visible-xs">
+						<!-- <div
+							key="early-access"
+							v-if="game._is_wip && !game.canceled"
+							class="alert full-bleed-xs"
+							v-translate
+							>
+							This game is in <b>early access</b>. It's still in development and the current version may be buggy or incomplete. Follow along to watch it as it develops!
+						</div>
+						<div
+							key="wip"
+							v-else-if="game.canceled"
+							class="alert alert-notice full-bleed-xs"
+							v-translate
+							>
+							This game was <b>canceled</b>, so the current version might be buggy or incomplete. You can still follow it if you'd like to be notified in the case that development continues.
+						</div> -->
+
+						<div
+							v-for="msg of customGameMessages"
+							class="alert full-bleed-xs"
+							:class="{
+								'alert-notice': msg.type === 'alert',
+							}"
+							>
+							<app-jolticon icon="notice" />
+							<span v-html="msg.message" />
+						</div>
+
+						<br class="hidden-xs">
+					</div>
+
+					<!--
+						Builds / Soundtrack
+						This is a bit tricky. _has_packages doesn't yet take into account private packages.
+						If the game has only private packages, this will still be set to true.
+						We only use it to figure out if we should show the releases section while loading before
+						we actually have the package data. Because of that, we only use it to figure out what to
+						show while we're loading the section. After it's loaded in, we decide if it should show
+						through the "hasReleasesSection" variable which has the correct data.
+					-->
+					<template v-if="(game._has_packages && !isOverviewLoaded) || hasReleasesSection">
+						<div id="game-releases">
+
+							<!--
+								Partner Controls
+							-->
+							<app-card v-if="hasPartnerControls">
+								<div class="card-content">
+									<p>
+										<translate tag="strong">This game is part of the Partner system!</translate>
+										<translate>You can use this link for sharing the game.</translate>
+									</p>
+									<input class="form-control" :value="partnerLink">
+								</div>
+								<div class="card-controls">
+									<app-button
+										primary
+										@click="copyPartnerLink"
+										>
+										<translate>Copy Partner Link</translate>
+									</app-button>
+									<app-button
+										trans
+										:to="{
+											name: 'dash.analytics',
+											params: { resource: 'Game', resourceId: game.id },
+										}"
+										>
+										<translate>View Analytics</translate>
+									</app-button>
+								</div>
+							</app-card>
+
+							<div v-if="shouldShowMultiplePackagesMessage" class="alert alert-notice">
+								<app-jolticon icon="notice" />
+								<translate>There are multiple packages for your device. Please choose one below.</translate>
+							</div>
+
+							<app-lazy-placeholder :when="isOverviewLoaded">
+								<div class="lazy-placeholder" style="height: 135px"></div>
+
+								<template v-if="packages.length">
+									<app-game-package-card
+										v-for="package of packages"
+										:key="package.id"
+										:game="game"
+										:sellable="package._sellable"
+										:package="package"
+										:releases="package._releases"
+										:builds="package._builds"
+										:is-partner="!!userPartnerKey"
+										:partner-key="partnerKey"
+										:partner="partner"
+										/>
+								</template>
+
+								<app-game-soundtrack-card
+									v-if="songs.length"
+									:game="game"
+									:songs="songs"
+									/>
+							</app-lazy-placeholder>
+
+						</div>
+
+						<template v-if="supporters.length > 0">
+							<app-discover-games-view-overview-supporters
+								:supporters="supporters"
+								:supporterCount="supporterCount"
+								/>
+						</template>
+
+						<div class="-spacer" />
+					</template>
+
+					<div v-if="!game.description_compiled">
+						<span class="lazy-placeholder"></span>
+						<span class="lazy-placeholder"></span>
+						<span class="lazy-placeholder"></span>
+						<span class="lazy-placeholder" style="width: 40%"></span>
+					</div>
+					<div v-else>
+						<!--
+							Set a :key to let vue know that it should update
+							this when the game changes.
+						-->
+						<app-fade-collapse
+							:collapse-height="500"
+							:is-open="showDetails || !postsCount"
+							:animate="false"
+							:key="game.id"
+							@require-change="setCanToggleDescription"
+							@expand="toggleDetails()"
+							>
+							<div
+								class="game-compiled-description"
+								v-html="game.description_compiled"
+								>
+							</div>
+						</app-fade-collapse>
+
+						<div v-if="showDetails">
+							<hr>
+							<div class="row">
+								<div class="col-sm-6">
+									<app-discover-games-view-overview-details :game="game" />
+								</div>
+								<div class="col-sm-6">
+									<app-lazy-placeholder :when="isOverviewLoaded">
+										<div class="lazy-placeholder" style="height: 115px"></div>
+										<app-game-ogrs :game="game" />
+									</app-lazy-placeholder>
+								</div>
+							</div>
+						</div>
+
+						<div class="page-cut">
+							<app-button
+								trans
+								@click="toggleDetails()"
+								v-app-track-event="`game-profile:show-full-description`"
+								>
+								<translate v-if="!showDetails">Show More</translate>
+								<translate v-else>Less</translate>
+							</app-button>
+						</div>
+					</div>
+
+					<template v-if="feed">
+						<div class="-spacer" />
+
+						<app-game-perms :game="game" required="devlogs">
+							<h5 class="sans-margin-top">
+								<translate>Add Post</translate>
+							</h5>
+
+							<app-devlog-post-add
+								:game="game"
+								@add="onPostAdded"
+								/>
+
+							<hr>
+						</app-game-perms>
+
+						<app-activity-feed
+							v-if="feed.hasItems"
+							:feed="feed"
+							show-edit-controls
+							/>
+					</template>
+
+				</div>
+
+				<!--
+					We don't show this whole section on phones.
+					We instead show in the game nav.
+				-->
+				<div :class="rightColClass" v-if="!Screen.isMobile">
+					<h3 class="section-header">
+						<translate>Recommended</translate>
+					</h3>
+
+					<app-discover-games-view-overview-recommended />
+
+					<template v-if="Screen.isDesktop">
+						<div style="width: 300px">
+							<app-ad size="rectangle" pos="bottom" />
+						</div>
+					</template>
+
+					<template v-if="game.comments_enabled">
+						<br>
+						<div class="pull-right">
+							<app-button trans @click="showComments()">
+								<translate>View All</translate>
+							</app-button>
+						</div>
+
+						<h3 class="section-header">
+							<translate>Comments</translate>
+						</h3>
+
+						<app-comment-add-button
+							resource="Game"
+							:resource-id="game.id"
+							/>
+
+						<app-comment-overview
+							:comments="overviewComments"
+							/>
+					</template>
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+</div>
