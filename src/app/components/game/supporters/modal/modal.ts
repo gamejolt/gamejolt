@@ -28,12 +28,6 @@ export default class AppSupportersModal extends BaseModal {
 	currentPage = 0;
 	users: User[] = [];
 
-	get title() {
-		return this.$gettextInterpolate('%{ amount } people support this game', {
-			amount: this.supporterCount,
-		});
-	}
-
 	get shouldShowLoadMore() {
 		return !this.isLoading && !this.reachedEnd;
 	}
