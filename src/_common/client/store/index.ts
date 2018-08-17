@@ -92,9 +92,21 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 
 	@VuexAction
 	private async _migrateFrom0_12_3() {
-		// The new dataPath is moved to Default folder inside what used to be the dataPath on 0.12.3
-		const oldDataPath = path.join(nw.App.dataPath, '..');
+		// The new dataPath is different than the old 0.12.3 dataPath,
+		// and is also different for each OS, so we find the root of the data path by crawling up the directory tree
+		// till we end up at the root of client data folder.
+		let oldDataPath = nw.App.dataPath;
+		for (let i = 0; path.basename(oldDataPath) !== 'game-jolt-client'; i++) {
+			const nextDataPath = path.dirname(oldDataPath);
+			if (nextDataPath === oldDataPath || i > 3) {
+				console.warn('Failed to find the old data path');
+				return;
+			}
+			oldDataPath = nextDataPath;
+		}
+
 		const migrationFile = path.join(oldDataPath, '0.12.3-migration.json');
+		console.log('Expecting to find migration file in ' + migrationFile);
 
 		if (fs.existsSync(migrationFile)) {
 			console.log('Migrating data from 0.12.3');

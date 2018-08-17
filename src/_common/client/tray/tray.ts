@@ -12,7 +12,8 @@ declare var global: NodeJS.Global & {
 
 @Component({})
 export class AppClientTray extends Vue {
-	@State app!: AppStore;
+	@State
+	app!: AppStore;
 
 	isFocused = false;
 	isMinimized = false;
@@ -35,8 +36,12 @@ export class AppClientTray extends Vue {
 
 		win.on('blur', () => (this.isFocused = false));
 		win.on('focus', () => (this.isFocused = true));
-		win.on('minimize', () => (this.isMinimized = true));
-		win.on('restore', () => (this.isMinimized = false));
+		win.on('minimize', () => {
+			this.isMinimized = true;
+		});
+		win.on('restore', () => {
+			this.isMinimized = false;
+		});
 
 		win.on('close', () => {
 			// If we should just minimize to tray instead of quitting.
@@ -56,6 +61,7 @@ export class AppClientTray extends Vue {
 
 		if (this.isClosed || this.isMinimized || !this.isFocused) {
 			Client.show();
+			this.isMinimized = false;
 			this.isClosed = false;
 		} else {
 			// If the window is being shown and is focused, let's minimize it.
@@ -74,8 +80,9 @@ export class AppClientTray extends Vue {
 			title: 'Game Jolt Client',
 			// This has to be a relative path, hence the removal of the first /.
 			icon: require(`./icon${Screen.isHiDpi ? '-2x' : ''}-2x.png`).substr(1),
-			click: () => this.toggleVisibility(),
-		} as any);
+		});
+
+		tray.on('click', () => this.toggleVisibility());
 
 		const menu = new nw.Menu();
 
