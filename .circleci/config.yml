@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run: 'git submodule update --init --recursive'
       - run: 'yarn'
-      - run: 'yarn run client-build-osx'
+      - run: 'yarn run client-build-osx --noGjPush'
       - store_artifacts:
           path: ./build/prod-client-build/osx64-package.zip
       - store_artifacts:
@@ -19,7 +19,7 @@ jobs:
       - checkout
       - run: 'git submodule update --init --recursive'
       - run: 'yarn'
-      - run: 'yarn run client-build-linux64'
+      - run: 'yarn run client-build-linux64 --noGjPush'
       - store_artifacts:
           path: ./build/prod-client-build/linux64-package.zip
       - store_artifacts:
