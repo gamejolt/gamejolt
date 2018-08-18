@@ -1,0 +1,28 @@
+<div class="comment-overview">
+	<div
+		class="-comment fill-offset"
+		v-for="comment of comments.slice(0, 3)"
+		:key="comment.id"
+		>
+		<div class="-target" @click="open(comment)" />
+
+		<div class="-byline">
+			<div class="-avatar avatar-circle">
+				<app-user-avatar-img
+					:user="comment.user"
+					/>
+			</div>
+
+			<strong>{{ comment.user.display_name }}</strong>
+			<small class="text-muted">@{{ comment.user.username }}</small>
+		</div>
+		<div class="-content-container">
+			<app-fade-collapse :collapse-height="120">
+				<div
+					class="-content"
+					v-html="comment.comment_compiled"
+					/>
+			</app-fade-collapse>
+		</div>
+	</div>
+</div>
