@@ -21,7 +21,7 @@ install:
 
 build_script:
   - yarn
-  - yarn run client-build-win
+  - yarn run client-build-win -- --noGjPush
 
 test: off
 
