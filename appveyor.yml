@@ -8,6 +8,7 @@ environment:
 branches:
   only:
     - client-build
+    - standalone
 
 install:
   - rmdir C:\go /s /q
