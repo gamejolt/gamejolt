@@ -15,6 +15,8 @@ import {
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
+import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 
 const ManifestUrl = 'https://d.gamejolt.net/data/client/manifest-2.json';
 
@@ -31,8 +33,13 @@ const ManifestUrl = 'https://d.gamejolt.net/data/client/manifest-2.json';
 	},
 })
 export default class RouteLandingClient extends BaseRouteComponent {
-	platform = Device.os();
+	// When this is set, it triggers the iframe that begins the download
 	downloadSrc = '';
+
+	private packageData: GamePackagePayloadModel | null = null;
+	private fallbackUrl = 'https://gamejolt.com';
+
+	readonly platform = Device.os();
 
 	readonly Screen = Screen;
 
@@ -41,30 +48,44 @@ export default class RouteLandingClient extends BaseRouteComponent {
 		return Api.sendRequest('/web/client');
 	}
 
+	routed(payload: any) {
+		this.packageData = new GamePackagePayloadModel(payload.packageData);
+		this.fallbackUrl = payload.clientGameUrl;
+	}
+
 	get routeTitle() {
 		return 'Game Jolt Client';
 	}
 
 	async download(platform: string) {
-		if (platform === 'windows') {
-			platform = 'win32';
-		} else if (platform === 'linux') {
-			platform = 'linux64';
-		} else if (platform === 'mac') {
-			platform = 'osx64';
-		}
-
 		// This will reset the iframe since it removes it when there is no download src.
 		this.downloadSrc = '';
 
 		HistoryTick.sendBeacon('client-download');
-		const response = await Axios.get(ManifestUrl);
 
-		if (!response.data[platform] || !response.data[platform].url) {
-			Growls.error(`Couldn't find a download for your platform!`);
-			return;
+		this.downloadSrc = await this.getDownloadUrl(platform);
+	}
+
+	private async getDownloadUrl(platform: string) {
+		if (!this.packageData) {
+			return this.fallbackUrl;
 		}
 
-		this.downloadSrc = response.data[platform].url;
+		const installableBuilds = Game.pluckInstallableBuilds(this.packageData.packages, platform);
+		const bestBuild = Game.chooseBestBuild(installableBuilds, platform);
+		if (!bestBuild) {
+			return this.fallbackUrl;
+		}
+
+		try {
+			const result = await bestBuild.getDownloadUrl();
+			if (!result || !result.url) {
+				return this.fallbackUrl;
+			}
+			return result.url;
+		} catch (err) {
+			console.warn(err);
+			return this.fallbackUrl;
+		}
 	}
 }

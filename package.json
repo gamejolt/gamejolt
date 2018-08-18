@@ -124,9 +124,6 @@
 			"window": {
 				"icon": "package/static-assets/client/icon-256x256.png"
 			}
-		},
-		"osx": {
-			"window": {}
 		}
 	}
 }
