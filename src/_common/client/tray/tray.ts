@@ -28,7 +28,7 @@ export class AppClientTray extends Vue {
 	 * will do a soft quit.
 	 */
 	get isClientGreedy() {
-		return this.app.clientSection === 'app';
+		return Client.clientSection === 'app';
 	}
 
 	mounted() {

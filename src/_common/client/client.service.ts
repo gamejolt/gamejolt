@@ -1,3 +1,4 @@
+import { Environment } from '../../lib/gj-lib-client/components/environment/environment.service';
 const win = nw.Window.get();
 
 export class Client {
@@ -60,5 +61,19 @@ export class Client {
 
 	static clearProgressBar() {
 		win.setProgressBar(-1);
+	}
+
+	static get clientSection() {
+		if (window.location.href.startsWith(Environment.wttfBaseUrl)) {
+			return 'app';
+		} else if (window.location.href.startsWith(Environment.authBaseUrl)) {
+			return 'auth';
+		} else if (window.location.href.startsWith(Environment.checkoutBaseUrl)) {
+			return 'checkout';
+		} else if (window.location.href.startsWith(Environment.clientForceDowngradeUrl)) {
+			return 'client';
+		}
+
+		return null;
 	}
 }

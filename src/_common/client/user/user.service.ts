@@ -2,6 +2,7 @@ import { VuexStore } from '../../../lib/gj-lib-client/utils/vuex';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
+import { Client } from '../client.service';
 
 // So that this can be pulled into any section and not rely on the main "app" store, we manually
 // attach this so we know it exists.
@@ -15,7 +16,7 @@ export class ClientUser {
 		if (localUser) {
 			const user = new User(JSON.parse(localUser));
 			store.commit('app/setUser', user);
-		} else if (store.state.app.clientSection !== 'auth') {
+		} else if (Client.clientSection !== 'auth') {
 			// Must be logged in to use client.
 			this.authRedirect();
 		}
@@ -38,6 +39,15 @@ export class ClientUser {
 	}
 
 	private static authRedirect() {
-		window.location.href = Environment.authBaseUrl + '/login';
+		// TODO: This is a hack to fix redirect loop between the client downgrade section and the auth section.
+		// Apparantly nwjs doesnt clean up the store properly when redirected using window.location.href like the browser does,
+		// so theres a race condition between the time user service figures out it has no user and redirects to auth
+		// and the init logic in client service to redirect to downgrade section.
+		//
+		// This hack will not hold if we have other sections under the 'client' section.
+		const fromSection = Client.clientSection;
+		if (!fromSection || fromSection !== 'client') {
+			window.location.href = Environment.authBaseUrl + '/login';
+		}
 	}
 }
