@@ -162,7 +162,7 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 		) {
 			if (!fs.existsSync(path.join(nw.App.dataPath, '0.12.3-migrated'))) {
 				console.warn('Running from new version without exporting the 0.12.3 data.');
-				window.location.href = Environment.clientForceDowngradeUrl;
+				window.location.href = Environment.clientForceDowngradeUrl + '/downgrade';
 			}
 		}
 	}

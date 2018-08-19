@@ -70,7 +70,7 @@ export class Client {
 			return 'auth';
 		} else if (window.location.href.startsWith(Environment.checkoutBaseUrl)) {
 			return 'checkout';
-		} else if (window.location.href.startsWith(Environment.clientForceDowngradeUrl)) {
+		} else if (window.location.href.startsWith(Environment.clientSectionUrl)) {
 			return 'client';
 		}
 
