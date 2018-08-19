@@ -49,6 +49,7 @@ export default class RouteLandingClient extends BaseRouteComponent {
 	}
 
 	routed(payload: any) {
+		console.log(payload);
 		this.packageData = new GamePackagePayloadModel(payload.packageData);
 		this.fallbackUrl = payload.clientGameUrl;
 	}
@@ -63,29 +64,35 @@ export default class RouteLandingClient extends BaseRouteComponent {
 
 		HistoryTick.sendBeacon('client-download');
 
-		this.downloadSrc = await this.getDownloadUrl(platform);
+		const downloadUrl = await this.getDownloadUrl(platform);
+		if (downloadUrl === null) {
+			window.location.href = this.fallbackUrl;
+			return;
+		}
+
+		this.downloadSrc = downloadUrl;
 	}
 
 	private async getDownloadUrl(platform: string) {
 		if (!this.packageData) {
-			return this.fallbackUrl;
+			return null;
 		}
 
 		const installableBuilds = Game.pluckInstallableBuilds(this.packageData.packages, platform);
 		const bestBuild = Game.chooseBestBuild(installableBuilds, platform);
 		if (!bestBuild) {
-			return this.fallbackUrl;
+			return null;
 		}
 
 		try {
 			const result = await bestBuild.getDownloadUrl();
 			if (!result || !result.url) {
-				return this.fallbackUrl;
+				return null;
 			}
 			return result.url;
 		} catch (err) {
 			console.warn(err);
-			return this.fallbackUrl;
+			return null;
 		}
 	}
 }
