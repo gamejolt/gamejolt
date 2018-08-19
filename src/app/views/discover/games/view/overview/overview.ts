@@ -144,7 +144,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	get hasRatingSection() {
 		return (
 			// this.app.user &&
-			!this.hasAnyPerms &&
+			// !this.hasAnyPerms &&
 			// !this.game._is_devlog &&
 			this.game.ratings_enabled &&
 			this.game.can_user_rate
