@@ -45,7 +45,7 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 	get clientManifestPath() {
 		let cwd = nw.App.startPath;
 		if (os.type() === 'Darwin') {
-			cwd = path.resolve(cwd, '../../../../');
+			cwd = path.resolve(cwd, '../../../');
 		}
 		return path.resolve(cwd, '..', '.manifest');
 	}
@@ -152,7 +152,14 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 					);
 				}
 			}
-		} else if (fs.existsSync(path.join(oldDataPath, 'IndexedDB'))) {
+		} else if (
+			// On platforms where the new data path is the same as the old 0.12.3 data path we can't
+			// check if the new version is a fresh install or if we skipped the migration.
+			// This is because traces of the IndexedDB folder from the old version are no longer valid
+			// indication of an old version existing.
+			path.normalize(oldDataPath) !== path.normalize(nw.App.dataPath) &&
+			fs.existsSync(path.join(oldDataPath, 'IndexedDB'))
+		) {
 			if (!fs.existsSync(path.join(nw.App.dataPath, '0.12.3-migrated'))) {
 				console.warn('Running from new version without exporting the 0.12.3 data.');
 				window.location.href = Environment.clientForceDowngradeUrl;
