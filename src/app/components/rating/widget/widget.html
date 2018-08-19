@@ -9,14 +9,22 @@
 		@click="like()"
 		/>
 
-	<span class="blip light filled" v-if="likeCount > 0">
-		<span class="blip-caret"></span>
-		<span class="blip-count">{{ likeCount }}</span>
-	</span>
+	<a
+		@click="showLikers()"
+		v-app-tooltip="$gettext(`View all people that liked this game`)"
+		>
+		<span class="blip filled" v-if="game.like_count > 0">
+			<span class="blip-caret"></span>
+			<span class="blip-count">{{ likeCountFormatted }}</span>
+		</span>
+	</a>
+
+	&nbsp;
 
 	<app-button
 		icon="thumbs-down"
 		circle
+		trans
 		:primary="hasDisliked"
 		:solid="hasDisliked"
 		:disabled="isProcessing"

@@ -13,39 +13,29 @@
 
 			<div class="row">
 				<div
-					v-if="hasStatsSection"
+					v-if="hasRatingSection"
 					:class="Screen.isMobile ? leftColClass : rightColClass"
 					>
-					<div class="row">
-						<div
-							class="col-xs-12 col-sm-6 col-md-12"
-							:class="{
-								'col-sm-push-6 col-md-push-0': hasRatingSection,
-							}"
-							>
-							<app-discover-games-view-overview-stats />
-						</div>
-						<div
-							v-if="hasRatingSection"
-							class="col-xs-12 col-sm-6 col-sm-pull-6 col-md-12 col-md-pull-0"
-							>
-							<h3 class="section-header">
-								<template v-if="!!userRating">
-									<translate>Your Rating</translate>
-								</template>
-								<template v-else>
-									<translate>Rate Game</translate>
-								</template>
-							</h3>
+					<!-- <h3 class="section-header">
+						<template v-if="!!userRating">
+							<translate>Your Rating</translate>
+						</template>
+						<template v-else>
+							<translate>Rate Game</translate>
+						</template>
+					</h3> -->
 
-							<div>
-								<app-rating-widget
-									:game="game"
-									:rating="userRating"
-									/>
-							</div>
+					<h5 class="section-header">
+						<!-- <strong> -->
+							<translate>What do you think?</translate>
+						<!-- </strong> -->
+					</h5>
 
-						</div>
+					<div>
+						<app-rating-widget
+							:game="game"
+							:rating="userRating"
+							/>
 					</div>
 
 					<br>

@@ -32,7 +32,6 @@ import { Store } from '../../../../../store';
 import { RouteMutation, RouteState, RouteStore } from '../view.store';
 import { AppDiscoverGamesViewOverviewDetails } from './_details/details';
 import { AppDiscoverGamesViewOverviewRecommended } from './_recommended/recommended';
-import { AppDiscoverGamesViewOverviewStats } from './_stats/stats';
 import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters';
 
 @View
@@ -40,7 +39,6 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 	name: 'RouteDiscoverGamesViewOverview',
 	components: {
 		AppDiscoverGamesViewOverviewDetails,
-		AppDiscoverGamesViewOverviewStats,
 		AppDiscoverGamesViewOverviewRecommended,
 		AppDiscoverGamesViewOverviewSupporters,
 		AppAd,
@@ -135,10 +133,6 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		return '-right-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-4 pull-right';
 	}
 
-	get hasStatsSection() {
-		return !this.game._is_devlog;
-	}
-
 	get hasAnyPerms() {
 		return this.game.hasPerms();
 	}
@@ -149,9 +143,9 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	get hasRatingSection() {
 		return (
-			this.app.user &&
+			// this.app.user &&
 			!this.hasAnyPerms &&
-			!this.game._is_devlog &&
+			// !this.game._is_devlog &&
 			this.game.ratings_enabled &&
 			this.game.can_user_rate
 		);

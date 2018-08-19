@@ -1,36 +1,28 @@
+import View from '!view!./widget.html?style=./widget.styl';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import View from '!view!./widget.html?style=./widget.styl';
-
+import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GameRating } from '../../../../lib/gj-lib-client/components/game/rating/rating.model';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 
 @View
 @Component({
-	components: {
-		AppJolticon,
-	},
 	directives: {
 		AppTooltip,
-		AppTrackEvent,
 	},
 })
 export class AppRatingWidget extends Vue {
-	@Prop(Object) game: Game;
-	@Prop(Object) rating?: GameRating;
-	@Prop(Number) totalLikes: Number;
+	@Prop(Game) game!: Game;
+	@Prop(GameRating) rating?: GameRating;
+	@Prop(Boolean) disabled?: boolean;
 
-	clearLabel = '';
-	hovered = 0;
 	isProcessing = false;
 	gameRating = this.rating;
 
-	get likeCount() {
-		return this.totalLikes;
+	get likeCountFormatted() {
+		return number(this.game.like_count);
 	}
 
 	get hasLiked() {
@@ -46,7 +38,15 @@ export class AppRatingWidget extends Vue {
 		this.gameRating = rating;
 	}
 
-	async updateVote(rating: number) {
+	like() {
+		this.updateVote(GameRating.RATING_LIKE);
+	}
+
+	dislike() {
+		this.updateVote(GameRating.RATING_DISLIKE);
+	}
+
+	private async updateVote(rating: number) {
 		if (this.isProcessing) {
 			return;
 		}
@@ -73,13 +73,5 @@ export class AppRatingWidget extends Vue {
 		this.$emit('changed', this.gameRating);
 
 		EventBus.emit('GameRating.changed', this.game.id);
-	}
-
-	like() {
-		this.updateVote(GameRating.RATING_LIKE);
-	}
-
-	dislike() {
-		this.updateVote(GameRating.RATING_DISLIKE);
 	}
 }
