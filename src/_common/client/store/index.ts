@@ -45,7 +45,7 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 	get clientManifestPath() {
 		let cwd = nw.App.startPath;
 		if (os.type() === 'Darwin') {
-			cwd = path.resolve(cwd, '../../../../../../');
+			cwd = path.resolve(cwd, '../../../../');
 		}
 		return path.resolve(cwd, '..', '.manifest');
 	}
