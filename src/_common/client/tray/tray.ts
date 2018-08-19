@@ -5,10 +5,7 @@ import { Component } from 'vue-property-decorator';
 import { Client } from '../client.service';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
-
-declare var global: NodeJS.Global & {
-	tray: nw.Tray | undefined;
-};
+import { Navigate } from '../../../lib/gj-lib-client/components/navigate/navigate.service';
 
 @Component({})
 export class AppClientTray extends Vue {
@@ -28,7 +25,7 @@ export class AppClientTray extends Vue {
 	 * will do a soft quit.
 	 */
 	get isClientGreedy() {
-		return Client.clientSection === 'app';
+		return Navigate.currentSection === 'app';
 	}
 
 	mounted() {
@@ -69,16 +66,15 @@ export class AppClientTray extends Vue {
 	}
 
 	render(h: CreateElement) {
-		// Changes to these will refresh the render function.
-		if (global.tray) {
-			global.tray.remove();
-			global.tray = undefined;
-		}
-
 		const tray = new nw.Tray({
 			title: 'Game Jolt Client',
 			// This has to be a relative path, hence the removal of the first /.
 			icon: require(`./icon${Screen.isHiDpi ? '-2x' : ''}-2x.png`).substr(1),
+		});
+
+		Navigate.registerDestructor(() => {
+			console.log('removing tray before memes');
+			tray.remove();
 		});
 
 		tray.on('click', () => this.toggleVisibility());
@@ -98,7 +94,6 @@ export class AppClientTray extends Vue {
 		menu.append(quitItem);
 
 		tray.menu = menu;
-		global.tray = tray;
 
 		return h('div');
 	}

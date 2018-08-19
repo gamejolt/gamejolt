@@ -1,9 +1,7 @@
-import Axios from 'axios';
 import { Component } from 'vue-property-decorator';
 import View from '!view!./client.html?style=./client.styl';
 
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
-import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -17,8 +15,7 @@ import {
 import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
 import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-
-const ManifestUrl = 'https://d.gamejolt.net/data/client/manifest-2.json';
+import { Navigate } from '../../../../lib/gj-lib-client/components/navigate/navigate.service';
 
 @View
 @Component({
@@ -66,7 +63,7 @@ export default class RouteLandingClient extends BaseRouteComponent {
 
 		const downloadUrl = await this.getDownloadUrl(platform);
 		if (downloadUrl === null) {
-			window.location.href = this.fallbackUrl;
+			Navigate.gotoExternal(this.fallbackUrl);
 			return;
 		}
 

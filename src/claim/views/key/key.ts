@@ -13,6 +13,7 @@ import { AppKeyBundle } from './_bundle/bundle';
 import { ModalConfirm } from '../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
 import { Store } from '../../store/index';
+import { Navigate } from '../../../lib/gj-lib-client/components/navigate/navigate.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -26,9 +27,11 @@ import {
 	},
 })
 export default class RouteKey extends BaseRouteComponent {
-	@Prop(String) accessKey!: string;
+	@Prop(String)
+	accessKey!: string;
 
-	@State app!: Store['app'];
+	@State
+	app!: Store['app'];
 
 	// Use payload here so that the children can be reactive to it.
 	payload = null as any;
@@ -36,7 +39,9 @@ export default class RouteKey extends BaseRouteComponent {
 	type = '';
 
 	get loginUrl() {
-		return Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath);
+		return (
+			Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath)
+		);
 	}
 
 	get component() {
@@ -112,14 +117,22 @@ export default class RouteKey extends BaseRouteComponent {
 		try {
 			await Api.sendRequest('/web/library/claim-key', { key: this.accessKey });
 
+			let location = '';
 			if (resource instanceof GameBundle) {
-				window.location.href =
-					Environment.wttfBaseUrl + `/library/bundle/${resource.slug}/${resource.id}/games`;
+				location =
+					Environment.wttfBaseUrl +
+					`/library/bundle/${resource.slug}/${resource.id}/games`;
 			} else if (resource instanceof Game) {
-				window.location.href = Environment.wttfBaseUrl + `/profile/${user.slug}/${user.id}/owned`;
+				location = Environment.wttfBaseUrl + `/profile/${user.slug}/${user.id}/owned`;
+			}
+
+			if (location) {
+				Navigate.goto(location);
 			}
 		} catch (_e) {
-			Growls.error(this.$gettext(`For some reason we couldn't claim this into your account!`));
+			Growls.error(
+				this.$gettext(`For some reason we couldn't claim this into your account!`)
+			);
 		}
 	}
 }

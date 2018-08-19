@@ -2,7 +2,7 @@ import { VuexStore } from '../../../lib/gj-lib-client/utils/vuex';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
-import { Client } from '../client.service';
+import { Navigate } from '../../../lib/gj-lib-client/components/navigate/navigate.service';
 
 // So that this can be pulled into any section and not rely on the main "app" store, we manually
 // attach this so we know it exists.
@@ -16,7 +16,7 @@ export class ClientUser {
 		if (localUser) {
 			const user = new User(JSON.parse(localUser));
 			store.commit('app/setUser', user);
-		} else if (Client.clientSection !== 'auth') {
+		} else if (Navigate.currentSection !== 'auth') {
 			// Must be logged in to use client.
 			this.authRedirect();
 		}
@@ -45,9 +45,9 @@ export class ClientUser {
 		// and the init logic in client service to redirect to downgrade section.
 		//
 		// This hack will not hold if we have other sections under the 'client' section.
-		const fromSection = Client.clientSection;
+		const fromSection = Navigate.currentSection;
 		if (!fromSection || fromSection !== 'client') {
-			window.location.href = Environment.authBaseUrl + '/login';
+			Navigate.goto(Environment.authBaseUrl + '/login');
 		}
 	}
 }

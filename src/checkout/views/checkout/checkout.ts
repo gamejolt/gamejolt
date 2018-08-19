@@ -10,6 +10,7 @@ import { Environment } from '../../../lib/gj-lib-client/components/environment/e
 import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppMediaItemCover } from '../../../_common/media-item/cover/cover';
 import { FormPayment } from '../../components/forms/payment/payment';
+import { Navigate } from '../../../lib/gj-lib-client/components/navigate/navigate.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -71,6 +72,6 @@ export default class RouteCheckout extends BaseRouteComponent {
 			return;
 		}
 
-		window.location.href = redirect;
+		Navigate.goto(redirect);
 	}
 }

@@ -22,6 +22,7 @@ import {
 	FormOnInit,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { AppForm } from '../../../../lib/gj-lib-client/components/form-vue/form';
+import { Navigate } from '../../../../lib/gj-lib-client/components/navigate/navigate.service';
 
 interface FormModel {
 	tos_type?: 'partner' | 'developer';
@@ -141,11 +142,7 @@ export class FormFinancials extends BaseForm<FormModel>
 				throw new Error(`Response does not have an 'authUrl' field`);
 			}
 
-			if (GJ_IS_CLIENT) {
-				nw.Shell.openExternal(response.authUrl);
-			} else {
-				window.location.href = response.authUrl;
-			}
+			Navigate.gotoExternal(response.authUrl);
 		} catch (err) {
 			console.error(err);
 			Growls.error(this.$gettext('Could not get PayPal redirect URL.'));

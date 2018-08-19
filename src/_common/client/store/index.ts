@@ -13,6 +13,7 @@ import * as fs from 'fs';
 import { LocalDb } from '../../../app/components/client/local-db/local-db.service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { Client } from '../client.service';
+import { Navigate } from '../../../lib/gj-lib-client/components/navigate/navigate.service';
 
 export const ClientState = namespace('client', State);
 export const ClientAction = namespace('client', Action);
@@ -162,7 +163,7 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 		) {
 			if (!fs.existsSync(path.join(nw.App.dataPath, '0.12.3-migrated'))) {
 				console.warn('Running from new version without exporting the 0.12.3 data.');
-				window.location.href = Environment.clientSectionUrl + '/downgrade';
+				Navigate.goto(Environment.clientSectionUrl + '/downgrade');
 			}
 		}
 	}

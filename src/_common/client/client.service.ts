@@ -62,18 +62,4 @@ export class Client {
 	static clearProgressBar() {
 		win.setProgressBar(-1);
 	}
-
-	static get clientSection() {
-		if (window.location.href.startsWith(Environment.wttfBaseUrl)) {
-			return 'app';
-		} else if (window.location.href.startsWith(Environment.authBaseUrl)) {
-			return 'auth';
-		} else if (window.location.href.startsWith(Environment.checkoutBaseUrl)) {
-			return 'checkout';
-		} else if (window.location.href.startsWith(Environment.clientSectionUrl)) {
-			return 'client';
-		}
-
-		return null;
-	}
 }
