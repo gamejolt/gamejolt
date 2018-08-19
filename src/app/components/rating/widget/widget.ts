@@ -6,6 +6,7 @@ import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/eve
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GameRating } from '../../../../lib/gj-lib-client/components/game/rating/rating.model';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { LikersModal } from 'game-jolt-frontend-lib/components/likers/modal.service';
 
 @View
 @Component({
@@ -73,5 +74,9 @@ export class AppRatingWidget extends Vue {
 		this.$emit('changed', this.gameRating);
 
 		EventBus.emit('GameRating.changed', this.game.id);
+	}
+
+	private showLikers() {
+		LikersModal.show({ count: this.game.like_count, resource: this.game });
 	}
 }
