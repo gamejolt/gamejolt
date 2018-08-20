@@ -21,7 +21,10 @@ import { CommentModal } from '../../../../../../lib/gj-lib-client/components/com
 import { HistoryTick } from '../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { PartnerReferral } from '../../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
-import { BaseRouteComponent, RouteResolve } from '../../../../../../lib/gj-lib-client/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppCommentOverview } from '../../../../../components/comment/overview/overview';
 import { AppDevlogPostAdd } from '../../../../../components/devlog/post/add/add';
 import { AppGameOgrs } from '../../../../../components/game/ogrs/ogrs';
@@ -62,37 +65,63 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 	},
 })
 export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
-	@Prop() id!: string;
+	@Prop()
+	id!: string;
 
-	@State app!: Store['app'];
+	@State
+	app!: Store['app'];
 
-	@RouteState isOverviewLoaded!: RouteStore['isOverviewLoaded'];
-	@RouteState game!: RouteStore['game'];
-	@RouteState mediaItems!: RouteStore['mediaItems'];
-	@RouteState overviewComments!: RouteStore['overviewComments'];
-	@RouteState userRating!: RouteStore['userRating'];
-	@RouteState songs!: RouteStore['songs'];
-	@RouteState userPartnerKey!: RouteStore['userPartnerKey'];
-	@RouteState partnerLink!: RouteStore['partnerLink'];
-	@RouteState partner!: RouteStore['partner'];
-	@RouteState partnerKey!: RouteStore['partnerKey'];
-	@RouteState feed!: RouteStore['feed'];
-	@RouteState supporters!: RouteStore['supporters'];
-	@RouteState supporterCount!: RouteStore['supporterCount'];
-	@RouteState shouldShowMultiplePackagesMessage!: RouteStore['shouldShowMultiplePackagesMessage'];
-	@RouteState postsCount!: RouteStore['postsCount'];
-	@RouteState packages!: RouteStore['packages'];
-	@RouteState hasReleasesSection!: RouteStore['hasReleasesSection'];
-	@RouteState customGameMessages!: RouteStore['customGameMessages'];
+	@RouteState
+	isOverviewLoaded!: RouteStore['isOverviewLoaded'];
+	@RouteState
+	game!: RouteStore['game'];
+	@RouteState
+	mediaItems!: RouteStore['mediaItems'];
+	@RouteState
+	overviewComments!: RouteStore['overviewComments'];
+	@RouteState
+	userRating!: RouteStore['userRating'];
+	@RouteState
+	songs!: RouteStore['songs'];
+	@RouteState
+	userPartnerKey!: RouteStore['userPartnerKey'];
+	@RouteState
+	partnerLink!: RouteStore['partnerLink'];
+	@RouteState
+	partner!: RouteStore['partner'];
+	@RouteState
+	partnerKey!: RouteStore['partnerKey'];
+	@RouteState
+	feed!: RouteStore['feed'];
+	@RouteState
+	supporters!: RouteStore['supporters'];
+	@RouteState
+	supporterCount!: RouteStore['supporterCount'];
+	@RouteState
+	shouldShowMultiplePackagesMessage!: RouteStore['shouldShowMultiplePackagesMessage'];
+	@RouteState
+	postsCount!: RouteStore['postsCount'];
+	@RouteState
+	packages!: RouteStore['packages'];
+	@RouteState
+	hasReleasesSection!: RouteStore['hasReleasesSection'];
+	@RouteState
+	customGameMessages!: RouteStore['customGameMessages'];
 
-	@RouteMutation bootstrapFeed!: RouteStore['bootstrapFeed'];
-	@RouteMutation processOverviewPayload!: RouteStore['processOverviewPayload'];
+	@RouteMutation
+	bootstrapFeed!: RouteStore['bootstrapFeed'];
+	@RouteMutation
+	processOverviewPayload!: RouteStore['processOverviewPayload'];
 
-	@RouteState showDetails!: RouteStore['showDetails'];
-	@RouteMutation toggleDetails!: RouteStore['toggleDetails'];
-	@RouteMutation setCanToggleDescription!: RouteStore['setCanToggleDescription'];
+	@RouteState
+	showDetails!: RouteStore['showDetails'];
+	@RouteMutation
+	toggleDetails!: RouteStore['toggleDetails'];
+	@RouteMutation
+	setCanToggleDescription!: RouteStore['setCanToggleDescription'];
 
-	@RouteMutation addPost!: RouteStore['addPost'];
+	@RouteMutation
+	addPost!: RouteStore['addPost'];
 
 	readonly Screen = Screen;
 	readonly Environment = Environment;
@@ -146,13 +175,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	get hasRatingSection() {
-		return (
-			// this.app.user &&
-			// !this.hasAnyPerms &&
-			// !this.game._is_devlog &&
-			this.game.ratings_enabled &&
-			this.game.can_user_rate
-		);
+		return this.game.ratings_enabled;
 	}
 
 	routeInit() {

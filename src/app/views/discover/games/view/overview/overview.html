@@ -16,25 +16,15 @@
 					v-if="hasRatingSection"
 					:class="Screen.isMobile ? leftColClass : rightColClass"
 					>
-					<!-- <h3 class="section-header">
-						<template v-if="!!userRating">
-							<translate>Your Rating</translate>
-						</template>
-						<template v-else>
-							<translate>Rate Game</translate>
-						</template>
-					</h3> -->
-
-					<h5 class="section-header">
-						<!-- <strong> -->
-							<translate>What do you think?</translate>
-						<!-- </strong> -->
-					</h5>
+					<h4 class="section-header">
+						<translate>What do you think?</translate>
+					</h4>
 
 					<div>
 						<app-rating-widget
 							:game="game"
 							:rating="userRating"
+							@change="userRating = $event"
 							/>
 					</div>
 
@@ -238,9 +228,9 @@
 					We instead show in the game nav.
 				-->
 				<div :class="rightColClass" v-if="!Screen.isMobile">
-					<h3 class="section-header">
+					<h4 class="section-header">
 						<translate>Recommended</translate>
-					</h3>
+					</h4>
 
 					<app-discover-games-view-overview-recommended />
 
@@ -258,9 +248,9 @@
 							</app-button>
 						</div>
 
-						<h3 class="section-header">
+						<h4 class="section-header">
 							<translate>Comments</translate>
-						</h3>
+						</h4>
 
 						<app-comment-add-button
 							resource="Game"

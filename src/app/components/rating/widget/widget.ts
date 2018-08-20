@@ -1,42 +1,47 @@
 import View from '!view!./widget.html?style=./widget.styl';
+import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive.vue';
+import { LikersModal } from 'game-jolt-frontend-lib/components/likers/modal.service';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Emit, Prop } from 'vue-property-decorator';
 import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GameRating } from '../../../../lib/gj-lib-client/components/game/rating/rating.model';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { LikersModal } from 'game-jolt-frontend-lib/components/likers/modal.service';
 
 @View
 @Component({
 	directives: {
+		AppAuthRequired,
 		AppTooltip,
 	},
 })
 export class AppRatingWidget extends Vue {
-	@Prop(Game) game!: Game;
-	@Prop(GameRating) rating?: GameRating;
-	@Prop(Boolean) disabled?: boolean;
+	@Prop(Game)
+	game!: Game;
+
+	@Prop(GameRating)
+	userRating?: GameRating;
 
 	isProcessing = false;
-	gameRating = this.rating;
 
 	get likeCountFormatted() {
 		return number(this.game.like_count);
 	}
 
 	get hasLiked() {
-		return this.rating && this.rating.rating === GameRating.RATING_LIKE;
+		return this.userRating && this.userRating.rating === GameRating.RATING_LIKE;
 	}
 
 	get hasDisliked() {
-		return this.rating && this.rating.rating === GameRating.RATING_DISLIKE;
+		return this.userRating && this.userRating.rating === GameRating.RATING_DISLIKE;
 	}
 
-	@Watch('rating')
-	newRating(rating: GameRating) {
-		this.gameRating = rating;
+	@Emit('change')
+	onRatingChange(_rating?: GameRating) {}
+
+	showLikers() {
+		LikersModal.show({ count: this.game.like_count, resource: this.game });
 	}
 
 	like() {
@@ -55,10 +60,9 @@ export class AppRatingWidget extends Vue {
 		this.isProcessing = true;
 
 		// when a rating with the same value already exists, remove it instead
-		if (this.rating && this.rating.rating === rating) {
-			await this.rating.$remove();
-
-			this.gameRating = undefined;
+		if (this.userRating && this.userRating.rating === rating) {
+			await this.userRating.$remove();
+			this.onRatingChange(undefined);
 		} else {
 			const gameRating = new GameRating({
 				game_id: this.game.id,
@@ -66,17 +70,11 @@ export class AppRatingWidget extends Vue {
 			});
 
 			await gameRating.$save();
-
-			this.gameRating = gameRating;
+			this.onRatingChange(gameRating);
 		}
 
 		this.isProcessing = false;
-		this.$emit('changed', this.gameRating);
 
 		EventBus.emit('GameRating.changed', this.game.id);
-	}
-
-	private showLikers() {
-		LikersModal.show({ count: this.game.like_count, resource: this.game });
 	}
 }

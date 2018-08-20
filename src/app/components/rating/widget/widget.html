@@ -1,13 +1,15 @@
 <div class="rating-widget">
 
-	<app-button
-		icon="thumbs-up"
-		circle
-		:primary="hasLiked"
-		:solid="hasLiked"
-		:disabled="isProcessing"
-		@click="like()"
-		/>
+	<span v-app-auth-required>
+		<app-button
+			icon="thumbs-up"
+			circle
+			:primary="hasLiked"
+			:solid="hasLiked"
+			:disabled="isProcessing"
+			@click="like()"
+			/>
+	</span>
 
 	<a
 		@click="showLikers()"
@@ -21,14 +23,16 @@
 
 	&nbsp;
 
-	<app-button
-		icon="thumbs-down"
-		circle
-		trans
-		:primary="hasDisliked"
-		:solid="hasDisliked"
-		:disabled="isProcessing"
-		@click="dislike()"
-		/>
+	<span v-app-auth-required>
+		<app-button
+			icon="thumbs-down"
+			circle
+			trans
+			:primary="hasDisliked"
+			:solid="hasDisliked"
+			:disabled="isProcessing"
+			@click="dislike()"
+			/>
+	</span>
 
 </div>
