@@ -137,6 +137,10 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		return this.game.hasPerms();
 	}
 
+	get hasDevlogPerms() {
+		return this.game.hasPerms('devlogs');
+	}
+
 	get hasPartnerControls() {
 		return this.game.referrals_enabled && this.userPartnerKey && this.packages.length;
 	}

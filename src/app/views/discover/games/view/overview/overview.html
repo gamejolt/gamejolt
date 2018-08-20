@@ -208,10 +208,10 @@
 						</div>
 					</div>
 
-					<template v-if="feed">
+					<template v-if="feed && (feed.hasItems || hasDevlogPerms)">
 						<div class="-spacer" />
 
-						<app-game-perms :game="game" required="devlogs">
+						<template v-if="hasDevlogPerms">
 							<h5 class="sans-margin-top">
 								<translate>Add Post</translate>
 							</h5>
@@ -222,7 +222,7 @@
 								/>
 
 							<hr>
-						</app-game-perms>
+						</template>
 
 						<app-activity-feed
 							v-if="feed.hasItems"
