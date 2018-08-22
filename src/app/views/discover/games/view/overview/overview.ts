@@ -9,7 +9,6 @@ import { Environment } from 'game-jolt-frontend-lib/components/environment/envir
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppGamePackageCard } from 'game-jolt-frontend-lib/components/game/package/card/card';
-import { GameRatingGrowl } from 'game-jolt-frontend-lib/components/game/rating-growl/rating-growl.service';
 import { AppGameSoundtrackCard } from 'game-jolt-frontend-lib/components/game/soundtrack/card/card';
 import { AppLazyPlaceholder } from 'game-jolt-frontend-lib/components/lazy/placeholder/placeholder';
 import { AppMediaBar } from 'game-jolt-frontend-lib/components/media-bar/media-bar';
@@ -22,10 +21,7 @@ import { CommentModal } from '../../../../../../lib/gj-lib-client/components/com
 import { HistoryTick } from '../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { PartnerReferral } from '../../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
-import {
-	BaseRouteComponent,
-	RouteResolve,
-} from '../../../../../../lib/gj-lib-client/components/route/route-component';
+import { BaseRouteComponent, RouteResolve } from '../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppCommentOverview } from '../../../../../components/comment/overview/overview';
 import { AppDevlogPostAdd } from '../../../../../components/devlog/post/add/add';
 import { AppGameOgrs } from '../../../../../components/game/ogrs/ogrs';
@@ -216,7 +212,6 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		}
 
 		this.processOverviewPayload({ payload: $payload, fromCache });
-		GameRatingGrowl.show(this.game);
 	}
 
 	copyPartnerLink() {
