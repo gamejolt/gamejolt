@@ -32,7 +32,6 @@ import { Store } from '../../../../../store';
 import { RouteMutation, RouteState, RouteStore } from '../view.store';
 import { AppDiscoverGamesViewOverviewDetails } from './_details/details';
 import { AppDiscoverGamesViewOverviewRecommended } from './_recommended/recommended';
-import { AppDiscoverGamesViewOverviewStats } from './_stats/stats';
 import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters';
 
 @View
@@ -40,7 +39,6 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 	name: 'RouteDiscoverGamesViewOverview',
 	components: {
 		AppDiscoverGamesViewOverviewDetails,
-		AppDiscoverGamesViewOverviewStats,
 		AppDiscoverGamesViewOverviewRecommended,
 		AppDiscoverGamesViewOverviewSupporters,
 		AppAd,
@@ -64,37 +62,83 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 	},
 })
 export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
-	@Prop() id!: string;
+	@Prop()
+	id!: string;
 
-	@State app!: Store['app'];
+	@State
+	app!: Store['app'];
 
-	@RouteState isOverviewLoaded!: RouteStore['isOverviewLoaded'];
-	@RouteState game!: RouteStore['game'];
-	@RouteState mediaItems!: RouteStore['mediaItems'];
-	@RouteState overviewComments!: RouteStore['overviewComments'];
-	@RouteState userRating!: RouteStore['userRating'];
-	@RouteState songs!: RouteStore['songs'];
-	@RouteState userPartnerKey!: RouteStore['userPartnerKey'];
-	@RouteState partnerLink!: RouteStore['partnerLink'];
-	@RouteState partner!: RouteStore['partner'];
-	@RouteState partnerKey!: RouteStore['partnerKey'];
-	@RouteState feed!: RouteStore['feed'];
-	@RouteState supporters!: RouteStore['supporters'];
-	@RouteState supporterCount!: RouteStore['supporterCount'];
-	@RouteState shouldShowMultiplePackagesMessage!: RouteStore['shouldShowMultiplePackagesMessage'];
-	@RouteState postsCount!: RouteStore['postsCount'];
-	@RouteState packages!: RouteStore['packages'];
-	@RouteState hasReleasesSection!: RouteStore['hasReleasesSection'];
-	@RouteState customGameMessages!: RouteStore['customGameMessages'];
+	@RouteState
+	isOverviewLoaded!: RouteStore['isOverviewLoaded'];
 
-	@RouteMutation bootstrapFeed!: RouteStore['bootstrapFeed'];
-	@RouteMutation processOverviewPayload!: RouteStore['processOverviewPayload'];
+	@RouteState
+	game!: RouteStore['game'];
 
-	@RouteState showDetails!: RouteStore['showDetails'];
-	@RouteMutation toggleDetails!: RouteStore['toggleDetails'];
-	@RouteMutation setCanToggleDescription!: RouteStore['setCanToggleDescription'];
+	@RouteState
+	mediaItems!: RouteStore['mediaItems'];
 
-	@RouteMutation addPost!: RouteStore['addPost'];
+	@RouteState
+	overviewComments!: RouteStore['overviewComments'];
+
+	@RouteState
+	userRating!: RouteStore['userRating'];
+
+	@RouteState
+	songs!: RouteStore['songs'];
+
+	@RouteState
+	userPartnerKey!: RouteStore['userPartnerKey'];
+
+	@RouteState
+	partnerLink!: RouteStore['partnerLink'];
+
+	@RouteState
+	partner!: RouteStore['partner'];
+
+	@RouteState
+	partnerKey!: RouteStore['partnerKey'];
+
+	@RouteState
+	feed!: RouteStore['feed'];
+
+	@RouteState
+	supporters!: RouteStore['supporters'];
+
+	@RouteState
+	supporterCount!: RouteStore['supporterCount'];
+
+	@RouteState
+	shouldShowMultiplePackagesMessage!: RouteStore['shouldShowMultiplePackagesMessage'];
+
+	@RouteState
+	postsCount!: RouteStore['postsCount'];
+
+	@RouteState
+	packages!: RouteStore['packages'];
+
+	@RouteState
+	hasReleasesSection!: RouteStore['hasReleasesSection'];
+
+	@RouteState
+	customGameMessages!: RouteStore['customGameMessages'];
+
+	@RouteMutation
+	bootstrapFeed!: RouteStore['bootstrapFeed'];
+
+	@RouteMutation
+	processOverviewPayload!: RouteStore['processOverviewPayload'];
+
+	@RouteState
+	showDetails!: RouteStore['showDetails'];
+
+	@RouteMutation
+	toggleDetails!: RouteStore['toggleDetails'];
+
+	@RouteMutation
+	setCanToggleDescription!: RouteStore['setCanToggleDescription'];
+
+	@RouteMutation
+	addPost!: RouteStore['addPost'];
 
 	readonly Screen = Screen;
 	readonly Environment = Environment;
@@ -135,12 +179,12 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		return '-right-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-4 pull-right';
 	}
 
-	get hasStatsSection() {
-		return !this.game._is_devlog;
-	}
-
 	get hasAnyPerms() {
 		return this.game.hasPerms();
+	}
+
+	get hasDevlogPerms() {
+		return this.game.hasPerms('devlogs');
 	}
 
 	get hasPartnerControls() {
@@ -148,13 +192,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	get hasRatingSection() {
-		return (
-			this.app.user &&
-			!this.hasAnyPerms &&
-			!this.game._is_devlog &&
-			this.game.ratings_enabled &&
-			this.game.can_user_rate
-		);
+		return this.game.ratings_enabled;
 	}
 
 	routeInit() {

@@ -1,18 +1,33 @@
 import View from '!view!./view.html';
-import { CommentAction, CommentMutation, CommentState, CommentStore, CommentStoreModel } from 'game-jolt-frontend-lib/components/comment/comment-store';
+import {
+	CommentAction,
+	CommentMutation,
+	CommentState,
+	CommentStore,
+	CommentStoreModel,
+} from 'game-jolt-frontend-lib/components/comment/comment-store';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { EventBus } from '../../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
+import {
+	EventBus,
+	EventBusDeregister,
+} from '../../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
 import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
-import { BaseRouteComponent, RouteResolve } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { ThemeMutation, ThemeStore } from '../../../../../lib/gj-lib-client/components/theme/theme.store';
+import {
+	ThemeMutation,
+	ThemeStore,
+} from '../../../../../lib/gj-lib-client/components/theme/theme.store';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
 import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
@@ -22,11 +37,14 @@ import { AppGameMaturityBlock } from '../../../../components/game/maturity-block
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
+import {
+	RatingWidgetOnChange,
+	RatingWidgetOnChangePayload,
+} from '../../../../components/rating/widget/widget';
 import './view-content.styl';
-import { RouteAction, RouteMutation, RouteState, RouteStore, RouteStoreName } from './view.store';
+import { RouteMutation, RouteState, RouteStore, RouteStoreName } from './view.store';
 import { AppDiscoverGamesViewControls } from './_controls/controls';
 import { AppDiscoverGamesViewNav } from './_nav/nav';
-
 
 @View
 @Component({
@@ -45,30 +63,65 @@ import { AppDiscoverGamesViewNav } from './_nav/nav';
 	},
 })
 export default class RouteDiscoverGamesView extends BaseRouteComponent {
-	@Prop() id!: string;
+	@Prop()
+	id!: string;
 
-	@RouteState game!: RouteStore['game'];
-	@RouteState partner!: RouteStore['partner'];
-	@RouteState partnerKey!: RouteStore['partnerKey'];
-	@RouteState packages!: RouteStore['packages'];
-	@RouteState collaboratorInvite!: RouteStore['collaboratorInvite'];
-	@RouteState downloadableBuilds!: RouteStore['downloadableBuilds'];
-	@RouteState browserBuilds!: RouteStore['browserBuilds'];
-	@RouteState installableBuilds!: RouteStore['installableBuilds'];
+	@RouteState
+	game!: RouteStore['game'];
 
-	@RouteAction bootstrap!: RouteStore['bootstrap'];
-	@RouteAction refreshRatingInfo!: RouteStore['refreshRatingInfo'];
-	@RouteMutation bootstrapGame!: RouteStore['bootstrapGame'];
-	@RouteMutation showMultiplePackagesMessage!: RouteStore['showMultiplePackagesMessage'];
-	@RouteMutation acceptCollaboratorInvite!: RouteStore['acceptCollaboratorInvite'];
-	@RouteMutation declineCollaboratorInvite!: RouteStore['declineCollaboratorInvite'];
+	@RouteState
+	partner!: RouteStore['partner'];
 
-	@ThemeMutation setPageTheme!: ThemeStore['setPageTheme'];
+	@RouteState
+	partnerKey!: RouteStore['partnerKey'];
 
-	@CommentState getCommentStore!: CommentStore['getCommentStore'];
-	@CommentAction lockCommentStore!: CommentStore['lockCommentStore'];
-	@CommentMutation releaseCommentStore!: CommentStore['releaseCommentStore'];
-	@CommentMutation setCommentCount!: CommentStore['setCommentCount'];
+	@RouteState
+	packages!: RouteStore['packages'];
+
+	@RouteState
+	collaboratorInvite!: RouteStore['collaboratorInvite'];
+
+	@RouteState
+	downloadableBuilds!: RouteStore['downloadableBuilds'];
+
+	@RouteState
+	browserBuilds!: RouteStore['browserBuilds'];
+
+	@RouteState
+	installableBuilds!: RouteStore['installableBuilds'];
+
+	@RouteMutation
+	bootstrapGame!: RouteStore['bootstrapGame'];
+
+	@RouteMutation
+	processPayload!: RouteStore['processPayload'];
+
+	@RouteMutation
+	showMultiplePackagesMessage!: RouteStore['showMultiplePackagesMessage'];
+
+	@RouteMutation
+	acceptCollaboratorInvite!: RouteStore['acceptCollaboratorInvite'];
+
+	@RouteMutation
+	declineCollaboratorInvite!: RouteStore['declineCollaboratorInvite'];
+
+	@ThemeMutation
+	setPageTheme!: ThemeStore['setPageTheme'];
+
+	@RouteMutation
+	setUserRating!: RouteStore['setUserRating'];
+
+	@CommentState
+	getCommentStore!: CommentStore['getCommentStore'];
+
+	@CommentAction
+	lockCommentStore!: CommentStore['lockCommentStore'];
+
+	@CommentMutation
+	releaseCommentStore!: CommentStore['releaseCommentStore'];
+
+	@CommentMutation
+	setCommentCount!: CommentStore['setCommentCount'];
 
 	storeName = RouteStoreName;
 	storeModule = RouteStore;
@@ -77,7 +130,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 
-	private ratingCallback?: Function;
+	private ratingWatchDeregister?: EventBusDeregister;
 	private gaTrackingId?: string;
 
 	private roleNames: { [k: string]: string } = {
@@ -151,9 +204,16 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 		// Any game rating change will broadcast this event. We catch it so we
 		// can update the page with the new rating! Yay!
-		if (!this.ratingCallback) {
-			this.ratingCallback = (gameId: number) => this.onGameRatingChange(gameId);
-			EventBus.on('GameRating.changed', this.ratingCallback);
+		if (!this.ratingWatchDeregister) {
+			this.ratingWatchDeregister = EventBus.on(
+				RatingWidgetOnChange,
+				(payload: RatingWidgetOnChangePayload) => {
+					const { gameId, userRating } = payload;
+					if (gameId === this.game.id) {
+						this.setUserRating(userRating || null);
+					}
+				}
+			);
 		}
 
 		// Since routes are reused when switching params (new game page) we want
@@ -165,7 +225,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	}
 
 	async routed($payload: any) {
-		this.bootstrap($payload);
+		this.processPayload($payload);
 		this.setPageTheme(this.game.theme || null);
 
 		// If the game has a GA tracking ID, then we attach it to this
@@ -179,16 +239,19 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 			this.releaseCommentStore(this.commentStore);
 			this.commentStore = null;
 		}
-		this.commentStore = await this.lockCommentStore({resource: 'Game', resourceId: this.game.id});
-		this.setCommentCount({store: this.commentStore, count: $payload.commentsCount || 0});
+		this.commentStore = await this.lockCommentStore({
+			resource: 'Game',
+			resourceId: this.game.id,
+		});
+		this.setCommentCount({ store: this.commentStore, count: $payload.commentsCount || 0 });
 	}
 
 	routeDestroy() {
 		this.setPageTheme(null);
 
-		if (this.ratingCallback) {
-			EventBus.off('GameRating.changed', this.ratingCallback);
-			this.ratingCallback = undefined;
+		if (this.ratingWatchDeregister) {
+			this.ratingWatchDeregister();
+			this.ratingWatchDeregister = undefined;
 		}
 
 		if (this.game && this.game.ga_tracking_id) {
@@ -209,12 +272,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	async declineCollaboration() {
 		await this.collaboratorInvite!.$remove();
 		this.declineCollaboratorInvite();
-	}
-
-	onGameRatingChange(gameId: number) {
-		if (gameId === this.game.id) {
-			this.refreshRatingInfo();
-		}
 	}
 
 	scrollToPackagePayment(package_: GamePackage) {

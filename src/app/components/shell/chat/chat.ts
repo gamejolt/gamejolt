@@ -1,17 +1,19 @@
+import View from '!view!./chat.html';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
-import { State, Action } from 'vuex-class';
-import View from '!view!./chat.html';
-
-import { AppChatSidebar } from '../../chat/sidebar/sidebar';
-import { AppChatWindows } from '../../chat/windows/windows';
-import { Store } from '../../../store/index';
-import { ChatClient, ChatNewMessageEvent } from '../../chat/client';
-import { Favicon } from '../../../../lib/gj-lib-client/components/favicon/favicon.service';
-import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
+import { Action, State } from 'vuex-class';
 import { EscapeStack } from '../../../../lib/gj-lib-client/components/escape-stack/escape-stack.service';
+import {
+	EventBus,
+	EventBusDeregister,
+} from '../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
+import { Favicon } from '../../../../lib/gj-lib-client/components/favicon/favicon.service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppScrollInviewParent } from '../../../../lib/gj-lib-client/components/scroll/inview/parent';
+import { Store } from '../../../store/index';
+import { ChatClient, ChatNewMessageEvent } from '../../chat/client';
+import { AppChatSidebar } from '../../chat/sidebar/sidebar';
+import { AppChatWindows } from '../../chat/windows/windows';
 
 @View
 @Component({
@@ -32,7 +34,7 @@ export class AppShellChat extends Vue {
 	private isWindowFocused = false;
 	private unfocusedNotificationsCount = 0;
 
-	private newMessageCallback?: Function;
+	private newMessageDeregister?: EventBusDeregister;
 	private focusCallback?: EventListener;
 	private blurCallback?: EventListener;
 	private escapeCallback?: Function;
@@ -45,7 +47,7 @@ export class AppShellChat extends Vue {
 		this.blurCallback = () => (this.isWindowFocused = false);
 		this.focusCallback = () => (this.isWindowFocused = true);
 		this.escapeCallback = () => this.hideChatPane();
-		this.newMessageCallback = (event: ChatNewMessageEvent) => {
+		this.newMessageDeregister = EventBus.on('Chat.newMessage', (event: ChatNewMessageEvent) => {
 			// If we have a general room open, and our window is unfocused or
 			// minimized, then increment our room notifications count (since
 			// they haven't seen this message yet). Note that if these messages
@@ -60,20 +62,19 @@ export class AppShellChat extends Vue {
 					++this.unfocusedNotificationsCount;
 				}
 			}
-		};
+		});
 
 		window.addEventListener('blur', this.blurCallback);
 		window.addEventListener('focus', this.focusCallback);
 		EscapeStack.register(this.escapeCallback);
-		EventBus.on('Chat.newMessage', this.newMessageCallback);
 	}
 
 	destroyed() {
 		Favicon.reset();
 
-		if (this.newMessageCallback) {
-			EventBus.off('Chat.newMessage', this.newMessageCallback);
-			this.newMessageCallback = undefined;
+		if (this.newMessageDeregister) {
+			this.newMessageDeregister();
+			this.newMessageDeregister = undefined;
 		}
 
 		if (this.blurCallback) {

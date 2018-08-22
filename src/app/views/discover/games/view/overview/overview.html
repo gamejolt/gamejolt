@@ -13,39 +13,18 @@
 
 			<div class="row">
 				<div
-					v-if="hasStatsSection"
+					v-if="hasRatingSection"
 					:class="Screen.isMobile ? leftColClass : rightColClass"
 					>
-					<div class="row">
-						<div
-							class="col-xs-12 col-sm-6 col-md-12"
-							:class="{
-								'col-sm-push-6 col-md-push-0': hasRatingSection,
-							}"
-							>
-							<app-discover-games-view-overview-stats />
-						</div>
-						<div
-							v-if="hasRatingSection"
-							class="col-xs-12 col-sm-6 col-sm-pull-6 col-md-12 col-md-pull-0"
-							>
-							<h3 class="section-header">
-								<template v-if="!!userRating">
-									<translate>Your Rating</translate>
-								</template>
-								<template v-else>
-									<translate>Rate Game</translate>
-								</template>
-							</h3>
+					<h4 class="section-header">
+						<translate>What do you think?</translate>
+					</h4>
 
-							<div>
-								<app-rating-widget
-									:game="game"
-									:rating="userRating"
-									/>
-							</div>
-
-						</div>
+					<div>
+						<app-rating-widget
+							:game="game"
+							:user-rating="userRating"
+							/>
 					</div>
 
 					<br>
@@ -218,10 +197,10 @@
 						</div>
 					</div>
 
-					<template v-if="feed">
+					<template v-if="feed && (feed.hasItems || hasDevlogPerms)">
 						<div class="-spacer" />
 
-						<app-game-perms :game="game" required="devlogs">
+						<template v-if="hasDevlogPerms">
 							<h5 class="sans-margin-top">
 								<translate>Add Post</translate>
 							</h5>
@@ -232,7 +211,7 @@
 								/>
 
 							<hr>
-						</app-game-perms>
+						</template>
 
 						<app-activity-feed
 							v-if="feed.hasItems"
@@ -248,9 +227,9 @@
 					We instead show in the game nav.
 				-->
 				<div :class="rightColClass" v-if="!Screen.isMobile">
-					<h3 class="section-header">
+					<h4 class="section-header">
 						<translate>Recommended</translate>
-					</h3>
+					</h4>
 
 					<app-discover-games-view-overview-recommended />
 
@@ -268,9 +247,9 @@
 							</app-button>
 						</div>
 
-						<h3 class="section-header">
+						<h4 class="section-header">
 							<translate>Comments</translate>
-						</h3>
+						</h4>
 
 						<app-comment-add-button
 							resource="Game"
