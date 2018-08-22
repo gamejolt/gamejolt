@@ -244,8 +244,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 			: null;
 		this.twitterShareMessage = payload.twitterShareMessage || 'Check out this game!';
 
-		console.log('payload', payload);
-
 		this.userPartnerKey = payload.userPartnerKey;
 		this.collaboratorInvite = payload.invite ? new GameCollaborator(payload.invite) : null;
 
