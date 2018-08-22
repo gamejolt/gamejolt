@@ -9,6 +9,7 @@ import { Environment } from 'game-jolt-frontend-lib/components/environment/envir
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppGamePackageCard } from 'game-jolt-frontend-lib/components/game/package/card/card';
+import { GameRatingGrowl } from 'game-jolt-frontend-lib/components/game/rating-growl/rating-growl.service';
 import { AppGameSoundtrackCard } from 'game-jolt-frontend-lib/components/game/soundtrack/card/card';
 import { AppLazyPlaceholder } from 'game-jolt-frontend-lib/components/lazy/placeholder/placeholder';
 import { AppMediaBar } from 'game-jolt-frontend-lib/components/media-bar/media-bar';
@@ -73,50 +74,70 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	@RouteState
 	isOverviewLoaded!: RouteStore['isOverviewLoaded'];
+
 	@RouteState
 	game!: RouteStore['game'];
+
 	@RouteState
 	mediaItems!: RouteStore['mediaItems'];
+
 	@RouteState
 	overviewComments!: RouteStore['overviewComments'];
+
 	@RouteState
 	userRating!: RouteStore['userRating'];
+
 	@RouteState
 	songs!: RouteStore['songs'];
+
 	@RouteState
 	userPartnerKey!: RouteStore['userPartnerKey'];
+
 	@RouteState
 	partnerLink!: RouteStore['partnerLink'];
+
 	@RouteState
 	partner!: RouteStore['partner'];
+
 	@RouteState
 	partnerKey!: RouteStore['partnerKey'];
+
 	@RouteState
 	feed!: RouteStore['feed'];
+
 	@RouteState
 	supporters!: RouteStore['supporters'];
+
 	@RouteState
 	supporterCount!: RouteStore['supporterCount'];
+
 	@RouteState
 	shouldShowMultiplePackagesMessage!: RouteStore['shouldShowMultiplePackagesMessage'];
+
 	@RouteState
 	postsCount!: RouteStore['postsCount'];
+
 	@RouteState
 	packages!: RouteStore['packages'];
+
 	@RouteState
 	hasReleasesSection!: RouteStore['hasReleasesSection'];
+
 	@RouteState
 	customGameMessages!: RouteStore['customGameMessages'];
 
 	@RouteMutation
 	bootstrapFeed!: RouteStore['bootstrapFeed'];
+
 	@RouteMutation
 	processOverviewPayload!: RouteStore['processOverviewPayload'];
 
 	@RouteState
 	showDetails!: RouteStore['showDetails'];
+
 	@RouteMutation
 	toggleDetails!: RouteStore['toggleDetails'];
+
 	@RouteMutation
 	setCanToggleDescription!: RouteStore['setCanToggleDescription'];
 
@@ -195,6 +216,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		}
 
 		this.processOverviewPayload({ payload: $payload, fromCache });
+		GameRatingGrowl.show(this.game);
 	}
 
 	copyPartnerLink() {

@@ -3,11 +3,17 @@ import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-req
 import { LikersModal } from 'game-jolt-frontend-lib/components/likers/modal.service';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
 import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GameRating } from '../../../../lib/gj-lib-client/components/game/rating/rating.model';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
+
+export const RatingWidgetOnChange = 'GameRating.changed';
+export interface RatingWidgetOnChangePayload {
+	gameId: number;
+	userRating?: GameRating;
+}
 
 @View
 @Component({
@@ -37,9 +43,6 @@ export class AppRatingWidget extends Vue {
 		return this.userRating && this.userRating.rating === GameRating.RATING_DISLIKE;
 	}
 
-	@Emit('change')
-	onRatingChange(_rating?: GameRating) {}
-
 	showLikers() {
 		LikersModal.show({ count: this.game.like_count, resource: this.game });
 	}
@@ -60,21 +63,35 @@ export class AppRatingWidget extends Vue {
 		this.isProcessing = true;
 
 		// when a rating with the same value already exists, remove it instead
-		if (this.userRating && this.userRating.rating === rating) {
-			await this.userRating.$remove();
-			this.onRatingChange(undefined);
+		let userRating: GameRating | null = null;
+		const oldUserRating = this.userRating;
+		if (oldUserRating && oldUserRating.rating === rating) {
+			await oldUserRating.$remove();
+
+			if (rating === GameRating.RATING_LIKE) {
+				--this.game.like_count;
+			}
 		} else {
-			const gameRating = new GameRating({
+			userRating = new GameRating({
 				game_id: this.game.id,
 				rating: rating,
 			});
 
-			await gameRating.$save();
-			this.onRatingChange(gameRating);
+			await userRating.$save();
+
+			// We only show likes, not dislikes.
+			const oldRating = oldUserRating ? oldUserRating.rating : null;
+			if (rating === GameRating.RATING_LIKE) {
+				++this.game.like_count;
+			} else if (oldRating === GameRating.RATING_LIKE) {
+				--this.game.like_count;
+			}
 		}
 
 		this.isProcessing = false;
-
-		EventBus.emit('GameRating.changed', this.game.id);
+		EventBus.emit(RatingWidgetOnChange, {
+			gameId: this.game.id,
+			userRating,
+		} as RatingWidgetOnChangePayload);
 	}
 }

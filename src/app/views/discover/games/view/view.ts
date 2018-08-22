@@ -37,8 +37,12 @@ import { AppGameMaturityBlock } from '../../../../components/game/maturity-block
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
+import {
+	RatingWidgetOnChange,
+	RatingWidgetOnChangePayload,
+} from '../../../../components/rating/widget/widget';
 import './view-content.styl';
-import { RouteAction, RouteMutation, RouteState, RouteStore, RouteStoreName } from './view.store';
+import { RouteMutation, RouteState, RouteStore, RouteStoreName } from './view.store';
 import { AppDiscoverGamesViewControls } from './_controls/controls';
 import { AppDiscoverGamesViewNav } from './_nav/nav';
 
@@ -64,43 +68,58 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 	@RouteState
 	game!: RouteStore['game'];
+
 	@RouteState
 	partner!: RouteStore['partner'];
+
 	@RouteState
 	partnerKey!: RouteStore['partnerKey'];
+
 	@RouteState
 	packages!: RouteStore['packages'];
+
 	@RouteState
 	collaboratorInvite!: RouteStore['collaboratorInvite'];
+
 	@RouteState
 	downloadableBuilds!: RouteStore['downloadableBuilds'];
+
 	@RouteState
 	browserBuilds!: RouteStore['browserBuilds'];
+
 	@RouteState
 	installableBuilds!: RouteStore['installableBuilds'];
 
-	@RouteAction
-	bootstrap!: RouteStore['bootstrap'];
-	@RouteAction
-	refreshRatingInfo!: RouteStore['refreshRatingInfo'];
 	@RouteMutation
 	bootstrapGame!: RouteStore['bootstrapGame'];
+
+	@RouteMutation
+	processPayload!: RouteStore['processPayload'];
+
 	@RouteMutation
 	showMultiplePackagesMessage!: RouteStore['showMultiplePackagesMessage'];
+
 	@RouteMutation
 	acceptCollaboratorInvite!: RouteStore['acceptCollaboratorInvite'];
+
 	@RouteMutation
 	declineCollaboratorInvite!: RouteStore['declineCollaboratorInvite'];
 
 	@ThemeMutation
 	setPageTheme!: ThemeStore['setPageTheme'];
 
+	@RouteMutation
+	setUserRating!: RouteStore['setUserRating'];
+
 	@CommentState
 	getCommentStore!: CommentStore['getCommentStore'];
+
 	@CommentAction
 	lockCommentStore!: CommentStore['lockCommentStore'];
+
 	@CommentMutation
 	releaseCommentStore!: CommentStore['releaseCommentStore'];
+
 	@CommentMutation
 	setCommentCount!: CommentStore['setCommentCount'];
 
@@ -186,11 +205,15 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		// Any game rating change will broadcast this event. We catch it so we
 		// can update the page with the new rating! Yay!
 		if (!this.ratingWatchDeregister) {
-			this.ratingWatchDeregister = EventBus.on('GameRating.changed', (gameId: number) => {
-				if (gameId === this.game.id) {
-					this.refreshRatingInfo();
+			this.ratingWatchDeregister = EventBus.on(
+				RatingWidgetOnChange,
+				(payload: RatingWidgetOnChangePayload) => {
+					const { gameId, userRating } = payload;
+					if (gameId === this.game.id) {
+						this.setUserRating(userRating || null);
+					}
 				}
-			});
+			);
 		}
 
 		// Since routes are reused when switching params (new game page) we want
@@ -202,7 +225,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	}
 
 	async routed($payload: any) {
-		this.bootstrap($payload);
+		this.processPayload($payload);
 		this.setPageTheme(this.game.theme || null);
 
 		// If the game has a GA tracking ID, then we attach it to this
