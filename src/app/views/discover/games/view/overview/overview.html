@@ -12,22 +12,8 @@
 		<div class="container">
 
 			<div class="row">
-				<div
-					v-if="hasRatingSection"
-					:class="Screen.isMobile ? leftColClass : rightColClass"
-					>
-					<h4 class="section-header">
-						<translate>What do you think?</translate>
-					</h4>
-
-					<div>
-						<app-rating-widget
-							:game="game"
-							:user-rating="userRating"
-							/>
-					</div>
-
-					<br>
+				<div :class="Screen.isMobile ? leftColClass : rightColClass">
+					<app-discover-games-view-overview-statbar />
 				</div>
 
 				<div :class="leftColClass">
@@ -43,7 +29,7 @@
 							class="alert alert-notice full-bleed-xs"
 							v-translate
 							>
-							This game was <b>canceled</b>, so the current version might be buggy or incomplete. You can still follow it if you'd like to be notified in the case that development continues.
+							This game was canceled, so the current version might be buggy or incomplete. You can still follow it if you'd like to be notified in the case that development continues.
 						</div>
 
 						<div

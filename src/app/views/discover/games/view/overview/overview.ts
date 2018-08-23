@@ -32,6 +32,7 @@ import { Store } from '../../../../../store';
 import { RouteMutation, RouteState, RouteStore } from '../view.store';
 import { AppDiscoverGamesViewOverviewDetails } from './_details/details';
 import { AppDiscoverGamesViewOverviewRecommended } from './_recommended/recommended';
+import { AppDiscoverGamesViewOverviewStatbar } from './_statbar/statbar';
 import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters';
 
 @View
@@ -41,6 +42,7 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 		AppDiscoverGamesViewOverviewDetails,
 		AppDiscoverGamesViewOverviewRecommended,
 		AppDiscoverGamesViewOverviewSupporters,
+		AppDiscoverGamesViewOverviewStatbar,
 		AppAd,
 		AppAdPlacement,
 		AppRatingWidget,
@@ -189,10 +191,6 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	get hasPartnerControls() {
 		return this.game.referrals_enabled && this.userPartnerKey && this.packages.length;
-	}
-
-	get hasRatingSection() {
-		return this.game.ratings_enabled;
 	}
 
 	routeInit() {

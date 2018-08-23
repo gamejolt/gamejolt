@@ -1,0 +1,19 @@
+<div class="-statbar">
+	<div class="-rating" v-if="game.ratings_enabled">
+		<app-rating-widget
+			:game="game"
+			:user-rating="userRating"
+			/>
+	</div>
+	<div class="-split" />
+	<div class="-views">
+		<app-lazy-placeholder :when="isOverviewLoaded">
+			<span class="lazy-placeholder"></span>
+			<span :title="number( profileCount )">
+				<strong>{{ fuzzynumber( profileCount ) }}</strong>
+				<translate>views</translate>
+			</span>
+		</app-lazy-placeholder>
+	</div>
+
+</div>

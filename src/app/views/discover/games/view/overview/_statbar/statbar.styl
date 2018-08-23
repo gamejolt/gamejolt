@@ -1,0 +1,26 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.-statbar
+	theme-prop('border-bottom-color', 'bg-offset')
+	display: flex
+	align-items: flex-end
+	margin-bottom: $line-height-computed
+	border-bottom-style: solid
+	border-bottom-width: 1px
+
+.-split
+	flex: auto
+
+.-rating, .-views
+	padding-bottom: $line-height-computed * 0.75
+	flex: none
+
+.-rating
+	theme-prop('border-bottom-color', 'bg-offset')
+	border-bottom-style: solid
+	border-bottom-width: 2px
+
+.-views
+	theme-prop('color', 'fg-muted')
+	margin-bottom: 0
