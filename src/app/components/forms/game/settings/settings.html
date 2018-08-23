@@ -58,12 +58,13 @@
 
 	<app-form-group
 		name="ratings_enabled"
-		:label="$gettext( `dash.games.settings.ratings_label` )"
+		:label="$gettext('Allow ratings?')"
 		>
 		<app-form-control-toggle class="pull-right" />
 
-		<div class="help-block" v-translate>
-			dash.games.settings.ratings_help_html
+		<div class="help-block">
+			<p><strong><translate>Turning this off will disable ratings for this game and hide any ratings already on the page.</translate></strong></p>
+			<p><translate>Your game's voltage will be calculated as if it had received no likes or dislikes. If you allow ratings in the future, the old ratings will be reapplied and your voltage will be recalculated.</translate></p>
 		</div>
 	</app-form-group>
 
