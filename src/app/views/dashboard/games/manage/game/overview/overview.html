@@ -108,7 +108,19 @@
 						</div>
 						<div class="stat-big-digit">
 							<template>
-								{{ game.like_count | number }}
+								{{ likeCount | number }}
+							</template>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-4 col-lg-6">
+					<div class="stat-big">
+						<div class="stat-big-label">
+							<translate>Avg. Rating</translate>
+						</div>
+						<div class="stat-big-digit">
+							<template>
+								{{ (likeCount / (likeCount + dislikeCount)) || 0 | number( { style: 'percent', maximumFractionDigits: 2 } ) }}
 							</template>
 						</div>
 					</div>
