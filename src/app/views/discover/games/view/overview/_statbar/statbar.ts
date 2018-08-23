@@ -1,5 +1,7 @@
 import View from '!view!./statbar.html?style=./statbar.styl';
 import { AppLazyPlaceholder } from 'game-jolt-frontend-lib/components/lazy/placeholder/placeholder';
+import { LikersModal } from 'game-jolt-frontend-lib/components/likers/modal.service';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { fuzzynumber } from 'game-jolt-frontend-lib/vue/filters/fuzzynumber';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
@@ -12,6 +14,9 @@ import { RouteState, RouteStore } from '../../view.store';
 	components: {
 		AppLazyPlaceholder,
 		AppRatingWidget,
+	},
+	directives: {
+		AppTooltip,
 	},
 })
 export class AppDiscoverGamesViewOverviewStatbar extends Vue {
@@ -29,4 +34,12 @@ export class AppDiscoverGamesViewOverviewStatbar extends Vue {
 
 	readonly number = number;
 	readonly fuzzynumber = fuzzynumber;
+
+	get likeCount() {
+		return this.game.like_count;
+	}
+
+	showLikers() {
+		LikersModal.show({ count: this.likeCount, resource: this.game });
+	}
 }
