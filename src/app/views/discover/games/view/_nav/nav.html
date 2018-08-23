@@ -12,7 +12,7 @@
 				</router-link>
 			</li>
 
-			<li v-if="game.comments_enabled && Screen.isMobile">
+			<li v-if="game.comments_enabled">
 				<a @click="showComments()">
 					<translate>Comments</translate>
 					<span class="badge" v-if="commentsCount">
