@@ -103,6 +103,21 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 		return this.game.like_count || 0;
 	}
 
+	get voteCount() {
+		return this.likeCount + this.dislikeCount;
+	}
+
+	get averageRating() {
+		if (!this.voteCount) {
+			return '-';
+		}
+
+		return number(this.likeCount / this.voteCount, {
+			style: 'percent',
+			maximumFractionDigits: 2,
+		});
+	}
+
 	routed($payload: any) {
 		this.viewCount = $payload.viewCount || 0;
 		this.downloadCount = $payload.downloadCount || 0;
