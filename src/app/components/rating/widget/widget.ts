@@ -29,6 +29,9 @@ export class AppRatingWidget extends Vue {
 	@Prop(GameRating)
 	userRating?: GameRating;
 
+	@Prop(Boolean)
+	hideCount?: boolean;
+
 	isProcessing = false;
 
 	get likeCountFormatted() {
