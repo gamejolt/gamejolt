@@ -1,12 +1,15 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-.section-header
-	word-wrap: normal
+.-left-col
+	clear: left
+
+.-right-col
+	clear: right
 
 .-spacer
 	display: block
-	height: $line-height-computed * 2
+	height: $line-height-computed
 
 	@media $media-xs
 		full-bleed()

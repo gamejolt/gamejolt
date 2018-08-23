@@ -1,14 +1,16 @@
+import View from '!view!./intro.html?style=./intro.styl';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
-import View from '!view!./intro.html?style=./intro.styl';
-
-import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
+import {
+	EventBus,
+	EventBusDeregister,
+} from '../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
+import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
+import { sleep } from '../../../../lib/gj-lib-client/utils/utils';
+import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Client } from '../../../../_common/client/client.service';
-import { sleep } from '../../../../lib/gj-lib-client/utils/utils';
-import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 
 @View
 @Component({
@@ -18,12 +20,14 @@ import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading
 	},
 })
 export class AppClientIntro extends Vue {
-	@AppState user!: AppStore['user'];
+	@AppState
+	user!: AppStore['user'];
 
 	shouldShowLogo = false;
 	shouldShowLoading = false;
 	shouldTransitionOut = false;
-	initialStateChangeResolver: Function = null as any;
+	private initialStateChangeResolver: Function = null as any;
+	private routeChangeAfterDeregister?: EventBusDeregister;
 
 	$refs!: {
 		wrap: HTMLDivElement;
@@ -45,7 +49,7 @@ export class AppClientIntro extends Vue {
 			this.initialStateChangeResolver();
 		}
 
-		EventBus.on('routeChangeAfter', () => {
+		this.routeChangeAfterDeregister = EventBus.on('routeChangeAfter', () => {
 			this.initialStateChangeResolver();
 		});
 
@@ -56,6 +60,7 @@ export class AppClientIntro extends Vue {
 		// anyway.
 		if (!this.user && !sessionStorage.getItem('client-intro-login-play')) {
 			console.log('Skip intro -- not logged in.');
+			this.finish();
 			return;
 		}
 
@@ -127,5 +132,10 @@ export class AppClientIntro extends Vue {
 	private finish() {
 		document.body.classList.remove('client-intro-no-overflow');
 		this.$emit('finish');
+
+		if (this.routeChangeAfterDeregister) {
+			this.routeChangeAfterDeregister();
+			this.routeChangeAfterDeregister = undefined;
+		}
 	}
 }

@@ -1,0 +1,42 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.-statbar
+	theme-prop('border-bottom-color', 'bg-offset')
+	display: flex
+	align-items: flex-end
+	margin-bottom: $line-height-computed
+	border-bottom-style: solid
+	border-bottom-width: 1px
+
+// This will push the stats to the right side of the component on mobile.
+@media $media-mobile
+	.-split
+		flex: auto
+
+.-rating, .-stat
+	padding-bottom: $line-height-computed * 0.75
+	flex: none
+
+.-rating
+	theme-prop('border-bottom-color', 'bg-offset')
+	border-bottom-style: solid
+	border-bottom-width: 2px
+
+.-stat
+	theme-prop('color', 'fg-muted')
+	margin-left: $grid-gutter-width
+	border-bottom-style: solid
+	border-bottom-width: 2px
+	border-bottom-color: transparent
+	padding-bottom: ($line-height-computed * 0.75) - 5px
+
+	a&:hover
+		theme-prop('border-bottom-color', 'highlight')
+		theme-prop('color', 'fg')
+
+.-label
+	font-size: $font-size-small
+
+.-metric
+	font-size: $font-size-large

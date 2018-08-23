@@ -1,40 +1,40 @@
 <div class="rating-widget">
 
-	<span class="-icons">
-		<span
-			v-for="i of [ 1, 2, 3, 4, 5 ]"
-			class="-bubble"
-			:class="{
-				'-hover': isHovered(i),
-				'-selected': isSelected(i),
-			}"
-			@mouseenter="hover( i )"
-			@mouseleave="hover()"
-			@click="select( i )"
-			v-app-tooltip="getTooltip( i )"
-			v-app-track-event="`game-rating:rate:${i}`"
-			>
-			<app-jolticon
-				icon="gamejolt"
-				class="-icon"
-				/>
-		</span>
+	<span v-app-auth-required>
+		<app-button
+			icon="thumbs-up"
+			circle
+			:primary="hasLiked"
+			:solid="hasLiked"
+			:disabled="isProcessing"
+			@click="like()"
+			/>
+	</span>
 
-		<span class="-clear">
-			<transition>
-				<span
-					v-if="gameRating && gameRating.rating"
-					class="anim-fade-in-enlarge anim-fade-leave"
-					@click="clear"
-					v-app-track-event="`game-rating:clear`"
-					>
-					<app-jolticon
-						icon="remove"
-						v-app-tooltip="$gettext( 'rating.clear' )"
-						/>
-				</span>
-			</transition>
-		</span>
+	<template v-if="!hideCount">
+		<a
+			@click="showLikers()"
+			v-app-tooltip="$gettext(`View all people that liked this game`)"
+			>
+			<span class="blip filled" v-if="game.like_count > 0">
+				<span class="blip-caret"></span>
+				<span class="blip-count">{{ likeCountFormatted }}</span>
+			</span>
+		</a>
+
+		&nbsp;
+	</template>
+
+	<span v-app-auth-required>
+		<app-button
+			icon="thumbs-down"
+			circle
+			trans
+			:primary="hasDisliked"
+			:solid="hasDisliked"
+			:disabled="isProcessing"
+			@click="dislike()"
+			/>
 	</span>
 
 </div>

@@ -1,27 +1,26 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./overview.html';
-
-import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
-import { RouteState, RouteStore, RouteAction } from '../../manage.store';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppProgressPoller } from '../../../../../../../lib/gj-lib-client/components/progress/poller/poller';
-import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/components/progress/bar/bar';
 import { AppExpand } from '../../../../../../../lib/gj-lib-client/components/expand/expand';
-import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
-import { AppGameDevStageSelector } from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector';
+import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppGraphWidget } from '../../../../../../../lib/gj-lib-client/components/graph/widget/widget';
-import { AppGamePerms } from '../../../../../../components/game/perms/perms';
-import {
-	AppState,
-	AppStore,
-} from '../../../../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/components/progress/bar/bar';
+import { AppProgressPoller } from '../../../../../../../lib/gj-lib-client/components/progress/poller/poller';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
+import {
+	AppState,
+	AppStore,
+} from '../../../../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { AppGameDevStageSelector } from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector';
+import { AppGamePerms } from '../../../../../../components/game/perms/perms';
+import { RouteAction, RouteState, RouteStore } from '../../manage.store';
 
 @View
 @Component({
@@ -43,17 +42,26 @@ import {
 	},
 })
 export default class RouteDashGamesManageGameOverview extends BaseRouteComponent {
-	@AppState user!: AppStore['user'];
-	@RouteState game!: RouteStore['game'];
-	@RouteState canPublish!: RouteStore['canPublish'];
+	@AppState
+	user!: AppStore['user'];
 
-	@RouteAction publish!: RouteStore['publish'];
-	@RouteAction uncancel!: RouteStore['uncancel'];
+	@RouteState
+	game!: RouteStore['game'];
+
+	@RouteState
+	canPublish!: RouteStore['canPublish'];
+
+	@RouteAction
+	publish!: RouteStore['publish'];
+
+	@RouteAction
+	uncancel!: RouteStore['uncancel'];
 
 	viewCount = 0;
 	downloadCount = 0;
 	playCount = 0;
 	commentCount = 0;
+	dislikeCount = 0;
 
 	hasBuildsProcessing = false;
 
@@ -92,11 +100,31 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 		return null;
 	}
 
+	get likeCount() {
+		return this.game.like_count || 0;
+	}
+
+	get voteCount() {
+		return this.likeCount + this.dislikeCount;
+	}
+
+	get averageRating() {
+		if (!this.voteCount) {
+			return '-';
+		}
+
+		return number(this.likeCount / this.voteCount, {
+			style: 'percent',
+			maximumFractionDigits: 2,
+		});
+	}
+
 	routed($payload: any) {
 		this.viewCount = $payload.viewCount || 0;
 		this.downloadCount = $payload.downloadCount || 0;
 		this.playCount = $payload.playCount || 0;
 		this.commentCount = $payload.commentCount || 0;
+		this.dislikeCount = $payload.dislikeCount || 0;
 
 		this.hasBuildsProcessing = $payload.hasBuildsProcessing || false;
 	}

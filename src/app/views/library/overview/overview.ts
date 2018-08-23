@@ -24,11 +24,20 @@ import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/rou
 	},
 })
 export default class RouteLibraryOverview extends BaseRouteComponent {
-	@State isBootstrapped!: Store['isBootstrapped'];
-	@LibraryState followedCollection!: LibraryStore['followedCollection'];
-	@LibraryState developerCollection!: LibraryStore['developerCollection'];
-	@LibraryState ownedCollection!: LibraryStore['ownedCollection'];
-	@LibraryState collections!: LibraryStore['collections'];
+	@State
+	isBootstrapped!: Store['isBootstrapped'];
+
+	@LibraryState
+	followedCollection!: LibraryStore['followedCollection'];
+
+	@LibraryState
+	developerCollection!: LibraryStore['developerCollection'];
+
+	@LibraryState
+	ownedCollection!: LibraryStore['ownedCollection'];
+
+	@LibraryState
+	collections!: LibraryStore['collections'];
 
 	readonly Connection = Connection;
 	readonly Screen = Screen;

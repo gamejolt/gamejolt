@@ -1,7 +1,6 @@
 import { Action, Mutation, namespace, State } from 'vuex-class';
-
 import { Ads } from '../../../../../lib/gj-lib-client/components/ad/ads.service';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
+import { Comment } from '../../../../../lib/gj-lib-client/components/comment/comment-model';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
@@ -23,12 +22,7 @@ import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/vide
 import { Registry } from '../../../../../lib/gj-lib-client/components/registry/registry.service';
 import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
 import { objectPick } from '../../../../../lib/gj-lib-client/utils/object';
-import {
-	VuexAction,
-	VuexModule,
-	VuexMutation,
-	VuexStore,
-} from '../../../../../lib/gj-lib-client/utils/vuex';
+import { VuexModule, VuexMutation, VuexStore } from '../../../../../lib/gj-lib-client/utils/vuex';
 import { ActivityFeedContainer } from '../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { router } from '../../../index';
@@ -38,24 +32,20 @@ export const RouteState = namespace(RouteStoreName, State);
 export const RouteAction = namespace(RouteStoreName, Action);
 export const RouteMutation = namespace(RouteStoreName, Mutation);
 
-type Actions = {
-	bootstrap: any;
-	loadVideoComments: undefined;
-	refreshRatingInfo: undefined;
-};
+type Actions = {};
 
 type Mutations = {
 	bootstrapGame: number;
 	bootstrapFeed: undefined;
 	processPayload: any;
 	processOverviewPayload: { payload: any; fromCache: boolean };
-	processRatingPayload: any;
 	acceptCollaboratorInvite: GameCollaborator;
 	declineCollaboratorInvite: GameCollaborator;
 	pushVideoComments: CommentVideo[];
 	showMultiplePackagesMessage: undefined;
 	toggleDescription: undefined;
 	setCanToggleDescription: boolean;
+	setUserRating: GameRating | null;
 	addPost: FiresidePost;
 };
 
@@ -122,7 +112,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	collaboratorInvite: GameCollaborator | null = null;
 
 	userRating: GameRating | null = null;
-	ratingBreakdown: number[] = [];
 
 	mediaItems: (GameScreenshot | GameVideo | GameSketchfab)[] = [];
 	songs: GameSong[] = [];
@@ -133,10 +122,13 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	playCount = 0;
 	developerGamesCount = 0;
 	supporters: User[] = [];
+	supporterCount = 0;
 	recommendedGames: Game[] = [];
 
-	showDescription = false;
 	canToggleDescription = false;
+	showDetails = false;
+
+	overviewComments: Comment[] = [];
 
 	videoComments: CommentVideo[] = [];
 	videoCommentsCount = 0;
@@ -213,39 +205,17 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		return undefined;
 	}
 
-	@VuexAction
-	async bootstrap(payload: Actions['bootstrap']) {
-		this.processPayload(payload);
-		this.processRatingPayload(payload);
-	}
-
-	@VuexAction
-	async loadVideoComments() {
-		const response = await Api.sendRequest(
-			'/web/discover/games/videos/' + this.game.id + '?page=' + (this.videoCommentsPage + 1)
-		);
-
-		this.pushVideoComments(CommentVideo.populate(response.videos));
-	}
-
-	@VuexAction
-	async refreshRatingInfo() {
-		const response = await Api.sendRequest(
-			'/web/discover/games/refresh-rating-info/' + this.game.id,
-			null,
-			{ detach: true }
-		);
-
-		this.processRatingPayload(response);
-	}
-
 	@VuexMutation
 	bootstrapGame(gameId: Mutations['bootstrapGame']) {
 		this.game = Registry.find<Game>('Game', gameId) as any;
-		this.showDescription = false;
+		this.showDetails = false;
 		this.isOverviewLoaded = false;
 		this.recommendedGames = [];
 		this.mediaItems = [];
+		this.supporters = [];
+		this.videoComments = [];
+		this.overviewComments = [];
+		this.userRating = null;
 		setAds(this.game);
 	}
 
@@ -265,6 +235,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 			this.game = game;
 		}
 
+		this.userRating = payload.userRating ? new GameRating(payload.userRating) : null;
 		this.postsCount = payload.postCount || 0;
 		this.trophiesCount = payload.trophiesCount || 0;
 		this.hasScores = payload.hasScores || false;
@@ -275,6 +246,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 		this.userPartnerKey = payload.userPartnerKey;
 		this.collaboratorInvite = payload.invite ? new GameCollaborator(payload.invite) : null;
+
 		setAds(this.game);
 	}
 
@@ -303,7 +275,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 			this.feed = ActivityFeedService.bootstrap(EventItem.populate(payload.posts), {
 				type: 'EventItem',
 				url: `/web/discover/games/devlog/posts/${this.game.id}`,
-				noAutoload: !this.game._is_devlog,
 			});
 		}
 
@@ -325,6 +296,9 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.developerGamesCount = payload.developerGamesCount || 0;
 
 		this.supporters = User.populate(payload.supporters);
+		this.supporterCount = payload.supporterCount;
+
+		this.overviewComments = Comment.populate(payload.comments);
 
 		this.videoComments = CommentVideo.populate(payload.videoComments);
 		this.videoCommentsCount = payload.videoCommentsCount || 0;
@@ -352,8 +326,12 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
+	setUserRating(rating: Mutations['setUserRating']) {
+		this.userRating = rating;
+	}
+
+	@VuexMutation
 	acceptCollaboratorInvite(invite: Mutations['acceptCollaboratorInvite']) {
-		console.log('Accepting collaborator invite: ' + JSON.stringify(invite.perms));
 		this.game.perms = invite.perms;
 		this.collaboratorInvite = null;
 	}
@@ -361,14 +339,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexMutation
 	declineCollaboratorInvite() {
 		this.collaboratorInvite = null;
-	}
-
-	@VuexMutation
-	processRatingPayload(payload: Mutations['processRatingPayload']) {
-		this.userRating = payload.userRating ? new GameRating(payload.userRating) : null;
-		this.ratingBreakdown = payload.ratingBreakdown;
-		this.game.rating_count = payload.game.rating_count;
-		this.game.avg_rating = payload.game.avg_rating;
 	}
 
 	@VuexMutation
@@ -383,13 +353,13 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	toggleDescription() {
-		this.showDescription = !this.showDescription;
+	setCanToggleDescription(flag: Mutations['setCanToggleDescription']) {
+		this.canToggleDescription = flag;
 	}
 
 	@VuexMutation
-	setCanToggleDescription(flag: Mutations['setCanToggleDescription']) {
-		this.canToggleDescription = flag;
+	toggleDetails() {
+		this.showDetails = !this.showDetails;
 	}
 
 	@VuexMutation

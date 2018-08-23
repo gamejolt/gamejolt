@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./details.html';
+import View from '!view!./details.html?style=./details.styl';
 
 import { AppLazyPlaceholder } from '../../../../../../../lib/gj-lib-client/components/lazy/placeholder/placeholder';
 import { date } from '../../../../../../../lib/gj-lib-client/vue/filters/date';
@@ -18,7 +18,8 @@ import { RouteState, RouteStore } from '../../view.store';
 	},
 })
 export class AppDiscoverGamesViewOverviewDetails extends Vue {
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	date = date;
 }

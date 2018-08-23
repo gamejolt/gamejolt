@@ -2,8 +2,6 @@ import View from '!view!./build.html';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
-
-import { AppGameThumbnail } from '../../../../../../../_common/game/thumbnail/thumbnail';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
@@ -20,6 +18,7 @@ import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll
 import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
 import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
+import { AppGameThumbnail } from '../../../../../../../_common/game/thumbnail/thumbnail';
 import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
 import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
 import { Store } from '../../../../../../store/index';
@@ -44,10 +43,14 @@ const DownloadDelay = 3000;
 	},
 })
 export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
-	@RouteState userRating!: RouteStore['userRating'];
+	@RouteState
+	game!: RouteStore['game'];
 
-	@State app!: Store['app'];
+	@RouteState
+	userRating!: RouteStore['userRating'];
+
+	@State
+	app!: Store['app'];
 
 	src: string | null = null;
 	build: GameBuild = null as any;

@@ -25,9 +25,14 @@ import { Mention } from '../../../../../lib/gj-lib-client/components/mention/men
 	},
 })
 export class AppActivityFeedNotification extends Vue {
-	@Prop(ActivityFeedItem) item!: ActivityFeedItem;
-	@Prop(Boolean) isNew?: boolean;
-	@Prop(Boolean) isActive?: boolean;
+	@Prop(ActivityFeedItem)
+	item!: ActivityFeedItem;
+
+	@Prop(Boolean)
+	isNew?: boolean;
+
+	@Prop(Boolean)
+	isActive?: boolean;
 
 	notification!: Notification;
 
@@ -53,11 +58,9 @@ export class AppActivityFeedNotification extends Vue {
 		}
 
 		return (
-			[
-				Notification.TYPE_COMMENT_ADD,
-				Notification.TYPE_COMMENT_ADD_OBJECT_OWNER,
-				Notification.TYPE_GAME_RATING_ADD,
-			].indexOf(this.notification.type) !== -1
+			[Notification.TYPE_COMMENT_ADD, Notification.TYPE_COMMENT_ADD_OBJECT_OWNER].indexOf(
+				this.notification.type
+			) !== -1
 		);
 	}
 

@@ -1,27 +1,25 @@
+import View from '!view!./nav.html';
+import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import View from '!view!./nav.html';
-
-import { number } from '../../../../../../lib/gj-lib-client/vue/filters/number';
-import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppPopoverTrigger } from '../../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
-import { AppPopover } from '../../../../../../lib/gj-lib-client/components/popover/popover';
-import { Environment } from '../../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { RouteState, RouteStore } from '../view.store';
-import { ReportModal } from '../../../../../../lib/gj-lib-client/components/report/modal/modal.service';
-import { Store } from '../../../../../store/index';
-import { AppGamePerms } from '../../../../../components/game/perms/perms';
-import { AppGameModLinks } from '../../../../../components/game/mod-links/mod-links';
 import {
-	CommentStore,
 	CommentState,
+	CommentStore,
 } from '../../../../../../lib/gj-lib-client/components/comment/comment-store';
+import { AppPopover } from '../../../../../../lib/gj-lib-client/components/popover/popover';
+import { AppPopoverTrigger } from '../../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
+import { ReportModal } from '../../../../../../lib/gj-lib-client/components/report/modal/modal.service';
+import { number } from '../../../../../../lib/gj-lib-client/vue/filters/number';
+import { AppGameModLinks } from '../../../../../components/game/mod-links/mod-links';
+import { AppGamePerms } from '../../../../../components/game/perms/perms';
+import { Store } from '../../../../../store/index';
+import { RouteState, RouteStore } from '../view.store';
 
 @View
 @Component({
 	components: {
-		AppJolticon,
 		AppPopover,
 		AppGamePerms,
 		AppGameModLinks,
@@ -34,17 +32,25 @@ import {
 	},
 })
 export class AppDiscoverGamesViewNav extends Vue {
-	@RouteState game!: RouteStore['game'];
-	@RouteState postsCount!: RouteStore['postsCount'];
-	@RouteState trophiesCount!: RouteStore['trophiesCount'];
-	@RouteState hasScores!: RouteStore['hasScores'];
-	@RouteState primaryScoreTable!: RouteStore['primaryScoreTable'];
+	@RouteState
+	game!: RouteStore['game'];
 
-	@State app!: Store['app'];
+	@RouteState
+	trophiesCount!: RouteStore['trophiesCount'];
 
-	@CommentState getCommentStore!: CommentStore['getCommentStore'];
+	@RouteState
+	hasScores!: RouteStore['hasScores'];
 
-	Environment = Environment;
+	@RouteState
+	primaryScoreTable!: RouteStore['primaryScoreTable'];
+
+	@State
+	app!: Store['app'];
+
+	@CommentState
+	getCommentStore!: CommentStore['getCommentStore'];
+
+	readonly Screen = Screen;
 
 	get hasAnyPerms() {
 		return this.game && this.game.hasPerms();
@@ -60,6 +66,10 @@ export class AppDiscoverGamesViewNav extends Vue {
 			return store ? store.count : 0;
 		}
 		return 0;
+	}
+
+	showComments() {
+		CommentModal.show({ resource: 'Game', resourceId: this.game.id });
 	}
 
 	report() {
