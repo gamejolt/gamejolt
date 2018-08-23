@@ -1,4 +1,3 @@
-import { Environment } from '../../lib/gj-lib-client/components/environment/environment.service';
 const win = nw.Window.get();
 
 export class Client {
