@@ -1,31 +1,34 @@
-<div class="-statbar">
-	<div
-		class="-rating"
-		v-if="game.ratings_enabled"
-		>
-		<app-rating-widget
-			:game="game"
-			:user-rating="userRating"
-			hide-count
-			/>
-	</div>
-	<div class="-split" />
-	<a
-		class="-stat"
-		v-if="game.ratings_enabled"
-		@click="showLikers()"
-		v-app-tooltip="$gettext(`View all people that liked this game`)"
-		>
-		<div class="-label">
-			<translate>likes</translate>
+<div
+	class="-statbar"
+	:class="{
+		'-ratings-disabled': !game.ratings_enabled,
+	}"
+	>
+	<template v-if="game.ratings_enabled">
+		<div class="-rating">
+			<app-rating-widget
+				:game="game"
+				:user-rating="userRating"
+				hide-count
+				/>
 		</div>
-		<app-lazy-placeholder :when="isOverviewLoaded">
-			<span class="lazy-placeholder"></span>
-			<span class="-metric" :title="number( likeCount )">
-				<strong>{{ fuzzynumber( likeCount ) }}</strong>
-			</span>
-		</app-lazy-placeholder>
-	</a>
+		<div class="-split" />
+		<a
+			class="-stat"
+			@click="showLikers()"
+			v-app-tooltip="$gettext(`View all people that liked this game`)"
+			>
+			<div class="-label">
+				<translate>likes</translate>
+			</div>
+			<app-lazy-placeholder :when="isOverviewLoaded">
+				<span class="lazy-placeholder"></span>
+				<span class="-metric" :title="number( likeCount )">
+					<strong>{{ fuzzynumber( likeCount ) }}</strong>
+				</span>
+			</app-lazy-placeholder>
+		</a>
+	</template>
 	<div
 		class="-stat"
 		>
