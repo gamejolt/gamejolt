@@ -1,16 +1,16 @@
 export class ChatUser {
-	id: number;
-	roomId: number;
-	lastMessageOn: number;
-	username: string;
-	displayName: string;
-	imgAvatar: string;
+	id!: number;
+	roomId!: number;
+	lastMessageOn!: number;
+	username!: string;
+	displayName!: string;
+	imgAvatar!: string;
 
-	isOnline: boolean;
-	isMutedRoom: boolean;
-	isMutedGlobal: boolean;
+	isOnline!: boolean;
+	isMutedRoom!: boolean;
+	isMutedGlobal!: boolean;
 	isMod: 'owner' | 'moderator' | false = false;
-	permissionLevel: number;
+	permissionLevel!: number;
 
 	constructor(data: Partial<ChatUser> = {}) {
 		Object.assign(this, data);

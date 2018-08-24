@@ -34,7 +34,7 @@ import {
 	},
 })
 export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponent {
-	@Prop() channel: any;
+	@Prop() channel!: any;
 
 	isLoaded = false;
 	bestGames: Game[] = [];

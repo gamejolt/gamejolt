@@ -12,8 +12,8 @@ import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jol
 	},
 })
 export default class AppGameDevStageConfirmModal extends BaseModal {
-	@Prop(Game) game: Game;
-	@Prop(Number) stage: number;
+	@Prop(Game) game!: Game;
+	@Prop(Number) stage!: number;
 
 	from = '';
 	to = '';

@@ -76,7 +76,8 @@ import {
 	},
 })
 export default class RouteDashAnalytics extends BaseRouteComponent {
-	@State app: Store['app'];
+	@State
+	app!: Store['app'];
 
 	user: User | null = null;
 	game: Game | null = null;

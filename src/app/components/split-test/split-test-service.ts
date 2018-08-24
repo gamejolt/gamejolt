@@ -32,7 +32,7 @@ function getClientSideVariation(route: Route, experiment: string): number {
 		variation = 2;
 	}
 
-	window.localStorage[experiment] = variation;
+	window.localStorage.setItem(experiment, variation + '');
 	return variation;
 }
 
@@ -49,8 +49,9 @@ function checkHardcoded(route: Route, experiment: string): number {
 	}
 
 	// Allow you to force an experiment variation permanently through localStorage.
-	if (window.localStorage[experiment]) {
-		return parseInt(window.localStorage[experiment], 10);
+	const experimentId = window.localStorage.getItem(experiment);
+	if (experimentId) {
+		return parseInt(experimentId, 10);
 	}
 
 	return -1;

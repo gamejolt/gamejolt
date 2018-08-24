@@ -6,14 +6,14 @@ export class ChatMessage {
 	static readonly TypeNormal = 0;
 	static readonly TypeSystem = 1;
 
-	id: number;
-	type: ChatMessageType;
-	userId: number;
-	user: ChatUser;
-	roomId: number;
-	contentRaw: string;
-	content: string;
-	loggedOn: Date;
+	id!: number;
+	type!: ChatMessageType;
+	userId!: number;
+	user!: ChatUser;
+	roomId!: number;
+	contentRaw!: string;
+	content!: string;
+	loggedOn!: Date;
 	combine?: boolean;
 	dateSplit?: boolean;
 
@@ -24,7 +24,7 @@ export class ChatMessage {
 	constructor(data: Partial<ChatMessage> = {}) {
 		Object.assign(this, data);
 
-		if (typeof this.loggedOn === 'number') {
+		if (typeof this.loggedOn === 'number' || typeof this.loggedOn === 'string') {
 			this.loggedOn = new Date(this.loggedOn);
 		}
 

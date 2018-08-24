@@ -13,7 +13,7 @@ import { ModalConfirm } from '../../../../lib/gj-lib-client/components/modal/con
 	},
 })
 export default class AppGameHeaderEditModal extends BaseModal {
-	@Prop(Game) game: Game;
+	@Prop(Game) game!: Game;
 
 	async clearHeader() {
 		const result = await ModalConfirm.show(

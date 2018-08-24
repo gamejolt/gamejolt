@@ -8,8 +8,9 @@ import { AppUserListItem } from './item/item';
 @Component({
 	components: {
 		AppUserListItem,
-	}
+	},
 })
 export class AppUserList extends Vue {
-	@Prop(Array) users!: User[];
+	@Prop(Array)
+	users!: User[];
 }

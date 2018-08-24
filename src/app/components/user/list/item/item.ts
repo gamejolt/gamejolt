@@ -9,10 +9,11 @@ import { Component, Prop } from 'vue-property-decorator';
 @Component({
 	components: {
 		AppUserAvatarImg,
-	}
+	},
 })
 export class AppUserListItem extends Vue {
-	@Prop(User) user!: User;
+	@Prop(User)
+	user!: User;
 
 	readonly Screen = Screen;
 }

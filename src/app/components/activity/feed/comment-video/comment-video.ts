@@ -15,8 +15,8 @@ import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fad
 	},
 })
 export class AppActivityFeedCommentVideo extends Vue {
-	@Prop(ActivityFeedItem) item: ActivityFeedItem;
-	@Prop(CommentVideo) video: CommentVideo;
+	@Prop(ActivityFeedItem) item!: ActivityFeedItem;
+	@Prop(CommentVideo) video!: CommentVideo;
 	@Prop(Boolean) isHydrated?: boolean;
 
 	canToggleContent = false;

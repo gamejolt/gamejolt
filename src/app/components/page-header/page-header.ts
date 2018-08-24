@@ -27,8 +27,8 @@ export class AppPageHeader extends Vue {
 	@Prop(Boolean) blurHeader?: boolean;
 	@Prop({ type: String, default: 'col-xs-12' })
 	colClasses?: string;
-	@Prop() autoscrollAnchorKey: any;
-	@Prop(Boolean) disableAutoscrollAnchor: any;
+	@Prop() autoscrollAnchorKey!: any;
+	@Prop(Boolean) disableAutoscrollAnchor!: any;
 	@Prop(Boolean) showCoverButtons?: boolean;
 
 	readonly Screen = Screen;

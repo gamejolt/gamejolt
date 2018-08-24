@@ -19,7 +19,7 @@ import { arrayRemove } from '../../../../../lib/gj-lib-client/utils/array';
 	},
 })
 export default class RouteDashAccountAddresses extends BaseRouteComponent {
-	@RouteMutation setHeading: RouteStore['setHeading'];
+	@RouteMutation setHeading!: RouteStore['setHeading'];
 
 	billingAddresses: UserAddress[] = [];
 

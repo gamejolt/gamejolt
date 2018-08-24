@@ -15,10 +15,10 @@ const RetroJoltBaseUrl = 'https://gamejolt.net/retrojolt/1';
 @View
 @Component({})
 export class AppEmbedRom extends Vue {
-	@State url: Store['url'];
-	@State build: Store['build'];
-	@State username: Store['username'];
-	@State token: Store['token'];
+	@State url!: Store['url'];
+	@State build!: Store['build'];
+	@State username!: Store['username'];
+	@State token!: Store['token'];
 
 	emulator: any;
 

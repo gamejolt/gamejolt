@@ -35,15 +35,15 @@ import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 	},
 })
 export class AppGameListing extends Vue {
-	@Prop(Object) listing: GameListingContainer;
+	@Prop(Object) listing!: GameListingContainer;
 	@Prop(Boolean) hideFilters?: boolean;
 	@Prop(Boolean) hideSectionNav?: boolean;
 	@Prop(Boolean) includeFeaturedSection?: boolean;
 	@Prop(Boolean) isLoading?: boolean;
 	@Prop({ type: Boolean, default: true })
-	showAds: boolean;
+	showAds!: boolean;
 	@Prop({ type: Boolean, default: true })
-	showFooterAd: boolean;
+	showFooterAd!: boolean;
 
 	readonly number = number;
 	readonly Environment = Environment;

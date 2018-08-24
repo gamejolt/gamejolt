@@ -20,7 +20,7 @@ export class FormGameCollaborator extends BaseForm<GameCollaborator> implements 
 	saveMethod = '$invite' as '$invite';
 	resetOnSubmit = true;
 
-	@Prop(Game) game: Game;
+	@Prop(Game) game!: Game;
 
 	readonly GameCollaborator = GameCollaborator;
 

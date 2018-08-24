@@ -24,9 +24,9 @@ import { CreateElement } from 'vue/types/vue';
 	},
 })
 export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent {
-	@Prop() postSlug: string;
+	@Prop() postSlug!: string;
 
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	post: FiresidePost | null = null;
 

@@ -13,10 +13,10 @@ import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.s
 	},
 })
 export class AppShellBanner extends Vue {
-	@BannerState shouldShowBanner: BannerStore['shouldShowBanner'];
-	@BannerState currentBanner: BannerStore['currentBanner'];
-	@BannerMutation clickBanner: BannerStore['clickBanner'];
-	@BannerMutation closeBanner: BannerStore['closeBanner'];
+	@BannerState shouldShowBanner!: BannerStore['shouldShowBanner'];
+	@BannerState currentBanner!: BannerStore['currentBanner'];
+	@BannerMutation clickBanner!: BannerStore['clickBanner'];
+	@BannerMutation closeBanner!: BannerStore['closeBanner'];
 
 	@Watch('shouldShowBanner', { immediate: true })
 	onShouldShowBannerChange(isShowing: boolean) {

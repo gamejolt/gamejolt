@@ -25,11 +25,16 @@ import { Mention } from '../../../../../lib/gj-lib-client/components/mention/men
 	},
 })
 export class AppActivityFeedNotification extends Vue {
-	@Prop(ActivityFeedItem) item: ActivityFeedItem;
-	@Prop(Boolean) isNew?: boolean;
-	@Prop(Boolean) isActive?: boolean;
+	@Prop(ActivityFeedItem)
+	item!: ActivityFeedItem;
 
-	notification: Notification;
+	@Prop(Boolean)
+	isNew?: boolean;
+
+	@Prop(Boolean)
+	isActive?: boolean;
+
+	notification!: Notification;
 
 	canToggleContent = false;
 	showFullContent = false;

@@ -49,7 +49,7 @@ function setCaretPosition(el: any, caretPos: number) {
 })
 export class AppSearch extends Vue {
 	@Prop({ type: Boolean, default: false })
-	autocompleteDisabled: boolean;
+	autocompleteDisabled!: boolean;
 
 	id = ++searchIterator;
 

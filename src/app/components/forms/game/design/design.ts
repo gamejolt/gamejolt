@@ -28,8 +28,8 @@ export class FormGameDesign extends BaseForm<Game> {
 	modelClass = Game as any;
 	saveMethod: '$saveDesign' = '$saveDesign';
 
-	@ThemeState userTheme: ThemeStore['userTheme'];
-	@ThemeMutation setFormTheme: ThemeStore['setFormTheme'];
+	@ThemeState userTheme!: ThemeStore['userTheme'];
+	@ThemeMutation setFormTheme!: ThemeStore['setFormTheme'];
 
 	get hasThumbnailError() {
 		return this.hasCustomError('thumbnail');

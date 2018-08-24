@@ -15,7 +15,8 @@ import { CommentModal } from '../../../../lib/gj-lib-client/components/comment/m
 	},
 })
 export class AppCommentOverview extends Vue {
-	@Prop(Array) comments: Comment[];
+	@Prop(Array)
+	comments!: Comment[];
 
 	open(comment: Comment) {
 		CommentModal.show({ comment });

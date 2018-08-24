@@ -19,7 +19,7 @@ import {
 	},
 })
 export default class RouteProfileLibrary extends BaseRouteComponent {
-	@Prop() user: User;
+	@Prop() user!: User;
 
 	collections: GameCollection[] = [];
 

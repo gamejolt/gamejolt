@@ -17,8 +17,8 @@ import { BaseRouteComponent } from '../../../../../lib/gj-lib-client/components/
 	},
 })
 export default class RouteDashAccountEdit extends BaseRouteComponent {
-	@State app: Store['app'];
-	@RouteMutation setHeading: RouteStore['setHeading'];
+	@State app!: Store['app'];
+	@RouteMutation setHeading!: RouteStore['setHeading'];
 
 	get routeTitle() {
 		return this.$gettext(`Edit Your Profile`);

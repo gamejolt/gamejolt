@@ -26,10 +26,14 @@ import { AppChatWindows } from '../../chat/windows/windows';
 export class AppShellChat extends Vue {
 	// Chat should be available since we only include in DOM if chat is
 	// bootstrapped.
-	@State chat: ChatClient;
-	@State isRightPaneVisible: Store['isRightPaneVisible'];
+	@State
+	chat!: ChatClient;
 
-	@Action toggleRightPane: Store['toggleRightPane'];
+	@State
+	isRightPaneVisible!: Store['isRightPaneVisible'];
+
+	@Action
+	toggleRightPane!: Store['toggleRightPane'];
 
 	private isWindowFocused = false;
 	private unfocusedNotificationsCount = 0;

@@ -1,6 +1,5 @@
 import View from '!view!./package-card-buttons.html?style=./package-card-buttons.styl';
 import * as fs from 'fs';
-import { Shell } from 'nw.gui';
 import * as path from 'path';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
@@ -47,18 +46,18 @@ import { LocalDbPackage, LocalDbPackagePatchState } from '../../local-db/package
 	},
 })
 export class AppClientPackageCardButtons extends Vue {
-	@ClientLibraryState packagesById: ClientLibraryStore['packagesById'];
+	@ClientLibraryState packagesById!: ClientLibraryStore['packagesById'];
 
-	@ClientLibraryAction private packageInstall: ClientLibraryStore['packageInstall'];
-	@ClientLibraryAction private packageUninstall: ClientLibraryStore['packageUninstall'];
-	@ClientLibraryAction private installerPause: ClientLibraryStore['installerPause'];
-	@ClientLibraryAction private installerResume: ClientLibraryStore['installerResume'];
-	@ClientLibraryAction private installerRetry: ClientLibraryStore['installerRetry'];
-	@ClientLibraryAction private launcherLaunch: ClientLibraryStore['launcherLaunch'];
+	@ClientLibraryAction private packageInstall!: ClientLibraryStore['packageInstall'];
+	@ClientLibraryAction private packageUninstall!: ClientLibraryStore['packageUninstall'];
+	@ClientLibraryAction private installerPause!: ClientLibraryStore['installerPause'];
+	@ClientLibraryAction private installerResume!: ClientLibraryStore['installerResume'];
+	@ClientLibraryAction private installerRetry!: ClientLibraryStore['installerRetry'];
+	@ClientLibraryAction private launcherLaunch!: ClientLibraryStore['launcherLaunch'];
 
-	@Prop(Game) game: Game;
-	@Prop(GamePackage) package: GamePackage;
-	@Prop(GamePackageCardModel) card: GamePackageCardModel;
+	@Prop(Game) game!: Game;
+	@Prop(GamePackage) package!: GamePackage;
+	@Prop(GamePackageCardModel) card!: GamePackageCardModel;
 
 	build: GameBuild | null = null;
 	downloadableUnsupported = false;
@@ -210,7 +209,7 @@ export class AppClientPackageCardButtons extends Vue {
 
 			// Just open the first file in the folder.
 			// This way we open within the package folder instead of the parent folder.
-			Shell.showItemInFolder(path.resolve(this.localPackage!.install_dir, files[0]));
+			nw.Shell.showItemInFolder(path.resolve(this.localPackage!.install_dir, files[0]));
 		});
 	}
 

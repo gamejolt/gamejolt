@@ -5,12 +5,12 @@ import { Device } from '../../../lib/gj-lib-client/components/device/device.serv
 
 export class ClientShortcut {
 	static get supportsShortcuts() {
-		// We just make ".desktop" entries for linux at the moment.
-		// This way it's easier to launch them.
-		if (Device.os() !== 'linux' || GJ_BUILD_TYPE === 'development') {
+		if (GJ_IS_WATCHING) {
 			return false;
 		}
-		return true;
+		// We just make ".desktop" entries for linux at the moment.
+		// This way it's easier to launch them.
+		return Device.os() === 'linux';
 	}
 
 	static create() {
@@ -19,7 +19,7 @@ export class ClientShortcut {
 		}
 
 		return Shortcut.create(
-			process.execPath,
+			path.join(nw.App.startPath, '..', 'game-jolt-client'),
 			// Path is absolute, so we make it relative to get the resolve working.
 			path.resolve(require('../../../static-assets/client/icon-256x256.png').substr(1))
 		);

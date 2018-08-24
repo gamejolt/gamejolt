@@ -29,7 +29,7 @@ import {
 	},
 })
 export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	user: User = null as any;
 	scoreTable: GameScoreTable = null as any;

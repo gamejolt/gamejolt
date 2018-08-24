@@ -18,8 +18,11 @@ const UsersPerPage = 20;
 	},
 })
 export default class AppSupportersModal extends BaseModal {
-	@Prop(Game) game!: Game;
-	@Prop(Number) supporterCount!: number;
+	@Prop(Game)
+	game!: Game;
+
+	@Prop(Number)
+	supporterCount!: number;
 
 	readonly number = number;
 

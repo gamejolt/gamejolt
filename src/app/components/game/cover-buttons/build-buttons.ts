@@ -13,8 +13,8 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 	},
 })
 export class AppGameCoverButtonsBuildButtons extends Vue {
-	@Prop(Game) game: Game;
-	@Prop(Array) downloadableBuilds: GameBuild[];
-	@Prop(Array) browserBuilds: GameBuild[];
-	@Prop(Array) installableBuilds: GameBuild[];
+	@Prop(Game) game!: Game;
+	@Prop(Array) downloadableBuilds!: GameBuild[];
+	@Prop(Array) browserBuilds!: GameBuild[];
+	@Prop(Array) installableBuilds!: GameBuild[];
 }

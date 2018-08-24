@@ -15,8 +15,6 @@ import { Store } from '../../store/index';
 import { AppMinbar } from '../../../lib/gj-lib-client/components/minbar/minbar';
 import { Connection } from '../../../lib/gj-lib-client/components/connection/connection-service';
 import { BannerState, BannerStore } from '../../store/banner';
-import { Analytics } from '../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 
 let components: any = {
 	AppShellTopNav,
@@ -47,14 +45,14 @@ if (GJ_IS_CLIENT) {
 	components,
 })
 export class AppShell extends Vue {
-	@State app: Store['app'];
-	@State chat: Store['chat'];
-	@State isLeftPaneVisible: Store['isLeftPaneVisible'];
-	@State isRightPaneVisible: Store['isRightPaneVisible'];
-	@State hasSidebar: Store['hasSidebar'];
-	@BannerState shouldShowBanner: BannerStore['shouldShowBanner'];
+	@State app!: Store['app'];
+	@State chat!: Store['chat'];
+	@State isLeftPaneVisible!: Store['isLeftPaneVisible'];
+	@State isRightPaneVisible!: Store['isRightPaneVisible'];
+	@State hasSidebar!: Store['hasSidebar'];
+	@BannerState shouldShowBanner!: BannerStore['shouldShowBanner'];
 
-	@Action clearPanes: Store['clearPanes'];
+	@Action clearPanes!: Store['clearPanes'];
 
 	readonly Connection = Connection;
 

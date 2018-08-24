@@ -16,7 +16,7 @@ import { AppScrollInviewParent } from '../../../../lib/gj-lib-client/components/
 	},
 })
 export class AppChatUserList extends Vue {
-	@Prop(Array) users: ChatUser[];
+	@Prop(Array) users!: ChatUser[];
 	@Prop(ChatRoom) room?: ChatRoom;
 	@Prop(Boolean) showPm?: boolean;
 	@Prop(Boolean) showModTools?: boolean;

@@ -19,7 +19,7 @@ import { AppUserPaymentSourceCard } from '../../../../components/user/payment-so
 	},
 })
 export default class RouteDashAccountPaymentMethods extends BaseRouteComponent {
-	@RouteMutation setHeading: RouteStore['setHeading'];
+	@RouteMutation setHeading!: RouteStore['setHeading'];
 
 	paymentSources: PaymentSource[] = [];
 

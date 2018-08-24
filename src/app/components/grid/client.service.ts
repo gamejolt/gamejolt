@@ -172,7 +172,7 @@ export class GridClient {
 		channel.push('request-bootstrap', { user_id: userId });
 	}
 
-	async restart(sleepMs: number = 2000) {
+	async restart(sleepMs = 2000) {
 		// sleep a bit before trying to reconnect
 		await sleep(sleepMs);
 		// teardown and try to reconnect

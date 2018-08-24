@@ -62,10 +62,10 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 	resetOnSubmit = true;
 	reloadOnSubmit = true;
 
-	@AppState user: AppStore['user'];
+	@AppState user!: AppStore['user'];
 
-	@Prop(Game) game: Game;
-	@Prop(Sellable) sellable: Sellable;
+	@Prop(Game) game!: Game;
+	@Prop(Sellable) sellable!: Sellable;
 	// @Prop(GamePackage) package?: GamePackage;
 
 	showDescriptionInput = false;
@@ -219,9 +219,9 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 				);
 
 				if (this.promotionalPricing) {
-					this.setField('sale_timezone', this.promotionalPricing.timezone);
-					this.setField('sale_start', this.promotionalPricing.start);
-					this.setField('sale_end', this.promotionalPricing.end);
+					this.setField('sale_timezone', this.promotionalPricing.timezone!);
+					this.setField('sale_start', this.promotionalPricing.start!);
+					this.setField('sale_end', this.promotionalPricing.end!);
 					this.setField('sale_price', this.promotionalPricing.amount / 100);
 				}
 

@@ -7,7 +7,7 @@ export type ActivityFeedInput = Notification | FiresidePost | EventItem;
 
 export class ActivityFeedItem {
 	id: string;
-	type: 'notification' | 'event-item';
+	type!: 'notification' | 'event-item';
 	feedItem: ActivityFeedInput;
 	scrollId: string;
 	height: string | null = null;

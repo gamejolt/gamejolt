@@ -17,10 +17,14 @@ import { RouteState, RouteStore } from '../../view.store';
 	},
 })
 export class AppDiscoverGamesViewOverviewSupporters extends Vue {
-	@Prop(Array) supporters!: User[];
-	@Prop(Number) supporterCount!: number;
+	@Prop(Array)
+	supporters!: User[];
 
-	@RouteState game!: RouteStore['game'];
+	@Prop(Number)
+	supporterCount!: number;
+
+	@RouteState
+	game!: RouteStore['game'];
 
 	viewAll() {
 		GameSupportersModal.show({

@@ -20,7 +20,7 @@ import {
 	},
 })
 export default class RouteSearchUsers extends BaseRouteComponent {
-	@Prop(Object) payload: any;
+	@Prop(Object) payload!: any;
 
 	readonly Search = Search;
 	readonly Scroll = Scroll;

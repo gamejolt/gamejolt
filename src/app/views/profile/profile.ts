@@ -48,10 +48,10 @@ import { ThemeMutation, ThemeStore } from '../../../lib/gj-lib-client/components
 	},
 })
 export default class RouteProfile extends BaseRouteComponent {
-	@Prop(String) username: string;
+	@Prop(String) username!: string;
 
-	@State app: Store['app'];
-	@ThemeMutation setPageTheme: ThemeStore['setPageTheme'];
+	@State app!: Store['app'];
+	@ThemeMutation setPageTheme!: ThemeStore['setPageTheme'];
 
 	user: User | null = null;
 	headerMediaItem: MediaItem | null = null;

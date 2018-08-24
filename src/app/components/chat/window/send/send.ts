@@ -18,12 +18,12 @@ import { ChatClient } from '../../client';
 	},
 })
 export class AppChatWindowSend extends Vue {
-	@State chat: ChatClient;
+	@State chat!: ChatClient;
 
 	message = '';
 	multiLineMode = false;
 
-	$refs: {
+	$refs!: {
 		input: HTMLTextAreaElement;
 	};
 

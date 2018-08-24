@@ -30,10 +30,11 @@ export function checkGameFilteringRoute(route: Route) {
 
 	// We only do work if the URL is bare with no filters set yet.
 	if (!paramFiltersFound && !GJ_IS_SSR) {
-		if (window.localStorage[STORAGE_KEY]) {
+		const storageKey = window.localStorage.getItem(STORAGE_KEY);
+		if (storageKey) {
 			console.log('from storage');
 
-			let filters = JSON.parse(window.localStorage[STORAGE_KEY]);
+			let filters = JSON.parse(storageKey);
 			if (filters && !isEmpty(filters)) {
 				// Never resolve so we don't switch routes.
 				const _filters = getRouteData(filters);
@@ -57,7 +58,9 @@ export function checkGameFilteringRoute(route: Route) {
 				// Always add in all browser types if we auto-detected.
 				// TODO: Would be nice to not have to manually add every single one in, but rather just a single filter for all browser types.
 				if (!GJ_IS_CLIENT) {
-					filters.browser = Object.keys(GameFilteringContainer.definitions.browser.options || {});
+					filters.browser = Object.keys(
+						GameFilteringContainer.definitions.browser.options || {}
+					);
 				} else {
 					// On client we only do HTML for now.
 					filters.browser = ['html'];
@@ -359,7 +362,7 @@ export class GameFilteringContainer {
 
 		// We allow them to save/set blank filters as well.
 		// This is so they can specifically say not to do our detected OS filters.
-		window.localStorage[STORAGE_KEY] = JSON.stringify(this.filters);
+		window.localStorage.setItem(STORAGE_KEY, JSON.stringify(this.filters));
 	}
 }
 

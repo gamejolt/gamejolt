@@ -47,7 +47,7 @@ if (GJ_IS_CLIENT) {
 	},
 })
 export class App extends Vue {
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	curDate = new Date();
 

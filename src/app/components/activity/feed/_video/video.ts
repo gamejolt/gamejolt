@@ -15,8 +15,8 @@ import { AppResponsiveDimensions } from '../../../../../lib/gj-lib-client/compon
 	},
 })
 export class AppActivityFeedVideo extends Vue {
-	@Prop(String) videoId: string;
-	@Prop(String) thumbnail: string;
+	@Prop(String) videoId!: string;
+	@Prop(String) thumbnail!: string;
 	@Prop(Boolean) isHydrated?: boolean;
 
 	contentBootstrapped = false;

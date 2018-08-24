@@ -34,10 +34,10 @@ import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/
 	},
 })
 export class FormPayment extends BaseForm<any> implements FormOnInit, FormOnSubmit {
-	@State app: AppStore;
+	@State app!: AppStore;
 
-	@Prop(Array) cards: any[];
-	@Prop(Order) order: Order;
+	@Prop(Array) cards!: any[];
+	@Prop(Order) order!: Order;
 
 	warnOnDiscard = false;
 

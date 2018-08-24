@@ -1,15 +1,12 @@
-import Vue from 'vue';
-import { initClientApiInterceptors } from './api/api.service';
 import { VuexStore } from '../../lib/gj-lib-client/utils/vuex';
+import { initClientApiInterceptors } from './api/api.service';
 import { Client } from './client.service';
+import { store } from './store/index';
 import { ClientUser } from './user/user.service';
 
-export function bootstrapCommonClient(store: VuexStore) {
+export function bootstrapCommonClient(sectionStore: VuexStore) {
 	initClientApiInterceptors();
 	Client.init();
-	ClientUser.init(store);
-
-	Vue.use(vue => {
-		(vue.prototype as any).GJ_IS_CLIENT = GJ_IS_CLIENT;
-	});
+	ClientUser.init(sectionStore);
+	store.dispatch('bootstrap');
 }

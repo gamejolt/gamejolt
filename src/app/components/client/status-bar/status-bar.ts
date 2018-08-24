@@ -7,6 +7,7 @@ import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-li
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+import { store as clientStore } from '../../../../_common/client/store';
 
 @View
 @Component({
@@ -22,14 +23,18 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 	},
 })
 export class AppClientStatusBar extends Vue {
-	@ClientLibraryState gamesById: ClientLibraryStore['gamesById'];
-	@ClientLibraryState numPlaying: ClientLibraryStore['numPlaying'];
-	@ClientLibraryState numPatching: ClientLibraryStore['numPatching'];
-	@ClientLibraryState currentlyPlaying: ClientLibraryStore['currentlyPlaying'];
-	@ClientLibraryState currentlyPatching: ClientLibraryStore['currentlyPatching'];
+	@ClientLibraryState gamesById!: ClientLibraryStore['gamesById'];
+	@ClientLibraryState numPlaying!: ClientLibraryStore['numPlaying'];
+	@ClientLibraryState numPatching!: ClientLibraryStore['numPatching'];
+	@ClientLibraryState currentlyPlaying!: ClientLibraryStore['currentlyPlaying'];
+	@ClientLibraryState currentlyPatching!: ClientLibraryStore['currentlyPatching'];
+
+	get clientUpdateStatus() {
+		return clientStore.state.clientUpdateStatus;
+	}
 
 	get isShowing() {
-		return this.numPatching > 0 || this.numPlaying > 0;
+		return this.numPatching > 0 || this.numPlaying > 0 || this.hasUpdate;
 	}
 
 	get currentlyPlayingList() {
@@ -38,6 +43,14 @@ export class AppClientStatusBar extends Vue {
 
 	get currentlyPatchingIds() {
 		return Object.keys(this.currentlyPatching).map(i => parseInt(i, 10));
+	}
+
+	get hasUpdate() {
+		return this.clientUpdateStatus === 'ready';
+	}
+
+	async updateClient() {
+		await clientStore.dispatch('updateClient');
 	}
 
 	@Watch('isShowing', { immediate: true })
@@ -51,5 +64,9 @@ export class AppClientStatusBar extends Vue {
 
 	destroyed() {
 		document.body.classList.remove('status-bar-visible');
+	}
+
+	updateApply() {
+		this.updateClient();
 	}
 }

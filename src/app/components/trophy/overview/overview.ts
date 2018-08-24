@@ -25,12 +25,12 @@ import { Store } from '../../../store/index';
 	},
 })
 export class AppTrophyOverview extends Vue {
-	@Prop(Game) game: Game;
+	@Prop(Game) game!: Game;
 	@Prop(Object) initialPayload?: any;
 	@Prop({ type: String, default: 'full' })
 	size?: 'small' | 'full';
 
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	trophies: GameTrophy[] = [];
 	showInvisibleTrophyMessage = false;

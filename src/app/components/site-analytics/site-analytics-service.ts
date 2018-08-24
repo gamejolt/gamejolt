@@ -442,7 +442,8 @@ export class SiteAnalytics {
 		});
 
 		let data: any = {};
-		Object.entries(response).forEach(([metricKey, eventData]) => {
+		Object.entries(response).forEach((kv: any) => {
+			const [metricKey, eventData] = kv;
 			let label: string | undefined = undefined;
 			if (request[metricKey].analyzer === 'histogram-sum') {
 				label = 'Sum';
@@ -479,7 +480,8 @@ export class SiteAnalytics {
 		});
 
 		let data: any = {};
-		Object.entries(response).forEach(([metricKey, eventData]) => {
+		Object.entries(response).forEach((kv: any) => {
+			const [metricKey, eventData] = kv;
 			let amount = eventData.total;
 			if (request[metricKey].analyzer === 'sum') {
 				amount = eventData.result;

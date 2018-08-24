@@ -1,6 +1,5 @@
 import View from '!view!./game-buttons.html';
 import * as fs from 'fs';
-import { Shell } from 'nw.gui';
 import * as path from 'path';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
@@ -17,7 +16,6 @@ import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popo
 import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { arrayGroupBy } from '../../../../lib/gj-lib-client/utils/array';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import {
 	ClientLibraryAction,
 	ClientLibraryState,
@@ -30,7 +28,6 @@ import { LocalDbPackage } from '../local-db/package/package.model';
 @View
 @Component({
 	components: {
-		AppJolticon,
 		AppPopover,
 		AppClientInstallProgress,
 	},
@@ -40,17 +37,17 @@ import { LocalDbPackage } from '../local-db/package/package.model';
 	},
 })
 export class AppClientGameButtons extends Vue {
-	@ClientLibraryState packagesByGameId: ClientLibraryStore['packagesByGameId'];
-	@ClientLibraryState findActiveForGame: ClientLibraryStore['findActiveForGame'];
+	@ClientLibraryState packagesByGameId!: ClientLibraryStore['packagesByGameId'];
+	@ClientLibraryState findActiveForGame!: ClientLibraryStore['findActiveForGame'];
 
-	@ClientLibraryAction private packageInstall: ClientLibraryStore['packageInstall'];
-	@ClientLibraryAction private packageUninstall: ClientLibraryStore['packageUninstall'];
-	@ClientLibraryAction private launcherLaunch: ClientLibraryStore['launcherLaunch'];
-	@ClientLibraryAction private installerPause: ClientLibraryStore['installerPause'];
-	@ClientLibraryAction private installerResume: ClientLibraryStore['installerResume'];
-	@ClientLibraryAction private installerRetry: ClientLibraryStore['installerRetry'];
+	@ClientLibraryAction private packageInstall!: ClientLibraryStore['packageInstall'];
+	@ClientLibraryAction private packageUninstall!: ClientLibraryStore['packageUninstall'];
+	@ClientLibraryAction private launcherLaunch!: ClientLibraryStore['launcherLaunch'];
+	@ClientLibraryAction private installerPause!: ClientLibraryStore['installerPause'];
+	@ClientLibraryAction private installerResume!: ClientLibraryStore['installerResume'];
+	@ClientLibraryAction private installerRetry!: ClientLibraryStore['installerRetry'];
 
-	@Prop(Game) game: Game;
+	@Prop(Game) game!: Game;
 	@Prop(Boolean) overlay?: boolean;
 	@Prop(Boolean) small?: boolean;
 	@Prop(Boolean) large?: boolean;
@@ -194,7 +191,7 @@ export class AppClientGameButtons extends Vue {
 
 			// Just open the first file in the folder.
 			// This way we open within the package folder instead of the parent folder.
-			Shell.showItemInFolder(path.resolve(localPackage.install_dir, files[0]));
+			nw.Shell.showItemInFolder(path.resolve(localPackage.install_dir, files[0]));
 		});
 	}
 

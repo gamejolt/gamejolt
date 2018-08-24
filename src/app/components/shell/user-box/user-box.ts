@@ -23,5 +23,5 @@ import { AppProgressBar } from '../../../../lib/gj-lib-client/components/progres
 	},
 })
 export class AppShellUserBox extends Vue {
-	@State app: Store['app'];
+	@State app!: Store['app'];
 }

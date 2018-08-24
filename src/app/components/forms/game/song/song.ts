@@ -18,7 +18,7 @@ import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/component
 	},
 })
 export class FormGameSong extends BaseForm<GameSong> implements FormOnInit, FormOnLoad {
-	@Prop(Game) game: Game;
+	@Prop(Game) game!: Game;
 
 	modelClass = GameSong;
 	warnOnDiscard = false;

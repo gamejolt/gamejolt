@@ -21,7 +21,7 @@ import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 	},
 })
 export class AppPollVoting extends Vue {
-	@Prop(Poll) poll: Poll;
+	@Prop(Poll) poll!: Poll;
 	@Prop(Game) game?: Game;
 
 	chosenItemId: number | null = null;

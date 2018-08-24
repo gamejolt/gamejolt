@@ -12,7 +12,7 @@ import {
 	Uninstaller,
 } from 'client-voodoo';
 import * as fs from 'fs';
-import * as nwGui from 'nw.gui';
+
 import * as path from 'path';
 import Vue from 'vue';
 import { Action, Mutation, namespace, State } from 'vuex-class';
@@ -36,7 +36,7 @@ import {
 	VuexStore,
 } from '../../lib/gj-lib-client/utils/vuex';
 import { LocalDbGame } from '../components/client/local-db/game/game.model';
-import { db } from '../components/client/local-db/local-db.service';
+import { LocalDb } from '../components/client/local-db/local-db.service';
 import {
 	LocalDbPackage,
 	LocalDbPackagePid,
@@ -50,6 +50,8 @@ import { fuzzysearch } from '../../lib/gj-lib-client/utils/string';
 export const ClientLibraryState = namespace('clientLibrary', State);
 export const ClientLibraryAction = namespace('clientLibrary', Action);
 export const ClientLibraryMutation = namespace('clientLibrary', Mutation);
+
+export type ClientUpdateStatus = 'checking' | 'none' | 'fetching' | 'ready' | 'error';
 
 // These are only the public actions/mutations.
 export type Actions = {
@@ -80,6 +82,8 @@ export type Mutations = {
 export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, Mutations> {
 	private _bootstrapPromise: Promise<void> | null = null;
 	private _bootstrapPromiseResolver: Function = null as any;
+
+	private db: LocalDb = null as any;
 
 	// Localdb variables
 	packages: LocalDbPackage[] = [];
@@ -137,7 +141,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			currentProgress += progress;
 		}
 
-		return currentProgress / numPatching;
+		return numPatching ? currentProgress / numPatching : null;
 	}
 
 	@VuexAction
@@ -148,11 +152,10 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 		this._startBootstrap();
 
-		const [packages, games] = await Promise.all([
-			// Need these type hints because dexie returns its own Dexie.Promises.
-			db.packages.toArray() as Promise<LocalDbPackage[]>,
-			db.games.toArray() as Promise<LocalDbGame[]>,
-		]);
+		const db = await LocalDb.instance();
+		this._useLocalDb(db);
+
+		const [packages, games] = [db.packages.all(), db.games.all()];
 
 		this._bootstrap({ packages, games });
 
@@ -180,6 +183,11 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	private _bootstrap({ packages, games }: { packages: LocalDbPackage[]; games: LocalDbGame[] }) {
 		this.packages = packages;
 		this.games = games;
+	}
+
+	@VuexMutation
+	private _useLocalDb(db: LocalDb) {
+		this.db = db;
 	}
 
 	/**
@@ -276,6 +284,8 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			const localPackage = this.packages[packageId];
 			if (localPackage.isPatching && !localPackage.isPatchPaused) {
 				promises.push(this.installerRetry(localPackage));
+			} else if (localPackage.isRemoving || localPackage.didRemoveFail) {
+				promises.push(this.packageUninstall([localPackage, false]));
 			}
 		}
 
@@ -682,7 +692,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 	@VuexAction
 	private async launcherInit() {
-		const pidDir = path.resolve(nwGui.App.dataPath, 'game-pids');
+		const pidDir = path.resolve(nw.App.dataPath, 'game-pids');
 		Config.setPidDir(pidDir);
 
 		try {
@@ -954,13 +964,12 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	private async setGameData([localGame, data]: [LocalDbGame, Partial<LocalDbGame>]) {
 		this._setGameData([localGame, data]);
 
-		const dbId = await db.games.put(localGame);
+		this.db.games.put(localGame);
+		await this.db.games.save();
 
 		if (!this.gamesById[localGame.id]) {
 			this.games.push(localGame);
 		}
-
-		return dbId;
 	}
 
 	@VuexMutation
@@ -985,16 +994,14 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		const localGame = new LocalDbGame();
 		const localPackage = new LocalDbPackage();
 
-		await db.transaction('rw', [db.games, db.packages], async () => {
-			await this.setGameData([localGame, game]);
-			await this.setPackageData([
-				localPackage,
-				{
-					...LocalDbPackage.fromSitePackageInfo(pkg, release, build, launchOptions),
-					install_state: LocalDbPackagePatchState.PATCH_PENDING,
-				},
-			]);
-		});
+		await this.setGameData([localGame, game]);
+		await this.setPackageData([
+			localPackage,
+			{
+				...LocalDbPackage.fromSitePackageInfo(pkg, release, build, launchOptions),
+				install_state: LocalDbPackagePatchState.PATCH_PENDING,
+			},
+		]);
 
 		return this.doPatch([localGame, localPackage]);
 	}
@@ -1092,7 +1099,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				}
 
 				// We refetch from db because if canceling a first installation it might remove the local game from the db.
-				localGame = await db.games.get(localPackage.game_id);
+				localGame = this.db.games.get(localPackage.game_id)!;
 
 				// Make sure we're clean.
 				await this.clearPackageOperations(localPackage);
@@ -1107,21 +1114,18 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				}
 
 				// Get the number of packages in this game.
-				const count = await db.packages
-					.where('game_id')
-					.equals(localPackage.game_id)
-					.count();
+				const count = this.db.packages.countInGroup('game_id', localPackage.game_id);
 
-				await db.transaction('rw', [db.games, db.packages], async () => {
-					// Note that some times a game is removed before the package (really weird cases).
-					// We still want the remove to go through, so be sure to skip this situation.
-					// If this is the last package for the game, remove the game since we no longer need it.
-					if (localGame && count <= 1) {
-						await db.games.delete(localGame.id);
-					}
+				// Note that some times a game is removed before the package (really weird cases).
+				// We still want the remove to go through, so be sure to skip this situation.
+				// If this is the last package for the game, remove the game since we no longer need it.
+				if (localGame && count <= 1) {
+					this.db.games.delete(localGame.id);
+					await this.db.games.save();
+				}
 
-					await db.packages.delete(localPackage.id);
-				});
+				this.db.packages.delete(localPackage.id);
+				await this.db.packages.save();
 
 				// Finally remove from the vuex store.
 				if (localGame && count <= 1) {
@@ -1315,13 +1319,12 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	private async setPackageData([localPackage, data]: [LocalDbPackage, Partial<LocalDbPackage>]) {
 		this._setPackageData([localPackage, data]);
 
-		const dbId = await db.packages.put(localPackage);
+		this.db.packages.put(localPackage);
+		await this.db.packages.save();
 
 		if (!this.packagesById[localPackage.id]) {
 			this.packages.push(localPackage);
 		}
-
-		return dbId;
 	}
 
 	@VuexMutation

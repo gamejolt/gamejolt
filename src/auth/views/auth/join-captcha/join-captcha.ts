@@ -25,7 +25,7 @@ export default class RouteJoinCaptcha extends BaseRouteComponent {
 		error?: boolean;
 	} | null = null;
 
-	$refs: {
+	$refs!: {
 		recaptcha: HTMLDivElement;
 	};
 

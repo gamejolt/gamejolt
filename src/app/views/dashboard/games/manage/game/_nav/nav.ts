@@ -15,12 +15,12 @@ import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 	},
 })
 export class AppManageGameNav extends Vue {
-	@RouteState game: RouteStore['game'];
-	@RouteState isWizard: RouteStore['isWizard'];
-	@RouteState canPublish: RouteStore['canPublish'];
+	@RouteState game!: RouteStore['game'];
+	@RouteState isWizard!: RouteStore['isWizard'];
+	@RouteState canPublish!: RouteStore['canPublish'];
 
-	@RouteAction saveDraft: RouteStore['saveDraft'];
-	@RouteAction publish: RouteStore['publish'];
+	@RouteAction saveDraft!: RouteStore['saveDraft'];
+	@RouteAction publish!: RouteStore['publish'];
 
 	Game = Game;
 }

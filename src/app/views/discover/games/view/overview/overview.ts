@@ -15,20 +15,21 @@ import { AppMediaBar } from 'game-jolt-frontend-lib/components/media-bar/media-b
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
-import { State } from 'vuex-class';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { CommentModal } from '../../../../../../lib/gj-lib-client/components/comment/modal/modal.service';
 import { HistoryTick } from '../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
 import { PartnerReferral } from '../../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
-import { BaseRouteComponent, RouteResolve } from '../../../../../../lib/gj-lib-client/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppCommentOverview } from '../../../../../components/comment/overview/overview';
 import { AppDevlogPostAdd } from '../../../../../components/devlog/post/add/add';
 import { AppGameOgrs } from '../../../../../components/game/ogrs/ogrs';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppActivityFeedLazy } from '../../../../../components/lazy';
 import { AppRatingWidget } from '../../../../../components/rating/widget/widget';
-import { Store } from '../../../../../store';
 import { RouteMutation, RouteState, RouteStore } from '../view.store';
 import { AppDiscoverGamesViewOverviewDetails } from './_details/details';
 import { AppDiscoverGamesViewOverviewRecommended } from './_recommended/recommended';
@@ -66,9 +67,6 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	@Prop()
 	id!: string;
-
-	@State
-	app!: Store['app'];
 
 	@RouteState
 	isOverviewLoaded!: RouteStore['isOverviewLoaded'];

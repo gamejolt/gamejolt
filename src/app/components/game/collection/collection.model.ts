@@ -22,12 +22,12 @@ export class GameCollection extends Model {
 		GameCollection.TYPE_RECOMMENDED,
 	];
 
-	_id: string;
-	type: string;
-	name: string;
-	slug: string;
-	img_thumbnail: string;
-	from_subscription: boolean;
+	_id?: string;
+	type!: string;
+	name!: string;
+	slug!: string;
+	img_thumbnail!: string;
+	from_subscription!: boolean;
 	owner?: User;
 	playlist?: GamePlaylist;
 	jam?: Jam;

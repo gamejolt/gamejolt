@@ -39,7 +39,9 @@ import { AppAdPlacement } from '../../../../../lib/gj-lib-client/components/ad/p
 	},
 })
 export class AppDevlogPostView extends Vue {
-	@Prop(FiresidePost) post: FiresidePost;
+	@Prop(FiresidePost) post!: FiresidePost;
+	@Prop(Boolean) showGameInfo?: boolean;
+	@Prop(Boolean) inModal?: boolean;
 
 	readonly Screen = Screen;
 }

@@ -28,7 +28,7 @@ import {
 	},
 })
 export default class RouteDashGamesManageApiOverview extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	numActiveSessions = 0;
 	numActiveTrophies = 0;

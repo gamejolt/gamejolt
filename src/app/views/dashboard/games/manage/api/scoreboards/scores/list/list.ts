@@ -21,7 +21,7 @@ import {
 	},
 })
 export default class RouteDashGamesManageApiScoreboardsScoresList extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	scoreTables: GameScoreTable[] = [];
 	scoreTable: GameScoreTable = null as any;

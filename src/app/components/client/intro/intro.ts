@@ -20,7 +20,8 @@ import { Client } from '../../../../_common/client/client.service';
 	},
 })
 export class AppClientIntro extends Vue {
-	@AppState user: AppStore['user'];
+	@AppState
+	user!: AppStore['user'];
 
 	shouldShowLogo = false;
 	shouldShowLoading = false;
@@ -28,7 +29,7 @@ export class AppClientIntro extends Vue {
 	private initialStateChangeResolver: Function = null as any;
 	private routeChangeAfterDeregister?: EventBusDeregister;
 
-	$refs: {
+	$refs!: {
 		wrap: HTMLDivElement;
 	};
 

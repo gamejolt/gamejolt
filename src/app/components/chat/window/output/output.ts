@@ -21,10 +21,10 @@ import { AppChatWindowOutputItem } from './item/item';
 	},
 })
 export class AppChatWindowOutput extends Vue {
-	@Prop(ChatRoom) room: ChatRoom;
-	@Prop(Array) messages: ChatMessage[];
+	@Prop(ChatRoom) room!: ChatRoom;
+	@Prop(Array) messages!: ChatMessage[];
 
-	@State chat: ChatClient;
+	@State chat!: ChatClient;
 
 	private shouldScroll = true;
 	private resize$: Subscription | undefined;

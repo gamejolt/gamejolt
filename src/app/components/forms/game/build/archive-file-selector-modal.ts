@@ -13,12 +13,12 @@ import { AppLoading } from '../../../../../lib/gj-lib-client/vue/components/load
 	},
 })
 export default class AppArchiveFileSelectorModal extends BaseModal {
-	@Prop(Number) gameId: number;
-	@Prop(Number) packageId: number;
-	@Prop(Number) releaseId: number;
-	@Prop(Number) buildId: number;
-	@Prop(Number) primaryFileId: number;
-	@Prop(String) platform: string;
+	@Prop(Number) gameId!: number;
+	@Prop(Number) packageId!: number;
+	@Prop(Number) releaseId!: number;
+	@Prop(Number) buildId!: number;
+	@Prop(Number) primaryFileId!: number;
+	@Prop(String) platform!: string;
 
 	isLoaded = false;
 	files: string[] = [];

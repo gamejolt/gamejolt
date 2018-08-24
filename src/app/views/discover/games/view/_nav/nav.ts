@@ -4,7 +4,10 @@ import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service'
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { CommentState, CommentStore } from '../../../../../../lib/gj-lib-client/components/comment/comment-store';
+import {
+	CommentState,
+	CommentStore,
+} from '../../../../../../lib/gj-lib-client/components/comment/comment-store';
 import { AppPopover } from '../../../../../../lib/gj-lib-client/components/popover/popover';
 import { AppPopoverTrigger } from '../../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { ReportModal } from '../../../../../../lib/gj-lib-client/components/report/modal/modal.service';
@@ -29,14 +32,23 @@ import { RouteState, RouteStore } from '../view.store';
 	},
 })
 export class AppDiscoverGamesViewNav extends Vue {
-	@RouteState game!: RouteStore['game'];
-	@RouteState trophiesCount!: RouteStore['trophiesCount'];
-	@RouteState hasScores!: RouteStore['hasScores'];
-	@RouteState primaryScoreTable!: RouteStore['primaryScoreTable'];
+	@RouteState
+	game!: RouteStore['game'];
 
-	@State app!: Store['app'];
+	@RouteState
+	trophiesCount!: RouteStore['trophiesCount'];
 
-	@CommentState getCommentStore!: CommentStore['getCommentStore'];
+	@RouteState
+	hasScores!: RouteStore['hasScores'];
+
+	@RouteState
+	primaryScoreTable!: RouteStore['primaryScoreTable'];
+
+	@State
+	app!: Store['app'];
+
+	@CommentState
+	getCommentStore!: CommentStore['getCommentStore'];
 
 	readonly Screen = Screen;
 

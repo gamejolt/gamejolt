@@ -22,11 +22,11 @@ import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ag
 	},
 })
 export class AppForumChannelList extends Vue {
-	@Prop(ForumCategory) category: ForumCategory;
-	@Prop(Array) channels: ForumChannel[];
+	@Prop(ForumCategory) category!: ForumCategory;
+	@Prop(Array) channels!: ForumChannel[];
 	@Prop({ type: Array, default: [] })
-	latestPosts: ForumPost[];
-	@Prop(Number) postCountPerPage: number;
+	latestPosts!: ForumPost[];
+	@Prop(Number) postCountPerPage!: number;
 
 	readonly number = number;
 	readonly Screen = Screen;
@@ -40,7 +40,7 @@ export class AppForumChannelList extends Vue {
 			return undefined;
 		}
 
-		const page = Math.ceil(post.topic!.replies_count / this.postCountPerPage);
+		const page = Math.ceil((post.topic.replies_count || 0) / this.postCountPerPage);
 		if (page === 1) {
 			return undefined;
 		}

@@ -25,7 +25,7 @@ import { AppPollVoting } from '../poll/voting/voting';
 })
 export default class AppBroadcastModal extends BaseModal {
 	@Prop({ type: Array, default: () => [] })
-	posts: FiresidePost[];
+	posts!: FiresidePost[];
 
 	post: FiresidePost | null = null;
 

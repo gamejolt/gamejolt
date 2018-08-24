@@ -1,49 +1,32 @@
-import Dexie from 'dexie';
 import { LocalDbGame } from './game/game.model';
 import { LocalDbPackage } from './package/package.model';
-import { LocalDbModel } from './model.service';
+import * as path from 'path';
+import { Collection } from './collection';
 
-function setHooks<T extends LocalDbModel>(table: Dexie.Table<T, number>) {
-	table.hook('reading', obj => {
-		obj.hydrate();
-		return obj;
-	});
-}
+export class LocalDb {
+	readonly games: Collection<LocalDbGame>;
+	readonly packages: Collection<LocalDbPackage>;
 
-export class LocalDb extends Dexie {
-	games: Dexie.Table<LocalDbGame, number>;
-	packages: Dexie.Table<LocalDbPackage, number>;
+	private static _instance: Promise<LocalDb> | null = null;
 
-	constructor() {
-		super('local');
+	private constructor() {
+		const dataPath = nw.App.dataPath;
 
-		this.version(1).stores({
-			games: 'id',
-			packages: 'id,game_id',
-		});
+		this.games = new Collection<LocalDbGame>(1, path.join(dataPath, 'games.wttf'), LocalDbGame);
+		this.packages = new Collection<LocalDbPackage>(
+			1,
+			path.join(dataPath, 'packages.wttf'),
+			LocalDbPackage
+		);
+		this.packages.defineGroup('game_id');
+	}
 
-		this.version(2)
-			.stores({
-				games: 'id',
-				packages: 'id,game_id',
-			})
-			.upgrade(trans => {
-				return trans
-					.table('games')
-					.toCollection()
-					.modify(game => {
-						game.modified_on = 0;
-					});
-			});
+	static instance() {
+		if (!this._instance) {
+			const db = new LocalDb();
+			this._instance = Promise.all([db.games.load(), db.packages.load()]).then(() => db);
+		}
 
-		this.games.mapToClass(LocalDbGame);
-		this.packages.mapToClass(LocalDbPackage);
-
-		setHooks(this.games);
-		setHooks(this.packages);
-
-		this.open();
+		return this._instance;
 	}
 }
-
-export const db = new LocalDb();

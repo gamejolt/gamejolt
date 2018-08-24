@@ -106,15 +106,15 @@ if (GJ_IS_CLIENT) {
 	modules,
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
-	app: AppStore;
-	theme: ThemeStore;
-	library: LibraryStore;
-	banner: BannerStore;
-	comment: CommentStore;
-	clientLibrary: _ClientLibraryMod.ClientLibraryStore;
+	app!: AppStore;
+	theme!: ThemeStore;
+	library!: LibraryStore;
+	banner!: BannerStore;
+	comment!: CommentStore;
+	clientLibrary!: _ClientLibraryMod.ClientLibraryStore;
 
 	// From the vuex-router-sync.
-	route: Route;
+	route!: Route;
 
 	chat: ChatClient | null = null;
 	grid: GridClient | null = null;

@@ -21,7 +21,7 @@ import { Translate } from '../../../../../lib/gj-lib-client/components/translate
 	},
 })
 export default class RouteDashAccountEmailPreferences extends BaseRouteComponent {
-	@RouteMutation setHeading: RouteStore['setHeading'];
+	@RouteMutation setHeading!: RouteStore['setHeading'];
 
 	user: User = null as any;
 
