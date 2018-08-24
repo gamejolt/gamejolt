@@ -43,7 +43,6 @@
 		"decompress-zip": "0.3.0",
 		"express": "4.16.2",
 		"favico.js": "0.3.10",
-		"fs-extra": "7.0.0",
 		"fs-readdir-recursive": "1.1.0",
 		"game-jolt-frontend-lib": "link:src/lib/gj-lib-client",
 		"hammerjs": "2.0.8",
@@ -83,15 +82,16 @@
 		"vuedraggable": "2.16.0",
 		"vuex": "3.0.1",
 		"vuex-class": "0.3.0",
-		"vuex-router-sync": "5.0.0",
-		"write-file-atomic": "2.3.0"
+		"vuex-router-sync": "5.0.0"
 	},
 	"optionalDependencies": {
 		"appdmg": "0.5.2"
 	},
 	"dependencies": {
 		"axios": "0.17.1",
-		"client-voodoo": "2.1.2"
+		"client-voodoo": "2.1.2",
+		"fs-extra": "7.0.0",
+		"write-file-atomic": "2.3.0"
 	},
 	"main": "chrome-extension://game-jolt-client/index.html#/",
 	"domain": "game-jolt-client",
