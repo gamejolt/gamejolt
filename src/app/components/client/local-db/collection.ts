@@ -42,11 +42,13 @@ export class Collection<T extends LocalDbModel<T>> {
 	}
 
 	async load() {
-		if (!await fs.pathExists(this.file)) {
+		if (!(await fs.pathExists(this.file))) {
+			console.log(`${this.file} doesnt exist, initializing new data`);
 			this.data = { version: this.version, objects: {}, groups: {} };
 			return;
 		}
 
+		console.log(`reading ${this.file}`);
 		let data = await fs.readJson(this.file);
 
 		let version = 0;
@@ -57,9 +59,12 @@ export class Collection<T extends LocalDbModel<T>> {
 		}
 
 		if (version !== this.version) {
+			console.log(`upgrading ${this.file} from ${version} to ${this.version}`);
 			await this.upgrade(version, data);
 			return;
 		}
+
+		console.log(`${this.file} loaded successfully`);
 
 		// We don't do any integrity checks on the json we read. We trust that if the versions match, everything is fine.
 		this.data = data;
@@ -68,13 +73,16 @@ export class Collection<T extends LocalDbModel<T>> {
 		// Simply lazy comparison by stringifying the arrays after sorting.
 		const existingGroups = Object.keys(this.data.groups);
 		if (JSON.stringify(this.groupFields.sort()) !== JSON.stringify(existingGroups.sort())) {
+			console.log(`${this.file} is reindexing`);
 			this.reindexGroups();
 			await this.save();
-			return;
 		}
 
-		this.reindexGroups();
-		await this.save();
+		// Is this a refactoring artifact? we shouldn't have to reindex the collection immediately after loading it.
+		// this.reindexGroups();
+		// await this.save();
+
+		console.log(`${this.file} is ready`);
 	}
 
 	private async upgrade(oldVersion: any, data: any) {
@@ -125,7 +133,7 @@ export class Collection<T extends LocalDbModel<T>> {
 
 	save() {
 		return new Promise<void>((resolve, reject) => {
-			writeFileAtomic(this.file, JSON.stringify(this.data), err => {
+			writeFileAtomic(this.file, JSON.stringify(this.data), {}, err => {
 				if (err) {
 					return reject(err);
 				}

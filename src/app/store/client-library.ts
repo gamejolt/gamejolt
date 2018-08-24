@@ -152,11 +152,12 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 		this._startBootstrap();
 
+		console.log('Bootstrapping client library');
 		const db = await LocalDb.instance();
 		this._useLocalDb(db);
+		console.log('LocalDB ready');
 
 		const [packages, games] = [db.packages.all(), db.games.all()];
-
 		this._bootstrap({ packages, games });
 
 		if (GJ_ENVIRONMENT === 'development') {
@@ -234,9 +235,10 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexMutation
-	private setCurrentlyUninstalling(
-		[localPackage, uninstallPromise]: [LocalDbPackage, Promise<void>]
-	) {
+	private setCurrentlyUninstalling([localPackage, uninstallPromise]: [
+		LocalDbPackage,
+		Promise<void>
+	]) {
 		if (this.currentlyUninstalling[localPackage.id]) {
 			return;
 		}
@@ -817,9 +819,10 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexAction
-	private async launcherAttach(
-		[localPackage, launchInstance]: [LocalDbPackage, LaunchInstance | OldLaunchInstance]
-	) {
+	private async launcherAttach([localPackage, launchInstance]: [
+		LocalDbPackage,
+		LaunchInstance | OldLaunchInstance
+	]) {
 		this.setCurrentlyPlaying(localPackage);
 
 		// Typescript for some reason can't detect that all possible types of launchInstance have a .on( 'gameOver' ), so we have to assert type.
@@ -978,9 +981,13 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexAction
-	async packageInstall(
-		[game, pkg, release, build, launchOptions]: Actions['clientLibrary/packageInstall']
-	) {
+	async packageInstall([
+		game,
+		pkg,
+		release,
+		build,
+		launchOptions,
+	]: Actions['clientLibrary/packageInstall']) {
 		// TODO: Are these needed?
 		HistoryTick.sendBeacon('game-build', build.id, {
 			sourceResource: 'Game',
@@ -1007,9 +1014,10 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexAction
-	async packageStartUpdate(
-		[localPackage, newBuildId]: Actions['clientLibrary/packageStartUpdate']
-	) {
+	async packageStartUpdate([
+		localPackage,
+		newBuildId,
+	]: Actions['clientLibrary/packageStartUpdate']) {
 		// If this package isn't installed (and at rest), we don't update.
 		// We also don't update if we're currently running the game. Imagine that happening!
 		if (!localPackage.isSettled || localPackage.isRunning) {
@@ -1184,9 +1192,10 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexAction
-	async setPackageInstallState(
-		[localPackage, state]: [LocalDbPackage, LocalDbPackagePatchState]
-	) {
+	async setPackageInstallState([localPackage, state]: [
+		LocalDbPackage,
+		LocalDbPackagePatchState
+	]) {
 		await this.setPackageData([localPackage, { install_state: state }]);
 	}
 
@@ -1245,16 +1254,18 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexAction
-	async setPackageDownloadProgress(
-		[localPackage, progress]: [LocalDbPackage, LocalDbPackageProgress | null]
-	) {
+	async setPackageDownloadProgress([localPackage, progress]: [
+		LocalDbPackage,
+		LocalDbPackageProgress | null
+	]) {
 		await this.setPackageData([localPackage, { download_progress: progress }]);
 	}
 
 	@VuexAction
-	async setPackageUnpackProgress(
-		[localPackage, progress]: [LocalDbPackage, LocalDbPackageProgress | null]
-	) {
+	async setPackageUnpackProgress([localPackage, progress]: [
+		LocalDbPackage,
+		LocalDbPackageProgress | null
+	]) {
 		await this.setPackageData([localPackage, { unpack_progress: progress }]);
 	}
 
@@ -1309,9 +1320,10 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexAction
-	async setPackageRemoveState(
-		[localPackage, state]: [LocalDbPackage, LocalDbPackageRemoveState]
-	) {
+	async setPackageRemoveState([localPackage, state]: [
+		LocalDbPackage,
+		LocalDbPackageRemoveState
+	]) {
 		await this.setPackageData([localPackage, { remove_state: state }]);
 	}
 

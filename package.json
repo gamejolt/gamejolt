@@ -89,7 +89,7 @@
 	},
 	"dependencies": {
 		"axios": "0.17.1",
-		"client-voodoo": "2.1.2",
+		"client-voodoo": "2.2.0",
 		"fs-extra": "7.0.0",
 		"write-file-atomic": "2.3.0"
 	},
