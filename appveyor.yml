@@ -8,7 +8,6 @@ environment:
 branches:
   only:
     - client-build
-    - standalone
 
 install:
   - rmdir C:\go /s /q
@@ -22,7 +21,7 @@ install:
 
 build_script:
   - yarn
-  - yarn run client-build-win -- --noGjPush
+  - yarn run client-build-win
 
 test: off
 
