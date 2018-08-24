@@ -25,7 +25,7 @@ export class LocalDb {
 		if (!this._instance) {
 			console.log('new localdb');
 			const db = new LocalDb();
-			this._instance = Promise.all([db.games.load()]).then(() => db);
+			this._instance = Promise.all([db.games.load(), db.packages.load()]).then(() => db);
 		}
 
 		return this._instance;
