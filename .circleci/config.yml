@@ -9,7 +9,7 @@ jobs:
       - run: 'yarn'
       - run: 'yarn run client-build-osx'
       - store_artifacts:
-          path: ./build/prod-client-build/osx64-package.zip
+          path: ./build/prod-client-build/osx64-package.tar.gz
       - store_artifacts:
           path: ./build/prod-client-build/osx.dmg
   build-linux:
@@ -21,7 +21,7 @@ jobs:
       - run: 'yarn'
       - run: 'yarn run client-build-linux64'
       - store_artifacts:
-          path: ./build/prod-client-build/linux64-package.zip
+          path: ./build/prod-client-build/linux64-package.tar.gz
       - store_artifacts:
           path: ./build/prod-client-build/linux64.tar.gz
 workflows:
