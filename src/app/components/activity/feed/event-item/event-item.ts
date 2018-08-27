@@ -23,6 +23,7 @@ import { AppActivityFeedDevlogPostText } from '../devlog-post/text/text';
 import { AppActivityFeedDevlogPostVideo } from '../devlog-post/video/video';
 import { AppActivityFeed } from '../feed';
 import { ActivityFeedItem } from '../item-service';
+import { AppWidgetCompiler } from '../../../../../lib/gj-lib-client/components/widget-compiler/widget-compiler';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
@@ -41,6 +42,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppActivityFeedDevlogPostVideo,
 		AppActivityFeedControls,
 		AppPollVoting,
+		AppWidgetCompiler,
 	},
 	filters: {
 		number,
