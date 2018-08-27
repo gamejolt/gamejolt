@@ -1,8 +1,9 @@
-@require '~styles/variables'
+@require '../../variables'
 @require '~styles-lib/mixins'
 
 .devlog-post-sketchfab
 	&-embed
+		margin-top: $-item-padding
 		rounded-corners()
 		theme-prop('background-color', 'bg-offset')
 		position: relative

@@ -1,4 +1,4 @@
-<app-timeline-list class="activity-feed">
+<div class="activity-feed">
 
 	<div v-for="(item, i) of feed.items" :key="item.id">
 		<app-activity-feed-item
@@ -6,7 +6,7 @@
 			:item="item"
 			/>
 
-		<div class="timeline-list-item-ad" v-if="shouldShowAd(i)">
+		<!-- <div class="timeline-list-item-ad" v-if="shouldShowAd(i)">
 			<section class="section section-thin fill-offset text-center">
 				<div class="timeline-list-item-ad-container">
 					<app-ad size="rectangle" pos="bottom" />
@@ -15,7 +15,7 @@
 					<translate>Advertisement</translate>
 				</div>
 			</section>
-		</div>
+		</div> -->
 	</div>
 
 	<div v-if="shouldShowLoadMore" class="page-cut">
@@ -34,4 +34,4 @@
 		<translate>A wild Snorlax blocks your path. Looks like it's the end of this feed.</translate>
 	</div>
 
-</app-timeline-list>
+</div>

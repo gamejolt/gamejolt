@@ -16,6 +16,39 @@
 
 		<div class="row">
 			<div class="col-sm-10 col-md-8 col-lg-7" :class="{ 'col-centered': Screen.isMobile }">
+				<div v-if="post.hasMedia" class="full-bleed-xs">
+					<div v-for="item of post.media" :key="item.id">
+						<app-responsive-dimensions
+							:ratio="item.width / item.height"
+							>
+
+							<app-img-responsive
+								v-if="!item.is_animated"
+								:src="item.mediaserver_url"
+								alt=""
+								/>
+
+							<app-video
+								v-else
+								:poster="item.mediaserver_url"
+								:webm="item.mediaserver_url_webm"
+								:mp4="item.mediaserver_url_mp4"
+								:show-loading="true"
+								/>
+
+						</app-responsive-dimensions>
+
+						<br>
+					</div>
+				</div>
+
+				<div v-if="post.hasSketchfab" class="full-bleed-xs">
+					<app-sketchfab-embed
+						:sketchfab-id="post.sketchfabs[0].sketchfab_id"
+						:autoplay="true"
+						/>
+				</div>
+
 				<div class="tiny text-muted">
 					<app-time-ago
 						v-if="post.isActive"
@@ -40,51 +73,19 @@
 					</span>
 				</div>
 
-				<h2 class="section-header">
-					{{ post.title }}
-				</h2>
+				<div class="lead">
+					<p>{{ post.title }}</p>
+					<p>{{ post.subline }}</p>
+				</div>
 
-				<div v-if="post.type === 'text'" class="fireside-post-body">
+				<div v-if="post.hasArticle" class="fireside-post-body">
 					<app-widget-compiler
 						:content="post.content_compiled"
 						/>
 				</div>
-				<div v-else-if="post.type === 'media'" class="full-bleed-xs">
-					<div v-for="item of post.media" :key="item.id">
-
-						<app-responsive-dimensions
-							:ratio="item.width / item.height"
-							>
-
-							<app-img-responsive
-								v-if="!item.is_animated"
-								:src="item.mediaserver_url"
-								alt=""
-								/>
-
-							<app-video
-								v-else
-								:poster="item.mediaserver_url"
-								:webm="item.mediaserver_url_webm"
-								:mp4="item.mediaserver_url_mp4"
-								:show-loading="true"
-								/>
-
-						</app-responsive-dimensions>
-
-						<br>
-
-					</div>
-				</div>
-				<div v-else-if="post.type === 'sketchfab'" class="full-bleed-xs">
-					<app-sketchfab-embed
-						:sketchfab-id="post.sketchfabs[0].sketchfab_id"
-						:autoplay="true"
-						/>
-				</div>
 
 				<app-poll-voting
-					v-if="post.poll"
+					v-if="post.hasPoll"
 					:poll="post.poll"
 					:game="post.game"
 					/>

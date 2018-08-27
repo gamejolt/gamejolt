@@ -1,5 +1,102 @@
-@require '~styles/variables'
+@require '../variables'
+@require '~styles-lib/mixins'
+
+.-container
+	@media $media-sm-up
+		padding-bottom: $-item-padding
+
+.-item
+	theme-prop('border-color', 'bg-subtle')
+	rounded-corners()
+	padding: $-item-padding
+	margin-left: -($grid-gutter-width-xs / 2)
+	margin-right: -($grid-gutter-width-xs / 2)
+	border-bottom-width: 2px
+	border-bottom-style: solid
+
+	@media $media-sm-up
+		theme-prop('border-color', 'bg-offset')
+		border-width: 2px
+		border-style: solid
+		margin-left: 0
+		margin-right: 0
+
+		&:hover
+			theme-prop('border-color', 'link')
+			cursor: pointer
+
+.-byline
+	display: flex
+	margin-top: 5px
+
+.-avatar
+	theme-prop('background-color', 'bg-subtle')
+	theme-prop('color', 'fg-muted')
+	theme-prop('border-color', 'bg')
+	flex: none
+	text-align: center
+	border-radius: 50%
+	overflow: hidden
+	margin-right: $-item-padding
+	width: $-avatar-size
+	height: $-avatar-size
+	line-height: $-avatar-size
+	border-width: 3px
+	border-style: solid
+
+	> .jolticon
+		position: relative
+		top: -2px
+		margin: 0
+		vertical-align: baseline
+
+	img
+		border-radius: 50% !important
+
+.-byline-content
+	flex: auto
+	display: flex
+	flex-direction: column
+
+.-byline-row
+	display: flex
+	// On xs we want to stack them on top of each other.
+	flex-direction: column
+
+	@media $media-sm-up
+		flex-direction: row
+
+.-byline-spacer
+	flex: auto
+
+.-byline-name
+	text-overflow()
+
+.-byline-displayname
+	margin-right: 5px
+	font-weight: bold
+
+.-byline-to
+	text-overflow()
+
+.-lead
+	margin-top: $-item-padding
+	font-size: $font-size-h4-xs
+	line-height: 1.4
+
+	@media $media-min-tablet
+		font-size: $font-size-h4
+
+	a
+		theme-prop('color', 'link')
+
+		&:hover, &:focus
+			theme-prop('color', 'link')
+			text-decoration: underline
+
+	& > p
+		margin-top: $-item-padding
+		margin-bottom: 0
 
 .-poll
-	margin-top: $line-height-computed
-	margin-bottom: $line-height-computed
+	margin-top: $-item-padding

@@ -1,12 +1,8 @@
-@require '~styles/variables'
+@require '../variables'
 @require '~styles-lib/mixins'
 
-.activity-feed-controls
-	margin-bottom: $line-height-computed
-
 .-controls
-	margin-top: $line-height-computed
-	margin-bottom: $line-height-computed
+	margin-top: $-item-padding
 
 .-manage-controls, .-manage-stats
 	display: block
@@ -15,7 +11,7 @@
 		display: inline-block
 
 .-manage-controls
-	margin-bottom: $line-height-computed
+	margin-bottom: $-item-padding
 
 	@media $media-sm-up
 		margin-right: 10px

@@ -1,29 +1,28 @@
+import View from '!view!./event-item.html?style=./event-item.styl';
+import { AppUserAvatar } from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./event-item.html?style=./event-item.styl';
-
-import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { ActivityFeedItem } from '../item-service';
-import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
-import { AppActivityFeed } from '../feed';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppGameThumbnailImg } from '../../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
-import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
-import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
-import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
+import { CommentVideoModal } from '../../../../../lib/gj-lib-client/components/comment/video/modal/modal.service';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
+import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
+import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import { AppGameThumbnailImg } from '../../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
+import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
+import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
+import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
+import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
+import { AppPollVoting } from '../../../poll/voting/voting';
 import { AppActivityFeedCommentVideo } from '../comment-video/comment-video';
 import { AppActivityFeedControls } from '../controls/controls';
-import { AppActivityFeedDevlogPostText } from '../devlog-post/text/text';
 import { AppActivityFeedDevlogPostMedia } from '../devlog-post/media/media';
 import { AppActivityFeedDevlogPostSketchfab } from '../devlog-post/sketchfab/sketchfab';
+import { AppActivityFeedDevlogPostText } from '../devlog-post/text/text';
 import { AppActivityFeedDevlogPostVideo } from '../devlog-post/video/video';
-import { CommentVideoModal } from '../../../../../lib/gj-lib-client/components/comment/video/modal/modal.service';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
-import { AppPollVoting } from '../../../poll/voting/voting';
+import { AppActivityFeed } from '../feed';
+import { ActivityFeedItem } from '../item-service';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
@@ -32,7 +31,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 	components: {
 		AppTimelineListItem,
 		AppJolticon,
-		AppUserAvatarImg,
+		AppUserAvatar,
 		AppGameThumbnailImg,
 		AppTimeAgo,
 		AppActivityFeedCommentVideo,
@@ -48,16 +47,24 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 	},
 })
 export class AppActivityFeedEventItem extends Vue {
-	@Prop(ActivityFeedItem) item!: ActivityFeedItem;
-	@Prop(Boolean) isNew?: boolean;
-	@Prop(Boolean) isActive?: boolean;
-	@Prop(Boolean) isHydrated?: boolean;
+	@Prop(ActivityFeedItem)
+	item!: ActivityFeedItem;
+	@Prop(Boolean)
+	isNew?: boolean;
+	@Prop(Boolean)
+	isActive?: boolean;
+	@Prop(Boolean)
+	isHydrated?: boolean;
 
 	private resizeSensor?: any;
 
 	feed!: AppActivityFeed;
 	readonly Screen = Screen;
 	readonly EventItem = EventItem;
+
+	get isThreadView() {
+		return !Screen.isXs;
+	}
 
 	get eventItem() {
 		return this.item.feedItem as EventItem;
@@ -161,11 +168,35 @@ export class AppActivityFeedEventItem extends Vue {
 		this.$emit('expanded');
 	}
 
-	onClick() {
+	/**
+	 * Called when clicking on the item, before running through any other click events--in the
+	 * capture phase.
+	 */
+	onClickCapture() {
 		this.$emit('clicked');
 
 		if (this.video) {
 			CommentVideoModal.show(this.video);
 		}
+	}
+
+	/**
+	 * Called when bubbling back up the click for the item. Any links within the item can cancel
+	 * this.
+	 */
+	onClick(event: Event) {
+		console.log(event.target);
+
+		const ignoreList = ['a', 'button'];
+
+		if (event.target) {
+			const target = event.target as HTMLElement;
+			const nodeName = target.nodeName.toLowerCase();
+			if (ignoreList.indexOf(nodeName) !== -1) {
+				return;
+			}
+		}
+
+		this.$router.push(this.link);
 	}
 }

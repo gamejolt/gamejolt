@@ -7,48 +7,50 @@
 		:pan-options="{ direction: 'horizontal' }"
 		>
 
-		<a class="devlog-post-media-prev" v-if="page > 1" @click="prev">
+		<a
+			class="devlog-post-media-prev"
+			v-if="page > 1"
+			@click.stop="prev"
+			>
 			<app-jolticon icon="chevron-left" />
 		</a>
 
-		<a class="devlog-post-media-next" v-if="page < post.media.length" @click="next">
+		<a
+			class="devlog-post-media-next"
+			v-if="page < post.media.length"
+			@click.stop="next"
+			>
 			<app-jolticon icon="chevron-right" />
 		</a>
 
-		<div class="devlog-post-media-embed-img"
-			@click.capture="clicked"
-			>
-			<router-link
-				:to="{ name: 'discover.games.view.devlog.view', params: { slug: post.game.slug, id: post.game.id, postSlug: post.slug } }"
-				>
-				<div class="devlog-post-media-slider" ref="slider">
+		<div class="devlog-post-media-embed-img">
+			<div class="devlog-post-media-slider" ref="slider">
 
-					<app-responsive-dimensions
-						class="devlog-post-media-slider-item"
-						v-for="item of post.media"
-						:key="item.id"
-						:ratio="item.width / item.height"
-						@change="onDimensionsChange"
-						>
+				<app-responsive-dimensions
+					class="devlog-post-media-slider-item"
+					v-for="item of post.media"
+					:key="item.id"
+					:ratio="item.width / item.height"
+					@change="onDimensionsChange"
+					>
 
-						<app-img-responsive
-							v-if="!isHydrated || !item.is_animated"
-							:src="item.mediaserver_url"
-							alt=""
-							ondragstart="return false"
-							/>
-						<app-video
-							v-else-if="shouldVideoPlay( item )"
-							:poster="item.mediaserver_url"
-							:webm="item.mediaserver_url_webm"
-							:mp4="item.mediaserver_url_mp4"
-							:show-loading="true"
-							/>
+					<app-img-responsive
+						v-if="!isHydrated || !item.is_animated"
+						:src="item.mediaserver_url"
+						alt=""
+						ondragstart="return false"
+						/>
+					<app-video
+						v-else-if="shouldVideoPlay( item )"
+						:poster="item.mediaserver_url"
+						:webm="item.mediaserver_url_webm"
+						:mp4="item.mediaserver_url_mp4"
+						:show-loading="true"
+						/>
 
-					</app-responsive-dimensions>
+				</app-responsive-dimensions>
 
-				</div>
-			</router-link>
+			</div>
 		</div>
 
 	</v-touch>

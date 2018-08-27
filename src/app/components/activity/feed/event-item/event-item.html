@@ -1,13 +1,23 @@
-<app-timeline-list-item is-thread :is-new="isNew" :is-active="isActive">
+<div class="-container">
+	<div
+		class="-item"
+		:class="{
+			'-new': isNew,
+			'-active': isActive,
+		}"
+		@click.capture="onClickCapture"
+		@click="onClick"
+		>
 
-	<app-user-avatar-img
-		slot="bubble"
-		:user="user"
-		/>
+<!-- <app-timeline-list-item
+	:is-thread="isThreadView"
+	:is-new="isNew"
+	:is-active="isActive"
+	> -->
 
-	<div class="event-item">
+	<!-- <div class="-main"> -->
 
-		<div @click.capture="onClick">
+		<!-- <div @click.capture="onClick">
 			<router-link :to="link" class="timeline-list-item-title">
 				<strong>
 					<template v-if="eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD">
@@ -21,9 +31,9 @@
 					</template>
 				</strong>
 			</router-link>
-		</div>
+		</div> -->
 
-		<div class="timeline-list-item-meta">
+		<!-- <div class="timeline-list-item-meta">
 			<template v-if="shouldShowScheduled">
 				<span class="tag" style="vertical-align: middle">
 					<app-jolticon icon="calendar-grid" />
@@ -53,77 +63,158 @@
 					{{ game.title }}
 				</router-link>
 			</template>
+		</div> -->
+
+		<!-- <div class="timeline-list-item-details"> -->
+		<div class="-byline">
+			<app-user-avatar
+				class="-avatar"
+				:user="user"
+				@click.native.stop
+				/>
+
+			<div class="-byline-content">
+				<div class="-byline-row">
+					<div class="-byline-name">
+						<router-link
+							class="-byline-displayname link-unstyled"
+							:to="{
+								name: 'profile.overview',
+								params: { username: user.username },
+							}"
+							>
+							{{ user.display_name }}
+						</router-link>
+
+						<span class="-byline-to text-muted" v-if="game && feed.showGameInfo">
+							<app-jolticon icon="chevron-right" class="middle" />
+							<router-link :to="gameUrl" class="link-unstyled">
+								{{ game.title }}
+							</router-link>
+						</span>
+					</div>
+
+					<div class="-byline-spacer" />
+
+					<div class="small text-muted">
+						<!-- <template v-if="post && post.type === 'media'">
+							<app-jolticon icon="screenshot" class="middle" />
+							{{ post.media.length | number }}
+							<span class="dot-separator" />
+						</template> -->
+
+						<template v-if="shouldShowScheduled">
+							<span class="tag" style="vertical-align: middle">
+								<app-jolticon icon="calendar-grid" />
+								<translate>Scheduled</translate>
+							</span>
+							<app-time-ago
+								:date="post.scheduled_for"
+								without-suffix
+								/>
+						</template>
+						<template v-else>
+							<app-time-ago
+								:date="eventItem.added_on"
+								/>
+						</template>
+					</div>
+				</div>
+
+				<div class="-byline-row">
+					<small class="-byline-username text-muted">
+						<router-link
+							class="link-unstyled"
+							:to="{
+								name: 'profile.overview',
+								params: { username: user.username },
+							}"
+							>
+							@{{ user.username }}
+						</router-link>
+					</small>
+				</div>
+			</div>
 		</div>
 
-		<div class="timeline-list-item-details">
+		<app-activity-feed-comment-video
+			v-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD"
+			:item="item"
+			:video="video"
+			:is-hydrated="isHydrated"
+			@expanded="onExpand"
+			@content-bootstrapped="onContentBootstrapped"
+			/>
+		<template v-if="post">
 
-			<app-activity-feed-comment-video
-				v-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD"
+			<app-activity-feed-devlog-post-video
+				v-if="post.hasVideo"
 				:item="item"
-				:video="video"
+				:post="post"
+				:is-hydrated="isHydrated"
+				@click.native.stop
+				@expanded="onExpand"
+				@content-bootstrapped="onContentBootstrapped"
+				/>
+
+			<app-activity-feed-devlog-post-sketchfab
+				v-if="post.hasSketchfab"
+				:item="item"
+				:post="post"
+				:is-hydrated="isHydrated"
+				@click.native.stop
+				@expanded="onExpand"
+				@content-bootstrapped="onContentBootstrapped"
+				/>
+
+			<app-activity-feed-devlog-post-media
+				v-if="post.hasMedia"
+				:item="item"
+				:post="post"
 				:is-hydrated="isHydrated"
 				@expanded="onExpand"
 				@content-bootstrapped="onContentBootstrapped"
 				/>
-			<template v-if="post">
-				<app-activity-feed-devlog-post-text
-					v-if="post.type === 'text'"
-					:item="item"
-					:post="post"
-					:is-hydrated="isHydrated"
-					@expanded="onExpand"
-					@content-bootstrapped="onContentBootstrapped"
-					/>
-				<app-activity-feed-devlog-post-video
-					v-else-if="post.type === 'video'"
-					:item="item"
-					:post="post"
-					:is-hydrated="isHydrated"
-					@expanded="onExpand"
-					@content-bootstrapped="onContentBootstrapped"
-					/>
-				<app-activity-feed-devlog-post-sketchfab
-					v-else-if="post.type === 'sketchfab'"
-					:item="item"
-					:post="post"
-					:is-hydrated="isHydrated"
-					@expanded="onExpand"
-					@content-bootstrapped="onContentBootstrapped"
-					/>
-				<app-activity-feed-devlog-post-media
-					v-else-if="post.type === 'media'"
-					:item="item"
-					:post="post"
-					:is-hydrated="isHydrated"
-					@clicked="onClick( $event )"
-					@expanded="onExpand"
-					@content-bootstrapped="onContentBootstrapped"
-					/>
 
-				<div class="-poll" v-if="post.poll">
-					<app-poll-voting
-						:poll="post.poll"
-						:game="post.game"
-						/>
-				</div>
-			</template>
+			<div class="-lead">
+				<p>{{ post.title }}</p>
+				<p>{{ post.subline }}</p>
+			</div>
 
-			<app-activity-feed-controls
+			<app-activity-feed-devlog-post-text
+				v-if="post.hasArticle"
+				:item="item"
 				:post="post"
-				:video="video"
-				:game="game"
-				show-comment-add-button
-				:show-game-info="feed.showGameInfo"
-				:show-edit-controls="feed.showEditControls"
-				:show-extra-info="!Screen.isXs"
+				:is-hydrated="isHydrated"
 				@expanded="onExpand"
-				@edited="feed.onPostEdited( post )"
-				@published="feed.onPostPublished( post )"
-				@removed="feed.onPostRemoved( post )"
+				@content-bootstrapped="onContentBootstrapped"
 				/>
 
-		</div>
+			<div
+				class="-poll"
+				v-if="post.hasPoll"
+				@click.stop
+				>
+				<app-poll-voting
+					:poll="post.poll"
+					:game="post.game"
+					/>
+			</div>
+		</template>
+
+		<app-activity-feed-controls
+			:post="post"
+			:video="video"
+			:game="game"
+			show-comment-add-button
+			:show-game-info="feed.showGameInfo"
+			:show-edit-controls="feed.showEditControls"
+			:show-extra-info="!Screen.isXs"
+			@expanded="onExpand"
+			@edited="feed.onPostEdited( post )"
+			@published="feed.onPostPublished( post )"
+			@removed="feed.onPostRemoved( post )"
+			/>
 
 	</div>
-
-</app-timeline-list-item>
+</div>
