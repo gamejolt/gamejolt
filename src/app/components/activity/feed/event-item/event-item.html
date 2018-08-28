@@ -176,10 +176,7 @@
 				@content-bootstrapped="onContentBootstrapped"
 				/>
 
-			<div class="-lead">
-				<app-widget-compiler
-					:content="post.lead_compiled"
-					/>
+			<div class="-lead" v-html="post.lead_compiled">
 			</div>
 
 			<app-activity-feed-devlog-post-text

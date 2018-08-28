@@ -73,10 +73,7 @@
 					</span>
 				</div>
 
-				<div class="lead">
-					<app-widget-compiler
-						:content="post.lead_compiled"
-						/>
+				<div class="lead" v-html="post.lead_compiled">
 				</div>
 
 				<div v-if="post.hasArticle" class="fireside-post-body">
