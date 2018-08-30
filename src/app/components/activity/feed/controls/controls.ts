@@ -54,22 +54,35 @@ import { AppCommentAddButton } from '../../../../../lib/gj-lib-client/components
 	},
 })
 export class AppActivityFeedControls extends Vue {
-	@Prop(FiresidePost) post?: FiresidePost;
-	@Prop(CommentVideo) video?: CommentVideo;
-	@Prop(Game) game?: Game;
-	@Prop(Boolean) showGameInfo?: boolean;
-	@Prop(Boolean) showEditControls?: boolean;
+	@Prop(FiresidePost)
+	post?: FiresidePost;
+	@Prop(CommentVideo)
+	video?: CommentVideo;
+	@Prop(Game)
+	game?: Game;
+	@Prop(Boolean)
+	showGameInfo?: boolean;
+	@Prop(Boolean)
+	showEditControls?: boolean;
 	@Prop({ type: Boolean, default: true })
 	showExtraInfo!: boolean;
-	@Prop(Boolean) showComments?: boolean;
-	@Prop(Boolean) showCommentAddButton?: boolean;
-	@Prop(Boolean) inModal?: boolean;
+	@Prop(Boolean)
+	showComments?: boolean;
+	@Prop(Boolean)
+	showCommentAddButton?: boolean;
+	@Prop(Boolean)
+	inModal?: boolean;
 
-	@State app!: Store['app'];
-	@CommentState getCommentStore!: CommentStore['getCommentStore'];
-	@CommentAction lockCommentStore!: CommentStore['lockCommentStore'];
-	@CommentMutation releaseCommentStore!: CommentStore['releaseCommentStore'];
-	@CommentMutation setCommentCount!: CommentStore['setCommentCount'];
+	@State
+	app!: Store['app'];
+	@CommentState
+	getCommentStore!: CommentStore['getCommentStore'];
+	@CommentAction
+	lockCommentStore!: CommentStore['lockCommentStore'];
+	@CommentMutation
+	releaseCommentStore!: CommentStore['releaseCommentStore'];
+	@CommentMutation
+	setCommentCount!: CommentStore['setCommentCount'];
 
 	commentStore: CommentStoreModel | null = null;
 	isShowingShare = false;
@@ -170,7 +183,7 @@ export class AppActivityFeedControls extends Vue {
 
 	async showEdit() {
 		if (this.post) {
-			if (await DevlogPostEditModal.show(this.post)) {
+			if (await DevlogPostEditModal.show(this.post, 'edit')) {
 				this.$emit('edited');
 			}
 		}

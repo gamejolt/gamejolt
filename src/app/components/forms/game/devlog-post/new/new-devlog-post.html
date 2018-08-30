@@ -1,0 +1,556 @@
+<app-form name="newDevlogPostForm" ref="form">
+
+	<!-- Attachments -->
+	<div class="well fill-offset full-bleed"
+		v-if="enabledAttachments">
+		<!-- Images -->
+		<app-form-group
+			name="file"
+			:label="$gettext( `Images` )"
+			v-if="enabledImages"
+			>
+
+			<span class="pull-right">
+				<app-button
+					sparse
+					circle
+					icon="remove"
+					@click.prevent="onDisableAttachments()"
+					/>
+			</span>
+
+			<p class="help-block">
+				<translate>Your image must be a PNG, JPG, or GIF.</translate> <br>
+				<b><translate>Animated GIFs are supported.</translate></b>
+			</p>
+
+			<app-form-control-upload
+				:rules="{
+					filesize: maxFilesize,
+					max_img_dimensions: [ maxWidth, maxHeight ],
+				}"
+				accept=".png,.jpg,.jpeg,.gif"
+				:multiple="true"
+				/>
+
+			<app-form-control-errors />
+		</app-form-group>
+
+		<!-- Video -->
+		<app-form-group
+			name="video_url"
+			:label="$gettext( `Video URL` )"
+			v-else-if="enabledVideo"
+			>
+			<span class="pull-right" v-if="!wasPublished">
+				<app-button
+					sparse
+					circle
+					icon="remove"
+					@click.prevent="onDisableAttachments()"
+					/>
+			</span>
+
+			<p class="help-block" v-if="!wasPublished">
+				<translate>Currently only YouTube videos are supported.</translate>
+			</p>
+
+			<app-form-control
+				type="text"
+				:disabled="wasPublished"
+				:rules="{
+					pattern: YOUTUBE_URL_REGEX,
+				}"
+				/>
+
+			<app-form-control-errors />
+
+			<div v-if="hasValidYouTubeUrl">
+				<br />
+				<app-video-embed
+					video-provider="youtube"
+					:video-id="youtubeVideoId"
+					/>
+			</div>
+		</app-form-group>
+
+		<!-- Sketchfab -->
+		<app-form-group
+			name="sketchfab_id"
+			:label="$gettext( `Sketchfab Model ID` )"
+			v-else-if="enabledSketchfab"
+			>
+			<span class="pull-right" v-if="!wasPublished">
+				<app-button
+					sparse
+					circle
+					icon="remove"
+					@click.prevent="onDisableAttachments()"
+					/>
+			</span>
+
+			<p class="help-block" v-if="!wasPublished">
+				<translate>This is the ID in your model's URL. For example:</translate>
+				<code>https://sketchfab.com/models/<strong>ID</strong></code>
+			</p>
+
+			<app-form-control type="text"
+				:disabled="wasPublished"
+				:rules="{
+					pattern: SKETCHFAB_MODEL_REGEX,
+				}" />
+			<app-form-control-errors />
+			<div v-if="hasValidSketchfabModelId">
+				<br />
+				<app-sketchfab-embed
+					:sketchfab-id="formModel.sketchfab_id"
+					/>
+			</div>
+		</app-form-group>
+	</div>
+
+	<!-- Post title (short) -->
+	<app-form-group
+		hideLabel
+		name="lead"
+		>
+		<app-form-control-textarea
+			maxlength="255"
+			rows="2"
+			v-app-focus-when
+			:placeholder="$gettext(`What's new?`)"
+			/>
+	</app-form-group>
+
+	<!-- Post body (long) -->
+	<div v-if="longEnabled">
+		<hr />
+		<app-form-group
+			name="content_markdown"
+			:label="$gettext( `Post Content` )"
+			:hide-label="true"
+			>
+			<app-form-control-markdown
+				preview-class="fireside-post-body"
+				preview-url="/web/dash/developer/games/devlog/preview"
+				markdown-mode="devlog"
+				:show-media-items="true"
+				media-item-type="fireside-post-image"
+				:placeholder="$gettext( `Write your post content here...` )"
+				/>
+
+			<app-form-control-errors />
+		</app-form-group>
+	</div>
+
+	<!-- Poll -->
+	<div class="well fill-offset full-bleed" v-if="hasPoll">
+		<fieldset>
+			<app-form-legend compact>
+				<translate>Set up poll</translate>
+				<span class="pull-right" v-if="isPollEditable">
+					<app-button
+						sparse
+						circle
+						icon="remove"
+						@click.prevent="onRemovePoll()"
+						/>
+				</span>
+			</app-form-legend>
+
+			<!-- i starts from 1 -->
+			<div
+				class="-poll-option"
+				v-for="i of formModel.poll_item_count"
+				>
+				<app-form-group
+					:name="'poll_item' + i"
+					:label="$gettext(`choice`)"
+					:hide-label="true"
+					>
+					<app-form-control
+						type="text"
+						:rules="{
+							max: 64,
+						}"
+						:placeholder="$gettextInterpolate('Choice %{ num }', { num: i })"
+						:disabled="!isPollEditable"
+						/>
+
+					<app-form-control-errors />
+				</app-form-group>
+
+				<!-- Can't have less than 2 poll items -->
+				<a
+					class="-poll-option-remove link-muted"
+					v-if="formModel.poll_item_count > 2 && isPollEditable"
+					@click="onRemovePollItem(i)"
+					>
+					<app-jolticon icon="remove" />
+				</a>
+			</div>
+
+			<div>
+				<a
+					v-if="isPollEditable && formModel.poll_item_count < MAX_POLL_ITEMS"
+					@click="onAddPollItem()"
+					>
+					+ <translate>Add choice</translate>
+				</a>
+			</div>
+		</fieldset>
+
+		<br>
+
+		<fieldset class="-poll-duration">
+			<app-form-legend compact>
+				<translate>Duration</translate>
+			</app-form-legend>
+
+			<div class="row">
+				<div class="col-xs-4">
+					<app-form-group
+						name="poll_days"
+						:label="$gettext('Days')"
+						>
+						<app-form-control
+							type="number"
+							step="1"
+							min="0"
+							max="14"
+							:disabled="!isPollEditable"
+							:rules="{
+								min_value: 0,
+								max_value: 14,
+							}"
+							/>
+					</app-form-group>
+				</div>
+
+				<div class="col-xs-4">
+					<app-form-group
+						name="poll_hours"
+						:label="$gettext('Hours')"
+						>
+						<app-form-control
+							type="number"
+							step="1"
+							min="0"
+							max="23"
+							:disabled="!isPollEditable"
+							:rules="{
+								min_value: 0,
+								max_value: 23,
+							}"
+							/>
+					</app-form-group>
+				</div>
+
+				<div class="col-xs-4">
+					<app-form-group
+						name="poll_minutes"
+						:label="$gettext('Minutes')"
+						>
+						<app-form-control
+							type="number"
+							step="1"
+							min="0"
+							max="59"
+							:disabled="!isPollEditable"
+							:rules="{
+								min_value: 0,
+								max_value: 59,
+							}"
+							/>
+					</app-form-group>
+				</div>
+			</div>
+
+			<p v-if="pollDuration < MIN_POLL_DURATION" class="help-block error">
+				<translate>Too short! Polls must be between 5 minutes and 14 days long.</translate>
+			</p>
+			<p v-else-if="pollDuration > MAX_POLL_DURATION" class="help-block error">
+				<translate>Too long! Polls must be between 5 minutes and 14 days long.</translate>
+			</p>
+			<br v-else>
+		</fieldset>
+
+		<fieldset>
+			<app-form-legend
+				compact
+				expandable
+				:expanded="isShowingMorePollOptions"
+				@click.native="isShowingMorePollOptions = !isShowingMorePollOptions"
+				>
+				<translate>More options</translate>
+			</app-form-legend>
+
+			<div v-show="isShowingMorePollOptions">
+				<app-form-group
+					name="poll_is_private"
+					:label="$gettext(`Private results?`)"
+					>
+					<app-form-control-toggle class="pull-right" />
+					<p class="help-block sans-margin-top">
+						<translate>The poll's results will be kept hidden if this is turned on.</translate>
+					</p>
+				</app-form-group>
+			</div>
+		</fieldset>
+
+	</div>
+
+	<!-- Scheduling -->
+	<div class="well fill-offset full-bleed" v-if="isScheduling && timezones">
+		<fieldset>
+			<app-form-legend compact>
+				<translate>Schedule publishing of post</translate>
+				<span class="pull-right">
+					<app-button
+						sparse
+						circle
+						icon="remove"
+						@click.prevent="onRemoveSchedule()"
+						/>
+				</span>
+			</app-form-legend>
+
+			<app-form-group
+				name="scheduled_for_timezone"
+				:label="$gettext( `Timezone` )"
+				>
+				<p class="help-block">
+					<translate>All time selection below will use this timezone.</translate>
+				</p>
+
+				<p class="help-block">
+					<strong><translate>Should auto-detect, but if it doesn't, choose your closest city.</translate></strong>
+				</p>
+
+				<app-form-control-select>
+					<optgroup
+						v-for="(timezones, region) of timezones"
+						:label="region"
+						>
+						<option
+							v-for="timezone of timezones"
+							:value="timezone.i"
+							>
+							{{ timezone.label }}
+						</option>
+					</optgroup>
+				</app-form-control-select>
+
+				<app-form-control-errors />
+			</app-form-group>
+
+			<app-form-group
+				name="scheduled_for"
+				:label="$gettext( `Date and time` )"
+				>
+				<app-form-control-date
+					:timezone-offset="scheduledTimezoneOffset"
+					:rules="{
+						min_date: now,
+					}"
+					/>
+				<app-form-control-errors :label="$gettext(`scheduled for`)" />
+			</app-form-group>
+
+		</fieldset>
+	</div>
+
+	<!-- Access permissions -->
+	<div class="well fill-offset full-bleed"
+		v-if="!wasPublished && accessPermissionsEnabled">
+		<app-form-group
+			name="key_group_ids"
+			:label="$gettext(`Access Permissions`)"
+			>
+			<span class="pull-right">
+				<app-button
+					sparse
+					circle
+					icon="remove"
+					@click.prevent="onDisableAccessPermissions()"
+					/>
+			</span>
+			<br />
+			<br />
+
+			<div
+				class="alert"
+				v-if="!keyGroups.length"
+				>
+				<translate>You can make this post available to only the users within a key group. For example, this is useful for sending news updates to testers. You can create a user key group through the "Keys/Access" page.</translate>
+			</div>
+			<div v-else>
+				<p class="help-block">
+					<translate>You can make this post available to only the users within a key group. For example, this is useful for sending news updates to testers. Only User-type key groups can be selected.</translate>
+				</p>
+
+				<div class="checkbox" v-for="keyGroup of keyGroups" :key="keyGroup.id">
+					<label>
+						<app-form-control-checkbox :value="keyGroup.id" />
+						{{ keyGroup.name }}
+					</label>
+				</div>
+			</div>
+		</app-form-group>
+	</div>
+	<div
+		class="form-group well fill-offset full-bleed"
+		v-else-if="wasPublished && model.key_groups.length"
+		>
+		<label class="control-label">
+			<translate>Access Permissions</translate>
+		</label>
+		<div class="alert">
+			<translate>The below key groups have access to this post. You can't edit who has access after posting since notifications have already gone out.</translate>
+		</div>
+		<div>
+			<span class="tag" v-for="keyGroup of model.key_groups" :key="keyGroup.id">
+				{{ keyGroup.name }}
+			</span>
+		</div>
+	</div>
+
+	<!-- Post as game owner -->
+	<app-form-group
+		name="as_game_owner"
+		v-if="user && model.game && user.id != model.game.developer.id"
+		:label="$gettext(`Post as Game Owner`)"
+		>
+		<p class="help-block">
+			This will show the game owner as the user that posted instead of you.
+		</p>
+		<div class="-as-owner">
+			<div class="-as-owner-item">
+				<app-form-control-toggle />
+			</div>
+			<div class="-as-owner-item -as-owner-avatar avatar-circle"
+				v-if="formModel.as_game_owner"
+				v-app-tooltip="model.game.developer.display_name + ` (@${model.game.developer.username})`">
+				<app-user-avatar-img
+					:user="model.game.developer"
+					/>
+			</div>
+		</div>
+	</app-form-group>
+
+	<!-- Controls -->
+	<div>
+		<app-button
+			sparse
+			trans
+			circle
+			:solid="enabledImages"
+			:disabled="(wasPublished || enabledAttachments) && !enabledImages"
+			icon="screenshot"
+			v-app-tooltip="$gettext(`Add images or gifs`)"
+			@click.prevent="onEnableImages()"
+			/>
+
+		<app-button
+			sparse
+			trans
+			circle
+			:solid="enabledVideo"
+			:disabled="(wasPublished || enabledAttachments) && !enabledVideo"
+			icon="video"
+			v-app-tooltip="$gettext(`Add video`)"
+			@click.prevent="onEnableVideo()"
+			/>
+
+		<app-button
+			sparse
+			trans
+			circle
+			:solid="enabledSketchfab"
+			:disabled="(wasPublished || enabledAttachments) && !enabledSketchfab"
+			icon="sketchfab"
+			v-app-tooltip="$gettext(`Add sketchfab model`)"
+			@click.prevent="onEnableSketchfab()"
+			/>
+
+		<span class="dot-separator"></span>
+
+		<app-button
+			sparse
+			trans
+			circle
+			:solid="longEnabled"
+			icon="markdown"
+			v-app-tooltip="$gettext(`Add text body`)"
+			@click.prevent="onAddLong()"
+			/>
+
+		<app-button
+			sparse
+			trans
+			circle
+			:solid="hasPoll"
+			:disabled="wasPublished && !hasPoll"
+			icon="pedestals-numbers"
+			v-app-tooltip="$gettext(`Add poll`)"
+			@click.prevent="onCreatePoll()"
+			/>
+
+		<span class="dot-separator"></span>
+
+		<app-button
+			sparse
+			trans
+			circle
+			:solid="isScheduling"
+			:disabled="wasPublished"
+			icon="calendar-plus"
+			v-app-tooltip="$gettext(`Schedule your post`)"
+			@click.prevent="onAddSchedule()"
+			/>
+
+		<app-button
+			sparse
+			trans
+			circle
+			:solid="accessPermissionsEnabled"
+			:disabled="wasPublished && !model.key_groups.length"
+			icon="key-diagonal"
+			v-app-tooltip="$gettext(`Access Permissions`)"
+			@click.prevent="onEnableAccessPermissions()"
+			/>
+
+		<span class="pull-right">
+			<app-button
+				:disabled="!valid"
+				primary
+				solid
+				>
+				{{mainActionText}}
+			</app-button>
+
+			<app-button
+				v-if="!wasPublished && !isScheduling"
+				:disabled="!valid"
+				sparse
+				trans
+				circle
+				icon="ellipsis-v"
+				@click.prevent
+				v-app-popover-trigger="`devlog-post-post-options`"
+				/>
+
+			<app-popover popover-id="devlog-post-post-options">
+				<div class="list-group list-group-dark">
+					<a class="list-group-item has-icon"
+						@click="onDraftSubmit"
+						>
+						<app-jolticon icon="pencil-box" />
+						{{draftButtonText}}
+					</a>
+				</div>
+			</app-popover>
+		</span>
+	</div>
+
+</app-form>
