@@ -18,11 +18,11 @@ import { FormGameNewDevlogPost } from '../../../forms/game/devlog-post/new/new-d
 export default class AppDevlogPostEditModal extends BaseModal {
 	@Prop(FiresidePost)
 	post!: FiresidePost;
-	@Prop(Boolean)
-	editMode!: boolean;
+	@Prop(String)
+	editMode!: string;
 
 	get headerText() {
-		if (this.editMode) {
+		if (this.editMode === 'edit') {
 			if (this.post.status === FiresidePost.STATUS_DRAFT) {
 				return this.$gettext('Edit draft post');
 			} else {

@@ -34,6 +34,7 @@ import {
 } from '../../../../../../lib/gj-lib-client/components/timezone/timezone.service';
 import { determine } from 'jstimezonedetect';
 import { AppFormControlDate } from '../../../../../../lib/gj-lib-client/components/form-vue/control/date/date';
+import { AppProgressBar } from '../../../../../../lib/gj-lib-client/components/progress/bar/bar';
 
 type FormGameDevlogPostModel = FiresidePost & {
 	keyGroups: KeyGroup[];
@@ -72,6 +73,7 @@ type FormGameDevlogPostModel = FiresidePost & {
 		AppJolticon,
 		AppPopover,
 		AppUserAvatarImg,
+		AppProgressBar,
 	},
 	directives: {
 		AppFocusWhen,
@@ -93,8 +95,10 @@ export class FormGameNewDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		form: AppForm;
 	};
 
+	static readonly LEAD_URL_REGEX = /(https?:\/\/([\/\.\?\-\+a-z0-9=#%_&;,~@])+)/gi;
 	readonly YOUTUBE_URL_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_\-]{11})(&.+)*$/i;
-	readonly SKETCHFAB_MODEL_REGEX = /^[a-f0-9]{32}$/i;
+	readonly SKETCHFAB_URL_REGEX = /^(https:\/\/)?(www.)?sketchfab.com\/models\/[0-9a-f]{32}\/?$/i;
+	readonly SKETCHFAB_FIELD_REGEX = /^((https:\/\/)?(www.)?(sketchfab.com\/models\/[0-9a-f]{32}\/?))|([0-9a-f]{32})$/i;
 	readonly MAX_POLL_ITEMS = 10;
 	readonly MIN_POLL_DURATION = 5;
 	readonly MAX_POLL_DURATION = 20160;
@@ -112,6 +116,8 @@ export class FormGameNewDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	isShowingMorePollOptions = false;
 	accessPermissionsEnabled = false;
 	isSavedDraftPost = false;
+	leadUrlLength = 30;
+	leadLengthLimit = 255;
 
 	readonly GameVideo = GameVideo;
 
@@ -158,8 +164,19 @@ export class FormGameNewDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	get hasValidSketchfabModelId() {
 		return (
 			this.formModel.sketchfab_id &&
-			this.formModel.sketchfab_id.match(this.SKETCHFAB_MODEL_REGEX)
+			this.formModel.sketchfab_id.match(this.SKETCHFAB_FIELD_REGEX)
 		);
+	}
+
+	get sketchfabId() {
+		if (this.formModel.sketchfab_id.match(this.SKETCHFAB_URL_REGEX)) {
+			// extract model id from url
+			var matches = this.formModel.sketchfab_id.match(/[a-f0-9]{32}/);
+			if (matches && matches.length > 0) {
+				return matches[0];
+			}
+		}
+		return this.formModel.sketchfab_id;
 	}
 
 	get hasValidYouTubeUrl() {
@@ -214,6 +231,27 @@ export class FormGameNewDevlogPost extends BaseForm<FormGameDevlogPostModel>
 
 	get isScheduling() {
 		return this.formModel.isScheduled;
+	}
+
+	get computedLeadLength() {
+		const regex = FormGameNewDevlogPost.LEAD_URL_REGEX;
+		let lead = this.formModel.lead;
+		if (!lead) {
+			return 0;
+		}
+
+		if (lead.match(regex)) {
+			lead = lead.replace(regex, ' '.repeat(this.leadUrlLength));
+		}
+		return lead.length;
+	}
+
+	get leadLengthPercent() {
+		return 100 - (this.computedLeadLength / this.leadLengthLimit) * 100;
+	}
+
+	get isLeadValid() {
+		return this.computedLeadLength <= this.leadLengthLimit;
 	}
 
 	// ///////////////////
@@ -279,6 +317,8 @@ export class FormGameNewDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
+		this.leadUrlLength = payload.leadUrlLength;
+		this.leadLengthLimit = payload.leadLengthLimit;
 	}
 
 	// ///////////////////
@@ -429,6 +469,10 @@ export class FormGameNewDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		// a scheduled post gets saved as draft and will get set to published when the scheduled date is reached
 		if (this.isScheduling) {
 			this.setField('status', FiresidePost.STATUS_DRAFT);
+		}
+		// in case they have a sketchfab url set, replace it with the model id
+		if (this.formModel.sketchfab_id) {
+			this.setField('sketchfab_id', this.sketchfabId);
 		}
 		this.setField('poll_duration', this.pollDuration * 60); // site-api expects duration in seconds.
 		return this.formModel.$save();

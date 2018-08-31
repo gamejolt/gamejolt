@@ -97,13 +97,13 @@
 			<app-form-control type="text"
 				:disabled="wasPublished"
 				:rules="{
-					pattern: SKETCHFAB_MODEL_REGEX,
+					pattern: SKETCHFAB_FIELD_REGEX,
 				}" />
 			<app-form-control-errors />
 			<div v-if="hasValidSketchfabModelId">
 				<br />
 				<app-sketchfab-embed
-					:sketchfab-id="formModel.sketchfab_id"
+					:sketchfab-id="sketchfabId"
 					/>
 			</div>
 		</app-form-group>
@@ -115,11 +115,25 @@
 		name="lead"
 		>
 		<app-form-control-textarea
-			maxlength="255"
+			maxlength="300"
 			rows="2"
 			v-app-focus-when
 			:placeholder="$gettext(`What's new?`)"
 			/>
+		<app-progress-bar
+			:percent="leadLengthPercent"
+			:indeterminate="!isLeadValid"
+			:thin="leadLengthPercent > 10">
+			<template v-if="leadLengthPercent <= 10">
+				{{leadLengthLimit - computedLeadLength}}
+			</template>
+		</app-progress-bar>
+		<template v-if="!isLeadValid" class="alert notice alert-notice">
+			<app-jolticon
+				notice
+				icon="notice" />
+			Your lead is too long!
+		</template>
 	</app-form-group>
 
 	<!-- Post body (long) -->
@@ -504,7 +518,7 @@
 			circle
 			:solid="isScheduling"
 			:disabled="wasPublished"
-			icon="calendar-plus"
+			icon="calendar-grid"
 			v-app-tooltip="$gettext(`Schedule your post`)"
 			@click.prevent="onAddSchedule()"
 			/>
