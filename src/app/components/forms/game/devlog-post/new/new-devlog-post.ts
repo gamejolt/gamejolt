@@ -171,7 +171,7 @@ export class FormGameNewDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	get sketchfabId() {
 		if (this.formModel.sketchfab_id.match(this.SKETCHFAB_URL_REGEX)) {
 			// extract model id from url
-			var matches = this.formModel.sketchfab_id.match(/[a-f0-9]{32}/);
+			var matches = this.formModel.sketchfab_id.match(/[a-f0-9]{32}/i);
 			if (matches && matches.length > 0) {
 				return matches[0];
 			}
@@ -186,8 +186,12 @@ export class FormGameNewDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	get youtubeVideoId() {
 		const url = this.formModel.video_url;
 		if (url) {
-			const videoId = new URL(url).searchParams.get('v');
-			return videoId;
+			// extract video id from url
+			var matches = url.match(/\?v=[a-zA-Z0-9_\-]{11}/);
+			if (matches && matches.length > 0) {
+				const videoId = matches[0].substr(3);
+				return videoId;
+			}
 		}
 	}
 
