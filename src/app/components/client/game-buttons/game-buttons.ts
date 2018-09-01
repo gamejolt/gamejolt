@@ -37,24 +37,53 @@ import { LocalDbPackage } from '../local-db/package/package.model';
 	},
 })
 export class AppClientGameButtons extends Vue {
-	@ClientLibraryState packagesByGameId!: ClientLibraryStore['packagesByGameId'];
-	@ClientLibraryState findActiveForGame!: ClientLibraryStore['findActiveForGame'];
+	@ClientLibraryState
+	packagesByGameId!: ClientLibraryStore['packagesByGameId'];
 
-	@ClientLibraryAction private packageInstall!: ClientLibraryStore['packageInstall'];
-	@ClientLibraryAction private packageUninstall!: ClientLibraryStore['packageUninstall'];
-	@ClientLibraryAction private launcherLaunch!: ClientLibraryStore['launcherLaunch'];
-	@ClientLibraryAction private installerPause!: ClientLibraryStore['installerPause'];
-	@ClientLibraryAction private installerResume!: ClientLibraryStore['installerResume'];
-	@ClientLibraryAction private installerRetry!: ClientLibraryStore['installerRetry'];
+	@ClientLibraryState
+	findActiveForGame!: ClientLibraryStore['findActiveForGame'];
 
-	@Prop(Game) game!: Game;
-	@Prop(Boolean) overlay?: boolean;
-	@Prop(Boolean) small?: boolean;
-	@Prop(Boolean) large?: boolean;
-	@Prop(String) label?: string;
-	@Prop(Boolean) hasInstallableBuilds?: boolean;
-	@Prop(Boolean) canInstall?: boolean;
-	@Prop(Boolean) noProgress?: boolean;
+	@ClientLibraryAction
+	private packageInstall!: ClientLibraryStore['packageInstall'];
+
+	@ClientLibraryAction
+	private packageUninstall!: ClientLibraryStore['packageUninstall'];
+
+	@ClientLibraryAction
+	private launcherLaunch!: ClientLibraryStore['launcherLaunch'];
+
+	@ClientLibraryAction
+	private installerPause!: ClientLibraryStore['installerPause'];
+
+	@ClientLibraryAction
+	private installerResume!: ClientLibraryStore['installerResume'];
+
+	@ClientLibraryAction
+	private installerRetry!: ClientLibraryStore['installerRetry'];
+
+	@Prop(Game)
+	game!: Game;
+
+	@Prop(Boolean)
+	overlay?: boolean;
+
+	@Prop(Boolean)
+	small?: boolean;
+
+	@Prop(Boolean)
+	large?: boolean;
+
+	@Prop(String)
+	label?: string;
+
+	@Prop(Boolean)
+	hasInstallableBuilds?: boolean;
+
+	@Prop(Boolean)
+	canInstall?: boolean;
+
+	@Prop(Boolean)
+	noProgress?: boolean;
 
 	isLoadingPackageData = false;
 	packageDataPromise: Promise<GamePackagePayloadModel> | null = null;
