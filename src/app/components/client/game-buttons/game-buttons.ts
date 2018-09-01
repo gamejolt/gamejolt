@@ -189,7 +189,7 @@ export class AppClientGameButtons extends Vue {
 		}
 
 		Analytics.trackEvent('client-game-buttons', 'cancel-install');
-		this.packageUninstall([this.localPackage, false]);
+		this.packageUninstall([this.localPackage]);
 	}
 
 	retryInstall() {
@@ -233,6 +233,6 @@ export class AppClientGameButtons extends Vue {
 		Analytics.trackEvent('client-game-buttons', 'uninstall');
 		Popover.hideAll();
 
-		await this.packageUninstall([localPackage, false]);
+		await this.packageUninstall([localPackage]);
 	}
 }
