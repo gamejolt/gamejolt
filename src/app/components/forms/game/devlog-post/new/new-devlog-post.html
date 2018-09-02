@@ -142,7 +142,8 @@
 		<app-form-group
 			name="content_markdown"
 			:label="$gettext( `Post Content` )"
-			:hide-label="true"
+			hide-label
+			optional
 			>
 			<app-form-control-markdown
 				preview-class="fireside-post-body"
@@ -180,7 +181,7 @@
 				<app-form-group
 					:name="'poll_item' + i"
 					:label="$gettext(`choice`)"
-					:hide-label="true"
+					hide-label
 					>
 					<app-form-control
 						type="text"
