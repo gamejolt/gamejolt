@@ -115,7 +115,7 @@
 		name="lead"
 		>
 		<app-form-control-textarea
-			maxlength="300"
+			:maxlength="leadTotalLengthLimit"
 			rows="2"
 			v-app-focus-when
 			:placeholder="$gettext(`What's new?`)"

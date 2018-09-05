@@ -118,6 +118,7 @@ export class FormGameNewDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	isSavedDraftPost = false;
 	leadUrlLength = 30;
 	leadLengthLimit = 255;
+	leadTotalLengthLimit = 300;
 
 	readonly GameVideo = GameVideo;
 
@@ -323,6 +324,7 @@ export class FormGameNewDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.maxHeight = payload.maxHeight;
 		this.leadUrlLength = payload.leadUrlLength;
 		this.leadLengthLimit = payload.leadLengthLimit;
+		this.leadTotalLengthLimit = payload.leadTotalLengthLimit;
 	}
 
 	// ///////////////////
