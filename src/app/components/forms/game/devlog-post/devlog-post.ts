@@ -1,35 +1,40 @@
 import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./devlog-post.html?style=./devlog-post.styl';
-import { determine } from 'jstimezonedetect';
 
 import {
 	BaseForm,
 	FormOnInit,
 	FormOnLoad,
 	FormOnSubmit,
+	FormOnSubmitSuccess,
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/video/video.model';
 import { KeyGroup } from '../../../../../lib/gj-lib-client/components/key-group/key-group.model';
-import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
-import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
+import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
 import { AppFocusWhen } from '../../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
-import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
-import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
+import { AppSketchfabEmbed } from '../../../../../lib/gj-lib-client/components/sketchfab/embed/embed';
+import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/video/video.model';
+import { AppVideoEmbed } from '../../../../../lib/gj-lib-client/components/video/embed/embed';
+import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
 import { AppFormLegend } from '../../../../../lib/gj-lib-client/components/form-vue/legend/legend';
-import { FormOnSubmitSuccess } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
+import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
+import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/popover';
+import { AppFormControlCheckbox } from '../../../../../lib/gj-lib-client/components/form-vue/control/checkbox/checkbox';
+import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
+import * as startOfDay from 'date-fns/start_of_day';
+import * as addWeeks from 'date-fns/add_weeks';
 import {
 	TimezoneData,
 	Timezone,
 } from '../../../../../lib/gj-lib-client/components/timezone/timezone.service';
+import { determine } from 'jstimezonedetect';
 import { AppFormControlDate } from '../../../../../lib/gj-lib-client/components/form-vue/control/date/date';
-import * as startOfDay from 'date-fns/start_of_day';
-import * as addWeeks from 'date-fns/add_weeks';
+import { AppProgressBar } from '../../../../../lib/gj-lib-client/components/progress/bar/bar';
 
 type FormGameDevlogPostModel = FiresidePost & {
 	keyGroups: KeyGroup[];
@@ -57,18 +62,23 @@ type FormGameDevlogPostModel = FiresidePost & {
 @View
 @Component({
 	components: {
-		AppFormControlMarkdown,
-		AppFormControlUpload,
-		AppFormControlToggle,
-		AppFormLegend,
-		AppUserAvatarImg,
-		AppExpand,
-		AppJolticon,
+		AppFormControlCheckbox,
 		AppFormControlDate,
+		AppFormControlMarkdown,
+		AppFormControlToggle,
+		AppFormControlUpload,
+		AppFormLegend,
+		AppSketchfabEmbed,
+		AppVideoEmbed,
+		AppJolticon,
+		AppPopover,
+		AppUserAvatarImg,
+		AppProgressBar,
 	},
 	directives: {
 		AppFocusWhen,
 		AppTooltip,
+		AppPopoverTrigger,
 	},
 })
 export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
@@ -85,29 +95,109 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		form: AppForm;
 	};
 
+	static readonly LEAD_URL_REGEX = /(https?:\/\/([\/\.\?\-\+a-z0-9=#%_&;,~@])+)/gi;
+	readonly YOUTUBE_URL_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_\-]{11})(&.+)*$/i;
+	readonly SKETCHFAB_URL_REGEX = /^(https:\/\/)?(www.)?sketchfab.com\/models\/[0-9a-f]{32}\/?$/i;
+	readonly SKETCHFAB_FIELD_REGEX = /^((https:\/\/)?(www.)?(sketchfab.com\/models\/[0-9a-f]{32}\/?))|([0-9a-f]{32})$/i;
+	readonly MAX_POLL_ITEMS = 10;
+	readonly MIN_POLL_DURATION = 5;
+	readonly MAX_POLL_DURATION = 20160;
+
 	keyGroups: KeyGroup[] = [];
-	hasMediaItems = false;
 	wasPublished = false;
+	enabledAttachments = false;
+	attachmentType = '';
+	longEnabled = false;
 	maxFilesize = 0;
 	maxWidth = 0;
 	maxHeight = 0;
-	isShowingMoreOptions = false;
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = null as any;
 	now = 0;
+	isShowingMorePollOptions = false;
+	accessPermissionsEnabled = false;
+	isSavedDraftPost = false;
+	leadUrlLength = 30;
+	leadLengthLimit = 255;
+	leadTotalLengthLimit = 300;
 
-	readonly FiresidePost = FiresidePost;
 	readonly GameVideo = GameVideo;
-
-	readonly MAX_POLL_ITEMS = 10;
-	readonly MIN_DURATION = 5;
-	readonly MAX_DURATION = 20160;
 
 	get loadUrl() {
 		return `/web/dash/developer/games/devlog/save/${this.model!.game.id}/${this.model!.id}`;
 	}
 
-	get isPublished() {
-		return this.model && this.model.status === FiresidePost.STATUS_ACTIVE;
+	get shortLabel() {
+		return this.$gettext('');
+	}
+
+	get mainActionText() {
+		if (this.wasPublished) {
+			return this.$gettext('Save');
+		} else if (this.isScheduling) {
+			return this.$gettext('Schedule');
+		} else if (this.isSavedDraftPost) {
+			return this.$gettext('Publish');
+		} else {
+			return this.$gettext('Post');
+		}
+	}
+
+	get draftButtonText() {
+		if (this.isSavedDraftPost) {
+			return this.$gettext('Save Draft');
+		} else {
+			return this.$gettext('Save as Draft');
+		}
+	}
+
+	get enabledImages() {
+		return this.enabledAttachments && this.attachmentType === FiresidePost.TYPE_MEDIA;
+	}
+
+	get enabledVideo() {
+		return this.enabledAttachments && this.attachmentType === FiresidePost.TYPE_VIDEO;
+	}
+
+	get enabledSketchfab() {
+		return this.enabledAttachments && this.attachmentType === FiresidePost.TYPE_SKETCHFAB;
+	}
+
+	get hasValidSketchfabModelId() {
+		return (
+			this.formModel.sketchfab_id &&
+			this.formModel.sketchfab_id.match(this.SKETCHFAB_FIELD_REGEX)
+		);
+	}
+
+	get sketchfabId() {
+		if (this.formModel.sketchfab_id.match(this.SKETCHFAB_URL_REGEX)) {
+			// extract model id from url
+			var matches = this.formModel.sketchfab_id.match(/[a-f0-9]{32}/i);
+			if (matches && matches.length > 0) {
+				return matches[0];
+			}
+		}
+		return this.formModel.sketchfab_id;
+	}
+
+	get hasValidYouTubeUrl() {
+		return this.formModel.video_url && this.formModel.video_url.match(this.YOUTUBE_URL_REGEX);
+	}
+
+	get youtubeVideoId() {
+		const url = this.formModel.video_url;
+		if (url) {
+			// extract video id from url
+			var matches = url.match(/\?v=[a-zA-Z0-9_\-]{11}/);
+			if (matches && matches.length > 0) {
+				const videoId = matches[0].substr(3);
+				return videoId;
+			}
+		}
+	}
+
+	get hasOptionalData() {
+		return this.longEnabled;
 	}
 
 	get hasPoll() {
@@ -122,7 +212,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		return true;
 	}
 
-	get duration() {
+	get pollDuration() {
 		return (
 			this.formModel.poll_days * 1440 +
 			this.formModel.poll_hours * 60 +
@@ -148,24 +238,53 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		return this.formModel.isScheduled;
 	}
 
+	get computedLeadLength() {
+		const regex = FormGameDevlogPost.LEAD_URL_REGEX;
+		let lead = this.formModel.lead;
+		if (!lead) {
+			return 0;
+		}
+
+		if (lead.match(regex)) {
+			lead = lead.replace(regex, ' '.repeat(this.leadUrlLength));
+		}
+		return lead.length;
+	}
+
+	get leadLengthPercent() {
+		return 100 - (this.computedLeadLength / this.leadLengthLimit) * 100;
+	}
+
+	get isLeadValid() {
+		return this.computedLeadLength <= this.leadLengthLimit;
+	}
+
+	// ///////////////////
+	// init functions
+
 	async onInit() {
 		await this.fetchTimezones();
 
 		const model = this.model!;
 
+		// save if the post was a saved draft post (not a new draft post)
+		if (model.status === FiresidePost.STATUS_DRAFT && model.lead) {
+			this.isSavedDraftPost = true;
+		}
+
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
 
-		if (model.type === FiresidePost.TYPE_VIDEO) {
-			if (model.videos.length) {
-				this.setField(
-					'video_url',
-					'https://www.youtube.com/watch?v=' + model.videos[0].video_id
-				);
-			}
-		} else if (model.type === FiresidePost.TYPE_SKETCHFAB) {
-			if (model.sketchfabs.length) {
-				this.setField('sketchfab_id', model.sketchfabs[0].sketchfab_id);
-			}
+		if (model.videos.length) {
+			this.setField(
+				'video_url',
+				'https://www.youtube.com/watch?v=' + model.videos[0].video_id
+			);
+			this.onEnableVideo();
+		} else if (model.sketchfabs.length) {
+			this.setField('sketchfab_id', model.sketchfabs[0].sketchfab_id);
+			this.onEnableSketchfab();
+		} else if (model.hasMedia) {
+			this.onEnableImages();
 		}
 
 		if (model.poll) {
@@ -187,18 +306,148 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 				this.setField(('poll_item' + (i + 1)) as any, poll.items[i].text);
 			}
 		}
+
+		if (model.published_on && model.key_groups.length) {
+			this.accessPermissionsEnabled = true;
+		}
+
+		if (model.content_markdown) {
+			this.longEnabled = true;
+		}
 	}
 
 	onLoad(payload: any) {
 		this.keyGroups = KeyGroup.populate(payload.keyGroups);
-		this.hasMediaItems = payload.hasMediaItems;
 		this.wasPublished = payload.wasPublished;
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
+		this.leadUrlLength = payload.leadUrlLength;
+		this.leadLengthLimit = payload.leadLengthLimit;
+		this.leadTotalLengthLimit = payload.leadTotalLengthLimit;
 	}
 
-	private async fetchTimezones() {
+	// ///////////////////
+	// Attachments
+
+	onEnableImages() {
+		this.enabledAttachments = true;
+		this.attachmentType = FiresidePost.TYPE_MEDIA;
+	}
+
+	onEnableVideo() {
+		this.enabledAttachments = true;
+		this.attachmentType = FiresidePost.TYPE_VIDEO;
+	}
+
+	onEnableSketchfab() {
+		this.enabledAttachments = true;
+		this.attachmentType = FiresidePost.TYPE_SKETCHFAB;
+	}
+
+	onDisableAttachments() {
+		this.enabledAttachments = false;
+		// clean current values
+		switch (this.attachmentType) {
+			case FiresidePost.TYPE_SKETCHFAB:
+				this.setField('sketchfab_id', '');
+				break;
+			case FiresidePost.TYPE_VIDEO:
+				this.setField('video_url', '');
+				break;
+		}
+		this.attachmentType = '';
+	}
+
+	onAddLong() {
+		this.longEnabled = true;
+	}
+
+	// ///////////////////
+	// Poll
+
+	onCreatePoll() {
+		// Initialize default poll
+		this.setField('poll_days', 1);
+		this.setField('poll_hours', 0);
+		this.setField('poll_minutes', 0);
+		this.setField('poll_item_count', 2);
+		for (let i = 0; i < this.MAX_POLL_ITEMS; i++) {
+			this.setField(('poll_item' + (i + 1)) as any, '');
+		}
+
+		this.changed = true;
+	}
+
+	onRemovePoll() {
+		this.setField('poll_item_count', 0);
+		this.changed = true;
+	}
+
+	onRemovePollItem(idx: number) {
+		if (this.formModel.poll_item_count <= 2) {
+			return;
+		}
+
+		for (let i = idx; i < this.formModel.poll_item_count; i++) {
+			this.setField(('poll_item' + i) as any, (this.formModel as any)['poll_item' + (i + 1)]);
+		}
+
+		this.setField('poll_item_count', this.formModel.poll_item_count - 1);
+		this.changed = true;
+	}
+
+	onAddPollItem() {
+		if (this.formModel.poll_item_count >= this.MAX_POLL_ITEMS) {
+			return;
+		}
+
+		this.setField(('poll_item' + (this.formModel.poll_item_count + 1)) as any, '');
+		this.setField('poll_item_count', this.formModel.poll_item_count + 1);
+		this.changed = true;
+	}
+
+	// ///////////////////
+	// Access permissions
+
+	onEnableAccessPermissions() {
+		this.accessPermissionsEnabled = true;
+	}
+
+	onDisableAccessPermissions() {
+		this.accessPermissionsEnabled = false;
+	}
+
+	// ///////////////////
+	// Schedule
+
+	onAddSchedule() {
+		if (this.formModel.scheduled_for === null) {
+			this.setField('scheduled_for', startOfDay(addWeeks(Date.now(), 1)).getTime());
+		}
+
+		this.now = Date.now();
+		this.setField('scheduled_for_timezone', determine().name());
+		this.changed = true;
+	}
+
+	onRemoveSchedule() {
+		this.setField('scheduled_for_timezone', null);
+		this.setField('scheduled_for', null);
+		this.changed = true;
+	}
+
+	timezoneByName(timezone: string) {
+		for (let region in this.timezones) {
+			const tz = this.timezones[region].find(_tz => _tz.i === timezone);
+			if (tz) {
+				return tz;
+			}
+		}
+		return null;
+	}
+
+	async fetchTimezones() {
 		// Get timezones list.
 		this.timezones = await Timezone.getGroupedTimezones();
 		for (let region in this.timezones) {
@@ -214,72 +463,8 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		}
 	}
 
-	private timezoneByName(timezone: string) {
-		for (let region in this.timezones) {
-			const tz = this.timezones[region].find(_tz => _tz.i === timezone);
-			if (tz) {
-				return tz;
-			}
-		}
-		return null;
-	}
-
-	createPoll() {
-		// Initialize default poll
-		this.setField('poll_days', 1);
-		this.setField('poll_hours', 0);
-		this.setField('poll_minutes', 0);
-		this.setField('poll_item_count', 2);
-		for (let i = 0; i < this.MAX_POLL_ITEMS; i++) {
-			this.setField(('poll_item' + (i + 1)) as any, '');
-		}
-
-		this.changed = true;
-	}
-
-	async removePoll() {
-		this.setField('poll_item_count', 0);
-		this.changed = true;
-	}
-
-	removePollItem(idx: number) {
-		if (this.formModel.poll_item_count <= 2) {
-			return;
-		}
-
-		for (let i = idx; i < this.formModel.poll_item_count; i++) {
-			this.setField(('poll_item' + i) as any, (this.formModel as any)['poll_item' + (i + 1)]);
-		}
-
-		this.setField('poll_item_count', this.formModel.poll_item_count - 1);
-		this.changed = true;
-	}
-
-	addPollItem() {
-		if (this.formModel.poll_item_count >= this.MAX_POLL_ITEMS) {
-			return;
-		}
-
-		this.setField(('poll_item' + (this.formModel.poll_item_count + 1)) as any, '');
-		this.setField('poll_item_count', this.formModel.poll_item_count + 1);
-		this.changed = true;
-	}
-
-	async addSchedule() {
-		if (this.formModel.scheduled_for === null) {
-			this.setField('scheduled_for', startOfDay(addWeeks(Date.now(), 1)).getTime());
-		}
-
-		this.now = Date.now();
-		this.setField('scheduled_for_timezone', determine().name());
-		this.changed = true;
-	}
-
-	removeSchedule() {
-		this.setField('scheduled_for_timezone', null);
-		this.setField('scheduled_for', null);
-		this.changed = true;
-	}
+	// ///////////////////
+	// Submit
 
 	onDraftSubmit() {
 		this.setField('status', FiresidePost.STATUS_DRAFT);
@@ -287,11 +472,15 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	}
 
 	async onSubmit() {
-		// if the post is scheduled, default submit action is draft
+		// a scheduled post gets saved as draft and will get set to published when the scheduled date is reached
 		if (this.isScheduling) {
 			this.setField('status', FiresidePost.STATUS_DRAFT);
 		}
-		this.setField('poll_duration', this.duration * 60); // site-api expects duration in seconds.
+		// in case they have a sketchfab url set, replace it with the model id
+		if (this.formModel.sketchfab_id) {
+			this.setField('sketchfab_id', this.sketchfabId);
+		}
+		this.setField('poll_duration', this.pollDuration * 60); // site-api expects duration in seconds.
 		return this.formModel.$save();
 	}
 
