@@ -18,6 +18,10 @@ jobs:
     steps:
       - checkout
       - run: 'git submodule update --init --recursive'
+
+      - run: apt-get update
+      - run: apt-get install -y libgl1-mesa-dev xorg-dev
+
       - run: 'yarn'
       - run: 'yarn run client-build-linux64'
       - store_artifacts:
