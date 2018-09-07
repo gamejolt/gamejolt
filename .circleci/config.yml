@@ -19,8 +19,22 @@ jobs:
       - checkout
       - run: 'git submodule update --init --recursive'
 
-      - run: sudo apt-get update
-      - run: sudo apt-get install -y libgl1-mesa-dev xorg-dev
+      - run:
+          name: Install OpenGL dev dependencies
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y libgl1-mesa-dev xorg-dev
+
+      - run:
+          name: Install Go 1.10.4
+          command: |
+            wget https://dl.google.com/go/go1.10.4.linux-amd64.tar.gz
+            sudo tar -C /usr/local -xzf go1.10.4.linux-amd64.tar.gz
+            echo 'export GOROOT=/usr/local/go' >> $BASH_ENV
+            echo 'export GOPATH=$HOME/go' >> $BASH_ENV
+            echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin' >> $BASH_ENV
+
+      - run: 'echo $PATH'
 
       - run: 'yarn'
       - run: 'yarn run client-build-linux64'
