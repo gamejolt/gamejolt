@@ -90,7 +90,7 @@
 	},
 	"dependencies": {
 		"axios": "0.17.1",
-		"client-voodoo": "2.2.4",
+		"client-voodoo": "2.2.5",
 		"fs-extra": "7.0.0",
 		"write-file-atomic": "2.3.0"
 	},
@@ -110,7 +110,7 @@
 		"plugin": true
 	},
 	"clientManifestUrl": "https://d.gamejolt.net/data/client/manifest-2.json",
-	"joltronVersion": "v2.1.1-beta.loader",
+	"joltronVersion": "v2.1.2-beta.loader",
 	"chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
 	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
 	"platformOverrides": {
