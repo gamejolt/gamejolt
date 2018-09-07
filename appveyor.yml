@@ -5,6 +5,7 @@ image: Visual Studio 2015
 
 environment:
   GOPATH: C:\gopath
+  GOROOT: C:\go110-x86
   nodejs_version: '8.11.4'
 
 stack: go 1.10
@@ -27,13 +28,12 @@ install:
   - git submodule update --init --recursive
 
   # Make InnoSetup and MinGW tools accessible from path
-  - set PATH=%PATH%;C:\Program Files (x86)\Inno Setup 5;C:\MinGW\bin
+  - set PATH=C:\Program Files (x86)\Inno Setup 5;C:\MinGW\bin;%GOROOT%\bin;%GOPATH%\bin;%PATH%
   - echo %PATH%
 
   - node --version
   - yarn --version
   - go version
-  - iscc /?
   - gcc -v
 
 build_script:

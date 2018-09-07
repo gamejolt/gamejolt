@@ -2,7 +2,7 @@ version: 2
 jobs:
   build-macos:
     macos:
-      xcode: '10.0'
+      xcode: '9.0'
     steps:
       - checkout
       - run:
@@ -17,7 +17,6 @@ jobs:
             echo 'export GOROOT=/usr/local/go' >> $BASH_ENV
             echo 'export GOPATH=$HOME/go' >> $BASH_ENV
             echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin' >> $BASH_ENV
-            go version
 
       - run: yarn
       - run: yarn run client-build-osx
@@ -50,7 +49,6 @@ jobs:
             echo 'export GOROOT=/usr/local/go' >> $BASH_ENV
             echo 'export GOPATH=$HOME/go' >> $BASH_ENV
             echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin' >> $BASH_ENV
-            go version
 
       - run: yarn
       - run: yarn run client-build-linux64
