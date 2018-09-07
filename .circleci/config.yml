@@ -2,22 +2,39 @@ version: 2
 jobs:
   build-macos:
     macos:
-      xcode: '9.0'
+      xcode: '10.0'
     steps:
       - checkout
-      - run: 'git submodule update --init --recursive'
-      - run: 'yarn'
-      - run: 'yarn run client-build-osx'
+      - run:
+          name: Submodules
+          command: git submodule update --init --recursive
+
+      - run:
+          name: Install Go 1.10.4
+          command: |
+            curl https://dl.google.com/go/go1.10.4.darwin-amd64.tar.gz -o go1.10.4.darwin-amd64.tar.gz
+            sudo tar -C /usr/local -xzf go1.10.4.darwin-amd64.tar.gz
+            echo 'export GOROOT=/usr/local/go' >> $BASH_ENV
+            echo 'export GOPATH=$HOME/go' >> $BASH_ENV
+            echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin' >> $BASH_ENV
+            go version
+
+      - run: yarn
+      - run: yarn run client-build-osx
+
       - store_artifacts:
           path: ./build/prod-client-build/osx64-package.tar.gz
       - store_artifacts:
           path: ./build/prod-client-build/osx.dmg
+
   build-linux:
     docker:
-      - image: circleci/node:8.9.1
+      - image: circleci/node:8.11.4
     steps:
       - checkout
-      - run: 'git submodule update --init --recursive'
+      - run:
+          name: Submodules
+          command: git submodule update --init --recursive
 
       - run:
           name: Install OpenGL dev dependencies
@@ -33,11 +50,11 @@ jobs:
             echo 'export GOROOT=/usr/local/go' >> $BASH_ENV
             echo 'export GOPATH=$HOME/go' >> $BASH_ENV
             echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin' >> $BASH_ENV
+            go version
 
-      - run: 'echo $PATH'
+      - run: yarn
+      - run: yarn run client-build-linux64
 
-      - run: 'yarn'
-      - run: 'yarn run client-build-linux64'
       - store_artifacts:
           path: ./build/prod-client-build/linux64-package.tar.gz
       - store_artifacts:
