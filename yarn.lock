@@ -1159,9 +1159,9 @@ cli-boxes@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/cli-boxes/-/cli-boxes-1.0.0.tgz#4fa917c3e59c94a004cd61f8ee509da651687143"
 
-client-voodoo@2.2.8:
-  version "2.2.8"
-  resolved "https://registry.yarnpkg.com/client-voodoo/-/client-voodoo-2.2.8.tgz#18949d67d55adddc92e7f0eb5d281a804bdee201"
+client-voodoo@2.2.9:
+  version "2.2.9"
+  resolved "https://registry.yarnpkg.com/client-voodoo/-/client-voodoo-2.2.9.tgz#202fcdc1b49c449bf1d4a976b06eca5b2c622666"
   dependencies:
     JSONStream "github:gamejolt/JSONStream#no-shebang"
     follow-redirects "1.2.6"
