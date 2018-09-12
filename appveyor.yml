@@ -43,5 +43,5 @@ build_script:
 test: off
 
 artifacts:
-  - path: build\prod-client-build\Setup.exe
+  - path: build\prod-client-build\GameJoltClientSetup.exe
   - path: build\prod-client-build\win32-package.tar.gz

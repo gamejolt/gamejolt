@@ -24,7 +24,7 @@ jobs:
       - store_artifacts:
           path: ./build/prod-client-build/osx64-package.tar.gz
       - store_artifacts:
-          path: ./build/prod-client-build/osx.dmg
+          path: ./build/prod-client-build/GameJoltClient.dmg
 
   build-linux:
     docker:
@@ -56,7 +56,7 @@ jobs:
       - store_artifacts:
           path: ./build/prod-client-build/linux64-package.tar.gz
       - store_artifacts:
-          path: ./build/prod-client-build/linux64.tar.gz
+          path: ./build/prod-client-build/GameJoltClient.tar.gz
 workflows:
   version: 2
   build_all:
