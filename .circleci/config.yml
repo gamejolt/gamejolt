@@ -19,7 +19,7 @@ jobs:
             echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin' >> $BASH_ENV
 
       - run: yarn
-      - run: yarn run client-build-osx --noGjPush
+      - run: yarn run client-build-osx
 
       - store_artifacts:
           path: ./build/prod-client-build/osx64-package.tar.gz
@@ -51,7 +51,7 @@ jobs:
             echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin' >> $BASH_ENV
 
       - run: yarn
-      - run: yarn run client-build-linux64 --noGjPush
+      - run: yarn run client-build-linux64
 
       - store_artifacts:
           path: ./build/prod-client-build/linux64-package.tar.gz
