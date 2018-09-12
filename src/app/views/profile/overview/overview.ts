@@ -23,7 +23,7 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppUserLevelWidget } from '../../../components/user/level-widget/level-widget';
 import { Store } from '../../../store/index';
-import { RouteState, RouteStore, RouteAction } from '../profile.store';
+import { RouteStore, RouteAction } from '../profile.store';
 import { UserGameSession } from '../../../../lib/gj-lib-client/components/user/game-session/game-session.model';
 
 @View

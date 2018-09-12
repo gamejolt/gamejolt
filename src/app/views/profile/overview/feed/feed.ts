@@ -27,8 +27,11 @@ import { EventItem } from '../../../../../lib/gj-lib-client/components/event-ite
 	},
 })
 export default class RouteProfileOverviewFeed extends BaseRouteComponent {
-	@State app: Store['app'];
-	@RouteState user: RouteStore['user'];
+	@State
+	app!: Store['app'];
+
+	@RouteState
+	user!: RouteStore['user'];
 
 	feed: ActivityFeedContainer | null = null;
 
