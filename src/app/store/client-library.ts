@@ -12,7 +12,7 @@ import {
 	Uninstaller,
 } from 'client-voodoo';
 import * as fs from 'fs';
-import * as nwGui from 'nw.gui';
+
 import * as path from 'path';
 import Vue from 'vue';
 import { Action, Mutation, namespace, State } from 'vuex-class';
@@ -36,7 +36,7 @@ import {
 	VuexStore,
 } from '../../lib/gj-lib-client/utils/vuex';
 import { LocalDbGame } from '../components/client/local-db/game/game.model';
-import { db } from '../components/client/local-db/local-db.service';
+import { LocalDb } from '../components/client/local-db/local-db.service';
 import {
 	LocalDbPackage,
 	LocalDbPackagePid,
@@ -51,6 +51,8 @@ export const ClientLibraryState = namespace('clientLibrary', State);
 export const ClientLibraryAction = namespace('clientLibrary', Action);
 export const ClientLibraryMutation = namespace('clientLibrary', Mutation);
 
+export type ClientUpdateStatus = 'checking' | 'none' | 'fetching' | 'ready' | 'error';
+
 // These are only the public actions/mutations.
 export type Actions = {
 	'clientLibrary/bootstrap': undefined;
@@ -62,7 +64,10 @@ export type Actions = {
 		GameBuildLaunchOption[]
 	];
 	'clientLibrary/packageStartUpdate': [LocalDbPackage, number];
-	'clientLibrary/packageUninstall': [LocalDbPackage, boolean];
+	'clientLibrary/packageUninstall': [
+		LocalDbPackage,
+		{ dbOnly?: boolean; notifications?: boolean }?
+	];
 	'clientLibrary/installerRetry': LocalDbPackage;
 	'clientLibrary/installerPause': LocalDbPackage;
 	'clientLibrary/installerResume': LocalDbPackage;
@@ -80,6 +85,8 @@ export type Mutations = {
 export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, Mutations> {
 	private _bootstrapPromise: Promise<void> | null = null;
 	private _bootstrapPromiseResolver: Function = null as any;
+
+	private db: LocalDb = null as any;
 
 	// Localdb variables
 	packages: LocalDbPackage[] = [];
@@ -137,7 +144,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			currentProgress += progress;
 		}
 
-		return currentProgress / numPatching;
+		return numPatching ? currentProgress / numPatching : null;
 	}
 
 	@VuexAction
@@ -148,12 +155,12 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 		this._startBootstrap();
 
-		const [packages, games] = await Promise.all([
-			// Need these type hints because dexie returns its own Dexie.Promises.
-			db.packages.toArray() as Promise<LocalDbPackage[]>,
-			db.games.toArray() as Promise<LocalDbGame[]>,
-		]);
+		console.log('Bootstrapping client library');
+		const db = await LocalDb.instance();
+		this._useLocalDb(db);
+		console.log('LocalDB ready');
 
+		const [packages, games] = [db.packages.all(), db.games.all()];
 		this._bootstrap({ packages, games });
 
 		if (GJ_ENVIRONMENT === 'development') {
@@ -180,6 +187,11 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	private _bootstrap({ packages, games }: { packages: LocalDbPackage[]; games: LocalDbGame[] }) {
 		this.packages = packages;
 		this.games = games;
+	}
+
+	@VuexMutation
+	private _useLocalDb(db: LocalDb) {
+		this.db = db;
 	}
 
 	/**
@@ -226,9 +238,10 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexMutation
-	private setCurrentlyUninstalling(
-		[localPackage, uninstallPromise]: [LocalDbPackage, Promise<void>]
-	) {
+	private setCurrentlyUninstalling([localPackage, uninstallPromise]: [
+		LocalDbPackage,
+		Promise<void>
+	]) {
 		if (this.currentlyUninstalling[localPackage.id]) {
 			return;
 		}
@@ -276,6 +289,20 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			const localPackage = this.packages[packageId];
 			if (localPackage.isPatching && !localPackage.isPatchPaused) {
 				promises.push(this.installerRetry(localPackage));
+			} else if (localPackage.isRemoving || localPackage.didRemoveFail) {
+				// Since the old client version on nwjs 0.12.3 we solved a long lived bug that prevented users from
+				// uninstalling packages that failed during uninstallation. The client now retries the uninstallations
+				// properly - which means after the update users will receive a torrent of growl messages and system notifications
+				// for each package that was now finally uninstalled successfully. Ungood, lets silence that.
+				promises.push(
+					this.packageUninstall([
+						localPackage,
+						{
+							dbOnly: false,
+							notifications: false,
+						},
+					])
+				);
 			}
 		}
 
@@ -534,7 +561,10 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 					// Calling uninstall normally attempts to spawn a client voodoo uninstall instance.
 					// Override that because the uninstallation should be done automatically by the installation process.
-					await this.packageUninstall([localPackage, true]);
+					await this.packageUninstall([
+						localPackage,
+						{ dbOnly: true, notifications: true },
+					]);
 				} else {
 					console.log(
 						'installerInstall: This is an update operation. Attempting to rollback with installerRollback'
@@ -682,7 +712,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 	@VuexAction
 	private async launcherInit() {
-		const pidDir = path.resolve(nwGui.App.dataPath, 'game-pids');
+		const pidDir = path.resolve(nw.App.dataPath, 'game-pids');
 		Config.setPidDir(pidDir);
 
 		try {
@@ -807,9 +837,10 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexAction
-	private async launcherAttach(
-		[localPackage, launchInstance]: [LocalDbPackage, LaunchInstance | OldLaunchInstance]
-	) {
+	private async launcherAttach([localPackage, launchInstance]: [
+		LocalDbPackage,
+		LaunchInstance | OldLaunchInstance
+	]) {
 		this.setCurrentlyPlaying(localPackage);
 
 		// Typescript for some reason can't detect that all possible types of launchInstance have a .on( 'gameOver' ), so we have to assert type.
@@ -954,13 +985,12 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	private async setGameData([localGame, data]: [LocalDbGame, Partial<LocalDbGame>]) {
 		this._setGameData([localGame, data]);
 
-		const dbId = await db.games.put(localGame);
+		this.db.games.put(localGame);
+		await this.db.games.save();
 
 		if (!this.gamesById[localGame.id]) {
 			this.games.push(localGame);
 		}
-
-		return dbId;
 	}
 
 	@VuexMutation
@@ -969,9 +999,13 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexAction
-	async packageInstall(
-		[game, pkg, release, build, launchOptions]: Actions['clientLibrary/packageInstall']
-	) {
+	async packageInstall([
+		game,
+		pkg,
+		release,
+		build,
+		launchOptions,
+	]: Actions['clientLibrary/packageInstall']) {
 		// TODO: Are these needed?
 		HistoryTick.sendBeacon('game-build', build.id, {
 			sourceResource: 'Game',
@@ -985,24 +1019,23 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		const localGame = new LocalDbGame();
 		const localPackage = new LocalDbPackage();
 
-		await db.transaction('rw', [db.games, db.packages], async () => {
-			await this.setGameData([localGame, game]);
-			await this.setPackageData([
-				localPackage,
-				{
-					...LocalDbPackage.fromSitePackageInfo(pkg, release, build, launchOptions),
-					install_state: LocalDbPackagePatchState.PATCH_PENDING,
-				},
-			]);
-		});
+		await this.setGameData([localGame, game]);
+		await this.setPackageData([
+			localPackage,
+			{
+				...LocalDbPackage.fromSitePackageInfo(pkg, release, build, launchOptions),
+				install_state: LocalDbPackagePatchState.PATCH_PENDING,
+			},
+		]);
 
 		return this.doPatch([localGame, localPackage]);
 	}
 
 	@VuexAction
-	async packageStartUpdate(
-		[localPackage, newBuildId]: Actions['clientLibrary/packageStartUpdate']
-	) {
+	async packageStartUpdate([
+		localPackage,
+		newBuildId,
+	]: Actions['clientLibrary/packageStartUpdate']) {
 		// If this package isn't installed (and at rest), we don't update.
 		// We also don't update if we're currently running the game. Imagine that happening!
 		if (!localPackage.isSettled || localPackage.isRunning) {
@@ -1046,7 +1079,12 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexAction
-	async packageUninstall([localPackage, dbOnly]: Actions['clientLibrary/packageUninstall']) {
+	async packageUninstall([localPackage, options]: Actions['clientLibrary/packageUninstall']) {
+		options = options || {};
+		const dbOnly = typeof options.dbOnly === 'boolean' ? options.dbOnly : false;
+		const withNotifications =
+			typeof options.notifications === 'boolean' ? options.notifications : true;
+
 		// We just use this so they don't click "uninstall" twice in a row.
 		// No need to save to the DB.
 		let currentlyUninstalling = this.currentlyUninstalling[localPackage.id];
@@ -1092,7 +1130,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				}
 
 				// We refetch from db because if canceling a first installation it might remove the local game from the db.
-				localGame = await db.games.get(localPackage.game_id);
+				localGame = this.db.games.get(localPackage.game_id)!;
 
 				// Make sure we're clean.
 				await this.clearPackageOperations(localPackage);
@@ -1107,21 +1145,18 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				}
 
 				// Get the number of packages in this game.
-				const count = await db.packages
-					.where('game_id')
-					.equals(localPackage.game_id)
-					.count();
+				const count = this.db.packages.countInGroup('game_id', localPackage.game_id);
 
-				await db.transaction('rw', [db.games, db.packages], async () => {
-					// Note that some times a game is removed before the package (really weird cases).
-					// We still want the remove to go through, so be sure to skip this situation.
-					// If this is the last package for the game, remove the game since we no longer need it.
-					if (localGame && count <= 1) {
-						await db.games.delete(localGame.id);
-					}
+				// Note that some times a game is removed before the package (really weird cases).
+				// We still want the remove to go through, so be sure to skip this situation.
+				// If this is the last package for the game, remove the game since we no longer need it.
+				if (localGame && count <= 1) {
+					this.db.games.delete(localGame.id);
+					await this.db.games.save();
+				}
 
-					await db.packages.delete(localPackage.id);
-				});
+				this.db.packages.delete(localPackage.id);
+				await this.db.packages.save();
 
 				// Finally remove from the vuex store.
 				if (localGame && count <= 1) {
@@ -1129,36 +1164,43 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				}
 				arrayRemove(this.packages, p => p.id === localPackage.id);
 
-				if (!wasInstalling) {
-					Growls.success({
-						title: 'Package Removed',
-						message:
-							'Removed ' +
-							(localPackage.title || (localGame ? localGame.title : 'the package')) +
-							' from your computer.',
-						system: true,
-					});
-				} else {
-					Growls.success({
-						title: 'Installation Canceled',
-						message:
-							'Canceled installation of ' +
-							(localPackage.title || (localGame ? localGame.title : 'the package')),
-						system: true,
-					});
+				if (withNotifications) {
+					if (!wasInstalling) {
+						Growls.success({
+							title: 'Package Removed',
+							message:
+								'Removed ' +
+								(localPackage.title ||
+									(localGame ? localGame.title : 'the package')) +
+								' from your computer.',
+							system: true,
+						});
+					} else {
+						Growls.success({
+							title: 'Installation Canceled',
+							message:
+								'Canceled installation of ' +
+								(localPackage.title ||
+									(localGame ? localGame.title : 'the package')),
+							system: true,
+						});
+					}
 				}
 			} catch (err) {
-				if (wasInstalling) {
-					Growls.error('Could not stop the installation.');
-				} else {
-					Growls.error({
-						title: 'Remove Failed',
-						message:
-							'Could not remove ' +
-							(localPackage.title || (localGame ? localGame.title : 'the package')) +
-							'.',
-						system: true,
-					});
+				if (withNotifications) {
+					if (wasInstalling) {
+						Growls.error('Could not stop the installation.');
+					} else {
+						Growls.error({
+							title: 'Remove Failed',
+							message:
+								'Could not remove ' +
+								(localPackage.title ||
+									(localGame ? localGame.title : 'the package')) +
+								'.',
+							system: true,
+						});
+					}
 				}
 
 				await this.setPackageRemoveState([
@@ -1180,9 +1222,10 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexAction
-	async setPackageInstallState(
-		[localPackage, state]: [LocalDbPackage, LocalDbPackagePatchState]
-	) {
+	async setPackageInstallState([localPackage, state]: [
+		LocalDbPackage,
+		LocalDbPackagePatchState
+	]) {
 		await this.setPackageData([localPackage, { install_state: state }]);
 	}
 
@@ -1241,16 +1284,18 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexAction
-	async setPackageDownloadProgress(
-		[localPackage, progress]: [LocalDbPackage, LocalDbPackageProgress | null]
-	) {
+	async setPackageDownloadProgress([localPackage, progress]: [
+		LocalDbPackage,
+		LocalDbPackageProgress | null
+	]) {
 		await this.setPackageData([localPackage, { download_progress: progress }]);
 	}
 
 	@VuexAction
-	async setPackageUnpackProgress(
-		[localPackage, progress]: [LocalDbPackage, LocalDbPackageProgress | null]
-	) {
+	async setPackageUnpackProgress([localPackage, progress]: [
+		LocalDbPackage,
+		LocalDbPackageProgress | null
+	]) {
 		await this.setPackageData([localPackage, { unpack_progress: progress }]);
 	}
 
@@ -1305,9 +1350,10 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexAction
-	async setPackageRemoveState(
-		[localPackage, state]: [LocalDbPackage, LocalDbPackageRemoveState]
-	) {
+	async setPackageRemoveState([localPackage, state]: [
+		LocalDbPackage,
+		LocalDbPackageRemoveState
+	]) {
 		await this.setPackageData([localPackage, { remove_state: state }]);
 	}
 
@@ -1315,13 +1361,12 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	private async setPackageData([localPackage, data]: [LocalDbPackage, Partial<LocalDbPackage>]) {
 		this._setPackageData([localPackage, data]);
 
-		const dbId = await db.packages.put(localPackage);
+		this.db.packages.put(localPackage);
+		await this.db.packages.save();
 
 		if (!this.packagesById[localPackage.id]) {
 			this.packages.push(localPackage);
 		}
-
-		return dbId;
 	}
 
 	@VuexMutation

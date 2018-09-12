@@ -5,9 +5,10 @@ const STORAGE_KEY = 'search-history';
 export class SearchHistory {
 	static get() {
 		let searchHistory: string[] = [];
-		if (!GJ_IS_SSR && window.localStorage[STORAGE_KEY]) {
+		const storageKey = window.localStorage.getItem(STORAGE_KEY);
+		if (!GJ_IS_SSR && storageKey) {
 			try {
-				searchHistory = JSON.parse(window.localStorage[STORAGE_KEY]);
+				searchHistory = JSON.parse(storageKey);
 
 				if (!Array.isArray(searchHistory)) {
 					throw new Error('Search history is not array.');
@@ -35,7 +36,7 @@ export class SearchHistory {
 		searchHistory = searchHistory.slice(0, 7);
 
 		if (!GJ_IS_SSR) {
-			window.localStorage[STORAGE_KEY] = JSON.stringify(searchHistory);
+			window.localStorage.setItem(STORAGE_KEY, JSON.stringify(searchHistory));
 		}
 	}
 

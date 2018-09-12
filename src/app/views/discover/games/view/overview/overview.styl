@@ -1,0 +1,24 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.-left-col
+	clear: left
+
+.-right-col
+	clear: right
+
+.-spacer
+	display: block
+	height: $line-height-computed
+
+	@media $media-xs
+		full-bleed()
+		theme-prop('background-color', 'bg-offset')
+		theme-prop('border-top-color', 'bg-subtle')
+		theme-prop('border-bottom-color', 'bg-subtle')
+		height: ($line-height-computed / 2)
+		border-top-width: 1px
+		border-top-style: solid
+		border-bottom-width: 1px
+		border-bottom-style: solid
+		margin-bottom: $line-height-computed

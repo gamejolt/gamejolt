@@ -32,7 +32,7 @@ import { AppCookieBanner } from '../_common/cookie/banner/banner';
 	},
 })
 export class App extends Vue {
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	curDate = new Date();
 

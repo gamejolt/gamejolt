@@ -44,6 +44,24 @@
 									/>
 
 								<!--
+									Rating widget
+								-->
+								<template v-if="app.user && game.ratings_enabled">
+									<h4>
+										<translate>What did you think?</translate>
+									</h4>
+
+									<p class="small">
+										<translate>Rating the games you play helps us show you better stuff.</translate>
+									</p>
+
+									<app-rating-widget
+										:game="game"
+										:user-rating="userRating"
+										/>
+								</template>
+
+								<!--
 									Social sharing
 								-->
 								<template v-if="!GJ_IS_CLIENT">
@@ -62,21 +80,6 @@
 											:url="Environment.baseUrl + game.getUrl()"
 											/>
 									</div>
-								</template>
-
-								<!--
-									Rating widget
-								-->
-								<template v-if="app.user && !game.hasPerms() && game.ratings_enabled && game.can_user_rate">
-									<br>
-									<p class="small" v-translate>
-										game.download.game.rate_html
-									</p>
-
-									<app-rating-widget
-										:game="game"
-										:rating="userRating"
-										/>
 								</template>
 
 								<!--

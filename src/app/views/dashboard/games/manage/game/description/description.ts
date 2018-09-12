@@ -15,7 +15,7 @@ import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/compo
 	},
 })
 export default class RouteDashGamesManageGameDescription extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	get routeTitle() {
 		if (this.game) {

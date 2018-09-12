@@ -1,0 +1,34 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+$-v-padding = 15px
+$-h-padding = 20px
+$-height = 50px
+
+.user-list-item
+	theme-prop('border-bottom-color', 'bg-subtle')
+	display: flex
+	align-items: center
+	padding: $-v-padding 0
+	height: $-height + $-v-padding * 2
+	overflow: hidden
+	border-bottom-width: 1px
+	border-bottom-style: solid
+
+	&:last-child
+		border-bottom: 0
+
+.-avatar
+	flex: none
+	width: $-height
+	margin-right: $-v-padding
+
+.-name, .-username
+	text-overflow()
+
+.-name
+	font-weight: bold
+
+.-username
+	theme-prop('color', 'fg-muted')
+	font-size: $font-size-small

@@ -30,7 +30,7 @@ export type Mutations = AppMutations & {
 	},
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
-	app: AppStore;
+	app!: AppStore;
 
 	shouldShowCoverImage = true;
 	coverMediaItem?: MediaItem = undefined;

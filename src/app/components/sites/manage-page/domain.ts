@@ -16,10 +16,10 @@ import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 	},
 })
 export class AppSitesManagePageDomain extends Vue {
-	@Prop(Site) site: Site;
+	@Prop(Site) site!: Site;
 	@Prop(Game) game?: Game;
 
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	onDomainSaved() {
 		Growls.success(

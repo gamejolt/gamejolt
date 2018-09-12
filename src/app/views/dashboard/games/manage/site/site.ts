@@ -21,7 +21,7 @@ import {
 	},
 })
 export default class RouteDashGamesManageSite extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	site: Site = null as any;
 

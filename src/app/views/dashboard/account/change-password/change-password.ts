@@ -18,7 +18,7 @@ import {
 	},
 })
 export default class RouteDashAccountChangePassword extends BaseRouteComponent {
-	@RouteMutation setHeading: RouteStore['setHeading'];
+	@RouteMutation setHeading!: RouteStore['setHeading'];
 
 	hasPassword = true;
 

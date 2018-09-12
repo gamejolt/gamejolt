@@ -14,7 +14,7 @@ import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/componen
 	},
 })
 export default class RouteAuthLinkedAccountTwitterFinalize extends BaseRouteComponent {
-	@Prop(String) state: string;
+	@Prop(String) state!: string;
 
 	get routeTitle() {
 		return this.$gettext('auth.linked_account.twitter.finalize.page_title');

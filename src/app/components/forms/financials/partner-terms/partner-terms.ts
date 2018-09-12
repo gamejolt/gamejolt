@@ -19,7 +19,7 @@ import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 	},
 })
 export class AppPartnerTerms extends Vue {
-	@Prop(UserStripeManagedAccount) account: UserStripeManagedAccount;
+	@Prop(UserStripeManagedAccount) account!: UserStripeManagedAccount;
 
 	checked = false;
 	showAgreement = false;

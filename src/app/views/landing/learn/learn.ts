@@ -16,5 +16,5 @@ import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/
 	},
 })
 export default class RouteLandingLearn extends BaseRouteComponent {
-	@State app: Store['app'];
+	@State app!: Store['app'];
 }

@@ -27,11 +27,11 @@ import { KeyGroup } from '../../../../lib/gj-lib-client/components/key-group/key
 	},
 })
 export class AppKeyGame extends Vue {
-	@Prop() payload: any;
-	@Prop() loginUrl: string;
+	@Prop() payload!: any;
+	@Prop() loginUrl!: string;
 	@Prop() accessKey?: string;
 
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	showingThanks = false;
 	isClaimOnly = false;

@@ -75,11 +75,11 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	implements FormOnInit, FormOnLoad, FormOnSubmit, FormOnSubmitSuccess {
 	modelClass = FiresidePost as any;
 
-	@AppState user: AppStore['user'];
+	@AppState user!: AppStore['user'];
 
-	@Prop(FiresidePost) post: FiresidePost;
+	@Prop(FiresidePost) post!: FiresidePost;
 
-	$refs: {
+	$refs!: {
 		form: AppForm;
 	};
 

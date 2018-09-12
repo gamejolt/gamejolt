@@ -1,11 +1,12 @@
 {
 	"name": "game-jolt-client",
-	"version": "0.16.1",
+	"version": "0.18.12",
 	"scripts": {
 		"postinstall": "sh ./git-hooks/setup-hooks.sh",
 		"dev": "gulp watch",
 		"translations": "gulp translations:compile",
 		"client": "nw build/dev-client",
+		"client-build-dev": "gulp --development --client --arch=64 --noGjPush",
 		"client-build-win": "gulp --production --client --arch=32",
 		"client-build-osx": "gulp --production --client --arch=64",
 		"client-build-linux32": "gulp --production --client --arch=32",
@@ -16,18 +17,22 @@
 		"@types/autosize": "3.0.6",
 		"@types/chart.js": "2.7.0",
 		"@types/codemirror": "0.0.51",
+		"@types/cropperjs": "1.1.3",
 		"@types/express": "4.0.39",
 		"@types/favico.js": "0.0.28",
+		"@types/fs-extra": "5.0.4",
+		"@types/fs-readdir-recursive": "1.0.0",
 		"@types/grecaptcha": "2.0.34",
 		"@types/hammerjs": "2.0.35",
 		"@types/jstimezonedetect": "1.0.1",
 		"@types/node": "8.0.53",
-		"@types/nw.gui": "0.0.20",
+		"@types/nw.js": "0.13.8",
 		"@types/phoenix": "0.0.4",
 		"@types/qs": "6.5.1",
 		"@types/simplebar": "2.4.1",
 		"@types/stripe": "2.0.2",
 		"@types/ua-parser-js": "0.7.32",
+		"@types/write-file-atomic": "2.1.1",
 		"autosize": "4.0.2",
 		"chart.js": "2.7.1",
 		"codemirror": "5.32.0",
@@ -36,9 +41,9 @@
 		"css-element-queries": "1.0.2",
 		"date-fns": "1.29.0",
 		"decompress-zip": "0.3.0",
-		"dexie": "2.0.1",
 		"express": "4.16.2",
 		"favico.js": "0.3.10",
+		"fs-readdir-recursive": "1.1.0",
 		"game-jolt-frontend-lib": "link:src/lib/gj-lib-client",
 		"hammerjs": "2.0.8",
 		"humanize-duration": "3.12.0",
@@ -49,18 +54,19 @@
 		"nw-builder": "github:gamejolt/nw-builder#skip-merge-app",
 		"phoenix": "1.3.0",
 		"pofile": "1.0.9",
-		"prettier": "1.8.2",
+		"prettier": "1.14.2",
 		"qs": "6.5.2",
 		"reflect-metadata": "0.1.12",
 		"rxjs": "5.5.2",
 		"simplebar": "2.6.1",
 		"smoothscroll-polyfill": "0.4.0",
 		"spectrum-colorpicker": "1.8.0",
+		"tar": "4.4.6",
 		"text-mask-addons": "3.7.1",
 		"text-mask-core": "5.0.1",
-		"tslib": "1.8.0",
-		"tslint": "5.8.0",
-		"typescript": "2.6.1",
+		"tslib": "1.9.3",
+		"tslint": "5.11.0",
+		"typescript": "3.0.1",
 		"ua-parser-js": "0.7.17",
 		"v-tooltip": "2.0.0-rc.23",
 		"vee-validate": "2.0.0-rc.7",
@@ -84,18 +90,19 @@
 	},
 	"dependencies": {
 		"axios": "0.17.1",
-		"client-voodoo": "2.0.4",
-		"nwjs-snappy-updater": "1.1.0"
+		"client-voodoo": "2.2.9",
+		"fs-extra": "7.0.0",
+		"write-file-atomic": "2.3.0"
 	},
-	"main": "app://game-jolt-client/index.html#/",
+	"main": "chrome-extension://game-jolt-client/index.html#/",
+	"domain": "game-jolt-client",
 	"window": {
-		"show": true,
+		"show": false,
 		"width": 1250,
 		"height": 700,
 		"min_height": 400,
 		"min_width": 400,
 		"position": "center",
-		"toolbar": true,
 		"frame": true,
 		"icon": "static-assets/client/icon-256x256.png"
 	},
@@ -103,26 +110,20 @@
 		"plugin": true
 	},
 	"clientManifestUrl": "https://d.gamejolt.net/data/client/manifest-2.json",
+	"joltronVersion": "v2.2.2-beta.loader",
 	"chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
 	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
 	"platformOverrides": {
 		"linux": {
-			"main": "app://game-jolt-client/package/index.html#/",
+			"main": "chrome-extension://game-jolt-client/package/index.html#/",
 			"window": {
-				"toolbar": false,
 				"icon": "package/static-assets/client/icon-256x256.png"
 			}
 		},
 		"win": {
-			"main": "app://game-jolt-client/package/index.html#/",
+			"main": "chrome-extension://game-jolt-client/package/index.html#/",
 			"window": {
-				"toolbar": false,
 				"icon": "package/static-assets/client/icon-256x256.png"
-			}
-		},
-		"osx": {
-			"window": {
-				"toolbar": false
 			}
 		}
 	}

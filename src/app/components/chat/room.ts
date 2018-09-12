@@ -10,15 +10,15 @@ export class ChatRoom {
 	static readonly ROOM_CLOSED_GROUP = 'closed_group';
 	static readonly ROOM_VIRAL_GROUP = 'viral_group';
 
-	id: number;
-	title: string;
-	type: ChatRoomType;
+	id!: number;
+	title!: string;
+	type!: ChatRoomType;
 	user?: ChatUser;
 
-	description_compiled: string;
-	description_markdown: string;
+	description_compiled!: string;
+	description_markdown!: string;
 
-	staff: {
+	staff!: {
 		permission: string;
 		userId: number;
 	}[];

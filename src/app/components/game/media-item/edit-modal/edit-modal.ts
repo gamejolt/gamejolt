@@ -29,9 +29,9 @@ import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/
 	},
 })
 export default class AppGameMediaItemEditModal extends BaseModal {
-	@Prop(Game) game: Game;
-	@Prop(Object) item: Media;
-	@Prop(Function) onRemove: GameMediaItemEditModalRemoveCallback;
+	@Prop(Game) game!: Game;
+	@Prop(Object) item!: Media;
+	@Prop(Function) onRemove!: GameMediaItemEditModalRemoveCallback;
 
 	get copyLinkTooltip() {
 		if (this.item.media_type === 'image') {

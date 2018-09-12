@@ -1,5 +1,5 @@
 import View from '!view!./overview.html';
-import { Component } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 
@@ -24,6 +24,7 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppUserLevelWidget } from '../../../components/user/level-widget/level-widget';
 import { Store } from '../../../store/index';
 import { RouteState, RouteStore, RouteAction } from '../profile.store';
+import { UserGameSession } from '../../../../lib/gj-lib-client/components/user/game-session/game-session.model';
 
 @View
 @Component({
@@ -45,16 +46,38 @@ import { RouteState, RouteStore, RouteAction } from '../profile.store';
 	},
 })
 export default class RouteProfileOverview extends BaseRouteComponent {
-	@State app: Store['app'];
-	@RouteState user: RouteStore['user'];
-	@RouteState gamesCount: RouteStore['gamesCount'];
-	@RouteState videosCount: RouteStore['videosCount'];
-	@RouteState userFriendship: RouteStore['userFriendship'];
-	@RouteAction sendFriendRequest: RouteStore['sendFriendRequest'];
-	@RouteAction acceptFriendRequest: RouteStore['acceptFriendRequest'];
-	@RouteAction cancelFriendRequest: RouteStore['cancelFriendRequest'];
-	@RouteAction rejectFriendRequest: RouteStore['rejectFriendRequest'];
-	@RouteAction removeFriend: RouteStore['removeFriend'];
+	@Prop()
+	user!: User;
+
+	@Prop()
+	gamesCount!: number;
+
+	@Prop()
+	videosCount!: number;
+
+	@Prop()
+	userFriendship!: UserFriendship;
+
+	@Prop()
+	activeGameSession?: UserGameSession;
+
+	@State
+	app!: Store['app'];
+
+	@RouteAction
+	sendFriendRequest!: RouteStore['sendFriendRequest'];
+
+	@RouteAction
+	acceptFriendRequest!: RouteStore['acceptFriendRequest'];
+
+	@RouteAction
+	cancelFriendRequest!: RouteStore['cancelFriendRequest'];
+
+	@RouteAction
+	rejectFriendRequest!: RouteStore['rejectFriendRequest'];
+
+	@RouteAction
+	removeFriend!: RouteStore['removeFriend'];
 
 	youtubeChannels: YoutubeChannel[] = [];
 	showFullDescription = false;

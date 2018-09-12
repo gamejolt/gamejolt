@@ -13,7 +13,7 @@ import { BaseRouteComponent } from '../../../../../lib/gj-lib-client/components/
 	},
 })
 export default class RouteDashAccountFinancials extends BaseRouteComponent {
-	@RouteMutation setHeading: RouteStore['setHeading'];
+	@RouteMutation setHeading!: RouteStore['setHeading'];
 
 	get routeTitle() {
 		return this.$gettext('Marketplace Account Setup');

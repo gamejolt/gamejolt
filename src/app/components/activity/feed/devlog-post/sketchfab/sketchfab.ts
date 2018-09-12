@@ -17,8 +17,8 @@ import { ActivityFeedItem } from '../../item-service';
 	},
 })
 export class AppActivityFeedDevlogPostSketchfab extends Vue {
-	@Prop(ActivityFeedItem) item: ActivityFeedItem;
-	@Prop(FiresidePost) post: FiresidePost;
+	@Prop(ActivityFeedItem) item!: ActivityFeedItem;
+	@Prop(FiresidePost) post!: FiresidePost;
 	@Prop(Boolean) isHydrated?: boolean;
 
 	isShowing = GJ_IS_SSR;

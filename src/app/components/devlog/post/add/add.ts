@@ -11,8 +11,11 @@ import { User } from '../../../../../lib/gj-lib-client/components/user/user.mode
 @View
 @Component({})
 export class AppDevlogPostAdd extends Vue {
-	@Prop(Game) game?: Game;
-	@Prop(User) user?: User;
+	@Prop(Game)
+	game?: Game;
+
+	@Prop(User)
+	user?: User;
 
 	async showAddModal(type: string) {
 		let url = `/web/dash/posts/new-post/${type}`;

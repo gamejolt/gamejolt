@@ -37,7 +37,7 @@ export function loggedUserBlock() {
 	},
 })
 export default class RouteAuth extends BaseRouteComponent {
-	@State shouldShowCoverImage: boolean;
+	@State shouldShowCoverImage!: boolean;
 	@State coverMediaItem?: MediaItem;
 
 	readonly Environment = Environment;

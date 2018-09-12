@@ -27,7 +27,7 @@ import {
 	},
 })
 export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	package: GamePackage = null as any;
 	release: GameRelease = null as any;

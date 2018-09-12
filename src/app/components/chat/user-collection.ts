@@ -1,6 +1,5 @@
 import { ChatUser } from './user';
 import { ChatRoom } from './room';
-import { store } from '../../store/index';
 import { ChatSiteModPermission } from './client';
 
 export class ChatUserCollection {
@@ -10,10 +9,6 @@ export class ChatUserCollection {
 	collection: ChatUser[] = [];
 	onlineCount = 0;
 	offlineCount = 0;
-
-	private get chat() {
-		return store.state.chat!;
-	}
 
 	constructor(public type: 'friend' | 'room', users: any[] = []) {
 		if (users && users.length) {

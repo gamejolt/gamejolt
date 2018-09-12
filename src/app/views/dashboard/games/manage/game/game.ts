@@ -26,11 +26,11 @@ import { AppManageGameMediaBar } from './_media-bar/media-bar';
 	},
 })
 export default class RouteDashGamesManageGame extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
-	@RouteState media: RouteStore['media'];
-	@RouteState canPublish: RouteStore['canPublish'];
+	@RouteState game!: RouteStore['game'];
+	@RouteState media!: RouteStore['media'];
+	@RouteState canPublish!: RouteStore['canPublish'];
 
-	@RouteAction saveDraft: RouteStore['saveDraft'];
+	@RouteAction saveDraft!: RouteStore['saveDraft'];
 
 	readonly Game = Game;
 	readonly Screen = Screen;

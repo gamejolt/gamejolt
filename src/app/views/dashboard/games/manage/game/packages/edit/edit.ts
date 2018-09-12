@@ -50,7 +50,7 @@ import { AppTimeAgo } from '../../../../../../../../lib/gj-lib-client/components
 	},
 })
 export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	package: GamePackage = null as any;
 	sellable: Sellable = null as any;

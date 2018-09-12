@@ -16,7 +16,7 @@ import { AppUserAddressDetails } from '../details/details';
 	},
 })
 export class AppUserAddressCard extends Vue {
-	@Prop(UserAddress) address: UserAddress;
+	@Prop(UserAddress) address!: UserAddress;
 	@Prop(Boolean) showRemove?: boolean;
 
 	@Emit('remove')

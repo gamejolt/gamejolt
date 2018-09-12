@@ -15,7 +15,7 @@ import { AppClientSystemProgress } from '../../client/system-progress/system-pro
 	},
 })
 export class AppShellClient extends Vue {
-	@AppState userBootstrapped: AppStore['userBootstrapped'];
+	@AppState userBootstrapped!: AppStore['userBootstrapped'];
 
 	isShowingIntro = true;
 

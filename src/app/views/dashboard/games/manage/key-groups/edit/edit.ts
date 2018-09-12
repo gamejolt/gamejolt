@@ -44,7 +44,7 @@ import {
 	},
 })
 export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	keyGroup: KeyGroup = null as any;
 	packages: GamePackage[] = [];

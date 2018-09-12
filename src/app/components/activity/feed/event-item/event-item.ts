@@ -48,14 +48,14 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 	},
 })
 export class AppActivityFeedEventItem extends Vue {
-	@Prop(ActivityFeedItem) item: ActivityFeedItem;
+	@Prop(ActivityFeedItem) item!: ActivityFeedItem;
 	@Prop(Boolean) isNew?: boolean;
 	@Prop(Boolean) isActive?: boolean;
 	@Prop(Boolean) isHydrated?: boolean;
 
 	private resizeSensor?: any;
 
-	feed: AppActivityFeed;
+	feed!: AppActivityFeed;
 	readonly Screen = Screen;
 	readonly EventItem = EventItem;
 

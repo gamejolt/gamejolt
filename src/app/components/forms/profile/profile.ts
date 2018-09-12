@@ -35,7 +35,7 @@ export class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSub
 	resetOnSubmit = true;
 	reloadOnSubmit = true;
 
-	@ThemeMutation setFormTheme: ThemeStore['setFormTheme'];
+	@ThemeMutation setFormTheme!: ThemeStore['setFormTheme'];
 
 	usernameChangedOn = 0;
 	usernameTimeLeft = 0;

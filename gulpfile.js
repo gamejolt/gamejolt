@@ -19,7 +19,8 @@ const config = {
 				theme_color: '#191919',
 				display: 'standalone',
 				start_url: './?utm_source=web_app_manifest',
-				icons: [{
+				icons: [
+					{
 						src: 'icon-128x128.png',
 						size: 128,
 					},
@@ -54,9 +55,15 @@ const config = {
 			title: 'Edit Site - Game Jolt',
 			crawl: false,
 		},
-		'gameserver': {
+		gameserver: {
 			title: 'Playing Game - Game Jolt',
 			crawl: false,
+		},
+		client: {
+			title: 'Game Jolt',
+			client: true,
+			crawl: false,
+			bodyClass: 'fill-darkest',
 		},
 	},
 	translations: 'site-translations',
@@ -73,43 +80,3 @@ const config = {
 };
 
 require('game-jolt-frontend-lib/gulp/tasks/common')(config, __dirname);
-
-// For releasing to S3.
-// We have to gather all the builds into the versioned folder before pushing.
-const packageJson = require('./package.json');
-const releaseDir = path.join('build/prod-client', 'v' + packageJson.version);
-const s3Dir = 's3://gjolt-data/data/client/releases/v' + packageJson.version;
-
-gulp.task(
-	'client:push-releases',
-	shell.task([
-		'aws s3 cp ' +
-		releaseDir +
-		'/linux64.tar.gz ' +
-		s3Dir +
-		'/game-jolt-client.tar.gz --acl public-read',
-		'aws s3 cp ' +
-		releaseDir +
-		'/linux64-package.zip ' +
-		s3Dir +
-		'/linux64-package.zip --acl public-read',
-
-		'aws s3 cp ' + releaseDir + '/osx.dmg ' + s3Dir + '/GameJoltClient.dmg --acl public-read',
-		'aws s3 cp ' +
-		releaseDir +
-		'/osx64-package.zip ' +
-		s3Dir +
-		'/osx64-package.zip --acl public-read',
-
-		'aws s3 cp ' +
-		releaseDir +
-		'/Setup.exe ' +
-		s3Dir +
-		'/GameJoltClientSetup.exe --acl public-read',
-		'aws s3 cp ' +
-		releaseDir +
-		'/win32-package.zip ' +
-		s3Dir +
-		'/win32-package.zip --acl public-read',
-	])
-);

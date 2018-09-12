@@ -7,10 +7,10 @@ import { Perm, Game } from '../../../../lib/gj-lib-client/components/game/game.m
 export class AppGamePerms extends Vue {
 	@Prop(Game) game?: Game;
 	@Prop({ type: String, default: '' })
-	required: string;
+	required!: string;
 	@Prop(Boolean) either?: boolean;
 	@Prop({ type: String, default: 'span' })
-	tag: string;
+	tag!: string;
 	@Prop(Boolean) debug?: boolean;
 
 	get targetGame() {

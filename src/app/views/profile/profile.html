@@ -43,15 +43,7 @@
 			<translate>profile.joined</translate>
 			<app-time-ago :date="user.created_on" />
 
-			<!-- Logged on -->
-			<template v-if="!isOnline">
-				<span class="dot-separator hidden-xs"></span>
-				<br class="visible-xs">
-				<translate>profile.last_seen</translate>
-				<app-time-ago :date="user.last_logged_on" />
-			</template>
-
-			<span class="dot-separator"></span>
+			<span class="dot-separator" />
 
 			<!-- Dogtag -->
 			<app-user-dogtag :type="user.dogtag" />

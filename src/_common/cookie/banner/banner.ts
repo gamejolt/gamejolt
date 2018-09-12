@@ -16,11 +16,11 @@ export class AppCookieBanner extends Vue {
 			return false;
 		}
 
-		return !this.forceClosed && !window.localStorage['banner:cookie'];
+		return !this.forceClosed && !window.localStorage.getItem('banner:cookie');
 	}
 
 	close() {
 		this.forceClosed = true;
-		window.localStorage['banner:cookie'] = Date.now();
+		window.localStorage.setItem('banner:cookie', Date.now() + '');
 	}
 }

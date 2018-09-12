@@ -68,7 +68,7 @@
 		<div class="-controls" v-if="post && post.status === FiresidePost.STATUS_ACTIVE">
 
 			<app-comment-add-button
-				v-if="showCommentAddButton && !hasDevlogsPerms"
+				v-if="showCommentAddButton && !hasDevlogsPerms && Screen.isDesktop"
 				resource="Fireside_Post"
 				:resource-id="post.id"
 				/>
@@ -77,6 +77,8 @@
 				:post="post"
 				circle
 				/>
+
+			&nbsp;
 
 			<template v-if="!showComments">
 				<app-button
@@ -95,6 +97,8 @@
 						{{ commentsCount | number }}
 					</span>
 				</span>
+
+				&nbsp;
 			</template>
 
 			<app-button

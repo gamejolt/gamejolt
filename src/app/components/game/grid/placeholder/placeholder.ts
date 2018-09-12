@@ -13,7 +13,7 @@ import { GameGridRowSizeLg, GameGridRowSizeMd, GameGridRowSizeSm } from '../grid
 	},
 })
 export class AppGameGridPlaceholder extends Vue {
-	@Prop(Number) num: number;
+	@Prop(Number) num!: number;
 	@Prop(Boolean) truncateToFit?: boolean;
 	@Prop(Boolean) scrollable?: boolean;
 	@Prop(Boolean) forceScrollable?: boolean;

@@ -17,7 +17,7 @@ import {
 	},
 })
 export default class RouteSearchDevlogs extends BaseRouteComponent {
-	@Prop(Object) payload: any;
+	@Prop(Object) payload!: any;
 
 	readonly Search = Search;
 

@@ -13,7 +13,7 @@ import {
 	name: 'RouteDashAccountLinkedAccountsLinkCallback',
 })
 export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRouteComponent {
-	@AppState user: AppStore['user'];
+	@AppState user!: AppStore['user'];
 
 	@RouteResolve()
 	async routeResolve(this: undefined, route: Route) {

@@ -2,6 +2,8 @@ import { Autostarter } from 'client-voodoo';
 
 import { Device } from '../../../lib/gj-lib-client/components/device/device.service';
 import { Settings } from '../../settings/settings.service';
+import * as path from 'path';
+import { Client } from '../client.service';
 
 export class ClientAutoStart {
 	static init() {
@@ -11,7 +13,11 @@ export class ClientAutoStart {
 	}
 
 	static get canAutoStart() {
-		return GJ_BUILD_TYPE === 'production' && Device.os() === 'windows';
+		if (GJ_IS_WATCHING) {
+			return false;
+		}
+
+		return Device.os() === 'windows';
 	}
 
 	static async set() {
@@ -19,7 +25,11 @@ export class ClientAutoStart {
 			return;
 		}
 
-		return Autostarter.set(process.execPath, ['--silent-start']);
+		return Autostarter.set(path.join(Client.joltronDir, 'GameJoltClient.exe'), [
+			'run',
+			'--',
+			'--silent-start',
+		]);
 	}
 
 	static async clear() {

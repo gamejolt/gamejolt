@@ -23,8 +23,8 @@ export type Mutations = AppMutations & ThemeMutations & {};
 	},
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
-	app: AppStore;
-	theme: ThemeStore;
+	app!: AppStore;
+	theme!: ThemeStore;
 }
 
 export const store = new Store();

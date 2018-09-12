@@ -49,18 +49,38 @@ import { number } from '../../../lib/gj-lib-client/vue/filters/number';
 	},
 })
 export default class RouteProfile extends BaseRouteComponent {
-	@Prop(String) username: string;
+	@Prop(String)
+	username!: string;
 
-	@State app: Store['app'];
-	@RouteState user: RouteStore['user'];
-	@RouteState headerMediaItem: RouteStore['headerMediaItem'];
-	@RouteState videosCount: RouteStore['videosCount'];
-	@RouteState isOnline: RouteStore['isOnline'];
-	@RouteState userFriendship: RouteStore['userFriendship'];
-	@ThemeMutation setPageTheme: ThemeStore['setPageTheme'];
-	@RouteMutation bootstrapUser: RouteStore['bootstrapUser'];
-	@RouteMutation profilePayload: RouteStore['profilePayload'];
-	@RouteMutation removeFriend: RouteStore['removeFriend'];
+	@State
+	app!: Store['app'];
+
+	@RouteState
+	user!: RouteStore['user'];
+
+	@RouteState
+	headerMediaItem!: RouteStore['headerMediaItem'];
+
+	@RouteState
+	videosCount!: RouteStore['videosCount'];
+
+	@RouteState
+	isOnline!: RouteStore['isOnline'];
+
+	@RouteState
+	userFriendship!: RouteStore['userFriendship'];
+
+	@ThemeMutation
+	setPageTheme!: ThemeStore['setPageTheme'];
+
+	@RouteMutation
+	bootstrapUser!: RouteStore['bootstrapUser'];
+
+	@RouteMutation
+	profilePayload!: RouteStore['profilePayload'];
+
+	@RouteMutation
+	removeFriend!: RouteStore['removeFriend'];
 
 	storeName = RouteStoreName;
 	storeModule = RouteStore;

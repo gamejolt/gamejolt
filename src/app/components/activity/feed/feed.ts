@@ -45,14 +45,14 @@ const ScrollSampleTime = 1000;
 	},
 })
 export class AppActivityFeed extends Vue {
-	@Prop(ActivityFeedContainer) feed: ActivityFeedContainer;
+	@Prop(ActivityFeedContainer) feed!: ActivityFeedContainer;
 	@Prop(Boolean) showEditControls?: boolean;
 	@Prop(Boolean) showGameInfo?: boolean;
 	@Prop(Boolean) showAds?: boolean;
 
 	// We save the scroll position every time it changes. When clicking back to
 	// the same feed we can scroll to the previous position that way.
-	private scroll: number;
+	private scroll!: number;
 	private scroll$: Subscription | undefined;
 
 	mounted() {
