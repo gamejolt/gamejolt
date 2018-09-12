@@ -32,6 +32,11 @@
 								<translate>Advertising Platforms</translate>
 							</router-link>
 						</li>
+						<li v-if="GJ_IS_CLIENT">
+							<router-link :to="{ name: 'legal.client-licenses' }" active-class="active">
+								<translate>Client Licenses</translate>
+							</router-link>
+						</li>
 					</ul>
 				</nav>
 			</div>
