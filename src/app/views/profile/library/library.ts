@@ -4,12 +4,12 @@ import View from '!view!./library.html';
 
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { AppGameCollectionGrid } from '../../../components/game/collection/grid/grid';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { RouteState, RouteStore } from '../profile.store';
 
 @View
 @Component({
@@ -19,7 +19,8 @@ import {
 	},
 })
 export default class RouteProfileLibrary extends BaseRouteComponent {
-	@Prop() user!: User;
+	@RouteState
+	user!: RouteStore['user'];
 
 	collections: GameCollection[] = [];
 

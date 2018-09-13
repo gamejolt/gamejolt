@@ -58,7 +58,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexAction
 	async cancelFriendRequest() {
 		if (this.userFriendship) {
-			if (!await UserFriendshipHelper.cancelRequest(this.userFriendship)) {
+			if (!(await UserFriendshipHelper.cancelRequest(this.userFriendship))) {
 				return;
 			}
 		}
@@ -68,7 +68,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexAction
 	async rejectFriendRequest() {
 		if (this.userFriendship) {
-			if (!await UserFriendshipHelper.rejectRequest(this.userFriendship)) {
+			if (!(await UserFriendshipHelper.rejectRequest(this.userFriendship))) {
 				return;
 			}
 		}
@@ -78,7 +78,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexAction
 	async removeFriend() {
 		if (this.userFriendship) {
-			if (!await UserFriendshipHelper.removeFriend(this.userFriendship)) {
+			if (!(await UserFriendshipHelper.removeFriend(this.userFriendship))) {
 				return;
 			}
 		}

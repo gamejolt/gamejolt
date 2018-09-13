@@ -11,6 +11,7 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { RouteStore, RouteState } from '../../profile.store';
 
 @View
 @Component({
@@ -23,8 +24,11 @@ import {
 	},
 })
 export default class RouteProfileVideosList extends BaseRouteComponent {
-	@Prop() user!: User;
-	@Prop() videosCount!: number;
+	@RouteState
+	user!: RouteStore['user'];
+
+	@RouteState
+	videosCount!: RouteStore['videosCount'];
 
 	videos: CommentVideo[] = [];
 	page = 0;
@@ -47,6 +51,10 @@ export default class RouteProfileVideosList extends BaseRouteComponent {
 	}
 
 	async loadMore() {
+		if (!this.user) {
+			return;
+		}
+
 		++this.page;
 
 		const response = await Api.sendRequest(

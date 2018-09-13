@@ -23,7 +23,7 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppUserLevelWidget } from '../../../components/user/level-widget/level-widget';
 import { Store } from '../../../store/index';
-import { RouteStore, RouteAction } from '../profile.store';
+import { RouteStore, RouteAction, RouteState } from '../profile.store';
 import { UserGameSession } from '../../../../lib/gj-lib-client/components/user/game-session/game-session.model';
 
 @View
@@ -46,23 +46,20 @@ import { UserGameSession } from '../../../../lib/gj-lib-client/components/user/g
 	},
 })
 export default class RouteProfileOverview extends BaseRouteComponent {
-	@Prop()
-	user!: User;
-
-	@Prop()
-	gamesCount!: number;
-
-	@Prop()
-	videosCount!: number;
-
-	@Prop()
-	userFriendship!: UserFriendship;
-
-	@Prop()
-	activeGameSession?: UserGameSession;
-
 	@State
 	app!: Store['app'];
+
+	@RouteState
+	user!: RouteStore['user'];
+
+	@RouteState
+	gamesCount!: RouteStore['gamesCount'];
+
+	@RouteState
+	videosCount!: RouteStore['videosCount'];
+
+	@RouteState
+	userFriendship!: RouteStore['userFriendship'];
 
 	@RouteAction
 	sendFriendRequest!: RouteStore['sendFriendRequest'];
