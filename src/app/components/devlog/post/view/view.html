@@ -87,12 +87,12 @@
 					v-if="post.poll"
 					:poll="post.poll"
 					:game="post.game"
+					:user="post.user"
 					/>
 
 				<app-activity-feed-controls
 					show-comments
 					:post="post"
-					:show-game-info="showGameInfo"
 					:in-modal="inModal"
 					/>
 			</div>

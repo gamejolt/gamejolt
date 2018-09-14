@@ -54,22 +54,44 @@ import { AppCommentAddButton } from '../../../../../lib/gj-lib-client/components
 	},
 })
 export class AppActivityFeedControls extends Vue {
-	@Prop(FiresidePost) post?: FiresidePost;
-	@Prop(CommentVideo) video?: CommentVideo;
-	@Prop(Game) game?: Game;
-	@Prop(Boolean) showGameInfo?: boolean;
-	@Prop(Boolean) showEditControls?: boolean;
+	@Prop(FiresidePost)
+	post?: FiresidePost;
+
+	@Prop(CommentVideo)
+	video?: CommentVideo;
+
+	@Prop(Game)
+	game?: Game;
+
+	@Prop(Boolean)
+	showEditControls?: boolean;
+
 	@Prop({ type: Boolean, default: true })
 	showExtraInfo!: boolean;
-	@Prop(Boolean) showComments?: boolean;
-	@Prop(Boolean) showCommentAddButton?: boolean;
-	@Prop(Boolean) inModal?: boolean;
 
-	@State app!: Store['app'];
-	@CommentState getCommentStore!: CommentStore['getCommentStore'];
-	@CommentAction lockCommentStore!: CommentStore['lockCommentStore'];
-	@CommentMutation releaseCommentStore!: CommentStore['releaseCommentStore'];
-	@CommentMutation setCommentCount!: CommentStore['setCommentCount'];
+	@Prop(Boolean)
+	showComments?: boolean;
+
+	@Prop(Boolean)
+	showCommentAddButton?: boolean;
+
+	@Prop(Boolean)
+	inModal?: boolean;
+
+	@State
+	app!: Store['app'];
+
+	@CommentState
+	getCommentStore!: CommentStore['getCommentStore'];
+
+	@CommentAction
+	lockCommentStore!: CommentStore['lockCommentStore'];
+
+	@CommentMutation
+	releaseCommentStore!: CommentStore['releaseCommentStore'];
+
+	@CommentMutation
+	setCommentCount!: CommentStore['setCommentCount'];
 
 	commentStore: CommentStoreModel | null = null;
 	isShowingShare = false;
@@ -80,6 +102,14 @@ export class AppActivityFeedControls extends Vue {
 
 	get hasDevlogsPerms() {
 		return this.game && this.game.hasPerms('devlogs');
+	}
+
+	get hasAuthorPerms() {
+		return this.post && this.app.user && this.post.user.id === this.app.user.id;
+	}
+
+	get hasPerms() {
+		return this.hasAuthorPerms || this.hasDevlogsPerms;
 	}
 
 	get sharePopoverId() {
@@ -112,7 +142,7 @@ export class AppActivityFeedControls extends Vue {
 	}
 
 	get shouldShowManageControls() {
-		return this.post && this.game && this.showEditControls && this.hasDevlogsPerms;
+		return this.post && this.showEditControls && this.hasPerms;
 	}
 
 	get canPublish() {
@@ -121,12 +151,7 @@ export class AppActivityFeedControls extends Vue {
 
 	// TODO: Figure out if this can be collapsed into the same func as "showManageControls"
 	get shouldShowStats() {
-		return (
-			!!this.post &&
-			this.showExtraInfo &&
-			!!this.app.user &&
-			(this.post.user.id === this.app.user.id || this.hasDevlogsPerms)
-		);
+		return this.post && this.showExtraInfo && this.hasPerms;
 	}
 
 	get commentsCount() {

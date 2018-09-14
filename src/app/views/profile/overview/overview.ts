@@ -1,5 +1,5 @@
 import View from '!view!./overview.html';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 
@@ -24,7 +24,6 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppUserLevelWidget } from '../../../components/user/level-widget/level-widget';
 import { Store } from '../../../store/index';
 import { RouteStore, RouteAction, RouteState } from '../profile.store';
-import { UserGameSession } from '../../../../lib/gj-lib-client/components/user/game-session/game-session.model';
 
 @View
 @Component({

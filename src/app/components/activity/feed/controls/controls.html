@@ -68,7 +68,7 @@
 		<div class="-controls" v-if="post && post.status === FiresidePost.STATUS_ACTIVE">
 
 			<app-comment-add-button
-				v-if="showCommentAddButton && !hasDevlogsPerms && Screen.isDesktop"
+				v-if="showCommentAddButton && !hasPerms && Screen.isDesktop"
 				resource="Fireside_Post"
 				:resource-id="post.id"
 				/>
