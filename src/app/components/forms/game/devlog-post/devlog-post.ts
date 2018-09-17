@@ -35,7 +35,7 @@ import { AppVideoEmbed } from 'game-jolt-frontend-lib/components/video/embed/emb
 import { AppJolticon } from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon';
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { determine } from 'jstimezonedetect';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import { AppFormGameDevlogPostMedia } from './_media/media';
 
 type FormGameDevlogPostModel = FiresidePost & {
@@ -96,7 +96,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	post!: FiresidePost;
 
 	@Prop({ type: String, default: '' })
-	attachmentType!: string;
+	defaultAttachmentType!: string;
 
 	$refs!: {
 		form: AppForm;
@@ -111,8 +111,10 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	readonly MIN_POLL_DURATION = 5;
 	readonly MAX_POLL_DURATION = 20160;
 
+	// media: MediaItem[] = [];
 	keyGroups: KeyGroup[] = [];
 	wasPublished = false;
+	attachmentType = '';
 	enabledAttachments = false;
 	longEnabled = false;
 	maxFilesize = 0;
@@ -171,7 +173,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	get sketchfabId() {
 		if (this.formModel.sketchfab_id.match(this.SKETCHFAB_URL_REGEX)) {
 			// extract model id from url
-			var matches = this.formModel.sketchfab_id.match(/[a-f0-9]{32}/i);
+			const matches = this.formModel.sketchfab_id.match(/[a-f0-9]{32}/i);
 			if (matches && matches.length > 0) {
 				return matches[0];
 			}
@@ -187,7 +189,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		const url = this.formModel.video_url;
 		if (url) {
 			// extract video id from url
-			var matches = url.match(/\?v=[a-zA-Z0-9_\-]{11}/);
+			const matches = url.match(/\?v=[a-zA-Z0-9_\-]{11}/);
 			if (matches && matches.length > 0) {
 				const videoId = matches[0].substr(3);
 				return videoId;
@@ -270,6 +272,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
 
+		this.attachmentType = this.defaultAttachmentType;
 		if (model.videos.length) {
 			this.setField(
 				'video_url',
@@ -330,13 +333,9 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.attachmentType = FiresidePost.TYPE_MEDIA;
 	}
 
-	showSelectMedia() {
-		this.$refs.upload.showFileSelect();
-	}
-
-	mediaSelected() {
-		// TODO: Upload into the post
-		console.log('selected');
+	onMediaUploaded(mediaItems: MediaItem[]) {
+		const newMedia = mediaItems.concat(this.formModel.media);
+		this.setField('media', newMedia);
 	}
 
 	onMediaSort(mediaItems: MediaItem[]) {
@@ -345,8 +344,8 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	}
 
 	removeMediaItem(mediaItem: MediaItem) {
-		// TODO
-		console.log('remove');
+		const newMedia = this.formModel.media.filter(item => item.id !== mediaItem.id);
+		this.setField('media', newMedia);
 	}
 
 	onEnableVideo() {

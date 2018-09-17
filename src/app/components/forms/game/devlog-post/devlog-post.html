@@ -55,37 +55,15 @@
 				<translate>Select images</translate>
 			</app-form-legend>
 
-			<app-form-group
-				name="file"
-				hide-label
-				:label="$gettext(`Images`)"
-				v-app-focus-when="!wasPublished"
-				>
-				<p class="help-block">
-					<translate>Your image must be a PNG, JPG, or GIF.</translate> <br>
-					<b><translate>Animated GIFs are supported.</translate></b>
-				</p>
-
-				<app-form-control-upload
-					class="-upload-input"
-					ref="upload"
-					:rules="{
-						filesize: maxFilesize,
-						max_img_dimensions: [ maxWidth, maxHeight ],
-					}"
-					accept=".png,.jpg,.jpeg,.gif"
-					:multiple="true"
-					@changed="mediaSelected()"
-					/>
-
-				<app-form-control-errors />
-			</app-form-group>
-
 			<app-form-game-devlog-post-media
 				:media-items="formModel.media"
-				@add="showSelectMedia()"
+				:post="formModel"
+				:maxFilesize="maxFilesize"
+				:maxWidth="maxWidth"
+				:maxHeight="maxHeight"
+				@uploaded="onMediaUploaded($event)"
 				@remove="removeMediaItem($event)"
-				@sort="onMediaSort()"
+				@sort="onMediaSort($event)"
 				/>
 		</fieldset>
 
