@@ -1,40 +1,44 @@
 import View from '!view!./devlog-post.html?style=./devlog-post.styl';
 import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
+import { AppCardListDraggable } from 'game-jolt-frontend-lib/components/card/list/draggable/draggable';
+import { AppCardListItem } from 'game-jolt-frontend-lib/components/card/list/item/item';
+import { AppCardList } from 'game-jolt-frontend-lib/components/card/list/list';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppFormAutosize } from 'game-jolt-frontend-lib/components/form-vue/autosize.directive';
-import { determine } from 'jstimezonedetect';
-import { Component, Prop } from 'vue-property-decorator';
-import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { AppFormControlCheckbox } from '../../../../../lib/gj-lib-client/components/form-vue/control/checkbox/checkbox';
-import { AppFormControlDate } from '../../../../../lib/gj-lib-client/components/form-vue/control/date/date';
-import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
-import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
-import { AppFocusWhen } from '../../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
-import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
+import { AppFormControlCheckbox } from 'game-jolt-frontend-lib/components/form-vue/control/checkbox/checkbox';
+import { AppFormControlDate } from 'game-jolt-frontend-lib/components/form-vue/control/date/date';
+import { AppFormControlMarkdown } from 'game-jolt-frontend-lib/components/form-vue/control/markdown/markdown';
+import { AppFormControlToggle } from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle';
+import { AppFormControlUpload } from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload';
+import { AppFocusWhen } from 'game-jolt-frontend-lib/components/form-vue/focus-when.directive';
+import { AppForm } from 'game-jolt-frontend-lib/components/form-vue/form';
 import {
 	BaseForm,
 	FormOnInit,
 	FormOnLoad,
 	FormOnSubmit,
 	FormOnSubmitSuccess,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { AppFormLegend } from '../../../../../lib/gj-lib-client/components/form-vue/legend/legend';
-import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/video/video.model';
-import { KeyGroup } from '../../../../../lib/gj-lib-client/components/key-group/key-group.model';
-import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/popover';
-import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
-import { AppProgressBar } from '../../../../../lib/gj-lib-client/components/progress/bar/bar';
-import { AppSketchfabEmbed } from '../../../../../lib/gj-lib-client/components/sketchfab/embed/embed';
+} from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { AppFormLegend } from 'game-jolt-frontend-lib/components/form-vue/legend/legend';
+import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
+import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
+import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
+import { AppPopover } from 'game-jolt-frontend-lib/components/popover/popover';
+import { AppPopoverTrigger } from 'game-jolt-frontend-lib/components/popover/popover-trigger.directive.vue';
+import { AppProgressBar } from 'game-jolt-frontend-lib/components/progress/bar/bar';
+import { AppSketchfabEmbed } from 'game-jolt-frontend-lib/components/sketchfab/embed/embed';
 import {
 	Timezone,
 	TimezoneData,
-} from '../../../../../lib/gj-lib-client/components/timezone/timezone.service';
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
-import { AppVideoEmbed } from '../../../../../lib/gj-lib-client/components/video/embed/embed';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
+} from 'game-jolt-frontend-lib/components/timezone/timezone.service';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { AppUserAvatarImg } from 'game-jolt-frontend-lib/components/user/user-avatar/img/img';
+import { AppVideoEmbed } from 'game-jolt-frontend-lib/components/video/embed/embed';
+import { AppJolticon } from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon';
+import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
+import { determine } from 'jstimezonedetect';
+import { Component, Prop } from 'vue-property-decorator';
 
 type FormGameDevlogPostModel = FiresidePost & {
 	keyGroups: KeyGroup[];
@@ -74,6 +78,9 @@ type FormGameDevlogPostModel = FiresidePost & {
 		AppPopover,
 		AppUserAvatarImg,
 		AppProgressBar,
+		AppCardList,
+		AppCardListDraggable,
+		AppCardListItem,
 	},
 	directives: {
 		AppFocusWhen,
@@ -252,9 +259,6 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		return this.computedLeadLength <= this.leadLengthLimit;
 	}
 
-	// ///////////////////
-	// init functions
-
 	async onInit() {
 		await this.fetchTimezones();
 
@@ -320,12 +324,21 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.leadTotalLengthLimit = payload.leadTotalLengthLimit;
 	}
 
-	// ///////////////////
-	// Attachments
-
 	onEnableImages() {
 		this.enabledAttachments = true;
 		this.attachmentType = FiresidePost.TYPE_MEDIA;
+	}
+
+	mediaSelected() {
+		// TODO: Upload into the post
+	}
+
+	applyMediaSort() {
+		// TODO
+	}
+
+	removeMediaItem(mediaItem: MediaItem) {
+		// TODO
 	}
 
 	onEnableVideo() {
@@ -355,9 +368,6 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	toggleLong() {
 		this.longEnabled = !this.longEnabled;
 	}
-
-	// ///////////////////
-	// Poll
 
 	onCreatePoll() {
 		// Initialize default poll
@@ -400,9 +410,6 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.changed = true;
 	}
 
-	// ///////////////////
-	// Access permissions
-
 	onEnableAccessPermissions() {
 		this.accessPermissionsEnabled = true;
 	}
@@ -410,9 +417,6 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	onDisableAccessPermissions() {
 		this.accessPermissionsEnabled = false;
 	}
-
-	// ///////////////////
-	// Schedule
 
 	onAddSchedule() {
 		if (this.formModel.scheduled_for === null) {
@@ -455,9 +459,6 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 			}
 		}
 	}
-
-	// ///////////////////
-	// Submit
 
 	onDraftSubmit() {
 		this.setField('status', FiresidePost.STATUS_DRAFT);
