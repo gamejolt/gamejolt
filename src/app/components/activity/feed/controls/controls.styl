@@ -4,19 +4,19 @@
 .-controls
 	margin-top: $-item-padding
 
-.-manage-controls, .-manage-stats
-	display: block
-
-	@media $media-sm-up
-		display: inline-block
-
-.-manage-controls
-	margin-bottom: $-item-padding
-
-	@media $media-sm-up
-		margin-right: 10px
-		margin-bottom: 0
+.-manage
+	theme-prop('background-color', 'bg-offset')
+	display: flex
+	align-items: center
+	padding: $-item-padding
+	margin-top: $-item-padding
+	margin-left: -($-item-padding)
+	margin-right: -($-item-padding)
 
 .-manage-stats
 	theme-prop('color', 'fg-muted')
+	flex: auto
 	font-size: $font-size-small
+
+.-manage-controls
+	flex: none

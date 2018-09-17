@@ -73,11 +73,13 @@
 					</span>
 				</div>
 
-				<div class="lead" v-html="post.lead_compiled">
-				</div>
+				<div class="lead" v-html="post.lead_compiled" />
 
-				<div v-if="post.hasArticle" class="fireside-post-body">
+				<div v-if="post.hasArticle">
+					<div class="page-cut" />
+
 					<app-widget-compiler
+						class="fireside-post-body"
 						:content="post.content_compiled"
 						/>
 				</div>

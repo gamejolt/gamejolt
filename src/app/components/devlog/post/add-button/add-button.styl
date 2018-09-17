@@ -1,0 +1,19 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.-input
+	theme-prop('border-color', 'bg-subtle')
+	theme-prop('background-color', 'bg')
+	margin-bottom: $line-height-computed
+	border-width: 2px
+	border-style: solid
+	border-radius: $input-border-radius
+	height: $input-height-base * 1.5
+	line-height: $input-height-base * 1.5
+	padding-left: $padding-base-horizontal
+	padding-right: $padding-base-horizontal
+	font-style: italic
+	cursor: pointer
+
+	&:hover
+		theme-prop('border-color', 'fg-muted')

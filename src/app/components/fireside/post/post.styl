@@ -1,7 +1,14 @@
 @require '../../../../lib/gj-lib-client/stylus/mixins/compiled-content'
 
+$-font-size = 16px
+$-line-height = $-font-size * 1.5
+
 .fireside-post-body
-	compiled-content($font-size-base, $line-height-computed)
+	compiled-content($-font-size, $-line-height)
+
+	&, p
+		font-size: $-font-size
+		line-height: $-line-height
 
 	a
 		link-underlines(var(--theme-link), var(--theme-bg), var(--theme-link-hover))

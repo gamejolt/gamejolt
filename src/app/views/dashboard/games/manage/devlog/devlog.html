@@ -1,68 +1,65 @@
 <div v-if="routeBootstrapped">
-	<section class="section section-has-nav fill-darker">
-		<div class="container">
-
-			<app-game-perms :game="game" required="devlogs">
-				<app-devlog-post-add
-					:game="game"
-					@add="onPostAdded"
-					/>
-			</app-game-perms>
-
-			<nav class="platform-list inline section-nav">
-				<ul>
-					<li>
-						<router-link
-							:to="{
-								name: 'dash.games.manage.devlog',
-								params: {
-									tab: null,
-								},
-							}"
-							active-class="active"
-							:exact="true"
-							>
-							<translate>Posts</translate>
-						</router-link>
-					</li>
-					<li>
-						<router-link
-							:to="{
-								name: 'dash.games.manage.devlog',
-								params: {
-									tab: 'draft',
-								},
-							}"
-							active-class="active"
-							:exact="true"
-							>
-							<translate>Draft Posts</translate>
-						</router-link>
-					</li>
-					<li>
-						<router-link
-							:to="{
-								name: 'dash.games.manage.devlog',
-								params: {
-									tab: 'scheduled',
-								},
-							}"
-							active-class="active"
-							:exact="true"
-							>
-							<translate>Scheduled Posts</translate>
-						</router-link>
-					</li>
-				</ul>
-			</nav>
-
-		</div>
-	</section>
-
 	<section class="section">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-8">
+
+					<app-game-perms :game="game" required="devlogs">
+						<app-devlog-post-add-button
+							:game="game"
+							@add="onPostAdded"
+							/>
+
+						<br>
+						<br>
+					</app-game-perms>
+
+					<app-nav-tab-list>
+						<ul>
+							<li>
+								<router-link
+									:to="{
+										name: 'dash.games.manage.devlog',
+										params: {
+											tab: null,
+										},
+									}"
+									active-class="active"
+									:exact="true"
+									>
+									<translate>Posts</translate>
+								</router-link>
+							</li>
+							<li>
+								<router-link
+									:to="{
+										name: 'dash.games.manage.devlog',
+										params: {
+											tab: 'draft',
+										},
+									}"
+									active-class="active"
+									:exact="true"
+									>
+									<translate>Draft Posts</translate>
+								</router-link>
+							</li>
+							<li>
+								<router-link
+									:to="{
+										name: 'dash.games.manage.devlog',
+										params: {
+											tab: 'scheduled',
+										},
+									}"
+									active-class="active"
+									:exact="true"
+									>
+									<translate>Scheduled Posts</translate>
+								</router-link>
+							</li>
+						</ul>
+					</app-nav-tab-list>
 
 					<app-activity-feed
 						v-if="feed.hasItems"

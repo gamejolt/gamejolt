@@ -1,6 +1,44 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+.-attachment-controls
+	display: flex
+	align-items: center
+
+	&-label
+		flex: none
+		margin-right: 10px
+		text-transform: uppercase
+		font-weight: bold
+
+	&-buttons
+		flex: auto
+
+.-hp
+	display: flex
+	align-items: center
+	margin-top: 5px
+
+	&-label
+		theme-prop('color', 'fg-muted')
+		flex: none
+		margin-right: 10px
+		font-size: $font-size-small
+		font-weight: bold
+
+	&-bar
+		flex: auto
+
+		.progress
+			margin-bottom: 0
+
+	&-count
+		theme-prop('color', 'notice')
+		flex: none
+		margin-left: 10px
+		font-size: $font-size-small
+		font-weight: bold
+
 .-as-owner
 	clearfix()
 

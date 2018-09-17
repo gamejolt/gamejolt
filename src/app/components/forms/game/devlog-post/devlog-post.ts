@@ -1,6 +1,17 @@
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./devlog-post.html?style=./devlog-post.styl';
-
+import * as addWeeks from 'date-fns/add_weeks';
+import * as startOfDay from 'date-fns/start_of_day';
+import { AppFormAutosize } from 'game-jolt-frontend-lib/components/form-vue/autosize.directive';
+import { determine } from 'jstimezonedetect';
+import { Component, Prop } from 'vue-property-decorator';
+import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { AppFormControlCheckbox } from '../../../../../lib/gj-lib-client/components/form-vue/control/checkbox/checkbox';
+import { AppFormControlDate } from '../../../../../lib/gj-lib-client/components/form-vue/control/date/date';
+import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
+import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
+import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
+import { AppFocusWhen } from '../../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
+import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
 import {
 	BaseForm,
 	FormOnInit,
@@ -8,33 +19,22 @@ import {
 	FormOnSubmit,
 	FormOnSubmitSuccess,
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { KeyGroup } from '../../../../../lib/gj-lib-client/components/key-group/key-group.model';
-import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
-import { AppFocusWhen } from '../../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
-import { AppSketchfabEmbed } from '../../../../../lib/gj-lib-client/components/sketchfab/embed/embed';
-import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/video/video.model';
-import { AppVideoEmbed } from '../../../../../lib/gj-lib-client/components/video/embed/embed';
-import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
 import { AppFormLegend } from '../../../../../lib/gj-lib-client/components/form-vue/legend/legend';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
+import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/video/video.model';
+import { KeyGroup } from '../../../../../lib/gj-lib-client/components/key-group/key-group.model';
 import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/popover';
-import { AppFormControlCheckbox } from '../../../../../lib/gj-lib-client/components/form-vue/control/checkbox/checkbox';
-import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
-import * as startOfDay from 'date-fns/start_of_day';
-import * as addWeeks from 'date-fns/add_weeks';
-import {
-	TimezoneData,
-	Timezone,
-} from '../../../../../lib/gj-lib-client/components/timezone/timezone.service';
-import { determine } from 'jstimezonedetect';
-import { AppFormControlDate } from '../../../../../lib/gj-lib-client/components/form-vue/control/date/date';
+import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppProgressBar } from '../../../../../lib/gj-lib-client/components/progress/bar/bar';
+import { AppSketchfabEmbed } from '../../../../../lib/gj-lib-client/components/sketchfab/embed/embed';
+import {
+	Timezone,
+	TimezoneData,
+} from '../../../../../lib/gj-lib-client/components/timezone/timezone.service';
+import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
+import { AppVideoEmbed } from '../../../../../lib/gj-lib-client/components/video/embed/embed';
+import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 
 type FormGameDevlogPostModel = FiresidePost & {
 	keyGroups: KeyGroup[];
@@ -79,6 +79,7 @@ type FormGameDevlogPostModel = FiresidePost & {
 		AppFocusWhen,
 		AppTooltip,
 		AppPopoverTrigger,
+		AppFormAutosize,
 	},
 })
 export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
@@ -139,14 +140,6 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 			return this.$gettext('Publish');
 		} else {
 			return this.$gettext('Post');
-		}
-	}
-
-	get draftButtonText() {
-		if (this.isSavedDraftPost) {
-			return this.$gettext('Save Draft');
-		} else {
-			return this.$gettext('Save as Draft');
 		}
 	}
 
@@ -359,8 +352,8 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.attachmentType = '';
 	}
 
-	onAddLong() {
-		this.longEnabled = true;
+	toggleLong() {
+		this.longEnabled = !this.longEnabled;
 	}
 
 	// ///////////////////

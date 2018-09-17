@@ -1,144 +1,218 @@
 <app-form name="devlogPostForm" ref="form">
 
+	<!-- Attachment Controls -->
+	<div class="-attachment-controls">
+		<div class="-attachment-controls-label">
+			<translate>Add:</translate>
+		</div>
+		<div class="-attachment-controls-buttons">
+			<app-button
+				trans
+				:primary="enabledImages"
+				:solid="enabledImages"
+				:disabled="(wasPublished || enabledAttachments) && !enabledImages"
+				icon="screenshot"
+				@click.prevent="onEnableImages()"
+				>
+				<translate>Images/GIFs</translate>
+			</app-button>
+
+			<app-button
+				trans
+				:primary="enabledVideo"
+				:solid="enabledVideo"
+				:disabled="(wasPublished || enabledAttachments) && !enabledVideo"
+				icon="video"
+				@click.prevent="onEnableVideo()"
+				>
+				<translate>Video</translate>
+			</app-button>
+
+			<app-button
+				trans
+				:primary="enabledSketchfab"
+				:solid="enabledSketchfab"
+				:disabled="(wasPublished || enabledAttachments) && !enabledSketchfab"
+				icon="sketchfab"
+				@click.prevent="onEnableSketchfab()"
+				>
+				Sketchfab
+			</app-button>
+		</div>
+	</div>
+	<br>
+
 	<!-- Attachments -->
-	<div class="well fill-offset full-bleed"
-		v-if="enabledAttachments">
-		<!-- Images -->
-		<app-form-group
-			name="file"
-			:label="$gettext( `Images` )"
-			v-if="enabledImages"
-			>
+	<div class="well fill-offset full-bleed" v-if="enabledAttachments">
+		<fieldset v-if="enabledImages">
+			<app-form-legend
+				compact
+				:deletable="!wasPublished"
+				@delete="onDisableAttachments()"
+				>
+				<translate>Select images</translate>
+			</app-form-legend>
 
-			<span class="pull-right">
-				<app-button
-					sparse
-					circle
-					icon="remove"
-					@click.prevent="onDisableAttachments()"
+			<!-- Images -->
+			<app-form-group
+				name="file"
+				hide-label
+				:label="$gettext(`Images`)"
+				v-app-focus-when="!wasPublished"
+				>
+				<p class="help-block">
+					<translate>Your image must be a PNG, JPG, or GIF.</translate> <br>
+					<b><translate>Animated GIFs are supported.</translate></b>
+				</p>
+
+				<app-form-control-upload
+					:rules="{
+						filesize: maxFilesize,
+						max_img_dimensions: [ maxWidth, maxHeight ],
+					}"
+					accept=".png,.jpg,.jpeg,.gif"
+					:multiple="true"
 					/>
-			</span>
 
-			<p class="help-block">
-				<translate>Your image must be a PNG, JPG, or GIF.</translate> <br>
-				<b><translate>Animated GIFs are supported.</translate></b>
-			</p>
-
-			<app-form-control-upload
-				:rules="{
-					filesize: maxFilesize,
-					max_img_dimensions: [ maxWidth, maxHeight ],
-				}"
-				accept=".png,.jpg,.jpeg,.gif"
-				:multiple="true"
-				/>
-
-			<app-form-control-errors />
-		</app-form-group>
+				<app-form-control-errors />
+			</app-form-group>
+		</fieldset>
 
 		<!-- Video -->
-		<app-form-group
-			name="video_url"
-			:label="$gettext( `Video URL` )"
-			v-else-if="enabledVideo"
-			>
-			<span class="pull-right" v-if="!wasPublished">
-				<app-button
-					sparse
-					circle
-					icon="remove"
-					@click.prevent="onDisableAttachments()"
+		<fieldset v-else-if="enabledVideo">
+			<app-form-legend
+				compact
+				:deletable="!wasPublished"
+				@delete="onDisableAttachments()"
+				>
+				<translate>YouTube video URL</translate>
+			</app-form-legend>
+
+			<app-form-group
+				name="video_url"
+				hide-label
+				:label="$gettext(`YouTube Video URL`)"
+				v-app-focus-when="!wasPublished"
+				>
+				<p class="help-block" v-if="!wasPublished">
+					<translate>Enter the URL of your YouTube video. For example:</translate>
+					<code>https://www.youtube.com/watch?v=dQw4w9WgXcQ</code>
+				</p>
+
+				<app-form-control
+					type="text"
+					:disabled="wasPublished"
+					:rules="{
+						pattern: YOUTUBE_URL_REGEX,
+					}"
 					/>
-			</span>
 
-			<p class="help-block" v-if="!wasPublished">
-				<translate>Currently only YouTube videos are supported.</translate>
-			</p>
+				<app-form-control-errors />
 
-			<app-form-control
-				type="text"
-				:disabled="wasPublished"
-				:rules="{
-					pattern: YOUTUBE_URL_REGEX,
-				}"
-				/>
-
-			<app-form-control-errors />
-
-			<div v-if="hasValidYouTubeUrl">
-				<br />
-				<app-video-embed
-					video-provider="youtube"
-					:video-id="youtubeVideoId"
-					/>
-			</div>
-		</app-form-group>
+				<div v-if="hasValidYouTubeUrl">
+					<br />
+					<app-video-embed
+						video-provider="youtube"
+						:video-id="youtubeVideoId"
+						/>
+				</div>
+			</app-form-group>
+		</fieldset>
 
 		<!-- Sketchfab -->
-		<app-form-group
-			name="sketchfab_id"
-			:label="$gettext( `Sketchfab Model ID` )"
-			v-else-if="enabledSketchfab"
-			>
-			<span class="pull-right" v-if="!wasPublished">
-				<app-button
-					sparse
-					circle
-					icon="remove"
-					@click.prevent="onDisableAttachments()"
-					/>
-			</span>
+		<fieldset v-else-if="enabledSketchfab">
+			<app-form-legend
+				compact
+				:deletable="!wasPublished"
+				@delete="onDisableAttachments()"
+				>
+				<translate>Embed Sketchfab model</translate>
+			</app-form-legend>
 
-			<p class="help-block" v-if="!wasPublished">
-				<translate>This is the ID in your model's URL. For example:</translate>
-				<code>https://sketchfab.com/models/<strong>ID</strong></code>
-			</p>
+			<app-form-group
+				name="sketchfab_id"
+				hide-label
+				:label="$gettext( `Sketchfab Model ID` )"
+				v-app-focus-when="!wasPublished"
+				>
+				<p class="help-block" v-if="!wasPublished">
+					<translate>Enter the ID in your Sketchfab model's URL. For example:</translate>
+					<code>https://sketchfab.com/models/<strong>ID</strong></code>
+				</p>
 
-			<app-form-control type="text"
-				:disabled="wasPublished"
-				:rules="{
-					pattern: SKETCHFAB_FIELD_REGEX,
-				}" />
-			<app-form-control-errors />
-			<div v-if="hasValidSketchfabModelId">
-				<br />
-				<app-sketchfab-embed
-					:sketchfab-id="sketchfabId"
-					/>
-			</div>
-		</app-form-group>
+				<app-form-control type="text"
+					:disabled="wasPublished"
+					:rules="{
+						pattern: SKETCHFAB_FIELD_REGEX,
+					}" />
+				<app-form-control-errors />
+				<div v-if="hasValidSketchfabModelId">
+					<br />
+					<app-sketchfab-embed
+						:sketchfab-id="sketchfabId"
+						/>
+				</div>
+			</app-form-group>
+		</fieldset>
 	</div>
 
 	<!-- Post title (short) -->
 	<app-form-group
-		hideLabel
+		:hide-label="!longEnabled"
+		:label="$gettext(`Summary`)"
 		name="lead"
 		>
 		<app-form-control-textarea
 			:maxlength="leadTotalLengthLimit"
 			rows="2"
+			v-app-form-autosize
 			v-app-focus-when
-			:placeholder="$gettext(`What's new?`)"
+			:placeholder="!longEnabled ? $gettext(`What's new?`) : $gettext(`Write a summary for your article...`)"
 			/>
-		<app-progress-bar
-			:percent="leadLengthPercent"
-			:indeterminate="!isLeadValid"
-			:thin="leadLengthPercent > 10">
-			<template v-if="leadLengthPercent <= 10">
-				{{leadLengthLimit - computedLeadLength}}
-			</template>
-		</app-progress-bar>
-		<template v-if="!isLeadValid" class="alert notice alert-notice">
-			<app-jolticon
-				notice
-				icon="notice" />
-			Your lead is too long!
-		</template>
+
+		<div class="-hp">
+			<div class="-hp-label">HP</div>
+			<div class="-hp-bar">
+				<app-progress-bar
+					thin
+					:percent="leadLengthPercent"
+					:animate="false"
+					>
+				</app-progress-bar>
+			</div>
+			<div class="-hp-count" v-if="leadLengthPercent <= 10">
+				{{ leadLengthLimit - computedLeadLength }}
+			</div>
+		</div>
+
+		<p
+			v-if="!isLeadValid"
+			class="help-block error anim-fade-in"
+			>
+			<translate>Your post is too long!</translate>
+		</p>
 	</app-form-group>
 
 	<!-- Post body (long) -->
-	<div v-if="longEnabled">
-		<hr />
+	<div class="page-cut">
+		<app-button
+			v-if="!longEnabled"
+			trans
+			@click.prevent="toggleLong()"
+			>
+			<translate>Write Article</translate>
+		</app-button>
+		<app-button
+			v-else
+			circle
+			sparse
+			icon="remove"
+			@click.prevent="toggleLong()"
+			v-app-tooltip="$gettext(`Remove text body`)"
+			/>
+	</div>
+
+	<template v-if="longEnabled">
 		<app-form-group
 			name="content_markdown"
 			:label="$gettext( `Post Content` )"
@@ -156,21 +230,17 @@
 
 			<app-form-control-errors />
 		</app-form-group>
-	</div>
+	</template>
 
 	<!-- Poll -->
 	<div class="well fill-offset full-bleed" v-if="hasPoll">
 		<fieldset>
-			<app-form-legend compact>
+			<app-form-legend
+				compact
+				deletable
+				@delete="onRemovePoll()"
+				>
 				<translate>Set up poll</translate>
-				<span class="pull-right" v-if="isPollEditable">
-					<app-button
-						sparse
-						circle
-						icon="remove"
-						@click.prevent="onRemovePoll()"
-						/>
-				</span>
 			</app-form-legend>
 
 			<!-- i starts from 1 -->
@@ -318,16 +388,12 @@
 	<!-- Scheduling -->
 	<div class="well fill-offset full-bleed" v-if="isScheduling && timezones">
 		<fieldset>
-			<app-form-legend compact>
+			<app-form-legend
+				compact
+				deletable
+				@delete="onRemoveSchedule()"
+				>
 				<translate>Schedule publishing of post</translate>
-				<span class="pull-right">
-					<app-button
-						sparse
-						circle
-						icon="remove"
-						@click.prevent="onRemoveSchedule()"
-						/>
-				</span>
 			</app-form-legend>
 
 			<app-form-group
@@ -376,42 +442,41 @@
 	</div>
 
 	<!-- Access permissions -->
-	<div class="well fill-offset full-bleed"
-		v-if="!wasPublished && accessPermissionsEnabled">
-		<app-form-group
-			name="key_group_ids"
-			:label="$gettext(`Access Permissions`)"
-			>
-			<span class="pull-right">
-				<app-button
-					sparse
-					circle
-					icon="remove"
-					@click.prevent="onDisableAccessPermissions()"
-					/>
-			</span>
-			<br />
-			<br />
-
-			<div
-				class="alert"
-				v-if="!keyGroups.length"
+	<div class="well fill-offset full-bleed" v-if="!wasPublished && accessPermissionsEnabled">
+		<fieldset>
+			<app-form-legend
+				compact
+				deletable
+				@delete="onDisableAccessPermissions()"
 				>
-				<translate>You can make this post available to only the users within a key group. For example, this is useful for sending news updates to testers. You can create a user key group through the "Keys/Access" page.</translate>
-			</div>
-			<div v-else>
-				<p class="help-block">
-					<translate>You can make this post available to only the users within a key group. For example, this is useful for sending news updates to testers. Only User-type key groups can be selected.</translate>
-				</p>
+				<translate>Access permissions</translate>
+			</app-form-legend>
 
-				<div class="checkbox" v-for="keyGroup of keyGroups" :key="keyGroup.id">
-					<label>
-						<app-form-control-checkbox :value="keyGroup.id" />
-						{{ keyGroup.name }}
-					</label>
+			<app-form-group
+				name="key_group_ids"
+				:label="$gettext(`Access Permissions`)"
+				hide-label
+				>
+				<div
+					class="alert"
+					v-if="!keyGroups.length"
+					>
+					<translate>You can make this post available to only the users within a key group. For example, this is useful for sending news updates to testers. You can create a user key group through the "Keys/Access" page.</translate>
 				</div>
-			</div>
-		</app-form-group>
+				<div v-else>
+					<p class="help-block">
+						<translate>You can make this post available to only the users within a key group. For example, this is useful for sending news updates to testers. Only User-type key groups can be selected.</translate>
+					</p>
+
+					<div class="checkbox" v-for="keyGroup of keyGroups" :key="keyGroup.id">
+						<label>
+							<app-form-control-checkbox :value="keyGroup.id" />
+							{{ keyGroup.name }}
+						</label>
+					</div>
+				</div>
+			</app-form-group>
+		</fieldset>
 	</div>
 	<div
 		class="form-group well fill-offset full-bleed"
@@ -459,59 +524,12 @@
 			sparse
 			trans
 			circle
-			:solid="enabledImages"
-			:disabled="(wasPublished || enabledAttachments) && !enabledImages"
-			icon="screenshot"
-			v-app-tooltip="$gettext(`Add images or gifs`)"
-			@click.prevent="onEnableImages()"
-			/>
-
-		<app-button
-			sparse
-			trans
-			circle
-			:solid="enabledVideo"
-			:disabled="(wasPublished || enabledAttachments) && !enabledVideo"
-			icon="video"
-			v-app-tooltip="$gettext(`Add video`)"
-			@click.prevent="onEnableVideo()"
-			/>
-
-		<app-button
-			sparse
-			trans
-			circle
-			:solid="enabledSketchfab"
-			:disabled="(wasPublished || enabledAttachments) && !enabledSketchfab"
-			icon="sketchfab"
-			v-app-tooltip="$gettext(`Add sketchfab model`)"
-			@click.prevent="onEnableSketchfab()"
-			/>
-
-		<span class="dot-separator"></span>
-
-		<app-button
-			sparse
-			trans
-			circle
-			:solid="longEnabled"
-			icon="markdown"
-			v-app-tooltip="$gettext(`Add text body`)"
-			@click.prevent="onAddLong()"
-			/>
-
-		<app-button
-			sparse
-			trans
-			circle
 			:solid="hasPoll"
 			:disabled="wasPublished && !hasPoll"
 			icon="pedestals-numbers"
-			v-app-tooltip="$gettext(`Add poll`)"
+			v-app-tooltip="$gettext(`Add Poll`)"
 			@click.prevent="onCreatePoll()"
 			/>
-
-		<span class="dot-separator"></span>
 
 		<app-button
 			sparse
@@ -520,7 +538,7 @@
 			:solid="isScheduling"
 			:disabled="wasPublished"
 			icon="calendar-grid"
-			v-app-tooltip="$gettext(`Schedule your post`)"
+			v-app-tooltip="$gettext(`Schedule Post`)"
 			@click.prevent="onAddSchedule()"
 			/>
 
@@ -547,24 +565,11 @@
 			<app-button
 				v-if="!wasPublished && !isScheduling"
 				:disabled="!valid"
-				sparse
 				trans
-				circle
-				icon="ellipsis-v"
-				@click.prevent
-				v-app-popover-trigger="`devlog-post-post-options`"
-				/>
-
-			<app-popover popover-id="devlog-post-post-options">
-				<div class="list-group list-group-dark">
-					<a class="list-group-item has-icon"
-						@click="onDraftSubmit"
-						>
-						<app-jolticon icon="pencil-box" />
-						{{draftButtonText}}
-					</a>
-				</div>
-			</app-popover>
+				@click.prevent="onDraftSubmit()"
+				>
+				<translate>Save Draft</translate>
+			</app-button>
 		</span>
 	</div>
 

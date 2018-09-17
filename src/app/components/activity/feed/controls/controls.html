@@ -2,40 +2,7 @@
 	<div class="activity-feed-controls timeline-list-item-controls">
 
 		<div class="-manage" v-if="shouldShowManageSection">
-			<hr>
-
-			<span class="-manage-controls" v-if="shouldShowManageControls">
-				<app-button
-					v-if="canPublish"
-					primary
-					@click="publishPost"
-					>
-					<translate>Publish</translate>
-				</app-button>
-				<app-button
-					@click="showEdit"
-					>
-					<translate>Edit</translate>
-				</app-button>
-				<app-button
-					sparse
-					icon="ellipsis-v"
-					v-app-popover-trigger="`activity-feed-controls-options-${post.id}`"
-					/>
-
-				<app-popover :popover-id="`activity-feed-controls-options-${post.id}`">
-					<div class="list-group list-group-dark">
-						<a class="list-group-item has-icon"
-							@click="removePost"
-							>
-							<app-jolticon icon="remove" notice />
-							<translate>Remove Post</translate>
-						</a>
-					</div>
-				</app-popover>
-			</span>
-
-			<span class="-manage-stats" v-if="shouldShowStats">
+			<div class="-manage-stats" v-if="shouldShowStats">
 				<translate
 					:translate-n="post.view_count || 0"
 					:translate-params="{ count: number( post.view_count || 0 ) }"
@@ -60,9 +27,40 @@
 					>
 					<app-jolticon icon="help-circle" />
 				</span>
-			</span>
+			</div>
 
-			<hr>
+			<div class="-manage-controls" v-if="shouldShowManageControls">
+				<app-button
+					v-if="canPublish"
+					primary
+					@click="publishPost"
+					>
+					<translate>Publish</translate>
+				</app-button>
+				<app-button
+					@click="showEdit"
+					>
+					<translate>Edit</translate>
+				</app-button>
+				<app-button
+					sparse
+					circle
+					trans
+					icon="ellipsis-v"
+					v-app-popover-trigger="`activity-feed-controls-options-${post.id}`"
+					/>
+
+				<app-popover :popover-id="`activity-feed-controls-options-${post.id}`">
+					<div class="list-group list-group-dark">
+						<a class="list-group-item has-icon"
+							@click="removePost"
+							>
+							<app-jolticon icon="remove" notice />
+							<translate>Remove Post</translate>
+						</a>
+					</div>
+				</app-popover>
+			</div>
 		</div>
 
 		<div class="-controls" v-if="post && post.status === FiresidePost.STATUS_ACTIVE">

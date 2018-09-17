@@ -185,8 +185,6 @@ export class AppActivityFeedEventItem extends Vue {
 	 * this.
 	 */
 	onClick(event: Event) {
-		console.log(event.target);
-
 		const ignoreList = ['a', 'button'];
 
 		if (event.target) {
