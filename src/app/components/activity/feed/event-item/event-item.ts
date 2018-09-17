@@ -2,10 +2,14 @@ import View from '!view!./event-item.html?style=./event-item.styl';
 import { AppUserAvatar } from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { CommentVideoModal } from '../../../../../lib/gj-lib-client/components/comment/video/modal/modal.service';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
-import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import {
+	canUserManagePost,
+	FiresidePost,
+} from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppGameThumbnailImg } from '../../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
@@ -14,9 +18,11 @@ import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components
 import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
+import { Store } from '../../../../store';
+import { AppEventItemControls } from '../../../event-item/controls/controls';
+import { AppEventItemManage } from '../../../event-item/manage/manage';
 import { AppPollVoting } from '../../../poll/voting/voting';
 import { AppActivityFeedCommentVideo } from '../comment-video/comment-video';
-import { AppActivityFeedControls } from '../controls/controls';
 import { AppActivityFeedDevlogPostMedia } from '../devlog-post/media/media';
 import { AppActivityFeedDevlogPostSketchfab } from '../devlog-post/sketchfab/sketchfab';
 import { AppActivityFeedDevlogPostText } from '../devlog-post/text/text';
@@ -39,7 +45,8 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppActivityFeedDevlogPostMedia,
 		AppActivityFeedDevlogPostSketchfab,
 		AppActivityFeedDevlogPostVideo,
-		AppActivityFeedControls,
+		AppEventItemManage,
+		AppEventItemControls,
 		AppPollVoting,
 	},
 	filters: {
@@ -49,12 +56,18 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 export class AppActivityFeedEventItem extends Vue {
 	@Prop(ActivityFeedItem)
 	item!: ActivityFeedItem;
+
 	@Prop(Boolean)
 	isNew?: boolean;
+
 	@Prop(Boolean)
 	isActive?: boolean;
+
 	@Prop(Boolean)
 	isHydrated?: boolean;
+
+	@State
+	app!: Store['app'];
 
 	private resizeSensor?: any;
 
@@ -137,6 +150,10 @@ export class AppActivityFeedEventItem extends Vue {
 		}
 
 		return '';
+	}
+
+	get shouldShowManage() {
+		return this.post && canUserManagePost(this.post, this.app.user);
 	}
 
 	get shouldShowScheduled() {

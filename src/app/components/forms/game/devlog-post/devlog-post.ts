@@ -1,9 +1,6 @@
 import View from '!view!./devlog-post.html?style=./devlog-post.styl';
 import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
-import { AppCardListDraggable } from 'game-jolt-frontend-lib/components/card/list/draggable/draggable';
-import { AppCardListItem } from 'game-jolt-frontend-lib/components/card/list/item/item';
-import { AppCardList } from 'game-jolt-frontend-lib/components/card/list/list';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppFormAutosize } from 'game-jolt-frontend-lib/components/form-vue/autosize.directive';
 import { AppFormControlCheckbox } from 'game-jolt-frontend-lib/components/form-vue/control/checkbox/checkbox';
@@ -39,6 +36,7 @@ import { AppJolticon } from 'game-jolt-frontend-lib/vue/components/jolticon/jolt
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { determine } from 'jstimezonedetect';
 import { Component, Prop } from 'vue-property-decorator';
+import { AppFormGameDevlogPostMedia } from './_media/media';
 
 type FormGameDevlogPostModel = FiresidePost & {
 	keyGroups: KeyGroup[];
@@ -78,9 +76,7 @@ type FormGameDevlogPostModel = FiresidePost & {
 		AppPopover,
 		AppUserAvatarImg,
 		AppProgressBar,
-		AppCardList,
-		AppCardListDraggable,
-		AppCardListItem,
+		AppFormGameDevlogPostMedia,
 	},
 	directives: {
 		AppFocusWhen,
@@ -104,6 +100,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 
 	$refs!: {
 		form: AppForm;
+		upload: AppFormControlUpload;
 	};
 
 	static readonly LEAD_URL_REGEX = /(https?:\/\/([\/\.\?\-\+a-z0-9=#%_&;,~@])+)/gi;
@@ -333,16 +330,23 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.attachmentType = FiresidePost.TYPE_MEDIA;
 	}
 
-	mediaSelected() {
-		// TODO: Upload into the post
+	showSelectMedia() {
+		this.$refs.upload.showFileSelect();
 	}
 
-	applyMediaSort() {
+	mediaSelected() {
+		// TODO: Upload into the post
+		console.log('selected');
+	}
+
+	onMediaSort(mediaItems: MediaItem[]) {
 		// TODO
+		console.log('sorted');
 	}
 
 	removeMediaItem(mediaItem: MediaItem) {
 		// TODO
+		console.log('remove');
 	}
 
 	onEnableVideo() {

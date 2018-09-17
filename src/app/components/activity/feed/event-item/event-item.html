@@ -200,18 +200,20 @@
 			</div>
 		</template>
 
-		<app-activity-feed-controls
+		<div class="-manage" v-if="shouldShowManage">
+			<app-event-item-manage
+				:post="post"
+				:show-edit-controls="feed.showEditControls"
+				@edit="feed.onPostEdited( post )"
+				@publish="feed.onPostPublished( post )"
+				@remove="feed.onPostRemoved( post )"
+				/>
+		</div>
+
+		<app-event-item-controls
 			:post="post"
 			:video="video"
-			:game="game"
-			show-comment-add-button
-			:show-game-info="feed.showGameInfo"
-			:show-edit-controls="feed.showEditControls"
-			:show-extra-info="!Screen.isXs"
-			@expanded="onExpand"
-			@edited="feed.onPostEdited( post )"
-			@published="feed.onPostPublished( post )"
-			@removed="feed.onPostRemoved( post )"
+			@expand="onExpand()"
 			/>
 
 	</div>

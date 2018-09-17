@@ -1,0 +1,32 @@
+<app-scroll-scroller
+	overlay
+	horizontal
+	>
+	<div class="-items">
+		<a class="-add" @click="emitAdd()">
+			<div class="-add-inner">
+				<div>
+					<app-jolticon icon="add" big />
+					<br>
+					<b>
+						<translate>Images/GIFs</translate>
+					</b>
+				</div>
+			</div>
+		</a>
+
+		<draggable
+			style="display: inline-block"
+			v-model="internalMediaItems"
+			@change="emitSort(internalMediaItems)"
+			>
+			<app-form-game-devlog-post-media-item
+				class="-item"
+				v-for="item of internalMediaItems"
+				:key="item.id"
+				:item="item"
+				@remove="emitRemove(item)"
+				/>
+		</draggable>
+	</div>
+</app-scroll-scroller>

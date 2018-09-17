@@ -1,0 +1,28 @@
+@require './variables'
+@require '~styles-lib/mixins'
+
+.-items
+	white-space: nowrap
+	// Only put padding once so that it only pads the bottom.
+	height: $-padding + $-height
+
+.-add
+	rounded-corners()
+	theme-prop('border-color', 'bg-subtle')
+	display: inline-block
+	vertical-align: top
+	text-align: center
+	border-width: 2px
+	border-style: dashed
+	margin-right: $-padding
+
+	&:hover
+		theme-prop('border-color', 'link')
+		theme-prop('color', 'link')
+
+.-add-inner
+	display: flex
+	align-items: center
+	justify-content: center
+	width: $-height
+	height: $-height

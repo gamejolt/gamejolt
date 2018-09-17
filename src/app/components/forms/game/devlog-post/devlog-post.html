@@ -67,6 +67,8 @@
 				</p>
 
 				<app-form-control-upload
+					class="-upload-input"
+					ref="upload"
 					:rules="{
 						filesize: maxFilesize,
 						max_img_dimensions: [ maxWidth, maxHeight ],
@@ -79,30 +81,12 @@
 				<app-form-control-errors />
 			</app-form-group>
 
-			<app-card-list :items="formModel.media">
-				<app-card-list-draggable @change="applyMediaSort">
-					<app-card-list-item
-						v-for="mediaItem of formModel.media"
-						:key="mediaItem.id"
-						:id="`media-item-${ mediaItem.id }`"
-						:item="mediaItem"
-						>
-
-						<a
-							class="card-remove"
-							@click.stop="removeMediaItem(mediaItem)"
-							>
-							<app-jolticon icon="remove" />
-						</a>
-
-						<div
-							class="-media-thumb"
-							:style="{ 'background-image': `url('${mediaItem.img_url}')` }"
-							/>
-
-					</app-card-list-item>
-				</app-card-list-draggable>
-			</app-card-list>
+			<app-form-game-devlog-post-media
+				:media-items="formModel.media"
+				@add="showSelectMedia()"
+				@remove="removeMediaItem($event)"
+				@sort="onMediaSort()"
+				/>
 		</fieldset>
 
 		<!-- Video -->
