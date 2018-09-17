@@ -9,6 +9,7 @@ import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.serv
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
 import { AppDevlogPostAdd } from '../../../../../components/devlog/post/add/add';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
+import { EventItem } from '../../../../../../lib/gj-lib-client/components/event-item/event-item.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -24,9 +25,11 @@ import {
 	},
 })
 export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
-	@Prop(String) tab!: 'draft' | 'scheduled' | undefined;
+	@Prop(String)
+	tab!: 'draft' | 'scheduled' | undefined;
 
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	feed: ActivityFeedContainer = null as any;
 
@@ -50,7 +53,7 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 
 	routed($payload: any) {
 		// Create a new activity feed container each time. Don't cache anything.
-		this.feed = new ActivityFeedContainer(FiresidePost.populate($payload.posts), {
+		this.feed = new ActivityFeedContainer(EventItem.populate($payload.items), {
 			type: 'EventItem',
 			url: `/web/dash/developer/games/devlog/posts/${this.game.id}/${this._tab}`,
 		});

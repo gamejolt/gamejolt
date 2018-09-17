@@ -3,7 +3,7 @@ import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/
 import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/event-item.model';
 import { CommentVideo } from '../../../../lib/gj-lib-client/components/comment/video/video-model';
 
-export type ActivityFeedInput = Notification | FiresidePost | EventItem;
+export type ActivityFeedInput = Notification | EventItem;
 
 export class ActivityFeedItem {
 	id: string;
@@ -17,22 +17,7 @@ export class ActivityFeedItem {
 		this.feedItem = sourceItem;
 
 		let dateVal = 0;
-		if (this.feedItem instanceof FiresidePost) {
-			this.type = 'event-item';
-			dateVal = this.feedItem.updated_on || this.feedItem.added_on;
-
-			// We have to spoof this as an event item.
-			const post = this.feedItem;
-			this.feedItem = new EventItem({
-				type: EventItem.TYPE_POST_ADD,
-				added_on: dateVal,
-				scroll_id: post.scroll_id,
-				action_resource_model: post,
-				from_resource_model: post.user,
-				// Game posts will have a game, user posts just post to their user.
-				to_resource_model: post.game || post.user,
-			});
-		} else if (this.feedItem instanceof Notification) {
+		if (this.feedItem instanceof Notification) {
 			this.type = 'notification';
 			dateVal = this.feedItem.added_on;
 		} else if (this.feedItem instanceof EventItem) {
