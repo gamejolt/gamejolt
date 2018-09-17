@@ -4,15 +4,15 @@
 	</div>
 
 	<div class="-controls">
-		<app-button trans icon="blog-article">
+		<app-button trans icon="blog-article" @click="open()">
 			<translate>Write an article</translate>
 		</app-button>
 
-		<app-button trans icon="screenshot">
+		<app-button trans icon="screenshot" @click="open(FiresidePost.TYPE_MEDIA)">
 			<translate>Images/GIFs</translate>
 		</app-button>
 
-		<app-button trans icon="video">
+		<app-button trans icon="video" @click="open(FiresidePost.TYPE_VIDEO)">
 			<translate>Video</translate>
 		</app-button>
 	</div>

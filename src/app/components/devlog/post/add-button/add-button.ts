@@ -12,14 +12,16 @@ export class AppDevlogPostAddButton extends Vue {
 	@Prop(Game)
 	game!: Game;
 
-	async open() {
+	readonly FiresidePost = FiresidePost;
+
+	async open(attachmentType?: string) {
 		const response = await Api.sendRequest(
 			`/web/dash/developer/games/devlog/new-post/${this.game.id}`
 		);
 
 		let post: FiresidePost | undefined = new FiresidePost(response.post);
 
-		post = await DevlogPostEditModal.show(post);
+		post = await DevlogPostEditModal.show(post, { attachmentType: attachmentType || '' });
 		if (!post) {
 			return;
 		}

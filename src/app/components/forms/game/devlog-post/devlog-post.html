@@ -264,7 +264,7 @@
 		<fieldset>
 			<app-form-legend
 				compact
-				deletable
+				:deletable="isPollEditable"
 				@delete="onRemovePoll()"
 				>
 				<translate>Set up poll</translate>
@@ -413,7 +413,7 @@
 	</div>
 
 	<!-- Scheduling -->
-	<div class="well fill-offset full-bleed" v-if="isScheduling && timezones">
+	<div class="well fill-offset full-bleed" v-if="!wasPublished && isScheduling && timezones">
 		<fieldset>
 			<app-form-legend
 				compact
@@ -469,7 +469,7 @@
 	</div>
 
 	<!-- Access permissions -->
-	<div class="well fill-offset full-bleed" v-if="!wasPublished && accessPermissionsEnabled">
+	<div class="well fill-offset full-bleed" v-if="accessPermissionsEnabled">
 		<fieldset>
 			<app-form-legend
 				compact
@@ -546,34 +546,32 @@
 	</app-form-group>
 
 	<!-- Controls -->
-	<div>
+	<div class="clearfix">
 		<app-button
+			v-if="!hasPoll"
 			sparse
 			trans
 			circle
-			:solid="hasPoll"
-			:disabled="wasPublished && !hasPoll"
 			icon="pedestals-numbers"
 			v-app-tooltip="$gettext(`Add Poll`)"
 			@click.prevent="onCreatePoll()"
 			/>
 
 		<app-button
+			v-if="!wasPublished && !isScheduling"
 			sparse
 			trans
 			circle
-			:solid="isScheduling"
-			:disabled="wasPublished"
 			icon="calendar-grid"
 			v-app-tooltip="$gettext(`Schedule Post`)"
 			@click.prevent="onAddSchedule()"
 			/>
 
 		<app-button
+			v-if="!accessPermissionsEnabled"
 			sparse
 			trans
 			circle
-			:solid="accessPermissionsEnabled"
 			:disabled="wasPublished && !model.key_groups.length"
 			icon="key-diagonal"
 			v-app-tooltip="$gettext(`Access Permissions`)"

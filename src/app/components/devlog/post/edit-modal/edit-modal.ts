@@ -16,8 +16,12 @@ import { FormGameDevlogPost } from '../../../forms/game/devlog-post/devlog-post'
 export default class AppDevlogPostEditModal extends BaseModal {
 	@Prop(FiresidePost)
 	post!: FiresidePost;
+
 	@Prop(String)
 	editMode!: string;
+
+	@Prop(String)
+	attachmentType!: string;
 
 	get headerText() {
 		if (this.editMode === 'edit') {

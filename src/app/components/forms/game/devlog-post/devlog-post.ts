@@ -99,6 +99,9 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	@Prop(FiresidePost)
 	post!: FiresidePost;
 
+	@Prop({ type: String, default: '' })
+	attachmentType!: string;
+
 	$refs!: {
 		form: AppForm;
 	};
@@ -114,7 +117,6 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	keyGroups: KeyGroup[] = [];
 	wasPublished = false;
 	enabledAttachments = false;
-	attachmentType = '';
 	longEnabled = false;
 	maxFilesize = 0;
 	maxWidth = 0;
@@ -207,7 +209,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	get isPollEditable() {
 		const poll = this.model!.poll;
 		if (poll) {
-			return poll.end_time === 0;
+			return !poll.end_time;
 		}
 		return true;
 	}
@@ -282,6 +284,8 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 			this.onEnableSketchfab();
 		} else if (model.hasMedia) {
 			this.onEnableImages();
+		} else if (this.attachmentType !== '') {
+			this.enabledAttachments = true;
 		}
 
 		if (model.poll) {
@@ -304,7 +308,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 			}
 		}
 
-		if (model.published_on && model.key_groups.length) {
+		if (model.key_groups.length) {
 			this.accessPermissionsEnabled = true;
 		}
 
@@ -473,6 +477,9 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		// in case they have a sketchfab url set, replace it with the model id
 		if (this.formModel.sketchfab_id) {
 			this.setField('sketchfab_id', this.sketchfabId);
+		}
+		if (!this.longEnabled) {
+			this.setField('content_markdown', '');
 		}
 		this.setField('poll_duration', this.pollDuration * 60); // site-api expects duration in seconds.
 		return this.formModel.$save();

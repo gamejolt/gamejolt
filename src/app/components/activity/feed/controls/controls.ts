@@ -183,7 +183,7 @@ export class AppActivityFeedControls extends Vue {
 
 	async showEdit() {
 		if (this.post) {
-			if (await DevlogPostEditModal.show(this.post, 'edit')) {
+			if (await DevlogPostEditModal.show(this.post, { editMode: 'edit' })) {
 				this.$emit('edited');
 			}
 		}

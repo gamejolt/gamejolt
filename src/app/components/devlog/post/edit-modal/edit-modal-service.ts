@@ -4,8 +4,14 @@ import { Modal } from '../../../../../lib/gj-lib-client/components/modal/modal.s
 
 type DevlogPostEditModalType = 'add' | 'edit';
 
+export type DevlogPostEditModalOptions = {
+	editMode?: DevlogPostEditModalType;
+	attachmentType?: string;
+};
+
 export class DevlogPostEditModal {
-	static async show(post: FiresidePost, editMode: DevlogPostEditModalType = 'add') {
+	static async show(post: FiresidePost, options: DevlogPostEditModalOptions) {
+		options = options || {};
 		return await Modal.show<FiresidePost>({
 			component: () =>
 				asyncComponentLoader(
@@ -14,7 +20,11 @@ export class DevlogPostEditModal {
 			noBackdropClose: true,
 			noEscClose: true,
 			size: 'sm',
-			props: { post, editMode },
+			props: {
+				post: post,
+				editMode: options.editMode || 'add',
+				attachmentType: options.attachmentType || '',
+			},
 		});
 	}
 }
