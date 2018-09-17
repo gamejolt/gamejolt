@@ -84,17 +84,24 @@
 						/>
 				</div>
 
-				<app-poll-voting
-					v-if="post.hasPoll"
-					:poll="post.poll"
-					:game="post.game"
-					/>
+				<template v-if="post.hasPoll">
+					<app-poll-voting
+						:poll="post.poll"
+						:game="post.game"
+						/>
 
-				<app-activity-feed-controls
+					<br>
+				</template>
+
+				<div class="well fill-offset" v-if="shouldShowManage">
+					<app-event-item-manage
+						:post="post"
+						/>
+				</div>
+
+				<app-event-item-controls
 					show-comments
 					:post="post"
-					:show-game-info="showGameInfo"
-					:in-modal="inModal"
 					/>
 			</div>
 			<div class="col-md-4 col-lg-5" v-if="Screen.isDesktop">
