@@ -1,6 +1,6 @@
-import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { asyncComponentLoader } from '../../../../../lib/gj-lib-client/utils/utils';
-import { Modal } from '../../../../../lib/gj-lib-client/components/modal/modal.service';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
+import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
 
 type DevlogPostEditModalType = 'add' | 'edit';
 
