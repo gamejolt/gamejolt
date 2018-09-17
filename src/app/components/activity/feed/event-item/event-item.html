@@ -176,8 +176,25 @@
 				@content-bootstrapped="onContentBootstrapped"
 				/>
 
-			<div class="-lead" v-html="post.lead_compiled">
-			</div>
+			<!--
+				This shouldn't ever really show a collapser. It's for the jokers that think it would
+				be fun to make a post with a bunch of new lines.
+			-->
+			<app-fade-collapse
+				:collapse-height="600"
+				:is-open="item.isLeadOpen"
+				:animate="false"
+				@require-change="canToggleLeadChanged"
+				>
+				<div class="-lead" v-html="post.lead_compiled" />
+			</app-fade-collapse>
+
+			<a
+				class="hidden-text-expander"
+				v-if="canToggleLead"
+				@click="toggleLead()"
+				>
+			</a>
 
 			<app-activity-feed-devlog-post-text
 				v-if="post.hasArticle"

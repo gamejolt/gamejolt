@@ -1,4 +1,5 @@
 import View from '!view!./event-item.html?style=./event-item.styl';
+import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { AppUserAvatar } from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
@@ -48,6 +49,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppEventItemManage,
 		AppEventItemControls,
 		AppPollVoting,
+		AppFadeCollapse,
 	},
 	filters: {
 		number,
@@ -72,6 +74,8 @@ export class AppActivityFeedEventItem extends Vue {
 	private resizeSensor?: any;
 
 	feed!: AppActivityFeed;
+	canToggleLead = false;
+
 	readonly Screen = Screen;
 	readonly EventItem = EventItem;
 
@@ -213,5 +217,14 @@ export class AppActivityFeedEventItem extends Vue {
 		}
 
 		this.$router.push(this.link);
+	}
+
+	toggleLead() {
+		this.item.isLeadOpen = !this.item.isLeadOpen;
+		this.$emit('expanded');
+	}
+
+	canToggleLeadChanged(canToggle: boolean) {
+		this.canToggleLead = canToggle;
 	}
 }
