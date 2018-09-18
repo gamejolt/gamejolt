@@ -271,7 +271,13 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
 
-		this.attachmentType = this.defaultAttachmentType;
+		// Set up the default attachment if one was passed in.
+		if (this.defaultAttachmentType === 'article') {
+			this.longEnabled = true;
+		} else {
+			this.attachmentType = this.defaultAttachmentType;
+		}
+
 		if (model.videos.length) {
 			this.setField(
 				'video_url',

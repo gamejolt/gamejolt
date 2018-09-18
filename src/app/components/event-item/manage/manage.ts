@@ -46,7 +46,7 @@ export class AppEventItemManage extends Vue {
 	}
 
 	async openEdit() {
-		if (await DevlogPostEditModal.show(this.post, { editMode: 'edit' })) {
+		if (await DevlogPostEditModal.show(this.post)) {
 			this.emitEdit();
 		}
 	}
