@@ -40,7 +40,7 @@ import { AppFormGameDevlogPostMedia } from './_media/media';
 
 type FormGameDevlogPostModel = FiresidePost & {
 	mediaItemIds: number[];
-	keyGroups: KeyGroup[];
+	key_group_ids: KeyGroup[];
 	video_url: string;
 	sketchfab_id: string;
 
@@ -339,7 +339,6 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 
 	onMediaSort(mediaItems: MediaItem[]) {
 		this.setField('media', mediaItems);
-		console.log('sort');
 	}
 
 	removeMediaItem(mediaItem: MediaItem) {
@@ -359,15 +358,6 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 
 	onDisableAttachments() {
 		this.enabledAttachments = false;
-		// clean current values
-		switch (this.attachmentType) {
-			case FiresidePost.TYPE_SKETCHFAB:
-				this.setField('sketchfab_id', '');
-				break;
-			case FiresidePost.TYPE_VIDEO:
-				this.setField('video_url', '');
-				break;
-		}
 		this.attachmentType = '';
 	}
 
@@ -476,16 +466,32 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		if (this.isScheduling) {
 			this.setField('status', FiresidePost.STATUS_DRAFT);
 		}
-		// in case they have a sketchfab url set, replace it with the model id
-		if (this.formModel.sketchfab_id) {
-			this.setField('sketchfab_id', this.sketchfabId);
+
+		// Set or clear attachments as needed
+		if (this.attachmentType === FiresidePost.TYPE_MEDIA && this.formModel.media) {
+			this.setField('mediaItemIds', this.formModel.media.map(item => item.id));
+		} else {
+			this.setField('mediaItemIds', []);
 		}
+
+		if (this.attachmentType !== FiresidePost.TYPE_VIDEO || !this.formModel.video_url) {
+			this.setField('video_url', '');
+		}
+
+		if (this.attachmentType === FiresidePost.TYPE_SKETCHFAB && this.formModel.sketchfab_id) {
+			this.setField('sketchfab_id', this.sketchfabId);
+		} else {
+			this.setField('sketchfab_id', '');
+		}
+
+		if (!this.accessPermissionsEnabled) {
+			this.setField('key_group_ids', []);
+		}
+
 		if (!this.longEnabled) {
 			this.setField('content_markdown', '');
 		}
-		if (this.formModel.media) {
-			this.setField('mediaItemIds', this.formModel.media.map(item => item.id));
-		}
+
 		this.setField('poll_duration', this.pollDuration * 60); // site-api expects duration in seconds.
 		return this.formModel.$save();
 	}

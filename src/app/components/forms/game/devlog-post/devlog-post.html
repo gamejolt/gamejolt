@@ -10,7 +10,6 @@
 				trans
 				:primary="enabledImages"
 				:solid="enabledImages"
-				:disabled="(wasPublished || enabledAttachments) && !enabledImages"
 				icon="screenshot"
 				@click.prevent="onEnableImages()"
 				>
@@ -21,7 +20,6 @@
 				trans
 				:primary="enabledVideo"
 				:solid="enabledVideo"
-				:disabled="(wasPublished || enabledAttachments) && !enabledVideo"
 				icon="video"
 				@click.prevent="onEnableVideo()"
 				>
@@ -32,7 +30,6 @@
 				trans
 				:primary="enabledSketchfab"
 				:solid="enabledSketchfab"
-				:disabled="(wasPublished || enabledAttachments) && !enabledSketchfab"
 				icon="sketchfab"
 				@click.prevent="onEnableSketchfab()"
 				>
@@ -49,7 +46,7 @@
 		<fieldset v-if="enabledImages">
 			<app-form-legend
 				compact
-				:deletable="!wasPublished"
+				deletable
 				@delete="onDisableAttachments()"
 				>
 				<translate>Select images</translate>
@@ -71,7 +68,7 @@
 		<fieldset v-else-if="enabledVideo">
 			<app-form-legend
 				compact
-				:deletable="!wasPublished"
+				deletable
 				@delete="onDisableAttachments()"
 				>
 				<translate>YouTube video URL</translate>
@@ -83,14 +80,13 @@
 				:label="$gettext(`YouTube Video URL`)"
 				v-app-focus-when="!wasPublished"
 				>
-				<p class="help-block" v-if="!wasPublished">
+				<p class="help-block">
 					<translate>Enter the URL of your YouTube video. For example:</translate>
 					<code>https://www.youtube.com/watch?v=dQw4w9WgXcQ</code>
 				</p>
 
 				<app-form-control
 					type="text"
-					:disabled="wasPublished"
 					:rules="{
 						pattern: YOUTUBE_URL_REGEX,
 					}"
@@ -112,7 +108,7 @@
 		<fieldset v-else-if="enabledSketchfab">
 			<app-form-legend
 				compact
-				:deletable="!wasPublished"
+				deletable
 				@delete="onDisableAttachments()"
 				>
 				<translate>Embed Sketchfab model</translate>
@@ -124,13 +120,12 @@
 				:label="$gettext( `Sketchfab Model ID` )"
 				v-app-focus-when="!wasPublished"
 				>
-				<p class="help-block" v-if="!wasPublished">
+				<p class="help-block">
 					<translate>Enter the ID in your Sketchfab model's URL. For example:</translate>
 					<code>https://sketchfab.com/models/<strong>ID</strong></code>
 				</p>
 
 				<app-form-control type="text"
-					:disabled="wasPublished"
 					:rules="{
 						pattern: SKETCHFAB_FIELD_REGEX,
 					}" />
@@ -432,58 +427,60 @@
 	</div>
 
 	<!-- Access permissions -->
-	<div class="well fill-offset full-bleed" v-if="accessPermissionsEnabled">
-		<fieldset>
-			<app-form-legend
-				compact
-				deletable
-				@delete="onDisableAccessPermissions()"
-				>
-				<translate>Access permissions</translate>
-			</app-form-legend>
-
-			<app-form-group
-				name="key_group_ids"
-				:label="$gettext(`Access Permissions`)"
-				hide-label
-				>
-				<div
-					class="alert"
-					v-if="!keyGroups.length"
+	<template v-if="accessPermissionsEnabled">
+		<div class="well fill-offset full-bleed" v-if="!wasPublished">
+			<fieldset>
+				<app-form-legend
+					compact
+					deletable
+					@delete="onDisableAccessPermissions()"
 					>
-					<translate>You can make this post available to only the users within a key group. For example, this is useful for sending news updates to testers. You can create a user key group through the "Keys/Access" page.</translate>
-				</div>
-				<div v-else>
-					<p class="help-block">
-						<translate>You can make this post available to only the users within a key group. For example, this is useful for sending news updates to testers. Only User-type key groups can be selected.</translate>
-					</p>
+					<translate>Access permissions</translate>
+				</app-form-legend>
 
-					<div class="checkbox" v-for="keyGroup of keyGroups" :key="keyGroup.id">
-						<label>
-							<app-form-control-checkbox :value="keyGroup.id" />
-							{{ keyGroup.name }}
-						</label>
+				<app-form-group
+					name="key_group_ids"
+					:label="$gettext(`Access Permissions`)"
+					hide-label
+					>
+					<div
+						class="alert"
+						v-if="!keyGroups.length"
+						>
+						<translate>You can make this post available to only the users within a key group. For example, this is useful for sending news updates to testers. You can create a user key group through the "Keys/Access" page.</translate>
 					</div>
-				</div>
-			</app-form-group>
-		</fieldset>
-	</div>
-	<div
-		class="form-group well fill-offset full-bleed"
-		v-else-if="wasPublished && model.key_groups.length"
-		>
-		<label class="control-label">
-			<translate>Access Permissions</translate>
-		</label>
-		<div class="alert">
-			<translate>The below key groups have access to this post. You can't edit who has access after posting since notifications have already gone out.</translate>
+					<div v-else>
+						<p class="help-block">
+							<translate>You can make this post available to only the users within a key group. For example, this is useful for sending news updates to testers. Only User-type key groups can be selected.</translate>
+						</p>
+
+						<div class="checkbox" v-for="keyGroup of keyGroups" :key="keyGroup.id">
+							<label>
+								<app-form-control-checkbox :value="keyGroup.id" />
+								{{ keyGroup.name }}
+							</label>
+						</div>
+					</div>
+				</app-form-group>
+			</fieldset>
 		</div>
-		<div>
-			<span class="tag" v-for="keyGroup of model.key_groups" :key="keyGroup.id">
-				{{ keyGroup.name }}
-			</span>
+		<div
+			class="form-group well fill-offset full-bleed"
+			v-else
+			>
+			<label class="control-label">
+				<translate>Access Permissions</translate>
+			</label>
+			<div class="alert">
+				<translate>The below key groups have access to this post. You can't edit who has access after posting since notifications have already gone out.</translate>
+			</div>
+			<div>
+				<span class="tag" v-for="keyGroup of model.key_groups" :key="keyGroup.id">
+					{{ keyGroup.name }}
+				</span>
+			</div>
 		</div>
-	</div>
+	</template>
 
 	<!-- Post as game owner -->
 	<app-form-group
@@ -531,11 +528,10 @@
 			/>
 
 		<app-button
-			v-if="!accessPermissionsEnabled"
+			v-if="!accessPermissionsEnabled && !wasPublished"
 			sparse
 			trans
 			circle
-			:disabled="wasPublished && !model.key_groups.length"
 			icon="key-diagonal"
 			v-app-tooltip="$gettext(`Access Permissions`)"
 			@click.prevent="onEnableAccessPermissions()"
