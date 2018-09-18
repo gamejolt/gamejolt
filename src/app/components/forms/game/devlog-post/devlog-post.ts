@@ -35,7 +35,7 @@ import { AppVideoEmbed } from 'game-jolt-frontend-lib/components/video/embed/emb
 import { AppJolticon } from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon';
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { determine } from 'jstimezonedetect';
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
 import { AppFormGameDevlogPostMedia } from './_media/media';
 
 type FormGameDevlogPostModel = FiresidePost & {
@@ -100,7 +100,6 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 
 	$refs!: {
 		form: AppForm;
-		upload: AppFormControlUpload;
 	};
 
 	static readonly LEAD_URL_REGEX = /(https?:\/\/([\/\.\?\-\+a-z0-9=#%_&;,~@])+)/gi;
