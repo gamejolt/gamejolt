@@ -283,12 +283,12 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 				'video_url',
 				'https://www.youtube.com/watch?v=' + model.videos[0].video_id
 			);
-			this.onEnableVideo();
+			this.enableVideo();
 		} else if (model.sketchfabs.length) {
 			this.setField('sketchfab_id', model.sketchfabs[0].sketchfab_id);
-			this.onEnableSketchfab();
+			this.enableSketchfab();
 		} else if (model.hasMedia) {
-			this.onEnableImages();
+			this.enableImages();
 		} else if (this.attachmentType !== '') {
 			this.enabledAttachments = true;
 		}
@@ -333,7 +333,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.leadTotalLengthLimit = payload.leadTotalLengthLimit;
 	}
 
-	onEnableImages() {
+	enableImages() {
 		this.enabledAttachments = true;
 		this.attachmentType = FiresidePost.TYPE_MEDIA;
 	}
@@ -352,26 +352,30 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.setField('media', newMedia);
 	}
 
-	onEnableVideo() {
+	enableVideo() {
 		this.enabledAttachments = true;
 		this.attachmentType = FiresidePost.TYPE_VIDEO;
 	}
 
-	onEnableSketchfab() {
+	enableSketchfab() {
 		this.enabledAttachments = true;
 		this.attachmentType = FiresidePost.TYPE_SKETCHFAB;
 	}
 
-	onDisableAttachments() {
+	disableAttachments() {
 		this.enabledAttachments = false;
 		this.attachmentType = '';
+
+		this.setField('video_url', '');
+		this.setField('sketchfab_id', '');
+		this.setField('media', []);
 	}
 
 	toggleLong() {
 		this.longEnabled = !this.longEnabled;
 	}
 
-	onCreatePoll() {
+	createPoll() {
 		// Initialize default poll
 		this.setField('poll_days', 1);
 		this.setField('poll_hours', 0);
@@ -384,12 +388,12 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.changed = true;
 	}
 
-	onRemovePoll() {
+	removePoll() {
 		this.setField('poll_item_count', 0);
 		this.changed = true;
 	}
 
-	onRemovePollItem(idx: number) {
+	removePollItem(idx: number) {
 		if (this.formModel.poll_item_count <= 2) {
 			return;
 		}
@@ -402,7 +406,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.changed = true;
 	}
 
-	onAddPollItem() {
+	addPollItem() {
 		if (this.formModel.poll_item_count >= this.MAX_POLL_ITEMS) {
 			return;
 		}
@@ -412,15 +416,15 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.changed = true;
 	}
 
-	onEnableAccessPermissions() {
+	enableAccessPermissions() {
 		this.accessPermissionsEnabled = true;
 	}
 
-	onDisableAccessPermissions() {
+	disableAccessPermissions() {
 		this.accessPermissionsEnabled = false;
 	}
 
-	onAddSchedule() {
+	addSchedule() {
 		if (this.formModel.scheduled_for === null) {
 			this.setField('scheduled_for', startOfDay(addWeeks(Date.now(), 1)).getTime());
 		}
@@ -430,7 +434,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.changed = true;
 	}
 
-	onRemoveSchedule() {
+	removeSchedule() {
 		this.setField('scheduled_for_timezone', null);
 		this.setField('scheduled_for', null);
 		this.changed = true;

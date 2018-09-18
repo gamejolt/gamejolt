@@ -1,7 +1,7 @@
 <app-form name="devlogPostForm" ref="form">
 
-	<!-- Attachment Controls -->
-	<div class="-attachment-controls">
+	<!-- Attachments -->
+	<div class="-attachment-controls" v-if="!enabledAttachments">
 		<div class="-attachment-controls-label">
 			<translate>Add:</translate>
 		</div>
@@ -11,7 +11,7 @@
 				:primary="enabledImages"
 				:solid="enabledImages"
 				icon="screenshot"
-				@click.prevent="onEnableImages()"
+				@click.prevent="enableImages()"
 				>
 				<translate>Images/GIFs</translate>
 			</app-button>
@@ -21,7 +21,7 @@
 				:primary="enabledVideo"
 				:solid="enabledVideo"
 				icon="video"
-				@click.prevent="onEnableVideo()"
+				@click.prevent="enableVideo()"
 				>
 				<translate>Video</translate>
 			</app-button>
@@ -31,23 +31,20 @@
 				:primary="enabledSketchfab"
 				:solid="enabledSketchfab"
 				icon="sketchfab"
-				@click.prevent="onEnableSketchfab()"
+				@click.prevent="enableSketchfab()"
 				>
 				Sketchfab
 			</app-button>
 		</div>
 	</div>
-	<br>
-
-	<!-- Attachments -->
-	<div class="well fill-offset full-bleed" v-if="enabledAttachments">
+	<div class="well fill-offset full-bleed" v-else>
 
 		<!-- Images -->
 		<fieldset v-if="enabledImages">
 			<app-form-legend
 				compact
 				deletable
-				@delete="onDisableAttachments()"
+				@delete="disableAttachments()"
 				>
 				<translate>Select images</translate>
 			</app-form-legend>
@@ -69,7 +66,7 @@
 			<app-form-legend
 				compact
 				deletable
-				@delete="onDisableAttachments()"
+				@delete="disableAttachments()"
 				>
 				<translate>YouTube video URL</translate>
 			</app-form-legend>
@@ -109,7 +106,7 @@
 			<app-form-legend
 				compact
 				deletable
-				@delete="onDisableAttachments()"
+				@delete="disableAttachments()"
 				>
 				<translate>Embed Sketchfab model</translate>
 			</app-form-legend>
@@ -223,7 +220,7 @@
 			<app-form-legend
 				compact
 				:deletable="isPollEditable"
-				@delete="onRemovePoll()"
+				@delete="removePoll()"
 				>
 				<translate>Set up poll</translate>
 			</app-form-legend>
@@ -254,7 +251,7 @@
 				<a
 					class="-poll-option-remove link-muted"
 					v-if="formModel.poll_item_count > 2 && isPollEditable"
-					@click="onRemovePollItem(i)"
+					@click="removePollItem(i)"
 					>
 					<app-jolticon icon="remove" />
 				</a>
@@ -263,7 +260,7 @@
 			<div>
 				<a
 					v-if="isPollEditable && formModel.poll_item_count < MAX_POLL_ITEMS"
-					@click="onAddPollItem()"
+					@click="addPollItem()"
 					>
 					+ <translate>Add choice</translate>
 				</a>
@@ -376,7 +373,7 @@
 			<app-form-legend
 				compact
 				deletable
-				@delete="onRemoveSchedule()"
+				@delete="removeSchedule()"
 				>
 				<translate>Schedule publishing of post</translate>
 			</app-form-legend>
@@ -433,7 +430,7 @@
 				<app-form-legend
 					compact
 					deletable
-					@delete="onDisableAccessPermissions()"
+					@delete="disableAccessPermissions()"
 					>
 					<translate>Access permissions</translate>
 				</app-form-legend>
@@ -514,7 +511,7 @@
 			circle
 			icon="pedestals-numbers"
 			v-app-tooltip="$gettext(`Add Poll`)"
-			@click.prevent="onCreatePoll()"
+			@click.prevent="createPoll()"
 			/>
 
 		<app-button
@@ -524,7 +521,7 @@
 			circle
 			icon="calendar-grid"
 			v-app-tooltip="$gettext(`Schedule Post`)"
-			@click.prevent="onAddSchedule()"
+			@click.prevent="addSchedule()"
 			/>
 
 		<app-button
@@ -534,7 +531,7 @@
 			circle
 			icon="key-diagonal"
 			v-app-tooltip="$gettext(`Access Permissions`)"
-			@click.prevent="onEnableAccessPermissions()"
+			@click.prevent="enableAccessPermissions()"
 			/>
 
 		<span class="pull-right">
