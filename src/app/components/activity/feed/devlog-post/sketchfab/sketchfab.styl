@@ -3,10 +3,13 @@
 
 .devlog-post-sketchfab
 	&-embed
-		margin-top: $-item-padding
+		margin-top: $-item-padding-xs
 		rounded-corners()
 		theme-prop('background-color', 'bg-offset')
 		position: relative
+
+		@media $media-sm-up
+			margin-top: $-item-padding
 
 		a
 			display: block

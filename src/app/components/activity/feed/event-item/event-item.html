@@ -9,63 +9,6 @@
 		@click="onClick"
 		>
 
-<!-- <app-timeline-list-item
-	:is-thread="isThreadView"
-	:is-new="isNew"
-	:is-active="isActive"
-	> -->
-
-	<!-- <div class="-main"> -->
-
-		<!-- <div @click.capture="onClick">
-			<router-link :to="link" class="timeline-list-item-title">
-				<strong>
-					<template v-if="eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD">
-						{{ post.title }}
-					</template>
-					<template v-else-if="eventItem.type === EventItem.TYPE_GAME_PUBLISH">
-						{{ game.title }}
-					</template>
-					<template v-else-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD">
-						{{ eventItem.action.title }}
-					</template>
-				</strong>
-			</router-link>
-		</div> -->
-
-		<!-- <div class="timeline-list-item-meta">
-			<template v-if="shouldShowScheduled">
-				<span class="tag" style="vertical-align: middle">
-					<app-jolticon icon="calendar-grid" />
-					<translate>Scheduled</translate>
-				</span>
-
-				<app-time-ago
-					:date="post.scheduled_for"
-					without-suffix
-					/>
-			</template>
-			<template v-else>
-				<app-time-ago
-					:date="eventItem.added_on"
-					/>
-			</template>
-
-			<template v-if="post && post.type === 'media'">
-				<span class="dot-separator"></span>
-				<app-jolticon icon="screenshot" class="middle" />
-				{{ post.media.length | number }}
-			</template>
-
-			<template v-if="game && feed.showGameInfo">
-				<span class="dot-separator"></span>
-				<router-link :to="gameUrl" class="link-unstyled">
-					{{ game.title }}
-				</router-link>
-			</template>
-		</div> -->
-
-		<!-- <div class="timeline-list-item-details"> -->
 		<div class="-byline">
 			<app-user-avatar
 				class="-avatar"
@@ -86,8 +29,8 @@
 							{{ user.display_name }}
 						</router-link>
 
-						<span class="-byline-to text-muted" v-if="game && feed.showGameInfo">
-							<app-jolticon icon="chevron-right" class="middle" />
+						<span class="-byline-to text-muted small" v-if="game && feed.showGameInfo">
+							<app-jolticon icon="game" class="middle" />
 							<router-link :to="gameUrl" class="link-unstyled">
 								{{ game.title }}
 							</router-link>
@@ -96,28 +39,11 @@
 
 					<div class="-byline-spacer" />
 
-					<div class="small text-muted">
-						<!-- <template v-if="post && post.type === 'media'">
-							<app-jolticon icon="screenshot" class="middle" />
-							{{ post.media.length | number }}
-							<span class="dot-separator" />
-						</template> -->
-
-						<template v-if="shouldShowScheduled">
-							<span class="tag" style="vertical-align: middle">
-								<app-jolticon icon="calendar-grid" />
-								<translate>Scheduled</translate>
-							</span>
-							<app-time-ago
-								:date="post.scheduled_for"
-								without-suffix
-								/>
-						</template>
-						<template v-else>
-							<app-time-ago
-								:date="eventItem.added_on"
-								/>
-						</template>
+					<div class="small text-muted hidden-xs">
+						<app-activity-feed-event-item-time
+							:event-item="eventItem"
+							:post="post"
+							/>
 					</div>
 				</div>
 
@@ -133,6 +59,13 @@
 							@{{ user.username }}
 						</router-link>
 					</small>
+
+					<div class="tiny text-muted visible-xs">
+						<app-activity-feed-event-item-time
+							:event-item="eventItem"
+							:post="post"
+							/>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -228,6 +161,7 @@
 		</div>
 
 		<app-event-item-controls
+			class="-controls"
 			:post="post"
 			:video="video"
 			@expand="onExpand()"

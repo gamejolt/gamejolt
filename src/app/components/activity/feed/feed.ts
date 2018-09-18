@@ -1,4 +1,4 @@
-import View from '!view!./feed.html';
+import View from '!view!./feed.html?style=./feed.styl';
 import 'rxjs/add/operator/sampleTime';
 import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';

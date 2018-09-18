@@ -6,7 +6,7 @@
 
 		<a
 			v-if="!isHydrated || !isShowingVideo"
-			@click="play"
+			@click.stop="play"
 			>
 			<div class="play-button-overlay">
 				<app-jolticon icon="play" />

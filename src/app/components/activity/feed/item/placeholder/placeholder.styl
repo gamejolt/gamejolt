@@ -1,19 +1,15 @@
-@require '~styles/variables'
+@require '../../event-item/event-item'
 @require '~styles-lib/mixins'
 
-.placeholder-time
-	lazy-placeholder-inline()
-	width: 30%
-	height: $font-size-small
+// Gotta override the border hover styling of event items.
+.-item
+	&, &:hover
+		theme-prop('border-color', 'bg-subtle')
+		cursor: default
 
-.placeholder-title
-	lazy-placeholder-inline()
-	width: 60%
-	height: $font-size-h1
-
-.placeholder-text
+.-placeholder-text
 	lazy-placeholder-inline()
 
-.placeholder-small
+.-placeholder-small
 	lazy-placeholder-inline()
 	height: $font-size-small
