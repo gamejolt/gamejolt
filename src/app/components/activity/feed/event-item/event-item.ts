@@ -1,5 +1,7 @@
 import View from '!view!./event-item.html?style=./event-item.styl';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
+import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
 import { AppUserAvatar } from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
@@ -191,20 +193,29 @@ export class AppActivityFeedEventItem extends Vue {
 	 * Called when bubbling back up the click for the item. Any links within the item can cancel
 	 * this.
 	 */
-	onClick(event: Event) {
+	onClick(e: MouseEvent) {
 		const ignoreList = ['a', 'button'];
 
-		if (event.target) {
-			const target = event.target as HTMLElement;
+		if (e.target) {
+			const target = e.target as HTMLElement;
 			const nodeName = target.nodeName.toLowerCase();
 			if (ignoreList.indexOf(nodeName) !== -1) {
 				return;
 			}
 		}
 
+		if (e.metaKey || e.altKey) {
+			return;
+		}
+
 		if (this.video) {
 			CommentVideoModal.show(this.video);
 		} else {
+			if (e.ctrlKey || e.shiftKey) {
+				Navigate.newWindow(Environment.wttfBaseUrl + this.$router.resolve(this.link).href);
+				return;
+			}
+
 			this.$router.push(this.link);
 		}
 	}
