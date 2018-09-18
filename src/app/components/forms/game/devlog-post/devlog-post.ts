@@ -35,10 +35,11 @@ import { AppVideoEmbed } from 'game-jolt-frontend-lib/components/video/embed/emb
 import { AppJolticon } from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon';
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { determine } from 'jstimezonedetect';
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
 import { AppFormGameDevlogPostMedia } from './_media/media';
 
 type FormGameDevlogPostModel = FiresidePost & {
+	mediaItemIds: number[];
 	keyGroups: KeyGroup[];
 	video_url: string;
 	sketchfab_id: string;
@@ -111,7 +112,6 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	readonly MIN_POLL_DURATION = 5;
 	readonly MAX_POLL_DURATION = 20160;
 
-	// media: MediaItem[] = [];
 	keyGroups: KeyGroup[] = [];
 	wasPublished = false;
 	attachmentType = '';
@@ -339,8 +339,8 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	}
 
 	onMediaSort(mediaItems: MediaItem[]) {
-		// TODO
-		console.log('sorted');
+		this.setField('media', mediaItems);
+		console.log('sort');
 	}
 
 	removeMediaItem(mediaItem: MediaItem) {
@@ -483,6 +483,9 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		}
 		if (!this.longEnabled) {
 			this.setField('content_markdown', '');
+		}
+		if (this.formModel.media) {
+			this.setField('mediaItemIds', this.formModel.media.map(item => item.id));
 		}
 		this.setField('poll_duration', this.pollDuration * 60); // site-api expects duration in seconds.
 		return this.formModel.$save();
