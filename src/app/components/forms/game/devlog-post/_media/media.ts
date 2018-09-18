@@ -1,18 +1,19 @@
 import View from '!view!./media.html?style=./media.styl';
 import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
+import { AppLoadingFade } from 'game-jolt-frontend-lib/components/loading/fade/fade';
 import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
 import { AppScrollScroller } from 'game-jolt-frontend-lib/components/scroll/scroller/scroller';
 import { Component, Emit, Prop } from 'vue-property-decorator';
-import { AppFormGameDevlogPostMediaItem } from './item/item';
+import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
+import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { AppFormControlUpload } from '../../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
+import { AppForm } from '../../../../../../lib/gj-lib-client/components/form-vue/form';
 import {
 	BaseForm,
 	FormOnSubmit,
 	FormOnSubmitSuccess,
 } from '../../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { AppForm } from '../../../../../../lib/gj-lib-client/components/form-vue/form';
-import { AppFormControlUpload } from '../../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
-import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
-import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { AppFormGameDevlogPostMediaItem } from './item/item';
 
 const draggable = require('vuedraggable');
 
@@ -29,6 +30,7 @@ interface FormModel {
 		AppImgResponsive,
 		AppFormGameDevlogPostMediaItem,
 		AppFormControlUpload,
+		AppLoadingFade,
 	},
 })
 export class AppFormGameDevlogPostMedia extends BaseForm<FormModel>
@@ -54,6 +56,15 @@ export class AppFormGameDevlogPostMedia extends BaseForm<FormModel>
 		form: AppForm;
 		upload: AppFormControlUpload;
 	};
+
+	@Emit('upload')
+	emitUpload(_newMediaItems: MediaItem[]) {}
+
+	@Emit('sort')
+	emitSort(_mediaItems: MediaItem[]) {}
+
+	@Emit('remove')
+	emitRemove(_mediaItem: MediaItem) {}
 
 	get internalItems() {
 		return this.mediaItems;
@@ -87,15 +98,6 @@ export class AppFormGameDevlogPostMedia extends BaseForm<FormModel>
 	}
 
 	onSubmitSuccess(response: any) {
-		this.emitUploaded(MediaItem.populate(response.mediaItems));
+		this.emitUpload(MediaItem.populate(response.mediaItems));
 	}
-
-	@Emit('uploaded')
-	emitUploaded(_mediaItems: MediaItem[]) {}
-
-	@Emit('sort')
-	emitSort(_mediaItems: MediaItem[]) {}
-
-	@Emit('remove')
-	emitRemove(_mediaItem: MediaItem) {}
 }

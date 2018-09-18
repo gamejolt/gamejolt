@@ -7,8 +7,7 @@
 
 .-item
 	theme-prop('border-color', 'bg-subtle')
-	rounded-corners()
-	padding: $-item-padding
+	padding: $-item-padding-xs
 	margin-left: -($grid-gutter-width-xs / 2)
 	margin-right: -($grid-gutter-width-xs / 2)
 	border-bottom-width: 2px
@@ -16,7 +15,9 @@
 	transition: border-color 100ms
 
 	@media $media-sm-up
+		rounded-corners()
 		theme-prop('border-color', 'bg-offset')
+		padding: $-item-padding
 		border-width: 2px
 		border-style: solid
 		margin-left: 0
@@ -38,12 +39,24 @@
 	text-align: center
 	border-radius: 50%
 	overflow: hidden
-	margin-right: $-item-padding
-	width: $-avatar-size
-	height: $-avatar-size
-	line-height: $-avatar-size
+	margin-right: $-item-padding-xs
+	width: $-avatar-size-xs
+	height: $-avatar-size-xs
+	line-height: $-avatar-size-xs
 	border-width: 3px
 	border-style: solid
+
+	.-item.-new &
+		theme-prop('border-color', 'notice')
+
+	.-item.-active &
+		theme-prop('border-color', 'link')
+
+	@media $media-sm-up
+		margin-right: $-item-padding
+		width: $-avatar-size
+		height: $-avatar-size
+		line-height: $-avatar-size
 
 	> .jolticon
 		position: relative
@@ -80,8 +93,14 @@
 .-byline-to
 	text-overflow()
 
+// Spacing for sections.
+.-poll, .-controls, .-manage, .-lead
+	margin-top: $-item-padding-xs
+
+	@media $media-sm-up
+		margin-top: $-item-padding
+
 .-lead
-	margin-top: $-item-padding
 	font-size: $font-size-h4-xs
 	line-height: 1.4
 
@@ -96,16 +115,21 @@
 			text-decoration: underline
 
 	& > p
-		margin-top: $-item-padding
+		margin-top: $-item-padding-xs
 		margin-bottom: 0
 
-.-poll
-	margin-top: $-item-padding
+		@media $media-sm-up
+			margin-top: $-item-padding
 
 .-manage
 	theme-prop('background-color', 'bg-offset')
-	margin-top: $-item-padding
-	margin-bottom: $-item-padding
-	margin-left: -($-item-padding)
-	margin-right: -($-item-padding)
-	padding: $-item-padding
+	margin-bottom: $-item-padding-xs
+	margin-left: -($-item-padding-xs)
+	margin-right: -($-item-padding-xs)
+	padding: $-item-padding-xs
+
+	@media $media-sm-up
+		margin-bottom: $-item-padding
+		margin-left: -($-item-padding)
+		margin-right: -($-item-padding)
+		padding: $-item-padding

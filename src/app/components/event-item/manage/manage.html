@@ -52,7 +52,7 @@
 			<div class="list-group list-group-dark">
 				<a
 					class="list-group-item has-icon"
-					@click="removePost()"
+					@click.stop="removePost()"
 					>
 					<app-jolticon icon="remove" notice />
 					<translate>Remove Post</translate>

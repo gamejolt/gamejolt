@@ -1,5 +1,7 @@
 import View from '!view!./event-item.html?style=./event-item.styl';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
+import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
 import { AppUserAvatar } from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
@@ -12,12 +14,8 @@ import {
 	FiresidePost,
 } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { AppGameThumbnailImg } from '../../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
-import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
 import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { Store } from '../../../../store';
 import { AppEventItemControls } from '../../../event-item/controls/controls';
@@ -30,17 +28,15 @@ import { AppActivityFeedDevlogPostText } from '../devlog-post/text/text';
 import { AppActivityFeedDevlogPostVideo } from '../devlog-post/video/video';
 import { AppActivityFeed } from '../feed';
 import { ActivityFeedItem } from '../item-service';
+import { AppActivityFeedEventItemTime } from './time/time';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
 @View
 @Component({
 	components: {
-		AppTimelineListItem,
-		AppJolticon,
+		AppActivityFeedEventItemTime,
 		AppUserAvatar,
-		AppGameThumbnailImg,
-		AppTimeAgo,
 		AppActivityFeedCommentVideo,
 		AppActivityFeedDevlogPostText,
 		AppActivityFeedDevlogPostMedia,
@@ -160,10 +156,6 @@ export class AppActivityFeedEventItem extends Vue {
 		return this.post && canUserManagePost(this.post, this.app.user);
 	}
 
-	get shouldShowScheduled() {
-		return this.post && this.post.isScheduled;
-	}
-
 	created() {
 		this.feed = findRequiredVueParent(this, AppActivityFeed);
 	}
@@ -195,28 +187,37 @@ export class AppActivityFeedEventItem extends Vue {
 	 */
 	onClickCapture() {
 		this.$emit('clicked');
-
-		if (this.video) {
-			CommentVideoModal.show(this.video);
-		}
 	}
 
 	/**
 	 * Called when bubbling back up the click for the item. Any links within the item can cancel
 	 * this.
 	 */
-	onClick(event: Event) {
+	onClick(e: MouseEvent) {
 		const ignoreList = ['a', 'button'];
 
-		if (event.target) {
-			const target = event.target as HTMLElement;
+		if (e.target) {
+			const target = e.target as HTMLElement;
 			const nodeName = target.nodeName.toLowerCase();
 			if (ignoreList.indexOf(nodeName) !== -1) {
 				return;
 			}
 		}
 
-		this.$router.push(this.link);
+		if (e.metaKey || e.altKey) {
+			return;
+		}
+
+		if (this.video) {
+			CommentVideoModal.show(this.video);
+		} else {
+			if (e.ctrlKey || e.shiftKey) {
+				Navigate.newWindow(Environment.wttfBaseUrl + this.$router.resolve(this.link).href);
+				return;
+			}
+
+			this.$router.push(this.link);
+		}
 	}
 
 	toggleLead() {

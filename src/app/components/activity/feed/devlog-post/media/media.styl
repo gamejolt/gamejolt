@@ -3,14 +3,21 @@
 
 .devlog-post-media
 	&-embed
-		margin-top: $-item-padding
+		margin-top: $-item-padding-xs
 		position: relative
+
+		@media $media-sm-up
+			margin-top: $-item-padding
 
 		&-img
 			display: block
 			overflow: hidden
-			margin-left: -($-item-padding)
-			margin-right: -($-item-padding)
+			margin-left: -($-item-padding-xs)
+			margin-right: -($-item-padding-xs)
+
+			@media $media-sm-up
+				margin-left: -($-item-padding)
+				margin-right: -($-item-padding)
 
 	&-slider
 		white-space: nowrap

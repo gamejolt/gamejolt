@@ -1,13 +1,14 @@
-<div>
+<app-loading-fade :is-loading="state.isProcessing">
 	<app-form name="devlogPostMediaForm" ref="form">
 		<app-form-group
 			name="image"
 			hide-label
+			optional
 			:label="$gettext(`Images`)"
 			>
 			<p class="help-block">
 				<translate>Your image must be a PNG, JPG, or GIF.</translate> <br>
-				<b><translate>Animated GIFs are suppordted.</translate></b>
+				<b><translate>Animated GIFs are supported.</translate></b>
 			</p>
 
 			<app-form-control-upload
@@ -18,7 +19,7 @@
 					max_img_dimensions: [ maxWidth, maxHeight ],
 				}"
 				accept=".png,.jpg,.jpeg,.gif"
-				:multiple="true"
+				multiple
 				@changed="mediaSelected()"
 				/>
 
@@ -57,4 +58,4 @@
 			</draggable>
 		</div>
 	</app-scroll-scroller>
-</div>
+</app-loading-fade>

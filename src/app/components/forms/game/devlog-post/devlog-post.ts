@@ -101,7 +101,6 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 
 	$refs!: {
 		form: AppForm;
-		upload: AppFormControlUpload;
 	};
 
 	static readonly LEAD_URL_REGEX = /(https?:\/\/([\/\.\?\-\+a-z0-9=#%_&;,~@])+)/gi;

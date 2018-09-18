@@ -58,10 +58,10 @@
 			<app-form-game-devlog-post-media
 				:media-items="formModel.media"
 				:post="formModel"
-				:maxFilesize="maxFilesize"
-				:maxWidth="maxWidth"
-				:maxHeight="maxHeight"
-				@uploaded="onMediaUploaded($event)"
+				:max-filesize="maxFilesize"
+				:max-width="maxWidth"
+				:max-height="maxHeight"
+				@upload="onMediaUploaded($event)"
 				@remove="removeMediaItem($event)"
 				@sort="onMediaSort($event)"
 				/>
@@ -150,6 +150,7 @@
 		:hide-label="!longEnabled"
 		:label="$gettext(`Summary`)"
 		name="lead"
+		class="-lead-form-group"
 		>
 		<app-form-control-textarea
 			:maxlength="leadTotalLengthLimit"
