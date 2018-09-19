@@ -118,7 +118,10 @@
 				:animate="false"
 				@require-change="canToggleLeadChanged"
 				>
-				<div class="-lead" v-html="post.lead_compiled" />
+				<div v-if="post.lead_compiled" class="-lead" v-html="post.lead_compiled" />
+				<div class="-lead" v-else>
+					<p>{{ post.title }}</p>
+				</div>
 			</app-fade-collapse>
 
 			<a

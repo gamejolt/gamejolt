@@ -104,19 +104,12 @@
 	@media $media-min-tablet
 		font-size: $font-size-h4
 
-	a
+	>>> a
 		theme-prop('color', 'link')
 
 		&:hover, &:focus
 			theme-prop('color', 'link')
 			text-decoration: underline
-
-	& > p
-		margin-top: $-item-padding-xs
-		margin-bottom: 0
-
-		@media $media-sm-up
-			margin-top: $-item-padding
 
 .-manage
 	theme-prop('background-color', 'bg-offset')

@@ -73,7 +73,12 @@
 					</span>
 				</div>
 
-				<div class="lead" v-html="post.lead_compiled" />
+				<div v-if="post.lead_compiled" class="lead" v-html="post.lead_compiled" />
+				<div class="lead" v-else>
+					<p>{{ post.title }}</p>
+				</div>
+
+				<!-- <div class="lead" v-html="post.lead_compiled" /> -->
 
 				<div v-if="post.hasArticle">
 					<div class="page-cut" />
