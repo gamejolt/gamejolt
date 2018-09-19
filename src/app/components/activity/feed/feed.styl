@@ -1,4 +1,4 @@
-@require '~styles/variables'
+@require './variables'
 @require '~styles-lib/mixins'
 
 .-ad-container
@@ -6,6 +6,10 @@
 	margin-bottom: 0
 	border-bottom-width: 2px
 	border-bottom-style: solid
+
+	@media $media-sm-up
+		border-bottom: 0
+		margin-bottom: $-item-padding
 
 .-ad-label
 	margin-top: 5px
