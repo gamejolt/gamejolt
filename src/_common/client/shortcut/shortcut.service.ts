@@ -2,6 +2,7 @@ import { Shortcut } from 'client-voodoo';
 import * as path from 'path';
 
 import { Device } from '../../../lib/gj-lib-client/components/device/device.service';
+import { Client } from '../client.service';
 
 export class ClientShortcut {
 	static get supportsShortcuts() {
@@ -19,7 +20,7 @@ export class ClientShortcut {
 		}
 
 		return Shortcut.create(
-			path.join(nw.App.startPath, '..', 'game-jolt-client'),
+			path.join(Client.joltronDir, 'game-jolt-client'),
 			// Path is absolute, so we make it relative to get the resolve working.
 			path.resolve(require('../../../static-assets/client/icon-256x256.png').substr(1))
 		);

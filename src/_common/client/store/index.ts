@@ -8,7 +8,6 @@ import {
 	VuexStore,
 } from '../../../lib/gj-lib-client/utils/vuex';
 import { SelfUpdaterInstance, SelfUpdater, Logger } from 'client-voodoo';
-import * as os from 'os';
 import * as fs from 'fs';
 import { LocalDb } from '../../../app/components/client/local-db/local-db.service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
@@ -42,14 +41,6 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 	// Client updater
 	clientUpdateStatus: ClientUpdateStatus = 'none';
 	private _updaterInstance: SelfUpdaterInstance | null = null;
-
-	get clientManifestPath() {
-		let cwd = nw.App.startPath;
-		if (os.type() === 'Darwin') {
-			cwd = path.resolve(cwd, '../../../');
-		}
-		return path.resolve(cwd, '..', '.manifest');
-	}
 
 	@VuexAction
 	async bootstrap() {
@@ -234,9 +225,10 @@ export class ClientStore extends VuexStore<ClientStore, Actions, Mutations> {
 	@VuexAction
 	private async _ensureUpdaterInstance(): Promise<void> {
 		if (!this._updaterInstance) {
-			console.log('Attaching selfupdater instance for manifest ' + this.clientManifestPath);
+			const manifestPath = path.resolve(Client.joltronDir, '.manifest');
+			console.log('Attaching selfupdater instance for manifest ' + manifestPath);
 
-			const thisInstance = await SelfUpdater.attach(this.clientManifestPath);
+			const thisInstance = await SelfUpdater.attach(manifestPath);
 			this._setUpdaterInstance(thisInstance);
 
 			thisInstance

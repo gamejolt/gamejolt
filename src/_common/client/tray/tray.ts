@@ -16,6 +16,8 @@ export class AppClientTray extends Vue {
 	isMinimized = false;
 	isClosed = false;
 
+	tray: nw.Tray | null = null;
+
 	static hook = {
 		menuBuilder: undefined as ((menu: nw.Menu) => void) | undefined,
 	};
@@ -29,6 +31,15 @@ export class AppClientTray extends Vue {
 	}
 
 	mounted() {
+		this.registerWindowEvents();
+		this.createTray();
+	}
+
+	destroyed() {
+		this.removeTray();
+	}
+
+	registerWindowEvents() {
 		const win = nw.Window.get();
 
 		win.on('blur', () => (this.isFocused = false));
@@ -53,31 +64,22 @@ export class AppClientTray extends Vue {
 		});
 	}
 
-	private toggleVisibility() {
-		const win = nw.Window.get();
-
-		if (this.isClosed || this.isMinimized || !this.isFocused) {
-			Client.show();
-			this.isClosed = false;
-		} else {
-			// If the window is being shown and is focused, let's minimize it.
-			win.minimize();
+	createTray() {
+		if (this.tray || Navigate.isRedirecting) {
+			return;
 		}
-	}
 
-	render(h: CreateElement) {
-		const tray = new nw.Tray({
+		this.tray = new nw.Tray({
 			title: 'Game Jolt Client',
 			// This has to be a relative path, hence the removal of the first /.
 			icon: require(`./icon${Screen.isHiDpi ? '-2x' : ''}-2x.png`).substr(1),
 		});
 
 		Navigate.registerDestructor(() => {
-			console.log('removing tray before memes');
-			tray.remove();
+			this.removeTray();
 		});
 
-		tray.on('click', () => this.toggleVisibility());
+		this.tray.on('click', () => this.toggleVisibility());
 
 		const menu = new nw.Menu();
 
@@ -93,8 +95,32 @@ export class AppClientTray extends Vue {
 
 		menu.append(quitItem);
 
-		tray.menu = menu;
+		this.tray.menu = menu;
+	}
 
+	removeTray() {
+		if (!this.tray) {
+			return;
+		}
+
+		this.tray.remove();
+		this.tray = null;
+	}
+
+	private toggleVisibility() {
+		const win = nw.Window.get();
+
+		if (this.isClosed || this.isMinimized || !this.isFocused) {
+			console.log('toggleVisibility');
+			Client.show();
+			this.isClosed = false;
+		} else {
+			// If the window is being shown and is focused, let's minimize it.
+			win.minimize();
+		}
+	}
+
+	render(h: CreateElement) {
 		return h('div');
 	}
 }

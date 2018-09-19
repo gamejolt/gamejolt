@@ -23,12 +23,12 @@
 			:to="{ name: 'library.installed' }"
 			v-app-tooltip="$gettext( `View Downloads` )"
 			>
-			<strong>{{ numPatching | number }}</strong>
 			<translate
-				:translate-n="numPatching"
-				translate-plural="Downloads"
+				:translate-n="numPatching || 0"
+				:translate-params="{ count: number( numPatching || 0 ) }"
+				translate-plural="%{ count } Downloads"
 				>
-				Download
+				%{ count } Download
 			</translate>
 			&nbsp;
 			<div class="-progress">

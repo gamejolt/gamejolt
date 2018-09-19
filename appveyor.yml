@@ -1,23 +1,40 @@
 platform:
   - x86
 
+image: Visual Studio 2015
+
 environment:
   GOPATH: C:\gopath
-  GOVERSION: 1.9.3
+  GOROOT: C:\go110-x86
+  nodejs_version: '8.11.4'
+
+stack: go 1.10
 
 branches:
   only:
     - client-build
 
 install:
-  - rmdir C:\go /s /q
-  - appveyor DownloadFile https://storage.googleapis.com/golang/go%GOVERSION%.windows-amd64.msi
-  - msiexec /i go%GOVERSION%.windows-amd64.msi /q
-  - ps: Install-Product node 8.11.1
-  - npm install -g yarn
+  # Software we need - provided by Appveyor's VS2015 image:
+  # Node 8.11.4
+  # Yarn 1.9.4
+  # Go 1.10.4
+  # InnoSetup 5.x Unicode
+  # MinGW 32-bit
+
+  # Enable VS2015 toolset
+  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+
   - git submodule update --init --recursive
-  - choco install -y InnoSetup
-  - set PATH="C:\ProgramData\chocolatey\bin";C:\go\bin;C:\gopath\bin;%PATH%
+
+  # Make InnoSetup and MinGW tools accessible from path
+  - set PATH=C:\Program Files (x86)\Inno Setup 5;C:\MinGW\bin;%GOROOT%\bin;%GOPATH%\bin;%PATH%
+  - echo %PATH%
+
+  - node --version
+  - yarn --version
+  - go version
+  - gcc -v
 
 build_script:
   - yarn
@@ -26,5 +43,5 @@ build_script:
 test: off
 
 artifacts:
-  - path: build\prod-client-build\Setup.exe
+  - path: build\prod-client-build\GameJoltClientSetup.exe
   - path: build\prod-client-build\win32-package.tar.gz

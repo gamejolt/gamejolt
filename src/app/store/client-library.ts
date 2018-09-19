@@ -64,7 +64,10 @@ export type Actions = {
 		GameBuildLaunchOption[]
 	];
 	'clientLibrary/packageStartUpdate': [LocalDbPackage, number];
-	'clientLibrary/packageUninstall': [LocalDbPackage, boolean];
+	'clientLibrary/packageUninstall': [
+		LocalDbPackage,
+		{ dbOnly?: boolean; notifications?: boolean }?
+	];
 	'clientLibrary/installerRetry': LocalDbPackage;
 	'clientLibrary/installerPause': LocalDbPackage;
 	'clientLibrary/installerResume': LocalDbPackage;
@@ -287,7 +290,19 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			if (localPackage.isPatching && !localPackage.isPatchPaused) {
 				promises.push(this.installerRetry(localPackage));
 			} else if (localPackage.isRemoving || localPackage.didRemoveFail) {
-				promises.push(this.packageUninstall([localPackage, false]));
+				// Since the old client version on nwjs 0.12.3 we solved a long lived bug that prevented users from
+				// uninstalling packages that failed during uninstallation. The client now retries the uninstallations
+				// properly - which means after the update users will receive a torrent of growl messages and system notifications
+				// for each package that was now finally uninstalled successfully. Ungood, lets silence that.
+				promises.push(
+					this.packageUninstall([
+						localPackage,
+						{
+							dbOnly: false,
+							notifications: false,
+						},
+					])
+				);
 			}
 		}
 
@@ -546,7 +561,10 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 					// Calling uninstall normally attempts to spawn a client voodoo uninstall instance.
 					// Override that because the uninstallation should be done automatically by the installation process.
-					await this.packageUninstall([localPackage, true]);
+					await this.packageUninstall([
+						localPackage,
+						{ dbOnly: true, notifications: true },
+					]);
 				} else {
 					console.log(
 						'installerInstall: This is an update operation. Attempting to rollback with installerRollback'
@@ -1061,7 +1079,12 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexAction
-	async packageUninstall([localPackage, dbOnly]: Actions['clientLibrary/packageUninstall']) {
+	async packageUninstall([localPackage, options]: Actions['clientLibrary/packageUninstall']) {
+		options = options || {};
+		const dbOnly = typeof options.dbOnly === 'boolean' ? options.dbOnly : false;
+		const withNotifications =
+			typeof options.notifications === 'boolean' ? options.notifications : true;
+
 		// We just use this so they don't click "uninstall" twice in a row.
 		// No need to save to the DB.
 		let currentlyUninstalling = this.currentlyUninstalling[localPackage.id];
@@ -1141,36 +1164,43 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				}
 				arrayRemove(this.packages, p => p.id === localPackage.id);
 
-				if (!wasInstalling) {
-					Growls.success({
-						title: 'Package Removed',
-						message:
-							'Removed ' +
-							(localPackage.title || (localGame ? localGame.title : 'the package')) +
-							' from your computer.',
-						system: true,
-					});
-				} else {
-					Growls.success({
-						title: 'Installation Canceled',
-						message:
-							'Canceled installation of ' +
-							(localPackage.title || (localGame ? localGame.title : 'the package')),
-						system: true,
-					});
+				if (withNotifications) {
+					if (!wasInstalling) {
+						Growls.success({
+							title: 'Package Removed',
+							message:
+								'Removed ' +
+								(localPackage.title ||
+									(localGame ? localGame.title : 'the package')) +
+								' from your computer.',
+							system: true,
+						});
+					} else {
+						Growls.success({
+							title: 'Installation Canceled',
+							message:
+								'Canceled installation of ' +
+								(localPackage.title ||
+									(localGame ? localGame.title : 'the package')),
+							system: true,
+						});
+					}
 				}
 			} catch (err) {
-				if (wasInstalling) {
-					Growls.error('Could not stop the installation.');
-				} else {
-					Growls.error({
-						title: 'Remove Failed',
-						message:
-							'Could not remove ' +
-							(localPackage.title || (localGame ? localGame.title : 'the package')) +
-							'.',
-						system: true,
-					});
+				if (withNotifications) {
+					if (wasInstalling) {
+						Growls.error('Could not stop the installation.');
+					} else {
+						Growls.error({
+							title: 'Remove Failed',
+							message:
+								'Could not remove ' +
+								(localPackage.title ||
+									(localGame ? localGame.title : 'the package')) +
+								'.',
+							system: true,
+						});
+					}
 				}
 
 				await this.setPackageRemoveState([

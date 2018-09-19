@@ -1,3 +1,5 @@
+import * as os from 'os';
+import * as path from 'path';
 const win = nw.Window.get();
 
 export class Client {
@@ -60,5 +62,16 @@ export class Client {
 
 	static clearProgressBar() {
 		win.setProgressBar(-1);
+	}
+
+	// Gets the directory the joltron binary is running from.
+	static get joltronDir() {
+		if (os.type() === 'Darwin') {
+			// On mac nw.App.startPath is apparantly unreliable, but process.cwd() always changes to app.nw folder.
+			// Need to traverse up this path.
+			// data-packageId-buildId/Game Jolt Client.app/Contents/Resources/app.nw
+			return path.resolve(process.cwd(), '../../../../../');
+		}
+		return path.resolve(nw.App.startPath, '..');
 	}
 }

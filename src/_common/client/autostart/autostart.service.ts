@@ -3,6 +3,7 @@ import { Autostarter } from 'client-voodoo';
 import { Device } from '../../../lib/gj-lib-client/components/device/device.service';
 import { Settings } from '../../settings/settings.service';
 import * as path from 'path';
+import { Client } from '../client.service';
 
 export class ClientAutoStart {
 	static init() {
@@ -24,7 +25,7 @@ export class ClientAutoStart {
 			return;
 		}
 
-		return Autostarter.set(path.join(nw.App.startPath, '..', 'GameJoltClient.exe'), [
+		return Autostarter.set(path.join(Client.joltronDir, 'GameJoltClient.exe'), [
 			'run',
 			'--',
 			'--silent-start',

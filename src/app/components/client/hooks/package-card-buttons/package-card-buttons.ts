@@ -46,18 +46,33 @@ import { LocalDbPackage, LocalDbPackagePatchState } from '../../local-db/package
 	},
 })
 export class AppClientPackageCardButtons extends Vue {
-	@ClientLibraryState packagesById!: ClientLibraryStore['packagesById'];
+	@ClientLibraryState
+	packagesById!: ClientLibraryStore['packagesById'];
 
-	@ClientLibraryAction private packageInstall!: ClientLibraryStore['packageInstall'];
-	@ClientLibraryAction private packageUninstall!: ClientLibraryStore['packageUninstall'];
-	@ClientLibraryAction private installerPause!: ClientLibraryStore['installerPause'];
-	@ClientLibraryAction private installerResume!: ClientLibraryStore['installerResume'];
-	@ClientLibraryAction private installerRetry!: ClientLibraryStore['installerRetry'];
-	@ClientLibraryAction private launcherLaunch!: ClientLibraryStore['launcherLaunch'];
+	@ClientLibraryAction
+	private packageInstall!: ClientLibraryStore['packageInstall'];
 
-	@Prop(Game) game!: Game;
-	@Prop(GamePackage) package!: GamePackage;
-	@Prop(GamePackageCardModel) card!: GamePackageCardModel;
+	@ClientLibraryAction
+	private packageUninstall!: ClientLibraryStore['packageUninstall'];
+
+	@ClientLibraryAction
+	private installerPause!: ClientLibraryStore['installerPause'];
+
+	@ClientLibraryAction
+	private installerResume!: ClientLibraryStore['installerResume'];
+
+	@ClientLibraryAction
+	private installerRetry!: ClientLibraryStore['installerRetry'];
+
+	@ClientLibraryAction
+	private launcherLaunch!: ClientLibraryStore['launcherLaunch'];
+
+	@Prop(Game)
+	game!: Game;
+	@Prop(GamePackage)
+	package!: GamePackage;
+	@Prop(GamePackageCardModel)
+	card!: GamePackageCardModel;
 
 	build: GameBuild | null = null;
 	downloadableUnsupported = false;
@@ -176,7 +191,7 @@ export class AppClientPackageCardButtons extends Vue {
 		}
 
 		Analytics.trackEvent('game-package-card', 'cancel-install');
-		this.packageUninstall([this.localPackage, false]);
+		this.packageUninstall([this.localPackage]);
 	}
 
 	retryInstall() {
@@ -222,6 +237,6 @@ export class AppClientPackageCardButtons extends Vue {
 		Analytics.trackEvent('game-package-card', 'uninstall');
 		Popover.hideAll();
 
-		this.packageUninstall([this.localPackage, false]);
+		this.packageUninstall([this.localPackage]);
 	}
 }
