@@ -1,21 +1,20 @@
-import { Route } from 'vue-router';
-import { Component, Prop } from 'vue-property-decorator';
-
-import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { AppDevlogPostView } from '../../../../../../components/devlog/post/view/view';
-import { Registry } from '../../../../../../../lib/gj-lib-client/components/registry/registry.service';
-import { RouteState, RouteStore } from '../../view.store';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
+import { Registry } from 'game-jolt-frontend-lib/components/registry/registry.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
-} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { enforceLocation } from '../../../../../../../lib/gj-lib-client/utils/router';
-import { IntentService } from '../../../../../../components/intent/intent.service';
-import { Translate } from '../../../../../../../lib/gj-lib-client/components/translate/translate.service';
-import { CommentModal } from '../../../../../../../lib/gj-lib-client/components/comment/modal/modal.service';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
+import { Component, Prop } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { CreateElement } from 'vue/types/vue';
+import { AppDevlogPostView } from '../../../../../../components/devlog/post/view/view';
+import { IntentService } from '../../../../../../components/intent/intent.service';
+import { RouteState, RouteStore } from '../../view.store';
 
 @Component({
 	name: 'RouteDiscoverGamesViewDevlogView',
@@ -24,9 +23,11 @@ import { CreateElement } from 'vue/types/vue';
 	},
 })
 export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent {
-	@Prop() postSlug!: string;
+	@Prop()
+	postSlug!: string;
 
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	post: FiresidePost | null = null;
 
@@ -56,7 +57,7 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 	}
 
 	get routeTitle() {
-		return this.post ? this.post.title : null;
+		return this.post && this.post.lead_snippet;
 	}
 
 	routeInit() {

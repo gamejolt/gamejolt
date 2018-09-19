@@ -1,10 +1,17 @@
-@require '~styles/variables'
+@require '../variables'
 @require '~styles-lib/mixins'
 
 .-video-embed
-	rounded-corners()
 	theme-prop('background-color', 'bg-offset')
+	margin-top: $-item-padding-xs
+	margin-left: -($-item-padding-xs)
+	margin-right: -($-item-padding-xs)
 	position: relative
+
+	@media $media-sm-up
+		margin-top: $-item-padding
+		margin-left: -($-item-padding)
+		margin-right: -($-item-padding)
 
 	a
 		display: block
@@ -18,7 +25,3 @@
 	background-repeat: no-repeat
 	background-position: center center
 	background-size: cover
-
-// It's a thumbnail first, then after clicking it becomes an iframe embed.
-.-thumb, .-video-embed >>> iframe
-	rounded-corners()

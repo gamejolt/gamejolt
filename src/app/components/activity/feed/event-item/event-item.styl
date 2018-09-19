@@ -1,5 +1,125 @@
-@require '~styles/variables'
+@require '../variables'
+@require '~styles-lib/mixins'
 
-.-poll
-	margin-top: $line-height-computed
-	margin-bottom: $line-height-computed
+.-container
+	@media $media-sm-up
+		padding-bottom: $-item-padding
+
+.-item
+	theme-prop('border-color', 'bg-subtle')
+	padding: $-item-padding-xs
+	margin-left: -($grid-gutter-width-xs / 2)
+	margin-right: -($grid-gutter-width-xs / 2)
+	border-bottom-width: 2px
+	border-bottom-style: solid
+	transition: border-color 100ms
+
+	@media $media-sm-up
+		rounded-corners()
+		theme-prop('border-color', 'bg-offset')
+		padding: $-item-padding
+		border-width: 2px
+		border-style: solid
+		margin-left: 0
+		margin-right: 0
+
+		&:hover
+			theme-prop('border-color', 'link')
+			cursor: pointer
+
+.-byline
+	display: flex
+	margin-top: 5px
+
+.-avatar
+	theme-prop('background-color', 'bg-subtle')
+	theme-prop('color', 'fg-muted')
+	theme-prop('border-color', 'bg')
+	flex: none
+	text-align: center
+	border-radius: 50%
+	overflow: hidden
+	margin-right: $-item-padding-xs
+	width: $-avatar-size-xs
+	height: $-avatar-size-xs
+	line-height: $-avatar-size-xs
+	border-width: 3px
+	border-style: solid
+
+	.-item.-new &
+		theme-prop('border-color', 'notice')
+
+	@media $media-sm-up
+		margin-right: $-item-padding
+		width: $-avatar-size
+		height: $-avatar-size
+		line-height: $-avatar-size
+
+	> .jolticon
+		position: relative
+		top: -2px
+		margin: 0
+		vertical-align: baseline
+
+	img
+		border-radius: 50% !important
+
+.-byline-content
+	flex: auto
+	display: flex
+	flex-direction: column
+
+.-byline-row
+	display: flex
+	// On xs we want to stack them on top of each other.
+	flex-direction: column
+
+	@media $media-sm-up
+		flex-direction: row
+
+.-byline-spacer
+	flex: auto
+
+.-byline-name
+	text-overflow()
+
+.-byline-displayname
+	margin-right: 5px
+	font-weight: bold
+
+.-byline-to
+	text-overflow()
+
+// Spacing for sections.
+.-poll, .-controls, .-manage, .-lead
+	margin-top: $-item-padding-xs
+
+	@media $media-sm-up
+		margin-top: $-item-padding
+
+.-lead
+	font-size: $font-size-h4-xs
+	line-height: 1.4
+
+	@media $media-min-tablet
+		font-size: $font-size-h4
+
+	>>> a
+		theme-prop('color', 'link')
+
+		&:hover, &:focus
+			theme-prop('color', 'link')
+			text-decoration: underline
+
+.-manage
+	theme-prop('background-color', 'bg-offset')
+	margin-bottom: $-item-padding-xs
+	margin-left: -($-item-padding-xs)
+	margin-right: -($-item-padding-xs)
+	padding: $-item-padding-xs
+
+	@media $media-sm-up
+		margin-bottom: $-item-padding
+		margin-left: -($-item-padding)
+		margin-right: -($-item-padding)
+		padding: $-item-padding

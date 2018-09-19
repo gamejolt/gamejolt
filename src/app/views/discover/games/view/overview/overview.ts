@@ -2,30 +2,30 @@ import View from '!view!./overview.html?style=./overview.styl';
 import { AppAd } from 'game-jolt-frontend-lib/components/ad/ad';
 import { AppAdPlacement } from 'game-jolt-frontend-lib/components/ad/placement/placement';
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { AppCard } from 'game-jolt-frontend-lib/components/card/card';
 import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
 import { AppCommentAddButton } from 'game-jolt-frontend-lib/components/comment/add-button/add-button';
+import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppGamePackageCard } from 'game-jolt-frontend-lib/components/game/package/card/card';
 import { AppGameSoundtrackCard } from 'game-jolt-frontend-lib/components/game/soundtrack/card/card';
+import { HistoryTick } from 'game-jolt-frontend-lib/components/history-tick/history-tick-service';
 import { AppLazyPlaceholder } from 'game-jolt-frontend-lib/components/lazy/placeholder/placeholder';
 import { AppMediaBar } from 'game-jolt-frontend-lib/components/media-bar/media-bar';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { Component, Prop } from 'vue-property-decorator';
-import { Route } from 'vue-router';
-import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
-import { CommentModal } from '../../../../../../lib/gj-lib-client/components/comment/modal/modal.service';
-import { HistoryTick } from '../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
-import { Meta } from '../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { PartnerReferral } from '../../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
+import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
+import { PartnerReferral } from 'game-jolt-frontend-lib/components/partner-referral/partner-referral-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
-} from '../../../../../../lib/gj-lib-client/components/route/route-component';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { Component, Prop } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { AppCommentOverview } from '../../../../../components/comment/overview/overview';
-import { AppDevlogPostAdd } from '../../../../../components/devlog/post/add/add';
+import { AppDevlogPostAddButton } from '../../../../../components/devlog/post/add-button/add-button';
 import { AppGameOgrs } from '../../../../../components/game/ogrs/ogrs';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppActivityFeedLazy } from '../../../../../components/lazy';
@@ -57,7 +57,7 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 		AppCommentAddButton,
 		AppCommentOverview,
 		AppActivityFeed: AppActivityFeedLazy,
-		AppDevlogPostAdd,
+		AppDevlogPostAddButton,
 		AppGamePerms,
 	},
 	directives: {
