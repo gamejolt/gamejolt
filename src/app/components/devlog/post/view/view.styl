@@ -1,8 +1,10 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+.-img, .-video
+	width: 100%
+
 @media $media-sm-up
 	.devlog-post-view >>>
 		img, video, iframe
 			rounded-corners()
-			width: 100%

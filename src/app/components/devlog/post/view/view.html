@@ -23,6 +23,7 @@
 							>
 
 							<app-img-responsive
+								class="-img"
 								v-if="!item.is_animated"
 								:src="item.mediaserver_url"
 								alt=""
@@ -30,6 +31,7 @@
 
 							<app-video
 								v-else
+								class="-video"
 								:poster="item.mediaserver_url"
 								:webm="item.mediaserver_url_webm"
 								:mp4="item.mediaserver_url_mp4"
