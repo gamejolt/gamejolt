@@ -36,16 +36,18 @@
 
 					<app-img-responsive
 						v-if="!isHydrated || !item.is_animated"
+						class="-img"
 						:src="item.mediaserver_url"
 						alt=""
 						ondragstart="return false"
 						/>
 					<app-video
 						v-else-if="shouldVideoPlay( item )"
+						class="-video"
 						:poster="item.mediaserver_url"
 						:webm="item.mediaserver_url_webm"
 						:mp4="item.mediaserver_url_mp4"
-						:show-loading="true"
+						show-loading
 						/>
 
 				</app-responsive-dimensions>
