@@ -4,7 +4,7 @@
 
 	<div class="container">
 
-		<div v-if="post.type === 'video'" class="full-bleed-xs">
+		<div v-if="post.hasVideo" class="full-bleed-xs">
 			<app-video-embed
 				video-provider="youtube"
 				:video-id="post.videos[0].video_id"
