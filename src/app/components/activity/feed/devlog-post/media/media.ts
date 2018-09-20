@@ -7,6 +7,8 @@ import { MediaItem } from '../../../../../../lib/gj-lib-client/components/media-
 import { AppResponsiveDimensions } from '../../../../../../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppVideo } from '../../../../../../lib/gj-lib-client/components/video/video';
+import { AppEventItemMediaIndicator } from '../../../../event-item/media-indicator/media-indicator';
+import { AppEventItemMediaTags } from '../../../../event-item/media-tags/media-tags';
 import { ActivityFeedItem } from '../../item-service';
 
 if (!GJ_IS_SSR) {
@@ -20,6 +22,8 @@ if (!GJ_IS_SSR) {
 		AppImgResponsive,
 		AppVideo,
 		AppResponsiveDimensions,
+		AppEventItemMediaTags,
+		AppEventItemMediaIndicator,
 	},
 })
 export class AppActivityFeedDevlogPostMedia extends Vue {

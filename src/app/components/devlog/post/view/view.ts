@@ -20,6 +20,7 @@ import { State } from 'vuex-class';
 import { Store } from '../../../../store';
 import { AppEventItemControls } from '../../../event-item/controls/controls';
 import { AppEventItemManage } from '../../../event-item/manage/manage';
+import { AppEventItemMediaTags } from '../../../event-item/media-tags/media-tags';
 import { AppPollVoting } from '../../../poll/voting/voting';
 import { AppDevlogPostViewPlaceholder } from './placeholder/placeholder';
 
@@ -36,6 +37,7 @@ import { AppDevlogPostViewPlaceholder } from './placeholder/placeholder';
 		AppSketchfabEmbed,
 		AppEventItemManage,
 		AppEventItemControls,
+		AppEventItemMediaTags,
 		AppPollVoting,
 		AppAd,
 		AppAdPlacement,

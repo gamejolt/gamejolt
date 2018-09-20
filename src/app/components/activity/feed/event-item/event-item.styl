@@ -5,13 +5,13 @@
 	@media $media-sm-up
 		padding-bottom: $-item-padding
 
+.-spacer
+	spacer-xs()
+
 .-item
-	theme-prop('border-color', 'bg-subtle')
 	padding: $-item-padding-xs
 	margin-left: -($grid-gutter-width-xs / 2)
 	margin-right: -($grid-gutter-width-xs / 2)
-	border-bottom-width: 2px
-	border-bottom-style: solid
 	transition: border-color 100ms
 
 	@media $media-sm-up
@@ -27,70 +27,58 @@
 			theme-prop('border-color', 'link')
 			cursor: pointer
 
-.-byline
+.-header
 	display: flex
-	margin-top: 5px
+	align-items: center
 
-.-avatar
-	theme-prop('background-color', 'bg-subtle')
-	theme-prop('color', 'fg-muted')
-	theme-prop('border-color', 'bg')
-	flex: none
-	text-align: center
-	border-radius: 50%
-	overflow: hidden
-	margin-right: $-item-padding-xs
-	width: $-avatar-size-xs
-	height: $-avatar-size-xs
-	line-height: $-avatar-size-xs
-	border-width: 3px
-	border-style: solid
+	&-avatar
+		theme-prop('background-color', 'bg-subtle')
+		theme-prop('color', 'fg-muted')
+		flex: none
+		text-align: center
+		border-radius: 50%
+		overflow: hidden
+		margin-right: $-item-padding-xs
+		width: $-avatar-size-xs
+		height: $-avatar-size-xs
+		line-height: $-avatar-size-xs
 
-	.-item.-new &
-		theme-prop('border-color', 'notice')
+		.-item.-new &
+			theme-prop('border-color', 'notice')
+			border-width: 3px
+			border-style: solid
 
-	@media $media-sm-up
-		margin-right: $-item-padding
-		width: $-avatar-size
-		height: $-avatar-size
-		line-height: $-avatar-size
+		@media $media-sm-up
+			margin-right: $-item-padding
+			width: $-avatar-size
+			height: $-avatar-size
+			line-height: $-avatar-size
 
-	> .jolticon
-		position: relative
-		top: -2px
-		margin: 0
-		vertical-align: baseline
+		img
+			border-radius: 50% !important
 
-	img
-		border-radius: 50% !important
+	&-content
+		flex: auto
+		display: flex
+		align-items: flex-start
+		overflow: hidden
 
-.-byline-content
-	flex: auto
-	display: flex
-	flex-direction: column
+	&-byline
+		flex: auto
+		display: flex
+		flex-direction: column
+		overflow: hidden
 
-.-byline-row
-	display: flex
-	// On xs we want to stack them on top of each other.
-	flex-direction: column
+		&-name, &-game
+			text-overflow()
 
-	@media $media-sm-up
-		flex-direction: row
+	&-date
+		flex: none
+		margin-left: $-item-padding-xs
 
-.-byline-spacer
-	flex: auto
+		@media $media-sm-up
+			margin-left: $-item-padding
 
-.-byline-name
-	text-overflow()
-
-.-byline-displayname
-	margin-right: 5px
-	font-weight: bold
-
-.-byline-to
-	text-overflow()
-
-// Spacing for sections.
 .-poll, .-controls, .-manage, .-lead
 	margin-top: $-item-padding-xs
 

@@ -1,38 +1,26 @@
-<div class="devlog-post-media-embed">
+<div class="devlog-post-media">
 	<v-touch
-		class="media-bar-lightbox"
+		class="-lightbox"
 		@panstart="panStart"
 		@panmove="pan"
 		@panend="panEnd"
 		:pan-options="{ direction: 'horizontal' }"
 		>
 
-		<a
-			class="devlog-post-media-prev"
-			v-if="page > 1"
-			@click.stop="prev"
-			>
-			<app-jolticon icon="chevron-left" />
-		</a>
-
-		<a
-			class="devlog-post-media-next"
-			v-if="page < post.media.length"
-			@click.stop="next"
-			>
-			<app-jolticon icon="chevron-right" />
-		</a>
-
-		<div class="devlog-post-media-embed-img">
-			<div class="devlog-post-media-slider" ref="slider">
+		<div class="-container">
+			<div class="-slider" ref="slider">
 
 				<app-responsive-dimensions
-					class="devlog-post-media-slider-item"
+					class="-slider-item"
 					v-for="item of post.media"
 					:key="item.id"
 					:ratio="item.width / item.height"
 					@change="onDimensionsChange"
 					>
+
+					<app-event-item-media-tags
+						:gif="item.is_animated"
+						/>
 
 					<app-img-responsive
 						v-if="!isHydrated || !item.is_animated"
@@ -55,5 +43,28 @@
 			</div>
 		</div>
 
+		<a
+			class="-prev"
+			v-if="page > 1"
+			@click.stop="prev"
+			>
+			<app-jolticon icon="chevron-left" />
+		</a>
+
+		<a
+			class="-next"
+			v-if="page < post.media.length"
+			@click.stop="next"
+			>
+			<app-jolticon icon="chevron-right" />
+		</a>
+
 	</v-touch>
+
+	<app-event-item-media-indicator
+		v-if="post.media.length > 1"
+		class="-indicator"
+		:count="post.media.length"
+		:current="page"
+		/>
 </div>

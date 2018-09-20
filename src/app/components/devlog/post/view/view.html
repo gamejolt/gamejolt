@@ -20,8 +20,13 @@
 					<div v-if="post.hasMedia" class="full-bleed-xs">
 						<div v-for="item of post.media" :key="item.id">
 							<app-responsive-dimensions
+								class="-media-item"
 								:ratio="item.width / item.height"
 								>
+
+								<app-event-item-media-tags
+									:gif="item.is_animated"
+									/>
 
 								<app-img-responsive
 									class="-img"

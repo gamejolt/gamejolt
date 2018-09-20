@@ -6,12 +6,13 @@
 		</span>
 		<app-time-ago
 			:date="post.scheduled_for"
-			without-suffix
+			short
 			/>
 	</template>
 	<template v-else>
 		<app-time-ago
 			:date="eventItem.added_on"
+			short
 			/>
 	</template>
 </span>

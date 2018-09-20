@@ -8,63 +8,56 @@
 		@click="onClick"
 		>
 
-		<div class="-byline">
+		<div class="-header">
 			<app-user-avatar
-				class="-avatar"
+				class="-header-avatar"
 				:user="user"
 				@click.native.stop
 				/>
 
-			<div class="-byline-content">
-				<div class="-byline-row">
-					<div class="-byline-name">
-						<router-link
-							class="-byline-displayname link-unstyled"
-							:to="{
-								name: 'profile.overview',
-								params: { username: user.username },
-							}"
-							>
-							{{ user.display_name }}
-						</router-link>
-
-						<span class="-byline-to text-muted small" v-if="game && feed.showGameInfo">
-							<app-jolticon icon="game" class="middle" />
+			<div class="-header-content">
+				<div class="-header-byline">
+					<div class="-header-byline-game" v-if="game && feed.showGameInfo">
+					<!-- <div class="-header-byline-game" v-if="game"> -->
+						<strong class="text-muted">
 							<router-link :to="gameUrl" class="link-unstyled">
 								{{ game.title }}
 							</router-link>
-						</span>
+						</strong>
 					</div>
 
-					<div class="-byline-spacer" />
+					<div class="-header-byline-name">
+						<strong>
+							<router-link
+								class="link-unstyled"
+								:to="{
+									name: 'profile.overview',
+									params: { username: user.username },
+								}"
+								>
+								{{ user.display_name }}
+							</router-link>
+						</strong>
 
-					<div class="small text-muted hidden-xs">
-						<app-activity-feed-event-item-time
-							:event-item="eventItem"
-							:post="post"
-							/>
+						<small class="text-muted">
+							<router-link
+								class="link-unstyled"
+								:to="{
+									name: 'profile.overview',
+									params: { username: user.username },
+								}"
+								>
+								@{{ user.username }}
+							</router-link>
+						</small>
 					</div>
 				</div>
 
-				<div class="-byline-row">
-					<small class="-byline-username text-muted">
-						<router-link
-							class="link-unstyled"
-							:to="{
-								name: 'profile.overview',
-								params: { username: user.username },
-							}"
-							>
-							@{{ user.username }}
-						</router-link>
-					</small>
-
-					<div class="tiny text-muted visible-xs">
-						<app-activity-feed-event-item-time
-							:event-item="eventItem"
-							:post="post"
-							/>
-					</div>
+				<div class="-header-date small text-muted">
+					<app-activity-feed-event-item-time
+						:event-item="eventItem"
+						:post="post"
+						/>
 				</div>
 			</div>
 		</div>
@@ -170,4 +163,5 @@
 			/>
 
 	</div>
+	<div class="-spacer" />
 </div>
