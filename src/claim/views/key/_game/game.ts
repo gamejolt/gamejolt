@@ -1,21 +1,21 @@
-import Vue from 'vue';
-import { State } from 'vuex-class';
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./game.html?style=./game.styl';
-
-import {
-	Game,
-	CustomMessage as CustomGameMessage,
-} from '../../../../lib/gj-lib-client/components/game/game.model';
-import { GameBundle } from '../../../../lib/gj-lib-client/components/game-bundle/game-bundle.model';
-import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
+import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { Store } from '../../../store/index';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
+import { GameBundle } from '../../../../lib/gj-lib-client/components/game-bundle/game-bundle.model';
+import {
+	CustomMessage as CustomGameMessage,
+	Game,
+} from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppGamePackageCard } from '../../../../lib/gj-lib-client/components/game/package/card/card';
-import { AppMediaItemCover } from '../../../../_common/media-item/cover/cover';
+import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { KeyGroup } from '../../../../lib/gj-lib-client/components/key-group/key-group.model';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppMediaItemCover } from '../../../../_common/media-item/cover/cover';
+import { Store } from '../../../store/index';
 
 @View
 @Component({
@@ -27,11 +27,20 @@ import { KeyGroup } from '../../../../lib/gj-lib-client/components/key-group/key
 	},
 })
 export class AppKeyGame extends Vue {
-	@Prop() payload!: any;
-	@Prop() loginUrl!: string;
-	@Prop() accessKey?: string;
+	@Prop()
+	payload!: any;
 
-	@State app!: Store['app'];
+	@Prop()
+	loginUrl!: string;
+
+	@Prop()
+	accessKey?: string;
+
+	@ThemeMutation
+	setPageTheme!: ThemeStore['setPageTheme'];
+
+	@State
+	app!: Store['app'];
 
 	showingThanks = false;
 	isClaimOnly = false;
@@ -54,6 +63,7 @@ export class AppKeyGame extends Vue {
 		this.game = new Game(this.payload.game);
 		this.bundle = this.payload.bundle ? new GameBundle(this.payload.bundle) : null;
 		this.keyGroup = this.payload.keyGroup ? new KeyGroup(this.payload.keyGroup) : null;
+		this.setPageTheme(this.game.theme || null);
 
 		if (
 			this.keyGroup &&
@@ -69,6 +79,10 @@ export class AppKeyGame extends Vue {
 		if (this.payload.packages && this.payload.packages.length) {
 			this.packagePayload = new GamePackagePayloadModel(this.payload);
 		}
+	}
+
+	destroyed() {
+		this.setPageTheme(null);
 	}
 
 	claim() {
