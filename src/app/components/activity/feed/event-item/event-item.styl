@@ -5,14 +5,14 @@
 	@media $media-sm-up
 		padding-bottom: $-item-padding
 
-.-spacer
-	spacer-xs()
-
 .-item
+	theme-prop('border-color', 'bg-offset')
 	padding: $-item-padding-xs
 	margin-left: -($grid-gutter-width-xs / 2)
 	margin-right: -($grid-gutter-width-xs / 2)
 	transition: border-color 100ms
+	border-bottom-width: 6px
+	border-bottom-style: solid
 
 	@media $media-sm-up
 		rounded-corners()
@@ -75,29 +75,16 @@
 	&-date
 		flex: none
 		margin-left: $-item-padding-xs
+		line-height: $line-height-computed
 
 		@media $media-sm-up
 			margin-left: $-item-padding
 
-.-poll, .-controls, .-manage, .-lead
+.-poll, .-controls, .-manage, .fireside-post-lead
 	margin-top: $-item-padding-xs
 
 	@media $media-sm-up
 		margin-top: $-item-padding
-
-.-lead
-	font-size: $font-size-h4-xs
-	line-height: 1.4
-
-	@media $media-min-tablet
-		font-size: $font-size-h4
-
-	>>> a
-		theme-prop('color', 'link')
-
-		&:hover, &:focus
-			theme-prop('color', 'link')
-			text-decoration: underline
 
 .-manage
 	theme-prop('background-color', 'bg-offset')

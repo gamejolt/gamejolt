@@ -111,10 +111,7 @@
 				:animate="false"
 				@require-change="canToggleLeadChanged"
 				>
-				<div v-if="post.lead_compiled" class="-lead" v-html="post.lead_compiled" />
-				<div class="-lead" v-else>
-					<p>{{ post.title }}</p>
-				</div>
+				<div class="fireside-post-lead" v-html="post.lead_compiled" />
 			</app-fade-collapse>
 
 			<a
@@ -163,5 +160,4 @@
 			/>
 
 	</div>
-	<div class="-spacer" />
 </div>
