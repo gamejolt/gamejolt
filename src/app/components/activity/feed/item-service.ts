@@ -25,6 +25,13 @@ export class ActivityFeedItem {
 			// We have to spoof this as an event item.
 			const post = this.feedItem;
 			this.feedItem = new EventItem({
+				// TODO(new-post-format) - we set the mock event item id to the post id
+				// to fix a bug where removing any item from the feed would always remove the first
+				// because their ids were the same.
+				//
+				// This is a temporary hack that is already fixed in the user-posts branch.
+				id: post.id,
+
 				type: EventItem.TYPE_DEVLOG_POST_ADD,
 				added_on: dateVal,
 				scroll_id: post.scroll_id,
