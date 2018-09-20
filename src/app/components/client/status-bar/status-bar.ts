@@ -1,13 +1,12 @@
+import View from '!view!./status-bar.html?style=./status-bar.styl';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
-import View from '!view!./status-bar.html?style=./status-bar.styl';
-
-import { AppClientStatusBarPatchItem } from './patch-item/patch-item';
-import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { store as clientStore } from '../../../../_common/client/store';
+import { ClientUpdater } from '../../../../_common/client/client-updater.service';
+import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
+import { AppClientStatusBarPatchItem } from './patch-item/patch-item';
 
 @View
 @Component({
@@ -41,7 +40,7 @@ export class AppClientStatusBar extends Vue {
 	readonly number = number;
 
 	get clientUpdateStatus() {
-		return clientStore.state.clientUpdateStatus;
+		return ClientUpdater.clientUpdateStatus;
 	}
 
 	get isShowing() {
@@ -61,7 +60,7 @@ export class AppClientStatusBar extends Vue {
 	}
 
 	async updateClient() {
-		await clientStore.dispatch('updateClient');
+		await ClientUpdater.updateClient();
 	}
 
 	@Watch('isShowing', { immediate: true })

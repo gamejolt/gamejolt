@@ -1,6 +1,15 @@
-import { ThemeActions, ThemeMutations, ThemeStore } from '../../lib/gj-lib-client/components/theme/theme.store';
+import {
+	ThemeActions,
+	ThemeMutations,
+	ThemeStore,
+} from '../../lib/gj-lib-client/components/theme/theme.store';
 import { VuexModule, VuexStore } from '../../lib/gj-lib-client/utils/vuex';
-import { Actions as AppActions, AppStore, appStore, Mutations as AppMutations } from '../../lib/gj-lib-client/vue/services/app/app-store';
+import {
+	Actions as AppActions,
+	AppStore,
+	appStore,
+	Mutations as AppMutations,
+} from '../../lib/gj-lib-client/vue/services/app/app-store';
 
 export type Actions = AppActions & ThemeActions & {};
 
