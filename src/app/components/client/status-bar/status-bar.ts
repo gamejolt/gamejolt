@@ -5,6 +5,7 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { ClientUpdater } from '../../../../_common/client/client-updater.service';
+import { Client } from '../../../../_common/client/client.service';
 import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
 import { AppClientStatusBarPatchItem } from './patch-item/patch-item';
 
@@ -37,6 +38,8 @@ export class AppClientStatusBar extends Vue {
 	@ClientLibraryState
 	currentlyPatching!: ClientLibraryStore['currentlyPatching'];
 
+	updaterWarningDismissed = false;
+
 	readonly number = number;
 
 	get clientUpdateStatus() {
@@ -44,7 +47,9 @@ export class AppClientStatusBar extends Vue {
 	}
 
 	get isShowing() {
-		return this.numPatching > 0 || this.numPlaying > 0 || this.hasUpdate;
+		return (
+			this.numPatching > 0 || this.numPlaying > 0 || this.hasUpdate || this.showUpdaterIssue
+		);
 	}
 
 	get currentlyPlayingList() {
@@ -57,6 +62,14 @@ export class AppClientStatusBar extends Vue {
 
 	get hasUpdate() {
 		return this.clientUpdateStatus === 'ready';
+	}
+
+	get showUpdaterIssue() {
+		return this.clientUpdateStatus === 'error' && !this.updaterWarningDismissed;
+	}
+
+	dismissUpdaterWarning() {
+		this.updaterWarningDismissed = true;
 	}
 
 	async updateClient() {
@@ -78,5 +91,9 @@ export class AppClientStatusBar extends Vue {
 
 	updateApply() {
 		this.updateClient();
+	}
+
+	quitClient() {
+		Client.quit();
 	}
 }

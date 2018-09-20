@@ -30,6 +30,10 @@ export abstract class ClientUpdater {
 		return this._clientUpdateProgress;
 	}
 
+	static get hasUpdaterConnectivity() {
+		return this.updaterInstance && this.updaterInstance.controller.connected;
+	}
+
 	private static setClientUpdateStatus(status: ClientUpdateStatus) {
 		console.log('set client update state: ' + status);
 		this._clientUpdateStatus = status;
@@ -287,6 +291,7 @@ export abstract class ClientUpdater {
 				resolve(thisInstance);
 			} catch (err) {
 				try {
+					this.setClientUpdateStatus('error');
 					if (thisInstance) {
 						this.disposeUpdaterInstance(thisInstance);
 					}
