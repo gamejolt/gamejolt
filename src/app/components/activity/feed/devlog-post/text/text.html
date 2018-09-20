@@ -11,6 +11,7 @@
 		:collapse-height="150"
 		:is-open="item.isOpen"
 		:animate="false"
+		@expand.stop="toggleFull()"
 		@require-change="canToggleChanged"
 		>
 		<div class="fireside-post-body">
@@ -21,7 +22,7 @@
 	<div class="page-cut" v-if="canToggleContent">
 		<app-button
 			trans
-			@click="toggleFull()"
+			@click.stop="toggleFull()"
 			>
 			<translate v-if="!item.isOpen">expand post</translate>
 			<translate v-else>collapse</translate>
