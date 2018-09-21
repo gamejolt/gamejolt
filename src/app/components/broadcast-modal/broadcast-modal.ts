@@ -1,26 +1,30 @@
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./broadcast-modal.html';
-
-import { FiresidePost } from '../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
+import { AppResponsiveDimensions } from 'game-jolt-frontend-lib/components/responsive-dimensions/responsive-dimensions';
+import { AppVideoEmbed } from 'game-jolt-frontend-lib/components/video/embed/embed';
+import { AppVideo } from 'game-jolt-frontend-lib/components/video/video';
+import { Component, Prop } from 'vue-property-decorator';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { FiresidePost } from '../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { BaseModal } from '../../../lib/gj-lib-client/components/modal/base';
 import { AppTimeAgo } from '../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppWidgetCompiler } from '../../../lib/gj-lib-client/components/widget-compiler/widget-compiler';
-import { AppFiresidePostLikeWidget } from '../../../lib/gj-lib-client/components/fireside/post/like/widget/widget';
-import { BaseModal } from '../../../lib/gj-lib-client/components/modal/base';
-import { AppCommentWidgetLazy } from '../lazy';
+import { AppEventItemControls } from '../event-item/controls/controls';
+import { AppEventItemMediaTags } from '../event-item/media-tags/media-tags';
 import { AppPollVoting } from '../poll/voting/voting';
 
 @View
 @Component({
 	components: {
-		AppJolticon,
+		AppResponsiveDimensions,
+		AppEventItemMediaTags,
+		AppImgResponsive,
+		AppVideo,
+		AppVideoEmbed,
 		AppTimeAgo,
 		AppWidgetCompiler,
-		AppFiresidePostLikeWidget,
 		AppPollVoting,
-		AppCommentWidget: AppCommentWidgetLazy,
+		AppEventItemControls,
 	},
 })
 export default class AppBroadcastModal extends BaseModal {
@@ -29,12 +33,9 @@ export default class AppBroadcastModal extends BaseModal {
 
 	post: FiresidePost | null = null;
 
-	readonly Screen = Screen;
 	readonly Environment = Environment;
 
 	created() {
-		if (!Screen.isXs) {
-			this.post = this.posts[0];
-		}
+		this.post = this.posts[0];
 	}
 }
