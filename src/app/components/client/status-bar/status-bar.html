@@ -42,12 +42,25 @@
 	</div>
 
 	<div class="pull-right">
-		<div class="-item" v-if="hasUpdate">
+		<div class="-item" v-if="hasUpdate || showUpdaterIssue">
 			<b>
-				<translate>New Client version available!</translate>
-				<a @click="updateApply()">
-					<translate>Update now</translate>
-				</a>
+				<template v-if="hasUpdate">
+					<translate>New Client version available!</translate>
+					<a @click="updateApply()">
+						<translate>Update now</translate>
+					</a>
+				</template>
+				<template v-else>
+					<translate>Uh oh, client has trouble updating!</translate>
+					<a class="-notice" @click="quitClient()">
+						<app-jolticon notice icon="notice" />
+						<translate>Try restarting</translate>
+					</a>
+					&nbsp;
+					<a class="-dismiss" @click="dismissUpdaterWarning()">
+						<app-jolticon class="-dismiss" icon="remove" />
+					</a>
+				</template>
 			</b>
 		</div>
 	</div>
