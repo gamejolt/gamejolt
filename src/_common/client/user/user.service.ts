@@ -1,8 +1,8 @@
-import { VuexStore } from '../../../lib/gj-lib-client/utils/vuex';
-import { User } from '../../../lib/gj-lib-client/components/user/user.model';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Navigate } from '../../../lib/gj-lib-client/components/navigate/navigate.service';
+import { User } from '../../../lib/gj-lib-client/components/user/user.model';
+import { VuexStore } from '../../../lib/gj-lib-client/utils/vuex';
+import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
 
 // So that this can be pulled into any section and not rely on the main "app" store, we manually
 // attach this so we know it exists.
@@ -39,14 +39,14 @@ export class ClientUser {
 	}
 
 	private static authRedirect() {
-		// TODO: This is a hack to fix redirect loop between the client downgrade section and the auth section.
-		// Apparantly nwjs doesnt clean up the store properly when redirected using window.location.href like the browser does,
-		// so theres a race condition between the time user service figures out it has no user and redirects to auth
+		// TODO: This is a hack to fix redirect loop between the client sections and the auth section.
+		// Since redirecting with window.location.href isnt really synchronous theres a race condition
+		// between the time user service figures out it has no user and redirects to auth
 		// and the init logic in client service to redirect to downgrade section.
 		//
-		// This hack will not hold if we have other sections under the 'client' section.
+		// This hack will not hold if we have other sections under the 'client' section that need to redirect to auth if not logged in.
 		const fromSection = Navigate.currentSection;
-		if (!fromSection || fromSection !== 'client') {
+		if (!Navigate.isRedirecting && (!fromSection || fromSection !== 'client')) {
 			Navigate.goto(Environment.authBaseUrl + '/login');
 		}
 	}
