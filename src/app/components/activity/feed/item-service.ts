@@ -20,7 +20,7 @@ export class ActivityFeedItem {
 		let dateVal = 0;
 		if (this.feedItem instanceof FiresidePost) {
 			this.type = 'event-item';
-			dateVal = this.feedItem.updated_on || this.feedItem.added_on;
+			dateVal = this.feedItem.published_on || this.feedItem.added_on;
 
 			// We have to spoof this as an event item.
 			const post = this.feedItem;
