@@ -1,8 +1,13 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+.-media-item
+	theme-prop('background-color', 'bg-offset')
+	position: relative
+
 .-img, .-video
 	width: 100%
+	height: 100%
 
 @media $media-sm-up
 	.devlog-post-view >>>

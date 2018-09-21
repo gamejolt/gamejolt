@@ -127,25 +127,35 @@ export class AppActivityFeedEventItem extends Vue {
 	get link() {
 		if (this.eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
 			return '';
-		} else if (this.eventItem.type === EventItem.TYPE_GAME_PUBLISH) {
+		}
+
+		if (this.eventItem.type === EventItem.TYPE_GAME_PUBLISH) {
 			const game = this.game!;
+
+			const params: { [key: string]: string } = {
+				slug: game.slug,
+				id: game.id + '',
+			};
+
 			return {
 				name: 'discover.games.view.overview',
-				params: {
-					slug: game.slug,
-					id: game.id,
-				},
+				params: params,
 			};
-		} else if (this.eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
+		}
+
+		if (this.eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
 			const post = this.post!;
 			const game = this.game!;
+
+			const params: { [key: string]: string } = {
+				slug: game.slug,
+				id: game.id + '',
+				postSlug: post.slug,
+			};
+
 			return {
 				name: 'discover.games.view.devlog.view',
-				params: {
-					slug: game.slug,
-					id: game.id,
-					postSlug: post.slug,
-				},
+				params: params,
 			};
 		}
 
