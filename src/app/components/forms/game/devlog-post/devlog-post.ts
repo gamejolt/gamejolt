@@ -248,7 +248,11 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		if (lead.match(regex)) {
 			lead = lead.replace(regex, ' '.repeat(this.leadUrlLength));
 		}
-		return lead.length;
+
+		// js is utf18, we need to calc the byte length
+		// thank you https://github.com/substack/utf8-length !
+		// tslint:disable-next-line:no-bitwise
+		return ~-encodeURI(lead).split(/%..|./).length;
 	}
 
 	get leadLengthPercent() {
