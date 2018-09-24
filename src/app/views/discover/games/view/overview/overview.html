@@ -188,14 +188,11 @@
 							<template v-if="feed && (feed.hasItems || hasDevlogPerms)">
 								<div class="-spacer" />
 
-								<template v-if="hasDevlogPerms">
-									<app-devlog-post-add-button
-										:game="game"
-										@add="onPostAdded"
-										/>
-
-									<hr>
-								</template>
+								<app-devlog-post-add-button
+									v-if="hasDevlogPerms"
+									:game="game"
+									@add="onPostAdded"
+									/>
 
 								<app-activity-feed
 									v-if="feed.hasItems"
