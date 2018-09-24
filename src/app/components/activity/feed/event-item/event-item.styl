@@ -17,9 +17,9 @@
 	@media $media-sm-up
 		rounded-corners()
 		theme-prop('border-color', 'bg-offset')
-		border-width: 2px
+		border-width: $-border-width
 		border-style: solid
-		padding: $-item-padding - @border-width
+		padding: $-item-padding-container
 		margin-left: 0
 		margin-right: 0
 
@@ -93,6 +93,6 @@
 
 	@media $media-sm-up
 		margin-bottom: $-item-padding
-		margin-left: -($-item-padding)
-		margin-right: -($-item-padding)
+		margin-left: -($-item-padding-container)
+		margin-right: -($-item-padding-container)
 		padding: $-item-padding

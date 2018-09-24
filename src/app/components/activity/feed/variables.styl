@@ -1,6 +1,9 @@
 @require '~styles/variables'
 
+$-border-width = 2px
 $-item-padding = ($grid-gutter-width / 2)
 $-item-padding-xs = ($grid-gutter-width-xs / 2)
 $-avatar-size = 50px
 $-avatar-size-xs = 40px
+// This is the padding around the event item container. We do it this way to fit the grid.
+$-item-padding-container = $-item-padding - $-border-width

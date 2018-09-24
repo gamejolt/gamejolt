@@ -15,8 +15,8 @@
 	margin-right: -($-item-padding-xs)
 
 	@media $media-sm-up
-		margin-left: -($-item-padding)
-		margin-right: -($-item-padding)
+		margin-left: -($-item-padding-container)
+		margin-right: -($-item-padding-container)
 
 .-slider
 	white-space: nowrap
@@ -61,12 +61,12 @@
 		display: block
 
 .-prev
-	left: -($-item-padding + $grid-gutter-width)
+	left: -($-item-padding-container + $grid-gutter-width)
 	border-top-left-radius: $border-radius-base
 	border-bottom-left-radius: $border-radius-base
 
 .-next
-	right: -($-item-padding + $grid-gutter-width)
+	right: -($-item-padding-container + $grid-gutter-width)
 	border-top-right-radius: $border-radius-base
 	border-bottom-right-radius: $border-radius-base
 
