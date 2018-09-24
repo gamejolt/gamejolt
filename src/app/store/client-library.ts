@@ -1,5 +1,6 @@
 import {
 	Config,
+	getExecutable,
 	Launcher,
 	LaunchInstance,
 	OldLaunchInstance,
@@ -12,12 +13,13 @@ import {
 	Uninstaller,
 } from 'client-voodoo';
 import * as fs from 'fs';
-
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { isErrnoException } from 'game-jolt-frontend-lib/utils/utils';
 import * as path from 'path';
-import Vue from 'vue';
+import Vue, { CreateElement } from 'vue';
+import { Component } from 'vue-property-decorator';
 import { Action, Mutation, namespace, State } from 'vuex-class';
-
-import { Settings } from '../../_common/settings/settings.service';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
 import { Device } from '../../lib/gj-lib-client/components/device/device.service';
 import { GameBuild } from '../../lib/gj-lib-client/components/game/build/build.model';
@@ -25,9 +27,10 @@ import { GameBuildLaunchOption } from '../../lib/gj-lib-client/components/game/b
 import { Game } from '../../lib/gj-lib-client/components/game/game.model';
 import { GamePackage } from '../../lib/gj-lib-client/components/game/package/package.model';
 import { GameRelease } from '../../lib/gj-lib-client/components/game/release/release.model';
-import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
+import { GrowlOptions, Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
 import { HistoryTick } from '../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { arrayGroupBy, arrayIndexBy, arrayRemove } from '../../lib/gj-lib-client/utils/array';
+import { fuzzysearch } from '../../lib/gj-lib-client/utils/string';
 import {
 	VuexAction,
 	VuexGetter,
@@ -35,17 +38,18 @@ import {
 	VuexMutation,
 	VuexStore,
 } from '../../lib/gj-lib-client/utils/vuex';
+import { Settings } from '../../_common/settings/settings.service';
+import { AppClientGrowlAntiVirus } from '../components/client/growls/anti-virus/anti-virus';
 import { LocalDbGame } from '../components/client/local-db/game/game.model';
 import { LocalDb } from '../components/client/local-db/local-db.service';
 import {
 	LocalDbPackage,
-	LocalDbPackagePid,
 	LocalDbPackagePatchState,
+	LocalDbPackagePid,
 	LocalDbPackageProgress,
 	LocalDbPackageRemoveState,
 	LocalDbPackageRunState,
 } from '../components/client/local-db/package/package.model';
-import { fuzzysearch } from '../../lib/gj-lib-client/utils/string';
 
 export const ClientLibraryState = namespace('clientLibrary', State);
 export const ClientLibraryAction = namespace('clientLibrary', Action);
@@ -80,6 +84,64 @@ export type Mutations = {
 	'clientLibrary/syncSetInterval': NodeJS.Timer;
 	'clientLibrary/syncClear': undefined;
 };
+
+export type ClientVoodooErrorType =
+	| 'client-voodoo-launch'
+	| 'client-voodoo-attach'
+	| 'client-voodoo-install'
+	| 'client-voodoo-update'
+	| 'client-voodoo-update-abort'
+	| 'client-voodoo-uninstall';
+
+@Component({})
+class Meme extends Vue {
+	render(h: CreateElement) {
+		const content = h('div');
+		// content.text = 'eyy';
+		return content;
+	}
+}
+
+function handleClientVoodooError(
+	err: Error,
+	action: ClientVoodooErrorType,
+	growlOpts?: GrowlOptions
+) {
+	console.log('Client voodoo error');
+	console.log(err);
+
+	try {
+		if (
+			isErrnoException(err) &&
+			err.code === 'ENOENT' &&
+			err.path &&
+			path.resolve(err.path) === path.resolve(getExecutable()) &&
+			true
+		) {
+			if (growlOpts && growlOpts.message) {
+				growlOpts.message = Translate.$gettext(
+					'Looks like a hyper-active anti virus removed an executable we need to manage your games.'
+				);
+				growlOpts.sticky = true;
+				growlOpts.component = AppClientGrowlAntiVirus;
+				growlOpts.props = {
+					title: growlOpts.title,
+				};
+			}
+
+			if (action) {
+				Analytics.trackError(action);
+			}
+		}
+
+		if (growlOpts) {
+			Growls.error(growlOpts);
+		}
+	} catch (err2) {
+		console.log('help');
+		console.log(err2);
+	}
+}
 
 @VuexModule()
 export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, Mutations> {
@@ -588,10 +650,11 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 								LocalDbPackagePatchState.DOWNLOAD_FAILED,
 							]);
 						}
-						Growls.error(
-							`${packageTitle} cannot abort at this time. Retry or uninstall it.`,
-							'Update Failed'
-						);
+
+						handleClientVoodooError(err, 'client-voodoo-update-abort', {
+							message: `${packageTitle} cannot abort at this time. Retry or uninstall it.`,
+							title: 'Update Failed',
+						});
 					}
 				}
 			}
@@ -600,7 +663,13 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 			const action = operation === 'install' ? 'install' : 'update';
 			const title = operation === 'install' ? 'Installation Failed' : 'Update Failed';
-			Growls.error(`${packageTitle} failed to ${action}.`, title);
+			const errorType: ClientVoodooErrorType =
+				operation === 'install' ? 'client-voodoo-install' : 'client-voodoo-update';
+
+			handleClientVoodooError(err, errorType, {
+				message: `${packageTitle} failed to ${action}.`,
+				title: title,
+			});
 
 			if (localPackage.install_state) {
 				if (localPackage.install_state === LocalDbPackagePatchState.UNPACKING) {
@@ -815,7 +884,9 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			this.launcherAttach([localPackage, launchInstance]);
 		} catch (err) {
 			console.error(err);
-			Growls.error('Could not launch game.');
+			handleClientVoodooError(err, 'client-voodoo-launch', {
+				message: Translate.$gettext('Could not launch game.'),
+			});
 			this.launcherClear(localPackage);
 		}
 	}
@@ -832,6 +903,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		} catch (err) {
 			console.log(`Could not reattach launcher instance: ${localPackage.running_pid}`);
 			console.error(err);
+			handleClientVoodooError(err, 'client-voodoo-attach');
 			this.launcherClear(localPackage);
 		}
 	}
@@ -1189,18 +1261,20 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			} catch (err) {
 				if (withNotifications) {
 					if (wasInstalling) {
-						Growls.error('Could not stop the installation.');
+						handleClientVoodooError(err, 'client-voodoo-uninstall', {
+							message: 'Could not stop the installation.',
+						});
 					} else {
-						Growls.error({
-							title: 'Remove Failed',
-							message:
-								'Could not remove ' +
-								(localPackage.title ||
-									(localGame ? localGame.title : 'the package')) +
-								'.',
-							system: true,
+						const what =
+							localPackage.title || (localGame ? localGame.title : 'the package');
+
+						handleClientVoodooError(err, 'client-voodoo-uninstall', {
+							message: `Could not remove ${what}.`,
+							title: 'Remove failed',
 						});
 					}
+				} else {
+					handleClientVoodooError(err, 'client-voodoo-uninstall');
 				}
 
 				await this.setPackageRemoveState([
