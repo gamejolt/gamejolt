@@ -83,7 +83,7 @@ export class AppActivityFeedDevlogPostText extends Vue {
 
 			setTimeout(() => {
 				this.isToggling = false;
-			}, 750);
+			}, 1000);
 		} else {
 			this.item.isOpen = false;
 			this.isToggling = false;
