@@ -1,8 +1,7 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-$-height = 50px
-$-height-xs = 40px
+$-height = 40px
 
 .devlog-post-add-button
 	display: flex
@@ -11,35 +10,20 @@ $-height-xs = 40px
 .-avatar
 	theme-prop('background-color', 'bg-subtle')
 	flex: none
-	width: $-height-xs
-	height: $-height-xs
+	width: $-height
+	height: $-height
 	margin-right: $grid-gutter-width-xs * 0.5
 	border-radius: 50%
 
 	@media $media-sm-up
-		width: $-height
-		height: $-height
 		margin-right: $grid-gutter-width * 0.5
 
 .-input
-	theme-prop('border-color', 'bg-subtle')
-	theme-prop('background-color', 'bg')
-	theme-prop('color', 'link')
+	input-placeholder-button()
 	flex: auto
 	position: relative
-	height: $-height-xs
-	line-height: $-height-xs
-	padding-left: $padding-base-horizontal
-	padding-right: $padding-base-horizontal
-	border-width: 2px
-	border-style: solid
-	border-radius: $input-border-radius
-	font-weight: 600
-	cursor: pointer
-
-	@media $media-sm-up
-		height: $-height
-		line-height: $-height
+	height: $-height
+	line-height: $-height
 
 	&::before
 		caret(var(--theme-bg-subtle), size: 9px)

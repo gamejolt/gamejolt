@@ -2,23 +2,12 @@
 @require '~styles-lib/mixins'
 
 .-attachment-controls
-	display: flex
-	align-items: center
 	margin-bottom: $line-height-computed
 
-	&-label
-		flex: none
-		margin-right: 10px
-		text-transform: uppercase
-		font-weight: bold
-
-	&-buttons
-		flex: auto
-
-		@media $media-xs
-			white-space: nowrap
-			overflow-x: scroll
-			overflow-y: hidden
+	@media $media-xs
+		white-space: nowrap
+		overflow-x: scroll
+		overflow-y: hidden
 
 .-upload-input
 	display: none
