@@ -126,7 +126,7 @@ export class AppActivityFeedEventItem extends Vue {
 
 	get link() {
 		if (this.eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
-			return '';
+			return null;
 		}
 
 		if (this.eventItem.type === EventItem.TYPE_GAME_PUBLISH) {
@@ -159,7 +159,14 @@ export class AppActivityFeedEventItem extends Vue {
 			};
 		}
 
-		return '';
+		return null;
+	}
+
+	get linkResolved() {
+		if (!this.link) {
+			return '';
+		}
+		return this.$router.resolve(this.link).href;
 	}
 
 	get shouldShowManage() {
@@ -206,11 +213,24 @@ export class AppActivityFeedEventItem extends Vue {
 	onClick(e: MouseEvent) {
 		const ignoreList = ['a', 'button'];
 
-		if (e.target) {
-			const target = e.target as HTMLElement;
-			const nodeName = target.nodeName.toLowerCase();
-			if (ignoreList.indexOf(nodeName) !== -1) {
-				return;
+		// This mess is because we have to search the parent chain to see if one of the elements is
+		// in our ignored list.
+		let target = e.target as HTMLElement;
+		if (target instanceof HTMLElement) {
+			while (true) {
+				const nodeName = target.nodeName.toLowerCase();
+
+				// Immediately stop if we hit the end.
+				if ((target as any) === document || !target.parentNode) {
+					break;
+				}
+
+				// If it's in our list of ignored elements, then just stop.
+				if (ignoreList.indexOf(nodeName) !== -1) {
+					return;
+				}
+
+				target = target.parentNode as HTMLAnchorElement;
 			}
 		}
 
@@ -221,8 +241,12 @@ export class AppActivityFeedEventItem extends Vue {
 		if (this.video) {
 			CommentVideoModal.show(this.video);
 		} else {
+			if (!this.link) {
+				return;
+			}
+
 			if (e.ctrlKey || e.shiftKey) {
-				Navigate.newWindow(Environment.wttfBaseUrl + this.$router.resolve(this.link).href);
+				Navigate.newWindow(Environment.wttfBaseUrl + this.linkResolved);
 				return;
 			}
 

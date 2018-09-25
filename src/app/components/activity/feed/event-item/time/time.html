@@ -1,4 +1,8 @@
-<span>
+<component
+	:is="link ? 'router-link' : 'span'"
+	:to="link"
+	:class="link ? 'link-unstyled' : ''"
+	>
 	<template v-if="shouldShowScheduled">
 		<span class="tag" style="vertical-align: middle">
 			<app-jolticon icon="calendar-grid" />
@@ -15,4 +19,4 @@
 			short
 			/>
 	</template>
-</span>
+</component>

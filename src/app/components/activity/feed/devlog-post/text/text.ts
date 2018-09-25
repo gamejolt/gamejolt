@@ -8,8 +8,6 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { ActivityFeedItem } from '../../item-service';
 
-const ExtraCollapsePadding = 200;
-
 @View
 @Component({
 	components: {

@@ -18,6 +18,9 @@ export class AppActivityFeedEventItemTime extends Vue {
 	@Prop(FiresidePost)
 	post?: FiresidePost;
 
+	@Prop(String)
+	link!: string;
+
 	get shouldShowScheduled() {
 		return this.post && this.post.isScheduled;
 	}
