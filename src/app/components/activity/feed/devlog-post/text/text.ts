@@ -27,8 +27,6 @@ export class AppActivityFeedDevlogPostText extends Vue {
 	@Prop(Boolean)
 	isHydrated?: boolean;
 
-	// canToggleContent = true;
-	// contentBootstrapped = false;
 	isToggling = false;
 
 	async mounted() {
@@ -52,27 +50,14 @@ export class AppActivityFeedDevlogPostText extends Vue {
 		}
 	}
 
-	// We wait for the fade collapse component to bootstrap in and potentially restrict the content
-	// size before saying we're bootstrapped.
-	// async canToggleChanged(canToggle: boolean) {
-	// 	this.canToggleContent = canToggle;
-
-	// 	if (!this.contentBootstrapped) {
-	// 		this.contentBootstrapped = true;
-
-	// 		// Wait for the fade to restrict content now before emitting the
-	// 		// event.
-	// 	}
-	// }
-
 	expand() {
 		this.item.isOpen = true;
 		this.isToggling = false;
 	}
 
 	collapse() {
-		// We will scroll to the bottom of the element minus some extra padding.
-		// This keeps the element in view a bit.
+		// We will scroll to the bottom of the element minus some extra padding. This keeps the
+		// element in view a bit.
 		const elementOffset = Scroll.getElementOffsetFromContext(this.$el);
 		const scrollTo = elementOffset - Screen.windowHeight * 0.25;
 
