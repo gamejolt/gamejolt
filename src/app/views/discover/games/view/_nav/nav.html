@@ -2,7 +2,7 @@
 
 	<nav class="platform-list inline">
 		<ul>
-			<li v-if="!game._is_devlog">
+			<li>
 				<router-link
 					:to="{ name: 'discover.games.view.overview' }"
 					active-class="active"
@@ -12,36 +12,13 @@
 				</router-link>
 			</li>
 
-			<li v-if="game._is_devlog">
-				<router-link
-					:to="{ name: 'discover.games.view.overview' }"
-					active-class="active"
-					exact
-					>
-					<translate>Devlog</translate>
-					<span class="badge">{{ postsCount | number }}</span>
-				</router-link>
-			</li>
-
-			<li v-if="!game._is_devlog && postsCount > 0">
-				<router-link
-					:to="{ name: 'discover.games.view.devlog.list' }"
-					active-class="active"
-					exact
-					>
-					<translate>Devlog</translate>
-					<span class="badge">{{ postsCount | number }}</span>
-				</router-link>
-			</li>
-
-			<li v-if="game._is_devlog && game.comments_enabled">
-				<router-link
-					:to="{ name: 'discover.games.view.comments' }"
-					active-class="active"
-					>
+			<li v-if="game.comments_enabled">
+				<a @click="showComments()">
 					<translate>Comments</translate>
-					<span class="badge">{{ commentsCount | number }}</span>
-				</router-link>
+					<span class="badge" v-if="commentsCount">
+						{{ commentsCount | number }}
+					</span>
+				</a>
 			</li>
 
 			<li v-if="hasScores">
@@ -93,7 +70,7 @@
 			</app-game-perms>
 			<a class="list-group-item has-icon"
 				v-if="app.user && !hasAnyPerms"
-				@click="report"
+				@click="report()"
 				>
 				<app-jolticon icon="flag" notice />
 				<translate>games.view.report_game_button</translate>

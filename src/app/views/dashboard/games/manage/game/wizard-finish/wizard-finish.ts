@@ -9,9 +9,9 @@ import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/compo
 	name: 'RouteDashGamesManageGameWizardFinish',
 })
 export default class RouteDashGamesManageGameWizardFinish extends BaseRouteComponent {
-	@RouteState canPublish: RouteStore['canPublish'];
-	@RouteAction publish: RouteStore['publish'];
-	@RouteAction saveDraft: RouteStore['saveDraft'];
+	@RouteState canPublish!: RouteStore['canPublish'];
+	@RouteAction publish!: RouteStore['publish'];
+	@RouteAction saveDraft!: RouteStore['saveDraft'];
 
 	get routeTitle() {
 		return this.$gettext('The End Is Not the End');

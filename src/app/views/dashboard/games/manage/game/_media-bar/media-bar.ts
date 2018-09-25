@@ -25,12 +25,12 @@ const draggable = require('vuedraggable');
 	},
 })
 export class AppManageGameMediaBar extends Vue {
-	@Prop(Game) game: Game;
-	@Prop(Array) mediaItems: Media[];
+	@Prop(Game) game!: Game;
+	@Prop(Array) mediaItems!: Media[];
 
-	@RouteMutation addMedia: RouteStore['addMedia'];
-	@RouteMutation removeMedia: RouteStore['removeMedia'];
-	@RouteAction saveMediaSort: RouteStore['saveMediaSort'];
+	@RouteMutation addMedia!: RouteStore['addMedia'];
+	@RouteMutation removeMedia!: RouteStore['removeMedia'];
+	@RouteAction saveMediaSort!: RouteStore['saveMediaSort'];
 
 	mediaBarHeight = MediaBarItemMaxHeight + 40;
 	addButtonSize = MediaBarItemMaxHeight;

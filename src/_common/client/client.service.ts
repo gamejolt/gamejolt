@@ -1,5 +1,6 @@
-import * as gui from 'nw.gui';
-const win = gui.Window.get();
+import * as os from 'os';
+import * as path from 'path';
+const win = nw.Window.get();
 
 export class Client {
 	static startedSilently = false;
@@ -8,10 +9,9 @@ export class Client {
 		// Whether or not we started "hidden".
 		this.startedSilently = false;
 
-		const app = gui.App;
-		if (app.argv.length) {
-			for (let i = 0; i < app.argv.length; ++i) {
-				if (app.argv[i] === '--silent-start') {
+		if (nw.App.argv.length) {
+			for (let i = 0; i < nw.App.argv.length; ++i) {
+				if (nw.App.argv[i] === '--silent-start') {
 					console.info('Started silently.');
 					this.startedSilently = true;
 					break;
@@ -21,7 +21,7 @@ export class Client {
 
 		// If they try to open the app again we should get a second 'open' event.
 		// We should force it into view.
-		app.on('open', () => {
+		nw.App.on('open', () => {
 			console.info('They tried opening the Client again. Force showing the window.');
 			this.show();
 		});
@@ -33,10 +33,10 @@ export class Client {
 	}
 
 	/**
-	 * A soft close. It won't quit the whole app.
+	 * Just hides the window. Mostly useful on Mac to hide on soft quit.
 	 */
-	static close() {
-		win.close();
+	static hide() {
+		win.hide();
 	}
 
 	/**
@@ -44,8 +44,8 @@ export class Client {
 	 */
 	static show() {
 		win.show();
-		win.focus();
 		win.restore();
+		win.focus();
 	}
 
 	/**
@@ -62,5 +62,16 @@ export class Client {
 
 	static clearProgressBar() {
 		win.setProgressBar(-1);
+	}
+
+	// Gets the directory the joltron binary is running from.
+	static get joltronDir() {
+		if (os.type() === 'Darwin') {
+			// On mac nw.App.startPath is apparantly unreliable, but process.cwd() always changes to app.nw folder.
+			// Need to traverse up this path.
+			// data-packageId-buildId/Game Jolt Client.app/Contents/Resources/app.nw
+			return path.resolve(process.cwd(), '../../../../../');
+		}
+		return path.resolve(nw.App.startPath, '..');
 	}
 }

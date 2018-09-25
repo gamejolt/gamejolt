@@ -19,7 +19,7 @@ import { AppGameListPlaceholder } from '../../../../../../components/game/list/p
 	},
 })
 export class AppDiscoverGamesViewOverviewRecommended extends Vue {
-	@RouteState recommendedGames: RouteStore['recommendedGames'];
+	@RouteState recommendedGames!: RouteStore['recommendedGames'];
 
 	readonly Screen = Screen;
 }

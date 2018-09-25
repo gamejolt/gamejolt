@@ -17,9 +17,9 @@ import { AppGameOgrs } from '../ogrs/ogrs';
 	},
 })
 export class AppGameMaturityBlock extends Vue {
-	@Prop(Game) game: Game;
+	@Prop(Game) game!: Game;
 
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	private hasBypassed = false;
 

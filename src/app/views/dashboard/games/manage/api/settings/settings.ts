@@ -20,7 +20,7 @@ import {
 	},
 })
 export default class RouteDashGamesManageApiSettings extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	privateKey = '';
 	shouldShowKey = false;

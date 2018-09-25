@@ -17,7 +17,7 @@ import {
 	},
 })
 export default class RouteSearchGames extends BaseRouteComponent {
-	@Prop(Object) payload: any;
+	@Prop(Object) payload!: any;
 
 	readonly Search = Search;
 

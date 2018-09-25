@@ -12,7 +12,7 @@ export class LocalDbGame extends LocalDbModel<LocalDbGame> {
 	modified_on = 0;
 
 	// Shouldn't this have fields/types?
-	compatibility: any = null;
+	compatibility: unknown = null;
 
 	header_media_item: MediaItem | null = null;
 	thumbnail_media_item: MediaItem | null = null;

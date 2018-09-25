@@ -11,7 +11,7 @@ import { Ads } from '../../../lib/gj-lib-client/components/ad/ads.service';
 	name: 'RouteDash',
 })
 export default class RouteDash extends BaseRouteComponent {
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	routeInit() {
 		Ads.setAdUnit('user');

@@ -50,8 +50,8 @@ export type Mutations = AppMutations &
 	},
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
-	app: AppStore;
-	theme: ThemeStore;
+	app!: AppStore;
+	theme!: ThemeStore;
 
 	isLoaded = false;
 	tab: Tab = 'theme';

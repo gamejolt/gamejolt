@@ -30,7 +30,7 @@ import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/
 	},
 })
 export default class RouteLandingMarketplace extends BaseRouteComponent {
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	firesidePosts: FiresidePost[] = [];
 	games: Game[] = [];

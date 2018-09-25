@@ -27,7 +27,7 @@ import { Ads } from '../../../lib/gj-lib-client/components/ad/ads.service';
 	},
 })
 export default class RouteSearch extends BaseRouteComponent {
-	@State route: Store['route'];
+	@State route!: Store['route'];
 
 	query = '';
 	showPagination = false;

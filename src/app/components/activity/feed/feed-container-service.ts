@@ -1,12 +1,12 @@
 import Vue from 'vue';
-import { ActivityFeedItem, ActivityFeedInput } from './item-service';
-import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
+import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/event-item.model';
+import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
 import { arrayRemove } from '../../../../lib/gj-lib-client/utils/array';
-import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/event-item.model';
-import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { ActivityFeedInput, ActivityFeedItem } from './item-service';
 
 export interface ActivityFeedContainerOptions {
 	/**

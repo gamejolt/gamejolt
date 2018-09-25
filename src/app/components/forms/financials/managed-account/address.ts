@@ -13,9 +13,9 @@ import Vue from 'vue';
 	},
 })
 export class AppFinancialsManagedAccountAddress extends Vue {
-	@Prop(Boolean) forceRequired: boolean;
+	@Prop(Boolean) forceRequired!: boolean;
 
-	@Prop(String) namePrefix: string;
+	@Prop(String) namePrefix!: string;
 
 	parent: FormFinancialsManagedAccount = null as any;
 	countries: Country[] = [];

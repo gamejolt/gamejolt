@@ -49,7 +49,7 @@ import {
 	},
 })
 export default class RouteDashMainOverview extends BaseRouteComponent {
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	revenueTotal = 0;
 	revenueWithdrawn = 0;

@@ -22,11 +22,11 @@ import {
 	},
 })
 export default class RouteDashGamesManageGameDesign extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
-	@RouteState media: RouteStore['media'];
+	@RouteState game!: RouteStore['game'];
+	@RouteState media!: RouteStore['media'];
 
-	@RouteMutation populateMedia: RouteStore['populateMedia'];
-	@ThemeMutation setPageTheme: ThemeStore['setPageTheme'];
+	@RouteMutation populateMedia!: RouteStore['populateMedia'];
+	@ThemeMutation setPageTheme!: ThemeStore['setPageTheme'];
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: Route) {

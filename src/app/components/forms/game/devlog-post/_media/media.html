@@ -1,0 +1,61 @@
+<app-loading-fade :is-loading="state.isProcessing">
+	<app-form name="devlogPostMediaForm" ref="form">
+		<app-form-group
+			name="image"
+			hide-label
+			optional
+			:label="$gettext(`Images`)"
+			>
+			<p class="help-block">
+				<translate>Your image must be a PNG, JPG, or GIF.</translate> <br>
+				<b><translate>Animated GIFs are supported.</translate></b>
+			</p>
+
+			<app-form-control-upload
+				class="-upload-input"
+				ref="upload"
+				:rules="{
+					filesize: maxFilesize,
+					max_img_dimensions: [ maxWidth, maxHeight ],
+				}"
+				accept=".png,.jpg,.jpeg,.gif"
+				multiple
+				@changed="mediaSelected()"
+				/>
+
+			<app-form-control-errors />
+		</app-form-group>
+	</app-form>
+
+	<app-scroll-scroller
+		overlay
+		horizontal
+		>
+		<div class="-items">
+			<a class="-add" @click="showSelectMedia()">
+				<div class="-add-inner">
+					<div>
+						<app-jolticon icon="add" big />
+						<br>
+						<b>
+							<translate>Images/GIFs</translate>
+						</b>
+					</div>
+				</div>
+			</a>
+
+			<draggable
+				style="display: inline-block"
+				v-model="internalItems"
+				>
+				<app-form-game-devlog-post-media-item
+					class="-item"
+					v-for="item of internalItems"
+					:key="item.id"
+					:item="item"
+					@remove="emitRemove(item)"
+					/>
+			</draggable>
+		</div>
+	</app-scroll-scroller>
+</app-loading-fade>

@@ -12,11 +12,11 @@ import Vue from 'vue';
 	},
 })
 export class AppFinancialsManagedAccountSsn extends Vue {
-	@Prop(Boolean) isForceRequired: boolean;
+	@Prop(Boolean) isForceRequired!: boolean;
 
-	@Prop(String) namePrefix: string;
+	@Prop(String) namePrefix!: string;
 
-	@Prop(String) countryCode: string;
+	@Prop(String) countryCode!: string;
 
 	parent: FormFinancialsManagedAccount = null as any;
 	created() {

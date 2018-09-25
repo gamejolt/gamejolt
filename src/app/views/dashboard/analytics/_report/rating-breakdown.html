@@ -13,9 +13,12 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="i of [ 5, 4, 3, 2, 1 ]">
-				<td>
-					{{ i }}
+			<tr v-for="i of [ 1, 0 ]">
+				<td v-if="i === 1">
+					<translate>Like</translate>
+				</td>
+				<td v-else>
+					<translate>Dislike</translate>
 				</td>
 				<td class="text-right">
 					{{ reportData.data[ i ] || 0 | number }}

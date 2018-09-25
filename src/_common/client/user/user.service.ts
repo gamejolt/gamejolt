@@ -1,6 +1,7 @@
-import { VuexStore } from '../../../lib/gj-lib-client/utils/vuex';
-import { User } from '../../../lib/gj-lib-client/components/user/user.model';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
+import { Navigate } from '../../../lib/gj-lib-client/components/navigate/navigate.service';
+import { User } from '../../../lib/gj-lib-client/components/user/user.model';
+import { VuexStore } from '../../../lib/gj-lib-client/utils/vuex';
 import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
 
 // So that this can be pulled into any section and not rely on the main "app" store, we manually
@@ -15,7 +16,7 @@ export class ClientUser {
 		if (localUser) {
 			const user = new User(JSON.parse(localUser));
 			store.commit('app/setUser', user);
-		} else if (store.state.app.clientSection !== 'auth') {
+		} else if (Navigate.currentSection !== 'auth') {
 			// Must be logged in to use client.
 			this.authRedirect();
 		}
@@ -38,6 +39,15 @@ export class ClientUser {
 	}
 
 	private static authRedirect() {
-		window.location.href = Environment.authBaseUrl + '/login';
+		// TODO: This is a hack to fix redirect loop between the client sections and the auth section.
+		// Since redirecting with window.location.href isnt really synchronous theres a race condition
+		// between the time user service figures out it has no user and redirects to auth
+		// and the init logic in client service to redirect to downgrade section.
+		//
+		// This hack will not hold if we have other sections under the 'client' section that need to redirect to auth if not logged in.
+		const fromSection = Navigate.currentSection;
+		if (!Navigate.isRedirecting && (!fromSection || fromSection !== 'client')) {
+			Navigate.goto(Environment.authBaseUrl + '/login');
+		}
 	}
 }

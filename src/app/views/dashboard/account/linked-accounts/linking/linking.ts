@@ -21,7 +21,7 @@ if (GJ_IS_CLIENT) {
 	},
 })
 export default class RouteDashAccountLinkedAccountsLinking extends BaseRouteComponent {
-	token: string;
+	token!: string;
 
 	get routeTitle() {
 		return this.$gettext('Waiting for Link');

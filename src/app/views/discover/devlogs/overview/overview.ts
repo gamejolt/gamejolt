@@ -39,7 +39,7 @@ import {
 	},
 })
 export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	games: any[] = [];
 	feed: ActivityFeedContainer | null = null;

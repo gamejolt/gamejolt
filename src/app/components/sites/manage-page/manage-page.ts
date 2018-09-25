@@ -25,7 +25,7 @@ import { AppSitesManagePageStatic } from './static';
 	},
 })
 export class AppSitesManagePage extends Vue {
-	@Prop(Site) site: Site;
+	@Prop(Site) site!: Site;
 	@Prop(Game) game?: Game;
 
 	get tab() {

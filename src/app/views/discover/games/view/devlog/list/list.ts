@@ -1,31 +1,22 @@
+import View from '!view!./list.html';
+import { AppAd } from 'game-jolt-frontend-lib/components/ad/ad';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
+import { BaseRouteComponent, RouteResolve } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
-import { Component } from 'vue-property-decorator';
-import View from '!view!./list.html';
-
 import { ActivityFeedContainer } from '../../../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../../../../components/activity/feed/feed-service';
-import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
-import {
-	RouteState,
-	RouteStore,
-	RouteMutation,
-	gameStoreCheckPostRedirect,
-} from '../../view.store';
-import {
-	BaseRouteComponent,
-	RouteResolve,
-} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { AppActivityFeedLazy } from '../../../../../../components/lazy';
-import { EventItem } from '../../../../../../../lib/gj-lib-client/components/event-item/event-item.model';
-import { AppDevlogPostAdd } from '../../../../../../components/devlog/post/add/add';
-import { Store } from '../../../../../../store/index';
-import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { AppDevlogPostAddButton } from '../../../../../../components/devlog/post/add-button/add-button';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
+import { AppActivityFeedLazy } from '../../../../../../components/lazy';
+import { Store } from '../../../../../../store/index';
+import { gameStoreCheckPostRedirect, RouteMutation, RouteState, RouteStore } from '../../view.store';
 
 @View
 @Component({
@@ -34,15 +25,19 @@ import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 		AppAd,
 		AppActivityFeed: AppActivityFeedLazy,
 		AppActivityFeedPlaceholder,
-		AppDevlogPostAdd,
+		AppDevlogPostAddButton,
 		AppGamePerms,
 	},
 })
 export default class RouteDiscoverGamesViewDevlogList extends BaseRouteComponent {
-	@State app: Store['app'];
+	@State
+	app!: Store['app'];
 
-	@RouteState game: RouteStore['game'];
-	@RouteMutation addPost: RouteStore['addPost'];
+	@RouteState
+	game!: RouteStore['game'];
+
+	@RouteMutation
+	addPost!: RouteStore['addPost'];
 
 	feed: ActivityFeedContainer | null = null;
 

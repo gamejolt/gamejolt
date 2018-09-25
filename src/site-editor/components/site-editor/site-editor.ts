@@ -21,18 +21,18 @@ import { Store } from '../../store/index';
 	},
 })
 export class AppSiteEditor extends Vue {
-	@State tab: Store['tab'];
-	@State site: Store['site'];
-	@State('siteTemplates') templates: Store['siteTemplates'];
-	@State currentTemplateId: Store['currentTemplateId'];
-	@State('siteTheme') theme: Store['siteTheme'];
-	@State isLoaded: Store['isLoaded'];
-	@State isDirty: Store['isDirty'];
+	@State tab!: Store['tab'];
+	@State site!: Store['site'];
+	@State('siteTemplates') templates!: Store['siteTemplates'];
+	@State currentTemplateId!: Store['currentTemplateId'];
+	@State('siteTheme') theme!: Store['siteTheme'];
+	@State isLoaded!: Store['isLoaded'];
+	@State isDirty!: Store['isDirty'];
 
-	@Mutation setTemplateId: Store['setTemplateId'];
-	@Mutation setThemeData: Store['setThemeData'];
-	@Mutation setContentEdited: Store['setContentEdited'];
-	@Mutation clearIsDirty: Store['clearIsDirty'];
+	@Mutation setTemplateId!: Store['setTemplateId'];
+	@Mutation setThemeData!: Store['setThemeData'];
+	@Mutation setContentEdited!: Store['setContentEdited'];
+	@Mutation clearIsDirty!: Store['clearIsDirty'];
 
 	get siteUrl() {
 		return this.site.url;

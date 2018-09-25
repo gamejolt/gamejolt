@@ -30,7 +30,7 @@ import {
 	},
 })
 export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	items: GameDataStoreItem[] = [];
 

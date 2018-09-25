@@ -26,7 +26,7 @@ export class FormSiteDomain extends BaseForm<FormModel> implements FormOnInit {
 	modelClass = Site as any;
 	saveMethod = '$saveDomain' as any;
 
-	@Prop(User) user: User;
+	@Prop(User) user!: User;
 	@Prop(Game) game?: Game;
 
 	onInit() {}

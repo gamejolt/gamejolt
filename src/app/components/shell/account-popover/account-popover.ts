@@ -44,16 +44,16 @@ if (GJ_IS_CLIENT) {
 	},
 })
 export class AppShellAccountPopover extends Vue {
-	@State app: AppStore;
-	@ThemeState isDark: ThemeStore['isDark'];
-	@ThemeMutation setDark: ThemeStore['setDark'];
+	@State app!: AppStore;
+	@ThemeState isDark!: ThemeStore['isDark'];
+	@ThemeMutation setDark!: ThemeStore['setDark'];
 
 	walletAmount: number | false = false;
 
 	readonly Screen = Screen;
 	readonly Connection = Connection;
 
-	@Action logout: Store['logout'];
+	@Action logout!: Store['logout'];
 
 	onShow() {
 		this.$emit('shown');

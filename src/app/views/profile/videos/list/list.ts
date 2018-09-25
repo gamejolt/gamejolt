@@ -23,8 +23,8 @@ import {
 	},
 })
 export default class RouteProfileVideosList extends BaseRouteComponent {
-	@Prop() user: User;
-	@Prop() videosCount: number;
+	@Prop() user!: User;
+	@Prop() videosCount!: number;
 
 	videos: CommentVideo[] = [];
 	page = 0;

@@ -21,9 +21,9 @@ import {
 	},
 })
 export default class RouteDashGamesManageGameDetails extends BaseRouteComponent {
-	@AppState user: AppStore['user'];
-	@RouteState game: RouteStore['game'];
-	@RouteState isWizard: RouteStore['isWizard'];
+	@AppState user!: AppStore['user'];
+	@RouteState game!: RouteStore['game'];
+	@RouteState isWizard!: RouteStore['isWizard'];
 
 	get routeTitle() {
 		if (this.game) {

@@ -1,0 +1,43 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.-comment
+	rounded-corners()
+	theme-prop('border-color', 'bg-offset')
+	position: relative
+	padding: 10px
+	border-width: 2px
+	border-style: solid
+	margin-bottom: 4px
+
+	&:hover
+		theme-prop('border-color', 'link')
+		cursor: pointer
+
+// The click target. We want to put it over all the other content so that clicking a link will still
+// bring up the comment modal instead of going to that link.
+.-target
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	z-index: 2
+
+.-byline
+	clearfix()
+	margin-bottom: 10px
+	line-height: 30px
+
+.-avatar
+	float: left
+	margin-right: 10px
+	width: 30px
+
+// We set this as relative so that z-index stays lower within the content area than the target.
+.-content-container
+	position: relative
+	z-index: 1
+
+.-content
+	font-size: $font-size-small

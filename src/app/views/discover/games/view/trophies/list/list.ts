@@ -30,9 +30,9 @@ import {
 	},
 })
 export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	trophies: GameTrophy[] = [];
 	achieved: UserGameTrophy[] = [];

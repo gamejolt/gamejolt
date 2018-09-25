@@ -36,6 +36,14 @@ export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, rout
 	Vue.component('AppButton', AppButton);
 	Vue.component('AppJolticon', AppJolticon);
 
+	// Set some constants so we can use them in templates.
+	Vue.use(vue => {
+		const proto = vue.prototype as any;
+		proto.GJ_SECTION = GJ_SECTION;
+		proto.GJ_IS_CLIENT = GJ_IS_CLIENT;
+		proto.GJ_IS_SSR = GJ_IS_SSR;
+	});
+
 	return () => {
 		bootstrapAppTranslations();
 

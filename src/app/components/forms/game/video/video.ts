@@ -17,7 +17,7 @@ type FormModel = GameVideo & {
 	components: {},
 })
 export class FormGameVideo extends BaseForm<FormModel> implements FormOnInit {
-	@Prop(Game) game: Game;
+	@Prop(Game) game!: Game;
 
 	modelClass = GameVideo as any;
 	resetOnSubmit = true;

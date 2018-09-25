@@ -76,7 +76,8 @@ import {
 	},
 })
 export default class RouteDashAnalytics extends BaseRouteComponent {
-	@State app: Store['app'];
+	@State
+	app!: Store['app'];
 
 	user: User | null = null;
 	game: Game | null = null;
@@ -133,7 +134,8 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 		this.package = $payload.package ? new GamePackage($payload.package) : null;
 		this.release = $payload.release ? new GameRelease($payload.release) : null;
 		this.partnerMode =
-			(!this.user || this.user.id !== this.viewAs) && !!parseInt(this.$route.query.partner, 10);
+			(!this.user || this.user.id !== this.viewAs) &&
+			!!parseInt(this.$route.query.partner, 10);
 
 		this.period = (this.$route.query['period'] as any) || 'monthly';
 		this.resource = this.$route.params['resource'] as any;
@@ -325,7 +327,10 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 							this.$gettext('Revenue from Partners'),
 							...ReportPartnerGeneratedRevenue
 						);
-						this.pullReport(this.$gettext('Top Profitable Partners'), ...ReportTopPartnerRevenue);
+						this.pullReport(
+							this.$gettext('Top Profitable Partners'),
+							...ReportTopPartnerRevenue
+						);
 					} else {
 						this.pullReport(this.$gettext('Revenue Stats'), ...ReportPartnerRevenue);
 					}
@@ -386,15 +391,24 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 				case 'revenue':
 					if (!this.partnerMode) {
 						this.pullReport(this.$gettext('Revenue Stats'), ...ReportDevRevenue);
-						this.pullReport(this.$gettext('Top Profitable Games'), ...ReportTopGameRevenue);
+						this.pullReport(
+							this.$gettext('Top Profitable Games'),
+							...ReportTopGameRevenue
+						);
 						this.pullReport(
 							this.$gettext('Revenue from Partners'),
 							...ReportPartnerGeneratedRevenue
 						);
-						this.pullReport(this.$gettext('Top Profitable Partners'), ...ReportTopPartnerRevenue);
+						this.pullReport(
+							this.$gettext('Top Profitable Partners'),
+							...ReportTopPartnerRevenue
+						);
 					} else {
 						this.pullReport(this.$gettext('Revenue Stats'), ...ReportPartnerRevenue);
-						this.pullReport(this.$gettext('Top Profitable Games'), ...ReportTopGamePartnerRevenue);
+						this.pullReport(
+							this.$gettext('Top Profitable Games'),
+							...ReportTopGamePartnerRevenue
+						);
 					}
 					break;
 			}

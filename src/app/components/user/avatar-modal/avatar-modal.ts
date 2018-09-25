@@ -13,5 +13,5 @@ import { Store } from '../../../store/index';
 	},
 })
 export default class AppUserAvatarModal extends BaseModal {
-	@State app: Store['app'];
+	@State app!: Store['app'];
 }

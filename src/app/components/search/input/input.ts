@@ -8,7 +8,7 @@ import { AppSearch } from '../search';
 @View
 @Component({})
 export class AppSearchInput extends Vue {
-	@Prop(String) value: string;
+	@Prop(String) value!: string;
 
 	mounted() {
 		const search = findRequiredVueParent(this, AppSearch);

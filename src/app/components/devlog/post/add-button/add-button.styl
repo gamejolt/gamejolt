@@ -1,0 +1,36 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+$-height = 40px
+
+.devlog-post-add-button
+	display: flex
+	align-items: center
+
+.-avatar
+	theme-prop('background-color', 'bg-subtle')
+	flex: none
+	width: $-height
+	height: $-height
+	margin-right: $grid-gutter-width-xs * 0.5
+	border-radius: 50%
+
+	@media $media-sm-up
+		margin-right: $grid-gutter-width * 0.5
+
+.-input
+	input-placeholder-button()
+	flex: auto
+	position: relative
+	height: $-height
+	line-height: $-height
+
+	&::before
+		caret(var(--theme-bg-subtle), size: 9px)
+		content: ''
+
+	&:hover
+		theme-prop('border-color', 'link')
+
+		&::before
+			caret(var(--theme-link), size: 9px)

@@ -27,7 +27,7 @@ import { Popover } from '../../../../lib/gj-lib-client/components/popover/popove
 	},
 })
 export class AppGameFollowWidget extends Vue {
-	@Prop(Game) game: Game;
+	@Prop(Game) game!: Game;
 	@Prop(Boolean) overlay?: boolean;
 	@Prop(Boolean) circle?: boolean;
 	@Prop(Boolean) block?: boolean;
@@ -36,7 +36,7 @@ export class AppGameFollowWidget extends Vue {
 	@Prop(String) eventLabel?: string;
 	@Prop(Boolean) showUserFollow?: boolean;
 
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	isProcessing = false;
 

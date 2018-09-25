@@ -23,7 +23,7 @@ import { Store } from '../../../../store/index';
 	},
 })
 export default class RouteDiscoverChannelsView extends BaseRouteComponent {
-	@State route: Store['route'];
+	@State route!: Store['route'];
 
 	channel = '';
 

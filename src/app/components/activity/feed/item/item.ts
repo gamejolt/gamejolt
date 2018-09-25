@@ -20,8 +20,8 @@ import { AppActivityFeedEventItem } from '../event-item/event-item';
 	},
 })
 export class AppActivityFeedItem extends Vue {
-	@Prop(ActivityFeedItem) item: ActivityFeedItem;
-	@Prop(ActivityFeedContainer) feed: ActivityFeedContainer;
+	@Prop(ActivityFeedItem) item!: ActivityFeedItem;
+	@Prop(ActivityFeedContainer) feed!: ActivityFeedContainer;
 
 	inviewPadding = Screen.windowHeight;
 

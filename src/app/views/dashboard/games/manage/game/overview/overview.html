@@ -104,14 +104,11 @@
 				<div class="col-xs-6 col-sm-4 col-lg-6">
 					<div class="stat-big">
 						<div class="stat-big-label">
-							<translate>dash.games.overview.stats_rating</translate>
+							<translate>Likes</translate>
 						</div>
 						<div class="stat-big-digit">
-							<template v-if="game.avg_rating">
-								{{ game.avg_rating | number }}
-							</template>
-							<template v-if="!game.avg_rating">
-								<translate>dash.games.overview.stats_na</translate>
+							<template>
+								{{ likeCount | number }}
 							</template>
 						</div>
 					</div>
@@ -119,10 +116,12 @@
 				<div class="col-xs-6 col-sm-4 col-lg-6">
 					<div class="stat-big">
 						<div class="stat-big-label">
-							<translate>dash.games.overview.stats_ratings</translate>
+							<translate>Avg. Rating</translate>
 						</div>
 						<div class="stat-big-digit">
-							{{ game.rating_count || 0 | number }}
+							<template>
+								{{ averageRating }}
+							</template>
 						</div>
 					</div>
 				</div>

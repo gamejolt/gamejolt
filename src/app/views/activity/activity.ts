@@ -31,9 +31,9 @@ import {
 	},
 })
 export default class RouteActivity extends BaseRouteComponent {
-	@Prop(String) tab: 'activity' | 'notifications';
+	@Prop(String) tab!: 'activity' | 'notifications';
 
-	@Mutation setNotificationCount: Store['setNotificationCount'];
+	@Mutation setNotificationCount!: Store['setNotificationCount'];
 
 	feed: ActivityFeedContainer | null = null;
 	activityUnreadCount = 0;

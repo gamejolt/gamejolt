@@ -42,7 +42,6 @@ import {
 	ThemeStore,
 } from '../../lib/gj-lib-client/components/theme/theme.store';
 import { ContentFocus } from '../../lib/gj-lib-client/components/content-focus/content-focus.service';
-import { splitNoSidebar } from '../components/split-test/split-test-service';
 
 export type Actions = AppActions &
 	ThemeActions &
@@ -107,15 +106,15 @@ if (GJ_IS_CLIENT) {
 	modules,
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
-	app: AppStore;
-	theme: ThemeStore;
-	library: LibraryStore;
-	banner: BannerStore;
-	comment: CommentStore;
-	clientLibrary: _ClientLibraryMod.ClientLibraryStore;
+	app!: AppStore;
+	theme!: ThemeStore;
+	library!: LibraryStore;
+	banner!: BannerStore;
+	comment!: CommentStore;
+	clientLibrary!: _ClientLibraryMod.ClientLibraryStore;
 
 	// From the vuex-router-sync.
-	route: Route;
+	route!: Route;
 
 	chat: ChatClient | null = null;
 	grid: GridClient | null = null;
@@ -147,7 +146,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	get hasSidebar() {
-		return Screen.isXs || this.app.user || !splitNoSidebar(this.route);
+		return Screen.isXs || this.app.user;
 	}
 
 	@VuexAction

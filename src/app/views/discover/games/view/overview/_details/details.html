@@ -1,44 +1,54 @@
 <div>
-	<div>
-		<strong>
-			<translate>Development Stage:</translate>
-		</strong>
-		<app-lazy-placeholder tag="span" :when="game.development_status">
+	<div class="-metadata">
+		<div class="-metadata-label">
+			<translate>Development Stage</translate>
+		</div>
+		<app-lazy-placeholder
+			tag="span"
+			:when="game.development_status"
+			>
 			<span class="lazy-placeholder" style="width: 80px"></span>
 
-			<translate v-if="game._is_wip">
-				Early Access
-			</translate>
+			<span class="-metadata-value">
+				<translate v-if="game._is_devlog">
+					Devlog
+				</translate>
 
-			<translate v-if="game._is_finished">
-				Complete
-			</translate>
+				<translate v-if="game._is_wip">
+					Early Access
+				</translate>
 
-			<translate class="tag tag-notice" v-if="game.canceled">
-				Canceled
-			</translate>
+				<translate v-if="game._is_finished">
+					Complete
+				</translate>
+
+				<translate class="tag tag-notice" v-if="game.canceled">
+					Canceled
+				</translate>
+			</span>
 		</app-lazy-placeholder>
 	</div>
 
-	<div>
-		<strong>
-			<translate>Engine/Language:</translate>
-		</strong>
+	<div class="-metadata">
+		<div class="-metadata-label">
+			<translate>Engine/Language</translate>
+		</div>
 		<app-lazy-placeholder tag="span" :when="game.creation_tool_human">
 			<span class="lazy-placeholder" style="width: 100px"></span>
-			<span>
+			<span class="-metadata-value">
 				{{ game.creation_tool_human }}
 			</span>
 		</app-lazy-placeholder>
 	</div>
 
-	<div v-if="game.published_on">
-		<strong>
-			<translate>Published On:</translate>
-		</strong>
+	<div class="-metadata" v-if="game.published_on">
+		<div class="-metadata-label">
+			<translate>Published On</translate>
+		</div>
 		<app-lazy-placeholder tag="span" :when="game.category_human">
 			<span class="lazy-placeholder" style="width: 120px"></span>
 			<router-link
+				class="-metadata-value"
 				:to="{
 					name: 'discover.games.list._fetch-date',
 					params: {

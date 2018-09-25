@@ -7,7 +7,7 @@ import { Geo } from '../../../../../lib/gj-lib-client/components/geo/geo.service
 @View
 @Component({})
 export class AppUserAddressDetails extends Vue {
-	@Prop(UserAddress) address: UserAddress;
+	@Prop(UserAddress) address!: UserAddress;
 
 	get country() {
 		if (this.address) {

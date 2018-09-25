@@ -33,10 +33,10 @@ import { AppEditableOverlay } from '../../../../lib/gj-lib-client/components/edi
 	},
 })
 export default class RouteDashAccount extends BaseRouteComponent {
-	@State app: Store['app'];
-	@RouteState heading: RouteStore['heading'];
+	@State app!: Store['app'];
+	@RouteState heading!: RouteStore['heading'];
 
-	@AppMutation setUser: AppStore['setUser'];
+	@AppMutation setUser!: AppStore['setUser'];
 
 	readonly Screen = Screen;
 

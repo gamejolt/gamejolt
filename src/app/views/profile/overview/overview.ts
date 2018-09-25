@@ -51,13 +51,13 @@ import {
 	},
 })
 export default class RouteProfileOverview extends BaseRouteComponent {
-	@Prop() user: User;
-	@Prop() gamesCount: number;
-	@Prop() videosCount: number;
-	@Prop() userFriendship: UserFriendship;
+	@Prop() user!: User;
+	@Prop() gamesCount!: number;
+	@Prop() videosCount!: number;
+	@Prop() userFriendship!: UserFriendship;
 	@Prop() activeGameSession?: UserGameSession;
 
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	static readonly PROVIDERS: Provider[] = [
 		LinkedAccount.PROVIDER_TWITTER,

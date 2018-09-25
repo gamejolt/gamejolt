@@ -30,9 +30,9 @@ import { ClientLibraryAction, ClientLibraryStore } from '../../../store/client-l
 	},
 })
 export default class AppClientInstallPackageModal extends BaseModal {
-	@Prop(Game) game: Game;
+	@Prop(Game) game!: Game;
 
-	@ClientLibraryAction packageInstall: ClientLibraryStore['packageInstall'];
+	@ClientLibraryAction packageInstall!: ClientLibraryStore['packageInstall'];
 
 	isLoading = true;
 	packageData: GamePackagePayloadModel = null as any;

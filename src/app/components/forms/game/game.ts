@@ -7,7 +7,6 @@ import {
 	FormOnLoad,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { State } from 'vuex-class';
 import { Store } from '../../../store/index';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
@@ -31,13 +30,12 @@ import { AppGameDevStageSelector } from './dev-stage-selector/dev-stage-selector
 	},
 })
 export class FormGame extends BaseForm<Game> implements FormOnInit, FormOnLoad {
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	// We need to reset all the "is published", "has builds" stuff.
 	modelClass = Game;
 	resetOnSubmit = true;
 
-	acceptedRules = false;
 	account: any = null;
 	categories: any = null;
 	engines: any = null;
@@ -78,9 +76,7 @@ export class FormGame extends BaseForm<Game> implements FormOnInit, FormOnLoad {
 	}
 
 	get stage() {
-		if (!this.acceptedRules) {
-			return 'rules';
-		} else if (this.formModel.development_status === undefined) {
+		if (this.formModel.development_status === undefined) {
 			return 'dev-status';
 		}
 		return 'details';
@@ -109,8 +105,6 @@ export class FormGame extends BaseForm<Game> implements FormOnInit, FormOnLoad {
 	}
 
 	onInit() {
-		this.acceptedRules = this.method !== 'add';
-
 		if (this.method === 'add') {
 			this.setField('referrals_enabled', true);
 
@@ -127,10 +121,5 @@ export class FormGame extends BaseForm<Game> implements FormOnInit, FormOnLoad {
 
 	selectStage(stage: number) {
 		this.setField('development_status', stage);
-	}
-
-	acceptRules() {
-		this.acceptedRules = true;
-		Scroll.to(0, { animate: false });
 	}
 }

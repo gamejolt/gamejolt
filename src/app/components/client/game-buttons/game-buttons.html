@@ -1,25 +1,23 @@
-<div class="client-game-buttons">
+<span class="client-game-buttons">
 
-	<!--
-		The mousedown handlers preventDefault() stops it from unfocusing input elements (like search).
-		The stopPropagation() on the click handlers makes it so any <a> tag doesn't get "clicked" if it's inside one.
-	-->
-
-	<button class="btn btn-success-outline"
+	<span
 		v-if="!localPackage"
-		:class="{
-			'disabled': !canInstall,
-			'btn-overlay-variant': overlay,
-			'btn-sm': small,
-			'btn-lg': large,
-		}"
-		@mousedown.prevent
-		@click.stop="install()"
 		v-app-tooltip="installTooltip"
+		style="display: inline-block"
 		>
-		<app-jolticon icon="download-box" />
-		<translate>Install</translate>
-	</button>
+		<app-button
+			primary
+			solid
+			icon="download-box"
+			:disabled="!canInstall"
+			:overlay="overlay"
+			:sm="small"
+			:lg="large"
+			@click.stop="install()"
+			>
+			<translate>Install</translate>
+		</app-button>
+	</span>
 
 	<template v-else>
 
@@ -30,18 +28,15 @@
 				<span class="tag tag-notice">
 					{{ localPackage.didInstallFail ? $gettext('Installation Failed') : $gettext('Update Failed') }}
 				</span>
-				<button
-					class="btn btn-outline"
-					:class="{
-						'btn-overlay-variant': overlay,
-						'btn-sm': small,
-						'btn-lg': large,
-					}"
-					@mousedown.prevent
+				<app-button
+					primary
+					:overlay="overlay"
+					:sm="small"
+					:lg="large"
 					@click.stop="retryInstall()"
 					>
 					<translate>Retry</translate>
-				</button>
+				</app-button>
 			</template>
 
 			<app-client-install-progress
@@ -62,53 +57,41 @@
 				<template v-else-if="!localPackage.isPatchQueued">
 
 					<template v-if="!localPackage.isPatchPaused">
-						<button
-							class="btn btn-outline"
-							:class="{
-								'btn-overlay-variant': overlay,
-								'btn-sm btn-sparse': small,
-								'btn-lg': large,
-							}"
-							@mousedown.prevent
+						<app-button
+							:overlay="overlay"
+							:sm="small"
+							:lg="large"
 							@click.stop="pause()"
 							>
-							<app-jolticon icon="pause" />
 							<translate v-if="!small">Pause</translate>
-						</button>
+						</app-button>
 					</template>
 
 					<template v-else>
-						<button
-							class="btn btn-outline"
-							:class="{
-								'btn-overlay-variant': overlay,
-								'btn-sm btn-sparse': small,
-								'btn-lg': large,
-							}"
-							@mousedown.prevent
+						<app-button
+							primary
+							:overlay="overlay"
+							:sm="small"
+							:lg="large"
 							@click.stop="resume()"
 							>
-							<app-jolticon icon="play-small" />
 							<translate v-if="!small">Resume</translate>
-						</button>
+						</app-button>
 					</template>
 				</template>
 			</template>
 
-			<button
+			<app-button
 				v-if="localPackage.install_state"
-				class="btn btn-danger-outline btn-sparse"
-				:class="{
-					'btn-overlay-variant': overlay,
-					'btn-sm': small,
-					'btn-lg': large,
-				}"
-				@mousedown.prevent
+				circle
+				icon="remove"
+				:trans="!overlay"
+				:overlay="overlay"
+				:sm="small"
+				:lg="large"
 				@click.stop="cancel()"
 				v-app-tooltip="$gettext('Cancel Installation')"
-				>
-				<app-jolticon icon="remove" />
-			</button>
+				/>
 		</span>
 
 		<span v-if="localPackage.isSettled">
@@ -117,59 +100,51 @@
 				Single game launching.
 			-->
 			<template v-if="gamePackages.length === 1">
-				<button
+				<app-button
 					v-if="!localPackage.isRunning"
-					class="btn btn-primary-outline"
-					:class="{
-						'btn-overlay-variant': overlay,
-						'btn-sm': small,
-						'btn-lg': large,
-					}"
-					@mousedown.prevent
+					primary
+					solid
+					icon="play"
+					:overlay="overlay"
+					:sm="small"
+					:lg="large"
 					@click.stop="launch( localPackage )"
 					v-app-tooltip="$gettext(localPackage.isRunning ? 'This game is currently running.' : undefined)"
 					>
-					<app-jolticon icon="play" />
 					<translate>Launch</translate>
-				</button>
+				</app-button>
 			</template>
 
 			<!--
 				Multi game launching.
 				Opens popover.
 			-->
-			<template v-else-if="gamePackages.length > 1">
-				<button
-					class="btn btn-primary-outline"
-					:class="{
-						'btn-overlay-variant': overlay,
-						'btn-sm': small,
-						'btn-lg': large,
-					}"
-					@mousedown.prevent
-					@click.stop
-					v-app-popover-trigger="`game-buttons-launch-${label}-${game.id}`"
-					>
-					<app-jolticon icon="play" />
-					<translate>Launch</translate>
-				</button>
-			</template>
+			<app-button
+				v-else-if="gamePackages.length > 1"
+				primary
+				solid
+				icon="play"
+				:overlay="overlay"
+				:sm="small"
+				:lg="large"
+				@click.stop
+				v-app-popover-trigger="`game-buttons-launch-${label}-${game.id}`"
+				>
+				<translate>Launch</translate>
+			</app-button>
 		</span>
 
-		<button
+		<app-button
 			v-if="!localPackage.install_state"
-			class="btn btn-outline btn-sparse"
-			:class="{
-				'btn-overlay-variant': overlay,
-				'btn-sm': small,
-				'btn-lg': large,
-			}"
-			@mousedown.prevent
+			circle
+			icon="ellipsis-v"
+			:trans="!overlay"
+			:overlay="overlay"
+			:sm="small"
+			:lg="large"
 			@click.stop
 			v-app-popover-trigger="`game-buttons-options-${label}-${game.id}`"
-			>
-			<app-jolticon icon="ellipsis-h" />
-		</button>
+			/>
 
 		<app-popover
 			:popover-id="`game-buttons-options-${label}-${game.id}`"
@@ -242,4 +217,4 @@
 			</div>
 		</app-popover>
 	</template>
-</div>
+</span>

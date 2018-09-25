@@ -1,32 +1,35 @@
-import { Route } from 'vue-router';
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./devlog.html';
-
-import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
-import { RouteState, RouteStore } from '../manage.store';
-import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
-import { AppDevlogPostAdd } from '../../../../../components/devlog/post/add/add';
-import { AppGamePerms } from '../../../../../components/game/perms/perms';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
 import {
 	BaseRouteComponent,
 	RouteResolve,
-} from '../../../../../../lib/gj-lib-client/components/route/route-component';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Component, Prop } from 'vue-property-decorator';
+import { Route } from 'vue-router';
+import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
+import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
+import { AppDevlogPostAddButton } from '../../../../../components/devlog/post/add-button/add-button';
+import { AppGamePerms } from '../../../../../components/game/perms/perms';
+import { RouteState, RouteStore } from '../manage.store';
 
 @View
 @Component({
 	name: 'RouteDashGamesManageDevlog',
 	components: {
 		AppActivityFeed,
-		AppDevlogPostAdd,
+		AppDevlogPostAddButton,
 		AppGamePerms,
+		AppNavTabList,
 	},
 })
 export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
-	@Prop(String) tab: 'draft' | 'scheduled' | undefined;
+	@Prop(String)
+	tab!: 'draft' | 'scheduled' | undefined;
 
-	@RouteState game: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	feed: ActivityFeedContainer = null as any;
 

@@ -14,20 +14,20 @@ import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading
 })
 export class AppGrecaptchaWidget extends Vue {
 	@Prop({ type: String, default: 'dark' })
-	theme: 'light' | 'dark';
+	theme!: 'light' | 'dark';
 	@Prop({ type: String, default: 'image' })
-	type: 'image' | 'audio';
+	type!: 'image' | 'audio';
 	@Prop({ type: String, default: 'normal' })
-	size: 'normal' | 'compact' | 'invisible';
+	size!: 'normal' | 'compact' | 'invisible';
 	@Prop({ type: String, default: 'bottomright' })
-	badgeLocation: 'bottomright' | 'bottomleft' | 'inline';
+	badgeLocation!: 'bottomright' | 'bottomleft' | 'inline';
 
 	resetting = false;
 	loaded = false;
 	valid = false;
 	widgetId = 0;
 
-	$refs: { grecaptcha: HTMLDivElement };
+	$refs!: { grecaptcha: HTMLDivElement };
 
 	get loadedAndValid() {
 		return this.loaded && this.valid;

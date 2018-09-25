@@ -1,17 +1,18 @@
-import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
-import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/event-item.model';
 import { CommentVideo } from '../../../../lib/gj-lib-client/components/comment/video/video-model';
+import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/event-item.model';
+import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
 
 export type ActivityFeedInput = Notification | FiresidePost | EventItem;
 
 export class ActivityFeedItem {
 	id: string;
-	type: 'notification' | 'event-item';
+	type!: 'notification' | 'event-item';
 	feedItem: ActivityFeedInput;
 	scrollId: string;
 	height: string | null = null;
 	isOpen = false;
+	isLeadOpen = false;
 
 	constructor(public sourceItem: ActivityFeedInput) {
 		this.feedItem = sourceItem;
@@ -19,11 +20,18 @@ export class ActivityFeedItem {
 		let dateVal = 0;
 		if (this.feedItem instanceof FiresidePost) {
 			this.type = 'event-item';
-			dateVal = this.feedItem.updated_on || this.feedItem.added_on;
+			dateVal = this.feedItem.published_on || this.feedItem.added_on;
 
 			// We have to spoof this as an event item.
 			const post = this.feedItem;
 			this.feedItem = new EventItem({
+				// TODO(new-post-format) - we set the mock event item id to the post id
+				// to fix a bug where removing any item from the feed would always remove the first
+				// because their ids were the same.
+				//
+				// This is a temporary hack that is already fixed in the user-posts branch.
+				id: post.id,
+
 				type: EventItem.TYPE_DEVLOG_POST_ADD,
 				added_on: dateVal,
 				scroll_id: post.scroll_id,

@@ -24,12 +24,12 @@ import { AppGamePlaylistAddToPopover } from '../add-to-popover/add-to-popover';
 	},
 })
 export class AppGamePlaylistAddToWidget extends Vue {
-	@Prop(Game) game: Game;
+	@Prop(Game) game!: Game;
 	@Prop(String) eventLabel?: string;
 	@Prop(Boolean) overlay?: boolean;
 	@Prop(Boolean) circle?: boolean;
 
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	Game = Game;
 }

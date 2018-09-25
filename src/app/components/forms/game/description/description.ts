@@ -32,7 +32,7 @@ export class FormGameDescription extends BaseForm<DescriptionFormModel> {
 	isFnafDetected = false;
 	isDisabled = false;
 
-	$refs: {
+	$refs!: {
 		form: AppForm;
 	};
 

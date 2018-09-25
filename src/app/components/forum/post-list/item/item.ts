@@ -53,13 +53,13 @@ import { AppMessageThread } from '../../../../../lib/gj-lib-client/components/me
 	},
 })
 export class AppForumPostListItem extends Vue {
-	@Prop(ForumTopic) topic: ForumTopic;
-	@Prop(ForumPost) post: ForumPost;
-	@Prop(Boolean) isReply: boolean;
-	@Prop(Boolean) showReplies: boolean;
+	@Prop(ForumTopic) topic!: ForumTopic;
+	@Prop(ForumPost) post!: ForumPost;
+	@Prop(Boolean) isReply!: boolean;
+	@Prop(Boolean) showReplies!: boolean;
 	@Prop(Boolean) isLastInThread?: boolean;
 
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	isEditing = false;
 	isReplying = false;

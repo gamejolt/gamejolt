@@ -16,7 +16,7 @@ import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/component
 	},
 })
 export class FormGameScoreTable extends BaseForm<GameScoreTable> implements FormOnInit {
-	@Prop(Game) game: Game;
+	@Prop(Game) game!: Game;
 
 	modelClass = GameScoreTable;
 	GameScoreTable = GameScoreTable;

@@ -17,7 +17,7 @@ import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 	},
 })
 export class AppGameListItem extends Vue {
-	@Prop(Game) game: Game;
+	@Prop(Game) game!: Game;
 	@Prop(String) eventLabel?: string;
 
 	number = number;
