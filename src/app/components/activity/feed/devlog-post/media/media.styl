@@ -1,60 +1,74 @@
-@require '~styles/variables'
+@require '../../variables'
 @require '~styles-lib/mixins'
 
 .devlog-post-media
-	&-embed
+	margin-top: $-item-padding-xs-v
+	position: relative
+
+	@media $media-sm-up
+		margin-top: $-item-padding-v
+
+.-container
+	display: block
+	overflow: hidden
+	margin-left: -($-item-padding-xs)
+	margin-right: -($-item-padding-xs)
+
+	@media $media-sm-up
+		margin-left: -($-item-padding-container)
+		margin-right: -($-item-padding-container)
+
+.-slider
+	white-space: nowrap
+	transition: transform 300ms $strong-ease-out
+
+	&-item
+		theme-prop('background-color', 'bg-offset')
 		position: relative
+		display: inline-block
+		vertical-align: middle
+		width: 100%
 
-		&-img
+		// The "item" gets the correct dimensions applied, so we want to stretch out any image or
+		// video in the item to be full width/height.
+		.-img, .-video
 			display: block
-			overflow: hidden
-
-	&-slider
-		white-space: nowrap
-		transition: transform 300ms $strong-ease-out
-
-		&-item
-			rounded-corners()
-			theme-prop('background-color', 'bg-offset')
-			display: inline-block
-			vertical-align: middle
 			width: 100%
+			position: absolute
+			top: 0
+			right: 0
+			bottom: 0
+			left: 0
 
-			>>> img
-				rounded-corners()
-				display: block
-				width: 100%
-				height: auto
+.-prev, .-next
+	theme-prop('background-color', 'darker')
+	display: none
+	position: absolute
+	top: 50%
+	height: 80px
+	width: $grid-gutter-width
+	line-height: @height
+	margin-top: -(@height / 2)
+	color: $white
+	text-align: center
+	z-index: 2
+	user-select: none
 
-			>>> video
-				rounded-corners()
+	&:hover
+		theme-prop('color', 'highlight')
 
-	&-prev, &-next
-		theme-prop('background-color', 'darker')
-		display: none
-		position: absolute
-		top: 50%
-		height: 80px
-		width: $grid-gutter-width
-		line-height: @height
-		margin-top: -(@height / 2)
-		color: $white
-		text-align: center
-		z-index: 2
-		user-select: none
+	@media $media-sm-up
+		display: block
 
-		&:hover
-			theme-prop('color', 'highlight')
+.-prev
+	left: -($-item-padding-container + $grid-gutter-width)
+	border-top-left-radius: $border-radius-base
+	border-bottom-left-radius: $border-radius-base
 
-		@media $media-sm-up
-			display: block
+.-next
+	right: -($-item-padding-container + $grid-gutter-width)
+	border-top-right-radius: $border-radius-base
+	border-bottom-right-radius: $border-radius-base
 
-	&-prev
-		left: -($grid-gutter-width)
-		border-top-left-radius: $border-radius-base
-		border-bottom-left-radius: $border-radius-base
-
-	&-next
-		right: -($grid-gutter-width)
-		border-top-right-radius: $border-radius-base
-		border-bottom-right-radius: $border-radius-base
+.-indicator
+	margin-top: 10px

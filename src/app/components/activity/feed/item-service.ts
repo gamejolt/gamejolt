@@ -1,7 +1,7 @@
-import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
-import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/event-item.model';
 import { CommentVideo } from '../../../../lib/gj-lib-client/components/comment/video/video-model';
+import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/event-item.model';
+import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
 
 export type ActivityFeedInput = Notification | EventItem;
 
@@ -12,6 +12,7 @@ export class ActivityFeedItem {
 	scrollId: string;
 	height: string | null = null;
 	isOpen = false;
+	isLeadOpen = false;
 
 	constructor(public sourceItem: ActivityFeedInput) {
 		this.feedItem = sourceItem;

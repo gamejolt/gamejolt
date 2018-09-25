@@ -1,0 +1,18 @@
+<div
+	class="-item"
+	:style="{ width, height }"
+	>
+	<div class="-controls theme-dark">
+		<app-button
+			icon="remove"
+			overlay
+			sparse
+			@click.prevent="emitRemove()"
+			/>
+	</div>
+
+	<app-img-responsive
+		:src="item.mediaserver_url"
+		alt=""
+		/>
+</div>

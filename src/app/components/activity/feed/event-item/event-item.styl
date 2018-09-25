@@ -1,41 +1,105 @@
-@require '~styles/variables'
+@require '../variables'
 @require '~styles-lib/mixins'
 
-.-byline
-	text-overflow()
-
-.-byline-name
-	margin-right: 2px
-	font-weight: bold
-
-.-byline-to
-	text-overflow()
-	display: block
-	font-weight: bold
+-container-padding()
+	padding-top: $-item-padding-xs-v
+	padding-bottom: $-item-padding-xs-v
+	padding-left: $-item-padding-xs
+	padding-right: $-item-padding-xs
 
 	@media $media-sm-up
-		display: inline
+		padding-top: $-item-padding-v
+		padding-bottom: $-item-padding-v
+		padding-left: $-item-padding-container
+		padding-right: $-item-padding-container
 
-.-meta
-	margin-bottom: 1em
+.-container
+	@media $media-sm-up
+		padding-bottom: $-item-padding-v
 
-.-title
-	font-size: $font-size-h4
-	// Override link color
-	theme-prop('color', 'fg')
-	display: block
-	font-weight: bold
-	margin-bottom: $line-height-computed
+.-item
+	theme-prop('border-color', 'bg-offset')
+	-container-padding()
+	margin-left: -($grid-gutter-width-xs / 2)
+	margin-right: -($grid-gutter-width-xs / 2)
+	transition: border-color 100ms
+	border-bottom-width: 6px
+	border-bottom-style: solid
 
-/* .tag
-		margin-right: 5px
+	@media $media-sm-up
+		rounded-corners()
+		theme-prop('border-color', 'bg-offset')
+		border-width: $-border-width
+		border-style: solid
+		margin-left: 0
+		margin-right: 0
 
-.-meta-slot
-	float: right
-	margin-left: 5px
+		&:hover
+			theme-prop('border-color', 'link')
+			cursor: pointer
 
-	>>> .tag
-		vertical-align: middle */
-.-poll
-	margin-top: $line-height-computed
-	margin-bottom: $line-height-computed
+.-header
+	display: flex
+	align-items: center
+
+	&-avatar
+		theme-prop('background-color', 'bg-subtle')
+		flex: none
+		border-radius: 50%
+		overflow: hidden
+		margin-right: $-item-padding-xs
+		width: $-avatar-size
+		height: $-avatar-size
+		line-height: $-avatar-size
+
+		.-item.-new &
+			theme-prop('border-color', 'notice')
+			border-width: 3px
+			border-style: solid
+
+		@media $media-sm-up
+			margin-right: $-item-padding
+
+		img
+			border-radius: 50% !important
+
+	&-content
+		flex: auto
+		display: flex
+		align-items: flex-start
+		overflow: hidden
+
+	&-byline
+		flex: auto
+		display: flex
+		flex-direction: column
+		overflow: hidden
+
+		&-name, &-game
+			text-overflow()
+
+	&-date
+		flex: none
+		margin-left: $-item-padding-xs
+		line-height: $line-height-computed
+
+		@media $media-sm-up
+			margin-left: $-item-padding
+
+.-poll, .-controls, .-manage, .fireside-post-lead
+	margin-top: $-item-padding-xs-v
+
+	@media $media-sm-up
+		margin-top: $-item-padding-v
+
+.-manage
+	theme-prop('background-color', 'bg-offset')
+	margin-bottom: $-item-padding-xs-v
+	margin-left: -($-item-padding-xs)
+	margin-right: -($-item-padding-xs)
+	-container-padding()
+
+	@media $media-sm-up
+		margin-bottom: $-item-padding-v
+		margin-left: -($-item-padding-container)
+		margin-right: -($-item-padding-container)

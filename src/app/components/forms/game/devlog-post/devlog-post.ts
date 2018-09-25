@@ -1,38 +1,46 @@
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./devlog-post.html?style=./devlog-post.styl';
-import { determine } from 'jstimezonedetect';
-
+import * as addWeeks from 'date-fns/add_weeks';
+import * as startOfDay from 'date-fns/start_of_day';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { AppFormAutosize } from 'game-jolt-frontend-lib/components/form-vue/autosize.directive';
+import { AppFormControlCheckbox } from 'game-jolt-frontend-lib/components/form-vue/control/checkbox/checkbox';
+import { AppFormControlDate } from 'game-jolt-frontend-lib/components/form-vue/control/date/date';
+import { AppFormControlMarkdown } from 'game-jolt-frontend-lib/components/form-vue/control/markdown/markdown';
+import { AppFormControlToggle } from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle';
+import { AppFormControlUpload } from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload';
+import { AppFocusWhen } from 'game-jolt-frontend-lib/components/form-vue/focus-when.directive';
+import { AppForm } from 'game-jolt-frontend-lib/components/form-vue/form';
 import {
 	BaseForm,
 	FormOnInit,
 	FormOnLoad,
 	FormOnSubmit,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/video/video.model';
-import { KeyGroup } from '../../../../../lib/gj-lib-client/components/key-group/key-group.model';
-import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
-import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
-import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
-import { AppFocusWhen } from '../../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
-import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
-import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppFormLegend } from '../../../../../lib/gj-lib-client/components/form-vue/legend/legend';
-import { FormOnSubmitSuccess } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+	FormOnSubmitSuccess,
+} from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { AppFormLegend } from 'game-jolt-frontend-lib/components/form-vue/legend/legend';
+import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
+import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
+import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
+import { AppPopover } from 'game-jolt-frontend-lib/components/popover/popover';
+import { AppPopoverTrigger } from 'game-jolt-frontend-lib/components/popover/popover-trigger.directive.vue';
+import { AppProgressBar } from 'game-jolt-frontend-lib/components/progress/bar/bar';
+import { AppSketchfabEmbed } from 'game-jolt-frontend-lib/components/sketchfab/embed/embed';
 import {
-	TimezoneData,
 	Timezone,
-} from '../../../../../lib/gj-lib-client/components/timezone/timezone.service';
-import { AppFormControlDate } from '../../../../../lib/gj-lib-client/components/form-vue/control/date/date';
-import * as startOfDay from 'date-fns/start_of_day';
-import * as addWeeks from 'date-fns/add_weeks';
+	TimezoneData,
+} from 'game-jolt-frontend-lib/components/timezone/timezone.service';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { AppUserAvatarImg } from 'game-jolt-frontend-lib/components/user/user-avatar/img/img';
+import { AppVideoEmbed } from 'game-jolt-frontend-lib/components/video/embed/embed';
+import { AppJolticon } from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon';
+import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
+import { determine } from 'jstimezonedetect';
+import { Component, Prop } from 'vue-property-decorator';
+import { AppFormGameDevlogPostMedia } from './_media/media';
 
 type FormGameDevlogPostModel = FiresidePost & {
-	keyGroups: KeyGroup[];
+	mediaItemIds: number[];
+	key_group_ids: KeyGroup[];
 	video_url: string;
 	sketchfab_id: string;
 
@@ -57,55 +65,139 @@ type FormGameDevlogPostModel = FiresidePost & {
 @View
 @Component({
 	components: {
-		AppFormControlMarkdown,
-		AppFormControlUpload,
-		AppFormControlToggle,
-		AppFormLegend,
-		AppUserAvatarImg,
-		AppExpand,
-		AppJolticon,
+		AppFormControlCheckbox,
 		AppFormControlDate,
+		AppFormControlMarkdown,
+		AppFormControlToggle,
+		AppFormControlUpload,
+		AppFormLegend,
+		AppSketchfabEmbed,
+		AppVideoEmbed,
+		AppJolticon,
+		AppPopover,
+		AppUserAvatarImg,
+		AppProgressBar,
+		AppFormGameDevlogPostMedia,
 	},
 	directives: {
 		AppFocusWhen,
 		AppTooltip,
+		AppPopoverTrigger,
+		AppFormAutosize,
 	},
 })
 export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	implements FormOnInit, FormOnLoad, FormOnSubmit, FormOnSubmitSuccess {
 	modelClass = FiresidePost as any;
 
-	@AppState user!: AppStore['user'];
+	@AppState
+	user!: AppStore['user'];
 
-	@Prop(FiresidePost) post!: FiresidePost;
+	@Prop(FiresidePost)
+	post!: FiresidePost;
+
+	@Prop({ type: String, default: '' })
+	defaultAttachmentType!: string;
 
 	$refs!: {
 		form: AppForm;
 	};
 
+	static readonly LEAD_URL_REGEX = /(https?:\/\/([\/\.\?\-\+a-z0-9=#%_&;,~@])+)/gi;
+	readonly YOUTUBE_URL_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_\-]{11})(&.+)*$/i;
+	readonly SKETCHFAB_URL_REGEX = /^(https:\/\/)?(www.)?sketchfab.com\/models\/[0-9a-f]{32}\/?$/i;
+	readonly SKETCHFAB_FIELD_REGEX = /^((https:\/\/)?(www.)?(sketchfab.com\/models\/[0-9a-f]{32}\/?))|([0-9a-f]{32})$/i;
+	readonly MAX_POLL_ITEMS = 10;
+	readonly MIN_POLL_DURATION = 5;
+	readonly MAX_POLL_DURATION = 20160;
+
 	keyGroups: KeyGroup[] = [];
-	hasMediaItems = false;
 	wasPublished = false;
+	attachmentType = '';
+	enabledAttachments = false;
+	longEnabled = false;
 	maxFilesize = 0;
 	maxWidth = 0;
 	maxHeight = 0;
-	isShowingMoreOptions = false;
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = null as any;
 	now = 0;
+	isShowingMorePollOptions = false;
+	accessPermissionsEnabled = false;
+	isSavedDraftPost = false;
+	leadUrlLength = 30;
+	leadLengthLimit = 255;
+	leadTotalLengthLimit = 300;
 
-	readonly FiresidePost = FiresidePost;
 	readonly GameVideo = GameVideo;
-
-	readonly MAX_POLL_ITEMS = 10;
-	readonly MIN_DURATION = 5;
-	readonly MAX_DURATION = 20160;
 
 	get loadUrl() {
 		return `/web/dash/posts/save/${this.model!.id}`;
 	}
 
-	get isPublished() {
-		return this.model && this.model.status === FiresidePost.STATUS_ACTIVE;
+	get shortLabel() {
+		return this.$gettext('');
+	}
+
+	get mainActionText() {
+		if (this.wasPublished) {
+			return this.$gettext('Save');
+		} else if (this.isScheduling) {
+			return this.$gettext('Schedule');
+		} else if (this.isSavedDraftPost) {
+			return this.$gettext('Publish');
+		} else {
+			return this.$gettext('Post');
+		}
+	}
+
+	get enabledImages() {
+		return this.enabledAttachments && this.attachmentType === FiresidePost.TYPE_MEDIA;
+	}
+
+	get enabledVideo() {
+		return this.enabledAttachments && this.attachmentType === FiresidePost.TYPE_VIDEO;
+	}
+
+	get enabledSketchfab() {
+		return this.enabledAttachments && this.attachmentType === FiresidePost.TYPE_SKETCHFAB;
+	}
+
+	get hasValidSketchfabModelId() {
+		return (
+			this.formModel.sketchfab_id &&
+			this.formModel.sketchfab_id.match(this.SKETCHFAB_FIELD_REGEX)
+		);
+	}
+
+	get sketchfabId() {
+		if (this.formModel.sketchfab_id.match(this.SKETCHFAB_URL_REGEX)) {
+			// extract model id from url
+			const matches = this.formModel.sketchfab_id.match(/[a-f0-9]{32}/i);
+			if (matches && matches.length > 0) {
+				return matches[0];
+			}
+		}
+		return this.formModel.sketchfab_id;
+	}
+
+	get hasValidYouTubeUrl() {
+		return this.formModel.video_url && this.formModel.video_url.match(this.YOUTUBE_URL_REGEX);
+	}
+
+	get youtubeVideoId() {
+		const url = this.formModel.video_url;
+		if (url) {
+			// extract video id from url
+			const matches = url.match(/\?v=[a-zA-Z0-9_\-]{11}/);
+			if (matches && matches.length > 0) {
+				const videoId = matches[0].substr(3);
+				return videoId;
+			}
+		}
+	}
+
+	get hasOptionalData() {
+		return this.longEnabled;
 	}
 
 	get hasPoll() {
@@ -115,12 +207,12 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	get isPollEditable() {
 		const poll = this.model!.poll;
 		if (poll) {
-			return poll.end_time === 0;
+			return !poll.end_time;
 		}
 		return true;
 	}
 
-	get duration() {
+	get pollDuration() {
 		return (
 			this.formModel.poll_days * 1440 +
 			this.formModel.poll_hours * 60 +
@@ -146,24 +238,63 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		return this.formModel.isScheduled;
 	}
 
+	get computedLeadLength() {
+		const regex = FormGameDevlogPost.LEAD_URL_REGEX;
+		let lead = this.formModel.lead;
+		if (!lead) {
+			return 0;
+		}
+
+		if (lead.match(regex)) {
+			lead = lead.replace(regex, ' '.repeat(this.leadUrlLength));
+		}
+
+		// js is utf18, we need to calc the byte length
+		// thank you https://github.com/substack/utf8-length !
+		// tslint:disable-next-line:no-bitwise
+		return ~-encodeURI(lead).split(/%..|./).length;
+	}
+
+	get leadLengthPercent() {
+		return 100 - (this.computedLeadLength / this.leadLengthLimit) * 100;
+	}
+
+	get isLeadValid() {
+		return this.computedLeadLength <= this.leadLengthLimit;
+	}
+
 	async onInit() {
 		await this.fetchTimezones();
 
 		const model = this.model!;
 
+		// save if the post was a saved draft post (not a new draft post)
+		if (model.status === FiresidePost.STATUS_DRAFT && model.lead) {
+			this.isSavedDraftPost = true;
+		}
+
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
 
-		if (model.type === FiresidePost.TYPE_VIDEO) {
-			if (model.videos.length) {
-				this.setField(
-					'video_url',
-					'https://www.youtube.com/watch?v=' + model.videos[0].video_id
-				);
-			}
-		} else if (model.type === FiresidePost.TYPE_SKETCHFAB) {
-			if (model.sketchfabs.length) {
-				this.setField('sketchfab_id', model.sketchfabs[0].sketchfab_id);
-			}
+		// Set up the default attachment if one was passed in.
+		if (this.defaultAttachmentType === 'article') {
+			this.longEnabled = true;
+		} else {
+			this.attachmentType = this.defaultAttachmentType;
+		}
+
+		if (model.videos.length) {
+			this.setField(
+				'video_url',
+				'https://www.youtube.com/watch?v=' + model.videos[0].video_id
+			);
+			this.enableVideo();
+		} else if (model.sketchfabs.length) {
+			this.setField('sketchfab_id', model.sketchfabs[0].sketchfab_id);
+			this.enableSketchfab();
+		} else if (model.hasMedia) {
+			this.enableImages();
+		} else if (this.attachmentType !== '') {
+			this.enabledAttachments = true;
 		}
 
 		if (model.poll) {
@@ -185,41 +316,67 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 				this.setField(('poll_item' + (i + 1)) as any, poll.items[i].text);
 			}
 		}
+
+		if (model.key_groups.length) {
+			this.accessPermissionsEnabled = true;
+		}
+
+		if (model.content_markdown) {
+			this.longEnabled = true;
+		}
 	}
 
 	onLoad(payload: any) {
 		this.keyGroups = KeyGroup.populate(payload.keyGroups);
-		this.hasMediaItems = payload.hasMediaItems;
 		this.wasPublished = payload.wasPublished;
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
+		this.leadUrlLength = payload.leadUrlLength;
+		this.leadLengthLimit = payload.leadLengthLimit;
+		this.leadTotalLengthLimit = payload.leadTotalLengthLimit;
 	}
 
-	private async fetchTimezones() {
-		// Get timezones list.
-		this.timezones = await Timezone.getGroupedTimezones();
-		for (let region in this.timezones) {
-			for (let tz of this.timezones[region]) {
-				let offset = '';
-				if (tz.o > 0) {
-					offset = `+${tz.o / 3600}:00`;
-				} else if (tz.o < 0) {
-					offset = `-${-tz.o / 3600}:00`;
-				}
-				tz.label = `(UTC${offset}) ${tz.i}`;
-			}
-		}
+	enableImages() {
+		this.enabledAttachments = true;
+		this.attachmentType = FiresidePost.TYPE_MEDIA;
 	}
 
-	private timezoneByName(timezone: string) {
-		for (let region in this.timezones) {
-			const tz = this.timezones[region].find(_tz => _tz.i === timezone);
-			if (tz) {
-				return tz;
-			}
-		}
-		return null;
+	onMediaUploaded(mediaItems: MediaItem[]) {
+		const newMedia = mediaItems.concat(this.formModel.media);
+		this.setField('media', newMedia);
+	}
+
+	onMediaSort(mediaItems: MediaItem[]) {
+		this.setField('media', mediaItems);
+	}
+
+	removeMediaItem(mediaItem: MediaItem) {
+		const newMedia = this.formModel.media.filter(item => item.id !== mediaItem.id);
+		this.setField('media', newMedia);
+	}
+
+	enableVideo() {
+		this.enabledAttachments = true;
+		this.attachmentType = FiresidePost.TYPE_VIDEO;
+	}
+
+	enableSketchfab() {
+		this.enabledAttachments = true;
+		this.attachmentType = FiresidePost.TYPE_SKETCHFAB;
+	}
+
+	disableAttachments() {
+		this.enabledAttachments = false;
+		this.attachmentType = '';
+
+		this.setField('video_url', '');
+		this.setField('sketchfab_id', '');
+		this.setField('media', []);
+	}
+
+	toggleLong() {
+		this.longEnabled = !this.longEnabled;
 	}
 
 	createPoll() {
@@ -235,7 +392,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.changed = true;
 	}
 
-	async removePoll() {
+	removePoll() {
 		this.setField('poll_item_count', 0);
 		this.changed = true;
 	}
@@ -263,7 +420,15 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.changed = true;
 	}
 
-	async addSchedule() {
+	enableAccessPermissions() {
+		this.accessPermissionsEnabled = true;
+	}
+
+	disableAccessPermissions() {
+		this.accessPermissionsEnabled = false;
+	}
+
+	addSchedule() {
 		if (this.formModel.scheduled_for === null) {
 			this.setField('scheduled_for', startOfDay(addWeeks(Date.now(), 1)).getTime());
 		}
@@ -279,17 +444,69 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		this.changed = true;
 	}
 
+	timezoneByName(timezone: string) {
+		for (let region in this.timezones) {
+			const tz = this.timezones[region].find(_tz => _tz.i === timezone);
+			if (tz) {
+				return tz;
+			}
+		}
+		return null;
+	}
+
+	async fetchTimezones() {
+		// Get timezones list.
+		this.timezones = await Timezone.getGroupedTimezones();
+		for (let region in this.timezones) {
+			for (let tz of this.timezones[region]) {
+				let offset = '';
+				if (tz.o > 0) {
+					offset = `+${tz.o / 3600}:00`;
+				} else if (tz.o < 0) {
+					offset = `-${-tz.o / 3600}:00`;
+				}
+				tz.label = `(UTC${offset}) ${tz.i}`;
+			}
+		}
+	}
+
 	onDraftSubmit() {
 		this.setField('status', FiresidePost.STATUS_DRAFT);
 		this.$refs.form.submit();
 	}
 
 	async onSubmit() {
-		// if the post is scheduled, default submit action is draft
+		// a scheduled post gets saved as draft and will get set to published when the scheduled date is reached
 		if (this.isScheduling) {
 			this.setField('status', FiresidePost.STATUS_DRAFT);
 		}
-		this.setField('poll_duration', this.duration * 60); // site-api expects duration in seconds.
+
+		// Set or clear attachments as needed
+		if (this.attachmentType === FiresidePost.TYPE_MEDIA && this.formModel.media) {
+			this.setField('mediaItemIds', this.formModel.media.map(item => item.id));
+		} else {
+			this.setField('mediaItemIds', []);
+		}
+
+		if (this.attachmentType !== FiresidePost.TYPE_VIDEO || !this.formModel.video_url) {
+			this.setField('video_url', '');
+		}
+
+		if (this.attachmentType === FiresidePost.TYPE_SKETCHFAB && this.formModel.sketchfab_id) {
+			this.setField('sketchfab_id', this.sketchfabId);
+		} else {
+			this.setField('sketchfab_id', '');
+		}
+
+		if (!this.accessPermissionsEnabled) {
+			this.setField('key_group_ids', []);
+		}
+
+		if (!this.longEnabled) {
+			this.setField('content_markdown', '');
+		}
+
+		this.setField('poll_duration', this.pollDuration * 60); // site-api expects duration in seconds.
 		return this.formModel.$save();
 	}
 

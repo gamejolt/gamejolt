@@ -1,10 +1,10 @@
-<section class="section devlog-post-view" v-if="post">
+<section class="section" v-if="post">
 
 	<div v-app-scroll-when="true"></div>
 
 	<div class="container">
 
-		<div v-if="post.type === 'video'" class="full-bleed-xs">
+		<div v-if="post.hasVideo" class="full-bleed-xs">
 			<app-video-embed
 				video-provider="youtube"
 				:video-id="post.videos[0].video_id"
@@ -16,84 +16,101 @@
 
 		<div class="row">
 			<div class="col-sm-10 col-md-8 col-lg-7" :class="{ 'col-centered': Screen.isMobile }">
-				<div class="tiny text-muted">
-					<app-time-ago
-						v-if="post.isActive"
-						:date="post.published_on"
-						/>
-					<template v-else-if="post.isScheduled">
+				<div class="devlog-post-view">
+					<div v-if="post.hasMedia" class="full-bleed-xs">
+						<div v-for="item of post.media" :key="item.id">
+							<app-responsive-dimensions
+								class="-media-item"
+								:ratio="item.width / item.height"
+								>
+
+								<app-event-item-media-tags
+									:gif="item.is_animated"
+									/>
+
+								<app-img-responsive
+									class="-img"
+									v-if="!item.is_animated"
+									:src="item.mediaserver_url"
+									alt=""
+									/>
+
+								<app-video
+									v-else
+									class="-video"
+									:poster="item.mediaserver_url"
+									:webm="item.mediaserver_url_webm"
+									:mp4="item.mediaserver_url_mp4"
+									:show-loading="true"
+									/>
+
+							</app-responsive-dimensions>
+
+							<br>
+						</div>
+					</div>
+
+					<div v-if="post.hasSketchfab" class="full-bleed-xs">
+						<app-sketchfab-embed
+							:sketchfab-id="post.sketchfabs[0].sketchfab_id"
+							:autoplay="true"
+							/>
+					</div>
+
+					<div class="tiny text-muted">
+						<app-time-ago
+							v-if="post.isActive"
+							:date="post.published_on"
+							/>
+						<template v-else-if="post.isScheduled">
+							<span
+								class="tag"
+								style="vertical-align: middle"
+								>
+								<app-jolticon icon="calendar-grid" />
+								<translate>Scheduled</translate>
+							</span>
+							<app-time-ago :date="post.scheduled_for" without-suffix />
+						</template>
 						<span
+							v-else-if="post.isDraft"
 							class="tag"
 							style="vertical-align: middle"
 							>
-							<app-jolticon icon="calendar-grid" />
-							<translate>Scheduled</translate>
+							<translate>Draft</translate>
 						</span>
-						<app-time-ago :date="post.scheduled_for" without-suffix />
-					</template>
-					<span
-						v-else-if="post.isDraft"
-						class="tag"
-						style="vertical-align: middle"
-						>
-						<translate>Draft</translate>
-					</span>
-				</div>
+					</div>
 
-				<h2 class="section-header">
-					{{ post.title }}
-				</h2>
+					<div class="fireside-post-lead" v-html="post.lead_compiled" />
 
-				<div v-if="post.type === 'text'" class="fireside-post-body">
-					<app-widget-compiler
-						:content="post.content_compiled"
-						/>
-				</div>
-				<div v-else-if="post.type === 'media'" class="full-bleed-xs">
-					<div v-for="item of post.media" :key="item.id">
+					<div v-if="post.hasArticle">
+						<div class="page-cut" />
 
-						<app-responsive-dimensions
-							:ratio="item.width / item.height"
-							>
-
-							<app-img-responsive
-								v-if="!item.is_animated"
-								:src="item.mediaserver_url"
-								alt=""
-								/>
-
-							<app-video
-								v-else
-								:poster="item.mediaserver_url"
-								:webm="item.mediaserver_url_webm"
-								:mp4="item.mediaserver_url_mp4"
-								:show-loading="true"
-								/>
-
-						</app-responsive-dimensions>
-
-						<br>
-
+						<app-widget-compiler
+							class="fireside-post-body"
+							:content="post.content_compiled"
+							/>
 					</div>
 				</div>
-				<div v-else-if="post.type === 'sketchfab'" class="full-bleed-xs">
-					<app-sketchfab-embed
-						:sketchfab-id="post.sketchfabs[0].sketchfab_id"
-						:autoplay="true"
+
+				<template v-if="post.hasPoll">
+					<app-poll-voting
+						:poll="post.poll"
+						:game="post.game"
+						/>
+
+					<br>
+				</template>
+
+				<div class="well fill-offset full-bleed-xs" v-if="shouldShowManage">
+					<app-event-item-manage
+						:post="post"
 						/>
 				</div>
 
-				<app-poll-voting
-					v-if="post.poll"
-					:poll="post.poll"
-					:game="post.game"
-					:user="post.user"
-					/>
-
-				<app-activity-feed-controls
+				<app-event-item-controls
 					show-comments
 					:post="post"
-					:in-modal="inModal"
 					/>
 			</div>
 			<div class="col-md-4 col-lg-5" v-if="Screen.isDesktop">

@@ -1,6 +1,45 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+.-attachment-controls
+	margin-bottom: $line-height-computed
+
+	@media $media-xs
+		white-space: nowrap
+		overflow-x: scroll
+		overflow-y: hidden
+
+.-upload-input
+	display: none
+
+.-lead-form-group
+	margin-bottom: 10px
+
+.-hp
+	display: flex
+	align-items: center
+	margin-top: 5px
+
+	&-label
+		theme-prop('color', 'fg-muted')
+		flex: none
+		margin-right: 10px
+		font-size: $font-size-small
+		font-weight: bold
+
+	&-bar
+		flex: auto
+
+		.progress
+			margin-bottom: 0
+
+	&-count
+		theme-prop('color', 'notice')
+		flex: none
+		margin-left: 10px
+		font-size: $font-size-small
+		font-weight: bold
+
 .-as-owner
 	clearfix()
 

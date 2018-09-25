@@ -1,181 +1,163 @@
-<app-timeline-list-item
-	:is-thread="isThreadView"
-	:is-new="isNew"
-	:is-active="isActive"
-	>
+<div class="-container">
+	<div
+		class="-item"
+		:class="{
+			'-new': isNew,
+		}"
+		@click.capture="onClickCapture"
+		@click="onClick"
+		>
 
-	<app-user-avatar-img
-		slot="bubble"
-		:user="user"
-		/>
+		<div class="-header">
+			<app-user-avatar
+				class="-header-avatar"
+				:user="user"
+				@click.native.stop
+				/>
 
-	<div class="event-item">
+			<div class="-header-content">
+				<div class="-header-byline">
+					<div class="-header-byline-game" v-if="game && feed.showGameInfo">
+						<strong class="text-muted">
+							<router-link :to="gameUrl" class="link-unstyled">
+								{{ game.title }}
+							</router-link>
+						</strong>
+					</div>
 
-		<!-- <div class="timeline-list-item-meta">
-			<template v-if="shouldShowScheduled">
-				<span class="tag" style="vertical-align: middle">
-					<app-jolticon icon="calendar-grid" />
-					<translate>Scheduled</translate>
-				</span>
+					<div class="-header-byline-name">
+						<strong>
+							<router-link
+								class="link-unstyled"
+								:to="{
+									name: 'profile.overview',
+									params: { username: user.username },
+								}"
+								>
+								{{ user.display_name }}
+							</router-link>
+						</strong>
 
-				<app-time-ago
-					:date="post.scheduled_for"
-					without-suffix
-					/>
-			</template>
-			<template v-else>
-				<app-time-ago
-					:date="eventItem.added_on"
-					/>
-			</template>
+						<small class="text-muted">
+							<router-link
+								class="link-unstyled"
+								:to="{
+									name: 'profile.overview',
+									params: { username: user.username },
+								}"
+								>
+								@{{ user.username }}
+							</router-link>
+						</small>
+					</div>
+				</div>
 
-			<template v-if="post && post.type === 'media'">
-				<span class="dot-separator"></span>
-				<app-jolticon icon="screenshot" class="middle" />
-				{{ post.media.length | number }}
-			</template>
-
-			<template v-if="game && feed.showGameInfo">
-				<span class="dot-separator"></span>
-				<router-link :to="gameUrl" class="link-unstyled">
-					{{ game.title }}
-				</router-link>
-			</template>
-		</div> -->
-
-		<div class="timeline-list-item-details">
-			<div class="-byline">
-				<router-link
-					class="-byline-name link-unstyled"
-					:to="{
-						name: 'profile.overview',
-						params: { username: user.username },
-					}"
-					>
-					{{ user.display_name }}
-				</router-link>
-
-				<small class="-byline-username text-muted">
-					@{{ user.username }}
-				</small>
-
-				<span v-if="game && feed.showGameInfo" class="-byline-to">
-					<app-jolticon icon="share" />
-					<router-link :to="gameUrl" class="link-unstyled">
-						{{ game.title }}
-					</router-link>
-				</span>
-			</div>
-
-
-			<div class="-meta small text-muted">
-				<template v-if="shouldShowScheduled">
-					<span class="tag" style="vertical-align: middle">
-						<app-jolticon icon="calendar-grid" />
-						<translate>Scheduled</translate>
-					</span>
-
-					<app-time-ago
-						:date="post.scheduled_for"
-						without-suffix
+				<div class="-header-date small text-muted">
+					<app-activity-feed-event-item-time
+						:event-item="eventItem"
+						:post="post"
+						:link="linkResolved"
 						/>
-				</template>
-				<template v-else>
-					<app-time-ago
-						:date="eventItem.added_on"
-						/>
-				</template>
-
-				<template v-if="post && post.type === 'media'">
-					<span class="dot-separator" />
-					<app-jolticon icon="screenshot" class="middle" />
-					{{ post.media.length | number }}
-				</template>
+				</div>
 			</div>
+		</div>
 
-			<div @click.capture="onClick">
-				<router-link :to="link" class="-title">
-					<strong>
-						<template v-if="eventItem.type === EventItem.TYPE_POST_ADD">
-							{{ post.title }}
-						</template>
-						<template v-else-if="eventItem.type === EventItem.TYPE_GAME_PUBLISH">
-							{{ game.title }}
-						</template>
-						<template v-else-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD">
-							{{ eventItem.action.title }}
-						</template>
-					</strong>
-				</router-link>
-			</div>
+		<app-activity-feed-comment-video
+			v-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD"
+			:item="item"
+			:video="video"
+			:is-hydrated="isHydrated"
+			@expanded="onExpand"
+			@content-bootstrapped="onContentBootstrapped"
+			/>
+		<template v-if="post">
 
-			<app-activity-feed-comment-video
-				v-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD"
+			<app-activity-feed-devlog-post-video
+				v-if="post.hasVideo"
 				:item="item"
-				:video="video"
+				:post="post"
+				:is-hydrated="isHydrated"
+				@click.native.stop
+				@expanded="onExpand"
+				@content-bootstrapped="onContentBootstrapped"
+				/>
+
+			<app-activity-feed-devlog-post-sketchfab
+				v-if="post.hasSketchfab"
+				:item="item"
+				:post="post"
+				:is-hydrated="isHydrated"
+				@click.native.stop
+				@expanded="onExpand"
+				@content-bootstrapped="onContentBootstrapped"
+				/>
+
+			<app-activity-feed-devlog-post-media
+				v-if="post.hasMedia"
+				:item="item"
+				:post="post"
 				:is-hydrated="isHydrated"
 				@expanded="onExpand"
 				@content-bootstrapped="onContentBootstrapped"
 				/>
-			<template v-if="post">
-				<app-activity-feed-devlog-post-text
-					v-if="post.type === 'text'"
-					:item="item"
-					:post="post"
-					:is-hydrated="isHydrated"
-					@expanded="onExpand"
-					@content-bootstrapped="onContentBootstrapped"
-					/>
-				<app-activity-feed-devlog-post-video
-					v-else-if="post.type === 'video'"
-					:item="item"
-					:post="post"
-					:is-hydrated="isHydrated"
-					@expanded="onExpand"
-					@content-bootstrapped="onContentBootstrapped"
-					/>
-				<app-activity-feed-devlog-post-sketchfab
-					v-else-if="post.type === 'sketchfab'"
-					:item="item"
-					:post="post"
-					:is-hydrated="isHydrated"
-					@expanded="onExpand"
-					@content-bootstrapped="onContentBootstrapped"
-					/>
-				<app-activity-feed-devlog-post-media
-					v-else-if="post.type === 'media'"
-					:item="item"
-					:post="post"
-					:is-hydrated="isHydrated"
-					@clicked="onClick( $event )"
-					@expanded="onExpand"
-					@content-bootstrapped="onContentBootstrapped"
-					/>
 
-				<div class="-poll" v-if="post.poll">
-					<app-poll-voting
-						:poll="post.poll"
-						:game="post.game"
-						:user="post.user"
-						/>
-				</div>
-			</template>
+			<!--
+				This shouldn't ever really show a collapser. It's for the jokers that think it would
+				be fun to make a post with a bunch of new lines.
+			-->
+			<app-fade-collapse
+				:collapse-height="600"
+				:is-open="item.isLeadOpen"
+				:animate="false"
+				@require-change="canToggleLeadChanged"
+				>
+				<div class="fireside-post-lead" v-html="post.lead_compiled" />
+			</app-fade-collapse>
 
-			<app-activity-feed-controls
+			<a
+				class="hidden-text-expander"
+				v-if="canToggleLead"
+				@click="toggleLead()"
+				>
+			</a>
+
+			<app-activity-feed-devlog-post-text
+				v-if="post.hasArticle"
+				:item="item"
 				:post="post"
-				:video="video"
-				:game="game"
-				show-comment-add-button
-				:show-edit-controls="feed.showEditControls"
-				:show-extra-info="!Screen.isXs"
+				:is-hydrated="isHydrated"
 				@expanded="onExpand"
-				@edited="feed.onPostEdited( post )"
-				@published="feed.onPostPublished( post )"
-				@removed="feed.onPostRemoved( post )"
+				@content-bootstrapped="onContentBootstrapped"
 				/>
 
+			<div
+				class="-poll"
+				v-if="post.hasPoll"
+				@click.stop
+				>
+				<app-poll-voting
+					:poll="post.poll"
+					:game="post.game"
+					/>
+			</div>
+		</template>
+
+		<div class="-manage" v-if="shouldShowManage">
+			<app-event-item-manage
+				:post="post"
+				:show-edit-controls="feed.showEditControls"
+				@edit="feed.onPostEdited( post )"
+				@publish="feed.onPostPublished( post )"
+				@remove="feed.onPostRemoved( post )"
+				/>
 		</div>
 
-	</div>
+		<app-event-item-controls
+			class="-controls"
+			:post="post"
+			:video="video"
+			@expand="onExpand()"
+			/>
 
-</app-timeline-list-item>
+	</div>
+</div>

@@ -1,0 +1,22 @@
+<component
+	:is="link ? 'router-link' : 'span'"
+	:to="link"
+	:class="link ? 'link-unstyled' : ''"
+	>
+	<template v-if="shouldShowScheduled">
+		<span class="tag" style="vertical-align: middle">
+			<app-jolticon icon="calendar-grid" />
+			<translate>Scheduled</translate>
+		</span>
+		<app-time-ago
+			:date="post.scheduled_for"
+			short
+			/>
+	</template>
+	<template v-else>
+		<app-time-ago
+			:date="eventItem.added_on"
+			short
+			/>
+	</template>
+</component>

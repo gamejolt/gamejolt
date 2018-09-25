@@ -20,36 +20,23 @@
 
 	<div class="modal-body">
 
-		<template v-if="Screen.isXs && post">
-			<app-button
-				type="a"
-				block
-				icon="chevron-left"
-				@click="post = null"
-				>
-				<translate>Back to Changelog</translate>
-			</app-button>
-			<br>
-		</template>
-
 		<div class="row">
-			<div class="col-sm-4 col-sm-push-8" v-if="!Screen.isXs || !post">
+			<div class="col-sm-4 col-sm-push-8">
 
 				<div class="list-group">
 					<a
-						class="list-group-item"
-						:class="{ 'has-icon': !Screen.isXs }"
+						class="list-group-item has-icon"
 						v-for="_post of posts"
 						:key="_post.id"
 						@click="post = _post"
 						>
 						<h5 class="list-group-item-heading">
 							<app-jolticon
-								v-if="post.id === _post.id && !Screen.isXs"
+								v-if="post.id === _post.id"
 								icon="chevron-right"
 								/>
 
-							{{ _post.title }}
+							{{ _post.lead_snippet }}
 
 							<div class="tiny text-muted">
 								<app-time-ago :date="_post.published_on" />
@@ -57,73 +44,85 @@
 						</h5>
 					</a>
 				</div>
-				<!-- <br>
-
-				<div>
-					<app-button
-						block
-						:href="Environment.firesideBaseUrl + '/tag/gjbroadcast'"
-						target="_blank"
-						>
-						<translate>View Full Changelog</translate>
-					</app-button>
-				</div> -->
 
 			</div>
-			<div class="col-sm-8 col-sm-pull-4" v-if="!Screen.isXs || post">
+			<div class="col-sm-8 col-sm-pull-4">
 
-				<h2 class="section-header">
-					<router-link
-						class="link-unstyled"
-						:to="{
-							name: 'discover.games.view.devlog.view',
-							params: {
-								slug: post.game.slug,
-								id: post.game.id,
-								postSlug: post.slug
-							}
-						}"
-						>
-						{{ post.title }}
-					</router-link>
-				</h2>
+				<div v-if="post.hasMedia">
+					<div v-for="item of post.media" :key="item.id">
+						<app-responsive-dimensions
+							class="-media-item"
+							:ratio="item.width / item.height"
+							>
 
-				<!--
-					Need to refresh social widgets any time post changes.
-				-->
-				<div class="social-widgets" :key="post.id">
-					<app-fireside-post-like-widget
-						:post="post"
+							<app-event-item-media-tags
+								:gif="item.is_animated"
+								/>
+
+							<app-img-responsive
+								class="-img"
+								v-if="!item.is_animated"
+								:src="item.mediaserver_url"
+								alt=""
+								/>
+
+							<app-video
+								v-else
+								class="-video"
+								:poster="item.mediaserver_url"
+								:webm="item.mediaserver_url_webm"
+								:mp4="item.mediaserver_url_mp4"
+								:show-loading="true"
+								/>
+
+						</app-responsive-dimensions>
+
+						<br>
+					</div>
+				</div>
+
+				<div v-if="post.hasVideo">
+					<app-video-embed
+						video-provider="youtube"
+						:video-id="post.videos[0].video_id"
+						:autoplay="true"
+						/>
+
+					<br>
+				</div>
+
+				<!-- No need for sketchfab -->
+
+				<div class="tiny text-muted">
+					<app-time-ago
+						v-if="post.isActive"
+						:date="post.published_on"
 						/>
 				</div>
 
-				<br>
+				<div class="fireside-post-lead" v-html="post.lead_compiled" />
 
-				<div class="fireside-post-body">
+				<div v-if="post.hasArticle">
+					<div class="page-cut" />
+
 					<app-widget-compiler
+						class="fireside-post-body"
 						:content="post.content_compiled"
 						/>
 				</div>
 
-				<app-poll-voting
-					v-if="post.poll"
-					:poll="post.poll"
-					/>
-
-				<!--
-					Need to refresh social widgets any time post changes.
-				-->
-				<div class="social-widgets" :key="post.id">
-					<app-fireside-post-like-widget
-						:post="post"
+				<template v-if="post.hasPoll">
+					<app-poll-voting
+						:poll="post.poll"
+						:game="post.game"
 						/>
-				</div>
 
-				<hr>
+					<br>
+				</template>
 
-				<app-comment-widget
-					resource="Fireside_Post"
-					:resource-id="post.id"
+				<app-event-item-controls
+					show-comments
+					:post="post"
 					/>
 
 			</div>
