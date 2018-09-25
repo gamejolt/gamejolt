@@ -2,9 +2,6 @@
 
 	<!-- Attachments -->
 	<div class="-attachment-controls" v-if="!enabledAttachments">
-		<div class="-attachment-controls-label">
-			<translate>Add:</translate>
-		</div>
 		<div class="-attachment-controls-buttons">
 			<app-button
 				trans
@@ -139,10 +136,10 @@
 
 	<!-- Post title (short) -->
 	<app-form-group
-		:hide-label="!longEnabled"
-		:label="$gettext(`Summary`)"
 		name="lead"
 		class="-lead-form-group"
+		:label="$gettext(`Summary`)"
+		hide-label
 		>
 		<app-form-control-textarea
 			:maxlength="leadTotalLengthLimit"
@@ -176,28 +173,55 @@
 	</app-form-group>
 
 	<!-- Post body (long) -->
-	<div class="page-cut">
-		<app-button
+	<div class="well fill-offset full-bleed" v-if="longEnabled">
+		<fieldset>
+			<app-form-legend
+				compact
+				deletable
+				@delete="toggleLong()"
+				>
+				<translate>Article content</translate>
+			</app-form-legend>
+
+			<app-form-group
+				name="content_markdown"
+				:label="$gettext( `Article Content` )"
+				hide-label
+				optional
+				>
+				<app-form-control-markdown
+					preview-class="fireside-post-body"
+					preview-url="/web/dash/developer/games/devlog/preview"
+					markdown-mode="devlog"
+					:show-media-items="true"
+					media-item-type="fireside-post-article-image"
+					:placeholder="$gettext( `Write your article here...` )"
+					/>
+
+				<app-form-control-errors />
+			</app-form-group>
+		</fieldset>
+		<!-- <app-button
 			v-if="!longEnabled"
 			trans
 			@click.prevent="toggleLong()"
 			>
 			<translate>Add Post Body</translate>
-		</app-button>
-		<app-button
-			v-else
+		</app-button> -->
+			<!-- v-else -->
+		<!-- <app-button
 			circle
 			sparse
 			icon="remove"
 			@click.prevent="toggleLong()"
 			v-app-tooltip="$gettext(`Remove Post Body`)"
-			/>
+			/> -->
 	</div>
 
-	<template v-if="longEnabled">
+	<!-- <template v-if="longEnabled">
 		<app-form-group
 			name="content_markdown"
-			:label="$gettext( `Post Content` )"
+			:label="$gettext( `Article Content` )"
 			hide-label
 			optional
 			>
@@ -207,12 +231,12 @@
 				markdown-mode="devlog"
 				:show-media-items="true"
 				media-item-type="fireside-post-article-image"
-				:placeholder="$gettext( `Write your post content here...` )"
+				:placeholder="$gettext( `Write your article here...` )"
 				/>
 
 			<app-form-control-errors />
 		</app-form-group>
-	</template>
+	</template> -->
 
 	<!-- Poll -->
 	<div class="well fill-offset full-bleed" v-if="hasPoll">
@@ -504,6 +528,16 @@
 
 	<!-- Controls -->
 	<div class="clearfix">
+		<app-button
+			v-if="!longEnabled"
+			sparse
+			trans
+			circle
+			icon="blog-article"
+			v-app-tooltip="$gettext(`Add Article`)"
+			@click.prevent="toggleLong()"
+			/>
+
 		<app-button
 			v-if="!hasPoll"
 			sparse

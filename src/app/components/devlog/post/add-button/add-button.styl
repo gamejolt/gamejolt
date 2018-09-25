@@ -22,20 +22,11 @@ $-height-xs = 40px
 		margin-right: $grid-gutter-width * 0.5
 
 .-input
-	theme-prop('border-color', 'bg-subtle')
-	theme-prop('background-color', 'bg')
-	theme-prop('color', 'link')
+	input-placeholder-button()
 	flex: auto
 	position: relative
 	height: $-height-xs
 	line-height: $-height-xs
-	padding-left: $padding-base-horizontal
-	padding-right: $padding-base-horizontal
-	border-width: 2px
-	border-style: solid
-	border-radius: $input-border-radius
-	font-weight: 600
-	cursor: pointer
 
 	@media $media-sm-up
 		height: $-height

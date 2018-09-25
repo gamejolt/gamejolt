@@ -1,31 +1,29 @@
 <div
-	class="-devlog-post-text"
+	class="devlog-post-text"
 	:class="{
 		'-hydrated': isHydrated
 	}"
 	>
 
-	<div class="page-cut" />
+	<template v-if="item.isOpen">
+		<div class="page-cut" />
 
-	<app-fade-collapse
-		:collapse-height="150"
-		:is-open="item.isOpen"
-		:animate="false"
-		@expand.stop="toggleFull()"
-		@require-change="canToggleChanged"
-		>
 		<div class="fireside-post-body">
-			<app-widget-compiler :content="post.content_compiled" />
+			<app-widget-compiler
+				:content="post.content_compiled"
+				/>
 		</div>
-	</app-fade-collapse>
+	</template>
 
-	<div class="page-cut" v-if="canToggleContent">
+	<div class="page-cut">
 		<app-button
-			trans
+			:trans="!isToggling"
+			:solid="isToggling"
+			:primary="isToggling"
 			@click.stop="toggleFull()"
 			>
-			<translate v-if="!item.isOpen">expand post</translate>
-			<translate v-else>collapse</translate>
+			<translate v-if="!item.isOpen">read article</translate>
+			<translate v-else>less</translate>
 		</app-button>
 	</div>
 
