@@ -12,14 +12,14 @@ import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { CreateElement } from 'vue/types/vue';
-import { AppDevlogPostView } from '../../../../../../components/devlog/post/view/view';
 import { IntentService } from '../../../../../../components/intent/intent.service';
+import { AppPostView } from '../../../../../../components/post/view/view';
 import { RouteState, RouteStore } from '../../view.store';
 
 @Component({
 	name: 'RouteDiscoverGamesViewDevlogView',
 	components: {
-		AppDevlogPostView,
+		AppPostView,
 	},
 })
 export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent {
@@ -84,7 +84,7 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 	}
 
 	render(h: CreateElement) {
-		return h(AppDevlogPostView, {
+		return h(AppPostView, {
 			props: {
 				post: this.post,
 			},

@@ -10,7 +10,7 @@ import { Component, Emit, Prop } from 'vue-property-decorator';
 		AppImgResponsive,
 	},
 })
-export class AppFormGameDevlogPostMediaItem extends Vue {
+export class AppFormPostMediaItem extends Vue {
 	@Prop(MediaItem)
 	item!: MediaItem;
 

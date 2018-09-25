@@ -1,4 +1,4 @@
-import View from '!view!./devlog-post.html?style=./devlog-post.styl';
+import View from '!view!./post.html?style=./post.styl';
 import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
@@ -36,9 +36,9 @@ import { AppJolticon } from 'game-jolt-frontend-lib/vue/components/jolticon/jolt
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { determine } from 'jstimezonedetect';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppFormGameDevlogPostMedia } from './_media/media';
+import { AppFormPostMedia } from './_media/media';
 
-type FormGameDevlogPostModel = FiresidePost & {
+type FormPostModel = FiresidePost & {
 	mediaItemIds: number[];
 	key_group_ids: KeyGroup[];
 	video_url: string;
@@ -77,7 +77,7 @@ type FormGameDevlogPostModel = FiresidePost & {
 		AppPopover,
 		AppUserAvatarImg,
 		AppProgressBar,
-		AppFormGameDevlogPostMedia,
+		AppFormPostMedia,
 	},
 	directives: {
 		AppFocusWhen,
@@ -86,7 +86,7 @@ type FormGameDevlogPostModel = FiresidePost & {
 		AppFormAutosize,
 	},
 })
-export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
+export class FormPost extends BaseForm<FormPostModel>
 	implements FormOnInit, FormOnLoad, FormOnSubmit, FormOnSubmitSuccess {
 	modelClass = FiresidePost as any;
 
@@ -239,7 +239,7 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 	}
 
 	get computedLeadLength() {
-		const regex = FormGameDevlogPost.LEAD_URL_REGEX;
+		const regex = FormPost.LEAD_URL_REGEX;
 		let lead = this.formModel.lead;
 		if (!lead) {
 			return 0;

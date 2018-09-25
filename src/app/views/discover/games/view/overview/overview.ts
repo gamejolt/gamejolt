@@ -25,10 +25,10 @@ import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service'
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { AppCommentOverview } from '../../../../../components/comment/overview/overview';
-import { AppDevlogPostAddButton } from '../../../../../components/devlog/post/add-button/add-button';
 import { AppGameOgrs } from '../../../../../components/game/ogrs/ogrs';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppActivityFeedLazy } from '../../../../../components/lazy';
+import { AppPostAddButton } from '../../../../../components/post/add-button/add-button';
 import { AppRatingWidget } from '../../../../../components/rating/widget/widget';
 import { RouteMutation, RouteState, RouteStore } from '../view.store';
 import { AppDiscoverGamesViewOverviewDetails } from './_details/details';
@@ -57,7 +57,7 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 		AppCommentAddButton,
 		AppCommentOverview,
 		AppActivityFeed: AppActivityFeedLazy,
-		AppDevlogPostAddButton,
+		AppPostAddButton,
 		AppGamePerms,
 	},
 	directives: {

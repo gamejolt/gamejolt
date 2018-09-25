@@ -16,7 +16,7 @@
 
 		<div class="row">
 			<div class="col-sm-10 col-md-8 col-lg-7" :class="{ 'col-centered': Screen.isMobile }">
-				<div class="devlog-post-view">
+				<div class="post-view">
 					<div v-if="post.hasMedia" class="full-bleed-xs">
 						<div v-for="item of post.media" :key="item.id">
 							<app-responsive-dimensions

@@ -1,5 +1,5 @@
 <app-loading-fade :is-loading="state.isProcessing">
-	<app-form name="devlogPostMediaForm" ref="form">
+	<app-form name="postMediaForm" ref="form">
 		<app-form-group
 			name="image"
 			hide-label
@@ -48,7 +48,7 @@
 				style="display: inline-block"
 				v-model="internalItems"
 				>
-				<app-form-game-devlog-post-media-item
+				<app-form-post-media-item
 					class="-item"
 					v-for="item of internalItems"
 					:key="item.id"

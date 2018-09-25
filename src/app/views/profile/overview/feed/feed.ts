@@ -1,21 +1,20 @@
-import { State } from 'vuex-class';
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./feed.html';
-
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
+import { State } from 'vuex-class';
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
+import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppActivityFeed } from '../../../../components/activity/feed/feed';
-import { AppActivityFeedPlaceholder } from '../../../../components/activity/feed/placeholder/placeholder';
-import { AppDevlogPostAddPopoverButton } from '../../../../components/post/add-popover-button/add-popover-button';
 import { ActivityFeedContainer } from '../../../../components/activity/feed/feed-container-service';
+import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
+import { AppActivityFeedPlaceholder } from '../../../../components/activity/feed/placeholder/placeholder';
+import { AppPostAddPopoverButton } from '../../../../components/post/add-popover-button/add-popover-button';
 import { Store } from '../../../../store/index';
 import { RouteState, RouteStore } from '../../profile.store';
-import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
 
 @View
 @Component({
@@ -23,7 +22,7 @@ import { EventItem } from '../../../../../lib/gj-lib-client/components/event-ite
 	components: {
 		AppActivityFeed,
 		AppActivityFeedPlaceholder,
-		AppDevlogPostAddPopoverButton,
+		AppPostAddPopoverButton,
 	},
 })
 export default class RouteProfileOverviewFeed extends BaseRouteComponent {

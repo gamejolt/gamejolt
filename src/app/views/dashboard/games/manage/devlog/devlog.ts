@@ -11,8 +11,8 @@ import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
 import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
-import { AppDevlogPostAddButton } from '../../../../../components/devlog/post/add-button/add-button';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
+import { AppPostAddButton } from '../../../../../components/post/add-button/add-button';
 import { RouteState, RouteStore } from '../manage.store';
 
 @View
@@ -20,7 +20,7 @@ import { RouteState, RouteStore } from '../manage.store';
 	name: 'RouteDashGamesManageDevlog',
 	components: {
 		AppActivityFeed,
-		AppDevlogPostAddButton,
+		AppPostAddButton,
 		AppGamePerms,
 		AppNavTabList,
 	},

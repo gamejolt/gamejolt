@@ -6,7 +6,7 @@ import { AppUserAvatarImg } from 'game-jolt-frontend-lib/components/user/user-av
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { DevlogPostEditModal } from '../edit-modal/edit-modal-service';
+import { PostEditModal } from '../edit-modal/edit-modal-service';
 
 @View
 @Component({
@@ -14,7 +14,7 @@ import { DevlogPostEditModal } from '../edit-modal/edit-modal-service';
 		AppUserAvatarImg,
 	},
 })
-export class AppDevlogPostAddButton extends Vue {
+export class AppPostAddButton extends Vue {
 	@Prop(Game)
 	game!: Game;
 
@@ -30,7 +30,7 @@ export class AppDevlogPostAddButton extends Vue {
 
 		let post: FiresidePost | undefined = new FiresidePost(response.post);
 
-		post = await DevlogPostEditModal.show(post, { attachmentType: attachmentType || '' });
+		post = await PostEditModal.show(post, { attachmentType: attachmentType || '' });
 		if (!post) {
 			return;
 		}

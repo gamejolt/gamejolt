@@ -1,4 +1,4 @@
-<app-form name="devlogPostForm" ref="form">
+<app-form name="postForm" ref="form">
 
 	<!-- Attachments -->
 	<div class="-attachment-controls" v-if="!enabledAttachments">
@@ -44,7 +44,7 @@
 				<translate>Select images</translate>
 			</app-form-legend>
 
-			<app-form-game-devlog-post-media
+			<app-form-post-media
 				:media-items="formModel.media"
 				:post="formModel"
 				:max-filesize="maxFilesize"
@@ -189,7 +189,7 @@
 				>
 				<app-form-control-markdown
 					preview-class="fireside-post-body"
-					preview-url="/web/dash/developer/games/devlog/preview"
+					preview-url="/web/dash/posts/preview"
 					markdown-mode="devlog"
 					:show-media-items="true"
 					media-item-type="fireside-post-article-image"
@@ -522,7 +522,7 @@
 			/>
 
 		<app-button
-			v-if="!accessPermissionsEnabled && !wasPublished"
+			v-if="!accessPermissionsEnabled && !wasPublished && model.game"
 			sparse
 			trans
 			circle

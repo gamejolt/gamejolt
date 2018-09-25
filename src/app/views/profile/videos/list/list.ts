@@ -1,17 +1,15 @@
-import { Route } from 'vue-router';
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./list.html';
-
-import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
-import { AppCommentVideoThumbnail } from '../../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
-import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { AppCommentVideoThumbnail } from 'game-jolt-frontend-lib/components/comment/video/thumbnail/thumbnail';
+import { CommentVideo } from 'game-jolt-frontend-lib/components/comment/video/video-model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { RouteStore, RouteState } from '../../profile.store';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
+import { RouteState, RouteStore } from '../../profile.store';
 
 @View
 @Component({

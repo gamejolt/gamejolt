@@ -8,7 +8,7 @@ import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../store';
-import { DevlogPostEditModal } from '../../devlog/post/edit-modal/edit-modal-service';
+import { PostEditModal } from '../../post/edit-modal/edit-modal-service';
 
 @View
 @Component({
@@ -46,7 +46,7 @@ export class AppEventItemManage extends Vue {
 	}
 
 	async openEdit() {
-		if (await DevlogPostEditModal.show(this.post)) {
+		if (await PostEditModal.show(this.post)) {
 			this.emitEdit();
 		}
 	}

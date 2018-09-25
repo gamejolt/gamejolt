@@ -1,19 +1,19 @@
 import View from '!view!./media.html?style=./media.styl';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { AppFormControlUpload } from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload';
+import { AppForm } from 'game-jolt-frontend-lib/components/form-vue/form';
+import {
+	BaseForm,
+	FormOnSubmit,
+	FormOnSubmitSuccess,
+} from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
 import { AppLoadingFade } from 'game-jolt-frontend-lib/components/loading/fade/fade';
 import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
 import { AppScrollScroller } from 'game-jolt-frontend-lib/components/scroll/scroller/scroller';
 import { Component, Emit, Prop } from 'vue-property-decorator';
-import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
-import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { AppFormControlUpload } from '../../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
-import { AppForm } from '../../../../../../lib/gj-lib-client/components/form-vue/form';
-import {
-	BaseForm,
-	FormOnSubmit,
-	FormOnSubmitSuccess,
-} from '../../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { AppFormGameDevlogPostMediaItem } from './item/item';
+import { AppFormPostMediaItem } from './item/item';
 
 const draggable = require('vuedraggable');
 
@@ -28,12 +28,12 @@ interface FormModel {
 		draggable,
 		AppScrollScroller,
 		AppImgResponsive,
-		AppFormGameDevlogPostMediaItem,
+		AppFormPostMediaItem,
 		AppFormControlUpload,
 		AppLoadingFade,
 	},
 })
-export class AppFormGameDevlogPostMedia extends BaseForm<FormModel>
+export class AppFormPostMedia extends BaseForm<FormModel>
 	implements FormOnSubmit, FormOnSubmitSuccess {
 	@Prop(FiresidePost)
 	post!: FiresidePost;
@@ -88,7 +88,7 @@ export class AppFormGameDevlogPostMedia extends BaseForm<FormModel>
 
 	async onSubmit() {
 		return Api.sendRequest(
-			`/web/dash/developer/games/devlog/add-media/${this.post.game.id}/${this.post.id}`,
+			`/web/dash/posts/add-media/${this.post.id}`,
 			{},
 			{
 				file: this.formModel.image,

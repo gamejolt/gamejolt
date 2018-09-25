@@ -4,7 +4,10 @@ import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import { BaseRouteComponent, RouteResolve } from 'game-jolt-frontend-lib/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
@@ -12,11 +15,16 @@ import { State } from 'vuex-class';
 import { ActivityFeedContainer } from '../../../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../../../../components/activity/feed/feed-service';
 import { AppActivityFeedPlaceholder } from '../../../../../../components/activity/feed/placeholder/placeholder';
-import { AppDevlogPostAddButton } from '../../../../../../components/devlog/post/add-button/add-button';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { AppActivityFeedLazy } from '../../../../../../components/lazy';
+import { AppPostAddButton } from '../../../../../../components/post/add-button/add-button';
 import { Store } from '../../../../../../store/index';
-import { gameStoreCheckPostRedirect, RouteMutation, RouteState, RouteStore } from '../../view.store';
+import {
+	gameStoreCheckPostRedirect,
+	RouteMutation,
+	RouteState,
+	RouteStore,
+} from '../../view.store';
 
 @View
 @Component({
@@ -25,7 +33,7 @@ import { gameStoreCheckPostRedirect, RouteMutation, RouteState, RouteStore } fro
 		AppAd,
 		AppActivityFeed: AppActivityFeedLazy,
 		AppActivityFeedPlaceholder,
-		AppDevlogPostAddButton,
+		AppPostAddButton,
 		AppGamePerms,
 	},
 })

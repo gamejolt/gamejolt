@@ -1,26 +1,25 @@
-import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
-
-import { AppDevlogPostView } from '../../../components/devlog/post/view/view';
+import { Route } from 'vue-router';
 import { CreateElement } from 'vue/types/vue';
-import { RouteState, RouteStore } from '../profile.store';
-import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { IntentService } from '../../../components/intent/intent.service';
-import { Translate } from '../../../../lib/gj-lib-client/components/translate/translate.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { enforceLocation } from '../../../../lib/gj-lib-client/utils/router';
 import { CommentModal } from '../../../../lib/gj-lib-client/components/comment/modal/modal.service';
-import { Registry } from '../../../../lib/gj-lib-client/components/registry/registry.service';
+import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
+import { Registry } from '../../../../lib/gj-lib-client/components/registry/registry.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { Translate } from '../../../../lib/gj-lib-client/components/translate/translate.service';
+import { enforceLocation } from '../../../../lib/gj-lib-client/utils/router';
+import { IntentService } from '../../../components/intent/intent.service';
+import { AppPostView } from '../../../components/post/view/view';
+import { RouteState, RouteStore } from '../profile.store';
 
 @Component({
 	name: 'RouteProfilePostView',
 	components: {
-		AppDevlogPostView,
+		AppPostView,
 	},
 })
 export default class RouteProfilePostView extends BaseRouteComponent {
@@ -61,7 +60,7 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 	}
 
 	get routeTitle() {
-		return this.post ? this.post.title : null;
+		return this.post ? this.post.lead_snippet : null;
 	}
 
 	routeInit() {
@@ -88,7 +87,7 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 	}
 
 	render(h: CreateElement) {
-		return h(AppDevlogPostView, {
+		return h(AppPostView, {
 			props: {
 				post: this.post,
 			},

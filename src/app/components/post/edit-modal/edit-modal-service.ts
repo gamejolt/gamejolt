@@ -2,17 +2,17 @@ import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/po
 import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
 import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
 
-export type DevlogPostEditModalOptions = {
+export type PostEditModalOptions = {
 	attachmentType?: string;
 };
 
-export class DevlogPostEditModal {
-	static async show(post: FiresidePost, options: DevlogPostEditModalOptions = {}) {
+export class PostEditModal {
+	static async show(post: FiresidePost, options: PostEditModalOptions = {}) {
 		options = options || {};
 		return await Modal.show<FiresidePost>({
 			component: () =>
 				asyncComponentLoader(
-					import(/* webpackChunkName: "DevlogPostEditModal" */ './edit-modal')
+					import(/* webpackChunkName: "PostEditModal" */ './edit-modal')
 				),
 			noBackdropClose: true,
 			noEscClose: true,
