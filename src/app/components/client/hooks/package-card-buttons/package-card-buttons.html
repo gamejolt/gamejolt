@@ -30,6 +30,13 @@
 			</p>
 		</div>
 
+		<div class="alert alert-notice" v-if="localPackage.remove_state === RemoveState.REMOVE_FAILED">
+			<p>
+				<app-jolticon icon="notice" />
+				<translate>Oh no! We couldn't remove this package. Maybe try again?</translate>
+			</p>
+		</div>
+
 		<div class="alert alert-highlight" v-if="localPackage.isRunning">
 			<p>
 				<app-jolticon icon="play" />
@@ -98,6 +105,15 @@
 			@click="retryInstall()"
 			>
 			<translate>Retry Update</translate>
+		</app-button>
+
+		<!-- Game failed to uninstall -->
+		<app-button
+			v-if="localPackage.didRemoveFail"
+			primary
+			@click="retryUninstall()"
+			>
+			<translate>Retry Uninstall</translate>
 		</app-button>
 
 		<!--

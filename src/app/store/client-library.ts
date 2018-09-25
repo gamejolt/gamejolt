@@ -17,8 +17,7 @@ import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
 import { isErrnoException } from 'game-jolt-frontend-lib/utils/utils';
 import * as path from 'path';
-import Vue, { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
+import Vue from 'vue';
 import { Action, Mutation, namespace, State } from 'vuex-class';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
 import { Device } from '../../lib/gj-lib-client/components/device/device.service';
@@ -27,7 +26,7 @@ import { GameBuildLaunchOption } from '../../lib/gj-lib-client/components/game/b
 import { Game } from '../../lib/gj-lib-client/components/game/game.model';
 import { GamePackage } from '../../lib/gj-lib-client/components/game/package/package.model';
 import { GameRelease } from '../../lib/gj-lib-client/components/game/release/release.model';
-import { GrowlOptions, Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
+import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
 import { HistoryTick } from '../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { arrayGroupBy, arrayIndexBy, arrayRemove } from '../../lib/gj-lib-client/utils/array';
 import { fuzzysearch } from '../../lib/gj-lib-client/utils/string';
@@ -39,7 +38,6 @@ import {
 	VuexStore,
 } from '../../lib/gj-lib-client/utils/vuex';
 import { Settings } from '../../_common/settings/settings.service';
-import { AppClientGrowlAntiVirus } from '../components/client/growls/anti-virus/anti-virus';
 import { LocalDbGame } from '../components/client/local-db/game/game.model';
 import { LocalDb } from '../components/client/local-db/local-db.service';
 import {
@@ -85,61 +83,46 @@ export type Mutations = {
 	'clientLibrary/syncClear': undefined;
 };
 
-export type ClientVoodooErrorType =
-	| 'client-voodoo-launch'
-	| 'client-voodoo-attach'
-	| 'client-voodoo-install'
-	| 'client-voodoo-update'
-	| 'client-voodoo-update-abort'
-	| 'client-voodoo-uninstall';
+export type ClientVoodooOperation =
+	| 'launch'
+	| 'attach'
+	| 'install-begin'
+	| 'install-end'
+	| 'update-begin'
+	| 'update-end'
+	| 'patch-abort-begin'
+	| 'patch-abort-end'
+	| 'uninstall-begin'
+	| 'uninstall-end';
 
-@Component({})
-class Meme extends Vue {
-	render(h: CreateElement) {
-		const content = h('div');
-		// content.text = 'eyy';
-		return content;
-	}
+function trackClientVoodooOperation(operation: ClientVoodooOperation, success: boolean) {
+	Analytics.trackEvent('client-op', success ? 'success' : 'error', operation);
 }
 
 function handleClientVoodooError(
 	err: Error,
-	action: ClientVoodooErrorType,
-	growlOpts?: GrowlOptions
+	operation: ClientVoodooOperation,
+	message?: string,
+	title?: string
 ) {
-	console.log('Client voodoo error');
-	console.log(err);
-
-	try {
-		if (
-			isErrnoException(err) &&
-			err.code === 'ENOENT' &&
-			err.path &&
-			path.resolve(err.path) === path.resolve(getExecutable()) &&
-			true
-		) {
-			if (growlOpts && growlOpts.message) {
-				growlOpts.message = Translate.$gettext(
-					'Looks like a hyper-active anti virus removed an executable we need to manage your games.'
-				);
-				growlOpts.sticky = true;
-				growlOpts.component = AppClientGrowlAntiVirus;
-				growlOpts.props = {
-					title: growlOpts.title,
-				};
-			}
-
-			if (action) {
-				Analytics.trackError(action);
-			}
+	if (
+		isErrnoException(err) &&
+		err.code === 'ENOENT' &&
+		err.path &&
+		path.resolve(err.path) === path.resolve(getExecutable())
+	) {
+		if (operation) {
+			trackClientVoodooOperation(operation, false);
 		}
 
-		if (growlOpts) {
-			Growls.error(growlOpts);
+		if (message) {
+			// ClientAntiVirusModal.show(message, title);
 		}
-	} catch (err2) {
-		console.log('help');
-		console.log(err2);
+		return;
+	}
+
+	if (message) {
+		Growls.error(message, title);
 	}
 }
 
@@ -420,6 +403,8 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			packageTitle += ' for ' + localGame.title;
 		}
 
+		let patchBegun = false;
+
 		try {
 			// We freeze the installation directory in time.
 			if (!localPackage.install_dir) {
@@ -450,6 +435,13 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			const patchInstance = await Patcher.patch(localPackage as any, authTokenGetter, {
 				authToken,
 			});
+
+			patchBegun = true;
+			trackClientVoodooOperation(
+				operation === 'install' ? 'install-begin' : 'update-begin',
+				true
+			);
+
 			const canceled = await new Promise<boolean>((resolve, reject) => {
 				this.setCurrentlyPatching([localPackage, patchInstance]);
 
@@ -599,6 +591,12 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 			this.unsetCurrentlyPatching(localPackage);
 
+			// Even if our patch operation has been canceled - as far as the installation flow is concerned it was a success.
+			trackClientVoodooOperation(
+				operation === 'install' ? 'install-end' : 'update-end',
+				true
+			);
+
 			if (!canceled) {
 				if (localPackage.install_state) {
 					await this.clearPackageOperations(localPackage);
@@ -617,6 +615,11 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				// If we were cancelling the first installation - we have to treat the package as uninstalled.
 				// By this point we can assume joltron has removed it from disk.
 				if (operation === 'install') {
+					// Since the actual aborting is done by joltron for first installations we don't
+					// really have a hook to use for sending the patch-abort-begin/end analytics. This is a best effort.
+					trackClientVoodooOperation('patch-abort-begin', true);
+					trackClientVoodooOperation('patch-abort-end', true);
+
 					console.log(
 						'installerInstall: This is a first installation. Marking as uninstalled from db with packageUninstall(true)'
 					);
@@ -632,7 +635,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 						'installerInstall: This is an update operation. Attempting to rollback with installerRollback'
 					);
 					try {
-						await this.installerRollback(localPackage);
+						await this.installerRollback(localPackage, packageTitle);
 						Growls.success({
 							title: 'Update Aborted',
 							message: `${packageTitle} aborted the update.`,
@@ -650,11 +653,6 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 								LocalDbPackagePatchState.DOWNLOAD_FAILED,
 							]);
 						}
-
-						handleClientVoodooError(err, 'client-voodoo-update-abort', {
-							message: `${packageTitle} cannot abort at this time. Retry or uninstall it.`,
-							title: 'Update Failed',
-						});
 					}
 				}
 			}
@@ -663,13 +661,19 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 			const action = operation === 'install' ? 'install' : 'update';
 			const title = operation === 'install' ? 'Installation Failed' : 'Update Failed';
-			const errorType: ClientVoodooErrorType =
-				operation === 'install' ? 'client-voodoo-install' : 'client-voodoo-update';
+			let cvOperation: ClientVoodooOperation;
+			if (operation === 'install') {
+				cvOperation = patchBegun ? 'install-end' : 'install-begin';
+			} else {
+				cvOperation = patchBegun ? 'update-end' : 'update-begin';
+			}
 
-			handleClientVoodooError(err, errorType, {
-				message: `${packageTitle} failed to ${action}.`,
-				title: title,
-			});
+			handleClientVoodooError(
+				err,
+				cvOperation,
+				`${packageTitle} failed to ${action}.`,
+				title
+			);
 
 			if (localPackage.install_state) {
 				if (localPackage.install_state === LocalDbPackagePatchState.UNPACKING) {
@@ -745,36 +749,99 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexAction
-	private async installerRollback(localPackage: LocalDbPackage) {
-		const rollbackInstance = await Rollbacker.rollback(localPackage as any);
-		await new Promise((resolve, reject) => {
-			rollbackInstance
-				.on('rollbackFailed', (reason: string) => {
-					console.log(`Received rollbackFailed in gamejolt: ${reason}`);
-					reject(new Error(reason));
-				})
-				.on('rollbackFinished', () => {
-					console.log('Received rollbackFinished in gamejolt');
-					resolve();
-				})
-				.on('fatal', reject);
-		});
+	private async installerRollback(localPackage: LocalDbPackage, packageTitle: string) {
+		let abortBegun = false;
 
-		await this.clearPackageOperations(localPackage);
+		try {
+			const rollbackInstance = await Rollbacker.rollback(localPackage as any);
+			abortBegun = true;
+			trackClientVoodooOperation('patch-abort-begin', true);
+
+			await new Promise((resolve, reject) => {
+				rollbackInstance
+					.on('rollbackFailed', (reason: string) => {
+						console.log(`Received rollbackFailed in gamejolt: ${reason}`);
+						reject(new Error(reason));
+					})
+					.on('rollbackFinished', () => {
+						console.log('Received rollbackFinished in gamejolt');
+						resolve();
+					})
+					.on('fatal', reject);
+			});
+
+			await this.clearPackageOperations(localPackage);
+			trackClientVoodooOperation('patch-abort-end', true);
+		} catch (err) {
+			const title = Translate.$gettext('Update Failed');
+			const message = Translate.$gettextInterpolate(
+				`%{ packageTitle } cannot abort at this time. Retry or uninstall it.`,
+				{ packageTitle }
+			);
+
+			handleClientVoodooError(
+				err,
+				abortBegun ? 'patch-abort-end' : 'patch-abort-begin',
+				message,
+				title
+			);
+			throw err;
+		}
 	}
 
 	@VuexAction
-	private async doUninstall(localPackage: LocalDbPackage) {
+	private async doUninstall(
+		localPackage: LocalDbPackage,
+		packageTitle: string,
+		withNotifications: boolean,
+		wasInstalling: boolean
+	) {
+		let uninstallBegun = false;
+
 		try {
 			const uninstallInstance = await Uninstaller.uninstall(localPackage as any);
-			return new Promise<void>((resolve, reject) => {
+			uninstallBegun = true;
+			trackClientVoodooOperation('uninstall-begin', true);
+
+			await new Promise<void>((resolve, reject) => {
 				uninstallInstance
 					.on('uninstallFinished', () => resolve())
 					.on('uninstallFailed', reject)
 					.on('fatal', reject);
 			});
+
+			trackClientVoodooOperation('uninstall-end', true);
 		} catch (err) {
 			console.error(err);
+
+			const uninstallOp: ClientVoodooOperation = uninstallBegun
+				? 'uninstall-end'
+				: 'uninstall-begin';
+
+			if (withNotifications) {
+				if (wasInstalling) {
+					handleClientVoodooError(
+						err,
+						uninstallOp,
+						Translate.$gettextInterpolate(
+							'Could not stop the installation of %{ packageTitle }.',
+							{ packageTitle }
+						)
+					);
+				} else {
+					handleClientVoodooError(
+						err,
+						uninstallOp,
+						Translate.$gettextInterpolate('Could not remove %{ packageTitle }.', {
+							packageTitle,
+						}),
+						Translate.$gettext('Remove failed')
+					);
+				}
+			} else {
+				handleClientVoodooError(err, uninstallOp);
+			}
+
 			throw err;
 		}
 	}
@@ -879,14 +946,12 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 					? { username: payload.username, user_token: payload.token }
 					: null;
 
-			// return Launcher.launch( localPackage, os, arch, credentials ).promise;
 			const launchInstance = await Launcher.launch(localPackage as any, credentials);
 			this.launcherAttach([localPackage, launchInstance]);
+			trackClientVoodooOperation('launch', true);
 		} catch (err) {
 			console.error(err);
-			handleClientVoodooError(err, 'client-voodoo-launch', {
-				message: Translate.$gettext('Could not launch game.'),
-			});
+			handleClientVoodooError(err, 'launch', Translate.$gettext('Could not launch game.'));
 			this.launcherClear(localPackage);
 		}
 	}
@@ -900,10 +965,11 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		try {
 			const launchInstance = await Launcher.attach(localPackage.running_pid);
 			this.launcherAttach([localPackage, launchInstance]);
+			trackClientVoodooOperation('attach', true);
 		} catch (err) {
 			console.log(`Could not reattach launcher instance: ${localPackage.running_pid}`);
 			console.error(err);
-			handleClientVoodooError(err, 'client-voodoo-attach');
+			handleClientVoodooError(err, 'attach');
 			this.launcherClear(localPackage);
 		}
 	}
@@ -1204,6 +1270,9 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				// We refetch from db because if canceling a first installation it might remove the local game from the db.
 				localGame = this.db.games.get(localPackage.game_id)!;
 
+				const packageTitle =
+					localPackage.title || (localGame ? localGame.title : 'the package');
+
 				// Make sure we're clean.
 				await this.clearPackageOperations(localPackage);
 				await this.setPackageRemoveState([
@@ -1213,7 +1282,12 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 				// Skip removing the package if we don't want to actually uninstall from disk.
 				if (!dbOnly) {
-					await this.doUninstall(localPackage);
+					await this.doUninstall(
+						localPackage,
+						packageTitle,
+						withNotifications,
+						wasInstalling
+					);
 				}
 
 				// Get the number of packages in this game.
@@ -1259,24 +1333,6 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 					}
 				}
 			} catch (err) {
-				if (withNotifications) {
-					if (wasInstalling) {
-						handleClientVoodooError(err, 'client-voodoo-uninstall', {
-							message: 'Could not stop the installation.',
-						});
-					} else {
-						const what =
-							localPackage.title || (localGame ? localGame.title : 'the package');
-
-						handleClientVoodooError(err, 'client-voodoo-uninstall', {
-							message: `Could not remove ${what}.`,
-							title: 'Remove failed',
-						});
-					}
-				} else {
-					handleClientVoodooError(err, 'client-voodoo-uninstall');
-				}
-
 				await this.setPackageRemoveState([
 					localPackage,
 					LocalDbPackageRemoveState.REMOVE_FAILED,
