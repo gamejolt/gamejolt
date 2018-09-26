@@ -10,13 +10,7 @@ import { AppFormControlToggle } from 'game-jolt-frontend-lib/components/form-vue
 import { AppFormControlUpload } from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload';
 import { AppFocusWhen } from 'game-jolt-frontend-lib/components/form-vue/focus-when.directive';
 import { AppForm } from 'game-jolt-frontend-lib/components/form-vue/form';
-import {
-	BaseForm,
-	FormOnInit,
-	FormOnLoad,
-	FormOnSubmit,
-	FormOnSubmitSuccess,
-} from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { BaseForm, FormOnInit, FormOnLoad, FormOnSubmit, FormOnSubmitSuccess } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { AppFormLegend } from 'game-jolt-frontend-lib/components/form-vue/legend/legend';
 import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
 import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
@@ -25,10 +19,7 @@ import { AppPopover } from 'game-jolt-frontend-lib/components/popover/popover';
 import { AppPopoverTrigger } from 'game-jolt-frontend-lib/components/popover/popover-trigger.directive.vue';
 import { AppProgressBar } from 'game-jolt-frontend-lib/components/progress/bar/bar';
 import { AppSketchfabEmbed } from 'game-jolt-frontend-lib/components/sketchfab/embed/embed';
-import {
-	Timezone,
-	TimezoneData,
-} from 'game-jolt-frontend-lib/components/timezone/timezone.service';
+import { Timezone, TimezoneData } from 'game-jolt-frontend-lib/components/timezone/timezone.service';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { AppUserAvatarImg } from 'game-jolt-frontend-lib/components/user/user-avatar/img/img';
 import { AppVideoEmbed } from 'game-jolt-frontend-lib/components/video/embed/embed';
@@ -686,8 +677,8 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 		const providerPrefix = LinkedAccount.getProviderDisplayName(restriction.provider) + ': ';
 		const restrictionKey = restriction.provider + '-' + restriction.topic;
 		switch (restrictionKey) {
-			case 'twitter-title-too-long':
-				return providerPrefix + 'The post title is too long for a tweet.';
+			case 'twitter-lead-too-long':
+				return providerPrefix + 'The lead is too long for a tweet.';
 			case 'twitter-gif-file-size-too-large':
 				return (
 					providerPrefix +
@@ -699,11 +690,6 @@ export class FormGameDevlogPost extends BaseForm<FormGameDevlogPostModel>
 				return providerPrefix + 'Only up to 4 images are supported per tweet.';
 			case 'twitter-image-file-size-too-large':
 				return providerPrefix + 'Any attached image file can only be up to 5 MB in size.';
-			case 'twitter-too-many-hashtags':
-				return (
-					providerPrefix +
-					'Only the first 3 hashtags will be taken into account, your post has more.'
-				);
 			case 'facebook-media-item-photo-too-large':
 				return providerPrefix + 'Any attached photo can only be up to 10 MB in size.';
 			case 'tumblr-media-item-photo-too-large':
