@@ -18,7 +18,9 @@ import { Store } from '../../../../store/index';
 import { RouteState, RouteStore } from '../../profile.store';
 
 function getFetchUrl(route: Route) {
-	return '/web/posts/fetch/user/@' + route.params.username;
+	const tab = route.query.tab || 'active';
+
+	return `/web/posts/fetch/user/@${route.params.username}?tab=${tab}`;
 }
 
 @View
