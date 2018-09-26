@@ -21,6 +21,8 @@ import { AppActivityFeedPlaceholder } from '../../components/activity/feed/place
 import { AppPageHeader } from '../../components/page-header/page-header';
 import { Store } from '../../store/index';
 
+const ITEMS_PER_PAGE = 15;
+
 @View
 @Component({
 	name: 'RouteActivity',
@@ -66,6 +68,16 @@ export default class RouteActivity extends BaseRouteComponent {
 
 	get shouldShowHeaderImage() {
 		return getTranslationLang() === 'en_US';
+	}
+
+	get unreadCount() {
+		switch (this.tab) {
+			case 'activity':
+				return this.unreadActivityCount;
+			case 'notifications':
+				return this.unreadNotificationsCount;
+		}
+		return 0;
 	}
 
 	routeInit() {
@@ -124,7 +136,9 @@ export default class RouteActivity extends BaseRouteComponent {
 	}
 
 	async loadNew() {
-		await this.feed!.loadNew();
+		// clear the current feed if we have more than 15 new items
+		// that would exceed the load-per-page amount, and leave a gap in the posts
+		await this.feed!.loadNew(this.unreadCount > ITEMS_PER_PAGE);
 		this.setNotificationCount({ type: this.tab, count: 0 });
 	}
 }

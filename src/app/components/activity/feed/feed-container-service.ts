@@ -108,6 +108,11 @@ export class ActivityFeedContainer {
 		this.processGames();
 	}
 
+	clear() {
+		this.items = [];
+		this.processGames();
+	}
+
 	viewed(item: ActivityFeedItem) {
 		if (this.viewedItems.indexOf(item.id) !== -1) {
 			return;
@@ -175,7 +180,7 @@ export class ActivityFeedContainer {
 		Analytics.trackEvent('activity-feed', 'loaded-more', 'page-' + this.timesLoaded);
 	}
 
-	async loadNew() {
+	async loadNew(clearOld: boolean) {
 		if (this.isLoadingNew || !this.loadNewUrl) {
 			return;
 		}
@@ -192,6 +197,9 @@ export class ActivityFeedContainer {
 
 		if (!response.items || !response.items.length) {
 			return;
+		}
+		if (clearOld) {
+			this.clear();
 		}
 
 		if (this.feedType === 'Notification') {

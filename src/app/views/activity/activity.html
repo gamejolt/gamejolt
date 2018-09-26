@@ -64,30 +64,21 @@
 							Add notification count
 						</app-button>
 
-						<template v-if="tab === 'activity'">
-							<app-expand :when="unreadActivityCount > 0 || feed.isLoadingNew" :animate-initial="true">
-								<div class="well fill-offset">
-									<app-loading v-if="feed.isLoadingNew" />
-									<app-button v-else
-										@click="loadNew"
-										>
-										Show {{unreadActivityCount}} new posts
-									</app-button>
-								</div>
-							</app-expand>
-						</template>
-						<template v-else-if="tab === 'notifications'">
-							<app-expand :when="unreadNotificationsCount > 0 || feed.isLoadingNew" :animate-initial="true">
-								<div class="well fill-offset">
-									<app-loading v-if="feed.isLoadingNew" />
-									<app-button v-else
-										@click="loadNew"
-										>
-										Show {{unreadNotificationsCount}} new notifications
-									</app-button>
-								</div>
-							</app-expand>
-						</template>
+						<app-expand :when="unreadCount > 0 || feed.isLoadingNew" :animate-initial="true">
+							<div class="well fill-offset">
+								<app-loading v-if="feed.isLoadingNew" />
+								<app-button v-else
+									@click="loadNew"
+									>
+									<template v-if="tab === 'activity'">
+										<translate>Show {{unreadCount}} new posts</translate>
+									</template>
+									<template v-else-if="tab === 'notifications'">
+										<translate>Show {{unreadCount}} new notifications</translate>
+									</template>
+								</app-button>
+							</div>
+						</app-expand>
 
 						<div v-for="_feed of [ feed ]" :key="feed.type">
 							<app-activity-feed
