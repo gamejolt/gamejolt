@@ -15,9 +15,14 @@ export interface ActivityFeedContainerOptions {
 	type: 'Fireside_Post' | 'Notification' | 'EventItem';
 
 	/**
+	 * The url to hit to load the new its from the feed
+	 */
+	loadNewUrl?: string;
+
+	/**
 	 * The URL to hit to load more from the feed.
 	 */
-	url: string;
+	loadMoreUrl: string;
 
 	/**
 	 * Disables infinite scroll.
@@ -46,8 +51,10 @@ export class ActivityFeedContainer {
 	scroll = 0;
 	noAutoload = false;
 	isLoadingMore = false;
+	isLoadingNew = false;
 	timesLoaded = 0;
 	private loadMoreUrl: string;
+	private loadNewUrl?: string;
 
 	get hasItems() {
 		return this.items.length > 0;
@@ -57,7 +64,8 @@ export class ActivityFeedContainer {
 		this.append(items);
 
 		this.feedType = options.type;
-		this.loadMoreUrl = options.url;
+		this.loadMoreUrl = options.loadMoreUrl;
+		this.loadNewUrl = options.loadNewUrl;
 		this.noAutoload = options.noAutoload || false;
 
 		if (typeof options.notificationWatermark !== 'undefined') {
@@ -165,6 +173,34 @@ export class ActivityFeedContainer {
 		}
 
 		Analytics.trackEvent('activity-feed', 'loaded-more', 'page-' + this.timesLoaded);
+	}
+
+	async loadNew() {
+		if (this.isLoadingNew || !this.loadNewUrl) {
+			return;
+		}
+
+		this.isLoadingNew = true;
+
+		const firstPost = this.items[0];
+
+		const response = await Api.sendRequest(this.loadNewUrl, {
+			scrollId: firstPost.scrollId,
+		});
+
+		this.isLoadingNew = false;
+
+		if (!response.items || !response.items.length) {
+			return;
+		}
+
+		if (this.feedType === 'Notification') {
+			this.prepend(Notification.populate(response.items));
+		} else if (this.feedType === 'Fireside_Post') {
+			this.prepend(FiresidePost.populate(response.items));
+		} else if (this.feedType === 'EventItem') {
+			this.prepend(EventItem.populate(response.items));
+		}
 	}
 
 	/**

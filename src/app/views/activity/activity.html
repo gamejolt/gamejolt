@@ -27,8 +27,8 @@
 					<router-link :to="{ name: 'activity', params: { tab: 'activity' } }" active-class="active">
 						<app-jolticon icon="feed" class="hidden-xs" />
 						<translate>Feed</translate>
-						<span class="tag tag-highlight" v-if="activityUnreadCount > 0">
-							{{ activityUnreadCount < 100 ? activityUnreadCount : '99+' }}
+						<span class="tag tag-highlight" v-if="unreadActivityCount > 0">
+							{{ unreadActivityCount < 100 ? unreadActivityCount : '99+' }}
 						</span>
 					</router-link>
 				</li>
@@ -36,8 +36,8 @@
 					<router-link :to="{ name: 'activity', params: { tab: 'notifications' } }" active-class="active">
 						<app-jolticon icon="notifications" class="hidden-xs" />
 						<translate>Notifications</translate>
-						<span class="tag tag-highlight" v-if="notificationsUnreadCount > 0">
-							{{ notificationsUnreadCount < 100 ? notificationsUnreadCount : '99+' }}
+						<span class="tag tag-highlight" v-if="unreadNotificationsCount > 0">
+							{{ unreadNotificationsCount < 100 ? unreadNotificationsCount : '99+' }}
 						</span>
 					</router-link>
 				</li>
@@ -53,6 +53,41 @@
 
 					<app-activity-feed-placeholder v-if="!feed" />
 					<div v-else>
+
+						<app-button
+							@click="addActivityCount">
+							Add activity count
+						</app-button>
+
+						<app-button
+							@click="addNotificationCount">
+							Add notification count
+						</app-button>
+
+						<template v-if="tab === 'activity'">
+							<app-expand :when="unreadActivityCount > 0 || feed.isLoadingNew" :animate-initial="true">
+								<div class="well fill-offset">
+									<app-loading v-if="feed.isLoadingNew" />
+									<app-button v-else
+										@click="loadNew"
+										>
+										Show {{unreadActivityCount}} new posts
+									</app-button>
+								</div>
+							</app-expand>
+						</template>
+						<template v-else-if="tab === 'notifications'">
+							<app-expand :when="unreadNotificationsCount > 0 || feed.isLoadingNew" :animate-initial="true">
+								<div class="well fill-offset">
+									<app-loading v-if="feed.isLoadingNew" />
+									<app-button v-else
+										@click="loadNew"
+										>
+										Show {{unreadNotificationsCount}} new notifications
+									</app-button>
+								</div>
+							</app-expand>
+						</template>
 
 						<div v-for="_feed of [ feed ]" :key="feed.type">
 							<app-activity-feed

@@ -1,24 +1,25 @@
-import { Route } from 'vue-router';
-import { Mutation } from 'vuex-class';
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./activity.html?style=./activity.styl';
-
+import { Component, Prop } from 'vue-property-decorator';
+import { Route } from 'vue-router';
+import { Mutation, State } from 'vuex-class';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
-import { ActivityFeedContainer } from '../../components/activity/feed/feed-container-service';
-import { Notification } from '../../../lib/gj-lib-client/components/notification/notification-model';
-import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import { AppPageHeader } from '../../components/page-header/page-header';
-import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppActivityFeed } from '../../components/activity/feed/feed';
-import { AppActivityFeedPlaceholder } from '../../components/activity/feed/placeholder/placeholder';
-import { Store } from '../../store/index';
 import { EventItem } from '../../../lib/gj-lib-client/components/event-item/event-item.model';
-import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
-import { getTranslationLang } from '../../../lib/gj-lib-client/components/translate/translate.service';
+import { AppExpand } from '../../../lib/gj-lib-client/components/expand/expand';
+import { Notification } from '../../../lib/gj-lib-client/components/notification/notification-model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../lib/gj-lib-client/components/route/route-component';
+import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
+import { getTranslationLang } from '../../../lib/gj-lib-client/components/translate/translate.service';
+import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppLoading } from '../../../lib/gj-lib-client/vue/components/loading/loading';
+import { AppActivityFeed } from '../../components/activity/feed/feed';
+import { ActivityFeedContainer } from '../../components/activity/feed/feed-container-service';
+import { ActivityFeedService } from '../../components/activity/feed/feed-service';
+import { AppActivityFeedPlaceholder } from '../../components/activity/feed/placeholder/placeholder';
+import { AppPageHeader } from '../../components/page-header/page-header';
+import { Store } from '../../store/index';
 
 @View
 @Component({
@@ -28,16 +29,27 @@ import {
 		AppJolticon,
 		AppActivityFeed,
 		AppActivityFeedPlaceholder,
+		AppExpand,
+		AppLoading,
 	},
 })
 export default class RouteActivity extends BaseRouteComponent {
-	@Prop(String) tab!: 'activity' | 'notifications';
+	@Prop(String)
+	tab!: 'activity' | 'notifications';
 
-	@Mutation setNotificationCount!: Store['setNotificationCount'];
+	@Mutation
+	setNotificationCount!: Store['setNotificationCount'];
+
+	@State
+	app!: Store['app'];
+	@State
+	unreadActivityCount!: Store['unreadActivityCount'];
+	@State
+	unreadNotificationsCount!: Store['unreadNotificationsCount'];
+	@Mutation
+	incrementNotificationCount!: Store['incrementNotificationCount'];
 
 	feed: ActivityFeedContainer | null = null;
-	activityUnreadCount = 0;
-	notificationsUnreadCount = 0;
 
 	readonly Screen = Screen;
 
@@ -69,7 +81,8 @@ export default class RouteActivity extends BaseRouteComponent {
 				if (!this.feed || this.feed.feedType !== 'EventItem') {
 					this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.items), {
 						type: 'EventItem',
-						url: `/web/dash/activity/more/${this.tab}`,
+						loadMoreUrl: `/web/dash/activity/more/${this.tab}`,
+						loadNewUrl: `/web/dash/activity/new/${this.tab}`,
 						notificationWatermark: $payload.unreadWatermark,
 					});
 				}
@@ -79,7 +92,8 @@ export default class RouteActivity extends BaseRouteComponent {
 						Notification.populate($payload.items),
 						{
 							type: 'Notification',
-							url: `/web/dash/activity/more/${this.tab}`,
+							loadMoreUrl: `/web/dash/activity/more/${this.tab}`,
+							loadNewUrl: `/web/dash/activity/new/${this.tab}`,
 							notificationWatermark: $payload.unreadWatermark,
 						}
 					);
@@ -87,13 +101,30 @@ export default class RouteActivity extends BaseRouteComponent {
 			}
 		}
 
-		this.activityUnreadCount = $payload.activityUnreadCount || 0;
-		this.notificationsUnreadCount = $payload.notificationsUnreadCount || 0;
+		// we clear the notifications for the tab we are on
+		this.setNotificationCount({ type: this.tab, count: 0 });
 
-		// Since we clear out the notifications on the page let's set the count
-		// as being the opposite of the tab we're on.
-		this.setNotificationCount(
-			this.tab === 'activity' ? this.notificationsUnreadCount : this.activityUnreadCount
-		);
+		// set the other notification count
+		if (this.tab === 'activity') {
+			this.setNotificationCount({
+				type: 'notifications',
+				count: $payload.notificationsUnreadCount,
+			});
+		} else {
+			this.setNotificationCount({ type: 'activity', count: $payload.activityUnreadCount });
+		}
+	}
+
+	addNotificationCount() {
+		this.incrementNotificationCount({ count: 1, type: 'notifications' });
+	}
+
+	addActivityCount() {
+		this.incrementNotificationCount({ count: 1, type: 'activity' });
+	}
+
+	async loadNew() {
+		await this.feed!.loadNew();
+		this.setNotificationCount({ type: this.tab, count: 0 });
 	}
 }

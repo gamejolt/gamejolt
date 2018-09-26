@@ -1,26 +1,25 @@
+import View from '!view!./overview.html';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import View from '!view!./overview.html';
-
-import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { ActivityFeedContainer } from '../../../../components/activity/feed/feed-container-service';
-import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
-import { AppVideoEmbed } from '../../../../../lib/gj-lib-client/components/video/embed/embed';
-import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppGameGrid } from '../../../../components/game/grid/grid';
-import { AppActivityFeed } from '../../../../components/activity/feed/feed';
-import { AppGameGridPlaceholder } from '../../../../components/game/grid/placeholder/placeholder';
-import { AppActivityFeedPlaceholder } from '../../../../components/activity/feed/placeholder/placeholder';
-import { Store } from '../../../../store/index';
 import { AppAdPlacement } from '../../../../../lib/gj-lib-client/components/ad/placement/placement';
+import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
+import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
+import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppVideoEmbed } from '../../../../../lib/gj-lib-client/components/video/embed/embed';
+import { AppActivityFeed } from '../../../../components/activity/feed/feed';
+import { ActivityFeedContainer } from '../../../../components/activity/feed/feed-container-service';
+import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
+import { AppActivityFeedPlaceholder } from '../../../../components/activity/feed/placeholder/placeholder';
+import { AppGameGrid } from '../../../../components/game/grid/grid';
+import { AppGameGridPlaceholder } from '../../../../components/game/grid/placeholder/placeholder';
+import { Store } from '../../../../store/index';
 
 @View
 @Component({
@@ -39,7 +38,8 @@ import {
 	},
 })
 export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
-	@State app!: Store['app'];
+	@State
+	app!: Store['app'];
 
 	games: any[] = [];
 	feed: ActivityFeedContainer | null = null;
@@ -77,7 +77,7 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 		if (!fromCache && !this.feed) {
 			this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.posts), {
 				type: 'EventItem',
-				url: '/web/discover/devlogs/posts',
+				loadMoreUrl: '/web/discover/devlogs/posts',
 			});
 		}
 	}
