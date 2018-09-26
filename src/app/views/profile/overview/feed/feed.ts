@@ -18,7 +18,9 @@ import { Store } from '../../../../store/index';
 import { RouteState, RouteStore } from '../../profile.store';
 
 function getFetchUrl(route: Route) {
-	return '/web/posts/fetch/user/@' + route.params.username;
+	const tab = route.query.tab || 'active';
+
+	return `/web/posts/fetch/user/@${route.params.username}?tab=${tab}`;
 }
 
 @View
@@ -54,7 +56,7 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 		return undefined;
 	}
 
-	@RouteResolve({ lazy: true })
+	@RouteResolve({ lazy: true, reloadOnQueryChange: true })
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(getFetchUrl(route));
 	}

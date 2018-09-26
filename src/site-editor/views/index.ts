@@ -1,11 +1,11 @@
 import { CreateElement } from 'vue';
-import { Route, RouteConfig } from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import { initRouter } from '../../lib/gj-lib-client/utils/router';
+import { Route, RouteConfig } from 'vue-router';
 import {
-	RouteResolve,
 	BaseRouteComponent,
+	RouteResolve,
 } from '../../lib/gj-lib-client/components/route/route-component';
+import { initRouter } from '../../lib/gj-lib-client/utils/router';
 import { store } from '../store/index';
 
 // Empty route component. We just use it to send API calls and set up the store for the app
@@ -15,7 +15,7 @@ import { store } from '../store/index';
 	name: 'RouteEditor',
 })
 class RouteEditor extends BaseRouteComponent {
-	@RouteResolve({ lazy: false, cache: false })
+	@RouteResolve({ lazy: false, cache: false, reloadOnQueryChange: true })
 	routeResolve(this: undefined, route: Route) {
 		const tab: any = route.params.tab;
 		const siteId = parseInt(route.query.id, 10);

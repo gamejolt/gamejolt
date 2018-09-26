@@ -7,8 +7,9 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from 'game-jolt-frontend-lib/components/route/route-component';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
+import { Dictionary } from 'vue-router/types/router';
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
 import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
@@ -16,7 +17,7 @@ import { AppPostAddButton } from '../../../../../components/post/add-button/add-
 import { RouteState, RouteStore } from '../manage.store';
 
 function getTab(route: Route) {
-	return route.params.tab || 'active';
+	return route.query.tab || 'active';
 }
 
 function getTabForPost(post: FiresidePost) {
@@ -26,8 +27,7 @@ function getTabForPost(post: FiresidePost) {
 		return 'draft';
 	}
 
-	// null = active
-	return null;
+	return 'active';
 }
 
 function getFetchUrl(route: Route) {
@@ -46,19 +46,16 @@ function getFetchUrl(route: Route) {
 	},
 })
 export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
-	@Prop(String)
-	tab!: 'draft' | 'scheduled' | undefined;
-
 	@RouteState
 	game!: RouteStore['game'];
 
 	feed: ActivityFeedContainer = null as any;
 
-	get _tab() {
-		return this.tab || 'active';
+	get tab() {
+		return getTab(this.$route);
 	}
 
-	@RouteResolve({ cache: false, lazy: false })
+	@RouteResolve({ cache: false, lazy: false, reloadOnQueryChange: true })
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(getFetchUrl(route));
 	}
@@ -112,9 +109,15 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 			return;
 		}
 
+		let query: Dictionary<string> = {};
+		if (newTab !== 'active') {
+			query = { tab: newTab };
+		}
+
 		const location = {
 			name: this.$route.name,
-			params: Object.assign({}, this.$route.params, { tab: newTab }),
+			params: this.$route.params,
+			query,
 		};
 
 		if (this.$router.resolve(location).href === this.$route.fullPath) {
