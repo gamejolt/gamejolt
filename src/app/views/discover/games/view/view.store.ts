@@ -364,8 +364,12 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexMutation
 	addPost(post: Mutations['addPost']) {
+		if (!post.event_item) {
+			throw new Error('Post was expected to have an event_item field after being added');
+		}
+
 		if (gameStoreCheckPostRedirect(post, this.game)) {
-			this.feed!.prepend([post]);
+			this.feed!.prepend([post.event_item]);
 		}
 	}
 }

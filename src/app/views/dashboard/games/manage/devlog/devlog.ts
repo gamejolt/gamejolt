@@ -75,20 +75,30 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 		});
 	}
 
+	private _postFromEventItem(eventItem: EventItem) {
+		return eventItem.action as FiresidePost;
+	}
+
 	onPostAdded(post: FiresidePost) {
+		if (!post.event_item) {
+			throw new Error('Post was expected to have an event_item field after being added');
+		}
+
 		this.gotoPost(post);
-		this.feed.prepend([post]);
+		this.feed.prepend([post.event_item]);
 	}
 
-	onPostEdited(post: FiresidePost) {
+	onPostEdited(eventItem: EventItem) {
+		const post = this._postFromEventItem(eventItem);
 		this.gotoPost(post);
 	}
 
-	onPostPublished(post: FiresidePost) {
+	onPostPublished(eventItem: EventItem) {
+		const post = this._postFromEventItem(eventItem);
 		this.gotoPost(post);
 	}
 
-	onPostRemoved(_post: FiresidePost) {
+	onPostRemoved(_eventItem: EventItem) {
 		// do nothing
 	}
 
@@ -104,7 +114,7 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 
 		const location = {
 			name: this.$route.name,
-			params: Object.assign({}, this.$route.params, { newTab }),
+			params: Object.assign({}, this.$route.params, { tab: newTab }),
 		};
 
 		if (this.$router.resolve(location).href === this.$route.fullPath) {

@@ -62,9 +62,9 @@
 						v-if="feed.hasItems"
 						:feed="feed"
 						show-edit-controls
-						@postedited="onPostEdited"
-						@postpublished="onPostPublished"
-						@postremoved="onPostRemoved"
+						@edit-post="onPostEdited"
+						@publish-post="onPostPublished"
+						@remove-post="onPostRemoved"
 						/>
 
 					<div class="alert"
