@@ -1,55 +1,54 @@
+import View from '!view!./analytics.html?style=./analytics.styl';
+import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
-import { Component } from 'vue-property-decorator';
-import View from '!view!./analytics.html?style=./analytics.styl';
-
-import {
-	MetricMap,
-	Metric,
-	SiteAnalytics,
-	ResourceName,
-	ReportComponent,
-	ReportTopSources,
-	ReportReferringPages,
-	ReportCountries,
-	ReportOs,
-	ReportCommentLanguages,
-	ReportRatingBreakdown,
-	ReportDevRevenue,
-	ReportTopGames,
-	ReportTopGameRevenue,
-	ReportTopGamePartnerRevenue,
-	ReportTopPartners,
-	ReportPartnerRevenue,
-	ReportPartnerGeneratedRevenue,
-	ReportTopPartnerRevenue,
-} from '../../../components/site-analytics/site-analytics-service';
-import { SiteAnalyticsReport } from '../../../components/site-analytics/report-service';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
+import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
+import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GamePackage } from '../../../../lib/gj-lib-client/components/game/package/package.model';
 import { GameRelease } from '../../../../lib/gj-lib-client/components/game/release/release.model';
-import { Store } from '../../../store/index';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppPageHeader } from '../../../components/page-header/page-header';
-import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
-import { date as dateFilter } from '../../../../lib/gj-lib-client/vue/filters/date';
-import { AppScrollAffix } from '../../../../lib/gj-lib-client/components/scroll/affix/affix';
-import { AppScrollTo } from '../../../../lib/gj-lib-client/components/scroll/to/to.directive';
-import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppAnalyticsReportSimpleStat } from './_report/simple-stat';
-import { AppAnalyticsReportRatingBreakdown } from './_report/rating-breakdown';
-import { AppAnalyticsReportTopComposition } from './_report/top-composition';
-import { AppAnalyticsReportTopCompositionValue } from './_report/top-composition-value';
 import { AppGraph } from '../../../../lib/gj-lib-client/components/graph/graph';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppScrollAffix } from '../../../../lib/gj-lib-client/components/scroll/affix/affix';
+import { AppScrollTo } from '../../../../lib/gj-lib-client/components/scroll/to/to.directive';
+import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
+import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
+import { date as dateFilter } from '../../../../lib/gj-lib-client/vue/filters/date';
+import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+import { AppPageHeader } from '../../../components/page-header/page-header';
+import { SiteAnalyticsReport } from '../../../components/site-analytics/report-service';
+import {
+	Metric,
+	MetricMap,
+	ReportCommentLanguages,
+	ReportComponent,
+	ReportCountries,
+	ReportDevRevenue,
+	ReportOs,
+	ReportPartnerGeneratedRevenue,
+	ReportPartnerRevenue,
+	ReportRatingBreakdown,
+	ReportReferringPages,
+	ReportTopGamePartnerRevenue,
+	ReportTopGameRevenue,
+	ReportTopGames,
+	ReportTopPartnerRevenue,
+	ReportTopPartners,
+	ReportTopSources,
+	ResourceName,
+	SiteAnalytics,
+} from '../../../components/site-analytics/site-analytics-service';
+import { Store } from '../../../store/index';
+import { AppAnalyticsReportRatingBreakdown } from './_report/rating-breakdown';
+import { AppAnalyticsReportSimpleStat } from './_report/simple-stat';
+import { AppAnalyticsReportTopComposition } from './_report/top-composition';
+import { AppAnalyticsReportTopCompositionValue } from './_report/top-composition-value';
 
 @View
 @Component({
@@ -105,7 +104,7 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 
-	@RouteResolve({ cache: false })
+	@RouteResolve({ cache: false, reloadOnQueryChange: true })
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			'/web/dash/analytics/' + route.params.resource + '/' + route.params.resourceId

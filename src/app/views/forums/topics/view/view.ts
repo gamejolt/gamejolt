@@ -1,45 +1,44 @@
+import View from '!view!./view.html';
+import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
-import { Component } from 'vue-property-decorator';
-import View from '!view!./view.html';
-
-import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { ReportModal } from '../../../../../lib/gj-lib-client/components/report/modal/modal.service';
-import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { ForumPost } from '../../../../../lib/gj-lib-client/components/forum/post/post.model';
-import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { Popover } from '../../../../../lib/gj-lib-client/components/popover/popover.service';
-import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
-import { enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
-import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
-import { AppPageHeader } from '../../../../components/page-header/page-header';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/breadcrumbs';
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
-import { AppScrollTo } from '../../../../../lib/gj-lib-client/components/scroll/to/to.directive';
-import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
-import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/popover';
-import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppWidgetCompiler } from '../../../../../lib/gj-lib-client/components/widget-compiler/widget-compiler';
-import { AppForumPostList } from '../../../../components/forum/post-list/post-list';
-import { AppScrollAffix } from '../../../../../lib/gj-lib-client/components/scroll/affix/affix';
-import { FormForumPost } from '../../../../components/forms/forum/post/post';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
+import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
+import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
+import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
+import { ForumPost } from '../../../../../lib/gj-lib-client/components/forum/post/post.model';
+import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
+import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
+import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components/message-thread/add/add';
-import { Store } from '../../../../store/index';
 import { AppMessageThreadPagination } from '../../../../../lib/gj-lib-client/components/message-thread/pagination/pagination';
-import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
-import { AppForumTopicUpvoteWidget } from '../../../../components/forum/topic/upvote-widget/upvote-widget';
+import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/popover';
+import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
+import { Popover } from '../../../../../lib/gj-lib-client/components/popover/popover.service';
+import { ReportModal } from '../../../../../lib/gj-lib-client/components/report/modal/modal.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppScrollAffix } from '../../../../../lib/gj-lib-client/components/scroll/affix/affix';
+import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { AppScrollTo } from '../../../../../lib/gj-lib-client/components/scroll/to/to.directive';
+import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
+import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
+import { AppWidgetCompiler } from '../../../../../lib/gj-lib-client/components/widget-compiler/widget-compiler';
+import { enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';
+import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
+import { FormForumPost } from '../../../../components/forms/forum/post/post';
+import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
+import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/breadcrumbs';
+import { AppForumPostList } from '../../../../components/forum/post-list/post-list';
+import { AppForumTopicUpvoteWidget } from '../../../../components/forum/topic/upvote-widget/upvote-widget';
+import { AppPageHeader } from '../../../../components/page-header/page-header';
+import { Store } from '../../../../store/index';
 
 @View
 @Component({
@@ -72,7 +71,8 @@ import {
 	},
 })
 export default class RouteForumsTopicsView extends BaseRouteComponent {
-	@State app!: Store['app'];
+	@State
+	app!: Store['app'];
 
 	topic: ForumTopic = null as any;
 	channel: ForumChannel = null as any;
@@ -106,7 +106,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 		return this.topic.can_upvote && !this.topic.is_locked;
 	}
 
-	@RouteResolve({ cache: true })
+	@RouteResolve({ cache: true, reloadOnQueryChange: true })
 	async routeResolve(this: undefined, route: Route) {
 		HistoryTick.sendBeacon('forum-topic', parseInt(route.params.id, 10));
 

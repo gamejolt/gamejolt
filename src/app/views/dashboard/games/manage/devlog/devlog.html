@@ -17,9 +17,7 @@
 								<router-link
 									:to="{
 										name: 'dash.games.manage.devlog',
-										params: {
-											tab: null,
-										},
+										query: {},
 									}"
 									active-class="active"
 									:exact="true"
@@ -31,7 +29,7 @@
 								<router-link
 									:to="{
 										name: 'dash.games.manage.devlog',
-										params: {
+										query: {
 											tab: 'draft',
 										},
 									}"
@@ -45,7 +43,7 @@
 								<router-link
 									:to="{
 										name: 'dash.games.manage.devlog',
-										params: {
+										query: {
 											tab: 'scheduled',
 										},
 									}"
@@ -70,13 +68,13 @@
 					<div class="alert"
 						v-else
 						>
-						<template v-if="_tab === 'active'">
+						<template v-if="tab === 'active'">
 							<p><translate>You haven't published any posts yet.</translate></p>
 						</template>
-						<template v-else-if="_tab === 'draft'">
+						<template v-else-if="tab === 'draft'">
 							<p><translate>You don't have any draft posts.</translate></p>
 						</template>
-						<template v-else-if="_tab === 'scheduled'">
+						<template v-else-if="tab === 'scheduled'">
 							<p><translate>You don't have any scheduled posts.</translate></p>
 						</template>
 					</div>

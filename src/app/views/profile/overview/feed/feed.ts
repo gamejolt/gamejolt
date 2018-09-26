@@ -56,7 +56,7 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 		return undefined;
 	}
 
-	@RouteResolve({ lazy: true })
+	@RouteResolve({ lazy: true, reloadOnQueryChange: true })
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(getFetchUrl(route));
 	}
