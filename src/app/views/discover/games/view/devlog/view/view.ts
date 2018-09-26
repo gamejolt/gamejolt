@@ -42,9 +42,7 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		}
 
 		const postHash = FiresidePost.pullHashFromUrl(route.params.postSlug);
-		const payload = await Api.sendRequest(
-			'/web/discover/games/devlog/' + route.params.id + '/' + postHash
-		);
+		const payload = await Api.sendRequest('/web/posts/view/' + postHash);
 
 		if (payload && payload.post) {
 			const redirect = enforceLocation(route, { postSlug: payload.post.slug });

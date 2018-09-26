@@ -15,6 +15,26 @@ import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppPostAddButton } from '../../../../../components/post/add-button/add-button';
 import { RouteState, RouteStore } from '../manage.store';
 
+function getTab(route: Route) {
+	return route.params.tab || 'active';
+}
+
+function getTabForPost(post: FiresidePost) {
+	if (post.isScheduled) {
+		return 'scheduled';
+	} else if (post.isDraft) {
+		return 'draft';
+	}
+
+	// null = active
+	return null;
+}
+
+function getFetchUrl(route: Route) {
+	const tab = getTab(route);
+	return `/web/posts/fetch/game/${route.params.id}?tab=${tab}`;
+}
+
 @View
 @Component({
 	name: 'RouteDashGamesManageDevlog',
@@ -40,12 +60,7 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 
 	@RouteResolve({ cache: false, lazy: false })
 	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest(
-			'/web/dash/developer/games/devlog/posts/' +
-				route.params.id +
-				'/' +
-				(route.params.tab || 'active')
-		);
+		return Api.sendRequest(getFetchUrl(route));
 	}
 
 	get routeTitle() {
@@ -56,19 +71,8 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 		// Create a new activity feed container each time. Don't cache anything.
 		this.feed = new ActivityFeedContainer(EventItem.populate($payload.items), {
 			type: 'EventItem',
-			url: `/web/dash/developer/games/devlog/posts/${this.game.id}/${this._tab}`,
+			url: getFetchUrl(this.$route),
 		});
-	}
-
-	getTabForPost(post: FiresidePost) {
-		if (post.isScheduled) {
-			return 'scheduled';
-		} else if (post.isDraft) {
-			return 'draft';
-		} else {
-			// null = active
-			return null;
-		}
 	}
 
 	onPostAdded(post: FiresidePost) {
@@ -89,17 +93,18 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 	}
 
 	private gotoPost(post: FiresidePost) {
-		const tab = this.getTabForPost(post);
+		const tab = getTab(this.$route);
+		const newTab = getTabForPost(post);
 
 		// We always reload the scheduled posts page. Since it works based on a date that can change
 		// we need to refresh the feed to properly sort everything agian.
-		if (tab !== 'scheduled' && this._tab === tab) {
+		if (newTab !== 'scheduled' && tab === newTab) {
 			return;
 		}
 
 		const location = {
 			name: this.$route.name,
-			params: Object.assign({}, this.$route.params, { tab }),
+			params: Object.assign({}, this.$route.params, { newTab }),
 		};
 
 		if (this.$router.resolve(location).href === this.$route.fullPath) {

@@ -1,9 +1,7 @@
-import View from '!view!./overview.html';
+import View from '!view!./overview.html?style=./overview.styl';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
-
-import { AppGameThumbnail } from '../../../../_common/game/thumbnail/thumbnail';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { AppCommentVideoThumbnail } from '../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
@@ -21,9 +19,10 @@ import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { YoutubeChannel } from '../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+import { AppGameThumbnail } from '../../../../_common/game/thumbnail/thumbnail';
 import { AppUserLevelWidget } from '../../../components/user/level-widget/level-widget';
 import { Store } from '../../../store/index';
-import { RouteStore, RouteAction, RouteState } from '../profile.store';
+import { RouteAction, RouteState, RouteStore } from '../profile.store';
 
 @View
 @Component({
@@ -93,6 +92,14 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			return `${this.user.display_name} (@${this.user.username})`;
 		}
 		return null;
+	}
+
+	get leftColClass() {
+		return '-left-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-8 pull-left';
+	}
+
+	get rightColClass() {
+		return '-right-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-4 pull-right';
 	}
 
 	routed($payload: any) {

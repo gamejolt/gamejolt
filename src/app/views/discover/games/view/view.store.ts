@@ -274,7 +274,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		if (!fromCache && !this.feed) {
 			this.feed = ActivityFeedService.bootstrap(EventItem.populate(payload.posts), {
 				type: 'EventItem',
-				url: `/web/discover/games/devlog/posts/${this.game.id}`,
+				url: `/web/posts/fetch/game/${this.game.id}`,
 			});
 		}
 

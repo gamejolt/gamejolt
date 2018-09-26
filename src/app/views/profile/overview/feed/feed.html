@@ -1,60 +1,55 @@
 <div>
-	<div class="clearfix">
-		<div class="pull-left">
-			<nav class="platform-list inline">
-				<ul>
-					<li>
-						<router-link
-							:to="{
-								name: 'profile.overview',
-								params: {
-									sub: null,
-								},
-							}"
-							active-class="active"
-							:exact="true"
-							>
-							<translate>Posts</translate>
-						</router-link>
-					</li>
-					<li>
-						<router-link
-							:to="{
-								name: 'profile.overview',
-								params: {
-									sub: 'draft-posts',
-								},
-							}"
-							active-class="active"
-							:exact="true"
-							>
-							<translate>Draft</translate>
-						</router-link>
-					</li>
-					<li>
-						<router-link
-							:to="{
-								name: 'profile.overview',
-								params: {
-									sub: 'scheduled-posts',
-								},
-							}"
-							active-class="active"
-							:exact="true"
-							>
-							<translate>Scheduled</translate>
-						</router-link>
-					</li>
-				</ul>
-			</nav>
-		</div>
-		<div class="pull-right">
-			<app-post-add-popover-button
-				v-if="isOwner"
-				:user="user"
-				/>
-		</div>
-	</div>
+	<template v-if="isOwner">
+		<app-post-add-button
+			:game="game"
+			@add="onPostAdded"
+			/>
+
+		<app-nav-tab-list>
+			<ul>
+				<li>
+					<router-link
+						:to="{
+							name: 'profile.overview',
+							query: {},
+						}"
+						active-class="active"
+						:exact="true"
+						>
+						<translate>Posts</translate>
+					</router-link>
+				</li>
+				<li>
+					<router-link
+						:to="{
+							name: 'profile.overview',
+							query: {
+								tab: 'draft',
+							},
+						}"
+						active-class="active"
+						:exact="true"
+						>
+						<translate>Draft Posts</translate>
+					</router-link>
+				</li>
+				<li>
+					<router-link
+						:to="{
+							name: 'profile.overview',
+							query: {
+								tab: 'scheduled',
+							},
+						}"
+						active-class="active"
+						:exact="true"
+						>
+						<translate>Scheduled Posts</translate>
+					</router-link>
+				</li>
+			</ul>
+		</app-nav-tab-list>
+	</template>
 
 	<app-activity-feed-placeholder v-if="!feed" />
 	<div v-else>

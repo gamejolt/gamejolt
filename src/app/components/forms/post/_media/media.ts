@@ -88,7 +88,7 @@ export class AppFormPostMedia extends BaseForm<FormModel>
 
 	async onSubmit() {
 		return Api.sendRequest(
-			`/web/dash/posts/add-media/${this.post.id}`,
+			`/web/posts/manage/add-media/${this.post.id}`,
 			{},
 			{
 				file: this.formModel.image,

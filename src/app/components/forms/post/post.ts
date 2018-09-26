@@ -131,7 +131,7 @@ export class FormPost extends BaseForm<FormPostModel>
 	readonly GameVideo = GameVideo;
 
 	get loadUrl() {
-		return `/web/dash/posts/save/${this.model!.id}`;
+		return `/web/posts/manage/save/${this.model!.id}`;
 	}
 
 	get shortLabel() {
