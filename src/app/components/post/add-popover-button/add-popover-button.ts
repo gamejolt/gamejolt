@@ -1,5 +1,4 @@
 import View from '!view!./add-popover-button.html';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { AppPopover } from 'game-jolt-frontend-lib/components/popover/popover';
@@ -25,14 +24,9 @@ export class AppPostAddPopoverButton extends Vue {
 	add(_post: FiresidePost) {}
 
 	async showAddModal() {
-		let url = `/web/dash/posts/new-post`;
-		if (this.game) {
-			url += '/' + this.game.id;
-		}
-
-		const response = await Api.sendRequest(url);
-
-		let post: FiresidePost | undefined = new FiresidePost(response.post);
+		let post: FiresidePost | undefined = await FiresidePost.$create(
+			this.game ? this.game.id : 0
+		);
 
 		post = await PostEditModal.show(post);
 		if (!post) {
