@@ -141,10 +141,10 @@ export class ActivityFeedContainer {
 		this.isLoadingMore = true;
 		++this.timesLoaded;
 
-		const lastPost = this.items[this.items.length - 1];
+		const lastFeedItem = this.items[this.items.length - 1];
 
 		const response = await Api.sendRequest(this.loadMoreUrl, {
-			scrollId: lastPost.scrollId,
+			scrollId: lastFeedItem.scrollId,
 		});
 
 		this.isLoadingMore = false;

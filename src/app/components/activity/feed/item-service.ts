@@ -14,7 +14,7 @@ export class ActivityFeedItem {
 	isOpen = false;
 	isLeadOpen = false;
 
-	constructor(public sourceItem: ActivityFeedInput) {
+	constructor(sourceItem: ActivityFeedInput) {
 		this.feedItem = sourceItem;
 
 		let dateVal = 0;
@@ -27,7 +27,7 @@ export class ActivityFeedItem {
 		}
 
 		this.id = `${this.type}-${this.feedItem.id}-${dateVal}`;
-		this.scrollId = sourceItem.scroll_id as string;
+		this.scrollId = this.feedItem.scroll_id as string;
 	}
 
 	$viewed() {
