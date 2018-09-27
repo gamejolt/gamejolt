@@ -95,7 +95,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	get leftColClass() {
-		return '-left-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-8 pull-left';
+		return '-left-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-8 col-lg-7 pull-left';
 	}
 
 	get rightColClass() {

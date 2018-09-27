@@ -1,4 +1,4 @@
-import View from '!view!./list.html';
+import View from '!view!./videos.html';
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { AppCommentVideoThumbnail } from 'game-jolt-frontend-lib/components/comment/video/thumbnail/thumbnail';
@@ -9,11 +9,11 @@ import {
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
-import { RouteState, RouteStore } from '../../profile.store';
+import { RouteState, RouteStore } from '../profile.store';
 
 @View
 @Component({
-	name: 'RouteProfileVideosList',
+	name: 'RouteProfileVideos',
 	components: {
 		AppCommentVideoThumbnail,
 	},
@@ -21,7 +21,7 @@ import { RouteState, RouteStore } from '../../profile.store';
 		AppTrackEvent,
 	},
 })
-export default class RouteProfileVideosList extends BaseRouteComponent {
+export default class RouteProfileVideos extends BaseRouteComponent {
 	@RouteState
 	user!: RouteStore['user'];
 

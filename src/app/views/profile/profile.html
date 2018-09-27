@@ -89,7 +89,7 @@
 						</router-link>
 					</li>
 					<li>
-						<router-link :to="{ name: 'profile.videos.list' }" active-class="active">
+						<router-link :to="{ name: 'profile.followers' }" active-class="active">
 							<translate>Followers</translate>
 							<span class="badge">
 								{{ user.follower_count | number }}
@@ -105,7 +105,7 @@
 						</router-link>
 					</li>
 					<li v-if="videosCount > 0">
-						<router-link :to="{ name: 'profile.videos.list' }" active-class="active">
+						<router-link :to="{ name: 'profile.videos' }" active-class="active">
 							<translate>Videos</translate>
 						</router-link>
 					</li>

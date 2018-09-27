@@ -1,9 +1,9 @@
 import { RouteConfig } from 'vue-router';
-
-import { routeProfileOverview } from './overview/overview.route';
-import { routeProfileVideosList } from './videos/list/list.route';
+import { routeProfileFollowers } from './followers/followers.route';
 import { routeProfileLibrary } from './library/library.route';
+import { routeProfileOverview } from './overview/overview.route';
 import { routeProfilePostView } from './post/view.route';
+import { routeProfileVideos } from './videos/videos.route';
 
 export const routeProfile: RouteConfig = {
 	path: '/@:username',
@@ -13,6 +13,7 @@ export const routeProfile: RouteConfig = {
 		routeProfileOverview,
 		routeProfileLibrary,
 		routeProfilePostView,
-		routeProfileVideosList,
+		routeProfileVideos,
+		routeProfileFollowers,
 	],
 };
