@@ -17,10 +17,7 @@ import { AppLazyPlaceholder } from 'game-jolt-frontend-lib/components/lazy/place
 import { AppMediaBar } from 'game-jolt-frontend-lib/components/media-bar/media-bar';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import { PartnerReferral } from 'game-jolt-frontend-lib/components/partner-referral/partner-referral-service';
-import {
-	BaseRouteComponent,
-	RouteResolve,
-} from 'game-jolt-frontend-lib/components/route/route-component';
+import { BaseRouteComponent, RouteResolve } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
@@ -172,7 +169,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	get leftColClass() {
-		return '-left-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-8 pull-left';
+		return '-left-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-8 col-lg-7 pull-left';
 	}
 
 	get rightColClass() {
