@@ -1,4 +1,4 @@
-import View from '!view!./followers.html';
+import View from '!view!./following.html';
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import {
@@ -13,7 +13,7 @@ import { RouteState, RouteStore } from '../profile.store';
 
 @View
 @Component({
-	name: 'RouteProfileFollowers',
+	name: 'RouteProfileFollowing',
 	components: {
 		AppUserCard,
 	},
@@ -21,7 +21,7 @@ import { RouteState, RouteStore } from '../profile.store';
 		AppTrackEvent,
 	},
 })
-export default class RouteProfileFollowers extends BaseRouteComponent {
+export default class RouteProfileFollowing extends BaseRouteComponent {
 	@RouteState
 	user!: RouteStore['user'];
 
@@ -30,12 +30,12 @@ export default class RouteProfileFollowers extends BaseRouteComponent {
 	reachedEnd = false;
 
 	get shouldShowLoadMore() {
-		return this.users.length < this.user!.follower_count && !this.reachedEnd;
+		return this.users.length < this.user!.following_count && !this.reachedEnd;
 	}
 
 	@RouteResolve({ lazy: true, cache: true })
 	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/profile/followers/@' + route.params.username);
+		return Api.sendRequest('/web/profile/following/@' + route.params.username);
 	}
 
 	routed($payload: any) {
@@ -44,7 +44,7 @@ export default class RouteProfileFollowers extends BaseRouteComponent {
 
 	async loadPage() {
 		const payload = await Api.sendRequest(
-			'/web/profile/followers/@' + this.user!.username + '?page=' + this.page
+			'/web/profile/following/@' + this.user!.username + '?page=' + this.page
 		);
 		return User.populate(payload.users);
 	}
