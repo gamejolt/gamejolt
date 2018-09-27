@@ -104,6 +104,8 @@ export class AppActivityFeed extends Vue {
 
 	@Watch('feed', { immediate: true })
 	async onFeedChanged(feed: ActivityFeedContainer, oldFeed: ActivityFeedContainer | undefined) {
+		console.log('feed changed');
+
 		// Gotta make sure the feed has compiled.
 		await this.$nextTick();
 
