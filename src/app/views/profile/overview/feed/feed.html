@@ -13,7 +13,7 @@
 							query: {},
 						}"
 						active-class="active"
-						:exact="true"
+						exact
 						>
 						<translate>Posts</translate>
 					</router-link>
@@ -27,7 +27,7 @@
 							},
 						}"
 						active-class="active"
-						:exact="true"
+						exact
 						>
 						<translate>Draft Posts</translate>
 					</router-link>
@@ -41,7 +41,7 @@
 							},
 						}"
 						active-class="active"
-						:exact="true"
+						exact
 						>
 						<translate>Scheduled Posts</translate>
 					</router-link>
@@ -56,9 +56,11 @@
 		<app-activity-feed
 			v-if="feed.hasItems"
 			:feed="feed"
-			show-edit-controls
-			show-ads
 			show-game-info
+			show-edit-controls
+			@edit-post="onPostEdited"
+			@publish-post="onPostPublished"
+			@remove-post="onPostRemoved"
 			/>
 
 		<div v-else class="alert">

@@ -1,15 +1,15 @@
 import { Action, Mutation, namespace, State } from 'vuex-class';
-import {
-	VuexModule,
-	VuexStore,
-	VuexAction,
-	VuexMutation,
-} from '../../../lib/gj-lib-client/utils/vuex';
-import { User } from '../../../lib/gj-lib-client/components/user/user.model';
 import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
-import { UserFriendship } from '../../../lib/gj-lib-client/components/user/friendship/friendship.model';
-import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
 import { Registry } from '../../../lib/gj-lib-client/components/registry/registry.service';
+import { UserFriendship } from '../../../lib/gj-lib-client/components/user/friendship/friendship.model';
+import { User } from '../../../lib/gj-lib-client/components/user/user.model';
+import {
+	VuexAction,
+	VuexModule,
+	VuexMutation,
+	VuexStore,
+} from '../../../lib/gj-lib-client/utils/vuex';
+import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
 
 export const RouteStoreName = 'profileRoute';
 export const RouteState = namespace(RouteStoreName, State);
@@ -88,12 +88,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexMutation
 	bootstrapUser(username: Mutations['bootstrapUser']) {
 		this.user = Registry.find<User>('User', username, 'username');
-		console.log('bootstrapping user', username, this.user);
-		// setAds(this.game);
-		// this.showDescription = false;
-		// this.isOverviewLoaded = false;
-		// this.recommendedGames = [];
-		// this.mediaItems = [];
 	}
 
 	@VuexMutation
