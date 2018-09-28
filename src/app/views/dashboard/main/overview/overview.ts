@@ -1,32 +1,32 @@
-import { State } from 'vuex-class';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./overview.html';
-
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
-import { Notification } from '../../../../../lib/gj-lib-client/components/notification/notification-model';
-import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { Store } from '../../../../store/index';
+import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppCard } from '../../../../../lib/gj-lib-client/components/card/card';
 import { AppCommentVideoThumbnail } from '../../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
-import { currency } from '../../../../../lib/gj-lib-client/vue/filters/currency';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
+import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
+import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
+import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
+import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
+import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import { Jam } from '../../../../../lib/gj-lib-client/components/jam/jam.model';
+import { Notification } from '../../../../../lib/gj-lib-client/components/notification/notification-model';
 import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/popover';
 import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
-import { numberSort } from '../../../../../lib/gj-lib-client/utils/array';
-import { Jam } from '../../../../../lib/gj-lib-client/components/jam/jam.model';
-import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { numberSort } from '../../../../../lib/gj-lib-client/utils/array';
+import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { currency } from '../../../../../lib/gj-lib-client/vue/filters/currency';
+import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
+import { AppBroadcastCard } from '../../../../components/broadcast-card/broadcast-card';
+import { Store } from '../../../../store/index';
 
 @View
 @Component({
@@ -37,6 +37,7 @@ import {
 		AppCard,
 		AppCommentVideoThumbnail,
 		AppPopover,
+		AppBroadcastCard,
 	},
 	directives: {
 		AppTrackEvent,
@@ -49,7 +50,8 @@ import {
 	},
 })
 export default class RouteDashMainOverview extends BaseRouteComponent {
-	@State app!: Store['app'];
+	@State
+	app!: Store['app'];
 
 	revenueTotal = 0;
 	revenueWithdrawn = 0;

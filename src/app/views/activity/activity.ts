@@ -1,4 +1,7 @@
 import View from '!view!./activity.html';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { Mutation, State } from 'vuex-class';
@@ -14,6 +17,9 @@ import { AppActivityFeed } from '../../components/activity/feed/feed';
 import { ActivityFeedContainer } from '../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { AppActivityFeedPlaceholder } from '../../components/activity/feed/placeholder/placeholder';
+import { AppBroadcastCard } from '../../components/broadcast-card/broadcast-card';
+import { AppGameList } from '../../components/game/list/list';
+import { AppGameListPlaceholder } from '../../components/game/list/placeholder/placeholder';
 import { AppPageHeader } from '../../components/page-header/page-header';
 import { Store } from '../../store/index';
 
@@ -24,6 +30,12 @@ import { Store } from '../../store/index';
 		AppPageHeader,
 		AppActivityFeed,
 		AppActivityFeedPlaceholder,
+		AppGameList,
+		AppGameListPlaceholder,
+		AppBroadcastCard,
+	},
+	directives: {
+		AppTrackEvent,
 	},
 })
 export default class RouteActivity extends BaseRouteComponent {
@@ -43,12 +55,17 @@ export default class RouteActivity extends BaseRouteComponent {
 	unreadNotificationsCount!: Store['unreadNotificationsCount'];
 
 	feed: ActivityFeedContainer | null = null;
+	featuredGames: Game[] = [];
+	latestBroadcast: FiresidePost | null = null;
 
 	readonly Screen = Screen;
 
 	@RouteResolve({ cache: true, lazy: true })
 	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/dash/activity/' + route.params.tab);
+		return Promise.all([
+			Api.sendRequest('/web/dash/activity/' + route.params.tab),
+			Api.sendRequest('/web/discover'),
+		]);
 	}
 
 	get routeTitle() {
@@ -73,25 +90,30 @@ export default class RouteActivity extends BaseRouteComponent {
 	}
 
 	routed($payload: any, fromCache: boolean) {
+		const [feedPlayload, discoverPayload, dashPayload] = $payload;
+
 		// Never pull data from cache for feed since the feed is already bootstrapped from its own
 		// cache.
 		if (!fromCache) {
 			if (this.tab === 'activity') {
 				if (!this.feed || this.feed.feedType !== 'EventItem') {
-					this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.items), {
-						type: 'EventItem',
-						url: `/web/dash/activity/more/${this.tab}`,
-						notificationWatermark: $payload.unreadWatermark,
-					});
+					this.feed = ActivityFeedService.bootstrap(
+						EventItem.populate(feedPlayload.items),
+						{
+							type: 'EventItem',
+							url: `/web/dash/activity/more/${this.tab}`,
+							notificationWatermark: feedPlayload.unreadWatermark,
+						}
+					);
 				}
 			} else {
 				if (!this.feed || this.feed.feedType !== 'Notification') {
 					this.feed = ActivityFeedService.bootstrap(
-						Notification.populate($payload.items),
+						Notification.populate(feedPlayload.items),
 						{
 							type: 'Notification',
 							url: `/web/dash/activity/more/${this.tab}`,
-							notificationWatermark: $payload.unreadWatermark,
+							notificationWatermark: feedPlayload.unreadWatermark,
 						}
 					);
 				}
@@ -105,11 +127,23 @@ export default class RouteActivity extends BaseRouteComponent {
 		if (this.tab === 'activity') {
 			this.setNotificationCount({
 				type: 'notifications',
-				count: $payload.notificationsUnreadCount,
+				count: feedPlayload.notificationsUnreadCount,
 			});
 		} else {
-			this.setNotificationCount({ type: 'activity', count: $payload.activityUnreadCount });
+			this.setNotificationCount({
+				type: 'activity',
+				count: feedPlayload.activityUnreadCount,
+			});
 		}
+
+		this.featuredGames = Game.populate(discoverPayload.games);
+		if (discoverPayload.featuredItem) {
+			this.featuredGames.unshift(new Game(discoverPayload.featuredItem.game));
+		}
+
+		this.latestBroadcast = feedPlayload.latestBroadcast
+			? new FiresidePost(feedPlayload.latestBroadcast)
+			: null;
 	}
 
 	loadedNew() {
