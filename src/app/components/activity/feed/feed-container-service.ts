@@ -30,8 +30,8 @@ export interface ActivityFeedContainerOptions {
 	notificationWatermark?: number;
 }
 
-const SCROLL_DIRECTION_FROM = 'from';
-const SCROLL_DIRECTION_TO = 'to';
+const ScrollDirectionFrom = 'from';
+const ScrollDirectionTo = 'to';
 
 export class ActivityFeedContainer {
 	feedType: 'Notification' | 'Fireside_Post' | 'EventItem';
@@ -106,6 +106,17 @@ export class ActivityFeedContainer {
 
 	clear() {
 		this.items = [];
+		this.expandedItems = [];
+		this.viewedItems = [];
+		this.games = [];
+		this.hydratedItems = {};
+		this.bootstrappedItems = {};
+
+		this.activeItem = null;
+		this.timesLoaded = 0;
+		this.scroll = 0;
+		this.reachedEnd = false;
+
 		this.processGames();
 	}
 
@@ -155,7 +166,7 @@ export class ActivityFeedContainer {
 
 		const response = await Api.sendRequest(this.loadMoreUrl, {
 			scrollId: lastPost.scrollId,
-			scrollDirection: SCROLL_DIRECTION_FROM,
+			scrollDirection: ScrollDirectionFrom,
 		});
 
 		this.isLoadingMore = false;
@@ -188,7 +199,7 @@ export class ActivityFeedContainer {
 
 		const response = await Api.sendRequest(this.loadMoreUrl, {
 			scrollId: firstPost.scrollId,
-			scrollDirection: SCROLL_DIRECTION_TO,
+			scrollDirection: ScrollDirectionTo,
 		});
 
 		this.isLoadingNew = false;
