@@ -42,9 +42,6 @@ export default class RouteActivity extends BaseRouteComponent {
 	@State
 	unreadNotificationsCount!: Store['unreadNotificationsCount'];
 
-	@Mutation
-	incrementNotificationCount!: Store['incrementNotificationCount'];
-
 	feed: ActivityFeedContainer | null = null;
 
 	readonly Screen = Screen;
@@ -113,14 +110,6 @@ export default class RouteActivity extends BaseRouteComponent {
 		} else {
 			this.setNotificationCount({ type: 'activity', count: $payload.activityUnreadCount });
 		}
-	}
-
-	addNotificationCount() {
-		this.incrementNotificationCount({ count: 1, type: 'notifications' });
-	}
-
-	addActivityCount() {
-		this.incrementNotificationCount({ count: 1, type: 'activity' });
 	}
 
 	loadedNew() {

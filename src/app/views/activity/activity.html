@@ -42,21 +42,6 @@
 
 					<app-activity-feed-placeholder v-if="!feed" />
 					<div v-else>
-
-						<p>
-						<app-button
-							@click="addActivityCount"
-							>
-							Add activity count
-						</app-button>
-
-						<app-button
-							@click="addNotificationCount"
-							>
-							Add notification count
-						</app-button>
-						</p>
-
 						<div :key="feed.type">
 							<app-activity-feed
 								v-if="feed.hasItems"
