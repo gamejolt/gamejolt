@@ -77,7 +77,7 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 		if (!fromCache && !this.feed) {
 			this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.posts), {
 				type: 'EventItem',
-				loadMoreUrl: '/web/discover/devlogs/posts',
+				url: '/web/discover/devlogs/posts',
 			});
 		}
 	}

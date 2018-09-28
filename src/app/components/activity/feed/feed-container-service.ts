@@ -17,7 +17,7 @@ export interface ActivityFeedContainerOptions {
 	/**
 	 * The URL to hit to load more from the feed.
 	 */
-	loadMoreUrl: string;
+	url: string;
 
 	/**
 	 * Disables infinite scroll.
@@ -61,7 +61,7 @@ export class ActivityFeedContainer {
 		this.append(items);
 
 		this.feedType = options.type;
-		this.loadMoreUrl = options.loadMoreUrl;
+		this.loadMoreUrl = options.url;
 		this.noAutoload = options.noAutoload || false;
 
 		if (typeof options.notificationWatermark !== 'undefined') {

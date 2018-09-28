@@ -62,7 +62,7 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 		if (!fromCache && !this.feed) {
 			this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.posts), {
 				type: 'EventItem',
-				loadMoreUrl: `/web/discover/channels/posts/${this.channel}`,
+				url: `/web/discover/channels/posts/${this.channel}`,
 			});
 		}
 
