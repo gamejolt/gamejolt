@@ -8,3 +8,36 @@ $-item-padding-xs-v = $-item-padding-xs * 0.75
 $-avatar-size = 40px
 // This is the padding around the event item container. We do it this way to fit the grid.
 $-item-padding-container = $-item-padding - $-border-width
+
+-activity-feed-item-padding()
+	padding-top: $-item-padding-xs-v
+	padding-bottom: $-item-padding-xs-v
+	padding-left: $-item-padding-xs
+	padding-right: $-item-padding-xs
+
+	@media $media-sm-up
+		padding-top: $-item-padding-v
+		padding-bottom: $-item-padding-v
+		padding-left: $-item-padding-container
+		padding-right: $-item-padding-container
+
+-activity-feed-item()
+	-activity-feed-item-padding()
+	theme-prop('border-color', 'bg-offset')
+	margin-left: -($grid-gutter-width-xs / 2)
+	margin-right: -($grid-gutter-width-xs / 2)
+	transition: border-color 100ms
+	border-bottom-width: 6px
+	border-bottom-style: solid
+
+	@media $media-sm-up
+		rounded-corners()
+		theme-prop('border-color', 'bg-offset')
+		border-width: $-border-width
+		border-style: solid
+		margin-left: 0
+		margin-right: 0
+
+		&:hover
+			theme-prop('border-color', 'link')
+			cursor: pointer

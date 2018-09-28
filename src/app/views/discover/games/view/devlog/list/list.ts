@@ -4,7 +4,10 @@ import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import { BaseRouteComponent, RouteResolve } from 'game-jolt-frontend-lib/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
@@ -16,7 +19,12 @@ import { AppDevlogPostAddButton } from '../../../../../../components/devlog/post
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { AppActivityFeedLazy } from '../../../../../../components/lazy';
 import { Store } from '../../../../../../store/index';
-import { gameStoreCheckPostRedirect, RouteMutation, RouteState, RouteStore } from '../../view.store';
+import {
+	gameStoreCheckPostRedirect,
+	RouteMutation,
+	RouteState,
+	RouteStore,
+} from '../../view.store';
 
 @View
 @Component({
