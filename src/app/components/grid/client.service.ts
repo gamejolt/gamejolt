@@ -27,7 +27,7 @@ interface BootstrapPayload {
 		lastNotificationTime: number;
 		notificationCount: number;
 		activityUnreadCount: number;
-		notificationsUnreadCount: number;
+		notificationUnreadCount: number;
 	};
 }
 
@@ -157,7 +157,7 @@ export class GridClient {
 				});
 				store.commit('setNotificationCount', {
 					type: 'notifications',
-					count: payload.body.notificationsUnreadCount,
+					count: payload.body.notificationUnreadCount,
 				});
 
 				store.commit('setFriendRequestCount', payload.body.friendRequestCount);
