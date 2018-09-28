@@ -57,16 +57,15 @@
 						</app-button>
 						</p>
 
-						<div v-for="_feed of [ feed ]" :key="feed.type">
+						<div :key="feed.type">
 							<app-activity-feed
-								v-if="_feed.hasItems"
-								:feed="_feed"
+								v-if="feed.hasItems"
+								:feed="feed"
 								show-game-info
 								:show-ads="tab === 'activity'"
 								:new-count="unreadCount"
 								@load-new="loadedNew()"
 								/>
-
 							<div class="alert" v-else>
 								<template v-if="tab === 'activity'">
 									<p>
