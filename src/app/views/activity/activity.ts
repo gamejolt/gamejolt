@@ -83,7 +83,7 @@ export default class RouteActivity extends BaseRouteComponent {
 				if (!this.feed || this.feed.feedType !== 'EventItem') {
 					this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.items), {
 						type: 'EventItem',
-						loadMoreUrl: `/web/dash/activity/more/${this.tab}`,
+						url: `/web/dash/activity/more/${this.tab}`,
 						notificationWatermark: $payload.unreadWatermark,
 					});
 				}
@@ -93,7 +93,7 @@ export default class RouteActivity extends BaseRouteComponent {
 						Notification.populate($payload.items),
 						{
 							type: 'Notification',
-							loadMoreUrl: `/web/dash/activity/more/${this.tab}`,
+							url: `/web/dash/activity/more/${this.tab}`,
 							notificationWatermark: $payload.unreadWatermark,
 						}
 					);
