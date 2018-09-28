@@ -205,6 +205,7 @@ export class ActivityFeedContainer {
 		if (!response.items || !response.items.length) {
 			return;
 		}
+
 		if (clearOld) {
 			this.clear();
 		}
@@ -215,6 +216,10 @@ export class ActivityFeedContainer {
 			this.prepend(FiresidePost.populate(response.items));
 		} else if (this.feedType === 'EventItem') {
 			this.prepend(EventItem.populate(response.items));
+		}
+
+		if (response.unreadWatermark) {
+			this.notificationWatermark = response.unreadWatermark;
 		}
 	}
 
