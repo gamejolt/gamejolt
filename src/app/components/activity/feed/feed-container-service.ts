@@ -108,7 +108,7 @@ export class ActivityFeedContainer {
 		this.items = [];
 		this.expandedItems = [];
 		this.viewedItems = [];
-		this.games = [];
+		this.games = {};
 		this.hydratedItems = {};
 		this.bootstrappedItems = {};
 
@@ -116,8 +116,6 @@ export class ActivityFeedContainer {
 		this.timesLoaded = 0;
 		this.scroll = 0;
 		this.reachedEnd = false;
-
-		this.processGames();
 	}
 
 	viewed(item: ActivityFeedItem) {
