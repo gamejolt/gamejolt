@@ -227,10 +227,9 @@ export class GridClient {
 	}
 
 	spawnNotification(notification: Notification) {
-		if (notification.isActivityFeedNotification) {
-			store.commit('incrementNotificationCount', { count: 1, type: 'activity' });
-		} else {
-			store.commit('incrementNotificationCount', { count: 1, type: 'notifications' });
+		const feedType = notification.feedType;
+		if (feedType !== '') {
+			store.commit('incrementNotificationCount', { count: 1, type: feedType });
 		}
 
 		// In Client when the feed notifications setting is disabled, don't show them notifications.
