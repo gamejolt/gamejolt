@@ -15,11 +15,6 @@ export interface ActivityFeedContainerOptions {
 	type: 'Fireside_Post' | 'Notification' | 'EventItem';
 
 	/**
-	 * The url to hit to load the new its from the feed
-	 */
-	loadNewUrl?: string;
-
-	/**
 	 * The URL to hit to load more from the feed.
 	 */
 	loadMoreUrl: string;
@@ -34,6 +29,9 @@ export interface ActivityFeedContainerOptions {
 	 */
 	notificationWatermark?: number;
 }
+
+const SCROLL_DIRECTION_FROM = 'from';
+const SCROLL_DIRECTION_TO = 'to';
 
 export class ActivityFeedContainer {
 	feedType: 'Notification' | 'Fireside_Post' | 'EventItem';
@@ -54,7 +52,6 @@ export class ActivityFeedContainer {
 	isLoadingNew = false;
 	timesLoaded = 0;
 	private loadMoreUrl: string;
-	private loadNewUrl?: string;
 
 	get hasItems() {
 		return this.items.length > 0;
@@ -65,7 +62,6 @@ export class ActivityFeedContainer {
 
 		this.feedType = options.type;
 		this.loadMoreUrl = options.loadMoreUrl;
-		this.loadNewUrl = options.loadNewUrl;
 		this.noAutoload = options.noAutoload || false;
 
 		if (typeof options.notificationWatermark !== 'undefined') {
@@ -159,6 +155,7 @@ export class ActivityFeedContainer {
 
 		const response = await Api.sendRequest(this.loadMoreUrl, {
 			scrollId: lastPost.scrollId,
+			scrollDirection: SCROLL_DIRECTION_FROM,
 		});
 
 		this.isLoadingMore = false;
@@ -181,7 +178,7 @@ export class ActivityFeedContainer {
 	}
 
 	async loadNew(clearOld: boolean) {
-		if (this.isLoadingNew || !this.loadNewUrl) {
+		if (this.isLoadingNew) {
 			return;
 		}
 
@@ -189,8 +186,9 @@ export class ActivityFeedContainer {
 
 		const firstPost = this.items[0];
 
-		const response = await Api.sendRequest(this.loadNewUrl, {
+		const response = await Api.sendRequest(this.loadMoreUrl, {
 			scrollId: firstPost.scrollId,
+			scrollDirection: SCROLL_DIRECTION_TO,
 		});
 
 		this.isLoadingNew = false;
