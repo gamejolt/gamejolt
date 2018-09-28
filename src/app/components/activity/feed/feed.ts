@@ -1,8 +1,10 @@
 import View from '!view!./feed.html?style=./feed.styl';
+import { AppExpand } from 'game-jolt-frontend-lib/components/expand/expand';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import 'rxjs/add/operator/sampleTime';
 import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
@@ -10,10 +12,10 @@ import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/
 import { Ruler } from '../../../../lib/gj-lib-client/components/ruler/ruler-service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { AppTimelineList } from '../../../../lib/gj-lib-client/components/timeline-list/timeline-list';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { ActivityFeedContainer } from './feed-container-service';
 import { AppActivityFeedItem } from './item/item';
+import { AppActivityFeedNewButton } from './new-button/new-button';
 
 /**
  * The distance from the bottom of the feed that we should start loading more.
@@ -31,13 +33,19 @@ const LoadMoreTimes = 3;
  */
 const ScrollSampleTime = 1000;
 
+/**
+ * The items we expect per page of a feed.
+ */
+const ItemsPerPage = 15;
+
 @View
 @Component({
 	components: {
 		AppLoading,
 		AppActivityFeedItem,
+		AppActivityFeedNewButton,
 		AppAd,
-		AppTimelineList,
+		AppExpand,
 	},
 	directives: {
 		AppTrackEvent,
@@ -46,6 +54,9 @@ const ScrollSampleTime = 1000;
 export class AppActivityFeed extends Vue {
 	@Prop(ActivityFeedContainer)
 	feed!: ActivityFeedContainer;
+
+	@Prop(Number)
+	newCount?: number;
 
 	@Prop(Boolean)
 	showEditControls?: boolean;
@@ -60,6 +71,14 @@ export class AppActivityFeed extends Vue {
 	// the same feed we can scroll to the previous position that way.
 	private scroll!: number;
 	private scroll$: Subscription | undefined;
+
+	readonly number = number;
+
+	@Emit('load-new')
+	emitLoadNew() {}
+
+	@Emit('load-more')
+	emitLoadMore() {}
 
 	mounted() {
 		this.scroll$ = Scroll.watcher.changes.sampleTime(ScrollSampleTime).subscribe(() => {
@@ -157,5 +176,17 @@ export class AppActivityFeed extends Vue {
 
 	loadMore() {
 		this.feed.loadMore();
+		this.emitLoadMore();
+	}
+
+	async loadNew() {
+		if (!this.newCount) {
+			return;
+		}
+
+		// clear the current feed if we have more than 15 new items
+		// that would exceed the load-per-page amount, and leave a gap in the posts
+		await this.feed.loadNew(this.newCount > ItemsPerPage);
+		this.emitLoadNew();
 	}
 }

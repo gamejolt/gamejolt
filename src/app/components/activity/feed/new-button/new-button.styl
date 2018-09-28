@@ -1,0 +1,15 @@
+@require '../variables'
+@require '~styles-lib/mixins'
+
+.-container
+	@media $media-sm-up
+		padding-bottom: $-item-padding-v
+
+.-button
+	-activity-feed-item()
+	theme-prop('color', 'fg')
+	display: block
+	font-weight: $button-md-font-weight
+	font-size: $button-md-font-size
+	text-transform: uppercase
+	text-align: center

@@ -1,19 +1,15 @@
-import View from '!view!./activity.html?style=./activity.styl';
+import View from '!view!./activity.html';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { Mutation, State } from 'vuex-class';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { EventItem } from '../../../lib/gj-lib-client/components/event-item/event-item.model';
-import { AppExpand } from '../../../lib/gj-lib-client/components/expand/expand';
 import { Notification } from '../../../lib/gj-lib-client/components/notification/notification-model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
-import { getTranslationLang } from '../../../lib/gj-lib-client/components/translate/translate.service';
-import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppLoading } from '../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppActivityFeed } from '../../components/activity/feed/feed';
 import { ActivityFeedContainer } from '../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
@@ -21,18 +17,13 @@ import { AppActivityFeedPlaceholder } from '../../components/activity/feed/place
 import { AppPageHeader } from '../../components/page-header/page-header';
 import { Store } from '../../store/index';
 
-const ITEMS_PER_PAGE = 15;
-
 @View
 @Component({
 	name: 'RouteActivity',
 	components: {
 		AppPageHeader,
-		AppJolticon,
 		AppActivityFeed,
 		AppActivityFeedPlaceholder,
-		AppExpand,
-		AppLoading,
 	},
 })
 export default class RouteActivity extends BaseRouteComponent {
@@ -44,10 +35,13 @@ export default class RouteActivity extends BaseRouteComponent {
 
 	@State
 	app!: Store['app'];
+
 	@State
 	unreadActivityCount!: Store['unreadActivityCount'];
+
 	@State
 	unreadNotificationsCount!: Store['unreadNotificationsCount'];
+
 	@Mutation
 	incrementNotificationCount!: Store['incrementNotificationCount'];
 
@@ -64,10 +58,6 @@ export default class RouteActivity extends BaseRouteComponent {
 		return this.tab === 'activity'
 			? this.$gettext('Your Activity Feed')
 			: this.$gettext('Your Notifications');
-	}
-
-	get shouldShowHeaderImage() {
-		return getTranslationLang() === 'en_US';
 	}
 
 	get unreadCount() {
@@ -135,10 +125,7 @@ export default class RouteActivity extends BaseRouteComponent {
 		this.incrementNotificationCount({ count: 1, type: 'activity' });
 	}
 
-	async loadNew() {
-		// clear the current feed if we have more than 15 new items
-		// that would exceed the load-per-page amount, and leave a gap in the posts
-		await this.feed!.loadNew(this.unreadCount > ITEMS_PER_PAGE);
+	loadedNew() {
 		this.setNotificationCount({ type: this.tab, count: 0 });
 	}
 }

@@ -1,25 +1,14 @@
 <div>
 
 	<app-page-header
-		:class="{ '-header': shouldShowHeaderImage }"
 		:should-affix-nav="true"
 		col-classes="col-md-8 col-lg-7 col-centered"
 		>
 
-		<img
-			v-if="shouldShowHeaderImage"
-			class="-header-img"
-			src="./header.png"
-			:width="704 / (Screen.isXs ? 3 : 2)"
-			:height="416 / (Screen.isXs ? 3 : 2)"
-			alt="Activity Feed"
-			>
-		<template v-else>
-			<h1>
-				<translate>Activity Feed</translate>
-			</h1>
-			<br>
-		</template>
+		<h1 class="text-center">
+			<translate>Activity Feed</translate>
+		</h1>
+		<br>
 
 		<nav slot="nav" class="platform-list inline nav-justified">
 			<ul>
@@ -54,31 +43,19 @@
 					<app-activity-feed-placeholder v-if="!feed" />
 					<div v-else>
 
+						<p>
 						<app-button
-							@click="addActivityCount">
+							@click="addActivityCount"
+							>
 							Add activity count
 						</app-button>
 
 						<app-button
-							@click="addNotificationCount">
+							@click="addNotificationCount"
+							>
 							Add notification count
 						</app-button>
-
-						<app-expand :when="unreadCount > 0 || feed.isLoadingNew" :animate-initial="true">
-							<div class="well fill-offset">
-								<app-loading v-if="feed.isLoadingNew" />
-								<app-button v-else
-									@click="loadNew"
-									>
-									<template v-if="tab === 'activity'">
-										<translate>Show {{unreadCount}} new posts</translate>
-									</template>
-									<template v-else-if="tab === 'notifications'">
-										<translate>Show {{unreadCount}} new notifications</translate>
-									</template>
-								</app-button>
-							</div>
-						</app-expand>
+						</p>
 
 						<div v-for="_feed of [ feed ]" :key="feed.type">
 							<app-activity-feed
@@ -86,6 +63,8 @@
 								:feed="_feed"
 								show-game-info
 								:show-ads="tab === 'activity'"
+								:new-count="unreadCount"
+								@load-new="loadedNew()"
 								/>
 
 							<div class="alert" v-else>
