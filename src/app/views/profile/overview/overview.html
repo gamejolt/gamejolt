@@ -73,8 +73,10 @@
 
 					<!-- Bio -->
 					<app-fade-collapse
-						:collapse-height="500"
+						:collapse-height="200"
 						:is-open="showFullDescription"
+						:animate="false"
+						:key="user.id"
 						@require-change="canToggleDescription = $event"
 						@expand="showFullDescription = true"
 						>
@@ -192,54 +194,7 @@
 				</div>
 
 				<div :class="leftColClass">
-
 					<router-view />
-
-					<!-- Games -->
-					<!-- <template v-if="gamesCount > 0">
-						<h2>
-							<router-link class="link-unstyled" :to="{ name: 'library.collection.developer', params: { id: user.username } }">
-								<translate>profile.developer_games_teaser_heading</translate>
-							</router-link>
-							<small>
-								<translate>profile.developer_games_teaser_heading_small</translate>
-							</small>
-						</h2>
-
-						<div class="scrollable-grid-xs">
-							<div class="row">
-								<div
-									class="scrollable-grid-item col-xs-10 col-sm-6"
-									v-for="game of developerGames.slice( 0, 4 )"
-									:key="game.id"
-									>
-									<app-game-thumbnail
-										:game="game"
-										/>
-								</div>
-							</div>
-						</div>
-					</template> -->
-
-					<!-- Videos -->
-					<!-- <template v-if="videosCount > 0">
-						<h2>
-							<router-link class="link-unstyled" :to="{ name: 'profile.videos' }">
-								<translate>Latest Videos</translate>
-							</router-link>
-						</h2>
-
-						<div class="row">
-							<div
-								class="col-xs-6"
-								v-for="video of videos.slice( 0, 4 )"
-								:key="video.id"
-								>
-								<app-comment-video-thumbnail :video="video" />
-							</div>
-						</div>
-					</template> -->
-
 				</div>
 			</div>
 

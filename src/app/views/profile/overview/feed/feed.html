@@ -51,8 +51,7 @@
 	</template>
 
 	<app-activity-feed-placeholder v-if="!feed" />
-	<div v-else>
-
+	<template v-else>
 		<app-activity-feed
 			v-if="feed.hasItems"
 			:feed="feed"
@@ -62,10 +61,8 @@
 			@publish-post="onPostPublished"
 			@remove-post="onPostRemoved"
 			/>
-
 		<div v-else class="alert">
 			<translate>This user hasn't posted anything yet.</translate>
 		</div>
-
-	</div>
+	</template>
 </div>

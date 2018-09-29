@@ -3,10 +3,8 @@ import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { AppCommentVideoThumbnail } from '../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
 import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
-import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import {
 	BaseRouteComponent,
@@ -17,10 +15,7 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 import { UserFriendship } from '../../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { YoutubeChannel } from '../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { AppGameThumbnail } from '../../../../_common/game/thumbnail/thumbnail';
-import { AppUserLevelWidget } from '../../../components/user/level-widget/level-widget';
 import { Store } from '../../../store/index';
 import { RouteAction, RouteState, RouteStore } from '../profile.store';
 
@@ -28,13 +23,8 @@ import { RouteAction, RouteState, RouteStore } from '../profile.store';
 @Component({
 	name: 'RouteProfileOverview',
 	components: {
-		AppGameThumbnailImg,
 		AppExpand,
-		AppJolticon,
 		AppFadeCollapse,
-		AppGameThumbnail,
-		AppCommentVideoThumbnail,
-		AppUserLevelWidget,
 	},
 	directives: {
 		AppTooltip,
