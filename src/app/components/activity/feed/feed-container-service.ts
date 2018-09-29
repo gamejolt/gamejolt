@@ -29,6 +29,9 @@ export interface ActivityFeedContainerOptions {
 	notificationWatermark?: number;
 }
 
+const ScrollDirectionFrom = 'from';
+const ScrollDirectionTo = 'to';
+
 export class ActivityFeedContainer {
 	feedType: 'Notification' | 'EventItem';
 	items: ActivityFeedItem[] = [];
@@ -45,6 +48,7 @@ export class ActivityFeedContainer {
 	scroll = 0;
 	noAutoload = false;
 	isLoadingMore = false;
+	isLoadingNew = false;
 	timesLoaded = 0;
 	private loadMoreUrl: string;
 
@@ -99,6 +103,20 @@ export class ActivityFeedContainer {
 		this.processGames();
 	}
 
+	clear() {
+		this.items = [];
+		this.expandedItems = [];
+		this.viewedItems = [];
+		this.games = {};
+		this.hydratedItems = {};
+		this.bootstrappedItems = {};
+
+		this.activeItem = null;
+		this.timesLoaded = 0;
+		this.scroll = 0;
+		this.reachedEnd = false;
+	}
+
 	viewed(item: ActivityFeedItem) {
 		if (this.viewedItems.indexOf(item.id) !== -1) {
 			return;
@@ -145,6 +163,7 @@ export class ActivityFeedContainer {
 
 		const response = await Api.sendRequest(this.loadMoreUrl, {
 			scrollId: lastFeedItem.scrollId,
+			scrollDirection: ScrollDirectionFrom,
 		});
 
 		this.isLoadingMore = false;
@@ -162,6 +181,41 @@ export class ActivityFeedContainer {
 		}
 
 		Analytics.trackEvent('activity-feed', 'loaded-more', 'page-' + this.timesLoaded);
+	}
+
+	async loadNew(clearOld: boolean) {
+		if (this.isLoadingNew) {
+			return;
+		}
+
+		this.isLoadingNew = true;
+
+		const firstPost = this.items[0];
+
+		const response = await Api.sendRequest(this.loadMoreUrl, {
+			scrollId: firstPost.scrollId,
+			scrollDirection: ScrollDirectionTo,
+		});
+
+		this.isLoadingNew = false;
+
+		if (!response.items || !response.items.length) {
+			return;
+		}
+
+		if (clearOld) {
+			this.clear();
+		}
+
+		if (this.feedType === 'Notification') {
+			this.prepend(Notification.populate(response.items));
+		} else if (this.feedType === 'EventItem') {
+			this.prepend(EventItem.populate(response.items));
+		}
+
+		if (response.unreadWatermark) {
+			this.notificationWatermark = response.unreadWatermark;
+		}
 	}
 
 	/**

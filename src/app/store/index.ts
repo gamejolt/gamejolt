@@ -66,8 +66,8 @@ export type Mutations = AppMutations &
 	BannerMutations &
 	CommentMutations &
 	_ClientLibraryMod.Mutations & {
-		setNotificationCount: number;
-		incrementNotificationCount: number;
+		setNotificationCount: { type: UnreadItemType; count: number };
+		incrementNotificationCount: { type: UnreadItemType; count: number };
 		setFriendRequestCount: number;
 		changeFriendRequestCount: number;
 		_setBootstrapped: undefined;
@@ -99,6 +99,9 @@ if (GJ_IS_CLIENT) {
 	modules.clientLibrary = new m.ClientLibraryStore();
 }
 
+// the two types an event notification can assume, either "activity" for the post activity feed or "notifications"
+export type UnreadItemType = 'activity' | 'notifications';
+
 @VuexModule({
 	store: true,
 	modules,
@@ -120,7 +123,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	isBootstrapped = false;
 	isLibraryBootstrapped = false;
 
-	notificationCount = 0;
+	unreadActivityCount = 0; // unread items in the activity feed
+	unreadNotificationsCount = 0; // unread items in the notification feed
 	friendRequestCount = 0;
 
 	isLeftPaneSticky = Settings.get('sidebar') as boolean;
@@ -145,6 +149,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	get hasSidebar() {
 		return Screen.isXs || this.app.user;
+	}
+
+	get notificationCount() {
+		return this.unreadActivityCount + this.unreadNotificationsCount;
 	}
 
 	@VuexAction
@@ -285,13 +293,21 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	incrementNotificationCount(amount: Mutations['incrementNotificationCount']) {
-		this.notificationCount += amount;
+	incrementNotificationCount(payload: Mutations['incrementNotificationCount']) {
+		if (payload.type === 'activity') {
+			this.unreadActivityCount += payload.count;
+		} else {
+			this.unreadNotificationsCount += payload.count;
+		}
 	}
 
 	@VuexMutation
-	setNotificationCount(count: Mutations['setNotificationCount']) {
-		this.notificationCount = count;
+	setNotificationCount(payload: Mutations['setNotificationCount']) {
+		if (payload.type === 'activity') {
+			this.unreadActivityCount = payload.count;
+		} else {
+			this.unreadNotificationsCount = payload.count;
+		}
 	}
 
 	@VuexMutation

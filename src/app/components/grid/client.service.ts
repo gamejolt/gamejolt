@@ -26,6 +26,8 @@ interface BootstrapPayload {
 		friendRequestCount: number;
 		lastNotificationTime: number;
 		notificationCount: number;
+		activityUnreadCount: number;
+		notificationUnreadCount: number;
 	};
 }
 
@@ -149,7 +151,15 @@ export class GridClient {
 					this.restart(0);
 				});
 
-				store.commit('setNotificationCount', payload.body.notificationCount);
+				store.commit('setNotificationCount', {
+					type: 'activity',
+					count: payload.body.activityUnreadCount,
+				});
+				store.commit('setNotificationCount', {
+					type: 'notifications',
+					count: payload.body.notificationUnreadCount,
+				});
+
 				store.commit('setFriendRequestCount', payload.body.friendRequestCount);
 				this.bootstrapTimestamp = payload.body.lastNotificationTime;
 
@@ -217,7 +227,10 @@ export class GridClient {
 	}
 
 	spawnNotification(notification: Notification) {
-		store.commit('incrementNotificationCount', 1);
+		const feedType = notification.feedType;
+		if (feedType !== '') {
+			store.commit('incrementNotificationCount', { count: 1, type: feedType });
+		}
 
 		// In Client when the feed notifications setting is disabled, don't show them notifications.
 		// On site we only use it to disable native browser notifications, but still try to show in
