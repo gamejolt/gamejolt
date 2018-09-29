@@ -42,7 +42,7 @@ export class AppEventItemManagePost extends Vue {
 	private emitRemove() {}
 
 	get canPublish() {
-		return this.post.isDraft && !this.post.isScheduled;
+		return this.post.isDraft && !this.post.isScheduled && !!this.post.lead;
 	}
 
 	async openEdit() {

@@ -57,7 +57,7 @@
 					</app-nav-tab-list>
 
 					<app-activity-feed
-						v-if="feed.hasItems"
+						v-if="feed && feed.hasItems"
 						:feed="feed"
 						show-edit-controls
 						@edit-post="onPostEdited"

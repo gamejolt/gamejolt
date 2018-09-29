@@ -1,18 +1,18 @@
-import { Socket, Channel } from 'phoenix';
-import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
+import Axios from 'axios';
+import { Channel, Socket } from 'phoenix';
+import { Analytics } from '../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
-import { store } from '../../store/index';
-import { getCookie } from '../../../_common/cookie/cookie.service';
+import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
 import {
-	Notification,
 	getNotificationText,
+	Notification,
 } from '../../../lib/gj-lib-client/components/notification/notification-model';
 import { Translate } from '../../../lib/gj-lib-client/components/translate/translate.service';
-import { router } from '../../views';
-import Axios from 'axios';
 import { sleep } from '../../../lib/gj-lib-client/utils/utils';
-import { Analytics } from '../../../lib/gj-lib-client/components/analytics/analytics.service';
+import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Settings } from '../../../_common/settings/settings.service';
+import { store } from '../../store/index';
+import { router } from '../../views';
 
 interface NewNotificationPayload {
 	notification_data: {
