@@ -1,4 +1,5 @@
 import View from '!view!./feed.html?style=./feed.styl';
+import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
 import { AppExpand } from 'game-jolt-frontend-lib/components/expand/expand';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import 'rxjs/add/operator/sampleTime';
@@ -8,7 +9,6 @@ import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Ruler } from '../../../../lib/gj-lib-client/components/ruler/ruler-service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
@@ -72,13 +72,22 @@ export class AppActivityFeed extends Vue {
 	private scroll!: number;
 	private scroll$: Subscription | undefined;
 
-	readonly number = number;
+	@Emit('edit-post')
+	emitEditPost(_eventItem: EventItem) {}
+
+	@Emit('publish-post')
+	emitPublishPost(_eventItem: EventItem) {}
+
+	@Emit('remove-post')
+	emitRemovePost(_eventItem: EventItem) {}
 
 	@Emit('load-new')
 	emitLoadNew() {}
 
 	@Emit('load-more')
 	emitLoadMore() {}
+
+	readonly number = number;
 
 	mounted() {
 		this.scroll$ = Scroll.watcher.changes.sampleTime(ScrollSampleTime).subscribe(() => {
@@ -159,19 +168,19 @@ export class AppActivityFeed extends Vue {
 		return index === firstAd || (index - firstAd) % adGap === 0;
 	}
 
-	onPostEdited(post: FiresidePost) {
-		this.feed.update(post);
-		this.$emit('postedited', post);
+	onPostEdited(eventItem: EventItem) {
+		this.feed.update(eventItem);
+		this.emitEditPost(eventItem);
 	}
 
-	onPostPublished(post: FiresidePost) {
-		this.feed.update(post);
-		this.$emit('postpublished', post);
+	onPostPublished(eventItem: EventItem) {
+		this.feed.update(eventItem);
+		this.emitPublishPost(eventItem);
 	}
 
-	onPostRemoved(post: FiresidePost) {
-		this.feed.remove(post);
-		this.$emit('postremoved', post);
+	onPostRemoved(eventItem: EventItem) {
+		this.feed.remove(eventItem);
+		this.emitRemovePost(eventItem);
 	}
 
 	loadMore() {

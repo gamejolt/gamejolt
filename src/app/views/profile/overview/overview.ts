@@ -1,16 +1,11 @@
-import View from '!view!./overview.html';
-import { Component, Prop } from 'vue-property-decorator';
+import View from '!view!./overview.html?style=./overview.styl';
+import 'game-jolt-frontend-lib/components/lazy/placeholder/placeholder.styl';
+import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
-
-import { AppGameThumbnail } from '../../../../_common/game/thumbnail/thumbnail';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { AppCommentVideoThumbnail } from '../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
-import { CommentVideo } from '../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
 import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import {
 	BaseRouteComponent,
@@ -19,25 +14,18 @@ import {
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { UserFriendship } from '../../../../lib/gj-lib-client/components/user/friendship/friendship.model';
-import { UserGameSession } from '../../../../lib/gj-lib-client/components/user/game-session/game-session.model';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { YoutubeChannel } from '../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { AppUserLevelWidget } from '../../../components/user/level-widget/level-widget';
 import { Store } from '../../../store/index';
+import { RouteAction, RouteState, RouteStore } from '../profile.store';
 
 @View
 @Component({
 	name: 'RouteProfileOverview',
 	components: {
-		AppGameThumbnailImg,
 		AppExpand,
-		AppJolticon,
 		AppFadeCollapse,
-		AppGameThumbnail,
-		AppCommentVideoThumbnail,
-		AppUserLevelWidget,
 	},
 	directives: {
 		AppTooltip,
@@ -47,18 +35,37 @@ import { Store } from '../../../store/index';
 	},
 })
 export default class RouteProfileOverview extends BaseRouteComponent {
-	@Prop() user!: User;
-	@Prop() gamesCount!: number;
-	@Prop() videosCount!: number;
-	@Prop() userFriendship!: UserFriendship;
-	@Prop() activeGameSession?: UserGameSession;
+	@State
+	app!: Store['app'];
 
-	@State app!: Store['app'];
+	@RouteState
+	user!: RouteStore['user'];
 
-	developerGames: Game[] = [];
+	@RouteState
+	gamesCount!: RouteStore['gamesCount'];
+
+	@RouteState
+	videosCount!: RouteStore['videosCount'];
+
+	@RouteState
+	userFriendship!: RouteStore['userFriendship'];
+
+	@RouteAction
+	sendFriendRequest!: RouteStore['sendFriendRequest'];
+
+	@RouteAction
+	acceptFriendRequest!: RouteStore['acceptFriendRequest'];
+
+	@RouteAction
+	cancelFriendRequest!: RouteStore['cancelFriendRequest'];
+
+	@RouteAction
+	rejectFriendRequest!: RouteStore['rejectFriendRequest'];
+
+	@RouteAction
+	removeFriend!: RouteStore['removeFriend'];
+
 	youtubeChannels: YoutubeChannel[] = [];
-	videos: CommentVideo[] = [];
-
 	showFullDescription = false;
 	canToggleDescription = false;
 
@@ -66,24 +73,28 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	readonly UserFriendship = UserFriendship;
 	readonly Screen = Screen;
 
-	@RouteResolve()
+	@RouteResolve({ cache: true, lazy: true })
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/profile/overview/@' + route.params.username);
 	}
 
 	get routeTitle() {
 		if (this.user) {
-			let title = `${this.user.display_name} (@${this.user.username}) - `;
-
-			if (this.user.is_gamer) {
-				title += 'An indie gamer';
-			} else if (this.user.is_developer) {
-				title += 'An indie game developer';
-			}
-
-			return title;
+			return `${this.user.display_name} (@${this.user.username})`;
 		}
 		return null;
+	}
+
+	get leftColClass() {
+		return '-left-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-8 col-lg-7 pull-left';
+	}
+
+	get rightColClass() {
+		return '-right-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-4 pull-right';
+	}
+
+	get isBioLoaded() {
+		return this.user && typeof this.user.description_compiled !== 'undefined';
 	}
 
 	routed($payload: any) {
@@ -94,9 +105,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		Meta.twitter.title = this.routeTitle;
 
 		this.showFullDescription = false;
-
-		this.developerGames = Game.populate($payload.developerGamesTeaser);
 		this.youtubeChannels = YoutubeChannel.populate($payload.youtubeChannels);
-		this.videos = CommentVideo.populate($payload.videos);
 	}
 }

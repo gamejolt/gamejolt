@@ -2,7 +2,6 @@ import Vue from 'vue';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/event-item.model';
-import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
 import { arrayRemove } from '../../../../lib/gj-lib-client/utils/array';
@@ -12,7 +11,7 @@ export interface ActivityFeedContainerOptions {
 	/**
 	 * Which types of models are used in the feed.
 	 */
-	type: 'Fireside_Post' | 'Notification' | 'EventItem';
+	type: 'Notification' | 'EventItem';
 
 	/**
 	 * The URL to hit to load more from the feed.
@@ -34,7 +33,7 @@ const ScrollDirectionFrom = 'from';
 const ScrollDirectionTo = 'to';
 
 export class ActivityFeedContainer {
-	feedType: 'Notification' | 'Fireside_Post' | 'EventItem';
+	feedType: 'Notification' | 'EventItem';
 	items: ActivityFeedItem[] = [];
 	games: { [k: number]: Game } = {};
 
@@ -160,10 +159,10 @@ export class ActivityFeedContainer {
 		this.isLoadingMore = true;
 		++this.timesLoaded;
 
-		const lastPost = this.items[this.items.length - 1];
+		const lastFeedItem = this.items[this.items.length - 1];
 
 		const response = await Api.sendRequest(this.loadMoreUrl, {
-			scrollId: lastPost.scrollId,
+			scrollId: lastFeedItem.scrollId,
 			scrollDirection: ScrollDirectionFrom,
 		});
 
@@ -177,8 +176,6 @@ export class ActivityFeedContainer {
 
 		if (this.feedType === 'Notification') {
 			this.append(Notification.populate(response.items));
-		} else if (this.feedType === 'Fireside_Post') {
-			this.append(FiresidePost.populate(response.items));
 		} else if (this.feedType === 'EventItem') {
 			this.append(EventItem.populate(response.items));
 		}
@@ -212,8 +209,6 @@ export class ActivityFeedContainer {
 
 		if (this.feedType === 'Notification') {
 			this.prepend(Notification.populate(response.items));
-		} else if (this.feedType === 'Fireside_Post') {
-			this.prepend(FiresidePost.populate(response.items));
 		} else if (this.feedType === 'EventItem') {
 			this.prepend(EventItem.populate(response.items));
 		}
@@ -230,7 +225,7 @@ export class ActivityFeedContainer {
 	 */
 	private processGames() {
 		for (const item of this.items) {
-			if (item.feedItem instanceof FiresidePost || item.feedItem instanceof EventItem) {
+			if (item.feedItem instanceof EventItem) {
 				const game = item.feedItem.game;
 				if (game) {
 					if (!this.games[game.id]) {

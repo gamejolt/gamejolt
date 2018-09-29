@@ -6,7 +6,6 @@ import { AppAdPlacement } from '../../../../../../lib/gj-lib-client/components/a
 import { AppTrackEvent } from '../../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { EventItem } from '../../../../../../lib/gj-lib-client/components/event-item/event-item.model';
 import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
 import {
 	BaseRouteComponent,
@@ -50,21 +49,22 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 	}
 
 	routeInit() {
-		// Try pulling feed from cache.
-		this.feed = ActivityFeedService.bootstrap();
+		this.feed = ActivityFeedService.routeInit(this);
 	}
 
-	routed($payload: any, fromCache: boolean) {
+	routed($payload: any) {
 		this.isLoaded = true;
 		this.bestGames = Game.populate($payload.bestGames).slice(0, 6);
 		this.hotGames = Game.populate($payload.hotGames).slice(0, 6);
 
-		if (!fromCache && !this.feed) {
-			this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.posts), {
+		this.feed = ActivityFeedService.routed(
+			this.feed,
+			{
 				type: 'EventItem',
 				url: `/web/discover/channels/posts/${this.channel}`,
-			});
-		}
+			},
+			$payload.posts
+		);
 
 		Ads.globalTargeting = {
 			channel: this.channel,

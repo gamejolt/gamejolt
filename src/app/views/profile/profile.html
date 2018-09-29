@@ -58,21 +58,21 @@
 			</span>
 
 			<!-- Online status -->
-			<template v-if="!activeGameSession">
-				<span class="tag" v-if="!isOnline" v-app-tooltip="$gettext( 'profile.offline_tooltip' )">
-					<app-jolticon icon="chat-offline" />
-					<translate>profile.offline_tag</translate>
-				</span>
-				<span class="tag tag-highlight" v-if="isOnline" v-app-tooltip="$gettext( 'profile.online_tooltip' )">
-					<app-jolticon icon="chat-online" />
-					<translate>profile.online_tag</translate>
-				</span>
-			</template>
-
-			<!-- In-game -->
-			<span class="tag tag-highlight" v-if="activeGameSession" v-app-tooltip="$gettext( 'profile.in_game_tooltip' )">
-				<app-jolticon icon="chat-in-game" />
-				<translate>profile.in_game_tag</translate>
+			<span
+				v-if="!isOnline"
+				class="tag"
+				v-app-tooltip="$gettext( 'profile.offline_tooltip' )"
+				>
+				<app-jolticon icon="chat-offline" />
+				<translate>profile.offline_tag</translate>
+			</span>
+			<span
+				v-else
+				class="tag tag-highlight"
+				v-app-tooltip="$gettext( 'profile.online_tooltip' )"
+				>
+				<app-jolticon icon="chat-online" />
+				<translate>profile.online_tag</translate>
 			</span>
 		</div>
 
@@ -88,8 +88,24 @@
 							<translate>profile.overview_tab</translate>
 						</router-link>
 					</li>
+					<!-- <li>
+						<router-link :to="{ name: 'profile.followers' }" active-class="active">
+							<translate>Followers</translate>
+							<span class="badge">
+								{{ user.follower_count | number }}
+							</span>
+						</router-link>
+					</li>
+					<li>
+						<router-link :to="{ name: 'profile.following' }" active-class="active">
+							<translate>Following</translate>
+							<span class="badge">
+								{{ user.following_count | number }}
+							</span>
+						</router-link>
+					</li> -->
 					<li v-if="videosCount > 0">
-						<router-link :to="{ name: 'profile.videos.list' }" active-class="active">
+						<router-link :to="{ name: 'profile.videos' }" active-class="active">
 							<translate>Videos</translate>
 						</router-link>
 					</li>
@@ -117,7 +133,7 @@
 					</a>
 					<a class="list-group-item has-icon"
 						v-if="userFriendship && userFriendship.state === UserFriendship.STATE_FRIENDS"
-						@click="removeFriend"
+						@click="removeFriend()"
 						>
 						<app-jolticon icon="friend-remove-2" notice />
 						<translate>profile.remove_friend_button</translate>
@@ -155,17 +171,6 @@
 
 	</app-page-header>
 
-	<router-view
-		:user="user"
-		:games-count="gamesCount"
-		:videos-count="videosCount"
-		:user-friendship="userFriendship"
-		:active-game-session="activeGameSession"
-		@send-friend-request="sendFriendRequest"
-		@remove-friend="removeFriend"
-		@cancel-friend-request="cancelFriendRequest"
-		@accept-friend-request="acceptFriendRequest"
-		@reject-friend-request="rejectFriendRequest"
-		/>
+	<router-view />
 
 </div>

@@ -4,8 +4,6 @@ import { Comment } from '../../../../../lib/gj-lib-client/components/comment/com
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
-import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
 import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
 import {
@@ -23,8 +21,6 @@ import { Registry } from '../../../../../lib/gj-lib-client/components/registry/r
 import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
 import { objectPick } from '../../../../../lib/gj-lib-client/utils/object';
 import { VuexModule, VuexMutation, VuexStore } from '../../../../../lib/gj-lib-client/utils/vuex';
-import { ActivityFeedContainer } from '../../../../components/activity/feed/feed-container-service';
-import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { router } from '../../../index';
 
 export const RouteStoreName = 'gameRoute';
@@ -36,7 +32,6 @@ type Actions = {};
 
 type Mutations = {
 	bootstrapGame: number;
-	bootstrapFeed: undefined;
 	processPayload: any;
 	processOverviewPayload: { payload: any; fromCache: boolean };
 	acceptCollaboratorInvite: GameCollaborator;
@@ -46,7 +41,6 @@ type Mutations = {
 	toggleDescription: undefined;
 	setCanToggleDescription: boolean;
 	setUserRating: GameRating | null;
-	addPost: FiresidePost;
 };
 
 function setAds(game?: Game) {
@@ -71,21 +65,6 @@ function setAds(game?: Game) {
 		game: game.id + '',
 	};
 	Ads.setAdUnit('gamepage');
-}
-
-/**
- * Check whether this post should cause a redirect to the dashboard when it's a new post being added
- * to the feed from the developer.
- */
-export function gameStoreCheckPostRedirect(post: FiresidePost, game: Game) {
-	if (post.status !== FiresidePost.STATUS_ACTIVE) {
-		router.push({
-			name: 'dash.games.manage.devlog',
-			params: { id: game.id + '', tab: 'draft' },
-		});
-		return false;
-	}
-	return true;
 }
 
 @VuexModule()
@@ -115,7 +94,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	mediaItems: (GameScreenshot | GameVideo | GameSketchfab)[] = [];
 	songs: GameSong[] = [];
-	feed: ActivityFeedContainer | null = null;
 
 	profileCount = 0;
 	downloadCount = 0;
@@ -220,14 +198,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	bootstrapFeed() {
-		// Try pulling feed from cache.
-		this.feed = ActivityFeedService.bootstrap();
-	}
-
-	@VuexMutation
 	processPayload(payload: Mutations['processPayload']) {
-		// Load in the full data that we have for the game.
 		const game = new Game(payload.game);
 		if (this.game) {
 			this.game.assign(game);
@@ -252,7 +223,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexMutation
 	processOverviewPayload(data: Mutations['processOverviewPayload']) {
-		const { payload, fromCache } = data;
+		const { payload } = data;
 		this.isOverviewLoaded = true;
 
 		this.mediaItems = [];
@@ -265,16 +236,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 				} else if (item.media_type === 'sketchfab') {
 					this.mediaItems.push(new GameSketchfab(item));
 				}
-			});
-		}
-
-		// This may have been bootstrapped from cache in the `bootstrapFeed`
-		// mutation. If there was no cached feed, then we'll generate a new one.
-		// Also regenerate if the game changed.
-		if (!fromCache && !this.feed) {
-			this.feed = ActivityFeedService.bootstrap(EventItem.populate(payload.posts), {
-				type: 'EventItem',
-				url: `/web/discover/games/devlog/posts/${this.game.id}`,
 			});
 		}
 
@@ -360,12 +321,5 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexMutation
 	toggleDetails() {
 		this.showDetails = !this.showDetails;
-	}
-
-	@VuexMutation
-	addPost(post: Mutations['addPost']) {
-		if (gameStoreCheckPostRedirect(post, this.game)) {
-			this.feed!.prepend([post]);
-		}
 	}
 }

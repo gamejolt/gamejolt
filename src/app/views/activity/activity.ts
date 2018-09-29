@@ -6,8 +6,6 @@ import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { Mutation, State } from 'vuex-class';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
-import { EventItem } from '../../../lib/gj-lib-client/components/event-item/event-item.model';
-import { Notification } from '../../../lib/gj-lib-client/components/notification/notification-model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -85,39 +83,32 @@ export default class RouteActivity extends BaseRouteComponent {
 	}
 
 	routeInit() {
-		// Try to pull from cache.
-		this.feed = ActivityFeedService.bootstrap();
+		this.feed = ActivityFeedService.routeInit(this);
 	}
 
-	routed($payload: any, fromCache: boolean) {
-		const [feedPlayload, discoverPayload, dashPayload] = $payload;
+	routed($payload: any) {
+		const [feedPlayload, discoverPayload] = $payload;
 
-		// Never pull data from cache for feed since the feed is already bootstrapped from its own
-		// cache.
-		if (!fromCache) {
-			if (this.tab === 'activity') {
-				if (!this.feed || this.feed.feedType !== 'EventItem') {
-					this.feed = ActivityFeedService.bootstrap(
-						EventItem.populate(feedPlayload.items),
-						{
-							type: 'EventItem',
-							url: `/web/dash/activity/more/${this.tab}`,
-							notificationWatermark: feedPlayload.unreadWatermark,
-						}
-					);
-				}
-			} else {
-				if (!this.feed || this.feed.feedType !== 'Notification') {
-					this.feed = ActivityFeedService.bootstrap(
-						Notification.populate(feedPlayload.items),
-						{
-							type: 'Notification',
-							url: `/web/dash/activity/more/${this.tab}`,
-							notificationWatermark: feedPlayload.unreadWatermark,
-						}
-					);
-				}
-			}
+		if (this.tab === 'activity') {
+			this.feed = ActivityFeedService.routed(
+				this.feed,
+				{
+					type: 'EventItem',
+					url: `/web/dash/activity/more/${this.tab}`,
+					notificationWatermark: feedPlayload.unreadWatermark,
+				},
+				feedPlayload.items
+			);
+		} else {
+			this.feed = ActivityFeedService.routed(
+				this.feed,
+				{
+					type: 'Notification',
+					url: `/web/dash/activity/more/${this.tab}`,
+					notificationWatermark: feedPlayload.unreadWatermark,
+				},
+				feedPlayload.items
+			);
 		}
 
 		// we clear the notifications for the tab we are on

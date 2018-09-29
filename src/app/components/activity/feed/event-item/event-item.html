@@ -144,11 +144,11 @@
 
 		<div class="-manage" v-if="shouldShowManage">
 			<app-event-item-manage
-				:post="post"
+				:event-item="eventItem"
 				:show-edit-controls="feed.showEditControls"
-				@edit="feed.onPostEdited( post )"
-				@publish="feed.onPostPublished( post )"
-				@remove="feed.onPostRemoved( post )"
+				@edit-post="feed.onPostEdited( eventItem )"
+				@publish-post="feed.onPostPublished( eventItem )"
+				@remove-post="feed.onPostRemoved( eventItem )"
 				/>
 		</div>
 

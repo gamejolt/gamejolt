@@ -21,11 +21,14 @@ import { BaseRouteComponent, RouteResolve } from 'game-jolt-frontend-lib/compone
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
+import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
+import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
+import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
+import { AppActivityFeedPlaceholder } from '../../../../../components/activity/feed/placeholder/placeholder';
 import { AppCommentOverview } from '../../../../../components/comment/overview/overview';
-import { AppDevlogPostAddButton } from '../../../../../components/devlog/post/add-button/add-button';
 import { AppGameOgrs } from '../../../../../components/game/ogrs/ogrs';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
-import { AppActivityFeedLazy } from '../../../../../components/lazy';
+import { AppPostAddButton } from '../../../../../components/post/add-button/add-button';
 import { AppRatingWidget } from '../../../../../components/rating/widget/widget';
 import { RouteMutation, RouteState, RouteStore } from '../view.store';
 import { AppDiscoverGamesViewOverviewDetails } from './_details/details';
@@ -53,8 +56,9 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 		AppMediaBar,
 		AppCommentAddButton,
 		AppCommentOverview,
-		AppActivityFeed: AppActivityFeedLazy,
-		AppDevlogPostAddButton,
+		AppActivityFeed,
+		AppActivityFeedPlaceholder,
+		AppPostAddButton,
 		AppGamePerms,
 	},
 	directives: {
@@ -96,9 +100,6 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	partnerKey!: RouteStore['partnerKey'];
 
 	@RouteState
-	feed!: RouteStore['feed'];
-
-	@RouteState
 	supporters!: RouteStore['supporters'];
 
 	@RouteState
@@ -120,9 +121,6 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	customGameMessages!: RouteStore['customGameMessages'];
 
 	@RouteMutation
-	bootstrapFeed!: RouteStore['bootstrapFeed'];
-
-	@RouteMutation
 	processOverviewPayload!: RouteStore['processOverviewPayload'];
 
 	@RouteState
@@ -134,8 +132,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	@RouteMutation
 	setCanToggleDescription!: RouteStore['setCanToggleDescription'];
 
-	@RouteMutation
-	addPost!: RouteStore['addPost'];
+	feed: ActivityFeedContainer | null = null;
 
 	readonly Screen = Screen;
 	readonly Environment = Environment;
@@ -190,9 +187,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	routeInit() {
 		CommentModal.checkPermalink(this.$router);
-
-		// Try pulling feed from cache.
-		this.bootstrapFeed();
+		this.feed = ActivityFeedService.routeInit(this);
 	}
 
 	async routed($payload: any, fromCache: boolean) {
@@ -204,6 +199,15 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 			Meta.microdata = $payload.microdata;
 		}
 
+		this.feed = ActivityFeedService.routed(
+			this.feed,
+			{
+				type: 'EventItem',
+				url: `/web/posts/fetch/game/${this.game.id}`,
+			},
+			$payload.posts
+		);
+
 		this.processOverviewPayload({ payload: $payload, fromCache });
 	}
 
@@ -213,11 +217,11 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		}
 	}
 
-	onPostAdded(post: FiresidePost) {
-		this.addPost(post);
-	}
-
 	showComments() {
 		CommentModal.show({ resource: 'Game', resourceId: this.game.id });
+	}
+
+	onPostAdded(post: FiresidePost) {
+		ActivityFeedService.onPostAdded(this.feed!, post, this);
 	}
 }

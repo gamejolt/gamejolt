@@ -4,7 +4,6 @@ import { State } from 'vuex-class';
 import { AppAdPlacement } from '../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
@@ -65,20 +64,19 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 
 		Meta.twitter.image = require('../social.png');
 
-		// Try pulling feed from cache.
-		if (!GJ_IS_SSR) {
-			this.feed = ActivityFeedService.bootstrap();
-		}
+		this.feed = ActivityFeedService.routeInit(this);
 	}
 
-	routed($payload: any, fromCache: boolean) {
+	routed($payload: any) {
 		this.games = Game.populate($payload.games);
 
-		if (!fromCache && !this.feed) {
-			this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.posts), {
+		this.feed = ActivityFeedService.routed(
+			this.feed,
+			{
 				type: 'EventItem',
 				url: '/web/discover/devlogs/posts',
-			});
-		}
+			},
+			$payload.posts
+		);
 	}
 }

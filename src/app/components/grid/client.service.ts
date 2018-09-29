@@ -245,7 +245,7 @@ export class GridClient {
 
 		if (message !== undefined) {
 			let title = Translate.$gettext('New Notification');
-			if (notification.type === Notification.TYPE_DEVLOG_POST_ADD) {
+			if (notification.type === Notification.TYPE_POST_ADD) {
 				title = Translate.$gettext('New Post');
 			} else if (notification.type === Notification.TYPE_COMMENT_VIDEO_ADD) {
 				title = Translate.$gettext('New Video');
