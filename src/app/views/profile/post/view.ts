@@ -42,15 +42,10 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 		}
 
 		const postHash = FiresidePost.pullHashFromUrl(route.params.slug);
-		const payload = await Api.sendRequest(
-			'/web/profile/post/' + route.params.username + '/' + postHash
-		);
+		const payload = await Api.sendRequest('/web/posts/view/' + postHash);
 
 		if (payload && payload.post) {
-			const redirect = enforceLocation(route, {
-				username: payload.post.user.username,
-				slug: payload.post.slug,
-			});
+			const redirect = enforceLocation(route, { slug: payload.post.slug });
 			if (redirect) {
 				return redirect;
 			}
