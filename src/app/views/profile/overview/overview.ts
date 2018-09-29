@@ -1,4 +1,5 @@
 import View from '!view!./overview.html?style=./overview.styl';
+import 'game-jolt-frontend-lib/components/lazy/placeholder/placeholder.styl';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
@@ -90,6 +91,10 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	get rightColClass() {
 		return '-right-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-4 pull-right';
+	}
+
+	get isBioLoaded() {
+		return this.user && typeof this.user.description_compiled !== 'undefined';
 	}
 
 	routed($payload: any) {

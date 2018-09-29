@@ -199,7 +199,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexMutation
 	processPayload(payload: Mutations['processPayload']) {
-		// Load in the full data that we have for the game.
 		const game = new Game(payload.game);
 		if (this.game) {
 			this.game.assign(game);
