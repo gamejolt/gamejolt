@@ -1,32 +1,31 @@
-import { Route } from 'vue-router';
-import { Component, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import View from '!view!./profile.html?style=./profile.styl';
-
-import { UserFriendship } from '../../../lib/gj-lib-client/components/user/friendship/friendship.model';
+import { Component, Prop } from 'vue-property-decorator';
+import { Route } from 'vue-router';
+import { State } from 'vuex-class';
+import { Ads } from '../../../lib/gj-lib-client/components/ad/ads.service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
-import { AppPageHeader } from '../../components/page-header/page-header';
-import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTimeAgo } from '../../../lib/gj-lib-client/components/time/ago/ago';
-import { AppTooltip } from '../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppUserAvatar } from '../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
+import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppPopover } from '../../../lib/gj-lib-client/components/popover/popover';
 import { AppPopoverTrigger } from '../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
-import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppUserDogtag } from '../../components/user/dogtag/dogtag';
 import { ReportModal } from '../../../lib/gj-lib-client/components/report/modal/modal.service';
-import { Store } from '../../store/index';
-import { AppUserFollowWidget } from '../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
-import { IntentService } from '../../components/intent/intent.service';
-import { Translate } from '../../../lib/gj-lib-client/components/translate/translate.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../lib/gj-lib-client/components/route/route-component';
 import { ThemeMutation, ThemeStore } from '../../../lib/gj-lib-client/components/theme/theme.store';
-import { RouteMutation, RouteStore, RouteState, RouteStoreName } from './profile.store';
-import { Ads } from '../../../lib/gj-lib-client/components/ad/ads.service';
+import { AppTimeAgo } from '../../../lib/gj-lib-client/components/time/ago/ago';
+import { AppTooltip } from '../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { Translate } from '../../../lib/gj-lib-client/components/translate/translate.service';
+import { AppUserFollowWidget } from '../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
+import { UserFriendship } from '../../../lib/gj-lib-client/components/user/friendship/friendship.model';
+import { AppUserAvatar } from '../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
+import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../lib/gj-lib-client/vue/filters/number';
+import { IntentService } from '../../components/intent/intent.service';
+import { AppPageHeader } from '../../components/page-header/page-header';
+import { AppUserDogtag } from '../../components/user/dogtag/dogtag';
+import { Store } from '../../store/index';
+import { RouteMutation, RouteState, RouteStore, RouteStoreName } from './profile.store';
 
 @View
 @Component({

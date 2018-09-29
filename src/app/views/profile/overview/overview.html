@@ -72,25 +72,39 @@
 					</template>
 
 					<!-- Bio -->
-					<app-fade-collapse
-						:collapse-height="200"
-						:is-open="showFullDescription"
-						:animate="false"
-						:key="user.id"
-						@require-change="canToggleDescription = $event"
-						@expand="showFullDescription = true"
-						>
-						<div v-if="user.description_compiled" class="user-compiled-description" v-html="user.description_compiled"></div>
-						<div v-if="!user.description_compiled" class="text-muted" v-translate>
-							profile.no_bio_html
-						</div>
-					</app-fade-collapse>
+					<div v-if="!isBioLoaded">
+						<span class="lazy-placeholder" />
+						<span class="lazy-placeholder" />
+						<span class="lazy-placeholder" />
+						<span class="lazy-placeholder" style="width: 40%" />
+					</div>
+					<div v-else-if="!user.description_compiled" class="text-muted" v-translate>
+						profile.no_bio_html
+					</div>
+					<div v-else>
+						<!--
+							Set a :key to let vue know that it should update
+							this when the user changes.
+						-->
+						<app-fade-collapse
+							:collapse-height="200"
+							:is-open="showFullDescription"
+							:animate="false"
+							:key="user.id"
+							@require-change="canToggleDescription = $event"
+							@expand="showFullDescription = true"
+							>
+							<div
+								class="user-compiled-description"
+								v-html="user.description_compiled"
+								/>
+						</app-fade-collapse>
 
-					<a class="hidden-text-expander"
-						v-if="canToggleDescription"
-						@click="showFullDescription = !showFullDescription"
-						>
-					</a>
+						<a class="hidden-text-expander"
+							v-if="canToggleDescription"
+							@click="showFullDescription = !showFullDescription"
+							/>
+					</div>
 
 					<div class="-spacer" />
 				</div>

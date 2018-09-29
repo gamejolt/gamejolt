@@ -92,7 +92,12 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexMutation
 	profilePayload($payload: Mutations['profilePayload']) {
-		this.user = new User($payload.user);
+		const user = new User($payload.user);
+		if (this.user) {
+			this.user.assign(user);
+		} else {
+			this.user = user;
+		}
 
 		this.headerMediaItem = $payload.headerMediaItem
 			? new MediaItem($payload.headerMediaItem)
