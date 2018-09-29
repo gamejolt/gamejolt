@@ -183,20 +183,24 @@
 						</div>
 					</div>
 
-					<template v-if="feed && (feed.hasItems || hasDevlogPerms)">
-						<div class="-spacer" />
+					<div class="-spacer" />
 
-						<app-post-add-button
-							v-if="hasDevlogPerms"
-							:game="game"
-							@add="onPostAdded"
-							/>
+					<app-post-add-button
+						v-if="hasDevlogPerms"
+						:game="game"
+						@add="onPostAdded"
+						/>
 
+					<app-activity-feed-placeholder v-if="!feed" />
+					<template v-else>
 						<app-activity-feed
 							v-if="feed.hasItems"
 							:feed="feed"
 							show-edit-controls
 							/>
+						<div v-else class="alert">
+							<translate>Nothing has been posted to this project page yet. Maybe check back later!</translate>
+						</div>
 					</template>
 
 				</div>

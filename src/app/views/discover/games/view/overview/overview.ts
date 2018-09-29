@@ -24,12 +24,13 @@ import {
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
+import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
 import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
+import { AppActivityFeedPlaceholder } from '../../../../../components/activity/feed/placeholder/placeholder';
 import { AppCommentOverview } from '../../../../../components/comment/overview/overview';
 import { AppGameOgrs } from '../../../../../components/game/ogrs/ogrs';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
-import { AppActivityFeedLazy } from '../../../../../components/lazy';
 import { AppPostAddButton } from '../../../../../components/post/add-button/add-button';
 import { AppRatingWidget } from '../../../../../components/rating/widget/widget';
 import { RouteMutation, RouteState, RouteStore } from '../view.store';
@@ -58,7 +59,8 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 		AppMediaBar,
 		AppCommentAddButton,
 		AppCommentOverview,
-		AppActivityFeed: AppActivityFeedLazy,
+		AppActivityFeed,
+		AppActivityFeedPlaceholder,
 		AppPostAddButton,
 		AppGamePerms,
 	},
