@@ -20,7 +20,9 @@
 		v-else
 		:cover-media-item="headerMediaItem"
 		:cover-max-height="400"
-		:should-affix-nav="true"
+		should-affix-nav
+		:blur-header="!shouldShowFullCover"
+		:cover-auto-height="!shouldShowFullCover"
 		:autoscroll-anchor-key="user.id"
 		>
 

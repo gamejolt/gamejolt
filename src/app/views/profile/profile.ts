@@ -1,4 +1,5 @@
 import View from '!view!./profile.html?style=./profile.styl';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
@@ -92,6 +93,10 @@ export default class RouteProfile extends BaseRouteComponent {
 
 	UserFriendship = UserFriendship;
 	Environment = Environment;
+
+	get shouldShowFullCover() {
+		return Screen.isXs || this.$route.name === 'profile.overview';
+	}
 
 	@RouteResolve({ cache: true, lazy: true })
 	async routeResolve(this: undefined, route: Route) {
