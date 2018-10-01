@@ -87,7 +87,7 @@
 							this when the user changes.
 						-->
 						<app-fade-collapse
-							:collapse-height="200"
+							:collapse-height="300"
 							:is-open="showFullDescription"
 							:animate="false"
 							:key="user.id"
@@ -100,25 +100,51 @@
 								/>
 						</app-fade-collapse>
 
-						<a class="hidden-text-expander"
-							v-if="canToggleDescription"
-							@click="showFullDescription = !showFullDescription"
-							/>
+						<p>
+							<a class="hidden-text-expander"
+								v-if="canToggleDescription"
+								@click="showFullDescription = !showFullDescription"
+								/>
+						</p>
 					</div>
 				</div>
 
 				<div :class="rightColClass">
 
-					<p
-						v-if="(
-							user.twitch_id
-							|| user.twitter_id
-							|| user.google_id
-							|| user.web_site
-							|| youtubeChannels.length
-							)
-						"
-						>
+					<p v-if="hasQuickButtonsSection">
+
+						<!-- Add Friend -->
+						<app-button
+							v-if="canAddAsFriend"
+							block
+							@click="sendFriendRequest()"
+							>
+							<translate>profile.friend_request_button</translate>
+						</app-button>
+
+						<template v-if="Screen.isMobile">
+							<app-button
+								v-if="gamesCount > 0"
+								block
+								:to="{
+									name: 'library.collection.developer',
+									params: { id: user.username },
+								}"
+								>
+								{{ gamesCount | number }} Games
+							</app-button>
+
+							<app-button
+								v-if="videosCount > 0"
+								block
+								:to="{ name: 'profile.videos' }"
+								>
+								{{ videosCount | number }} Videos
+							</app-button>
+						</template>
+					</p>
+
+					<p v-if="hasLinksSection">
 						<div v-if="user.twitter_id">
 							<a
 								class="link-unstyled"
@@ -176,36 +202,38 @@
 						</template>
 					</p>
 
-					<p>
+					<template v-if="hasGamesSection">
+						<br>
 
-						<!-- Add Friend -->
-						<app-button
-							v-if="app.user && user.id !== app.user.id && !userFriendship && !user.is_verified"
-							block
-							@click="sendFriendRequest()"
-							>
-							<translate>profile.friend_request_button</translate>
-						</app-button>
+						<div class="clearfix">
+							<div class="pull-right">
+								<app-button
+									trans
+									:to="{
+										name: 'library.collection.developer',
+										params: { id: user.username },
+									}"
+									>
+									<translate>View All</translate>
+									<small>({{ gamesCount | number }})</small>
+								</app-button>
+							</div>
 
-						<app-button
-							v-if="gamesCount > 0"
-							block
-							:to="{
-								name: 'library.collection.developer',
-								params: { id: user.username },
-							}"
-							>
-							{{ gamesCount | number }} Games
-						</app-button>
+							<h4 class="section-header">
+								<translate>Latest Games</translate>
+							</h4>
+						</div>
 
-						<app-button
-							v-if="videosCount > 0"
-							block
-							:to="{ name: 'profile.videos' }"
-							>
-							{{ videosCount | number }} Videos
-						</app-button>
-					</p>
+						<app-game-list-placeholder
+							v-if="!games.length"
+							:num="5"
+							/>
+						<app-game-list
+							v-else-if="games.length"
+							:games="games.slice(0, 7)"
+							event-label="profile"
+							/>
+					</template>
 
 				</div>
 

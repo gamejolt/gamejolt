@@ -1,24 +1,27 @@
 import View from '!view!./overview.html?style=./overview.styl';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { AppExpand } from 'game-jolt-frontend-lib/components/expand/expand';
+import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import 'game-jolt-frontend-lib/components/lazy/placeholder/placeholder.styl';
-import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
-import { State } from 'vuex-class';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
+import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
-} from '../../../../lib/gj-lib-client/components/route/route-component';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { UserFriendship } from '../../../../lib/gj-lib-client/components/user/friendship/friendship.model';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { YoutubeChannel } from '../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { YoutubeChannel } from 'game-jolt-frontend-lib/components/youtube/channel/channel-model';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
+import { State } from 'vuex-class';
 import { Store } from '../../../store/index';
 import { RouteAction, RouteState, RouteStore } from '../profile.store';
+import { AppGameList } from './../../../components/game/list/list';
+import { AppGameListPlaceholder } from './../../../components/game/list/placeholder/placeholder';
 
 @View
 @Component({
@@ -26,6 +29,8 @@ import { RouteAction, RouteState, RouteStore } from '../profile.store';
 	components: {
 		AppExpand,
 		AppFadeCollapse,
+		AppGameList,
+		AppGameListPlaceholder,
 	},
 	directives: {
 		AppTooltip,
@@ -68,6 +73,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	youtubeChannels: YoutubeChannel[] = [];
 	showFullDescription = false;
 	canToggleDescription = false;
+	games: Game[] = [];
 
 	readonly User = User;
 	readonly UserFriendship = UserFriendship;
@@ -86,15 +92,47 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	get leftColClass() {
-		return '-left-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-8 col-lg-7 pull-left';
+		return '-left-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-8 col-lg-7';
 	}
 
 	get rightColClass() {
-		return '-right-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-4 pull-right';
+		return '-right-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-4';
 	}
 
 	get isBioLoaded() {
 		return this.user && typeof this.user.description_compiled !== 'undefined';
+	}
+
+	get canAddAsFriend() {
+		return (
+			this.app.user &&
+			this.user &&
+			this.user.id !== this.app.user.id &&
+			!this.userFriendship &&
+			!this.user.is_verified
+		);
+	}
+
+	get hasQuickButtonsSection() {
+		return (
+			this.canAddAsFriend ||
+			(Screen.isMobile && (this.gamesCount > 0 || this.videosCount > 0))
+		);
+	}
+
+	get hasLinksSection() {
+		return (
+			this.user &&
+			(this.user.twitch_id ||
+				this.user.twitter_id ||
+				this.user.google_id ||
+				this.user.web_site ||
+				this.youtubeChannels.length > 0)
+		);
+	}
+
+	get hasGamesSection() {
+		return !Screen.isMobile && this.gamesCount > 0;
 	}
 
 	routed($payload: any) {
@@ -106,5 +144,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 		this.showFullDescription = false;
 		this.youtubeChannels = YoutubeChannel.populate($payload.youtubeChannels);
+		this.games = Game.populate($payload.developerGamesTeaser);
 	}
 }
