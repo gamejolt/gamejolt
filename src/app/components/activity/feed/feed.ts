@@ -1,20 +1,21 @@
-import Vue from 'vue';
-import { Subscription } from 'rxjs/Subscription';
+import View from '!view!./feed.html?style=./feed.styl';
+import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
+import { AppExpand } from 'game-jolt-frontend-lib/components/expand/expand';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import 'rxjs/add/operator/sampleTime';
-import { Component, Prop, Watch } from 'vue-property-decorator';
-import View from '!view!./feed.html';
-
-import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { ActivityFeedContainer } from './feed-container-service';
-import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppActivityFeedItem } from './item/item';
+import { Subscription } from 'rxjs/Subscription';
+import Vue from 'vue';
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
-import { AppTimelineList } from '../../../../lib/gj-lib-client/components/timeline-list/timeline-list';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
+import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Ruler } from '../../../../lib/gj-lib-client/components/ruler/ruler-service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
+import { ActivityFeedContainer } from './feed-container-service';
+import { AppActivityFeedItem } from './item/item';
+import { AppActivityFeedNewButton } from './new-button/new-button';
 
 /**
  * The distance from the bottom of the feed that we should start loading more.
@@ -32,28 +33,61 @@ const LoadMoreTimes = 3;
  */
 const ScrollSampleTime = 1000;
 
+/**
+ * The items we expect per page of a feed.
+ */
+const ItemsPerPage = 15;
+
 @View
 @Component({
 	components: {
 		AppLoading,
 		AppActivityFeedItem,
+		AppActivityFeedNewButton,
 		AppAd,
-		AppTimelineList,
+		AppExpand,
 	},
 	directives: {
 		AppTrackEvent,
 	},
 })
 export class AppActivityFeed extends Vue {
-	@Prop(ActivityFeedContainer) feed: ActivityFeedContainer;
-	@Prop(Boolean) showEditControls?: boolean;
-	@Prop(Boolean) showGameInfo?: boolean;
-	@Prop(Boolean) showAds?: boolean;
+	@Prop(ActivityFeedContainer)
+	feed!: ActivityFeedContainer;
+
+	@Prop(Number)
+	newCount?: number;
+
+	@Prop(Boolean)
+	showEditControls?: boolean;
+
+	@Prop(Boolean)
+	showGameInfo?: boolean;
+
+	@Prop(Boolean)
+	showAds?: boolean;
 
 	// We save the scroll position every time it changes. When clicking back to
 	// the same feed we can scroll to the previous position that way.
-	private scroll: number;
+	private scroll!: number;
 	private scroll$: Subscription | undefined;
+
+	@Emit('edit-post')
+	emitEditPost(_eventItem: EventItem) {}
+
+	@Emit('publish-post')
+	emitPublishPost(_eventItem: EventItem) {}
+
+	@Emit('remove-post')
+	emitRemovePost(_eventItem: EventItem) {}
+
+	@Emit('load-new')
+	emitLoadNew() {}
+
+	@Emit('load-more')
+	emitLoadMore() {}
+
+	readonly number = number;
 
 	mounted() {
 		this.scroll$ = Scroll.watcher.changes.sampleTime(ScrollSampleTime).subscribe(() => {
@@ -134,22 +168,34 @@ export class AppActivityFeed extends Vue {
 		return index === firstAd || (index - firstAd) % adGap === 0;
 	}
 
-	onPostEdited(post: FiresidePost) {
-		this.feed.update(post);
-		this.$emit('postedited', post);
+	onPostEdited(eventItem: EventItem) {
+		this.feed.update(eventItem);
+		this.emitEditPost(eventItem);
 	}
 
-	onPostPublished(post: FiresidePost) {
-		this.feed.update(post);
-		this.$emit('postpublished', post);
+	onPostPublished(eventItem: EventItem) {
+		this.feed.update(eventItem);
+		this.emitPublishPost(eventItem);
 	}
 
-	onPostRemoved(post: FiresidePost) {
-		this.feed.remove(post);
-		this.$emit('postremoved', post);
+	onPostRemoved(eventItem: EventItem) {
+		this.feed.remove(eventItem);
+		this.emitRemovePost(eventItem);
 	}
 
 	loadMore() {
 		this.feed.loadMore();
+		this.emitLoadMore();
+	}
+
+	async loadNew() {
+		if (!this.newCount) {
+			return;
+		}
+
+		// clear the current feed if we have more than 15 new items
+		// that would exceed the load-per-page amount, and leave a gap in the posts
+		await this.feed.loadNew(this.newCount > ItemsPerPage);
+		this.emitLoadNew();
 	}
 }

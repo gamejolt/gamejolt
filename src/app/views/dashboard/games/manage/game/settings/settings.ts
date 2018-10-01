@@ -22,14 +22,14 @@ import { AppExpand } from '../../../../../../../lib/gj-lib-client/components/exp
 	},
 })
 export default class RouteDashGamesManageGameSettings extends BaseRouteComponent {
-	@AppState user: AppStore['user'];
-	@RouteState game: RouteStore['game'];
-	@RouteState isWizard: RouteStore['isWizard'];
+	@AppState user!: AppStore['user'];
+	@RouteState game!: RouteStore['game'];
+	@RouteState isWizard!: RouteStore['isWizard'];
 
-	@RouteAction cancel: RouteStore['cancel'];
-	@RouteAction hide: RouteStore['hide'];
-	@RouteAction removeGame: RouteStore['removeGame'];
-	@RouteAction leaveProject: RouteStore['leaveProject'];
+	@RouteAction cancel!: RouteStore['cancel'];
+	@RouteAction hide!: RouteStore['hide'];
+	@RouteAction removeGame!: RouteStore['removeGame'];
+	@RouteAction leaveProject!: RouteStore['leaveProject'];
 
 	get routeTitle() {
 		if (this.game) {

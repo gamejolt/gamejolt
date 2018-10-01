@@ -23,10 +23,10 @@ import { AppScrollScroller } from '../../../../../lib/gj-lib-client/components/s
 	},
 })
 export class AppChatWindowOutput extends Vue {
-	@Prop(ChatRoom) room: ChatRoom;
-	@Prop(Array) messages: ChatMessage[];
+	@Prop(ChatRoom) room!: ChatRoom;
+	@Prop(Array) messages!: ChatMessage[];
 
-	@State chat: ChatClient;
+	@State chat!: ChatClient;
 
 	private shouldScroll = true;
 	private resize$: Subscription | undefined;

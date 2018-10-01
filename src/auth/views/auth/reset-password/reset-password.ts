@@ -18,8 +18,8 @@ import {
 	},
 })
 export default class RouteAuthResetPassword extends BaseRouteComponent {
-	@Prop(String) userId: string;
-	@Prop(String) token: string;
+	@Prop(String) userId!: string;
+	@Prop(String) token!: string;
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: Route) {

@@ -185,12 +185,10 @@
 			>
 			<translate>Schedule release</translate>
 		</app-button>
-
-
 		<app-button
 			primary
 			solid
-			v-if="!isScheduling"
+			v-else
 			:disabled="!valid || !builds.length"
 			@click.prevent="savePublished()"
 			>
@@ -207,6 +205,8 @@
 	</template>
 	<template v-else>
 		<app-button
+			primary
+			solid
 			:disabled="!valid || !builds.length"
 			@click.prevent="save()"
 			>

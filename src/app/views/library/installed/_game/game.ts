@@ -15,10 +15,10 @@ import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client
 	},
 })
 export class AppLibraryInstalledGame extends Vue {
-	@Prop(LocalDbGame) game: LocalDbGame;
+	@Prop(LocalDbGame) game!: LocalDbGame;
 
-	@ClientLibraryState packagesByGameId: ClientLibraryStore['packagesByGameId'];
-	@ClientLibraryState packages: ClientLibraryStore['packages'];
+	@ClientLibraryState packagesByGameId!: ClientLibraryStore['packagesByGameId'];
+	@ClientLibraryState packages!: ClientLibraryStore['packages'];
 
 	isHovering = false;
 	isShowingOptions = false;

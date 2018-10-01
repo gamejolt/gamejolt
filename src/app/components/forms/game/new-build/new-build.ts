@@ -32,13 +32,13 @@ export class FormGameNewBuild extends BaseForm<NewGameBuildFormModel>
 	reloadOnSubmit = true;
 	warnOnDiscard = false;
 
-	@Prop(String) type: 'downloadable' | 'browser';
-	@Prop(Game) game: Game;
-	@Prop(GamePackage) package: GamePackage;
-	@Prop(GameRelease) release: GameRelease;
-	@Prop(Array) builds: GameBuild[];
+	@Prop(String) type!: 'downloadable' | 'browser';
+	@Prop(Game) game!: Game;
+	@Prop(GamePackage) package!: GamePackage;
+	@Prop(GameRelease) release!: GameRelease;
+	@Prop(Array) builds!: GameBuild[];
 
-	$refs: {
+	$refs!: {
 		form: AppForm;
 	};
 

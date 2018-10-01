@@ -23,10 +23,10 @@ import { ChatRoom } from '../../../room';
 	},
 })
 export class AppChatWindowOutputItem extends Vue {
-	@Prop(ChatMessage) message: ChatMessage;
-	@Prop(ChatRoom) room: ChatRoom;
+	@Prop(ChatMessage) message!: ChatMessage;
+	@Prop(ChatRoom) room!: ChatRoom;
 
-	@State chat: ChatClient;
+	@State chat!: ChatClient;
 
 	isExpanded = false;
 	isCollapsable = false;

@@ -26,9 +26,9 @@ import { Translate } from '../../../../lib/gj-lib-client/components/translate/tr
 	},
 })
 export class AppGameFilteringWidget extends Vue {
-	@Prop(Object) filtering: GameFilteringContainer;
+	@Prop(Object) filtering!: GameFilteringContainer;
 
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	// GameFilteringContainer = GameFilteringContainer;
 

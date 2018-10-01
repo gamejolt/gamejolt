@@ -1,25 +1,14 @@
 <div>
 
 	<app-page-header
-		:class="{ '-header': shouldShowHeaderImage }"
-		:should-affix-nav="true"
-		col-classes="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7"
+		should-affix-nav
+		col-classes="col-md-8 col-lg-7 col-lg-offset-1"
 		>
 
-		<img
-			v-if="shouldShowHeaderImage"
-			class="-header-img"
-			src="./header.png"
-			:width="704 / (Screen.isXs ? 3 : 2)"
-			:height="416 / (Screen.isXs ? 3 : 2)"
-			alt="Activity Feed"
-			>
-		<template v-else>
-			<h1>
-				<translate>Activity Feed</translate>
-			</h1>
-			<br>
-		</template>
+		<h1>
+			<translate>Activity Feed</translate>
+		</h1>
+		<br>
 
 		<nav slot="nav" class="platform-list inline nav-justified">
 			<ul>
@@ -27,8 +16,8 @@
 					<router-link :to="{ name: 'activity', params: { tab: 'activity' } }" active-class="active">
 						<app-jolticon icon="feed" class="hidden-xs" />
 						<translate>Feed</translate>
-						<span class="tag tag-highlight" v-if="activityUnreadCount > 0">
-							{{ activityUnreadCount < 100 ? activityUnreadCount : '99+' }}
+						<span class="tag tag-highlight" v-if="unreadActivityCount > 0">
+							{{ unreadActivityCount < 100 ? unreadActivityCount : '99+' }}
 						</span>
 					</router-link>
 				</li>
@@ -36,8 +25,8 @@
 					<router-link :to="{ name: 'activity', params: { tab: 'notifications' } }" active-class="active">
 						<app-jolticon icon="notifications" class="hidden-xs" />
 						<translate>Notifications</translate>
-						<span class="tag tag-highlight" v-if="notificationsUnreadCount > 0">
-							{{ notificationsUnreadCount < 100 ? notificationsUnreadCount : '99+' }}
+						<span class="tag tag-highlight" v-if="unreadNotificationsCount > 0">
+							{{ unreadNotificationsCount < 100 ? unreadNotificationsCount : '99+' }}
 						</span>
 					</router-link>
 				</li>
@@ -49,19 +38,42 @@
 	<section class="section">
 		<div class="container">
 			<div class="row">
-				<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-7">
+				<div class="col-xs-12 col-md-4 pull-right" v-if="tab === 'activity'">
+					<app-broadcast-card
+						v-if="latestBroadcast"
+						:post="latestBroadcast"
+						/>
+
+					<template v-if="!Screen.isMobile">
+						<h4 class="section-header">
+							<translate>Featured Games</translate>
+						</h4>
+
+						<app-game-list-placeholder
+							v-if="!featuredGames.length"
+							:num="5"
+							/>
+						<app-game-list
+							v-else-if="featuredGames.length"
+							:games="featuredGames.slice(0, 7)"
+							event-label="activity"
+							/>
+					</template>
+
+				</div>
+				<div class="col-xs-12 col-md-8 col-lg-7 col-lg-offset-1 pull-left">
 
 					<app-activity-feed-placeholder v-if="!feed" />
 					<div v-else>
-
-						<div v-for="_feed of [ feed ]" :key="feed.type">
+						<div :key="feed.type">
 							<app-activity-feed
-								v-if="_feed.hasItems"
-								:feed="_feed"
+								v-if="feed.hasItems"
+								:feed="feed"
 								show-game-info
 								:show-ads="tab === 'activity'"
+								:new-count="unreadCount"
+								@load-new="loadedNew()"
 								/>
-
 							<div class="alert" v-else>
 								<template v-if="tab === 'activity'">
 									<p>

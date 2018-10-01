@@ -37,20 +37,20 @@ import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/poppe
 	},
 })
 export class AppShellSidebar extends Vue {
-	@State app: Store['app'];
-	@State isBootstrapped: Store['isBootstrapped'];
-	@State isLibraryBootstrapped: Store['isLibraryBootstrapped'];
-	@State notificationCount: Store['notificationCount'];
-	@State isLeftPaneVisible: Store['isLeftPaneVisible'];
-	@LibraryState bundleCollections: LibraryStore['bundleCollections'];
-	@LibraryState developerCollection: LibraryStore['developerCollection'];
-	@LibraryState followedCollection: LibraryStore['followedCollection'];
-	@LibraryState ownedCollection: LibraryStore['ownedCollection'];
-	@LibraryState collections: LibraryStore['collections'];
-	@LibraryState playlistFolders: LibraryStore['playlistFolders'];
+	@State app!: Store['app'];
+	@State isBootstrapped!: Store['isBootstrapped'];
+	@State isLibraryBootstrapped!: Store['isLibraryBootstrapped'];
+	@State notificationCount!: Store['notificationCount'];
+	@State isLeftPaneVisible!: Store['isLeftPaneVisible'];
+	@LibraryState bundleCollections!: LibraryStore['bundleCollections'];
+	@LibraryState developerCollection!: LibraryStore['developerCollection'];
+	@LibraryState followedCollection!: LibraryStore['followedCollection'];
+	@LibraryState ownedCollection!: LibraryStore['ownedCollection'];
+	@LibraryState collections!: LibraryStore['collections'];
+	@LibraryState playlistFolders!: LibraryStore['playlistFolders'];
 
-	@Action toggleLeftPane: Store['toggleLeftPane'];
-	@LibraryAction newPlaylist: LibraryStore['newPlaylist'];
+	@Action toggleLeftPane!: Store['toggleLeftPane'];
+	@LibraryAction newPlaylist!: LibraryStore['newPlaylist'];
 
 	playlistFilterQuery = '';
 	openFolders: string[] = [];

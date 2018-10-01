@@ -34,10 +34,10 @@ import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/
 	},
 })
 export class FormPayment extends BaseForm<any> implements FormOnInit, FormOnSubmit {
-	@State app: AppStore;
+	@State app!: AppStore;
 
-	@Prop(Array) cards: any[];
-	@Prop(Order) order: Order;
+	@Prop(Array) cards!: any[];
+	@Prop(Order) order!: Order;
 
 	warnOnDiscard = false;
 
@@ -82,7 +82,7 @@ export class FormPayment extends BaseForm<any> implements FormOnInit, FormOnSubm
 		if (GJ_ENVIRONMENT === 'development') {
 			this.setField('fullname', 'Vash the Stampede');
 			this.setField('card_number', '4242424242424242');
-			this.setField('exp', '1216');
+			this.setField('exp', '1219');
 			this.setField('cvc', '123');
 			this.setField('street1', `No-man's Land`);
 			this.setField('postcode', '11111');

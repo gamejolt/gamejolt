@@ -54,7 +54,7 @@ interface Command {
 	},
 })
 export class AppSearchAutocomplete extends Vue {
-	@State app: AppStore;
+	@State app!: AppStore;
 	mode: 'search' | 'command' = 'search';
 
 	selected = 0;

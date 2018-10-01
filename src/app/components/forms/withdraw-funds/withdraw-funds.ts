@@ -18,10 +18,10 @@ interface WithdrawFundsFormModel {
 @Component({})
 export class FormWithdrawFunds extends BaseForm<WithdrawFundsFormModel>
 	implements FormOnInit, FormOnSubmit {
-	@Prop(User) user: User;
-	@Prop(String) paypalEmail: string;
-	@Prop(Number) minAmount: number;
-	@Prop(Number) withdrawableAmount: number;
+	@Prop(User) user!: User;
+	@Prop(String) paypalEmail!: string;
+	@Prop(Number) minAmount!: number;
+	@Prop(Number) withdrawableAmount!: number;
 
 	warnOnDiscard = false;
 

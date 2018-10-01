@@ -20,7 +20,7 @@ import { ChatClient } from '../client';
 	},
 })
 export class AppChatSidebar extends Vue {
-	@State chat: ChatClient;
+	@State chat!: ChatClient;
 
 	friendsTab: 'all' | 'online' = 'all';
 

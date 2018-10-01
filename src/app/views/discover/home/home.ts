@@ -53,7 +53,7 @@ export interface DiscoverRow {
 	},
 })
 export default class RouteDiscoverHome extends BaseRouteComponent {
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	isLoaded = false;
 	channels: any[] = [];

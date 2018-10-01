@@ -27,7 +27,7 @@ export class FormUserHeader extends BaseForm<User> implements FormOnLoad {
 	minAspectRatio = 0;
 	maxAspectRatio = 0;
 
-	$refs: {
+	$refs!: {
 		form: AppForm;
 	};
 

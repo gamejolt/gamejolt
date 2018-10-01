@@ -1,43 +1,42 @@
+import View from '!view!./collection.html?style=./collection.styl';
+import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
-import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./collection.html?style=./collection.styl';
-
-import { GameFilteringContainer } from '../../../components/game/filtering/container';
-import { GameListingContainer } from '../../../components/game/listing/listing-container-service';
-import { enforceLocation } from '../../../../lib/gj-lib-client/utils/router';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { GameCollection } from '../../../components/game/collection/collection.model';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
-import { AppGameListing } from '../../../components/game/listing/listing';
-import { AppGameGrid } from '../../../components/game/grid/grid';
-import { GameBundle } from '../../../../lib/gj-lib-client/components/game-bundle/game-bundle.model';
-import { AppPageHeader } from '../../../components/page-header/page-header';
-import { AppGameCollectionThumbnail } from '../../../components/game/collection/thumbnail/thumbnail';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { AppGameCollectionFollowWidget } from '../../../components/game/collection/follow-widget/follow-widget';
-import { store, Store, tillStoreBootstrapped } from '../../../store/index';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { LibraryAction, LibraryStore, LibraryState } from '../../../store/library';
-import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading/fade/fade';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
+import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
+import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
+import { GameBundle } from '../../../../lib/gj-lib-client/components/game-bundle/game-bundle.model';
+import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { Jam } from '../../../../lib/gj-lib-client/components/jam/jam.model';
+import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading/fade/fade';
+import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
+import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import {
 	ThemeMutation,
 	ThemeStore,
 } from '../../../../lib/gj-lib-client/components/theme/theme.store';
-import { Jam } from '../../../../lib/gj-lib-client/components/jam/jam.model';
-import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
+import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
+import { enforceLocation } from '../../../../lib/gj-lib-client/utils/router';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+import { GameCollection } from '../../../components/game/collection/collection.model';
+import { AppGameCollectionFollowWidget } from '../../../components/game/collection/follow-widget/follow-widget';
+import { AppGameCollectionThumbnail } from '../../../components/game/collection/thumbnail/thumbnail';
+import { GameFilteringContainer } from '../../../components/game/filtering/container';
+import { AppGameGrid } from '../../../components/game/grid/grid';
+import { AppGameListing } from '../../../components/game/listing/listing';
+import { GameListingContainer } from '../../../components/game/listing/listing-container-service';
+import { AppPageHeader } from '../../../components/page-header/page-header';
+import { store, Store, tillStoreBootstrapped } from '../../../store/index';
+import { LibraryAction, LibraryState, LibraryStore } from '../../../store/library';
 
 const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
 const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
@@ -65,17 +64,25 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 	},
 })
 export default class RouteLibraryCollection extends BaseRouteComponent {
-	@Prop(String) id: string;
+	@Prop(String)
+	id!: string;
 
-	@State app: Store['app'];
-	@LibraryState collections: LibraryStore['collections'];
+	@State
+	app!: Store['app'];
+	@LibraryState
+	collections!: LibraryStore['collections'];
 
-	@LibraryAction removeGameFromPlaylist: LibraryStore['removeGameFromPlaylist'];
-	@LibraryAction unfollowGame: LibraryStore['unfollowGame'];
-	@LibraryAction editPlaylist: LibraryStore['editPlaylist'];
-	@LibraryAction removePlaylist: LibraryStore['removePlaylist'];
+	@LibraryAction
+	removeGameFromPlaylist!: LibraryStore['removeGameFromPlaylist'];
+	@LibraryAction
+	unfollowGame!: LibraryStore['unfollowGame'];
+	@LibraryAction
+	editPlaylist!: LibraryStore['editPlaylist'];
+	@LibraryAction
+	removePlaylist!: LibraryStore['removePlaylist'];
 
-	@ThemeMutation setPageTheme: ThemeStore['setPageTheme'];
+	@ThemeMutation
+	setPageTheme!: ThemeStore['setPageTheme'];
 
 	type = '';
 	followerCount = 0;

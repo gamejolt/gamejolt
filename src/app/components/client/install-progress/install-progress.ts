@@ -13,7 +13,7 @@ import { LocalDbPackage, LocalDbPackagePatchState } from '../local-db/package/pa
 	},
 })
 export class AppClientInstallProgress extends Vue {
-	@Prop(LocalDbPackage) localPackage: LocalDbPackage;
+	@Prop(LocalDbPackage) localPackage!: LocalDbPackage;
 
 	get patchState() {
 		if (!this.localPackage) {

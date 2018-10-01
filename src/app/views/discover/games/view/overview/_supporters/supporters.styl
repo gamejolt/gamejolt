@@ -1,0 +1,47 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+$-size = 30px
+$-spacing = 3px
+
+.-supporters
+	display: flex
+	flex-flow: row wrap
+	margin-bottom: $line-height-computed
+
+.-heading
+	flex: none
+	margin: 0
+	margin-right: $-spacing * 3
+	line-height: $-size
+
+	// On xs, we make the heading take up its own row (the 100%).
+	@media $media-xs
+		flex: 1 100%
+
+.-all
+	flex: none
+
+.-list
+	position: relative
+	flex: 1
+	display: flex
+	overflow: hidden
+
+.-list-fade
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	width: 50px
+	background-image: linear-gradient(to right, rgba($white, 0) 0, rgba($white, 1) 100%)
+	background-image: linear-gradient(to right, var(--theme-bg-trans) 0, var(--theme-bg) 100%)
+	z-index: 1
+
+.-supporter
+	img-circle()
+	flex: none
+	width: $-size
+	height: $-size
+	margin: 0 $-spacing
+	overflow: hidden

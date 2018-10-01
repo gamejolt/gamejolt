@@ -1,72 +1,92 @@
+import View from '!view!./event-item.html?style=./event-item.styl';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
+import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
+import { AppUserAvatar } from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./event-item.html?style=./event-item.styl';
-
-import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { ActivityFeedItem } from '../item-service';
-import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
-import { AppActivityFeed } from '../feed';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppGameThumbnailImg } from '../../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
-import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
-import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
-import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
+import { State } from 'vuex-class';
+import { CommentVideoModal } from '../../../../../lib/gj-lib-client/components/comment/video/modal/modal.service';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
+import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
+import {
+	canUserManagePost,
+	FiresidePost,
+} from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppUserCardHover } from '../../../../../lib/gj-lib-client/components/user/card/hover/hover';
+import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
+import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
+import { Store } from '../../../../store';
+import { AppEventItemControls } from '../../../event-item/controls/controls';
+import { AppEventItemManage } from '../../../event-item/manage/manage';
+import { AppPollVoting } from '../../../poll/voting/voting';
 import { AppActivityFeedCommentVideo } from '../comment-video/comment-video';
-import { AppActivityFeedControls } from '../controls/controls';
-import { AppActivityFeedDevlogPostText } from '../devlog-post/text/text';
 import { AppActivityFeedDevlogPostMedia } from '../devlog-post/media/media';
 import { AppActivityFeedDevlogPostSketchfab } from '../devlog-post/sketchfab/sketchfab';
+import { AppActivityFeedDevlogPostText } from '../devlog-post/text/text';
 import { AppActivityFeedDevlogPostVideo } from '../devlog-post/video/video';
-import { CommentVideoModal } from '../../../../../lib/gj-lib-client/components/comment/video/modal/modal.service';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
-import { AppPollVoting } from '../../../poll/voting/voting';
-import { AppUserCardHover } from '../../../../../lib/gj-lib-client/components/user/card/hover/hover';
+import { AppActivityFeed } from '../feed';
+import { ActivityFeedItem } from '../item-service';
+import { AppActivityFeedEventItemTime } from './time/time';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
 @View
 @Component({
 	components: {
-		AppTimelineListItem,
-		AppJolticon,
-		AppUserAvatarImg,
-		AppGameThumbnailImg,
-		AppTimeAgo,
+		AppActivityFeedEventItemTime,
+		AppUserAvatar,
 		AppActivityFeedCommentVideo,
 		AppActivityFeedDevlogPostText,
 		AppActivityFeedDevlogPostMedia,
 		AppActivityFeedDevlogPostSketchfab,
 		AppActivityFeedDevlogPostVideo,
-		AppActivityFeedControls,
+		AppEventItemManage,
+		AppEventItemControls,
 		AppPollVoting,
 		AppUserCardHover,
+		AppFadeCollapse,
 	},
 	filters: {
 		number,
 	},
 })
 export class AppActivityFeedEventItem extends Vue {
-	@Prop(ActivityFeedItem) item: ActivityFeedItem;
-	@Prop(Boolean) isNew?: boolean;
-	@Prop(Boolean) isActive?: boolean;
-	@Prop(Boolean) isHydrated?: boolean;
+	@Prop(ActivityFeedItem)
+	item!: ActivityFeedItem;
+
+	@Prop(Boolean)
+	isNew?: boolean;
+
+	@Prop(Boolean)
+	isActive?: boolean;
+
+	@Prop(Boolean)
+	isHydrated?: boolean;
+
+	@State
+	app!: Store['app'];
 
 	private resizeSensor?: any;
 
-	feed: AppActivityFeed;
+	feed!: AppActivityFeed;
+	canToggleLead = false;
+
 	readonly Screen = Screen;
 	readonly EventItem = EventItem;
+
+	get isThreadView() {
+		return !Screen.isXs;
+	}
 
 	get eventItem() {
 		return this.item.feedItem as EventItem;
 	}
 
 	get post() {
-		if (this.eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
+		if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
 			return this.eventItem.action as FiresidePost;
 		}
 	}
@@ -94,7 +114,7 @@ export class AppActivityFeedEventItem extends Vue {
 			return (this.eventItem.action as CommentVideo).comment.user;
 		} else if (this.eventItem.type === EventItem.TYPE_GAME_PUBLISH) {
 			return (this.eventItem.action as Game).developer;
-		} else if (this.eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
+		} else if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
 			const post = this.eventItem.action as FiresidePost;
 			if (post.game && post.as_game_owner) {
 				return post.game.developer;
@@ -108,34 +128,56 @@ export class AppActivityFeedEventItem extends Vue {
 
 	get link() {
 		if (this.eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
-			return '';
-		} else if (this.eventItem.type === EventItem.TYPE_GAME_PUBLISH) {
-			const game = this.game!;
-			return {
-				name: 'discover.games.view.overview',
-				params: {
-					slug: game.slug,
-					id: game.id,
-				},
-			};
-		} else if (this.eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
-			const post = this.post!;
-			const game = this.game!;
-			return {
-				name: 'discover.games.view.devlog.view',
-				params: {
-					slug: game.slug,
-					id: game.id,
-					postSlug: post.slug,
-				},
-			};
+			return null;
 		}
 
-		return '';
+		if (this.eventItem.type === EventItem.TYPE_GAME_PUBLISH) {
+			const game = this.game!;
+
+			const params: { [key: string]: string } = {
+				slug: game.slug,
+				id: game.id + '',
+			};
+
+			return {
+				name: 'discover.games.view.overview',
+				params: params,
+			};
+		} else if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
+			// TODO(userposts)
+			const post = this.post!;
+			if (this.game) {
+				return {
+					name: 'discover.games.view.devlog.view',
+					params: {
+						slug: this.game.slug,
+						id: this.game.id + '',
+						postSlug: post.slug,
+					},
+				};
+			} else {
+				return {
+					name: 'profile.post.view',
+					params: {
+						username: post.user.username,
+						slug: post.slug,
+					},
+				};
+			}
+		}
+
+		return null;
 	}
 
-	get shouldShowScheduled() {
-		return this.post && this.post.isScheduled;
+	get linkResolved() {
+		if (!this.link) {
+			return '';
+		}
+		return this.$router.resolve(this.link).href;
+	}
+
+	get shouldShowManage() {
+		return this.post && canUserManagePost(this.post, this.app.user);
 	}
 
 	created() {
@@ -163,11 +205,68 @@ export class AppActivityFeedEventItem extends Vue {
 		this.$emit('expanded');
 	}
 
-	onClick() {
+	/**
+	 * Called when clicking on the item, before running through any other click events--in the
+	 * capture phase.
+	 */
+	onClickCapture() {
 		this.$emit('clicked');
+	}
+
+	/**
+	 * Called when bubbling back up the click for the item. Any links within the item can cancel
+	 * this.
+	 */
+	onClick(e: MouseEvent) {
+		const ignoreList = ['a', 'button'];
+
+		// This mess is because we have to search the parent chain to see if one of the elements is
+		// in our ignored list.
+		let target = e.target as HTMLElement;
+		if (target instanceof HTMLElement) {
+			while (true) {
+				const nodeName = target.nodeName.toLowerCase();
+
+				// Immediately stop if we hit the end.
+				if ((target as any) === document || !target.parentNode) {
+					break;
+				}
+
+				// If it's in our list of ignored elements, then just stop.
+				if (ignoreList.indexOf(nodeName) !== -1) {
+					return;
+				}
+
+				target = target.parentNode as HTMLAnchorElement;
+			}
+		}
+
+		if (e.metaKey || e.altKey) {
+			return;
+		}
 
 		if (this.video) {
 			CommentVideoModal.show(this.video);
+		} else {
+			if (!this.link) {
+				return;
+			}
+
+			if (e.ctrlKey || e.shiftKey) {
+				Navigate.newWindow(Environment.wttfBaseUrl + this.linkResolved);
+				return;
+			}
+
+			this.$router.push(this.link);
 		}
+	}
+
+	toggleLead() {
+		this.item.isLeadOpen = !this.item.isLeadOpen;
+		this.$emit('expanded');
+	}
+
+	canToggleLeadChanged(canToggle: boolean) {
+		this.canToggleLead = canToggle;
 	}
 }

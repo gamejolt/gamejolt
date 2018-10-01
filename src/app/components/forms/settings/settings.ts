@@ -43,10 +43,10 @@ type FormModel = {
 	},
 })
 export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
-	@ThemeState isDark: ThemeStore['isDark'];
-	@ThemeState alwaysOurs: ThemeStore['alwaysOurs'];
-	@ThemeMutation setDark: ThemeStore['setDark'];
-	@ThemeMutation setAlwaysOurs: ThemeStore['setAlwaysOurs'];
+	@ThemeState isDark!: ThemeStore['isDark'];
+	@ThemeState alwaysOurs!: ThemeStore['alwaysOurs'];
+	@ThemeMutation setDark!: ThemeStore['setDark'];
+	@ThemeMutation setAlwaysOurs!: ThemeStore['setAlwaysOurs'];
 
 	warnOnDiscard = false;
 

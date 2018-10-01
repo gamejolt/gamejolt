@@ -16,7 +16,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 	},
 })
 export class AppMediaItemCover extends Vue {
-	@Prop(MediaItem) mediaItem: MediaItem;
+	@Prop(MediaItem) mediaItem!: MediaItem;
 	@Prop(Number) maxHeight?: number;
 	@Prop(Boolean) blur?: boolean;
 

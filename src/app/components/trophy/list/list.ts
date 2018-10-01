@@ -25,8 +25,8 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 	},
 })
 export class AppTrophyList extends Vue {
-	@Prop(Array) trophies: GameTrophy[];
-	@Prop(Array) achieved: UserGameTrophy[];
+	@Prop(Array) trophies!: GameTrophy[];
+	@Prop(Array) achieved!: UserGameTrophy[];
 
 	get achievedIndexed() {
 		return UserGameTrophy.indexAchieved(this.achieved);

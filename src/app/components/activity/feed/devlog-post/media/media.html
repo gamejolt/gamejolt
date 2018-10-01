@@ -1,55 +1,70 @@
-<div class="devlog-post-media-embed">
+<div class="devlog-post-media">
 	<v-touch
-		class="media-bar-lightbox"
+		class="-lightbox"
 		@panstart="panStart"
 		@panmove="pan"
 		@panend="panEnd"
 		:pan-options="{ direction: 'horizontal' }"
 		>
 
-		<a class="devlog-post-media-prev" v-if="page > 1" @click="prev">
+		<div class="-container">
+			<div class="-slider" ref="slider">
+
+				<app-responsive-dimensions
+					class="-slider-item"
+					v-for="item of post.media"
+					:key="item.id"
+					:ratio="item.width / item.height"
+					@change="onDimensionsChange"
+					>
+
+					<app-event-item-media-tags
+						:gif="item.is_animated"
+						/>
+
+					<app-img-responsive
+						v-if="!isHydrated || !item.is_animated"
+						class="-img"
+						:src="item.mediaserver_url"
+						alt=""
+						ondragstart="return false"
+						/>
+					<app-video
+						v-else-if="shouldVideoPlay( item )"
+						class="-video"
+						:poster="item.mediaserver_url"
+						:webm="item.mediaserver_url_webm"
+						:mp4="item.mediaserver_url_mp4"
+						show-loading
+						/>
+
+				</app-responsive-dimensions>
+
+			</div>
+		</div>
+
+		<a
+			class="-prev"
+			v-if="page > 1"
+			@click.stop="prev"
+			>
 			<app-jolticon icon="chevron-left" />
 		</a>
 
-		<a class="devlog-post-media-next" v-if="page < post.media.length" @click="next">
+		<a
+			class="-next"
+			v-if="page < post.media.length"
+			@click.stop="next"
+			>
 			<app-jolticon icon="chevron-right" />
 		</a>
 
-		<div class="devlog-post-media-embed-img"
-			@click.capture="clicked"
-			>
-			<router-link
-				:to="{ name: 'discover.games.view.devlog.view', params: { slug: post.game.slug, id: post.game.id, postSlug: post.slug } }"
-				>
-				<div class="devlog-post-media-slider" ref="slider">
-
-					<app-responsive-dimensions
-						class="devlog-post-media-slider-item"
-						v-for="item of post.media"
-						:key="item.id"
-						:ratio="item.width / item.height"
-						@change="onDimensionsChange"
-						>
-
-						<app-img-responsive
-							v-if="!isHydrated || !item.is_animated"
-							:src="item.mediaserver_url"
-							alt=""
-							ondragstart="return false"
-							/>
-						<app-video
-							v-else-if="shouldVideoPlay( item )"
-							:poster="item.mediaserver_url"
-							:webm="item.mediaserver_url_webm"
-							:mp4="item.mediaserver_url_mp4"
-							:show-loading="true"
-							/>
-
-					</app-responsive-dimensions>
-
-				</div>
-			</router-link>
-		</div>
-
 	</v-touch>
+
+	<app-event-item-media-indicator
+		v-if="post.media.length > 1"
+		class="-indicator"
+		:count="post.media.length"
+		:current="page"
+		/>
 </div>

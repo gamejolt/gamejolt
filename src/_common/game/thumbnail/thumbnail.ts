@@ -33,11 +33,11 @@ import { AppUserCardHover } from '../../../lib/gj-lib-client/components/user/car
 	},
 })
 export class AppGameThumbnail extends Vue {
-	@Prop(Object) game: Game;
+	@Prop(Object) game!: Game;
 	@Prop(String) linkTo?: string;
 	@Prop(Boolean) hidePricing?: boolean;
 
-	@State app: AppStore;
+	@State app!: AppStore;
 
 	isBootstrapped = GJ_IS_SSR;
 	isHydrated = GJ_IS_SSR;

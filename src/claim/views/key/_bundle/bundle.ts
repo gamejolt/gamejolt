@@ -17,11 +17,11 @@ import { Store } from '../../../store/index';
 	},
 })
 export class AppKeyBundle extends Vue {
-	@Prop() payload: any;
-	@Prop() loginUrl: string;
+	@Prop() payload!: any;
+	@Prop() loginUrl!: string;
 	@Prop() accessKey?: string;
 
-	@State app: Store['app'];
+	@State app!: Store['app'];
 
 	bundle: GameBundle = null as any;
 	games: Game[] = [];

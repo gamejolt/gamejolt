@@ -1,48 +1,35 @@
-import { Route } from 'vue-router';
-import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./view.html?style=./view.styl';
-
-import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { FiresidePost } from '../../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Meta } from '../../../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
-import { AppDevlogPostView } from '../../../../../../components/devlog/post/view/view';
-import { AppDevlogPostViewPlaceholder } from '../../../../../../components/devlog/post/view/placeholder/placeholder';
-import { AppScrollWhen } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll-when.directive.vue';
-import { Registry } from '../../../../../../../lib/gj-lib-client/components/registry/registry.service';
-import { RouteState, RouteStore } from '../../view.store';
-import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
+import { Registry } from 'game-jolt-frontend-lib/components/registry/registry.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
-} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { enforceLocation } from '../../../../../../../lib/gj-lib-client/utils/router';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
+import { Component, Prop } from 'vue-property-decorator';
+import { Route } from 'vue-router';
+import { CreateElement } from 'vue/types/vue';
 import { IntentService } from '../../../../../../components/intent/intent.service';
-import { Translate } from '../../../../../../../lib/gj-lib-client/components/translate/translate.service';
-import { CommentModal } from '../../../../../../../lib/gj-lib-client/components/comment/modal/modal.service';
+import { AppPostView } from '../../../../../../components/post/view/view';
+import { RouteState, RouteStore } from '../../view.store';
 
-@View
 @Component({
 	name: 'RouteDiscoverGamesViewDevlogView',
 	components: {
-		AppAd,
-		AppAdPlacement,
-		AppDevlogPostView,
-		AppDevlogPostViewPlaceholder,
-	},
-	directives: {
-		AppScrollWhen,
+		AppPostView,
 	},
 })
 export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent {
-	@Prop() postSlug: string;
+	@Prop()
+	postSlug!: string;
 
-	@RouteState game: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	post: FiresidePost | null = null;
-
-	readonly Screen = Screen;
 
 	@RouteResolve({ lazy: true, cache: true })
 	async routeResolve(this: undefined, route: Route) {
@@ -55,9 +42,7 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		}
 
 		const postHash = FiresidePost.pullHashFromUrl(route.params.postSlug);
-		const payload = await Api.sendRequest(
-			'/web/discover/games/devlog/' + route.params.id + '/' + postHash
-		);
+		const payload = await Api.sendRequest('/web/posts/view/' + postHash);
 
 		if (payload && payload.post) {
 			const redirect = enforceLocation(route, { postSlug: payload.post.slug });
@@ -70,14 +55,14 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 	}
 
 	get routeTitle() {
-		return this.post ? this.post.title : null;
+		return this.post && this.post.lead_snippet;
 	}
 
 	routeInit() {
 		CommentModal.checkPermalink(this.$router);
 
 		const hash = FiresidePost.pullHashFromUrl(this.postSlug);
-		this.post = Registry.find<FiresidePost>('FiresidePost', hash, 'hash');
+		this.post = Registry.find<FiresidePost>('FiresidePost', i => i.hash === hash);
 	}
 
 	routed($payload: any) {
@@ -94,5 +79,13 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;
+	}
+
+	render(h: CreateElement) {
+		return h(AppPostView, {
+			props: {
+				post: this.post,
+			},
+		});
 	}
 }

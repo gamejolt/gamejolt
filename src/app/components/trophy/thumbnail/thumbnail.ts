@@ -30,7 +30,7 @@ const BaseHeight = 35;
 	},
 })
 export class AppTrophyThumbnail extends Vue {
-	@Prop(GameTrophy) trophy: GameTrophy;
+	@Prop(GameTrophy) trophy!: GameTrophy;
 	@Prop(Boolean) isAchieved?: boolean;
 
 	thumbWidth = BaseWidth;

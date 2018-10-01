@@ -39,11 +39,15 @@
 	</template>
 
 	<!-- Able to install game -->
-	<button class="btn btn-success-outline" v-if="canInstall && !localPackage" @click="installClick( card.downloadableBuild )">
-		<app-jolticon icon="download-box" />
+	<app-button
+		v-if="canInstall && !localPackage"
+		primary
+		icon="download-box"
+		@click="installClick( card.downloadableBuild )"
+		>
 		<translate>Install</translate>
 		<small>({{ card.downloadableBuild.primary_file.filesize | filesize }})</small>
-	</button>
+	</app-button>
 
 	<!-- Game is installing or installed -->
 	<template v-if="localPackage">
@@ -62,41 +66,62 @@
 				</span>
 			</template>
 			<template v-else>
-
-				<button v-if="!localPackage.isPatchPaused" @click="pauseInstall()" class="btn btn-outline">
-					<app-jolticon icon="pause" />
+				<app-button
+					v-if="!localPackage.isPatchPaused"
+					@click="pauseInstall()"
+					>
 					<translate>Pause</translate>
-				</button>
-
-				<button v-else @click="resumeInstall()" class="btn btn-outline">
-					<app-jolticon icon="play-small" />
+				</app-button>
+				<app-button
+					v-else
+					primary
+					@click="resumeInstall()"
+					>
 					<translate>Resume</translate>
-				</button>
+				</app-button>
 			</template>
 		</template>
 
 		<!-- Game failed to install -->
-		<button v-if="localPackage.didInstallFail" @click="retryInstall()" class="btn btn-outline">
+		<app-button
+			v-if="localPackage.didInstallFail"
+			primary
+			@click="retryInstall()"
+			>
 			<translate>Retry Install</translate>
-		</button>
+		</app-button>
 
 		<!-- Game failed to update -->
-		<button v-if="localPackage.didUpdateFail" @click="retryInstall()" class="btn btn-outline">
+		<app-button
+			v-if="localPackage.didUpdateFail"
+			primary
+			@click="retryInstall()"
+			>
 			<translate>Retry Update</translate>
-		</button>
+		</app-button>
 
 		<!--
 			Can only cancel installs, not updates.
 		-->
-		<button v-if="localPackage.install_state" @click="cancelInstall()" v-app-tooltip="$gettext('Cancel Installation')" class="btn btn-danger-outline btn-sparse">
-			<app-jolticon icon="remove" />
-		</button>
+		<app-button
+			v-if="localPackage.install_state"
+			circle
+			icon="remove"
+			:trans="!overlay"
+			@click="cancelInstall()"
+			v-app-tooltip="$gettext('Cancel Installation')"
+			/>
 
 		<!-- Game is installed -->
-		<button v-if="localPackage.isSettled && !localPackage.isRunning" @click="launchPackage()" class="btn btn-primary-outline">
-			<app-jolticon icon="play" />
+		<app-button
+			v-if="localPackage.isSettled && !localPackage.isRunning"
+			primary
+			solid
+			icon="play"
+			@click="launchPackage()"
+			>
 			<translate>Launch</translate>
-		</button>
+		</app-button>
 
 	</template>
 
@@ -104,27 +129,24 @@
 		Browser quick play
 		We hide this as soon as they install the game.
 	-->
-	<template v-else-if="card.browserBuild">
-		<button @click="buildClick(card.browserBuild)" class="btn btn-primary-outline">
-			<app-jolticon icon="play" />
-			<translate>Quick Play</translate>
-			<app-jolticon icon="addon" :class="`jolticon-${card.showcasedBrowserIcon}`" />
-		</button>
-	</template>
-
-	<!--
-		If this package only has "Other" builds, then we make it look like a download
-		button with a [...] after.
-		If the package has normal builds too, then we just show it as a more options sparse button.
-	-->
-	<button
-		v-if="card.extraBuilds.length || (localPackage && !localPackage.install_state)"
-		v-app-popover-trigger="`game-package-card-more-options-${ package.id }`"
-		v-app-track-event="`game-package-card:more-options`" class="btn btn-outline"
+	<app-button
+		v-else-if="card.browserBuild"
+		primary
+		icon="play"
+		@click="buildClick(card.browserBuild)"
 		>
-		<app-jolticon icon="ellipsis-h" />
-		<translate>options</translate>
-	</button>
+		<translate>Quick Play</translate>
+		<app-jolticon icon="addon" :class="`jolticon-${card.showcasedBrowserIcon}`" />
+	</app-button>
+
+	<app-button
+		v-if="card.extraBuilds.length || (localPackage && !localPackage.install_state)"
+		circle
+		icon="ellipsis-v"
+		:trans="!overlay"
+		v-app-popover-trigger="`game-package-card-more-options-${ package.id }`"
+		v-app-track-event="`game-package-card:more-options`"
+		/>
 
 	<app-popover :popover-id="`game-package-card-more-options-${package.id}`">
 

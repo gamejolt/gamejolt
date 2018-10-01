@@ -22,8 +22,8 @@ import { AppPopper } from '../../../../../../../../lib/gj-lib-client/components/
 	},
 })
 export class AppManageGameListScores extends Vue {
-	@Prop(GameScoreTable) scoreTable: GameScoreTable;
-	@Prop(Array) scores: UserGameScore[];
+	@Prop(GameScoreTable) scoreTable!: GameScoreTable;
+	@Prop(Array) scores!: UserGameScore[];
 	@Prop(Boolean) isForUser?: boolean;
 
 	async removeScore(score: UserGameScore) {

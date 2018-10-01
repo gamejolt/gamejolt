@@ -9,7 +9,6 @@ import { Connection } from '../../../../lib/gj-lib-client/components/connection/
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppShellAccountPopover } from '../account-popover/account-popover';
 import { AppFriendRequestPopover } from '../../friend/request-popover/request-popover';
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
@@ -20,7 +19,6 @@ import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/
 import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
 
 let components: any = {
-	AppJolticon,
 	AppUserAvatarImg,
 	AppPopper,
 	AppShellAccountPopover,
@@ -46,13 +44,13 @@ if (GJ_IS_CLIENT) {
 	},
 })
 export class AppShellTopNav extends Vue {
-	@State app: Store['app'];
-	@State chat: ChatClient;
-	@State notificationCount: Store['notificationCount'];
-	@State friendRequestCount: Store['friendRequestCount'];
-	@State isLeftPaneVisible: Store['isLeftPaneVisible'];
-	@State isRightPaneVisible: Store['isRightPaneVisible'];
-	@State hasSidebar: Store['hasSidebar'];
+	@State app!: Store['app'];
+	@State chat!: ChatClient;
+	@State notificationCount!: Store['notificationCount'];
+	@State friendRequestCount!: Store['friendRequestCount'];
+	@State isLeftPaneVisible!: Store['isLeftPaneVisible'];
+	@State isRightPaneVisible!: Store['isRightPaneVisible'];
+	@State hasSidebar!: Store['hasSidebar'];
 
 	friendRequestsShowing = false;
 	userMenuShowing = false;
@@ -62,6 +60,6 @@ export class AppShellTopNav extends Vue {
 	readonly Screen = Screen;
 	readonly Connection = Connection;
 
-	@Action toggleRightPane: Store['toggleRightPane'];
-	@Action toggleLeftPane: Store['toggleLeftPane'];
+	@Action toggleRightPane!: Store['toggleRightPane'];
+	@Action toggleLeftPane!: Store['toggleLeftPane'];
 }

@@ -27,14 +27,14 @@ import { LibraryStore } from '../../../store/library';
 	},
 })
 export class AppGamePlaylistAddToPopover extends Vue {
-	@Prop(Game) game: Game;
+	@Prop(Game) game!: Game;
 
-	@Action('library/addGameToPlaylist') addGameToPlaylist: LibraryStore['addGameToPlaylist'];
+	@Action('library/addGameToPlaylist') addGameToPlaylist!: LibraryStore['addGameToPlaylist'];
 
 	@Action('library/removeGameFromPlaylist')
-	removeGameFromPlaylist: LibraryStore['removeGameFromPlaylist'];
+	removeGameFromPlaylist!: LibraryStore['removeGameFromPlaylist'];
 
-	@Action('library/newPlaylist') newPlaylist: LibraryStore['newPlaylist'];
+	@Action('library/newPlaylist') newPlaylist!: LibraryStore['newPlaylist'];
 
 	playlists: GamePlaylist[] = [];
 	playlistsWithGame: number[] = [];

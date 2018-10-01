@@ -1,27 +1,26 @@
-import { Route } from 'vue-router';
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./list.html';
-
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppGenreList } from '../../../../components/genre/list/list';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import {
-	GameFilteringContainer,
-	checkGameFilteringRoute,
-} from '../../../../components/game/filtering/container';
-import { AppPageHeader } from '../../../../components/page-header/page-header';
-import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
-import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
-import { AppGameGrid } from '../../../../components/game/grid/grid';
-import { AppGameListing } from '../../../../components/game/listing/listing';
-import { LocationRedirect } from '../../../../../lib/gj-lib-client/utils/router';
+import { Component, Prop } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Ads } from '../../../../../lib/gj-lib-client/components/ad/ads.service';
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
+import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { LocationRedirect } from '../../../../../lib/gj-lib-client/utils/router';
+import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
+import {
+	checkGameFilteringRoute,
+	GameFilteringContainer,
+} from '../../../../components/game/filtering/container';
+import { AppGameGrid } from '../../../../components/game/grid/grid';
+import { AppGameListing } from '../../../../components/game/listing/listing';
+import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
+import { AppGenreList } from '../../../../components/genre/list/list';
+import { AppPageHeader } from '../../../../components/page-header/page-header';
 
 @View
 @Component({
@@ -38,8 +37,10 @@ import {
 	},
 })
 export default class RouteDiscoverGamesList extends BaseRouteComponent {
-	@Prop(String) section?: string;
-	@Prop(String) category?: string;
+	@Prop(String)
+	section?: string;
+	@Prop(String)
+	category?: string;
 
 	filtering: GameFilteringContainer | null = null;
 	listing: GameListingContainer | null = null;
@@ -170,11 +171,17 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 			category: categoryHuman,
 		};
 
-		this.pageTitle = this.$gettextInterpolate('%{ section } Indie %{ category } Games', context);
+		this.pageTitle = this.$gettextInterpolate(
+			'%{ section } Indie %{ category } Games',
+			context
+		);
 		if (this.category === 'rpg') {
 			this.pageTitle = this.$gettextInterpolate('%{ section } Indie RPGs', context);
 		} else if (this.category === 'other') {
-			this.pageTitle = this.$gettextInterpolate('%{ section } Alternative Indie Games', context);
+			this.pageTitle = this.$gettextInterpolate(
+				'%{ section } Alternative Indie Games',
+				context
+			);
 		}
 
 		if (this.category === 'rpg') {

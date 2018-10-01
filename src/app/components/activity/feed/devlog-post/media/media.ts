@@ -1,15 +1,15 @@
+import View from '!view!./media.html?style=./media.styl';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./media.html?style=./media.styl';
-
 import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { ActivityFeedItem } from '../../item-service';
-import { MediaItem } from '../../../../../../lib/gj-lib-client/components/media-item/media-item-model';
-import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppImgResponsive } from '../../../../../../lib/gj-lib-client/components/img/responsive/responsive';
-import { AppVideo } from '../../../../../../lib/gj-lib-client/components/video/video';
+import { MediaItem } from '../../../../../../lib/gj-lib-client/components/media-item/media-item-model';
 import { AppResponsiveDimensions } from '../../../../../../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions';
+import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppVideo } from '../../../../../../lib/gj-lib-client/components/video/video';
+import { AppEventItemMediaIndicator } from '../../../../event-item/media-indicator/media-indicator';
+import { AppEventItemMediaTags } from '../../../../event-item/media-tags/media-tags';
+import { ActivityFeedItem } from '../../item-service';
 
 if (!GJ_IS_SSR) {
 	const VueTouch = require('vue-touch');
@@ -19,17 +19,25 @@ if (!GJ_IS_SSR) {
 @View
 @Component({
 	components: {
-		AppJolticon,
 		AppImgResponsive,
 		AppVideo,
 		AppResponsiveDimensions,
+		AppEventItemMediaTags,
+		AppEventItemMediaIndicator,
 	},
 })
 export class AppActivityFeedDevlogPostMedia extends Vue {
-	@Prop(ActivityFeedItem) item: ActivityFeedItem;
-	@Prop(FiresidePost) post: FiresidePost;
-	@Prop(Boolean) isNew?: boolean;
-	@Prop(Boolean) isHydrated?: boolean;
+	@Prop(ActivityFeedItem)
+	item!: ActivityFeedItem;
+
+	@Prop(FiresidePost)
+	post!: FiresidePost;
+
+	@Prop(Boolean)
+	isNew?: boolean;
+
+	@Prop(Boolean)
+	isHydrated?: boolean;
 
 	page = 1;
 	activeMediaItem: MediaItem | null = null;
@@ -46,10 +54,6 @@ export class AppActivityFeedDevlogPostMedia extends Vue {
 	shouldVideoPlay(mediaItem: any) {
 		// Must be the active media item.
 		return this.activeMediaItem === mediaItem;
-	}
-
-	clicked() {
-		this.$emit('clicked');
 	}
 
 	next() {

@@ -1,17 +1,15 @@
-import * as nwGui from 'nw.gui';
-
 export function getCookie(name: string): Promise<string | undefined> {
 	return new Promise(resolve => {
-		// Within Client we have to access it connectedthis way.
+		// Within Client we have to access it this way.
 		if (GJ_IS_CLIENT) {
-			const gui = require('nw.gui') as typeof nwGui;
-			const win = gui.Window.get();
-			(win as any).cookies.get(
+			const win = nw.Window.get();
+			win.cookies.get(
 				{
-					url: 'game-jolt-client',
-					name: name,
+					storeId: '',
+					url: 'https://gamejolt.com',
+					name,
 				},
-				(cookieData: any) => {
+				cookieData => {
 					if (!cookieData) {
 						return resolve(undefined);
 					}

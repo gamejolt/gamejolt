@@ -20,7 +20,7 @@ import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-li
 	},
 })
 export default class RouteLibraryInstalled extends BaseRouteComponent {
-	@ClientLibraryState games: ClientLibraryStore['games'];
+	@ClientLibraryState games!: ClientLibraryStore['games'];
 
 	get gamesByTitle() {
 		return this.games.sort((a, b) => {

@@ -1,18 +1,17 @@
 import Vue from 'vue';
-import { ActivityFeedItem, ActivityFeedInput } from './item-service';
-import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
+import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/event-item.model';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
 import { arrayRemove } from '../../../../lib/gj-lib-client/utils/array';
-import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/event-item.model';
-import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { ActivityFeedInput, ActivityFeedItem } from './item-service';
 
 export interface ActivityFeedContainerOptions {
 	/**
 	 * Which types of models are used in the feed.
 	 */
-	type: 'Fireside_Post' | 'Notification' | 'EventItem';
+	type: 'Notification' | 'EventItem';
 
 	/**
 	 * The URL to hit to load more from the feed.
@@ -30,8 +29,11 @@ export interface ActivityFeedContainerOptions {
 	notificationWatermark?: number;
 }
 
+const ScrollDirectionFrom = 'from';
+const ScrollDirectionTo = 'to';
+
 export class ActivityFeedContainer {
-	feedType: 'Notification' | 'Fireside_Post' | 'EventItem';
+	feedType: 'Notification' | 'EventItem';
 	items: ActivityFeedItem[] = [];
 	games: { [k: number]: Game } = {};
 
@@ -46,6 +48,7 @@ export class ActivityFeedContainer {
 	scroll = 0;
 	noAutoload = false;
 	isLoadingMore = false;
+	isLoadingNew = false;
 	timesLoaded = 0;
 	private loadMoreUrl: string;
 
@@ -100,6 +103,20 @@ export class ActivityFeedContainer {
 		this.processGames();
 	}
 
+	clear() {
+		this.items = [];
+		this.expandedItems = [];
+		this.viewedItems = [];
+		this.games = {};
+		this.hydratedItems = {};
+		this.bootstrappedItems = {};
+
+		this.activeItem = null;
+		this.timesLoaded = 0;
+		this.scroll = 0;
+		this.reachedEnd = false;
+	}
+
 	viewed(item: ActivityFeedItem) {
 		if (this.viewedItems.indexOf(item.id) !== -1) {
 			return;
@@ -142,10 +159,11 @@ export class ActivityFeedContainer {
 		this.isLoadingMore = true;
 		++this.timesLoaded;
 
-		const lastPost = this.items[this.items.length - 1];
+		const lastFeedItem = this.items[this.items.length - 1];
 
 		const response = await Api.sendRequest(this.loadMoreUrl, {
-			scrollId: lastPost.scrollId,
+			scrollId: lastFeedItem.scrollId,
+			scrollDirection: ScrollDirectionFrom,
 		});
 
 		this.isLoadingMore = false;
@@ -158,13 +176,46 @@ export class ActivityFeedContainer {
 
 		if (this.feedType === 'Notification') {
 			this.append(Notification.populate(response.items));
-		} else if (this.feedType === 'Fireside_Post') {
-			this.append(FiresidePost.populate(response.items));
 		} else if (this.feedType === 'EventItem') {
 			this.append(EventItem.populate(response.items));
 		}
 
 		Analytics.trackEvent('activity-feed', 'loaded-more', 'page-' + this.timesLoaded);
+	}
+
+	async loadNew(clearOld: boolean) {
+		if (this.isLoadingNew) {
+			return;
+		}
+
+		this.isLoadingNew = true;
+
+		const firstPost = this.items[0];
+
+		const response = await Api.sendRequest(this.loadMoreUrl, {
+			scrollId: firstPost.scrollId,
+			scrollDirection: ScrollDirectionTo,
+		});
+
+		this.isLoadingNew = false;
+
+		if (!response.items || !response.items.length) {
+			return;
+		}
+
+		if (clearOld) {
+			this.clear();
+		}
+
+		if (this.feedType === 'Notification') {
+			this.prepend(Notification.populate(response.items));
+		} else if (this.feedType === 'EventItem') {
+			this.prepend(EventItem.populate(response.items));
+		}
+
+		if (response.unreadWatermark) {
+			this.notificationWatermark = response.unreadWatermark;
+		}
 	}
 
 	/**
@@ -174,7 +225,7 @@ export class ActivityFeedContainer {
 	 */
 	private processGames() {
 		for (const item of this.items) {
-			if (item.feedItem instanceof FiresidePost || item.feedItem instanceof EventItem) {
+			if (item.feedItem instanceof EventItem) {
 				const game = item.feedItem.game;
 				if (game) {
 					if (!this.games[game.id]) {

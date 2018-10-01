@@ -9,6 +9,9 @@ import { PollItem } from '../../../../lib/gj-lib-client/components/poll/item/ite
 import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
+import { Store } from '../../../store';
+import { State } from 'vuex-class';
 
 @View
 @Component({
@@ -21,8 +24,17 @@ import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 	},
 })
 export class AppPollVoting extends Vue {
-	@Prop(Poll) poll: Poll;
-	@Prop(Game) game?: Game;
+	@State
+	app!: Store['app'];
+
+	@Prop(Poll)
+	poll!: Poll;
+
+	@Prop(Game)
+	game?: Game;
+
+	@Prop(User)
+	user?: User;
 
 	chosenItemId: number | null = null;
 	isProcessing = false;
@@ -36,7 +48,8 @@ export class AppPollVoting extends Vue {
 		return (
 			(!this.isVotable && this.areResultsReady) ||
 			this.votedId !== null ||
-			(this.game && this.game.hasPerms())
+			(this.game && this.game.hasPerms()) ||
+			(this.user && this.app.user && this.user.id === this.app.user.id)
 		);
 	}
 

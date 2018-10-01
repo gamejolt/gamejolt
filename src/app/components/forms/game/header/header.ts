@@ -25,7 +25,7 @@ export class FormGameHeader extends BaseForm<Game> implements FormOnLoad {
 	minWidth = 0;
 	maxWidth = 0;
 
-	$refs: {
+	$refs!: {
 		form: AppForm;
 	};
 

@@ -1,10 +1,14 @@
 <div class="row">
 	<div class="col-md-8">
 
-		<form-game-settings
-			:model="game"
-			@submit="onSaved"
-			/>
+		<template v-if="!isCollaborator">
+			<form-game-sett
+				:model="game"
+				@submit="onSaved"
+				/>
+
+			<br>
+		</template>
 
 		<div v-if="!isWizard" class="-danger-zone well fill-offset">
 			<template v-if="isCollaborator">

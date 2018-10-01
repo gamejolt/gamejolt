@@ -27,8 +27,8 @@ import {
 	},
 })
 export default class RouteDashAccountLinkedAccountsList extends BaseRouteComponent {
-	@AppState user: AppStore['user'];
-	@RouteMutation setHeading: RouteStore['setHeading'];
+	@AppState user!: AppStore['user'];
+	@RouteMutation setHeading!: RouteStore['setHeading'];
 
 	channels: YoutubeChannel[] = [];
 

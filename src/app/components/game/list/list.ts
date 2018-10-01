@@ -12,6 +12,6 @@ import { AppGameListItem } from './item/item';
 	},
 })
 export class AppGameList extends Vue {
-	@Prop(Array) games: Game[];
+	@Prop(Array) games!: Game[];
 	@Prop(String) eventLabel?: string;
 }

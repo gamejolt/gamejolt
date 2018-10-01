@@ -1,0 +1,9 @@
+<div class="event-item-media-indicator">
+	<div
+		v-for="i of count"
+		class="-dot"
+		:class="{
+			'-active': current === i
+		}"
+		/>
+</div>

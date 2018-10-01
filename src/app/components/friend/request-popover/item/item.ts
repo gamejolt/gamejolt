@@ -22,9 +22,9 @@ import { Screen } from '../../../../../lib/gj-lib-client/components/screen/scree
 	},
 })
 export class AppFriendRequestPopoverItem extends Vue {
-	@Prop(UserFriendship) request: UserFriendship;
+	@Prop(UserFriendship) request!: UserFriendship;
 
-	@AppState user: AppStore['user'];
+	@AppState user!: AppStore['user'];
 
 	isInview = false;
 

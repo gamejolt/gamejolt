@@ -1,49 +1,66 @@
-import { Route } from 'vue-router';
-import { Mutation } from 'vuex-class';
+import View from '!view!./activity.html';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./activity.html?style=./activity.styl';
-
+import { Route } from 'vue-router';
+import { Mutation, State } from 'vuex-class';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
-import { ActivityFeedContainer } from '../../components/activity/feed/feed-container-service';
-import { Notification } from '../../../lib/gj-lib-client/components/notification/notification-model';
-import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import { AppPageHeader } from '../../components/page-header/page-header';
-import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppActivityFeed } from '../../components/activity/feed/feed';
-import { AppActivityFeedPlaceholder } from '../../components/activity/feed/placeholder/placeholder';
-import { Store } from '../../store/index';
-import { EventItem } from '../../../lib/gj-lib-client/components/event-item/event-item.model';
+import { BaseRouteComponent, RouteResolve } from '../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
-import { getTranslationLang } from '../../../lib/gj-lib-client/components/translate/translate.service';
-import {
-	BaseRouteComponent,
-	RouteResolve,
-} from '../../../lib/gj-lib-client/components/route/route-component';
+import { AppActivityFeed } from '../../components/activity/feed/feed';
+import { ActivityFeedContainer } from '../../components/activity/feed/feed-container-service';
+import { ActivityFeedService } from '../../components/activity/feed/feed-service';
+import { AppActivityFeedPlaceholder } from '../../components/activity/feed/placeholder/placeholder';
+import { AppBroadcastCard } from '../../components/broadcast-card/broadcast-card';
+import { AppGameList } from '../../components/game/list/list';
+import { AppGameListPlaceholder } from '../../components/game/list/placeholder/placeholder';
+import { AppPageHeader } from '../../components/page-header/page-header';
+import { Store } from '../../store/index';
 
 @View
 @Component({
 	name: 'RouteActivity',
 	components: {
 		AppPageHeader,
-		AppJolticon,
 		AppActivityFeed,
 		AppActivityFeedPlaceholder,
+		AppGameList,
+		AppGameListPlaceholder,
+		AppBroadcastCard,
+	},
+	directives: {
+		AppTrackEvent,
 	},
 })
 export default class RouteActivity extends BaseRouteComponent {
-	@Prop(String) tab: 'activity' | 'notifications';
+	@Prop(String)
+	tab!: 'activity' | 'notifications';
 
-	@Mutation setNotificationCount: Store['setNotificationCount'];
+	@Mutation
+	setNotificationCount!: Store['setNotificationCount'];
+
+	@State
+	app!: Store['app'];
+
+	@State
+	unreadActivityCount!: Store['unreadActivityCount'];
+
+	@State
+	unreadNotificationsCount!: Store['unreadNotificationsCount'];
 
 	feed: ActivityFeedContainer | null = null;
-	activityUnreadCount = 0;
-	notificationsUnreadCount = 0;
+	featuredGames: Game[] = [];
+	latestBroadcast: FiresidePost | null = null;
 
 	readonly Screen = Screen;
 
 	@RouteResolve({ cache: true, lazy: true })
 	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/dash/activity/' + route.params.tab);
+		return Promise.all([
+			Api.sendRequest('/web/dash/activity/' + route.params.tab),
+			Api.sendRequest('/web/discover'),
+		]);
 	}
 
 	get routeTitle() {
@@ -52,48 +69,74 @@ export default class RouteActivity extends BaseRouteComponent {
 			: this.$gettext('Your Notifications');
 	}
 
-	get shouldShowHeaderImage() {
-		return getTranslationLang() === 'en_US';
+	get unreadCount() {
+		switch (this.tab) {
+			case 'activity':
+				return this.unreadActivityCount;
+			case 'notifications':
+				return this.unreadNotificationsCount;
+		}
+		return 0;
 	}
 
 	routeInit() {
-		// Try to pull from cache.
-		this.feed = ActivityFeedService.bootstrap();
+		this.feed = ActivityFeedService.routeInit(this);
 	}
 
 	routed($payload: any, fromCache: boolean) {
-		// Never pull data from cache for feed since the feed is already bootstrapped from its own
-		// cache.
+		const [feedPlayload, discoverPayload] = $payload;
+
+		if (this.tab === 'activity') {
+			this.feed = ActivityFeedService.routed(
+				this.feed,
+				{
+					type: 'EventItem',
+					url: `/web/dash/activity/more/${this.tab}`,
+					notificationWatermark: feedPlayload.unreadWatermark,
+				},
+				feedPlayload.items
+			);
+		} else {
+			this.feed = ActivityFeedService.routed(
+				this.feed,
+				{
+					type: 'Notification',
+					url: `/web/dash/activity/more/${this.tab}`,
+					notificationWatermark: feedPlayload.unreadWatermark,
+				},
+				feedPlayload.items
+			);
+		}
+
+		// we clear the notifications for the tab we are on
+		this.setNotificationCount({ type: this.tab, count: 0 });
+
+		// Don't set if from cache, otherwise it could reset to the cached count when switching between tabs.
 		if (!fromCache) {
 			if (this.tab === 'activity') {
-				if (!this.feed || this.feed.feedType !== 'EventItem') {
-					this.feed = ActivityFeedService.bootstrap(EventItem.populate($payload.items), {
-						type: 'EventItem',
-						url: `/web/dash/activity/more/${this.tab}`,
-						notificationWatermark: $payload.unreadWatermark,
-					});
-				}
+				this.setNotificationCount({
+					type: 'notifications',
+					count: feedPlayload.notificationsUnreadCount,
+				});
 			} else {
-				if (!this.feed || this.feed.feedType !== 'Notification') {
-					this.feed = ActivityFeedService.bootstrap(
-						Notification.populate($payload.items),
-						{
-							type: 'Notification',
-							url: `/web/dash/activity/more/${this.tab}`,
-							notificationWatermark: $payload.unreadWatermark,
-						}
-					);
-				}
+				this.setNotificationCount({
+					type: 'activity',
+					count: feedPlayload.activityUnreadCount,
+				});
 			}
 		}
 
-		this.activityUnreadCount = $payload.activityUnreadCount || 0;
-		this.notificationsUnreadCount = $payload.notificationsUnreadCount || 0;
+		this.featuredGames = Game.populate(discoverPayload.games);
+		if (discoverPayload.featuredItem) {
+			this.featuredGames.unshift(new Game(discoverPayload.featuredItem.game));
+		}
 
-		// Since we clear out the notifications on the page let's set the count
-		// as being the opposite of the tab we're on.
-		this.setNotificationCount(
-			this.tab === 'activity' ? this.notificationsUnreadCount : this.activityUnreadCount
-		);
+		this.latestBroadcast = feedPlayload.latestBroadcast
+			? new FiresidePost(feedPlayload.latestBroadcast)
+			: null;
+	}
+
+	loadedNew() {
+		this.setNotificationCount({ type: this.tab, count: 0 });
 	}
 }

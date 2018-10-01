@@ -40,7 +40,7 @@ import { GamePackageEditModal } from '../../../../../../../components/game/packa
 	},
 })
 export default class RouteDashGamesManageGamePackagesList extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState game!: RouteStore['game'];
 
 	packages: GamePackage[] = [];
 	sellables: { [x: number]: Sellable } = {};
@@ -76,7 +76,7 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 	routed($payload: any) {
 		if ($payload.packages && !$payload.packages.length) {
 			if (this.game.hasPerms('all')) {
-				this.$router.push({
+				this.$router.replace({
 					name: 'dash.games.manage.game.packages.add',
 					params: {
 						id: this.game.id + '',

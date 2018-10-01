@@ -1,9 +1,5 @@
 import { Route } from 'vue-router';
 
-export function splitNoSidebar(route: Route) {
-	return getClientSideVariation(route, 'split:no-sidebar') === 2;
-}
-
 function getPayloadVariation(route: Route, payload: any, experiment: string): number {
 	let variation = checkHardcoded(route, experiment);
 	if (variation !== -1) {
@@ -36,7 +32,7 @@ function getClientSideVariation(route: Route, experiment: string): number {
 		variation = 2;
 	}
 
-	window.localStorage[experiment] = variation;
+	window.localStorage.setItem(experiment, variation + '');
 	return variation;
 }
 
@@ -53,8 +49,9 @@ function checkHardcoded(route: Route, experiment: string): number {
 	}
 
 	// Allow you to force an experiment variation permanently through localStorage.
-	if (window.localStorage[experiment]) {
-		return parseInt(window.localStorage[experiment], 10);
+	const experimentId = window.localStorage.getItem(experiment);
+	if (experimentId) {
+		return parseInt(experimentId, 10);
 	}
 
 	return -1;

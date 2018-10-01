@@ -35,12 +35,12 @@ import { AppScoreboardSelector } from '../scoreboard-selector/scoreboard-selecto
 	},
 })
 export class AppScoreOverview extends Vue {
-	@Prop(Game) game: Game;
+	@Prop(Game) game!: Game;
 	@Prop(Object) initialPayload?: any;
 	@Prop({ type: String, default: 'full' })
-	size: 'full' | 'small';
+	size!: 'full' | 'small';
 
-	@State app: AppStore;
+	@State app!: AppStore;
 
 	scoreTables: GameScoreTable[] = [];
 	scoreTable: GameScoreTable | null = null;

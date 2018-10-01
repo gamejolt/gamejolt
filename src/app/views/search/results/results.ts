@@ -1,17 +1,16 @@
-import { Route } from 'vue-router';
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./results.html';
-
-import { Search } from '../../../components/search/search-service';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { AppGameGrid } from '../../../components/game/grid/grid';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { Component, Prop } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+import { AppGameGrid } from '../../../components/game/grid/grid';
+import { Search } from '../../../components/search/search-service';
 
 @View
 @Component({
@@ -26,8 +25,11 @@ import {
 	},
 })
 export default class RouteSearchResults extends BaseRouteComponent {
-	@Prop(Object) payload: any;
-	@Prop(String) query: string;
+	@Prop(Object)
+	payload!: any;
+
+	@Prop(String)
+	query!: string;
 
 	readonly Search = Search;
 	readonly Screen = Screen;

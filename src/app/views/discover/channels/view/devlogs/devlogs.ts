@@ -1,17 +1,16 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./devlogs.html';
-
-import { GameListingContainer } from '../../../../../components/game/listing/listing-container-service';
-import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
-import { GameFilteringContainer } from '../../../../../components/game/filtering/container';
-import { AppGameListing } from '../../../../../components/game/listing/listing';
-import { AppGameGrid } from '../../../../../components/game/grid/grid';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Ads } from '../../../../../../lib/gj-lib-client/components/ad/ads.service';
+import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
+import { GameFilteringContainer } from '../../../../../components/game/filtering/container';
+import { AppGameGrid } from '../../../../../components/game/grid/grid';
+import { AppGameListing } from '../../../../../components/game/listing/listing';
+import { GameListingContainer } from '../../../../../components/game/listing/listing-container-service';
 
 @View
 @Component({
@@ -29,7 +28,8 @@ export default class RouteDiscoverChannelsViewDevlogs extends BaseRouteComponent
 	routeResolve(this: undefined, route: Route) {
 		const filtering = new GameFilteringContainer(route);
 		return Api.sendRequest(
-			`/web/discover/channels/devlogs/${route.params.channel}?` + filtering.getQueryString(route)
+			`/web/discover/channels/devlogs/${route.params.channel}?` +
+				filtering.getQueryString(route)
 		);
 	}
 

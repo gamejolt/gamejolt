@@ -1,46 +1,68 @@
-<div class="status-bar fill-darker clearfix" :class="{ '-is-showing': isShowing }">
-	<!-- <div gj-expand-when="ctrl.isShowing"> -->
+<div
+	class="status-bar fill-darker clearfix"
+	:class="{
+		'-is-showing': isShowing,
+	}"
+	>
 
-	<div
-		class="-item"
-		v-if="numPlaying > 0"
-		>
-		<app-jolticon icon="play" />
-		<translate>Currently Playing:</translate>
-		<strong :title="currentlyPlayingList">
-			{{ currentlyPlayingList }}
-		</strong>
+	<div class="pull-left">
+		<div
+			class="-item"
+			v-if="numPlaying > 0"
+			>
+			<app-jolticon icon="play" />
+			<translate>Currently Playing:</translate>
+			<strong :title="currentlyPlayingList">
+				{{ currentlyPlayingList }}
+			</strong>
+		</div>
+
+		<router-link
+			class="-item link-unstyled"
+			v-if="numPatching > 0"
+			:to="{ name: 'library.installed' }"
+			v-app-tooltip="$gettext( `View Downloads` )"
+			>
+			<translate
+				:translate-n="numPatching || 0"
+				:translate-params="{ count: number( numPatching || 0 ) }"
+				translate-plural="%{ count } Downloads"
+				>
+				%{ count } Download
+			</translate>
+			&nbsp;
+			<div class="-progress">
+				<app-client-status-bar-patch-item
+					v-for="packageId of currentlyPatchingIds"
+					:key="packageId"
+					:package-id="packageId"
+					/>
+			</div>
+		</router-link>
 	</div>
 
-	<router-link
-		class="-item link-unstyled"
-		v-if="numPatching > 0"
-		:to="{ name: 'library.installed' }"
-		v-app-tooltip="$gettext( `View Downloads` )"
-		>
-		<strong>{{ numPatching | number }}</strong>
-		<translate
-			:translate-n="numPatching"
-			translate-plural="Downloads"
-			>
-			Download
-		</translate>
-		&nbsp;
-		<div class="-progress">
-			<app-client-status-bar-patch-item
-				v-for="packageId of currentlyPatchingIds"
-				:key="packageId"
-				:package-id="packageId"
-				/>
+	<div class="pull-right">
+		<div class="-item" v-if="hasUpdate || showUpdaterIssue">
+			<b>
+				<template v-if="hasUpdate">
+					<translate>New Client version available!</translate>
+					<a @click="updateApply()">
+						<translate>Update now</translate>
+					</a>
+				</template>
+				<template v-else>
+					<translate>Uh oh, client has trouble updating!</translate>
+					<a class="-notice" @click="quitClient()">
+						<app-jolticon notice icon="notice" />
+						<translate>Try restarting</translate>
+					</a>
+					&nbsp;
+					<a class="-dismiss" @click="dismissUpdaterWarning()">
+						<app-jolticon class="-dismiss" icon="remove" />
+					</a>
+				</template>
+			</b>
 		</div>
-	</router-link>
-
-	<!--<div class="pull-right">
-		<div class="status-bar-item">
-			Restart Client to apply updates.
-			&nbsp;
-			<button class="btn btn-sm btn-success-outline">Restart Now</button>
-		</div>
-	</div>-->
+	</div>
 
 </div>

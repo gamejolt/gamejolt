@@ -147,6 +147,37 @@
 				<app-friend-request-popover slot="popover" />
 			</app-popper>
 
+			<!-- Chat -->
+			<li v-if="chat" key="chat">
+				<a
+					:class="{ active: isRightPaneVisible }"
+					@click="toggleRightPane"
+					v-app-tooltip.left="
+						app.user
+							? $gettext( `Chat and Friends List (c)` )
+							: $gettext( `Chat (c)` )
+					"
+					v-app-track-event="`top-nav:chat:toggle`"
+					>
+					<span class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
+						v-if="chat.friendNotificationsCount"
+						>
+						{{ chat.friendNotificationsCount }}
+					</span>
+					<app-jolticon icon="user-messages" />
+				</a>
+			</li>
+
+			<!-- Connection Status -->
+			<li v-if="Connection.isOffline" key="offline">
+				<span
+					class="navbar-item disconnected-icon"
+					v-app-tooltip.left="$gettext( `We're having trouble connecting to Game Jolt.` )"
+					>
+					<app-jolticon icon="offline" />
+				</span>
+			</li>
+
 			<!-- User Menu -->
 			<app-popper
 				hide-on-state-change

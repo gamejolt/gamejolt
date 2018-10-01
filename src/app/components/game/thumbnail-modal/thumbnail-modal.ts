@@ -12,7 +12,7 @@ import { BaseModal } from '../../../../lib/gj-lib-client/components/modal/base';
 	},
 })
 export default class AppGameThumbnailModal extends BaseModal {
-	@Prop(Game) game: Game;
+	@Prop(Game) game!: Game;
 
 	// We don't want to close the modal after they've uploaded a thumbnail since they can set a crop
 	// after. We want to auto-close it after they've saved the crop, though.

@@ -1,17 +1,16 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./games.html';
-
-import { AppGameListing } from '../../../../components/game/listing/listing';
-import { AppGameGrid } from '../../../../components/game/grid/grid';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
-import { GameFilteringContainer } from '../../../../components/game/filtering/container';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Ads } from '../../../../../lib/gj-lib-client/components/ad/ads.service';
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { GameFilteringContainer } from '../../../../components/game/filtering/container';
+import { AppGameGrid } from '../../../../components/game/grid/grid';
+import { AppGameListing } from '../../../../components/game/listing/listing';
+import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
 
 @View
 @Component({

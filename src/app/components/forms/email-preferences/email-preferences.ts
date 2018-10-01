@@ -60,7 +60,7 @@ export class FormEmailPreferences extends BaseForm<FormModel>
 			},
 			{
 				key: 'notify_ratings',
-				label: this.$gettext(`When someone rates one of your games.`),
+				label: this.$gettext(`When someone likes one of your games.`),
 			},
 			{
 				key: 'notify_game_follows',

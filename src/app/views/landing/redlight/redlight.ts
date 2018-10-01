@@ -26,7 +26,7 @@ function getRandomInt(min: number, max: number) {
 	},
 })
 export default class RouteLandingRedlight extends BaseRouteComponent {
-	@AppState user: AppStore['user'];
+	@AppState user!: AppStore['user'];
 
 	readonly slogans = [
 		`Drive indie traffic to your AAA games`,

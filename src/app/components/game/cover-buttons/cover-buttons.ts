@@ -22,11 +22,11 @@ import { AppGameCoverButtonsBuildButtons } from './build-buttons';
 	},
 })
 export class AppGameCoverButtons extends Vue {
-	@Prop(Game) game: Game;
-	@Prop(Array) packages: GamePackage[];
-	@Prop(Array) downloadableBuilds: GameBuild[];
-	@Prop(Array) browserBuilds: GameBuild[];
-	@Prop(Array) installableBuilds: GameBuild[];
+	@Prop(Game) game!: Game;
+	@Prop(Array) packages!: GamePackage[];
+	@Prop(Array) downloadableBuilds!: GameBuild[];
+	@Prop(Array) browserBuilds!: GameBuild[];
+	@Prop(Array) installableBuilds!: GameBuild[];
 	@Prop(String) partnerKey?: string;
 	@Prop(User) partner?: User;
 
@@ -108,7 +108,18 @@ export class AppGameCoverButtons extends Vue {
 
 	buy(pkg?: GamePackage, build?: GameBuild) {
 		if (!pkg) {
-			pkg = this.packages.find(item => item._sellable!.id === this.game.sellable.id);
+			if (!this.game.sellable) {
+				return;
+			}
+			const sellableId = this.game.sellable.id;
+
+			pkg = this.packages.find(item => {
+				if (!item._sellable) {
+					return false;
+				}
+
+				return item._sellable.id === sellableId;
+			});
 			if (!pkg) {
 				return;
 			}

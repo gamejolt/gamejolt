@@ -1,26 +1,32 @@
-<app-timeline-list-item is-thread>
-	<span slot="bubble"></span>
+<div class="-container">
+	<div class="-item">
+		<div class="-header">
 
-	<div class="timeline-list-item-title">
-		<span class="placeholder-title"></span>
-	</div>
+			<div class="-header-avatar" />
 
-	<div class="timeline-list-item-meta">
-		<span class="placeholder-time"></span>
-	</div>
+			<div class="-header-content">
+				<div class="-header-byline">
+					<div class="-header-byline-name">
+						<span class="-placeholder-text" style="width: 100px" />
+					</div>
+				</div>
 
-	<div class="timeline-list-item-details">
-		<div>
-			<span class="placeholder-text"></span>
-			<span class="placeholder-text"></span>
-			<span class="placeholder-text" style="width: 40%"></span>
+				<div class="-byline-date">
+					<span class="-placeholder-small" style="width: 75px" />
+				</div>
+			</div>
 		</div>
 
-		<br>
-
-		<div>
-			<app-button-placeholder :sparse="true" :circle="true" />
-			<app-button-placeholder />
+		<div class="fireside-post-lead">
+			<span class="-placeholder-text" />
+			<span class="-placeholder-text" />
+			<span class="-placeholder-text" style="width: 40%" />
 		</div>
+
+		<div class="-controls">
+			<app-button-placeholder sparse circle />
+			<app-button-placeholder sparse circle />
+		</div>
+
 	</div>
-</app-timeline-list-item>
+</div>

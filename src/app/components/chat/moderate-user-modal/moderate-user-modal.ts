@@ -15,10 +15,10 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 	},
 })
 export default class AppChatModerateUserModal extends BaseModal {
-	@Prop(ChatRoom) room: ChatRoom;
-	@Prop(ChatUser) user: ChatUser;
+	@Prop(ChatRoom) room!: ChatRoom;
+	@Prop(ChatUser) user!: ChatUser;
 
-	@State chat: ChatClient;
+	@State chat!: ChatClient;
 
 	get canModerate() {
 		return this.chat.canModerate(this.room, this.user);

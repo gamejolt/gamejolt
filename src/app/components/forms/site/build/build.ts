@@ -25,12 +25,12 @@ export class FormDashSiteBuild extends BaseForm<SiteBuild>
 	resetOnSubmit = true;
 	warnOnDiscard = false;
 
-	@Prop(Site) site: Site;
+	@Prop(Site) site!: Site;
 
 	maxFilesize = 0;
 	progress = 0;
 
-	$refs: {
+	$refs!: {
 		form: AppForm;
 	};
 

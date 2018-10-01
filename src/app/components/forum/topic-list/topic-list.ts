@@ -29,10 +29,10 @@ import { AppUserCardHover } from '../../../../lib/gj-lib-client/components/user/
 	},
 })
 export class AppForumTopicList extends Vue {
-	@Prop(Array) topics: ForumTopic[];
-	@Prop(String) sort: string;
-	@Prop(Boolean) useUpvotes: boolean;
-	@Prop(Number) postCountPerPage: number;
+	@Prop(Array) topics!: ForumTopic[];
+	@Prop(String) sort!: string;
+	@Prop(Boolean) useUpvotes!: boolean;
+	@Prop(Number) postCountPerPage!: number;
 
 	readonly number = number;
 	readonly Screen = Screen;
@@ -42,7 +42,7 @@ export class AppForumTopicList extends Vue {
 			return undefined;
 		}
 
-		const page = Math.ceil(topic.replies_count / this.postCountPerPage);
+		const page = Math.ceil((topic.replies_count || 0) / this.postCountPerPage);
 		if (page === 1) {
 			return undefined;
 		}

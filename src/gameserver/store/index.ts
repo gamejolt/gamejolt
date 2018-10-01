@@ -41,8 +41,8 @@ export type Mutations = AppMutations &
 	},
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
-	app: AppStore;
-	theme: ThemeStore;
+	app!: AppStore;
+	theme!: ThemeStore;
 
 	game: Game | null = null;
 	package: GamePackage | null = null;

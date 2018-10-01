@@ -7,38 +7,10 @@
 				<!--
 					Broadcast
 				-->
-				<template v-if="latestBroadcast">
-					<router-link
-						:to="{
-							name: 'discover.games.view.devlog.view',
-							params: {
-								slug: latestBroadcast.game.slug,
-								id: latestBroadcast.game.id,
-								postSlug: latestBroadcast.slug
-							}
-						}"
-						v-app-track-event="`dash:overview:broadcast-view`"
-						>
-						<app-card>
-							<div class="row">
-								<div class="col-xs-10">
-									<div class="card-title">
-										<h4>{{ latestBroadcast.title }}</h4>
-									</div>
-								</div>
-								<div class="col-xs-2 text-center">
-									<app-jolticon icon="broadcast" big />
-								</div>
-							</div>
-						</app-card>
-					</router-link>
-
-					<!-- <div class="text-right small">
-						<a class="link-muted" :href="Environment.firesideBaseUrl + `/tag/gjbroadcast`" target="_blank" v-app-track-event="`dash:overview:broadcast-all`">
-							<translate>dash.overview.broadcast_view_all</translate>
-						</a>
-					</div> -->
-				</template>
+				<app-broadcast-card
+					v-if="latestBroadcast"
+					:post="latestBroadcast"
+					/>
 
 				<!--
 					Revenue
@@ -486,6 +458,20 @@
 						>
 						<app-jolticon icon="email" />
 						<translate>Email Preferences</translate>
+					</router-link>
+					<router-link
+						class="list-group-item has-icon"
+						:to="{ name: 'dash.account.payment-methods' }"
+						>
+						<app-jolticon icon="credit-card" />
+						<translate>Payment Methods</translate>
+					</router-link>
+					<router-link
+						class="list-group-item has-icon"
+						:to="{ name: 'dash.account.addresses' }"
+						>
+						<app-jolticon icon="world" />
+						<translate>Saved Addresses</translate>
 					</router-link>
 					<router-link
 						class="list-group-item has-icon"

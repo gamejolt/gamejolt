@@ -40,13 +40,13 @@ export class App extends Vue {
 	// 	loadCurrentLanguage(this);
 	// }
 
-	@State game: Game;
-	@State package: GamePackage;
-	@State build: GameBuild;
-	@State embedWidthStyle: Store['embedWidthStyle'];
-	@State embedHeightStyle: Store['embedHeightStyle'];
+	@State game!: Game;
+	@State package!: GamePackage;
+	@State build!: GameBuild;
+	@State embedWidthStyle!: Store['embedWidthStyle'];
+	@State embedHeightStyle!: Store['embedHeightStyle'];
 
-	@Action bootstrap: Store['bootstrap'];
+	@Action bootstrap!: Store['bootstrap'];
 
 	GameBuild = GameBuild;
 

@@ -19,21 +19,6 @@
 		</p>
 
 		<ul>
-
-			<!-- Ratings -->
-			<li v-if="from === 'devlog'">
-				<translate>People will now be able to rate your game (unless you turn it off in your Settings).</translate>
-			</li>
-			<li v-else-if="action === 'wip:complete'">
-				<translate>Your early access ratings will be archived and we will show a separate rating average for your complete game page.</translate>
-			</li>
-			<li v-else-if="action === 'complete:wip'">
-				<translate>Your complete game ratings will be archived and we will show a separate rating average for your early access game page.</translate>
-			</li>
-			<li v-else-if="to === 'devlog'">
-				<translate>Ratings will be disabled for your game. Any ratings you currently have will be archived until you transition back to an early access or complete game page.</translate>
-			</li>
-
 			<!-- Builds -->
 			<li v-if="from === 'devlog'">
 				<translate>Public packages/builds for your game will now be visible to everyone.</translate>

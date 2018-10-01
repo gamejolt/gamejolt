@@ -38,12 +38,12 @@ import {
 	},
 })
 export default class RouteDashGamesManage extends BaseRouteComponent {
-	@AppState user: AppStore['user'];
-	@RouteState game: RouteStore['game'];
-	@RouteState isWizard: RouteStore['isWizard'];
+	@AppState user!: AppStore['user'];
+	@RouteState game!: RouteStore['game'];
+	@RouteState isWizard!: RouteStore['isWizard'];
 
-	@RouteMutation populate: RouteStore['populate'];
-	@ThemeMutation setPageTheme: ThemeStore['setPageTheme'];
+	@RouteMutation populate!: RouteStore['populate'];
+	@ThemeMutation setPageTheme!: ThemeStore['setPageTheme'];
 
 	storeName = RouteStoreName;
 	storeModule = RouteStore;

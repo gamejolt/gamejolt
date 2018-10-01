@@ -21,7 +21,7 @@ import { GameSketchfab } from '../../../../../lib/gj-lib-client/components/game/
 	},
 })
 export default class AppGameMediaItemAddModal extends BaseModal {
-	@Prop(Game) game: Game;
+	@Prop(Game) game!: Game;
 
 	tab: 'image' | 'video' | 'sketchfab' = 'image';
 

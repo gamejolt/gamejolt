@@ -21,9 +21,9 @@ export class FormGameImage extends BaseForm<GameScreenshot> implements FormOnIni
 	modelClass = GameScreenshot;
 	resetOnSubmit = true;
 
-	@Prop(Game) game: Game;
+	@Prop(Game) game!: Game;
 
-	$refs: {
+	$refs!: {
 		form: AppForm;
 	};
 
