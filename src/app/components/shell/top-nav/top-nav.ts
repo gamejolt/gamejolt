@@ -17,10 +17,12 @@ import { AppSearch } from '../../search/search';
 import { Store } from '../../../store/index';
 import { ChatClient } from '../../chat/client';
 import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
+import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
 
 let components: any = {
 	AppJolticon,
 	AppUserAvatarImg,
+	AppPopper,
 	AppShellAccountPopover,
 	AppFriendRequestPopover,
 	AppSearch,
@@ -54,6 +56,7 @@ export class AppShellTopNav extends Vue {
 
 	friendRequestsShowing = false;
 	userMenuShowing = false;
+	moreMenuShowing = false;
 
 	readonly Environment = Environment;
 	readonly Screen = Screen;

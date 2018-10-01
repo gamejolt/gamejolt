@@ -8,17 +8,17 @@ import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/a
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { Store } from '../../../store/index';
-import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppGamePlaylistAddToPopover } from '../add-to-popover/add-to-popover';
+import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
 
 @View
 @Component({
 	components: {
+		AppPopper,
 		AppGamePlaylistAddToPopover,
 	},
 	directives: {
 		AppAuthRequired,
-		AppPopoverTrigger,
 		AppTrackEvent,
 		AppTooltip,
 	},

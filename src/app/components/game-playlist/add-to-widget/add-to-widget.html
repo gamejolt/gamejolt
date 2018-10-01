@@ -1,4 +1,7 @@
-<span>
+<app-popper
+	placement="bottom"
+	:disabled="!app.user"
+	>
 	<app-button
 		v-if="game.status === Game.STATUS_VISIBLE"
 		icon="add"
@@ -6,16 +9,12 @@
 		:overlay="overlay"
 		:circle="circle"
 		v-app-auth-required
-		v-app-popover-trigger="{
-			id: `add-to-playlist-${game.id}`,
-			disabled: !app.user,
-		}"
 		v-app-tooltip.bottom="$gettext( 'Add to Playlist' )"
 		v-app-track-event="`add-to-playlist:widget:${eventLabel || 'any'}`"
-		@click.prevent
 		/>
 
 	<app-game-playlist-add-to-popover
+		slot="popover"
 		:game="game"
 		/>
-</span>
+</app-popper>

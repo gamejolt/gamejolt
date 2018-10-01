@@ -9,29 +9,27 @@ import { AppGameFollowWidget } from '../../../app/components/game/follow-widget/
 import { AppGameModLinks } from '../../../app/components/game/mod-links/mod-links';
 import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
 import { AppGameThumbnailImg } from '../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
-import { AppPopover } from '../../../lib/gj-lib-client/components/popover/popover';
-import { AppPopoverTrigger } from '../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppScrollInview } from '../../../lib/gj-lib-client/components/scroll/inview/inview';
 import { AppUserAvatarImg } from '../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { currency } from '../../../lib/gj-lib-client/vue/filters/currency';
 import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Settings } from '../../settings/settings.service';
+import { AppPopper } from '../../../lib/gj-lib-client/components/popper/popper';
+import { AppUserCardHover } from '../../../lib/gj-lib-client/components/user/card/hover/hover';
 
 @View
 @Component({
 	components: {
 		AppGameThumbnailImg,
 		AppGameCompatIcons,
-		AppPopover,
+		AppPopper,
 		AppGameModLinks,
+		AppUserCardHover,
 		AppUserAvatarImg,
 		AppScrollInview,
 		AppGameFollowWidget,
 		AppGamePlaylistAddToWidget,
-	},
-	directives: {
-		AppPopoverTrigger,
 	},
 })
 export class AppGameThumbnail extends Vue {

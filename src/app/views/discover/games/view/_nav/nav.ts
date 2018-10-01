@@ -5,8 +5,6 @@ import View from '!view!./nav.html';
 
 import { number } from '../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppPopoverTrigger } from '../../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
-import { AppPopover } from '../../../../../../lib/gj-lib-client/components/popover/popover';
 import { Environment } from '../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { RouteState, RouteStore } from '../view.store';
 import { ReportModal } from '../../../../../../lib/gj-lib-client/components/report/modal/modal.service';
@@ -17,17 +15,15 @@ import {
 	CommentStore,
 	CommentState,
 } from '../../../../../../lib/gj-lib-client/components/comment/comment-store';
+import { AppPopper } from '../../../../../../lib/gj-lib-client/components/popper/popper';
 
 @View
 @Component({
 	components: {
+		AppPopper,
 		AppJolticon,
-		AppPopover,
 		AppGamePerms,
 		AppGameModLinks,
-	},
-	directives: {
-		AppPopoverTrigger,
 	},
 	filters: {
 		number,

@@ -17,12 +17,10 @@ import { GameBundle } from '../../../../lib/gj-lib-client/components/game-bundle
 import { AppPageHeader } from '../../../components/page-header/page-header';
 import { AppGameCollectionThumbnail } from '../../../components/game/collection/thumbnail/thumbnail';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppGameCollectionFollowWidget } from '../../../components/game/collection/follow-widget/follow-widget';
 import { store, Store, tillStoreBootstrapped } from '../../../store/index';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
@@ -39,6 +37,7 @@ import {
 	ThemeStore,
 } from '../../../../lib/gj-lib-client/components/theme/theme.store';
 import { Jam } from '../../../../lib/gj-lib-client/components/jam/jam.model';
+import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
 
 const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
 const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
@@ -50,7 +49,7 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 		AppPageHeader,
 		AppGameCollectionThumbnail,
 		AppJolticon,
-		AppPopover,
+		AppPopper,
 		AppGameListing,
 		AppGameGrid,
 		AppGameCollectionFollowWidget,
@@ -60,7 +59,6 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 	directives: {
 		AppTooltip,
 		AppAuthRequired,
-		AppPopoverTrigger,
 	},
 	filters: {
 		number,

@@ -22,8 +22,6 @@ import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppScrollTo } from '../../../../../lib/gj-lib-client/components/scroll/to/to.directive';
-import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
-import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/popover';
 import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppWidgetCompiler } from '../../../../../lib/gj-lib-client/components/widget-compiler/widget-compiler';
@@ -40,6 +38,7 @@ import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppPopper } from '../../../../../lib/gj-lib-client/components/popper/popper';
 
 @View
 @Component({
@@ -50,7 +49,7 @@ import {
 		AppUserAvatar,
 		AppForumBreadcrumbs,
 		AppTimeAgo,
-		AppPopover,
+		AppPopper,
 		AppFadeCollapse,
 		AppWidgetCompiler,
 		AppForumPostList,
@@ -64,7 +63,6 @@ import {
 	directives: {
 		AppTooltip,
 		AppScrollTo,
-		AppPopoverTrigger,
 		AppTrackEvent,
 	},
 	filters: {

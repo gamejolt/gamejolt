@@ -11,14 +11,13 @@ import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytic
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { Store } from '../../../store/index';
 import { AppUserFollowWidget } from '../../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
-import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
-import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
+import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
 
 @View
 @Component({
 	components: {
 		AppUserFollowWidget,
-		AppPopover,
+		AppPopper,
 	},
 	directives: {
 		AppAuthRequired,
@@ -39,6 +38,7 @@ export class AppGameFollowWidget extends Vue {
 	@State app: Store['app'];
 
 	isProcessing = false;
+	isShowingFollowPopover = false;
 
 	get shouldShowFollow() {
 		return (
@@ -48,10 +48,6 @@ export class AppGameFollowWidget extends Vue {
 
 	get widgetId() {
 		return `game-follow-widget-${this.game.id}`;
-	}
-
-	get popoverId() {
-		return `game-follow-widget-user-follow-${this.game.id}`;
 	}
 
 	get badge() {
@@ -91,11 +87,12 @@ export class AppGameFollowWidget extends Vue {
 			}
 
 			if (this.showUserFollow && !this.game.developer.is_following) {
-				const popover = Popover.getPopover(this.popoverId);
-				if (popover) {
-					await this.$nextTick();
-					popover.show(this.$el);
-				}
+				this.isShowingFollowPopover = true;
+				// const popover = Popover.getPopover(this.popoverId);
+				// if (popover) {
+				// 	await this.$nextTick();
+				// 	popover.show(this.$el);
+				// }
 			}
 		} else {
 			try {

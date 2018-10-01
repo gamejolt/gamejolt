@@ -4,19 +4,17 @@ import View from '!view!./history.html?style=./history.styl';
 
 import { SearchHistory } from './history-service';
 import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
-import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
+import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
 
 @View
 @Component({
 	components: {
 		AppJolticon,
-		AppPopover,
+		AppPopper,
 	},
 	directives: {
-		AppPopoverTrigger,
 		AppTrackEvent,
 	},
 })

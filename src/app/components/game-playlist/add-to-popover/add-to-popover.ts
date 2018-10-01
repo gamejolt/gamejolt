@@ -39,7 +39,7 @@ export class AppGamePlaylistAddToPopover extends Vue {
 	playlists: GamePlaylist[] = [];
 	playlistsWithGame: number[] = [];
 
-	isShown = false;
+	// isShown = false;
 	isLoading = true;
 	filterQuery = '';
 
@@ -49,16 +49,22 @@ export class AppGamePlaylistAddToPopover extends Vue {
 			.sort((a, b) => stringSort(a.name, b.name));
 	}
 
-	onFocus() {
-		this.isShown = true;
+	mounted() {
+		// this.isShown = true;
 		this.fetchPlaylists();
-
 		Analytics.trackEvent('add-to-playlist', 'open');
 	}
 
-	onBlur() {
-		this.isShown = false;
-	}
+	// onFocus() {
+	// 	this.isShown = true;
+	// 	this.fetchPlaylists();
+
+	// 	Analytics.trackEvent('add-to-playlist', 'open');
+	// }
+
+	// onBlur() {
+	// 	this.isShown = false;
+	// }
 
 	close() {
 		Popover.hideAll();

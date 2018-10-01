@@ -5,21 +5,20 @@ import View from '!view!./widget.html?style=./widget.styl';
 
 import { GameFilteringContainer } from './container';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
-import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { Store } from '../../../store/index';
+import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
+import { Translate } from '../../../../lib/gj-lib-client/components/translate/translate.service';
 
 @View
 @Component({
 	components: {
-		AppPopover,
+		AppPopper,
 		AppJolticon,
 	},
 	directives: {
-		AppPopoverTrigger,
 		AppTrackEvent,
 	},
 	filters: {
@@ -31,18 +30,26 @@ export class AppGameFilteringWidget extends Vue {
 
 	@State app: Store['app'];
 
-	GameFilteringContainer = GameFilteringContainer;
+	// GameFilteringContainer = GameFilteringContainer;
 
 	hovered: any = {};
 
-	orderedFilters: any = {
-		price: ['free', 'sale', 'paid', '5-less', '15-less', '30-less'],
-		os: ['windows', 'mac', 'linux', 'other', 'rom'],
-		browser: ['html', 'flash', 'unity', 'applet', 'silverlight'],
-		maturity: ['everyone', 'teen', 'adult'],
-		status: ['complete', 'wip'],
-		partners: ['partners'],
-	};
+	get filters() {
+		return ['price', 'os', 'browser', 'maturity', 'status', 'partners'];
+	}
+
+	get definitions() {
+		return GameFilteringContainer.definitions;
+	}
+
+	// orderedFilters: any = {
+	// 	price: ['free', 'sale', 'paid', '5-less', '15-less', '30-less'],
+	// 	os: ['windows', 'mac', 'linux', 'other', 'rom'],
+	// 	browser: ['html', 'flash', 'unity', 'applet', 'silverlight'],
+	// 	maturity: ['everyone', 'teen', 'adult'],
+	// 	status: ['complete', 'wip'],
+	// 	partners: ['partners'],
+	// };
 
 	onMouseover(filter: string, option: any) {
 		this.$set(this.hovered, filter, option);

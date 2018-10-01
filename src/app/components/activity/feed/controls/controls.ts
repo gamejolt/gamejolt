@@ -10,8 +10,6 @@ import { Environment } from '../../../../../lib/gj-lib-client/components/environ
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
-import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/popover';
 import { AppGameFollowWidget } from '../../../game/follow-widget/follow-widget';
 import { AppFiresidePostLikeWidget } from '../../../../../lib/gj-lib-client/components/fireside/post/like/widget/widget';
 import { AppSocialTwitterShare } from '../../../../../lib/gj-lib-client/components/social/twitter/share/share';
@@ -30,12 +28,13 @@ import {
 	CommentMutation,
 	CommentStoreModel,
 } from '../../../../../lib/gj-lib-client/components/comment/comment-store';
+import { AppPopper } from '../../../../../lib/gj-lib-client/components/popper/popper';
 
 @View
 @Component({
 	components: {
+		AppPopper,
 		AppJolticon,
-		AppPopover,
 		AppGameFollowWidget,
 		AppCommentWidgetAdd: FormCommentLazy,
 		AppCommentWidget: AppCommentWidgetLazy,
@@ -46,7 +45,6 @@ import {
 	},
 	directives: {
 		AppTooltip,
-		AppPopoverTrigger,
 	},
 	filters: {
 		number,
@@ -78,13 +76,6 @@ export class AppActivityFeedControls extends Vue {
 
 	get hasDevlogsPerms() {
 		return this.game && this.game.hasPerms('devlogs');
-	}
-
-	get sharePopoverId() {
-		if (!this.post) {
-			return '';
-		}
-		return `activity-feed-share-${this.inModal ? 'modal' : 'no-modal'}-${this.post.id}`;
 	}
 
 	get shareUrl() {

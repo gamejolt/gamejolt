@@ -10,12 +10,14 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppForumTopicUpvoteWidget } from '../topic/upvote-widget/upvote-widget';
+import { AppUserCardHover } from '../../../../lib/gj-lib-client/components/user/card/hover/hover';
 
 @View
 @Component({
 	components: {
 		AppJolticon,
 		AppTimeAgo,
+		AppUserCardHover,
 		AppUserAvatar,
 		AppForumTopicUpvoteWidget,
 	},

@@ -24,6 +24,7 @@ import { CommentVideoModal } from '../../../../../lib/gj-lib-client/components/c
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppUserAvatarImg } from '../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { AppPollVoting } from '../../../poll/voting/voting';
+import { AppUserCardHover } from '../../../../../lib/gj-lib-client/components/user/card/hover/hover';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
@@ -42,6 +43,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppActivityFeedDevlogPostVideo,
 		AppActivityFeedControls,
 		AppPollVoting,
+		AppUserCardHover,
 	},
 	filters: {
 		number,

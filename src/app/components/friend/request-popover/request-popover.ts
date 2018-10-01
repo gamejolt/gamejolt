@@ -2,7 +2,6 @@ import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import View from '!view!./request-popover.html';
 
-import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { UserFriendship } from '../../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { UserFriendshipHelper } from '../../user/friendships-helper/friendship-helper.service';
@@ -11,13 +10,13 @@ import { Mutation } from 'vuex-class/lib/bindings';
 import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppFriendRequestPopoverItem } from './item/item';
 import { AppScrollInviewParent } from '../../../../lib/gj-lib-client/components/scroll/inview/parent';
+import { findRequiredVueParent } from '../../../../lib/gj-lib-client/utils/vue';
 
 type Tab = 'requests' | 'pending';
 
 @View
 @Component({
 	components: {
-		AppPopover,
 		AppLoading,
 		AppFriendRequestPopoverItem,
 	},
@@ -26,7 +25,6 @@ export class AppFriendRequestPopover extends Vue {
 	@Mutation setFriendRequestCount: Store['setFriendRequestCount'];
 	@AppState user: AppStore['user'];
 
-	isShown = false;
 	isLoading = true;
 
 	activeTab: Tab = 'requests';
@@ -45,35 +43,18 @@ export class AppFriendRequestPopover extends Vue {
 	 */
 	@Watch('requests')
 	onRequestsChange() {
-		if (this.inviewParent) {
-			this.inviewParent.container.queueCheck();
-		}
+		this.inviewParent.container.queueCheck();
 	}
 
-	onFocus() {
-		this.isShown = true;
+	mounted() {
 		this.fetchRequests();
-		this.$emit('focused');
-	}
-
-	onBlur() {
-		this.isShown = false;
-		this.$emit('blurred');
-	}
-
-	private setCount(count: number) {
-		this.setFriendRequestCount(count);
-	}
-
-	async fetchCount() {
-		const response = await UserFriendship.fetchCount();
-		this.setCount(response.requestCount);
+		this.inviewParent = findRequiredVueParent(this, AppScrollInviewParent);
 	}
 
 	async fetchRequests() {
 		const { requests, pending } = await UserFriendship.fetchRequests();
 		this.incoming = requests;
-		this.setCount(this.incoming.length);
+		this.setFriendRequestCount(this.incoming.length);
 		this.outgoing = pending;
 		this.isLoading = false;
 	}
@@ -107,7 +88,7 @@ export class AppFriendRequestPopover extends Vue {
 			this.incoming.splice(index, 1);
 		}
 
-		this.setCount(this.incoming.length);
+		this.setFriendRequestCount(this.incoming.length);
 
 		if (this.activeTab === 'pending' && !this.outgoing.length) {
 			this.setActiveTab('requests');

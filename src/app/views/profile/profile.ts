@@ -12,8 +12,6 @@ import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/
 import { AppTimeAgo } from '../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppTooltip } from '../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppUserAvatar } from '../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { AppPopover } from '../../../lib/gj-lib-client/components/popover/popover';
-import { AppPopoverTrigger } from '../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppUserDogtag } from '../../components/user/dogtag/dogtag';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
@@ -29,6 +27,7 @@ import {
 	RouteResolve,
 } from '../../../lib/gj-lib-client/components/route/route-component';
 import { ThemeMutation, ThemeStore } from '../../../lib/gj-lib-client/components/theme/theme.store';
+import { AppPopper } from '../../../lib/gj-lib-client/components/popper/popper';
 
 @View
 @Component({
@@ -39,12 +38,11 @@ import { ThemeMutation, ThemeStore } from '../../../lib/gj-lib-client/components
 		AppTimeAgo,
 		AppUserAvatar,
 		AppUserDogtag,
-		AppPopover,
+		AppPopper,
 		AppUserFollowWidget,
 	},
 	directives: {
 		AppTooltip,
-		AppPopoverTrigger,
 	},
 })
 export default class RouteProfile extends BaseRouteComponent {

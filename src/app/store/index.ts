@@ -1,48 +1,29 @@
 import { Route } from 'vue-router';
 import { sync } from 'vuex-router-sync';
-
-import { Settings } from '../../_common/settings/settings.service';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
 import { AppBackdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop';
 import { Backdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop.service';
+import { CommentActions, CommentMutations, CommentStore } from '../../lib/gj-lib-client/components/comment/comment-store';
+import { Connection } from '../../lib/gj-lib-client/components/connection/connection-service';
+import { ContentFocus } from '../../lib/gj-lib-client/components/content-focus/content-focus.service';
 import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
 import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service';
+import { ThemeActions, ThemeMutations, ThemeStore } from '../../lib/gj-lib-client/components/theme/theme.store';
 import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
-import {
-	VuexAction,
-	VuexModule,
-	VuexMutation,
-	VuexStore,
-} from '../../lib/gj-lib-client/utils/vuex';
-import {
-	Actions as AppActions,
-	AppStore,
-	appStore,
-	Mutations as AppMutations,
-} from '../../lib/gj-lib-client/vue/services/app/app-store';
+import { VuexAction, VuexModule, VuexMutation, VuexStore } from '../../lib/gj-lib-client/utils/vuex';
+import { Actions as AppActions, AppStore, appStore, Mutations as AppMutations } from '../../lib/gj-lib-client/vue/services/app/app-store';
+import { Settings } from '../../_common/settings/settings.service';
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
 import { ChatClient } from '../components/chat/client';
-import { ChatClientLazy } from '../components/lazy';
 import { GridClient } from '../components/grid/client.service';
-import { GridClientLazy } from '../components/lazy';
+import { ChatClientLazy, GridClientLazy } from '../components/lazy';
+import { splitNoSidebar } from '../components/split-test/split-test-service';
 import { router } from '../views';
+import { BannerActions, BannerMutations, BannerStore } from './banner';
 import * as _ClientLibraryMod from './client-library';
 import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
-import { Connection } from '../../lib/gj-lib-client/components/connection/connection-service';
-import { BannerStore, BannerMutations, BannerActions } from './banner';
-import {
-	CommentActions,
-	CommentMutations,
-	CommentStore,
-} from '../../lib/gj-lib-client/components/comment/comment-store';
-import {
-	ThemeActions,
-	ThemeMutations,
-	ThemeStore,
-} from '../../lib/gj-lib-client/components/theme/theme.store';
-import { ContentFocus } from '../../lib/gj-lib-client/components/content-focus/content-focus.service';
-import { splitNoSidebar } from '../components/split-test/split-test-service';
+
 
 export type Actions = AppActions &
 	ThemeActions &
@@ -147,7 +128,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	get hasSidebar() {
-		return Screen.isXs || this.app.user || !splitNoSidebar(this.route);
+		return Screen.isXs || this.app.user || (this.route && !splitNoSidebar(this.route));
 	}
 
 	@VuexAction

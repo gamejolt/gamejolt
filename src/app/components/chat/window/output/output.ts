@@ -10,11 +10,13 @@ import { Screen } from '../../../../../lib/gj-lib-client/components/screen/scree
 import { ChatClient } from '../../client';
 import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { AppChatWindowOutputItem } from './item/item';
+import { AppScrollScroller } from '../../../../../lib/gj-lib-client/components/scroll/scroller/scroller';
 
 @View
 @Component({
 	components: {
 		AppChatWindowOutputItem,
+		AppScrollScroller,
 	},
 	filters: {
 		date,

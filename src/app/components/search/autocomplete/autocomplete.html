@@ -1,11 +1,15 @@
-<app-popover
+<app-popper
+	hide-on-state-change
+	:track-element-width="'#search-input-' + search.id"
+	>
+<!-- <app-popover
 	popover-id="search-autocomplete"
 	position-by="fixed"
 	:append-to-body="true"
 	:track-element-width="'#search-input-' + search.id"
 	:hide-on-state-change="true"
 	:no-max-height="true"
-	>
+	> -->
 
 	<div class="search-autocomplete-popover fill-darkest">
 
@@ -159,4 +163,4 @@
 		</template>
 
 	</div>
-</app-popover>
+</app-popper>

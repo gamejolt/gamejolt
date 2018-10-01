@@ -12,27 +12,33 @@
 					>
 					<translate>Publish</translate>
 				</app-button>
+
 				<app-button
 					@click="showEdit"
 					>
 					<translate>Edit</translate>
 				</app-button>
-				<app-button
-					sparse
-					icon="ellipsis-v"
-					v-app-popover-trigger="`activity-feed-controls-options-${post.id}`"
-					/>
 
-				<app-popover :popover-id="`activity-feed-controls-options-${post.id}`">
-					<div class="list-group list-group-dark">
-						<a class="list-group-item has-icon"
-							@click="removePost"
+				<app-popper>
+					<app-button
+						sparse
+						icon="ellipsis-v"
+						/>
+
+					<!-- <app-popover :popover-id="`activity-feed-controls-options-${post.id}`"> -->
+						<div
+							class="list-group list-group-dark"
+							slot="popover"
 							>
-							<app-jolticon icon="remove" notice />
-							<translate>Remove Post</translate>
-						</a>
-					</div>
-				</app-popover>
+							<a class="list-group-item has-icon"
+								@click="removePost"
+								>
+								<app-jolticon icon="remove" notice />
+								<translate>Remove Post</translate>
+							</a>
+						</div>
+					<!-- </app-popover> -->
+				</app-popper>
 			</span>
 
 			<span class="-manage-stats" v-if="shouldShowStats">
@@ -91,43 +97,51 @@
 				</span>
 			</template>
 
-			<app-button
-				icon="share-airplane"
-				circle
-				v-app-popover-trigger="sharePopoverId"
-				v-app-tooltip="$gettext( 'Share' )"
-				/>
-
-			<app-popover
-				:popover-id="sharePopoverId"
-				:append-to-body="!inModal"
-				@focused="isShowingShare = true"
-				@blurred="isShowingShare = false"
+			<app-popper
+				@show="isShowingShare = true"
+				@hide="isShowingShare = false"
 				>
+				<app-button
+					icon="share-airplane"
+					circle
+					v-app-tooltip="$gettext( 'Share' )"
+					/>
 
-				<div class="well fill-darkest sans-margin" v-if="isShowingShare">
-					<div class="social-widgets" v-if="!GJ_IS_CLIENT">
-						<app-social-twitter-share
-							:url="shareUrl"
-							:content="post.title"
-							/>
+				<!-- <app-popover
+					:popover-id="sharePopoverId"
+					:append-to-body="!inModal"
+					@focused="isShowingShare = true"
+					@blurred="isShowingShare = false"
+					> -->
 
-						<span class="dot-separator"></span>
+					<div
+						v-if="isShowingShare"
+						slot="popover"
+						class="well fill-darkest sans-margin"
+						>
+						<div class="social-widgets" v-if="!GJ_IS_CLIENT">
+							<app-social-twitter-share
+								:url="shareUrl"
+								:content="post.title"
+								/>
 
-						<app-social-facebook-like
-							:url="shareUrl"
-							/>
+							<span class="dot-separator"></span>
+
+							<app-social-facebook-like
+								:url="shareUrl"
+								/>
+						</div>
+
+						<app-button
+							block
+							@click="copyShareUrl"
+							>
+							<translate>Copy Permalink</translate>
+						</app-button>
 					</div>
 
-					<app-button
-						block
-						@click="copyShareUrl"
-						>
-						<translate>Copy Permalink</translate>
-					</app-button>
-				</div>
-
-			</app-popover>
+				<!-- </app-popover> -->
+			</app-popper>
 		</div>
 		<div class="-controls" v-else-if="video">
 			<app-comment-video-like-widget

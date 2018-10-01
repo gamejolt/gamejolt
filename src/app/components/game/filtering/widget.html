@@ -2,7 +2,81 @@
 
 	<nav class="game-filtering-widget-list platform-list inline">
 		<ul>
-			<li>
+			<li v-for="filter of filters" :key="filter">
+				<app-popper>
+					<a v-app-track-event="`game-filtering:tab-${filter}`">
+						{{ definitions[filter].label }}
+						<template v-if="definitions[filter].type === 'radio'">
+							<span class="badge badge-highlight" v-if="filtering.filters[filter]">
+								1
+							</span>
+						</template>
+						<template v-else>
+							<span class="badge badge-highlight" v-if="filtering.filters[filter] && filtering.filters[filter].length > 0">
+								{{ filtering.filters[filter].length | number }}
+							</span>
+						</template>
+
+						<app-jolticon icon="chevron-down" />
+					</a>
+
+					<!-- <app-popover
+						v-for="( options, filter ) of orderedFilters"
+						:key="filter"
+						:popover-id="`games-filter-${filter}`"
+						> -->
+
+						<div
+							class="game-filtering-widget-list-group list-group list-group-dark"
+							slot="popover"
+							>
+							<a
+								class="list-group-item has-addon"
+								v-for="(label, option) of definitions[filter].options"
+								:key="option"
+								:class="filter === 'os' || filter === 'browser' ? 'has-icon' : ''"
+								@click="toggleFilterOption(filter, option)"
+								@mouseover="onMouseover(filter, option)"
+								@mouseout="onMouseout(filter)"
+								>
+
+								<!--
+									Array types get checboxes.
+								-->
+								<div class="list-group-item-addon" v-if="definitions[filter].type === 'array'">
+									<app-jolticon
+										:icon="filtering.isFilterOptionSet(filter, option)
+											? 'checkbox'
+											: 'box-empty'
+										"
+										/>
+								</div>
+
+								<!--
+									Radio types get radio button things.
+								-->
+								<div class="list-group-item-addon" v-if="definitions[filter].type === 'radio'">
+									<app-jolticon
+										:icon="filtering.isFilterOptionSet(filter, option)
+											? (hovered[filter] === option ? 'remove' : 'radio-circle-filled')
+											: 'radio-circle'
+										"
+										/>
+								</div>
+
+								<app-jolticon
+									v-if="filter === 'os' || filter === 'browser'"
+									:icon="getJolticon(filter, option)"
+									/>
+
+								{{ label }}
+
+							</a>
+						</div>
+					<!-- </app-popover> -->
+				</app-popper>
+			</li>
+			<!-- <li>
 				<a v-app-popover-trigger="`games-filter-price`" v-app-track-event="`game-filtering:tab-price`">
 					<translate>Price</translate>
 					<span class="badge badge-highlight" v-if="filtering.filters.price">
@@ -50,69 +124,13 @@
 			<li v-if="app.user && app.user.is_partner">
 				<a v-app-popover-trigger="`games-filter-partners`" v-app-track-event="`game-filtering:tab-partners`">
 					<translate>Partners</translate>
-					<span class="tag tag-highlight">
-						<translate>New</translate>
-					</span>
 					<span class="badge badge-highlight" v-if="filtering.filters.partners.length">
 						{{ filtering.filters.partners.length | number }}
 					</span>
 					<app-jolticon icon="chevron-down" />
 				</a>
-			</li>
+			</li> -->
 		</ul>
 	</nav>
-
-	<app-popover
-		v-for="( options, filter ) of orderedFilters"
-		:key="filter"
-		:popover-id="`games-filter-${filter}`"
-		>
-
-		<div class="game-filtering-widget-list-group list-group list-group-dark">
-
-			<a class="list-group-item has-addon"
-				v-for="option of options"
-				:key="option"
-				:class="filter === 'os' || filter === 'browser' ? 'has-icon' : ''"
-				@click="toggleFilterOption( filter, option )"
-				@mouseover="onMouseover( filter, option )"
-				@mouseout="onMouseout( filter )"
-				>
-
-				<!--
-					Array types get checboxes.
-				-->
-				<div class="list-group-item-addon" v-if="GameFilteringContainer.definitions[ filter ].type === 'array'">
-					<app-jolticon
-						:icon="filtering.isFilterOptionSet( filter, option )
-							? 'checkbox'
-							: 'box-empty'
-						"
-						/>
-				</div>
-
-				<!--
-					Radio types get radio button things.
-				-->
-				<div class="list-group-item-addon" v-if="GameFilteringContainer.definitions[ filter ].type === 'radio'">
-					<app-jolticon
-						:icon="filtering.isFilterOptionSet( filter, option )
-							? (hovered[ filter ] === option ? 'remove' : 'radio-circle-filled')
-							: 'radio-circle'
-						"
-						/>
-				</div>
-
-				<app-jolticon
-					v-if="filter === 'os' || filter === 'browser'"
-					:icon="getJolticon( filter, option )"
-					/>
-
-				{{ GameFilteringContainer.definitions[ filter ].options[ option ] }}
-
-			</a>
-
-		</div>
-	</app-popover>
 
 </div>

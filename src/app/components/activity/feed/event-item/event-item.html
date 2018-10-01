@@ -1,9 +1,10 @@
 <app-timeline-list-item is-thread :is-new="isNew" :is-active="isActive">
 
-	<app-user-avatar-img
-		slot="bubble"
-		:user="user"
-		/>
+	<div slot="bubble">
+		<app-user-card-hover :user="user">
+			<app-user-avatar-img :user="user" />
+		</app-user-card-hover>
+	</div>
 
 	<div class="event-item">
 

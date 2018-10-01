@@ -251,23 +251,25 @@
 				</app-button>
 
 				<!-- More options -->
-				<app-button
-					icon="ellipsis-v"
-					circle
-					v-app-popover-trigger="`collection-options`"
-					/>
+				<app-popper>
+					<app-button
+						icon="ellipsis-v"
+						circle
+						trans
+						/>
 
-				<app-popover popover-id="collection-options">
-					<div class="list-group list-group-dark">
-						<a
-							class="list-group-item has-icon"
-							@click="removePlaylist( collection )"
-							>
-							<app-jolticon icon="remove" notice />
-							<translate>library.collection.remove_playlist_button</translate>
-						</a>
-					</div>
-				</app-popover>
+					<!-- <app-popover popover-id="collection-options"> -->
+						<div slot="popover" class="list-group list-group-dark">
+							<a
+								class="list-group-item has-icon"
+								@click="removePlaylist( collection )"
+								>
+								<app-jolticon icon="remove" notice />
+								<translate>library.collection.remove_playlist_button</translate>
+							</a>
+						</div>
+					<!-- </app-popover> -->
+				</app-popper>
 
 			</template>
 

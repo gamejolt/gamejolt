@@ -10,10 +10,12 @@ import { arrayIndexByFunc } from '../../../../lib/gj-lib-client/utils/array';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ago';
+import { AppUserCardHover } from '../../../../lib/gj-lib-client/components/user/card/hover/hover';
 
 @View
 @Component({
 	components: {
+		AppUserCardHover,
 		AppUserAvatar,
 		AppTimeAgo,
 	},

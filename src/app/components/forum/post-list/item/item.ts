@@ -13,9 +13,7 @@ import { ReportModal } from '../../../../../lib/gj-lib-client/components/report/
 import { Clipboard } from '../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/popover';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { AppWidgetCompiler } from '../../../../../lib/gj-lib-client/components/widget-compiler/widget-compiler';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
@@ -26,6 +24,7 @@ import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scrol
 import { Store } from '../../../../store/index';
 import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components/message-thread/add/add';
 import { AppMessageThread } from '../../../../../lib/gj-lib-client/components/message-thread/message-thread';
+import { AppPopper } from '../../../../../lib/gj-lib-client/components/popper/popper';
 
 @View
 @Component({
@@ -35,17 +34,16 @@ import { AppMessageThread } from '../../../../../lib/gj-lib-client/components/me
 		AppMessageThreadItem,
 		AppMessageThreadAdd,
 		AppJolticon,
-		AppPopover,
 		AppWidgetCompiler,
 		AppExpand,
 		FormForumPost,
+		AppPopper,
 
 		// Since it's recursive it needs to be able to resolve itself.
 		AppForumPostListItem: () => Promise.resolve(AppForumPostListItem),
 	},
 	directives: {
 		AppTooltip,
-		AppPopoverTrigger,
 	},
 	filters: {
 		date,

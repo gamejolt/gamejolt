@@ -1,4 +1,4 @@
-<app-popover
+<!-- <app-popover
 	popover-id="friend-requests"
 	position-by="fixed"
 	:append-to-body="true"
@@ -6,49 +6,49 @@
 	@inview-parent="inviewParent = $event"
 	@focused="onFocus"
 	@blurred="onBlur"
-	>
-	<div class="shell-card-popover fill-dark">
+	> -->
+<div class="shell-card-popover fill-dark">
 
-		<nav class="platform-list inline nav-justified no-animate">
-			<ul>
-				<li>
-					<a
-						:class="{ active: activeTab === 'requests' }"
-						@click="setActiveTab( 'requests' )"
-						>
-						<translate>Friend Requests</translate>
-						<span class="badge">{{ requestsCount }}</span>
-					</a>
-				</li>
-				<li v-if="outgoing.length">
-					<a
-						:class="{ active: activeTab === 'pending' }"
-						@click="setActiveTab( 'pending' )"
-						>
-						<translate>Sent Requests</translate>
-						<span class="badge">{{ outgoing.length }}</span>
-					</a>
-				</li>
-			</ul>
-		</nav>
+	<nav class="platform-list inline nav-justified no-animate">
+		<ul>
+			<li>
+				<a
+					:class="{ active: activeTab === 'requests' }"
+					@click="setActiveTab( 'requests' )"
+					>
+					<translate>Friend Requests</translate>
+					<span class="badge">{{ requestsCount }}</span>
+				</a>
+			</li>
+			<li v-if="outgoing.length">
+				<a
+					:class="{ active: activeTab === 'pending' }"
+					@click="setActiveTab( 'pending' )"
+					>
+					<translate>Sent Requests</translate>
+					<span class="badge">{{ outgoing.length }}</span>
+				</a>
+			</li>
+		</ul>
+	</nav>
 
-		<template v-if="isLoading">
-			<br>
-			<app-loading :centered="true"></app-loading>
-		</template>
-		<template v-else-if="requests.length">
-			<app-friend-request-popover-item
-				v-for="request of requests"
-				:key="request.id"
-				:request="request"
-				@accept="acceptRequest(request)"
-				@reject="rejectRequest(request)"
-				@cancel="cancelRequest(request)"
-				/>
-		</template>
-		<div class="alert" v-else>
-			<translate>No friend requests right now.</translate>
-		</div>
-
+	<template v-if="isLoading">
+		<br>
+		<app-loading :centered="true"></app-loading>
+	</template>
+	<template v-else-if="requests.length">
+		<app-friend-request-popover-item
+			v-for="request of requests"
+			:key="request.id"
+			:request="request"
+			@accept="acceptRequest(request)"
+			@reject="rejectRequest(request)"
+			@cancel="cancelRequest(request)"
+			/>
+	</template>
+	<div class="alert" v-else>
+		<translate>No friend requests right now.</translate>
 	</div>
-</app-popover>
+
+</div>
+<!-- </app-popover> -->

@@ -77,58 +77,64 @@
 
 	<template slot="meta">
 
-		<a class="link-muted"
+		<app-popper
 			v-if="app.user"
-			v-app-popover-trigger="`forum-post-popover-${ id }`"
-			v-app-tooltip="$gettext( 'Options' )"
 			>
-			<app-jolticon icon="ellipsis-v" class="middle" />
-		</a>
+			<a
+				class="link-muted"
+				v-app-tooltip="$gettext( 'Options' )"
+				>
+				<app-jolticon icon="ellipsis-v" class="middle" />
+			</a>
 
-		<app-popover :popover-id="`forum-post-popover-${ id }`" v-if="app.user">
-			<div class="list-group list-group-dark">
-				<a class="list-group-item has-icon"
-					@click="copyPermalink"
+			<!-- <app-popover :popover-id="`forum-post-popover-${ id }`" v-if="app.user"> -->
+				<div
+					slot="popover"
+					class="list-group list-group-dark"
 					>
-					<app-jolticon icon="link" />
-					<translate>Copy Link</translate>
-				</a>
+					<a class="list-group-item has-icon"
+						@click="copyPermalink"
+						>
+						<app-jolticon icon="link" />
+						<translate>Copy Link</translate>
+					</a>
 
-				<a class="list-group-item has-icon"
-					v-if="app.user && post.user_id === app.user.id && !topic.is_locked && !isEditing"
-					@click="edit()"
-					>
-					<app-jolticon icon="edit" />
-					<translate>Edit Post</translate>
-				</a>
-				<a class="list-group-item has-icon"
-					@click="report"
-					>
-					<app-jolticon icon="flag" notice />
-					<translate>Report Post</translate>
-				</a>
-				<template v-if="app.user.permission_level > 0">
-					<a class="list-group-item"
-						:href="Environment.baseUrl + `/moderate/forums/posts/edit/${ post.id }`"
-						target="_blank"
+					<a class="list-group-item has-icon"
+						v-if="app.user && post.user_id === app.user.id && !topic.is_locked && !isEditing"
+						@click="edit()"
 						>
-						<translate>Edit (Mod)</translate>
+						<app-jolticon icon="edit" />
+						<translate>Edit Post</translate>
 					</a>
-					<a class="list-group-item"
-						:href="Environment.baseUrl + `/moderate/forums/posts/remove/${ post.id }`"
-						target="_blank"
+					<a class="list-group-item has-icon"
+						@click="report"
 						>
-						<translate>Remove (Mod)</translate>
+						<app-jolticon icon="flag" notice />
+						<translate>Report Post</translate>
 					</a>
-					<a class="list-group-item"
-						:href="Environment.baseUrl + `/moderate/users/view/${ post.user_id }`"
-						target="_blank"
-						>
-						<translate>Moderate User</translate>
-					</a>
-				</template>
-			</div>
-		</app-popover>
+					<template v-if="app.user.permission_level > 0">
+						<a class="list-group-item"
+							:href="Environment.baseUrl + `/moderate/forums/posts/edit/${ post.id }`"
+							target="_blank"
+							>
+							<translate>Edit (Mod)</translate>
+						</a>
+						<a class="list-group-item"
+							:href="Environment.baseUrl + `/moderate/forums/posts/remove/${ post.id }`"
+							target="_blank"
+							>
+							<translate>Remove (Mod)</translate>
+						</a>
+						<a class="list-group-item"
+							:href="Environment.baseUrl + `/moderate/users/view/${ post.user_id }`"
+							target="_blank"
+							>
+							<translate>Moderate User</translate>
+						</a>
+					</template>
+				</div>
+			<!-- </app-popover> -->
+		</app-popper>
 
 	</template>
 
@@ -152,9 +158,9 @@
 			<translate
 				:translate-n="post.replies_count"
 				:translate-params="{ count: post.replies_count }"
-				translate-plural="+%{ count } replies"
+				translate-plural="%{ count } replies"
 				>
-				+%{ count } reply
+				%{ count } reply
 			</translate>
 		</app-button>
 

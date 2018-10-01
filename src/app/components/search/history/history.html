@@ -1,19 +1,23 @@
-<div>
-	<a class="search-history-icon"
+<app-popper
+	class="search-history"
+	@show="onShow()"
+	@hide="onHide()"
+	>
+	<a
+		class="-icon"
 		:class="{ active: isVisible }"
-		v-app-popover-trigger="`search-history-popover`"
 		v-app-track-event="`search:history:open`"
 		>
 		<app-jolticon icon="search" />
 		<app-jolticon icon="trans-down" class="caret" />
 	</a>
 
-	<app-popover
+	<!-- <app-popover
 		popover-id="search-history-popover"
 		@focused="onShow"
 		@blurred="onHide"
-		>
-		<div class="fill-darkest">
+		> -->
+		<div slot="popover" class="fill-darkest">
 
 			<div class="popover-heading">
 				<translate>search.recent.popover_heading</translate>
@@ -48,5 +52,5 @@
 			</template>
 
 		</div>
-	</app-popover>
-</div>
+	<!-- </app-popover> -->
+</app-popper>

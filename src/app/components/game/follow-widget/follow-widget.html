@@ -1,36 +1,46 @@
-<app-button
-	:id="widgetId"
+<app-popper
 	class="game-follow-widget"
-	primary
-	:icon="icon"
-	:circle="circle"
-	:overlay="overlay"
+	trigger="manual"
+	:show="isShowingFollowPopover"
 	:block="block"
-	:lg="lg"
-	:solid="game.is_following || solid"
-	:badge="badge"
-	:disabled="isProcessing"
-	v-app-auth-required
-	v-app-tooltip="tooltip"
-	v-app-track-event="`game-follow:${eventLabel || 'any'}:${!game.is_following ? 'follow' : 'unfollow'}`"
-	@click="onClick"
+	@hide="isShowingFollowPopover = false"
 	>
-	<template v-if="!circle">
-		<template v-if="!game.is_following">
-			<translate>Follow</translate>
+	<app-button
+		:id="widgetId"
+		primary
+		:icon="icon"
+		:circle="circle"
+		:overlay="overlay"
+		:block="block"
+		:lg="lg"
+		:solid="game.is_following || solid"
+		:badge="badge"
+		:disabled="isProcessing"
+		v-app-auth-required
+		v-app-tooltip="tooltip"
+		v-app-track-event="`game-follow:${eventLabel || 'any'}:${!game.is_following ? 'follow' : 'unfollow'}`"
+		@click="onClick"
+		>
+		<template v-if="!circle">
+			<template v-if="!game.is_following">
+				<translate>Follow</translate>
+			</template>
+			<template v-else>
+				<translate>Following</translate>
+			</template>
 		</template>
-		<template v-else>
-			<translate>Following</translate>
-		</template>
-	</template>
+	</app-button>
 
-	<app-popover
+	<!-- <app-popover
 		v-if="shouldShowFollow"
 		:popover-id="popoverId"
 		:append-to-body="true"
 		:track-element-width="'#' + widgetId"
-		>
-		<div class="well fill-darkest">
+		> -->
+		<div
+			slot="popover"
+			class="well fill-darkest"
+			>
 			<p class="small">
 				<translate>Would you also like to follow this developer? You will get notified when they release new games.</translate>
 			</p>
@@ -40,5 +50,5 @@
 				event-label="game-follow-widget"
 				/>
 		</div>
-	</app-popover>
-</app-button>
+	<!-- </app-popover> -->
+</app-popper>

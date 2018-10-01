@@ -155,13 +155,14 @@
 				The v-for is a hack to make sure we destroy/recreate each time
 				the room changes.
 			-->
-			<app-chat-window-output
-				class="chat-window-output"
-				v-for="room of [ room ]"
-				:key="room.id"
-				:room="room"
-				:messages="messages"
-				/>
+			<div class="chat-window-output">
+				<app-chat-window-output
+					v-for="room of [ room ]"
+					:key="room.id"
+					:room="room"
+					:messages="messages"
+					/>
+			</div>
 
 			<div class="chat-window-send-container" v-if="chat.currentUser">
 				<app-chat-window-send />

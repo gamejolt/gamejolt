@@ -1,10 +1,10 @@
-<app-popover
+<!-- <app-popover
 	:popover-id="`add-to-playlist-${game.id}`"
 	:append-to-body="true"
 	@focused="onFocus"
 	@blurred="onBlur"
-	>
-	<div class="add-to-playlist-popover" v-if="isShown">
+	> -->
+	<div class="add-to-playlist-popover">
 
 		<app-loading :centered="true" v-if="isLoading" />
 		<template v-else>
@@ -41,4 +41,4 @@
 		</template>
 
 	</div>
-</app-popover>
+<!-- </app-popover> -->

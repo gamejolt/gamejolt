@@ -67,39 +67,42 @@
 			</li>
 
 			<li v-if="app.user">
-				<a v-app-popover-trigger="`game-more-options`">
-					<app-jolticon icon="ellipsis-h" />
-				</a>
+				<app-popper>
+					<a>
+						<app-jolticon icon="ellipsis-h" />
+					</a>
+
+					<div
+						slot="popover"
+						class="list-group list-group-dark"
+						>
+						<app-game-perms :game="game">
+							<router-link
+								class="list-group-item has-icon"
+								:to="{
+									name: 'dash.games.manage.game.overview',
+									params: { id: game.id },
+								}"
+								>
+								<app-jolticon icon="cog" />
+								<translate>Manage Game</translate>
+							</router-link>
+						</app-game-perms>
+						<a class="list-group-item has-icon"
+							v-if="app.user && !hasAnyPerms"
+							@click="report"
+							>
+							<app-jolticon icon="flag" notice />
+							<translate>games.view.report_game_button</translate>
+						</a>
+						<app-game-mod-links
+							v-if="shouldShowModTools"
+							:game="game"
+							/>
+					</div>
+				</app-popper>
 			</li>
 		</ul>
 	</nav>
-
-	<app-popover popover-id="game-more-options">
-		<div class="list-group list-group-dark">
-			<app-game-perms :game="game">
-				<router-link
-					class="list-group-item has-icon"
-					:to="{
-						name: 'dash.games.manage.game.overview',
-						params: { id: game.id },
-					}"
-					>
-					<app-jolticon icon="cog" />
-					<translate>Manage Game</translate>
-				</router-link>
-			</app-game-perms>
-			<a class="list-group-item has-icon"
-				v-if="app.user && !hasAnyPerms"
-				@click="report"
-				>
-				<app-jolticon icon="flag" notice />
-				<translate>games.view.report_game_button</translate>
-			</a>
-			<app-game-mod-links
-				v-if="shouldShowModTools"
-				:game="game"
-				/>
-		</div>
-	</app-popover>
 
 </div>
