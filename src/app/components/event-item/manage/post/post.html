@@ -40,16 +40,17 @@
 			>
 			<translate>Edit</translate>
 		</app-button>
-		<app-button
-			sparse
-			circle
-			trans
-			icon="ellipsis-v"
-			v-app-popover-trigger="`activity-feed-controls-options-${post.id}`"
-			/>
 
-		<app-popover :popover-id="`activity-feed-controls-options-${post.id}`">
-			<div class="list-group list-group-dark">
+		<app-popper>
+		<!-- <app-popover :popover-id="`activity-feed-controls-options-${post.id}`"> -->
+			<app-button
+				sparse
+				circle
+				trans
+				icon="ellipsis-v"
+				/>
+
+			<div slot="popover" class="list-group list-group-dark">
 				<a
 					class="list-group-item has-icon"
 					@click.stop="removePost()"
@@ -58,7 +59,7 @@
 					<translate>Remove Post</translate>
 				</a>
 			</div>
-		</app-popover>
+		</app-popper>
 	</div>
 
 </div>
