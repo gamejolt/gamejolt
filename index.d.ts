@@ -4,6 +4,7 @@
 /// <reference path="./src/lib/gj-lib-client/typings/vue.d.ts" />
 /// <reference path="./src/lib/gj-lib-client/typings/vue/tooltip.d.ts" />
 /// <reference path="./src/lib/gj-lib-client/typings/api.d.ts" />
+/// <reference path="./src/lib/gj-lib-client/typings/simplebar.d.ts" />
 
 interface Window {
 	_gjStartTime: number;
