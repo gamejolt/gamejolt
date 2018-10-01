@@ -11,6 +11,8 @@ import { AppLoading } from 'game-jolt-frontend-lib/vue/components/loading/loadin
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { RouteState, RouteStore } from '../profile.store';
+import { Screen } from './../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppUserCardPlaceholder } from './../../../../lib/gj-lib-client/components/user/card/placeholder/placeholder';
 
 export function makeRouteFollowList(routeName: string) {
 	const followType = routeName === 'RouteProfileFollowers' ? 'followers' : 'following';
@@ -30,6 +32,7 @@ export function makeRouteFollowList(routeName: string) {
 		name: routeName,
 		components: {
 			AppUserCard,
+			AppUserCardPlaceholder,
 			AppLoading,
 		},
 		directives: {
@@ -45,8 +48,26 @@ export function makeRouteFollowList(routeName: string) {
 		isLoading = false;
 		reachedEnd = false;
 
+		get placeholderCount() {
+			if (Screen.isXs) {
+				return 1;
+			} else if (Screen.isSm) {
+				return 2;
+			} else if (Screen.isMd) {
+				return 3;
+			}
+			return 4;
+		}
+
 		get followType() {
 			return followType;
+		}
+
+		get followCount() {
+			if (followType === 'followers') {
+				return this.user!.follower_count || 0;
+			}
+			return this.user!.following_count || 0;
 		}
 
 		get routeTitle() {
@@ -62,17 +83,15 @@ export function makeRouteFollowList(routeName: string) {
 		}
 
 		get shouldShowLoadMore() {
-			return this.users.length < this.user!.follower_count && !this.reachedEnd;
+			return this.users.length < this.followCount && !this.reachedEnd;
 		}
 
 		@RouteResolve({ lazy: true, cache: true })
 		routeResolve(this: undefined, route: Route) {
-			console.log('test', getFetchUrl(route));
 			return Api.sendRequest(getFetchUrl(route));
 		}
 
 		routed($payload: any) {
-			console.log('routed?', $payload);
 			this.users = User.populate($payload.users);
 		}
 
