@@ -25,7 +25,13 @@ import { IntentService } from '../../components/intent/intent.service';
 import { AppPageHeader } from '../../components/page-header/page-header';
 import { AppUserDogtag } from '../../components/user/dogtag/dogtag';
 import { Store } from '../../store/index';
-import { RouteMutation, RouteState, RouteStore, RouteStoreName } from './profile.store';
+import {
+	RouteAction,
+	RouteMutation,
+	RouteState,
+	RouteStore,
+	RouteStoreName,
+} from './profile.store';
 
 @View
 @Component({
@@ -78,7 +84,7 @@ export default class RouteProfile extends BaseRouteComponent {
 	@RouteMutation
 	profilePayload!: RouteStore['profilePayload'];
 
-	@RouteMutation
+	@RouteAction
 	removeFriend!: RouteStore['removeFriend'];
 
 	storeName = RouteStoreName;
