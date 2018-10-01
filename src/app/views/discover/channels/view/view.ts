@@ -1,19 +1,18 @@
+import View from '!view!./view.html';
+import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
-import { Component } from 'vue-property-decorator';
-import View from '!view!./view.html';
-
-import { ChannelsViewHelper } from '../channels-view-helper';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
-import { Channels } from '../../../../components/channel/channels-service';
-import { AppPageHeader } from '../../../../components/page-header/page-header';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
+import { Channels } from '../../../../components/channel/channels-service';
+import { AppPageHeader } from '../../../../components/page-header/page-header';
 import { Store } from '../../../../store/index';
+import { ChannelsViewHelper } from '../channels-view-helper';
 
 @View
 @Component({
@@ -23,7 +22,8 @@ import { Store } from '../../../../store/index';
 	},
 })
 export default class RouteDiscoverChannelsView extends BaseRouteComponent {
-	@State route!: Store['route'];
+	@State
+	route!: Store['route'];
 
 	channel = '';
 
@@ -36,7 +36,7 @@ export default class RouteDiscoverChannelsView extends BaseRouteComponent {
 		return info && info.image;
 	}
 
-	@RouteResolve({ cache: true, lazy: true, cacheTag: 'view' })
+	@RouteResolve({ cache: true, lazy: true })
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/discover/channels/' + route.params.channel);
 	}

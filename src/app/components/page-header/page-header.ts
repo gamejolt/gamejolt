@@ -1,35 +1,52 @@
+import View from '!view!./page-header.html?style=./page-header.styl';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./page-header.html?style=./page-header.styl';
-import './page-header-content.styl';
-
-import { AppScrollAffix } from '../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppAutoscrollAnchor } from '../../../lib/gj-lib-client/components/scroll/auto-scroll/anchor';
 import { AppMediaItemCover } from '../../../_common/media-item/cover/cover';
+import './page-header-content.styl';
 
 @View
 @Component({
 	components: {
-		AppScrollAffix,
 		AppAutoscrollAnchor,
 		AppMediaItemCover,
 	},
 })
 export class AppPageHeader extends Vue {
-	@Prop(Object) coverMediaItem?: MediaItem;
-	@Prop(Number) coverMaxHeight?: number;
-	@Prop(Boolean) coverAutoHeight?: boolean;
-	@Prop(Boolean) hideNav?: boolean;
-	@Prop(Boolean) shouldAffixNav?: boolean;
-	@Prop(Boolean) spotlightDark?: boolean;
-	@Prop(Boolean) blurHeader?: boolean;
+	@Prop(Object)
+	coverMediaItem?: MediaItem;
+
+	@Prop(Number)
+	coverMaxHeight?: number;
+
+	@Prop(Boolean)
+	coverAutoHeight?: boolean;
+
+	@Prop(Boolean)
+	hideNav?: boolean;
+
+	@Prop(Boolean)
+	shouldAffixNav?: boolean;
+
+	@Prop(Boolean)
+	spotlightDark?: boolean;
+
+	@Prop(Boolean)
+	blurHeader?: boolean;
+
 	@Prop({ type: String, default: 'col-xs-12' })
 	colClasses?: string;
-	@Prop() autoscrollAnchorKey!: any;
-	@Prop(Boolean) disableAutoscrollAnchor!: any;
-	@Prop(Boolean) showCoverButtons?: boolean;
+
+	@Prop()
+	autoscrollAnchorKey!: any;
+
+	@Prop(Boolean)
+	disableAutoscrollAnchor!: any;
+
+	@Prop(Boolean)
+	showCoverButtons?: boolean;
 
 	readonly Screen = Screen;
 

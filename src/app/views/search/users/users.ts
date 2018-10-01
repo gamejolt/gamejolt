@@ -1,15 +1,14 @@
-import { Route } from 'vue-router';
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./users.html';
-
-import { Search } from '../../../components/search/search-service';
-import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
+import { Component, Prop } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { AppPagination } from '../../../../lib/gj-lib-client/components/pagination/pagination';
-import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
+import { Search } from '../../../components/search/search-service';
 
 @View
 @Component({
@@ -20,7 +19,8 @@ import {
 	},
 })
 export default class RouteSearchUsers extends BaseRouteComponent {
-	@Prop(Object) payload!: any;
+	@Prop(Object)
+	payload!: any;
 
 	readonly Search = Search;
 	readonly Scroll = Scroll;

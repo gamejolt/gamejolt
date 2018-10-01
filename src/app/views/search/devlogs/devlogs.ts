@@ -1,13 +1,12 @@
-import { Route } from 'vue-router';
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./devlogs.html';
-
-import { Search } from '../../../components/search/search-service';
-import { AppGameGrid } from '../../../components/game/grid/grid';
+import { Component, Prop } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { AppGameGrid } from '../../../components/game/grid/grid';
+import { Search } from '../../../components/search/search-service';
 
 @View
 @Component({
@@ -17,7 +16,8 @@ import {
 	},
 })
 export default class RouteSearchDevlogs extends BaseRouteComponent {
-	@Prop(Object) payload!: any;
+	@Prop(Object)
+	payload!: any;
 
 	readonly Search = Search;
 

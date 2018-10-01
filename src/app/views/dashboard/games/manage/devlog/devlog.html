@@ -5,7 +5,7 @@
 				<div class="col-md-8">
 
 					<app-game-perms :game="game" required="devlogs">
-						<app-devlog-post-add-button
+						<app-post-add-button
 							:game="game"
 							@add="onPostAdded"
 							/>
@@ -17,12 +17,10 @@
 								<router-link
 									:to="{
 										name: 'dash.games.manage.devlog',
-										params: {
-											tab: null,
-										},
+										query: {},
 									}"
 									active-class="active"
-									:exact="true"
+									exact
 									>
 									<translate>Posts</translate>
 								</router-link>
@@ -31,12 +29,12 @@
 								<router-link
 									:to="{
 										name: 'dash.games.manage.devlog',
-										params: {
+										query: {
 											tab: 'draft',
 										},
 									}"
 									active-class="active"
-									:exact="true"
+									exact
 									>
 									<translate>Draft Posts</translate>
 								</router-link>
@@ -45,12 +43,12 @@
 								<router-link
 									:to="{
 										name: 'dash.games.manage.devlog',
-										params: {
+										query: {
 											tab: 'scheduled',
 										},
 									}"
 									active-class="active"
-									:exact="true"
+									exact
 									>
 									<translate>Scheduled Posts</translate>
 								</router-link>
@@ -59,28 +57,27 @@
 					</app-nav-tab-list>
 
 					<app-activity-feed
-						v-if="feed.hasItems"
+						v-if="feed && feed.hasItems"
 						:feed="feed"
 						show-edit-controls
-						@postedited="onPostEdited"
-						@postpublished="onPostPublished"
-						@postremoved="onPostRemoved"
+						@edit-post="onPostEdited"
+						@publish-post="onPostPublished"
+						@remove-post="onPostRemoved"
 						/>
 
 					<div class="alert"
 						v-else
 						>
-						<template v-if="_tab === 'active'">
+						<template v-if="tab === 'active'">
 							<p><translate>You haven't published any posts yet.</translate></p>
 						</template>
-						<template v-else-if="_tab === 'draft'">
+						<template v-else-if="tab === 'draft'">
 							<p><translate>You don't have any draft posts.</translate></p>
 						</template>
-						<template v-else-if="_tab === 'scheduled'">
+						<template v-else-if="tab === 'scheduled'">
 							<p><translate>You don't have any scheduled posts.</translate></p>
 						</template>
 					</div>
-
 
 				</div>
 			</div>

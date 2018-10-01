@@ -1,0 +1,28 @@
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div
+				class="col-xs-6 col-sm-3"
+				v-for="follower of users"
+				:key="follower.id"
+				>
+				<app-user-card
+					:user="follower"
+					/>
+				<!-- <app-comment-video-thumbnail :video="video" /> -->
+			</div>
+		</div>
+
+		<div class="page-cut" v-if="shouldShowLoadMore">
+			<app-button
+				trans
+				@click="loadMore"
+				v-app-track-event="`profile-following:more`"
+				>
+				<translate>Load More</translate>
+			</app-button>
+		</div>
+
+	</div>
+</section>

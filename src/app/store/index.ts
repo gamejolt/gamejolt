@@ -1,13 +1,23 @@
 import { Route } from 'vue-router';
 import { sync } from 'vuex-router-sync';
-
-import { Settings } from '../../_common/settings/settings.service';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
 import { AppBackdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop';
 import { Backdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop.service';
+import {
+	CommentActions,
+	CommentMutations,
+	CommentStore,
+} from '../../lib/gj-lib-client/components/comment/comment-store';
+import { Connection } from '../../lib/gj-lib-client/components/connection/connection-service';
+import { ContentFocus } from '../../lib/gj-lib-client/components/content-focus/content-focus.service';
 import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
 import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service';
+import {
+	ThemeActions,
+	ThemeMutations,
+	ThemeStore,
+} from '../../lib/gj-lib-client/components/theme/theme.store';
 import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
 import {
 	VuexAction,
@@ -21,27 +31,15 @@ import {
 	appStore,
 	Mutations as AppMutations,
 } from '../../lib/gj-lib-client/vue/services/app/app-store';
+import { Settings } from '../../_common/settings/settings.service';
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
 import { ChatClient } from '../components/chat/client';
-import { ChatClientLazy } from '../components/lazy';
 import { GridClient } from '../components/grid/client.service';
-import { GridClientLazy } from '../components/lazy';
+import { ChatClientLazy, GridClientLazy } from '../components/lazy';
 import { router } from '../views';
+import { BannerActions, BannerMutations, BannerStore } from './banner';
 import * as _ClientLibraryMod from './client-library';
 import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
-import { Connection } from '../../lib/gj-lib-client/components/connection/connection-service';
-import { BannerStore, BannerMutations, BannerActions } from './banner';
-import {
-	CommentActions,
-	CommentMutations,
-	CommentStore,
-} from '../../lib/gj-lib-client/components/comment/comment-store';
-import {
-	ThemeActions,
-	ThemeMutations,
-	ThemeStore,
-} from '../../lib/gj-lib-client/components/theme/theme.store';
-import { ContentFocus } from '../../lib/gj-lib-client/components/content-focus/content-focus.service';
 
 export type Actions = AppActions &
 	ThemeActions &
@@ -68,8 +66,8 @@ export type Mutations = AppMutations &
 	BannerMutations &
 	CommentMutations &
 	_ClientLibraryMod.Mutations & {
-		setNotificationCount: number;
-		incrementNotificationCount: number;
+		setNotificationCount: { type: UnreadItemType; count: number };
+		incrementNotificationCount: { type: UnreadItemType; count: number };
 		setFriendRequestCount: number;
 		changeFriendRequestCount: number;
 		_setBootstrapped: undefined;
@@ -101,6 +99,9 @@ if (GJ_IS_CLIENT) {
 	modules.clientLibrary = new m.ClientLibraryStore();
 }
 
+// the two types an event notification can assume, either "activity" for the post activity feed or "notifications"
+export type UnreadItemType = 'activity' | 'notifications';
+
 @VuexModule({
 	store: true,
 	modules,
@@ -122,7 +123,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	isBootstrapped = false;
 	isLibraryBootstrapped = false;
 
-	notificationCount = 0;
+	unreadActivityCount = 0; // unread items in the activity feed
+	unreadNotificationsCount = 0; // unread items in the notification feed
 	friendRequestCount = 0;
 
 	isLeftPaneSticky = Settings.get('sidebar') as boolean;
@@ -147,6 +149,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	get hasSidebar() {
 		return Screen.isXs || this.app.user;
+	}
+
+	get notificationCount() {
+		return this.unreadActivityCount + this.unreadNotificationsCount;
 	}
 
 	@VuexAction
@@ -287,13 +293,21 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	incrementNotificationCount(amount: Mutations['incrementNotificationCount']) {
-		this.notificationCount += amount;
+	incrementNotificationCount(payload: Mutations['incrementNotificationCount']) {
+		if (payload.type === 'activity') {
+			this.unreadActivityCount += payload.count;
+		} else {
+			this.unreadNotificationsCount += payload.count;
+		}
 	}
 
 	@VuexMutation
-	setNotificationCount(count: Mutations['setNotificationCount']) {
-		this.notificationCount = count;
+	setNotificationCount(payload: Mutations['setNotificationCount']) {
+		if (payload.type === 'activity') {
+			this.unreadActivityCount = payload.count;
+		} else {
+			this.unreadNotificationsCount = payload.count;
+		}
 	}
 
 	@VuexMutation

@@ -1,23 +1,22 @@
+import View from '!view!./key.html';
+import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
-import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./key.html';
-
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppKeyGame } from './_game/game';
-import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
 import { GameBundle } from '../../../lib/gj-lib-client/components/game-bundle/game-bundle.model';
-import { AppInvalidKey } from '../../components/invalid-key/invalid-key';
-import { AppKeyBundle } from './_bundle/bundle';
-import { ModalConfirm } from '../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
 import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
-import { Store } from '../../store/index';
+import { ModalConfirm } from '../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Navigate } from '../../../lib/gj-lib-client/components/navigate/navigate.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../lib/gj-lib-client/components/route/route-component';
+import { AppInvalidKey } from '../../components/invalid-key/invalid-key';
+import { Store } from '../../store/index';
+import { AppKeyBundle } from './_bundle/bundle';
+import { AppKeyGame } from './_game/game';
 
 @View
 @Component({

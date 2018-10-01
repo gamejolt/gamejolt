@@ -84,7 +84,7 @@ export class AppActivityFeedEventItem extends Vue {
 	}
 
 	get post() {
-		if (this.eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
+		if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
 			return this.eventItem.action as FiresidePost;
 		}
 	}
@@ -112,7 +112,7 @@ export class AppActivityFeedEventItem extends Vue {
 			return (this.eventItem.action as CommentVideo).comment.user;
 		} else if (this.eventItem.type === EventItem.TYPE_GAME_PUBLISH) {
 			return (this.eventItem.action as Game).developer;
-		} else if (this.eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
+		} else if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
 			const post = this.eventItem.action as FiresidePost;
 			if (post.game && post.as_game_owner) {
 				return post.game.developer;
@@ -141,22 +141,27 @@ export class AppActivityFeedEventItem extends Vue {
 				name: 'discover.games.view.overview',
 				params: params,
 			};
-		}
-
-		if (this.eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
+		} else if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
+			// TODO(userposts)
 			const post = this.post!;
-			const game = this.game!;
-
-			const params: { [key: string]: string } = {
-				slug: game.slug,
-				id: game.id + '',
-				postSlug: post.slug,
-			};
-
-			return {
-				name: 'discover.games.view.devlog.view',
-				params: params,
-			};
+			if (this.game) {
+				return {
+					name: 'discover.games.view.devlog.view',
+					params: {
+						slug: this.game.slug,
+						id: this.game.id + '',
+						postSlug: post.slug,
+					},
+				};
+			} else {
+				return {
+					name: 'profile.post.view',
+					params: {
+						username: post.user.username,
+						slug: post.slug,
+					},
+				};
+			}
 		}
 
 		return null;

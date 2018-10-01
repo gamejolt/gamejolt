@@ -95,8 +95,8 @@
 				<translate>Music</translate>
 			</router-link>
 		</app-game-perms>
-		<app-game-perms 
-			tag="li" 
+		<app-game-perms
+			tag="li"
 			required="all"
 			v-if="!isWizard">
 			<router-link
@@ -109,7 +109,7 @@
 				<translate>Linked Accounts</translate>
 			</router-link>
 		</app-game-perms>
-		<app-game-perms tag="li" required="all">
+		<app-game-perms tag="li">
 			<router-link
 				:to="{
 					name: 'dash.games.manage.game.settings',
