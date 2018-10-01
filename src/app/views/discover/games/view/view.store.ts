@@ -185,7 +185,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexMutation
 	bootstrapGame(gameId: Mutations['bootstrapGame']) {
-		this.game = Registry.find<Game>('Game', gameId) as any;
+		this.game = Registry.find<Game>('Game', i => i.id === gameId) as any;
 		this.showDetails = false;
 		this.isOverviewLoaded = false;
 		this.recommendedGames = [];

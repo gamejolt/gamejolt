@@ -62,7 +62,7 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		CommentModal.checkPermalink(this.$router);
 
 		const hash = FiresidePost.pullHashFromUrl(this.postSlug);
-		this.post = Registry.find<FiresidePost>('FiresidePost', hash, 'hash');
+		this.post = Registry.find<FiresidePost>('FiresidePost', i => i.hash === hash);
 	}
 
 	routed($payload: any) {
