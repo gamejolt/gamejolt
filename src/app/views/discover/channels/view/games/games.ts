@@ -28,7 +28,7 @@ export default class RouteDiscoverChannelsViewGames extends BaseRouteComponent {
 	filtering: GameFilteringContainer | null = null;
 	listing: GameListingContainer | null = null;
 
-	@RouteResolve({ cache: true, reloadOnQueryChange: true })
+	@RouteResolve({ cache: true })
 	async routeResolve(this: undefined, route: Route) {
 		const location = checkGameFilteringRoute(route);
 		if (location) {

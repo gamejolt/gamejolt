@@ -7,10 +7,7 @@ import { GameScoreTable } from '../../../../../../../lib/gj-lib-client/component
 import { AppLoadingFade } from '../../../../../../../lib/gj-lib-client/components/loading/fade/fade';
 import { AppNavTabList } from '../../../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import { Popover } from '../../../../../../../lib/gj-lib-client/components/popover/popover.service';
-import {
-	BaseRouteComponent,
-	RouteResolve,
-} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { BaseRouteComponent, RouteResolve } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppScrollAffix } from '../../../../../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { AppNoAutoscroll } from '../../../../../../../lib/gj-lib-client/components/scroll/auto-scroll/no-autoscroll.directive.vue';
@@ -64,7 +61,7 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 		return this.scores.filter((_score, i) => i % 2 === 1);
 	}
 
-	@RouteResolve({ cache: true, reloadOnQueryChange: true })
+	@RouteResolve({ cache: true })
 	routeResolve(this: undefined, route: Route) {
 		let query = '';
 		if (parseInt(route.query.page, 10) > 1) {

@@ -23,7 +23,7 @@ import { GameListingContainer } from '../../../../components/game/listing/listin
 export default class RouteDiscoverDevlogsGames extends BaseRouteComponent {
 	listing: GameListingContainer | null = null;
 
-	@RouteResolve({ cache: true, reloadOnQueryChange: true })
+	@RouteResolve({ cache: true })
 	routeResolve(this: undefined, route: Route) {
 		const filteringContainer = new GameFilteringContainer(route);
 		return Api.sendRequest(

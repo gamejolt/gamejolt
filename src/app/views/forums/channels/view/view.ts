@@ -7,10 +7,7 @@ import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
 import { AppNavTabList } from '../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import { AppPagination } from '../../../../../lib/gj-lib-client/components/pagination/pagination';
-import {
-	BaseRouteComponent,
-	RouteResolve,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { BaseRouteComponent, RouteResolve } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
@@ -51,7 +48,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 	readonly Scroll = Scroll;
 	readonly Screen = Screen;
 
-	@RouteResolve({ cache: true, reloadOnQueryChange: true })
+	@RouteResolve({ cache: true })
 	routeResolve(this: undefined, route: Route) {
 		const sort = route.params.sort || 'active';
 		return Api.sendRequest(

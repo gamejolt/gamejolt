@@ -50,7 +50,7 @@ export default class RouteKey extends BaseRouteComponent {
 		return AppKeyGame;
 	}
 
-	@RouteResolve({ cache: true, reloadOnQueryChange: true })
+	@RouteResolve({ cache: true })
 	routeResolve(this: undefined, route: Route) {
 		let url = '/claim/view/' + route.params.accessKey;
 

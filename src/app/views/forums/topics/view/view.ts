@@ -106,7 +106,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 		return this.topic.can_upvote && !this.topic.is_locked;
 	}
 
-	@RouteResolve({ cache: true, reloadOnQueryChange: true })
+	@RouteResolve({ cache: true })
 	async routeResolve(this: undefined, route: Route) {
 		HistoryTick.sendBeacon('forum-topic', parseInt(route.params.id, 10));
 
