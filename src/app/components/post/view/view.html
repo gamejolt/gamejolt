@@ -61,6 +61,7 @@
 						<app-time-ago
 							v-if="post.isActive"
 							:date="post.published_on"
+							strict
 							/>
 						<template v-else-if="post.isScheduled">
 							<span
@@ -70,7 +71,11 @@
 								<app-jolticon icon="calendar-grid" />
 								<translate>Scheduled</translate>
 							</span>
-							<app-time-ago :date="post.scheduled_for" without-suffix />
+							<app-time-ago
+								:date="post.scheduled_for"
+								strict
+								without-suffix
+								/>
 						</template>
 						<span
 							v-else-if="post.isDraft"
