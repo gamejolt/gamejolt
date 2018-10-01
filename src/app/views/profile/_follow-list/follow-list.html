@@ -1,0 +1,45 @@
+<section class="section">
+	<div class="container">
+
+		<div class="alert alert-info" v-if="routeBootstrapped && users.length === 0">
+			<translate v-if="followType === 'following'">
+				This person isn't following anyone yet.
+			</translate>
+			<translate v-else-if="followType === 'followers'">
+				No one is following this person yet.
+			</translate>
+		</div>
+
+		<div class="row">
+			<div
+				class="col-sm-6 col-md-4 col-lg-3"
+				v-for="_user of users"
+				:key="_user.id"
+				>
+				<app-user-card
+					:user="_user"
+					:posts="1"
+					:games="1"
+					:videos="2"
+					/>
+			</div>
+		</div>
+
+		<template v-if="routeBootstrapped && users.length > 0">
+			<app-loading
+				v-if="isLoading"
+				centered
+				/>
+			<div class="page-cut" v-else-if="shouldShowLoadMore">
+				<app-button
+					trans
+					@click="loadMore()"
+					v-app-track-event="`profile-followers:more`"
+					>
+					<translate>Load More</translate>
+				</app-button>
+			</div>
+		</template>
+
+	</div>
+</section>
