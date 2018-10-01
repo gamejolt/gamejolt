@@ -88,6 +88,12 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexMutation
 	bootstrapUser(username: Mutations['bootstrapUser']) {
 		this.user = Registry.find<User>('User', i => i.username === username);
+		this.headerMediaItem = (this.user && this.user.header_media_item) || null;
+		this.gamesCount = 0;
+		this.isOnline = false;
+		this.libraryGamesCount = 0;
+		this.videosCount = 0;
+		this.userFriendship = null;
 	}
 
 	@VuexMutation
