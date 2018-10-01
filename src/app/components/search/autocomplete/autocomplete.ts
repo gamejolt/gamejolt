@@ -10,19 +10,18 @@ import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/an
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
-import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { fuzzysearch } from '../../../../lib/gj-lib-client/utils/string';
 import { findRequiredVueParent } from '../../../../lib/gj-lib-client/utils/vue';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import * as _LocalDbGameMod from '../../client/local-db/game/game.model';
 import { AppGameCompatIcons } from '../../game/compat-icons/compat-icons';
 import { SearchHistory } from '../history/history-service';
 import { AppSearch } from '../search';
 import { Search } from '../search-service';
+import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
 
 let LocalDbGameMod: typeof _LocalDbGameMod | undefined;
 if (GJ_IS_CLIENT) {
@@ -46,8 +45,7 @@ interface Command {
 @View
 @Component({
 	components: {
-		AppPopover,
-		AppJolticon,
+		AppPopper,
 		AppGameThumbnailImg,
 		AppGameCompatIcons,
 	},
