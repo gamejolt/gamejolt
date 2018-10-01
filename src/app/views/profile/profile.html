@@ -84,7 +84,7 @@
 			<nav class="platform-list inline">
 				<ul>
 					<li>
-						<router-link :to="{ name: 'profile.overview' }" active-class="active" exact>
+						<router-link :to="{ name: 'profile.overview' }" :class="{ active: $route.name === 'profile.overview' }">
 							<translate>profile.overview_tab</translate>
 						</router-link>
 					</li>
