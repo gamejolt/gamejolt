@@ -4,5 +4,6 @@ export const routeProfileFollowers: RouteConfig = {
 	name: 'profile.followers',
 	path: 'followers',
 	props: true,
-	component: () => import(/* webpackChunkName: "routeProfileFollowers" */ './followers'),
+	// Put all the "follow" routes in same chunk.
+	component: () => import(/* webpackChunkName: "routeProfileFollowList" */ './followers'),
 };
