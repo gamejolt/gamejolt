@@ -50,6 +50,7 @@ export class ActivityFeedContainer {
 	isLoadingMore = false;
 	isLoadingNew = false;
 	timesLoaded = 0;
+	totalTimesLoaded = 0;
 	private loadMoreUrl: string;
 
 	get hasItems() {
@@ -158,6 +159,7 @@ export class ActivityFeedContainer {
 
 		this.isLoadingMore = true;
 		++this.timesLoaded;
+		++this.totalTimesLoaded;
 
 		const lastFeedItem = this.items[this.items.length - 1];
 
@@ -180,7 +182,7 @@ export class ActivityFeedContainer {
 			this.append(EventItem.populate(response.items));
 		}
 
-		Analytics.trackEvent('activity-feed', 'loaded-more', 'page-' + this.timesLoaded);
+		Analytics.trackEvent('activity-feed', 'loaded-more', 'page-' + this.totalTimesLoaded);
 	}
 
 	async loadNew(clearOld: boolean) {

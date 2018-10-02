@@ -72,6 +72,8 @@ export class AppActivityFeed extends Vue {
 	private scroll!: number;
 	private scroll$: Subscription | undefined;
 
+	readonly number = number;
+
 	@Emit('edit-post')
 	emitEditPost(_eventItem: EventItem) {}
 
@@ -86,8 +88,6 @@ export class AppActivityFeed extends Vue {
 
 	@Emit('load-more')
 	emitLoadMore() {}
-
-	readonly number = number;
 
 	mounted() {
 		this.scroll$ = Scroll.watcher.changes.sampleTime(ScrollSampleTime).subscribe(() => {
@@ -181,6 +181,11 @@ export class AppActivityFeed extends Vue {
 	onPostRemoved(eventItem: EventItem) {
 		this.feed.remove(eventItem);
 		this.emitRemovePost(eventItem);
+	}
+
+	loadMoreButton() {
+		this.feed.timesLoaded = 0;
+		this.loadMore();
 	}
 
 	loadMore() {
