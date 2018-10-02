@@ -20,7 +20,7 @@
 		</div>
 	</div>
 
-	<div class="-button">
+	<div class="-button" v-if="user.id !== app.user.id">
 		<!-- Gotta prevent default so that the router-link doesn't go to the user page. -->
 		<app-user-follow-widget
 			@click.native.capture="$event.preventDefault()"
