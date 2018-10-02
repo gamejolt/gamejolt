@@ -12,13 +12,13 @@
 			<app-user-avatar
 				class="-header-avatar"
 				:user="user"
+				show-hover-card
 				@click.native.stop
 				/>
 
 			<div class="-header-content">
 				<div class="-header-byline">
 					<div class="-header-byline-game" v-if="game && feed.showGameInfo">
-					<!-- <div class="-header-byline-game" v-if="game"> -->
 						<strong class="text-muted">
 							<router-link :to="gameUrl" class="link-unstyled">
 								{{ game.title }}
@@ -57,6 +57,7 @@
 					<app-activity-feed-event-item-time
 						:event-item="eventItem"
 						:post="post"
+						:link="linkResolved"
 						/>
 				</div>
 			</div>
@@ -144,11 +145,11 @@
 
 		<div class="-manage" v-if="shouldShowManage">
 			<app-event-item-manage
-				:post="post"
+				:event-item="eventItem"
 				:show-edit-controls="feed.showEditControls"
-				@edit="feed.onPostEdited( post )"
-				@publish="feed.onPostPublished( post )"
-				@remove="feed.onPostRemoved( post )"
+				@edit-post="feed.onPostEdited( eventItem )"
+				@publish-post="feed.onPostPublished( eventItem )"
+				@remove-post="feed.onPostRemoved( eventItem )"
 				/>
 		</div>
 

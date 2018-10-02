@@ -84,7 +84,7 @@ export class AppActivityFeedEventItem extends Vue {
 	}
 
 	get post() {
-		if (this.eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
+		if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
 			return this.eventItem.action as FiresidePost;
 		}
 	}
@@ -112,7 +112,7 @@ export class AppActivityFeedEventItem extends Vue {
 			return (this.eventItem.action as CommentVideo).comment.user;
 		} else if (this.eventItem.type === EventItem.TYPE_GAME_PUBLISH) {
 			return (this.eventItem.action as Game).developer;
-		} else if (this.eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
+		} else if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
 			const post = this.eventItem.action as FiresidePost;
 			if (post.game && post.as_game_owner) {
 				return post.game.developer;
@@ -126,7 +126,7 @@ export class AppActivityFeedEventItem extends Vue {
 
 	get link() {
 		if (this.eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
-			return '';
+			return null;
 		}
 
 		if (this.eventItem.type === EventItem.TYPE_GAME_PUBLISH) {
@@ -141,25 +141,37 @@ export class AppActivityFeedEventItem extends Vue {
 				name: 'discover.games.view.overview',
 				params: params,
 			};
-		}
-
-		if (this.eventItem.type === EventItem.TYPE_DEVLOG_POST_ADD) {
+		} else if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
+			// TODO(userposts)
 			const post = this.post!;
-			const game = this.game!;
-
-			const params: { [key: string]: string } = {
-				slug: game.slug,
-				id: game.id + '',
-				postSlug: post.slug,
-			};
-
-			return {
-				name: 'discover.games.view.devlog.view',
-				params: params,
-			};
+			if (this.game) {
+				return {
+					name: 'discover.games.view.devlog.view',
+					params: {
+						slug: this.game.slug,
+						id: this.game.id + '',
+						postSlug: post.slug,
+					},
+				};
+			} else {
+				return {
+					name: 'profile.post.view',
+					params: {
+						username: post.user.username,
+						slug: post.slug,
+					},
+				};
+			}
 		}
 
-		return '';
+		return null;
+	}
+
+	get linkResolved() {
+		if (!this.link) {
+			return '';
+		}
+		return this.$router.resolve(this.link).href;
 	}
 
 	get shouldShowManage() {
@@ -206,11 +218,24 @@ export class AppActivityFeedEventItem extends Vue {
 	onClick(e: MouseEvent) {
 		const ignoreList = ['a', 'button'];
 
-		if (e.target) {
-			const target = e.target as HTMLElement;
-			const nodeName = target.nodeName.toLowerCase();
-			if (ignoreList.indexOf(nodeName) !== -1) {
-				return;
+		// This mess is because we have to search the parent chain to see if one of the elements is
+		// in our ignored list.
+		let target = e.target as HTMLElement;
+		if (target instanceof HTMLElement) {
+			while (true) {
+				const nodeName = target.nodeName.toLowerCase();
+
+				// Immediately stop if we hit the end.
+				if ((target as any) === document || !target.parentNode) {
+					break;
+				}
+
+				// If it's in our list of ignored elements, then just stop.
+				if (ignoreList.indexOf(nodeName) !== -1) {
+					return;
+				}
+
+				target = target.parentNode as HTMLAnchorElement;
 			}
 		}
 
@@ -221,8 +246,12 @@ export class AppActivityFeedEventItem extends Vue {
 		if (this.video) {
 			CommentVideoModal.show(this.video);
 		} else {
+			if (!this.link) {
+				return;
+			}
+
 			if (e.ctrlKey || e.shiftKey) {
-				Navigate.newWindow(Environment.wttfBaseUrl + this.$router.resolve(this.link).href);
+				Navigate.newWindow(Environment.wttfBaseUrl + this.linkResolved);
 				return;
 			}
 

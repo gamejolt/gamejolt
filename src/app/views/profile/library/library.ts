@@ -1,15 +1,14 @@
-import { Route } from 'vue-router';
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./library.html';
-
-import { GameCollection } from '../../../components/game/collection/collection.model';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { AppGameCollectionGrid } from '../../../components/game/collection/grid/grid';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
-} from '../../../../lib/gj-lib-client/components/route/route-component';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
+import { GameCollection } from '../../../components/game/collection/collection.model';
+import { AppGameCollectionGrid } from '../../../components/game/collection/grid/grid';
+import { RouteState, RouteStore } from '../profile.store';
 
 @View
 @Component({
@@ -19,7 +18,8 @@ import {
 	},
 })
 export default class RouteProfileLibrary extends BaseRouteComponent {
-	@Prop() user!: User;
+	@RouteState
+	user!: RouteStore['user'];
 
 	collections: GameCollection[] = [];
 

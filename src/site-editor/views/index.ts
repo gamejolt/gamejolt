@@ -1,11 +1,11 @@
 import { CreateElement } from 'vue';
-import { Route, RouteConfig } from 'vue-router';
 import { Component } from 'vue-property-decorator';
-import { initRouter } from '../../lib/gj-lib-client/utils/router';
+import { Route, RouteConfig } from 'vue-router';
 import {
-	RouteResolve,
 	BaseRouteComponent,
+	RouteResolve,
 } from '../../lib/gj-lib-client/components/route/route-component';
+import { initRouter } from '../../lib/gj-lib-client/utils/router';
 import { store } from '../store/index';
 
 // Empty route component. We just use it to send API calls and set up the store for the app

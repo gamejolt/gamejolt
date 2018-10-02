@@ -12,14 +12,14 @@ import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { CreateElement } from 'vue/types/vue';
-import { AppDevlogPostView } from '../../../../../../components/devlog/post/view/view';
 import { IntentService } from '../../../../../../components/intent/intent.service';
+import { AppPostView } from '../../../../../../components/post/view/view';
 import { RouteState, RouteStore } from '../../view.store';
 
 @Component({
 	name: 'RouteDiscoverGamesViewDevlogView',
 	components: {
-		AppDevlogPostView,
+		AppPostView,
 	},
 })
 export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent {
@@ -42,9 +42,7 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		}
 
 		const postHash = FiresidePost.pullHashFromUrl(route.params.postSlug);
-		const payload = await Api.sendRequest(
-			'/web/discover/games/devlog/' + route.params.id + '/' + postHash
-		);
+		const payload = await Api.sendRequest('/web/posts/view/' + postHash);
 
 		if (payload && payload.post) {
 			const redirect = enforceLocation(route, { postSlug: payload.post.slug });
@@ -64,7 +62,7 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		CommentModal.checkPermalink(this.$router);
 
 		const hash = FiresidePost.pullHashFromUrl(this.postSlug);
-		this.post = Registry.find<FiresidePost>('FiresidePost', hash, 'hash');
+		this.post = Registry.find<FiresidePost>('FiresidePost', i => i.hash === hash);
 	}
 
 	routed($payload: any) {
@@ -84,7 +82,7 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 	}
 
 	render(h: CreateElement) {
-		return h(AppDevlogPostView, {
+		return h(AppPostView, {
 			props: {
 				post: this.post,
 			},

@@ -1,5 +1,26 @@
 <div class="activity-feed">
 
+	<template v-if="newCount > 0">
+		<app-expand
+			v-if="!feed.isLoadingNew"
+			when
+			animate-initial
+			>
+			<app-activity-feed-new-button
+				@click="loadNew()"
+				>
+				<translate
+					:translate-n="newCount"
+					:translate-params="{ count: number(newCount) }"
+					translate-plural="%{count} new items"
+					>
+					1 new item
+				</translate>
+			</app-activity-feed-new-button>
+		</app-expand>
+		<app-loading v-else class="loading-centered" />
+	</template>
+
 	<div v-for="(item, i) of feed.items" :key="item.id">
 		<app-activity-feed-item
 			:feed="feed"

@@ -1,0 +1,36 @@
+<div class="follower-list">
+	<div class="row" v-if="!users.length">
+		<div
+			class="-item col-sm-6 col-md-4 col-lg-3"
+			v-for="i of placeholderCount"
+			:key="i"
+			>
+			<app-user-card-placeholder />
+		</div>
+	</div>
+	<template v-else>
+		<div class="row">
+			<div
+				class="-item col-sm-6 col-md-4 col-lg-3"
+				v-for="_user of users"
+				:key="_user.id"
+				>
+				<app-user-card :user="_user" />
+			</div>
+		</div>
+
+		<app-loading
+			v-if="isLoading"
+			centered
+			/>
+		<div class="page-cut" v-else-if="shouldShowLoadMore">
+			<app-button
+				trans
+				@click="loadMore()"
+				v-app-track-event="`profile-followers:more`"
+				>
+				<translate>Load More</translate>
+			</app-button>
+		</div>
+	</template>
+</div>

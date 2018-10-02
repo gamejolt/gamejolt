@@ -3,29 +3,10 @@
 
 .-container
 	@media $media-sm-up
-		padding-bottom: $-item-padding
+		padding-bottom: $-item-padding-v
 
 .-item
-	theme-prop('border-color', 'bg-offset')
-	padding: $-item-padding-xs
-	margin-left: -($grid-gutter-width-xs / 2)
-	margin-right: -($grid-gutter-width-xs / 2)
-	transition: border-color 100ms
-	border-bottom-width: 6px
-	border-bottom-style: solid
-
-	@media $media-sm-up
-		rounded-corners()
-		theme-prop('border-color', 'bg-offset')
-		padding: $-item-padding
-		border-width: 2px
-		border-style: solid
-		margin-left: 0
-		margin-right: 0
-
-		&:hover
-			theme-prop('border-color', 'link')
-			cursor: pointer
+	-activity-feed-item()
 
 .-header
 	display: flex
@@ -33,15 +14,13 @@
 
 	&-avatar
 		theme-prop('background-color', 'bg-subtle')
-		theme-prop('color', 'fg-muted')
 		flex: none
-		text-align: center
 		border-radius: 50%
 		overflow: hidden
 		margin-right: $-item-padding-xs
-		width: $-avatar-size-xs
-		height: $-avatar-size-xs
-		line-height: $-avatar-size-xs
+		width: $-avatar-size
+		height: $-avatar-size
+		line-height: $-avatar-size
 
 		.-item.-new &
 			theme-prop('border-color', 'notice')
@@ -50,9 +29,6 @@
 
 		@media $media-sm-up
 			margin-right: $-item-padding
-			width: $-avatar-size
-			height: $-avatar-size
-			line-height: $-avatar-size
 
 		img
 			border-radius: 50% !important
@@ -81,20 +57,19 @@
 			margin-left: $-item-padding
 
 .-poll, .-controls, .-manage, .fireside-post-lead
-	margin-top: $-item-padding-xs
+	margin-top: $-item-padding-xs-v
 
 	@media $media-sm-up
-		margin-top: $-item-padding
+		margin-top: $-item-padding-v
 
 .-manage
+	-activity-feed-item-padding()
 	theme-prop('background-color', 'bg-offset')
-	margin-bottom: $-item-padding-xs
+	margin-bottom: $-item-padding-xs-v
 	margin-left: -($-item-padding-xs)
 	margin-right: -($-item-padding-xs)
-	padding: $-item-padding-xs
 
 	@media $media-sm-up
-		margin-bottom: $-item-padding
-		margin-left: -($-item-padding)
-		margin-right: -($-item-padding)
-		padding: $-item-padding
+		margin-bottom: $-item-padding-v
+		margin-left: -($-item-padding-container)
+		margin-right: -($-item-padding-container)

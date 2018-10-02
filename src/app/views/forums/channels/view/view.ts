@@ -1,25 +1,21 @@
+import View from '!view!./view.html';
+import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
-import { Component } from 'vue-property-decorator';
-import View from '!view!./view.html';
-
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppPageHeader } from '../../../../components/page-header/page-header';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppForumTopicList } from '../../../../components/forum/topic-list/topic-list';
+import { AppNavTabList } from '../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import { AppPagination } from '../../../../../lib/gj-lib-client/components/pagination/pagination';
+import { BaseRouteComponent, RouteResolve } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/breadcrumbs';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppForumTopicList } from '../../../../components/forum/topic-list/topic-list';
+import { AppPageHeader } from '../../../../components/page-header/page-header';
 import { Store } from '../../../../store/index';
-import { AppNavTabList } from '../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
-import {
-	BaseRouteComponent,
-	RouteResolve,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
@@ -37,7 +33,8 @@ import {
 	},
 })
 export default class RouteForumsChannelsView extends BaseRouteComponent {
-	@State app!: Store['app'];
+	@State
+	app!: Store['app'];
 
 	channel: ForumChannel = null as any;
 	topics: ForumTopic[] = [];

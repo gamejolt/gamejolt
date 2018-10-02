@@ -161,7 +161,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		return Screen.isXs || this.$route.name === 'discover.games.view.overview';
 	}
 
-	@RouteResolve({ lazy: true, cache: true, cacheTag: 'view' })
+	@RouteResolve({ lazy: true, cache: true })
 	async routeResolve(this: undefined, route: Route) {
 		HistoryTick.trackSource('Game', parseInt(route.params.id, 10));
 		PartnerReferral.trackReferrer('Game', parseInt(route.params.id, 10), route);

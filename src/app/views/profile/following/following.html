@@ -1,0 +1,15 @@
+<section class="section">
+	<div class="container">
+
+		<div class="alert alert-info" v-if="!user.following_count">
+			<translate>This person isn't following anyone yet.</translate>
+		</div>
+		<app-follower-list
+			:url="loadUrl"
+			:initial-users="users"
+			:count="user.following_count || 0"
+			v-else
+			/>
+
+	</div>
+</section>
