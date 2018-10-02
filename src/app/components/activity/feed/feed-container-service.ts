@@ -114,6 +114,7 @@ export class ActivityFeedContainer {
 
 		this.activeItem = null;
 		this.timesLoaded = 0;
+		this.totalTimesLoaded = 0;
 		this.scroll = 0;
 		this.reachedEnd = false;
 	}
