@@ -22,10 +22,7 @@
 					class="user-avatar"
 					:to="user.url"
 					>
-					<app-user-avatar-img
-						:user="user"
-						v-app-tooltip="`${user.display_name} (@${user.username})`"
-						/>
+					<app-user-avatar-img :user="user" />
 				</router-link>
 			</app-user-card-hover>
 		</div>
