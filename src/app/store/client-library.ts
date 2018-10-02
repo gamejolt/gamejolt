@@ -38,6 +38,7 @@ import {
 	VuexStore,
 } from '../../lib/gj-lib-client/utils/vuex';
 import { Settings } from '../../_common/settings/settings.service';
+import { ClientAntiVirusModal } from '../components/client/anti-virus-modal/anti-virus-modal.service';
 import { LocalDbGame } from '../components/client/local-db/game/game.model';
 import { LocalDb } from '../components/client/local-db/local-db.service';
 import {
@@ -116,7 +117,7 @@ function handleClientVoodooError(
 		}
 
 		if (message) {
-			// ClientAntiVirusModal.show(message, title);
+			ClientAntiVirusModal.show(message, title);
 		}
 		return;
 	}
@@ -659,8 +660,20 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		} catch (err) {
 			console.error(err);
 
-			const action = operation === 'install' ? 'install' : 'update';
-			const title = operation === 'install' ? 'Installation Failed' : 'Update Failed';
+			const title =
+				operation === 'install'
+					? Translate.$gettext(`Installation Failed`)
+					: Translate.$gettext(`Update Failed`);
+
+			const message =
+				operation === 'install'
+					? Translate.$gettextInterpolate(`%{package} failed to install.`, {
+							package: packageTitle,
+					  })
+					: Translate.$gettextInterpolate(`%{package} failed to update.`, {
+							package: packageTitle,
+					  });
+
 			let cvOperation: ClientVoodooOperation;
 			if (operation === 'install') {
 				cvOperation = patchBegun ? 'install-end' : 'install-begin';
@@ -668,12 +681,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				cvOperation = patchBegun ? 'update-end' : 'update-begin';
 			}
 
-			handleClientVoodooError(
-				err,
-				cvOperation,
-				`${packageTitle} failed to ${action}.`,
-				title
-			);
+			handleClientVoodooError(err, cvOperation, message, title);
 
 			if (localPackage.install_state) {
 				if (localPackage.install_state === LocalDbPackagePatchState.UNPACKING) {
