@@ -83,10 +83,14 @@
 				</app-game-perms>
 			</template>
 
-			<app-user-avatar
+			<app-user-card-hover
 				slot="spotlight"
 				:user="game.developer"
-				/>
+				>
+				<app-user-avatar
+					:user="game.developer"
+					/>
+			</app-user-card-hover>
 
 			<app-discover-games-view-nav
 				slot="nav"

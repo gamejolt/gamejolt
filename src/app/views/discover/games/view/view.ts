@@ -6,6 +6,7 @@ import {
 	CommentStore,
 	CommentStoreModel,
 } from 'game-jolt-frontend-lib/components/comment/comment-store';
+import { AppUserCardHover } from 'game-jolt-frontend-lib/components/user/card/hover/hover';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
@@ -52,6 +53,7 @@ import { AppDiscoverGamesViewNav } from './_nav/nav';
 	components: {
 		AppPageHeader,
 		AppUserAvatar,
+		AppUserCardHover,
 		AppDiscoverGamesViewNav,
 		AppDiscoverGamesViewControls,
 		AppGameMaturityBlock,

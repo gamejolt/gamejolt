@@ -5,8 +5,7 @@
 			<li>
 				<router-link
 					:to="{ name: 'discover.games.view.overview' }"
-					active-class="active"
-					exact
+					:class="{ active: $route.name === 'discover.games.view.overview' }"
 					>
 					<translate>games.view.overview_tab</translate>
 				</router-link>
@@ -22,7 +21,10 @@
 			</li>
 
 			<li>
-				<router-link :to="{ name: 'discover.games.view.followers' }" active-class="active">
+				<router-link
+					:to="{ name: 'discover.games.view.followers' }"
+					active-class="active"
+					>
 					<translate>Followers</translate>
 					<span class="badge">
 						{{ game.follower_count | number }}

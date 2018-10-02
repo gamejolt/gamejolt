@@ -20,18 +20,23 @@
 			{{ game.title }}
 		</router-link>
 
-		<router-link
-			class="-dev -spacing link-muted"
-			:to="{
-				name: 'profile.overview',
-				params: { username: game.developer.username }
-			}"
-			:title="`${game.developer.display_name} (@${game.developer.username})`"
-			v-app-track-event="eventLabel ? 'game-list:dev:' + eventLabel : undefined"
+		<app-user-card-hover
+			class="-dev -spacing"
+			:user="game.developer"
 			>
-			<translate>by</translate>
-			<strong>{{ game.developer.display_name }}</strong>
-		</router-link>
+			<router-link
+				class="link-muted"
+				:to="{
+					name: 'profile.overview',
+					params: { username: game.developer.username }
+				}"
+				:title="`${game.developer.display_name} (@${game.developer.username})`"
+				v-app-track-event="eventLabel ? 'game-list:dev:' + eventLabel : undefined"
+				>
+				<translate>by</translate>
+				<strong>{{ game.developer.display_name }}</strong>
+			</router-link>
+		</app-user-card-hover>
 
 		<div class="-followers -spacing text-muted">
 			<translate

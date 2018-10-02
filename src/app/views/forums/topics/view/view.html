@@ -29,10 +29,14 @@
 			</span>
 		</div>
 
-		<app-user-avatar
+		<app-user-card-hover
 			slot="spotlight"
 			:user="topic.user"
-			/>
+			>
+			<app-user-avatar
+				:user="topic.user"
+				/>
+		</app-user-card-hover>
 
 		<template slot="nav">
 			<app-forum-breadcrumbs

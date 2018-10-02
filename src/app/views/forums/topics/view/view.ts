@@ -1,5 +1,6 @@
 import View from '!view!./view.html';
 import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
+import { AppUserCardHover } from 'game-jolt-frontend-lib/components/user/card/hover/hover';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
@@ -29,7 +30,6 @@ import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/
 import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { AppWidgetCompiler } from '../../../../../lib/gj-lib-client/components/widget-compiler/widget-compiler';
 import { enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { FormForumPost } from '../../../../components/forms/forum/post/post';
 import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
@@ -44,8 +44,8 @@ import { Store } from '../../../../store/index';
 	name: 'RouteForumsTopicsView',
 	components: {
 		AppPageHeader,
-		AppJolticon,
 		AppUserAvatar,
+		AppUserCardHover,
 		AppForumBreadcrumbs,
 		AppTimeAgo,
 		AppPopper,

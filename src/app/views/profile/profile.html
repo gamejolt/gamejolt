@@ -91,18 +91,18 @@
 						</router-link>
 					</li>
 					<li>
-						<router-link :to="{ name: 'profile.followers' }" active-class="active">
-							<translate>Followers</translate>
-							<span class="badge">
-								{{ user.follower_count | number }}
-							</span>
-						</router-link>
-					</li>
-					<li>
 						<router-link :to="{ name: 'profile.following' }" active-class="active">
 							<translate>Following</translate>
 							<span class="badge">
 								{{ user.following_count | number }}
+							</span>
+						</router-link>
+					</li>
+					<li>
+						<router-link :to="{ name: 'profile.followers' }" active-class="active">
+							<translate>Followers</translate>
+							<span class="badge">
+								{{ user.follower_count | number }}
 							</span>
 						</router-link>
 					</li>
