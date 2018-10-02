@@ -1,7 +1,7 @@
 <div class="follower-list">
 	<div class="row" v-if="!users.length">
 		<div
-			class="col-sm-6 col-md-4 col-lg-3"
+			class="-item col-sm-6 col-md-4 col-lg-3"
 			v-for="i of placeholderCount"
 			:key="i"
 			>
@@ -11,7 +11,7 @@
 	<template v-else>
 		<div class="row">
 			<div
-				class="col-sm-6 col-md-4 col-lg-3"
+				class="-item col-sm-6 col-md-4 col-lg-3"
 				v-for="_user of users"
 				:key="_user.id"
 				>

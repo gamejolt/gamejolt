@@ -1,4 +1,4 @@
-import View from '!view!./list.html';
+import View from '!view!./list.html?style=./list.styl';
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
 import { AppUserCard } from 'game-jolt-frontend-lib/components/user/card/card';
 import { AppUserCardPlaceholder } from 'game-jolt-frontend-lib/components/user/card/placeholder/placeholder';
