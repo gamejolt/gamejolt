@@ -14,9 +14,11 @@ import { ClientUpdater } from '../../../_common/client/client-updater.service';
 	},
 })
 export default class RouteUpgrade extends BaseRouteComponent {
-	readonly ClientUpdater = ClientUpdater;
+	get status() {
+		return ClientUpdater.clientUpdateStatus;
+	}
 
-	get updateProgress() {
+	get progress() {
 		// Lets avoid having two progress bars by combining download + extract progress reports.
 		// 80% download, 20% extract seems like a nice mix.
 
@@ -33,5 +35,9 @@ export default class RouteUpgrade extends BaseRouteComponent {
 
 	routeInit() {
 		ClientUpdater.checkForClientUpdates();
+	}
+
+	update() {
+		ClientUpdater.updateClient();
 	}
 }
