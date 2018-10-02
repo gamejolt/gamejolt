@@ -84,14 +84,27 @@ export class AppEventItemControls extends Vue {
 			return '';
 		}
 
+		if (this.post.game) {
+			return (
+				Environment.baseUrl +
+				this.$router.resolve({
+					name: 'discover.games.view.devlog.view',
+					params: {
+						slug: this.post.game.slug,
+						id: this.post.game.id + '',
+						postSlug: this.post.slug,
+					},
+				}).href
+			);
+		}
+
 		return (
 			Environment.baseUrl +
 			this.$router.resolve({
-				name: 'discover.games.view.devlog.view',
+				name: 'profile.post.view',
 				params: {
-					slug: this.post.game.slug,
-					id: this.post.game.id + '',
-					postSlug: this.post.slug,
+					username: this.post.user.username,
+					slug: this.post.slug,
 				},
 			}).href
 		);
