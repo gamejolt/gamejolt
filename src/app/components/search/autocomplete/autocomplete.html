@@ -1,6 +1,7 @@
 <app-popper
+	trigger="manual"
 	hide-on-state-change
-	:track-element-width="'#search-input-' + search.id"
+	track-trigger-width
 	>
 <!-- <app-popover
 	popover-id="search-autocomplete"
@@ -11,7 +12,9 @@
 	:no-max-height="true"
 	> -->
 
-	<div class="search-autocomplete-popover fill-darkest">
+	<slot />
+
+	<div slot="popover" class="search-autocomplete-popover fill-darkest">
 
 		<div v-if="isHidden" class="well sans-margin-bottom">
 			<app-jolticon icon="chevron-up" />
