@@ -1,9 +1,9 @@
 import View from '!view!./package-card-buttons.html?style=./package-card-buttons.styl';
 import * as fs from 'fs';
+import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
 import * as path from 'path';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
 import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
@@ -15,7 +15,6 @@ import { AppGamePackageCardMoreOptions } from '../../../../../lib/gj-lib-client/
 import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/popover';
 import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
-import { Popover } from '../../../../../lib/gj-lib-client/components/popover/popover.service';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { filesize } from '../../../../../lib/gj-lib-client/vue/filters/filesize';
@@ -235,7 +234,7 @@ export class AppClientPackageCardButtons extends Vue {
 		}
 
 		Analytics.trackEvent('game-package-card', 'uninstall');
-		Popover.hideAll();
+		Popper.hideAll();
 
 		this.packageUninstall([this.localPackage]);
 	}

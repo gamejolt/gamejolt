@@ -1,18 +1,17 @@
-import Vue from 'vue';
-import { Action } from 'vuex-class';
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./add-to-popover.html?style=./add-to-popover.styl';
-
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
+import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import { Action } from 'vuex-class';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
+import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
+import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { fuzzysearch } from '../../../../lib/gj-lib-client/utils/string';
-import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { LibraryStore } from '../../../store/library';
 
 @View
@@ -27,14 +26,17 @@ import { LibraryStore } from '../../../store/library';
 	},
 })
 export class AppGamePlaylistAddToPopover extends Vue {
-	@Prop(Game) game!: Game;
+	@Prop(Game)
+	game!: Game;
 
-	@Action('library/addGameToPlaylist') addGameToPlaylist!: LibraryStore['addGameToPlaylist'];
+	@Action('library/addGameToPlaylist')
+	addGameToPlaylist!: LibraryStore['addGameToPlaylist'];
 
 	@Action('library/removeGameFromPlaylist')
 	removeGameFromPlaylist!: LibraryStore['removeGameFromPlaylist'];
 
-	@Action('library/newPlaylist') newPlaylist!: LibraryStore['newPlaylist'];
+	@Action('library/newPlaylist')
+	newPlaylist!: LibraryStore['newPlaylist'];
 
 	playlists: GamePlaylist[] = [];
 	playlistsWithGame: number[] = [];
@@ -67,7 +69,7 @@ export class AppGamePlaylistAddToPopover extends Vue {
 	// }
 
 	close() {
-		Popover.hideAll();
+		Popper.hideAll();
 	}
 
 	async fetchPlaylists() {
@@ -94,7 +96,7 @@ export class AppGamePlaylistAddToPopover extends Vue {
 		const game = this.game;
 		if (await this.addGameToPlaylist({ playlist, game })) {
 			this.playlistsWithGame.push(playlist.id);
-			Popover.hideAll();
+			Popper.hideAll();
 		}
 	}
 
@@ -106,7 +108,7 @@ export class AppGamePlaylistAddToPopover extends Vue {
 				this.playlistsWithGame.splice(index, 1);
 			}
 
-			Popover.hideAll();
+			Popper.hideAll();
 		}
 	}
 

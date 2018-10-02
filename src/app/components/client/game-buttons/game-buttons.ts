@@ -1,10 +1,9 @@
 import View from '!view!./game-buttons.html';
 import * as fs from 'fs';
+import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
 import * as path from 'path';
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { Watch } from 'vue-property-decorator';
-
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
@@ -13,7 +12,6 @@ import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/component
 import { GamePackagePurchaseModal } from '../../../../lib/gj-lib-client/components/game/package/purchase-modal/purchase-modal.service';
 import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
-import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { arrayGroupBy } from '../../../../lib/gj-lib-client/utils/array';
 import {
@@ -208,7 +206,7 @@ export class AppClientGameButtons extends Vue {
 		}
 
 		Analytics.trackEvent('client-game-buttons', 'launch');
-		Popover.hideAll();
+		Popper.hideAll();
 		return this.launcherLaunch(localPackage);
 	}
 
@@ -231,7 +229,7 @@ export class AppClientGameButtons extends Vue {
 		}
 
 		Analytics.trackEvent('client-game-buttons', 'uninstall');
-		Popover.hideAll();
+		Popper.hideAll();
 
 		await this.packageUninstall([localPackage]);
 	}

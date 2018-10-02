@@ -1,30 +1,29 @@
-import Vue from 'vue';
-import { State } from 'vuex-class';
-import { Component, Prop, Watch } from 'vue-property-decorator';
 import View from '!view!./item.html?style=./item.styl';
-
-import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
-import { ForumPost } from '../../../../../lib/gj-lib-client/components/forum/post/post.model';
-import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
+import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
+import Vue from 'vue';
+import { Component, Prop, Watch } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { Popover } from '../../../../../lib/gj-lib-client/components/popover/popover.service';
-import { ReportModal } from '../../../../../lib/gj-lib-client/components/report/modal/modal.service';
 import { Clipboard } from '../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
-import { AppWidgetCompiler } from '../../../../../lib/gj-lib-client/components/widget-compiler/widget-compiler';
+import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
-import { FormForumPost } from '../../../forms/forum/post/post';
-import { AppMessageThreadItem } from '../../../../../lib/gj-lib-client/components/message-thread/item/item';
-import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scroll/inview/inview';
-import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { Store } from '../../../../store/index';
+import { ForumPost } from '../../../../../lib/gj-lib-client/components/forum/post/post.model';
+import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
+import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components/message-thread/add/add';
+import { AppMessageThreadItem } from '../../../../../lib/gj-lib-client/components/message-thread/item/item';
 import { AppMessageThread } from '../../../../../lib/gj-lib-client/components/message-thread/message-thread';
 import { AppPopper } from '../../../../../lib/gj-lib-client/components/popper/popper';
+import { ReportModal } from '../../../../../lib/gj-lib-client/components/report/modal/modal.service';
+import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scroll/inview/inview';
+import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { AppWidgetCompiler } from '../../../../../lib/gj-lib-client/components/widget-compiler/widget-compiler';
+import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
+import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
+import { Store } from '../../../../store/index';
+import { FormForumPost } from '../../../forms/forum/post/post';
 
 @View
 @Component({
@@ -51,13 +50,19 @@ import { AppPopper } from '../../../../../lib/gj-lib-client/components/popper/po
 	},
 })
 export class AppForumPostListItem extends Vue {
-	@Prop(ForumTopic) topic!: ForumTopic;
-	@Prop(ForumPost) post!: ForumPost;
-	@Prop(Boolean) isReply!: boolean;
-	@Prop(Boolean) showReplies!: boolean;
-	@Prop(Boolean) isLastInThread?: boolean;
+	@Prop(ForumTopic)
+	topic!: ForumTopic;
+	@Prop(ForumPost)
+	post!: ForumPost;
+	@Prop(Boolean)
+	isReply!: boolean;
+	@Prop(Boolean)
+	showReplies!: boolean;
+	@Prop(Boolean)
+	isLastInThread?: boolean;
 
-	@State app!: Store['app'];
+	@State
+	app!: Store['app'];
 
 	isEditing = false;
 	isReplying = false;
@@ -166,7 +171,7 @@ export class AppForumPostListItem extends Vue {
 
 	edit() {
 		this.isEditing = true;
-		Popover.hideAll();
+		Popper.hideAll();
 	}
 
 	closeEdit() {

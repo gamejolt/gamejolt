@@ -1,12 +1,11 @@
+import View from '!view!./history.html?style=./history.styl';
+import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./history.html?style=./history.styl';
-
-import { SearchHistory } from './history-service';
-import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { SearchHistory } from './history-service';
 
 @View
 @Component({
@@ -40,11 +39,11 @@ export class AppSearchHistory extends Vue {
 			name: 'search.results',
 			query: { q: query },
 		});
-		Popover.hideAll();
+		Popper.hideAll();
 	}
 
 	clear() {
 		SearchHistory.clear();
-		Popover.hideAll();
+		Popper.hideAll();
 	}
 }

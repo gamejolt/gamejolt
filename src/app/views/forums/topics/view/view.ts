@@ -1,4 +1,5 @@
 import View from '!view!./view.html';
+import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
@@ -13,7 +14,6 @@ import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growl
 import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components/message-thread/add/add';
 import { AppMessageThreadPagination } from '../../../../../lib/gj-lib-client/components/message-thread/pagination/pagination';
-import { Popover } from '../../../../../lib/gj-lib-client/components/popover/popover.service';
 import { AppPopper } from '../../../../../lib/gj-lib-client/components/popper/popper';
 import { ReportModal } from '../../../../../lib/gj-lib-client/components/report/modal/modal.service';
 import {
@@ -163,7 +163,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 
 	editTopic() {
 		this.isEditingTopic = true;
-		Popover.hideAll();
+		Popper.hideAll();
 	}
 
 	closeEditTopic() {

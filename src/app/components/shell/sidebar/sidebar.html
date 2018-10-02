@@ -64,7 +64,8 @@
 					:class="{ active: $route.name.indexOf( 'discover.devlogs' ) === 0 }"
 					v-app-track-event="`sidebar:devlogs`"
 					>
-					<span class="shell-nav-icon"
+					<span
+						class="shell-nav-icon"
 						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Devlogs' ) : ''"
 						>
 						<app-jolticon icon="devlogs" />
@@ -75,13 +76,32 @@
 				</router-link>
 			</li>
 
+			<li class="offline-disable">
+				<router-link
+					:to="{ name: 'discover.channels.overview' }"
+					:class="{ active: $route.name.indexOf( 'discover.channels' ) === 0 }"
+					v-app-track-event="`sidebar:channels`"
+					>
+					<span
+						class="shell-nav-icon"
+						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Channels' ) : ''"
+						>
+						<app-jolticon icon="tag" />
+					</span>
+					<span class="shell-nav-label">
+						<translate>Channels</translate>
+					</span>
+				</router-link>
+			</li>
+
 			<li class="offline-disable" v-if="Screen.isXs">
 				<router-link
 					:to="{ name: 'search.results' }"
 					:class="{ active: $route.name.indexOf( 'search' ) === 0 }"
 					v-app-track-event="`sidebar:search`"
 					>
-					<span class="shell-nav-icon"
+					<span
+						class="shell-nav-icon"
 						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Search' ) : ''"
 						>
 						<app-jolticon icon="search" />
@@ -108,7 +128,8 @@
 						:class="{ active: $route.name.indexOf( 'dasboard' ) === 0 && $route.name.indexOf( 'dash.activity' ) === -1 }"
 						v-app-track-event="`sidebar:dashboard`"
 						>
-						<span class="shell-nav-icon"
+						<span
+							class="shell-nav-icon"
 							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Dashboard' ) : ''"
 							>
 							<app-user-avatar-img :user="app.user" />
@@ -129,7 +150,8 @@
 						active-class="active"
 						v-app-track-event="`sidebar:collection:installed`"
 						>
-						<span class="shell-nav-icon"
+						<span
+							class="shell-nav-icon"
 							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Installed Games' ) : ''"
 							>
 							<app-jolticon icon="download-box" />
@@ -146,7 +168,8 @@
 						active-class="active"
 						v-app-track-event="`sidebar:collection:developer`"
 						>
-						<span class="shell-nav-icon"
+						<span
+							class="shell-nav-icon"
 							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Your Games' ) : ''"
 							>
 							<app-jolticon icon="user" />
@@ -163,7 +186,8 @@
 						active-class="active"
 						v-app-track-event="`sidebar:collection:followed`"
 						>
-						<span class="shell-nav-icon"
+						<span
+							class="shell-nav-icon"
 							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Followed Games' ) : ''"
 							>
 							<app-jolticon icon="subscribe" />
@@ -180,7 +204,8 @@
 						active-class="active"
 						v-app-track-event="`sidebar:collection:owned`"
 						>
-						<span class="shell-nav-icon"
+						<span
+							class="shell-nav-icon"
 							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Owned Games' ) : ''"
 							>
 							<app-jolticon icon="heart" />
@@ -200,7 +225,8 @@
 							active-class="active"
 							v-app-track-event="`sidebar:playlists`"
 							>
-							<span class="shell-nav-icon"
+							<span
+								class="shell-nav-icon"
 								v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Playlists' ) : ''"
 								>
 								<app-jolticon icon="playlist" />
