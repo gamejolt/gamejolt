@@ -86,54 +86,51 @@
 				>
 				<app-jolticon icon="ellipsis-v" class="middle" />
 			</a>
-
-			<!-- <app-popover :popover-id="`forum-post-popover-${ id }`" v-if="app.user"> -->
-				<div
-					slot="popover"
-					class="list-group list-group-dark"
+			<div
+				slot="popover"
+				class="list-group list-group-dark"
+				>
+				<a class="list-group-item has-icon"
+					@click="copyPermalink"
 					>
-					<a class="list-group-item has-icon"
-						@click="copyPermalink"
-						>
-						<app-jolticon icon="link" />
-						<translate>Copy Link</translate>
-					</a>
+					<app-jolticon icon="link" />
+					<translate>Copy Link</translate>
+				</a>
 
-					<a class="list-group-item has-icon"
-						v-if="app.user && post.user_id === app.user.id && !topic.is_locked && !isEditing"
-						@click="edit()"
+				<a class="list-group-item has-icon"
+					v-if="app.user && post.user_id === app.user.id && !topic.is_locked && !isEditing"
+					@click="edit()"
+					>
+					<app-jolticon icon="edit" />
+					<translate>Edit Post</translate>
+				</a>
+				<a class="list-group-item has-icon"
+					@click="report"
+					>
+					<app-jolticon icon="flag" notice />
+					<translate>Report Post</translate>
+				</a>
+				<template v-if="app.user.permission_level > 0">
+					<a class="list-group-item"
+						:href="Environment.baseUrl + `/moderate/forums/posts/edit/${ post.id }`"
+						target="_blank"
 						>
-						<app-jolticon icon="edit" />
-						<translate>Edit Post</translate>
+						<translate>Edit (Mod)</translate>
 					</a>
-					<a class="list-group-item has-icon"
-						@click="report"
+					<a class="list-group-item"
+						:href="Environment.baseUrl + `/moderate/forums/posts/remove/${ post.id }`"
+						target="_blank"
 						>
-						<app-jolticon icon="flag" notice />
-						<translate>Report Post</translate>
+						<translate>Remove (Mod)</translate>
 					</a>
-					<template v-if="app.user.permission_level > 0">
-						<a class="list-group-item"
-							:href="Environment.baseUrl + `/moderate/forums/posts/edit/${ post.id }`"
-							target="_blank"
-							>
-							<translate>Edit (Mod)</translate>
-						</a>
-						<a class="list-group-item"
-							:href="Environment.baseUrl + `/moderate/forums/posts/remove/${ post.id }`"
-							target="_blank"
-							>
-							<translate>Remove (Mod)</translate>
-						</a>
-						<a class="list-group-item"
-							:href="Environment.baseUrl + `/moderate/users/view/${ post.user_id }`"
-							target="_blank"
-							>
-							<translate>Moderate User</translate>
-						</a>
-					</template>
-				</div>
-			<!-- </app-popover> -->
+					<a class="list-group-item"
+						:href="Environment.baseUrl + `/moderate/users/view/${ post.user_id }`"
+						target="_blank"
+						>
+						<translate>Moderate User</translate>
+					</a>
+				</template>
+			</div>
 		</app-popper>
 
 	</template>

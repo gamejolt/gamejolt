@@ -68,17 +68,15 @@
 								<app-jolticon icon="cog" />
 							</a>
 
-							<!-- <app-popover :popover-id="'scores-options-' + score.id"> -->
-								<div slot="popover" class="list-group nowrap">
-									<a
-										class="list-group-item has-icon"
-										@click="removeScore( score )"
-										>
-										<app-jolticon icon="remove" />
-										<translate>dash.games.scores.list.remove_button</translate>
-									</a>
-								</div>
-							<!-- </app-popover> -->
+							<div slot="popover" class="list-group list-group-dark nowrap">
+								<a
+									class="list-group-item has-icon"
+									@click="removeScore( score )"
+									>
+									<app-jolticon icon="remove" notice />
+									<translate>dash.games.scores.list.remove_button</translate>
+								</a>
+							</div>
 						</app-popper>
 					</div>
 				</td>

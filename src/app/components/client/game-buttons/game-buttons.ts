@@ -1,5 +1,6 @@
 import View from '!view!./game-buttons.html';
 import * as fs from 'fs';
+import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
 import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
 import * as path from 'path';
 import Vue from 'vue';
@@ -10,8 +11,6 @@ import { Device } from '../../../../lib/gj-lib-client/components/device/device.s
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { GamePackagePurchaseModal } from '../../../../lib/gj-lib-client/components/game/package/purchase-modal/purchase-modal.service';
-import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
-import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { arrayGroupBy } from '../../../../lib/gj-lib-client/utils/array';
 import {
@@ -26,12 +25,11 @@ import { LocalDbPackage } from '../local-db/package/package.model';
 @View
 @Component({
 	components: {
-		AppPopover,
+		AppPopper,
 		AppClientInstallProgress,
 	},
 	directives: {
 		AppTooltip,
-		AppPopoverTrigger,
 	},
 })
 export class AppClientGameButtons extends Vue {

@@ -6,12 +6,10 @@ import { State } from 'vuex-class';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GameScoreTable } from '../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ago';
 import { UserGameScore } from '../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppScoreList } from '../list/list';
@@ -20,14 +18,10 @@ import { AppScoreboardSelector } from '../scoreboard-selector/scoreboard-selecto
 @View
 @Component({
 	components: {
-		AppJolticon,
 		AppTimeAgo,
 		AppScoreboardSelector,
 		AppScoreList,
 		AppUserAvatar,
-	},
-	directives: {
-		AppPopoverTrigger,
 	},
 	filters: {
 		number,

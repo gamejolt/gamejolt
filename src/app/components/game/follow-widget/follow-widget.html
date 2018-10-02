@@ -32,24 +32,17 @@
 		</template>
 	</app-button>
 
-	<!-- <app-popover
-		v-if="shouldShowFollow"
-		:popover-id="popoverId"
-		:append-to-body="true"
-		:track-element-width="'#' + widgetId"
-		> -->
-		<div
-			slot="popover"
-			class="well fill-darkest"
-			>
-			<p class="small">
-				<translate>Would you also like to follow this developer? You will get notified when they release new games.</translate>
-			</p>
-			<app-user-follow-widget
-				:user="game.developer"
-				block
-				event-label="game-follow-widget"
-				/>
-		</div>
-	<!-- </app-popover> -->
+	<div
+		slot="popover"
+		class="well fill-darkest"
+		>
+		<p class="small">
+			<translate>Would you also like to follow this developer? You will get notified when they release new games.</translate>
+		</p>
+		<app-user-follow-widget
+			:user="game.developer"
+			block
+			event-label="game-follow-widget"
+			/>
+	</div>
 </app-popper>

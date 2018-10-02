@@ -21,8 +21,6 @@ import { AppFormLegend } from 'game-jolt-frontend-lib/components/form-vue/legend
 import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
 import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
 import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
-import { AppPopover } from 'game-jolt-frontend-lib/components/popover/popover';
-import { AppPopoverTrigger } from 'game-jolt-frontend-lib/components/popover/popover-trigger.directive.vue';
 import { AppProgressBar } from 'game-jolt-frontend-lib/components/progress/bar/bar';
 import { AppSketchfabEmbed } from 'game-jolt-frontend-lib/components/sketchfab/embed/embed';
 import {
@@ -32,7 +30,6 @@ import {
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { AppUserAvatarImg } from 'game-jolt-frontend-lib/components/user/user-avatar/img/img';
 import { AppVideoEmbed } from 'game-jolt-frontend-lib/components/video/embed/embed';
-import { AppJolticon } from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon';
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { determine } from 'jstimezonedetect';
 import { Component, Prop } from 'vue-property-decorator';
@@ -73,8 +70,6 @@ type FormPostModel = FiresidePost & {
 		AppFormLegend,
 		AppSketchfabEmbed,
 		AppVideoEmbed,
-		AppJolticon,
-		AppPopover,
 		AppUserAvatarImg,
 		AppProgressBar,
 		AppFormPostMedia,
@@ -82,7 +77,6 @@ type FormPostModel = FiresidePost & {
 	directives: {
 		AppFocusWhen,
 		AppTooltip,
-		AppPopoverTrigger,
 		AppFormAutosize,
 	},
 })

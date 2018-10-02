@@ -1,16 +1,15 @@
+import View from '!view!./request-popover.html?style=./request-popover.styl';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
-import View from '!view!./request-popover.html';
-
-import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { UserFriendship } from '../../../../lib/gj-lib-client/components/user/friendship/friendship.model';
-import { UserFriendshipHelper } from '../../user/friendships-helper/friendship-helper.service';
-import { Store } from '../../../store/index';
 import { Mutation } from 'vuex-class/lib/bindings';
-import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { AppFriendRequestPopoverItem } from './item/item';
 import { AppScrollInviewParent } from '../../../../lib/gj-lib-client/components/scroll/inview/parent';
+import { UserFriendship } from '../../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { findRequiredVueParent } from '../../../../lib/gj-lib-client/utils/vue';
+import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
+import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { Store } from '../../../store/index';
+import { UserFriendshipHelper } from '../../user/friendships-helper/friendship-helper.service';
+import { AppFriendRequestPopoverItem } from './item/item';
 
 type Tab = 'requests' | 'pending';
 
@@ -22,8 +21,10 @@ type Tab = 'requests' | 'pending';
 	},
 })
 export class AppFriendRequestPopover extends Vue {
-	@Mutation setFriendRequestCount!: Store['setFriendRequestCount'];
-	@AppState user!: AppStore['user'];
+	@Mutation
+	setFriendRequestCount!: Store['setFriendRequestCount'];
+	@AppState
+	user!: AppStore['user'];
 
 	isLoading = true;
 
@@ -69,14 +70,14 @@ export class AppFriendRequestPopover extends Vue {
 	}
 
 	async rejectRequest(request: UserFriendship) {
-		if (!await UserFriendshipHelper.rejectRequest(request)) {
+		if (!(await UserFriendshipHelper.rejectRequest(request))) {
 			return;
 		}
 		this.removeRequest(request);
 	}
 
 	async cancelRequest(request: UserFriendship) {
-		if (!await UserFriendshipHelper.cancelRequest(request)) {
+		if (!(await UserFriendshipHelper.cancelRequest(request))) {
 			return;
 		}
 		this.removeRequest(request);

@@ -94,23 +94,52 @@
 				</router-link>
 			</li>
 
-			<li class="offline-disable" v-if="Screen.isXs">
-				<router-link
-					:to="{ name: 'search.results' }"
-					:class="{ active: $route.name.indexOf( 'search' ) === 0 }"
-					v-app-track-event="`sidebar:search`"
-					>
-					<span
-						class="shell-nav-icon"
-						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Search' ) : ''"
+			<template v-if="Screen.isXs">
+				<li class="offline-disable">
+					<router-link
+						:to="{ name: 'search.results' }"
+						:class="{ active: $route.name.indexOf( 'search' ) === 0 }"
+						v-app-track-event="`sidebar:search`"
 						>
-						<app-jolticon icon="search" />
-					</span>
-					<span class="shell-nav-label">
-						<translate>Search</translate>
-					</span>
-				</router-link>
-			</li>
+						<span class="shell-nav-icon">
+							<app-jolticon icon="search" />
+						</span>
+						<span class="shell-nav-label">
+							<translate>Search</translate>
+						</span>
+					</router-link>
+				</li>
+
+				<li class="offline-disable">
+					<router-link
+						:to="{ name: 'forums.landing.overview' }"
+						:class="{ active: $route.name.indexOf( 'search' ) === 0 }"
+						v-app-track-event="`sidebar:forums`"
+						>
+						<span class="shell-nav-icon">
+							<app-jolticon icon="forums" />
+						</span>
+						<span class="shell-nav-label">
+							<translate>Forums</translate>
+						</span>
+					</router-link>
+				</li>
+
+				<li class="offline-disable">
+					<a
+						:href="Environment.jamsBaseUrl"
+						target="_blank"
+						v-app-track-event="`sidebar:jams`"
+						>
+						<span class="shell-nav-icon">
+							<app-jolticon icon="jams" />
+						</span>
+						<span class="shell-nav-label">
+							<translate>Jams</translate>
+						</span>
+					</a>
+				</li>
+			</template>
 		</ul>
 
 		<template v-if="app.user">

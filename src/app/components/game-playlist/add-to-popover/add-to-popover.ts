@@ -7,18 +7,14 @@ import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/an
 import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
 import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { fuzzysearch } from '../../../../lib/gj-lib-client/utils/string';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { LibraryStore } from '../../../store/library';
 
 @View
 @Component({
 	components: {
-		AppPopover,
-		AppJolticon,
 		AppLoading,
 	},
 	directives: {
@@ -41,7 +37,6 @@ export class AppGamePlaylistAddToPopover extends Vue {
 	playlists: GamePlaylist[] = [];
 	playlistsWithGame: number[] = [];
 
-	// isShown = false;
 	isLoading = true;
 	filterQuery = '';
 
@@ -52,21 +47,9 @@ export class AppGamePlaylistAddToPopover extends Vue {
 	}
 
 	mounted() {
-		// this.isShown = true;
 		this.fetchPlaylists();
 		Analytics.trackEvent('add-to-playlist', 'open');
 	}
-
-	// onFocus() {
-	// 	this.isShown = true;
-	// 	this.fetchPlaylists();
-
-	// 	Analytics.trackEvent('add-to-playlist', 'open');
-	// }
-
-	// onBlur() {
-	// 	this.isShown = false;
-	// }
 
 	close() {
 		Popper.hideAll();
@@ -96,7 +79,6 @@ export class AppGamePlaylistAddToPopover extends Vue {
 		const game = this.game;
 		if (await this.addGameToPlaylist({ playlist, game })) {
 			this.playlistsWithGame.push(playlist.id);
-			Popper.hideAll();
 		}
 	}
 
@@ -107,8 +89,6 @@ export class AppGamePlaylistAddToPopover extends Vue {
 			if (index !== -1) {
 				this.playlistsWithGame.splice(index, 1);
 			}
-
-			Popper.hideAll();
 		}
 	}
 

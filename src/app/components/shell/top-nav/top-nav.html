@@ -23,6 +23,7 @@
 		</router-link>
 
 		<app-popper
+			v-if="!Screen.isXs"
 			hide-on-state-change
 			@show="moreMenuShowing = true"
 			@hide="moreMenuShowing = false"

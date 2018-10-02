@@ -139,19 +139,21 @@
 		<app-jolticon icon="addon" :class="`jolticon-${card.showcasedBrowserIcon}`" />
 	</app-button>
 
-	<app-button
+	<app-popper
 		v-if="card.extraBuilds.length || (localPackage && !localPackage.install_state)"
-		circle
-		icon="ellipsis-v"
-		:trans="!overlay"
-		v-app-popover-trigger="`game-package-card-more-options-${ package.id }`"
-		v-app-track-event="`game-package-card:more-options`"
-		/>
+		>
+		<app-button
+			circle
+			icon="ellipsis-v"
+			:trans="!overlay"
+			v-app-track-event="`game-package-card:more-options`"
+			/>
 
-	<app-popover :popover-id="`game-package-card-more-options-${package.id}`">
-
-		<template v-if="localPackage && (card.browserBuild || localPackage.isSettled)">
-			<div class="more-client-options list-group list-group-dark nowrap">
+		<div slot="popover">
+			<div
+				v-if="localPackage && (card.browserBuild || localPackage.isSettled)"
+				class="more-client-options list-group list-group-dark nowrap"
+				>
 
 				<template v-if="localPackage.isSettled">
 					<a class="list-group-item has-icon" @click="openFolder()">
@@ -183,13 +185,15 @@
 				</template>
 
 			</div>
-		</template>
 
-		<!--
-			The non-client options.
-		-->
-		<app-game-package-card-more-options :card="card" @click="buildClick( $event, true )" />
-
-	</app-popover>
+			<!--
+				The non-client options.
+			-->
+			<app-game-package-card-more-options
+				:card="card"
+				@click="buildClick($event, true)"
+				/>
+		</div>
+	</app-popper>
 
 </div>

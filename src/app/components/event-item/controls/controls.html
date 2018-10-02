@@ -45,13 +45,6 @@
 						v-app-tooltip="$gettext( 'Share' )"
 						/>
 
-				<!-- <app-popover
-					:popover-id="sharePopoverId"
-					:append-to-body="!inModal"
-					@focused="isShowingShare = true"
-					@blurred="isShowingShare = false"
-					> -->
-
 					<div slot="popover" class="well fill-darkest sans-margin" v-if="isShowingShare">
 						<div class="social-widgets" v-if="!GJ_IS_CLIENT">
 							<app-social-twitter-share
@@ -73,8 +66,6 @@
 							<translate>Copy Permalink</translate>
 						</app-button>
 					</div>
-
-				<!-- </app-popover> -->
 				</app-popper>
 			</span>
 		</template>

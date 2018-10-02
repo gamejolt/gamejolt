@@ -1,9 +1,11 @@
 <app-popper
+	v-if="game.status === Game.STATUS_VISIBLE"
 	placement="bottom"
 	:disabled="!app.user"
+	@show="isShown = true"
+	@hide="isShown = false"
 	>
 	<app-button
-		v-if="game.status === Game.STATUS_VISIBLE"
 		icon="add"
 		sparse
 		:overlay="overlay"
@@ -14,6 +16,7 @@
 		/>
 
 	<app-game-playlist-add-to-popover
+		v-if="isShown"
 		slot="popover"
 		:game="game"
 		/>

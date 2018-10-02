@@ -13,8 +13,6 @@ import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/ga
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { Jam } from '../../../../../lib/gj-lib-client/components/jam/jam.model';
 import { Notification } from '../../../../../lib/gj-lib-client/components/notification/notification-model';
-import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/popover';
-import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -22,7 +20,6 @@ import {
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { numberSort } from '../../../../../lib/gj-lib-client/utils/array';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { currency } from '../../../../../lib/gj-lib-client/vue/filters/currency';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppBroadcastCard } from '../../../../components/broadcast-card/broadcast-card';
@@ -32,17 +29,14 @@ import { Store } from '../../../../store/index';
 @Component({
 	name: 'RouteDashMainOverview',
 	components: {
-		AppJolticon,
 		AppExpand,
 		AppCard,
 		AppCommentVideoThumbnail,
-		AppPopover,
 		AppBroadcastCard,
 	},
 	directives: {
 		AppTrackEvent,
 		AppTooltip,
-		AppPopoverTrigger,
 	},
 	filters: {
 		currency,

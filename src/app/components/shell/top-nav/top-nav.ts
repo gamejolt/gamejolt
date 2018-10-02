@@ -1,22 +1,20 @@
+import View from '!view!./top-nav.html?style=./top-nav.styl';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { State, Action } from 'vuex-class';
-import View from '!view!./top-nav.html?style=./top-nav.styl';
-
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
+import { Action, State } from 'vuex-class';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppShellAccountPopover } from '../account-popover/account-popover';
-import { AppFriendRequestPopover } from '../../friend/request-popover/request-popover';
+import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
+import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
+import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
+import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
-import { AppSearch } from '../../search/search';
 import { Store } from '../../../store/index';
 import { ChatClient } from '../../chat/client';
-import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
-import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
+import { AppFriendRequestPopover } from '../../friend/request-popover/request-popover';
+import { AppSearch } from '../../search/search';
+import { AppShellAccountPopover } from '../account-popover/account-popover';
 
 let components: any = {
 	AppUserAvatarImg,
@@ -39,18 +37,30 @@ if (GJ_IS_CLIENT) {
 	components,
 	directives: {
 		AppTooltip,
-		AppPopoverTrigger,
 		AppTrackEvent,
 	},
 })
 export class AppShellTopNav extends Vue {
-	@State app!: Store['app'];
-	@State chat!: ChatClient;
-	@State notificationCount!: Store['notificationCount'];
-	@State friendRequestCount!: Store['friendRequestCount'];
-	@State isLeftPaneVisible!: Store['isLeftPaneVisible'];
-	@State isRightPaneVisible!: Store['isRightPaneVisible'];
-	@State hasSidebar!: Store['hasSidebar'];
+	@State
+	app!: Store['app'];
+
+	@State
+	chat!: ChatClient;
+
+	@State
+	notificationCount!: Store['notificationCount'];
+
+	@State
+	friendRequestCount!: Store['friendRequestCount'];
+
+	@State
+	isLeftPaneVisible!: Store['isLeftPaneVisible'];
+
+	@State
+	isRightPaneVisible!: Store['isRightPaneVisible'];
+
+	@State
+	hasSidebar!: Store['hasSidebar'];
 
 	friendRequestsShowing = false;
 	userMenuShowing = false;
@@ -60,6 +70,8 @@ export class AppShellTopNav extends Vue {
 	readonly Screen = Screen;
 	readonly Connection = Connection;
 
-	@Action toggleRightPane!: Store['toggleRightPane'];
-	@Action toggleLeftPane!: Store['toggleLeftPane'];
+	@Action
+	toggleRightPane!: Store['toggleRightPane'];
+	@Action
+	toggleLeftPane!: Store['toggleLeftPane'];
 }

@@ -12,45 +12,39 @@
 		<app-jolticon icon="trans-down" class="caret" />
 	</a>
 
-	<!-- <app-popover
-		popover-id="search-history-popover"
-		@focused="onShow"
-		@blurred="onHide"
-		> -->
-		<div slot="popover" class="fill-darkest">
+	<div slot="popover" class="fill-darkest">
 
-			<div class="popover-heading">
-				<translate>search.recent.popover_heading</translate>
-			</div>
-
-			<div class="alert alert-notice" v-if="!recentSearches.length">
-				<translate>search.recent.none</translate>
-			</div>
-
-			<template v-if="isVisible && recentSearches.length">
-
-				<div class="list-group list-group-dark thin">
-					<a class="list-group-item"
-						v-for="query of recentSearches"
-						@click="go( query )"
-						v-app-track-event="`search:history:go`"
-						>
-						{{ query }}
-					</a>
-				</div>
-
-				<div class="list-group list-group-dark thin">
-					<a class="list-group-item has-icon"
-						@click="clear()"
-						v-app-track-event="`search:history:clear`"
-						>
-						<app-jolticon icon="remove" />
-						<translate>search.recent.clear_button</translate>
-					</a>
-				</div>
-
-			</template>
-
+		<div class="popover-heading">
+			<translate>search.recent.popover_heading</translate>
 		</div>
-	<!-- </app-popover> -->
+
+		<div class="alert alert-notice" v-if="!recentSearches.length">
+			<translate>search.recent.none</translate>
+		</div>
+
+		<template v-if="isVisible && recentSearches.length">
+
+			<div class="list-group list-group-dark thin">
+				<a class="list-group-item"
+					v-for="query of recentSearches"
+					@click="go( query )"
+					v-app-track-event="`search:history:go`"
+					>
+					{{ query }}
+				</a>
+			</div>
+
+			<div class="list-group list-group-dark thin">
+				<a class="list-group-item has-icon"
+					@click="clear()"
+					v-app-track-event="`search:history:clear`"
+					>
+					<app-jolticon icon="remove" />
+					<translate>search.recent.clear_button</translate>
+				</a>
+			</div>
+
+		</template>
+
+	</div>
 </app-popper>

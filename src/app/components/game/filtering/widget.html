@@ -20,116 +20,55 @@
 						<app-jolticon icon="chevron-down" />
 					</a>
 
-					<!-- <app-popover
-						v-for="( options, filter ) of orderedFilters"
-						:key="filter"
-						:popover-id="`games-filter-${filter}`"
-						> -->
-
-						<div
-							class="game-filtering-widget-list-group list-group list-group-dark"
-							slot="popover"
+					<div
+						class="game-filtering-widget-list-group list-group list-group-dark"
+						slot="popover"
+						>
+						<a
+							class="list-group-item has-addon"
+							v-for="(label, option) of definitions[filter].options"
+							:key="option"
+							:class="filter === 'os' || filter === 'browser' ? 'has-icon' : ''"
+							@click="toggleFilterOption(filter, option)"
+							@mouseover="onMouseover(filter, option)"
+							@mouseout="onMouseout(filter)"
 							>
-							<a
-								class="list-group-item has-addon"
-								v-for="(label, option) of definitions[filter].options"
-								:key="option"
-								:class="filter === 'os' || filter === 'browser' ? 'has-icon' : ''"
-								@click="toggleFilterOption(filter, option)"
-								@mouseover="onMouseover(filter, option)"
-								@mouseout="onMouseout(filter)"
-								>
 
-								<!--
-									Array types get checboxes.
-								-->
-								<div class="list-group-item-addon" v-if="definitions[filter].type === 'array'">
-									<app-jolticon
-										:icon="filtering.isFilterOptionSet(filter, option)
-											? 'checkbox'
-											: 'box-empty'
-										"
-										/>
-								</div>
-
-								<!--
-									Radio types get radio button things.
-								-->
-								<div class="list-group-item-addon" v-if="definitions[filter].type === 'radio'">
-									<app-jolticon
-										:icon="filtering.isFilterOptionSet(filter, option)
-											? (hovered[filter] === option ? 'remove' : 'radio-circle-filled')
-											: 'radio-circle'
-										"
-										/>
-								</div>
-
+							<!--
+								Array types get checboxes.
+							-->
+							<div class="list-group-item-addon" v-if="definitions[filter].type === 'array'">
 								<app-jolticon
-									v-if="filter === 'os' || filter === 'browser'"
-									:icon="getJolticon(filter, option)"
+									:icon="filtering.isFilterOptionSet(filter, option)
+										? 'checkbox'
+										: 'box-empty'
+									"
 									/>
+							</div>
 
-								{{ label }}
+							<!--
+								Radio types get radio button things.
+							-->
+							<div class="list-group-item-addon" v-if="definitions[filter].type === 'radio'">
+								<app-jolticon
+									:icon="filtering.isFilterOptionSet(filter, option)
+										? (hovered[filter] === option ? 'remove' : 'radio-circle-filled')
+										: 'radio-circle'
+									"
+									/>
+							</div>
 
-							</a>
-						</div>
-					<!-- </app-popover> -->
+							<app-jolticon
+								v-if="filter === 'os' || filter === 'browser'"
+								:icon="getJolticon(filter, option)"
+								/>
+
+							{{ label }}
+
+						</a>
+					</div>
 				</app-popper>
 			</li>
-			<!-- <li>
-				<a v-app-popover-trigger="`games-filter-price`" v-app-track-event="`game-filtering:tab-price`">
-					<translate>Price</translate>
-					<span class="badge badge-highlight" v-if="filtering.filters.price">
-						1
-					</span>
-					<app-jolticon icon="chevron-down" />
-				</a>
-			</li>
-			<li>
-				<a v-app-popover-trigger="`games-filter-os`" v-app-track-event="`game-filtering:tab-os`">
-					<translate>games.filtering.os_label</translate>
-					<span class="badge badge-highlight" v-if="filtering.filters.os.length">
-						{{ filtering.filters.os.length | number }}
-					</span>
-					<app-jolticon icon="chevron-down" />
-				</a>
-			</li>
-			<li>
-				<a v-app-popover-trigger="`games-filter-browser`" v-app-track-event="`game-filtering:tab-browser`">
-					<translate>games.filtering.browser_label</translate>
-					<span class="badge badge-highlight" v-if="filtering.filters.browser.length">
-						{{ filtering.filters.browser.length | number }}
-					</span>
-					<app-jolticon icon="chevron-down" />
-				</a>
-			</li>
-			<li>
-				<a v-app-popover-trigger="`games-filter-maturity`" v-app-track-event="`game-filtering:tab-maturity`">
-					<translate>games.filtering.maturity_label</translate>
-					<span class="badge badge-highlight" v-if="filtering.filters.maturity.length">
-						{{ filtering.filters.maturity.length | number }}
-					</span>
-					<app-jolticon icon="chevron-down" />
-				</a>
-			</li>
-			<li>
-				<a v-app-popover-trigger="`games-filter-status`" v-app-track-event="`game-filtering:tab-status`">
-					<translate>games.filtering.status_label</translate>
-					<span class="badge badge-highlight" v-if="filtering.filters.status.length">
-						{{ filtering.filters.status.length | number }}
-					</span>
-					<app-jolticon icon="chevron-down" />
-				</a>
-			</li>
-			<li v-if="app.user && app.user.is_partner">
-				<a v-app-popover-trigger="`games-filter-partners`" v-app-track-event="`game-filtering:tab-partners`">
-					<translate>Partners</translate>
-					<span class="badge badge-highlight" v-if="filtering.filters.partners.length">
-						{{ filtering.filters.partners.length | number }}
-					</span>
-					<app-jolticon icon="chevron-down" />
-				</a>
-			</li> -->
 		</ul>
 	</nav>
 
