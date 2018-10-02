@@ -46,7 +46,7 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 		return this.app.user && this.user && this.user.id === this.app.user.id;
 	}
 
-	@RouteResolve({ cache: false, lazy: true, reloadOnQueryChange: true })
+	@RouteResolve({ cache: false, lazy: true })
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(getFetchUrl(route));
 	}

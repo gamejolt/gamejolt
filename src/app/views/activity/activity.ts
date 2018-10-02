@@ -6,7 +6,10 @@ import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { Mutation, State } from 'vuex-class';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
-import { BaseRouteComponent, RouteResolve } from '../../../lib/gj-lib-client/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppActivityFeed } from '../../components/activity/feed/feed';
 import { ActivityFeedContainer } from '../../components/activity/feed/feed-container-service';
@@ -108,11 +111,11 @@ export default class RouteActivity extends BaseRouteComponent {
 			);
 		}
 
-		// we clear the notifications for the tab we are on
-		this.setNotificationCount({ type: this.tab, count: 0 });
-
 		// Don't set if from cache, otherwise it could reset to the cached count when switching between tabs.
 		if (!fromCache) {
+			// we clear the notifications for the tab we are on
+			this.setNotificationCount({ type: this.tab, count: 0 });
+
 			if (this.tab === 'activity') {
 				this.setNotificationCount({
 					type: 'notifications',

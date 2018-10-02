@@ -41,7 +41,7 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 		return this.$route.query.tab || 'active';
 	}
 
-	@RouteResolve({ cache: false, lazy: false, reloadOnQueryChange: true })
+	@RouteResolve({ cache: false, lazy: false })
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(getFetchUrl(route));
 	}

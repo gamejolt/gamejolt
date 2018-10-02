@@ -104,7 +104,7 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 
-	@RouteResolve({ cache: false, reloadOnQueryChange: true })
+	@RouteResolve({ cache: false })
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			'/web/dash/analytics/' + route.params.resource + '/' + route.params.resourceId

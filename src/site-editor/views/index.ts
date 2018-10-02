@@ -15,7 +15,7 @@ import { store } from '../store/index';
 	name: 'RouteEditor',
 })
 class RouteEditor extends BaseRouteComponent {
-	@RouteResolve({ lazy: false, cache: false, reloadOnQueryChange: true })
+	@RouteResolve({ lazy: false, cache: false })
 	routeResolve(this: undefined, route: Route) {
 		const tab: any = route.params.tab;
 		const siteId = parseInt(route.query.id, 10);
