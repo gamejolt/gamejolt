@@ -12,8 +12,7 @@ import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Jam } from '../../../../lib/gj-lib-client/components/jam/jam.model';
 import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading/fade/fade';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
-import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
-import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
+import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -49,7 +48,7 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 		AppPageHeader,
 		AppGameCollectionThumbnail,
 		AppJolticon,
-		AppPopover,
+		AppPopper,
 		AppGameListing,
 		AppGameGrid,
 		AppGameCollectionFollowWidget,
@@ -59,7 +58,6 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 	directives: {
 		AppTooltip,
 		AppAuthRequired,
-		AppPopoverTrigger,
 	},
 	filters: {
 		number,

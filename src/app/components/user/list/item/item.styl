@@ -21,7 +21,11 @@ $-height = 50px
 .-avatar
 	flex: none
 	width: $-height
-	margin-right: $-v-padding
+	margin-right: $-h-padding
+
+.-label
+	flex: auto
+	overflow: hidden
 
 .-name, .-username
 	text-overflow()
@@ -32,3 +36,7 @@ $-height = 50px
 .-username
 	theme-prop('color', 'fg-muted')
 	font-size: $font-size-small
+
+.-button
+	flex: none
+	margin-left: $-h-padding

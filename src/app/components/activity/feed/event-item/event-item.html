@@ -9,12 +9,13 @@
 		>
 
 		<div class="-header">
-			<app-user-avatar
-				class="-header-avatar"
-				:user="user"
-				show-hover-card
-				@click.native.stop
-				/>
+			<app-user-card-hover :user="user">
+				<app-user-avatar
+					class="-header-avatar"
+					:user="user"
+					@click.native.stop
+					/>
+			</app-user-card-hover>
 
 			<div class="-header-content">
 				<div class="-header-byline">

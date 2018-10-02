@@ -1,4 +1,5 @@
 import View from '!view!./list.html?style=./list.styl';
+import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
@@ -6,8 +7,10 @@ import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.s
 import { GameScoreTable } from '../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { AppLoadingFade } from '../../../../../../../lib/gj-lib-client/components/loading/fade/fade';
 import { AppNavTabList } from '../../../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
-import { Popover } from '../../../../../../../lib/gj-lib-client/components/popover/popover.service';
-import { BaseRouteComponent, RouteResolve } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppScrollAffix } from '../../../../../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { AppNoAutoscroll } from '../../../../../../../lib/gj-lib-client/components/scroll/auto-scroll/no-autoscroll.directive.vue';
@@ -108,6 +111,6 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 			params: { tableId: table.id + '' },
 		});
 
-		Popover.hideAll();
+		Popper.hideAll();
 	}
 }

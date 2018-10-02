@@ -22,17 +22,26 @@
 					This will make sure that the autocomplete popover doesn't disappear when
 					clicking the search input again.'
 				-->
-				<app-search-input
-					:id="`search-input-${id}`"
-					v-model="query"
-					v-app-popover-trigger.click-show="`search-autocomplete`"
-					@focus="onFocus"
-					@blur="onBlur"
-					@keydown="onKeydown"
-					/>
-			</div>
+				<app-popper
+					trigger="manual"
+					block
+					hide-on-state-change
+					track-trigger-width
+					:show="isShowingAutocomplete"
+					:disabled="autocompleteDisabled"
+					:auto-hide="false"
+					>
+					<app-search-input
+						:id="`search-input-${id}`"
+						v-model="query"
+						@focus="onFocus"
+						@blur="onBlur"
+						@keydown="onKeydown"
+						/>
 
-			<app-search-autocomplete v-if="!autocompleteDisabled" />
+					<app-search-autocomplete slot="popover" />
+				</app-popper>
+			</div>
 
 		</div>
 	</form>

@@ -1,35 +1,36 @@
-<div
-	class="scrollable fill-darker"
-	@scroll="onScroll"
+<app-scroll-scroller
+	@scroll.native="onScroll"
 	>
+	<div class="-container fill-darker">
 
-	<transition-group
-		@enter="onMessageTransition"
-		>
-		<div
-			class="anim-fade-in no-animate-leave"
-			v-for="message of messages"
-			:key="message.id"
-			>
-
+		<!-- <transition-group
+			@enter="onMessageTransition"
+			> -->
 			<div
-				class="chat-window-output-date-split"
-				v-if="message.dateSplit"
+				class="anim-fade-in no-animate-leave"
+				v-for="message of messages"
+				:key="message.id"
 				>
-				<span class="inner">{{ message.loggedOn | date( 'mediumDate' ) }}</span>
+
+				<div
+					class="-date-split"
+					v-if="message.dateSplit"
+					>
+					<span class="-inner">{{ message.loggedOn | date( 'mediumDate' ) }}</span>
+				</div>
+
+				<hr
+					class="-hr"
+					v-if="!message.dateSplit && !message.combine"
+					>
+
+				<app-chat-window-output-item
+					:message="message"
+					:room="room"
+					/>
+
 			</div>
+		<!-- </transition-group> -->
 
-			<hr
-				class="chat-window-output-hr"
-				v-if="!message.dateSplit && !message.combine"
-				>
-
-			<app-chat-window-output-item
-				:message="message"
-				:room="room"
-				/>
-
-		</div>
-	</transition-group>
-
-</div>
+	</div>
+</app-scroll-scroller>

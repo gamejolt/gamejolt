@@ -1,4 +1,6 @@
 import View from '!view!./view.html';
+import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
+import { AppUserCardHover } from 'game-jolt-frontend-lib/components/user/card/hover/hover';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
@@ -13,9 +15,7 @@ import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growl
 import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components/message-thread/add/add';
 import { AppMessageThreadPagination } from '../../../../../lib/gj-lib-client/components/message-thread/pagination/pagination';
-import { AppPopover } from '../../../../../lib/gj-lib-client/components/popover/popover';
-import { AppPopoverTrigger } from '../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
-import { Popover } from '../../../../../lib/gj-lib-client/components/popover/popover.service';
+import { AppPopper } from '../../../../../lib/gj-lib-client/components/popper/popper';
 import { ReportModal } from '../../../../../lib/gj-lib-client/components/report/modal/modal.service';
 import {
 	BaseRouteComponent,
@@ -30,7 +30,6 @@ import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/
 import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { AppWidgetCompiler } from '../../../../../lib/gj-lib-client/components/widget-compiler/widget-compiler';
 import { enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { FormForumPost } from '../../../../components/forms/forum/post/post';
 import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
@@ -45,11 +44,11 @@ import { Store } from '../../../../store/index';
 	name: 'RouteForumsTopicsView',
 	components: {
 		AppPageHeader,
-		AppJolticon,
 		AppUserAvatar,
+		AppUserCardHover,
 		AppForumBreadcrumbs,
 		AppTimeAgo,
-		AppPopover,
+		AppPopper,
 		AppFadeCollapse,
 		AppWidgetCompiler,
 		AppForumPostList,
@@ -63,7 +62,6 @@ import { Store } from '../../../../store/index';
 	directives: {
 		AppTooltip,
 		AppScrollTo,
-		AppPopoverTrigger,
 		AppTrackEvent,
 	},
 	filters: {
@@ -165,7 +163,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 
 	editTopic() {
 		this.isEditingTopic = true;
-		Popover.hideAll();
+		Popper.hideAll();
 	}
 
 	closeEditTopic() {

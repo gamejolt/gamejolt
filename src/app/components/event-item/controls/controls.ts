@@ -13,8 +13,7 @@ import { CommentVideo } from 'game-jolt-frontend-lib/components/comment/video/vi
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { AppFiresidePostLikeWidget } from 'game-jolt-frontend-lib/components/fireside/post/like/widget/widget';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { AppPopover } from 'game-jolt-frontend-lib/components/popover/popover';
-import { AppPopoverTrigger } from 'game-jolt-frontend-lib/components/popover/popover-trigger.directive.vue';
+import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
 import { AppSocialFacebookLike } from 'game-jolt-frontend-lib/components/social/facebook/like/like';
 import { AppSocialTwitterShare } from 'game-jolt-frontend-lib/components/social/twitter/share/share';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
@@ -26,7 +25,7 @@ import { AppCommentWidgetLazy } from '../../lazy';
 @View
 @Component({
 	components: {
-		AppPopover,
+		AppPopper,
 		AppCommentWidget: AppCommentWidgetLazy,
 		AppFiresidePostLikeWidget,
 		AppCommentVideoLikeWidget,
@@ -35,7 +34,6 @@ import { AppCommentWidgetLazy } from '../../lazy';
 	},
 	directives: {
 		AppTooltip,
-		AppPopoverTrigger,
 	},
 	filters: {
 		number,

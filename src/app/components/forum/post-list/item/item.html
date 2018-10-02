@@ -77,16 +77,19 @@
 
 	<template slot="meta">
 
-		<a class="link-muted"
+		<app-popper
 			v-if="app.user"
-			v-app-popover-trigger="`forum-post-popover-${ id }`"
-			v-app-tooltip="$gettext( 'Options' )"
 			>
-			<app-jolticon icon="ellipsis-v" class="middle" />
-		</a>
-
-		<app-popover :popover-id="`forum-post-popover-${ id }`" v-if="app.user">
-			<div class="list-group list-group-dark">
+			<a
+				class="link-muted"
+				v-app-tooltip="$gettext( 'Options' )"
+				>
+				<app-jolticon icon="ellipsis-v" class="middle" />
+			</a>
+			<div
+				slot="popover"
+				class="list-group list-group-dark"
+				>
 				<a class="list-group-item has-icon"
 					@click="copyPermalink"
 					>
@@ -128,7 +131,7 @@
 					</a>
 				</template>
 			</div>
-		</app-popover>
+		</app-popper>
 
 	</template>
 
@@ -152,9 +155,9 @@
 			<translate
 				:translate-n="post.replies_count"
 				:translate-params="{ count: post.replies_count }"
-				translate-plural="+%{ count } replies"
+				translate-plural="%{ count } replies"
 				>
-				+%{ count } reply
+				%{ count } reply
 			</translate>
 		</app-button>
 

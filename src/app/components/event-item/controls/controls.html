@@ -35,21 +35,17 @@
 					&nbsp;
 				</template>
 
-				<app-button
-					icon="share-airplane"
-					circle
-					v-app-popover-trigger="sharePopoverId"
-					v-app-tooltip="$gettext( 'Share' )"
-					/>
-
-				<app-popover
-					:popover-id="sharePopoverId"
-					:append-to-body="!inModal"
-					@focused="isShowingShare = true"
-					@blurred="isShowingShare = false"
+				<app-popper
+					@show="isShowingShare = true"
+					@hide="isShowingShare = false"
 					>
+					<app-button
+						icon="share-airplane"
+						circle
+						v-app-tooltip="$gettext( 'Share' )"
+						/>
 
-					<div class="well fill-darkest sans-margin" v-if="isShowingShare">
+					<div slot="popover" class="well fill-darkest sans-margin" v-if="isShowingShare">
 						<div class="social-widgets" v-if="!GJ_IS_CLIENT">
 							<app-social-twitter-share
 								:url="shareUrl"
@@ -70,8 +66,7 @@
 							<translate>Copy Permalink</translate>
 						</app-button>
 					</div>
-
-				</app-popover>
+				</app-popper>
 			</span>
 		</template>
 		<template v-else-if="video">

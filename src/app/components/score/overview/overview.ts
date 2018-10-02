@@ -1,46 +1,42 @@
-import Vue from 'vue';
-import { State } from 'vuex-class';
-import { Component, Prop, Watch } from 'vue-property-decorator';
 import View from '!view!./overview.html?style=./overview.styl';
-
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { GameScoreTable } from '../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { UserGameScore } from '../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
-import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
+import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
+import Vue from 'vue';
+import { Component, Prop, Watch } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { GameScoreTable } from '../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ago';
-import { AppScoreList } from '../list/list';
-import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+import { UserGameScore } from '../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
+import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { AppScoreList } from '../list/list';
 import { AppScoreboardSelector } from '../scoreboard-selector/scoreboard-selector';
 
 @View
 @Component({
 	components: {
-		AppJolticon,
 		AppTimeAgo,
 		AppScoreboardSelector,
 		AppScoreList,
 		AppUserAvatar,
-	},
-	directives: {
-		AppPopoverTrigger,
 	},
 	filters: {
 		number,
 	},
 })
 export class AppScoreOverview extends Vue {
-	@Prop(Game) game!: Game;
-	@Prop(Object) initialPayload?: any;
+	@Prop(Game)
+	game!: Game;
+	@Prop(Object)
+	initialPayload?: any;
 	@Prop({ type: String, default: 'full' })
 	size!: 'full' | 'small';
 
-	@State app!: AppStore;
+	@State
+	app!: AppStore;
 
 	scoreTables: GameScoreTable[] = [];
 	scoreTable: GameScoreTable | null = null;
@@ -88,7 +84,7 @@ export class AppScoreOverview extends Vue {
 	}
 
 	async changeTable(table?: GameScoreTable) {
-		Popover.hideAll();
+		Popper.hideAll();
 
 		// Only if not current table.
 		if (table && this.scoreTable && table.id === this.scoreTable.id) {

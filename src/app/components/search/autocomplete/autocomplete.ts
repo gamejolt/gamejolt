@@ -1,22 +1,17 @@
-import 'rxjs/add/operator/debounceTime';
-
 import View from '!view!./autocomplete.html?style=./autocomplete.styl';
+import 'rxjs/add/operator/debounceTime';
 import { Subject } from 'rxjs/Subject';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
-import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
-import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { fuzzysearch } from '../../../../lib/gj-lib-client/utils/string';
 import { findRequiredVueParent } from '../../../../lib/gj-lib-client/utils/vue';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import * as _LocalDbGameMod from '../../client/local-db/game/game.model';
 import { AppGameCompatIcons } from '../../game/compat-icons/compat-icons';
@@ -46,8 +41,6 @@ interface Command {
 @View
 @Component({
 	components: {
-		AppPopover,
-		AppJolticon,
 		AppGameThumbnailImg,
 		AppGameCompatIcons,
 	},
@@ -56,7 +49,8 @@ interface Command {
 	},
 })
 export class AppSearchAutocomplete extends Vue {
-	@State app!: AppStore;
+	@State
+	app!: AppStore;
 	mode: 'search' | 'command' = 'search';
 
 	selected = 0;
@@ -204,10 +198,6 @@ export class AppSearchAutocomplete extends Vue {
 		}
 
 		return filteredCommands;
-	}
-
-	getPopover() {
-		return Popover.getPopover('search-autocomplete');
 	}
 
 	inAvailableMode() {

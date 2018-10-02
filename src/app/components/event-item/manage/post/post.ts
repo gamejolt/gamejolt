@@ -1,7 +1,6 @@
 import View from '!view!./post.html?style=./post.styl';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { AppPopover } from 'game-jolt-frontend-lib/components/popover/popover';
-import { AppPopoverTrigger } from 'game-jolt-frontend-lib/components/popover/popover-trigger.directive.vue';
+import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
@@ -13,11 +12,10 @@ import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 @View
 @Component({
 	components: {
-		AppPopover,
+		AppPopper,
 	},
 	directives: {
 		AppTooltip,
-		AppPopoverTrigger,
 	},
 })
 export class AppEventItemManagePost extends Vue {

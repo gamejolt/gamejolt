@@ -8,8 +8,7 @@ import {
 	CommentState,
 	CommentStore,
 } from '../../../../../../lib/gj-lib-client/components/comment/comment-store';
-import { AppPopover } from '../../../../../../lib/gj-lib-client/components/popover/popover';
-import { AppPopoverTrigger } from '../../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
+import { AppPopper } from '../../../../../../lib/gj-lib-client/components/popper/popper';
 import { ReportModal } from '../../../../../../lib/gj-lib-client/components/report/modal/modal.service';
 import { number } from '../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppGameModLinks } from '../../../../../components/game/mod-links/mod-links';
@@ -20,12 +19,9 @@ import { RouteState, RouteStore } from '../view.store';
 @View
 @Component({
 	components: {
-		AppPopover,
+		AppPopper,
 		AppGamePerms,
 		AppGameModLinks,
-	},
-	directives: {
-		AppPopoverTrigger,
 	},
 	filters: {
 		number,

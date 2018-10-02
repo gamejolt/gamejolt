@@ -35,7 +35,7 @@
 .chat-window
 	position: relative
 	display: flex
-	flex: 1 1 auto
+	flex: auto
 	justify-content: center
 	width: 100%
 	height: 100%
@@ -73,7 +73,7 @@
 
 .chat-window-main
 	position: relative
-	flex: 1 1 auto
+	flex: auto
 	display: flex
 	flex-direction: column
 	z-index: 1
@@ -84,7 +84,7 @@
  */
 .chat-window-header-wrap
 	theme-prop('color', 'light')
-	flex: 0 0 auto
+	flex: none
 	width: 100%
 	font-size: 14px
 
@@ -122,16 +122,19 @@
  * Chat Window Output
  */
 .chat-window-output
-	flex: 1 1 auto
-	overflow-y: auto
-	overflow-x: hidden
-	padding: $chat-room-window-padding
+	flex: auto
+	display: flex
+	overflow: hidden
+	height: 100%
+
+	> .scroll-scroller
+		flex: auto
 
 .chat-window-send-container
 	theme-prop('background-color', 'darker')
 	theme-prop('border-top-color', 'dark')
 	width: 100%
-	flex: 0 0 auto
+	flex: none
 	border-top-width: 1px
 	border-top-style: solid
 	padding: $chat-room-window-padding

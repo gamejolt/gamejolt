@@ -5,9 +5,7 @@ import View from '!view!./sidebar.html?style=./sidebar.styl';
 
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
@@ -18,11 +16,12 @@ import { AppShellSidebarCollectionList } from './collection-list';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
 import { LibraryStore, LibraryAction, LibraryState } from '../../../store/library';
 import { AppScrollScroller } from '../../../../lib/gj-lib-client/components/scroll/scroller/scroller';
+import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
 
 @View
 @Component({
 	components: {
-		AppPopover,
+		AppPopper,
 		AppJolticon,
 		AppUserAvatarImg,
 		AppShellSidebarCollectionList,
@@ -30,7 +29,6 @@ import { AppScrollScroller } from '../../../../lib/gj-lib-client/components/scro
 		AppScrollScroller,
 	},
 	directives: {
-		AppPopoverTrigger,
 		AppTooltip,
 		AppTrackEvent,
 	},

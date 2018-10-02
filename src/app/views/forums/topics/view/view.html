@@ -29,10 +29,14 @@
 			</span>
 		</div>
 
-		<app-user-avatar
+		<app-user-card-hover
 			slot="spotlight"
 			:user="topic.user"
-			/>
+			>
+			<app-user-avatar
+				:user="topic.user"
+				/>
+		</app-user-card-hover>
 
 		<template slot="nav">
 			<app-forum-breadcrumbs
@@ -95,16 +99,18 @@
 						</app-button>
 
 						<!-- Mod Tools -->
-						<app-button
+						<app-popper
 							v-if="app.user"
 							block
-							sparse
-							icon="ellipsis-v"
-							v-app-popover-trigger="`forum-topic-popover`"
-							/>
+							>
+							<br>
+							<app-button
+								block
+								sparse
+								icon="ellipsis-v"
+								/>
 
-						<app-popover popover-id="forum-topic-popover" v-if="app.user">
-							<div class="list-group list-group-dark thin">
+							<div slot="popover" class="list-group list-group-dark thin">
 								<a class="list-group-item has-icon"
 									@click="report"
 									>
@@ -154,7 +160,7 @@
 									<translate>Moderate User</translate>
 								</a>
 							</div>
-						</app-popover>
+						</app-popper>
 					</app-scroll-affix>
 
 					<br>

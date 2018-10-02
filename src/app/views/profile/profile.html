@@ -91,18 +91,18 @@
 						</router-link>
 					</li>
 					<li>
-						<router-link :to="{ name: 'profile.followers' }" active-class="active">
-							<translate>Followers</translate>
-							<span class="badge">
-								{{ user.follower_count | number }}
-							</span>
-						</router-link>
-					</li>
-					<li>
 						<router-link :to="{ name: 'profile.following' }" active-class="active">
 							<translate>Following</translate>
 							<span class="badge">
 								{{ user.following_count | number }}
+							</span>
+						</router-link>
+					</li>
+					<li>
+						<router-link :to="{ name: 'profile.followers' }" active-class="active">
+							<translate>Followers</translate>
+							<span class="badge">
+								{{ user.follower_count | number }}
 							</span>
 						</router-link>
 					</li>
@@ -117,39 +117,39 @@
 						</router-link>
 					</li>
 					<li v-if="app.user && (app.user.permission_level > 0 || (userFriendship && userFriendship.state) === UserFriendship.STATE_FRIENDS || user.id !== app.user.id)">
-						<a v-app-popover-trigger="`profile-more-options`">
-							<app-jolticon icon="ellipsis-h" />
-						</a>
+						<app-popper>
+							<a>
+								<app-jolticon icon="ellipsis-h" />
+							</a>
+
+							<div slot="popover" class="list-group list-group-dark">
+								<a class="list-group-item has-icon"
+									v-if="app.user && user.id !== app.user.id"
+									@click="report"
+									>
+									<app-jolticon icon="flag" notice />
+									<translate>profile.report_user_button</translate>
+								</a>
+								<a class="list-group-item has-icon"
+									v-if="userFriendship && userFriendship.state === UserFriendship.STATE_FRIENDS"
+									@click="removeFriend()"
+									>
+									<app-jolticon icon="friend-remove-2" notice />
+									<translate>profile.remove_friend_button</translate>
+								</a>
+								<a class="list-group-item has-icon"
+									v-if="app.user && app.user.permission_level > 0"
+									:href="`${Environment.baseUrl}/moderate/users/view/${user.id}`"
+									target="_blank"
+									>
+									<app-jolticon icon="cog" />
+									<translate>profile.moderate_user_button</translate>
+								</a>
+							</div>
+						</app-popper>
 					</li>
 				</ul>
 			</nav>
-
-			<app-popover popover-id="profile-more-options">
-				<div class="list-group list-group-dark">
-					<a class="list-group-item has-icon"
-						v-if="app.user && user.id !== app.user.id"
-						@click="report"
-						>
-						<app-jolticon icon="flag" notice />
-						<translate>profile.report_user_button</translate>
-					</a>
-					<a class="list-group-item has-icon"
-						v-if="userFriendship && userFriendship.state === UserFriendship.STATE_FRIENDS"
-						@click="removeFriend()"
-						>
-						<app-jolticon icon="friend-remove-2" notice />
-						<translate>profile.remove_friend_button</translate>
-					</a>
-					<a class="list-group-item has-icon"
-						v-if="app.user && app.user.permission_level > 0"
-						:href="`${Environment.baseUrl}/moderate/users/view/${user.id}`"
-						target="_blank"
-						>
-						<app-jolticon icon="cog" />
-						<translate>profile.moderate_user_button</translate>
-					</a>
-				</div>
-			</app-popover>
 		</template>
 
 		<template slot="controls">

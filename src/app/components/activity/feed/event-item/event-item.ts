@@ -15,6 +15,7 @@ import {
 } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppUserCardHover } from '../../../../../lib/gj-lib-client/components/user/card/hover/hover';
 import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { Store } from '../../../../store';
@@ -45,6 +46,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppEventItemManage,
 		AppEventItemControls,
 		AppPollVoting,
+		AppUserCardHover,
 		AppFadeCollapse,
 	},
 	filters: {

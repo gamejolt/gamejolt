@@ -63,24 +63,22 @@
 				</td>
 				<td class="text-right">
 					<div class="table-controls">
-						<a
-							class="text-muted"
-							v-app-popover-trigger="`scores-options-${ score.id }`"
-							>
-							<app-jolticon icon="cog" />
-						</a>
-					</div>
-					<app-popover :popover-id="'scores-options-' + score.id">
-						<div class="list-group nowrap">
-							<a
-								class="list-group-item has-icon"
-								@click="removeScore( score )"
-								>
-								<app-jolticon icon="remove" />
-								<translate>dash.games.scores.list.remove_button</translate>
+						<app-popper>
+							<a class="text-muted">
+								<app-jolticon icon="cog" />
 							</a>
-						</div>
-					</app-popover>
+
+							<div slot="popover" class="list-group list-group-dark nowrap">
+								<a
+									class="list-group-item has-icon"
+									@click="removeScore( score )"
+									>
+									<app-jolticon icon="remove" notice />
+									<translate>dash.games.scores.list.remove_button</translate>
+								</a>
+							</div>
+						</app-popper>
+					</div>
 				</td>
 			</tr>
 		</tbody>
