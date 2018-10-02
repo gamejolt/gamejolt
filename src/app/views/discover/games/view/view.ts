@@ -32,7 +32,6 @@ import {
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
 import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';
 import { AppGameCoverButtons } from '../../../../components/game/cover-buttons/cover-buttons';
 import { AppGameMaturityBlock } from '../../../../components/game/maturity-block/maturity-block';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
@@ -183,22 +182,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 			return intentRedirect;
 		}
 
-		const payload = await Api.sendRequest('/web/discover/games/' + route.params.id);
-
-		if (payload && payload.game) {
-			const redirect = enforceLocation(
-				route,
-				{ slug: payload.game.slug },
-				{
-					ref: payload.userPartnerKey || route.query.ref || undefined,
-				}
-			);
-			if (redirect) {
-				return redirect;
-			}
-		}
-
-		return payload;
+		return Api.sendRequest('/web/discover/games/' + route.params.id);
 	}
 
 	routeInit() {
