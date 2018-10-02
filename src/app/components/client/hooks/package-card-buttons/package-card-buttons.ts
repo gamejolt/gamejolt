@@ -22,7 +22,11 @@ import {
 	ClientLibraryStore,
 } from '../../../../store/client-library';
 import { AppClientInstallProgress } from '../../install-progress/install-progress';
-import { LocalDbPackage, LocalDbPackagePatchState } from '../../local-db/package/package.model';
+import {
+	LocalDbPackage,
+	LocalDbPackagePatchState,
+	LocalDbPackageRemoveState,
+} from '../../local-db/package/package.model';
 
 @View
 @Component({
@@ -75,6 +79,7 @@ export class AppClientPackageCardButtons extends Vue {
 
 	readonly Device = Device;
 	readonly PatchState = LocalDbPackagePatchState;
+	readonly RemoveState = LocalDbPackageRemoveState;
 
 	get canInstall() {
 		const arch = Device.arch();
@@ -231,6 +236,17 @@ export class AppClientPackageCardButtons extends Vue {
 
 		Analytics.trackEvent('game-package-card', 'uninstall');
 		Popper.hideAll();
+
+		this.packageUninstall([this.localPackage]);
+	}
+
+	retryUninstall() {
+		if (!this.localPackage) {
+			throw new Error(`Local package isn't set`);
+		}
+
+		Analytics.trackEvent('game-package-card', 'retry-uninstall');
+		Popover.hideAll();
 
 		this.packageUninstall([this.localPackage]);
 	}

@@ -1,4 +1,4 @@
-import View from '!view!./following.html';
+import View from '!view!./followers.html';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import {
 	BaseRouteComponent,
@@ -7,37 +7,35 @@ import {
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
-import { RouteState, RouteStore } from '../profile.store';
-import { AppFollowerList } from './../../../components/follower/list/list';
+import { RouteState, RouteStore } from '../view.store';
+import { AppFollowerList } from './../../../../../components/follower/list/list';
 
 function getFetchUrl(route: Route) {
-	return `/web/profile/following/@${route.params.username}`;
+	return `/web/discover/games/followers/${route.params.id}`;
 }
 
 @View
 @Component({
-	name: 'RouteProfileFollowing',
+	name: 'RouteProfileFollowers',
 	components: {
 		AppFollowerList,
 	},
 })
-export default class RouteProfileFollowing extends BaseRouteComponent {
+export default class RouteProfileFollowers extends BaseRouteComponent {
 	@RouteState
-	user!: RouteStore['user'];
+	game!: RouteStore['game'];
 
 	users: User[] = [];
 
 	get routeTitle() {
-		return this.user
-			? `People followed by ${this.user.display_name} (@${this.user.username})`
-			: null;
+		return this.game ? `People following ${this.game.title}` : null;
 	}
 
 	get loadUrl() {
 		return getFetchUrl(this.$route);
 	}
 
-	@RouteResolve()
+	@RouteResolve({ cache: true, lazy: true })
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(getFetchUrl(route));
 	}

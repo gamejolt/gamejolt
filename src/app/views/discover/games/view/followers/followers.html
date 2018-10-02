@@ -1,13 +1,13 @@
 <section class="section">
 	<div class="container">
 
-		<div class="alert alert-info" v-if="!user.follower_count">
-			<translate>No one is following this person yet.</translate>
+		<div class="alert alert-info" v-if="!game.follower_count">
+			<translate>No one is following this game yet.</translate>
 		</div>
 		<app-follower-list
 			:url="loadUrl"
 			:initial-users="users"
-			:count="user.follower_count || 0"
+			:count="game.follower_count || 0"
 			v-else
 			/>
 

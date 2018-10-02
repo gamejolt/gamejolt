@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "0.20.0",
+	"version": "0.20.1",
 	"scripts": {
 		"postinstall": "sh ./git-hooks/setup-hooks.sh",
 		"dev": "gulp watch",
@@ -89,7 +89,7 @@
 	},
 	"dependencies": {
 		"axios": "0.18.0",
-		"client-voodoo": "2.2.10",
+		"client-voodoo": "2.2.12",
 		"fs-extra": "7.0.0",
 		"write-file-atomic": "2.3.0"
 	},

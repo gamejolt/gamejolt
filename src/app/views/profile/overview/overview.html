@@ -226,11 +226,11 @@
 
 						<app-game-list-placeholder
 							v-if="!games.length"
-							:num="5"
+							:num="7"
 							/>
 						<app-game-list
 							v-else-if="games.length"
-							:games="games.slice(0, 7)"
+							:games="games"
 							event-label="profile"
 							/>
 					</template>
