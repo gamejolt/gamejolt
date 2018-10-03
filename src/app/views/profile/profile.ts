@@ -93,7 +93,7 @@ export default class RouteProfile extends BaseRouteComponent {
 	Environment = Environment;
 
 	get shouldShowFullCover() {
-		return Screen.isXs || this.$route.name === 'profile.overview';
+		return Screen.isXs || this.$route.name !== 'profile.post.view';
 	}
 
 	@RouteResolve({ cache: true, lazy: true })
