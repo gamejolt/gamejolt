@@ -159,7 +159,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	}
 
 	get shouldShowFullCover() {
-		return Screen.isXs || this.$route.name === 'discover.games.view.overview';
+		return Screen.isXs || this.$route.name !== 'discover.games.view.devlog.view';
 	}
 
 	@RouteResolve({ lazy: true, cache: true })
