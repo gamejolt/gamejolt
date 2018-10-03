@@ -31,13 +31,13 @@
 		-->
 		<app-page-header
 			:cover-media-item="game.header_media_item"
-			:should-affix-nav="$route.name !== 'discover.games.view.download'"
-			:autoscroll-anchor-key="game.id"
-			:show-cover-buttons="shouldShowCoverButtons"
+			should-affix-nav
 			:blur-header="!shouldShowFullCover"
 			:cover-auto-height="!shouldShowFullCover"
-			:disable-autoscroll-anchor="!Screen.isXs"
+			:autoscroll-anchor-key="game.id"
+			:show-cover-buttons="shouldShowCoverButtons"
 			>
+			<!-- :disable-autoscroll-anchor="!Screen.isXs" -->
 
 			<template slot="cover-buttons" v-if="shouldShowCoverButtons">
 				<app-game-cover-buttons
