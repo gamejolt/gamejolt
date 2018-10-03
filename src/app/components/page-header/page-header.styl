@@ -33,13 +33,14 @@ $-cover-buttons-height = $button-md-line-height + 20px
 					left: ($grid-gutter-width / 2)
 					right: @left
 
+		// When no image, we want to make sure it has enough separation between
+		// the bottom content, otherwise it looks very cluttered.
 		&.has-cover-buttons
-			// When no image, we want to make sure it has enough separation
-			// between the bottom content, otherwise it looks very cluttered.
-			padding-top: $-cover-buttons-height + 80px
+			padding-top: 80px
 
+		// When there is an image, we want to overlay it on top of the image.
 		&.has-cover-image.has-cover-buttons
-			padding-top: ($-cover-buttons-height / 2)
+			padding-top: 0
 
 		.page-header-cover-buttons
 			theme-prop('background-color', 'darkest')
@@ -166,6 +167,3 @@ $-cover-buttons-height = $button-md-line-height + 20px
 				justify-content: center
 				align-items: center
 				overflow: hidden
-
-			&.has-cover-buttons
-				padding-top: $-cover-buttons-height + 20px
