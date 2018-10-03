@@ -9,7 +9,7 @@
 	<div class="game-header-follow-container">
 		<app-game-follow-widget
 			:game="game"
-			block
+			:block="!Screen.isSm && !Screen.isMd"
 			show-user-follow
 			event-label="game-header"
 			/>

@@ -3,18 +3,14 @@ import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./scoreboard-selector.html';
 
 import { GameScoreTable } from '../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppPopoverTrigger } from '../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
+import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
 
 @View
 @Component({
 	components: {
-		AppPopover,
+		AppPopper,
 		AppJolticon,
-	},
-	directives: {
-		AppPopoverTrigger,
 	},
 })
 export class AppScoreboardSelector extends Vue {

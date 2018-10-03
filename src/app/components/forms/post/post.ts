@@ -23,8 +23,6 @@ import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.mo
 import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
 import { LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
 import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
-import { AppPopover } from 'game-jolt-frontend-lib/components/popover/popover';
-import { AppPopoverTrigger } from 'game-jolt-frontend-lib/components/popover/popover-trigger.directive.vue';
 import { AppProgressBar } from 'game-jolt-frontend-lib/components/progress/bar/bar';
 import { AppSketchfabEmbed } from 'game-jolt-frontend-lib/components/sketchfab/embed/embed';
 import {
@@ -84,7 +82,6 @@ type PlatformRestriction = {
 		AppVideoEmbed,
 		AppJolticon,
 		AppLoading,
-		AppPopover,
 		AppUserAvatarImg,
 		AppProgressBar,
 		AppFormPostMedia,
@@ -92,7 +89,6 @@ type PlatformRestriction = {
 	directives: {
 		AppFocusWhen,
 		AppTooltip,
-		AppPopoverTrigger,
 		AppFormAutosize,
 	},
 })

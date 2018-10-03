@@ -6,7 +6,6 @@ import View from '!view!./account-popover.html?style=./account-popover.styl';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
-import { AppPopover } from '../../../../lib/gj-lib-client/components/popover/popover';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppShellUserBox } from '../user-box/user-box';
@@ -31,7 +30,6 @@ if (GJ_IS_CLIENT) {
 @View
 @Component({
 	components: {
-		AppPopover,
 		AppJolticon,
 		AppShellUserBox,
 	},
@@ -55,13 +53,8 @@ export class AppShellAccountPopover extends Vue {
 
 	@Action logout!: Store['logout'];
 
-	onShow() {
-		this.$emit('shown');
+	mounted() {
 		this.getWallet();
-	}
-
-	onHide() {
-		this.$emit('hidden');
 	}
 
 	showToken() {

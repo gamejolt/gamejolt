@@ -7,177 +7,6 @@
 	v-shortkey="[ 'm' ]"
 	@shortkey="toggleLeftPane"
 	>
-	<!--
-		Gotta put any popovers out of the content area.
-		This is so that we can scroll on the Y axis, but overflow on the X.
-	-->
-	<app-popover
-		popover-id="shell-sidebar-games"
-		position="right"
-		position-by="fixed"
-		:append-to-body="true"
-		:hide-on-state-change="true"
-		>
-		<div class="fill-darkest">
-			<ul class="shell-nav">
-				<li>
-					<router-link
-						class="no-icon"
-						:to="{ name: 'discover.games.list._fetch', params: { section: null } }"
-						v-app-track-event="`sidebar:games:hot`"
-						>
-						<translate>Hot Games</translate>
-					</router-link>
-				</li>
-				<li>
-					<router-link
-						class="no-icon"
-						:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
-						v-app-track-event="`sidebar:games:featured`"
-						>
-						<translate>Featured Games</translate>
-					</router-link>
-				</li>
-				<li>
-					<router-link
-						class="no-icon"
-						:to="{ name: 'discover.games.list._fetch', params: { section: 'best' } }"
-						v-app-track-event="`sidebar:games:best`"
-						>
-						<translate>Best Games</translate>
-					</router-link>
-				</li>
-				<li>
-					<a
-						class="no-icon"
-						v-app-popover-trigger.hover="`shell-sidebar-genres`"
-						>
-						<app-jolticon icon="chevron-right" class="shell-nav-chevron" />
-						<strong>
-							<translate>Genres</translate>
-						</strong>
-					</a>
-				</li>
-				<li>
-					<router-link
-						class="no-icon"
-						:to="{ name: 'discover.channels.list' }"
-						v-app-track-event="`sidebar:channels`"
-						v-app-popover-trigger.hover="`shell-sidebar-channels`"
-						>
-						<app-jolticon icon="chevron-right" class="shell-nav-chevron" />
-						<strong>
-							<translate>Channels</translate>
-						</strong>
-					</router-link>
-				</li>
-			</ul>
-		</div>
-
-		<app-popover
-			popover-id="shell-sidebar-genres"
-			position="right"
-			:hide-on-state-change="true"
-			>
-			<div class="fill-darkest">
-				<ul class="shell-nav">
-					<li v-for="( genre, key ) of genres" :key="key">
-						<router-link
-							class="no-icon"
-							:to="{
-								name: 'discover.games.list._fetch-category',
-								params: { section: defaultBrowseSection, category: key },
-							}"
-							v-app-track-event="`sidebar:genres:${genre}`"
-							>
-							{{ genre }}
-						</router-link>
-					</li>
-				</ul>
-			</div>
-		</app-popover>
-
-		<app-popover
-			popover-id="shell-sidebar-channels"
-			position="right"
-			:hide-on-state-change="true"
-			>
-			<div class="fill-darkest">
-				<ul class="shell-nav">
-					<li v-for="channel of channels" :key="channel">
-						<router-link
-							class="no-icon"
-							:to="{
-								name: 'discover.channels.view.overview',
-								params: { channel },
-							}"
-							v-app-track-event="`sidebar:channels`"
-							>
-							#{{ channel }}
-						</router-link>
-					</li>
-					<li>
-						<router-link
-							class="no-icon"
-							:to="{ name: 'discover.channels.list' }"
-							v-app-track-event="`sidebar:channels-all`"
-							>
-							<strong>
-								<translate>View all...</translate>
-							</strong>
-						</router-link>
-					</li>
-				</ul>
-			</div>
-		</app-popover>
-	</app-popover>
-
-	<app-popover
-		popover-id="shell-sidebar-more"
-		:position="Screen.isXs ? 'bottom' : 'right'"
-		:append-to-body="true"
-		:position-by="Screen.isXs ? 'offset' : 'fixed'"
-		:hide-on-state-change="true"
-		>
-		<div class="fill-darkest">
-			<ul class="shell-nav">
-				<li v-if="!GJ_IS_CLIENT && !Screen.isXs">
-					<router-link
-						:to="{ name: 'landing.client' }"
-						v-app-track-event="`sidebar:client`"
-						>
-						<span class="shell-nav-icon">
-							<app-jolticon icon="client" />
-						</span>
-						<translate>Client</translate>
-					</router-link>
-				</li>
-				<li>
-					<router-link
-						:to="{ name: 'forums.landing.overview' }"
-						v-app-track-event="`sidebar:forums`"
-						>
-						<span class="shell-nav-icon">
-							<app-jolticon icon="forums" />
-						</span>
-						<translate>Forums</translate>
-					</router-link>
-				</li>
-				<li>
-					<a
-						:href="Environment.jamsBaseUrl"
-						target="_blank"
-						v-app-track-event="`sidebar:jams`"
-						>
-						<span class="shell-nav-icon">
-							<app-jolticon icon="jams" />
-						</span>
-						<translate>Jams</translate>
-					</a>
-				</li>
-			</ul>
-		</div>
-	</app-popover>
 
 	<app-scroll-scroller
 		overlay
@@ -187,7 +16,6 @@
 
 		<ul class="shell-nav">
 			<li class="offline-disable">
-
 				<router-link
 					v-if="app.user && isBootstrapped"
 					:to="{ name: 'activity', params: { tab: 'activity' } }"
@@ -210,22 +38,17 @@
 						<translate>Activity Feed</translate>
 					</span>
 				</router-link>
+			</li>
 
+			<li class="offline-disable">
 				<router-link
 					:to="{ name: 'discover.games.list._fetch', params: { section: defaultBrowseSection } }"
 					:class="{ active: $route.name.indexOf( 'discover.games.list' ) === 0 }"
 					v-app-track-event="`sidebar:games`"
-					v-app-popover-trigger.hover="{
-						id: `shell-sidebar-games`,
-						disabled: !isLeftPaneVisible || Screen.isMobile,
-					}"
 					>
-					<app-jolticon icon="chevron-right" class="shell-nav-chevron hidden-xs" />
-					<span class="shell-nav-icon"
-						v-app-popover-trigger.hover="{
-							id: `shell-sidebar-games`,
-							disabled: isLeftPaneVisible || Screen.isMobile,
-						}"
+					<span
+						class="shell-nav-icon"
+						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Browse Games' ) : ''"
 						>
 						<app-jolticon icon="game" />
 					</span>
@@ -241,7 +64,8 @@
 					:class="{ active: $route.name.indexOf( 'discover.devlogs' ) === 0 }"
 					v-app-track-event="`sidebar:devlogs`"
 					>
-					<span class="shell-nav-icon"
+					<span
+						class="shell-nav-icon"
 						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Devlogs' ) : ''"
 						>
 						<app-jolticon icon="devlogs" />
@@ -252,46 +76,70 @@
 				</router-link>
 			</li>
 
-			<li class="offline-disable" v-if="Screen.isXs">
+			<li class="offline-disable">
 				<router-link
-					:to="{ name: 'search.results' }"
-					:class="{ active: $route.name.indexOf( 'search' ) === 0 }"
-					v-app-track-event="`sidebar:search`"
+					:to="{ name: 'discover.channels.list' }"
+					:class="{ active: $route.name.indexOf( 'discover.channels' ) === 0 }"
+					v-app-track-event="`sidebar:channels`"
 					>
-					<span class="shell-nav-icon"
-						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Search' ) : ''"
+					<span
+						class="shell-nav-icon"
+						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Channels' ) : ''"
 						>
-						<app-jolticon icon="search" />
+						<app-jolticon icon="tag" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>Search</translate>
+						<translate>Channels</translate>
 					</span>
 				</router-link>
 			</li>
 
-			<li class="offline-disable">
-				<a
-					v-app-popover-trigger="{
-						id: `shell-sidebar-more`,
-						event: Screen.isMobile ? 'click' : 'hover',
-						disabled: !isLeftPaneVisible,
-					}"
-					>
-					<app-jolticon icon="chevron-right" class="shell-nav-chevron" />
-					<span class="shell-nav-icon"
-						v-app-popover-trigger="{
-							id: `shell-sidebar-more`,
-							event: Screen.isMobile ? 'click' : 'hover',
-							disabled: isLeftPaneVisible || Screen.isXs,
-						}"
+			<template v-if="Screen.isXs">
+				<li class="offline-disable">
+					<router-link
+						:to="{ name: 'search.results' }"
+						:class="{ active: $route.name.indexOf( 'search' ) === 0 }"
+						v-app-track-event="`sidebar:search`"
 						>
-						<app-jolticon icon="ellipsis-h" />
-					</span>
-					<span class="shell-nav-label">
-						<translate>More</translate>
-					</span>
-				</a>
-			</li>
+						<span class="shell-nav-icon">
+							<app-jolticon icon="search" />
+						</span>
+						<span class="shell-nav-label">
+							<translate>Search</translate>
+						</span>
+					</router-link>
+				</li>
+
+				<li class="offline-disable">
+					<router-link
+						:to="{ name: 'forums.landing.overview' }"
+						:class="{ active: $route.name.indexOf( 'search' ) === 0 }"
+						v-app-track-event="`sidebar:forums`"
+						>
+						<span class="shell-nav-icon">
+							<app-jolticon icon="forums" />
+						</span>
+						<span class="shell-nav-label">
+							<translate>Forums</translate>
+						</span>
+					</router-link>
+				</li>
+
+				<li class="offline-disable">
+					<a
+						:href="Environment.jamsBaseUrl"
+						target="_blank"
+						v-app-track-event="`sidebar:jams`"
+						>
+						<span class="shell-nav-icon">
+							<app-jolticon icon="jams" />
+						</span>
+						<span class="shell-nav-label">
+							<translate>Jams</translate>
+						</span>
+					</a>
+				</li>
+			</template>
 		</ul>
 
 		<template v-if="app.user">
@@ -309,7 +157,8 @@
 						:class="{ active: $route.name.indexOf( 'dasboard' ) === 0 && $route.name.indexOf( 'dash.activity' ) === -1 }"
 						v-app-track-event="`sidebar:dashboard`"
 						>
-						<span class="shell-nav-icon"
+						<span
+							class="shell-nav-icon"
 							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Dashboard' ) : ''"
 							>
 							<app-user-avatar-img :user="app.user" />
@@ -330,7 +179,8 @@
 						active-class="active"
 						v-app-track-event="`sidebar:collection:installed`"
 						>
-						<span class="shell-nav-icon"
+						<span
+							class="shell-nav-icon"
 							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Installed Games' ) : ''"
 							>
 							<app-jolticon icon="download-box" />
@@ -347,7 +197,8 @@
 						active-class="active"
 						v-app-track-event="`sidebar:collection:developer`"
 						>
-						<span class="shell-nav-icon"
+						<span
+							class="shell-nav-icon"
 							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Your Games' ) : ''"
 							>
 							<app-jolticon icon="user" />
@@ -364,7 +215,8 @@
 						active-class="active"
 						v-app-track-event="`sidebar:collection:followed`"
 						>
-						<span class="shell-nav-icon"
+						<span
+							class="shell-nav-icon"
 							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Followed Games' ) : ''"
 							>
 							<app-jolticon icon="subscribe" />
@@ -381,7 +233,8 @@
 						active-class="active"
 						v-app-track-event="`sidebar:collection:owned`"
 						>
-						<span class="shell-nav-icon"
+						<span
+							class="shell-nav-icon"
 							v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Owned Games' ) : ''"
 							>
 							<app-jolticon icon="heart" />
@@ -401,7 +254,8 @@
 							active-class="active"
 							v-app-track-event="`sidebar:playlists`"
 							>
-							<span class="shell-nav-icon"
+							<span
+								class="shell-nav-icon"
 								v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Playlists' ) : ''"
 								>
 								<app-jolticon icon="playlist" />

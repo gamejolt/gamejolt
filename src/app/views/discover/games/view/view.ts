@@ -1,4 +1,5 @@
 import View from '!view!./view.html';
+import { Ads, AdSettingsContainer } from 'game-jolt-frontend-lib/components/ad/ads.service';
 import {
 	CommentAction,
 	CommentMutation,
@@ -6,6 +7,7 @@ import {
 	CommentStore,
 	CommentStoreModel,
 } from 'game-jolt-frontend-lib/components/comment/comment-store';
+import { AppUserCardHover } from 'game-jolt-frontend-lib/components/user/card/hover/hover';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
@@ -31,7 +33,6 @@ import {
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
 import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';
 import { AppGameCoverButtons } from '../../../../components/game/cover-buttons/cover-buttons';
 import { AppGameMaturityBlock } from '../../../../components/game/maturity-block/maturity-block';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
@@ -52,6 +53,7 @@ import { AppDiscoverGamesViewNav } from './_nav/nav';
 	components: {
 		AppPageHeader,
 		AppUserAvatar,
+		AppUserCardHover,
 		AppDiscoverGamesViewNav,
 		AppDiscoverGamesViewControls,
 		AppGameMaturityBlock,
@@ -158,7 +160,16 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	}
 
 	get shouldShowFullCover() {
-		return Screen.isXs || this.$route.name === 'discover.games.view.overview';
+		return Screen.isXs || this.$route.name !== 'discover.games.view.devlog.view';
+	}
+
+	/**
+	 * The cover height changes when we switch to not showing the full cover, so
+	 * let's make sure we reset the autoscroll anchor so that it scrolls to the
+	 * top again.
+	 */
+	get autoscrollAnchorKey() {
+		return this.game.id + (this.shouldShowFullCover ? '-full' : '-collapsed');
 	}
 
 	@RouteResolve({ lazy: true, cache: true })
@@ -181,26 +192,12 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 			return intentRedirect;
 		}
 
-		const payload = await Api.sendRequest('/web/discover/games/' + route.params.id);
-
-		if (payload && payload.game) {
-			const redirect = enforceLocation(
-				route,
-				{ slug: payload.game.slug },
-				{
-					ref: payload.userPartnerKey || route.query.ref || undefined,
-				}
-			);
-			if (redirect) {
-				return redirect;
-			}
-		}
-
-		return payload;
+		return Api.sendRequest('/web/discover/games/' + route.params.id);
 	}
 
 	routeInit() {
 		this.bootstrapGame(parseInt(this.id, 10));
+		this.setAdSettings();
 
 		// Any game rating change will broadcast this event. We catch it so we
 		// can update the page with the new rating! Yay!
@@ -227,6 +224,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	async routed($payload: any) {
 		this.processPayload($payload);
 		this.setPageTheme(this.game.theme || null);
+		this.setAdSettings();
 
 		// If the game has a GA tracking ID, then we attach it to this
 		// scope so all page views within get tracked.
@@ -248,6 +246,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 	routeDestroy() {
 		this.setPageTheme(null);
+		this.releaseAdSettings();
 
 		if (this.ratingWatchDeregister) {
 			this.ratingWatchDeregister();
@@ -282,5 +281,42 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	scrollToMultiplePackages() {
 		this.showMultiplePackagesMessage();
 		Scroll.to('game-releases');
+	}
+
+	setAdSettings() {
+		if (!this.game) {
+			return;
+		}
+
+		// If our resource changed, we have to reset with new settings.
+		if (Ads.settings.resource && Ads.settings.resource.id === this.game.id) {
+			return;
+		}
+
+		let mat: string | undefined = undefined;
+		if (this.game.tigrs_age === 1) {
+			mat = 'everyone';
+		} else if (this.game.tigrs_age === 2) {
+			mat = 'teen';
+		} else if (this.game.tigrs_age === 3) {
+			mat = 'adult';
+		}
+
+		const settings = new AdSettingsContainer();
+		settings.resource = this.game;
+		settings.isPageDisabled = !this.game._should_show_ads;
+		settings.targeting = {
+			mat,
+			genre: this.game.category,
+			paid: this.game.is_paid_game ? 'y' : 'n',
+			game: this.game.id + '',
+		};
+		settings.adUnit = 'gamepage';
+
+		Ads.setPageSettings(settings);
+	}
+
+	releaseAdSettings() {
+		Ads.releasePageSettings();
 	}
 }

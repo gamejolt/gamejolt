@@ -11,17 +11,17 @@
 
 		<br>
 
-		<template v-if="ClientUpdater.clientUpdateStatus === 'error'">
+		<template v-if="status === 'error'">
 			<div class="alert alert-notice">
 				<p><strong>Oh no, the client failed to update</strong></p>
 				<p>Try restarting it. If it still doesn't work, <a href="https://gamejolt.com/client">reinstall it from the website</a>.</p>
 			</div>
 		</template>
 
-		<template v-else-if="ClientUpdater.clientUpdateStatus !== 'ready'">
+		<template v-else-if="status !== 'ready'">
 			<p class="lead">
 				<strong>
-					<template v-if="ClientUpdater.clientUpdateStatus === 'fetching'">
+					<template v-if="status === 'fetching'">
 						Downloading new version ...
 					</template>
 					<template v-else>
@@ -32,14 +32,14 @@
 
 			<app-progress-bar
 				active
-				:percent="updateProgress"
+				:percent="progress"
 				/>
 		</template>
 
 		<app-button
 			v-else
 			lg
-			@click="ClientUpdater.updateClient()"
+			@click="update()"
 			>
 			Update now
 		</app-button>

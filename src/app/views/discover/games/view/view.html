@@ -31,12 +31,11 @@
 		-->
 		<app-page-header
 			:cover-media-item="game.header_media_item"
-			:should-affix-nav="$route.name !== 'discover.games.view.download'"
-			:autoscroll-anchor-key="game.id"
-			:show-cover-buttons="shouldShowCoverButtons"
+			should-affix-nav
 			:blur-header="!shouldShowFullCover"
 			:cover-auto-height="!shouldShowFullCover"
-			:disable-autoscroll-anchor="!Screen.isXs"
+			:autoscroll-anchor-key="autoscrollAnchorKey"
+			:show-cover-buttons="shouldShowCoverButtons"
 			>
 
 			<template slot="cover-buttons" v-if="shouldShowCoverButtons">
@@ -83,10 +82,15 @@
 				</app-game-perms>
 			</template>
 
-			<app-user-avatar
+			<app-user-card-hover
 				slot="spotlight"
+				block
 				:user="game.developer"
-				/>
+				>
+				<app-user-avatar
+					:user="game.developer"
+					/>
+			</app-user-card-hover>
 
 			<app-discover-games-view-nav
 				slot="nav"

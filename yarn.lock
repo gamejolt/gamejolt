@@ -1376,10 +1376,10 @@ cli-boxes@^1.0.0:
   resolved "https://registry.yarnpkg.com/cli-boxes/-/cli-boxes-1.0.0.tgz#4fa917c3e59c94a004cd61f8ee509da651687143"
   integrity sha1-T6kXw+WclKAEzWH47lCdplFocUM=
 
-client-voodoo@2.2.10:
-  version "2.2.10"
-  resolved "https://registry.yarnpkg.com/client-voodoo/-/client-voodoo-2.2.10.tgz#5ef3ad7dc386c0f28c7a79f3f167c189656dfac8"
-  integrity sha512-5gp9dnIq2eLf/a4YTacu53W/mgS0Ina1LjYxWlG/GLeJVOLelhPlsdObYYeL9y0xbcMI9F3fETOuyl//KgC8fQ==
+client-voodoo@2.2.12:
+  version "2.2.12"
+  resolved "https://registry.yarnpkg.com/client-voodoo/-/client-voodoo-2.2.12.tgz#f4e03b40fb3405125f472afabdde0966bbf7765e"
+  integrity sha512-VNnaUgt9l2EsI9jLU4ZRU0CQbIhxexQKT3yERk9Qr7DMe0O8DXGZAnKkC9vGHnIpnY3ncA2QSrX9SC7sbQdcIQ==
   dependencies:
     JSONStream "github:gamejolt/JSONStream#no-shebang"
     follow-redirects "1.2.6"
@@ -9086,10 +9086,10 @@ typescript-eslint-parser@^3.0.0:
     lodash.unescape "4.0.1"
     semver "5.3.0"
 
-typescript@3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.1.1.tgz#3362ba9dd1e482ebb2355b02dfe8bcd19a2c7c96"
-  integrity sha512-Veu0w4dTc/9wlWNf2jeRInNodKlcdLgemvPsrNpfu5Pq39sgfFjvIIgTsvUHCoLBnMhPoUA+tFxsXjU6VexVRQ==
+typescript@3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.0.3.tgz#4853b3e275ecdaa27f78fda46dc273a7eb7fc1c8"
+  integrity sha512-kk80vLW9iGtjMnIv11qyxLqZm20UklzuR2tL0QAnDIygIUIemcZMxlMWudl9OOt76H3ntVzcTiddQ1/pAAJMYg==
 
 typescript@~2.3.2:
   version "2.3.4"

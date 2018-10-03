@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "0.20.0",
+	"version": "0.20.2",
 	"scripts": {
 		"postinstall": "sh ./git-hooks/setup-hooks.sh",
 		"dev": "gulp watch",
@@ -65,7 +65,7 @@
 		"text-mask-core": "5.1.2",
 		"tslib": "1.9.3",
 		"tslint": "5.11.0",
-		"typescript": "3.1.1",
+		"typescript": "3.0.3",
 		"ua-parser-js": "0.7.18",
 		"v-tooltip": "2.0.0-rc.33",
 		"vee-validate": "2.0.0-rc.7",
@@ -89,7 +89,7 @@
 	},
 	"dependencies": {
 		"axios": "0.18.0",
-		"client-voodoo": "2.2.10",
+		"client-voodoo": "2.2.12",
 		"fs-extra": "7.0.0",
 		"write-file-atomic": "2.3.0"
 	},

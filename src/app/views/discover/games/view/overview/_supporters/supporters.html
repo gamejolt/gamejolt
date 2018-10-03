@@ -15,15 +15,16 @@
 			v-for="user of supporters.slice(0, 16)"
 			:key="user.id"
 			>
-			<router-link
-				class="user-avatar"
-				:to="user.url"
+			<app-user-card-hover
+				:user="user"
 				>
-				<app-user-avatar-img
-					:user="user"
-					v-app-tooltip="`${user.display_name} (@${user.username})`"
-					/>
-			</router-link>
+				<router-link
+					class="user-avatar"
+					:to="user.url"
+					>
+					<app-user-avatar-img :user="user" />
+				</router-link>
+			</app-user-card-hover>
 		</div>
 	</div>
 

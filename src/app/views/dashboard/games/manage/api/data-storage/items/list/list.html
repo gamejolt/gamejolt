@@ -60,24 +60,22 @@
 					</td>
 					<td class="text-right">
 						<div class="table-controls">
-							<a
-								class="link-muted"
-								v-app-popover-trigger="`data-storage-item-options-${item.id}`"
-								>
-								<app-jolticon icon="cog" />
-							</a>
-						</div>
-						<app-popover :popover-id="`data-storage-item-options-${item.id}`">
-							<div class="list-group nowrap">
-								<a
-									class="list-group-item has-icon"
-									@click="removeItem( item )"
-									>
-									<app-jolticon icon="remove" />
-									<translate>dash.games.data_store.items.remove_button</translate>
+							<app-popper>
+								<a class="link-muted">
+									<app-jolticon icon="cog" />
 								</a>
-							</div>
-						</app-popover>
+
+								<div slot="popover" class="list-group list-group-dark nowrap">
+									<a
+										class="list-group-item has-icon"
+										@click="removeItem( item )"
+										>
+										<app-jolticon icon="remove" notice />
+										<translate>dash.games.data_store.items.remove_button</translate>
+									</a>
+								</div>
+							</app-popper>
+						</div>
 					</td>
 				</tr>
 			</tbody>

@@ -1,19 +1,25 @@
-import { State } from 'vuex-class';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./dashboard.html';
-
-import { Store } from '../../store/index';
+import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import { Ads, AdSettingsContainer } from '../../../lib/gj-lib-client/components/ad/ads.service';
 import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
-import { Ads } from '../../../lib/gj-lib-client/components/ad/ads.service';
+import { Store } from '../../store/index';
 
 @View
 @Component({
 	name: 'RouteDash',
 })
 export default class RouteDash extends BaseRouteComponent {
-	@State app!: Store['app'];
+	@State
+	app!: Store['app'];
 
 	routeInit() {
-		Ads.setAdUnit('user');
+		const adSettings = new AdSettingsContainer();
+		adSettings.adUnit = 'user';
+		Ads.setPageSettings(adSettings);
+	}
+
+	routeDestroy() {
+		Ads.releasePageSettings();
 	}
 }

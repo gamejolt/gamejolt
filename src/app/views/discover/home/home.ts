@@ -1,30 +1,29 @@
-import { Location } from 'vue-router';
-import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import View from '!view!./home.html?style=./home.styl';
-
+import { Component } from 'vue-property-decorator';
+import { Location } from 'vue-router';
+import { State } from 'vuex-class';
+import { Ads, AdSettingsContainer } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { AppNavTabList } from '../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
-import { AppGameGrid } from '../../../components/game/grid/grid';
-import { AppChannelThumbnail } from '../../../components/channel/thumbnail/thumbnail';
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppGameGridPlaceholder } from '../../../components/game/grid/placeholder/placeholder';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
-import { Store } from '../../../store/index';
-import { AppAuthJoinLazy } from '../../../components/lazy';
-import { Channels } from '../../../components/channel/channels-service';
-import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
-import { AppDiscoverHomeBanner } from './_banner/banner';
-import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
+import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
+import { AppNavTabList } from '../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { AppScrollScroller } from '../../../../lib/gj-lib-client/components/scroll/scroller/scroller';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { Channels } from '../../../components/channel/channels-service';
+import { AppChannelThumbnail } from '../../../components/channel/thumbnail/thumbnail';
+import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
+import { AppGameGrid } from '../../../components/game/grid/grid';
+import { AppGameGridPlaceholder } from '../../../components/game/grid/placeholder/placeholder';
+import { AppAuthJoinLazy } from '../../../components/lazy';
+import { Store } from '../../../store/index';
+import { AppDiscoverHomeBanner } from './_banner/banner';
 
 export interface DiscoverRow {
 	title: string;
@@ -53,7 +52,8 @@ export interface DiscoverRow {
 	},
 })
 export default class RouteDiscoverHome extends BaseRouteComponent {
-	@State app!: Store['app'];
+	@State
+	app!: Store['app'];
 
 	isLoaded = false;
 	channels: any[] = [];
@@ -67,7 +67,10 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 
 	routeInit() {
 		Meta.title = null;
-		Ads.setAdUnit('homepage');
+
+		const adSettings = new AdSettingsContainer();
+		adSettings.adUnit = 'homepage';
+		Ads.setPageSettings(adSettings);
 	}
 
 	routed($payload: any) {
@@ -117,5 +120,9 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		}
 
 		this.isLoaded = true;
+	}
+
+	routeDestroy() {
+		Ads.releasePageSettings();
 	}
 }

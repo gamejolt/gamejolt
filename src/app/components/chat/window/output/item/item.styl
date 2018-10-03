@@ -42,29 +42,20 @@
 		margin-left: 5px
 		font-size: $font-size-tiny
 
-	// This ridiculousness is so that we can show <pre> tags full bleed even if they're in fade-collapsers.
-	// We basically make the content wrap full-bleed to the edges of the chat window, and then we make the
-	// content container have the padding. This allows any tags within the content area to full bleed again
-	// even if in fade-collapse and even with the `overflow-y: hidden` thing we do in the content.
-	&-content-wrap
-		position: relative
-		margin-left: -(35px + 10px + $chat-room-window-padding)
-		margin-right: -(35px + $chat-room-window-padding)
+	// Some different styling for the fade collapse.
+	.fade-collapse-collapsed
+		theme-prop('border-bottom-color', 'light')
+		margin-bottom: 5px
+		border-bottom-width: 1px
+		border-bottom-style: dashed
 
-		// Some different styling for the fade collapse.
-		.fade-collapse-collapsed
-			theme-prop('border-bottom-color', 'light')
-			margin-bottom: 5px
-			border-bottom-width: 1px
-			border-bottom-style: dashed
+		&::before
+			theme-prop('background', 'darker', true)
+			max-height: 5px !important
 
-			&::before
-				theme-prop('background', 'darker', true)
-				max-height: 5px !important
-
-		// Only shown during fade-collapse of messages that are too long.
-		.hidden-text-expander
-			margin-left: 35px + 10px + $chat-room-window-padding
+	// Only shown during fade-collapse of messages that are too long.
+	.hidden-text-expander
+		margin-left: 35px + 10px + $chat-room-window-padding
 
 	&-mod-tools
 		display: none
@@ -89,9 +80,6 @@
 		// Luckily this is mostly where it matters.
 		word-wrap: break-word
 		hyphens: auto
-		// Add in the padding again.
-		padding-left: 35px + 10px + $chat-room-window-padding
-		padding-right: 34px + 1px + $chat-room-window-padding
 		// Try to limit the effects of what zalgo text can do to chat.
 		overflow: hidden
 

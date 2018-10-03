@@ -117,41 +117,58 @@
 
 			<!--
 				Multi game launching.
-				Opens popover.
 			-->
+			<app-popper
+				v-if="gamePackages.length > 1"
+				@show="$emit('show-launch-options', $event)"
+				@hide="$emit('hide-launch-options', $event)"
+				>
+				<app-button
+					primary
+					solid
+					icon="play"
+					:overlay="overlay"
+					:sm="small"
+					:lg="large"
+					@click.stop
+					>
+					<translate>Launch</translate>
+				</app-button>
+
+				<div slot="popover" class="list-group list-group-dark thin">
+					<a
+						v-for="package_ of gamePackages"
+						:key="`launch-${package_.id}`"
+						v-if="package_.isSettled"
+						class="list-group-item has-icon"
+						:class="{
+							'disabled': package_.isRunning,
+						}"
+						@click="launch( package_ )"
+						>
+						<app-jolticon icon="play" />
+						{{ package_.title || game.title }}
+					</a>
+				</div>
+			</app-popper>
+		</span>
+
+		<app-popper
+			v-if="!localPackage.install_state"
+			@show="$emit('show-options', $event)"
+			@hide="$emit('hide-options', $event)"
+			>
 			<app-button
-				v-else-if="gamePackages.length > 1"
-				primary
-				solid
-				icon="play"
+				circle
+				icon="ellipsis-v"
+				:trans="!overlay"
 				:overlay="overlay"
 				:sm="small"
 				:lg="large"
 				@click.stop
-				v-app-popover-trigger="`game-buttons-launch-${label}-${game.id}`"
-				>
-				<translate>Launch</translate>
-			</app-button>
-		</span>
+				/>
 
-		<app-button
-			v-if="!localPackage.install_state"
-			circle
-			icon="ellipsis-v"
-			:trans="!overlay"
-			:overlay="overlay"
-			:sm="small"
-			:lg="large"
-			@click.stop
-			v-app-popover-trigger="`game-buttons-options-${label}-${game.id}`"
-			/>
-
-		<app-popover
-			:popover-id="`game-buttons-options-${label}-${game.id}`"
-			@focused="$emit('show-options', $event)"
-			@blurred="$emit('hide-options', $event)"
-			>
-			<div class="list-group list-group-dark thin">
+			<div slot="popover" class="list-group list-group-dark thin">
 				<router-link
 					class="list-group-item has-icon"
 					:to="{
@@ -193,28 +210,6 @@
 					</span>
 				</a>
 			</div>
-		</app-popover>
-
-		<app-popover
-			:popover-id="`game-buttons-launch-${label}-${game.id}`"
-			@focused="$emit('show-launch-options', $event)"
-			@blurred="$emit('hide-launch-options', $event)"
-			>
-			<div class="list-group list-group-dark thin">
-				<a
-					v-for="package_ of gamePackages"
-					:key="`launch-${package_.id}`"
-					v-if="package_.isSettled"
-					class="list-group-item has-icon"
-					:class="{
-						'disabled': package_.isRunning,
-					}"
-					@click="launch( package_ )"
-					>
-					<app-jolticon icon="play" />
-					{{ package_.title || game.title }}
-				</a>
-			</div>
-		</app-popover>
+		</app-popper>
 	</template>
 </span>

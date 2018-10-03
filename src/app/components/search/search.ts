@@ -1,14 +1,12 @@
+import View from '!view!./search.html?style=./search.styl';
+import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import View from '!view!./search.html?style=./search.styl';
-
-import { AppPopoverTrigger } from '../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
-import { Search } from './search-service';
-import { AppSearchHistory } from './history/history';
 import { AppSearchAutocomplete } from './autocomplete/autocomplete';
-import { Popover } from '../../../lib/gj-lib-client/components/popover/popover.service';
+import { AppSearchHistory } from './history/history';
 import { SearchHistory } from './history/history-service';
 import { AppSearchInput } from './input/input';
+import { Search } from './search-service';
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;
@@ -42,9 +40,7 @@ function setCaretPosition(el: any, caretPos: number) {
 		AppSearchHistory,
 		AppSearchAutocomplete,
 		AppSearchInput,
-	},
-	directives: {
-		AppPopoverTrigger,
+		AppPopper,
 	},
 })
 export class AppSearch extends Vue {
@@ -55,6 +51,7 @@ export class AppSearch extends Vue {
 
 	query = '';
 	isFocused = false;
+	isShowingAutocomplete = false;
 	inputElem: HTMLElement | undefined;
 	keydownSpies: Function[] = [];
 
@@ -131,7 +128,6 @@ export class AppSearch extends Vue {
 		// We want to blur the input on escape.
 		if (event.keyCode === KEYCODE_ESC) {
 			this.blur();
-			this.toggleAutocomplete(false);
 			event.stopPropagation();
 		}
 
@@ -142,23 +138,11 @@ export class AppSearch extends Vue {
 
 	onFocus() {
 		this.isFocused = true;
-		this.toggleAutocomplete(true);
+		this.isShowingAutocomplete = true;
 	}
 
 	onBlur() {
 		this.isFocused = false;
-	}
-
-	private toggleAutocomplete(state: boolean) {
-		const autocomplete = Popover.getPopover('search-autocomplete');
-		if (!autocomplete || !this.inputElem) {
-			return;
-		}
-
-		if (state) {
-			autocomplete.show(this.inputElem);
-		} else {
-			autocomplete.hide();
-		}
+		this.isShowingAutocomplete = false;
 	}
 }

@@ -5,8 +5,7 @@
 			<li>
 				<router-link
 					:to="{ name: 'discover.games.view.overview' }"
-					active-class="active"
-					exact
+					:class="{ active: $route.name === 'discover.games.view.overview' }"
 					>
 					<translate>games.view.overview_tab</translate>
 				</router-link>
@@ -19,6 +18,18 @@
 						{{ commentsCount | number }}
 					</span>
 				</a>
+			</li>
+
+			<li>
+				<router-link
+					:to="{ name: 'discover.games.view.followers' }"
+					active-class="active"
+					>
+					<translate>Followers</translate>
+					<span class="badge">
+						{{ game.follower_count | number }}
+					</span>
+				</router-link>
 			</li>
 
 			<li v-if="hasScores">
@@ -47,39 +58,42 @@
 			</li>
 
 			<li v-if="app.user">
-				<a v-app-popover-trigger="`game-more-options`">
-					<app-jolticon icon="ellipsis-h" />
-				</a>
+				<app-popper>
+					<a>
+						<app-jolticon icon="ellipsis-h" />
+					</a>
+
+					<div
+						slot="popover"
+						class="list-group list-group-dark"
+						>
+						<app-game-perms :game="game">
+							<router-link
+								class="list-group-item has-icon"
+								:to="{
+									name: 'dash.games.manage.game.overview',
+									params: { id: game.id },
+								}"
+								>
+								<app-jolticon icon="cog" />
+								<translate>Manage Game</translate>
+							</router-link>
+						</app-game-perms>
+						<a class="list-group-item has-icon"
+							v-if="app.user && !hasAnyPerms"
+							@click="report"
+							>
+							<app-jolticon icon="flag" notice />
+							<translate>games.view.report_game_button</translate>
+						</a>
+						<app-game-mod-links
+							v-if="shouldShowModTools"
+							:game="game"
+							/>
+					</div>
+				</app-popper>
 			</li>
 		</ul>
 	</nav>
-
-	<app-popover popover-id="game-more-options">
-		<div class="list-group list-group-dark">
-			<app-game-perms :game="game">
-				<router-link
-					class="list-group-item has-icon"
-					:to="{
-						name: 'dash.games.manage.game.overview',
-						params: { id: game.id },
-					}"
-					>
-					<app-jolticon icon="cog" />
-					<translate>Manage Game</translate>
-				</router-link>
-			</app-game-perms>
-			<a class="list-group-item has-icon"
-				v-if="app.user && !hasAnyPerms"
-				@click="report()"
-				>
-				<app-jolticon icon="flag" notice />
-				<translate>games.view.report_game_button</translate>
-			</a>
-			<app-game-mod-links
-				v-if="shouldShowModTools"
-				:game="game"
-				/>
-		</div>
-	</app-popover>
 
 </div>

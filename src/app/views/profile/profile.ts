@@ -1,13 +1,14 @@
 import View from '!view!./profile.html?style=./profile.styl';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
-import { Ads } from '../../../lib/gj-lib-client/components/ad/ads.service';
+import { Ads, AdSettingsContainer } from '../../../lib/gj-lib-client/components/ad/ads.service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppPopover } from '../../../lib/gj-lib-client/components/popover/popover';
-import { AppPopoverTrigger } from '../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
+import { AppPopper } from '../../../lib/gj-lib-client/components/popper/popper';
 import { ReportModal } from '../../../lib/gj-lib-client/components/report/modal/modal.service';
 import {
 	BaseRouteComponent,
@@ -16,16 +17,14 @@ import {
 import { ThemeMutation, ThemeStore } from '../../../lib/gj-lib-client/components/theme/theme.store';
 import { AppTimeAgo } from '../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppTooltip } from '../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { Translate } from '../../../lib/gj-lib-client/components/translate/translate.service';
 import { AppUserFollowWidget } from '../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
-import { UserFriendship } from '../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { AppUserAvatar } from '../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../lib/gj-lib-client/vue/filters/number';
 import { IntentService } from '../../components/intent/intent.service';
 import { AppPageHeader } from '../../components/page-header/page-header';
 import { AppUserDogtag } from '../../components/user/dogtag/dogtag';
-import { Store } from '../../store/index';
+import { Store } from '../../store';
 import {
 	RouteAction,
 	RouteMutation,
@@ -43,12 +42,11 @@ import {
 		AppTimeAgo,
 		AppUserAvatar,
 		AppUserDogtag,
-		AppPopover,
+		AppPopper,
 		AppUserFollowWidget,
 	},
 	directives: {
 		AppTooltip,
-		AppPopoverTrigger,
 	},
 	filters: {
 		number,
@@ -95,7 +93,16 @@ export default class RouteProfile extends BaseRouteComponent {
 	Environment = Environment;
 
 	get shouldShowFullCover() {
-		return Screen.isXs || this.$route.name === 'profile.overview';
+		return Screen.isXs || this.$route.name !== 'profile.post.view';
+	}
+
+	/**
+	 * The cover height changes when we switch to not showing the full cover, so
+	 * let's make sure we reset the autoscroll anchor so that it scrolls to the
+	 * top again.
+	 */
+	get autoscrollAnchorKey() {
+		return this.user!.id + (this.shouldShowFullCover ? '-full' : '-collapsed');
 	}
 
 	@RouteResolve({ cache: true, lazy: true })
@@ -124,7 +131,10 @@ export default class RouteProfile extends BaseRouteComponent {
 
 	routeInit() {
 		this.bootstrapUser(this.$route.params.username);
-		Ads.setAdUnit('devprofile');
+
+		const adSettings = new AdSettingsContainer();
+		adSettings.adUnit = 'devprofile';
+		Ads.setPageSettings(adSettings);
 	}
 
 	routed($payload: any) {
@@ -136,6 +146,7 @@ export default class RouteProfile extends BaseRouteComponent {
 
 	routeDestroy() {
 		this.setPageTheme(null);
+		Ads.releasePageSettings();
 	}
 
 	report() {

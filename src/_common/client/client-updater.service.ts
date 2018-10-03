@@ -16,18 +16,18 @@ export abstract class ClientUpdater {
 	private static db: LocalDb = null as any;
 
 	// Updater fields
-	private static _clientUpdateStatus: ClientUpdateStatus = 'none';
-	private static _clientUpdateProgress: MsgProgress | null = null;
+	private static myClientUpdateStatus: ClientUpdateStatus = 'none';
+	private static myClientUpdateProgress: MsgProgress | null = null;
 
 	private static updaterInstance: SelfUpdaterInstance | null = null;
 	private static updaterInstanceBuilder: Promise<SelfUpdaterInstance> | null = null;
 
 	static get clientUpdateStatus() {
-		return this._clientUpdateStatus;
+		return this.myClientUpdateStatus;
 	}
 
 	static get clientUpdateProgress() {
-		return this._clientUpdateProgress;
+		return this.myClientUpdateProgress;
 	}
 
 	static get hasUpdaterConnectivity() {
@@ -36,10 +36,10 @@ export abstract class ClientUpdater {
 
 	private static setClientUpdateStatus(status: ClientUpdateStatus) {
 		console.log('set client update state: ' + status);
-		this._clientUpdateStatus = status;
+		this.myClientUpdateStatus = status;
 
 		if (this.clientUpdateStatus !== 'fetching') {
-			this._clientUpdateProgress = null;
+			this.myClientUpdateProgress = null;
 		}
 	}
 
@@ -251,7 +251,7 @@ export abstract class ClientUpdater {
 					.on('progress', (progress: MsgProgress) => {
 						console.log('progress received');
 						console.log(progress);
-						this._clientUpdateProgress = progress;
+						this.myClientUpdateProgress = progress;
 					})
 					.on('updateFailed', (reason: string) => {
 						console.error('Failed to update. Joltron says: ' + reason);

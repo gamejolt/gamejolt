@@ -1,9 +1,8 @@
 import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
-import './forums-content.styl';
-
+import { Ads, AdSettingsContainer } from '../../../lib/gj-lib-client/components/ad/ads.service';
 import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
-import { Ads } from '../../../lib/gj-lib-client/components/ad/ads.service';
+import './forums-content.styl';
 
 @Component({
 	name: 'RouteForums',
@@ -14,6 +13,12 @@ export default class RouteForums extends BaseRouteComponent {
 	}
 
 	routeInit() {
-		Ads.setAdUnit('forums');
+		const adSettings = new AdSettingsContainer();
+		adSettings.adUnit = 'forums';
+		Ads.setPageSettings(adSettings);
+	}
+
+	routeDestroy() {
+		Ads.releasePageSettings();
 	}
 }

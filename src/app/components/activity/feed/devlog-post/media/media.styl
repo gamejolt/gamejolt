@@ -41,32 +41,32 @@
 			left: 0
 
 .-prev, .-next
-	theme-prop('background-color', 'darker')
+	theme-prop('background-color', 'bg-subtle')
+	theme-prop('color', 'fg')
 	display: none
 	position: absolute
 	top: 50%
 	height: 80px
-	width: $grid-gutter-width
+	width: $grid-gutter-width * 0.75
 	line-height: @height
 	margin-top: -(@height / 2)
-	color: $white
 	text-align: center
 	z-index: 2
 	user-select: none
 
 	&:hover
-		theme-prop('color', 'highlight')
+		theme-prop('color', 'link')
 
 	@media $media-sm-up
 		display: block
 
 .-prev
-	left: -($-item-padding-container + $grid-gutter-width)
+	left: -($-item-padding-container + $grid-gutter-width * 0.75 + $-border-width)
 	border-top-left-radius: $border-radius-base
 	border-bottom-left-radius: $border-radius-base
 
 .-next
-	right: -($-item-padding-container + $grid-gutter-width)
+	right: -($-item-padding-container + $grid-gutter-width * 0.75 + $-border-width)
 	border-top-right-radius: $border-radius-base
 	border-bottom-right-radius: $border-radius-base
 

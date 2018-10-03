@@ -1,21 +1,20 @@
-import { Component, Watch } from 'vue-property-decorator';
 import View from '!view!./avatar.html';
-
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { AppFormControlUpload } from '../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
-import { AppFormControlCrop } from '../../../../lib/gj-lib-client/components/form-vue/control/crop/crop';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import { filesize } from '../../../../lib/gj-lib-client/vue/filters/filesize';
-import { Popover } from '../../../../lib/gj-lib-client/components/popover/popover.service';
-import { ModalConfirm } from '../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
+import { Component, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
+import { AppFormControlCrop } from '../../../../lib/gj-lib-client/components/form-vue/control/crop/crop';
+import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
+import { AppFormControlUpload } from '../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
 import { AppForm } from '../../../../lib/gj-lib-client/components/form-vue/form';
 import {
 	BaseForm,
 	FormOnLoad,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
+import { ModalConfirm } from '../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { filesize } from '../../../../lib/gj-lib-client/vue/filters/filesize';
 
 type FormModel = User & {
 	crop?: any;
@@ -79,7 +78,7 @@ export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
 	}
 
 	async clearAvatar() {
-		Popover.hideAll();
+		Popper.hideAll();
 
 		const result = await ModalConfirm.show(
 			this.$gettext(`Are you sure you want to remove your avatar?`),

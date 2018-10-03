@@ -32,20 +32,19 @@
 			</template>
 
 			<template v-if="showModTools">
-				<app-button
-					overlay
-					circle
-					icon="cog"
-					v-app-popover-trigger="`game-mod-tools-${game.id}`"
-					@click.prevent
-					>
-				</app-button>
-				<app-popover
-					:popover-id="`game-mod-tools-${game.id}`"
-					:append-to-body="true"
-					>
-					<app-game-mod-links :game="game" />
-				</app-popover>
+				<app-popper>
+					<app-button
+						overlay
+						circle
+						icon="cog"
+						@click.prevent
+						/>
+
+					<app-game-mod-links
+						slot="popover"
+						:game="game"
+						/>
+				</app-popper>
 			</template>
 		</div>
 
@@ -99,7 +98,9 @@
 			</div>
 
 			<div class="-avatar">
-				<app-user-avatar-img :user="game.developer" />
+				<app-user-card-hover :user="game.developer">
+					<app-user-avatar-img :user="game.developer" />
+				</app-user-card-hover>
 			</div>
 
 			<div class="-dev" :title="`${game.developer.display_name} (@${game.developer.username})`">

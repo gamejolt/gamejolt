@@ -7,23 +7,19 @@ import { RouteState, RouteStore } from '../../../../manage.store';
 import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { date } from '../../../../../../../../../lib/gj-lib-client/vue/filters/date';
-import { AppPopoverTrigger } from '../../../../../../../../../lib/gj-lib-client/components/popover/popover-trigger.directive.vue';
-import { AppPopover } from '../../../../../../../../../lib/gj-lib-client/components/popover/popover';
 import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppPopper } from '../../../../../../../../../lib/gj-lib-client/components/popper/popper';
 
 @View
 @Component({
 	name: 'RouteDashGamesManageApiDataStorageItemsList',
 	components: {
-		AppPopover,
+		AppPopper,
 		AppJolticon,
-	},
-	directives: {
-		AppPopoverTrigger,
 	},
 	filters: {
 		date,

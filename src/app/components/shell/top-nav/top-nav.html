@@ -3,30 +3,73 @@
 	<div class="navbar-left">
 
 		<!-- Mobile Menu Toggle -->
-		<ul class="navbar-items" v-if="hasSidebar">
-			<li>
-				<a
-					:class="{ active: isLeftPaneVisible }"
-					@click="toggleLeftPane"
-					v-app-popover-trigger="`main-menu`"
-					v-app-tooltip.right="$gettext( `Menu (m)` )"
-					v-app-track-event="`top-nav:main-menu:toggle`"
-					>
-					<app-jolticon icon="menu" />
-				</a>
-			</li>
-		</ul>
+		<a
+			v-if="hasSidebar"
+			class="navbar-item"
+			:class="{ active: isLeftPaneVisible }"
+			@click="toggleLeftPane"
+			v-app-tooltip.right="$gettext( `Menu (m)` )"
+			v-app-track-event="`top-nav:main-menu:toggle`"
+			>
+			<app-jolticon icon="menu" />
+		</a>
 
 		<!-- History Navigator (for desktop client) -->
 		<app-client-history-navigator v-if="GJ_IS_CLIENT" />
 
 		<router-link class="navbar-item" :to="{ name: 'discover.home' }">
 			<app-theme-svg v-if="!Screen.isMobile" src="~img/game-jolt-logo.svg" alt="" />
-			<app-theme-svg v-if="Screen.isMobile" src="~img/jolt.svg" alt="" />
+			<app-theme-svg v-else src="~img/jolt.svg" alt="" />
 		</router-link>
 
-		<div class="navbar-separator hidden-xs"></div>
+		<app-popper
+			v-if="!Screen.isXs"
+			hide-on-state-change
+			trigger="hover"
+			@show="moreMenuShowing = true"
+			@hide="moreMenuShowing = false"
+			v-app-track-event="`top-nav:more-menu:toggle`"
+			>
+			<a
+				class="navbar-item"
+				:class="{ active: moreMenuShowing }"
+				>
+				<app-jolticon icon="ellipsis-v" />
+			</a>
 
+			<div class="fill-darkest" slot="popover">
+				<div class="list-group-dark">
+					<router-link
+						class="list-group-item has-icon offline-disable"
+						v-if="!GJ_IS_CLIENT && !Screen.isXs"
+						:to="{ name: 'landing.client' }"
+						v-app-track-event="`sidebar:client`"
+						>
+						<app-jolticon icon="client" />
+						<translate>Client</translate>
+					</router-link>
+					<router-link
+						class="list-group-item has-icon offline-disable"
+						:to="{ name: 'forums.landing.overview' }"
+						v-app-track-event="`sidebar:forums`"
+						>
+						<app-jolticon icon="forums" />
+						<translate>Forums</translate>
+					</router-link>
+					<a
+						class="list-group-item has-icon offline-disable"
+						:href="Environment.jamsBaseUrl"
+						target="_blank"
+						v-app-track-event="`sidebar:jams`"
+						>
+						<app-jolticon icon="jams" />
+						<translate>Jams</translate>
+					</a>
+				</div>
+			</div>
+		</app-popper>
+
+		<span class="navbar-separator hidden-xs" />
 	</div>
 
 	<div class="navbar-center">
@@ -42,95 +85,97 @@
 	-->
 	<div class="navbar-right" v-if="app.userBootstrapped">
 
-		<ul class="navbar-items" v-if="app.user">
+		<template v-if="app.user">
 
 			<!-- Activity -->
-			<li v-if="!Connection.isClientOffline" key="activity">
-				<router-link
-					:to="{ name: 'activity', params: { tab: 'activity' } }"
-					:class="{ active: $route.name.indexOf( 'activity' ) === 0 }"
-					v-app-tooltip.bottom="$gettext( `Activity` )"
-					v-app-track-event="`top-nav:activity:toggle`"
+			<router-link
+				v-if="!Connection.isClientOffline"
+				class="navbar-item"
+				:to="{ name: 'activity', params: { tab: 'activity' } }"
+				:class="{ active: $route.name.indexOf( 'activity' ) === 0 }"
+				v-app-tooltip.bottom="$gettext( `Activity` )"
+				v-app-track-event="`top-nav:activity:toggle`"
+				>
+				<span
+					class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
+					v-if="notificationCount > 0"
 					>
-					<span class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
-						v-if="notificationCount > 0"
-						>
-						{{ notificationCount < 100 ? notificationCount : '99+' }}
-					</span>
-					<app-jolticon icon="notifications" />
-				</router-link>
-			</li>
+					{{ notificationCount < 100 ? notificationCount : '99+' }}
+				</span>
+				<app-jolticon icon="notifications" />
+			</router-link>
 
 			<!-- Friend Requests -->
-			<li v-if="!Connection.isClientOffline" key="friend-requests">
+			<app-popper
+				v-if="!Connection.isClientOffline"
+				hide-on-state-change
+				@show="friendRequestsShowing = true"
+				@hide="friendRequestsShowing = false"
+				>
 				<a
+					class="navbar-item"
 					:class="{ active: friendRequestsShowing }"
-					v-app-popover-trigger="`friend-requests`"
 					v-app-tooltip.bottom="$gettext( `Friend Requests` )"
 					v-app-track-event="`top-nav:friend-requests:toggle`"
 					>
-					<span class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
+					<span
+						class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
 						v-if="friendRequestCount"
 						>
 						{{ friendRequestCount }}
 					</span>
 					<app-jolticon icon="friend-requests" />
 				</a>
-				<app-friend-request-popover
-					@focused="friendRequestsShowing = true"
-					@blurred="friendRequestsShowing = false"
-					>
-				</app-friend-request-popover>
-			</li>
+				<app-friend-request-popover slot="popover" />
+			</app-popper>
 
 			<!-- Chat -->
-			<li v-if="chat" key="chat">
-				<a
-					:class="{ active: isRightPaneVisible }"
-					@click="toggleRightPane"
-					v-app-tooltip.left="
-						app.user
-							? $gettext( `Chat and Friends List (c)` )
-							: $gettext( `Chat (c)` )
-					"
-					v-app-track-event="`top-nav:chat:toggle`"
+			<a
+				v-if="chat"
+				class="navbar-item"
+				:class="{ active: isRightPaneVisible }"
+				@click="toggleRightPane"
+				v-app-tooltip.left="
+					app.user
+						? $gettext( `Chat and Friends List (c)` )
+						: $gettext( `Chat (c)` )
+				"
+				v-app-track-event="`top-nav:chat:toggle`"
+				>
+				<span
+					class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
+					v-if="chat.friendNotificationsCount"
 					>
-					<span class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
-						v-if="chat.friendNotificationsCount"
-						>
-						{{ chat.friendNotificationsCount }}
-					</span>
-					<app-jolticon icon="user-messages" />
-				</a>
-			</li>
+					{{ chat.friendNotificationsCount }}
+				</span>
+				<app-jolticon icon="user-messages" />
+			</a>
 
 			<!-- Connection Status -->
-			<li v-if="Connection.isOffline" key="offline">
-				<span
-					class="navbar-item disconnected-icon"
-					v-app-tooltip.left="$gettext( `We're having trouble connecting to Game Jolt.` )"
-					>
-					<app-jolticon icon="offline" />
-				</span>
-			</li>
+			<span
+				v-if="Connection.isOffline"
+				class="navbar-item disconnected-icon"
+				v-app-tooltip.left="$gettext( `We're having trouble connecting to Game Jolt.` )"
+				>
+				<app-jolticon icon="offline" />
+			</span>
 
 			<!-- User Menu -->
-			<li key="account">
+			<app-popper
+				hide-on-state-change
+				@show="userMenuShowing = true"
+				@hide="userMenuShowing = false"
+				v-app-track-event="`top-nav:user-menu:toggle`"
+				>
 				<a
 					class="navbar-avatar"
 					:class="{ active: userMenuShowing }"
-					v-app-popover-trigger="`account-popover`"
-					v-app-track-event="`top-nav:user-menu:toggle`"
 					>
 					<app-user-avatar-img :user="app.user" />
 				</a>
-				<app-shell-account-popover
-					@shown="userMenuShowing = true"
-					@hidden="userMenuShowing = false"
-					>
-				</app-shell-account-popover>
-			</li>
-		</ul>
+				<app-shell-account-popover slot="popover" />
+			</app-popper>
+		</template>
 
 		<!-- Login/Join Buttons -->
 		<template v-if="!app.user">

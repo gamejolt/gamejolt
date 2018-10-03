@@ -1,7 +1,7 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-.search-history-icon
+.search-history
 	display: block
 	position: absolute
 	left: 0
@@ -9,9 +9,12 @@
 	width: 20px
 	height: 20px
 	line-height: @height
+	z-index: 2
+
+.-icon
+	display: inline-block
 	user-select: none
 	cursor: pointer
-	z-index: 2
 
 	> .jolticon
 		color: $dark-theme-fg-muted

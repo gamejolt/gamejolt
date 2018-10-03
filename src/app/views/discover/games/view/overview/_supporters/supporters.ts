@@ -1,4 +1,5 @@
 import View from '!view!./supporters.html?style=./supporters.styl';
+import { AppUserCardHover } from 'game-jolt-frontend-lib/components/user/card/hover/hover';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
@@ -11,6 +12,7 @@ import { RouteState, RouteStore } from '../../view.store';
 @Component({
 	components: {
 		AppUserAvatarImg,
+		AppUserCardHover,
 	},
 	directives: {
 		AppTooltip,
