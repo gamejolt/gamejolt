@@ -50,14 +50,15 @@ export class AppFollowerList extends Vue {
 	}
 
 	get placeholderCount() {
+		// 2 rows, except for xs.
 		if (Screen.isXs) {
 			return 1;
 		} else if (Screen.isSm) {
-			return 2;
+			return 4;
 		} else if (Screen.isMd) {
-			return 3;
+			return 6;
 		}
-		return 4;
+		return 8;
 	}
 
 	get shouldShowLoadMore() {
