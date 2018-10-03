@@ -1,18 +1,17 @@
+import View from '!view!./search.html';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import View from '!view!./search.html';
-import './search.styl';
-
+import { Ads, AdSettingsContainer } from '../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppExpand } from '../../../lib/gj-lib-client/components/expand/expand';
-import { AppPageHeader } from '../../components/page-header/page-header';
-import { AppSearch } from '../../components/search/search';
-import { Search } from '../../components/search/search-service';
-import { SearchHistory } from '../../components/search/history/history-service';
+import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 import { number } from '../../../lib/gj-lib-client/vue/filters/number';
-import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
+import { AppPageHeader } from '../../components/page-header/page-header';
+import { SearchHistory } from '../../components/search/history/history-service';
+import { AppSearch } from '../../components/search/search';
+import { Search } from '../../components/search/search-service';
 import { Store } from '../../store/index';
-import { Ads } from '../../../lib/gj-lib-client/components/ad/ads.service';
+import './search.styl';
 
 @View
 @Component({
@@ -27,12 +26,14 @@ import { Ads } from '../../../lib/gj-lib-client/components/ad/ads.service';
 	},
 })
 export default class RouteSearch extends BaseRouteComponent {
-	@State route!: Store['route'];
+	@State
+	route!: Store['route'];
 
 	query = '';
 	showPagination = false;
 	noResults = false;
 	payload: any = {};
+	adSettings: AdSettingsContainer = null as any;
 
 	readonly Screen = Screen;
 	readonly Search = Search;
@@ -50,14 +51,20 @@ export default class RouteSearch extends BaseRouteComponent {
 		// We store our own version of the search query and sync back to it on form submission.
 		this.query = Search.query;
 
-		Ads.setAdUnit('search');
+		this.adSettings = new AdSettingsContainer();
+		this.adSettings.adUnit = 'search';
+		Ads.setPageSettings(this.adSettings);
+	}
+
+	routeDestroy() {
+		Ads.releasePageSettings();
 	}
 
 	// Child routes emit an event that calls this.
 	processPayload(payload: any) {
 		// Disable ads for adult searches.
 		if (payload.isAdultSearch) {
-			Ads.isPageDisabled = true;
+			this.adSettings.isPageDisabled = true;
 		}
 
 		this.query = '';

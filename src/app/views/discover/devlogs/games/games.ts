@@ -33,9 +33,11 @@ export default class RouteDiscoverDevlogsGames extends BaseRouteComponent {
 
 	routed($payload: any) {
 		this.listing = new GameListingContainer();
-		this.listing.setAdTargeting(this.$route);
+		this.listing.setAdTargeting(this.$route, 'devlogs');
 		this.listing.processPayload(this.$route, $payload);
+	}
 
-		Ads.setAdUnit('devlogs');
+	routeDestroy() {
+		Ads.releasePageSettings();
 	}
 }

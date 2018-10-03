@@ -5,7 +5,7 @@ import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendshi
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
-import { Ads } from '../../../lib/gj-lib-client/components/ad/ads.service';
+import { Ads, AdSettingsContainer } from '../../../lib/gj-lib-client/components/ad/ads.service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppPopper } from '../../../lib/gj-lib-client/components/popper/popper';
@@ -131,7 +131,10 @@ export default class RouteProfile extends BaseRouteComponent {
 
 	routeInit() {
 		this.bootstrapUser(this.$route.params.username);
-		Ads.setAdUnit('devprofile');
+
+		const adSettings = new AdSettingsContainer();
+		adSettings.adUnit = 'devprofile';
+		Ads.setPageSettings(adSettings);
 	}
 
 	routed($payload: any) {
@@ -143,6 +146,7 @@ export default class RouteProfile extends BaseRouteComponent {
 
 	routeDestroy() {
 		this.setPageTheme(null);
+		Ads.releasePageSettings();
 	}
 
 	report() {

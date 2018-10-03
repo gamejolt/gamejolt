@@ -1,7 +1,7 @@
 import View from '!view!./devlogs.html';
+import { Ads } from 'game-jolt-frontend-lib/components/ad/ads.service';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
-import { Ads } from '../../../../../../lib/gj-lib-client/components/ad/ads.service';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import {
 	BaseRouteComponent,
@@ -35,9 +35,11 @@ export default class RouteDiscoverChannelsViewDevlogs extends BaseRouteComponent
 
 	routed($payload: any) {
 		this.listing = new GameListingContainer();
-		this.listing.setAdTargeting(this.$route);
+		this.listing.setAdTargeting(this.$route, 'devlogs');
 		this.listing.processPayload(this.$route, $payload);
+	}
 
-		Ads.setAdUnit('devlogs');
+	routeDestroy() {
+		Ads.releasePageSettings();
 	}
 }

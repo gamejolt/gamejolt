@@ -214,10 +214,8 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		}
 
 		this.filtering.init(this.$route);
-		this.listing.setAdTargeting(this.$route);
+		this.listing.setAdTargeting(this.$route, 'gamesdir');
 		this.listing.processPayload(this.$route, $payload);
-
-		Ads.setAdUnit('gamesdir');
 
 		this.type = this.$route.meta.collectionType;
 
@@ -261,6 +259,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 	routeDestroy() {
 		this.setPageTheme(null);
+		Ads.releasePageSettings();
 	}
 
 	private processMeta($payload: any) {

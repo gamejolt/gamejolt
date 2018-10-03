@@ -1,4 +1,5 @@
 import View from '!view!./view.html';
+import { Ads, AdSettingsContainer } from 'game-jolt-frontend-lib/components/ad/ads.service';
 import {
 	CommentAction,
 	CommentMutation,
@@ -196,6 +197,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 	routeInit() {
 		this.bootstrapGame(parseInt(this.id, 10));
+		this.setAdSettings();
 
 		// Any game rating change will broadcast this event. We catch it so we
 		// can update the page with the new rating! Yay!
@@ -222,6 +224,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	async routed($payload: any) {
 		this.processPayload($payload);
 		this.setPageTheme(this.game.theme || null);
+		this.setAdSettings();
 
 		// If the game has a GA tracking ID, then we attach it to this
 		// scope so all page views within get tracked.
@@ -243,6 +246,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 	routeDestroy() {
 		this.setPageTheme(null);
+		this.releaseAdSettings();
 
 		if (this.ratingWatchDeregister) {
 			this.ratingWatchDeregister();
@@ -277,5 +281,42 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	scrollToMultiplePackages() {
 		this.showMultiplePackagesMessage();
 		Scroll.to('game-releases');
+	}
+
+	setAdSettings() {
+		if (!this.game) {
+			return;
+		}
+
+		// If our resource changed, we have to reset with new settings.
+		if (Ads.settings.resource && Ads.settings.resource.id === this.game.id) {
+			return;
+		}
+
+		let mat: string | undefined = undefined;
+		if (this.game.tigrs_age === 1) {
+			mat = 'everyone';
+		} else if (this.game.tigrs_age === 2) {
+			mat = 'teen';
+		} else if (this.game.tigrs_age === 3) {
+			mat = 'adult';
+		}
+
+		const settings = new AdSettingsContainer();
+		settings.resource = this.game;
+		settings.isPageDisabled = !this.game._should_show_ads;
+		settings.targeting = {
+			mat,
+			genre: this.game.category,
+			paid: this.game.is_paid_game ? 'y' : 'n',
+			game: this.game.id + '',
+		};
+		settings.adUnit = 'gamepage';
+
+		Ads.setPageSettings(settings);
+	}
+
+	releaseAdSettings() {
+		Ads.releasePageSettings();
 	}
 }

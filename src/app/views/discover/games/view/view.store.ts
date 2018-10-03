@@ -1,5 +1,4 @@
 import { Action, Mutation, namespace, State } from 'vuex-class';
-import { Ads } from '../../../../../lib/gj-lib-client/components/ad/ads.service';
 import { Comment } from '../../../../../lib/gj-lib-client/components/comment/comment-model';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
@@ -42,30 +41,6 @@ type Mutations = {
 	setCanToggleDescription: boolean;
 	setUserRating: GameRating | null;
 };
-
-function setAds(game?: Game) {
-	if (!game) {
-		return;
-	}
-
-	let mat: string | undefined = undefined;
-	if (game.tigrs_age === 1) {
-		mat = 'everyone';
-	} else if (game.tigrs_age === 2) {
-		mat = 'teen';
-	} else if (game.tigrs_age === 3) {
-		mat = 'adult';
-	}
-
-	Ads.resource = game;
-	Ads.globalTargeting = {
-		mat,
-		genre: game.category,
-		paid: game.is_paid_game ? 'y' : 'n',
-		game: game.id + '',
-	};
-	Ads.setAdUnit('gamepage');
-}
 
 @VuexModule()
 export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
@@ -194,7 +169,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.videoComments = [];
 		this.overviewComments = [];
 		this.userRating = null;
-		setAds(this.game);
 	}
 
 	@VuexMutation
@@ -217,8 +191,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 		this.userPartnerKey = payload.userPartnerKey;
 		this.collaboratorInvite = payload.invite ? new GameCollaborator(payload.invite) : null;
-
-		setAds(this.game);
 	}
 
 	@VuexMutation

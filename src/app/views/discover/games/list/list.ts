@@ -39,6 +39,7 @@ import { AppPageHeader } from '../../../../components/page-header/page-header';
 export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	@Prop(String)
 	section?: string;
+
 	@Prop(String)
 	category?: string;
 
@@ -92,7 +93,6 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 
 	routeInit() {
 		this.process();
-		Ads.setAdUnit('gamesdir');
 	}
 
 	routed($payload: any) {
@@ -104,6 +104,10 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 			this.listing.processPayload(this.$route, $payload);
 			this.process();
 		}
+	}
+
+	routeDestroy() {
+		Ads.releasePageSettings();
 	}
 
 	/**
@@ -118,7 +122,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		}
 
 		this.filtering.init(this.$route);
-		this.listing.setAdTargeting(this.$route);
+		this.listing.setAdTargeting(this.$route, 'gamesdir');
 
 		if (this.section === 'by-date') {
 			this.processDateSection();

@@ -1,7 +1,7 @@
 import { Route } from 'vue-router';
+import { Ads, AdSettingsContainer } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GameFilteringContainer } from '../filtering/container';
-import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 
 export class GameListingContainer {
 	isBootstrapped = false;
@@ -23,7 +23,7 @@ export class GameListingContainer {
 		this.section = route.params.section || 'hot';
 	}
 
-	setAdTargeting(route: Route) {
+	setAdTargeting(route: Route, adUnit?: string) {
 		const genre = route.params.category || undefined;
 		const channel = route.params.channel || undefined;
 
@@ -35,11 +35,18 @@ export class GameListingContainer {
 			paid = priceFilter ? (priceFilter !== 'free' ? 'y' : 'n') : undefined;
 		}
 
-		Ads.globalTargeting = {
+		const adSettings = new AdSettingsContainer();
+		adSettings.targeting = {
 			mat,
 			genre,
 			channel,
 			paid,
 		};
+
+		if (adUnit) {
+			adSettings.adUnit = adUnit;
+		}
+
+		Ads.setPageSettings(adSettings);
 	}
 }

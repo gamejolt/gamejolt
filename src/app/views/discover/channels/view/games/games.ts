@@ -48,9 +48,11 @@ export default class RouteDiscoverChannelsViewGames extends BaseRouteComponent {
 			this.listing = new GameListingContainer(this.filtering);
 		}
 
-		this.listing.setAdTargeting(this.$route);
+		this.listing.setAdTargeting(this.$route, 'gamesdir');
 		this.listing.processPayload(this.$route, $payload);
+	}
 
-		Ads.setAdUnit('gamesdir');
+	routeDestroy() {
+		Ads.releasePageSettings();
 	}
 }

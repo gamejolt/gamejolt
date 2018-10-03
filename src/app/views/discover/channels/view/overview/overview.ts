@@ -1,7 +1,10 @@
 import View from '!view!./overview.html';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
-import { Ads } from '../../../../../../lib/gj-lib-client/components/ad/ads.service';
+import {
+	Ads,
+	AdSettingsContainer,
+} from '../../../../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppAdPlacement } from '../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { AppTrackEvent } from '../../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
@@ -50,6 +53,12 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 
 	routeInit() {
 		this.feed = ActivityFeedService.routeInit(this);
+
+		const adSettings = new AdSettingsContainer();
+		adSettings.targeting = {
+			channel: this.$route.params.channel.toLowerCase(),
+		};
+		Ads.setPageSettings(adSettings);
 	}
 
 	routed($payload: any) {
@@ -65,9 +74,9 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 			},
 			$payload.posts
 		);
+	}
 
-		Ads.globalTargeting = {
-			channel: this.channel,
-		};
+	routeDestroy() {
+		Ads.releasePageSettings();
 	}
 }

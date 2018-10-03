@@ -17,7 +17,10 @@ import { AppLazyPlaceholder } from 'game-jolt-frontend-lib/components/lazy/place
 import { AppMediaBar } from 'game-jolt-frontend-lib/components/media-bar/media-bar';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import { PartnerReferral } from 'game-jolt-frontend-lib/components/partner-referral/partner-referral-service';
-import { BaseRouteComponent, RouteResolve } from 'game-jolt-frontend-lib/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
