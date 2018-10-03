@@ -34,10 +34,9 @@
 			should-affix-nav
 			:blur-header="!shouldShowFullCover"
 			:cover-auto-height="!shouldShowFullCover"
-			:autoscroll-anchor-key="game.id"
+			:autoscroll-anchor-key="autoscrollAnchorKey"
 			:show-cover-buttons="shouldShowCoverButtons"
 			>
-			<!-- :disable-autoscroll-anchor="!Screen.isXs" -->
 
 			<template slot="cover-buttons" v-if="shouldShowCoverButtons">
 				<app-game-cover-buttons

@@ -162,6 +162,15 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		return Screen.isXs || this.$route.name !== 'discover.games.view.devlog.view';
 	}
 
+	/**
+	 * The cover height changes when we switch to not showing the full cover, so
+	 * let's make sure we reset the autoscroll anchor so that it scrolls to the
+	 * top again.
+	 */
+	get autoscrollAnchorKey() {
+		return this.game.id + (this.shouldShowFullCover ? '-full' : '-collapsed');
+	}
+
 	@RouteResolve({ lazy: true, cache: true })
 	async routeResolve(this: undefined, route: Route) {
 		HistoryTick.trackSource('Game', parseInt(route.params.id, 10));

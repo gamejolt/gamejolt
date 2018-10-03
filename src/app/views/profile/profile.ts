@@ -96,6 +96,15 @@ export default class RouteProfile extends BaseRouteComponent {
 		return Screen.isXs || this.$route.name !== 'profile.post.view';
 	}
 
+	/**
+	 * The cover height changes when we switch to not showing the full cover, so
+	 * let's make sure we reset the autoscroll anchor so that it scrolls to the
+	 * top again.
+	 */
+	get autoscrollAnchorKey() {
+		return this.user!.id + (this.shouldShowFullCover ? '-full' : '-collapsed');
+	}
+
 	@RouteResolve({ cache: true, lazy: true })
 	async routeResolve(this: undefined, route: Route) {
 		const intentRedirect = IntentService.checkRoute(
