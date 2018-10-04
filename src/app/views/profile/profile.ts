@@ -63,9 +63,6 @@ export default class RouteProfile extends BaseRouteComponent {
 	user!: RouteStore['user'];
 
 	@RouteState
-	headerMediaItem!: RouteStore['headerMediaItem'];
-
-	@RouteState
 	videosCount!: RouteStore['videosCount'];
 
 	@RouteState

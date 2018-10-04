@@ -1,5 +1,4 @@
 import { Action, Mutation, namespace, State } from 'vuex-class';
-import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
 import { Registry } from '../../../lib/gj-lib-client/components/registry/registry.service';
 import { UserFriendship } from '../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
@@ -33,7 +32,6 @@ type Mutations = {
 @VuexModule()
 export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	user: User | null = null;
-	headerMediaItem: MediaItem | null = null;
 	gamesCount = 0;
 	videosCount = 0;
 	isOnline = false;
@@ -88,7 +86,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	@VuexMutation
 	bootstrapUser(username: Mutations['bootstrapUser']) {
 		this.user = Registry.find<User>('User', i => i.username === username);
-		this.headerMediaItem = (this.user && this.user.header_media_item) || null;
 		this.gamesCount = 0;
 		this.isOnline = false;
 		this.libraryGamesCount = 0;
@@ -105,9 +102,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 			this.user = user;
 		}
 
-		this.headerMediaItem = $payload.headerMediaItem
-			? new MediaItem($payload.headerMediaItem)
-			: null;
 		this.gamesCount = $payload.gamesCount || 0;
 		this.isOnline = $payload.isOnline || false;
 		this.libraryGamesCount = $payload.libraryGamesCount || 0;
