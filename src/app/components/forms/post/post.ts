@@ -11,28 +11,16 @@ import { AppFormControlToggle } from 'game-jolt-frontend-lib/components/form-vue
 import { AppFormControlUpload } from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload';
 import { AppFocusWhen } from 'game-jolt-frontend-lib/components/form-vue/focus-when.directive';
 import { AppForm } from 'game-jolt-frontend-lib/components/form-vue/form';
-import {
-	BaseForm,
-	FormOnInit,
-	FormOnLoad,
-	FormOnSubmit,
-	FormOnSubmitSuccess,
-} from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { BaseForm, FormOnInit, FormOnLoad, FormOnSubmit, FormOnSubmitSuccess } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { AppFormLegend } from 'game-jolt-frontend-lib/components/form-vue/legend/legend';
 import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
 import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
-import {
-	getLinkedAccountProviderDisplayName,
-	LinkedAccount,
-} from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
+import { getLinkedAccountProviderDisplayName, LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
 import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
 import { AppProgressBar } from 'game-jolt-frontend-lib/components/progress/bar/bar';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppSketchfabEmbed } from 'game-jolt-frontend-lib/components/sketchfab/embed/embed';
-import {
-	Timezone,
-	TimezoneData,
-} from 'game-jolt-frontend-lib/components/timezone/timezone.service';
+import { Timezone, TimezoneData } from 'game-jolt-frontend-lib/components/timezone/timezone.service';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { AppUserAvatarImg } from 'game-jolt-frontend-lib/components/user/user-avatar/img/img';
 import { AppVideoEmbed } from 'game-jolt-frontend-lib/components/video/embed/embed';
@@ -549,12 +537,11 @@ export class FormPost extends BaseForm<FormPostModel>
 			'/web/dash/developer/games/devlog/linked-accounts/' + this.model!.id
 		);
 
-		if (payload.game_accounts) {
-			this.linkedAccounts.push(...LinkedAccount.populate(payload.game_accounts));
+		if (payload.accounts) {
+			this.linkedAccounts = LinkedAccount.populate(payload.accounts);
 		}
-
-		if (payload.user_accounts) {
-			this.linkedAccounts.push(...LinkedAccount.populate(payload.user_accounts));
+		else {
+			this.linkedAccounts = [];
 		}
 
 		this.isLoadingLinkedAccounts = false;
