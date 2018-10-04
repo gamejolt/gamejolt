@@ -39,8 +39,12 @@ export abstract class ClientUpdater {
 		this.myClientUpdateStatus = status;
 
 		if (this.clientUpdateStatus !== 'fetching') {
-			this.myClientUpdateProgress = null;
+			this.setClientUpdateProgress(null);
 		}
+	}
+
+	private static setClientUpdateProgress(progress: MsgProgress | null) {
+		this.myClientUpdateProgress = progress;
 	}
 
 	static async init() {
@@ -250,8 +254,7 @@ export abstract class ClientUpdater {
 					})
 					.on('progress', (progress: MsgProgress) => {
 						console.log('progress received');
-						console.log(progress);
-						this.myClientUpdateProgress = progress;
+						this.setClientUpdateProgress(progress);
 					})
 					.on('updateFailed', (reason: string) => {
 						console.error('Failed to update. Joltron says: ' + reason);
