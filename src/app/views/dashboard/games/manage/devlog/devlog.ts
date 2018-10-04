@@ -54,14 +54,15 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
-	routed($payload: any) {
+	routed($payload: any, fromCache: boolean) {
 		this.feed = ActivityFeedService.routed(
 			this.feed,
 			{
 				type: 'EventItem',
 				url: getFetchUrl(this.$route),
 			},
-			$payload.items
+			$payload.items,
+			fromCache
 		);
 	}
 

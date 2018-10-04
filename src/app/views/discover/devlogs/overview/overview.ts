@@ -67,7 +67,7 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
-	routed($payload: any) {
+	routed($payload: any, fromCache: boolean) {
 		this.games = Game.populate($payload.games);
 
 		this.feed = ActivityFeedService.routed(
@@ -76,7 +76,8 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 				type: 'EventItem',
 				url: '/web/discover/devlogs/posts',
 			},
-			$payload.posts
+			$payload.posts,
+			fromCache
 		);
 	}
 }

@@ -25,9 +25,20 @@ type Actions = {
 
 type Mutations = {
 	bootstrapUser: string;
+	onUserChange: void;
 	profilePayload: any;
 	setUserFriendship: UserFriendship | null;
 };
+
+function updateUser(user: User | null, newUser: User | null) {
+	// If we already have a user, just assign new data into it to keep it fresh.
+	if (user) {
+		user.assign(newUser);
+		return user;
+	}
+
+	return newUser;
+}
 
 @VuexModule()
 export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
@@ -84,21 +95,22 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexMutation
 	bootstrapUser(username: Mutations['bootstrapUser']) {
-		this.user = Registry.find<User>('User', i => i.username === username);
-		this.gamesCount = 0;
-		this.isOnline = false;
-		this.videosCount = 0;
-		this.userFriendship = null;
+		const prevId = this.user && this.user.id;
+		const user = Registry.find<User>('User', i => i.username === username);
+		this.user = updateUser(this.user, user);
+
+		if ((this.user && this.user.id) !== prevId) {
+			this.gamesCount = 0;
+			this.isOnline = false;
+			this.videosCount = 0;
+			this.userFriendship = null;
+		}
 	}
 
 	@VuexMutation
 	profilePayload($payload: Mutations['profilePayload']) {
 		const user = new User($payload.user);
-		if (this.user) {
-			this.user.assign(user);
-		} else {
-			this.user = user;
-		}
+		this.user = updateUser(this.user, user);
 
 		this.gamesCount = $payload.gamesCount || 0;
 		this.isOnline = $payload.isOnline || false;

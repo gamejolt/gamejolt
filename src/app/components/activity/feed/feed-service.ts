@@ -47,11 +47,17 @@ export class ActivityFeedService {
 	static routed(
 		feed: ActivityFeedContainer | null,
 		options: ActivityFeedContainerOptions,
-		items: any[]
+		items: any[],
+		fromPayloadCache: boolean
 	) {
 		// If there is a feed pulled from cache in routeInit, we just use that.
 		if (feed) {
 			return feed;
+		}
+
+		// Never pull from cache.
+		if (fromPayloadCache) {
+			return null;
 		}
 
 		// If we couldn't fetch a cached feed when routeInit was called, we should start fresh.

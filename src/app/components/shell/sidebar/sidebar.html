@@ -18,8 +18,8 @@
 			<li class="offline-disable">
 				<router-link
 					v-if="app.user && isBootstrapped"
-					:to="{ name: 'activity', params: { tab: 'activity' } }"
-					:class="{ active: $route.name.indexOf( 'activity' ) === 0 }"
+					:to="{ name: 'activity.feed' }"
+					:class="{ active: $route.name.indexOf( 'activity.' ) === 0 }"
 					v-app-track-event="`sidebar:activity`"
 					>
 					<span

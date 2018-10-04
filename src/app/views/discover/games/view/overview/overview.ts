@@ -208,7 +208,8 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 				type: 'EventItem',
 				url: `/web/posts/fetch/game/${this.game.id}`,
 			},
-			$payload.posts
+			$payload.posts,
+			fromCache
 		);
 
 		this.processOverviewPayload({ payload: $payload, fromCache });
