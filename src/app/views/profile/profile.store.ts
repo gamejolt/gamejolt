@@ -35,7 +35,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	gamesCount = 0;
 	videosCount = 0;
 	isOnline = false;
-	libraryGamesCount = 0;
 	userFriendship: UserFriendship | null = null;
 
 	@VuexAction
@@ -88,7 +87,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.user = Registry.find<User>('User', i => i.username === username);
 		this.gamesCount = 0;
 		this.isOnline = false;
-		this.libraryGamesCount = 0;
 		this.videosCount = 0;
 		this.userFriendship = null;
 	}
@@ -104,7 +102,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 		this.gamesCount = $payload.gamesCount || 0;
 		this.isOnline = $payload.isOnline || false;
-		this.libraryGamesCount = $payload.libraryGamesCount || 0;
 		this.videosCount = $payload.videosCount || 0;
 
 		if ($payload.userFriendship) {
