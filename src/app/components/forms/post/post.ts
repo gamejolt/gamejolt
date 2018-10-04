@@ -548,7 +548,7 @@ export class FormPost extends BaseForm<FormPostModel>
 		}
 
 		const payload = await Api.sendRequest(
-			'/web/dash/developer/games/devlog/linked-accounts/' + this.model!.id
+			'/web/posts/manage/linked-accounts/' + this.model!.id
 		);
 
 		this.linkedAccounts = LinkedAccount.populate(payload.accounts);
@@ -596,7 +596,7 @@ export class FormPost extends BaseForm<FormPostModel>
 	async checkPlatformRestrictions() {
 		if (this.isPublishingToPlatforms) {
 			const payload = await Api.sendRequest(
-				'/web/dash/developer/games/devlog/check-platform-restrictions/' + this.formModel.id,
+				'/web/posts/manage/check-platform-restrictions/' + this.formModel.id,
 				{
 					lead: this.formModel.lead,
 					content: this.formModel.content_markdown,
