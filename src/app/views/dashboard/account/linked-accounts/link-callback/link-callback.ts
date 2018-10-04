@@ -1,21 +1,25 @@
 import { CreateElement } from 'vue';
-import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { AppState, AppStore } from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { LinkedAccount } from '../../../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
-import { YoutubeChannel } from '../../../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
+import {
+	getLinkedAccountProviderDisplayName,
+	LinkedAccount,
+} from '../../../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
+import { YoutubeChannel } from '../../../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
+import { AppState, AppStore } from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 
 @Component({
 	name: 'RouteDashAccountLinkedAccountsLinkCallback',
 })
 export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRouteComponent {
-	@AppState user!: AppStore['user'];
+	@AppState
+	user!: AppStore['user'];
 
 	@RouteResolve()
 	async routeResolve(this: undefined, route: Route) {
@@ -60,7 +64,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 		}
 
 		const provider = this.$route.params.provider;
-		const providerName = LinkedAccount.getProviderDisplayName(provider);
+		const providerName = getLinkedAccountProviderDisplayName(provider);
 		if (!$payload.success) {
 			if ($payload.reason) {
 				if ($payload.reason === 'account-taken') {

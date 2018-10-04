@@ -1,25 +1,37 @@
 <div>
 	<div class="row linked-accounts-list">
-        <app-linked-account
-            :account="facebookAccount"
-            provider="facebook"
-			@link="onLink"
-            @unlink="onUnlink" />
-        <app-linked-account
-            :account="twitterAccount"
-            provider="twitter"
-			@link="onLink"
-            @unlink="onUnlink" />
-        <app-linked-account
-            :account="googleAccount"
-            provider="google"
-			@link="onLink"
-            @unlink="onUnlink" />
-        <app-linked-account
-            :account="twitchAccount"
-            provider="twitch"
-			@link="onLink"
-            @unlink="onUnlink" />
+		<div class="col-md-8 col-lg-6">
+			<app-linked-account
+				:account="facebookAccount"
+				provider="facebook"
+				@link="onLink"
+				@unlink="onUnlink"
+				/>
+		</div>
+		<div class="col-md-8 col-lg-6">
+			<app-linked-account
+				:account="twitterAccount"
+				provider="twitter"
+				@link="onLink"
+				@unlink="onUnlink"
+				/>
+		</div>
+		<div class="col-md-8 col-lg-6">
+			<app-linked-account
+				:account="googleAccount"
+				provider="google"
+				@link="onLink"
+				@unlink="onUnlink"
+				/>
+		</div>
+		<div class="col-md-8 col-lg-6">
+			<app-linked-account
+				:account="twitchAccount"
+				provider="twitch"
+				@link="onLink"
+				@unlink="onUnlink"
+				/>
+		</div>
     </div>
 
 	<div class="row">

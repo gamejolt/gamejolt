@@ -44,7 +44,9 @@ export class AppFriendRequestPopover extends Vue {
 	 */
 	@Watch('requests')
 	onRequestsChange() {
-		this.inviewParent.container.queueCheck();
+		if (this.inviewParent) {
+			this.inviewParent.container.queueCheck();
+		}
 	}
 
 	mounted() {

@@ -1,23 +1,23 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./linked-accounts.html?style=./linked-accounts.styl';
-
-import {
-	BaseRouteComponent,
-	RouteResolve,
-} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { RouteState, RouteStore } from '../../manage.store';
+import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
+import { ModalFacebookPageSelector } from '../../../../../../../lib/gj-lib-client/components/linked-account/facebook-page-selector-modal/facebook-page-selector-modal-service';
 import { AppLinkedAccount } from '../../../../../../../lib/gj-lib-client/components/linked-account/linked-account';
 import {
+	getLinkedAccountProviderDisplayName,
 	LinkedAccount,
 	Provider,
 } from '../../../../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
 import { LinkedAccounts } from '../../../../../../../lib/gj-lib-client/components/linked-account/linked-accounts.service';
-import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { ModalFacebookPageSelector } from '../../../../../../../lib/gj-lib-client/components/linked-account/facebook-page-selector-modal/facebook-page-selector-modal-service';
 import { ModalTumblrBlogSelector } from '../../../../../../../lib/gj-lib-client/components/linked-account/tumblr-blog-selector-modal/tumblr-blog-selector-modal-service';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { RouteState, RouteStore } from '../../manage.store';
 
 @View
 @Component({
@@ -27,7 +27,8 @@ import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/
 	},
 })
 export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteComponent {
-	@RouteState game: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	accounts: LinkedAccount[] = [];
 
@@ -61,6 +62,10 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		return this.getAccount(LinkedAccount.PROVIDER_DISCORD);
 	}
 
+	routed($payload: any) {
+		this.accounts = LinkedAccount.populate($payload.accounts);
+	}
+
 	getAccount(provider: string) {
 		if (this.accounts) {
 			for (const account of this.accounts) {
@@ -72,11 +77,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		return null;
 	}
 
-	routed($payload: any) {
-		this.accounts = LinkedAccount.populate($payload.accounts);
-	}
-
-	async onLink(_e: Event, provider: Provider) {
+	async onLink(provider: Provider) {
 		await LinkedAccounts.link(
 			this.$router,
 			provider,
@@ -84,7 +85,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		);
 	}
 
-	async onUnlink(_e: Event, provider: Provider) {
+	async onUnlink(provider: Provider) {
 		if (
 			provider === LinkedAccount.PROVIDER_FACEBOOK &&
 			this.facebookAccount &&
@@ -128,7 +129,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 			{}
 		);
 
-		const providerName = LinkedAccount.getProviderDisplayName(provider);
+		const providerName = getLinkedAccountProviderDisplayName(provider);
 		if (response.success) {
 			this.accounts = LinkedAccount.populate(response.accounts);
 			Growls.success(

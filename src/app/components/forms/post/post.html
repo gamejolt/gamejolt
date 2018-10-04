@@ -147,14 +147,6 @@
 			:placeholder="!longEnabled ? $gettext(`What's new?`) : $gettext(`Write a summary for your article...`)"
 			/>
 
-		<app-button
-			v-if="!isPublishingToPlatforms"
-			sparse
-			icon="share-airplane"
-			v-app-tooltip="$gettext(`Publish to social media`)"
-			@click.prevent="addPublishingToPlatforms()"
-			/>
-
 		<div class="-hp">
 			<div class="-hp-label">HP</div>
 			<div class="-hp-bar">
@@ -417,45 +409,96 @@
 
 		</fieldset>
 	</div>
+
 	<div class="well fill-offset full-bleed" v-if="isPublishingToPlatforms">
 		<fieldset>
-			<app-form-legend compact>
-				<translate>Publish your post to social media</translate>
+			<app-form-legend
+				compact
+				deletable
+				@delete="removePublishingToPlatforms()"
+				>
+				<translate>Publish your post to other platforms</translate>
 			</app-form-legend>
+
+			<div class="alert">
+				<translate>You can publish this post to other platforms!</translate>
+				<translate v-if="!model.game">Set up your linked accounts in your user account.</translate>
+				<translate v-else>Set up your linked accounts either in your game dashboard, or your user account.</translate>
+			</div>
 
 			<app-loading v-if="isLoadingLinkedAccounts" />
 			<div v-else>
-				<p class="help-block">
-					<translate>Linked Accounts from this post's owner (You) and the game show up here.</translate><br />
-					<translate>To link more, visit the Linked Accounts sections on your user profile or this game's dashboard.</translate>
-				</p>
-				<div class="alert" v-if="platformRestrictions.length">
+				<div
+					v-if="platformRestrictions.length"
+					class="alert alert-notice"
+					>
 					<app-jolticon icon="exclamation-circle" />
-					<div v-for="restriction of platformRestrictions"
-						:key="restriction.topic">
-						{{getPlatformRestrictionTitle(restriction)}}
+					<div
+						v-for="restriction of platformRestrictions"
+						:key="restriction.topic"
+						>
+						{{ getPlatformRestrictionTitle(restriction) }}
 					</div>
 				</div>
-				<strong><translate>Game's Linked Accounts</translate></strong>
-				<div v-for="account of gameLinkedAccounts"
-					:key="account.id"
-					:value="account.id">
-					<template v-if="getGameLinkedAccountDisplayName(account)">
-						<input type="checkbox"
+
+				<div class="-linked-accounts">
+					<!-- :value="account.id" -->
+					<app-form-group
+						v-for="account of linkedAccounts"
+						:key="account.id"
+
+						:name="`test_${account.id}`"
+						:label="$gettext(`test`)"
+						hide-label
+						>
+						<div class="-linked-account">
+
+							<div class="-linked-account-icon">
+								<app-jolticon
+									v-app-tooltip="account.providerDisplayName"
+									:icon="account.icon"
+									big
+									/>
+							</div>
+
+							<div class="-linked-account-label">
+								{{ getGameLinkedAccountDisplayName(account) }}
+							</div>
+
+							<div class="-linked-account-toggle">
+								<app-form-control-toggle />
+							</div>
+
+						</div>
+					</app-form-group>
+				</div>
+
+					<!-- <template v-if="getGameLinkedAccountDisplayName(account)">
+						<input
+							type="checkbox"
 							:value="account.id"
 							:id="account.id"
 							:checked="isLinkedAccountActive(account.id)"
-							@change="changeLinkedAccount($event.target.value)"/>
+							@change="changeLinkedAccount($event.target.value)"
+							/>
+
 						<app-jolticon
 							v-app-tooltip="account.providerDisplayName"
-							:icon="account.icon" />
-						<label :for="account.id">{{getGameLinkedAccountDisplayName(account)}}</label>
+							:icon="account.icon"
+							/>
+
+						<label :for="account.id">
+							{{ getGameLinkedAccountDisplayName(account) }}
+						</label>
 					</template>
-				</div>
-				<strong><translate>Post owner's Linked Accounts</translate></strong>
+				</div> -->
+
+				<!-- <strong><translate>Post owner's Linked Accounts</translate></strong>
+
 				<p class="help-block" v-if="!canEditOwnerLinkedAccounts">
 					Only the owner of this post can edit this section.
 				</p>
+
 				<div v-for="account of userLinkedAccounts"
 					:key="account.id"
 					:value="account.id">
@@ -469,19 +512,10 @@
 						v-app-tooltip="account.providerDisplayName"
 						:icon="account.icon" />
 					<label :for="account.id">{{account.name}}</label>
-				</div>
+				</div> -->
 			</div>
 
 		</fieldset>
-
-		<div class="text-right">
-			<app-button
-				trans
-				@click.prevent="removePublishingToPlatforms()"
-				>
-				<translate>Remove</translate>
-			</app-button>
-		</div>
 	</div>
 	<div class="alert" v-if="hasPublishedToPlatforms">
 		<translate>Any edits made to this post will not be reflected on the posts on your social media.</translate>
@@ -567,65 +601,83 @@
 	</app-form-group>
 
 	<!-- Controls -->
-	<div class="clearfix">
-		<app-button
-			v-if="!longEnabled"
-			sparse
-			trans
-			circle
-			icon="blog-article"
-			v-app-tooltip="$gettext(`Add Article`)"
-			@click.prevent="toggleLong()"
-			/>
-
-		<app-button
-			v-if="!hasPoll"
-			sparse
-			trans
-			circle
-			icon="pedestals-numbers"
-			v-app-tooltip="$gettext(`Add Poll`)"
-			@click.prevent="createPoll()"
-			/>
-
-		<app-button
-			v-if="!wasPublished && !isScheduling"
-			sparse
-			trans
-			circle
-			icon="calendar-grid"
-			v-app-tooltip="$gettext(`Schedule Post`)"
-			@click.prevent="addSchedule()"
-			/>
-
-		<app-button
-			v-if="!accessPermissionsEnabled && !wasPublished && model.game"
-			sparse
-			trans
-			circle
-			icon="key-diagonal"
-			v-app-tooltip="$gettext(`Access Permissions`)"
-			@click.prevent="enableAccessPermissions()"
-			/>
-
-		<span class="pull-right">
+	<div class="-controls">
+		<div class="-controls-attachments">
 			<app-button
-				:disabled="!valid"
-				primary
-				solid
-				>
-				{{mainActionText}}
-			</app-button>
+				v-if="!longEnabled"
+				sparse
+				trans
+				circle
+				icon="blog-article"
+				v-app-tooltip="$gettext(`Add Article`)"
+				@click.prevent="toggleLong()"
+				/>
+
+			<app-button
+				v-if="!hasPoll"
+				sparse
+				trans
+				circle
+				icon="pedestals-numbers"
+				v-app-tooltip="$gettext(`Add Poll`)"
+				@click.prevent="createPoll()"
+				/>
 
 			<app-button
 				v-if="!wasPublished && !isScheduling"
-				:disabled="!valid"
+				sparse
 				trans
-				@click.prevent="onDraftSubmit()"
-				>
-				<translate>Save Draft</translate>
-			</app-button>
-		</span>
+				circle
+				icon="calendar-grid"
+				v-app-tooltip="$gettext(`Schedule Post`)"
+				@click.prevent="addSchedule()"
+				/>
+
+			<app-button
+				v-if="!accessPermissionsEnabled && !wasPublished && model.game"
+				sparse
+				trans
+				circle
+				icon="key-diagonal"
+				v-app-tooltip="$gettext(`Access Permissions`)"
+				@click.prevent="enableAccessPermissions()"
+				/>
+
+			<app-button
+				v-if="!isPublishingToPlatforms"
+				sparse
+				trans
+				circle
+				icon="share-airplane"
+				v-app-tooltip="$gettext(`Publish to Other Platforms`)"
+				@click.prevent="addPublishingToPlatforms()"
+				/>
+		</div>
+
+		<div class="-controls-submit">
+			<div class="-controls-submit-button">
+				<app-button
+					:disabled="!valid"
+					primary
+					solid
+					:block="Screen.isXs"
+					>
+					{{ mainActionText }}
+				</app-button>
+			</div>
+
+			<div class="-controls-submit-button">
+				<app-button
+					v-if="!wasPublished && !isScheduling"
+					:disabled="!valid"
+					trans
+					:block="Screen.isXs"
+					@click.prevent="onDraftSubmit()"
+					>
+					<translate>Save Draft</translate>
+				</app-button>
+			</div>
+		</div>
 	</div>
 
 </app-form>

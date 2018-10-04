@@ -1,24 +1,24 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./linked-accounts.html';
-
-import {
-	BaseRouteComponent,
-	RouteResolve,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { RouteMutation, RouteStore } from '../account.store';
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { YoutubeChannel } from '../../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
+import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppLinkedAccount } from '../../../../../lib/gj-lib-client/components/linked-account/linked-account';
 import {
+	getLinkedAccountProviderDisplayName,
 	LinkedAccount,
 	Provider,
 } from '../../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
 import { LinkedAccounts } from '../../../../../lib/gj-lib-client/components/linked-account/linked-accounts.service';
-import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
-import { UserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
 import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
+import { YoutubeChannel } from '../../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
+import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { UserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
+import { RouteMutation, RouteStore } from '../account.store';
 
 @View
 @Component({
@@ -28,8 +28,11 @@ import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/
 	},
 })
 export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
-	@AppState user: AppStore['user'];
-	@RouteMutation setHeading: RouteStore['setHeading'];
+	@AppState
+	user!: AppStore['user'];
+
+	@RouteMutation
+	setHeading!: RouteStore['setHeading'];
 
 	accounts: LinkedAccount[] = [];
 	channels: YoutubeChannel[] = [];
@@ -76,11 +79,11 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 		this.accounts = LinkedAccount.populate($payload.accounts);
 	}
 
-	async onLink(_e: Event, provider: Provider) {
+	async onLink(provider: Provider) {
 		await LinkedAccounts.link(this.$router, provider, '/web/dash/linked-accounts/link/');
 	}
 
-	async onUnlink(e: Event, provider: Provider) {
+	async onUnlink(provider: Provider) {
 		if (!this.user) {
 			return;
 		}
@@ -88,7 +91,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 		const response = await Api.sendRequest('/web/dash/linked-accounts/unlink/' + provider, {});
 		if (response.success) {
 			this.accounts = LinkedAccount.populate(response.accounts);
-			const providerName = LinkedAccount.getProviderDisplayName(provider);
+			const providerName = getLinkedAccountProviderDisplayName(provider);
 			Growls.success(
 				Translate.$gettextInterpolate(
 					`Your %{ provider } account has been unlinked from the site.`,
@@ -110,7 +113,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 				);
 
 				// Try to unlink again once they've set one!
-				await this.onUnlink(e, provider);
+				await this.onUnlink(provider);
 			} else {
 				Growls.error(this.$gettext('Failed to unlink account from the site.'));
 			}

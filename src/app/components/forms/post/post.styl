@@ -65,3 +65,61 @@
 .-poll-duration
 	.form-group
 		margin-bottom: 0
+
+.-linked-accounts
+	.form-group
+		margin-bottom: 0
+
+.-linked-account
+	display: flex
+	align-items: center
+	margin-top: 10px
+
+	&-icon
+		flex: none
+		margin-right: 10px
+
+	&-label
+		flex: auto
+		margin-right: 10px
+
+	&-toggle
+		flex: none
+
+@media $media-xs
+	.-controls
+		display: flex
+		flex-direction: column
+
+		&-attachments
+			display: flex
+			justify-content: center
+			margin-bottom: $line-height-computed
+
+		&-submit
+			display: flex
+
+			&-button
+				flex: 1 0
+				margin-right: 10px
+				margin-left: 10px
+
+				&:first-of-type
+					margin-left: 0
+
+				&:last-of-type
+					margin-right: 0
+
+@media $media-sm-up
+	.-controls
+		display: flex
+		flex-direction: row
+
+		&-attachments
+			flex: auto
+
+		&-submit
+			flex: none
+
+			&-button
+				display: inline-block

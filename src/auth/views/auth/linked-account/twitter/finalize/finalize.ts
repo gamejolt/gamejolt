@@ -1,10 +1,9 @@
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./finalize.html';
-
-import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
+import { Component, Prop } from 'vue-property-decorator';
 import { Auth } from '../../../../../../lib/gj-lib-client/components/auth/auth.service';
-import { FormTwitterEmail } from '../../../../../components/forms/twitter-email/twitter-email';
+import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/components/route/route-component';
+import { FormTwitterEmail } from '../../../../../components/forms/twitter-email/twitter-email';
 
 @View
 @Component({
@@ -14,7 +13,8 @@ import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/componen
 	},
 })
 export default class RouteAuthLinkedAccountTwitterFinalize extends BaseRouteComponent {
-	@Prop(String) state!: string;
+	@Prop(String)
+	state!: string;
 
 	get routeTitle() {
 		return this.$gettext('auth.linked_account.twitter.finalize.page_title');

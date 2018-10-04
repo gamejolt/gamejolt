@@ -21,9 +21,13 @@ import {
 import { AppFormLegend } from 'game-jolt-frontend-lib/components/form-vue/legend/legend';
 import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
 import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
-import { LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
+import {
+	getLinkedAccountProviderDisplayName,
+	LinkedAccount,
+} from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
 import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
 import { AppProgressBar } from 'game-jolt-frontend-lib/components/progress/bar/bar';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppSketchfabEmbed } from 'game-jolt-frontend-lib/components/sketchfab/embed/embed';
 import {
 	Timezone,
@@ -33,7 +37,6 @@ import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { AppUserAvatarImg } from 'game-jolt-frontend-lib/components/user/user-avatar/img/img';
 import { AppVideoEmbed } from 'game-jolt-frontend-lib/components/video/embed/embed';
 import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
-import { AppJolticon } from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon';
 import { AppLoading } from 'game-jolt-frontend-lib/vue/components/loading/loading';
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { determine } from 'jstimezonedetect';
@@ -80,7 +83,6 @@ type PlatformRestriction = {
 		AppFormLegend,
 		AppSketchfabEmbed,
 		AppVideoEmbed,
-		AppJolticon,
 		AppLoading,
 		AppUserAvatarImg,
 		AppProgressBar,
@@ -98,9 +100,6 @@ export class FormPost extends BaseForm<FormPostModel>
 
 	@AppState
 	user!: AppStore['user'];
-
-	@Prop(FiresidePost)
-	post!: FiresidePost;
 
 	@Prop({ type: String, default: '' })
 	defaultAttachmentType!: string;
@@ -127,8 +126,7 @@ export class FormPost extends BaseForm<FormPostModel>
 	maxHeight = 0;
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = null as any;
 	now = 0;
-	userLinkedAccounts: LinkedAccount[] | null = null;
-	gameLinkedAccounts: LinkedAccount[] | null = null;
+	linkedAccounts: LinkedAccount[] = [];
 	isLoadingLinkedAccounts = false;
 	platformRestrictions: PlatformRestriction[] = [];
 	restrictionCheckIntervalHandle?: NodeJS.Timer;
@@ -140,6 +138,7 @@ export class FormPost extends BaseForm<FormPostModel>
 	leadTotalLengthLimit = 300;
 
 	readonly GameVideo = GameVideo;
+	readonly Screen = Screen;
 
 	get loadUrl() {
 		return `/web/posts/manage/save/${this.model!.id}`;
@@ -367,6 +366,50 @@ export class FormPost extends BaseForm<FormPostModel>
 		this.leadTotalLengthLimit = payload.leadTotalLengthLimit;
 	}
 
+	onDraftSubmit() {
+		this.setField('status', FiresidePost.STATUS_DRAFT);
+		this.$refs.form.submit();
+	}
+
+	async onSubmit() {
+		// a scheduled post gets saved as draft and will get set to published when the scheduled date is reached
+		if (this.isScheduling) {
+			this.setField('status', FiresidePost.STATUS_DRAFT);
+		}
+
+		// Set or clear attachments as needed
+		if (this.attachmentType === FiresidePost.TYPE_MEDIA && this.formModel.media) {
+			this.setField('mediaItemIds', this.formModel.media.map(item => item.id));
+		} else {
+			this.setField('mediaItemIds', []);
+		}
+
+		if (this.attachmentType !== FiresidePost.TYPE_VIDEO || !this.formModel.video_url) {
+			this.setField('video_url', '');
+		}
+
+		if (this.attachmentType === FiresidePost.TYPE_SKETCHFAB && this.formModel.sketchfab_id) {
+			this.setField('sketchfab_id', this.sketchfabId);
+		} else {
+			this.setField('sketchfab_id', '');
+		}
+
+		if (!this.accessPermissionsEnabled) {
+			this.setField('key_group_ids', []);
+		}
+
+		if (!this.longEnabled) {
+			this.setField('content_markdown', '');
+		}
+
+		this.setField('poll_duration', this.pollDuration * 60); // site-api expects duration in seconds.
+		return this.formModel.$save();
+	}
+
+	onSubmitSuccess() {
+		Object.assign(this.model as FiresidePost, this.formModel);
+	}
+
 	enableImages() {
 		this.enabledAttachments = true;
 		this.attachmentType = FiresidePost.TYPE_MEDIA;
@@ -474,24 +517,12 @@ export class FormPost extends BaseForm<FormPostModel>
 		this.changed = true;
 	}
 
-	async loadLinkedAccounts() {
-		this.isLoadingLinkedAccounts = true;
-
-		const payload = await Api.sendRequest(
-			'/web/dash/developer/games/devlog/linked-accounts/' + this.model!.id
-		);
-		if (payload.game_accounts) {
-			this.gameLinkedAccounts = LinkedAccount.populate(payload.game_accounts);
+	togglePublishingToPlatforms() {
+		if (!this.isPublishingToPlatforms) {
+			this.addPublishingToPlatforms();
 		} else {
-			this.gameLinkedAccounts = [];
+			this.removePublishingToPlatforms();
 		}
-		if (payload.user_accounts) {
-			this.userLinkedAccounts = LinkedAccount.populate(payload.user_accounts);
-		} else {
-			this.userLinkedAccounts = [];
-		}
-
-		this.isLoadingLinkedAccounts = false;
 	}
 
 	async addPublishingToPlatforms() {
@@ -511,21 +542,28 @@ export class FormPost extends BaseForm<FormPostModel>
 		this.changed = true;
 	}
 
-	getLinkedAccountIdenfifier(id: number) {
-		if (this.gameLinkedAccounts) {
-			for (const account of this.gameLinkedAccounts) {
-				if (account.id == id) {
-					const identifier = 'game_' + account.provider;
-					return identifier;
-				}
-			}
+	async loadLinkedAccounts() {
+		this.isLoadingLinkedAccounts = true;
+
+		const payload = await Api.sendRequest(
+			'/web/dash/developer/games/devlog/linked-accounts/' + this.model!.id
+		);
+
+		if (payload.game_accounts) {
+			this.linkedAccounts.push(...LinkedAccount.populate(payload.game_accounts));
 		}
-		if (this.userLinkedAccounts) {
-			for (const account of this.userLinkedAccounts) {
-				if (account.id == id) {
-					const identifier = 'owner_' + account.provider;
-					return identifier;
-				}
+
+		if (payload.user_accounts) {
+			this.linkedAccounts.push(...LinkedAccount.populate(payload.user_accounts));
+		}
+
+		this.isLoadingLinkedAccounts = false;
+	}
+
+	getLinkedAccountIdenfifier(id: number) {
+		for (const account of this.linkedAccounts) {
+			if (account.id === id) {
+				return 'game_' + account.provider;
 			}
 		}
 	}
@@ -535,6 +573,7 @@ export class FormPost extends BaseForm<FormPostModel>
 			const platforms = this.formModel.publish_to_platforms
 				.split(',')
 				.filter(s => s.length > 0);
+
 			const identifier = this.getLinkedAccountIdenfifier(id);
 			if (identifier) {
 				return platforms.indexOf(identifier) !== -1;
@@ -575,15 +614,68 @@ export class FormPost extends BaseForm<FormPostModel>
 				} else {
 					return undefined;
 				}
+
 			case LinkedAccount.PROVIDER_TUMBLR:
 				if (account.tumblrSelectedBlog) {
 					return account.tumblrSelectedBlog.title;
 				} else {
 					return undefined;
 				}
+
 			default:
 				return account.name;
 		}
+	}
+
+	async checkPlatformRestrictions() {
+		if (this.isPublishingToPlatforms) {
+			const payload = await Api.sendRequest(
+				'/web/dash/developer/games/devlog/check-platform-restrictions/' + this.formModel.id,
+				{
+					lead: this.formModel.lead,
+					content: this.formModel.content_markdown,
+					publish_to_platforms: this.formModel.publish_to_platforms,
+				}
+			);
+
+			if (payload.success) {
+				this.platformRestrictions = [];
+				for (const restrictionData of payload.restrictions) {
+					this.platformRestrictions.push({
+						topic: restrictionData.topic,
+						provider: restrictionData.provider,
+					});
+				}
+			}
+		}
+	}
+
+	getPlatformRestrictionTitle(restriction: PlatformRestriction) {
+		const providerPrefix = getLinkedAccountProviderDisplayName(restriction.provider) + ': ';
+		const restrictionKey = restriction.provider + '-' + restriction.topic;
+		switch (restrictionKey) {
+			case 'twitter-lead-too-long':
+				return providerPrefix + 'The lead is too long for a tweet.';
+			case 'twitter-gif-file-size-too-large':
+				return (
+					providerPrefix +
+					'The attached animated GIF file can only be up to 15 MB in size.'
+				);
+			case 'twitter-too-many-media-items-1-animation':
+				return providerPrefix + 'Only one animated GIF file is supported per tweet.';
+			case 'twitter-too-many-media-items-4-images':
+				return providerPrefix + 'Only up to 4 images are supported per tweet.';
+			case 'twitter-image-file-size-too-large':
+				return providerPrefix + 'Any attached image file can only be up to 5 MB in size.';
+			case 'facebook-media-item-photo-too-large':
+				return providerPrefix + 'Any attached photo can only be up to 10 MB in size.';
+			case 'tumblr-media-item-photo-too-large':
+				return providerPrefix + 'Any attached photo can only be up to 10 MB in size.';
+		}
+
+		// we do not have the restriction listed here, try and make the topic somewhat readable
+		const message = restriction.topic.split('-');
+		return providerPrefix + message;
 	}
 
 	timezoneByName(timezone: string) {
@@ -610,100 +702,6 @@ export class FormPost extends BaseForm<FormPostModel>
 				tz.label = `(UTC${offset}) ${tz.i}`;
 			}
 		}
-	}
-
-	onDraftSubmit() {
-		this.setField('status', FiresidePost.STATUS_DRAFT);
-		this.$refs.form.submit();
-	}
-
-	async onSubmit() {
-		// a scheduled post gets saved as draft and will get set to published when the scheduled date is reached
-		if (this.isScheduling) {
-			this.setField('status', FiresidePost.STATUS_DRAFT);
-		}
-
-		// Set or clear attachments as needed
-		if (this.attachmentType === FiresidePost.TYPE_MEDIA && this.formModel.media) {
-			this.setField('mediaItemIds', this.formModel.media.map(item => item.id));
-		} else {
-			this.setField('mediaItemIds', []);
-		}
-
-		if (this.attachmentType !== FiresidePost.TYPE_VIDEO || !this.formModel.video_url) {
-			this.setField('video_url', '');
-		}
-
-		if (this.attachmentType === FiresidePost.TYPE_SKETCHFAB && this.formModel.sketchfab_id) {
-			this.setField('sketchfab_id', this.sketchfabId);
-		} else {
-			this.setField('sketchfab_id', '');
-		}
-
-		if (!this.accessPermissionsEnabled) {
-			this.setField('key_group_ids', []);
-		}
-
-		if (!this.longEnabled) {
-			this.setField('content_markdown', '');
-		}
-
-		this.setField('poll_duration', this.pollDuration * 60); // site-api expects duration in seconds.
-		return this.formModel.$save();
-	}
-
-	onSubmitSuccess() {
-		Object.assign(this.model as FiresidePost, this.formModel);
-	}
-
-	async checkPlatformRestrictions() {
-		if (this.isPublishingToPlatforms) {
-			const payload = await Api.sendRequest(
-				'/web/dash/developer/games/devlog/check-platform-restrictions/' + this.formModel.id,
-				{
-					lead: this.formModel.lead,
-					content: this.formModel.content_markdown,
-					publish_to_platforms: this.formModel.publish_to_platforms,
-				}
-			);
-			if (payload.success) {
-				this.platformRestrictions = [];
-				for (const restrictionData of payload.restrictions) {
-					this.platformRestrictions.push({
-						topic: restrictionData.topic,
-						provider: restrictionData.provider,
-					});
-				}
-			}
-		}
-	}
-
-	getPlatformRestrictionTitle(restriction: PlatformRestriction) {
-		const providerPrefix = LinkedAccount.getProviderDisplayName(restriction.provider) + ': ';
-		const restrictionKey = restriction.provider + '-' + restriction.topic;
-		switch (restrictionKey) {
-			case 'twitter-lead-too-long':
-				return providerPrefix + 'The lead is too long for a tweet.';
-			case 'twitter-gif-file-size-too-large':
-				return (
-					providerPrefix +
-					'The attached animated GIF file can only be up to 15 MB in size.'
-				);
-			case 'twitter-too-many-media-items-1-animation':
-				return providerPrefix + 'Only one animated GIF file is supported per tweet.';
-			case 'twitter-too-many-media-items-4-images':
-				return providerPrefix + 'Only up to 4 images are supported per tweet.';
-			case 'twitter-image-file-size-too-large':
-				return providerPrefix + 'Any attached image file can only be up to 5 MB in size.';
-			case 'facebook-media-item-photo-too-large':
-				return providerPrefix + 'Any attached photo can only be up to 10 MB in size.';
-			case 'tumblr-media-item-photo-too-large':
-				return providerPrefix + 'Any attached photo can only be up to 10 MB in size.';
-		}
-
-		// we do not have the restriction listed here, try and make the topic somewhat readable
-		const message = restriction.topic.split('-');
-		return providerPrefix + message;
 	}
 
 	destroyed() {

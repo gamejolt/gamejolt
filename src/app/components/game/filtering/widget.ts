@@ -1,16 +1,14 @@
+import View from '!view!./widget.html?style=./widget.styl';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import View from '!view!./widget.html?style=./widget.styl';
-
-import { GameFilteringContainer } from './container';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { Store } from '../../../store/index';
-import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
-import { Translate } from '../../../../lib/gj-lib-client/components/translate/translate.service';
+import { GameFilteringContainer } from './container';
 
 @View
 @Component({
@@ -26,9 +24,11 @@ import { Translate } from '../../../../lib/gj-lib-client/components/translate/tr
 	},
 })
 export class AppGameFilteringWidget extends Vue {
-	@Prop(Object) filtering!: GameFilteringContainer;
+	@Prop(Object)
+	filtering!: GameFilteringContainer;
 
-	@State app!: Store['app'];
+	@State
+	app!: Store['app'];
 
 	// GameFilteringContainer = GameFilteringContainer;
 
