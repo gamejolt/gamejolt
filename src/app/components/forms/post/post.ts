@@ -1,7 +1,6 @@
 import View from '!view!./post.html?style=./post.styl';
 import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppFormAutosize } from 'game-jolt-frontend-lib/components/form-vue/autosize.directive';
 import { AppFormControlCheckbox } from 'game-jolt-frontend-lib/components/form-vue/control/checkbox/checkbox';
@@ -21,10 +20,7 @@ import {
 import { AppFormLegend } from 'game-jolt-frontend-lib/components/form-vue/legend/legend';
 import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
 import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
-import {
-	getLinkedAccountProviderDisplayName,
-	LinkedAccount,
-} from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
+import { LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
 import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
 import { AppProgressBar } from 'game-jolt-frontend-lib/components/progress/bar/bar';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
@@ -66,11 +62,6 @@ type FormPostModel = FiresidePost & {
 	poll_item8: string;
 	poll_item9: string;
 	poll_item10: string;
-};
-
-type PlatformRestriction = {
-	topic: string;
-	provider: string;
 };
 
 @View
@@ -128,8 +119,7 @@ export class FormPost extends BaseForm<FormPostModel>
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = null as any;
 	now = 0;
 	linkedAccounts: LinkedAccount[] = [];
-	platformRestrictions: PlatformRestriction[] = [];
-	restrictionCheckIntervalHandle?: NodeJS.Timer;
+	publishToPlatforms: number[] | null = null;
 	isShowingMorePollOptions = false;
 	accessPermissionsEnabled = false;
 	isSavedDraftPost = false;
@@ -249,7 +239,7 @@ export class FormPost extends BaseForm<FormPostModel>
 	}
 
 	get isPublishingToPlatforms() {
-		return !this.wasPublished && this.formModel.publishToPlatforms !== null;
+		return !this.wasPublished && this.publishToPlatforms !== null;
 	}
 
 	get canEditOwnerLinkedAccounts() {
@@ -260,7 +250,7 @@ export class FormPost extends BaseForm<FormPostModel>
 	}
 
 	get hasPublishedToPlatforms() {
-		return this.wasPublished && this.formModel.publishToPlatforms !== null;
+		return this.wasPublished && this.publishToPlatforms !== null;
 	}
 
 	get computedLeadLength() {
@@ -286,6 +276,17 @@ export class FormPost extends BaseForm<FormPostModel>
 
 	get isLeadValid() {
 		return this.computedLeadLength <= this.leadLengthLimit;
+	}
+
+	get platformRestrictions() {
+		// Platform restriction errors returned from server are prefixed with
+		// 'platform-restriction-'.
+		return Object.keys(this.serverErrors)
+			.filter(i => i.indexOf('platform-restriction-') === 0)
+			.map(i => {
+				const key = i.substr('platform-restriction-'.length);
+				return this.getPlatformRestrictionTitle(key);
+			});
 	}
 
 	async onInit() {
@@ -360,8 +361,15 @@ export class FormPost extends BaseForm<FormPostModel>
 		this.leadUrlLength = payload.leadUrlLength;
 		this.leadLengthLimit = payload.leadLengthLimit;
 		this.leadTotalLengthLimit = payload.leadTotalLengthLimit;
+
 		this.linkedAccounts = LinkedAccount.populate(payload.linkedAccounts);
-		console.log(this.linkedAccounts);
+		this.publishToPlatforms = payload.publishToPlatforms || null;
+
+		if (this.publishToPlatforms) {
+			for (const accountId of this.publishToPlatforms) {
+				this.setField(`linked_account_${accountId}` as any, true);
+			}
+		}
 	}
 
 	onDraftSubmit() {
@@ -399,6 +407,8 @@ export class FormPost extends BaseForm<FormPostModel>
 		if (!this.longEnabled) {
 			this.setField('content_markdown', '');
 		}
+
+		this.setField('publishToPlatforms', this.publishToPlatforms);
 
 		this.setField('poll_duration', this.pollDuration * 60); // site-api expects duration in seconds.
 		return this.formModel.$save();
@@ -524,40 +534,28 @@ export class FormPost extends BaseForm<FormPostModel>
 	}
 
 	async addPublishingToPlatforms() {
-		// sets default data to target platforms to show dialog
-		this.setField('publishToPlatforms', []);
-		this.changed = true;
-
-		// run check
-		await this.checkPlatformRestrictions();
+		this.publishToPlatforms = [];
 	}
 
 	removePublishingToPlatforms() {
-		this.setField('publishToPlatforms', null);
-		this.changed = true;
+		this.publishToPlatforms = null;
 	}
 
 	isLinkedAccountActive(id: number) {
-		return (
-			this.formModel.publishToPlatforms &&
-			this.formModel.publishToPlatforms.indexOf(id) !== -1
-		);
+		return this.publishToPlatforms && this.publishToPlatforms.indexOf(id) !== -1;
 	}
 
 	async changeLinkedAccount(id: number) {
-		if (!this.formModel.publishToPlatforms) {
+		if (!this.publishToPlatforms) {
 			return;
 		}
 
 		const isActive = this.isLinkedAccountActive(id);
 		if (isActive) {
-			arrayRemove(this.formModel.publishToPlatforms, i => i === id);
+			arrayRemove(this.publishToPlatforms, i => i === id);
 		} else {
-			this.formModel.publishToPlatforms.push(id);
+			this.publishToPlatforms.push(id);
 		}
-
-		// run check
-		await this.checkPlatformRestrictions();
 
 		this.changed = true;
 	}
@@ -575,58 +573,30 @@ export class FormPost extends BaseForm<FormPostModel>
 		}
 	}
 
-	async checkPlatformRestrictions() {
-		if (this.isPublishingToPlatforms) {
-			const payload = await Api.sendRequest(
-				'/web/posts/manage/check-platform-restrictions/' + this.formModel.id,
-				{
-					lead: this.formModel.lead,
-					content: this.formModel.content_markdown,
-					publishToPlatforms: this.formModel.publishToPlatforms,
-				},
-				{
-					allowComplexData: ['publishToPlatforms'],
-				}
-			);
-
-			if (payload.success) {
-				this.platformRestrictions = [];
-				for (const restrictionData of payload.restrictions) {
-					this.platformRestrictions.push({
-						topic: restrictionData.topic,
-						provider: restrictionData.provider,
-					});
-				}
-			}
-		}
-	}
-
-	getPlatformRestrictionTitle(restriction: PlatformRestriction) {
-		const providerPrefix = getLinkedAccountProviderDisplayName(restriction.provider) + ': ';
-		const restrictionKey = restriction.provider + '-' + restriction.topic;
-		switch (restrictionKey) {
+	getPlatformRestrictionTitle(restriction: string) {
+		switch (restriction) {
 			case 'twitter-lead-too-long':
-				return providerPrefix + 'The lead is too long for a tweet.';
+				return this.$gettext(`Your post lead is too long for a tweet.`);
 			case 'twitter-gif-file-size-too-large':
-				return (
-					providerPrefix +
-					'The attached animated GIF file can only be up to 15 MB in size.'
-				);
+				return this.$gettext(`Twitter doesn't allow GIFs larger than 15MB in filesize.`);
 			case 'twitter-too-many-media-items-1-animation':
-				return providerPrefix + 'Only one animated GIF file is supported per tweet.';
+				return this.$gettext(`Twitter only allows one GIF per tweet.`);
 			case 'twitter-too-many-media-items-4-images':
-				return providerPrefix + 'Only up to 4 images are supported per tweet.';
+				return this.$gettext(`Twitter only allows a max of 4 images per tweet.`);
 			case 'twitter-image-file-size-too-large':
-				return providerPrefix + 'Any attached image file can only be up to 5 MB in size.';
+				return this.$gettext(`Twitter doesn't allow images larger than 5MB in filesize.`);
 			case 'facebook-media-item-photo-too-large':
-				return providerPrefix + 'Any attached photo can only be up to 10 MB in size.';
+				return this.$gettext(`Facebook doesn't allow images larger than 10MB in filesize.`);
 			case 'tumblr-media-item-photo-too-large':
-				return providerPrefix + 'Any attached photo can only be up to 10 MB in size.';
+				return this.$gettext(`Tumblr doesn't allow images larger than 10MB in filesize.`);
 		}
 
-		// we do not have the restriction listed here, try and make the topic somewhat readable
-		const message = restriction.topic.split('-');
-		return providerPrefix + message;
+		// We do not have the restriction listed here, try and make the topic
+		// somewhat readable.
+		return this.$gettextInterpolate(
+			`Your post can't be published to the platforms you've selected. Error: %{ error }`,
+			{ error: restriction }
+		);
 	}
 
 	timezoneByName(timezone: string) {
@@ -652,14 +622,6 @@ export class FormPost extends BaseForm<FormPostModel>
 				}
 				tz.label = `(UTC${offset}) ${tz.i}`;
 			}
-		}
-	}
-
-	destroyed() {
-		// clean up the check interval
-		if (this.restrictionCheckIntervalHandle) {
-			clearInterval(this.restrictionCheckIntervalHandle);
-			this.restrictionCheckIntervalHandle = undefined;
 		}
 	}
 }

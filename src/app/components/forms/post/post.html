@@ -420,58 +420,41 @@
 				<translate>Publish your post to other platforms</translate>
 			</app-form-legend>
 
-			<div class="alert">
+			<div class="alert" v-if="!linkedAccounts">
 				<translate>You can publish this post to other platforms!</translate>
 				<translate v-if="!model.game">Set up your linked accounts in your user account.</translate>
 				<translate v-else>Set up your linked accounts either in your game dashboard, or your user account.</translate>
 			</div>
-
-			<div>
-				<div
-					v-if="platformRestrictions.length"
-					class="alert alert-notice"
+			<div class="-linked-accounts" v-else>
+				<app-form-group
+					v-for="account of linkedAccounts"
+					:key="account.id"
+					:name="`linked_account_${account.id}`"
+					:label="$gettext(`Linked Account`)"
+					hide-label
 					>
-					<app-jolticon icon="exclamation-circle" />
-					<div
-						v-for="restriction of platformRestrictions"
-						:key="restriction.topic"
-						>
-						{{ getPlatformRestrictionTitle(restriction) }}
-					</div>
-				</div>
+					<div class="-linked-account">
 
-				<div class="-linked-accounts">
-					<app-form-group
-						v-for="account of linkedAccounts"
-						:key="account.id"
-						:name="`linked_${account.id}`"
-						:label="$gettext(`Linked Account`)"
-						hide-label
-						>
-						<div class="-linked-account">
-
-							<div class="-linked-account-icon">
-								<app-jolticon
-									v-app-tooltip="account.providerDisplayName"
-									:icon="account.icon"
-									big
-									/>
-							</div>
-
-							<div class="-linked-account-label">
-								{{ getLinkedAccountDisplayName(account) }}
-							</div>
-
-							<div class="-linked-account-toggle">
-								<app-form-control-toggle
-									@changed="changeLinkedAccount(account.id)"
-									/>
-							</div>
-
+						<div class="-linked-account-icon">
+							<app-jolticon
+								v-app-tooltip="account.providerDisplayName"
+								:icon="account.icon"
+								big
+								/>
 						</div>
-					</app-form-group>
-					<pre>{{ formModel.publishToPlatforms }}</pre>
-				</div>
+
+						<div class="-linked-account-label">
+							{{ getLinkedAccountDisplayName(account) }}
+						</div>
+
+						<div class="-linked-account-toggle">
+							<app-form-control-toggle
+								@changed="changeLinkedAccount(account.id)"
+								/>
+						</div>
+
+					</div>
+				</app-form-group>
 			</div>
 
 		</fieldset>
@@ -558,6 +541,18 @@
 			</div>
 		</div>
 	</app-form-group>
+
+	<template v-if="platformRestrictions.length">
+		<div
+			v-for="restriction of platformRestrictions"
+			:key="restriction"
+			class="alert alert-notice anim-fade-in"
+			>
+			<strong>
+				{{ restriction }}
+			</strong>
+		</div>
+	</template>
 
 	<!-- Controls -->
 	<div class="-controls">
