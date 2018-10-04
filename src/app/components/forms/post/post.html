@@ -426,7 +426,7 @@
 				<translate v-else>Set up your linked accounts either in your game dashboard, or your user account.</translate>
 			</div>
 
-			<app-loading v-if="isLoadingLinkedAccounts" />
+			<app-loading v-if="!linkedAccountsLoaded" />
 			<div v-else>
 				<div
 					v-if="platformRestrictions.length"
@@ -442,13 +442,11 @@
 				</div>
 
 				<div class="-linked-accounts">
-					<!-- :value="account.id" -->
 					<app-form-group
 						v-for="account of linkedAccounts"
 						:key="account.id"
-
-						:name="`test_${account.id}`"
-						:label="$gettext(`test`)"
+						:name="`linked_${account.id}`"
+						:label="$gettext(`Linked Account`)"
 						hide-label
 						>
 						<div class="-linked-account">
@@ -462,57 +460,19 @@
 							</div>
 
 							<div class="-linked-account-label">
-								{{ getGameLinkedAccountDisplayName(account) }}
+								{{ getLinkedAccountDisplayName(account) }}
 							</div>
 
 							<div class="-linked-account-toggle">
-								<app-form-control-toggle />
+								<app-form-control-toggle
+									@changed="changeLinkedAccount(account.id)"
+									/>
 							</div>
 
 						</div>
 					</app-form-group>
+					<pre>{{ formModel.publish_to_platforms }}</pre>
 				</div>
-
-					<!-- <template v-if="getGameLinkedAccountDisplayName(account)">
-						<input
-							type="checkbox"
-							:value="account.id"
-							:id="account.id"
-							:checked="isLinkedAccountActive(account.id)"
-							@change="changeLinkedAccount($event.target.value)"
-							/>
-
-						<app-jolticon
-							v-app-tooltip="account.providerDisplayName"
-							:icon="account.icon"
-							/>
-
-						<label :for="account.id">
-							{{ getGameLinkedAccountDisplayName(account) }}
-						</label>
-					</template>
-				</div> -->
-
-				<!-- <strong><translate>Post owner's Linked Accounts</translate></strong>
-
-				<p class="help-block" v-if="!canEditOwnerLinkedAccounts">
-					Only the owner of this post can edit this section.
-				</p>
-
-				<div v-for="account of userLinkedAccounts"
-					:key="account.id"
-					:value="account.id">
-					<input type="checkbox"
-						:value="account.id"
-						:id="account.id"
-						:disabled="!canEditOwnerLinkedAccounts"
-						:checked="isLinkedAccountActive(account.id)"
-						@change="changeLinkedAccount($event.target.value)"/>
-					<app-jolticon
-						v-app-tooltip="account.providerDisplayName"
-						:icon="account.icon" />
-					<label :for="account.id">{{account.name}}</label>
-				</div> -->
 			</div>
 
 		</fieldset>

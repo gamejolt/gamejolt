@@ -11,16 +11,28 @@ import { AppFormControlToggle } from 'game-jolt-frontend-lib/components/form-vue
 import { AppFormControlUpload } from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload';
 import { AppFocusWhen } from 'game-jolt-frontend-lib/components/form-vue/focus-when.directive';
 import { AppForm } from 'game-jolt-frontend-lib/components/form-vue/form';
-import { BaseForm, FormOnInit, FormOnLoad, FormOnSubmit, FormOnSubmitSuccess } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnInit,
+	FormOnLoad,
+	FormOnSubmit,
+	FormOnSubmitSuccess,
+} from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { AppFormLegend } from 'game-jolt-frontend-lib/components/form-vue/legend/legend';
 import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
 import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
-import { getLinkedAccountProviderDisplayName, LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
+import {
+	getLinkedAccountProviderDisplayName,
+	LinkedAccount,
+} from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
 import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
 import { AppProgressBar } from 'game-jolt-frontend-lib/components/progress/bar/bar';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppSketchfabEmbed } from 'game-jolt-frontend-lib/components/sketchfab/embed/embed';
-import { Timezone, TimezoneData } from 'game-jolt-frontend-lib/components/timezone/timezone.service';
+import {
+	Timezone,
+	TimezoneData,
+} from 'game-jolt-frontend-lib/components/timezone/timezone.service';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { AppUserAvatarImg } from 'game-jolt-frontend-lib/components/user/user-avatar/img/img';
 import { AppVideoEmbed } from 'game-jolt-frontend-lib/components/video/embed/embed';
@@ -115,7 +127,7 @@ export class FormPost extends BaseForm<FormPostModel>
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = null as any;
 	now = 0;
 	linkedAccounts: LinkedAccount[] = [];
-	isLoadingLinkedAccounts = false;
+	linkedAccountsLoaded = false;
 	platformRestrictions: PlatformRestriction[] = [];
 	restrictionCheckIntervalHandle?: NodeJS.Timer;
 	isShowingMorePollOptions = false;
@@ -331,7 +343,7 @@ export class FormPost extends BaseForm<FormPostModel>
 		}
 
 		if (this.isPublishingToPlatforms) {
-			await this.loadLinkedAccounts();
+			await this.fetchLinkedAccounts();
 		}
 
 		if (model.key_groups.length) {
@@ -515,11 +527,11 @@ export class FormPost extends BaseForm<FormPostModel>
 
 	async addPublishingToPlatforms() {
 		// sets default data to target platforms to show dialog
-		this.setField('publish_to_platforms', '');
+		this.setField('publish_to_platforms', []);
 		this.changed = true;
 
 		// load data
-		await this.loadLinkedAccounts();
+		await this.fetchLinkedAccounts();
 
 		// run check
 		await this.checkPlatformRestrictions();
@@ -530,84 +542,51 @@ export class FormPost extends BaseForm<FormPostModel>
 		this.changed = true;
 	}
 
-	async loadLinkedAccounts() {
-		this.isLoadingLinkedAccounts = true;
+	async fetchLinkedAccounts() {
+		if (this.linkedAccountsLoaded) {
+			return;
+		}
 
 		const payload = await Api.sendRequest(
 			'/web/dash/developer/games/devlog/linked-accounts/' + this.model!.id
 		);
 
-		if (payload.accounts) {
-			this.linkedAccounts = LinkedAccount.populate(payload.accounts);
-		}
-		else {
-			this.linkedAccounts = [];
-		}
-
-		this.isLoadingLinkedAccounts = false;
-	}
-
-	getLinkedAccountIdenfifier(id: number) {
-		for (const account of this.linkedAccounts) {
-			if (account.id === id) {
-				return 'game_' + account.provider;
-			}
-		}
+		this.linkedAccounts = LinkedAccount.populate(payload.accounts);
+		this.linkedAccountsLoaded = true;
 	}
 
 	isLinkedAccountActive(id: number) {
-		if (this.formModel.publish_to_platforms !== null) {
-			const platforms = this.formModel.publish_to_platforms
-				.split(',')
-				.filter(s => s.length > 0);
-
-			const identifier = this.getLinkedAccountIdenfifier(id);
-			if (identifier) {
-				return platforms.indexOf(identifier) !== -1;
-			}
-		}
+		return (
+			this.formModel.publish_to_platforms &&
+			this.formModel.publish_to_platforms.indexOf(id) !== -1
+		);
 	}
 
 	async changeLinkedAccount(id: number) {
-		if (this.formModel.publish_to_platforms !== null) {
-			const isActive = this.isLinkedAccountActive(id);
-			const identifier = this.getLinkedAccountIdenfifier(id);
-
-			if (identifier) {
-				const platforms = this.formModel.publish_to_platforms
-					.split(',')
-					.filter(s => s.length > 0);
-
-				if (isActive) {
-					arrayRemove(platforms, s => s === identifier);
-					this.setField('publish_to_platforms', platforms.join(','));
-				} else {
-					platforms.push(identifier);
-					this.setField('publish_to_platforms', platforms.join(','));
-				}
-
-				// run check
-				await this.checkPlatformRestrictions();
-			}
-			this.changed = true;
+		if (!this.formModel.publish_to_platforms) {
+			return;
 		}
+
+		const isActive = this.isLinkedAccountActive(id);
+		if (isActive) {
+			arrayRemove(this.formModel.publish_to_platforms, i => i === id);
+		} else {
+			this.formModel.publish_to_platforms.push(id);
+		}
+
+		// run check
+		await this.checkPlatformRestrictions();
+
+		this.changed = true;
 	}
 
-	getGameLinkedAccountDisplayName(account: LinkedAccount) {
+	getLinkedAccountDisplayName(account: LinkedAccount) {
 		switch (account.provider) {
 			case LinkedAccount.PROVIDER_FACEBOOK:
-				if (account.facebookSelectedPage) {
-					return account.facebookSelectedPage.name;
-				} else {
-					return undefined;
-				}
+				return account.facebookSelectedPage && account.facebookSelectedPage.name;
 
 			case LinkedAccount.PROVIDER_TUMBLR:
-				if (account.tumblrSelectedBlog) {
-					return account.tumblrSelectedBlog.title;
-				} else {
-					return undefined;
-				}
+				return account.tumblrSelectedBlog && account.tumblrSelectedBlog.title;
 
 			default:
 				return account.name;
