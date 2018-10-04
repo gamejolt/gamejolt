@@ -426,8 +426,7 @@
 				<translate v-else>Set up your linked accounts either in your game dashboard, or your user account.</translate>
 			</div>
 
-			<app-loading v-if="!linkedAccountsLoaded" />
-			<div v-else>
+			<div>
 				<div
 					v-if="platformRestrictions.length"
 					class="alert alert-notice"
@@ -471,7 +470,7 @@
 
 						</div>
 					</app-form-group>
-					<pre>{{ formModel.publish_to_platforms }}</pre>
+					<pre>{{ formModel.publishToPlatforms }}</pre>
 				</div>
 			</div>
 

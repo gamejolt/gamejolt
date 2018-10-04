@@ -45,6 +45,7 @@ import { AppFormPostMedia } from './_media/media';
 
 type FormPostModel = FiresidePost & {
 	mediaItemIds: number[];
+	publishToPlatforms: number[] | null;
 	key_group_ids: KeyGroup[];
 	video_url: string;
 	sketchfab_id: string;
@@ -127,7 +128,6 @@ export class FormPost extends BaseForm<FormPostModel>
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = null as any;
 	now = 0;
 	linkedAccounts: LinkedAccount[] = [];
-	linkedAccountsLoaded = false;
 	platformRestrictions: PlatformRestriction[] = [];
 	restrictionCheckIntervalHandle?: NodeJS.Timer;
 	isShowingMorePollOptions = false;
@@ -249,7 +249,7 @@ export class FormPost extends BaseForm<FormPostModel>
 	}
 
 	get isPublishingToPlatforms() {
-		return !this.wasPublished && this.formModel.publish_to_platforms !== null;
+		return !this.wasPublished && this.formModel.publishToPlatforms !== null;
 	}
 
 	get canEditOwnerLinkedAccounts() {
@@ -260,7 +260,7 @@ export class FormPost extends BaseForm<FormPostModel>
 	}
 
 	get hasPublishedToPlatforms() {
-		return this.wasPublished && this.formModel.publish_to_platforms !== null;
+		return this.wasPublished && this.formModel.publishToPlatforms !== null;
 	}
 
 	get computedLeadLength() {
@@ -342,10 +342,6 @@ export class FormPost extends BaseForm<FormPostModel>
 			}
 		}
 
-		if (this.isPublishingToPlatforms) {
-			await this.fetchLinkedAccounts();
-		}
-
 		if (model.key_groups.length) {
 			this.accessPermissionsEnabled = true;
 		}
@@ -364,6 +360,8 @@ export class FormPost extends BaseForm<FormPostModel>
 		this.leadUrlLength = payload.leadUrlLength;
 		this.leadLengthLimit = payload.leadLengthLimit;
 		this.leadTotalLengthLimit = payload.leadTotalLengthLimit;
+		this.linkedAccounts = LinkedAccount.populate(payload.linkedAccounts);
+		console.log(this.linkedAccounts);
 	}
 
 	onDraftSubmit() {
@@ -527,51 +525,35 @@ export class FormPost extends BaseForm<FormPostModel>
 
 	async addPublishingToPlatforms() {
 		// sets default data to target platforms to show dialog
-		this.setField('publish_to_platforms', []);
+		this.setField('publishToPlatforms', []);
 		this.changed = true;
-
-		// load data
-		await this.fetchLinkedAccounts();
 
 		// run check
 		await this.checkPlatformRestrictions();
 	}
 
 	removePublishingToPlatforms() {
-		this.setField('publish_to_platforms', null);
+		this.setField('publishToPlatforms', null);
 		this.changed = true;
-	}
-
-	async fetchLinkedAccounts() {
-		if (this.linkedAccountsLoaded) {
-			return;
-		}
-
-		const payload = await Api.sendRequest(
-			'/web/posts/manage/linked-accounts/' + this.model!.id
-		);
-
-		this.linkedAccounts = LinkedAccount.populate(payload.accounts);
-		this.linkedAccountsLoaded = true;
 	}
 
 	isLinkedAccountActive(id: number) {
 		return (
-			this.formModel.publish_to_platforms &&
-			this.formModel.publish_to_platforms.indexOf(id) !== -1
+			this.formModel.publishToPlatforms &&
+			this.formModel.publishToPlatforms.indexOf(id) !== -1
 		);
 	}
 
 	async changeLinkedAccount(id: number) {
-		if (!this.formModel.publish_to_platforms) {
+		if (!this.formModel.publishToPlatforms) {
 			return;
 		}
 
 		const isActive = this.isLinkedAccountActive(id);
 		if (isActive) {
-			arrayRemove(this.formModel.publish_to_platforms, i => i === id);
+			arrayRemove(this.formModel.publishToPlatforms, i => i === id);
 		} else {
-			this.formModel.publish_to_platforms.push(id);
+			this.formModel.publishToPlatforms.push(id);
 		}
 
 		// run check
@@ -600,7 +582,10 @@ export class FormPost extends BaseForm<FormPostModel>
 				{
 					lead: this.formModel.lead,
 					content: this.formModel.content_markdown,
-					publish_to_platforms: this.formModel.publish_to_platforms,
+					publishToPlatforms: this.formModel.publishToPlatforms,
+				},
+				{
+					allowComplexData: ['publishToPlatforms'],
 				}
 			);
 
