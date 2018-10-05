@@ -1,5 +1,6 @@
 import View from '!view!./post.html?style=./post.styl';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { getLinkedAccountPlatformIcon } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
 import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
@@ -41,6 +42,10 @@ export class AppEventItemManagePost extends Vue {
 
 	get canPublish() {
 		return this.post.isDraft && !this.post.isScheduled && !!this.post.lead;
+	}
+
+	getProviderIcon(provider: string) {
+		return getLinkedAccountPlatformIcon(provider);
 	}
 
 	async openEdit() {

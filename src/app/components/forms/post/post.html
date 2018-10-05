@@ -459,8 +459,12 @@
 
 		</fieldset>
 	</div>
+
 	<div class="alert" v-if="hasPublishedToPlatforms">
-		<translate>Any edits made to this post will not be reflected on the posts on your social media.</translate>
+		<strong>
+			<translate>This post has been published to other platforms.</translate>
+		</strong>
+		<translate>Any edits made to this post will not be reflected on those other platforms.</translate>
 	</div>
 
 	<!-- Access permissions -->
@@ -598,7 +602,7 @@
 				/>
 
 			<app-button
-				v-if="!isPublishingToPlatforms"
+				v-if="!wasPublished && !isPublishingToPlatforms"
 				sparse
 				trans
 				circle
