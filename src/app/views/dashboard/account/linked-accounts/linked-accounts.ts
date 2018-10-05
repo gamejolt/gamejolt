@@ -36,6 +36,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 
 	accounts: LinkedAccount[] = [];
 	channels: YoutubeChannel[] = [];
+	loading = false;
 
 	get facebookAccount() {
 		return this.getAccount(LinkedAccount.PROVIDER_FACEBOOK);
@@ -80,6 +81,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 	}
 
 	async onLink(provider: Provider) {
+		this.loading = true;
 		await LinkedAccounts.link(
 			this.$router,
 			provider,
@@ -93,6 +95,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 			return;
 		}
 
+		this.loading = true;
 		const response = await Api.sendRequest(
 			'/web/dash/linked-accounts/unlink/' + provider + '?resource=User',
 			{}
@@ -112,6 +115,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 			if (response.reason === 'no-password') {
 				const result = await UserSetPasswordModal.show();
 				if (!result) {
+					this.loading = false;
 					return;
 				}
 
@@ -126,6 +130,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 				Growls.error(this.$gettext('Failed to unlink account from the site.'));
 			}
 		}
+		this.loading = false;
 	}
 
 	async linkYouTubeChannel() {

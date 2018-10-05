@@ -50,6 +50,7 @@
 			<app-linked-account
 				provider="twitter"
 				:account="twitterAccount"
+				:disabled="loading"
 				@sync="onLink"
 				@link="onLink"
 				@unlink="onUnlink"

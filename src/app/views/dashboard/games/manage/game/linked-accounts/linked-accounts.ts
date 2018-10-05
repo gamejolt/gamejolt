@@ -31,6 +31,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 	game!: RouteStore['game'];
 
 	accounts: LinkedAccount[] = [];
+	loading = false;
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: Route) {
@@ -80,6 +81,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 	}
 
 	async onLink(provider: Provider) {
+		this.loading = true;
 		await LinkedAccounts.link(
 			this.$router,
 			provider,
@@ -90,6 +92,8 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 	}
 
 	async onUnlink(provider: Provider) {
+		this.loading = true;
+
 		if (
 			provider === LinkedAccount.PROVIDER_FACEBOOK &&
 			this.facebookAccount &&
@@ -106,6 +110,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 				'yes'
 			);
 			if (!confirmRemoval) {
+				this.loading = false;
 				return;
 			}
 		} else if (
@@ -124,6 +129,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 				'yes'
 			);
 			if (!confirmRemoval) {
+				this.loading = false;
 				return;
 			}
 		}
@@ -156,6 +162,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 				})
 			);
 		}
+		this.loading = false;
 	}
 
 	async onSelectFacebookPage() {
