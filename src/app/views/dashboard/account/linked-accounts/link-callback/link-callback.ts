@@ -55,6 +55,8 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 			}
 		}
 
+		url += (firstParam ? '?' : '&') + 'resource=User';
+
 		return url;
 	}
 

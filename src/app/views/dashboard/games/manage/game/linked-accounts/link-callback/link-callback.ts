@@ -23,7 +23,7 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 	@RouteResolve()
 	async routeResolve(this: undefined, route: Route) {
 		const url = RouteDashGamesManageGameLinkedAccountsLinkCallback.constructUrl(
-			'/web/dash/developer/games/linked-accounts/link-callback/',
+			'/web/dash/linked-accounts/link-callback/',
 			parseInt(route.params.id, 10),
 			route
 		);
@@ -32,7 +32,7 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 	}
 
 	private static constructUrl(baseUrl: string, gameId: number, route: Route) {
-		let url = baseUrl + gameId + '/' + route.params.provider;
+		let url = baseUrl + route.params.provider;
 		let firstParam = true;
 
 		for (const param of ['oauth_verifier', 'state', 'code']) {
@@ -42,6 +42,8 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 				firstParam = false;
 			}
 		}
+
+		url += (firstParam ? '?' : '&') + 'resource=Game&resourceId=' + gameId.toString();
 
 		return url;
 	}

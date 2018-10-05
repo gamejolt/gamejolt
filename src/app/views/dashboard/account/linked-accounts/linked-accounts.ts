@@ -66,7 +66,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 
 	@RouteResolve()
 	routeResolve(this: undefined) {
-		return Api.sendRequest('/web/dash/linked-accounts');
+		return Api.sendRequest('/web/dash/linked-accounts?resource=User');
 	}
 
 	get routeTitle() {
@@ -80,7 +80,12 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 	}
 
 	async onLink(provider: Provider) {
-		await LinkedAccounts.link(this.$router, provider, '/web/dash/linked-accounts/link/');
+		await LinkedAccounts.link(
+			this.$router,
+			provider,
+			'/web/dash/linked-accounts/link/',
+			'User'
+		);
 	}
 
 	async onUnlink(provider: Provider) {
@@ -88,7 +93,10 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 			return;
 		}
 
-		const response = await Api.sendRequest('/web/dash/linked-accounts/unlink/' + provider, {});
+		const response = await Api.sendRequest(
+			'/web/dash/linked-accounts/unlink/' + provider + '?resource=User',
+			{}
+		);
 		if (response.success) {
 			this.accounts = LinkedAccount.populate(response.accounts);
 			const providerName = getLinkedAccountProviderDisplayName(provider);
@@ -128,7 +136,8 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 		await LinkedAccounts.link(
 			this.$router,
 			'',
-			'/web/dash/linked-accounts/link-youtube-channel'
+			'/web/dash/linked-accounts/link-youtube-channel',
+			'User'
 		);
 	}
 

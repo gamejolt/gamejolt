@@ -34,7 +34,9 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 
 	@RouteResolve()
 	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/dash/developer/games/linked-accounts/' + route.params.id);
+		return Api.sendRequest(
+			'/web/dash/linked-accounts?resource=Game&resourceId=' + route.params.id
+		);
 	}
 
 	get routeTitle() {
@@ -81,7 +83,9 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		await LinkedAccounts.link(
 			this.$router,
 			provider,
-			'/web/dash/developer/games/linked-accounts/link/' + this.game.id + '/'
+			'/web/dash/linked-accounts/link/',
+			'Game',
+			this.game.id
 		);
 	}
 
@@ -125,7 +129,10 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		}
 
 		const response = await Api.sendRequest(
-			'/web/dash/developer/games/linked-accounts/unlink/' + this.game.id + '/' + provider,
+			'/web/dash/linked-accounts/unlink/' +
+				provider +
+				'?resource=Game&resourceId=' +
+				this.game.id,
 			{}
 		);
 
@@ -174,7 +181,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 			}
 
 			const payload = await Api.sendRequest(
-				'/web/dash/developer/games/linked-accounts/link-facebook-page/' +
+				'/web/dash/linked-accounts/link-facebook-page/' +
 					this.game.id +
 					'/' +
 					this.facebookAccount.id +
@@ -212,7 +219,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		const tempPageName = this.facebookAccount.facebookSelectedPage.name;
 
 		const payload = await Api.sendRequest(
-			'/web/dash/developer/games/linked-accounts/unlink-facebook-page/' +
+			'/web/dash/linked-accounts/unlink-facebook-page/' +
 				this.game.id +
 				'/' +
 				this.facebookAccount.id
@@ -261,7 +268,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 			}
 
 			const payload = await Api.sendRequest(
-				'/web/dash/developer/games/linked-accounts/link-tumblr-blog/' +
+				'/web/dash/linked-accounts/link-tumblr-blog/' +
 					this.game.id +
 					'/' +
 					this.tumblrAccount.id +
@@ -299,7 +306,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		const tempBlogTitle = this.tumblrAccount.tumblrSelectedBlog.title;
 
 		const payload = await Api.sendRequest(
-			'/web/dash/developer/games/linked-accounts/unlink-tumblr-blog/' +
+			'/web/dash/linked-accounts/unlink-tumblr-blog/' +
 				this.game.id +
 				'/' +
 				this.tumblrAccount.id
