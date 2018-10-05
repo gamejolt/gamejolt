@@ -44,7 +44,7 @@ type Mutations = {
 
 function updateGame(game: Game | null, newGame: Game | null) {
 	// If we already have a game, just assign new data into it to keep it fresh.
-	if (game) {
+	if (game && newGame) {
 		game.assign(newGame);
 		return game;
 	}

@@ -32,7 +32,7 @@ type Mutations = {
 
 function updateUser(user: User | null, newUser: User | null) {
 	// If we already have a user, just assign new data into it to keep it fresh.
-	if (user) {
+	if (user && newUser) {
 		user.assign(newUser);
 		return user;
 	}
