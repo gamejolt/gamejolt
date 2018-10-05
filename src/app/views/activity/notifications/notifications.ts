@@ -29,7 +29,11 @@ export default class RouteActivityNotifications extends BaseRouteComponent {
 
 	feed: ActivityFeedContainer | null = null;
 
-	@RouteResolve({ cache: true, lazy: true })
+	@RouteResolve({
+		cache: true,
+		lazy: true,
+		deps: {},
+	})
 	routeResolve(this: undefined) {
 		return Api.sendRequest('/web/dash/activity/notifications');
 	}

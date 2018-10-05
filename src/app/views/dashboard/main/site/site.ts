@@ -1,14 +1,13 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./site.html';
-
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { Site } from '../../../../../lib/gj-lib-client/components/site/site-model';
-import { AppSitesManagePage } from '../../../../components/sites/manage-page/manage-page';
-import { AppSitesLinkCard } from '../../../../components/sites/link-card/link-card';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { Site } from '../../../../../lib/gj-lib-client/components/site/site-model';
+import { AppSitesLinkCard } from '../../../../components/sites/link-card/link-card';
+import { AppSitesManagePage } from '../../../../components/sites/manage-page/manage-page';
 
 @View
 @Component({
@@ -21,7 +20,9 @@ import {
 export default class RouteDashMainSite extends BaseRouteComponent {
 	site?: Site = null as any;
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve(this: undefined) {
 		return Api.sendRequest('/web/dash/sites');
 	}

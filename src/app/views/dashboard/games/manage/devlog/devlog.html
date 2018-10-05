@@ -56,28 +56,28 @@
 						</ul>
 					</app-nav-tab-list>
 
-					<app-activity-feed
-						v-if="feed && feed.hasItems"
-						:feed="feed"
-						show-edit-controls
-						@edit-post="onPostEdited"
-						@publish-post="onPostPublished"
-						@remove-post="onPostRemoved"
-						/>
-
-					<div class="alert"
-						v-else
-						>
-						<template v-if="tab === 'active'">
-							<p><translate>You haven't published any posts yet.</translate></p>
-						</template>
-						<template v-else-if="tab === 'draft'">
-							<p><translate>You don't have any draft posts.</translate></p>
-						</template>
-						<template v-else-if="tab === 'scheduled'">
-							<p><translate>You don't have any scheduled posts.</translate></p>
-						</template>
-					</div>
+					<app-activity-feed-placeholder v-if="!feed" />
+					<template v-else>
+						<app-activity-feed
+							v-if="feed.hasItems"
+							:feed="feed"
+							show-edit-controls
+							@edit-post="onPostEdited"
+							@publish-post="onPostPublished"
+							@remove-post="onPostRemoved"
+							/>
+						<div v-else class="alert">
+							<template v-if="tab === 'active'">
+								<p><translate>You haven't published any posts yet.</translate></p>
+							</template>
+							<template v-else-if="tab === 'draft'">
+								<p><translate>You don't have any draft posts.</translate></p>
+							</template>
+							<template v-else-if="tab === 'scheduled'">
+								<p><translate>You don't have any scheduled posts.</translate></p>
+							</template>
+						</div>
+					</template>
 
 				</div>
 			</div>

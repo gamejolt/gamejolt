@@ -21,7 +21,9 @@ export default class RouteSearchGames extends BaseRouteComponent {
 
 	readonly Search = Search;
 
-	@RouteResolve({ cache: true })
+	@RouteResolve({
+		cache: true,
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Search.search(route.query.q, {
 			type: 'game',

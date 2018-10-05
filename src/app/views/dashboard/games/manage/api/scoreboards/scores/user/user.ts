@@ -1,21 +1,20 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./user.html';
-
-import { User } from '../../../../../../../../../lib/gj-lib-client/components/user/user.model';
-import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
-import { GameScoreTable } from '../../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { RouteState, RouteStore } from '../../../../manage.store';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { GameScoreTable } from '../../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { Growls } from '../../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTooltip } from '../../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppManageGameListScores } from '../../_list-scores/list-scores';
+import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppTooltip } from '../../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
+import { User } from '../../../../../../../../../lib/gj-lib-client/components/user/user.model';
+import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { RouteState, RouteStore } from '../../../../manage.store';
+import { AppManageGameListScores } from '../../_list-scores/list-scores';
 
 @View
 @Component({
@@ -29,13 +28,16 @@ import {
 	},
 })
 export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	user: User = null as any;
 	scoreTable: GameScoreTable = null as any;
 	scores: UserGameScore[] = [];
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: { params: ['table', 'user'] },
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/api/scores/list-table-user-scores/' +

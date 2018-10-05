@@ -172,7 +172,11 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		return this.game.id + (this.shouldShowFullCover ? '-full' : '-collapsed');
 	}
 
-	@RouteResolve({ lazy: true, cache: true })
+	@RouteResolve({
+		lazy: true,
+		cache: true,
+		deps: { params: ['slug', 'id'], query: ['intent'] },
+	})
 	async routeResolve(this: undefined, route: Route) {
 		HistoryTick.trackSource('Game', parseInt(route.params.id, 10));
 		PartnerReferral.trackReferrer('Game', parseInt(route.params.id, 10), route);

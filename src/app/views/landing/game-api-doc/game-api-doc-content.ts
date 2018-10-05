@@ -1,24 +1,24 @@
 import { CreateElement } from 'vue';
-import { Route } from 'vue-router';
 import { Component, Prop } from 'vue-property-decorator';
-import { importContext } from '../../../../lib/gj-lib-client/utils/utils';
+import { Route } from 'vue-router';
 import { PayloadError } from '../../../../lib/gj-lib-client/components/payload/payload-service';
+import {
+	BaseRouteComponent,
+	RouteResolve,
+} from '../../../../lib/gj-lib-client/components/route/route-component';
+import { importContext } from '../../../../lib/gj-lib-client/utils/utils';
 
 // We don't emit files since we just want to pull the directory listing.
 const paths = importContext(
 	require.context('!file-loader?-emitFile!../../../../lib/doc-game-api/v1.x/', true, /\.md$/)
 );
 
-import {
-	BaseRouteComponent,
-	RouteResolve,
-} from '../../../../lib/gj-lib-client/components/route/route-component';
-
 @Component({
 	name: 'RouteLandingGameApiDoc',
 })
 export default class RouteLandingGameApiDoc extends BaseRouteComponent {
-	@Prop(String) path!: string;
+	@Prop(String)
+	path!: string;
 
 	content = '';
 

@@ -1,23 +1,22 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./list.html?style=./list.styl';
-
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
-import { RouteMutation, RouteStore } from '../../account.store';
-import { YoutubeChannel } from '../../../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
-import { ModalConfirm } from '../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { arrayRemove } from '../../../../../../lib/gj-lib-client/utils/array';
-import { UserSetPasswordModal } from '../../../../../components/user/set-password-modal/set-password-modal.service';
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppState, AppStore } from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { ModalConfirm } from '../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
 import {
-	UserLinkedAccounts,
 	Provider,
+	UserLinkedAccounts,
 } from '../../../../../../lib/gj-lib-client/components/user/linked-accounts/linked-accounts.service';
+import { YoutubeChannel } from '../../../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
+import { arrayRemove } from '../../../../../../lib/gj-lib-client/utils/array';
+import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppState, AppStore } from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { UserSetPasswordModal } from '../../../../../components/user/set-password-modal/set-password-modal.service';
+import { RouteMutation, RouteStore } from '../../account.store';
 
 @View
 @Component({
@@ -27,12 +26,16 @@ import {
 	},
 })
 export default class RouteDashAccountLinkedAccountsList extends BaseRouteComponent {
-	@AppState user!: AppStore['user'];
-	@RouteMutation setHeading!: RouteStore['setHeading'];
+	@AppState
+	user!: AppStore['user'];
+	@RouteMutation
+	setHeading!: RouteStore['setHeading'];
 
 	channels: YoutubeChannel[] = [];
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve(this: undefined) {
 		return Api.sendRequest('/web/dash/linked-accounts');
 	}

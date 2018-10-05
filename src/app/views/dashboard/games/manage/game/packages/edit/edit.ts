@@ -1,33 +1,32 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./edit.html';
-
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
+import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
+import { AppCard } from '../../../../../../../../lib/gj-lib-client/components/card/card';
+import { AppExpand } from '../../../../../../../../lib/gj-lib-client/components/expand/expand';
+import { AppGamePackageCard } from '../../../../../../../../lib/gj-lib-client/components/game/package/card/card';
+import { GamePackagePayloadModel } from '../../../../../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { GameRelease } from '../../../../../../../../lib/gj-lib-client/components/game/release/release.model';
-import { Sellable } from '../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
-import { RouteState, RouteStore } from '../../../manage.store';
-import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { GamePackagePayloadModel } from '../../../../../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { Growls } from '../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { AppJolticon } from '../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppLoading } from '../../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppNavTabList } from '../../../../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
-import { AppGamePackageCard } from '../../../../../../../../lib/gj-lib-client/components/game/package/card/card';
-import { AppCard } from '../../../../../../../../lib/gj-lib-client/components/card/card';
-import { AppTooltip } from '../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { number } from '../../../../../../../../lib/gj-lib-client/vue/filters/number';
-import { FormGamePackage } from '../../../../../../../components/forms/game/package/package';
-import { AppExpand } from '../../../../../../../../lib/gj-lib-client/components/expand/expand';
-import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
 import { AppProgressPoller } from '../../../../../../../../lib/gj-lib-client/components/progress/poller/poller';
-import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
+import { Sellable } from '../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
 import { AppTimeAgo } from '../../../../../../../../lib/gj-lib-client/components/time/ago/ago';
+import { AppTooltip } from '../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { AppJolticon } from '../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppLoading } from '../../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
+import { number } from '../../../../../../../../lib/gj-lib-client/vue/filters/number';
+import { FormGamePackage } from '../../../../../../../components/forms/game/package/package';
+import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
+import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
+import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
+import { RouteState, RouteStore } from '../../../manage.store';
 
 @View
 @Component({
@@ -50,7 +49,8 @@ import { AppTimeAgo } from '../../../../../../../../lib/gj-lib-client/components
 	},
 })
 export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	package: GamePackage = null as any;
 	sellable: Sellable = null as any;
@@ -75,7 +75,9 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 		return this.game && this.game.hasPerms('analytics');
 	}
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: { params: ['packageId'] },
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/packages/' + route.params.id + '/' + route.params.packageId

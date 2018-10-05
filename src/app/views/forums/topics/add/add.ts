@@ -1,22 +1,21 @@
+import View from '!view!./add.html';
+import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
-import { Component } from 'vue-property-decorator';
-import View from '!view!./add.html';
-
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
 import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { Store } from '../../../../store/index';
-import { AppPageHeader } from '../../../../components/page-header/page-header';
-import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/breadcrumbs';
-import { AppForumRules } from '../../../../components/forum/rules/rules';
-import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
+import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
+import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/breadcrumbs';
+import { AppForumRules } from '../../../../components/forum/rules/rules';
+import { AppPageHeader } from '../../../../components/page-header/page-header';
+import { Store } from '../../../../store/index';
 
 @View
 @Component({
@@ -30,7 +29,8 @@ import {
 	},
 })
 export default class RouteForumsTopicsAdd extends BaseRouteComponent {
-	@State app!: Store['app'];
+	@State
+	app!: Store['app'];
 
 	channel: ForumChannel = null as any;
 
@@ -38,7 +38,9 @@ export default class RouteForumsTopicsAdd extends BaseRouteComponent {
 		return this.$gettext(`Create a New Topic`);
 	}
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: { params: ['channel'] },
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/forums/topics/create/' + route.params.channel);
 	}

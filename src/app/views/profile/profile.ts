@@ -103,7 +103,11 @@ export default class RouteProfile extends BaseRouteComponent {
 		return this.user!.id + (this.shouldShowFullCover ? '-full' : '-collapsed');
 	}
 
-	@RouteResolve({ cache: true, lazy: true })
+	@RouteResolve({
+		cache: true,
+		lazy: true,
+		deps: { params: ['username'], query: ['intent'] },
+	})
 	async routeResolve(this: undefined, route: Route) {
 		const intentRedirect = IntentService.checkRoute(
 			route,

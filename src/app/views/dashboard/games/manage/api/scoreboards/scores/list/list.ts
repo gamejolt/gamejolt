@@ -1,17 +1,16 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./list.html';
-
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Scroll } from '../../../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
-import { RouteState, RouteStore } from '../../../../manage.store';
 import { GameScoreTable } from '../../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { AppManageGameListScores } from '../../_list-scores/list-scores';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { Scroll } from '../../../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
+import { RouteState, RouteStore } from '../../../../manage.store';
+import { AppManageGameListScores } from '../../_list-scores/list-scores';
 
 @View
 @Component({
@@ -21,14 +20,17 @@ import {
 	},
 })
 export default class RouteDashGamesManageApiScoreboardsScoresList extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	scoreTables: GameScoreTable[] = [];
 	scoreTable: GameScoreTable = null as any;
 	selectedTable = 0;
 	scores: UserGameScore[] = [];
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: { params: ['table'] },
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/api/scores/list-table-scores/' +

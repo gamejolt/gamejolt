@@ -1,22 +1,21 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./list.html';
-
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { GameScoreTable } from '../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { RouteState, RouteStore } from '../../../manage.store';
-import { AppCardList } from '../../../../../../../../lib/gj-lib-client/components/card/list/list';
-import { AppCardListItem } from '../../../../../../../../lib/gj-lib-client/components/card/list/item/item';
 import { AppCardListAdd } from '../../../../../../../../lib/gj-lib-client/components/card/list/add/add';
 import { AppCardListDraggable } from '../../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';
-import { AppJolticon } from '../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTooltip } from '../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { FormGameScoreTable } from '../../../../../../../components/forms/game/score-table/score-table';
+import { AppCardListItem } from '../../../../../../../../lib/gj-lib-client/components/card/list/item/item';
+import { AppCardList } from '../../../../../../../../lib/gj-lib-client/components/card/list/list';
+import { GameScoreTable } from '../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
+import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppTooltip } from '../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { AppJolticon } from '../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { FormGameScoreTable } from '../../../../../../../components/forms/game/score-table/score-table';
+import { RouteState, RouteStore } from '../../../manage.store';
 
 @View
 @Component({
@@ -34,7 +33,8 @@ import {
 	},
 })
 export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	GameScoreTable = GameScoreTable;
 
@@ -46,7 +46,9 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 		return this.scoreTables.map(item => item.id);
 	}
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/api/scores/' + route.params.id);
 	}

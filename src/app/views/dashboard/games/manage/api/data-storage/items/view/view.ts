@@ -1,17 +1,16 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./view.html';
-
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { RouteState, RouteStore } from '../../../../manage.store';
 import { GameDataStoreItem } from '../../../../../../../../../lib/gj-lib-client/components/game/data-store/item/item.model';
-import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { date } from '../../../../../../../../../lib/gj-lib-client/vue/filters/date';
+import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { date } from '../../../../../../../../../lib/gj-lib-client/vue/filters/date';
+import { RouteState, RouteStore } from '../../../../manage.store';
 
 @View
 @Component({
@@ -24,14 +23,20 @@ import {
 	},
 })
 export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	item: GameDataStoreItem = null as any;
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: { params: ['item'] },
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
-			'/web/dash/developer/games/api/data-storage/' + route.params.id + '/' + route.params.item
+			'/web/dash/developer/games/api/data-storage/' +
+				route.params.id +
+				'/' +
+				route.params.item
 		);
 	}
 

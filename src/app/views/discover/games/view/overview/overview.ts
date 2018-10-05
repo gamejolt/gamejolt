@@ -140,7 +140,11 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	readonly Screen = Screen;
 	readonly Environment = Environment;
 
-	@RouteResolve({ lazy: true, cache: true })
+	@RouteResolve({
+		lazy: true,
+		cache: true,
+		deps: {},
+	})
 	routeResolve(this: undefined, route: Route) {
 		const gameId = parseInt(route.params.id, 10);
 		HistoryTick.sendBeacon('game-view', gameId, {

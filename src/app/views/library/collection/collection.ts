@@ -105,7 +105,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 	// Not really able to make this lazy since it needs payload to build out the
 	// header.
-	@RouteResolve({ cache: true })
+	@RouteResolve({
+		cache: true,
+	})
 	async routeResolve(this: undefined, route: Route) {
 		const type = route.meta.collectionType;
 		const filtering = new GameFilteringContainer(route);

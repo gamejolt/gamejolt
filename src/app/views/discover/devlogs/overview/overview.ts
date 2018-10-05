@@ -44,7 +44,10 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 	feed: ActivityFeedContainer | null = null;
 
 	// Don't cache since every page load we pull new games in.
-	@RouteResolve({ lazy: true })
+	@RouteResolve({
+		lazy: true,
+		deps: {},
+	})
 	routeResolve() {
 		return Api.sendRequest('/web/discover/devlogs');
 	}

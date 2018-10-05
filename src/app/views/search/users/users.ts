@@ -25,7 +25,9 @@ export default class RouteSearchUsers extends BaseRouteComponent {
 	readonly Search = Search;
 	readonly Scroll = Scroll;
 
-	@RouteResolve({ cache: true })
+	@RouteResolve({
+		cache: true,
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Search.search(route.query.q, {
 			type: 'user',

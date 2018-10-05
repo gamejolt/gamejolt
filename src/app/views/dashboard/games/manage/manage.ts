@@ -1,19 +1,9 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./manage.html';
-
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { RouteStoreName, RouteState, RouteStore, RouteMutation } from './manage.store';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppPageHeader } from '../../../../components/page-header/page-header';
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
-import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
-import { AppGamePerms } from '../../../../components/game/perms/perms';
-import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { IntentService } from '../../../../components/intent/intent.service';
-import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
+import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -22,6 +12,15 @@ import {
 	ThemeMutation,
 	ThemeStore,
 } from '../../../../../lib/gj-lib-client/components/theme/theme.store';
+import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
+import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
+import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { AppGamePerms } from '../../../../components/game/perms/perms';
+import { IntentService } from '../../../../components/intent/intent.service';
+import { AppPageHeader } from '../../../../components/page-header/page-header';
+import { RouteMutation, RouteState, RouteStore, RouteStoreName } from './manage.store';
 
 @View
 @Component({
@@ -38,19 +37,26 @@ import {
 	},
 })
 export default class RouteDashGamesManage extends BaseRouteComponent {
-	@AppState user!: AppStore['user'];
-	@RouteState game!: RouteStore['game'];
-	@RouteState isWizard!: RouteStore['isWizard'];
+	@AppState
+	user!: AppStore['user'];
+	@RouteState
+	game!: RouteStore['game'];
+	@RouteState
+	isWizard!: RouteStore['isWizard'];
 
-	@RouteMutation populate!: RouteStore['populate'];
-	@ThemeMutation setPageTheme!: ThemeStore['setPageTheme'];
+	@RouteMutation
+	populate!: RouteStore['populate'];
+	@ThemeMutation
+	setPageTheme!: ThemeStore['setPageTheme'];
 
 	storeName = RouteStoreName;
 	storeModule = RouteStore;
 
 	Game = Game;
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: { params: ['id'], query: ['intent'] },
+	})
 	async routeResolve(this: undefined, route: Route) {
 		const intentRedirect = IntentService.checkRoute(route, {
 			intent: 'accept-game-collaboration',

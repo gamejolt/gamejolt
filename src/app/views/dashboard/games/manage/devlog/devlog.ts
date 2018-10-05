@@ -12,6 +12,7 @@ import { Route } from 'vue-router';
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
 import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
+import { AppActivityFeedPlaceholder } from '../../../../../components/activity/feed/placeholder/placeholder';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppPostAddButton } from '../../../../../components/post/add-button/add-button';
 import { RouteState, RouteStore } from '../manage.store';
@@ -26,6 +27,7 @@ function getFetchUrl(route: Route) {
 	name: 'RouteDashGamesManageDevlog',
 	components: {
 		AppActivityFeed,
+		AppActivityFeedPlaceholder,
 		AppPostAddButton,
 		AppGamePerms,
 		AppNavTabList,
@@ -41,7 +43,11 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 		return this.$route.query.tab || 'active';
 	}
 
-	@RouteResolve({ cache: false, lazy: false })
+	@RouteResolve({
+		cache: false,
+		lazy: false,
+		deps: { query: ['tab'] },
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(getFetchUrl(route));
 	}

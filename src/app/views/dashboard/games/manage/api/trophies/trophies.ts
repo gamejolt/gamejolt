@@ -1,27 +1,26 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./trophies.html';
-
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { RouteState, RouteStore } from '../../manage.store';
+import { AppCardListAdd } from '../../../../../../../lib/gj-lib-client/components/card/list/add/add';
+import { AppCardListDraggable } from '../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';
+import { AppCardListItem } from '../../../../../../../lib/gj-lib-client/components/card/list/item/item';
+import { AppCardList } from '../../../../../../../lib/gj-lib-client/components/card/list/list';
 import {
 	GameTrophy,
 	GameTrophyDifficulty,
 } from '../../../../../../../lib/gj-lib-client/components/game/trophy/trophy.model';
-import { AppCardList } from '../../../../../../../lib/gj-lib-client/components/card/list/list';
-import { AppCardListDraggable } from '../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';
-import { AppCardListItem } from '../../../../../../../lib/gj-lib-client/components/card/list/item/item';
-import { AppTrophyThumbnail } from '../../../../../../components/trophy/thumbnail/thumbnail';
-import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { FormGameTrophy } from '../../../../../../components/forms/game/trophy/trophy';
-import { AppCardListAdd } from '../../../../../../../lib/gj-lib-client/components/card/list/add/add';
-import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { FormGameTrophy } from '../../../../../../components/forms/game/trophy/trophy';
+import { AppTrophyThumbnail } from '../../../../../../components/trophy/thumbnail/thumbnail';
+import { RouteState, RouteStore } from '../../manage.store';
 
 @View
 @Component({
@@ -40,7 +39,8 @@ import {
 	},
 })
 export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	trophies: GameTrophy[] = [];
 	isAdding: { [x: number]: boolean } = {};
@@ -83,7 +83,9 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 		return this.trophies.filter(item => !item.visible).length > 0;
 	}
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/api/trophies/' + route.params.id);
 	}

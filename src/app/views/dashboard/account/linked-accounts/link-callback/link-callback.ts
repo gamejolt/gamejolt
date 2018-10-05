@@ -1,19 +1,20 @@
 import { CreateElement } from 'vue';
-import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { AppState, AppStore } from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppState, AppStore } from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 
 @Component({
 	name: 'RouteDashAccountLinkedAccountsLinkCallback',
 })
 export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRouteComponent {
-	@AppState user!: AppStore['user'];
+	@AppState
+	user!: AppStore['user'];
 
 	@RouteResolve()
 	async routeResolve(this: undefined, route: Route) {
@@ -80,7 +81,9 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 			if (!$payload.success) {
 				if ($payload.reason && $payload.reason === 'account-taken') {
 					Growls.error(
-						this.$gettext('This Twitter account is already linked to another Game Jolt account.')
+						this.$gettext(
+							'This Twitter account is already linked to another Game Jolt account.'
+						)
 					);
 				} else {
 					Growls.error(this.$gettext('Unable to link your Twitter account.'));
@@ -97,7 +100,9 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 			if (!$payload.success) {
 				if ($payload.reason && $payload.reason === 'account-taken') {
 					Growls.error(
-						this.$gettext('This Facebook account is already linked to another Game Jolt account.')
+						this.$gettext(
+							'This Facebook account is already linked to another Game Jolt account.'
+						)
 					);
 				} else {
 					Growls.error(this.$gettext('Unable to link your Facebook account.'));
@@ -114,7 +119,9 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 			if (!$payload.success) {
 				if ($payload.reason && $payload.reason === 'account-taken') {
 					Growls.error(
-						this.$gettext('This Twitch account is already linked to another Game Jolt account.')
+						this.$gettext(
+							'This Twitch account is already linked to another Game Jolt account.'
+						)
 					);
 				} else {
 					Growls.error(this.$gettext('Unable to link your Twitch account.'));
@@ -131,7 +138,9 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 			if (!$payload.success) {
 				if ($payload.reason && $payload.reason === 'account-taken') {
 					Growls.error(
-						this.$gettext('This Google+ account is already linked to another Game Jolt account.')
+						this.$gettext(
+							'This Google+ account is already linked to another Game Jolt account.'
+						)
 					);
 				} else {
 					Growls.error(this.$gettext('Unable to link your Google+ account.'));
@@ -150,7 +159,9 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 					Growls.error(this.$gettext('Unable to link your YouTube channel.'));
 				} else if ($payload.reason === 'channel-taken') {
 					Growls.error(
-						this.$gettext('This YouTube channel is already linked to another Game Jolt account.')
+						this.$gettext(
+							'This YouTube channel is already linked to another Game Jolt account.'
+						)
 					);
 				} else if ($payload.reason === 'not-public') {
 					Growls.error(this.$gettext('This YouTube channel is not public.'));

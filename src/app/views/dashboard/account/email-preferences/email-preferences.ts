@@ -1,17 +1,16 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./email-preferences.html';
-
-import { RouteMutation, RouteStore } from '../account.store';
-import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { FormEmailPreferences } from '../../../../components/forms/email-preferences/email-preferences';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { IntentService } from '../../../../components/intent/intent.service';
 import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
+import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
+import { FormEmailPreferences } from '../../../../components/forms/email-preferences/email-preferences';
+import { IntentService } from '../../../../components/intent/intent.service';
+import { RouteMutation, RouteStore } from '../account.store';
 
 @View
 @Component({
@@ -21,11 +20,14 @@ import { Translate } from '../../../../../lib/gj-lib-client/components/translate
 	},
 })
 export default class RouteDashAccountEmailPreferences extends BaseRouteComponent {
-	@RouteMutation setHeading!: RouteStore['setHeading'];
+	@RouteMutation
+	setHeading!: RouteStore['setHeading'];
 
 	user: User = null as any;
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: { query: ['intent'] },
+	})
 	async routeResolve(this: undefined, route: Route) {
 		const intentRedirect = IntentService.checkRoute(route, {
 			intent: 'unsubscribe',

@@ -24,7 +24,9 @@ export default class RouteDiscoverChannelsViewDevlogs extends BaseRouteComponent
 	// Devlogs don't have filters.
 	listing: GameListingContainer | null = null;
 
-	@RouteResolve({ cache: true })
+	@RouteResolve({
+		cache: true,
+	})
 	routeResolve(this: undefined, route: Route) {
 		const filtering = new GameFilteringContainer(route);
 		return Api.sendRequest(

@@ -12,7 +12,9 @@ import { User } from '../../../lib/gj-lib-client/components/user/user.model';
 	name: 'RouteLegal',
 })
 export default class RouteLegal extends BaseRouteComponent {
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve() {
 		return User.touch();
 	}

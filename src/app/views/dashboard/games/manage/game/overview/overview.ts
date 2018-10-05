@@ -86,7 +86,9 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 	// 	} );
 	// } );
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/overview/' + route.params.id);
 	}

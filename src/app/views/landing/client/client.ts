@@ -1,21 +1,20 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./client.html?style=./client.styl';
-
-import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { Component } from 'vue-property-decorator';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppScrollTo } from '../../../../lib/gj-lib-client/components/scroll/to/to.directive';
+import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
+import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { HistoryTick } from '../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
+import { Navigate } from '../../../../lib/gj-lib-client/components/navigate/navigate.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppScrollTo } from '../../../../lib/gj-lib-client/components/scroll/to/to.directive';
 import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
-import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { Navigate } from '../../../../lib/gj-lib-client/components/navigate/navigate.service';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 
 @View
 @Component({
@@ -37,16 +36,18 @@ export default class RouteLandingClient extends BaseRouteComponent {
 	private fallbackUrl = 'https://gamejolt.com';
 
 	readonly platform = Device.os();
-
 	readonly Screen = Screen;
 
-	@RouteResolve({ cache: true, lazy: true })
+	@RouteResolve({
+		cache: true,
+		lazy: true,
+		deps: {},
+	})
 	routeResolve() {
 		return Api.sendRequest('/web/client');
 	}
 
 	routed(payload: any) {
-		console.log(payload);
 		this.packageData = new GamePackagePayloadModel(payload.packageData);
 		this.fallbackUrl = payload.clientGameUrl;
 	}

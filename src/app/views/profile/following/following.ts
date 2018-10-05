@@ -37,7 +37,9 @@ export default class RouteProfileFollowing extends BaseRouteComponent {
 		return getFetchUrl(this.$route);
 	}
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(getFetchUrl(route));
 	}

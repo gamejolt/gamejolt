@@ -1,12 +1,11 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./intent.html';
-
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
+import { PayloadError } from '../../../lib/gj-lib-client/components/payload/payload-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../lib/gj-lib-client/components/route/route-component';
-import { PayloadError } from '../../../lib/gj-lib-client/components/payload/payload-service';
 
 const ActionUnsubscribeNotification = 'unsubscribe-notification';
 const ActionUnsubscribeGJ = 'unsubscribe-gj';

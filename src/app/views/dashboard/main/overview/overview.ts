@@ -102,7 +102,10 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 		};
 	}
 
-	@RouteResolve({ cache: true })
+	@RouteResolve({
+		cache: true,
+		deps: {},
+	})
 	routeResolve() {
 		return Api.sendRequest('/web/dash');
 	}

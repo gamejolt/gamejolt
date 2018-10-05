@@ -1,26 +1,25 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./list.html';
-
-import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { RouteState, RouteStore } from '../../../manage.store';
-import { arrayIndexBy } from '../../../../../../../../lib/gj-lib-client/utils/array';
-import { Sellable } from '../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
-import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { Growls } from '../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppTooltip } from '../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { currency } from '../../../../../../../../lib/gj-lib-client/vue/filters/currency';
-import { AppCardList } from '../../../../../../../../lib/gj-lib-client/components/card/list/list';
 import { AppCardListDraggable } from '../../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';
 import { AppCardListItem } from '../../../../../../../../lib/gj-lib-client/components/card/list/item/item';
-import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
-import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
+import { AppCardList } from '../../../../../../../../lib/gj-lib-client/components/card/list/list';
+import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
+import { Growls } from '../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
+import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { Sellable } from '../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
+import { AppTooltip } from '../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { arrayIndexBy } from '../../../../../../../../lib/gj-lib-client/utils/array';
+import { currency } from '../../../../../../../../lib/gj-lib-client/vue/filters/currency';
+import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
 import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
+import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
+import { RouteState, RouteStore } from '../../../manage.store';
 
 @View
 @Component({
@@ -40,7 +39,8 @@ import { GamePackageEditModal } from '../../../../../../../components/game/packa
 	},
 })
 export default class RouteDashGamesManageGamePackagesList extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	packages: GamePackage[] = [];
 	sellables: { [x: number]: Sellable } = {};
@@ -59,7 +59,9 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 		return this.packages.map(i => i.id);
 	}
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	async routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id);
 	}

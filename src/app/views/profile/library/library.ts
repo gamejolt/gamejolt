@@ -23,7 +23,9 @@ export default class RouteProfileLibrary extends BaseRouteComponent {
 
 	collections: GameCollection[] = [];
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/library/@' + route.params.username);
 	}

@@ -1,15 +1,14 @@
 import View from '!view!./payment-methods.html';
 import { Component } from 'vue-property-decorator';
-
+import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
+import { PaymentSource } from '../../../../../lib/gj-lib-client/components/payment-source/payment-source.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { PaymentSource } from '../../../../../lib/gj-lib-client/components/payment-source/payment-source.model';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { RouteMutation, RouteStore } from '../account.store';
 import { arrayRemove } from '../../../../../lib/gj-lib-client/utils/array';
 import { AppUserPaymentSourceCard } from '../../../../components/user/payment-source/card/card';
+import { RouteMutation, RouteStore } from '../account.store';
 
 @View
 @Component({
@@ -19,11 +18,14 @@ import { AppUserPaymentSourceCard } from '../../../../components/user/payment-so
 	},
 })
 export default class RouteDashAccountPaymentMethods extends BaseRouteComponent {
-	@RouteMutation setHeading!: RouteStore['setHeading'];
+	@RouteMutation
+	setHeading!: RouteStore['setHeading'];
 
 	paymentSources: PaymentSource[] = [];
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve(this: undefined) {
 		return Api.sendRequest('/web/dash/payment-methods');
 	}

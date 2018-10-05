@@ -42,7 +42,11 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 
-	@RouteResolve({ cache: true, lazy: true })
+	@RouteResolve({
+		cache: true,
+		lazy: true,
+		deps: {},
+	})
 	routeResolve(this: undefined) {
 		return Promise.all([
 			Api.sendRequest('/web/dash/activity/activity'),

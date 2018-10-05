@@ -1,13 +1,12 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./test-ads.html';
-
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
+import { AppAd } from '../../../lib/gj-lib-client/components/ad/ad';
+import { Prebid } from '../../../lib/gj-lib-client/components/ad/prebid.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../lib/gj-lib-client/components/route/route-component';
-import { Prebid } from '../../../lib/gj-lib-client/components/ad/prebid.service';
-import { AppAd } from '../../../lib/gj-lib-client/components/ad/ad';
 
 @View
 @Component({

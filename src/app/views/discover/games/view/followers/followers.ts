@@ -35,7 +35,11 @@ export default class RouteProfileFollowers extends BaseRouteComponent {
 		return getFetchUrl(this.$route);
 	}
 
-	@RouteResolve({ cache: true, lazy: true })
+	@RouteResolve({
+		cache: true,
+		lazy: true,
+		deps: {},
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(getFetchUrl(route));
 	}

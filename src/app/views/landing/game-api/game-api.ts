@@ -1,14 +1,13 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./game-api.html';
-
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { Component } from 'vue-property-decorator';
+import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
+import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 
 @View
 @Component({
@@ -28,7 +27,11 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 	totalAchievedTrophies = 0;
 	sessionTime = 0;
 
-	@RouteResolve({ cache: true, lazy: true })
+	@RouteResolve({
+		cache: true,
+		lazy: true,
+		deps: {},
+	})
 	async routeResolve() {
 		return Api.sendRequest('/web/landing/game-api');
 	}

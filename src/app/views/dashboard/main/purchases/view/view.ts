@@ -1,22 +1,21 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./view.html?style=./view.styl';
-
-import { Geo } from '../../../../../../lib/gj-lib-client/components/geo/geo.service';
-import { OrderPayment } from '../../../../../../lib/gj-lib-client/components/order/payment/payment.model';
-import { date } from '../../../../../../lib/gj-lib-client/vue/filters/date';
-import { Order } from '../../../../../../lib/gj-lib-client/components/order/order.model';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
-import { GamePackage } from '../../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { arrayIndexBy, arrayGroupBy } from '../../../../../../lib/gj-lib-client/utils/array';
 import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
+import { GamePackage } from '../../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { AppGameThumbnailImg } from '../../../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
-import { currency } from '../../../../../../lib/gj-lib-client/vue/filters/currency';
-import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Geo } from '../../../../../../lib/gj-lib-client/components/geo/geo.service';
+import { Order } from '../../../../../../lib/gj-lib-client/components/order/order.model';
+import { OrderPayment } from '../../../../../../lib/gj-lib-client/components/order/payment/payment.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
+import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { arrayGroupBy, arrayIndexBy } from '../../../../../../lib/gj-lib-client/utils/array';
+import { currency } from '../../../../../../lib/gj-lib-client/vue/filters/currency';
+import { date } from '../../../../../../lib/gj-lib-client/vue/filters/date';
 
 @View
 @Component({
@@ -39,7 +38,9 @@ export default class RouteDashMainPurchasesView extends BaseRouteComponent {
 	readonly date = date;
 	readonly Screen = Screen;
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: { params: ['id'] },
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/purchases/' + route.params.id);
 	}

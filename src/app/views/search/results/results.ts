@@ -34,7 +34,9 @@ export default class RouteSearchResults extends BaseRouteComponent {
 	readonly Search = Search;
 	readonly Screen = Screen;
 
-	@RouteResolve({ cache: true })
+	@RouteResolve({
+		cache: true,
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Search.search(route.query.q);
 	}
