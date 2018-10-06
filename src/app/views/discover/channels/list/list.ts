@@ -1,14 +1,13 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./list.html';
-
-import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppPageHeader } from '../../../../components/page-header/page-header';
-import { AppChannelThumbnail } from '../../../../components/channel/thumbnail/thumbnail';
+import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppChannelThumbnail } from '../../../../components/channel/thumbnail/thumbnail';
+import { AppPageHeader } from '../../../../components/page-header/page-header';
 
 @View
 @Component({
@@ -21,7 +20,9 @@ import {
 export default class RouteDiscoverChannelsList extends BaseRouteComponent {
 	channels: any[] = [];
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve() {
 		return Api.sendRequest('/web/discover/channels');
 	}

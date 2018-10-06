@@ -1,8 +1,6 @@
 import View from '!view!./marketplace.html';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-
-import { AppGameThumbnail } from '../../../../_common/game/thumbnail/thumbnail';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
@@ -13,9 +11,10 @@ import {
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
+import { AppGameThumbnail } from '../../../../_common/game/thumbnail/thumbnail';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Store } from '../../../store/index';
-import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
 
 @View
 @Component({
@@ -30,14 +29,17 @@ import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/
 	},
 })
 export default class RouteLandingMarketplace extends BaseRouteComponent {
-	@State app!: Store['app'];
+	@State
+	app!: Store['app'];
 
 	firesidePosts: FiresidePost[] = [];
 	games: Game[] = [];
 
 	readonly Screen = Screen;
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve() {
 		return Api.sendRequest('/web/marketplace');
 	}

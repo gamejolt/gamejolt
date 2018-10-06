@@ -42,6 +42,16 @@ type Mutations = {
 	setUserRating: GameRating | null;
 };
 
+function updateGame(game: Game | null, newGame: Game | null) {
+	// If we already have a game, just assign new data into it to keep it fresh.
+	if (game && newGame) {
+		game.assign(newGame);
+		return game;
+	}
+
+	return newGame;
+}
+
 @VuexModule()
 export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	isOverviewLoaded = false;
@@ -160,25 +170,26 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexMutation
 	bootstrapGame(gameId: Mutations['bootstrapGame']) {
-		this.game = Registry.find<Game>('Game', i => i.id === gameId) as any;
-		this.showDetails = false;
-		this.isOverviewLoaded = false;
-		this.recommendedGames = [];
-		this.mediaItems = [];
-		this.supporters = [];
-		this.videoComments = [];
-		this.overviewComments = [];
-		this.userRating = null;
+		const prevId = this.game && this.game.id;
+		const game = Registry.find<Game>('Game', i => i.id === gameId);
+		this.game = updateGame(this.game, game) as any;
+
+		if ((this.game && this.game.id) !== prevId) {
+			this.showDetails = false;
+			this.isOverviewLoaded = false;
+			this.recommendedGames = [];
+			this.mediaItems = [];
+			this.supporters = [];
+			this.videoComments = [];
+			this.overviewComments = [];
+			this.userRating = null;
+		}
 	}
 
 	@VuexMutation
 	processPayload(payload: Mutations['processPayload']) {
 		const game = new Game(payload.game);
-		if (this.game) {
-			this.game.assign(game);
-		} else {
-			this.game = game;
-		}
+		this.game = updateGame(this.game, game)!;
 
 		this.userRating = payload.userRating ? new GameRating(payload.userRating) : null;
 		this.postsCount = payload.postCount || 0;

@@ -147,15 +147,13 @@ export class AppSearchAutocomplete extends Vue {
 			},
 			{
 				keyword: ':activity',
-				routeName: 'activity',
-				params: { tab: 'activity' },
+				routeName: 'activity.feed',
 				authRequired: true,
 				description: this.$gettext('commands.activity_description'),
 			},
 			{
 				keyword: ':notifications',
-				routeName: 'activity',
-				params: { tab: 'notifications' },
+				routeName: 'activity.notifications',
 				authRequired: true,
 				description: this.$gettext('View your notifications.'),
 			},

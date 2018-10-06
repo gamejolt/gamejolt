@@ -31,7 +31,11 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 
 	post: FiresidePost | null = null;
 
-	@RouteResolve({ lazy: true, cache: true })
+	@RouteResolve({
+		lazy: true,
+		cache: true,
+		deps: { params: ['slug'], query: ['intent'] },
+	})
 	async routeResolve(this: undefined, route: Route) {
 		const intentRedirect = IntentService.checkRoute(route, {
 			intent: 'like-post',

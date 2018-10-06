@@ -1,17 +1,17 @@
+import {
+	getLinkedAccountProviderDisplayName,
+	LinkedAccount,
+} from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
+import { YoutubeChannel } from 'game-jolt-frontend-lib/components/youtube/channel/channel-model';
 import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import {
-	getLinkedAccountProviderDisplayName,
-	LinkedAccount,
-} from '../../../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
-import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
-import { YoutubeChannel } from '../../../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
 import { AppState, AppStore } from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 
 @Component({
@@ -89,7 +89,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 				} else {
 					Growls.error(
 						this.$gettextInterpolate('Unable to link your %{ provider } account.', {
-							provder: providerName,
+							provider: providerName,
 						})
 					);
 				}

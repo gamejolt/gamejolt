@@ -44,7 +44,10 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 	feed: ActivityFeedContainer | null = null;
 
 	// Don't cache since every page load we pull new games in.
-	@RouteResolve({ lazy: true })
+	@RouteResolve({
+		lazy: true,
+		deps: {},
+	})
 	routeResolve() {
 		return Api.sendRequest('/web/discover/devlogs');
 	}
@@ -67,7 +70,7 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
-	routed($payload: any) {
+	routed($payload: any, fromCache: boolean) {
 		this.games = Game.populate($payload.games);
 
 		this.feed = ActivityFeedService.routed(
@@ -76,7 +79,8 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 				type: 'EventItem',
 				url: '/web/discover/devlogs/posts',
 			},
-			$payload.posts
+			$payload.posts,
+			fromCache
 		);
 	}
 }

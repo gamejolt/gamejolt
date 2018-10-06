@@ -1,15 +1,14 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./settings.html';
-
-import { AppScrollAffix } from '../../../lib/gj-lib-client/components/scroll/affix/affix';
-import { AppPageHeader } from '../../components/page-header/page-header';
-import { User } from '../../../lib/gj-lib-client/components/user/user.model';
-import { FormSettings } from '../../components/forms/settings/settings';
-import { AppScrollTo } from '../../../lib/gj-lib-client/components/scroll/to/to.directive';
+import { Component } from 'vue-property-decorator';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../lib/gj-lib-client/components/route/route-component';
+import { AppScrollAffix } from '../../../lib/gj-lib-client/components/scroll/affix/affix';
+import { AppScrollTo } from '../../../lib/gj-lib-client/components/scroll/to/to.directive';
+import { User } from '../../../lib/gj-lib-client/components/user/user.model';
+import { FormSettings } from '../../components/forms/settings/settings';
+import { AppPageHeader } from '../../components/page-header/page-header';
 
 @View
 @Component({
@@ -40,7 +39,9 @@ export default class RouteSettings extends BaseRouteComponent {
 		return sections;
 	}
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	async routeResolve() {
 		User.touch();
 	}

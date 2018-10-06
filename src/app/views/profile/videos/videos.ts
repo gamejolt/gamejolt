@@ -31,7 +31,10 @@ export default class RouteProfileVideos extends BaseRouteComponent {
 	videos: CommentVideo[] = [];
 	page = 0;
 
-	@RouteResolve()
+	@RouteResolve({
+		cache: true,
+		deps: {},
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/profile/videos/@' + route.params.username);
 	}

@@ -1,19 +1,18 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./view.html';
-
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
 import { GameScoreTable } from '../../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { RouteState, RouteStore } from '../../../../manage.store';
 import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { number } from '../../../../../../../../../lib/gj-lib-client/vue/filters/number';
-import { date } from '../../../../../../../../../lib/gj-lib-client/vue/filters/date';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
+import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { date } from '../../../../../../../../../lib/gj-lib-client/vue/filters/date';
+import { number } from '../../../../../../../../../lib/gj-lib-client/vue/filters/number';
+import { RouteState, RouteStore } from '../../../../manage.store';
 
 @View
 @Component({
@@ -27,12 +26,15 @@ import {
 	},
 })
 export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	score: UserGameScore = null as any;
 	scoreTable: GameScoreTable = null as any;
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: { params: ['score'] },
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/api/scores/' + route.params.id + '/' + route.params.score

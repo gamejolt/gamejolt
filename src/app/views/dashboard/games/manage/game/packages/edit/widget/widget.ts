@@ -1,15 +1,14 @@
-import { Route } from 'vue-router';
-import { Component, Watch } from 'vue-property-decorator';
 import View from '!view!./widget.html';
-
+import { Component, Watch } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Sellable } from '../../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
 import { Environment } from '../../../../../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { Screen } from '../../../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { Screen } from '../../../../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Sellable } from '../../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
 
 @View
 @Component({
@@ -23,7 +22,9 @@ export default class RouteDashGamesManageGamePackagesEditWidget extends BaseRout
 
 	readonly Screen = Screen;
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/packages/preview/' +

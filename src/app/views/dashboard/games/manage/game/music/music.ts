@@ -1,24 +1,23 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./music.html';
-
-import { GameSong } from '../../../../../../../lib/gj-lib-client/components/game/song/song.model';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { RouteState, RouteStore } from '../../manage.store';
-import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { AppCardList } from '../../../../../../../lib/gj-lib-client/components/card/list/list';
-import { AppCardListItem } from '../../../../../../../lib/gj-lib-client/components/card/list/item/item';
-import { AppCardListDraggable } from '../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';
-import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { FormGameSong } from '../../../../../../components/forms/game/song/song';
-import { AppDashGameWizardControls } from '../../../../../../components/forms/game/wizard-controls/wizard-controls';
 import { AppCardListAdd } from '../../../../../../../lib/gj-lib-client/components/card/list/add/add';
-import { arrayRemove } from '../../../../../../../lib/gj-lib-client/utils/array';
+import { AppCardListDraggable } from '../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';
+import { AppCardListItem } from '../../../../../../../lib/gj-lib-client/components/card/list/item/item';
+import { AppCardList } from '../../../../../../../lib/gj-lib-client/components/card/list/list';
+import { GameSong } from '../../../../../../../lib/gj-lib-client/components/game/song/song.model';
 import { AppLoadingFade } from '../../../../../../../lib/gj-lib-client/components/loading/fade/fade';
+import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { arrayRemove } from '../../../../../../../lib/gj-lib-client/utils/array';
+import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { FormGameSong } from '../../../../../../components/forms/game/song/song';
+import { AppDashGameWizardControls } from '../../../../../../components/forms/game/wizard-controls/wizard-controls';
+import { RouteState, RouteStore } from '../../manage.store';
 
 @View
 @Component({
@@ -35,7 +34,8 @@ import {
 	},
 })
 export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	songs: GameSong[] = [];
 	isAdding = false;
@@ -46,7 +46,9 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 		return this.songs.map(item => item.id);
 	}
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/music/' + route.params.id);
 	}
@@ -80,7 +82,9 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 	}
 
 	async removeSong(song: GameSong) {
-		const result = await ModalConfirm.show(this.$gettext('dash.games.music.remove_confirmation'));
+		const result = await ModalConfirm.show(
+			this.$gettext('dash.games.music.remove_confirmation')
+		);
 
 		if (!result) {
 			return;

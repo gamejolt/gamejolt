@@ -1,18 +1,17 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./list.html';
-
-import { GameDataStoreItem } from '../../../../../../../../../lib/gj-lib-client/components/game/data-store/item/item.model';
-import { RouteState, RouteStore } from '../../../../manage.store';
-import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { date } from '../../../../../../../../../lib/gj-lib-client/vue/filters/date';
-import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { GameDataStoreItem } from '../../../../../../../../../lib/gj-lib-client/components/game/data-store/item/item.model';
+import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { AppPopper } from '../../../../../../../../../lib/gj-lib-client/components/popper/popper';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { AppPopper } from '../../../../../../../../../lib/gj-lib-client/components/popper/popper';
+import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { date } from '../../../../../../../../../lib/gj-lib-client/vue/filters/date';
+import { RouteState, RouteStore } from '../../../../manage.store';
 
 @View
 @Component({
@@ -26,11 +25,14 @@ import { AppPopper } from '../../../../../../../../../lib/gj-lib-client/componen
 	},
 })
 export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	items: GameDataStoreItem[] = [];
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/api/data-storage/' + route.params.id);
 	}

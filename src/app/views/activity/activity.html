@@ -13,7 +13,7 @@
 		<nav slot="nav" class="platform-list inline nav-justified">
 			<ul>
 				<li>
-					<router-link :to="{ name: 'activity', params: { tab: 'activity' } }" active-class="active">
+					<router-link :to="{ name: 'activity.feed' }" active-class="active">
 						<app-jolticon icon="feed" class="hidden-xs" />
 						<translate>Feed</translate>
 						<span class="tag tag-highlight" v-if="unreadActivityCount > 0">
@@ -22,7 +22,7 @@
 					</router-link>
 				</li>
 				<li>
-					<router-link :to="{ name: 'activity', params: { tab: 'notifications' } }" active-class="active">
+					<router-link :to="{ name: 'activity.notifications' }" active-class="active">
 						<app-jolticon icon="notifications" class="hidden-xs" />
 						<translate>Notifications</translate>
 						<span class="tag tag-highlight" v-if="unreadNotificationsCount > 0">
@@ -35,64 +35,6 @@
 
 	</app-page-header>
 
-	<section class="section">
-		<div class="container">
-			<div class="row">
-				<div class="col-xs-12 col-md-4 pull-right" v-if="tab === 'activity'">
-					<app-broadcast-card
-						v-if="latestBroadcast"
-						:post="latestBroadcast"
-						/>
-
-					<template v-if="!Screen.isMobile">
-						<h4 class="section-header">
-							<translate>Featured Games</translate>
-						</h4>
-
-						<app-game-list-placeholder
-							v-if="!featuredGames.length"
-							:num="5"
-							/>
-						<app-game-list
-							v-else-if="featuredGames.length"
-							:games="featuredGames.slice(0, 7)"
-							event-label="activity"
-							/>
-					</template>
-
-				</div>
-				<div class="col-xs-12 col-md-8 col-lg-7 col-lg-offset-1 pull-left">
-
-					<app-activity-feed-placeholder v-if="!feed" />
-					<div v-else>
-						<div :key="feed.type">
-							<app-activity-feed
-								v-if="feed.hasItems"
-								:feed="feed"
-								show-game-info
-								:show-ads="tab === 'activity'"
-								:new-count="unreadCount"
-								@load-new="loadedNew()"
-								/>
-							<div class="alert" v-else>
-								<template v-if="tab === 'activity'">
-									<p>
-										<translate>You don't have any activity yet. Follow games to stay up to date on their latest development!</translate>
-									</p>
-								</template>
-								<template v-if="tab === 'notifications'">
-									<p>
-										<translate>You don't have any notifications yet.</translate>
-									</p>
-								</template>
-							</div>
-						</div>
-					</div>
-
-				</div>
-			</div>
-		</div>
-	</section>
-
+	<router-view />
 
 </div>

@@ -91,7 +91,11 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	readonly UserFriendship = UserFriendship;
 	readonly Screen = Screen;
 
-	@RouteResolve({ cache: true, lazy: true })
+	@RouteResolve({
+		cache: true,
+		lazy: true,
+		deps: {},
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/profile/overview/@' + route.params.username);
 	}

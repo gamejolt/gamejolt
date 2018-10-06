@@ -1,19 +1,18 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./soundtrack.html';
-
-import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
-import { RouteState, RouteStore } from '../../view.store';
-import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { GameSong } from '../../../../../../../lib/gj-lib-client/components/game/song/song.model';
-import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
-import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
+import { GameSong } from '../../../../../../../lib/gj-lib-client/components/game/song/song.model';
+import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
+import { RouteState, RouteStore } from '../../view.store';
 
 const DownloadDelay = 3000;
 
@@ -27,13 +26,16 @@ const DownloadDelay = 3000;
 	},
 })
 export default class RouteDiscoverGamesViewDownloadSoundtrack extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	src: string | null = null;
 
 	readonly Screen = Screen;
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	async routeResolve(this: undefined, route: Route) {
 		const gameId = parseInt(route.params.id, 10);
 

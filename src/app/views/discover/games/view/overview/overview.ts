@@ -140,7 +140,11 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	readonly Screen = Screen;
 	readonly Environment = Environment;
 
-	@RouteResolve({ lazy: true, cache: true })
+	@RouteResolve({
+		lazy: true,
+		cache: true,
+		deps: {},
+	})
 	routeResolve(this: undefined, route: Route) {
 		const gameId = parseInt(route.params.id, 10);
 		HistoryTick.sendBeacon('game-view', gameId, {
@@ -208,7 +212,8 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 				type: 'EventItem',
 				url: `/web/posts/fetch/game/${this.game.id}`,
 			},
-			$payload.posts
+			$payload.posts,
+			fromCache
 		);
 
 		this.processOverviewPayload({ payload: $payload, fromCache });

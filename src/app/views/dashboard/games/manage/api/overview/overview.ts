@@ -1,17 +1,16 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./overview.html';
-
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { RouteState, RouteStore } from '../../manage.store';
-import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
-import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { duration } from '../../../../../../../lib/gj-lib-client/vue/filters/duration';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { duration } from '../../../../../../../lib/gj-lib-client/vue/filters/duration';
+import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
+import { RouteState, RouteStore } from '../../manage.store';
 
 @View
 @Component({
@@ -28,7 +27,8 @@ import {
 	},
 })
 export default class RouteDashGamesManageApiOverview extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	numActiveSessions = 0;
 	numActiveTrophies = 0;
@@ -44,7 +44,9 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 		'user-count': number;
 	} = {} as any;
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/api/' + route.params.id);
 	}

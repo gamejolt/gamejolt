@@ -1,29 +1,28 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./edit.html';
-
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { KeyGroup } from '../../../../../../../lib/gj-lib-client/components/key-group/key-group.model';
-import { GamePackage } from '../../../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { Key } from '../../../../../../../lib/gj-lib-client/components/key/key-model';
 import { Clipboard } from '../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { arrayRemove } from '../../../../../../../lib/gj-lib-client/utils/array';
-import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/components/progress/bar/bar';
-import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppExpand } from '../../../../../../../lib/gj-lib-client/components/expand/expand';
-import { AppTimeAgo } from '../../../../../../../lib/gj-lib-client/components/time/ago/ago';
-import { RouteState, RouteStore } from '../../manage.store';
-import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
-import { FormGameKeyGroup } from '../../../../../../components/forms/game/key-group/key-group';
-import { FormGameKeyGroupAddKeys } from '../../../../../../components/forms/game/key-group/add-keys/add-keys';
+import { GamePackage } from '../../../../../../../lib/gj-lib-client/components/game/package/package.model';
+import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
+import { KeyGroup } from '../../../../../../../lib/gj-lib-client/components/key-group/key-group.model';
+import { Key } from '../../../../../../../lib/gj-lib-client/components/key/key-model';
+import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/components/progress/bar/bar';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppTimeAgo } from '../../../../../../../lib/gj-lib-client/components/time/ago/ago';
+import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
+import { arrayRemove } from '../../../../../../../lib/gj-lib-client/utils/array';
+import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
+import { FormGameKeyGroupAddKeys } from '../../../../../../components/forms/game/key-group/add-keys/add-keys';
+import { FormGameKeyGroup } from '../../../../../../components/forms/game/key-group/key-group';
+import { RouteState, RouteStore } from '../../manage.store';
 
 @View
 @Component({
@@ -44,7 +43,8 @@ import {
 	},
 })
 export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	keyGroup: KeyGroup = null as any;
 	packages: GamePackage[] = [];
@@ -60,7 +60,9 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 	Environment = Environment;
 	KeyGroup = KeyGroup;
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: { params: ['keyGroupId'] },
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			`/web/dash/developer/games/key-groups/${route.params.id}/${route.params.keyGroupId}`

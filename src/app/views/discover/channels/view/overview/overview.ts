@@ -46,7 +46,11 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 	Environment = Environment;
 	Screen = Screen;
 
-	@RouteResolve({ cache: true, lazy: true })
+	@RouteResolve({
+		cache: true,
+		lazy: true,
+		deps: {},
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/discover/channels/overview/' + route.params.channel);
 	}
@@ -61,7 +65,7 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 		Ads.setPageSettings(adSettings);
 	}
 
-	routed($payload: any) {
+	routed($payload: any, fromCache: boolean) {
 		this.isLoaded = true;
 		this.bestGames = Game.populate($payload.bestGames).slice(0, 6);
 		this.hotGames = Game.populate($payload.hotGames).slice(0, 6);
@@ -72,7 +76,8 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 				type: 'EventItem',
 				url: `/web/discover/channels/posts/${this.channel}`,
 			},
-			$payload.posts
+			$payload.posts,
+			fromCache
 		);
 	}
 

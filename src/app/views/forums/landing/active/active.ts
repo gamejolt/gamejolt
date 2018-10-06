@@ -1,13 +1,12 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./active.html';
-
-import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppForumTopicList } from '../../../../components/forum/topic-list/topic-list';
+import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppForumTopicList } from '../../../../components/forum/topic-list/topic-list';
 
 @View
 @Component({
@@ -20,7 +19,10 @@ export default class RouteForumsLandingActive extends BaseRouteComponent {
 	topics: ForumTopic[] = [];
 	postCountPerPage = 0;
 
-	@RouteResolve({ cache: true })
+	@RouteResolve({
+		cache: true,
+		deps: {},
+	})
 	routeResolve(this: undefined) {
 		return Api.sendRequest('/web/forums/active-topics');
 	}

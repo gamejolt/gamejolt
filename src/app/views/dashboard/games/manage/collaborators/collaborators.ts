@@ -1,23 +1,22 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./collaborators.html';
-
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
-import { RouteState, RouteStore } from '../manage.store';
-import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { GameCollaborator } from '../../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
-import { ModalConfirm } from '../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { arrayRemove } from '../../../../../../lib/gj-lib-client/utils/array';
-import { AppTimeAgo } from '../../../../../../lib/gj-lib-client/components/time/ago/ago';
-import { FormGameCollaborator } from '../../../../../components/forms/game/collaborator/collaborator';
-import { AppCardList } from '../../../../../../lib/gj-lib-client/components/card/list/list';
-import { AppCardListItem } from '../../../../../../lib/gj-lib-client/components/card/list/item/item';
 import { AppCardListAdd } from '../../../../../../lib/gj-lib-client/components/card/list/add/add';
+import { AppCardListItem } from '../../../../../../lib/gj-lib-client/components/card/list/item/item';
+import { AppCardList } from '../../../../../../lib/gj-lib-client/components/card/list/list';
+import { GameCollaborator } from '../../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
+import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
+import { ModalConfirm } from '../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppTimeAgo } from '../../../../../../lib/gj-lib-client/components/time/ago/ago';
+import { arrayRemove } from '../../../../../../lib/gj-lib-client/utils/array';
+import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { FormGameCollaborator } from '../../../../../components/forms/game/collaborator/collaborator';
+import { RouteState, RouteStore } from '../manage.store';
 
 @View
 @Component({
@@ -32,7 +31,8 @@ import {
 	},
 })
 export default class RouteDashGamesManageCollaborators extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	collaborators: GameCollaborator[] = [];
 	activeCollaborator: GameCollaborator | null = null;
@@ -40,7 +40,9 @@ export default class RouteDashGamesManageCollaborators extends BaseRouteComponen
 
 	readonly GameCollaborator = GameCollaborator;
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/collaborators/' + route.params.id);
 	}

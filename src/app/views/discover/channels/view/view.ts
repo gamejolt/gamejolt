@@ -36,7 +36,11 @@ export default class RouteDiscoverChannelsView extends BaseRouteComponent {
 		return info && info.image;
 	}
 
-	@RouteResolve({ cache: true, lazy: true })
+	@RouteResolve({
+		cache: true,
+		lazy: true,
+		deps: { params: ['channel'] },
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/discover/channels/' + route.params.channel);
 	}

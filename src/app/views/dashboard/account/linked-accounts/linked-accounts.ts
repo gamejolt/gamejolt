@@ -65,7 +65,9 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 		return null;
 	}
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve(this: undefined) {
 		return Api.sendRequest('/web/dash/linked-accounts?resource=User');
 	}

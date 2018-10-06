@@ -64,7 +64,10 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 		return this.scores.filter((_score, i) => i % 2 === 1);
 	}
 
-	@RouteResolve({ cache: true })
+	@RouteResolve({
+		cache: true,
+		deps: { params: ['tableId', 'type'], query: ['page'] },
+	})
 	routeResolve(this: undefined, route: Route) {
 		let query = '';
 		if (parseInt(route.query.page, 10) > 1) {

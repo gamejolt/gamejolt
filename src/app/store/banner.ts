@@ -1,11 +1,11 @@
-import { namespace, State, Action, Mutation } from 'vuex-class';
-import { VuexModule, VuexMutation, VuexStore } from '../../lib/gj-lib-client/utils/vuex';
-import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
+import { Action, Mutation, namespace, State } from 'vuex-class';
+import { Analytics } from '../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Connection } from '../../lib/gj-lib-client/components/connection/connection-service';
 import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service';
-import { store } from './index';
-import { Analytics } from '../../lib/gj-lib-client/components/analytics/analytics.service';
+import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
+import { VuexModule, VuexMutation, VuexStore } from '../../lib/gj-lib-client/utils/vuex';
 import { Settings } from '../../_common/settings/settings.service';
+import { store } from './index';
 
 export const BannerStoreNamespace = 'banner';
 export const BannerState = namespace(BannerStoreNamespace, State);
@@ -49,7 +49,8 @@ class NotificationsBanner extends Banner {
 		// "store" is a circular dependency, so make sure it exists.
 		return (
 			store &&
-			store.state.route.name === 'activity' &&
+			store.state.route.name &&
+			store.state.route.name.indexOf('activity.') === 0 &&
 			'Notification' in window &&
 			(Notification as any).permission === 'default' &&
 			Settings.get('feed-notifications')

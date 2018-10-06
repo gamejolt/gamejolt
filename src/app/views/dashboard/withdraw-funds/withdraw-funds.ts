@@ -1,16 +1,15 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./withdraw-funds.html';
-
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
-import { FormWithdrawFunds } from '../../../components/forms/withdraw-funds/withdraw-funds';
-import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
+import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
+import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
+import { FormWithdrawFunds } from '../../../components/forms/withdraw-funds/withdraw-funds';
 
 @View
 @Component({
@@ -34,7 +33,9 @@ export default class RouteDashWithdrawFunds extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve(this: undefined) {
 		return Api.sendRequest('/web/dash/funds');
 	}

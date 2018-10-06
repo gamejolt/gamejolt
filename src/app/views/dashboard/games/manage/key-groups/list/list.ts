@@ -1,22 +1,21 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./list.html?style=./list.styl';
-
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { KeyGroup } from '../../../../../../../lib/gj-lib-client/components/key-group/key-group.model';
-import { GamePackage } from '../../../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { RouteState, RouteStore } from '../../manage.store';
-import { AppCardList } from '../../../../../../../lib/gj-lib-client/components/card/list/list';
-import { AppCardListItem } from '../../../../../../../lib/gj-lib-client/components/card/list/item/item';
-import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/components/progress/bar/bar';
 import { AppCardListAdd } from '../../../../../../../lib/gj-lib-client/components/card/list/add/add';
-import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
-import { FormGameKeyGroup } from '../../../../../../components/forms/game/key-group/key-group';
+import { AppCardListItem } from '../../../../../../../lib/gj-lib-client/components/card/list/item/item';
+import { AppCardList } from '../../../../../../../lib/gj-lib-client/components/card/list/list';
+import { GamePackage } from '../../../../../../../lib/gj-lib-client/components/game/package/package.model';
+import { KeyGroup } from '../../../../../../../lib/gj-lib-client/components/key-group/key-group.model';
+import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/components/progress/bar/bar';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
+import { FormGameKeyGroup } from '../../../../../../components/forms/game/key-group/key-group';
+import { RouteState, RouteStore } from '../../manage.store';
 
 @View
 @Component({
@@ -34,7 +33,8 @@ import {
 	},
 })
 export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	keyGroups: KeyGroup[] = [];
 	packages: GamePackage[] = [];
@@ -42,7 +42,9 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 
 	KeyGroup = KeyGroup;
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest('/web/dash/developer/games/key-groups/' + route.params.id);
 	}

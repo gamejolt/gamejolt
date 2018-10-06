@@ -1,22 +1,21 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./edit.html';
-
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { RouteState, RouteStore } from '../../../../manage.store';
-import { GamePackage } from '../../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { GameRelease } from '../../../../../../../../../lib/gj-lib-client/components/game/release/release.model';
 import { GameBuild } from '../../../../../../../../../lib/gj-lib-client/components/game/build/build.model';
-import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { Growls } from '../../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 // tslint:disable-next-line:max-line-length
 import { GameBuildLaunchOption } from '../../../../../../../../../lib/gj-lib-client/components/game/build/launch-option/launch-option.model';
-import { FormGameRelease } from '../../../../../../../../components/forms/game/release/release';
-import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { GamePackage } from '../../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
+import { GameRelease } from '../../../../../../../../../lib/gj-lib-client/components/game/release/release.model';
+import { Growls } from '../../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
+import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { FormGameRelease } from '../../../../../../../../components/forms/game/release/release';
+import { RouteState, RouteStore } from '../../../../manage.store';
 
 @View
 @Component({
@@ -27,7 +26,8 @@ import {
 	},
 })
 export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteState
+	game!: RouteStore['game'];
 
 	package: GamePackage = null as any;
 	release: GameRelease = null as any;
@@ -38,7 +38,9 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 	areBuildsLockedByJam = false;
 	areWebBuildsLockedBySellable = false;
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: { params: ['packageId', 'releaseId'] },
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			'/web/dash/developer/games/releases/' +
@@ -52,11 +54,14 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 
 	get routeTitle() {
 		if (this.game && this.package && this.release) {
-			return this.$gettextInterpolate('Edit Release %{ release } - %{ package } - %{ game }', {
-				game: this.game.title,
-				package: this.package.title || this.game.title,
-				release: this.release.version_number,
-			});
+			return this.$gettextInterpolate(
+				'Edit Release %{ release } - %{ package } - %{ game }',
+				{
+					game: this.game.title,
+					package: this.package.title || this.game.title,
+					release: this.release.version_number,
+				}
+			);
 		}
 		return null;
 	}

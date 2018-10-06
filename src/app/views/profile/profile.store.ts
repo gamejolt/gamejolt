@@ -1,5 +1,4 @@
 import { Action, Mutation, namespace, State } from 'vuex-class';
-import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
 import { Registry } from '../../../lib/gj-lib-client/components/registry/registry.service';
 import { UserFriendship } from '../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
@@ -26,18 +25,27 @@ type Actions = {
 
 type Mutations = {
 	bootstrapUser: string;
+	onUserChange: void;
 	profilePayload: any;
 	setUserFriendship: UserFriendship | null;
 };
 
+function updateUser(user: User | null, newUser: User | null) {
+	// If we already have a user, just assign new data into it to keep it fresh.
+	if (user && newUser) {
+		user.assign(newUser);
+		return user;
+	}
+
+	return newUser;
+}
+
 @VuexModule()
 export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	user: User | null = null;
-	headerMediaItem: MediaItem | null = null;
 	gamesCount = 0;
 	videosCount = 0;
 	isOnline = false;
-	libraryGamesCount = 0;
 	userFriendship: UserFriendship | null = null;
 
 	@VuexAction
@@ -87,30 +95,25 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 	@VuexMutation
 	bootstrapUser(username: Mutations['bootstrapUser']) {
-		this.user = Registry.find<User>('User', i => i.username === username);
-		this.headerMediaItem = (this.user && this.user.header_media_item) || null;
-		this.gamesCount = 0;
-		this.isOnline = false;
-		this.libraryGamesCount = 0;
-		this.videosCount = 0;
-		this.userFriendship = null;
+		const prevId = this.user && this.user.id;
+		const user = Registry.find<User>('User', i => i.username === username);
+		this.user = updateUser(this.user, user);
+
+		if ((this.user && this.user.id) !== prevId) {
+			this.gamesCount = 0;
+			this.isOnline = false;
+			this.videosCount = 0;
+			this.userFriendship = null;
+		}
 	}
 
 	@VuexMutation
 	profilePayload($payload: Mutations['profilePayload']) {
 		const user = new User($payload.user);
-		if (this.user) {
-			this.user.assign(user);
-		} else {
-			this.user = user;
-		}
+		this.user = updateUser(this.user, user);
 
-		this.headerMediaItem = $payload.headerMediaItem
-			? new MediaItem($payload.headerMediaItem)
-			: null;
 		this.gamesCount = $payload.gamesCount || 0;
 		this.isOnline = $payload.isOnline || false;
-		this.libraryGamesCount = $payload.libraryGamesCount || 0;
 		this.videosCount = $payload.videosCount || 0;
 
 		if ($payload.userFriendship) {

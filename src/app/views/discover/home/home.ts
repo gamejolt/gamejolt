@@ -15,7 +15,6 @@ import {
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { AppScrollScroller } from '../../../../lib/gj-lib-client/components/scroll/scroller/scroller';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { Channels } from '../../../components/channel/channels-service';
 import { AppChannelThumbnail } from '../../../components/channel/thumbnail/thumbnail';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
@@ -37,7 +36,6 @@ export interface DiscoverRow {
 @Component({
 	name: 'RouteDiscoverHome',
 	components: {
-		AppJolticon,
 		AppNavTabList,
 		AppGameGrid,
 		AppGameGridPlaceholder,
@@ -60,7 +58,11 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	featuredItem: FeaturedItem | null = null;
 	games: Game[] = [];
 
-	@RouteResolve({ cache: true, lazy: true })
+	@RouteResolve({
+		cache: true,
+		lazy: true,
+		deps: {},
+	})
 	routeResolve() {
 		return Api.sendRequest('/web/discover');
 	}

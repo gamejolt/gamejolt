@@ -76,7 +76,10 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		'games.list.section_best': this.$gettext('games.list.section_best'),
 	};
 
-	@RouteResolve({ lazy: true, cache: true })
+	@RouteResolve({
+		lazy: true,
+		cache: true,
+	})
 	async routeResolve(this: undefined, route: Route) {
 		const location = checkGameFilteringRoute(route);
 		if (location) {

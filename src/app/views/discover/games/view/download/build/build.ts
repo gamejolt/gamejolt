@@ -61,7 +61,9 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 	readonly Screen = Screen;
 	readonly Environment = Environment;
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: { params: ['buildId'] },
+	})
 	routeResolve(this: undefined, route: Route) {
 		const gameId = parseInt(route.params.id, 10);
 		const buildId = parseInt(route.params.buildId, 10);

@@ -19,7 +19,6 @@ import { AppTimeAgo } from '../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppTooltip } from '../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppUserFollowWidget } from '../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
 import { AppUserAvatar } from '../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { AppJolticon } from '../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../lib/gj-lib-client/vue/filters/number';
 import { IntentService } from '../../components/intent/intent.service';
 import { AppPageHeader } from '../../components/page-header/page-header';
@@ -38,7 +37,6 @@ import {
 	name: 'RouteProfile',
 	components: {
 		AppPageHeader,
-		AppJolticon,
 		AppTimeAgo,
 		AppUserAvatar,
 		AppUserDogtag,
@@ -63,9 +61,6 @@ export default class RouteProfile extends BaseRouteComponent {
 	user!: RouteStore['user'];
 
 	@RouteState
-	headerMediaItem!: RouteStore['headerMediaItem'];
-
-	@RouteState
 	videosCount!: RouteStore['videosCount'];
 
 	@RouteState
@@ -82,6 +77,9 @@ export default class RouteProfile extends BaseRouteComponent {
 
 	@RouteMutation
 	profilePayload!: RouteStore['profilePayload'];
+
+	@RouteMutation
+	onUserChange!: RouteStore['onUserChange'];
 
 	@RouteAction
 	removeFriend!: RouteStore['removeFriend'];
@@ -105,7 +103,11 @@ export default class RouteProfile extends BaseRouteComponent {
 		return this.user!.id + (this.shouldShowFullCover ? '-full' : '-collapsed');
 	}
 
-	@RouteResolve({ cache: true, lazy: true })
+	@RouteResolve({
+		cache: true,
+		lazy: true,
+		deps: { params: ['username'], query: ['intent'] },
+	})
 	async routeResolve(this: undefined, route: Route) {
 		const intentRedirect = IntentService.checkRoute(
 			route,
