@@ -420,7 +420,7 @@
 				<translate>Publish your post to other platforms</translate>
 			</app-form-legend>
 
-			<div class="alert" v-if="!linkedAccounts">
+			<div class="alert" v-if="!linkedAccounts.length">
 				<translate>You can publish this post to other platforms!</translate>
 				<translate v-if="!model.game">Set up your linked accounts in your user account.</translate>
 				<translate v-else>Set up your linked accounts either in your game dashboard, or your user account.</translate>
