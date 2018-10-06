@@ -12,11 +12,6 @@
 		img
 			filter: grayscale(100%)
 
-	// We have to pull the z-index for any game that is showing options to be in front.
-	// This way the dropdowns always show over other games.
-	&.-is-active
-		z-index: 2
-
 // This matches the thumbnail ratio.
 .-meta-outer
 	position: absolute
@@ -35,7 +30,7 @@
 	align-items: center
 	display: flex
 	text-align: center
-	z-index: 10 // Go over thumbnail controls stuff
+	z-index: 1
 
 	>>> .client-game-buttons
 		display: block
