@@ -98,7 +98,8 @@
 		<app-game-perms
 			tag="li"
 			required="all"
-			v-if="!isWizard">
+			v-if="!isWizard && app.user.id === game.developer.id"
+			>
 			<router-link
 				:to="{
 					name: 'dash.games.manage.game.linked-accounts',
