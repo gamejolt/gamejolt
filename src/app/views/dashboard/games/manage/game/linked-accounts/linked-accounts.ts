@@ -33,7 +33,9 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 	accounts: LinkedAccount[] = [];
 	loading = false;
 
-	@RouteResolve()
+	@RouteResolve({
+		deps: {},
+	})
 	routeResolve(this: undefined, route: Route) {
 		return Api.sendRequest(
 			'/web/dash/linked-accounts?resource=Game&resourceId=' + route.params.id
