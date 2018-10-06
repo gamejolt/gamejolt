@@ -68,16 +68,6 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 	gamesExpanded = false;
 	jamsExpanded = false;
 
-	isFullyIntegrated = true;
-	integration: any = null;
-	integrationKeys: string[] = [
-		'played_game',
-		'rated_game',
-		'got_trophy',
-		'got_score',
-		'has_friend',
-	];
-
 	readonly number = number;
 	readonly Game = Game;
 	readonly Screen = Screen;
@@ -92,17 +82,10 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 		return this.games.slice(0, this.gamesExpanded ? this.games.length : 5);
 	}
 
-	get integrationTranslations() {
-		return {
-			played_game: this.$gettext('dash.integrate.played_game_html'),
-			rated_game: this.$gettext('dash.integrate.rated_game_html'),
-			got_trophy: this.$gettext('dash.integrate.got_trophy_html'),
-			got_score: this.$gettext('dash.integrate.got_score_html'),
-			has_friend: this.$gettext('dash.integrate.has_friend_html'),
-		};
-	}
-
-	@RouteResolve({ cache: true })
+	@RouteResolve({
+		cache: true,
+		deps: {},
+	})
 	routeResolve() {
 		return Api.sendRequest('/web/dash');
 	}
@@ -146,13 +129,5 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 		this.latestBroadcast = $payload.latestBroadcast
 			? new FiresidePost($payload.latestBroadcast)
 			: null;
-
-		this.integration = $payload.integration || {};
-
-		this.integrationKeys.forEach(key => {
-			if (this.integration[key] && !this.integration[key].achieved) {
-				this.isFullyIntegrated = false;
-			}
-		});
 	}
 }

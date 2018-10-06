@@ -143,70 +143,10 @@
 			<div class="col-md-7" :class="{ 'pull-left': Screen.isDesktop }">
 
 				<!--
-					Integrate
-				-->
-				<template v-if="!isFullyIntegrated">
-					<h2 :class="{ 'section-header': Screen.isDesktop }">
-						<translate>dash.integrate.heading</translate>
-					</h2>
-
-					<p><translate>dash.integrate.lead</translate></p>
-
-					<table class="table">
-						<tbody>
-							<tr
-								v-for="key of integrationKeys"
-								:key="key"
-								v-if="integration[ key ]"
-								>
-								<td style="width: 1px">
-									<app-jolticon
-										icon="check"
-										:class="integration[ key ].achieved ? 'active' : 'text-muted'"
-										/>
-								</td>
-								<td>
-									<app-jolticon
-										icon="exp"
-										class="text-muted"
-										/>
-									<strong>
-										{{ integration[ key ].exp | number }}
-										<translate>leveling.exp</translate>
-									</strong>
-								</td>
-								<td>
-									<span v-if="integration[ key ].achieved" class="tag tag-highlight pull-right">
-										<app-jolticon icon="check" />
-										<translate>dash.integrate.done</translate>
-									</span>
-									<span
-										:class="{ 'text-muted': integration[ key ].achieved }"
-										v-html="integrationTranslations[ key ]"
-										>
-									</span>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</template>
-
-				<br v-if="isFullyIntegrated && Screen.isMobile">
-
-				<div class="alert">
-					<h4>
-						<translate>dash.integrate.exp_help_heading</translate>
-					</h4>
-					<div v-translate>
-						dash.integrate.exp_help_body_html
-					</div>
-				</div>
-
-				<!--
 					Sites
 				-->
-				<template v-if="app.user.is_developer">
-					<h2>
+				<template>
+					<h2 class="section-header">
 						<translate>Sites</translate>
 					</h2>
 
