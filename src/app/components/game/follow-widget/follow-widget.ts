@@ -101,7 +101,7 @@ export class AppGameFollowWidget extends Vue {
 				);
 			}
 
-			if (this.showUserFollow && !this.game.developer.is_following) {
+			if (this.shouldShowFollow && !this.game.developer.is_following) {
 				this.isShowingFollowPopover = true;
 			}
 		} else {
