@@ -57,6 +57,15 @@ export default class RouteDashLinking extends BaseRouteComponent {
 	}
 
 	failed() {
-		Growls.error(this.$gettext('Could not link.'), this.$gettext('Link Failed'));
+		Growls.error({
+			message: this.$gettext('Could not link.'),
+			title: this.$gettext('Link Failed'),
+			sticky: true,
+		});
+
+		// Focus back to the Client.
+		if (ClientMod) {
+			ClientMod.Client.show();
+		}
 	}
 }
