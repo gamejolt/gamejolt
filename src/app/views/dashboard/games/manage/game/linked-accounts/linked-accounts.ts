@@ -261,7 +261,6 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		}
 
 		const modalResult = await ModalTumblrBlogSelector.show(
-			this.$gettext('Select a blog you want to post to with this account'),
 			this.tumblrAccount,
 			this.$gettext('Select Tumblr Blog')
 		);
@@ -295,12 +294,12 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 					this.$gettextInterpolate('Changed the selected Tumblr blog to %{ title }.', {
 						title: modalResult.title,
 					}),
-					this.$gettext('Select Tumblr Blog')
+					this.$gettext('Tumblr Blog Changed')
 				);
 			} else {
 				Growls.error(
 					this.$gettext(
-						'Failed to change to new Tumblr blog. Try to Sync your Tumblr account.'
+						'Failed to change to new Tumblr blog. Maybe try to sync your Tumblr account.'
 					)
 				);
 			}

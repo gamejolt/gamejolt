@@ -66,17 +66,18 @@
 				@link="onLink"
 				@unlink="onUnlink" />
 		</div>
+		-->
 		<div class="col-md-8 col-lg-6">
 			<app-linked-account
 				provider="tumblr"
 				:account="tumblrAccount"
+				:disabled="loading"
 				@sync="onLink"
 				@link="onLink"
-				@unlink="onUnlink">
+				@unlink="onUnlink"
+				>
 				<div v-if="tumblrAccount" class="-tumblr-blog">
-					<h5>
-						<translate>Linked Blog</translate>
-					</h5>
+					<br>
 					<template v-if="tumblrAccount.tumblrSelectedBlog">
 						<p>
 							<strong>
@@ -86,29 +87,30 @@
 							</strong>
 						</p>
 						<app-button
-							@click="onSelectTumblrBlog">
-							<translate>Change</translate>
+							@click="onSelectTumblrBlog"
+							>
+							<translate>Change Blog</translate>
 						</app-button>
 						<app-button
 							v-if="tumblrAccount.tumblrSelectedBlog"
 							@click="onUnlinkTumblrBlog"
-							trans>
-							<translate>Unlink</translate>
+							trans
+							>
+							<translate>Unlink Blog</translate>
 						</app-button>
 					</template>
 					<template v-else>
-						<p>
-							<small class="text-muted"><translate>Not linked.</translate></small>
-						</p>
+						<div class="alert alert-notice">
+							<translate>Before you can publish to Tumblr, you have to select a blog within your Tumblr account that you'd like to use.</translate>
+						</div>
 						<app-button
 							@click="onSelectTumblrBlog"
-							icon="link">
-							<translate>Link Now</translate>
+							>
+							<translate>Select Blog</translate>
 						</app-button>
 					</template>
 				</div>
 			</app-linked-account>
 		</div>
-		-->
 	</div>
 </div>
