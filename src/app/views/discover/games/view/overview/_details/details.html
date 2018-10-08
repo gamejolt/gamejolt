@@ -64,8 +64,11 @@
 
 	<br>
 
-	<ul class="list-unstyled" v-if="game.web_site">
-		<li>
+	<ul class="list-unstyled" v-if="game.web_site ||
+		(facebookAccount && facebookAccount.facebookSelectedPage) ||
+		twitterAccount ||
+		(tumblrAccount && tumblrAccount.tumblrSelectedBlog)">
+		<li v-if="game.web_site">
 			<app-jolticon icon="world" />
 			<a :href="game.web_site" target="_blank">
 				<translate>Game Website</translate>
