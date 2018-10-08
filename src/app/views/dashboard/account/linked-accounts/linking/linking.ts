@@ -55,7 +55,7 @@ export default class RouteDashAccountLinkedAccountsLinking extends BaseRouteComp
 				name: 'dash.account.linked-accounts.link-callback',
 				params: { provider: 'twitter' },
 				query: {
-					oauth_verifier: response['oauth-verifier'],
+					code: response.code,
 					state: this.token,
 				},
 			});
