@@ -50,46 +50,6 @@ export default class RouteDashLinking extends BaseRouteComponent {
 			},
 		});
 
-		// if (response.provider === 'facebook') {
-		// } else if (response.provider === 'twitch') {
-		// 	this.$router.push({
-		// 		name: routeName,
-		// 		params: { ...routeParams, provider: 'twitch' },
-		// 		query: {
-		// 			code: response.code,
-		// 			state: this.token,
-		// 		},
-		// 	});
-		// } else if (response.provider === 'twitter') {
-		// 	this.$router.push({
-		// 		name: routeName,
-		// 		params: { ...routeParams, provider: 'twitter' },
-		// 		query: {
-		// 			code: response.code,
-		// 			state: this.token,
-		// 		},
-		// 	});
-		// } else if (response.provider === 'google') {
-		// 	this.$router.push({
-		// 		name: routeName,
-		// 		params: { ...routeParams, provider: 'google' },
-		// 		query: {
-		// 			code: response.code,
-		// 			state: this.token,
-		// 		},
-		// 	});
-		// } else if (response.provider === 'youtube-channel') {
-		// 	this.$router.push({
-		// 		name: routeName,
-		// 		params: { ...routeParams, provider: 'youtube-channel' },
-		// 		query: {
-		// 			code: response.code,
-		// 			state: this.token,
-		// 			channelTitle: response.channel ? response.channel.title : null,
-		// 		},
-		// 	});
-		// }
-
 		// Focus back to the Client.
 		if (ClientMod) {
 			ClientMod.Client.show();
