@@ -53,10 +53,18 @@
 			<div class="list-group" v-if="channels.length > 0">
 				<div
 					class="list-group-item clearfix"
+					style="display: flex; align-items: center;"
 					v-for="channel of channels"
 					:key="channel.id"
 					>
-					<div class="pull-right">
+					<div style="flex: auto">
+						<strong>
+							<a :href="channel.link" target="_blank">
+								{{ channel.title }}
+							</a>
+						</strong>
+					</div>
+					<div style="flex: none">
 						<app-button
 							trans
 							@click="unlinkYouTubeChannel(channel)"
@@ -64,11 +72,6 @@
 							<translate>Unlink</translate>
 						</app-button>
 					</div>
-					<strong>
-						<a :href="channel.link" target="_blank">
-							{{ channel.title }}
-						</a>
-					</strong>
 				</div>
 			</div>
 
