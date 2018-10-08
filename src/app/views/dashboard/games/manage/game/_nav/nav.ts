@@ -1,11 +1,12 @@
+import View from '!view!./nav.html?style=./nav.styl';
+import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./nav.html?style=./nav.styl';
-
-import { RouteState, RouteStore, RouteAction } from '../../manage.store';
+import { State } from 'vuex-class';
 import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
-import { AppManageGameNavRequired } from './required';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
+import { RouteAction, RouteState, RouteStore } from '../../manage.store';
+import { AppManageGameNavRequired } from './required';
 
 @View
 @Component({
@@ -15,12 +16,23 @@ import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 	},
 })
 export class AppManageGameNav extends Vue {
-	@RouteState game!: RouteStore['game'];
-	@RouteState isWizard!: RouteStore['isWizard'];
-	@RouteState canPublish!: RouteStore['canPublish'];
+	@RouteState
+	game!: RouteStore['game'];
 
-	@RouteAction saveDraft!: RouteStore['saveDraft'];
-	@RouteAction publish!: RouteStore['publish'];
+	@RouteState
+	isWizard!: RouteStore['isWizard'];
+
+	@RouteState
+	canPublish!: RouteStore['canPublish'];
+
+	@RouteAction
+	saveDraft!: RouteStore['saveDraft'];
+
+	@RouteAction
+	publish!: RouteStore['publish'];
+
+	@State
+	app!: AppStore;
 
 	Game = Game;
 }

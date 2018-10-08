@@ -1,14 +1,12 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./login.html';
-
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { Component } from 'vue-property-decorator';
 import { AppAuthLogin } from '../../../../lib/gj-lib-client/components/auth/login/login';
-import { loggedUserBlock } from '../auth';
-import { UserLinkedAccounts } from '../../../../lib/gj-lib-client/components/user/linked-accounts/linked-accounts.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { loggedUserBlock } from '../auth';
 
 @View
 @Component({
@@ -32,9 +30,5 @@ export default class RouteAuthLogin extends BaseRouteComponent {
 
 	routeInit() {
 		this.redirect = this.$route.query.redirect || '';
-	}
-
-	linkedAccountLogin(provider: any) {
-		UserLinkedAccounts.login(this.$router, provider);
 	}
 }

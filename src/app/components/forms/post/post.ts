@@ -20,8 +20,10 @@ import {
 import { AppFormLegend } from 'game-jolt-frontend-lib/components/form-vue/legend/legend';
 import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
 import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
+import { LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
 import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
 import { AppProgressBar } from 'game-jolt-frontend-lib/components/progress/bar/bar';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppSketchfabEmbed } from 'game-jolt-frontend-lib/components/sketchfab/embed/embed';
 import {
 	Timezone,
@@ -30,6 +32,8 @@ import {
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { AppUserAvatarImg } from 'game-jolt-frontend-lib/components/user/user-avatar/img/img';
 import { AppVideoEmbed } from 'game-jolt-frontend-lib/components/video/embed/embed';
+import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
+import { AppLoading } from 'game-jolt-frontend-lib/vue/components/loading/loading';
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { determine } from 'jstimezonedetect';
 import { Component, Prop } from 'vue-property-decorator';
@@ -37,6 +41,7 @@ import { AppFormPostMedia } from './_media/media';
 
 type FormPostModel = FiresidePost & {
 	mediaItemIds: number[];
+	publishToPlatforms: number[] | null;
 	key_group_ids: KeyGroup[];
 	video_url: string;
 	sketchfab_id: string;
@@ -70,6 +75,7 @@ type FormPostModel = FiresidePost & {
 		AppFormLegend,
 		AppSketchfabEmbed,
 		AppVideoEmbed,
+		AppLoading,
 		AppUserAvatarImg,
 		AppProgressBar,
 		AppFormPostMedia,
@@ -86,9 +92,6 @@ export class FormPost extends BaseForm<FormPostModel>
 
 	@AppState
 	user!: AppStore['user'];
-
-	@Prop(FiresidePost)
-	post!: FiresidePost;
 
 	@Prop({ type: String, default: '' })
 	defaultAttachmentType!: string;
@@ -115,6 +118,8 @@ export class FormPost extends BaseForm<FormPostModel>
 	maxHeight = 0;
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = null as any;
 	now = 0;
+	linkedAccounts: LinkedAccount[] = [];
+	publishToPlatforms: number[] | null = null;
 	isShowingMorePollOptions = false;
 	accessPermissionsEnabled = false;
 	isSavedDraftPost = false;
@@ -123,6 +128,7 @@ export class FormPost extends BaseForm<FormPostModel>
 	leadTotalLengthLimit = 300;
 
 	readonly GameVideo = GameVideo;
+	readonly Screen = Screen;
 
 	get loadUrl() {
 		return `/web/posts/manage/save/${this.model!.id}`;
@@ -232,6 +238,21 @@ export class FormPost extends BaseForm<FormPostModel>
 		return this.formModel.isScheduled;
 	}
 
+	get isPublishingToPlatforms() {
+		return !this.wasPublished && this.publishToPlatforms !== null;
+	}
+
+	get canEditOwnerLinkedAccounts() {
+		// only the owner can edit
+		if (this.user) {
+			return this.formModel.user.id === this.user.id;
+		}
+	}
+
+	get hasPublishedToPlatforms() {
+		return this.wasPublished && this.publishToPlatforms !== null;
+	}
+
 	get computedLeadLength() {
 		const regex = FormPost.LEAD_URL_REGEX;
 		let lead = this.formModel.lead;
@@ -255,6 +276,17 @@ export class FormPost extends BaseForm<FormPostModel>
 
 	get isLeadValid() {
 		return this.computedLeadLength <= this.leadLengthLimit;
+	}
+
+	get platformRestrictions() {
+		// Platform restriction errors returned from server are prefixed with
+		// 'platform-restriction-'.
+		return Object.keys(this.serverErrors)
+			.filter(i => i.indexOf('platform-restriction-') === 0)
+			.map(i => {
+				const key = i.substr('platform-restriction-'.length);
+				return this.getPlatformRestrictionTitle(key);
+			});
 	}
 
 	async onInit() {
@@ -329,6 +361,61 @@ export class FormPost extends BaseForm<FormPostModel>
 		this.leadUrlLength = payload.leadUrlLength;
 		this.leadLengthLimit = payload.leadLengthLimit;
 		this.leadTotalLengthLimit = payload.leadTotalLengthLimit;
+
+		this.linkedAccounts = LinkedAccount.populate(payload.linkedAccounts);
+		this.publishToPlatforms = payload.publishToPlatforms || null;
+
+		if (this.publishToPlatforms) {
+			for (const accountId of this.publishToPlatforms) {
+				this.setField(`linked_account_${accountId}` as any, true);
+			}
+		}
+	}
+
+	onDraftSubmit() {
+		this.setField('status', FiresidePost.STATUS_DRAFT);
+		this.$refs.form.submit();
+	}
+
+	async onSubmit() {
+		// a scheduled post gets saved as draft and will get set to published when the scheduled date is reached
+		if (this.isScheduling) {
+			this.setField('status', FiresidePost.STATUS_DRAFT);
+		}
+
+		// Set or clear attachments as needed
+		if (this.attachmentType === FiresidePost.TYPE_MEDIA && this.formModel.media) {
+			this.setField('mediaItemIds', this.formModel.media.map(item => item.id));
+		} else {
+			this.setField('mediaItemIds', []);
+		}
+
+		if (this.attachmentType !== FiresidePost.TYPE_VIDEO || !this.formModel.video_url) {
+			this.setField('video_url', '');
+		}
+
+		if (this.attachmentType === FiresidePost.TYPE_SKETCHFAB && this.formModel.sketchfab_id) {
+			this.setField('sketchfab_id', this.sketchfabId);
+		} else {
+			this.setField('sketchfab_id', '');
+		}
+
+		if (!this.accessPermissionsEnabled) {
+			this.setField('key_group_ids', []);
+		}
+
+		if (!this.longEnabled) {
+			this.setField('content_markdown', '');
+		}
+
+		this.setField('publishToPlatforms', this.publishToPlatforms);
+
+		this.setField('poll_duration', this.pollDuration * 60); // site-api expects duration in seconds.
+		return this.formModel.$save();
+	}
+
+	onSubmitSuccess() {
+		Object.assign(this.model as FiresidePost, this.formModel);
 	}
 
 	enableImages() {
@@ -438,6 +525,80 @@ export class FormPost extends BaseForm<FormPostModel>
 		this.changed = true;
 	}
 
+	togglePublishingToPlatforms() {
+		if (!this.isPublishingToPlatforms) {
+			this.addPublishingToPlatforms();
+		} else {
+			this.removePublishingToPlatforms();
+		}
+	}
+
+	async addPublishingToPlatforms() {
+		this.publishToPlatforms = [];
+	}
+
+	removePublishingToPlatforms() {
+		this.publishToPlatforms = null;
+	}
+
+	isLinkedAccountActive(id: number) {
+		return this.publishToPlatforms && this.publishToPlatforms.indexOf(id) !== -1;
+	}
+
+	async changeLinkedAccount(id: number) {
+		if (!this.publishToPlatforms) {
+			return;
+		}
+
+		const isActive = this.isLinkedAccountActive(id);
+		if (isActive) {
+			arrayRemove(this.publishToPlatforms, i => i === id);
+		} else {
+			this.publishToPlatforms.push(id);
+		}
+
+		this.changed = true;
+	}
+
+	getLinkedAccountDisplayName(account: LinkedAccount) {
+		switch (account.provider) {
+			case LinkedAccount.PROVIDER_FACEBOOK:
+				return account.facebookSelectedPage && account.facebookSelectedPage.name;
+
+			case LinkedAccount.PROVIDER_TUMBLR:
+				return account.tumblrSelectedBlog && account.tumblrSelectedBlog.title;
+
+			default:
+				return account.name;
+		}
+	}
+
+	getPlatformRestrictionTitle(restriction: string) {
+		switch (restriction) {
+			case 'twitter-lead-too-long':
+				return this.$gettext(`Your post lead is too long for a tweet.`);
+			case 'twitter-gif-file-size-too-large':
+				return this.$gettext(`Twitter doesn't allow GIFs larger than 15MB in filesize.`);
+			case 'twitter-too-many-media-items-1-animation':
+				return this.$gettext(`Twitter only allows one GIF per tweet.`);
+			case 'twitter-too-many-media-items-4-images':
+				return this.$gettext(`Twitter only allows a max of 4 images per tweet.`);
+			case 'twitter-image-file-size-too-large':
+				return this.$gettext(`Twitter doesn't allow images larger than 5MB in filesize.`);
+			case 'facebook-media-item-photo-too-large':
+				return this.$gettext(`Facebook doesn't allow images larger than 10MB in filesize.`);
+			case 'tumblr-media-item-photo-too-large':
+				return this.$gettext(`Tumblr doesn't allow images larger than 10MB in filesize.`);
+		}
+
+		// We do not have the restriction listed here, try and make the topic
+		// somewhat readable.
+		return this.$gettextInterpolate(
+			`Your post can't be published to the platforms you've selected. Error: %{ error }`,
+			{ error: restriction }
+		);
+	}
+
 	timezoneByName(timezone: string) {
 		for (let region in this.timezones) {
 			const tz = this.timezones[region].find(_tz => _tz.i === timezone);
@@ -462,49 +623,5 @@ export class FormPost extends BaseForm<FormPostModel>
 				tz.label = `(UTC${offset}) ${tz.i}`;
 			}
 		}
-	}
-
-	onDraftSubmit() {
-		this.setField('status', FiresidePost.STATUS_DRAFT);
-		this.$refs.form.submit();
-	}
-
-	async onSubmit() {
-		// a scheduled post gets saved as draft and will get set to published when the scheduled date is reached
-		if (this.isScheduling) {
-			this.setField('status', FiresidePost.STATUS_DRAFT);
-		}
-
-		// Set or clear attachments as needed
-		if (this.attachmentType === FiresidePost.TYPE_MEDIA && this.formModel.media) {
-			this.setField('mediaItemIds', this.formModel.media.map(item => item.id));
-		} else {
-			this.setField('mediaItemIds', []);
-		}
-
-		if (this.attachmentType !== FiresidePost.TYPE_VIDEO || !this.formModel.video_url) {
-			this.setField('video_url', '');
-		}
-
-		if (this.attachmentType === FiresidePost.TYPE_SKETCHFAB && this.formModel.sketchfab_id) {
-			this.setField('sketchfab_id', this.sketchfabId);
-		} else {
-			this.setField('sketchfab_id', '');
-		}
-
-		if (!this.accessPermissionsEnabled) {
-			this.setField('key_group_ids', []);
-		}
-
-		if (!this.longEnabled) {
-			this.setField('content_markdown', '');
-		}
-
-		this.setField('poll_duration', this.pollDuration * 60); // site-api expects duration in seconds.
-		return this.formModel.$save();
-	}
-
-	onSubmitSuccess() {
-		Object.assign(this.model as FiresidePost, this.formModel);
 	}
 }

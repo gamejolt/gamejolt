@@ -246,7 +246,7 @@ export class AppClientPackageCardButtons extends Vue {
 		}
 
 		Analytics.trackEvent('game-package-card', 'retry-uninstall');
-		Popover.hideAll();
+		Popper.hideAll();
 
 		this.packageUninstall([this.localPackage]);
 	}

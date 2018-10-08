@@ -1,10 +1,9 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./poll.html';
-
+import { Component } from 'vue-property-decorator';
 import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppProgressPoller } from '../../../../../lib/gj-lib-client/components/progress/poller/poller';
-import { AppLoading } from '../../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { BaseRouteComponent } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { AppLoading } from '../../../../../lib/gj-lib-client/vue/components/loading/loading';
 import * as _ClientMod from '../../../../../_common/client/client.service';
 
 let ClientMod: typeof _ClientMod | undefined;
@@ -34,27 +33,12 @@ export default class RouteAuthLinkedAccountPoll extends BaseRouteComponent {
 
 	completed(response: any) {
 		// Redirect them off to complete their social login like normal.
-		if (response.provider === 'facebook') {
+
+		const validProviders = ['facebook', 'twitch', 'twitter', 'google'];
+		const provider = response.provider;
+		if (validProviders.indexOf(provider) !== -1) {
 			this.$router.push({
-				name: 'auth.linked-account.facebook.callback',
-				query: { code: response.code, state: this.token },
-			});
-		} else if (response.provider === 'twitch') {
-			this.$router.push({
-				name: 'auth.linked-account.twitch.callback',
-				query: { code: response.code, state: this.token },
-			});
-		} else if (response.provider === 'twitter') {
-			this.$router.push({
-				name: 'auth.linked-account.twitter.callback',
-				query: {
-					oauth_verifier: response['oauth-verifier'],
-					state: this.token,
-				},
-			});
-		} else if (response.provider === 'google') {
-			this.$router.push({
-				name: 'auth.linked-account.google.callback',
+				name: `auth.linked-account.${provider}.callback`,
 				query: { code: response.code, state: this.token },
 			});
 		}

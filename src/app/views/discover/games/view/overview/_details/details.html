@@ -68,7 +68,25 @@
 		<li>
 			<app-jolticon icon="world" />
 			<a :href="game.web_site" target="_blank">
-				<translate>Game Web Site</translate>
+				<translate>Game Website</translate>
+			</a>
+		</li>
+		<li v-if="facebookAccount && facebookAccount.facebookSelectedPage">
+			<app-jolticon icon="facebook" />
+			<a :href="facebookAccount.facebookPageUrl" target="_blank">
+				{{ facebookAccount.facebookSelectedPage.name }}
+			</a>
+		</li>
+		<li v-if="twitterAccount">
+			<app-jolticon icon="twitter-bird" />
+			<a :href="twitterAccount.platformLink" target="_blank">
+				@{{ twitterAccount.name }}
+			</a>
+		</li>
+		<li v-if="tumblrAccount && tumblrAccount.tumblrSelectedBlog">
+			<app-jolticon icon="tumblr" />
+			<a :href="tumblrAccount.tumblrSelectedBlog.url" target="_blank">
+				{{ tumblrAccount.tumblrSelectedBlog.title }}
 			</a>
 		</li>
 	</ul>

@@ -1,15 +1,14 @@
 import { CreateElement } from 'vue';
-import { Route } from 'vue-router';
 import { Component } from 'vue-property-decorator';
-
-import { AuthLinkedAccountProcessing } from '../../_processing/processing';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { Auth } from '../../../../../../lib/gj-lib-client/components/auth/auth.service';
+import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import {
 	BaseRouteComponent,
 	RouteResolve,
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
+import { AuthLinkedAccountProcessing } from '../../_processing/processing';
 
 @Component({
 	name: 'RouteAuthLinkedAccountFacebookCallback',
@@ -18,7 +17,10 @@ export default class RouteAuthLinkedAccountFacebookCallback extends BaseRouteCom
 	@RouteResolve()
 	routeResolve(this: undefined, route: Route) {
 		const { code, state } = route.query;
-		return Api.sendRequest('/web/auth/facebook/callback?code=' + code + '&state=' + state, {});
+		return Api.sendRequest(
+			'/web/auth/linked-accounts/link_callback/facebook?code=' + code + '&state=' + state,
+			{}
+		);
 	}
 
 	routed($payload: any) {
@@ -32,6 +34,13 @@ export default class RouteAuthLinkedAccountFacebookCallback extends BaseRouteCom
 				Growls.error({
 					sticky: true,
 					message: this.$gettext(`auth.linked_account.facebook.duplicate_email_growl`),
+				});
+			} else if ($payload.reason && $payload.reason === 'no-unique-username') {
+				Growls.error({
+					sticky: true,
+					message: this.$gettext(
+						`Could not create a username for your account. Perhaps you already have an account?`
+					),
 				});
 			} else {
 				Growls.error({

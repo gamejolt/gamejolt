@@ -49,14 +49,36 @@
 				icon="ellipsis-v"
 				/>
 
-			<div slot="popover" class="list-group list-group-dark">
-				<a
-					class="list-group-item has-icon"
-					@click.stop="removePost()"
-					>
-					<app-jolticon icon="remove" notice />
-					<translate>Remove Post</translate>
-				</a>
+			<div slot="popover" class="fill-darkest">
+				<template v-if="post.platforms_published_to.length">
+					<div class="popper-heading">
+						<translate>Published to:</translate>
+					</div>
+					<div class="list-group list-group-dark" style="margin-bottom: 0">
+						<a
+							v-for="platform of post.platforms_published_to"
+							:key="platform.id"
+							class="list-group-item has-icon"
+							:href="platform.url"
+							target="_blank"
+							>
+							<app-jolticon :icon="getProviderIcon(platform.created_resource_provider)" />
+							{{ platform.created_resource_account_name }}
+						</a>
+					</div>
+
+					<hr>
+				</template>
+
+				<div class="list-group list-group-dark">
+					<a
+						class="list-group-item has-icon"
+						@click.stop="removePost()"
+						>
+						<app-jolticon icon="remove" notice />
+						<translate>Remove Post</translate>
+					</a>
+				</div>
 			</div>
 		</app-popper>
 	</div>

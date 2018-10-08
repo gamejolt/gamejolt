@@ -1,10 +1,10 @@
 import { RouteConfig } from 'vue-router';
-
-import { routeDashMain } from './main/main.route';
 import { routeDashAccount } from './account/account.route';
 import { routeDashAccountMobileNav } from './account/mobile-nav.route';
 import { routeDashAnalytics } from './analytics/analytics.route';
 import { routeDashGames } from './games/games.route';
+import { routeDashLinking } from './linking/linking.route';
+import { routeDashMain } from './main/main.route';
 import { routeDashWithdrawFunds } from './withdraw-funds/withdraw-funds.route';
 
 export const routeDash: RouteConfig = {
@@ -19,5 +19,6 @@ export const routeDash: RouteConfig = {
 		routeDashGames,
 		routeDashAnalytics,
 		routeDashWithdrawFunds,
+		routeDashLinking,
 	],
 };

@@ -95,6 +95,21 @@
 				<translate>Music</translate>
 			</router-link>
 		</app-game-perms>
+		<app-game-perms
+			tag="li"
+			required="all"
+			v-if="!isWizard && app.user.id === game.developer.id"
+			>
+			<router-link
+				:to="{
+					name: 'dash.games.manage.game.linked-accounts',
+					query: $route.query,
+				}"
+				active-class="active"
+				>
+				<translate>Linked Accounts</translate>
+			</router-link>
+		</app-game-perms>
 		<app-game-perms tag="li">
 			<router-link
 				:to="{
