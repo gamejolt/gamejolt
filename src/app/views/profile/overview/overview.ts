@@ -56,9 +56,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		LinkedAccount.PROVIDER_TWITCH,
 	];
 
-	developerGames: Game[] = [];
-	youtubeChannels: YoutubeChannel[] = [];
-	linkedAccounts: LinkedAccount[] = [];
 	@RouteState
 	gamesCount!: RouteStore['gamesCount'];
 
@@ -86,6 +83,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	showFullDescription = false;
 	canToggleDescription = false;
 	games: Game[] = [];
+	developerGames: Game[] = [];
+	youtubeChannels: YoutubeChannel[] = [];
+	linkedAccounts: LinkedAccount[] = [];
 
 	readonly User = User;
 	readonly UserFriendship = UserFriendship;
@@ -158,11 +158,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 		this.showFullDescription = false;
 		this.youtubeChannels = YoutubeChannel.populate($payload.youtubeChannels);
-		if (this.user && this.user.linkedAccounts) {
-			this.linkedAccounts = RouteProfileOverview.PROVIDERS.filter(p =>
-				this.user!.linkedAccounts!.some(l => l.provider === p)
-			).map(p => this.user!.linkedAccounts!.find(l => l.provider === p)!);
-		}
 		this.games = Game.populate($payload.developerGamesTeaser);
+		this.linkedAccounts = LinkedAccount.populate($payload.linkedAccounts);
 	}
 }

@@ -1,3 +1,4 @@
+import { LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
 import { Action, Mutation, namespace, State } from 'vuex-class';
 import { Comment } from '../../../../../lib/gj-lib-client/components/comment/comment-model';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
@@ -87,6 +88,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	supporters: User[] = [];
 	supporterCount = 0;
 	recommendedGames: Game[] = [];
+	linkedAccounts: LinkedAccount[] = [];
 
 	canToggleDescription = false;
 	showDetails = false;
@@ -183,6 +185,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 			this.videoComments = [];
 			this.overviewComments = [];
 			this.userRating = null;
+			this.linkedAccounts = [];
 		}
 	}
 
@@ -241,6 +244,9 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 
 		this.supporters = User.populate(payload.supporters);
 		this.supporterCount = payload.supporterCount;
+
+		console.log('linked', payload.linkedAccounts);
+		this.linkedAccounts = LinkedAccount.populate(payload.linkedAccounts);
 
 		this.overviewComments = Comment.populate(payload.comments);
 
