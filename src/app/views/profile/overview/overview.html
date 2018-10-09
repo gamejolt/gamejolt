@@ -145,13 +145,13 @@
 					</p>
 
 					<p v-if="hasLinksSection">
-						<template v-if="user.linkedAccounts.length">
+						<template v-if="linkedAccounts.length">
 							<div v-if="twitchAccount">
 								<a
 									class="link-unstyled"
 									:href="twitchAccount.platformLink"
 									target="_blank"
-								>
+									>
 									<app-jolticon :icon="twitchAccount.icon" />
 									{{ twitchAccount.name }}
 								</a>
@@ -161,7 +161,7 @@
 									class="link-unstyled"
 									:href="twitterAccount.platformLink"
 									target="_blank"
-								>
+									>
 									<app-jolticon :icon="twitterAccount.icon" />
 									<span>@</span>{{ twitterAccount.name }}
 								</a>
@@ -171,7 +171,7 @@
 									class="link-unstyled"
 									:href="tumblrAccount.tumblrSelectedBlog.url"
 									target="_blank"
-								>
+									>
 									<app-jolticon :icon="tumblrAccount.icon" />
 									{{ tumblrAccount.tumblrSelectedBlog.title }}
 								</a>
@@ -181,7 +181,7 @@
 									class="link-unstyled"
 									:href="googleAccount.platformLink"
 									target="_blank"
-								>
+									>
 									<app-jolticon :icon="googleAccount.icon" />
 									{{ googleAccount.name }}
 								</a>

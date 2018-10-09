@@ -1,12 +1,11 @@
+import View from '!view!./details.html?style=./details.styl';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./details.html?style=./details.styl';
-
 import { AppLazyPlaceholder } from '../../../../../../../lib/gj-lib-client/components/lazy/placeholder/placeholder';
-import { date } from '../../../../../../../lib/gj-lib-client/vue/filters/date';
-import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { RouteState, RouteStore } from '../../view.store';
 import { LinkedAccount } from '../../../../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
+import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { date } from '../../../../../../../lib/gj-lib-client/vue/filters/date';
+import { RouteState, RouteStore } from '../../view.store';
 
 @View
 @Component({
@@ -22,27 +21,36 @@ export class AppDiscoverGamesViewOverviewDetails extends Vue {
 	@RouteState
 	game!: RouteStore['game'];
 
+	@RouteState
+	linkedAccounts!: RouteStore['linkedAccounts'];
+
 	date = date;
 
+	get hasLinksSection() {
+		return (
+			this.game.web_site || this.facebookAccount || this.twitterAccount || this.tumblrAccount
+		);
+	}
+
 	get facebookAccount() {
-		if (this.game.linkedAccounts) {
-			return this.game.linkedAccounts.find(
-				l => l.provider === LinkedAccount.PROVIDER_FACEBOOK
+		if (this.linkedAccounts) {
+			return this.linkedAccounts.find(
+				i => i.provider === LinkedAccount.PROVIDER_FACEBOOK && !!i.facebookSelectedPage
 			);
 		}
 	}
 
 	get twitterAccount() {
-		if (this.game.linkedAccounts) {
-			return this.game.linkedAccounts.find(
-				l => l.provider === LinkedAccount.PROVIDER_TWITTER
-			);
+		if (this.linkedAccounts) {
+			return this.linkedAccounts.find(i => i.provider === LinkedAccount.PROVIDER_TWITTER);
 		}
 	}
 
 	get tumblrAccount() {
-		if (this.game.linkedAccounts) {
-			return this.game.linkedAccounts.find(l => l.provider === LinkedAccount.PROVIDER_TUMBLR);
+		if (this.linkedAccounts) {
+			return this.linkedAccounts.find(
+				i => i.provider === LinkedAccount.PROVIDER_TUMBLR && !!i.tumblrSelectedBlog
+			);
 		}
 	}
 }

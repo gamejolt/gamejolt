@@ -78,9 +78,6 @@ export default class RouteProfile extends BaseRouteComponent {
 	@RouteMutation
 	profilePayload!: RouteStore['profilePayload'];
 
-	@RouteMutation
-	onUserChange!: RouteStore['onUserChange'];
-
 	@RouteAction
 	removeFriend!: RouteStore['removeFriend'];
 

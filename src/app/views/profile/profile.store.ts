@@ -25,7 +25,6 @@ type Actions = {
 
 type Mutations = {
 	bootstrapUser: string;
-	onUserChange: void;
 	profilePayload: any;
 	setUserFriendship: UserFriendship | null;
 };

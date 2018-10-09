@@ -50,8 +50,12 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	@RouteState
 	user!: RouteStore['user'];
 
-	developerGames: Game[] = [];
-	youtubeChannels: YoutubeChannel[] = [];
+	static readonly PROVIDERS: Provider[] = [
+		LinkedAccount.PROVIDER_TWITTER,
+		LinkedAccount.PROVIDER_GOOGLE,
+		LinkedAccount.PROVIDER_TWITCH,
+	];
+
 	@RouteState
 	gamesCount!: RouteStore['gamesCount'];
 
@@ -79,6 +83,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	showFullDescription = false;
 	canToggleDescription = false;
 	games: Game[] = [];
+	developerGames: Game[] = [];
+	youtubeChannels: YoutubeChannel[] = [];
+	linkedAccounts: LinkedAccount[] = [];
 
 	readonly User = User;
 	readonly UserFriendship = UserFriendship;
@@ -133,7 +140,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return (
 			this.user &&
 			(this.youtubeChannels.length > 0 ||
-				(this.user.linkedAccounts && this.user.linkedAccounts.length > 0) ||
+				(this.linkedAccounts && this.linkedAccounts.length > 0) ||
 				this.user.web_site)
 		);
 	}
@@ -165,10 +172,10 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	getLinkedAccount(provider: Provider) {
 		if (
 			this.user &&
-			this.user.linkedAccounts &&
-			this.user.linkedAccounts.some(l => l.provider === provider)
+			this.linkedAccounts &&
+			this.linkedAccounts.some(i => i.provider === provider)
 		) {
-			const account = this.user.linkedAccounts.find(l => l.provider === provider);
+			const account = this.linkedAccounts.find(i => i.provider === provider);
 			if (account) {
 				return account;
 			}
@@ -186,5 +193,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		this.showFullDescription = false;
 		this.youtubeChannels = YoutubeChannel.populate($payload.youtubeChannels);
 		this.games = Game.populate($payload.developerGamesTeaser);
+		this.linkedAccounts = LinkedAccount.populate($payload.linkedAccounts);
 	}
 }
