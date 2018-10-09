@@ -1,0 +1,35 @@
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div :class="rightColClass">
+				<div class="alert alert-info">
+					<p>Hey there! Join the community. Post, have fun, all that jazz!</p>
+				</div>
+			</div>
+
+			<div :class="leftColClass">
+				<!-- @add="onPostAdded" -->
+				<app-post-add-button
+					/>
+
+				<app-activity-feed-placeholder v-if="!feed" />
+				<template v-else>
+					<app-activity-feed
+						v-if="feed.hasItems"
+						:feed="feed"
+						/>
+						<!-- show-game-info
+						show-edit-controls
+						@edit-post="onPostEdited"
+						@publish-post="onPostPublished"
+						@remove-post="onPostRemoved" -->
+					<div v-else class="alert">
+						<translate>There are no posts in this community yet. What are you waiting for? Post some stuff! Make people happy.</translate>
+					</div>
+				</template>
+			</div>
+		</div>
+
+	</div>
+</section>

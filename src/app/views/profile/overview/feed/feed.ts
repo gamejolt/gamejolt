@@ -47,7 +47,7 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 	}
 
 	@RouteResolve({
-		cache: false,
+		cache: true,
 		lazy: true,
 		deps: { query: ['tab'] },
 	})
