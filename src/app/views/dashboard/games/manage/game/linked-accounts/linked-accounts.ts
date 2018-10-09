@@ -9,9 +9,9 @@ import {
 	getLinkedAccountProviderDisplayName,
 	LinkedAccount,
 	Provider,
+	TumblrBlog,
 } from '../../../../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
 import { LinkedAccounts } from '../../../../../../../lib/gj-lib-client/components/linked-account/linked-accounts.service';
-import { ModalTumblrBlogSelector } from '../../../../../../../lib/gj-lib-client/components/linked-account/tumblr-blog-selector-modal/tumblr-blog-selector-modal-service';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
@@ -255,56 +255,43 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		}
 	}
 
-	async onSelectTumblrBlog() {
+	async onLinkTumblrBlog(tumblrBlog: TumblrBlog) {
 		if (!this.tumblrAccount) {
 			return;
 		}
 
-		const modalResult = await ModalTumblrBlogSelector.show(
-			this.$gettext('Select a blog you want to post to with this account'),
-			this.tumblrAccount,
-			this.$gettext('Select Tumblr Blog')
+		this.loading = true;
+
+		const payload = await Api.sendRequest(
+			'/web/dash/linked-accounts/link-tumblr-blog/' +
+				this.tumblrAccount.id +
+				'/' +
+				tumblrBlog.name +
+				'?resource=Game&resourceId=' +
+				this.game.id
 		);
 
-		if (modalResult) {
-			// do not send if the same blog was already selected
-			if (
-				this.tumblrAccount.tumblrSelectedBlog &&
-				JSON.stringify(modalResult) ===
-					JSON.stringify(this.tumblrAccount.tumblrSelectedBlog)
-			) {
-				return;
+		if (payload.success) {
+			if (payload.accounts) {
+				// update accounts
+				this.accounts = LinkedAccount.populate(payload.accounts);
 			}
 
-			const payload = await Api.sendRequest(
-				'/web/dash/linked-accounts/link-tumblr-blog/' +
-					this.game.id +
-					'/' +
-					this.tumblrAccount.id +
-					'/' +
-					modalResult.name
+			Growls.success(
+				this.$gettextInterpolate('Changed the selected Tumblr blog to %{ title }.', {
+					title: tumblrBlog.title,
+				}),
+				this.$gettext('Tumblr Blog Changed')
 			);
-
-			if (payload.success) {
-				if (payload.accounts) {
-					// update accounts
-					this.accounts = LinkedAccount.populate(payload.accounts);
-				}
-
-				Growls.success(
-					this.$gettextInterpolate('Changed the selected Tumblr blog to %{ title }.', {
-						title: modalResult.title,
-					}),
-					this.$gettext('Select Tumblr Blog')
-				);
-			} else {
-				Growls.error(
-					this.$gettext(
-						'Failed to change to new Tumblr blog. Try to Sync your Tumblr account.'
-					)
-				);
-			}
+		} else {
+			Growls.error(
+				this.$gettext(
+					'Failed to change to new Tumblr blog. Maybe try to sync your Tumblr account.'
+				)
+			);
 		}
+
+		this.loading = false;
 	}
 
 	async onUnlinkTumblrBlog() {
@@ -312,13 +299,15 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 			return;
 		}
 
+		this.loading = true;
+
 		const tempBlogTitle = this.tumblrAccount.tumblrSelectedBlog.title;
 
 		const payload = await Api.sendRequest(
 			'/web/dash/linked-accounts/unlink-tumblr-blog/' +
-				this.game.id +
-				'/' +
-				this.tumblrAccount.id
+				this.tumblrAccount.id +
+				'?resource=Game&resourceId=' +
+				this.game.id
 		);
 
 		if (payload.success) {
@@ -340,5 +329,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		} else {
 			Growls.error(this.$gettext(`Could not unlink your Tumblr Blog.`));
 		}
+
+		this.loading = false;
 	}
 }

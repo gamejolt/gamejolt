@@ -40,6 +40,19 @@
 				@unlink="onUnlink"
 				/>
 		</div>
+		<div class="col-md-8 col-lg-6">
+			<app-linked-account
+				:account="tumblrAccount"
+				:disabled="loading"
+				provider="tumblr"
+				@link="onLink"
+				@sync="onLink"
+				@unlink="onUnlink"
+				@link-tumblr-blog="onLinkTumblrBlog"
+				@unlink-tumblr-blog="onUnlinkTumblrBlog"
+				show-tumblr-blog
+				/>
+		</div>
     </div>
 
 	<div class="row">
