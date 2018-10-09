@@ -50,15 +50,8 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	@RouteState
 	user!: RouteStore['user'];
 
-	static readonly PROVIDERS: Provider[] = [
-		LinkedAccount.PROVIDER_TWITTER,
-		LinkedAccount.PROVIDER_GOOGLE,
-		LinkedAccount.PROVIDER_TWITCH,
-	];
-
 	developerGames: Game[] = [];
 	youtubeChannels: YoutubeChannel[] = [];
-	linkedAccounts: LinkedAccount[] = [];
 	@RouteState
 	gamesCount!: RouteStore['gamesCount'];
 
@@ -140,13 +133,47 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return (
 			this.user &&
 			(this.youtubeChannels.length > 0 ||
-				(this.linkedAccounts && this.linkedAccounts.length > 0) ||
+				(this.user.linkedAccounts && this.user.linkedAccounts.length > 0) ||
 				this.user.web_site)
 		);
 	}
 
 	get hasGamesSection() {
 		return !Screen.isMobile && this.gamesCount > 0;
+	}
+
+	get twitterAccount() {
+		return this.getLinkedAccount(LinkedAccount.PROVIDER_TWITTER);
+	}
+
+	get googleAccount() {
+		return this.getLinkedAccount(LinkedAccount.PROVIDER_GOOGLE);
+	}
+
+	get twitchAccount() {
+		return this.getLinkedAccount(LinkedAccount.PROVIDER_TWITCH);
+	}
+
+	get tumblrAccount() {
+		const account = this.getLinkedAccount(LinkedAccount.PROVIDER_TUMBLR);
+		if (account && account.tumblrSelectedBlog) {
+			return account;
+		}
+		return null;
+	}
+
+	getLinkedAccount(provider: Provider) {
+		if (
+			this.user &&
+			this.user.linkedAccounts &&
+			this.user.linkedAccounts.some(l => l.provider === provider)
+		) {
+			const account = this.user.linkedAccounts.find(l => l.provider === provider);
+			if (account) {
+				return account;
+			}
+		}
+		return null;
 	}
 
 	routed($payload: any) {
@@ -158,11 +185,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 		this.showFullDescription = false;
 		this.youtubeChannels = YoutubeChannel.populate($payload.youtubeChannels);
-		if (this.user && this.user.linkedAccounts) {
-			this.linkedAccounts = RouteProfileOverview.PROVIDERS.filter(p =>
-				this.user!.linkedAccounts!.some(l => l.provider === p)
-			).map(p => this.user!.linkedAccounts!.find(l => l.provider === p)!);
-		}
 		this.games = Game.populate($payload.developerGamesTeaser);
 	}
 }

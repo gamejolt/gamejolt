@@ -145,15 +145,45 @@
 					</p>
 
 					<p v-if="hasLinksSection">
-						<template v-if="linkedAccounts.length">
-							<div v-for="account of linkedAccounts" :key="account.id">
+						<template v-if="user.linkedAccounts.length">
+							<div v-if="twitchAccount">
 								<a
 									class="link-unstyled"
-									:href="account.platformLink"
+									:href="twitchAccount.platformLink"
 									target="_blank"
-									>
-									<app-jolticon :icon="account.icon" />
-									<span v-if="account.provider === 'twitter'">@</span>{{ account.name }}
+								>
+									<app-jolticon :icon="twitchAccount.icon" />
+									{{ twitchAccount.name }}
+								</a>
+							</div>
+							<div v-if="twitterAccount">
+								<a
+									class="link-unstyled"
+									:href="twitterAccount.platformLink"
+									target="_blank"
+								>
+									<app-jolticon :icon="twitterAccount.icon" />
+									<span>@</span>{{ twitterAccount.name }}
+								</a>
+							</div>
+							<div v-if="tumblrAccount">
+								<a
+									class="link-unstyled"
+									:href="tumblrAccount.tumblrSelectedBlog.url"
+									target="_blank"
+								>
+									<app-jolticon :icon="tumblrAccount.icon" />
+									{{ tumblrAccount.tumblrSelectedBlog.title }}
+								</a>
+							</div>
+							<div v-if="googleAccount">
+								<a
+									class="link-unstyled"
+									:href="googleAccount.platformLink"
+									target="_blank"
+								>
+									<app-jolticon :icon="googleAccount.icon" />
+									{{ googleAccount.name }}
 								</a>
 							</div>
 						</template>
