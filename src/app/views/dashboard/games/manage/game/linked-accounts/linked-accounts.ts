@@ -260,6 +260,8 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 			return;
 		}
 
+		this.loading = true;
+
 		const payload = await Api.sendRequest(
 			'/web/dash/linked-accounts/link-tumblr-blog/' +
 				this.tumblrAccount.id +
@@ -288,12 +290,16 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 				)
 			);
 		}
+
+		this.loading = false;
 	}
 
 	async onUnlinkTumblrBlog() {
 		if (!this.tumblrAccount || !this.tumblrAccount.tumblrSelectedBlog) {
 			return;
 		}
+
+		this.loading = true;
 
 		const tempBlogTitle = this.tumblrAccount.tumblrSelectedBlog.title;
 
@@ -323,5 +329,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		} else {
 			Growls.error(this.$gettext(`Could not unlink your Tumblr Blog.`));
 		}
+
+		this.loading = false;
 	}
 }

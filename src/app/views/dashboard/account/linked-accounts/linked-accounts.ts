@@ -186,6 +186,8 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 			return;
 		}
 
+		this.loading = true;
+
 		const payload = await Api.sendRequest(
 			'/web/dash/linked-accounts/link-tumblr-blog/' +
 				this.tumblrAccount.id +
@@ -213,12 +215,16 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 				)
 			);
 		}
+
+		this.loading = false;
 	}
 
 	async onUnlinkTumblrBlog() {
 		if (!this.tumblrAccount || !this.tumblrAccount.tumblrSelectedBlog) {
 			return;
 		}
+
+		this.loading = true;
 
 		const tempBlogTitle = this.tumblrAccount.tumblrSelectedBlog.title;
 
@@ -243,5 +249,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 		} else {
 			Growls.error(this.$gettext(`Could not unlink your Tumblr Blog.`));
 		}
+
+		this.loading = false;
 	}
 }
