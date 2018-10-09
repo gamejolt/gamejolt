@@ -7,6 +7,7 @@ import {
 	getLinkedAccountProviderDisplayName,
 	LinkedAccount,
 	Provider,
+	TumblrBlog,
 } from '../../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
 import { LinkedAccounts } from '../../../../../lib/gj-lib-client/components/linked-account/linked-accounts.service';
 import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
@@ -52,6 +53,10 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 
 	get twitchAccount() {
 		return this.getAccount(LinkedAccount.PROVIDER_TWITCH);
+	}
+
+	get tumblrAccount() {
+		return this.getAccount(LinkedAccount.PROVIDER_TUMBLR);
 	}
 
 	getAccount(provider: string) {
@@ -173,6 +178,70 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 					{ title: channel.title }
 				)
 			);
+		}
+	}
+
+	async onLinkTumblrBlog(tumblrBlog: TumblrBlog) {
+		if (!this.tumblrAccount) {
+			return;
+		}
+
+		const payload = await Api.sendRequest(
+			'/web/dash/linked-accounts/link-tumblr-blog/' +
+				this.tumblrAccount.id +
+				'/' +
+				tumblrBlog.name +
+				'?resource=User'
+		);
+
+		if (payload.success) {
+			if (payload.accounts) {
+				// update accounts
+				this.accounts = LinkedAccount.populate(payload.accounts);
+			}
+
+			Growls.success(
+				this.$gettextInterpolate('Changed the selected Tumblr blog to %{ title }.', {
+					title: tumblrBlog.title,
+				}),
+				this.$gettext('Tumblr Blog Changed')
+			);
+		} else {
+			Growls.error(
+				this.$gettext(
+					'Failed to change to new Tumblr blog. Maybe try to sync your Tumblr account.'
+				)
+			);
+		}
+	}
+
+	async onUnlinkTumblrBlog() {
+		if (!this.tumblrAccount || !this.tumblrAccount.tumblrSelectedBlog) {
+			return;
+		}
+
+		const tempBlogTitle = this.tumblrAccount.tumblrSelectedBlog.title;
+
+		const payload = await Api.sendRequest(
+			'/web/dash/linked-accounts/unlink-tumblr-blog/' +
+				this.tumblrAccount.id +
+				'?resource=User'
+		);
+
+		if (payload.success) {
+			if (payload.accounts) {
+				// update accounts
+				this.accounts = LinkedAccount.populate(payload.accounts);
+			}
+
+			Growls.success(
+				this.$gettextInterpolate(`The Tumblr Blog %{ title } has been unlinked.`, {
+					title: tempBlogTitle,
+				}),
+				this.$gettext('Tumblr Blog Unlinked')
+			);
+		} else {
+			Growls.error(this.$gettext(`Could not unlink your Tumblr Blog.`));
 		}
 	}
 }
