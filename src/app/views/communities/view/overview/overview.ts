@@ -1,6 +1,7 @@
 import View from '!view!./overview.html?style=./overview.styl';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
+import { AppPill } from 'game-jolt-frontend-lib/components/pill/pill';
 import {
 	BaseRouteComponent,
 	RouteResolve,
@@ -24,6 +25,7 @@ function getFetchUrl(route: Route) {
 		AppPostAddButton,
 		AppActivityFeed,
 		AppActivityFeedPlaceholder,
+		AppPill,
 	},
 })
 export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
@@ -38,6 +40,14 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	get rightColClass() {
 		return '-right-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-4';
+	}
+
+	get routeTitle() {
+		return this.community
+			? this.$gettextInterpolate(`%{ community } Community`, {
+					community: this.community.name,
+			  })
+			: null;
 	}
 
 	@RouteResolve({

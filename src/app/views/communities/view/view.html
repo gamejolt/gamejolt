@@ -28,13 +28,11 @@
 						:to="{ name: 'communities.view.overview' }"
 						:class="{ active: $route.name === 'communities.view.overview' }"
 						>
-						<app-jolticon icon="feed" />
 						<translate>Feed</translate>
 					</router-link>
 				</li>
 				<li>
 					<a>
-						<app-jolticon icon="fireside" />
 						<translate>Latest</translate>
 					</a>
 				</li>
@@ -43,7 +41,6 @@
 						:to="{ name: 'communities.view.members' }"
 						active-class="active"
 						>
-						<app-jolticon icon="friends" />
 						<translate>Members</translate>
 						<span class="badge" v-if="community.member_count">
 							{{ community.member_count | number }}

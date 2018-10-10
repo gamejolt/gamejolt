@@ -9,6 +9,18 @@
 			</div>
 
 			<div :class="leftColClass">
+				<p>
+					<a
+						v-for="tag in ['news', 'fanart', 'guide', 'review', 'letsplay']"
+						>
+						<app-pill :class="{ active: tag === 'news' }">
+							#{{ tag }}
+						</app-pill>
+					</a>
+				</p>
+
+				<br>
+
 				<!-- @add="onPostAdded" -->
 				<app-post-add-button
 					:community="community"

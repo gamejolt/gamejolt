@@ -23,6 +23,7 @@ import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.mo
 import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
 import { LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
 import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
+import { AppPill } from 'game-jolt-frontend-lib/components/pill/pill';
 import { AppProgressBar } from 'game-jolt-frontend-lib/components/progress/bar/bar';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppSketchfabEmbed } from 'game-jolt-frontend-lib/components/sketchfab/embed/embed';
@@ -81,6 +82,7 @@ type FormPostModel = FiresidePost & {
 		AppUserAvatarImg,
 		AppProgressBar,
 		AppFormPostMedia,
+		AppPill,
 	},
 	directives: {
 		AppFocusWhen,
