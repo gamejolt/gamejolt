@@ -1,7 +1,7 @@
 <div @click.stop="go">
 	<router-link :to="notification.routeLocation">
 		<app-timeline-list-item
-			:is-new="isNew"
+			:is-new="isNewNotification"
 			:is-active="isActive"
 			>
 
@@ -54,10 +54,22 @@
 					</div>
 				</div>
 				<div class="-actions">
-					<app-jolticon
-						icon="radio-circle-filled"
-						v-app-tooltip="$gettext(`Mark as Read`)"
-						/>
+					<a v-if="isNewNotification"
+						@click.stop.prevent="onMarkRead"
+						>
+						<app-jolticon
+							icon="radio-circle-filled"
+							v-app-tooltip="$gettext(`Mark as Read`)"
+							/>
+					</a>
+					<a v-else
+						@click.stop.prevent="onMarkUnread"
+						>
+						<app-jolticon
+							icon="radio-circle"
+							v-app-tooltip="$gettext(`Mark as Unread`)"
+							/>
+					</a>
 				</div>
 			</div>
 

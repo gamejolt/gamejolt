@@ -87,23 +87,29 @@
 
 		<template v-if="app.user">
 
-			<!-- Activity -->
-			<router-link
+			<!-- Notifications -->
+			<app-popper
 				v-if="!Connection.isClientOffline"
-				class="navbar-item"
-				:to="{ name: 'activity.feed' }"
-				:class="{ active: $route.name.indexOf( 'activity.' ) === 0 }"
-				v-app-tooltip.bottom="$gettext( `Activity` )"
-				v-app-track-event="`top-nav:activity:toggle`"
+				hide-on-state-change
+				@show="notificationsShowing = true"
+				@hide="notificationsShowing = false"
 				>
-				<span
-					class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
-					v-if="notificationCount > 0"
+				<a
+					class="navbar-item"
+					:class="{ active: notificationsShowing }"
+					v-app-tooltip.bottom="$gettext( `Notifications` )"
+					v-app-track-event="`top-nav:notifications:toggle`"
 					>
-					{{ notificationCount < 100 ? notificationCount : '99+' }}
-				</span>
-				<app-jolticon icon="notifications" />
-			</router-link>
+					<span
+						class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
+						v-if="notificationCount"
+						>
+						{{ notificationCount }}
+					</span>
+					<app-jolticon icon="notifications" />
+				</a>
+				<app-notification-popover slot="popover" />
+			</app-popper>
 
 			<!-- Friend Requests -->
 			<app-popper

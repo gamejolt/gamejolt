@@ -46,6 +46,10 @@ export class AppActivityFeedNotification extends Vue {
 
 	readonly Screen = Screen;
 
+	get isNewNotification() {
+		return this.notification.viewed_on === null || this.isNew;
+	}
+
 	get titleText() {
 		return getNotificationText(this.notification);
 	}
@@ -74,11 +78,20 @@ export class AppActivityFeedNotification extends Vue {
 	}
 
 	go() {
+		this.notification.$read();
 		this.notification.go(this.$router);
 		this.$emit('clicked');
 	}
 
 	toggleFull() {
 		this.showFullContent = !this.showFullContent;
+	}
+
+	onMarkRead() {
+		this.notification.$read();
+	}
+
+	onMarkUnread() {
+		this.notification.$unread();
 	}
 }

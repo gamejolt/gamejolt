@@ -27,6 +27,11 @@ export interface ActivityFeedContainerOptions {
 	 * A timestamp of when the notifications in this feed were last viewed.
 	 */
 	notificationWatermark?: number;
+
+	/**
+	 * If more items can be loaded in
+	 */
+	isInfinite?: boolean;
 }
 
 const ScrollDirectionFrom = 'from';
@@ -47,6 +52,7 @@ export class ActivityFeedContainer {
 	activeItem: ActivityFeedItem | null = null;
 	scroll = 0;
 	noAutoload = false;
+	isInfinite = true;
 	isLoadingMore = false;
 	isLoadingNew = false;
 	timesLoaded = 0;
@@ -63,6 +69,12 @@ export class ActivityFeedContainer {
 		this.feedType = options.type;
 		this.loadMoreUrl = options.url;
 		this.noAutoload = options.noAutoload || false;
+
+		if (options.isInfinite === undefined) {
+			this.isInfinite = true;
+		} else {
+			this.isInfinite = options.isInfinite;
+		}
 
 		if (typeof options.notificationWatermark !== 'undefined') {
 			this.notificationWatermark = options.notificationWatermark;

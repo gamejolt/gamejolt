@@ -11,6 +11,7 @@ import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { Store } from '../../../store/index';
+import { AppNotificationPopover } from '../../activity/notification-popover/notification-popover';
 import { ChatClient } from '../../chat/client';
 import { AppFriendRequestPopover } from '../../friend/request-popover/request-popover';
 import { AppSearch } from '../../search/search';
@@ -21,6 +22,7 @@ let components: any = {
 	AppPopper,
 	AppShellAccountPopover,
 	AppFriendRequestPopover,
+	AppNotificationPopover,
 	AppSearch,
 	AppThemeSvg,
 };
@@ -63,6 +65,7 @@ export class AppShellTopNav extends Vue {
 	hasSidebar!: Store['hasSidebar'];
 
 	friendRequestsShowing = false;
+	notificationsShowing = false;
 	userMenuShowing = false;
 	moreMenuShowing = false;
 

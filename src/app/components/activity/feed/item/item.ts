@@ -1,14 +1,13 @@
+import View from '!view!./item.html';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./item.html';
-
-import { ActivityFeedItem } from '../item-service';
-import { ActivityFeedContainer } from '../feed-container-service';
-import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scroll/inview/inview';
-import { AppActivityFeedNotification } from '../notification/notification';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppActivityFeedItemPlaceholder } from './placeholder/placeholder';
+import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scroll/inview/inview';
 import { AppActivityFeedEventItem } from '../event-item/event-item';
+import { ActivityFeedContainer } from '../feed-container-service';
+import { ActivityFeedItem } from '../item-service';
+import { AppActivityFeedNotification } from '../notification/notification';
+import { AppActivityFeedItemPlaceholder } from './placeholder/placeholder';
 
 @View
 @Component({
@@ -20,8 +19,10 @@ import { AppActivityFeedEventItem } from '../event-item/event-item';
 	},
 })
 export class AppActivityFeedItem extends Vue {
-	@Prop(ActivityFeedItem) item!: ActivityFeedItem;
-	@Prop(ActivityFeedContainer) feed!: ActivityFeedContainer;
+	@Prop(ActivityFeedItem)
+	item!: ActivityFeedItem;
+	@Prop(ActivityFeedContainer)
+	feed!: ActivityFeedContainer;
 
 	inviewPadding = Screen.windowHeight;
 

@@ -1,0 +1,19 @@
+<div class="shell-card-popover fill-dark">
+
+	<template v-if="isLoading">
+		<br>
+		<app-loading :centered="true"></app-loading>
+	</template>
+	<template v-else>
+		<div class="alert" v-if="!feed.hasItems">
+			<translate>You don't have any notifications yet.</translate>
+		</div>
+		<app-activity-feed
+			v-else
+			:feed="feed"
+			:new-count="0"
+			@load-new="loadedNew()"
+			/>
+	</template>
+
+</div>
