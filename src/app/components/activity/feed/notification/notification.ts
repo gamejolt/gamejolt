@@ -1,27 +1,32 @@
+import View from '!view!./notification.html?style=./notification.styl';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { AppUserCardHover } from 'game-jolt-frontend-lib/components/user/card/hover/hover';
+import { AppUserAvatar } from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./notification.html';
 import '../../../../../lib/gj-lib-client/components/comment/comment.styl';
-
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import {
-	Notification,
-	getNotificationText,
-} from '../../../../../lib/gj-lib-client/components/notification/notification-model';
-import { ActivityFeedItem } from '../item-service';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
-import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
 import { Mention } from '../../../../../lib/gj-lib-client/components/mention/mention.model';
+import {
+	getNotificationText,
+	Notification,
+} from '../../../../../lib/gj-lib-client/components/notification/notification-model';
+import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
+import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
+import { ActivityFeedItem } from '../item-service';
 
 @View
 @Component({
 	components: {
 		AppTimelineListItem,
-		AppJolticon,
 		AppTimeAgo,
 		AppFadeCollapse,
+		AppUserCardHover,
+		AppUserAvatar,
+	},
+	directives: {
+		AppTooltip,
 	},
 })
 export class AppActivityFeedNotification extends Vue {
