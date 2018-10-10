@@ -26,6 +26,11 @@
 			</div>
 			<div class="col-xs-12 col-md-8 col-lg-7 col-lg-offset-1 pull-left">
 
+				<template v-if="Screen.isXs">
+					<app-community-slider />
+					<hr class="full-bleed">
+				</template>
+
 				<app-activity-feed-placeholder v-if="!feed" />
 				<template v-else>
 					<div class="alert" v-if="!feed.hasItems">

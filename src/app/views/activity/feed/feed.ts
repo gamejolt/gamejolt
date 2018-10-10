@@ -14,6 +14,7 @@ import { ActivityFeedContainer } from '../../../components/activity/feed/feed-co
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import { AppActivityFeedPlaceholder } from '../../../components/activity/feed/placeholder/placeholder';
 import { AppBroadcastCard } from '../../../components/broadcast-card/broadcast-card';
+import { AppCommunitySlider } from '../../../components/community/slider/slider';
 import { AppGameList } from '../../../components/game/list/list';
 import { AppGameListPlaceholder } from '../../../components/game/list/placeholder/placeholder';
 import { Store } from '../../../store';
@@ -27,6 +28,7 @@ import { Store } from '../../../store';
 		AppGameList,
 		AppGameListPlaceholder,
 		AppBroadcastCard,
+		AppCommunitySlider,
 	},
 })
 export default class RouteActivityFeed extends BaseRouteComponent {

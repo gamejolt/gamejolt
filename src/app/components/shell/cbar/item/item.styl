@@ -13,10 +13,12 @@ $-blip-top = $-item-size * 0.5 - $-blip-size * 0.5
 .-thumb
 	img-circle()
 	theme-prop('border-color', 'gray')
-	width: $-item-size
-	height: $-item-size
 	border-width: 2px
 	border-style: solid
+
+	>>> img
+		width: $-item-size - 2px
+		height: $-item-size - 2px
 
 .-blip
 	theme-prop('background-color', 'highlight')
