@@ -6,6 +6,7 @@ import {
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class';
+import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
 import { AppActivityFeed } from '../../../components/activity/feed/feed';
 import { ActivityFeedContainer } from '../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
@@ -73,5 +74,20 @@ export default class RouteActivityNotifications extends BaseRouteComponent {
 
 	loadedNew() {
 		this.setNotificationCount({ type: 'notifications', count: 0 });
+	}
+
+	async onClickMarkAllAsRead() {
+		await Api.sendRequest('/web/dash/activity/mark-all-read', {});
+		// mark all loaded notifications as read temporarely
+		if (this.feed) {
+			for (const item of this.feed.items) {
+				if (item.feedItem instanceof Notification) {
+					const notification = item.feedItem as Notification;
+					if (notification.viewed_on === null) {
+						notification.viewed_on = Date.now();
+					}
+				}
+			}
+		}
 	}
 }

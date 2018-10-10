@@ -1,6 +1,13 @@
 <section class="section">
 	<div class="container">
 		<div class="row">
+			<div class="col-xs-12 col-md-4 pull-right">
+				<app-button
+					@click="onClickMarkAllAsRead"
+					>
+					<translate>Mark all as Read</translate>
+				</app-button>
+			</div>
 			<div class="col-xs-12 col-md-8 col-lg-7 col-lg-offset-1">
 
 				<app-activity-feed-placeholder v-if="!feed" />
