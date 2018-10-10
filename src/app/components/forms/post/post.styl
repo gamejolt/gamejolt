@@ -86,6 +86,29 @@
 	&-toggle
 		flex: none
 
+.-communities
+	margin-bottom: 10px
+	display: flex
+	align-items: center
+
+.-communities-label
+	theme-prop('color', 'fg-muted')
+	flex: none
+	margin-right: 10px
+	font-size: $font-size-small
+	font-weight: bold
+
+.-communities-list
+	flex: auto
+
+.-community
+	rounded-corners()
+	theme-prop('background-color', 'bg-offset')
+	theme-prop('color', 'fg')
+	display: inline-block
+	padding: 5px 10px
+	font-size: $font-size-small
+
 @media $media-xs
 	.-controls
 		display: flex

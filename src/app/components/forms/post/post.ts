@@ -1,6 +1,7 @@
 import View from '!view!./post.html?style=./post.styl';
 import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
+import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppFormAutosize } from 'game-jolt-frontend-lib/components/form-vue/autosize.directive';
 import { AppFormControlCheckbox } from 'game-jolt-frontend-lib/components/form-vue/control/checkbox/checkbox';
@@ -45,6 +46,7 @@ type FormPostModel = FiresidePost & {
 	key_group_ids: KeyGroup[];
 	video_url: string;
 	sketchfab_id: string;
+	community_id: number;
 
 	poll_item_count: number;
 	poll_duration: number;
@@ -93,8 +95,8 @@ export class FormPost extends BaseForm<FormPostModel>
 	@AppState
 	user!: AppStore['user'];
 
-	@Prop({ type: String, default: '' })
-	defaultAttachmentType!: string;
+	@Prop(Community)
+	defaultCommunity?: Community;
 
 	$refs!: {
 		form: AppForm;
@@ -289,6 +291,20 @@ export class FormPost extends BaseForm<FormPostModel>
 			});
 	}
 
+	get communities() {
+		if (this.model) {
+			if (this.model.tagged_communities.length) {
+				return this.model.tagged_communities.map(i => i.community);
+			}
+
+			if (this.defaultCommunity) {
+				return [this.defaultCommunity];
+			}
+		}
+
+		return [];
+	}
+
 	async onInit() {
 		await this.fetchTimezones();
 
@@ -301,11 +317,10 @@ export class FormPost extends BaseForm<FormPostModel>
 
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
 
-		// Set up the default attachment if one was passed in.
-		if (this.defaultAttachmentType === 'article') {
-			this.longEnabled = true;
-		} else {
-			this.attachmentType = this.defaultAttachmentType;
+		if (model.tagged_communities.length > 0) {
+			this.setField('community_id', model.tagged_communities[0].community.id);
+		} else if (this.defaultCommunity) {
+			this.setField('community_id', this.defaultCommunity.id);
 		}
 
 		if (model.videos.length) {

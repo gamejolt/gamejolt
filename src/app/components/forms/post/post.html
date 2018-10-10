@@ -546,11 +546,33 @@
 		</div>
 	</app-form-group>
 
+	<!-- Communities -->
+	<template v-if="communities.length">
+		<div class="-communities">
+			<div class="-communities-label">
+				<translate>Community</translate>
+			</div>
+			<div class="-communities-list">
+				<span class="-community" v-for="community of communities" :key="community.id">
+					{{ community.name }}
+				</span>
+			</div>
+		</div>
+
+		<div
+			v-if="!wasPublished"
+			class="alert alert-info full-bleed"
+			>
+			<strong><translate>Looks like you're posting into a community!</translate></strong>
+			<translate>Your post will be shown within the community, as well as on your profile page and to any people that follow you.</translate>
+		</div>
+	</template>
+
 	<template v-if="platformRestrictions.length">
 		<div
 			v-for="restriction of platformRestrictions"
 			:key="restriction"
-			class="alert alert-notice anim-fade-in"
+			class="alert alert-notice full-bleed anim-fade-in"
 			>
 			<strong>
 				{{ restriction }}

@@ -11,6 +11,7 @@
 			<div :class="leftColClass">
 				<!-- @add="onPostAdded" -->
 				<app-post-add-button
+					:community="community"
 					/>
 
 				<app-activity-feed-placeholder v-if="!feed" />

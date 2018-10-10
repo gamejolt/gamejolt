@@ -1,9 +1,10 @@
+import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
 import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
 
 export type PostEditModalOptions = {
-	attachmentType?: string;
+	community?: Community;
 };
 
 export class PostEditModal {
@@ -19,7 +20,7 @@ export class PostEditModal {
 			size: 'sm',
 			props: {
 				post: post,
-				attachmentType: options.attachmentType || '',
+				community: options.community,
 			},
 		});
 	}
