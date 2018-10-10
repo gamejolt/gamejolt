@@ -1,3 +1,4 @@
+import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { Route } from 'vue-router';
 import { sync } from 'vuex-router-sync';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
@@ -41,6 +42,10 @@ import { BannerActions, BannerMutations, BannerStore } from './banner';
 import * as _ClientLibraryMod from './client-library';
 import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
 
+// Re-export our sub-modules.
+export { BannerModule, BannerStore } from './banner';
+export { LibraryModule, LibraryStore } from './library';
+
 export type Actions = AppActions &
 	ThemeActions &
 	LibraryActions &
@@ -57,7 +62,6 @@ export type Actions = AppActions &
 		toggleLeftPane: undefined;
 		toggleRightPane: undefined;
 		clearPanes: undefined;
-		_checkBackdrop: undefined;
 	};
 
 export type Mutations = AppMutations &
@@ -70,16 +74,6 @@ export type Mutations = AppMutations &
 		incrementNotificationCount: { type: UnreadItemType; count: number };
 		setFriendRequestCount: number;
 		changeFriendRequestCount: number;
-		_setBootstrapped: undefined;
-		_setLibraryBootstrapped: undefined;
-		_clear: undefined;
-		_setChat: ChatClient | null;
-		_setGrid: GridClient | null;
-		_toggleLeftPane: undefined;
-		_toggleRightPane: undefined;
-		_clearPanes: undefined;
-		_addBackdrop: undefined;
-		_removeBackdrop: undefined;
 	};
 
 let bootstrapResolver: Function | null = null;
@@ -122,6 +116,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	isBootstrapped = false;
 	isLibraryBootstrapped = false;
+	isShellBootstrapped = false;
 
 	unreadActivityCount = 0; // unread items in the activity feed
 	unreadNotificationsCount = 0; // unread items in the notification feed
@@ -130,6 +125,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	isLeftPaneSticky = Settings.get('sidebar') as boolean;
 	isLeftPaneOverlayed = false;
 	isRightPaneOverlayed = false;
+
+	communities: Community[] = [];
 
 	get isLeftPaneVisible() {
 		if (Screen.isLg) {
@@ -151,6 +148,16 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		return Screen.isXs || this.app.user;
 	}
 
+	get hasMinibar() {
+		return (
+			this.app.user && (Screen.isSm || Screen.isMd || (Screen.isLg && !this.isLeftPaneSticky))
+		);
+	}
+
+	get hasCbar() {
+		return !Screen.isXs && this.communities.length;
+	}
+
 	get notificationCount() {
 		return this.unreadActivityCount + this.unreadNotificationsCount;
 	}
@@ -162,15 +169,20 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		// Detach so that errors in it doesn't cause the not found page to show. This is considered
 		// a sort of "async" load.
 		try {
-			const response = await Api.sendRequest('/web/library', null, { detach: true });
+			const [shellPayload, libraryPayload] = await Promise.all([
+				Api.sendRequest('/web/dash/shell', null, { detach: true }),
+				Api.sendRequest('/web/library', null, { detach: true }),
+			]);
+
 			this._setLibraryBootstrapped();
+			this._shellPayload(shellPayload);
 
 			// If we failed to finish before we unbootstrapped, then stop.
 			if (bootstrapResolver !== prevResolver) {
 				return;
 			}
 
-			this.commit('library/bootstrap', response);
+			this.commit('library/bootstrap', libraryPayload);
 		} catch (e) {}
 
 		this._setBootstrapped();
@@ -178,6 +190,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		if (!GJ_IS_CLIENT && !GJ_IS_SSR) {
 			BroadcastModal.check();
 		}
+
+		console.log('test', this.communities);
 	}
 
 	@VuexAction
@@ -321,7 +335,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	_setBootstrapped() {
+	private _setBootstrapped() {
 		this.isBootstrapped = true;
 		if (bootstrapResolver) {
 			bootstrapResolver();
@@ -329,27 +343,33 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	_setLibraryBootstrapped() {
+	private _setLibraryBootstrapped() {
 		this.isLibraryBootstrapped = true;
 	}
 
 	@VuexMutation
-	_clear() {
+	private _clear() {
 		tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
 	}
 
 	@VuexMutation
-	_setChat(chat: Mutations['_setChat']) {
+	private _shellPayload(payload: any) {
+		this.isShellBootstrapped = true;
+		this.communities = Community.populate(payload.communities);
+	}
+
+	@VuexMutation
+	private _setChat(chat: ChatClient | null) {
 		this.chat = chat;
 	}
 
 	@VuexMutation
-	_setGrid(grid: Mutations['_setGrid']) {
+	private _setGrid(grid: GridClient | null) {
 		this.grid = grid;
 	}
 
 	@VuexMutation
-	_toggleLeftPane() {
+	private _toggleLeftPane() {
 		if (Screen.isLg) {
 			this.isLeftPaneSticky = !this.isLeftPaneSticky;
 		} else {
@@ -360,19 +380,19 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	_toggleRightPane() {
+	private _toggleRightPane() {
 		this.isRightPaneOverlayed = !this.isRightPaneOverlayed;
 		this.isLeftPaneOverlayed = false;
 	}
 
 	@VuexMutation
-	_clearPanes() {
+	private _clearPanes() {
 		this.isRightPaneOverlayed = false;
 		this.isLeftPaneOverlayed = false;
 	}
 
 	@VuexMutation
-	_addBackdrop() {
+	private _addBackdrop() {
 		if (backdrop) {
 			return;
 		}
@@ -381,7 +401,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	_removeBackdrop() {
+	private _removeBackdrop() {
 		if (!backdrop) {
 			return;
 		}

@@ -35,8 +35,13 @@ import { AppGameGrid } from '../../../components/game/grid/grid';
 import { AppGameListing } from '../../../components/game/listing/listing';
 import { GameListingContainer } from '../../../components/game/listing/listing-container-service';
 import { AppPageHeader } from '../../../components/page-header/page-header';
-import { store, Store, tillStoreBootstrapped } from '../../../store/index';
-import { LibraryAction, LibraryState, LibraryStore } from '../../../store/library';
+import {
+	LibraryModule,
+	LibraryStore,
+	store,
+	Store,
+	tillStoreBootstrapped,
+} from '../../../store/index';
 
 const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
 const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
@@ -69,16 +74,20 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 	@State
 	app!: Store['app'];
-	@LibraryState
+
+	@LibraryModule.State
 	collections!: LibraryStore['collections'];
 
-	@LibraryAction
+	@LibraryModule.Action
 	removeGameFromPlaylist!: LibraryStore['removeGameFromPlaylist'];
-	@LibraryAction
+
+	@LibraryModule.Action
 	unfollowGame!: LibraryStore['unfollowGame'];
-	@LibraryAction
+
+	@LibraryModule.Action
 	editPlaylist!: LibraryStore['editPlaylist'];
-	@LibraryAction
+
+	@LibraryModule.Action
 	removePlaylist!: LibraryStore['removePlaylist'];
 
 	@ThemeMutation

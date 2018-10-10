@@ -1,19 +1,14 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
-.shell-sidebar
+#shell-sidebar
+	theme-prop('border-right-color', 'darkest')
 	position: fixed
-	top: $shell-top-nav-height
-	bottom: 0
-	left: 0
 	width: $shell-top-nav-height
+	border-right-style: solid
+	border-right-width: 1px
 	z-index: $zindex-shell-pane
 	will-change: width
-
-	body.status-bar-visible &
-		bottom: $status-bar-height
-
-	#shell.has-banner &
-		top: $shell-top-nav-height * 2
 
 	hr
 		margin: $line-height-computed 15px

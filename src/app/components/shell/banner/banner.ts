@@ -1,10 +1,10 @@
+import View from '!view!./banner.html?style=./banner.styl';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
-import View from '!view!./banner.html?style=./banner.styl';
-
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { BannerState, BannerStore, BannerMutation } from '../../../store/banner';
+// import { BannerState, BannerStore, BannerMutation, BannerModule } from '../../../store/banner';
 import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { BannerModule, BannerStore } from '../../../store';
 
 @View
 @Component({
@@ -13,13 +13,20 @@ import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.s
 	},
 })
 export class AppShellBanner extends Vue {
-	@BannerState shouldShowBanner!: BannerStore['shouldShowBanner'];
-	@BannerState currentBanner!: BannerStore['currentBanner'];
-	@BannerMutation clickBanner!: BannerStore['clickBanner'];
-	@BannerMutation closeBanner!: BannerStore['closeBanner'];
+	@BannerModule.State
+	hasBanner!: BannerStore['hasBanner'];
 
-	@Watch('shouldShowBanner', { immediate: true })
-	onShouldShowBannerChange(isShowing: boolean) {
+	@BannerModule.State
+	currentBanner!: BannerStore['currentBanner'];
+
+	@BannerModule.Mutation
+	clickBanner!: BannerStore['clickBanner'];
+
+	@BannerModule.Mutation
+	closeBanner!: BannerStore['closeBanner'];
+
+	@Watch('hasBanner', { immediate: true })
+	onHasBannerChange(isShowing: boolean) {
 		if (isShowing) {
 			Scroll.setOffsetTop(50 * 2);
 		} else {

@@ -1,0 +1,19 @@
+<router-link
+	class="-item -unread"
+	:to="{
+		name: 'communities.view.overview',
+		params: { path: community.path }
+	}"
+	active-class="-active"
+	>
+	<app-community-thumbnail-img
+		class="-thumb"
+		:community="community"
+		/>
+	<div
+		class="-blip"
+		:style="{
+			'background-color': highlight,
+		}"
+		/>
+</router-link>

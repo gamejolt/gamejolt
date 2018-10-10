@@ -1,0 +1,7 @@
+<div id="shell-cbar" v-if="communities.length">
+	<app-shell-cbar-item
+		v-for="community of communities"
+		:key="community.id"
+		:community="community"
+		/>
+</div>

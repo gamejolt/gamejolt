@@ -2,15 +2,20 @@
 	id="shell"
 	:class="{
 		'is-client-offline': Connection.isClientOffline,
-		'left-pane-visible': isLeftPaneVisible,
 		'right-pane-visible': isRightPaneVisible,
-		'no-sidebar': !hasSidebar,
-		'has-banner': shouldShowBanner,
+		'left-pane-visible': isLeftPaneVisible,
+		'has-left-pane': Screen.isLg && isLeftPaneSticky,
+		'has-minibar': hasMinibar,
+		'has-cbar': hasCbar,
+		'has-banner': hasBanner,
 	}"
 	>
 
 	<app-shell-banner />
 	<app-shell-top-nav />
+	<app-shell-cbar
+		v-if="hasCbar"
+		/>
 	<app-shell-sidebar
 		v-if="hasSidebar"
 		/>

@@ -56,7 +56,7 @@ const defaultSettings: { [k: string]: Setting } = {
 	},
 	sidebar: {
 		type: 'boolean',
-		val: 1,
+		val: 0,
 	},
 	'broadcast-modal': {
 		type: 'boolean',

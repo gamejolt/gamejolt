@@ -1,11 +1,118 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-html, body
+$-scroll-affixed-spacing = ($grid-gutter-width / 2)
+
+html
 	// Firefox uses this color to blank the screen before it renders. It's
 	// better to use this than constantly flicker black while rendering.
 	theme-prop('background-color', 'bg')
 
 body
-	background-image: url('./shell-bg.png')
-	background-repeat: repeat
+	theme-prop('background-color', 'darkest-subtle', true)
+
+#shell-top-nav
+	top: 0
+	// If we used `right: 0` instead, the top nav would flex off the screen if
+	// a horizontal scrollbar became visible. Doing it this way ensures it's
+	// always the correct width.
+	width: 100vw
+	max-width: 100%
+
+#shell-sidebar
+	top: $shell-top-nav-height
+	bottom: 0
+	left: 0
+
+#shell-cbar
+	top: 0
+	left: 0
+	bottom: 0
+
+#shell-body
+	margin-top: $shell-top-nav-height
+	margin-left: 0
+
+#shell-banner
+	top: 0
+	left: 0
+	right: 0
+
+#shell-hot-bottom
+	bottom: 0
+	left: 0
+	right: 0
+
+.growl-container
+	bottom: 10px
+
+.chat-window-wrap
+	top: 0
+	left: 0
+	right: 0
+	bottom: 0
+
+	@media $media-sm-up
+		top: $shell-top-nav-height + 10px
+		right: $shell-pane-width + 10px
+
+// Affixed components should be shifted down from the top of the shell to make room
+// for the top nav.
+.gj-scroll-affixed
+	margin-top: $shell-top-nav-height + $-scroll-affixed-spacing
+
+#shell
+	&.has-cbar
+		#shell-top-nav
+			left: $shell-cbar-width
+			width: 'calc(100vw - %s)' % $shell-cbar-width
+			max-width: 'calc(100% - %s)' % $shell-cbar-width
+
+		#shell-sidebar
+			left: $shell-cbar-width
+
+		#shell-body
+			margin-left: $shell-cbar-width
+
+	&.has-banner
+		#shell-top-nav, #shell-cbar
+			top: $shell-top-nav-height
+
+		#shell-sidebar, .shell-pane
+			top: $shell-top-nav-height * 2
+
+		#shell-body
+			margin-top: $shell-top-nav-height * 2
+
+		@media $media-sm-up
+			.chat-window-wrap
+				top: $shell-top-nav-height * 2 + 10px
+
+		.gj-scroll-affixed
+			margin-top: $shell-top-nav-height * 2 + $-scroll-affixed-spacing
+
+	&.has-minibar
+		#shell-body
+			margin-left: $shell-top-nav-height
+
+	&.has-left-pane
+		#shell-body
+			margin-left: $shell-sidebar-width
+
+	&.has-minibar.has-cbar
+		#shell-body
+			margin-left: $shell-top-nav-height + $shell-cbar-width
+
+	&.has-left-pane.has-cbar
+		#shell-body
+			margin-left: $shell-sidebar-width + $shell-cbar-width
+
+body.has-hot-bottom
+	#shell-body
+		margin-bottom: $status-bar-height
+
+	#shell-cbar, #shell-sidebar, .shell-pane
+		bottom: $status-bar-height
+
+	.growl-container
+		bottom: $status-bar-height + 10px
