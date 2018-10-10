@@ -149,6 +149,40 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return !Screen.isMobile && this.gamesCount > 0;
 	}
 
+	get twitterAccount() {
+		return this.getLinkedAccount(LinkedAccount.PROVIDER_TWITTER);
+	}
+
+	get googleAccount() {
+		return this.getLinkedAccount(LinkedAccount.PROVIDER_GOOGLE);
+	}
+
+	get twitchAccount() {
+		return this.getLinkedAccount(LinkedAccount.PROVIDER_TWITCH);
+	}
+
+	get tumblrAccount() {
+		const account = this.getLinkedAccount(LinkedAccount.PROVIDER_TUMBLR);
+		if (account && account.tumblrSelectedBlog) {
+			return account;
+		}
+		return null;
+	}
+
+	getLinkedAccount(provider: Provider) {
+		if (
+			this.user &&
+			this.linkedAccounts &&
+			this.linkedAccounts.some(i => i.provider === provider)
+		) {
+			const account = this.linkedAccounts.find(i => i.provider === provider);
+			if (account) {
+				return account;
+			}
+		}
+		return null;
+	}
+
 	routed($payload: any) {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb || {};
