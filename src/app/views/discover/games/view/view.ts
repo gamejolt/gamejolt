@@ -8,6 +8,7 @@ import {
 	CommentStoreModel,
 } from 'game-jolt-frontend-lib/components/comment/comment-store';
 import { AppUserCardHover } from 'game-jolt-frontend-lib/components/user/card/hover/hover';
+import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
@@ -196,7 +197,16 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 			return intentRedirect;
 		}
 
-		return Api.sendRequest('/web/discover/games/' + route.params.id);
+		const payload = await Api.sendRequest('/web/discover/games/' + route.params.id);
+
+		if (payload && payload.game) {
+			const redirect = enforceLocation(route, { slug: payload.game.slug });
+			if (redirect) {
+				return redirect;
+			}
+		}
+
+		return payload;
 	}
 
 	routeInit() {
