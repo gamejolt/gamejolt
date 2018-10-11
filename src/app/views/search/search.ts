@@ -7,7 +7,6 @@ import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 import { number } from '../../../lib/gj-lib-client/vue/filters/number';
 import { AppPageHeader } from '../../components/page-header/page-header';
-import { SearchHistory } from '../../components/search/history/history-service';
 import { AppSearch } from '../../components/search/search';
 import { Search } from '../../components/search/search-service';
 import { Store } from '../../store/index';
@@ -81,7 +80,6 @@ export default class RouteSearch extends BaseRouteComponent {
 		// We sync the query to the search service so that all places get updated with the new query.
 		// We also record the search history since it was an explicit search request.
 		Search.query = this.query;
-		SearchHistory.record(this.query);
 
 		this.payload = payload;
 		this.showPagination = this.payload.type !== 'all';

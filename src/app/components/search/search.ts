@@ -3,8 +3,6 @@ import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { AppSearchAutocomplete } from './autocomplete/autocomplete';
-import { AppSearchHistory } from './history/history';
-import { SearchHistory } from './history/history-service';
 import { AppSearchInput } from './input/input';
 import { Search } from './search-service';
 
@@ -37,7 +35,6 @@ function setCaretPosition(el: any, caretPos: number) {
 @View
 @Component({
 	components: {
-		AppSearchHistory,
 		AppSearchAutocomplete,
 		AppSearchInput,
 		AppPopper,
@@ -121,7 +118,6 @@ export class AppSearch extends Vue {
 		// Normally the autocomplete will take control of the submission since they
 		// technically highlight what they want in autocomplete and go to it.
 		if (this.autocompleteDisabled && event.keyCode === KEYCODE_ENTER) {
-			SearchHistory.record(this.query);
 			this.$router.push({ name: 'search.results', query: { q: this.query } });
 		}
 

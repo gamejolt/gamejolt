@@ -15,7 +15,6 @@ import { findRequiredVueParent } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import * as _LocalDbGameMod from '../../client/local-db/game/game.model';
 import { AppGameCompatIcons } from '../../game/compat-icons/compat-icons';
-import { SearchHistory } from '../history/history-service';
 import { AppSearch } from '../search';
 import { Search } from '../search-service';
 
@@ -235,8 +234,6 @@ export class AppSearchAutocomplete extends Vue {
 		}
 
 		if (this.mode === 'search') {
-			SearchHistory.record(this.search!.query);
-
 			// Selected the "show all results" option.
 			if (this.selected === 0) {
 				this.viewAll();
