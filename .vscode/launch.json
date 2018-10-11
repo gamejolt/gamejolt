@@ -1,6 +1,11 @@
 {
 	"version": "0.2.0",
-	"configurations": [
+	"configurations": [{
+			"type": "node",
+			"request": "launch",
+			"name": "Launch Server",
+			"program": "${workspaceFolder}/src/server.js"
+		},
 		{
 			"name": "Launch Site in Chrome",
 			"type": "chrome",
