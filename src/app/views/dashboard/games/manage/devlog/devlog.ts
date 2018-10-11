@@ -46,10 +46,10 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 	@RouteResolve({
 		cache: false,
 		lazy: false,
-		deps: { query: ['tab'] },
+		deps: { query: ['tab', 'feed_last_id'] },
 	})
 	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest(getFetchUrl(route));
+		return Api.sendRequest(ActivityFeedService.makeFeedUrl(route, getFetchUrl(route)));
 	}
 
 	get routeTitle() {

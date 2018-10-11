@@ -49,10 +49,15 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 	@RouteResolve({
 		cache: true,
 		lazy: true,
-		deps: {},
+		deps: { query: ['feed_last_id'] },
 	})
 	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/discover/channels/overview/' + route.params.channel);
+		return Api.sendRequest(
+			ActivityFeedService.makeFeedUrl(
+				route,
+				'/web/discover/channels/overview/' + route.params.channel
+			)
+		);
 	}
 
 	routeInit() {

@@ -8,6 +8,7 @@ import {
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Mutation, State } from 'vuex-class';
 import { AppActivityFeed } from '../../../components/activity/feed/feed';
 import { ActivityFeedContainer } from '../../../components/activity/feed/feed-container-service';
@@ -45,11 +46,11 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	@RouteResolve({
 		cache: true,
 		lazy: true,
-		deps: {},
+		deps: { query: ['feed_last_id'] },
 	})
-	routeResolve(this: undefined) {
+	routeResolve(this: undefined, route: Route) {
 		return Promise.all([
-			Api.sendRequest('/web/dash/activity/activity'),
+			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/activity')),
 			Api.sendRequest('/web/discover'),
 		]);
 	}

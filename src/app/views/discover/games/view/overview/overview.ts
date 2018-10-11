@@ -143,7 +143,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	@RouteResolve({
 		lazy: true,
 		cache: true,
-		deps: {},
+		deps: { query: ['feed_last_id'] },
 	})
 	routeResolve(this: undefined, route: Route) {
 		const gameId = parseInt(route.params.id, 10);
@@ -161,7 +161,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 			apiOverviewUrl += '?ref=' + ref;
 		}
 
-		return Api.sendRequest(apiOverviewUrl);
+		return Api.sendRequest(ActivityFeedService.makeFeedUrl(route, apiOverviewUrl));
 	}
 
 	get routeTitle() {

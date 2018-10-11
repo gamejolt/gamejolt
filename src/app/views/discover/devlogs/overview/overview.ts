@@ -1,5 +1,6 @@
 import View from '!view!./overview.html';
 import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { AppAdPlacement } from '../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
@@ -46,10 +47,10 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 	// Don't cache since every page load we pull new games in.
 	@RouteResolve({
 		lazy: true,
-		deps: {},
+		deps: { query: ['feed_last_id'] },
 	})
-	routeResolve() {
-		return Api.sendRequest('/web/discover/devlogs');
+	routeResolve(this: undefined, route: Route) {
+		return Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/discover/devlogs'));
 	}
 
 	get routeTitle() {

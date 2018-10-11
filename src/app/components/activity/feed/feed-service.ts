@@ -2,7 +2,7 @@ import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-it
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';
 import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
-import { Dictionary } from 'vue-router/types/router';
+import { Dictionary, Route } from 'vue-router/types/router';
 import { ActivityFeedContainer, ActivityFeedContainerOptions } from './feed-container-service';
 import { ActivityFeedInput } from './item-service';
 
@@ -34,6 +34,20 @@ function postFromEventItem(eventItem: EventItem) {
 
 export class ActivityFeedService {
 	private static _states: ActivityFeedState[] = [];
+
+	static makeFeedUrl(route: Route, url: string) {
+		if (url.indexOf('?') === -1) {
+			url += '?ignore';
+		}
+
+		// Attach the scroll ID if it exists in the URL. This is for SSR
+		// pagination.
+		if (route.query.feed_last_id) {
+			url += '&scrollId=' + route.query.feed_last_id;
+		}
+
+		return url;
+	}
 
 	static routeInit(routeComponent: BaseRouteComponent) {
 		// Try to pull the feed from cache if they are going back to this route. We don't want to

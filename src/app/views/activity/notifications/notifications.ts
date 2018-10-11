@@ -5,6 +5,7 @@ import {
 	RouteResolve,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Mutation, State } from 'vuex-class';
 import { AppActivityFeed } from '../../../components/activity/feed/feed';
 import { ActivityFeedContainer } from '../../../components/activity/feed/feed-container-service';
@@ -32,10 +33,12 @@ export default class RouteActivityNotifications extends BaseRouteComponent {
 	@RouteResolve({
 		cache: true,
 		lazy: true,
-		deps: {},
+		deps: { query: ['feed_last_id'] },
 	})
-	routeResolve(this: undefined) {
-		return Api.sendRequest('/web/dash/activity/notifications');
+	routeResolve(this: undefined, route: Route) {
+		return Api.sendRequest(
+			ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/notifications')
+		);
 	}
 
 	get routeTitle() {
