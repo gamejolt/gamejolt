@@ -1,4 +1,4 @@
-import View from '!view!./controls.html';
+import View from '!view!./controls.html?style=./controls.styl';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';

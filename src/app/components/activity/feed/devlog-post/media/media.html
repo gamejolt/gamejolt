@@ -1,4 +1,7 @@
-<div class="devlog-post-media">
+<div
+	class="devlog-post-media"
+	:class="{ '-ssr': GJ_IS_SSR }"
+	>
 	<v-touch
 		class="-lightbox"
 		@panstart="panStart"

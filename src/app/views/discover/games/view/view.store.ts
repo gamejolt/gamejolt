@@ -91,7 +91,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	linkedAccounts: LinkedAccount[] = [];
 
 	canToggleDescription = false;
-	showDetails = false;
+	showDetails = GJ_IS_SSR;
 
 	overviewComments: Comment[] = [];
 

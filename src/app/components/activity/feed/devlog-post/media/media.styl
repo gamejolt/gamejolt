@@ -29,8 +29,8 @@
 		vertical-align: middle
 		width: 100%
 
-		// The "item" gets the correct dimensions applied, so we want to stretch out any image or
-		// video in the item to be full width/height.
+		// The "item" gets the correct dimensions applied, so we want to stretch
+		// out any image or video in the item to be full width/height.
 		.-img, .-video
 			display: block
 			width: 100%
@@ -39,6 +39,12 @@
 			right: 0
 			bottom: 0
 			left: 0
+
+			// For SSR responsive-dimensions component doesn't work, so we want
+			// to instead just try showing the media however the browser would
+			// show it.
+			.-ssr &
+				position: static
 
 .-prev, .-next
 	theme-prop('background-color', 'bg-subtle')
