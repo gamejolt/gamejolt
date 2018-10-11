@@ -1,13 +1,6 @@
 <div>
 	<router-link
-		:to="{
-			name: 'discover.games.view.devlog.view',
-			params: {
-				slug: post.game.slug,
-				id: post.game.id,
-				postSlug: post.slug
-			}
-		}"
+		:to="post.routeLocation"
 		v-app-track-event="`dash:overview:broadcast-view`"
 		>
 		<app-card>

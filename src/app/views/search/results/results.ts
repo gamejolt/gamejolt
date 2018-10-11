@@ -1,4 +1,4 @@
-import View from '!view!./results.html';
+import View from '!view!./results.html?style=./results.styl';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import {
@@ -9,6 +9,10 @@ import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-s
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+import { AppActivityFeed } from '../../../components/activity/feed/feed';
+import { ActivityFeedContainer } from '../../../components/activity/feed/feed-container-service';
+import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
+import { AppActivityFeedPlaceholder } from '../../../components/activity/feed/placeholder/placeholder';
 import { AppGameGrid } from '../../../components/game/grid/grid';
 import { Search } from '../../../components/search/search-service';
 
@@ -19,6 +23,8 @@ import { Search } from '../../../components/search/search-service';
 		AppUserAvatar,
 		AppGameGrid,
 		AppJolticon,
+		AppActivityFeed,
+		AppActivityFeedPlaceholder,
 	},
 	filters: {
 		number,
@@ -31,6 +37,8 @@ export default class RouteSearchResults extends BaseRouteComponent {
 	@Prop(String)
 	query!: string;
 
+	feed: ActivityFeedContainer | null = null;
+
 	readonly Search = Search;
 	readonly Screen = Screen;
 
@@ -41,7 +49,21 @@ export default class RouteSearchResults extends BaseRouteComponent {
 		return Search.search(route.query.q);
 	}
 
-	routed($payload: any) {
+	routeInit() {
+		this.feed = ActivityFeedService.routeInit(this);
+	}
+
+	routed($payload: any, fromCache: boolean) {
+		this.feed = ActivityFeedService.routed(
+			this.feed,
+			{
+				type: 'EventItem',
+				url: `/web/posts/fetch/search/${this.$route.query.q}`,
+			},
+			$payload.posts,
+			fromCache
+		);
+
 		this.$emit('searchpayload', $payload);
 	}
 }

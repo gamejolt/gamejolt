@@ -15,9 +15,9 @@
 					:title="room.title"
 					>
 					<span class="tag tag-highlight notifications-tag"
-						v-if="chat.roomId === room.id && Chat.roomNotifications"
+						v-if="chat.roomId === room.id && chat.roomNotificationsCount"
 						>
-						{{ Chat.roomNotifications | number }}
+						{{ chat.roomNotificationsCount | number }}
 					</span>
 					<span class="shell-nav-icon">
 						<app-jolticon icon="users" />

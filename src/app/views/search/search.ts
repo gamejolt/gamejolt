@@ -90,7 +90,12 @@ export default class RouteSearch extends BaseRouteComponent {
 			this.payload.perPage = parseInt(this.payload.perPage, 10);
 		}
 
-		if (!payload.gamesCount && !payload.usersCount && !payload.devlogsCount) {
+		if (
+			!payload.gamesCount &&
+			!payload.usersCount &&
+			!payload.devlogsCount &&
+			!payload.postsCount
+		) {
 			this.noResults = true;
 		} else if (payload.devlogsCount > 0) {
 			this.payload.devlogsTrimmed = payload.devlogs.slice(0, 4);
