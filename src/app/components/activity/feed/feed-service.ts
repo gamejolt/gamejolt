@@ -14,7 +14,7 @@ const MaxCachedCount = 3;
 
 interface ActivityFeedState {
 	key?: string;
-	href: string;
+	href?: string;
 	container: ActivityFeedContainer;
 }
 
@@ -147,7 +147,7 @@ export class ActivityFeedService {
 
 	private static makeState(items: ActivityFeedInput[], options: ActivityFeedContainerOptions) {
 		const key = this.getStateKey();
-		const href = window.location.href;
+		const href = typeof window !== 'undefined' ? window.location.href : undefined;
 
 		const state = {
 			key,
@@ -164,7 +164,7 @@ export class ActivityFeedService {
 
 	private static findState() {
 		const key = this.getStateKey();
-		const href = window.location.href;
+		const href = typeof window !== 'undefined' ? window.location.href : undefined;
 
 		// Note that we have to check the history state key AND the actual URL. If you replace a
 		// route with vue, the history state key stays the same, even though the route changes.
