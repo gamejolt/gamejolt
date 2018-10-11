@@ -37,9 +37,9 @@
 
 	<div v-if="shouldShowLoadMore" class="page-cut">
 		<app-button
-			:to="{ query: { feed_last_id: feed.endScrollId } }"
+			:to="GJ_IS_SSR ? { query: { feed_last_id: feed.endScrollId } } : undefined"
 			trans
-			@click="loadMoreButton"
+			@click.prevent="loadMoreButton"
 			v-app-track-event="`activity-feed:more`"
 			>
 			<translate>Load More</translate>
