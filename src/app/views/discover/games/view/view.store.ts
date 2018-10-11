@@ -245,7 +245,6 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 		this.supporters = User.populate(payload.supporters);
 		this.supporterCount = payload.supporterCount;
 
-		console.log('linked', payload.linkedAccounts);
 		this.linkedAccounts = LinkedAccount.populate(payload.linkedAccounts);
 
 		this.overviewComments = Comment.populate(payload.comments);
