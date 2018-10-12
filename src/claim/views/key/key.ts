@@ -114,7 +114,17 @@ export default class RouteKey extends BaseRouteComponent {
 		}
 
 		try {
-			await Api.sendRequest('/web/library/claim-key', { key: this.accessKey });
+			const response = await Api.sendRequest(
+				'/web/library/claim-key',
+				{ key: this.accessKey },
+				{ detach: true }
+			);
+
+			if (response && response.error && response.error === 'already-claimed-in-group') {
+				this.invalidKey = true;
+				Growls.error(this.$gettext(`You already claimed a key for that!`));
+				return;
+			}
 
 			let location = '';
 			if (resource instanceof GameBundle) {
