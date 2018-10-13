@@ -2,7 +2,13 @@ import { namespace } from 'vuex-class';
 import { Registry } from '../../../lib/gj-lib-client/components/registry/registry.service';
 import { UserFriendship } from '../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
-import { NamespaceVuexStore, VuexAction, VuexModule, VuexMutation, VuexStore } from '../../../lib/gj-lib-client/utils/vuex';
+import {
+	NamespaceVuexStore,
+	VuexAction,
+	VuexModule,
+	VuexMutation,
+	VuexStore,
+} from '../../../lib/gj-lib-client/utils/vuex';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
 import { store } from '../../store';
 
