@@ -1,22 +1,20 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./add.html';
-
-import { RouteState, RouteStore } from '../../../manage.store';
+import { Component } from 'vue-property-decorator';
 import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { AppJolticon } from '../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { FormGamePackage } from '../../../../../../../components/forms/game/package/package';
 import { BaseRouteComponent } from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { FormGamePackage } from '../../../../../../../components/forms/game/package/package';
+import { RouteStore, RouteStoreModule } from '../../../manage.store';
 
 @View
 @Component({
 	name: 'RouteDashGamesManageGamePackagesAdd',
 	components: {
-		AppJolticon,
 		FormGamePackage,
 	},
 })
 export default class RouteDashGamesManageGamePackagesAdd extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteStoreModule.State
+	game!: RouteStore['game'];
 
 	get routeTitle() {
 		if (this.game) {

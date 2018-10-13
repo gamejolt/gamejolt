@@ -13,7 +13,7 @@ export default class RouteDash extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
 
-	routeInit() {
+	routeCreated() {
 		const adSettings = new AdSettingsContainer();
 		adSettings.adUnit = 'user';
 		Ads.setPageSettings(adSettings);

@@ -1,6 +1,5 @@
 import View from '!view!./analytics.html?style=./analytics.styl';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
@@ -10,7 +9,7 @@ import { GameRelease } from '../../../../lib/gj-lib-client/components/game/relea
 import { AppGraph } from '../../../../lib/gj-lib-client/components/graph/graph';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppScrollAffix } from '../../../../lib/gj-lib-client/components/scroll/affix/affix';
@@ -74,6 +73,17 @@ import { AppAnalyticsReportTopCompositionValue } from './_report/top-composition
 		date: dateFilter,
 	},
 })
+@RouteResolver({
+	cache: false,
+	deps: {
+		params: ['resource', 'resourceId', 'metricKey'],
+		query: ['viewAs', 'partner', 'period', 'year', 'month'],
+	},
+	resolver: ({ route }) =>
+		Api.sendRequest(
+			'/web/dash/analytics/' + route.params.resource + '/' + route.params.resourceId
+		),
+})
 export default class RouteDashAnalytics extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
@@ -104,24 +114,11 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 
-	@RouteResolve({
-		cache: false,
-		deps: {
-			params: ['resource', 'resourceId', 'metricKey'],
-			query: ['viewAs', 'partner', 'period', 'year', 'month'],
-		},
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest(
-			'/web/dash/analytics/' + route.params.resource + '/' + route.params.resourceId
-		);
-	}
-
 	get routeTitle() {
 		return this.$gettext('Analytics');
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.resource = this.$route.params.resource as ResourceName;
 		this.resourceId = parseInt(this.$route.params.resourceId, 10);
 

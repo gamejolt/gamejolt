@@ -1,12 +1,10 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./redlight.html?style=./redlight.styl';
-
-import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { Component } from 'vue-property-decorator';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
-import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { AppSocialTwitterShare } from '../../../../lib/gj-lib-client/components/social/twitter/share/share';
+import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { AppSocialFacebookLike } from '../../../../lib/gj-lib-client/components/social/facebook/like/like';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppSocialTwitterShare } from '../../../../lib/gj-lib-client/components/social/twitter/share/share';
+import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 
 function getRandomInt(min: number, max: number) {
@@ -21,12 +19,12 @@ function getRandomInt(min: number, max: number) {
 	components: {
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,
-		AppJolticon,
 		AppAuthJoin: AppAuthJoinLazy,
 	},
 })
 export default class RouteLandingRedlight extends BaseRouteComponent {
-	@AppState user!: AppStore['user'];
+	@AppState
+	user!: AppStore['user'];
 
 	readonly slogans = [
 		`Drive indie traffic to your AAA games`,
@@ -72,7 +70,7 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 		return `Redlight`;
 	}
 
-	routeInit() {
+	routeCreated() {
 		Meta.description = `A unique platform for AAA studios and non-indie publishers.`;
 
 		Meta.fb = {

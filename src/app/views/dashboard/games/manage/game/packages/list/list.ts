@@ -1,6 +1,5 @@
 import View from '!view!./list.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppCardListDraggable } from '../../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';
 import { AppCardListItem } from '../../../../../../../../lib/gj-lib-client/components/card/list/item/item';
@@ -10,7 +9,7 @@ import { Growls } from '../../../../../../../../lib/gj-lib-client/components/gro
 import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { Sellable } from '../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
 import { AppTooltip } from '../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
@@ -19,7 +18,7 @@ import { currency } from '../../../../../../../../lib/gj-lib-client/vue/filters/
 import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
 import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
-import { RouteState, RouteStore } from '../../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../../manage.store';
 
 @View
 @Component({
@@ -38,8 +37,13 @@ import { RouteState, RouteStore } from '../../../manage.store';
 		currency,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) =>
+		Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id),
+})
 export default class RouteDashGamesManageGamePackagesList extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
 	packages: GamePackage[] = [];
@@ -59,13 +63,6 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 		return this.packages.map(i => i.id);
 	}
 
-	@RouteResolve({
-		deps: {},
-	})
-	async routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id);
-	}
-
 	get routeTitle() {
 		if (this.game) {
 			return this.$gettextInterpolate('Manage Packages for %{ game }', {
@@ -75,7 +72,7 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		if ($payload.packages && !$payload.packages.length) {
 			if (this.game.hasPerms('all')) {
 				this.$router.replace({

@@ -8,7 +8,7 @@ import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service
 import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppActivityFeed } from '../../../../components/activity/feed/feed';
 import { ActivityFeedContainer } from '../../../../components/activity/feed/feed-container-service';
@@ -16,7 +16,7 @@ import { ActivityFeedService } from '../../../../components/activity/feed/feed-s
 import { AppActivityFeedPlaceholder } from '../../../../components/activity/feed/placeholder/placeholder';
 import { AppPostAddButton } from '../../../../components/post/add-button/add-button';
 import { Store } from '../../../../store/index';
-import { RouteState, RouteStore } from '../../profile.store';
+import { RouteStore, RouteStoreModule } from '../../profile.store';
 
 function getFetchUrl(route: Route) {
 	const tab = route.query.tab || 'active';
@@ -33,11 +33,18 @@ function getFetchUrl(route: Route) {
 		AppPostAddButton,
 	},
 })
+@RouteResolver({
+	cache: false,
+	lazy: true,
+	deps: { query: ['tab', 'feed_last_id'] },
+	resolver: ({ route }) =>
+		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, getFetchUrl(route))),
+})
 export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
 
-	@RouteState
+	@RouteStoreModule.State
 	user!: RouteStore['user'];
 
 	feed: ActivityFeedContainer | null = null;
@@ -46,20 +53,11 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 		return this.app.user && this.user && this.user.id === this.app.user.id;
 	}
 
-	@RouteResolve({
-		cache: false,
-		lazy: true,
-		deps: { query: ['tab', 'feed_last_id'] },
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest(ActivityFeedService.makeFeedUrl(route, getFetchUrl(route)));
-	}
-
-	routeInit() {
+	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
-	routed($payload: any, fromCache: boolean) {
+	routeResolved($payload: any, fromCache: boolean) {
 		this.feed = ActivityFeedService.routed(
 			this.feed,
 			{

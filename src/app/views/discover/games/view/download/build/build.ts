@@ -1,6 +1,5 @@
 import View from '!view!./build.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
@@ -11,7 +10,7 @@ import { Game } from '../../../../../../../lib/gj-lib-client/components/game/gam
 import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
@@ -23,7 +22,7 @@ import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
 import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
 import { Store } from '../../../../../../store/index';
 import { AppDiscoverGamesViewOverviewDetails } from '../../overview/_details/details';
-import { RouteState, RouteStore } from '../../view.store';
+import { RouteStore, RouteStoreModule } from '../../view.store';
 
 const DownloadDelay = 3000;
 
@@ -42,11 +41,25 @@ const DownloadDelay = 3000;
 		AppDiscoverGamesViewOverviewDetails,
 	},
 })
+@RouteResolver({
+	deps: { params: ['buildId'] },
+	resolver({ route }) {
+		const gameId = parseInt(route.params.id, 10);
+		const buildId = parseInt(route.params.buildId, 10);
+
+		HistoryTick.sendBeacon('game-build', buildId, {
+			sourceResource: 'Game',
+			sourceResourceId: gameId,
+		});
+
+		return Api.sendRequest(`/web/discover/games/builds/download-page/${gameId}/${buildId}`);
+	},
+})
 export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
-	@RouteState
+	@RouteStoreModule.State
 	userRating!: RouteStore['userRating'];
 
 	@State
@@ -61,21 +74,6 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 	readonly Screen = Screen;
 	readonly Environment = Environment;
 
-	@RouteResolve({
-		deps: { params: ['buildId'] },
-	})
-	routeResolve(this: undefined, route: Route) {
-		const gameId = parseInt(route.params.id, 10);
-		const buildId = parseInt(route.params.buildId, 10);
-
-		HistoryTick.sendBeacon('game-build', buildId, {
-			sourceResource: 'Game',
-			sourceResourceId: gameId,
-		});
-
-		return Api.sendRequest(`/web/discover/games/builds/download-page/${gameId}/${buildId}`);
-	}
-
 	get routeTitle() {
 		if (this.game) {
 			return this.$gettextInterpolate(`Downloading %{ game }`, {
@@ -85,7 +83,7 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 		return null;
 	}
 
-	async routed($payload: any) {
+	async routeResolved($payload: any) {
 		this.build = new GameBuild($payload.build);
 		this.src = null;
 

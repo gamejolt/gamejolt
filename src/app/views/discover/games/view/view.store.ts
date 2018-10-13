@@ -1,5 +1,5 @@
 import { LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
-import { Action, Mutation, namespace, State } from 'vuex-class';
+import { namespace } from 'vuex-class';
 import { Comment } from '../../../../../lib/gj-lib-client/components/comment/comment-model';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
@@ -20,17 +20,18 @@ import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/vide
 import { Registry } from '../../../../../lib/gj-lib-client/components/registry/registry.service';
 import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
 import { objectPick } from '../../../../../lib/gj-lib-client/utils/object';
-import { VuexModule, VuexMutation, VuexStore } from '../../../../../lib/gj-lib-client/utils/vuex';
+import {
+	NamespaceVuexStore,
+	VuexModule,
+	VuexMutation,
+	VuexStore,
+} from '../../../../../lib/gj-lib-client/utils/vuex';
+import { store } from '../../../../store';
 import { router } from '../../../index';
 
-export const RouteStoreName = 'gameRoute';
-export const RouteState = namespace(RouteStoreName, State);
-export const RouteAction = namespace(RouteStoreName, Action);
-export const RouteMutation = namespace(RouteStoreName, Mutation);
+type RouteActions = {};
 
-type Actions = {};
-
-type Mutations = {
+type RouteMutations = {
 	bootstrapGame: number;
 	processPayload: any;
 	processOverviewPayload: { payload: any; fromCache: boolean };
@@ -43,6 +44,13 @@ type Mutations = {
 	setUserRating: GameRating | null;
 };
 
+export const RouteStoreName = 'gameRoute';
+export const RouteStoreModule = namespace(RouteStoreName);
+export const routeStore = NamespaceVuexStore<RouteStore, RouteActions, RouteMutations>(
+	store,
+	RouteStoreName
+);
+
 function updateGame(game: Game | null, newGame: Game | null) {
 	// If we already have a game, just assign new data into it to keep it fresh.
 	if (game && newGame) {
@@ -54,7 +62,7 @@ function updateGame(game: Game | null, newGame: Game | null) {
 }
 
 @VuexModule()
-export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
+export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutations> {
 	isOverviewLoaded = false;
 
 	// We will bootstrap this right away, so it should always be set for use.
@@ -171,7 +179,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	bootstrapGame(gameId: Mutations['bootstrapGame']) {
+	bootstrapGame(gameId: RouteMutations['bootstrapGame']) {
 		const prevId = this.game && this.game.id;
 		const game = Registry.find<Game>('Game', i => i.id === gameId);
 		this.game = updateGame(this.game, game) as any;
@@ -190,7 +198,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	processPayload(payload: Mutations['processPayload']) {
+	processPayload(payload: RouteMutations['processPayload']) {
 		const game = new Game(payload.game);
 		this.game = updateGame(this.game, game)!;
 
@@ -208,7 +216,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	processOverviewPayload(data: Mutations['processOverviewPayload']) {
+	processOverviewPayload(data: RouteMutations['processOverviewPayload']) {
 		const { payload } = data;
 		this.isOverviewLoaded = true;
 
@@ -275,12 +283,12 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	setUserRating(rating: Mutations['setUserRating']) {
+	setUserRating(rating: RouteMutations['setUserRating']) {
 		this.userRating = rating;
 	}
 
 	@VuexMutation
-	acceptCollaboratorInvite(invite: Mutations['acceptCollaboratorInvite']) {
+	acceptCollaboratorInvite(invite: RouteMutations['acceptCollaboratorInvite']) {
 		this.game.perms = invite.perms;
 		this.collaboratorInvite = null;
 	}
@@ -291,7 +299,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	pushVideoComments(videos: Mutations['pushVideoComments']) {
+	pushVideoComments(videos: RouteMutations['pushVideoComments']) {
 		++this.videoCommentsPage;
 		this.videoComments = this.videoComments.concat(videos);
 	}
@@ -302,7 +310,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	setCanToggleDescription(flag: Mutations['setCanToggleDescription']) {
+	setCanToggleDescription(flag: RouteMutations['setCanToggleDescription']) {
 		this.canToggleDescription = flag;
 	}
 

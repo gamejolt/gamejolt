@@ -1,17 +1,16 @@
+import View from '!view!./media-bar.html?style=./media-bar.styl';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./media-bar.html?style=./media-bar.styl';
-
+import { AppEditableOverlay } from '../../../../../../../lib/gj-lib-client/components/editable-overlay/editable-overlay';
+import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
 import {
 	AppMediaBarItem,
 	MediaBarItemMaxHeight,
 } from '../../../../../../../lib/gj-lib-client/components/media-bar/item/item';
 import { AppScrollScroller } from '../../../../../../../lib/gj-lib-client/components/scroll/scroller/scroller';
-import { RouteAction, RouteStore, Media, RouteMutation } from '../../manage.store';
 import { GameMediaItemAddModal } from '../../../../../../components/game/media-item/add-modal/add-modal.service';
-import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
 import { GameMediaItemEditModal } from '../../../../../../components/game/media-item/edit-modal/edit-modal.service';
-import { AppEditableOverlay } from '../../../../../../../lib/gj-lib-client/components/editable-overlay/editable-overlay';
+import { Media, RouteStore, RouteStoreModule } from '../../manage.store';
 
 const draggable = require('vuedraggable');
 
@@ -25,12 +24,20 @@ const draggable = require('vuedraggable');
 	},
 })
 export class AppManageGameMediaBar extends Vue {
-	@Prop(Game) game!: Game;
-	@Prop(Array) mediaItems!: Media[];
+	@Prop(Game)
+	game!: Game;
 
-	@RouteMutation addMedia!: RouteStore['addMedia'];
-	@RouteMutation removeMedia!: RouteStore['removeMedia'];
-	@RouteAction saveMediaSort!: RouteStore['saveMediaSort'];
+	@Prop(Array)
+	mediaItems!: Media[];
+
+	@RouteStoreModule.Mutation
+	addMedia!: RouteStore['addMedia'];
+
+	@RouteStoreModule.Mutation
+	removeMedia!: RouteStore['removeMedia'];
+
+	@RouteStoreModule.Action
+	saveMediaSort!: RouteStore['saveMediaSort'];
 
 	mediaBarHeight = MediaBarItemMaxHeight + 40;
 	addButtonSize = MediaBarItemMaxHeight;

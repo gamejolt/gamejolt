@@ -1,6 +1,5 @@
 import View from '!view!./key.html';
 import { Component, Prop } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
@@ -11,7 +10,7 @@ import { ModalConfirm } from '../../../lib/gj-lib-client/components/modal/confir
 import { Navigate } from '../../../lib/gj-lib-client/components/navigate/navigate.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../lib/gj-lib-client/components/route/route-component';
 import { AppInvalidKey } from '../../components/invalid-key/invalid-key';
 import { Store } from '../../store/index';
@@ -23,6 +22,18 @@ import { AppKeyGame } from './_game/game';
 	name: 'RouteKey',
 	components: {
 		AppInvalidKey,
+	},
+})
+@RouteResolver({
+	cache: true,
+	resolver({ route }) {
+		let url = '/claim/view/' + route.params.accessKey;
+
+		if (route.query.bundleGameId) {
+			url += '?game_id=' + route.query.bundleGameId;
+		}
+
+		return Api.sendRequest(url);
 	},
 })
 export default class RouteKey extends BaseRouteComponent {
@@ -50,18 +61,7 @@ export default class RouteKey extends BaseRouteComponent {
 		return AppKeyGame;
 	}
 
-	@RouteResolve({ cache: true })
-	routeResolve(this: undefined, route: Route) {
-		let url = '/claim/view/' + route.params.accessKey;
-
-		if (route.query.bundleGameId) {
-			url += '?game_id=' + route.query.bundleGameId;
-		}
-
-		return Api.sendRequest(url);
-	}
-
-	routeInit() {
+	routeCreated() {
 		this.payload = null;
 		this.type = '';
 	}
@@ -87,7 +87,7 @@ export default class RouteKey extends BaseRouteComponent {
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		if ($payload.error === 'invalid-key') {
 			this.invalidKey = true;
 			return;

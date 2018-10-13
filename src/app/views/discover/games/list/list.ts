@@ -1,16 +1,14 @@
 import View from '!view!./list.html';
 import { Component, Prop } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Ads } from '../../../../../lib/gj-lib-client/components/ad/ads.service';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { LocationRedirect } from '../../../../../lib/gj-lib-client/utils/router';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import {
 	checkGameFilteringRoute,
@@ -27,13 +25,25 @@ import { AppPageHeader } from '../../../../components/page-header/page-header';
 	name: 'RouteDiscoverGamesList',
 	components: {
 		AppPageHeader,
-		AppJolticon,
 		AppGenreList,
 		AppGameListing,
 		AppGameGrid,
 	},
 	directives: {
 		AppTooltip,
+	},
+})
+@RouteResolver({
+	lazy: true,
+	cache: true,
+	async resolver({ route }) {
+		const location = checkGameFilteringRoute(route);
+		if (location) {
+			return new LocationRedirect(location);
+		}
+
+		const filtering = new GameFilteringContainer(route);
+		return Api.sendRequest('/web/discover/games?' + filtering.getQueryString(route));
 	},
 })
 export default class RouteDiscoverGamesList extends BaseRouteComponent {
@@ -76,29 +86,15 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		'games.list.section_best': this.$gettext('games.list.section_best'),
 	};
 
-	@RouteResolve({
-		lazy: true,
-		cache: true,
-	})
-	async routeResolve(this: undefined, route: Route) {
-		const location = checkGameFilteringRoute(route);
-		if (location) {
-			return new LocationRedirect(location);
-		}
-
-		const filtering = new GameFilteringContainer(route);
-		return Api.sendRequest('/web/discover/games?' + filtering.getQueryString(route));
-	}
-
 	get routeTitle() {
 		return this.pageTitle;
 	}
 
-	routeInit() {
+	routeCreated() {
 		this.process();
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		if ($payload && $payload.metaDescription) {
 			Meta.description = $payload.metaDescription;
 		}

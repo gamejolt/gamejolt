@@ -1,9 +1,12 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./financials.html';
-
-import { RouteMutation, RouteStore } from '../account.store';
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { Component } from 'vue-property-decorator';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { FormFinancials } from '../../../../components/forms/financials/financials';
-import { BaseRouteComponent } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
 @View
 @Component({
@@ -12,14 +15,17 @@ import { BaseRouteComponent } from '../../../../../lib/gj-lib-client/components/
 		FormFinancials,
 	},
 })
+@RouteResolver({
+	resolver: () => Promise.resolve(),
+	resolveStore() {
+		routeStore.commit('setHeading', Translate.$gettext(`Marketplace Account Setup`));
+	},
+})
 export default class RouteDashAccountFinancials extends BaseRouteComponent {
-	@RouteMutation setHeading!: RouteStore['setHeading'];
+	@RouteStoreModule.State
+	heading!: RouteStore['heading'];
 
 	get routeTitle() {
-		return this.$gettext('Marketplace Account Setup');
-	}
-
-	routeInit() {
-		this.setHeading(this.$gettext('Marketplace Account Setup'));
+		return this.heading;
 	}
 }

@@ -2,7 +2,6 @@ import View from '!view!./view.html';
 import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
 import { AppUserCardHover } from 'game-jolt-frontend-lib/components/user/card/hover/hover';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
@@ -19,7 +18,7 @@ import { AppPopper } from '../../../../../lib/gj-lib-client/components/popper/po
 import { ReportModal } from '../../../../../lib/gj-lib-client/components/report/modal/modal.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppScrollAffix } from '../../../../../lib/gj-lib-client/components/scroll/affix/affix';
@@ -68,6 +67,26 @@ import { Store } from '../../../../store/index';
 		number,
 	},
 })
+@RouteResolver({
+	cache: true,
+	deps: { params: ['slug', 'id'], query: ['page'] },
+	async resolver({ route }) {
+		HistoryTick.sendBeacon('forum-topic', parseInt(route.params.id, 10));
+
+		const payload = await Api.sendRequest(
+			'/web/forums/topics/' + route.params.id + '?page=' + (route.query.page || 1)
+		);
+
+		if (payload && payload.topic) {
+			const redirect = enforceLocation(route, { slug: payload.topic.slug });
+			if (redirect) {
+				return redirect;
+			}
+		}
+
+		return payload;
+	},
+})
 export default class RouteForumsTopicsView extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
@@ -104,27 +123,6 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 		return this.topic.can_upvote && !this.topic.is_locked;
 	}
 
-	@RouteResolve({
-		cache: true,
-		deps: { params: ['slug', 'id'], query: ['page'] },
-	})
-	async routeResolve(this: undefined, route: Route) {
-		HistoryTick.sendBeacon('forum-topic', parseInt(route.params.id, 10));
-
-		const payload = await Api.sendRequest(
-			'/web/forums/topics/' + route.params.id + '?page=' + (route.query.page || 1)
-		);
-
-		if (payload && payload.topic) {
-			const redirect = enforceLocation(route, { slug: payload.topic.slug });
-			if (redirect) {
-				return redirect;
-			}
-		}
-
-		return payload;
-	}
-
 	get routeTitle() {
 		if (this.topic) {
 			return this.topic.title;
@@ -132,7 +130,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.topic = new ForumTopic($payload.topic);
 		this.channel = new ForumChannel($payload.channel);
 		this.posts = ForumPost.populate($payload.posts);

@@ -1,14 +1,12 @@
-import { Route } from 'vue-router';
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./reset-password.html';
-
-import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
+import { Component, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { FormResetPassword } from '../../../components/forms/reset-password/reset-password';
+import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { FormResetPassword } from '../../../components/forms/reset-password/reset-password';
 
 @View
 @Component({
@@ -17,17 +15,19 @@ import {
 		FormResetPassword,
 	},
 })
-export default class RouteAuthResetPassword extends BaseRouteComponent {
-	@Prop(String) userId!: string;
-	@Prop(String) token!: string;
-
-	@RouteResolve()
-	routeResolve(this: undefined, route: Route) {
-		// Will return a 404 if the key isn't correct for this user.
-		return Api.sendRequest('/web/auth/check-reset-key/' + route.params.userId, {
+@RouteResolver({
+	// Will return a 404 if the key isn't correct for this user.
+	resolver: ({ route }) =>
+		Api.sendRequest('/web/auth/check-reset-key/' + route.params.userId, {
 			key: route.params.token,
-		});
-	}
+		}),
+})
+export default class RouteAuthResetPassword extends BaseRouteComponent {
+	@Prop(String)
+	userId!: string;
+
+	@Prop(String)
+	token!: string;
 
 	get routeTitle() {
 		return this.$gettext('auth.reset_password.page_title');

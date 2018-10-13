@@ -1,20 +1,19 @@
 import View from '!view!./list.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameTrophy } from '../../../../../../../lib/gj-lib-client/components/game/trophy/trophy.model';
 import { AppNavTabList } from '../../../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { UserGameTrophy } from '../../../../../../../lib/gj-lib-client/components/user/game-trophy/game-trophy.model';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppTrophyCompletion } from '../../../../../../components/trophy/completion/completion';
 import { AppTrophyList } from '../../../../../../components/trophy/list/list';
 import { Store } from '../../../../../../store/index';
-import { RouteState, RouteStore } from '../../view.store';
+import { RouteStore, RouteStoreModule } from '../../view.store';
 
 @View
 @Component({
@@ -28,8 +27,13 @@ import { RouteState, RouteStore } from '../../view.store';
 		number,
 	},
 })
+@RouteResolver({
+	cache: true,
+	deps: {},
+	resolver: ({ route }) => Api.sendRequest('/web/discover/games/trophies/' + route.params.id),
+})
 export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
 	@State
@@ -48,14 +52,6 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 
 	currentFilter = 'all';
 
-	@RouteResolve({
-		cache: true,
-		deps: {},
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/discover/games/trophies/' + route.params.id);
-	}
-
 	get routeTitle() {
 		if (this.game) {
 			return this.$gettextInterpolate(`Trophies for %{ game }`, {
@@ -65,7 +61,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.trophies = GameTrophy.populate($payload.trophies);
 		this.achieved = $payload.trophiesAchieved
 			? UserGameTrophy.populate($payload.trophiesAchieved)

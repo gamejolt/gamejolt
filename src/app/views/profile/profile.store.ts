@@ -1,21 +1,12 @@
-import { Action, Mutation, namespace, State } from 'vuex-class';
+import { namespace } from 'vuex-class';
 import { Registry } from '../../../lib/gj-lib-client/components/registry/registry.service';
 import { UserFriendship } from '../../../lib/gj-lib-client/components/user/friendship/friendship.model';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
-import {
-	VuexAction,
-	VuexModule,
-	VuexMutation,
-	VuexStore,
-} from '../../../lib/gj-lib-client/utils/vuex';
+import { NamespaceVuexStore, VuexAction, VuexModule, VuexMutation, VuexStore } from '../../../lib/gj-lib-client/utils/vuex';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
+import { store } from '../../store';
 
-export const RouteStoreName = 'profileRoute';
-export const RouteState = namespace(RouteStoreName, State);
-export const RouteAction = namespace(RouteStoreName, Action);
-export const RouteMutation = namespace(RouteStoreName, Mutation);
-
-type Actions = {
+type RouteActions = {
 	sendFriendRequest: void;
 	acceptFriendRequest: void;
 	cancelFriendRequest: void;
@@ -23,11 +14,18 @@ type Actions = {
 	removeFriend: void;
 };
 
-type Mutations = {
+type RouteMutations = {
 	bootstrapUser: string;
 	profilePayload: any;
 	setUserFriendship: UserFriendship | null;
 };
+
+export const RouteStoreName = 'profileRoute';
+export const RouteStoreModule = namespace(RouteStoreName);
+export const routeStore = NamespaceVuexStore<RouteStore, RouteActions, RouteMutations>(
+	store,
+	RouteStoreName
+);
 
 function updateUser(user: User | null, newUser: User | null) {
 	// If we already have a user, just assign new data into it to keep it fresh.
@@ -40,7 +38,7 @@ function updateUser(user: User | null, newUser: User | null) {
 }
 
 @VuexModule()
-export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
+export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutations> {
 	user: User | null = null;
 	gamesCount = 0;
 	videosCount = 0;
@@ -93,7 +91,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	bootstrapUser(username: Mutations['bootstrapUser']) {
+	bootstrapUser(username: RouteMutations['bootstrapUser']) {
 		const prevId = this.user && this.user.id;
 		const user = Registry.find<User>('User', i => i.username === username);
 		this.user = updateUser(this.user, user);
@@ -107,7 +105,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	profilePayload($payload: Mutations['profilePayload']) {
+	profilePayload($payload: RouteMutations['profilePayload']) {
 		const user = new User($payload.user);
 		this.user = updateUser(this.user, user);
 
@@ -123,7 +121,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	setUserFriendship(friendship: Mutations['setUserFriendship']) {
+	setUserFriendship(friendship: RouteMutations['setUserFriendship']) {
 		this.userFriendship = friendship;
 	}
 }

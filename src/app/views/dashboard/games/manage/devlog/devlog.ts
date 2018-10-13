@@ -5,7 +5,7 @@ import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/po
 import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
@@ -15,7 +15,7 @@ import { ActivityFeedService } from '../../../../../components/activity/feed/fee
 import { AppActivityFeedPlaceholder } from '../../../../../components/activity/feed/placeholder/placeholder';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppPostAddButton } from '../../../../../components/post/add-button/add-button';
-import { RouteState, RouteStore } from '../manage.store';
+import { RouteStore, RouteStoreModule } from '../manage.store';
 
 function getFetchUrl(route: Route) {
 	const tab = route.query.tab || 'active';
@@ -33,8 +33,15 @@ function getFetchUrl(route: Route) {
 		AppNavTabList,
 	},
 })
+@RouteResolver({
+	cache: false,
+	lazy: false,
+	deps: { query: ['tab', 'feed_last_id'] },
+	resolver: ({ route }) =>
+		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, getFetchUrl(route))),
+})
 export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
 	feed: ActivityFeedContainer | null = null;
@@ -43,24 +50,15 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 		return this.$route.query.tab || 'active';
 	}
 
-	@RouteResolve({
-		cache: false,
-		lazy: false,
-		deps: { query: ['tab', 'feed_last_id'] },
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest(ActivityFeedService.makeFeedUrl(route, getFetchUrl(route)));
-	}
-
 	get routeTitle() {
 		return this.$gettext('Manage Devlog');
 	}
 
-	routeInit() {
+	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
-	routed($payload: any, fromCache: boolean) {
+	routeResolved($payload: any, fromCache: boolean) {
 		this.feed = ActivityFeedService.routed(
 			this.feed,
 			{

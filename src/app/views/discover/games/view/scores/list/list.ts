@@ -1,7 +1,6 @@
 import View from '!view!./list.html?style=./list.styl';
 import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
 import { Component, Prop } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameScoreTable } from '../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
@@ -9,7 +8,7 @@ import { AppLoadingFade } from '../../../../../../../lib/gj-lib-client/component
 import { AppNavTabList } from '../../../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppScrollAffix } from '../../../../../../../lib/gj-lib-client/components/scroll/affix/affix';
@@ -19,7 +18,7 @@ import { UserGameScore } from '../../../../../../../lib/gj-lib-client/components
 import { AppScoreList } from '../../../../../../components/score/list/list';
 import { AppScoreboardSelector } from '../../../../../../components/score/scoreboard-selector/scoreboard-selector';
 import { Store } from '../../../../../../store/index';
-import { RouteState, RouteStore } from '../../view.store';
+import { RouteStore, RouteStoreModule } from '../../view.store';
 
 @View
 @Component({
@@ -35,11 +34,32 @@ import { RouteState, RouteStore } from '../../view.store';
 		AppNoAutoscroll,
 	},
 })
+@RouteResolver({
+	cache: true,
+	deps: { params: ['tableId', 'type'], query: ['page'] },
+	resolver({ route }) {
+		let query = '';
+		if (parseInt(route.query.page, 10) > 1) {
+			query = '?page=' + route.query.page;
+		}
+
+		const url =
+			'/web/discover/games/scores' +
+			'/' +
+			route.params.id +
+			'/' +
+			route.params.tableId +
+			'/' +
+			route.params.type;
+
+		return Api.sendRequest(url + query);
+	},
+})
 export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent {
 	@Prop(String)
 	type!: 'best' | 'user';
 
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
 	@State
@@ -64,28 +84,6 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 		return this.scores.filter((_score, i) => i % 2 === 1);
 	}
 
-	@RouteResolve({
-		cache: true,
-		deps: { params: ['tableId', 'type'], query: ['page'] },
-	})
-	routeResolve(this: undefined, route: Route) {
-		let query = '';
-		if (parseInt(route.query.page, 10) > 1) {
-			query = '?page=' + route.query.page;
-		}
-
-		const url =
-			'/web/discover/games/scores' +
-			'/' +
-			route.params.id +
-			'/' +
-			route.params.tableId +
-			'/' +
-			route.params.type;
-
-		return Api.sendRequest(url + query);
-	}
-
 	get routeTitle() {
 		if (this.game) {
 			return this.$gettextInterpolate(`Scores for %{ game }`, {
@@ -95,7 +93,7 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.scoreTables = GameScoreTable.populate($payload.scoreTables);
 		this.scoreTable = $payload.scoreTable ? new GameScoreTable($payload.scoreTable) : null;
 		this.scores = UserGameScore.populate($payload.scores);

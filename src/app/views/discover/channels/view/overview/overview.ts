@@ -1,6 +1,5 @@
 import View from '!view!./overview.html';
 import { Component, Prop } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import {
 	Ads,
 	AdSettingsContainer,
@@ -12,7 +11,7 @@ import { Environment } from '../../../../../../lib/gj-lib-client/components/envi
 import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
@@ -34,6 +33,18 @@ import { AppGameGridPlaceholder } from '../../../../../components/game/grid/plac
 		AppTrackEvent,
 	},
 })
+@RouteResolver({
+	cache: true,
+	lazy: true,
+	deps: { query: ['feed_last_id'] },
+	resolver: ({ route }) =>
+		Api.sendRequest(
+			ActivityFeedService.makeFeedUrl(
+				route,
+				'/web/discover/channels/overview/' + route.params.channel
+			)
+		),
+})
 export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponent {
 	@Prop()
 	channel!: any;
@@ -46,21 +57,7 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 	Environment = Environment;
 	Screen = Screen;
 
-	@RouteResolve({
-		cache: true,
-		lazy: true,
-		deps: { query: ['feed_last_id'] },
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest(
-			ActivityFeedService.makeFeedUrl(
-				route,
-				'/web/discover/channels/overview/' + route.params.channel
-			)
-		);
-	}
-
-	routeInit() {
+	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 
 		const adSettings = new AdSettingsContainer();
@@ -70,7 +67,7 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 		Ads.setPageSettings(adSettings);
 	}
 
-	routed($payload: any, fromCache: boolean) {
+	routeResolved($payload: any, fromCache: boolean) {
 		this.isLoaded = true;
 		this.bestGames = Game.populate($payload.bestGames).slice(0, 6);
 		this.hotGames = Game.populate($payload.hotGames).slice(0, 6);

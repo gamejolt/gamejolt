@@ -1,11 +1,11 @@
 <section class="section">
-	<div class="container-lg" v-if="Search.query">
+	<div class="container-lg" v-if="hasSearch">
 
 		<app-game-grid
-			:games="payload.devlogs"
-			:games-count="payload.devlogsCount"
-			:per-page="payload.perPage"
-			:show-ads="true"
+			:games="searchPayload.devlogs"
+			:games-count="searchPayload.devlogsCount"
+			:current-page="searchPayload.page"
+			show-ads
 			event-label="search-devlogs"
 			/>
 

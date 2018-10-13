@@ -1,6 +1,5 @@
 import View from '!view!./trophies.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppCardListAdd } from '../../../../../../../lib/gj-lib-client/components/card/list/add/add';
 import { AppCardListDraggable } from '../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';
@@ -13,14 +12,13 @@ import {
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { FormGameTrophy } from '../../../../../../components/forms/game/trophy/trophy';
 import { AppTrophyThumbnail } from '../../../../../../components/trophy/thumbnail/thumbnail';
-import { RouteState, RouteStore } from '../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @View
 @Component({
@@ -31,15 +29,19 @@ import { RouteState, RouteStore } from '../../manage.store';
 		AppCardListItem,
 		AppCardListAdd,
 		AppTrophyThumbnail,
-		AppJolticon,
 		FormGameTrophy,
 	},
 	directives: {
 		AppTooltip,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) =>
+		Api.sendRequest('/web/dash/developer/games/api/trophies/' + route.params.id),
+})
 export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
 	trophies: GameTrophy[] = [];
@@ -83,18 +85,6 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 		return this.trophies.filter(item => !item.visible).length > 0;
 	}
 
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/dash/developer/games/api/trophies/' + route.params.id);
-	}
-
-	routeInit() {
-		this.resetActive();
-		this.resetAdding();
-	}
-
 	get routeTitle() {
 		if (this.game) {
 			return this.$gettextInterpolate('Manage Trophies for %{ game }', {
@@ -104,7 +94,12 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 		return null;
 	}
 
-	routed($payload: any) {
+	routeCreated() {
+		this.resetActive();
+		this.resetAdding();
+	}
+
+	routeResolved($payload: any) {
 		this.trophies = GameTrophy.populate($payload.trophies);
 	}
 

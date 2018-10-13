@@ -2,13 +2,12 @@ import View from '!view!./library.html';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import { AppGameCollectionGrid } from '../../../components/game/collection/grid/grid';
-import { RouteState, RouteStore } from '../profile.store';
+import { RouteStore, RouteStoreModule } from '../profile.store';
 
 @View
 @Component({
@@ -17,18 +16,15 @@ import { RouteState, RouteStore } from '../profile.store';
 		AppGameCollectionGrid,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) => Api.sendRequest('/web/library/@' + route.params.username),
+})
 export default class RouteProfileLibrary extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	user!: RouteStore['user'];
 
 	collections: GameCollection[] = [];
-
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/library/@' + route.params.username);
-	}
 
 	get routeTitle() {
 		if (this.user) {
@@ -39,7 +35,7 @@ export default class RouteProfileLibrary extends BaseRouteComponent {
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.collections = GameCollection.populate($payload.collections);
 
 		const followedCollection = new GameCollection($payload.followedCollection);

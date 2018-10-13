@@ -4,7 +4,7 @@ import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppForumTopicList } from '../../../../components/forum/topic-list/topic-list';
 
@@ -15,23 +15,20 @@ import { AppForumTopicList } from '../../../../components/forum/topic-list/topic
 		AppForumTopicList,
 	},
 })
+@RouteResolver({
+	cache: true,
+	deps: {},
+	resolver: () => Api.sendRequest('/web/forums/active-topics'),
+})
 export default class RouteForumsLandingActive extends BaseRouteComponent {
 	topics: ForumTopic[] = [];
 	postCountPerPage = 0;
-
-	@RouteResolve({
-		cache: true,
-		deps: {},
-	})
-	routeResolve(this: undefined) {
-		return Api.sendRequest('/web/forums/active-topics');
-	}
 
 	get routeTitle() {
 		return this.$gettext(`Active Topics in All Forums`);
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.topics = ForumTopic.populate($payload.topics);
 		this.postCountPerPage = $payload.postCountPerPage;
 	}

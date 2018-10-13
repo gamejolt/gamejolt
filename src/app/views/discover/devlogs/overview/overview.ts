@@ -1,6 +1,5 @@
 import View from '!view!./overview.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { AppAdPlacement } from '../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
@@ -10,7 +9,7 @@ import { Game } from '../../../../../lib/gj-lib-client/components/game/game.mode
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppVideoEmbed } from '../../../../../lib/gj-lib-client/components/video/embed/embed';
 import { AppActivityFeed } from '../../../../components/activity/feed/feed';
@@ -37,6 +36,13 @@ import { Store } from '../../../../store/index';
 		AppTrackEvent,
 	},
 })
+@RouteResolver({
+	// Don't cache since every page load we pull new games in.
+	lazy: true,
+	deps: { query: ['feed_last_id'] },
+	resolver: ({ route }) =>
+		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/discover/devlogs')),
+})
 export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
@@ -44,20 +50,11 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 	games: any[] = [];
 	feed: ActivityFeedContainer | null = null;
 
-	// Don't cache since every page load we pull new games in.
-	@RouteResolve({
-		lazy: true,
-		deps: { query: ['feed_last_id'] },
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/discover/devlogs'));
-	}
-
 	get routeTitle() {
 		return this.$gettext('Indie game devlogs');
 	}
 
-	routeInit() {
+	routeCreated() {
 		Meta.fb.title = this.routeTitle;
 		Meta.twitter.title = this.routeTitle;
 
@@ -71,7 +68,7 @@ export default class RouteDiscoverDevlogsOverview extends BaseRouteComponent {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
-	routed($payload: any, fromCache: boolean) {
+	routeResolved($payload: any, fromCache: boolean) {
 		this.games = Game.populate($payload.games);
 
 		this.feed = ActivityFeedService.routed(

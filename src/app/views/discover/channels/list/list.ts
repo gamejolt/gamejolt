@@ -4,7 +4,7 @@ import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppChannelThumbnail } from '../../../../components/channel/thumbnail/thumbnail';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
@@ -17,25 +17,22 @@ import { AppPageHeader } from '../../../../components/page-header/page-header';
 		AppChannelThumbnail,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) => Api.sendRequest('/web/discover/channels'),
+})
 export default class RouteDiscoverChannelsList extends BaseRouteComponent {
 	channels: any[] = [];
-
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve() {
-		return Api.sendRequest('/web/discover/channels');
-	}
 
 	get routeTitle() {
 		return this.$gettext('Top Channels');
 	}
 
-	routeInit() {
+	routeCreated() {
 		Meta.description = 'Find and discover indie games around specific interests.';
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.channels = $payload.channels;
 	}
 }

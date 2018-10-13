@@ -1,6 +1,5 @@
 import View from '!view!./collaborators.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppCardListAdd } from '../../../../../../lib/gj-lib-client/components/card/list/add/add';
 import { AppCardListItem } from '../../../../../../lib/gj-lib-client/components/card/list/item/item';
@@ -10,19 +9,17 @@ import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/gr
 import { ModalConfirm } from '../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppTimeAgo } from '../../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { arrayRemove } from '../../../../../../lib/gj-lib-client/utils/array';
-import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { FormGameCollaborator } from '../../../../../components/forms/game/collaborator/collaborator';
-import { RouteState, RouteStore } from '../manage.store';
+import { RouteStore, RouteStoreModule } from '../manage.store';
 
 @View
 @Component({
 	name: 'RouteDashGamesManageCollaborators',
 	components: {
-		AppJolticon,
 		AppTimeAgo,
 		AppCardList,
 		AppCardListItem,
@@ -30,8 +27,13 @@ import { RouteState, RouteStore } from '../manage.store';
 		FormGameCollaborator,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) =>
+		Api.sendRequest('/web/dash/developer/games/collaborators/' + route.params.id),
+})
 export default class RouteDashGamesManageCollaborators extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
 	collaborators: GameCollaborator[] = [];
@@ -39,13 +41,6 @@ export default class RouteDashGamesManageCollaborators extends BaseRouteComponen
 	isAdding = false;
 
 	readonly GameCollaborator = GameCollaborator;
-
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/dash/developer/games/collaborators/' + route.params.id);
-	}
 
 	get routeTitle() {
 		if (this.game) {
@@ -56,7 +51,7 @@ export default class RouteDashGamesManageCollaborators extends BaseRouteComponen
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.collaborators = GameCollaborator.populate($payload.collaborators);
 		if (!this.collaborators.length) {
 			this.isAdding = true;

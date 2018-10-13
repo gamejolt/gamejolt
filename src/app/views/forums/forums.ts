@@ -12,7 +12,7 @@ export default class RouteForums extends BaseRouteComponent {
 		return h('router-view', { staticClass: 'route-forums' });
 	}
 
-	routeInit() {
+	routeCreated() {
 		const adSettings = new AdSettingsContainer();
 		adSettings.adUnit = 'forums';
 		Ads.setPageSettings(adSettings);

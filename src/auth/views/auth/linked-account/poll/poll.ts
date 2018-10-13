@@ -27,7 +27,7 @@ export default class RouteAuthLinkedAccountPoll extends BaseRouteComponent {
 		return this.$gettext(`Waiting for Login`);
 	}
 
-	routeInit() {
+	routeCreated() {
 		this.token = this.$route.params.token;
 	}
 
