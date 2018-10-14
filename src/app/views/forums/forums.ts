@@ -18,7 +18,7 @@ export default class RouteForums extends BaseRouteComponent {
 		Ads.setPageSettings(adSettings);
 	}
 
-	routeDestroy() {
+	routeDestroyed() {
 		Ads.releasePageSettings();
 	}
 }

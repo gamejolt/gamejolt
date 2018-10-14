@@ -256,7 +256,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		this.setCommentCount({ store: this.commentStore, count: $payload.commentsCount || 0 });
 	}
 
-	routeDestroy() {
+	routeDestroyed() {
 		store.commit('theme/setPageTheme', null);
 		this._releaseAdSettings();
 

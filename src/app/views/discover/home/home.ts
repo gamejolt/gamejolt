@@ -121,7 +121,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		this.isLoaded = true;
 	}
 
-	routeDestroy() {
+	routeDestroyed() {
 		Ads.releasePageSettings();
 	}
 }

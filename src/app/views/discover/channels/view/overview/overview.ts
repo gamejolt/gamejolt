@@ -83,7 +83,7 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 		);
 	}
 
-	routeDestroy() {
+	routeDestroyed() {
 		Ads.releasePageSettings();
 	}
 }

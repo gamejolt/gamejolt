@@ -69,7 +69,7 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 
 	readonly Game = Game;
 
-	routeDestroy() {
+	routeDestroyed() {
 		store.commit('theme/setPageTheme', null);
 	}
 }

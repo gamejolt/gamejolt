@@ -105,7 +105,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		}
 	}
 
-	routeDestroy() {
+	routeDestroyed() {
 		Ads.releasePageSettings();
 	}
 

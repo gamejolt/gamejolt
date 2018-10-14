@@ -52,7 +52,7 @@ export class ActivityFeedService {
 	static routeInit(routeComponent: BaseRouteComponent) {
 		// Try to pull the feed from cache if they are going back to this route. We don't want to
 		// pull from cache if they go back and forth between feed tabs, though.
-		if (!routeComponent.routeBootstrapped) {
+		if (!routeComponent.isRouteBootstrapped) {
 			return this.bootstrapFeedFromCache();
 		}
 		return null;

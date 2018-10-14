@@ -22,7 +22,7 @@ export default class RouteLegal extends BaseRouteComponent {
 		Ads.setPageSettings(settings);
 	}
 
-	routeDestroy() {
+	routeDestroyed() {
 		Ads.releasePageSettings();
 	}
 }

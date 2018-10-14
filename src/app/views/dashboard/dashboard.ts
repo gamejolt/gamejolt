@@ -19,7 +19,7 @@ export default class RouteDash extends BaseRouteComponent {
 		Ads.setPageSettings(adSettings);
 	}
 
-	routeDestroy() {
+	routeDestroyed() {
 		Ads.releasePageSettings();
 	}
 }

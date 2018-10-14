@@ -39,7 +39,7 @@ export default class RouteDiscoverChannelsViewDevlogs extends BaseRouteComponent
 		this.listing.processPayload(this.$route, $payload);
 	}
 
-	routeDestroy() {
+	routeDestroyed() {
 		Ads.releasePageSettings();
 	}
 }

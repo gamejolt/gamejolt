@@ -52,7 +52,7 @@ export default class RouteDiscoverChannelsViewGames extends BaseRouteComponent {
 		this.listing.processPayload(this.$route, $payload);
 	}
 
-	routeDestroy() {
+	routeDestroyed() {
 		Ads.releasePageSettings();
 	}
 }

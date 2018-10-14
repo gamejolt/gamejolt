@@ -140,7 +140,7 @@ export default class RouteProfile extends BaseRouteComponent {
 		Ads.setPageSettings(adSettings);
 	}
 
-	routeDestroy() {
+	routeDestroyed() {
 		this.setPageTheme(null);
 		Ads.releasePageSettings();
 	}

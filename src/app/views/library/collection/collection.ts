@@ -262,7 +262,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		this.mixPlaylist();
 	}
 
-	routeDestroy() {
+	routeDestroyed() {
 		this.setPageTheme(null);
 		Ads.releasePageSettings();
 	}
