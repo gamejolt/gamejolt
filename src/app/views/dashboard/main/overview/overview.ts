@@ -15,7 +15,7 @@ import { Jam } from '../../../../../lib/gj-lib-client/components/jam/jam.model';
 import { Notification } from '../../../../../lib/gj-lib-client/components/notification/notification-model';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
@@ -42,6 +42,11 @@ import { Store } from '../../../../store/index';
 		currency,
 		number,
 	},
+})
+@RouteResolver({
+	cache: true,
+	deps: {},
+	resolver: () => Api.sendRequest('/web/dash'),
 })
 export default class RouteDashMainOverview extends BaseRouteComponent {
 	@State
@@ -82,19 +87,11 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 		return this.games.slice(0, this.gamesExpanded ? this.games.length : 5);
 	}
 
-	@RouteResolve({
-		cache: true,
-		deps: {},
-	})
-	routeResolve() {
-		return Api.sendRequest('/web/dash');
-	}
-
 	get routeTitle() {
 		return this.$gettext('dash.overview.page_title');
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		// Keep them undefined if not on the payload.
 		// This will ensure that if they aren't an account with revenue, it won't show the revenue widget.
 		if (typeof $payload.revenueTotal !== 'undefined' && $payload.revenueTotal !== null) {

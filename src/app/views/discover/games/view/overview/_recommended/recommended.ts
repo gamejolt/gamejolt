@@ -1,13 +1,12 @@
+import View from '!view!./recommended.html';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./recommended.html';
-
-import { RouteState, RouteStore } from '../../view.store';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppGameList } from '../../../../../../components/game/list/list';
-import { AppGameGridPlaceholder } from '../../../../../../components/game/grid/placeholder/placeholder';
 import { AppGameGrid } from '../../../../../../components/game/grid/grid';
+import { AppGameGridPlaceholder } from '../../../../../../components/game/grid/placeholder/placeholder';
+import { AppGameList } from '../../../../../../components/game/list/list';
 import { AppGameListPlaceholder } from '../../../../../../components/game/list/placeholder/placeholder';
+import { RouteStore, RouteStoreModule } from '../../view.store';
 
 @View
 @Component({
@@ -19,7 +18,8 @@ import { AppGameListPlaceholder } from '../../../../../../components/game/list/p
 	},
 })
 export class AppDiscoverGamesViewOverviewRecommended extends Vue {
-	@RouteState recommendedGames!: RouteStore['recommendedGames'];
+	@RouteStoreModule.State
+	recommendedGames!: RouteStore['recommendedGames'];
 
 	readonly Screen = Screen;
 }

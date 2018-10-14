@@ -1,7 +1,7 @@
-import { createApp } from './bootstrap';
 import { Device } from '../lib/gj-lib-client/components/device/device.service';
 import { Environment } from '../lib/gj-lib-client/components/environment/environment.service';
 import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
+import { createApp } from './bootstrap';
 
 export default (context: any) => {
 	const { app, router, store } = createApp();
@@ -15,7 +15,7 @@ export default (context: any) => {
 
 		// Wait until the route has resolved all possible async components and
 		// hooks.
-		router.onReady(async () => {
+		router.onReady(() => {
 			const matchedComponents = router.getMatchedComponents();
 			console.log(`got ${matchedComponents.length} matched route components`);
 

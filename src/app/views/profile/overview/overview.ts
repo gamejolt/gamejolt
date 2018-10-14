@@ -7,7 +7,7 @@ import 'game-jolt-frontend-lib/components/lazy/placeholder/placeholder.styl';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
@@ -16,14 +16,13 @@ import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { YoutubeChannel } from 'game-jolt-frontend-lib/components/youtube/channel/channel-model';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import {
 	LinkedAccount,
 	Provider,
 } from '../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
 import { Store } from '../../../store/index';
-import { RouteAction, RouteState, RouteStore } from '../profile.store';
+import { RouteStore, RouteStoreModule } from '../profile.store';
 import { AppGameList } from './../../../components/game/list/list';
 import { AppGameListPlaceholder } from './../../../components/game/list/placeholder/placeholder';
 
@@ -43,41 +42,41 @@ import { AppGameListPlaceholder } from './../../../components/game/list/placehol
 		number,
 	},
 })
+@RouteResolver({
+	cache: true,
+	lazy: true,
+	deps: {},
+	resolver: ({ route }) => Api.sendRequest('/web/profile/overview/@' + route.params.username),
+})
 export default class RouteProfileOverview extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
 
-	@RouteState
+	@RouteStoreModule.State
 	user!: RouteStore['user'];
 
-	static readonly PROVIDERS: Provider[] = [
-		LinkedAccount.PROVIDER_TWITTER,
-		LinkedAccount.PROVIDER_GOOGLE,
-		LinkedAccount.PROVIDER_TWITCH,
-	];
-
-	@RouteState
+	@RouteStoreModule.State
 	gamesCount!: RouteStore['gamesCount'];
 
-	@RouteState
+	@RouteStoreModule.State
 	videosCount!: RouteStore['videosCount'];
 
-	@RouteState
+	@RouteStoreModule.State
 	userFriendship!: RouteStore['userFriendship'];
 
-	@RouteAction
+	@RouteStoreModule.Action
 	sendFriendRequest!: RouteStore['sendFriendRequest'];
 
-	@RouteAction
+	@RouteStoreModule.Action
 	acceptFriendRequest!: RouteStore['acceptFriendRequest'];
 
-	@RouteAction
+	@RouteStoreModule.Action
 	cancelFriendRequest!: RouteStore['cancelFriendRequest'];
 
-	@RouteAction
+	@RouteStoreModule.Action
 	rejectFriendRequest!: RouteStore['rejectFriendRequest'];
 
-	@RouteAction
+	@RouteStoreModule.Action
 	removeFriend!: RouteStore['removeFriend'];
 
 	showFullDescription = false;
@@ -87,18 +86,15 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	youtubeChannels: YoutubeChannel[] = [];
 	linkedAccounts: LinkedAccount[] = [];
 
+	static readonly PROVIDERS: Provider[] = [
+		LinkedAccount.PROVIDER_TWITTER,
+		LinkedAccount.PROVIDER_GOOGLE,
+		LinkedAccount.PROVIDER_TWITCH,
+	];
+
 	readonly User = User;
 	readonly UserFriendship = UserFriendship;
 	readonly Screen = Screen;
-
-	@RouteResolve({
-		cache: true,
-		lazy: true,
-		deps: {},
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/profile/overview/@' + route.params.username);
-	}
 
 	get routeTitle() {
 		if (this.user) {
@@ -183,7 +179,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb || {};
 		Meta.fb.title = this.routeTitle;

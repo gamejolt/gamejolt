@@ -1,19 +1,18 @@
 import View from '!view!./user.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameScoreTable } from '../../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { Growls } from '../../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppTooltip } from '../../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
 import { User } from '../../../../../../../../../lib/gj-lib-client/components/user/user.model';
 import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { RouteState, RouteStore } from '../../../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 import { AppManageGameListScores } from '../../_list-scores/list-scores';
 
 @View
@@ -27,27 +26,25 @@ import { AppManageGameListScores } from '../../_list-scores/list-scores';
 		AppTooltip,
 	},
 })
-export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRouteComponent {
-	@RouteState
-	game!: RouteStore['game'];
-
-	user: User = null as any;
-	scoreTable: GameScoreTable = null as any;
-	scores: UserGameScore[] = [];
-
-	@RouteResolve({
-		deps: { params: ['table', 'user'] },
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest(
+@RouteResolver({
+	deps: { params: ['table', 'user'] },
+	resolver: ({ route }) =>
+		Api.sendRequest(
 			'/web/dash/developer/games/api/scores/list-table-user-scores/' +
 				route.params.id +
 				'/' +
 				route.params.table +
 				'/' +
 				route.params.user
-		);
-	}
+		),
+})
+export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRouteComponent {
+	@RouteStoreModule.State
+	game!: RouteStore['game'];
+
+	user: User = null as any;
+	scoreTable: GameScoreTable = null as any;
+	scores: UserGameScore[] = [];
 
 	get routeTitle() {
 		if (this.game && this.user && this.scoreTable) {
@@ -60,7 +57,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRo
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.user = new User($payload.user);
 		this.scoreTable = new GameScoreTable($payload.scoreTable);
 		this.scores = UserGameScore.populate($payload.scores);

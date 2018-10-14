@@ -2,7 +2,7 @@ import View from '!view!./settings.html';
 import { Component } from 'vue-property-decorator';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../lib/gj-lib-client/components/route/route-component';
 import { AppScrollAffix } from '../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { AppScrollTo } from '../../../lib/gj-lib-client/components/scroll/to/to.directive';
@@ -22,6 +22,10 @@ import { AppPageHeader } from '../../components/page-header/page-header';
 		AppScrollTo,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: () => User.touch(),
+})
 export default class RouteSettings extends BaseRouteComponent {
 	get sections() {
 		const sections: any = {};
@@ -37,13 +41,6 @@ export default class RouteSettings extends BaseRouteComponent {
 		});
 
 		return sections;
-	}
-
-	@RouteResolve({
-		deps: {},
-	})
-	async routeResolve() {
-		User.touch();
 	}
 
 	get routeTitle() {

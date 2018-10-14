@@ -1,12 +1,12 @@
 import View from '!view!./devlogs.html';
-import { Component, Prop } from 'vue-property-decorator';
-import { Route } from 'vue-router';
+import { Component } from 'vue-property-decorator';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { AppGameGrid } from '../../../components/game/grid/grid';
 import { Search } from '../../../components/search/search-service';
+import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 
 @View
 @Component({
@@ -15,23 +15,26 @@ import { Search } from '../../../components/search/search-service';
 		AppGameGrid,
 	},
 })
-export default class RouteSearchDevlogs extends BaseRouteComponent {
-	@Prop(Object)
-	payload!: any;
-
-	readonly Search = Search;
-
-	@RouteResolve({
-		cache: true,
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Search.search(route.query.q, {
+@RouteResolver({
+	cache: true,
+	resolver: ({ route }) =>
+		Search.search(route.query.q, {
 			type: 'devlog',
 			page: route.query.page ? parseInt(route.query.page, 10) : 1,
-		});
-	}
+		}),
+	resolveStore({ route, payload }) {
+		routeStore.commit('processPayload', { payload: payload, route: route });
+	},
+})
+export default class RouteSearchDevlogs extends BaseRouteComponent {
+	@RouteStoreModule.Mutation
+	processPayload!: RouteStore['processPayload'];
 
-	routed($payload: any) {
-		this.$emit('searchpayload', $payload);
-	}
+	@RouteStoreModule.State
+	hasSearch!: RouteStore['hasSearch'];
+
+	@RouteStoreModule.State
+	searchPayload!: RouteStore['searchPayload'];
+
+	readonly Search = Search;
 }

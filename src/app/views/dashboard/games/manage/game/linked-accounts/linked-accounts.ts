@@ -1,6 +1,5 @@
 import View from '!view!./linked-accounts.html?style=./linked-accounts.styl';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { ModalFacebookPageSelector } from '../../../../../../../lib/gj-lib-client/components/linked-account/facebook-page-selector-modal/facebook-page-selector-modal-service';
@@ -15,9 +14,9 @@ import { LinkedAccounts } from '../../../../../../../lib/gj-lib-client/component
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { RouteState, RouteStore } from '../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @View
 @Component({
@@ -26,21 +25,17 @@ import { RouteState, RouteStore } from '../../manage.store';
 		AppLinkedAccount,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) =>
+		Api.sendRequest('/web/dash/linked-accounts?resource=Game&resourceId=' + route.params.id),
+})
 export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
 	accounts: LinkedAccount[] = [];
 	loading = false;
-
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest(
-			'/web/dash/linked-accounts?resource=Game&resourceId=' + route.params.id
-		);
-	}
 
 	get routeTitle() {
 		if (this.game) {
@@ -67,7 +62,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		return this.getAccount(LinkedAccount.PROVIDER_DISCORD);
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.accounts = LinkedAccount.populate($payload.accounts);
 	}
 

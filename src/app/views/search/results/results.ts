@@ -1,16 +1,15 @@
 import View from '!view!./results.html';
-import { Component, Prop } from 'vue-property-decorator';
-import { Route } from 'vue-router';
+import { Component } from 'vue-property-decorator';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppGameGrid } from '../../../components/game/grid/grid';
 import { Search } from '../../../components/search/search-service';
+import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 
 @View
 @Component({
@@ -18,30 +17,34 @@ import { Search } from '../../../components/search/search-service';
 	components: {
 		AppUserAvatar,
 		AppGameGrid,
-		AppJolticon,
 	},
 	filters: {
 		number,
 	},
 })
+@RouteResolver({
+	resolver: ({ route }) => Search.search(route.query.q),
+	resolveStore({ route, payload }) {
+		routeStore.commit('processPayload', { payload: payload, route: route });
+	},
+})
 export default class RouteSearchResults extends BaseRouteComponent {
-	@Prop(Object)
-	payload!: any;
+	@RouteStoreModule.Mutation
+	processPayload!: RouteStore['processPayload'];
 
-	@Prop(String)
-	query!: string;
+	@RouteStoreModule.State
+	hasSearch!: RouteStore['hasSearch'];
+
+	@RouteStoreModule.State
+	query!: RouteStore['query'];
+
+	@RouteStoreModule.State
+	searchPayload!: RouteStore['searchPayload'];
 
 	readonly Search = Search;
 	readonly Screen = Screen;
 
-	@RouteResolve({
-		cache: true,
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Search.search(route.query.q);
-	}
-
-	routed($payload: any) {
-		this.$emit('searchpayload', $payload);
+	get devlogsTrimmed() {
+		return this.searchPayload.devlogs.slice(0, 4);
 	}
 }

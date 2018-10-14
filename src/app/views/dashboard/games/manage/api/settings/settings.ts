@@ -1,15 +1,14 @@
 import View from '!view!./settings.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { RouteState, RouteStore } from '../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @View
 @Component({
@@ -18,19 +17,17 @@ import { RouteState, RouteStore } from '../../manage.store';
 		AppJolticon,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) =>
+		Api.sendRequest('/web/dash/developer/games/api/settings/' + route.params.id),
+})
 export default class RouteDashGamesManageApiSettings extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
 	privateKey = '';
 	shouldShowKey = false;
-
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/dash/developer/games/api/settings/' + route.params.id);
-	}
 
 	get routeTitle() {
 		if (this.game) {
@@ -41,7 +38,7 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.privateKey = $payload.privateKey;
 	}
 

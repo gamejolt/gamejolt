@@ -142,7 +142,7 @@ export class AppActivityFeed extends Vue {
 	}
 
 	get shouldShowLoadMore() {
-		return !this.feed.reachedEnd && !this.feed.isLoadingMore;
+		return !this.feed.reachedEnd && !this.feed.isLoadingMore && this.feed.hasItems;
 	}
 
 	get shouldShowAds() {

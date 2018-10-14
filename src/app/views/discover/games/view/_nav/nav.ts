@@ -14,7 +14,7 @@ import { number } from '../../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppGameModLinks } from '../../../../../components/game/mod-links/mod-links';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { Store } from '../../../../../store/index';
-import { RouteState, RouteStore } from '../view.store';
+import { RouteStore, RouteStoreModule } from '../view.store';
 
 @View
 @Component({
@@ -28,16 +28,16 @@ import { RouteState, RouteStore } from '../view.store';
 	},
 })
 export class AppDiscoverGamesViewNav extends Vue {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
-	@RouteState
+	@RouteStoreModule.State
 	trophiesCount!: RouteStore['trophiesCount'];
 
-	@RouteState
+	@RouteStoreModule.State
 	hasScores!: RouteStore['hasScores'];
 
-	@RouteState
+	@RouteStoreModule.State
 	primaryScoreTable!: RouteStore['primaryScoreTable'];
 
 	@State

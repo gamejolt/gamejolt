@@ -63,6 +63,16 @@ export class ActivityFeedContainer {
 		return this.items.length > 0;
 	}
 
+	get startScrollId() {
+		const firstPost = this.items[0];
+		return firstPost ? firstPost.scrollId : undefined;
+	}
+
+	get endScrollId() {
+		const lastFeedItem = this.items[this.items.length - 1];
+		return lastFeedItem ? lastFeedItem.scrollId : undefined;
+	}
+
 	constructor(items: ActivityFeedInput[], options: ActivityFeedContainerOptions) {
 		this.append(items);
 
@@ -174,10 +184,8 @@ export class ActivityFeedContainer {
 		++this.timesLoaded;
 		++this.totalTimesLoaded;
 
-		const lastFeedItem = this.items[this.items.length - 1];
-
 		const response = await Api.sendRequest(this.loadMoreUrl, {
-			scrollId: lastFeedItem.scrollId,
+			scrollId: this.endScrollId,
 			scrollDirection: ScrollDirectionFrom,
 		});
 
@@ -205,10 +213,8 @@ export class ActivityFeedContainer {
 
 		this.isLoadingNew = true;
 
-		const firstPost = this.items[0];
-
 		const response = await Api.sendRequest(this.loadMoreUrl, {
-			scrollId: firstPost.scrollId,
+			scrollId: this.startScrollId,
 			scrollDirection: ScrollDirectionTo,
 		});
 

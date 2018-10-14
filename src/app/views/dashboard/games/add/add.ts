@@ -1,11 +1,10 @@
 import View from '!view!./add.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { FormGame } from '../../../../components/forms/game/game';
 import { startWizard } from '../manage/manage.store';
@@ -17,15 +16,12 @@ import { startWizard } from '../manage/manage.store';
 		FormGame,
 	},
 })
+@RouteResolver({
+	deps: {},
+	// Make sure they can add a game.
+	resolver: () => Api.sendRequest('/web/dash/developer/games/add'),
+})
 export default class RouteDashGamesAdd extends BaseRouteComponent {
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve(this: undefined, _route: Route) {
-		// Make sure they can add a game.
-		return Api.sendRequest('/web/dash/developer/games/add');
-	}
-
 	get routeTitle() {
 		return this.$gettext('dash.games.add.page_title');
 	}

@@ -12,7 +12,7 @@ import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service
 import { AppNavTabList } from '../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { AppScrollScroller } from '../../../../lib/gj-lib-client/components/scroll/scroller/scroller';
 import { Channels } from '../../../components/channel/channels-service';
@@ -49,6 +49,12 @@ export interface DiscoverRow {
 		AppAuthRequired,
 	},
 })
+@RouteResolver({
+	cache: true,
+	lazy: true,
+	deps: {},
+	resolver: () => Api.sendRequest('/web/discover'),
+})
 export default class RouteDiscoverHome extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
@@ -58,16 +64,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	featuredItem: FeaturedItem | null = null;
 	games: Game[] = [];
 
-	@RouteResolve({
-		cache: true,
-		lazy: true,
-		deps: {},
-	})
-	routeResolve() {
-		return Api.sendRequest('/web/discover');
-	}
-
-	routeInit() {
+	routeCreated() {
 		Meta.title = null;
 
 		const adSettings = new AdSettingsContainer();
@@ -75,7 +72,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		Ads.setPageSettings(adSettings);
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;
@@ -124,7 +121,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		this.isLoaded = true;
 	}
 
-	routeDestroy() {
+	routeDestroyed() {
 		Ads.releasePageSettings();
 	}
 }

@@ -1,6 +1,5 @@
 import View from '!view!./edit.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameBuild } from '../../../../../../../../../lib/gj-lib-client/components/game/build/build.model';
 // tslint:disable-next-line:max-line-length
@@ -11,22 +10,32 @@ import { Growls } from '../../../../../../../../../lib/gj-lib-client/components/
 import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { FormGameRelease } from '../../../../../../../../components/forms/game/release/release';
-import { RouteState, RouteStore } from '../../../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 
 @View
 @Component({
 	name: 'RouteDashGamesManageGamePackageReleaseEdit',
 	components: {
-		AppJolticon,
 		FormGameRelease,
 	},
 })
+@RouteResolver({
+	deps: { params: ['packageId', 'releaseId'] },
+	resolver: ({ route }) =>
+		Api.sendRequest(
+			'/web/dash/developer/games/releases/' +
+				route.params.id +
+				'/' +
+				route.params.packageId +
+				'/' +
+				route.params.releaseId
+		),
+})
 export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
 	package: GamePackage = null as any;
@@ -37,20 +46,6 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 	buildDownloadCounts: { [buildId: number]: number } = {};
 	areBuildsLockedByJam = false;
 	areWebBuildsLockedBySellable = false;
-
-	@RouteResolve({
-		deps: { params: ['packageId', 'releaseId'] },
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest(
-			'/web/dash/developer/games/releases/' +
-				route.params.id +
-				'/' +
-				route.params.packageId +
-				'/' +
-				route.params.releaseId
-		);
-	}
 
 	get routeTitle() {
 		if (this.game && this.package && this.release) {
@@ -66,7 +61,7 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.package = new GamePackage($payload.package);
 		this.release = new GameRelease($payload.release);
 		this.releases = GameRelease.populate($payload.releases);

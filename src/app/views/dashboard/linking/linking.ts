@@ -26,7 +26,7 @@ export default class RouteDashLinking extends BaseRouteComponent {
 		return this.$gettext('Waiting for Link');
 	}
 
-	routeInit() {
+	routeCreated() {
 		this.token = this.$route.query.token;
 	}
 

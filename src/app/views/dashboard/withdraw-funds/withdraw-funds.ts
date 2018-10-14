@@ -4,7 +4,7 @@ import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
@@ -21,6 +21,10 @@ import { FormWithdrawFunds } from '../../../components/forms/withdraw-funds/with
 		currency,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: () => Api.sendRequest('/web/dash/funds'),
+})
 export default class RouteDashWithdrawFunds extends BaseRouteComponent {
 	user: User = null as any;
 	minAmount = 0;
@@ -33,18 +37,11 @@ export default class RouteDashWithdrawFunds extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve(this: undefined) {
-		return Api.sendRequest('/web/dash/funds');
-	}
-
 	get routeTitle() {
 		return this.$gettext('dash.funds.withdraw.page_title');
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.user = new User($payload.user);
 		this.minAmount = $payload.minAmount || 0;
 		this.revenueTotal = $payload.revenueTotal || 0;

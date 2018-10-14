@@ -6,7 +6,7 @@ import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/
 import { ForumPost } from '../../../../../lib/gj-lib-client/components/forum/post/post.model';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppForumChannelList } from '../../../../components/forum/channel-list/channel-list';
 import { AppForumRules } from '../../../../components/forum/rules/rules';
@@ -19,25 +19,22 @@ import { AppForumRules } from '../../../../components/forum/rules/rules';
 		AppForumChannelList,
 	},
 })
+@RouteResolver({
+	cache: true,
+	deps: {},
+	resolver: () => Api.sendRequest('/web/forums'),
+})
 export default class RouteForumsLandingOverview extends BaseRouteComponent {
 	categories: ForumCategory[] = [];
 	groupedChannels: { [k: number]: ForumChannel[] } = {};
 	latestPosts: ForumPost[] = [];
 	postCountPerPage = 0;
 
-	@RouteResolve({
-		cache: true,
-		deps: {},
-	})
-	routeResolve(this: undefined) {
-		return Api.sendRequest('/web/forums');
-	}
-
 	get routeTitle() {
 		return this.$gettext('Forums');
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.categories = ForumCategory.populate($payload.categories);
 		this.latestPosts = ForumPost.populate($payload.latestPosts);
 		this.postCountPerPage = $payload.postCountPerPage;

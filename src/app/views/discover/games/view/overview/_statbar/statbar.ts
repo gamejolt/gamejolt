@@ -7,7 +7,7 @@ import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
-import { RouteState, RouteStore } from '../../view.store';
+import { RouteStore, RouteStoreModule } from '../../view.store';
 
 @View
 @Component({
@@ -20,16 +20,16 @@ import { RouteState, RouteStore } from '../../view.store';
 	},
 })
 export class AppDiscoverGamesViewOverviewStatbar extends Vue {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
-	@RouteState
+	@RouteStoreModule.State
 	isOverviewLoaded!: RouteStore['isOverviewLoaded'];
 
-	@RouteState
+	@RouteStoreModule.State
 	profileCount!: RouteStore['profileCount'];
 
-	@RouteState
+	@RouteStoreModule.State
 	userRating!: RouteStore['userRating'];
 
 	readonly number = number;

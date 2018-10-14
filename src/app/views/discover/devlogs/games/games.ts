@@ -1,11 +1,10 @@
 import View from '!view!./games.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Ads } from '../../../../../lib/gj-lib-client/components/ad/ads.service';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { GameFilteringContainer } from '../../../../components/game/filtering/container';
 import { AppGameGrid } from '../../../../components/game/grid/grid';
@@ -20,26 +19,25 @@ import { GameListingContainer } from '../../../../components/game/listing/listin
 		AppGameGrid,
 	},
 })
-export default class RouteDiscoverDevlogsGames extends BaseRouteComponent {
-	listing: GameListingContainer | null = null;
-
-	@RouteResolve({
-		cache: true,
-	})
-	routeResolve(this: undefined, route: Route) {
+@RouteResolver({
+	cache: true,
+	resolver({ route }) {
 		const filteringContainer = new GameFilteringContainer(route);
 		return Api.sendRequest(
 			'/web/discover/devlogs/games?' + filteringContainer.getQueryString(route)
 		);
-	}
+	},
+})
+export default class RouteDiscoverDevlogsGames extends BaseRouteComponent {
+	listing: GameListingContainer | null = null;
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.listing = new GameListingContainer();
 		this.listing.setAdTargeting(this.$route, 'devlogs');
 		this.listing.processPayload(this.$route, $payload);
 	}
 
-	routeDestroy() {
+	routeDestroyed() {
 		Ads.releasePageSettings();
 	}
 }

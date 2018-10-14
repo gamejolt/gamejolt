@@ -108,5 +108,14 @@
 			"}",
 			"$0"
 		]
+	},
+	"Vue route resolver": {
+		"prefix": "vue-route-resolver",
+		"body": [
+			"@RouteResolver({",
+			"\tdeps: {},",
+			"\tresolver: ({ route }) => Api.sendRequest($1),",
+			"})$0"
+		]
 	}
 }

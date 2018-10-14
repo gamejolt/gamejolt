@@ -1,24 +1,21 @@
-import { State } from 'vuex-class';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./overview.html?style=./overview.styl';
-
-import { GameCollection } from '../../../components/game/collection/collection.model';
+import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
+import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppPageHeader } from '../../../components/page-header/page-header';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppGameCollectionList } from '../../../components/game/collection/list/list';
+import { GameCollection } from '../../../components/game/collection/collection.model';
 import { AppGameCollectionGrid } from '../../../components/game/collection/grid/grid';
+import { AppGameCollectionList } from '../../../components/game/collection/list/list';
+import { AppPageHeader } from '../../../components/page-header/page-header';
 import { Store } from '../../../store/index';
 import { LibraryState, LibraryStore } from '../../../store/library';
-import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
 	name: 'RouteLibraryOverview',
 	components: {
 		AppPageHeader,
-		AppJolticon,
 		AppGameCollectionGrid,
 		AppGameCollectionList,
 	},

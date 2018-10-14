@@ -1,6 +1,5 @@
 import View from '!view!./edit.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppCard } from '../../../../../../../../lib/gj-lib-client/components/card/card';
 import { AppExpand } from '../../../../../../../../lib/gj-lib-client/components/expand/expand';
@@ -14,26 +13,24 @@ import { AppNavTabList } from '../../../../../../../../lib/gj-lib-client/compone
 import { AppProgressPoller } from '../../../../../../../../lib/gj-lib-client/components/progress/poller/poller';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { Sellable } from '../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
 import { AppTimeAgo } from '../../../../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppTooltip } from '../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppJolticon } from '../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppLoading } from '../../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { number } from '../../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { FormGamePackage } from '../../../../../../../components/forms/game/package/package';
 import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
 import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
-import { RouteState, RouteStore } from '../../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../../manage.store';
 
 @View
 @Component({
 	name: 'RouteDashGamesManageGamePackagesEdit',
 	components: {
 		AppTimeAgo,
-		AppJolticon,
 		AppNavTabList,
 		AppLoading,
 		AppGamePackageCard,
@@ -48,8 +45,15 @@ import { RouteState, RouteStore } from '../../../manage.store';
 		AppTooltip,
 	},
 })
+@RouteResolver({
+	deps: { params: ['packageId'] },
+	resolver: ({ route }) =>
+		Api.sendRequest(
+			'/web/dash/developer/games/packages/' + route.params.id + '/' + route.params.packageId
+		),
+})
 export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
 	package: GamePackage = null as any;
@@ -75,15 +79,6 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 		return this.game && this.game.hasPerms('analytics');
 	}
 
-	@RouteResolve({
-		deps: { params: ['packageId'] },
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest(
-			'/web/dash/developer/games/packages/' + route.params.id + '/' + route.params.packageId
-		);
-	}
-
 	get routeTitle() {
 		if (this.game && this.package) {
 			return this.$gettextInterpolate(`Edit Package %{ package } - %{ game }`, {
@@ -94,7 +89,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.package = new GamePackage($payload.package);
 		this.sellable = new Sellable($payload.sellable);
 		this.releases = GameRelease.populate($payload.releases);

@@ -1,11 +1,10 @@
 import View from '!view!./devlogs.html';
 import { Ads } from 'game-jolt-frontend-lib/components/ad/ads.service';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
 import { GameFilteringContainer } from '../../../../../components/game/filtering/container';
 import { AppGameGrid } from '../../../../../components/game/grid/grid';
@@ -20,28 +19,27 @@ import { GameListingContainer } from '../../../../../components/game/listing/lis
 		AppGameGrid,
 	},
 })
-export default class RouteDiscoverChannelsViewDevlogs extends BaseRouteComponent {
-	// Devlogs don't have filters.
-	listing: GameListingContainer | null = null;
-
-	@RouteResolve({
-		cache: true,
-	})
-	routeResolve(this: undefined, route: Route) {
+@RouteResolver({
+	cache: true,
+	resolver({ route }) {
 		const filtering = new GameFilteringContainer(route);
 		return Api.sendRequest(
 			`/web/discover/channels/devlogs/${route.params.channel}?` +
 				filtering.getQueryString(route)
 		);
-	}
+	},
+})
+export default class RouteDiscoverChannelsViewDevlogs extends BaseRouteComponent {
+	// Devlogs don't have filters.
+	listing: GameListingContainer | null = null;
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.listing = new GameListingContainer();
 		this.listing.setAdTargeting(this.$route, 'devlogs');
 		this.listing.processPayload(this.$route, $payload);
 	}
 
-	routeDestroy() {
+	routeDestroyed() {
 		Ads.releasePageSettings();
 	}
 }

@@ -19,11 +19,10 @@ import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import { PartnerReferral } from 'game-jolt-frontend-lib/components/partner-referral/partner-referral-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component, Prop } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
 import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
@@ -33,7 +32,7 @@ import { AppGameOgrs } from '../../../../../components/game/ogrs/ogrs';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppPostAddButton } from '../../../../../components/post/add-button/add-button';
 import { AppRatingWidget } from '../../../../../components/rating/widget/widget';
-import { RouteMutation, RouteState, RouteStore } from '../view.store';
+import { RouteStore, routeStore, RouteStoreModule } from '../view.store';
 import { AppDiscoverGamesViewOverviewDetails } from './_details/details';
 import { AppDiscoverGamesViewOverviewRecommended } from './_recommended/recommended';
 import { AppDiscoverGamesViewOverviewStatbar } from './_statbar/statbar';
@@ -68,84 +67,11 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 		AppTrackEvent,
 	},
 })
-export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
-	@Prop()
-	id!: string;
-
-	@RouteState
-	isOverviewLoaded!: RouteStore['isOverviewLoaded'];
-
-	@RouteState
-	game!: RouteStore['game'];
-
-	@RouteState
-	mediaItems!: RouteStore['mediaItems'];
-
-	@RouteState
-	overviewComments!: RouteStore['overviewComments'];
-
-	@RouteState
-	userRating!: RouteStore['userRating'];
-
-	@RouteState
-	songs!: RouteStore['songs'];
-
-	@RouteState
-	userPartnerKey!: RouteStore['userPartnerKey'];
-
-	@RouteState
-	partnerLink!: RouteStore['partnerLink'];
-
-	@RouteState
-	partner!: RouteStore['partner'];
-
-	@RouteState
-	partnerKey!: RouteStore['partnerKey'];
-
-	@RouteState
-	supporters!: RouteStore['supporters'];
-
-	@RouteState
-	supporterCount!: RouteStore['supporterCount'];
-
-	@RouteState
-	shouldShowMultiplePackagesMessage!: RouteStore['shouldShowMultiplePackagesMessage'];
-
-	@RouteState
-	postsCount!: RouteStore['postsCount'];
-
-	@RouteState
-	packages!: RouteStore['packages'];
-
-	@RouteState
-	hasReleasesSection!: RouteStore['hasReleasesSection'];
-
-	@RouteState
-	customGameMessages!: RouteStore['customGameMessages'];
-
-	@RouteMutation
-	processOverviewPayload!: RouteStore['processOverviewPayload'];
-
-	@RouteState
-	showDetails!: RouteStore['showDetails'];
-
-	@RouteMutation
-	toggleDetails!: RouteStore['toggleDetails'];
-
-	@RouteMutation
-	setCanToggleDescription!: RouteStore['setCanToggleDescription'];
-
-	feed: ActivityFeedContainer | null = null;
-
-	readonly Screen = Screen;
-	readonly Environment = Environment;
-
-	@RouteResolve({
-		lazy: true,
-		cache: true,
-		deps: {},
-	})
-	routeResolve(this: undefined, route: Route) {
+@RouteResolver({
+	lazy: true,
+	cache: true,
+	deps: { query: ['feed_last_id'] },
+	resolver({ route }) {
 		const gameId = parseInt(route.params.id, 10);
 		HistoryTick.sendBeacon('game-view', gameId, {
 			sourceResource: 'Game',
@@ -161,8 +87,83 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 			apiOverviewUrl += '?ref=' + ref;
 		}
 
-		return Api.sendRequest(apiOverviewUrl);
-	}
+		return Api.sendRequest(ActivityFeedService.makeFeedUrl(route, apiOverviewUrl));
+	},
+	resolveStore({ payload, fromCache }) {
+		routeStore.commit('processOverviewPayload', { payload, fromCache });
+	},
+})
+export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
+	@Prop()
+	id!: string;
+
+	@RouteStoreModule.State
+	isOverviewLoaded!: RouteStore['isOverviewLoaded'];
+
+	@RouteStoreModule.State
+	game!: RouteStore['game'];
+
+	@RouteStoreModule.State
+	mediaItems!: RouteStore['mediaItems'];
+
+	@RouteStoreModule.State
+	overviewComments!: RouteStore['overviewComments'];
+
+	@RouteStoreModule.State
+	userRating!: RouteStore['userRating'];
+
+	@RouteStoreModule.State
+	songs!: RouteStore['songs'];
+
+	@RouteStoreModule.State
+	userPartnerKey!: RouteStore['userPartnerKey'];
+
+	@RouteStoreModule.State
+	partnerLink!: RouteStore['partnerLink'];
+
+	@RouteStoreModule.State
+	partner!: RouteStore['partner'];
+
+	@RouteStoreModule.State
+	partnerKey!: RouteStore['partnerKey'];
+
+	@RouteStoreModule.State
+	supporters!: RouteStore['supporters'];
+
+	@RouteStoreModule.State
+	supporterCount!: RouteStore['supporterCount'];
+
+	@RouteStoreModule.State
+	shouldShowMultiplePackagesMessage!: RouteStore['shouldShowMultiplePackagesMessage'];
+
+	@RouteStoreModule.State
+	postsCount!: RouteStore['postsCount'];
+
+	@RouteStoreModule.State
+	packages!: RouteStore['packages'];
+
+	@RouteStoreModule.State
+	hasReleasesSection!: RouteStore['hasReleasesSection'];
+
+	@RouteStoreModule.State
+	customGameMessages!: RouteStore['customGameMessages'];
+
+	@RouteStoreModule.Mutation
+	processOverviewPayload!: RouteStore['processOverviewPayload'];
+
+	@RouteStoreModule.State
+	showDetails!: RouteStore['showDetails'];
+
+	@RouteStoreModule.Mutation
+	toggleDetails!: RouteStore['toggleDetails'];
+
+	@RouteStoreModule.Mutation
+	setCanToggleDescription!: RouteStore['setCanToggleDescription'];
+
+	feed: ActivityFeedContainer | null = null;
+
+	readonly Screen = Screen;
+	readonly Environment = Environment;
 
 	get routeTitle() {
 		if (this.game) {
@@ -192,12 +193,12 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		return this.game.referrals_enabled && this.userPartnerKey && this.packages.length;
 	}
 
-	routeInit() {
+	routeCreated() {
 		CommentModal.checkPermalink(this.$router);
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
-	async routed($payload: any, fromCache: boolean) {
+	async routeResolved($payload: any, fromCache: boolean) {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;
@@ -215,8 +216,6 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 			$payload.posts,
 			fromCache
 		);
-
-		this.processOverviewPayload({ payload: $payload, fromCache });
 	}
 
 	copyPartnerLink() {

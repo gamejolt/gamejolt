@@ -1,15 +1,14 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./maturity.html';
-
-import { RouteState, RouteStore } from '../../manage.store';
-import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { Component } from 'vue-property-decorator';
 import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
-import { AppScrollAffix } from '../../../../../../../lib/gj-lib-client/components/scroll/affix/affix';
-import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
-import { FormGameMaturity } from '../../../../../../components/forms/game/maturity/maturity';
+import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppScrollAffix } from '../../../../../../../lib/gj-lib-client/components/scroll/affix/affix';
+import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { FormGameMaturity } from '../../../../../../components/forms/game/maturity/maturity';
+import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
+import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @View
 @Component({
@@ -21,11 +20,12 @@ import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/compo
 	},
 })
 export default class RouteDashGamesManageGameMaturity extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteStoreModule.State
+	game!: RouteStore['game'];
 
 	current: Game = null as any;
 
-	Screen = Screen;
+	readonly Screen = Screen;
 
 	get routeTitle() {
 		if (this.game) {
@@ -36,7 +36,7 @@ export default class RouteDashGamesManageGameMaturity extends BaseRouteComponent
 		return null;
 	}
 
-	routeInit() {
+	routeCreated() {
 		this.current = this.game;
 	}
 

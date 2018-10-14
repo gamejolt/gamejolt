@@ -6,7 +6,7 @@ import { AppListGroupStyleguide } from '../../../lib/gj-lib-client/components/li
 import { AppProgressBarStyleguide } from '../../../lib/gj-lib-client/components/progress/bar/bar-styleguide';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../lib/gj-lib-client/components/route/route-component';
 import { AppScrollAffix } from '../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { AppScrollTo } from '../../../lib/gj-lib-client/components/scroll/to/to.directive';
@@ -26,14 +26,11 @@ import { User } from '../../../lib/gj-lib-client/components/user/user.model';
 		AppScrollTo,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: () => User.touch(),
+})
 export default class RouteStyleguide extends BaseRouteComponent {
-	@RouteResolve({
-		deps: {},
-	})
-	async routeResolve() {
-		User.touch();
-	}
-
 	get routeTitle() {
 		return 'Styleguide';
 	}

@@ -1,23 +1,31 @@
-import { namespace, State, Action, Mutation } from 'vuex-class';
-import { VuexModule, VuexStore, VuexMutation } from '../../../../lib/gj-lib-client/utils/vuex';
+import { namespace } from 'vuex-class';
+import {
+	NamespaceVuexStore,
+	VuexModule,
+	VuexMutation,
+	VuexStore,
+} from '../../../../lib/gj-lib-client/utils/vuex';
+import { store } from '../../../store';
 
-export const RouteStoreName = 'accountRoute';
-export const RouteState = namespace(RouteStoreName, State);
-export const RouteAction = namespace(RouteStoreName, Action);
-export const RouteMutation = namespace(RouteStoreName, Mutation);
+type RouteActions = {};
 
-type Actions = {};
-
-type Mutations = {
+type RouteMutations = {
 	setHeading: string;
 };
 
+export const RouteStoreName = 'accountRoute';
+export const RouteStoreModule = namespace(RouteStoreName);
+export const routeStore = NamespaceVuexStore<RouteStore, RouteActions, RouteMutations>(
+	store,
+	RouteStoreName
+);
+
 @VuexModule()
-export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
+export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutations> {
 	heading = '';
 
 	@VuexMutation
-	setHeading(heading: Mutations['setHeading']) {
+	setHeading(heading: RouteMutations['setHeading']) {
 		this.heading = heading;
 	}
 }

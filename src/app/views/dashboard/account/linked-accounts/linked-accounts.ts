@@ -13,13 +13,13 @@ import { LinkedAccounts } from '../../../../../lib/gj-lib-client/components/link
 import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
 import { YoutubeChannel } from '../../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
 import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { UserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
-import { RouteMutation, RouteStore } from '../account.store';
+import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
 @View
 @Component({
@@ -28,12 +28,19 @@ import { RouteMutation, RouteStore } from '../account.store';
 		AppLinkedAccount,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: () => Api.sendRequest('/web/dash/linked-accounts?resource=User'),
+	resolveStore({}) {
+		routeStore.commit('setHeading', Translate.$gettext(`LinkedAccounts`));
+	},
+})
 export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 	@AppState
 	user!: AppStore['user'];
 
-	@RouteMutation
-	setHeading!: RouteStore['setHeading'];
+	@RouteStoreModule.State
+	heading!: RouteStore['heading'];
 
 	accounts: LinkedAccount[] = [];
 	channels: YoutubeChannel[] = [];
@@ -70,19 +77,11 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 		return null;
 	}
 
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve(this: undefined) {
-		return Api.sendRequest('/web/dash/linked-accounts?resource=User');
-	}
-
 	get routeTitle() {
-		return this.$gettext('Linked Accounts');
+		return this.heading;
 	}
 
-	routed($payload: any) {
-		this.setHeading(this.$gettext('Linked Accounts'));
+	routeResolved($payload: any) {
 		this.channels = YoutubeChannel.populate($payload.channels);
 		this.accounts = LinkedAccount.populate($payload.accounts);
 	}

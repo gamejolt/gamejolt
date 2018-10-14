@@ -1,6 +1,5 @@
 import View from '!view!./collection.html?style=./collection.styl';
 import { Component, Prop } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
@@ -15,7 +14,7 @@ import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service
 import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import {
@@ -25,7 +24,6 @@ import {
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { enforceLocation } from '../../../../lib/gj-lib-client/utils/router';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import { AppGameCollectionFollowWidget } from '../../../components/game/collection/follow-widget/follow-widget';
@@ -47,7 +45,6 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 	components: {
 		AppPageHeader,
 		AppGameCollectionThumbnail,
-		AppJolticon,
 		AppPopper,
 		AppGameListing,
 		AppGameGrid,
@@ -63,52 +60,11 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 		number,
 	},
 })
-export default class RouteLibraryCollection extends BaseRouteComponent {
-	@Prop(String)
-	id!: string;
-
-	@State
-	app!: Store['app'];
-	@LibraryState
-	collections!: LibraryStore['collections'];
-
-	@LibraryAction
-	removeGameFromPlaylist!: LibraryStore['removeGameFromPlaylist'];
-	@LibraryAction
-	unfollowGame!: LibraryStore['unfollowGame'];
-	@LibraryAction
-	editPlaylist!: LibraryStore['editPlaylist'];
-	@LibraryAction
-	removePlaylist!: LibraryStore['removePlaylist'];
-
-	@ThemeMutation
-	setPageTheme!: ThemeStore['setPageTheme'];
-
-	type = '';
-	followerCount = 0;
-
-	collection: GameCollection | null = null;
-	bundle: GameBundle | null = null;
-	playlist: GamePlaylist | null = null;
-	jam: Jam | null = null;
-	user: User | null = null;
-
-	filtering: GameFilteringContainer | null = null;
-	listing: GameListingContainer | null = null;
-
-	recommendedGames: Game[] = [];
-	isLoadingRecommended = false;
-
-	metaTitle = '';
-
-	readonly Screen = Screen;
-
+@RouteResolver({
 	// Not really able to make this lazy since it needs payload to build out the
 	// header.
-	@RouteResolve({
-		cache: true,
-	})
-	async routeResolve(this: undefined, route: Route) {
+	cache: true,
+	async resolver({ route }) {
 		const type = route.meta.collectionType;
 		const filtering = new GameFilteringContainer(route);
 		const query = filtering.getQueryString(route);
@@ -140,7 +96,51 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		}
 
 		return payload;
-	}
+	},
+})
+export default class RouteLibraryCollection extends BaseRouteComponent {
+	@Prop(String)
+	id!: string;
+
+	@State
+	app!: Store['app'];
+
+	@ThemeMutation
+	setPageTheme!: ThemeStore['setPageTheme'];
+
+	@LibraryState
+	collections!: LibraryStore['collections'];
+
+	@LibraryAction
+	removeGameFromPlaylist!: LibraryStore['removeGameFromPlaylist'];
+
+	@LibraryAction
+	unfollowGame!: LibraryStore['unfollowGame'];
+
+	@LibraryAction
+	editPlaylist!: LibraryStore['editPlaylist'];
+
+	@LibraryAction
+	removePlaylist!: LibraryStore['removePlaylist'];
+
+	type = '';
+	followerCount = 0;
+
+	collection: GameCollection | null = null;
+	bundle: GameBundle | null = null;
+	playlist: GamePlaylist | null = null;
+	jam: Jam | null = null;
+	user: User | null = null;
+
+	filtering: GameFilteringContainer | null = null;
+	listing: GameListingContainer | null = null;
+
+	recommendedGames: Game[] = [];
+	isLoadingRecommended = false;
+
+	metaTitle = '';
+
+	readonly Screen = Screen;
 
 	get routeTitle() {
 		if (this.metaTitle) {
@@ -209,7 +209,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		if (!this.listing || !this.filtering) {
 			this.filtering = new GameFilteringContainer(this.$route);
 			this.listing = new GameListingContainer(this.filtering);
@@ -249,6 +249,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			this.user = this.playlist.user;
 		}
 
+		// This should be in a resolveStore func, but I don't want to refactor
+		// the whole route to use a store so that we can access user. It won't
+		// lose much if SSR doesn't see that the page theme isn't set.
 		if (this.user) {
 			this.setPageTheme(this.user.theme || null);
 		} else {
@@ -259,7 +262,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		this.mixPlaylist();
 	}
 
-	routeDestroy() {
+	routeDestroyed() {
 		this.setPageTheme(null);
 		Ads.releasePageSettings();
 	}

@@ -1,6 +1,5 @@
 import View from '!view!./view.html?style=./view.styl';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
 import { GamePackage } from '../../../../../../lib/gj-lib-client/components/game/package/package.model';
@@ -10,7 +9,7 @@ import { Order } from '../../../../../../lib/gj-lib-client/components/order/orde
 import { OrderPayment } from '../../../../../../lib/gj-lib-client/components/order/payment/payment.model';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { arrayGroupBy, arrayIndexBy } from '../../../../../../lib/gj-lib-client/utils/array';
@@ -28,6 +27,10 @@ import { date } from '../../../../../../lib/gj-lib-client/vue/filters/date';
 		date,
 	},
 })
+@RouteResolver({
+	deps: { params: ['id'] },
+	resolver: ({ route }) => Api.sendRequest('/web/dash/purchases/' + route.params.id),
+})
 export default class RouteDashMainPurchasesView extends BaseRouteComponent {
 	order: Order = null as any;
 	packages: GamePackage[] = [];
@@ -37,13 +40,6 @@ export default class RouteDashMainPurchasesView extends BaseRouteComponent {
 	readonly OrderPayment = OrderPayment;
 	readonly date = date;
 	readonly Screen = Screen;
-
-	@RouteResolve({
-		deps: { params: ['id'] },
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/dash/purchases/' + route.params.id);
-	}
 
 	get routeTitle() {
 		if (this.order) {
@@ -74,7 +70,7 @@ export default class RouteDashMainPurchasesView extends BaseRouteComponent {
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.order = new Order($payload.order);
 		this.games = Game.populate($payload.games);
 		this.packages = GamePackage.populate($payload.packages);

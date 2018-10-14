@@ -1,25 +1,15 @@
 <section class="section">
-	<div class="container" v-if="Search.query" id="users-pagination">
+	<div class="container" v-if="hasSearch">
 
 		<div class="search-media-list row">
-			<div class="search-media-list-item search-media-list-user col-xs-3 col-sm-2 anim-fade-in-up no-animate-xs"
-				v-for="user of payload.users"
+			<div
+				class="search-media-list-item search-media-list-user col-xs-3 col-sm-2 anim-fade-in-up no-animate-xs"
+				v-for="user of searchPayload.users"
 				:key="user.id"
 				>
-				<app-user-avatar :user="user" :show-name="true" />
+				<app-user-avatar :user="user" show-name />
 			</div>
 		</div>
-
-		<br>
-
-		<app-pagination
-			class="text-center"
-			v-if="showPagination && payload.perPage && payload.count"
-			:items-per-page="payload.perPage"
-			:total-items="payload.count"
-			:current-page="payload.page"
-			@pagechange="Scroll.to( 'users-pagination', { animate: false } )"
-			/>
 
 	</div>
 </section>

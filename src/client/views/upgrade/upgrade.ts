@@ -33,7 +33,7 @@ export default class RouteUpgrade extends BaseRouteComponent {
 		return 80 + Math.round(progress.percent * 0.2);
 	}
 
-	routeInit() {
+	routeCreated() {
 		ClientUpdater.checkForClientUpdates();
 	}
 
