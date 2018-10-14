@@ -1,5 +1,4 @@
 import View from '!view!./avatar.html';
-import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
 import { Component, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { AppFormControlCrop } from '../../../../lib/gj-lib-client/components/form-vue/control/crop/crop';
@@ -78,8 +77,6 @@ export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
 	}
 
 	async clearAvatar() {
-		Popper.hideAll();
-
 		const result = await ModalConfirm.show(
 			this.$gettext(`Are you sure you want to remove your avatar?`),
 			undefined,
