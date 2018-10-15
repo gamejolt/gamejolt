@@ -8,12 +8,23 @@
 		<div class="alert" v-if="!feed.hasItems">
 			<translate>You don't have any notifications yet.</translate>
 		</div>
-		<app-activity-feed
-			v-else
-			:feed="feed"
-			:new-count="0"
-			@load-new="loadedNew()"
-			/>
+		<div v-else>
+			<router-link
+				:to="{ name: 'activity.notifications' }">
+				<app-button>
+					<translate>View All</translate>
+				</app-button>
+			</router-link>
+			<app-button
+			 	@click="markAllAsRead">
+				<translate>Mark all as Read</translate>
+			</app-button>
+			<app-activity-feed
+				:feed="feed"
+				:new-count="0"
+				@load-new="loadedNew()"
+				/>
+		</div>
 	</template>
 
 </div>

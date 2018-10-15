@@ -75,7 +75,7 @@ export default class RouteActivityNotifications extends BaseRouteComponent {
 		this.setNotificationCount({ type: 'notifications', count: 0 });
 	}
 
-	async onClickMarkAllAsRead() {
+	async markAllAsRead() {
 		await Api.sendRequest('/web/dash/activity/mark-all-read', {});
 		// mark all loaded notifications as read temporarely
 		if (this.feed) {
