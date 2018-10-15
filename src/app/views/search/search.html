@@ -48,12 +48,6 @@
 						<span class="badge">{{ searchPayload.gamesCount | number }}</span>
 					</router-link>
 				</li>
-				<li v-if="searchPayload.devlogsCount">
-					<router-link :to="{ name: 'search.devlogs', query: { q: query } }" active-class="active">
-						<translate>Devlogs</translate>
-						<span class="badge">{{ searchPayload.devlogsCount | number }}</span>
-					</router-link>
-				</li>
 			</ul>
 		</nav>
 

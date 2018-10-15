@@ -43,8 +43,4 @@ export default class RouteSearchResults extends BaseRouteComponent {
 
 	readonly Search = Search;
 	readonly Screen = Screen;
-
-	get devlogsTrimmed() {
-		return this.searchPayload.devlogs.slice(0, 4);
-	}
 }

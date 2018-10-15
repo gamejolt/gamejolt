@@ -1,17 +1,11 @@
 import { RouteConfig } from 'vue-router';
-
-import { routeDiscoverChannelsViewOverview } from './overview/overview.route';
 import { routeDiscoverChannelsViewGames } from './games/games.route';
-import { routeDiscoverChannelsViewDevlogs } from './devlogs/devlogs.route';
+import { routeDiscoverChannelsViewOverview } from './overview/overview.route';
 
 export const routeDiscoverChannelsView: RouteConfig = {
 	name: 'discover.channels.view',
 	path: ':channel',
 	props: true,
 	component: () => import(/* webpackChunkName: "routeDiscoverChannels" */ './view'),
-	children: [
-		routeDiscoverChannelsViewOverview,
-		routeDiscoverChannelsViewGames,
-		routeDiscoverChannelsViewDevlogs,
-	],
+	children: [routeDiscoverChannelsViewOverview, routeDiscoverChannelsViewGames],
 };
