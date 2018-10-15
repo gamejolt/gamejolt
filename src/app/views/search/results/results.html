@@ -38,41 +38,6 @@
 	<section class="section">
 		<div class="container-lg">
 
-			<!-- Devlogs -->
-			<template v-if="searchPayload.devlogs.length">
-				<div class="clearfix">
-					<app-button
-						class="pull-right"
-						:to="{ name: 'search.devlogs', query: { q: query } }"
-						>
-						<translate>search.results.view_all_link</translate>
-					</app-button>
-					<h3 class="section-header">
-						<router-link
-							class="link-unstyled"
-							:to="{ name: 'search.devlogs', query: { q: query } }"
-							>
-							<translate>Devlogs</translate>
-						</router-link>
-						<small>({{ searchPayload.devlogsCount | number }})</small>
-					</h3>
-				</div>
-
-				<app-game-grid
-					:games="devlogsTrimmed"
-					truncate-to-fit
-					scrollable
-					event-label="search-overview-devlogs"
-					/>
-
-			</template>
-
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="container-lg">
-
 			<!-- Games -->
 			<template v-if="searchPayload.games.length">
 				<div class="clearfix">

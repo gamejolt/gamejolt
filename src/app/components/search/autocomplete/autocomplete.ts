@@ -54,7 +54,6 @@ export class AppSearchAutocomplete extends Vue {
 
 	selected = 0;
 	games: Game[] = [];
-	devlogs: Game[] = [];
 	users: User[] = [];
 	libraryGames: _LocalDbGameMod.LocalDbGame[] = [];
 	items: any[] = [];
@@ -114,11 +113,6 @@ export class AppSearchAutocomplete extends Vue {
 				routeName: 'discover.games.list._fetch',
 				params: { section: 'featured' },
 				description: this.$gettext('commands.games_description'),
-			},
-			{
-				keyword: ':devlogs',
-				routeName: 'discover.devlogs.overview',
-				description: this.$gettext('Browse devlogs.'),
 			},
 			{
 				keyword: ':dashboard',
@@ -214,7 +208,6 @@ export class AppSearchAutocomplete extends Vue {
 		// Payloads may not come back sequentially.
 		if (this.search!.query === query) {
 			this.games = payload.games;
-			this.devlogs = payload.devlogs;
 			this.users = payload.users;
 			this.libraryGames = payload.libraryGames;
 
@@ -223,7 +216,6 @@ export class AppSearchAutocomplete extends Vue {
 			this.items = ([] as any[])
 				.concat(this.libraryGames)
 				.concat(this.games)
-				.concat(this.devlogs)
 				.concat(this.users);
 		}
 	}

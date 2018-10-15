@@ -1,11 +1,11 @@
 import Vue from 'vue';
-import { Route, Location } from 'vue-router';
+import { Location, Route } from 'vue-router';
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
-import { forEach } from '../../../../lib/gj-lib-client/utils/collection';
 import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { Translate } from '../../../../lib/gj-lib-client/components/translate/translate.service';
+import { forEach } from '../../../../lib/gj-lib-client/utils/collection';
 import { objectEquals } from '../../../../lib/gj-lib-client/utils/object';
 import { router } from '../../../views/index';
-import { Translate } from '../../../../lib/gj-lib-client/components/translate/translate.service';
 
 const STORAGE_KEY = 'game-filtering:filters';
 
@@ -125,6 +125,7 @@ export class GameFilteringContainer {
 				options: {
 					complete: Translate.$gettext('Complete/Stable'),
 					wip: Translate.$gettext('Early Access'),
+					devlog: Translate.$gettext('Devlog'),
 				},
 			},
 			partners: {
