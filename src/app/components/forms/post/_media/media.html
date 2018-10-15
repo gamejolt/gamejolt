@@ -31,8 +31,19 @@
 		overlay
 		horizontal
 		>
-		<div class="-items">
-			<a class="-add" @click="showSelectMedia()">
+		<div
+			class="-items"
+			@dragover="onDragOver($event)"
+			@dragleave="onDragLeave()"
+			@drop="onDrop($event)"
+			>
+			<a
+				class="-add"
+				:class="{
+					'-drop-active': isDropActive,
+				}"
+				@click="showSelectMedia()"
+				>
 				<div class="-add-inner">
 					<div>
 						<app-jolticon icon="add" big />
