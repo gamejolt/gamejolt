@@ -14,7 +14,7 @@
 			<ul>
 				<li>
 					<router-link :to="{ name: 'activity.feed' }" active-class="active">
-						<app-jolticon icon="feed" class="hidden-xs" />
+						<app-jolticon icon="devlogs" class="hidden-xs" />
 						<translate>Feed</translate>
 						<span class="tag tag-highlight" v-if="unreadActivityCount > 0">
 							{{ unreadActivityCount < 100 ? unreadActivityCount : '99+' }}
