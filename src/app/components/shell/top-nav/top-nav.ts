@@ -50,9 +50,6 @@ export class AppShellTopNav extends Vue {
 	chat!: ChatClient;
 
 	@State
-	notificationCount!: Store['notificationCount'];
-
-	@State
 	friendRequestCount!: Store['friendRequestCount'];
 
 	@State
@@ -65,7 +62,6 @@ export class AppShellTopNav extends Vue {
 	hasSidebar!: Store['hasSidebar'];
 
 	friendRequestsShowing = false;
-	notificationsShowing = false;
 	userMenuShowing = false;
 	moreMenuShowing = false;
 
@@ -75,6 +71,7 @@ export class AppShellTopNav extends Vue {
 
 	@Action
 	toggleRightPane!: Store['toggleRightPane'];
+
 	@Action
 	toggleLeftPane!: Store['toggleLeftPane'];
 }

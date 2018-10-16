@@ -88,28 +88,7 @@
 		<template v-if="app.user">
 
 			<!-- Notifications -->
-			<app-popper
-				v-if="!Connection.isClientOffline"
-				hide-on-state-change
-				@show="notificationsShowing = true"
-				@hide="notificationsShowing = false"
-				>
-				<a
-					class="navbar-item"
-					:class="{ active: notificationsShowing }"
-					v-app-tooltip.bottom="$gettext( `Notifications` )"
-					v-app-track-event="`top-nav:notifications:toggle`"
-					>
-					<span
-						class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
-						v-if="notificationCount"
-						>
-						{{ notificationCount }}
-					</span>
-					<app-jolticon icon="notifications" />
-				</a>
-				<app-notification-popover slot="popover" />
-			</app-popper>
+			<app-notification-popover />
 
 			<!-- Friend Requests -->
 			<app-popper
