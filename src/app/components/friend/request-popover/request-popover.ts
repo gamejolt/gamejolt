@@ -1,4 +1,4 @@
-import View from '!view!./request-popover.html?style=./request-popover.styl';
+import View from '!view!./request-popover.html';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { Mutation } from 'vuex-class/lib/bindings';
@@ -45,7 +45,7 @@ export class AppFriendRequestPopover extends Vue {
 	@Watch('requests')
 	onRequestsChange() {
 		if (this.inviewParent) {
-			this.inviewParent.container.queueCheck();
+			this.inviewParent.queueCheck();
 		}
 	}
 
