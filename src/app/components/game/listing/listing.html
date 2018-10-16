@@ -110,17 +110,13 @@
 				:num="16"
 				/>
 
-		</div>
-
-		<div class="container anim-fade-in"
-			v-if="listing.isBootstrapped && !listing.gamesCount"
-			>
-			<div class="alert alert-notice">
-				<div class="container">
-					<p>
-						<translate>No games match your filters. Zoinks!</translate>
-					</p>
-				</div>
+			<div
+				v-if="listing.isBootstrapped && !listing.gamesCount"
+				class="alert alert-notice anim-fade-in-enlarge"
+				>
+				<p>
+					<translate>No games match your filters. Zoinks!</translate>
+				</p>
 			</div>
 		</div>
 	</section>

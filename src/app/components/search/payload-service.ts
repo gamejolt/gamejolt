@@ -12,8 +12,6 @@ export class SearchPayload {
 	usersCount: number;
 	games: Game[];
 	gamesCount: number;
-	devlogs: Game[];
-	devlogsCount: number;
 	libraryGames: LocalDbGame[];
 
 	constructor(public type: string, data: any) {
@@ -26,8 +24,6 @@ export class SearchPayload {
 		this.users = User.populate(data.users);
 		this.gamesCount = data.gamesCount || 0;
 		this.games = Game.populate(data.games);
-		this.devlogsCount = data.devlogsCount || 0;
-		this.devlogs = Game.populate(data.devlogs);
 		this.libraryGames = [];
 
 		if (GJ_IS_CLIENT) {

@@ -16,9 +16,12 @@
 	border-style: dashed
 	margin-right: $-padding
 
-	&:hover
+	&:hover, &.-drop-active
 		theme-prop('border-color', 'link')
 		theme-prop('color', 'link')
+
+	&.-drop-active
+		border-style: solid
 
 .-add-inner
 	display: flex
