@@ -12,10 +12,8 @@
 		<app-form-control-upload
 			:rules="{
 				filesize: maxFilesize,
-				min_img_dimensions: [ minWidth, 0 ],
-				max_img_dimensions: [ maxWidth, 0 ],
-				min_img_ratio: minAspectRatio,
-				max_img_ratio: maxAspectRatio,
+				min_img_dimensions: [ minWidth, minHeight ],
+				max_img_dimensions: [ maxWidth, maxHeight ],
 			}"
 			accept=".png,.jpg,.jpeg,.gif"
 			@changed="headerSelected()"
