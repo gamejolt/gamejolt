@@ -1,4 +1,5 @@
 import View from '!view!./details.html?style=./details.styl';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { AppLazyPlaceholder } from '../../../../../../../lib/gj-lib-client/components/lazy/placeholder/placeholder';
@@ -25,6 +26,13 @@ export class AppDiscoverGamesViewOverviewDetails extends Vue {
 	linkedAccounts!: RouteStore['linkedAccounts'];
 
 	date = date;
+
+	get creationTool() {
+		if (this.game.creation_tool_human === Game.CREATION_TOOL_OTHER) {
+			return this.game.creation_tool_other;
+		}
+		return this.game.creation_tool_human;
+	}
 
 	get hasLinksSection() {
 		return (
