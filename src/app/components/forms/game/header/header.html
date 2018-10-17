@@ -2,6 +2,7 @@
 	<app-form-group
 		name="file"
 		:label="$gettext( `Upload New Header` )"
+		:optional="!!formModel.header_media_item"
 		>
 
 		<p class="help-block" v-translate>
@@ -24,4 +25,30 @@
 			:label="$gettext( `header` )"
 			/>
 	</app-form-group>
+
+	<app-form-group
+		name="crop"
+		:label="$gettext(`Crop Current Header`)"
+		v-if="formModel.header_media_item && !formModel.file"
+		>
+
+		<div class="form-control-static">
+			<app-form-control-crop
+				:src="formModel.header_media_item.img_url"
+				:min-width="minWidth"
+				:min-height="minHeight"
+				:min-aspect-ratio="minAspectRatio"
+				:max-aspect-ratio="maxAspectRatio"
+				/>
+
+			<app-form-control-errors
+				:label="$gettext( `dash.games.thumbnail.crop_error_label` )"
+				/>
+		</div>
+	</app-form-group>
+
+	<app-form-button v-if="formModel.header_media_item">
+		<translate>Save Header</translate>
+	</app-form-button>
+
 </app-form>
