@@ -13,18 +13,8 @@
 		<p class="help-block" v-translate>
 			dash.forms.image_filetype_help_html
 		</p>
-		<p class="help-block">
-			<translate>
-				The recommended size for a header image is
-			</translate>
-			<code>
-				<translate>
-					5120px × 1280px
-				</translate>
-			</code>
-			<translate>
-				(ratio of 4 ÷ 1).
-			</translate>
+		<p class="help-block strong" v-translate="{ dimensions: '2000x500' }">
+			The recommended size for a header image is <code>%{dimensions}</code> (ratio of 4 ÷ 1).
 		</p>
 		<p class="help-block">
 			<a class="link-help" href="https://help.gamejolt.com/dev-page-headers" target="_blank">
