@@ -5,8 +5,31 @@
 		:optional="!!formModel.header_media_item"
 		>
 
+		<p class="help-block">
+			<translate>
+				Headers are the big, banner-like images that adorn the tops of pages. For your header to look its best on all devices, make sure anything important is located near the center of the image.
+			</translate>
+		</p>
 		<p class="help-block" v-translate>
 			dash.forms.image_filetype_help_html
+		</p>
+		<p class="help-block">
+			<translate>
+				The recommended size for a header image is
+			</translate>
+			<code>
+				<translate>
+					5120px × 1280px
+				</translate>
+			</code>
+			<translate>
+				(ratio of 4 ÷ 1).
+			</translate>
+		</p>
+		<p class="help-block">
+			<a class="link-help" href="https://help.gamejolt.com/dev-page-headers" target="_blank">
+				<translate>What are the header requirements and guidelines?</translate>
+			</a>
 		</p>
 
 		<app-form-control-upload
@@ -39,14 +62,20 @@
 				:max-aspect-ratio="maxAspectRatio"
 				/>
 
-			<app-form-control-errors
-				:label="$gettext( `dash.games.thumbnail.crop_error_label` )"
-				/>
+			<app-form-control-errors />
 		</div>
 	</app-form-group>
 
-	<app-form-button v-if="formModel.header_media_item">
-		<translate>Save Header</translate>
-	</app-form-button>
+	<template v-if="formModel.header_media_item">
+		<app-form-button>
+			<translate>Save</translate>
+		</app-form-button>
+		<app-button
+			trans
+			@click.prevent="clearHeader()"
+			>
+			<translate>Remove Header</translate>
+		</app-button>
+	</template>
 
 </app-form>

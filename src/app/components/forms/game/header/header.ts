@@ -1,5 +1,6 @@
 import View from '!view!./header.html';
 import { AppFormControlCrop } from 'game-jolt-frontend-lib/components/form-vue/control/crop/crop';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
 import { Component, Watch } from 'vue-property-decorator';
 import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
 import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
@@ -59,6 +60,18 @@ export class FormGameHeader extends BaseForm<FormModel> implements FormOnLoad {
 		this.maxWidth = payload.maxWidth;
 		this.minHeight = payload.minHeight;
 		this.maxHeight = payload.maxHeight;
+	}
+
+	async clearHeader() {
+		const result = await ModalConfirm.show(
+			this.$gettext(`Are you sure you want to remove your game header?`),
+			undefined,
+			'yes'
+		);
+
+		if (result) {
+			this.formModel.$clearHeader();
+		}
 	}
 
 	headerSelected() {
