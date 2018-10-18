@@ -11,16 +11,8 @@
 		<p class="help-block" v-translate>
 			dash.forms.thumbnail_filetype_help_html
 		</p>
-		<p class="help-block">
-			<translate>
-				The recommended size for a thumbnail is
-			</translate>
-			<code>
-				<translate>
-					1920px × 1080px
-				</translate>
-			</code>
-			.
+		<p class="help-block strong" v-translate="{ dimensions: '1280x720' }">
+			The recommended size for a thumbnail is <code>%{dimensions}</code> (ratio of 16 ÷ 9).
 		</p>
 		<p class="help-block">
 			<a class="link-help" href="https://help.gamejolt.com/dev-thumbnails" target="_blank">
