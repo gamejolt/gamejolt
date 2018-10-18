@@ -8,6 +8,7 @@ export class UserHeaderModal {
 				asyncComponentLoader(
 					import(/* webpackChunkName: "UserHeaderModal" */ './header-modal')
 				),
+			size: 'sm',
 		});
 	}
 }
