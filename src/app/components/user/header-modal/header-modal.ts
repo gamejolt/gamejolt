@@ -26,7 +26,7 @@ export default class AppUserHeaderModal extends BaseModal {
 		}
 	}
 
-	onSaved(user: User) {
+	onSubmit(user: User) {
 		const newHeaderId = (user.header_media_item && user.header_media_item.id) || null;
 		if (this.previousHeaderId === newHeaderId) {
 			this.modal.resolve(user);
