@@ -19,7 +19,7 @@ import { AppPageHeader } from '../../../../components/page-header/page-header';
 })
 @RouteResolver({
 	deps: {},
-	resolver: ({ route }) => Api.sendRequest('/web/discover/channels'),
+	resolver: () => Api.sendRequest('/web/discover/channels'),
 })
 export default class RouteDiscoverChannelsList extends BaseRouteComponent {
 	channels: any[] = [];

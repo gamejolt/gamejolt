@@ -1,6 +1,6 @@
 <div class="activity-feed">
 
-	<template v-if="feed.isInfinite && newCount > 0">
+	<template v-if="newCount > 0">
 		<app-expand
 			v-if="!feed.isLoadingNew"
 			when
@@ -24,21 +24,30 @@
 			/>
 	</template>
 
-	<div v-for="(item, i) of feed.items" :key="item.id">
-		<app-activity-feed-item
-			:feed="feed"
-			:item="item"
-			/>
+	<!-- Need the div so that we can target the last child in teh container. -->
+	<div>
+		<div
+			class="-item"
+			v-for="(item, i) of feed.items"
+			:key="item.id"
+			>
+			<app-activity-feed-item
+				:item="item"
+				/>
 
-		<div class="-ad-container well fill-offset full-bleed-xs text-center" v-if="shouldShowAd(i)">
-			<app-ad size="rectangle" pos="bottom" />
-			<div class="-ad-label text-muted small">
-				<translate>Advertisement</translate>
+			<div class="-ad-container well fill-offset full-bleed-xs text-center" v-if="shouldShowAd(i)">
+				<app-ad size="rectangle" pos="bottom" />
+				<div class="-ad-label text-muted small">
+					<translate>Advertisement</translate>
+				</div>
 			</div>
 		</div>
 	</div>
 
-	<template v-if="feed.isInfinite">
+	<!--
+		If they are viewing a slice of the state, then we don't want to allow loading more.
+	-->
+	<template v-if="!feed.slice">
 		<div v-if="shouldShowLoadMore" class="page-cut">
 			<app-button
 				:to="GJ_IS_SSR ? { query: { feed_last_id: feed.endScrollId } } : undefined"

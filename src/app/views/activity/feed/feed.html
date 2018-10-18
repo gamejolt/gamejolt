@@ -26,7 +26,7 @@
 			</div>
 			<div class="col-xs-12 col-md-8 col-lg-7 col-lg-offset-1 pull-left">
 
-				<app-activity-feed-placeholder v-if="!feed" />
+				<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
 				<template v-else>
 					<div class="alert" v-if="!feed.hasItems">
 						<translate>You don't have any activity yet. Follow games to stay up to date on their latest development!</translate>
@@ -34,7 +34,6 @@
 					<app-activity-feed
 						v-else
 						:feed="feed"
-						show-game-info
 						show-ads
 						:new-count="unreadActivityCount"
 						@load-new="loadedNew()"

@@ -6,28 +6,26 @@ import { Notification } from '../../../../lib/gj-lib-client/components/notificat
 export type ActivityFeedInput = Notification | EventItem;
 
 export class ActivityFeedItem {
-	id: string;
-	type!: 'notification' | 'event-item';
 	feedItem: ActivityFeedInput;
-	scrollId: string;
-	height: string | null = null;
-	isOpen = false;
-	isLeadOpen = false;
+
+	get id() {
+		return this.feedItem.id + '';
+	}
+
+	get type() {
+		if (this.feedItem instanceof Notification) {
+			return 'notification';
+		}
+
+		return 'event-item';
+	}
+
+	get scrollId() {
+		return this.feedItem.scroll_id as string;
+	}
 
 	constructor(sourceItem: ActivityFeedInput) {
 		this.feedItem = sourceItem;
-
-		let dateVal = 0;
-		if (this.feedItem instanceof Notification) {
-			this.type = 'notification';
-			dateVal = this.feedItem.added_on;
-		} else if (this.feedItem instanceof EventItem) {
-			this.type = 'event-item';
-			dateVal = this.feedItem.added_on;
-		}
-
-		this.id = `${this.type}-${this.feedItem.id}-${dateVal}`;
-		this.scrollId = this.feedItem.scroll_id as string;
 	}
 
 	$viewed() {

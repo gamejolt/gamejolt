@@ -5,8 +5,9 @@ import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service'
 import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
 import { AppWidgetCompiler } from 'game-jolt-frontend-lib/components/widget-compiler/widget-compiler';
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import { ActivityFeedItem } from '../../item-service';
+import { ActivityFeedView } from '../../view';
 
 @View
 @Component({
@@ -16,16 +17,24 @@ import { ActivityFeedItem } from '../../item-service';
 	},
 })
 export class AppActivityFeedDevlogPostText extends Vue {
+	@Inject()
+	feed!: ActivityFeedView;
+
 	@Prop(ActivityFeedItem)
 	item!: ActivityFeedItem;
 
 	@Prop(FiresidePost)
 	post!: FiresidePost;
 
-	@Prop(Boolean)
-	isHydrated?: boolean;
-
 	isToggling = false;
+
+	get isHydrated() {
+		return this.feed.isItemHydrated(this.item);
+	}
+
+	get isOpen() {
+		return this.feed.isItemOpen(this.item);
+	}
 
 	async mounted() {
 		await this.$nextTick();
@@ -41,7 +50,7 @@ export class AppActivityFeedDevlogPostText extends Vue {
 		this.$emit('expanded');
 
 		// If we collapsed.
-		if (!this.item.isOpen) {
+		if (!this.isOpen) {
 			this.expand();
 		} else {
 			this.collapse();
@@ -49,27 +58,25 @@ export class AppActivityFeedDevlogPostText extends Vue {
 	}
 
 	expand() {
-		this.item.isOpen = true;
+		this.feed.setItemOpen(this.item, true);
 		this.isToggling = false;
 	}
 
 	collapse() {
-		// We will scroll to the bottom of the element minus some extra padding. This keeps the
-		// element in view a bit.
+		// We will scroll to the bottom of the element minus some extra padding.
+		// This keeps the element in view a bit.
 		const elementOffset = Scroll.getElementOffsetFromContext(this.$el);
 		const scrollTo = elementOffset - Screen.windowHeight * 0.25;
 
 		// Only if we're past where we would scroll.
 		if (Scroll.getScrollTop() > elementOffset) {
 			Scroll.to(scrollTo, { animate: false });
-			this.item.isOpen = false;
-
-			setTimeout(() => {
-				this.isToggling = false;
-			}, 1000);
-		} else {
-			this.item.isOpen = false;
-			this.isToggling = false;
 		}
+
+		this.feed.setItemOpen(this.item, false);
+
+		setTimeout(() => {
+			this.isToggling = false;
+		}, 1000);
 	}
 }

@@ -4,7 +4,7 @@ import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse
 import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
 import { AppUserAvatar } from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar';
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { CommentVideoModal } from '../../../../../lib/gj-lib-client/components/comment/video/modal/modal.service';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
@@ -16,7 +16,6 @@ import {
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppUserCardHover } from '../../../../../lib/gj-lib-client/components/user/card/hover/hover';
-import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { Store } from '../../../../store';
 import { AppEventItemControls } from '../../../event-item/controls/controls';
@@ -27,8 +26,8 @@ import { AppActivityFeedDevlogPostMedia } from '../devlog-post/media/media';
 import { AppActivityFeedDevlogPostSketchfab } from '../devlog-post/sketchfab/sketchfab';
 import { AppActivityFeedDevlogPostText } from '../devlog-post/text/text';
 import { AppActivityFeedDevlogPostVideo } from '../devlog-post/video/video';
-import { AppActivityFeed } from '../feed';
 import { ActivityFeedItem } from '../item-service';
+import { ActivityFeedView } from '../view';
 import { AppActivityFeedEventItemTime } from './time/time';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
@@ -54,28 +53,25 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 	},
 })
 export class AppActivityFeedEventItem extends Vue {
+	@Inject()
+	feed!: ActivityFeedView;
+
 	@Prop(ActivityFeedItem)
 	item!: ActivityFeedItem;
-
-	@Prop(Boolean)
-	isNew?: boolean;
-
-	@Prop(Boolean)
-	isActive?: boolean;
-
-	@Prop(Boolean)
-	isHydrated?: boolean;
 
 	@State
 	app!: Store['app'];
 
 	private resizeSensor?: any;
 
-	feed!: AppActivityFeed;
 	canToggleLead = false;
 
 	readonly Screen = Screen;
 	readonly EventItem = EventItem;
+
+	get isNew() {
+		return this.feed.isItemUnread(this.item);
+	}
 
 	get isThreadView() {
 		return !Screen.isXs;
@@ -180,10 +176,6 @@ export class AppActivityFeedEventItem extends Vue {
 		return this.post && canUserManagePost(this.post, this.app.user);
 	}
 
-	created() {
-		this.feed = findRequiredVueParent(this, AppActivityFeed);
-	}
-
 	destroyed() {
 		this.resizeSensor = undefined;
 	}
@@ -262,7 +254,7 @@ export class AppActivityFeedEventItem extends Vue {
 	}
 
 	toggleLead() {
-		this.item.isLeadOpen = !this.item.isLeadOpen;
+		this.feed.toggleItemLeadOpen(this.item);
 		this.$emit('expanded');
 	}
 

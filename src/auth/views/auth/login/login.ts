@@ -5,19 +5,17 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { loggedUserBlock } from '../auth';
 
 @View
 @Component({
 	name: 'RouteAuthLogin',
 	components: {
-		AppJolticon,
 		AppAuthLogin,
 	},
 })
 @RouteResolver({
-	async resolver({ route }) {
+	async resolver() {
 		return loggedUserBlock();
 	},
 })

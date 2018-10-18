@@ -87,31 +87,10 @@
 		<template v-if="app.user">
 
 			<!-- Notifications -->
-			<app-notification-popover />
+			<app-shell-notification-popover />
 
 			<!-- Friend Requests -->
-			<app-popper
-				v-if="!Connection.isClientOffline"
-				hide-on-state-change
-				@show="friendRequestsShowing = true"
-				@hide="friendRequestsShowing = false"
-				>
-				<a
-					class="navbar-item"
-					:class="{ active: friendRequestsShowing }"
-					v-app-tooltip.bottom="$gettext( `Friend Requests` )"
-					v-app-track-event="`top-nav:friend-requests:toggle`"
-					>
-					<span
-						class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
-						v-if="friendRequestCount"
-						>
-						{{ friendRequestCount }}
-					</span>
-					<app-jolticon icon="friend-requests" />
-				</a>
-				<app-friend-request-popover slot="popover" />
-			</app-popper>
+			<app-shell-friend-request-popover />
 
 			<!-- Chat -->
 			<a
@@ -145,20 +124,7 @@
 			</span>
 
 			<!-- User Menu -->
-			<app-popper
-				hide-on-state-change
-				@show="userMenuShowing = true"
-				@hide="userMenuShowing = false"
-				v-app-track-event="`top-nav:user-menu:toggle`"
-				>
-				<a
-					class="navbar-avatar"
-					:class="{ active: userMenuShowing }"
-					>
-					<app-user-avatar-img :user="app.user" />
-				</a>
-				<app-shell-account-popover slot="popover" />
-			</app-popper>
+			<app-shell-account-popover />
 		</template>
 
 		<!-- Login/Join Buttons -->

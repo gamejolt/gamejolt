@@ -9,20 +9,18 @@ import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/poppe
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { Store } from '../../../store/index';
-import { AppNotificationPopover } from '../../activity/notification-popover/notification-popover';
 import { ChatClient } from '../../chat/client';
-import { AppFriendRequestPopover } from '../../friend/request-popover/request-popover';
 import { AppSearch } from '../../search/search';
 import { AppShellAccountPopover } from '../account-popover/account-popover';
+import { AppShellFriendRequestPopover } from '../friend-request-popover/friend-request-popover';
+import { AppShellNotificationPopover } from '../notification-popover/notification-popover';
 
 let components: any = {
-	AppUserAvatarImg,
 	AppPopper,
 	AppShellAccountPopover,
-	AppFriendRequestPopover,
-	AppNotificationPopover,
+	AppShellFriendRequestPopover,
+	AppShellNotificationPopover,
 	AppSearch,
 	AppThemeSvg,
 };
@@ -50,9 +48,6 @@ export class AppShellTopNav extends Vue {
 	chat!: ChatClient;
 
 	@State
-	friendRequestCount!: Store['friendRequestCount'];
-
-	@State
 	isLeftPaneVisible!: Store['isLeftPaneVisible'];
 
 	@State
@@ -61,8 +56,6 @@ export class AppShellTopNav extends Vue {
 	@State
 	hasSidebar!: Store['hasSidebar'];
 
-	friendRequestsShowing = false;
-	userMenuShowing = false;
 	moreMenuShowing = false;
 
 	readonly Environment = Environment;

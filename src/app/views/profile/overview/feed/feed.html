@@ -50,13 +50,11 @@
 		</app-nav-tab-list>
 	</template>
 
-	<app-activity-feed-placeholder v-if="!feed" />
+	<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
 	<template v-else>
 		<app-activity-feed
 			v-if="feed.hasItems"
 			:feed="feed"
-			show-game-info
-			show-edit-controls
 			@edit-post="onPostEdited"
 			@publish-post="onPostPublished"
 			@remove-post="onPostRemoved"

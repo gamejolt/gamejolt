@@ -11,9 +11,9 @@ import {
 	RouteResolver,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppActivityFeed } from '../../../../components/activity/feed/feed';
-import { ActivityFeedContainer } from '../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { AppActivityFeedPlaceholder } from '../../../../components/activity/feed/placeholder/placeholder';
+import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppPostAddButton } from '../../../../components/post/add-button/add-button';
 import { Store } from '../../../../store/index';
 import { RouteStore, RouteStoreModule } from '../../profile.store';
@@ -47,7 +47,7 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 	@RouteStoreModule.State
 	user!: RouteStore['user'];
 
-	feed: ActivityFeedContainer | null = null;
+	feed: ActivityFeedView | null = null;
 
 	get isOwner() {
 		return this.app.user && this.user && this.user.id === this.app.user.id;
@@ -63,6 +63,8 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 			{
 				type: 'EventItem',
 				url: getFetchUrl(this.$route),
+				shouldShowEditControls: true,
+				shouldShowGameInfo: true,
 			},
 			$payload.items,
 			fromCache

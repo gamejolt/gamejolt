@@ -3,7 +3,7 @@ import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { AppUserCardHover } from 'game-jolt-frontend-lib/components/user/card/hover/hover';
 import { AppUserAvatar } from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar';
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import '../../../../../lib/gj-lib-client/components/comment/comment.styl';
 import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import { Mention } from '../../../../../lib/gj-lib-client/components/mention/mention.model';
@@ -15,6 +15,7 @@ import { Screen } from '../../../../../lib/gj-lib-client/components/screen/scree
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
 import { ActivityFeedItem } from '../item-service';
+import { ActivityFeedView } from '../view';
 
 @View
 @Component({
@@ -30,14 +31,11 @@ import { ActivityFeedItem } from '../item-service';
 	},
 })
 export class AppActivityFeedNotification extends Vue {
+	@Inject()
+	feed!: ActivityFeedView;
+
 	@Prop(ActivityFeedItem)
 	item!: ActivityFeedItem;
-
-	@Prop(Boolean)
-	isNew?: boolean;
-
-	@Prop(Boolean)
-	isActive?: boolean;
 
 	notification!: Notification;
 
@@ -46,16 +44,12 @@ export class AppActivityFeedNotification extends Vue {
 
 	readonly Screen = Screen;
 
-	get isNewNotification() {
-		return this.notification.viewed_on === null || this.isNew;
+	get isNew() {
+		return this.feed.isItemUnread(this.item);
 	}
 
 	get titleText() {
 		return getNotificationText(this.notification);
-	}
-
-	get icon() {
-		return this.notification.jolticon.replace('jolticon-', '');
 	}
 
 	get hasDetails() {

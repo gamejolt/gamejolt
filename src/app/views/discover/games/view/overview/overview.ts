@@ -24,9 +24,9 @@ import {
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component, Prop } from 'vue-property-decorator';
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
-import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { AppActivityFeedPlaceholder } from '../../../../../components/activity/feed/placeholder/placeholder';
+import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import { AppCommentOverview } from '../../../../../components/comment/overview/overview';
 import { AppGameOgrs } from '../../../../../components/game/ogrs/ogrs';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
@@ -160,7 +160,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	@RouteStoreModule.Mutation
 	setCanToggleDescription!: RouteStore['setCanToggleDescription'];
 
-	feed: ActivityFeedContainer | null = null;
+	feed: ActivityFeedView | null = null;
 
 	readonly Screen = Screen;
 	readonly Environment = Environment;
@@ -212,6 +212,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 			{
 				type: 'EventItem',
 				url: `/web/posts/fetch/game/${this.game.id}`,
+				shouldShowEditControls: true,
 			},
 			$payload.posts,
 			fromCache

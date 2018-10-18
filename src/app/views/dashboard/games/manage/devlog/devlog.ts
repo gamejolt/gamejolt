@@ -10,9 +10,9 @@ import {
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
-import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { AppActivityFeedPlaceholder } from '../../../../../components/activity/feed/placeholder/placeholder';
+import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppPostAddButton } from '../../../../../components/post/add-button/add-button';
 import { RouteStore, RouteStoreModule } from '../manage.store';
@@ -44,7 +44,7 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
-	feed: ActivityFeedContainer | null = null;
+	feed: ActivityFeedView | null = null;
 
 	get tab() {
 		return this.$route.query.tab || 'active';
@@ -64,6 +64,7 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 			{
 				type: 'EventItem',
 				url: getFetchUrl(this.$route),
+				shouldShowEditControls: true,
 			},
 			$payload.items,
 			fromCache

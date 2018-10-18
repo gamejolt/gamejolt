@@ -10,9 +10,9 @@ import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service'
 import { Component } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class';
 import { AppActivityFeed } from '../../../components/activity/feed/feed';
-import { ActivityFeedContainer } from '../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import { AppActivityFeedPlaceholder } from '../../../components/activity/feed/placeholder/placeholder';
+import { ActivityFeedView } from '../../../components/activity/feed/view';
 import { AppBroadcastCard } from '../../../components/broadcast-card/broadcast-card';
 import { AppGameList } from '../../../components/game/list/list';
 import { AppGameListPlaceholder } from '../../../components/game/list/placeholder/placeholder';
@@ -61,7 +61,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	@State
 	unreadActivityCount!: Store['unreadActivityCount'];
 
-	feed: ActivityFeedContainer | null = null;
+	feed: ActivityFeedView | null = null;
 	featuredGames: Game[] = [];
 	latestBroadcast: FiresidePost | null = null;
 
@@ -84,6 +84,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 				type: 'EventItem',
 				url: `/web/dash/activity/more/activity`,
 				notificationWatermark: feedPlayload.unreadWatermark,
+				shouldShowGameInfo: true,
 			},
 			feedPlayload.items,
 			fromCache

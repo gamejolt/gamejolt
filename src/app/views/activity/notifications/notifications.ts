@@ -1,17 +1,20 @@
 import View from '!view!./notifications.html';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { HistoryCache } from 'game-jolt-frontend-lib/components/history/cache/cache.service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
-import { Component } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class';
 import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
 import { AppActivityFeed } from '../../../components/activity/feed/feed';
-import { ActivityFeedContainer } from '../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import { AppActivityFeedPlaceholder } from '../../../components/activity/feed/placeholder/placeholder';
+import { ActivityFeedView } from '../../../components/activity/feed/view';
 import { Store, store } from '../../../store';
+
+const HistoryCacheFeedTag = 'notifications-feed';
 
 @View
 @Component({
@@ -22,7 +25,6 @@ import { Store, store } from '../../../store';
 	},
 })
 @RouteResolver({
-	cache: true,
 	lazy: true,
 	deps: { query: ['feed_last_id'] },
 	resolver: ({ route }) =>
@@ -42,51 +44,47 @@ import { Store, store } from '../../../store';
 	},
 })
 export default class RouteActivityNotifications extends BaseRouteComponent {
-	@Mutation
-	setNotificationCount!: Store['setNotificationCount'];
+	@State
+	notificationState!: Store['notificationState'];
 
 	@State
 	unreadNotificationsCount!: Store['unreadNotificationsCount'];
 
-	feed: ActivityFeedContainer | null = null;
+	@Mutation
+	setNotificationCount!: Store['setNotificationCount'];
+
+	feed: ActivityFeedView | null = null;
 
 	get routeTitle() {
 		return this.$gettext(`Your Notifications`);
 	}
 
-	routeCreated() {
-		this.feed = ActivityFeedService.routeInit(this);
+	/**
+	 * The route lazily resolves, so the store gets bootstrapped with user data
+	 * a bit delayed.
+	 */
+	@Watch('notificationState', { immediate: true })
+	onNotificationStateChange(state: Store['notificationState']) {
+		if (state) {
+			this.feed = new ActivityFeedView(state);
+		} else {
+			this.feed = null;
+		}
 	}
 
-	routeResolved($payload: any, fromCache: boolean) {
-		this.feed = ActivityFeedService.routed(
-			this.feed,
-			{
-				type: 'Notification',
-				url: `/web/dash/activity/more/notifications`,
-				notificationWatermark: $payload.unreadWatermark,
-			},
-			$payload.items,
-			fromCache
-		);
+	routeResolved($payload: any) {
+		// We mark in the history cache whether this route is a historical view
+		// or a new view. If it's new, we want to load fresh. If it's old, we
+		// want to use current feed data, just so we can try to go back to the
+		// correct scroll spot.
+		if (this.feed && !HistoryCache.has(this.$route, HistoryCacheFeedTag)) {
+			this.feed.clear();
+			this.feed.append(Notification.populate($payload.items));
+			HistoryCache.store(this.$route, true, HistoryCacheFeedTag);
+		}
 	}
 
 	loadedNew() {
 		this.setNotificationCount({ type: 'notifications', count: 0 });
-	}
-
-	async markAllAsRead() {
-		await Api.sendRequest('/web/dash/activity/mark-all-read', {});
-		// mark all loaded notifications as read temporarely
-		if (this.feed) {
-			for (const item of this.feed.items) {
-				if (item.feedItem instanceof Notification) {
-					const notification = item.feedItem as Notification;
-					if (notification.viewed_on === null) {
-						notification.viewed_on = Date.now();
-					}
-				}
-			}
-		}
 	}
 }

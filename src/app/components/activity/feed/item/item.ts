@@ -1,12 +1,12 @@
 import View from '!view!./item.html';
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scroll/inview/inview';
 import { AppActivityFeedEventItem } from '../event-item/event-item';
-import { ActivityFeedContainer } from '../feed-container-service';
 import { ActivityFeedItem } from '../item-service';
 import { AppActivityFeedNotification } from '../notification/notification';
+import { ActivityFeedView } from '../view';
 import { AppActivityFeedItemPlaceholder } from './placeholder/placeholder';
 
 @View
@@ -19,59 +19,40 @@ import { AppActivityFeedItemPlaceholder } from './placeholder/placeholder';
 	},
 })
 export class AppActivityFeedItem extends Vue {
+	@Inject()
+	feed!: ActivityFeedView;
+
 	@Prop(ActivityFeedItem)
 	item!: ActivityFeedItem;
-	@Prop(ActivityFeedContainer)
-	feed!: ActivityFeedContainer;
 
 	inviewPadding = Screen.windowHeight;
 
 	mounted() {
-		if (this.item.height) {
-			this.$el.style.height = this.item.height;
+		const height = this.feed.getItemHeight(this.item);
+		if (height) {
+			this.$el.style.height = height;
 		}
-	}
-
-	get isNew() {
-		// Only care if there is a watermark.
-		if (this.feed.notificationWatermark === 0) {
-			return false;
-		}
-
-		return this.item.feedItem.added_on > this.feed.notificationWatermark;
 	}
 
 	get isBootstrapped() {
-		return GJ_IS_SSR || typeof this.feed.bootstrappedItems[this.item.id] !== 'undefined';
-	}
-
-	get isHydrated() {
-		return GJ_IS_SSR || typeof this.feed.hydratedItems[this.item.id] !== 'undefined';
-	}
-
-	get isActive() {
-		return this.feed.activeItem && this.feed.activeItem.id === this.item.id;
+		return this.feed.isItemBootstrapped(this.item);
 	}
 
 	get height() {
 		// Don't set height for notifications since they're tiny.
-		return this.item.type !== 'notification' ? this.item.height : undefined;
-	}
-
-	setActive() {
-		this.feed.activeItem = this.item;
+		return this.item.type !== 'notification' ? this.feed.getItemHeight(this.item) : undefined;
 	}
 
 	onExpanded() {
-		this.feed.expanded(this.item);
+		this.feed.setItemExpanded(this.item);
 	}
 
 	onInviewChange(visible: boolean) {
-		this.feed.inViewChange(this.item, visible);
+		this.feed.inviewChange(this.item, visible);
 	}
 
 	onResize(height: number) {
+		this.feed.setItemHeight(this.item, height + 'px');
 		this.$el.style.height = height + 'px';
-		this.item.height = height + 'px';
 	}
 }

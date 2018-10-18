@@ -1,8 +1,7 @@
 <div @click.stop="go">
 	<router-link :to="notification.routeLocation">
 		<app-timeline-list-item
-			:is-new="isNewNotification"
-			:is-active="isActive"
+			:is-new="isNew"
 			>
 
 			<div slot="bubble" v-if="notification.from_model">
@@ -54,7 +53,8 @@
 					</div>
 				</div>
 				<div class="-actions">
-					<a v-if="isNewNotification"
+					<a
+						v-if="isNew"
 						@click.stop.prevent="onMarkRead"
 						>
 						<app-jolticon
@@ -62,7 +62,8 @@
 							v-app-tooltip="$gettext(`Mark as Read`)"
 							/>
 					</a>
-					<a v-else
+					<a
+						v-else
 						@click.stop.prevent="onMarkUnread"
 						>
 						<app-jolticon

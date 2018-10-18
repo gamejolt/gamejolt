@@ -3,8 +3,9 @@ import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/po
 import { Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';
 import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Dictionary, Route } from 'vue-router/types/router';
-import { ActivityFeedContainer, ActivityFeedContainerOptions } from './feed-container-service';
 import { ActivityFeedInput } from './item-service';
+import { ActivityFeedState, ActivityFeedStateOptions } from './state';
+import { ActivityFeedView, ActivityFeedViewOptions } from './view';
 
 /**
  * Number of states we will keep cached.
@@ -12,10 +13,10 @@ import { ActivityFeedInput } from './item-service';
  */
 const MaxCachedCount = 3;
 
-interface ActivityFeedState {
+interface ActivityFeedCachedState {
 	key?: string;
 	href?: string;
-	container: ActivityFeedContainer;
+	view: ActivityFeedView;
 }
 
 function getTabForPost(post: FiresidePost) {
@@ -32,8 +33,10 @@ function postFromEventItem(eventItem: EventItem) {
 	return eventItem.action as FiresidePost;
 }
 
+type BootstrapOptions = ActivityFeedViewOptions & ActivityFeedStateOptions;
+
 export class ActivityFeedService {
-	private static _states: ActivityFeedState[] = [];
+	private static cache: ActivityFeedCachedState[] = [];
 
 	static makeFeedUrl(route: Route, url: string) {
 		if (url.indexOf('?') === -1) {
@@ -59,8 +62,8 @@ export class ActivityFeedService {
 	}
 
 	static routed(
-		feed: ActivityFeedContainer | null,
-		options: ActivityFeedContainerOptions,
+		feed: ActivityFeedView | null,
+		options: BootstrapOptions,
 		items: any[],
 		fromPayloadCache: boolean
 	) {
@@ -79,7 +82,7 @@ export class ActivityFeedService {
 	}
 
 	static onPostAdded(
-		feed: ActivityFeedContainer,
+		feed: ActivityFeedView,
 		post: FiresidePost,
 		routeComponent: BaseRouteComponent
 	) {
@@ -154,53 +157,57 @@ export class ActivityFeedService {
 		return true;
 	}
 
-	private static getStateKey() {
+	private static getCachedStateKey() {
 		// vue-router maintains a history key for each route in the history.
 		return typeof history !== 'undefined' ? history.state && history.state.key : undefined;
 	}
 
-	private static makeState(items: ActivityFeedInput[], options: ActivityFeedContainerOptions) {
-		const key = this.getStateKey();
+	private static makeCachedState(items: ActivityFeedInput[], options: BootstrapOptions) {
+		const key = this.getCachedStateKey();
 		const href = typeof window !== 'undefined' ? window.location.href : undefined;
 
-		const state = {
+		const state = new ActivityFeedState(options);
+		const view = new ActivityFeedView(state, options);
+		view.append(items);
+
+		const cachedState: ActivityFeedCachedState = {
 			key,
 			href,
-			container: new ActivityFeedContainer(items, options),
+			view,
 		};
 
 		// Keep it trimmed.
-		this._states.unshift(state);
-		this._states = this._states.slice(0, MaxCachedCount);
+		this.cache.unshift(cachedState);
+		this.cache = this.cache.slice(0, MaxCachedCount);
 
-		return state;
+		return cachedState;
 	}
 
-	private static findState() {
-		const key = this.getStateKey();
+	private static findCachedState() {
+		const key = this.getCachedStateKey();
 		const href = typeof window !== 'undefined' ? window.location.href : undefined;
 
 		// Note that we have to check the history state key AND the actual URL. If you replace a
 		// route with vue, the history state key stays the same, even though the route changes.
-		return this._states.find(item => item.key === key && item.href === href);
+		return this.cache.find(item => item.key === key && item.href === href);
 	}
 
 	private static bootstrapFeedFromCache() {
-		const state = this.findState();
+		const state = this.findCachedState();
 		if (state) {
 			// Reset bootstrapped items so that we can go "back" to this feed really fast.
-			state.container.resetBootstrapped();
-			return state.container;
+			state.view.resetBootstrapped();
+			return state.view;
 		}
 
 		return null;
 	}
 
-	private static bootstrapFeed(items: any[], options: ActivityFeedContainerOptions) {
+	private static bootstrapFeed(items: any[], options: BootstrapOptions) {
 		const populatedItems =
 			options.type === 'EventItem' ? EventItem.populate(items) : Notification.populate(items);
 
-		const state = this.makeState(populatedItems, options);
-		return state.container;
+		const state = this.makeCachedState(populatedItems, options);
+		return state.view;
 	}
 }
