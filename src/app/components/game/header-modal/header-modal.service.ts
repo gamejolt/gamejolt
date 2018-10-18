@@ -1,6 +1,6 @@
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Modal } from '../../../../lib/gj-lib-client/components/modal/modal.service';
 import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 
 export class GameHeaderModal {
 	static async show(game: Game) {
@@ -12,6 +12,7 @@ export class GameHeaderModal {
 			props: {
 				game,
 			},
+			size: 'sm',
 		});
 	}
 }
