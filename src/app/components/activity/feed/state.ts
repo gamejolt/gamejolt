@@ -56,11 +56,11 @@ export class ActivityFeedState {
 
 	clear() {
 		this.items = [];
-		this.expandedItems = [];
-		this.viewedItems = [];
 		this.games = {};
-		this.reachedEnd = false;
+		this.viewedItems = [];
+		this.expandedItems = [];
 		this.isBootstrapped = false;
+		this.reachedEnd = false;
 	}
 
 	addItems(items: ActivityFeedItem[], position: 'start' | 'end' = 'start') {

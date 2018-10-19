@@ -1,13 +1,13 @@
 import View from '!view!./notifications.html';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { HistoryCache } from 'game-jolt-frontend-lib/components/history/cache/cache.service';
+import { Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';
 import {
 	BaseRouteComponent,
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component, Watch } from 'vue-property-decorator';
-import { Mutation, State } from 'vuex-class';
-import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
+import { Action, Mutation, State } from 'vuex-class';
 import { AppActivityFeed } from '../../../components/activity/feed/feed';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import { AppActivityFeedPlaceholder } from '../../../components/activity/feed/placeholder/placeholder';
@@ -53,6 +53,9 @@ export default class RouteActivityNotifications extends BaseRouteComponent {
 	@Mutation
 	setNotificationCount!: Store['setNotificationCount'];
 
+	@Action
+	markNotificationsAsRead!: Store['markNotificationsAsRead'];
+
 	feed: ActivityFeedView | null = null;
 
 	get routeTitle() {
@@ -61,7 +64,9 @@ export default class RouteActivityNotifications extends BaseRouteComponent {
 
 	/**
 	 * The route lazily resolves, so the store gets bootstrapped with user data
-	 * a bit delayed.
+	 * a bit delayed. We want to bootstrap it in as soon as possible (before
+	 * route resolve) which is why we do it in the watcher and not in route
+	 * resolve. This is so we can show the "loading" feed.
 	 */
 	@Watch('notificationState', { immediate: true })
 	onNotificationStateChange(state: Store['notificationState']) {

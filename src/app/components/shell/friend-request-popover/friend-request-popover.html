@@ -1,6 +1,7 @@
 <app-popper
 	v-if="!Connection.isClientOffline"
 	hide-on-state-change
+	force-max-width
 	@show="onShow()"
 	@hide="onHide()"
 	>
@@ -53,7 +54,7 @@
 			>
 			<template v-if="isLoading">
 				<br>
-				<app-loading :centered="true"></app-loading>
+				<app-loading centered />
 			</template>
 			<template v-else-if="requests.length">
 				<app-shell-friend-request-popover-item

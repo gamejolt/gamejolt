@@ -9,7 +9,10 @@
 		>
 
 		<div class="-header">
-			<app-user-card-hover :user="user">
+			<app-user-card-hover
+				:user="user"
+				:disabled="!feed.shouldShowUserCards"
+				>
 				<div class="-header-avatar">
 					<div class="-header-avatar-inner">
 						<app-user-avatar

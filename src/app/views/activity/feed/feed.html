@@ -28,7 +28,7 @@
 
 				<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
 				<template v-else>
-					<div class="alert" v-if="!feed.hasItems">
+					<div class="alert full-bleed-xs" v-if="!feed.hasItems">
 						<translate>You don't have any activity yet. Follow games to stay up to date on their latest development!</translate>
 					</div>
 					<app-activity-feed

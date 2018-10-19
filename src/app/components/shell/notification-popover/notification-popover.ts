@@ -4,11 +4,12 @@ import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
 import { Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';
 import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { AppLoading } from 'game-jolt-frontend-lib/vue/components/loading/loading';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
-import { Mutation, State } from 'vuex-class';
+import { Action, Mutation, State } from 'vuex-class';
 import { Store } from '../../../store';
 import { AppActivityFeed } from '../../activity/feed/feed';
 import { ActivityFeedView } from '../../activity/feed/view';
@@ -35,18 +36,48 @@ export class AppShellNotificationPopover extends Vue {
 	@Mutation
 	setNotificationCount!: Store['setNotificationCount'];
 
+	@Action
+	markNotificationsAsRead!: Store['markNotificationsAsRead'];
+
 	isShowing = false;
 	isLoading = true;
 	feed: ActivityFeedView | null = null;
 
 	readonly Connection = Connection;
 
+	/**
+	 * For mobile, the navbar item should be active when they are on
+	 * notifications page, since there is no popover on mobile.
+	 */
+	get isNavbarItemActive() {
+		return (Screen.isXs && this.$route.name === 'activity.notifications') || this.isShowing;
+	}
+
+	/**
+	 * This loads in lazily, so we want to capture it once it bootstraps into
+	 * the store and wrap it with a view.
+	 */
 	@Watch('notificationState', { immediate: true })
 	onNotificationStateChange(state: Store['notificationState']) {
 		if (state) {
-			this.feed = new ActivityFeedView(state, { slice: 15, shouldScroll: false });
+			this.feed = new ActivityFeedView(state, {
+				slice: 15,
+				shouldScroll: false,
+				shouldShowUserCards: false,
+			});
 		} else {
 			this.feed = null;
+		}
+	}
+
+	/**
+	 * When they click the item in the navbar, we don't want to open the popover
+	 * on mobile. Let's just go to the notifications page.
+	 */
+	onNavbarItemClick(e: Event) {
+		if (Screen.isXs) {
+			e.stopPropagation();
+			this.$router.push({ name: 'activity.notifications' });
 		}
 	}
 
@@ -76,17 +107,5 @@ export class AppShellNotificationPopover extends Vue {
 
 	onHide() {
 		this.isShowing = false;
-	}
-
-	async markAllAsRead() {
-		if (!this.feed) {
-			return;
-		}
-
-		await Api.sendRequest('/web/dash/activity/mark-all-read', {});
-
-		// Mark all loaded notifications as read through the feed watermark.
-		// It's better than having to reload from the backend.
-		this.feed.state.notificationWatermark = Date.now();
 	}
 }

@@ -5,7 +5,10 @@
 			>
 
 			<div slot="bubble" v-if="notification.from_model">
-				<app-user-card-hover :user="notification.from_model">
+				<app-user-card-hover
+					:user="notification.from_model"
+					:disabled="!feed.shouldShowUserCards"
+					>
 					<app-user-avatar :user="notification.from_model" />
 				</app-user-card-hover>
 			</div>
@@ -52,23 +55,11 @@
 						</div>
 					</div>
 				</div>
-				<div class="-actions">
-					<a
-						v-if="isNew"
-						@click.stop.prevent="onMarkRead"
-						>
-						<app-jolticon
-							icon="radio-circle-filled"
-							v-app-tooltip="$gettext(`Mark as Read`)"
-							/>
-					</a>
-					<a
-						v-else
-						@click.stop.prevent="onMarkUnread"
-						>
+				<div class="-actions" v-if="isNew">
+					<a @click.stop.prevent="onMarkRead">
 						<app-jolticon
 							icon="radio-circle"
-							v-app-tooltip="$gettext(`Mark as Unread`)"
+							v-app-tooltip="$gettext(`Mark as Read`)"
 							/>
 					</a>
 				</div>

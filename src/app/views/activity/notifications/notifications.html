@@ -5,15 +5,22 @@
 
 				<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
 				<template v-else>
-					<div class="alert" v-if="!feed.hasItems">
+					<div class="alert full-bleed-xs" v-if="!feed.hasItems">
 						<translate>You don't have any notifications yet.</translate>
 					</div>
-					<app-activity-feed
-						v-else
-						:feed="feed"
-						:new-count="unreadNotificationsCount"
-						@load-new="loadedNew()"
-						/>
+					<template v-else>
+						<p class="text-right">
+							<a class="link-muted small" @click="markNotificationsAsRead()">
+								<translate>Mark All as Read</translate>
+							</a>
+						</p>
+
+						<app-activity-feed
+							:feed="feed"
+							:new-count="unreadNotificationsCount"
+							@load-new="loadedNew()"
+							/>
+					</template>
 				</template>
 
 			</div>

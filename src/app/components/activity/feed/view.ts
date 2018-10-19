@@ -20,6 +20,8 @@ const ItemsPerPage = 15;
 const ScrollDirectionFrom = 'from';
 const ScrollDirectionTo = 'to';
 
+let globalIndex = 0;
+
 class ActivityFeedViewItemState {
 	isBootstrapped = false;
 	isHydrated = false;
@@ -33,9 +35,15 @@ export interface ActivityFeedViewOptions {
 	shouldScroll?: boolean;
 	shouldShowGameInfo?: boolean;
 	shouldShowEditControls?: boolean;
+	shouldShowUserCards?: boolean;
 }
 
 export class ActivityFeedView {
+	/**
+	 * We keep a feed ID so that when we clear we can change it and let vue
+	 * know that the feed has completely modified
+	 */
+	id = ++globalIndex;
 	readonly state: ActivityFeedState;
 	itemStates: { [k: string]: ActivityFeedViewItemState } = {};
 	slice: number | null = null;
@@ -45,6 +53,7 @@ export class ActivityFeedView {
 	shouldScroll = true;
 	shouldShowEditControls = false;
 	shouldShowGameInfo = false;
+	shouldShowUserCards = true;
 
 	get isBootstrapped() {
 		return this.state.isBootstrapped;
@@ -86,6 +95,7 @@ export class ActivityFeedView {
 			shouldScroll = true,
 			shouldShowGameInfo = false,
 			shouldShowEditControls = false,
+			shouldShowUserCards = true,
 		}: ActivityFeedViewOptions = {}
 	) {
 		this.state = state;
@@ -93,9 +103,11 @@ export class ActivityFeedView {
 		this.shouldScroll = shouldScroll;
 		this.shouldShowGameInfo = shouldShowGameInfo;
 		this.shouldShowEditControls = shouldShowEditControls;
+		this.shouldShowUserCards = shouldShowUserCards;
 	}
 
 	clear() {
+		this.id = ++globalIndex;
 		this.state.clear();
 		this.itemStates = {};
 		this.timesLoaded = 0;

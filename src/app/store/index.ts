@@ -48,19 +48,20 @@ export type Actions = AppActions &
 	BannerActions &
 	CommentActions &
 	_ClientLibraryMod.Actions & {
-		bootstrap: undefined;
-		logout: undefined;
-		clear: undefined;
-		loadChat: undefined;
-		clearChat: undefined;
-		loadGrid: undefined;
-		clearGrid: undefined;
-		loadNotificationState: undefined;
-		clearNotificationState: undefined;
-		toggleLeftPane: undefined;
-		toggleRightPane: undefined;
-		clearPanes: undefined;
-		_checkBackdrop: undefined;
+		bootstrap: void;
+		logout: void;
+		clear: void;
+		loadChat: void;
+		clearChat: void;
+		loadGrid: void;
+		clearGrid: void;
+		loadNotificationState: void;
+		clearNotificationState: void;
+		markNotificationsAsRead: void;
+		toggleLeftPane: void;
+		toggleRightPane: void;
+		clearPanes: void;
+		_checkBackdrop: void;
 	};
 
 export type Mutations = AppMutations &
@@ -73,16 +74,17 @@ export type Mutations = AppMutations &
 		incrementNotificationCount: { type: UnreadItemType; count: number };
 		setFriendRequestCount: number;
 		changeFriendRequestCount: number;
-		_setBootstrapped: undefined;
-		_setLibraryBootstrapped: undefined;
+		_setBootstrapped: void;
+		_setLibraryBootstrapped: void;
 		_setChat: ChatClient | null;
 		_setGrid: GridClient | null;
 		_setNotificationState: ActivityFeedState | null;
-		_toggleLeftPane: undefined;
-		_toggleRightPane: undefined;
-		_clearPanes: undefined;
-		_addBackdrop: undefined;
-		_removeBackdrop: undefined;
+		_resetNotificationWatermark: void;
+		_toggleLeftPane: void;
+		_toggleRightPane: void;
+		_clearPanes: void;
+		_addBackdrop: void;
+		_removeBackdrop: void;
 	};
 
 let bootstrapResolver: Function | null = null;
@@ -262,6 +264,17 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexAction
+	async markNotificationsAsRead() {
+		if (!this.notificationState) {
+			return;
+		}
+
+		// Reset the watermark first so that it happens immediately.
+		this._resetNotificationWatermark();
+		await Api.sendRequest('/web/dash/activity/mark-all-read', {});
+	}
+
+	@VuexAction
 	async toggleLeftPane() {
 		if (!this.hasSidebar) {
 			return;
@@ -285,7 +298,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexAction
-	async _checkBackdrop() {
+	private async _checkBackdrop() {
 		// Ensure we have a backdrop if anything is overlayed.
 		// Otherwise ensure the backdrop is gone.
 		if (this.isRightPaneOverlayed || this.shouldShowLeftPaneBackdrop) {
@@ -332,7 +345,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	_setBootstrapped() {
+	private _setBootstrapped() {
 		this.isBootstrapped = true;
 		if (bootstrapResolver) {
 			bootstrapResolver();
@@ -340,27 +353,36 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	_setLibraryBootstrapped() {
+	private _setLibraryBootstrapped() {
 		this.isLibraryBootstrapped = true;
 	}
 
 	@VuexMutation
-	_setChat(chat: Mutations['_setChat']) {
+	private _setChat(chat: Mutations['_setChat']) {
 		this.chat = chat;
 	}
 
 	@VuexMutation
-	_setGrid(grid: Mutations['_setGrid']) {
+	private _setGrid(grid: Mutations['_setGrid']) {
 		this.grid = grid;
 	}
 
 	@VuexMutation
-	_setNotificationState(state: Mutations['_setNotificationState']) {
+	private _setNotificationState(state: Mutations['_setNotificationState']) {
 		this.notificationState = state;
 	}
 
 	@VuexMutation
-	_toggleLeftPane() {
+	private _resetNotificationWatermark() {
+		// Mark all loaded notifications as read through the feed watermark.
+		// It's better than having to reload from the backend.
+		if (this.notificationState) {
+			this.notificationState.notificationWatermark = Date.now();
+		}
+	}
+
+	@VuexMutation
+	private _toggleLeftPane() {
 		if (Screen.isLg) {
 			this.isLeftPaneSticky = !this.isLeftPaneSticky;
 		} else {
@@ -371,19 +393,19 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	_toggleRightPane() {
+	private _toggleRightPane() {
 		this.isRightPaneOverlayed = !this.isRightPaneOverlayed;
 		this.isLeftPaneOverlayed = false;
 	}
 
 	@VuexMutation
-	_clearPanes() {
+	private _clearPanes() {
 		this.isRightPaneOverlayed = false;
 		this.isLeftPaneOverlayed = false;
 	}
 
 	@VuexMutation
-	_addBackdrop() {
+	private _addBackdrop() {
 		if (backdrop) {
 			return;
 		}
@@ -392,7 +414,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	_removeBackdrop() {
+	private _removeBackdrop() {
 		if (!backdrop) {
 			return;
 		}

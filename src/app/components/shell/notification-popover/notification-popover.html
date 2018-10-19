@@ -6,7 +6,8 @@
 	>
 	<a
 		class="navbar-item"
-		:class="{ active: isShowing }"
+		:class="{ active: isNavbarItemActive }"
+		@click.capture="onNavbarItemClick"
 		v-app-tooltip.bottom="$gettext( `Notifications` )"
 		v-app-track-event="`top-nav:notifications:toggle`"
 		>
@@ -24,7 +25,7 @@
 			class="-header fill-darker small"
 			slot="header"
 			>
-			<a class="link-muted" @click="markAllAsRead()">
+			<a class="link-muted" @click="markNotificationsAsRead()">
 				<translate>Mark All as Read</translate>
 			</a>
 		</div>

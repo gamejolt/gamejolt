@@ -1,4 +1,12 @@
-<div class="activity-feed">
+<!--
+	We need to refresh the whole feed anytime it's cleared or massively changed.
+	Basically anytime the feed state's items are replaced so that the references
+	to them get picked up again.
+-->
+<div
+	class="activity-feed"
+	:key="feed.id"
+	>
 
 	<template v-if="newCount > 0">
 		<app-expand
