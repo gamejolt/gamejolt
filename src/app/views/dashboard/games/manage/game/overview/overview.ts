@@ -1,6 +1,5 @@
 import View from '!view!./overview.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppExpand } from '../../../../../../../lib/gj-lib-client/components/expand/expand';
 import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
@@ -9,10 +8,9 @@ import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/component
 import { AppProgressPoller } from '../../../../../../../lib/gj-lib-client/components/progress/poller/poller';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import {
 	AppState,
@@ -20,13 +18,12 @@ import {
 } from '../../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppGameDevStageSelector } from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
-import { RouteAction, RouteState, RouteStore } from '../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @View
 @Component({
 	name: 'RouteDashGamesManageGameOverview',
 	components: {
-		AppJolticon,
 		AppProgressPoller,
 		AppProgressBar,
 		AppExpand,
@@ -41,20 +38,25 @@ import { RouteAction, RouteState, RouteStore } from '../../manage.store';
 		number,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) =>
+		Api.sendRequest('/web/dash/developer/games/overview/' + route.params.id),
+})
 export default class RouteDashGamesManageGameOverview extends BaseRouteComponent {
 	@AppState
 	user!: AppStore['user'];
 
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
-	@RouteState
+	@RouteStoreModule.State
 	canPublish!: RouteStore['canPublish'];
 
-	@RouteAction
+	@RouteStoreModule.Action
 	publish!: RouteStore['publish'];
 
-	@RouteAction
+	@RouteStoreModule.Action
 	uncancel!: RouteStore['uncancel'];
 
 	viewCount = 0;
@@ -65,7 +67,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 
 	hasBuildsProcessing = false;
 
-	Game = Game;
+	readonly Game = Game;
 
 	// TODO(rewrite,cros)!
 	// .run( function( $state, Payload, Location )
@@ -85,13 +87,6 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 	// 		}
 	// 	} );
 	// } );
-
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/dash/developer/games/overview/' + route.params.id);
-	}
 
 	get routeTitle() {
 		if (this.game) {
@@ -121,7 +116,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 		});
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.viewCount = $payload.viewCount || 0;
 		this.downloadCount = $payload.downloadCount || 0;
 		this.playCount = $payload.playCount || 0;

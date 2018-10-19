@@ -1,4 +1,4 @@
-<div class="route-discover-games-view-scores-list" v-if="routeBootstrapped">
+<div class="route-discover-games-view-scores-list" v-if="isRouteBootstrapped">
 
 	<section class="section">
 		<div class="container">
@@ -53,7 +53,7 @@
 					<!--
 						When screen isn't XS, we split the scores out into two columns.
 					-->
-					<app-loading-fade :is-loading="routeLoading">
+					<app-loading-fade :is-loading="isRouteLoading">
 						<div class="row" v-if="!Screen.isXs">
 							<div class="col-sm-6">
 								<app-score-list
@@ -74,7 +74,7 @@
 					<!--
 						When screen is XS we just show as one long list.
 					-->
-					<app-loading-fade :is-loading="routeLoading">
+					<app-loading-fade :is-loading="isRouteLoading">
 						<app-score-list
 							:scores="scores"
 							v-if="Screen.isXs"

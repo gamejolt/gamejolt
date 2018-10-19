@@ -2,7 +2,7 @@ import View from '!view!./notifications.html';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class';
@@ -10,7 +10,7 @@ import { AppActivityFeed } from '../../../components/activity/feed/feed';
 import { ActivityFeedContainer } from '../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import { AppActivityFeedPlaceholder } from '../../../components/activity/feed/placeholder/placeholder';
-import { Store } from '../../../store';
+import { Store, store } from '../../../store';
 
 @View
 @Component({
@@ -18,6 +18,26 @@ import { Store } from '../../../store';
 	components: {
 		AppActivityFeed,
 		AppActivityFeedPlaceholder,
+	},
+})
+@RouteResolver({
+	cache: true,
+	lazy: true,
+	deps: { query: ['feed_last_id'] },
+	resolver: ({ route }) =>
+		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/notifications')),
+	resolveStore({ payload, fromCache }) {
+		// Don't set if from cache, otherwise it could reset to the cached count
+		// when switching between tabs.
+		if (!fromCache) {
+			// We clear the notifications for the tab we are on, and load in
+			// counts for the other tab.
+			store.commit('setNotificationCount', { type: 'notifications', count: 0 });
+			store.commit('setNotificationCount', {
+				type: 'activity',
+				count: payload.activityUnreadCount,
+			});
+		}
 	},
 })
 export default class RouteActivityNotifications extends BaseRouteComponent {
@@ -29,24 +49,15 @@ export default class RouteActivityNotifications extends BaseRouteComponent {
 
 	feed: ActivityFeedContainer | null = null;
 
-	@RouteResolve({
-		cache: true,
-		lazy: true,
-		deps: {},
-	})
-	routeResolve(this: undefined) {
-		return Api.sendRequest('/web/dash/activity/notifications');
-	}
-
 	get routeTitle() {
 		return this.$gettext(`Your Notifications`);
 	}
 
-	routeInit() {
+	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
-	routed($payload: any, fromCache: boolean) {
+	routeResolved($payload: any, fromCache: boolean) {
 		this.feed = ActivityFeedService.routed(
 			this.feed,
 			{
@@ -57,18 +68,6 @@ export default class RouteActivityNotifications extends BaseRouteComponent {
 			$payload.items,
 			fromCache
 		);
-
-		// Don't set if from cache, otherwise it could reset to the cached count
-		// when switching between tabs.
-		if (!fromCache) {
-			// We clear the notifications for the tab we are on, and load in
-			// counts for the other tab.
-			this.setNotificationCount({ type: 'notifications', count: 0 });
-			this.setNotificationCount({
-				type: 'activity',
-				count: $payload.activityUnreadCount,
-			});
-		}
 	}
 
 	loadedNew() {

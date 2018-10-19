@@ -1,6 +1,5 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./join-captcha.html';
-
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
@@ -33,7 +32,7 @@ export default class RouteJoinCaptcha extends BaseRouteComponent {
 		return this.$gettext('Are you a robot?');
 	}
 
-	routeInit() {
+	routeCreated() {
 		const token = sessionStorage.getItem('signup-auth-token');
 		if (!token) {
 			Growls.error({

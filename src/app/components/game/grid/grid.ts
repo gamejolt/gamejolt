@@ -1,16 +1,13 @@
 import View from '!view!./grid.html?style=./grid.styl';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
-import { AppGameThumbnail } from '../../../../_common/game/thumbnail/thumbnail';
 import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { AppPagination } from '../../../../lib/gj-lib-client/components/pagination/pagination';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+import { AppGameThumbnail } from '../../../../_common/game/thumbnail/thumbnail';
 
 export const GameGridRowSizeSm = 2;
 export const GameGridRowSizeMd = 3;
@@ -22,7 +19,6 @@ let idCounter = 0;
 @Component({
 	components: {
 		AppGameThumbnail,
-		AppPagination,
 		AppAd,
 	},
 	directives: {
@@ -32,23 +28,35 @@ let idCounter = 0;
 export class AppGameGrid extends Vue {
 	@Prop({ type: Array, default: () => [] })
 	games!: Game[];
-	@Prop(Number) gamesCount?: number;
-	@Prop(Number) perPage?: number;
-	@Prop(Boolean) truncateToFit?: boolean;
-	@Prop(Boolean) scrollable?: boolean;
-	@Prop(Boolean) forceScrollable?: boolean;
-	@Prop(Boolean) showAds?: boolean;
-	@Prop(String) eventLabel?: string;
+
+	@Prop(Number)
+	gamesCount?: number;
+
+	@Prop(Number)
+	currentPage?: number;
+
+	@Prop(Boolean)
+	truncateToFit?: boolean;
+
+	@Prop(Boolean)
+	scrollable?: boolean;
+
+	@Prop(Boolean)
+	forceScrollable?: boolean;
+
+	@Prop(Boolean)
+	showAds?: boolean;
+
+	@Prop(String)
+	eventLabel?: string;
+
 	@Prop({ type: String, default: 'top' })
 	adPos?: string;
-
-	currentPage = 1;
 
 	id = ++idCounter;
 
 	readonly number = number;
 	readonly Screen = Screen;
-	readonly Scroll = Scroll;
 
 	get shouldShowAds() {
 		return this.showAds && Ads.shouldShow;

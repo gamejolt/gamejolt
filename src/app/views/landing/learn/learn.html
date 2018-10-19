@@ -97,7 +97,7 @@
 							<router-link :to="{ name: 'discover.games.list._fetch', params: { section: null } }">
 								Hot
 							</router-link>,
-							<router-link :to="{ name: 'discover.devlogs.overview' }">
+							<router-link :to="{ name: 'discover.games.list._fetch', params: { section: 'best' }, query: { status: 'devlog' } }">
 								Devlogs
 							</router-link>,
 							<router-link :to="{ name: 'discover.games.list._fetch', params: { section: 'best' }, query: { status: 'wip' } }">
@@ -219,7 +219,7 @@
 
 						<p>
 							Browse
-							<router-link :to="{ name: 'discover.devlogs.overview' }">
+							<router-link :to="{ name: 'discover.games.list._fetch', params: { section: 'best' }, query: { status: 'devlog' } }">
 								Devlogs
 							</router-link>
 							and

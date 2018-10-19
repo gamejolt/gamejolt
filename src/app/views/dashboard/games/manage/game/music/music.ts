@@ -1,6 +1,5 @@
 import View from '!view!./music.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppCardListAdd } from '../../../../../../../lib/gj-lib-client/components/card/list/add/add';
 import { AppCardListDraggable } from '../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';
@@ -11,13 +10,12 @@ import { AppLoadingFade } from '../../../../../../../lib/gj-lib-client/component
 import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { arrayRemove } from '../../../../../../../lib/gj-lib-client/utils/array';
-import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { FormGameSong } from '../../../../../../components/forms/game/song/song';
 import { AppDashGameWizardControls } from '../../../../../../components/forms/game/wizard-controls/wizard-controls';
-import { RouteState, RouteStore } from '../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @View
 @Component({
@@ -28,13 +26,16 @@ import { RouteState, RouteStore } from '../../manage.store';
 		AppCardListItem,
 		AppCardListDraggable,
 		AppCardListAdd,
-		AppJolticon,
 		AppDashGameWizardControls,
 		AppLoadingFade,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/music/' + route.params.id),
+})
 export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
 	songs: GameSong[] = [];
@@ -46,13 +47,6 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 		return this.songs.map(item => item.id);
 	}
 
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/dash/developer/games/music/' + route.params.id);
-	}
-
 	get routeTitle() {
 		if (this.game) {
 			return this.$gettextInterpolate(`Manage Music for %{ game }`, {
@@ -62,7 +56,7 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.songs = GameSong.populate($payload.songs);
 		this.isAdding = !this.songs.length;
 	}

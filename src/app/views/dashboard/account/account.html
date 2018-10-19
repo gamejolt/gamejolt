@@ -56,7 +56,7 @@
 	</app-expand>
 
 	<!-- Don't show content before this route has loaded in the account data. -->
-	<section class="section" v-if="routeBootstrapped">
+	<section class="section" v-if="isRouteBootstrapped">
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-3 col-md-2" v-if="!Screen.isXs">

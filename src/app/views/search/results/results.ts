@@ -1,13 +1,11 @@
 import View from '!view!./results.html?style=./results.styl';
-import { Component, Prop } from 'vue-property-decorator';
-import { Route } from 'vue-router';
+import { Component } from 'vue-property-decorator';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppActivityFeed } from '../../../components/activity/feed/feed';
 import { ActivityFeedContainer } from '../../../components/activity/feed/feed-container-service';
@@ -15,6 +13,7 @@ import { ActivityFeedService } from '../../../components/activity/feed/feed-serv
 import { AppActivityFeedPlaceholder } from '../../../components/activity/feed/placeholder/placeholder';
 import { AppGameGrid } from '../../../components/game/grid/grid';
 import { Search } from '../../../components/search/search-service';
+import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 
 @View
 @Component({
@@ -22,7 +21,6 @@ import { Search } from '../../../components/search/search-service';
 	components: {
 		AppUserAvatar,
 		AppGameGrid,
-		AppJolticon,
 		AppActivityFeed,
 		AppActivityFeedPlaceholder,
 	},
@@ -30,30 +28,35 @@ import { Search } from '../../../components/search/search-service';
 		number,
 	},
 })
+@RouteResolver({
+	resolver: ({ route }) => Search.search(route.query.q),
+	resolveStore({ route, payload }) {
+		routeStore.commit('processPayload', { payload: payload, route: route });
+	},
+})
 export default class RouteSearchResults extends BaseRouteComponent {
-	@Prop(Object)
-	payload!: any;
+	@RouteStoreModule.Mutation
+	processPayload!: RouteStore['processPayload'];
 
-	@Prop(String)
-	query!: string;
+	@RouteStoreModule.State
+	hasSearch!: RouteStore['hasSearch'];
+
+	@RouteStoreModule.State
+	query!: RouteStore['query'];
+
+	@RouteStoreModule.State
+	searchPayload!: RouteStore['searchPayload'];
 
 	feed: ActivityFeedContainer | null = null;
 
 	readonly Search = Search;
 	readonly Screen = Screen;
 
-	@RouteResolve({
-		cache: true,
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Search.search(route.query.q);
-	}
-
-	routeInit() {
+	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
-	routed($payload: any, fromCache: boolean) {
+	routeResolved($payload: any, fromCache: boolean) {
 		this.feed = ActivityFeedService.routed(
 			this.feed,
 			{
@@ -63,7 +66,5 @@ export default class RouteSearchResults extends BaseRouteComponent {
 			$payload.posts,
 			fromCache
 		);
-
-		this.$emit('searchpayload', $payload);
 	}
 }

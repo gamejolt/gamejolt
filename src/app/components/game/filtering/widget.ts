@@ -30,8 +30,6 @@ export class AppGameFilteringWidget extends Vue {
 	@State
 	app!: Store['app'];
 
-	// GameFilteringContainer = GameFilteringContainer;
-
 	hovered: any = {};
 
 	get filters() {
@@ -41,15 +39,6 @@ export class AppGameFilteringWidget extends Vue {
 	get definitions() {
 		return GameFilteringContainer.definitions;
 	}
-
-	// orderedFilters: any = {
-	// 	price: ['free', 'sale', 'paid', '5-less', '15-less', '30-less'],
-	// 	os: ['windows', 'mac', 'linux', 'other', 'rom'],
-	// 	browser: ['html', 'flash', 'unity', 'applet', 'silverlight'],
-	// 	maturity: ['everyone', 'teen', 'adult'],
-	// 	status: ['complete', 'wip'],
-	// 	partners: ['partners'],
-	// };
 
 	onMouseover(filter: string, option: any) {
 		this.$set(this.hovered, filter, option);

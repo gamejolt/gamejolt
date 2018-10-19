@@ -1,6 +1,5 @@
 import View from '!view!./list.html?style=./list.styl';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppCardListAdd } from '../../../../../../../lib/gj-lib-client/components/card/list/add/add';
 import { AppCardListItem } from '../../../../../../../lib/gj-lib-client/components/card/list/item/item';
@@ -10,12 +9,11 @@ import { KeyGroup } from '../../../../../../../lib/gj-lib-client/components/key-
 import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/components/progress/bar/bar';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
 import { FormGameKeyGroup } from '../../../../../../components/forms/game/key-group/key-group';
-import { RouteState, RouteStore } from '../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @View
 @Component({
@@ -25,15 +23,19 @@ import { RouteState, RouteStore } from '../../manage.store';
 		AppCardListItem,
 		AppCardListAdd,
 		AppProgressBar,
-		AppJolticon,
 		FormGameKeyGroup,
 	},
 	filters: {
 		number,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) =>
+		Api.sendRequest('/web/dash/developer/games/key-groups/' + route.params.id),
+})
 export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
 	keyGroups: KeyGroup[] = [];
@@ -41,13 +43,6 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 	isAdding = false;
 
 	KeyGroup = KeyGroup;
-
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/dash/developer/games/key-groups/' + route.params.id);
-	}
 
 	get routeTitle() {
 		if (this.game) {
@@ -58,7 +53,7 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.keyGroups = KeyGroup.populate($payload.keyGroups);
 		this.packages = GamePackage.populate($payload.packages);
 	}

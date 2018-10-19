@@ -18,7 +18,10 @@
 				</translate>
 			</app-activity-feed-new-button>
 		</app-expand>
-		<app-loading v-else class="loading-centered" />
+		<app-loading
+			v-else
+			class="loading-centered"
+			/>
 	</template>
 
 	<div v-for="(item, i) of feed.items" :key="item.id">
@@ -37,15 +40,19 @@
 
 	<div v-if="shouldShowLoadMore" class="page-cut">
 		<app-button
+			:to="GJ_IS_SSR ? { query: { feed_last_id: feed.endScrollId } } : undefined"
 			trans
-			@click="loadMoreButton"
+			@click.prevent="loadMoreButton"
 			v-app-track-event="`activity-feed:more`"
 			>
 			<translate>Load More</translate>
 		</app-button>
 	</div>
 
-	<app-loading v-if="feed.isLoadingMore" class="loading-centered" />
+	<app-loading
+		v-if="feed.isLoadingMore"
+		class="-bottom-loading loading-centered"
+		/>
 
 	<div class="alert full-bleed-xs" v-if="feed.reachedEnd">
 		<translate>A wild Snorlax blocks your path. Looks like it's the end of this feed.</translate>

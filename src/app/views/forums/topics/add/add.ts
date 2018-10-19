@@ -1,6 +1,5 @@
 import View from '!view!./add.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
@@ -8,7 +7,7 @@ import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/to
 import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
@@ -28,6 +27,10 @@ import { Store } from '../../../../store/index';
 		FormForumTopic,
 	},
 })
+@RouteResolver({
+	deps: { params: ['channel'] },
+	resolver: ({ route }) => Api.sendRequest('/web/forums/topics/create/' + route.params.channel),
+})
 export default class RouteForumsTopicsAdd extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
@@ -38,14 +41,7 @@ export default class RouteForumsTopicsAdd extends BaseRouteComponent {
 		return this.$gettext(`Create a New Topic`);
 	}
 
-	@RouteResolve({
-		deps: { params: ['channel'] },
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/forums/topics/create/' + route.params.channel);
-	}
-
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.channel = new ForumChannel($payload.channel);
 	}
 

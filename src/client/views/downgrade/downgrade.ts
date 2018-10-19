@@ -1,11 +1,11 @@
 import View from '!view!./downgrade.html';
+import Axios from 'axios';
 import { Component } from 'vue-property-decorator';
+import { Device } from '../../../lib/gj-lib-client/components/device/device.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../lib/gj-lib-client/components/route/route-component';
-import Axios from 'axios';
-import { Device } from '../../../lib/gj-lib-client/components/device/device.service';
 
 const ManifestUrl = 'https://d.gamejolt.net/data/client/manifest-2.json';
 
@@ -13,17 +13,15 @@ const ManifestUrl = 'https://d.gamejolt.net/data/client/manifest-2.json';
 @Component({
 	name: 'RouteDowngrade',
 })
+@RouteResolver({
+	resolver: () => Axios.get(ManifestUrl),
+})
 export default class RouteDowngrade extends BaseRouteComponent {
 	downloadUrl = '';
 
 	readonly platform = Device.os();
 
-	@RouteResolve()
-	routeResolve() {
-		return Axios.get(ManifestUrl);
-	}
-
-	routed(payload: any) {
+	routeResolved(payload: any) {
 		let platform = '';
 		if (this.platform === 'windows') {
 			platform = 'win32';

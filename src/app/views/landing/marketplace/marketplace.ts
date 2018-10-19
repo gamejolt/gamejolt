@@ -8,7 +8,7 @@ import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
@@ -28,6 +28,10 @@ import { Store } from '../../../store/index';
 		AppTrackEvent,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: () => Api.sendRequest('/web/marketplace'),
+})
 export default class RouteLandingMarketplace extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
@@ -37,18 +41,11 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve() {
-		return Api.sendRequest('/web/marketplace');
-	}
-
 	get routeTitle() {
 		return 'Sell Your Games';
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;

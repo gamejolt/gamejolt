@@ -1,16 +1,15 @@
 import View from '!view!./view.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameDataStoreItem } from '../../../../../../../../../lib/gj-lib-client/components/game/data-store/item/item.model';
 import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { date } from '../../../../../../../../../lib/gj-lib-client/vue/filters/date';
-import { RouteState, RouteStore } from '../../../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 
 @View
 @Component({
@@ -22,23 +21,21 @@ import { RouteState, RouteStore } from '../../../../manage.store';
 		date,
 	},
 })
-export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRouteComponent {
-	@RouteState
-	game!: RouteStore['game'];
-
-	item: GameDataStoreItem = null as any;
-
-	@RouteResolve({
-		deps: { params: ['item'] },
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest(
+@RouteResolver({
+	deps: { params: ['item'] },
+	resolver: ({ route }) =>
+		Api.sendRequest(
 			'/web/dash/developer/games/api/data-storage/' +
 				route.params.id +
 				'/' +
 				route.params.item
-		);
-	}
+		),
+})
+export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRouteComponent {
+	@RouteStoreModule.State
+	game!: RouteStore['game'];
+
+	item: GameDataStoreItem = null as any;
 
 	get routeTitle() {
 		if (this.game) {
@@ -49,7 +46,7 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.item = new GameDataStoreItem($payload.item);
 	}
 

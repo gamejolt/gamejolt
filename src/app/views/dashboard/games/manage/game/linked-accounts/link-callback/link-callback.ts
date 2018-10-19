@@ -9,19 +9,15 @@ import {
 } from '../../../../../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { RouteState, RouteStore } from '../../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../../manage.store';
 
 @Component({
 	name: 'RouteDashGamesManageGameLinkedAccountsLinkCallback',
 })
-export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends BaseRouteComponent {
-	@RouteState
-	game!: RouteStore['game'];
-
-	@RouteResolve()
-	async routeResolve(this: undefined, route: Route) {
+@RouteResolver({
+	resolver({ route }) {
 		const url = RouteDashGamesManageGameLinkedAccountsLinkCallback.constructUrl(
 			'/web/dash/linked-accounts/link-callback/',
 			parseInt(route.params.id, 10),
@@ -29,7 +25,11 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 		);
 
 		return Api.sendRequest(url, {});
-	}
+	},
+})
+export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends BaseRouteComponent {
+	@RouteStoreModule.State
+	game!: RouteStore['game'];
 
 	private static constructUrl(baseUrl: string, gameId: number, route: Route) {
 		let url = baseUrl + route.params.provider;
@@ -48,7 +48,7 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 		return url;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		if (!this.game) {
 			return;
 		}

@@ -66,49 +66,20 @@
 				@link="onLink"
 				@unlink="onUnlink" />
 		</div>
+		-->
 		<div class="col-md-8 col-lg-6">
 			<app-linked-account
 				provider="tumblr"
 				:account="tumblrAccount"
+				:disabled="loading"
 				@sync="onLink"
 				@link="onLink"
-				@unlink="onUnlink">
-				<div v-if="tumblrAccount" class="-tumblr-blog">
-					<h5>
-						<translate>Linked Blog</translate>
-					</h5>
-					<template v-if="tumblrAccount.tumblrSelectedBlog">
-						<p>
-							<strong>
-								<a :href="tumblrAccount.tumblrSelectedBlog.url" target="_blank">
-									{{ tumblrAccount.tumblrSelectedBlog.title }}
-								</a>
-							</strong>
-						</p>
-						<app-button
-							@click="onSelectTumblrBlog">
-							<translate>Change</translate>
-						</app-button>
-						<app-button
-							v-if="tumblrAccount.tumblrSelectedBlog"
-							@click="onUnlinkTumblrBlog"
-							trans>
-							<translate>Unlink</translate>
-						</app-button>
-					</template>
-					<template v-else>
-						<p>
-							<small class="text-muted"><translate>Not linked.</translate></small>
-						</p>
-						<app-button
-							@click="onSelectTumblrBlog"
-							icon="link">
-							<translate>Link Now</translate>
-						</app-button>
-					</template>
-				</div>
+				@unlink="onUnlink"
+				@link-tumblr-blog="onLinkTumblrBlog"
+				@unlink-tumblr-blog="onUnlinkTumblrBlog"
+				show-tumblr-blog
+				>
 			</app-linked-account>
 		</div>
-		-->
 	</div>
 </div>

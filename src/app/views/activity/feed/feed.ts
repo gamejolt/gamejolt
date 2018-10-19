@@ -4,7 +4,7 @@ import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/po
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component } from 'vue-property-decorator';
@@ -16,7 +16,7 @@ import { AppActivityFeedPlaceholder } from '../../../components/activity/feed/pl
 import { AppBroadcastCard } from '../../../components/broadcast-card/broadcast-card';
 import { AppGameList } from '../../../components/game/list/list';
 import { AppGameListPlaceholder } from '../../../components/game/list/placeholder/placeholder';
-import { Store } from '../../../store';
+import { Store, store } from '../../../store';
 
 @View
 @Component({
@@ -27,6 +27,31 @@ import { Store } from '../../../store';
 		AppGameList,
 		AppGameListPlaceholder,
 		AppBroadcastCard,
+	},
+})
+@RouteResolver({
+	cache: true,
+	lazy: true,
+	deps: { query: ['feed_last_id'] },
+	resolver: ({ route }) =>
+		Promise.all([
+			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/activity')),
+			Api.sendRequest('/web/discover'),
+		]),
+	resolveStore({ payload, fromCache }) {
+		const [feedPlayload] = payload;
+
+		// Don't set if from cache, otherwise it could reset to the cached count
+		// when switching between tabs.
+		if (!fromCache) {
+			// We clear the notifications for the tab we are on, and load in
+			// counts for the other tab.
+			store.commit('setNotificationCount', { type: 'activity', count: 0 });
+			store.commit('setNotificationCount', {
+				type: 'notifications',
+				count: feedPlayload.notificationsUnreadCount,
+			});
+		}
 	},
 })
 export default class RouteActivityFeed extends BaseRouteComponent {
@@ -42,27 +67,15 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 
-	@RouteResolve({
-		cache: true,
-		lazy: true,
-		deps: {},
-	})
-	routeResolve(this: undefined) {
-		return Promise.all([
-			Api.sendRequest('/web/dash/activity/activity'),
-			Api.sendRequest('/web/discover'),
-		]);
-	}
-
 	get routeTitle() {
 		return this.$gettext(`Your Activity Feed`);
 	}
 
-	routeInit() {
+	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
-	routed($payload: any, fromCache: boolean) {
+	routeResolved($payload: any, fromCache: boolean) {
 		const [feedPlayload, discoverPayload] = $payload;
 
 		this.feed = ActivityFeedService.routed(
@@ -75,18 +88,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			feedPlayload.items,
 			fromCache
 		);
-
-		// Don't set if from cache, otherwise it could reset to the cached count
-		// when switching between tabs.
-		if (!fromCache) {
-			// We clear the notifications for the tab we are on, and load in
-			// counts for the other tab.
-			this.setNotificationCount({ type: 'activity', count: 0 });
-			this.setNotificationCount({
-				type: 'notifications',
-				count: feedPlayload.notificationsUnreadCount,
-			});
-		}
 
 		this.featuredGames = Game.populate(discoverPayload.games);
 		if (discoverPayload.featuredItem) {

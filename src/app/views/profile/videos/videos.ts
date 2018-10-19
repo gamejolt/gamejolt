@@ -5,11 +5,10 @@ import { AppCommentVideoThumbnail } from 'game-jolt-frontend-lib/components/comm
 import { CommentVideo } from 'game-jolt-frontend-lib/components/comment/video/video-model';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
-import { RouteState, RouteStore } from '../profile.store';
+import { RouteStore, RouteStoreModule } from '../profile.store';
 
 @View
 @Component({
@@ -21,23 +20,20 @@ import { RouteState, RouteStore } from '../profile.store';
 		AppTrackEvent,
 	},
 })
+@RouteResolver({
+	cache: true,
+	deps: {},
+	resolver: ({ route }) => Api.sendRequest('/web/profile/videos/@' + route.params.username),
+})
 export default class RouteProfileVideos extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	user!: RouteStore['user'];
 
-	@RouteState
+	@RouteStoreModule.State
 	videosCount!: RouteStore['videosCount'];
 
 	videos: CommentVideo[] = [];
 	page = 0;
-
-	@RouteResolve({
-		cache: true,
-		deps: {},
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/profile/videos/@' + route.params.username);
-	}
 
 	get routeTitle() {
 		if (this.user) {
@@ -46,7 +42,7 @@ export default class RouteProfileVideos extends BaseRouteComponent {
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.page = 0;
 		this.videos = CommentVideo.populate($payload.videos);
 	}

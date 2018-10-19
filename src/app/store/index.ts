@@ -148,7 +148,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	get hasSidebar() {
-		return Screen.isXs || this.app.user;
+		return Screen.isXs || this.app.user || GJ_IS_SSR;
 	}
 
 	get notificationCount() {

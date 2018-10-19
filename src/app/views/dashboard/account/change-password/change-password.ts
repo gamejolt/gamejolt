@@ -1,13 +1,13 @@
 import View from '!view!./change-password.html';
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { FormChangePassword } from '../../../../components/forms/change-password/change-password';
-import { RouteMutation, RouteStore } from '../account.store';
+import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
 @View
 @Component({
@@ -16,28 +16,24 @@ import { RouteMutation, RouteStore } from '../account.store';
 		FormChangePassword,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: () => Api.sendRequest('/web/dash/account/has-password'),
+	resolveStore() {
+		routeStore.commit('setHeading', Translate.$gettext(`dash.change_pass.page_title`));
+	},
+})
 export default class RouteDashAccountChangePassword extends BaseRouteComponent {
-	@RouteMutation
-	setHeading!: RouteStore['setHeading'];
+	@RouteStoreModule.State
+	heading!: RouteStore['heading'];
 
 	hasPassword = true;
 
 	get routeTitle() {
-		return this.$gettext(`dash.change_pass.page_title`);
+		return this.heading;
 	}
 
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve(this: undefined, _route: Route) {
-		return Api.sendRequest('/web/dash/account/has_password');
-	}
-
-	routeInit() {
-		this.setHeading(this.$gettext('dash.change_pass.heading'));
-	}
-
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.hasPassword = $payload.hasPassword;
 	}
 }

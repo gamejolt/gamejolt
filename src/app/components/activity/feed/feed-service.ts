@@ -2,7 +2,7 @@ import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-it
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';
 import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
-import { Dictionary } from 'vue-router/types/router';
+import { Dictionary, Route } from 'vue-router/types/router';
 import { ActivityFeedContainer, ActivityFeedContainerOptions } from './feed-container-service';
 import { ActivityFeedInput } from './item-service';
 
@@ -14,7 +14,7 @@ const MaxCachedCount = 3;
 
 interface ActivityFeedState {
 	key?: string;
-	href: string;
+	href?: string;
 	container: ActivityFeedContainer;
 }
 
@@ -35,10 +35,24 @@ function postFromEventItem(eventItem: EventItem) {
 export class ActivityFeedService {
 	private static _states: ActivityFeedState[] = [];
 
+	static makeFeedUrl(route: Route, url: string) {
+		if (url.indexOf('?') === -1) {
+			url += '?ignore';
+		}
+
+		// Attach the scroll ID if it exists in the URL. This is for SSR
+		// pagination.
+		if (route.query.feed_last_id) {
+			url += '&scrollId=' + route.query.feed_last_id;
+		}
+
+		return url;
+	}
+
 	static routeInit(routeComponent: BaseRouteComponent) {
 		// Try to pull the feed from cache if they are going back to this route. We don't want to
 		// pull from cache if they go back and forth between feed tabs, though.
-		if (!routeComponent.routeBootstrapped) {
+		if (!routeComponent.isRouteBootstrapped) {
 			return this.bootstrapFeedFromCache();
 		}
 		return null;
@@ -147,7 +161,7 @@ export class ActivityFeedService {
 
 	private static makeState(items: ActivityFeedInput[], options: ActivityFeedContainerOptions) {
 		const key = this.getStateKey();
-		const href = window.location.href;
+		const href = typeof window !== 'undefined' ? window.location.href : undefined;
 
 		const state = {
 			key,
@@ -164,7 +178,7 @@ export class ActivityFeedService {
 
 	private static findState() {
 		const key = this.getStateKey();
-		const href = window.location.href;
+		const href = typeof window !== 'undefined' ? window.location.href : undefined;
 
 		// Note that we have to check the history state key AND the actual URL. If you replace a
 		// route with vue, the history state key stays the same, even though the route changes.

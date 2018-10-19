@@ -10,19 +10,15 @@ import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.serv
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppState, AppStore } from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 
 @Component({
 	name: 'RouteDashAccountLinkedAccountsLinkCallback',
 })
-export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRouteComponent {
-	@AppState
-	user!: AppStore['user'];
-
-	@RouteResolve()
-	async routeResolve(this: undefined, route: Route) {
+@RouteResolver({
+	resolver({ route }) {
 		let url;
 		if (route.params.provider === LinkedAccount.PROVIDER_YOUTUBE_CHANNEL) {
 			url =
@@ -41,7 +37,11 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 
 		// Force POST.
 		return Api.sendRequest(url, {});
-	}
+	},
+})
+export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRouteComponent {
+	@AppState
+	user!: AppStore['user'];
 
 	private static constructUrl(baseUrl: string, route: Route) {
 		let url = baseUrl + route.params.provider;
@@ -60,7 +60,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 		return url;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		if (!this.user) {
 			return;
 		}
@@ -120,6 +120,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 				case LinkedAccount.PROVIDER_FACEBOOK:
 				case LinkedAccount.PROVIDER_GOOGLE:
 				case LinkedAccount.PROVIDER_TWITCH:
+				case LinkedAccount.PROVIDER_TUMBLR:
 					{
 						const account = new LinkedAccount($payload.account);
 						Growls.success(

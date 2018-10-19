@@ -1,17 +1,16 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./settings.html?style=./settings.styl';
-
-import { RouteState, RouteStore, RouteAction } from '../../manage.store';
+import { Component } from 'vue-property-decorator';
+import { AppExpand } from '../../../../../../../lib/gj-lib-client/components/expand/expand';
+import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { FormGameSettings } from '../../../../../../components/forms/game/settings/settings';
 import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import {
 	AppState,
 	AppStore,
 } from '../../../../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
-import { AppExpand } from '../../../../../../../lib/gj-lib-client/components/expand/expand';
+import { FormGameSettings } from '../../../../../../components/forms/game/settings/settings';
+import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @View
 @Component({
@@ -22,14 +21,26 @@ import { AppExpand } from '../../../../../../../lib/gj-lib-client/components/exp
 	},
 })
 export default class RouteDashGamesManageGameSettings extends BaseRouteComponent {
-	@AppState user!: AppStore['user'];
-	@RouteState game!: RouteStore['game'];
-	@RouteState isWizard!: RouteStore['isWizard'];
+	@AppState
+	user!: AppStore['user'];
 
-	@RouteAction cancel!: RouteStore['cancel'];
-	@RouteAction hide!: RouteStore['hide'];
-	@RouteAction removeGame!: RouteStore['removeGame'];
-	@RouteAction leaveProject!: RouteStore['leaveProject'];
+	@RouteStoreModule.State
+	game!: RouteStore['game'];
+
+	@RouteStoreModule.State
+	isWizard!: RouteStore['isWizard'];
+
+	@RouteStoreModule.Action
+	cancel!: RouteStore['cancel'];
+
+	@RouteStoreModule.Action
+	hide!: RouteStore['hide'];
+
+	@RouteStoreModule.Action
+	removeGame!: RouteStore['removeGame'];
+
+	@RouteStoreModule.Action
+	leaveProject!: RouteStore['leaveProject'];
 
 	get routeTitle() {
 		if (this.game) {

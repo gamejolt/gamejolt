@@ -1,41 +1,40 @@
 import View from '!view!./users.html';
-import { Component, Prop } from 'vue-property-decorator';
-import { Route } from 'vue-router';
-import { AppPagination } from '../../../../lib/gj-lib-client/components/pagination/pagination';
+import { Component } from 'vue-property-decorator';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
-import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { Search } from '../../../components/search/search-service';
+import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 
 @View
 @Component({
 	name: 'RouteSearchUsers',
 	components: {
 		AppUserAvatar,
-		AppPagination,
+	},
+})
+@RouteResolver({
+	cache: true,
+	resolver: ({ route }) =>
+		Search.search(route.query.q, {
+			type: 'user',
+			page: route.query.page ? parseInt(route.query.page, 10) : 1,
+		}),
+	resolveStore({ route, payload }) {
+		routeStore.commit('processPayload', { payload: payload, route: route });
 	},
 })
 export default class RouteSearchUsers extends BaseRouteComponent {
-	@Prop(Object)
-	payload!: any;
+	@RouteStoreModule.Mutation
+	processPayload!: RouteStore['processPayload'];
+
+	@RouteStoreModule.State
+	hasSearch!: RouteStore['hasSearch'];
+
+	@RouteStoreModule.State
+	searchPayload!: RouteStore['searchPayload'];
 
 	readonly Search = Search;
-	readonly Scroll = Scroll;
-
-	@RouteResolve({
-		cache: true,
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Search.search(route.query.q, {
-			type: 'user',
-			page: route.query.page ? parseInt(route.query.page, 10) : 1,
-		});
-	}
-
-	routed($payload: any) {
-		this.$emit('searchpayload', $payload);
-	}
 }

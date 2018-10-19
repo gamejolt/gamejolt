@@ -1,16 +1,18 @@
 import View from '!view!./search.html';
+import { AppPagination } from 'game-jolt-frontend-lib/components/pagination/pagination';
+import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-store';
+import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Ads, AdSettingsContainer } from '../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppExpand } from '../../../lib/gj-lib-client/components/expand/expand';
 import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 import { number } from '../../../lib/gj-lib-client/vue/filters/number';
 import { AppPageHeader } from '../../components/page-header/page-header';
-import { SearchHistory } from '../../components/search/history/history-service';
 import { AppSearch } from '../../components/search/search';
 import { Search } from '../../components/search/search-service';
-import { Store } from '../../store/index';
+import { Store, store } from '../../store/index';
+import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './search.store';
 import './search.styl';
 
 @View
@@ -20,23 +22,45 @@ import './search.styl';
 		AppPageHeader,
 		AppExpand,
 		AppSearch,
+		AppPagination,
 	},
 	filters: {
 		number,
+	},
+})
+@WithRouteStore({
+	store,
+	routeStoreName: RouteStoreName,
+	routeStoreClass: RouteStore,
+	created({ route }) {
+		routeStore.commit('initStore', route);
+	},
+	destroyed() {
+		routeStore.commit('destroyStore');
 	},
 })
 export default class RouteSearch extends BaseRouteComponent {
 	@State
 	route!: Store['route'];
 
-	query = '';
-	showPagination = false;
-	noResults = false;
-	payload: any = {};
-	adSettings: AdSettingsContainer = null as any;
+	@RouteStoreModule.Mutation
+	initStore!: RouteStore['initStore'];
+
+	@RouteStoreModule.Mutation
+	destroyStore!: RouteStore['destroyStore'];
+
+	@RouteStoreModule.State
+	hasSearch!: RouteStore['hasSearch'];
+
+	@RouteStoreModule.State
+	query!: RouteStore['query'];
+
+	@RouteStoreModule.State
+	searchPayload!: RouteStore['searchPayload'];
 
 	readonly Screen = Screen;
 	readonly Search = Search;
+	readonly Scroll = Scroll;
 
 	get routeTitle() {
 		if (this.route.query.q) {
@@ -47,58 +71,12 @@ export default class RouteSearch extends BaseRouteComponent {
 		return this.$gettext('search.page_title');
 	}
 
-	routeInit() {
-		// We store our own version of the search query and sync back to it on form submission.
-		this.query = Search.query;
-
-		this.adSettings = new AdSettingsContainer();
-		this.adSettings.adUnit = 'search';
-		Ads.setPageSettings(this.adSettings);
-	}
-
-	routeDestroy() {
-		Ads.releasePageSettings();
-	}
-
-	// Child routes emit an event that calls this.
-	processPayload(payload: any) {
-		// Disable ads for adult searches.
-		if (payload.isAdultSearch) {
-			this.adSettings.isPageDisabled = true;
-		}
-
-		this.query = '';
-		this.showPagination = false;
-		this.payload = {};
-		this.noResults = false;
-
-		if (!this.route.query.q) {
-			return;
-		}
-
-		this.query = this.route.query.q;
-
-		// We sync the query to the search service so that all places get updated with the new query.
-		// We also record the search history since it was an explicit search request.
-		Search.query = this.query;
-		SearchHistory.record(this.query);
-
-		this.payload = payload;
-		this.showPagination = this.payload.type !== 'all';
-
-		if (typeof this.payload.perPage === 'string') {
-			this.payload.perPage = parseInt(this.payload.perPage, 10);
-		}
-
-		if (
-			!payload.gamesCount &&
-			!payload.usersCount &&
-			!payload.devlogsCount &&
-			!payload.postsCount
-		) {
-			this.noResults = true;
-		} else if (payload.devlogsCount > 0) {
-			this.payload.devlogsTrimmed = payload.devlogs.slice(0, 4);
-		}
+	get noResults() {
+		return (
+			this.hasSearch &&
+			!this.searchPayload.gamesCount &&
+			!this.searchPayload.usersCount &&
+			!this.searchPayload.postsCount
+		);
 	}
 }

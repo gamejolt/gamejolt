@@ -1,5 +1,4 @@
 import { Component, Prop } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { CreateElement } from 'vue/types/vue';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { CommentModal } from '../../../../lib/gj-lib-client/components/comment/modal/modal.service';
@@ -8,13 +7,13 @@ import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service
 import { Registry } from '../../../../lib/gj-lib-client/components/registry/registry.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Translate } from '../../../../lib/gj-lib-client/components/translate/translate.service';
 import { enforceLocation } from '../../../../lib/gj-lib-client/utils/router';
 import { IntentService } from '../../../components/intent/intent.service';
 import { AppPostView } from '../../../components/post/view/view';
-import { RouteState, RouteStore } from '../profile.store';
+import { RouteStore, RouteStoreModule } from '../profile.store';
 
 @Component({
 	name: 'RouteProfilePostView',
@@ -22,21 +21,11 @@ import { RouteState, RouteStore } from '../profile.store';
 		AppPostView,
 	},
 })
-export default class RouteProfilePostView extends BaseRouteComponent {
-	@Prop()
-	slug!: string;
-
-	@RouteState
-	user!: RouteStore['user'];
-
-	post: FiresidePost | null = null;
-
-	@RouteResolve({
-		lazy: true,
-		cache: true,
-		deps: { params: ['slug'], query: ['intent'] },
-	})
-	async routeResolve(this: undefined, route: Route) {
+@RouteResolver({
+	lazy: true,
+	cache: true,
+	deps: { params: ['slug'], query: ['intent'] },
+	async resolver({ route }) {
 		const intentRedirect = IntentService.checkRoute(route, {
 			intent: 'like-post',
 			message: Translate.$gettext(`You like this post! That's cool.`),
@@ -56,20 +45,29 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 		}
 
 		return payload;
-	}
+	},
+})
+export default class RouteProfilePostView extends BaseRouteComponent {
+	@Prop()
+	slug!: string;
+
+	@RouteStoreModule.State
+	user!: RouteStore['user'];
+
+	post: FiresidePost | null = null;
 
 	get routeTitle() {
 		return this.post ? this.post.lead_snippet : null;
 	}
 
-	routeInit() {
+	routeCreated() {
 		CommentModal.checkPermalink(this.$router);
 
 		const hash = FiresidePost.pullHashFromUrl(this.slug);
 		this.post = Registry.find<FiresidePost>('FiresidePost', i => i.hash === hash);
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		const post = new FiresidePost($payload.post);
 		if (this.post) {
 			this.post.assign(post);

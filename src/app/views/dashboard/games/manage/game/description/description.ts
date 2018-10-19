@@ -1,11 +1,10 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./description.html';
-
-import { RouteState, RouteStore } from '../../manage.store';
+import { Component } from 'vue-property-decorator';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
+import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { FormGameDescription } from '../../../../../../components/forms/game/description/description';
-import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @View
 @Component({
@@ -15,7 +14,8 @@ import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/compo
 	},
 })
 export default class RouteDashGamesManageGameDescription extends BaseRouteComponent {
-	@RouteState game!: RouteStore['game'];
+	@RouteStoreModule.State
+	game!: RouteStore['game'];
 
 	get routeTitle() {
 		if (this.game) {

@@ -3,7 +3,7 @@ import { Component } from 'vue-property-decorator';
 import { AppAuthLogin } from '../../../../lib/gj-lib-client/components/auth/login/login';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { loggedUserBlock } from '../auth';
@@ -16,19 +16,19 @@ import { loggedUserBlock } from '../auth';
 		AppAuthLogin,
 	},
 })
+@RouteResolver({
+	async resolver({ route }) {
+		return loggedUserBlock();
+	},
+})
 export default class RouteAuthLogin extends BaseRouteComponent {
 	redirect = '';
-
-	@RouteResolve()
-	async routeResolve() {
-		return loggedUserBlock();
-	}
 
 	get routeTitle() {
 		return this.$gettext('auth.login.page_title');
 	}
 
-	routeInit() {
+	routeCreated() {
 		this.redirect = this.$route.query.redirect || '';
 	}
 }

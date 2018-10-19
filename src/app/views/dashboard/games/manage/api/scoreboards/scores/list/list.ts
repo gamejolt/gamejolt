@@ -1,15 +1,14 @@
 import View from '!view!./list.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameScoreTable } from '../../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { Scroll } from '../../../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
-import { RouteState, RouteStore } from '../../../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 import { AppManageGameListScores } from '../../_list-scores/list-scores';
 
 @View
@@ -19,26 +18,24 @@ import { AppManageGameListScores } from '../../_list-scores/list-scores';
 		AppManageGameListScores,
 	},
 })
+@RouteResolver({
+	deps: { params: ['table'] },
+	resolver: ({ route }) =>
+		Api.sendRequest(
+			'/web/dash/developer/games/api/scores/list-table-scores/' +
+				route.params.id +
+				'/' +
+				route.params.table
+		),
+})
 export default class RouteDashGamesManageApiScoreboardsScoresList extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
 	scoreTables: GameScoreTable[] = [];
 	scoreTable: GameScoreTable = null as any;
 	selectedTable = 0;
 	scores: UserGameScore[] = [];
-
-	@RouteResolve({
-		deps: { params: ['table'] },
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest(
-			'/web/dash/developer/games/api/scores/list-table-scores/' +
-				route.params.id +
-				'/' +
-				route.params.table
-		);
-	}
 
 	get routeTitle() {
 		if (this.game && this.scoreTable) {
@@ -50,7 +47,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresList extends BaseRo
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.scoreTables = GameScoreTable.populate($payload.scoreTables);
 		this.scoreTable = new GameScoreTable($payload.scoreTable);
 		this.scores = UserGameScore.populate($payload.scores);

@@ -5,16 +5,15 @@ import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import { Registry } from 'game-jolt-frontend-lib/components/registry/registry.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
 import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
 import { Component, Prop } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { CreateElement } from 'vue/types/vue';
 import { IntentService } from '../../../../../../components/intent/intent.service';
 import { AppPostView } from '../../../../../../components/post/view/view';
-import { RouteState, RouteStore } from '../../view.store';
+import { RouteStore, RouteStoreModule } from '../../view.store';
 
 @Component({
 	name: 'RouteDiscoverGamesViewDevlogView',
@@ -22,21 +21,11 @@ import { RouteState, RouteStore } from '../../view.store';
 		AppPostView,
 	},
 })
-export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent {
-	@Prop()
-	postSlug!: string;
-
-	@RouteState
-	game!: RouteStore['game'];
-
-	post: FiresidePost | null = null;
-
-	@RouteResolve({
-		lazy: true,
-		cache: true,
-		deps: { params: ['postSlug'], query: ['intent'] },
-	})
-	async routeResolve(this: undefined, route: Route) {
+@RouteResolver({
+	lazy: true,
+	cache: true,
+	deps: { params: ['postSlug'], query: ['intent'] },
+	async resolver({ route }) {
 		const intentRedirect = IntentService.checkRoute(route, {
 			intent: 'like-post',
 			message: Translate.$gettext(`You like this post! That's cool.`),
@@ -56,20 +45,29 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		}
 
 		return payload;
-	}
+	},
+})
+export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent {
+	@Prop()
+	postSlug!: string;
+
+	@RouteStoreModule.State
+	game!: RouteStore['game'];
+
+	post: FiresidePost | null = null;
 
 	get routeTitle() {
 		return this.post && this.post.lead_snippet;
 	}
 
-	routeInit() {
+	routeCreated() {
 		CommentModal.checkPermalink(this.$router);
 
 		const hash = FiresidePost.pullHashFromUrl(this.postSlug);
 		this.post = Registry.find<FiresidePost>('FiresidePost', i => i.hash === hash);
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		const post = new FiresidePost($payload.post);
 		if (this.post) {
 			this.post.assign(post);

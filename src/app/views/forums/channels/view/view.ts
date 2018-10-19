@@ -1,6 +1,5 @@
 import View from '!view!./view.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
@@ -9,11 +8,10 @@ import { AppNavTabList } from '../../../../../lib/gj-lib-client/components/nav/t
 import { AppPagination } from '../../../../../lib/gj-lib-client/components/pagination/pagination';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/breadcrumbs';
 import { AppForumTopicList } from '../../../../components/forum/topic-list/topic-list';
@@ -25,7 +23,6 @@ import { Store } from '../../../../store/index';
 	name: 'RouteForumsChannelsView',
 	components: {
 		AppPageHeader,
-		AppJolticon,
 		AppForumTopicList,
 		AppPagination,
 		AppForumBreadcrumbs,
@@ -33,6 +30,16 @@ import { Store } from '../../../../store/index';
 	},
 	filters: {
 		number,
+	},
+})
+@RouteResolver({
+	cache: true,
+	deps: { params: ['name', 'sort'], query: ['page'] },
+	resolver({ route }) {
+		const sort = route.params.sort || 'active';
+		return Api.sendRequest(
+			`/web/forums/channels/${route.params.name}/${sort}?page=${route.query.page || 1}`
+		);
 	},
 })
 export default class RouteForumsChannelsView extends BaseRouteComponent {
@@ -51,17 +58,6 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 	readonly Scroll = Scroll;
 	readonly Screen = Screen;
 
-	@RouteResolve({
-		cache: true,
-		deps: { params: ['name', 'sort'], query: ['page'] },
-	})
-	routeResolve(this: undefined, route: Route) {
-		const sort = route.params.sort || 'active';
-		return Api.sendRequest(
-			`/web/forums/channels/${route.params.name}/${sort}?page=${route.query.page || 1}`
-		);
-	}
-
 	get sort() {
 		return this.$route.params.sort || 'active';
 	}
@@ -79,7 +75,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.channel = new ForumChannel($payload.channel);
 		this.topics = ForumTopic.populate($payload.topics);
 		this.postCountPerPage = $payload.postCountPerPage;

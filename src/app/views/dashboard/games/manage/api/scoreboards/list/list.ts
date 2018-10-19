@@ -1,6 +1,5 @@
 import View from '!view!./list.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppCardListAdd } from '../../../../../../../../lib/gj-lib-client/components/card/list/add/add';
 import { AppCardListDraggable } from '../../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';
@@ -10,12 +9,12 @@ import { GameScoreTable } from '../../../../../../../../lib/gj-lib-client/compon
 import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppTooltip } from '../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { AppJolticon } from '../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { FormGameScoreTable } from '../../../../../../../components/forms/game/score-table/score-table';
-import { RouteState, RouteStore } from '../../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../../manage.store';
 
 @View
 @Component({
@@ -32,8 +31,13 @@ import { RouteState, RouteStore } from '../../../manage.store';
 		AppTooltip,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) =>
+		Api.sendRequest('/web/dash/developer/games/api/scores/' + route.params.id),
+})
 export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
 	GameScoreTable = GameScoreTable;
@@ -46,13 +50,6 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 		return this.scoreTables.map(item => item.id);
 	}
 
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/dash/developer/games/api/scores/' + route.params.id);
-	}
-
 	get routeTitle() {
 		if (this.game) {
 			return this.$gettextInterpolate('Manage Scoreboards for %{ game }', {
@@ -62,7 +59,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.scoreTables = GameScoreTable.populate($payload.scoreTables);
 	}
 

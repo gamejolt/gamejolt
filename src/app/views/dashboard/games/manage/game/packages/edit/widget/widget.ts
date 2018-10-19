@@ -1,11 +1,10 @@
 import View from '!view!./widget.html';
 import { Component, Watch } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../../../../../../../lib/gj-lib-client/components/environment/environment.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Sellable } from '../../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
@@ -13,6 +12,16 @@ import { Sellable } from '../../../../../../../../../lib/gj-lib-client/component
 @View
 @Component({
 	name: 'RouteDashGamesManageGamePackagesEditWidget',
+})
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) =>
+		Api.sendRequest(
+			'/web/dash/developer/games/packages/preview/' +
+				route.params.id +
+				'/' +
+				route.params.packageId
+		),
 })
 export default class RouteDashGamesManageGamePackagesEditWidget extends BaseRouteComponent {
 	sellable: Sellable | null = null;
@@ -22,20 +31,7 @@ export default class RouteDashGamesManageGamePackagesEditWidget extends BaseRout
 
 	readonly Screen = Screen;
 
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest(
-			'/web/dash/developer/games/packages/preview/' +
-				route.params.id +
-				'/' +
-				route.params.packageId
-		);
-	}
-
-	routed($payload: any) {
-		console.log($payload);
+	routeResolved($payload: any) {
 		this.sellable = $payload.sellable ? new Sellable($payload.sellable) : null;
 		this.theme = ''; // Default to dark.
 	}

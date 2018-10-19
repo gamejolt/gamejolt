@@ -7,9 +7,10 @@ import {
 	CommentStore,
 	CommentStoreModel,
 } from 'game-jolt-frontend-lib/components/comment/comment-store';
+import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-store';
 import { AppUserCardHover } from 'game-jolt-frontend-lib/components/user/card/hover/hover';
-import { Component, Prop } from 'vue-property-decorator';
-import { Route } from 'vue-router';
+import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
+import { Component } from 'vue-property-decorator';
 import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import {
@@ -22,14 +23,10 @@ import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history
 import { PartnerReferral } from '../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import {
-	ThemeMutation,
-	ThemeStore,
-} from '../../../../../lib/gj-lib-client/components/theme/theme.store';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
 import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
@@ -42,8 +39,9 @@ import {
 	RatingWidgetOnChange,
 	RatingWidgetOnChangePayload,
 } from '../../../../components/rating/widget/widget';
+import { store } from '../../../../store';
 import './view-content.styl';
-import { RouteMutation, RouteState, RouteStore, RouteStoreName } from './view.store';
+import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './view.store';
 import { AppDiscoverGamesViewControls } from './_controls/controls';
 import { AppDiscoverGamesViewNav } from './_nav/nav';
 
@@ -64,53 +62,94 @@ import { AppDiscoverGamesViewNav } from './_nav/nav';
 		AppTooltip,
 	},
 })
-export default class RouteDiscoverGamesView extends BaseRouteComponent {
-	@Prop()
-	id!: string;
+@WithRouteStore({
+	store,
+	routeStoreName: RouteStoreName,
+	routeStoreClass: RouteStore,
+})
+@RouteResolver({
+	lazy: true,
+	cache: true,
+	deps: { params: ['slug', 'id'], query: ['intent'] },
+	async resolver({ route }) {
+		HistoryTick.trackSource('Game', parseInt(route.params.id, 10));
+		PartnerReferral.trackReferrer('Game', parseInt(route.params.id, 10), route);
 
-	@RouteState
+		const intentRedirect = IntentService.checkRoute(
+			route,
+			{
+				intent: 'follow-game',
+				message: Translate.$gettext(`You're now following this game.`),
+			},
+			{
+				intent: 'decline-game-collaboration',
+				message: Translate.$gettext(`You've declined the invitation to collaborate.`),
+			}
+		);
+		if (intentRedirect) {
+			return intentRedirect;
+		}
+
+		const payload = await Api.sendRequest('/web/discover/games/' + route.params.id);
+
+		if (payload && payload.game) {
+			const redirect = enforceLocation(route, { slug: payload.game.slug });
+			if (redirect) {
+				return redirect;
+			}
+		}
+
+		return payload;
+	},
+	resolveStore({ payload }) {
+		routeStore.commit('processPayload', payload);
+		store.commit('theme/setPageTheme', routeStore.state.game.theme || null);
+	},
+})
+export default class RouteDiscoverGamesView extends BaseRouteComponent {
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
-	@RouteState
+	@RouteStoreModule.State
 	partner!: RouteStore['partner'];
 
-	@RouteState
+	@RouteStoreModule.State
 	partnerKey!: RouteStore['partnerKey'];
 
-	@RouteState
+	@RouteStoreModule.State
 	packages!: RouteStore['packages'];
 
-	@RouteState
+	@RouteStoreModule.State
 	collaboratorInvite!: RouteStore['collaboratorInvite'];
 
-	@RouteState
+	@RouteStoreModule.State
 	downloadableBuilds!: RouteStore['downloadableBuilds'];
 
-	@RouteState
+	@RouteStoreModule.State
 	browserBuilds!: RouteStore['browserBuilds'];
 
-	@RouteState
+	@RouteStoreModule.State
+	profileCount!: RouteStore['profileCount'];
+
+	@RouteStoreModule.State
 	installableBuilds!: RouteStore['installableBuilds'];
 
-	@RouteMutation
+	@RouteStoreModule.Mutation
 	bootstrapGame!: RouteStore['bootstrapGame'];
 
-	@RouteMutation
+	@RouteStoreModule.Mutation
 	processPayload!: RouteStore['processPayload'];
 
-	@RouteMutation
+	@RouteStoreModule.Mutation
 	showMultiplePackagesMessage!: RouteStore['showMultiplePackagesMessage'];
 
-	@RouteMutation
+	@RouteStoreModule.Mutation
 	acceptCollaboratorInvite!: RouteStore['acceptCollaboratorInvite'];
 
-	@RouteMutation
+	@RouteStoreModule.Mutation
 	declineCollaboratorInvite!: RouteStore['declineCollaboratorInvite'];
 
-	@ThemeMutation
-	setPageTheme!: ThemeStore['setPageTheme'];
-
-	@RouteMutation
+	@RouteStoreModule.Mutation
 	setUserRating!: RouteStore['setUserRating'];
 
 	@CommentState
@@ -124,9 +163,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 	@CommentMutation
 	setCommentCount!: CommentStore['setCommentCount'];
-
-	storeName = RouteStoreName;
-	storeModule = RouteStore;
 
 	commentStore: CommentStoreModel | null = null;
 
@@ -172,36 +208,10 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		return this.game.id + (this.shouldShowFullCover ? '-full' : '-collapsed');
 	}
 
-	@RouteResolve({
-		lazy: true,
-		cache: true,
-		deps: { params: ['slug', 'id'], query: ['intent'] },
-	})
-	async routeResolve(this: undefined, route: Route) {
-		HistoryTick.trackSource('Game', parseInt(route.params.id, 10));
-		PartnerReferral.trackReferrer('Game', parseInt(route.params.id, 10), route);
-
-		const intentRedirect = IntentService.checkRoute(
-			route,
-			{
-				intent: 'follow-game',
-				message: Translate.$gettext(`You're now following this game.`),
-			},
-			{
-				intent: 'decline-game-collaboration',
-				message: Translate.$gettext(`You've declined the invitation to collaborate.`),
-			}
-		);
-		if (intentRedirect) {
-			return intentRedirect;
-		}
-
-		return Api.sendRequest('/web/discover/games/' + route.params.id);
-	}
-
-	routeInit() {
-		this.bootstrapGame(parseInt(this.id, 10));
-		this.setAdSettings();
+	routeCreated() {
+		// This isn't needed by SSR or anything, so it's fine to call it here.
+		this.bootstrapGame(parseInt(this.$route.params.id, 10));
+		this._setAdSettings();
 
 		// Any game rating change will broadcast this event. We catch it so we
 		// can update the page with the new rating! Yay!
@@ -225,10 +235,8 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		}
 	}
 
-	async routed($payload: any) {
-		this.processPayload($payload);
-		this.setPageTheme(this.game.theme || null);
-		this.setAdSettings();
+	async routeResolved($payload: any) {
+		this._setAdSettings();
 
 		// If the game has a GA tracking ID, then we attach it to this
 		// scope so all page views within get tracked.
@@ -248,9 +256,9 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		this.setCommentCount({ store: this.commentStore, count: $payload.commentsCount || 0 });
 	}
 
-	routeDestroy() {
-		this.setPageTheme(null);
-		this.releaseAdSettings();
+	routeDestroyed() {
+		store.commit('theme/setPageTheme', null);
+		this._releaseAdSettings();
 
 		if (this.ratingWatchDeregister) {
 			this.ratingWatchDeregister();
@@ -287,7 +295,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		Scroll.to('game-releases');
 	}
 
-	setAdSettings() {
+	private _setAdSettings() {
 		if (!this.game) {
 			return;
 		}
@@ -320,7 +328,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		Ads.setPageSettings(settings);
 	}
 
-	releaseAdSettings() {
+	private _releaseAdSettings() {
 		Ads.releasePageSettings();
 	}
 }

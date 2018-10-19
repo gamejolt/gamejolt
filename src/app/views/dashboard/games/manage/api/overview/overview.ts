@@ -1,23 +1,18 @@
 import View from '!view!./overview.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { duration } from '../../../../../../../lib/gj-lib-client/vue/filters/duration';
 import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
-import { RouteState, RouteStore } from '../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @View
 @Component({
 	name: 'RouteDashGamesManageApiOverview',
-	components: {
-		AppJolticon,
-	},
 	directives: {
 		AppTooltip,
 	},
@@ -26,8 +21,12 @@ import { RouteState, RouteStore } from '../../manage.store';
 		duration,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/api/' + route.params.id),
+})
 export default class RouteDashGamesManageApiOverview extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
 	numActiveSessions = 0;
@@ -44,13 +43,6 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 		'user-count': number;
 	} = {} as any;
 
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/dash/developer/games/api/' + route.params.id);
-	}
-
 	get routeTitle() {
 		if (this.game) {
 			return this.$gettextInterpolate('Game API for %{ game }', {
@@ -60,7 +52,7 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.sessionStats = $payload.sessionStats;
 
 		const fields = [

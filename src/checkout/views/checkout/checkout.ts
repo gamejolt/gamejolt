@@ -1,7 +1,6 @@
 import View from '!view!./checkout.html?style=./checkout.styl';
 import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
@@ -10,7 +9,7 @@ import { Navigate } from '../../../lib/gj-lib-client/components/navigate/navigat
 import { Order } from '../../../lib/gj-lib-client/components/order/order.model';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../lib/gj-lib-client/components/route/route-component';
 import { Sellable } from '../../../lib/gj-lib-client/components/sellable/sellable.model';
 import { AppMediaItemCover } from '../../../_common/media-item/cover/cover';
@@ -24,6 +23,9 @@ import { FormPayment } from '../../components/forms/payment/payment';
 		FormPayment,
 	},
 })
+@RouteResolver({
+	resolver: ({ route }) => Api.sendRequest('/web/checkout/' + route.params.orderId, {}),
+})
 export default class RouteCheckout extends BaseRouteComponent {
 	@ThemeMutation
 	setPageTheme!: ThemeStore['setPageTheme'];
@@ -35,11 +37,6 @@ export default class RouteCheckout extends BaseRouteComponent {
 
 	Environment = Environment;
 
-	@RouteResolve()
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/checkout/' + route.params.orderId, {});
-	}
-
 	get routeTitle() {
 		if (this.sellable) {
 			return this.$gettextInterpolate('Buy %{ game }', {
@@ -49,7 +46,7 @@ export default class RouteCheckout extends BaseRouteComponent {
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.cards = $payload.cards || [];
 		this.sellable = new Sellable($payload.sellable);
 		this.order = new Order($payload.order);

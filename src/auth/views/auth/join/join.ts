@@ -1,14 +1,13 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./join.html';
-
-import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { Component } from 'vue-property-decorator';
 import { AppAuthJoin } from '../../../../lib/gj-lib-client/components/auth/join/join';
-import { loggedUserBlock } from '../auth';
+import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { loggedUserBlock } from '../auth';
 
 @View
 @Component({
@@ -18,13 +17,13 @@ import {
 		AppAuthJoin,
 	},
 })
+@RouteResolver({
+	async resolver() {
+		return loggedUserBlock();
+	},
+})
 export default class RouteAuthJoin extends BaseRouteComponent {
 	readonly Connection = Connection;
-
-	@RouteResolve()
-	async routeResolve() {
-		return loggedUserBlock();
-	}
 
 	get routeTitle() {
 		return this.$gettext('auth.join.page_title');

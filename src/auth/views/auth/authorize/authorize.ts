@@ -1,26 +1,24 @@
-import { Route } from 'vue-router';
-import { Component } from 'vue-property-decorator';
 import View from '!view!./authorize.html';
-
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Auth } from '../../../../lib/gj-lib-client/components/auth/auth.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 
 @View
 @Component({
 	name: 'RouteAuthAuthorize',
 })
-export default class RouteAuthAuthorize extends BaseRouteComponent {
-	isSuccess = false;
-
-	@RouteResolve()
-	routeResolve(this: undefined, route: Route) {
+@RouteResolver({
+	resolver({ route }) {
 		const { userId, code, type } = route.params;
 		return Api.sendRequest(`/web/auth/authorize/${userId}/${code}/${type}`);
-	}
+	},
+})
+export default class RouteAuthAuthorize extends BaseRouteComponent {
+	isSuccess = false;
 
 	get routeTitle() {
 		if (this.isSuccess) {
@@ -30,7 +28,7 @@ export default class RouteAuthAuthorize extends BaseRouteComponent {
 		return this.$gettext('auth.authorize.invalid.page_title');
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.isSuccess = $payload.success;
 
 		// Redirect them to their dashboard after a bit.

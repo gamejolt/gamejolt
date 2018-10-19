@@ -1,18 +1,17 @@
 import View from '!view!./soundtrack.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { GameSong } from '../../../../../../../lib/gj-lib-client/components/game/song/song.model';
 import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { RouteState, RouteStore } from '../../view.store';
+import { RouteStore, RouteStoreModule } from '../../view.store';
 
 const DownloadDelay = 3000;
 
@@ -25,25 +24,24 @@ const DownloadDelay = 3000;
 		AppLoading,
 	},
 })
-export default class RouteDiscoverGamesViewDownloadSoundtrack extends BaseRouteComponent {
-	@RouteState
-	game!: RouteStore['game'];
-
-	src: string | null = null;
-
-	readonly Screen = Screen;
-
-	@RouteResolve({
-		deps: {},
-	})
-	async routeResolve(this: undefined, route: Route) {
+@RouteResolver({
+	deps: {},
+	async resolver({ route }) {
 		const gameId = parseInt(route.params.id, 10);
 
 		HistoryTick.sendBeacon('game-soundtrack', gameId, {
 			sourceResource: 'Game',
 			sourceResourceId: gameId,
 		});
-	}
+	},
+})
+export default class RouteDiscoverGamesViewDownloadSoundtrack extends BaseRouteComponent {
+	@RouteStoreModule.State
+	game!: RouteStore['game'];
+
+	src: string | null = null;
+
+	readonly Screen = Screen;
 
 	get routeTitle() {
 		if (this.game) {
@@ -54,7 +52,7 @@ export default class RouteDiscoverGamesViewDownloadSoundtrack extends BaseRouteC
 		return null;
 	}
 
-	async routed() {
+	async routeResolved() {
 		// Don't download on SSR.
 		if (GJ_IS_SSR) {
 			return;
