@@ -7,6 +7,7 @@ import { AppFormControlUpload } from '../../../../lib/gj-lib-client/components/f
 import { AppForm } from '../../../../lib/gj-lib-client/components/form-vue/form';
 import {
 	BaseForm,
+	FormOnBeforeSubmit,
 	FormOnLoad,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { ModalConfirm } from '../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
@@ -16,7 +17,7 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 import { filesize } from '../../../../lib/gj-lib-client/vue/filters/filesize';
 
 type FormModel = User & {
-	crop?: any;
+	avatar_crop?: any;
 };
 
 @View
@@ -28,7 +29,7 @@ type FormModel = User & {
 		AppJolticon,
 	},
 })
-export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
+export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad, FormOnBeforeSubmit {
 	modelClass = User;
 	reloadOnSubmit = true;
 	warnOnDiscard = false;
@@ -61,13 +62,18 @@ export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
 
 	@Watch('crop')
 	onCropChange() {
-		this.setField('crop', this.crop);
+		this.setField('avatar_crop', this.crop);
 	}
 
 	onLoad(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 		this.minSize = payload.minSize;
 		this.maxSize = payload.maxSize;
+	}
+
+	onBeforeSubmit() {
+		// Backend expects this field.
+		this.setField('crop' as any, this.formModel.avatar_crop);
 	}
 
 	avatarSelected() {

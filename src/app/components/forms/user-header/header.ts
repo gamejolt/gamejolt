@@ -7,6 +7,7 @@ import { AppFormControlUpload } from '../../../../lib/gj-lib-client/components/f
 import { AppForm } from '../../../../lib/gj-lib-client/components/form-vue/form';
 import {
 	BaseForm,
+	FormOnBeforeSubmit,
 	FormOnLoad,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
@@ -14,7 +15,7 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 import { Store } from '../../../store/index';
 
 type FormModel = User & {
-	crop: any;
+	header_crop: any;
 };
 
 @View
@@ -25,7 +26,7 @@ type FormModel = User & {
 		AppJolticon,
 	},
 })
-export class FormUserHeader extends BaseForm<FormModel> implements FormOnLoad {
+export class FormUserHeader extends BaseForm<FormModel> implements FormOnLoad, FormOnBeforeSubmit {
 	@State
 	app!: Store['app'];
 	modelClass = User as any;
@@ -55,7 +56,7 @@ export class FormUserHeader extends BaseForm<FormModel> implements FormOnLoad {
 
 	@Watch('crop')
 	onCropChange() {
-		this.setField('crop', this.crop);
+		this.setField('header_crop', this.crop);
 	}
 
 	onLoad(payload: any) {
@@ -66,6 +67,11 @@ export class FormUserHeader extends BaseForm<FormModel> implements FormOnLoad {
 		this.maxWidth = payload.maxWidth;
 		this.minHeight = payload.minHeight;
 		this.maxHeight = payload.maxHeight;
+	}
+
+	onBeforeSubmit() {
+		// Backend expects this field.
+		this.setField('crop' as any, this.formModel.header_crop);
 	}
 
 	async clearHeader() {
