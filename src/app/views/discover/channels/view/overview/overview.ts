@@ -15,8 +15,8 @@ import {
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
-import { ActivityFeedContainer } from '../../../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
+import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import { AppGameGrid } from '../../../../../components/game/grid/grid';
 import { AppGameGridPlaceholder } from '../../../../../components/game/grid/placeholder/placeholder';
 
@@ -52,7 +52,7 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 	isLoaded = false;
 	bestGames: Game[] = [];
 	hotGames: Game[] = [];
-	feed: ActivityFeedContainer | null = null;
+	feed: ActivityFeedView | null = null;
 
 	Environment = Environment;
 	Screen = Screen;
@@ -77,6 +77,7 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 			{
 				type: 'EventItem',
 				url: `/web/discover/channels/posts/${this.channel}`,
+				shouldShowGameInfo: true,
 			},
 			$payload.posts,
 			fromCache

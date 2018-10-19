@@ -22,16 +22,21 @@
 		height: $-avatar-size
 		line-height: $-avatar-size
 
+		>>> img
+			border-radius: 50% !important
+
 		.-item.-new &
 			theme-prop('border-color', 'notice')
-			border-width: 3px
+			border-width: 2px
 			border-style: solid
+
+			.-header-avatar-inner
+				theme-prop('background-color', 'bg')
+				padding: 2px
+				border-radius: 50%
 
 		@media $media-sm-up
 			margin-right: $-item-padding
-
-		img
-			border-radius: 50% !important
 
 	&-content
 		flex: auto

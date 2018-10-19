@@ -1,38 +1,41 @@
+import View from '!view!./notification.html?style=./notification.styl';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { AppUserCardHover } from 'game-jolt-frontend-lib/components/user/card/hover/hover';
+import { AppUserAvatar } from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar';
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./notification.html';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import '../../../../../lib/gj-lib-client/components/comment/comment.styl';
-
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import {
-	Notification,
-	getNotificationText,
-} from '../../../../../lib/gj-lib-client/components/notification/notification-model';
-import { ActivityFeedItem } from '../item-service';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
-import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
 import { Mention } from '../../../../../lib/gj-lib-client/components/mention/mention.model';
+import {
+	getNotificationText,
+	Notification,
+} from '../../../../../lib/gj-lib-client/components/notification/notification-model';
+import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
+import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
+import { ActivityFeedItem } from '../item-service';
+import { ActivityFeedView } from '../view';
 
 @View
 @Component({
 	components: {
 		AppTimelineListItem,
-		AppJolticon,
 		AppTimeAgo,
 		AppFadeCollapse,
+		AppUserCardHover,
+		AppUserAvatar,
+	},
+	directives: {
+		AppTooltip,
 	},
 })
 export class AppActivityFeedNotification extends Vue {
+	@Inject()
+	feed!: ActivityFeedView;
+
 	@Prop(ActivityFeedItem)
 	item!: ActivityFeedItem;
-
-	@Prop(Boolean)
-	isNew?: boolean;
-
-	@Prop(Boolean)
-	isActive?: boolean;
 
 	notification!: Notification;
 
@@ -41,12 +44,12 @@ export class AppActivityFeedNotification extends Vue {
 
 	readonly Screen = Screen;
 
-	get titleText() {
-		return getNotificationText(this.notification);
+	get isNew() {
+		return this.feed.isItemUnread(this.item);
 	}
 
-	get icon() {
-		return this.notification.jolticon.replace('jolticon-', '');
+	get titleText() {
+		return getNotificationText(this.notification);
 	}
 
 	get hasDetails() {
@@ -69,11 +72,20 @@ export class AppActivityFeedNotification extends Vue {
 	}
 
 	go() {
+		this.notification.$read();
 		this.notification.go(this.$router);
 		this.$emit('clicked');
 	}
 
 	toggleFull() {
 		this.showFullContent = !this.showFullContent;
+	}
+
+	onMarkRead() {
+		this.notification.$read();
+	}
+
+	onMarkUnread() {
+		this.notification.$unread();
 	}
 }

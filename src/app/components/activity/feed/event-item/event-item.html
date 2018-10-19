@@ -9,17 +9,23 @@
 		>
 
 		<div class="-header">
-			<app-user-card-hover :user="user">
-				<app-user-avatar
-					class="-header-avatar"
-					:user="user"
-					@click.native.stop
-					/>
+			<app-user-card-hover
+				:user="user"
+				:disabled="!feed.shouldShowUserCards"
+				>
+				<div class="-header-avatar">
+					<div class="-header-avatar-inner">
+						<app-user-avatar
+							:user="user"
+							@click.native.stop
+							/>
+					</div>
+				</div>
 			</app-user-card-hover>
 
 			<div class="-header-content">
 				<div class="-header-byline">
-					<div class="-header-byline-game" v-if="game && feed.showGameInfo">
+					<div class="-header-byline-game" v-if="game && feed.shouldShowGameInfo">
 						<strong class="text-muted">
 							<router-link :to="gameUrl" class="link-unstyled">
 								{{ game.title }}
@@ -68,7 +74,6 @@
 			v-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD"
 			:item="item"
 			:video="video"
-			:is-hydrated="isHydrated"
 			@expanded="onExpand"
 			@content-bootstrapped="onContentBootstrapped"
 			/>
@@ -78,7 +83,6 @@
 				v-if="post.hasVideo"
 				:item="item"
 				:post="post"
-				:is-hydrated="isHydrated"
 				@click.native.stop
 				@expanded="onExpand"
 				@content-bootstrapped="onContentBootstrapped"
@@ -88,7 +92,6 @@
 				v-if="post.hasSketchfab"
 				:item="item"
 				:post="post"
-				:is-hydrated="isHydrated"
 				@click.native.stop
 				@expanded="onExpand"
 				@content-bootstrapped="onContentBootstrapped"
@@ -98,7 +101,6 @@
 				v-if="post.hasMedia"
 				:item="item"
 				:post="post"
-				:is-hydrated="isHydrated"
 				@expanded="onExpand"
 				@content-bootstrapped="onContentBootstrapped"
 				/>
@@ -127,7 +129,6 @@
 				v-if="post.hasArticle"
 				:item="item"
 				:post="post"
-				:is-hydrated="isHydrated"
 				@expanded="onExpand"
 				@content-bootstrapped="onContentBootstrapped"
 				/>
@@ -147,7 +148,7 @@
 		<div class="-manage" v-if="shouldShowManage">
 			<app-event-item-manage
 				:event-item="eventItem"
-				:show-edit-controls="feed.showEditControls"
+				:show-edit-controls="feed.shouldShowEditControls"
 				@edit-post="feed.onPostEdited( eventItem )"
 				@publish-post="feed.onPostPublished( eventItem )"
 				@remove-post="feed.onPostRemoved( eventItem )"

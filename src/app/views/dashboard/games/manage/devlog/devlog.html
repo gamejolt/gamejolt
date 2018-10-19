@@ -56,12 +56,11 @@
 						</ul>
 					</app-nav-tab-list>
 
-					<app-activity-feed-placeholder v-if="!feed" />
+					<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
 					<template v-else>
 						<app-activity-feed
 							v-if="feed.hasItems"
 							:feed="feed"
-							show-edit-controls
 							@edit-post="onPostEdited"
 							@publish-post="onPostPublished"
 							@remove-post="onPostRemoved"

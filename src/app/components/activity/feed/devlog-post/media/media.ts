@@ -1,6 +1,6 @@
 import View from '!view!./media.html?style=./media.styl';
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { AppImgResponsive } from '../../../../../../lib/gj-lib-client/components/img/responsive/responsive';
 import { MediaItem } from '../../../../../../lib/gj-lib-client/components/media-item/media-item-model';
@@ -10,6 +10,7 @@ import { AppVideo } from '../../../../../../lib/gj-lib-client/components/video/v
 import { AppEventItemMediaIndicator } from '../../../../event-item/media-indicator/media-indicator';
 import { AppEventItemMediaTags } from '../../../../event-item/media-tags/media-tags';
 import { ActivityFeedItem } from '../../item-service';
+import { ActivityFeedView } from '../../view';
 
 if (!GJ_IS_SSR) {
 	const VueTouch = require('vue-touch');
@@ -27,17 +28,14 @@ if (!GJ_IS_SSR) {
 	},
 })
 export class AppActivityFeedDevlogPostMedia extends Vue {
+	@Inject()
+	feed!: ActivityFeedView;
+
 	@Prop(ActivityFeedItem)
 	item!: ActivityFeedItem;
 
 	@Prop(FiresidePost)
 	post!: FiresidePost;
-
-	@Prop(Boolean)
-	isNew?: boolean;
-
-	@Prop(Boolean)
-	isHydrated?: boolean;
 
 	page = 1;
 	activeMediaItem: MediaItem | null = null;
@@ -46,6 +44,10 @@ export class AppActivityFeedDevlogPostMedia extends Vue {
 	contentBootstrapped = false;
 
 	readonly Screen = Screen;
+
+	get isHydrated() {
+		return this.feed.isItemHydrated(this.item);
+	}
 
 	created() {
 		this.activeMediaItem = this.post.media[0];
