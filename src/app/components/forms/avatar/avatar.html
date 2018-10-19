@@ -8,6 +8,9 @@
 		<p class="help-block" v-translate>
 			dash.forms.image_filetype_help_html
 		</p>
+		<p class="help-block strong" v-translate="{ dimensions: '1000x1000' }">
+			The recommended size for an avatar is <code>%{dimensions}</code>.
+		</p>
 
 		<app-form-control-upload
 			:rules="{
@@ -37,6 +40,8 @@
 				:aspect-ratio="1"
 				:min-width="minSize"
 				:min-height="minSize"
+				:max-width="maxSize"
+				:max-height="maxSize"
 				/>
 
 			<app-form-control-errors
@@ -48,7 +53,7 @@
 	<template v-if="formModel.avatar_media_item && !hasFormErrors">
 		<div>
 			<app-form-button>
-				<translate>Save Crop</translate>
+				<translate>Save</translate>
 			</app-form-button>
 
 			<app-button
