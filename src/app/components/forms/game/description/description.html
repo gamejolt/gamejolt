@@ -20,6 +20,37 @@
 
 	</app-form-group>
 
+	<template v-if="shouldShowTags">
+		<app-jolticon icon="tags" />
+		<strong><translate>Game Tags</translate></strong>
+		<div class="page-help">
+			<p><translate>Tag your game to make it appear in game lists. Simply click one to add it to your game's description.</translate></p>
+		</div>
+		<div v-if="recommendedTags.length">
+			<a
+				v-for="tag of recommendedTags"
+				:key="tag"
+				@click="addTag(tag)"
+				class="badge game-tag"
+				>
+				#{{tag}}
+			</a>
+			<hr>
+		</div>
+		<div v-if="otherTags.length">
+			<a
+				v-for="tag of otherTags"
+				:key="tag"
+				@click="addTag(tag)"
+				class="badge game-tag"
+				>
+				#{{tag}}
+			</a>
+		</div>
+		<br />
+
+	</template>
+
 	<app-expand :when="isFnafDetected">
 		<div class="alert alert-notice">
 			<div v-translate>
