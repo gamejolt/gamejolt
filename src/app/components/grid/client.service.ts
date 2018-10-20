@@ -239,7 +239,7 @@ export class GridClient {
 			return;
 		}
 
-		const message = getNotificationText(notification);
+		const message = getNotificationText(notification, true);
 		const icon =
 			notification.from_model === undefined ? '' : notification.from_model.img_avatar;
 
