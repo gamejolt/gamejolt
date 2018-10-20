@@ -33,6 +33,9 @@ export class AppShellNotificationPopover extends Vue {
 	@State
 	unreadNotificationsCount!: Store['unreadNotificationsCount'];
 
+	@State
+	notificationCount!: Store['notificationCount'];
+
 	@Mutation
 	setNotificationCount!: Store['setNotificationCount'];
 
@@ -45,12 +48,17 @@ export class AppShellNotificationPopover extends Vue {
 
 	readonly Connection = Connection;
 
+	get count() {
+		// On mobile, we show all counts since it goes to the "activity" page.
+		return Screen.isXs ? this.notificationCount : this.unreadNotificationsCount;
+	}
+
 	/**
 	 * For mobile, the navbar item should be active when they are on
 	 * notifications page, since there is no popover on mobile.
 	 */
 	get isNavbarItemActive() {
-		return (Screen.isXs && this.$route.name === 'activity.notifications') || this.isShowing;
+		return (Screen.isXs && this.$route.name!.indexOf('activity.') === 0) || this.isShowing;
 	}
 
 	/**
@@ -72,12 +80,12 @@ export class AppShellNotificationPopover extends Vue {
 
 	/**
 	 * When they click the item in the navbar, we don't want to open the popover
-	 * on mobile. Let's just go to the notifications page.
+	 * on mobile. Let's just go to the activity page.
 	 */
 	onNavbarItemClick(e: Event) {
 		if (Screen.isXs) {
 			e.stopPropagation();
-			this.$router.push({ name: 'activity.notifications' });
+			this.$router.push({ name: 'activity.feed' });
 		}
 	}
 
