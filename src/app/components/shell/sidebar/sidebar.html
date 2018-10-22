@@ -10,7 +10,7 @@
 
 	<app-scroll-scroller
 		overlay
-		:hide-scrollbar="!isLeftPaneVisible"
+		:hide-scrollbar="!isLeftPaneVisible && !GJ_IS_SSR"
 		class="shell-sidebar-content fill-darkest"
 		>
 
