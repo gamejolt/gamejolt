@@ -74,6 +74,10 @@ export class ActivityFeedView {
 		return this.state.isLoadingMore;
 	}
 
+	get isLoadingNew() {
+		return this.state.isLoadingNew;
+	}
+
 	get reachedEnd() {
 		return this.state.reachedEnd;
 	}
