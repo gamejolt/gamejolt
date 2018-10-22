@@ -2,7 +2,6 @@ import { Ads } from '../lib/gj-lib-client/components/ad/ads.service';
 import { GamePlayModal } from '../lib/gj-lib-client/components/game/play-modal/play-modal.service';
 import { Registry } from '../lib/gj-lib-client/components/registry/registry.service';
 import '../lib/gj-lib-client/utils/polyfills';
-import { bootstrapShortkey } from '../lib/gj-lib-client/vue/shortkey';
 import { bootstrapCommon } from '../_common/bootstrap';
 import { App } from './app';
 import './main.styl';
@@ -21,7 +20,7 @@ if (GJ_IS_CLIENT) {
 Ads.init(router);
 
 GamePlayModal.init({ canMinimize: true });
-bootstrapShortkey();
+// bootstrapShortkey();
 
 Registry.setConfig('Game', { maxItems: 100 });
 Registry.setConfig('User', { maxItems: 150 });
