@@ -1,11 +1,11 @@
 <app-scroll-scroller
 	@scroll.native="onScroll"
 	>
-	<div class="-container fill-darker">
+	<div class="-container">
 
-		<!-- <transition-group
+		<transition-group
 			@enter="onMessageTransition"
-			> -->
+			>
 			<div
 				class="anim-fade-in no-animate-leave"
 				v-for="message of messages"
@@ -30,7 +30,7 @@
 					/>
 
 			</div>
-		<!-- </transition-group> -->
+		</transition-group>
 
 	</div>
 </app-scroll-scroller>
