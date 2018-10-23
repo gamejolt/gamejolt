@@ -52,6 +52,17 @@ export default class RouteSearchResults extends BaseRouteComponent {
 	readonly Search = Search;
 	readonly Screen = Screen;
 
+	get hasResults() {
+		if (!this.hasSearch || !this.searchPayload) {
+			return false;
+		}
+		return (
+			(this.feed && this.feed.hasItems) ||
+			this.searchPayload.users.length ||
+			this.searchPayload.games.length
+		);
+	}
+
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
