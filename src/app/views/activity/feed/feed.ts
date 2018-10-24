@@ -1,12 +1,16 @@
 import View from '!view!./feed.html';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { GameCollaborator } from 'game-jolt-frontend-lib/components/game/collaborator/collaborator.model';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import {
 	BaseRouteComponent,
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { numberSort } from 'game-jolt-frontend-lib/utils/array';
+import { fuzzysearch } from 'game-jolt-frontend-lib/utils/string';
 import { Component } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class';
 import { AppActivityFeed } from '../../../components/activity/feed/feed';
@@ -28,6 +32,9 @@ import { Store, store } from '../../../store';
 		AppGameListPlaceholder,
 		AppBroadcastCard,
 	},
+	directives: {
+		AppTrackEvent,
+	},
 })
 @RouteResolver({
 	cache: true,
@@ -37,6 +44,7 @@ import { Store, store } from '../../../store';
 		Promise.all([
 			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/activity')),
 			Api.sendRequest('/web/discover'),
+			Api.sendRequest('/web/dash'),
 		]),
 	resolveStore({ payload, fromCache }) {
 		const [feedPlayload] = payload;
@@ -55,15 +63,21 @@ import { Store, store } from '../../../store';
 	},
 })
 export default class RouteActivityFeed extends BaseRouteComponent {
-	@Mutation
-	setNotificationCount!: Store['setNotificationCount'];
+	@State
+	app!: Store['app'];
 
 	@State
 	unreadActivityCount!: Store['unreadActivityCount'];
 
+	@Mutation
+	setNotificationCount!: Store['setNotificationCount'];
+
 	feed: ActivityFeedView | null = null;
 	featuredGames: Game[] = [];
 	latestBroadcast: FiresidePost | null = null;
+	games: Game[] = [];
+	gameFilterQuery = '';
+	isShowingAllGames = false;
 
 	readonly Screen = Screen;
 
@@ -71,12 +85,44 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		return this.$gettext(`Your Activity Feed`);
 	}
 
+	get filteredGames() {
+		if (this.gameFilterQuery !== '') {
+			return this.games.filter(i => this.checkGameFilter(i));
+		} else if (this.isShowingAllGames) {
+			return this.games;
+		}
+		return this.games.slice(0, 7);
+	}
+
+	get isShowAllGamesVisible() {
+		return !this.isShowingAllGames && this.games.length > 7 && this.gameFilterQuery === '';
+	}
+
+	private checkGameFilter(game: Game) {
+		let text = '';
+		const search = this.gameFilterQuery.toLowerCase();
+
+		text = game.title.toLowerCase();
+		if (fuzzysearch(search, text)) {
+			return true;
+		}
+
+		if (this.app.user && game.developer.id !== this.app.user.id) {
+			text = game.developer.username.toLowerCase();
+			if (fuzzysearch(search, text)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {
-		const [feedPlayload, discoverPayload] = $payload;
+		const [feedPlayload, discoverPayload, dashPayload] = $payload;
 
 		this.feed = ActivityFeedService.routed(
 			this.feed,
@@ -98,6 +144,19 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		this.latestBroadcast = feedPlayload.latestBroadcast
 			? new FiresidePost(feedPlayload.latestBroadcast)
 			: null;
+
+		const items: (Game | GameCollaborator)[] = [];
+		this.games = items
+			.concat(Game.populate(dashPayload.games))
+			.concat(GameCollaborator.populate(dashPayload.collaborations))
+			.sort((a, b) =>
+				numberSort(
+					a instanceof Game ? a.posted_on : a.accepted_on,
+					b instanceof Game ? b.posted_on : b.accepted_on
+				)
+			)
+			.reverse()
+			.map(i => (i instanceof Game ? i : i.game!));
 	}
 
 	loadedNew() {
