@@ -94,6 +94,10 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		return this.games.length > 0;
 	}
 
+	get hasGameFilter() {
+		return this.games.length > 7;
+	}
+
 	get filteredGames() {
 		if (this.gameFilterQuery !== '') {
 			return this.games.filter(i => this.checkGameFilter(i));

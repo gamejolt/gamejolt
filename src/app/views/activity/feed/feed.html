@@ -40,16 +40,17 @@
 						<translate>Manage Games</translate>
 					</h4>
 
-					<div>
-						<input
-							type="search"
-							class="form-control"
-							:placeholder="$gettext(`Find a game`)"
-							v-model="gameFilterQuery"
-							>
-					</div>
-
-					<br>
+					<template v-if="hasGameFilter">
+						<div>
+							<input
+								type="search"
+								class="form-control"
+								:placeholder="$gettext(`Find a game`)"
+								v-model="gameFilterQuery"
+								>
+						</div>
+						<br>
+					</template>
 
 					<nav class="platform-list">
 						<ul>
