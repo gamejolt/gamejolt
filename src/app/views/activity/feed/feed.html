@@ -28,56 +28,61 @@
 
 			</div>
 
+			<!--
+				We need this space to be taken up even if they don't have games.
+			-->
 			<div
 				v-if="!Screen.isMobile"
 				class="col-md-2 col-lg-3 pull-left"
 				>
-				<h4 class="section-header">
-					<translate>Manage Games</translate>
-				</h4>
+				<template v-if="hasGamesSection">
+					<h4 class="section-header">
+						<translate>Manage Games</translate>
+					</h4>
 
-				<div>
-					<input
-						type="search"
-						class="form-control"
-						:placeholder="$gettext(`Find a game`)"
-						v-model="gameFilterQuery"
-						>
-				</div>
-
-				<br>
-
-				<nav class="platform-list">
-					<ul>
-						<li
-							v-for="game of filteredGames"
-							:key="game.id"
+					<div>
+						<input
+							type="search"
+							class="form-control"
+							:placeholder="$gettext(`Find a game`)"
+							v-model="gameFilterQuery"
 							>
-							<router-link
-								:to="{
-									name: 'dash.games.manage.game.overview',
-									params: { id: game.id },
-								}"
-								v-app-track-event="`activity:quick-game`"
-								>
-								<template v-if="game.developer.id !== app.user.id">
-									<small>@{{ game.developer.username}}</small>
-									/
-								</template>
-								{{ game.title }}
-							</router-link>
-						</li>
-					</ul>
-				</nav>
+					</div>
 
-				<div v-if="isShowAllGamesVisible">
-					<a
-						class="link-muted"
-						@click="isShowingAllGames = !isShowingAllGames"
-						>
-						<translate>Show all</translate>
-					</a>
-				</div>
+					<br>
+
+					<nav class="platform-list">
+						<ul>
+							<li
+								v-for="game of filteredGames"
+								:key="game.id"
+								>
+								<router-link
+									:to="{
+										name: 'dash.games.manage.game.overview',
+										params: { id: game.id },
+									}"
+									v-app-track-event="`activity:quick-game`"
+									>
+									<template v-if="game.developer.id !== app.user.id">
+										<small>@{{ game.developer.username}}</small>
+										/
+									</template>
+									{{ game.title }}
+								</router-link>
+							</li>
+						</ul>
+					</nav>
+
+					<div v-if="isShowAllGamesVisible">
+						<a
+							class="link-muted"
+							@click="isShowingAllGames = !isShowingAllGames"
+							>
+							<translate>Show all</translate>
+						</a>
+					</div>
+				</template>
 			</div>
 
 			<div
