@@ -4,16 +4,18 @@
 $game-list-item-thumb-width = 145px
 
 .game-list-item
-	clearfix()
+	display: flex
 	margin-bottom: $line-height-computed
 
 .-thumb
-	float: left
-	width: $game-list-item-thumb-width
-	height: $game-list-item-thumb-width * 0.5625
+	display: block
+	flex: none
+	width: 40%
+	max-width: $game-list-item-thumb-width
+	margin-right: 10px
 
 .-meta
-	margin-left: $game-list-item-thumb-width + 10px
+	flex: auto
 
 .-spacing
 	display: block
