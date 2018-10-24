@@ -64,8 +64,8 @@
 									}"
 									v-app-track-event="`activity:quick-game`"
 									>
-									<template v-if="game.developer.id !== app.user.id">
-										<small>@{{ game.developer.username}}</small>
+									<template v-if="game.ownerName">
+										<small>@{{game.ownerName}}</small>
 										/
 									</template>
 									{{ game.title }}
