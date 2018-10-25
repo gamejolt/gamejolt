@@ -5,7 +5,6 @@ import { routeDashAnalytics } from './analytics/analytics.route';
 import { routeDashGames } from './games/games.route';
 import { routeDashLinking } from './linking/linking.route';
 import { routeDashMain } from './main/main.route';
-import { routeDashWithdrawFunds } from './withdraw-funds/withdraw-funds.route';
 
 export const routeDash: RouteConfig = {
 	name: 'dashboard',
@@ -18,7 +17,6 @@ export const routeDash: RouteConfig = {
 		routeDashAccountMobileNav,
 		routeDashGames,
 		routeDashAnalytics,
-		routeDashWithdrawFunds,
 		routeDashLinking,
 	],
 };

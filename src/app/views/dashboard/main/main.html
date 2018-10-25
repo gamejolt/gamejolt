@@ -12,38 +12,6 @@
 
 		<app-user-avatar slot="spotlight" :user="app.user" />
 
-		<template slot="nav">
-			<nav class="platform-list inline">
-				<ul>
-					<li>
-						<router-link
-							:to="{ name: 'dash.main.overview' }"
-							:class="{ active: $route.name === 'dash.main.overview' }"
-							>
-							<translate>Overview</translate>
-						</router-link>
-					</li>
-					<li>
-						<router-link
-							:to="{ name: 'dash.main.purchases.list' }"
-							:class="{ active: $route.name.indexOf( 'dash.main.purchases' ) === 0 }"
-							>
-							<translate>Purchases</translate>
-						</router-link>
-					</li>
-					<li>
-						<router-link
-							:to="{ name: 'dash.main.site' }"
-							:class="{ active: $route.name.indexOf( 'dash.main.site' ) === 0 }"
-							v-app-tooltip.bottom="$gettext( `Game Jolt Sites are customizable external sites for your portfolio and games!` )"
-							>
-							<translate>Site</translate>
-						</router-link>
-					</li>
-				</ul>
-			</nav>
-		</template>
-
 		<template slot="controls">
 			<app-button
 				block
