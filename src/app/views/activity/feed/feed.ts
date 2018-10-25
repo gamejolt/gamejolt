@@ -1,4 +1,4 @@
-import View from '!view!./feed.html';
+import View from '!view!./feed.html?style=./feed.styl';
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';

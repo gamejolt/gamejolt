@@ -52,7 +52,7 @@
 						<br>
 					</template>
 
-					<nav class="platform-list">
+					<nav class="-game-list platform-list">
 						<ul>
 							<li
 								v-for="game of filteredGames"
@@ -63,6 +63,7 @@
 										name: 'dash.games.manage.game.overview',
 										params: { id: game.id },
 									}"
+									:title="(game.ownerName ? `@${game.ownerName}/` : '') + game.title"
 									v-app-track-event="`activity:quick-game`"
 									>
 									<template v-if="game.ownerName">
