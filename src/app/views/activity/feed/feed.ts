@@ -21,12 +21,12 @@ import { AppGameList } from '../../../components/game/list/list';
 import { AppGameListPlaceholder } from '../../../components/game/list/placeholder/placeholder';
 import { Store, store } from '../../../store';
 
-type DashGame = {
-	id: number;
-	title: string;
-	ownerName: string;
-	createdOn: number;
-};
+class DashGame {
+	id!: number;
+	title!: string;
+	ownerName!: string;
+	createdOn!: number;
+}
 
 @View
 @Component({
@@ -47,13 +47,8 @@ type DashGame = {
 	lazy: true,
 	deps: { query: ['feed_last_id'] },
 	resolver: ({ route }) =>
-		Promise.all([
-			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/activity')),
-			Api.sendRequest('/web/discover'),
-		]),
+		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/activity')),
 	resolveStore({ payload, fromCache }) {
-		const [feedPlayload] = payload;
-
 		// Don't set if from cache, otherwise it could reset to the cached count
 		// when switching between tabs.
 		if (!fromCache) {
@@ -62,7 +57,7 @@ type DashGame = {
 			store.commit('setNotificationCount', { type: 'activity', count: 0 });
 			store.commit('setNotificationCount', {
 				type: 'notifications',
-				count: feedPlayload.notificationsUnreadCount,
+				count: payload.notificationsUnreadCount,
 			});
 		}
 	},
@@ -135,30 +130,28 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {
-		const [feedPlayload, discoverPayload] = $payload;
-
 		this.feed = ActivityFeedService.routed(
 			this.feed,
 			{
 				type: 'EventItem',
 				url: `/web/dash/activity/more/activity`,
-				notificationWatermark: feedPlayload.unreadWatermark,
+				notificationWatermark: $payload.unreadWatermark,
 				shouldShowGameInfo: true,
 			},
-			feedPlayload.items,
+			$payload.items,
 			fromCache
 		);
 
-		this.featuredGames = Game.populate(discoverPayload.games);
-		if (discoverPayload.featuredItem) {
-			this.featuredGames.unshift(new Game(discoverPayload.featuredItem.game));
+		this.featuredGames = Game.populate($payload.games);
+		if ($payload.featuredItem) {
+			this.featuredGames.unshift(new Game($payload.featuredItem.game));
 		}
 
-		this.latestBroadcast = feedPlayload.latestBroadcast
-			? new FiresidePost(feedPlayload.latestBroadcast)
+		this.latestBroadcast = $payload.latestBroadcast
+			? new FiresidePost($payload.latestBroadcast)
 			: null;
 
-		this.games = feedPlayload.games;
+		this.games = $payload.dashGames;
 		this.games = this.games.sort((a, b) => numberSort(a.createdOn, b.createdOn)).reverse();
 	}
 
