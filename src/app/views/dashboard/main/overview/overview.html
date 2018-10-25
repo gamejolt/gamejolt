@@ -132,7 +132,7 @@
 					<div>
 						<app-button
 							block
-							:to="{ name: 'dash.withdraw-funds' }"
+							:to="{ name: 'dash.account.withdraw-funds' }"
 							>
 							<translate>dash.overview.revenue_withdraw_button</translate>
 						</app-button>
@@ -162,7 +162,7 @@
 					<div>
 						<app-button
 							primary
-							:to="{ name: 'dash.main.site' }"
+							:to="{ name: 'dash.account.site' }"
 							v-app-track-event="`dash:overview:quick-profile-site`"
 							>
 							<translate>Edit Portfolio Site</translate>
@@ -412,6 +412,13 @@
 						>
 						<app-jolticon icon="world" />
 						<translate>Saved Addresses</translate>
+					</router-link>
+					<router-link
+						class="list-group-item has-icon"
+						:to="{ name: 'dash.account.purchases.list' }"
+						>
+						<app-jolticon icon="game" />
+						<translate>Purchases</translate>
 					</router-link>
 					<router-link
 						class="list-group-item has-icon"

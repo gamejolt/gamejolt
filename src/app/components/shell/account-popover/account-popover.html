@@ -96,13 +96,23 @@
 
 			<app-shell-user-box></app-shell-user-box>
 
-			<template v-if="app.user.is_developer">
+			<!--
+				We don't know if they have revenue until we do the call.
+			-->
+			<template v-if="walletAmount === false || walletAmount > 0">
 				<div class="account-popover-separator"></div>
 
 				<div class="list-group-dark">
-					<router-link
+					<div
+						v-if="walletAmount === false"
 						class="list-group-item small"
-						:to="{ name: 'dash.withdraw-funds' }"
+						>
+						<translate>Loading...</translate>
+					</div>
+					<router-link
+						v-else
+						class="list-group-item small"
+						:to="{ name: 'dash.account.withdraw-funds' }"
 						>
 						<app-jolticon
 							class="pull-right"
@@ -112,10 +122,7 @@
 
 						<translate>Wallet Balance</translate>
 						&mdash;
-						<translate v-if="walletAmount === false">
-							Loading...
-						</translate>
-						<span class="account-popover-currency" v-if="walletAmount !== false">
+						<span class="account-popover-currency">
 							{{ walletAmount | currency }}
 						</span>
 					</router-link>
