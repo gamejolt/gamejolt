@@ -21,12 +21,12 @@ import { AppGameList } from '../../../components/game/list/list';
 import { AppGameListPlaceholder } from '../../../components/game/list/placeholder/placeholder';
 import { Store, store } from '../../../store';
 
-type DashGame = {
-	id: number;
-	title: string;
-	ownerName: string;
-	createdOn: number;
-};
+class DashGame {
+	id!: number;
+	title!: string;
+	ownerName!: string;
+	createdOn!: number;
+}
 
 @View
 @Component({
