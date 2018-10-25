@@ -22,10 +22,12 @@ import { AppGameListPlaceholder } from '../../../components/game/list/placeholde
 import { Store, store } from '../../../store';
 
 class DashGame {
-	id!: number;
-	title!: string;
-	ownerName!: string;
-	createdOn!: number;
+	constructor(
+		public id: number,
+		public title: string,
+		public ownerName: string,
+		public createdOn: number
+	) {}
 }
 
 @View
@@ -151,8 +153,10 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			? new FiresidePost($payload.latestBroadcast)
 			: null;
 
-		this.games = $payload.dashGames;
-		this.games = this.games.sort((a, b) => numberSort(a.createdOn, b.createdOn)).reverse();
+		this.games = ($payload.ownerGames as DashGame[])
+			.map(i => new DashGame(i.id, i.title, i.ownerName, i.createdOn))
+			.sort((a, b) => numberSort(a.createdOn, b.createdOn))
+			.reverse();
 	}
 
 	loadedNew() {
