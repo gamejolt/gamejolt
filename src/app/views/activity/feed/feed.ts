@@ -143,7 +143,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		);
 
 		this.featuredGames = Game.populate($payload.games);
-		if ($payload.featuredItem) {
+		if ($payload.featuredItem && $payload.featuredItem.game) {
 			this.featuredGames.unshift(new Game($payload.featuredItem.game));
 		}
 
