@@ -95,16 +95,22 @@
 			</div>
 		</app-expand>
 
-		<template v-if="revenuePendingWithdraw > 0" class="alert">
-			<span v-translate="{ amount: currency( revenuePendingWithdraw ) }">
+		<div
+			v-if="revenuePendingWithdraw > 0"
+			class="alert alert-info"
+			>
+			<p v-translate="{ amount: currency( revenuePendingWithdraw ) }">
 				You have pending withdrawals amounting to <b>%{ amount }</b>.
-			</span>
-		</template>
+			</p>
+		</div>
 
-		<div class="alert" v-if="revenuePending">
-			<span v-translate="{ amount: currency( revenuePending ) }">
+		<div
+			v-if="revenuePending"
+			class="alert alert-info"
+			>
+			<p v-translate="{ amount: currency( revenuePending ) }">
 				You currently have <b>%{ amount }</b> pending withdrawal.
-			</span>
+			</p>
 		</div>
 
 
