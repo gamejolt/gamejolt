@@ -100,7 +100,6 @@ export class FormPost extends BaseForm<FormPostModel>
 		form: AppForm;
 	};
 
-	static readonly LEAD_URL_REGEX = /(https?:\/\/([\/\.\?\-\+a-z0-9=#%_&;,~@])+)/gi;
 	readonly YOUTUBE_URL_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_\-]{11})(&.+)*$/i;
 	readonly SKETCHFAB_URL_REGEX = /^(https:\/\/)?(www.)?sketchfab.com\/models\/[0-9a-f]{32}\/?$/i;
 	readonly SKETCHFAB_FIELD_REGEX = /^((https:\/\/)?(www.)?(sketchfab.com\/models\/[0-9a-f]{32}\/?))|([0-9a-f]{32})$/i;
@@ -253,15 +252,75 @@ export class FormPost extends BaseForm<FormPostModel>
 		return this.wasPublished && this.publishToPlatforms !== null;
 	}
 
+	get urlsInLead() {
+		const lead = this.formModel.lead;
+		if (!lead) {
+			return [];
+		}
+
+		const urlRegex = new RegExp(
+			// Separate by no-word or start of string.
+			'(^|\\W)' +
+				// Optional http/s protocol.
+				'(https?:\\/\\/)?' +
+				// Subdomain and main domain.
+				'([a-z0-9][a-z0-9-]{0,61}[a-z0-9]\\.){1,}' +
+				// Top level domain.
+				'[a-z0-9][a-z0-9-]{0,61}[a-z0-9]' +
+				// Port number.
+				'(:(6553[0-5]|655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[0-9]{1,4}))?' +
+				// Path.
+				"(\\/([a-z0-9-\\._~!$&'\\(\\)\\*\\+,;=:@%]{1,})?)*" +
+				// Query.
+				"(\\?[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]{1,}(=[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]*)?(&[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]{1,}(=[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]*)?)*)?" +
+				// Fragment.
+				"(#[a-z0-9-\\._~:@\\/\\?!$&'\\(\\)\\*\\+,;=%]{1,})?" +
+				// Lookahead to end url.
+				'(?=\\W|$)',
+			'gi'
+		);
+
+		const matches = lead.match(urlRegex);
+		const urls = [];
+		if (matches && matches.length) {
+			for (const match of matches) {
+				let matchStr = match;
+				// Url has to start with an alphanumeric char.
+				while (matchStr && matchStr.match(/^[^a-z0-9].+/i)) {
+					matchStr = matchStr.substr(1);
+				}
+
+				// Trim common delimiters from end of the url.
+				// If the url ends with ) and has ( in it, do not remove it from the end.
+				const openingParenthesesCount = matchStr.split('(').length - 1;
+				const closingParenthesesCount = matchStr.split(')').length - 1;
+				let removeParenthesesCount = closingParenthesesCount - openingParenthesesCount;
+				while (
+					matchStr &&
+					matchStr.match(/.+[\)\?\]}'"\.:]$/) &&
+					(!matchStr.endsWith(')') || removeParenthesesCount > 0)
+				) {
+					if (matchStr.endsWith(')')) {
+						removeParenthesesCount--;
+					}
+					matchStr = matchStr.substr(0, matchStr.length - 1);
+				}
+
+				urls.push(matchStr);
+			}
+		}
+		return urls;
+	}
+
 	get computedLeadLength() {
-		const regex = FormPost.LEAD_URL_REGEX;
 		let lead = this.formModel.lead;
 		if (!lead) {
 			return 0;
 		}
 
-		if (lead.match(regex)) {
-			lead = lead.replace(regex, ' '.repeat(this.leadUrlLength));
+		const urls = this.urlsInLead;
+		for (const url of urls) {
+			lead = lead.replace(url, ' '.repeat(this.leadUrlLength));
 		}
 
 		// js is utf18, we need to calc the byte length
