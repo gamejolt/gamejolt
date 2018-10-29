@@ -144,6 +144,7 @@
 						</template>
 					</p>
 
+					<!-- Social links -->
 					<p v-if="hasLinksSection">
 						<template v-if="linkedAccounts.length">
 							<div v-if="twitchAccount">
@@ -211,6 +212,7 @@
 						</template>
 					</p>
 
+					<!-- Latest Games -->
 					<template v-if="hasGamesSection">
 						<br>
 
@@ -244,6 +246,29 @@
 							/>
 					</template>
 
+					<!-- Shouts -->
+					<br>
+					<div class="pull-right">
+						<app-button trans @click="showComments()">
+							<translate>View All</translate>
+							<small>({{ commentsCount | number }})</small>
+						</app-button>
+					</div>
+
+					<h4 class="section-header">
+						<translate>Shouts</translate>
+					</h4>
+
+					<app-comment-add-button
+						resource="User"
+						:resource-id="user.id"
+						:placeholder="addCommentPlaceholder"
+						display-mode="shouts"
+						/>
+
+					<app-comment-overview
+						:comments="overviewComments"
+						/>
 				</div>
 
 				<div :class="leftColClass">

@@ -1,4 +1,5 @@
 import View from '!view!./profile.html?style=./profile.styl';
+import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
 import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-store';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
@@ -131,7 +132,16 @@ export default class RouteProfile extends BaseRouteComponent {
 		return this.user!.id + (this.shouldShowFullCover ? '-full' : '-collapsed');
 	}
 
+	get commentsCount() {
+		if (this.user && this.user.comment_count) {
+			return this.user.comment_count;
+		}
+		return 0;
+	}
+
 	routeCreated() {
+		CommentModal.checkPermalink(this.$router);
+
 		// This isn't needed by SSR or anything, so it's fine to call it here.
 		this.bootstrapUser(this.$route.params.username);
 
@@ -143,6 +153,16 @@ export default class RouteProfile extends BaseRouteComponent {
 	routeDestroyed() {
 		this.setPageTheme(null);
 		Ads.releasePageSettings();
+	}
+
+	showComments() {
+		if (this.user) {
+			CommentModal.show({
+				resource: 'User',
+				resourceId: this.user.id,
+				displayMode: 'shouts',
+			});
+		}
 	}
 
 	report() {

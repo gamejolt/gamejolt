@@ -20,6 +20,6 @@ export class AppCommentOverview extends Vue {
 	comments!: Comment[];
 
 	open(comment: Comment) {
-		CommentModal.show({ comment });
+		CommentModal.show({ comment, displayMode: 'comments' });
 	}
 }

@@ -1,5 +1,7 @@
 import View from '!view!./overview.html?style=./overview.styl';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { AppCommentAddButton } from 'game-jolt-frontend-lib/components/comment/add-button/add-button';
+import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
 import { AppExpand } from 'game-jolt-frontend-lib/components/expand/expand';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
@@ -17,10 +19,12 @@ import { YoutubeChannel } from 'game-jolt-frontend-lib/components/youtube/channe
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { Comment } from '../../../../lib/gj-lib-client/components/comment/comment-model';
 import {
 	LinkedAccount,
 	Provider,
 } from '../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
+import { AppCommentOverview } from '../../../components/comment/overview/overview';
 import { Store } from '../../../store/index';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 import { AppGameList } from './../../../components/game/list/list';
@@ -34,6 +38,8 @@ import { AppGameListPlaceholder } from './../../../components/game/list/placehol
 		AppFadeCollapse,
 		AppGameList,
 		AppGameListPlaceholder,
+		AppCommentAddButton,
+		AppCommentOverview,
 	},
 	directives: {
 		AppTooltip,
@@ -82,6 +88,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	showFullDescription = false;
 	canToggleDescription = false;
 	games: Game[] = [];
+	overviewComments: Comment[] = [];
 	developerGames: Game[] = [];
 	youtubeChannels: YoutubeChannel[] = [];
 	linkedAccounts: LinkedAccount[] = [];
@@ -165,6 +172,17 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return null;
 	}
 
+	get addCommentPlaceholder() {
+		return this.$gettext('Shout') + ' @' + this.user!.username + '!';
+	}
+
+	get commentsCount() {
+		if (this.user && this.user.comment_count) {
+			return this.user.comment_count;
+		}
+		return 0;
+	}
+
 	getLinkedAccount(provider: Provider) {
 		if (
 			this.user &&
@@ -190,5 +208,16 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		this.youtubeChannels = YoutubeChannel.populate($payload.youtubeChannels);
 		this.games = Game.populate($payload.developerGamesTeaser);
 		this.linkedAccounts = LinkedAccount.populate($payload.linkedAccounts);
+		this.overviewComments = Comment.populate($payload.comments);
+	}
+
+	showComments() {
+		if (this.user) {
+			CommentModal.show({
+				resource: 'User',
+				resourceId: this.user.id,
+				displayMode: 'shouts',
+			});
+		}
 	}
 }

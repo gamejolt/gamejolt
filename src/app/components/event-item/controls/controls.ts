@@ -139,7 +139,11 @@ export class AppEventItemControls extends Vue {
 
 	openComments() {
 		if (this.post) {
-			CommentModal.show({ resource: 'Fireside_Post', resourceId: this.post.id });
+			CommentModal.show({
+				resource: 'Fireside_Post',
+				resourceId: this.post.id,
+				displayMode: 'comments',
+			});
 		}
 
 		this.emitExpand();
