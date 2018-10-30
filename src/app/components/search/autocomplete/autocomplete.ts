@@ -1,5 +1,4 @@
 import View from '!view!./autocomplete.html?style=./autocomplete.styl';
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import 'rxjs/add/operator/debounceTime';
 import { Subject } from 'rxjs/Subject';
 import Vue from 'vue';
@@ -56,7 +55,6 @@ export class AppSearchAutocomplete extends Vue {
 	selected = 0;
 	games: Game[] = [];
 	users: User[] = [];
-	posts: FiresidePost[] = [];
 	libraryGames: _LocalDbGameMod.LocalDbGame[] = [];
 	items: any[] = [];
 
@@ -211,7 +209,6 @@ export class AppSearchAutocomplete extends Vue {
 		if (this.search!.query === query) {
 			this.games = payload.games;
 			this.users = payload.users;
-			this.posts = payload.posts;
 			this.libraryGames = payload.libraryGames;
 
 			// All items so we can calculate global selection indexes easily.
@@ -219,8 +216,7 @@ export class AppSearchAutocomplete extends Vue {
 			this.items = ([] as any[])
 				.concat(this.libraryGames)
 				.concat(this.games)
-				.concat(this.users)
-				.concat(this.posts);
+				.concat(this.users);
 		}
 	}
 
@@ -239,8 +235,6 @@ export class AppSearchAutocomplete extends Vue {
 					this.selectGame(item);
 				} else if (item instanceof User) {
 					this.selectUser(item);
-				} else if (item instanceof FiresidePost) {
-					this.selectPost(item);
 				} else if (LocalDbGameMod) {
 					if (item instanceof LocalDbGameMod.LocalDbGame) {
 						this.selectLibraryGame(item);
@@ -280,11 +274,6 @@ export class AppSearchAutocomplete extends Vue {
 		});
 
 		Analytics.trackEvent('search', 'autocomplete', 'go-user');
-	}
-
-	selectPost(post: FiresidePost) {
-		this.$router.push(post.routeLocation);
-		Analytics.trackEvent('search', 'autocomplete', 'go-post');
 	}
 
 	selectLibraryGame(localGame: _LocalDbGameMod.LocalDbGame) {

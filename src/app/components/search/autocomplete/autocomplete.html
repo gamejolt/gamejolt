@@ -100,26 +100,6 @@
 					</router-link>
 				</div>
 			</template>
-
-			<!-- Posts -->
-			<template v-if="posts.length">
-				<div class="popper-heading">
-					<translate>Posts</translate>
-				</div>
-				<div class="list-group list-group-dark thin">
-					<router-link
-						class="list-group-item"
-						v-for="post of posts"
-						:key="post.id"
-						:to="post.routeLocation"
-						:class="{ active: items[ selected - 1 ] === post }"
-						v-app-track-event="`search:autocomplete:go-post`"
-						>
-						<img :src="post.user.img_avatar" class="search-user-avatar" alt="">
-						{{ post.lead_snippet }}
-					</router-link>
-				</div>
-			</template>
 		</template>
 
 		<!-- Commands -->
