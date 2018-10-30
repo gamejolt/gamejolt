@@ -1,6 +1,7 @@
 import View from '!view!./post.html?style=./post.styl';
 import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppFormAutosize } from 'game-jolt-frontend-lib/components/form-vue/autosize.directive';
 import { AppFormControlCheckbox } from 'game-jolt-frontend-lib/components/form-vue/control/checkbox/checkbox';
@@ -125,6 +126,7 @@ export class FormPost extends BaseForm<FormPostModel>
 	leadUrlLength = 30;
 	leadLengthLimit = 255;
 	leadTotalLengthLimit = 300;
+	isUploadingPastedImage = false;
 
 	readonly GameVideo = GameVideo;
 	readonly Screen = Screen;
@@ -682,5 +684,64 @@ export class FormPost extends BaseForm<FormPostModel>
 				tz.label = `(UTC${offset}) ${tz.i}`;
 			}
 		}
+	}
+
+	async onPaste(e: ClipboardEvent) {
+		// Do not react to paste events when videos/sketchfab is selected.
+		if (!!this.attachmentType && this.attachmentType !== FiresidePost.TYPE_MEDIA) {
+			return;
+		}
+		if (this.isUploadingPastedImage) {
+			return;
+		}
+
+		// Validate clipboard data
+		if (!e.clipboardData) {
+			return;
+		}
+
+		const items = e.clipboardData.items;
+		if (!items) {
+			return;
+		}
+
+		const files = [];
+
+		for (let i = 0; i < items.length; i++) {
+			const item = items[i];
+			if (item.type.includes('image')) {
+				const blob = item.getAsFile();
+				if (blob) {
+					files.push(blob);
+				}
+			}
+		}
+
+		if (files.length === 0) {
+			return;
+		}
+
+		// Show image tray.
+		if (!this.enabledImages) {
+			this.enableImages();
+		}
+
+		// Upload
+		this.isUploadingPastedImage = true;
+
+		const $payload = await Api.sendRequest(
+			`/web/posts/manage/add-media/${this.formModel.id}`,
+			{},
+			{
+				file: files,
+				progress: e => this.setField('_progress', e),
+			}
+		);
+
+		this.isUploadingPastedImage = false;
+
+		// Apply returned media items.
+		const mediaItems = MediaItem.populate($payload.mediaItems);
+		this.onMediaUploaded(mediaItems);
 	}
 }
