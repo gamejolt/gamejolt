@@ -19,6 +19,7 @@ import { ActivityFeedView } from '../../../components/activity/feed/view';
 import { AppBroadcastCard } from '../../../components/broadcast-card/broadcast-card';
 import { AppGameList } from '../../../components/game/list/list';
 import { AppGameListPlaceholder } from '../../../components/game/list/placeholder/placeholder';
+import { AppPostAddButton } from '../../../components/post/add-button/add-button';
 import { Store, store } from '../../../store';
 
 class DashGame {
@@ -39,6 +40,7 @@ class DashGame {
 		AppGameList,
 		AppGameListPlaceholder,
 		AppBroadcastCard,
+		AppPostAddButton,
 	},
 	directives: {
 		AppTrackEvent,
@@ -161,5 +163,14 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 
 	loadedNew() {
 		this.setNotificationCount({ type: 'activity', count: 0 });
+	}
+
+	onPostAdded() {
+		if (this.app.user) {
+			this.$router.push({
+				name: 'profile.overview',
+				params: { username: this.app.user!.username },
+			});
+		}
 	}
 }
