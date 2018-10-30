@@ -251,7 +251,7 @@
 					<div class="pull-right">
 						<app-button trans @click="showComments()">
 							<translate>View All</translate>
-							<small>({{ commentsCount | number }})</small>
+							<small v-if="commentsCount">({{ commentsCount | number }})</small>
 						</app-button>
 					</div>
 
