@@ -3,9 +3,10 @@
 	<span v-app-auth-required>
 		<app-button
 			class="-like-button"
-			icon="heart"
+			icon="thumbs-up"
 			circle
-			primary
+			trans
+			:primary="hasLiked"
 			:solid="hasLiked"
 			:disabled="isProcessing"
 			@click="like()"

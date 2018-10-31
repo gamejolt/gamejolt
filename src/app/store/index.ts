@@ -32,6 +32,7 @@ import {
 	Mutations as AppMutations,
 } from '../../lib/gj-lib-client/vue/services/app/app-store';
 import { Settings } from '../../_common/settings/settings.service';
+import { ActivityFeedState } from '../components/activity/feed/state';
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
 import { ChatClient } from '../components/chat/client';
 import { GridClient } from '../components/grid/client.service';
@@ -41,23 +42,28 @@ import { BannerActions, BannerMutations, BannerStore } from './banner';
 import * as _ClientLibraryMod from './client-library';
 import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
 
+// Re-export our sub-modules.
+export { BannerModule, BannerStore } from './banner';
+
 export type Actions = AppActions &
 	ThemeActions &
 	LibraryActions &
 	BannerActions &
 	CommentActions &
 	_ClientLibraryMod.Actions & {
-		bootstrap: undefined;
-		logout: undefined;
-		clear: undefined;
-		loadChat: undefined;
-		clearChat: undefined;
-		loadGrid: undefined;
-		clearGrid: undefined;
-		toggleLeftPane: undefined;
-		toggleRightPane: undefined;
-		clearPanes: undefined;
-		_checkBackdrop: undefined;
+		bootstrap: void;
+		logout: void;
+		clear: void;
+		loadChat: void;
+		clearChat: void;
+		loadGrid: void;
+		clearGrid: void;
+		loadNotificationState: void;
+		clearNotificationState: void;
+		markNotificationsAsRead: void;
+		toggleLeftPane: void;
+		toggleRightPane: void;
+		clearPanes: void;
 	};
 
 export type Mutations = AppMutations &
@@ -70,16 +76,6 @@ export type Mutations = AppMutations &
 		incrementNotificationCount: { type: UnreadItemType; count: number };
 		setFriendRequestCount: number;
 		changeFriendRequestCount: number;
-		_setBootstrapped: undefined;
-		_setLibraryBootstrapped: undefined;
-		_clear: undefined;
-		_setChat: ChatClient | null;
-		_setGrid: GridClient | null;
-		_toggleLeftPane: undefined;
-		_toggleRightPane: undefined;
-		_clearPanes: undefined;
-		_addBackdrop: undefined;
-		_removeBackdrop: undefined;
 	};
 
 let bootstrapResolver: Function | null = null;
@@ -126,6 +122,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	unreadActivityCount = 0; // unread items in the activity feed
 	unreadNotificationsCount = 0; // unread items in the notification feed
 	friendRequestCount = 0;
+	notificationState: ActivityFeedState | null = null;
 
 	isLeftPaneSticky = Settings.get('sidebar') as boolean;
 	isLeftPaneOverlayed = false;
@@ -149,6 +146,12 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	get hasSidebar() {
 		return Screen.isXs || this.app.user || GJ_IS_SSR;
+	}
+
+	get hasMinibar() {
+		return (
+			this.app.user && (Screen.isSm || Screen.isMd || (Screen.isLg && !this.isLeftPaneSticky))
+		);
 	}
 
 	get notificationCount() {
@@ -207,16 +210,12 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async clear() {
-		this._clear();
+		tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
 		this.commit('library/clear');
 	}
 
 	@VuexAction
 	async loadChat() {
-		if (GJ_IS_SSR) {
-			return;
-		}
-
 		const ChatClient_ = await ChatClientLazy();
 		this._setChat(new ChatClient_());
 	}
@@ -233,10 +232,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async loadGrid() {
-		if (GJ_IS_SSR) {
-			return;
-		}
-
 		const GridClient_ = await GridClientLazy();
 		this._setGrid(new GridClient_());
 	}
@@ -248,6 +243,32 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		}
 
 		this._setGrid(null);
+	}
+
+	@VuexAction
+	async loadNotificationState() {
+		const state = new ActivityFeedState({
+			type: 'Notification',
+			url: `/web/dash/activity/more/notifications`,
+		});
+
+		this._setNotificationState(state);
+	}
+
+	@VuexAction
+	async clearNotificationState() {
+		this._setNotificationState(null);
+	}
+
+	@VuexAction
+	async markNotificationsAsRead() {
+		if (!this.notificationState) {
+			return;
+		}
+
+		// Reset the watermark first so that it happens immediately.
+		this._resetNotificationWatermark();
+		await Api.sendRequest('/web/dash/activity/mark-all-read', {});
 	}
 
 	@VuexAction
@@ -274,7 +295,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexAction
-	async _checkBackdrop() {
+	private async _checkBackdrop() {
 		// Ensure we have a backdrop if anything is overlayed.
 		// Otherwise ensure the backdrop is gone.
 		if (this.isRightPaneOverlayed || this.shouldShowLeftPaneBackdrop) {
@@ -321,7 +342,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	_setBootstrapped() {
+	private _setBootstrapped() {
 		this.isBootstrapped = true;
 		if (bootstrapResolver) {
 			bootstrapResolver();
@@ -329,27 +350,36 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	_setLibraryBootstrapped() {
+	private _setLibraryBootstrapped() {
 		this.isLibraryBootstrapped = true;
 	}
 
 	@VuexMutation
-	_clear() {
-		tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
-	}
-
-	@VuexMutation
-	_setChat(chat: Mutations['_setChat']) {
+	private _setChat(chat: ChatClient | null) {
 		this.chat = chat;
 	}
 
 	@VuexMutation
-	_setGrid(grid: Mutations['_setGrid']) {
+	private _setGrid(grid: GridClient | null) {
 		this.grid = grid;
 	}
 
 	@VuexMutation
-	_toggleLeftPane() {
+	private _setNotificationState(state: ActivityFeedState | null) {
+		this.notificationState = state;
+	}
+
+	@VuexMutation
+	private _resetNotificationWatermark() {
+		// Mark all loaded notifications as read through the feed watermark.
+		// It's better than having to reload from the backend.
+		if (this.notificationState) {
+			this.notificationState.notificationWatermark = Date.now();
+		}
+	}
+
+	@VuexMutation
+	private _toggleLeftPane() {
 		if (Screen.isLg) {
 			this.isLeftPaneSticky = !this.isLeftPaneSticky;
 		} else {
@@ -360,19 +390,19 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	_toggleRightPane() {
+	private _toggleRightPane() {
 		this.isRightPaneOverlayed = !this.isRightPaneOverlayed;
 		this.isLeftPaneOverlayed = false;
 	}
 
 	@VuexMutation
-	_clearPanes() {
+	private _clearPanes() {
 		this.isRightPaneOverlayed = false;
 		this.isLeftPaneOverlayed = false;
 	}
 
 	@VuexMutation
-	_addBackdrop() {
+	private _addBackdrop() {
 		if (backdrop) {
 			return;
 		}
@@ -381,7 +411,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	_removeBackdrop() {
+	private _removeBackdrop() {
 		if (!backdrop) {
 			return;
 		}
@@ -409,8 +439,11 @@ store.watch(
 
 		if (isLoggedIn) {
 			store.dispatch('bootstrap');
-			store.dispatch('loadChat');
-			store.dispatch('loadGrid');
+			if (!GJ_IS_SSR) {
+				store.dispatch('loadChat');
+				store.dispatch('loadGrid');
+				store.dispatch('loadNotificationState');
+			}
 
 			if (GJ_IS_CLIENT) {
 				store.dispatch('clientLibrary/bootstrap');
@@ -419,6 +452,7 @@ store.watch(
 			store.dispatch('clear');
 			store.dispatch('clearChat');
 			store.dispatch('clearGrid');
+			store.dispatch('clearNotificationState');
 		}
 	}
 );

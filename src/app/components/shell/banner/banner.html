@@ -1,5 +1,6 @@
 <div
-	v-if="shouldShowBanner"
+	v-if="hasBanner"
+	id="shell-banner"
 	class="-banner"
 	:class="{
 		'-clickable': currentBanner.canClick,

@@ -1,13 +1,12 @@
+import View from '!view!./user-list.html';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import View from '!view!./user-list.html';
-
+import { AppScrollInviewParent } from '../../../../lib/gj-lib-client/components/scroll/inview/parent';
+import { fuzzysearch } from '../../../../lib/gj-lib-client/utils/string';
+import { findVueParent } from '../../../../lib/gj-lib-client/utils/vue';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 import { AppChatUserListItem } from './item/item';
-import { fuzzysearch } from '../../../../lib/gj-lib-client/utils/string';
-import { findVueParent } from '../../../../lib/gj-lib-client/utils/vue';
-import { AppScrollInviewParent } from '../../../../lib/gj-lib-client/components/scroll/inview/parent';
 
 @View
 @Component({
@@ -16,10 +15,17 @@ import { AppScrollInviewParent } from '../../../../lib/gj-lib-client/components/
 	},
 })
 export class AppChatUserList extends Vue {
-	@Prop(Array) users!: ChatUser[];
-	@Prop(ChatRoom) room?: ChatRoom;
-	@Prop(Boolean) showPm?: boolean;
-	@Prop(Boolean) showModTools?: boolean;
+	@Prop(Array)
+	users!: ChatUser[];
+
+	@Prop(ChatRoom)
+	room?: ChatRoom;
+
+	@Prop(Boolean)
+	showPm?: boolean;
+
+	@Prop(Boolean)
+	showModTools?: boolean;
 
 	filterQuery = '';
 
@@ -43,7 +49,7 @@ export class AppChatUserList extends Vue {
 	onUsersChange() {
 		const inviewParent = findVueParent(this, AppScrollInviewParent);
 		if (inviewParent) {
-			inviewParent.container.queueCheck();
+			inviewParent.queueCheck();
 		}
 	}
 }

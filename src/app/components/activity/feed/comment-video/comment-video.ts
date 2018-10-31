@@ -1,11 +1,11 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./comment-video.html';
-
-import { ActivityFeedItem } from '../item-service';
+import Vue from 'vue';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
-import { AppActivityFeedVideo } from '../_video/video';
 import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
+import { ActivityFeedItem } from '../item-service';
+import { ActivityFeedView } from '../view';
+import { AppActivityFeedVideo } from '../_video/video';
 
 @View
 @Component({
@@ -15,15 +15,28 @@ import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fad
 	},
 })
 export class AppActivityFeedCommentVideo extends Vue {
-	@Prop(ActivityFeedItem) item!: ActivityFeedItem;
-	@Prop(CommentVideo) video!: CommentVideo;
-	@Prop(Boolean) isHydrated?: boolean;
+	@Inject()
+	feed!: ActivityFeedView;
+
+	@Prop(ActivityFeedItem)
+	item!: ActivityFeedItem;
+
+	@Prop(CommentVideo)
+	video!: CommentVideo;
 
 	canToggleContent = false;
 	contentBootstrapped = false;
 
+	get isHydrated() {
+		return this.feed.isItemHydrated(this.item);
+	}
+
+	get isOpen() {
+		return this.feed.isItemOpen(this.item);
+	}
+
 	toggleFull() {
-		this.item.isOpen = !this.item.isOpen;
+		this.feed.toggleItemOpen(this.item);
 		this.$emit('expanded');
 	}
 

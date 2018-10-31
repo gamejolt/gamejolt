@@ -1,5 +1,4 @@
 <app-scroll-inview
-	:id="`activity-feed-item-${item.id}`"
 	:extra-padding="inviewPadding"
 	@inview="onInviewChange(true)"
 	@outview="onInviewChange(false)"
@@ -17,19 +16,12 @@
 		<app-activity-feed-event-item
 			v-if="item.type === 'event-item'"
 			:item="item"
-			:is-new="isNew"
-			:is-active="isActive"
-			:is-hydrated="isHydrated"
-			@clicked="setActive"
 			@expanded="onExpanded"
 			@resize="onResize"
 			/>
 		<app-activity-feed-notification
 			v-else-if="item.type === 'notification'"
 			:item="item"
-			:is-new="isNew"
-			:is-active="isActive"
-			@clicked="setActive"
 			/>
 
 	 </template>

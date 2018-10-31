@@ -79,14 +79,14 @@ export class AppClientStatusBar extends Vue {
 	@Watch('isShowing', { immediate: true })
 	onIsShowingChanged() {
 		if (this.isShowing) {
-			document.body.classList.add('status-bar-visible');
+			document.body.classList.add('has-hot-bottom');
 		} else {
-			document.body.classList.remove('status-bar-visible');
+			document.body.classList.remove('has-hot-bottom');
 		}
 	}
 
 	destroyed() {
-		document.body.classList.remove('status-bar-visible');
+		document.body.classList.remove('has-hot-bottom');
 	}
 
 	updateApply() {

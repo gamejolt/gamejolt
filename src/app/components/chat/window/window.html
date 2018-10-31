@@ -108,11 +108,15 @@
 							<img :src="room.user.imgAvatar" alt="">
 						</router-link>
 
-						<h3 v-if="!room.isPmRoom" class="anim-fade-in-right no-animate-xs">
+						<h3
+							v-if="!room.isPmRoom"
+							class="anim-fade-in-right no-animate-xs"
+							>
 							{{ room.title }}
 						</h3>
-
-						<h3 v-if="room.isPmRoom" class="anim-fade-in-right no-animate-xs"
+						<h3
+							v-else
+							class="anim-fade-in-right no-animate-xs"
 							:title="`${room.user.displayName} (@${room.user.username})`"
 							>
 							<router-link
@@ -155,7 +159,7 @@
 				The v-for is a hack to make sure we destroy/recreate each time
 				the room changes.
 			-->
-			<div class="chat-window-output">
+			<div class="chat-window-output fill-darker">
 				<app-chat-window-output
 					v-for="room of [ room ]"
 					:key="room.id"

@@ -1,12 +1,12 @@
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./sketchfab.html?style=./sketchfab.styl';
-
+import Vue from 'vue';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppSketchfabEmbed } from '../../../../../../lib/gj-lib-client/components/sketchfab/embed/embed';
 import { AppResponsiveDimensions } from '../../../../../../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions';
+import { AppSketchfabEmbed } from '../../../../../../lib/gj-lib-client/components/sketchfab/embed/embed';
+import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { ActivityFeedItem } from '../../item-service';
+import { ActivityFeedView } from '../../view';
 
 @View
 @Component({
@@ -17,12 +17,21 @@ import { ActivityFeedItem } from '../../item-service';
 	},
 })
 export class AppActivityFeedDevlogPostSketchfab extends Vue {
-	@Prop(ActivityFeedItem) item!: ActivityFeedItem;
-	@Prop(FiresidePost) post!: FiresidePost;
-	@Prop(Boolean) isHydrated?: boolean;
+	@Inject()
+	feed!: ActivityFeedView;
+
+	@Prop(ActivityFeedItem)
+	item!: ActivityFeedItem;
+
+	@Prop(FiresidePost)
+	post!: FiresidePost;
 
 	isShowing = GJ_IS_SSR;
 	contentBootstrapped = false;
+
+	get isHydrated() {
+		return this.feed.isItemHydrated(this.item);
+	}
 
 	get sketchfab() {
 		return this.post.sketchfabs[0];

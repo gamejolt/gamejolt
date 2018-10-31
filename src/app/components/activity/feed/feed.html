@@ -1,4 +1,12 @@
-<div class="activity-feed">
+<!--
+	We need to refresh the whole feed anytime it's cleared or massively changed.
+	Basically anytime the feed state's items are replaced so that the references
+	to them get picked up again.
+-->
+<div
+	class="activity-feed"
+	:key="feed.id"
+	>
 
 	<template v-if="newCount > 0">
 		<app-expand
@@ -24,38 +32,49 @@
 			/>
 	</template>
 
-	<div v-for="(item, i) of feed.items" :key="item.id">
-		<app-activity-feed-item
-			:feed="feed"
-			:item="item"
-			/>
+	<!-- Need the div so that we can target the last child in teh container. -->
+	<div>
+		<div
+			class="-item"
+			v-for="(item, i) of feed.items"
+			:key="item.id"
+			>
+			<app-activity-feed-item
+				:item="item"
+				/>
 
-		<div class="-ad-container well fill-offset full-bleed-xs text-center" v-if="shouldShowAd(i)">
-			<app-ad size="rectangle" pos="bottom" />
-			<div class="-ad-label text-muted small">
-				<translate>Advertisement</translate>
+			<div class="-ad-container well fill-offset full-bleed-xs text-center" v-if="shouldShowAd(i)">
+				<app-ad size="rectangle" pos="bottom" />
+				<div class="-ad-label text-muted small">
+					<translate>Advertisement</translate>
+				</div>
 			</div>
 		</div>
 	</div>
 
-	<div v-if="shouldShowLoadMore" class="page-cut">
-		<app-button
-			:to="GJ_IS_SSR ? { query: { feed_last_id: feed.endScrollId } } : undefined"
-			trans
-			@click.prevent="loadMoreButton"
-			v-app-track-event="`activity-feed:more`"
-			>
-			<translate>Load More</translate>
-		</app-button>
-	</div>
+	<!--
+		If they are viewing a slice of the state, then we don't want to allow loading more.
+	-->
+	<template v-if="!feed.slice">
+		<div v-if="shouldShowLoadMore" class="page-cut">
+			<app-button
+				:to="GJ_IS_SSR ? { query: { feed_last_id: lastPostId } } : undefined"
+				trans
+				@click.prevent="loadMoreButton"
+				v-app-track-event="`activity-feed:more`"
+				>
+				<translate>Load More</translate>
+			</app-button>
+		</div>
 
-	<app-loading
-		v-if="feed.isLoadingMore"
-		class="-bottom-loading loading-centered"
-		/>
+		<app-loading
+			v-if="feed.isLoadingMore"
+			class="-bottom-loading loading-centered"
+			/>
 
-	<div class="alert full-bleed-xs" v-if="feed.reachedEnd">
-		<translate>A wild Snorlax blocks your path. Looks like it's the end of this feed.</translate>
-	</div>
+		<div class="alert full-bleed-xs" v-if="feed.reachedEnd">
+			<translate>A wild Snorlax blocks your path. Looks like it's the end of this feed.</translate>
+		</div>
+	</template>
 
 </div>

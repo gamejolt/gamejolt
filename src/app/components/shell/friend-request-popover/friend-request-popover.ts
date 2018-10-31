@@ -1,39 +1,54 @@
-import View from '!view!./request-popover.html?style=./request-popover.styl';
+import View from '!view!./friend-request-popover.html?style=./friend-request-popover.styl';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
+import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
+import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';
+import { AppLoading } from 'game-jolt-frontend-lib/vue/components/loading/loading';
+import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
-import { Mutation } from 'vuex-class/lib/bindings';
-import { AppScrollInviewParent } from '../../../../lib/gj-lib-client/components/scroll/inview/parent';
-import { UserFriendship } from '../../../../lib/gj-lib-client/components/user/friendship/friendship.model';
-import { findRequiredVueParent } from '../../../../lib/gj-lib-client/utils/vue';
-import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { Store } from '../../../store/index';
+import { Mutation, State } from 'vuex-class/lib/bindings';
+import { Store } from '../../../store';
 import { UserFriendshipHelper } from '../../user/friendships-helper/friendship-helper.service';
-import { AppFriendRequestPopoverItem } from './item/item';
+import { AppShellFriendRequestPopoverItem } from './item/item';
 
 type Tab = 'requests' | 'pending';
 
 @View
 @Component({
 	components: {
+		AppPopper,
 		AppLoading,
-		AppFriendRequestPopoverItem,
+		AppShellFriendRequestPopoverItem,
+	},
+	directives: {
+		AppTooltip,
+		AppTrackEvent,
 	},
 })
-export class AppFriendRequestPopover extends Vue {
+export class AppShellFriendRequestPopover extends Vue {
+	@State
+	friendRequestCount!: Store['friendRequestCount'];
+
 	@Mutation
 	setFriendRequestCount!: Store['setFriendRequestCount'];
+
 	@AppState
 	user!: AppStore['user'];
 
-	isLoading = true;
+	isShowing = false;
+	isLoading = false;
 
 	activeTab: Tab = 'requests';
 	incoming: UserFriendship[] = [];
 	outgoing: UserFriendship[] = [];
 
-	// Don't set default value so it doesn't watch.
-	private inviewParent?: AppScrollInviewParent;
+	$refs!: {
+		popper: AppPopper;
+	};
+
+	readonly Connection = Connection;
 
 	get requests() {
 		return this.activeTab === 'requests' ? this.incoming : this.outgoing;
@@ -44,22 +59,28 @@ export class AppFriendRequestPopover extends Vue {
 	 */
 	@Watch('requests')
 	onRequestsChange() {
-		if (this.inviewParent) {
-			this.inviewParent.container.queueCheck();
+		if (this.$refs.popper && this.$refs.popper.$refs.scroller) {
+			this.$refs.popper.$refs.scroller.queueInviewCheck();
 		}
 	}
 
-	mounted() {
-		this.fetchRequests();
-		this.inviewParent = findRequiredVueParent(this, AppScrollInviewParent);
-	}
+	async onShow() {
+		if (this.isLoading) {
+			return;
+		}
 
-	async fetchRequests() {
+		this.isShowing = true;
+		this.isLoading = true;
+
 		const { requests, pending } = await UserFriendship.fetchRequests();
 		this.incoming = requests;
 		this.setFriendRequestCount(this.incoming.length);
 		this.outgoing = pending;
 		this.isLoading = false;
+	}
+
+	onHide() {
+		this.isShowing = false;
 	}
 
 	setActiveTab(tab: Tab) {

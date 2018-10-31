@@ -111,8 +111,13 @@
 										/>
 								</template>
 
+								<!--
+									We want to key it by the game ID so that it
+									resets completely when the page changes.
+								-->
 								<app-game-soundtrack-card
 									v-if="songs.length"
+									:key="game.id"
 									:game="game"
 									:songs="songs"
 									/>
@@ -191,12 +196,11 @@
 						@add="onPostAdded"
 						/>
 
-					<app-activity-feed-placeholder v-if="!feed" />
+					<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
 					<template v-else>
 						<app-activity-feed
 							v-if="feed.hasItems"
 							:feed="feed"
-							show-edit-controls
 							/>
 						<div v-else class="alert">
 							<translate>Nothing has been posted to this project page yet. Maybe check back later!</translate>
