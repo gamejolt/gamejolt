@@ -31,6 +31,7 @@ import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 @RouteResolver({
 	resolver: ({ route }) => Search.search(route.query.q),
 	resolveStore({ route, payload }) {
+		console.log('resolve store');
 		routeStore.commit('processPayload', { payload: payload, route: route });
 	},
 })
@@ -52,11 +53,11 @@ export default class RouteSearchResults extends BaseRouteComponent {
 	readonly Search = Search;
 	readonly Screen = Screen;
 
-	routeCreated() {
-		this.feed = ActivityFeedService.routeInit(this);
-	}
-
 	routeResolved($payload: any, fromCache: boolean) {
+		// We bootstrap the feed from cache in the routeResolved method since
+		// this page is not cached or lazy. We need this to get called after we
+		// resolve the store with data.
+		this.feed = ActivityFeedService.routeInit(this);
 		this.feed = ActivityFeedService.routed(
 			this.feed,
 			{
