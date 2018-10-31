@@ -8,9 +8,9 @@ import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-s
 import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { AppActivityFeed } from '../../../components/activity/feed/feed';
-import { ActivityFeedContainer } from '../../../components/activity/feed/feed-container-service';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import { AppActivityFeedPlaceholder } from '../../../components/activity/feed/placeholder/placeholder';
+import { ActivityFeedView } from '../../../components/activity/feed/view';
 import { AppGameGrid } from '../../../components/game/grid/grid';
 import { Search } from '../../../components/search/search-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
@@ -47,21 +47,10 @@ export default class RouteSearchResults extends BaseRouteComponent {
 	@RouteStoreModule.State
 	searchPayload!: RouteStore['searchPayload'];
 
-	feed: ActivityFeedContainer | null = null;
+	feed: ActivityFeedView | null = null;
 
 	readonly Search = Search;
 	readonly Screen = Screen;
-
-	get hasResults() {
-		if (!this.hasSearch || !this.searchPayload) {
-			return false;
-		}
-		return (
-			(this.feed && this.feed.hasItems) ||
-			this.searchPayload.users.length ||
-			this.searchPayload.games.length
-		);
-	}
 
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
