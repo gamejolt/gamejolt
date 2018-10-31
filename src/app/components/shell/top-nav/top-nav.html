@@ -4,11 +4,10 @@
 
 		<!-- Mobile Menu Toggle -->
 		<a
-			v-if="hasSidebar"
 			class="navbar-item"
 			:class="{ active: isLeftPaneVisible }"
 			@click="toggleLeftPane"
-			v-app-tooltip.right="$gettext( `Menu (m)` )"
+			v-app-tooltip.right="$gettext( `Playlists (m)` )"
 			v-app-track-event="`top-nav:main-menu:toggle`"
 			>
 			<app-jolticon icon="menu" />
@@ -17,9 +16,22 @@
 		<!-- History Navigator (for desktop client) -->
 		<app-client-history-navigator v-if="GJ_IS_CLIENT" />
 
-		<router-link class="navbar-item" :to="{ name: 'discover.home' }">
+		<router-link class="navbar-item" :to="{ name: 'activity.feed' }">
 			<app-theme-svg v-if="!Screen.isMobile" src="~img/game-jolt-logo.svg" alt="" />
 			<app-theme-svg v-else src="~img/jolt.svg" alt="" />
+		</router-link>
+
+		<router-link
+			v-if="!Screen.isXs && app.user"
+			class="-explore navbar-item"
+			:class="{ active: $route.name === 'discover.home' }"
+			:to="{ name: 'discover.home' }"
+			v-app-track-event="`top-nav:main-menu:discover`"
+			>
+			<app-jolticon icon="compass" />
+			<strong class="text-upper">
+				<translate>Explore</translate>
+			</strong>
 		</router-link>
 
 		<app-popper

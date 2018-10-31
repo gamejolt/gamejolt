@@ -1,17 +1,15 @@
-<div id="shell-sidebar"
-	:class="{
-		'shell-sidebar': !Screen.isXs,
-		'shell-pane shell-pane-left': Screen.isXs,
-		'visible': Screen.isMobile && isLeftPaneVisible,
-	}"
+<div
+	id="shell-sidebar"
+	class="shell-pane shell-pane-left"
+	:class="{ visible: isLeftPaneVisible }"
 	v-shortkey="[ 'm' ]"
-	@shortkey="toggleLeftPane"
+	@shortkey="toggleLeftPane()"
 	>
 
 	<app-scroll-scroller
+		v-if="isLeftPaneVisible"
+		class="-content fill-darkest"
 		overlay
-		:hide-scrollbar="!isLeftPaneVisible"
-		class="shell-sidebar-content fill-darkest"
 		>
 
 		<ul class="shell-nav">
@@ -36,24 +34,6 @@
 					</span>
 					<span class="shell-nav-label">
 						<translate>Activity Feed</translate>
-					</span>
-				</router-link>
-			</li>
-
-			<li class="offline-disable">
-				<router-link
-					:to="{ name: 'discover.games.list._fetch', params: { section: defaultBrowseSection } }"
-					:class="{ active: $route.name.indexOf( 'discover.games.list' ) === 0 }"
-					v-app-track-event="`sidebar:games`"
-					>
-					<span
-						class="shell-nav-icon"
-						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Browse Games' ) : ''"
-						>
-						<app-jolticon icon="game" />
-					</span>
-					<span class="shell-nav-label">
-						<translate>Browse Games</translate>
 					</span>
 				</router-link>
 			</li>
