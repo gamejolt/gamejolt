@@ -173,7 +173,11 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	get addCommentPlaceholder() {
-		return this.$gettext('Shout') + ' @' + this.user!.username + '!';
+		if (this.user && this.app.user && this.user.id === this.app.user.id) {
+			return this.$gettext('Shout at yourself!');
+		} else {
+			return this.$gettext('Shout') + ' @' + this.user!.username + '!';
+		}
 	}
 
 	get commentsCount() {
