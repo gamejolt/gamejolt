@@ -72,6 +72,11 @@ export default class RouteSearch extends BaseRouteComponent {
 	}
 
 	get noResults() {
-		return this.hasSearch && !this.searchPayload.gamesCount && !this.searchPayload.usersCount;
+		return (
+			this.hasSearch &&
+			!this.searchPayload.gamesCount &&
+			!this.searchPayload.usersCount &&
+			!this.searchPayload.postsCount
+		);
 	}
 }
