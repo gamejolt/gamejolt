@@ -31,7 +31,6 @@ import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 @RouteResolver({
 	resolver: ({ route }) => Search.search(route.query.q),
 	resolveStore({ route, payload }) {
-		console.log('resolve store');
 		routeStore.commit('processPayload', { payload: payload, route: route });
 	},
 })
