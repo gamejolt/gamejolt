@@ -1,9 +1,9 @@
-import { Model } from '../../../../lib/gj-lib-client/components/model/model.service';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
-import { appStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Jam } from '../../../../lib/gj-lib-client/components/jam/jam.model';
+import { Model } from '../../../../lib/gj-lib-client/components/model/model.service';
+import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
+import { appStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 
 export class GameCollection extends Model {
 	static readonly TYPE_FOLLOWED = 'followed';
@@ -12,7 +12,6 @@ export class GameCollection extends Model {
 	static readonly TYPE_RECOMMENDED = 'recommended';
 	static readonly TYPE_PLAYLIST = 'playlist';
 	static readonly TYPE_BUNDLE = 'bundle';
-	static readonly TYPE_TAG = 'tag';
 	static readonly TYPE_JAM = 'jam';
 
 	static readonly USER_TYPES = [

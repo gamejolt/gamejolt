@@ -199,8 +199,6 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 				}
 			} else if (this.type === GameCollection.TYPE_BUNDLE && this.bundle) {
 				return this.bundle.title;
-			} else if (this.type === GameCollection.TYPE_TAG) {
-				return `#${this.tag}`;
 			} else if (this.type === GameCollection.TYPE_JAM && this.jam) {
 				return 'Jam games entered into ' + this.jam.name;
 			}
@@ -297,20 +295,8 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		return id;
 	}
 
-	get tag() {
-		if (this.type !== 'tag') {
-			return undefined;
-		}
-
-		return this.id;
-	}
-
 	get shouldShowFollowers() {
-		return (
-			this.type !== GameCollection.TYPE_BUNDLE &&
-			this.type !== GameCollection.TYPE_TAG &&
-			this.type !== GameCollection.TYPE_OWNED
-		);
+		return this.type !== GameCollection.TYPE_BUNDLE && this.type !== GameCollection.TYPE_OWNED;
 	}
 
 	get shouldShowFollow() {
