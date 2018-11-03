@@ -1,20 +1,19 @@
+import View from '!view!./shell.html';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { State, Action } from 'vuex-class';
-import View from '!view!./shell.html';
-import './shell.styl';
-
-import { AppShellTopNav } from './top-nav/top-nav';
-import { AppShellBody } from './body/body';
-import { AppShellSidebar } from './sidebar/sidebar';
-import { AppShellHotBottom } from './hot-bottom/hot-bottom';
-import { AppGrowls } from '../../../lib/gj-lib-client/components/growls/growls';
-import { AppModals } from '../../../lib/gj-lib-client/components/modal/modals';
-import { AppLoadingBar } from '../../../lib/gj-lib-client/components/loading/bar/bar';
-import { Store } from '../../store/index';
-import { AppMinbar } from '../../../lib/gj-lib-client/components/minbar/minbar';
+import { Action, State } from 'vuex-class';
 import { Connection } from '../../../lib/gj-lib-client/components/connection/connection-service';
-import { BannerState, BannerStore } from '../../store/banner';
+import { AppGrowls } from '../../../lib/gj-lib-client/components/growls/growls';
+import { AppLoadingBar } from '../../../lib/gj-lib-client/components/loading/bar/bar';
+import { AppMinbar } from '../../../lib/gj-lib-client/components/minbar/minbar';
+import { AppModals } from '../../../lib/gj-lib-client/components/modal/modals';
+import { BannerModule, BannerStore, Store } from '../../store/index';
+import { AppShellBody } from './body/body';
+import { AppShellHotBottom } from './hot-bottom/hot-bottom';
+import './shell.styl';
+import { AppShellSidebar } from './sidebar/sidebar';
+import { AppShellTopNav } from './top-nav/top-nav';
 
 let components: any = {
 	AppShellTopNav,
@@ -45,16 +44,35 @@ if (GJ_IS_CLIENT) {
 	components,
 })
 export class AppShell extends Vue {
-	@State app!: Store['app'];
-	@State chat!: Store['chat'];
-	@State isLeftPaneVisible!: Store['isLeftPaneVisible'];
-	@State isRightPaneVisible!: Store['isRightPaneVisible'];
-	@State hasSidebar!: Store['hasSidebar'];
-	@BannerState shouldShowBanner!: BannerStore['shouldShowBanner'];
+	@State
+	app!: Store['app'];
 
-	@Action clearPanes!: Store['clearPanes'];
+	@State
+	chat!: Store['chat'];
+
+	@State
+	isLeftPaneVisible!: Store['isLeftPaneVisible'];
+
+	@State
+	isLeftPaneSticky!: Store['isLeftPaneSticky'];
+
+	@State
+	isRightPaneVisible!: Store['isRightPaneVisible'];
+
+	@State
+	hasMinibar!: Store['hasMinibar'];
+
+	@State
+	hasSidebar!: Store['hasSidebar'];
+
+	@BannerModule.State
+	hasBanner!: BannerStore['hasBanner'];
+
+	@Action
+	clearPanes!: Store['clearPanes'];
 
 	readonly Connection = Connection;
+	readonly Screen = Screen;
 
 	mounted() {
 		// When changing routes, hide all overlays.

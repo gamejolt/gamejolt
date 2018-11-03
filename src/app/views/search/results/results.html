@@ -35,40 +35,53 @@
 		</div>
 	</section>
 
-	<section class="section">
+	<!-- Games -->
+	<section class="section" v-if="searchPayload.games.length">
 		<div class="container-lg">
 
-			<!-- Games -->
-			<template v-if="searchPayload.games.length">
-				<div class="clearfix">
-					<app-button
-						class="pull-right"
+			<div class="clearfix">
+				<app-button
+					class="pull-right"
+					:to="{ name: 'search.games', query: { q: query } }"
+					>
+					<translate>search.results.view_all_link</translate>
+				</app-button>
+				<h3 class="section-header">
+					<router-link
+						class="link-unstyled"
 						:to="{ name: 'search.games', query: { q: query } }"
 						>
-						<translate>search.results.view_all_link</translate>
-					</app-button>
-					<h3 class="section-header">
-						<router-link
-							class="link-unstyled"
-							:to="{ name: 'search.games', query: { q: query } }"
-							>
-							<translate>search.results.games_heading</translate>
-						</router-link>
-						<small>({{ searchPayload.gamesCount | number }})</small>
-					</h3>
-				</div>
+						<translate>search.results.games_heading</translate>
+					</router-link>
+					<small>({{ searchPayload.gamesCount | number }})</small>
+				</h3>
+			</div>
 
-				<app-game-grid
-					:games="searchPayload.games"
-					truncate-to-fit
-					show-ads
-					ad-pos="bottom"
-					event-label="search-overview-games"
-					/>
-
-			</template>
+			<app-game-grid
+				:games="searchPayload.games"
+				truncate-to-fit
+				show-ads
+				ad-pos="bottom"
+				event-label="search-overview-games"
+				/>
 
 		</div>
 	</section>
 
+	<!-- Posts -->
+	<section class="section" v-if="feed && feed.hasItems">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-7 col-lg-offset-2">
+					<h2 class="section-header posts-title">
+						<translate>Posts</translate>
+					</h2>
+
+					<app-activity-feed
+						:feed="feed"
+						/>
+				</div>
+			</div>
+		</div>
+	</section>
 </div>

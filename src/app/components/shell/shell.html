@@ -4,8 +4,9 @@
 		'is-client-offline': Connection.isClientOffline,
 		'left-pane-visible': isLeftPaneVisible,
 		'right-pane-visible': isRightPaneVisible,
-		'no-sidebar': !hasSidebar,
-		'has-banner': shouldShowBanner,
+		'has-left-pane': app.user && Screen.isLg && isLeftPaneSticky,
+		'has-minibar': hasMinibar,
+		'has-banner': hasBanner,
 	}"
 	>
 

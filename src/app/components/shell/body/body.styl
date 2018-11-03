@@ -7,35 +7,10 @@
 	z-index: $zindex-shell-body
 	overflow-x: hidden
 	min-height: 100vh
-	// Space for the top nav.
-	margin-top: $shell-top-nav-height
 
-	// Affixed components should be shifted down from the top of the shell to make room
-	// for the top nav.
-	.gj-scroll-affixed
-		margin-top: $shell-top-nav-height + ($grid-gutter-width / 2)
-
-	#shell.has-banner &
-		margin-top: $shell-top-nav-height * 2
-
-		.gj-scroll-affixed
-			margin-top: $shell-top-nav-height * 2 + ($grid-gutter-width / 2)
-
-	// Containers are fluid until they hit the "lg" width.
 	.container
 		width: 100%
 		max-width: $container-lg
-
-	// Cut out the space for the left sidebar from the shell body.
-	@media $media-sm-up
-		margin-left: $shell-top-nav-height
-
-	@media $media-lg-up
-		.left-pane-visible &
-			margin-left: $shell-sidebar-width
-
-	.no-sidebar &
-		margin-left: 0 !important
 
 // Set the content BG so that we don't show the html color.
 #content

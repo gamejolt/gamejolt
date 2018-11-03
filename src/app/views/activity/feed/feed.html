@@ -91,6 +91,10 @@
 				class="col-xs-12 col-sm-9 col-md-6"
 				:class="Screen.isDesktop ? 'pull-left' : 'col-centered'"
 				>
+				<app-post-add-button
+					@add="onPostAdded"
+					/>
+
 				<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
 				<template v-else>
 					<div class="alert full-bleed-xs" v-if="!feed.hasItems">
