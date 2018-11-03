@@ -247,28 +247,30 @@
 					</template>
 
 					<!-- Shouts -->
-					<br>
-					<div class="pull-right">
-						<app-button trans @click="showComments()">
-							<translate>View All</translate>
-							<small v-if="commentsCount">({{ commentsCount | number }})</small>
-						</app-button>
-					</div>
+					<template v-if="shouldShowShouts">
+						<br>
+						<div class="pull-right">
+							<app-button trans @click="showComments()">
+								<translate>View All</translate>
+								<small v-if="commentsCount">({{ commentsCount | number }})</small>
+							</app-button>
+						</div>
 
-					<h4 class="section-header">
-						<translate>Shouts</translate>
-					</h4>
+						<h4 class="section-header">
+							<translate>Shouts</translate>
+						</h4>
 
-					<app-comment-add-button
-						resource="User"
-						:resource-id="user.id"
-						:placeholder="addCommentPlaceholder"
-						display-mode="shouts"
-						/>
+						<app-comment-add-button
+							resource="User"
+							:resource-id="user.id"
+							:placeholder="addCommentPlaceholder"
+							display-mode="shouts"
+							/>
 
-					<app-comment-overview
-						:comments="overviewComments"
-						/>
+						<app-comment-overview
+							:comments="overviewComments"
+							/>
+					</template>
 				</div>
 
 				<div :class="leftColClass">
