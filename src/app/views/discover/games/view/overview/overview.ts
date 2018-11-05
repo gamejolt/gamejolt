@@ -23,6 +23,7 @@ import {
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component, Prop } from 'vue-property-decorator';
+import { CommentThreadModal } from '../../../../../../lib/gj-lib-client/components/comment/thread/modal.service';
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { AppActivityFeedPlaceholder } from '../../../../../components/activity/feed/placeholder/placeholder';
@@ -194,7 +195,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		CommentModal.checkPermalink(this.$router);
+		CommentThreadModal.showFromPermalink(this.$router, 'Game', parseInt(this.id));
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
