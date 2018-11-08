@@ -1,0 +1,27 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.-row
+	display: flex
+	flex-direction: row
+	justify-content: center
+
+.-left
+	flex: 1 0
+	padding-right: $grid-gutter-width-xs
+	min-width: $percentage-3
+
+	@media $media-sm-up
+		padding-right: $grid-gutter-width
+
+.-middle
+	flex: 2 0
+	max-width: 650px
+
+.-right
+	flex: 1 0
+	padding-left: $grid-gutter-width-xs
+	min-width: $percentage-3
+
+	@media $media-sm-up
+		padding-left: $grid-gutter-width

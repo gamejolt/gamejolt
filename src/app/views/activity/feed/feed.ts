@@ -19,6 +19,7 @@ import { ActivityFeedView } from '../../../components/activity/feed/view';
 import { AppBroadcastCard } from '../../../components/broadcast-card/broadcast-card';
 import { AppGameList } from '../../../components/game/list/list';
 import { AppGameListPlaceholder } from '../../../components/game/list/placeholder/placeholder';
+import { AppPageContainer } from '../../../components/page-container/page-container';
 import { AppPostAddButton } from '../../../components/post/add-button/add-button';
 import { Store, store } from '../../../store';
 
@@ -35,6 +36,7 @@ class DashGame {
 @Component({
 	name: 'RouteActivityFeed',
 	components: {
+		AppPageContainer,
 		AppActivityFeed,
 		AppActivityFeedPlaceholder,
 		AppGameList,

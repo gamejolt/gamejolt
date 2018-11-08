@@ -10,9 +10,8 @@
 	border-bottom-width: 1px
 
 // This will push the stats to the right side of the component on mobile.
-@media $media-mobile
-	.-split
-		flex: auto
+.-split
+	flex: auto
 
 .-rating, .-stat
 	padding-bottom: $line-height-computed * 0.75
@@ -25,7 +24,7 @@
 
 .-stat
 	theme-prop('color', 'fg-muted')
-	margin-left: $grid-gutter-width
+	margin-right: $grid-gutter-width
 	border-bottom-style: solid
 	border-bottom-width: 2px
 	border-bottom-color: transparent
@@ -37,7 +36,7 @@
 
 	// When ratings are disabled, we don't want any margin on the left.
 	.-ratings-disabled &:first-child
-		margin-left: 0
+		margin-right: 0
 
 .-label
 	font-size: $font-size-small
