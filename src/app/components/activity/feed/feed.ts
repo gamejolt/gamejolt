@@ -133,6 +133,10 @@ export class AppActivityFeed extends Vue {
 		return this.showAds && Ads.shouldShow;
 	}
 
+	get lastPostId() {
+		return this.feed.state.endScrollId;
+	}
+
 	shouldShowAd(index: number) {
 		// Show an ad after this many posts at the beginning of the feed.
 		const firstAd = 2;

@@ -111,8 +111,13 @@
 										/>
 								</template>
 
+								<!--
+									We want to key it by the game ID so that it
+									resets completely when the page changes.
+								-->
 								<app-game-soundtrack-card
 									v-if="songs.length"
+									:key="game.id"
 									:game="game"
 									:songs="songs"
 									/>

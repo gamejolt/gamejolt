@@ -51,6 +51,7 @@ export class AppGameThumbnail extends Vue {
 	isHydrated = GJ_IS_SSR;
 
 	readonly Screen = Screen;
+	readonly Game = Game;
 
 	get shouldShowControls() {
 		// Only show controls if they didn't override with their own.

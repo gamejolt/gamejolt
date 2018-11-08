@@ -149,9 +149,9 @@
 			<app-event-item-manage
 				:event-item="eventItem"
 				:show-edit-controls="feed.shouldShowEditControls"
-				@edit-post="feed.onPostEdited( eventItem )"
-				@publish-post="feed.onPostPublished( eventItem )"
-				@remove-post="feed.onPostRemoved( eventItem )"
+				@edit-post="onPostEdited(eventItem)"
+				@publish-post="onPostPublished(eventItem)"
+				@remove-post="onPostRemoved(eventItem)"
 				/>
 		</div>
 

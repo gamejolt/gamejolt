@@ -50,6 +50,9 @@ export class AppFormPostMedia extends BaseForm<FormModel>
 	@Prop(Array)
 	mediaItems!: MediaItem[];
 
+	@Prop(Boolean)
+	loading?: boolean;
+
 	resetOnSubmit = true;
 	isDropActive = false;
 
@@ -66,6 +69,10 @@ export class AppFormPostMedia extends BaseForm<FormModel>
 
 	@Emit('remove')
 	emitRemove(_mediaItem: MediaItem) {}
+
+	get isLoading() {
+		return this.state.isProcessing || this.loading;
+	}
 
 	get internalItems() {
 		return this.mediaItems;

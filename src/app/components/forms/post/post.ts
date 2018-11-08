@@ -1,6 +1,7 @@
 import View from '!view!./post.html?style=./post.styl';
 import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppFormAutosize } from 'game-jolt-frontend-lib/components/form-vue/autosize.directive';
 import { AppFormControlCheckbox } from 'game-jolt-frontend-lib/components/form-vue/control/checkbox/checkbox';
@@ -100,7 +101,6 @@ export class FormPost extends BaseForm<FormPostModel>
 		form: AppForm;
 	};
 
-	static readonly LEAD_URL_REGEX = /(https?:\/\/([\/\.\?\-\+a-z0-9=#%_&;,~@])+)/gi;
 	readonly YOUTUBE_URL_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_\-]{11})(&.+)*$/i;
 	readonly SKETCHFAB_URL_REGEX = /^(https:\/\/)?(www.)?sketchfab.com\/models\/[0-9a-f]{32}\/?$/i;
 	readonly SKETCHFAB_FIELD_REGEX = /^((https:\/\/)?(www.)?(sketchfab.com\/models\/[0-9a-f]{32}\/?))|([0-9a-f]{32})$/i;
@@ -126,6 +126,7 @@ export class FormPost extends BaseForm<FormPostModel>
 	leadUrlLength = 30;
 	leadLengthLimit = 255;
 	leadTotalLengthLimit = 300;
+	isUploadingPastedImage = false;
 
 	readonly GameVideo = GameVideo;
 	readonly Screen = Screen;
@@ -253,15 +254,75 @@ export class FormPost extends BaseForm<FormPostModel>
 		return this.wasPublished && this.publishToPlatforms !== null;
 	}
 
+	get urlsInLead() {
+		const lead = this.formModel.lead;
+		if (!lead) {
+			return [];
+		}
+
+		const urlRegex = new RegExp(
+			// Separate by no-word or start of string.
+			'(^|\\W)' +
+				// Optional http/s protocol.
+				'(https?:\\/\\/)?' +
+				// Subdomain and main domain.
+				'((([a-z0-9][a-z0-9-]{0,61}[a-z0-9])|([a-z0-9]))\\.){1,}' +
+				// Top level domain.
+				'[a-z][a-z-]{0,61}[a-z]' +
+				// Port number.
+				'(:(6553[0-5]|655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[0-9]{1,4}))?' +
+				// Path.
+				"(\\/([a-z0-9-\\._~!$&'\\(\\)\\*\\+,;=:@%]{1,})?)*" +
+				// Query.
+				"(\\?[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]{1,}(=[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]*)?(&[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]{1,}(=[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]*)?)*)?" +
+				// Fragment.
+				"(#[a-z0-9-\\._~:@\\/\\?!$&'\\(\\)\\*\\+,;=%]{1,})?" +
+				// Lookahead to end url.
+				'(?=\\W|$)',
+			'gi'
+		);
+
+		const matches = lead.match(urlRegex);
+		const urls = [];
+		if (matches && matches.length) {
+			for (const match of matches) {
+				let matchStr = match;
+				// Url has to start with an alphanumeric char.
+				while (matchStr && matchStr.match(/^[^a-z0-9].+/i)) {
+					matchStr = matchStr.substr(1);
+				}
+
+				// Trim common delimiters from end of the url.
+				// If the url ends with ) and has ( in it, do not remove it from the end.
+				const openingParenthesesCount = matchStr.split('(').length - 1;
+				const closingParenthesesCount = matchStr.split(')').length - 1;
+				let removeParenthesesCount = closingParenthesesCount - openingParenthesesCount;
+				while (
+					matchStr &&
+					matchStr.match(/.+[\)\?\]}'"\.:]$/) &&
+					(!matchStr.endsWith(')') || removeParenthesesCount > 0)
+				) {
+					if (matchStr.endsWith(')')) {
+						removeParenthesesCount--;
+					}
+					matchStr = matchStr.substr(0, matchStr.length - 1);
+				}
+
+				urls.push(matchStr);
+			}
+		}
+		return urls;
+	}
+
 	get computedLeadLength() {
-		const regex = FormPost.LEAD_URL_REGEX;
 		let lead = this.formModel.lead;
 		if (!lead) {
 			return 0;
 		}
 
-		if (lead.match(regex)) {
-			lead = lead.replace(regex, ' '.repeat(this.leadUrlLength));
+		const urls = this.urlsInLead;
+		for (const url of urls) {
+			lead = lead.replace(url, ' '.repeat(this.leadUrlLength));
 		}
 
 		// js is utf18, we need to calc the byte length
@@ -623,5 +684,64 @@ export class FormPost extends BaseForm<FormPostModel>
 				tz.label = `(UTC${offset}) ${tz.i}`;
 			}
 		}
+	}
+
+	async onPaste(e: ClipboardEvent) {
+		// Do not react to paste events when videos/sketchfab is selected.
+		if (!!this.attachmentType && this.attachmentType !== FiresidePost.TYPE_MEDIA) {
+			return;
+		}
+		if (this.isUploadingPastedImage) {
+			return;
+		}
+
+		// Validate clipboard data
+		if (!e.clipboardData) {
+			return;
+		}
+
+		const items = e.clipboardData.items;
+		if (!items) {
+			return;
+		}
+
+		const files = [];
+
+		for (let i = 0; i < items.length; i++) {
+			const item = items[i];
+			if (item.type.includes('image')) {
+				const blob = item.getAsFile();
+				if (blob) {
+					files.push(blob);
+				}
+			}
+		}
+
+		if (files.length === 0) {
+			return;
+		}
+
+		// Show image tray.
+		if (!this.enabledImages) {
+			this.enableImages();
+		}
+
+		// Upload
+		this.isUploadingPastedImage = true;
+
+		const $payload = await Api.sendRequest(
+			`/web/posts/manage/add-media/${this.formModel.id}`,
+			{},
+			{
+				file: files,
+				progress: e => this.setField('_progress', e),
+			}
+		);
+
+		this.isUploadingPastedImage = false;
+
+		// Apply returned media items.
+		const mediaItems = MediaItem.populate($payload.mediaItems);
+		this.onMediaUploaded(mediaItems);
 	}
 }

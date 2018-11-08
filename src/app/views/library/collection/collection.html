@@ -2,13 +2,13 @@
 
 	<app-page-header
 		class="library-collection-header"
-		:hide-nav="type === 'bundle' || type === 'tag'"
+		:hide-nav="type === 'bundle'"
 		:autoscroll-anchor-key="collection._id"
 		>
 
 		<div class="row collection-copy">
 			<div class="col-sm-4 col-md-3"
-				v-if="type !== 'tag' && !Screen.isXs"
+				v-if="!Screen.isXs"
 				>
 
 				<app-game-collection-thumbnail
@@ -29,22 +29,9 @@
 						>
 
 						<!--
-							Tag
-						-->
-						<template v-if="type === 'tag'">
-							<div class="text-muted">
-								<translate>Games tagged with</translate>
-							</div>
-
-							<h2 class="sans-margin">
-								#{{ tag }}
-							</h2>
-						</template>
-
-						<!--
 							Followed Games
 						-->
-						<template v-else-if="type === 'followed'">
+						<template v-if="type === 'followed'">
 							<template v-if="collection.isOwner">
 								<h1>
 									<translate>Your Followed Games</translate>
@@ -83,7 +70,7 @@
 									<translate>Your Games</translate>
 								</h1>
 								<p class="text-muted small">
-									<translate>These are the games that you've made. Be proud!</translate>
+									<translate>These are the games that you've made or collaborated on. Be proud!</translate>
 									<br>
 									<translate>Feel free to share this page with others to show off your games.</translate>
 								</p>

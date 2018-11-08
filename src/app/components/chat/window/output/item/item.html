@@ -9,39 +9,38 @@
 	}"
 	>
 
-	<router-link class="chat-window-message-avatar"
+	<router-link
 		v-if="!message.combine"
+		class="chat-window-message-avatar"
 		:to="message.user.url"
 		>
 		<img class="img-responsive" :src="message.user.imgAvatar" alt="">
 	</router-link>
 
 	<div class="chat-window-message-container">
-		<div class="chat-window-message-byline">
-			<router-link class="chat-window-message-user link-unstyled"
-				v-if="!message.combine"
+		<div class="chat-window-message-byline" v-if="!message.combine">
+			<router-link
+				class="chat-window-message-user link-unstyled"
 				:to="message.user.url"
 				>
 				{{ message.user.displayName }}
 			</router-link>
-			<span class="chat-window-message-username"
-				v-if="!message.combine"
-				>
+			<span class="chat-window-message-username">
 				@{{ message.user.username }}
 			</span>
-			<span class="chat-window-message-time"
-				v-if="!message.combine"
-				>
+			<span class="chat-window-message-time">
 				<span :title="loggedOn">
 					{{ message.loggedOn | date( 'shortTime' ) }}
 				</span>
 			</span>
 		</div>
 
-		<div class="chat-window-message-mod-tools"
+		<div
 			v-if="canModerate"
+			class="chat-window-message-mod-tools"
 			>
-			<a class="link-muted"
+			<a
+				class="link-muted"
 				@click="muteUser"
 				:title="$gettext( 'Mute User' )"
 				>

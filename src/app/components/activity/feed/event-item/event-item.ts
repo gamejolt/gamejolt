@@ -3,6 +3,7 @@ import { Environment } from 'game-jolt-frontend-lib/components/environment/envir
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
 import { AppUserAvatar } from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar';
+import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
@@ -26,6 +27,7 @@ import { AppActivityFeedDevlogPostMedia } from '../devlog-post/media/media';
 import { AppActivityFeedDevlogPostSketchfab } from '../devlog-post/sketchfab/sketchfab';
 import { AppActivityFeedDevlogPostText } from '../devlog-post/text/text';
 import { AppActivityFeedDevlogPostVideo } from '../devlog-post/video/video';
+import { AppActivityFeed } from '../feed';
 import { ActivityFeedItem } from '../item-service';
 import { ActivityFeedView } from '../view';
 import { AppActivityFeedEventItemTime } from './time/time';
@@ -62,9 +64,10 @@ export class AppActivityFeedEventItem extends Vue {
 	@State
 	app!: Store['app'];
 
-	private resizeSensor?: any;
-
 	canToggleLead = false;
+
+	private resizeSensor?: any;
+	private feedComponent!: AppActivityFeed;
 
 	readonly Screen = Screen;
 	readonly EventItem = EventItem;
@@ -140,26 +143,30 @@ export class AppActivityFeedEventItem extends Vue {
 				params: params,
 			};
 		} else if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
-			// TODO(userposts)
 			const post = this.post!;
-			if (this.game) {
-				return {
-					name: 'discover.games.view.devlog.view',
-					params: {
-						slug: this.game.slug,
-						id: this.game.id + '',
-						postSlug: post.slug,
-					},
-				};
-			} else {
-				return {
-					name: 'profile.post.view',
-					params: {
-						username: post.user.username,
-						slug: post.slug,
-					},
-				};
-			}
+
+			return post.routeLocation;
+
+			// TODO(search-improve) if navigating to posts doesnt work, revert to the commented out code below.
+			// Might fail if for some reason the post doesn't have the game gathered on it
+			// if (this.game) {
+			// 	return {
+			// 		name: 'discover.games.view.devlog.view',
+			// 		params: {
+			// 			slug: this.game.slug,
+			// 			id: this.game.id + '',
+			// 			postSlug: post.slug,
+			// 		},
+			// 	};
+			// } else {
+			// 	return {
+			// 		name: 'profile.post.view',
+			// 		params: {
+			// 			username: post.user.username,
+			// 			slug: post.slug,
+			// 		},
+			// 	};
+			// }
 		}
 
 		return null;
@@ -176,7 +183,12 @@ export class AppActivityFeedEventItem extends Vue {
 		return this.post && canUserManagePost(this.post, this.app.user);
 	}
 
+	mounted() {
+		this.feedComponent = findRequiredVueParent(this, AppActivityFeed);
+	}
+
 	destroyed() {
+		this.feedComponent = undefined as any;
 		this.resizeSensor = undefined;
 	}
 
@@ -260,5 +272,17 @@ export class AppActivityFeedEventItem extends Vue {
 
 	canToggleLeadChanged(canToggle: boolean) {
 		this.canToggleLead = canToggle;
+	}
+
+	onPostEdited(item: EventItem) {
+		this.feedComponent.onPostEdited(item);
+	}
+
+	onPostPublished(item: EventItem) {
+		this.feedComponent.onPostPublished(item);
+	}
+
+	onPostRemoved(item: EventItem) {
+		this.feedComponent.onPostRemoved(item);
 	}
 }

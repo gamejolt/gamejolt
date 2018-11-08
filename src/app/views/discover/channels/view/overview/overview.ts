@@ -76,7 +76,7 @@ export default class RouteDiscoverChannelsViewOverview extends BaseRouteComponen
 			this.feed,
 			{
 				type: 'EventItem',
-				url: `/web/discover/channels/posts/${this.channel}`,
+				url: `/web/discover/channels/posts/${encodeURIComponent(this.channel)}`,
 				shouldShowGameInfo: true,
 			},
 			$payload.posts,

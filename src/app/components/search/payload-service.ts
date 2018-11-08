@@ -1,3 +1,4 @@
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
 import { User } from '../../../lib/gj-lib-client/components/user/user.model';
 import { LocalDbGame } from '../client/local-db/game/game.model';
@@ -12,6 +13,8 @@ export class SearchPayload {
 	usersCount: number;
 	games: Game[];
 	gamesCount: number;
+	posts: FiresidePost[];
+	postsCount: number;
 	libraryGames: LocalDbGame[];
 
 	constructor(public type: string, data: any) {
@@ -24,6 +27,8 @@ export class SearchPayload {
 		this.users = User.populate(data.users);
 		this.gamesCount = data.gamesCount || 0;
 		this.games = Game.populate(data.games);
+		this.posts = FiresidePost.populate(data.posts);
+		this.postsCount = data.postsCount || 0;
 		this.libraryGames = [];
 
 		if (GJ_IS_CLIENT) {

@@ -42,6 +42,9 @@ import { BannerActions, BannerMutations, BannerStore } from './banner';
 import * as _ClientLibraryMod from './client-library';
 import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
 
+// Re-export our sub-modules.
+export { BannerModule, BannerStore } from './banner';
+
 export type Actions = AppActions &
 	ThemeActions &
 	LibraryActions &
@@ -61,7 +64,6 @@ export type Actions = AppActions &
 		toggleLeftPane: void;
 		toggleRightPane: void;
 		clearPanes: void;
-		_checkBackdrop: void;
 	};
 
 export type Mutations = AppMutations &
@@ -74,17 +76,6 @@ export type Mutations = AppMutations &
 		incrementNotificationCount: { type: UnreadItemType; count: number };
 		setFriendRequestCount: number;
 		changeFriendRequestCount: number;
-		_setBootstrapped: void;
-		_setLibraryBootstrapped: void;
-		_setChat: ChatClient | null;
-		_setGrid: GridClient | null;
-		_setNotificationState: ActivityFeedState | null;
-		_resetNotificationWatermark: void;
-		_toggleLeftPane: void;
-		_toggleRightPane: void;
-		_clearPanes: void;
-		_addBackdrop: void;
-		_removeBackdrop: void;
 	};
 
 let bootstrapResolver: Function | null = null;
@@ -155,6 +146,12 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	get hasSidebar() {
 		return Screen.isXs || this.app.user || GJ_IS_SSR;
+	}
+
+	get hasMinibar() {
+		return (
+			this.app.user && (Screen.isSm || Screen.isMd || (Screen.isLg && !this.isLeftPaneSticky))
+		);
 	}
 
 	get notificationCount() {
@@ -358,17 +355,17 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	private _setChat(chat: Mutations['_setChat']) {
+	private _setChat(chat: ChatClient | null) {
 		this.chat = chat;
 	}
 
 	@VuexMutation
-	private _setGrid(grid: Mutations['_setGrid']) {
+	private _setGrid(grid: GridClient | null) {
 		this.grid = grid;
 	}
 
 	@VuexMutation
-	private _setNotificationState(state: Mutations['_setNotificationState']) {
+	private _setNotificationState(state: ActivityFeedState | null) {
 		this.notificationState = state;
 	}
 

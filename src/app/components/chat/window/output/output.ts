@@ -1,16 +1,15 @@
-import Vue from 'vue';
-import { State } from 'vuex-class';
-import { Component, Prop } from 'vue-property-decorator';
-import { Subscription } from 'rxjs/Subscription';
 import View from '!view!./output.html?style=./output.styl';
-
+import { Subscription } from 'rxjs/Subscription';
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppScrollScroller } from '../../../../../lib/gj-lib-client/components/scroll/scroller/scroller';
+import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
+import { ChatClient } from '../../client';
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { ChatClient } from '../../client';
-import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { AppChatWindowOutputItem } from './item/item';
-import { AppScrollScroller } from '../../../../../lib/gj-lib-client/components/scroll/scroller/scroller';
 
 @View
 @Component({
@@ -23,10 +22,14 @@ import { AppScrollScroller } from '../../../../../lib/gj-lib-client/components/s
 	},
 })
 export class AppChatWindowOutput extends Vue {
-	@Prop(ChatRoom) room!: ChatRoom;
-	@Prop(Array) messages!: ChatMessage[];
+	@Prop(ChatRoom)
+	room!: ChatRoom;
 
-	@State chat!: ChatClient;
+	@Prop(Array)
+	messages!: ChatMessage[];
+
+	@State
+	chat!: ChatClient;
 
 	private shouldScroll = true;
 	private resize$: Subscription | undefined;
