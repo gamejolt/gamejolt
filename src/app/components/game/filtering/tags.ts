@@ -1,26 +1,25 @@
+import View from '!view!./tags.html?style=./tags.styl';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./tags.html?style=./tags.styl';
-
-import { GameFilteringContainer } from './container';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { Genre } from '../../genre/genre';
+import { TagsInfo } from '../../tag/tags-info.service';
+import { GameFilteringContainer } from './container';
 
 @View
-@Component({
-	components: {
-		AppJolticon,
-	},
-})
+@Component({})
 export class AppGameFilteringTags extends Vue {
-	@Prop(Object) filtering!: GameFilteringContainer;
+	@Prop(Object)
+	filtering!: GameFilteringContainer;
 
 	readonly GameFilteringContainer = GameFilteringContainer;
-	readonly Genre = Genre;
 
-	get genre() {
-		return this.$route.params.category;
+	get tag() {
+		const tag = this.$route.params.tag;
+		if (!tag) {
+			return undefined;
+		}
+
+		return TagsInfo.tags.find(i => i.id === tag);
 	}
 
 	removeFilterOption(filter: string, option: any) {
@@ -30,7 +29,7 @@ export class AppGameFilteringTags extends Vue {
 		this.filtering.onChanged();
 	}
 
-	clearGenre() {
+	clearTag() {
 		this.$router.push({ name: 'discover.games.list._fetch' });
 	}
 }

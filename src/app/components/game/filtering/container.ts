@@ -294,8 +294,8 @@ export class GameFilteringContainer {
 			queryPieces.push('sort=' + route.query.sort);
 		}
 
-		if (route.params.category) {
-			queryPieces.push('category=' + route.params.category);
+		if (route.params.tag) {
+			queryPieces.push('tag=' + route.params.tag);
 		}
 
 		if (route.params.date) {

@@ -76,21 +76,6 @@ export class AppShellSidebar extends Vue {
 	playlistFilterQuery = '';
 	openFolders: string[] = [];
 
-	channels = ['horror', 'multiplayer', 'retro', 'survival', 'fangame', 'fnaf'];
-
-	genres = {
-		action: 'Action',
-		adventure: 'Adventure',
-		arcade: 'Arcade',
-		platformer: 'Platformer',
-		puzzle: 'Puzzle',
-		rpg: 'RPG',
-		shooter: 'Shooter',
-		sports: 'Sports',
-		'strategy-sim': 'Strategy/Sim',
-		other: 'Other',
-	};
-
 	// This is "hot".
 	defaultBrowseSection = null;
 

@@ -1,14 +1,13 @@
-import { Component, Watch } from 'vue-property-decorator';
 import View from '!view!./description.html';
-
-import { BaseForm } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppDashGameWizardControls } from '../wizard-controls/wizard-controls';
 import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
+import { BaseForm } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppGamePerms } from '../../../game/perms/perms';
+import { AppDashGameWizardControls } from '../wizard-controls/wizard-controls';
+import { AppFormGameDescriptionTags } from './tags/tags';
 
 type DescriptionFormModel = Game & {
 	autotag?: string;
@@ -20,12 +19,15 @@ type DescriptionFormModel = Game & {
 	components: {
 		AppExpand,
 		AppFormControlMarkdown,
-		AppJolticon,
 		AppDashGameWizardControls,
 		AppGamePerms,
+		AppFormGameDescriptionTags,
 	},
 })
 export class FormGameDescription extends BaseForm<DescriptionFormModel> {
+	@Prop(Array)
+	tags!: string[];
+
 	modelClass = Game;
 	saveMethod = '$saveDescription' as '$saveDescription';
 
@@ -40,6 +42,10 @@ export class FormGameDescription extends BaseForm<DescriptionFormModel> {
 		return this.model && this.model.hasPerms('details');
 	}
 
+	get tagText() {
+		return (this.formModel.title + ' ' + this.formModel.description_markdown).toLowerCase();
+	}
+
 	@Watch('serverErrors')
 	onServerErrors() {
 		this.isFnafDetected = false;
@@ -49,6 +55,10 @@ export class FormGameDescription extends BaseForm<DescriptionFormModel> {
 			this.isFnafDetected = true;
 			this.isDisabled = true;
 		}
+	}
+
+	addTag(tag: string) {
+		this.setField('description_markdown', this.formModel.description_markdown + ' #' + tag);
 	}
 
 	addAutotag(tag: string) {

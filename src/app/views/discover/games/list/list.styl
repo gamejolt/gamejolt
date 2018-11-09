@@ -1,0 +1,12 @@
+@require '~styles/variables'
+
+$-spotlight-size = 58px
+
+@media $media-sm-up
+	.-spotlight
+		float: left
+		width: $-spotlight-size
+		height: $-spotlight-size
+
+	.-has-spotlight .-header-content
+		margin-left: $-spotlight-size + $grid-gutter-width
