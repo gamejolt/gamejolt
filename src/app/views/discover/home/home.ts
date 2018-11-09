@@ -82,6 +82,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			},
 		};
 
+		this.featuredItem = $payload.featuredItem ? new FeaturedItem($payload.featuredItem) : null;
 		if ($payload.isFollowingFeatured && this.featuredItem && this.featuredItem.game) {
 			this.featuredItem!.game!.is_following = true;
 		}
