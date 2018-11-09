@@ -262,7 +262,7 @@ export class FormPost extends BaseForm<FormPostModel>
 
 		const urlRegex = new RegExp(
 			// Separate by no-word or start of string.
-			'(^|\\W)' +
+			'(^|[^\\w@])' +
 				// Optional http/s protocol.
 				'(https?:\\/\\/)?' +
 				// Subdomain and main domain.
