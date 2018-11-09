@@ -36,6 +36,7 @@ export class FormGameDescription extends BaseForm<DescriptionFormModel> {
 
 	$refs!: {
 		form: AppForm;
+		editor: AppFormControlMarkdown;
 	};
 
 	get hasDetailsPerms() {
@@ -57,8 +58,15 @@ export class FormGameDescription extends BaseForm<DescriptionFormModel> {
 		}
 	}
 
-	addTag(tag: string) {
+	async addTag(tag: string) {
 		this.setField('description_markdown', this.formModel.description_markdown + ' #' + tag);
+
+		// Since we are modifying the description outside the normal flow, we
+		// have to tell the autosizer to try to update itself.
+		if (this.$refs.editor) {
+			await this.$nextTick();
+			this.$refs.editor.updateAutosize();
+		}
 	}
 
 	addAutotag(tag: string) {
