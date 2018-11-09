@@ -23,13 +23,17 @@ export class AppTagThumbnail extends Vue {
 		return {
 			name: 'discover.games.list._fetch-tag',
 			params: {
-				section:
-					typeof this.$route.params.section === 'undefined'
-						? 'best'
-						: this.$route.params.section,
+				section: this.$route.params.section || (null as any),
 				tag: this.tag,
 			},
 			query: Object.assign({}, this.$route.query, { page: undefined }),
 		};
+	}
+
+	get active() {
+		return (
+			this.$route.name === 'discover.games.list._fetch-tag' &&
+			this.$route.params.tag === this.tag
+		);
 	}
 }

@@ -52,7 +52,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	listing: GameListingContainer | null = null;
 
 	get section() {
-		return this.$route.params.section.toLowerCase();
+		return this.$route.params.section && this.$route.params.section.toLowerCase();
 	}
 
 	get tag() {
@@ -119,9 +119,6 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 						tag: this.tag,
 					});
 
-				case 'hot':
-					return this.$gettextInterpolate('Hot %{tag} games', { tag: this.tag });
-
 				case 'new':
 					return this.$gettextInterpolate('New %{tag} games', { tag: this.tag });
 
@@ -136,9 +133,6 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 
 			case 'best':
 				return this.$gettext('Best games (top-rated)');
-
-			case 'hot':
-				return this.$gettext('Hot games');
 
 			case 'new':
 				return this.$gettext('New games');
@@ -168,7 +162,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 			descriptiveTag = `${this.tag} games`;
 		}
 
-		if (this.section === 'hot') {
+		if (!this.section) {
 			return `Browse the freshest ${descriptiveTag} on Game Jolt. They're almost too hot!`;
 		} else if (this.section === 'new') {
 			return `Browse new ${descriptiveTag} on Game Jolt. Good or bad, you decide!`;

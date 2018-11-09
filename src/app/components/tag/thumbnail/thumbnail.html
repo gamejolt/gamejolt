@@ -1,7 +1,7 @@
 <router-link
 	class="tag-thumbnail"
+	:class="{ active }"
 	:to="location"
-	active-class="active"
 	v-app-track-event="`tag-list:${ tagInfo.id }`"
 	>
 	<div class="-image-spacer">
