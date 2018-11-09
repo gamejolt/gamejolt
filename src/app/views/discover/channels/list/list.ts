@@ -6,7 +6,7 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { AppChannelThumbnail } from '../../../../components/channel/thumbnail/thumbnail';
+import { AppTagThumbnail } from '../../../../components/channel/thumbnail/thumbnail';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
 
 @View
@@ -14,7 +14,7 @@ import { AppPageHeader } from '../../../../components/page-header/page-header';
 	name: 'RouteDiscoverChannelsList',
 	components: {
 		AppPageHeader,
-		AppChannelThumbnail,
+		AppTagThumbnail,
 	},
 })
 @RouteResolver({

@@ -1,8 +1,8 @@
 import { RouteConfig } from 'vue-router';
 
 const SectionRegex = 'featured|new|fresh|hot|best|worst';
-const CategoryRegex =
-	'arcade|action|adventure|rpg|strategy\\-sim|platformer|shooter|puzzle|sports|other';
+// const CategoryRegex =
+// 	'arcade|action|adventure|rpg|strategy\\-sim|platformer|shooter|puzzle|sports|other';
 const DateRegex = '\\d{4}\\-\\d{2}\\-\\d{2}';
 
 export const routeDiscoverGamesListSection: RouteConfig = {
@@ -12,9 +12,9 @@ export const routeDiscoverGamesListSection: RouteConfig = {
 	component: () => import(/* webpackChunkName: "routeDiscoverGamesList" */ './list'),
 };
 
-export const routeDiscoverGamesListCategory: RouteConfig = {
-	name: 'discover.games.list._fetch-category',
-	path: `:section(${SectionRegex})?/:category(${CategoryRegex})`,
+export const routeDiscoverGamesListTag: RouteConfig = {
+	name: 'discover.games.list._fetch-tag',
+	path: `:section(${SectionRegex})?/tag-:tag`,
 	props: true,
 	component: () => import(/* webpackChunkName: "routeDiscoverGamesList" */ './list'),
 };

@@ -80,10 +80,8 @@
 
 	</app-page-header>
 
-	<section class="section fill-dark section-thin" v-if="section !== 'by-date'">
-		<div class="container">
-			<app-genre-list />
-		</div>
+	<section class="fill-dark" v-if="section !== 'by-date'">
+		<app-tag-list />
 	</section>
 
 	<app-game-listing

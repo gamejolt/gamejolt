@@ -17,15 +17,15 @@ import {
 import { AppGameGrid } from '../../../../components/game/grid/grid';
 import { AppGameListing } from '../../../../components/game/listing/listing';
 import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
-import { AppGenreList } from '../../../../components/genre/list/list';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
+import { AppTagList } from '../../../../components/tag/list/list';
 
 @View
 @Component({
 	name: 'RouteDiscoverGamesList',
 	components: {
 		AppPageHeader,
-		AppGenreList,
+		AppTagList,
 		AppGameListing,
 		AppGameGrid,
 	},
@@ -51,7 +51,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	section?: string;
 
 	@Prop(String)
-	category?: string;
+	tag?: string;
 
 	filtering: GameFilteringContainer | null = null;
 	listing: GameListingContainer | null = null;
@@ -164,10 +164,10 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		const sectionTranslationKey = 'games.list.section_' + (this.section || 'hot');
 		const sectionHuman = this.translations[sectionTranslationKey];
 		let categoryHuman = '';
-		if (this.category) {
-			const categoryTranslationKey = 'discover.categories.' + this.category.replace('-', '_');
-			categoryHuman = this.translations[categoryTranslationKey];
-		}
+		// if (this.category) {
+		// 	const categoryTranslationKey = 'discover.categories.' + this.category.replace('-', '_');
+		// 	categoryHuman = this.translations[categoryTranslationKey];
+		// }
 
 		const context = {
 			section: sectionHuman,
@@ -178,24 +178,24 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 			'%{ section } Indie %{ category } Games',
 			context
 		);
-		if (this.category === 'rpg') {
-			this.pageTitle = this.$gettextInterpolate('%{ section } Indie RPGs', context);
-		} else if (this.category === 'other') {
-			this.pageTitle = this.$gettextInterpolate(
-				'%{ section } Alternative Indie Games',
-				context
-			);
-		}
+		// if (this.category === 'rpg') {
+		// 	this.pageTitle = this.$gettextInterpolate('%{ section } Indie RPGs', context);
+		// } else if (this.category === 'other') {
+		// 	this.pageTitle = this.$gettextInterpolate(
+		// 		'%{ section } Alternative Indie Games',
+		// 		context
+		// 	);
+		// }
 
-		if (this.category === 'rpg') {
-			this.descriptiveCategory = this.$gettext('role-playing games');
-		} else if (this.category === 'other') {
-			this.descriptiveCategory = this.$gettext('alt games and other weirdness');
-		} else {
-			this.descriptiveCategory = this.$gettextInterpolate('%{ category } games', {
-				category: categoryHuman.toLowerCase(),
-			});
-		}
+		// if (this.category === 'rpg') {
+		// 	this.descriptiveCategory = this.$gettext('role-playing games');
+		// } else if (this.category === 'other') {
+		// 	this.descriptiveCategory = this.$gettext('alt games and other weirdness');
+		// } else {
+		// 	this.descriptiveCategory = this.$gettextInterpolate('%{ category } games', {
+		// 		category: categoryHuman.toLowerCase(),
+		// 	});
+		// }
 	}
 
 	processWorstSection() {
