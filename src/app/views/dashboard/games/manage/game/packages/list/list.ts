@@ -99,8 +99,11 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 		GamePackage.$saveSort(this.game.id, this.packagesSort);
 	}
 
-	addPackage() {
-		GamePackageEditModal.show(this.game);
+	async addPackage() {
+		const newPackage = await GamePackageEditModal.show(this.game);
+		if (newPackage instanceof GamePackage) {
+			this.packages.push(newPackage);
+		}
 	}
 
 	async removePackage(pkg: GamePackage) {
