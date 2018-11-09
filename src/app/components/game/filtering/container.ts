@@ -106,8 +106,6 @@ export class GameFilteringContainer {
 					html: Translate.$gettext('games.filtering.browser_html'),
 					flash: Translate.$gettext('games.filtering.browser_flash'),
 					unity: Translate.$gettext('games.filtering.browser_unity'),
-					applet: Translate.$gettext('games.filtering.browser_applet'),
-					silverlight: Translate.$gettext('games.filtering.browser_silverlight'),
 				},
 			},
 			maturity: {
