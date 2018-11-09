@@ -1,8 +1,6 @@
 import { RouteConfig } from 'vue-router';
 
 const SectionRegex = 'featured|new|fresh|hot|best|worst';
-// const CategoryRegex =
-// 	'arcade|action|adventure|rpg|strategy\\-sim|platformer|shooter|puzzle|sports|other';
 const DateRegex = '\\d{4}\\-\\d{2}\\-\\d{2}';
 
 export const routeDiscoverGamesListSection: RouteConfig = {

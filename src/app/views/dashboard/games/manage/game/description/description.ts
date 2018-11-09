@@ -25,7 +25,7 @@ export default class RouteDashGamesManageGameDescription extends BaseRouteCompon
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
-	tags: string[] | null = null;
+	tags: string[] = [];
 
 	get routeTitle() {
 		if (this.game) {
@@ -37,7 +37,7 @@ export default class RouteDashGamesManageGameDescription extends BaseRouteCompon
 	}
 
 	routeResolved($payload: any) {
-		this.tags = $payload.channels;
+		this.tags = $payload.tags || [];
 	}
 
 	onSaved() {

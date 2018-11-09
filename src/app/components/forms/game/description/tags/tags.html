@@ -1,0 +1,35 @@
+<div v-if="shouldShow">
+	<app-jolticon icon="tags" class="middle" />
+	<strong>
+		<translate>Game Tags</translate>
+	</strong>
+
+	<p class="help-block">
+		<translate>Tag your game to increase its visibility. It is recommended to include at least one of the listed tags, although you can add your own by putting a #hashtag in your description.</translate>
+	</p>
+
+	<div v-if="recommendedTags.length">
+		<a
+			class="badge game-tag"
+			v-for="tag of recommendedTags"
+			:key="tag"
+			@click="emitTag(tag)"
+			>
+			#{{ tag }}
+		</a>
+		<hr>
+	</div>
+
+	<div v-if="otherTags.length">
+		<a
+			class="badge game-tag"
+			v-for="tag of otherTags"
+			:key="tag"
+			@click="emitTag(tag)"
+			>
+			#{{ tag }}
+		</a>
+	</div>
+
+	<br>
+</div>

@@ -3,14 +3,14 @@
 	<app-form-group
 		name="description_markdown"
 		:label="$gettext( `dash.games.form.description_label` )"
-		:hide-label="true"
+		hide-label
 		>
 
 		<app-form-control-markdown
 			preview-class="game-compiled-description"
 			preview-url="/web/dash/developer/games/description/preview"
 			markdown-mode="games"
-			:show-media-items="true"
+			show-media-items
 			media-item-type="game-description"
 			:placeholder="$gettext( `Write your game description here...` )"
 			:disabled="isDisabled || !hasDetailsPerms"
@@ -20,40 +20,11 @@
 
 	</app-form-group>
 
-	<template v-if="shouldShowTags">
-		<app-jolticon icon="tags" />
-		<strong><translate>Game Tags</translate></strong>
-		<div class="page-help">
-			<p>
-				<translate>Tag your game to make it appear in game lists. Simply click one to add it to your game's description.</translate>
-				<br />
-				<translate>It is recommended to include at least one of the listed tags.</translate>
-			</p>
-		</div>
-		<div v-if="recommendedTags.length">
-			<a
-				v-for="tag of recommendedTags"
-				:key="tag"
-				@click="addTag(tag)"
-				class="badge game-tag"
-				>
-				#{{tag}}
-			</a>
-			<hr>
-		</div>
-		<div v-if="otherTags.length">
-			<a
-				v-for="tag of otherTags"
-				:key="tag"
-				@click="addTag(tag)"
-				class="badge game-tag"
-				>
-				#{{tag}}
-			</a>
-		</div>
-		<br />
-
-	</template>
+	<app-form-game-description-tags
+		:text="tagText"
+		:tags="tags"
+		@tag="addTag($event)"
+		/>
 
 	<app-expand :when="isFnafDetected">
 		<div class="alert alert-notice">
@@ -72,7 +43,7 @@
 
 				<app-button
 					trans
-					@click="skipAutotag"
+					@click="skipAutotag()"
 					>
 					<translate>dash.games.add.fnaf_autotag_reject</translate>
 				</app-button>
