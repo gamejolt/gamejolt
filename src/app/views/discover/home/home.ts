@@ -52,7 +52,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
 
-	isLoaded = false;
 	featuredItem: FeaturedItem | null = null;
 	games: Game[] = [];
 
@@ -83,10 +82,10 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			},
 		};
 
-		this.featuredItem = $payload.featuredItem ? new FeaturedItem($payload.featuredItem) : null;
+		if ($payload.isFollowingFeatured && this.featuredItem && this.featuredItem.game) {
+			this.featuredItem!.game!.is_following = true;
+		}
 		this.games = Game.populate($payload.games);
-
-		this.isLoaded = true;
 	}
 
 	routeDestroyed() {

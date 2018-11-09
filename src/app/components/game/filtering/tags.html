@@ -1,14 +1,14 @@
-<div class="game-filtering-tags" v-if="!filtering.areTagFiltersEmpty || genre">
+<div class="game-filtering-tags" v-if="!filtering.areTagFiltersEmpty || tag">
 
 	<a
-		v-if="genre"
+		v-if="tag"
 		class="tag tag-highlight game-filtering-tag"
-		@click="clearGenre"
+		@click="clearTag()"
 		>
 		<strong>
-			<translate>games.filtering.genre_label</translate>:
+			<translate>Tag</translate>:
 		</strong>
-		{{ Genre.genres[ genre ].label }}
+		{{ tag.label }}
 		<app-jolticon icon="remove" />
 	</a>
 

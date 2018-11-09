@@ -16,20 +16,8 @@
 			<translate>Browse by Tag</translate>
 		</h2>
 	</div>
-	<app-scroll-scroller horizontal overlay>
-		<div class="-list">
-			<div
-				class="-list-item"
-				v-for="channel of channels"
-				:key="channel.id"
-				>
-				<app-channel-thumbnail
-					class="-list-thumb"
-					:channel="channel.id"
-					/>
-			</div>
-		</div>
-	</app-scroll-scroller>
+
+	<app-tag-list />
 
 	<div class="-button visible-xs">
 		<div class="container">

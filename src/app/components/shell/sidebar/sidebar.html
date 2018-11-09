@@ -40,18 +40,18 @@
 
 			<li class="offline-disable">
 				<router-link
-					:to="{ name: 'discover.channels.list' }"
-					:class="{ active: $route.name.indexOf( 'discover.channels' ) === 0 }"
-					v-app-track-event="`sidebar:channels`"
+					:to="{ name: 'discover.games.list._fetch', params: { section: defaultBrowseSection } }"
+					:class="{ active: $route.name.indexOf( 'discover.games.list' ) === 0 }"
+					v-app-track-event="`sidebar:games`"
 					>
 					<span
 						class="shell-nav-icon"
-						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Channels' ) : ''"
+						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Browse Games' ) : ''"
 						>
-						<app-jolticon icon="tag" />
+						<app-jolticon icon="game" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>Channels</translate>
+						<translate>Browse Games</translate>
 					</span>
 				</router-link>
 			</li>

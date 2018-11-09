@@ -1,7 +1,6 @@
 import View from '!view!./cover-buttons.html?style=./cover-buttons.styl';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
 import { GameBuild } from '../../../../lib/gj-lib-client/components/game/build/build.model';
@@ -22,13 +21,26 @@ import { AppGameCoverButtonsBuildButtons } from './build-buttons';
 	},
 })
 export class AppGameCoverButtons extends Vue {
-	@Prop(Game) game!: Game;
-	@Prop(Array) packages!: GamePackage[];
-	@Prop(Array) downloadableBuilds!: GameBuild[];
-	@Prop(Array) browserBuilds!: GameBuild[];
-	@Prop(Array) installableBuilds!: GameBuild[];
-	@Prop(String) partnerKey?: string;
-	@Prop(User) partner?: User;
+	@Prop(Game)
+	game!: Game;
+
+	@Prop(Array)
+	packages!: GamePackage[];
+
+	@Prop(Array)
+	downloadableBuilds!: GameBuild[];
+
+	@Prop(Array)
+	browserBuilds!: GameBuild[];
+
+	@Prop(Array)
+	installableBuilds!: GameBuild[];
+
+	@Prop(String)
+	partnerKey?: string;
+
+	@Prop(User)
+	partner?: User;
 
 	static hook = {
 		buildButtons: undefined as typeof Vue | undefined,
@@ -79,7 +91,13 @@ export class AppGameCoverButtons extends Vue {
 		const build = this.chooseBuild(this.browserBuilds, defaultBuild);
 
 		if (build) {
-			GamePlayModal.show(this.game, build);
+			// If the build belongs to a pwyw package, open up the package
+			// payment form.
+			if (build._package!.shouldShowNamePrice()) {
+				this.buy(build._package, build);
+			} else {
+				GamePlayModal.show(this.game, build);
+			}
 		}
 	}
 
