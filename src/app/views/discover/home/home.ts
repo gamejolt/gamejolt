@@ -1,4 +1,4 @@
-import View from '!view!./home.html?style=./home.styl';
+import View from '!view!./home.html';
 import { Component } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { State } from 'vuex-class';
@@ -15,14 +15,13 @@ import {
 	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { AppScrollScroller } from '../../../../lib/gj-lib-client/components/scroll/scroller/scroller';
-import { Channels } from '../../../components/channel/channels-service';
-import { AppChannelThumbnail } from '../../../components/channel/thumbnail/thumbnail';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import { AppGameGrid } from '../../../components/game/grid/grid';
 import { AppGameGridPlaceholder } from '../../../components/game/grid/placeholder/placeholder';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Store } from '../../../store/index';
 import { AppDiscoverHomeBanner } from './_banner/banner';
+import { AppDiscoverHomeTags } from './_tags/tags';
 
 export interface DiscoverRow {
 	title: string;
@@ -36,12 +35,12 @@ export interface DiscoverRow {
 @Component({
 	name: 'RouteDiscoverHome',
 	components: {
+		AppDiscoverHomeBanner,
+		AppDiscoverHomeTags,
 		AppNavTabList,
 		AppGameGrid,
 		AppGameGridPlaceholder,
-		AppChannelThumbnail,
 		AppAuthJoin: AppAuthJoinLazy,
-		AppDiscoverHomeBanner,
 		AppScrollScroller,
 	},
 	directives: {
@@ -59,8 +58,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
 
-	isLoaded = false;
-	channels: any[] = [];
 	featuredItem: FeaturedItem | null = null;
 	games: Game[] = [];
 
@@ -97,32 +94,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		}
 
 		this.games = Game.populate($payload.games);
-
-		const channels = [
-			'action',
-			'horror',
-			'adventure',
-			'fangame',
-			'rpg',
-			'multiplayer',
-			'platformer',
-			'survival',
-			'retro',
-			'shooter',
-			'vr',
-			'strategy-sim',
-			'fnaf',
-		];
-
-		this.channels = [];
-		for (const channel of channels) {
-			const info = Channels.channels.find(i => i.id === channel);
-			if (info) {
-				this.channels.push(info);
-			}
-		}
-
-		this.isLoaded = true;
 	}
 
 	routeDestroyed() {
