@@ -12,7 +12,7 @@ import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 		AppTagSuggestion,
 	},
 })
-export class AppFormGameDescriptionTags extends Vue {
+export class AppFormPostTags extends Vue {
 	@Prop(Array)
 	tags!: string[];
 

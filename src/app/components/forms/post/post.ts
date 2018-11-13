@@ -38,12 +38,13 @@ import { AppLoading } from 'game-jolt-frontend-lib/vue/components/loading/loadin
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { determine } from 'jstimezonedetect';
 import { Component, Prop } from 'vue-property-decorator';
+import { AppFormPostTags } from './tags/tags';
 import { AppFormPostMedia } from './_media/media';
 
 type FormPostModel = FiresidePost & {
 	mediaItemIds: number[];
 	publishToPlatforms: number[] | null;
-	key_group_ids: KeyGroup[];
+	key_group_ids: number[];
 	video_url: string;
 	sketchfab_id: string;
 
@@ -80,6 +81,7 @@ type FormPostModel = FiresidePost & {
 		AppUserAvatarImg,
 		AppProgressBar,
 		AppFormPostMedia,
+		AppFormPostTags,
 	},
 	directives: {
 		AppFocusWhen,
@@ -109,6 +111,7 @@ export class FormPost extends BaseForm<FormPostModel>
 	readonly MAX_POLL_DURATION = 20160;
 
 	keyGroups: KeyGroup[] = [];
+	possibleTags: string[] = [];
 	wasPublished = false;
 	attachmentType = '';
 	enabledAttachments = false;
@@ -201,6 +204,11 @@ export class FormPost extends BaseForm<FormPostModel>
 		return this.longEnabled;
 	}
 
+	get tagText() {
+		const longText = this.longEnabled ? this.formModel.content_markdown : '';
+		return `${this.formModel.lead} ${longText || ''}`.toLowerCase();
+	}
+
 	get hasPoll() {
 		return this.formModel.poll_item_count > 0;
 	}
@@ -272,10 +280,13 @@ export class FormPost extends BaseForm<FormPostModel>
 				// Port number.
 				'(:(6553[0-5]|655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[0-9]{1,4}))?' +
 				// Path.
+				// tslint:disable-next-line:quotemark
 				"(\\/([a-z0-9-\\._~!$&'\\(\\)\\*\\+,;=:@%]{1,})?)*" +
 				// Query.
+				// tslint:disable-next-line:quotemark max-line-length
 				"(\\?[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]{1,}(=[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]*)?(&[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]{1,}(=[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]*)?)*)?" +
 				// Fragment.
+				// tslint:disable-next-line:quotemark
 				"(#[a-z0-9-\\._~:@\\/\\?!$&'\\(\\)\\*\\+,;=%]{1,})?" +
 				// Lookahead to end url.
 				'(?=\\W|$)',
@@ -415,6 +426,7 @@ export class FormPost extends BaseForm<FormPostModel>
 
 	onLoad(payload: any) {
 		this.keyGroups = KeyGroup.populate(payload.keyGroups);
+		this.possibleTags = payload.tags;
 		this.wasPublished = payload.wasPublished;
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
@@ -519,6 +531,11 @@ export class FormPost extends BaseForm<FormPostModel>
 
 	toggleLong() {
 		this.longEnabled = !this.longEnabled;
+	}
+
+	async addTag(tag: string) {
+		const newLead = this.formModel.lead ? `${this.formModel.lead} #${tag}` : `#${tag}`;
+		this.setField('lead', newLead);
 	}
 
 	createPoll() {
@@ -734,7 +751,7 @@ export class FormPost extends BaseForm<FormPostModel>
 			{},
 			{
 				file: files,
-				progress: e => this.setField('_progress', e),
+				progress: e2 => this.setField('_progress', e2),
 			}
 		);
 

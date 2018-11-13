@@ -170,6 +170,13 @@
 			>
 			<translate>Your post is too long!</translate>
 		</p>
+
+		<app-form-post-tags
+			class="-post-tags"
+			:text="tagText"
+			:tags="possibleTags"
+			@tag="addTag($event)"
+		/>
 	</app-form-group>
 
 	<!-- Post body (long) -->
