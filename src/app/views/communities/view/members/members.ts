@@ -3,7 +3,7 @@ import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { Component, Prop } from 'vue-property-decorator';
@@ -21,6 +21,12 @@ function getFetchUrl(route: Route) {
 		AppFollowerList,
 	},
 })
+@RouteResolver({
+	cache: true,
+	lazy: true,
+	deps: {},
+	resolver: ({ route }) => Api.sendRequest(getFetchUrl(route)),
+})
 export default class RouteCommunitiesViewMembers extends BaseRouteComponent {
 	@Prop(Community)
 	community!: Community;
@@ -35,16 +41,7 @@ export default class RouteCommunitiesViewMembers extends BaseRouteComponent {
 		return getFetchUrl(this.$route);
 	}
 
-	@RouteResolve({
-		cache: true,
-		lazy: true,
-		deps: {},
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest(getFetchUrl(route));
-	}
-
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.users = User.populate($payload.users);
 	}
 }

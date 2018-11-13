@@ -5,12 +5,11 @@ import { AppCommunityJoinWidget } from 'game-jolt-frontend-lib/components/commun
 import { AppCommunityThumbnailImg } from 'game-jolt-frontend-lib/components/community/thumbnail/img/img';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { AppPageHeader } from '../../../components/page-header/page-header';
 
 @View
@@ -25,21 +24,18 @@ import { AppPageHeader } from '../../../components/page-header/page-header';
 		number,
 	},
 })
+@RouteResolver({
+	cache: true,
+	deps: { params: ['path'] },
+	resolver: ({ route }) => Api.sendRequest('/web/communities/view/' + route.params.path),
+})
 export default class RouteCommunitiesView extends BaseRouteComponent {
 	@ThemeMutation
 	setPageTheme!: ThemeStore['setPageTheme'];
 
 	community: Community = null as any;
 
-	@RouteResolve({
-		cache: true,
-		deps: { params: ['path'] },
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/communities/view/' + route.params.path);
-	}
-
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.community = new Community($payload.community);
 		this.setPageTheme(this.community.theme || null);
 	}

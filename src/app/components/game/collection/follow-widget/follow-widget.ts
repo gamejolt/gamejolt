@@ -6,7 +6,7 @@ import { AppAuthRequired } from '../../../../../lib/gj-lib-client/components/aut
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { LibraryModule, LibraryStore } from '../../../../store';
+import { LibraryModule, LibraryStore } from '../../../../store/library';
 import { GameCollection } from '../collection.model';
 
 @View

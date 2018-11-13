@@ -33,13 +33,8 @@ import { AppGameGrid } from '../../../components/game/grid/grid';
 import { AppGameListing } from '../../../components/game/listing/listing';
 import { GameListingContainer } from '../../../components/game/listing/listing-container-service';
 import { AppPageHeader } from '../../../components/page-header/page-header';
-import {
-	LibraryModule,
-	LibraryStore,
-	store,
-	Store,
-	tillStoreBootstrapped,
-} from '../../../store/index';
+import { store, Store, tillStoreBootstrapped } from '../../../store/index';
+import { LibraryModule, LibraryStore } from '../../../store/library';
 
 const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
 const UserTypes = ['followed', 'owned', 'developer', 'recommended'];

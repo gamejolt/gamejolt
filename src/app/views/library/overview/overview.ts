@@ -8,7 +8,8 @@ import { GameCollection } from '../../../components/game/collection/collection.m
 import { AppGameCollectionGrid } from '../../../components/game/collection/grid/grid';
 import { AppGameCollectionList } from '../../../components/game/collection/list/list';
 import { AppPageHeader } from '../../../components/page-header/page-header';
-import { LibraryModule, LibraryStore, Store } from '../../../store/index';
+import { Store } from '../../../store';
+import { LibraryModule, LibraryStore } from '../../../store/library';
 
 @View
 @Component({
