@@ -92,7 +92,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	}
 
 	get hasGamesSection() {
-		return this.games.length > 0;
+		return this.games.length > 0 && Screen.isLg;
 	}
 
 	get hasGameFilter() {

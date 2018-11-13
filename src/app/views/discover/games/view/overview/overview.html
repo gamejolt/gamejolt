@@ -9,37 +9,36 @@
 	<app-ad-placement hidden-xs pos="top" />
 
 	<section class="section">
-		<app-page-container>
-			<div slot="left">
-				<app-discover-games-view-overview-statbar />
+		<app-page-container xl>
+			<app-discover-games-view-overview-statbar
+				slot="left"
+				/>
 
-				<template v-if="game.comments_enabled">
-					<br>
-					<div class="pull-right">
-						<app-button trans @click="showComments()">
-							<translate>View All</translate>
-						</app-button>
-					</div>
+			<div
+				v-if="!Screen.isMobile && game.comments_enabled"
+				slot="left-bottom"
+				>
+				<br>
+				<div class="pull-right">
+					<app-button trans @click="showComments()">
+						<translate>View All</translate>
+					</app-button>
+				</div>
 
-					<h4 class="section-header">
-						<translate>Comments</translate>
-					</h4>
+				<h4 class="section-header">
+					<translate>Comments</translate>
+				</h4>
 
-					<app-comment-add-button
-						resource="Game"
-						:resource-id="game.id"
-						/>
+				<app-comment-add-button
+					resource="Game"
+					:resource-id="game.id"
+					/>
 
-					<app-comment-overview
-						:comments="overviewComments"
-						/>
-				</template>
+				<app-comment-overview
+					:comments="overviewComments"
+					/>
 			</div>
 
-			<!--
-				We don't show this whole section on phones.
-				We instead show in the game nav.
-			-->
 			<div slot="right" v-if="!Screen.isMobile">
 				<h4 class="section-header">
 					<translate>Recommended</translate>

@@ -1,35 +1,6 @@
 <section class="section">
-	<app-page-container>
-		<div slot="right">
-			<app-broadcast-card
-				v-if="latestBroadcast"
-				:post="latestBroadcast"
-				/>
-
-			<template v-if="!Screen.isMobile">
-				<h4 class="section-header">
-					<translate>Featured Games</translate>
-				</h4>
-
-				<app-game-list-placeholder
-					v-if="!featuredGames.length"
-					:num="5"
-					/>
-				<app-game-list
-					v-else-if="featuredGames.length"
-					:games="featuredGames.slice(0, 7)"
-					event-label="activity"
-					/>
-			</template>
-		</div>
-
-		<!--
-			We need this space to be taken up even if they don't have games.
-		-->
-		<div
-			slot="left"
-			v-if="!Screen.isMobile"
-			>
+	<app-page-container xl>
+		<div slot="left">
 			<template v-if="hasGamesSection">
 				<h4 class="section-header">
 					<translate>Manage Games</translate>
@@ -71,14 +42,37 @@
 					</ul>
 				</nav>
 
-				<div v-if="isShowAllGamesVisible">
+				<p v-if="isShowAllGamesVisible">
 					<a
 						class="link-muted"
 						@click="isShowingAllGames = !isShowingAllGames"
 						>
 						<translate>Show all</translate>
 					</a>
-				</div>
+				</p>
+			</template>
+		</div>
+
+		<div slot="right">
+			<app-broadcast-card
+				v-if="latestBroadcast"
+				:post="latestBroadcast"
+				/>
+
+			<template v-if="!Screen.isMobile">
+				<h4 class="section-header">
+					<translate>Featured Games</translate>
+				</h4>
+
+				<app-game-list-placeholder
+					v-if="!featuredGames.length"
+					:num="5"
+					/>
+				<app-game-list
+					v-else-if="featuredGames.length"
+					:games="featuredGames.slice(0, 7)"
+					event-label="activity"
+					/>
 			</template>
 		</div>
 
