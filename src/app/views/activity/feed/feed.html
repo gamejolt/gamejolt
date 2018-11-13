@@ -46,6 +46,7 @@
 					<a
 						class="link-muted"
 						@click="isShowingAllGames = !isShowingAllGames"
+						v-app-track-event="`activity:quick-game-all`"
 						>
 						<translate>Show all</translate>
 					</a>
@@ -73,6 +74,19 @@
 					:games="featuredGames.slice(0, 7)"
 					event-label="activity"
 					/>
+
+				<p>
+					<router-link
+						class="link-muted"
+						:to="{
+							name: 'discover.games.list._fetch',
+							params: { section: null }
+						}"
+						v-app-track-event="`activity:browse-games`"
+						>
+						<translate>Browse all games</translate>
+					</router-link>
+				</p>
 			</template>
 		</div>
 

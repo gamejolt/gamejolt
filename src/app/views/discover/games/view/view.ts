@@ -319,7 +319,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		settings.isPageDisabled = !this.game._should_show_ads;
 		settings.targeting = {
 			mat,
-			genre: this.game.category,
 			paid: this.game.is_paid_game ? 'y' : 'n',
 			game: this.game.id + '',
 		};

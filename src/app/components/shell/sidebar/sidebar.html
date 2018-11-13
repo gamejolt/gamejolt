@@ -58,24 +58,6 @@
 				</router-link>
 			</li>
 
-			<li class="offline-disable">
-				<router-link
-					:to="{ name: 'discover.channels.list' }"
-					:class="{ active: $route.name.indexOf( 'discover.channels' ) === 0 }"
-					v-app-track-event="`sidebar:channels`"
-					>
-					<span
-						class="shell-nav-icon"
-						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Channels' ) : ''"
-						>
-						<app-jolticon icon="tag" />
-					</span>
-					<span class="shell-nav-label">
-						<translate>Channels</translate>
-					</span>
-				</router-link>
-			</li>
-
 			<template v-if="Screen.isXs">
 				<li class="offline-disable">
 					<router-link
