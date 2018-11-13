@@ -30,6 +30,7 @@ import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import { AppCommentOverview } from '../../../../../components/comment/overview/overview';
 import { AppGameOgrs } from '../../../../../components/game/ogrs/ogrs';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
+import { AppPageContainer } from '../../../../../components/page-container/page-container';
 import { AppPostAddButton } from '../../../../../components/post/add-button/add-button';
 import { AppRatingWidget } from '../../../../../components/rating/widget/widget';
 import { RouteStore, routeStore, RouteStoreModule } from '../view.store';
@@ -42,6 +43,7 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 @Component({
 	name: 'RouteDiscoverGamesViewOverview',
 	components: {
+		AppPageContainer,
 		AppDiscoverGamesViewOverviewDetails,
 		AppDiscoverGamesViewOverviewRecommended,
 		AppDiscoverGamesViewOverviewSupporters,
