@@ -33,6 +33,7 @@ import {
 	Mutations as AppMutations,
 } from '../../lib/gj-lib-client/vue/services/app/app-store';
 import { Settings } from '../../_common/settings/settings.service';
+import { ActivityFeedState } from '../components/activity/feed/state';
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
 import { ChatClient } from '../components/chat/client';
 import { GridClient } from '../components/grid/client.service';
@@ -44,7 +45,6 @@ import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations 
 
 // Re-export our sub-modules.
 export { BannerModule, BannerStore } from './banner';
-export { LibraryModule, LibraryStore } from './library';
 
 export type Actions = AppActions &
 	ThemeActions &
@@ -52,16 +52,19 @@ export type Actions = AppActions &
 	BannerActions &
 	CommentActions &
 	_ClientLibraryMod.Actions & {
-		bootstrap: undefined;
-		logout: undefined;
-		clear: undefined;
-		loadChat: undefined;
-		clearChat: undefined;
-		loadGrid: undefined;
-		clearGrid: undefined;
-		toggleLeftPane: undefined;
-		toggleRightPane: undefined;
-		clearPanes: undefined;
+		bootstrap: void;
+		logout: void;
+		clear: void;
+		loadChat: void;
+		clearChat: void;
+		loadGrid: void;
+		clearGrid: void;
+		loadNotificationState: void;
+		clearNotificationState: void;
+		markNotificationsAsRead: void;
+		toggleLeftPane: void;
+		toggleRightPane: void;
+		clearPanes: void;
 	};
 
 export type Mutations = AppMutations &
@@ -121,6 +124,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	unreadActivityCount = 0; // unread items in the activity feed
 	unreadNotificationsCount = 0; // unread items in the notification feed
 	friendRequestCount = 0;
+	notificationState: ActivityFeedState | null = null;
 
 	isLeftPaneSticky = Settings.get('sidebar') as boolean;
 	isLeftPaneOverlayed = false;
@@ -145,7 +149,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	get hasSidebar() {
-		return Screen.isXs || this.app.user;
+		return Screen.isXs || this.app.user || GJ_IS_SSR;
 	}
 
 	get hasMinibar() {
@@ -221,16 +225,12 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async clear() {
-		this._clear();
+		tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
 		this.commit('library/clear');
 	}
 
 	@VuexAction
 	async loadChat() {
-		if (GJ_IS_SSR) {
-			return;
-		}
-
 		const ChatClient_ = await ChatClientLazy();
 		this._setChat(new ChatClient_());
 	}
@@ -247,10 +247,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async loadGrid() {
-		if (GJ_IS_SSR) {
-			return;
-		}
-
 		const GridClient_ = await GridClientLazy();
 		this._setGrid(new GridClient_());
 	}
@@ -262,6 +258,32 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		}
 
 		this._setGrid(null);
+	}
+
+	@VuexAction
+	async loadNotificationState() {
+		const state = new ActivityFeedState({
+			type: 'Notification',
+			url: `/web/dash/activity/more/notifications`,
+		});
+
+		this._setNotificationState(state);
+	}
+
+	@VuexAction
+	async clearNotificationState() {
+		this._setNotificationState(null);
+	}
+
+	@VuexAction
+	async markNotificationsAsRead() {
+		if (!this.notificationState) {
+			return;
+		}
+
+		// Reset the watermark first so that it happens immediately.
+		this._resetNotificationWatermark();
+		await Api.sendRequest('/web/dash/activity/mark-all-read', {});
 	}
 
 	@VuexAction
@@ -288,7 +310,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexAction
-	async _checkBackdrop() {
+	private async _checkBackdrop() {
 		// Ensure we have a backdrop if anything is overlayed.
 		// Otherwise ensure the backdrop is gone.
 		if (this.isRightPaneOverlayed || this.shouldShowLeftPaneBackdrop) {
@@ -348,11 +370,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	private _clear() {
-		tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
-	}
-
-	@VuexMutation
 	private _shellPayload(payload: any) {
 		this.isShellBootstrapped = true;
 		this.communities = Community.populate(payload.communities);
@@ -366,6 +383,20 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexMutation
 	private _setGrid(grid: GridClient | null) {
 		this.grid = grid;
+	}
+
+	@VuexMutation
+	private _setNotificationState(state: ActivityFeedState | null) {
+		this.notificationState = state;
+	}
+
+	@VuexMutation
+	private _resetNotificationWatermark() {
+		// Mark all loaded notifications as read through the feed watermark.
+		// It's better than having to reload from the backend.
+		if (this.notificationState) {
+			this.notificationState.notificationWatermark = Date.now();
+		}
 	}
 
 	@VuexMutation
@@ -429,8 +460,11 @@ store.watch(
 
 		if (isLoggedIn) {
 			store.dispatch('bootstrap');
-			store.dispatch('loadChat');
-			store.dispatch('loadGrid');
+			if (!GJ_IS_SSR) {
+				store.dispatch('loadChat');
+				store.dispatch('loadGrid');
+				store.dispatch('loadNotificationState');
+			}
 
 			if (GJ_IS_CLIENT) {
 				store.dispatch('clientLibrary/bootstrap');
@@ -439,6 +473,7 @@ store.watch(
 			store.dispatch('clear');
 			store.dispatch('clearChat');
 			store.dispatch('clearGrid');
+			store.dispatch('clearNotificationState');
 		}
 	}
 );

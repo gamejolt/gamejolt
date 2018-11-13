@@ -56,7 +56,7 @@
 	</app-expand>
 
 	<!-- Don't show content before this route has loaded in the account data. -->
-	<section class="section" v-if="routeBootstrapped">
+	<section class="section" v-if="isRouteBootstrapped">
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-3 col-md-2" v-if="!Screen.isXs">
@@ -71,6 +71,17 @@
 									<translate>Profile</translate>
 								</router-link>
 							</li>
+							<li>
+								<router-link
+									:to="{ name: 'dash.account.site' }"
+									active-class="active"
+									>
+									<translate>Portfolio Site</translate>
+								</router-link>
+							</li>
+						</ul>
+						<hr>
+						<ul>
 							<li>
 								<router-link
 									:to="{ name: 'dash.account.linked-accounts' }"
@@ -95,6 +106,9 @@
 									<translate>Password</translate>
 								</router-link>
 							</li>
+						</ul>
+						<hr>
+						<ul>
 							<li>
 								<router-link
 									:to="{ name: 'dash.account.payment-methods' }"
@@ -113,10 +127,29 @@
 							</li>
 							<li>
 								<router-link
+									:to="{ name: 'dash.account.purchases.list' }"
+									active-class="active"
+									>
+									<translate>Purchases</translate>
+								</router-link>
+							</li>
+						</ul>
+						<hr>
+						<ul>
+							<li>
+								<router-link
 									:to="{ name: 'dash.account.financials' }"
 									active-class="active"
 									>
 									<translate>Marketplace Account Setup</translate>
+								</router-link>
+							</li>
+							<li>
+								<router-link
+									:to="{ name: 'dash.account.withdraw-funds' }"
+									active-class="active"
+									>
+									<translate>Revenue</translate>
 								</router-link>
 							</li>
 						</ul>

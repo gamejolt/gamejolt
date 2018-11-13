@@ -1,32 +1,27 @@
 import View from '!view!./manage.html';
+import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-store';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../lib/gj-lib-client/components/route/route-component';
-import {
-	ThemeMutation,
-	ThemeStore,
-} from '../../../../../lib/gj-lib-client/components/theme/theme.store';
 import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
-import { RouteMutation, RouteState, RouteStore, RouteStoreName } from './manage.store';
+import { store } from '../../../../store';
+import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './manage.store';
 
 @View
 @Component({
 	name: 'RouteDashGamesManage',
 	components: {
-		AppJolticon,
 		AppPageHeader,
 		AppExpand,
 		AppTimeAgo,
@@ -36,28 +31,14 @@ import { RouteMutation, RouteState, RouteStore, RouteStoreName } from './manage.
 		AppTooltip,
 	},
 })
-export default class RouteDashGamesManage extends BaseRouteComponent {
-	@AppState
-	user!: AppStore['user'];
-	@RouteState
-	game!: RouteStore['game'];
-	@RouteState
-	isWizard!: RouteStore['isWizard'];
-
-	@RouteMutation
-	populate!: RouteStore['populate'];
-	@ThemeMutation
-	setPageTheme!: ThemeStore['setPageTheme'];
-
-	storeName = RouteStoreName;
-	storeModule = RouteStore;
-
-	Game = Game;
-
-	@RouteResolve({
-		deps: { params: ['id'], query: ['intent'] },
-	})
-	async routeResolve(this: undefined, route: Route) {
+@WithRouteStore({
+	store,
+	routeStoreName: RouteStoreName,
+	routeStoreClass: RouteStore,
+})
+@RouteResolver({
+	deps: { params: ['id'], query: ['intent'] },
+	async resolver({ route }) {
 		const intentRedirect = IntentService.checkRoute(route, {
 			intent: 'accept-game-collaboration',
 			message: Translate.$gettext(`You're now a collaborator for this project!`),
@@ -67,14 +48,28 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 		}
 
 		return Api.sendRequest('/web/dash/developer/games/' + route.params.id);
-	}
+	},
+	resolveStore({ payload }) {
+		routeStore.commit('populate', payload);
+		store.commit('theme/setPageTheme', routeStore.state.game.theme || null);
+	},
+})
+export default class RouteDashGamesManage extends BaseRouteComponent {
+	@AppState
+	user!: AppStore['user'];
 
-	routed($payload: any) {
-		this.populate($payload);
-		this.setPageTheme(this.game.theme || null);
-	}
+	@RouteStoreModule.State
+	game!: RouteStore['game'];
 
-	routeDestroy() {
-		this.setPageTheme(null);
+	@RouteStoreModule.State
+	isWizard!: RouteStore['isWizard'];
+
+	@RouteStoreModule.Mutation
+	populate!: RouteStore['populate'];
+
+	readonly Game = Game;
+
+	routeDestroyed() {
+		store.commit('theme/setPageTheme', null);
 	}
 }

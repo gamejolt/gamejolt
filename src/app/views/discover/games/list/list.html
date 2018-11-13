@@ -1,95 +1,119 @@
 <div>
 
 	<app-page-header>
+
 		<!--
 			Animation scope.
 		-->
-		<div class="games-section-header-copy anim-fade-in-right no-animate-leave no-animate-xs"
-			v-for="sectionCategory of [ section + (category || '') ]"
+		<div
+			:class="{
+				'-has-spotlight': spotlight,
+			}"
+			:key="section + (tag || '')"
 			>
 
-			<h1 v-if="section !== 'by-date'">
-				{{ pageTitle }}
-			</h1>
-			<h1 v-else>
-				<template v-if="!dateRange">
-					<span v-translate="{ date }">
-						Games Published <small>on %{ date }</small>
-					</span>
+			<img
+				v-if="spotlight"
+				class="-spotlight hidden-xs anim-fade-in-enlarge"
+				:src="spotlight"
+				alt=""
+				>
+
+			<div class="-header-content anim-fade-in-right">
+				<h1 v-if="section !== 'by-date'">
+					{{ routeTitle }}
+				</h1>
+				<h1 v-else>
+					<template v-if="!dateRange">
+						<span v-translate="{ date }">
+							Games published <small>on %{ date }</small>
+						</span>
+					</template>
+					<template v-else>
+						<span
+							v-translate="{
+								dateStart: dateRange[0],
+								dateEnd: dateRange[1],
+							}"
+							>
+							Games published <small>between %{ dateStart } and %{ dateEnd }</small>
+						</span>
+					</template>
+				</h1>
+
+				<template v-if="tag">
+					<p class="text-muted small" v-if="section === 'featured'">
+						<translate :translate-params="{ tag: tag }">
+							Featured %{ tag } games that we love on Game Jolt.
+						</translate>
+					</p>
+					<p class="text-muted small" v-else-if="section === 'best'">
+						<translate :translate-params="{ tag: tag }">
+							Best %{ tag } games sorted by Voltage on Game Jolt.
+						</translate>
+						<app-jolticon icon="help-circle" v-app-tooltip="$gettext( 'games.list.voltage_tooltip' )" />
+					</p>
+					<p class="text-muted small" v-else-if="!section">
+						<translate :translate-params="{ tag: tag }">
+							New %{ tag } games sorted by Hotness on Game Jolt.
+						</translate>
+						<app-jolticon icon="help-circle" v-app-tooltip="$gettext( 'games.list.hotness_tooltip' )" />
+					</p>
+					<p class="text-muted small" v-else-if="section === 'new'">
+						<translate :translate-params="{ tag: tag }">
+							New %{ tag } games on Game Jolt.
+						</translate>
+					</p>
 				</template>
 				<template v-else>
-					<span
-						v-translate="{
-							dateStart: dateRange[0],
-							dateEnd: dateRange[1],
-						}"
-						>
-						Games Published <small>between %{ dateStart } and %{ dateEnd }</small>
-					</span>
+					<p class="text-muted small" v-if="section === 'featured'">
+						<translate>
+							Featured games that we love on Game Jolt.
+						</translate>
+					</p>
+					<p class="text-muted small" v-else-if="section === 'best'">
+						<translate>
+							Best games sorted by Voltage on Game Jolt.
+						</translate>
+						<app-jolticon icon="help-circle" v-app-tooltip="$gettext( 'games.list.voltage_tooltip' )" />
+					</p>
+					<p class="text-muted small" v-else-if="!section">
+						<translate>
+							New games sorted by Hotness on Game Jolt.
+						</translate>
+						<app-jolticon icon="help-circle" v-app-tooltip="$gettext( 'games.list.hotness_tooltip' )" />
+					</p>
+					<p class="text-muted small" v-else-if="section === 'new'">
+						<translate>
+							New games on Game Jolt, sorted by publication date.
+						</translate>
+					</p>
+					<p class="text-muted small" v-else-if="section === 'by-date'">
+						<template v-if="!dateRange">
+							<translate :translate-params="{ date }">
+								Games that were published on %{ date }, sorted by Voltage, with the best scores at the top.
+							</translate>
+						</template>
+						<template v-else>
+							<translate
+								:translate-params="{
+									dateStart: dateRange[0],
+									dateEnd: dateRange[1],
+								}"
+								>
+								Games that were published between %{ dateStart } and %{ dateEnd }, sorted by Voltage, with the best scores at the top.
+							</translate>
+						</template>
+						<app-jolticon icon="help-circle" v-app-tooltip="$gettext( 'games.list.voltage_tooltip' )" />
+					</p>
 				</template>
-			</h1>
-
-			<p class="text-muted small" v-if="section === 'featured'">
-				<translate :translate-params="{ category: descriptiveCategory }">
-					Indie %{ category } that we've featured on the homepage, sorted by feature date.
-				</translate>
-			</p>
-			<p class="text-muted small" v-else-if="section === 'best'">
-				<translate :translate-params="{ category: descriptiveCategory }">
-					Indie %{ category } sorted by Voltage.
-				</translate>
-				<app-jolticon icon="help-circle" v-app-tooltip="$gettext( 'games.list.voltage_tooltip' )" />
-			</p>
-			<p class="text-muted small" v-else-if="section === 'fresh'">
-				<translate :translate-params="{ category: descriptiveCategory }">
-					Indie %{ category } sorted by Freshness.
-				</translate>
-				<app-jolticon icon="help-circle" v-app-tooltip="$gettext( 'games.list.freshness_tooltip' )" />
-			</p>
-			<p class="text-muted small" v-else-if="!section">
-				<translate :translate-params="{ category: descriptiveCategory }">
-					Indie %{ category } sorted by Hotness.
-				</translate>
-				<app-jolticon icon="help-circle" v-app-tooltip="$gettext( 'games.list.hotness_tooltip' )" />
-			</p>
-			<p class="text-muted small" v-else-if="section === 'new'">
-				<translate :translate-params="{ category: descriptiveCategory }">
-					Indie %{ category } sorted by publication date.
-				</translate>
-			</p>
-			<p class="text-muted small" v-else-if="section === 'by-date'">
-				<template v-if="!dateRange">
-					<translate :translate-params="{ date }">
-						Games that were published on %{ date }, sorted by Voltage, with the best scores at the top.
-					</translate>
-				</template>
-				<template v-else>
-					<translate
-						:translate-params="{
-							dateStart: dateRange[0],
-							dateEnd: dateRange[1],
-						}"
-						>
-						Games that were published between %{ dateStart } and %{ dateEnd }, sorted by Voltage, with the best scores at the top.
-					</translate>
-				</template>
-				<app-jolticon icon="help-circle" v-app-tooltip="$gettext( 'games.list.voltage_tooltip' )" />
-			</p>
-
+			</div>
 		</div>
 
 	</app-page-header>
 
-	<section class="section fill-dark section-thin" v-if="section !== 'by-date'">
-		<div class="container">
-			<app-genre-list />
-		</div>
-	</section>
-
-	<section class="section fill-notice section-thin" v-if="section === 'new'">
-		<div class="container" v-translate>
-			games.list.new_games_warning_html
-		</div>
+	<section class="fill-dark" v-if="section !== 'by-date'">
+		<app-tag-list />
 	</section>
 
 	<app-game-listing
@@ -97,8 +121,14 @@
 		:listing="listing"
 		:include-featured-section="true"
 		:hide-section-nav="section === 'by-date'"
-		:is-loading="routeLoading"
+		:is-loading="isRouteLoading"
 		>
+
+		<div class="alert alert-info anim-fade-in-enlarge" v-if="section === 'new'">
+			<div v-translate>
+				games.list.new_games_warning_html
+			</div>
+		</div>
 
 		<app-game-grid
 			:games="listing.games"

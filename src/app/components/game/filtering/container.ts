@@ -1,11 +1,11 @@
 import Vue from 'vue';
-import { Route, Location } from 'vue-router';
+import { Location, Route } from 'vue-router';
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
-import { forEach } from '../../../../lib/gj-lib-client/utils/collection';
 import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { Translate } from '../../../../lib/gj-lib-client/components/translate/translate.service';
+import { forEach } from '../../../../lib/gj-lib-client/utils/collection';
 import { objectEquals } from '../../../../lib/gj-lib-client/utils/object';
 import { router } from '../../../views/index';
-import { Translate } from '../../../../lib/gj-lib-client/components/translate/translate.service';
 
 const STORAGE_KEY = 'game-filtering:filters';
 
@@ -106,8 +106,6 @@ export class GameFilteringContainer {
 					html: Translate.$gettext('games.filtering.browser_html'),
 					flash: Translate.$gettext('games.filtering.browser_flash'),
 					unity: Translate.$gettext('games.filtering.browser_unity'),
-					applet: Translate.$gettext('games.filtering.browser_applet'),
-					silverlight: Translate.$gettext('games.filtering.browser_silverlight'),
 				},
 			},
 			maturity: {
@@ -125,6 +123,7 @@ export class GameFilteringContainer {
 				options: {
 					complete: Translate.$gettext('Complete/Stable'),
 					wip: Translate.$gettext('Early Access'),
+					devlog: Translate.$gettext('Devlog'),
 				},
 			},
 			partners: {
@@ -293,8 +292,8 @@ export class GameFilteringContainer {
 			queryPieces.push('sort=' + route.query.sort);
 		}
 
-		if (route.params.category) {
-			queryPieces.push('category=' + route.params.category);
+		if (route.params.tag) {
+			queryPieces.push('tag=' + route.params.tag);
 		}
 
 		if (route.params.date) {

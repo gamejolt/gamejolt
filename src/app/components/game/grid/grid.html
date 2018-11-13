@@ -52,13 +52,4 @@
 			</template>
 		</div>
 	</div>
-
-	<app-pagination
-		class="text-center"
-		v-if="perPage && gamesCount"
-		:items-per-page="perPage"
-		:total-items="gamesCount"
-		:current-page="currentPage"
-		@pagechange="Scroll.to( 'grid-pagination-' + id, { animate: false } )"
-		/>
 </div>

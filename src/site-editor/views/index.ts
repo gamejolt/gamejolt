@@ -1,9 +1,9 @@
 import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
-import { Route, RouteConfig } from 'vue-router';
+import { RouteConfig } from 'vue-router';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../lib/gj-lib-client/components/route/route-component';
 import { initRouter } from '../../lib/gj-lib-client/utils/router';
 import { store } from '../store/index';
@@ -14,14 +14,16 @@ import { store } from '../store/index';
 @Component({
 	name: 'RouteEditor',
 })
-class RouteEditor extends BaseRouteComponent {
-	@RouteResolve({ lazy: false, cache: false })
-	routeResolve(this: undefined, route: Route) {
+@RouteResolver({
+	lazy: false,
+	cache: false,
+	resolver({ route }) {
 		const tab: any = route.params.tab;
 		const siteId = parseInt(route.query.id, 10);
 		return store.dispatch('bootstrapTab', { tab, siteId });
-	}
-
+	},
+})
+class RouteEditor extends BaseRouteComponent {
 	render(h: CreateElement) {
 		return h('div');
 	}

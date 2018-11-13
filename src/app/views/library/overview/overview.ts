@@ -4,7 +4,6 @@ import { State } from 'vuex-class';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import { AppGameCollectionGrid } from '../../../components/game/collection/grid/grid';
 import { AppGameCollectionList } from '../../../components/game/collection/list/list';
@@ -16,7 +15,6 @@ import { LibraryModule, LibraryStore, Store } from '../../../store/index';
 	name: 'RouteLibraryOverview',
 	components: {
 		AppPageHeader,
-		AppJolticon,
 		AppGameCollectionGrid,
 		AppGameCollectionList,
 	},

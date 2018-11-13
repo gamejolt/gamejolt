@@ -1,10 +1,9 @@
 import { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { PayloadError } from '../../../../lib/gj-lib-client/components/payload/payload-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { importContext } from '../../../../lib/gj-lib-client/utils/utils';
 
@@ -16,14 +15,8 @@ const paths = importContext(
 @Component({
 	name: 'RouteLandingGameApiDoc',
 })
-export default class RouteLandingGameApiDoc extends BaseRouteComponent {
-	@Prop(String)
-	path!: string;
-
-	content = '';
-
-	@RouteResolve()
-	async routeResolve(this: undefined, route: Route) {
+@RouteResolver({
+	async resolver({ route }) {
 		// First check the path as is, then check with "index".
 		let path = route.params.path;
 		if (!path) {
@@ -39,9 +32,15 @@ export default class RouteLandingGameApiDoc extends BaseRouteComponent {
 		}
 
 		return PayloadError.fromHttpError(404);
-	}
+	},
+})
+export default class RouteLandingGameApiDoc extends BaseRouteComponent {
+	@Prop(String)
+	path!: string;
 
-	routed($payload: any) {
+	content = '';
+
+	routeResolved($payload: any) {
 		this.content = $payload;
 	}
 

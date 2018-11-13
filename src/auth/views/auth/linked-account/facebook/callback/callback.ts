@@ -1,29 +1,28 @@
 import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Auth } from '../../../../../../lib/gj-lib-client/components/auth/auth.service';
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AuthLinkedAccountProcessing } from '../../_processing/processing';
 
 @Component({
 	name: 'RouteAuthLinkedAccountFacebookCallback',
 })
-export default class RouteAuthLinkedAccountFacebookCallback extends BaseRouteComponent {
-	@RouteResolve()
-	routeResolve(this: undefined, route: Route) {
+@RouteResolver({
+	resolver({ route }) {
 		const { code, state } = route.query;
 		return Api.sendRequest(
 			'/web/auth/linked-accounts/link_callback/facebook?code=' + code + '&state=' + state,
 			{}
 		);
-	}
-
-	routed($payload: any) {
+	},
+})
+export default class RouteAuthLinkedAccountFacebookCallback extends BaseRouteComponent {
+	routeResolved($payload: any) {
 		if (!$payload.success) {
 			if ($payload.reason && $payload.reason === 'no-email') {
 				Growls.error({

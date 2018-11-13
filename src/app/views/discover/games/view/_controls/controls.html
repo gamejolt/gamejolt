@@ -1,16 +1,17 @@
-<div class="game-header-controls">
+<div class="-controls">
 
-	<app-game-playlist-add-to-widget
-		class="game-header-add"
-		:game="game"
-		event-label="game-header"
-		/>
-
-	<div class="game-header-follow-container">
+	<div class="-follow">
 		<app-game-follow-widget
 			:game="game"
 			:block="!Screen.isSm && !Screen.isMd"
 			show-user-follow
+			event-label="game-header"
+			/>
+	</div>
+
+	<div class="-add">
+		<app-game-playlist-add-to-widget
+			:game="game"
 			event-label="game-header"
 			/>
 	</div>

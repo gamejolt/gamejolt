@@ -1,7 +1,6 @@
 import View from '!view!./banner.html?style=./banner.styl';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
-// import { BannerState, BannerStore, BannerMutation, BannerModule } from '../../../store/banner';
 import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { BannerModule, BannerStore } from '../../../store';

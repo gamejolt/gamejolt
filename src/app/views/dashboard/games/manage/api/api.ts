@@ -1,10 +1,9 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./api.html';
-
-import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppManageGameApiNav } from './_nav/nav';
+import { Component } from 'vue-property-decorator';
 import { AppNavTabList } from '../../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/components/route/route-component';
+import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { AppManageGameApiNav } from './_nav/nav';
 
 @View
 @Component({

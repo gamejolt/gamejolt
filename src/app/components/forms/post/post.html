@@ -50,6 +50,7 @@
 				:max-filesize="maxFilesize"
 				:max-width="maxWidth"
 				:max-height="maxHeight"
+				:loading="isUploadingPastedImage"
 				@upload="onMediaUploaded($event)"
 				@remove="removeMediaItem($event)"
 				@sort="onMediaSort($event)"
@@ -145,6 +146,7 @@
 			v-app-form-autosize
 			v-app-focus-when
 			:placeholder="!longEnabled ? $gettext(`What's new?`) : $gettext(`Write a summary for your article...`)"
+			@paste="onPaste"
 			/>
 
 		<div class="-hp">

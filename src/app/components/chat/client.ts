@@ -1,16 +1,15 @@
 import Vue from 'vue';
-
+import { Analytics } from '../../../lib/gj-lib-client/components/analytics/analytics.service';
+import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
+import { EventBus } from '../../../lib/gj-lib-client/components/event-bus/event-bus.service';
+import { Primus } from '../../../lib/gj-lib-client/components/primus/primus.service';
+import { getCookie } from '../../../_common/cookie/cookie.service';
 import { store } from '../../store/index';
+import { ChatMessage, ChatMessageType } from './message';
+import { ChatNotification } from './notification/notification.service';
+import { ChatRoom } from './room';
 import { ChatUser } from './user';
 import { ChatUserCollection } from './user-collection';
-import { ChatRoom } from './room';
-import { Primus } from '../../../lib/gj-lib-client/components/primus/primus.service';
-import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
-import { Analytics } from '../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { ChatMessage, ChatMessageType } from './message';
-import { EventBus } from '../../../lib/gj-lib-client/components/event-bus/event-bus.service';
-import { ChatNotification } from './notification/notification.service';
-import { getCookie } from '../../../_common/cookie/cookie.service';
 
 export const ChatMaxNumMessages = 200;
 export const ChatSiteModPermission = 2;

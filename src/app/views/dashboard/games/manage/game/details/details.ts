@@ -1,16 +1,15 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./details.html';
-
-import { RouteState, RouteStore } from '../../manage.store';
-import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
+import { Component } from 'vue-property-decorator';
 import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { FormGame } from '../../../../../../components/forms/game/game';
 import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { AppGameDevStageSelector } from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector';
+import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import {
 	AppState,
 	AppStore,
 } from '../../../../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { AppGameDevStageSelector } from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector';
+import { FormGame } from '../../../../../../components/forms/game/game';
+import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @View
 @Component({
@@ -21,9 +20,14 @@ import {
 	},
 })
 export default class RouteDashGamesManageGameDetails extends BaseRouteComponent {
-	@AppState user!: AppStore['user'];
-	@RouteState game!: RouteStore['game'];
-	@RouteState isWizard!: RouteStore['isWizard'];
+	@AppState
+	user!: AppStore['user'];
+
+	@RouteStoreModule.State
+	game!: RouteStore['game'];
+
+	@RouteStoreModule.State
+	isWizard!: RouteStore['isWizard'];
 
 	get routeTitle() {
 		if (this.game) {

@@ -4,7 +4,7 @@
 		'is-client-offline': Connection.isClientOffline,
 		'right-pane-visible': isRightPaneVisible,
 		'left-pane-visible': isLeftPaneVisible,
-		'has-left-pane': Screen.isLg && isLeftPaneSticky,
+		'has-left-pane': app.user && Screen.isLg && isLeftPaneSticky,
 		'has-minibar': hasMinibar,
 		'has-cbar': hasCbar,
 		'has-banner': hasBanner,

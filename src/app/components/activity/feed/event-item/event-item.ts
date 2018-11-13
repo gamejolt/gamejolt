@@ -3,8 +3,9 @@ import { Environment } from 'game-jolt-frontend-lib/components/environment/envir
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
 import { AppUserAvatar } from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar';
+import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { CommentVideoModal } from '../../../../../lib/gj-lib-client/components/comment/video/modal/modal.service';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
@@ -16,7 +17,6 @@ import {
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppUserCardHover } from '../../../../../lib/gj-lib-client/components/user/card/hover/hover';
-import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { Store } from '../../../../store';
 import { AppEventItemControls } from '../../../event-item/controls/controls';
@@ -29,6 +29,7 @@ import { AppActivityFeedDevlogPostText } from '../devlog-post/text/text';
 import { AppActivityFeedDevlogPostVideo } from '../devlog-post/video/video';
 import { AppActivityFeed } from '../feed';
 import { ActivityFeedItem } from '../item-service';
+import { ActivityFeedView } from '../view';
 import { AppActivityFeedEventItemTime } from './time/time';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
@@ -54,28 +55,26 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 	},
 })
 export class AppActivityFeedEventItem extends Vue {
+	@Inject()
+	feed!: ActivityFeedView;
+
 	@Prop(ActivityFeedItem)
 	item!: ActivityFeedItem;
-
-	@Prop(Boolean)
-	isNew?: boolean;
-
-	@Prop(Boolean)
-	isActive?: boolean;
-
-	@Prop(Boolean)
-	isHydrated?: boolean;
 
 	@State
 	app!: Store['app'];
 
-	private resizeSensor?: any;
-
-	feed!: AppActivityFeed;
 	canToggleLead = false;
+
+	private resizeSensor?: any;
+	private feedComponent!: AppActivityFeed;
 
 	readonly Screen = Screen;
 	readonly EventItem = EventItem;
+
+	get isNew() {
+		return this.feed.isItemUnread(this.item);
+	}
 
 	get isThreadView() {
 		return !Screen.isXs;
@@ -144,26 +143,30 @@ export class AppActivityFeedEventItem extends Vue {
 				params: params,
 			};
 		} else if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
-			// TODO(userposts)
 			const post = this.post!;
-			if (this.game) {
-				return {
-					name: 'discover.games.view.devlog.view',
-					params: {
-						slug: this.game.slug,
-						id: this.game.id + '',
-						postSlug: post.slug,
-					},
-				};
-			} else {
-				return {
-					name: 'profile.post.view',
-					params: {
-						username: post.user.username,
-						slug: post.slug,
-					},
-				};
-			}
+
+			return post.routeLocation;
+
+			// TODO(search-improve) if navigating to posts doesnt work, revert to the commented out code below.
+			// Might fail if for some reason the post doesn't have the game gathered on it
+			// if (this.game) {
+			// 	return {
+			// 		name: 'discover.games.view.devlog.view',
+			// 		params: {
+			// 			slug: this.game.slug,
+			// 			id: this.game.id + '',
+			// 			postSlug: post.slug,
+			// 		},
+			// 	};
+			// } else {
+			// 	return {
+			// 		name: 'profile.post.view',
+			// 		params: {
+			// 			username: post.user.username,
+			// 			slug: post.slug,
+			// 		},
+			// 	};
+			// }
 		}
 
 		return null;
@@ -180,11 +183,12 @@ export class AppActivityFeedEventItem extends Vue {
 		return this.post && canUserManagePost(this.post, this.app.user);
 	}
 
-	created() {
-		this.feed = findRequiredVueParent(this, AppActivityFeed);
+	mounted() {
+		this.feedComponent = findRequiredVueParent(this, AppActivityFeed);
 	}
 
 	destroyed() {
+		this.feedComponent = undefined as any;
 		this.resizeSensor = undefined;
 	}
 
@@ -262,11 +266,23 @@ export class AppActivityFeedEventItem extends Vue {
 	}
 
 	toggleLead() {
-		this.item.isLeadOpen = !this.item.isLeadOpen;
+		this.feed.toggleItemLeadOpen(this.item);
 		this.$emit('expanded');
 	}
 
 	canToggleLeadChanged(canToggle: boolean) {
 		this.canToggleLead = canToggle;
+	}
+
+	onPostEdited(item: EventItem) {
+		this.feedComponent.onPostEdited(item);
+	}
+
+	onPostPublished(item: EventItem) {
+		this.feedComponent.onPostPublished(item);
+	}
+
+	onPostRemoved(item: EventItem) {
+		this.feedComponent.onPostRemoved(item);
 	}
 }

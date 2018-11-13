@@ -9,3 +9,13 @@
 
 .-ad-label
 	margin-top: 5px
+
+.-bottom-loading
+	margin-top: $-item-padding-v
+
+	@media $media-sm-up
+		margin-top: 0
+
+// Don't show the split for the last item in the list.
+.-item:last-child >>> .timeline-list-item-split
+	display: none

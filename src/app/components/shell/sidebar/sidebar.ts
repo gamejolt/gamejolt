@@ -12,7 +12,8 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { LibraryModule, LibraryStore, Store } from '../../../store/index';
+import { Store } from '../../../store/index';
+import { LibraryModule, LibraryStore } from '../../../store/library';
 import { AppShellSidebarCollectionList } from './collection-list';
 
 @View
@@ -74,21 +75,6 @@ export class AppShellSidebar extends Vue {
 
 	playlistFilterQuery = '';
 	openFolders: string[] = [];
-
-	channels = ['horror', 'multiplayer', 'retro', 'survival', 'fangame', 'fnaf'];
-
-	genres = {
-		action: 'Action',
-		adventure: 'Adventure',
-		arcade: 'Arcade',
-		platformer: 'Platformer',
-		puzzle: 'Puzzle',
-		rpg: 'RPG',
-		shooter: 'Shooter',
-		sports: 'Sports',
-		'strategy-sim': 'Strategy/Sim',
-		other: 'Other',
-	};
 
 	// This is "hot".
 	defaultBrowseSection = null;

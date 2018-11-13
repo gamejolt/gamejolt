@@ -5,7 +5,7 @@ import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
-import { RouteAction, RouteState, RouteStore } from '../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../manage.store';
 import { AppManageGameNavRequired } from './required';
 
 @View
@@ -16,19 +16,19 @@ import { AppManageGameNavRequired } from './required';
 	},
 })
 export class AppManageGameNav extends Vue {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
-	@RouteState
+	@RouteStoreModule.State
 	isWizard!: RouteStore['isWizard'];
 
-	@RouteState
+	@RouteStoreModule.State
 	canPublish!: RouteStore['canPublish'];
 
-	@RouteAction
+	@RouteStoreModule.Action
 	saveDraft!: RouteStore['saveDraft'];
 
-	@RouteAction
+	@RouteStoreModule.Action
 	publish!: RouteStore['publish'];
 
 	@State

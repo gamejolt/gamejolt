@@ -1,16 +1,7 @@
-<span class="manage-game-nav-required">
+<span class="manage-game-nav-required" v-if="!isComplete">
 	<span
-		v-if="!isComplete"
-		class="incomplete"
 		v-app-tooltip="$gettext( `Required Step` )"
 		>
-		<app-jolticon icon="notice" />
-	</span>
-	<span
-		v-else
-		class="complete"
-		v-app-tooltip="$gettext( `Complete!` )"
-		>
-		<app-jolticon icon="check" />
+		<app-jolticon notice icon="notice" />
 	</span>
 </span>

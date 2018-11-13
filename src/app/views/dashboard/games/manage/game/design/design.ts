@@ -1,17 +1,16 @@
 import View from '!view!./design.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import {
 	ThemeMutation,
 	ThemeStore,
 } from '../../../../../../../lib/gj-lib-client/components/theme/theme.store';
 import { FormGameDesign } from '../../../../../../components/forms/game/design/design';
-import { RouteMutation, RouteState, RouteStore } from '../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @View
 @Component({
@@ -20,23 +19,22 @@ import { RouteMutation, RouteState, RouteStore } from '../../manage.store';
 		FormGameDesign,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/media/' + route.params.id),
+})
 export default class RouteDashGamesManageGameDesign extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
-	@RouteState
+
+	@RouteStoreModule.State
 	media!: RouteStore['media'];
 
-	@RouteMutation
+	@RouteStoreModule.Mutation
 	populateMedia!: RouteStore['populateMedia'];
+
 	@ThemeMutation
 	setPageTheme!: ThemeStore['setPageTheme'];
-
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/dash/developer/games/media/' + route.params.id);
-	}
 
 	get routeTitle() {
 		if (this.game) {
@@ -47,7 +45,7 @@ export default class RouteDashGamesManageGameDesign extends BaseRouteComponent {
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.populateMedia($payload.mediaItems || []);
 	}
 

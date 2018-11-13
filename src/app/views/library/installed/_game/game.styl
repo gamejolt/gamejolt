@@ -4,13 +4,17 @@
 .client-installed-game
 	position: relative
 
-	img
+	>>> img, >>> video
 		transition: all 1s
 		filter: grayscale(0)
 
 	&.-is-installing
-		img
+		>>> img, >>> video
 			filter: grayscale(100%)
+
+.-thumb
+	position: relative
+	z-index: 1
 
 // This matches the thumbnail ratio.
 .-meta-outer
@@ -22,6 +26,7 @@
 	padding-top: 56.25% // HD 16:9
 
 .-meta
+	rounded-corners()
 	position: absolute
 	top: 0
 	left: 0
@@ -30,7 +35,8 @@
 	align-items: center
 	display: flex
 	text-align: center
-	z-index: 1
+	background-color: rgba(0, 0, 0, 0.5)
+	z-index: 2
 
 	>>> .client-game-buttons
 		display: block
@@ -58,3 +64,5 @@
 	color: $white
 	padding: 5px 10px
 	font-size: $font-size-tiny
+	border-top-left-radius: $border-radius-base
+	border-top-right-radius: $border-radius-base

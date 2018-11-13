@@ -9,24 +9,28 @@ import { HistoryTick } from '../../../../lib/gj-lib-client/components/history-ti
 import { Navigate } from '../../../../lib/gj-lib-client/components/navigate/navigate.service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppScrollTo } from '../../../../lib/gj-lib-client/components/scroll/to/to.directive';
 import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 
 @View
 @Component({
 	name: 'RouteLandingClient',
 	components: {
-		AppJolticon,
 		AppThemeSvg,
 	},
 	directives: {
 		AppTrackEvent,
 		AppScrollTo,
 	},
+})
+@RouteResolver({
+	cache: true,
+	lazy: true,
+	deps: {},
+	resolver: () => Api.sendRequest('/web/client'),
 })
 export default class RouteLandingClient extends BaseRouteComponent {
 	// When this is set, it triggers the iframe that begins the download
@@ -38,22 +42,13 @@ export default class RouteLandingClient extends BaseRouteComponent {
 	readonly platform = Device.os();
 	readonly Screen = Screen;
 
-	@RouteResolve({
-		cache: true,
-		lazy: true,
-		deps: {},
-	})
-	routeResolve() {
-		return Api.sendRequest('/web/client');
-	}
-
-	routed(payload: any) {
+	routeResolved(payload: any) {
 		this.packageData = new GamePackagePayloadModel(payload.packageData);
 		this.fallbackUrl = payload.clientGameUrl;
 	}
 
 	get routeTitle() {
-		return 'Game Jolt Client';
+		return `Game Jolt Client`;
 	}
 
 	async download(platform: string) {

@@ -1,4 +1,4 @@
-<section class="section" v-if="routeBootstrapped">
+<section class="section" v-if="isRouteBootstrapped">
 	<div class="container">
 
 		<template v-if="!game.path">
@@ -45,7 +45,7 @@
 				</p>
 
 				<p class="page-help">
-					<router-link :to="{ name: 'dash.main.site' }">
+					<router-link :to="{ name: 'dash.account.site' }">
 						<translate>You can also create a user portfolio site.</translate>
 					</router-link>
 				</p>

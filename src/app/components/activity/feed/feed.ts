@@ -5,7 +5,7 @@ import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import 'rxjs/add/operator/sampleTime';
 import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { Component, Emit, Prop, Provide, Watch } from 'vue-property-decorator';
 import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
@@ -13,9 +13,9 @@ import { Ruler } from '../../../../lib/gj-lib-client/components/ruler/ruler-serv
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { ActivityFeedContainer } from './feed-container-service';
 import { AppActivityFeedItem } from './item/item';
 import { AppActivityFeedNewButton } from './new-button/new-button';
+import { ActivityFeedView } from './view';
 
 /**
  * The distance from the bottom of the feed that we should start loading more.
@@ -23,20 +23,9 @@ import { AppActivityFeedNewButton } from './new-button/new-button';
 const LoadMoreOffset = Screen.windowHeight * 2;
 
 /**
- * The number of times we should do an auto-load of items before stopping and requiring them to do
- * it manually.
- */
-const LoadMoreTimes = 3;
-
-/**
  * Wait this long between scroll checks.
  */
 const ScrollSampleTime = 1000;
-
-/**
- * The items we expect per page of a feed.
- */
-const ItemsPerPage = 15;
 
 @View
 @Component({
@@ -52,17 +41,12 @@ const ItemsPerPage = 15;
 	},
 })
 export class AppActivityFeed extends Vue {
-	@Prop(ActivityFeedContainer)
-	feed!: ActivityFeedContainer;
+	@Provide('feed')
+	@Prop(ActivityFeedView)
+	feed!: ActivityFeedView;
 
 	@Prop(Number)
 	newCount?: number;
-
-	@Prop(Boolean)
-	showEditControls?: boolean;
-
-	@Prop(Boolean)
-	showGameInfo?: boolean;
 
 	@Prop(Boolean)
 	showAds?: boolean;
@@ -95,12 +79,7 @@ export class AppActivityFeed extends Vue {
 			this.scroll = top;
 
 			// Auto-loading while scrolling.
-			if (
-				!this.feed.noAutoload &&
-				!this.feed.isLoadingMore &&
-				!this.feed.reachedEnd &&
-				this.feed.timesLoaded < LoadMoreTimes
-			) {
+			if (this.feed.shouldScrollLoadMore) {
 				const feedOffset = Ruler.offset(this.$el);
 				const feedBottom = feedOffset.top + feedOffset.height;
 				const scrollBottom = top + height;
@@ -121,20 +100,25 @@ export class AppActivityFeed extends Vue {
 		}
 	}
 
+	// TODO: This shouldn't be needed anymore, since we always show placholder
+	// if no feed yet, and feeds aren't allowed to swap in the middle.
 	@Watch('feed', { immediate: true })
-	async onFeedChanged(feed: ActivityFeedContainer, oldFeed: ActivityFeedContainer | undefined) {
+	async onFeedChanged(feed: ActivityFeedView, oldFeed: ActivityFeedView | undefined) {
 		// Gotta make sure the feed has compiled.
 		await this.$nextTick();
 
-		// First time getting items in.
-		// Let's try scrolling to a possible active one.
-		// This will happen if they click away and back to the feed.
+		// First time getting items in. Let's try scrolling to their old
+		// position. This will happen if they click away and back to the feed.
 		if (feed.items.length && feed !== oldFeed) {
 			this.initScroll();
 		}
 	}
 
 	private initScroll() {
+		if (!this.feed.shouldScroll) {
+			return;
+		}
+
 		const scroll = this.feed.scroll;
 		if (scroll) {
 			Scroll.to(scroll, { animate: false });
@@ -142,11 +126,15 @@ export class AppActivityFeed extends Vue {
 	}
 
 	get shouldShowLoadMore() {
-		return !this.feed.reachedEnd && !this.feed.isLoadingMore;
+		return !this.feed.reachedEnd && !this.feed.isLoadingMore && this.feed.hasItems;
 	}
 
 	get shouldShowAds() {
 		return this.showAds && Ads.shouldShow;
+	}
+
+	get lastPostId() {
+		return this.feed.state.endScrollId;
 	}
 
 	shouldShowAd(index: number) {
@@ -179,7 +167,7 @@ export class AppActivityFeed extends Vue {
 	}
 
 	onPostRemoved(eventItem: EventItem) {
-		this.feed.remove(eventItem);
+		this.feed.remove([eventItem]);
 		this.emitRemovePost(eventItem);
 	}
 
@@ -198,9 +186,7 @@ export class AppActivityFeed extends Vue {
 			return;
 		}
 
-		// clear the current feed if we have more than 15 new items
-		// that would exceed the load-per-page amount, and leave a gap in the posts
-		await this.feed.loadNew(this.newCount > ItemsPerPage);
+		await this.feed.loadNew(this.newCount);
 		this.emitLoadNew();
 	}
 }

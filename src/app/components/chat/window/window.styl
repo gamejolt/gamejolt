@@ -107,13 +107,17 @@
  * Chat Window Output
  */
 .chat-window-output
+	position: relative
 	flex: auto
 	display: flex
-	overflow: hidden
 	height: 100%
 
 	> .scroll-scroller
-		flex: auto
+		position: absolute
+		top: 0
+		right: 0
+		bottom: 0
+		left: 0
 
 .chat-window-send-container
 	theme-prop('background-color', 'darker')

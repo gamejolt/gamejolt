@@ -14,11 +14,7 @@
 					:class="{ active: chat.room && chat.room.id === room.id }"
 					:title="room.title"
 					>
-					<span class="tag tag-highlight notifications-tag"
-						v-if="chat.roomId === room.id && Chat.roomNotifications"
-						>
-						{{ Chat.roomNotifications | number }}
-					</span>
+
 					<span class="shell-nav-icon">
 						<app-jolticon icon="users" />
 					</span>

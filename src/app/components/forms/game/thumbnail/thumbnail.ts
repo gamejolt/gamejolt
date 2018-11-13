@@ -1,17 +1,17 @@
-import { Component, Watch } from 'vue-property-decorator';
 import View from '!view!./thumbnail.html';
-
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import { Component, Watch } from 'vue-property-decorator';
+import { AppFormControlCrop } from '../../../../../lib/gj-lib-client/components/form-vue/control/crop/crop';
+import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
+import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
 import {
 	BaseForm,
+	FormOnBeforeSubmit,
 	FormOnLoad,
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
-import { AppFormControlCrop } from '../../../../../lib/gj-lib-client/components/form-vue/control/crop/crop';
-import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
+import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 
 type FormModel = Game & {
-	crop: any;
+	thumb_crop: any;
 };
 
 @View
@@ -21,7 +21,8 @@ type FormModel = Game & {
 		AppFormControlCrop,
 	},
 })
-export class FormGameThumbnail extends BaseForm<FormModel> implements FormOnLoad {
+export class FormGameThumbnail extends BaseForm<FormModel>
+	implements FormOnLoad, FormOnBeforeSubmit {
 	modelClass = Game as any;
 	resetOnSubmit = true;
 	warnOnDiscard = false;
@@ -49,7 +50,7 @@ export class FormGameThumbnail extends BaseForm<FormModel> implements FormOnLoad
 
 	@Watch('crop')
 	onCropChange() {
-		this.setField('crop', this.crop);
+		this.setField('thumb_crop', this.crop);
 	}
 
 	onLoad(payload: any) {
@@ -59,6 +60,11 @@ export class FormGameThumbnail extends BaseForm<FormModel> implements FormOnLoad
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
 		this.cropAspectRatio = payload.cropAspectRatio;
+	}
+
+	onBeforeSubmit() {
+		// Backend expects this field.
+		this.setField('crop' as any, this.formModel.thumb_crop);
 	}
 
 	/**

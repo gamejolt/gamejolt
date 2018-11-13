@@ -1,10 +1,10 @@
-import { SearchPayload } from './payload-service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
-import { store } from '../../store/index';
 import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
+import { store } from '../../store/index';
+import { SearchPayload } from './payload-service';
 
 export interface SearchOptions {
-	type: 'all' | 'user' | 'game' | 'devlog' | 'typeahead';
+	type: 'all' | 'user' | 'game' | 'typeahead';
 	page?: number;
 }
 
@@ -49,8 +49,6 @@ export class Search {
 			endpoint += '/users';
 		} else if (options.type === 'game') {
 			endpoint += '/games';
-		} else if (options.type === 'devlog') {
-			endpoint += '/devlogs';
 		} else if (options.type === 'typeahead') {
 			endpoint += '/typeahead';
 			requestOptions.detach = true;

@@ -15,7 +15,6 @@ import { findRequiredVueParent } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import * as _LocalDbGameMod from '../../client/local-db/game/game.model';
 import { AppGameCompatIcons } from '../../game/compat-icons/compat-icons';
-import { SearchHistory } from '../history/history-service';
 import { AppSearch } from '../search';
 import { Search } from '../search-service';
 
@@ -55,7 +54,6 @@ export class AppSearchAutocomplete extends Vue {
 
 	selected = 0;
 	games: Game[] = [];
-	devlogs: Game[] = [];
 	users: User[] = [];
 	libraryGames: _LocalDbGameMod.LocalDbGame[] = [];
 	items: any[] = [];
@@ -115,11 +113,6 @@ export class AppSearchAutocomplete extends Vue {
 				routeName: 'discover.games.list._fetch',
 				params: { section: 'featured' },
 				description: this.$gettext('commands.games_description'),
-			},
-			{
-				keyword: ':devlogs',
-				routeName: 'discover.devlogs.overview',
-				description: this.$gettext('Browse devlogs.'),
 			},
 			{
 				keyword: ':dashboard',
@@ -215,7 +208,6 @@ export class AppSearchAutocomplete extends Vue {
 		// Payloads may not come back sequentially.
 		if (this.search!.query === query) {
 			this.games = payload.games;
-			this.devlogs = payload.devlogs;
 			this.users = payload.users;
 			this.libraryGames = payload.libraryGames;
 
@@ -224,7 +216,6 @@ export class AppSearchAutocomplete extends Vue {
 			this.items = ([] as any[])
 				.concat(this.libraryGames)
 				.concat(this.games)
-				.concat(this.devlogs)
 				.concat(this.users);
 		}
 	}
@@ -235,8 +226,6 @@ export class AppSearchAutocomplete extends Vue {
 		}
 
 		if (this.mode === 'search') {
-			SearchHistory.record(this.search!.query);
-
 			// Selected the "show all results" option.
 			if (this.selected === 0) {
 				this.viewAll();

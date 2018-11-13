@@ -50,7 +50,11 @@ export class AppFormPostMedia extends BaseForm<FormModel>
 	@Prop(Array)
 	mediaItems!: MediaItem[];
 
+	@Prop(Boolean)
+	loading?: boolean;
+
 	resetOnSubmit = true;
+	isDropActive = false;
 
 	$refs!: {
 		form: AppForm;
@@ -65,6 +69,10 @@ export class AppFormPostMedia extends BaseForm<FormModel>
 
 	@Emit('remove')
 	emitRemove(_mediaItem: MediaItem) {}
+
+	get isLoading() {
+		return this.state.isProcessing || this.loading;
+	}
 
 	get internalItems() {
 		return this.mediaItems;
@@ -84,6 +92,32 @@ export class AppFormPostMedia extends BaseForm<FormModel>
 
 	showSelectMedia() {
 		this.$refs.upload.showFileSelect();
+	}
+
+	onDragOver(e: DragEvent) {
+		// Don't do anything if not a file drop.
+		if (!e.dataTransfer.items.length || e.dataTransfer.items[0].kind !== 'file') {
+			return;
+		}
+
+		e.preventDefault();
+		this.isDropActive = true;
+	}
+
+	onDragLeave() {
+		this.isDropActive = false;
+	}
+
+	// File select resulting from a drop onto the input.
+	async onDrop(e: DragEvent) {
+		// Don't do anything if not a file drop.
+		if (!e.dataTransfer.items.length || e.dataTransfer.items[0].kind !== 'file') {
+			return;
+		}
+
+		e.preventDefault();
+		this.isDropActive = false;
+		this.$refs.upload.drop(e);
 	}
 
 	async onSubmit() {

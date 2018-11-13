@@ -32,7 +32,7 @@
 						class="shell-nav-icon"
 						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Activity Feed' ) : ''"
 						>
-						<app-jolticon icon="feed" />
+						<app-jolticon icon="devlogs" />
 					</span>
 					<span class="shell-nav-label">
 						<translate>Activity Feed</translate>
@@ -54,42 +54,6 @@
 					</span>
 					<span class="shell-nav-label">
 						<translate>Browse Games</translate>
-					</span>
-				</router-link>
-			</li>
-
-			<li class="offline-disable">
-				<router-link
-					:to="{ name: 'discover.devlogs.overview' }"
-					:class="{ active: $route.name.indexOf( 'discover.devlogs' ) === 0 }"
-					v-app-track-event="`sidebar:devlogs`"
-					>
-					<span
-						class="shell-nav-icon"
-						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Devlogs' ) : ''"
-						>
-						<app-jolticon icon="devlogs" />
-					</span>
-					<span class="shell-nav-label">
-						<translate>Devlogs</translate>
-					</span>
-				</router-link>
-			</li>
-
-			<li class="offline-disable">
-				<router-link
-					:to="{ name: 'discover.channels.list' }"
-					:class="{ active: $route.name.indexOf( 'discover.channels' ) === 0 }"
-					v-app-track-event="`sidebar:channels`"
-					>
-					<span
-						class="shell-nav-icon"
-						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Channels' ) : ''"
-						>
-						<app-jolticon icon="tag" />
-					</span>
-					<span class="shell-nav-label">
-						<translate>Channels</translate>
 					</span>
 				</router-link>
 			</li>

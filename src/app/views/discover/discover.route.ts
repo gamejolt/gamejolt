@@ -1,13 +1,11 @@
 import { RouteConfig } from 'vue-router';
 import RouteDiscover from './discover';
-import { routeDiscoverHome } from './home/home.route';
 import { routeDiscoverGames } from './games/games.route';
-import { routeDiscoverDevlogs } from './devlogs/devlogs.route';
-import { routeDiscoverChannels } from './channels/channels.route';
+import { routeDiscoverHome } from './home/home.route';
 
 export const routeDiscover: RouteConfig = {
 	path: '/',
 	props: true,
 	component: RouteDiscover,
-	children: [routeDiscoverHome, routeDiscoverGames, routeDiscoverDevlogs, routeDiscoverChannels],
+	children: [routeDiscoverHome, routeDiscoverGames],
 };

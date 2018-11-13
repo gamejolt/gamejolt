@@ -1,4 +1,4 @@
-import View from '!view!./home.html?style=./home.styl';
+import View from '!view!./home.html';
 import { Component } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { State } from 'vuex-class';
@@ -12,17 +12,16 @@ import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service
 import { AppNavTabList } from '../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { AppScrollScroller } from '../../../../lib/gj-lib-client/components/scroll/scroller/scroller';
-import { Channels } from '../../../components/channel/channels-service';
-import { AppChannelThumbnail } from '../../../components/channel/thumbnail/thumbnail';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import { AppGameGrid } from '../../../components/game/grid/grid';
 import { AppGameGridPlaceholder } from '../../../components/game/grid/placeholder/placeholder';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Store } from '../../../store/index';
 import { AppDiscoverHomeBanner } from './_banner/banner';
+import { AppDiscoverHomeTags } from './_tags/tags';
 
 export interface DiscoverRow {
 	title: string;
@@ -36,12 +35,12 @@ export interface DiscoverRow {
 @Component({
 	name: 'RouteDiscoverHome',
 	components: {
+		AppDiscoverHomeBanner,
+		AppDiscoverHomeTags,
 		AppNavTabList,
 		AppGameGrid,
 		AppGameGridPlaceholder,
-		AppChannelThumbnail,
 		AppAuthJoin: AppAuthJoinLazy,
-		AppDiscoverHomeBanner,
 		AppScrollScroller,
 	},
 	directives: {
@@ -49,25 +48,20 @@ export interface DiscoverRow {
 		AppAuthRequired,
 	},
 })
+@RouteResolver({
+	cache: true,
+	lazy: true,
+	deps: {},
+	resolver: () => Api.sendRequest('/web/discover'),
+})
 export default class RouteDiscoverHome extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
 
-	isLoaded = false;
-	channels: any[] = [];
 	featuredItem: FeaturedItem | null = null;
 	games: Game[] = [];
 
-	@RouteResolve({
-		cache: true,
-		lazy: true,
-		deps: {},
-	})
-	routeResolve() {
-		return Api.sendRequest('/web/discover');
-	}
-
-	routeInit() {
+	routeCreated() {
 		Meta.title = null;
 
 		const adSettings = new AdSettingsContainer();
@@ -75,7 +69,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		Ads.setPageSettings(adSettings);
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;
@@ -95,36 +89,14 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		};
 
 		this.featuredItem = $payload.featuredItem ? new FeaturedItem($payload.featuredItem) : null;
-		this.games = Game.populate($payload.games);
-
-		const channels = [
-			'action',
-			'horror',
-			'adventure',
-			'fangame',
-			'rpg',
-			'multiplayer',
-			'platformer',
-			'survival',
-			'retro',
-			'shooter',
-			'vr',
-			'strategy-sim',
-			'fnaf',
-		];
-
-		this.channels = [];
-		for (const channel of channels) {
-			const info = Channels.channels.find(i => i.id === channel);
-			if (info) {
-				this.channels.push(info);
-			}
+		if ($payload.isFollowingFeatured && this.featuredItem && this.featuredItem.game) {
+			this.featuredItem!.game!.is_following = true;
 		}
 
-		this.isLoaded = true;
+		this.games = Game.populate($payload.games);
 	}
 
-	routeDestroy() {
+	routeDestroyed() {
 		Ads.releasePageSettings();
 	}
 }

@@ -1,5 +1,4 @@
 import View from '!view!./avatar.html';
-import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
 import { Component, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { AppFormControlCrop } from '../../../../lib/gj-lib-client/components/form-vue/control/crop/crop';
@@ -8,6 +7,7 @@ import { AppFormControlUpload } from '../../../../lib/gj-lib-client/components/f
 import { AppForm } from '../../../../lib/gj-lib-client/components/form-vue/form';
 import {
 	BaseForm,
+	FormOnBeforeSubmit,
 	FormOnLoad,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { ModalConfirm } from '../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
@@ -17,7 +17,7 @@ import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/joltic
 import { filesize } from '../../../../lib/gj-lib-client/vue/filters/filesize';
 
 type FormModel = User & {
-	crop?: any;
+	avatar_crop?: any;
 };
 
 @View
@@ -29,7 +29,7 @@ type FormModel = User & {
 		AppJolticon,
 	},
 })
-export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
+export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad, FormOnBeforeSubmit {
 	modelClass = User;
 	reloadOnSubmit = true;
 	warnOnDiscard = false;
@@ -62,13 +62,18 @@ export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
 
 	@Watch('crop')
 	onCropChange() {
-		this.setField('crop', this.crop);
+		this.setField('avatar_crop', this.crop);
 	}
 
 	onLoad(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 		this.minSize = payload.minSize;
 		this.maxSize = payload.maxSize;
+	}
+
+	onBeforeSubmit() {
+		// Backend expects this field.
+		this.setField('crop' as any, this.formModel.avatar_crop);
 	}
 
 	avatarSelected() {
@@ -78,8 +83,6 @@ export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad {
 	}
 
 	async clearAvatar() {
-		Popper.hideAll();
-
 		const result = await ModalConfirm.show(
 			this.$gettext(`Are you sure you want to remove your avatar?`),
 			undefined,

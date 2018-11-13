@@ -77,33 +77,6 @@
 				</div>
 			</template>
 
-			<!-- Devlogs -->
-			<template v-if="devlogs.length">
-				<div class="popper-heading">
-					<translate>Devlogs</translate>
-				</div>
-				<div class="list-group list-group-dark thin">
-					<router-link
-						class="list-group-item"
-						v-for="game of devlogs"
-						:key="game.id"
-						:to="{
-							name: 'discover.games.view.overview',
-							params: { slug: game.slug, id: game.id },
-						}"
-						:class="{ active: items[ selected - 1 ] === game }"
-						v-app-track-event="`search:autocomplete:go-game`"
-						>
-
-						<span class="search-game-thumbnail">
-							<app-game-thumbnail-img :game="game" />
-						</span>
-
-						{{ game.title }}
-					</router-link>
-				</div>
-			</template>
-
 			<!-- Users -->
 			<template v-if="users.length">
 				<div class="popper-heading">

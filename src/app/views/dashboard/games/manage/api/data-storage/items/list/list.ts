@@ -1,41 +1,36 @@
 import View from '!view!./list.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameDataStoreItem } from '../../../../../../../../../lib/gj-lib-client/components/game/data-store/item/item.model';
 import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import { AppPopper } from '../../../../../../../../../lib/gj-lib-client/components/popper/popper';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { date } from '../../../../../../../../../lib/gj-lib-client/vue/filters/date';
-import { RouteState, RouteStore } from '../../../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 
 @View
 @Component({
 	name: 'RouteDashGamesManageApiDataStorageItemsList',
 	components: {
 		AppPopper,
-		AppJolticon,
 	},
 	filters: {
 		date,
 	},
 })
+@RouteResolver({
+	deps: {},
+	resolver: ({ route }) =>
+		Api.sendRequest('/web/dash/developer/games/api/data-storage/' + route.params.id),
+})
 export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
 	items: GameDataStoreItem[] = [];
-
-	@RouteResolve({
-		deps: {},
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest('/web/dash/developer/games/api/data-storage/' + route.params.id);
-	}
 
 	get routeTitle() {
 		if (this.game) {
@@ -46,7 +41,7 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.items = GameDataStoreItem.populate($payload.items);
 	}
 

@@ -1,31 +1,35 @@
-import { namespace, State, Action, Mutation } from 'vuex-class';
-import {
-	VuexModule,
-	VuexStore,
-	VuexMutation,
-	VuexAction,
-} from '../../../../../lib/gj-lib-client/utils/vuex';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
-import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { GameScreenshot } from '../../../../../lib/gj-lib-client/components/game/screenshot/screenshot.model';
-import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/video/video.model';
-import { GameSketchfab } from '../../../../../lib/gj-lib-client/components/game/sketchfab/sketchfab.model';
+import { namespace } from 'vuex-class';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { router } from '../../../index';
 import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
+import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import { GameScreenshot } from '../../../../../lib/gj-lib-client/components/game/screenshot/screenshot.model';
+import { GameSketchfab } from '../../../../../lib/gj-lib-client/components/game/sketchfab/sketchfab.model';
+import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/video/video.model';
+import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
+import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
+import {
+	NamespaceVuexStore,
+	VuexAction,
+	VuexModule,
+	VuexMutation,
+	VuexStore,
+} from '../../../../../lib/gj-lib-client/utils/vuex';
+import { store } from '../../../../store';
+import { router } from '../../../index';
 
 export const RouteStoreName = 'manageRoute';
-export const RouteState = namespace(RouteStoreName, State);
-export const RouteAction = namespace(RouteStoreName, Action);
-export const RouteMutation = namespace(RouteStoreName, Mutation);
+export const RouteStoreModule = namespace(RouteStoreName);
+export const routeStore = NamespaceVuexStore<RouteStore, RouteActions, RouteMutations>(
+	store,
+	RouteStoreName
+);
 
 const WizardKey = 'manage-game-wizard';
 
 export type Media = GameScreenshot | GameVideo | GameSketchfab;
 
-type Actions = {
+type RouteActions = {
 	wizardNext: undefined;
 	publish: undefined;
 	saveDraft: undefined;
@@ -36,7 +40,7 @@ type Actions = {
 	saveMediaSort: Media[];
 };
 
-type Mutations = {
+type RouteMutations = {
 	populate: any;
 	populateMedia: any[];
 	addMedia: (GameScreenshot | GameVideo | GameSketchfab)[];
@@ -82,7 +86,7 @@ export function startWizard() {
 }
 
 @VuexModule()
-export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
+export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutations> {
 	game: Game = null as any;
 	collaboration: GameCollaborator | null = null;
 	media: Media[] = [];
@@ -125,7 +129,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	populate(payload: Mutations['populate']) {
+	populate(payload: RouteMutations['populate']) {
 		this.game = new Game(payload.game);
 		this.collaboration = payload.collaboration
 			? new GameCollaborator(payload.collaboration)
@@ -134,7 +138,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	populateMedia(mediaItems: Mutations['populateMedia']) {
+	populateMedia(mediaItems: RouteMutations['populateMedia']) {
 		this.media.splice(0, this.media.length);
 		if (mediaItems && mediaItems.length) {
 			for (const item of mediaItems) {
@@ -144,14 +148,14 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	addMedia(media: Mutations['addMedia']) {
+	addMedia(media: RouteMutations['addMedia']) {
 		for (const item of media) {
 			this.media.unshift(item);
 		}
 	}
 
 	@VuexMutation
-	removeMedia(item: Mutations['removeMedia']) {
+	removeMedia(item: RouteMutations['removeMedia']) {
 		const index = this.media.findIndex(i => i.id === item.id);
 		if (index !== -1) {
 			this.media.splice(index, 1);
@@ -159,7 +163,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	updateMedia(items: Mutations['updateMedia']) {
+	updateMedia(items: RouteMutations['updateMedia']) {
 		this.media = items;
 	}
 
@@ -324,7 +328,7 @@ export class RouteStore extends VuexStore<RouteStore, Actions, Mutations> {
 	}
 
 	@VuexAction
-	async saveMediaSort(items: Actions['saveMediaSort']) {
+	async saveMediaSort(items: RouteActions['saveMediaSort']) {
 		this.updateMedia(items);
 
 		await Api.sendRequest(

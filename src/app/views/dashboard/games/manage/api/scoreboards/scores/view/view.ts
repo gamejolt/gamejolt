@@ -1,18 +1,17 @@
 import View from '!view!./view.html';
 import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
 import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameScoreTable } from '../../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolve,
+	RouteResolver,
 } from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
 import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { date } from '../../../../../../../../../lib/gj-lib-client/vue/filters/date';
 import { number } from '../../../../../../../../../lib/gj-lib-client/vue/filters/number';
-import { RouteState, RouteStore } from '../../../../manage.store';
+import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 
 @View
 @Component({
@@ -25,21 +24,19 @@ import { RouteState, RouteStore } from '../../../../manage.store';
 		date,
 	},
 })
+@RouteResolver({
+	deps: { params: ['score'] },
+	resolver: ({ route }) =>
+		Api.sendRequest(
+			'/web/dash/developer/games/api/scores/' + route.params.id + '/' + route.params.score
+		),
+})
 export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRouteComponent {
-	@RouteState
+	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
 	score: UserGameScore = null as any;
 	scoreTable: GameScoreTable = null as any;
-
-	@RouteResolve({
-		deps: { params: ['score'] },
-	})
-	routeResolve(this: undefined, route: Route) {
-		return Api.sendRequest(
-			'/web/dash/developer/games/api/scores/' + route.params.id + '/' + route.params.score
-		);
-	}
 
 	get routeTitle() {
 		if (this.game) {
@@ -50,7 +47,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 		return null;
 	}
 
-	routed($payload: any) {
+	routeResolved($payload: any) {
 		this.score = new UserGameScore($payload.score);
 		this.scoreTable = new GameScoreTable($payload.scoreTable);
 	}

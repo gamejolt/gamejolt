@@ -1,7 +1,10 @@
 <section class="section">
-	<div class="container">
+	<div class="container-lg">
 		<div class="row">
-			<div class="col-xs-12 col-md-4 pull-right">
+			<div
+				class="col-xs-12 col-sm-9 col-md-4 col-lg-3"
+				:class="Screen.isDesktop ? 'pull-right' : 'col-centered'"
+				>
 				<app-broadcast-card
 					v-if="latestBroadcast"
 					:post="latestBroadcast"
@@ -21,31 +24,111 @@
 						:games="featuredGames.slice(0, 7)"
 						event-label="activity"
 						/>
+
+					<div>
+						<router-link
+							class="link-muted"
+							:to="{
+								name: 'discover.games.list._fetch',
+								params: { section: null }
+							}"
+							v-app-track-event="`activity:browse-games`"
+							>
+							<translate>Browse all games</translate>
+						</router-link>
+					</div>
 				</template>
 
 			</div>
-			<div class="col-xs-12 col-md-8 col-lg-7 col-lg-offset-1 pull-left">
 
+			<!--
+				We need this space to be taken up even if they don't have games.
+			-->
+			<div
+				v-if="!Screen.isMobile"
+				class="col-md-2 col-lg-3 pull-left"
+				>
+				<template v-if="hasGamesSection">
+					<h4 class="section-header">
+						<translate>Manage Games</translate>
+					</h4>
+
+					<template v-if="hasGameFilter">
+						<div>
+							<input
+								type="search"
+								class="form-control"
+								:placeholder="$gettext(`Find a game`)"
+								v-model="gameFilterQuery"
+								>
+						</div>
+						<br>
+					</template>
+
+					<nav class="-game-list platform-list">
+						<ul>
+							<li
+								v-for="game of filteredGames"
+								:key="game.id"
+								>
+								<router-link
+									:to="{
+										name: 'dash.games.manage.game.overview',
+										params: { id: game.id },
+									}"
+									:title="(game.ownerName ? `@${game.ownerName}/` : '') + game.title"
+									v-app-track-event="`activity:quick-game`"
+									>
+									<template v-if="game.ownerName">
+										<small>@{{game.ownerName}}</small>
+										/
+									</template>
+									{{ game.title }}
+								</router-link>
+							</li>
+						</ul>
+					</nav>
+
+					<div v-if="isShowAllGamesVisible">
+						<a
+							class="link-muted"
+							@click="isShowingAllGames = !isShowingAllGames"
+							v-app-track-event="`activity:quick-game-all`"
+							>
+							<translate>Show all</translate>
+						</a>
+					</div>
+				</template>
+			</div>
+
+			<div
+				class="col-xs-12 col-sm-9 col-md-6"
+				:class="Screen.isDesktop ? 'pull-left' : 'col-centered'"
+				>
+
+				<!-- TODO(communities) is this merged correctly? -->
 				<template v-if="Screen.isXs">
 					<app-community-slider />
 					<hr class="full-bleed">
 				</template>
 
-				<app-activity-feed-placeholder v-if="!feed" />
+				<app-post-add-button
+					@add="onPostAdded"
+					/>
+
+				<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
 				<template v-else>
-					<div class="alert" v-if="!feed.hasItems">
+					<div class="alert full-bleed-xs" v-if="!feed.hasItems">
 						<translate>You don't have any activity yet. Follow games to stay up to date on their latest development!</translate>
 					</div>
 					<app-activity-feed
 						v-else
 						:feed="feed"
-						show-game-info
 						show-ads
 						:new-count="unreadActivityCount"
 						@load-new="loadedNew()"
 						/>
 				</template>
-
 			</div>
 		</div>
 	</div>

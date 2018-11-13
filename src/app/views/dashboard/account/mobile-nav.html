@@ -17,6 +17,13 @@
 			</router-link>
 			<router-link
 				class="list-group-item"
+				:to="{ name: 'dash.account.site' }"
+				active-class="active"
+				>
+				<translate>Portfolio Site</translate>
+			</router-link>
+			<router-link
+				class="list-group-item"
 				:to="{ name: 'dash.account.linked-accounts' }"
 				active-class="active"
 				>
@@ -52,10 +59,24 @@
 			</router-link>
 			<router-link
 				class="list-group-item"
+				:to="{ name: 'dash.account.purchases.list' }"
+				active-class="active"
+				>
+				<translate>Purchases</translate>
+			</router-link>
+			<router-link
+				class="list-group-item"
 				:to="{ name: 'dash.account.financials' }"
 				active-class="active"
 				>
 				<translate>Marketplace Account Setup</translate>
+			</router-link>
+			<router-link
+				class="list-group-item"
+				:to="{ name: 'dash.account.withdraw-funds' }"
+				active-class="active"
+				>
+				<translate>Revenue</translate>
 			</router-link>
 		</div>
 	</nav>

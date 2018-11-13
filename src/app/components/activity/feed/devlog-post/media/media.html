@@ -1,4 +1,7 @@
-<div class="devlog-post-media">
+<div
+	class="devlog-post-media"
+	:class="{ '-ssr': GJ_IS_SSR }"
+	>
 	<v-touch
 		class="-lightbox"
 		@panstart="panStart"
@@ -12,29 +15,29 @@
 
 				<app-responsive-dimensions
 					class="-slider-item"
-					v-for="item of post.media"
-					:key="item.id"
-					:ratio="item.width / item.height"
+					v-for="mediaItem of post.media"
+					:key="mediaItem.id"
+					:ratio="mediaItem.width / mediaItem.height"
 					@change="onDimensionsChange"
 					>
 
 					<app-event-item-media-tags
-						:gif="item.is_animated"
+						:gif="mediaItem.is_animated"
 						/>
 
 					<app-img-responsive
-						v-if="!isHydrated || !item.is_animated"
+						v-if="!isHydrated || !mediaItem.is_animated"
 						class="-img"
-						:src="item.mediaserver_url"
+						:src="mediaItem.mediaserver_url"
 						alt=""
 						ondragstart="return false"
 						/>
 					<app-video
-						v-else-if="shouldVideoPlay( item )"
+						v-else-if="shouldVideoPlay(mediaItem)"
 						class="-video"
-						:poster="item.mediaserver_url"
-						:webm="item.mediaserver_url_webm"
-						:mp4="item.mediaserver_url_mp4"
+						:poster="mediaItem.mediaserver_url"
+						:webm="mediaItem.mediaserver_url_webm"
+						:mp4="mediaItem.mediaserver_url_mp4"
 						show-loading
 						/>
 
