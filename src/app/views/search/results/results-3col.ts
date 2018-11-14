@@ -1,4 +1,4 @@
-import View from '!view!./results-3col.html';
+import View from '!view!./results-3col.html?style=./results-3col.styl';
 import {
 	BaseRouteComponent,
 	RouteResolver,
@@ -11,6 +11,7 @@ import { AppActivityFeed } from '../../../components/activity/feed/feed';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import { AppActivityFeedPlaceholder } from '../../../components/activity/feed/placeholder/placeholder';
 import { ActivityFeedView } from '../../../components/activity/feed/view';
+import { AppGameGrid } from '../../../components/game/grid/grid';
 import { AppGameList } from '../../../components/game/list/list';
 import { AppPageContainer } from '../../../components/page-container/page-container';
 import { Search } from '../../../components/search/search-service';
@@ -24,6 +25,7 @@ import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 		AppPageContainer,
 		AppUserCard,
 		AppGameList,
+		AppGameGrid,
 		AppActivityFeed,
 		AppActivityFeedPlaceholder,
 	},
@@ -54,6 +56,10 @@ export default class RouteSearchResults extends BaseRouteComponent {
 
 	readonly Search = Search;
 	readonly Screen = Screen;
+
+	get slicedUsers() {
+		return Screen.isXs ? this.searchPayload.users : this.searchPayload.users.slice(0, 2);
+	}
 
 	routeCreated() {
 		trackSearchPage3ColSplitTest();

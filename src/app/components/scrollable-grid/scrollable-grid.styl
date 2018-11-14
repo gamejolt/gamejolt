@@ -3,6 +3,16 @@
 
 _scrollable-grid()
 	white-space: nowrap
+	margin-left: -($grid-gutter-width-xs / 2)
+	margin-right: -($grid-gutter-width-xs / 2)
+
+	@media $media-sm-up
+		margin-left: -($grid-gutter-width / 2)
+		margin-right: -($grid-gutter-width / 2)
+
+	& > .row
+		margin-left: 0
+		margin-right: 0
 
 	.scrollable-grid-item
 		display: inline-block
