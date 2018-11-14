@@ -14,8 +14,12 @@ import { AppActivityFeedPlaceholder } from '../../../../components/activity/feed
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppPostAddButton } from '../../../../components/post/add-button/add-button';
 
-function getFetchUrl(route: Route) {
-	return `/web/posts/fetch/community/${route.params.path}`;
+function getFetchUrl(route: Route, tags: string[]) {
+	let url = `/web/posts/fetch/community/${route.params.path}`;
+	if (tags.length) {
+		url += '?' + tags.map(tag => `tags[]=` + encodeURIComponent(tag)).join('&');
+	}
+	return url;
 }
 
 @View
@@ -29,16 +33,19 @@ function getFetchUrl(route: Route) {
 	},
 })
 @RouteResolver({
-	cache: true,
+	cache: false,
 	lazy: true,
 	deps: {},
-	resolver: ({ route }) => Api.sendRequest(getFetchUrl(route)),
+	resolver: ({ route }) => Api.sendRequest(getFetchUrl(route, ['featured'])),
 })
 export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@Prop(Community)
 	community!: Community;
 
 	feed: ActivityFeedView | null = null;
+
+	activeTag = '';
+	searchId = 0;
 
 	get leftColClass() {
 		return '-left-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-8 col-lg-7';
@@ -59,6 +66,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
+		this.activeTag = 'featured';
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {
@@ -66,10 +74,34 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			this.feed,
 			{
 				type: 'EventItem',
-				url: getFetchUrl(this.$route),
+				url: getFetchUrl(this.$route, ['featured']),
 			},
 			$payload.items,
 			fromCache
+		);
+	}
+
+	async setActiveTag(tag: string) {
+		const searchId = ++this.searchId;
+
+		this.activeTag = tag;
+		this.feed = null;
+
+		const loadUrl = getFetchUrl(this.$route, [this.activeTag]);
+		const payload = await Api.sendRequest(loadUrl);
+
+		if (searchId !== this.searchId) {
+			return;
+		}
+
+		this.feed = ActivityFeedService.routed(
+			null,
+			{
+				type: 'EventItem',
+				url: loadUrl,
+			},
+			payload.items,
+			false
 		);
 	}
 }

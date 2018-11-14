@@ -10,7 +10,9 @@ import {
 import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
+import { Mutation } from 'vuex-class';
 import { AppPageHeader } from '../../../components/page-header/page-header';
+import { Store } from '../../../store/index';
 
 @View
 @Component({
@@ -33,6 +35,12 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	@ThemeMutation
 	setPageTheme!: ThemeStore['setPageTheme'];
 
+	@Mutation
+	joinCommunity!: Store['joinCommunity'];
+
+	@Mutation
+	leaveCommunity!: Store['leaveCommunity'];
+
 	community: Community = null as any;
 
 	routeResolved($payload: any) {
@@ -42,5 +50,13 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	routeDestroy() {
 		this.setPageTheme(null);
+	}
+
+	onJoin() {
+		this.joinCommunity(this.community);
+	}
+
+	onLeave() {
+		this.leaveCommunity(this.community);
 	}
 }

@@ -53,6 +53,8 @@
 		<div slot="controls">
 			<app-community-join-widget
 				:community="community"
+				@join="onJoin"
+				@leave="onLeave"
 				block
 				/>
 		</div>

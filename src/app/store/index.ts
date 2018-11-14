@@ -77,6 +77,8 @@ export type Mutations = AppMutations &
 		incrementNotificationCount: { type: UnreadItemType; count: number };
 		setFriendRequestCount: number;
 		changeFriendRequestCount: number;
+		joinCommunity: Community;
+		leaveCommunity: Community;
 	};
 
 let bootstrapResolver: Function | null = null;
@@ -373,6 +375,25 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	private _shellPayload(payload: any) {
 		this.isShellBootstrapped = true;
 		this.communities = Community.populate(payload.communities);
+	}
+
+	@VuexMutation
+	joinCommunity(community: Mutations['joinCommunity']) {
+		if (this.communities.find(c => c.id === community.id)) {
+			return;
+		}
+
+		this.communities.push(community);
+	}
+
+	@VuexMutation
+	leaveCommunity(community: Mutations['leaveCommunity']) {
+		const idx = this.communities.findIndex(c => c.id === community.id);
+		if (idx === -1) {
+			return;
+		}
+
+		this.communities.splice(idx, 1);
 	}
 
 	@VuexMutation

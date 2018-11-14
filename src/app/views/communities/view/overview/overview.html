@@ -11,9 +11,10 @@
 			<div :class="leftColClass">
 				<p>
 					<a
-						v-for="tag in ['news', 'fanart', 'guide', 'review', 'letsplay']"
+						v-for="tag in ['featured', 'latest', 'news', 'fanart', 'guide', 'review', 'letsplay']"
+						@click="setActiveTag(tag)"
 						>
-						<app-pill :class="{ active: tag === 'news' }">
+						<app-pill :class="{ active: tag === activeTag }">
 							#{{ tag }}
 						</app-pill>
 					</a>
