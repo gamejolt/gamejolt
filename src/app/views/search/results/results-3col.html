@@ -1,7 +1,9 @@
 <section class="section" v-if="hasSearch">
 
 	<app-page-container no-left>
-		<div slot="right">
+
+		<!-- Games -->
+		<div slot="right" v-if="searchPayload.games.length">
 			<div class="pull-right">
 				<app-button
 					trans
@@ -80,5 +82,6 @@
 				show-ads
 				/>
 		</template>
+
 	</app-page-container>
 </section>
