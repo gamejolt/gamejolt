@@ -1,6 +1,8 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+$-main-max-width = 650px
+
 // On xs the content stacks, we shove "main" to the bottom.
 .-row
 	display: flex
@@ -19,6 +21,7 @@
 
 	.-left, .-main, .-right
 		width: $percentage-10
+		max-width: $-main-max-width
 
 // Desktop sizes is where we break it out into different columns.
 @media $media-md-up
@@ -33,7 +36,7 @@
 
 	.-main
 		flex: 2 0
-		max-width: 650px
+		max-width: $-main-max-width
 		order: 0
 
 	.-right
