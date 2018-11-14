@@ -111,7 +111,7 @@ export class FormPost extends BaseForm<FormPostModel>
 	readonly MAX_POLL_DURATION = 20160;
 
 	keyGroups: KeyGroup[] = [];
-	possibleTags: string[] = [];
+	featuredTags: string[] = [];
 	wasPublished = false;
 	attachmentType = '';
 	enabledAttachments = false;
@@ -206,7 +206,7 @@ export class FormPost extends BaseForm<FormPostModel>
 
 	get tagText() {
 		const longText = this.longEnabled ? this.formModel.content_markdown : '';
-		return `${this.formModel.lead} ${longText || ''}`.toLowerCase();
+		return `${this.formModel.lead} ${longText || ''}`;
 	}
 
 	get hasPoll() {
@@ -426,7 +426,7 @@ export class FormPost extends BaseForm<FormPostModel>
 
 	onLoad(payload: any) {
 		this.keyGroups = KeyGroup.populate(payload.keyGroups);
-		this.possibleTags = payload.tags;
+		this.featuredTags = payload.tags;
 		this.wasPublished = payload.wasPublished;
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
