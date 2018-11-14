@@ -32,6 +32,7 @@ import { AppGameOgrs } from '../../../../../components/game/ogrs/ogrs';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppPostAddButton } from '../../../../../components/post/add-button/add-button';
 import { AppRatingWidget } from '../../../../../components/rating/widget/widget';
+import { trackGamePage3ColSplitTest } from '../../../../../components/split-test/split-test-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../view.store';
 import { AppDiscoverGamesViewOverviewDetails } from './_details/details';
 import { AppDiscoverGamesViewOverviewRecommended } from './_recommended/recommended';
@@ -194,6 +195,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	routeCreated() {
+		trackGamePage3ColSplitTest();
 		CommentModal.checkPermalink(this.$router);
 		this.feed = ActivityFeedService.routeInit(this);
 	}

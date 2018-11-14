@@ -1,4 +1,4 @@
-import View from '!view!./overview.html?style=./overview.styl';
+import View from '!view!./overview-3col.html?style=./overview.styl';
 import { AppAd } from 'game-jolt-frontend-lib/components/ad/ad';
 import { AppAdPlacement } from 'game-jolt-frontend-lib/components/ad/placement/placement';
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
@@ -33,6 +33,7 @@ import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppPageContainer } from '../../../../../components/page-container/page-container';
 import { AppPostAddButton } from '../../../../../components/post/add-button/add-button';
 import { AppRatingWidget } from '../../../../../components/rating/widget/widget';
+import { trackGamePage3ColSplitTest } from '../../../../../components/split-test/split-test-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../view.store';
 import { AppDiscoverGamesViewOverviewDetails } from './_details/details';
 import { AppDiscoverGamesViewOverviewRecommended } from './_recommended/recommended';
@@ -196,6 +197,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	routeCreated() {
+		trackGamePage3ColSplitTest();
 		CommentModal.checkPermalink(this.$router);
 		this.feed = ActivityFeedService.routeInit(this);
 	}

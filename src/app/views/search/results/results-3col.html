@@ -1,0 +1,84 @@
+<section class="section" v-if="hasSearch">
+
+	<app-page-container no-left>
+		<div slot="right">
+			<div class="pull-right">
+				<app-button
+					trans
+					:to="{ name: 'search.games', query: { q: query } }"
+					>
+					<translate>View All</translate>
+				</app-button>
+			</div>
+
+			<h3 class="section-header">
+				<router-link
+					class="link-unstyled"
+					:to="{ name: 'search.games', query: { q: query } }"
+					>
+					<translate>search.results.games_heading</translate>
+				</router-link>
+				<small>({{ searchPayload.gamesCount | number }})</small>
+			</h3>
+
+			<app-game-list
+				v-if="searchPayload.games.length"
+				:games="searchPayload.games"
+				event-label="search-overview-games"
+				/>
+
+			<div class="hidden-xs hidden-sm">
+				<router-link
+					class="link-muted"
+					:to="{ name: 'search.games', query: { q: query } }"
+					>
+					<translate>View all</translate>
+				</router-link>
+			</div>
+		</div>
+
+		<!-- Users -->
+		<template v-if="searchPayload.users.length">
+			<div class="pull-right">
+				<app-button
+					trans
+					:to="{ name: 'search.users', query: { q: query } }"
+					>
+					<translate>View All</translate>
+				</app-button>
+			</div>
+
+			<h3 class="section-header">
+				<router-link
+					class="link-unstyled"
+					:to="{ name: 'search.users', query: { q: query } }"
+					>
+					<translate>search.results.users_heading</translate>
+				</router-link>
+				<small>({{ searchPayload.usersCount | number }})</small>
+			</h3>
+
+			<div class="row">
+				<div
+					class="col-xs-8 col-md-6"
+					v-for="user of searchPayload.users.slice(0, 2)"
+					:key="user.id"
+					>
+					<app-user-card :user="user" />
+				</div>
+			</div>
+		</template>
+
+		<!-- Posts -->
+		<template v-if="feed && feed.hasItems">
+			<h3 :class="{ 'section-header': !searchPayload.users.length }">
+				<translate>Posts</translate>
+			</h3>
+
+			<app-activity-feed
+				:feed="feed"
+				show-ads
+				/>
+		</template>
+	</app-page-container>
+</section>

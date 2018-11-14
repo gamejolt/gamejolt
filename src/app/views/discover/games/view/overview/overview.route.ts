@@ -7,7 +7,7 @@ export const routeDiscoverGamesViewOverview: RouteConfig = {
 	props: true,
 	component: () => {
 		return hasGamePage3ColSplitTest()
-			? import(/* webpackChunkName: "routeDiscoverGamesView" */ './overview')
-			: import(/* webpackChunkName: "routeDiscoverGamesView3Col" */ './overview-3col');
+			? import(/* webpackChunkName: "routeDiscoverGamesView3Col" */ './overview-3col')
+			: import(/* webpackChunkName: "routeDiscoverGamesView" */ './overview');
 	},
 };
