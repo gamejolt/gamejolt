@@ -3,7 +3,10 @@ import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { AppFormAutosize } from 'game-jolt-frontend-lib/components/form-vue/autosize.directive';
+import {
+	AppFormAutosize,
+	AutosizeBootstrap,
+} from 'game-jolt-frontend-lib/components/form-vue/autosize.directive';
 import { AppFormControlCheckbox } from 'game-jolt-frontend-lib/components/form-vue/control/checkbox/checkbox';
 import { AppFormControlDate } from 'game-jolt-frontend-lib/components/form-vue/control/date/date';
 import { AppFormControlMarkdown } from 'game-jolt-frontend-lib/components/form-vue/control/markdown/markdown';
@@ -130,6 +133,8 @@ export class FormPost extends BaseForm<FormPostModel>
 	leadLengthLimit = 255;
 	leadTotalLengthLimit = 300;
 	isUploadingPastedImage = false;
+
+	private updateAutosize?: () => void;
 
 	readonly GameVideo = GameVideo;
 	readonly Screen = Screen;
@@ -491,6 +496,14 @@ export class FormPost extends BaseForm<FormPostModel>
 		Object.assign(this.model as FiresidePost, this.formModel);
 	}
 
+	/**
+	 * This is called when the autosize directive is bootstrapped. It passes us
+	 * some hooks that we can call to modify it.
+	 */
+	bootstrapAutosize({ updater }: AutosizeBootstrap) {
+		this.updateAutosize = updater;
+	}
+
 	enableImages() {
 		this.enabledAttachments = true;
 		this.attachmentType = FiresidePost.TYPE_MEDIA;
@@ -536,6 +549,11 @@ export class FormPost extends BaseForm<FormPostModel>
 	async addTag(tag: string) {
 		const newLead = this.formModel.lead ? `${this.formModel.lead} #${tag}` : `#${tag}`;
 		this.setField('lead', newLead);
+
+		if (this.updateAutosize) {
+			await this.$nextTick();
+			this.updateAutosize();
+		}
 	}
 
 	createPoll() {
