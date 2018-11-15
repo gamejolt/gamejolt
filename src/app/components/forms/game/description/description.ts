@@ -1,4 +1,4 @@
-import View from '!view!./description.html';
+import View from '!view!./description.html?style=./description.styl';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
@@ -59,7 +59,10 @@ export class FormGameDescription extends BaseForm<DescriptionFormModel> {
 	}
 
 	async addTag(tag: string) {
-		this.setField('description_markdown', this.formModel.description_markdown + ' #' + tag);
+		const newDescription = this.formModel.description_markdown
+			? `${this.formModel.description_markdown} #${tag}`
+			: `#${tag}`;
+		this.setField('description_markdown', newDescription);
 
 		// Since we are modifying the description outside the normal flow, we
 		// have to tell the autosizer to try to update itself.
