@@ -1,4 +1,4 @@
-import View from '!view!./description.html';
+import View from '!view!./description.html?style=./description.styl';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';

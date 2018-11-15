@@ -1,4 +1,8 @@
-<div v-if="shouldShow">
+<app-tag-suggestion
+	:tags="tags"
+	:text="text"
+	@tag="emitTag($event)"
+	>
 	<app-jolticon icon="tags" class="middle" />
 	<strong>
 		<translate>Post Tags</translate>
@@ -7,9 +11,5 @@
 	<p class="help-block">
 		<translate>Tag your post to increase its visibility. You can also add your own tags if none of the below apply by putting a #hashtag in the text.</translate>
 	</p>
+</app-tag-suggestion>
 
-	<app-tag-suggestion
-		:suggester="suggester"
-		@tag="emitTag($event)"
-		/>
-</div>
