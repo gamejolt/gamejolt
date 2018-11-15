@@ -1,17 +1,19 @@
-import View from '!view!./results.html';
-import { Component } from 'vue-property-decorator';
+import View from '!view!./results-3col.html?style=./results-3col.styl';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../lib/gj-lib-client/components/route/route-component';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppUserCard } from 'game-jolt-frontend-lib/components/user/card/card';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Component } from 'vue-property-decorator';
 import { AppActivityFeed } from '../../../components/activity/feed/feed';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import { AppActivityFeedPlaceholder } from '../../../components/activity/feed/placeholder/placeholder';
 import { ActivityFeedView } from '../../../components/activity/feed/view';
 import { AppGameGrid } from '../../../components/game/grid/grid';
+import { AppGameList } from '../../../components/game/list/list';
+import { AppPageContainer } from '../../../components/page-container/page-container';
 import { Search } from '../../../components/search/search-service';
 import { trackSearchPage3ColSplitTest } from '../../../components/split-test/split-test-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
@@ -20,7 +22,9 @@ import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 @Component({
 	name: 'RouteSearchResults',
 	components: {
-		AppUserAvatar,
+		AppPageContainer,
+		AppUserCard,
+		AppGameList,
 		AppGameGrid,
 		AppActivityFeed,
 		AppActivityFeedPlaceholder,
@@ -52,6 +56,10 @@ export default class RouteSearchResults extends BaseRouteComponent {
 
 	readonly Search = Search;
 	readonly Screen = Screen;
+
+	get slicedUsers() {
+		return Screen.isXs ? this.searchPayload.users : this.searchPayload.users.slice(0, 2);
+	}
 
 	routeCreated() {
 		trackSearchPage3ColSplitTest();

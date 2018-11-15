@@ -1,4 +1,4 @@
-import View from '!view!./overview.html?style=./overview.styl';
+import View from '!view!./overview-3col.html?style=./overview.styl';
 import { AppAd } from 'game-jolt-frontend-lib/components/ad/ad';
 import { AppAdPlacement } from 'game-jolt-frontend-lib/components/ad/placement/placement';
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
@@ -30,6 +30,7 @@ import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import { AppCommentOverview } from '../../../../../components/comment/overview/overview';
 import { AppGameOgrs } from '../../../../../components/game/ogrs/ogrs';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
+import { AppPageContainer } from '../../../../../components/page-container/page-container';
 import { AppPostAddButton } from '../../../../../components/post/add-button/add-button';
 import { AppRatingWidget } from '../../../../../components/rating/widget/widget';
 import { trackGamePage3ColSplitTest } from '../../../../../components/split-test/split-test-service';
@@ -43,6 +44,7 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 @Component({
 	name: 'RouteDiscoverGamesViewOverview',
 	components: {
+		AppPageContainer,
 		AppDiscoverGamesViewOverviewDetails,
 		AppDiscoverGamesViewOverviewRecommended,
 		AppDiscoverGamesViewOverviewSupporters,
