@@ -98,13 +98,13 @@
 
 								<template v-if="packages.length">
 									<app-game-package-card
-										v-for="package of packages"
-										:key="package.id"
+										v-for="pkg of packages"
+										:key="pkg.id"
 										:game="game"
-										:sellable="package._sellable"
-										:package="package"
-										:releases="package._releases"
-										:builds="package._builds"
+										:sellable="pkg._sellable"
+										:package="pkg"
+										:releases="pkg._releases"
+										:builds="pkg._builds"
 										:is-partner="!!userPartnerKey"
 										:partner-key="partnerKey"
 										:partner="partner"

@@ -6,3 +6,4 @@
 /debug.log
 /src/translations
 .DS_Store
+.cache
