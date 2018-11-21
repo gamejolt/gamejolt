@@ -31,6 +31,7 @@ interface BootstrapPayload {
 		notificationCount: number;
 		activityUnreadCount: number;
 		notificationUnreadCount: number;
+		unreadCommunities: number[];
 	};
 }
 
@@ -146,40 +147,7 @@ export class GridClient {
 		);
 
 		channel.on('bootstrap', (payload: BootstrapPayload) => {
-			if (payload.status === 'ok') {
-				console.log('[Grid] Received notification count bootstrap.');
-
-				channel.onError(reason => {
-					console.log(`[Grid] Connection error encountered (Reason: ${reason}).`);
-					this.restart(0);
-				});
-
-				store.commit('setNotificationCount', {
-					type: 'activity',
-					count: payload.body.activityUnreadCount,
-				});
-				store.commit('setNotificationCount', {
-					type: 'notifications',
-					count: payload.body.notificationUnreadCount,
-				});
-
-				store.commit('setFriendRequestCount', payload.body.friendRequestCount);
-				this.bootstrapTimestamp = payload.body.lastNotificationTime;
-
-				this.bootstrapReceived = true;
-
-				// handle backlog
-				for (const notification of this.notificationBacklog) {
-					this.handleNotification(notification);
-				}
-				this.notificationBacklog = [];
-			} else {
-				// error
-				console.log(
-					`[Grid] Failed to fetch notification count bootstrap (${payload.body}).`
-				);
-				this.restart();
-			}
+			this.handleBootstrap(channel, payload);
 		});
 
 		channel.push('request-bootstrap', { user_id: userId });
@@ -228,6 +196,49 @@ export class GridClient {
 					}
 				}
 			}
+		}
+	}
+
+	handleBootstrap(channel: Channel, payload: BootstrapPayload) {
+		if (payload.status === 'ok') {
+			console.log('[Grid] Received notification count bootstrap.');
+
+			channel.onError(reason => {
+				console.log(`[Grid] Connection error encountered (Reason: ${reason}).`);
+				this.restart(0);
+			});
+
+			store.commit('setNotificationCount', {
+				type: 'activity',
+				count: payload.body.activityUnreadCount,
+			});
+			store.commit('setNotificationCount', {
+				type: 'notifications',
+				count: payload.body.notificationUnreadCount,
+			});
+
+			store.commit('setFriendRequestCount', payload.body.friendRequestCount);
+			this.bootstrapTimestamp = payload.body.lastNotificationTime;
+
+			this.bootstrapReceived = true;
+
+			// handle backlog
+			for (const notification of this.notificationBacklog) {
+				this.handleNotification(notification);
+			}
+			this.notificationBacklog = [];
+
+			// communities
+			for (const communityId of payload.body.unreadCommunities) {
+				const community = store.state.communities.find(c => c.id === communityId);
+				if (community instanceof Community) {
+					community.is_unread = true;
+				}
+			}
+		} else {
+			// error
+			console.log(`[Grid] Failed to fetch notification count bootstrap (${payload.body}).`);
+			this.restart();
 		}
 	}
 
