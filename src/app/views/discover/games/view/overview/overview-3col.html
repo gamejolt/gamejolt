@@ -132,6 +132,14 @@
 					<app-lazy-placeholder :when="isOverviewLoaded">
 						<div class="lazy-placeholder" style="height: 135px"></div>
 
+						<template v-if="externalPackages.length">
+							<app-game-external-package-card
+								v-for="externalPackage of externalPackages"
+								:key="`external-${externalPackage.id}`"
+								:package="externalPackage"
+								/>
+						</template>
+
 						<template v-if="packages.length">
 							<app-game-package-card
 								v-for="pkg of packages"
