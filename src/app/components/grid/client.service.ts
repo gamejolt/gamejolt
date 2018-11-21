@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { Channel, Socket } from 'phoenix';
 import { Analytics } from '../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
@@ -19,6 +20,8 @@ interface NewNotificationPayload {
 		event_item: any;
 	};
 }
+
+interface CommunityNotification {}
 
 interface BootstrapPayload {
 	status: string;
@@ -180,6 +183,8 @@ export class GridClient {
 		});
 
 		channel.push('request-bootstrap', { user_id: userId });
+
+		this.joinCommunities();
 	}
 
 	async restart(sleepMs = 2000) {
@@ -274,6 +279,46 @@ export class GridClient {
 				system: true,
 			});
 		}
+	}
+
+	async joinCommunities() {
+		const cookie = await getCookie('frontend');
+		const user = store.state.app.user;
+
+		if (this.socket && user && cookie) {
+			const userId = user.id.toString();
+			console.log('[Grid] Subscribing to community channels...');
+
+			for (const community of store.state.communities) {
+				const topic = 'community:' + community.id;
+				const channel = this.socket.channel(topic, {
+					frontend_cookie: cookie,
+					user_id: userId,
+				});
+
+				await pollRequest(
+					`Join community channel '${community.name}' (${community.id})`,
+					() =>
+						new Promise((resolve, reject) => {
+							channel
+								.join()
+								.receive('error', reject)
+								.receive('ok', () => {
+									this.channels.push(channel);
+									resolve();
+								});
+						})
+				);
+
+				channel.on('new-notification', (payload: CommunityNotification) =>
+					this.handleCommunityNotification(community, payload)
+				);
+			}
+		}
+	}
+
+	handleCommunityNotification(community: Community, _payload: CommunityNotification) {
+		community.is_unread = true;
 	}
 
 	disconnect() {
