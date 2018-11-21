@@ -5,6 +5,7 @@
 		params: { path: community.path }
 	}"
 	active-class="-active"
+	v-app-tooltip.right="community.name"
 	>
 	<app-community-thumbnail-img
 		class="-thumb"
@@ -16,4 +17,8 @@
 			'background-color': highlight,
 		}"
 		/>
+	<div
+		v-if="community.is_unread"
+		class="-bubble"
+	 	/>
 </router-link>

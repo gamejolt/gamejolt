@@ -5,6 +5,7 @@ $-item-size = $shell-cbar-width - $cbar-h-padding * 2
 $-blip-size = 10px
 $-blip-left = (-($cbar-h-padding + $-blip-size * 0.5))
 $-blip-top = $-item-size * 0.5 - $-blip-size * 0.5
+$-bubble-size = 14px
 
 .-item
 	display: block
@@ -39,3 +40,15 @@ $-blip-top = $-item-size * 0.5 - $-blip-size * 0.5
 		top: 0
 		height: $-item-size
 		left: $-blip-left
+
+.-bubble
+	theme-prop('background-color', 'highlight')
+	theme-prop('border-color', 'gray')
+	border-width: 2px
+	border-style: solid
+	position: absolute
+	width: $-bubble-size
+	height: $-bubble-size
+	border-radius: 50%
+	top: $-item-size - $-bubble-size
+	left: $-item-size - $-bubble-size
