@@ -10,6 +10,7 @@ import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/mo
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { AppGameExternalPackageCard } from 'game-jolt-frontend-lib/components/game/external-package/card/card';
 import { AppGamePackageCard } from 'game-jolt-frontend-lib/components/game/package/card/card';
 import { AppGameSoundtrackCard } from 'game-jolt-frontend-lib/components/game/soundtrack/card/card';
 import { HistoryTick } from 'game-jolt-frontend-lib/components/history-tick/history-tick-service';
@@ -56,6 +57,7 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 		AppFadeCollapse,
 		AppLazyPlaceholder,
 		AppGameOgrs,
+		AppGameExternalPackageCard,
 		AppGamePackageCard,
 		AppGameSoundtrackCard,
 		AppMediaBar,
@@ -144,6 +146,9 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	@RouteStoreModule.State
 	packages!: RouteStore['packages'];
+
+	@RouteStoreModule.State
+	externalPackages!: RouteStore['externalPackages'];
 
 	@RouteStoreModule.State
 	hasReleasesSection!: RouteStore['hasReleasesSection'];
