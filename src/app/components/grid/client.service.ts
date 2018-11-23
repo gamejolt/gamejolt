@@ -322,14 +322,17 @@ export class GridClient {
 				);
 
 				channel.on('new-notification', (payload: CommunityNotification) =>
-					this.handleCommunityNotification(community, payload)
+					this.handleCommunityNotification(community.id, payload)
 				);
 			}
 		}
 	}
 
-	handleCommunityNotification(community: Community, _payload: CommunityNotification) {
-		community.is_unread = true;
+	handleCommunityNotification(communityId: number, _payload: CommunityNotification) {
+		const community = store.state.communities.find(c => c.id === communityId);
+		if (community instanceof Community) {
+			community.is_unread = true;
+		}
 	}
 
 	disconnect() {
