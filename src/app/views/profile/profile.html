@@ -79,7 +79,7 @@
 
 			<!-- Following status -->
 			<span
-				v-if="!user.follows_you"
+				v-if="user.follows_you"
 				class="tag tag-highlight"
 				v-app-tooltip="$gettext( 'This user is following you.' )"
 				>
