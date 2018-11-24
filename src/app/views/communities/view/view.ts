@@ -12,7 +12,7 @@ import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { Mutation } from 'vuex-class';
 import { AppPageHeader } from '../../../components/page-header/page-header';
-import { Store, store } from '../../../store/index';
+import { Store } from '../../../store/index';
 
 @View
 @Component({
@@ -41,15 +41,15 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	@Mutation
 	leaveCommunity!: Store['leaveCommunity'];
 
+	@Mutation
+	viewCommunity!: Store['viewCommunity'];
+
 	community: Community = null as any;
 
 	routeResolved($payload: any) {
 		this.community = new Community($payload.community);
 		this.setPageTheme(this.community.theme || null);
-		const community = store.state.communities.find(c => c.id === this.community.id);
-		if (community) {
-			community.is_unread = false;
-		}
+		this.viewCommunity(this.community);
 	}
 
 	routeDestroy() {

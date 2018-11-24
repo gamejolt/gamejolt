@@ -1,4 +1,5 @@
 import View from '!view!./cbar.html?style=./cbar.styl';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
@@ -14,4 +15,6 @@ import { AppShellCbarItem } from './item/item';
 export class AppShellCbar extends Vue {
 	@State
 	communities!: Store['communities'];
+
+	Screen = Screen;
 }

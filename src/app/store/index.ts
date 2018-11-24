@@ -79,6 +79,7 @@ export type Mutations = AppMutations &
 		changeFriendRequestCount: number;
 		joinCommunity: Community;
 		leaveCommunity: Community;
+		viewCommunity: Community;
 	};
 
 let bootstrapResolver: Function | null = null;
@@ -383,7 +384,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			return;
 		}
 
-		this.communities.push(community);
+		this.communities.unshift(community);
 	}
 
 	@VuexMutation
@@ -394,6 +395,19 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		}
 
 		this.communities.splice(idx, 1);
+	}
+
+	@VuexMutation
+	viewCommunity(community: Mutations['leaveCommunity']) {
+		community.is_unread = false;
+
+		const idx = this.communities.findIndex(c => c.id === community.id);
+		if (idx === -1) {
+			return;
+		}
+
+		this.communities.splice(idx, 1);
+		this.communities.unshift(community);
 	}
 
 	@VuexMutation

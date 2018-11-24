@@ -10,12 +10,17 @@ $-bubble-size = 14px
 .-item
 	display: block
 	position: relative
+	outline: 0
+	margin-bottom: 5px
 
 .-thumb
 	img-circle()
 	theme-prop('border-color', 'gray')
+	theme-prop('background-color', 'gray-dark')
 	border-width: 2px
 	border-style: solid
+	width: $-item-size - 2px
+	height: $-item-size - 2px
 
 	>>> img
 		width: $-item-size - 2px
