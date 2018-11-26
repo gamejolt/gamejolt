@@ -18,6 +18,9 @@ export class AppEventItemManage extends Vue {
 	@Prop(Boolean)
 	showEditControls?: boolean;
 
+	@Prop(Boolean)
+	showCommunityControls?: boolean;
+
 	@Emit('edit-post')
 	emitEditPost() {}
 

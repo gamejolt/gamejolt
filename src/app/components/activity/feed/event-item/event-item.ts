@@ -10,10 +10,7 @@ import { State } from 'vuex-class';
 import { CommentVideoModal } from '../../../../../lib/gj-lib-client/components/comment/video/modal/modal.service';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
-import {
-	canUserManagePost,
-	FiresidePost,
-} from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppUserCardHover } from '../../../../../lib/gj-lib-client/components/user/card/hover/hover';
@@ -180,7 +177,15 @@ export class AppActivityFeedEventItem extends Vue {
 	}
 
 	get shouldShowManage() {
-		return this.post && canUserManagePost(this.post, this.app.user);
+		return this.post && this.post.isManageableByUser(this.app.user);
+	}
+
+	get isEditableByUser() {
+		return this.post && this.post.isEditableByUser(this.app.user);
+	}
+
+	get hasManageableCommunities() {
+		return this.post && this.post.manageableCommunities.length !== 0;
 	}
 
 	mounted() {

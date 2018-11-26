@@ -75,6 +75,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			{
 				type: 'EventItem',
 				url: getFetchUrl(this.$route, ['featured']),
+				shouldShowCommunityControls: true,
 			},
 			$payload.items,
 			fromCache
@@ -99,6 +100,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			{
 				type: 'EventItem',
 				url: loadUrl,
+				shouldShowCommunityControls: true,
 			},
 			payload.items,
 			false

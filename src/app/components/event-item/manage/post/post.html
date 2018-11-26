@@ -27,19 +27,21 @@
 		</span>
 	</div>
 
-	<div class="-controls" v-if="showEditControls">
-		<app-button
-			v-if="canPublish"
-			primary
-			@click="publishPost()"
-			>
-			<translate>Publish</translate>
-		</app-button>
-		<app-button
-			@click="openEdit()"
-			>
-			<translate>Edit</translate>
-		</app-button>
+	<div class="-controls" v-if="showEditControls || showCommunityControls">
+		<template v-if="showEditControls">
+			<app-button
+				v-if="canPublish"
+				primary
+				@click="publishPost()"
+				>
+				<translate>Publish</translate>
+			</app-button>
+			<app-button
+				@click="openEdit()"
+				>
+				<translate>Edit</translate>
+			</app-button>
+		</template>
 
 		<app-popper>
 			<app-button
@@ -50,7 +52,7 @@
 				/>
 
 			<div slot="popover" class="fill-darkest">
-				<template v-if="post.platforms_published_to.length">
+				<template v-if="showEditControls && post.platforms_published_to.length">
 					<div class="popper-heading">
 						<translate>Published to:</translate>
 					</div>
@@ -72,6 +74,31 @@
 
 				<div class="list-group list-group-dark">
 					<a
+						v-if="showCommunityControls"
+						v-for="tagCom of post.tagged_communities"
+						:key="tagCom.id"
+						class="list-group-item has-icon"
+						@click.stop="toggleFeatured(tagCom)"
+						>
+						<app-jolticon icon="tag" />
+
+						<translate
+							v-if="tagCom.isFeatured"
+							:translate-params="{ community: tagCom.community.path }"
+							>
+							Unfeature in %{ community }
+						</translate>
+
+						<translate
+							v-else
+							:translate-params="{ community: tagCom.community.path }"
+							>
+							Feature in %{ community }
+						</translate>
+					</a>
+
+					<a
+						v-if="showEditControls"
 						class="list-group-item has-icon"
 						@click.stop="removePost()"
 						>

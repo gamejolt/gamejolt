@@ -7,6 +7,7 @@ import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { FiresidePostCommunity } from '../../../../../lib/gj-lib-client/components/fireside/post/community/community.model';
 import { Store } from '../../../../store';
 import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 
@@ -25,6 +26,9 @@ export class AppEventItemManagePost extends Vue {
 
 	@Prop(Boolean)
 	showEditControls?: boolean;
+
+	@Prop(Boolean)
+	showCommunityControls?: boolean;
 
 	@State
 	app!: Store['app'];
@@ -46,6 +50,14 @@ export class AppEventItemManagePost extends Vue {
 
 	getProviderIcon(provider: string) {
 		return getLinkedAccountPlatformIcon(provider);
+	}
+
+	async toggleFeatured(tagCom: FiresidePostCommunity) {
+		if (tagCom.isFeatured) {
+			await this.post.$unfeature(tagCom.community);
+		} else {
+			await this.post.$feature(tagCom.community);
+		}
 	}
 
 	async openEdit() {

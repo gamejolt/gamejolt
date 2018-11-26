@@ -25,6 +25,7 @@
 
 			<div class="-header-content">
 				<div class="-header-byline">
+					<!-- TODO(communities) show community info if feed.shouldShowCommunityInfo is set -->
 					<div class="-header-byline-game" v-if="game && feed.shouldShowGameInfo">
 						<strong class="text-muted">
 							<router-link :to="gameUrl" class="link-unstyled">
@@ -148,7 +149,8 @@
 		<div class="-manage" v-if="shouldShowManage">
 			<app-event-item-manage
 				:event-item="eventItem"
-				:show-edit-controls="feed.shouldShowEditControls"
+				:show-edit-controls="feed.shouldShowEditControls && isEditableByUser"
+				:show-community-controls="feed.shouldShowCommunityControls && hasManageableCommunities"
 				@edit-post="onPostEdited(eventItem)"
 				@publish-post="onPostPublished(eventItem)"
 				@remove-post="onPostRemoved(eventItem)"

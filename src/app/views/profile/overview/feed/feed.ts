@@ -63,7 +63,9 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 			{
 				type: 'EventItem',
 				url: getFetchUrl(this.$route),
+				shouldShowCommunityControls: true,
 				shouldShowEditControls: true,
+				shouldShowCommunityInfo: true,
 				shouldShowGameInfo: true,
 			},
 			$payload.items,
