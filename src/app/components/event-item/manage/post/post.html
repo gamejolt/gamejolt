@@ -75,7 +75,7 @@
 				<div class="list-group list-group-dark">
 					<a
 						v-if="showCommunityControls"
-						v-for="tagCom of post.tagged_communities"
+						v-for="tagCom of post.manageableCommunities"
 						:key="tagCom.id"
 						class="list-group-item has-icon"
 						@click.stop="toggleFeatured(tagCom)"

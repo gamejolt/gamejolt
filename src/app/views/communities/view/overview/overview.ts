@@ -1,6 +1,8 @@
 import View from '!view!./overview.html?style=./overview.styl';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
+import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppPill } from 'game-jolt-frontend-lib/components/pill/pill';
 import {
 	BaseRouteComponent,
@@ -105,5 +107,15 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			payload.items,
 			false
 		);
+	}
+
+	onPostAdded(post: FiresidePost) {
+		ActivityFeedService.gotoPostFeedManage(post, this);
+	}
+
+	onPostUnfeatured(eventItem: EventItem, community: Community) {
+		if (this.activeTag === 'featured' && this.community.id === community.id) {
+			this.feed!.remove([eventItem]);
+		}
 	}
 }

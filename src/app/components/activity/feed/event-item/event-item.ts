@@ -1,4 +1,5 @@
 import View from '!view!./event-item.html?style=./event-item.styl';
+import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
@@ -289,5 +290,13 @@ export class AppActivityFeedEventItem extends Vue {
 
 	onPostRemoved(item: EventItem) {
 		this.feedComponent.onPostRemoved(item);
+	}
+
+	onPostFeatured(item: EventItem, community: Community) {
+		this.feedComponent.onPostFeatured(item, community);
+	}
+
+	onPostUnfeatured(item: EventItem, community: Community) {
+		this.feedComponent.onPostUnfeatured(item, community);
 	}
 }

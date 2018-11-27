@@ -25,6 +25,7 @@
 				<!-- @add="onPostAdded" -->
 				<app-post-add-button
 					:community="community"
+					@add="onPostAdded"
 					/>
 
 				<app-activity-feed-placeholder v-if="!feed" />
@@ -32,13 +33,10 @@
 					<app-activity-feed
 						v-if="feed.hasItems"
 						:feed="feed"
+						:show-edit-controls="feed.shouldShowEditControls"
 						:show-community-controls="feed.shouldShowCommunityControls"
+						@unfeature-post="onPostUnfeatured"
 						/>
-						<!-- show-game-info
-						show-edit-controls
-						@edit-post="onPostEdited"
-						@publish-post="onPostPublished"
-						@remove-post="onPostRemoved" -->
 					<div v-else class="alert">
 						<translate>There are no posts in this community yet. What are you waiting for? Post some stuff! Make people happy.</translate>
 					</div>

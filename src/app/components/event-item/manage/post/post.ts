@@ -1,4 +1,5 @@
 import View from '!view!./post.html?style=./post.styl';
+import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { getLinkedAccountPlatformIcon } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
 import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
@@ -44,6 +45,12 @@ export class AppEventItemManagePost extends Vue {
 	@Emit('remove')
 	private emitRemove() {}
 
+	@Emit('feature')
+	private emitFeature(_community: Community) {}
+
+	@Emit('unfeature')
+	private emitUnfeature(_community: Community) {}
+
 	get canPublish() {
 		return this.post.isDraft && !this.post.isScheduled && !!this.post.lead;
 	}
@@ -55,8 +62,10 @@ export class AppEventItemManagePost extends Vue {
 	async toggleFeatured(tagCom: FiresidePostCommunity) {
 		if (tagCom.isFeatured) {
 			await this.post.$unfeature(tagCom.community);
+			this.emitUnfeature(tagCom.community);
 		} else {
 			await this.post.$feature(tagCom.community);
+			this.emitFeature(tagCom.community);
 		}
 	}
 

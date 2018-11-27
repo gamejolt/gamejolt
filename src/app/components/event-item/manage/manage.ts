@@ -1,4 +1,5 @@
 import View from '!view!./manage.html';
+import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import Vue from 'vue';
@@ -29,6 +30,12 @@ export class AppEventItemManage extends Vue {
 
 	@Emit('remove-post')
 	emitRemovePost() {}
+
+	@Emit('feature-post')
+	emitFeaturePost(_community: Community) {}
+
+	@Emit('unfeature-post')
+	emitUnfeaturePost(_community: Community) {}
 
 	get post() {
 		if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
