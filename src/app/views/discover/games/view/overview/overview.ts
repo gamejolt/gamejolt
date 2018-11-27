@@ -1,6 +1,6 @@
 import View from '!view!./overview.html?style=./overview.styl';
-import { AppAd } from 'game-jolt-frontend-lib/components/ad/ad';
 import { AppAdPlacement } from 'game-jolt-frontend-lib/components/ad/placement/placement';
+import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { AppCard } from 'game-jolt-frontend-lib/components/card/card';
@@ -48,7 +48,7 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 		AppDiscoverGamesViewOverviewRecommended,
 		AppDiscoverGamesViewOverviewSupporters,
 		AppDiscoverGamesViewOverviewStatbar,
-		AppAd,
+		AppAdWidget,
 		AppAdPlacement,
 		AppRatingWidget,
 		AppCard,
