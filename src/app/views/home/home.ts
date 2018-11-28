@@ -1,8 +1,8 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
@@ -16,7 +16,7 @@ import RouteActivityFeed from './feed';
 	// No need to wait since the render function handles when there is no user
 	// bootstrapped yet.
 	lazy: true,
-	resolver: () => Api.sendRequest('/web/touch'),
+	resolver: () => User.touch(),
 })
 export default class RouteHome extends BaseRouteComponent {
 	@AppState
