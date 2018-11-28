@@ -1,6 +1,6 @@
 #!/bin/sh
 
-files=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.ts|\.js$' | tr '\n' ' ')
+files=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.ts$' | tr '\n' ' ')
 [ -z "${files}" ] && exit 0
 
 echo "${files}" | xargs ./node_modules/.bin/prettier -l
