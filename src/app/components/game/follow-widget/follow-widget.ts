@@ -73,6 +73,7 @@ export class AppGameFollowWidget extends Vue {
 		return !this.game.is_following
 			? this.$gettext(
 					`Follow this game to add it to your Library and be notified when new posts are added.`
+					// tslint:disable-next-line:indent
 			  )
 			: undefined;
 	}
@@ -93,16 +94,19 @@ export class AppGameFollowWidget extends Vue {
 		this.isProcessing = true;
 
 		if (!this.game.is_following) {
+			// Do this before attempting to follow.
+			// We don't want to wait till the follow is confirmed to show the dialog,
+			// and even if the follow fails it's not like we'll close it.
+			if (this.shouldShowFollow && !this.game.developer.is_following) {
+				this.isShowingFollowPopover = true;
+			}
+
 			try {
 				await this.game.$follow();
 			} catch (e) {
 				Growls.error(
 					this.$gettext('Something has prevented you from following this game.')
 				);
-			}
-
-			if (this.shouldShowFollow && !this.game.developer.is_following) {
-				this.isShowingFollowPopover = true;
 			}
 		} else {
 			try {
