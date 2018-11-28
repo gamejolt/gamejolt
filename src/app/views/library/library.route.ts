@@ -1,7 +1,6 @@
 import { RouteConfig } from 'vue-router';
-
-import { routeLibraryOverview } from './overview/overview.route';
 import { routeLibraryCollectionRoutes } from './collection/collection.route';
+import { routeLibraryOverview } from './overview/overview.route';
 
 const children: RouteConfig[] = [routeLibraryOverview, ...routeLibraryCollectionRoutes];
 
@@ -11,7 +10,6 @@ if (GJ_IS_CLIENT) {
 
 export const routeLibrary: RouteConfig = {
 	path: '/library',
-	props: true,
 	component: () => import(/* webpackChunkName: "routeLibrary" */ './library'),
 	children,
 };

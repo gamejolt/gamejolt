@@ -1,19 +1,17 @@
 import { RouteConfig } from 'vue-router';
-
 import RouteAuth from './auth';
-import { routeAuthLogin } from './login/login.route';
-import { routeAuthJoin } from './join/join.route';
-import { routeAuthForgot } from './forgot/forgot.route';
-import { routeAuthForgotSent } from './forgot-sent/forgot-sent.route';
-import { routeAuthJoinCaptcha } from './join-captcha/join-captcha.route';
-import { routeAuthJoinAlmost } from './join-almost/join-almost.route';
-import { routeAuthResetPassword } from './reset-password/reset-password.route';
 import { routeAuthAuthorize } from './authorize/authorize.route';
+import { routeAuthForgotSent } from './forgot-sent/forgot-sent.route';
+import { routeAuthForgot } from './forgot/forgot.route';
+import { routeAuthJoinAlmost } from './join-almost/join-almost.route';
+import { routeAuthJoinCaptcha } from './join-captcha/join-captcha.route';
+import { routeAuthJoin } from './join/join.route';
 import { routeAuthLinkedAccount } from './linked-account/linked-account.route';
+import { routeAuthLogin } from './login/login.route';
+import { routeAuthResetPassword } from './reset-password/reset-password.route';
 
 export const routeAuth: RouteConfig = {
 	path: '/',
-	props: true,
 	component: RouteAuth,
 	children: [
 		routeAuthLogin,

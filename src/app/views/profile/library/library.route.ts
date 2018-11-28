@@ -3,7 +3,6 @@ import { RouteConfig } from 'vue-router';
 export const routeProfileLibrary: RouteConfig = {
 	name: 'profile.library',
 	path: 'library',
-	props: true,
 	component: () => import(/* webpackChunkName: "routeProfileLibrary" */ './library'),
 	children: [
 		{
