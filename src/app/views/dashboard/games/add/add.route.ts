@@ -3,7 +3,6 @@ import { RouteConfig } from 'vue-router';
 export const routeDashGamesAdd: RouteConfig = {
 	name: 'dash.games.add',
 	path: 'add',
-	props: true,
 	component: () => import(/* webpackChunkName: "routeDashGamesAdd" */ './add'),
 	children: [
 		{
