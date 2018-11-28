@@ -13,6 +13,9 @@ import RouteActivityFeed from './feed';
 	name: 'RouteHome',
 })
 @RouteResolver({
+	// No need to wait since the render function handles when there is no user
+	// bootstrapped yet.
+	lazy: true,
 	resolver: () => Api.sendRequest('/web/touch'),
 })
 export default class RouteHome extends BaseRouteComponent {
