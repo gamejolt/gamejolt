@@ -16,22 +16,9 @@
 		<!-- History Navigator (for desktop client) -->
 		<app-client-history-navigator v-if="GJ_IS_CLIENT" />
 
-		<router-link class="navbar-item" :to="{ name: 'activity.feed' }">
+		<router-link class="navbar-item" :to="{ name: 'discover.home' }">
 			<app-theme-svg v-if="!Screen.isMobile" src="~img/game-jolt-logo.svg" alt="" />
 			<app-theme-svg v-else src="~img/jolt.svg" alt="" />
-		</router-link>
-
-		<router-link
-			v-if="!Screen.isXs && app.user"
-			class="-explore navbar-item"
-			:class="{ active: $route.name === 'discover.home' }"
-			:to="{ name: 'discover.home' }"
-			v-app-track-event="`top-nav:main-menu:discover`"
-			>
-			<app-jolticon icon="compass" />
-			<strong class="text-upper">
-				<translate>Explore</translate>
-			</strong>
 		</router-link>
 
 		<app-popper
