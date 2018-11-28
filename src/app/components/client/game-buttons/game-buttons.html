@@ -136,17 +136,17 @@
 
 				<div slot="popover" class="list-group list-group-dark thin">
 					<a
-						v-for="package_ of gamePackages"
-						:key="`launch-${package_.id}`"
-						v-if="package_.isSettled"
+						v-for="pkg of gamePackages"
+						:key="`launch-${pkg.id}`"
+						v-if="pkg.isSettled"
 						class="list-group-item has-icon"
 						:class="{
-							'disabled': package_.isRunning,
+							'disabled': pkg.isRunning,
 						}"
-						@click="launch( package_ )"
+						@click="launch( pkg )"
 						>
 						<app-jolticon icon="play" />
-						{{ package_.title || game.title }}
+						{{ pkg.title || game.title }}
 					</a>
 				</div>
 			</app-popper>
@@ -181,29 +181,29 @@
 					<translate>View Game</translate>
 				</router-link>
 				<a
-					v-for="package_ of gamePackages"
-					:key="`open-folder-${package_.id}`"
-					v-if="package_.isSettled"
+					v-for="pkg of gamePackages"
+					:key="`open-folder-${pkg.id}`"
+					v-if="pkg.isSettled"
 					class="list-group-item has-icon"
-					@click="openFolder( package_ )"
+					@click="openFolder( pkg )"
 					>
 					<app-jolticon icon="folder-open" />
-					<span v-translate="{ title: package_.title || game.title }">
+					<span v-translate="{ title: pkg.title || game.title }">
 						Open Folder for %{ title }
 					</span>
 				</a>
 				<a
-					v-for="package_ of gamePackages"
-					:key="`uninstall-${package_.id}`"
-					v-if="!package_.install_state && !package_.isRemoving"
+					v-for="pkg of gamePackages"
+					:key="`uninstall-${pkg.id}`"
+					v-if="!pkg.install_state && !pkg.isRemoving"
 					class="list-group-item has-icon"
 					:class="{
-						'disabled': package_.isRunning,
+						'disabled': pkg.isRunning,
 					}"
-					@click="uninstallPackage( package_ )"
+					@click="uninstallPackage( pkg )"
 					>
 					<app-jolticon icon="remove" notice />
-					<span v-translate="{ title: package_.title || game.title }">
+					<span v-translate="{ title: pkg.title || game.title }">
 						Uninstall %{ title }
 					</span>
 				</a>

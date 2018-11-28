@@ -1,15 +1,14 @@
+import View from '!view!./footer.html?style=./footer.styl';
+import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./footer.html?style=./footer.styl';
-
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTranslateLangSelector } from '../../../../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
-import { date } from '../../../../lib/gj-lib-client/vue/filters/date';
-import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import * as _ClientSystemReportModalMod from '../../client/system-report-modal/system-report-modal.service';
 import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
+import { AppTranslateLangSelector } from '../../../../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { date } from '../../../../lib/gj-lib-client/vue/filters/date';
+import * as _ClientSystemReportModalMod from '../../client/system-report-modal/system-report-modal.service';
 
 let ClientSystemReportModalMod: typeof _ClientSystemReportModalMod | undefined;
 if (GJ_IS_CLIENT) {
@@ -21,7 +20,7 @@ if (GJ_IS_CLIENT) {
 	components: {
 		AppJolticon,
 		AppTranslateLangSelector,
-		AppAd,
+		AppAdWidget,
 		AppThemeSvg,
 	},
 	directives: {

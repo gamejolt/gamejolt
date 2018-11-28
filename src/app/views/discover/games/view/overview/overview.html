@@ -96,15 +96,23 @@
 							<app-lazy-placeholder :when="isOverviewLoaded">
 								<div class="lazy-placeholder" style="height: 135px"></div>
 
+								<template v-if="externalPackages.length">
+									<app-game-external-package-card
+										v-for="externalPackage of externalPackages"
+										:key="`external-${externalPackage.id}`"
+										:package="externalPackage"
+										/>
+								</template>
+
 								<template v-if="packages.length">
 									<app-game-package-card
-										v-for="package of packages"
-										:key="package.id"
+										v-for="pkg of packages"
+										:key="pkg.id"
 										:game="game"
-										:sellable="package._sellable"
-										:package="package"
-										:releases="package._releases"
-										:builds="package._builds"
+										:sellable="pkg._sellable"
+										:package="pkg"
+										:releases="pkg._releases"
+										:builds="pkg._builds"
 										:is-partner="!!userPartnerKey"
 										:partner-key="partnerKey"
 										:partner="partner"
@@ -218,11 +226,11 @@
 						<translate>Recommended</translate>
 					</h4>
 
-					<app-discover-games-view-overview-recommended />
+					<app-discover-games-view-overview-recommended :num="5" />
 
 					<template v-if="Screen.isDesktop">
 						<div style="width: 300px">
-							<app-ad size="rectangle" pos="bottom" />
+							<app-ad-widget size="rectangle" pos="bottom" />
 						</div>
 					</template>
 

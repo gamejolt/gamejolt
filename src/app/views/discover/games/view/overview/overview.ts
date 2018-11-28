@@ -1,6 +1,6 @@
 import View from '!view!./overview.html?style=./overview.styl';
-import { AppAd } from 'game-jolt-frontend-lib/components/ad/ad';
 import { AppAdPlacement } from 'game-jolt-frontend-lib/components/ad/placement/placement';
+import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { AppCard } from 'game-jolt-frontend-lib/components/card/card';
@@ -10,6 +10,7 @@ import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/mo
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { AppGameExternalPackageCard } from 'game-jolt-frontend-lib/components/game/external-package/card/card';
 import { AppGamePackageCard } from 'game-jolt-frontend-lib/components/game/package/card/card';
 import { AppGameSoundtrackCard } from 'game-jolt-frontend-lib/components/game/soundtrack/card/card';
 import { HistoryTick } from 'game-jolt-frontend-lib/components/history-tick/history-tick-service';
@@ -22,7 +23,7 @@ import {
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { AppActivityFeedPlaceholder } from '../../../../../components/activity/feed/placeholder/placeholder';
@@ -32,6 +33,7 @@ import { AppGameOgrs } from '../../../../../components/game/ogrs/ogrs';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppPostAddButton } from '../../../../../components/post/add-button/add-button';
 import { AppRatingWidget } from '../../../../../components/rating/widget/widget';
+import { trackGamePage3ColSplitTest } from '../../../../../components/split-test/split-test-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../view.store';
 import { AppDiscoverGamesViewOverviewDetails } from './_details/details';
 import { AppDiscoverGamesViewOverviewRecommended } from './_recommended/recommended';
@@ -46,13 +48,14 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 		AppDiscoverGamesViewOverviewRecommended,
 		AppDiscoverGamesViewOverviewSupporters,
 		AppDiscoverGamesViewOverviewStatbar,
-		AppAd,
+		AppAdWidget,
 		AppAdPlacement,
 		AppRatingWidget,
 		AppCard,
 		AppFadeCollapse,
 		AppLazyPlaceholder,
 		AppGameOgrs,
+		AppGameExternalPackageCard,
 		AppGamePackageCard,
 		AppGameSoundtrackCard,
 		AppMediaBar,
@@ -94,9 +97,6 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 	},
 })
 export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
-	@Prop()
-	id!: string;
-
 	@RouteStoreModule.State
 	isOverviewLoaded!: RouteStore['isOverviewLoaded'];
 
@@ -141,6 +141,9 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	@RouteStoreModule.State
 	packages!: RouteStore['packages'];
+
+	@RouteStoreModule.State
+	externalPackages!: RouteStore['externalPackages'];
 
 	@RouteStoreModule.State
 	hasReleasesSection!: RouteStore['hasReleasesSection'];
@@ -194,6 +197,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	routeCreated() {
+		trackGamePage3ColSplitTest();
 		CommentModal.checkPermalink(this.$router);
 		this.feed = ActivityFeedService.routeInit(this);
 	}

@@ -3,7 +3,6 @@ import { RouteConfig } from 'vue-router';
 const routeLandingGameApiDocContent: RouteConfig = {
 	name: 'landing.game-api-doc',
 	path: ':path*',
-	props: true,
 	component: () =>
 		import(/* webpackChunkName: "routeLandingGameApiDoc" */ './game-api-doc-content'),
 };

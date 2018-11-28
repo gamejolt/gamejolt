@@ -1,0 +1,45 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+$-main-max-width = 650px
+
+// On xs the content stacks, we shove "main" to the bottom.
+.-row
+	display: flex
+	flex-direction: column
+
+.-left, .-right
+	order: 0
+
+.-main
+	order: 1
+
+// On sm we keep them in same column, but set a max size and center the content.
+@media $media-sm
+	.-row
+		align-items: center
+
+	.-left, .-main, .-right
+		width: $percentage-10
+		max-width: $-main-max-width
+
+// Desktop sizes is where we break it out into different columns.
+@media $media-md-up
+	.-row
+		flex-direction: row
+		justify-content: center
+
+	.-left
+		flex: 1 0
+		padding-right: $grid-gutter-width
+		min-width: $percentage-3
+
+	.-main
+		flex: 2 0
+		max-width: $-main-max-width
+		order: 0
+
+	.-right
+		flex: 1 0
+		padding-left: $grid-gutter-width
+		min-width: $percentage-3

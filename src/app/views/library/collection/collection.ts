@@ -1,5 +1,5 @@
 import View from '!view!./collection.html?style=./collection.styl';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
@@ -99,9 +99,6 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 	},
 })
 export default class RouteLibraryCollection extends BaseRouteComponent {
-	@Prop(String)
-	id!: string;
-
 	@State
 	app!: Store['app'];
 
@@ -283,6 +280,10 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			Meta.twitter = $payload.twitter;
 			Meta.twitter.title = this.routeTitle;
 		}
+	}
+
+	get id() {
+		return this.$route.params.id;
 	}
 
 	get processedId() {

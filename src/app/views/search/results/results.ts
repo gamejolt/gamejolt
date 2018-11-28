@@ -1,4 +1,4 @@
-import View from '!view!./results.html?style=./results.styl';
+import View from '!view!./results.html';
 import { Component } from 'vue-property-decorator';
 import {
 	BaseRouteComponent,
@@ -13,6 +13,7 @@ import { AppActivityFeedPlaceholder } from '../../../components/activity/feed/pl
 import { ActivityFeedView } from '../../../components/activity/feed/view';
 import { AppGameGrid } from '../../../components/game/grid/grid';
 import { Search } from '../../../components/search/search-service';
+import { trackSearchPage3ColSplitTest } from '../../../components/split-test/split-test-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 
 @View
@@ -51,6 +52,10 @@ export default class RouteSearchResults extends BaseRouteComponent {
 
 	readonly Search = Search;
 	readonly Screen = Screen;
+
+	routeCreated() {
+		trackSearchPage3ColSplitTest();
+	}
 
 	routeResolved($payload: any, fromCache: boolean) {
 		// We bootstrap the feed from cache in the routeResolved method since

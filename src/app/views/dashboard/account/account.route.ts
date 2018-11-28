@@ -14,7 +14,6 @@ import { routeDashAccountWithdrawFunds } from './withdraw-funds/withdraw-funds.r
 
 export const routeDashAccount: RouteConfig = {
 	path: '/dashboard',
-	props: true,
 	component: () => import(/* webpackChunkName: "routeDashAccount" */ './account'),
 	children: [
 		routeDashAccountEdit,

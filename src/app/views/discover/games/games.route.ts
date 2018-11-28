@@ -9,7 +9,6 @@ import { routeDiscoverGamesView } from './view/view.route';
 
 export const routeDiscoverGames: RouteConfig = {
 	path: 'games',
-	props: true,
 	component: RouteDiscoverGames,
 	children: [
 		routeDiscoverGamesListSection,

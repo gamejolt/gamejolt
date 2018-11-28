@@ -3,7 +3,6 @@ import RouteDiscoverHome from './home';
 
 export const routeDiscoverHome: RouteConfig = {
 	name: 'discover.home',
-	path: '/explore',
-	props: true,
+	path: '',
 	component: RouteDiscoverHome,
 };

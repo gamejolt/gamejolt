@@ -1,4 +1,8 @@
-<div v-if="shouldShow">
+<app-tag-suggestion
+	:tags="tags"
+	:text="text"
+	@tag="emitTag($event)"
+	>
 	<app-jolticon icon="tags" class="middle" />
 	<strong>
 		<translate>Game Tags</translate>
@@ -7,29 +11,4 @@
 	<p class="help-block">
 		<translate>Tag your game to increase its visibility. It's recommended to include at least one of the listed tags, although you can add your own by putting a #hashtag in your description.</translate>
 	</p>
-
-	<div v-if="recommendedTags.length">
-		<a
-			class="badge -tag"
-			v-for="tag of recommendedTags"
-			:key="tag"
-			@click="emitTag(tag)"
-			>
-			#{{ tag }}
-		</a>
-		<hr>
-	</div>
-
-	<div v-if="otherTags.length">
-		<a
-			class="badge -tag"
-			v-for="tag of otherTags"
-			:key="tag"
-			@click="emitTag(tag)"
-			>
-			#{{ tag }}
-		</a>
-	</div>
-
-	<br>
-</div>
+</app-tag-suggestion>

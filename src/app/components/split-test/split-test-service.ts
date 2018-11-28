@@ -1,7 +1,33 @@
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
 import { Route } from 'vue-router';
 
-function getPayloadVariation(route: Route, payload: any, experiment: string): number {
-	let variation = checkHardcoded(route, experiment);
+const ExperimentGamePage3Col = 'split:game-page-3-col';
+const ExperimentSearchPage3Col = 'split:search-page-3-col';
+
+export function hasGamePage3ColSplitTest() {
+	return getClientSideVariation(ExperimentGamePage3Col) === 2;
+}
+
+export function trackGamePage3ColSplitTest() {
+	Analytics.trackEvent(
+		ExperimentGamePage3Col,
+		'variation-' + getClientSideVariation(ExperimentGamePage3Col)
+	);
+}
+
+export function hasSearchPage3ColSplitTest() {
+	return getClientSideVariation(ExperimentSearchPage3Col) === 2;
+}
+
+export function trackSearchPage3ColSplitTest() {
+	Analytics.trackEvent(
+		ExperimentSearchPage3Col,
+		'variation-' + getClientSideVariation(ExperimentSearchPage3Col)
+	);
+}
+
+function getPayloadVariation(payload: any, experiment: string, route?: Route): number {
+	let variation = checkHardcoded(experiment, route);
 	if (variation !== -1) {
 		return variation;
 	}
@@ -15,12 +41,12 @@ function getPayloadVariation(route: Route, payload: any, experiment: string): nu
 	return -1;
 }
 
-function getClientSideVariation(route: Route, experiment: string): number {
+function getClientSideVariation(experiment: string, route?: Route): number {
 	if (GJ_IS_SSR) {
 		return 1;
 	}
 
-	let variation = checkHardcoded(route, experiment);
+	let variation = checkHardcoded(experiment, route);
 	if (variation !== -1) {
 		return variation;
 	}
@@ -36,16 +62,18 @@ function getClientSideVariation(route: Route, experiment: string): number {
 	return variation;
 }
 
-function checkHardcoded(route: Route, experiment: string): number {
+function checkHardcoded(experiment: string, route?: Route): number {
 	if (GJ_IS_SSR) {
 		return -1;
 	}
 
 	// Allows you to put the experiment in the URL to force it.
 	// Example: /games/best?oCnfrO9TSku9N0t3viKvKg=1
-	const query = route.query;
-	if (query[experiment]) {
-		return parseInt(query[experiment], 10);
+	if (route) {
+		const query = route.query;
+		if (query[experiment]) {
+			return parseInt(query[experiment], 10);
+		}
 	}
 
 	// Allow you to force an experiment variation permanently through localStorage.
