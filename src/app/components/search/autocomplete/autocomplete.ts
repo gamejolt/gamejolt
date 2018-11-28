@@ -9,8 +9,6 @@ import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytic
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
-import { fuzzysearch } from '../../../../lib/gj-lib-client/utils/string';
 import { findRequiredVueParent } from '../../../../lib/gj-lib-client/utils/vue';
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import * as _LocalDbGameMod from '../../client/local-db/game/game.model';
@@ -26,16 +24,6 @@ if (GJ_IS_CLIENT) {
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;
 const KEYCODE_ENTER = 13;
-const KEYCODE_ESC = 27;
-
-interface Command {
-	keyword: string;
-	routeName: string;
-	description: string;
-	authRequired?: boolean;
-	clientRequired?: boolean;
-	params?: any;
-}
 
 @View
 @Component({
@@ -50,15 +38,12 @@ interface Command {
 export class AppSearchAutocomplete extends Vue {
 	@State
 	app!: AppStore;
-	mode: 'search' | 'command' = 'search';
 
 	selected = 0;
 	games: Game[] = [];
 	users: User[] = [];
 	libraryGames: _LocalDbGameMod.LocalDbGame[] = [];
 	items: any[] = [];
-
-	modes = ['search', 'command'];
 
 	search: AppSearch | null = null;
 
@@ -78,13 +63,7 @@ export class AppSearchAutocomplete extends Vue {
 	mounted() {
 		this.search!.setKeydownSpy((event: KeyboardEvent) => {
 			let min = 0;
-			let max = 0;
-
-			if (this.mode === 'search') {
-				max = this.items.length;
-			} else if (this.mode === 'command') {
-				max = this.filteredCommands.length - 1;
-			}
+			let max = this.items.length;
 
 			if (event.keyCode === KEYCODE_DOWN) {
 				this.selected = Math.min(this.selected + 1, max);
@@ -92,111 +71,12 @@ export class AppSearchAutocomplete extends Vue {
 				this.selected = Math.max(this.selected - 1, min);
 			} else if (event.keyCode === KEYCODE_ENTER) {
 				this.selectActive();
-			} else if (event.keyCode === KEYCODE_ESC) {
-				// If they had a command in there but escaped, then remove the whole command.
-				if (this.mode === 'command') {
-					this.search!.query = '';
-				}
 			}
 		});
 	}
 
-	get commands() {
-		const commands: Command[] = [
-			{
-				keyword: ':discover',
-				routeName: 'discover.home',
-				description: this.$gettext('commands.discover_description'),
-			},
-			{
-				keyword: ':games',
-				routeName: 'discover.games.list._fetch',
-				params: { section: 'featured' },
-				description: this.$gettext('commands.games_description'),
-			},
-			{
-				keyword: ':dashboard',
-				routeName: 'dash.main.overview',
-				authRequired: true,
-				description: this.$gettext('commands.dashboard_description'),
-			},
-			{
-				keyword: ':library',
-				routeName: 'library.overview',
-				authRequired: true,
-				description: this.$gettext('commands.library_description'),
-			},
-			{
-				keyword: ':installed',
-				routeName: 'library.installed',
-				clientRequired: true,
-				description: this.$gettext('commands.installed_description'),
-			},
-			{
-				keyword: ':account',
-				routeName: 'dash.account.edit',
-				authRequired: true,
-				description: this.$gettext('commands.account_description'),
-			},
-			{
-				keyword: ':activity',
-				routeName: 'activity.feed',
-				authRequired: true,
-				description: this.$gettext('commands.activity_description'),
-			},
-			{
-				keyword: ':notifications',
-				routeName: 'activity.notifications',
-				authRequired: true,
-				description: this.$gettext('View your notifications.'),
-			},
-			{
-				keyword: ':settings',
-				routeName: 'settings',
-				authRequired: true,
-				description: this.$gettext('commands.settings_description'),
-			},
-		];
-
-		return commands.sort((a, b) => stringSort(a.keyword, b.keyword));
-	}
-
-	get filteredCommands() {
-		const commands = this.commands;
-		const isLoggedIn = this.app && this.app.user;
-		const search = this.search!;
-
-		if (this.mode !== 'command') {
-			return commands;
-		}
-
-		const filteredCommands = [];
-		for (const command of commands) {
-			if (!isLoggedIn && command.authRequired) {
-				continue;
-			}
-
-			if (!GJ_IS_CLIENT && command.clientRequired) {
-				continue;
-			}
-
-			if (
-				search.query.length === 1 ||
-				fuzzysearch(search.query.toLowerCase(), command.keyword)
-			) {
-				filteredCommands.push(command);
-			}
-		}
-
-		return filteredCommands;
-	}
-
-	inAvailableMode() {
-		return this.modes.indexOf(this.mode) !== -1;
-	}
-
 	private async sendSearch(query: string) {
-		if (this.search!.isEmpty() || !this.inAvailableMode()) {
+		if (this.search!.isEmpty()) {
 			return;
 		}
 
@@ -225,25 +105,20 @@ export class AppSearchAutocomplete extends Vue {
 			return;
 		}
 
-		if (this.mode === 'search') {
-			// Selected the "show all results" option.
-			if (this.selected === 0) {
-				this.viewAll();
-			} else {
-				const item = this.items[this.selected - 1];
-				if (item instanceof Game) {
-					this.selectGame(item);
-				} else if (item instanceof User) {
-					this.selectUser(item);
-				} else if (LocalDbGameMod) {
-					if (item instanceof LocalDbGameMod.LocalDbGame) {
-						this.selectLibraryGame(item);
-					}
+		// Selected the "show all results" option.
+		if (this.selected === 0) {
+			this.viewAll();
+		} else {
+			const item = this.items[this.selected - 1];
+			if (item instanceof Game) {
+				this.selectGame(item);
+			} else if (item instanceof User) {
+				this.selectUser(item);
+			} else if (LocalDbGameMod) {
+				if (item instanceof LocalDbGameMod.LocalDbGame) {
+					this.selectLibraryGame(item);
 				}
 			}
-		} else if (this.mode === 'command') {
-			const command = this.filteredCommands[this.selected];
-			this.selectCommand(command);
 		}
 
 		this.search!.blur();
@@ -284,19 +159,6 @@ export class AppSearchAutocomplete extends Vue {
 		Analytics.trackEvent('search', 'autocomplete', 'go-library-game');
 	}
 
-	selectCommand(command: Command) {
-		if (command && command.routeName) {
-			this.search!.query = ''; // Set it as blank.
-
-			this.$router.push({
-				name: command.routeName,
-				params: command.params || undefined,
-			});
-
-			Analytics.trackEvent('search', 'autocomplete', 'go-command');
-		}
-	}
-
 	@Watch('search.query')
 	onChange(query: string) {
 		// Reset the selected index.
@@ -306,11 +168,6 @@ export class AppSearchAutocomplete extends Vue {
 			return;
 		}
 
-		if (this.search!.query[0] === ':') {
-			this.mode = 'command';
-		} else {
-			this.mode = 'search';
-			this.searchChanges.next(query);
-		}
+		this.searchChanges.next(query);
 	}
 }

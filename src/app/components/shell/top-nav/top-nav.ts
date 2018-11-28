@@ -56,6 +56,9 @@ export class AppShellTopNav extends Vue {
 	@State
 	hasSidebar!: Store['hasSidebar'];
 
+	@State
+	unreadActivityCount!: Store['unreadActivityCount'];
+
 	moreMenuShowing = false;
 
 	readonly Environment = Environment;

@@ -12,16 +12,16 @@ import { numberSort } from 'game-jolt-frontend-lib/utils/array';
 import { fuzzysearch } from 'game-jolt-frontend-lib/utils/string';
 import { Component } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class';
-import { AppActivityFeed } from '../../../components/activity/feed/feed';
-import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
-import { AppActivityFeedPlaceholder } from '../../../components/activity/feed/placeholder/placeholder';
-import { ActivityFeedView } from '../../../components/activity/feed/view';
-import { AppBroadcastCard } from '../../../components/broadcast-card/broadcast-card';
-import { AppGameList } from '../../../components/game/list/list';
-import { AppGameListPlaceholder } from '../../../components/game/list/placeholder/placeholder';
-import { AppPageContainer } from '../../../components/page-container/page-container';
-import { AppPostAddButton } from '../../../components/post/add-button/add-button';
-import { Store, store } from '../../../store';
+import { AppActivityFeed } from '../../components/activity/feed/feed';
+import { ActivityFeedService } from '../../components/activity/feed/feed-service';
+import { AppActivityFeedPlaceholder } from '../../components/activity/feed/placeholder/placeholder';
+import { ActivityFeedView } from '../../components/activity/feed/view';
+import { AppBroadcastCard } from '../../components/broadcast-card/broadcast-card';
+import { AppGameList } from '../../components/game/list/list';
+import { AppGameListPlaceholder } from '../../components/game/list/placeholder/placeholder';
+import { AppPageContainer } from '../../components/page-container/page-container';
+import { AppPostAddButton } from '../../components/post/add-button/add-button';
+import { Store, store } from '../../store';
 
 class DashGame {
 	constructor(

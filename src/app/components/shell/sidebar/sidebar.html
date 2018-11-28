@@ -17,31 +17,6 @@
 		<ul class="shell-nav">
 			<li class="offline-disable">
 				<router-link
-					v-if="app.user && isBootstrapped"
-					:to="{ name: 'activity.feed' }"
-					:class="{ active: $route.name.indexOf( 'activity.' ) === 0 }"
-					v-app-track-event="`sidebar:activity`"
-					>
-					<span
-						class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
-						v-if="notificationCount > 0"
-						>
-						{{ notificationCount < 100 ? notificationCount : '99+' }}
-					</span>
-					<span
-						class="shell-nav-icon"
-						v-app-tooltip.right="!isLeftPaneVisible ? $gettext( 'Activity Feed' ) : ''"
-						>
-						<app-jolticon icon="devlogs" />
-					</span>
-					<span class="shell-nav-label">
-						<translate>Activity Feed</translate>
-					</span>
-				</router-link>
-			</li>
-
-			<li class="offline-disable">
-				<router-link
 					:to="{ name: 'discover.games.list._fetch', params: { section: defaultBrowseSection } }"
 					:class="{ active: $route.name.indexOf( 'discover.games.list' ) === 0 }"
 					v-app-track-event="`sidebar:games`"
