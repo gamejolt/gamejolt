@@ -53,8 +53,11 @@ export class AppShellTopNav extends Vue {
 	@State
 	isRightPaneVisible!: Store['isRightPaneVisible'];
 
-	@State
-	hasSidebar!: Store['hasSidebar'];
+	@Action
+	toggleRightPane!: Store['toggleRightPane'];
+
+	@Action
+	toggleLeftPane!: Store['toggleLeftPane'];
 
 	@State
 	unreadActivityCount!: Store['unreadActivityCount'];
@@ -64,10 +67,4 @@ export class AppShellTopNav extends Vue {
 	readonly Environment = Environment;
 	readonly Screen = Screen;
 	readonly Connection = Connection;
-
-	@Action
-	toggleRightPane!: Store['toggleRightPane'];
-
-	@Action
-	toggleLeftPane!: Store['toggleLeftPane'];
 }

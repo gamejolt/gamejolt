@@ -4,11 +4,10 @@
 
 		<!-- Mobile Menu Toggle -->
 		<a
-			v-if="hasSidebar"
 			class="navbar-item"
 			:class="{ active: isLeftPaneVisible }"
 			@click="toggleLeftPane"
-			v-app-tooltip.right="$gettext( `Menu (m)` )"
+			v-app-tooltip.right="$gettext( `Playlists (m)` )"
 			v-app-track-event="`top-nav:main-menu:toggle`"
 			>
 			<app-jolticon icon="menu" />

@@ -5,7 +5,11 @@ import { AppCardListItem } from '../../../../../lib/gj-lib-client/components/car
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
-import { BaseForm, FormOnInit, FormOnLoad } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnInit,
+	FormOnLoad,
+} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
 import { GameBuildLaunchOption } from '../../../../../lib/gj-lib-client/components/game/build/launch-option/launch-option.model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
@@ -24,7 +28,6 @@ import { fuzzynumber } from '../../../../../lib/gj-lib-client/vue/filters/fuzzyn
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { FormGameRelease } from '../release/release';
 import { ArchiveFileSelectorModal } from './archive-file-selector-modal.service';
-
 
 type GameBuildFormModel = GameBuild & {
 	launch_windows: string;
@@ -60,14 +63,25 @@ export class FormGameBuild extends BaseForm<GameBuildFormModel> implements FormO
 	resetOnSubmit = true;
 	reloadOnSubmit = true;
 
-	@Prop(Game) game!: Game;
-	@Prop(GamePackage) package!: GamePackage;
-	@Prop(GameRelease) release!: GameRelease;
-	@Prop(Array) releaseLaunchOptions!: GameBuildLaunchOption[];
-	@Prop(Object) buildDownloadCounts!: {
+	@Prop(Game)
+	game!: Game;
+
+	@Prop(GamePackage)
+	package!: GamePackage;
+
+	@Prop(GameRelease)
+	release!: GameRelease;
+
+	@Prop(Array)
+	releaseLaunchOptions!: GameBuildLaunchOption[];
+
+	@Prop(Object)
+	buildDownloadCounts!: {
 		[buildId: number]: number;
 	};
-	@Prop(Array) builds!: GameBuild[];
+
+	@Prop(Array)
+	builds!: GameBuild[];
 
 	private releaseForm!: FormGameRelease;
 

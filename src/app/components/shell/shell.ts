@@ -54,16 +54,7 @@ export class AppShell extends Vue {
 	isLeftPaneVisible!: Store['isLeftPaneVisible'];
 
 	@State
-	isLeftPaneSticky!: Store['isLeftPaneSticky'];
-
-	@State
 	isRightPaneVisible!: Store['isRightPaneVisible'];
-
-	@State
-	hasMinibar!: Store['hasMinibar'];
-
-	@State
-	hasSidebar!: Store['hasSidebar'];
 
 	@BannerModule.State
 	hasBanner!: BannerStore['hasBanner'];

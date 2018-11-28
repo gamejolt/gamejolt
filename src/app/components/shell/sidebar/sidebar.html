@@ -1,17 +1,15 @@
-<div id="shell-sidebar"
-	:class="{
-		'shell-sidebar': !Screen.isXs,
-		'shell-pane shell-pane-left': Screen.isXs,
-		'visible': Screen.isMobile && isLeftPaneVisible,
-	}"
+<div
+	id="shell-sidebar"
+	class="shell-pane shell-pane-left"
+	:class="{ visible: isLeftPaneVisible }"
 	v-shortkey="[ 'm' ]"
-	@shortkey="toggleLeftPane"
+	@shortkey="toggleLeftPane()"
 	>
 
 	<app-scroll-scroller
+		v-if="isLeftPaneVisible"
+		class="-content fill-darkest"
 		overlay
-		:hide-scrollbar="!isLeftPaneVisible"
-		class="shell-sidebar-content fill-darkest"
 		>
 
 		<ul class="shell-nav">
