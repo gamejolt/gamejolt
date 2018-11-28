@@ -25,6 +25,7 @@ import {
 	Provider,
 } from '../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
 import { AppCommentOverview } from '../../../components/comment/overview/overview';
+import { AppPageContainer } from '../../../components/page-container/page-container';
 import { Store } from '../../../store/index';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 import { AppGameList } from './../../../components/game/list/list';
@@ -34,6 +35,7 @@ import { AppGameListPlaceholder } from './../../../components/game/list/placehol
 @Component({
 	name: 'RouteProfileOverview',
 	components: {
+		AppPageContainer,
 		AppExpand,
 		AppFadeCollapse,
 		AppGameList,
@@ -108,14 +110,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			return `${this.user.display_name} (@${this.user.username})`;
 		}
 		return null;
-	}
-
-	get leftColClass() {
-		return '-left-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-8 col-lg-7';
-	}
-
-	get rightColClass() {
-		return '-right-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-4';
 	}
 
 	get isBioLoaded() {

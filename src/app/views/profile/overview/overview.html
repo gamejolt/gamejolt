@@ -26,10 +26,38 @@
 		</div>
 	</section>
 	<section class="section" v-else>
-		<div class="container">
+		<div class="row">
 
-			<div class="row">
-				<div :class="leftColClass">
+			<app-page-container xl>
+
+				<div slot="left">
+					<!-- Shouts -->
+					<template v-if="shouldShowShouts">
+						<div class="pull-right">
+							<app-button trans @click="showComments()">
+								<translate>View All</translate>
+								<small v-if="commentsCount">({{ commentsCount | number }})</small>
+							</app-button>
+						</div>
+
+						<h4 class="section-header">
+							<translate>Shouts</translate>
+						</h4>
+
+						<app-comment-add-button
+							resource="User"
+							:resource-id="user.id"
+							:placeholder="addCommentPlaceholder"
+							display-mode="shouts"
+							/>
+
+						<app-comment-overview
+							:comments="overviewComments"
+							/>
+					</template>
+				</div>
+
+				<div>
 
 					<!-- Friend Requests -->
 					<template v-if="userFriendship">
@@ -107,9 +135,14 @@
 								/>
 						</p>
 					</div>
+
+					<div>
+						<div class="-spacer" />
+						<router-view />
+					</div>
 				</div>
 
-				<div :class="rightColClass">
+				<div slot="right">
 
 					<p v-if="hasQuickButtonsSection">
 
@@ -246,39 +279,8 @@
 							/>
 					</template>
 
-					<!-- Shouts -->
-					<template v-if="shouldShowShouts">
-						<br>
-						<div class="pull-right">
-							<app-button trans @click="showComments()">
-								<translate>View All</translate>
-								<small v-if="commentsCount">({{ commentsCount | number }})</small>
-							</app-button>
-						</div>
-
-						<h4 class="section-header">
-							<translate>Shouts</translate>
-						</h4>
-
-						<app-comment-add-button
-							resource="User"
-							:resource-id="user.id"
-							:placeholder="addCommentPlaceholder"
-							display-mode="shouts"
-							/>
-
-						<app-comment-overview
-							:comments="overviewComments"
-							/>
-					</template>
 				</div>
-
-				<div :class="leftColClass">
-					<div class="-spacer" />
-
-					<router-view />
-				</div>
-			</div>
+			</app-page-container>
 
 		</div>
 	</section>
