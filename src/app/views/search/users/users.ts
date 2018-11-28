@@ -1,10 +1,10 @@
 import View from '!view!./users.html';
+import { AppUserCard } from 'game-jolt-frontend-lib/components/user/card/card';
 import { Component } from 'vue-property-decorator';
 import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
-import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { Search } from '../../../components/search/search-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 
@@ -12,7 +12,7 @@ import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 @Component({
 	name: 'RouteSearchUsers',
 	components: {
-		AppUserAvatar,
+		AppUserCard,
 	},
 })
 @RouteResolver({

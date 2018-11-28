@@ -76,33 +76,6 @@
 				<app-form-control-errors />
 			</app-form-group>
 
-			<!--
-				Gotta set keys for these since the data comes in async, vue
-				doesn't properly recheck the selected value after the categories
-				change.
-			-->
-			<app-form-group
-				v-if="categories"
-				name="category"
-				:label="$gettext( `dash.games.form.category_label` )"
-				>
-				<app-form-control-select
-					:disabled="!hasAllPerms"
-					>
-					<option value="">
-						<translate>dash.games.form.category_placeholder</translate>
-					</option>
-					<option
-						v-for="( label, key ) of categories"
-						:key="key"
-						:value="key"
-						>
-						{{ label }}
-					</option>
-				</app-form-control-select>
-				<app-form-control-errors />
-			</app-form-group>
-
 			<app-form-group
 				v-if="engines"
 				name="creation_tool"

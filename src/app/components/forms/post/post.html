@@ -143,7 +143,7 @@
 		<app-form-control-textarea
 			:maxlength="leadTotalLengthLimit"
 			rows="2"
-			v-app-form-autosize
+			v-app-form-autosize="bootstrapAutosize"
 			v-app-focus-when
 			:placeholder="!longEnabled ? $gettext(`What's new?`) : $gettext(`Write a summary for your article...`)"
 			@paste="onPaste"
@@ -170,6 +170,13 @@
 			>
 			<translate>Your post is too long!</translate>
 		</p>
+
+		<app-form-post-tags
+			class="-post-tags"
+			:text="tagText"
+			:tags="featuredTags"
+			@tag="addTag($event)"
+		/>
 	</app-form-group>
 
 	<!-- Post body (long) -->

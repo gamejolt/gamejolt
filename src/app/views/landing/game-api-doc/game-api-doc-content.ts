@@ -24,11 +24,11 @@ const paths = importContext(
 		}
 
 		if (paths[`./${path}.md`]) {
-			return import(/* webpackChunkName: "gameApiDocContent" */
-			`../../../../lib/doc-game-api/v1.x/${path}.md`);
+			return (await import(/* webpackChunkName: "gameApiDocContent" */
+			`../../../../lib/doc-game-api/v1.x/${path}.md`)).default;
 		} else if (paths[`./${path}/index.md`]) {
-			return import(/* webpackChunkName: "gameApiDocContent" */
-			`../../../../lib/doc-game-api/v1.x/${path}/index.md`);
+			return (await import(/* webpackChunkName: "gameApiDocContent" */
+			`../../../../lib/doc-game-api/v1.x/${path}/index.md`)).default;
 		}
 
 		return PayloadError.fromHttpError(404);

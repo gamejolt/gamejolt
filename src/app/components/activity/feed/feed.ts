@@ -1,4 +1,5 @@
 import View from '!view!./feed.html?style=./feed.styl';
+import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
 import { AppExpand } from 'game-jolt-frontend-lib/components/expand/expand';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
@@ -6,7 +7,6 @@ import 'rxjs/add/operator/sampleTime';
 import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Emit, Prop, Provide, Watch } from 'vue-property-decorator';
-import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Ruler } from '../../../../lib/gj-lib-client/components/ruler/ruler-service';
@@ -33,7 +33,7 @@ const ScrollSampleTime = 1000;
 		AppLoading,
 		AppActivityFeedItem,
 		AppActivityFeedNewButton,
-		AppAd,
+		AppAdWidget,
 		AppExpand,
 	},
 	directives: {
