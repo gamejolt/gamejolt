@@ -23,7 +23,7 @@ import {
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { AppActivityFeedPlaceholder } from '../../../../../components/activity/feed/placeholder/placeholder';
@@ -97,9 +97,6 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 	},
 })
 export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
-	@Prop()
-	id!: string;
-
 	@RouteStoreModule.State
 	isOverviewLoaded!: RouteStore['isOverviewLoaded'];
 

@@ -3,7 +3,7 @@ import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-st
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
 import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Ads, AdSettingsContainer } from '../../../lib/gj-lib-client/components/ad/ads.service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
@@ -85,9 +85,6 @@ import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './prof
 	},
 })
 export default class RouteProfile extends BaseRouteComponent {
-	@Prop(String)
-	username!: string;
-
 	@State
 	app!: Store['app'];
 
