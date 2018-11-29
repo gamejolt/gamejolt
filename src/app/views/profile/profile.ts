@@ -116,8 +116,9 @@ export default class RouteProfile extends BaseRouteComponent {
 	@RouteStoreModule.Action
 	removeFriend!: RouteStore['removeFriend'];
 
-	UserFriendship = UserFriendship;
-	Environment = Environment;
+	readonly UserFriendship = UserFriendship;
+	readonly Environment = Environment;
+	readonly Screen = Screen;
 
 	get shouldShowFullCover() {
 		return Screen.isXs || this.$route.name !== 'profile.post.view';

@@ -106,7 +106,10 @@
 							</span>
 						</router-link>
 					</li>
-					<li v-if="user.shouts_enabled">
+					<!--
+						We only need to show this on mobile.
+					-->
+					<li v-if="user.shouts_enabled && Screen.isMobile">
 						<a @click="showComments()">
 							<translate>Shouts</translate>
 							<span class="badge">
