@@ -8,6 +8,7 @@ import {
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppUserCard } from 'game-jolt-frontend-lib/components/user/card/card';
 import { numberSort } from 'game-jolt-frontend-lib/utils/array';
 import { fuzzysearch } from 'game-jolt-frontend-lib/utils/string';
 import { Component } from 'vue-property-decorator';
@@ -43,6 +44,7 @@ class DashGame {
 		AppGameListPlaceholder,
 		AppBroadcastCard,
 		AppPostAddButton,
+		AppUserCard,
 	},
 	directives: {
 		AppTrackEvent,

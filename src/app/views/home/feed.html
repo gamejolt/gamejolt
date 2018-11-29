@@ -1,9 +1,8 @@
 <section class="section">
 	<app-page-container xl>
 		<div slot="left">
-			<app-broadcast-card
-				v-if="latestBroadcast"
-				:post="latestBroadcast"
+			<app-user-card
+				:user="app.user"
 				/>
 
 			<template v-if="hasGamesSection">
@@ -60,6 +59,11 @@
 		</div>
 
 		<div slot="right">
+			<app-broadcast-card
+				v-if="latestBroadcast"
+				:post="latestBroadcast"
+				/>
+
 			<template v-if="!Screen.isMobile">
 				<h4 class="section-header">
 					<translate>Featured Games</translate>
