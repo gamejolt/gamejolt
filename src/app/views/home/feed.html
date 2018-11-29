@@ -102,6 +102,20 @@
 		<template v-else>
 			<div class="alert full-bleed-xs" v-if="!feed.hasItems">
 				<translate>You don't have any activity yet. Follow games to stay up to date on their latest development!</translate>
+
+				<router-link
+					:to="{
+						name: 'discover.home',
+					}"
+					v-app-track-event="`activity:main-menu:discover`"
+					>
+					<app-button
+						icon="compass"
+						solid
+						>
+						<translate>Explore Games</translate>
+					</app-button>
+				</router-link>
 			</div>
 			<app-activity-feed
 				v-else
