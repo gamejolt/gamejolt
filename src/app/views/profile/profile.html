@@ -45,46 +45,48 @@
 			<translate>profile.joined</translate>
 			<app-time-ago :date="user.created_on" />
 
-			<span class="dot-separator" />
+			<template v-if="isRouteBootstrapped">
+				<span class="dot-separator" />
 
-			<!-- Dogtag -->
-			<app-user-dogtag :type="user.dogtag" />
+				<!-- Dogtag -->
+				<app-user-dogtag :type="user.dogtag" />
 
-			<!-- Friend status -->
-			<span
-				class="tag tag-highlight"
-				v-if="userFriendship && userFriendship.state === UserFriendship.STATE_FRIENDS"
-				v-app-tooltip="$gettext( 'profile.friend_tooltip' )"
-				>
-				<translate>profile.friend_tag</translate>
-			</span>
+				<!-- Friend status -->
+				<span
+					class="tag tag-highlight"
+					v-if="userFriendship && userFriendship.state === UserFriendship.STATE_FRIENDS"
+					v-app-tooltip="$gettext( 'profile.friend_tooltip' )"
+					>
+					<translate>profile.friend_tag</translate>
+				</span>
 
-			<!-- Online status -->
-			<span
-				v-if="!isOnline"
-				class="tag"
-				v-app-tooltip="$gettext( 'profile.offline_tooltip' )"
-				>
-				<app-jolticon icon="chat-offline" />
-				<translate>profile.offline_tag</translate>
-			</span>
-			<span
-				v-else
-				class="tag tag-highlight"
-				v-app-tooltip="$gettext( 'profile.online_tooltip' )"
-				>
-				<app-jolticon icon="chat-online" />
-				<translate>profile.online_tag</translate>
-			</span>
+				<!-- Online status -->
+				<span
+					v-if="!isOnline"
+					class="tag"
+					v-app-tooltip="$gettext( 'profile.offline_tooltip' )"
+					>
+					<app-jolticon icon="chat-offline" />
+					<translate>profile.offline_tag</translate>
+				</span>
+				<span
+					v-else
+					class="tag tag-highlight"
+					v-app-tooltip="$gettext( 'profile.online_tooltip' )"
+					>
+					<app-jolticon icon="chat-online" />
+					<translate>profile.online_tag</translate>
+				</span>
 
-			<!-- Following status -->
-			<span
-				v-if="user.follows_you"
-				class="tag tag-highlight"
-				v-app-tooltip="$gettext( 'This user is following you.' )"
-				>
-				<translate>Follows You</translate>
-			</span>
+				<!-- Following status -->
+				<span
+					v-if="user.follows_you"
+					class="tag tag-highlight"
+					v-app-tooltip="$gettext( 'This user is following you.' )"
+					>
+					<translate>Follows You</translate>
+				</span>
+			</template>
 		</div>
 
 		<template slot="spotlight">
