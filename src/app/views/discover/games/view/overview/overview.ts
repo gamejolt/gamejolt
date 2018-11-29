@@ -31,9 +31,9 @@ import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import { AppCommentOverview } from '../../../../../components/comment/overview/overview';
 import { AppGameOgrs } from '../../../../../components/game/ogrs/ogrs';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
+import { AppPageContainer } from '../../../../../components/page-container/page-container';
 import { AppPostAddButton } from '../../../../../components/post/add-button/add-button';
 import { AppRatingWidget } from '../../../../../components/rating/widget/widget';
-import { trackGamePage3ColSplitTest } from '../../../../../components/split-test/split-test-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../view.store';
 import { AppDiscoverGamesViewOverviewDetails } from './_details/details';
 import { AppDiscoverGamesViewOverviewRecommended } from './_recommended/recommended';
@@ -44,6 +44,7 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 @Component({
 	name: 'RouteDiscoverGamesViewOverview',
 	components: {
+		AppPageContainer,
 		AppDiscoverGamesViewOverviewDetails,
 		AppDiscoverGamesViewOverviewRecommended,
 		AppDiscoverGamesViewOverviewSupporters,
@@ -197,7 +198,6 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		trackGamePage3ColSplitTest();
 		CommentModal.checkPermalink(this.$router);
 		this.feed = ActivityFeedService.routeInit(this);
 	}
@@ -230,7 +230,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	showComments() {
-		CommentModal.show({ resource: 'Game', resourceId: this.game.id, displayMode: 'comments' });
+		CommentModal.show({ resource: 'Game', resourceId: this.game.id });
 	}
 
 	onPostAdded(post: FiresidePost) {
