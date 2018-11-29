@@ -46,26 +46,27 @@
 							Set a :key to let vue know that it should update
 							this when the user changes.
 						-->
-						<app-fade-collapse
-							:collapse-height="160"
-							:is-open="showFullDescription"
-							:animate="false"
-							:key="user.id"
-							@require-change="canToggleDescription = $event"
-							@expand="showFullDescription = true"
-							>
-							<div
-								class="user-compiled-description"
-								v-html="user.description_compiled"
-								/>
-						</app-fade-collapse>
+						<div :key="user.id">
+							<app-fade-collapse
+								:collapse-height="160"
+								:is-open="showFullDescription"
+								:animate="false"
+								@require-change="canToggleDescription = $event"
+								@expand="showFullDescription = true"
+								>
+								<div
+									class="user-compiled-description"
+									v-html="user.description_compiled"
+									/>
+							</app-fade-collapse>
 
-						<p>
-							<a class="hidden-text-expander"
-								v-if="canToggleDescription"
-								@click="showFullDescription = !showFullDescription"
-								/>
-						</p>
+							<p>
+								<a class="hidden-text-expander"
+									v-if="canToggleDescription"
+									@click="showFullDescription = !showFullDescription"
+									/>
+							</p>
+						</div>
 					</div>
 
 					<!-- Shouts -->
