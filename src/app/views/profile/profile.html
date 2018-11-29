@@ -117,6 +117,17 @@
 							</span>
 						</router-link>
 					</li>
+					<!--
+						We only need to show this on mobile.
+					-->
+					<li v-if="user.shouts_enabled && Screen.isMobile">
+						<a @click="showComments()">
+							<translate>Shouts</translate>
+							<span class="badge">
+								{{ commentsCount | number }}
+							</span>
+						</a>
+					</li>
 					<li v-if="videosCount > 0">
 						<router-link :to="{ name: 'profile.videos' }" active-class="active">
 							<translate>Videos</translate>

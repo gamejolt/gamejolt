@@ -1,5 +1,7 @@
 import View from '!view!./overview.html?style=./overview.styl';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { AppCommentAddButton } from 'game-jolt-frontend-lib/components/comment/add-button/add-button';
+import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
 import { AppExpand } from 'game-jolt-frontend-lib/components/expand/expand';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
@@ -17,10 +19,13 @@ import { YoutubeChannel } from 'game-jolt-frontend-lib/components/youtube/channe
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { Comment } from '../../../../lib/gj-lib-client/components/comment/comment-model';
 import {
 	LinkedAccount,
 	Provider,
 } from '../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
+import { AppCommentOverview } from '../../../components/comment/overview/overview';
+import { AppPageContainer } from '../../../components/page-container/page-container';
 import { Store } from '../../../store/index';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 import { AppGameList } from './../../../components/game/list/list';
@@ -30,10 +35,13 @@ import { AppGameListPlaceholder } from './../../../components/game/list/placehol
 @Component({
 	name: 'RouteProfileOverview',
 	components: {
+		AppPageContainer,
 		AppExpand,
 		AppFadeCollapse,
 		AppGameList,
 		AppGameListPlaceholder,
+		AppCommentAddButton,
+		AppCommentOverview,
 	},
 	directives: {
 		AppTooltip,
@@ -82,6 +90,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	showFullDescription = false;
 	canToggleDescription = false;
 	games: Game[] = [];
+	overviewComments: Comment[] = [];
 	developerGames: Game[] = [];
 	youtubeChannels: YoutubeChannel[] = [];
 	linkedAccounts: LinkedAccount[] = [];
@@ -101,14 +110,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			return `${this.user.display_name} (@${this.user.username})`;
 		}
 		return null;
-	}
-
-	get leftColClass() {
-		return '-left-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-8 col-lg-7';
-	}
-
-	get rightColClass() {
-		return '-right-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-4';
 	}
 
 	get isBioLoaded() {
@@ -165,6 +166,29 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return null;
 	}
 
+	get addCommentPlaceholder() {
+		if (!this.user) {
+			return undefined;
+		}
+
+		if (this.app.user && this.user.id === this.app.user.id) {
+			return this.$gettext('Shout at yourself!');
+		} else {
+			return this.$gettext('Shout') + ' @' + this.user.username + '!';
+		}
+	}
+
+	get commentsCount() {
+		if (this.user && this.user.comment_count) {
+			return this.user.comment_count;
+		}
+		return 0;
+	}
+
+	get shouldShowShouts() {
+		return this.user && !Screen.isMobile && this.user.shouts_enabled;
+	}
+
 	getLinkedAccount(provider: Provider) {
 		if (
 			this.user &&
@@ -190,5 +214,16 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		this.youtubeChannels = YoutubeChannel.populate($payload.youtubeChannels);
 		this.games = Game.populate($payload.developerGamesTeaser);
 		this.linkedAccounts = LinkedAccount.populate($payload.linkedAccounts);
+		this.overviewComments = Comment.populate($payload.comments);
+	}
+
+	showComments() {
+		if (this.user) {
+			CommentModal.show({
+				resource: 'User',
+				resourceId: this.user.id,
+				displayMode: 'shouts',
+			});
+		}
 	}
 }

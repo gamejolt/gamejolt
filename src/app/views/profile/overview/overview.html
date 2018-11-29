@@ -26,10 +26,76 @@
 		</div>
 	</section>
 	<section class="section" v-else>
-		<div class="container">
+		<div>
 
-			<div class="row">
-				<div :class="leftColClass">
+			<app-page-container xl>
+
+				<div slot="left">
+					<!-- Bio -->
+					<div v-if="!isBioLoaded">
+						<span class="lazy-placeholder" />
+						<span class="lazy-placeholder" />
+						<span class="lazy-placeholder" />
+						<span class="lazy-placeholder" style="width: 40%" />
+					</div>
+					<div v-else-if="!user.description_compiled" class="text-muted" v-translate>
+						profile.no_bio_html
+					</div>
+					<div v-else>
+						<!--
+							Set a :key to let vue know that it should update
+							this when the user changes.
+						-->
+						<app-fade-collapse
+							:collapse-height="160"
+							:is-open="showFullDescription"
+							:animate="false"
+							:key="user.id"
+							@require-change="canToggleDescription = $event"
+							@expand="showFullDescription = true"
+							>
+							<div
+								class="user-compiled-description"
+								v-html="user.description_compiled"
+								/>
+						</app-fade-collapse>
+
+						<p>
+							<a class="hidden-text-expander"
+								v-if="canToggleDescription"
+								@click="showFullDescription = !showFullDescription"
+								/>
+						</p>
+					</div>
+
+					<!-- Shouts -->
+					<br>
+					<template v-if="shouldShowShouts">
+						<div class="pull-right">
+							<app-button trans @click="showComments()">
+								<translate>View All</translate>
+								<small v-if="commentsCount">({{ commentsCount | number }})</small>
+							</app-button>
+						</div>
+
+						<h4 class="section-header">
+							<translate>Shouts</translate>
+						</h4>
+
+						<app-comment-add-button
+							resource="User"
+							:resource-id="user.id"
+							:placeholder="addCommentPlaceholder"
+							display-mode="shouts"
+							/>
+
+						<app-comment-overview
+							:comments="overviewComments"
+							/>
+					</template>
+				</div>
+
+				<div>
 
 					<!-- Friend Requests -->
 					<template v-if="userFriendship">
@@ -71,45 +137,13 @@
 						</app-expand>
 					</template>
 
-					<!-- Bio -->
-					<div v-if="!isBioLoaded">
-						<span class="lazy-placeholder" />
-						<span class="lazy-placeholder" />
-						<span class="lazy-placeholder" />
-						<span class="lazy-placeholder" style="width: 40%" />
-					</div>
-					<div v-else-if="!user.description_compiled" class="text-muted" v-translate>
-						profile.no_bio_html
-					</div>
-					<div v-else>
-						<!--
-							Set a :key to let vue know that it should update
-							this when the user changes.
-						-->
-						<app-fade-collapse
-							:collapse-height="300"
-							:is-open="showFullDescription"
-							:animate="false"
-							:key="user.id"
-							@require-change="canToggleDescription = $event"
-							@expand="showFullDescription = true"
-							>
-							<div
-								class="user-compiled-description"
-								v-html="user.description_compiled"
-								/>
-						</app-fade-collapse>
-
-						<p>
-							<a class="hidden-text-expander"
-								v-if="canToggleDescription"
-								@click="showFullDescription = !showFullDescription"
-								/>
-						</p>
+					<div>
+						<!-- <div class="-spacer" /> -->
+						<router-view />
 					</div>
 				</div>
 
-				<div :class="rightColClass">
+				<div slot="right">
 
 					<p v-if="hasQuickButtonsSection">
 
@@ -144,6 +178,7 @@
 						</template>
 					</p>
 
+					<!-- Social links -->
 					<p v-if="hasLinksSection">
 						<template v-if="linkedAccounts.length">
 							<div v-if="twitchAccount">
@@ -211,6 +246,7 @@
 						</template>
 					</p>
 
+					<!-- Latest Games -->
 					<template v-if="hasGamesSection">
 						<br>
 
@@ -245,13 +281,7 @@
 					</template>
 
 				</div>
-
-				<div :class="leftColClass">
-					<div class="-spacer" />
-
-					<router-view />
-				</div>
-			</div>
+			</app-page-container>
 
 		</div>
 	</section>
