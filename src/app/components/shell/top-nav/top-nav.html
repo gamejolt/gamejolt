@@ -2,8 +2,8 @@
 
 	<div class="navbar-left">
 
-		<!-- Mobile Menu Toggle -->
 		<a
+			v-if="hasSidebar"
 			class="navbar-item"
 			:class="{ active: isLeftPaneVisible }"
 			@click="toggleLeftPane"

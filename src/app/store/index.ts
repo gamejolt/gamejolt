@@ -1,3 +1,4 @@
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Route } from 'vue-router';
 import { sync } from 'vuex-router-sync';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
@@ -124,6 +125,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	isLeftPaneOverlayed = false;
 	isRightPaneOverlayed = false;
+
+	get hasSidebar() {
+		return Screen.isXs || !!this.app.user;
+	}
 
 	get isLeftPaneVisible() {
 		return this.isLeftPaneOverlayed;
@@ -352,6 +357,11 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexMutation
 	private _toggleLeftPane() {
+		if (!this.hasSidebar) {
+			this.isLeftPaneOverlayed = false;
+			return;
+		}
+
 		this.isLeftPaneOverlayed = !this.isLeftPaneOverlayed;
 		this.isRightPaneOverlayed = false;
 	}

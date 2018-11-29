@@ -10,7 +10,7 @@
 
 	<app-shell-banner />
 	<app-shell-top-nav />
-	<app-shell-sidebar />
+	<app-shell-sidebar v-if="hasSidebar" />
 
 	<app-shell-body>
 		<slot />

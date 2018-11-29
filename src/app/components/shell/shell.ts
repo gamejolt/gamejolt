@@ -51,6 +51,9 @@ export class AppShell extends Vue {
 	chat!: Store['chat'];
 
 	@State
+	hasSidebar!: Store['hasSidebar'];
+
+	@State
 	isLeftPaneVisible!: Store['isLeftPaneVisible'];
 
 	@State
