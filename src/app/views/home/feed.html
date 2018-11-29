@@ -100,8 +100,13 @@
 
 		<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
 		<template v-else>
-			<div class="alert full-bleed-xs" v-if="!feed.hasItems">
-				<translate>You don't have any activity yet. Follow games to stay up to date on their latest development!</translate>
+			<div
+				v-if="!feed.hasItems"
+				class="alert full-bleed-xs text-center"
+				>
+				<p class="lead">
+					<translate>You don't have any activity yet. Follow games to stay up to date on their latest development!</translate>
+				</p>
 
 				<router-link
 					:to="{
@@ -110,10 +115,11 @@
 					v-app-track-event="`activity:main-menu:discover`"
 					>
 					<app-button
-						icon="compass"
+						icon="compass-needle"
 						solid
+						lg
 						>
-						<translate>Explore Games</translate>
+						<translate>Explore</translate>
 					</app-button>
 				</router-link>
 			</div>
