@@ -106,7 +106,7 @@
 							</span>
 						</router-link>
 					</li>
-					<li>
+					<li v-if="user.shouts_enabled">
 						<a @click="showComments()">
 							<translate>Shouts</translate>
 							<span class="badge">
