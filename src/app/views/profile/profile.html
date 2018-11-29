@@ -76,6 +76,15 @@
 				<app-jolticon icon="chat-online" />
 				<translate>profile.online_tag</translate>
 			</span>
+
+			<!-- Following status -->
+			<span
+				v-if="user.follows_you"
+				class="tag tag-highlight"
+				v-app-tooltip="$gettext( 'This user is following you.' )"
+				>
+				<translate>Follows You</translate>
+			</span>
 		</div>
 
 		<template slot="spotlight">
