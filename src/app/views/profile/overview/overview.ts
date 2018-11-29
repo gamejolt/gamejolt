@@ -182,7 +182,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	get shouldShowShouts() {
-		return this.user && !Screen.isMobile;
 		return this.user && !Screen.isMobile && this.user.shouts_enabled;
 	}
 
