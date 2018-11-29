@@ -31,7 +31,45 @@
 			<app-page-container xl>
 
 				<div slot="left">
+					<!-- Bio -->
+					<div v-if="!isBioLoaded">
+						<span class="lazy-placeholder" />
+						<span class="lazy-placeholder" />
+						<span class="lazy-placeholder" />
+						<span class="lazy-placeholder" style="width: 40%" />
+					</div>
+					<div v-else-if="!user.description_compiled" class="text-muted" v-translate>
+						profile.no_bio_html
+					</div>
+					<div v-else>
+						<!--
+							Set a :key to let vue know that it should update
+							this when the user changes.
+						-->
+						<app-fade-collapse
+							:collapse-height="160"
+							:is-open="showFullDescription"
+							:animate="false"
+							:key="user.id"
+							@require-change="canToggleDescription = $event"
+							@expand="showFullDescription = true"
+							>
+							<div
+								class="user-compiled-description"
+								v-html="user.description_compiled"
+								/>
+						</app-fade-collapse>
+
+						<p>
+							<a class="hidden-text-expander"
+								v-if="canToggleDescription"
+								@click="showFullDescription = !showFullDescription"
+								/>
+						</p>
+					</div>
+
 					<!-- Shouts -->
+					<br />
 					<template v-if="shouldShowShouts">
 						<div class="pull-right">
 							<app-button trans @click="showComments()">
@@ -99,45 +137,8 @@
 						</app-expand>
 					</template>
 
-					<!-- Bio -->
-					<div v-if="!isBioLoaded">
-						<span class="lazy-placeholder" />
-						<span class="lazy-placeholder" />
-						<span class="lazy-placeholder" />
-						<span class="lazy-placeholder" style="width: 40%" />
-					</div>
-					<div v-else-if="!user.description_compiled" class="text-muted" v-translate>
-						profile.no_bio_html
-					</div>
-					<div v-else>
-						<!--
-							Set a :key to let vue know that it should update
-							this when the user changes.
-						-->
-						<app-fade-collapse
-							:collapse-height="300"
-							:is-open="showFullDescription"
-							:animate="false"
-							:key="user.id"
-							@require-change="canToggleDescription = $event"
-							@expand="showFullDescription = true"
-							>
-							<div
-								class="user-compiled-description"
-								v-html="user.description_compiled"
-								/>
-						</app-fade-collapse>
-
-						<p>
-							<a class="hidden-text-expander"
-								v-if="canToggleDescription"
-								@click="showFullDescription = !showFullDescription"
-								/>
-						</p>
-					</div>
-
 					<div>
-						<div class="-spacer" />
+						<!-- <div class="-spacer" /> -->
 						<router-view />
 					</div>
 				</div>

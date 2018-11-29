@@ -182,7 +182,8 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	get shouldShowShouts() {
-		return this.user && this.user.shouts_enabled;
+		return this.user && !Screen.isMobile;
+		return this.user && !Screen.isMobile && this.user.shouts_enabled;
 	}
 
 	getLinkedAccount(provider: Provider) {
