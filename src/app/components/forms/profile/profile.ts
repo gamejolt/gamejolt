@@ -1,24 +1,24 @@
+import View from '!view!./profile.html';
 import * as distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./profile.html';
-
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import {
-	FormOnLoad,
-	BaseForm,
-	FormOnSubmitError,
-} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppFormControlMarkdown } from '../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
 import { AppFormControlTheme } from '../../../../lib/gj-lib-client/components/form-vue/control/theme/theme';
+import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
+import {
+	BaseForm,
+	FormOnLoad,
+	FormOnSubmitError,
+} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
+import { Theme } from '../../../../lib/gj-lib-client/components/theme/theme.model';
 import {
 	ThemeMutation,
 	ThemeStore,
 } from '../../../../lib/gj-lib-client/components/theme/theme.store';
-import { Theme } from '../../../../lib/gj-lib-client/components/theme/theme.model';
+import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 
 @View
 @Component({
@@ -28,6 +28,7 @@ import { Theme } from '../../../../lib/gj-lib-client/components/theme/theme.mode
 		AppJolticon,
 		AppFormControlMarkdown,
 		AppFormControlTheme,
+		AppFormControlToggle,
 	},
 })
 export class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSubmitError {
@@ -35,7 +36,8 @@ export class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSub
 	resetOnSubmit = true;
 	reloadOnSubmit = true;
 
-	@ThemeMutation setFormTheme!: ThemeStore['setFormTheme'];
+	@ThemeMutation
+	setFormTheme!: ThemeStore['setFormTheme'];
 
 	usernameChangedOn = 0;
 	usernameTimeLeft = 0;
