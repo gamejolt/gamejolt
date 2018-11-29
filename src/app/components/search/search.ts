@@ -13,25 +13,6 @@ const KEYCODE_ESC = 27;
 
 let searchIterator = 0;
 
-function setCaretPosition(el: any, caretPos: number) {
-	// This is used to not only get "focus", but
-	// to make sure we don't have it everything -selected-
-	// (it causes an issue in chrome, and having it doesn't hurt any other browser)
-	el.value = el.value;
-
-	if (el !== null) {
-		if (el.createTextRange) {
-			const range = el.createTextRange();
-			range.move('character', caretPos);
-			range.select();
-		} else if (el.selectionStart || el.selectionStart === 0) {
-			// (el.selectionStart === 0 added for Firefox bug)
-			el.focus();
-			el.setSelectionRange(caretPos, caretPos);
-		}
-	}
-}
-
 @View
 @Component({
 	components: {
@@ -81,17 +62,6 @@ export class AppSearch extends Vue {
 
 		if (this.inputElem) {
 			this.inputElem.blur();
-		}
-	}
-
-	commandFocus(event: KeyboardEvent) {
-		event.preventDefault();
-		this.query = ':';
-
-		// We push their cursor after the ":".
-		// This will also focus it.
-		if (this.inputElem) {
-			setCaretPosition(this.inputElem, 1);
 		}
 	}
 

@@ -298,7 +298,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 			Translate.$gettext('dash.games.removed_growl_title')
 		);
 
-		router.push({ name: 'dash.main.overview' });
+		router.push({ name: 'home' });
 	}
 
 	@VuexAction
@@ -324,7 +324,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 			Translate.$gettext('Left Project')
 		);
 
-		router.push({ name: 'dash.main.overview' });
+		router.push({ name: 'home' });
 	}
 
 	@VuexAction

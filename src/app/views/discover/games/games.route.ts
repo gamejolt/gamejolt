@@ -8,7 +8,7 @@ import {
 import { routeDiscoverGamesView } from './view/view.route';
 
 export const routeDiscoverGames: RouteConfig = {
-	path: 'games',
+	path: '/games',
 	component: RouteDiscoverGames,
 	children: [
 		routeDiscoverGamesListSection,

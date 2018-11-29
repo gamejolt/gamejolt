@@ -81,6 +81,6 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 			this.$gettext('dash.funds.withdraw.success_growl_title')
 		);
 
-		this.$router.push({ name: 'dash.main.overview' });
+		this.$router.push({ name: 'home' });
 	}
 }
