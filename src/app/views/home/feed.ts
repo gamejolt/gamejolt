@@ -55,8 +55,13 @@ class DashGame {
 	lazy: true,
 	deps: { query: ['feed_last_id'] },
 	resolver: ({ route }) =>
-		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/activity')),
+		Promise.all([
+			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/activity')),
+			Api.sendRequest('/web/dash/home'),
+		]),
 	resolveStore({ payload, fromCache }) {
+		const [feedPayload] = payload;
+
 		// Don't set if from cache, otherwise it could reset to the cached count
 		// when switching between tabs.
 		if (!fromCache) {
@@ -65,7 +70,7 @@ class DashGame {
 			store.commit('setNotificationCount', { type: 'activity', count: 0 });
 			store.commit('setNotificationCount', {
 				type: 'notifications',
-				count: payload.notificationsUnreadCount,
+				count: feedPayload.notificationsUnreadCount,
 			});
 		}
 	},
@@ -138,6 +143,8 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {
+		const [feedPayload, homePayload] = $payload;
+
 		this.feed = ActivityFeedService.routed(
 			this.feed,
 			{
@@ -146,20 +153,20 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 				notificationWatermark: $payload.unreadWatermark,
 				shouldShowGameInfo: true,
 			},
-			$payload.items,
+			feedPayload.items,
 			fromCache
 		);
 
-		this.featuredGames = Game.populate($payload.games);
-		if ($payload.featuredItem && $payload.featuredItem.game) {
-			this.featuredGames.unshift(new Game($payload.featuredItem.game));
+		this.featuredGames = Game.populate(homePayload.games);
+		if (homePayload.featuredItem && homePayload.featuredItem.game) {
+			this.featuredGames.unshift(new Game(homePayload.featuredItem.game));
 		}
 
-		this.latestBroadcast = $payload.latestBroadcast
-			? new FiresidePost($payload.latestBroadcast)
+		this.latestBroadcast = homePayload.latestBroadcast
+			? new FiresidePost(homePayload.latestBroadcast)
 			: null;
 
-		this.games = ($payload.ownerGames as DashGame[])
+		this.games = (homePayload.ownerGames as DashGame[])
 			.map(i => new DashGame(i.id, i.title, i.ownerName, i.createdOn))
 			.sort((a, b) => numberSort(a.createdOn, b.createdOn))
 			.reverse();
