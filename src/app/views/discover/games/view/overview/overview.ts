@@ -230,7 +230,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	showComments() {
-		CommentModal.show({ resource: 'Game', resourceId: this.game.id });
+		CommentModal.show({ resource: 'Game', resourceId: this.game.id, displayMode: 'comments' });
 	}
 
 	onPostAdded(post: FiresidePost) {
