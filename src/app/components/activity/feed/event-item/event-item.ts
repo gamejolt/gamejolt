@@ -144,29 +144,7 @@ export class AppActivityFeedEventItem extends Vue {
 			};
 		} else if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
 			const post = this.post!;
-
 			return post.routeLocation;
-
-			// TODO(search-improve) if navigating to posts doesnt work, revert to the commented out code below.
-			// Might fail if for some reason the post doesn't have the game gathered on it
-			// if (this.game) {
-			// 	return {
-			// 		name: 'discover.games.view.devlog.view',
-			// 		params: {
-			// 			slug: this.game.slug,
-			// 			id: this.game.id + '',
-			// 			postSlug: post.slug,
-			// 		},
-			// 	};
-			// } else {
-			// 	return {
-			// 		name: 'profile.post.view',
-			// 		params: {
-			// 			username: post.user.username,
-			// 			slug: post.slug,
-			// 		},
-			// 	};
-			// }
 		}
 
 		return null;
