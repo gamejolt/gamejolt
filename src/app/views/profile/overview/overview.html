@@ -101,7 +101,7 @@
 
 				<div slot="right">
 
-					<p v-if="hasQuickButtonsSection">
+					<template v-if="hasQuickButtonsSection">
 
 						<!-- Add Friend -->
 						<app-button
@@ -132,11 +132,13 @@
 								{{ videosCount | number }} Videos
 							</app-button>
 						</template>
-					</p>
+
+						<br>
+					</template>
 
 					<!-- Social links -->
-					<p v-if="hasLinksSection">
-						<div v-if="linkedAccounts.length">
+					<template v-if="hasLinksSection">
+						<template v-if="linkedAccounts.length">
 							<div v-if="twitchAccount">
 								<a
 									class="link-unstyled"
@@ -177,7 +179,7 @@
 									{{ googleAccount.name }}
 								</a>
 							</div>
-						</div>
+						</template>
 						<div v-if="user.web_site">
 							<a
 								class="link-unstyled"
@@ -200,7 +202,9 @@
 								</a>
 							</div>
 						</template>
-					</p>
+
+						<br>
+					</template>
 
 					<!-- Latest Games -->
 					<template v-if="hasGamesSection">
