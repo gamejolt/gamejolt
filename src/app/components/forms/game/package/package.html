@@ -128,7 +128,7 @@
 					</template>
 				</p>
 
-				<div class="alert alert-notice" v-if="isUserVerified && package && package.has_browser_builds">
+				<div class="alert alert-notice" v-if="isUserVerified && model && model.has_browser_builds">
 					<translate>Packages with browser builds cannot be sold at this time.</translate>
 				</div>
 			</div>
@@ -162,13 +162,13 @@
 
 			<div class="radio"
 				:class="{
-					disabled: !isUserVerified || (package && package.has_browser_builds) || isFangame || !hasSalesPerms,
+					disabled: !isUserVerified || (model && model.has_browser_builds) || isFangame || !hasSalesPerms,
 				}"
 				>
 				<label>
 					<app-form-control-radio
 						value="paid"
-						:disabled="!isUserVerified || (package && package.has_browser_builds) || isFangame || !hasSalesPerms"
+						:disabled="!isUserVerified || (model && model.has_browser_builds) || isFangame || !hasSalesPerms"
 						/>
 					<translate>Paid</translate> &mdash;
 					<span class="help-inline">
