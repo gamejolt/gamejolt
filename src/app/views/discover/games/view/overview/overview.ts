@@ -6,6 +6,10 @@ import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { AppCard } from 'game-jolt-frontend-lib/components/card/card';
 import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
 import { AppCommentAddButton } from 'game-jolt-frontend-lib/components/comment/add-button/add-button';
+import {
+	CommentState,
+	CommentStore,
+} from 'game-jolt-frontend-lib/components/comment/comment-store';
 import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
@@ -23,6 +27,7 @@ import {
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
@@ -69,6 +74,9 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 	},
 	directives: {
 		AppTrackEvent,
+	},
+	filters: {
+		number,
 	},
 })
 @RouteResolver({
@@ -164,6 +172,9 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	@RouteStoreModule.Mutation
 	setCanToggleDescription!: RouteStore['setCanToggleDescription'];
 
+	@CommentState
+	getCommentStore!: CommentStore['getCommentStore'];
+
 	feed: ActivityFeedView | null = null;
 
 	readonly Screen = Screen;
@@ -195,6 +206,14 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	get hasPartnerControls() {
 		return this.game.referrals_enabled && this.userPartnerKey && this.packages.length;
+	}
+
+	get commentsCount() {
+		if (this.game) {
+			const store = this.getCommentStore('Game', this.game.id);
+			return store ? store.count : 0;
+		}
+		return 0;
 	}
 
 	routeCreated() {
