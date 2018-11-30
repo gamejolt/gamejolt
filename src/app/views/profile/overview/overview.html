@@ -67,7 +67,9 @@
 								/>
 						</p>
 					</div>
+				</div>
 
+				<div slot="left-bottom">
 					<!-- Shouts -->
 					<br>
 					<template v-if="shouldShowShouts">
@@ -95,54 +97,6 @@
 							:comments="overviewComments"
 							/>
 					</template>
-				</div>
-
-				<div>
-
-					<!-- Friend Requests -->
-					<template v-if="userFriendship">
-						<app-expand :when="userFriendship.state === UserFriendship.STATE_REQUEST_SENT" :animate-initial="true">
-							<div class="alert">
-								<p>
-									<translate :translate-params="{ username: '@' + userFriendship.target_user.username }">
-										Friend request to %{ username } pending acceptance.
-									</translate>
-								</p>
-								<app-button @click="cancelFriendRequest()">
-									<translate>profile.friend_request_cancel</translate>
-								</app-button>
-							</div>
-						</app-expand>
-
-						<app-expand :when="userFriendship.state === UserFriendship.STATE_REQUEST_RECEIVED" :animate-initial="true">
-							<div class="alert">
-								<p>
-									<translate :translate-params="{ username: '@' + userFriendship.user.username }">
-										%{ username } would like to be your friend.
-									</translate>
-								</p>
-								<app-button
-									primary
-									solid
-									@click="acceptFriendRequest()"
-									>
-									<translate>profile.friend_request_accept</translate>
-								</app-button>
-								<app-button
-									trans
-									@click="rejectFriendRequest()"
-									v-app-tooltip="$gettext( 'profile.friend_request_decline_tooltip' )"
-									>
-									<translate>profile.friend_request_decline</translate>
-								</app-button>
-							</div>
-						</app-expand>
-					</template>
-
-					<div>
-						<!-- <div class="-spacer" /> -->
-						<router-view />
-					</div>
 				</div>
 
 				<div slot="right">
@@ -182,7 +136,7 @@
 
 					<!-- Social links -->
 					<p v-if="hasLinksSection">
-						<template v-if="linkedAccounts.length">
+						<div v-if="linkedAccounts.length">
 							<div v-if="twitchAccount">
 								<a
 									class="link-unstyled"
@@ -223,7 +177,7 @@
 									{{ googleAccount.name }}
 								</a>
 							</div>
-						</template>
+						</div>
 						<div v-if="user.web_site">
 							<a
 								class="link-unstyled"
@@ -251,7 +205,6 @@
 					<!-- Latest Games -->
 					<template v-if="hasGamesSection">
 						<br>
-
 						<div class="clearfix">
 							<div class="pull-right">
 								<app-button
@@ -283,6 +236,50 @@
 					</template>
 
 				</div>
+
+				<!-- Friend Requests -->
+				<template v-if="userFriendship">
+					<app-expand :when="userFriendship.state === UserFriendship.STATE_REQUEST_SENT" :animate-initial="true">
+						<div class="alert">
+							<p>
+								<translate :translate-params="{ username: '@' + userFriendship.target_user.username }">
+									Friend request to %{ username } pending acceptance.
+								</translate>
+							</p>
+							<app-button @click="cancelFriendRequest()">
+								<translate>profile.friend_request_cancel</translate>
+							</app-button>
+						</div>
+					</app-expand>
+
+					<app-expand :when="userFriendship.state === UserFriendship.STATE_REQUEST_RECEIVED" :animate-initial="true">
+						<div class="alert">
+							<p>
+								<translate :translate-params="{ username: '@' + userFriendship.user.username }">
+									%{ username } would like to be your friend.
+								</translate>
+							</p>
+							<app-button
+								primary
+								solid
+								@click="acceptFriendRequest()"
+								>
+								<translate>profile.friend_request_accept</translate>
+							</app-button>
+							<app-button
+								trans
+								@click="rejectFriendRequest()"
+								v-app-tooltip="$gettext( 'profile.friend_request_decline_tooltip' )"
+								>
+								<translate>profile.friend_request_decline</translate>
+							</app-button>
+						</div>
+					</app-expand>
+				</template>
+
+				<div class="-spacer visible-xs" />
+
+				<router-view />
 			</app-page-container>
 
 		</div>
