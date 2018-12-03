@@ -58,7 +58,7 @@ export class AppShellNotificationPopover extends Vue {
 	 * notifications page, since there is no popover on mobile.
 	 */
 	get isNavbarItemActive() {
-		return (Screen.isXs && this.$route.name!.indexOf('activity.') === 0) || this.isShowing;
+		return (Screen.isXs && this.$route.name === 'notifications') || this.isShowing;
 	}
 
 	/**
