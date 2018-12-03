@@ -55,6 +55,7 @@ export class AppActivityFeed extends Vue {
 	// the same feed we can scroll to the previous position that way.
 	private scroll!: number;
 	private scroll$: Subscription | undefined;
+	private scrollSampled$: Subscription | undefined;
 
 	readonly number = number;
 
@@ -74,9 +75,14 @@ export class AppActivityFeed extends Vue {
 	emitLoadMore() {}
 
 	mounted() {
-		this.scroll$ = Scroll.watcher.changes.sampleTime(ScrollSampleTime).subscribe(() => {
+		this.scroll$ = Scroll.watcher.changes.subscribe(() => {
+			// We use the scroll top directly, instead of going through scroll
+			// watcher, so that we can keep this as fast as possible.
+			this.scroll = Scroll.getScrollTop();
+		});
+
+		this.scrollSampled$ = Scroll.watcher.changes.sampleTime(ScrollSampleTime).subscribe(() => {
 			const { top, height } = Scroll.watcher.getScrollChange();
-			this.scroll = top;
 
 			// Auto-loading while scrolling.
 			if (this.feed.shouldScrollLoadMore) {
@@ -97,6 +103,11 @@ export class AppActivityFeed extends Vue {
 		if (this.scroll$) {
 			this.scroll$.unsubscribe();
 			this.scroll$ = undefined;
+		}
+
+		if (this.scrollSampled$) {
+			this.scrollSampled$.unsubscribe();
+			this.scrollSampled$ = undefined;
 		}
 	}
 
