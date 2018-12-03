@@ -105,48 +105,53 @@
 			</ul>
 		</nav>
 
-		<div slot="controls" :class="{ 'text-right': !Screen.isXs }">
-			<div class="analytics-month-selector" v-if="period === 'monthly'">
-				<app-button
-					circle
-					trans
-					icon="chevron-left"
-					:to="{
-						name: 'dash.analytics',
-						params: $route.params,
-						query: {
-							period: 'monthly',
-							year: prevYear,
-							month: prevMonth,
-							partner: $route.query.partner,
-						},
-					}"
-					replace
-					/>
+		<app-page-header-controls
+			v-if="period === 'monthly'"
+			slot="controls"
+			>
+			<app-button
+				slot="start"
+				circle
+				trans
+				icon="chevron-left"
+				:to="{
+					name: 'dash.analytics',
+					params: $route.params,
+					query: {
+						period: 'monthly',
+						year: prevYear,
+						month: prevMonth,
+						partner: $route.query.partner,
+					},
+				}"
+				replace
+				/>
 
+			<div class="text-center">
 				<strong>
 					{{ startTime | date( 'MMMM YYYY' ) }}
 				</strong>
-
-				<app-button
-					v-if="now > endTime"
-					circle
-					trans
-					icon="chevron-right"
-					:to="{
-						name: 'dash.analytics',
-						params: $route.params,
-						query: {
-							period: 'monthly',
-							year: nextYear,
-							month: nextMonth,
-							partner: $route.query.partner,
-						},
-					}"
-					replace
-					/>
 			</div>
-		</div>
+
+			<app-button
+				slot="end"
+				v-if="now > endTime"
+				circle
+				trans
+				icon="chevron-right"
+				:to="{
+					name: 'dash.analytics',
+					params: $route.params,
+					query: {
+						period: 'monthly',
+						year: nextYear,
+						month: nextMonth,
+						partner: $route.query.partner,
+					},
+				}"
+				replace
+				/>
+		</app-page-header-controls>
 
 	</app-page-header>
 

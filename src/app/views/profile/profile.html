@@ -174,7 +174,7 @@
 			</nav>
 		</template>
 
-		<template slot="controls">
+		<app-page-header-controls slot="controls">
 			<app-user-follow-widget
 				v-if="!app.user || user.id !== app.user.id"
 				:user="user"
@@ -191,7 +191,7 @@
 				>
 				<translate>Edit Profile</translate>
 			</app-button>
-		</template>
+		</app-page-header-controls>
 
 	</app-page-header>
 

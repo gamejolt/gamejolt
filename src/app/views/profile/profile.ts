@@ -22,6 +22,7 @@ import { AppUserFollowWidget } from '../../../lib/gj-lib-client/components/user/
 import { AppUserAvatar } from '../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { number } from '../../../lib/gj-lib-client/vue/filters/number';
 import { IntentService } from '../../components/intent/intent.service';
+import { AppPageHeaderControls } from '../../components/page-header/controls/controls';
 import { AppPageHeader } from '../../components/page-header/page-header';
 import { AppUserDogtag } from '../../components/user/dogtag/dogtag';
 import { Store, store } from '../../store';
@@ -32,6 +33,7 @@ import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './prof
 	name: 'RouteProfile',
 	components: {
 		AppPageHeader,
+		AppPageHeaderControls,
 		AppTimeAgo,
 		AppUserAvatar,
 		AppUserDogtag,

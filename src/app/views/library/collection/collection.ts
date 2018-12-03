@@ -32,6 +32,7 @@ import { GameFilteringContainer } from '../../../components/game/filtering/conta
 import { AppGameGrid } from '../../../components/game/grid/grid';
 import { AppGameListing } from '../../../components/game/listing/listing';
 import { GameListingContainer } from '../../../components/game/listing/listing-container-service';
+import { AppPageHeaderControls } from '../../../components/page-header/controls/controls';
 import { AppPageHeader } from '../../../components/page-header/page-header';
 import { store, Store, tillStoreBootstrapped } from '../../../store/index';
 import { LibraryAction, LibraryState, LibraryStore } from '../../../store/library';
@@ -44,6 +45,7 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 	name: 'RouteLibraryCollection',
 	components: {
 		AppPageHeader,
+		AppPageHeaderControls,
 		AppGameCollectionThumbnail,
 		AppPopper,
 		AppGameListing,
