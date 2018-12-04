@@ -9,11 +9,13 @@ import {
 	Notification,
 } from '../../../lib/gj-lib-client/components/notification/notification-model';
 import { Translate } from '../../../lib/gj-lib-client/components/translate/translate.service';
+import { arrayRemove } from '../../../lib/gj-lib-client/utils/array';
 import { sleep } from '../../../lib/gj-lib-client/utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Settings } from '../../../_common/settings/settings.service';
 import { store } from '../../store/index';
 import { router } from '../../views';
+import { CommunityChannel } from './community-channel';
 
 interface NewNotificationPayload {
 	notification_data: {
@@ -293,38 +295,51 @@ export class GridClient {
 	}
 
 	async joinCommunities() {
+		console.log('[Grid] Subscribing to community channels...');
+
+		for (const community of store.state.communities) {
+			this.joinCommunity(community);
+		}
+	}
+
+	async joinCommunity(community: Community) {
 		const cookie = await getCookie('frontend');
 		const user = store.state.app.user;
-
 		if (this.socket && user && cookie) {
 			const userId = user.id.toString();
-			console.log('[Grid] Subscribing to community channels...');
 
-			for (const community of store.state.communities) {
-				const topic = 'community:' + community.id;
-				const channel = this.socket.channel(topic, {
-					frontend_cookie: cookie,
-					user_id: userId,
-				});
+			const channel = new CommunityChannel(community, this.socket, {
+				frontend_cookie: cookie,
+				user_id: userId,
+			});
 
-				await pollRequest(
-					`Join community channel '${community.name}' (${community.id})`,
-					() =>
-						new Promise((resolve, reject) => {
-							channel
-								.join()
-								.receive('error', reject)
-								.receive('ok', () => {
-									this.channels.push(channel);
-									resolve();
-								});
-						})
-				);
+			await pollRequest(
+				`Join community channel '${community.name}' (${community.id})`,
+				() =>
+					new Promise((resolve, reject) => {
+						channel
+							.join()
+							.receive('error', reject)
+							.receive('ok', () => {
+								this.channels.push(channel);
+								resolve();
+							});
+					})
+			);
 
-				channel.on('new-notification', (payload: CommunityNotification) =>
-					this.handleCommunityNotification(community.id, payload)
-				);
-			}
+			channel.on('new-notification', (payload: CommunityNotification) =>
+				this.handleCommunityNotification(community.id, payload)
+			);
+		}
+	}
+
+	async leaveCommunity(community: Community) {
+		const channel = this.channels.find(
+			c => c instanceof CommunityChannel && c.community.id === community.id
+		);
+		if (channel) {
+			this.leaveChannel(channel);
+			arrayRemove(this.channels, c => c === channel);
 		}
 	}
 
@@ -332,6 +347,13 @@ export class GridClient {
 		const community = store.state.communities.find(c => c.id === communityId);
 		if (community instanceof Community) {
 			community.is_unread = true;
+		}
+	}
+
+	leaveChannel(channel: Channel) {
+		channel.leave();
+		if (this.socket !== null) {
+			this.socket.remove(channel);
 		}
 	}
 
@@ -344,10 +366,7 @@ export class GridClient {
 			this.notificationBacklog = [];
 			this.bootstrapTimestamp = 0;
 			this.channels.forEach(channel => {
-				channel.leave();
-				if (this.socket !== null) {
-					this.socket.remove(channel);
-				}
+				this.leaveChannel(channel);
 			});
 			this.channels = [];
 			if (this.socket !== null) {
