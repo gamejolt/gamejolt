@@ -3,6 +3,7 @@ import { AppUserCardHover } from 'game-jolt-frontend-lib/components/user/card/ho
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Comment } from '../../../../lib/gj-lib-client/components/comment/comment-model';
+import { DisplayMode } from '../../../../lib/gj-lib-client/components/comment/modal/modal.service';
 import { CommentThreadModal } from '../../../../lib/gj-lib-client/components/comment/thread/modal.service';
 import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
@@ -25,11 +26,15 @@ export class AppCommentOverview extends Vue {
 	@Prop(Number)
 	resourceId!: number;
 
+	@Prop(String)
+	displayMode!: DisplayMode;
+
 	open(comment: Comment) {
 		CommentThreadModal.show({
 			resource: this.resource,
 			resourceId: this.resourceId,
 			commentId: comment.id,
+			displayMode: this.displayMode,
 		});
 	}
 }

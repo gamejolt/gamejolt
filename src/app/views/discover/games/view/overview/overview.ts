@@ -218,7 +218,12 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		CommentThreadModal.showFromPermalink(this.$router, 'Game', parseInt(this.$route.params.id));
+		CommentThreadModal.showFromPermalink(
+			this.$router,
+			'Game',
+			parseInt(this.$route.params.id),
+			'comments'
+		);
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
