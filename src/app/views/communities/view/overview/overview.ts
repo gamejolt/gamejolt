@@ -28,6 +28,8 @@ function getFetchUrl(route: Route, tags: string[]) {
 	return url;
 }
 
+const TAG_FEATURED = 'featured';
+
 @View
 @Component({
 	name: 'RouteCommunitiesViewOverview',
@@ -44,7 +46,7 @@ function getFetchUrl(route: Route, tags: string[]) {
 	cache: false,
 	lazy: true,
 	deps: {},
-	resolver: ({ route }) => Api.sendRequest(getFetchUrl(route, ['featured'])),
+	resolver: ({ route }) => Api.sendRequest(getFetchUrl(route, [TAG_FEATURED])),
 })
 export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@Prop(Community)
@@ -79,14 +81,14 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		// We need to access the reactive community from the Store here to react to is_unread changing
 		const stateCommunity = this.communities.find(c => c.id == this.community.id);
 		if (stateCommunity) {
-			return this.activeTag === 'featured' && stateCommunity.is_unread;
+			return this.activeTag === TAG_FEATURED && stateCommunity.is_unread;
 		}
 		return false;
 	}
 
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
-		this.activeTag = 'featured';
+		this.activeTag = TAG_FEATURED;
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {
@@ -94,7 +96,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			this.feed,
 			{
 				type: 'EventItem',
-				url: getFetchUrl(this.$route, ['featured']),
+				url: getFetchUrl(this.$route, [TAG_FEATURED]),
 				shouldShowCommunityControls: true,
 			},
 			$payload.items,
@@ -132,7 +134,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	onPostUnfeatured(eventItem: EventItem, community: Community) {
-		if (this.activeTag === 'featured' && this.community.id === community.id) {
+		if (this.activeTag === TAG_FEATURED && this.community.id === community.id) {
 			this.feed!.remove([eventItem]);
 		}
 	}
