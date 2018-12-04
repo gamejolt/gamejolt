@@ -135,15 +135,15 @@
 					<app-lazy-placeholder :when="isOverviewLoaded">
 						<div class="lazy-placeholder" style="height: 135px"></div>
 
-						<template v-if="externalPackages.length">
+						<div v-if="externalPackages.length">
 							<app-game-external-package-card
 								v-for="externalPackage of externalPackages"
 								:key="`external-${externalPackage.id}`"
 								:package="externalPackage"
 								/>
-						</template>
+						</div>
 
-						<template v-if="packages.length">
+						<div v-if="packages.length">
 							<app-game-package-card
 								v-for="pkg of packages"
 								:key="pkg.id"
@@ -156,7 +156,7 @@
 								:partner-key="partnerKey"
 								:partner="partner"
 								/>
-						</template>
+						</div>
 
 						<!--
 							We want to key it by the game ID so that it
@@ -172,12 +172,11 @@
 
 				</div>
 
-				<template v-if="supporters.length > 0">
-					<app-discover-games-view-overview-supporters
-						:supporters="supporters"
-						:supporterCount="supporterCount"
-						/>
-				</template>
+				<app-discover-games-view-overview-supporters
+					v-if="supporters.length > 0"
+					:supporters="supporters"
+					:supporterCount="supporterCount"
+					/>
 
 				<div class="-spacer" />
 			</template>

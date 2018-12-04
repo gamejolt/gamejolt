@@ -56,7 +56,7 @@
 				<br>
 				<app-loading centered />
 			</template>
-			<template v-else-if="requests.length">
+			<div v-else-if="requests.length">
 				<app-shell-friend-request-popover-item
 					v-for="request of requests"
 					:key="request.id"
@@ -65,7 +65,7 @@
 					@reject="rejectRequest(request)"
 					@cancel="cancelRequest(request)"
 					/>
-			</template>
+			</div>
 			<div class="alert" v-else>
 				<translate>No friend requests right now.</translate>
 			</div>

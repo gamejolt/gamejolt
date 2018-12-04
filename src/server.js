@@ -18,109 +18,109 @@ function resolve(file) {
 const numWorkers = require('os').cpus().length;
 const isProd = process.env.NODE_ENV === 'production';
 
-if (cluster.isMaster) {
-	console.log(`Master ${process.pid} is running`);
+// if (cluster.isMaster) {
+// 	console.log(`Master ${process.pid} is running`);
 
-	// Fork workers.
-	for (let i = 0; i < numWorkers; i++) {
-		cluster.fork();
+// 	// Fork workers.
+// 	for (let i = 0; i < numWorkers; i++) {
+// 		cluster.fork();
+// 	}
+
+// 	cluster.on('exit', (worker, code, signal) => {
+// 		console.log(`worker ${worker.process.pid} died`);
+// 		cluster.fork();
+// 	});
+// } else {
+console.log(`Worker ${process.pid} started`);
+
+const section = argv.section || 'app';
+const serverBuildPath = isProd ? '../build/prod-server/' : '../build/dev-server/';
+const clientBuildPath = isProd ? '../build/prod/' : '../build/dev/';
+
+const serverBundle = require(path.join(
+	serverBuildPath,
+	'vue-ssr-server-bundle-' + section + '.json'
+));
+const clientManifest = require(path.join(
+	clientBuildPath,
+	'vue-ssr-client-manifest-' + section + '.json'
+));
+
+const app = express();
+const server = http.createServer(app);
+
+const renderer = createBundleRenderer(serverBundle, {
+	runInNewContext: true,
+	template: fs.readFileSync(resolve('./index-ssr.html'), 'utf-8'),
+	clientManifest,
+});
+
+if (!isProd) {
+	function serve(path) {
+		return express.static(resolve(path), {
+			maxAge: 0,
+			fallthrough: true,
+			index: false,
+			// maxAge: cache && isProd ? 60 * 60 * 24 * 30 : 0
+		});
 	}
 
-	cluster.on('exit', (worker, code, signal) => {
-		console.log(`worker ${worker.process.pid} died`);
-		cluster.fork();
-	});
-} else {
-	console.log(`Worker ${process.pid} started`);
+	app.use(serve(clientBuildPath));
+}
 
-	const section = argv.section || 'app';
-	const serverBuildPath = isProd ? '../../build/prod-server/' : '../build/dev-server/';
-	const clientBuildPath = isProd ? '../../build/prod/' : '../build/dev/';
+// Randomize so we don't all restart at same time.
+const numRequestsToRestartAt =
+	RestartRequestCount + Math.floor(Math.random() * (RestartRequestCount / 15));
 
-	const serverBundle = require(path.join(
-		serverBuildPath,
-		'vue-ssr-server-bundle-' + section + '.json'
-	));
-	const clientManifest = require(path.join(
-		clientBuildPath,
-		'vue-ssr-client-manifest-' + section + '.json'
-	));
+console.log('Worker will restart in', numRequestsToRestartAt, 'requests');
 
-	const app = express();
-	const server = http.createServer(app);
+let numRequests = 0;
+app.get('*', (req, res) => {
+	const context = {
+		url: req.url,
+		ua: req.headers['user-agent'],
+	};
 
-	const renderer = createBundleRenderer(serverBundle, {
-		runInNewContext: true,
-		template: fs.readFileSync(resolve('./index-ssr.html'), 'utf-8'),
-		// clientManifest,
-	});
-
-	if (!isProd) {
-		function serve(path) {
-			return express.static(resolve(path), {
-				maxAge: 0,
-				fallthrough: true,
-				index: false,
-				// maxAge: cache && isProd ? 60 * 60 * 24 * 30 : 0
-			});
+	const s = Date.now();
+	renderer.renderToString(context, (err, html) => {
+		if (err) {
+			console.log('got error', req.url, err.message);
+			res.status(500).end('Internal Server Error');
+			return;
+		} else if (context.redirect) {
+			console.log('sending redirect', context.redirect);
+			res.redirect(301, context.redirect);
+			return;
+		} else if (context.errorCode) {
+			console.log('sending error code', context.errorCode);
+			res.status(context.errorCode);
 		}
 
-		app.use(serve(clientBuildPath));
-	}
+		res.set('Content-Type', 'text/html');
+		res.end(html);
 
-	// Randomize so we don't all restart at same time.
-	const numRequestsToRestartAt =
-		RestartRequestCount + Math.floor(Math.random() * (RestartRequestCount / 15));
+		const total = Date.now() - s;
+		console.log(
+			'total',
+			total + 'ms',
+			'render',
+			total - context.prefetchTime + 'ms',
+			req.url,
+			req.headers['user-agent']
+		);
 
-	console.log('Worker will restart in', numRequestsToRestartAt, 'requests');
-
-	let numRequests = 0;
-	app.get('*', (req, res) => {
-		const context = {
-			url: req.url,
-			ua: req.headers['user-agent'],
-		};
-
-		const s = Date.now();
-		renderer.renderToString(context, (err, html) => {
-			if (err) {
-				console.log('got error', req.url, err.message);
-				res.status(500).end('Internal Server Error');
-				return;
-			} else if (context.redirect) {
-				console.log('sending redirect', context.redirect);
-				res.redirect(301, context.redirect);
-				return;
-			} else if (context.errorCode) {
-				console.log('sending error code', context.errorCode);
-				res.status(context.errorCode);
-			}
-
-			res.set('Content-Type', 'text/html');
-			res.end(html);
-
-			const total = Date.now() - s;
-			console.log(
-				'total',
-				total + 'ms',
-				'render',
-				total - context.prefetchTime + 'ms',
-				req.url,
-				req.headers['user-agent']
-			);
-
-			++numRequests;
-			if (numRequests > numRequestsToRestartAt) {
-				setTimeout(() => {
-					console.log('Close worker to restart');
-					process.exit();
-				});
-			}
-		});
+		++numRequests;
+		if (numRequests > numRequestsToRestartAt) {
+			setTimeout(() => {
+				console.log('Close worker to restart');
+				process.exit();
+			});
+		}
 	});
+});
 
-	const port = 3501;
-	server.listen(port, () => {
-		console.log(`server started at localhost:${port}`);
-	});
-}
+const port = 3501;
+server.listen(port, () => {
+	console.log(`server started at localhost:${port}`);
+});
+// }
