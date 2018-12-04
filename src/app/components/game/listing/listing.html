@@ -5,8 +5,6 @@
 		</div>
 	</section>
 
-	<app-ad-placement v-if="shouldShowAds" :visible-desktop="true" pos="top" />
-
 	<div class="container" v-if="!hideFilters">
 		<div class="clearfix">
 
@@ -19,7 +17,7 @@
 		Use ng-show so that the ui-view gets loaded in.
 	-->
 	<section class="section">
-		<div class="container-lg">
+		<div class="container-xl">
 
 			<app-nav-tab-list v-if="!hideSectionNav">
 				<ul>
@@ -122,6 +120,6 @@
 	</section>
 
 	<section class="section section-thin" v-if="shouldShowAds && showFooterAd">
-		<app-ad size="leaderboard" pos="bottom" />
+		<app-ad-widget size="leaderboard" pos="bottom" />
 	</section>
 </div>

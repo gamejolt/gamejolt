@@ -26,51 +26,11 @@
 		</div>
 	</section>
 	<section class="section" v-else>
-		<div class="container">
+		<div>
 
-			<div class="row">
-				<div :class="leftColClass">
+			<app-page-container xl>
 
-					<!-- Friend Requests -->
-					<template v-if="userFriendship">
-						<app-expand :when="userFriendship.state === UserFriendship.STATE_REQUEST_SENT" :animate-initial="true">
-							<div class="alert">
-								<p>
-									<translate :translate-params="{ username: '@' + userFriendship.target_user.username }">
-										Friend request to %{ username } pending acceptance.
-									</translate>
-								</p>
-								<app-button @click="cancelFriendRequest()">
-									<translate>profile.friend_request_cancel</translate>
-								</app-button>
-							</div>
-						</app-expand>
-
-						<app-expand :when="userFriendship.state === UserFriendship.STATE_REQUEST_RECEIVED" :animate-initial="true">
-							<div class="alert">
-								<p>
-									<translate :translate-params="{ username: '@' + userFriendship.user.username }">
-										%{ username } would like to be your friend.
-									</translate>
-								</p>
-								<app-button
-									primary
-									solid
-									@click="acceptFriendRequest()"
-									>
-									<translate>profile.friend_request_accept</translate>
-								</app-button>
-								<app-button
-									trans
-									@click="rejectFriendRequest()"
-									v-app-tooltip="$gettext( 'profile.friend_request_decline_tooltip' )"
-									>
-									<translate>profile.friend_request_decline</translate>
-								</app-button>
-							</div>
-						</app-expand>
-					</template>
-
+				<div slot="left">
 					<!-- Bio -->
 					<div v-if="!isBioLoaded">
 						<span class="lazy-placeholder" />
@@ -87,10 +47,10 @@
 							this when the user changes.
 						-->
 						<app-fade-collapse
-							:collapse-height="300"
+							:collapse-height="200"
 							:is-open="showFullDescription"
 							:animate="false"
-							:key="user.id"
+							:key="user.description_compiled"
 							@require-change="canToggleDescription = $event"
 							@expand="showFullDescription = true"
 							>
@@ -109,9 +69,39 @@
 					</div>
 				</div>
 
-				<div :class="rightColClass">
+				<div slot="left-bottom">
+					<!-- Shouts -->
+					<br>
+					<template v-if="shouldShowShouts">
+						<div class="pull-right">
+							<app-button trans @click="showComments()">
+								<translate>View All</translate>
+							</app-button>
+						</div>
 
-					<p v-if="hasQuickButtonsSection">
+						<h4 class="section-header">
+							<translate>Shouts</translate>
+							<small v-if="commentsCount">
+								({{ commentsCount | number }})
+							</small>
+						</h4>
+
+						<app-comment-add-button
+							resource="User"
+							:resource-id="user.id"
+							:placeholder="addCommentPlaceholder"
+							display-mode="shouts"
+							/>
+
+						<app-comment-overview
+							:comments="overviewComments"
+							/>
+					</template>
+				</div>
+
+				<div slot="right">
+
+					<template v-if="hasQuickButtonsSection">
 
 						<!-- Add Friend -->
 						<app-button
@@ -142,9 +132,12 @@
 								{{ videosCount | number }} Videos
 							</app-button>
 						</template>
-					</p>
 
-					<p v-if="hasLinksSection">
+						<br>
+					</template>
+
+					<!-- Social links -->
+					<template v-if="hasLinksSection">
 						<template v-if="linkedAccounts.length">
 							<div v-if="twitchAccount">
 								<a
@@ -209,11 +202,13 @@
 								</a>
 							</div>
 						</template>
-					</p>
 
+						<br>
+					</template>
+
+					<!-- Latest Games -->
 					<template v-if="hasGamesSection">
 						<br>
-
 						<div class="clearfix">
 							<div class="pull-right">
 								<app-button
@@ -246,12 +241,50 @@
 
 				</div>
 
-				<div :class="leftColClass">
-					<div class="-spacer" />
+				<!-- Friend Requests -->
+				<template v-if="userFriendship">
+					<app-expand :when="userFriendship.state === UserFriendship.STATE_REQUEST_SENT" :animate-initial="true">
+						<div class="alert">
+							<p>
+								<translate :translate-params="{ username: '@' + userFriendship.target_user.username }">
+									Friend request to %{ username } pending acceptance.
+								</translate>
+							</p>
+							<app-button @click="cancelFriendRequest()">
+								<translate>profile.friend_request_cancel</translate>
+							</app-button>
+						</div>
+					</app-expand>
 
-					<router-view />
-				</div>
-			</div>
+					<app-expand :when="userFriendship.state === UserFriendship.STATE_REQUEST_RECEIVED" :animate-initial="true">
+						<div class="alert">
+							<p>
+								<translate :translate-params="{ username: '@' + userFriendship.user.username }">
+									%{ username } would like to be your friend.
+								</translate>
+							</p>
+							<app-button
+								primary
+								solid
+								@click="acceptFriendRequest()"
+								>
+								<translate>profile.friend_request_accept</translate>
+							</app-button>
+							<app-button
+								trans
+								@click="rejectFriendRequest()"
+								v-app-tooltip="$gettext( 'profile.friend_request_decline_tooltip' )"
+								>
+								<translate>profile.friend_request_decline</translate>
+							</app-button>
+						</div>
+					</app-expand>
+				</template>
+
+				<div class="-spacer visible-xs" />
+
+				<router-view />
+			</app-page-container>
 
 		</div>
 	</section>

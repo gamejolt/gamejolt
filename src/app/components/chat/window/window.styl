@@ -3,25 +3,10 @@
 
 .chat-window-wrap
 	position: fixed
-	top: 0
-	left: 0
-	right: 0
-	bottom: 0
 	display: flex
 	justify-content: center
 	align-items: flex-start
 	z-index: $zindex-chat-window
-
-	@media $media-sm-up
-		top: $shell-top-nav-height + 10px
-		left: 0
-		right: $shell-pane-width + 10px
-
-		body.chat-tabs-visible.status-bar-visible &
-			bottom: $status-bar-height + 10px
-
-		#shell.has-banner &
-			top: $shell-top-nav-height * 2 + 10px
 
 .chat-window-back-close
 	position: absolute
@@ -105,7 +90,7 @@
 		height: 45px
 
 		img
-			rounded-corners()
+			img-circle()
 			display: block
 			width: 45px
 			height: 45px
@@ -122,13 +107,17 @@
  * Chat Window Output
  */
 .chat-window-output
+	position: relative
 	flex: auto
 	display: flex
-	overflow: hidden
 	height: 100%
 
 	> .scroll-scroller
-		flex: auto
+		position: absolute
+		top: 0
+		right: 0
+		bottom: 0
+		left: 0
 
 .chat-window-send-container
 	theme-prop('background-color', 'darker')

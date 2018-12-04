@@ -3,14 +3,15 @@
 	<app-form-group
 		name="description_markdown"
 		:label="$gettext( `dash.games.form.description_label` )"
-		:hide-label="true"
+		hide-label
 		>
 
 		<app-form-control-markdown
+			ref="editor"
 			preview-class="game-compiled-description"
 			preview-url="/web/dash/developer/games/description/preview"
 			markdown-mode="games"
-			:show-media-items="true"
+			show-media-items
 			media-item-type="game-description"
 			:placeholder="$gettext( `Write your game description here...` )"
 			:disabled="isDisabled || !hasDetailsPerms"
@@ -19,6 +20,13 @@
 		<app-form-control-errors />
 
 	</app-form-group>
+
+	<app-form-game-description-tags
+		class="-tags"
+		:text="tagText"
+		:tags="tags"
+		@tag="addTag($event)"
+		/>
 
 	<app-expand :when="isFnafDetected">
 		<div class="alert alert-notice">
@@ -37,7 +45,7 @@
 
 				<app-button
 					trans
-					@click="skipAutotag"
+					@click="skipAutotag()"
 					>
 					<translate>dash.games.add.fnaf_autotag_reject</translate>
 				</app-button>

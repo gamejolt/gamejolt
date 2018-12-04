@@ -4,7 +4,7 @@ import { routeDashGamesManageGamePackagesEditWidget } from './widget/widget.rout
 export const routeDashGamesManageGamePackagesEdit: RouteConfig = {
 	name: 'dash.games.manage.game.packages.edit',
 	path: 'packages/:packageId(\\d+)',
-	props: true,
-	component: () => import(/* webpackChunkName: "routeDashGamesManageGamePackagesEdit" */ './edit'),
+	component: () =>
+		import(/* webpackChunkName: "routeDashGamesManageGamePackagesEdit" */ './edit'),
 	children: [routeDashGamesManageGamePackagesEditWidget],
 };

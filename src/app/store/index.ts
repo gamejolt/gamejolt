@@ -1,3 +1,4 @@
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Route } from 'vue-router';
 import { sync } from 'vuex-router-sync';
 import { Api } from '../../lib/gj-lib-client/components/api/api.service';
@@ -12,7 +13,6 @@ import { Connection } from '../../lib/gj-lib-client/components/connection/connec
 import { ContentFocus } from '../../lib/gj-lib-client/components/content-focus/content-focus.service';
 import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
 import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service';
 import {
 	ThemeActions,
 	ThemeMutations,
@@ -31,7 +31,6 @@ import {
 	appStore,
 	Mutations as AppMutations,
 } from '../../lib/gj-lib-client/vue/services/app/app-store';
-import { Settings } from '../../_common/settings/settings.service';
 import { ActivityFeedState } from '../components/activity/feed/state';
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
 import { ChatClient } from '../components/chat/client';
@@ -41,6 +40,9 @@ import { router } from '../views';
 import { BannerActions, BannerMutations, BannerStore } from './banner';
 import * as _ClientLibraryMod from './client-library';
 import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
+
+// Re-export our sub-modules.
+export { BannerModule, BannerStore } from './banner';
 
 export type Actions = AppActions &
 	ThemeActions &
@@ -61,7 +63,6 @@ export type Actions = AppActions &
 		toggleLeftPane: void;
 		toggleRightPane: void;
 		clearPanes: void;
-		_checkBackdrop: void;
 	};
 
 export type Mutations = AppMutations &
@@ -74,17 +75,6 @@ export type Mutations = AppMutations &
 		incrementNotificationCount: { type: UnreadItemType; count: number };
 		setFriendRequestCount: number;
 		changeFriendRequestCount: number;
-		_setBootstrapped: void;
-		_setLibraryBootstrapped: void;
-		_setChat: ChatClient | null;
-		_setGrid: GridClient | null;
-		_setNotificationState: ActivityFeedState | null;
-		_resetNotificationWatermark: void;
-		_toggleLeftPane: void;
-		_toggleRightPane: void;
-		_clearPanes: void;
-		_addBackdrop: void;
-		_removeBackdrop: void;
 	};
 
 let bootstrapResolver: Function | null = null;
@@ -133,28 +123,19 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	friendRequestCount = 0;
 	notificationState: ActivityFeedState | null = null;
 
-	isLeftPaneSticky = Settings.get('sidebar') as boolean;
 	isLeftPaneOverlayed = false;
 	isRightPaneOverlayed = false;
 
-	get isLeftPaneVisible() {
-		if (Screen.isLg) {
-			return this.isLeftPaneSticky;
-		}
+	get hasSidebar() {
+		return Screen.isXs || !!this.app.user;
+	}
 
+	get isLeftPaneVisible() {
 		return this.isLeftPaneOverlayed;
 	}
 
 	get isRightPaneVisible() {
 		return this.isRightPaneOverlayed;
-	}
-
-	get shouldShowLeftPaneBackdrop() {
-		return this.isLeftPaneOverlayed && !Screen.isLg;
-	}
-
-	get hasSidebar() {
-		return Screen.isXs || this.app.user || GJ_IS_SSR;
 	}
 
 	get notificationCount() {
@@ -276,13 +257,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async toggleLeftPane() {
-		if (!this.hasSidebar) {
-			return;
-		}
-
 		this._toggleLeftPane();
 		this._checkBackdrop();
-		Settings.set('sidebar', this.isLeftPaneSticky);
 	}
 
 	@VuexAction
@@ -299,9 +275,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	private async _checkBackdrop() {
-		// Ensure we have a backdrop if anything is overlayed.
-		// Otherwise ensure the backdrop is gone.
-		if (this.isRightPaneOverlayed || this.shouldShowLeftPaneBackdrop) {
+		if (this.isRightPaneOverlayed || this.isLeftPaneOverlayed) {
 			if (backdrop) {
 				return;
 			}
@@ -358,17 +332,17 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	private _setChat(chat: Mutations['_setChat']) {
+	private _setChat(chat: ChatClient | null) {
 		this.chat = chat;
 	}
 
 	@VuexMutation
-	private _setGrid(grid: Mutations['_setGrid']) {
+	private _setGrid(grid: GridClient | null) {
 		this.grid = grid;
 	}
 
 	@VuexMutation
-	private _setNotificationState(state: Mutations['_setNotificationState']) {
+	private _setNotificationState(state: ActivityFeedState | null) {
 		this.notificationState = state;
 	}
 
@@ -383,12 +357,12 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexMutation
 	private _toggleLeftPane() {
-		if (Screen.isLg) {
-			this.isLeftPaneSticky = !this.isLeftPaneSticky;
-		} else {
-			this.isLeftPaneOverlayed = !this.isLeftPaneOverlayed;
+		if (!this.hasSidebar) {
+			this.isLeftPaneOverlayed = false;
+			return;
 		}
 
+		this.isLeftPaneOverlayed = !this.isLeftPaneOverlayed;
 		this.isRightPaneOverlayed = false;
 	}
 
@@ -431,7 +405,7 @@ sync(store, router, { moduleName: 'route' });
 
 // Sync with the ContentFocus service.
 ContentFocus.registerWatcher(
-	() => !store.state.isLeftPaneOverlayed && !store.state.isRightPaneVisible
+	() => !store.state.isLeftPaneOverlayed && !store.state.isRightPaneOverlayed
 );
 
 // Bootstrap/clear the app when user changes.

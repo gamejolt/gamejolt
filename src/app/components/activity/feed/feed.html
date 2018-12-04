@@ -44,7 +44,7 @@
 				/>
 
 			<div class="-ad-container well fill-offset full-bleed-xs text-center" v-if="shouldShowAd(i)">
-				<app-ad size="rectangle" pos="bottom" />
+				<app-ad-widget size="rectangle" pos="bottom" />
 				<div class="-ad-label text-muted small">
 					<translate>Advertisement</translate>
 				</div>
@@ -58,7 +58,7 @@
 	<template v-if="!feed.slice">
 		<div v-if="shouldShowLoadMore" class="page-cut">
 			<app-button
-				:to="GJ_IS_SSR ? { query: { feed_last_id: feed.endScrollId } } : undefined"
+				:to="GJ_IS_SSR ? { query: { feed_last_id: lastPostId } } : undefined"
 				trans
 				@click.prevent="loadMoreButton"
 				v-app-track-event="`activity-feed:more`"

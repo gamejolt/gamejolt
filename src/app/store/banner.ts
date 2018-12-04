@@ -1,4 +1,4 @@
-import { Action, Mutation, namespace, State } from 'vuex-class';
+import { namespace } from 'vuex-class';
 import { Analytics } from '../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Connection } from '../../lib/gj-lib-client/components/connection/connection-service';
 import { Screen } from '../../lib/gj-lib-client/components/screen/screen-service';
@@ -8,9 +8,7 @@ import { Settings } from '../../_common/settings/settings.service';
 import { store } from './index';
 
 export const BannerStoreNamespace = 'banner';
-export const BannerState = namespace(BannerStoreNamespace, State);
-export const BannerAction = namespace(BannerStoreNamespace, Action);
-export const BannerMutation = namespace(BannerStoreNamespace, Mutation);
+export const BannerModule = namespace(BannerStoreNamespace);
 
 export type BannerActions = {};
 
@@ -47,10 +45,11 @@ class NotificationsBanner extends Banner {
 		}
 
 		// "store" is a circular dependency, so make sure it exists.
-		return (
+		return !!(
 			store &&
+			store.state.app.user &&
 			store.state.route.name &&
-			store.state.route.name.indexOf('activity.') === 0 &&
+			(store.state.route.name === 'home' || store.state.route.name === 'notifications') &&
 			'Notification' in window &&
 			(Notification as any).permission === 'default' &&
 			Settings.get('feed-notifications')
@@ -125,7 +124,7 @@ class OfflineBanner extends Banner {
 export class BannerStore extends VuexStore<BannerStore, BannerActions, BannerMutations> {
 	banners: Banner[] = [new NotificationsBanner(), new OfflineBanner()];
 
-	get shouldShowBanner() {
+	get hasBanner() {
 		return !!this.currentBanner;
 	}
 

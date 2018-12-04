@@ -1,9 +1,9 @@
 import { Location } from 'vue-router';
-import { Client } from '../../../../../_common/client/client.service';
-import { UserTokenModal } from '../../../user/token-modal/token-modal.service';
 import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
+import { Client } from '../../../../../_common/client/client.service';
 import { store } from '../../../../store/index';
 import { router } from '../../../../views/index';
+import { UserTokenModal } from '../../../user/token-modal/token-modal.service';
 
 function go(location: Location) {
 	router.push(location);
@@ -11,6 +11,26 @@ function go(location: Location) {
 }
 
 export function clientTrayMenuBuilder(this: undefined, menu: nw.Menu) {
+	menu.append(
+		new nw.MenuItem({
+			label: Translate.$gettext('Home'),
+			click: () =>
+				go({
+					name: 'home',
+				}),
+		})
+	);
+
+	menu.append(
+		new nw.MenuItem({
+			label: Translate.$gettext('Explore'),
+			click: () =>
+				go({
+					name: 'discover.home',
+				}),
+		})
+	);
+
 	menu.append(
 		new nw.MenuItem({
 			label: Translate.$gettext('Browse Games'),
@@ -28,13 +48,6 @@ export function clientTrayMenuBuilder(this: undefined, menu: nw.Menu) {
 		new nw.MenuItem({
 			label: Translate.$gettext('Game Library'),
 			click: () => go({ name: 'library.installed' }),
-		})
-	);
-
-	menu.append(
-		new nw.MenuItem({
-			label: Translate.$gettext('Dashboard'),
-			click: () => go({ name: 'dash.main.overview' }),
 		})
 	);
 

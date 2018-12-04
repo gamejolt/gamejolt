@@ -25,33 +25,33 @@ export default (context: any) => {
 			}
 
 			try {
-				const componentState: { [k: string]: any } = {};
-				for (const component of matchedComponents as any[]) {
-					const name = component.extendOptions.name;
-					componentState[name] =
-						component.extendOptions.__RESOLVER__ &&
-						component.extendOptions.__RESOLVER__.payload;
-				}
+				// const componentState: { [k: string]: any } = {};
+				// for (const component of matchedComponents as any[]) {
+				// 	const name = component.extendOptions.name;
+				// 	componentState[name] =
+				// 		component.extendOptions.__RESOLVER__ &&
+				// 		component.extendOptions.__RESOLVER__.payload;
+				// }
 
 				console.log(`data fetch: ${Date.now() - s}ms`);
 
 				context.state = {
-					components: componentState,
+					// components: componentState,
 				};
 
 				// Gotta do it this way since the server renderer will call
 				// serialize on the context.state automatically. We don't have
 				// the finalized vuex state yet, so we have to make sure that it
 				// gets pulled during the serialize.
-				Object.defineProperty(context.state, 'vuex', {
-					enumerable: true,
-					get: () => {
-						if (store.getServerState) {
-							return store.getServerState();
-						}
-						return {};
-					},
-				});
+				// Object.defineProperty(context.state, 'vuex', {
+				// 	enumerable: true,
+				// 	get: () => {
+				// 		if (store.getServerState) {
+				// 			return store.getServerState();
+				// 		}
+				// 		return {};
+				// 	},
+				// });
 
 				context.meta = {
 					title: 'Game Jolt - Indie games for the love of it',

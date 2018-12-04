@@ -1,6 +1,6 @@
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import { createApp } from './bootstrap';
-import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 
 const { app, router, store } = createApp();
 

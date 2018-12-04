@@ -4,30 +4,21 @@
 		'is-client-offline': Connection.isClientOffline,
 		'left-pane-visible': isLeftPaneVisible,
 		'right-pane-visible': isRightPaneVisible,
-		'no-sidebar': !hasSidebar,
-		'has-banner': shouldShowBanner,
+		'has-banner': hasBanner,
 	}"
 	>
 
 	<app-shell-banner />
 	<app-shell-top-nav />
-	<app-shell-sidebar
-		v-if="hasSidebar"
-		/>
+	<app-shell-sidebar v-if="hasSidebar" />
 
 	<app-shell-body>
 		<slot />
 	</app-shell-body>
 
-	<!--
-		Without this containing div vue would fail with the dom diff after
-		logging out and the whole page would disappear.
-	-->
-	<div>
-		<app-shell-chat v-if="chat" />
-	</div>
+	<app-shell-chat v-if="chat" key="shell-chat" />
 
-	<div v-if="GJ_IS_CLIENT">
+	<div v-if="GJ_IS_CLIENT" key="shell-client">
 		<app-client-base />
 		<app-shell-client />
 	</div>
@@ -38,7 +29,7 @@
 
 	<app-shell-hot-bottom>
 		<app-minbar v-show="!isRightPaneVisible" />
-		<app-client-status-bar v-if="GJ_IS_CLIENT" />
+		<app-client-status-bar v-if="GJ_IS_CLIENT" key="shell-client-status-bar" />
 	</app-shell-hot-bottom>
 
 </div>

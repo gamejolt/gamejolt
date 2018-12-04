@@ -40,16 +40,16 @@
 		<app-card-list v-if="packages.length" :items="packages">
 			<app-card-list-draggable :disabled="!hasBuildsPerms" @change="saveSort">
 				<app-card-list-item
-					v-for="package of packages"
-					:key="package.id"
-					:item="package"
+					v-for="pkg of packages"
+					:key="pkg.id"
+					:item="pkg"
 					>
 
 					<app-game-perms required="all">
 						<a
 							class="card-remove"
-							v-if="!package.has_sales"
-							@click="removePackage( package )"
+							v-if="!pkg.has_sales"
+							@click="removePackage( pkg )"
 							>
 							<app-jolticon icon="remove" />
 						</a>
@@ -61,14 +61,14 @@
 								<router-link
 									:to="{
 										name: 'dash.games.manage.game.packages.edit',
-										params: { packageId: package.id },
+										params: { packageId: pkg.id },
 									}"
 									>
-									{{ package.title || game.title }}
+									{{ pkg.title || game.title }}
 								</router-link>
 							</template>
 							<template v-else>
-								{{ package.title || game.title }}
+								{{ pkg.title || game.title }}
 							</template>
 						</h4>
 					</div>
@@ -77,7 +77,7 @@
 
 						<span
 							class="tag tag-highlight"
-							v-if="sellables[ package.id ] && sellables[ package.id ].primary"
+							v-if="sellables[ pkg.id ] && sellables[ pkg.id ].primary"
 							v-app-tooltip="$gettext( `We use the primary package to determine the price to show on game listings.` )"
 							>
 							<translate>Primary Package</translate>
@@ -85,13 +85,13 @@
 
 						<span
 							class="tag tag-notice"
-							v-if="package.visibility === GamePackage.VISIBILITY_PRIVATE"
+							v-if="pkg.visibility === GamePackage.VISIBILITY_PRIVATE"
 							v-app-tooltip="$gettext( `This package will only be available to you and any keys that have access.` )"
 							>
 							<translate>Private</translate>
 						</span>
 
-						<template v-if="sellables[ package.id ] && sellables[ package.id ].type === 'pwyw'">
+						<template v-if="sellables[ pkg.id ] && sellables[ pkg.id ].type === 'pwyw'">
 							<span class="tag">
 								<translate>Pay What You Want</translate>
 							</span>
@@ -100,14 +100,14 @@
 								<translate>Suggested Price</translate>
 							</strong>
 							&mdash;
-							<template v-if="sellables[ package.id ] && sellables[ package.id ].pricings[0].amount">
-								{{ sellables[ package.id ].pricings[0].amount | currency }}
+							<template v-if="sellables[ pkg.id ] && sellables[ pkg.id ].pricings[0].amount">
+								{{ sellables[ pkg.id ].pricings[0].amount | currency }}
 							</template>
 							<template v-else>
 								<translate>None</translate>
 							</template>
 						</template>
-						<template v-else-if="sellables[ package.id ] && sellables[ package.id ].type === 'paid'">
+						<template v-else-if="sellables[ pkg.id ] && sellables[ pkg.id ].type === 'paid'">
 							<span class="tag">
 								<translate>Paid</translate>
 							</span>
@@ -116,7 +116,7 @@
 								<translate>Price</translate>
 							</strong>
 							&mdash;
-							{{ sellables[ package.id ].pricings[0].amount | currency }}
+							{{ sellables[ pkg.id ].pricings[0].amount | currency }}
 						</template>
 						<template v-else>
 							<span class="tag">
@@ -126,8 +126,8 @@
 
 					</div>
 
-					<div class="card-content" v-if="package.description">
-						{{ package.description }}
+					<div class="card-content" v-if="pkg.description">
+						{{ pkg.description }}
 					</div>
 
 					<div class="card-controls">
@@ -136,7 +136,7 @@
 								primary
 								:to="{
 									name: 'dash.games.manage.game.packages.edit',
-									params: { packageId: package.id },
+									params: { packageId: pkg.id },
 								}"
 								>
 								<translate>Manage</translate>
@@ -146,7 +146,7 @@
 							trans
 							:to="{
 								name: 'dash.games.manage.game.packages.edit.widget',
-								params: { packageId: package.id },
+								params: { packageId: pkg.id },
 							}"
 							>
 							<translate>Widget</translate>
@@ -156,7 +156,7 @@
 								trans
 								:to="{
 									name: 'dash.analytics',
-									params: { resource: 'Game_Package', resourceId: package.id },
+									params: { resource: 'Game_Package', resourceId: pkg.id },
 								}"
 								>
 								<translate>Analytics</translate>

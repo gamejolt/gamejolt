@@ -5,26 +5,14 @@
 		:item="featuredItem"
 		/>
 
-	<div class="fill-darker">
-		<app-scroll-scroller horizontal overlay>
-			<div class="-channel-list">
-				<div
-					class="-channel-list-item"
-					v-for="channel of channels"
-					:key="channel.id"
-					>
-					<app-channel-thumbnail :channel="channel.id" />
-				</div>
-			</div>
-		</app-scroll-scroller>
-	</div>
+	<app-discover-home-tags />
 
 	<section class="section">
-		<div class="container-lg">
+		<div class="container-xl">
 
-			<h1 class="section-header text-center">
+			<h2 class="section-header text-center">
 				<translate>Featured Games</translate>
-			</h1>
+			</h2>
 
 			<p class="text-center">
 				<translate>Check these games out and follow along in their development!</translate>
@@ -33,7 +21,7 @@
 			<hr class="underbar underbar-center">
 
 			<app-game-grid-placeholder
-				v-if="!isLoaded"
+				v-if="!isRouteBootstrapped"
 				:num="6"
 				/>
 			<app-game-grid
@@ -59,12 +47,12 @@
 		</div>
 	</section>
 
-	<section class="section fill-offset" v-if="isLoaded && !app.user">
+	<section class="section fill-offset" v-if="isRouteBootstrapped && !app.user">
 		<div class="container">
 
-			<h1 class="section-header text-center">
+			<h2 class="section-header text-center">
 				<translate>Join Game Jolt</translate>
-			</h1>
+			</h2>
 
 			<div class="text-center">
 				<p class="lead">

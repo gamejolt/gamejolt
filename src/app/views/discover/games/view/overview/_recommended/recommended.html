@@ -1,22 +1,22 @@
 <app-game-grid-placeholder
-	v-if="Screen.isMobile && !recommendedGames.length"
+	v-if="Screen.isMobile && !slicedGames.length"
 	:num="5"
 	truncate-to-fit
 	force-scrollable
 	/>
 <app-game-grid
-	v-else-if="Screen.isMobile && recommendedGames.length"
-	:games="recommendedGames"
+	v-else-if="Screen.isMobile && slicedGames.length"
+	:games="slicedGames"
 	truncate-to-fit
 	force-scrollable
 	event-label="recommended"
 	/>
 <app-game-list-placeholder
-	v-else-if="!Screen.isMobile && !recommendedGames.length"
+	v-else-if="!Screen.isMobile && !slicedGames.length"
 	:num="5"
 	/>
 <app-game-list
-	v-else-if="!Screen.isMobile && recommendedGames.length"
-	:games="recommendedGames"
+	v-else-if="!Screen.isMobile && slicedGames.length"
+	:games="slicedGames"
 	event-label="recommended"
 	/>

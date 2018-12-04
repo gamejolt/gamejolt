@@ -1,19 +1,18 @@
 import { RouteConfig } from 'vue-router';
+import RouteDiscoverGames from './games';
 import {
-	routeDiscoverGamesListSection,
-	routeDiscoverGamesListCategory,
 	routeDiscoverGamesListDate,
+	routeDiscoverGamesListSection,
+	routeDiscoverGamesListTag,
 } from './list/list.route';
 import { routeDiscoverGamesView } from './view/view.route';
-import RouteDiscoverGames from './games';
 
 export const routeDiscoverGames: RouteConfig = {
-	path: 'games',
-	props: true,
+	path: '/games',
 	component: RouteDiscoverGames,
 	children: [
 		routeDiscoverGamesListSection,
-		routeDiscoverGamesListCategory,
+		routeDiscoverGamesListTag,
 		routeDiscoverGamesListDate,
 		routeDiscoverGamesView,
 	],

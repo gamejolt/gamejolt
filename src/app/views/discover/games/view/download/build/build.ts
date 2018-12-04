@@ -1,7 +1,7 @@
 import View from '!view!./build.html';
+import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
@@ -30,7 +30,7 @@ const DownloadDelay = 3000;
 @Component({
 	name: 'RouteDiscoverGamesViewDownloadBuild',
 	components: {
-		AppAd,
+		AppAdWidget,
 		AppAdPlacement,
 		AppGameThumbnail,
 		AppRatingWidget,

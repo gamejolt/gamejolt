@@ -120,6 +120,19 @@
 
 	</app-form-group>
 
+	<app-form-group
+		name="shouts_enabled"
+		:label="$gettext(`Allow shouts?`)"
+		>
+
+		<app-form-control-toggle class="pull-right" />
+
+		<p class="help-block">
+			<translate>Will let people post short comments on your profile page. Turning this off will hide any shouts already on the page.</translate>
+		</p>
+
+	</app-form-group>
+
 	<app-form-button>
 		<translate>dash.profile.edit.submit_button</translate>
 	</app-form-button>

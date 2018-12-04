@@ -2,11 +2,10 @@ import View from '!view!./bundle.html';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-
-import { AppGameThumbnail } from '../../../../_common/game/thumbnail/thumbnail';
 import { GameBundle } from '../../../../lib/gj-lib-client/components/game-bundle/game-bundle.model';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { AppGameThumbnail } from '../../../../_common/game/thumbnail/thumbnail';
 import { Store } from '../../../store/index';
 
 @View
@@ -17,11 +16,17 @@ import { Store } from '../../../store/index';
 	},
 })
 export class AppKeyBundle extends Vue {
-	@Prop() payload!: any;
-	@Prop() loginUrl!: string;
-	@Prop() accessKey?: string;
+	@Prop()
+	payload!: any;
 
-	@State app!: Store['app'];
+	@Prop()
+	loginUrl!: string;
+
+	@Prop()
+	accessKey?: string;
+
+	@State
+	app!: Store['app'];
 
 	bundle: GameBundle = null as any;
 	games: Game[] = [];

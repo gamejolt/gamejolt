@@ -3,20 +3,14 @@
 
 #shell-top-nav
 	position: fixed
-	top: 0
-	left: 0
-	// If we used `right: 0` instead, the top nav would flex off the screen if
-	// a horizontal scrollbar became visible. Doing it this way ensures it's
-	// always the correct width.
-	width: 100vw
-	max-width: 100%
 	z-index: $zindex-shell-top-nav
-
-	#shell.has-banner &
-		top: $shell-top-nav-height
 
 	.disconnected-icon
 		theme-prop('color', 'notice')
 
 		&, .jolticon
 			cursor: help
+
+.-explore-icon
+	position: relative
+	top: 2px

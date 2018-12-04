@@ -301,10 +301,8 @@ export class ActivityFeedView {
 		const items = input.map(i => new ActivityFeedItem(i));
 		this.state.addItems(items, position);
 
-		// We bootstrap right away. We only use bootstrapping for going back into the feeds.
-		for (const i of items) {
-			this.getItemState(i).isBootstrapped = true;
-		}
+		// We bootstrap the first 5 items that we added right away.
+		items.slice(0, 5).forEach(i => (this.getItemState(i).isBootstrapped = true));
 	}
 
 	private getItemState(item: ActivityFeedItem) {

@@ -12,12 +12,6 @@
 	@media $media-sm-up
 		width: $shell-pane-width
 
-	body.status-bar-visible &
-		bottom: $status-bar-height
-
-	#shell.has-banner &
-		top: $shell-top-nav-height * 2
-
 .shell-pane-left
 	left: 0
 	right: auto
@@ -26,7 +20,7 @@
 	left: auto
 	right: 0
 
-.right-pane-visible .shell-pane-left, .right-pane-visible .shell-sidebar
+.right-pane-visible .shell-pane-left
 	z-index: $zindex-shell-pane-under !important
 
 // When we are hiding the pane and showing the content again, we want to also
@@ -46,9 +40,4 @@
 	transform: translateX(100%)
 
 	.right-pane-visible &
-		transform: translateX(0)
-
-@media $media-sm-up
-	// On sm-up left pane is always visible.
-	.shell-pane-left
 		transform: translateX(0)

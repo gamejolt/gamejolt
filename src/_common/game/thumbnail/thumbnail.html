@@ -118,12 +118,8 @@
 				</div>
 
 				<span class="-tags">
-					<span class="-tag tag" v-if="game.development_status === 2">
-						<translate>Early Access</translate>
-					</span>
-
-					<span class="tag tag" v-if="game.development_status === 4">
-						<translate>Devlog-Only</translate>
+					<span class="-tag tag tag-notice" v-if="game.status === Game.STATUS_HIDDEN">
+						<translate>Hidden</translate>
 					</span>
 				</span>
 			</div>
