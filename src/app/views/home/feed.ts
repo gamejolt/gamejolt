@@ -176,12 +176,9 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		this.setNotificationCount({ type: 'activity', count: 0 });
 	}
 
-	onPostAdded() {
+	onPostAdded(post: FiresidePost) {
 		if (this.app.user) {
-			this.$router.push({
-				name: 'profile.overview',
-				params: { username: this.app.user!.username },
-			});
+			ActivityFeedService.gotoPostFeedManage(post, this);
 		}
 	}
 }
