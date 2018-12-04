@@ -299,4 +299,8 @@ export class AppActivityFeedEventItem extends Vue {
 	onPostUnfeatured(item: EventItem, community: Community) {
 		this.feedComponent.onPostUnfeatured(item, community);
 	}
+
+	onPostRejected(item: EventItem, community: Community) {
+		this.feedComponent.onPostRejected(item, community);
+	}
 }

@@ -136,4 +136,10 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			this.feed!.remove([eventItem]);
 		}
 	}
+
+	onPostRejected(eventItem: EventItem, community: Community) {
+		if (this.community.id === community.id) {
+			this.feed!.remove([eventItem]);
+		}
+	}
 }

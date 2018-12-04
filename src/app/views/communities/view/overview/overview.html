@@ -46,6 +46,7 @@
 						:show-edit-controls="feed.shouldShowEditControls"
 						:show-community-controls="feed.shouldShowCommunityControls"
 						@unfeature-post="onPostUnfeatured"
+						@reject-post="onPostRejected"
 						/>
 					<div v-else class="alert">
 						<translate>There are no posts in this community yet. What are you waiting for? Post some stuff! Make people happy.</translate>

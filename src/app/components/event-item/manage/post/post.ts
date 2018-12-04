@@ -51,6 +51,9 @@ export class AppEventItemManagePost extends Vue {
 	@Emit('unfeature')
 	private emitUnfeature(_community: Community) {}
 
+	@Emit('reject')
+	private emitReject(_community: Community) {}
+
 	get canPublish() {
 		return this.post.isDraft && !this.post.isScheduled && !!this.post.lead;
 	}
@@ -67,6 +70,11 @@ export class AppEventItemManagePost extends Vue {
 			await this.post.$feature(tagCom.community);
 			this.emitFeature(tagCom.community);
 		}
+	}
+
+	async rejectFromCommunity(tagCom: FiresidePostCommunity) {
+		await this.post.$reject(tagCom.community);
+		this.emitReject(tagCom.community);
 	}
 
 	async openEdit() {

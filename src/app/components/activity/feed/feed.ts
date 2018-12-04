@@ -74,6 +74,9 @@ export class AppActivityFeed extends Vue {
 	@Emit('unfeature-post')
 	emitUnfeaturePost(_eventItem: EventItem, _community: Community) {}
 
+	@Emit('reject-post')
+	emitRejectPost(_eventItem: EventItem, _community: Community) {}
+
 	@Emit('load-new')
 	emitLoadNew() {}
 
@@ -184,6 +187,10 @@ export class AppActivityFeed extends Vue {
 
 	onPostUnfeatured(eventItem: EventItem, community: Community) {
 		this.emitUnfeaturePost(eventItem, community);
+	}
+
+	onPostRejected(eventItem: EventItem, community: Community) {
+		this.emitRejectPost(eventItem, community);
 	}
 
 	loadMoreButton() {

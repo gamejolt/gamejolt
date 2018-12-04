@@ -73,29 +73,45 @@
 				</template>
 
 				<div class="list-group list-group-dark">
-					<a
+					<span
 						v-if="showCommunityControls"
 						v-for="tagCom of post.manageableCommunities"
 						:key="tagCom.id"
-						class="list-group-item has-icon"
-						@click.stop="toggleFeatured(tagCom)"
 						>
-						<app-jolticon icon="tag" />
-
-						<translate
-							v-if="tagCom.isFeatured"
-							:translate-params="{ community: tagCom.community.path }"
+						<a
+							class="list-group-item has-icon"
+							@click.stop="toggleFeatured(tagCom)"
 							>
-							Unfeature in %{ community }
-						</translate>
+							<app-jolticon icon="tag" />
 
-						<translate
-							v-else
-							:translate-params="{ community: tagCom.community.path }"
+							<translate
+								v-if="tagCom.isFeatured"
+								:translate-params="{ community: tagCom.community.path }"
+								>
+								Unfeature in %{ community }
+							</translate>
+
+							<translate
+								v-else
+								:translate-params="{ community: tagCom.community.path }"
+								>
+								Feature in %{ community }
+							</translate>
+						</a>
+
+						<a
+							class="list-group-item has-icon"
+							@click.stop="rejectFromCommunity(tagCom)"
 							>
-							Feature in %{ community }
-						</translate>
-					</a>
+							<app-jolticon icon="remove" notice />
+
+							<translate
+								:translate-params="{ community: tagCom.community.path }"
+								>
+								Remove from %{ community }
+							</translate>
+						</a>
+					</span>
 
 					<a
 						v-if="showEditControls"

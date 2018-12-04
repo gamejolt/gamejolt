@@ -37,6 +37,9 @@ export class AppEventItemManage extends Vue {
 	@Emit('unfeature-post')
 	emitUnfeaturePost(_community: Community) {}
 
+	@Emit('reject-post')
+	emitRejectPost(_community: Community) {}
+
 	get post() {
 		if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
 			return this.eventItem.action as FiresidePost;
