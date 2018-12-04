@@ -52,7 +52,7 @@ if (cluster.isMaster) {
 	const renderer = createBundleRenderer(serverBundle, {
 		runInNewContext: true,
 		template: fs.readFileSync(resolve('./index-ssr.html'), 'utf-8'),
-		clientManifest,
+		// clientManifest,
 	});
 
 	if (!isProd) {
