@@ -10,11 +10,15 @@ import {
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
+import { State } from 'vuex-class';
+import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { AppActivityFeed } from '../../../../components/activity/feed/feed';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
+import { AppActivityFeedNewButton } from '../../../../components/activity/feed/new-button/new-button';
 import { AppActivityFeedPlaceholder } from '../../../../components/activity/feed/placeholder/placeholder';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppPostAddButton } from '../../../../components/post/add-button/add-button';
+import { Store } from '../../../../store/index';
 
 function getFetchUrl(route: Route, tags: string[]) {
 	let url = `/web/posts/fetch/community/${route.params.path}`;
@@ -32,6 +36,8 @@ function getFetchUrl(route: Route, tags: string[]) {
 		AppActivityFeed,
 		AppActivityFeedPlaceholder,
 		AppPill,
+		AppExpand,
+		AppActivityFeedNewButton,
 	},
 })
 @RouteResolver({
@@ -43,6 +49,9 @@ function getFetchUrl(route: Route, tags: string[]) {
 export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@Prop(Community)
 	community!: Community;
+
+	@State
+	communities!: Store['communities'];
 
 	feed: ActivityFeedView | null = null;
 
@@ -64,6 +73,15 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 					// tslint:disable-next-line:indent
 			  })
 			: null;
+	}
+
+	get shouldShowLoadNew() {
+		// We need to access the reactive community from the Store here to react to is_unread changing
+		const stateCommunity = this.communities.find(c => c.id == this.community.id);
+		if (stateCommunity) {
+			return this.activeTag === 'featured' && stateCommunity.is_unread;
+		}
+		return false;
 	}
 
 	routeCreated() {

@@ -20,6 +20,16 @@
 					</a>
 				</p>
 
+				<app-expand
+					v-if="shouldShowLoadNew"
+					when
+					animate-initial
+					>
+					<app-activity-feed-new-button>
+						Show New Activity
+					</app-activity-feed-new-button>
+				</app-expand>
+
 				<br>
 
 				<!-- @add="onPostAdded" -->
