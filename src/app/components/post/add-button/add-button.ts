@@ -24,15 +24,22 @@ export class AppPostAddButton extends Vue {
 	add(_post: FiresidePost) {}
 
 	async open(attachmentType?: string) {
-		let post: FiresidePost | undefined = await FiresidePost.$create(
-			this.game ? this.game.id : 0
-		);
+		if (PostEditModal.canShow) {
+			// Block the modal from appearing multiple times between the post request being sent and the modal opening
+			PostEditModal.blockModal();
 
-		post = await PostEditModal.show(post, { attachmentType: attachmentType || '' });
-		if (!post) {
-			return;
+			let post: FiresidePost | undefined = await FiresidePost.$create(
+				this.game ? this.game.id : 0
+			);
+
+			PostEditModal.unblockModal();
+
+			post = await PostEditModal.show(post, { attachmentType: attachmentType || '' });
+			if (!post) {
+				return;
+			}
+
+			this.add(post);
 		}
-
-		this.add(post);
 	}
 }
