@@ -1,4 +1,4 @@
-import View from '!view!./analytics.html?style=./analytics.styl';
+import View from '!view!./analytics.html';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
@@ -20,6 +20,7 @@ import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading
 import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
 import { date as dateFilter } from '../../../../lib/gj-lib-client/vue/filters/date';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+import { AppPageHeaderControls } from '../../../components/page-header/controls/controls';
 import { AppPageHeader } from '../../../components/page-header/page-header';
 import { SiteAnalyticsReport } from '../../../components/site-analytics/report-service';
 import {
@@ -54,6 +55,7 @@ import { AppAnalyticsReportTopCompositionValue } from './_report/top-composition
 	name: 'RouteDashAnalytics',
 	components: {
 		AppPageHeader,
+		AppPageHeaderControls,
 		AppJolticon,
 		AppExpand,
 		AppScrollAffix,

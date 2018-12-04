@@ -5,16 +5,13 @@ import { State } from 'vuex-class';
 import { Ads, AdSettingsContainer } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
-import { AppNavTabList } from '../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../lib/gj-lib-client/components/route/route-component';
-import { AppScrollScroller } from '../../../../lib/gj-lib-client/components/scroll/scroller/scroller';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import { AppGameGrid } from '../../../components/game/grid/grid';
 import { AppGameGridPlaceholder } from '../../../components/game/grid/placeholder/placeholder';
@@ -37,15 +34,12 @@ export interface DiscoverRow {
 	components: {
 		AppDiscoverHomeBanner,
 		AppDiscoverHomeTags,
-		AppNavTabList,
 		AppGameGrid,
 		AppGameGridPlaceholder,
 		AppAuthJoin: AppAuthJoinLazy,
-		AppScrollScroller,
 	},
 	directives: {
 		AppTrackEvent,
-		AppAuthRequired,
 	},
 })
 @RouteResolver({
@@ -92,7 +86,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		if ($payload.isFollowingFeatured && this.featuredItem && this.featuredItem.game) {
 			this.featuredItem!.game!.is_following = true;
 		}
-
 		this.games = Game.populate($payload.games);
 	}
 

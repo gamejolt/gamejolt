@@ -1,6 +1,6 @@
 import View from '!view!./soundtrack.html';
+import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
 import { Component } from 'vue-property-decorator';
-import { AppAd } from '../../../../../../../lib/gj-lib-client/components/ad/ad';
 import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { GameSong } from '../../../../../../../lib/gj-lib-client/components/game/song/song.model';
 import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
@@ -19,7 +19,7 @@ const DownloadDelay = 3000;
 @Component({
 	name: 'RouteDiscoverGamesViewDownloadSoundtrack',
 	components: {
-		AppAd,
+		AppAdWidget,
 		AppAdPlacement,
 		AppLoading,
 	},

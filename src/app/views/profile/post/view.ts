@@ -1,4 +1,4 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { CreateElement } from 'vue/types/vue';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { CommentThreadModal } from '../../../../lib/gj-lib-client/components/comment/thread/modal.service';
@@ -48,9 +48,6 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 	},
 })
 export default class RouteProfilePostView extends BaseRouteComponent {
-	@Prop()
-	slug!: string;
-
 	@RouteStoreModule.State
 	user!: RouteStore['user'];
 
@@ -61,7 +58,7 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		const hash = FiresidePost.pullHashFromUrl(this.slug);
+		const hash = FiresidePost.pullHashFromUrl(this.$route.params.slug);
 		this.post = Registry.find<FiresidePost>('FiresidePost', i => i.hash === hash);
 	}
 

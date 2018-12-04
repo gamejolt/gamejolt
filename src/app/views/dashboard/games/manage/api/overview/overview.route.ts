@@ -3,7 +3,6 @@ import { RouteConfig } from 'vue-router';
 export const routeDashGamesManageApiOverview: RouteConfig = {
 	name: 'dash.games.manage.api.overview',
 	path: '/dashboard/games/:id(\\d+)/api',
-	props: true,
 	component: () => import(/* webpackChunkName: "routeDashGamesManageApiOverview" */ './overview'),
 	children: [
 		{

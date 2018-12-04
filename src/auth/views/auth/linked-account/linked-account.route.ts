@@ -8,7 +8,6 @@ import { routeAuthLinkedAccountTwitterCallback } from './twitter/callback/callba
 export const routeAuthLinkedAccount: RouteConfig = {
 	name: 'auth.linked-account',
 	path: 'auth',
-	props: true,
 	component: () => import(/* webpackChunkName: "routeAuthLinkedAccount" */ './linked-account'),
 	meta: {
 		hideCoverImage: true,

@@ -45,10 +45,11 @@ class NotificationsBanner extends Banner {
 		}
 
 		// "store" is a circular dependency, so make sure it exists.
-		return (
+		return !!(
 			store &&
+			store.state.app.user &&
 			store.state.route.name &&
-			store.state.route.name.indexOf('activity.') === 0 &&
+			(store.state.route.name === 'home' || store.state.route.name === 'notifications') &&
 			'Notification' in window &&
 			(Notification as any).permission === 'default' &&
 			Settings.get('feed-notifications')

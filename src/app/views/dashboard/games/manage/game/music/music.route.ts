@@ -3,7 +3,6 @@ import { RouteConfig } from 'vue-router';
 export const routeDashGamesManageGameMusic: RouteConfig = {
 	name: 'dash.games.manage.game.music',
 	path: 'music',
-	props: true,
 	component: () => import(/* webpackChunkName: "routeDashGamesManageGameMusic" */ './music'),
 	children: [
 		{

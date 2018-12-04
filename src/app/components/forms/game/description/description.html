@@ -7,6 +7,7 @@
 		>
 
 		<app-form-control-markdown
+			ref="editor"
 			preview-class="game-compiled-description"
 			preview-url="/web/dash/developer/games/description/preview"
 			markdown-mode="games"
@@ -21,6 +22,7 @@
 	</app-form-group>
 
 	<app-form-game-description-tags
+		class="-tags"
 		:text="tagText"
 		:tags="tags"
 		@tag="addTag($event)"

@@ -1,8 +1,8 @@
-import Vue from 'vue';
 import Axios from 'axios';
+import Vue from 'vue';
 import {
-	TranslationLangs,
 	getTranslationLang,
+	TranslationLangs,
 } from '../lib/gj-lib-client/components/translate/translate.service';
 
 export function bootstrapAppTranslations() {
@@ -12,7 +12,7 @@ export function bootstrapAppTranslations() {
 	}
 
 	let lang = getTranslationLang();
-	let translations = require('!json-loader!../translations/en_US/main.json');
+	let translations = require('../translations/en_US/main.json');
 
 	const VueGettext = require('vue-gettext');
 	Vue.use(VueGettext, {
@@ -32,7 +32,7 @@ export async function loadCurrentLanguage(comp: Vue) {
 	// Don't use webpack to require directly. If we did it would generate
 	// new files for each section that we built for.
 	const response = await Axios({
-		url: require('!file-loader!../translations/' + comp.$language.current + '/main.json'),
+		url: require('../translations/' + comp.$language.current + '/main.json?file'),
 		ignoreLoadingBar: true,
 	});
 

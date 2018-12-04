@@ -1,12 +1,11 @@
 {
 	"compilerOptions": {
 		"target": "es5",
-		"moduleResolution": "node",
 		"module": "esnext",
-		"experimentalDecorators": true,
-		"removeComments": false,
+		"moduleResolution": "node",
 		"isolatedModules": true,
 		"strict": true,
+		"experimentalDecorators": true,
 		"strictFunctionTypes": false,
 		"noUnusedParameters": true,
 		"noUnusedLocals": true,
@@ -14,7 +13,12 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"importHelpers": true,
-		"lib": ["dom", "es2015", "es2017.object"]
+		"lib": [
+			"esnext",
+			"dom",
+			"dom.iterable",
+			"scripthost"
+		]
 	},
 	"exclude": ["build", "node_modules"]
 }

@@ -8,17 +8,17 @@ import {
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component, Watch } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
-import { AppActivityFeed } from '../../../components/activity/feed/feed';
-import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
-import { AppActivityFeedPlaceholder } from '../../../components/activity/feed/placeholder/placeholder';
-import { ActivityFeedView } from '../../../components/activity/feed/view';
-import { Store, store } from '../../../store';
+import { AppActivityFeed } from '../../components/activity/feed/feed';
+import { ActivityFeedService } from '../../components/activity/feed/feed-service';
+import { AppActivityFeedPlaceholder } from '../../components/activity/feed/placeholder/placeholder';
+import { ActivityFeedView } from '../../components/activity/feed/view';
+import { Store, store } from '../../store';
 
 const HistoryCacheFeedTag = 'notifications-feed';
 
 @View
 @Component({
-	name: 'RouteActivityNotifications',
+	name: 'RouteNotifications',
 	components: {
 		AppActivityFeed,
 		AppActivityFeedPlaceholder,
@@ -43,7 +43,7 @@ const HistoryCacheFeedTag = 'notifications-feed';
 		}
 	},
 })
-export default class RouteActivityNotifications extends BaseRouteComponent {
+export default class RouteNotifications extends BaseRouteComponent {
 	@State
 	notificationState!: Store['notificationState'];
 

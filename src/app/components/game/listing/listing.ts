@@ -1,7 +1,7 @@
 import View from '!view!./listing.html?style=./listing.styl';
+import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
@@ -19,7 +19,7 @@ import { GameListingContainer } from './listing-container-service';
 @View
 @Component({
 	components: {
-		AppAd,
+		AppAdWidget,
 		AppPagination,
 		AppLoadingFade,
 		AppGameFilteringWidget,

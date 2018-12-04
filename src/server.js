@@ -4,7 +4,9 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const cluster = require('cluster');
-const { createBundleRenderer } = require('vue-server-renderer');
+const {
+	createBundleRenderer
+} = require('vue-server-renderer');
 
 // We will restart each worker after around this many requests.
 const RestartRequestCount = 250;
@@ -50,7 +52,7 @@ if (cluster.isMaster) {
 	const renderer = createBundleRenderer(serverBundle, {
 		runInNewContext: true,
 		template: fs.readFileSync(resolve('./index-ssr.html'), 'utf-8'),
-		clientManifest,
+		// clientManifest,
 	});
 
 	if (!isProd) {

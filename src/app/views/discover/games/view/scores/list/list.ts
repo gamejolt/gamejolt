@@ -1,6 +1,6 @@
 import View from '!view!./list.html?style=./list.styl';
 import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
 import { GameScoreTable } from '../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
@@ -56,9 +56,6 @@ import { RouteStore, RouteStoreModule } from '../../view.store';
 	},
 })
 export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent {
-	@Prop(String)
-	type!: 'best' | 'user';
-
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
@@ -73,6 +70,10 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 	userScoreExperience = 0;
 
 	readonly Screen = Screen;
+
+	get type() {
+		return this.$route.params.type as 'user' | 'best';
+	}
 
 	// Even.
 	get scoresLeft() {

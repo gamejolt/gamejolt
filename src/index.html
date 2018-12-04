@@ -7,7 +7,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-		<% if (htmlWebpackPlugin.options._crawl) { %>
+		<% if (_crawl) { %>
 			<!-- Keep it from being crawled -->
 			<meta name="robots" content="noindex, nofollow">
 		<% } %>
@@ -17,7 +17,7 @@
 		<meta name="theme-color" content="#191919">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-		<% if (htmlWebpackPlugin.options._section === 'app') { %>
+		<% if (_section === 'app') { %>
 			<!-- Add to homescreen for Chrome on Android -->
 			<meta name="mobile-web-app-capable" content="yes">
 
@@ -52,7 +52,7 @@
 
 		</script>
 
-		<title><%= htmlWebpackPlugin.options._title %></title>
+		<title><%= _title %></title>
 
 		<!-- FB -->
 		<meta property="fb:app_id" content="410666682312265">
@@ -65,18 +65,18 @@
 
 	</head>
 
-	<body class="<%= htmlWebpackPlugin.options._bodyClass %>">
+	<body class="<%= _bodyClass %>" id="root">
 
 		<div id="app"></div>
 
 		<script async src="https://www.google-analytics.com/analytics.js"></script>
 		<script>
 			window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-			ga('create', '<%= !htmlWebpackPlugin.options._isClient ? `UA-6742777-1` : `UA-6742777-16` %>', 'auto');
+			ga('create', '<%= !_isClient ? `UA-6742777-1` : `UA-6742777-16` %>', 'auto');
 			ga('require', 'linkid', 'linkid.js');
 		</script>
 
-		<%= htmlWebpackPlugin.options._scripts %>
+		<%= _scripts %>
 
 	</body>
 </html>

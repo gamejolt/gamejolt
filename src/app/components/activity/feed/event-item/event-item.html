@@ -17,7 +17,6 @@
 					<div class="-header-avatar-inner">
 						<app-user-avatar
 							:user="user"
-							@click.native.stop
 							/>
 					</div>
 				</div>
@@ -25,14 +24,6 @@
 
 			<div class="-header-content">
 				<div class="-header-byline">
-					<div class="-header-byline-game" v-if="game && feed.shouldShowGameInfo">
-						<strong class="text-muted">
-							<router-link :to="gameUrl" class="link-unstyled">
-								{{ game.title }}
-							</router-link>
-						</strong>
-					</div>
-
 					<div class="-header-byline-name">
 						<strong>
 							<router-link
@@ -57,6 +48,14 @@
 								@{{ user.username }}
 							</router-link>
 						</small>
+					</div>
+
+					<div class="-header-byline-game" v-if="game && feed.shouldShowGameInfo">
+						<strong class="text-muted">
+							<router-link :to="gameUrl" class="link-unstyled">
+								{{ game.title }}
+							</router-link>
+						</strong>
 					</div>
 				</div>
 

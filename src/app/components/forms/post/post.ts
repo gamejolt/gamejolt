@@ -3,7 +3,10 @@ import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { AppFormAutosize } from 'game-jolt-frontend-lib/components/form-vue/autosize.directive';
+import {
+	AppFormAutosize,
+	AutosizeBootstrap,
+} from 'game-jolt-frontend-lib/components/form-vue/autosize.directive';
 import { AppFormControlCheckbox } from 'game-jolt-frontend-lib/components/form-vue/control/checkbox/checkbox';
 import { AppFormControlDate } from 'game-jolt-frontend-lib/components/form-vue/control/date/date';
 import { AppFormControlMarkdown } from 'game-jolt-frontend-lib/components/form-vue/control/markdown/markdown';
@@ -38,12 +41,13 @@ import { AppLoading } from 'game-jolt-frontend-lib/vue/components/loading/loadin
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { determine } from 'jstimezonedetect';
 import { Component, Prop } from 'vue-property-decorator';
+import { AppFormPostTags } from './tags/tags';
 import { AppFormPostMedia } from './_media/media';
 
 type FormPostModel = FiresidePost & {
 	mediaItemIds: number[];
 	publishToPlatforms: number[] | null;
-	key_group_ids: KeyGroup[];
+	key_group_ids: number[];
 	video_url: string;
 	sketchfab_id: string;
 
@@ -80,6 +84,7 @@ type FormPostModel = FiresidePost & {
 		AppUserAvatarImg,
 		AppProgressBar,
 		AppFormPostMedia,
+		AppFormPostTags,
 	},
 	directives: {
 		AppFocusWhen,
@@ -109,6 +114,7 @@ export class FormPost extends BaseForm<FormPostModel>
 	readonly MAX_POLL_DURATION = 20160;
 
 	keyGroups: KeyGroup[] = [];
+	featuredTags: string[] = [];
 	wasPublished = false;
 	attachmentType = '';
 	enabledAttachments = false;
@@ -127,6 +133,8 @@ export class FormPost extends BaseForm<FormPostModel>
 	leadLengthLimit = 255;
 	leadTotalLengthLimit = 300;
 	isUploadingPastedImage = false;
+
+	private updateAutosize?: () => void;
 
 	readonly GameVideo = GameVideo;
 	readonly Screen = Screen;
@@ -201,6 +209,11 @@ export class FormPost extends BaseForm<FormPostModel>
 		return this.longEnabled;
 	}
 
+	get tagText() {
+		const longText = this.longEnabled ? this.formModel.content_markdown : '';
+		return `${this.formModel.lead} ${longText || ''}`;
+	}
+
 	get hasPoll() {
 		return this.formModel.poll_item_count > 0;
 	}
@@ -262,7 +275,7 @@ export class FormPost extends BaseForm<FormPostModel>
 
 		const urlRegex = new RegExp(
 			// Separate by no-word or start of string.
-			'(^|\\W)' +
+			'(^|[^\\w@])' +
 				// Optional http/s protocol.
 				'(https?:\\/\\/)?' +
 				// Subdomain and main domain.
@@ -272,10 +285,13 @@ export class FormPost extends BaseForm<FormPostModel>
 				// Port number.
 				'(:(6553[0-5]|655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[0-9]{1,4}))?' +
 				// Path.
+				// tslint:disable-next-line:quotemark
 				"(\\/([a-z0-9-\\._~!$&'\\(\\)\\*\\+,;=:@%]{1,})?)*" +
 				// Query.
+				// tslint:disable-next-line:quotemark max-line-length
 				"(\\?[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]{1,}(=[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]*)?(&[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]{1,}(=[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]*)?)*)?" +
 				// Fragment.
+				// tslint:disable-next-line:quotemark
 				"(#[a-z0-9-\\._~:@\\/\\?!$&'\\(\\)\\*\\+,;=%]{1,})?" +
 				// Lookahead to end url.
 				'(?=\\W|$)',
@@ -415,6 +431,7 @@ export class FormPost extends BaseForm<FormPostModel>
 
 	onLoad(payload: any) {
 		this.keyGroups = KeyGroup.populate(payload.keyGroups);
+		this.featuredTags = payload.tags;
 		this.wasPublished = payload.wasPublished;
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
@@ -479,6 +496,14 @@ export class FormPost extends BaseForm<FormPostModel>
 		Object.assign(this.model as FiresidePost, this.formModel);
 	}
 
+	/**
+	 * This is called when the autosize directive is bootstrapped. It passes us
+	 * some hooks that we can call to modify it.
+	 */
+	bootstrapAutosize({ updater }: AutosizeBootstrap) {
+		this.updateAutosize = updater;
+	}
+
 	enableImages() {
 		this.enabledAttachments = true;
 		this.attachmentType = FiresidePost.TYPE_MEDIA;
@@ -519,6 +544,16 @@ export class FormPost extends BaseForm<FormPostModel>
 
 	toggleLong() {
 		this.longEnabled = !this.longEnabled;
+	}
+
+	async addTag(tag: string) {
+		const newLead = this.formModel.lead ? `${this.formModel.lead} #${tag}` : `#${tag}`;
+		this.setField('lead', newLead);
+
+		if (this.updateAutosize) {
+			await this.$nextTick();
+			this.updateAutosize();
+		}
 	}
 
 	createPoll() {
@@ -734,7 +769,7 @@ export class FormPost extends BaseForm<FormPostModel>
 			{},
 			{
 				file: files,
-				progress: e => this.setField('_progress', e),
+				progress: e2 => this.setField('_progress', e2),
 			}
 		);
 

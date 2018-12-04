@@ -8,7 +8,7 @@ import {
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
 import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { CreateElement } from 'vue/types/vue';
 import { CommentThreadModal } from '../../../../../../../lib/gj-lib-client/components/comment/thread/modal.service';
 import { IntentService } from '../../../../../../components/intent/intent.service';
@@ -48,9 +48,6 @@ import { RouteStore, RouteStoreModule } from '../../view.store';
 	},
 })
 export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent {
-	@Prop()
-	postSlug!: string;
-
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
@@ -61,7 +58,7 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 	}
 
 	routeCreated() {
-		const hash = FiresidePost.pullHashFromUrl(this.postSlug);
+		const hash = FiresidePost.pullHashFromUrl(this.$route.params.postSlug);
 		this.post = Registry.find<FiresidePost>('FiresidePost', i => i.hash === hash);
 	}
 

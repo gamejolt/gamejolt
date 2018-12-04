@@ -4,8 +4,7 @@ import { routeDiscoverGames } from './games/games.route';
 import { routeDiscoverHome } from './home/home.route';
 
 export const routeDiscover: RouteConfig = {
-	path: '/',
-	props: true,
+	path: '',
 	component: RouteDiscover,
 	children: [routeDiscoverHome, routeDiscoverGames],
 };
