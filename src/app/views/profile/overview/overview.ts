@@ -18,12 +18,14 @@ import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { YoutubeChannel } from 'game-jolt-frontend-lib/components/youtube/channel/channel-model';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { Action, State } from 'vuex-class';
 import { Comment } from '../../../../lib/gj-lib-client/components/comment/comment-model';
 import {
 	LinkedAccount,
 	Provider,
 } from '../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
+import { ChatClient } from '../../../components/chat/client';
+import { ChatUser } from '../../../components/chat/user';
 import { AppCommentOverview } from '../../../components/comment/overview/overview';
 import { AppPageContainer } from '../../../components/page-container/page-container';
 import { Store } from '../../../store/index';
@@ -87,6 +89,12 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	@RouteStoreModule.Action
 	removeFriend!: RouteStore['removeFriend'];
 
+	@Action
+	toggleRightPane!: Store['toggleRightPane'];
+
+	@State
+	chat?: ChatClient;
+
 	showFullDescription = false;
 	canToggleDescription = false;
 	games: Game[] = [];
@@ -129,6 +137,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	get hasQuickButtonsSection() {
 		return (
 			this.canAddAsFriend ||
+			this.canOpenChatroom ||
 			(Screen.isMobile && (this.gamesCount > 0 || this.videosCount > 0))
 		);
 	}
@@ -189,6 +198,14 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return this.user && !Screen.isMobile && this.user.shouts_enabled;
 	}
 
+	get isFriend() {
+		return this.userFriendship && this.userFriendship.state === UserFriendship.STATE_FRIENDS;
+	}
+
+	get canOpenChatroom() {
+		return this.isFriend && this.chat && this.chat.connected;
+	}
+
 	getLinkedAccount(provider: Provider) {
 		if (
 			this.user &&
@@ -224,6 +241,16 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 				resourceId: this.user.id,
 				displayMode: 'shouts',
 			});
+		}
+	}
+
+	openChatroom() {
+		if (this.user && this.chat) {
+			const chatUser = this.chat.friendsList.collection.find(u => u.id === this.user!.id);
+			if (chatUser instanceof ChatUser) {
+				this.toggleRightPane();
+				this.chat.enterRoom(chatUser.roomId);
+			}
 		}
 	}
 }
