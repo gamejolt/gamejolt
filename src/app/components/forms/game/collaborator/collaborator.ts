@@ -14,7 +14,7 @@ import { Game } from '../../../../../lib/gj-lib-client/components/game/game.mode
 		AppFocusWhen,
 	},
 })
-export class FormCollaborator extends BaseForm<Collaborator> implements FormOnInit {
+export class FormGameCollaborator extends BaseForm<Collaborator> implements FormOnInit {
 	modelClass = Collaborator;
 	saveMethod = '$invite' as '$invite';
 	resetOnSubmit = true;

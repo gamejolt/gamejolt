@@ -13,7 +13,7 @@ import {
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppTimeAgo } from '../../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { arrayRemove } from '../../../../../../lib/gj-lib-client/utils/array';
-import { FormCollaborator } from '../../../../../components/forms/game/collaborator/collaborator';
+import { FormGameCollaborator } from '../../../../../components/forms/game/collaborator/collaborator';
 import { RouteStore, RouteStoreModule } from '../manage.store';
 
 @View
@@ -24,7 +24,7 @@ import { RouteStore, RouteStoreModule } from '../manage.store';
 		AppCardList,
 		AppCardListItem,
 		AppCardListAdd,
-		FormCollaborator,
+		FormGameCollaborator,
 	},
 })
 @RouteResolver({
