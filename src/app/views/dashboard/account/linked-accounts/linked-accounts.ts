@@ -66,6 +66,10 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 		return this.getAccount(LinkedAccount.PROVIDER_TUMBLR);
 	}
 
+	get mixerAccount() {
+		return this.getAccount(LinkedAccount.PROVIDER_MIXER);
+	}
+
 	getAccount(provider: string) {
 		if (this.accounts) {
 			for (const account of this.accounts) {
