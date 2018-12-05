@@ -121,6 +121,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 				case LinkedAccount.PROVIDER_GOOGLE:
 				case LinkedAccount.PROVIDER_TWITCH:
 				case LinkedAccount.PROVIDER_TUMBLR:
+				case LinkedAccount.PROVIDER_MIXER:
 					{
 						const account = new LinkedAccount($payload.account);
 						Growls.success(
