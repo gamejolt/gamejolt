@@ -79,7 +79,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	get shouldShowLoadNew() {
 		// We need to access the reactive community from the Store here to react to is_unread changing
-		const stateCommunity = this.communities.find(c => c.id == this.community.id);
+		const stateCommunity = this.communities.find(c => c.id === this.community.id);
 		if (stateCommunity) {
 			return this.activeTag === TAG_FEATURED && stateCommunity.is_unread;
 		}

@@ -4,7 +4,7 @@ import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.serv
 import { AppCardListAdd } from '../../../../../../lib/gj-lib-client/components/card/list/add/add';
 import { AppCardListItem } from '../../../../../../lib/gj-lib-client/components/card/list/item/item';
 import { AppCardList } from '../../../../../../lib/gj-lib-client/components/card/list/list';
-import { GameCollaborator } from '../../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
+import { Collaborator } from '../../../../../../lib/gj-lib-client/components/collaborator/collaborator.model';
 import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
 import { ModalConfirm } from '../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
@@ -13,7 +13,7 @@ import {
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppTimeAgo } from '../../../../../../lib/gj-lib-client/components/time/ago/ago';
 import { arrayRemove } from '../../../../../../lib/gj-lib-client/utils/array';
-import { FormGameCollaborator } from '../../../../../components/forms/game/collaborator/collaborator';
+import { FormCollaborator } from '../../../../../components/forms/game/collaborator/collaborator';
 import { RouteStore, RouteStoreModule } from '../manage.store';
 
 @View
@@ -24,7 +24,7 @@ import { RouteStore, RouteStoreModule } from '../manage.store';
 		AppCardList,
 		AppCardListItem,
 		AppCardListAdd,
-		FormGameCollaborator,
+		FormCollaborator,
 	},
 })
 @RouteResolver({
@@ -36,11 +36,11 @@ export default class RouteDashGamesManageCollaborators extends BaseRouteComponen
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
-	collaborators: GameCollaborator[] = [];
-	activeCollaborator: GameCollaborator | null = null;
+	collaborators: Collaborator[] = [];
+	activeCollaborator: Collaborator | null = null;
 	isAdding = false;
 
-	readonly GameCollaborator = GameCollaborator;
+	readonly Collaborator = Collaborator;
 
 	get routeTitle() {
 		if (this.game) {
@@ -52,13 +52,13 @@ export default class RouteDashGamesManageCollaborators extends BaseRouteComponen
 	}
 
 	routeResolved($payload: any) {
-		this.collaborators = GameCollaborator.populate($payload.collaborators);
+		this.collaborators = Collaborator.populate($payload.collaborators);
 		if (!this.collaborators.length) {
 			this.isAdding = true;
 		}
 	}
 
-	onAdded(collaborator: GameCollaborator) {
+	onAdded(collaborator: Collaborator) {
 		this.isAdding = false;
 		this.collaborators.push(collaborator);
 	}
@@ -67,7 +67,7 @@ export default class RouteDashGamesManageCollaborators extends BaseRouteComponen
 		this.activeCollaborator = null;
 	}
 
-	async remove(collaborator: GameCollaborator) {
+	async remove(collaborator: Collaborator) {
 		const ret = await ModalConfirm.show(
 			this.$gettext(
 				`Are you sure you want to remove this collaborator? They will no longer be able to make changes to the game.`

@@ -1,11 +1,11 @@
 import { LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
 import { namespace } from 'vuex-class';
+import { Collaborator } from '../../../../../lib/gj-lib-client/components/collaborator/collaborator.model';
 import { Comment } from '../../../../../lib/gj-lib-client/components/comment/comment-model';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
-import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
 import {
 	CustomMessage as CustomGameMessage,
 	Game,
@@ -35,8 +35,8 @@ type RouteMutations = {
 	bootstrapGame: number;
 	processPayload: any;
 	processOverviewPayload: { payload: any; fromCache: boolean };
-	acceptCollaboratorInvite: GameCollaborator;
-	declineCollaboratorInvite: GameCollaborator;
+	acceptCollaboratorInvite: Collaborator;
+	declineCollaboratorInvite: Collaborator;
 	pushVideoComments: CommentVideo[];
 	showMultiplePackagesMessage: undefined;
 	toggleDescription: undefined;
@@ -82,7 +82,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	partnerKey = '';
 	partner: User | null = null;
 
-	collaboratorInvite: GameCollaborator | null = null;
+	collaboratorInvite: Collaborator | null = null;
 
 	userRating: GameRating | null = null;
 
@@ -212,7 +212,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 		this.twitterShareMessage = payload.twitterShareMessage || 'Check out this game!';
 
 		this.userPartnerKey = payload.userPartnerKey;
-		this.collaboratorInvite = payload.invite ? new GameCollaborator(payload.invite) : null;
+		this.collaboratorInvite = payload.invite ? new Collaborator(payload.invite) : null;
 	}
 
 	@VuexMutation

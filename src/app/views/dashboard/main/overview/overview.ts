@@ -4,12 +4,12 @@ import { State } from 'vuex-class';
 import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { AppCard } from '../../../../../lib/gj-lib-client/components/card/card';
+import { Collaborator } from '../../../../../lib/gj-lib-client/components/collaborator/collaborator.model';
 import { AppCommentVideoThumbnail } from '../../../../../lib/gj-lib-client/components/comment/video/thumbnail/thumbnail';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { Jam } from '../../../../../lib/gj-lib-client/components/jam/jam.model';
 import { Notification } from '../../../../../lib/gj-lib-client/components/notification/notification-model';
@@ -61,7 +61,7 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 	walletBalance = 0;
 
 	games: Game[] = [];
-	collabs: GameCollaborator[] = [];
+	collabs: Collaborator[] = [];
 	videos: CommentVideo[] = [];
 	videosCount = 0;
 	jams: Jam[] = [];
@@ -104,10 +104,10 @@ export default class RouteDashMainOverview extends BaseRouteComponent {
 			this.walletBalance = $payload.walletBalance || 0;
 		}
 
-		const items: (Game | GameCollaborator)[] = [];
+		const items: (Game | Collaborator)[] = [];
 		this.games = items
 			.concat(Game.populate($payload.games))
-			.concat(GameCollaborator.populate($payload.collaborations))
+			.concat(Collaborator.populate($payload.collaborations))
 			.sort((a, b) =>
 				numberSort(
 					a instanceof Game ? a.posted_on : a.accepted_on,

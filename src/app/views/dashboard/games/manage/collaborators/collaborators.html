@@ -37,19 +37,19 @@
 
 						<div class="card-meta">
 							<span class="tag">
-								<template v-if="collaborator.role === GameCollaborator.ROLE_COLLABORATOR">
+								<template v-if="collaborator.role === Collaborator.ROLE_GAME_COLLABORATOR">
 									<translate>Collaborator</translate>
 								</template>
-								<template v-else-if="collaborator.role === GameCollaborator.ROLE_COMMUNITY_MANAGER">
+								<template v-else-if="collaborator.role === Collaborator.ROLE_GAME_COMMUNITY_MANAGER">
 									<translate>Community Manager</translate>
 								</template>
-								<template v-else-if="collaborator.role === GameCollaborator.ROLE_DEVELOPER">
+								<template v-else-if="collaborator.role === Collaborator.ROLE_GAME_DEVELOPER">
 									<translate>Developer</translate>
 								</template>
 								<template v-else>-</template>
 							</span>
 
-							<template v-if="collaborator.status !== GameCollaborator.STATUS_ACTIVE">
+							<template v-if="collaborator.status !== Collaborator.STATUS_ACTIVE">
 								<span class="tag"><translate>Invited</translate></span>
 								<br>
 								<translate>This user hasn't accepted their invitation yet.</translate>
