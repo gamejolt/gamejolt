@@ -166,6 +166,10 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return null;
 	}
 
+	get mixerAccount() {
+		return this.getLinkedAccount(LinkedAccount.PROVIDER_MIXER);
+	}
+
 	get addCommentPlaceholder() {
 		if (!this.user) {
 			return undefined;
