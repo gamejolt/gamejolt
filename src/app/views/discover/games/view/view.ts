@@ -300,11 +300,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 			return;
 		}
 
-		// If our resource changed, we have to reset with new settings.
-		if (Ads.settings.resource && Ads.settings.resource.id === this.game.id) {
-			return;
-		}
-
 		let mat: string | undefined = undefined;
 		if (this.game.tigrs_age === 1) {
 			mat = 'everyone';
