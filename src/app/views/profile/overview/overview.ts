@@ -95,12 +95,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	youtubeChannels: YoutubeChannel[] = [];
 	linkedAccounts: LinkedAccount[] = [];
 
-	static readonly PROVIDERS: Provider[] = [
-		LinkedAccount.PROVIDER_TWITTER,
-		LinkedAccount.PROVIDER_GOOGLE,
-		LinkedAccount.PROVIDER_TWITCH,
-	];
-
 	readonly User = User;
 	readonly UserFriendship = UserFriendship;
 	readonly Screen = Screen;
