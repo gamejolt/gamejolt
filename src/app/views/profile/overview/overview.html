@@ -149,6 +149,16 @@
 									{{ twitchAccount.name }}
 								</a>
 							</div>
+							<div v-if="mixerAccount">
+								<a
+									class="link-unstyled"
+									:href="mixerAccount.platformLink"
+									target="_blank"
+									>
+									<app-jolticon :icon="mixerAccount.icon" />
+									{{ mixerAccount.name }}
+								</a>
+							</div>
 							<div v-if="twitterAccount">
 								<a
 									class="link-unstyled"

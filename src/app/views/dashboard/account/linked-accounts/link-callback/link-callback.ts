@@ -14,6 +14,23 @@ import {
 } from '../../../../../../lib/gj-lib-client/components/route/route-component';
 import { AppState, AppStore } from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 
+function constructUrl(baseUrl: string, route: Route) {
+	let url = baseUrl + route.params.provider;
+	let firstParam = true;
+
+	for (const param of ['oauth_verifier', 'state', 'code']) {
+		const value = route.query[param];
+		if (value) {
+			url += (firstParam ? '?' : '&') + param + '=' + value;
+			firstParam = false;
+		}
+	}
+
+	url += (firstParam ? '?' : '&') + 'resource=User';
+
+	return url;
+}
+
 @Component({
 	name: 'RouteDashAccountLinkedAccountsLinkCallback',
 })
@@ -29,10 +46,7 @@ import { AppState, AppStore } from '../../../../../../lib/gj-lib-client/vue/serv
 				'&state=' +
 				route.query.state;
 		} else {
-			url = RouteDashAccountLinkedAccountsLinkCallback.constructUrl(
-				'/web/dash/linked-accounts/link-callback/',
-				route
-			);
+			url = constructUrl('/web/dash/linked-accounts/link-callback/', route);
 		}
 
 		// Force POST.
@@ -42,23 +56,6 @@ import { AppState, AppStore } from '../../../../../../lib/gj-lib-client/vue/serv
 export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRouteComponent {
 	@AppState
 	user!: AppStore['user'];
-
-	private static constructUrl(baseUrl: string, route: Route) {
-		let url = baseUrl + route.params.provider;
-		let firstParam = true;
-
-		for (const param of ['oauth_verifier', 'state', 'code']) {
-			const value = route.query[param];
-			if (value) {
-				url += (firstParam ? '?' : '&') + param + '=' + value;
-				firstParam = false;
-			}
-		}
-
-		url += (firstParam ? '?' : '&') + 'resource=User';
-
-		return url;
-	}
 
 	routeResolved($payload: any) {
 		if (!this.user) {
@@ -121,6 +118,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 				case LinkedAccount.PROVIDER_GOOGLE:
 				case LinkedAccount.PROVIDER_TWITCH:
 				case LinkedAccount.PROVIDER_TUMBLR:
+				case LinkedAccount.PROVIDER_MIXER:
 					{
 						const account = new LinkedAccount($payload.account);
 						Growls.success(
