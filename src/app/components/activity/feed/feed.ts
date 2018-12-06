@@ -86,7 +86,7 @@ export class AppActivityFeed extends Vue {
 
 			// Auto-loading while scrolling.
 			if (this.feed.shouldScrollLoadMore) {
-				const feedOffset = Ruler.offset(this.$el);
+				const feedOffset = Ruler.offset(this.$el as HTMLElement);
 				const feedBottom = feedOffset.top + feedOffset.height;
 				const scrollBottom = top + height;
 
