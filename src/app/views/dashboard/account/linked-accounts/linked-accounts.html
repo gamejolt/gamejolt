@@ -53,6 +53,16 @@
 				show-tumblr-blog
 				/>
 		</div>
+		<div class="col-md-8 col-lg-6">
+			<app-linked-account
+				:account="mixerAccount"
+				:disabled="loading"
+				provider="mixer"
+				@link="onLink"
+				@sync="onLink"
+				@unlink="onUnlink"
+				/>
+		</div>
     </div>
 
 	<div class="row">

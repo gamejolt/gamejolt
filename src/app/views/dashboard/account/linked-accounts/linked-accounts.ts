@@ -32,7 +32,7 @@ import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 	deps: {},
 	resolver: () => Api.sendRequest('/web/dash/linked-accounts?resource=User'),
 	resolveStore({}) {
-		routeStore.commit('setHeading', Translate.$gettext(`LinkedAccounts`));
+		routeStore.commit('setHeading', Translate.$gettext(`Linked Accounts`));
 	},
 })
 export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
@@ -64,6 +64,10 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 
 	get tumblrAccount() {
 		return this.getAccount(LinkedAccount.PROVIDER_TUMBLR);
+	}
+
+	get mixerAccount() {
+		return this.getAccount(LinkedAccount.PROVIDER_MIXER);
 	}
 
 	getAccount(provider: string) {
