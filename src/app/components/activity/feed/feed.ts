@@ -59,6 +59,8 @@ export class AppActivityFeed extends Vue {
 
 	readonly number = number;
 
+	$el!: HTMLDivElement;
+
 	@Emit('edit-post')
 	emitEditPost(_eventItem: EventItem) {}
 

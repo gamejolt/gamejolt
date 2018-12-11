@@ -28,6 +28,8 @@ export class AppActivityFeedDevlogPostText extends Vue {
 
 	isToggling = false;
 
+	$el!: HTMLDivElement;
+
 	get isHydrated() {
 		return this.feed.isItemHydrated(this.item);
 	}
@@ -65,7 +67,7 @@ export class AppActivityFeedDevlogPostText extends Vue {
 	collapse() {
 		// We will scroll to the bottom of the element minus some extra padding.
 		// This keeps the element in view a bit.
-		const elementOffset = Scroll.getElementOffsetFromContext(this.$el);
+		const elementOffset = Scroll.getElementOffsetTopFromContext(this.$el);
 		const scrollTo = elementOffset - Screen.windowHeight * 0.25;
 
 		// Only if we're past where we would scroll.
