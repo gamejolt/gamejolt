@@ -37,28 +37,24 @@ export class AppCommentOverview extends Vue {
 	@CommentState
 	getCommentStore!: CommentStore['getCommentStore'];
 
-	previousCommentCount?: number = undefined;
-
-	get storeParentCommentsCount() {
+	get commentStoreDirtyState() {
 		const store = this.getCommentStore(this.resource, this.resourceId);
 		if (store instanceof CommentStoreModel) {
-			return store.parentComments.length;
+			return store.overviewNeedsRefresh;
 		}
+		return false;
 	}
 
-	@Watch('storeParentCommentsCount')
+	@Watch('commentStoreDirtyState')
 	reloadComments() {
-		if (this.storeParentCommentsCount === undefined) {
-			return;
-		}
-		if (
-			this.previousCommentCount === undefined ||
-			Math.abs(this.previousCommentCount - this.storeParentCommentsCount) === 1
-		) {
-			// When the store's parent comments update, emit event prompting to refetch the preview comments.
+		if (this.commentStoreDirtyState) {
+			const store = this.getCommentStore(this.resource, this.resourceId);
+			if (store instanceof CommentStoreModel) {
+				store.overviewNeedsRefresh = false;
+			}
+
 			this.$emit('reload-comments');
 		}
-		this.previousCommentCount = this.storeParentCommentsCount;
 	}
 
 	open(comment: Comment) {

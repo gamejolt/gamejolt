@@ -6,6 +6,7 @@ import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { AppCard } from 'game-jolt-frontend-lib/components/card/card';
 import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
 import { AppCommentAddButton } from 'game-jolt-frontend-lib/components/comment/add-button/add-button';
+import { Comment } from 'game-jolt-frontend-lib/components/comment/comment-model';
 import {
 	CommentState,
 	CommentStore,
@@ -15,6 +16,7 @@ import { Environment } from 'game-jolt-frontend-lib/components/environment/envir
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppGameExternalPackageCard } from 'game-jolt-frontend-lib/components/game/external-package/card/card';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { AppGamePackageCard } from 'game-jolt-frontend-lib/components/game/package/card/card';
 import { AppGameSoundtrackCard } from 'game-jolt-frontend-lib/components/game/soundtrack/card/card';
 import { HistoryTick } from 'game-jolt-frontend-lib/components/history-tick/history-tick-service';
@@ -173,6 +175,9 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	@RouteStoreModule.Mutation
 	setCanToggleDescription!: RouteStore['setCanToggleDescription'];
 
+	@RouteStoreModule.Mutation
+	setOverviewComments!: RouteStore['setOverviewComments'];
+
 	@CommentState
 	getCommentStore!: CommentStore['getCommentStore'];
 
@@ -260,5 +265,15 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	onPostAdded(post: FiresidePost) {
 		ActivityFeedService.onPostAdded(this.feed!, post, this);
+	}
+
+	async reloadPreviewComments() {
+		if (this.game instanceof Game) {
+			const $payload = await Api.sendRequest(
+				'/web/discover/games/comment-info/' + this.game.id
+			);
+
+			this.setOverviewComments(Comment.populate($payload.comments));
+		}
 	}
 }
