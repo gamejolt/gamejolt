@@ -28,7 +28,10 @@ export class AppDiscoverGamesViewOverviewDetails extends Vue {
 	date = date;
 
 	get creationTool() {
-		if (this.game.creation_tool_human === Game.CREATION_TOOL_OTHER) {
+		if (
+			this.game.creation_tool_human === Game.CREATION_TOOL_OTHER &&
+			this.game.creation_tool_other
+		) {
 			return this.game.creation_tool_other;
 		}
 		return this.game.creation_tool_human;
