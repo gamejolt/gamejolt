@@ -1,4 +1,5 @@
 import View from '!view!./footer.html?style=./footer.styl';
+import { hasPlaywire } from 'game-jolt-frontend-lib/components/ad/ads.service';
 import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
@@ -36,6 +37,11 @@ export class AppShellFooter extends Vue {
 
 	get clientVersion() {
 		return GJ_VERSION;
+	}
+
+	get shouldShowAd() {
+		// We just don't show footer ads with playwire for now.
+		return !hasPlaywire(this.$route);
 	}
 
 	async showSystemReport() {
