@@ -23,16 +23,18 @@ export class AppPostAddButton extends Vue {
 	@Emit()
 	add(_post: FiresidePost) {}
 
+	_isBlocked = false;
+
 	async open(attachmentType?: string) {
 		if (PostEditModal.canShow) {
 			// Block the modal from appearing multiple times between the post request being sent and the modal opening
-			PostEditModal.blockModal();
+			this._isBlocked = true;
 
 			let post: FiresidePost | undefined = await FiresidePost.$create(
 				this.game ? this.game.id : 0
 			);
 
-			PostEditModal.unblockModal();
+			this._isBlocked = false;
 
 			post = await PostEditModal.show(post, { attachmentType: attachmentType || '' });
 			if (!post) {
