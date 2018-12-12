@@ -112,11 +112,12 @@
 							<translate>profile.friend_request_button</translate>
 						</app-button>
 						<app-button
-							v-else-if="canOpenChatroom"
+							v-else-if="canMessage"
 							block
-							@click="openChatroom"
+							icon="user-messages"
+							@click="openMessaging"
 							>
-							<translate>Chat with</translate> @{{user.username}}
+							<translate>Message</translate>
 						</app-button>
 
 						<template v-if="Screen.isMobile">

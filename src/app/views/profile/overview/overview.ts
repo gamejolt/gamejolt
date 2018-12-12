@@ -131,7 +131,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	get hasQuickButtonsSection() {
 		return (
 			this.canAddAsFriend ||
-			this.canOpenChatroom ||
+			this.canMessage ||
 			(Screen.isMobile && (this.gamesCount > 0 || this.videosCount > 0))
 		);
 	}
@@ -200,7 +200,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return this.userFriendship && this.userFriendship.state === UserFriendship.STATE_FRIENDS;
 	}
 
-	get canOpenChatroom() {
+	get canMessage() {
 		return this.isFriend && this.chat && this.chat.connected;
 	}
 
@@ -242,7 +242,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		}
 	}
 
-	openChatroom() {
+	openMessaging() {
 		if (this.user && this.chat) {
 			const chatUser = this.chat.friendsList.collection.find(u => u.id === this.user!.id);
 			if (chatUser instanceof ChatUser) {
