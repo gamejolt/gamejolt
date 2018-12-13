@@ -1,34 +1,33 @@
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./release.html?style=./release.styl';
-
-import { GameRelease } from '../../../../../lib/gj-lib-client/components/game/release/release.model';
+import * as addWeeks from 'date-fns/add_weeks';
+import * as startOfDay from 'date-fns/start_of_day';
+import { AppCardList } from 'game-jolt-frontend-lib/components/card/list/list';
+import { AppFormControlDate } from 'game-jolt-frontend-lib/components/form-vue/control/date/date';
+import { AppForm } from 'game-jolt-frontend-lib/components/form-vue/form';
 import {
 	BaseForm,
 	FormOnInit,
-	FormOnSubmitSuccess,
 	FormOnLoad,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
-import { GameBuildLaunchOption } from '../../../../../lib/gj-lib-client/components/game/build/launch-option/launch-option.model';
-import { arrayRemove } from '../../../../../lib/gj-lib-client/utils/array';
-import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { FormGameBuild } from '../build/build';
-import { FormGameNewBuild } from '../new-build/new-build';
-import { AppCardList } from '../../../../../lib/gj-lib-client/components/card/list/list';
+	FormOnSubmitSuccess,
+} from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { AppFormLegend } from 'game-jolt-frontend-lib/components/form-vue/legend/legend';
+import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
+import { GameBuildLaunchOption } from 'game-jolt-frontend-lib/components/game/build/launch-option/launch-option.model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
+import { GameRelease } from 'game-jolt-frontend-lib/components/game/release/release.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
 import {
 	Timezone,
 	TimezoneData,
-} from '../../../../../lib/gj-lib-client/components/timezone/timezone.service';
-import * as startOfDay from 'date-fns/start_of_day';
-import * as addWeeks from 'date-fns/add_weeks';
+} from 'game-jolt-frontend-lib/components/timezone/timezone.service';
+import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
+import { AppJolticon } from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon';
 import { determine } from 'jstimezonedetect';
-import { AppFormControlDate } from '../../../../../lib/gj-lib-client/components/form-vue/control/date/date';
-import { AppFormLegend } from '../../../../../lib/gj-lib-client/components/form-vue/legend/legend';
+import { Component, Prop } from 'vue-property-decorator';
+import { FormGameBuild } from '../build/build';
+import { FormGameNewBuild } from '../new-build/new-build';
 
 type GameReleaseFormModel = GameRelease & {
 	should_publish: boolean;
@@ -49,13 +48,26 @@ export class FormGameRelease extends BaseForm<GameReleaseFormModel>
 	implements FormOnInit, FormOnLoad, FormOnSubmitSuccess {
 	modelClass = GameRelease as any;
 
-	@Prop(Game) game!: Game;
-	@Prop(GamePackage) package!: GamePackage;
-	@Prop(Array) builds!: GameBuild[];
-	@Prop(Array) launchOptions!: GameBuildLaunchOption[];
-	@Prop(Object) buildDownloadCounts!: { [buildId: number]: number };
-	@Prop(Boolean) areBuildsLockedByJam!: boolean;
-	@Prop(Boolean) areWebBuildsLockedBySellable!: boolean;
+	@Prop(Game)
+	game!: Game;
+
+	@Prop(GamePackage)
+	package!: GamePackage;
+
+	@Prop(Array)
+	builds!: GameBuild[];
+
+	@Prop(Array)
+	launchOptions!: GameBuildLaunchOption[];
+
+	@Prop(Object)
+	buildDownloadCounts!: { [buildId: number]: number };
+
+	@Prop(Boolean)
+	areBuildsLockedByJam!: boolean;
+
+	@Prop(Boolean)
+	areWebBuildsLockedBySellable!: boolean;
 
 	$refs!: {
 		form: AppForm;
