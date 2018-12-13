@@ -6,16 +6,11 @@ export type PostEditModalOptions = {
 	attachmentType?: string;
 };
 
-const MODAL_ID = 'PostEditModal';
-
 export class PostEditModal {
-	static get canShow() {
-		return Modal.canAddToStack(MODAL_ID);
-	}
-
 	static async show(post: FiresidePost, options: PostEditModalOptions = {}) {
 		options = options || {};
 		return await Modal.show<FiresidePost>({
+			modalId: 'PostEdit',
 			component: () =>
 				asyncComponentLoader(
 					import(/* webpackChunkName: "PostEditModal" */ './edit-modal')
@@ -27,7 +22,6 @@ export class PostEditModal {
 				post: post,
 				attachmentType: options.attachmentType || '',
 			},
-			modalId: MODAL_ID,
 		});
 	}
 }
