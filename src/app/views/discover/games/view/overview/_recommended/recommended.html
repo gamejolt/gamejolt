@@ -8,10 +8,15 @@
 		event-label="recommended"
 		/>
 
-	<app-ad-widget
-		size="rectangle"
-		pos="bottom"
-		/>
+	<div
+		v-if="shouldShowAds"
+		class="-ad"
+		>
+		<app-ad-widget
+			size="rectangle"
+			pos="bottom"
+			/>
+	</div>
 
 	<app-game-list
 		v-if="gamesAfterAd.length > 0"
@@ -19,9 +24,13 @@
 		event-label="recommended"
 		/>
 
-	<app-ad-widget
-		v-if="shouldShowBottomAd"
-		size="rectangle"
-		pos="bottom"
-		/>
+	<div
+		v-if="shouldShowAds && shouldShowBottomAd"
+		class="-ad"
+		>
+		<app-ad-widget
+			size="rectangle"
+			pos="bottom"
+			/>
+	</div>
 </div>

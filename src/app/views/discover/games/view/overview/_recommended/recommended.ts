@@ -1,4 +1,5 @@
-import View from '!view!./recommended.html';
+import View from '!view!./recommended.html?style=./recommended.styl';
+import { Ads } from 'game-jolt-frontend-lib/components/ad/ads.service';
 import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
@@ -33,6 +34,10 @@ export class AppDiscoverGamesViewOverviewRecommended extends Vue {
 
 	get isLoaded() {
 		return this.recommendedGames.length > 0;
+	}
+
+	get shouldShowAds() {
+		return Ads.shouldShow;
 	}
 
 	get shouldShowBottomAd() {
