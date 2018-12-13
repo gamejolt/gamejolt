@@ -2,6 +2,7 @@ import View from '!view!./overview.html?style=./overview.styl';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { AppCommentAddButton } from 'game-jolt-frontend-lib/components/comment/add-button/add-button';
 import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
+import { CommentThreadModal } from 'game-jolt-frontend-lib/components/comment/thread/modal.service';
 import { AppExpand } from 'game-jolt-frontend-lib/components/expand/expand';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
@@ -213,6 +214,10 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		this.games = Game.populate($payload.developerGamesTeaser);
 		this.linkedAccounts = LinkedAccount.populate($payload.linkedAccounts);
 		this.overviewComments = Comment.populate($payload.comments);
+
+		if (this.user) {
+			CommentThreadModal.showFromPermalink(this.$router, 'User', this.user.id, 'shouts');
+		}
 	}
 
 	showComments() {
