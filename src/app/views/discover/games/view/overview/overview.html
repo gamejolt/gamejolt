@@ -35,10 +35,15 @@
 				<app-comment-add-button
 					resource="Game"
 					:resource-id="game.id"
+					displayMode="comments"
 					/>
 
 				<app-comment-overview
 					:comments="overviewComments"
+					resource="Game"
+					:resource-id="game.id"
+					displayMode="comments"
+					@reload-comments="reloadPreviewComments"
 					/>
 			</div>
 

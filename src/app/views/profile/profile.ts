@@ -4,10 +4,12 @@ import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-st
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
 import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Ads, AdSettingsContainer } from '../../../lib/gj-lib-client/components/ad/ads.service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
+import { CommentThreadModal } from '../../../lib/gj-lib-client/components/comment/thread/modal.service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppPopper } from '../../../lib/gj-lib-client/components/popper/popper';
 import { ReportModal } from '../../../lib/gj-lib-client/components/report/modal/modal.service';
@@ -140,14 +142,18 @@ export default class RouteProfile extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		CommentModal.checkPermalink(this.$router);
-
 		// This isn't needed by SSR or anything, so it's fine to call it here.
 		this.bootstrapUser(this.$route.params.username);
 
 		const adSettings = new AdSettingsContainer();
 		adSettings.adUnit = 'devprofile';
 		Ads.setPageSettings(adSettings);
+	}
+
+	routeResolved() {
+		if (this.user instanceof User) {
+			CommentThreadModal.showFromPermalink(this.$router, 'User', this.user!.id, 'shouts');
+		}
 	}
 
 	routeDestroyed() {

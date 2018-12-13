@@ -224,4 +224,14 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			});
 		}
 	}
+
+	async reloadPreviewComments() {
+		if (this.user instanceof User) {
+			const $payload = await Api.sendRequest(
+				'/web/profile/comment-overview/@' + this.user.username
+			);
+			this.overviewComments = Comment.populate($payload.comments);
+			this.user.comment_count = $payload.count;
+		}
+	}
 }

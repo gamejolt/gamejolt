@@ -1,7 +1,7 @@
 import { Component } from 'vue-property-decorator';
 import { CreateElement } from 'vue/types/vue';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { CommentModal } from '../../../../lib/gj-lib-client/components/comment/modal/modal.service';
+import { CommentThreadModal } from '../../../../lib/gj-lib-client/components/comment/thread/modal.service';
 import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { Registry } from '../../../../lib/gj-lib-client/components/registry/registry.service';
@@ -58,8 +58,6 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		CommentModal.checkPermalink(this.$router);
-
 		const hash = FiresidePost.pullHashFromUrl(this.$route.params.slug);
 		this.post = Registry.find<FiresidePost>('FiresidePost', i => i.hash === hash);
 	}
@@ -71,6 +69,13 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 		} else {
 			this.post = post;
 		}
+
+		CommentThreadModal.showFromPermalink(
+			this.$router,
+			'Fireside_Post',
+			this.post.id,
+			'comments'
+		);
 
 		this.post.$viewed();
 		this.post.$expanded();

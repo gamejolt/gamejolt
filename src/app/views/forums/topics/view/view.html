@@ -141,7 +141,7 @@
 
 				<div class="col-sm-3 col-sm-push-9 col-md-offset-1 col-md-push-8">
 
-					<app-scroll-affix :should-affix="Screen.isDesktop" v-if="app.user">
+					<app-scroll-affix :disabled="!Screen.isDesktop" v-if="app.user">
 						<app-button
 							v-if="!topic.is_locked"
 							primary
