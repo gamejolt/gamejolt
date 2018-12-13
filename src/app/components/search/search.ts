@@ -1,5 +1,6 @@
 import View from '!view!./search.html?style=./search.styl';
 import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
+import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { AppSearchAutocomplete } from './autocomplete/autocomplete';
@@ -70,6 +71,10 @@ export class AppSearch extends Vue {
 	 */
 	setKeydownSpy(fn: Function) {
 		this.keydownSpies.push(fn);
+	}
+
+	removeKeydownSpy(fn: Function) {
+		arrayRemove(this.keydownSpies, i => i === fn);
 	}
 
 	onKeydown(event: KeyboardEvent) {
