@@ -157,15 +157,11 @@ export class AppActivityFeed extends Vue {
 		// Show an ad every X posts thereafter.
 		const adGap = 5;
 
-		// Only show a max of this many ads in the feed.
-		const totalAds = 4;
-
-		index = index + 1;
-
-		if (!this.shouldShowAds || index >= adGap * totalAds + firstAd) {
+		if (!this.shouldShowAds) {
 			return false;
 		}
 
+		++index;
 		return index === firstAd || (index - firstAd) % adGap === 0;
 	}
 

@@ -188,14 +188,6 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		return null;
 	}
 
-	get leftColClass() {
-		return '-left-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-8 col-lg-7 pull-left';
-	}
-
-	get rightColClass() {
-		return '-right-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-4 pull-right';
-	}
-
 	get hasAnyPerms() {
 		return this.game.hasPerms();
 	}
