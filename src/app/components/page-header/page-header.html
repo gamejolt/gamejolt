@@ -81,7 +81,7 @@
 		:disabled="disableAutoscrollAnchor"
 		>
 		<!-- <app-scroll-affix
-			:should-affix="shouldAffixNav && Screen.isLg && Screen.height > 750"
+			:disabled="!(shouldAffixNav && Screen.isLg && Screen.height > 750)"
 			> -->
 			<section class="section page-header-nav">
 				<div class="container">

@@ -13,6 +13,7 @@ export class GameSupportersModal {
 	static async show(options: GameSupportersModalOptions) {
 		const { game, supporters, supporterCount } = options;
 		return await Modal.show<void>({
+			modalId: 'GameSupporters',
 			component: () =>
 				asyncComponentLoader(
 					import(/* webpackChunkName: "GameSupportersModal" */ './modal')

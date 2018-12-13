@@ -4,6 +4,7 @@ import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils'
 export class ClientAntiVirusModal {
 	static async show(message: string, title?: string) {
 		return await Modal.show({
+			modalId: 'ClientAntiVirus',
 			component: () =>
 				asyncComponentLoader(
 					import(/* webpackChunkName: "ClientAntiVirusModal" */ './anti-virus-modal')

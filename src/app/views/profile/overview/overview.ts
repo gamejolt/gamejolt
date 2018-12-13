@@ -2,6 +2,7 @@ import View from '!view!./overview.html?style=./overview.styl';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { AppCommentAddButton } from 'game-jolt-frontend-lib/components/comment/add-button/add-button';
 import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
+import { CommentThreadModal } from 'game-jolt-frontend-lib/components/comment/thread/modal.service';
 import { AppExpand } from 'game-jolt-frontend-lib/components/expand/expand';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
@@ -25,7 +26,6 @@ import {
 	Provider,
 } from '../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
 import { ChatClient } from '../../../components/chat/client';
-import { ChatUser } from '../../../components/chat/user';
 import { AppCommentOverview } from '../../../components/comment/overview/overview';
 import { AppPageContainer } from '../../../components/page-container/page-container';
 import { Store } from '../../../store/index';
@@ -230,6 +230,10 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		this.games = Game.populate($payload.developerGamesTeaser);
 		this.linkedAccounts = LinkedAccount.populate($payload.linkedAccounts);
 		this.overviewComments = Comment.populate($payload.comments);
+
+		if (this.user) {
+			CommentThreadModal.showFromPermalink(this.$router, 'User', this.user.id, 'shouts');
+		}
 	}
 
 	showComments() {
@@ -245,10 +249,20 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	openMessaging() {
 		if (this.user && this.chat) {
 			const chatUser = this.chat.friendsList.collection.find(u => u.id === this.user!.id);
-			if (chatUser instanceof ChatUser) {
+			if (chatUser) {
 				this.toggleRightPane();
 				this.chat.enterRoom(chatUser.roomId);
 			}
+		}
+	}
+
+	async reloadPreviewComments() {
+		if (this.user) {
+			const $payload = await Api.sendRequest(
+				'/web/profile/comment-overview/@' + this.user.username
+			);
+			this.overviewComments = Comment.populate($payload.comments);
+			this.user.comment_count = $payload.count;
 		}
 	}
 }

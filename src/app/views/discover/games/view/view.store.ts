@@ -42,6 +42,7 @@ type RouteMutations = {
 	toggleDescription: undefined;
 	setCanToggleDescription: boolean;
 	setUserRating: GameRating | null;
+	setOverviewComments: Comment[];
 };
 
 export const RouteStoreName = 'gameRoute';
@@ -327,5 +328,10 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	@VuexMutation
 	toggleDetails() {
 		this.showDetails = !this.showDetails;
+	}
+
+	@VuexMutation
+	setOverviewComments(comments: RouteMutations['setOverviewComments']) {
+		this.overviewComments = comments;
 	}
 }
