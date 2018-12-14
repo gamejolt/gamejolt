@@ -8,20 +8,21 @@ import {
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppUserCard } from 'game-jolt-frontend-lib/components/user/card/card';
 import { numberSort } from 'game-jolt-frontend-lib/utils/array';
 import { fuzzysearch } from 'game-jolt-frontend-lib/utils/string';
 import { Component } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class';
-import { AppActivityFeed } from '../../../components/activity/feed/feed';
-import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
-import { AppActivityFeedPlaceholder } from '../../../components/activity/feed/placeholder/placeholder';
-import { ActivityFeedView } from '../../../components/activity/feed/view';
-import { AppBroadcastCard } from '../../../components/broadcast-card/broadcast-card';
-import { AppGameList } from '../../../components/game/list/list';
-import { AppGameListPlaceholder } from '../../../components/game/list/placeholder/placeholder';
-import { AppPageContainer } from '../../../components/page-container/page-container';
-import { AppPostAddButton } from '../../../components/post/add-button/add-button';
-import { Store, store } from '../../../store';
+import { AppActivityFeed } from '../../components/activity/feed/feed';
+import { ActivityFeedService } from '../../components/activity/feed/feed-service';
+import { AppActivityFeedPlaceholder } from '../../components/activity/feed/placeholder/placeholder';
+import { ActivityFeedView } from '../../components/activity/feed/view';
+import { AppBroadcastCard } from '../../components/broadcast-card/broadcast-card';
+import { AppGameList } from '../../components/game/list/list';
+import { AppGameListPlaceholder } from '../../components/game/list/placeholder/placeholder';
+import { AppPageContainer } from '../../components/page-container/page-container';
+import { AppPostAddButton } from '../../components/post/add-button/add-button';
+import { Store, store } from '../../store';
 
 class DashGame {
 	constructor(
@@ -43,6 +44,7 @@ class DashGame {
 		AppGameListPlaceholder,
 		AppBroadcastCard,
 		AppPostAddButton,
+		AppUserCard,
 	},
 	directives: {
 		AppTrackEvent,
@@ -53,8 +55,13 @@ class DashGame {
 	lazy: true,
 	deps: { query: ['feed_last_id'] },
 	resolver: ({ route }) =>
-		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/activity')),
+		Promise.all([
+			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/activity')),
+			Api.sendRequest('/web/dash/home'),
+		]),
 	resolveStore({ payload, fromCache }) {
+		const [feedPayload] = payload;
+
 		// Don't set if from cache, otherwise it could reset to the cached count
 		// when switching between tabs.
 		if (!fromCache) {
@@ -63,7 +70,7 @@ class DashGame {
 			store.commit('setNotificationCount', { type: 'activity', count: 0 });
 			store.commit('setNotificationCount', {
 				type: 'notifications',
-				count: payload.notificationsUnreadCount,
+				count: feedPayload.notificationsUnreadCount,
 			});
 		}
 	},
@@ -136,28 +143,30 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {
+		const [feedPayload, homePayload] = $payload;
+
 		this.feed = ActivityFeedService.routed(
 			this.feed,
 			{
 				type: 'EventItem',
 				url: `/web/dash/activity/more/activity`,
-				notificationWatermark: $payload.unreadWatermark,
+				notificationWatermark: feedPayload.unreadWatermark,
 				shouldShowGameInfo: true,
 			},
-			$payload.items,
+			feedPayload.items,
 			fromCache
 		);
 
-		this.featuredGames = Game.populate($payload.games);
-		if ($payload.featuredItem && $payload.featuredItem.game) {
-			this.featuredGames.unshift(new Game($payload.featuredItem.game));
+		this.featuredGames = Game.populate(homePayload.games);
+		if (homePayload.featuredItem && homePayload.featuredItem.game) {
+			this.featuredGames.unshift(new Game(homePayload.featuredItem.game));
 		}
 
-		this.latestBroadcast = $payload.latestBroadcast
-			? new FiresidePost($payload.latestBroadcast)
+		this.latestBroadcast = homePayload.latestBroadcast
+			? new FiresidePost(homePayload.latestBroadcast)
 			: null;
 
-		this.games = ($payload.ownerGames as DashGame[])
+		this.games = (homePayload.ownerGames as DashGame[])
 			.map(i => new DashGame(i.id, i.title, i.ownerName, i.createdOn))
 			.sort((a, b) => numberSort(a.createdOn, b.createdOn))
 			.reverse();
@@ -167,12 +176,9 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		this.setNotificationCount({ type: 'activity', count: 0 });
 	}
 
-	onPostAdded() {
+	onPostAdded(post: FiresidePost) {
 		if (this.app.user) {
-			this.$router.push({
-				name: 'profile.overview',
-				params: { username: this.app.user!.username },
-			});
+			ActivityFeedService.gotoPostFeedManage(post, this);
 		}
 	}
 }

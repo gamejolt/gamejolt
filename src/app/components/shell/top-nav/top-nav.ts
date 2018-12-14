@@ -48,23 +48,26 @@ export class AppShellTopNav extends Vue {
 	chat!: ChatClient;
 
 	@State
+	hasSidebar!: Store['hasSidebar'];
+
+	@State
 	isLeftPaneVisible!: Store['isLeftPaneVisible'];
 
 	@State
 	isRightPaneVisible!: Store['isRightPaneVisible'];
-
-	@State
-	hasSidebar!: Store['hasSidebar'];
-
-	moreMenuShowing = false;
-
-	readonly Environment = Environment;
-	readonly Screen = Screen;
-	readonly Connection = Connection;
 
 	@Action
 	toggleRightPane!: Store['toggleRightPane'];
 
 	@Action
 	toggleLeftPane!: Store['toggleLeftPane'];
+
+	@State
+	unreadActivityCount!: Store['unreadActivityCount'];
+
+	moreMenuShowing = false;
+
+	readonly Environment = Environment;
+	readonly Screen = Screen;
+	readonly Connection = Connection;
 }

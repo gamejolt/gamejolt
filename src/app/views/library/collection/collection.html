@@ -217,7 +217,7 @@
 
 		</template>
 
-		<template slot="controls">
+		<app-page-header-controls slot="controls">
 
 			<!-- Following -->
 			<app-game-collection-follow-widget
@@ -232,13 +232,14 @@
 
 				<!-- Editing Playlist -->
 				<app-button
+					block
 					@click="editPlaylist( collection )"
 					>
 					<translate>Edit Playlist</translate>
 				</app-button>
 
 				<!-- More options -->
-				<app-popper>
+				<app-popper slot="end">
 					<app-button
 						icon="ellipsis-v"
 						circle
@@ -255,10 +256,9 @@
 						</a>
 					</div>
 				</app-popper>
-
 			</template>
 
-		</template>
+		</app-page-header-controls>
 
 	</app-page-header>
 

@@ -8,7 +8,6 @@ import { routeProfileVideos } from './videos/videos.route';
 
 export const routeProfile: RouteConfig = {
 	path: '/@:username',
-	props: true,
 	component: () => import(/* webpackChunkName: "routeProfile" */ './profile'),
 	children: [
 		routeProfileOverview,

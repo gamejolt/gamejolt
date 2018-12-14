@@ -5,11 +5,9 @@ import { Action, State } from 'vuex-class';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppScrollScroller } from '../../../../lib/gj-lib-client/components/scroll/scroller/scroller';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { Store } from '../../../store/index';
@@ -19,8 +17,6 @@ import { AppShellSidebarCollectionList } from './collection-list';
 @View
 @Component({
 	components: {
-		AppPopper,
-		AppUserAvatarImg,
 		AppShellSidebarCollectionList,
 		AppExpand,
 		AppScrollScroller,
@@ -38,13 +34,7 @@ export class AppShellSidebar extends Vue {
 	app!: Store['app'];
 
 	@State
-	isBootstrapped!: Store['isBootstrapped'];
-
-	@State
 	isLibraryBootstrapped!: Store['isLibraryBootstrapped'];
-
-	@State
-	notificationCount!: Store['notificationCount'];
 
 	@State
 	isLeftPaneVisible!: Store['isLeftPaneVisible'];
@@ -75,9 +65,6 @@ export class AppShellSidebar extends Vue {
 
 	playlistFilterQuery = '';
 	openFolders: string[] = [];
-
-	// This is "hot".
-	defaultBrowseSection = null;
 
 	readonly Environment = Environment;
 	readonly Screen = Screen;

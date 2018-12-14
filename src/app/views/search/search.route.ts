@@ -5,7 +5,6 @@ import { routeSearchUsers } from './users/users.route';
 
 export const routeSearch: RouteConfig = {
 	path: '/search',
-	props: true,
 	component: () => import(/* webpackChunkName: "routeSearch" */ './search'),
 	children: [routeSearchResults, routeSearchGames, routeSearchUsers],
 };

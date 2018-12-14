@@ -1,5 +1,5 @@
 import View from '!view!./key.html';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
@@ -37,9 +37,6 @@ import { AppKeyGame } from './_game/game';
 	},
 })
 export default class RouteKey extends BaseRouteComponent {
-	@Prop(String)
-	accessKey!: string;
-
 	@State
 	app!: Store['app'];
 
@@ -47,6 +44,10 @@ export default class RouteKey extends BaseRouteComponent {
 	payload = null as any;
 	invalidKey = false;
 	type = '';
+
+	get accessKey() {
+		return this.$route.params.accessKey;
+	}
 
 	get loginUrl() {
 		return (

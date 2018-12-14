@@ -1,5 +1,5 @@
 import { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { PayloadError } from '../../../../lib/gj-lib-client/components/payload/payload-service';
 import {
 	BaseRouteComponent,
@@ -35,9 +35,6 @@ const paths = importContext(
 	},
 })
 export default class RouteLandingGameApiDoc extends BaseRouteComponent {
-	@Prop(String)
-	path!: string;
-
 	content = '';
 
 	routeResolved($payload: any) {

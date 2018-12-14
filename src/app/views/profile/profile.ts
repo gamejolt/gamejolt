@@ -1,9 +1,10 @@
 import View from '!view!./profile.html?style=./profile.styl';
+import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
 import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-store';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
 import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Ads, AdSettingsContainer } from '../../../lib/gj-lib-client/components/ad/ads.service';
 import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
@@ -21,6 +22,7 @@ import { AppUserFollowWidget } from '../../../lib/gj-lib-client/components/user/
 import { AppUserAvatar } from '../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
 import { number } from '../../../lib/gj-lib-client/vue/filters/number';
 import { IntentService } from '../../components/intent/intent.service';
+import { AppPageHeaderControls } from '../../components/page-header/controls/controls';
 import { AppPageHeader } from '../../components/page-header/page-header';
 import { AppUserDogtag } from '../../components/user/dogtag/dogtag';
 import { Store, store } from '../../store';
@@ -31,6 +33,7 @@ import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './prof
 	name: 'RouteProfile',
 	components: {
 		AppPageHeader,
+		AppPageHeaderControls,
 		AppTimeAgo,
 		AppUserAvatar,
 		AppUserDogtag,
@@ -85,9 +88,6 @@ import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './prof
 	},
 })
 export default class RouteProfile extends BaseRouteComponent {
-	@Prop(String)
-	username!: string;
-
 	@State
 	app!: Store['app'];
 
@@ -115,8 +115,9 @@ export default class RouteProfile extends BaseRouteComponent {
 	@RouteStoreModule.Action
 	removeFriend!: RouteStore['removeFriend'];
 
-	UserFriendship = UserFriendship;
-	Environment = Environment;
+	readonly UserFriendship = UserFriendship;
+	readonly Environment = Environment;
+	readonly Screen = Screen;
 
 	get shouldShowFullCover() {
 		return Screen.isXs || this.$route.name !== 'profile.post.view';
@@ -131,6 +132,13 @@ export default class RouteProfile extends BaseRouteComponent {
 		return this.user!.id + (this.shouldShowFullCover ? '-full' : '-collapsed');
 	}
 
+	get commentsCount() {
+		if (this.user && this.user.comment_count) {
+			return this.user.comment_count;
+		}
+		return 0;
+	}
+
 	routeCreated() {
 		// This isn't needed by SSR or anything, so it's fine to call it here.
 		this.bootstrapUser(this.$route.params.username);
@@ -143,6 +151,16 @@ export default class RouteProfile extends BaseRouteComponent {
 	routeDestroyed() {
 		this.setPageTheme(null);
 		Ads.releasePageSettings();
+	}
+
+	showComments() {
+		if (this.user) {
+			CommentModal.show({
+				resource: 'User',
+				resourceId: this.user.id,
+				displayMode: 'shouts',
+			});
+		}
 	}
 
 	report() {

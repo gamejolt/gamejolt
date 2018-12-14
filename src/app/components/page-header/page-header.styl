@@ -84,13 +84,13 @@ $-cover-buttons-height = $button-md-line-height + 20px
 			padding-bottom: $grid-gutter-width-xs
 
 	&-spotlight
+		img-circle()
 		position: absolute
 		width: $page-header-spotlight-size
 		height: @width
 		bottom: -20px // this just seems to look the best
 		left: -(@width + $page-header-spotlight-margin / 2)
 		border: 5px solid $white
-		border-radius: 50%
 		background-color: $white
 		z-index: $zindex-page-header-nav + 1
 		display: flex

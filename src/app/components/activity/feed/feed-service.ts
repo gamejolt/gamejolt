@@ -2,14 +2,14 @@ import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-it
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';
 import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
+import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
 import { Dictionary, Route } from 'vue-router/types/router';
 import { ActivityFeedInput } from './item-service';
 import { ActivityFeedState, ActivityFeedStateOptions } from './state';
 import { ActivityFeedView, ActivityFeedViewOptions } from './view';
 
 /**
- * Number of states we will keep cached.
- * We will purge others out of the cache.
+ * Number of states we will keep cached. We will purge others out of the cache.
  */
 const MaxCachedCount = 3;
 
@@ -53,8 +53,9 @@ export class ActivityFeedService {
 	}
 
 	static routeInit(routeComponent: BaseRouteComponent) {
-		// Try to pull the feed from cache if they are going back to this route. We don't want to
-		// pull from cache if they go back and forth between feed tabs, though.
+		// Try to pull the feed from cache if they are going back to this route.
+		// We don't want to pull from cache if they go back and forth between
+		// feed tabs, though.
 		if (!routeComponent.isRouteBootstrapped) {
 			return this.bootstrapFeedFromCache();
 		}
@@ -77,7 +78,8 @@ export class ActivityFeedService {
 			return null;
 		}
 
-		// If we couldn't fetch a cached feed when routeInit was called, we should start fresh.
+		// If we couldn't fetch a cached feed when routeInit was called, we
+		// should start fresh.
 		return ActivityFeedService.bootstrapFeed(items, options);
 	}
 
@@ -90,8 +92,8 @@ export class ActivityFeedService {
 			throw new Error('Post was expected to have an event_item field after being added');
 		}
 
-		// If we are already on the feed page that we need to be, let's just insert the post into
-		// the feed.
+		// If we are already on the feed page that we need to be, let's just
+		// insert the post into the feed.
 		if (!this.gotoPostFeedManage(post, routeComponent)) {
 			feed.prepend([post.event_item]);
 		}
@@ -112,7 +114,8 @@ export class ActivityFeedService {
 	}
 
 	/**
-	 * Returns true if it went to a new page, or false if we were already on the page required.
+	 * Returns true if it went to a new page, or false if we were already on the
+	 * page required.
 	 */
 	static gotoPostFeedManage(post: FiresidePost, routeComponent: BaseRouteComponent) {
 		const route = routeComponent.$route;
@@ -143,9 +146,10 @@ export class ActivityFeedService {
 		};
 
 		if (router.resolve(location).href === route.fullPath) {
-			// If we are already on the page, we shouldn't have to do anything. UNLESS we are on
-			// scheduled posts page. Since it works based on a date that can change we need to
-			// refresh the feed to properly sort everything again.
+			// If we are already on the page, we shouldn't have to do anything.
+			// UNLESS we are on scheduled posts page. Since it works based on a
+			// date that can change we need to refresh the feed to properly sort
+			// everything again.
 			if (tab === 'scheduled') {
 				routeComponent.reloadRoute();
 				return true;
@@ -187,16 +191,24 @@ export class ActivityFeedService {
 		const key = this.getCachedStateKey();
 		const href = typeof window !== 'undefined' ? window.location.href : undefined;
 
-		// Note that we have to check the history state key AND the actual URL. If you replace a
-		// route with vue, the history state key stays the same, even though the route changes.
+		// Note that we have to check the history state key AND the actual URL.
+		// If you replace a route with vue, the history state key stays the
+		// same, even though the route changes.
 		return this.cache.find(item => item.key === key && item.href === href);
 	}
 
 	private static bootstrapFeedFromCache() {
 		const state = this.findCachedState();
 		if (state) {
-			// Reset bootstrapped items so that we can go "back" to this feed really fast.
+			// Reset bootstrapped items so that we can go "back" to this feed
+			// really fast.
 			state.view.resetBootstrapped();
+
+			// We have to put the state back on top so that it was just
+			// accessed. We don't want it being cleaned up.
+			arrayRemove(this.cache, i => i === state);
+			this.cache.unshift(state);
+
 			return state.view;
 		}
 

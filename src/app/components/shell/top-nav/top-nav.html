@@ -2,13 +2,12 @@
 
 	<div class="navbar-left">
 
-		<!-- Mobile Menu Toggle -->
 		<a
 			v-if="hasSidebar"
 			class="navbar-item"
 			:class="{ active: isLeftPaneVisible }"
 			@click="toggleLeftPane"
-			v-app-tooltip.right="$gettext( `Menu (m)` )"
+			v-app-tooltip.right="$gettext( `Playlists (m)` )"
 			v-app-track-event="`top-nav:main-menu:toggle`"
 			>
 			<app-jolticon icon="menu" />
@@ -17,9 +16,33 @@
 		<!-- History Navigator (for desktop client) -->
 		<app-client-history-navigator v-if="GJ_IS_CLIENT" />
 
-		<router-link class="navbar-item" :to="{ name: 'discover.home' }">
+		<router-link
+			class="navbar-item"
+			:class="{ active: $route.name === 'home' }"
+			:to="{ name: 'home' }"
+			v-app-track-event="`top-nav:main-menu:home`"
+			>
 			<app-theme-svg v-if="!Screen.isMobile" src="~img/game-jolt-logo.svg" alt="" />
 			<app-theme-svg v-else src="~img/jolt.svg" alt="" />
+			<span
+				class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
+				v-if="unreadActivityCount > 0"
+				>
+				{{ unreadActivityCount < 100 ? unreadActivityCount : '99+' }}
+			</span>
+		</router-link>
+
+		<router-link
+			v-if="!Screen.isXs && app.user"
+			class="-explore navbar-item"
+			:class="{ active: $route.name === 'discover.home' }"
+			:to="{ name: 'discover.home' }"
+			v-app-track-event="`top-nav:main-menu:discover`"
+			>
+			<app-jolticon icon="compass-needle" class="-explore-icon" />
+			<strong class="text-upper">
+				<translate>Explore</translate>
+			</strong>
 		</router-link>
 
 		<app-popper
@@ -98,11 +121,7 @@
 				class="navbar-item"
 				:class="{ active: isRightPaneVisible }"
 				@click="toggleRightPane"
-				v-app-tooltip.left="
-					app.user
-						? $gettext( `Chat and Friends List (c)` )
-						: $gettext( `Chat (c)` )
-				"
+				v-app-tooltip.left="$gettext( `Chat and Friends List (c)` )"
 				v-app-track-event="`top-nav:chat:toggle`"
 				>
 				<span

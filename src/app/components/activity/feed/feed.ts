@@ -55,8 +55,11 @@ export class AppActivityFeed extends Vue {
 	// the same feed we can scroll to the previous position that way.
 	private scroll!: number;
 	private scroll$: Subscription | undefined;
+	private scrollSampled$: Subscription | undefined;
 
 	readonly number = number;
+
+	$el!: HTMLDivElement;
 
 	@Emit('edit-post')
 	emitEditPost(_eventItem: EventItem) {}
@@ -74,13 +77,18 @@ export class AppActivityFeed extends Vue {
 	emitLoadMore() {}
 
 	mounted() {
-		this.scroll$ = Scroll.watcher.changes.sampleTime(ScrollSampleTime).subscribe(() => {
+		this.scroll$ = Scroll.watcher.changes.subscribe(() => {
+			// We use the scroll top directly, instead of going through scroll
+			// watcher, so that we can keep this as fast as possible.
+			this.scroll = Scroll.getScrollTop();
+		});
+
+		this.scrollSampled$ = Scroll.watcher.changes.sampleTime(ScrollSampleTime).subscribe(() => {
 			const { top, height } = Scroll.watcher.getScrollChange();
-			this.scroll = top;
 
 			// Auto-loading while scrolling.
 			if (this.feed.shouldScrollLoadMore) {
-				const feedOffset = Ruler.offset(this.$el);
+				const feedOffset = Ruler.offset(this.$el as HTMLElement);
 				const feedBottom = feedOffset.top + feedOffset.height;
 				const scrollBottom = top + height;
 
@@ -97,6 +105,11 @@ export class AppActivityFeed extends Vue {
 		if (this.scroll$) {
 			this.scroll$.unsubscribe();
 			this.scroll$ = undefined;
+		}
+
+		if (this.scrollSampled$) {
+			this.scrollSampled$.unsubscribe();
+			this.scrollSampled$ = undefined;
 		}
 	}
 
@@ -144,15 +157,11 @@ export class AppActivityFeed extends Vue {
 		// Show an ad every X posts thereafter.
 		const adGap = 5;
 
-		// Only show a max of this many ads in the feed.
-		const totalAds = 4;
-
-		index = index + 1;
-
-		if (!this.shouldShowAds || index >= adGap * totalAds + firstAd) {
+		if (!this.shouldShowAds) {
 			return false;
 		}
 
+		++index;
 		return index === firstAd || (index - firstAd) % adGap === 0;
 	}
 

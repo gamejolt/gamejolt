@@ -58,7 +58,7 @@ export class AppShellNotificationPopover extends Vue {
 	 * notifications page, since there is no popover on mobile.
 	 */
 	get isNavbarItemActive() {
-		return (Screen.isXs && this.$route.name!.indexOf('activity.') === 0) || this.isShowing;
+		return (Screen.isXs && this.$route.name === 'notifications') || this.isShowing;
 	}
 
 	/**
@@ -80,12 +80,12 @@ export class AppShellNotificationPopover extends Vue {
 
 	/**
 	 * When they click the item in the navbar, we don't want to open the popover
-	 * on mobile. Let's just go to the activity page.
+	 * on mobile. Let's just go to the notifications page.
 	 */
 	onNavbarItemClick(e: Event) {
 		if (Screen.isXs) {
 			e.stopPropagation();
-			this.$router.push({ name: 'activity.feed' });
+			this.$router.push({ name: 'notifications' });
 		}
 	}
 

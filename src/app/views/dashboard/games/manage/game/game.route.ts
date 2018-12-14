@@ -16,7 +16,6 @@ import { routeDashGamesManageGameWizardFinish } from './wizard-finish/wizard-fin
 
 export const routeDashGamesManageGame: RouteConfig = {
 	path: '/dashboard/games/:id(\\d+)',
-	props: true,
 	component: () => import(/* webpackChunkName: "routeDashGamesManageGame" */ './game'),
 	children: [
 		routeDashGamesManageGameOverview,

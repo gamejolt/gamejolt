@@ -151,7 +151,7 @@
 					<br>
 				</app-game-perms>
 
-				<template v-if="releases.length">
+				<div v-if="releases.length">
 
 					<app-card
 						v-for="release of releases"
@@ -266,7 +266,7 @@
 
 					</app-card>
 
-				</template>
+				</div>
 
 				<app-dash-game-wizard-controls
 					:disabled="!game._is_devlog && !game.has_active_builds"

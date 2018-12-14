@@ -6,11 +6,14 @@ import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { AppCard } from 'game-jolt-frontend-lib/components/card/card';
 import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
 import { AppCommentAddButton } from 'game-jolt-frontend-lib/components/comment/add-button/add-button';
+import { Comment } from 'game-jolt-frontend-lib/components/comment/comment-model';
+import { CommentState, CommentStore } from 'game-jolt-frontend-lib/components/comment/comment-store';
 import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppGameExternalPackageCard } from 'game-jolt-frontend-lib/components/game/external-package/card/card';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { AppGamePackageCard } from 'game-jolt-frontend-lib/components/game/package/card/card';
 import { AppGameSoundtrackCard } from 'game-jolt-frontend-lib/components/game/soundtrack/card/card';
 import { HistoryTick } from 'game-jolt-frontend-lib/components/history-tick/history-tick-service';
@@ -18,12 +21,11 @@ import { AppLazyPlaceholder } from 'game-jolt-frontend-lib/components/lazy/place
 import { AppMediaBar } from 'game-jolt-frontend-lib/components/media-bar/media-bar';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import { PartnerReferral } from 'game-jolt-frontend-lib/components/partner-referral/partner-referral-service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { Component, Prop } from 'vue-property-decorator';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Component } from 'vue-property-decorator';
+import { CommentThreadModal } from '../../../../../../lib/gj-lib-client/components/comment/thread/modal.service';
 import { AppActivityFeed } from '../../../../../components/activity/feed/feed';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { AppActivityFeedPlaceholder } from '../../../../../components/activity/feed/placeholder/placeholder';
@@ -31,9 +33,9 @@ import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import { AppCommentOverview } from '../../../../../components/comment/overview/overview';
 import { AppGameOgrs } from '../../../../../components/game/ogrs/ogrs';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
+import { AppPageContainer } from '../../../../../components/page-container/page-container';
 import { AppPostAddButton } from '../../../../../components/post/add-button/add-button';
 import { AppRatingWidget } from '../../../../../components/rating/widget/widget';
-import { trackGamePage3ColSplitTest } from '../../../../../components/split-test/split-test-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../view.store';
 import { AppDiscoverGamesViewOverviewDetails } from './_details/details';
 import { AppDiscoverGamesViewOverviewRecommended } from './_recommended/recommended';
@@ -44,6 +46,7 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 @Component({
 	name: 'RouteDiscoverGamesViewOverview',
 	components: {
+		AppPageContainer,
 		AppDiscoverGamesViewOverviewDetails,
 		AppDiscoverGamesViewOverviewRecommended,
 		AppDiscoverGamesViewOverviewSupporters,
@@ -68,6 +71,9 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 	},
 	directives: {
 		AppTrackEvent,
+	},
+	filters: {
+		number,
 	},
 })
 @RouteResolver({
@@ -97,9 +103,6 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 	},
 })
 export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
-	@Prop()
-	id!: string;
-
 	@RouteStoreModule.State
 	isOverviewLoaded!: RouteStore['isOverviewLoaded'];
 
@@ -166,6 +169,12 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	@RouteStoreModule.Mutation
 	setCanToggleDescription!: RouteStore['setCanToggleDescription'];
 
+	@RouteStoreModule.Mutation
+	setOverviewComments!: RouteStore['setOverviewComments'];
+
+	@CommentState
+	getCommentStore!: CommentStore['getCommentStore'];
+
 	feed: ActivityFeedView | null = null;
 
 	readonly Screen = Screen;
@@ -177,14 +186,6 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 			return `${this.game.title} by ${dev.display_name} (@${dev.username})`;
 		}
 		return null;
-	}
-
-	get leftColClass() {
-		return '-left-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-8 col-lg-7 pull-left';
-	}
-
-	get rightColClass() {
-		return '-right-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-4 pull-right';
 	}
 
 	get hasAnyPerms() {
@@ -199,9 +200,21 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		return this.game.referrals_enabled && this.userPartnerKey && this.packages.length;
 	}
 
+	get commentsCount() {
+		if (this.game) {
+			const store = this.getCommentStore('Game', this.game.id);
+			return store ? store.count : 0;
+		}
+		return 0;
+	}
+
 	routeCreated() {
-		trackGamePage3ColSplitTest();
-		CommentModal.checkPermalink(this.$router);
+		CommentThreadModal.showFromPermalink(
+			this.$router,
+			'Game',
+			parseInt(this.$route.params.id),
+			'comments'
+		);
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
@@ -233,10 +246,20 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	showComments() {
-		CommentModal.show({ resource: 'Game', resourceId: this.game.id });
+		CommentModal.show({ resource: 'Game', resourceId: this.game.id, displayMode: 'comments' });
 	}
 
 	onPostAdded(post: FiresidePost) {
 		ActivityFeedService.onPostAdded(this.feed!, post, this);
+	}
+
+	async reloadPreviewComments() {
+		if (this.game instanceof Game) {
+			const $payload = await Api.sendRequest(
+				'/web/discover/games/comment-overview/' + this.game.id
+			);
+
+			this.setOverviewComments(Comment.populate($payload.comments));
+		}
 	}
 }

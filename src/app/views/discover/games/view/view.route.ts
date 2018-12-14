@@ -9,7 +9,6 @@ import { routeDiscoverGamesViewTrophiesList } from './trophies/list/list.route';
 
 export const routeDiscoverGamesView: RouteConfig = {
 	path: ':slug/:id(\\d+)',
-	props: true,
 	component: () => import(/* webpackChunkName: "routeDiscoverGamesView" */ './view'),
 	children: [
 		routeDiscoverGamesViewOverview,
