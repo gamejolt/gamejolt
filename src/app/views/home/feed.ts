@@ -142,9 +142,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
-	routeResolved($payload: any, fromCache: boolean) {
-		const [feedPayload, homePayload] = $payload;
-
+	routeResolved([feedPayload, homePayload]: any, fromCache: boolean) {
 		this.feed = ActivityFeedService.routed(
 			this.feed,
 			{
