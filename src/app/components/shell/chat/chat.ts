@@ -1,4 +1,5 @@
 import View from '!view!./chat.html';
+import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
@@ -7,7 +8,6 @@ import {
 	EventBus,
 	EventBusDeregister,
 } from '../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
-import { Favicon } from '../../../../lib/gj-lib-client/components/favicon/favicon.service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppScrollInviewParent } from '../../../../lib/gj-lib-client/components/scroll/inview/parent';
 import { Store } from '../../../store/index';
@@ -74,8 +74,6 @@ export class AppShellChat extends Vue {
 	}
 
 	destroyed() {
-		Favicon.reset();
-
 		if (this.newMessageDeregister) {
 			this.newMessageDeregister();
 			this.newMessageDeregister = undefined;
@@ -121,14 +119,10 @@ export class AppShellChat extends Vue {
 		}
 	}
 
-	// Keep the favicon up to date with chat notification counts.
+	// Keep the title up to date with chat notification counts.
 	@Watch('totalNotificationsCount')
 	onNotificationsCountChange(count: number) {
-		if (count) {
-			Favicon.badge(count);
-		} else {
-			Favicon.reset();
-		}
+		Meta.chatCount = count;
 	}
 
 	@Watch('isWindowFocused')
