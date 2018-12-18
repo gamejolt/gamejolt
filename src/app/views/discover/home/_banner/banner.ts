@@ -1,21 +1,18 @@
+import View from '!view!./banner.html?style=./banner.styl';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { State } from 'vuex-class';
-import View from '!view!./banner.html?style=./banner.styl';
-
-import { AppGameFollowWidget } from '../../../../components/game/follow-widget/follow-widget';
 import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { FeaturedItem } from '../../../../components/featured-item/featured-item.model';
-import { Store } from '../../../../store/index';
 import { AppTheme } from '../../../../../lib/gj-lib-client/components/theme/theme';
+import { FeaturedItem } from '../../../../components/featured-item/featured-item.model';
+import { AppGameFollowWidget } from '../../../../components/game/follow-widget/follow-widget';
+import { Store } from '../../../../store/index';
 
 @View
 @Component({
 	components: {
-		AppJolticon,
 		AppGameFollowWidget,
 		AppTheme,
 	},
@@ -24,9 +21,11 @@ import { AppTheme } from '../../../../../lib/gj-lib-client/components/theme/them
 	},
 })
 export class AppDiscoverHomeBanner extends Vue {
-	@Prop(FeaturedItem) item!: FeaturedItem;
+	@Prop(FeaturedItem)
+	item!: FeaturedItem;
 
-	@State app!: Store['app'];
+	@State
+	app!: Store['app'];
 
 	readonly Screen = Screen;
 

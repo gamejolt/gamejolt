@@ -4,6 +4,7 @@ import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils'
 export class UserHeaderModal {
 	static async show() {
 		return await Modal.show<void>({
+			modalId: 'UserHeader',
 			component: () =>
 				asyncComponentLoader(
 					import(/* webpackChunkName: "UserHeaderModal" */ './header-modal')

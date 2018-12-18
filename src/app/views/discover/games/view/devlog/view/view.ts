@@ -1,5 +1,4 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import { Registry } from 'game-jolt-frontend-lib/components/registry/registry.service';
@@ -9,8 +8,9 @@ import {
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
 import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { CreateElement } from 'vue/types/vue';
+import { CommentThreadModal } from '../../../../../../../lib/gj-lib-client/components/comment/thread/modal.service';
 import { IntentService } from '../../../../../../components/intent/intent.service';
 import { AppPostView } from '../../../../../../components/post/view/view';
 import { RouteStore, RouteStoreModule } from '../../view.store';
@@ -48,9 +48,6 @@ import { RouteStore, RouteStoreModule } from '../../view.store';
 	},
 })
 export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent {
-	@Prop()
-	postSlug!: string;
-
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
@@ -61,9 +58,7 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 	}
 
 	routeCreated() {
-		CommentModal.checkPermalink(this.$router);
-
-		const hash = FiresidePost.pullHashFromUrl(this.postSlug);
+		const hash = FiresidePost.pullHashFromUrl(this.$route.params.postSlug);
 		this.post = Registry.find<FiresidePost>('FiresidePost', i => i.hash === hash);
 	}
 
@@ -74,6 +69,13 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		} else {
 			this.post = post;
 		}
+
+		CommentThreadModal.showFromPermalink(
+			this.$router,
+			'Fireside_Post',
+			this.post.id,
+			'comments'
+		);
 
 		this.post.$viewed();
 		this.post.$expanded();

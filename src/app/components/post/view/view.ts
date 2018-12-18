@@ -1,6 +1,6 @@
 import View from '!view!./view.html?style=./view.styl';
-import { AppAd } from 'game-jolt-frontend-lib/components/ad/ad';
 import { AppAdPlacement } from 'game-jolt-frontend-lib/components/ad/placement/placement';
+import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
 import { AppResponsiveDimensions } from 'game-jolt-frontend-lib/components/responsive-dimensions/responsive-dimensions';
@@ -36,7 +36,7 @@ import { AppPostViewPlaceholder } from './placeholder/placeholder';
 		AppEventItemControls,
 		AppEventItemMediaTags,
 		AppPollVoting,
-		AppAd,
+		AppAdWidget,
 		AppAdPlacement,
 	},
 	directives: {

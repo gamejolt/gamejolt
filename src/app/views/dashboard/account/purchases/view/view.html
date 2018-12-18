@@ -189,8 +189,8 @@
 					</h5>
 
 					<div class="small text-muted">
-						<div v-for="package of packagesBySellable[ item.sellable.id ]" :key="package.id">
-							- {{ package.title || gamesById[ package.game_id ].title }}
+						<div v-for="pkg of packagesBySellable[ item.sellable.id ]" :key="pkg.id">
+							- {{ pkg.title || gamesById[ pkg.game_id ].title }}
 						</div>
 					</div>
 				</div>

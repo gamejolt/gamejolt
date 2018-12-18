@@ -5,7 +5,7 @@
 	$spotlight-size = $page-header-spotlight-size + $page-header-spotlight-margin
 	// Double the spotlight size since it will effectively take up the left AND
 	// right side of screens since content is centered.
-	$screen-lg-full = $screen-lg-min + $shell-sidebar-width + ($spotlight-size * 2)
+	$screen-lg-full = $screen-lg-min + ($spotlight-size * 2)
 	$page-header-spotlight-breakpoint = media(min: $screen-sm-min, max: $screen-lg-full)
 
 	&-cover.has-cover-image

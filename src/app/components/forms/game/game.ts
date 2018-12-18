@@ -1,25 +1,22 @@
+import View from '!view!./game.html';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./game.html?style=./game.styl';
-
+import { State } from 'vuex-class';
+import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
+import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import {
 	BaseForm,
 	FormOnInit,
 	FormOnLoad,
 } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { State } from 'vuex-class';
-import { Store } from '../../../store/index';
-import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppDashGameWizardControls } from './wizard-controls/wizard-controls';
+import { Store } from '../../../store/index';
 import { AppGameDevStageSelector } from './dev-stage-selector/dev-stage-selector';
+import { AppDashGameWizardControls } from './wizard-controls/wizard-controls';
 
 @View
 @Component({
 	components: {
-		AppJolticon,
 		AppFormControlToggle,
 		AppExpand,
 		AppDashGameWizardControls,
@@ -30,7 +27,8 @@ import { AppGameDevStageSelector } from './dev-stage-selector/dev-stage-selector
 	},
 })
 export class FormGame extends BaseForm<Game> implements FormOnInit, FormOnLoad {
-	@State app!: Store['app'];
+	@State
+	app!: Store['app'];
 
 	// We need to reset all the "is published", "has builds" stuff.
 	modelClass = Game;

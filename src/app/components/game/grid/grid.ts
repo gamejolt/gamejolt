@@ -1,7 +1,7 @@
 import View from '!view!./grid.html?style=./grid.styl';
+import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
@@ -19,7 +19,7 @@ let idCounter = 0;
 @Component({
 	components: {
 		AppGameThumbnail,
-		AppAd,
+		AppAdWidget,
 	},
 	directives: {
 		AppTrackEvent,

@@ -24,7 +24,7 @@
 		</div>
 
 		<div class="footer-jolt" v-if="Screen.isXs">
-			<router-link :to="{ name: 'discover.home' }">
+			<router-link :to="{ name: 'home' }">
 				<app-theme-svg src="~img/jolt.svg" alt="" width="68" height="72" />
 			</router-link>
 		</div>
@@ -32,8 +32,8 @@
 		<br class="visible-xs">
 
 		<div class="clearfix">
-			<div class="footer-ad" v-if="!Screen.isXs">
-				<app-ad size="rectangle" pos="footer" />
+			<div class="footer-ad" v-if="!Screen.isXs && shouldShowAd">
+				<app-ad-widget size="rectangle" pos="footer" />
 			</div>
 
 			<div class="footer-links">
@@ -143,7 +143,7 @@
 
 		<div class="clearfix">
 			<div class="footer-jolt" v-if="!Screen.isXs">
-				<router-link :to="{ name: 'discover.home' }">
+				<router-link :to="{ name: 'home' }">
 					<app-theme-svg src="~img/jolt.svg" alt="" width="68" height="72" />
 				</router-link>
 			</div>

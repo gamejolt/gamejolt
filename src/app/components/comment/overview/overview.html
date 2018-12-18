@@ -4,13 +4,13 @@
 	-->
 	<div
 		class="-comment fill-offset"
-		v-for="comment of comments.slice(0, 3)"
+		v-for="comment of comments"
 		:key="comment.id"
 		@click.capture="$event.preventDefault(); open(comment)"
 		>
 
 		<div class="-byline">
-			<div class="-avatar avatar-circle">
+			<div class="-avatar">
 				<app-user-card-hover
 					:user="comment.user"
 					>

@@ -4,15 +4,20 @@
 		'-ratings-disabled': !game.ratings_enabled,
 	}"
 	>
-	<template v-if="game.ratings_enabled">
-		<div class="-rating">
-			<app-rating-widget
-				:game="game"
-				:user-rating="userRating"
-				hide-count
-				/>
+	<div
+		class="-stat"
+		>
+		<div class="-label">
+			<translate>views</translate>
 		</div>
-		<div class="-split" />
+		<app-lazy-placeholder :when="isOverviewLoaded">
+			<span class="lazy-placeholder"></span>
+			<span class="-metric" :title="number( profileCount )">
+				<strong>{{ fuzzynumber( profileCount ) }}</strong>
+			</span>
+		</app-lazy-placeholder>
+	</div>
+	<template v-if="game.ratings_enabled">
 		<a
 			class="-stat"
 			@click="showLikers()"
@@ -28,19 +33,13 @@
 				</span>
 			</app-lazy-placeholder>
 		</a>
-	</template>
-	<div
-		class="-stat"
-		>
-		<div class="-label">
-			<translate>views</translate>
+		<div class="-split" />
+		<div class="-rating">
+			<app-rating-widget
+				:game="game"
+				:user-rating="userRating"
+				hide-count
+				/>
 		</div>
-		<app-lazy-placeholder :when="isOverviewLoaded">
-			<span class="lazy-placeholder"></span>
-			<span class="-metric" :title="number( profileCount )">
-				<strong>{{ fuzzynumber( profileCount ) }}</strong>
-			</span>
-		</app-lazy-placeholder>
-	</div>
-
+	</template>
 </div>

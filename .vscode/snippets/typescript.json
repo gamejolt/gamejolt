@@ -39,12 +39,10 @@
 			"@Component({",
 			"\tname: 'Route${2:Component}',",
 			"})",
-			"export default class Route${2:Component} extends BaseRouteComponent {",
-			"\t@RouteResolve()",
-			"\trouteResolve(this: undefined, route: Route) {",
-			"\t\t$0",
-			"\t}",
-			"}",
+			"@RouteResolver({",
+			"\tresolver: ({ route }) => {$0}",
+			"})",
+			"export default class Route${2:Component} extends BaseRouteComponent {}",
 			""
 		]
 	},
@@ -56,7 +54,6 @@
 			"export const route${1:Home}: RouteConfig = {",
 			"\tname: '${2:home}',",
 			"\tpath: '${3:home}',",
-			"\tprops: true,",
 			"\tcomponent: () => import(/* webpackChunkName: \"route${1:Home}\" */ './${4:home}'),",
 			"};",
 			"$0"
@@ -99,8 +96,9 @@
 		"body": [
 			"",
 			"export class ${1:Login}Modal {",
-			"\tstatic async show( $2 ) {",
+			"\tstatic async show($2) {",
 			"\t\treturn await Modal.show<${3:boolean}>({",
+			"\t\tmodalId: '${1:Login}',",
 			"\t\t\tcomponent: () => asyncComponentLoader(import(/* webpackChunkName: \"${1:Login}Modal\" */ './$4')),",
 			"\t\t\tprops: { $5 },",
 			"\t\t});",

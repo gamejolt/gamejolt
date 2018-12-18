@@ -14,16 +14,13 @@
 
 	&-avatar
 		theme-prop('background-color', 'bg-subtle')
+		img-circle()
 		flex: none
-		border-radius: 50%
 		overflow: hidden
 		margin-right: $-item-padding-xs
 		width: $-avatar-size
 		height: $-avatar-size
 		line-height: $-avatar-size
-
-		>>> img
-			border-radius: 50% !important
 
 		.-item.-new &
 			theme-prop('border-color', 'notice')
@@ -32,8 +29,8 @@
 
 			.-header-avatar-inner
 				theme-prop('background-color', 'bg')
+				img-circle()
 				padding: 2px
-				border-radius: 50%
 
 		@media $media-sm-up
 			margin-right: $-item-padding

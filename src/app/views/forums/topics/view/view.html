@@ -2,7 +2,7 @@
 
 	<app-page-header>
 
-		<div :class="{ 'text-center': Screen.isXs }">
+		<div>
 			<span class="tag"
 				v-if="topic.is_locked"
 				v-app-tooltip="$gettext( `This topic is locked and can no longer be replied to.` )"
@@ -46,11 +46,11 @@
 				/>
 		</template>
 
-		<template slot="controls" v-if="app.user">
+		<app-page-header-controls slot="controls" v-if="app.user">
 			<app-button
 				v-if="!isFollowing"
 				primary
-				:block="Screen.isXs || Screen.isDesktop"
+				block
 				@click="follow"
 				v-app-tooltip="$gettext( `Keep track of replies in this topic.` )"
 				>
@@ -60,7 +60,7 @@
 				v-else
 				primary
 				solid
-				:block="Screen.isXs || Screen.isDesktop"
+				block
 				@click="unfollow"
 				@mouseenter="unfollowHover = true"
 				@mouseleave="unfollowHover = false"
@@ -68,7 +68,69 @@
 				>
 				<translate>Following</translate>
 			</app-button>
-		</template>
+
+			<app-popper
+				v-if="app.user"
+				slot="end"
+				>
+				<app-button
+					circle
+					trans
+					icon="ellipsis-v"
+					/>
+
+				<div slot="popover" class="list-group list-group-dark thin">
+					<a class="list-group-item has-icon"
+						@click="report"
+						>
+						<app-jolticon icon="flag" notice />
+						<translate>Report Topic</translate>
+					</a>
+					<a class="list-group-item"
+						v-if="app.user.permission_level > 0"
+						:href="Environment.baseUrl + `/moderate/forums/topics/toggle-sticky/${ topic.id }`"
+						target="_blank"
+						>
+						<translate>Toggle Sticky</translate>
+					</a>
+					<a class="list-group-item"
+						v-if="app.user.permission_level > 0"
+						:href="Environment.baseUrl + `/moderate/forums/topics/toggle-lock/${ topic.id }`"
+						target="_blank"
+						>
+						<translate>Toggle Lock</translate>
+					</a>
+					<a class="list-group-item"
+						v-if="app.user.permission_level > 0"
+						:href="Environment.baseUrl + `/moderate/forums/topics/edit/${ topic.id }`"
+						target="_blank"
+						>
+						<translate>Edit Topic</translate>
+					</a>
+					<a class="list-group-item"
+						v-if="app.user.permission_level > 0"
+						:href="Environment.baseUrl + `/moderate/forums/topics/move/${ topic.id }`"
+						target="_blank"
+						>
+						<translate>Move Topic</translate>
+					</a>
+					<a class="list-group-item"
+						v-if="app.user.permission_level > 0"
+						:href="Environment.baseUrl + `/moderate/forums/topics/remove/${ topic.id }`"
+						target="_blank"
+						>
+						<translate>Remove Topic</translate>
+					</a>
+					<a class="list-group-item"
+						v-if="app.user.permission_level > 0"
+						:href="Environment.baseUrl + `/moderate/users/view/${ topic.user_id }`"
+						target="_blank"
+						>
+						<translate>Moderate User</translate>
+					</a>
+				</div>
+			</app-popper>
+		</app-page-header-controls>
 
 	</app-page-header>
 
@@ -79,7 +141,7 @@
 
 				<div class="col-sm-3 col-sm-push-9 col-md-offset-1 col-md-push-8">
 
-					<app-scroll-affix :should-affix="Screen.isDesktop" v-if="app.user">
+					<app-scroll-affix :disabled="!Screen.isDesktop" v-if="app.user">
 						<app-button
 							v-if="!topic.is_locked"
 							primary
@@ -97,70 +159,6 @@
 							>
 							<translate>Edit</translate>
 						</app-button>
-
-						<!-- Mod Tools -->
-						<app-popper
-							v-if="app.user"
-							block
-							>
-							<br>
-							<app-button
-								block
-								sparse
-								icon="ellipsis-v"
-								/>
-
-							<div slot="popover" class="list-group list-group-dark thin">
-								<a class="list-group-item has-icon"
-									@click="report"
-									>
-									<app-jolticon icon="flag" notice />
-									<translate>Report Topic</translate>
-								</a>
-								<a class="list-group-item"
-									v-if="app.user.permission_level > 0"
-									:href="Environment.baseUrl + `/moderate/forums/topics/toggle-sticky/${ topic.id }`"
-									target="_blank"
-									>
-									<translate>Toggle Sticky</translate>
-								</a>
-								<a class="list-group-item"
-									v-if="app.user.permission_level > 0"
-									:href="Environment.baseUrl + `/moderate/forums/topics/toggle-lock/${ topic.id }`"
-									target="_blank"
-									>
-									<translate>Toggle Lock</translate>
-								</a>
-								<a class="list-group-item"
-									v-if="app.user.permission_level > 0"
-									:href="Environment.baseUrl + `/moderate/forums/topics/edit/${ topic.id }`"
-									target="_blank"
-									>
-									<translate>Edit Topic</translate>
-								</a>
-								<a class="list-group-item"
-									v-if="app.user.permission_level > 0"
-									:href="Environment.baseUrl + `/moderate/forums/topics/move/${ topic.id }`"
-									target="_blank"
-									>
-									<translate>Move Topic</translate>
-								</a>
-								<a class="list-group-item"
-									v-if="app.user.permission_level > 0"
-									:href="Environment.baseUrl + `/moderate/forums/topics/remove/${ topic.id }`"
-									target="_blank"
-									>
-									<translate>Remove Topic</translate>
-								</a>
-								<a class="list-group-item"
-									v-if="app.user.permission_level > 0"
-									:href="Environment.baseUrl + `/moderate/users/view/${ topic.user_id }`"
-									target="_blank"
-									>
-									<translate>Moderate User</translate>
-								</a>
-							</div>
-						</app-popper>
 					</app-scroll-affix>
 
 					<br>

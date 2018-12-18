@@ -19,14 +19,14 @@
 		<app-loading big v-if="isLoading" />
 		<template v-else-if="packageData.packages.length">
 			<app-game-package-card
-				v-for="package of packageData.packages"
-				:key="package.id"
-				v-if="buildsByPackage[ package.id ]"
+				v-for="pkg of packageData.packages"
+				:key="pkg.id"
+				v-if="buildsByPackage[ pkg.id ]"
 				:game="game"
-				:sellable="package._sellable"
-				:package="package"
-				:releases="package._releases"
-				:builds="package._builds"
+				:sellable="pkg._sellable"
+				:package="pkg"
+				:releases="pkg._releases"
+				:builds="pkg._builds"
 				/>
 		</template>
 		<template v-else class="alert alert-notice">

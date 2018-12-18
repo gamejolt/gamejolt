@@ -1,5 +1,5 @@
 import View from '!view!./collection.html?style=./collection.styl';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
@@ -32,6 +32,7 @@ import { GameFilteringContainer } from '../../../components/game/filtering/conta
 import { AppGameGrid } from '../../../components/game/grid/grid';
 import { AppGameListing } from '../../../components/game/listing/listing';
 import { GameListingContainer } from '../../../components/game/listing/listing-container-service';
+import { AppPageHeaderControls } from '../../../components/page-header/controls/controls';
 import { AppPageHeader } from '../../../components/page-header/page-header';
 import { store, Store, tillStoreBootstrapped } from '../../../store/index';
 import { LibraryModule, LibraryStore } from '../../../store/library';
@@ -44,6 +45,7 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 	name: 'RouteLibraryCollection',
 	components: {
 		AppPageHeader,
+		AppPageHeaderControls,
 		AppGameCollectionThumbnail,
 		AppPopper,
 		AppGameListing,
@@ -99,9 +101,6 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 	},
 })
 export default class RouteLibraryCollection extends BaseRouteComponent {
-	@Prop(String)
-	id!: string;
-
 	@State
 	app!: Store['app'];
 
@@ -283,6 +282,10 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			Meta.twitter = $payload.twitter;
 			Meta.twitter.title = this.routeTitle;
 		}
+	}
+
+	get id() {
+		return this.$route.params.id;
 	}
 
 	get processedId() {

@@ -1,4 +1,18 @@
+import {
+	CustomMessage as CustomGameMessage,
+	Game,
+} from 'game-jolt-frontend-lib/components/game/game.model';
+import { GamePackagePayloadModel } from 'game-jolt-frontend-lib/components/game/package/package-payload.model';
+import { GameRating } from 'game-jolt-frontend-lib/components/game/rating/rating.model';
+import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
+import { GameScreenshot } from 'game-jolt-frontend-lib/components/game/screenshot/screenshot.model';
+import { GameSketchfab } from 'game-jolt-frontend-lib/components/game/sketchfab/sketchfab.model';
+import { GameSong } from 'game-jolt-frontend-lib/components/game/song/song.model';
+import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
 import { LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
+import { Registry } from 'game-jolt-frontend-lib/components/registry/registry.service';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { objectPick } from 'game-jolt-frontend-lib/utils/object';
 import { namespace } from 'vuex-class';
 import { Collaborator } from '../../../../../lib/gj-lib-client/components/collaborator/collaborator.model';
 import { Comment } from '../../../../../lib/gj-lib-client/components/comment/comment-model';
@@ -6,20 +20,6 @@ import { CommentVideo } from '../../../../../lib/gj-lib-client/components/commen
 import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
-import {
-	CustomMessage as CustomGameMessage,
-	Game,
-} from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { GamePackagePayloadModel } from '../../../../../lib/gj-lib-client/components/game/package/package-payload.model';
-import { GameRating } from '../../../../../lib/gj-lib-client/components/game/rating/rating.model';
-import { GameScoreTable } from '../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { GameScreenshot } from '../../../../../lib/gj-lib-client/components/game/screenshot/screenshot.model';
-import { GameSketchfab } from '../../../../../lib/gj-lib-client/components/game/sketchfab/sketchfab.model';
-import { GameSong } from '../../../../../lib/gj-lib-client/components/game/song/song.model';
-import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/video/video.model';
-import { Registry } from '../../../../../lib/gj-lib-client/components/registry/registry.service';
-import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
-import { objectPick } from '../../../../../lib/gj-lib-client/utils/object';
 import {
 	NamespaceVuexStore,
 	VuexModule,
@@ -42,6 +42,7 @@ type RouteMutations = {
 	toggleDescription: undefined;
 	setCanToggleDescription: boolean;
 	setUserRating: GameRating | null;
+	setOverviewComments: Comment[];
 };
 
 export const RouteStoreName = 'gameRoute';
@@ -134,6 +135,14 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 		return Game.pluckInstallableBuilds(this.packages, os, arch);
 	}
 
+	get externalPackages() {
+		if (!this.packagePayload) {
+			return [];
+		}
+
+		return this.packagePayload.externalPackages;
+	}
+
 	get downloadableBuilds() {
 		return Game.pluckDownloadableBuilds(this.packages);
 	}
@@ -152,7 +161,9 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 	get hasReleasesSection() {
 		// The releases section exists if there are releases or songs.
-		return this.packages.length > 0 || this.songs.length > 0;
+		return (
+			this.externalPackages.length > 0 || this.packages.length > 0 || this.songs.length > 0
+		);
 	}
 
 	get partnerLink() {
@@ -317,5 +328,10 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	@VuexMutation
 	toggleDetails() {
 		this.showDetails = !this.showDetails;
+	}
+
+	@VuexMutation
+	setOverviewComments(comments: RouteMutations['setOverviewComments']) {
+		this.overviewComments = comments;
 	}
 }

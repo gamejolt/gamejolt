@@ -5,6 +5,7 @@ import { asyncComponentLoader } from '../../../../../lib/gj-lib-client/utils/uti
 export class GameDevStageSelectorConfirmModal {
 	static async show(game: Game, stage: number) {
 		return await Modal.show<boolean>({
+			modalId: 'GameDevStageSelectorConfirm-' + game.id,
 			component: () =>
 				asyncComponentLoader(
 					import(/* webpackChunkName: "GameDevStageSelectorConfirmModal" */ './confirm')

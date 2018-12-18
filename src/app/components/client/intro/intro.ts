@@ -11,6 +11,7 @@ import { sleep } from '../../../../lib/gj-lib-client/utils/utils';
 import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Client } from '../../../../_common/client/client.service';
+import './intro-global.styl';
 
 @View
 @Component({

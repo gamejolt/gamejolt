@@ -1,34 +1,34 @@
-import { Component, Prop, Watch } from 'vue-property-decorator';
-import { determine } from 'jstimezonedetect';
-import * as startOfTomorrow from 'date-fns/start_of_tomorrow';
-import * as startOfDay from 'date-fns/start_of_day';
-import * as addWeeks from 'date-fns/add_weeks';
 import View from '!view!./package.html';
-
+import * as addWeeks from 'date-fns/add_weeks';
+import * as startOfDay from 'date-fns/start_of_day';
+import * as startOfTomorrow from 'date-fns/start_of_tomorrow';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { AppFormControlDate } from 'game-jolt-frontend-lib/components/form-vue/control/date/date';
+import { AppFormControlToggle } from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle';
 import {
 	BaseForm,
+	FormOnBeforeSubmit,
 	FormOnInit,
 	FormOnLoad,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { Sellable } from '../../../../../lib/gj-lib-client/components/sellable/sellable.model';
-import { SellablePricing } from '../../../../../lib/gj-lib-client/components/sellable/pricing/pricing.model';
-import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import { AppLoadingFade } from '../../../../../lib/gj-lib-client/components/loading/fade/fade';
+} from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { AppFormLegend } from 'game-jolt-frontend-lib/components/form-vue/legend/legend';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
+import { AppLoadingFade } from 'game-jolt-frontend-lib/components/loading/fade/fade';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
+import { SellablePricing } from 'game-jolt-frontend-lib/components/sellable/pricing/pricing.model';
+import { Sellable } from 'game-jolt-frontend-lib/components/sellable/sellable.model';
+import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
 import {
-	TimezoneData,
 	Timezone,
-} from '../../../../../lib/gj-lib-client/components/timezone/timezone.service';
-import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
-import { currency } from '../../../../../lib/gj-lib-client/vue/filters/currency';
-import { AppFormControlDate } from '../../../../../lib/gj-lib-client/components/form-vue/control/date/date';
-import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
+	TimezoneData,
+} from 'game-jolt-frontend-lib/components/timezone/timezone.service';
+import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
+import { date } from 'game-jolt-frontend-lib/vue/filters/date';
+import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
+import { determine } from 'jstimezonedetect';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import { AppGamePerms } from '../../../game/perms/perms';
-import { AppFormLegend } from '../../../../../lib/gj-lib-client/components/form-vue/legend/legend';
-import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 
 type FormGamePackageModel = GamePackage & {
 	primary: boolean;
@@ -38,6 +38,7 @@ type FormGamePackageModel = GamePackage & {
 	sale_start: number | null;
 	sale_end: number | null;
 	sale_price: number | null;
+	sale_start_now: boolean;
 	has_suggested_price: boolean;
 };
 
@@ -57,15 +58,19 @@ type FormGamePackageModel = GamePackage & {
 	},
 })
 export class FormGamePackage extends BaseForm<FormGamePackageModel>
-	implements FormOnInit, FormOnLoad {
+	implements FormOnInit, FormOnLoad, FormOnBeforeSubmit {
 	modelClass = GamePackage as any;
 	resetOnSubmit = true;
 	reloadOnSubmit = true;
 
-	@AppState user!: AppStore['user'];
+	@AppState
+	user!: AppStore['user'];
 
-	@Prop(Game) game!: Game;
-	@Prop(Sellable) sellable!: Sellable;
+	@Prop(Game)
+	game!: Game;
+
+	@Prop(Sellable)
+	sellable!: Sellable;
 	// @Prop(GamePackage) package?: GamePackage;
 
 	showDescriptionInput = false;
@@ -227,6 +232,12 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 
 				this.setField('has_suggested_price', !!this.formModel.price);
 			}
+		}
+	}
+
+	onBeforeSubmit(): void {
+		if (this.formModel.sale_start_now) {
+			this.setField('sale_start', Date.now());
 		}
 	}
 

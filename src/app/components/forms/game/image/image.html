@@ -6,7 +6,8 @@
 		:hide-label="true"
 		>
 		<p class="help-block" v-translate>
-			dash.forms.image_filetype_help_html
+			<translate>Your image must be a PNG or JPG.</translate><br>
+			<strong><translate>PNGs are highly recommended as they produce a lossless image.</translate></strong>
 		</p>
 
 		<app-form-control-upload
@@ -14,7 +15,7 @@
 				filesize: maxFilesize,
 				max_img_dimensions: [ maxWidth, maxHeight ],
 			}"
-			accept=".png,.jpg,.jpeg,.gif"
+			accept=".png,.jpg,.jpeg"
 			:multiple="true"
 			@changed="imagesSelected()"
 			/>

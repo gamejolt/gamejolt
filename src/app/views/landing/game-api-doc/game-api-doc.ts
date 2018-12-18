@@ -1,8 +1,7 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./game-api-doc.html?style=./game-api-doc.styl';
-
+import { Component } from 'vue-property-decorator';
+import nav from '../../../../lib/doc-game-api/v1.x/nav.json';
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
-import * as nav from '!json-loader!../../../../lib/doc-game-api/v1.x/nav.json';
 import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
 
 @View

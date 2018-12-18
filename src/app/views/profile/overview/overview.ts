@@ -1,5 +1,8 @@
 import View from '!view!./overview.html?style=./overview.styl';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { AppCommentAddButton } from 'game-jolt-frontend-lib/components/comment/add-button/add-button';
+import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
+import { CommentThreadModal } from 'game-jolt-frontend-lib/components/comment/thread/modal.service';
 import { AppExpand } from 'game-jolt-frontend-lib/components/expand/expand';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
@@ -16,11 +19,15 @@ import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { YoutubeChannel } from 'game-jolt-frontend-lib/components/youtube/channel/channel-model';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { Action, State } from 'vuex-class';
+import { Comment } from '../../../../lib/gj-lib-client/components/comment/comment-model';
 import {
 	LinkedAccount,
 	Provider,
 } from '../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
+import { ChatClient } from '../../../components/chat/client';
+import { AppCommentOverview } from '../../../components/comment/overview/overview';
+import { AppPageContainer } from '../../../components/page-container/page-container';
 import { Store } from '../../../store/index';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 import { AppGameList } from './../../../components/game/list/list';
@@ -30,10 +37,13 @@ import { AppGameListPlaceholder } from './../../../components/game/list/placehol
 @Component({
 	name: 'RouteProfileOverview',
 	components: {
+		AppPageContainer,
 		AppExpand,
 		AppFadeCollapse,
 		AppGameList,
 		AppGameListPlaceholder,
+		AppCommentAddButton,
+		AppCommentOverview,
 	},
 	directives: {
 		AppTooltip,
@@ -79,18 +89,19 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	@RouteStoreModule.Action
 	removeFriend!: RouteStore['removeFriend'];
 
+	@Action
+	toggleRightPane!: Store['toggleRightPane'];
+
+	@State
+	chat?: ChatClient;
+
 	showFullDescription = false;
 	canToggleDescription = false;
 	games: Game[] = [];
+	overviewComments: Comment[] = [];
 	developerGames: Game[] = [];
 	youtubeChannels: YoutubeChannel[] = [];
 	linkedAccounts: LinkedAccount[] = [];
-
-	static readonly PROVIDERS: Provider[] = [
-		LinkedAccount.PROVIDER_TWITTER,
-		LinkedAccount.PROVIDER_GOOGLE,
-		LinkedAccount.PROVIDER_TWITCH,
-	];
 
 	readonly User = User;
 	readonly UserFriendship = UserFriendship;
@@ -101,14 +112,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			return `${this.user.display_name} (@${this.user.username})`;
 		}
 		return null;
-	}
-
-	get leftColClass() {
-		return '-left-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-8 col-lg-7';
-	}
-
-	get rightColClass() {
-		return '-right-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-4';
 	}
 
 	get isBioLoaded() {
@@ -128,6 +131,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	get hasQuickButtonsSection() {
 		return (
 			this.canAddAsFriend ||
+			this.canMessage ||
 			(Screen.isMobile && (this.gamesCount > 0 || this.videosCount > 0))
 		);
 	}
@@ -165,6 +169,41 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return null;
 	}
 
+	get mixerAccount() {
+		return this.getLinkedAccount(LinkedAccount.PROVIDER_MIXER);
+	}
+
+	get addCommentPlaceholder() {
+		if (!this.user) {
+			return undefined;
+		}
+
+		if (this.app.user && this.user.id === this.app.user.id) {
+			return this.$gettext('Shout at yourself!');
+		} else {
+			return this.$gettext('Shout') + ' @' + this.user.username + '!';
+		}
+	}
+
+	get commentsCount() {
+		if (this.user && this.user.comment_count) {
+			return this.user.comment_count;
+		}
+		return 0;
+	}
+
+	get shouldShowShouts() {
+		return this.user && !Screen.isMobile && this.user.shouts_enabled;
+	}
+
+	get isFriend() {
+		return this.userFriendship && this.userFriendship.state === UserFriendship.STATE_FRIENDS;
+	}
+
+	get canMessage() {
+		return this.isFriend && this.chat && this.chat.connected;
+	}
+
 	getLinkedAccount(provider: Provider) {
 		if (
 			this.user &&
@@ -190,5 +229,43 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		this.youtubeChannels = YoutubeChannel.populate($payload.youtubeChannels);
 		this.games = Game.populate($payload.developerGamesTeaser);
 		this.linkedAccounts = LinkedAccount.populate($payload.linkedAccounts);
+		this.overviewComments = Comment.populate($payload.comments);
+
+		if (this.user) {
+			CommentThreadModal.showFromPermalink(this.$router, 'User', this.user.id, 'shouts');
+		}
+	}
+
+	showComments() {
+		if (this.user) {
+			CommentModal.show({
+				resource: 'User',
+				resourceId: this.user.id,
+				displayMode: 'shouts',
+			});
+		}
+	}
+
+	openMessaging() {
+		if (this.user && this.chat) {
+			const chatUser = this.chat.friendsList.collection.find(u => u.id === this.user!.id);
+			if (chatUser) {
+				if (this.chat.isInRoom(chatUser.roomId)) {
+					this.toggleRightPane();
+				} else {
+					this.chat.enterRoom(chatUser.roomId);
+				}
+			}
+		}
+	}
+
+	async reloadPreviewComments() {
+		if (this.user) {
+			const $payload = await Api.sendRequest(
+				'/web/profile/comment-overview/@' + this.user.username
+			);
+			this.overviewComments = Comment.populate($payload.comments);
+			this.user.comment_count = $payload.count;
+		}
 	}
 }

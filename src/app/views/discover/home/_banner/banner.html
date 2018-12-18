@@ -1,12 +1,9 @@
 <app-theme :theme="theme">
 	<section
 		class="-banner section landing-header"
-		:style="`
-			background-image: url('${item.back_url}');
-			background-repeat: no-repeat;
-			background-position: 50% 50%;
-			background-size: cover;
-		`"
+		:style="{
+			'background-image': `url('${item.back_url}')`,
+		}"
 		>
 		<router-link
 			v-if="location"

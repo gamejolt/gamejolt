@@ -53,22 +53,16 @@ export class AppShell extends Vue {
 	chat!: Store['chat'];
 
 	@State
-	isLeftPaneVisible!: Store['isLeftPaneVisible'];
-
-	@State
-	isLeftPaneSticky!: Store['isLeftPaneSticky'];
-
-	@State
-	isRightPaneVisible!: Store['isRightPaneVisible'];
-
-	@State
-	hasMinibar!: Store['hasMinibar'];
-
-	@State
 	hasSidebar!: Store['hasSidebar'];
 
 	@State
 	hasCbar!: Store['hasCbar'];
+
+	@State
+	isLeftPaneVisible!: Store['isLeftPaneVisible'];
+
+	@State
+	isRightPaneVisible!: Store['isRightPaneVisible'];
 
 	@BannerModule.State
 	hasBanner!: BannerStore['hasBanner'];

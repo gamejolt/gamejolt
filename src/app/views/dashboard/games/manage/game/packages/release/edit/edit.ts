@@ -1,17 +1,17 @@
 import View from '!view!./edit.html';
-import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { GameBuild } from '../../../../../../../../../lib/gj-lib-client/components/game/build/build.model';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
 // tslint:disable-next-line:max-line-length
-import { GameBuildLaunchOption } from '../../../../../../../../../lib/gj-lib-client/components/game/build/launch-option/launch-option.model';
-import { GamePackage } from '../../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { GameRelease } from '../../../../../../../../../lib/gj-lib-client/components/game/release/release.model';
-import { Growls } from '../../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { GameBuildLaunchOption } from 'game-jolt-frontend-lib/components/game/build/launch-option/launch-option.model';
+import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
+import { GameRelease } from 'game-jolt-frontend-lib/components/game/release/release.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Component } from 'vue-property-decorator';
 import { FormGameRelease } from '../../../../../../../../components/forms/game/release/release';
 import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 
@@ -77,8 +77,7 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 
 		// If the game was entered into a jam that locks its builds.
 		this.areBuildsLockedByJam = $payload.areBuildsLockedByJam || false;
-		this.areWebBuildsLockedBySellable =
-			$payload.package.is_in_paid_sellable || $payload.package.has_sales || false;
+		this.areWebBuildsLockedBySellable = $payload.package.is_in_paid_sellable || false;
 	}
 
 	onSaved() {

@@ -2,49 +2,16 @@
 @require '~styles-lib/mixins'
 
 #shell-sidebar
-	// TODO(communities) is this merged correctly? This next line was removed in master.
-	theme-prop('border-right-color', 'darkest')
-	position: fixed
-	width: $shell-top-nav-height
-	border-right-style: solid
-	border-right-width: 1px
-	z-index: $zindex-shell-pane
-	will-change: width
-
 	hr
 		margin: $line-height-computed 15px
 
-	.shell-nav-label
-		display: none !important
-
-	.shell-nav-chevron
-		display: none !important
-
 	.tag
-		position: absolute !important
-		right: 0
-		top: 0
-		margin-top: 0 !important
+		margin-top: 15px
 
 	.alert
 		border-radius: 0
 
-	// When hiding, keep the styling active. Only when the animation is fully
-	// done should we revert back to the styling above.
-	.left-pane-visible &, .left-pane-visible-remove &
-		width: $shell-sidebar-width
-
-		.shell-nav-label
-			display: block !important
-
-		.shell-nav-chevron
-			display: block !important
-
-		.tag
-			position: relative !important
-			margin-top: 15px !important
-
-.shell-sidebar-content
+.-content
 	position: absolute
 	top: 0
 	right: 0

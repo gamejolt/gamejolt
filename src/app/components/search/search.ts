@@ -1,5 +1,6 @@
 import View from '!view!./search.html?style=./search.styl';
 import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
+import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { AppSearchAutocomplete } from './autocomplete/autocomplete';
@@ -12,25 +13,6 @@ const KEYCODE_ENTER = 13;
 const KEYCODE_ESC = 27;
 
 let searchIterator = 0;
-
-function setCaretPosition(el: any, caretPos: number) {
-	// This is used to not only get "focus", but
-	// to make sure we don't have it everything -selected-
-	// (it causes an issue in chrome, and having it doesn't hurt any other browser)
-	el.value = el.value;
-
-	if (el !== null) {
-		if (el.createTextRange) {
-			const range = el.createTextRange();
-			range.move('character', caretPos);
-			range.select();
-		} else if (el.selectionStart || el.selectionStart === 0) {
-			// (el.selectionStart === 0 added for Firefox bug)
-			el.focus();
-			el.setSelectionRange(caretPos, caretPos);
-		}
-	}
-}
 
 @View
 @Component({
@@ -84,22 +66,15 @@ export class AppSearch extends Vue {
 		}
 	}
 
-	commandFocus(event: KeyboardEvent) {
-		event.preventDefault();
-		this.query = ':';
-
-		// We push their cursor after the ":".
-		// This will also focus it.
-		if (this.inputElem) {
-			setCaretPosition(this.inputElem, 1);
-		}
-	}
-
 	/**
 	 * Ability to set watchers for when a keydown event fires.
 	 */
 	setKeydownSpy(fn: Function) {
 		this.keydownSpies.push(fn);
+	}
+
+	removeKeydownSpy(fn: Function) {
+		arrayRemove(this.keydownSpies, i => i === fn);
 	}
 
 	onKeydown(event: KeyboardEvent) {

@@ -11,6 +11,7 @@ export class PostEditModal {
 	static async show(post: FiresidePost, options: PostEditModalOptions = {}) {
 		options = options || {};
 		return await Modal.show<FiresidePost>({
+			modalId: 'PostEdit',
 			component: () =>
 				asyncComponentLoader(
 					import(/* webpackChunkName: "PostEditModal" */ './edit-modal')

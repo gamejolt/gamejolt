@@ -1,4 +1,5 @@
 import View from '!view!./feed.html?style=./feed.styl';
+import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
 import { AppExpand } from 'game-jolt-frontend-lib/components/expand/expand';
@@ -7,7 +8,6 @@ import 'rxjs/add/operator/sampleTime';
 import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Emit, Prop, Provide, Watch } from 'vue-property-decorator';
-import { AppAd } from '../../../../lib/gj-lib-client/components/ad/ad';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Ruler } from '../../../../lib/gj-lib-client/components/ruler/ruler-service';
@@ -34,7 +34,7 @@ const ScrollSampleTime = 1000;
 		AppLoading,
 		AppActivityFeedItem,
 		AppActivityFeedNewButton,
-		AppAd,
+		AppAdWidget,
 		AppExpand,
 	},
 	directives: {
@@ -56,8 +56,11 @@ export class AppActivityFeed extends Vue {
 	// the same feed we can scroll to the previous position that way.
 	private scroll!: number;
 	private scroll$: Subscription | undefined;
+	private scrollSampled$: Subscription | undefined;
 
 	readonly number = number;
+
+	$el!: HTMLDivElement;
 
 	@Emit('edit-post')
 	emitEditPost(_eventItem: EventItem) {}
@@ -84,13 +87,18 @@ export class AppActivityFeed extends Vue {
 	emitLoadMore() {}
 
 	mounted() {
-		this.scroll$ = Scroll.watcher.changes.sampleTime(ScrollSampleTime).subscribe(() => {
+		this.scroll$ = Scroll.watcher.changes.subscribe(() => {
+			// We use the scroll top directly, instead of going through scroll
+			// watcher, so that we can keep this as fast as possible.
+			this.scroll = Scroll.getScrollTop();
+		});
+
+		this.scrollSampled$ = Scroll.watcher.changes.sampleTime(ScrollSampleTime).subscribe(() => {
 			const { top, height } = Scroll.watcher.getScrollChange();
-			this.scroll = top;
 
 			// Auto-loading while scrolling.
 			if (this.feed.shouldScrollLoadMore) {
-				const feedOffset = Ruler.offset(this.$el);
+				const feedOffset = Ruler.offset(this.$el as HTMLElement);
 				const feedBottom = feedOffset.top + feedOffset.height;
 				const scrollBottom = top + height;
 
@@ -107,6 +115,11 @@ export class AppActivityFeed extends Vue {
 		if (this.scroll$) {
 			this.scroll$.unsubscribe();
 			this.scroll$ = undefined;
+		}
+
+		if (this.scrollSampled$) {
+			this.scrollSampled$.unsubscribe();
+			this.scrollSampled$ = undefined;
 		}
 	}
 
@@ -154,15 +167,11 @@ export class AppActivityFeed extends Vue {
 		// Show an ad every X posts thereafter.
 		const adGap = 5;
 
-		// Only show a max of this many ads in the feed.
-		const totalAds = 4;
-
-		index = index + 1;
-
-		if (!this.shouldShowAds || index >= adGap * totalAds + firstAd) {
+		if (!this.shouldShowAds) {
 			return false;
 		}
 
+		++index;
 		return index === firstAd || (index - firstAd) % adGap === 0;
 	}
 

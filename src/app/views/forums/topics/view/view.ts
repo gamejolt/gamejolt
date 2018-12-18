@@ -35,6 +35,7 @@ import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
 import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/breadcrumbs';
 import { AppForumPostList } from '../../../../components/forum/post-list/post-list';
 import { AppForumTopicUpvoteWidget } from '../../../../components/forum/topic/upvote-widget/upvote-widget';
+import { AppPageHeaderControls } from '../../../../components/page-header/controls/controls';
 import { AppPageHeader } from '../../../../components/page-header/page-header';
 import { Store } from '../../../../store/index';
 
@@ -43,6 +44,7 @@ import { Store } from '../../../../store/index';
 	name: 'RouteForumsTopicsView',
 	components: {
 		AppPageHeader,
+		AppPageHeaderControls,
 		AppUserAvatar,
 		AppUserCardHover,
 		AppForumBreadcrumbs,

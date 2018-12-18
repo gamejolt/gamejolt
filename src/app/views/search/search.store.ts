@@ -44,6 +44,9 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 		this.adSettings = new AdSettingsContainer();
 		this.adSettings.adUnit = 'search';
+		// Always disable ads for now, until we get better controls of when
+		// adult content is shown in search.
+		this.adSettings.isPageDisabled = true;
 		Ads.setPageSettings(this.adSettings);
 	}
 
@@ -54,10 +57,10 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 	@VuexMutation
 	processPayload({ payload, route }: RouteMutations['processPayload']) {
-		// Disable ads for adult searches.
-		if (payload.isAdultSearch) {
-			this.adSettings.isPageDisabled = true;
-		}
+		// // Disable ads for adult searches.
+		// if (payload.isAdultSearch) {
+		// 	this.adSettings.isPageDisabled = true;
+		// }
 
 		this.query = '';
 
