@@ -11,6 +11,12 @@
 		&, .jolticon
 			cursor: help
 
+// We want to make this the same width as the cbar, so that it aligns.
+@media $media-sm-up
+	.-menu-toggle
+		width: $shell-cbar-width
+		text-align: center
+
 .-explore-icon
 	position: relative
 	top: 2px

@@ -52,7 +52,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 		this.viewCommunity(this.community);
 	}
 
-	routeDestroy() {
+	routeDestroyed() {
 		this.setPageTheme(null);
 	}
 

@@ -3,7 +3,6 @@
 
 $-scroll-affixed-spacing = ($grid-gutter-width / 2)
 
-// TODO(communities) check this entire file for merge issues.
 html
 	// Firefox uses this color to blank the screen before it renders. It's
 	// better to use this than constantly flicker black while rendering.
@@ -11,8 +10,6 @@ html
 
 body
 	theme-prop('background-color', 'darkest-subtle', true)
-	background-image: url('./shell-bg.png')
-	background-repeat: repeat
 
 #shell-top-nav
 	top: 0
@@ -60,10 +57,10 @@ body
 
 #shell
 	&.has-banner
-		#shell-top-nav, #shell-cbar
+		#shell-top-nav
 			top: $shell-top-nav-height
 
-		.shell-pane
+		.shell-pane, #shell-cbar
 			top: $shell-top-nav-height * 2
 
 		#shell-body
