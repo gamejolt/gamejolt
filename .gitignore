@@ -5,6 +5,5 @@
 /build/
 /debug.log
 /src/translations
-/.cache
 .DS_Store
 .cache
