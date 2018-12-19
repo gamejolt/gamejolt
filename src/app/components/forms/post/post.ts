@@ -3,6 +3,7 @@ import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
+import { AppCommunityPill } from 'game-jolt-frontend-lib/components/community/pill/pill';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import {
 	AppFormAutosize,
@@ -27,7 +28,6 @@ import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.mo
 import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
 import { LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
 import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
-import { AppPill } from 'game-jolt-frontend-lib/components/pill/pill';
 import { AppProgressBar } from 'game-jolt-frontend-lib/components/progress/bar/bar';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppSketchfabEmbed } from 'game-jolt-frontend-lib/components/sketchfab/embed/embed';
@@ -87,7 +87,7 @@ type FormPostModel = FiresidePost & {
 		AppUserAvatarImg,
 		AppProgressBar,
 		AppFormPostMedia,
-		AppPill,
+		AppCommunityPill,
 		AppFormPostTags,
 	},
 	directives: {

@@ -142,24 +142,15 @@
 					:game="post.game"
 					/>
 			</div>
-		</template>
 
-		<div class="-communities" v-if="communities.length && !feed.hideCommunityInfo">
-			<router-link
-				v-for="i of communities"
-				:key="i.id"
-				:to="{
-					name: 'communities.view.overview',
-					params: {
-						path: i.community.path,
-					},
-				}"
-				>
-				<app-pill>
-					{{ i.community.name }}
-				</app-pill>
-			</router-link>
-		</div>
+			<div class="-communities" v-if="communities.length && !feed.hideCommunityInfo">
+				<app-community-pill
+					v-for="i of communities"
+					:key="i.id"
+					:community="i.community"
+					/>
+			</div>
+		</template>
 
 		<div class="-manage" v-if="shouldShowManage">
 			<app-event-item-manage

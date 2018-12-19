@@ -10,35 +10,33 @@
 
 			<div :class="leftColClass">
 				<p>
-					<router-link
+					<app-pill
 						:to="{
 							name: 'communities.view.overview',
 							params: {
 								tab: undefined,
 							},
 						}"
+						:class="{ active: tab === 'featured' }"
 						>
-						<app-pill :class="{ active: tab === 'featured' }">
-							<translate>Featured</translate>
-						</app-pill>
-					</router-link>
+						<translate>Featured</translate>
+					</app-pill>
 
-					<router-link
+					<app-pill
 						:to="{
 							name: 'communities.view.overview',
 							params: {
 								tab: 'new',
 							},
 						}"
+						:class="{ active: tab === 'new' }"
 						>
-						<app-pill :class="{ active: tab === 'new' }">
-							<translate>New</translate>
-						</app-pill>
-					</router-link>
+						<translate>New</translate>
+					</app-pill>
 
 					<span class="dot-separator" />
 
-					<router-link
+					<app-pill
 						v-for="tag in tags"
 						:key="tag"
 						:to="{
@@ -47,11 +45,10 @@
 								tab: tag,
 							},
 						}"
+						:class="{ active: tab === tag }"
 						>
-						<app-pill :class="{ active: tab === tag }">
-							#{{ tag }}
-						</app-pill>
-					</router-link>
+						#{{ tag }}
+					</app-pill>
 				</p>
 
 				<app-expand

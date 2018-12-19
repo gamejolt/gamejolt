@@ -1,9 +1,9 @@
 import View from '!view!./event-item.html?style=./event-item.styl';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
+import { AppCommunityPill } from 'game-jolt-frontend-lib/components/community/pill/pill';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
-import { AppPill } from 'game-jolt-frontend-lib/components/pill/pill';
 import { AppUserAvatar } from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar';
 import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
 import Vue from 'vue';
@@ -48,7 +48,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppPollVoting,
 		AppUserCardHover,
 		AppFadeCollapse,
-		AppPill,
+		AppCommunityPill,
 	},
 	filters: {
 		number,

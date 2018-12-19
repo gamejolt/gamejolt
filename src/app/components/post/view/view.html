@@ -109,20 +109,11 @@
 
 				<template v-if="communities.length">
 					<div>
-						<router-link
+						<app-community-pill
 							v-for="i of communities"
 							:key="i.id"
-							:to="{
-								name: 'communities.view.overview',
-								params: {
-									path: i.community.path,
-								},
-							}"
-							>
-							<app-pill>
-								{{ i.community.name }}
-							</app-pill>
-						</router-link>
+							:community="i.community"
+							/>
 					</div>
 
 					<br>

@@ -566,9 +566,12 @@
 				<translate>Community</translate>
 			</div>
 			<div class="-communities-list">
-				<app-pill v-for="community of communities" :key="community.id">
-					{{ community.name }}
-				</app-pill>
+				<app-community-pill
+					v-for="community of communities"
+					:key="community.id"
+					:community="community"
+					static
+					/>
 			</div>
 		</div>
 

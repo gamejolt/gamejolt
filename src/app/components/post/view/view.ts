@@ -1,9 +1,9 @@
 import View from '!view!./view.html?style=./view.styl';
 import { AppAdPlacement } from 'game-jolt-frontend-lib/components/ad/placement/placement';
 import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
+import { AppCommunityPill } from 'game-jolt-frontend-lib/components/community/pill/pill';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
-import { AppPill } from 'game-jolt-frontend-lib/components/pill/pill';
 import { AppResponsiveDimensions } from 'game-jolt-frontend-lib/components/responsive-dimensions/responsive-dimensions';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppScrollWhen } from 'game-jolt-frontend-lib/components/scroll/scroll-when.directive.vue';
@@ -39,7 +39,7 @@ import { AppPostViewPlaceholder } from './placeholder/placeholder';
 		AppPollVoting,
 		AppAdWidget,
 		AppAdPlacement,
-		AppPill,
+		AppCommunityPill,
 	},
 	directives: {
 		AppScrollWhen,
