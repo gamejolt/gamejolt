@@ -15,6 +15,7 @@ $-bubble-size = 14px
 
 .-thumb
 	img-circle()
+	pressy()
 	theme-prop('border-color', 'gray')
 	theme-prop('background-color', 'gray-dark')
 	border-width: 2px
@@ -27,33 +28,17 @@ $-bubble-size = 14px
 		height: $-item-size - 2px
 
 .-blip
-	theme-prop('background-color', 'highlight')
+	theme-prop('background-color', 'gray')
 	position: absolute
 	width: $-blip-size
 	height: $-blip-size
 	top: $-blip-top
-	left: $-blip-left - $-item-size
+	left: $-blip-left
 	border-radius: 50%
 	will-change: height, top, left
 	z-index: 2
-	transition: height 300ms $ease-in-out-back, top 300ms $ease-in-out-back, left 300ms $ease-in-out
+	transition: height 300ms $ease-in-out-back, top 300ms $ease-in-out-back, background-color 300ms
 
-	.-item.-unread &
-		left: $-blip-left
-
-	.-item.-active &
-		top: 0
-		height: $-item-size
-		left: $-blip-left
-
-.-bubble
-	theme-prop('background-color', 'highlight')
-	theme-prop('border-color', 'gray')
-	border-width: 2px
-	border-style: solid
-	position: absolute
-	width: $-bubble-size
-	height: $-bubble-size
-	border-radius: 50%
-	top: $-item-size - $-bubble-size
-	left: $-item-size - $-bubble-size
+.-blip-active
+	top: 0
+	height: $-item-size

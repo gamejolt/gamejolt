@@ -4,7 +4,6 @@
 		name: 'communities.view.overview',
 		params: { path: community.path }
 	}"
-	active-class="-active"
 	v-app-tooltip.right="community.name"
 	>
 	<app-community-thumbnail-img
@@ -13,12 +12,11 @@
 		/>
 	<div
 		class="-blip"
+		:class="{
+			'-blip-active': isActive,
+		}"
 		:style="{
-			'background-color': highlight,
+			'background-color': isActive || isUnread ? highlight : undefined,
 		}"
 		/>
-	<div
-		v-if="community.is_unread"
-		class="-bubble"
-	 	/>
 </router-link>

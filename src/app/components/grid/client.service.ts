@@ -203,7 +203,7 @@ export class GridClient {
 
 	handleBootstrap(channel: Channel, payload: BootstrapPayload) {
 		if (payload.status === 'ok') {
-			console.log('[Grid] Received notification count bootstrap.');
+			console.log('[Grid] Received bootstrap.');
 
 			channel.onError(reason => {
 				console.log(`[Grid] Connection error encountered (Reason: ${reason}).`);

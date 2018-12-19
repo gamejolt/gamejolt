@@ -16,10 +16,22 @@ import { Component, Prop } from 'vue-property-decorator';
 })
 export class AppShellCbarItem extends Vue {
 	@Prop(Community)
-	community?: Community;
+	community!: Community;
+
+	get isUnread() {
+		return this.community.is_unread;
+	}
+
+	get isActive() {
+		return (
+			this.$route.name &&
+			this.$route.name.indexOf('communities.view') === 0 &&
+			this.$route.params.path === this.community!.path
+		);
+	}
 
 	get highlight() {
-		const highlight = this.community && this.community.theme && this.community.theme.highlight_;
+		const highlight = this.community.theme && this.community.theme.highlight_;
 		if (highlight) {
 			return '#' + highlight;
 		}
