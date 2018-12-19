@@ -20,15 +20,19 @@ import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppPostAddButton } from '../../../../components/post/add-button/add-button';
 import { Store } from '../../../../store/index';
 
-function getFetchUrl(route: Route, tags: string[]) {
+function getTab(route: Route) {
+	return route.params.tab || 'featured';
+}
+
+function getFetchUrl(route: Route) {
+	const tags = [getTab(route)];
+
 	let url = `/web/posts/fetch/community/${route.params.path}`;
 	if (tags.length) {
 		url += '?' + tags.map(tag => `tags[]=` + encodeURIComponent(tag)).join('&');
 	}
 	return url;
 }
-
-const TAG_FEATURED = 'featured';
 
 @View
 @Component({
@@ -43,22 +47,36 @@ const TAG_FEATURED = 'featured';
 	},
 })
 @RouteResolver({
-	cache: false,
+	cache: true,
 	lazy: true,
-	deps: {},
-	resolver: ({ route }) => Api.sendRequest(getFetchUrl(route, [TAG_FEATURED])),
+	deps: {
+		params: ['path', 'tab'],
+	},
+	resolver: ({ route }) => Api.sendRequest(getFetchUrl(route)),
 })
 export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@Prop(Community)
 	community!: Community;
+
+	@Prop(Array)
+	tags!: string[];
 
 	@State
 	communities!: Store['communities'];
 
 	feed: ActivityFeedView | null = null;
 
-	activeTag = '';
-	searchId = 0;
+	get routeTitle() {
+		return this.community
+			? this.$gettextInterpolate(`%{ community } Community`, {
+					community: this.community.name,
+			  })
+			: null;
+	}
+
+	get tab() {
+		return getTab(this.$route);
+	}
 
 	get leftColClass() {
 		return '-left-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-8 col-lg-7';
@@ -68,27 +86,17 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return '-right-col col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-4';
 	}
 
-	get routeTitle() {
-		return this.community
-			? this.$gettextInterpolate(`%{ community } Community`, {
-					community: this.community.name,
-					// tslint:disable-next-line:indent
-			  })
-			: null;
-	}
-
 	get shouldShowLoadNew() {
 		// We need to access the reactive community from the Store here to react to is_unread changing
 		const stateCommunity = this.communities.find(c => c.id === this.community.id);
 		if (stateCommunity) {
-			return this.activeTag === TAG_FEATURED && stateCommunity.is_unread;
+			return this.tab === 'featured' && stateCommunity.is_unread;
 		}
 		return false;
 	}
 
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
-		this.activeTag = TAG_FEATURED;
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {
@@ -96,36 +104,12 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			this.feed,
 			{
 				type: 'EventItem',
-				url: getFetchUrl(this.$route, [TAG_FEATURED]),
+				url: getFetchUrl(this.$route),
 				shouldShowCommunityControls: true,
+				hideCommunityInfo: true,
 			},
 			$payload.items,
 			fromCache
-		);
-	}
-
-	async setActiveTag(tag: string) {
-		const searchId = ++this.searchId;
-
-		this.activeTag = tag;
-		this.feed = null;
-
-		const loadUrl = getFetchUrl(this.$route, [this.activeTag]);
-		const payload = await Api.sendRequest(loadUrl);
-
-		if (searchId !== this.searchId) {
-			return;
-		}
-
-		this.feed = ActivityFeedService.routed(
-			null,
-			{
-				type: 'EventItem',
-				url: loadUrl,
-				shouldShowCommunityControls: true,
-			},
-			payload.items,
-			false
 		);
 	}
 
@@ -134,14 +118,14 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	onPostUnfeatured(eventItem: EventItem, community: Community) {
-		if (this.activeTag === TAG_FEATURED && this.community.id === community.id) {
-			this.feed!.remove([eventItem]);
+		if (this.feed && this.tab === 'featured' && this.community.id === community.id) {
+			this.feed.remove([eventItem]);
 		}
 	}
 
 	onPostRejected(eventItem: EventItem, community: Community) {
-		if (this.community.id === community.id) {
-			this.feed!.remove([eventItem]);
+		if (this.feed && this.community.id === community.id) {
+			this.feed.remove([eventItem]);
 		}
 	}
 }

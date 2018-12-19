@@ -10,14 +10,48 @@
 
 			<div :class="leftColClass">
 				<p>
-					<a
-						v-for="tag in ['featured', 'latest', 'news', 'fanart', 'guide', 'review', 'letsplay']"
-						@click="setActiveTag(tag)"
+					<router-link
+						:to="{
+							name: 'communities.view.overview',
+							params: {
+								tab: undefined,
+							},
+						}"
 						>
-						<app-pill :class="{ active: tag === activeTag }">
+						<app-pill :class="{ active: tab === 'featured' }">
+							<translate>Featured</translate>
+						</app-pill>
+					</router-link>
+
+					<router-link
+						:to="{
+							name: 'communities.view.overview',
+							params: {
+								tab: 'new',
+							},
+						}"
+						>
+						<app-pill :class="{ active: tab === 'new' }">
+							<translate>New</translate>
+						</app-pill>
+					</router-link>
+
+					<span class="dot-separator" />
+
+					<router-link
+						v-for="tag in tags"
+						:key="tag"
+						:to="{
+							name: 'communities.view.overview',
+							params: {
+								tab: tag,
+							},
+						}"
+						>
+						<app-pill :class="{ active: tab === tag }">
 							#{{ tag }}
 						</app-pill>
-					</a>
+					</router-link>
 				</p>
 
 				<app-expand
@@ -26,13 +60,12 @@
 					animate-initial
 					>
 					<app-activity-feed-new-button>
-						Show New Activity
+						<translate>Show New Posts</translate>
 					</app-activity-feed-new-button>
 				</app-expand>
 
 				<br>
 
-				<!-- @add="onPostAdded" -->
 				<app-post-add-button
 					:community="community"
 					@add="onPostAdded"
@@ -43,8 +76,6 @@
 					<app-activity-feed
 						v-if="feed.hasItems"
 						:feed="feed"
-						:show-edit-controls="feed.shouldShowEditControls"
-						:show-community-controls="feed.shouldShowCommunityControls"
 						@unfeature-post="onPostUnfeatured"
 						@reject-post="onPostRejected"
 						/>

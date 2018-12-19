@@ -28,13 +28,8 @@
 						:to="{ name: 'communities.view.overview' }"
 						:class="{ active: $route.name === 'communities.view.overview' }"
 						>
-						<translate>Feed</translate>
+						<translate>Overview</translate>
 					</router-link>
-				</li>
-				<li>
-					<a>
-						<translate>Latest</translate>
-					</a>
 				</li>
 				<li>
 					<router-link
@@ -63,6 +58,7 @@
 
 	<router-view
 		:community="community"
+		:tags="tags"
 		/>
 
 </div>

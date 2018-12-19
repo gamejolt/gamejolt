@@ -7,7 +7,10 @@ import { AppCard } from 'game-jolt-frontend-lib/components/card/card';
 import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
 import { AppCommentAddButton } from 'game-jolt-frontend-lib/components/comment/add-button/add-button';
 import { Comment } from 'game-jolt-frontend-lib/components/comment/comment-model';
-import { CommentState, CommentStore } from 'game-jolt-frontend-lib/components/comment/comment-store';
+import {
+	CommentState,
+	CommentStore,
+} from 'game-jolt-frontend-lib/components/comment/comment-store';
 import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
@@ -21,7 +24,10 @@ import { AppLazyPlaceholder } from 'game-jolt-frontend-lib/components/lazy/place
 import { AppMediaBar } from 'game-jolt-frontend-lib/components/media-bar/media-bar';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import { PartnerReferral } from 'game-jolt-frontend-lib/components/partner-referral/partner-referral-service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
@@ -233,6 +239,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 				type: 'EventItem',
 				url: `/web/posts/fetch/game/${this.game.id}`,
 				shouldShowEditControls: true,
+				hideGameInfo: true,
 			},
 			$payload.posts,
 			fromCache

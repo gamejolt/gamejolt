@@ -171,7 +171,11 @@
 			<translate>Your post is too long!</translate>
 		</p>
 
+		<!--
+			Only show tags for community posts at the moment.
+		-->
 		<app-form-post-tags
+			v-if="defaultCommunity"
 			class="-post-tags"
 			:text="tagText"
 			:tags="featuredTags"

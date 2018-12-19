@@ -45,9 +45,12 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	viewCommunity!: Store['viewCommunity'];
 
 	community: Community = null as any;
+	tags: string[] = [];
 
 	routeResolved($payload: any) {
 		this.community = new Community($payload.community);
+		this.tags = $payload.tags || [];
+
 		this.setPageTheme(this.community.theme || null);
 		this.viewCommunity(this.community);
 	}

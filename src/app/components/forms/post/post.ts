@@ -372,8 +372,8 @@ export class FormPost extends BaseForm<FormPostModel>
 
 	get communities() {
 		if (this.model) {
-			if (this.model.tagged_communities.length) {
-				return this.model.tagged_communities.map(i => i.community);
+			if (this.model.communities.length) {
+				return this.model.communities.map(i => i.community);
 			}
 
 			if (this.defaultCommunity) {
@@ -396,8 +396,8 @@ export class FormPost extends BaseForm<FormPostModel>
 
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
 
-		if (model.tagged_communities.length > 0) {
-			this.setField('community_id', model.tagged_communities[0].community.id);
+		if (model.communities.length > 0) {
+			this.setField('community_id', model.communities[0].community.id);
 		} else if (this.defaultCommunity) {
 			this.setField('community_id', this.defaultCommunity.id);
 		}

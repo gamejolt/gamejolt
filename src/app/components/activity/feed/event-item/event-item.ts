@@ -3,6 +3,7 @@ import { Community } from 'game-jolt-frontend-lib/components/community/community
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
+import { AppPill } from 'game-jolt-frontend-lib/components/pill/pill';
 import { AppUserAvatar } from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar';
 import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
 import Vue from 'vue';
@@ -47,6 +48,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppPollVoting,
 		AppUserCardHover,
 		AppFadeCollapse,
+		AppPill,
 	},
 	filters: {
 		number,
@@ -69,6 +71,8 @@ export class AppActivityFeedEventItem extends Vue {
 
 	readonly Screen = Screen;
 	readonly EventItem = EventItem;
+
+	$el!: HTMLDivElement;
 
 	get isNew() {
 		return this.feed.isItemUnread(this.item);
@@ -104,6 +108,10 @@ export class AppActivityFeedEventItem extends Vue {
 		}
 
 		return undefined;
+	}
+
+	get communities() {
+		return (this.post && this.post.communities) || [];
 	}
 
 	get user() {
