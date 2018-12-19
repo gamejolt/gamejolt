@@ -7,8 +7,11 @@
 	>
 	<div
 		class="-bubble"
+		:class="{
+			'-bubble-unread': this.community.is_unread,
+		}"
 		:style="{
-			'background-image': this.gradient,
+			'background-image': this.community.is_unread ? this.gradient : undefined,
 		}"
 		>
 		<app-community-thumbnail-img

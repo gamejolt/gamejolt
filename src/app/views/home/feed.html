@@ -95,10 +95,9 @@
 			</template>
 		</div>
 
-		<template v-if="Screen.isXs">
-			<app-community-slider />
-			<hr class="full-bleed">
-		</template>
+		<app-community-slider
+			v-if="Screen.isXs"
+			/>
 
 		<app-post-add-button
 			@add="onPostAdded"
