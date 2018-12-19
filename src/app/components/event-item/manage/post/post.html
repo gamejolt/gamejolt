@@ -86,16 +86,16 @@
 
 							<translate
 								v-if="tagCom.isFeatured"
-								:translate-params="{ community: tagCom.community.path }"
+								:translate-params="{ community: tagCom.community.name }"
 								>
-								Unfeature in %{ community }
+								Unfeature: %{ community }
 							</translate>
 
 							<translate
 								v-else
-								:translate-params="{ community: tagCom.community.path }"
+								:translate-params="{ community: tagCom.community.name }"
 								>
-								Feature in %{ community }
+								Feature: %{ community }
 							</translate>
 						</a>
 
@@ -106,9 +106,9 @@
 							<app-jolticon icon="remove" notice />
 
 							<translate
-								:translate-params="{ community: tagCom.community.path }"
+								:translate-params="{ community: tagCom.community.name }"
 								>
-								Remove from %{ community }
+								Remove: %{ community }
 							</translate>
 						</a>
 					</span>

@@ -107,6 +107,27 @@
 					<br>
 				</template>
 
+				<template v-if="communities.length">
+					<div>
+						<router-link
+							v-for="i of communities"
+							:key="i.id"
+							:to="{
+								name: 'communities.view.overview',
+								params: {
+									path: i.community.path,
+								},
+							}"
+							>
+							<app-pill>
+								{{ i.community.name }}
+							</app-pill>
+						</router-link>
+					</div>
+
+					<br>
+				</template>
+
 				<div class="well fill-offset full-bleed-xs" v-if="shouldShowManage">
 					<app-event-item-manage-post
 						:post="post"

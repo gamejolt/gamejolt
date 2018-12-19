@@ -3,6 +3,7 @@ import { AppAdPlacement } from 'game-jolt-frontend-lib/components/ad/placement/p
 import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
+import { AppPill } from 'game-jolt-frontend-lib/components/pill/pill';
 import { AppResponsiveDimensions } from 'game-jolt-frontend-lib/components/responsive-dimensions/responsive-dimensions';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppScrollWhen } from 'game-jolt-frontend-lib/components/scroll/scroll-when.directive.vue';
@@ -38,6 +39,7 @@ import { AppPostViewPlaceholder } from './placeholder/placeholder';
 		AppPollVoting,
 		AppAdWidget,
 		AppAdPlacement,
+		AppPill,
 	},
 	directives: {
 		AppScrollWhen,
@@ -54,6 +56,10 @@ export class AppPostView extends Vue {
 	app!: Store['app'];
 
 	readonly Screen = Screen;
+
+	get communities() {
+		return (this.post && this.post.communities) || [];
+	}
 
 	get shouldShowManage() {
 		return this.post && this.post.isManageableByUser(this.app.user);
