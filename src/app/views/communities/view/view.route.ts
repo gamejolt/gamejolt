@@ -6,5 +6,6 @@ export const routeCommunitiesView: RouteConfig = {
 	name: 'communities.view',
 	path: '/c/:path',
 	component: () => import(/* webpackChunkName: "routeCommunitiesView" */ './view'),
-	children: [routeCommunitiesViewOverview, routeCommunitiesViewMembers],
+	// The order matters here.
+	children: [routeCommunitiesViewMembers, routeCommunitiesViewOverview],
 };
