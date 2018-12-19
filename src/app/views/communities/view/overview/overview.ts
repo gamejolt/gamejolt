@@ -113,6 +113,10 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		);
 	}
 
+	reloadFeed() {
+		this.reloadRoute();
+	}
+
 	onPostAdded(post: FiresidePost) {
 		ActivityFeedService.gotoPostFeedManage(post, this);
 	}
