@@ -1,3 +1,4 @@
+import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Route } from 'vue-router';
 import { sync } from 'vuex-router-sync';
@@ -75,6 +76,9 @@ export type Mutations = AppMutations &
 		incrementNotificationCount: { type: UnreadItemType; count: number };
 		setFriendRequestCount: number;
 		changeFriendRequestCount: number;
+		joinCommunity: Community;
+		leaveCommunity: Community;
+		viewCommunity: Community;
 	};
 
 let bootstrapResolver: Function | null = null;
@@ -117,6 +121,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	isBootstrapped = false;
 	isLibraryBootstrapped = false;
+	isShellBootstrapped = false;
 
 	unreadActivityCount = 0; // unread items in the activity feed
 	unreadNotificationsCount = 0; // unread items in the notification feed
@@ -126,8 +131,14 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	isLeftPaneOverlayed = false;
 	isRightPaneOverlayed = false;
 
+	communities: Community[] = [];
+
 	get hasSidebar() {
 		return Screen.isXs || !!this.app.user;
+	}
+
+	get hasCbar() {
+		return !Screen.isXs && this.communities.length;
 	}
 
 	get isLeftPaneVisible() {
@@ -149,15 +160,20 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		// Detach so that errors in it doesn't cause the not found page to show. This is considered
 		// a sort of "async" load.
 		try {
-			const response = await Api.sendRequest('/web/library', null, { detach: true });
+			const [shellPayload, libraryPayload] = await Promise.all([
+				Api.sendRequest('/web/dash/shell', null, { detach: true }),
+				Api.sendRequest('/web/library', null, { detach: true }),
+			]);
+
 			this._setLibraryBootstrapped();
+			this._shellPayload(shellPayload);
 
 			// If we failed to finish before we unbootstrapped, then stop.
 			if (bootstrapResolver !== prevResolver) {
 				return;
 			}
 
-			this.commit('library/bootstrap', response);
+			this.commit('library/bootstrap', libraryPayload);
 		} catch (e) {}
 
 		this._setBootstrapped();
@@ -329,6 +345,44 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexMutation
 	private _setLibraryBootstrapped() {
 		this.isLibraryBootstrapped = true;
+	}
+
+	@VuexMutation
+	private _shellPayload(payload: any) {
+		this.isShellBootstrapped = true;
+		this.communities = Community.populate(payload.communities);
+	}
+
+	@VuexMutation
+	joinCommunity(community: Mutations['joinCommunity']) {
+		if (this.communities.find(c => c.id === community.id)) {
+			return;
+		}
+
+		this.communities.unshift(community);
+	}
+
+	@VuexMutation
+	leaveCommunity(community: Mutations['leaveCommunity']) {
+		const idx = this.communities.findIndex(c => c.id === community.id);
+		if (idx === -1) {
+			return;
+		}
+
+		this.communities.splice(idx, 1);
+	}
+
+	@VuexMutation
+	viewCommunity(community: Mutations['leaveCommunity']) {
+		community.is_unread = false;
+
+		const idx = this.communities.findIndex(c => c.id === community.id);
+		if (idx === -1) {
+			return;
+		}
+
+		this.communities.splice(idx, 1);
+		this.communities.unshift(community);
 	}
 
 	@VuexMutation

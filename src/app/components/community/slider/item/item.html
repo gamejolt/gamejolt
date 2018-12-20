@@ -1,0 +1,22 @@
+<router-link
+	class="-item"
+	:to="{
+		name: 'communities.view.overview',
+		params: { path: community.path }
+	}"
+	>
+	<div
+		class="-bubble"
+		:class="{
+			'-bubble-unread': this.community.is_unread,
+		}"
+		:style="{
+			'background-image': this.community.is_unread ? this.gradient : undefined,
+		}"
+		>
+		<app-community-thumbnail-img
+			class="-thumb"
+			:community="community"
+			/>
+	</div>
+</router-link>

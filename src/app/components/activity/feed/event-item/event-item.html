@@ -50,7 +50,7 @@
 						</small>
 					</div>
 
-					<div class="-header-byline-game" v-if="game && feed.shouldShowGameInfo">
+					<div class="-header-byline-game" v-if="game && !feed.hideGameInfo">
 						<strong class="text-muted">
 							<router-link :to="gameUrl" class="link-unstyled">
 								{{ game.title }}
@@ -142,15 +142,27 @@
 					:game="post.game"
 					/>
 			</div>
+
+			<div class="-communities" v-if="communities.length && !feed.hideCommunityInfo">
+				<app-community-pill
+					v-for="i of communities"
+					:key="i.id"
+					:community="i.community"
+					/>
+			</div>
 		</template>
 
 		<div class="-manage" v-if="shouldShowManage">
 			<app-event-item-manage
 				:event-item="eventItem"
-				:show-edit-controls="feed.shouldShowEditControls"
+				:show-edit-controls="feed.shouldShowEditControls && isEditableByUser"
+				:show-community-controls="feed.shouldShowCommunityControls && hasManageableCommunities"
 				@edit-post="onPostEdited(eventItem)"
 				@publish-post="onPostPublished(eventItem)"
 				@remove-post="onPostRemoved(eventItem)"
+				@feature-post="onPostFeatured(eventItem, $event)"
+				@unfeature-post="onPostUnfeatured(eventItem, $event)"
+				@reject-post="onPostRejected(eventItem, $event)"
 				/>
 		</div>
 

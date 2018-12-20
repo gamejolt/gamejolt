@@ -1,5 +1,6 @@
 import View from '!view!./feed.html?style=./feed.styl';
 import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
+import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
 import { AppExpand } from 'game-jolt-frontend-lib/components/expand/expand';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
@@ -69,6 +70,15 @@ export class AppActivityFeed extends Vue {
 
 	@Emit('remove-post')
 	emitRemovePost(_eventItem: EventItem) {}
+
+	@Emit('feature-post')
+	emitFeaturePost(_eventItem: EventItem, _community: Community) {}
+
+	@Emit('unfeature-post')
+	emitUnfeaturePost(_eventItem: EventItem, _community: Community) {}
+
+	@Emit('reject-post')
+	emitRejectPost(_eventItem: EventItem, _community: Community) {}
 
 	@Emit('load-new')
 	emitLoadNew() {}
@@ -178,6 +188,18 @@ export class AppActivityFeed extends Vue {
 	onPostRemoved(eventItem: EventItem) {
 		this.feed.remove([eventItem]);
 		this.emitRemovePost(eventItem);
+	}
+
+	onPostFeatured(eventItem: EventItem, community: Community) {
+		this.emitFeaturePost(eventItem, community);
+	}
+
+	onPostUnfeatured(eventItem: EventItem, community: Community) {
+		this.emitUnfeaturePost(eventItem, community);
+	}
+
+	onPostRejected(eventItem: EventItem, community: Community) {
+		this.emitRejectPost(eventItem, community);
 	}
 
 	loadMoreButton() {

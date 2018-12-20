@@ -18,6 +18,7 @@ import { ActivityFeedService } from '../../components/activity/feed/feed-service
 import { AppActivityFeedPlaceholder } from '../../components/activity/feed/placeholder/placeholder';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import { AppBroadcastCard } from '../../components/broadcast-card/broadcast-card';
+import { AppCommunitySlider } from '../../components/community/slider/slider';
 import { AppGameList } from '../../components/game/list/list';
 import { AppGameListPlaceholder } from '../../components/game/list/placeholder/placeholder';
 import { AppPageContainer } from '../../components/page-container/page-container';
@@ -43,6 +44,7 @@ class DashGame {
 		AppGameList,
 		AppGameListPlaceholder,
 		AppBroadcastCard,
+		AppCommunitySlider,
 		AppPostAddButton,
 		AppUserCard,
 	},
@@ -149,7 +151,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 				type: 'EventItem',
 				url: `/web/dash/activity/more/activity`,
 				notificationWatermark: feedPayload.unreadWatermark,
-				shouldShowGameInfo: true,
 			},
 			feedPayload.items,
 			fromCache

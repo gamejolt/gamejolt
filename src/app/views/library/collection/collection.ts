@@ -35,7 +35,7 @@ import { GameListingContainer } from '../../../components/game/listing/listing-c
 import { AppPageHeaderControls } from '../../../components/page-header/controls/controls';
 import { AppPageHeader } from '../../../components/page-header/page-header';
 import { store, Store, tillStoreBootstrapped } from '../../../store/index';
-import { LibraryAction, LibraryState, LibraryStore } from '../../../store/library';
+import { LibraryModule, LibraryStore } from '../../../store/library';
 
 const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
 const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
@@ -107,19 +107,19 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	@ThemeMutation
 	setPageTheme!: ThemeStore['setPageTheme'];
 
-	@LibraryState
+	@LibraryModule.State
 	collections!: LibraryStore['collections'];
 
-	@LibraryAction
+	@LibraryModule.Action
 	removeGameFromPlaylist!: LibraryStore['removeGameFromPlaylist'];
 
-	@LibraryAction
+	@LibraryModule.Action
 	unfollowGame!: LibraryStore['unfollowGame'];
 
-	@LibraryAction
+	@LibraryModule.Action
 	editPlaylist!: LibraryStore['editPlaylist'];
 
-	@LibraryAction
+	@LibraryModule.Action
 	removePlaylist!: LibraryStore['removePlaylist'];
 
 	type = '';

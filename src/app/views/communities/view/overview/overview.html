@@ -1,0 +1,87 @@
+<section class="section">
+	<div class="container">
+
+		<div class="row">
+			<div :class="rightColClass">
+				<div class="alert alert-info">
+					<p>Hey there! Join the community. Post, have fun, all that jazz!</p>
+				</div>
+			</div>
+
+			<div :class="leftColClass">
+				<p>
+					<app-pill
+						:to="{
+							name: 'communities.view.overview',
+							params: {
+								tab: undefined,
+							},
+						}"
+						:class="{ active: tab === 'featured' }"
+						>
+						<translate>Featured</translate>
+					</app-pill>
+
+					<app-pill
+						:to="{
+							name: 'communities.view.overview',
+							params: {
+								tab: 'new',
+							},
+						}"
+						:class="{ active: tab === 'new' }"
+						>
+						<translate>New</translate>
+					</app-pill>
+
+					<span class="dot-separator" />
+
+					<app-pill
+						v-for="tag in tags"
+						:key="tag"
+						:to="{
+							name: 'communities.view.overview',
+							params: {
+								tab: tag,
+							},
+						}"
+						:class="{ active: tab === tag }"
+						>
+						#{{ tag }}
+					</app-pill>
+				</p>
+
+				<app-expand
+					v-if="shouldShowLoadNew"
+					when
+					animate-initial
+					>
+					<app-activity-feed-new-button @click="reloadFeed()">
+						<translate>Show New Posts</translate>
+					</app-activity-feed-new-button>
+				</app-expand>
+
+				<br>
+
+				<app-post-add-button
+					:community="community"
+					@add="onPostAdded"
+					/>
+
+				<app-activity-feed-placeholder v-if="!feed" />
+				<template v-else>
+					<app-activity-feed
+						v-if="feed.hasItems"
+						:feed="feed"
+						@unfeature-post="onPostUnfeatured"
+						@reject-post="onPostRejected"
+						/>
+					<div v-else class="alert">
+						<translate>There are no posts in this community yet. What are you waiting for? Post some stuff! Make people happy.</translate>
+					</div>
+				</template>
+			</div>
+		</div>
+
+	</div>
+</section>

@@ -58,11 +58,17 @@
 		@media $media-sm-up
 			margin-left: $-item-padding
 
-.-poll, .-controls, .-manage, .fireside-post-lead
+.fireside-post-lead
 	margin-top: $-item-padding-xs-v
 
 	@media $media-sm-up
 		margin-top: $-item-padding-v
+
+.-poll, .-manage, .-communities, .fireside-post-lead
+	margin-bottom: $-item-padding-xs-v
+
+	@media $media-sm-up
+		margin-bottom: $-item-padding-v
 
 .-manage
 	-activity-feed-item-padding()

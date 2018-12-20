@@ -107,6 +107,18 @@
 					<br>
 				</template>
 
+				<template v-if="communities.length">
+					<div>
+						<app-community-pill
+							v-for="i of communities"
+							:key="i.id"
+							:community="i.community"
+							/>
+					</div>
+
+					<br>
+				</template>
+
 				<div class="well fill-offset full-bleed-xs" v-if="shouldShowManage">
 					<app-event-item-manage-post
 						:post="post"

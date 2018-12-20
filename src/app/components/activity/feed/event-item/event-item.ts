@@ -1,4 +1,6 @@
 import View from '!view!./event-item.html?style=./event-item.styl';
+import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
+import { AppCommunityPill } from 'game-jolt-frontend-lib/components/community/pill/pill';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
@@ -10,10 +12,7 @@ import { State } from 'vuex-class';
 import { CommentVideoModal } from '../../../../../lib/gj-lib-client/components/comment/video/modal/modal.service';
 import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
 import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
-import {
-	canUserManagePost,
-	FiresidePost,
-} from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
+import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppUserCardHover } from '../../../../../lib/gj-lib-client/components/user/card/hover/hover';
@@ -49,6 +48,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppPollVoting,
 		AppUserCardHover,
 		AppFadeCollapse,
+		AppCommunityPill,
 	},
 	filters: {
 		number,
@@ -71,6 +71,8 @@ export class AppActivityFeedEventItem extends Vue {
 
 	readonly Screen = Screen;
 	readonly EventItem = EventItem;
+
+	$el!: HTMLDivElement;
 
 	get isNew() {
 		return this.feed.isItemUnread(this.item);
@@ -106,6 +108,10 @@ export class AppActivityFeedEventItem extends Vue {
 		}
 
 		return undefined;
+	}
+
+	get communities() {
+		return (this.post && this.post.communities) || [];
 	}
 
 	get user() {
@@ -158,7 +164,15 @@ export class AppActivityFeedEventItem extends Vue {
 	}
 
 	get shouldShowManage() {
-		return this.post && canUserManagePost(this.post, this.app.user);
+		return this.post && this.post.isManageableByUser(this.app.user);
+	}
+
+	get isEditableByUser() {
+		return this.post && this.post.isEditableByUser(this.app.user);
+	}
+
+	get hasManageableCommunities() {
+		return this.post && this.post.manageableCommunities.length !== 0;
 	}
 
 	mounted() {
@@ -262,5 +276,17 @@ export class AppActivityFeedEventItem extends Vue {
 
 	onPostRemoved(item: EventItem) {
 		this.feedComponent.onPostRemoved(item);
+	}
+
+	onPostFeatured(item: EventItem, community: Community) {
+		this.feedComponent.onPostFeatured(item, community);
+	}
+
+	onPostUnfeatured(item: EventItem, community: Community) {
+		this.feedComponent.onPostUnfeatured(item, community);
+	}
+
+	onPostRejected(item: EventItem, community: Community) {
+		this.feedComponent.onPostRejected(item, community);
 	}
 }

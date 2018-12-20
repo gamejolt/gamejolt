@@ -95,6 +95,10 @@
 			</template>
 		</div>
 
+		<app-community-slider
+			v-if="Screen.isXs"
+			/>
+
 		<app-post-add-button
 			@add="onPostAdded"
 			/>

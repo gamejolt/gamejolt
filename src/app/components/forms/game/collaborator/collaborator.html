@@ -31,14 +31,14 @@
 		>
 		<div class="radio">
 			<label>
-				<app-form-control-radio :value="GameCollaborator.ROLE_COLLABORATOR" />
+				<app-form-control-radio :value="Collaborator.ROLE_GAME_COLLABORATOR" />
 				<translate>Full Collaborator</translate> &mdash;
 				<translate class="help-inline">They will be able to access and modify everything for the game. They won't be able to add other collaborators.</translate>
 			</label>
 		</div>
 		<div class="radio">
 			<label>
-				<app-form-control-radio :value="GameCollaborator.ROLE_COMMUNITY_MANAGER" />
+				<app-form-control-radio :value="Collaborator.ROLE_GAME_COMMUNITY_MANAGER" />
 				<translate>Community Manager</translate> &mdash;
 				<translate class="help-inline">They will be able to modify the game description, details, maturity, and media, as well as post devlogs. They won't be able to modify packages, game API, key groups, sales, or access analytics.</translate>
 			</label>

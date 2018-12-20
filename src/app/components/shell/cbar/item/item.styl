@@ -1,0 +1,44 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+$-item-size = $shell-cbar-width - $cbar-h-padding * 2
+$-blip-size = 10px
+$-blip-left = (-($cbar-h-padding + $-blip-size * 0.5))
+$-blip-top = $-item-size * 0.5 - $-blip-size * 0.5
+$-bubble-size = 14px
+
+.-item
+	display: block
+	position: relative
+	outline: 0
+	margin-bottom: 5px
+
+.-thumb
+	img-circle()
+	pressy()
+	theme-prop('border-color', 'gray')
+	theme-prop('background-color', 'gray-dark')
+	border-width: 2px
+	border-style: solid
+	width: $-item-size - 2px
+	height: $-item-size - 2px
+
+	>>> img
+		width: $-item-size - 2px
+		height: $-item-size - 2px
+
+.-blip
+	theme-prop('background-color', 'gray')
+	position: absolute
+	width: $-blip-size
+	height: $-blip-size
+	top: $-blip-top
+	left: $-blip-left
+	border-radius: 50%
+	will-change: height, top, left
+	z-index: 2
+	transition: height 300ms $ease-in-out-back, top 300ms $ease-in-out-back, background-color 300ms
+
+.-blip-active
+	top: 0
+	height: $-item-size

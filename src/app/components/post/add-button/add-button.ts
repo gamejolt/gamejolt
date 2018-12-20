@@ -1,4 +1,5 @@
 import View from '!view!./add-button.html?style=./add-button.styl';
+import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { AppUserAvatarImg } from 'game-jolt-frontend-lib/components/user/user-avatar/img/img';
@@ -17,6 +18,9 @@ export class AppPostAddButton extends Vue {
 	@Prop(Game)
 	game?: Game;
 
+	@Prop(Community)
+	community?: Community;
+
 	@AppState
 	user!: AppStore['user'];
 
@@ -25,7 +29,7 @@ export class AppPostAddButton extends Vue {
 
 	_isBlocked = false;
 
-	async open(attachmentType?: string) {
+	async open() {
 		if (this._isBlocked) {
 			return;
 		}
@@ -37,7 +41,7 @@ export class AppPostAddButton extends Vue {
 			this.game ? this.game.id : 0
 		);
 
-		post = await PostEditModal.show(post, { attachmentType: attachmentType || '' });
+		post = await PostEditModal.show(post, { community: this.community });
 		this._isBlocked = false;
 
 		if (!post) {

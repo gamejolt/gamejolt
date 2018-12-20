@@ -3,14 +3,13 @@
 
 $-scroll-affixed-spacing = ($grid-gutter-width / 2)
 
-html, body
+html
 	// Firefox uses this color to blank the screen before it renders. It's
 	// better to use this than constantly flicker black while rendering.
 	theme-prop('background-color', 'bg')
 
 body
-	background-image: url('./shell-bg.png')
-	background-repeat: repeat
+	theme-prop('background-color', 'darkest-subtle', true)
 
 #shell-top-nav
 	top: 0
@@ -19,6 +18,11 @@ body
 	// always the correct width.
 	width: 100vw
 	max-width: 100%
+
+#shell-cbar
+	top: $shell-top-nav-height
+	left: 0
+	bottom: 0
 
 #shell-body
 	margin-top: $shell-top-nav-height
@@ -56,7 +60,7 @@ body
 		#shell-top-nav
 			top: $shell-top-nav-height
 
-		.shell-pane
+		.shell-pane, #shell-cbar
 			top: $shell-top-nav-height * 2
 
 		#shell-body
@@ -69,11 +73,15 @@ body
 		.gj-scroll-affixed.-anchor-top
 			margin-top: $shell-top-nav-height * 2 + $-scroll-affixed-spacing
 
+	&.has-cbar
+		#shell-body
+			margin-left: $shell-cbar-width
+
 body.has-hot-bottom
 	#shell-body
 		margin-bottom: $status-bar-height
 
-	.shell-pane
+	.shell-pane, #shell-cbar
 		bottom: $status-bar-height
 
 	.growl-container

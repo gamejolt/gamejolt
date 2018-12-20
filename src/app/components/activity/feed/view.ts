@@ -33,7 +33,9 @@ class ActivityFeedViewItemState {
 export interface ActivityFeedViewOptions {
 	slice?: number;
 	shouldScroll?: boolean;
-	shouldShowGameInfo?: boolean;
+	hideCommunityInfo?: boolean;
+	hideGameInfo?: boolean;
+	shouldShowCommunityControls?: boolean;
 	shouldShowEditControls?: boolean;
 	shouldShowUserCards?: boolean;
 }
@@ -51,8 +53,10 @@ export class ActivityFeedView {
 	totalTimesLoaded = 0;
 	scroll = 0;
 	shouldScroll = true;
+	hideGameInfo = false;
+	hideCommunityInfo = false;
+	shouldShowCommunityControls = false;
 	shouldShowEditControls = false;
-	shouldShowGameInfo = false;
 	shouldShowUserCards = true;
 
 	get isBootstrapped() {
@@ -97,7 +101,9 @@ export class ActivityFeedView {
 		{
 			slice,
 			shouldScroll = true,
-			shouldShowGameInfo = false,
+			hideGameInfo = false,
+			hideCommunityInfo = false,
+			shouldShowCommunityControls = false,
 			shouldShowEditControls = false,
 			shouldShowUserCards = true,
 		}: ActivityFeedViewOptions = {}
@@ -105,7 +111,9 @@ export class ActivityFeedView {
 		this.state = state;
 		this.slice = slice || null;
 		this.shouldScroll = shouldScroll;
-		this.shouldShowGameInfo = shouldShowGameInfo;
+		this.hideGameInfo = hideGameInfo;
+		this.hideCommunityInfo = hideCommunityInfo;
+		this.shouldShowCommunityControls = shouldShowCommunityControls;
 		this.shouldShowEditControls = shouldShowEditControls;
 		this.shouldShowUserCards = shouldShowUserCards;
 	}

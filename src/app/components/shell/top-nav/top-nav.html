@@ -5,7 +5,10 @@
 		<a
 			v-if="hasSidebar"
 			class="navbar-item"
-			:class="{ active: isLeftPaneVisible }"
+			:class="{
+				'-menu-toggle': hasCbar,
+				active: isLeftPaneVisible,
+			}"
 			@click="toggleLeftPane"
 			v-app-tooltip.right="$gettext( `Playlists (m)` )"
 			v-app-track-event="`top-nav:main-menu:toggle`"

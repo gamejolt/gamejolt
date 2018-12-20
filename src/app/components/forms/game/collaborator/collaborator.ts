@@ -1,13 +1,12 @@
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./collaborator.html';
-
-import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import { Component, Prop } from 'vue-property-decorator';
+import { Collaborator } from '../../../../../lib/gj-lib-client/components/collaborator/collaborator.model';
 import { AppFocusWhen } from '../../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
 import {
 	BaseForm,
 	FormOnInit,
 } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 
 @View
 @Component({
@@ -15,17 +14,19 @@ import {
 		AppFocusWhen,
 	},
 })
-export class FormGameCollaborator extends BaseForm<GameCollaborator> implements FormOnInit {
-	modelClass = GameCollaborator;
+export class FormGameCollaborator extends BaseForm<Collaborator> implements FormOnInit {
+	modelClass = Collaborator;
 	saveMethod = '$invite' as '$invite';
 	resetOnSubmit = true;
 
-	@Prop(Game) game!: Game;
+	@Prop(Game)
+	game!: Game;
 
-	readonly GameCollaborator = GameCollaborator;
+	readonly Collaborator = Collaborator;
 
 	onInit() {
-		this.setField('game_id', this.game.id);
+		this.setField('resource', 'Game');
+		this.setField('resource_id', this.game.id);
 
 		if (this.model && this.model.user) {
 			this.setField('username', this.model.user.username);

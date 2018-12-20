@@ -1,26 +1,23 @@
-import { namespace, State, Action, Mutation } from 'vuex-class';
+import { namespace } from 'vuex-class';
+import { Analytics } from '../../lib/gj-lib-client/components/analytics/analytics.service';
+import { GamePlaylist } from '../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
+import { Game } from '../../lib/gj-lib-client/components/game/game.model';
+import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
+import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { Scroll } from '../../lib/gj-lib-client/components/scroll/scroll.service';
+import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
 import {
+	VuexAction,
 	VuexModule,
 	VuexMutation,
-	VuexAction,
 	VuexStore,
 } from '../../lib/gj-lib-client/utils/vuex';
-
-import { router } from '../views';
-import { GameCollection } from '../components/game/collection/collection.model';
-import { Analytics } from '../../lib/gj-lib-client/components/analytics/analytics.service';
 import { GamePlaylistSaveModal } from '../components/game-playlist/save-modal/save-modal.service';
-import { Scroll } from '../../lib/gj-lib-client/components/scroll/scroll.service';
-import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
-import { Game } from '../../lib/gj-lib-client/components/game/game.model';
-import { GamePlaylist } from '../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
-import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
+import { GameCollection } from '../components/game/collection/collection.model';
+import { router } from '../views';
 
 export const LibraryStoreNamespace = 'library';
-export const LibraryState = namespace(LibraryStoreNamespace, State);
-export const LibraryAction = namespace(LibraryStoreNamespace, Action);
-export const LibraryMutation = namespace(LibraryStoreNamespace, Mutation);
+export const LibraryModule = namespace(LibraryStoreNamespace);
 
 export type Actions = {
 	'library/followCollection': GameCollection;

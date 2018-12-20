@@ -17,6 +17,7 @@ import { AppModals } from '../../../lib/gj-lib-client/components/modal/modals';
 import { BannerModule, BannerStore, Store } from '../../store/index';
 import { ChatNewMessageEvent } from '../chat/client';
 import { AppShellBody } from './body/body';
+import { AppShellCbar } from './cbar/cbar';
 import { AppShellHotBottom } from './hot-bottom/hot-bottom';
 import './shell.styl';
 import { AppShellSidebar } from './sidebar/sidebar';
@@ -27,6 +28,7 @@ let components: any = {
 	AppShellBody,
 	AppShellSidebar,
 	AppShellHotBottom,
+	AppShellCbar,
 	AppMinbar,
 	AppGrowls,
 	AppModals,
@@ -59,6 +61,9 @@ export class AppShell extends Vue {
 
 	@State
 	hasSidebar!: Store['hasSidebar'];
+
+	@State
+	hasCbar!: Store['hasCbar'];
 
 	@State
 	isLeftPaneVisible!: Store['isLeftPaneVisible'];
