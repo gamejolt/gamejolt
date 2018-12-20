@@ -12,7 +12,6 @@ import {
 import { Connection } from '../../lib/gj-lib-client/components/connection/connection-service';
 import { ContentFocus } from '../../lib/gj-lib-client/components/content-focus/content-focus.service';
 import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
-import { Meta } from '../../lib/gj-lib-client/components/meta/meta-service';
 import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 import {
 	ThemeActions,
@@ -298,7 +297,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		} else {
 			this.unreadNotificationsCount += payload.count;
 		}
-		Meta.notificationCount = this.unreadActivityCount + this.unreadNotificationsCount;
 	}
 
 	@VuexMutation
@@ -308,7 +306,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		} else {
 			this.unreadNotificationsCount = payload.count;
 		}
-		Meta.notificationCount = this.unreadActivityCount + this.unreadNotificationsCount;
 	}
 
 	@VuexMutation
