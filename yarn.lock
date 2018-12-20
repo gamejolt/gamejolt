@@ -44,20 +44,20 @@
     "@types/express" "*"
     "@types/node" "*"
 
-"@types/chart.js@2.7.36":
-  version "2.7.36"
-  resolved "https://registry.yarnpkg.com/@types/chart.js/-/chart.js-2.7.36.tgz#561fee60e09acabc25c6414d36554f80dcf33dca"
-  integrity sha512-J92LO6oqKMIQ5WRPSdRHiZffpfZVXVpHgFSR8TpPlwi+C0MfaA9aNVMKPcUTZgoM26JrvqkRKQWEm+XPoPXmBA==
+"@types/chart.js@2.7.42":
+  version "2.7.42"
+  resolved "https://registry.yarnpkg.com/@types/chart.js/-/chart.js-2.7.42.tgz#3a201969379ef96f99c2901705fa7b57330ba127"
+  integrity sha512-+0v+PV2J9wsV7u36Vqt5Oke7ugtiZqNeYJgNk5mgNMkEkqtjxo2Q9N5Q9znHlgmXeOTfQL6e1sfcAbTnPHAzlA==
 
-"@types/codemirror@0.0.61":
-  version "0.0.61"
-  resolved "https://registry.yarnpkg.com/@types/codemirror/-/codemirror-0.0.61.tgz#7615190d833bbecf506f789f8caf9073e2dfe66d"
-  integrity sha512-LGqLfMyT2RKvo3JHQn7MTZ2uoMKuTFhRZ0MYR0YD3H/sZ81jOjBw8fzJ/6FXHSALXgGuoiZN7FH1Bx6PARdkBQ==
+"@types/codemirror@0.0.70":
+  version "0.0.70"
+  resolved "https://registry.yarnpkg.com/@types/codemirror/-/codemirror-0.0.70.tgz#2d9c850d6afbc93162c1434a827f86ad5ee90e35"
+  integrity sha512-NHpD8C5J9P+6M/Swm+jIkOs8EywFMeSYzX9c1917QBNfvj2fuS0djROLoLNzSYEMHUWWaEVPLYJ8zDR2M6qaaQ==
 
-"@types/cropperjs@1.1.3":
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/@types/cropperjs/-/cropperjs-1.1.3.tgz#8b2264fb45e933c3eda149cbd08a4f1926dfd8e2"
-  integrity sha512-E6P8qmd2Jns/j/vGW5nAFGbo5++jB5WzEAWQ/wIHgIVi2Of0krN2IFbImDLHinVGsGmAnHuYs8iuGKpcedZm/g==
+"@types/cropperjs@1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@types/cropperjs/-/cropperjs-1.1.4.tgz#241aaea915a3db820031e5c2ff66b735b4221345"
+  integrity sha512-JE8fiKPDVIm7JfHIhN35fA7uTif68WUvB36W3x8OSEW328tnjXg3XfW+Acgb2x+jK0QXQhjXg5aKLzxPIcBD8w==
 
 "@types/express-serve-static-core@*":
   version "4.0.57"
@@ -83,11 +83,6 @@
     "@types/body-parser" "*"
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
-
-"@types/favico.js@0.0.28":
-  version "0.0.28"
-  resolved "https://registry.yarnpkg.com/@types/favico.js/-/favico.js-0.0.28.tgz#bb7b7caa118217318d034666920d687a58d65eeb"
-  integrity sha1-u3t8qhGCFzGNA0Zmkg1oeljWXus=
 
 "@types/fs-extra@5.0.4":
   version "5.0.4"
@@ -1740,10 +1735,10 @@ chalk@^2.3.0:
     escape-string-regexp "^1.0.5"
     supports-color "^4.0.0"
 
-chart.js@2.7.2:
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-2.7.2.tgz#3c9fde4dc5b95608211bdefeda7e5d33dffa5714"
-  integrity sha512-90wl3V9xRZ8tnMvMlpcW+0Yg13BelsGS9P9t0ClaDxv/hdypHDr/YAGf+728m11P5ljwyB0ZHfPKCapZFqSqYA==
+chart.js@2.7.3:
+  version "2.7.3"
+  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-2.7.3.tgz#cdb61618830bf216dc887e2f7b1b3c228b73c57e"
+  integrity sha512-3+7k/DbR92m6BsMUYP6M0dMsMVZpMnwkUyNSAbqolHKsbIzH2Q4LWVEHHYq7v0fmEV8whXE0DrjANulw9j2K5g==
   dependencies:
     chartjs-color "^2.1.0"
     moment "^2.10.2"
@@ -1951,10 +1946,10 @@ code-point-at@^1.0.0:
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
 
-codemirror@5.40.2:
-  version "5.40.2"
-  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.40.2.tgz#f4a41fee2d84e679543591b3680af259d903330b"
-  integrity sha512-yoWuvEiD3v5vTwdoMc/wu/Ld6dh9K/yEiEBTKOPGM+/pN0gTAqFNtrLHv1IJ1UJvzFpNRvMi92XCi3+8/iIaEw==
+codemirror@5.42.0:
+  version "5.42.0"
+  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.42.0.tgz#2d5b640ed009e89dee9ed8a2a778e2a25b65f9eb"
+  integrity sha512-pbApC8zDzItP3HRphD6kQVwS976qB5Qi0hU3MZMixLk+AyugOW1RF+8XJEjeyl5yWsHNe88tDUxzeRh5AOxPRw==
 
 collection-map@^1.0.0:
   version "1.0.0"
@@ -2234,10 +2229,10 @@ copy-webpack-plugin@4.6.0:
     p-limit "^1.0.0"
     serialize-javascript "^1.4.0"
 
-core-js@2.5.7:
-  version "2.5.7"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.7.tgz#f972608ff0cead68b841a16a932d0b183791814e"
-  integrity sha512-RszJCAxg/PP6uzXVXL6BsxSXx/B05oJAQ2vkJRjyjrEcNVycaqOmNb5OTxZPE3xa5gwZduqza6L9JOCenh/Ecw==
+core-js@2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.1.tgz#87416ae817de957a3f249b3b5ca475d4aaed6042"
+  integrity sha512-L72mmmEayPJBejKIWe2pYtGis5r0tQ5NaJekdhyXgeMQTpJoBsH0NL4ElY2LfSoV15xeQWKQ+XTTOZdyero5Xg==
 
 core-js@^2.4.0:
   version "2.5.1"
@@ -2332,10 +2327,10 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-cropperjs@1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/cropperjs/-/cropperjs-1.4.1.tgz#41d9fcd87f9d9cd2e1dcf27c36680cac7a48cd6b"
-  integrity sha512-PzKN8nVbFCxw5vp4nLMtsMcBcRtBJzliPZMr9HpbJ75vZuTK3mSbimKEfmxXmJwiF+ngp/JVd1wh5F7z3h4lUg==
+cropperjs@1.4.3:
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/cropperjs/-/cropperjs-1.4.3.tgz#dc44d6c9e73269e7f96894c726ab91e8913f9e90"
+  integrity sha512-fsUjHuS9mvKVh2aXVRgNcUDlFplW+v4eEB6sOHVI9kMV4G3GViSD4p1qvNLg1ko4ZhOnF0L8/9uXcY4s2bFQPg==
 
 cross-spawn-async@^2.1.1:
   version "2.2.5"
@@ -2638,10 +2633,10 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-date-fns@1.29.0:
-  version "1.29.0"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.29.0.tgz#12e609cdcb935127311d04d33334e2960a2a54e6"
-  integrity sha512-lbTXWZ6M20cWH8N9S6afb0SBm6tMk+uUg6z3MqHPKE9atmsY3kJkTm8vKe93izJ2B2+q5MV990sM2CHgtAZaOw==
+date-fns@1.30.1:
+  version "1.30.1"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.30.1.tgz#2e71bf0b119153dbb4cc4e88d9ea5acfb50dc05c"
+  integrity sha512-hBSVCvSmWC+QypYObzwGOd9wqdDpOt+0wl0KbU+R+uuZBS1jN8VsD1ss3irQDknRj5NvxiTF6oj/nDRnN/UQNw==
 
 date-now@^0.1.4:
   version "0.1.4"
@@ -3844,11 +3839,6 @@ fastparse@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/fastparse/-/fastparse-1.1.1.tgz#d1e2643b38a94d7583b479060e6c4affc94071f8"
   integrity sha1-0eJkOzipTXWDtHkGDmxK/8lAcfg=
-
-favico.js@0.3.10:
-  version "0.3.10"
-  resolved "https://registry.yarnpkg.com/favico.js/-/favico.js-0.3.10.tgz#80586e27a117f24a8d51c18a99bdc714d4339301"
-  integrity sha1-gFhuJ6EX8kqNUcGKmb3HFNQzkwE=
 
 faye-websocket@^0.10.0:
   version "0.10.0"
@@ -11187,10 +11177,10 @@ typescript@~2.3.2:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.3.4.tgz#3d38321828231e434f287514959c37a82b629f42"
   integrity sha1-PTgyGCgjHkNPKHUUlZw3qCtin0I=
 
-ua-parser-js@0.7.18:
-  version "0.7.18"
-  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.18.tgz#a7bfd92f56edfb117083b69e31d2aa8882d4b1ed"
-  integrity sha512-LtzwHlVHwFGTptfNSgezHp7WUlwiqb0gA9AALRbKaERfxwJoiX0A73QbTToxteIAuIaFshhgIZfqK8s7clqgnA==
+ua-parser-js@0.7.19:
+  version "0.7.19"
+  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.19.tgz#94151be4c0a7fb1d001af7022fdaca4642659e4b"
+  integrity sha512-T3PVJ6uz8i0HzPxOF9SWzWAlfN/DavlpQqepn22xgve/5QecC+XMCAtmUNnY7C9StehaV6exjUCI801lOI7QlQ==
 
 uglify-js@3.2.x:
   version "3.2.1"
@@ -11623,7 +11613,12 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
-vue-class-component@6.2.0, vue-class-component@^6.2.0:
+vue-class-component@6.3.2:
+  version "6.3.2"
+  resolved "https://registry.yarnpkg.com/vue-class-component/-/vue-class-component-6.3.2.tgz#e6037e84d1df2af3bde4f455e50ca1b9eec02be6"
+  integrity sha512-cH208IoM+jgZyEf/g7mnFyofwPDJTM/QvBNhYMjqGB8fCsRyTf68rH2ISw/G20tJv+5mIThQ3upKwoL4jLTr1A==
+
+vue-class-component@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/vue-class-component/-/vue-class-component-6.2.0.tgz#7adb1daa9a868c75f30f97f33f4f1b94aee62089"
   integrity sha512-U11yVeP5zjPSx4IU7Zas3MLC+Vy9dmufI+uLKLo8YuGQJGOihSYfh/fgNnbjMteN+hz5axjG6iC6ybMo6vGYnA==
@@ -11657,10 +11652,10 @@ vue-loader@15.4.2:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
-vue-property-decorator@7.1.1:
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/vue-property-decorator/-/vue-property-decorator-7.1.1.tgz#0b1eefde50a7451e911ad44b91258010ffc08d01"
-  integrity sha512-oD+IXx3jxvKLgzk111GYvYwC5GdE7qKdjw6Pcq3594unQiczi0y2ZTigL3/v2T/586zq1M+u9URoZlkHMWL07Q==
+vue-property-decorator@7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/vue-property-decorator/-/vue-property-decorator-7.2.0.tgz#8e6b0f4dcc630c357135f76366ba7bd91f1db015"
+  integrity sha512-sCI6NVM3tEDg+mpZrQlgkddtxd9LbFWetue8D+nqO3agfSLz0KoC/UIi2P1l5E0TDhcUeIXS9rasuP2HWg+L4w==
   dependencies:
     vue-class-component "^6.2.0"
 
@@ -11669,10 +11664,10 @@ vue-resize@^0.4.3:
   resolved "https://registry.yarnpkg.com/vue-resize/-/vue-resize-0.4.3.tgz#5bdfd1cd60eb2bf1ebc08dff1517754af69e4886"
   integrity sha512-lFEhenRjvyzer6JylQOPltJhI48Fv2IukdGPpvb5fqK7FUGxiiGinSlAkPPdug5DQemFFysjp+8GqQU10oWouA==
 
-vue-router@3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.0.1.tgz#d9b05ad9c7420ba0f626d6500d693e60092cc1e9"
-  integrity sha512-vLLoY452L+JBpALMP5UHum9+7nzR9PeIBCghU9ZtJ1eWm6ieUI8Zb/DI3MYxH32bxkjzYV1LRjNv4qr8d+uX/w==
+vue-router@3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.0.2.tgz#dedc67afe6c4e2bc25682c8b1c2a8c0d7c7e56be"
+  integrity sha512-opKtsxjp9eOcFWdp6xLQPLmRGgfM932Tl56U9chYTnoWqKxQ8M20N7AkdEbM5beUh6wICoFGYugAX9vQjyJLFg==
 
 vue-server-renderer@2.5.21:
   version "2.5.21"
