@@ -1,4 +1,5 @@
 import View from '!view!./page-header.html?style=./page-header.styl';
+import { AppScrollAffix } from 'game-jolt-frontend-lib/components/scroll/affix/affix';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
@@ -11,6 +12,7 @@ import './page-header-content.styl';
 @Component({
 	components: {
 		AppAutoscrollAnchor,
+		AppScrollAffix,
 		AppMediaItemCover,
 	},
 })
