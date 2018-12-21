@@ -32,7 +32,7 @@
 
 				<div slot="left">
 					<!-- Bio -->
-					<div v-if="!isBioLoaded">
+					<div v-if="!isOverviewLoaded">
 						<span class="lazy-placeholder" />
 						<span class="lazy-placeholder" />
 						<span class="lazy-placeholder" />
@@ -251,7 +251,7 @@
 						</div>
 
 						<app-game-list-placeholder
-							v-if="!games.length"
+							v-if="!isOverviewLoaded"
 							:num="7"
 							/>
 						<app-game-list

@@ -180,7 +180,7 @@
 				<div class="-spacer" />
 			</template>
 
-			<div v-if="!game.description_compiled">
+			<div v-if="!isOverviewLoaded">
 				<span class="lazy-placeholder"></span>
 				<span class="lazy-placeholder"></span>
 				<span class="lazy-placeholder"></span>
@@ -192,10 +192,10 @@
 					this when the game changes.
 				-->
 				<app-fade-collapse
-					:collapse-height="500"
+					:collapse-height="600"
 					:is-open="showDetails || !postsCount"
 					:animate="false"
-					:key="game.id"
+					:key="game.description_compiled"
 					@require-change="setCanToggleDescription"
 					@expand="toggleDetails()"
 					>

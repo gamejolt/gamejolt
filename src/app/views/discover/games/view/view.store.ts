@@ -54,7 +54,7 @@ export const routeStore = NamespaceVuexStore<RouteStore, RouteActions, RouteMuta
 
 function updateGame(game: Game | null, newGame: Game | null) {
 	// If we already have a game, just assign new data into it to keep it fresh.
-	if (game && newGame) {
+	if (game && newGame && game.id === newGame.id) {
 		game.assign(newGame);
 		return game;
 	}
@@ -227,8 +227,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	}
 
 	@VuexMutation
-	processOverviewPayload(data: RouteMutations['processOverviewPayload']) {
-		const { payload } = data;
+	processOverviewPayload({ payload }: RouteMutations['processOverviewPayload']) {
 		this.isOverviewLoaded = true;
 
 		this.mediaItems = [];
