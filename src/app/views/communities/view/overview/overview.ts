@@ -8,6 +8,7 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
@@ -65,6 +66,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	communities!: Store['communities'];
 
 	feed: ActivityFeedView | null = null;
+
+	readonly Screen = Screen;
 
 	@Emit('refresh')
 	emitRefresh() {}

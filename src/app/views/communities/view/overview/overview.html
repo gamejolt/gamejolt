@@ -2,14 +2,14 @@
 	<div class="container">
 
 		<div class="row">
-			<div :class="rightColClass">
+			<div :class="rightColClass" v-if="!Screen.isXs">
 				<div class="alert alert-info">
 					<p>Hey there! Join the community. Post, have fun, all that jazz!</p>
 				</div>
 			</div>
 
 			<div :class="leftColClass">
-				<p>
+				<p class="-tabs">
 					<app-pill
 						:to="{
 							name: 'communities.view.overview',
@@ -51,6 +51,11 @@
 					</app-pill>
 				</p>
 
+				<app-post-add-button
+					:community="community"
+					@add="onPostAdded"
+					/>
+
 				<app-expand
 					v-if="shouldShowLoadNew"
 					when
@@ -60,13 +65,6 @@
 						<translate>Show New Posts</translate>
 					</app-activity-feed-new-button>
 				</app-expand>
-
-				<br>
-
-				<app-post-add-button
-					:community="community"
-					@add="onPostAdded"
-					/>
 
 				<app-activity-feed-placeholder v-if="!feed" />
 				<template v-else>
