@@ -66,4 +66,8 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	onLeave() {
 		this.leaveCommunity(this.community);
 	}
+
+	refresh() {
+		this.reloadRoute();
+	}
 }

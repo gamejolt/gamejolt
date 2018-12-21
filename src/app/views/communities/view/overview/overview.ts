@@ -8,7 +8,7 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
@@ -66,6 +66,9 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	feed: ActivityFeedView | null = null;
 
+	@Emit('refresh')
+	emitRefresh() {}
+
 	get routeTitle() {
 		return this.community
 			? this.$gettextInterpolate(`%{ community } Community`, {
@@ -111,10 +114,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			$payload.items,
 			fromCache
 		);
-	}
-
-	reloadFeed() {
-		this.reloadRoute();
 	}
 
 	onPostAdded(post: FiresidePost) {
