@@ -14,6 +14,10 @@ export class AppCommunitySliderItem extends Vue {
 	@Prop(Community)
 	community!: Community;
 
+	get isUnread() {
+		return this.community.is_unread;
+	}
+
 	get gradient() {
 		let begin = 'var(--theme-bi-bg)';
 		let end = 'var(--theme-bi-fg)';

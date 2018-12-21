@@ -87,6 +87,9 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	@Mutation
 	setNotificationCount!: Store['setNotificationCount'];
 
+	@State
+	communities!: Store['communities'];
+
 	feed: ActivityFeedView | null = null;
 	featuredGames: Game[] = [];
 	latestBroadcast: FiresidePost | null = null;
