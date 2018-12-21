@@ -2,6 +2,7 @@
 @require '~styles-lib/mixins'
 
 .-item
+	pressy()
 	display: inline-block
 	margin-right: 5px
 	vertical-align: middle
@@ -12,8 +13,9 @@
 
 .-thumb
 	img-circle()
+	theme-prop('border-color', 'bg')
+	theme-prop('background-color', 'bg')
 	border-width: 2px
 	border-style: solid
-	border-color: $white
 	width: 60px
 	height: 60px
