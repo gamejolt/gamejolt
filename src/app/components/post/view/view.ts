@@ -1,5 +1,4 @@
 import View from '!view!./view.html?style=./view.styl';
-import { AppAdPlacement } from 'game-jolt-frontend-lib/components/ad/placement/placement';
 import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
 import { AppCommunityPill } from 'game-jolt-frontend-lib/components/community/pill/pill';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
@@ -38,7 +37,6 @@ import { AppPostViewPlaceholder } from './placeholder/placeholder';
 		AppEventItemMediaTags,
 		AppPollVoting,
 		AppAdWidget,
-		AppAdPlacement,
 		AppCommunityPill,
 	},
 	directives: {
@@ -63,5 +61,12 @@ export class AppPostView extends Vue {
 
 	get shouldShowManage() {
 		return this.post && this.post.isManageableByUser(this.app.user);
+	}
+
+	get shouldShowAds() {
+		// Only show ads for game posts. The game will set the page settings for
+		// whether or not it should show an ad for this game page, so no need to
+		// do that here.
+		return this.post && this.post.game;
 	}
 }
