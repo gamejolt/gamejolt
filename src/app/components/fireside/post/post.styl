@@ -1,19 +1,15 @@
 @require '../../../../lib/gj-lib-client/stylus/mixins/compiled-content'
 
-$-font-size-xs = $font-size-base
-$-line-height-xs = $line-height-computed
-$-font-size = 16px
-$-line-height = $-font-size * 1.5
+$-font-size-xs = 16px
+$-line-height-xs = $-font-size-xs * 1.5
+$-font-size = 18px
+$-line-height = $-font-size * 1.4
 
 .fireside-post-body
 	compiled-content($-font-size-xs, $-line-height-xs)
 
 	@media $media-sm-up
 		compiled-content($-font-size, $-line-height)
-
-		&, p
-			font-size: $-font-size
-			line-height: $-line-height
 
 	a
 		link-underlines(var(--theme-link), var(--theme-bg), var(--theme-link-hover))
@@ -35,7 +31,7 @@ $-line-height = $-font-size * 1.5
 	font-weight: 600 // Semibold
 
 	@media $media-sm-up
-		font-size: 18px
+		font-size: 19px
 
 	>>> a
 		theme-prop('color', 'link')
