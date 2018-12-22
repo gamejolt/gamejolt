@@ -19,7 +19,7 @@ import { AppUserCardHover } from '../../../../../lib/gj-lib-client/components/us
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { Store } from '../../../../store';
 import { AppEventItemControls } from '../../../event-item/controls/controls';
-import { AppEventItemManage } from '../../../event-item/manage/manage';
+import { AppFiresidePostManage } from '../../../fireside/post/manage/manage';
 import { AppPollVoting } from '../../../poll/voting/voting';
 import { AppActivityFeedCommentVideo } from '../comment-video/comment-video';
 import { AppActivityFeedDevlogPostMedia } from '../devlog-post/media/media';
@@ -43,7 +43,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppActivityFeedDevlogPostMedia,
 		AppActivityFeedDevlogPostSketchfab,
 		AppActivityFeedDevlogPostVideo,
-		AppEventItemManage,
+		AppFiresidePostManage,
 		AppEventItemControls,
 		AppPollVoting,
 		AppUserCardHover,
@@ -165,14 +165,6 @@ export class AppActivityFeedEventItem extends Vue {
 
 	get shouldShowManage() {
 		return this.post && this.post.isManageableByUser(this.app.user);
-	}
-
-	get isEditableByUser() {
-		return this.post && this.post.isEditableByUser(this.app.user);
-	}
-
-	get hasManageableCommunities() {
-		return this.post && this.post.manageableCommunities.length !== 0;
 	}
 
 	mounted() {

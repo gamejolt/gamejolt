@@ -152,17 +152,17 @@
 			</div>
 		</template>
 
-		<div class="-manage" v-if="shouldShowManage">
-			<app-event-item-manage
-				:event-item="eventItem"
-				:show-edit-controls="feed.shouldShowEditControls && isEditableByUser"
-				:show-community-controls="feed.shouldShowCommunityControls && hasManageableCommunities"
-				@edit-post="onPostEdited(eventItem)"
-				@publish-post="onPostPublished(eventItem)"
-				@remove-post="onPostRemoved(eventItem)"
-				@feature-post="onPostFeatured(eventItem, $event)"
-				@unfeature-post="onPostUnfeatured(eventItem, $event)"
-				@reject-post="onPostRejected(eventItem, $event)"
+		<div class="-manage" v-if="shouldShowManage && !!post">
+			<app-fireside-post-manage
+				:post="post"
+				:show-edit-controls="feed.shouldShowEditControls"
+				:show-community-controls="feed.shouldShowCommunityControls"
+				@edit="onPostEdited(eventItem)"
+				@publish="onPostPublished(eventItem)"
+				@remove="onPostRemoved(eventItem)"
+				@feature="onPostFeatured(eventItem, $event)"
+				@unfeature="onPostUnfeatured(eventItem, $event)"
+				@reject="onPostRejected(eventItem, $event)"
 				/>
 		</div>
 

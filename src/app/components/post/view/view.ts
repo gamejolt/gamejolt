@@ -16,8 +16,8 @@ import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../store';
 import { AppEventItemControls } from '../../event-item/controls/controls';
-import { AppEventItemManagePost } from '../../event-item/manage/post/post';
 import { AppEventItemMediaTags } from '../../event-item/media-tags/media-tags';
+import { AppFiresidePostManage } from '../../fireside/post/manage/manage';
 import { AppPollVoting } from '../../poll/voting/voting';
 import { AppPostViewPlaceholder } from './placeholder/placeholder';
 
@@ -32,7 +32,7 @@ import { AppPostViewPlaceholder } from './placeholder/placeholder';
 		AppVideo,
 		AppVideoEmbed,
 		AppSketchfabEmbed,
-		AppEventItemManagePost,
+		AppFiresidePostManage,
 		AppEventItemControls,
 		AppEventItemMediaTags,
 		AppPollVoting,
