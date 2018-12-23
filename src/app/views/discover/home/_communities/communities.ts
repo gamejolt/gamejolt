@@ -1,16 +1,16 @@
-import View from '!view!./slider.html?style=./slider.styl';
+import View from '!view!./communities.html';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppCommunitySliderItem } from './item/item';
+import { AppCommunitySlider } from '../../../../components/community/slider/slider';
 
 @View
 @Component({
 	components: {
-		AppCommunitySliderItem,
+		AppCommunitySlider,
 	},
 })
-export class AppCommunitySlider extends Vue {
+export class AppDiscoverHomeCommunities extends Vue {
 	@Prop(Array)
 	communities!: Community[];
 }

@@ -82,13 +82,13 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	app!: Store['app'];
 
 	@State
+	communities!: Store['communities'];
+
+	@State
 	unreadActivityCount!: Store['unreadActivityCount'];
 
 	@Mutation
 	setNotificationCount!: Store['setNotificationCount'];
-
-	@State
-	communities!: Store['communities'];
 
 	feed: ActivityFeedView | null = null;
 	featuredGames: Game[] = [];

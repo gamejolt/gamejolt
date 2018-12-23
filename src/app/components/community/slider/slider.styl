@@ -3,9 +3,13 @@
 
 .-list
 	full-bleed()
+	white-space: nowrap
 	padding-left: $grid-gutter-width-xs * 0.5
 	padding-right: $grid-gutter-width-xs * 0.5
-	white-space: nowrap
-	overflow-x: scroll
+	overflow-x: auto
 	overflow-y: hidden
 	margin-bottom: $line-height-computed
+
+	@media $media-sm-up
+		padding-left: $grid-gutter-width * 0.5
+		padding-right: $grid-gutter-width * 0.5
