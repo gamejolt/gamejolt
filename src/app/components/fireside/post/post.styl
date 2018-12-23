@@ -1,15 +1,15 @@
 @require '../../../../lib/gj-lib-client/stylus/mixins/compiled-content'
 
 $-font-size-xs = 16px
-$-line-height-xs = $-font-size-xs * 1.5
-$-font-size = 18px
-$-line-height = $-font-size * 1.4
+$-font-size = 17px
+$-lead-font-size-xs = 16px
+$-lead-font-size = 19px
 
 .fireside-post-body
-	compiled-content($-font-size-xs, $-line-height-xs)
+	compiled-content($-font-size-xs)
 
 	@media $media-sm-up
-		compiled-content($-font-size, $-line-height)
+		compiled-content($-font-size)
 
 	a
 		link-underlines(var(--theme-link), var(--theme-bg), var(--theme-link-hover))
@@ -26,12 +26,12 @@ $-line-height = $-font-size * 1.4
 		rounded-corners()
 
 .fireside-post-lead
-	font-size: 16px
-	line-height: 1.4
+	font-size: $-lead-font-size-xs
+	line-height: $line-height-base
 	font-weight: 600 // Semibold
 
 	@media $media-sm-up
-		font-size: 19px
+		font-size: $-lead-font-size
 
 	>>> a
 		theme-prop('color', 'link')
