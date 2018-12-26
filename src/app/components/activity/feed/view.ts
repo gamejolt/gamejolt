@@ -38,6 +38,7 @@ export interface ActivityFeedViewOptions {
 	shouldShowCommunityControls?: boolean;
 	shouldShowEditControls?: boolean;
 	shouldShowUserCards?: boolean;
+	shouldShowFollow?: boolean;
 }
 
 export class ActivityFeedView {
@@ -58,6 +59,7 @@ export class ActivityFeedView {
 	shouldShowCommunityControls = false;
 	shouldShowEditControls = false;
 	shouldShowUserCards = true;
+	shouldShowFollow = false;
 
 	get isBootstrapped() {
 		return this.state.isBootstrapped;
@@ -106,6 +108,7 @@ export class ActivityFeedView {
 			shouldShowCommunityControls = false,
 			shouldShowEditControls = false,
 			shouldShowUserCards = true,
+			shouldShowFollow = false,
 		}: ActivityFeedViewOptions = {}
 	) {
 		this.state = state;
@@ -116,6 +119,7 @@ export class ActivityFeedView {
 		this.shouldShowCommunityControls = shouldShowCommunityControls;
 		this.shouldShowEditControls = shouldShowEditControls;
 		this.shouldShowUserCards = shouldShowUserCards;
+		this.shouldShowFollow = shouldShowFollow;
 	}
 
 	clear() {

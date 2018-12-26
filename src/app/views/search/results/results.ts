@@ -33,7 +33,7 @@ import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 	},
 })
 @RouteResolver({
-	resolver: ({ route }) => Search.search(route.query.q),
+	resolver: ({ route }) => Search.search(route.query.q + ''),
 	resolveStore({ route, payload }) {
 		routeStore.commit('processPayload', { payload: payload, route: route });
 	},
@@ -69,7 +69,8 @@ export default class RouteSearchResults extends BaseRouteComponent {
 			this.feed,
 			{
 				type: 'EventItem',
-				url: `/web/posts/fetch/search/${encodeURIComponent(this.$route.query.q)}`,
+				url: `/web/posts/fetch/search/${encodeURIComponent(this.$route.query.q + '')}`,
+				shouldShowFollow: true,
 			},
 			$payload.posts,
 			fromCache

@@ -4,6 +4,7 @@ import { AppCommunityPill } from 'game-jolt-frontend-lib/components/community/pi
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
+import { AppUserFollowWidget } from 'game-jolt-frontend-lib/components/user/follow-widget/follow-widget';
 import { AppUserAvatar } from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar';
 import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
 import Vue from 'vue';
@@ -38,6 +39,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 	components: {
 		AppActivityFeedEventItemTime,
 		AppUserAvatar,
+		AppUserFollowWidget,
 		AppActivityFeedCommentVideo,
 		AppActivityFeedDevlogPostText,
 		AppActivityFeedDevlogPostMedia,
@@ -161,6 +163,16 @@ export class AppActivityFeedEventItem extends Vue {
 			return '';
 		}
 		return this.$router.resolve(this.link).href;
+	}
+
+	get shouldShowFollow() {
+		// Don't show follow for game posts. Only for user posts/videos.
+		return (
+			this.feed.shouldShowFollow &&
+			!(this.post && this.post.game) &&
+			this.user &&
+			!this.user.is_following
+		);
 	}
 
 	get shouldShowManage() {

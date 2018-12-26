@@ -9,20 +9,20 @@
 		>
 
 		<div class="-header">
-			<app-user-card-hover
-				:user="user"
-				:disabled="!feed.shouldShowUserCards"
-				>
-				<div class="-header-avatar">
-					<div class="-header-avatar-inner">
-						<app-user-avatar
-							:user="user"
-							/>
-					</div>
-				</div>
-			</app-user-card-hover>
-
 			<div class="-header-content">
+				<app-user-card-hover
+					:user="user"
+					:disabled="!feed.shouldShowUserCards"
+					>
+					<div class="-header-avatar">
+						<div class="-header-avatar-inner">
+							<app-user-avatar
+								:user="user"
+								/>
+						</div>
+					</div>
+				</app-user-card-hover>
+
 				<div class="-header-byline">
 					<div class="-header-byline-name">
 						<strong>
@@ -58,14 +58,22 @@
 						</strong>
 					</div>
 				</div>
+			</div>
+			<div class="-header-meta small text-muted">
+				<app-user-follow-widget
+					v-if="shouldShowFollow"
+					class="-header-meta-follow"
+					:user="user"
+					:sm="Screen.isXs"
+					hide-count
+					event-label="feed"
+					/>
 
-				<div class="-header-date small text-muted">
-					<app-activity-feed-event-item-time
-						:event-item="eventItem"
-						:post="post"
-						:link="linkResolved"
-						/>
-				</div>
+				<app-activity-feed-event-item-time
+					:event-item="eventItem"
+					:post="post"
+					:link="linkResolved"
+					/>
 			</div>
 		</div>
 

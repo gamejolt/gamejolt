@@ -113,6 +113,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 				url: getFetchUrl(this.$route),
 				shouldShowCommunityControls: true,
 				hideCommunityInfo: true,
+				shouldShowFollow: true,
 			},
 			$payload.items,
 			fromCache
