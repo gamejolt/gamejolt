@@ -41,7 +41,7 @@
 									:poster="item.mediaserver_url"
 									:webm="item.mediaserver_url_webm"
 									:mp4="item.mediaserver_url_mp4"
-									:show-loading="true"
+									show-loading
 									/>
 
 							</app-responsive-dimensions>
@@ -53,7 +53,7 @@
 					<div v-if="post.hasSketchfab" class="full-bleed-xs">
 						<app-sketchfab-embed
 							:sketchfab-id="post.sketchfabs[0].sketchfab_id"
-							:autoplay="true"
+							autoplay
 							/>
 					</div>
 
@@ -122,6 +122,7 @@
 				<div class="well fill-offset full-bleed-xs" v-if="shouldShowManage">
 					<app-fireside-post-manage
 						:post="post"
+						show-community-controls
 						/>
 				</div>
 
