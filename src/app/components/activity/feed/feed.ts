@@ -1,5 +1,6 @@
 import View from '!view!./feed.html?style=./feed.styl';
 import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
+import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
 import { AppExpand } from 'game-jolt-frontend-lib/components/expand/expand';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
@@ -59,6 +60,8 @@ export class AppActivityFeed extends Vue {
 
 	readonly number = number;
 
+	$el!: HTMLDivElement;
+
 	@Emit('edit-post')
 	emitEditPost(_eventItem: EventItem) {}
 
@@ -67,6 +70,15 @@ export class AppActivityFeed extends Vue {
 
 	@Emit('remove-post')
 	emitRemovePost(_eventItem: EventItem) {}
+
+	@Emit('feature-post')
+	emitFeaturePost(_eventItem: EventItem, _community: Community) {}
+
+	@Emit('unfeature-post')
+	emitUnfeaturePost(_eventItem: EventItem, _community: Community) {}
+
+	@Emit('reject-post')
+	emitRejectPost(_eventItem: EventItem, _community: Community) {}
 
 	@Emit('load-new')
 	emitLoadNew() {}
@@ -86,7 +98,7 @@ export class AppActivityFeed extends Vue {
 
 			// Auto-loading while scrolling.
 			if (this.feed.shouldScrollLoadMore) {
-				const feedOffset = Ruler.offset(this.$el);
+				const feedOffset = Ruler.offset(this.$el as HTMLElement);
 				const feedBottom = feedOffset.top + feedOffset.height;
 				const scrollBottom = top + height;
 
@@ -155,15 +167,11 @@ export class AppActivityFeed extends Vue {
 		// Show an ad every X posts thereafter.
 		const adGap = 5;
 
-		// Only show a max of this many ads in the feed.
-		const totalAds = 4;
-
-		index = index + 1;
-
-		if (!this.shouldShowAds || index >= adGap * totalAds + firstAd) {
+		if (!this.shouldShowAds) {
 			return false;
 		}
 
+		++index;
 		return index === firstAd || (index - firstAd) % adGap === 0;
 	}
 
@@ -180,6 +188,18 @@ export class AppActivityFeed extends Vue {
 	onPostRemoved(eventItem: EventItem) {
 		this.feed.remove([eventItem]);
 		this.emitRemovePost(eventItem);
+	}
+
+	onPostFeatured(eventItem: EventItem, community: Community) {
+		this.emitFeaturePost(eventItem, community);
+	}
+
+	onPostUnfeatured(eventItem: EventItem, community: Community) {
+		this.emitUnfeaturePost(eventItem, community);
+	}
+
+	onPostRejected(eventItem: EventItem, community: Community) {
+		this.emitRejectPost(eventItem, community);
 	}
 
 	loadMoreButton() {

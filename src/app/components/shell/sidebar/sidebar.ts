@@ -11,7 +11,7 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { Store } from '../../../store/index';
-import { LibraryAction, LibraryState, LibraryStore } from '../../../store/library';
+import { LibraryModule, LibraryStore } from '../../../store/library';
 import { AppShellSidebarCollectionList } from './collection-list';
 
 @View
@@ -39,28 +39,28 @@ export class AppShellSidebar extends Vue {
 	@State
 	isLeftPaneVisible!: Store['isLeftPaneVisible'];
 
-	@LibraryState
+	@LibraryModule.State
 	bundleCollections!: LibraryStore['bundleCollections'];
 
-	@LibraryState
+	@LibraryModule.State
 	developerCollection!: LibraryStore['developerCollection'];
 
-	@LibraryState
+	@LibraryModule.State
 	followedCollection!: LibraryStore['followedCollection'];
 
-	@LibraryState
+	@LibraryModule.State
 	ownedCollection!: LibraryStore['ownedCollection'];
 
-	@LibraryState
+	@LibraryModule.State
 	collections!: LibraryStore['collections'];
 
-	@LibraryState
+	@LibraryModule.State
 	playlistFolders!: LibraryStore['playlistFolders'];
 
 	@Action
 	toggleLeftPane!: Store['toggleLeftPane'];
 
-	@LibraryAction
+	@LibraryModule.Action
 	newPlaylist!: LibraryStore['newPlaylist'];
 
 	playlistFilterQuery = '';

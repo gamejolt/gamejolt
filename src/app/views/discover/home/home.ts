@@ -1,4 +1,5 @@
 import View from '!view!./home.html';
+import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { Component } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { State } from 'vuex-class';
@@ -18,6 +19,7 @@ import { AppGameGridPlaceholder } from '../../../components/game/grid/placeholde
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Store } from '../../../store/index';
 import { AppDiscoverHomeBanner } from './_banner/banner';
+import { AppDiscoverHomeCommunities } from './_communities/communities';
 import { AppDiscoverHomeTags } from './_tags/tags';
 
 export interface DiscoverRow {
@@ -34,6 +36,7 @@ export interface DiscoverRow {
 	components: {
 		AppDiscoverHomeBanner,
 		AppDiscoverHomeTags,
+		AppDiscoverHomeCommunities,
 		AppGameGrid,
 		AppGameGridPlaceholder,
 		AppAuthJoin: AppAuthJoinLazy,
@@ -53,6 +56,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	app!: Store['app'];
 
 	featuredItem: FeaturedItem | null = null;
+	featuredCommunities: Community[] = [];
 	games: Game[] = [];
 
 	routeCreated() {
@@ -86,6 +90,8 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		if ($payload.isFollowingFeatured && this.featuredItem && this.featuredItem.game) {
 			this.featuredItem!.game!.is_following = true;
 		}
+
+		this.featuredCommunities = Community.populate($payload.featuredCommunities);
 		this.games = Game.populate($payload.games);
 	}
 

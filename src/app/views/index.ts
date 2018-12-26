@@ -1,4 +1,5 @@
 import { initRouter } from '../../lib/gj-lib-client/utils/router';
+import { routeCommunitiesView } from './communities/view/view.route';
 import { routeDash } from './dashboard/dashboard.route';
 import { routeDiscover } from './discover/discover.route';
 import { routeForums } from './forums/forums.route';
@@ -17,6 +18,7 @@ import { routeTestAds } from './test-ads/test-ads.route';
 const routes = [
 	routeHome,
 	routeDiscover,
+	routeCommunitiesView,
 	routeLanding,
 	routeSearch,
 	routeProfile,

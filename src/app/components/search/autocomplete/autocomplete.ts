@@ -52,6 +52,8 @@ export class AppSearchAutocomplete extends Vue {
 		this.sendSearch(query);
 	});
 
+	_keydownSpy?: Function;
+
 	get isHidden() {
 		return this.search!.isEmpty();
 	}
@@ -61,18 +63,29 @@ export class AppSearchAutocomplete extends Vue {
 	}
 
 	mounted() {
-		this.search!.setKeydownSpy((event: KeyboardEvent) => {
-			let min = 0;
-			let max = this.items.length;
+		if (this.search) {
+			this._keydownSpy = (event: KeyboardEvent) => {
+				let min = 0;
+				let max = this.items.length;
 
-			if (event.keyCode === KEYCODE_DOWN) {
-				this.selected = Math.min(this.selected + 1, max);
-			} else if (event.keyCode === KEYCODE_UP) {
-				this.selected = Math.max(this.selected - 1, min);
-			} else if (event.keyCode === KEYCODE_ENTER) {
-				this.selectActive();
-			}
-		});
+				if (event.keyCode === KEYCODE_DOWN) {
+					this.selected = Math.min(this.selected + 1, max);
+				} else if (event.keyCode === KEYCODE_UP) {
+					this.selected = Math.max(this.selected - 1, min);
+				} else if (event.keyCode === KEYCODE_ENTER) {
+					this.selectActive();
+				}
+			};
+
+			this.search.setKeydownSpy(this._keydownSpy);
+		}
+	}
+
+	destroyed() {
+		if (this.search && this._keydownSpy) {
+			this.search.removeKeydownSpy(this._keydownSpy);
+			this._keydownSpy = undefined;
+		}
 	}
 
 	private async sendSearch(query: string) {

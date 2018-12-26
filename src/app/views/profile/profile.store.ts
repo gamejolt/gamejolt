@@ -23,6 +23,7 @@ type RouteActions = {
 type RouteMutations = {
 	bootstrapUser: string;
 	profilePayload: any;
+	overviewPayload: any;
 	setUserFriendship: UserFriendship | null;
 };
 
@@ -35,7 +36,7 @@ export const routeStore = NamespaceVuexStore<RouteStore, RouteActions, RouteMuta
 
 function updateUser(user: User | null, newUser: User | null) {
 	// If we already have a user, just assign new data into it to keep it fresh.
-	if (user && newUser) {
+	if (user && newUser && user.id === newUser.id) {
 		user.assign(newUser);
 		return user;
 	}
@@ -45,7 +46,11 @@ function updateUser(user: User | null, newUser: User | null) {
 
 @VuexModule()
 export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutations> {
+	isOverviewLoaded = false;
+
+	// We will bootstrap this right away, so it should always be set for use.
 	user: User | null = null;
+
 	gamesCount = 0;
 	videosCount = 0;
 	isOnline = false;
@@ -103,6 +108,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 		this.user = updateUser(this.user, user);
 
 		if ((this.user && this.user.id) !== prevId) {
+			this.isOverviewLoaded = false;
 			this.gamesCount = 0;
 			this.isOnline = false;
 			this.videosCount = 0;
@@ -124,6 +130,12 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 		} else {
 			this.userFriendship = null;
 		}
+	}
+
+	@VuexMutation
+	overviewPayload(_payload: RouteMutations['overviewPayload']) {
+		// This is the only thing we care about globally.
+		this.isOverviewLoaded = true;
 	}
 
 	@VuexMutation

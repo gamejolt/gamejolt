@@ -5,6 +5,7 @@ import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils'
 export class GameThumbnailModal {
 	static async show(game: Game) {
 		return await Modal.show<Game>({
+			modalId: 'GameThumbnail',
 			component: () =>
 				asyncComponentLoader(
 					import(/* webpackChunkName: "GameThumbnailModal" */ './thumbnail-modal')

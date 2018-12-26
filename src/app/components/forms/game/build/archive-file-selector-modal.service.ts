@@ -11,6 +11,7 @@ export class ArchiveFileSelectorModal {
 		platform: string
 	) {
 		return await Modal.show<string>({
+			modalId: 'ArchiveFileSelector',
 			component: () =>
 				asyncComponentLoader(
 					import(/* webpackChunkName: "ArchiveFileSelectorModal" */ './archive-file-selector-modal')

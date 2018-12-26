@@ -140,8 +140,6 @@ export default class RouteProfile extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		CommentModal.checkPermalink(this.$router);
-
 		// This isn't needed by SSR or anything, so it's fine to call it here.
 		this.bootstrapUser(this.$route.params.username);
 

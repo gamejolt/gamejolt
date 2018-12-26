@@ -18,6 +18,7 @@ import { ActivityFeedService } from '../../components/activity/feed/feed-service
 import { AppActivityFeedPlaceholder } from '../../components/activity/feed/placeholder/placeholder';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import { AppBroadcastCard } from '../../components/broadcast-card/broadcast-card';
+import { AppCommunitySlider } from '../../components/community/slider/slider';
 import { AppGameList } from '../../components/game/list/list';
 import { AppGameListPlaceholder } from '../../components/game/list/placeholder/placeholder';
 import { AppPageContainer } from '../../components/page-container/page-container';
@@ -43,6 +44,7 @@ class DashGame {
 		AppGameList,
 		AppGameListPlaceholder,
 		AppBroadcastCard,
+		AppCommunitySlider,
 		AppPostAddButton,
 		AppUserCard,
 	},
@@ -78,6 +80,9 @@ class DashGame {
 export default class RouteActivityFeed extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
+
+	@State
+	communities!: Store['communities'];
 
 	@State
 	unreadActivityCount!: Store['unreadActivityCount'];
@@ -142,16 +147,13 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
-	routeResolved($payload: any, fromCache: boolean) {
-		const [feedPayload, homePayload] = $payload;
-
+	routeResolved([feedPayload, homePayload]: any, fromCache: boolean) {
 		this.feed = ActivityFeedService.routed(
 			this.feed,
 			{
 				type: 'EventItem',
 				url: `/web/dash/activity/more/activity`,
-				notificationWatermark: $payload.unreadWatermark,
-				shouldShowGameInfo: true,
+				notificationWatermark: feedPayload.unreadWatermark,
 			},
 			feedPayload.items,
 			fromCache
@@ -176,12 +178,9 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		this.setNotificationCount({ type: 'activity', count: 0 });
 	}
 
-	onPostAdded() {
+	onPostAdded(post: FiresidePost) {
 		if (this.app.user) {
-			this.$router.push({
-				name: 'profile.overview',
-				params: { username: this.app.user!.username },
-			});
+			ActivityFeedService.gotoPostFeedManage(post, this);
 		}
 	}
 }

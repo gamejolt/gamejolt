@@ -43,12 +43,6 @@ export default class RouteSearch extends BaseRouteComponent {
 	@State
 	route!: Store['route'];
 
-	@RouteStoreModule.Mutation
-	initStore!: RouteStore['initStore'];
-
-	@RouteStoreModule.Mutation
-	destroyStore!: RouteStore['destroyStore'];
-
 	@RouteStoreModule.State
 	hasSearch!: RouteStore['hasSearch'];
 

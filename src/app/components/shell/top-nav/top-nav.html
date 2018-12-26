@@ -5,7 +5,10 @@
 		<a
 			v-if="hasSidebar"
 			class="navbar-item"
-			:class="{ active: isLeftPaneVisible }"
+			:class="{
+				'-menu-toggle': hasCbar,
+				active: isLeftPaneVisible,
+			}"
 			@click="toggleLeftPane"
 			v-app-tooltip.right="$gettext( `Playlists (m)` )"
 			v-app-track-event="`top-nav:main-menu:toggle`"
@@ -121,11 +124,7 @@
 				class="navbar-item"
 				:class="{ active: isRightPaneVisible }"
 				@click="toggleRightPane"
-				v-app-tooltip.left="
-					app.user
-						? $gettext( `Chat and Friends List (c)` )
-						: $gettext( `Chat (c)` )
-				"
+				v-app-tooltip.left="$gettext( `Chat and Friends List (c)` )"
 				v-app-track-event="`top-nav:chat:toggle`"
 				>
 				<span

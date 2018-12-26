@@ -9,7 +9,7 @@
 				<translate>profile.banned_message_html</translate>
 			</p>
 
-			<app-expand :when="userFriendship && userFriendship.state === UserFriendship.STATE_FRIENDS">
+			<app-expand :when="isFriend">
 				<p>
 					<strong><translate>This user was your friend.</translate></strong>
 					<br>
@@ -32,7 +32,7 @@
 
 				<div slot="left">
 					<!-- Bio -->
-					<div v-if="!isBioLoaded">
+					<div v-if="!isOverviewLoaded">
 						<span class="lazy-placeholder" />
 						<span class="lazy-placeholder" />
 						<span class="lazy-placeholder" />
@@ -95,6 +95,10 @@
 
 						<app-comment-overview
 							:comments="overviewComments"
+							resource="User"
+							:resource-id="user.id"
+							displayMode="shouts"
+							@reload-comments="reloadPreviewComments"
 							/>
 					</template>
 				</div>
@@ -110,6 +114,14 @@
 							@click="sendFriendRequest()"
 							>
 							<translate>profile.friend_request_button</translate>
+						</app-button>
+						<app-button
+							v-else-if="canMessage"
+							block
+							icon="user-messages"
+							@click="openMessaging"
+							>
+							<translate>Message</translate>
 						</app-button>
 
 						<template v-if="Screen.isMobile">
@@ -147,6 +159,16 @@
 									>
 									<app-jolticon :icon="twitchAccount.icon" />
 									{{ twitchAccount.name }}
+								</a>
+							</div>
+							<div v-if="mixerAccount">
+								<a
+									class="link-unstyled"
+									:href="mixerAccount.platformLink"
+									target="_blank"
+									>
+									<app-jolticon :icon="mixerAccount.icon" />
+									{{ mixerAccount.name }}
 								</a>
 							</div>
 							<div v-if="twitterAccount">
@@ -229,7 +251,7 @@
 						</div>
 
 						<app-game-list-placeholder
-							v-if="!games.length"
+							v-if="!isOverviewLoaded"
 							:num="7"
 							/>
 						<app-game-list

@@ -35,10 +35,15 @@
 				<app-comment-add-button
 					resource="Game"
 					:resource-id="game.id"
+					displayMode="comments"
 					/>
 
 				<app-comment-overview
 					:comments="overviewComments"
+					resource="Game"
+					:resource-id="game.id"
+					displayMode="comments"
+					@reload-comments="reloadPreviewComments"
 					/>
 			</div>
 
@@ -48,12 +53,6 @@
 				</h4>
 
 				<app-discover-games-view-overview-recommended />
-
-				<template v-if="Screen.isDesktop">
-					<div style="width: 300px">
-						<app-ad-widget size="rectangle" pos="bottom" />
-					</div>
-				</template>
 			</div>
 
 			<!--
@@ -181,7 +180,7 @@
 				<div class="-spacer" />
 			</template>
 
-			<div v-if="!game.description_compiled">
+			<div v-if="!isOverviewLoaded">
 				<span class="lazy-placeholder"></span>
 				<span class="lazy-placeholder"></span>
 				<span class="lazy-placeholder"></span>
@@ -193,10 +192,10 @@
 					this when the game changes.
 				-->
 				<app-fade-collapse
-					:collapse-height="500"
+					:collapse-height="600"
 					:is-open="showDetails || !postsCount"
 					:animate="false"
-					:key="game.id"
+					:key="game.description_compiled"
 					@require-change="setCanToggleDescription"
 					@expand="toggleDetails()"
 					>
@@ -247,6 +246,7 @@
 				<app-activity-feed
 					v-if="feed.hasItems"
 					:feed="feed"
+					show-ads
 					/>
 				<div v-else class="alert">
 					<translate>Nothing has been posted to this project page yet. Maybe check back later!</translate>
