@@ -7,3 +7,4 @@
 /src/translations
 .DS_Store
 .cache
+yarn-error.log
