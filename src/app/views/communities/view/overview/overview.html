@@ -48,6 +48,18 @@
 						:to="{
 							name: 'communities.view.overview',
 							params: {
+								tab: 'hot',
+							},
+						}"
+						:class="{ active: tab === 'hot' }"
+						>
+						<translate>Hot</translate>
+					</app-pill>
+
+					<app-pill
+						:to="{
+							name: 'communities.view.overview',
+							params: {
 								tab: 'new',
 							},
 						}"
@@ -80,6 +92,9 @@
 
 				<div class="alert" v-if="tab === 'featured'">
 					<translate>Post your creations to this community for a chance to be featured!</translate>
+				</div>
+				<div class="alert" v-else-if="tab === 'hot'">
+					<translate>Hot posts are sorted by likes. Upvote your favorites!</translate>
 				</div>
 
 				<app-expand
