@@ -1,5 +1,5 @@
 import View from '!view!./styleguide.html';
-import { AppContentEditorStyleguide } from 'game-jolt-frontend-lib/components/content-editor/content-editor-styleguide';
+import { AppContentEditorStyleguide } from 'game-jolt-frontend-lib/components/content/content-editor/content-editor-styleguide';
 import { Component } from 'vue-property-decorator';
 import { AppButtonStyleguide } from '../../../lib/gj-lib-client/components/button/button-styleguide';
 import { AppJolticonsStyleguide } from '../../../lib/gj-lib-client/components/jolticons/jolticons-styleguide';
