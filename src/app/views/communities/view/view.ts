@@ -50,6 +50,9 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	routeResolved($payload: any) {
 		this.community = new Community($payload.community);
 		this.tags = $payload.tags || [];
+		if ($payload.unreadWatermark) {
+			this.community.unreadWatermark = $payload.unreadWatermark;
+		}
 
 		this.setPageTheme(this.community.theme || null);
 		this.viewCommunity(this.community);

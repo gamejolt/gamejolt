@@ -114,6 +114,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 				shouldShowCommunityControls: true,
 				hideCommunityInfo: true,
 				shouldShowFollow: true,
+				notificationWatermark: this.community.unreadWatermark,
 			},
 			$payload.items,
 			fromCache
