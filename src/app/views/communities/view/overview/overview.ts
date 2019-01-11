@@ -9,6 +9,7 @@ import {
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppScrollAffix } from 'game-jolt-frontend-lib/components/scroll/affix/affix';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
@@ -52,6 +53,7 @@ function getFetchUrl(route: Route) {
 	name: 'RouteCommunitiesViewOverview',
 	components: {
 		AppPageContainer,
+		AppScrollAffix,
 		AppCommunitiesViewOverviewNav,
 		AppPostAddButton,
 		AppActivityFeed,
