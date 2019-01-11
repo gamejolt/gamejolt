@@ -4,7 +4,7 @@
 			<div class="col-sm-4 col-sm-push-8">
 				<div class="page-help">
 					<p>
-						<translate>Allow other users to manage your game by giving them collaborator roles.</translate>
+						<translate>Allow other users to manage your community by giving them collaborator roles.</translate>
 					</p>
 				</div>
 			</div>
@@ -40,11 +40,8 @@
 								<template v-if="collaborator.role === Collaborator.ROLE_EQUAL_COLLABORATOR">
 									<translate>Collaborator</translate>
 								</template>
-								<template v-else-if="collaborator.role === Collaborator.ROLE_COMMUNITY_MANAGER">
-									<translate>Community Manager</translate>
-								</template>
-								<template v-else-if="collaborator.role === Collaborator.ROLE_DEVELOPER">
-									<translate>Developer</translate>
+								<template v-else-if="collaborator.role === Collaborator.ROLE_MODERATOR">
+									<translate>Moderator</translate>
 								</template>
 								<template v-else>-</template>
 							</span>
@@ -57,9 +54,9 @@
 						</div>
 
 						<template slot="body">
-							<form-game-collaborator
+							<form-community-collaborator
 								:model="collaborator"
-								:game="game"
+								:community="community"
 								@submit="onSaved"
 								/>
 						</template>
@@ -70,8 +67,8 @@
 						:label="$gettext(`Add Collaborator`)"
 						@toggle="isAdding = !isAdding"
 						>
-						<form-game-collaborator
-							:game="game"
+						<form-community-collaborator
+							:community="community"
 							@submit="onAdded"
 							/>
 					</app-card-list-add>

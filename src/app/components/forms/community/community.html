@@ -1,0 +1,50 @@
+<app-form name="communityForm">
+	<fieldset>
+
+		<app-form-group
+			name="name"
+			:label="$gettext( `Name` )"
+			>
+			<app-form-control
+				type="text"
+				:rules="{
+					max: 100,
+				}"
+				/>
+			<app-form-control-errors />
+		</app-form-group>
+
+		<app-form-group
+			name="path"
+			:label="$gettext( `URL Path` )"
+			>
+			<app-form-control
+				type="text"
+				data-vv-delay="500"
+				:rules="{
+					pattern: 'urlPath',
+					max: 50,
+					availability: {
+						url: '/web/dash/developer/communities/check-field-availability/path',
+					},
+				}"
+				:disabled="formModel.published_on !== 0"
+				/>
+
+			<app-form-control-errors />
+
+			<div class="help-block">
+				<div>
+					<translate>Community URL</translate>
+					<code v-html="communityUrl"></code>
+				</div>
+			</div>
+		</app-form-group>
+	</fieldset>
+
+	<app-dash-community-wizard-controls>
+		<app-form-button v-if="method === 'edit'">
+			<translate>Save Details</translate>
+		</app-form-button>
+	</app-dash-community-wizard-controls>
+</app-form>

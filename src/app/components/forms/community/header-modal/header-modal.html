@@ -1,0 +1,18 @@
+<app-modal>
+
+	<div class="modal-controls">
+		<app-button @click="modal.dismiss()">
+			<translate>Close</translate>
+		</app-button>
+	</div>
+
+	<div class="modal-body">
+
+		<form-community-header
+			:model="community"
+			@submit="onSubmit"
+			/>
+
+	</div>
+
+</app-modal>

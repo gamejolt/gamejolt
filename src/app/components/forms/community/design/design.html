@@ -1,0 +1,63 @@
+<app-form name="designForm">
+	<div class="row">
+		<div class="col-sm-6">
+			<h4 class="sans-margin-top">
+				<translate>Community Thumbnail</translate>
+			</h4>
+
+			<div class="page-help">
+				<div>
+					<p><translate>A thumbnail is the little circular image that show in the side bar for people who join the community.</translate></p>
+					<p><translate>Please don't choose an image that contains nudity, swear words, or adult-oriented imagery.</translate></p>
+				</div>
+				<p>
+					<a class="link-help" href="https://help.gamejolt.com/community-thumbnails" target="_blank">
+						<translate>What are the thumbnail requirements and guidelines?</translate>
+					</a>
+				</p>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<app-editable-overlay
+				@click="showEditThumbnail()"
+				>
+				<translate v-if="!model.thumbnail">Upload</translate>
+				<translate v-else>Change</translate>
+
+				<app-community-thumbnail-img
+					:community="model"
+					/>
+			</app-editable-overlay>
+		</div>
+	</div>
+
+	<div
+		v-if="hasThumbnailError"
+		class="alert alert-notice"
+		>
+		<translate>You must upload a thumbnail for your community.</translate>
+	</div>
+
+	<hr>
+
+	<app-form-group
+		name="theme"
+		:label="$gettext(`Color Theme`)"
+		>
+		<app-form-control-theme
+			class="pull-right"
+			@changed="onThemeChanged()"
+			/>
+		<p class="help-block">
+			<translate>
+				Give your page a splash of color! When people view your community page, they'll be switched to this theme.
+			</translate>
+		</p>
+	</app-form-group>
+
+	<app-dash-community-wizard-controls>
+		<app-form-button>
+			<translate>Save</translate>
+		</app-form-button>
+	</app-dash-community-wizard-controls>
+</app-form>

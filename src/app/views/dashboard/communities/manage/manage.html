@@ -1,0 +1,111 @@
+<div v-if="isRouteBootstrapped">
+	<app-page-header>
+		<div class="row">
+			<div class="col-sm-8">
+				<template v-if="isWizard">
+					<h1 class="section-header">
+						<translate>Make a Community</translate>
+					</h1>
+					<h4 class="section-header">
+						{{ community.name }}
+					</h4>
+				</template>
+				<template v-else>
+					<h1 class="section-header">
+						{{ community.name }}
+					</h1>
+				</template>
+
+				<p class="text-muted small">
+					<template v-if="!isWizard">
+						<span v-if="community.is_hidden" class="tag tag-notice">
+							<translate>Hidden</translate>
+						</span>
+						<template v-else-if="community.is_published">
+							<span class="tag tag-highlight">
+								<translate>Published</translate>
+							</span>
+							<span class="dot-separator"></span>
+							<app-time-ago :date="community.published_on" />
+						</template>
+					</template>
+				</p>
+			</div>
+			<div class="col-sm-4" v-if="!isWizard">
+				<p>
+					<app-button
+						icon="arrow-forward"
+						trans
+						:to="community.getUrl()"
+						>
+						<translate>View Community Page</translate>
+					</app-button>
+				</p>
+			</div>
+		</div>
+
+	</app-page-header>
+
+	<div>
+		<section class="alert alert-well sans-margin-bottom" v-if="!community.is_published">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-10 col-lg-8 col-centered" :class="{ 'text-center': Screen.isDesktop }">
+						<translate>This community is currently hidden from public view.</translate>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<app-expand :when="$route.name === 'dash.communities.manage.design'">
+			<app-editable-overlay @click="showEditHeader()">
+				<span slot="overlay">
+					<translate v-if="!community.header">Upload Community Header</translate>
+					<translate v-else>Change Header</translate>
+				</span>
+
+				<!--
+					If no header yet, show their highlight color with a min-height.
+				-->
+				<div
+					class="fill-highlight"
+					:style="{
+						'min-height': !community.header ? '200px' : '',
+					}"
+					>
+					<app-media-item-cover
+						v-if="community.header"
+						:media-item="community.header"
+						/>
+				</div>
+			</app-editable-overlay>
+		</app-expand>
+
+		<div class="container" v-if="Screen.isMobile">
+			<br>
+			<app-nav-tab-list>
+				<app-manage-community-nav />
+			</app-nav-tab-list>
+		</div>
+
+		<section class="section">
+			<div class="container">
+
+				<div class="row">
+					<div class="col-md-2" v-if="Screen.isDesktop">
+						<nav class="platform-list">
+							<app-manage-community-nav />
+						</nav>
+					</div>
+					<div class="col-xs-12 col-md-10">
+						<router-view />
+					</div>
+				</div>
+
+			</div>
+		</section>
+
+	</div>
+
+
+</div>
