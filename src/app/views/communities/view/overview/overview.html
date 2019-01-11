@@ -1,126 +1,113 @@
 <section class="section">
-	<div class="container">
+	<app-page-container xl>
 
-		<div class="row">
-			<div :class="rightColClass" v-if="!Screen.isXs">
-				<p class="lead" v-translate="{ community: community.name }">
-					Welcome to the <b>%{ community }</b> community on Game Jolt! Explore fan-created artwork, videos, game guides and more.
-				</p>
+		<div slot="right" v-if="!Screen.isXs">
+			<p class="lead" v-translate="{ community: community.name }">
+				Welcome to the <b>%{ community }</b> community on Game Jolt! Explore fan-created artwork, videos, game guides and more.
+			</p>
 
-				<p>
-					<strong>
-						<translate>Join the community and share your own creations for this game!</translate>
-					</strong>
-				</p>
+			<p>
+				<strong>
+					<translate>Join the community and share your own creations for this game!</translate>
+				</strong>
+			</p>
 
-				<p>
-					<a
-						href="https://gamejolt.com/games/gj/272864/devlog/communities-ps6r9d4p"
-						class="link-help"
-						>
-						<translate>Learn more</translate>
-					</a>
-				</p>
-
-				<br>
-				<br>
-
-				<div>
-					<img class="img-responsive" src="./communities-mascot.svg" alt="">
-				</div>
-			</div>
-
-			<div :class="leftColClass">
-				<p class="-tabs">
-					<app-pill
-						:to="{
-							name: 'communities.view.overview',
-							params: {
-								tab: undefined,
-							},
-						}"
-						:class="{ active: tab === 'featured' }"
-						>
-						<translate>Featured</translate>
-					</app-pill>
-
-					<app-pill
-						:to="{
-							name: 'communities.view.overview',
-							params: {
-								tab: 'hot',
-							},
-						}"
-						:class="{ active: tab === 'hot' }"
-						>
-						<translate>Hot</translate>
-					</app-pill>
-
-					<app-pill
-						:to="{
-							name: 'communities.view.overview',
-							params: {
-								tab: 'new',
-							},
-						}"
-						:class="{ active: tab === 'new' }"
-						>
-						<translate>New</translate>
-					</app-pill>
-
-					<span class="dot-separator" />
-
-					<app-pill
-						v-for="tag in tags"
-						:key="tag"
-						:to="{
-							name: 'communities.view.overview',
-							params: {
-								tab: tag,
-							},
-						}"
-						:class="{ active: tab === tag }"
-						>
-						#{{ tag }}
-					</app-pill>
-				</p>
-
-				<app-post-add-button
-					:community="community"
-					@add="onPostAdded"
-					/>
-
-				<div class="alert" v-if="tab === 'featured'">
-					<translate>Post your creations to this community for a chance to be featured!</translate>
-				</div>
-				<div class="alert" v-else-if="tab === 'hot'">
-					<translate>Hot posts are sorted by likes. Upvote your favorites!</translate>
-				</div>
-
-				<app-expand
-					v-if="shouldShowLoadNew"
-					when
-					animate-initial
+			<p>
+				<a
+					href="https://gamejolt.com/games/gj/272864/devlog/communities-ps6r9d4p"
+					class="link-help"
 					>
-					<app-activity-feed-new-button @click="emitRefresh()">
-						<translate>Show New Posts</translate>
-					</app-activity-feed-new-button>
-				</app-expand>
+					<translate>Learn more</translate>
+				</a>
+			</p>
 
-				<app-activity-feed-placeholder v-if="!feed" />
-				<template v-else>
-					<app-activity-feed
-						v-if="feed.hasItems"
-						:feed="feed"
-						@unfeature-post="onPostUnfeatured"
-						@reject-post="onPostRejected"
-						/>
-					<div v-else-if="tab !== 'featured'" class="alert">
-						<div v-translate><b>There are no posts here yet.</b> What are you waiting for? Post your creations! Make people happy.</div>
-					</div>
-				</template>
+			<br>
+			<br>
+
+			<div>
+				<img class="img-responsive" src="./communities-mascot.svg" alt="">
 			</div>
 		</div>
 
-	</div>
+		<div slot="left">
+			<app-communities-view-overview-nav
+				:community="community"
+				:tags="tags"
+				:channel="channel"
+				/>
+		</div>
+
+		<app-post-add-button
+			:community="community"
+			@add="onPostAdded"
+			:placeholder="$gettext(`Share your creations!`)"
+			/>
+
+		<app-nav-tab-list v-if="channel !== 'featured'">
+			<ul>
+				<li>
+					<router-link
+						:to="{
+							name: 'communities.view.overview',
+							params: {
+								channel,
+							},
+						}"
+						:class="{ active: sort === 'hot' }"
+						block
+						>
+						<translate>Hot</translate>
+					</router-link>
+				</li>
+				<li>
+					<router-link
+						:to="{
+							name: 'communities.view.overview',
+							params: {
+								channel,
+							},
+							query: {
+								sort: 'new',
+							},
+						}"
+						:class="{ active: sort === 'new' }"
+						block
+						>
+						<translate>New</translate>
+					</router-link>
+				</li>
+			</ul>
+		</app-nav-tab-list>
+
+		<div class="alert" v-if="channel === 'featured'">
+			<translate>Post your creations to this community for a chance to be featured!</translate>
+		</div>
+		<div class="alert" v-else-if="sort === 'hot'">
+			<translate>Hot posts are sorted by likes. Upvote your favorites!</translate>
+		</div>
+
+		<app-expand
+			v-if="shouldShowLoadNew"
+			when
+			animate-initial
+			>
+			<app-activity-feed-new-button @click="emitRefresh()">
+				<translate>Show New Posts</translate>
+			</app-activity-feed-new-button>
+		</app-expand>
+
+		<app-activity-feed-placeholder v-if="!feed" />
+		<template v-else>
+			<app-activity-feed
+				v-if="feed.hasItems"
+				:feed="feed"
+				@unfeature-post="onPostUnfeatured"
+				@reject-post="onPostRejected"
+				/>
+			<div v-else-if="channel !== 'featured'" class="alert">
+				<div v-translate><b>There are no posts here yet.</b> What are you waiting for? Post your creations! Make people happy.</div>
+			</div>
+		</template>
+
+	</app-page-container>
 </section>

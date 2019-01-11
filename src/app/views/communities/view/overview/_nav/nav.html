@@ -1,0 +1,61 @@
+<nav>
+	<ol>
+		<li>
+			<router-link
+				:to="{
+					name: 'communities.view.overview',
+					params: {
+						channel: undefined,
+					},
+				}"
+				:class="{ active: channel === 'featured' }"
+				block
+				>
+				<span class="-label">
+					<translate>Featured</translate>
+				</span>
+			</router-link>
+		</li>
+		<li>
+			<router-link
+				:to="{
+					name: 'communities.view.overview',
+					params: {
+						channel: 'all',
+					},
+				}"
+				:class="{ active: channel === 'all' }"
+				block
+				>
+				<span class="-label">
+					<translate>All Posts</translate>
+				</span>
+			</router-link>
+		</li>
+	</ol>
+
+	<ol>
+		<li
+			v-for="tag in tags"
+			:key="tag"
+			>
+			<router-link
+				:to="{
+					name: 'communities.view.overview',
+					params: {
+						channel: tag,
+					},
+				}"
+				:class="{ active: channel === tag }"
+				block
+				>
+				<span class="-icon">
+					<app-jolticon icon="tag" class="middle" />
+				</span>
+				<span class="-label">
+					{{ tag }}
+				</span>
+			</router-link>
+		</li>
+	</ol>
+</nav>

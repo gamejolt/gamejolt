@@ -1,0 +1,40 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+ol
+	padding-left: 0
+	margin-bottom: $line-height-computed
+	list-style: none
+
+li
+	margin: 0
+
+a
+	rounded-corners()
+	theme-prop('color', 'fg-muted')
+	display: flex
+	padding: 5px 10px
+	margin-bottom: 5px
+	user-select: none
+	transition: all 250ms
+
+	&:hover
+		theme-prop('background-color', 'bg-offset')
+		theme-prop('color', 'fg')
+		transition: none
+
+	&.active
+		&, &:hover
+			theme-prop('background-color', 'bi-bg')
+			theme-prop('color', 'bi-fg')
+
+			.-icon
+				theme-prop('color', 'bi-fg')
+
+.-icon
+	theme-prop('color', 'bg-subtle')
+	flex: none
+	margin-right: 5px
+
+.-label
+	flex: auto
