@@ -4,6 +4,8 @@
 .-media-item
 	theme-prop('background-color', 'bg-offset')
 	position: relative
+	margin-left: auto
+	margin-right: auto
 
 .-img, .-video
 	width: 100%
@@ -11,5 +13,5 @@
 
 @media $media-sm-up
 	.post-view >>>
-		img, video, iframe
+		.-media-item, img, video, iframe
 			rounded-corners()
