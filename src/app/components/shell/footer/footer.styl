@@ -3,42 +3,33 @@
 
 #footer
 	theme-prop('background-color', 'darkest')
+	padding-top: $grid-gutter-width * 0.5
 	position: relative
-	// background-image: url('../shell-bg.png')
-	// background-repeat: repeat
 	z-index: $zindex-footer
 
 	@media $media-xs
 		text-align: center
 
-.footer
-	&-ad .ad-inner
-		margin-left: auto
-		margin-right: auto
+.-client-logo
+	margin-right: 10px
 
+.footer
 	&-link-list
 		font-size: $font-size-tiny
 
 		@media $media-sm-up
 			font-size: $font-size-small
 
-		> li > a
-			theme-prop('color', 'fg-muted')
+		& > li
+			margin-bottom: 6px
 
-			&:hover
-				color: $white
+			& > a
+				theme-prop('color', 'fg-muted')
 
-	@media $media-xs
-		&-links
-			margin-top: $line-height-computed
+				&:hover
+					color: $white
 
 	@media $media-sm-up
-		&-ad
-			float: right
-
-		&-links
-			margin-right: 300px + $grid-gutter-width
-
 		&-jolt
 			float: left
 
