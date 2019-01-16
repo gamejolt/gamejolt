@@ -144,8 +144,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			itemsPayload.items,
 			fromCache
 		);
-		this.knownMembers = overviewPayload.knownMembers;
-		this.knownMemberCount = overviewPayload.knownMemberCount;
+		this.knownMembers = overviewPayload.knownMembers || [];
+		this.knownMemberCount = overviewPayload.knownMemberCount || 0;
 	}
 
 	onPostAdded(post: FiresidePost) {
