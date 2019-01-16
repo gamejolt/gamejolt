@@ -5,7 +5,6 @@ import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytic
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
 import { AppTranslateLangSelector } from '../../../../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { date } from '../../../../lib/gj-lib-client/vue/filters/date';
 import * as _ClientSystemReportModalMod from '../../client/system-report-modal/system-report-modal.service';
 
@@ -17,7 +16,6 @@ if (GJ_IS_CLIENT) {
 @View
 @Component({
 	components: {
-		AppJolticon,
 		AppTranslateLangSelector,
 		AppThemeSvg,
 	},
