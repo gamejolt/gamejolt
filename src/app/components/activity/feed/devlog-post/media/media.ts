@@ -2,15 +2,12 @@ import View from '!view!./media.html?style=./media.styl';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { AppImgResponsive } from '../../../../../../lib/gj-lib-client/components/img/responsive/responsive';
 import { MediaItem } from '../../../../../../lib/gj-lib-client/components/media-item/media-item-model';
-import { AppResponsiveDimensions } from '../../../../../../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppVideo } from '../../../../../../lib/gj-lib-client/components/video/video';
 import { AppEventItemMediaIndicator } from '../../../../event-item/media-indicator/media-indicator';
-import { AppEventItemMediaTags } from '../../../../event-item/media-tags/media-tags';
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedView } from '../../view';
+import { AppActivityFeedDevlogPostMediaItem } from './item/item';
 
 if (!GJ_IS_SSR) {
 	const VueTouch = require('vue-touch');
@@ -20,10 +17,7 @@ if (!GJ_IS_SSR) {
 @View
 @Component({
 	components: {
-		AppImgResponsive,
-		AppVideo,
-		AppResponsiveDimensions,
-		AppEventItemMediaTags,
+		AppActivityFeedDevlogPostMediaItem,
 		AppEventItemMediaIndicator,
 	},
 })
@@ -53,11 +47,6 @@ export class AppActivityFeedDevlogPostMedia extends Vue {
 		this.activeMediaItem = this.post.media[0];
 	}
 
-	shouldVideoPlay(mediaItem: any) {
-		// Must be the active media item.
-		return this.activeMediaItem === mediaItem;
-	}
-
 	next() {
 		this.page = Math.min(this.page + 1, this.post.media.length);
 		this.activeMediaItem = this.post.media[this.page - 1];
@@ -72,7 +61,7 @@ export class AppActivityFeedDevlogPostMedia extends Vue {
 		this.$emit('expanded');
 	}
 
-	async onDimensionsChange() {
+	async onItemBootstrapped() {
 		if (!this.contentBootstrapped) {
 			this.contentBootstrapped = true;
 
