@@ -69,6 +69,9 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@Prop(Array)
 	tags!: string[];
 
+	@Prop(Number)
+	unreadWatermark!: number;
+
 	@State
 	app!: Store['app'];
 
@@ -140,6 +143,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 				shouldShowCommunityControls: true,
 				hideCommunityInfo: true,
 				shouldShowFollow: true,
+				notificationWatermark: this.unreadWatermark,
 			},
 			itemsPayload.items,
 			fromCache
