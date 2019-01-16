@@ -76,8 +76,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	communities!: Store['communities'];
 
 	feed: ActivityFeedView | null = null;
-	knownMembers: User[] | null = null;
-	knownMemberCount: number | null = null;
+	knownMembers: User[] = [];
+	knownMemberCount: number = 0;
 
 	readonly Screen = Screen;
 
