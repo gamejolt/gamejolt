@@ -1,5 +1,25 @@
 <div v-if="community">
 
+	<section v-if="collaboratorInvite" class="section section-thin fill-highlight">
+		<div class="container text-center">
+			<p v-translate>
+				You've been invited you to collaborate on this community.</b>
+			</p>
+			<app-button
+				primary
+				@click="acceptCollaboration()"
+				>
+				<translate>Accept</translate>
+			</app-button>
+			<app-button
+				trans
+				@click="declineCollaboration()"
+				>
+				<translate>Decline</translate>
+			</app-button>
+		</div>
+	</section>
+
 	<app-page-header
 		:cover-media-item="community.header"
 		:cover-max-height="300"

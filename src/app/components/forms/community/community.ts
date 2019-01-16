@@ -15,7 +15,7 @@ export class FormCommunity extends BaseForm<Community> {
 	resetOnSubmit = true;
 
 	get loadUrl() {
-		let url = '/web/dash/developer/communities/save';
+		let url = '/web/dash/communities/save';
 		if (this.method === 'edit') {
 			url += '/' + this.model!.id;
 		}

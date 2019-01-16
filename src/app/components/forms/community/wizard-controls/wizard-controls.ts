@@ -26,7 +26,7 @@ export class AppDashCommunityWizardControls extends Vue {
 	// We have to do all this a bit custom so that we don't expect the module to
 	// exist.
 	@State(RouteStoreName)
-	manageRoute?: RouteStore;
+	manageCommunityRoute?: RouteStore;
 
 	form?: AppForm;
 
@@ -35,7 +35,7 @@ export class AppDashCommunityWizardControls extends Vue {
 	}
 
 	get isWizard() {
-		return !this.manageRoute || this.manageRoute.isWizard;
+		return !this.manageCommunityRoute || this.manageCommunityRoute.isWizard;
 	}
 
 	get inForm() {
@@ -58,8 +58,8 @@ export class AppDashCommunityWizardControls extends Vue {
 			}
 		}
 
-		if (this.manageRoute) {
-			// Sadly we can't attach directly to this since manageRoute may not
+		if (this.manageCommunityRoute) {
+			// Sadly we can't attach directly to this since manageCommunityRoute may not
 			// exist.
 			this.$store.dispatch(`${RouteStoreName}/wizardNext`);
 		}

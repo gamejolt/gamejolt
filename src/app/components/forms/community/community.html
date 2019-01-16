@@ -25,10 +25,11 @@
 					pattern: 'urlPath',
 					max: 50,
 					availability: {
-						url: '/web/dash/developer/communities/check-field-availability/path',
+						url: '/web/dash/communities/check-field-availability/path',
+						initVal: formModel.path || '',
 					},
 				}"
-				:disabled="formModel.published_on !== 0"
+				:disabled="!!formModel.id"
 				/>
 
 			<app-form-control-errors />

@@ -1,5 +1,6 @@
 import View from '!view!./view.html';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Collaborator } from 'game-jolt-frontend-lib/components/collaborator/collaborator.model';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { AppCommunityJoinWidget } from 'game-jolt-frontend-lib/components/community/join-widget/join-widget';
 import { AppCommunityThumbnailImg } from 'game-jolt-frontend-lib/components/community/thumbnail/img/img';
@@ -45,10 +46,14 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	viewCommunity!: Store['viewCommunity'];
 
 	community: Community = null as any;
+	collaboratorInvite: Collaborator | null = null;
 	tags: string[] = [];
 
 	routeResolved($payload: any) {
 		this.community = new Community($payload.community);
+		if ($payload.invite) {
+			this.collaboratorInvite = new Collaborator($payload.invite);
+		}
 		this.tags = $payload.tags || [];
 
 		this.setPageTheme(this.community.theme || null);
@@ -57,6 +62,17 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	routeDestroyed() {
 		this.setPageTheme(null);
+	}
+
+	async acceptCollaboration() {
+		await this.collaboratorInvite!.$accept();
+		this.community.perms = this.collaboratorInvite!.perms;
+		this.collaboratorInvite = null;
+	}
+
+	async declineCollaboration() {
+		await this.collaboratorInvite!.$remove();
+		this.collaboratorInvite = null;
 	}
 
 	onJoin() {

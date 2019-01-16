@@ -7,7 +7,7 @@ export const routeDashCommunitiesManageDetails: RouteConfig = {
 		import(/* webpackChunkName: "routeDashCommunitiesManageDetails" */ './details'),
 	children: [
 		{
-			path: '/dashboard/developer/communities/details/:id(\\d+)',
+			path: '/dashboard/communities/details/:id(\\d+)',
 			redirect: { name: 'dash.communities.manage.details' },
 		},
 	],

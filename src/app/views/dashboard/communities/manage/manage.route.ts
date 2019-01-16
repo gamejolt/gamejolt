@@ -2,6 +2,7 @@ import { RouteConfig } from 'vue-router';
 import { routeDashCommunitiesManageCollaborators } from './collaborators/collaborators.route';
 import { routeDashCommunitiesManageDesign } from './design/design.route';
 import { routeDashCommunitiesManageDetails } from './details/details.route';
+import { routeDashCommunitiesManageOverview } from './overview/overview.route';
 import { routeDashCommunitiesManageWizardFinish } from './wizard-finish/wizard-finish.route';
 
 export const routeDashCommunitiesManage: RouteConfig = {
@@ -11,6 +12,7 @@ export const routeDashCommunitiesManage: RouteConfig = {
 		routeDashCommunitiesManageCollaborators,
 		routeDashCommunitiesManageDesign,
 		routeDashCommunitiesManageDetails,
+		routeDashCommunitiesManageOverview,
 		routeDashCommunitiesManageWizardFinish,
 	],
 };

@@ -1,37 +1,42 @@
 <div v-if="isRouteBootstrapped">
-	<app-page-header>
-		<div class="row">
-			<div class="col-sm-8">
-				<template v-if="isWizard">
-					<h1 class="section-header">
-						<translate>Make a Community</translate>
-					</h1>
-					<h4 class="section-header">
-						{{ community.name }}
-					</h4>
-				</template>
-				<template v-else>
-					<h1 class="section-header">
-						{{ community.name }}
-					</h1>
-				</template>
+	<app-page-header
+		:cover-media-item="community.header"
+		:cover-max-height="300"
+		>
 
-				<p class="text-muted small">
-					<template v-if="!isWizard">
-						<span v-if="community.is_hidden" class="tag tag-notice">
-							<translate>Hidden</translate>
-						</span>
-						<template v-else-if="community.is_published">
-							<span class="tag tag-highlight">
-								<translate>Published</translate>
-							</span>
-							<span class="dot-separator"></span>
-							<app-time-ago :date="community.published_on" />
-						</template>
-					</template>
-				</p>
-			</div>
-			<div class="col-sm-4" v-if="!isWizard">
+		<div class="-header">
+			<span class="tag">
+				<translate>Community</translate>
+			</span>
+
+			<div class="clearfix" />
+
+			<h1 class="section-header">
+				<router-link
+					v-if="!isWizard"
+					:to="{ name: 'communities.view.overview' }"
+					>
+					{{ community.name }}
+				</router-link>
+				<template v-else>
+					{{ community.name }}
+				</template>
+			</h1>
+
+			<p class="text-muted small" v-if="!isWizard">
+				<span v-if="community.is_hidden" class="tag tag-notice">
+					<translate>Hidden</translate>
+				</span>
+				<template v-else-if="community.is_published">
+					<span class="tag tag-highlight">
+						<translate>Published</translate>
+					</span>
+					<span class="dot-separator"></span>
+					<app-time-ago :date="community.published_on" />
+				</template>
+			</p>
+
+			<div v-if="!isWizard">
 				<p>
 					<app-button
 						icon="arrow-forward"
@@ -44,10 +49,60 @@
 			</div>
 		</div>
 
+		<app-editable-overlay
+			slot="cover-image"
+			@click="showEditHeader()"
+			>
+			<span slot="overlay">
+				<translate v-if="!community.header">Upload Community Header</translate>
+				<translate v-else>Change Header</translate>
+			</span>
+
+			<!--
+				If no header yet, show their highlight color with a min-height.
+			-->
+			<div
+				class="fill-highlight"
+				:style="{
+					'min-height': !community.header ? '200px' : '',
+				}"
+				>
+				<app-media-item-cover
+					v-if="community.header"
+					:media-item="community.header"
+					:max-height="300"
+					/>
+			</div>
+		</app-editable-overlay>
+
+		<app-editable-overlay
+			slot="spotlight"
+			@click="showEditThumbnail()"
+			>
+			<span slot="overlay">
+				<translate v-if="!community.thumbnail">Upload</translate>
+				<translate v-else>Change</translate>
+			</span>
+
+			<!--
+				If no header yet, show their highlight color with a min-height.
+			-->
+			<div
+				class="fill-highlight"
+				:style="{
+					'min-height': !community.thumbnail ? '100px' : '',
+				}"
+				>
+				<app-community-thumbnail-img
+					:community="community"
+					/>
+			</div>
+		</app-editable-overlay>
+
 	</app-page-header>
 
 	<div>
-		<section class="alert alert-well sans-margin-bottom" v-if="!community.is_published">
+		<!-- <section class="alert alert-well sans-margin-bottom" v-if="!community.is_published">
 			<div class="container">
 				<div class="row">
 					<div class="col-md-10 col-lg-8 col-centered" :class="{ 'text-center': Screen.isDesktop }">
@@ -55,31 +110,7 @@
 					</div>
 				</div>
 			</div>
-		</section>
-
-		<app-expand :when="$route.name === 'dash.communities.manage.design'">
-			<app-editable-overlay @click="showEditHeader()">
-				<span slot="overlay">
-					<translate v-if="!community.header">Upload Community Header</translate>
-					<translate v-else>Change Header</translate>
-				</span>
-
-				<!--
-					If no header yet, show their highlight color with a min-height.
-				-->
-				<div
-					class="fill-highlight"
-					:style="{
-						'min-height': !community.header ? '200px' : '',
-					}"
-					>
-					<app-media-item-cover
-						v-if="community.header"
-						:media-item="community.header"
-						/>
-				</div>
-			</app-editable-overlay>
-		</app-expand>
+		</section> -->
 
 		<div class="container" v-if="Screen.isMobile">
 			<br>

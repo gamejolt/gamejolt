@@ -14,7 +14,7 @@ import { namespace } from 'vuex-class';
 import { store } from '../../../../store';
 import { router } from '../../../index';
 
-export const RouteStoreName = 'manageRoute';
+export const RouteStoreName = 'manageCommunityRoute';
 export const RouteStoreModule = namespace(RouteStoreName);
 export const routeStore = NamespaceVuexStore<RouteStore, RouteActions, RouteMutations>(
 	store,
@@ -37,7 +37,7 @@ type RouteMutations = {
 const STATE_PREFIX = 'dash.communities.manage';
 
 const TRANSITION_MAP: any = {
-	description: 'design',
+	details: 'design',
 	design: 'collaborators',
 	collaborators: 'wizard-finish',
 };
@@ -132,5 +132,31 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 			name: 'dash.communities.manage.design',
 			params: router.currentRoute.params,
 		});
+	}
+
+	@VuexAction
+	async resign() {
+		if (!this.collaboration || this.collaboration.role === Collaborator.ROLE_OWNER) {
+			return;
+		}
+
+		const result = await ModalConfirm.show(
+			Translate.$gettext(`Are you sure you want to resign from this community?`),
+			Translate.$gettext('Resign from community?'),
+			'yes'
+		);
+
+		if (!result) {
+			return;
+		}
+
+		await this.collaboration.$remove();
+
+		Growls.success(
+			Translate.$gettext('You resigned from the community. You will be missed! ;A;'),
+			Translate.$gettext('Resigned from community')
+		);
+
+		router.push({ name: 'home' });
 	}
 }

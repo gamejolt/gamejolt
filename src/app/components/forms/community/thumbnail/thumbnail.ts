@@ -46,11 +46,7 @@ export class FormCommunityThumbnail extends BaseForm<FormModel>
 	};
 
 	get loadUrl() {
-		return `/web/dash/avatar/save`;
-	}
-
-	get hasAvatar() {
-		return !!this.formModel.thumbnail;
+		return `/web/dash/communities/design/save-thumbnail/${this.model!.id}`;
 	}
 
 	get crop() {

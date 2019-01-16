@@ -6,7 +6,7 @@ export const routeDashCommunitiesAdd: RouteConfig = {
 	component: () => import(/* webpackChunkName: "routeDashCommunitiesAdd" */ './add'),
 	children: [
 		{
-			path: '/dashboard/developer/communities/add',
+			path: '/dashboard/communities/add',
 			redirect: { name: 'dash.communities.add' },
 		},
 	],

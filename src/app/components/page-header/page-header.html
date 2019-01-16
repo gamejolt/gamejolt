@@ -11,17 +11,19 @@
 	<section
 		class="section page-header-cover fill-darker"
 		:class="{
-			'has-cover-image': !!coverMediaItem,
+			'has-cover-image': true, // !!coverMediaItem, TODO(community-manage) do this properly
 			'has-cover-buttons': showCoverButtons,
 		}"
 		>
 
-		<div class="-cover-img" v-if="!!coverMediaItem">
-			<app-media-item-cover
-				:media-item="coverMediaItem"
-				:max-height="coverMaxHeight"
-				:blur="blurHeader"
-				/>
+		<div class="-cover-img" v-if="true /*!!coverMediaItem*/">
+			<slot name="cover-image">
+				<app-media-item-cover
+					:media-item="coverMediaItem"
+					:max-height="coverMaxHeight"
+					:blur="blurHeader"
+					/>
+			</slot>
 		</div>
 
 		<div

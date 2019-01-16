@@ -19,7 +19,7 @@ import { startWizard } from '../manage/manage.store';
 @RouteResolver({
 	deps: {},
 	// Make sure they can add a community.
-	resolver: () => Api.sendRequest('/web/dash/developer/communities/add'),
+	resolver: () => Api.sendRequest('/web/dash/communities/add'),
 })
 export default class RouteDashCommunitiesAdd extends BaseRouteComponent {
 	get routeTitle() {
@@ -30,7 +30,7 @@ export default class RouteDashCommunitiesAdd extends BaseRouteComponent {
 		startWizard();
 
 		this.$router.push({
-			name: 'dash.communities.manage.community.description',
+			name: 'dash.communities.manage.design',
 			params: { id: community.id + '' },
 		});
 	}

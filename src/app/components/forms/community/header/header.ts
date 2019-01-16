@@ -8,7 +8,6 @@ import {
 	FormOnBeforeSubmit,
 	FormOnLoad,
 } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
 import { Component, Watch } from 'vue-property-decorator';
 
 type FormModel = Community & {
@@ -40,7 +39,7 @@ export class FormCommunityHeader extends BaseForm<FormModel>
 	};
 
 	get loadUrl() {
-		return `/web/dash/developer/games/header/save/${this.model!.id}`;
+		return `/web/dash/communities/design/save-header/${this.model!.id}`;
 	}
 
 	get crop() {
@@ -65,18 +64,6 @@ export class FormCommunityHeader extends BaseForm<FormModel>
 	onBeforeSubmit() {
 		// Backend expects this field.
 		this.setField('crop' as any, this.formModel.header_crop);
-	}
-
-	async clearHeader() {
-		const result = await ModalConfirm.show(
-			this.$gettext(`Are you sure you want to remove your community header?`),
-			undefined,
-			'yes'
-		);
-
-		if (result) {
-			this.formModel.$clearHeader();
-		}
 	}
 
 	headerSelected() {

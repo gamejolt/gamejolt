@@ -1,0 +1,70 @@
+<div>
+
+	<div class="row">
+		<div class="col-lg-8">
+
+			<div class="alert alert-highlight" v-if="community.is_removed">
+				<app-jolticon icon="check" />
+				<translate>This community is archived.</translate>
+			</div>
+
+			<div class="alert alert-highlight" v-else-if="community.is_published">
+				<app-jolticon icon="check" />
+				<translate>This community is public.</translate>
+			</div>
+
+			<div class="alert alert-highlight" v-else-if="canPublish">
+				<p>
+					<translate>Your community is ready to publish to the site for all to see!</translate>
+				</p>
+
+				<app-community-perms required="all" tag="div" class="alert-actions">
+					<app-button
+						primary
+						block
+						v-app-tooltip="$gettext( `Ohhhh, yeah!` )"
+						@click="publish"
+						>
+						<translate>Publish Community</translate>
+					</app-button>
+				</app-community-perms>
+			</div>
+
+			<div class="alert alert-notice" v-else>
+				<p>
+					<translate>You are missing some steps before this community can go live!</translate>
+				</p>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- TODO(community-manage): Graph and data with follower count, post count, like count, comment count
+	<h2>
+		<translate>Stats</translate>
+	</h2>
+
+
+	<div class="row">
+
+	</div>-->
+
+	<div class="row" v-if="!isWizard && isCollaborator">
+		<div class="-danger-zone well fill-offset">
+			<h4>
+				<translate>Resign from Community</translate>
+			</h4>
+
+			<div class="page-help">
+				<p>
+					<translate>You are currently a collaborator on this community. Leaving the community will revoke all management access to it.</translate>
+				</p>
+			</div>
+
+			<app-button @click="resign">
+				<translate>Resign</translate>
+			</app-button>
+		</div>
+	</div>
+
+</div>

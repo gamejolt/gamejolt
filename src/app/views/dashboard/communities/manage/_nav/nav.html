@@ -8,6 +8,19 @@
 		<li>
 			<router-link
 				:to="{
+					name: 'dash.communities.manage.overview',
+					query: $route.query,
+				}"
+				active-class="active"
+				exact
+				>
+				<app-manage-community-nav-required :is-complete="true" />
+				<translate>Overview</translate>
+			</router-link>
+		</li>
+		<li>
+			<router-link
+				:to="{
 					name: 'dash.communities.manage.details',
 					query: $route.query,
 				}"
@@ -40,7 +53,7 @@
 				<translate>Collaborators</translate>
 			</router-link>
 		</li>
-	</ul>
+	</app-community-perms>
 
 	<app-community-perms
 		required="all"

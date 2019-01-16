@@ -30,7 +30,7 @@ import { RouteStore, RouteStoreModule } from '../manage.store';
 @RouteResolver({
 	deps: {},
 	resolver: ({ route }) =>
-		Api.sendRequest('/web/dash/developer/communities/collaborators/' + route.params.id),
+		Api.sendRequest('/web/dash/communities/collaborators/' + route.params.id),
 })
 export default class RouteDashCommunitiesManageCollaborators extends BaseRouteComponent {
 	@RouteStoreModule.State
