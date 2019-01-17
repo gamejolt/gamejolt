@@ -13,6 +13,8 @@ import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
+import { AppKnownUsers } from '../../../../../lib/gj-lib-client/components/user/known/known';
+import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
 import { AppActivityFeed } from '../../../../components/activity/feed/feed';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { AppActivityFeedNewButton } from '../../../../components/activity/feed/new-button/new-button';
@@ -45,6 +47,7 @@ function getFetchUrl(route: Route) {
 		AppPill,
 		AppExpand,
 		AppActivityFeedNewButton,
+		AppKnownUsers,
 	},
 })
 @RouteResolver({
@@ -53,7 +56,11 @@ function getFetchUrl(route: Route) {
 	deps: {
 		params: ['path', 'tab'],
 	},
-	resolver: ({ route }) => Api.sendRequest(getFetchUrl(route)),
+	resolver: ({ route }) =>
+		Promise.all([
+			Api.sendRequest(getFetchUrl(route)),
+			Api.sendRequest('/web/communities/overview/' + route.params.path),
+		]),
 })
 export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@Prop(Community)
@@ -62,10 +69,18 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@Prop(Array)
 	tags!: string[];
 
+	@Prop(Number)
+	unreadWatermark!: number;
+
+	@State
+	app!: Store['app'];
+
 	@State
 	communities!: Store['communities'];
 
 	feed: ActivityFeedView | null = null;
+	knownMembers: User[] = [];
+	knownMemberCount: number = 0;
 
 	readonly Screen = Screen;
 
@@ -101,11 +116,25 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return false;
 	}
 
+	get shouldShowKnownMembers() {
+		return this.app.user && this.knownMembers && this.knownMembers.length > 0;
+	}
+
+	get membersYouKnowCount() {
+		if (this.knownMemberCount && this.knownMemberCount > 0) {
+			if (this.knownMemberCount <= 10) {
+				return this.knownMemberCount.toString();
+			}
+			return '10+';
+		}
+	}
+
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {
+		const [itemsPayload, overviewPayload] = $payload;
 		this.feed = ActivityFeedService.routed(
 			this.feed,
 			{
@@ -114,10 +143,13 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 				shouldShowCommunityControls: true,
 				hideCommunityInfo: true,
 				shouldShowFollow: true,
+				notificationWatermark: this.unreadWatermark,
 			},
-			$payload.items,
+			itemsPayload.items,
 			fromCache
 		);
+		this.knownMembers = overviewPayload.knownMembers || [];
+		this.knownMemberCount = overviewPayload.knownMemberCount || 0;
 	}
 
 	onPostAdded(post: FiresidePost) {
