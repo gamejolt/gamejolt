@@ -1,13 +1,10 @@
 import View from '!view!./footer.html?style=./footer.styl';
-import { hasPlaywire } from 'game-jolt-frontend-lib/components/ad/ads.service';
-import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
 import { AppTranslateLangSelector } from '../../../../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { date } from '../../../../lib/gj-lib-client/vue/filters/date';
 import * as _ClientSystemReportModalMod from '../../client/system-report-modal/system-report-modal.service';
 
@@ -19,9 +16,7 @@ if (GJ_IS_CLIENT) {
 @View
 @Component({
 	components: {
-		AppJolticon,
 		AppTranslateLangSelector,
-		AppAdWidget,
 		AppThemeSvg,
 	},
 	directives: {
@@ -37,11 +32,6 @@ export class AppShellFooter extends Vue {
 
 	get clientVersion() {
 		return GJ_VERSION;
-	}
-
-	get shouldShowAd() {
-		// We just don't show footer ads with playwire for now.
-		return !hasPlaywire(this.$route);
 	}
 
 	async showSystemReport() {

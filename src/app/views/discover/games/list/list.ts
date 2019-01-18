@@ -1,6 +1,5 @@
 import View from '!view!./list.html?style=./list.styl';
 import { Component } from 'vue-property-decorator';
-import { Ads } from '../../../../../lib/gj-lib-client/components/ad/ads.service';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
 import {
@@ -203,10 +202,6 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		}
 	}
 
-	routeDestroyed() {
-		Ads.releasePageSettings();
-	}
-
 	/**
 	 * Gets called before the payload and after.
 	 */
@@ -219,6 +214,5 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		}
 
 		this.filtering.init(this.$route);
-		this.listing.setAdTargeting(this.$route, 'gamesdir');
 	}
 }

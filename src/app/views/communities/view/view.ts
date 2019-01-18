@@ -48,6 +48,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	community: Community = null as any;
 	collaboratorInvite: Collaborator | null = null;
 	tags: string[] = [];
+	unreadWatermark: number = 0;
 
 	routeResolved($payload: any) {
 		this.community = new Community($payload.community);
@@ -55,6 +56,9 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 			this.collaboratorInvite = new Collaborator($payload.invite);
 		}
 		this.tags = $payload.tags || [];
+		if ($payload.unreadWatermark) {
+			this.unreadWatermark = $payload.unreadWatermark;
+		}
 
 		this.setPageTheme(this.community.theme || null);
 		this.viewCommunity(this.community);

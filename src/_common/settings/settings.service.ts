@@ -12,7 +12,7 @@ interface Setting {
 const defaultSettings: { [k: string]: Setting } = {
 	'theme-dark': {
 		type: 'boolean',
-		val: false,
+		val: true,
 	},
 	'theme-always-ours': {
 		type: 'boolean',

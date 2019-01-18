@@ -3,7 +3,6 @@ import { Community } from 'game-jolt-frontend-lib/components/community/community
 import { Component } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { State } from 'vuex-class';
-import { Ads, AdSettingsContainer } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
@@ -61,10 +60,6 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 
 	routeCreated() {
 		Meta.title = null;
-
-		const adSettings = new AdSettingsContainer();
-		adSettings.adUnit = 'homepage';
-		Ads.setPageSettings(adSettings);
 	}
 
 	routeResolved($payload: any) {
@@ -93,9 +88,5 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 
 		this.featuredCommunities = Community.populate($payload.featuredCommunities);
 		this.games = Game.populate($payload.games);
-	}
-
-	routeDestroyed() {
-		Ads.releasePageSettings();
 	}
 }
