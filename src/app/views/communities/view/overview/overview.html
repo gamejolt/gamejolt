@@ -2,6 +2,21 @@
 	<app-page-container xl>
 
 		<div slot="right" v-if="!Screen.isXs">
+			<p v-if="shouldShowKnownMembers">
+				<h5 class="section-header">
+					<translate
+						:translate-n="membersYouKnowCount"
+						:translate-params="{ count: number(membersYouKnowCount) }"
+						translate-plural="%{ count } members you know"
+						>
+						1 member you know
+					</translate>
+				</h5>
+				<app-user-avatar-list
+					:users="knownMembers"
+					/>
+			</p>
+
 			<p class="lead" v-translate="{ community: community.name }">
 				Welcome to the <b>%{ community }</b> community on Game Jolt! Explore fan-created artwork, videos, game guides and more.
 			</p>

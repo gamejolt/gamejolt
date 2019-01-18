@@ -13,7 +13,6 @@ import { routeProfile } from './profile/profile.route';
 import { routeSearch } from './search/search.route';
 import { routeSettings } from './settings/settings.route';
 import { routeStyleguide } from './styleguide/styleguide.route';
-import { routeTestAds } from './test-ads/test-ads.route';
 
 const routes = [
 	routeHome,
@@ -28,7 +27,6 @@ const routes = [
 	routeSettings,
 	routeForums,
 	routeStyleguide,
-	routeTestAds,
 	routeLegal,
 	routeIntent,
 ];

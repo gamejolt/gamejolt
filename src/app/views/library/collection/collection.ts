@@ -1,7 +1,6 @@
 import View from '!view!./collection.html?style=./collection.styl';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
@@ -213,7 +212,6 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		}
 
 		this.filtering.init(this.$route);
-		this.listing.setAdTargeting(this.$route, 'gamesdir');
 		this.listing.processPayload(this.$route, $payload);
 
 		this.type = this.$route.meta.collectionType;
@@ -261,7 +259,6 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 	routeDestroyed() {
 		this.setPageTheme(null);
-		Ads.releasePageSettings();
 	}
 
 	private processMeta($payload: any) {
