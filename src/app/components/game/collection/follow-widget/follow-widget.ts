@@ -48,6 +48,10 @@ export class AppGameCollectionFollowWidget extends Vue {
 	isProcessing = false;
 
 	get isFollowing() {
+		if (this.collection.type === GameCollection.TYPE_DEVELOPER) {
+			return this.collection.owner!.is_following;
+		}
+
 		return (
 			this.collections.findIndex(
 				item =>

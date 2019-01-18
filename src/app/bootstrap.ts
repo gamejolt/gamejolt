@@ -1,4 +1,3 @@
-import { Ads } from '../lib/gj-lib-client/components/ad/ads.service';
 import { GamePlayModal } from '../lib/gj-lib-client/components/game/play-modal/play-modal.service';
 import { Registry } from '../lib/gj-lib-client/components/registry/registry.service';
 import '../lib/gj-lib-client/utils/polyfills';
@@ -16,8 +15,6 @@ export function createApp() {
 if (GJ_IS_CLIENT) {
 	require('./bootstrap-client');
 }
-
-Ads.init(router);
 
 GamePlayModal.init({ canMinimize: true });
 // bootstrapShortkey();

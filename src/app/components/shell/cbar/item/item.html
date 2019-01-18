@@ -19,4 +19,11 @@
 			'background-color': isActive || isUnread ? highlight : undefined,
 		}"
 		/>
+	<div
+		class="-notification"
+		v-if="isUnread"
+		:style="{
+			'background-color': highlight,
+		}"
+		/>
 </router-link>

@@ -21,6 +21,9 @@ export class AppPostAddButton extends Vue {
 	@Prop(Community)
 	community?: Community;
 
+	@Prop(String)
+	placeholder?: string;
+
 	@AppState
 	user!: AppStore['user'];
 
@@ -28,6 +31,10 @@ export class AppPostAddButton extends Vue {
 	add(_post: FiresidePost) {}
 
 	_isBlocked = false;
+
+	get placeholderMessage() {
+		return this.placeholder || this.$gettext(`So, what's on your mind?`);
+	}
 
 	async open() {
 		if (this._isBlocked) {
