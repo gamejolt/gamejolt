@@ -1,12 +1,12 @@
 <section class="section">
 	<app-page-container xl>
 
-		<div slot="right" v-if="!Screen.isXs">
+		<div slot="right" v-if="!Screen.isMobile">
 			<p v-if="shouldShowKnownMembers">
 				<h5 class="section-header">
 					<translate
-						:translate-n="membersYouKnowCount"
-						:translate-params="{ count: number(membersYouKnowCount) }"
+						:translate-n="knownMemberCount"
+						:translate-params="{ count: membersYouKnowCount }"
 						translate-plural="%{ count } members you know"
 						>
 						1 member you know
@@ -49,7 +49,7 @@
 				We put some extra spacing in here because of the affixed header
 				nav.
 			-->
-			<app-scroll-affix :scroll-offset="80">
+			<app-scroll-affix :scroll-offset="80" :disabled="!Screen.isLg">
 				<app-communities-view-overview-nav
 					class="-nav"
 					:community="community"
@@ -100,13 +100,6 @@
 				</li>
 			</ul>
 		</app-nav-tab-list>
-
-		<div class="alert" v-if="channel === 'featured'">
-			<translate>Post your creations to this community for a chance to be featured!</translate>
-		</div>
-		<div class="alert" v-else-if="sort === 'hot'">
-			<translate>Hot posts are sorted by likes. Upvote your favorites!</translate>
-		</div>
 
 		<app-expand
 			v-if="shouldShowLoadNew"

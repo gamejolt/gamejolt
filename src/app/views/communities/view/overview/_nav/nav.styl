@@ -1,21 +1,28 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+nav
+	margin-bottom: $line-height-computed
+
 ol
 	padding-left: 0
 	margin-bottom: $line-height-computed
 	list-style: none
 
+	&:last-child
+		margin-bottom: 0
+
 li
 	margin: 0
 
-a
+.-item
 	rounded-corners()
-	theme-prop('color', 'fg-muted')
+	theme-prop('color', 'fg')
 	display: flex
 	padding: 5px 10px
 	margin-bottom: 5px
 	user-select: none
+	cursor: pointer
 	transition: all 250ms
 
 	&:hover
@@ -31,10 +38,48 @@ a
 			.-icon
 				theme-prop('color', 'bi-fg')
 
+.-menu-icon
+	theme-prop('border-right-color', 'bi-fg')
+	flex: none
+	display: flex
+	align-items: center
+	justify-content: center
+	margin-top: -5px
+	margin-bottom: -5px
+	margin-right: 5px
+	padding-right: 10px
+	border-right-style: solid
+	border-right-width: 1px
+
+	.-jolticon
+		margin: 0
+
 .-icon
-	theme-prop('color', 'bg-subtle')
+	theme-prop('color', 'fg-muted')
 	flex: none
 	margin-right: 5px
 
 .-label
 	flex: auto
+
+.-mobile-nav-container
+	theme-prop('border-color', 'bg-subtle')
+	position: relative
+	margin-left: -($grid-gutter-width-xs * 0.5)
+	margin-right: -($grid-gutter-width-xs * 0.5)
+	padding: $grid-gutter-width-xs * 0.5
+	border-style: solid
+	border-width: 2px
+	border-left-width: 0
+	border-right-width: 0
+
+	@media $media-sm-up
+		rounded-corners()
+		margin-left: 0
+		margin-right: 0
+		padding: $grid-gutter-width * 0.5
+		border-width: 2px
+
+	&::before
+		caret(var(--theme-bg-subtle), size: 7px, direction: 'up')
+		content: ''

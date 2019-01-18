@@ -101,7 +101,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	knownMemberCount: number = 0;
 
 	readonly Screen = Screen;
-	readonly number = number;
 
 	@Emit('refresh')
 	emitRefresh() {}
@@ -144,12 +143,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get membersYouKnowCount() {
-		if (this.knownMemberCount && this.knownMemberCount > 0) {
-			if (this.knownMemberCount <= 10) {
-				return this.knownMemberCount.toString();
-			}
-			return '10+';
-		}
+		return number(this.knownMemberCount);
 	}
 
 	routeCreated() {
