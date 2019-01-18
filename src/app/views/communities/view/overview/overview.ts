@@ -9,11 +9,12 @@ import {
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppUserAvatarList } from 'game-jolt-frontend-lib/components/user/user-avatar/known/list';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
-import { AppKnownUsers } from '../../../../../lib/gj-lib-client/components/user/known/known';
 import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
 import { AppActivityFeed } from '../../../../components/activity/feed/feed';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
@@ -47,7 +48,7 @@ function getFetchUrl(route: Route) {
 		AppPill,
 		AppExpand,
 		AppActivityFeedNewButton,
-		AppKnownUsers,
+		AppUserAvatarList,
 	},
 })
 @RouteResolver({
@@ -83,6 +84,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	knownMemberCount: number = 0;
 
 	readonly Screen = Screen;
+	readonly number = number;
 
 	@Emit('refresh')
 	emitRefresh() {}
