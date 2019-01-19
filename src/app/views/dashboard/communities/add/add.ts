@@ -7,7 +7,6 @@ import {
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
 import { FormCommunity } from '../../../../components/forms/community/community';
-import { startWizard } from '../manage/manage.store';
 
 @View
 @Component({
@@ -27,8 +26,6 @@ export default class RouteDashCommunitiesAdd extends BaseRouteComponent {
 	}
 
 	onSubmit(community: Community) {
-		startWizard();
-
 		this.$router.push({
 			name: 'dash.communities.manage.design',
 			params: { id: community.id + '' },

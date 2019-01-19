@@ -1,80 +1,78 @@
-<section class="section">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-4 col-sm-push-8">
-				<div class="page-help">
-					<p>
-						<translate>Allow other users to manage your community by giving them collaborator roles.</translate>
-					</p>
-				</div>
-			</div>
-
-			<div class="col-sm-8 col-sm-pull-4">
-
-				<app-card-list
-					:items="collaborators"
-					:active-item="activeCollaborator"
-					:is-adding="isAdding"
-					@activate="activeCollaborator = $event"
-					>
-
-					<app-card-list-item
-						v-for="collaborator of collaborators"
-						:key="collaborator.id"
-						:item="collaborator"
-						>
-
-						<a
-							class="card-remove"
-							@click.stop="remove( collaborator )"
-							>
-							<app-jolticon icon="remove" />
-						</a>
-
-						<div class="card-title">
-							<h5>{{ collaborator.user.username }}</h5>
-						</div>
-
-						<div class="card-meta">
-							<span class="tag">
-								<template v-if="collaborator.role === Collaborator.ROLE_EQUAL_COLLABORATOR">
-									<translate>Collaborator</translate>
-								</template>
-								<template v-else-if="collaborator.role === Collaborator.ROLE_MODERATOR">
-									<translate>Moderator</translate>
-								</template>
-								<template v-else>-</template>
-							</span>
-
-							<template v-if="collaborator.status !== Collaborator.STATUS_ACTIVE">
-								<span class="tag"><translate>Invited</translate></span>
-								<br>
-								<translate>This user hasn't accepted their invitation yet.</translate>
-							</template>
-						</div>
-
-						<template slot="body">
-							<form-community-collaborator
-								:model="collaborator"
-								:community="community"
-								@submit="onSaved"
-								/>
-						</template>
-
-					</app-card-list-item>
-
-					<app-card-list-add
-						:label="$gettext(`Add Collaborator`)"
-						@toggle="isAdding = !isAdding"
-						>
-						<form-community-collaborator
-							:community="community"
-							@submit="onAdded"
-							/>
-					</app-card-list-add>
-				</app-card-list>
-
-			</div>
+<div class="row">
+	<div class="col-sm-4 col-sm-push-8">
+		<div class="page-help">
+			<p>
+				<translate>Allow other users to manage your community by giving them collaborator roles.</translate>
+			</p>
 		</div>
 	</div>
-</section>
+
+	<div class="col-sm-8 col-sm-pull-4">
+
+		<app-card-list
+			:items="collaborators"
+			:active-item="activeCollaborator"
+			:is-adding="isAdding"
+			@activate="activeCollaborator = $event"
+			>
+
+			<app-card-list-item
+				v-for="collaborator of collaborators"
+				:key="collaborator.id"
+				:item="collaborator"
+				>
+
+				<a
+					v-if="hasPerms"
+					class="card-remove"
+					@click.stop="remove( collaborator )"
+					>
+					<app-jolticon icon="remove" />
+				</a>
+
+				<div class="card-title">
+					<h5>{{ collaborator.user.username }}</h5>
+				</div>
+
+				<div class="card-meta">
+					<span class="tag">
+						<template v-if="collaborator.role === Collaborator.ROLE_EQUAL_COLLABORATOR">
+							<translate>Collaborator</translate>
+						</template>
+						<template v-else-if="collaborator.role === Collaborator.ROLE_MODERATOR">
+							<translate>Moderator</translate>
+						</template>
+						<template v-else>-</template>
+					</span>
+
+					<template v-if="collaborator.status !== Collaborator.STATUS_ACTIVE">
+						<span class="tag"><translate>Invited</translate></span>
+						<br>
+						<translate>This user hasn't accepted their invitation yet.</translate>
+					</template>
+				</div>
+
+				<template v-if="hasPerms" slot="body">
+					<form-community-collaborator
+						:model="collaborator"
+						:community="community"
+						@submit="onSaved"
+						/>
+				</template>
+
+			</app-card-list-item>
+
+			<app-card-list-add
+				v-if="hasPerms"
+				:label="$gettext(`Add Collaborator`)"
+				@toggle="isAdding = !isAdding"
+				>
+				<form-community-collaborator
+					:community="community"
+					@submit="onAdded"
+					/>
+			</app-card-list-add>
+		</app-card-list>
+
+	</div>
+</div>

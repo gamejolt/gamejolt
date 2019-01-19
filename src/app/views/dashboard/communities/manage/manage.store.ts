@@ -21,36 +21,18 @@ export const routeStore = NamespaceVuexStore<RouteStore, RouteActions, RouteMuta
 	RouteStoreName
 );
 
-const WizardKey = 'manage-community-wizard';
-
 type RouteActions = {
-	wizardNext: undefined;
 	publish: undefined;
-	saveDraft: undefined;
 };
 
 type RouteMutations = {
 	populate: any;
-	finishWizard: undefined;
 };
-
-const STATE_PREFIX = 'dash.communities.manage';
-
-const TRANSITION_MAP: any = {
-	details: 'design',
-	design: 'collaborators',
-	collaborators: 'wizard-finish',
-};
-
-export function startWizard() {
-	window.sessionStorage.setItem(WizardKey, 'active');
-}
 
 @VuexModule()
 export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutations> {
 	community: Community = null as any;
 	collaboration: Collaborator | null = null;
-	isWizard = false;
 
 	get canPublish() {
 		if (!this.community) {
@@ -68,31 +50,6 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	populate(payload: RouteMutations['populate']) {
 		this.community = new Community(payload.community);
 		this.collaboration = payload.collaboration ? new Collaborator(payload.collaboration) : null;
-		this.isWizard = !!window.sessionStorage.getItem(WizardKey);
-	}
-
-	@VuexMutation
-	finishWizard() {
-		this.isWizard = false;
-		window.sessionStorage.removeItem(WizardKey);
-	}
-
-	@VuexAction
-	async wizardNext() {
-		if (!this.community) {
-			return;
-		}
-
-		const routeName = router.currentRoute.name!;
-		for (const current in TRANSITION_MAP) {
-			if (routeName.indexOf(`${STATE_PREFIX}.${current}`) !== -1) {
-				const next = TRANSITION_MAP[current];
-				router.push({
-					name: `${STATE_PREFIX}.${next}`,
-				});
-				return;
-			}
-		}
 	}
 
 	@VuexAction
@@ -106,30 +63,17 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 			return;
 		}
 
-		// await this.game.$setStatus(Game.STATUS_VISIBLE);
+		await this.community.$publish();
 
 		Growls.success(
 			Translate.$gettext(
 				`You've published your community to the site! Huzzah! Remember to spread the word...`
 			),
-			Translate.$gettext(`Game Published`)
+			Translate.$gettext(`Community Published`)
 		);
 
-		this.finishWizard();
-
 		router.push({
-			name: 'dash.communities.manage.design',
-			params: router.currentRoute.params,
-		});
-	}
-
-	@VuexAction
-	async saveDraft() {
-		this.finishWizard();
-
-		// Simply go to the overview and pull out of the wizard!
-		router.push({
-			name: 'dash.communities.manage.design',
+			name: 'dash.communities.manage.overview',
 			params: router.currentRoute.params,
 		});
 	}

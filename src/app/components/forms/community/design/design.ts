@@ -10,14 +10,12 @@ import {
 	ThemeStore,
 } from 'game-jolt-frontend-lib/components/theme/theme.store';
 import { Component } from 'vue-property-decorator';
-import { AppDashCommunityWizardControls } from '../wizard-controls/wizard-controls';
 
 @View
 @Component({
 	components: {
 		AppFormControlTheme,
 		AppEditableOverlay,
-		AppDashCommunityWizardControls,
 	},
 })
 export class FormCommunityDesign extends BaseForm<Community> {
@@ -29,6 +27,10 @@ export class FormCommunityDesign extends BaseForm<Community> {
 
 	@ThemeMutation
 	setFormTheme!: ThemeStore['setFormTheme'];
+
+	get hasPerms() {
+		return this.formModel.hasPerms('media');
+	}
 
 	destroyed() {
 		this.setFormTheme(null);

@@ -51,6 +51,10 @@ export default class RouteDashCommunitiesManageCollaborators extends BaseRouteCo
 		return null;
 	}
 
+	get hasPerms() {
+		return this.community.hasPerms('all');
+	}
+
 	routeResolved($payload: any) {
 		this.collaborators = Collaborator.populate($payload.collaborators);
 		if (!this.collaborators.length) {

@@ -13,40 +13,29 @@
 
 			<h1 class="section-header">
 				<router-link
-					v-if="!isWizard"
-					:to="{ name: 'communities.view.overview' }"
+					:to="{
+						name: 'communities.view',
+						params: {
+							path: community.path,
+						},
+					}"
 					>
 					{{ community.name }}
 				</router-link>
-				<template v-else>
-					{{ community.name }}
-				</template>
-			</h1>
 
-			<p class="text-muted small" v-if="!isWizard">
-				<span v-if="community.is_hidden" class="tag tag-notice">
-					<translate>Hidden</translate>
-				</span>
-				<template v-else-if="community.is_published">
-					<span class="tag tag-highlight">
-						<translate>Published</translate>
+				<span class="text-muted small">
+					<span v-if="community.is_hidden" class="tag tag-notice">
+						<translate>Hidden</translate>
 					</span>
-					<span class="dot-separator"></span>
-					<app-time-ago :date="community.published_on" />
-				</template>
-			</p>
-
-			<div v-if="!isWizard">
-				<p>
-					<app-button
-						icon="arrow-forward"
-						trans
-						:to="community.getUrl()"
-						>
-						<translate>View Community Page</translate>
-					</app-button>
-				</p>
-			</div>
+					<template v-else-if="community.is_published">
+						<span class="tag tag-highlight">
+							<translate>Published</translate>
+						</span>
+						<span class="dot-separator"></span>
+						<app-time-ago :date="community.published_on" />
+					</template>
+				</span>
+			</h1>
 		</div>
 
 		<app-editable-overlay
@@ -129,7 +118,9 @@
 						</nav>
 					</div>
 					<div class="col-xs-12 col-md-10">
-						<router-view />
+						<transition name="body" mode="out-in">
+							<router-view />
+						</transition>
 					</div>
 				</div>
 

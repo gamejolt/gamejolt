@@ -10,6 +10,7 @@
 				:rules="{
 					max: 100,
 				}"
+				:disabled="!hasPerms"
 				/>
 			<app-form-control-errors />
 		</app-form-group>
@@ -29,7 +30,7 @@
 						initVal: formModel.path || '',
 					},
 				}"
-				:disabled="!!formModel.id"
+				:disabled="!canEditUrl"
 				/>
 
 			<app-form-control-errors />
@@ -43,9 +44,7 @@
 		</app-form-group>
 	</fieldset>
 
-	<app-dash-community-wizard-controls>
-		<app-form-button v-if="method === 'edit'">
-			<translate>Save Details</translate>
-		</app-form-button>
-	</app-dash-community-wizard-controls>
+	<app-form-button v-if="hasPerms && method === 'edit'">
+		<translate>Save</translate>
+	</app-form-button>
 </app-form>

@@ -1,11 +1,7 @@
 <div>
 
-	<app-community-perms
-		tag="ul"
-		required="all"
-		class="sans-margin community-dash-nav"
-		>
-		<li>
+	<ul class="sans-margin community-dash-nav">
+		<app-community-perms tag="li">
 			<router-link
 				:to="{
 					name: 'dash.communities.manage.overview',
@@ -17,8 +13,8 @@
 				<app-manage-community-nav-required :is-complete="true" />
 				<translate>Overview</translate>
 			</router-link>
-		</li>
-		<li>
+		</app-community-perms>
+		<app-community-perms tag="li" required="all">
 			<router-link
 				:to="{
 					name: 'dash.communities.manage.details',
@@ -29,8 +25,8 @@
 				<app-manage-community-nav-required :is-complete="true" />
 				<translate>Details</translate>
 			</router-link>
-		</li>
-		<li>
+		</app-community-perms>
+		<app-community-perms tag="li" required="all">
 			<router-link
 				:to="{
 					name: 'dash.communities.manage.design',
@@ -41,8 +37,8 @@
 				<app-manage-community-nav-required :is-complete="!!community.thumbnail && !!community.header" />
 				<translate>Design</translate>
 			</router-link>
-		</li>
-		<li>
+		</app-community-perms>
+		<app-community-perms tag="li" required="all">
 			<router-link
 				:to="{
 					name: 'dash.communities.manage.collaborators',
@@ -52,34 +48,6 @@
 				>
 				<translate>Collaborators</translate>
 			</router-link>
-		</li>
-	</app-community-perms>
-
-	<app-community-perms
-		required="all"
-		tag="div"
-		class="hidden-xs"
-		v-if="$route.name !== 'dash.communities.manage.wizard-finish'"
-		>
-		<app-button
-			v-if="community.is_hidden"
-			primary
-			block
-			:disabled="!canPublish"
-			@click="publish"
-			>
-			<translate>Publish</translate>
-		</app-button>
-
-		<app-button
-			v-if="isWizard"
-			primary
-			block
-			@click="saveDraft"
-			>
-			<translate class="visible-lg">Save Draft</translate>
-			<translate class="visible-md">Save</translate>
-		</app-button>
-	</app-community-perms>
-
+		</app-community-perms>
+	</ul>
 </div>

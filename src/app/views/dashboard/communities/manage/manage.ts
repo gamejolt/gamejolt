@@ -72,17 +72,11 @@ export default class RouteDashCommunitiesManage extends BaseRouteComponent {
 	@RouteStoreModule.State
 	community!: RouteStore['community'];
 
-	@RouteStoreModule.State
-	isWizard!: RouteStore['isWizard'];
-
 	@RouteStoreModule.Mutation
 	populate!: RouteStore['populate'];
 
 	@RouteStoreModule.State
 	canPublish!: RouteStore['canPublish'];
-
-	@RouteStoreModule.Action
-	saveDraft!: RouteStore['saveDraft'];
 
 	readonly Community = Community;
 	readonly Screen = Screen;

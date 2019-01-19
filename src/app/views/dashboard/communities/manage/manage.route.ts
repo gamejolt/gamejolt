@@ -3,7 +3,6 @@ import { routeDashCommunitiesManageCollaborators } from './collaborators/collabo
 import { routeDashCommunitiesManageDesign } from './design/design.route';
 import { routeDashCommunitiesManageDetails } from './details/details.route';
 import { routeDashCommunitiesManageOverview } from './overview/overview.route';
-import { routeDashCommunitiesManageWizardFinish } from './wizard-finish/wizard-finish.route';
 
 export const routeDashCommunitiesManage: RouteConfig = {
 	path: ':id(\\d+)',
@@ -13,6 +12,5 @@ export const routeDashCommunitiesManage: RouteConfig = {
 		routeDashCommunitiesManageDesign,
 		routeDashCommunitiesManageDetails,
 		routeDashCommunitiesManageOverview,
-		routeDashCommunitiesManageWizardFinish,
 	],
 };

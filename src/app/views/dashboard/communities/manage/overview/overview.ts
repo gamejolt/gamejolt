@@ -30,9 +30,6 @@ export default class RouteDashCommunitiesManageOverview extends BaseRouteCompone
 	@RouteStoreModule.State
 	canPublish!: RouteStore['canPublish'];
 
-	@RouteStoreModule.State
-	isWizard!: RouteStore['isWizard'];
-
 	@RouteStoreModule.Action
 	publish!: RouteStore['publish'];
 

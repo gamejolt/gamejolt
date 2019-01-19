@@ -20,13 +20,7 @@ export class AppManageCommunityNav extends Vue {
 	community!: RouteStore['community'];
 
 	@RouteStoreModule.State
-	isWizard!: RouteStore['isWizard'];
-
-	@RouteStoreModule.State
 	canPublish!: RouteStore['canPublish'];
-
-	@RouteStoreModule.Action
-	saveDraft!: RouteStore['saveDraft'];
 
 	@RouteStoreModule.Action
 	publish!: RouteStore['publish'];
