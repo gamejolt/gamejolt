@@ -1,11 +1,14 @@
 import Vue, { CreateElement } from 'vue';
-import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-
-import { Client } from '../client.service';
+import { State } from 'vuex-class';
+import { Navigate } from '../../../lib/gj-lib-client/components/navigate/navigate.service';
 import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
-import { Navigate } from '../../../lib/gj-lib-client/components/navigate/navigate.service';
+import { Client } from '../client.service';
+
+export type AppClientTrayHook = {
+	menuBuilder?: (menu: nw.Menu) => void;
+};
 
 @Component({})
 export class AppClientTray extends Vue {
@@ -18,9 +21,7 @@ export class AppClientTray extends Vue {
 
 	tray: nw.Tray | null = null;
 
-	static hook = {
-		menuBuilder: undefined as ((menu: nw.Menu) => void) | undefined,
-	};
+	static hook?: AppClientTrayHook = {};
 
 	/**
 	 * Whether or not the app will actually quit when you tell it to or if it
@@ -83,8 +84,9 @@ export class AppClientTray extends Vue {
 
 		const menu = new nw.Menu();
 
-		if (AppClientTray.hook.menuBuilder) {
-			AppClientTray.hook.menuBuilder(menu);
+		const menuBuilder = AppClientTray.hook!.menuBuilder;
+		if (menuBuilder) {
+			menuBuilder(menu);
 		}
 
 		const quitItem = new nw.MenuItem({

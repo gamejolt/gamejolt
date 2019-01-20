@@ -48,7 +48,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	community: Community = null as any;
 	collaboratorInvite: Collaborator | null = null;
 	tags: string[] = [];
-	unreadWatermark: number = 0;
+	unreadWatermark = 0;
 
 	routeResolved($payload: any) {
 		this.community = new Community($payload.community);

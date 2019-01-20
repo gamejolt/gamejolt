@@ -14,6 +14,10 @@ import { arrayUnique } from '../../../../lib/gj-lib-client/utils/array';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppGameCoverButtonsBuildButtons } from './build-buttons';
 
+export type AppGameCoverButtonsHook = {
+	buildButtons?: typeof Vue;
+};
+
 @View
 @Component({
 	components: {
@@ -42,12 +46,10 @@ export class AppGameCoverButtons extends Vue {
 	@Prop(User)
 	partner?: User;
 
-	static hook = {
-		buildButtons: undefined as typeof Vue | undefined,
-	};
+	static hook?: AppGameCoverButtonsHook = {};
 
 	get buildButtonsComponent() {
-		return AppGameCoverButtons.hook.buildButtons || AppGameCoverButtonsBuildButtons;
+		return AppGameCoverButtons.hook!.buildButtons || AppGameCoverButtonsBuildButtons;
 	}
 
 	private chooseBuild(builds: GameBuild[], defaultBuild?: GameBuild) {

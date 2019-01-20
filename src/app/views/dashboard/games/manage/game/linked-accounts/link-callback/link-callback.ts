@@ -1,24 +1,41 @@
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
-import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Growls } from '../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
 import {
 	getLinkedAccountProviderDisplayName,
 	LinkedAccount,
-} from '../../../../../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
+} from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { CreateElement } from 'vue';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { RouteStore, RouteStoreModule } from '../../../manage.store';
+
+function constructUrl(baseUrl: string, gameId: number, route: Route) {
+	let url = baseUrl + route.params.provider;
+	let firstParam = true;
+
+	for (const param of ['oauth_verifier', 'state', 'code']) {
+		const value = route.query[param];
+		if (value) {
+			url += (firstParam ? '?' : '&') + param + '=' + value;
+			firstParam = false;
+		}
+	}
+
+	url += (firstParam ? '?' : '&') + 'resource=Game&resourceId=' + gameId.toString();
+
+	return url;
+}
 
 @Component({
 	name: 'RouteDashGamesManageGameLinkedAccountsLinkCallback',
 })
 @RouteResolver({
 	resolver({ route }) {
-		const url = RouteDashGamesManageGameLinkedAccountsLinkCallback.constructUrl(
+		const url = constructUrl(
 			'/web/dash/linked-accounts/link-callback/',
 			parseInt(route.params.id, 10),
 			route
@@ -30,23 +47,6 @@ import { RouteStore, RouteStoreModule } from '../../../manage.store';
 export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends BaseRouteComponent {
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
-
-	private static constructUrl(baseUrl: string, gameId: number, route: Route) {
-		let url = baseUrl + route.params.provider;
-		let firstParam = true;
-
-		for (const param of ['oauth_verifier', 'state', 'code']) {
-			const value = route.query[param];
-			if (value) {
-				url += (firstParam ? '?' : '&') + param + '=' + value;
-				firstParam = false;
-			}
-		}
-
-		url += (firstParam ? '?' : '&') + 'resource=Game&resourceId=' + gameId.toString();
-
-		return url;
-	}
 
 	routeResolved($payload: any) {
 		if (!this.game) {

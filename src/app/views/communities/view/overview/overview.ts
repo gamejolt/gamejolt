@@ -98,7 +98,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	feed: ActivityFeedView | null = null;
 	knownMembers: User[] = [];
-	knownMemberCount: number = 0;
+	knownMemberCount = 0;
 
 	readonly Screen = Screen;
 
@@ -109,6 +109,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return this.community
 			? this.$gettextInterpolate(`%{ community } Community`, {
 					community: this.community.name,
+					// tslint:disable-next-line:indent
 			  })
 			: null;
 	}

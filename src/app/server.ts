@@ -4,7 +4,7 @@ import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
 import { createApp } from './bootstrap';
 
 export default (context: any) => {
-	const { app, router, store } = createApp();
+	const { app, router } = createApp();
 
 	return new Promise((resolve, reject) => {
 		const s = Date.now();
