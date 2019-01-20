@@ -27,10 +27,10 @@ export class AppPostAddButton extends Vue {
 	@AppState
 	user!: AppStore['user'];
 
+	_isBlocked = false;
+
 	@Emit()
 	add(_post: FiresidePost) {}
-
-	_isBlocked = false;
 
 	get placeholderMessage() {
 		return this.placeholder || this.$gettext(`So, what's on your mind?`);
@@ -45,7 +45,8 @@ export class AppPostAddButton extends Vue {
 		this._isBlocked = true;
 
 		let post: FiresidePost | undefined = await FiresidePost.$create(
-			this.game ? this.game.id : 0
+			this.game ? this.game.id : 0,
+			this.community ? [this.community.id] : []
 		);
 
 		post = await PostEditModal.show(post, { community: this.community });
