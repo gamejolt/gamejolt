@@ -1,28 +1,5 @@
 @require '~styles/variables'
-@require '~styles-lib/mixins'
 
-.-left-col
-	clear: left
-
-	@media $media-md-up
-		float: left
-
-.-right-col
-	clear: right
-
-	@media $media-md-up
-		float: right
-
-.-spacer
-	spacer()
-
-.-tabs
-	display: flex
-	align-items: center
-
-	@media $media-xs
-		scrollable-x()
-		white-space: nowrap
-
-	.dot-separator
-		margin: 0 10px 0 5px
+// Put some extra spacing in here because of the affixed game header.
+.gj-scroll-affixed .-nav
+	margin-top: $shell-top-nav-height + 10px !important
