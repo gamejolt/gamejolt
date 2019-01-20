@@ -1,0 +1,16 @@
+<app-form name="communityTagForm">
+
+	<app-form-group
+		name="tag"
+		:label="$gettext( `Tag` )"
+		hide-label
+		optional
+		>
+		<app-form-control type="text" :rules="{ max: 100 }" />
+	</app-form-group>
+
+	<app-form-button>
+		<translate>Add</translate>
+	</app-form-button>
+
+</app-form>

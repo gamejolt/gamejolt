@@ -1,0 +1,43 @@
+<div class="row">
+	<div class="col-md-9">
+
+		<h2 class="section-header">
+			<translate>Tags</translate>
+		</h2>
+
+		<div class="page-help">
+			<p>
+				<translate>Tags are used to group up posts by topic. They show on the left of the community page, and users can click them to filter which posts they see.</translate>
+			</p>
+			<p>
+				<translate>Choosing good tags can help direct the conversation to the topics the community is about.</translate>
+			</p>
+		</div>
+
+		<form-community-tag
+			:community="community"
+			@submit="onTagAdded"
+			/>
+
+		<ul class="-tag-list">
+			<draggable
+				v-model="tags"
+				@change="saveSort"
+				>
+				<li
+					v-for="tag in tags"
+					:key="tag.id"
+					>
+					<a class="tag big">
+						#{{ tag.tag }}
+
+						<a @click.stop="onTagRemove(tag)">
+							<app-jolticon icon="remove" />
+						</a>
+					</a>
+				</li>
+			</draggable>
+		</ul>
+	</div>
+
+</div>

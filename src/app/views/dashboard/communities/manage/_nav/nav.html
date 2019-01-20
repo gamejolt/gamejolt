@@ -29,6 +29,19 @@
 		<app-community-perms tag="li" required="all">
 			<router-link
 				:to="{
+					name: 'dash.communities.manage.tags',
+					query: $route.query,
+				}"
+				active-class="active"
+				>
+				<app-manage-community-nav-required :is-complete="true" />
+				<translate>Tags</translate>
+
+			</router-link>
+		</app-community-perms>
+		<app-community-perms tag="li" required="all">
+			<router-link
+				:to="{
 					name: 'dash.communities.manage.design',
 					query: $route.query,
 				}"

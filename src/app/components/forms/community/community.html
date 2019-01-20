@@ -44,7 +44,8 @@
 		</app-form-group>
 	</fieldset>
 
-	<app-form-button v-if="hasPerms && method === 'edit'">
-		<translate>Save</translate>
+	<app-form-button v-if="hasPerms">
+		<translate v-if="method === 'edit'">Save</translate>
+		<translate v-else>Create</translate>
 	</app-form-button>
 </app-form>

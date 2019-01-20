@@ -26,6 +26,6 @@ export class FormCommunity extends BaseForm<Community> {
 	}
 
 	get hasPerms() {
-		return this.formModel.hasPerms('all');
+		return !this.formModel.id || this.formModel.hasPerms('all');
 	}
 }
