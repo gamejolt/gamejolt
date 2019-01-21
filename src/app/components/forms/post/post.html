@@ -171,7 +171,11 @@
 			<translate>Your post is too long!</translate>
 		</p>
 
+		<!--
+			Only show tags for community posts at the moment.
+		-->
 		<app-form-post-tags
+			v-if="defaultCommunity"
 			class="-post-tags"
 			:text="tagText"
 			:tags="featuredTags"
@@ -555,11 +559,36 @@
 		</div>
 	</app-form-group>
 
+	<!-- Communities -->
+	<template v-if="communities.length">
+		<div class="-communities">
+			<div class="-communities-label">
+				<translate>Community</translate>
+			</div>
+			<div class="-communities-list">
+				<app-community-pill
+					v-for="community of communities"
+					:key="community.id"
+					:community="community"
+					static
+					/>
+			</div>
+		</div>
+
+		<div
+			v-if="!wasPublished"
+			class="alert alert-info full-bleed"
+			>
+			<strong><translate>Looks like you're posting into a community!</translate></strong>
+			<translate>Your post will be shown within the community, as well as on your profile page and to any people that follow you.</translate>
+		</div>
+	</template>
+
 	<template v-if="platformRestrictions.length">
 		<div
 			v-for="restriction of platformRestrictions"
 			:key="restriction"
-			class="alert alert-notice anim-fade-in"
+			class="alert alert-notice full-bleed anim-fade-in"
 			>
 			<strong>
 				{{ restriction }}

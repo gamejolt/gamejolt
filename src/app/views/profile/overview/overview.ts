@@ -66,6 +66,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	user!: RouteStore['user'];
 
 	@RouteStoreModule.State
+	isOverviewLoaded!: RouteStore['isOverviewLoaded'];
+
+	@RouteStoreModule.State
 	gamesCount!: RouteStore['gamesCount'];
 
 	@RouteStoreModule.State
@@ -73,6 +76,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	@RouteStoreModule.State
 	userFriendship!: RouteStore['userFriendship'];
+
+	@RouteStoreModule.Mutation
+	overviewPayload!: RouteStore['overviewPayload'];
 
 	@RouteStoreModule.Action
 	sendFriendRequest!: RouteStore['sendFriendRequest'];
@@ -112,10 +118,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			return `${this.user.display_name} (@${this.user.username})`;
 		}
 		return null;
-	}
-
-	get isBioLoaded() {
-		return this.user && typeof this.user.description_compiled !== 'undefined';
 	}
 
 	get canAddAsFriend() {
@@ -218,6 +220,14 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return null;
 	}
 
+	routeCreated() {
+		this.showFullDescription = false;
+		this.games = [];
+		this.youtubeChannels = [];
+		this.linkedAccounts = [];
+		this.overviewComments = [];
+	}
+
 	routeResolved($payload: any) {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb || {};
@@ -234,6 +244,8 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		if (this.user) {
 			CommentThreadModal.showFromPermalink(this.$router, 'User', this.user.id, 'shouts');
 		}
+
+		this.overviewPayload($payload);
 	}
 
 	showComments() {

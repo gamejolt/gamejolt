@@ -10,15 +10,17 @@
 	<section class="section">
 		<div class="container-xl">
 
-			<h2 class="section-header text-center">
+			<app-discover-home-communities
+				v-if="featuredCommunities.length > 0"
+				:communities="featuredCommunities"
+				/>
+
+			<h2 class="sans-margin-bottom">
 				<translate>Featured Games</translate>
 			</h2>
-
-			<p class="text-center">
+			<p class="text-muted">
 				<translate>Check these games out and follow along in their development!</translate>
 			</p>
-
-			<hr class="underbar underbar-center">
 
 			<app-game-grid-placeholder
 				v-if="!isRouteBootstrapped"

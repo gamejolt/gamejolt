@@ -1,6 +1,6 @@
 import { namespace } from 'vuex-class';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
+import { Collaborator } from '../../../../../lib/gj-lib-client/components/collaborator/collaborator.model';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { GameScreenshot } from '../../../../../lib/gj-lib-client/components/game/screenshot/screenshot.model';
 import { GameSketchfab } from '../../../../../lib/gj-lib-client/components/game/sketchfab/sketchfab.model';
@@ -88,7 +88,7 @@ export function startWizard() {
 @VuexModule()
 export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutations> {
 	game: Game = null as any;
-	collaboration: GameCollaborator | null = null;
+	collaboration: Collaborator | null = null;
 	media: Media[] = [];
 	isWizard = false;
 
@@ -131,9 +131,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	@VuexMutation
 	populate(payload: RouteMutations['populate']) {
 		this.game = new Game(payload.game);
-		this.collaboration = payload.collaboration
-			? new GameCollaborator(payload.collaboration)
-			: null;
+		this.collaboration = payload.collaboration ? new Collaborator(payload.collaboration) : null;
 		this.isWizard = !!window.sessionStorage.getItem(WizardKey);
 	}
 

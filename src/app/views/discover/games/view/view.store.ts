@@ -1,9 +1,3 @@
-import { Comment } from 'game-jolt-frontend-lib/components/comment/comment-model';
-import { CommentVideo } from 'game-jolt-frontend-lib/components/comment/video/video-model';
-import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
-import { GameCollaborator } from 'game-jolt-frontend-lib/components/game/collaborator/collaborator.model';
 import {
 	CustomMessage as CustomGameMessage,
 	Game,
@@ -20,6 +14,12 @@ import { Registry } from 'game-jolt-frontend-lib/components/registry/registry.se
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { objectPick } from 'game-jolt-frontend-lib/utils/object';
 import { namespace } from 'vuex-class';
+import { Collaborator } from '../../../../../lib/gj-lib-client/components/collaborator/collaborator.model';
+import { Comment } from '../../../../../lib/gj-lib-client/components/comment/comment-model';
+import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
+import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
+import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
+import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
 import {
 	NamespaceVuexStore,
 	VuexModule,
@@ -35,8 +35,8 @@ type RouteMutations = {
 	bootstrapGame: number;
 	processPayload: any;
 	processOverviewPayload: { payload: any; fromCache: boolean };
-	acceptCollaboratorInvite: GameCollaborator;
-	declineCollaboratorInvite: GameCollaborator;
+	acceptCollaboratorInvite: Collaborator;
+	declineCollaboratorInvite: Collaborator;
 	pushVideoComments: CommentVideo[];
 	showMultiplePackagesMessage: undefined;
 	toggleDescription: undefined;
@@ -54,7 +54,7 @@ export const routeStore = NamespaceVuexStore<RouteStore, RouteActions, RouteMuta
 
 function updateGame(game: Game | null, newGame: Game | null) {
 	// If we already have a game, just assign new data into it to keep it fresh.
-	if (game && newGame) {
+	if (game && newGame && game.id === newGame.id) {
 		game.assign(newGame);
 		return game;
 	}
@@ -83,7 +83,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	partnerKey = '';
 	partner: User | null = null;
 
-	collaboratorInvite: GameCollaborator | null = null;
+	collaboratorInvite: Collaborator | null = null;
 
 	userRating: GameRating | null = null;
 
@@ -223,12 +223,11 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 		this.twitterShareMessage = payload.twitterShareMessage || 'Check out this game!';
 
 		this.userPartnerKey = payload.userPartnerKey;
-		this.collaboratorInvite = payload.invite ? new GameCollaborator(payload.invite) : null;
+		this.collaboratorInvite = payload.invite ? new Collaborator(payload.invite) : null;
 	}
 
 	@VuexMutation
-	processOverviewPayload(data: RouteMutations['processOverviewPayload']) {
-		const { payload } = data;
+	processOverviewPayload({ payload }: RouteMutations['processOverviewPayload']) {
 		this.isOverviewLoaded = true;
 
 		this.mediaItems = [];

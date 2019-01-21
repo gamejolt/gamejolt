@@ -1,4 +1,5 @@
 import { initRouter } from '../../lib/gj-lib-client/utils/router';
+import { routeCommunitiesView } from './communities/view/view.route';
 import { routeDash } from './dashboard/dashboard.route';
 import { routeDiscover } from './discover/discover.route';
 import { routeForums } from './forums/forums.route';
@@ -12,11 +13,11 @@ import { routeProfile } from './profile/profile.route';
 import { routeSearch } from './search/search.route';
 import { routeSettings } from './settings/settings.route';
 import { routeStyleguide } from './styleguide/styleguide.route';
-import { routeTestAds } from './test-ads/test-ads.route';
 
 const routes = [
 	routeHome,
 	routeDiscover,
+	routeCommunitiesView,
 	routeLanding,
 	routeSearch,
 	routeProfile,
@@ -26,7 +27,6 @@ const routes = [
 	routeSettings,
 	routeForums,
 	routeStyleguide,
-	routeTestAds,
 	routeLegal,
 	routeIntent,
 ];

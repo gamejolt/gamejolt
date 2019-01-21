@@ -40,10 +40,9 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	initStore(route: RouteMutations['initStore']) {
 		// We store our own version of the search query and sync back to it on
 		// form submission.
-		this.query = route.query.q;
+		this.query = route.query.q + '';
 
 		this.adSettings = new AdSettingsContainer();
-		this.adSettings.adUnit = 'search';
 		// Always disable ads for now, until we get better controls of when
 		// adult content is shown in search.
 		this.adSettings.isPageDisabled = true;
@@ -69,7 +68,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 			return;
 		}
 
-		this.query = route.query.q;
+		this.query = route.query.q + '';
 		this.searchPayload = payload;
 
 		// We sync the query to the search service so that all places get

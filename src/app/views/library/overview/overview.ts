@@ -8,8 +8,8 @@ import { GameCollection } from '../../../components/game/collection/collection.m
 import { AppGameCollectionGrid } from '../../../components/game/collection/grid/grid';
 import { AppGameCollectionList } from '../../../components/game/collection/list/list';
 import { AppPageHeader } from '../../../components/page-header/page-header';
-import { Store } from '../../../store/index';
-import { LibraryState, LibraryStore } from '../../../store/library';
+import { Store } from '../../../store';
+import { LibraryModule, LibraryStore } from '../../../store/library';
 
 @View
 @Component({
@@ -24,16 +24,16 @@ export default class RouteLibraryOverview extends BaseRouteComponent {
 	@State
 	isBootstrapped!: Store['isBootstrapped'];
 
-	@LibraryState
+	@LibraryModule.State
 	followedCollection!: LibraryStore['followedCollection'];
 
-	@LibraryState
+	@LibraryModule.State
 	developerCollection!: LibraryStore['developerCollection'];
 
-	@LibraryState
+	@LibraryModule.State
 	ownedCollection!: LibraryStore['ownedCollection'];
 
-	@LibraryState
+	@LibraryModule.State
 	collections!: LibraryStore['collections'];
 
 	readonly Connection = Connection;
@@ -57,12 +57,6 @@ export default class RouteLibraryOverview extends BaseRouteComponent {
 				eventLabel: 'playlist',
 				collections: this.playlistCollections,
 			},
-			// {
-			// 	key: 'bundleCollections',
-			// 	heading: this.$gettext( 'Bundles' ),
-			// 	eventLabel: 'bundle',
-			// 	collections: ,
-			// },
 			{
 				key: 'followedCollections',
 				heading: this.$gettext('Followed Playlists'),

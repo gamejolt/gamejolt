@@ -1,7 +1,6 @@
 import View from '!view!./collection.html?style=./collection.styl';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
 import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
@@ -35,7 +34,7 @@ import { GameListingContainer } from '../../../components/game/listing/listing-c
 import { AppPageHeaderControls } from '../../../components/page-header/controls/controls';
 import { AppPageHeader } from '../../../components/page-header/page-header';
 import { store, Store, tillStoreBootstrapped } from '../../../store/index';
-import { LibraryAction, LibraryState, LibraryStore } from '../../../store/library';
+import { LibraryModule, LibraryStore } from '../../../store/library';
 
 const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
 const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
@@ -107,19 +106,19 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	@ThemeMutation
 	setPageTheme!: ThemeStore['setPageTheme'];
 
-	@LibraryState
+	@LibraryModule.State
 	collections!: LibraryStore['collections'];
 
-	@LibraryAction
+	@LibraryModule.Action
 	removeGameFromPlaylist!: LibraryStore['removeGameFromPlaylist'];
 
-	@LibraryAction
+	@LibraryModule.Action
 	unfollowGame!: LibraryStore['unfollowGame'];
 
-	@LibraryAction
+	@LibraryModule.Action
 	editPlaylist!: LibraryStore['editPlaylist'];
 
-	@LibraryAction
+	@LibraryModule.Action
 	removePlaylist!: LibraryStore['removePlaylist'];
 
 	type = '';
@@ -213,7 +212,6 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		}
 
 		this.filtering.init(this.$route);
-		this.listing.setAdTargeting(this.$route, 'gamesdir');
 		this.listing.processPayload(this.$route, $payload);
 
 		this.type = this.$route.meta.collectionType;
@@ -261,7 +259,6 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 	routeDestroyed() {
 		this.setPageTheme(null);
-		Ads.releasePageSettings();
 	}
 
 	private processMeta($payload: any) {

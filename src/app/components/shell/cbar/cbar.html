@@ -1,0 +1,9 @@
+<div id="shell-cbar" v-if="communities.length">
+	<transition-group name="-items">
+		<app-shell-cbar-item
+			v-for="community of communities"
+			:key="community.id"
+			:community="community"
+			/>
+	</transition-group>
+</div>

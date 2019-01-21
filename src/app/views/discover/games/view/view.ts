@@ -13,11 +13,11 @@ import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
 import { Component } from 'vue-property-decorator';
 import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
+import { Collaborator } from '../../../../../lib/gj-lib-client/components/collaborator/collaborator.model';
 import {
 	EventBus,
 	EventBusDeregister,
 } from '../../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
-import { GameCollaborator } from '../../../../../lib/gj-lib-client/components/game/collaborator/collaborator.model';
 import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
 import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
@@ -172,9 +172,9 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	private gaTrackingId?: string;
 
 	private roleNames: { [k: string]: string } = {
-		[GameCollaborator.ROLE_COLLABORATOR]: this.$gettext('an equal collaborator'),
-		[GameCollaborator.ROLE_COMMUNITY_MANAGER]: this.$gettext('a community manager'),
-		[GameCollaborator.ROLE_DEVELOPER]: this.$gettext('a developer'),
+		[Collaborator.ROLE_GAME_COLLABORATOR]: this.$gettext('an equal collaborator'),
+		[Collaborator.ROLE_GAME_COMMUNITY_MANAGER]: this.$gettext('a community manager'),
+		[Collaborator.ROLE_GAME_DEVELOPER]: this.$gettext('a developer'),
 	};
 
 	get roleName() {
@@ -312,12 +312,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		const settings = new AdSettingsContainer();
 		settings.resource = this.game;
 		settings.isPageDisabled = !this.game._should_show_ads;
-		settings.targeting = {
-			mat,
-			paid: this.game.is_paid_game ? 'y' : 'n',
-			game: this.game.id + '',
-		};
-		settings.adUnit = 'gamepage';
 
 		Ads.setPageSettings(settings);
 	}

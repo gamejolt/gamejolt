@@ -5,10 +5,10 @@
 			<translate>No one is following this person yet.</translate>
 		</div>
 		<app-follower-list
+			v-else
 			:url="loadUrl"
 			:initial-users="users"
 			:count="user.follower_count || 0"
-			v-else
 			/>
 
 	</div>

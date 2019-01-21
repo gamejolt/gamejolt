@@ -22,6 +22,7 @@
 							<app-responsive-dimensions
 								class="-media-item"
 								:ratio="item.width / item.height"
+								:max-width="item.width"
 								>
 
 								<app-event-item-media-tags
@@ -41,7 +42,7 @@
 									:poster="item.mediaserver_url"
 									:webm="item.mediaserver_url_webm"
 									:mp4="item.mediaserver_url_mp4"
-									:show-loading="true"
+									show-loading
 									/>
 
 							</app-responsive-dimensions>
@@ -53,7 +54,7 @@
 					<div v-if="post.hasSketchfab" class="full-bleed-xs">
 						<app-sketchfab-embed
 							:sketchfab-id="post.sketchfabs[0].sketchfab_id"
-							:autoplay="true"
+							autoplay
 							/>
 					</div>
 
@@ -107,9 +108,22 @@
 					<br>
 				</template>
 
+				<template v-if="communities.length">
+					<div>
+						<app-community-pill
+							v-for="i of communities"
+							:key="i.id"
+							:community="i.community"
+							/>
+					</div>
+
+					<br>
+				</template>
+
 				<div class="well fill-offset full-bleed-xs" v-if="shouldShowManage">
-					<app-event-item-manage-post
+					<app-fireside-post-manage
 						:post="post"
+						show-community-controls
 						/>
 				</div>
 
@@ -118,12 +132,10 @@
 					:post="post"
 					/>
 			</div>
-			<div class="col-md-4 col-lg-5" v-if="Screen.isDesktop">
+			<div class="col-md-4 col-lg-5" v-if="shouldShowAds && Screen.isDesktop">
 				<app-ad-widget class="pull-right" pos="top" />
 			</div>
 		</div>
 	</div>
-
-	<app-ad-placement pos="bottom" />
 
 </section>

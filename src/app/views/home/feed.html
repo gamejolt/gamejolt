@@ -16,7 +16,7 @@
 						<input
 							type="search"
 							class="form-control"
-							:placeholder="$gettext(`Find a game`)"
+							:placeholder="$gettext(`Filter games`)"
 							v-model="gameFilterQuery"
 							>
 					</div>
@@ -59,44 +59,59 @@
 			</template>
 		</div>
 
-		<div slot="right">
+		<div slot="right" v-if="!Screen.isMobile">
 			<app-broadcast-card
 				v-if="latestBroadcast"
 				:post="latestBroadcast"
 				/>
 
-			<template v-if="!Screen.isMobile">
-				<h4 class="section-header">
-					<translate>Featured Games</translate>
-				</h4>
+			<h4 class="section-header">
+				<translate>Featured Games</translate>
+			</h4>
 
-				<app-game-list-placeholder
-					v-if="!featuredGames.length"
-					:num="5"
-					/>
-				<app-game-list
-					v-else-if="featuredGames.length"
-					:games="featuredGames.slice(0, 7)"
-					event-label="activity"
-					/>
+			<app-game-list-placeholder
+				v-if="!featuredGames.length"
+				:num="5"
+				/>
+			<app-game-list
+				v-else-if="featuredGames.length"
+				:games="featuredGames.slice(0, 7)"
+				event-label="activity"
+				/>
 
-				<p>
-					<router-link
-						class="link-muted"
-						:to="{
-							name: 'discover.games.list._fetch',
-							params: { section: null }
-						}"
-						v-app-track-event="`activity:browse-games`"
-						>
-						<translate>Browse all games</translate>
-					</router-link>
-				</p>
-			</template>
+			<p>
+				<router-link
+					class="link-muted"
+					:to="{
+						name: 'discover.games.list._fetch',
+						params: { section: null }
+					}"
+					v-app-track-event="`activity:browse-games`"
+					>
+					<translate>Browse all games</translate>
+				</router-link>
+			</p>
 		</div>
 
 		<app-post-add-button
 			@add="onPostAdded"
+			/>
+
+		<template v-if="Screen.isXs && communities.length > 0">
+			<h6 class="-communities-heading">
+				<translate>Communities</translate>
+			</h6>
+
+			<app-community-slider
+				:communities="communities"
+				/>
+
+			<div class="-spacer" />
+		</template>
+
+		<app-broadcast-card
+			v-if="latestBroadcast && Screen.isMobile"
+			:post="latestBroadcast"
 			/>
 
 		<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />

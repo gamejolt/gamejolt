@@ -10,7 +10,7 @@
 
 .-header
 	display: flex
-	align-items: center
+	align-items: flex-start
 
 	&-avatar
 		theme-prop('background-color', 'bg-subtle')
@@ -38,11 +38,10 @@
 	&-content
 		flex: auto
 		display: flex
-		align-items: flex-start
+		align-items: center
 		overflow: hidden
 
 	&-byline
-		flex: auto
 		display: flex
 		flex-direction: column
 		overflow: hidden
@@ -50,19 +49,31 @@
 		&-name, &-game
 			text-overflow()
 
-	&-date
+	&-meta
 		flex: none
+		display: flex
+		align-items: flex-end
+		flex-direction: column
 		margin-left: $-item-padding-xs
 		line-height: $line-height-computed
 
 		@media $media-sm-up
 			margin-left: $-item-padding
 
-.-poll, .-controls, .-manage, .fireside-post-lead
+		&-follow
+			margin-bottom: 5px
+
+.fireside-post-lead
 	margin-top: $-item-padding-xs-v
 
 	@media $media-sm-up
 		margin-top: $-item-padding-v
+
+.-poll, .-manage, .-communities, .fireside-post-lead
+	margin-bottom: $-item-padding-xs-v
+
+	@media $media-sm-up
+		margin-bottom: $-item-padding-v
 
 .-manage
 	-activity-feed-item-padding()

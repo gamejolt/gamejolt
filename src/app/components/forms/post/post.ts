@@ -2,6 +2,8 @@ import View from '!view!./post.html?style=./post.styl';
 import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
+import { AppCommunityPill } from 'game-jolt-frontend-lib/components/community/pill/pill';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import {
 	AppFormAutosize,
@@ -50,6 +52,7 @@ type FormPostModel = FiresidePost & {
 	key_group_ids: number[];
 	video_url: string;
 	sketchfab_id: string;
+	community_id: number;
 
 	poll_item_count: number;
 	poll_duration: number;
@@ -84,6 +87,7 @@ type FormPostModel = FiresidePost & {
 		AppUserAvatarImg,
 		AppProgressBar,
 		AppFormPostMedia,
+		AppCommunityPill,
 		AppFormPostTags,
 	},
 	directives: {
@@ -99,8 +103,8 @@ export class FormPost extends BaseForm<FormPostModel>
 	@AppState
 	user!: AppStore['user'];
 
-	@Prop({ type: String, default: '' })
-	defaultAttachmentType!: string;
+	@Prop(Community)
+	defaultCommunity?: Community;
 
 	$refs!: {
 		form: AppForm;
@@ -289,7 +293,7 @@ export class FormPost extends BaseForm<FormPostModel>
 				"(\\/([a-z0-9-\\._~!$&'\\(\\)\\*\\+,;=:@%]{1,})?)*" +
 				// Query.
 				// tslint:disable-next-line:quotemark max-line-length
-				"(\\?[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]{1,}(=[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]*)?(&[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]{1,}(=[a-z0-9-\\._~!$'\\(\\)\\*\\+,;:@%]*)?)*)?" +
+				"(\\?[a-z0-9-\\._~!$\\/'\\(\\)\\*\\+,;:@%]{1,}(=[a-z0-9-\\._~!$\\/'\\(\\)\\*\\+,;:@%]*)?(&[a-z0-9-\\._~!$\\/'\\(\\)\\*\\+,;:@%]{1,}(=[a-z0-9-\\._~!$\\/'\\(\\)\\*\\+,;:@%]*)?)*)?" +
 				// Fragment.
 				// tslint:disable-next-line:quotemark
 				"(#[a-z0-9-\\._~:@\\/\\?!$&'\\(\\)\\*\\+,;=%]{1,})?" +
@@ -366,6 +370,20 @@ export class FormPost extends BaseForm<FormPostModel>
 			});
 	}
 
+	get communities() {
+		if (this.model) {
+			if (this.model.communities.length) {
+				return this.model.communities.map(i => i.community);
+			}
+
+			if (this.defaultCommunity) {
+				return [this.defaultCommunity];
+			}
+		}
+
+		return [];
+	}
+
 	async onInit() {
 		await this.fetchTimezones();
 
@@ -378,11 +396,10 @@ export class FormPost extends BaseForm<FormPostModel>
 
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
 
-		// Set up the default attachment if one was passed in.
-		if (this.defaultAttachmentType === 'article') {
-			this.longEnabled = true;
-		} else {
-			this.attachmentType = this.defaultAttachmentType;
+		if (model.communities.length > 0) {
+			this.setField('community_id', model.communities[0].community.id);
+		} else if (this.defaultCommunity) {
+			this.setField('community_id', this.defaultCommunity.id);
 		}
 
 		if (model.videos.length) {

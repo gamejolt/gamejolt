@@ -51,6 +51,9 @@ export class AppShellTopNav extends Vue {
 	hasSidebar!: Store['hasSidebar'];
 
 	@State
+	hasCbar!: Store['hasCbar'];
+
+	@State
 	isLeftPaneVisible!: Store['isLeftPaneVisible'];
 
 	@State
