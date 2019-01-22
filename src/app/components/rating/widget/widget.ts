@@ -33,8 +33,6 @@ export class AppRatingWidget extends Vue {
 	@Prop(Boolean)
 	hideCount?: boolean;
 
-	isProcessing = false;
-
 	get likeCountFormatted() {
 		return number(this.game.like_count);
 	}
@@ -60,12 +58,6 @@ export class AppRatingWidget extends Vue {
 	}
 
 	private async updateVote(rating: number) {
-		if (this.isProcessing) {
-			return;
-		}
-
-		this.isProcessing = true;
-
 		// when a rating with the same value already exists, remove it instead
 		const oldUserRating = this.userRating;
 		let operation = 0;
@@ -108,6 +100,7 @@ export class AppRatingWidget extends Vue {
 				await newUserRating.$save();
 			}
 		} catch (e) {
+			console.error(e);
 			this.game.like_count -= operation;
 			EventBus.emit(RatingWidgetOnChange, {
 				gameId: this.game.id,
@@ -115,7 +108,5 @@ export class AppRatingWidget extends Vue {
 			} as RatingWidgetOnChangePayload);
 			Growls.error(`Can't do that now. Try again later?`);
 		}
-
-		this.isProcessing = false;
 	}
 }

@@ -7,7 +7,6 @@
 	:block="block"
 	:solid="isFollowing"
 	:badge="badge"
-	:disabled="isProcessing"
 	v-app-auth-required
 	v-app-tooltip.bottom="tooltip"
 	v-app-track-event="`game-collection-follow:${!isFollowing ? 'follow' : 'unfollow'}`"

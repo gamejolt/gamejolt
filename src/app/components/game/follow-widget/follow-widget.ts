@@ -52,7 +52,6 @@ export class AppGameFollowWidget extends Vue {
 	@State
 	app!: Store['app'];
 
-	isProcessing = false;
 	isShowingFollowPopover = false;
 
 	get shouldShowFollow() {
@@ -87,11 +86,9 @@ export class AppGameFollowWidget extends Vue {
 	}
 
 	async onClick() {
-		if (!this.app.user || this.isProcessing) {
+		if (!this.app.user) {
 			return;
 		}
-
-		this.isProcessing = true;
 
 		if (!this.game.is_following) {
 			// Do this before attempting to follow.
@@ -118,7 +115,5 @@ export class AppGameFollowWidget extends Vue {
 				);
 			}
 		}
-
-		this.isProcessing = false;
 	}
 }
