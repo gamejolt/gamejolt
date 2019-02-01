@@ -1,0 +1,24 @@
+<div>
+	<div>
+		<h1 class="flow-title">
+			<translate>Select an Avatar</translate>
+		</h1>
+
+		<div>
+			<p class="help-block">
+				Make yourself stand out from the crowd, show who you are!
+			</p>
+			<div class="avatar-container">
+				<app-editable-overlay
+					class="-avatar-xs"
+					@click="showEditAvatar()"
+					>
+					<translate slot="overlay">Change</translate>
+					<app-user-avatar
+						:user="app.user"
+						/>
+				</app-editable-overlay>
+			</div>
+		</div>
+	</div>
+</div>

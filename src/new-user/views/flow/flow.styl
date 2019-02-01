@@ -1,0 +1,60 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.flow-container
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+
+.flow-scroll-container
+	scrollable()
+	position: relative
+	height: 100%
+	z-index: $zindex-scroll-container
+
+.flow-island
+	position: relative
+	z-index: $zindex-content
+	theme-prop('background-color', 'bg-offset')
+	border-radius: 4px
+	padding: 10px
+	min-height: 700px
+
+	@media $media-sm-up
+		margin-bottom: 20px
+
+.flow-logo
+	margin-top: 30px
+	margin-bottom: 30px
+	position: relative
+	z-index: $zindex-content
+
+	@media $media-sm-up
+		margin-top: 100px
+
+	a
+		&, &:hover
+			border-bottom: 0 !important
+
+	img
+		margin: 0 auto
+
+.auth-shell-bottom-links
+	position: relative
+	margin-top: $grid-gutter-width-xs
+	margin-bottom: $grid-gutter-width-xs
+	text-align: center
+	z-index: $zindex-content
+
+	@media $media-sm-up
+		position: fixed
+		bottom: 0
+		left: 0
+		margin-left: 20px
+		margin-bottom: 20px
+		text-align: left
+
+	> a
+		margin-right: 20px

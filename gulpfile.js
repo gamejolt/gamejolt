@@ -65,6 +65,12 @@ const config = {
 			crawl: false,
 			bodyClass: 'fill-darkest',
 		},
+		'new-user': {
+			title: 'Welcome - Game Jolt',
+			server: true,
+			client: true,
+			bodyClass: 'fill-darkest',
+		},
 	},
 	translations: 'site-translations',
 	translationSections: {
