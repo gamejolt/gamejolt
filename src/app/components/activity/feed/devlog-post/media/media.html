@@ -13,10 +13,10 @@
 			<div class="-slider" ref="slider">
 				<app-activity-feed-devlog-post-media-item
 					v-for="mediaItem of post.media"
-					:key="mediaItem.id"
+					:key="`${mediaItem.id}-${mediaItem.is_processing ? '1' : '0'}`"
 					:media-item="mediaItem"
 					:is-post-hydrated="isHydrated"
-					:is-active="mediaItem === activeMediaItem"
+					:is-active="mediaItem.id === activeMediaItem.id"
 					@bootstrap="onItemBootstrapped()"
 					/>
 			</div>

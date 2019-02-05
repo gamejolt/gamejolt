@@ -1,14 +1,15 @@
-import View from '!view!./thumbnail.html';
-import { Component, Watch } from 'vue-property-decorator';
-import { AppFormControlCrop } from '../../../../../lib/gj-lib-client/components/form-vue/control/crop/crop';
-import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
-import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
+import View from '!view!./thumbnail.html?style=./thumbnail.styl';
+import { AppFormControlCrop } from 'game-jolt-frontend-lib/components/form-vue/control/crop/crop';
+import { AppFormControlUpload } from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload';
+import { AppForm } from 'game-jolt-frontend-lib/components/form-vue/form';
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
 	FormOnLoad,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+} from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { MaxFilesizes } from 'game-jolt-frontend-lib/utils/file';
+import { Component, Watch } from 'vue-property-decorator';
 
 type FormModel = Game & {
 	thumb_crop: any;
@@ -27,7 +28,7 @@ export class FormGameThumbnail extends BaseForm<FormModel>
 	resetOnSubmit = true;
 	warnOnDiscard = false;
 	saveMethod = '$saveThumbnail' as '$saveThumbnail';
-	maxFilesize = 0;
+	maxFilesizes: MaxFilesizes = {};
 	minWidth = 0;
 	minHeight = 0;
 	maxWidth = 0;
@@ -48,13 +49,24 @@ export class FormGameThumbnail extends BaseForm<FormModel>
 			: undefined;
 	}
 
+	get isVideo() {
+		if (!this.formModel.thumbnail_media_item) {
+			return false;
+		}
+
+		return (
+			this.formModel.thumbnail_media_item.filetype === 'video/webm' ||
+			this.formModel.thumbnail_media_item.filetype === 'video/mp4'
+		);
+	}
+
 	@Watch('crop')
 	onCropChange() {
 		this.setField('thumb_crop', this.crop);
 	}
 
 	onLoad(payload: any) {
-		this.maxFilesize = payload.maxFilesize;
+		this.maxFilesizes = payload.maxFilesizes;
 		this.minWidth = payload.minWidth;
 		this.minHeight = payload.minHeight;
 		this.maxWidth = payload.maxWidth;

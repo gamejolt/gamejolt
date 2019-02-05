@@ -23,6 +23,7 @@
 		alt=""
 		ondragstart="return false"
 		/>
+
 	<app-video
 		v-else-if="shouldVideoPlay"
 		class="-video"
@@ -32,6 +33,7 @@
 		:poster="mediaItem.mediaserver_url"
 		:webm="mediaItem.mediaserver_url_webm"
 		:mp4="mediaItem.mediaserver_url_mp4"
+		:should-play="!mediaItem.is_processing"
 		show-loading
 		/>
 

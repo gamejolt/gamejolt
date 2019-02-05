@@ -1,6 +1,6 @@
 <div>
 	<div class="event-item-controls">
-		<template v-if="post && post.status === FiresidePost.STATUS_ACTIVE">
+		<template v-if="post && (post.isActive || post.isProcessing)">
 
 			<!--
 				We don't want it clicking into the post when clicking a control.
@@ -43,6 +43,7 @@
 						icon="share-airplane"
 						circle
 						v-app-tooltip="$gettext( 'Share' )"
+						:disabled="post.isProcessing"
 						/>
 
 					<div slot="popover" class="well fill-darkest sans-margin" v-if="isShowingShare">

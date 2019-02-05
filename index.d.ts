@@ -10,6 +10,8 @@ interface Window {
 	_gjStartTime: number;
 	Stripe: StripeStatic;
 	grecaptcha: ReCaptchaV2.ReCaptcha;
+	shaka: any;
+	muxjs: any;
 	gapi: any;
 	__INITIAL_STATE__?: {
 		vuex: any;

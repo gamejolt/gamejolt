@@ -12,6 +12,7 @@ import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsi
 import { AppLoadingFade } from 'game-jolt-frontend-lib/components/loading/fade/fade';
 import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
 import { AppScrollScroller } from 'game-jolt-frontend-lib/components/scroll/scroller/scroller';
+import { MaxFilesizes } from 'game-jolt-frontend-lib/utils/file';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { AppFormPostMediaItem } from './item/item';
 
@@ -38,8 +39,8 @@ export class AppFormPostMedia extends BaseForm<FormModel>
 	@Prop(FiresidePost)
 	post!: FiresidePost;
 
-	@Prop(Number)
-	maxFilesize!: number;
+	@Prop(Object)
+	maxFilesizes!: MaxFilesizes;
 
 	@Prop(Number)
 	maxWidth!: number;
@@ -96,7 +97,11 @@ export class AppFormPostMedia extends BaseForm<FormModel>
 
 	onDragOver(e: DragEvent) {
 		// Don't do anything if not a file drop.
-		if (!e.dataTransfer.items.length || e.dataTransfer.items[0].kind !== 'file') {
+		if (
+			!e.dataTransfer ||
+			!e.dataTransfer.items.length ||
+			e.dataTransfer.items[0].kind !== 'file'
+		) {
 			return;
 		}
 
@@ -111,7 +116,11 @@ export class AppFormPostMedia extends BaseForm<FormModel>
 	// File select resulting from a drop onto the input.
 	async onDrop(e: DragEvent) {
 		// Don't do anything if not a file drop.
-		if (!e.dataTransfer.items.length || e.dataTransfer.items[0].kind !== 'file') {
+		if (
+			!e.dataTransfer ||
+			!e.dataTransfer.items.length ||
+			e.dataTransfer.items[0].kind !== 'file'
+		) {
 			return;
 		}
 

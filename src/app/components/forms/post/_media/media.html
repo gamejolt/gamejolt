@@ -8,7 +8,7 @@
 			:label="$gettext(`Image`)"
 			>
 			<p class="help-block">
-				<translate>Your image must be a PNG, JPG, or GIF.</translate> <br>
+				<translate>Your image must be a PNG, JPG, GIF, WebM or MP4.</translate> <br>
 				<b><translate>Animated GIFs are supported.</translate></b>
 			</p>
 
@@ -59,10 +59,10 @@
 				class="-upload-input"
 				ref="upload"
 				:rules="{
-					filesize: maxFilesize,
+					filesize: maxFilesizes,
 					max_img_dimensions: [ maxWidth, maxHeight ],
 				}"
-				accept=".png,.jpg,.jpeg,.gif"
+				accept=".png,.jpg,.jpeg,.gif,.webm,.mp4"
 				multiple
 				@changed="mediaSelected()"
 				/>

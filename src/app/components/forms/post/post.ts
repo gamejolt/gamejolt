@@ -39,6 +39,7 @@ import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { AppUserAvatarImg } from 'game-jolt-frontend-lib/components/user/user-avatar/img/img';
 import { AppVideoEmbed } from 'game-jolt-frontend-lib/components/video/embed/embed';
 import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
+import { MaxFilesizes } from 'game-jolt-frontend-lib/utils/file';
 import { AppLoading } from 'game-jolt-frontend-lib/vue/components/loading/loading';
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { determine } from 'jstimezonedetect';
@@ -123,7 +124,8 @@ export class FormPost extends BaseForm<FormPostModel>
 	attachmentType = '';
 	enabledAttachments = false;
 	longEnabled = false;
-	maxFilesize = 0;
+	maxMediaFilesizes: MaxFilesizes = {};
+	maxVideoFilesizes: MaxFilesizes = {};
 	maxWidth = 0;
 	maxHeight = 0;
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = null as any;
@@ -450,7 +452,8 @@ export class FormPost extends BaseForm<FormPostModel>
 		this.keyGroups = KeyGroup.populate(payload.keyGroups);
 		this.featuredTags = payload.tags;
 		this.wasPublished = payload.wasPublished;
-		this.maxFilesize = payload.maxFilesize;
+		this.maxMediaFilesizes = payload.maxMediaFilesizes;
+		this.maxVideoFilesizes = payload.maxVideoFilesizes;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
 		this.leadUrlLength = payload.leadUrlLength;

@@ -11,6 +11,9 @@ const config = {
 			server: true,
 			client: true,
 			offline: true,
+			scripts:
+				`<script async src="https://github.com/videojs/mux.js/releases/download/v4.5.0/mux.js"></script>\n` +
+				`<script async src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/2.4.6/shaka-player.compiled.js"></script>`,
 			webAppManifest: {
 				name: 'Game Jolt',
 				short_name: 'Game Jolt',

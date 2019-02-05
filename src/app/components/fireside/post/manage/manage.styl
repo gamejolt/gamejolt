@@ -4,11 +4,21 @@
 .-manage
 	display: flex
 	align-items: center
+	justify-content: space-between
 
 .-stats
 	theme-prop('color', 'fg-muted')
-	flex: auto
 	font-size: $font-size-small
 
-.-controls
-	flex: none
+.-pending
+	rounded-corners()
+	theme-prop('background-color', 'notice')
+	theme-prop('color', 'notice-fg')
+	// Forces item to take all vertical space in row to match height of button
+	align-self: stretch
+	// Centers content vertically within the item
+	display: flex
+	align-items: center
+	// Feelsbadman
+	margin: 0 4px
+	padding: 0 8px

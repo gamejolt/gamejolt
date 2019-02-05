@@ -3,7 +3,9 @@ import { Community } from 'game-jolt-frontend-lib/components/community/community
 import { FiresidePostCommunity } from 'game-jolt-frontend-lib/components/fireside/post/community/community.model';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { getLinkedAccountPlatformIcon } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
+import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
 import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
+import { AppProgressPoller } from 'game-jolt-frontend-lib/components/progress/poller/poller';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
@@ -16,6 +18,7 @@ import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 @Component({
 	components: {
 		AppPopper,
+		AppProgressPoller,
 	},
 	directives: {
 		AppTooltip,
@@ -74,8 +77,19 @@ export class AppFiresidePostManage extends Vue {
 		return this.post.manageableCommunities.length !== 0 && this.showCommunityControls;
 	}
 
+	get hasProcessingMediaItems() {
+		return this.post.media.find(i => !!i.is_processing) instanceof MediaItem;
+	}
+
 	getProviderIcon(provider: string) {
 		return getLinkedAccountPlatformIcon(provider);
+	}
+
+	async onPostReady(response: any) {
+		// Setting response to success is necessary to process the update.
+		response.success = true;
+		await this.post.processUpdate(response, 'post');
+		this.emitEdit();
 	}
 
 	async toggleFeatured(postCommunity: FiresidePostCommunity) {

@@ -30,6 +30,23 @@
 			</template>
 		</div>
 
+		<div class="-pending" v-if="post.isProcessing">
+
+			<app-progress-poller
+				:url="`/web/posts/manage/poll-ready/${post.id}`"
+				@complete="onPostReady"
+				/>
+
+			<translate>The post is not visible yet</translate>
+			&nbsp;
+			<span
+				class="hidden-xs"
+				v-app-tooltip="$gettext( `The post media is still processing. It'll be published as soon as the media is ready.` )"
+				>
+				<app-jolticon icon="help-circle" />
+			</span>
+		</div>
+
 		<div class="-controls" v-if="shouldShowEdit || shouldShowManageCommunities">
 			<template v-if="shouldShowEdit">
 				<app-button
