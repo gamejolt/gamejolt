@@ -7,6 +7,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GameRating } from '../../../../lib/gj-lib-client/components/game/rating/rating.model';
+import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 
 export const RatingWidgetOnChange = 'GameRating.changed';
@@ -31,8 +32,6 @@ export class AppRatingWidget extends Vue {
 
 	@Prop(Boolean)
 	hideCount?: boolean;
-
-	isProcessing = false;
 
 	get likeCountFormatted() {
 		return number(this.game.like_count);
@@ -59,42 +58,55 @@ export class AppRatingWidget extends Vue {
 	}
 
 	private async updateVote(rating: number) {
-		if (this.isProcessing) {
-			return;
-		}
-
-		this.isProcessing = true;
-
 		// when a rating with the same value already exists, remove it instead
-		let userRating: GameRating | null = null;
 		const oldUserRating = this.userRating;
-		if (oldUserRating && oldUserRating.rating === rating) {
-			await oldUserRating.$remove();
+		let operation = 0;
 
-			if (rating === GameRating.RATING_LIKE) {
-				--this.game.like_count;
+		try {
+			if (oldUserRating && oldUserRating.rating === rating) {
+				if (rating === GameRating.RATING_LIKE) {
+					operation = -1;
+				}
+
+				this.game.like_count += operation;
+
+				EventBus.emit(RatingWidgetOnChange, {
+					gameId: this.game.id,
+					userRating: undefined,
+				} as RatingWidgetOnChangePayload);
+
+				await oldUserRating.$remove();
+			} else {
+				const newUserRating = new GameRating({
+					game_id: this.game.id,
+					rating: rating,
+				});
+
+				// We only show likes, not dislikes.
+				const oldRating = oldUserRating ? oldUserRating.rating : null;
+				if (rating === GameRating.RATING_LIKE) {
+					operation = 1;
+				} else if (oldRating === GameRating.RATING_LIKE) {
+					operation = -1;
+				}
+
+				this.game.like_count += operation;
+
+				EventBus.emit(RatingWidgetOnChange, {
+					gameId: this.game.id,
+					userRating: newUserRating,
+				} as RatingWidgetOnChangePayload);
+
+				await newUserRating.$save();
 			}
-		} else {
-			userRating = new GameRating({
-				game_id: this.game.id,
-				rating: rating,
-			});
-
-			await userRating.$save();
-
-			// We only show likes, not dislikes.
-			const oldRating = oldUserRating ? oldUserRating.rating : null;
-			if (rating === GameRating.RATING_LIKE) {
-				++this.game.like_count;
-			} else if (oldRating === GameRating.RATING_LIKE) {
-				--this.game.like_count;
-			}
+		} catch (e) {
+			console.error(e);
+			this.game.like_count -= operation;
+			EventBus.emit(RatingWidgetOnChange, {
+				gameId: this.game.id,
+				userRating: oldUserRating,
+			} as RatingWidgetOnChangePayload);
+			Growls.error(`Can't do that now. Try again later?`);
 		}
-
-		this.isProcessing = false;
-		EventBus.emit(RatingWidgetOnChange, {
-			gameId: this.game.id,
-			userRating,
-		} as RatingWidgetOnChangePayload);
 	}
 }

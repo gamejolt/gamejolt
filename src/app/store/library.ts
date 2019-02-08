@@ -150,14 +150,26 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 
 	@VuexAction
 	async followCollection(collection: Actions['library/followCollection']) {
-		await collection.$follow();
 		this.addCollection(collection);
+
+		try {
+			await collection.$follow();
+		} catch (e) {
+			this.removeCollection(collection);
+			throw e;
+		}
 	}
 
 	@VuexAction
 	async unfollowCollection(collection: Actions['library/unfollowCollection']) {
-		await collection.$unfollow();
 		this.removeCollection(collection);
+
+		try {
+			await collection.$unfollow();
+		} catch (e) {
+			this.addCollection(collection);
+			throw e;
+		}
 	}
 
 	@VuexAction
