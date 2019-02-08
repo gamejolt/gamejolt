@@ -1,0 +1,51 @@
+<div>
+	<app-button
+		class="pull-right"
+		icon="forward"
+		@click="onClickNext"
+		>
+		<translate>{{nextButtonText}}</translate>
+	</app-button>
+
+	<h1 class="flow-title">
+		<translate>What stuff do you like?</translate>
+	</h1>
+
+	<div>
+		<p class="help-block">
+			Select from the tags below to help customize your Game Jolt experience.
+		</p>
+		<div>
+			<div>
+				<h2><translate>Game Genres</translate></h2>
+			</div>
+			<a
+				class="-tag"
+				:class="{
+					'-tag-selected': activeTags.includes(i)
+				}"
+				v-for="i of genres"
+				:key="i"
+				@click="toggleTag(i)"
+				>
+				#{{i}}
+			</a>
+		</div>
+		<div>
+			<div>
+				<h2><translate>Content</translate></h2>
+			</div>
+			<a
+				class="-tag"
+				:class="{
+					'badge-highlight': activeTags.includes(i)
+				}"
+				v-for="i of content"
+				:key="i"
+				@click="toggleTag(i)"
+				>
+				#{{i}}
+			</a>
+		</div>
+	</div>
+</div>

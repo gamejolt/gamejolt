@@ -1,0 +1,28 @@
+<div class="flow-child">
+	<div>
+		<app-button
+			class="pull-right"
+			icon="forward"
+			@click="onClickNext"
+			>
+			<translate>Finish</translate>
+		</app-button>
+
+		<h1 class="flow-title">
+			<translate>Follow cool games!</translate>
+		</h1>
+
+		<p class="help-block">
+			When you follow games you can stay up to date with their latest developments. <br>
+			That's what Game Jolt is all about!
+		</p>
+	</div>
+
+	<div class="games-list">
+		<app-game-follow
+			v-for="i in games"
+			:key="i.id"
+			:game="i"
+			/>
+	</div>
+</div>

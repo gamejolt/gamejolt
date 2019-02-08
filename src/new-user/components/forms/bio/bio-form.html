@@ -1,0 +1,17 @@
+<app-form name="bioForm">
+	<app-form-group
+		name="description_markdown"
+		hide-label
+		:optional="true"
+		>
+
+		<app-form-control-markdown
+			preview-class="user-compiled-description"
+			preview-url="/web/dash/profile/preview-description"
+			markdown-mode="users"
+			/>
+
+		<app-form-control-errors />
+
+	</app-form-group>
+</app-form>

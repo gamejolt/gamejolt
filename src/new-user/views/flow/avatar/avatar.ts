@@ -19,7 +19,18 @@ export default class RouteFlowAvatar extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
 
-	showEditAvatar() {
-		UserAvatarModal.show();
+	goNext() {
+		this.$router.push({ name: 'flow.bio' });
+	}
+
+	async showEditAvatar() {
+		await UserAvatarModal.show();
+		if (!!this.app.user && !!this.app.user.avatar_media_item) {
+			this.goNext();
+		}
+	}
+
+	onClickNext() {
+		this.goNext();
 	}
 }

@@ -1,0 +1,24 @@
+<div>
+	<app-button
+		class="pull-right"
+		icon="forward"
+		@click="onClickNext"
+		>
+		<translate>Skip</translate>
+	</app-button>
+
+	<h1 class="flow-title">
+		<translate>Enter a bio</translate>
+	</h1>
+
+	<div>
+		<p class="help-block">
+			Put some memes or something idk.
+		</p>
+		<div>
+			<form-bio
+				:model="app.user"
+				/>
+		</div>
+	</div>
+</div>

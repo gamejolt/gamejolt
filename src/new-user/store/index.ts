@@ -1,4 +1,6 @@
+import { ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
 import { VuexModule, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
+import { VuexMutation } from '../../lib/gj-lib-client/utils/vuex';
 import {
 	Actions as AppActions,
 	AppStore,
@@ -11,19 +13,26 @@ export type Actions = AppActions & {
 };
 
 export type Mutations = AppMutations & {
-	showCoverImage: undefined;
-	hideCoverImage: undefined;
-	processPayload: any;
+	setTags: string[];
 };
 
 @VuexModule({
 	store: true,
 	modules: {
 		app: appStore,
+		theme: new ThemeStore(),
 	},
 })
 export class Store extends VuexStore<Store, Actions, Mutations> {
 	app!: AppStore;
+	theme!: ThemeStore;
+
+	tags: string[] = [];
+
+	@VuexMutation
+	setTags(tags: Mutations['setTags']) {
+		this.tags = tags;
+	}
 }
 
 export const store = new Store();

@@ -1,0 +1,40 @@
+<div class="follow-widget-container">
+
+	<div class="-thumbnail-container">
+		<router-link
+			:to="gameUrl"
+			target='_blank'
+			>
+			<app-game-thumbnail-img
+				:game="game"
+				/>
+		</router-link>
+	</div>
+
+	<div class="-game-info">
+		<div class="-game-title" :title="game.title">
+			<router-link
+				:to="gameUrl"
+				target='_blank'
+				>
+				<span class="link-unstyled">{{game.title}}</span>
+			</router-link>
+		</div>
+		<div class="text-muted">
+			<translate>by</translate>
+			<router-link
+				:to="developerUrl"
+				target='_blank'
+				>
+				<span class="link-muted">{{game.developer.display_name}}</span>
+			</router-link>
+		</div>
+		<div class="text-muted">{{followerCount}}</div>
+	</div>
+
+	<div>
+		<app-game-follow-widget
+			:game="game"
+			/>
+	</div>
+</div>

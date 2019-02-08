@@ -8,19 +8,13 @@
 	bottom: 0
 	left: 0
 
-.flow-scroll-container
-	scrollable()
-	position: relative
-	height: 100%
-	z-index: $zindex-scroll-container
-
 .flow-island
 	position: relative
 	z-index: $zindex-content
 	theme-prop('background-color', 'bg-offset')
 	border-radius: 4px
 	padding: 10px
-	min-height: 700px
+	height: 700px
 
 	@media $media-sm-up
 		margin-bottom: 20px
@@ -41,7 +35,7 @@
 	img
 		margin: 0 auto
 
-.auth-shell-bottom-links
+.flow-shell-bottom-links
 	position: relative
 	margin-top: $grid-gutter-width-xs
 	margin-bottom: $grid-gutter-width-xs
@@ -58,3 +52,4 @@
 
 	> a
 		margin-right: 20px
+
