@@ -7,12 +7,16 @@ import {
 import { Component } from 'vue-property-decorator';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import AppGameFollow from '../../../components/game/follow/follow';
+import AppGamePreview from '../../../components/game/preview/preview';
 import { store } from '../../../store/index';
 
 @View
 @Component({
 	name: 'RouteFlowExplore',
-	components: { AppGameFollow },
+	components: {
+		AppGameFollow,
+		AppGamePreview,
+	},
 })
 @RouteResolver({
 	resolver: () =>

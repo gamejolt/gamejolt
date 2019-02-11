@@ -4,7 +4,7 @@
 		icon="forward"
 		@click="onClickNext"
 		>
-		<translate>Skip</translate>
+		<translate>{{nextButtonText}}</translate>
 	</app-button>
 
 	<h1 class="flow-title">
@@ -16,9 +16,12 @@
 			Put some memes or something idk.
 		</p>
 		<div>
-			<form-bio
-				:model="app.user"
-				/>
+			<textarea
+				ref="input"
+				class="form-control"
+				@input="onChangeBio"
+				>
+			</textarea>
 		</div>
 	</div>
 </div>

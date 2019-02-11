@@ -19,6 +19,12 @@ export default class RouteFlowAvatar extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
 
+	private completedAvatar = false;
+
+	get nextButtonText() {
+		return this.completedAvatar ? 'Continue' : 'Skip';
+	}
+
 	goNext() {
 		this.$router.push({ name: 'flow.bio' });
 	}
@@ -26,7 +32,7 @@ export default class RouteFlowAvatar extends BaseRouteComponent {
 	async showEditAvatar() {
 		await UserAvatarModal.show();
 		if (!!this.app.user && !!this.app.user.avatar_media_item) {
-			this.goNext();
+			this.completedAvatar = true;
 		}
 	}
 
