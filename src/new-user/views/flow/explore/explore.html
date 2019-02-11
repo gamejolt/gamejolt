@@ -19,6 +19,10 @@
 	</div>
 
 	<div class="games-list">
+		<app-game-featured
+			v-if="shouldShowFeatured"
+			:item="featured"
+			/>
 		<app-game-preview
 			v-for="i in games"
 			:key="i.id"

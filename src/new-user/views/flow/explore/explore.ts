@@ -5,7 +5,9 @@ import {
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
+import { FeaturedItem } from '../../../../app/components/featured-item/featured-item.model';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import AppGameFeatured from '../../../components/game/featured/featured';
 import AppGameFollow from '../../../components/game/follow/follow';
 import AppGamePreview from '../../../components/game/preview/preview';
 import { store } from '../../../store/index';
@@ -16,6 +18,7 @@ import { store } from '../../../store/index';
 	components: {
 		AppGameFollow,
 		AppGamePreview,
+		AppGameFeatured,
 	},
 })
 @RouteResolver({
@@ -28,10 +31,20 @@ import { store } from '../../../store/index';
 })
 export default class RouteFlowExplore extends BaseRouteComponent {
 	games: Game[] = [];
+	featured: FeaturedItem | null = null;
+
+	get shouldShowFeatured() {
+		return !!this.featured;
+	}
 
 	routeResolved($payload: any) {
-		if ($payload && $payload.games) {
-			this.games = Game.populate($payload.games);
+		if ($payload) {
+			if ($payload.games) {
+				this.games = Game.populate($payload.games);
+			}
+			if ($payload.featured) {
+				this.featured = new FeaturedItem($payload.featured);
+			}
 		}
 	}
 

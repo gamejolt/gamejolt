@@ -3,13 +3,13 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
-import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
+import { AppUserAvatarImg } from '../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
 
 @View
 @Component({
 	components: {
 		AppGameThumbnailImg,
-		AppUserAvatar,
+		AppUserAvatarImg,
 	},
 })
 export default class AppGamePreview extends Vue {

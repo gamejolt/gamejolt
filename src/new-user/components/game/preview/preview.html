@@ -4,26 +4,26 @@
 		'game-preview-active': this.isActive
 	}"
 	@click="onClick">
-	<div class="thumbnail-container">
+	<div class="thumbnail-container" :title="game.title">
 		<app-game-thumbnail-img
 			:game="game"
 			/>
 	</div>
-	<div class="user-container">
-		<app-user-avatar
+	<div class="user-container" :title="developerTag">
+		<app-user-avatar-img
 			:user="game.developer"
 			/>
 	</div>
-	<span class="developer-name text-muted" :title="developerTag">
-		<span
-			v-if="game.developer.is_verified"
-			class="developer-verified"
-			:title="$gettext('Verified')"
-			>
-			<app-jolticon
-				icon="verified"
-				/>
-		</span>
-		{{game.developer.display_name}}
+	<span
+		v-if="game.developer.is_verified"
+		class="developer-verified"
+		:title="$gettext('Verified')"
+		>
+		<app-jolticon
+			icon="verified"
+			/>
+	</span>
+	<span class="game-name text-muted" :title="game.title">
+		{{game.title}}
 	</span>
 </div>

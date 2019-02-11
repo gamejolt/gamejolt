@@ -1,0 +1,22 @@
+<div
+	class="game-featured"
+	:style="{
+		backgroundImage: `url(${this.item.back_url})`
+	}"
+	>
+	<div class="info-container">
+		<h3 class="game-title">{{game.title}}</h3>
+		<span class="game-subtitle text-muted">
+			<translate>a game by</translate>
+			{{game.developer.display_name}}
+		</span>
+	</div>
+	<div class="caption-container">
+		{{item.content}}
+		<div class="follow-container">
+			<app-game-follow-widget
+				:game="game"
+				/>
+		</div>
+	</div>
+</div>
