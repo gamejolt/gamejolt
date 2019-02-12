@@ -45,8 +45,6 @@ export class AppGameCollectionFollowWidget extends Vue {
 	@LibraryModule.Action
 	unfollowCollection!: LibraryStore['unfollowCollection'];
 
-	isProcessing = false;
-
 	get isFollowing() {
 		if (this.collection.type === GameCollection.TYPE_DEVELOPER) {
 			return this.collection.owner!.is_following;
@@ -88,20 +86,24 @@ export class AppGameCollectionFollowWidget extends Vue {
 	}
 
 	async onClick() {
-		if (!this.user || this.isProcessing) {
+		if (!this.user) {
 			return;
 		}
 
-		this.isProcessing = true;
+		const revert = this.isFollowing ? 'unfollow' : 'follow';
 
-		if (this.isFollowing) {
-			await this.unfollowCollection(this.collection);
-			this.$emit('unfollow');
-		} else {
-			await this.followCollection(this.collection);
-			this.$emit('follow');
+		try {
+			if (this.isFollowing) {
+				this.$emit('unfollow');
+				await this.unfollowCollection(this.collection);
+			} else {
+				this.$emit('follow');
+				await this.followCollection(this.collection);
+			}
+		} catch (e) {
+			// The rest of the revert is done in the store actions.
+			this.$emit(revert);
+			throw e;
 		}
-
-		this.isProcessing = false;
 	}
 }

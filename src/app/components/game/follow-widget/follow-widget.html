@@ -16,7 +16,6 @@
 		:lg="lg"
 		:solid="game.is_following || solid"
 		:badge="badge"
-		:disabled="isProcessing"
 		v-app-auth-required
 		v-app-tooltip="tooltip"
 		v-app-track-event="`game-follow:${eventLabel || 'any'}:${!game.is_following ? 'follow' : 'unfollow'}`"

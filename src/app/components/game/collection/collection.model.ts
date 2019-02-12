@@ -95,12 +95,16 @@ export class GameCollection extends Model {
 	}
 
 	$follow() {
-		return Api.sendRequest('/web/library/follow/' + this.type, { id: this.id });
+		return Api.sendRequest('/web/library/follow/' + this.type, {
+			id: this.id,
+			timestamp: Date.now(),
+		});
 	}
 
 	$unfollow() {
 		return Api.sendRequest('/web/library/unfollow/' + this.type, {
 			id: this.id,
+			timestamp: Date.now(),
 		});
 	}
 }
