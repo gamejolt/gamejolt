@@ -2,7 +2,7 @@ import View from '!view!./tags.html?style=./tags.styl';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { stringSort } from 'game-jolt-frontend-lib/utils/array';
 import { Component } from 'vue-property-decorator';
-import { Mutation, State } from 'vuex-class';
+import { State } from 'vuex-class';
 import {
 	BaseRouteComponent,
 	RouteResolver,
@@ -26,9 +26,6 @@ export default class RouteFlowTags extends BaseRouteComponent {
 	content: string[] = [];
 	activeTags: string[] = [];
 
-	@Mutation
-	setTags!: Store['setTags'];
-
 	get nextButtonText() {
 		return this.activeTags.length > 0 ? 'Continue' : 'Skip';
 	}
@@ -40,6 +37,9 @@ export default class RouteFlowTags extends BaseRouteComponent {
 			}
 			if ($payload.content) {
 				this.content = $payload.content.sort(stringSort);
+			}
+			if ($payload.selectedTags) {
+				this.activeTags = $payload.selectedTags;
 			}
 		}
 	}
@@ -53,7 +53,14 @@ export default class RouteFlowTags extends BaseRouteComponent {
 	}
 
 	async onClickNext() {
-		this.setTags(this.activeTags);
+		await Api.sendRequest(
+			'/web/new-user/set-tags',
+			{ tags: this.activeTags },
+			{
+				allowComplexData: ['tags'],
+				processPayload: false,
+			}
+		);
 
 		this.$router.push({ name: 'flow.explore' });
 	}

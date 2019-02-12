@@ -10,7 +10,6 @@ import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import AppGameFeatured from '../../../components/game/featured/featured';
 import AppGameFollow from '../../../components/game/follow/follow';
 import AppGamePreview from '../../../components/game/preview/preview';
-import { store } from '../../../store/index';
 
 @View
 @Component({
@@ -22,12 +21,7 @@ import { store } from '../../../store/index';
 	},
 })
 @RouteResolver({
-	resolver: () =>
-		Api.sendRequest(
-			'/web/new-user/game-suggestions',
-			{ tags: store.state.tags },
-			{ allowComplexData: ['tags'] }
-		),
+	resolver: () => Api.sendRequest('/web/new-user/game-suggestions'),
 })
 export default class RouteFlowExplore extends BaseRouteComponent {
 	games: Game[] = [];

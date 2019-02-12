@@ -1,4 +1,5 @@
 import View from '!view!./flow.html?style=./flow.styl';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
@@ -8,6 +9,7 @@ import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/
 import { AppThemeSvg } from '../../../lib/gj-lib-client/components/theme/svg/svg';
 import { AppTranslateLangSelector } from '../../../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
 import { AppLoading } from '../../../lib/gj-lib-client/vue/components/loading/loading';
+import { AppMutation, AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Store } from '../../store/index';
 
 @View
@@ -25,6 +27,8 @@ export default class RouteFlow extends BaseRouteComponent {
 
 	@State
 	app!: Store['app'];
+	@AppMutation
+	setUser!: AppStore['setUser'];
 
 	get isUserBootstrapped() {
 		return !!this.app.user;
@@ -32,7 +36,10 @@ export default class RouteFlow extends BaseRouteComponent {
 
 	async mounted() {
 		// Load in user
-		await User.touch();
+		const $payload = await Api.sendRequest('/web/new-user/touch-user', null, {});
+		if ($payload.user) {
+			this.setUser(new User($payload.user));
+		}
 
 		// If no user is logged in or they have already completed the signup flow, redirect
 		if (!(this.app.user instanceof User)) {
