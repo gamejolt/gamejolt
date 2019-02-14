@@ -23,7 +23,7 @@ const ScrollDirectionTo = 'to';
 let globalIndex = 0;
 
 class ActivityFeedViewItemState {
-	isBootstrapped = false;
+	isBootstrapped = true;
 	isHydrated = false;
 	isOpen = false;
 	isLeadOpen = false;
@@ -312,9 +312,6 @@ export class ActivityFeedView {
 	private addItems(input: ActivityFeedInput[], position: 'start' | 'end' = 'start') {
 		const items = input.map(i => new ActivityFeedItem(i));
 		this.state.addItems(items, position);
-
-		// We bootstrap the first 5 items that we added right away.
-		items.slice(0, 5).forEach(i => (this.getItemState(i).isBootstrapped = true));
 	}
 
 	private getItemState(item: ActivityFeedItem) {
