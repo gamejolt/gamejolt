@@ -60,7 +60,10 @@ export class AppPostView extends Vue {
 	}
 
 	get shouldShowManage() {
-		return this.post && this.post.isManageableByUser(this.app.user);
+		return (
+			(this.app.user && this.app.user.isMod) ||
+			(this.post && this.post.isManageableByUser(this.app.user))
+		);
 	}
 
 	get shouldShowAds() {

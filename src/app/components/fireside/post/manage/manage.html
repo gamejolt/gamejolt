@@ -30,7 +30,7 @@
 			</template>
 		</div>
 
-		<div class="-controls" v-if="shouldShowEdit || shouldShowManageCommunities">
+		<div class="-controls" v-if="shouldShowEdit || shouldShowManageCommunities || shouldShowModTools">
 			<template v-if="shouldShowEdit">
 				<app-button
 					v-if="canPublish"
@@ -123,6 +123,16 @@
 							>
 							<app-jolticon icon="remove" notice />
 							<translate>Remove Post</translate>
+						</a>
+
+						<a
+							v-if="shouldShowModTools"
+							class="list-group-item has-icon"
+							:href="Environment.baseUrl + `/moderate/fireside-posts/view/${post.id}`"
+							target="_blank"
+							>
+							<app-jolticon icon="cog" />
+							<translate>Moderate Post</translate>
 						</a>
 					</div>
 				</div>
