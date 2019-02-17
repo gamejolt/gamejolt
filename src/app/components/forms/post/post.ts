@@ -111,8 +111,8 @@ export class FormPost extends BaseForm<FormPostModel>
 	};
 
 	readonly YOUTUBE_URL_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_\-]{11})(&.+)*$/i;
-	readonly SKETCHFAB_URL_REGEX = /^((https:\/\/)?(www.)?(sketchfab.com\/3d-models\/([a-z0-9]+-)+[0-9a-f]{32}\/?))\/?$/i;
-	readonly SKETCHFAB_FIELD_REGEX = /^((https:\/\/)?(www.)?(sketchfab.com\/3d-models\/([a-z0-9]+-)+[0-9a-f]{32}\/?))\/?$|^([0-9a-f]{32})$/i;
+	readonly SKETCHFAB_URL_REGEX = /^(?:(?:https:\/\/)?(?:www.)?(?:sketchfab.com\/3d-models\/(?:[a-z0-9]+-)+([0-9a-f]{32})\/?))$/i;
+	readonly SKETCHFAB_FIELD_REGEX = /^(?:(?:https:\/\/)?(?:www.)?(?:sketchfab.com\/3d-models\/(?:[a-z0-9]+-)+([0-9a-f]{32})\/?))$|^([0-9a-f]{32})$/i;
 	readonly MAX_POLL_ITEMS = 10;
 	readonly MIN_POLL_DURATION = 5;
 	readonly MAX_POLL_DURATION = 20160;
@@ -183,13 +183,9 @@ export class FormPost extends BaseForm<FormPostModel>
 	}
 
 	get sketchfabId() {
-		if (this.formModel.sketchfab_id.match(this.SKETCHFAB_URL_REGEX)) {
-			// extract model id from url
-			let url = this.formModel.sketchfab_id;
-			while (url.endsWith('/')) {
-				url = url.substr(0, url.length - 1);
-			}
-			const id = url.substr(url.length - 32, 32);
+		const urlMatches = this.SKETCHFAB_URL_REGEX.exec(this.formModel.sketchfab_id.trim());
+		if (urlMatches !== null && urlMatches.length === 2) {
+			const id = urlMatches[1];
 			return id;
 		}
 		return this.formModel.sketchfab_id;
