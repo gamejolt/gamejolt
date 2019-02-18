@@ -28,14 +28,14 @@ export default class RouteAuthLinkedAccountGoogleCallback extends BaseRouteCompo
 				Growls.error({
 					sticky: true,
 					message: this.$gettext(
-						`Your Google+ account did not return an email address. Make sure you have verified it with Google.`
+						`Your Google account did not return an email address. Make sure you have verified it with Google.`
 					),
 				});
 			} else if ($payload.reason && $payload.reason === 'duplicate-email') {
 				Growls.error({
 					sticky: true,
 					message: this.$gettext(
-						`The email address on this Google+ account is already in use. Perhaps you already have an account?`
+						`The email address on this Google account is already in use. Perhaps you already have an account?`
 					),
 				});
 			} else if ($payload.reason && $payload.reason === 'no-unique-username') {
@@ -49,7 +49,7 @@ export default class RouteAuthLinkedAccountGoogleCallback extends BaseRouteCompo
 				Growls.error({
 					sticky: true,
 					title: this.$gettext('Login Failed'),
-					message: this.$gettext('Unable to log in with Google+.'),
+					message: this.$gettext('Unable to log in with Google.'),
 				});
 			}
 			this.$router.push({ name: 'auth.join' });
