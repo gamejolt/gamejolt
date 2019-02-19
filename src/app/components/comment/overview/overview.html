@@ -3,7 +3,7 @@
 		Capture the click and prevent default so that no links within the content open up.
 	-->
 	<div
-		class="-comment fill-offset"
+		class="-comment"
 		v-for="comment of comments"
 		:key="comment.id"
 		@click.capture="$event.preventDefault(); open(comment)"

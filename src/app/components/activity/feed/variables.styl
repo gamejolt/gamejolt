@@ -1,6 +1,6 @@
 @require '~styles/variables'
 
-$-border-width = 2px
+$-border-width = 1px
 $-item-padding = ($grid-gutter-width / 2)
 $-item-padding-xs = ($grid-gutter-width-xs / 2)
 $-item-padding-v = $-item-padding * 0.75
@@ -23,6 +23,7 @@ $-item-padding-container = $-item-padding - $-border-width
 
 -activity-feed-item()
 	-activity-feed-item-padding()
+	theme-prop('background-color', 'bg')
 	theme-prop('border-color', 'bg-offset')
 	margin-left: -($grid-gutter-width-xs / 2)
 	margin-right: -($grid-gutter-width-xs / 2)
@@ -32,7 +33,7 @@ $-item-padding-container = $-item-padding - $-border-width
 
 	@media $media-sm-up
 		rounded-corners()
-		theme-prop('border-color', 'bg-offset')
+		raise()
 		border-width: $-border-width
 		border-style: solid
 		margin-left: 0
