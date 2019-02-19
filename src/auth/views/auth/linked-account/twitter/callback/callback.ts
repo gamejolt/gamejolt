@@ -43,7 +43,7 @@ export default class RouteAuthLinkedAccountTwitterCallback extends BaseRouteComp
 			return;
 		}
 
-		Auth.redirectDashboard();
+		Auth.redirectNewUserFlow();
 	}
 
 	render(h: CreateElement) {

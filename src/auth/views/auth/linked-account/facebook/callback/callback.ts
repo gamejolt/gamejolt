@@ -52,7 +52,7 @@ export default class RouteAuthLinkedAccountFacebookCallback extends BaseRouteCom
 			return;
 		}
 
-		Auth.redirectDashboard();
+		Auth.redirectNewUserFlow();
 	}
 
 	render(h: CreateElement) {

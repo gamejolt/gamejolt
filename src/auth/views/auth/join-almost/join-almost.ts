@@ -1,7 +1,7 @@
 import View from '!view!./join-almost.html';
+import { Auth } from 'game-jolt-frontend-lib/components/auth/auth.service';
 import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Auth } from '../../../../lib/gj-lib-client/components/auth/auth.service';
 import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 import { AppProgressPoller } from '../../../../lib/gj-lib-client/components/progress/poller/poller';
 import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
@@ -56,7 +56,7 @@ export default class RouteJoinAlmost extends BaseRouteComponent {
 			return;
 		}
 
-		// If it worked, redirect to dashboard. They're good to go!
-		Auth.redirectDashboard();
+		// If it worked, redirect to the new user flow. They're good to go!
+		Auth.redirectNewUserFlow();
 	}
 }

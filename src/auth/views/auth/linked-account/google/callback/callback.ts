@@ -56,7 +56,7 @@ export default class RouteAuthLinkedAccountGoogleCallback extends BaseRouteCompo
 			return;
 		}
 
-		Auth.redirectDashboard();
+		Auth.redirectNewUserFlow();
 	}
 
 	render(h: CreateElement) {

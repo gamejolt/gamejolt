@@ -9,6 +9,8 @@ export default class SectionService {
 				return 'discover';
 			case 'auth.login':
 				return 'login';
+			case 'new-user.avatar':
+				return 'new-user';
 		}
 
 		throw new Error('No translation defined for route name ' + routeName);
