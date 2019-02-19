@@ -10,6 +10,7 @@ import { AppThemeSvg } from '../../../lib/gj-lib-client/components/theme/svg/svg
 import { AppTranslateLangSelector } from '../../../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
 import { AppLoading } from '../../../lib/gj-lib-client/vue/components/loading/loading';
 import { AppMutation, AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
+import SectionService from '../../../_common/sections/section.service';
 import { Store } from '../../store/index';
 
 @View
@@ -43,10 +44,12 @@ export default class RouteFlow extends BaseRouteComponent {
 
 		// If no user is logged in or they have already completed the signup flow, redirect
 		if (!(this.app.user instanceof User)) {
-			this.$router.push({ name: 'auth.login' });
+			SectionService.redirectTo('auth.login');
 		} else {
-			// TODO: redirect to the dashboard
-			console.log('completed flow', this.app.user.completed_signup_flow);
+			if (this.app.user.completed_signup_flow) {
+				console.debug('user has already completed the signup flow, redirecting...');
+				SectionService.redirectTo('discover.home');
+			}
 		}
 	}
 }
