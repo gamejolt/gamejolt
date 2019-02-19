@@ -1,5 +1,5 @@
 import { initRouter } from '../../lib/gj-lib-client/utils/router';
-import { routeFlow } from './flow/flow.route';
+import { routeNewUser } from './new-user/new-user.flow';
 
-const routes = [routeFlow];
+const routes = [routeNewUser];
 export const router = initRouter(routes);

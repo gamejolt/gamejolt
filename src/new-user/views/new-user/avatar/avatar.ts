@@ -9,13 +9,13 @@ import { Store } from '../../../store/index';
 
 @View
 @Component({
-	name: 'RouteFlowAvatar',
+	name: 'RouteNewUserAvatar',
 	components: {
 		AppEditableOverlay,
 		AppUserAvatar,
 	},
 })
-export default class RouteFlowAvatar extends BaseRouteComponent {
+export default class RouteNewUserAvatar extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
 
@@ -26,7 +26,7 @@ export default class RouteFlowAvatar extends BaseRouteComponent {
 	}
 
 	goNext() {
-		this.$router.push({ name: 'flow.bio' });
+		this.$router.push({ name: 'new-user.bio' });
 	}
 
 	async showEditAvatar() {

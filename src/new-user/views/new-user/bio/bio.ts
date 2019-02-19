@@ -6,10 +6,10 @@ import { Store } from '../../../store/index';
 
 @View
 @Component({
-	name: 'RouteFlowBio',
+	name: 'RouteNewUserBio',
 	components: {},
 })
-export default class RouteFlowBio extends BaseRouteComponent {
+export default class RouteNewUserBio extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
 
@@ -31,7 +31,7 @@ export default class RouteFlowBio extends BaseRouteComponent {
 		if (this.textInputReceived) {
 			await this.app.user!.$save();
 		}
-		this.$router.push({ name: 'flow.tags' });
+		this.$router.push({ name: 'new-user.tags' });
 	}
 
 	onChangeBio() {

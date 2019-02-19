@@ -12,13 +12,13 @@ import { Store } from '../../../store/index';
 
 @View
 @Component({
-	name: 'RouteFlowTags',
+	name: 'RouteNewUserTags',
 	components: {},
 })
 @RouteResolver({
 	resolver: () => Api.sendRequest('/web/new-user/tags'),
 })
-export default class RouteFlowTags extends BaseRouteComponent {
+export default class RouteNewUserTags extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
 
@@ -62,6 +62,6 @@ export default class RouteFlowTags extends BaseRouteComponent {
 			}
 		);
 
-		this.$router.push({ name: 'flow.explore' });
+		this.$router.push({ name: 'new-user.explore' });
 	}
 }

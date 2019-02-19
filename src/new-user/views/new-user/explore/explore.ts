@@ -17,7 +17,7 @@ import { Store } from '../../../store';
 
 @View
 @Component({
-	name: 'RouteFlowExplore',
+	name: 'RouteNewUserExplore',
 	components: {
 		AppGameFollow,
 		AppGamePreview,
@@ -27,7 +27,7 @@ import { Store } from '../../../store';
 @RouteResolver({
 	resolver: () => Api.sendRequest('/web/new-user/game-suggestions'),
 })
-export default class RouteFlowExplore extends BaseRouteComponent {
+export default class RouteNewUserExplore extends BaseRouteComponent {
 	@State
 	app!: Store['app'];
 

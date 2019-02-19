@@ -1,4 +1,4 @@
-import View from '!view!./flow.html?style=./flow.styl';
+import View from '!view!./new-user.html?style=./new-user.styl';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
@@ -15,14 +15,14 @@ import { Store } from '../../store/index';
 
 @View
 @Component({
-	name: 'RouteFlow',
+	name: 'RouteNewUser',
 	components: {
 		AppThemeSvg,
 		AppTranslateLangSelector,
 		AppLoading,
 	},
 })
-export default class RouteFlow extends BaseRouteComponent {
+export default class RouteNewUser extends BaseRouteComponent {
 	readonly Environment = Environment;
 	readonly Connection = Connection;
 
