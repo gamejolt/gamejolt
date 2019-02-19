@@ -65,8 +65,8 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 		const provider = this.$route.params.provider;
 		const providerName = getLinkedAccountProviderDisplayName(provider);
 		if (!$payload.success) {
-			if ($payload.reason) {
-				if ($payload.reason === 'account-taken') {
+			switch ($payload.reason) {
+				case 'account-taken':
 					Growls.error(
 						this.$gettextInterpolate(
 							'This %{ provider } account is already linked to another Game Jolt account.',
@@ -75,27 +75,33 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 							}
 						)
 					);
-				} else if ($payload.reason === 'channel-taken') {
+					break;
+
+				case 'channel-taken':
 					Growls.error(
 						this.$gettext(
 							'This YouTube channel is already linked to another Game Jolt account.'
 						)
 					);
-				} else if ($payload.reason === 'not-public') {
+					break;
+
+				case 'not-public':
 					Growls.error(this.$gettext('This YouTube channel is not public.'));
-				} else {
+					break;
+
+				case 'invalid-google-account':
+					Growls.error(
+						this.$gettext('This Google account does not support Sign Up with Google.')
+					);
+					break;
+
+				default:
 					Growls.error(
 						this.$gettextInterpolate('Unable to link your %{ provider } account.', {
-							provider: providerName,
+							provder: providerName,
 						})
 					);
-				}
-			} else {
-				Growls.error(
-					this.$gettextInterpolate('Unable to link your %{ provider } account.', {
-						provder: providerName,
-					})
-				);
+					break;
 			}
 		} else {
 			switch (provider) {
