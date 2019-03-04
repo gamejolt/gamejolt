@@ -2,7 +2,7 @@
 	<app-page-container xl>
 
 		<div slot="right" v-if="!Screen.isMobile">
-			<p v-if="shouldShowKnownMembers">
+			<div v-if="shouldShowKnownMembers">
 				<h5 class="section-header">
 					<translate
 						:translate-n="knownMemberCount"
@@ -15,7 +15,7 @@
 				<app-user-avatar-list
 					:users="knownMembers"
 					/>
-			</p>
+			</div>
 
 			<p class="lead" v-translate="{ community: community.name }">
 				Welcome to the <b>%{ community }</b> community on Game Jolt! Explore fan-created artwork, videos, game guides and more.

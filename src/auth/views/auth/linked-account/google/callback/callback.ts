@@ -24,33 +24,50 @@ import { AuthLinkedAccountProcessing } from '../../_processing/processing';
 export default class RouteAuthLinkedAccountGoogleCallback extends BaseRouteComponent {
 	routeResolved($payload: any) {
 		if (!$payload.success) {
-			if ($payload.reason && $payload.reason === 'no-email') {
-				Growls.error({
-					sticky: true,
-					message: this.$gettext(
-						`Your Google+ account did not return an email address. Make sure you have verified it with Google.`
-					),
-				});
-			} else if ($payload.reason && $payload.reason === 'duplicate-email') {
-				Growls.error({
-					sticky: true,
-					message: this.$gettext(
-						`The email address on this Google+ account is already in use. Perhaps you already have an account?`
-					),
-				});
-			} else if ($payload.reason && $payload.reason === 'no-unique-username') {
-				Growls.error({
-					sticky: true,
-					message: this.$gettext(
-						`Could not create a username for your account. Perhaps you already have an account?`
-					),
-				});
-			} else {
-				Growls.error({
-					sticky: true,
-					title: this.$gettext('Login Failed'),
-					message: this.$gettext('Unable to log in with Google+.'),
-				});
+			switch ($payload.reason) {
+				case 'no-email':
+					Growls.error({
+						sticky: true,
+						message: this.$gettext(
+							`Your Google account did not return an email address. Make sure you have verified it with Google.`
+						),
+					});
+					break;
+
+				case 'duplicate-email':
+					Growls.error({
+						sticky: true,
+						message: this.$gettext(
+							`The email address on this Google account is already in use. Perhaps you already have an account?`
+						),
+					});
+					break;
+
+				case 'no-unique-username':
+					Growls.error({
+						sticky: true,
+						message: this.$gettext(
+							`Could not create a username for your account. Perhaps you already have an account?`
+						),
+					});
+					break;
+
+				case 'invalid-google-account':
+					Growls.error({
+						sticky: true,
+						message: this.$gettext(
+							'This Google account does not support Sign Up with Google.'
+						),
+					});
+					break;
+
+				default:
+					Growls.error({
+						sticky: true,
+						title: this.$gettext('Login Failed'),
+						message: this.$gettext('Unable to log in with Google.'),
+					});
+					break;
 			}
 			this.$router.push({ name: 'auth.join' });
 			return;

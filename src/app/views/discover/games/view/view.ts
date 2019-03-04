@@ -300,15 +300,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 			return;
 		}
 
-		let mat: string | undefined = undefined;
-		if (this.game.tigrs_age === 1) {
-			mat = 'everyone';
-		} else if (this.game.tigrs_age === 2) {
-			mat = 'teen';
-		} else if (this.game.tigrs_age === 3) {
-			mat = 'adult';
-		}
-
 		const settings = new AdSettingsContainer();
 		settings.resource = this.game;
 		settings.isPageDisabled = !this.game._should_show_ads;

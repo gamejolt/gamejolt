@@ -139,7 +139,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get shouldShowKnownMembers() {
-		return this.app.user && this.knownMembers && this.knownMembers.length > 0;
+		return !!this.app.user && this.knownMembers && this.knownMembers.length > 0;
 	}
 
 	get membersYouKnowCount() {

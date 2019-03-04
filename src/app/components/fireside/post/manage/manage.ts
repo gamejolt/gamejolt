@@ -1,5 +1,6 @@
 import View from '!view!./manage.html?style=./manage.styl';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { FiresidePostCommunity } from 'game-jolt-frontend-lib/components/fireside/post/community/community.model';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { getLinkedAccountPlatformIcon } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
@@ -33,6 +34,8 @@ export class AppFiresidePostManage extends Vue {
 
 	@State
 	app!: Store['app'];
+
+	Environment = Environment;
 
 	readonly number = number;
 
@@ -72,6 +75,10 @@ export class AppFiresidePostManage extends Vue {
 
 	get shouldShowManageCommunities() {
 		return this.post.manageableCommunities.length !== 0 && this.showCommunityControls;
+	}
+
+	get shouldShowModTools() {
+		return this.app.user && this.app.user.isMod;
 	}
 
 	getProviderIcon(provider: string) {
