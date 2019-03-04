@@ -2,7 +2,7 @@
 	"name": "game-jolt-client",
 	"version": "0.29.3",
 	"scripts": {
-		"postinstall": "sh ./git-hooks/setup-hooks.sh",
+		"postinstall": "sh ./git-hooks/setup-hooks.sh && yarn run translations",
 		"dev": "gulp watch",
 		"translations": "gulp translations:compile",
 		"client": "nw build/dev-client",
