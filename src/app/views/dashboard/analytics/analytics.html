@@ -155,21 +155,7 @@
 
 	</app-page-header>
 
-	<!-- Temporarily disable analytics -->
-	<section class="section">
-		<div class="container">
-			<div class="alert alert-notice">
-				<p>
-					<app-jolticon icon="notice" />
-					<strong><translate>Temporarily disabled</translate></strong>
-				</p>
-
-				<p><translate>We're working on bringing the analytics back online as soon as possible!</translate></p>
-			</div>
-		</div>
-	</section>
-
-	<template v-if="false && metricData[ metric.key ]">
+	<template v-if="metricData[ metric.key ]">
 
 		<app-expand :when="period === 'monthly' && !!metricData[ metric.key ].graph">
 			<app-graph
