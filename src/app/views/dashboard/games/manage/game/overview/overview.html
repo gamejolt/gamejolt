@@ -75,7 +75,19 @@
 		<translate>dash.games.overview.stats_heading</translate>
 	</h2>
 
+	<!-- Temporarily disable analytics -->
 	<div class="row">
+		<div class="alert alert-notice">
+			<p>
+				<app-jolticon icon="notice" />
+				<strong><translate>Temporarily disabled</translate></strong>
+			</p>
+
+			<p><translate>We're working on bringing the analytics back online as soon as possible!</translate></p>
+		</div>
+	</div>
+
+	<div class="row" v-if="false">
 		<div class="col-lg-8">
 			<app-graph-widget :url="`/web/dash/developer/games/graphs/overview/${ game.id }`" />
 		</div>

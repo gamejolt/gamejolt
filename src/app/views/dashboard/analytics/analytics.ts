@@ -213,15 +213,16 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 			this.nextYear = new Date(year, month + 1, 1).getFullYear();
 		}
 
-		if (this.period === 'all') {
-			this.counts();
-		} else if (this.period === 'monthly') {
-			this.histograms();
-		}
+		// Temporarily disable fetching analytics
+		// if (this.period === 'all') {
+		// 	this.counts();
+		// } else if (this.period === 'monthly') {
+		// 	this.histograms();
+		// }
 
-		if (this.period && this.metric) {
-			this.metricChanged();
-		}
+		// if (this.period && this.metric) {
+		// 	this.metricChanged();
+		// }
 	}
 
 	async histograms() {
