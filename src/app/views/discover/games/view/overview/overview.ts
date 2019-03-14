@@ -12,6 +12,7 @@ import {
 	CommentStore,
 } from 'game-jolt-frontend-lib/components/comment/comment-store';
 import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
+import { AppContentViewer } from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
@@ -74,6 +75,7 @@ import { AppDiscoverGamesViewOverviewSupporters } from './_supporters/supporters
 		AppActivityFeedPlaceholder,
 		AppPostAddButton,
 		AppGamePerms,
+		AppContentViewer,
 	},
 	directives: {
 		AppTrackEvent,
