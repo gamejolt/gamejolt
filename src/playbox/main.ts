@@ -1,5 +1,4 @@
 import { createApp } from './bootstrap';
-import './main.styl';
 
 const { app, router } = createApp();
 

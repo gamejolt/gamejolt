@@ -1,4 +1,3 @@
-import View from '!view!./main.html?style=./main.styl';
 // import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 // import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
@@ -10,7 +9,6 @@ import { Component } from 'vue-property-decorator';
 // 	description?: string;
 // };
 
-@View
 @Component({})
 // @RouteResolver({
 // 	async resolver(_data): Promise<Payload> {

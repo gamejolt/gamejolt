@@ -3,8 +3,7 @@ import { Referrer } from 'game-jolt-frontend-lib/components/referrer/referrer.se
 import 'game-jolt-frontend-lib/utils/polyfills';
 import Vue from 'vue';
 import { bootstrapAppTranslations } from '../utils/translations';
-import { App } from './app';
-import './main.styl';
+import App from './app.vue';
 import { store } from './store/index';
 import { router } from './views/index';
 
