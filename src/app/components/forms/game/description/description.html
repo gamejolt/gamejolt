@@ -1,23 +1,15 @@
 <app-form name="descriptionForm" ref="form">
 
 	<app-form-group
-		name="description_markdown"
-		:label="$gettext( `dash.games.form.description_label` )"
+		name="description_content"
+		:label="$gettext(`dash.games.form.description_label`)"
 		hide-label
 		>
 
-		<app-form-control-markdown
-			ref="editor"
-			preview-class="game-compiled-description"
-			preview-url="/web/dash/developer/games/description/preview"
-			markdown-mode="games"
-			show-media-items
-			media-item-type="game-description"
-			:placeholder="$gettext( `Write your game description here...` )"
-			:disabled="isDisabled || !hasDetailsPerms"
+		<app-form-control-content
+			:placeholder="$gettext(`Write your game description here...`)"
+			content-context="game-description"
 			/>
-
-		<app-form-control-errors />
 
 	</app-form-group>
 

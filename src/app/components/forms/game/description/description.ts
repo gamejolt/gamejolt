@@ -1,7 +1,7 @@
 import View from '!view!./description.html?style=./description.styl';
+import { AppFormControlContent } from 'game-jolt-frontend-lib/components/form-vue/control/content/content';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
-import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
 import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
 import { BaseForm } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
@@ -18,10 +18,10 @@ type DescriptionFormModel = Game & {
 @Component({
 	components: {
 		AppExpand,
-		AppFormControlMarkdown,
 		AppDashGameWizardControls,
 		AppGamePerms,
 		AppFormGameDescriptionTags,
+		AppFormControlContent,
 	},
 })
 export class FormGameDescription extends BaseForm<DescriptionFormModel> {
@@ -36,7 +36,6 @@ export class FormGameDescription extends BaseForm<DescriptionFormModel> {
 
 	$refs!: {
 		form: AppForm;
-		editor: AppFormControlMarkdown;
 	};
 
 	get hasDetailsPerms() {
@@ -63,13 +62,6 @@ export class FormGameDescription extends BaseForm<DescriptionFormModel> {
 			? `${this.formModel.description_markdown} #${tag}`
 			: `#${tag}`;
 		this.setField('description_markdown', newDescription);
-
-		// Since we are modifying the description outside the normal flow, we
-		// have to tell the autosizer to try to update itself.
-		if (this.$refs.editor) {
-			await this.$nextTick();
-			this.$refs.editor.updateAutosize();
-		}
 	}
 
 	addAutotag(tag: string) {
