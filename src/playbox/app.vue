@@ -10,4 +10,4 @@
 
 <script lang="ts" src="./app.ts" />
 
-<style lang="stylus" src="./app.styl" scoped />
+<style lang="stylus" src="./app.styl" />
