@@ -1,6 +1,7 @@
 import View from '!view!./event-item.html?style=./event-item.styl';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { AppCommunityPill } from 'game-jolt-frontend-lib/components/community/pill/pill';
+import { AppContentViewer } from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
@@ -51,6 +52,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppUserCardHover,
 		AppFadeCollapse,
 		AppCommunityPill,
+		AppContentViewer,
 	},
 	filters: {
 		number,

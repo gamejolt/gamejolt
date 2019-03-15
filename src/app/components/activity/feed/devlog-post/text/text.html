@@ -8,11 +8,9 @@
 	<template v-if="isOpen">
 		<div class="page-cut" />
 
-		<div class="fireside-post-body">
-			<app-widget-compiler
-				:content="post.content_compiled"
-				/>
-		</div>
+		<app-content-viewer
+			:source="post.article_content"
+			/>
 	</template>
 
 	<div class="page-cut">

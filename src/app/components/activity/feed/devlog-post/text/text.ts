@@ -1,4 +1,5 @@
 import View from '!view!./text.html?style=./text.styl';
+import { AppContentViewer } from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer';
 import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
@@ -14,6 +15,7 @@ import { ActivityFeedView } from '../../view';
 	components: {
 		AppFadeCollapse,
 		AppWidgetCompiler,
+		AppContentViewer,
 	},
 })
 export class AppActivityFeedDevlogPostText extends Vue {

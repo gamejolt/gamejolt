@@ -1,6 +1,7 @@
 import View from '!view!./view.html?style=./view.styl';
 import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
 import { AppCommunityPill } from 'game-jolt-frontend-lib/components/community/pill/pill';
+import { AppContentViewer } from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
 import { AppResponsiveDimensions } from 'game-jolt-frontend-lib/components/responsive-dimensions/responsive-dimensions';
@@ -38,6 +39,7 @@ import { AppPostViewPlaceholder } from './placeholder/placeholder';
 		AppPollVoting,
 		AppAdWidget,
 		AppCommunityPill,
+		AppContentViewer,
 	},
 	directives: {
 		AppScrollWhen,
