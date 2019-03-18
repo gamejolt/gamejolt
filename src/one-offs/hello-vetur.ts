@@ -2,6 +2,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import * as prettier from 'prettier';
 
 const readdir = require('fs-readdir-recursive') as (
 	path: string,
@@ -10,6 +11,10 @@ const readdir = require('fs-readdir-recursive') as (
 
 const baseDir = path.resolve(__dirname, '..', '..');
 const srcDir = path.join(baseDir, 'src');
+
+function shortFilename(file: string) {
+	return file.replace(baseDir, '');
+}
 
 type importLine = {
 	imported: string;
@@ -343,9 +348,9 @@ for (let file of files) {
 	}
 }
 
-const styleImportsByResolvedPaths = groupBy(styleImportLines, 'resolvesTo');
+const resolvedStyleImports = groupBy(styleImportLines, 'resolvesTo');
 
-const inlineableStyleFiles = Object.keys(styleImportsByResolvedPaths).reduce(
+const inlineableStyleFiles = Object.keys(resolvedStyleImports).reduce(
 	(accum, resolvedPath) => {
 		const text = fs.readFileSync(resolvedPath, 'utf8');
 		const lines = matchAll(text, /\n/g).length;
@@ -354,7 +359,7 @@ const inlineableStyleFiles = Object.keys(styleImportsByResolvedPaths).reduce(
 			return accum;
 		}
 
-		const imports = styleImportsByResolvedPaths[resolvedPath];
+		const imports = resolvedStyleImports[resolvedPath];
 		if (!imports || imports.length !== 1) {
 			console.warn(`Style is not inlineable (${resolvedPath}), imported multiple times: `);
 			for (let importItem of imports) {
@@ -363,16 +368,14 @@ const inlineableStyleFiles = Object.keys(styleImportsByResolvedPaths).reduce(
 			return accum;
 		}
 
-		accum.push(imports[0]);
+		accum[resolvedPath] = imports[0];
 		return accum;
 	},
-	[] as importLine[]
+	{} as { [resolvesTo: string]: importLine }
 );
 
-console.log(
-	'\n\nInlinable styles: \n\t' + inlineableStyleFiles.map(i => i.resolvesTo).join('\n\t')
-);
-console.log(inlineableStyleFiles.length + ' inlineable styles');
+console.log('\n\nInlinable styles: \n\t' + Object.keys(inlineableStyleFiles).join('\n\t'));
+console.log(Object.keys(inlineableStyleFiles).length + ' inlineable styles');
 
 console.log('\n\nSingle file components to generate: ');
 console.log(JSON.stringify(components, null, 2));
@@ -381,3 +384,44 @@ console.log(components.length + ' new single file components to generate');
 console.log('\n\nUnhandled TS files: ');
 console.log(JSON.stringify(unhandledTs, null, 2));
 console.log(Object.keys(unhandledTs).length + ' unhandled TS files');
+
+const resolvedTsImports = groupBy(tsImportLines, 'resolvesTo');
+
+for (let component of components) {
+	const vueFilename = component.template.replace(/\.html$/, '.vue');
+	console.log(`Rewriting ${shortFilename(component.template)} => ${shortFilename(vueFilename)}`);
+
+	let templateText = '';
+	try {
+		templateText = fs.readFileSync(component.template, 'utf8');
+	} catch (e) {
+		if ((e as NodeJS.ErrnoException).code === 'ENOENT') {
+			console.warn('\tFile not found, skipping');
+			continue;
+		}
+	}
+
+	templateText = `<template>${templateText}</template>`;
+
+	if (component.style) {
+		if (inlineableStyleFiles[component.style]) {
+			const styleText = fs.readFileSync(component.style, 'utf8');
+			if (component.style.endsWith('.styl')) {
+				templateText += `\n\n<style lang="stylus" scoped>\n${styleText}\n</style>`;
+			} else {
+				templateText += `\n\n<style scoped>\n${styleText}\n</style>`;
+			}
+		} else {
+			const stylePath = path.relative(path.join(vueFilename, '..'), component.style);
+			templateText += `\n\n<style src="${stylePath}" scoped />`;
+		}
+	}
+
+	const tsPath = path.relative(path.join(vueFilename, '..'), component.ts);
+	templateText += `\n\n<script lang="ts" src="${tsPath}" />`;
+
+	const prettierConf = prettier.resolveConfig.sync(vueFilename)!;
+	prettierConf.parser = 'vue';
+	const prettyText = prettier.format(templateText, prettierConf);
+	fs.writeFileSync(vueFilename, prettyText);
+}
