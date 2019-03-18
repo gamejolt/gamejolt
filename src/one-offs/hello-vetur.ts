@@ -12,6 +12,7 @@ const readdir = require('fs-readdir-recursive') as (
 const baseDir = path.resolve(__dirname, '..', '..');
 const srcDir = path.join(baseDir, 'src');
 const frontendLibDir = path.join(srcDir, 'lib', 'gj-lib-client');
+const refactorDir = srcDir;
 
 function shortFilename(file: string) {
 	return file.replace(baseDir + '/', '');
@@ -341,16 +342,13 @@ function collectStyl(file: string) {
 	}
 }
 
-const files = readdir(srcDir, (name, _, dir) => {
+const files = readdir(refactorDir, (name, _, dir) => {
 	const fullpath = path.resolve(dir, name);
-	if (name.endsWith('.new.ts')) {
-		return false;
-	}
 	return fs.statSync(fullpath).isDirectory() || name.endsWith('.ts') || name.endsWith('.styl');
 });
 
 for (let file of files) {
-	const fullpath = fs.realpathSync(path.resolve(srcDir, file));
+	const fullpath = fs.realpathSync(path.resolve(refactorDir, file));
 	if (file.endsWith('.ts')) {
 		collectTs(fullpath);
 	} else if (file.endsWith('.styl')) {
@@ -479,16 +477,6 @@ for (let component of components) {
 			}
 
 			let importPath = '';
-			if (tsImportLine.resolvesTo.indexOf('gj-lib-client') !== -1) {
-				console.log(
-					'importing lib: ' +
-						(tsImportLine.resolvesTo.startsWith(frontendLibDir) ? 'yes' : 'no')
-				);
-				console.log(
-					'imported from lib: ' +
-						(tsImportLine.from.startsWith(frontendLibDir) ? 'yes' : 'no')
-				);
-			}
 			if (
 				tsImportLine.resolvesTo.startsWith(frontendLibDir) &&
 				!tsImportLine.from.startsWith(frontendLibDir)
