@@ -12,7 +12,15 @@ const readdir = require('fs-readdir-recursive') as (
 const baseDir = path.resolve(__dirname, '..', '..');
 const srcDir = path.join(baseDir, 'src');
 const frontendLibDir = path.join(srcDir, 'lib', 'gj-lib-client');
+
 const refactorDir = srcDir;
+
+// Execute mode will do the full refactor in place of the original files.
+// Debug mode will do the refactor but save the filenames under a new name.
+// the goal of debug mode is to be able to try again and rollback quickly (git clean -f)
+// Dry mode will only print messages to output but will not write anything to disk.
+type Mode = 'execute' | 'debug' | 'dry';
+const mode: Mode = 'execute' as any;
 
 function shortFilename(file: string) {
 	return file.replace(baseDir + '/', '');
@@ -455,11 +463,16 @@ for (let component of components) {
 	const prettierConf = prettier.resolveConfig.sync(vueFilename)!;
 	prettierConf.parser = 'vue';
 	let prettyText = prettier.format(templateText, prettierConf);
-	fs.writeFileSync(vueFilename, prettyText);
+	if (mode !== 'dry') {
+		fs.writeFileSync(vueFilename, prettyText);
+	}
 
 	prettierConf.parser = 'typescript';
 	prettyText = prettier.format(tsText, prettierConf);
-	fs.writeFileSync(component.ts, prettyText);
+	if (mode !== 'dry') {
+		const newName = mode === 'execute' ? component.ts : component.ts + '.new.ts';
+		fs.writeFileSync(newName, prettyText);
+	}
 
 	component.converted = true;
 
@@ -495,17 +508,24 @@ for (let component of components) {
 				/^.*\/gj-lib-client\//,
 				'game-jolt-frontend-lib/'
 			);
+			importPath = importPath.replace(/\.ts$/, '.vue');
 		} else {
 			importPath = path.relative(path.join(tsImportLine.from, '..'), vueFilename);
 			if (!importPath.startsWith('../')) {
 				importPath = './' + importPath;
 			}
 		}
-		importPath = importPath.replace(/\.ts/, '');
 
-		let importingFileText = fs.readFileSync(tsImportLine.from, 'utf8');
+		const from =
+			mode !== 'execute' && fs.existsSync(tsImportLine.from + '.new.ts')
+				? tsImportLine.from + '.new.ts'
+				: tsImportLine.from;
+
+		let importingFileText = fs.readFileSync(from, 'utf8');
 		const newImportLine = `import ${importName} from '${importPath}'`;
 		importingFileText = importingFileText.replace(tsImportLine.line, newImportLine);
-		fs.writeFileSync(tsImportLine.from, importingFileText);
+		if (mode !== 'dry') {
+			fs.writeFileSync(tsImportLine.from + '.new.ts', importingFileText);
+		}
 	}
 }
