@@ -1,5 +1,5 @@
 import View from '!view!./friend-request-popover.html?style=./friend-request-popover.styl';
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
 import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';

@@ -5,7 +5,7 @@ import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';

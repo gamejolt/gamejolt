@@ -1,11 +1,11 @@
+import View from '!view!./collection-list.html';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./collection-list.html';
-
-import { GameCollection } from '../../game/collection/collection.model';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive';
 import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
+import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { GameCollection } from '../../game/collection/collection.model';
+
 
 @View
 @Component({

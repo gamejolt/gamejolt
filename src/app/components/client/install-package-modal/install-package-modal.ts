@@ -1,7 +1,6 @@
 import View from '!view!./install-package-modal.html';
 import { Component, Prop } from 'vue-property-decorator';
-
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
 import { GameBuild } from '../../../../lib/gj-lib-client/components/game/build/build.model';

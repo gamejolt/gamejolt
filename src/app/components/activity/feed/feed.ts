@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Emit, Prop, Provide, Watch } from 'vue-property-decorator';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive';
 import { Ruler } from '../../../../lib/gj-lib-client/components/ruler/ruler-service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';

@@ -1,7 +1,7 @@
 import View from '!view!./footer.html?style=./footer.styl';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
 import { AppTranslateLangSelector } from '../../../../lib/gj-lib-client/components/translate/lang-selector/lang-selector';

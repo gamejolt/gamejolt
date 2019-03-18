@@ -1,8 +1,8 @@
 import View from '!view!./follow-widget.html';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppAuthRequired } from '../../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
+import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive';
+import { AppAuthRequired } from '../../../../../lib/gj-lib-client/components/auth/auth-required-directive';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';

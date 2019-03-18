@@ -1,17 +1,17 @@
+import View from '!view!./voting.html?style=./voting.styl';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./voting.html?style=./voting.styl';
-
-import { Poll } from '../../../../lib/gj-lib-client/components/poll/poll.model';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { AppProgressBar } from '../../../../lib/gj-lib-client/components/progress/bar/bar';
-import { PollItem } from '../../../../lib/gj-lib-client/components/poll/item/item.model';
-import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ago';
-import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { Store } from '../../../store';
 import { State } from 'vuex-class';
+import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive';
+import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { PollItem } from '../../../../lib/gj-lib-client/components/poll/item/item.model';
+import { Poll } from '../../../../lib/gj-lib-client/components/poll/poll.model';
+import { AppProgressBar } from '../../../../lib/gj-lib-client/components/progress/bar/bar';
+import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ago';
+import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
+import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
+import { Store } from '../../../store';
+
 
 @View
 @Component({

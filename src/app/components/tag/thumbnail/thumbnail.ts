@@ -2,7 +2,7 @@ import View from '!view!./thumbnail.html?style=./thumbnail.styl';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Location } from 'vue-router';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive';
 import { TagsInfo } from '../tags-info.service';
 
 @View

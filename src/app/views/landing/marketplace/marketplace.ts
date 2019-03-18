@@ -1,15 +1,12 @@
 import View from '!view!./marketplace.html';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../lib/gj-lib-client/components/route/route-component';
+import { BaseRouteComponent, RouteResolver } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
 import { AppGameThumbnail } from '../../../../_common/game/thumbnail/thumbnail';

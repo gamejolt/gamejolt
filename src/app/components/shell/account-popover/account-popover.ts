@@ -4,15 +4,11 @@ import { AppUserAvatarImg } from 'game-jolt-frontend-lib/components/user/user-av
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import {
-	ThemeMutation,
-	ThemeState,
-	ThemeStore,
-} from '../../../../lib/gj-lib-client/components/theme/theme.store';
+import { ThemeMutation, ThemeState, ThemeStore } from '../../../../lib/gj-lib-client/components/theme/theme.store';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';

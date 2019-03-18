@@ -3,7 +3,7 @@ import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service'
 import { AppUserCardHover } from 'game-jolt-frontend-lib/components/user/card/hover/hover';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
@@ -16,10 +16,7 @@ import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components
 import { AppMessageThreadPagination } from '../../../../../lib/gj-lib-client/components/message-thread/pagination/pagination';
 import { AppPopper } from '../../../../../lib/gj-lib-client/components/popper/popper';
 import { ReportModal } from '../../../../../lib/gj-lib-client/components/report/modal/modal.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
+import { BaseRouteComponent, RouteResolver } from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppScrollAffix } from '../../../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';

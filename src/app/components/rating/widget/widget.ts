@@ -1,5 +1,5 @@
 import View from '!view!./widget.html?style=./widget.styl';
-import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive.vue';
+import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
 import { LikersModal } from 'game-jolt-frontend-lib/components/likers/modal.service';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';

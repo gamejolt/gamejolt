@@ -1,13 +1,13 @@
+import View from '!view!./upvote-widget.html';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./upvote-widget.html';
-
+import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive';
+import { AppAuthRequired } from '../../../../../lib/gj-lib-client/components/auth/auth-required-directive';
 import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
-import { AppAuthRequired } from '../../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
+
 
 @View
 @Component({

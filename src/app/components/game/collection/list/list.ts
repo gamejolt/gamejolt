@@ -1,12 +1,12 @@
-import Vue from 'vue';
-import { State } from 'vuex-class';
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./list.html?style=./list.styl';
-
-import { GameCollection } from '../collection.model';
-import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppGameCollectionThumbnail } from '../thumbnail/thumbnail';
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive';
 import { Store } from '../../../../store/index';
+import { GameCollection } from '../collection.model';
+import { AppGameCollectionThumbnail } from '../thumbnail/thumbnail';
+
 
 @View
 @Component({

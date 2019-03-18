@@ -2,7 +2,7 @@ import View from '!view!./top-nav.html?style=./top-nav.styl';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';

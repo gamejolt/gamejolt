@@ -3,7 +3,7 @@ import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { AppAdPlacement } from '../../../../lib/gj-lib-client/components/ad/placement/placement';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
+import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive';
 import { GameBundle } from '../../../../lib/gj-lib-client/components/game-bundle/game-bundle.model';
 import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
@@ -11,15 +11,9 @@ import { Jam } from '../../../../lib/gj-lib-client/components/jam/jam.model';
 import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading/fade/fade';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
 import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../lib/gj-lib-client/components/route/route-component';
+import { BaseRouteComponent, RouteResolver } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import {
-	ThemeMutation,
-	ThemeStore,
-} from '../../../../lib/gj-lib-client/components/theme/theme.store';
+import { ThemeMutation, ThemeStore } from '../../../../lib/gj-lib-client/components/theme/theme.store';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { enforceLocation } from '../../../../lib/gj-lib-client/utils/router';

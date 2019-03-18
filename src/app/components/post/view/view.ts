@@ -5,7 +5,7 @@ import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/po
 import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
 import { AppResponsiveDimensions } from 'game-jolt-frontend-lib/components/responsive-dimensions/responsive-dimensions';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppScrollWhen } from 'game-jolt-frontend-lib/components/scroll/scroll-when.directive.vue';
+import { AppScrollWhen } from 'game-jolt-frontend-lib/components/scroll/scroll-when.directive';
 import { AppSketchfabEmbed } from 'game-jolt-frontend-lib/components/sketchfab/embed/embed';
 import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
 import { AppVideoEmbed } from 'game-jolt-frontend-lib/components/video/embed/embed';

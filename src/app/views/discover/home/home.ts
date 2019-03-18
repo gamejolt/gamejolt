@@ -3,15 +3,12 @@ import { Community } from 'game-jolt-frontend-lib/components/community/community
 import { Component } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive';
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../lib/gj-lib-client/components/route/route-component';
+import { BaseRouteComponent, RouteResolver } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import { AppGameGrid } from '../../../components/game/grid/grid';
 import { AppGameGridPlaceholder } from '../../../components/game/grid/placeholder/placeholder';

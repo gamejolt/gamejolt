@@ -3,7 +3,7 @@ import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget'
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive';
 import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';

@@ -6,7 +6,7 @@ import * as path from 'path';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive';
 import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';

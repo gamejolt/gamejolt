@@ -1,5 +1,5 @@
 import View from '!view!./notification-popover.html?style=./notification-popover.styl';
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
 import { Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';

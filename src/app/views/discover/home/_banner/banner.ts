@@ -3,7 +3,7 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppTheme } from '../../../../../lib/gj-lib-client/components/theme/theme';
 import { FeaturedItem } from '../../../../components/featured-item/featured-item.model';
