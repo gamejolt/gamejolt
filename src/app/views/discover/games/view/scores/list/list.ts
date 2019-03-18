@@ -6,7 +6,10 @@ import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.s
 import { GameScoreTable } from '../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
 import { AppLoadingFade } from '../../../../../../../lib/gj-lib-client/components/loading/fade/fade';
 import { AppNavTabList } from '../../../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppScrollAffix } from '../../../../../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { AppNoAutoscroll } from '../../../../../../../lib/gj-lib-client/components/scroll/auto-scroll/no-autoscroll.directive';

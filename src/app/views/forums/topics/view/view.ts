@@ -16,7 +16,10 @@ import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components
 import { AppMessageThreadPagination } from '../../../../../lib/gj-lib-client/components/message-thread/pagination/pagination';
 import { AppPopper } from '../../../../../lib/gj-lib-client/components/popper/popper';
 import { ReportModal } from '../../../../../lib/gj-lib-client/components/report/modal/modal.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../lib/gj-lib-client/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppScrollAffix } from '../../../../../lib/gj-lib-client/components/scroll/affix/affix';
 import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';

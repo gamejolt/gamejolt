@@ -7,7 +7,10 @@ import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
 import { HistoryTick } from '../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
 import { Navigate } from '../../../../lib/gj-lib-client/components/navigate/navigate.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../lib/gj-lib-client/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../lib/gj-lib-client/components/route/route-component';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppScrollTo } from '../../../../lib/gj-lib-client/components/scroll/to/to.directive';
 import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';

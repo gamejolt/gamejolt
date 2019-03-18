@@ -6,7 +6,6 @@ import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
 import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { GameCollection } from '../../game/collection/collection.model';
 
-
 @View
 @Component({
 	components: {

@@ -12,7 +12,6 @@ import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
 import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { Store } from '../../../store';
 
-
 @View
 @Component({
 	components: {

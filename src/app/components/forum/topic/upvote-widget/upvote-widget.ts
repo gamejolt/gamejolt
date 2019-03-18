@@ -8,7 +8,6 @@ import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/
 import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 
-
 @View
 @Component({
 	components: {

@@ -8,7 +8,11 @@ import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytic
 import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
 import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { ThemeMutation, ThemeState, ThemeStore } from '../../../../lib/gj-lib-client/components/theme/theme.store';
+import {
+	ThemeMutation,
+	ThemeState,
+	ThemeStore,
+} from '../../../../lib/gj-lib-client/components/theme/theme.store';
 import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
 import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';

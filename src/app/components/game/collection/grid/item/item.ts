@@ -7,7 +7,6 @@ import { Store } from '../../../../../store/index';
 import { GameCollection } from '../../collection.model';
 import { AppGameCollectionThumbnail } from '../../thumbnail/thumbnail';
 
-
 @View
 @Component({
 	components: {
