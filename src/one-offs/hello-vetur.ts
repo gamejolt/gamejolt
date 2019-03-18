@@ -11,6 +11,7 @@ const readdir = require('fs-readdir-recursive') as (
 
 const baseDir = path.resolve(__dirname, '..', '..');
 const srcDir = path.join(baseDir, 'src');
+const frontendLibDir = path.join(srcDir, 'lib', 'gj-lib-client');
 
 function shortFilename(file: string) {
 	return file.replace(baseDir + '/', '');
@@ -42,8 +43,11 @@ const styleImportLines: importLine[] = [];
 type singleFileComponent = {
 	ts: string;
 	viewAnnotation: string;
+	hasDefaultExport: boolean;
 	template: string;
 	style?: string;
+
+	converted?: boolean;
 };
 const components: singleFileComponent[] = [];
 
@@ -249,7 +253,7 @@ function collectTs(file: string) {
 		return;
 	}
 
-	const exportMatches = matchAll(text, /^\s*export\s+/gm);
+	const exportMatches = matchAll(text, /^\s*export\s+([a-z]+)/gm);
 
 	// If something is missing, or exists more than once, its a weird component file.
 	if (
@@ -284,6 +288,7 @@ function collectTs(file: string) {
 	const component: singleFileComponent = {
 		ts: file,
 		viewAnnotation: viewAnnotations[0],
+		hasDefaultExport: exportMatches[0][1] === 'default',
 		template: path.resolve(file, '..', viewImportMatch[2]),
 	};
 
@@ -420,16 +425,24 @@ for (let component of components) {
 				templateText += `\n\n<style scoped>\n${styleText}\n</style>`;
 			}
 		} else {
-			const stylePath = path.relative(path.join(vueFilename, '..'), component.style);
+			let stylePath = path.relative(path.join(vueFilename, '..'), component.style);
+			if (!stylePath.startsWith('../')) {
+				stylePath = './' + stylePath;
+			}
 			templateText += `\n\n<style src="${stylePath}" scoped />`;
 		}
 	}
 
-	const tsPath = path.relative(path.join(vueFilename, '..'), component.ts);
+	let tsPath = path.relative(path.join(vueFilename, '..'), component.ts);
+	if (!tsPath.startsWith('../')) {
+		tsPath = './' + tsPath;
+	}
 	templateText += `\n\n<script lang="ts" src="${tsPath}" />`;
 
 	// Convert export to export defeault
-	tsText = tsText.replace(/^(\s*export)(\s+)(?=class)/gm, '$1 default$2');
+	if (!component.hasDefaultExport) {
+		tsText = tsText.replace(/^(\s*export)(\s+)(?=class)/gm, '$1 default$2');
+	}
 
 	// Remove View imports
 	tsText = tsText.replace(
@@ -448,4 +461,52 @@ for (let component of components) {
 	prettierConf.parser = 'typescript';
 	prettyText = prettier.format(tsText, prettierConf);
 	fs.writeFileSync(component.ts + '.new.ts', prettyText);
+
+	component.converted = true;
+
+	if (!component.hasDefaultExport) {
+		for (let tsImportLine of resolvedTsImports[component.ts] || []) {
+			const importAsMatch = tsImportLine.expression
+				? tsImportLine.expression.match(/^{\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*}$/)
+				: null;
+
+			if (!importAsMatch) {
+				console.warn(
+					`Unhandled TS import line ${tsImportLine.line} in ${tsImportLine.from}`
+				);
+				continue;
+			}
+
+			let importPath = '';
+			if (tsImportLine.resolvesTo.indexOf('gj-lib-client') !== -1) {
+				console.log(
+					'importing lib: ' +
+						(tsImportLine.resolvesTo.startsWith(frontendLibDir) ? 'yes' : 'no')
+				);
+				console.log(
+					'imported from lib: ' +
+						(tsImportLine.from.startsWith(frontendLibDir) ? 'yes' : 'no')
+				);
+			}
+			if (
+				tsImportLine.resolvesTo.startsWith(frontendLibDir) &&
+				!tsImportLine.from.startsWith(frontendLibDir)
+			) {
+				importPath = tsImportLine.resolvesTo.replace(
+					/^.*\/gj-lib-client\//,
+					'game-jolt-frontend-lib/'
+				);
+			} else {
+				importPath = path.relative(path.join(tsImportLine.from, '..'), vueFilename);
+				if (!importPath.startsWith('../')) {
+					importPath = './' + importPath;
+				}
+			}
+
+			let importingFileText = fs.readFileSync(tsImportLine.from, 'utf8');
+			const newImportLine = `import ${importAsMatch[1]} from '${importPath}'`;
+			importingFileText = importingFileText.replace(tsImportLine.line, newImportLine);
+			fs.writeFileSync(tsImportLine.from + 'imports.ts', importingFileText);
+		}
+	}
 }
