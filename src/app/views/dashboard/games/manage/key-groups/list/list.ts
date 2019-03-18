@@ -1,21 +1,16 @@
-import View from '!view!./list.html?style=./list.styl';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import AppCardListAdd from 'game-jolt-frontend-lib/components/card/list/add/add.vue';
+import AppCardListItem from 'game-jolt-frontend-lib/components/card/list/item/item.vue';
+import AppCardList from 'game-jolt-frontend-lib/components/card/list/list.vue';
+import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
+import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
+import AppProgressBar from 'game-jolt-frontend-lib/components/progress/bar/bar.vue';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppCardListAdd } from '../../../../../../../lib/gj-lib-client/components/card/list/add/add';
-import { AppCardListItem } from '../../../../../../../lib/gj-lib-client/components/card/list/item/item';
-import { AppCardList } from '../../../../../../../lib/gj-lib-client/components/card/list/list';
-import { GamePackage } from '../../../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { KeyGroup } from '../../../../../../../lib/gj-lib-client/components/key-group/key-group.model';
-import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/components/progress/bar/bar';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
-import { FormGameKeyGroup } from '../../../../../../components/forms/game/key-group/key-group';
+import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/key-group.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@View
 @Component({
 	name: 'RouteDashGamesManageKeyGroupsList',
 	components: {

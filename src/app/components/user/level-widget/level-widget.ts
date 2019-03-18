@@ -1,13 +1,11 @@
+import AppProgressBar from 'game-jolt-frontend-lib/components/progress/bar/bar.vue';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./level-widget.html?style=./level-widget.styl';
 
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { AppProgressBar } from '../../../../lib/gj-lib-client/components/progress/bar/bar';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 
-@View
 @Component({
 	components: {
 		AppProgressBar,
@@ -19,7 +17,7 @@ import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/too
 		number,
 	},
 })
-export class AppUserLevelWidget extends Vue {
+export default class AppUserLevelWidget extends Vue {
 	@Prop(User) user!: User;
 
 	get tooltip() {

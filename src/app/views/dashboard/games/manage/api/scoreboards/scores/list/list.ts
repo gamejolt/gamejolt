@@ -1,17 +1,15 @@
-import View from '!view!./list.html';
-import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { GameScoreTable } from '../../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { Scroll } from '../../../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
+import { UserGameScore } from 'game-jolt-frontend-lib/components/user/game-score/game-score.model';
+import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../../../../manage.store';
-import { AppManageGameListScores } from '../../_list-scores/list-scores';
+import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 
-@View
 @Component({
 	name: 'RouteDashGamesManageApiScoreboardsScoresList',
 	components: {

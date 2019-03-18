@@ -1,16 +1,14 @@
+import { loadScript } from 'game-jolt-frontend-lib/utils/utils';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import View from '!view!./unity.html';
-
-import { loadScript } from '../../../../lib/gj-lib-client/utils/utils';
 import { Store } from '../../../store/index';
+
 
 declare const UnityObject2: any;
 
-@View
 @Component({})
-export class AppEmbedUnity extends Vue {
+export default class AppEmbedUnity extends Vue {
 	@State url!: Store['url'];
 	@State build!: Store['build'];
 	@State username!: Store['username'];
@@ -31,9 +29,7 @@ export class AppEmbedUnity extends Vue {
 				(window as any).$ = $;
 				(window as any).jQuery = $;
 			}),
-			loadScript(
-				'https://ssl-webplayer.unity3d.com/download_webplayer-3.x/3.0/uo/UnityObject2.js'
-			),
+			loadScript('https://ssl-webplayer.unity3d.com/download_webplayer-3.x/3.0/uo/UnityObject2.js'),
 		]);
 
 		// Can be called by a game to automatically log in a user.

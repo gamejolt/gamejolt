@@ -1,16 +1,14 @@
-import View from '!view!./chat.html';
+import { EscapeStack } from 'game-jolt-frontend-lib/components/escape-stack/escape-stack.service';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppScrollInviewParent } from 'game-jolt-frontend-lib/components/scroll/inview/parent';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { EscapeStack } from '../../../../lib/gj-lib-client/components/escape-stack/escape-stack.service';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppScrollInviewParent } from '../../../../lib/gj-lib-client/components/scroll/inview/parent';
 import { Store } from '../../../store/index';
 import { ChatClient } from '../../chat/client';
-import { AppChatSidebar } from '../../chat/sidebar/sidebar';
-import { AppChatWindows } from '../../chat/windows/windows';
+import AppChatSidebar from '../../chat/sidebar/sidebar.vue';
+import AppChatWindows from '../../chat/windows/windows.vue';
 
-@View
 @Component({
 	components: {
 		AppScrollInviewParent,
@@ -18,7 +16,7 @@ import { AppChatWindows } from '../../chat/windows/windows';
 		AppChatWindows,
 	},
 })
-export class AppShellChat extends Vue {
+export default class AppShellChat extends Vue {
 	// Chat should be available since we only include in DOM if chat is
 	// bootstrapped.
 	@State

@@ -1,14 +1,14 @@
-import { namespace } from 'vuex-class';
-import { Registry } from '../../../lib/gj-lib-client/components/registry/registry.service';
-import { UserFriendship } from '../../../lib/gj-lib-client/components/user/friendship/friendship.model';
-import { User } from '../../../lib/gj-lib-client/components/user/user.model';
+import { Registry } from 'game-jolt-frontend-lib/components/registry/registry.service';
+import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import {
 	NamespaceVuexStore,
 	VuexAction,
 	VuexModule,
 	VuexMutation,
 	VuexStore,
-} from '../../../lib/gj-lib-client/utils/vuex';
+} from 'game-jolt-frontend-lib/utils/vuex';
+import { namespace } from 'vuex-class';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
 import { store } from '../../store';
 

@@ -1,16 +1,14 @@
-import View from '!view!./maturity.html';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
+import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
 import { Component } from 'vue-property-decorator';
-import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
-import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppScrollAffix } from '../../../../../../../lib/gj-lib-client/components/scroll/affix/affix';
-import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { FormGameMaturity } from '../../../../../../components/forms/game/maturity/maturity';
-import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
+import AppGameOgrs from '../../../../../../components/game/ogrs/ogrs.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@View
 @Component({
 	name: 'RouteDashGamesManageGameMaturity',
 	components: {

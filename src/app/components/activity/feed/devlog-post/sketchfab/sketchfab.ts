@@ -1,14 +1,12 @@
-import View from '!view!./sketchfab.html?style=./sketchfab.styl';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { AppResponsiveDimensions } from 'game-jolt-frontend-lib/components/responsive-dimensions/responsive-dimensions';
+import AppSketchfabEmbed from 'game-jolt-frontend-lib/components/sketchfab/embed/embed.vue';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
-import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { AppResponsiveDimensions } from '../../../../../../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions';
-import { AppSketchfabEmbed } from '../../../../../../lib/gj-lib-client/components/sketchfab/embed/embed';
-import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedView } from '../../view';
 
-@View
 @Component({
 	components: {
 		AppJolticon,
@@ -16,7 +14,7 @@ import { ActivityFeedView } from '../../view';
 		AppResponsiveDimensions,
 	},
 })
-export class AppActivityFeedDevlogPostSketchfab extends Vue {
+export default class AppActivityFeedDevlogPostSketchfab extends Vue {
 	@Inject()
 	feed!: ActivityFeedView;
 

@@ -1,17 +1,15 @@
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { AppThemeSvg } from 'game-jolt-frontend-lib/components/theme/svg/svg';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./tag.html?style=./tag.styl';
 
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
 
-@View
 @Component({
 	components: {
 		AppThemeSvg,
 	},
 })
-export class AppGameOgrsTag extends Vue {
+export default class AppGameOgrsTag extends Vue {
 	@Prop(Game) game!: Game;
 	@Prop(Boolean) full?: boolean;
 

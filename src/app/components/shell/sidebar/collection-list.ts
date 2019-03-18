@@ -1,12 +1,10 @@
-import View from '!view!./collection-list.html';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { stringSort } from 'game-jolt-frontend-lib/utils/array';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive';
-import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { GameCollection } from '../../game/collection/collection.model';
 
-@View
 @Component({
 	components: {
 		AppJolticon,
@@ -15,7 +13,7 @@ import { GameCollection } from '../../game/collection/collection.model';
 		AppTrackEvent,
 	},
 })
-export class AppShellSidebarCollectionList extends Vue {
+export default class AppShellSidebarCollectionList extends Vue {
 	@Prop(Array) collections!: GameCollection[];
 	@Prop(String) filter!: string;
 	@Prop(Boolean) shouldSort?: boolean;

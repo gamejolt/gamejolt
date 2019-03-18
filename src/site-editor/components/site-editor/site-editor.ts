@@ -1,17 +1,14 @@
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import AppContentBlockEditor from 'game-jolt-frontend-lib/components/content-block/editor/editor.vue';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import AppThemeSelector from 'game-jolt-frontend-lib/components/theme/selector/selector.vue';
+import AppThemeEditor from 'game-jolt-frontend-lib/components/theme/theme-editor/theme-editor.vue';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { State, Mutation } from 'vuex-class';
-import View from '!view!./site-editor.html?style=./site-editor.styl';
-
-import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
-import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
-import { AppThemeSelector } from '../../../lib/gj-lib-client/components/theme/selector/selector';
-import { AppLoading } from '../../../lib/gj-lib-client/vue/components/loading/loading';
-import { AppThemeEditor } from '../../../lib/gj-lib-client/components/theme/theme-editor/theme-editor';
-import { AppContentBlockEditor } from '../../../lib/gj-lib-client/components/content-block/editor/editor';
+import { Mutation, State } from 'vuex-class';
 import { Store } from '../../store/index';
 
-@View
 @Component({
 	components: {
 		AppLoading,
@@ -20,7 +17,7 @@ import { Store } from '../../store/index';
 		AppContentBlockEditor,
 	},
 })
-export class AppSiteEditor extends Vue {
+export default class AppSiteEditor extends Vue {
 	@State tab!: Store['tab'];
 	@State site!: Store['site'];
 	@State('siteTemplates') templates!: Store['siteTemplates'];

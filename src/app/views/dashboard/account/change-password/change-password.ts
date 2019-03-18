@@ -1,15 +1,10 @@
-import View from '!view!./change-password.html';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
 import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { FormChangePassword } from '../../../../components/forms/change-password/change-password';
+import FormChangePassword from '../../../../components/forms/change-password/change-password.vue';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
-@View
 @Component({
 	name: 'RouteDashAccountChangePassword',
 	components: {

@@ -1,4 +1,3 @@
-import View from '!view!./statbar.html?style=./statbar.styl';
 import { AppLazyPlaceholder } from 'game-jolt-frontend-lib/components/lazy/placeholder/placeholder';
 import { LikersModal } from 'game-jolt-frontend-lib/components/likers/modal.service';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
@@ -9,7 +8,6 @@ import { Component } from 'vue-property-decorator';
 import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
-@View
 @Component({
 	components: {
 		AppLazyPlaceholder,
@@ -19,7 +17,7 @@ import { RouteStore, RouteStoreModule } from '../../view.store';
 		AppTooltip,
 	},
 })
-export class AppDiscoverGamesViewOverviewStatbar extends Vue {
+export default class AppDiscoverGamesViewOverviewStatbar extends Vue {
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
 

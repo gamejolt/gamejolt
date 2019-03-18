@@ -1,18 +1,17 @@
-import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./address.html';
-import { CommonFormComponents } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Geo, Country } from '../../../../../lib/gj-lib-client/components/geo/geo.service';
-import { FormFinancialsManagedAccount } from './managed-account';
-import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
+import { CommonFormComponents } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Country, Geo } from 'game-jolt-frontend-lib/components/geo/geo.service';
+import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
 import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import FormFinancialsManagedAccount from './managed-account.vue';
 
-@View
+
 @Component({
 	components: {
 		...CommonFormComponents,
 	},
 })
-export class AppFinancialsManagedAccountAddress extends Vue {
+export default class AppFinancialsManagedAccountAddress extends Vue {
 	@Prop(Boolean) forceRequired!: boolean;
 
 	@Prop(String) namePrefix!: string;

@@ -1,14 +1,9 @@
-import View from '!view!./active.html';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { ForumTopic } from 'game-jolt-frontend-lib/components/forum/topic/topic.model';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { AppForumTopicList } from '../../../../components/forum/topic-list/topic-list';
+import AppForumTopicList from '../../../../components/forum/topic-list/topic-list.vue';
 
-@View
 @Component({
 	name: 'RouteForumsLandingActive',
 	components: {

@@ -1,4 +1,3 @@
-import View from '!view!./site.html';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import {
 	BaseRouteComponent,
@@ -7,11 +6,10 @@ import {
 import { Site } from 'game-jolt-frontend-lib/components/site/site-model';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
 import { Component } from 'vue-property-decorator';
-import { AppSitesLinkCard } from '../../../../components/sites/link-card/link-card';
-import { AppSitesManagePage } from '../../../../components/sites/manage-page/manage-page';
+import AppSitesLinkCard from '../../../../components/sites/link-card/link-card.vue';
+import AppSitesManagePage from '../../../../components/sites/manage-page/manage-page.vue';
 import { routeStore, RouteStore, RouteStoreModule } from '../account.store';
 
-@View
 @Component({
 	name: 'RouteDashAccountSite',
 	components: {

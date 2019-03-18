@@ -1,20 +1,19 @@
+import AppCard from 'game-jolt-frontend-lib/components/card/card.vue';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
+import { PaymentSource } from 'game-jolt-frontend-lib/components/payment-source/payment-source.model';
 import Vue from 'vue';
-import View from '!view!./card.html?style=./card.styl';
-import { Component, Prop, Emit } from 'vue-property-decorator';
-import { AppCard } from '../../../../../lib/gj-lib-client/components/card/card';
-import { PaymentSource } from '../../../../../lib/gj-lib-client/components/payment-source/payment-source.model';
-import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { AppUserAddressDetails } from '../../address/details/details';
+import { Component, Emit, Prop } from 'vue-property-decorator';
+import AppUserAddressDetails from '../../address/details/details.vue';
 
-@View
+
 @Component({
 	components: {
 		AppCard,
 		AppUserAddressDetails,
 	},
 })
-export class AppUserPaymentSourceCard extends Vue {
+export default class AppUserPaymentSourceCard extends Vue {
 	@Prop(PaymentSource) paymentSource!: PaymentSource;
 	@Prop(Boolean) showRemove?: boolean;
 

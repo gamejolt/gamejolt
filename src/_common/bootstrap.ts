@@ -1,15 +1,15 @@
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
+import AppButton from 'game-jolt-frontend-lib/components/button/button.vue';
+import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
+import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
+import { Payload } from 'game-jolt-frontend-lib/components/payload/payload-service';
+import { Referrer } from 'game-jolt-frontend-lib/components/referrer/referrer.service';
+import { hijackLinks } from 'game-jolt-frontend-lib/utils/router';
+import { VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { VueRouter } from 'vue-router/types/router';
-import { VuexStore } from '../lib/gj-lib-client/utils/vuex';
-import { hijackLinks } from '../lib/gj-lib-client/utils/router';
-import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
-import { Payload } from '../lib/gj-lib-client/components/payload/payload-service';
-import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
-import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
 import { bootstrapAppTranslations } from '../utils/translations';
-import { Referrer } from '../lib/gj-lib-client/components/referrer/referrer.service';
-import { AppButton } from '../lib/gj-lib-client/components/button/button';
-import { AppJolticon } from '../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { Settings } from './settings/settings.service';
 
 /**

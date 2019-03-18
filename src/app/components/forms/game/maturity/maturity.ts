@@ -1,13 +1,10 @@
-import { Component } from 'vue-property-decorator';
 import View from '!view!./maturity.html';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import { BaseForm, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Component } from 'vue-property-decorator';
+import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 
-import {
-	BaseForm,
-	FormOnInit,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
-import { AppDashGameWizardControls } from '../wizard-controls/wizard-controls';
 
 export type MaturityField = {
 	label?: string;

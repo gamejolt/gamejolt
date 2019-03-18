@@ -1,17 +1,16 @@
-import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./ssn.html';
-import { CommonFormComponents } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { FormFinancialsManagedAccount } from './managed-account';
-import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
+import { CommonFormComponents } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
 import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import FormFinancialsManagedAccount from './managed-account.vue';
 
-@View
+
 @Component({
 	components: {
 		...CommonFormComponents,
 	},
 })
-export class AppFinancialsManagedAccountSsn extends Vue {
+export default class AppFinancialsManagedAccountSsn extends Vue {
 	@Prop(Boolean) isForceRequired!: boolean;
 
 	@Prop(String) namePrefix!: string;

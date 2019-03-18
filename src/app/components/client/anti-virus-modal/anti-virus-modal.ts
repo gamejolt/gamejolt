@@ -1,8 +1,6 @@
-import View from '!view!./anti-virus-modal.html';
+import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
 import { Component, Prop } from 'vue-property-decorator';
-import { BaseModal } from '../../../../lib/gj-lib-client/components/modal/base';
 
-@View
 @Component({})
 export default class AppClientAntiVirusModal extends BaseModal {
 	@Prop(String)

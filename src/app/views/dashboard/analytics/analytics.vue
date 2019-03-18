@@ -1,0 +1,257 @@
+<template>
+	<div class="route-analytics" v-if="isRouteBootstrapped">
+		<app-page-header>
+			<nav class="breadcrumb">
+				<ul>
+					<li>
+						<router-link
+							:to="{
+								name: 'dash.analytics',
+								params: { resource: 'User', resourceId: user.id },
+								query: $route.query,
+							}"
+							replace
+							active-class="active"
+						>
+							<translate class="breadcrumb-tag" translate>User</translate>
+							@{{ user.username }}
+						</router-link>
+						<app-jolticon icon="chevron-right" class="breadcrumb-separator" v-if="game" />
+					</li>
+					<li v-if="game">
+						<router-link
+							:to="{
+								name: 'dash.analytics',
+								params: { resource: 'Game', resourceId: game.id },
+								query: $route.query,
+							}"
+							replace
+							active-class="active"
+						>
+							<translate class="breadcrumb-tag">Game</translate>
+							{{ game.title }}
+						</router-link>
+						<app-jolticon icon="chevron-right" class="breadcrumb-separator" v-if="package" />
+					</li>
+					<li v-if="package">
+						<router-link
+							:to="{
+								name: 'dash.analytics',
+								params: { resource: 'Game_Package', resourceId: package.id },
+								query: $route.query,
+							}"
+							replace
+							active-class="active"
+						>
+							<translate class="breadcrumb-tag" translate>Package</translate>
+							{{ package.title || game.title }}
+						</router-link>
+						<app-jolticon icon="chevron-right" class="breadcrumb-separator" v-if="release" />
+					</li>
+					<li v-if="release">
+						<router-link
+							:to="{
+								name: 'dash.analytics',
+								params: { resource: 'Game_Release', resourceId: release.id },
+								query: $route.query,
+							}"
+							replace
+							active-class="active"
+						>
+							<translate class="breadcrumb-tag">Release</translate>
+							{{ release.version_number }}
+						</router-link>
+					</li>
+				</ul>
+			</nav>
+
+			<nav slot="nav" class="platform-list inline">
+				<ul>
+					<li>
+						<router-link
+							:to="{
+								name: 'dash.analytics',
+								params: $route.params,
+								query: {
+									period: 'all',
+									partner: $route.query.partner,
+								},
+							}"
+							replace
+							:class="{ active: period === 'all' }"
+							translate
+						>
+							All-Time
+						</router-link>
+					</li>
+					<li>
+						<router-link
+							:to="{
+								name: 'dash.analytics',
+								params: $route.params,
+								query: {
+									period: 'monthly',
+									partner: $route.query.partner,
+								},
+							}"
+							replace
+							:class="{ active: period === 'monthly' }"
+							translate
+						>
+							Monthly
+						</router-link>
+					</li>
+				</ul>
+			</nav>
+
+			<app-page-header-controls v-if="period === 'monthly'" slot="controls">
+				<app-button
+					slot="start"
+					circle
+					trans
+					icon="chevron-left"
+					:to="{
+						name: 'dash.analytics',
+						params: $route.params,
+						query: {
+							period: 'monthly',
+							year: prevYear,
+							month: prevMonth,
+							partner: $route.query.partner,
+						},
+					}"
+					replace
+				/>
+
+				<div class="text-center">
+					<strong>
+						{{ startTime | date('MMMM YYYY') }}
+					</strong>
+				</div>
+
+				<app-button
+					slot="end"
+					v-if="now > endTime"
+					circle
+					trans
+					icon="chevron-right"
+					:to="{
+						name: 'dash.analytics',
+						params: $route.params,
+						query: {
+							period: 'monthly',
+							year: nextYear,
+							month: nextMonth,
+							partner: $route.query.partner,
+						},
+					}"
+					replace
+				/>
+			</app-page-header-controls>
+		</app-page-header>
+
+		<template v-if="metricData[metric.key]">
+			<app-expand :when="period === 'monthly' && !!metricData[metric.key].graph">
+				<app-graph :dataset="metricData[metric.key].graph" />
+			</app-expand>
+
+			<section class="section section-thin">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-4 col-md-3" v-for="metric of availableMetrics" :key="metric.key">
+							<router-link
+								class="stat-graph-overlay"
+								:to="{
+									name: 'dash.analytics',
+									params: { metricKey: metric.key },
+									query: $route.query,
+								}"
+								replace
+								active-class="active"
+							>
+								<div class="stat-big">
+									<div class="stat-big-label">
+										{{ metric.label }}
+									</div>
+									<div class="stat-big-digit">
+										<template v-if="metric.type === 'number'">
+											{{ metricData[metric.key].total | number }}
+										</template>
+										<template v-else-if="metric.type === 'currency'">
+											{{ metricData[metric.key].total | currency }}
+										</template>
+									</div>
+								</div>
+
+								<app-graph
+									v-if="period === 'monthly' && metricData[metric.key]"
+									:dataset="metricData[metric.key].graph"
+									:background-variant="true"
+								/>
+							</router-link>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<template v-if="pageReports.length">
+				<hr />
+
+				<section class="section">
+					<div class="container">
+						<div class="row">
+							<div class="col-md-3" v-if="Screen.isDesktop">
+								<app-scroll-affix>
+									<nav class="platform-list">
+										<ul>
+											<li v-for="(report, i) of pageReports" :key="i" class="no-animate-leave">
+												<a :href="`#report-${i}`" v-app-scroll-to>
+													{{ report.title }}
+												</a>
+											</li>
+										</ul>
+									</nav>
+								</app-scroll-affix>
+							</div>
+							<div class="col-md-9">
+								<div v-for="(report, i) of pageReports" :key="i" :id="`report-${i}`">
+									<h2 :class="{ 'section-header': i === 0 }">
+										{{ report.title }}
+									</h2>
+
+									<app-loading v-if="!report.isLoaded" />
+
+									<div v-if="report.isLoaded" class="row">
+										<div v-for="(component, n) of report.components" :key="n">
+											<app-analytics-report-simple-stat
+												v-if="component.type === 'sum' || component.type === 'average'"
+												:report-data="component"
+											/>
+											<app-analytics-report-top-composition
+												v-else-if="component.type === 'top-composition'"
+												:report-data="component"
+											/>
+											<app-analytics-report-top-composition-value
+												v-else-if="
+													component.type === 'top-composition-sum' ||
+														component.type === 'top-composition-avg'
+												"
+												:report-data="component"
+											/>
+											<app-analytics-report-rating-breakdown
+												v-else-if="component.type === 'rating-breakdown'"
+												:report-data="component"
+											/>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</template>
+		</template>
+	</div>
+</template>
+
+<script lang="ts" src="./analytics" />

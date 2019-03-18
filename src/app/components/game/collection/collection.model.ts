@@ -1,9 +1,9 @@
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
-import { Jam } from '../../../../lib/gj-lib-client/components/jam/jam.model';
-import { Model } from '../../../../lib/gj-lib-client/components/model/model.service';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { appStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { GamePlaylist } from 'game-jolt-frontend-lib/components/game-playlist/game-playlist.model';
+import { Jam } from 'game-jolt-frontend-lib/components/jam/jam.model';
+import { Model } from 'game-jolt-frontend-lib/components/model/model.service';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { appStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 
 export class GameCollection extends Model {
 	static readonly TYPE_FOLLOWED = 'followed';

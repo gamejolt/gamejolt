@@ -1,0 +1,22 @@
+<template>
+	<div class="anim-fade-in-up" v-if="isRouteBootstrapped">
+		<template v-if="isSuccess">
+			<h2 class="section-header">
+				<translate>auth.authorize.success_growl_title</translate>
+			</h2>
+			<div>
+				<translate>auth.authorize.success_growl</translate>
+			</div>
+		</template>
+		<template v-else>
+			<h2 class="section-header">
+				<translate>auth.authorize.invalid.heading</translate>
+			</h2>
+			<div v-translate>
+				auth.authorize.invalid.body_html
+			</div>
+		</template>
+	</div>
+</template>
+
+<script lang="ts" src="./authorize" />

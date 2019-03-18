@@ -1,7 +1,7 @@
-import { LocalDbModel } from './model.service';
 import * as fs from 'fs-extra';
+import { Properties } from 'game-jolt-frontend-lib/utils/utils';
 import * as writeFileAtomic from 'write-file-atomic';
-import { Properties } from '../../../../lib/gj-lib-client/utils/utils';
+import { LocalDbModel } from './model.service';
 
 type Data<T> = {
 	version: number;

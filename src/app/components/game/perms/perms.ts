@@ -1,7 +1,7 @@
+import { Game, Perm } from 'game-jolt-frontend-lib/components/game/game.model';
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { RouteStoreName, RouteStore } from '../../../views/dashboard/games/manage/manage.store';
-import { Perm, Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import { RouteStore, RouteStoreName } from '../../../views/dashboard/games/manage/manage.store';
 
 @Component({})
 export class AppGamePerms extends Vue {

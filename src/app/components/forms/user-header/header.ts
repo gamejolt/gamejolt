@@ -1,24 +1,22 @@
-import View from '!view!./header.html';
-import { AppFormControlCrop } from 'game-jolt-frontend-lib/components/form-vue/control/crop/crop';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import { Component, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { AppFormControlUpload } from '../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
-import { AppForm } from '../../../../lib/gj-lib-client/components/form-vue/form';
+import AppFormControlCrop from 'game-jolt-frontend-lib/components/form-vue/control/crop/crop.vue';
+import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
+import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
 	FormOnLoad,
-} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+} from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { Component, Watch } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { Store } from '../../../store/index';
 
 type FormModel = User & {
 	header_crop: any;
 };
 
-@View
 @Component({
 	components: {
 		AppFormControlUpload,
@@ -26,7 +24,8 @@ type FormModel = User & {
 		AppJolticon,
 	},
 })
-export class FormUserHeader extends BaseForm<FormModel> implements FormOnLoad, FormOnBeforeSubmit {
+export default class FormUserHeader extends BaseForm<FormModel>
+	implements FormOnLoad, FormOnBeforeSubmit {
 	@State
 	app!: Store['app'];
 	modelClass = User as any;

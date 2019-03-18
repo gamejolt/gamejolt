@@ -1,9 +1,8 @@
-import '../lib/gj-lib-client/utils/polyfills';
-import './main.styl';
-
-import { store } from './store/index';
-import { App } from './app';
+import 'game-jolt-frontend-lib/utils/polyfills';
 import { bootstrapCommon } from '../_common/bootstrap';
+import App from './app.vue';
+import './main.styl';
+import { store } from './store/index';
 
 const _createApp = bootstrapCommon(App, store);
 export function createApp() {

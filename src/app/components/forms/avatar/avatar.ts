@@ -1,26 +1,24 @@
-import View from '!view!./avatar.html';
-import { Component, Watch } from 'vue-property-decorator';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { AppFormControlCrop } from '../../../../lib/gj-lib-client/components/form-vue/control/crop/crop';
-import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import { AppFormControlUpload } from '../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
-import { AppForm } from '../../../../lib/gj-lib-client/components/form-vue/form';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import AppFormControlCrop from 'game-jolt-frontend-lib/components/form-vue/control/crop/crop.vue';
+import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
+import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
+import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
 	FormOnLoad,
-} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { ModalConfirm } from '../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { filesize } from '../../../../lib/gj-lib-client/vue/filters/filesize';
+} from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { filesize } from 'game-jolt-frontend-lib/vue/filters/filesize';
+import { Component, Watch } from 'vue-property-decorator';
 
 type FormModel = User & {
 	avatar_crop?: any;
 };
 
-@View
 @Component({
 	components: {
 		AppFormControlUpload,
@@ -29,7 +27,8 @@ type FormModel = User & {
 		AppJolticon,
 	},
 })
-export class FormAvatar extends BaseForm<FormModel> implements FormOnLoad, FormOnBeforeSubmit {
+export default class FormAvatar extends BaseForm<FormModel>
+	implements FormOnLoad, FormOnBeforeSubmit {
 	modelClass = User;
 	reloadOnSubmit = true;
 	warnOnDiscard = false;

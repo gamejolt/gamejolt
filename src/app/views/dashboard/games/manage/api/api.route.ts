@@ -11,7 +11,7 @@ import { routeDashGamesManageApiTrophies } from './trophies/trophies.route';
 
 export const routeDashGamesManageApi: RouteConfig = {
 	path: 'api',
-	component: () => import(/* webpackChunkName: "routeDashGamesManageApi" */ './api'),
+	component: () => import(/* webpackChunkName: "routeDashGamesManageApi" */ './api.vue'),
 	children: [
 		routeDashGamesManageApiOverview,
 		routeDashGamesManageApiTrophies,

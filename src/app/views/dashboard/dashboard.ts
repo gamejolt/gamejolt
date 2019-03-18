@@ -1,10 +1,8 @@
-import View from '!view!./dashboard.html';
+import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
 import { Store } from '../../store/index';
 
-@View
 @Component({
 	name: 'RouteDash',
 })

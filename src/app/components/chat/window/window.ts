@@ -1,23 +1,21 @@
+import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppScrollInviewParent } from 'game-jolt-frontend-lib/components/scroll/inview/parent';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
-import { State, Action } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./window.html?style=./window.styl';
-
-import { ChatRoom } from '../room';
-import { ChatMessage } from '../message';
-import { ChatUserCollection } from '../user-collection';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppChatUserList } from '../user-list/user-list';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { AppChatWindowSend } from './send/send';
-import { AppChatWindowOutput } from './output/output';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
-import { ChatClient } from '../client';
+import { Action, State } from 'vuex-class';
 import { Store } from '../../../store/index';
-import { AppScrollInviewParent } from '../../../../lib/gj-lib-client/components/scroll/inview/parent';
+import { ChatClient } from '../client';
+import { ChatMessage } from '../message';
+import { ChatRoom } from '../room';
+import { ChatUserCollection } from '../user-collection';
+import AppChatUserList from '../user-list/user-list.vue';
+import AppChatWindowOutput from './output/output.vue';
+import AppChatWindowSend from './send/send.vue';
 
-@View
+
 @Component({
 	components: {
 		AppJolticon,
@@ -31,7 +29,7 @@ import { AppScrollInviewParent } from '../../../../lib/gj-lib-client/components/
 		number,
 	},
 })
-export class AppChatWindow extends Vue {
+export default class AppChatWindow extends Vue {
 	@Prop(ChatRoom) room!: ChatRoom;
 	@Prop(Array) messages!: ChatMessage[];
 	@Prop(ChatUserCollection) users?: ChatUserCollection;

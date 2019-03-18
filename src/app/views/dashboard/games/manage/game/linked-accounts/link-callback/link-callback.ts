@@ -1,16 +1,16 @@
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
-import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Growls } from '../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
 import {
 	getLinkedAccountProviderDisplayName,
 	LinkedAccount,
-} from '../../../../../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
+} from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { CreateElement } from 'vue';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { RouteStore, RouteStoreModule } from '../../../manage.store';
 
 @Component({

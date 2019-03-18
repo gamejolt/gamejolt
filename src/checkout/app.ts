@@ -1,23 +1,21 @@
-import View from '!view!./app.html';
+import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import AppErrorPage from 'game-jolt-frontend-lib/components/error/page/page.vue';
+import AppGrowls from 'game-jolt-frontend-lib/components/growls/growls.vue';
+import AppLoadingBar from 'game-jolt-frontend-lib/components/loading/bar/bar.vue';
+import AppModals from 'game-jolt-frontend-lib/components/modal/modals.vue';
+import { AppTheme } from 'game-jolt-frontend-lib/components/theme/theme';
+import AppUserBar from 'game-jolt-frontend-lib/components/user/user-bar/user-bar.vue';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { date } from 'game-jolt-frontend-lib/vue/filters/date';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-
-import * as _ClientHistoryNavigatorMod from '../_common/client/history-navigator/history-navigator.service';
-import { Environment } from '../lib/gj-lib-client/components/environment/environment.service';
-import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
-import { AppGrowls } from '../lib/gj-lib-client/components/growls/growls';
-import { AppLoadingBar } from '../lib/gj-lib-client/components/loading/bar/bar';
-import { AppModals } from '../lib/gj-lib-client/components/modal/modals';
-import { AppUserBar } from '../lib/gj-lib-client/components/user/user-bar/user-bar';
-import { User } from '../lib/gj-lib-client/components/user/user.model';
-import { AppJolticon } from '../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { date } from '../lib/gj-lib-client/vue/filters/date';
 import { loadCurrentLanguage } from '../utils/translations';
+import * as _ClientHistoryNavigatorMod from '../_common/client/history-navigator/history-navigator.service';
+import AppCookieBanner from '../_common/cookie/banner/banner.vue';
 import { Store } from './store/index';
-import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
-import { AppTheme } from '../lib/gj-lib-client/components/theme/theme';
-import { AppCookieBanner } from '../_common/cookie/banner/banner';
 
 let components: any = {
 	AppTheme,
@@ -35,18 +33,17 @@ if (GJ_IS_CLIENT) {
 	ClientHistoryNavigatorMod = require('../_common/client/history-navigator/history-navigator.service');
 	components = {
 		...components,
-		...require('../_common/client/base/base'),
+		...require('../_common/client/base/base.vue'),
 	};
 }
 
-@View
 @Component({
 	components,
 	filters: {
 		date,
 	},
 })
-export class App extends Vue {
+export default class App extends Vue {
 	@State app!: Store['app'];
 
 	curDate = new Date();

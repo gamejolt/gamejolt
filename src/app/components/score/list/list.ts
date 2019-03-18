@@ -1,14 +1,12 @@
-import View from '!view!./list.html?style=./list.styl';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
+import { UserGameScore } from 'game-jolt-frontend-lib/components/user/game-score/game-score.model';
+import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ago';
-import { UserGameScore } from '../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
-import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 
-@View
 @Component({
 	components: {
 		AppUserAvatar,
@@ -18,7 +16,7 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 		number,
 	},
 })
-export class AppScoreList extends Vue {
+export default class AppScoreList extends Vue {
 	@Prop(Array) scores!: UserGameScore[];
 	@Prop(Number) startRank?: number;
 	@Prop(Number) step?: number;

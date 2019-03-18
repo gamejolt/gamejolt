@@ -1,10 +1,8 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./mobile-nav.html';
 
-import { AppPageHeader } from '../../../components/page-header/page-header';
+import AppPageHeader from '../../../components/page-header/page-header.vue';
 
-@View
 @Component({
 	components: {
 		AppPageHeader,

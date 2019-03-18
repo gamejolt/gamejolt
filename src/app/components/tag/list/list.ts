@@ -1,9 +1,8 @@
-import View from '!view!./list.html?style=./list.styl';
-import { AppScrollScroller } from 'game-jolt-frontend-lib/components/scroll/scroller/scroller';
+import AppScrollScroller from 'game-jolt-frontend-lib/components/scroll/scroller/scroller.vue'
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { TagsInfo } from '../tags-info.service';
-import { AppTagThumbnail } from '../thumbnail/thumbnail';
+import AppTagThumbnail from '../thumbnail/thumbnail.vue'
 
 const FeaturedTags = [
 	'action',
@@ -29,14 +28,13 @@ const FeaturedTags = [
 	'sports',
 ];
 
-@View
 @Component({
 	components: {
 		AppScrollScroller,
 		AppTagThumbnail,
 	},
 })
-export class AppTagList extends Vue {
+export default class AppTagList extends Vue {
 	get tags() {
 		const tags = [];
 		for (const tag of FeaturedTags) {

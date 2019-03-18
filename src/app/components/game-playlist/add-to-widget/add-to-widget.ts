@@ -1,16 +1,14 @@
-import View from '!view!./add-to-widget.html';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive';
-import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { Store } from '../../../store/index';
-import { AppGamePlaylistAddToPopover } from '../add-to-popover/add-to-popover';
+import AppGamePlaylistAddToPopover from '../add-to-popover/add-to-popover.vue';
 
-@View
 @Component({
 	components: {
 		AppPopper,
@@ -22,7 +20,7 @@ import { AppGamePlaylistAddToPopover } from '../add-to-popover/add-to-popover';
 		AppTooltip,
 	},
 })
-export class AppGamePlaylistAddToWidget extends Vue {
+export default class AppGamePlaylistAddToWidget extends Vue {
 	@Prop(Game)
 	game!: Game;
 

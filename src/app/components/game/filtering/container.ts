@@ -1,9 +1,9 @@
+import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { forEach } from 'game-jolt-frontend-lib/utils/collection';
+import { objectEquals } from 'game-jolt-frontend-lib/utils/object';
 import Vue from 'vue';
 import { Location, Route } from 'vue-router';
-import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { Translate } from '../../../../lib/gj-lib-client/components/translate/translate.service';
-import { forEach } from '../../../../lib/gj-lib-client/utils/collection';
-import { objectEquals } from '../../../../lib/gj-lib-client/utils/object';
 import { router } from '../../../views/index';
 
 const STORAGE_KEY = 'game-filtering:filters-v2';
@@ -146,7 +146,7 @@ export class GameFilteringContainer {
 		forEach(GameFilteringContainer.definitions, (definition, filter) => {
 			if (params[filter]) {
 				if (definition.type === 'array') {
-					this.filters[filter] = params[filter].split(',');
+					this.filters[filter] = (params[filter] as string).split(',');
 				} else if (definition.type === 'string') {
 					this.filters[filter] = params[filter];
 				} else if (definition.type === 'radio') {
@@ -270,7 +270,7 @@ export class GameFilteringContainer {
 			queryPieces.push('date=' + route.params.date);
 		}
 
-		if (route.query.page && parseInt(route.query.page, 10) > 1) {
+		if (typeof route.query.page === 'string' && parseInt(route.query.page, 10) > 1) {
 			queryPieces.push('page=' + route.query.page);
 		}
 

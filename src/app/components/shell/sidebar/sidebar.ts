@@ -1,20 +1,18 @@
-import View from '!view!./sidebar.html?style=./sidebar.styl';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import AppScrollScroller from 'game-jolt-frontend-lib/components/scroll/scroller/scroller.vue';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { stringSort } from 'game-jolt-frontend-lib/utils/array';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive';
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppScrollScroller } from '../../../../lib/gj-lib-client/components/scroll/scroller/scroller';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { Store } from '../../../store/index';
 import { LibraryModule, LibraryStore } from '../../../store/library';
-import { AppShellSidebarCollectionList } from './collection-list';
+import AppShellSidebarCollectionList from './collection-list.vue';
 
-@View
 @Component({
 	components: {
 		AppShellSidebarCollectionList,
@@ -29,7 +27,7 @@ import { AppShellSidebarCollectionList } from './collection-list';
 		number,
 	},
 })
-export class AppShellSidebar extends Vue {
+export default class AppShellSidebar extends Vue {
 	@State
 	app!: Store['app'];
 

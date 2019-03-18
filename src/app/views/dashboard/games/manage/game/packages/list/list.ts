@@ -1,26 +1,24 @@
-import View from '!view!./list.html';
-import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppCardListDraggable } from '../../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';
-import { AppCardListItem } from '../../../../../../../../lib/gj-lib-client/components/card/list/item/item';
-import { AppCardList } from '../../../../../../../../lib/gj-lib-client/components/card/list/list';
-import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { Growls } from '../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import AppCardListDraggable from 'game-jolt-frontend-lib/components/card/list/draggable/draggable.vue';
+import AppCardListItem from 'game-jolt-frontend-lib/components/card/list/item/item.vue';
+import AppCardList from 'game-jolt-frontend-lib/components/card/list/list.vue';
+import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { Sellable } from '../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
-import { AppTooltip } from '../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { arrayIndexBy } from '../../../../../../../../lib/gj-lib-client/utils/array';
-import { currency } from '../../../../../../../../lib/gj-lib-client/vue/filters/currency';
-import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Sellable } from 'game-jolt-frontend-lib/components/sellable/sellable.model';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { arrayIndexBy } from 'game-jolt-frontend-lib/utils/array';
+import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
+import { Component } from 'vue-property-decorator';
+import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
 import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import { RouteStore, RouteStoreModule } from '../../../manage.store';
 
-@View
 @Component({
 	name: 'RouteDashGamesManageGamePackagesList',
 	components: {

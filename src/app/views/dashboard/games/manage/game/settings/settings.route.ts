@@ -4,5 +4,5 @@ export const routeDashGamesManageGameSettings: RouteConfig = {
 	name: 'dash.games.manage.game.settings',
 	path: 'settings',
 	component: () =>
-		import(/* webpackChunkName: "routeDashGamesManageGameSettingsname" */ './settings'),
+		import(/* webpackChunkName: "routeDashGamesManageGameSettingsname" */ './settings.vue'),
 };

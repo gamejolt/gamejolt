@@ -1,19 +1,13 @@
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import { BaseForm, FormOnInit, FormOnSubmitSuccess } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
+import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./key-group.html';
 
-import { KeyGroup } from '../../../../../lib/gj-lib-client/components/key-group/key-group.model';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
-import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
-import {
-	BaseForm,
-	FormOnInit,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { FormOnSubmitSuccess } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
 
-@View
 @Component({
 	components: {
 		AppExpand,
@@ -25,7 +19,7 @@ import { FormOnSubmitSuccess } from '../../../../../lib/gj-lib-client/components
 		number,
 	},
 })
-export class FormGameKeyGroup extends BaseForm<KeyGroup>
+export default class FormGameKeyGroup extends BaseForm<KeyGroup>
 	implements FormOnInit, FormOnSubmitSuccess {
 	modelClass = KeyGroup;
 	resetOnSubmit = true;

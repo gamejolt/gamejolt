@@ -1,12 +1,10 @@
-import View from '!view!./header-modal.html';
+import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { BaseModal } from '../../../../lib/gj-lib-client/components/modal/base';
 import { Store } from '../../../store/index';
-import { FormUserHeader } from '../../forms/user-header/header';
+import FormUserHeader from '../../forms/user-header/header.vue';
 
-@View
 @Component({
 	components: {
 		FormUserHeader,

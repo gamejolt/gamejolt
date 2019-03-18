@@ -1,17 +1,12 @@
-import View from '!view!./addresses.html';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { UserAddress } from 'game-jolt-frontend-lib/components/user/address/address.model';
+import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
 import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { UserAddress } from '../../../../../lib/gj-lib-client/components/user/address/address.model';
-import { arrayRemove } from '../../../../../lib/gj-lib-client/utils/array';
-import { AppUserAddressCard } from '../../../../components/user/address/card/card';
+import AppUserAddressCard from '../../../../components/user/address/card/card.vue';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
-@View
 @Component({
 	name: 'RouteDashAccountAddresses',
 	components: {

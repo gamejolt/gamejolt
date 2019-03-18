@@ -1,15 +1,14 @@
-import View from '!view!./retrieve.html';
-import { Component } from 'vue-property-decorator';
-import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
-import { GameBundle } from '../../../lib/gj-lib-client/components/game-bundle/game-bundle.model';
-import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
-import { Meta } from '../../../lib/gj-lib-client/components/meta/meta-service';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { GameBundle } from 'game-jolt-frontend-lib/components/game-bundle/game-bundle.model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../lib/gj-lib-client/components/route/route-component';
-import { FormRetrieve } from '../../components/forms/retrieve/retrieve';
-import { AppInvalidKey } from '../../components/invalid-key/invalid-key';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Component } from 'vue-property-decorator';
+import FormRetrieve from '../../components/forms/retrieve/retrieve.vue';
+import AppInvalidKey from '../../components/invalid-key/invalid-key.vue';
 
 interface SuccessPayload {
 	error: false;
@@ -24,7 +23,6 @@ interface ErrorPayload {
 
 type Payload = SuccessPayload | ErrorPayload | undefined;
 
-@View
 @Component({
 	name: 'RouteRetrieve',
 	components: {

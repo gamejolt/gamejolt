@@ -1,4 +1,3 @@
-import View from '!view!./list.html';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Order } from 'game-jolt-frontend-lib/components/order/order.model';
 import {
@@ -11,7 +10,6 @@ import { date } from 'game-jolt-frontend-lib/vue/filters/date';
 import { Component } from 'vue-property-decorator';
 import { routeStore, RouteStore, RouteStoreModule } from '../../account.store';
 
-@View
 @Component({
 	name: 'RouteDashAccountPurchasesList',
 	filters: {

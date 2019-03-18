@@ -1,21 +1,19 @@
-import View from '!view!./search.html';
-import { AppPagination } from 'game-jolt-frontend-lib/components/pagination/pagination';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import AppPagination from 'game-jolt-frontend-lib/components/pagination/pagination.vue';
+import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
 import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-store';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { AppExpand } from '../../../lib/gj-lib-client/components/expand/expand';
-import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
-import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
-import { number } from '../../../lib/gj-lib-client/vue/filters/number';
-import { AppPageHeader } from '../../components/page-header/page-header';
-import { AppSearch } from '../../components/search/search';
+import AppPageHeader from '../../components/page-header/page-header.vue';
 import { Search } from '../../components/search/search-service';
+import AppSearch from '../../components/search/search.vue';
 import { Store, store } from '../../store/index';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './search.store';
 import './search.styl';
 
-@View
 @Component({
 	name: 'RouteSearch',
 	components: {

@@ -1,28 +1,23 @@
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
+import { BaseForm, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Site } from 'game-jolt-frontend-lib/components/site/site-model';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./domain.html';
 
-import {
-	BaseForm,
-	FormOnInit,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Site } from '../../../../../lib/gj-lib-client/components/site/site-model';
-import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
 
 interface FormModel {
 	type: string;
 }
 
-@View
 @Component({
 	components: {
 		AppFormControlToggle,
 		AppExpand,
 	},
 })
-export class FormSiteDomain extends BaseForm<FormModel> implements FormOnInit {
+export default class FormSiteDomain extends BaseForm<FormModel> implements FormOnInit {
 	modelClass = Site as any;
 	saveMethod = '$saveDomain' as any;
 

@@ -1,7 +1,10 @@
-import {
-	CustomMessage as CustomGameMessage,
-	Game,
-} from 'game-jolt-frontend-lib/components/game/game.model';
+import { Collaborator } from 'game-jolt-frontend-lib/components/collaborator/collaborator.model';
+import { Comment } from 'game-jolt-frontend-lib/components/comment/comment-model';
+import { CommentVideo } from 'game-jolt-frontend-lib/components/comment/video/video-model';
+import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
+import { CustomMessage as CustomGameMessage, Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { GamePackagePayloadModel } from 'game-jolt-frontend-lib/components/game/package/package-payload.model';
 import { GameRating } from 'game-jolt-frontend-lib/components/game/rating/rating.model';
 import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
@@ -13,19 +16,8 @@ import { LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/
 import { Registry } from 'game-jolt-frontend-lib/components/registry/registry.service';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { objectPick } from 'game-jolt-frontend-lib/utils/object';
+import { NamespaceVuexStore, VuexModule, VuexMutation, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
 import { namespace } from 'vuex-class';
-import { Collaborator } from '../../../../../lib/gj-lib-client/components/collaborator/collaborator.model';
-import { Comment } from '../../../../../lib/gj-lib-client/components/comment/comment-model';
-import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
-import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
-import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
-import {
-	NamespaceVuexStore,
-	VuexModule,
-	VuexMutation,
-	VuexStore,
-} from '../../../../../lib/gj-lib-client/utils/vuex';
 import { store } from '../../../../store';
 import { router } from '../../../index';
 

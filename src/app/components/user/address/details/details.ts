@@ -1,12 +1,11 @@
+import { Geo } from 'game-jolt-frontend-lib/components/geo/geo.service';
+import { UserAddress } from 'game-jolt-frontend-lib/components/user/address/address.model';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./details.html';
-import { UserAddress } from '../../../../../lib/gj-lib-client/components/user/address/address.model';
-import { Geo } from '../../../../../lib/gj-lib-client/components/geo/geo.service';
 
-@View
+
 @Component({})
-export class AppUserAddressDetails extends Vue {
+export default class AppUserAddressDetails extends Vue {
 	@Prop(UserAddress) address!: UserAddress;
 
 	get country() {
@@ -17,9 +16,7 @@ export class AppUserAddressDetails extends Vue {
 
 	get region() {
 		if (this.address) {
-			return (
-				Geo.getRegionName(this.address.country, this.address.region) || this.address.region
-			);
+			return Geo.getRegionName(this.address.country, this.address.region) || this.address.region;
 		}
 	}
 }

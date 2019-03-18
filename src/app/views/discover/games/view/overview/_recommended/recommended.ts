@@ -1,19 +1,17 @@
-import View from '!view!./recommended.html?style=./recommended.styl';
 import { Ads } from 'game-jolt-frontend-lib/components/ad/ads.service';
-import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
+import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
 import { AppGameGrid } from '../../../../../../components/game/grid/grid';
-import { AppGameGridPlaceholder } from '../../../../../../components/game/grid/placeholder/placeholder';
-import { AppGameList } from '../../../../../../components/game/list/list';
-import { AppGameListPlaceholder } from '../../../../../../components/game/list/placeholder/placeholder';
+import AppGameGridPlaceholder from '../../../../../../components/game/grid/placeholder/placeholder.vue';
+import AppGameList from '../../../../../../components/game/list/list.vue';
+import AppGameListPlaceholder from '../../../../../../components/game/list/placeholder/placeholder.vue';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
 /** Number of games to show before inserting an ad. */
 const SplitIndex = 3;
 
-@View
 @Component({
 	components: {
 		AppGameGridPlaceholder,
@@ -23,7 +21,7 @@ const SplitIndex = 3;
 		AppAdWidget,
 	},
 })
-export class AppDiscoverGamesViewOverviewRecommended extends Vue {
+export default class AppDiscoverGamesViewOverviewRecommended extends Vue {
 	@RouteStoreModule.State
 	recommendedGames!: RouteStore['recommendedGames'];
 

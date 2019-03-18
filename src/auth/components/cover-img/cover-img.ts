@@ -1,12 +1,9 @@
+import { ImgHelper } from 'game-jolt-frontend-lib/components/img/helper/helper-service';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import View from '!view!./cover-img.html?style=./cover-img.styl';
 
-import { ImgHelper } from '../../../lib/gj-lib-client/components/img/helper/helper-service';
-
-@View
 @Component({})
-export class AppCoverImg extends Vue {
+export default class AppCoverImg extends Vue {
 	@Prop(String) imgUrl!: string;
 
 	isLoaded = false;

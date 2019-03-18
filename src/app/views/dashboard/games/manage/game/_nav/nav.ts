@@ -1,21 +1,19 @@
-import View from '!view!./nav.html?style=./nav.styl';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
-import { AppManageGameNavRequired } from './required';
+import AppManageGameNavRequired from './required.vue';
 
-@View
 @Component({
 	components: {
 		AppManageGameNavRequired,
 		AppGamePerms,
 	},
 })
-export class AppManageGameNav extends Vue {
+export default class AppManageGameNav extends Vue {
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
 

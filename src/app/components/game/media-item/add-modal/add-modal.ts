@@ -1,17 +1,15 @@
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GameScreenshot } from 'game-jolt-frontend-lib/components/game/screenshot/screenshot.model';
+import { GameSketchfab } from 'game-jolt-frontend-lib/components/game/sketchfab/sketchfab.model';
+import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
+import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
+import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./add-modal.html';
+import FormGameImage from '../../../forms/game/image/image.vue';
+import FormGameSketchfab from '../../../forms/game/sketchfab/sketchfab.vue';
+import FormGameVideo from '../../../forms/game/video/video.vue';
 
-import { BaseModal } from '../../../../../lib/gj-lib-client/components/modal/base';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { AppNavTabList } from '../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
-import { FormGameImage } from '../../../forms/game/image/image';
-import { FormGameVideo } from '../../../forms/game/video/video';
-import { FormGameSketchfab } from '../../../forms/game/sketchfab/sketchfab';
-import { GameScreenshot } from '../../../../../lib/gj-lib-client/components/game/screenshot/screenshot.model';
-import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/video/video.model';
-import { GameSketchfab } from '../../../../../lib/gj-lib-client/components/game/sketchfab/sketchfab.model';
 
-@View
 @Component({
 	components: {
 		AppNavTabList,

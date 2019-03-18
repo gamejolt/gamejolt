@@ -1,7 +1,7 @@
-import { CommentVideo } from '../../../../lib/gj-lib-client/components/comment/video/video-model';
-import { EventItem } from '../../../../lib/gj-lib-client/components/event-item/event-item.model';
-import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Notification } from '../../../../lib/gj-lib-client/components/notification/notification-model';
+import { CommentVideo } from 'game-jolt-frontend-lib/components/comment/video/video-model';
+import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';
 
 export type ActivityFeedInput = Notification | EventItem;
 

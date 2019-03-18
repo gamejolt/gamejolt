@@ -1,15 +1,13 @@
-import View from '!view!./widget.html';
-import { Component, Watch } from 'vue-property-decorator';
-import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Environment } from '../../../../../../../../../lib/gj-lib-client/components/environment/environment.service';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { Screen } from '../../../../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { Sellable } from '../../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { Sellable } from 'game-jolt-frontend-lib/components/sellable/sellable.model';
+import { Component, Watch } from 'vue-property-decorator';
 
-@View
 @Component({
 	name: 'RouteDashGamesManageGamePackagesEditWidget',
 })

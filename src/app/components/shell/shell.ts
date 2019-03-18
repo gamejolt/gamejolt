@@ -1,27 +1,26 @@
-import View from '!view!./shell.html';
+import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
 import { ContentFocus } from 'game-jolt-frontend-lib/components/content-focus/content-focus.service';
 import {
 	EventBus,
 	EventBusDeregister,
 } from 'game-jolt-frontend-lib/components/event-bus/event-bus.service';
+import AppGrowls from 'game-jolt-frontend-lib/components/growls/growls.vue';
+import AppLoadingBar from 'game-jolt-frontend-lib/components/loading/bar/bar.vue';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
+import AppMinbar from 'game-jolt-frontend-lib/components/minbar/minbar.vue';
+import AppModals from 'game-jolt-frontend-lib/components/modal/modals.vue';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { Connection } from '../../../lib/gj-lib-client/components/connection/connection-service';
-import { AppGrowls } from '../../../lib/gj-lib-client/components/growls/growls';
-import { AppLoadingBar } from '../../../lib/gj-lib-client/components/loading/bar/bar';
-import { AppMinbar } from '../../../lib/gj-lib-client/components/minbar/minbar';
-import { AppModals } from '../../../lib/gj-lib-client/components/modal/modals';
 import { BannerModule, BannerStore, Store } from '../../store/index';
 import { ChatNewMessageEvent } from '../chat/client';
-import { AppShellBody } from './body/body';
-import { AppShellCbar } from './cbar/cbar';
-import { AppShellHotBottom } from './hot-bottom/hot-bottom';
+import AppShellBody from './body/body.vue';
+import AppShellCbar from './cbar/cbar.vue';
+import AppShellHotBottom from './hot-bottom/hot-bottom.vue';
 import './shell.styl';
-import { AppShellSidebar } from './sidebar/sidebar';
-import { AppShellTopNav } from './top-nav/top-nav';
+import AppShellSidebar from './sidebar/sidebar.vue';
+import AppShellTopNav from './top-nav/top-nav.vue';
 
 let components: any = {
 	AppShellTopNav,
@@ -33,26 +32,23 @@ let components: any = {
 	AppGrowls,
 	AppModals,
 	AppLoadingBar,
-	AppShellBanner: () =>
-		import(/* webpackChunkName: "shell" */ './banner/banner').then(m => m.AppShellBanner),
-	AppShellChat: () =>
-		import(/* webpackChunkName: "chat" */ './chat/chat').then(m => m.AppShellChat),
+	AppShellBanner: () => import(/* webpackChunkName: "shell" */ './banner/banner.vue'),
+	AppShellChat: () => import(/* webpackChunkName: "chat" */ './chat/chat.vue'),
 };
 
 if (GJ_IS_CLIENT) {
 	components = {
 		...components,
-		...require('../../../_common/client/base/base'),
-		...require('./client/client'),
-		...require('../client/status-bar/status-bar'),
+		...require('../../../_common/client/base/base.vue'),
+		...require('./client/client.vue'),
+		...require('../client/status-bar/status-bar.vue'),
 	};
 }
 
-@View
 @Component({
 	components,
 })
-export class AppShell extends Vue {
+export default class AppShell extends Vue {
 	@State
 	app!: Store['app'];
 

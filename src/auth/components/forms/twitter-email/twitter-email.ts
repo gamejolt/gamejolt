@@ -1,11 +1,8 @@
-import { Component, Prop } from 'vue-property-decorator';
 import View from '!view!./twitter-email.html';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { BaseForm, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Component, Prop } from 'vue-property-decorator';
 
-import {
-	BaseForm,
-	FormOnSubmit,
-} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 
 @View
 @Component({})

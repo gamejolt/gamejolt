@@ -1,0 +1,17 @@
+<template>
+	<section class="section">
+		<div class="container" v-if="hasSearch">
+			<div class="row">
+				<div
+					class="-item col-sm-6 col-md-4 col-lg-3"
+					v-for="user of searchPayload.users"
+					:key="user.id"
+				>
+					<app-user-card :user="user" />
+				</div>
+			</div>
+		</div>
+	</section>
+</template>
+
+<script lang="ts" src="./users" />

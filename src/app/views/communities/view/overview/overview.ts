@@ -1,31 +1,27 @@
-import View from '!view!./overview.html?style=./overview.styl';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppScrollAffix } from 'game-jolt-frontend-lib/components/scroll/affix/affix';
-import { AppUserAvatarList } from 'game-jolt-frontend-lib/components/user/user-avatar/known/list';
+import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
+import AppUserAvatarList from 'game-jolt-frontend-lib/components/user/user-avatar/known/list.vue';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
-import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
-import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
-import { AppActivityFeed } from '../../../../components/activity/feed/feed';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
-import { AppActivityFeedNewButton } from '../../../../components/activity/feed/new-button/new-button';
-import { AppActivityFeedPlaceholder } from '../../../../components/activity/feed/placeholder/placeholder';
+import AppActivityFeed from '../../../../components/activity/feed/feed.vue';
+import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';
+import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
-import { AppPageContainer } from '../../../../components/page-container/page-container';
-import { AppPostAddButton } from '../../../../components/post/add-button/add-button';
+import AppPageContainer from '../../../../components/page-container/page-container.vue';
+import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
 import { Store } from '../../../../store/index';
-import { AppCommunitiesViewOverviewNav } from './_nav/nav';
+import AppCommunitiesViewOverviewNav from './_nav/nav.vue';
 
 function getChannel(route: Route) {
 	return route.params.channel || 'featured';
@@ -51,7 +47,6 @@ function getFetchUrl(route: Route) {
 	return url;
 }
 
-@View
 @Component({
 	name: 'RouteCommunitiesViewOverview',
 	components: {

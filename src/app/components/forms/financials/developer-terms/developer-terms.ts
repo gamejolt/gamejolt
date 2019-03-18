@@ -1,12 +1,11 @@
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { UserStripeManagedAccount } from 'game-jolt-frontend-lib/components/user/stripe-managed-account/stripe-managed-account';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { date } from 'game-jolt-frontend-lib/vue/filters/date';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./developer-terms.html';
-import { UserStripeManagedAccount } from '../../../../../lib/gj-lib-client/components/user/stripe-managed-account/stripe-managed-account';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 
-@View
+
 @Component({
 	components: {
 		AppJolticon,
@@ -18,7 +17,7 @@ import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 		date,
 	},
 })
-export class AppDeveloperTerms extends Vue {
+export default class AppDeveloperTerms extends Vue {
 	@Prop(UserStripeManagedAccount) account!: UserStripeManagedAccount;
 
 	checked = false;

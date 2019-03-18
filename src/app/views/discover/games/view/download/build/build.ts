@@ -1,32 +1,30 @@
-import View from '!view!./build.html';
-import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
-import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
-import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { GameBuild } from '../../../../../../../lib/gj-lib-client/components/game/build/build.model';
-import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
-import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
+import AppAdPlacement from 'game-jolt-frontend-lib/components/ad/placement/placement.vue';
+import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { HistoryTick } from 'game-jolt-frontend-lib/components/history-tick/history-tick-service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { AppSocialFacebookLike } from '../../../../../../../lib/gj-lib-client/components/social/facebook/like/like';
-import { AppSocialTwitterShare } from '../../../../../../../lib/gj-lib-client/components/social/twitter/share/share';
-import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { AppGameThumbnail } from '../../../../../../../_common/game/thumbnail/thumbnail';
-import { AppGameOgrs } from '../../../../../../components/game/ogrs/ogrs';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
+import { AppSocialFacebookLike } from 'game-jolt-frontend-lib/components/social/facebook/like/like';
+import { AppSocialTwitterShare } from 'game-jolt-frontend-lib/components/social/twitter/share/share';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
+import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import AppGameThumbnail from '../../../../../../../_common/game/thumbnail/thumbnail.vue';
+import AppGameOgrs from '../../../../../../components/game/ogrs/ogrs.vue';
 import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
 import { Store } from '../../../../../../store/index';
-import { AppDiscoverGamesViewOverviewDetails } from '../../overview/_details/details';
+import AppDiscoverGamesViewOverviewDetails from '../../overview/_details/details.vue';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
 const DownloadDelay = 3000;
 
-@View
 @Component({
 	name: 'RouteDiscoverGamesViewDownloadBuild',
 	components: {

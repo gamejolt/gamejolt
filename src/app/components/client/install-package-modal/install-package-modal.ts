@@ -1,20 +1,18 @@
-import View from '!view!./install-package-modal.html';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
+import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import AppGamePackageCard from 'game-jolt-frontend-lib/components/game/package/card/card.vue';
+import { GamePackagePayloadModel } from 'game-jolt-frontend-lib/components/game/package/package-payload.model';
+import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
+import { arrayIndexBy } from 'game-jolt-frontend-lib/utils/array';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
+import { filesize } from 'game-jolt-frontend-lib/vue/filters/filesize';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
-import { GameBuild } from '../../../../lib/gj-lib-client/components/game/build/build.model';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { AppGamePackageCard } from '../../../../lib/gj-lib-client/components/game/package/card/card';
-import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
-import { BaseModal } from '../../../../lib/gj-lib-client/components/modal/base';
-import { arrayIndexBy } from '../../../../lib/gj-lib-client/utils/array';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { filesize } from '../../../../lib/gj-lib-client/vue/filters/filesize';
 import { ClientLibraryAction, ClientLibraryStore } from '../../../store/client-library';
 
-@View
 @Component({
 	components: {
 		AppJolticon,

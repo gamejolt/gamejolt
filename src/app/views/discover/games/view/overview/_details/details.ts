@@ -1,14 +1,12 @@
-import View from '!view!./details.html?style=./details.styl';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { AppLazyPlaceholder } from 'game-jolt-frontend-lib/components/lazy/placeholder/placeholder';
+import { LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { date } from 'game-jolt-frontend-lib/vue/filters/date';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { AppLazyPlaceholder } from '../../../../../../../lib/gj-lib-client/components/lazy/placeholder/placeholder';
-import { LinkedAccount } from '../../../../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
-import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { date } from '../../../../../../../lib/gj-lib-client/vue/filters/date';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
-@View
 @Component({
 	components: {
 		AppLazyPlaceholder,
@@ -18,7 +16,7 @@ import { RouteStore, RouteStoreModule } from '../../view.store';
 		date,
 	},
 })
-export class AppDiscoverGamesViewOverviewDetails extends Vue {
+export default class AppDiscoverGamesViewOverviewDetails extends Vue {
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
 

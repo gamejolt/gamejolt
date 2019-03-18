@@ -1,45 +1,40 @@
-import View from '!view!./view.html';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
+import { ForumChannel } from 'game-jolt-frontend-lib/components/forum/channel/channel.model';
+import { ForumPost } from 'game-jolt-frontend-lib/components/forum/post/post.model';
+import { ForumTopic } from 'game-jolt-frontend-lib/components/forum/topic/topic.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { HistoryTick } from 'game-jolt-frontend-lib/components/history-tick/history-tick-service';
+import AppMessageThreadAdd from 'game-jolt-frontend-lib/components/message-thread/add/add.vue';
+import AppMessageThreadPagination from 'game-jolt-frontend-lib/components/message-thread/pagination/pagination.vue';
 import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
-import { AppUserCardHover } from 'game-jolt-frontend-lib/components/user/card/hover/hover';
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
+import { ReportModal } from 'game-jolt-frontend-lib/components/report/modal/modal.service';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
+import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
+import { AppScrollTo } from 'game-jolt-frontend-lib/components/scroll/to/to.directive';
+import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
+import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
+import { AppWidgetCompiler } from 'game-jolt-frontend-lib/components/widget-compiler/widget-compiler';
+import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
-import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
-import { ForumPost } from '../../../../../lib/gj-lib-client/components/forum/post/post.model';
-import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
-import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
-import { AppMessageThreadAdd } from '../../../../../lib/gj-lib-client/components/message-thread/add/add';
-import { AppMessageThreadPagination } from '../../../../../lib/gj-lib-client/components/message-thread/pagination/pagination';
-import { AppPopper } from '../../../../../lib/gj-lib-client/components/popper/popper';
-import { ReportModal } from '../../../../../lib/gj-lib-client/components/report/modal/modal.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppScrollAffix } from '../../../../../lib/gj-lib-client/components/scroll/affix/affix';
-import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { AppScrollTo } from '../../../../../lib/gj-lib-client/components/scroll/to/to.directive';
-import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { AppWidgetCompiler } from '../../../../../lib/gj-lib-client/components/widget-compiler/widget-compiler';
-import { enforceLocation } from '../../../../../lib/gj-lib-client/utils/router';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
-import { FormForumPost } from '../../../../components/forms/forum/post/post';
-import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
-import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/breadcrumbs';
-import { AppForumPostList } from '../../../../components/forum/post-list/post-list';
-import { AppForumTopicUpvoteWidget } from '../../../../components/forum/topic/upvote-widget/upvote-widget';
-import { AppPageHeaderControls } from '../../../../components/page-header/controls/controls';
-import { AppPageHeader } from '../../../../components/page-header/page-header';
+import FormForumPost from '../../../../components/forms/forum/post/post.vue';
+import FormForumTopic from '../../../../components/forms/forum/topic/topic.vue';
+import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
+import AppForumPostList from '../../../../components/forum/post-list/post-list.vue';
+import AppForumTopicUpvoteWidget from '../../../../components/forum/topic/upvote-widget/upvote-widget.vue';
+import AppPageHeaderControls from '../../../../components/page-header/controls/controls.vue';
+import AppPageHeader from '../../../../components/page-header/page-header.vue';
 import { Store } from '../../../../store/index';
 
-@View
 @Component({
 	name: 'RouteForumsTopicsView',
 	components: {
@@ -112,9 +107,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 	readonly Environment = Environment;
 
 	get loginUrl() {
-		return (
-			Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath)
-		);
+		return Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath);
 	}
 
 	get sort() {

@@ -1,6 +1,6 @@
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { LocationRedirect } from 'game-jolt-frontend-lib/utils/router';
 import { Route } from 'vue-router';
-import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
-import { LocationRedirect } from '../../../lib/gj-lib-client/utils/router';
 
 export interface Intent {
 	intent: string;

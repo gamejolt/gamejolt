@@ -1,23 +1,18 @@
-import View from '!view!./notification.html?style=./notification.styl';
+import 'game-jolt-frontend-lib/components/comment/comment.styl';
+import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
+import { Mention } from 'game-jolt-frontend-lib/components/mention/mention.model';
+import { getNotificationText, Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
+import AppTimelineListItem from 'game-jolt-frontend-lib/components/timeline-list/item/item.vue';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { AppUserCardHover } from 'game-jolt-frontend-lib/components/user/card/hover/hover';
-import { AppUserAvatar } from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar';
+import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
+import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
-import '../../../../../lib/gj-lib-client/components/comment/comment.styl';
-import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
-import { Mention } from '../../../../../lib/gj-lib-client/components/mention/mention.model';
-import {
-	getNotificationText,
-	Notification,
-} from '../../../../../lib/gj-lib-client/components/notification/notification-model';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
-import { AppTimelineListItem } from '../../../../../lib/gj-lib-client/components/timeline-list/item/item';
 import { ActivityFeedItem } from '../item-service';
 import { ActivityFeedView } from '../view';
 
-@View
 @Component({
 	components: {
 		AppTimelineListItem,
@@ -30,7 +25,7 @@ import { ActivityFeedView } from '../view';
 		AppTooltip,
 	},
 })
-export class AppActivityFeedNotification extends Vue {
+export default class AppActivityFeedNotification extends Vue {
 	@Inject()
 	feed!: ActivityFeedView;
 

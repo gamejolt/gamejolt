@@ -1,13 +1,12 @@
-import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./id-document.html';
-import { FormFinancialsManagedAccount } from './managed-account';
-import { CommonFormComponents } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
-import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
+import AppFormControlUploadTS from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload';
+import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
+import { CommonFormComponents } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import FormFinancialsManagedAccount from './managed-account';
 
-@View
 @Component({
 	components: {
 		...CommonFormComponents,
@@ -15,7 +14,7 @@ import Vue from 'vue';
 		AppFormControlUpload,
 	},
 })
-export class AppFinancialsManagedAccountIdDocument extends Vue {
+export default class AppFinancialsManagedAccountIdDocument extends Vue {
 	@Prop(String) namePrefix!: string;
 
 	parent: FormFinancialsManagedAccount = null as any;
@@ -28,7 +27,7 @@ export class AppFinancialsManagedAccountIdDocument extends Vue {
 			const formData = new FormData();
 			formData.append('purpose', 'identity_document');
 
-			const uploadComponent: AppFormControlUpload = this.$refs['document-input'] as any;
+			const uploadComponent: AppFormControlUploadTS = this.$refs['document-input'] as any;
 			formData.append('file', uploadComponent.files[0]!);
 
 			const xhr = new XMLHttpRequest();

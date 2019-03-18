@@ -1,22 +1,20 @@
-import View from '!view!./listing.html?style=./listing.styl';
-import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
+import { Ads } from 'game-jolt-frontend-lib/components/ad/ads.service';
+import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import AppLoadingFade from 'game-jolt-frontend-lib/components/loading/fade/fade.vue';
+import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
+import AppPagination from 'game-jolt-frontend-lib/components/pagination/pagination.vue';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive';
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading/fade/fade';
-import { AppNavTabList } from '../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
-import { AppPagination } from '../../../../lib/gj-lib-client/components/pagination/pagination';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { AppGameFilteringTags } from '../filtering/tags';
-import { AppGameFilteringWidget } from '../filtering/widget';
-import { AppGameGridPlaceholder } from '../grid/placeholder/placeholder';
+import AppGameFilteringTags from '../filtering/tags.vue';
+import AppGameFilteringWidget from '../filtering/widget.vue';
+import AppGameGridPlaceholder from '../grid/placeholder/placeholder.vue';
 import { GameListingContainer } from './listing-container-service';
 
-@View
 @Component({
 	components: {
 		AppAdWidget,
@@ -31,7 +29,7 @@ import { GameListingContainer } from './listing-container-service';
 		AppTrackEvent,
 	},
 })
-export class AppGameListing extends Vue {
+export default class AppGameListing extends Vue {
 	@Prop(Object)
 	listing!: GameListingContainer;
 	@Prop(Boolean)

@@ -1,9 +1,8 @@
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./compat-icons.html?style=./compat-icons.styl';
 
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 
 const compatMapping: any = {
 	os_windows: 'windows',
@@ -22,13 +21,12 @@ const compatMapping: any = {
 
 const compatFields = Object.keys(compatMapping);
 
-@View
 @Component({
 	components: {
 		AppJolticon,
 	},
 })
-export class AppGameCompatIcons extends Vue {
+export default class AppGameCompatIcons extends Vue {
 	@Prop(Object) game!: Game;
 
 	platforms: string[] = [];

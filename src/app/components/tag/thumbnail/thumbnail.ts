@@ -1,17 +1,15 @@
-import View from '!view!./thumbnail.html?style=./thumbnail.styl';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Location } from 'vue-router';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive';
 import { TagsInfo } from '../tags-info.service';
 
-@View
 @Component({
 	directives: {
 		AppTrackEvent,
 	},
 })
-export class AppTagThumbnail extends Vue {
+export default class AppTagThumbnail extends Vue {
 	@Prop(String)
 	tag!: string;
 
@@ -32,8 +30,7 @@ export class AppTagThumbnail extends Vue {
 
 	get active() {
 		return (
-			this.$route.name === 'discover.games.list._fetch-tag' &&
-			this.$route.params.tag === this.tag
+			this.$route.name === 'discover.games.list._fetch-tag' && this.$route.params.tag === this.tag
 		);
 	}
 }

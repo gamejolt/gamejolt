@@ -1,18 +1,16 @@
-import View from '!view!./game.html';
+import AppEditableOverlay from 'game-jolt-frontend-lib/components/editable-overlay/editable-overlay.vue';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
+import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component } from 'vue-property-decorator';
-import { AppEditableOverlay } from '../../../../../../lib/gj-lib-client/components/editable-overlay/editable-overlay';
-import { AppExpand } from '../../../../../../lib/gj-lib-client/components/expand/expand';
-import { Game } from '../../../../../../lib/gj-lib-client/components/game/game.model';
-import { AppNavTabList } from '../../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
-import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/components/route/route-component';
-import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppMediaItemCover } from '../../../../../../_common/media-item/cover/cover';
+import AppMediaItemCover from '../../../../../../_common/media-item/cover/cover.vue';
 import { GameHeaderModal } from '../../../../../components/game/header-modal/header-modal.service';
 import { RouteStore, RouteStoreModule } from '../manage.store';
-import { AppManageGameMediaBar } from './_media-bar/media-bar';
-import { AppManageGameNav } from './_nav/nav';
+import AppManageGameMediaBar from './_media-bar/media-bar.vue';
+import AppManageGameNav from './_nav/nav.vue';
 
-@View
 @Component({
 	name: 'RouteDashGamesManageGame',
 	components: {

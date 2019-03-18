@@ -1,5 +1,5 @@
+import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { Channel, Socket } from 'phoenix';
-import { Community } from '../../../lib/gj-lib-client/components/community/community.model';
 
 export class CommunityChannel extends Channel {
 	community: Community;

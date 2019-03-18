@@ -1,10 +1,8 @@
+import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./forgot.html';
+import FormRetrieveLogin from '../../../components/forms/retrieve-login/retrieve-login.vue';
 
-import { FormRetrieveLogin } from '../../../components/forms/retrieve-login/retrieve-login';
-import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 
-@View
 @Component({
 	name: 'RouteAuthForgot',
 	components: {

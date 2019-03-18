@@ -1,13 +1,11 @@
+import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
+import { AppThemeSvg } from 'game-jolt-frontend-lib/components/theme/svg/svg';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import View from '!view!./learn.html?style=./learn.styl';
-
-import { Store } from '../../../store/index';
-import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
 import { AppAuthJoinLazy } from '../../../components/lazy';
-import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
+import { Store } from '../../../store/index';
 
-@View
+
 @Component({
 	name: 'RouteLandingLearn',
 	components: {

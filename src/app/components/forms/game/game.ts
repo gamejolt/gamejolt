@@ -1,20 +1,14 @@
-import View from '!view!./game.html';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
+import { BaseForm, FormOnInit, FormOnLoad } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import {
-	BaseForm,
-	FormOnInit,
-	FormOnLoad,
-} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { Store } from '../../../store/index';
-import { AppGameDevStageSelector } from './dev-stage-selector/dev-stage-selector';
-import { AppDashGameWizardControls } from './wizard-controls/wizard-controls';
+import AppGameDevStageSelector from './dev-stage-selector/dev-stage-selector.vue';
+import AppDashGameWizardControls from './wizard-controls/wizard-controls.vue';
 
-@View
 @Component({
 	components: {
 		AppFormControlToggle,
@@ -26,7 +20,7 @@ import { AppDashGameWizardControls } from './wizard-controls/wizard-controls';
 		AppTooltip,
 	},
 })
-export class FormGame extends BaseForm<Game> implements FormOnInit, FormOnLoad {
+export default class FormGame extends BaseForm<Game> implements FormOnInit, FormOnLoad {
 	@State
 	app!: Store['app'];
 

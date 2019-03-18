@@ -1,5 +1,5 @@
-import { Modal } from '../../../../lib/gj-lib-client/components/modal/modal.service';
-import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils';
+import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
+import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
 
 export class UserHeaderModal {
 	static async show() {
@@ -7,7 +7,7 @@ export class UserHeaderModal {
 			modalId: 'UserHeader',
 			component: () =>
 				asyncComponentLoader(
-					import(/* webpackChunkName: "UserHeaderModal" */ './header-modal')
+					import(/* webpackChunkName: "UserHeaderModal" */ './header-modal.vue')
 				),
 			size: 'sm',
 		});

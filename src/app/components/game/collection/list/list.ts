@@ -1,13 +1,11 @@
-import View from '!view!./list.html?style=./list.styl';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive';
 import { Store } from '../../../../store/index';
 import { GameCollection } from '../collection.model';
-import { AppGameCollectionThumbnail } from '../thumbnail/thumbnail';
+import AppGameCollectionThumbnail from '../thumbnail/thumbnail.vue';
 
-@View
 @Component({
 	components: {
 		AppGameCollectionThumbnail,
@@ -16,7 +14,7 @@ import { AppGameCollectionThumbnail } from '../thumbnail/thumbnail';
 		AppTrackEvent,
 	},
 })
-export class AppGameCollectionList extends Vue {
+export default class AppGameCollectionList extends Vue {
 	@Prop(Array) collections!: GameCollection[];
 	@Prop(String) eventLabel?: string;
 

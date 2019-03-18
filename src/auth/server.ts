@@ -1,7 +1,7 @@
+import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import { createApp } from './bootstrap';
-import { Device } from '../lib/gj-lib-client/components/device/device.service';
-import { Meta } from '../lib/gj-lib-client/components/meta/meta-service';
-import { Environment } from '../lib/gj-lib-client/components/environment/environment.service';
 
 export default (context: any) => {
 	const { app, router } = createApp();

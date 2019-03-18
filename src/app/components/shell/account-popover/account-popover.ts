@@ -1,33 +1,27 @@
-import View from '!view!./account-popover.html?style=./account-popover.styl';
-import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
-import { AppUserAvatarImg } from 'game-jolt-frontend-lib/components/user/user-avatar/img/img';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { ThemeMutation, ThemeState, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import AppUserAvatarImg from 'game-jolt-frontend-lib/components/user/user-avatar/img/img.vue';
+import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
+import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import {
-	ThemeMutation,
-	ThemeState,
-	ThemeStore,
-} from '../../../../lib/gj-lib-client/components/theme/theme.store';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
-import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import * as _ClientMod from '../../../../_common/client/client.service';
 import { Settings } from '../../../../_common/settings/settings.service';
 import { Store } from '../../../store/index';
 import { UserTokenModal } from '../../user/token-modal/token-modal.service';
-import { AppShellUserBox } from '../user-box/user-box';
+import AppShellUserBox from '../user-box/user-box.vue';
 
 let ClientMod: typeof _ClientMod | undefined;
 if (GJ_IS_CLIENT) {
 	ClientMod = require('../../../../_common/client/client.service');
 }
 
-@View
 @Component({
 	components: {
 		AppPopper,
@@ -42,7 +36,7 @@ if (GJ_IS_CLIENT) {
 		currency,
 	},
 })
-export class AppShellAccountPopover extends Vue {
+export default class AppShellAccountPopover extends Vue {
 	@State
 	app!: AppStore;
 

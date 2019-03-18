@@ -1,11 +1,9 @@
-import View from '!view!./join-captcha.html';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
-import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
-import { AppGrecaptchaWidget } from '../../../components/grecaptcha/widget/widget';
+import AppGrecaptchaWidget from '../../../components/grecaptcha/widget/widget.vue';
 
-@View
 @Component({
 	name: 'RouteJoinCaptcha',
 	components: {

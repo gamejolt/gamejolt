@@ -1,16 +1,14 @@
-import View from '!view!./item.html?style=./item.styl';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import { AppCommunityThumbnailImg } from 'game-jolt-frontend-lib/components/community/thumbnail/img/img';
+import AppCommunityThumbnailImg from 'game-jolt-frontend-lib/components/community/thumbnail/img/img.vue'
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 
-@View
 @Component({
 	components: {
 		AppCommunityThumbnailImg,
 	},
 })
-export class AppCommunitySliderItem extends Vue {
+export default class AppCommunitySliderItem extends Vue {
 	@Prop(Community)
 	community!: Community;
 

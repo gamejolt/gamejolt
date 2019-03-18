@@ -1,8 +1,7 @@
-import View from '!view!./linking.html';
 import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
 import { AppProgressPoller } from 'game-jolt-frontend-lib/components/progress/poller/poller';
 import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
-import { AppLoading } from 'game-jolt-frontend-lib/vue/components/loading/loading';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
 import { Component } from 'vue-property-decorator';
 import * as _ClientMod from '../../../../_common/client/client.service';
 
@@ -11,7 +10,6 @@ if (GJ_IS_CLIENT) {
 	ClientMod = require('../../../../_common/client/client.service');
 }
 
-@View
 @Component({
 	name: 'RouteDashLinking',
 	components: {
@@ -27,7 +25,7 @@ export default class RouteDashLinking extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		this.token = this.$route.query.token;
+		this.token = this.$route.query.token as string;
 	}
 
 	completed(response: any) {

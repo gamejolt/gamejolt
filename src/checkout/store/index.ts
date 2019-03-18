@@ -1,15 +1,15 @@
-import { VuexStore, VuexModule } from '../../lib/gj-lib-client/utils/vuex';
-import {
-	AppStore,
-	Mutations as AppMutations,
-	Actions as AppActions,
-	appStore,
-} from '../../lib/gj-lib-client/vue/services/app/app-store';
 import {
 	ThemeActions,
 	ThemeMutations,
 	ThemeStore,
-} from '../../lib/gj-lib-client/components/theme/theme.store';
+} from 'game-jolt-frontend-lib/components/theme/theme.store';
+import { VuexModule, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
+import {
+	Actions as AppActions,
+	AppStore,
+	appStore,
+	Mutations as AppMutations,
+} from 'game-jolt-frontend-lib/vue/services/app/app-store';
 
 export type Actions = AppActions & ThemeActions & {};
 

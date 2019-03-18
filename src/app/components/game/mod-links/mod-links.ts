@@ -1,20 +1,18 @@
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./mod-links.html';
 
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
 
-@View
 @Component({
 	components: {
 		AppJolticon,
 	},
 })
-export class AppGameModLinks extends Vue {
+export default class AppGameModLinks extends Vue {
 	@Prop(Object) game!: Game;
 
 	Environment = Environment;

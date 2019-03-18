@@ -1,26 +1,18 @@
-import View from '!view!./list.html?style=./list.styl';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { LocationRedirect } from 'game-jolt-frontend-lib/utils/router';
+import { date } from 'game-jolt-frontend-lib/vue/filters/date';
 import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { Meta } from '../../../../../lib/gj-lib-client/components/meta/meta-service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { LocationRedirect } from '../../../../../lib/gj-lib-client/utils/router';
-import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
-import {
-	checkGameFilteringRoute,
-	GameFilteringContainer,
-} from '../../../../components/game/filtering/container';
+import { checkGameFilteringRoute, GameFilteringContainer } from '../../../../components/game/filtering/container';
 import { AppGameGrid } from '../../../../components/game/grid/grid';
-import { AppGameListing } from '../../../../components/game/listing/listing';
 import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
-import { AppPageHeader } from '../../../../components/page-header/page-header';
-import { AppTagList } from '../../../../components/tag/list/list';
+import AppGameListing from '../../../../components/game/listing/listing.vue';
+import AppPageHeader from '../../../../components/page-header/page-header.vue';
+import AppTagList from '../../../../components/tag/list/list.vue';
 import { TagsInfo } from '../../../../components/tag/tags-info.service';
 
-@View
 @Component({
 	name: 'RouteDiscoverGamesList',
 	components: {
@@ -93,13 +85,10 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		}
 
 		if (this.dateRange) {
-			return this.$gettextInterpolate(
-				'Games published between %{ dateStart } and %{ dateEnd }',
-				{
-					dateStart: this.dateRange[0],
-					dateEnd: this.dateRange[1],
-				}
-			);
+			return this.$gettextInterpolate('Games published between %{ dateStart } and %{ dateEnd }', {
+				dateStart: this.dateRange[0],
+				dateEnd: this.dateRange[1],
+			});
 		}
 
 		if (this.date) {

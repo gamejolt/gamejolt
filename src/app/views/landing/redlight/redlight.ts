@@ -1,10 +1,9 @@
-import View from '!view!./redlight.html?style=./redlight.styl';
+import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
+import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
+import { AppSocialFacebookLike } from 'game-jolt-frontend-lib/components/social/facebook/like/like';
+import { AppSocialTwitterShare } from 'game-jolt-frontend-lib/components/social/twitter/share/share';
+import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Component } from 'vue-property-decorator';
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
-import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
-import { AppSocialFacebookLike } from '../../../../lib/gj-lib-client/components/social/facebook/like/like';
-import { AppSocialTwitterShare } from '../../../../lib/gj-lib-client/components/social/twitter/share/share';
-import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 
 function getRandomInt(min: number, max: number) {
@@ -13,7 +12,6 @@ function getRandomInt(min: number, max: number) {
 	return Math.floor(Math.random() * (max - min)) + min;
 }
 
-@View
 @Component({
 	name: 'RouteLandingRedlight',
 	components: {

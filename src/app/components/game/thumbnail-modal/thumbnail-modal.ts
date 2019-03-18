@@ -1,11 +1,9 @@
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./thumbnail-modal.html';
+import FormGameThumbnail from '../../forms/game/thumbnail/thumbnail.vue';
 
-import { FormGameThumbnail } from '../../forms/game/thumbnail/thumbnail';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { BaseModal } from '../../../../lib/gj-lib-client/components/modal/base';
 
-@View
 @Component({
 	components: {
 		FormGameThumbnail,

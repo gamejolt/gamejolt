@@ -1,28 +1,25 @@
-import { Component } from 'vue-property-decorator';
-import View from '!view!./financials.html?style=./financials.styl';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
 import {
 	BaseForm,
-	FormOnSubmit,
-	FormOnLoad,
-} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { UserStripeManagedAccount } from '../../../../lib/gj-lib-client/components/user/stripe-managed-account/stripe-managed-account';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { ReferralEntry } from '../../../../lib/gj-lib-client/components/referral-entry/referral-entry.model';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
-import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
-import { AppPartnerTerms } from './partner-terms/partner-terms';
-import { AppDeveloperTerms } from './developer-terms/developer-terms';
-import { FormFinancialsManagedAccount } from './managed-account/managed-account';
-import {
-	FormOnSubmitError,
 	FormOnInit,
-} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { AppForm } from '../../../../lib/gj-lib-client/components/form-vue/form';
-import { Navigate } from '../../../../lib/gj-lib-client/components/navigate/navigate.service';
+	FormOnLoad,
+	FormOnSubmit,
+	FormOnSubmitError,
+} from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
+import { ReferralEntry } from 'game-jolt-frontend-lib/components/referral-entry/referral-entry.model';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { UserStripeManagedAccount } from 'game-jolt-frontend-lib/components/user/stripe-managed-account/stripe-managed-account';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
+import { Component } from 'vue-property-decorator';
+import AppDeveloperTerms from './developer-terms/developer-terms.vue';
+import FormFinancialsManagedAccount from './managed-account/managed-account.vue';
+import AppPartnerTerms from './partner-terms/partner-terms.vue';
 
 interface FormModel {
 	tos_type?: 'partner' | 'developer';
@@ -31,7 +28,6 @@ interface FormModel {
 	percentage_split: number;
 }
 
-@View
 @Component({
 	components: {
 		AppExpand,
@@ -47,7 +43,7 @@ interface FormModel {
 		currency,
 	},
 })
-export class FormFinancials extends BaseForm<FormModel>
+export default class FormFinancials extends BaseForm<FormModel>
 	implements FormOnInit, FormOnSubmit, FormOnLoad, FormOnSubmitError {
 	resetOnSubmit = true;
 	reloadOnSubmit = true;

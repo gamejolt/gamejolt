@@ -1,34 +1,24 @@
-import View from '!view!./package-card-buttons.html?style=./package-card-buttons.styl';
 import * as fs from 'fs';
-import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GamePackageCardModel } from 'game-jolt-frontend-lib/components/game/package/card/card.model';
+import AppGamePackageCardMoreOptions from 'game-jolt-frontend-lib/components/game/package/card/more-options.vue';
+import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
 import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { filesize } from 'game-jolt-frontend-lib/vue/filters/filesize';
 import * as path from 'path';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive';
-import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
-import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
-import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { GamePackageCardModel } from '../../../../../lib/gj-lib-client/components/game/package/card/card.model';
-import { AppGamePackageCardMoreOptions } from '../../../../../lib/gj-lib-client/components/game/package/card/more-options';
-import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { filesize } from '../../../../../lib/gj-lib-client/vue/filters/filesize';
-import {
-	ClientLibraryAction,
-	ClientLibraryState,
-	ClientLibraryStore,
-} from '../../../../store/client-library';
-import { AppClientInstallProgress } from '../../install-progress/install-progress';
-import {
-	LocalDbPackage,
-	LocalDbPackagePatchState,
-	LocalDbPackageRemoveState,
-} from '../../local-db/package/package.model';
+import { ClientLibraryAction, ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
+import AppClientInstallProgress from '../../install-progress/install-progress.vue';
+import { LocalDbPackage, LocalDbPackagePatchState, LocalDbPackageRemoveState } from '../../local-db/package/package.model';
 
-@View
 @Component({
 	components: {
 		AppExpand,
@@ -44,7 +34,7 @@ import {
 		filesize,
 	},
 })
-export class AppClientPackageCardButtons extends Vue {
+export default class AppClientPackageCardButtons extends Vue {
 	@ClientLibraryState
 	packagesById!: ClientLibraryStore['packagesById'];
 

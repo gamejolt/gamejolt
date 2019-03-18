@@ -1,4 +1,3 @@
-import View from '!view!./notifications.html';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { HistoryCache } from 'game-jolt-frontend-lib/components/history/cache/cache.service';
 import { Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';
@@ -8,15 +7,14 @@ import {
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component, Watch } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
-import { AppActivityFeed } from '../../components/activity/feed/feed';
+import AppActivityFeed from '../../components/activity/feed/feed.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import { AppActivityFeedPlaceholder } from '../../components/activity/feed/placeholder/placeholder';
+import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import { Store, store } from '../../store';
 
 const HistoryCacheFeedTag = 'notifications-feed';
 
-@View
 @Component({
 	name: 'RouteNotifications',
 	components: {

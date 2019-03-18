@@ -1,40 +1,38 @@
-import View from '!view!./event-item.html?style=./event-item.styl';
+import { CommentVideoModal } from 'game-jolt-frontend-lib/components/comment/video/modal/modal.service';
+import { CommentVideo } from 'game-jolt-frontend-lib/components/comment/video/video-model';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import { AppCommunityPill } from 'game-jolt-frontend-lib/components/community/pill/pill';
+import AppCommunityPill from 'game-jolt-frontend-lib/components/community/pill/pill.vue';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
+import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
+import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
-import { AppUserFollowWidget } from 'game-jolt-frontend-lib/components/user/follow-widget/follow-widget';
-import { AppUserAvatar } from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
+import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow-widget/follow-widget.vue';
+import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
 import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { CommentVideoModal } from '../../../../../lib/gj-lib-client/components/comment/video/modal/modal.service';
-import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
-import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
-import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppUserCardHover } from '../../../../../lib/gj-lib-client/components/user/card/hover/hover';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { Store } from '../../../../store';
-import { AppEventItemControls } from '../../../event-item/controls/controls';
-import { AppFiresidePostManage } from '../../../fireside/post/manage/manage';
-import { AppPollVoting } from '../../../poll/voting/voting';
-import { AppActivityFeedCommentVideo } from '../comment-video/comment-video';
-import { AppActivityFeedDevlogPostMedia } from '../devlog-post/media/media';
-import { AppActivityFeedDevlogPostSketchfab } from '../devlog-post/sketchfab/sketchfab';
-import { AppActivityFeedDevlogPostText } from '../devlog-post/text/text';
-import { AppActivityFeedDevlogPostVideo } from '../devlog-post/video/video';
-import { AppActivityFeed } from '../feed';
+import AppEventItemControls from '../../../event-item/controls/controls.vue';
+import AppFiresidePostManage from '../../../fireside/post/manage/manage.vue';
+import AppPollVoting from '../../../poll/voting/voting.vue';
+import AppActivityFeedCommentVideo from '../comment-video/comment-video.vue';
+import AppActivityFeedDevlogPostMedia from '../devlog-post/media/media.vue';
+import AppActivityFeedDevlogPostSketchfab from '../devlog-post/sketchfab/sketchfab.vue';
+import AppActivityFeedDevlogPostText from '../devlog-post/text/text.vue';
+import AppActivityFeedDevlogPostVideo from '../devlog-post/video/video.vue';
+import AppActivityFeed from '../feed';
 import { ActivityFeedItem } from '../item-service';
 import { ActivityFeedView } from '../view';
-import { AppActivityFeedEventItemTime } from './time/time';
+import AppActivityFeedEventItemTime from './time/time.vue';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
-@View
 @Component({
 	components: {
 		AppActivityFeedEventItemTime,
@@ -56,7 +54,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		number,
 	},
 })
-export class AppActivityFeedEventItem extends Vue {
+export default class AppActivityFeedEventItem extends Vue {
 	@Inject()
 	feed!: ActivityFeedView;
 

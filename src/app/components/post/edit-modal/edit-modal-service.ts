@@ -14,7 +14,7 @@ export class PostEditModal {
 			modalId: 'PostEdit',
 			component: () =>
 				asyncComponentLoader(
-					import(/* webpackChunkName: "PostEditModal" */ './edit-modal')
+					import(/* webpackChunkName: "PostEditModal" */ './edit-modal.vue')
 				),
 			noBackdropClose: true,
 			noEscClose: true,

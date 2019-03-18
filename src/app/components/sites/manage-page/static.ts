@@ -1,15 +1,13 @@
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { SiteBuild } from 'game-jolt-frontend-lib/components/site/build/build-model';
+import { Site } from 'game-jolt-frontend-lib/components/site/site-model';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./static.html';
+import FormDashSiteBuild from '../../forms/site/build/build.vue';
 
-import { Site } from '../../../../lib/gj-lib-client/components/site/site-model';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { FormDashSiteBuild } from '../../forms/site/build/build';
-import { SiteBuild } from '../../../../lib/gj-lib-client/components/site/build/build-model';
 
-@View
 @Component({
 	components: {
 		FormDashSiteBuild,
@@ -18,7 +16,7 @@ import { SiteBuild } from '../../../../lib/gj-lib-client/components/site/build/b
 		AppTooltip,
 	},
 })
-export class AppSitesManagePageStatic extends Vue {
+export default class AppSitesManagePageStatic extends Vue {
 	@Prop(Site) site?: Site;
 	@Prop(Boolean) enabled?: boolean;
 	@Prop(Boolean) templateEnabled?: boolean;

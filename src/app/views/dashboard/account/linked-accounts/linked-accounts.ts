@@ -1,27 +1,17 @@
-import View from '!view!./linked-accounts.html';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { getLinkedAccountProviderDisplayName, LinkedAccount, Provider, TumblrBlog } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
+import AppLinkedAccount from 'game-jolt-frontend-lib/components/linked-account/linked-account.vue';
+import { LinkedAccounts } from 'game-jolt-frontend-lib/components/linked-account/linked-accounts.service';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { YoutubeChannel } from 'game-jolt-frontend-lib/components/youtube/channel/channel-model';
+import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { AppLinkedAccount } from '../../../../../lib/gj-lib-client/components/linked-account/linked-account';
-import {
-	getLinkedAccountProviderDisplayName,
-	LinkedAccount,
-	Provider,
-	TumblrBlog,
-} from '../../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
-import { LinkedAccounts } from '../../../../../lib/gj-lib-client/components/linked-account/linked-accounts.service';
-import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
-import { YoutubeChannel } from '../../../../../lib/gj-lib-client/components/youtube/channel/channel-model';
-import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { UserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
-@View
 @Component({
 	name: 'RouteDashAccountLinkedAccounts',
 	components: {
@@ -92,12 +82,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 
 	async onLink(provider: Provider) {
 		this.loading = true;
-		await LinkedAccounts.link(
-			this.$router,
-			provider,
-			'/web/dash/linked-accounts/link/',
-			'User'
-		);
+		await LinkedAccounts.link(this.$router, provider, '/web/dash/linked-accounts/link/', 'User');
 	}
 
 	async onUnlink(provider: Provider) {
@@ -176,10 +161,9 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 			this.channels = YoutubeChannel.populate(payload.channels);
 		} else {
 			Growls.error(
-				this.$gettextInterpolate(
-					'Failed to remove YouTube channel %{ title } form Game Jolt.',
-					{ title: channel.title }
-				)
+				this.$gettextInterpolate('Failed to remove YouTube channel %{ title } form Game Jolt.', {
+					title: channel.title,
+				})
 			);
 		}
 	}
@@ -213,9 +197,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 			);
 		} else {
 			Growls.error(
-				this.$gettext(
-					'Failed to change to new Tumblr blog. Maybe try to sync your Tumblr account.'
-				)
+				this.$gettext('Failed to change to new Tumblr blog. Maybe try to sync your Tumblr account.')
 			);
 		}
 
@@ -232,9 +214,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 		const tempBlogTitle = this.tumblrAccount.tumblrSelectedBlog.title;
 
 		const payload = await Api.sendRequest(
-			'/web/dash/linked-accounts/unlink-tumblr-blog/' +
-				this.tumblrAccount.id +
-				'?resource=User'
+			'/web/dash/linked-accounts/unlink-tumblr-blog/' + this.tumblrAccount.id + '?resource=User'
 		);
 
 		if (payload.success) {

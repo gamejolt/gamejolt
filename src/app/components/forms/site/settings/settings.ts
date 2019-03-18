@@ -1,11 +1,9 @@
+import { BaseForm } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Site } from 'game-jolt-frontend-lib/components/site/site-model';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./settings.html';
 
-import { BaseForm } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Site } from '../../../../../lib/gj-lib-client/components/site/site-model';
 
-@View
 @Component({})
-export class FormSiteSettings extends BaseForm<Site> {
+export default class FormSiteSettings extends BaseForm<Site> {
 	modelClass = Site;
 }

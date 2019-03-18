@@ -1,6 +1,6 @@
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
 import { LocalDbModel } from '../model.service';
-import { MediaItem } from '../../../../../lib/gj-lib-client/components/media-item/media-item-model';
 
 export class LocalDbGame extends LocalDbModel<LocalDbGame> {
 	private static readonly CachedGames = new WeakMap<LocalDbGame, Game>();

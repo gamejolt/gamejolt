@@ -1,0 +1,18 @@
+<template>
+	<div class="game-thumbnail-placeholder">
+		<div class="placeholder-thumb"></div>
+
+		<div class="placeholder-meta">
+			<div class="placeholder-avatar"></div>
+			<div class="placeholder-dev"></div>
+			<div class="placeholder-title"></div>
+			<div class="placeholder-meta-extra">
+				<div class="placeholder-tags"></div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<style src="./placeholder.styl" scoped />
+
+<script lang="ts" src="./placeholder" />

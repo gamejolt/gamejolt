@@ -1,14 +1,12 @@
+import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
+import AppErrorPage from 'game-jolt-frontend-lib/components/error/page/page.vue';
+import AppGrowls from 'game-jolt-frontend-lib/components/growls/growls.vue';
+import AppLoadingBar from 'game-jolt-frontend-lib/components/loading/bar/bar.vue';
+import { AppTheme } from 'game-jolt-frontend-lib/components/theme/theme';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./app.html';
-
-import { AppGrowls } from '../lib/gj-lib-client/components/growls/growls';
-import { Connection } from '../lib/gj-lib-client/components/connection/connection-service';
-import { AppLoadingBar } from '../lib/gj-lib-client/components/loading/bar/bar';
-import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
 import { loadCurrentLanguage } from '../utils/translations';
-import { AppTheme } from '../lib/gj-lib-client/components/theme/theme';
-import { AppCookieBanner } from '../_common/cookie/banner/banner';
+import AppCookieBanner from '../_common/cookie/banner/banner.vue';
 
 let components: any = {
 	AppTheme,
@@ -21,15 +19,14 @@ let components: any = {
 if (GJ_IS_CLIENT) {
 	components = {
 		...components,
-		...require('../_common/client/base/base'),
+		...require('../_common/client/base/base.vue'),
 	};
 }
 
-@View
 @Component({
 	components,
 })
-export class App extends Vue {
+export default class App extends Vue {
 	readonly Connection = Connection;
 
 	mounted() {

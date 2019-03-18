@@ -1,6 +1,5 @@
-import View from '!view!./withdraw-funds.html';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { AppExpand } from 'game-jolt-frontend-lib/components/expand/expand';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue'
 import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
 import {
 	BaseRouteComponent,
@@ -13,10 +12,9 @@ import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
-import { FormWithdrawFunds } from '../../../../components/forms/withdraw-funds/withdraw-funds';
+import FormWithdrawFunds from '../../../../components/forms/withdraw-funds/withdraw-funds.vue';
 import { routeStore, RouteStore, RouteStoreModule } from '../account.store';
 
-@View
 @Component({
 	name: 'RouteDashAccountWithdrawFunds',
 	components: {

@@ -1,13 +1,9 @@
-import View from '!view!./system-report-form.html';
 import { IClientOSInfo } from 'client-voodoo';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { BaseForm, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { Component } from 'vue-property-decorator';
-
 import { ClientLogger } from '../../../../_common/client/logger/logger.service';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import {
-	BaseForm,
-	FormOnSubmit,
-} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
+
 
 interface FormModel {
 	description: string;
@@ -15,9 +11,8 @@ interface FormModel {
 	os_info: IClientOSInfo;
 }
 
-@View
 @Component({})
-export class FormClientSystemReport extends BaseForm<FormModel> implements FormOnSubmit {
+export default class FormClientSystemReport extends BaseForm<FormModel> implements FormOnSubmit {
 	onSubmit() {
 		const log = ClientLogger.getLogInfo();
 

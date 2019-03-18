@@ -1,23 +1,18 @@
-import View from '!view!./game.html?style=./game.styl';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
+import { GameBundle } from 'game-jolt-frontend-lib/components/game-bundle/game-bundle.model';
+import { CustomMessage as CustomGameMessage, Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import AppGamePackageCard from 'game-jolt-frontend-lib/components/game/package/card/card.vue';
+import { GamePackagePayloadModel } from 'game-jolt-frontend-lib/components/game/package/package-payload.model';
+import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
 import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppFadeCollapse } from '../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
-import { GameBundle } from '../../../../lib/gj-lib-client/components/game-bundle/game-bundle.model';
-import {
-	CustomMessage as CustomGameMessage,
-	Game,
-} from '../../../../lib/gj-lib-client/components/game/game.model';
-import { AppGamePackageCard } from '../../../../lib/gj-lib-client/components/game/package/card/card';
-import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
-import { KeyGroup } from '../../../../lib/gj-lib-client/components/key-group/key-group.model';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppMediaItemCover } from '../../../../_common/media-item/cover/cover';
+import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
 import { Store } from '../../../store/index';
 
-@View
 @Component({
 	components: {
 		AppJolticon,
@@ -26,7 +21,7 @@ import { Store } from '../../../store/index';
 		AppMediaItemCover,
 	},
 })
-export class AppKeyGame extends Vue {
+export default class AppKeyGame extends Vue {
 	@Prop()
 	payload!: any;
 

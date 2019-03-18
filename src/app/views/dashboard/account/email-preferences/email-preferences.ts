@@ -1,17 +1,12 @@
-import View from '!view!./email-preferences.html';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
-import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
-import { FormEmailPreferences } from '../../../../components/forms/email-preferences/email-preferences';
+import FormEmailPreferences from '../../../../components/forms/email-preferences/email-preferences.vue';
 import { IntentService } from '../../../../components/intent/intent.service';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
-@View
 @Component({
 	name: 'RouteDashAccountEmailPreferences',
 	components: {

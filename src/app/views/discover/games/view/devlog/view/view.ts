@@ -1,4 +1,5 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { CommentThreadModal } from 'game-jolt-frontend-lib/components/comment/thread/modal.service';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import { Registry } from 'game-jolt-frontend-lib/components/registry/registry.service';
@@ -10,9 +11,8 @@ import { Translate } from 'game-jolt-frontend-lib/components/translate/translate
 import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
 import { Component } from 'vue-property-decorator';
 import { CreateElement } from 'vue/types/vue';
-import { CommentThreadModal } from '../../../../../../../lib/gj-lib-client/components/comment/thread/modal.service';
 import { IntentService } from '../../../../../../components/intent/intent.service';
-import { AppPostView } from '../../../../../../components/post/view/view';
+import AppPostView from '../../../../../../components/post/view/view.vue';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
 @Component({

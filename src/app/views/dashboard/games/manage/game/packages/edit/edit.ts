@@ -1,32 +1,30 @@
-import View from '!view!./edit.html';
-import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppCard } from '../../../../../../../../lib/gj-lib-client/components/card/card';
-import { AppExpand } from '../../../../../../../../lib/gj-lib-client/components/expand/expand';
-import { AppGamePackageCard } from '../../../../../../../../lib/gj-lib-client/components/game/package/card/card';
-import { GamePackagePayloadModel } from '../../../../../../../../lib/gj-lib-client/components/game/package/package-payload.model';
-import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { GameRelease } from '../../../../../../../../lib/gj-lib-client/components/game/release/release.model';
-import { Growls } from '../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { AppNavTabList } from '../../../../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
-import { AppProgressPoller } from '../../../../../../../../lib/gj-lib-client/components/progress/poller/poller';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import AppCard from 'game-jolt-frontend-lib/components/card/card.vue';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import AppGamePackageCard from 'game-jolt-frontend-lib/components/game/package/card/card.vue';
+import { GamePackagePayloadModel } from 'game-jolt-frontend-lib/components/game/package/package-payload.model';
+import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
+import { GameRelease } from 'game-jolt-frontend-lib/components/game/release/release.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
+import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
+import { AppProgressPoller } from 'game-jolt-frontend-lib/components/progress/poller/poller';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { Sellable } from '../../../../../../../../lib/gj-lib-client/components/sellable/sellable.model';
-import { AppTimeAgo } from '../../../../../../../../lib/gj-lib-client/components/time/ago/ago';
-import { AppTooltip } from '../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppLoading } from '../../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { number } from '../../../../../../../../lib/gj-lib-client/vue/filters/number';
-import { FormGamePackage } from '../../../../../../../components/forms/game/package/package';
-import { AppDashGameWizardControls } from '../../../../../../../components/forms/game/wizard-controls/wizard-controls';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Sellable } from 'game-jolt-frontend-lib/components/sellable/sellable.model';
+import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Component } from 'vue-property-decorator';
+import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
+import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
 import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import { RouteStore, RouteStoreModule } from '../../../manage.store';
 
-@View
 @Component({
 	name: 'RouteDashGamesManageGamePackagesEdit',
 	components: {

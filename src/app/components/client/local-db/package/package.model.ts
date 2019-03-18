@@ -1,10 +1,10 @@
 import { IParsedWrapper } from 'client-voodoo';
-import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
-import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { GameRelease } from '../../../../../lib/gj-lib-client/components/game/release/release.model';
-import { GameBuildLaunchOption } from '../../../../../lib/gj-lib-client/components/game/build/launch-option/launch-option.model';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { Device } from '../../../../../lib/gj-lib-client/components/device/device.service';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
+import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
+import { GameBuildLaunchOption } from 'game-jolt-frontend-lib/components/game/build/launch-option/launch-option.model';
+import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
+import { GameRelease } from 'game-jolt-frontend-lib/components/game/release/release.model';
 import { LocalDbModel } from '../model.service';
 
 export type LocalDbPackagePid = string | IParsedWrapper;

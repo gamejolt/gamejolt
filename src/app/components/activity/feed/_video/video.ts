@@ -1,12 +1,10 @@
-import View from '!view!./video.html?style=./video.styl';
+import { AppResponsiveDimensions } from 'game-jolt-frontend-lib/components/responsive-dimensions/responsive-dimensions';
+import AppVideoEmbed from 'game-jolt-frontend-lib/components/video/embed/embed.vue';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
-import { AppResponsiveDimensions } from '../../../../../lib/gj-lib-client/components/responsive-dimensions/responsive-dimensions';
-import { AppVideoEmbed } from '../../../../../lib/gj-lib-client/components/video/embed/embed';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { ActivityFeedView } from '../view';
 
-@View
 @Component({
 	components: {
 		AppJolticon,
@@ -14,7 +12,7 @@ import { ActivityFeedView } from '../view';
 		AppResponsiveDimensions,
 	},
 })
-export class AppActivityFeedVideo extends Vue {
+export default class AppActivityFeedVideo extends Vue {
 	@Inject()
 	feed!: ActivityFeedView;
 

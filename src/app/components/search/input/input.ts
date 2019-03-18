@@ -1,18 +1,15 @@
+import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./input.html?style=./input.styl';
+import AppSearch from '../search';
 
-import { findRequiredVueParent } from '../../../../lib/gj-lib-client/utils/vue';
-import { AppSearch } from '../search';
-
-@View
 @Component({})
-export class AppSearchInput extends Vue {
+export default class AppSearchInput extends Vue {
 	@Prop(String) value!: string;
 
 	mounted() {
 		const search = findRequiredVueParent(this, AppSearch);
-		search.inputElem = this.$el;
+		search.inputElem = this.$el as HTMLElement;
 	}
 
 	onChange(val: string) {

@@ -1,22 +1,20 @@
-import View from '!view!./list.html';
-import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppCardListAdd } from '../../../../../../../../lib/gj-lib-client/components/card/list/add/add';
-import { AppCardListDraggable } from '../../../../../../../../lib/gj-lib-client/components/card/list/draggable/draggable';
-import { AppCardListItem } from '../../../../../../../../lib/gj-lib-client/components/card/list/item/item';
-import { AppCardList } from '../../../../../../../../lib/gj-lib-client/components/card/list/list';
-import { GameScoreTable } from '../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import AppCardListAdd from 'game-jolt-frontend-lib/components/card/list/add/add.vue';
+import AppCardListDraggable from 'game-jolt-frontend-lib/components/card/list/draggable/draggable.vue';
+import AppCardListItem from 'game-jolt-frontend-lib/components/card/list/item/item.vue';
+import AppCardList from 'game-jolt-frontend-lib/components/card/list/list.vue';
+import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { AppTooltip } from '../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppJolticon } from '../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { FormGameScoreTable } from '../../../../../../../components/forms/game/score-table/score-table';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { Component } from 'vue-property-decorator';
+import FormGameScoreTable from '../../../../../../../components/forms/game/score-table/score-table.vue';
 import { RouteStore, RouteStoreModule } from '../../../manage.store';
 
-@View
 @Component({
 	name: 'RouteDashGamesManageApiScoreboardsList',
 	components: {

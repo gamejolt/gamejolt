@@ -1,5 +1,5 @@
-import { Modal } from '../../../../lib/gj-lib-client/components/modal/modal.service';
-import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils';
+import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
+import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
 import { GameCollection } from '../../game/collection/collection.model';
 
 export class GamePlaylistSaveModal {
@@ -8,7 +8,7 @@ export class GamePlaylistSaveModal {
 			modalId: 'GamePlaylistSave',
 			component: () =>
 				asyncComponentLoader(
-					import(/* webpackChunkName: "GamePlaylistSaveModal" */ './save-modal')
+					import(/* webpackChunkName: "GamePlaylistSaveModal" */ './save-modal.vue')
 				),
 			props: { collection },
 			size: 'sm',

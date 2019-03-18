@@ -1,20 +1,18 @@
+import AppCard from 'game-jolt-frontend-lib/components/card/card.vue';
+import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
+import { Site } from 'game-jolt-frontend-lib/components/site/site-model';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./link-card.html';
 
-import { Site } from '../../../../lib/gj-lib-client/components/site/site-model';
-import { Clipboard } from '../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
-import { AppCard } from '../../../../lib/gj-lib-client/components/card/card';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 
-@View
 @Component({
 	components: {
 		AppCard,
 		AppJolticon,
 	},
 })
-export class AppSitesLinkCard extends Vue {
+export default class AppSitesLinkCard extends Vue {
 	@Prop(Object) site!: Site;
 
 	copyLink() {

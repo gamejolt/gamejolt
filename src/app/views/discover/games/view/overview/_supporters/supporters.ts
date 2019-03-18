@@ -1,14 +1,12 @@
-import View from '!view!./supporters.html?style=./supporters.styl';
-import { AppUserCardHover } from 'game-jolt-frontend-lib/components/user/card/hover/hover';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
+import AppUserAvatarImg from 'game-jolt-frontend-lib/components/user/user-avatar/img/img.vue';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppUserAvatarImg } from '../../../../../../../lib/gj-lib-client/components/user/user-avatar/img/img';
-import { User } from '../../../../../../../lib/gj-lib-client/components/user/user.model';
 import { GameSupportersModal } from '../../../../../../components/game/supporters/modal/modal.service';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
-@View
 @Component({
 	components: {
 		AppUserAvatarImg,
@@ -18,7 +16,7 @@ import { RouteStore, RouteStoreModule } from '../../view.store';
 		AppTooltip,
 	},
 })
-export class AppDiscoverGamesViewOverviewSupporters extends Vue {
+export default class AppDiscoverGamesViewOverviewSupporters extends Vue {
 	@Prop(Array)
 	supporters!: User[];
 

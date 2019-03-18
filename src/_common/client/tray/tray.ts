@@ -1,11 +1,10 @@
+import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue, { CreateElement } from 'vue';
-import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-
+import { State } from 'vuex-class';
 import { Client } from '../client.service';
-import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
-import { Navigate } from '../../../lib/gj-lib-client/components/navigate/navigate.service';
 
 @Component({})
 export class AppClientTray extends Vue {

@@ -1,21 +1,16 @@
-import View from '!view!./soundtrack.html';
-import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
+import AppAdPlacement from 'game-jolt-frontend-lib/components/ad/placement/placement.vue';
+import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
+import { GameSong } from 'game-jolt-frontend-lib/components/game/song/song.model';
+import { HistoryTick } from 'game-jolt-frontend-lib/components/history-tick/history-tick-service';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
 import { Component } from 'vue-property-decorator';
-import { AppAdPlacement } from '../../../../../../../lib/gj-lib-client/components/ad/placement/placement';
-import { GameSong } from '../../../../../../../lib/gj-lib-client/components/game/song/song.model';
-import { HistoryTick } from '../../../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { AppLoading } from '../../../../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
 const DownloadDelay = 3000;
 
-@View
 @Component({
 	name: 'RouteDiscoverGamesViewDownloadSoundtrack',
 	components: {

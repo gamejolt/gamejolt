@@ -1,18 +1,15 @@
-import View from '!view!./install-progress.html';
+import AppProgressBar from 'game-jolt-frontend-lib/components/progress/bar/bar.vue';
+import { duration } from 'game-jolt-frontend-lib/vue/filters/duration';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
-import { AppProgressBar } from '../../../../lib/gj-lib-client/components/progress/bar/bar';
-import { duration } from '../../../../lib/gj-lib-client/vue/filters/duration';
 import { LocalDbPackage, LocalDbPackagePatchState } from '../local-db/package/package.model';
 
-@View
 @Component({
 	components: {
 		AppProgressBar,
 	},
 })
-export class AppClientInstallProgress extends Vue {
+export default class AppClientInstallProgress extends Vue {
 	@Prop(LocalDbPackage) localPackage!: LocalDbPackage;
 
 	get patchState() {

@@ -1,18 +1,16 @@
+import { ForumCategory } from 'game-jolt-frontend-lib/components/forum/category/category.model';
+import { ForumChannel } from 'game-jolt-frontend-lib/components/forum/channel/channel.model';
+import { ForumPost } from 'game-jolt-frontend-lib/components/forum/post/post.model';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
+import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
+import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
+import { arrayIndexByFunc } from 'game-jolt-frontend-lib/utils/array';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./channel-list.html?style=./channel-list.styl';
 
-import { ForumCategory } from '../../../../lib/gj-lib-client/components/forum/category/category.model';
-import { ForumChannel } from '../../../../lib/gj-lib-client/components/forum/channel/channel.model';
-import { ForumPost } from '../../../../lib/gj-lib-client/components/forum/post/post.model';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { arrayIndexByFunc } from '../../../../lib/gj-lib-client/utils/array';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ago';
-import { AppUserCardHover } from '../../../../lib/gj-lib-client/components/user/card/hover/hover';
 
-@View
 @Component({
 	components: {
 		AppUserCardHover,
@@ -23,7 +21,7 @@ import { AppUserCardHover } from '../../../../lib/gj-lib-client/components/user/
 		number,
 	},
 })
-export class AppForumChannelList extends Vue {
+export default class AppForumChannelList extends Vue {
 	@Prop(ForumCategory) category!: ForumCategory;
 	@Prop(Array) channels!: ForumChannel[];
 	@Prop({ type: Array, default: [] })

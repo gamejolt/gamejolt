@@ -1,6 +1,6 @@
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
-import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
+import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { Store } from '../../../../store/index';
 
 export function hookDownloadPackage(store: Store, game: Game, build: GameBuild) {

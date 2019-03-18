@@ -1,20 +1,18 @@
+import { ForumPost } from 'game-jolt-frontend-lib/components/forum/post/post.model';
+import { ForumTopic } from 'game-jolt-frontend-lib/components/forum/topic/topic.model';
+import AppMessageThread from 'game-jolt-frontend-lib/components/message-thread/message-thread.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./post-list.html';
+import AppForumPostListItem from './item/item.vue';
 
-import { ForumPost } from '../../../../lib/gj-lib-client/components/forum/post/post.model';
-import { ForumTopic } from '../../../../lib/gj-lib-client/components/forum/topic/topic.model';
-import { AppForumPostListItem } from './item/item';
-import { AppMessageThread } from '../../../../lib/gj-lib-client/components/message-thread/message-thread';
 
-@View
 @Component({
 	components: {
 		AppMessageThread,
 		AppForumPostListItem,
 	},
 })
-export class AppForumPostList extends Vue {
+export default class AppForumPostList extends Vue {
 	@Prop(ForumTopic) topic!: ForumTopic;
 	@Prop(Array) posts!: ForumPost[];
 	@Prop(String) sort!: string;
