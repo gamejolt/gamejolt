@@ -437,6 +437,7 @@ for (let component of components) {
 	if (!tsPath.startsWith('../')) {
 		tsPath = './' + tsPath;
 	}
+	tsPath = tsPath.replace(/\.ts$/, '');
 	templateText += `\n\n<script lang="ts" src="${tsPath}" />`;
 
 	// Convert export to export defeault
@@ -460,7 +461,7 @@ for (let component of components) {
 
 	prettierConf.parser = 'typescript';
 	prettyText = prettier.format(tsText, prettierConf);
-	fs.writeFileSync(component.ts + '.new.ts', prettyText);
+	fs.writeFileSync(component.ts, prettyText);
 
 	component.converted = true;
 
@@ -502,11 +503,12 @@ for (let component of components) {
 					importPath = './' + importPath;
 				}
 			}
+			importPath = importPath.replace(/\.ts/, '');
 
 			let importingFileText = fs.readFileSync(tsImportLine.from, 'utf8');
 			const newImportLine = `import ${importAsMatch[1]} from '${importPath}'`;
 			importingFileText = importingFileText.replace(tsImportLine.line, newImportLine);
-			fs.writeFileSync(tsImportLine.from + 'imports.ts', importingFileText);
+			fs.writeFileSync(tsImportLine.from, importingFileText);
 		}
 	}
 }
