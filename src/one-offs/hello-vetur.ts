@@ -463,11 +463,17 @@ for (let component of components) {
 
 	component.converted = true;
 
-	if (!component.hasDefaultExport) {
-		for (let tsImportLine of resolvedTsImports[component.ts] || []) {
-			const importAsMatch = tsImportLine.expression
-				? tsImportLine.expression.match(/^{\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*}$/)
-				: null;
+	for (let tsImportLine of resolvedTsImports[component.ts] || []) {
+		if (!tsImportLine.expression) {
+			console.warn(`Unhandled TS import line ${tsImportLine.line} in ${tsImportLine.from}`);
+			continue;
+		}
+
+		let importName = '';
+		if (!component.hasDefaultExport) {
+			const importAsMatch = tsImportLine.expression.match(
+				/^{\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*}$/
+			);
 
 			if (!importAsMatch) {
 				console.warn(
@@ -475,28 +481,31 @@ for (let component of components) {
 				);
 				continue;
 			}
-
-			let importPath = '';
-			if (
-				tsImportLine.resolvesTo.startsWith(frontendLibDir) &&
-				!tsImportLine.from.startsWith(frontendLibDir)
-			) {
-				importPath = tsImportLine.resolvesTo.replace(
-					/^.*\/gj-lib-client\//,
-					'game-jolt-frontend-lib/'
-				);
-			} else {
-				importPath = path.relative(path.join(tsImportLine.from, '..'), vueFilename);
-				if (!importPath.startsWith('../')) {
-					importPath = './' + importPath;
-				}
-			}
-			importPath = importPath.replace(/\.ts/, '');
-
-			let importingFileText = fs.readFileSync(tsImportLine.from, 'utf8');
-			const newImportLine = `import ${importAsMatch[1]} from '${importPath}'`;
-			importingFileText = importingFileText.replace(tsImportLine.line, newImportLine);
-			fs.writeFileSync(tsImportLine.from, importingFileText);
+			importName = importAsMatch[1];
+		} else {
+			importName = tsImportLine.expression;
 		}
+
+		let importPath = '';
+		if (
+			tsImportLine.resolvesTo.startsWith(frontendLibDir) &&
+			!tsImportLine.from.startsWith(frontendLibDir)
+		) {
+			importPath = tsImportLine.resolvesTo.replace(
+				/^.*\/gj-lib-client\//,
+				'game-jolt-frontend-lib/'
+			);
+		} else {
+			importPath = path.relative(path.join(tsImportLine.from, '..'), vueFilename);
+			if (!importPath.startsWith('../')) {
+				importPath = './' + importPath;
+			}
+		}
+		importPath = importPath.replace(/\.ts/, '');
+
+		let importingFileText = fs.readFileSync(tsImportLine.from, 'utf8');
+		const newImportLine = `import ${importName} from '${importPath}'`;
+		importingFileText = importingFileText.replace(tsImportLine.line, newImportLine);
+		fs.writeFileSync(tsImportLine.from, importingFileText);
 	}
 }
