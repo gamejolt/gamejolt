@@ -13,7 +13,7 @@ const baseDir = path.resolve(__dirname, '..', '..');
 const srcDir = path.join(baseDir, 'src');
 
 function shortFilename(file: string) {
-	return file.replace(baseDir, '');
+	return file.replace(baseDir + '/', '');
 }
 
 type importLine = {
@@ -41,6 +41,7 @@ const styleImportLines: importLine[] = [];
 // { ts: string; template: string; styl: string; }
 type singleFileComponent = {
 	ts: string;
+	viewAnnotation: string;
 	template: string;
 	style?: string;
 };
@@ -232,7 +233,7 @@ function collectTs(file: string) {
 
 	// In our project our components always use relative path styles.
 	// If they didn't we'd have to resolve the possible paths it'll end up requiring, phew.
-	const viewImportRegex = /^\s*import\s+([a-zA-Z_][a-zA-Z0-9_]*)\s+from\s+'!view!(.*?\.html)(?:\?style=(.*?\.(?:styl|css)))?';$/gm;
+	const viewImportRegex = /^\s*import\s+([a-zA-Z_][a-zA-Z0-9_]*)\s+from\s+'!view!(.*?\.html)(?:\?style=(.*?\.(?:styl|css)))?';\r?$/gm;
 	const viewImportMatches = matchAll(text, viewImportRegex);
 	const hasViewImport = viewImportMatches && viewImportMatches.length !== 0;
 	const viewAnnotations = viewImportMatches.map(importMatch => importMatch[1]);
@@ -240,7 +241,7 @@ function collectTs(file: string) {
 	const viewMatches =
 		viewAnnotations.length === 0
 			? []
-			: matchAll(text, new RegExp('^s*@(?:' + viewAnnotations.join('|') + ')$', 'gm'));
+			: matchAll(text, new RegExp('^\\s*@(?:' + viewAnnotations.join('|') + ')\\r?$', 'gm'));
 	const hasView = viewMatches && viewMatches.length !== 0;
 
 	// If it has nothing, it's definitely not a component.
@@ -282,6 +283,7 @@ function collectTs(file: string) {
 	const viewImportMatch = viewImportMatches[0];
 	const component: singleFileComponent = {
 		ts: file,
+		viewAnnotation: viewAnnotations[0],
 		template: path.resolve(file, '..', viewImportMatch[2]),
 	};
 
@@ -336,6 +338,9 @@ function collectStyl(file: string) {
 
 const files = readdir(srcDir, (name, _, dir) => {
 	const fullpath = path.resolve(dir, name);
+	if (name.endsWith('.new.ts')) {
+		return false;
+	}
 	return fs.statSync(fullpath).isDirectory() || name.endsWith('.ts') || name.endsWith('.styl');
 });
 
@@ -391,9 +396,13 @@ for (let component of components) {
 	const vueFilename = component.template.replace(/\.html$/, '.vue');
 	console.log(`Rewriting ${shortFilename(component.template)} => ${shortFilename(vueFilename)}`);
 
-	let templateText = '';
+	let templateText = '',
+		styleText = '',
+		tsText = '';
 	try {
 		templateText = fs.readFileSync(component.template, 'utf8');
+		styleText = component.style ? fs.readFileSync(component.style, 'utf8') : '';
+		tsText = fs.readFileSync(component.ts, 'utf8');
 	} catch (e) {
 		if ((e as NodeJS.ErrnoException).code === 'ENOENT') {
 			console.warn('\tFile not found, skipping');
@@ -405,7 +414,6 @@ for (let component of components) {
 
 	if (component.style) {
 		if (inlineableStyleFiles[component.style]) {
-			const styleText = fs.readFileSync(component.style, 'utf8');
 			if (component.style.endsWith('.styl')) {
 				templateText += `\n\n<style lang="stylus" scoped>\n${styleText}\n</style>`;
 			} else {
@@ -420,8 +428,24 @@ for (let component of components) {
 	const tsPath = path.relative(path.join(vueFilename, '..'), component.ts);
 	templateText += `\n\n<script lang="ts" src="${tsPath}" />`;
 
+	// Convert export to export defeault
+	tsText = tsText.replace(/^(\s*export)(\s+)(?=class)/gm, '$1 default$2');
+
+	// Remove View imports
+	tsText = tsText.replace(
+		new RegExp('^\\s*import\\s+' + component.viewAnnotation + '\\s+.*\\r?$', 'gm'),
+		''
+	);
+
+	// Remove @View annotations
+	tsText = tsText.replace(new RegExp('^\\s*@' + component.viewAnnotation + '\\r?$', 'gm'), '');
+
 	const prettierConf = prettier.resolveConfig.sync(vueFilename)!;
 	prettierConf.parser = 'vue';
-	const prettyText = prettier.format(templateText, prettierConf);
+	let prettyText = prettier.format(templateText, prettierConf);
 	fs.writeFileSync(vueFilename, prettyText);
+
+	prettierConf.parser = 'typescript';
+	prettyText = prettier.format(tsText, prettierConf);
+	fs.writeFileSync(component.ts + '.new.ts', prettyText);
 }
