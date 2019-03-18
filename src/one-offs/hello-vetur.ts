@@ -525,7 +525,8 @@ for (let component of components) {
 		const newImportLine = `import ${importName} from '${importPath}'`;
 		importingFileText = importingFileText.replace(tsImportLine.line, newImportLine);
 		if (mode !== 'dry') {
-			fs.writeFileSync(tsImportLine.from + '.new.ts', importingFileText);
+			const newName = mode === 'execute' ? tsImportLine.from : tsImportLine.from + '.new.ts';
+			fs.writeFileSync(newName, importingFileText);
 		}
 	}
 }
