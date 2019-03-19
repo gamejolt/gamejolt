@@ -5,7 +5,8 @@ import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
 import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import FormFinancialsManagedAccount from './managed-account';
+import FormFinancialsManagedAccountTS from './managed-account';
+import FormFinancialsManagedAccount from './managed-account.vue';
 
 @Component({
 	components: {
@@ -17,9 +18,12 @@ import FormFinancialsManagedAccount from './managed-account';
 export default class AppFinancialsManagedAccountIdDocument extends Vue {
 	@Prop(String) namePrefix!: string;
 
-	parent: FormFinancialsManagedAccount = null as any;
+	parent: FormFinancialsManagedAccountTS = null as any;
 	created() {
-		this.parent = findRequiredVueParent(this, FormFinancialsManagedAccount);
+		this.parent = findRequiredVueParent(
+			this,
+			FormFinancialsManagedAccount
+		) as FormFinancialsManagedAccountTS;
 	}
 
 	uploadIdDocument(stripePublishableKey: string) {

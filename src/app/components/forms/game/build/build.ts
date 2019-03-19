@@ -25,7 +25,8 @@ import { filesize } from 'game-jolt-frontend-lib/vue/filters/filesize';
 import { fuzzynumber } from 'game-jolt-frontend-lib/vue/filters/fuzzynumber';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import FormGameRelease from '../release/release';
+import FormGameReleaseTS from '../release/release';
+import FormGameRelease from '../release/release.vue';
 import { ArchiveFileSelectorModal } from './archive-file-selector-modal.service';
 
 type GameBuildFormModel = GameBuild & {
@@ -82,7 +83,7 @@ export default class FormGameBuild extends BaseForm<GameBuildFormModel>
 	@Prop(Array)
 	builds!: GameBuild[];
 
-	private releaseForm!: FormGameRelease;
+	private releaseForm!: FormGameReleaseTS;
 
 	maxFilesize = 0;
 	restrictedPlatforms: string[] = [];
@@ -208,7 +209,7 @@ export default class FormGameBuild extends BaseForm<GameBuildFormModel>
 	}
 
 	created() {
-		this.releaseForm = findRequiredVueParent(this, FormGameRelease);
+		this.releaseForm = findRequiredVueParent(this, FormGameRelease) as FormGameReleaseTS;
 		this.releaseForm.buildForms.push(this);
 	}
 

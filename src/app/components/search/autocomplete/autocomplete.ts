@@ -12,8 +12,9 @@ import { Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import * as _LocalDbGameMod from '../../client/local-db/game/game.model';
 import AppGameCompatIcons from '../../game/compat-icons/compat-icons.vue';
-import AppSearch from '../search';
+import AppSearchTS from '../search';
 import { Search } from '../search-service';
+import AppSearch from '../search.vue';
 
 let LocalDbGameMod: typeof _LocalDbGameMod | undefined;
 if (GJ_IS_CLIENT) {
@@ -43,7 +44,7 @@ export default class AppSearchAutocomplete extends Vue {
 	libraryGames: _LocalDbGameMod.LocalDbGame[] = [];
 	items: any[] = [];
 
-	search: AppSearch | null = null;
+	search: AppSearchTS | null = null;
 
 	searchChanges = new Subject<string>();
 	searched$ = this.searchChanges.debounceTime(500).subscribe(query => {
@@ -57,7 +58,7 @@ export default class AppSearchAutocomplete extends Vue {
 	}
 
 	created() {
-		this.search = findRequiredVueParent(this, AppSearch);
+		this.search = findRequiredVueParent(this, AppSearch) as AppSearchTS;
 	}
 
 	mounted() {

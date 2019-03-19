@@ -1,5 +1,6 @@
 import AppFormButton from 'game-jolt-frontend-lib/components/form-vue/button/button.vue';
-import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
+import AppFormTS from 'game-jolt-frontend-lib/components/form-vue/form';
+import AppForm from 'game-jolt-frontend-lib/components/form-vue/form.vue';
 import { findVueParent } from 'game-jolt-frontend-lib/utils/vue';
 import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
@@ -21,10 +22,10 @@ export default class AppDashGameWizardControls extends Vue {
 	// exist.
 	@State(RouteStoreName) manageRoute?: RouteStore;
 
-	form?: AppForm;
+	form?: AppFormTS;
 
 	created() {
-		this.form = findVueParent(this, AppForm);
+		this.form = findVueParent(this, AppForm) as AppFormTS;
 	}
 
 	get isWizard() {

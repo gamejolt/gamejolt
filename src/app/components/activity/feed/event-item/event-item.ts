@@ -26,7 +26,8 @@ import AppActivityFeedDevlogPostMedia from '../devlog-post/media/media.vue';
 import AppActivityFeedDevlogPostSketchfab from '../devlog-post/sketchfab/sketchfab.vue';
 import AppActivityFeedDevlogPostText from '../devlog-post/text/text.vue';
 import AppActivityFeedDevlogPostVideo from '../devlog-post/video/video.vue';
-import AppActivityFeed from '../feed';
+import AppActivityFeedTS from '../feed';
+import AppActivityFeed from '../feed.vue';
 import { ActivityFeedItem } from '../item-service';
 import { ActivityFeedView } from '../view';
 import AppActivityFeedEventItemTime from './time/time.vue';
@@ -67,7 +68,7 @@ export default class AppActivityFeedEventItem extends Vue {
 	canToggleLead = false;
 
 	private resizeSensor?: any;
-	private feedComponent!: AppActivityFeed;
+	private feedComponent!: AppActivityFeedTS;
 
 	readonly Screen = Screen;
 	readonly EventItem = EventItem;
@@ -178,7 +179,7 @@ export default class AppActivityFeedEventItem extends Vue {
 	}
 
 	mounted() {
-		this.feedComponent = findRequiredVueParent(this, AppActivityFeed);
+		this.feedComponent = findRequiredVueParent(this, AppActivityFeed) as AppActivityFeedTS;
 	}
 
 	destroyed() {

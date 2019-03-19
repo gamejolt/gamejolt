@@ -2,8 +2,8 @@ import { CommonFormComponents } from 'game-jolt-frontend-lib/components/form-vue
 import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
+import FormFinancialsManagedAccountTS from './managed-account';
 import FormFinancialsManagedAccount from './managed-account.vue';
-
 
 @Component({
 	components: {
@@ -11,9 +11,12 @@ import FormFinancialsManagedAccount from './managed-account.vue';
 	},
 })
 export default class AppFinancialsManagedAccountBusiness extends Vue {
-	parent: FormFinancialsManagedAccount = null as any;
+	parent: FormFinancialsManagedAccountTS = null as any;
 
 	created() {
-		this.parent = findRequiredVueParent(this, FormFinancialsManagedAccount);
+		this.parent = findRequiredVueParent(
+			this,
+			FormFinancialsManagedAccount
+		) as FormFinancialsManagedAccountTS;
 	}
 }
