@@ -11,18 +11,18 @@ import { Store } from './store/index';
 @Component({
 	components: {
 		AppTheme,
-		AppEmbedHtml: async () =>
-			await import(/* webpackChunkName: "gameserverHtml" */ './components/embed/html/html.vue'),
-		AppEmbedFlash: async () =>
-			await import(/* webpackChunkName: "gameserverFlash" */ './components/embed/flash/flash.vue'),
-		AppEmbedUnity: async () =>
-			await import(/* webpackChunkName: "gameserverUnity" */ './components/embed/unity/unity.vue'),
-		AppEmbedApplet: async () =>
-			await import(/* webpackChunkName: "gameserverApplet" */ './components/embed/applet/applet.vue'),
-		AppEmbedRom: async () =>
-			await import(/* webpackChunkName: "gameserverRom" */ './components/embed/rom/rom.vue'),
-		AppEmbedSilverlight: async () =>
-			await import(/* webpackChunkName: "gameserverSilverlight" */ './components/embed/silverlight/silverlight.vue'),
+		AppEmbedHtml: () =>
+			import(/* webpackChunkName: "gameserverHtml" */ './components/embed/html/html.vue'),
+		AppEmbedFlash: () =>
+			import(/* webpackChunkName: "gameserverFlash" */ './components/embed/flash/flash.vue'),
+		AppEmbedUnity: () =>
+			import(/* webpackChunkName: "gameserverUnity" */ './components/embed/unity/unity.vue'),
+		AppEmbedApplet: () =>
+			import(/* webpackChunkName: "gameserverApplet" */ './components/embed/applet/applet.vue'),
+		AppEmbedRom: () =>
+			import(/* webpackChunkName: "gameserverRom" */ './components/embed/rom/rom.vue'),
+		AppEmbedSilverlight: () =>
+			import(/* webpackChunkName: "gameserverSilverlight" */ './components/embed/silverlight/silverlight.vue'),
 	},
 })
 export default class App extends Vue {

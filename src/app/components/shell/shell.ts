@@ -37,11 +37,12 @@ let components: any = {
 };
 
 if (GJ_IS_CLIENT) {
+	// TODO check if .default is actually needed here.
 	components = {
 		...components,
-		...require('../../../_common/client/base/base.vue'),
-		...require('./client/client.vue'),
-		...require('../client/status-bar/status-bar.vue'),
+		...require('../../../_common/client/base/base.vue').default,
+		...require('./client/client.vue').default,
+		...require('../client/status-bar/status-bar.vue').default,
 	};
 }
 

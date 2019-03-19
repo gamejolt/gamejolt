@@ -17,9 +17,10 @@ let components: any = {
 };
 
 if (GJ_IS_CLIENT) {
+	// TODO check if the .default is actually needed here
 	components = {
 		...components,
-		...require('../_common/client/base/base.vue'),
+		...require('../_common/client/base/base.vue').default,
 	};
 }
 

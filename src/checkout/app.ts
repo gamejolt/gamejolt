@@ -31,9 +31,10 @@ let components: any = {
 let ClientHistoryNavigatorMod: typeof _ClientHistoryNavigatorMod | undefined;
 if (GJ_IS_CLIENT) {
 	ClientHistoryNavigatorMod = require('../_common/client/history-navigator/history-navigator.service');
+	// TODO check if the .default is actually needed here
 	components = {
 		...components,
-		...require('../_common/client/base/base.vue'),
+		...require('../_common/client/base/base.vue').default,
 	};
 }
 
