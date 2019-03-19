@@ -1,4 +1,3 @@
-import View from '!view!./auth.html?style=./auth.styl';
 import { Auth } from 'game-jolt-frontend-lib/components/auth/auth.service';
 import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
@@ -22,7 +21,6 @@ export function loggedUserBlock() {
 	}
 }
 
-@View
 @Component({
 	name: 'RouteAuth',
 	components: {

@@ -193,6 +193,7 @@
 						<div v-if="model.primary_file.is_archive">
 							<app-form-group
 								v-for="platform of platformOptions"
+								:key="platform.key"
 								v-if="model['os_' + platform.key]"
 								:name="`launch_${platform.key}`"
 								:label="platform.label"

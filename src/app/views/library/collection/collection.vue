@@ -267,7 +267,7 @@
 			:show-footer-ad="false"
 		>
 			<app-game-grid v-if="listing" :games="listing.games" event-label="collection-games">
-				<template slot="thumbnail-controls" scope="props">
+				<template v-slot:thumbnail-controls="props">
 					<app-button
 						icon="remove"
 						circle
@@ -331,23 +331,28 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@require '~styles/variables';
+@require '~styles-lib/mixins';
 
-.library-collection-header
-	.collection-copy
-		margin-bottom: $font-size-base
+.library-collection-header {
+  .collection-copy {
+    margin-bottom: $font-size-base;
 
-		h4
-			theme-prop('color', 'fg-muted')
-			margin-top: 0
+    h4 {
+      theme-prop('color', 'fg-muted');
+      margin-top: 0;
+    }
 
-		p
-			margin-top: $font-size-base
-			margin-bottom: 0
+    p {
+      margin-top: $font-size-base;
+      margin-bottom: 0;
+    }
+  }
 
-	@media $media-xs
-		text-align: center
+  @media $media-xs {
+    text-align: center;
+  }
+}
 </style>
 
 <script lang="ts" src="./collection" />
