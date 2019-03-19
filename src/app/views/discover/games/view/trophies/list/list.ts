@@ -1,7 +1,10 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { GameTrophy } from 'game-jolt-frontend-lib/components/game/trophy/trophy.model';
-import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { UserGameTrophy } from 'game-jolt-frontend-lib/components/user/game-trophy/game-trophy.model';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';

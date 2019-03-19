@@ -1,9 +1,12 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { ForumChannel } from 'game-jolt-frontend-lib/components/forum/channel/channel.model';
 import { ForumTopic } from 'game-jolt-frontend-lib/components/forum/topic/topic.model';
-import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
+import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
 import AppPagination from 'game-jolt-frontend-lib/components/pagination/pagination.vue';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';

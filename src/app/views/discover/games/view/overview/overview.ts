@@ -6,7 +6,10 @@ import AppCard from 'game-jolt-frontend-lib/components/card/card.vue';
 import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
 import AppCommentAddButton from 'game-jolt-frontend-lib/components/comment/add-button/add-button.vue';
 import { Comment } from 'game-jolt-frontend-lib/components/comment/comment-model';
-import { CommentState, CommentStore } from 'game-jolt-frontend-lib/components/comment/comment-store';
+import {
+	CommentState,
+	CommentStore,
+} from 'game-jolt-frontend-lib/components/comment/comment-store';
 import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
 import { CommentThreadModal } from 'game-jolt-frontend-lib/components/comment/thread/modal.service';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
@@ -21,7 +24,10 @@ import { AppLazyPlaceholder } from 'game-jolt-frontend-lib/components/lazy/place
 import AppMediaBar from 'game-jolt-frontend-lib/components/media-bar/media-bar.vue';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import { PartnerReferral } from 'game-jolt-frontend-lib/components/partner-referral/partner-referral-service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
@@ -34,7 +40,7 @@ import AppGameOgrs from '../../../../../components/game/ogrs/ogrs.vue';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import AppPageContainer from '../../../../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../../../../components/post/add-button/add-button.vue';
-import { AppRatingWidget } from '../../../../../components/rating/widget/widget';
+import AppRatingWidget from '../../../../../components/rating/widget/widget.vue';
 import { RouteStore, routeStore, RouteStoreModule } from '../view.store';
 import AppDiscoverGamesViewOverviewDetails from './_details/details.vue';
 import AppDiscoverGamesViewOverviewRecommended from './_recommended/recommended.vue';

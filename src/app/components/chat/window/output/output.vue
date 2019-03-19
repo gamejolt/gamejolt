@@ -16,6 +16,6 @@
 	</app-scroll-scroller>
 </template>
 
-<style src="./output.styl" scoped />
+<style lang="stylus" src="./output.styl" scoped />
 
 <script lang="ts" src="./output" />

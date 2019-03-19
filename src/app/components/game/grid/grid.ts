@@ -1,4 +1,3 @@
-import View from '!view!./grid.html?style=./grid.styl';
 import { Ads } from 'game-jolt-frontend-lib/components/ad/ads.service';
 import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
@@ -15,7 +14,6 @@ export const GameGridRowSizeLg = 3;
 
 let idCounter = 0;
 
-@View
 @Component({
 	components: {
 		AppGameThumbnail,
@@ -25,7 +23,7 @@ let idCounter = 0;
 		AppTrackEvent,
 	},
 })
-export class AppGameGrid extends Vue {
+export default class AppGameGrid extends Vue {
 	@Prop({ type: Array, default: () => [] })
 	games!: Game[];
 

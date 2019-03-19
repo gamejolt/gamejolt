@@ -3,14 +3,14 @@ import {
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import AppUserCard from 'game-jolt-frontend-lib/components/user/card/card.vue'
+import AppUserCard from 'game-jolt-frontend-lib/components/user/card/card.vue';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
-import AppActivityFeed from '../../../components/activity/feed/feed.vue';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
+import AppActivityFeed from '../../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../components/activity/feed/view';
-import { AppGameGrid } from '../../../components/game/grid/grid';
+import AppGameGrid from '../../../components/game/grid/grid.vue';
 import AppGameList from '../../../components/game/list/list.vue';
 import AppPageContainer from '../../../components/page-container/page-container.vue';
 import { Search } from '../../../components/search/search-service';

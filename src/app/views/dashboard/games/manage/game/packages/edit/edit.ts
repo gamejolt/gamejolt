@@ -7,7 +7,7 @@ import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/pack
 import { GameRelease } from 'game-jolt-frontend-lib/components/game/release/release.model';
 import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
 import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
+import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
 import { AppProgressPoller } from 'game-jolt-frontend-lib/components/progress/poller/poller';
 import {
 	BaseRouteComponent,

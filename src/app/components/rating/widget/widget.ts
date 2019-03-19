@@ -1,4 +1,3 @@
-import View from '!view!./widget.html?style=./widget.styl';
 import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
 import { EventBus } from 'game-jolt-frontend-lib/components/event-bus/event-bus.service';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
@@ -16,14 +15,13 @@ export interface RatingWidgetOnChangePayload {
 	userRating?: GameRating;
 }
 
-@View
 @Component({
 	directives: {
 		AppAuthRequired,
 		AppTooltip,
 	},
 })
-export class AppRatingWidget extends Vue {
+export default class AppRatingWidget extends Vue {
 	@Prop(Game)
 	game!: Game;
 

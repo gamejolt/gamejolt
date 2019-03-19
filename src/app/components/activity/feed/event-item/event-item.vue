@@ -157,6 +157,6 @@
 	</div>
 </template>
 
-<style src="./event-item.styl" scoped />
+<style lang="stylus" src="./event-item.styl" scoped />
 
 <script lang="ts" src="./event-item" />

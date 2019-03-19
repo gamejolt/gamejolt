@@ -13,6 +13,6 @@
 	</div>
 </template>
 
-<style src="./placeholder.styl" scoped />
+<style lang="stylus" src="./placeholder.styl" scoped />
 
 <script lang="ts" src="./placeholder" />

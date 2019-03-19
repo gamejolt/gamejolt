@@ -1,24 +1,21 @@
-import View from '!view!./maturity.html';
 import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
 import { BaseForm, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { Component } from 'vue-property-decorator';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 
-
-export type MaturityField = {
+type MaturityField = {
 	label?: string;
 	description?: string;
 };
 
-@View
 @Component({
 	components: {
 		AppExpand,
 		AppDashGameWizardControls,
 	},
 })
-export class FormGameMaturity extends BaseForm<Game> implements FormOnInit {
+export default class FormGameMaturity extends BaseForm<Game> implements FormOnInit {
 	modelClass = Game;
 
 	age: MaturityField[] = [

@@ -5,7 +5,7 @@ import { fuzzynumber } from 'game-jolt-frontend-lib/vue/filters/fuzzynumber';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
+import AppRatingWidget from '../../../../../../components/rating/widget/widget.vue';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
 @Component({

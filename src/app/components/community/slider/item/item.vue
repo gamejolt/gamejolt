@@ -25,6 +25,6 @@
 	</router-link>
 </template>
 
-<style src="./item.styl" scoped />
+<style lang="stylus" src="./item.styl" scoped />
 
 <script lang="ts" src="./item" />

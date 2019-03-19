@@ -150,6 +150,6 @@
 	</div>
 </template>
 
-<style src="./window.styl" scoped />
+<style lang="stylus" src="./window.styl" scoped />
 
 <script lang="ts" src="./window" />

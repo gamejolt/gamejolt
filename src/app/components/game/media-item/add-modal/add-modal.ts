@@ -3,12 +3,11 @@ import { GameScreenshot } from 'game-jolt-frontend-lib/components/game/screensho
 import { GameSketchfab } from 'game-jolt-frontend-lib/components/game/sketchfab/sketchfab.model';
 import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
 import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
-import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
+import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
 import { Component, Prop } from 'vue-property-decorator';
 import FormGameImage from '../../../forms/game/image/image.vue';
 import FormGameSketchfab from '../../../forms/game/sketchfab/sketchfab.vue';
 import FormGameVideo from '../../../forms/game/video/video.vue';
-
 
 @Component({
 	components: {

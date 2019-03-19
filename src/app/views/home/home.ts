@@ -13,7 +13,7 @@ import { router } from '..';
 	name: 'RouteHome',
 	components: {
 		RouteHomeFeed: () => asyncRouteLoader(import('./feed.vue'), router),
-		RouteDiscoverHome: () => asyncRouteLoader(import('../discover/home/home'), router),
+		RouteDiscoverHome: () => asyncRouteLoader(import('../discover/home/home.vue'), router),
 	},
 })
 @RouteResolver({

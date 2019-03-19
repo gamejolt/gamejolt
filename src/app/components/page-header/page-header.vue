@@ -101,6 +101,6 @@
 	</header>
 </template>
 
-<style src="./page-header.styl" scoped />
+<style lang="stylus" src="./page-header.styl" scoped />
 
 <script lang="ts" src="./page-header" />

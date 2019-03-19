@@ -5,7 +5,7 @@ import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service'
 import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
 import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
 import { Component } from 'vue-property-decorator';
-import { FormGameMaturity } from '../../../../../../components/forms/game/maturity/maturity';
+import FormGameMaturity from '../../../../../../components/forms/game/maturity/maturity.vue';
 import AppGameOgrs from '../../../../../../components/game/ogrs/ogrs.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 

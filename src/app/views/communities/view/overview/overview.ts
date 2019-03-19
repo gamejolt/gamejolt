@@ -3,8 +3,11 @@ import { Community } from 'game-jolt-frontend-lib/components/community/community
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
 import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
 import AppUserAvatarList from 'game-jolt-frontend-lib/components/user/user-avatar/known/list.vue';

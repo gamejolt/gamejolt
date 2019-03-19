@@ -1,15 +1,15 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
+import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
 import {
 	BaseRouteComponent,
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
-import AppActivityFeed from '../../../../../components/activity/feed/feed.vue';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
+import AppActivityFeed from '../../../../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';

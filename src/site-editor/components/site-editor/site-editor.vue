@@ -114,6 +114,6 @@
 	</div>
 </template>
 
-<style src="./site-editor.styl" scoped />
+<style lang="stylus" src="./site-editor.styl" scoped />
 
 <script lang="ts" src="./site-editor" />

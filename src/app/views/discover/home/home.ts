@@ -1,16 +1,17 @@
-import View from '!view!./home.html';
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
-import { Location } from 'vue-router';
 import { State } from 'vuex-class';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
-import { AppGameGrid } from '../../../components/game/grid/grid';
+import AppGameGrid from '../../../components/game/grid/grid.vue';
 import AppGameGridPlaceholder from '../../../components/game/grid/placeholder/placeholder.vue';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Store } from '../../../store/index';
@@ -18,15 +19,6 @@ import AppDiscoverHomeBanner from './_banner/banner.vue';
 import AppDiscoverHomeCommunities from './_communities/communities.vue';
 import AppDiscoverHomeTags from './_tags/tags.vue';
 
-export interface DiscoverRow {
-	title: string;
-	desc?: string;
-	url: Location;
-	eventLabel: string;
-	games: string;
-}
-
-@View
 @Component({
 	name: 'RouteDiscoverHome',
 	components: {

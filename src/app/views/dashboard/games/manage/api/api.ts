@@ -1,4 +1,4 @@
-import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
+import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component } from 'vue-property-decorator';

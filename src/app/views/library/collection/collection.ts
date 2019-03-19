@@ -8,7 +8,10 @@ import { Jam } from 'game-jolt-frontend-lib/components/jam/jam.model';
 import AppLoadingFade from 'game-jolt-frontend-lib/components/loading/fade/fade.vue';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
@@ -21,7 +24,7 @@ import { GameCollection } from '../../../components/game/collection/collection.m
 import AppGameCollectionFollowWidget from '../../../components/game/collection/follow-widget/follow-widget.vue';
 import AppGameCollectionThumbnail from '../../../components/game/collection/thumbnail/thumbnail.vue';
 import { GameFilteringContainer } from '../../../components/game/filtering/container';
-import { AppGameGrid } from '../../../components/game/grid/grid';
+import AppGameGrid from '../../../components/game/grid/grid.vue';
 import { GameListingContainer } from '../../../components/game/listing/listing-container-service';
 import AppGameListing from '../../../components/game/listing/listing.vue';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
@@ -158,7 +161,11 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 				} else {
 					return this.$gettextInterpolate('%{ playlist } by %{ user }', params);
 				}
-			} else if (this.type === GameCollection.TYPE_DEVELOPER && this.user && this.collection) {
+			} else if (
+				this.type === GameCollection.TYPE_DEVELOPER &&
+				this.user &&
+				this.collection
+			) {
 				const params = { user: '@' + this.user.username };
 				if (this.collection.isOwner) {
 					return this.$gettext('Your Games');
@@ -172,7 +179,11 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 				} else {
 					return this.$gettextInterpolate('Games Owned by %{ user }', params);
 				}
-			} else if (this.type === GameCollection.TYPE_RECOMMENDED && this.collection && this.user) {
+			} else if (
+				this.type === GameCollection.TYPE_RECOMMENDED &&
+				this.collection &&
+				this.user
+			) {
 				const params = { user: '@' + this.user.username };
 				if (this.collection.isOwner) {
 					return this.$gettext('Your Daily Mix');
@@ -317,7 +328,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		const action = shouldRefresh ? 'refresh-mix' : 'mix';
 
 		this.isLoadingRecommended = true;
-		const payload = await Api.sendRequest(`/web/library/games/${action}/` + this.type + '/' + id);
+		const payload = await Api.sendRequest(
+			`/web/library/games/${action}/` + this.type + '/' + id
+		);
 		this.recommendedGames = Game.populate(payload.games);
 		this.isLoadingRecommended = false;
 	}

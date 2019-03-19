@@ -41,6 +41,6 @@
 	</ol>
 </template>
 
-<style src="./list.styl" scoped />
+<style lang="stylus" src="./list.styl" scoped />
 
 <script lang="ts" src="./list" />

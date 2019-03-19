@@ -40,6 +40,6 @@
 	</div>
 </template>
 
-<style src="./statbar.styl" scoped />
+<style lang="stylus" src="./statbar.styl" scoped />
 
 <script lang="ts" src="./statbar" />

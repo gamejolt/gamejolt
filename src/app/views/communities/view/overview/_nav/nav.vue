@@ -47,6 +47,6 @@
 	</nav>
 </template>
 
-<style src="./nav.styl" scoped />
+<style lang="stylus" src="./nav.styl" scoped />
 
 <script lang="ts" src="./nav" />

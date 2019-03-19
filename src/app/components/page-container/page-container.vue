@@ -26,6 +26,6 @@
 	</div>
 </template>
 
-<style src="./page-container.styl" scoped />
+<style lang="stylus" src="./page-container.styl" scoped />
 
 <script lang="ts" src="./page-container" />

@@ -218,6 +218,6 @@
 	</div>
 </template>
 
-<style src="./indieaf.styl" scoped />
+<style lang="stylus" src="./indieaf.styl" scoped />
 
 <script lang="ts" src="./indieaf" />

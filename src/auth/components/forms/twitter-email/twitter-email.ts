@@ -1,12 +1,11 @@
-import View from '!view!./twitter-email.html';
+// TODO missing component template, is this intentional?
+// import View from '!view!./twitter-email.html';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { BaseForm, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { Component, Prop } from 'vue-property-decorator';
 
-
-@View
 @Component({})
-export class FormTwitterEmail extends BaseForm<any> implements FormOnSubmit {
+export default class FormTwitterEmail extends BaseForm<any> implements FormOnSubmit {
 	@Prop(String) stateHandle!: string;
 
 	warnOnDiscard = false;

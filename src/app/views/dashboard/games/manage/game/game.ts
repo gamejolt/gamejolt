@@ -1,7 +1,7 @@
 import AppEditableOverlay from 'game-jolt-frontend-lib/components/editable-overlay/editable-overlay.vue';
 import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
+import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component } from 'vue-property-decorator';

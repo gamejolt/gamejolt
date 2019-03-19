@@ -115,6 +115,6 @@
 	</div>
 </template>
 
-<style src="./topic-list.styl" scoped />
+<style lang="stylus" src="./topic-list.styl" scoped />
 
 <script lang="ts" src="./topic-list" />

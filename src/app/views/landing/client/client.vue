@@ -373,6 +373,6 @@
 	</div>
 </template>
 
-<style src="./client.styl" scoped />
+<style lang="stylus" src="./client.styl" scoped />
 
 <script lang="ts" src="./client" />

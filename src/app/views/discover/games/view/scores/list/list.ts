@@ -1,7 +1,7 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
 import AppLoadingFade from 'game-jolt-frontend-lib/components/loading/fade/fade.vue';
-import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
+import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
 import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
 import {
 	BaseRouteComponent,

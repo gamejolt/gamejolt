@@ -3,7 +3,7 @@ import {
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
-import { AppGameGrid } from '../../../components/game/grid/grid';
+import AppGameGrid from '../../../components/game/grid/grid.vue';
 import { Search } from '../../../components/search/search-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 

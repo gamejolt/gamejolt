@@ -39,6 +39,6 @@
 	</div>
 </template>
 
-<style src="./game.styl" scoped />
+<style lang="stylus" src="./game.styl" scoped />
 
 <script lang="ts" src="./game" />

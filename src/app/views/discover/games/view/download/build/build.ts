@@ -18,7 +18,7 @@ import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppGameThumbnail from '../../../../../../../_common/game/thumbnail/thumbnail.vue';
 import AppGameOgrs from '../../../../../../components/game/ogrs/ogrs.vue';
-import { AppRatingWidget } from '../../../../../../components/rating/widget/widget';
+import AppRatingWidget from '../../../../../../components/rating/widget/widget.vue';
 import { Store } from '../../../../../../store/index';
 import AppDiscoverGamesViewOverviewDetails from '../../overview/_details/details.vue';
 import { RouteStore, RouteStoreModule } from '../../view.store';

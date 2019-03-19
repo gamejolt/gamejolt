@@ -1,8 +1,11 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';

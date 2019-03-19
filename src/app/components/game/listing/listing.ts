@@ -3,7 +3,7 @@ import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue'
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import AppLoadingFade from 'game-jolt-frontend-lib/components/loading/fade/fade.vue';
-import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
+import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
 import AppPagination from 'game-jolt-frontend-lib/components/pagination/pagination.vue';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';

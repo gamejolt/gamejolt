@@ -3,7 +3,7 @@ import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue'
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { AppGameGrid } from '../../../../../../components/game/grid/grid';
+import AppGameGrid from '../../../../../../components/game/grid/grid.vue';
 import AppGameGridPlaceholder from '../../../../../../components/game/grid/placeholder/placeholder.vue';
 import AppGameList from '../../../../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../../../../components/game/list/placeholder/placeholder.vue';

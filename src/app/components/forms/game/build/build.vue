@@ -393,6 +393,6 @@
 	</app-card-list-item>
 </template>
 
-<style src="./build.styl" scoped />
+<style lang="stylus" src="./build.styl" scoped />
 
 <script lang="ts" src="./build" />

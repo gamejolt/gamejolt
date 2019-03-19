@@ -603,6 +603,6 @@
 	</app-form>
 </template>
 
-<style src="./post.styl" scoped />
+<style lang="stylus" src="./post.styl" scoped />
 
 <script lang="ts" src="./post" />

@@ -95,6 +95,6 @@
 	</div>
 </template>
 
-<style src="./autocomplete.styl" scoped />
+<style lang="stylus" src="./autocomplete.styl" scoped />
 
 <script lang="ts" src="./autocomplete" />

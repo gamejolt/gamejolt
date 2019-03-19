@@ -1,12 +1,18 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { LocationRedirect } from 'game-jolt-frontend-lib/utils/router';
 import { date } from 'game-jolt-frontend-lib/vue/filters/date';
 import { Component } from 'vue-property-decorator';
-import { checkGameFilteringRoute, GameFilteringContainer } from '../../../../components/game/filtering/container';
-import { AppGameGrid } from '../../../../components/game/grid/grid';
+import {
+	checkGameFilteringRoute,
+	GameFilteringContainer,
+} from '../../../../components/game/filtering/container';
+import AppGameGrid from '../../../../components/game/grid/grid.vue';
 import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
 import AppGameListing from '../../../../components/game/listing/listing.vue';
 import AppPageHeader from '../../../../components/page-header/page-header.vue';
@@ -85,10 +91,13 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		}
 
 		if (this.dateRange) {
-			return this.$gettextInterpolate('Games published between %{ dateStart } and %{ dateEnd }', {
-				dateStart: this.dateRange[0],
-				dateEnd: this.dateRange[1],
-			});
+			return this.$gettextInterpolate(
+				'Games published between %{ dateStart } and %{ dateEnd }',
+				{
+					dateStart: this.dateRange[0],
+					dateEnd: this.dateRange[1],
+				}
+			);
 		}
 
 		if (this.date) {
