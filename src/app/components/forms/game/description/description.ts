@@ -1,4 +1,6 @@
 import View from '!view!./description.html?style=./description.styl';
+import { ContentContainer } from 'game-jolt-frontend-lib/components/content/content-container';
+import ContentWriter from 'game-jolt-frontend-lib/components/content/content-writer';
 import { AppFormControlContent } from 'game-jolt-frontend-lib/components/form-vue/control/content/content';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
@@ -42,8 +44,16 @@ export class FormGameDescription extends BaseForm<DescriptionFormModel> {
 		return this.model && this.model.hasPerms('details');
 	}
 
+	get contentContainer() {
+		if (this.formModel.description_content) {
+			const container = ContentContainer.fromJson(this.formModel.description_content);
+			return container;
+		}
+		return null;
+	}
+
 	get tagText() {
-		return (this.formModel.title + ' ' + this.formModel.description_markdown).toLowerCase();
+		return this.formModel.title.toLowerCase();
 	}
 
 	@Watch('serverErrors')
@@ -58,10 +68,13 @@ export class FormGameDescription extends BaseForm<DescriptionFormModel> {
 	}
 
 	async addTag(tag: string) {
-		const newDescription = this.formModel.description_markdown
-			? `${this.formModel.description_markdown} #${tag}`
-			: `#${tag}`;
-		this.setField('description_markdown', newDescription);
+		const container = this.contentContainer;
+		if (container instanceof ContentContainer) {
+			const writer = new ContentWriter(container);
+			writer.appendTag(tag);
+
+			this.setField('description_content', container.toJson());
+		}
 	}
 
 	addAutotag(tag: string) {
