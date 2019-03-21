@@ -1,0 +1,65 @@
+<template>
+	<div class="route-library-overview">
+		<app-page-header>
+			<h1 class="section-header sans-margin-bottom">
+				<translate>library.heading</translate>
+			</h1>
+			<div class="text-muted small">
+				<p>
+					<translate>
+						This is your personalized library of games. Here dwell the games you've followed and any
+						playlists or bundles that you've made or followed.
+					</translate>
+				</p>
+			</div>
+		</app-page-header>
+
+		<!--
+		When they are offline, we show them this message.
+	-->
+		<section class="section fill-notice text-center" v-if="Connection.isClientOffline">
+			<p>
+				<app-jolticon icon="notice" big />
+			</p>
+			<p class="sans-margin">
+				<translate>You must be online to access your playlists.</translate>
+			</p>
+		</section>
+
+		<template v-else>
+			<section
+				class="section collection-row-section"
+				v-for="group of collectionGroups"
+				:key="group.key"
+				v-if="group.collections.length"
+			>
+				<div class="container" v-if="group.heading">
+					<h2 class="section-header" :class="{ h4: Screen.isXs }">
+						{{ group.heading }}
+					</h2>
+				</div>
+
+				<div :class="!Screen.isXs ? 'container' : ''">
+					<app-game-collection-list
+						v-if="Screen.isXs"
+						:collections="group.collections"
+						:event-label="`library-overview:collection:${group.eventLabel}`"
+					/>
+
+					<app-game-collection-grid
+						v-else
+						:collections="group.collections"
+						:event-label="`library-overview:collection:${group.eventLabel}`"
+					/>
+				</div>
+			</section>
+		</template>
+	</div>
+</template>
+
+<style lang="stylus" scoped>
+.route-library-overview-page .collection-row-section
+	padding-bottom: 0
+</style>
+
+<script lang="ts" src="./overview" />

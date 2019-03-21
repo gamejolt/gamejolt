@@ -1,4 +1,4 @@
-import { initRouter } from '../../lib/gj-lib-client/utils/router';
+import { initRouter } from 'game-jolt-frontend-lib/utils/router';
 import { routeCommunitiesView } from './communities/view/view.route';
 import { routeDash } from './dashboard/dashboard.route';
 import { routeDiscover } from './discover/discover.route';

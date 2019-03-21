@@ -5,5 +5,5 @@ export const routeProfileOverviewFeed: RouteConfig = {
 	name: 'profile.overview',
 	path: '/@:username',
 	// Add this component into the same webpack chunk as the main "profile" chunk.
-	component: () => import(/* webpackChunkName: "routeProfile" */ './feed'),
+	component: () => import(/* webpackChunkName: "routeProfile" */ './feed.vue'),
 };

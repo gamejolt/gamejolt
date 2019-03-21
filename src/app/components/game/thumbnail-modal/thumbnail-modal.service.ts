@@ -1,6 +1,6 @@
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { Modal } from '../../../../lib/gj-lib-client/components/modal/modal.service';
-import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
+import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
 
 export class GameThumbnailModal {
 	static async show(game: Game) {
@@ -8,7 +8,7 @@ export class GameThumbnailModal {
 			modalId: 'GameThumbnail',
 			component: () =>
 				asyncComponentLoader(
-					import(/* webpackChunkName: "GameThumbnailModal" */ './thumbnail-modal')
+					import(/* webpackChunkName: "GameThumbnailModal" */ './thumbnail-modal.vue')
 				),
 			props: {
 				game,

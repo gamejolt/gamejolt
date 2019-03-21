@@ -1,0 +1,209 @@
+<template>
+	<div v-if="user">
+		<!--
+		If this user is banned, we show very little.
+	-->
+		<app-page-header v-if="!user.status">
+			<h1>
+				{{ user.display_name }}
+				<br />
+				<small>@{{ user.username }}</small>
+			</h1>
+
+			<div class="text-muted small">
+				<translate>profile.joined</translate>
+				<app-time-ago :date="user.created_on" />
+			</div>
+		</app-page-header>
+
+		<app-page-header
+			v-else
+			:cover-media-item="user.header_media_item"
+			:cover-max-height="400"
+			should-affix-nav
+			:blur-header="!shouldShowFullCover"
+			:cover-auto-height="!shouldShowFullCover"
+			:autoscroll-anchor-key="autoscrollAnchorKey"
+		>
+			<h1>
+				{{ user.display_name }}
+				<small>@{{ user.username }}</small>
+				<app-jolticon
+					v-if="user.is_verified"
+					icon="verified"
+					big
+					class="verified-account-tag"
+					v-app-tooltip="$gettext('profile.verified_tooltip')"
+				/>
+			</h1>
+			<div class="small text-muted">
+				<!-- Joined on -->
+				<translate>profile.joined</translate>
+				<app-time-ago :date="user.created_on" />
+
+				<template v-if="isRouteBootstrapped">
+					<span class="dot-separator" />
+
+					<!-- Dogtag -->
+					<app-user-dogtag :type="user.dogtag" />
+
+					<!-- Friend status -->
+					<span
+						class="tag tag-highlight"
+						v-if="userFriendship && userFriendship.state === UserFriendship.STATE_FRIENDS"
+						v-app-tooltip="$gettext('profile.friend_tooltip')"
+					>
+						<translate>profile.friend_tag</translate>
+					</span>
+
+					<!-- Online status -->
+					<span v-if="!isOnline" class="tag" v-app-tooltip="$gettext('profile.offline_tooltip')">
+						<app-jolticon icon="chat-offline" />
+						<translate>profile.offline_tag</translate>
+					</span>
+					<span v-else class="tag tag-highlight" v-app-tooltip="$gettext('profile.online_tooltip')">
+						<app-jolticon icon="chat-online" />
+						<translate>profile.online_tag</translate>
+					</span>
+
+					<!-- Following status -->
+					<span
+						v-if="user.follows_you"
+						class="tag tag-highlight"
+						v-app-tooltip="$gettext('This user is following you.')"
+					>
+						<translate>Follows You</translate>
+					</span>
+				</template>
+			</div>
+
+			<template slot="spotlight">
+				<app-user-avatar :user="user" />
+			</template>
+
+			<template slot="nav">
+				<nav class="platform-list inline">
+					<ul>
+						<li>
+							<router-link
+								:to="{ name: 'profile.overview' }"
+								:class="{ active: $route.name === 'profile.overview' }"
+							>
+								<translate>profile.overview_tab</translate>
+							</router-link>
+						</li>
+						<li>
+							<router-link :to="{ name: 'profile.following' }" active-class="active">
+								<translate>Following</translate>
+								<span class="badge">
+									{{ user.following_count | number }}
+								</span>
+							</router-link>
+						</li>
+						<li>
+							<router-link :to="{ name: 'profile.followers' }" active-class="active">
+								<translate>Followers</translate>
+								<span class="badge">
+									{{ user.follower_count | number }}
+								</span>
+							</router-link>
+						</li>
+						<!--
+						We only need to show this on mobile.
+					-->
+						<li v-if="user.shouts_enabled && Screen.isMobile">
+							<a @click="showComments()">
+								<translate>Shouts</translate>
+								<span class="badge">
+									{{ commentsCount | number }}
+								</span>
+							</a>
+						</li>
+						<li v-if="videosCount > 0">
+							<router-link :to="{ name: 'profile.videos' }" active-class="active">
+								<translate>Videos</translate>
+							</router-link>
+						</li>
+						<li>
+							<router-link :to="{ name: 'profile.library' }" active-class="active">
+								<translate>profile.library_tab</translate>
+							</router-link>
+						</li>
+						<li
+							v-if="
+								app.user &&
+									(app.user.permission_level > 0 ||
+										(userFriendship && userFriendship.state) === UserFriendship.STATE_FRIENDS ||
+										user.id !== app.user.id)
+							"
+						>
+							<app-popper>
+								<a>
+									<app-jolticon icon="ellipsis-h" />
+								</a>
+
+								<div slot="popover" class="list-group list-group-dark">
+									<a
+										class="list-group-item has-icon"
+										v-if="app.user && user.id !== app.user.id"
+										@click="report"
+									>
+										<app-jolticon icon="flag" notice />
+										<translate>profile.report_user_button</translate>
+									</a>
+									<a
+										class="list-group-item has-icon"
+										v-if="userFriendship && userFriendship.state === UserFriendship.STATE_FRIENDS"
+										@click="removeFriend()"
+									>
+										<app-jolticon icon="friend-remove-2" notice />
+										<translate>profile.remove_friend_button</translate>
+									</a>
+									<a
+										class="list-group-item has-icon"
+										v-if="app.user && app.user.permission_level > 0"
+										:href="`${Environment.baseUrl}/moderate/users/view/${user.id}`"
+										target="_blank"
+									>
+										<app-jolticon icon="cog" />
+										<translate>profile.moderate_user_button</translate>
+									</a>
+								</div>
+							</app-popper>
+						</li>
+					</ul>
+				</nav>
+			</template>
+
+			<app-page-header-controls slot="controls">
+				<app-user-follow-widget
+					v-if="!app.user || user.id !== app.user.id"
+					:user="user"
+					block
+					event-label="profile"
+				/>
+				<app-button
+					v-else
+					primary
+					block
+					:to="{
+						name: 'dash.account.edit',
+					}"
+				>
+					<translate>Edit Profile</translate>
+				</app-button>
+			</app-page-header-controls>
+		</app-page-header>
+
+		<router-view />
+	</div>
+</template>
+
+<style lang="stylus" scoped>
+@require '~styles/variables'
+
+.verified-account-tag
+	theme-prop('color', 'highlight')
+</style>
+
+<script lang="ts" src="./profile" />

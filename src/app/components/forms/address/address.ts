@@ -1,12 +1,11 @@
-import { Watch, Component } from 'vue-property-decorator';
-import View from '!view!./address.html';
-import { BaseForm } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { UserAddress } from '../../../../lib/gj-lib-client/components/user/address/address.model';
-import { Geo, Region } from '../../../../lib/gj-lib-client/components/geo/geo.service';
+import { BaseForm } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Geo, Region } from 'game-jolt-frontend-lib/components/geo/geo.service';
+import { UserAddress } from 'game-jolt-frontend-lib/components/user/address/address.model';
+import { Component, Watch } from 'vue-property-decorator';
 
-@View
+
 @Component({})
-export class FormAddress extends BaseForm<UserAddress> {
+export default class FormAddress extends BaseForm<UserAddress> {
 	modelClass = UserAddress;
 
 	countries = Geo.getCountries();

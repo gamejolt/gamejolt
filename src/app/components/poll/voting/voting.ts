@@ -1,19 +1,16 @@
+import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { PollItem } from 'game-jolt-frontend-lib/components/poll/item/item.model';
+import { Poll } from 'game-jolt-frontend-lib/components/poll/poll.model';
+import AppProgressBar from 'game-jolt-frontend-lib/components/progress/bar/bar.vue';
+import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./voting.html?style=./voting.styl';
-
-import { Poll } from '../../../../lib/gj-lib-client/components/poll/poll.model';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { AppProgressBar } from '../../../../lib/gj-lib-client/components/progress/bar/bar';
-import { PollItem } from '../../../../lib/gj-lib-client/components/poll/item/item.model';
-import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ago';
-import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { Store } from '../../../store';
 import { State } from 'vuex-class';
+import { Store } from '../../../store';
 
-@View
 @Component({
 	components: {
 		AppProgressBar,
@@ -23,7 +20,7 @@ import { State } from 'vuex-class';
 		AppAuthRequired,
 	},
 })
-export class AppPollVoting extends Vue {
+export default class AppPollVoting extends Vue {
 	@State
 	app!: Store['app'];
 

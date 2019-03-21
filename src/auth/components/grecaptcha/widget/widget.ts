@@ -1,18 +1,16 @@
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import View from '!view!./widget.html';
-
 import { GrecaptchaSdk } from '../sdk/sdk.service';
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 
-@View
+
 @Component({
 	components: {
 		AppLoading,
 	},
 })
-export class AppGrecaptchaWidget extends Vue {
+export default class AppGrecaptchaWidget extends Vue {
 	@Prop({ type: String, default: 'dark' })
 	theme!: 'light' | 'dark';
 	@Prop({ type: String, default: 'image' })

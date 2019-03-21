@@ -1,15 +1,13 @@
-import View from '!view!./downgrade.html';
 import Axios from 'axios';
-import { Component } from 'vue-property-decorator';
-import { Device } from '../../../lib/gj-lib-client/components/device/device.service';
+import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../lib/gj-lib-client/components/route/route-component';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Component } from 'vue-property-decorator';
 
 const ManifestUrl = 'https://d.gamejolt.net/data/client/manifest-2.json';
 
-@View
 @Component({
 	name: 'RouteDowngrade',
 })

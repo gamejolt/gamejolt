@@ -1,8 +1,7 @@
-import View from '!view!./view.html';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import { AppCommunityJoinWidget } from 'game-jolt-frontend-lib/components/community/join-widget/join-widget';
-import { AppCommunityThumbnailImg } from 'game-jolt-frontend-lib/components/community/thumbnail/img/img';
+import AppCommunityJoinWidget from 'game-jolt-frontend-lib/components/community/join-widget/join-widget.vue'
+import AppCommunityThumbnailImg from 'game-jolt-frontend-lib/components/community/thumbnail/img/img.vue'
 import {
 	BaseRouteComponent,
 	RouteResolver,
@@ -11,10 +10,9 @@ import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/the
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { Mutation } from 'vuex-class';
-import { AppPageHeader } from '../../../components/page-header/page-header';
+import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { Store } from '../../../store/index';
 
-@View
 @Component({
 	name: 'RouteCommunitiesView',
 	components: {

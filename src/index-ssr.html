@@ -54,7 +54,7 @@
 		<!-- Twitter -->
 		<meta name="twitter:site" content="@gamejolt">
 
-		{{{ meta.renderTags() }}}
+		{{{ typeof meta.renderTags === 'function' ? meta.renderTags() : '' }}}
 
 	</head>
 

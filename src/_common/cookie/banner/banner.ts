@@ -1,12 +1,9 @@
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./banner.html?style=./banner.styl';
 
-import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
-
-@View
 @Component({})
-export class AppCookieBanner extends Vue {
+export default class AppCookieBanner extends Vue {
 	readonly Environment = Environment;
 
 	forceClosed = false;

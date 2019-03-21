@@ -1,27 +1,21 @@
+import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
+import { BaseForm, FormOnBeforeSubmit, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import AppLoadingFade from 'game-jolt-frontend-lib/components/loading/fade/fade.vue';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./email-preferences.html';
 
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import {
-	BaseForm,
-	FormOnInit,
-	FormOnBeforeSubmit,
-} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import { AppLoadingFade } from '../../../../lib/gj-lib-client/components/loading/fade/fade';
 
 interface FormModel extends User {
 	notifications: string[];
 }
 
-@View
 @Component({
 	components: {
 		AppFormControlToggle,
 		AppLoadingFade,
 	},
 })
-export class FormEmailPreferences extends BaseForm<FormModel>
+export default class FormEmailPreferences extends BaseForm<FormModel>
 	implements FormOnInit, FormOnBeforeSubmit {
 	modelClass = User as any;
 	saveMethod: '$saveEmailPreferences' = '$saveEmailPreferences';

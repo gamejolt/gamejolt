@@ -1,10 +1,5 @@
+import { NamespaceVuexStore, VuexModule, VuexMutation, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
 import { namespace } from 'vuex-class';
-import {
-	NamespaceVuexStore,
-	VuexModule,
-	VuexMutation,
-	VuexStore,
-} from '../../../../lib/gj-lib-client/utils/vuex';
 import { store } from '../../../store';
 
 type RouteActions = {};

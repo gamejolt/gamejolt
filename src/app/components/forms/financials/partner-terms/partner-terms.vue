@@ -1,0 +1,74 @@
+<template>
+	<fieldset>
+		<legend>
+			<span
+				v-if="hasSignedPartnerAgreement"
+				class="pull-right done-icon"
+				v-app-tooltip="$gettext(`You have completed this section.`)"
+			>
+				<app-jolticon icon="check" big />
+			</span>
+			<translate>Partner Agreement</translate>
+		</legend>
+
+		<div v-if="!hasSignedPartnerAgreement">
+			<!--
+			If they accepted a different agreement, then show that they can accept this one too.
+		-->
+			<div class="form-group" v-if="hasSignedSomeAgreement && !showAgreement">
+				<div class="small">
+					<div>
+						<translate>
+							If you would to be a Game Jolt partner, you must accept the Partner Agreement.
+						</translate>
+					</div>
+				</div>
+				<br />
+
+				<app-button primary @click.prevent="showAgreement = true">
+					<translate>Show Partner Agreement</translate>
+				</app-button>
+			</div>
+
+			<div class="form-group" v-if="!hasSignedSomeAgreement || showAgreement">
+				<div class="tos-scroller">
+					<div v-html="termsTemplate"></div>
+				</div>
+				<br />
+
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" v-model="checked" />
+						<translate>
+							By checking this box and clicking the button below marked "I Agree," I agree that I
+							have read, understand, and agree to be bound by the terms of this agreement.
+						</translate>
+					</label>
+				</div>
+				<br />
+
+				<app-button primary solid :disabled="!checked" @click.prevent="onAccept()">
+					<translate>I Agree</translate>
+				</app-button>
+			</div>
+		</div>
+
+		<div class="form-group" v-if="hasSignedPartnerAgreement">
+			<p class="small">
+				<translate
+					:translate-params="{
+						date: date(account.tos_signed_partner_timestamp, 'medium'),
+					}"
+				>
+					You have agreed to our Partner Agreement on %{ date }.
+				</translate>
+				<br />
+				<a :href="agreementLink" target="_blank">
+					<translate>View Partner Agreement</translate>
+				</a>
+			</p>
+		</div>
+	</fieldset>
+</template>
+
+<script lang="ts" src="./partner-terms" />

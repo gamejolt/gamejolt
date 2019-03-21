@@ -1,20 +1,19 @@
-import View from '!view!./top-nav.html?style=./top-nav.styl';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppThemeSvg } from 'game-jolt-frontend-lib/components/theme/svg/svg';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 import { Store } from '../../../store/index';
 import { ChatClient } from '../../chat/client';
-import { AppSearch } from '../../search/search';
-import { AppShellAccountPopover } from '../account-popover/account-popover';
-import { AppShellFriendRequestPopover } from '../friend-request-popover/friend-request-popover';
-import { AppShellNotificationPopover } from '../notification-popover/notification-popover';
+import AppSearch from '../../search/search.vue';
+import AppShellAccountPopover from '../account-popover/account-popover.vue';
+import AppShellFriendRequestPopover from '../friend-request-popover/friend-request-popover.vue';
+import AppShellNotificationPopover from '../notification-popover/notification-popover.vue';
 
 let components: any = {
 	AppPopper,
@@ -26,13 +25,13 @@ let components: any = {
 };
 
 if (GJ_IS_CLIENT) {
+	// TODO check if .default is actually needed here
 	components = {
 		...components,
-		...require('../../../../_common/client/history-navigator/history-navigator'),
+		...require('../../../../_common/client/history-navigator/history-navigator.vue').default,
 	};
 }
 
-@View
 @Component({
 	components,
 	directives: {
@@ -40,7 +39,7 @@ if (GJ_IS_CLIENT) {
 		AppTrackEvent,
 	},
 })
-export class AppShellTopNav extends Vue {
+export default class AppShellTopNav extends Vue {
 	@State
 	app!: Store['app'];
 

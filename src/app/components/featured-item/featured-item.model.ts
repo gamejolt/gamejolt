@@ -1,6 +1,6 @@
-import { Model } from '../../../lib/gj-lib-client/components/model/model.service';
-import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
-import { Jam } from '../../../lib/gj-lib-client/components/jam/jam.model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Jam } from 'game-jolt-frontend-lib/components/jam/jam.model';
+import { Model } from 'game-jolt-frontend-lib/components/model/model.service';
 
 export class FeaturedItem extends Model {
 	game?: Game;

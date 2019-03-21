@@ -1,22 +1,20 @@
-import View from '!view!./maturity-block.html?style=./maturity-block.styl';
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-
 import { Settings } from '../../../../_common/settings/settings.service';
-import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
 import { Store } from '../../../store/index';
-import { AppGameOgrs } from '../ogrs/ogrs';
+import AppGameOgrs from '../ogrs/ogrs.vue';
 
-@View
+
 @Component({
 	components: {
 		AppGameOgrs,
 	},
 })
-export class AppGameMaturityBlock extends Vue {
+export default class AppGameMaturityBlock extends Vue {
 	@Prop(Game) game!: Game;
 
 	@State app!: Store['app'];

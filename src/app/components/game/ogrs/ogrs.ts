@@ -1,17 +1,15 @@
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./ogrs.html?style=./ogrs.styl';
+import AppGameOgrsTag from './tag.vue';
 
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { AppGameOgrsTag } from './tag';
 
-@View
 @Component({
 	components: {
 		AppGameOgrsTag,
 	},
 })
-export class AppGameOgrs extends Vue {
+export default class AppGameOgrs extends Vue {
 	@Prop(Game) game!: Game;
 	@Prop(Boolean) hideDescriptors?: boolean;
 	@Prop(Boolean) hideTag?: boolean;

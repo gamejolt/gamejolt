@@ -8,7 +8,7 @@ import { routeProfileVideos } from './videos/videos.route';
 
 export const routeProfile: RouteConfig = {
 	path: '/@:username',
-	component: () => import(/* webpackChunkName: "routeProfile" */ './profile'),
+	component: () => import(/* webpackChunkName: "routeProfile" */ './profile.vue'),
 	children: [
 		routeProfileOverview,
 		routeProfileLibrary,

@@ -1,28 +1,22 @@
-import View from '!view!./game-buttons.html';
 import * as fs from 'fs';
-import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GamePackagePayloadModel } from 'game-jolt-frontend-lib/components/game/package/package-payload.model';
+import { GamePackagePurchaseModal } from 'game-jolt-frontend-lib/components/game/package/purchase-modal/purchase-modal.service';
 import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { arrayGroupBy } from 'game-jolt-frontend-lib/utils/array';
 import * as path from 'path';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
-import { GamePackagePurchaseModal } from '../../../../lib/gj-lib-client/components/game/package/purchase-modal/purchase-modal.service';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { arrayGroupBy } from '../../../../lib/gj-lib-client/utils/array';
-import {
-	ClientLibraryAction,
-	ClientLibraryState,
-	ClientLibraryStore,
-} from '../../../store/client-library';
+import { ClientLibraryAction, ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
 import { ClientInstallPackageModal } from '../install-package-modal/install-package-modal.service';
-import { AppClientInstallProgress } from '../install-progress/install-progress';
+import AppClientInstallProgress from '../install-progress/install-progress.vue';
 import { LocalDbPackage } from '../local-db/package/package.model';
 
-@View
 @Component({
 	components: {
 		AppPopper,
@@ -32,7 +26,7 @@ import { LocalDbPackage } from '../local-db/package/package.model';
 		AppTooltip,
 	},
 })
-export class AppClientGameButtons extends Vue {
+export default class AppClientGameButtons extends Vue {
 	@ClientLibraryState
 	packagesByGameId!: ClientLibraryStore['packagesByGameId'];
 

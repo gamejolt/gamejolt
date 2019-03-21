@@ -1,17 +1,11 @@
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
+import { BaseForm, FormOnInit, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./reset-password.html';
 
-import {
-	BaseForm,
-	FormOnInit,
-	FormOnSubmit,
-} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 
-@View
 @Component({})
-export class FormResetPassword extends BaseForm<any> implements FormOnInit, FormOnSubmit {
+export default class FormResetPassword extends BaseForm<any> implements FormOnInit, FormOnSubmit {
 	@Prop(Number) userId!: number;
 	@Prop(String) token!: string;
 

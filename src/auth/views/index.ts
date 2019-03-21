@@ -1,5 +1,5 @@
+import { initRouter } from 'game-jolt-frontend-lib/utils/router';
 import { store } from '../store/index';
-import { initRouter } from '../../lib/gj-lib-client/utils/router';
 import { routeAuth } from './auth/auth.route';
 
 const routes = [routeAuth];

@@ -1,21 +1,20 @@
-import View from '!view!./friend-request-popover.html?style=./friend-request-popover.styl';
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
-import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
+import AppPopperTS from 'game-jolt-frontend-lib/components/popper/popper';
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';
-import { AppLoading } from 'game-jolt-frontend-lib/vue/components/loading/loading';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class/lib/bindings';
 import { Store } from '../../../store';
 import { UserFriendshipHelper } from '../../user/friendships-helper/friendship-helper.service';
-import { AppShellFriendRequestPopoverItem } from './item/item';
+import AppShellFriendRequestPopoverItem from './item/item.vue';
 
 type Tab = 'requests' | 'pending';
 
-@View
 @Component({
 	components: {
 		AppPopper,
@@ -27,7 +26,7 @@ type Tab = 'requests' | 'pending';
 		AppTrackEvent,
 	},
 })
-export class AppShellFriendRequestPopover extends Vue {
+export default class AppShellFriendRequestPopover extends Vue {
 	@State
 	friendRequestCount!: Store['friendRequestCount'];
 
@@ -45,7 +44,7 @@ export class AppShellFriendRequestPopover extends Vue {
 	outgoing: UserFriendship[] = [];
 
 	$refs!: {
-		popper: AppPopper;
+		popper: AppPopperTS;
 	};
 
 	readonly Connection = Connection;

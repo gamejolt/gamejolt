@@ -1,22 +1,15 @@
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { AppFocusWhen } from 'game-jolt-frontend-lib/components/form-vue/focus-when.directive';
+import { BaseForm, FormOnInit, FormOnSubmit, FormOnSubmitSuccess } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./token.html';
 
-import {
-	BaseForm,
-	FormOnSubmit,
-	FormOnSubmitSuccess,
-	FormOnInit,
-} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
 
-@View
 @Component({
 	directives: {
 		AppFocusWhen,
 	},
 })
-export class FormToken extends BaseForm<any>
+export default class FormToken extends BaseForm<any>
 	implements FormOnInit, FormOnSubmit, FormOnSubmitSuccess {
 	@Prop(String) token!: string;
 

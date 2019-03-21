@@ -3,7 +3,7 @@ import { RouteConfig } from 'vue-router';
 export const routeDiscoverGamesViewDownloadSoundtrack: RouteConfig = {
 	name: 'discover.games.view.download.soundtrack',
 	path: 'download/soundtrack',
-	component: () => import(/* webpackChunkName: "routeDiscoverGamesView" */ './soundtrack'),
+	component: () => import(/* webpackChunkName: "routeDiscoverGamesView" */ './soundtrack.vue'),
 	children: [
 		// http://localhost:8080/games/tea-time-with-luap-sere-make-the-world-right/soundtracks/download/863
 		{

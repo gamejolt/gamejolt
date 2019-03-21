@@ -4,9 +4,7 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const cluster = require('cluster');
-const {
-	createBundleRenderer
-} = require('vue-server-renderer');
+const { createBundleRenderer } = require('vue-server-renderer');
 
 // We will restart each worker after around this many requests.
 const RestartRequestCount = 250;
@@ -34,8 +32,8 @@ if (cluster.isMaster) {
 	console.log(`Worker ${process.pid} started`);
 
 	const section = argv.section || 'app';
-	const serverBuildPath = isProd ? '../../build/prod-server/' : '../build/dev-server/';
-	const clientBuildPath = isProd ? '../../build/prod/' : '../build/dev/';
+	const serverBuildPath = resolve(isProd ? '../build/prod-server/' : '../build/dev-server/');
+	const clientBuildPath = resolve(isProd ? '../build/prod/' : '../build/dev/');
 
 	const serverBundle = require(path.join(
 		serverBuildPath,
@@ -52,7 +50,7 @@ if (cluster.isMaster) {
 	const renderer = createBundleRenderer(serverBundle, {
 		runInNewContext: true,
 		template: fs.readFileSync(resolve('./index-ssr.html'), 'utf-8'),
-		// clientManifest,
+		clientManifest,
 	});
 
 	if (!isProd) {

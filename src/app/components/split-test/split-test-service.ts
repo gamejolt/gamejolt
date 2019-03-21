@@ -46,7 +46,7 @@ function checkHardcoded(experiment: string, route?: Route): number {
 	if (route) {
 		const query = route.query;
 		if (query[experiment]) {
-			return parseInt(query[experiment], 10);
+			return parseInt(query[experiment] as string, 10);
 		}
 	}
 

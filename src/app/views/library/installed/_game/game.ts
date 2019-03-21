@@ -1,19 +1,17 @@
-import View from '!view!./game.html?style=./game.styl';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppGameThumbnail } from '../../../../../_common/game/thumbnail/thumbnail';
-import { AppClientGameButtons } from '../../../../components/client/game-buttons/game-buttons';
+import AppGameThumbnail from '../../../../../_common/game/thumbnail/thumbnail.vue';
+import AppClientGameButtons from '../../../../components/client/game-buttons/game-buttons.vue';
 import { LocalDbGame } from '../../../../components/client/local-db/game/game.model';
 import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
 
-@View
 @Component({
 	components: {
 		AppGameThumbnail,
 		AppClientGameButtons,
 	},
 })
-export class AppLibraryInstalledGame extends Vue {
+export default class AppLibraryInstalledGame extends Vue {
 	@Prop(LocalDbGame)
 	game!: LocalDbGame;
 

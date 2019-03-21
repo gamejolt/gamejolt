@@ -1,18 +1,10 @@
-import View from '!view!./settings.html';
+import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
+import { BaseForm, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { ThemeMutation, ThemeState, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
 import { Component, Watch } from 'vue-property-decorator';
-
-import { Settings } from '../../../../_common/settings/settings.service';
-import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import {
-	BaseForm,
-	FormOnInit,
-} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 import * as _ClientAutoStartMod from '../../../../_common/client/autostart/autostart.service';
-import {
-	ThemeState,
-	ThemeMutation,
-	ThemeStore,
-} from '../../../../lib/gj-lib-client/components/theme/theme.store';
+import { Settings } from '../../../../_common/settings/settings.service';
+
 
 let ClientAutoStartMod: typeof _ClientAutoStartMod | undefined;
 if (GJ_IS_CLIENT) {
@@ -36,13 +28,12 @@ type FormModel = {
 	theme_always_ours: boolean;
 };
 
-@View
 @Component({
 	components: {
 		AppFormControlToggle,
 	},
 })
-export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
+export default class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 	@ThemeState isDark!: ThemeStore['isDark'];
 	@ThemeState alwaysOurs!: ThemeStore['alwaysOurs'];
 	@ThemeMutation setDark!: ThemeStore['setDark'];
@@ -108,10 +99,7 @@ export class FormSettings extends BaseForm<FormModel> implements FormOnInit {
 
 	@Watch('formModel.limit_extractions')
 	limitExtractionsChange(shouldLimit: boolean) {
-		this.setField(
-			'max_extract_count',
-			shouldLimit ? Settings.getDefault('max-extract-count') : -1
-		);
+		this.setField('max_extract_count', shouldLimit ? Settings.getDefault('max-extract-count') : -1);
 		this.onChange();
 	}
 

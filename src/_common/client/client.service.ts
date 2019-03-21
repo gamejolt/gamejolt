@@ -72,6 +72,6 @@ export class Client {
 			// data-packageId-buildId/Game Jolt Client.app/Contents/Resources/app.nw
 			return path.resolve(process.cwd(), '../../../../../');
 		}
-		return path.resolve(nw.App.startPath, '..');
+		return path.resolve((nw.App as any).startPath as string, '..');
 	}
 }

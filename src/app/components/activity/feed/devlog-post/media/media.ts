@@ -1,27 +1,25 @@
-import View from '!view!./media.html?style=./media.styl';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
-import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { MediaItem } from '../../../../../../lib/gj-lib-client/components/media-item/media-item-model';
-import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppEventItemMediaIndicator } from '../../../../event-item/media-indicator/media-indicator';
+import AppEventItemMediaIndicator from '../../../../event-item/media-indicator/media-indicator.vue';
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedView } from '../../view';
-import { AppActivityFeedDevlogPostMediaItem } from './item/item';
+import AppActivityFeedDevlogPostMediaItem from './item/item.vue';
 
 if (!GJ_IS_SSR) {
 	const VueTouch = require('vue-touch');
 	Vue.use(VueTouch);
 }
 
-@View
 @Component({
 	components: {
 		AppActivityFeedDevlogPostMediaItem,
 		AppEventItemMediaIndicator,
 	},
 })
-export class AppActivityFeedDevlogPostMedia extends Vue {
+export default class AppActivityFeedDevlogPostMedia extends Vue {
 	@Inject()
 	feed!: ActivityFeedView;
 

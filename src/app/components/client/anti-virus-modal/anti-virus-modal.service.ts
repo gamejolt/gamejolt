@@ -1,5 +1,5 @@
-import { Modal } from '../../../../lib/gj-lib-client/components/modal/modal.service';
-import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils';
+import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
+import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
 
 export class ClientAntiVirusModal {
 	static async show(message: string, title?: string) {
@@ -7,7 +7,7 @@ export class ClientAntiVirusModal {
 			modalId: 'ClientAntiVirus',
 			component: () =>
 				asyncComponentLoader(
-					import(/* webpackChunkName: "ClientAntiVirusModal" */ './anti-virus-modal')
+					import(/* webpackChunkName: "ClientAntiVirusModal" */ './anti-virus-modal.vue')
 				),
 			props: { message, title },
 			size: 'sm',

@@ -1,18 +1,15 @@
-import View from '!view!./item.html?style=./item.styl';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppScrollInview } from 'game-jolt-frontend-lib/components/scroll/inview/inview';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 import { ChatClient, ChatSiteModPermission } from '../../client';
+import { ChatModerateUserModal } from '../../moderate-user-modal/moderate-user-modal.service';
 import { ChatRoom } from '../../room';
 import { ChatUser } from '../../user';
-import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scroll/inview/inview';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { ChatModerateUserModal } from '../../moderate-user-modal/moderate-user-modal.service';
 
-@View
 @Component({
 	components: {
 		AppScrollInview,
@@ -22,7 +19,7 @@ import { ChatModerateUserModal } from '../../moderate-user-modal/moderate-user-m
 		number,
 	},
 })
-export class AppChatUserListItem extends Vue {
+export default class AppChatUserListItem extends Vue {
 	@Prop(ChatUser) user!: ChatUser;
 	@Prop(ChatRoom) room?: ChatRoom;
 	@Prop(Boolean) showPm?: boolean;

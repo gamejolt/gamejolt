@@ -1,21 +1,16 @@
+import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
+import { BaseForm, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./score-table.html';
 
-import { GameScoreTable } from '../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import {
-	BaseForm,
-	FormOnInit,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 
-@View
 @Component({
 	components: {
 		AppFormControlToggle,
 	},
 })
-export class FormGameScoreTable extends BaseForm<GameScoreTable> implements FormOnInit {
+export default class FormGameScoreTable extends BaseForm<GameScoreTable> implements FormOnInit {
 	@Prop(Game) game!: Game;
 
 	modelClass = GameScoreTable;

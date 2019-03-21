@@ -4,7 +4,7 @@ export const routeDashGamesManageGameOverview: RouteConfig = {
 	name: 'dash.games.manage.game.overview',
 	path: '/dashboard/games/:id(\\d+)',
 	component: () =>
-		import(/* webpackChunkName: "routeDashGamesManageGameOverview" */ './overview'),
+		import(/* webpackChunkName: "routeDashGamesManageGameOverview" */ './overview.vue'),
 	children: [
 		{
 			path: '/dashboard/developer/games/view/:id(\\d+)',

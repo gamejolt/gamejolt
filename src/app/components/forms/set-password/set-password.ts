@@ -1,15 +1,10 @@
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { BaseForm, FormOnInit, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./set-password.html';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import {
-	BaseForm,
-	FormOnInit,
-	FormOnSubmit,
-} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
 
-@View
+
 @Component({})
-export class FormSetPassword extends BaseForm<any> implements FormOnInit, FormOnSubmit {
+export default class FormSetPassword extends BaseForm<any> implements FormOnInit, FormOnSubmit {
 	warnOnDiscard = false;
 
 	onInit() {

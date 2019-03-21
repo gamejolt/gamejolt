@@ -9,7 +9,7 @@ import { routeDashGamesManageSite } from './site/site.route';
 
 export const routeDashGamesManage: RouteConfig = {
 	path: '/dashboard/games/:id(\\d+)',
-	component: () => import(/* webpackChunkName: "routeDashGamesManage" */ './manage'),
+	component: () => import(/* webpackChunkName: "routeDashGamesManage" */ './manage.vue'),
 	children: [
 		routeDashGamesManageGame,
 		routeDashGamesManageApi,

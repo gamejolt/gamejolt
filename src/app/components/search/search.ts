@@ -1,10 +1,9 @@
-import View from '!view!./search.html?style=./search.styl';
-import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue'
 import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { AppSearchAutocomplete } from './autocomplete/autocomplete';
-import { AppSearchInput } from './input/input';
+import AppSearchAutocomplete from './autocomplete/autocomplete.vue';
+import AppSearchInput from './input/input.vue';
 import { Search } from './search-service';
 
 const KEYCODE_UP = 38;
@@ -14,7 +13,6 @@ const KEYCODE_ESC = 27;
 
 let searchIterator = 0;
 
-@View
 @Component({
 	components: {
 		AppSearchAutocomplete,
@@ -22,7 +20,7 @@ let searchIterator = 0;
 		AppPopper,
 	},
 })
-export class AppSearch extends Vue {
+export default class AppSearch extends Vue {
 	@Prop({ type: Boolean, default: false })
 	autocompleteDisabled!: boolean;
 

@@ -1,17 +1,15 @@
-import View from '!view!./overview.html?style=./overview.styl';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { AppCommentAddButton } from 'game-jolt-frontend-lib/components/comment/add-button/add-button';
+import AppCommentAddButton from 'game-jolt-frontend-lib/components/comment/add-button/add-button.vue';
+import { Comment } from 'game-jolt-frontend-lib/components/comment/comment-model';
 import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
 import { CommentThreadModal } from 'game-jolt-frontend-lib/components/comment/thread/modal.service';
-import { AppExpand } from 'game-jolt-frontend-lib/components/expand/expand';
-import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import 'game-jolt-frontend-lib/components/lazy/placeholder/placeholder.styl';
+import { LinkedAccount, Provider } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';
@@ -20,20 +18,14 @@ import { YoutubeChannel } from 'game-jolt-frontend-lib/components/youtube/channe
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { Comment } from '../../../../lib/gj-lib-client/components/comment/comment-model';
-import {
-	LinkedAccount,
-	Provider,
-} from '../../../../lib/gj-lib-client/components/linked-account/linked-account.model';
 import { ChatClient } from '../../../components/chat/client';
-import { AppCommentOverview } from '../../../components/comment/overview/overview';
-import { AppPageContainer } from '../../../components/page-container/page-container';
+import AppCommentOverview from '../../../components/comment/overview/overview.vue';
+import AppGameList from '../../../components/game/list/list.vue';
+import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
+import AppPageContainer from '../../../components/page-container/page-container.vue';
 import { Store } from '../../../store/index';
 import { RouteStore, RouteStoreModule } from '../profile.store';
-import { AppGameList } from './../../../components/game/list/list';
-import { AppGameListPlaceholder } from './../../../components/game/list/placeholder/placeholder';
 
-@View
 @Component({
 	name: 'RouteProfileOverview',
 	components: {

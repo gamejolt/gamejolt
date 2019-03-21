@@ -1,16 +1,14 @@
-import View from '!view!./banner.html?style=./banner.styl';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppTheme } from 'game-jolt-frontend-lib/components/theme/theme';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppTheme } from '../../../../../lib/gj-lib-client/components/theme/theme';
 import { FeaturedItem } from '../../../../components/featured-item/featured-item.model';
-import { AppGameFollowWidget } from '../../../../components/game/follow-widget/follow-widget';
+import AppGameFollowWidget from '../../../../components/game/follow-widget/follow-widget.vue';
 import { Store } from '../../../../store/index';
 
-@View
 @Component({
 	components: {
 		AppGameFollowWidget,
@@ -20,7 +18,7 @@ import { Store } from '../../../../store/index';
 		AppTrackEvent,
 	},
 })
-export class AppDiscoverHomeBanner extends Vue {
+export default class AppDiscoverHomeBanner extends Vue {
 	@Prop(FeaturedItem)
 	item!: FeaturedItem;
 

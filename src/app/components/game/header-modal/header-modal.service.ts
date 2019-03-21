@@ -1,6 +1,6 @@
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { Modal } from '../../../../lib/gj-lib-client/components/modal/modal.service';
-import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
+import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
 
 export class GameHeaderModal {
 	static async show(game: Game) {
@@ -8,7 +8,7 @@ export class GameHeaderModal {
 			modalId: 'GameHeader',
 			component: () =>
 				asyncComponentLoader(
-					import(/* webpackChunkName: "GameHeaderModal" */ './header-modal')
+					import(/* webpackChunkName: "GameHeaderModal" */ './header-modal.vue')
 				),
 			props: {
 				game,

@@ -1,22 +1,20 @@
+import AppFormButton from 'game-jolt-frontend-lib/components/form-vue/button/button.vue';
+import AppFormTS from 'game-jolt-frontend-lib/components/form-vue/form';
+import AppForm from 'game-jolt-frontend-lib/components/form-vue/form.vue';
+import { findVueParent } from 'game-jolt-frontend-lib/utils/vue';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
-import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./wizard-controls.html';
-
-import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
-import { findVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
-import { AppFormButton } from '../../../../../lib/gj-lib-client/components/form-vue/button/button';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+import { State } from 'vuex-class';
 import { RouteStore, RouteStoreName } from '../../../../views/dashboard/games/manage/manage.store';
 
-@View
 @Component({
 	components: {
 		AppFormButton,
 		AppJolticon,
 	},
 })
-export class AppDashGameWizardControls extends Vue {
+export default class AppDashGameWizardControls extends Vue {
 	@Prop(Boolean) disabled?: boolean;
 
 	// The manage route store may not be loaded in if we're in the "add" form.
@@ -24,10 +22,10 @@ export class AppDashGameWizardControls extends Vue {
 	// exist.
 	@State(RouteStoreName) manageRoute?: RouteStore;
 
-	form?: AppForm;
+	form?: AppFormTS;
 
 	created() {
-		this.form = findVueParent(this, AppForm);
+		this.form = findVueParent(this, AppForm) as AppFormTS;
 	}
 
 	get isWizard() {

@@ -1,17 +1,12 @@
-import View from '!view!./details.html';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
+import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Component } from 'vue-property-decorator';
-import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import {
-	AppState,
-	AppStore,
-} from '../../../../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { AppGameDevStageSelector } from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector';
-import { FormGame } from '../../../../../../components/forms/game/game';
+import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector.vue';
+import FormGame from '../../../../../../components/forms/game/game.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@View
 @Component({
 	name: 'RouteDashGamesManageGameDetails',
 	components: {

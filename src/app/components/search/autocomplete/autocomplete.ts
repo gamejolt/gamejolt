@@ -1,20 +1,20 @@
-import View from '!view!./autocomplete.html?style=./autocomplete.styl';
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import AppGameThumbnailImg from 'game-jolt-frontend-lib/components/game/thumbnail-img/thumbnail-img.vue';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
+import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import 'rxjs/add/operator/debounceTime';
 import { Subject } from 'rxjs/Subject';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { AppGameThumbnailImg } from '../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { findRequiredVueParent } from '../../../../lib/gj-lib-client/utils/vue';
-import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import * as _LocalDbGameMod from '../../client/local-db/game/game.model';
-import { AppGameCompatIcons } from '../../game/compat-icons/compat-icons';
-import { AppSearch } from '../search';
+import AppGameCompatIcons from '../../game/compat-icons/compat-icons.vue';
+import AppSearchTS from '../search';
 import { Search } from '../search-service';
+import AppSearch from '../search.vue';
 
 let LocalDbGameMod: typeof _LocalDbGameMod | undefined;
 if (GJ_IS_CLIENT) {
@@ -25,7 +25,6 @@ const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;
 const KEYCODE_ENTER = 13;
 
-@View
 @Component({
 	components: {
 		AppGameThumbnailImg,
@@ -35,7 +34,7 @@ const KEYCODE_ENTER = 13;
 		AppTrackEvent,
 	},
 })
-export class AppSearchAutocomplete extends Vue {
+export default class AppSearchAutocomplete extends Vue {
 	@State
 	app!: AppStore;
 
@@ -45,7 +44,7 @@ export class AppSearchAutocomplete extends Vue {
 	libraryGames: _LocalDbGameMod.LocalDbGame[] = [];
 	items: any[] = [];
 
-	search: AppSearch | null = null;
+	search: AppSearchTS | null = null;
 
 	searchChanges = new Subject<string>();
 	searched$ = this.searchChanges.debounceTime(500).subscribe(query => {
@@ -59,7 +58,7 @@ export class AppSearchAutocomplete extends Vue {
 	}
 
 	created() {
-		this.search = findRequiredVueParent(this, AppSearch);
+		this.search = findRequiredVueParent(this, AppSearch) as AppSearchTS;
 	}
 
 	mounted() {

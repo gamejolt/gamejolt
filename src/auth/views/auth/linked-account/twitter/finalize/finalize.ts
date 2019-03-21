@@ -1,11 +1,11 @@
-import View from '!view!./finalize.html';
+// TODO template file is missing, is this intentional?
+// import View from '!view!./finalize.html';
+import { Auth } from 'game-jolt-frontend-lib/components/auth/auth.service';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
-import { Auth } from '../../../../../../lib/gj-lib-client/components/auth/auth.service';
-import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/components/route/route-component';
-import { FormTwitterEmail } from '../../../../../components/forms/twitter-email/twitter-email';
+import FormTwitterEmail from '../../../../../components/forms/twitter-email/twitter-email';
 
-@View
 @Component({
 	name: 'RouteAuthLinkedAccountTwitterFinalize',
 	components: {

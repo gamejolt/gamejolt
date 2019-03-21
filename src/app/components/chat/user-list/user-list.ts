@@ -1,20 +1,18 @@
-import View from '!view!./user-list.html';
+import { AppScrollInviewParent } from 'game-jolt-frontend-lib/components/scroll/inview/parent';
+import { fuzzysearch } from 'game-jolt-frontend-lib/utils/string';
+import { findVueParent } from 'game-jolt-frontend-lib/utils/vue';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { AppScrollInviewParent } from '../../../../lib/gj-lib-client/components/scroll/inview/parent';
-import { fuzzysearch } from '../../../../lib/gj-lib-client/utils/string';
-import { findVueParent } from '../../../../lib/gj-lib-client/utils/vue';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
-import { AppChatUserListItem } from './item/item';
+import AppChatUserListItem from './item/item.vue';
 
-@View
 @Component({
 	components: {
 		AppChatUserListItem,
 	},
 })
-export class AppChatUserList extends Vue {
+export default class AppChatUserList extends Vue {
 	@Prop(Array)
 	users!: ChatUser[];
 

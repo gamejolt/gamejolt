@@ -1,12 +1,7 @@
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { BaseForm, FormOnInit, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./change-password.html';
 
-import {
-	BaseForm,
-	FormOnInit,
-	FormOnSubmit,
-} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 
 type FormModel = {
 	old_password: string;
@@ -14,9 +9,9 @@ type FormModel = {
 	confirm_password: string;
 };
 
-@View
 @Component({})
-export class FormChangePassword extends BaseForm<FormModel> implements FormOnInit, FormOnSubmit {
+export default class FormChangePassword extends BaseForm<FormModel>
+	implements FormOnInit, FormOnSubmit {
 	@Prop({ type: Boolean, default: true })
 	requiresOld!: boolean;
 

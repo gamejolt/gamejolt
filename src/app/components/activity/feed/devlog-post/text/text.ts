@@ -1,5 +1,4 @@
-import View from '!view!./text.html?style=./text.styl';
-import { AppFadeCollapse } from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse';
+import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue'
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
@@ -9,14 +8,13 @@ import { Component, Inject, Prop } from 'vue-property-decorator';
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedView } from '../../view';
 
-@View
 @Component({
 	components: {
 		AppFadeCollapse,
 		AppWidgetCompiler,
 	},
 })
-export class AppActivityFeedDevlogPostText extends Vue {
+export default class AppActivityFeedDevlogPostText extends Vue {
 	@Inject()
 	feed!: ActivityFeedView;
 

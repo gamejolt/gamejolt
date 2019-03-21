@@ -1,21 +1,15 @@
+import AppEditableOverlay from 'game-jolt-frontend-lib/components/editable-overlay/editable-overlay.vue';
+import AppFormControlTheme from 'game-jolt-frontend-lib/components/form-vue/control/theme/theme.vue';
+import { BaseForm } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import AppGameThumbnailImg from 'game-jolt-frontend-lib/components/game/thumbnail-img/thumbnail-img.vue';
+import { Theme } from 'game-jolt-frontend-lib/components/theme/theme.model';
+import { ThemeMutation, ThemeState, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
 import { Component, Watch } from 'vue-property-decorator';
-import View from '!view!./design.html?style=./design.styl';
-
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { BaseForm } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { AppFormControlTheme } from '../../../../../lib/gj-lib-client/components/form-vue/control/theme/theme';
-import {
-	ThemeMutation,
-	ThemeStore,
-	ThemeState,
-} from '../../../../../lib/gj-lib-client/components/theme/theme.store';
-import { Theme } from '../../../../../lib/gj-lib-client/components/theme/theme.model';
-import { AppDashGameWizardControls } from '../wizard-controls/wizard-controls';
-import { AppEditableOverlay } from '../../../../../lib/gj-lib-client/components/editable-overlay/editable-overlay';
-import { AppGameThumbnailImg } from '../../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
 import { GameThumbnailModal } from '../../../game/thumbnail-modal/thumbnail-modal.service';
+import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 
-@View
+
 @Component({
 	components: {
 		AppFormControlTheme,
@@ -24,7 +18,7 @@ import { GameThumbnailModal } from '../../../game/thumbnail-modal/thumbnail-moda
 		AppDashGameWizardControls,
 	},
 })
-export class FormGameDesign extends BaseForm<Game> {
+export default class FormGameDesign extends BaseForm<Game> {
 	modelClass = Game as any;
 	saveMethod: '$saveDesign' = '$saveDesign';
 

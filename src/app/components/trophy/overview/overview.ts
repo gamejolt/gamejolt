@@ -1,19 +1,17 @@
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GameTrophy } from 'game-jolt-frontend-lib/components/game/trophy/trophy.model';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { UserGameTrophy } from 'game-jolt-frontend-lib/components/user/game-trophy/game-trophy.model';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import View from '!view!./overview.html?style=./overview.styl';
-
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { State } from 'vuex-class';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { UserGameTrophy } from '../../../../lib/gj-lib-client/components/user/game-trophy/game-trophy.model';
-import { GameTrophy } from '../../../../lib/gj-lib-client/components/game/trophy/trophy.model';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { AppTrophyCompletion } from '../completion/completion';
-import { AppTrophyThumbnail } from '../thumbnail/thumbnail';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 import { Store } from '../../../store/index';
+import AppTrophyCompletion from '../completion/completion.vue';
+import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
 
-@View
+
 @Component({
 	components: {
 		AppTrophyCompletion,
@@ -24,7 +22,7 @@ import { Store } from '../../../store/index';
 		number,
 	},
 })
-export class AppTrophyOverview extends Vue {
+export default class AppTrophyOverview extends Vue {
 	@Prop(Game) game!: Game;
 	@Prop(Object) initialPayload?: any;
 	@Prop({ type: String, default: 'full' })

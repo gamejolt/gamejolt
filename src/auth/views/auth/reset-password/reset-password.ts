@@ -1,14 +1,9 @@
-import View from '!view!./reset-password.html';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../lib/gj-lib-client/components/route/route-component';
-import { FormResetPassword } from '../../../components/forms/reset-password/reset-password';
+import FormResetPassword from '../../../components/forms/reset-password/reset-password.vue';
 
-@View
 @Component({
 	name: 'RouteAuthResetPassword',
 	components: {

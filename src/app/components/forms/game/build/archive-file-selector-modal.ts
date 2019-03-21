@@ -1,11 +1,10 @@
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./archive-file-selector.html';
-import { BaseModal } from '../../../../../lib/gj-lib-client/components/modal/base';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppLoading } from '../../../../../lib/gj-lib-client/vue/components/loading/loading';
 
-@View
+
 @Component({
 	components: {
 		AppJolticon,

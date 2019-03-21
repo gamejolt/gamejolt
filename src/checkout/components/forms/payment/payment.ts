@@ -1,24 +1,18 @@
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import { AppFocusWhen } from 'game-jolt-frontend-lib/components/form-vue/focus-when.directive';
+import { BaseForm, FormOnInit, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Geo, Region } from 'game-jolt-frontend-lib/components/geo/geo.service';
+import { Order } from 'game-jolt-frontend-lib/components/order/order.model';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
+import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
+import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import View from '!view!./payment.html?style=./payment.styl';
 
-import {
-	BaseForm,
-	FormOnInit,
-} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Geo, Region } from '../../../../lib/gj-lib-client/components/geo/geo.service';
-import { Order } from '../../../../lib/gj-lib-client/components/order/order.model';
-import { FormOnSubmit } from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
-import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
 
-@View
 @Component({
 	components: {
 		AppExpand,
@@ -33,7 +27,7 @@ import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/
 		currency,
 	},
 })
-export class FormPayment extends BaseForm<any> implements FormOnInit, FormOnSubmit {
+export default class FormPayment extends BaseForm<any> implements FormOnInit, FormOnSubmit {
 	@State app!: AppStore;
 
 	@Prop(Array) cards!: any[];

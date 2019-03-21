@@ -1,0 +1,18 @@
+<template>
+	<div :class="{ 'is-client-offline': Connection.isClientOffline }">
+		<app-theme />
+		<app-cookie-banner />
+
+		<div id="content">
+			<app-error-page>
+				<router-view />
+			</app-error-page>
+		</div>
+
+		<app-client-base v-if="GJ_IS_CLIENT" />
+		<app-loading-bar />
+		<app-growls />
+	</div>
+</template>
+
+<script lang="ts" src="./app" />

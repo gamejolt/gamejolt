@@ -1,23 +1,21 @@
-import View from '!view!./key.html';
-import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
-import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
-import { GameBundle } from '../../../lib/gj-lib-client/components/game-bundle/game-bundle.model';
-import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
-import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
-import { ModalConfirm } from '../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { Navigate } from '../../../lib/gj-lib-client/components/navigate/navigate.service';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import { GameBundle } from 'game-jolt-frontend-lib/components/game-bundle/game-bundle.model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
+import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../lib/gj-lib-client/components/route/route-component';
-import { AppInvalidKey } from '../../components/invalid-key/invalid-key';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import AppInvalidKey from '../../components/invalid-key/invalid-key.vue';
 import { Store } from '../../store/index';
-import { AppKeyBundle } from './_bundle/bundle';
-import { AppKeyGame } from './_game/game';
+import AppKeyBundle from './_bundle/bundle.vue';
+import AppKeyGame from './_game/game.vue';
 
-@View
 @Component({
 	name: 'RouteKey',
 	components: {

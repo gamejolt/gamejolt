@@ -1,11 +1,9 @@
-import View from '!view!./api.html';
+import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
+import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component } from 'vue-property-decorator';
-import { AppNavTabList } from '../../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
-import { BaseRouteComponent } from '../../../../../../lib/gj-lib-client/components/route/route-component';
-import { Screen } from '../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppManageGameApiNav } from './_nav/nav';
+import AppManageGameApiNav from './_nav/nav.vue';
 
-@View
 @Component({
 	name: 'RouteDashGamesManageApi',
 	components: {

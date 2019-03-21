@@ -5,6 +5,6 @@ import { routeSearchUsers } from './users/users.route';
 
 export const routeSearch: RouteConfig = {
 	path: '/search',
-	component: () => import(/* webpackChunkName: "routeSearch" */ './search'),
+	component: () => import(/* webpackChunkName: "routeSearch" */ './search.vue'),
 	children: [routeSearchResults, routeSearchGames, routeSearchUsers],
 };

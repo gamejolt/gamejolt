@@ -1,20 +1,18 @@
-import View from '!view!./comment-video.html';
+import { CommentVideo } from 'game-jolt-frontend-lib/components/comment/video/video-model';
+import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
-import { CommentVideo } from '../../../../../lib/gj-lib-client/components/comment/video/video-model';
-import { AppFadeCollapse } from '../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
 import { ActivityFeedItem } from '../item-service';
 import { ActivityFeedView } from '../view';
-import { AppActivityFeedVideo } from '../_video/video';
+import AppActivityFeedVideo from '../_video/video.vue';
 
-@View
 @Component({
 	components: {
 		AppActivityFeedVideo,
 		AppFadeCollapse,
 	},
 })
-export class AppActivityFeedCommentVideo extends Vue {
+export default class AppActivityFeedCommentVideo extends Vue {
 	@Inject()
 	feed!: ActivityFeedView;
 

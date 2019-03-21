@@ -1,12 +1,10 @@
-import { State } from 'vuex-class';
+import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./avatar-modal.html';
-
-import { BaseModal } from '../../../../lib/gj-lib-client/components/modal/base';
-import { FormAvatar } from '../../forms/avatar/avatar';
+import { State } from 'vuex-class';
 import { Store } from '../../../store/index';
+import FormAvatar from '../../forms/avatar/avatar.vue';
 
-@View
+
 @Component({
 	components: {
 		FormAvatar,

@@ -1,5 +1,4 @@
-import View from '!view!./feed.html?style=./feed.styl';
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
@@ -8,21 +7,21 @@ import {
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppUserCard } from 'game-jolt-frontend-lib/components/user/card/card';
+import AppUserCard from 'game-jolt-frontend-lib/components/user/card/card.vue'
 import { numberSort } from 'game-jolt-frontend-lib/utils/array';
 import { fuzzysearch } from 'game-jolt-frontend-lib/utils/string';
 import { Component } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class';
-import { AppActivityFeed } from '../../components/activity/feed/feed';
+import AppActivityFeed from '../../components/activity/feed/feed.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import { AppActivityFeedPlaceholder } from '../../components/activity/feed/placeholder/placeholder';
+import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../components/activity/feed/view';
-import { AppBroadcastCard } from '../../components/broadcast-card/broadcast-card';
-import { AppCommunitySlider } from '../../components/community/slider/slider';
-import { AppGameList } from '../../components/game/list/list';
-import { AppGameListPlaceholder } from '../../components/game/list/placeholder/placeholder';
-import { AppPageContainer } from '../../components/page-container/page-container';
-import { AppPostAddButton } from '../../components/post/add-button/add-button';
+import AppBroadcastCard from '../../components/broadcast-card/broadcast-card.vue';
+import AppCommunitySlider from '../../components/community/slider/slider.vue';
+import AppGameList from '../../components/game/list/list.vue';
+import AppGameListPlaceholder from '../../components/game/list/placeholder/placeholder.vue';
+import AppPageContainer from '../../components/page-container/page-container.vue';
+import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import { Store, store } from '../../store';
 
 class DashGame {
@@ -34,7 +33,6 @@ class DashGame {
 	) {}
 }
 
-@View
 @Component({
 	name: 'RouteActivityFeed',
 	components: {

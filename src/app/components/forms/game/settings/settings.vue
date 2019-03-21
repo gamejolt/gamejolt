@@ -1,0 +1,87 @@
+<template>
+	<app-form name="settingsForm">
+		<app-form-group
+			name="ga_tracking_id"
+			:label="$gettext(`dash.games.settings.ga_tracking_id_label`)"
+			:optional="true"
+		>
+			<app-form-control
+				type="text"
+				:rules="{
+					max: 30,
+					pattern: 'gaTrackingId',
+				}"
+				:placeholder="$gettext(`dash.games.settings.ga_tracking_id_placeholder`)"
+			/>
+
+			<app-form-control-errors
+				:label="$gettext(`dash.games.settings.ga_tracking_id_error_label`)"
+			/>
+
+			<div class="help-block" v-translate>
+				dash.games.settings.ga_tracking_id_help_html
+			</div>
+		</app-form-group>
+
+		<app-form-group
+			v-if="!hasPackagesForSale && !hasAdultContent"
+			name="ads_enabled"
+			:label="$gettext(`dash.games.settings.ads_label`)"
+		>
+			<app-form-control-toggle class="pull-right" />
+			<div class="help-block" v-translate>
+				dash.games.settings.ads_help_html
+			</div>
+		</app-form-group>
+		<div v-else class="form-group">
+			<label class="control-label">
+				<translate>dash.games.settings.ads_label</translate>
+			</label>
+			<div class="alert">
+				<translate v-if="hasPackagesForSale">
+					We don't show ads on Marketplace game pages (even for pay what you want games).
+				</translate>
+				<translate v-else-if="hasAdultContent">
+					We don't show ads on adult games.
+				</translate>
+			</div>
+		</div>
+
+		<app-form-group name="comments_enabled" :label="$gettext(`dash.games.settings.comments_label`)">
+			<app-form-control-toggle class="pull-right" />
+			<div class="help-block" v-translate>
+				dash.games.settings.comments_help_html
+			</div>
+		</app-form-group>
+
+		<app-form-group name="ratings_enabled" :label="$gettext('Allow ratings?')">
+			<app-form-control-toggle class="pull-right" />
+
+			<div class="help-block">
+				<p>
+					<strong>
+						<translate>
+							Turning this off will disable ratings for this game and hide any ratings already on
+							the page.
+						</translate>
+					</strong>
+				</p>
+				<p>
+					<translate>
+						Your game's voltage will be calculated as if it had received no likes or dislikes. If
+						you allow ratings in the future, the old ratings will be reapplied and your voltage will
+						be recalculated.
+					</translate>
+				</p>
+			</div>
+		</app-form-group>
+
+		<app-dash-game-wizard-controls>
+			<app-form-button>
+				<translate>dash.games.settings.save_button</translate>
+			</app-form-button>
+		</app-dash-game-wizard-controls>
+	</app-form>
+</template>
+
+<script lang="ts" src="./settings" />

@@ -1,15 +1,13 @@
-import View from '!view!./list.html?style=./list.styl';
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
-import { AppUserCard } from 'game-jolt-frontend-lib/components/user/card/card';
-import { AppUserCardPlaceholder } from 'game-jolt-frontend-lib/components/user/card/placeholder/placeholder';
-import { AppLoading } from 'game-jolt-frontend-lib/vue/components/loading/loading';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import AppUserCard from 'game-jolt-frontend-lib/components/user/card/card.vue'
+import AppUserCardPlaceholder from 'game-jolt-frontend-lib/components/user/card/placeholder/placeholder.vue'
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue'
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { Api } from './../../../../lib/gj-lib-client/components/api/api.service';
 import { Screen } from './../../../../lib/gj-lib-client/components/screen/screen-service';
 import { User } from './../../../../lib/gj-lib-client/components/user/user.model';
 
-@View
 @Component({
 	components: {
 		AppUserCard,
@@ -20,7 +18,7 @@ import { User } from './../../../../lib/gj-lib-client/components/user/user.model
 		AppTrackEvent,
 	},
 })
-export class AppFollowerList extends Vue {
+export default class AppFollowerList extends Vue {
 	@Prop(String)
 	url!: string;
 

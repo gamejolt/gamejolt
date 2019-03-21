@@ -1,16 +1,13 @@
+import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
+import { UserGameScore } from 'game-jolt-frontend-lib/components/user/game-score/game-score.model';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { date } from 'game-jolt-frontend-lib/vue/filters/date';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./list-scores.html';
 
-import { GameScoreTable } from '../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { UserGameScore } from '../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
-import { ModalConfirm } from '../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { AppJolticon } from '../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { date } from '../../../../../../../../lib/gj-lib-client/vue/filters/date';
-import { number } from '../../../../../../../../lib/gj-lib-client/vue/filters/number';
-import { AppPopper } from '../../../../../../../../lib/gj-lib-client/components/popper/popper';
-
-@View
 @Component({
 	components: {
 		AppJolticon,
@@ -21,7 +18,7 @@ import { AppPopper } from '../../../../../../../../lib/gj-lib-client/components/
 		number,
 	},
 })
-export class AppManageGameListScores extends Vue {
+export default class AppManageGameListScores extends Vue {
 	@Prop(GameScoreTable) scoreTable!: GameScoreTable;
 	@Prop(Array) scores!: UserGameScore[];
 	@Prop(Boolean) isForUser?: boolean;

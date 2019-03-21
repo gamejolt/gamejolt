@@ -1,11 +1,8 @@
+import { PayloadError } from 'game-jolt-frontend-lib/components/payload/payload-service';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import { importContext } from 'game-jolt-frontend-lib/utils/utils';
 import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
-import { PayloadError } from '../../../../lib/gj-lib-client/components/payload/payload-service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../lib/gj-lib-client/components/route/route-component';
-import { importContext } from '../../../../lib/gj-lib-client/utils/utils';
 
 // We don't emit files since we just want to pull the directory listing.
 const paths = importContext(

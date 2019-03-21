@@ -1,15 +1,13 @@
-import View from '!view!./item.html';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppScrollInview } from 'game-jolt-frontend-lib/components/scroll/inview/inview';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppScrollInview } from '../../../../../lib/gj-lib-client/components/scroll/inview/inview';
-import { AppActivityFeedEventItem } from '../event-item/event-item';
+import AppActivityFeedEventItem from '../event-item/event-item.vue';
 import { ActivityFeedItem } from '../item-service';
-import { AppActivityFeedNotification } from '../notification/notification';
+import AppActivityFeedNotification from '../notification/notification.vue';
 import { ActivityFeedView } from '../view';
-import { AppActivityFeedItemPlaceholder } from './placeholder/placeholder';
+import AppActivityFeedItemPlaceholder from './placeholder/placeholder.vue';
 
-@View
 @Component({
 	components: {
 		AppScrollInview,
@@ -18,7 +16,7 @@ import { AppActivityFeedItemPlaceholder } from './placeholder/placeholder';
 		AppActivityFeedItemPlaceholder,
 	},
 })
-export class AppActivityFeedItem extends Vue {
+export default class AppActivityFeedItem extends Vue {
 	@Inject()
 	feed!: ActivityFeedView;
 
@@ -30,7 +28,7 @@ export class AppActivityFeedItem extends Vue {
 	mounted() {
 		const height = this.feed.getItemHeight(this.item);
 		if (height) {
-			this.$el.style.height = height;
+			(this.$el as HTMLElement).style.height = height;
 		}
 	}
 
@@ -53,6 +51,6 @@ export class AppActivityFeedItem extends Vue {
 
 	onResize(height: number) {
 		this.feed.setItemHeight(this.item, height + 'px');
-		this.$el.style.height = height + 'px';
+		(this.$el as HTMLElement).style.height = height + 'px';
 	}
 }

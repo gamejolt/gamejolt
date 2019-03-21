@@ -1,14 +1,12 @@
+import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import View from '!view!./moderate-user-modal.html';
-
-import { BaseModal } from '../../../../lib/gj-lib-client/components/modal/base';
-import { ChatRoom } from '../room';
 import { ChatClient } from '../client';
+import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 
-@View
+
 @Component({
 	components: {
 		AppJolticon,

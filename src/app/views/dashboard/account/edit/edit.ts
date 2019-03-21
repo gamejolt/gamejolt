@@ -1,18 +1,13 @@
-import View from '!view!./edit.html';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { FormProfile } from '../../../../components/forms/profile/profile';
+import FormProfile from '../../../../components/forms/profile/profile.vue';
 import { Store } from '../../../../store/index';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
-@View
 @Component({
 	name: 'RouteDashAccountEdit',
 	components: {

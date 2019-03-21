@@ -1,6 +1,6 @@
-import { Modal } from '../../../../../lib/gj-lib-client/components/modal/modal.service';
-import { UserAddress } from '../../../../../lib/gj-lib-client/components/user/address/address.model';
-import { asyncComponentLoader } from '../../../../../lib/gj-lib-client/utils/utils';
+import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
+import { UserAddress } from 'game-jolt-frontend-lib/components/user/address/address.model';
+import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
 
 export class UserAddressEditModal {
 	static async show(address: UserAddress) {
@@ -8,7 +8,7 @@ export class UserAddressEditModal {
 			modalId: 'UserAddressEdit',
 			component: () =>
 				asyncComponentLoader(
-					import(/* webpackChunkName: "UserAddressEditModal" */ './edit-modal')
+					import(/* webpackChunkName: "UserAddressEditModal" */ './edit-modal.vue')
 				),
 			size: 'sm',
 			props: { address },

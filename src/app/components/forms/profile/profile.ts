@@ -1,26 +1,17 @@
-import View from '!view!./profile.html';
 import * as distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import AppFormControlMarkdown from 'game-jolt-frontend-lib/components/form-vue/control/markdown/markdown.vue';
+import AppFormControlTheme from 'game-jolt-frontend-lib/components/form-vue/control/theme/theme.vue';
+import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
+import { BaseForm, FormOnLoad, FormOnSubmitError } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Theme } from 'game-jolt-frontend-lib/components/theme/theme.model';
+import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
 import { Component } from 'vue-property-decorator';
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import { AppFormControlMarkdown } from '../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
-import { AppFormControlTheme } from '../../../../lib/gj-lib-client/components/form-vue/control/theme/theme';
-import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import {
-	BaseForm,
-	FormOnLoad,
-	FormOnSubmitError,
-} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Theme } from '../../../../lib/gj-lib-client/components/theme/theme.model';
-import {
-	ThemeMutation,
-	ThemeStore,
-} from '../../../../lib/gj-lib-client/components/theme/theme.store';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 
-@View
 @Component({
 	components: {
 		AppLoading,
@@ -31,7 +22,7 @@ import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading
 		AppFormControlToggle,
 	},
 })
-export class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSubmitError {
+export default class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSubmitError {
 	modelClass = User;
 	resetOnSubmit = true;
 	reloadOnSubmit = true;

@@ -1,9 +1,9 @@
-import { GamePlayModal } from '../lib/gj-lib-client/components/game/play-modal/play-modal.service';
-import { Registry } from '../lib/gj-lib-client/components/registry/registry.service';
-import '../lib/gj-lib-client/utils/polyfills';
-import { bootstrapShortkey } from '../lib/gj-lib-client/vue/shortkey';
+import { GamePlayModal } from 'game-jolt-frontend-lib/components/game/play-modal/play-modal.service';
+import { Registry } from 'game-jolt-frontend-lib/components/registry/registry.service';
+import 'game-jolt-frontend-lib/utils/polyfills';
+import { bootstrapShortkey } from 'game-jolt-frontend-lib/vue/shortkey';
 import { bootstrapCommon } from '../_common/bootstrap';
-import { App } from './app';
+import App from './app.vue';
 import './main.styl';
 import { store } from './store/index';
 import { router } from './views/index';

@@ -1,8 +1,8 @@
-import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
-import { Navigate } from '../../../lib/gj-lib-client/components/navigate/navigate.service';
-import { User } from '../../../lib/gj-lib-client/components/user/user.model';
-import { VuexStore } from '../../../lib/gj-lib-client/utils/vuex';
-import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
+import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 
 // So that this can be pulled into any section and not rely on the main "app" store, we manually
 // attach this so we know it exists.

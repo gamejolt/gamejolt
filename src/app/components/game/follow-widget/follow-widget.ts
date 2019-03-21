@@ -1,18 +1,16 @@
-import View from '!view!./follow-widget.html';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow-widget/follow-widget.vue';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppAuthRequired } from '../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
-import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppUserFollowWidget } from '../../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { Store } from '../../../store/index';
 
-@View
 @Component({
 	components: {
 		AppUserFollowWidget,
@@ -24,7 +22,7 @@ import { Store } from '../../../store/index';
 		AppTooltip,
 	},
 })
-export class AppGameFollowWidget extends Vue {
+export default class AppGameFollowWidget extends Vue {
 	@Prop(Game)
 	game!: Game;
 
@@ -55,9 +53,7 @@ export class AppGameFollowWidget extends Vue {
 	isShowingFollowPopover = false;
 
 	get shouldShowFollow() {
-		return (
-			this.showUserFollow && (!this.app.user || this.app.user.id !== this.game.developer.id)
-		);
+		return this.showUserFollow && (!this.app.user || this.app.user.id !== this.game.developer.id);
 	}
 
 	get widgetId() {
@@ -101,9 +97,7 @@ export class AppGameFollowWidget extends Vue {
 			try {
 				await this.game.$follow();
 			} catch (e) {
-				Growls.error(
-					this.$gettext('Something has prevented you from following this game.')
-				);
+				Growls.error(this.$gettext('Something has prevented you from following this game.'));
 			}
 		} else {
 			try {

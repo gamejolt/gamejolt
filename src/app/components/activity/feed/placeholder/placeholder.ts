@@ -1,12 +1,10 @@
-import View from '!view!./placeholder.html';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { AppActivityFeedItemPlaceholder } from '../item/placeholder/placeholder';
+import AppActivityFeedItemPlaceholder from '../item/placeholder/placeholder.vue';
 
-@View
 @Component({
 	components: {
 		AppActivityFeedItemPlaceholder,
 	},
 })
-export class AppActivityFeedPlaceholder extends Vue {}
+export default class AppActivityFeedPlaceholder extends Vue {}

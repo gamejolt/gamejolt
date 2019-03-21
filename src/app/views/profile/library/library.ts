@@ -1,4 +1,3 @@
-import View from '!view!./library.html';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import {
 	BaseRouteComponent,
@@ -6,10 +5,9 @@ import {
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
 import { GameCollection } from '../../../components/game/collection/collection.model';
-import { AppGameCollectionGrid } from '../../../components/game/collection/grid/grid';
+import AppGameCollectionGrid from '../../../components/game/collection/grid/grid.vue';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 
-@View
 @Component({
 	name: 'RouteProfileLibrary',
 	components: {

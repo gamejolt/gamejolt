@@ -1,13 +1,11 @@
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import { BaseForm, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./add-keys.html';
-import { KeyGroup } from '../../../../../../lib/gj-lib-client/components/key-group/key-group.model';
-import { FormOnSubmit } from '../../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { BaseForm } from '../../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppExpand } from '../../../../../../lib/gj-lib-client/components/expand/expand';
-import { number } from '../../../../../../lib/gj-lib-client/vue/filters/number';
 
-@View
+
 @Component({
 	components: {
 		AppExpand,
@@ -16,7 +14,7 @@ import { number } from '../../../../../../lib/gj-lib-client/vue/filters/number';
 		number,
 	},
 })
-export class FormGameKeyGroupAddKeys extends BaseForm<any> implements FormOnSubmit {
+export default class FormGameKeyGroupAddKeys extends BaseForm<any> implements FormOnSubmit {
 	@Prop(KeyGroup) keyGroup!: KeyGroup;
 
 	warnOnDiscard = false;

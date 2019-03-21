@@ -1,18 +1,15 @@
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { CommentThreadModal } from 'game-jolt-frontend-lib/components/comment/thread/modal.service';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
+import { Registry } from 'game-jolt-frontend-lib/components/registry/registry.service';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
 import { Component } from 'vue-property-decorator';
 import { CreateElement } from 'vue/types/vue';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { CommentThreadModal } from '../../../../lib/gj-lib-client/components/comment/thread/modal.service';
-import { FiresidePost } from '../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
-import { Registry } from '../../../../lib/gj-lib-client/components/registry/registry.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../lib/gj-lib-client/components/route/route-component';
-import { Translate } from '../../../../lib/gj-lib-client/components/translate/translate.service';
-import { enforceLocation } from '../../../../lib/gj-lib-client/utils/router';
 import { IntentService } from '../../../components/intent/intent.service';
-import { AppPostView } from '../../../components/post/view/view';
+import AppPostView from '../../../components/post/view/view.vue';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 
 @Component({

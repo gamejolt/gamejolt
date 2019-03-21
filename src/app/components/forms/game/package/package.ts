@@ -1,20 +1,19 @@
-import View from '!view!./package.html';
 import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
 import * as startOfTomorrow from 'date-fns/start_of_tomorrow';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { AppFormControlDate } from 'game-jolt-frontend-lib/components/form-vue/control/date/date';
-import { AppFormControlToggle } from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle';
+import AppFormControlDate from 'game-jolt-frontend-lib/components/form-vue/control/date/date.vue'
+import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue'
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
 	FormOnInit,
 	FormOnLoad,
 } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { AppFormLegend } from 'game-jolt-frontend-lib/components/form-vue/legend/legend';
+import AppFormLegend from 'game-jolt-frontend-lib/components/form-vue/legend/legend.vue'
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import { AppLoadingFade } from 'game-jolt-frontend-lib/components/loading/fade/fade';
+import AppLoadingFade from 'game-jolt-frontend-lib/components/loading/fade/fade.vue'
 import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
 import { SellablePricing } from 'game-jolt-frontend-lib/components/sellable/pricing/pricing.model';
 import { Sellable } from 'game-jolt-frontend-lib/components/sellable/sellable.model';
@@ -42,7 +41,6 @@ type FormGamePackageModel = GamePackage & {
 	has_suggested_price: boolean;
 };
 
-@View
 @Component({
 	components: {
 		AppFormLegend,
@@ -57,7 +55,7 @@ type FormGamePackageModel = GamePackage & {
 		currency,
 	},
 })
-export class FormGamePackage extends BaseForm<FormGamePackageModel>
+export default class FormGamePackage extends BaseForm<FormGamePackageModel>
 	implements FormOnInit, FormOnLoad, FormOnBeforeSubmit {
 	modelClass = GamePackage as any;
 	resetOnSubmit = true;
@@ -215,13 +213,9 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 
 				this.originalPricing = SellablePricing.getOriginalPricing(this.pricings) || null;
 
-				this.promotionalPricing =
-					SellablePricing.getPromotionalPricing(this.pricings) || null;
+				this.promotionalPricing = SellablePricing.getPromotionalPricing(this.pricings) || null;
 
-				this.setField(
-					'price',
-					this.originalPricing ? this.originalPricing.amount / 100 : 0
-				);
+				this.setField('price', this.originalPricing ? this.originalPricing.amount / 100 : 0);
 
 				if (this.promotionalPricing) {
 					this.setField('sale_timezone', this.promotionalPricing.timezone!);
@@ -263,9 +257,7 @@ export class FormGamePackage extends BaseForm<FormGamePackageModel>
 		this.isProcessing = true;
 
 		const params = [this.formModel.game_id, this.formModel.id];
-		await Api.sendRequest(
-			'/web/dash/developer/games/packages/cancel-sales/' + params.join('/')
-		);
+		await Api.sendRequest('/web/dash/developer/games/packages/cancel-sales/' + params.join('/'));
 
 		this.promotionalPricing = null;
 		this.setField('sale_timezone', determine().name());

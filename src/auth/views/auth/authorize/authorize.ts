@@ -1,13 +1,8 @@
-import View from '!view!./authorize.html';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Auth } from 'game-jolt-frontend-lib/components/auth/auth.service';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Auth } from '../../../../lib/gj-lib-client/components/auth/auth.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../lib/gj-lib-client/components/route/route-component';
 
-@View
 @Component({
 	name: 'RouteAuthAuthorize',
 })

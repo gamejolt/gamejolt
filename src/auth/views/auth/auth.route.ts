@@ -1,5 +1,5 @@
 import { RouteConfig } from 'vue-router';
-import RouteAuth from './auth';
+import RouteAuth from './auth.vue';
 import { routeAuthAuthorize } from './authorize/authorize.route';
 import { routeAuthForgotSent } from './forgot-sent/forgot-sent.route';
 import { routeAuthForgot } from './forgot/forgot.route';

@@ -1,9 +1,9 @@
 import Axios from 'axios';
-import Vue from 'vue';
 import {
 	getTranslationLang,
 	TranslationLangs,
-} from '../lib/gj-lib-client/components/translate/translate.service';
+} from 'game-jolt-frontend-lib/components/translate/translate.service';
+import Vue from 'vue';
 
 export function bootstrapAppTranslations() {
 	const availableLanguages: any = {};

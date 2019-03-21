@@ -1,14 +1,12 @@
-import View from '!view!./page-header.html?style=./page-header.styl';
-import { AppScrollAffix } from 'game-jolt-frontend-lib/components/scroll/affix/affix';
+import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
+import { AppAutoscrollAnchor } from 'game-jolt-frontend-lib/components/scroll/auto-scroll/anchor';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
-import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppAutoscrollAnchor } from '../../../lib/gj-lib-client/components/scroll/auto-scroll/anchor';
-import { AppMediaItemCover } from '../../../_common/media-item/cover/cover';
+import AppMediaItemCover from '../../../_common/media-item/cover/cover.vue';
 import './page-header-content.styl';
 
-@View
 @Component({
 	components: {
 		AppAutoscrollAnchor,
@@ -16,7 +14,7 @@ import './page-header-content.styl';
 		AppMediaItemCover,
 	},
 })
-export class AppPageHeader extends Vue {
+export default class AppPageHeader extends Vue {
 	@Prop(Object)
 	coverMediaItem?: MediaItem;
 

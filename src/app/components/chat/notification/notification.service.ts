@@ -1,6 +1,6 @@
-import { ChatMessage } from '../message';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
 import { store } from '../../../store/index';
-import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
+import { ChatMessage } from '../message';
 
 export class ChatNotification {
 	private static get chat() {

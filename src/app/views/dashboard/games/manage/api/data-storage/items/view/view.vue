@@ -1,0 +1,47 @@
+<template>
+	<div v-if="isRouteBootstrapped">
+		<h2 class="section-header">
+			<div class="section-header-controls">
+				<app-button sparse icon="remove" @click="remove" />
+			</div>
+
+			<translate>dash.games.data_store.items.view.heading</translate>
+		</h2>
+
+		<div class="table-responsive">
+			<table class="table table-fixed">
+				<colgroup>
+					<col class="col-sm-3 col-md-2" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<th>
+							<translate>dash.games.data_store.items.view.key_label</translate>
+						</th>
+						<td>
+							<code>{{ item.key }}</code>
+						</td>
+					</tr>
+					<tr>
+						<th>
+							<translate>dash.games.data_store.items.view.date_label</translate>
+						</th>
+						<td>
+							{{ item.posted_on | date('medium') }}
+						</td>
+					</tr>
+					<tr>
+						<th>
+							<translate>dash.games.data_store.items.view.data_label</translate>
+						</th>
+						<td class="small">
+							<pre>{{ item.data }}</pre>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</template>
+
+<script lang="ts" src="./view" />

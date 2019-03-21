@@ -1,14 +1,13 @@
-import View from '!view!./widget.html?style=./widget.styl';
-import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive.vue';
+import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
+import { EventBus } from 'game-jolt-frontend-lib/components/event-bus/event-bus.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GameRating } from 'game-jolt-frontend-lib/components/game/rating/rating.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
 import { LikersModal } from 'game-jolt-frontend-lib/components/likers/modal.service';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { EventBus } from '../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { GameRating } from '../../../../lib/gj-lib-client/components/game/rating/rating.model';
-import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
 
 export const RatingWidgetOnChange = 'GameRating.changed';
 export interface RatingWidgetOnChangePayload {
@@ -16,14 +15,13 @@ export interface RatingWidgetOnChangePayload {
 	userRating?: GameRating;
 }
 
-@View
 @Component({
 	directives: {
 		AppAuthRequired,
 		AppTooltip,
 	},
 })
-export class AppRatingWidget extends Vue {
+export default class AppRatingWidget extends Vue {
 	@Prop(Game)
 	game!: Game;
 

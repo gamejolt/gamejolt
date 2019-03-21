@@ -7,7 +7,7 @@ const name = 'forums.channels.view';
 export const routeForumsChannelsView: RouteConfig = {
 	name: 'forums.channels.view',
 	path: '/f/:name/:sort(active|new|top|archived)?',
-	component: () => import(/* webpackChunkName: "routeForumsChannelsView" */ './view'),
+	component: () => import(/* webpackChunkName: "routeForumsChannelsView" */ './view.vue'),
 	children: [
 		{ path: `${path}2`, redirect: { name, params: { name: 'gj-feedback', sort: 'active' } } },
 		{ path: `${path}7`, redirect: { name, params: { name: 'jams', sort: 'active' } } },

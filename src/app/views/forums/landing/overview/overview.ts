@@ -1,17 +1,12 @@
-import View from '!view!./overview.html';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { ForumCategory } from 'game-jolt-frontend-lib/components/forum/category/category.model';
+import { ForumChannel } from 'game-jolt-frontend-lib/components/forum/channel/channel.model';
+import { ForumPost } from 'game-jolt-frontend-lib/components/forum/post/post.model';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { ForumCategory } from '../../../../../lib/gj-lib-client/components/forum/category/category.model';
-import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
-import { ForumPost } from '../../../../../lib/gj-lib-client/components/forum/post/post.model';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { AppForumChannelList } from '../../../../components/forum/channel-list/channel-list';
-import { AppForumRules } from '../../../../components/forum/rules/rules';
+import AppForumChannelList from '../../../../components/forum/channel-list/channel-list.vue';
+import AppForumRules from '../../../../components/forum/rules/rules.vue';
 
-@View
 @Component({
 	name: 'RouteForumsLandingOverview',
 	components: {

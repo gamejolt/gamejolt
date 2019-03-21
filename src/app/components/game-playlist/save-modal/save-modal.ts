@@ -1,13 +1,10 @@
+import { GamePlaylist } from 'game-jolt-frontend-lib/components/game-playlist/game-playlist.model';
+import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./save-modal.html';
-
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { FormPlaylist } from '../../forms/playlist/playlist';
+import FormPlaylist from '../../forms/playlist/playlist.vue';
 import { GameCollection } from '../../game/collection/collection.model';
-import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
-import { BaseModal } from '../../../../lib/gj-lib-client/components/modal/base';
 
-@View
 @Component({
 	components: {
 		AppJolticon,

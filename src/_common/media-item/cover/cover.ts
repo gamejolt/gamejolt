@@ -1,21 +1,18 @@
+import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
+import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
+import { Ruler } from 'game-jolt-frontend-lib/components/ruler/ruler-service';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import View from '!view!./cover.html?style=./cover.styl';
-
-import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
-import { Ruler } from '../../../lib/gj-lib-client/components/ruler/ruler-service';
-import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppImgResponsive } from '../../../lib/gj-lib-client/components/img/responsive/responsive';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
-@View
 @Component({
 	components: {
 		AppImgResponsive,
 	},
 })
-export class AppMediaItemCover extends Vue {
+export default class AppMediaItemCover extends Vue {
 	@Prop(MediaItem) mediaItem!: MediaItem;
 	@Prop(Number) maxHeight?: number;
 	@Prop(Boolean) blur?: boolean;
@@ -49,7 +46,7 @@ export class AppMediaItemCover extends Vue {
 		if (this.mediaItem) {
 			if (this.$el) {
 				const newDimensions = this.mediaItem.getDimensions(
-					Ruler.width(this.$el),
+					Ruler.width(this.$el as HTMLElement),
 					undefined,
 					{
 						force: true,

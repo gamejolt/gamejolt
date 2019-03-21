@@ -1,22 +1,17 @@
-import View from '!view!./add.html';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { ForumChannel } from 'game-jolt-frontend-lib/components/forum/channel/channel.model';
+import { ForumTopic } from 'game-jolt-frontend-lib/components/forum/topic/topic.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
-import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
-import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { FormForumTopic } from '../../../../components/forms/forum/topic/topic';
-import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/breadcrumbs';
-import { AppForumRules } from '../../../../components/forum/rules/rules';
-import { AppPageHeader } from '../../../../components/page-header/page-header';
+import FormForumTopic from '../../../../components/forms/forum/topic/topic.vue';
+import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
+import AppForumRules from '../../../../components/forum/rules/rules.vue';
+import AppPageHeader from '../../../../components/page-header/page-header.vue';
 import { Store } from '../../../../store/index';
 
-@View
 @Component({
 	name: 'RouteForumsTopicsAdd',
 	components: {

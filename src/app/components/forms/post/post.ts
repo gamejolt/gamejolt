@@ -1,21 +1,20 @@
-import View from '!view!./post.html?style=./post.styl';
 import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import { AppCommunityPill } from 'game-jolt-frontend-lib/components/community/pill/pill';
+import AppCommunityPill from 'game-jolt-frontend-lib/components/community/pill/pill.vue';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import {
 	AppFormAutosize,
 	AutosizeBootstrap,
 } from 'game-jolt-frontend-lib/components/form-vue/autosize.directive';
-import { AppFormControlCheckbox } from 'game-jolt-frontend-lib/components/form-vue/control/checkbox/checkbox';
-import { AppFormControlDate } from 'game-jolt-frontend-lib/components/form-vue/control/date/date';
-import { AppFormControlMarkdown } from 'game-jolt-frontend-lib/components/form-vue/control/markdown/markdown';
-import { AppFormControlToggle } from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle';
-import { AppFormControlUpload } from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload';
+import AppFormControlCheckbox from 'game-jolt-frontend-lib/components/form-vue/control/checkbox/checkbox.vue';
+import AppFormControlDate from 'game-jolt-frontend-lib/components/form-vue/control/date/date.vue';
+import AppFormControlMarkdown from 'game-jolt-frontend-lib/components/form-vue/control/markdown/markdown.vue';
+import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
+import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
 import { AppFocusWhen } from 'game-jolt-frontend-lib/components/form-vue/focus-when.directive';
-import { AppForm } from 'game-jolt-frontend-lib/components/form-vue/form';
+import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
 import {
 	BaseForm,
 	FormOnInit,
@@ -23,28 +22,28 @@ import {
 	FormOnSubmit,
 	FormOnSubmitSuccess,
 } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { AppFormLegend } from 'game-jolt-frontend-lib/components/form-vue/legend/legend';
+import AppFormLegend from 'game-jolt-frontend-lib/components/form-vue/legend/legend.vue';
 import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
 import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
 import { LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
 import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
-import { AppProgressBar } from 'game-jolt-frontend-lib/components/progress/bar/bar';
+import AppProgressBar from 'game-jolt-frontend-lib/components/progress/bar/bar.vue';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppSketchfabEmbed } from 'game-jolt-frontend-lib/components/sketchfab/embed/embed';
+import AppSketchfabEmbed from 'game-jolt-frontend-lib/components/sketchfab/embed/embed.vue';
 import {
 	Timezone,
 	TimezoneData,
 } from 'game-jolt-frontend-lib/components/timezone/timezone.service';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { AppUserAvatarImg } from 'game-jolt-frontend-lib/components/user/user-avatar/img/img';
-import { AppVideoEmbed } from 'game-jolt-frontend-lib/components/video/embed/embed';
+import AppUserAvatarImg from 'game-jolt-frontend-lib/components/user/user-avatar/img/img.vue';
+import AppVideoEmbed from 'game-jolt-frontend-lib/components/video/embed/embed.vue';
 import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
-import { AppLoading } from 'game-jolt-frontend-lib/vue/components/loading/loading';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { determine } from 'jstimezonedetect';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppFormPostTags } from './tags/tags';
-import { AppFormPostMedia } from './_media/media';
+import AppFormPostTags from './tags/tags.vue';
+import AppFormPostMedia from './_media/media.vue';
 
 type FormPostModel = FiresidePost & {
 	mediaItemIds: number[];
@@ -72,7 +71,6 @@ type FormPostModel = FiresidePost & {
 	poll_item10: string;
 };
 
-@View
 @Component({
 	components: {
 		AppFormControlCheckbox,
@@ -96,7 +94,7 @@ type FormPostModel = FiresidePost & {
 		AppFormAutosize,
 	},
 })
-export class FormPost extends BaseForm<FormPostModel>
+export default class FormPost extends BaseForm<FormPostModel>
 	implements FormOnInit, FormOnLoad, FormOnSubmit, FormOnSubmitSuccess {
 	modelClass = FiresidePost as any;
 

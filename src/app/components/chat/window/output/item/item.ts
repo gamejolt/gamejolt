@@ -1,18 +1,15 @@
-import './item-content.styl';
-
-import View from '!view!./item.html?style=./item.styl';
+import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { date } from 'game-jolt-frontend-lib/vue/filters/date';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-
-import { AppFadeCollapse } from '../../../../../../lib/gj-lib-client/components/fade-collapse/fade-collapse';
-import { AppJolticon } from '../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { date } from '../../../../../../lib/gj-lib-client/vue/filters/date';
 import { ChatClient } from '../../../client';
 import { ChatMessage } from '../../../message';
 import { ChatRoom } from '../../../room';
+import './item-content.styl';
 
-@View
+
 @Component({
 	components: {
 		AppFadeCollapse,
@@ -22,7 +19,7 @@ import { ChatRoom } from '../../../room';
 		date,
 	},
 })
-export class AppChatWindowOutputItem extends Vue {
+export default class AppChatWindowOutputItem extends Vue {
 	@Prop(ChatMessage) message!: ChatMessage;
 	@Prop(ChatRoom) room!: ChatRoom;
 

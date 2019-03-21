@@ -1,16 +1,14 @@
+import { GameTrophy } from 'game-jolt-frontend-lib/components/game/trophy/trophy.model';
+import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { UserGameTrophy } from 'game-jolt-frontend-lib/components/user/game-trophy/game-trophy.model';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./list.html?style=./list.styl';
+import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
 
-import { GameTrophy } from '../../../../lib/gj-lib-client/components/game/trophy/trophy.model';
-import { UserGameTrophy } from '../../../../lib/gj-lib-client/components/user/game-trophy/game-trophy.model';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTrophyThumbnail } from '../thumbnail/thumbnail';
-import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ago';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 
-@View
 @Component({
 	components: {
 		AppJolticon,
@@ -24,7 +22,7 @@ import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 		number,
 	},
 })
-export class AppTrophyList extends Vue {
+export default class AppTrophyList extends Vue {
 	@Prop(Array) trophies!: GameTrophy[];
 	@Prop(Array) achieved!: UserGameTrophy[];
 

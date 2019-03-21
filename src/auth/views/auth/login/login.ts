@@ -1,13 +1,11 @@
-import View from '!view!./login.html';
-import { Component } from 'vue-property-decorator';
-import { AppAuthLogin } from '../../../../lib/gj-lib-client/components/auth/login/login';
+import AppAuthLogin from 'game-jolt-frontend-lib/components/auth/login/login.vue';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../lib/gj-lib-client/components/route/route-component';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Component } from 'vue-property-decorator';
 import { loggedUserBlock } from '../auth';
 
-@View
 @Component({
 	name: 'RouteAuthLogin',
 	components: {
@@ -27,6 +25,6 @@ export default class RouteAuthLogin extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		this.redirect = this.$route.query.redirect || '';
+		this.redirect = (this.$route.query.redirect as string) || '';
 	}
 }

@@ -1,14 +1,12 @@
-import View from '!view!./indieaf.html?style=./indieaf.styl';
+import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
+import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
+import { AppScrollTo } from 'game-jolt-frontend-lib/components/scroll/to/to.directive';
+import { AppSocialFacebookLike } from 'game-jolt-frontend-lib/components/social/facebook/like/like';
+import { AppSocialTwitterShare } from 'game-jolt-frontend-lib/components/social/twitter/share/share';
+import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Component } from 'vue-property-decorator';
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
-import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
-import { AppScrollTo } from '../../../../lib/gj-lib-client/components/scroll/to/to.directive';
-import { AppSocialFacebookLike } from '../../../../lib/gj-lib-client/components/social/facebook/like/like';
-import { AppSocialTwitterShare } from '../../../../lib/gj-lib-client/components/social/twitter/share/share';
-import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 
-@View
 @Component({
 	name: 'RouteLandingIndieaf',
 	components: {

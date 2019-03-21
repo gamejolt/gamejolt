@@ -1,15 +1,10 @@
-import View from '!view!./add.html';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { FormGame } from '../../../../components/forms/game/game';
+import FormGame from '../../../../components/forms/game/game.vue';
 import { startWizard } from '../manage/manage.store';
 
-@View
 @Component({
 	name: 'RouteDashGamesAdd',
 	components: {

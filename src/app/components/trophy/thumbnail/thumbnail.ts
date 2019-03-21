@@ -1,10 +1,9 @@
+import { GameTrophy } from 'game-jolt-frontend-lib/components/game/trophy/trophy.model';
+import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./thumbnail.html?style=./thumbnail.styl';
 
-import { GameTrophy } from '../../../../lib/gj-lib-client/components/game/trophy/trophy.model';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppImgResponsive } from '../../../../lib/gj-lib-client/components/img/responsive/responsive';
 
 const imgMapping: any = {
 	bronze: require('./bronze.png'),
@@ -20,7 +19,6 @@ const imgMapping: any = {
 const BaseWidth = 34;
 const BaseHeight = 35;
 
-@View
 @Component({
 	components: {
 		AppImgResponsive,
@@ -29,7 +27,7 @@ const BaseHeight = 35;
 		AppTooltip,
 	},
 })
-export class AppTrophyThumbnail extends Vue {
+export default class AppTrophyThumbnail extends Vue {
 	@Prop(GameTrophy) trophy!: GameTrophy;
 	@Prop(Boolean) isAchieved?: boolean;
 

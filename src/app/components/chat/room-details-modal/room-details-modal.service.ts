@@ -1,5 +1,5 @@
-import { Modal } from '../../../../lib/gj-lib-client/components/modal/modal.service';
-import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils';
+import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
+import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
 import { ChatRoom } from '../room';
 
 export class ChatRoomDetailsModal {
@@ -9,7 +9,7 @@ export class ChatRoomDetailsModal {
 			size: 'sm',
 			component: () =>
 				asyncComponentLoader(
-					import(/* webpackChunkName: "ChatRoomDetailsModal" */ './room-details-modal')
+					import(/* webpackChunkName: "ChatRoomDetailsModal" */ './room-details-modal.vue')
 				),
 			props: { room },
 		});

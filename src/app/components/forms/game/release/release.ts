@@ -1,16 +1,15 @@
-import View from '!view!./release.html?style=./release.styl';
 import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
-import { AppCardList } from 'game-jolt-frontend-lib/components/card/list/list';
-import { AppFormControlDate } from 'game-jolt-frontend-lib/components/form-vue/control/date/date';
-import { AppForm } from 'game-jolt-frontend-lib/components/form-vue/form';
+import AppCardList from 'game-jolt-frontend-lib/components/card/list/list.vue';
+import AppFormControlDate from 'game-jolt-frontend-lib/components/form-vue/control/date/date.vue';
+import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
 import {
 	BaseForm,
 	FormOnInit,
 	FormOnLoad,
 	FormOnSubmitSuccess,
 } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { AppFormLegend } from 'game-jolt-frontend-lib/components/form-vue/legend/legend';
+import AppFormLegend from 'game-jolt-frontend-lib/components/form-vue/legend/legend.vue';
 import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
 import { GameBuildLaunchOption } from 'game-jolt-frontend-lib/components/game/build/launch-option/launch-option.model';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
@@ -23,17 +22,17 @@ import {
 	TimezoneData,
 } from 'game-jolt-frontend-lib/components/timezone/timezone.service';
 import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
-import { AppJolticon } from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import { determine } from 'jstimezonedetect';
 import { Component, Prop } from 'vue-property-decorator';
-import { FormGameBuild } from '../build/build';
-import { FormGameNewBuild } from '../new-build/new-build';
+import FormGameBuildTS from '../build/build';
+import FormGameBuild from '../build/build.vue';
+import FormGameNewBuild from '../new-build/new-build.vue';
 
 type GameReleaseFormModel = GameRelease & {
 	should_publish: boolean;
 };
 
-@View
 @Component({
 	components: {
 		AppJolticon,
@@ -44,7 +43,7 @@ type GameReleaseFormModel = GameRelease & {
 		AppFormLegend,
 	},
 })
-export class FormGameRelease extends BaseForm<GameReleaseFormModel>
+export default class FormGameRelease extends BaseForm<GameReleaseFormModel>
 	implements FormOnInit, FormOnLoad, FormOnSubmitSuccess {
 	modelClass = GameRelease as any;
 
@@ -73,7 +72,7 @@ export class FormGameRelease extends BaseForm<GameReleaseFormModel>
 		form: AppForm;
 	};
 
-	buildForms: FormGameBuild[] = [];
+	buildForms: FormGameBuildTS[] = [];
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = null as any;
 	now = 0;
 

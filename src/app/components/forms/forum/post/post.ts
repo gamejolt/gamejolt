@@ -1,21 +1,16 @@
+import AppFormControlMarkdown from 'game-jolt-frontend-lib/components/form-vue/control/markdown/markdown.vue';
+import { BaseForm, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { ForumPost } from 'game-jolt-frontend-lib/components/forum/post/post.model';
+import { ForumTopic } from 'game-jolt-frontend-lib/components/forum/topic/topic.model';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./post.html';
 
-import { ForumPost } from '../../../../../lib/gj-lib-client/components/forum/post/post.model';
-import {
-	BaseForm,
-	FormOnInit,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
-import { AppFormControlMarkdown } from '../../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
 
-@View
 @Component({
 	components: {
 		AppFormControlMarkdown,
 	},
 })
-export class FormForumPost extends BaseForm<ForumPost> implements FormOnInit {
+export default class FormForumPost extends BaseForm<ForumPost> implements FormOnInit {
 	@Prop(ForumTopic) topic!: ForumTopic;
 	@Prop(ForumPost) replyTo?: ForumPost;
 

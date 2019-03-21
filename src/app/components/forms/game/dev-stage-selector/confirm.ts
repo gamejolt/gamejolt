@@ -1,11 +1,9 @@
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./confirm.html';
 
-import { BaseModal } from '../../../../../lib/gj-lib-client/components/modal/base';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 
-@View
 @Component({
 	components: {
 		AppJolticon,

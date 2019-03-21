@@ -1,17 +1,12 @@
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { BaseForm, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { GameBundle } from 'game-jolt-frontend-lib/components/game-bundle/game-bundle.model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./retrieve.html';
 
-import {
-	BaseForm,
-	FormOnSubmit,
-} from '../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { GameBundle } from '../../../../lib/gj-lib-client/components/game-bundle/game-bundle.model';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
 
-@View
 @Component({})
-export class FormRetrieve extends BaseForm<any> implements FormOnSubmit {
+export default class FormRetrieve extends BaseForm<any> implements FormOnSubmit {
 	@Prop(String) keyId!: string;
 	@Prop(GameBundle) bundle!: GameBundle;
 	@Prop(Game) game!: Game;

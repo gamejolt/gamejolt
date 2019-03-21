@@ -1,4 +1,3 @@
-import View from '!view!./nav.html?style=./nav.styl';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import Vue from 'vue';
@@ -22,9 +21,8 @@ class NavGroup {
 	constructor(public readonly items: NavItem[]) {}
 }
 
-@View
 @Component({})
-export class AppCommunitiesViewOverviewNav extends Vue {
+export default class AppCommunitiesViewOverviewNav extends Vue {
 	@Prop(Community)
 	community!: Community;
 

@@ -1,16 +1,11 @@
-import View from '!view!./site.html?style=./site.styl';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Site } from 'game-jolt-frontend-lib/components/site/site-model';
 import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../../lib/gj-lib-client/components/route/route-component';
-import { Site } from '../../../../../../lib/gj-lib-client/components/site/site-model';
-import { AppSitesLinkCard } from '../../../../../components/sites/link-card/link-card';
-import { AppSitesManagePage } from '../../../../../components/sites/manage-page/manage-page';
+import AppSitesLinkCard from '../../../../../components/sites/link-card/link-card.vue';
+import AppSitesManagePage from '../../../../../components/sites/manage-page/manage-page.vue';
 import { RouteStore, RouteStoreModule } from '../manage.store';
 
-@View
 @Component({
 	name: 'RouteDashGamesManageSite',
 	components: {
