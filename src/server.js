@@ -15,6 +15,7 @@ function resolve(file) {
 
 const numWorkers = require('os').cpus().length;
 const isProd = process.env.NODE_ENV === 'production';
+const buildDir = process.env.BUNDLE_DIR || resolve(path.join('..', 'build'));
 
 if (cluster.isMaster) {
 	console.log(`Master ${process.pid} is running`);
@@ -32,8 +33,8 @@ if (cluster.isMaster) {
 	console.log(`Worker ${process.pid} started`);
 
 	const section = argv.section || 'app';
-	const serverBuildPath = resolve(isProd ? '../build/prod-server/' : '../build/dev-server/');
-	const clientBuildPath = resolve(isProd ? '../build/prod/' : '../build/dev/');
+	const serverBuildPath = path.join(buildDir, isProd ? 'prod-server' : 'dev-server');
+	const clientBuildPath = path.join(buildDir, isProd ? 'prod' : 'dev');
 
 	const serverBundle = require(path.join(
 		serverBuildPath,
