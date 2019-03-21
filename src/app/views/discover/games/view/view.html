@@ -1,6 +1,6 @@
 <div
 	class="route-discover-games-view"
-	v-if="game"
+	v-if="game && game.developer"
 	>
 
 	<app-game-maturity-block :game="game">
