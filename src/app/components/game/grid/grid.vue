@@ -25,10 +25,10 @@
 				</div>
 
 				<!--
-				Keep the end div and the opening div together below. If you
-				don't it will not wrap correctly in the DOM since it adds the
-				space.
-			-->
+					Keep the end div and the opening div together below. If you
+					don't it will not wrap correctly in the DOM since it adds the
+					space.
+				-->
 				<template v-for="(game, i) of processedGames">
 					<div class="game-grid-ad" v-if="shouldShowAd(i)" :key="game.id + '-ad'">
 						<div class="game-grid-ad-inner">
