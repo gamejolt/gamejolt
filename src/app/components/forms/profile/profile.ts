@@ -1,9 +1,9 @@
 import View from '!view!./profile.html';
 import * as distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
+import { AppFormControlContent } from 'game-jolt-frontend-lib/components/form-vue/control/content/content';
 import { Component } from 'vue-property-decorator';
 import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import { AppFormControlMarkdown } from '../../../../lib/gj-lib-client/components/form-vue/control/markdown/markdown';
 import { AppFormControlTheme } from '../../../../lib/gj-lib-client/components/form-vue/control/theme/theme';
 import { AppFormControlToggle } from '../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
 import {
@@ -26,9 +26,9 @@ import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading
 		AppLoading,
 		AppExpand,
 		AppJolticon,
-		AppFormControlMarkdown,
 		AppFormControlTheme,
 		AppFormControlToggle,
+		AppFormControlContent,
 	},
 })
 export class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSubmitError {
