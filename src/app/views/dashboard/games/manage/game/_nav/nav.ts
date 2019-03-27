@@ -1,4 +1,5 @@
 import View from '!view!./nav.html?style=./nav.styl';
+import { ContentContainer } from 'game-jolt-frontend-lib/components/content/content-container';
 import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
@@ -33,6 +34,11 @@ export class AppManageGameNav extends Vue {
 
 	@State
 	app!: AppStore;
+
+	get hasDescription() {
+		const container = ContentContainer.fromJson(this.game.description_content);
+		return container.hasContent;
+	}
 
 	Game = Game;
 }
