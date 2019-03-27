@@ -14,7 +14,7 @@ function resolve(file) {
 }
 
 const numWorkers = require('os').cpus().length;
-const isProd = process.env.NODE_ENV === 'production';
+const isProd = process.env.NODE_ENV === 'production' || argv.production;
 const buildDir = process.env.BUNDLE_DIR || resolve(path.join('..', 'build'));
 
 if (cluster.isMaster) {
@@ -54,6 +54,7 @@ if (cluster.isMaster) {
 		clientManifest,
 	});
 
+	// If testing ssr prod build locally, remove this if so that static assets are served properly.
 	if (!isProd) {
 		function serve(path) {
 			return express.static(resolve(path), {
