@@ -270,7 +270,7 @@ export class GameFilteringContainer {
 			queryPieces.push('date=' + route.params.date);
 		}
 
-		if (typeof route.query.page === 'string' && parseInt(route.query.page, 10) > 1) {
+		if (route.query.page && parseInt(route.query.page as string, 10) > 1) {
 			queryPieces.push('page=' + route.query.page);
 		}
 
