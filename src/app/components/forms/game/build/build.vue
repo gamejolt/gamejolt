@@ -88,7 +88,8 @@
 			<app-progress-bar thin indeterminate active :percent="100" />
 
 			<div class="text-center small" v-translate>
-				dash.games.releases.builds.processing_message_html
+				<strong>Processing build.</strong>
+				It will become available in this release as soon as we're done.
 			</div>
 		</app-expand>
 

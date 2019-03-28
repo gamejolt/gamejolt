@@ -19,7 +19,8 @@
 					<p>
 						<app-jolticon icon="notice" />
 						<span v-translate>
-							dash.games.overview.todo_info_builds_processing_html
+							<strong>You still have builds that are being processed.</strong>
+							They won't show on your game page until they're finished processing.
 						</span>
 					</p>
 				</div>

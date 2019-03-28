@@ -141,7 +141,8 @@
 		>
 			<div class="alert alert-info anim-fade-in-enlarge" v-if="section === 'new'">
 				<div v-translate>
-					games.list.new_games_warning_html
+					Newly added games are not moderated, curated, or vetted by the community. You can find a
+					goldmine of undiscovered talent or you may see some of the scariest shit of your life.
 				</div>
 			</div>
 

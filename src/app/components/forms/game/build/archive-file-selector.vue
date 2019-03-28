@@ -34,8 +34,12 @@
 				</div>
 			</div>
 
-			<div v-else class="alert alert-notice" v-translate>
-				dash.games.releases.builds.launch_options.file_selector.no_files_html
+			<div v-else class="alert alert-notice">
+				<p>
+					<translate>
+						Oh no! We didn't find any executable files for this platform in the archive.
+					</translate>
+				</p>
 			</div>
 		</div>
 	</app-modal>

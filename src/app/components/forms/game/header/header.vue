@@ -13,7 +13,9 @@
 				</translate>
 			</p>
 			<p class="help-block" v-translate>
-				dash.forms.image_filetype_help_html
+				Your image must be a PNG, JPG, or GIF.
+				<br />
+				<strong>PNGs are highly recommended as they produce a lossless image.</strong>
 			</p>
 			<p class="help-block strong" v-translate="{ dimensions: '2000x500' }">
 				The recommended size for a header image is

@@ -18,7 +18,8 @@
 			</p>
 
 			<p class="text-muted small" v-translate>
-				system_report.send.issue_tracker
+				If you experienced a bug, please report it first on our
+				<a href="https://github.com/gamejolt/issue-tracker">issue tracker</a>
 			</p>
 
 			<form-client-system-report @submit="onSubmit" />

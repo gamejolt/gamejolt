@@ -2,7 +2,9 @@
 	<app-form name="avatarForm" ref="form">
 		<app-form-group name="file" :label="$gettext(`Upload New Avatar`)" :optional="true">
 			<p class="help-block" v-translate>
-				dash.forms.image_filetype_help_html
+				Your image must be a PNG, JPG, or GIF.
+				<br />
+				<strong>PNGs are highly recommended as they produce a lossless image.</strong>
 			</p>
 			<p class="help-block strong" v-translate="{ dimensions: '1000x1000' }">
 				The recommended size for an avatar is
