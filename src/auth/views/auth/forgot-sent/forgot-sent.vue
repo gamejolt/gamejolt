@@ -4,9 +4,9 @@
 			<translate>auth.forgot.sent.heading</translate>
 		</h2>
 
-		<div v-translate>
-			auth.forgot.sent.body_html
-		</div>
+		<p>
+			<translate>We've sent your login credentials to the email address you entered.</translate>
+		</p>
 
 		<p class="small text-muted">
 			<translate>auth.forgot.sent.spam</translate>

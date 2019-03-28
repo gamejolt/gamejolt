@@ -5,9 +5,13 @@
 			:title="$gettext('dash.games.releases.form.version_number_label')"
 		>
 			<div class="help-block">
-				<div v-translate>
-					dash.games.releases.form.version_number_help_html
-				</div>
+				<p v-translate>
+					Version numbers are how you label releases.
+					<br />
+					Numbering should follow the format
+					<code>MAJOR.MINOR.PATCH</code>
+					.
+				</p>
 				<a
 					class="link-help"
 					href="https://help.gamejolt.com/dev-packages#release-version-numbers"

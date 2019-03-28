@@ -31,9 +31,12 @@
 
 			<template v-if="tab === 'image'">
 				<div class="alert full-bleed-xs">
-					<div v-translate>
-						dash.games.media.add.image.page_help_html
-					</div>
+					<p>
+						<translate>
+							Add screenshots, concept drawings, photos of little clay models, fake box covers, or
+							any other original art created for the game. Yes, even if it's a text-based game!
+						</translate>
+					</p>
 					<br />
 					<div>
 						<a class="link-help" href="https://help.gamejolt.com/dev-media-images" target="_blank">
@@ -46,9 +49,17 @@
 			</template>
 			<template v-else-if="tab === 'video'">
 				<div class="alert full-bleed-xs">
-					<div v-translate>
-						dash.games.media.add.video.page_help_html
-					</div>
+					<p>
+						<translate>
+							Add videos you've created, such as trailers, gameplay footage, walkthroughs, etc.
+						</translate>
+					</p>
+					<p>
+						<translate>
+							Please don't add Let's Plays or reviews. Let the content owners do that themselves in
+							the comments.
+						</translate>
+					</p>
 					<br />
 					<div>
 						<a class="link-help" href="https://help.gamejolt.com/dev-media-videos" target="_blank">

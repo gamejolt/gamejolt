@@ -5,8 +5,15 @@
 				<translate>dash.games.api.settings.heading</translate>
 			</h2>
 
-			<div class="alert alert-notice" v-translate>
-				dash.games.api.settings.page_alert_html
+			<div class="alert alert-notice">
+				<p>
+					<strong><translate>Never give your private key to anyone!</translate></strong>
+					<translate>
+						Your game's key is used to validate that API requests are coming from your game. If
+						villains or knaves get ahold of it, they can send in fake requests pretending to be your
+						game. Not good!
+					</translate>
+				</p>
 			</div>
 
 			<div class="table-responsive">

@@ -12,8 +12,13 @@
 			<h2 class="section-header">
 				<translate>auth.authorize.invalid.heading</translate>
 			</h2>
-			<div v-translate>
-				auth.authorize.invalid.body_html
+			<div>
+				<p><translate>Your authorization code is invalid.</translate></p>
+				<p>
+					<translate>
+						Please make sure to copy and paste the full URL that we emailed you.
+					</translate>
+				</p>
 			</div>
 		</template>
 	</div>

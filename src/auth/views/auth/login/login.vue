@@ -13,7 +13,7 @@
 			<div class="auth-page-link">
 				<router-link class="link-unstyled" :to="{ name: 'auth.forgot' }">
 					<translate>
-						auth.forgot_link
+						Forgot Username or Password
 					</translate>
 					<app-jolticon icon="help-circle" />
 				</router-link>

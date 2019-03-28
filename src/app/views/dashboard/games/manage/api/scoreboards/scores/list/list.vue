@@ -21,12 +21,17 @@
 			</div>
 		</div>
 
-		<div class="page-help" key="page-help" v-translate>
-			dash.games.scores.list.page_help_html
+		<div class="page-help" key="page-help">
+			<p>
+				<translate>
+					These are all of the scores that have been submitted to this scoreboard by users and
+					guests (if allowed).
+				</translate>
+			</p>
 		</div>
 
-		<div class="alert alert-notice anim-fade-in" key="no-scores" v-if="!scores.length" v-translate>
-			dash.games.scores.list.no_scores_html
+		<div class="alert alert-notice anim-fade-in" key="no-scores" v-if="!scores.length">
+			<p><translate>This table lacks scores, alas.</translate></p>
 		</div>
 
 		<app-manage-game-list-scores

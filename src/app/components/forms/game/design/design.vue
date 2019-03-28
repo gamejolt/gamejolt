@@ -7,9 +7,19 @@
 				</h4>
 
 				<div class="page-help">
-					<div v-translate>
-						dash.games.thumbnail.page_help_html
-					</div>
+					<p>
+						<translate>
+							A thumbnail is the little rectangular image that represents your game throughout the
+							site. People can click it in game listings and search results to get to your game
+							page.
+						</translate>
+					</p>
+					<p>
+						<translate>
+							Please don't choose an image that contains nudity, swear words, or adult-oriented
+							imagery.
+						</translate>
+					</p>
 					<p>
 						<a class="link-help" href="https://help.gamejolt.com/dev-thumbnails" target="_blank">
 							<translate>dash.games.thumbnail.page_help_link</translate>

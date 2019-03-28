@@ -2,8 +2,11 @@
 	<app-form name="packageForm">
 		<app-loading-fade :is-loading="isProcessing">
 			<app-form-group name="title" :label="$gettext(`dash.games.packages.form.title_label`)">
-				<p class="help-block" v-translate>
-					dash.games.packages.form.title_help_html
+				<p class="help-block">
+					<translate>
+						This is the name that shows up on your game page above the Download/Play button. For
+						your main package, use the title of your game.
+					</translate>
 				</p>
 
 				<app-form-control
@@ -28,7 +31,9 @@
 				:optional="true"
 			>
 				<p class="help-block" v-translate>
-					dash.games.packages.form.description_help_html
+					This should be filled in
+					<em>only if it's needed</em>
+					, if the name alone isn't enough to distinguish this package from other packages.
 				</p>
 
 				<div v-if="!showDescriptionInput">
@@ -444,7 +449,7 @@
 			<app-form-button>
 				<translate v-if="method === 'add'">dash.games.packages.form.add_package_button</translate>
 				<translate v-else-if="method === 'edit'">
-					dash.games.packages.form.save_package_button
+					Save Package
 				</translate>
 			</app-form-button>
 		</app-loading-fade>

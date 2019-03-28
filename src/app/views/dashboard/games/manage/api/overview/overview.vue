@@ -5,9 +5,19 @@
 		</h2>
 
 		<div class="page-help">
-			<div v-translate>
-				dash.games.api.overview.page_help_html
-			</div>
+			<p>
+				<translate>
+					The Game API lets you spice up your game with scoreboards, trophies, cloud data storage,
+					session logging, and more.
+				</translate>
+			</p>
+			<p>
+				<translate>
+					You can check the links below to see if the community has already written an API library
+					or plugin for the engine/tool/language you use. Of course, you can always write one
+					yourself and share it in the forums!
+				</translate>
+			</p>
 			<p>
 				<router-link class="link-help" :to="{ name: 'landing.game-api' }">
 					<translate>dash.games.api.overview.page_help_link</translate>

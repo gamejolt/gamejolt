@@ -23,7 +23,7 @@
 					<translate
 						translate-comment="The message shown when there are no games installed yet in their library."
 					>
-						library.installed.no_games_message
+						Your installed games show up here... that is, once you have some!
 					</translate>
 				</div>
 				<div class="row" v-else>

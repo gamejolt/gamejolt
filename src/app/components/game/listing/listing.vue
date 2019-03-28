@@ -64,7 +64,7 @@
 					<template slot="meta">
 						<div v-if="listing.isBootstrapped" :class="{ 'text-right': !Screen.isXs }">
 							<translate v-if="listing.gamesCount === 0">
-								games.list.games_count_none
+								No games.
 							</translate>
 
 							<translate

@@ -6,7 +6,15 @@
 			<app-form-control-errors :label="$gettext(`dash.games.media.video.form.url_error_label`)" />
 
 			<p class="help-block" v-translate>
-				dash.games.media.video.form.url_help_html
+				We currently only support videos from Vimeo or YouTube.
+				<br />
+				The URL should look something like:
+				<br />
+				<strong>YouTube:</strong>
+				http://www.youtube.com/watch?v=oHg5SJYRHA0
+				<br />
+				<strong>Vimeo:</strong>
+				http://www.vimeo.com/2619976
 			</p>
 		</app-form-group>
 

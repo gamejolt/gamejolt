@@ -36,8 +36,14 @@
 							<span class="lazy-placeholder" />
 							<span class="lazy-placeholder" style="width: 40%" />
 						</div>
-						<div v-else-if="!user.description_compiled" class="text-muted" v-translate>
-							profile.no_bio_html
+						<div v-else-if="!user.description_compiled" class="text-muted">
+							<p>
+								<em>
+									<translate>
+										This person doesn't have a bio yet, so use your imagination!
+									</translate>
+								</em>
+							</p>
 						</div>
 						<div v-else>
 							<!--

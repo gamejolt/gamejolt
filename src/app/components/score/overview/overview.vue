@@ -64,8 +64,10 @@
 										<translate>scores.overview.user_best_none_heading</translate>
 									</strong>
 								</p>
-								<p v-translate>
-									scores.overview.user_best_none_body_html
+								<p>
+									<translate>
+										What'cha waitin' for? Get gaming!
+									</translate>
 								</p>
 							</div>
 

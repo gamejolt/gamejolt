@@ -8,9 +8,13 @@
 			</app-scroll-affix>
 
 			<div class="page-help">
-				<div v-translate>
-					dash.games.maturity.page_help_html
-				</div>
+				<p>
+					<translate>
+						Every game on Game Jolt, even works-in-progress, needs a maturity rating to describe its
+						content. Accurate ratings and details about content help gamers make informed decisions.
+						Remember, you can always come back later and make changes.
+					</translate>
+				</p>
 				<p>
 					<a
 						class="link-help"

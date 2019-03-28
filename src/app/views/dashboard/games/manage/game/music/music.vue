@@ -1,14 +1,25 @@
 <template>
 	<div class="row" v-if="isRouteBootstrapped">
 		<div class="col-sm-4 col-sm-push-8">
-			<div class="page-help" v-translate>
-				dash.games.music.page_help_html
+			<div class="page-help">
+				<p>
+					<translate>
+						Let people enjoy your game's soundtrack whenever they want! Upload MP3s of music from
+						your game and the songs will appear on your game page in a nice little music player.
+						Don't upload copyrighted songs without permission!
+					</translate>
+				</p>
 			</div>
 		</div>
 
 		<div class="col-sm-8 col-sm-pull-4">
-			<div class="alert" v-if="!songs.length" v-translate>
-				dash.games.music.no_music_html
+			<div class="alert" v-if="!songs.length">
+				<p>
+					<translate>
+						You haven't added any music. Upload some songs from your game! The music player's worth
+						it, trust us!
+					</translate>
+				</p>
 			</div>
 
 			<app-loading-fade :is-loading="isProcessing">

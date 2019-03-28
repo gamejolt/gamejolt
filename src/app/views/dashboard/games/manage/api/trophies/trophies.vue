@@ -6,9 +6,13 @@
 			</h2>
 
 			<div class="page-help">
-				<div v-translate>
-					dash.games.trophies.page_help_html
-				</div>
+				<p>
+					<translate>
+						The API lets you add multiple unique trophies, each forged from a material that
+						indicates how difficult it is to achieve: bronze (easiest), silver, gold, or platinum
+						(hardest).
+					</translate>
+				</p>
 				<p>
 					<a class="link-help" href="https://help.gamejolt.com/dev-trophies" target="_blank">
 						<translate>dash.games.trophies.page_help_link</translate>
@@ -16,8 +20,11 @@
 				</p>
 			</div>
 
-			<div class="alert alert-notice" v-if="hasHiddenTrophies" v-translate>
-				dash.games.trophies.has_hidden_html
+			<div class="alert alert-notice" v-if="hasHiddenTrophies">
+				<p v-translate>
+					<strong>You have hidden trophies!</strong>
+					Be sure to unhide them when you're ready for players to achieve them.
+				</p>
 			</div>
 
 			<div v-for="difficulty of GameTrophy.difficulties">

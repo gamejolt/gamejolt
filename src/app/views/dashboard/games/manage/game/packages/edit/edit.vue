@@ -131,9 +131,13 @@
 			<div class="row">
 				<div class="col-sm-4 col-sm-push-8">
 					<div class="page-help">
-						<div v-translate>
-							dash.games.packages.manage.releases.page_help_html
-						</div>
+						<p>
+							<translate>
+								Releases represent new versions of your package. If you update a package, you should
+								add a release. You can group all of the new builds for different platforms into a
+								single new release.
+							</translate>
+						</p>
 						<p>
 							<a
 								class="link-help"

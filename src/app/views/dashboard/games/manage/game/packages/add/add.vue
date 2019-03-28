@@ -23,9 +23,18 @@
 		<div class="row">
 			<div class="hidden-xs col-sm-4 col-sm-push-8 col-md-4 col-md-push-8 col-lg-4 col-lg-push-8">
 				<div class="page-help">
-					<div v-translate>
-						dash.games.packages.page_help_html
-					</div>
+					<p>
+						<translate>
+							Packages are how you organize and distribute your game's builds and other files.
+						</translate>
+					</p>
+					<p>
+						<translate>
+							Your primary package should contain the builds you want people to play. You can create
+							new packages to contain additional files, such as level editors, art packs,
+							expansions, and other DLC.
+						</translate>
+					</p>
 					<p>
 						<a
 							class="link-help"

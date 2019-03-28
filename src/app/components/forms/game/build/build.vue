@@ -141,8 +141,11 @@
 							</translate>
 						</p>
 
-						<p class="help-block" v-translate>
-							dash.games.builds.form.platforms_help_html
+						<p class="help-block">
+							<translate>
+								Select "Other" if this build is for a platform that's not shown, or if it's a
+								non-executable file such as a PDF.
+							</translate>
 						</p>
 
 						<div class="clearfix">
@@ -162,8 +165,10 @@
 						</div>
 
 						<app-expand :when="hasPlatformsError">
-							<div class="alert alert-notice sans-margin-bottom" v-translate>
-								dash.games.builds.form.no_platforms_error
+							<div class="alert alert-notice sans-margin-bottom">
+								<translate>
+									You have to select at least one platform on which your build runs (or "Other").
+								</translate>
 							</div>
 						</app-expand>
 					</div>
@@ -247,8 +252,15 @@
 						</app-expand>
 
 						<app-expand :when="!model.primary_file.is_archive">
-							<div v-translate>
-								dash.games.releases.builds.launch_options.standalone_info_html
+							<div>
+								<p>
+									<strong>
+										<translate>
+											We've detected that this build is a standalone executable file.
+										</translate>
+									</strong>
+								</p>
+								<p><translate>It can be launched automatically.</translate></p>
 							</div>
 						</app-expand>
 					</fieldset>
@@ -271,8 +283,10 @@
 						<template v-if="!isFitToScreen">
 							<hr />
 
-							<p class="help-block" v-translate>
-								dash.games.builds.form.dimensions_help_html
+							<p class="help-block">
+								<translate>
+									These are the dimensions at which your browser build will be displayed.
+								</translate>
 							</p>
 
 							<div class="row">

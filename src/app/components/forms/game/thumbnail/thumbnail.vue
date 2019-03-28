@@ -9,7 +9,11 @@
 			:optional="formModel.thumbnail_media_item && canCrop"
 		>
 			<p class="help-block" v-translate>
-				dash.forms.thumbnail_filetype_help_html
+				Your thumbnail image must be a PNG, JPG, or GIF.
+				<br />
+				Animated GIFs allow gamers to get a glimpse of your game in action.
+				<br />
+				For still images, PNGs are recommended because they produce lossless images.
 			</p>
 			<p class="help-block strong" v-translate="{ dimensions: '1280x720' }">
 				The recommended size for a thumbnail is

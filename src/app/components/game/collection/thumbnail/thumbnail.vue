@@ -3,10 +3,10 @@
 		<span class="tag tag-highlight" v-if="!hideTag">
 			<translate v-if="collection.type === 'developer'">library.playlists.developer_tag</translate>
 			<translate v-else-if="collection.type === 'followed'">
-				library.playlists.followed_tag
+				Followed Games
 			</translate>
 			<translate v-else-if="collection.type === 'playlist'">
-				library.playlists.playlist_tag
+				Playlist
 			</translate>
 			<translate v-else-if="collection.type === 'bundle'">library.playlists.bundle_tag</translate>
 			<translate v-else-if="collection.type === 'tag'">library.playlists.tag_tag</translate>

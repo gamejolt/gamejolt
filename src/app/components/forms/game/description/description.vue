@@ -29,7 +29,14 @@
 		<app-expand :when="isFnafDetected">
 			<div class="alert alert-notice">
 				<div v-translate>
-					dash.games.add.fnaf_autotag_message_html
+					<strong>
+						It appears that your game may be a Five Nights at Freddy's fan game, spinoff, or
+						unofficial sequel.
+					</strong>
+					Therefore, we have added the hashtag
+					<code>#fnaf</code>
+					to your game's description. We require this tag for all games derived from the Five Nights
+					at Freddy's series.
 				</div>
 
 				<app-game-perms required="details" tag="div" class="alert-actions">

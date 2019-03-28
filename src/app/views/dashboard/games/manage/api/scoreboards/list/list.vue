@@ -5,9 +5,18 @@
 		</h2>
 
 		<div class="page-help">
-			<div v-translate>
-				dash.games.scoreboards.page_help_html
-			</div>
+			<p>
+				<translate>
+					The API allows you to add multiple customized scoreboards, with control over sorting
+					options and guest scoring, and the ability to attach extra hidden data to scores.
+				</translate>
+			</p>
+			<p>
+				<translate>
+					The primary scoreboard is the one that will show by default on your game's page. Set a new
+					primary by dragging a scoreboard into the first slot.
+				</translate>
+			</p>
 			<p>
 				<a class="link-help" href="https://help.gamejolt.com/dev-scoreboards" target="_blank">
 					<translate>dash.games.scoreboards.page_help_link</translate>

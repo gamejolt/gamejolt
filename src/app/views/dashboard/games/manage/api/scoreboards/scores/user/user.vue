@@ -30,8 +30,8 @@
 		</h2>
 
 		<div class="alert alert-notice anim-fade-in" v-if="!scores.length">
-			<p v-translate>
-				dash.games.scores.user.list.no_scores_html
+			<p>
+				<translate>The user has no scores on this scoreboard.</translate>
 			</p>
 		</div>
 

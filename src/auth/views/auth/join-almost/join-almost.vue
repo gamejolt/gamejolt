@@ -12,9 +12,16 @@
 			</template>
 		</h2>
 
-		<div v-translate>
-			auth.join.almost.body_html
-		</div>
+		<p>
+			<translate>
+				Before you can log in to Game Jolt, you need to verify the email address on your account.
+			</translate>
+		</p>
+		<p>
+			<translate>
+				We've sent you an email with instructions on how to authorize your account.
+			</translate>
+		</p>
 		<p class="small text-muted">
 			<translate>auth.join.almost.spam</translate>
 		</p>

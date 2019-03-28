@@ -23,7 +23,11 @@
 				v-if="state.invalidEmail"
 				v-translate
 			>
-				auth.forgot.invalid_email_error_html
+				<p>
+					Hmm, that email address is not in our system. Maybe you didn't
+					<a href="/join">sign up yet</a>
+					?
+				</p>
 			</div>
 
 			<app-form-button block>

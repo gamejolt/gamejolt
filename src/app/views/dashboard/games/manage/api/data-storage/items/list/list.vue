@@ -5,9 +5,17 @@
 		</h2>
 
 		<div class="page-help">
-			<div v-translate>
-				dash.games.data_store.items.page_help_html
-			</div>
+			<p v-translate>
+				You can use the API to store data...
+				<em>in the cloud!</em>
+				All stored data items will show up here.
+			</p>
+			<p>
+				<translate>
+					Currently, you can only view (and remove) globally stored data items. Stored user data
+					items are not viewable at this time.
+				</translate>
+			</p>
 			<p>
 				<a class="link-help" href="https://help.gamejolt.com/dev-data-storage" target="_blank">
 					<translate>dash.games.data_store.items.page_help_link</translate>
