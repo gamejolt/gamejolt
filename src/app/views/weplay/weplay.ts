@@ -1,6 +1,10 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
@@ -13,6 +17,10 @@ const LOCALSTORAGE_KEY = 'weplay-timeout';
 	directives: {
 		AppTooltip,
 	},
+})
+@RouteResolver({
+	deps: {},
+	resolver: () => User.touch(),
 })
 export default class RouteWeplay extends BaseRouteComponent {
 	private timeoutFor = 0;
