@@ -3,13 +3,12 @@
 		<div class="content">
 			<div class="title">
 				<h1>
+					<app-jolticon icon="game" big />
 					Game Jolt WePlay
-					<span>
-						<app-jolticon icon="info-circle" highlight />
-					</span>
 				</h1>
 				<div class="help-block">
-					Some cool information about Game Jolt WePlay right here.
+					The new and innovative way to play games.
+					<a href="https://gamejolt.com/games/gj/272864">More info</a>
 				</div>
 			</div>
 
@@ -25,6 +24,15 @@
 				<app-card v-else class="twitch-player-placeholder">
 					<app-loading />
 				</app-card>
+			</div>
+
+			<div class="player-info">
+				<span class="text-muted">
+					Currently playing:
+					<a href="https://gamejolt.com/games/eggnogg/42742">EGGNOGG+</a>
+				</span>
+				<div class="controller-wire" />
+				<div />
 			</div>
 
 			<div class="controls">
@@ -66,6 +74,13 @@
 						</td>
 					</tr>
 				</table>
+
+				<div v-if="!Screen.isXs" class="controls-center">
+					<div class="controls-stripe" />
+					<div class="controls-stripe" />
+					<div class="controls-stripe" />
+					<div class="controls-stripe" />
+				</div>
 
 				<table class="control-table">
 					<tr>
@@ -131,9 +146,8 @@
 
 .player-container
 	width: 100%
-	padding-bottom: 56.25%
+	padding-bottom: 56.25% // 16:9
 	position: relative
-	margin-bottom: 20px
 
 .twitch-player-placeholder
 	position: absolute
@@ -148,17 +162,49 @@
 	height: 100%
 	width: 100%
 
+.player-info
+	font-size: 14px
+	width: 100%
+	display: flex
+	justify-content: space-between
+
+.controller-wire
+	width: 8px
+	height: 30px
+	theme-prop('background-color', 'darkest')
+
 .controls
 	margin-bottom: 10px
 	display: flex
-	max-width: 300px
+	max-width: 420px
 	width: 100%
 	justify-content: space-between
+	theme-prop('background-color', 'light')
+	padding: 10px
+	flex-wrap: wrap
+	border-radius: 4px
 
 .control-table
+	flex-shrink: 0
+	border-radius: 10px
+	display: block
+	padding: 4px
+	theme-prop('background-color', 'darker')
+
 	& > tr > td
 		padding: 4px
 		text-align: center
+
+.controls-center
+	display: flex
+	flex-direction: column
+	justify-content: space-between
+
+.controls-stripe
+	width: 100px
+	height: 15px
+	border-radius: 4px
+	theme-prop('background-color', 'darker')
 
 .team-name
 	font-weight: bold
