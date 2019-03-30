@@ -3,6 +3,7 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
@@ -29,6 +30,8 @@ export default class RouteWeplay extends BaseRouteComponent {
 	@State
 	app!: AppStore;
 
+	readonly Screen = Screen;
+
 	get routeTitle() {
 		return 'WePlay';
 	}
@@ -39,6 +42,16 @@ export default class RouteWeplay extends BaseRouteComponent {
 
 	get timeoutFormatted() {
 		return (this.timeoutFor / 1000).toFixed(2);
+	}
+
+	get teamName() {
+		if (this.app.user) {
+			if (this.app.user.id % 2 === 0) {
+				return 'Alpha';
+			} else {
+				return 'Beta';
+			}
+		}
 	}
 
 	mounted() {

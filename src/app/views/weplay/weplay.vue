@@ -13,13 +13,15 @@
 				</div>
 			</div>
 
-			<iframe
-				class="twitch-player"
-				src="https://player.twitch.tv/?channel=nathanauckett"
-				frameborder="0"
-				allowfullscreen="true"
-				scrolling="no"
-			></iframe>
+			<div class="player-container">
+				<iframe
+					class="twitch-player"
+					src="https://player.twitch.tv/?channel=nathanauckett"
+					frameborder="0"
+					allowfullscreen="true"
+					scrolling="no"
+				></iframe>
+			</div>
 
 			<div class="controls">
 				<table class="control-table">
@@ -95,11 +97,16 @@
 					</router-link>
 					to play.
 				</template>
-				<template v-else-if="isDisabled">
-					You regain control in {{ timeoutFormatted }}s
-				</template>
 				<template v-else>
-					<translate>You can use your input!</translate>
+					You are on team
+					<span class="team-name">{{ teamName }}.</span>
+					<br />
+					<template v-if="isDisabled">
+						You regain control in {{ timeoutFormatted }}s
+					</template>
+					<template v-else>
+						<translate>You can use your input!</translate>
+					</template>
 				</template>
 			</span>
 		</div>
@@ -108,16 +115,25 @@
 
 <style lang="stylus" scoped>
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .content
 	display: flex
 	align-items: center
 	flex-direction: column
 
-.twitch-player
+.title > h1
+	margin-top: 30px
+
+.player-container
 	width: 100%
-	min-height: 600px
-	max-height: 800px
+	padding-bottom: 56.25%
+	position: relative
+
+.twitch-player
+	position: absolute
+	height: 100%
+	width: 100%
 
 .controls
 	margin-top: 20px
@@ -131,6 +147,9 @@
 	& > tr > td
 		padding: 4px
 		text-align: center
+
+.team-name
+	theme-prop('color', 'highlight')
 </style>
 
 <script lang="ts" src="./weplay" />
