@@ -2,7 +2,9 @@
 	<router-link :to="{ name: 'weplay' }">
 		<div class="weplay-banner well fill-offset full-bleed-xs">
 			<div class="banner-lead">
-				<app-jolticon icon="game" big />
+				<span class="logo">
+					<app-weplay-logo />
+				</span>
 				<p class="lead">
 					Check out
 					<strong>Game Jolt Stajoltia</strong>
@@ -38,6 +40,9 @@
 
 .banner-lead
 	display: flex
+
+.logo
+	width: 32px
 
 .lead
 	margin-left: 10px

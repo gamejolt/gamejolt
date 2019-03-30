@@ -11,6 +11,7 @@ import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vu
 import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import AppWeplayLogo from '../../components/weplay/logo/logo.vue';
 
 const LOCALSTORAGE_KEY = 'weplay-timeout';
 
@@ -19,6 +20,7 @@ const LOCALSTORAGE_KEY = 'weplay-timeout';
 	components: {
 		AppLoading,
 		AppCard,
+		AppWeplayLogo,
 	},
 	directives: {
 		AppTooltip,

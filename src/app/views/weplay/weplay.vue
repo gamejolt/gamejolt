@@ -3,12 +3,14 @@
 		<div class="content">
 			<div class="title">
 				<h1>
-					<app-jolticon icon="game" big />
+					<div class="logo">
+						<app-weplay-logo />
+					</div>
 					Game Jolt Stajoltia
 				</h1>
 				<div class="help-block">
 					The future of gaming is we.
-					<a href="https://gamejolt.com/games/gj/272864">More info</a>
+					<router-link :to="{ name: 'landing.weplay' }">More info</router-link>
 				</div>
 			</div>
 
@@ -143,6 +145,11 @@
 
 .title > h1
 	margin-top: 30px
+
+.logo
+	display: inline-block
+	width: 32px
+	margin-right: 4px
 
 .player-container
 	width: 100%
