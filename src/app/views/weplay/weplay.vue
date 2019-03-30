@@ -161,7 +161,8 @@
 		text-align: center
 
 .team-name
-	theme-prop('color', 'highlight')
+	font-weight: bold
+
 </style>
 
 <script lang="ts" src="./weplay" />
