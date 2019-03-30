@@ -1,4 +1,5 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import AppCard from 'game-jolt-frontend-lib/components/card/card.vue';
 import {
 	BaseRouteComponent,
 	RouteResolver,
@@ -6,6 +7,7 @@ import {
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
 import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
@@ -14,7 +16,10 @@ const LOCALSTORAGE_KEY = 'weplay-timeout';
 
 @Component({
 	name: 'RouteWeplay',
-	components: {},
+	components: {
+		AppLoading,
+		AppCard,
+	},
 	directives: {
 		AppTooltip,
 	},
@@ -26,11 +31,16 @@ const LOCALSTORAGE_KEY = 'weplay-timeout';
 export default class RouteWeplay extends BaseRouteComponent {
 	private timeoutFor = 0;
 	private timer!: NodeJS.Timer;
+	private twitchChannel: string | null = null;
 
 	@State
 	app!: AppStore;
 
 	readonly Screen = Screen;
+
+	get twitchChannelUrl() {
+		return `https://player.twitch.tv/?channel=${this.twitchChannel}`;
+	}
 
 	get routeTitle() {
 		return 'WePlay';
@@ -54,10 +64,13 @@ export default class RouteWeplay extends BaseRouteComponent {
 		}
 	}
 
-	mounted() {
+	async mounted() {
 		this.checkTimeout = this.checkTimeout.bind(this);
 		this.checkTimeout();
 		this.timer = setInterval(this.checkTimeout, 100);
+
+		const $payload = await Api.sendRequest('/web/weplay');
+		this.twitchChannel = $payload.channel;
 	}
 
 	beforeDestroy() {

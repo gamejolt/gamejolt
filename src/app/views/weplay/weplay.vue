@@ -15,12 +15,16 @@
 
 			<div class="player-container">
 				<iframe
+					v-if="twitchChannel"
 					class="twitch-player"
-					src="https://player.twitch.tv/?channel=nathanauckett"
+					:src="twitchChannelUrl"
 					frameborder="0"
 					allowfullscreen="true"
 					scrolling="no"
 				></iframe>
+				<app-card v-else class="twitch-player-placeholder">
+					<app-loading />
+				</app-card>
 			</div>
 
 			<div class="controls">
@@ -129,6 +133,15 @@
 	width: 100%
 	padding-bottom: 56.25%
 	position: relative
+	margin-bottom: 20px
+
+.twitch-player-placeholder
+	position: absolute
+	height: 100%
+	width: 100%
+	display: flex
+	justify-content: center
+	align-items: center
 
 .twitch-player
 	position: absolute
@@ -136,7 +149,6 @@
 	width: 100%
 
 .controls
-	margin-top: 20px
 	margin-bottom: 10px
 	display: flex
 	max-width: 300px
