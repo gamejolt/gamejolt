@@ -180,56 +180,61 @@
 				<div class="-spacer" />
 			</template>
 
-			<div v-if="!isOverviewLoaded">
-				<span class="lazy-placeholder"></span>
-				<span class="lazy-placeholder"></span>
-				<span class="lazy-placeholder"></span>
-				<span class="lazy-placeholder" style="width: 40%"></span>
-			</div>
-			<div v-else>
-				<!--
-					Set a :key to let vue know that it should update
-					this when the game changes.
-				-->
-				<app-fade-collapse
-					:collapse-height="600"
-					:is-open="showDetails || !postsCount"
-					:animate="false"
-					:key="game.description_compiled"
-					@require-change="setCanToggleDescription"
-					@expand="toggleDetails()"
-					>
-					<div
-						class="game-compiled-description"
-						v-html="game.description_compiled"
-						>
-					</div>
-				</app-fade-collapse>
-
-				<div v-if="showDetails">
-					<hr>
-					<div class="row">
-						<div class="col-sm-6">
-							<app-discover-games-view-overview-details :game="game" />
-						</div>
-						<div class="col-sm-6">
-							<app-lazy-placeholder :when="isOverviewLoaded">
-								<div class="lazy-placeholder" style="height: 115px"></div>
-								<app-game-ogrs :game="game" />
-							</app-lazy-placeholder>
-						</div>
-					</div>
+			<div class="content-well">
+				<!-- <h4 class="section-header">
+					<translate>Description</translate>
+				</h4> -->
+				<div v-if="!isOverviewLoaded">
+					<span class="lazy-placeholder"></span>
+					<span class="lazy-placeholder"></span>
+					<span class="lazy-placeholder"></span>
+					<span class="lazy-placeholder" style="width: 40%"></span>
 				</div>
-
-				<div class="page-cut">
-					<app-button
-						trans
-						@click="toggleDetails()"
-						v-app-track-event="`game-profile:show-full-description`"
+				<div v-else>
+					<!--
+						Set a :key to let vue know that it should update
+						this when the game changes.
+					-->
+					<app-fade-collapse
+						:collapse-height="600"
+						:is-open="showDetails || !postsCount"
+						:animate="false"
+						:key="game.description_compiled"
+						@require-change="setCanToggleDescription"
+						@expand="toggleDetails()"
 						>
-						<translate v-if="!showDetails">Show More</translate>
-						<translate v-else>Less</translate>
-					</app-button>
+						<div
+							class="game-compiled-description"
+							v-html="game.description_compiled"
+							>
+						</div>
+					</app-fade-collapse>
+
+					<div v-if="showDetails">
+						<hr>
+						<div class="row">
+							<div class="col-sm-6">
+								<app-discover-games-view-overview-details :game="game" />
+							</div>
+							<div class="col-sm-6">
+								<app-lazy-placeholder :when="isOverviewLoaded">
+									<div class="lazy-placeholder" style="height: 115px"></div>
+									<app-game-ogrs :game="game" />
+								</app-lazy-placeholder>
+							</div>
+						</div>
+					</div>
+
+					<div class="page-cut">
+						<app-button
+							trans
+							@click="toggleDetails()"
+							v-app-track-event="`game-profile:show-full-description`"
+							>
+							<translate v-if="!showDetails">Show More</translate>
+							<translate v-else>Less</translate>
+						</app-button>
+					</div>
 				</div>
 			</div>
 
