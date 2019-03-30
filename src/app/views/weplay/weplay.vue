@@ -4,10 +4,10 @@
 			<div class="title">
 				<h1>
 					<app-jolticon icon="game" big />
-					Game Jolt WePlay
+					Game Jolt Stajoltia
 				</h1>
 				<div class="help-block">
-					The new and innovative way to play games.
+					The future of gaming is we.
 					<a href="https://gamejolt.com/games/gj/272864">More info</a>
 				</div>
 			</div>

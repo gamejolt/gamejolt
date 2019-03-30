@@ -43,7 +43,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 	}
 
 	get routeTitle() {
-		return 'WePlay';
+		return 'Stajoltia';
 	}
 
 	get isDisabled() {

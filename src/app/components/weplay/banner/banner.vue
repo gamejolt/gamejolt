@@ -5,12 +5,13 @@
 				<app-jolticon icon="game" big />
 				<p class="lead">
 					Check out
-					<strong>Game Jolt WePlay</strong>
+					<strong>Game Jolt Stajoltia</strong>
 				</p>
 			</div>
 
 			<div class="banner-help help-block">
-				The new and innovative way to play games, right here on Game Jolt!
+				Introducing Stajoltia, a new gaming platform from Game Jolt for playing video games across
+				all kinds of screens.
 			</div>
 
 			<div v-if="!Screen.isXs" class="mascots">
@@ -46,9 +47,9 @@
 
 .mascots
 	position: absolute
-	top: -20px
+	top: -10px
 	right: -20px
-	width: 300px
+	width: 310px
 	opacity: 0.5
 
 </style>
