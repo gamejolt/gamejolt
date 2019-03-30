@@ -7,13 +7,13 @@ import {
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import AppUserCard from 'game-jolt-frontend-lib/components/user/card/card.vue'
+import AppUserCard from 'game-jolt-frontend-lib/components/user/card/card.vue';
 import { numberSort } from 'game-jolt-frontend-lib/utils/array';
 import { fuzzysearch } from 'game-jolt-frontend-lib/utils/string';
 import { Component } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class';
-import AppActivityFeed from '../../components/activity/feed/feed.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
+import AppActivityFeed from '../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import AppBroadcastCard from '../../components/broadcast-card/broadcast-card.vue';
@@ -22,6 +22,7 @@ import AppGameList from '../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../components/game/list/placeholder/placeholder.vue';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
+import AppWeplayBanner from '../../components/weplay/banner/banner.vue';
 import { Store, store } from '../../store';
 
 class DashGame {
@@ -45,6 +46,7 @@ class DashGame {
 		AppCommunitySlider,
 		AppPostAddButton,
 		AppUserCard,
+		AppWeplayBanner,
 	},
 	directives: {
 		AppTrackEvent,
