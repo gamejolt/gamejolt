@@ -111,6 +111,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 			const timeoutValue = ($payload.wait * 1000 + Date.now()).toString();
 			localStorage.setItem(LOCALSTORAGE_TIMEOUT_KEY, timeoutValue);
 		}
+		this.checkTimeout();
 		this.processing = false;
 	}
 }
