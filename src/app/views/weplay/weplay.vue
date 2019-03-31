@@ -45,7 +45,7 @@
 								circle
 								icon="chevron-up"
 								:disabled="isDisabled"
-								@click="onClickKey('up')"
+								@click="onClickKey($event, 'up')"
 							/>
 						</td>
 					</tr>
@@ -55,7 +55,7 @@
 								circle
 								icon="chevron-left"
 								:disabled="isDisabled"
-								@click="onClickKey('left')"
+								@click="onClickKey($event, 'left')"
 							/>
 						</td>
 						<td>
@@ -63,7 +63,7 @@
 								circle
 								icon="chevron-down"
 								:disabled="isDisabled"
-								@click="onClickKey('down')"
+								@click="onClickKey($event, 'down')"
 								v-app-tooltip.bottom="$gettext('Pickup')"
 							/>
 						</td>
@@ -72,7 +72,7 @@
 								circle
 								icon="chevron-right"
 								:disabled="isDisabled"
-								@click="onClickKey('right')"
+								@click="onClickKey($event, 'right')"
 							/>
 						</td>
 					</tr>
@@ -91,7 +91,7 @@
 						<td>
 							<app-button
 								:disabled="isDisabled"
-								@click="onClickKey('a')"
+								@click="onClickKey($event, 'a')"
 								v-app-tooltip="$gettext('Jump')"
 							>
 								A
@@ -102,7 +102,7 @@
 						<td>
 							<app-button
 								:disabled="isDisabled"
-								@click="onClickKey('b')"
+								@click="onClickKey($event, 'b')"
 								v-app-tooltip="$gettext('Attack')"
 							>
 								B

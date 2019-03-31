@@ -106,7 +106,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 		this.timeoutFor = 0;
 	}
 
-	public async onClickKey(key: string) {
+	public async onClickKey(event: Event, key: string) {
 		if (this.timeoutFor > 0) {
 			return;
 		}
@@ -122,6 +122,9 @@ export default class RouteWeplay extends BaseRouteComponent {
 			localStorage.setItem(LOCALSTORAGE_TIMEOUT_KEY, timeoutValue);
 		}
 		this.checkTimeout();
+		if (event.target instanceof HTMLButtonElement) {
+			event.target.blur();
+		}
 		this.processing = false;
 	}
 }
