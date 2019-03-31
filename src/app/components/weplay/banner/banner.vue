@@ -43,6 +43,7 @@
 
 .logo
 	width: 32px
+	filter: drop-shadow(0 0 4px var(--theme-notice));
 
 .lead
 	margin-left: 10px

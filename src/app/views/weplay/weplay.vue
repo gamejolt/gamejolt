@@ -123,7 +123,10 @@
 					<span class="team-name">{{ teamName }}.</span>
 					<br />
 					<template v-if="isDisabled">
-						You regain control in {{ timeoutFormatted }}s
+						<span v-if="processing">
+							Processing...
+						</span>
+						<span v-else>You regain control in {{ timeoutFormatted }}s</span>
 					</template>
 					<template v-else>
 						<translate>You can use your input!</translate>
@@ -150,6 +153,7 @@
 	display: inline-block
 	width: 32px
 	margin-right: 4px
+	filter: drop-shadow(0 0 4px var(--theme-notice));
 
 .player-container
 	width: 100%

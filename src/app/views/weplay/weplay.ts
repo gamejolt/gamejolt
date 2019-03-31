@@ -34,6 +34,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 	private timeoutFor = 0;
 	private timer!: NodeJS.Timer;
 	private twitchChannel: string | null = null;
+	private processing = false;
 
 	@State
 	app!: AppStore;
@@ -49,7 +50,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 	}
 
 	get isDisabled() {
-		return !this.app.user || this.timeoutFor > 0;
+		return !this.app.user || this.processing || this.timeoutFor > 0;
 	}
 
 	get timeoutFormatted() {
@@ -97,6 +98,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 			return;
 		}
 
+		this.processing = true;
 		const $payload = await Api.sendRequest(
 			'/web/weplay/process-input',
 			{ key },
@@ -106,5 +108,6 @@ export default class RouteWeplay extends BaseRouteComponent {
 			const timeoutValue = ($payload.wait * 1000 + Date.now()).toString();
 			localStorage.setItem(LOCALSTORAGE_KEY, timeoutValue);
 		}
+		this.processing = false;
 	}
 }
