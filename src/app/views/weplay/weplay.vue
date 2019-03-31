@@ -31,7 +31,7 @@
 			<div class="player-info">
 				<span class="text-muted">
 					Currently playing:
-					<a href="https://gamejolt.com/games/eggnogg/42742">EGGNOGG+</a>
+					<a href="https://gamejolt.com/games/eggnogg/42742" target="_blank">EGGNOGG+</a>
 				</span>
 				<div class="controller-wire" />
 				<div />
