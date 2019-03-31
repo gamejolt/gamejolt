@@ -9,7 +9,6 @@ import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
 import { Component } from 'vue-property-decorator';
-import AppWeplayBanner from '../../components/weplay/banner/banner';
 import AppWeplayLogo from '../../components/weplay/logo/logo.vue';
 
 const LOCALSTORAGE_TIMEOUT_KEY = 'weplay-timeout';
@@ -21,7 +20,6 @@ export const LOCALSTORAGE_VISITED_KEY = 'weplay-check';
 		AppLoading,
 		AppCard,
 		AppWeplayLogo,
-		AppWeplayBanner,
 	},
 	directives: {
 		AppTooltip,

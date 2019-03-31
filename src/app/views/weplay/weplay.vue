@@ -17,9 +17,6 @@
 							Introducing Stajoltia, a new gaming platform from Game Jolt for playing video games across
 							all kinds of screens.
 						</p>
-						<!-- <div class="banner">
-							<app-weplay-banner />
-						</div> -->
 						<span class="text-muted">
 							(phone screens, watch screens, computer screens, window screens and more!)
 						</span>
