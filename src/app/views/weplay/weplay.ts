@@ -116,15 +116,19 @@ export default class RouteWeplay extends BaseRouteComponent {
 		}
 
 		this.processing = true;
-		const response = await Api.sendRequest(
-			'/web/weplay/process-input',
-			{ key },
-			{ detach: true, processPayload: false }
-		);
-		const $payload = response.data;
-		if ($payload.success) {
-			const timeoutValue = ($payload.wait * 1000 + Date.now()).toString();
-			localStorage.setItem(LOCALSTORAGE_TIMEOUT_KEY, timeoutValue);
+		try {
+			const response = await Api.sendRequest(
+				'/web/weplay/process-input',
+				{ key },
+				{ detach: true, processPayload: false }
+			);
+			const $payload = response.data;
+			if ($payload.success) {
+				const timeoutValue = ($payload.wait * 1000 + Date.now()).toString();
+				localStorage.setItem(LOCALSTORAGE_TIMEOUT_KEY, timeoutValue);
+			}
+		} catch (error) {
+			console.log('Failed to press key');
 		}
 		this.checkTimeout();
 		if (event.target instanceof HTMLButtonElement) {
