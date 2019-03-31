@@ -8,10 +8,10 @@
 					</div>
 					Game Jolt Stajoltia
 				</h1>
-				<div class="help-block">
-					The future of gaming is we.
-					<router-link :to="{ name: 'landing.weplay' }">More info</router-link>
-				</div>
+			</div>
+			<div class="help-block">
+				The future of gaming is we.
+				<router-link :to="{ name: 'landing.weplay' }">More info</router-link>
 			</div>
 
 			<div class="player-container">
@@ -148,6 +148,7 @@
 
 .title > h1
 	margin-top: 30px
+	margin-bottom: 2px
 
 .logo
 	display: inline-block

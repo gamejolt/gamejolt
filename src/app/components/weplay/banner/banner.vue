@@ -1,6 +1,9 @@
 <template>
 	<router-link :to="{ name: 'weplay' }">
-		<div class="weplay-banner well fill-offset full-bleed-xs">
+		<div
+			class="weplay-banner well fill-offset full-bleed-xs"
+			:class="{ 'weplay-banner-glowing': !hasVisited }"
+		>
 			<div class="banner-lead">
 				<span class="logo">
 					<app-weplay-logo />
@@ -27,6 +30,18 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+@keyframes boxpulse {
+  0% {
+	filter: drop-shadow(0 0 15px var(--theme-notice));
+  }
+  50% {
+	filter: drop-shadow(0 0 4px var(--theme-highlight));
+  }
+  100% {
+	filter: drop-shadow(0 0 15px var(--theme-notice));
+  }
+}
+
 .weplay-banner
 	position: relative
 	border-style: solid
@@ -34,6 +49,9 @@
 	rounded-corners()
 	theme-prop('border-color', 'bg-offset')
 	overflow: hidden
+
+.weplay-banner-glowing
+	animation: boxpulse 3s infinite;
 
 .weplay-banner:hover
 	theme-prop('border-color', 'highlight')

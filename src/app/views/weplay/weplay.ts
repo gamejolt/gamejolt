@@ -13,7 +13,8 @@ import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppWeplayLogo from '../../components/weplay/logo/logo.vue';
 
-const LOCALSTORAGE_KEY = 'weplay-timeout';
+const LOCALSTORAGE_TIMEOUT_KEY = 'weplay-timeout';
+export const LOCALSTORAGE_VISITED_KEY = 'weplay-check';
 
 @Component({
 	name: 'RouteWeplay',
@@ -74,6 +75,8 @@ export default class RouteWeplay extends BaseRouteComponent {
 
 		const $payload = await Api.sendRequest('/web/weplay');
 		this.twitchChannel = $payload.channel;
+
+		localStorage.setItem(LOCALSTORAGE_VISITED_KEY, '1');
 	}
 
 	beforeDestroy() {
@@ -81,7 +84,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 	}
 
 	private checkTimeout() {
-		const value = localStorage.getItem(LOCALSTORAGE_KEY);
+		const value = localStorage.getItem(LOCALSTORAGE_TIMEOUT_KEY);
 		if (value !== null) {
 			const num = parseInt(value);
 			if (num !== NaN) {
@@ -106,7 +109,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 		);
 		if ($payload.success) {
 			const timeoutValue = ($payload.wait * 1000 + Date.now()).toString();
-			localStorage.setItem(LOCALSTORAGE_KEY, timeoutValue);
+			localStorage.setItem(LOCALSTORAGE_TIMEOUT_KEY, timeoutValue);
 		}
 		this.processing = false;
 	}
