@@ -82,6 +82,8 @@
 				</p>
 			</div>
 
+			<!-- <app-weplay-banner /> -->
+
 			<app-post-add-button @add="onPostAdded" />
 
 			<template v-if="Screen.isXs && communities.length > 0">
