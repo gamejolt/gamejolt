@@ -15,8 +15,7 @@
 			</div>
 
 			<div class="banner-help help-block">
-				Introducing Stajoltia, a new gaming platform from Game Jolt for playing video games across
-				all kinds of screens.
+				Introducing Stajoltia, a new game streaming platform from Game Jolt for playing video games from anywhere.
 			</div>
 
 			<div v-if="!Screen.isXs" class="mascots">
