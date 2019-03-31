@@ -113,11 +113,11 @@
 			</div>
 
 			<span class="help-block">
-				<template v-if="!app.user">
-					<router-link :to="{ name: 'auth.login' }">
-						Log in
-					</router-link>
-					to play.
+				<template v-if="turnedOff">
+					Disabled.
+				</template>
+				<template v-else-if="team === -1">
+					Loading...
 				</template>
 				<template v-else>
 					You are on team

@@ -8,9 +8,7 @@ import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service'
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
-import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import AppWeplayLogo from '../../components/weplay/logo/logo.vue';
 
 const LOCALSTORAGE_TIMEOUT_KEY = 'weplay-timeout';
@@ -36,9 +34,8 @@ export default class RouteWeplay extends BaseRouteComponent {
 	private timer!: NodeJS.Timer;
 	private twitchChannel: string | null = null;
 	private processing = false;
-
-	@State
-	app!: AppStore;
+	private team = -1;
+	private turnedOff = false;
 
 	readonly Screen = Screen;
 
@@ -51,7 +48,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 	}
 
 	get isDisabled() {
-		return !this.app.user || this.processing || this.timeoutFor > 0;
+		return this.turnedOff || this.team === -1 || this.processing || this.timeoutFor > 0;
 	}
 
 	get timeoutFormatted() {
@@ -59,8 +56,8 @@ export default class RouteWeplay extends BaseRouteComponent {
 	}
 
 	get teamName() {
-		if (this.app.user) {
-			if (this.app.user.id % 2 === 0) {
+		if (this.team !== -1) {
+			if (this.team === 0) {
 				return 'Alpha';
 			} else {
 				return 'Beta';
@@ -69,8 +66,8 @@ export default class RouteWeplay extends BaseRouteComponent {
 	}
 
 	get teamColor() {
-		if (this.app.user) {
-			if (this.app.user.id % 2 === 0) {
+		if (this.team !== -1) {
+			if (this.team === 0) {
 				return '#ccff00';
 			} else {
 				return '#ff3fac';
@@ -83,8 +80,15 @@ export default class RouteWeplay extends BaseRouteComponent {
 		this.checkTimeout();
 		this.timer = setInterval(this.checkTimeout, 100);
 
-		const $payload = await Api.sendRequest('/web/weplay');
+		const response = await Api.sendRequest('/web/weplay', null, { processPayload: false });
+		const $payload = response.data;
+		if (!$payload.success) {
+			this.turnedOff = true;
+		}
 		this.twitchChannel = $payload.channel;
+		if ($payload.team === 0 || $payload.team === 1) {
+			this.team = $payload.team;
+		}
 
 		localStorage.setItem(LOCALSTORAGE_VISITED_KEY, '1');
 	}
@@ -112,11 +116,12 @@ export default class RouteWeplay extends BaseRouteComponent {
 		}
 
 		this.processing = true;
-		const $payload = await Api.sendRequest(
+		const response = await Api.sendRequest(
 			'/web/weplay/process-input',
 			{ key },
-			{ detach: true }
+			{ detach: true, processPayload: false }
 		);
+		const $payload = response.data;
 		if ($payload.success) {
 			const timeoutValue = ($payload.wait * 1000 + Date.now()).toString();
 			localStorage.setItem(LOCALSTORAGE_TIMEOUT_KEY, timeoutValue);
