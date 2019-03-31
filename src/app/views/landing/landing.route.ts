@@ -9,7 +9,6 @@ import { routeLandingLearn } from './learn/learn.route';
 import { routeLandingMarketplace } from './marketplace/marketplace.route';
 import { routeLandingPartners } from './partners/partners.route';
 import { routeLandingRedlight } from './redlight/redlight.route';
-import { routeLandingWeplay } from './weplay/weplay.route';
 
 export const routeLanding: RouteConfig = {
 	path: '',
@@ -24,6 +23,5 @@ export const routeLanding: RouteConfig = {
 		routeLandingPartners,
 		routeLandingRedlight,
 		routeLandingIndieaf,
-		routeLandingWeplay,
 	],
 };
