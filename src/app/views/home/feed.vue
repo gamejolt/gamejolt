@@ -82,7 +82,7 @@
 				</p>
 			</div>
 
-			<app-weplay-banner />
+			<!-- <app-weplay-banner /> -->
 
 			<app-post-add-button @add="onPostAdded" />
 
