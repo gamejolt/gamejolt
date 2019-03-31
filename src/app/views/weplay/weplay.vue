@@ -64,6 +64,7 @@
 								icon="chevron-down"
 								:disabled="isDisabled"
 								@click="onClickKey('down')"
+								v-app-tooltip.bottom="$gettext('Pickup')"
 							/>
 						</td>
 						<td>
@@ -120,7 +121,7 @@
 				</template>
 				<template v-else>
 					You are on team
-					<span class="team-name">{{ teamName }}.</span>
+					<span class="team-name" :style="{ color: teamColor }">{{ teamName }}.</span>
 					<br />
 					<template v-if="isDisabled">
 						<span v-if="processing">

@@ -68,6 +68,16 @@ export default class RouteWeplay extends BaseRouteComponent {
 		}
 	}
 
+	get teamColor() {
+		if (this.app.user) {
+			if (this.app.user.id % 2 === 0) {
+				return '#ccff00';
+			} else {
+				return '#ff3fac';
+			}
+		}
+	}
+
 	async mounted() {
 		this.checkTimeout = this.checkTimeout.bind(this);
 		this.checkTimeout();
