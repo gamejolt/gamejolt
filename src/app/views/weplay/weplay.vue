@@ -26,7 +26,7 @@
 		</section>
 
 		<section class="section fill-darker">
-			<div class="container">
+			<div class="container-xl">
 				<div class="content">
 					<div class="player-container">
 						<iframe
@@ -36,7 +36,14 @@
 							frameborder="0"
 							allowfullscreen="true"
 							scrolling="no"
-						></iframe>
+						/>
+						<iframe
+							v-if="twitchChannel"
+							class="twitch-chat"
+							frameborder="0"
+							scrolling="yes"
+							:src="twitchChannelChatUrl"
+						/>
 						<app-card v-else class="twitch-player-placeholder">
 							<app-loading />
 						</app-card>
@@ -306,6 +313,20 @@
 	position: absolute
 	height: 100%
 	width: 100%
+
+.twitch-chat
+	position: absolute
+	display: none
+	height: 100%
+	width: 25%
+	right: 0
+
+@media $media-md-up
+	.twitch-player
+		width: 75%
+
+	.twitch-chat
+		display: block
 
 .player-info
 	font-size: 14px

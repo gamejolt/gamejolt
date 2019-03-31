@@ -43,6 +43,10 @@ export default class RouteWeplay extends BaseRouteComponent {
 		return `https://player.twitch.tv/?channel=${this.twitchChannel}`;
 	}
 
+	get twitchChannelChatUrl() {
+		return `https://www.twitch.tv/embed/${this.twitchChannel}/chat`;
+	}
+
 	get routeTitle() {
 		return 'Stajoltia';
 	}
