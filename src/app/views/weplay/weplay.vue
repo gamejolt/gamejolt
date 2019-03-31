@@ -26,7 +26,7 @@
 		</section>
 
 		<section class="section fill-darker">
-			<div class="container-xl">
+			<div class="container">
 				<div class="content">
 					<div class="player-container">
 						<iframe
