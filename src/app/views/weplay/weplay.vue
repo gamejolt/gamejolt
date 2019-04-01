@@ -61,12 +61,33 @@
 					<div class="controls">
 						<table class="control-table">
 							<tr>
-								<td colspan="3">
+								<td>
 									<app-button
+										class="control-up-left"
 										circle
 										icon="chevron-up"
 										:disabled="isDisabled"
+										@click="onClickKey($event, 'jump-left')"
+										v-app-tooltip="$gettext('Jump Left')"
+									/>
+								</td>
+								<td>
+									<app-button
+										circle
+										solid
+										icon="chevron-up"
+										:disabled="isDisabled"
 										@click="onClickKey($event, 'up')"
+									/>
+								</td>
+								<td>
+									<app-button
+										class="control-up-right"
+										circle
+										icon="chevron-up"
+										:disabled="isDisabled"
+										@click="onClickKey($event, 'jump-right')"
+										v-app-tooltip="$gettext('Jump Right')"
 									/>
 								</td>
 							</tr>
@@ -74,6 +95,7 @@
 								<td>
 									<app-button
 										circle
+										solid
 										icon="chevron-left"
 										:disabled="isDisabled"
 										@click="onClickKey($event, 'left')"
@@ -82,6 +104,7 @@
 								<td>
 									<app-button
 										circle
+										solid
 										icon="chevron-down"
 										:disabled="isDisabled"
 										@click="onClickKey($event, 'down')"
@@ -91,6 +114,7 @@
 								<td>
 									<app-button
 										circle
+										solid
 										icon="chevron-right"
 										:disabled="isDisabled"
 										@click="onClickKey($event, 'right')"
@@ -111,6 +135,7 @@
 								<td />
 								<td>
 									<app-button
+										solid
 										:disabled="isDisabled"
 										@click="onClickKey($event, 'a')"
 										v-app-tooltip="$gettext('Jump')"
@@ -122,6 +147,7 @@
 							<tr>
 								<td>
 									<app-button
+										solid
 										:disabled="isDisabled"
 										@click="onClickKey($event, 'b')"
 										v-app-tooltip="$gettext('Attack')"
@@ -371,6 +397,12 @@
 	height: 15px
 	border-radius: 4px
 	theme-prop('background-color', 'darker')
+
+.control-up-left
+	transform: rotate(-45deg)
+
+.control-up-right
+	transform: rotate(45deg)
 
 .team-name
 	font-weight: bold

@@ -104,7 +104,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 	private checkTimeout() {
 		const value = localStorage.getItem(LOCALSTORAGE_TIMEOUT_KEY);
 		if (value !== null) {
-			const num = parseInt(value);
+			const num = parseInt(value, 10);
 			if (num !== NaN) {
 				const timeout = num - Date.now();
 				this.timeoutFor = timeout;
