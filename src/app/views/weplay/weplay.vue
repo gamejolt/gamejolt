@@ -399,10 +399,10 @@
 	theme-prop('background-color', 'darker')
 
 .control-up-left
-	transform: rotate(-45deg)
+	transform: rotate(-45deg) !important
 
 .control-up-right
-	transform: rotate(45deg)
+	transform: rotate(45deg) !important
 
 .team-name
 	font-weight: bold
