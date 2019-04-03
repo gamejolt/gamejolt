@@ -7,6 +7,8 @@ import { Referrer } from 'game-jolt-frontend-lib/components/referrer/referrer.se
 import { hijackLinks } from 'game-jolt-frontend-lib/utils/router';
 import { VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
 import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import Nbsp from 'game-jolt-frontend-lib/vue/components/space/nbsp.vue';
+import Space from 'game-jolt-frontend-lib/vue/components/space/space.vue';
 import Vue from 'vue';
 import { VueRouter } from 'vue-router/types/router';
 import { bootstrapAppTranslations } from '../utils/translations';
@@ -35,6 +37,8 @@ export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, rout
 	// Common components.
 	Vue.component('AppButton', AppButton);
 	Vue.component('AppJolticon', AppJolticon);
+	Vue.component('Space', Space);
+	Vue.component('Nbsp', Nbsp);
 
 	// Set some constants so we can use them in templates.
 	Vue.use(vue => {

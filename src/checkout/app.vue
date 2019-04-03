@@ -30,12 +30,18 @@
 					<div class="col-sm-6">
 						<p class="footer-links">
 							<a href="mailto:contact@gamejolt.com">Contact Game Jolt</a>
-							&nbsp;|&nbsp;
+							<nbsp />
+							|
+							<nbsp />
 							<a :href="Environment.baseUrl + '/terms'" target="_blank">Terms</a>
-							&nbsp;|&nbsp;
+							<nbsp />
+							|
+							<nbsp />
 							<a :href="Environment.baseUrl + '/privacy'" target="_blank">Privacy Policy</a>
 							<template v-if="!GJ_IS_CLIENT">
-								&nbsp;|&nbsp;
+								<nbsp />
+								|
+								<nbsp />
 								<a :href="Environment.baseUrl + '/cookies'" target="_blank">Cookie Policy</a>
 							</template>
 						</p>

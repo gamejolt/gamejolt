@@ -8,7 +8,7 @@
 				<span @click.stop>
 					<app-fireside-post-like-widget :post="post" circle />
 
-					&nbsp;
+					<nbsp />
 
 					<template v-if="!showComments">
 						<app-button
@@ -25,7 +25,7 @@
 							</span>
 						</span>
 
-						&nbsp;
+						<nbsp />
 					</template>
 
 					<app-popper @show="isShowingShare = true" @hide="isShowingShare = false">
