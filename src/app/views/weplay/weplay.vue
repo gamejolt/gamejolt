@@ -147,7 +147,7 @@
 					</div>
 
 					<div class="help-block">
-						<strong>April Fools 2019 is over.</strong> Thanks for participating!
+						<strong>April Fool's 2019 is over.</strong> Thanks for participating!
 					</div>
 				</div>
 			</div>
