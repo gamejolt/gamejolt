@@ -30,23 +30,18 @@
 				<div class="content">
 					<div class="player-container">
 						<iframe
-							v-if="twitchChannel"
 							class="twitch-player"
-							:src="twitchChannelUrl"
+							src="https://player.twitch.tv/?channel=gamejolt"
 							frameborder="0"
 							allowfullscreen="true"
 							scrolling="no"
 						/>
 						<iframe
-							v-if="twitchChannel"
 							class="twitch-chat"
 							frameborder="0"
 							scrolling="yes"
-							:src="twitchChannelChatUrl"
+							src="https://www.twitch.tv/embed/gamejolt/chat"
 						/>
-						<app-card v-else class="twitch-player-placeholder">
-							<app-loading />
-						</app-card>
 					</div>
 
 					<div class="player-info">
@@ -66,8 +61,7 @@
 										class="control-up-left"
 										circle
 										icon="chevron-up"
-										:disabled="isDisabled"
-										@click="onClickKey($event, 'jump-left')"
+										disabled
 										v-app-tooltip="$gettext('Jump Left')"
 									/>
 								</td>
@@ -76,8 +70,7 @@
 										circle
 										solid
 										icon="chevron-up"
-										:disabled="isDisabled"
-										@click="onClickKey($event, 'up')"
+										disabled
 									/>
 								</td>
 								<td>
@@ -85,8 +78,7 @@
 										class="control-up-right"
 										circle
 										icon="chevron-up"
-										:disabled="isDisabled"
-										@click="onClickKey($event, 'jump-right')"
+										disabled
 										v-app-tooltip="$gettext('Jump Right')"
 									/>
 								</td>
@@ -97,8 +89,7 @@
 										circle
 										solid
 										icon="chevron-left"
-										:disabled="isDisabled"
-										@click="onClickKey($event, 'left')"
+										disabled
 									/>
 								</td>
 								<td>
@@ -106,8 +97,7 @@
 										circle
 										solid
 										icon="chevron-down"
-										:disabled="isDisabled"
-										@click="onClickKey($event, 'down')"
+										disabled
 										v-app-tooltip.bottom="$gettext('Pickup')"
 									/>
 								</td>
@@ -116,8 +106,7 @@
 										circle
 										solid
 										icon="chevron-right"
-										:disabled="isDisabled"
-										@click="onClickKey($event, 'right')"
+										disabled
 									/>
 								</td>
 							</tr>
@@ -136,8 +125,7 @@
 								<td>
 									<app-button
 										solid
-										:disabled="isDisabled"
-										@click="onClickKey($event, 'a')"
+										disabled
 										v-app-tooltip="$gettext('Jump')"
 									>
 										A
@@ -148,8 +136,7 @@
 								<td>
 									<app-button
 										solid
-										:disabled="isDisabled"
-										@click="onClickKey($event, 'b')"
+										disabled
 										v-app-tooltip="$gettext('Attack')"
 									>
 										B
@@ -160,26 +147,7 @@
 					</div>
 
 					<div class="help-block">
-						<template v-if="turnedOff">
-							Disabled.
-						</template>
-						<template v-else-if="team === -1">
-							Loading...
-						</template>
-						<template v-else>
-							You are on team
-							<span class="team-name" :style="{ color: teamColor }">{{ teamName }}.</span>
-							<br />
-							<template v-if="isDisabled">
-								<span v-if="processing">
-									Processing...
-								</span>
-								<span v-else>You regain control in {{ timeoutFormatted }}s</span>
-							</template>
-							<template v-else>
-								<translate>You can use your input!</translate>
-							</template>
-						</template>
+						<strong>April Fools 2019 is over.</strong> Thanks for participating!
 					</div>
 				</div>
 			</div>

@@ -22,7 +22,6 @@ import AppGameList from '../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../components/game/list/placeholder/placeholder.vue';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
-import AppWeplayBanner from '../../components/weplay/banner/banner.vue';
 import { Store, store } from '../../store';
 
 class DashGame {
@@ -46,7 +45,6 @@ class DashGame {
 		AppCommunitySlider,
 		AppPostAddButton,
 		AppUserCard,
-		AppWeplayBanner,
 	},
 	directives: {
 		AppTrackEvent,
