@@ -112,9 +112,8 @@
 
 					<div slot="popover" class="list-group list-group-dark thin">
 						<a
-							v-for="pkg of gamePackages"
+							v-for="pkg of settledGamePackages"
 							:key="`launch-${pkg.id}`"
-							v-if="pkg.isSettled"
 							class="list-group-item has-icon"
 							:class="{
 								disabled: pkg.isRunning,
@@ -157,9 +156,8 @@
 						<translate>View Game</translate>
 					</router-link>
 					<a
-						v-for="pkg of gamePackages"
+						v-for="pkg of settledGamePackages"
 						:key="`open-folder-${pkg.id}`"
-						v-if="pkg.isSettled"
 						class="list-group-item has-icon"
 						@click="openFolder(pkg)"
 					>
@@ -169,9 +167,8 @@
 						</span>
 					</a>
 					<a
-						v-for="pkg of gamePackages"
+						v-for="pkg of uninstallableGamePackages"
 						:key="`uninstall-${pkg.id}`"
-						v-if="!pkg.install_state && !pkg.isRemoving"
 						class="list-group-item has-icon"
 						:class="{
 							disabled: pkg.isRunning,

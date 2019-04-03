@@ -72,17 +72,10 @@
 		</div>
 
 		<!--
-		Processing the build.
-	-->
+			Processing the build.
+		-->
 		<app-expand :when="!model.errors && model.status === GameBuild.STATUS_ADDING">
-			<app-progress-poller
-				:url="
-					`/web/dash/developer/games/builds/poll-progress/${game.id}/${package.id}/${release.id}/${
-						model.id
-					}`
-				"
-				@complete="onBuildProcessingComplete"
-			/>
+			<app-progress-poller :url="pollUrl" @complete="onBuildProcessingComplete" />
 
 			<br />
 			<app-progress-bar thin indeterminate active :percent="100" />
@@ -149,7 +142,7 @@
 						</p>
 
 						<div class="clearfix">
-							<div v-for="platform of platformOptions">
+							<div v-for="platform of platformOptions" :key="platform.key">
 								<app-form-group :name="`os_${platform.key}`" :optional="true" :hide-label="true">
 									<div class="checkbox" :class="{ disabled: isPlatformDisabled(platform.key) }">
 										<label>
@@ -186,8 +179,8 @@
 					</p>
 
 					<!--
-					Launch Options
-				-->
+						Launch Options
+					-->
 					<fieldset
 						v-if="
 							!hasPlatformsError && model.type === GameBuild.TYPE_DOWNLOADABLE && !model.os_other
@@ -198,9 +191,8 @@
 
 						<div v-if="model.primary_file.is_archive">
 							<app-form-group
-								v-for="platform of platformOptions"
+								v-for="platform of availablePlatformOptions"
 								:key="platform.key"
-								v-if="model['os_' + platform.key]"
 								:name="`launch_${platform.key}`"
 								:label="platform.label"
 								label-class="col-sm-3"

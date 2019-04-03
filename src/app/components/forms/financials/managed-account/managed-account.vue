@@ -239,11 +239,12 @@
 						</p>
 					</div>
 
-					<div v-for="i of [0, 1, 2, 3]" v-if="i < formModel.additional_owners_count">
+					<!-- Funny syntax for zero based v-for iteration -->
+					<div v-for="(_, i) in formModel.additional_owners_count" :key="i">
 						<!--
-						We only use this when gathering info for the additional owner.
-						It's pointless after they've filled out all the owners.
-					-->
+							We only use this when gathering info for the additional owner.
+							It's pointless after they've filled out all the owners.
+						-->
 						<h5 class="clearfix" v-if="account.status === 'unverified'">
 							<div class="pull-right">
 								<app-button

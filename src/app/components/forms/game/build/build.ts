@@ -107,6 +107,12 @@ export default class FormGameBuild extends BaseForm<GameBuildFormModel>
 		}/${this.model!.id}`;
 	}
 
+	get pollUrl() {
+		return `/web/dash/developer/games/builds/poll-progress/${this.game.id}/${this.package.id}/${
+			this.release.id
+		}/${this.model!.id}`;
+	}
+
 	get hasBrowserError() {
 		return this.hasCustomError('browser');
 	}
@@ -185,6 +191,14 @@ export default class FormGameBuild extends BaseForm<GameBuildFormModel>
 			!!this.model.os_linux_64 ||
 			!!this.model.os_other
 		);
+	}
+
+	get availablePlatformOptions() {
+		if (!this.model) {
+			return [];
+		}
+
+		return this.platformOptions.filter(platform => (this.model as any)[`os_${platform.key}`]);
 	}
 
 	get emulatorsInfo(): { [type: string]: string } {

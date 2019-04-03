@@ -43,6 +43,17 @@ export default class AppClientInstallPackageModal extends BaseModal {
 		return arrayIndexBy(builds, 'game_package_id');
 	}
 
+	get installablePackages() {
+		const packagesById = arrayIndexBy(this.packageData.packages, 'id');
+		return Object.keys(this.buildsByPackage)
+			.map(pkgId => packagesById[pkgId])
+			.filter(pkg => !!pkg);
+
+		// Can probably also just do this, but the above seems more resillient.
+		// I don't want to assume installableBuilds is always necessarily computed from this.packageData.packages
+		// return this.packageData.packages.filter(p => !!this.buildsByPackage[p.id]);
+	}
+
 	async created() {
 		const payload = await Api.sendRequest(`/web/discover/games/packages/${this.game.id}`);
 		this.packageData = new GamePackagePayloadModel(payload);
