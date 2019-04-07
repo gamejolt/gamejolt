@@ -121,10 +121,10 @@
 				-->
 				<div v-if="!isDeprecated">
 					<template v-if="archiveError">
-						<app-expand :when="true">
+						<app-expand class="-archive-error" :when="true">
 							<div class="alert alert-notice sans-margin-bottom">
 								<p>{{ archiveError }}</p>
-								<p><translate>Sorry, you'll have to upload a new build with a valid archive.</translate></p>
+								<p><translate>Please re-upload with a valid archive.</translate></p>
 							</div>
 						</app-expand>
 					</template>
