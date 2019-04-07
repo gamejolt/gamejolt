@@ -406,6 +406,7 @@ export default class FormGameBuild extends BaseForm<GameBuildFormModel>
 	}
 
 	async openFileSelector(platform: string) {
+		console.log('wat');
 		const selected = await ArchiveFileSelectorModal.show(
 			this.game.id,
 			this.package.id,
