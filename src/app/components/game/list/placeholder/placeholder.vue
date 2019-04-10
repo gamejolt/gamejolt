@@ -15,7 +15,6 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
-@require '../item/item'
 
 .-placeholder
 	&-thumb
