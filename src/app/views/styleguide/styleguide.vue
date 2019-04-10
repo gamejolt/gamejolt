@@ -17,11 +17,7 @@
 				</app-scroll-affix>
 			</div>
 			<div class="col-sm-9 col-sm-pull-3 col-lg-10 col-lg-pull-2">
-				<component
-					v-for="component of components"
-					:is="component"
-					:key="component"
-					/>
+				<component v-for="(component, key) of components" :key="key" :is="component" />
 			</div>
 		</div>
 	</div>
