@@ -46,42 +46,6 @@
 	</div>
 </template>
 
-<style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
-$game-list-item-thumb-width = 145px
-
-.game-list-item
-	display: flex
-	margin-bottom: $line-height-computed
-
-.-thumb
-	display: block
-	flex: none
-	width: 50%
-	min-width: 145px
-	max-width: 200px
-	margin-right: 10px
-
-.-meta
-	flex: auto
-
-.-spacing
-	display: block
-	margin-top: 3px
-	margin-bottom: 3px
-
-.-title
-	font-weight: bold
-
-.-dev
-	text-overflow()
-	font-size: $font-size-small
-
-.-followers
-	text-overflow()
-	font-size: $font-size-small
-</style>
+<style lang="stylus" src="../list-common.styl" scoped></style>
 
 <script lang="ts" src="./item"></script>
