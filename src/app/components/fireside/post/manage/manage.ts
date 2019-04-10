@@ -1,10 +1,9 @@
-import View from '!view!./manage.html?style=./manage.styl';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { FiresidePostCommunity } from 'game-jolt-frontend-lib/components/fireside/post/community/community.model';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { getLinkedAccountPlatformIcon } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
-import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue'
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
@@ -13,7 +12,6 @@ import { State } from 'vuex-class';
 import { Store } from '../../../../store';
 import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 
-@View
 @Component({
 	components: {
 		AppPopper,
@@ -22,7 +20,7 @@ import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 		AppTooltip,
 	},
 })
-export class AppFiresidePostManage extends Vue {
+export default class AppFiresidePostManage extends Vue {
 	@Prop(FiresidePost)
 	post!: FiresidePost;
 

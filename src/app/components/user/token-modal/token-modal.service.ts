@@ -1,5 +1,5 @@
-import { Modal } from '../../../../lib/gj-lib-client/components/modal/modal.service';
-import { asyncComponentLoader } from '../../../../lib/gj-lib-client/utils/utils';
+import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
+import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
 
 export class UserTokenModal {
 	static async show() {
@@ -7,7 +7,7 @@ export class UserTokenModal {
 			modalId: 'UserToken',
 			component: () =>
 				asyncComponentLoader(
-					import(/* webpackChunkName: "UserTokenModal" */ './token-modal')
+					import(/* webpackChunkName: "UserTokenModal" */ './token-modal.vue')
 				),
 			size: 'sm',
 			props: {},

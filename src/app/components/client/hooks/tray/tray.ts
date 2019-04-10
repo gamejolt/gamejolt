@@ -1,5 +1,5 @@
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
 import { Location } from 'vue-router';
-import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
 import { Client } from '../../../../../_common/client/client.service';
 import { store } from '../../../../store/index';
 import { router } from '../../../../views/index';

@@ -1,21 +1,19 @@
+import AppCard from 'game-jolt-frontend-lib/components/card/card.vue';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./dev-stage-selector.html?style=./dev-stage-selector.styl';
-
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppCard } from '../../../../../lib/gj-lib-client/components/card/card';
 import { GameDevStageSelectorConfirmModal } from './confirm-service';
-import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
 
-@View
+
 @Component({
 	components: {
 		AppJolticon,
 		AppCard,
 	},
 })
-export class AppGameDevStageSelector extends Vue {
+export default class AppGameDevStageSelector extends Vue {
 	@Prop(Game) game?: Game;
 
 	stages = [

@@ -1,28 +1,23 @@
-import View from '!view!./edit.html';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
+import { Key } from 'game-jolt-frontend-lib/components/key/key-model';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
+import AppProgressBar from 'game-jolt-frontend-lib/components/progress/bar/bar.vue';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Clipboard } from '../../../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
-import { Environment } from '../../../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppExpand } from '../../../../../../../lib/gj-lib-client/components/expand/expand';
-import { GamePackage } from '../../../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { KeyGroup } from '../../../../../../../lib/gj-lib-client/components/key-group/key-group.model';
-import { Key } from '../../../../../../../lib/gj-lib-client/components/key/key-model';
-import { ModalConfirm } from '../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { AppProgressBar } from '../../../../../../../lib/gj-lib-client/components/progress/bar/bar';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { AppTimeAgo } from '../../../../../../../lib/gj-lib-client/components/time/ago/ago';
-import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { arrayRemove } from '../../../../../../../lib/gj-lib-client/utils/array';
-import { number } from '../../../../../../../lib/gj-lib-client/vue/filters/number';
-import { FormGameKeyGroupAddKeys } from '../../../../../../components/forms/game/key-group/add-keys/add-keys';
-import { FormGameKeyGroup } from '../../../../../../components/forms/game/key-group/key-group';
+import FormGameKeyGroupAddKeys from '../../../../../../components/forms/game/key-group/add-keys/add-keys.vue';
+import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/key-group.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@View
 @Component({
 	name: 'RouteDashGamesManageKeyGroupsEdit',
 	components: {

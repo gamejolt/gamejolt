@@ -1,31 +1,28 @@
-import { Component, Prop, Watch } from 'vue-property-decorator';
-import View from '!view!./new-build.html';
-
-import { GameBuild } from '../../../../../lib/gj-lib-client/components/game/build/build.model';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { GameRelease } from '../../../../../lib/gj-lib-client/components/game/release/release.model';
-import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
-import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
-import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
+import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
 import {
 	BaseForm,
 	FormOnInit,
 	FormOnLoad,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+} from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
+import { GameRelease } from 'game-jolt-frontend-lib/components/game/release/release.model';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 
 type NewGameBuildFormModel = GameBuild & {
 	file: File;
 };
 
-@View
 @Component({
 	components: {
 		AppFormControlUpload,
 		AppExpand,
 	},
 })
-export class FormGameNewBuild extends BaseForm<NewGameBuildFormModel>
+export default class FormGameNewBuild extends BaseForm<NewGameBuildFormModel>
 	implements FormOnInit, FormOnLoad {
 	modelClass = GameBuild as any;
 	resetOnSubmit = true;
@@ -50,8 +47,9 @@ export class FormGameNewBuild extends BaseForm<NewGameBuildFormModel>
 	private browserTypes: { [ext: string]: string } = {};
 
 	get loadUrl() {
-		return `/web/dash/developer/games/builds/save/${this.game.id}/${this.package.id}/${this.release
-			.id}`;
+		return `/web/dash/developer/games/builds/save/${this.game.id}/${this.package.id}/${
+			this.release.id
+		}`;
 	}
 
 	get uploadAccept() {

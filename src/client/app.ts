@@ -1,14 +1,12 @@
-import View from '!view!./app.html';
+import AppErrorPage from 'game-jolt-frontend-lib/components/error/page/page.vue';
+import { AppTheme } from 'game-jolt-frontend-lib/components/theme/theme';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
-import { AppTheme } from '../lib/gj-lib-client/components/theme/theme';
 
-@View
 @Component({
 	components: {
 		AppTheme,
 		AppErrorPage,
 	},
 })
-export class App extends Vue {}
+export default class App extends Vue {}

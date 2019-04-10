@@ -1,20 +1,15 @@
-import View from '!view!./collaborator.html';
+import { Collaborator } from 'game-jolt-frontend-lib/components/collaborator/collaborator.model';
+import { AppFocusWhen } from 'game-jolt-frontend-lib/components/form-vue/focus-when.directive';
+import { BaseForm, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { Component, Prop } from 'vue-property-decorator';
-import { Collaborator } from '../../../../../lib/gj-lib-client/components/collaborator/collaborator.model';
-import { AppFocusWhen } from '../../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
-import {
-	BaseForm,
-	FormOnInit,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 
-@View
 @Component({
 	directives: {
 		AppFocusWhen,
 	},
 })
-export class FormGameCollaborator extends BaseForm<Collaborator> implements FormOnInit {
+export default class FormGameCollaborator extends BaseForm<Collaborator> implements FormOnInit {
 	modelClass = Collaborator;
 	saveMethod = '$invite' as '$invite';
 	resetOnSubmit = true;

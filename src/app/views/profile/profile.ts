@@ -1,33 +1,31 @@
-import View from '!view!./profile.html?style=./profile.styl';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
-import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-store';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';
-import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
-import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppPopper } from '../../../lib/gj-lib-client/components/popper/popper';
-import { ReportModal } from '../../../lib/gj-lib-client/components/report/modal/modal.service';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
+import { ReportModal } from 'game-jolt-frontend-lib/components/report/modal/modal.service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../lib/gj-lib-client/components/route/route-component';
-import { ThemeMutation, ThemeStore } from '../../../lib/gj-lib-client/components/theme/theme.store';
-import { AppTimeAgo } from '../../../lib/gj-lib-client/components/time/ago/ago';
-import { AppTooltip } from '../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppUserFollowWidget } from '../../../lib/gj-lib-client/components/user/follow-widget/follow-widget';
-import { AppUserAvatar } from '../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { number } from '../../../lib/gj-lib-client/vue/filters/number';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-store';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
+import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow-widget/follow-widget.vue';
+import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';
+import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { IntentService } from '../../components/intent/intent.service';
-import { AppPageHeaderControls } from '../../components/page-header/controls/controls';
-import { AppPageHeader } from '../../components/page-header/page-header';
-import { AppUserDogtag } from '../../components/user/dogtag/dogtag';
+import AppPageHeaderControls from '../../components/page-header/controls/controls.vue';
+import AppPageHeader from '../../components/page-header/page-header.vue';
+import AppUserDogtag from '../../components/user/dogtag/dogtag.vue';
 import { Store, store } from '../../store';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './profile.store';
 
-@View
 @Component({
 	name: 'RouteProfile',
 	components: {

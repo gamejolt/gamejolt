@@ -1,0 +1,23 @@
+<template>
+	<app-popper
+		v-if="game.status === Game.STATUS_VISIBLE"
+		placement="bottom"
+		:disabled="!app.user"
+		@show="isShown = true"
+		@hide="isShown = false"
+	>
+		<app-button
+			icon="add"
+			sparse
+			:overlay="overlay"
+			:circle="circle"
+			v-app-auth-required
+			v-app-tooltip.bottom="$gettext('Add to Playlist')"
+			v-app-track-event="`add-to-playlist:widget:${eventLabel || 'any'}`"
+		/>
+
+		<app-game-playlist-add-to-popover v-if="isShown" slot="popover" :game="game" />
+	</app-popper>
+</template>
+
+<script lang="ts" src="./add-to-widget"></script>

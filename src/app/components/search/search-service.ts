@@ -1,5 +1,5 @@
-import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
-import { makeObservableService } from '../../../lib/gj-lib-client/utils/vue';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { makeObservableService } from 'game-jolt-frontend-lib/utils/vue';
 import { store } from '../../store/index';
 import { SearchPayload } from './payload-service';
 

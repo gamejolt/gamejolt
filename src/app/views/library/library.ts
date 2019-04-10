@@ -1,10 +1,10 @@
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../lib/gj-lib-client/components/route/route-component';
-import { User } from '../../../lib/gj-lib-client/components/user/user.model';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { CreateElement } from 'vue';
+import { Component } from 'vue-property-decorator';
 
 @Component({
 	name: 'RouteLibrary',

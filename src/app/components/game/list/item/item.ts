@@ -1,13 +1,11 @@
-import View from '!view!./item.html?style=./item.styl';
-import { AppUserCardHover } from 'game-jolt-frontend-lib/components/user/card/hover/hover';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import AppGameThumbnailImg from 'game-jolt-frontend-lib/components/game/thumbnail-img/thumbnail-img.vue';
+import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { AppGameThumbnailImg } from '../../../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 
-@View
 @Component({
 	components: {
 		AppGameThumbnailImg,
@@ -17,7 +15,7 @@ import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
 		AppTrackEvent,
 	},
 })
-export class AppGameListItem extends Vue {
+export default class AppGameListItem extends Vue {
 	@Prop(Game)
 	game!: Game;
 

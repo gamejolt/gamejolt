@@ -1,11 +1,11 @@
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
-import { RouteConfig } from 'vue-router';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../lib/gj-lib-client/components/route/route-component';
-import { initRouter } from '../../lib/gj-lib-client/utils/router';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { initRouter } from 'game-jolt-frontend-lib/utils/router';
+import { CreateElement } from 'vue';
+import { Component } from 'vue-property-decorator';
+import { RouteConfig } from 'vue-router';
 import { store } from '../store/index';
 
 // Empty route component. We just use it to send API calls and set up the store for the app
@@ -19,7 +19,7 @@ import { store } from '../store/index';
 	cache: false,
 	resolver({ route }) {
 		const tab: any = route.params.tab;
-		const siteId = parseInt(route.query.id, 10);
+		const siteId = parseInt(route.query.id as string, 10);
 		return store.dispatch('bootstrapTab', { tab, siteId });
 	},
 })

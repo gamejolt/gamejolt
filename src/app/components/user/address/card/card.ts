@@ -1,21 +1,20 @@
+import AppCard from 'game-jolt-frontend-lib/components/card/card.vue';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
+import { UserAddress } from 'game-jolt-frontend-lib/components/user/address/address.model';
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
-import View from '!view!./card.html';
-import { AppCard } from '../../../../../lib/gj-lib-client/components/card/card';
-import { UserAddress } from '../../../../../lib/gj-lib-client/components/user/address/address.model';
+import AppUserAddressDetails from '../details/details.vue';
 import { UserAddressEditModal } from '../edit-modal/edit-modal.service';
-import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { AppUserAddressDetails } from '../details/details';
 
-@View
+
 @Component({
 	components: {
 		AppCard,
 		AppUserAddressDetails,
 	},
 })
-export class AppUserAddressCard extends Vue {
+export default class AppUserAddressCard extends Vue {
 	@Prop(UserAddress) address!: UserAddress;
 	@Prop(Boolean) showRemove?: boolean;
 

@@ -12,8 +12,8 @@ import { router } from '..';
 @Component({
 	name: 'RouteHome',
 	components: {
-		RouteHomeFeed: () => asyncRouteLoader(import('./feed'), router),
-		RouteDiscoverHome: () => asyncRouteLoader(import('../discover/home/home'), router),
+		RouteHomeFeed: () => asyncRouteLoader(import('./feed.vue'), router),
+		RouteDiscoverHome: () => asyncRouteLoader(import('../discover/home/home.vue'), router),
 	},
 })
 @RouteResolver({

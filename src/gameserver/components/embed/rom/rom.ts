@@ -1,20 +1,18 @@
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
+import { loadScript } from 'game-jolt-frontend-lib/utils/utils';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import View from '!view!./rom.html';
-
-import { GameBuild } from '../../../../lib/gj-lib-client/components/game/build/build.model';
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { loadScript } from '../../../../lib/gj-lib-client/utils/utils';
 import { Store } from '../../../store/index';
+
 
 declare const RetroJolt: any;
 
 const RetroJoltBaseUrl = 'https://gamejolt.net/retrojolt/1';
 
-@View
 @Component({})
-export class AppEmbedRom extends Vue {
+export default class AppEmbedRom extends Vue {
 	@State url!: Store['url'];
 	@State build!: Store['build'];
 	@State username!: Store['username'];

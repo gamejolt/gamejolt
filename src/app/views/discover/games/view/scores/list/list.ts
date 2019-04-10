@@ -1,26 +1,24 @@
-import View from '!view!./list.html?style=./list.styl';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
+import AppLoadingFade from 'game-jolt-frontend-lib/components/loading/fade/fade.vue';
+import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
 import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
-import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { Api } from '../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { GameScoreTable } from '../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { AppLoadingFade } from '../../../../../../../lib/gj-lib-client/components/loading/fade/fade';
-import { AppNavTabList } from '../../../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { Screen } from '../../../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppScrollAffix } from '../../../../../../../lib/gj-lib-client/components/scroll/affix/affix';
-import { AppNoAutoscroll } from '../../../../../../../lib/gj-lib-client/components/scroll/auto-scroll/no-autoscroll.directive.vue';
-import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { UserGameScore } from '../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
-import { AppScoreList } from '../../../../../../components/score/list/list';
-import { AppScoreboardSelector } from '../../../../../../components/score/scoreboard-selector/scoreboard-selector';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
+import { AppNoAutoscroll } from 'game-jolt-frontend-lib/components/scroll/auto-scroll/no-autoscroll.directive';
+import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
+import { UserGameScore } from 'game-jolt-frontend-lib/components/user/game-score/game-score.model';
+import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import AppScoreList from '../../../../../../components/score/list/list.vue';
+import AppScoreboardSelector from '../../../../../../components/score/scoreboard-selector/scoreboard-selector.vue';
 import { Store } from '../../../../../../store/index';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
-@View
 @Component({
 	name: 'RouteDiscoverGamesViewScoresList',
 	components: {
@@ -39,7 +37,7 @@ import { RouteStore, RouteStoreModule } from '../../view.store';
 	deps: { params: ['tableId', 'type'], query: ['page'] },
 	resolver({ route }) {
 		let query = '';
-		if (parseInt(route.query.page, 10) > 1) {
+		if (parseInt(route.query.page as string, 10) > 1) {
 			query = '?page=' + route.query.page;
 		}
 

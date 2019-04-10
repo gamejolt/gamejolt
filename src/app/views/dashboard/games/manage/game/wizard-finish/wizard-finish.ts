@@ -1,9 +1,7 @@
-import View from '!view!./wizard-finish.html';
+import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
-import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@View
 @Component({
 	name: 'RouteDashGamesManageGameWizardFinish',
 })

@@ -1,21 +1,19 @@
+import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
+import AppSketchfabEmbed from 'game-jolt-frontend-lib/components/sketchfab/embed/embed.vue';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import AppVideoEmbed from 'game-jolt-frontend-lib/components/video/embed/embed.vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./edit-modal.html';
-
-import { BaseModal } from '../../../../../lib/gj-lib-client/components/modal/base';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { FormGameImage } from '../../../forms/game/image/image';
-import { FormGameVideo } from '../../../forms/game/video/video';
-import { FormGameSketchfab } from '../../../forms/game/sketchfab/sketchfab';
 import { Media } from '../../../../views/dashboard/games/manage/manage.store';
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppVideoEmbed } from '../../../../../lib/gj-lib-client/components/video/embed/embed';
-import { AppSketchfabEmbed } from '../../../../../lib/gj-lib-client/components/sketchfab/embed/embed';
-import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { Clipboard } from '../../../../../lib/gj-lib-client/components/clipboard/clipboard-service';
+import FormGameImage from '../../../forms/game/image/image.vue';
+import FormGameSketchfab from '../../../forms/game/sketchfab/sketchfab.vue';
+import FormGameVideo from '../../../forms/game/video/video.vue';
 import { GameMediaItemEditModalRemoveCallback } from './edit-modal.service';
-import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
 
-@View
+
 @Component({
 	components: {
 		FormGameImage,
@@ -43,9 +41,7 @@ export default class AppGameMediaItemEditModal extends BaseModal {
 		}
 
 		if (this.item.media_type === 'sketchfab') {
-			return this.$gettext(
-				`Copy the direct link to view this sketchfab model on your game page.`
-			);
+			return this.$gettext(`Copy the direct link to view this sketchfab model on your game page.`);
 		}
 	}
 
@@ -74,12 +70,9 @@ export default class AppGameMediaItemEditModal extends BaseModal {
 		}
 
 		/// {{ type }} contains the translated media item type (image/video/sketchfab)
-		const message = this.$gettextInterpolate(
-			'Are you sure you want to remove this %{ type }?',
-			{
-				type: typeLabel,
-			}
-		);
+		const message = this.$gettextInterpolate('Are you sure you want to remove this %{ type }?', {
+			type: typeLabel,
+		});
 
 		const result = await ModalConfirm.show(message);
 		if (!result) {

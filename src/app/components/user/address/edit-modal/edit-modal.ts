@@ -1,10 +1,8 @@
-import View from '!view!./edit-modal.html';
+import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
+import { UserAddress } from 'game-jolt-frontend-lib/components/user/address/address.model';
 import { Component, Prop } from 'vue-property-decorator';
-import { FormAddress } from '../../../forms/address/address';
-import { UserAddress } from '../../../../../lib/gj-lib-client/components/user/address/address.model';
-import { BaseModal } from '../../../../../lib/gj-lib-client/components/modal/base';
+import FormAddress from '../../../forms/address/address.vue';
 
-@View
 @Component({
 	components: {
 		FormAddress,

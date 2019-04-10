@@ -1,9 +1,9 @@
-import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
-import { FiresidePost } from '../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Modal } from '../../../lib/gj-lib-client/components/modal/modal.service';
-import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
-import { asyncComponentLoader } from '../../../lib/gj-lib-client/utils/utils';
-import { appStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
+import { appStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Settings } from '../../../_common/settings/settings.service';
 
 const STORAGE_KEY_PREFIX = 'broadcast-modal:date:';
@@ -51,7 +51,7 @@ export class BroadcastModal {
 			modalId: 'Broadcast',
 			component: () =>
 				asyncComponentLoader(
-					import(/* webpackChunkName: "BroadcastModal" */ './broadcast-modal')
+					import(/* webpackChunkName: "BroadcastModal" */ './broadcast-modal.vue')
 				),
 			props: { posts },
 			noBackdropClose: true,

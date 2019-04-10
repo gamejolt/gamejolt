@@ -1,18 +1,16 @@
-import View from '!view!./video.html';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
-import { FiresidePost } from '../../../../../../lib/gj-lib-client/components/fireside/post/post-model';
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedView } from '../../view';
-import { AppActivityFeedVideo } from '../../_video/video';
+import AppActivityFeedVideo from '../../_video/video.vue';
 
-@View
 @Component({
 	components: {
 		AppActivityFeedVideo,
 	},
 })
-export class AppActivityFeedDevlogPostVideo extends Vue {
+export default class AppActivityFeedDevlogPostVideo extends Vue {
 	@Inject()
 	feed!: ActivityFeedView;
 

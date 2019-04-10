@@ -1,18 +1,16 @@
-import View from '!view!./add-to-popover.html?style=./add-to-popover.styl';
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
+import { AppFocusWhen } from 'game-jolt-frontend-lib/components/form-vue/focus-when.directive';
+import { GamePlaylist } from 'game-jolt-frontend-lib/components/game-playlist/game-playlist.model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
+import { stringSort } from 'game-jolt-frontend-lib/utils/array';
+import { fuzzysearch } from 'game-jolt-frontend-lib/utils/string';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
-import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { AppFocusWhen } from '../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
-import { GamePlaylist } from '../../../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { stringSort } from '../../../../lib/gj-lib-client/utils/array';
-import { fuzzysearch } from '../../../../lib/gj-lib-client/utils/string';
-import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
 import { LibraryStore } from '../../../store/library';
 
-@View
 @Component({
 	components: {
 		AppLoading,
@@ -21,7 +19,7 @@ import { LibraryStore } from '../../../store/library';
 		AppFocusWhen,
 	},
 })
-export class AppGamePlaylistAddToPopover extends Vue {
+export default class AppGamePlaylistAddToPopover extends Vue {
 	@Prop(Game)
 	game!: Game;
 

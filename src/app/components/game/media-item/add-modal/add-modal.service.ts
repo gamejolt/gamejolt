@@ -1,9 +1,9 @@
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { GameScreenshot } from '../../../../../lib/gj-lib-client/components/game/screenshot/screenshot.model';
-import { GameSketchfab } from '../../../../../lib/gj-lib-client/components/game/sketchfab/sketchfab.model';
-import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/video/video.model';
-import { Modal } from '../../../../../lib/gj-lib-client/components/modal/modal.service';
-import { asyncComponentLoader } from '../../../../../lib/gj-lib-client/utils/utils';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GameScreenshot } from 'game-jolt-frontend-lib/components/game/screenshot/screenshot.model';
+import { GameSketchfab } from 'game-jolt-frontend-lib/components/game/sketchfab/sketchfab.model';
+import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
+import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
+import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
 
 export class GameMediaItemAddModal {
 	static async show(game: Game) {
@@ -11,7 +11,7 @@ export class GameMediaItemAddModal {
 			modalId: 'GameMediaItemAdd',
 			component: () =>
 				asyncComponentLoader(
-					import(/* webpackChunkName: "GameMediaItemAddModal" */ './add-modal')
+					import(/* webpackChunkName: "GameMediaItemAddModal" */ './add-modal.vue')
 				),
 			props: {
 				game,

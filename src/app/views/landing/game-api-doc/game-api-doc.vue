@@ -1,0 +1,67 @@
+<template>
+	<div>
+		<section class="section landing-header">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-offset-1 col-lg-11">
+						<h1>
+							<app-theme-svg src="~img/jolt.svg" alt="" :width="17 * 3" :height="18 * 3" />
+							<translate>Game API</translate>
+							<sup>
+								<translate>Documentation</translate>
+							</sup>
+						</h1>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="section">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-1"></div>
+					<div class="col-sm-3 col-sm-push-9 col-lg-3 col-lg-push-8">
+						<br />
+						<br />
+						<nav class="platform-list">
+							<ul>
+								<li v-for="item of nav" :key="item.url">
+									<router-link
+										:to="`/game-api/doc${item.url}`"
+										:class="inPath(item.url) ? 'active' : ''"
+									>
+										{{ item.title }}
+									</router-link>
+									<ul v-if="item.nav && item.nav.length > 0 && inPath(item.url)">
+										<li v-for="item of item.nav" :key="item.url">
+											<router-link
+												:to="`/game-api/doc${item.url}`"
+												:class="inPath(item.url, true) ? 'active' : ''"
+											>
+												{{ item.title }}
+											</router-link>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</nav>
+					</div>
+
+					<div class="col-sm-9 col-sm-pull-3 col-lg-7 col-lg-pull-3">
+						<router-view />
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</template>
+
+<style lang="stylus" scoped>
+@require '~styles/variables'
+@require '~styles-lib/tables'
+
+>>> table
+	@extend .table
+</style>
+
+<script lang="ts" src="./game-api-doc"></script>

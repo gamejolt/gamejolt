@@ -1,23 +1,21 @@
-import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./image.html';
-
-import { GameScreenshot } from '../../../../../lib/gj-lib-client/components/game/screenshot/screenshot.model';
+import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
+import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
 import {
 	BaseForm,
 	FormOnInit,
 	FormOnLoad,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
-import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
+} from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GameScreenshot } from 'game-jolt-frontend-lib/components/game/screenshot/screenshot.model';
+import { Component, Prop } from 'vue-property-decorator';
 
-@View
 @Component({
 	components: {
 		AppFormControlUpload,
 	},
 })
-export class FormGameImage extends BaseForm<GameScreenshot> implements FormOnInit, FormOnLoad {
+export default class FormGameImage extends BaseForm<GameScreenshot>
+	implements FormOnInit, FormOnLoad {
 	modelClass = GameScreenshot;
 	resetOnSubmit = true;
 

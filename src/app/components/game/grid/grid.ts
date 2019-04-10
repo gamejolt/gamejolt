@@ -1,13 +1,12 @@
-import View from '!view!./grid.html?style=./grid.styl';
-import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
+import { Ads } from 'game-jolt-frontend-lib/components/ad/ads.service';
+import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { AppGameThumbnail } from '../../../../_common/game/thumbnail/thumbnail';
+import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
 
 export const GameGridRowSizeSm = 2;
 export const GameGridRowSizeMd = 3;
@@ -15,7 +14,6 @@ export const GameGridRowSizeLg = 3;
 
 let idCounter = 0;
 
-@View
 @Component({
 	components: {
 		AppGameThumbnail,
@@ -25,7 +23,7 @@ let idCounter = 0;
 		AppTrackEvent,
 	},
 })
-export class AppGameGrid extends Vue {
+export default class AppGameGrid extends Vue {
 	@Prop({ type: Array, default: () => [] })
 	games!: Game[];
 

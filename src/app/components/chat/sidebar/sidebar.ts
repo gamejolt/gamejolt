@@ -1,14 +1,12 @@
-import View from '!view!./sidebar.html';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { ChatClient } from '../client';
-import { AppChatUserList } from '../user-list/user-list';
+import AppChatUserList from '../user-list/user-list.vue';
 
-@View
 @Component({
 	components: {
 		AppJolticon,
@@ -18,7 +16,7 @@ import { AppChatUserList } from '../user-list/user-list';
 		number,
 	},
 })
-export class AppChatSidebar extends Vue {
+export default class AppChatSidebar extends Vue {
 	@State
 	chat!: ChatClient;
 

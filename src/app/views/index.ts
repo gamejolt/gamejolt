@@ -1,4 +1,4 @@
-import { initRouter } from '../../lib/gj-lib-client/utils/router';
+import { initRouter } from 'game-jolt-frontend-lib/utils/router';
 import { routeCommunitiesView } from './communities/view/view.route';
 import { routeDash } from './dashboard/dashboard.route';
 import { routeDiscover } from './discover/discover.route';
@@ -13,6 +13,7 @@ import { routeProfile } from './profile/profile.route';
 import { routeSearch } from './search/search.route';
 import { routeSettings } from './settings/settings.route';
 import { routeStyleguide } from './styleguide/styleguide.route';
+import { routeWeplay } from './weplay/weplay.route';
 
 const routes = [
 	routeHome,
@@ -29,6 +30,7 @@ const routes = [
 	routeStyleguide,
 	routeLegal,
 	routeIntent,
+	routeWeplay,
 ];
 
 export const router = initRouter(routes);

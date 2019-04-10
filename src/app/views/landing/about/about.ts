@@ -1,12 +1,10 @@
+import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppThemeSvg } from 'game-jolt-frontend-lib/components/theme/svg/svg';
+import { importContext } from 'game-jolt-frontend-lib/utils/utils';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./about.html?style=./about.styl';
 
-import { importContext } from '../../../../lib/gj-lib-client/utils/utils';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
-import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
 
-@View
 @Component({
 	name: 'RouteLandingAbout',
 	components: {

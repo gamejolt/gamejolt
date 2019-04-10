@@ -1,21 +1,19 @@
-import View from '!view!./checkout.html?style=./checkout.styl';
-import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
-import { Component } from 'vue-property-decorator';
-import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
-import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
-import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
-import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
-import { Navigate } from '../../../lib/gj-lib-client/components/navigate/navigate.service';
-import { Order } from '../../../lib/gj-lib-client/components/order/order.model';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
+import { Order } from 'game-jolt-frontend-lib/components/order/order.model';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../lib/gj-lib-client/components/route/route-component';
-import { Sellable } from '../../../lib/gj-lib-client/components/sellable/sellable.model';
-import { AppMediaItemCover } from '../../../_common/media-item/cover/cover';
-import { FormPayment } from '../../components/forms/payment/payment';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Sellable } from 'game-jolt-frontend-lib/components/sellable/sellable.model';
+import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
+import { Component } from 'vue-property-decorator';
+import AppMediaItemCover from '../../../_common/media-item/cover/cover.vue';
+import FormPayment from '../../components/forms/payment/payment.vue';
 
-@View
 @Component({
 	name: 'RouteCheckout',
 	components: {

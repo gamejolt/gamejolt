@@ -1,17 +1,15 @@
-import View from '!view!./view.html';
-import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { GameDataStoreItem } from '../../../../../../../../../lib/gj-lib-client/components/game/data-store/item/item.model';
-import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { GameDataStoreItem } from 'game-jolt-frontend-lib/components/game/data-store/item/item.model';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { date } from '../../../../../../../../../lib/gj-lib-client/vue/filters/date';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { date } from 'game-jolt-frontend-lib/vue/filters/date';
+import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 
-@View
 @Component({
 	name: 'RouteDashGamesManageApiDataStorageItemsView',
 	components: {

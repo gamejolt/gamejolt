@@ -1,16 +1,11 @@
+import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
+import { BaseForm, FormOnLoad } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./settings.html';
+import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import {
-	BaseForm,
-	FormOnLoad,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import { AppDashGameWizardControls } from '../wizard-controls/wizard-controls';
 
-@View
 @Component({
 	components: {
 		AppJolticon,
@@ -18,7 +13,7 @@ import { AppDashGameWizardControls } from '../wizard-controls/wizard-controls';
 		AppDashGameWizardControls,
 	},
 })
-export class FormGameSettings extends BaseForm<Game> implements FormOnLoad {
+export default class FormGameSettings extends BaseForm<Game> implements FormOnLoad {
 	modelClass = Game;
 	saveMethod: '$saveSettings' = '$saveSettings';
 

@@ -1,19 +1,17 @@
-import View from '!view!./view.html';
-import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { GameScoreTable } from '../../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
-import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { date } from '../../../../../../../../../lib/gj-lib-client/vue/filters/date';
-import { number } from '../../../../../../../../../lib/gj-lib-client/vue/filters/number';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { UserGameScore } from 'game-jolt-frontend-lib/components/user/game-score/game-score.model';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { date } from 'game-jolt-frontend-lib/vue/filters/date';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 
-@View
 @Component({
 	name: 'RouteDashGamesManageApiScoreboardsScoresView',
 	components: {

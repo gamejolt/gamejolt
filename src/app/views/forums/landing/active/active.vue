@@ -1,0 +1,18 @@
+<template>
+	<div class="section">
+		<div class="container">
+			<div class="alert full-bleed-xs">
+				<p>
+					<translate>
+						Some topics from all channels sorted by when they last had a post. Smell how fresh.
+					</translate>
+				</p>
+			</div>
+			<br />
+
+			<app-forum-topic-list :topics="topics" :post-count-per-page="postCountPerPage" />
+		</div>
+	</div>
+</template>
+
+<script lang="ts" src="./active"></script>

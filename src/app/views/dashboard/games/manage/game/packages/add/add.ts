@@ -1,11 +1,9 @@
-import View from '!view!./add.html';
+import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
+import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
-import { GamePackage } from '../../../../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { BaseRouteComponent } from '../../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { FormGamePackage } from '../../../../../../../components/forms/game/package/package';
+import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
 import { RouteStore, RouteStoreModule } from '../../../manage.store';
 
-@View
 @Component({
 	name: 'RouteDashGamesManageGamePackagesAdd',
 	components: {

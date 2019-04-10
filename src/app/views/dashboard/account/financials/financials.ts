@@ -1,14 +1,9 @@
-import View from '!view!./financials.html';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
 import { Component } from 'vue-property-decorator';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { FormFinancials } from '../../../../components/forms/financials/financials';
+import FormFinancials from '../../../../components/forms/financials/financials.vue';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
-@View
 @Component({
 	name: 'RouteDashAccountFinancials',
 	components: {

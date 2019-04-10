@@ -1,0 +1,75 @@
+<template>
+	<div>
+		<section class="section">
+			<div class="container">
+				<h2 class="section-header">
+					<translate>game.trophies.heading</translate>
+				</h2>
+
+				<div class="row">
+					<div class="col-sm-10 col-md-9 col-lg-5 col-lg-push-7">
+						<app-trophy-completion
+							v-if="app.user"
+							:total="trophies.length"
+							:achieved="achieved.length"
+							:experience="experience"
+						/>
+					</div>
+					<div class="col-sm-10 col-md-9 col-lg-7 col-lg-pull-5">
+						<app-nav-tab-list v-if="filteredTrophies.achieved.length">
+							<ul>
+								<li>
+									<a :class="{ active: currentFilter === 'all' }" @click="currentFilter = 'all'">
+										<translate>game.trophies.all_tab</translate>
+										<span class="badge hidden-xs">
+											{{ trophies.length | number }}
+										</span>
+									</a>
+								</li>
+								<li>
+									<a
+										:class="{ active: currentFilter === 'achieved' }"
+										@click="currentFilter = 'achieved'"
+									>
+										<translate>game.trophies.achieved_tab</translate>
+										<span class="badge hidden-xs">
+											{{ filteredTrophies.achieved.length | number }}
+										</span>
+									</a>
+								</li>
+								<li>
+									<a
+										:class="{ active: currentFilter === 'unachieved' }"
+										@click="currentFilter = 'unachieved'"
+									>
+										<translate>game.trophies.unachieved_tab</translate>
+										<span class="badge hidden-xs">
+											{{ filteredTrophies.unachieved.length | number }}
+										</span>
+									</a>
+								</li>
+							</ul>
+						</app-nav-tab-list>
+
+						<div class="alert alert-notice" v-if="showInvisibleTrophyMessage">
+							<translate>trophies.invisible_trophies_message</translate>
+						</div>
+
+						<app-trophy-list
+							:trophies="currentFilter === 'all' ? trophies : filteredTrophies[currentFilter]"
+							:achieved="achieved"
+						/>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="section fill-offset" v-if="!trophies.length">
+			<div class="container text-center">
+				<translate>game.trophies.no_trophies_html</translate>
+			</div>
+		</section>
+	</div>
+</template>
+
+<script lang="ts" src="./list"></script>

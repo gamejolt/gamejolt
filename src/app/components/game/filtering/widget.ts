@@ -1,16 +1,14 @@
-import View from '!view!./widget.html?style=./widget.styl';
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { Store } from '../../../store/index';
 import { GameFilteringContainer } from './container';
 
-@View
 @Component({
 	components: {
 		AppPopper,
@@ -23,7 +21,7 @@ import { GameFilteringContainer } from './container';
 		number,
 	},
 })
-export class AppGameFilteringWidget extends Vue {
+export default class AppGameFilteringWidget extends Vue {
 	@Prop(Object)
 	filtering!: GameFilteringContainer;
 

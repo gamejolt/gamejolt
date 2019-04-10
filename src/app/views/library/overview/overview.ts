@@ -1,17 +1,15 @@
-import View from '!view!./overview.html?style=./overview.styl';
+import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
+import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
-import { BaseRouteComponent } from '../../../../lib/gj-lib-client/components/route/route-component';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
 import { GameCollection } from '../../../components/game/collection/collection.model';
-import { AppGameCollectionGrid } from '../../../components/game/collection/grid/grid';
-import { AppGameCollectionList } from '../../../components/game/collection/list/list';
-import { AppPageHeader } from '../../../components/page-header/page-header';
+import AppGameCollectionGrid from '../../../components/game/collection/grid/grid.vue';
+import AppGameCollectionList from '../../../components/game/collection/list/list.vue';
+import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { Store } from '../../../store';
 import { LibraryModule, LibraryStore } from '../../../store/library';
 
-@View
 @Component({
 	name: 'RouteLibraryOverview',
 	components: {

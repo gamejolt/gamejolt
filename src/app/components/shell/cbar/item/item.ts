@@ -1,11 +1,9 @@
-import View from '!view!./item.html?style=./item.styl';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import { AppCommunityThumbnailImg } from 'game-jolt-frontend-lib/components/community/thumbnail/img/img';
+import AppCommunityThumbnailImg from 'game-jolt-frontend-lib/components/community/thumbnail/img/img.vue'
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 
-@View
 @Component({
 	components: {
 		AppCommunityThumbnailImg,
@@ -14,7 +12,7 @@ import { Component, Prop } from 'vue-property-decorator';
 		AppTooltip,
 	},
 })
-export class AppShellCbarItem extends Vue {
+export default class AppShellCbarItem extends Vue {
 	@Prop(Community)
 	community!: Community;
 

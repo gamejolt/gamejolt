@@ -1,0 +1,213 @@
+<template>
+	<app-form name="gameMaturityForm" @changed="$emit('changed', $event)">
+		<app-form-group name="tigrs_age" :label="$gettext(`dash.games.maturity.age_label`)">
+			<p class="help-block" v-if="model._is_wip">
+				<translate>dash.games.maturity.wip_help</translate>
+			</p>
+
+			<!-- skip the first element, it's a placeholder for unrated maturity that shouldn't be selectable -->
+			<div class="radio" v-for="(item, index) in age.slice(1)" :key="index">
+				<label>
+					<app-form-control-radio :value="index + 1" />
+					{{ item.label }}
+					<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+				</label>
+			</div>
+			<app-form-control-errors />
+		</app-form-group>
+
+		<app-expand :when="formModel.tigrs_age !== 0">
+			<fieldset>
+				<legend><translate>dash.games.maturity.violence_legend</translate></legend>
+
+				<app-form-group
+					name="tigrs_cartoon_violence"
+					:label="$gettext(`dash.games.maturity.cartoon_violence_label`)"
+				>
+					<div class="radio" v-for="(item, index) in cartoonViolence" :key="index">
+						<label>
+							<app-form-control-radio :value="index" />
+							{{ item.label }}
+							<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+						</label>
+					</div>
+					<app-form-control-errors />
+				</app-form-group>
+
+				<app-form-group
+					name="tigrs_fantasy_violence"
+					:label="$gettext(`dash.games.maturity.fantasy_violence_label`)"
+				>
+					<div class="radio" v-for="(item, index) in fantasyViolence" :key="index">
+						<label>
+							<app-form-control-radio :value="index" />
+							{{ item.label }}
+							<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+						</label>
+					</div>
+					<app-form-control-errors />
+				</app-form-group>
+
+				<app-form-group
+					name="tigrs_realistic_violence"
+					:label="$gettext(`dash.games.maturity.realistic_violence_label`)"
+				>
+					<div class="radio" v-for="(item, index) in realisticViolence" :key="index">
+						<label>
+							<app-form-control-radio :value="index" />
+							{{ item.label }}
+							<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+						</label>
+					</div>
+					<app-form-control-errors />
+				</app-form-group>
+
+				<app-form-group
+					name="tigrs_bloodshed"
+					:label="$gettext(`dash.games.maturity.bloodshed_label`)"
+				>
+					<div class="radio" v-for="(item, index) in bloodshed" :key="index">
+						<label>
+							<app-form-control-radio :value="index" />
+							{{ item.label }}
+							<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+						</label>
+					</div>
+					<app-form-control-errors />
+				</app-form-group>
+
+				<app-form-group
+					name="tigrs_sexual_violence"
+					:label="$gettext(`dash.games.maturity.sexual_violence_label`)"
+				>
+					<div class="radio" v-for="(item, index) in sexualViolence" :key="index">
+						<label>
+							<app-form-control-radio :value="index" />
+							{{ item.label }}
+							<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+						</label>
+					</div>
+					<app-form-control-errors />
+				</app-form-group>
+			</fieldset>
+
+			<fieldset>
+				<legend><translate>dash.games.maturity.substances_legend</translate></legend>
+
+				<app-form-group name="tigrs_alcohol" :label="$gettext(`dash.games.maturity.alcohol_label`)">
+					<div class="radio" v-for="(item, index) in alcohol" :key="index">
+						<label>
+							<app-form-control-radio :value="index" />
+							{{ item.label }}
+							<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+						</label>
+					</div>
+					<app-form-control-errors />
+				</app-form-group>
+
+				<app-form-group name="tigrs_drugs" :label="$gettext(`dash.games.maturity.drugs_label`)">
+					<div class="radio" v-for="(item, index) in drugs" :key="index">
+						<label>
+							<app-form-control-radio :value="index" />
+							{{ item.label }}
+							<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+						</label>
+					</div>
+					<app-form-control-errors />
+				</app-form-group>
+
+				<app-form-group name="tigrs_tobacco" :label="$gettext(`dash.games.maturity.tobacco_label`)">
+					<div class="radio" v-for="(item, index) in tobacco" :key="index">
+						<label>
+							<app-form-control-radio :value="index" />
+							{{ item.label }}
+							<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+						</label>
+					</div>
+					<app-form-control-errors />
+				</app-form-group>
+			</fieldset>
+
+			<fieldset>
+				<legend><translate>dash.games.maturity.sex_nudity_legend</translate></legend>
+
+				<app-form-group name="tigrs_nudity" :label="$gettext(`dash.games.maturity.nudity_label`)">
+					<div class="radio" v-for="(item, index) in nudity" :key="index">
+						<label>
+							<app-form-control-radio :value="index" />
+							{{ item.label }}
+							<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+						</label>
+					</div>
+					<app-form-control-errors />
+				</app-form-group>
+
+				<app-form-group
+					name="tigrs_sexual_themes"
+					:label="$gettext(`dash.games.maturity.sexual_themes_label`)"
+				>
+					<div class="radio" v-for="(item, index) in sexualThemes" :key="index">
+						<label>
+							<app-form-control-radio :value="index" />
+							{{ item.label }}
+							<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+						</label>
+					</div>
+					<app-form-control-errors />
+				</app-form-group>
+			</fieldset>
+
+			<fieldset>
+				<legend><translate>dash.games.maturity.misc_legend</translate></legend>
+
+				<app-form-group
+					name="tigrs_language"
+					:label="$gettext(`dash.games.maturity.language_label`)"
+				>
+					<div class="radio" v-for="(item, index) in language" :key="index">
+						<label>
+							<app-form-control-radio :value="index" />
+							{{ item.label }}
+							<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+						</label>
+					</div>
+					<app-form-control-errors />
+				</app-form-group>
+
+				<app-form-group name="tigrs_humor" :label="$gettext(`dash.games.maturity.humor_label`)">
+					<div class="radio" v-for="(item, index) in humor" :key="index">
+						<label>
+							<app-form-control-radio :value="index" />
+							{{ item.label }}
+							<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+						</label>
+					</div>
+					<app-form-control-errors />
+				</app-form-group>
+
+				<app-form-group
+					name="tigrs_gambling"
+					:label="$gettext(`dash.games.maturity.gambling_label`)"
+				>
+					<div class="radio" v-for="(item, index) in gambling" :key="index">
+						<label>
+							<app-form-control-radio :value="index" />
+							{{ item.label }}
+							<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
+						</label>
+					</div>
+					<app-form-control-errors />
+				</app-form-group>
+			</fieldset>
+		</app-expand>
+
+		<app-dash-game-wizard-controls :disabled="!formModel.tigrs_age">
+			<app-form-button :disabled="!formModel.tigrs_age || !valid">
+				<translate>dash.games.maturity.save_button</translate>
+			</app-form-button>
+		</app-dash-game-wizard-controls>
+	</app-form>
+</template>
+
+<script lang="ts" src="./maturity"></script>
+

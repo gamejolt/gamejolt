@@ -1,5 +1,5 @@
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { Route } from 'vue-router';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
 import { GameFilteringContainer } from '../filtering/container';
 
 export class GameListingContainer {

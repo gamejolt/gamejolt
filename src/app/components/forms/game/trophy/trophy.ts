@@ -1,19 +1,13 @@
+import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
+import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
+import { BaseForm, FormOnInit, FormOnLoad } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GameTrophy } from 'game-jolt-frontend-lib/components/game/trophy/trophy.model';
+import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./trophy.html';
 
-import {
-	BaseForm,
-	FormOnInit,
-	FormOnLoad,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { GameTrophy } from '../../../../../lib/gj-lib-client/components/game/trophy/trophy.model';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { AppImgResponsive } from '../../../../../lib/gj-lib-client/components/img/responsive/responsive';
-import { AppFormControlToggle } from '../../../../../lib/gj-lib-client/components/form-vue/control/toggle/toggle';
-import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
 
-@View
 @Component({
 	components: {
 		AppImgResponsive,
@@ -21,7 +15,7 @@ import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/component
 		AppFormControlUpload,
 	},
 })
-export class FormGameTrophy extends BaseForm<GameTrophy> implements FormOnInit, FormOnLoad {
+export default class FormGameTrophy extends BaseForm<GameTrophy> implements FormOnInit, FormOnLoad {
 	@Prop(Game) game!: Game;
 	@Prop(Number) difficulty!: number;
 

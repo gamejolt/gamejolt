@@ -1,4 +1,3 @@
-import View from '!view!./members.html';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import {
@@ -8,13 +7,12 @@ import {
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
-import { AppFollowerList } from '../../../../components/follower/list/list';
+import AppFollowerList from '../../../../components/follower/list/list.vue';
 
 function getFetchUrl(route: Route) {
 	return `/web/communities/members/${route.params.path}`;
 }
 
-@View
 @Component({
 	name: 'RouteCommunitiesViewMembers',
 	components: {

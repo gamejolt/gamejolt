@@ -9,5 +9,7 @@
 	"editor.formatOnSave": true,
 	"editor.codeActionsOnSave": {
 		"source.organizeImports": true
-	}
+	},
+	"vetur.format.defaultFormatter.html": "prettier",
+	"vetur.format.defaultFormatter.stylus": "none"
 }

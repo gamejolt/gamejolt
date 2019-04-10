@@ -1,15 +1,13 @@
-import View from '!view!./status-bar.html?style=./status-bar.styl';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
 import { ClientUpdater } from '../../../../_common/client/client-updater.service';
 import { Client } from '../../../../_common/client/client.service';
 import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
-import { AppClientStatusBarPatchItem } from './patch-item/patch-item';
+import AppClientStatusBarPatchItem from './patch-item/patch-item.vue';
 
-@View
 @Component({
 	components: {
 		AppJolticon,
@@ -22,7 +20,7 @@ import { AppClientStatusBarPatchItem } from './patch-item/patch-item';
 		number,
 	},
 })
-export class AppClientStatusBar extends Vue {
+export default class AppClientStatusBar extends Vue {
 	@ClientLibraryState
 	gamesById!: ClientLibraryStore['gamesById'];
 
@@ -47,9 +45,7 @@ export class AppClientStatusBar extends Vue {
 	}
 
 	get isShowing() {
-		return (
-			this.numPatching > 0 || this.numPlaying > 0 || this.hasUpdate || this.showUpdaterIssue
-		);
+		return this.numPatching > 0 || this.numPlaying > 0 || this.hasUpdate || this.showUpdaterIssue;
 	}
 
 	get currentlyPlayingList() {

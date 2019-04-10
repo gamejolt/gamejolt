@@ -1,18 +1,16 @@
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./thumbnail.html?style=./thumbnail.styl';
 
-import { FiresidePost } from '../../../../../lib/gj-lib-client/components/fireside/post/post-model';
-import { Environment } from '../../../../../lib/gj-lib-client/components/environment/environment.service';
-import { AppTimeAgo } from '../../../../../lib/gj-lib-client/components/time/ago/ago';
 
-@View
 @Component({
 	components: {
 		AppTimeAgo,
 	},
 })
-export class AppFiresidePostThumbnail extends Vue {
+export default class AppFiresidePostThumbnail extends Vue {
 	@Prop(FiresidePost) post!: FiresidePost;
 
 	noThumb: string = require('./no-thumb.png');

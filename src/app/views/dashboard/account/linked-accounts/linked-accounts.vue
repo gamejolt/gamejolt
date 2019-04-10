@@ -1,0 +1,111 @@
+<template>
+	<div>
+		<div class="row linked-accounts-list">
+			<div class="col-md-8 col-lg-6">
+				<app-linked-account
+					:account="facebookAccount"
+					:disabled="loading"
+					provider="facebook"
+					@link="onLink"
+					@sync="onLink"
+					@unlink="onUnlink"
+				/>
+			</div>
+			<div class="col-md-8 col-lg-6">
+				<app-linked-account
+					:account="twitterAccount"
+					:disabled="loading"
+					provider="twitter"
+					@link="onLink"
+					@sync="onLink"
+					@unlink="onUnlink"
+				/>
+			</div>
+			<div class="col-md-8 col-lg-6">
+				<app-linked-account
+					:account="googleAccount"
+					:disabled="loading"
+					provider="google"
+					@link="onLink"
+					@sync="onLink"
+					@unlink="onUnlink"
+				/>
+			</div>
+			<div class="col-md-8 col-lg-6">
+				<app-linked-account
+					:account="twitchAccount"
+					:disabled="loading"
+					provider="twitch"
+					@link="onLink"
+					@sync="onLink"
+					@unlink="onUnlink"
+				/>
+			</div>
+			<div class="col-md-8 col-lg-6">
+				<app-linked-account
+					:account="tumblrAccount"
+					:disabled="loading"
+					provider="tumblr"
+					@link="onLink"
+					@sync="onLink"
+					@unlink="onUnlink"
+					@link-tumblr-blog="onLinkTumblrBlog"
+					@unlink-tumblr-blog="onUnlinkTumblrBlog"
+					show-tumblr-blog
+				/>
+			</div>
+			<div class="col-md-8 col-lg-6">
+				<app-linked-account
+					:account="mixerAccount"
+					:disabled="loading"
+					provider="mixer"
+					@link="onLink"
+					@sync="onLink"
+					@unlink="onUnlink"
+				/>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-8 col-lg-6">
+				<h3><translate>YouTube Channels</translate></h3>
+
+				<p class="page-help">
+					<translate>
+						You can link your YouTube channels in order to post video comments on games.
+					</translate>
+				</p>
+
+				<div class="list-group" v-if="channels.length > 0">
+					<div
+						class="list-group-item clearfix"
+						style="display: flex; align-items: center;"
+						v-for="channel of channels"
+						:key="channel.id"
+					>
+						<div style="flex: auto">
+							<strong>
+								<a :href="channel.link" target="_blank">
+									{{ channel.title }}
+								</a>
+							</strong>
+						</div>
+						<div style="flex: none">
+							<app-button trans @click="unlinkYouTubeChannel(channel)">
+								<translate>Unlink</translate>
+							</app-button>
+						</div>
+					</div>
+				</div>
+
+				<div>
+					<app-button primary icon="link" @click="linkYouTubeChannel()">
+						<translate>Link YouTube Channel</translate>
+					</app-button>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script lang="ts" src="./linked-accounts"></script>

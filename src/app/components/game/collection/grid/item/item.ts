@@ -1,14 +1,11 @@
-import { State } from 'vuex-class';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./item.html?style=./item.styl';
-
-import { GameCollection } from '../../collection.model';
+import { State } from 'vuex-class';
 import { Store } from '../../../../../store/index';
-import { AppGameCollectionThumbnail } from '../../thumbnail/thumbnail';
-import { AppTrackEvent } from '../../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
+import { GameCollection } from '../../collection.model';
+import AppGameCollectionThumbnail from '../../thumbnail/thumbnail.vue';
 
-@View
 @Component({
 	components: {
 		AppGameCollectionThumbnail,
@@ -17,7 +14,7 @@ import { AppTrackEvent } from '../../../../../../lib/gj-lib-client/components/an
 		AppTrackEvent,
 	},
 })
-export class AppGameCollectionGridItem extends Vue {
+export default class AppGameCollectionGridItem extends Vue {
 	@Prop(GameCollection) collection!: GameCollection;
 	@Prop(String) eventLabel?: string;
 

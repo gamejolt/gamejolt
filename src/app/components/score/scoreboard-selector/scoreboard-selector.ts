@@ -1,19 +1,17 @@
+import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./scoreboard-selector.html';
 
-import { GameScoreTable } from '../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppPopper } from '../../../../lib/gj-lib-client/components/popper/popper';
 
-@View
 @Component({
 	components: {
 		AppPopper,
 		AppJolticon,
 	},
 })
-export class AppScoreboardSelector extends Vue {
+export default class AppScoreboardSelector extends Vue {
 	@Prop(GameScoreTable) currentTable!: GameScoreTable;
 	@Prop(Array) tables!: GameScoreTable[];
 

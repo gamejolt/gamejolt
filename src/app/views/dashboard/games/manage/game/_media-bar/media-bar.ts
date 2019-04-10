@@ -1,20 +1,16 @@
-import View from '!view!./media-bar.html?style=./media-bar.styl';
+import AppEditableOverlay from 'game-jolt-frontend-lib/components/editable-overlay/editable-overlay.vue';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { MediaBarItemMaxHeight } from 'game-jolt-frontend-lib/components/media-bar/item/item';
+import AppMediaBarItem from 'game-jolt-frontend-lib/components/media-bar/item/item.vue';
+import AppScrollScroller from 'game-jolt-frontend-lib/components/scroll/scroller/scroller.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppEditableOverlay } from '../../../../../../../lib/gj-lib-client/components/editable-overlay/editable-overlay';
-import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
-import {
-	AppMediaBarItem,
-	MediaBarItemMaxHeight,
-} from '../../../../../../../lib/gj-lib-client/components/media-bar/item/item';
-import { AppScrollScroller } from '../../../../../../../lib/gj-lib-client/components/scroll/scroller/scroller';
 import { GameMediaItemAddModal } from '../../../../../../components/game/media-item/add-modal/add-modal.service';
 import { GameMediaItemEditModal } from '../../../../../../components/game/media-item/edit-modal/edit-modal.service';
 import { Media, RouteStore, RouteStoreModule } from '../../manage.store';
 
 const draggable = require('vuedraggable');
 
-@View
 @Component({
 	components: {
 		draggable,
@@ -23,7 +19,7 @@ const draggable = require('vuedraggable');
 		AppEditableOverlay,
 	},
 })
-export class AppManageGameMediaBar extends Vue {
+export default class AppManageGameMediaBar extends Vue {
 	@Prop(Game)
 	game!: Game;
 

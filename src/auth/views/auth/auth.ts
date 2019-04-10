@@ -1,17 +1,15 @@
+import { Auth } from 'game-jolt-frontend-lib/components/auth/auth.service';
+import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
+import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
+import { AppThemeSvg } from 'game-jolt-frontend-lib/components/theme/svg/svg';
+import AppTranslateLangSelector from 'game-jolt-frontend-lib/components/translate/lang-selector/lang-selector.vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import View from '!view!./auth.html?style=./auth.styl';
-import './auth-content.styl';
-
+import AppCoverImg from '../../components/cover-img/cover-img.vue';
 import { store } from '../../store/index';
-import { MediaItem } from '../../../lib/gj-lib-client/components/media-item/media-item-model';
-import { AppCoverImg } from '../../components/cover-img/cover-img';
-import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
-import { Connection } from '../../../lib/gj-lib-client/components/connection/connection-service';
-import { AppTranslateLangSelector } from '../../../lib/gj-lib-client/components/translate/lang-selector/lang-selector';
-import { Auth } from '../../../lib/gj-lib-client/components/auth/auth.service';
-import { BaseRouteComponent } from '../../../lib/gj-lib-client/components/route/route-component';
-import { AppThemeSvg } from '../../../lib/gj-lib-client/components/theme/svg/svg';
+import './auth-content.styl';
 
 export function loggedUserBlock() {
 	// Redirect right away if they are logged in.
@@ -23,7 +21,6 @@ export function loggedUserBlock() {
 	}
 }
 
-@View
 @Component({
 	name: 'RouteAuth',
 	components: {

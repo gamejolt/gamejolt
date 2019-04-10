@@ -1,16 +1,14 @@
-import View from '!view!./modal.html';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import { AppLoading } from 'game-jolt-frontend-lib/vue/components/loading/loading';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue'
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppUserList } from '../../../user/list/list';
+import AppUserList from '../../../user/list/list.vue'
 
 const UsersPerPage = 20;
 
-@View
 @Component({
 	components: {
 		AppLoading,

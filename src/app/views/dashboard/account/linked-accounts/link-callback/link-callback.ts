@@ -1,18 +1,12 @@
-import {
-	getLinkedAccountProviderDisplayName,
-	LinkedAccount,
-} from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { getLinkedAccountProviderDisplayName, LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
 import { YoutubeChannel } from 'game-jolt-frontend-lib/components/youtube/channel/channel-model';
+import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
-import { Api } from '../../../../../../lib/gj-lib-client/components/api/api.service';
-import { Growls } from '../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../../lib/gj-lib-client/components/route/route-component';
-import { AppState, AppStore } from '../../../../../../lib/gj-lib-client/vue/services/app/app-store';
 
 function constructUrl(baseUrl: string, route: Route) {
 	let url = baseUrl + route.params.provider;

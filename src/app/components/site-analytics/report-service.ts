@@ -1,17 +1,8 @@
-import {
-	ReportComponent,
-	Request,
-	ResourceName,
-	Analyzer,
-	Collection,
-	Field,
-	Condition,
-	ResourceFields,
-} from './site-analytics-service';
-import { Api } from '../../../lib/gj-lib-client/components/api/api.service';
-import { Geo } from '../../../lib/gj-lib-client/components/geo/geo.service';
-import { arrayUnique } from '../../../lib/gj-lib-client/utils/array';
-import { Translate } from '../../../lib/gj-lib-client/components/translate/translate.service';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Geo } from 'game-jolt-frontend-lib/components/geo/geo.service';
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { arrayUnique } from 'game-jolt-frontend-lib/utils/array';
+import { Analyzer, Collection, Condition, Field, ReportComponent, Request, ResourceFields, ResourceName } from './site-analytics-service';
 
 export class SiteAnalyticsReport {
 	isLoaded = false;

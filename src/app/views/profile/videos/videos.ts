@@ -1,7 +1,6 @@
-import View from '!view!./videos.html';
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { AppCommentVideoThumbnail } from 'game-jolt-frontend-lib/components/comment/video/thumbnail/thumbnail';
+import AppCommentVideoThumbnail from 'game-jolt-frontend-lib/components/comment/video/thumbnail/thumbnail.vue'
 import { CommentVideo } from 'game-jolt-frontend-lib/components/comment/video/video-model';
 import {
 	BaseRouteComponent,
@@ -10,7 +9,6 @@ import {
 import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 
-@View
 @Component({
 	name: 'RouteProfileVideos',
 	components: {

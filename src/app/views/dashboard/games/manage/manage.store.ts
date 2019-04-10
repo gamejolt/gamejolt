@@ -1,20 +1,14 @@
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Collaborator } from 'game-jolt-frontend-lib/components/collaborator/collaborator.model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GameScreenshot } from 'game-jolt-frontend-lib/components/game/screenshot/screenshot.model';
+import { GameSketchfab } from 'game-jolt-frontend-lib/components/game/sketchfab/sketchfab.model';
+import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { NamespaceVuexStore, VuexAction, VuexModule, VuexMutation, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
 import { namespace } from 'vuex-class';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { Collaborator } from '../../../../../lib/gj-lib-client/components/collaborator/collaborator.model';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { GameScreenshot } from '../../../../../lib/gj-lib-client/components/game/screenshot/screenshot.model';
-import { GameSketchfab } from '../../../../../lib/gj-lib-client/components/game/sketchfab/sketchfab.model';
-import { GameVideo } from '../../../../../lib/gj-lib-client/components/game/video/video.model';
-import { Growls } from '../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { ModalConfirm } from '../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
-import {
-	NamespaceVuexStore,
-	VuexAction,
-	VuexModule,
-	VuexMutation,
-	VuexStore,
-} from '../../../../../lib/gj-lib-client/utils/vuex';
 import { store } from '../../../../store';
 import { router } from '../../../index';
 

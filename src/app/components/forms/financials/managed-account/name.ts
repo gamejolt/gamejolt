@@ -1,23 +1,27 @@
-import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./name.html';
-import { CommonFormComponents } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { FormFinancialsManagedAccount } from './managed-account';
-import { findRequiredVueParent } from '../../../../../lib/gj-lib-client/utils/vue';
+import { CommonFormComponents } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
 import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import {
+	default as FormFinancialsManagedAccount,
+	default as FormFinancialsManagedAccountTS,
+} from './managed-account.vue';
 
-@View
 @Component({
 	components: {
 		...CommonFormComponents,
 	},
 })
-export class AppFinancialsManagedAccountName extends Vue {
+export default class AppFinancialsManagedAccountName extends Vue {
 	@Prop(Boolean) forceRequired!: boolean;
 
 	@Prop(String) namePrefix!: string;
 
-	parent: FormFinancialsManagedAccount = null as any;
+	parent: FormFinancialsManagedAccountTS = null as any;
 	created() {
-		this.parent = findRequiredVueParent(this, FormFinancialsManagedAccount);
+		this.parent = findRequiredVueParent(
+			this,
+			FormFinancialsManagedAccount
+		) as FormFinancialsManagedAccountTS;
 	}
 }

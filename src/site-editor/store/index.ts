@@ -1,24 +1,19 @@
-import { Api } from '../../lib/gj-lib-client/components/api/api.service';
-import { Site } from '../../lib/gj-lib-client/components/site/site-model';
-import { SiteTemplate } from '../../lib/gj-lib-client/components/site/template/template-model';
-import { SiteTheme } from '../../lib/gj-lib-client/components/site/theme/theme-model';
-import {
-	VuexStore,
-	VuexModule,
-	VuexAction,
-	VuexMutation,
-} from '../../lib/gj-lib-client/utils/vuex';
-import {
-	AppStore,
-	Mutations as AppMutations,
-	Actions as AppActions,
-	appStore,
-} from '../../lib/gj-lib-client/vue/services/app/app-store';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Site } from 'game-jolt-frontend-lib/components/site/site-model';
+import { SiteTemplate } from 'game-jolt-frontend-lib/components/site/template/template-model';
+import { SiteTheme } from 'game-jolt-frontend-lib/components/site/theme/theme-model';
 import {
 	ThemeActions,
 	ThemeMutations,
 	ThemeStore,
-} from '../../lib/gj-lib-client/components/theme/theme.store';
+} from 'game-jolt-frontend-lib/components/theme/theme.store';
+import { VuexAction, VuexModule, VuexMutation, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
+import {
+	Actions as AppActions,
+	AppStore,
+	appStore,
+	Mutations as AppMutations,
+} from 'game-jolt-frontend-lib/vue/services/app/app-store';
 
 type Tab = 'theme' | 'editor';
 

@@ -1,0 +1,42 @@
+<template>
+	<section class="section">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-9 col-md-8 col-lg-7 col-lg-offset-1">
+					<router-view />
+				</div>
+				<div class="col-sm-3 col-md-4 col-lg-3 hidden-xs">
+					<br />
+					<br />
+					<br />
+					<nav class="platform-list">
+						<ul>
+							<li>
+								<router-link :to="{ name: 'legal.terms' }" active-class="active">
+									<translate>Terms of Use</translate>
+								</router-link>
+							</li>
+							<li>
+								<router-link :to="{ name: 'legal.privacy' }" active-class="active" exact>
+									<translate>Privacy Policy</translate>
+								</router-link>
+							</li>
+							<li>
+								<router-link :to="{ name: 'legal.cookies' }" active-class="active">
+									<translate>Cookie Policy</translate>
+								</router-link>
+							</li>
+							<li>
+								<router-link :to="{ name: 'legal.ads' }" active-class="active">
+									<translate>Advertising Platforms</translate>
+								</router-link>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section>
+</template>
+
+<script lang="ts" src="./legal"></script>

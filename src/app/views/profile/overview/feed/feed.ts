@@ -1,20 +1,19 @@
-import View from '!view!./feed.html';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { AppNavTabList } from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list';
-import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
-import { State } from 'vuex-class';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { EventItem } from '../../../../../lib/gj-lib-client/components/event-item/event-item.model';
+import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { AppActivityFeed } from '../../../../components/activity/feed/feed';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
+import { State } from 'vuex-class';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
-import { AppActivityFeedPlaceholder } from '../../../../components/activity/feed/placeholder/placeholder';
+import AppActivityFeed from '../../../../components/activity/feed/feed.vue';
+import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
-import { AppPostAddButton } from '../../../../components/post/add-button/add-button';
+import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
 import { Store } from '../../../../store/index';
 import { RouteStore, RouteStoreModule } from '../../profile.store';
 
@@ -23,7 +22,6 @@ function getFetchUrl(route: Route) {
 	return `/web/posts/fetch/user/@${route.params.username}?tab=${tab}`;
 }
 
-@View
 @Component({
 	name: 'RouteProfileOverviewFeed',
 	components: {

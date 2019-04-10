@@ -1,25 +1,25 @@
-import { Component } from 'vue-property-decorator';
-import View from '!view!./managed-account.html?style=./managed-account.styl';
-import { Geo } from '../../../../../lib/gj-lib-client/components/geo/geo.service';
-import { currency } from '../../../../../lib/gj-lib-client/vue/filters/currency';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { UserStripeManagedAccount } from '../../../../../lib/gj-lib-client/components/user/stripe-managed-account/stripe-managed-account';
-import { User } from '../../../../../lib/gj-lib-client/components/user/user.model';
-import { FormOnSubmit } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { loadScript } from '../../../../../lib/gj-lib-client/utils/utils';
-import { AppLoading } from '../../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppFinancialsManagedAccountName } from './name';
-import { AppFinancialsManagedAccountDob } from './dob';
-import { AppFinancialsManagedAccountAddress } from './address';
-import { AppFinancialsManagedAccountSsn } from './ssn';
-import { AppFinancialsManagedAccountIdDocument } from './id-document';
-import { AppFinancialsManagedAccountBusiness } from './business';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
 import {
 	BaseForm,
 	FormOnInit,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
+	FormOnSubmit,
+} from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Geo } from 'game-jolt-frontend-lib/components/geo/geo.service';
+import { UserStripeManagedAccount } from 'game-jolt-frontend-lib/components/user/stripe-managed-account/stripe-managed-account';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { loadScript } from 'game-jolt-frontend-lib/utils/utils';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
+import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
+import { Component } from 'vue-property-decorator';
+import AppFinancialsManagedAccountAddress from './address.vue';
+import AppFinancialsManagedAccountBusiness from './business.vue';
+import AppFinancialsManagedAccountDob from './dob.vue';
+import AppFinancialsManagedAccountIdDocumentTS from './id-document';
+import AppFinancialsManagedAccountIdDocument from './id-document.vue';
+import AppFinancialsManagedAccountName from './name.vue';
+import AppFinancialsManagedAccountSsn from './ssn.vue';
 
 interface FormModel {
 	additional_owners_count: number;
@@ -32,7 +32,6 @@ interface FormModel {
 	[k: string]: any;
 }
 
-@View
 @Component({
 	components: {
 		AppLoading,
@@ -46,7 +45,7 @@ interface FormModel {
 		AppFinancialsManagedAccountBusiness,
 	},
 })
-export class FormFinancialsManagedAccount extends BaseForm<FormModel>
+export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 	implements FormOnInit, FormOnSubmit {
 	resetOnSubmit = true;
 	scriptLoaded = false;
@@ -168,7 +167,11 @@ export class FormFinancialsManagedAccount extends BaseForm<FormModel>
 
 	get isVerificationPending() {
 		// If they're in pending state and we don't require more info from them.
-		if (this.account && this.account.status === 'pending' && !this.requiresVerificationDocument) {
+		if (
+			this.account &&
+			this.account.status === 'pending' &&
+			!this.requiresVerificationDocument
+		) {
 			return true;
 		}
 
@@ -255,7 +258,9 @@ export class FormFinancialsManagedAccount extends BaseForm<FormModel>
 				this.formModel['legal_entity.verification.document'] &&
 				this.formModel['legal_entity.verification.status'] !== 'verified'
 			) {
-				const idDocument: AppFinancialsManagedAccountIdDocument = this.$refs['id-document'] as any;
+				const idDocument: AppFinancialsManagedAccountIdDocumentTS = this.$refs[
+					'id-document'
+				] as any;
 				const _response = await idDocument.uploadIdDocument(this.stripePublishableKey);
 				data['legal_entity.verification.document'] = _response.id;
 			}
@@ -264,11 +269,12 @@ export class FormFinancialsManagedAccount extends BaseForm<FormModel>
 			for (let i = 0; i < 4; i++) {
 				if (this.formModel[`legal_entity.additional_owners.${i}.verification.document`]) {
 					const curIndex = i;
-					const idDocument: AppFinancialsManagedAccountIdDocument = this.$refs[
+					const idDocument: AppFinancialsManagedAccountIdDocumentTS = this.$refs[
 						`additional-id-document-${i}`
 					] as any;
 					const _response = await idDocument.uploadIdDocument(this.stripePublishableKey);
-					data[`legal_entity.additional_owners.${curIndex}.verification.document`] = _response.id;
+					data[`legal_entity.additional_owners.${curIndex}.verification.document`] =
+						_response.id;
 				}
 			}
 

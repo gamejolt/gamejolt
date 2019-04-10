@@ -1,17 +1,12 @@
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
+import { VuexAction, VuexModule, VuexMutation, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
 import {
-	VuexStore,
-	VuexModule,
-	VuexMutation,
-	VuexAction,
-} from '../../lib/gj-lib-client/utils/vuex';
-import {
-	AppStore,
-	Mutations as AppMutations,
 	Actions as AppActions,
+	AppStore,
 	appStore,
-} from '../../lib/gj-lib-client/vue/services/app/app-store';
-import { MediaItem } from '../../lib/gj-lib-client/components/media-item/media-item-model';
-import { Api } from '../../lib/gj-lib-client/components/api/api.service';
+	Mutations as AppMutations,
+} from 'game-jolt-frontend-lib/vue/services/app/app-store';
 
 export type Actions = AppActions & {
 	bootstrap: undefined;

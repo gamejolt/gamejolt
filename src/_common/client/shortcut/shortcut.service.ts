@@ -1,7 +1,6 @@
 import { Shortcut } from 'client-voodoo';
+import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
 import * as path from 'path';
-
-import { Device } from '../../../lib/gj-lib-client/components/device/device.service';
 import { Client } from '../client.service';
 
 export class ClientShortcut {

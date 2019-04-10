@@ -1,8 +1,7 @@
-import View from '!view!./view.html?style=./view.styl';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import { AppGameThumbnailImg } from 'game-jolt-frontend-lib/components/game/thumbnail-img/thumbnail-img';
+import AppGameThumbnailImg from 'game-jolt-frontend-lib/components/game/thumbnail-img/thumbnail-img.vue'
 import { Geo } from 'game-jolt-frontend-lib/components/geo/geo.service';
 import { Order } from 'game-jolt-frontend-lib/components/order/order.model';
 import { OrderPayment } from 'game-jolt-frontend-lib/components/order/payment/payment.model';
@@ -18,7 +17,6 @@ import { date } from 'game-jolt-frontend-lib/vue/filters/date';
 import { Component } from 'vue-property-decorator';
 import { routeStore, RouteStore, RouteStoreModule } from '../../account.store';
 
-@View
 @Component({
 	name: 'RouteDashAccountPurchasesView',
 	components: {

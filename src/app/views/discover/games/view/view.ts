@@ -1,51 +1,34 @@
-import View from '!view!./view.html';
 import { Ads, AdSettingsContainer } from 'game-jolt-frontend-lib/components/ad/ads.service';
-import {
-	CommentAction,
-	CommentMutation,
-	CommentState,
-	CommentStore,
-	CommentStoreModel,
-} from 'game-jolt-frontend-lib/components/comment/comment-store';
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Collaborator } from 'game-jolt-frontend-lib/components/collaborator/collaborator.model';
+import { CommentAction, CommentMutation, CommentState, CommentStore, CommentStoreModel } from 'game-jolt-frontend-lib/components/comment/comment-store';
+import { EventBus, EventBusDeregister } from 'game-jolt-frontend-lib/components/event-bus/event-bus.service';
+import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
+import { HistoryTick } from 'game-jolt-frontend-lib/components/history-tick/history-tick-service';
+import { PartnerReferral } from 'game-jolt-frontend-lib/components/partner-referral/partner-referral-service';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
 import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-store';
-import { AppUserCardHover } from 'game-jolt-frontend-lib/components/user/card/hover/hover';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
+import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
 import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
 import { Component } from 'vue-property-decorator';
-import { Analytics } from '../../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { Collaborator } from '../../../../../lib/gj-lib-client/components/collaborator/collaborator.model';
-import {
-	EventBus,
-	EventBusDeregister,
-} from '../../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
-import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { HistoryTick } from '../../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
-import { PartnerReferral } from '../../../../../lib/gj-lib-client/components/partner-referral/partner-referral-service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { Translate } from '../../../../../lib/gj-lib-client/components/translate/translate.service';
-import { AppUserAvatar } from '../../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { AppGameCoverButtons } from '../../../../components/game/cover-buttons/cover-buttons';
-import { AppGameMaturityBlock } from '../../../../components/game/maturity-block/maturity-block';
+import AppGameCoverButtons from '../../../../components/game/cover-buttons/cover-buttons.vue';
+import AppGameMaturityBlock from '../../../../components/game/maturity-block/maturity-block.vue';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
-import { AppPageHeader } from '../../../../components/page-header/page-header';
-import {
-	RatingWidgetOnChange,
-	RatingWidgetOnChangePayload,
-} from '../../../../components/rating/widget/widget';
+import AppPageHeader from '../../../../components/page-header/page-header.vue';
+import { RatingWidgetOnChange, RatingWidgetOnChangePayload } from '../../../../components/rating/widget/widget';
 import { store } from '../../../../store';
 import './view-content.styl';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './view.store';
-import { AppDiscoverGamesViewControls } from './_controls/controls';
-import { AppDiscoverGamesViewNav } from './_nav/nav';
+import AppDiscoverGamesViewControls from './_controls/controls.vue';
+import AppDiscoverGamesViewNav from './_nav/nav.vue';
 
-@View
 @Component({
 	name: 'RouteDiscoverGamesView',
 	components: {

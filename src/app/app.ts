@@ -1,15 +1,12 @@
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
+import AppErrorPage from 'game-jolt-frontend-lib/components/error/page/page.vue';
+import { AppTheme } from 'game-jolt-frontend-lib/components/theme/theme';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./app.html';
-
-import { AppShell } from './components/shell/shell';
-import { AppErrorPage } from '../lib/gj-lib-client/components/error/page/page';
-import { Analytics } from '../lib/gj-lib-client/components/analytics/analytics.service';
 import { loadCurrentLanguage } from '../utils/translations';
-import { AppTheme } from '../lib/gj-lib-client/components/theme/theme';
-import { AppCookieBanner } from '../_common/cookie/banner/banner';
+import AppCookieBanner from '../_common/cookie/banner/banner.vue';
+import AppShell from './components/shell/shell.vue';
 
-@View
 @Component({
 	components: {
 		AppTheme,
@@ -18,7 +15,7 @@ import { AppCookieBanner } from '../_common/cookie/banner/banner';
 		AppCookieBanner,
 	},
 })
-export class App extends Vue {
+export default class App extends Vue {
 	// On SSR we want to set mount point for the app to this component so that
 	// we can hydrate the component. On browser we want to set the "app" in the
 	// index template.

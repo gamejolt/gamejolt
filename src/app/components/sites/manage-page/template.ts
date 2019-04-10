@@ -1,15 +1,13 @@
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { Site } from 'game-jolt-frontend-lib/components/site/site-model';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./template.html';
+import FormSiteSettings from '../../forms/site/settings/settings.vue';
 
-import { Site } from '../../../../lib/gj-lib-client/components/site/site-model';
-import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { FormSiteSettings } from '../../forms/site/settings/settings';
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
 
-@View
 @Component({
 	components: {
 		AppJolticon,
@@ -19,7 +17,7 @@ import { Environment } from '../../../../lib/gj-lib-client/components/environmen
 		AppTooltip,
 	},
 })
-export class AppSitesManagePageTemplate extends Vue {
+export default class AppSitesManagePageTemplate extends Vue {
 	@Prop(Site) site?: Site;
 	@Prop(Boolean) enabled?: boolean;
 	@Prop(Boolean) staticEnabled?: boolean;

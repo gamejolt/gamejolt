@@ -8,21 +8,17 @@ export async function GridClientLazy() {
 }
 
 export async function AppAuthJoinLazy() {
-	return (await import(/* webpackChunkName: "authJoin" */ './../../lib/gj-lib-client/components/auth/join/join'))
-		.AppAuthJoin;
+	return await import(/* webpackChunkName: "authJoin" */ 'game-jolt-frontend-lib/components/auth/join/join.vue');
 }
 
 export async function AppCommentWidgetLazy() {
-	return (await import(/* webpackChunkName: "commentWidget" */ '../../lib/gj-lib-client/components/comment/widget/widget'))
-		.AppCommentWidget;
+	return await import(/* webpackChunkName: "commentWidget" */ 'game-jolt-frontend-lib/components/comment/widget/widget.vue');
 }
 
 export async function FormCommentLazy() {
-	return (await import(/* webpackChunkName: "commentWidget" */ '../../lib/gj-lib-client/components/comment/add/add'))
-		.FormComment;
+	return await import(/* webpackChunkName: "commentWidget" */ 'game-jolt-frontend-lib/components/comment/add/add.vue');
 }
 
 export async function AppActivityFeedLazy() {
-	return (await import(/* webpackChunkName: "activityFeed" */ './activity/feed/feed'))
-		.AppActivityFeed;
+	return await import(/* webpackChunkName: "activityFeed" */ './activity/feed/feed.vue');
 }

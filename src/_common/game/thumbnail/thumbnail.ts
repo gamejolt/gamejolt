@@ -1,23 +1,21 @@
-import View from '!view!./thumbnail.html?style=./thumbnail.styl';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import AppGameThumbnailImg from 'game-jolt-frontend-lib/components/game/thumbnail-img/thumbnail-img.vue';
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppScrollInview } from 'game-jolt-frontend-lib/components/scroll/inview/inview';
+import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
+import AppUserAvatarImg from 'game-jolt-frontend-lib/components/user/user-avatar/img/img.vue';
+import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
+import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { AppGamePlaylistAddToWidget } from '../../../app/components/game-playlist/add-to-widget/add-to-widget';
-import { AppGameCompatIcons } from '../../../app/components/game/compat-icons/compat-icons';
-import { AppGameFollowWidget } from '../../../app/components/game/follow-widget/follow-widget';
-import { AppGameModLinks } from '../../../app/components/game/mod-links/mod-links';
-import { Game } from '../../../lib/gj-lib-client/components/game/game.model';
-import { AppGameThumbnailImg } from '../../../lib/gj-lib-client/components/game/thumbnail-img/thumbnail-img';
-import { AppPopper } from '../../../lib/gj-lib-client/components/popper/popper';
-import { Screen } from '../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppScrollInview } from '../../../lib/gj-lib-client/components/scroll/inview/inview';
-import { AppUserCardHover } from '../../../lib/gj-lib-client/components/user/card/hover/hover';
-import { AppUserAvatarImg } from '../../../lib/gj-lib-client/components/user/user-avatar/img/img';
-import { currency } from '../../../lib/gj-lib-client/vue/filters/currency';
-import { AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
+import AppGamePlaylistAddToWidget from '../../../app/components/game-playlist/add-to-widget/add-to-widget.vue';
+import AppGameCompatIcons from '../../../app/components/game/compat-icons/compat-icons.vue';
+import AppGameFollowWidget from '../../../app/components/game/follow-widget/follow-widget.vue';
+import AppGameModLinks from '../../../app/components/game/mod-links/mod-links.vue';
 import { Settings } from '../../settings/settings.service';
 
-@View
 @Component({
 	components: {
 		AppGameThumbnailImg,
@@ -31,7 +29,7 @@ import { Settings } from '../../settings/settings.service';
 		AppGamePlaylistAddToWidget,
 	},
 })
-export class AppGameThumbnail extends Vue {
+export default class AppGameThumbnail extends Vue {
 	@Prop(Object)
 	game!: Game;
 

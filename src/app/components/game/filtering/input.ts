@@ -1,18 +1,16 @@
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./input.html?style=./input.styl';
-
 import { GameFilteringContainer } from './container';
-import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
 
-@View
+
 @Component({
 	components: {
 		AppJolticon,
 	},
 })
-export class AppGameFilteringInput extends Vue {
+export default class AppGameFilteringInput extends Vue {
 	@Prop(Object) filtering!: GameFilteringContainer;
 
 	query = '';

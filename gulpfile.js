@@ -65,6 +65,10 @@ const config = {
 			crawl: false,
 			bodyClass: 'fill-darkest',
 		},
+		playbox: {
+			title: 'Playbox - for tests and stuff',
+			server: true,
+		},
 	},
 	translations: 'site-translations',
 	translationSections: {
@@ -76,6 +80,7 @@ const config = {
 		],
 		checkout: ['checkout/'],
 		claim: ['claim/'],
+		playbox: ['playbox/'],
 	},
 };
 

@@ -7,6 +7,6 @@ import { routeLegalTerms } from './terms/terms.route';
 export const routeLegal: RouteConfig = {
 	name: 'legal',
 	path: '',
-	component: () => import(/* webpackChunkName: "routeLegal" */ './legal'),
+	component: () => import(/* webpackChunkName: "routeLegal" */ './legal.vue'),
 	children: [routeLegalPrivacy, routeLegalTerms, routeLegalCookies, routeLegalAds],
 };

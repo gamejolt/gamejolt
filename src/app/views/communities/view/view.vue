@@ -1,0 +1,50 @@
+<template>
+	<div v-if="community">
+		<app-page-header :cover-media-item="community.header" should-affix-nav>
+			<span class="tag">
+				<translate>Community</translate>
+			</span>
+			<h1>
+				<router-link :to="{ name: 'communities.view.overview' }">
+					{{ community.name }}
+				</router-link>
+			</h1>
+
+			<app-community-thumbnail-img slot="spotlight" :community="community" />
+
+			<nav slot="nav" class="platform-list inline">
+				<ul>
+					<li>
+						<router-link
+							:to="{ name: 'communities.view.overview' }"
+							:class="{ active: $route.name === 'communities.view.overview' }"
+						>
+							<translate>Overview</translate>
+						</router-link>
+					</li>
+					<li>
+						<router-link :to="{ name: 'communities.view.members' }" active-class="active">
+							<translate>Members</translate>
+							<span class="badge" v-if="community.member_count">
+								{{ community.member_count | number }}
+							</span>
+						</router-link>
+					</li>
+				</ul>
+			</nav>
+
+			<div slot="controls">
+				<app-community-join-widget :community="community" @join="onJoin" @leave="onLeave" block />
+			</div>
+		</app-page-header>
+
+		<router-view
+			:community="community"
+			:tags="tags"
+			:unread-watermark="unreadWatermark"
+			@refresh="refresh()"
+		/>
+	</div>
+</template>
+
+<script lang="ts" src="./view"></script>

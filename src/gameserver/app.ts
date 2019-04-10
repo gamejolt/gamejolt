@@ -1,40 +1,31 @@
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
+import { AppTheme } from 'game-jolt-frontend-lib/components/theme/theme';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./app.html?style=./app.styl';
-
-import { State, Action } from 'vuex-class';
-import { Environment } from '../lib/gj-lib-client/components/environment/environment.service';
-import { Game } from '../lib/gj-lib-client/components/game/game.model';
-import { GamePackage } from '../lib/gj-lib-client/components/game/package/package.model';
-import { GameBuild } from '../lib/gj-lib-client/components/game/build/build.model';
+import { Action, State } from 'vuex-class';
 import { Store } from './store/index';
-import { AppTheme } from '../lib/gj-lib-client/components/theme/theme';
 
-@View
 @Component({
 	components: {
 		AppTheme,
-		AppEmbedHtml: async () =>
-			(await import(/* webpackChunkName: "gameserverHtml" */ './components/embed/html/html'))
-				.AppEmbedHtml,
-		AppEmbedFlash: async () =>
-			(await import(/* webpackChunkName: "gameserverFlash" */ './components/embed/flash/flash'))
-				.AppEmbedFlash,
-		AppEmbedUnity: async () =>
-			(await import(/* webpackChunkName: "gameserverUnity" */ './components/embed/unity/unity'))
-				.AppEmbedUnity,
-		AppEmbedApplet: async () =>
-			(await import(/* webpackChunkName: "gameserverApplet" */ './components/embed/applet/applet'))
-				.AppEmbedApplet,
-		AppEmbedRom: async () =>
-			(await import(/* webpackChunkName: "gameserverRom" */ './components/embed/rom/rom'))
-				.AppEmbedRom,
-		AppEmbedSilverlight: async () =>
-			(await import(/* webpackChunkName: "gameserverSilverlight" */ './components/embed/silverlight/silverlight'))
-				.AppEmbedSilverlight,
+		AppEmbedHtml: () =>
+			import(/* webpackChunkName: "gameserverHtml" */ './components/embed/html/html.vue'),
+		AppEmbedFlash: () =>
+			import(/* webpackChunkName: "gameserverFlash" */ './components/embed/flash/flash.vue'),
+		AppEmbedUnity: () =>
+			import(/* webpackChunkName: "gameserverUnity" */ './components/embed/unity/unity.vue'),
+		AppEmbedApplet: () =>
+			import(/* webpackChunkName: "gameserverApplet" */ './components/embed/applet/applet.vue'),
+		AppEmbedRom: () =>
+			import(/* webpackChunkName: "gameserverRom" */ './components/embed/rom/rom.vue'),
+		AppEmbedSilverlight: () =>
+			import(/* webpackChunkName: "gameserverSilverlight" */ './components/embed/silverlight/silverlight.vue'),
 	},
 })
-export class App extends Vue {
+export default class App extends Vue {
 	// Not translatable just yet.
 	// mounted() {
 	// 	loadCurrentLanguage(this);

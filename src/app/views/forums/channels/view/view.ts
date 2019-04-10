@@ -1,24 +1,22 @@
-import View from '!view!./view.html';
-import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { ForumChannel } from '../../../../../lib/gj-lib-client/components/forum/channel/channel.model';
-import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
-import { AppNavTabList } from '../../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
-import { AppPagination } from '../../../../../lib/gj-lib-client/components/pagination/pagination';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { ForumChannel } from 'game-jolt-frontend-lib/components/forum/channel/channel.model';
+import { ForumTopic } from 'game-jolt-frontend-lib/components/forum/topic/topic.model';
+import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
+import AppPagination from 'game-jolt-frontend-lib/components/pagination/pagination.vue';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { Scroll } from '../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
-import { AppForumBreadcrumbs } from '../../../../components/forum/breadcrumbs/breadcrumbs';
-import { AppForumTopicList } from '../../../../components/forum/topic-list/topic-list';
-import { AppPageHeader } from '../../../../components/page-header/page-header';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
+import AppForumTopicList from '../../../../components/forum/topic-list/topic-list.vue';
+import AppPageHeader from '../../../../components/page-header/page-header.vue';
 import { Store } from '../../../../store/index';
 
-@View
 @Component({
 	name: 'RouteForumsChannelsView',
 	components: {

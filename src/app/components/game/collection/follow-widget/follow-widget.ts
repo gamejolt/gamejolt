@@ -1,15 +1,13 @@
-import View from '!view!./follow-widget.html';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { AppAuthRequired } from '../../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
-import { AppState, AppStore } from '../../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { LibraryModule, LibraryStore } from '../../../../store/library';
 import { GameCollection } from '../collection.model';
 
-@View
 @Component({
 	directives: {
 		AppTrackEvent,
@@ -17,7 +15,7 @@ import { GameCollection } from '../collection.model';
 		AppAuthRequired,
 	},
 })
-export class AppGameCollectionFollowWidget extends Vue {
+export default class AppGameCollectionFollowWidget extends Vue {
 	@Prop(GameCollection)
 	collection!: GameCollection;
 
@@ -52,16 +50,13 @@ export class AppGameCollectionFollowWidget extends Vue {
 
 		return (
 			this.collections.findIndex(
-				item =>
-					item.type === this.collection.type && (item as any).id === this.collection.id
+				item => item.type === this.collection.type && (item as any).id === this.collection.id
 			) !== -1
 		);
 	}
 
 	get badge() {
-		return !this.circle && this.isFollowing && this.followerCount
-			? number(this.followerCount)
-			: '';
+		return !this.circle && this.isFollowing && this.followerCount ? number(this.followerCount) : '';
 	}
 
 	get tooltip() {

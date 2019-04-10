@@ -1,0 +1,41 @@
+<template>
+	<nav class="breadcrumb dark-variant">
+		<ul>
+			<li>
+				<router-link :to="{ name: 'forums.landing.overview' }">
+					<span class="breadcrumb-tag">&nbsp;</span>
+					<translate>Forums</translate>
+				</router-link>
+				<app-jolticon v-if="channel" icon="chevron-right" class="breadcrumb-separator" />
+			</li>
+
+			<li v-if="channel">
+				<router-link
+					:class="{ active: !page }"
+					:to="{
+						name: 'forums.channels.view',
+						params: { name: channel.name, sort: sort },
+					}"
+				>
+					<translate class="breadcrumb-tag">Channel</translate>
+					#{{ channel.name }}
+				</router-link>
+				<app-jolticon v-if="page" icon="chevron-right" class="breadcrumb-separator" />
+			</li>
+
+			<li v-if="page">
+				<span class="active">
+					<span class="breadcrumb-tag">&nbsp;</span>
+					<template v-if="page === 'add-topic'">
+						<translate>New Topic</translate>
+					</template>
+					<template v-else-if="page === 'view-topic'">
+						<translate>View Topic</translate>
+					</template>
+				</span>
+			</li>
+		</ul>
+	</nav>
+</template>
+
+<script lang="ts" src="./breadcrumbs"></script>

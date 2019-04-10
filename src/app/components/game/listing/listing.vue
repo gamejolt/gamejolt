@@ -1,0 +1,130 @@
+<template>
+	<div class="game-listing" id="games">
+		<section class="section fill-offset nav-only" v-if="!hideFilters">
+			<div class="container">
+				<app-game-filtering-widget :filtering="listing.filteringContainer" />
+			</div>
+		</section>
+
+		<div class="container" v-if="!hideFilters">
+			<div class="clearfix">
+				<app-game-filtering-tags :filtering="listing.filteringContainer" />
+			</div>
+		</div>
+
+		<!--
+		Use ng-show so that the ui-view gets loaded in.
+	-->
+		<section class="section">
+			<div class="container-xl">
+				<app-nav-tab-list v-if="!hideSectionNav">
+					<ul>
+						<li v-if="includeFeaturedSection">
+							<router-link
+								:to="{ name: $route.name, params: { section: 'featured' } }"
+								:class="{ active: $route.params.section === 'featured' }"
+								gj-no-auto-scroll
+								v-app-track-event="`game-list:section-selector:featured`"
+							>
+								<translate>games.list.sections_selector_featured</translate>
+							</router-link>
+						</li>
+						<li>
+							<router-link
+								:to="{ name: $route.name, params: { section: null } }"
+								:class="{ active: !$route.params.section }"
+								gj-no-auto-scroll
+								v-app-track-event="`game-list:section-selector:hot`"
+							>
+								<translate>games.list.sections_selector_hot</translate>
+							</router-link>
+						</li>
+						<li>
+							<router-link
+								:to="{ name: $route.name, params: { section: 'best' } }"
+								:class="{ active: $route.params.section === 'best' }"
+								gj-no-auto-scroll
+								v-app-track-event="`game-list:section-selector:best`"
+							>
+								<translate>games.list.sections_selector_best</translate>
+							</router-link>
+						</li>
+						<li>
+							<router-link
+								:to="{ name: $route.name, params: { section: 'new' } }"
+								:class="{ active: $route.params.section === 'new' }"
+								gj-no-auto-scroll
+								v-app-track-event="`game-list:section-selector:new`"
+							>
+								<translate>games.list.sections_selector_new</translate>
+							</router-link>
+						</li>
+					</ul>
+
+					<template slot="meta">
+						<div v-if="listing.isBootstrapped" :class="{ 'text-right': !Screen.isXs }">
+							<translate v-if="listing.gamesCount === 0">
+								No games.
+							</translate>
+
+							<translate
+								v-if="listing.gamesCount > 0"
+								:translate-params="{
+									count: number(listing.gamesCount),
+									page: number(listing.currentPage),
+								}"
+								:translate-n="listing.gamesCount"
+								translate-plural="Page %{ page } of %{ count } games."
+								translate-comment="%{ page } expands to the current page of games"
+							>
+								Page %{ page } of %{ count } games.
+							</translate>
+						</div>
+					</template>
+				</app-nav-tab-list>
+
+				<template v-if="listing.isBootstrapped">
+					<template v-if="listing.gamesCount">
+						<app-loading-fade :is-loading="isLoading">
+							<slot />
+						</app-loading-fade>
+
+						<app-pagination
+							class="text-center"
+							:items-per-page="listing.perPage"
+							:total-items="listing.gamesCount"
+							:current-page="listing.currentPage"
+							@pagechange="Scroll.to('games', { animate: false })"
+						/>
+					</template>
+				</template>
+				<app-game-grid-placeholder v-else :num="16" />
+
+				<div
+					v-if="listing.isBootstrapped && !listing.gamesCount"
+					class="alert alert-notice anim-fade-in-enlarge"
+				>
+					<p>
+						<translate>No games match your filters. Zoinks!</translate>
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="section section-thin" v-if="shouldShowAds && showFooterAd">
+			<app-ad-widget size="leaderboard" pos="bottom" />
+		</section>
+	</div>
+</template>
+
+<style lang="stylus" scoped>
+@require '~styles/variables'
+
+.game-listing
+
+	.game-filtering-tags
+		margin-top: $font-size-base
+		margin-bottom: 0
+</style>
+
+<script lang="ts" src="./listing"></script>

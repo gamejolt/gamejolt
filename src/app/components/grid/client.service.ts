@@ -1,16 +1,13 @@
 import Axios from 'axios';
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { getNotificationText, Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
+import { sleep } from 'game-jolt-frontend-lib/utils/utils';
 import { Channel, Socket } from 'phoenix';
-import { Analytics } from '../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { Environment } from '../../../lib/gj-lib-client/components/environment/environment.service';
-import { Growls } from '../../../lib/gj-lib-client/components/growls/growls.service';
-import {
-	getNotificationText,
-	Notification,
-} from '../../../lib/gj-lib-client/components/notification/notification-model';
-import { Translate } from '../../../lib/gj-lib-client/components/translate/translate.service';
-import { arrayRemove } from '../../../lib/gj-lib-client/utils/array';
-import { sleep } from '../../../lib/gj-lib-client/utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Settings } from '../../../_common/settings/settings.service';
 import { store } from '../../store/index';

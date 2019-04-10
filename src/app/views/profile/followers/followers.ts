@@ -1,4 +1,3 @@
-import View from '!view!./followers.html';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import {
 	BaseRouteComponent,
@@ -8,13 +7,12 @@ import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { RouteStore, RouteStoreModule } from '../profile.store';
-import { AppFollowerList } from './../../../components/follower/list/list';
+import AppFollowerList from '../../../components/follower/list/list.vue';
 
 function getFetchUrl(route: Route) {
 	return `/web/profile/followers/@${route.params.username}`;
 }
 
-@View
 @Component({
 	name: 'RouteProfileFollowers',
 	components: {
@@ -34,9 +32,7 @@ export default class RouteProfileFollowers extends BaseRouteComponent {
 	users: User[] = [];
 
 	get routeTitle() {
-		return this.user
-			? `People following ${this.user.display_name} (@${this.user.username})`
-			: null;
+		return this.user ? `People following ${this.user.display_name} (@${this.user.username})` : null;
 	}
 
 	get loadUrl() {

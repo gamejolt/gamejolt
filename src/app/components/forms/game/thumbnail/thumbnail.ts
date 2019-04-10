@@ -1,27 +1,25 @@
-import View from '!view!./thumbnail.html';
-import { Component, Watch } from 'vue-property-decorator';
-import { AppFormControlCrop } from '../../../../../lib/gj-lib-client/components/form-vue/control/crop/crop';
-import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
-import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
+import AppFormControlCrop from 'game-jolt-frontend-lib/components/form-vue/control/crop/crop.vue';
+import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
+import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
 	FormOnLoad,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
+} from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Component, Watch } from 'vue-property-decorator';
 
 type FormModel = Game & {
 	thumb_crop: any;
 };
 
-@View
 @Component({
 	components: {
 		AppFormControlUpload,
 		AppFormControlCrop,
 	},
 })
-export class FormGameThumbnail extends BaseForm<FormModel>
+export default class FormGameThumbnail extends BaseForm<FormModel>
 	implements FormOnLoad, FormOnBeforeSubmit {
 	modelClass = Game as any;
 	resetOnSubmit = true;

@@ -1,21 +1,19 @@
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { Site } from 'game-jolt-frontend-lib/components/site/site-model';
 import Vue from 'vue';
-import { State } from 'vuex-class';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./domain.html';
-
-import { Site } from '../../../../lib/gj-lib-client/components/site/site-model';
-import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
-import { FormSiteDomain } from '../../forms/site/domain/domain';
+import { State } from 'vuex-class';
 import { Store } from '../../../store/index';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
+import FormSiteDomain from '../../forms/site/domain/domain.vue';
 
-@View
+
 @Component({
 	components: {
 		FormSiteDomain,
 	},
 })
-export class AppSitesManagePageDomain extends Vue {
+export default class AppSitesManagePageDomain extends Vue {
 	@Prop(Site) site!: Site;
 	@Prop(Game) game?: Game;
 

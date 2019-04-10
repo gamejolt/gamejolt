@@ -1,13 +1,11 @@
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./system-report-modal.html';
+import FormClientSystemReport from './system-report-form.vue';
 
-import { BaseModal } from '../../../../lib/gj-lib-client/components/modal/base';
-import { Growls } from '../../../../lib/gj-lib-client/components/growls/growls.service';
-import { Translate } from '../../../../lib/gj-lib-client/components/translate/translate.service';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { FormClientSystemReport } from './system-report-form';
 
-@View
 @Component({
 	components: {
 		AppJolticon,

@@ -1,22 +1,17 @@
-import View from '!view!./nav.html';
+import { CommentState, CommentStore } from 'game-jolt-frontend-lib/components/comment/comment-store';
 import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
+import { ReportModal } from 'game-jolt-frontend-lib/components/report/modal/modal.service';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import {
-	CommentState,
-	CommentStore,
-} from '../../../../../../lib/gj-lib-client/components/comment/comment-store';
-import { AppPopper } from '../../../../../../lib/gj-lib-client/components/popper/popper';
-import { ReportModal } from '../../../../../../lib/gj-lib-client/components/report/modal/modal.service';
-import { number } from '../../../../../../lib/gj-lib-client/vue/filters/number';
-import { AppGameModLinks } from '../../../../../components/game/mod-links/mod-links';
+import AppGameModLinks from '../../../../../components/game/mod-links/mod-links.vue';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { Store } from '../../../../../store/index';
 import { RouteStore, RouteStoreModule } from '../view.store';
 
-@View
 @Component({
 	components: {
 		AppPopper,
@@ -27,7 +22,7 @@ import { RouteStore, RouteStoreModule } from '../view.store';
 		number,
 	},
 })
-export class AppDiscoverGamesViewNav extends Vue {
+export default class AppDiscoverGamesViewNav extends Vue {
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
 

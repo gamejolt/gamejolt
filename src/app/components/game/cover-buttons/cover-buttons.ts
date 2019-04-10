@@ -1,26 +1,24 @@
-import View from '!view!./cover-buttons.html?style=./cover-buttons.styl';
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
+import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
+import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
+import { GameDownloader } from 'game-jolt-frontend-lib/components/game/downloader/downloader.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
+import { GamePackagePurchaseModal } from 'game-jolt-frontend-lib/components/game/package/purchase-modal/purchase-modal.service';
+import { GamePlayModal } from 'game-jolt-frontend-lib/components/game/play-modal/play-modal.service';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { arrayUnique } from 'game-jolt-frontend-lib/utils/array';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
-import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
-import { GameBuild } from '../../../../lib/gj-lib-client/components/game/build/build.model';
-import { GameDownloader } from '../../../../lib/gj-lib-client/components/game/downloader/downloader.service';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { GamePackage } from '../../../../lib/gj-lib-client/components/game/package/package.model';
-import { GamePackagePurchaseModal } from '../../../../lib/gj-lib-client/components/game/package/purchase-modal/purchase-modal.service';
-import { GamePlayModal } from '../../../../lib/gj-lib-client/components/game/play-modal/play-modal.service';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { arrayUnique } from '../../../../lib/gj-lib-client/utils/array';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppGameCoverButtonsBuildButtons } from './build-buttons';
+import AppGameCoverButtonsBuildButtons from './build-buttons.vue';
 
-@View
 @Component({
 	components: {
 		AppJolticon,
 	},
 })
-export class AppGameCoverButtons extends Vue {
+export default class AppGameCoverButtons extends Vue {
 	@Prop(Game)
 	game!: Game;
 

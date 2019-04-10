@@ -8,7 +8,7 @@ import { routeDashLinking } from './linking/linking.route';
 export const routeDash: RouteConfig = {
 	name: 'dashboard',
 	path: '/dashboard',
-	component: () => import(/* webpackChunkName: "routeDash" */ './dashboard'),
+	component: () => import(/* webpackChunkName: "routeDash" */ './dashboard.vue'),
 	children: [
 		routeDashAccount,
 		routeDashAccountMobileNav,

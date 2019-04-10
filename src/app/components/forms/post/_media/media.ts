@@ -1,19 +1,19 @@
-import View from '!view!./media.html?style=./media.styl';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { AppFormControlUpload } from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload';
-import { AppForm } from 'game-jolt-frontend-lib/components/form-vue/form';
+import AppFormControlUploadTS from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload';
+import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
+import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
 import {
 	BaseForm,
 	FormOnSubmit,
 	FormOnSubmitSuccess,
 } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
-import { AppLoadingFade } from 'game-jolt-frontend-lib/components/loading/fade/fade';
+import AppLoadingFade from 'game-jolt-frontend-lib/components/loading/fade/fade.vue';
 import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
-import { AppScrollScroller } from 'game-jolt-frontend-lib/components/scroll/scroller/scroller';
+import AppScrollScroller from 'game-jolt-frontend-lib/components/scroll/scroller/scroller.vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
-import { AppFormPostMediaItem } from './item/item';
+import AppFormPostMediaItem from './item/item.vue';
 
 const draggable = require('vuedraggable');
 
@@ -22,7 +22,6 @@ interface FormModel {
 	_progress: ProgressEvent | null;
 }
 
-@View
 @Component({
 	components: {
 		draggable,
@@ -33,7 +32,7 @@ interface FormModel {
 		AppLoadingFade,
 	},
 })
-export class AppFormPostMedia extends BaseForm<FormModel>
+export default class AppFormPostMedia extends BaseForm<FormModel>
 	implements FormOnSubmit, FormOnSubmitSuccess {
 	@Prop(FiresidePost)
 	post!: FiresidePost;
@@ -58,7 +57,7 @@ export class AppFormPostMedia extends BaseForm<FormModel>
 
 	$refs!: {
 		form: AppForm;
-		upload: AppFormControlUpload;
+		upload: AppFormControlUploadTS;
 	};
 
 	@Emit('upload')
@@ -96,7 +95,11 @@ export class AppFormPostMedia extends BaseForm<FormModel>
 
 	onDragOver(e: DragEvent) {
 		// Don't do anything if not a file drop.
-		if (!e.dataTransfer.items.length || e.dataTransfer.items[0].kind !== 'file') {
+		if (
+			!e.dataTransfer ||
+			!e.dataTransfer.items.length ||
+			e.dataTransfer.items[0].kind !== 'file'
+		) {
 			return;
 		}
 
@@ -111,7 +114,11 @@ export class AppFormPostMedia extends BaseForm<FormModel>
 	// File select resulting from a drop onto the input.
 	async onDrop(e: DragEvent) {
 		// Don't do anything if not a file drop.
-		if (!e.dataTransfer.items.length || e.dataTransfer.items[0].kind !== 'file') {
+		if (
+			!e.dataTransfer ||
+			!e.dataTransfer.items.length ||
+			e.dataTransfer.items[0].kind !== 'file'
+		) {
 			return;
 		}
 

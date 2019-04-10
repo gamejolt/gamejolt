@@ -4,9 +4,7 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const cluster = require('cluster');
-const {
-	createBundleRenderer
-} = require('vue-server-renderer');
+const { createBundleRenderer } = require('vue-server-renderer');
 
 // We will restart each worker after around this many requests.
 const RestartRequestCount = 250;
@@ -16,7 +14,8 @@ function resolve(file) {
 }
 
 const numWorkers = require('os').cpus().length;
-const isProd = process.env.NODE_ENV === 'production';
+const isProd = process.env.NODE_ENV === 'production' || argv.production;
+const buildDir = process.env.BUNDLE_DIR || resolve(path.join('..', 'build'));
 
 if (cluster.isMaster) {
 	console.log(`Master ${process.pid} is running`);
@@ -34,8 +33,8 @@ if (cluster.isMaster) {
 	console.log(`Worker ${process.pid} started`);
 
 	const section = argv.section || 'app';
-	const serverBuildPath = isProd ? '../../build/prod-server/' : '../build/dev-server/';
-	const clientBuildPath = isProd ? '../../build/prod/' : '../build/dev/';
+	const serverBuildPath = path.join(buildDir, isProd ? 'prod-server' : 'dev-server');
+	const clientBuildPath = path.join(buildDir, isProd ? 'prod' : 'dev');
 
 	const serverBundle = require(path.join(
 		serverBuildPath,
@@ -52,9 +51,10 @@ if (cluster.isMaster) {
 	const renderer = createBundleRenderer(serverBundle, {
 		runInNewContext: true,
 		template: fs.readFileSync(resolve('./index-ssr.html'), 'utf-8'),
-		// clientManifest,
+		clientManifest,
 	});
 
+	// If testing ssr prod build locally, remove this if so that static assets are served properly.
 	if (!isProd) {
 		function serve(path) {
 			return express.static(resolve(path), {

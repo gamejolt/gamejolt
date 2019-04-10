@@ -1,19 +1,17 @@
-import View from '!view!./styleguide.html';
-import { AppContentEditorStyleguide } from 'game-jolt-frontend-lib/components/content/content-editor/content-editor-styleguide';
-import { Component } from 'vue-property-decorator';
-import { AppButtonStyleguide } from '../../../lib/gj-lib-client/components/button/button-styleguide';
-import { AppJolticonsStyleguide } from '../../../lib/gj-lib-client/components/jolticons/jolticons-styleguide';
-import { AppListGroupStyleguide } from '../../../lib/gj-lib-client/components/list-group/list-group-styleguide';
-import { AppProgressBarStyleguide } from '../../../lib/gj-lib-client/components/progress/bar/bar-styleguide';
+import AppButtonStyleguide from 'game-jolt-frontend-lib/components/button/button-styleguide.vue';
+import AppContentEditorStyleguide from 'game-jolt-frontend-lib/components/content/content-editor/content-editor-styleguide.vue';
+import AppJolticonsStyleguide from 'game-jolt-frontend-lib/components/jolticons/jolticons-styleguide.vue';
+import AppListGroupStyleguide from 'game-jolt-frontend-lib/components/list-group/list-group-styleguide.vue';
+import AppProgressBarStyleguide from 'game-jolt-frontend-lib/components/progress/bar/bar-styleguide.vue';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../lib/gj-lib-client/components/route/route-component';
-import { AppScrollAffix } from '../../../lib/gj-lib-client/components/scroll/affix/affix';
-import { AppScrollTo } from '../../../lib/gj-lib-client/components/scroll/to/to.directive';
-import { User } from '../../../lib/gj-lib-client/components/user/user.model';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
+import { AppScrollTo } from 'game-jolt-frontend-lib/components/scroll/to/to.directive';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { Component } from 'vue-property-decorator';
 
-@View
 @Component({
 	name: 'RouteStyleguide',
 	components: {

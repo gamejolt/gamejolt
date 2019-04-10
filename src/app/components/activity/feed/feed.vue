@@ -1,0 +1,96 @@
+<template>
+	<!--
+	We need to refresh the whole feed anytime it's cleared or massively changed.
+	Basically anytime the feed state's items are replaced so that the references
+	to them get picked up again.
+-->
+	<div class="activity-feed" :key="feed.id">
+		<template v-if="newCount > 0">
+			<app-expand v-if="!feed.isLoadingNew" when animate-initial>
+				<app-activity-feed-new-button @click="loadNew()">
+					<translate
+						:translate-n="newCount"
+						:translate-params="{ count: number(newCount) }"
+						translate-plural="%{count} new items"
+					>
+						1 new item
+					</translate>
+				</app-activity-feed-new-button>
+			</app-expand>
+			<app-loading v-else class="loading-centered" />
+		</template>
+
+		<!-- Need the div so that we can target the last child in teh container. -->
+		<div>
+			<div class="-item" v-for="(item, i) of feed.items" :key="item.id">
+				<app-activity-feed-item :item="item" />
+
+				<div
+					class="-ad-container well fill-offset full-bleed-xs text-center"
+					v-if="shouldShowAd(i)"
+				>
+					<app-ad-widget size="rectangle" pos="bottom" />
+					<div class="-ad-label text-muted small">
+						<translate>Advertisement</translate>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--
+		If they are viewing a slice of the state, then we don't want to allow loading more.
+	-->
+		<template v-if="!feed.slice">
+			<div v-if="shouldShowLoadMore" class="page-cut">
+				<app-button
+					:to="GJ_IS_SSR ? { query: { feed_last_id: lastPostId } } : undefined"
+					trans
+					@click.prevent="loadMoreButton"
+					v-app-track-event="`activity-feed:more`"
+				>
+					<translate>Load More</translate>
+				</app-button>
+			</div>
+
+			<app-loading v-if="feed.isLoadingMore" class="-bottom-loading loading-centered" />
+
+			<div class="alert full-bleed-xs" v-if="feed.reachedEnd">
+				<translate>
+					A wild Snorlax blocks your path. Looks like it's the end of this feed.
+				</translate>
+			</div>
+		</template>
+	</div>
+</template>
+
+<style lang="stylus" scoped>
+@require './variables';
+@require '~styles-lib/mixins';
+
+.-ad-container {
+  margin-bottom: 0;
+
+  @media $media-sm-up {
+    margin-bottom: $-item-padding-v;
+  }
+}
+
+.-ad-label {
+  margin-top: 5px;
+}
+
+.-bottom-loading {
+  margin-top: $-item-padding-v;
+
+  @media $media-sm-up {
+    margin-top: 0;
+  }
+}
+
+// Don't show the split for the last item in the list.
+.-item:last-child >>> .timeline-list-item-split {
+  display: none;
+}
+</style>
+
+<script lang="ts" src="./feed"></script>

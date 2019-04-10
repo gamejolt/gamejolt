@@ -1,22 +1,20 @@
-import View from '!view!./description.html?style=./description.styl';
 import { ContentContainer } from 'game-jolt-frontend-lib/components/content/content-container';
 import ContentWriter from 'game-jolt-frontend-lib/components/content/content-writer';
-import { AppFormControlContent } from 'game-jolt-frontend-lib/components/form-vue/control/content/content';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import AppFormControlContent from 'game-jolt-frontend-lib/components/form-vue/control/content/content.vue';
+import { BaseForm } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import AppForm from 'game-jolt-frontend-lib/components/form-vue/form.vue';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { AppExpand } from '../../../../../lib/gj-lib-client/components/expand/expand';
-import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
-import { BaseForm } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
 import { AppGamePerms } from '../../../game/perms/perms';
-import { AppDashGameWizardControls } from '../wizard-controls/wizard-controls';
-import { AppFormGameDescriptionTags } from './tags/tags';
+import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
+import AppFormGameDescriptionTags from './tags/tags.vue';
 
 type DescriptionFormModel = Game & {
 	autotag?: string;
 	autotag_skip?: boolean;
 };
 
-@View
 @Component({
 	components: {
 		AppExpand,
@@ -26,7 +24,7 @@ type DescriptionFormModel = Game & {
 		AppFormControlContent,
 	},
 })
-export class FormGameDescription extends BaseForm<DescriptionFormModel> {
+export default class FormGameDescription extends BaseForm<DescriptionFormModel> {
 	@Prop(Array)
 	tags!: string[];
 

@@ -1,16 +1,14 @@
-import View from '!view!./intent.html';
-import { Component } from 'vue-property-decorator';
-import { PayloadError } from '../../../lib/gj-lib-client/components/payload/payload-service';
+import { PayloadError } from 'game-jolt-frontend-lib/components/payload/payload-service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../lib/gj-lib-client/components/route/route-component';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Component } from 'vue-property-decorator';
 
 const ActionUnsubscribeNotification = 'unsubscribe-notification';
 const ActionUnsubscribeGJ = 'unsubscribe-gj';
 const ValidActions = [ActionUnsubscribeNotification, ActionUnsubscribeGJ];
 
-@View
 @Component({
 	name: 'RouteIntent',
 })

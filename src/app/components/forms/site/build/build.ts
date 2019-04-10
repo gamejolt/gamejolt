@@ -1,25 +1,22 @@
-import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./build.html?style=./build.styl';
-
-import { SiteBuild } from '../../../../../lib/gj-lib-client/components/site/build/build-model';
-import { Site } from '../../../../../lib/gj-lib-client/components/site/site-model';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
+import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
 import {
 	BaseForm,
 	FormOnInit,
-	FormOnSubmit,
 	FormOnLoad,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
-import { AppForm } from '../../../../../lib/gj-lib-client/components/form-vue/form';
+	FormOnSubmit,
+} from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { SiteBuild } from 'game-jolt-frontend-lib/components/site/build/build-model';
+import { Site } from 'game-jolt-frontend-lib/components/site/site-model';
+import { Component, Prop } from 'vue-property-decorator';
 
-@View
 @Component({
 	components: {
 		AppFormControlUpload,
 	},
 })
-export class FormDashSiteBuild extends BaseForm<SiteBuild>
+export default class FormDashSiteBuild extends BaseForm<SiteBuild>
 	implements FormOnInit, FormOnLoad, FormOnSubmit {
 	modelClass = SiteBuild;
 	resetOnSubmit = true;

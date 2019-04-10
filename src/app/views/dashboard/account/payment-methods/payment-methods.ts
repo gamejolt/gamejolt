@@ -1,17 +1,12 @@
-import View from '!view!./payment-methods.html';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { PaymentSource } from 'game-jolt-frontend-lib/components/payment-source/payment-source.model';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
 import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { PaymentSource } from '../../../../../lib/gj-lib-client/components/payment-source/payment-source.model';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../lib/gj-lib-client/components/route/route-component';
-import { arrayRemove } from '../../../../../lib/gj-lib-client/utils/array';
-import { AppUserPaymentSourceCard } from '../../../../components/user/payment-source/card/card';
+import AppUserPaymentSourceCard from '../../../../components/user/payment-source/card/card.vue';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
-@View
 @Component({
 	name: 'RouteDashAccountPaymentMethods',
 	components: {

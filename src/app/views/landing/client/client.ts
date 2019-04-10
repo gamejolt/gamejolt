@@ -1,21 +1,16 @@
-import View from '!view!./client.html?style=./client.styl';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GamePackagePayloadModel } from 'game-jolt-frontend-lib/components/game/package/package-payload.model';
+import { HistoryTick } from 'game-jolt-frontend-lib/components/history-tick/history-tick-service';
+import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppScrollTo } from 'game-jolt-frontend-lib/components/scroll/to/to.directive';
+import { AppThemeSvg } from 'game-jolt-frontend-lib/components/theme/svg/svg';
 import { Component } from 'vue-property-decorator';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Device } from '../../../../lib/gj-lib-client/components/device/device.service';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { GamePackagePayloadModel } from '../../../../lib/gj-lib-client/components/game/package/package-payload.model';
-import { HistoryTick } from '../../../../lib/gj-lib-client/components/history-tick/history-tick-service';
-import { Navigate } from '../../../../lib/gj-lib-client/components/navigate/navigate.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../lib/gj-lib-client/components/route/route-component';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppScrollTo } from '../../../../lib/gj-lib-client/components/scroll/to/to.directive';
-import { AppThemeSvg } from '../../../../lib/gj-lib-client/components/theme/svg/svg';
 
-@View
 @Component({
 	name: 'RouteLandingClient',
 	components: {

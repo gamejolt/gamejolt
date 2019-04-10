@@ -1,15 +1,12 @@
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
+import { ForumTopic } from 'game-jolt-frontend-lib/components/forum/topic/topic.model';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./upvote-widget.html';
 
-import { ForumTopic } from '../../../../../lib/gj-lib-client/components/forum/topic/topic.model';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
-import { AppAuthRequired } from '../../../../../lib/gj-lib-client/components/auth/auth-required-directive.vue';
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTooltip } from '../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-
-@View
 @Component({
 	components: {
 		AppJolticon,
@@ -23,7 +20,7 @@ import { AppTrackEvent } from '../../../../../lib/gj-lib-client/components/analy
 		number,
 	},
 })
-export class AppForumTopicUpvoteWidget extends Vue {
+export default class AppForumTopicUpvoteWidget extends Vue {
 	@Prop(ForumTopic) topic!: ForumTopic;
 
 	get canUpvote() {

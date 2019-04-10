@@ -1,13 +1,11 @@
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
+import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
+import { Sellable } from 'game-jolt-frontend-lib/components/sellable/sellable.model';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./edit-modal.html';
+import FormGamePackage from '../../../forms/game/package/package.vue';
 
-import { BaseModal } from '../../../../../lib/gj-lib-client/components/modal/base';
-import { GamePackage } from '../../../../../lib/gj-lib-client/components/game/package/package.model';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { Sellable } from '../../../../../lib/gj-lib-client/components/sellable/sellable.model';
-import { FormGamePackage } from '../../../forms/game/package/package';
 
-@View
 @Component({
 	components: {
 		FormGamePackage,

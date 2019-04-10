@@ -1,21 +1,19 @@
-import View from '!view!./overview.html?style=./overview.styl';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
 import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
+import { UserGameScore } from 'game-jolt-frontend-lib/components/user/game-score/game-score.model';
+import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { GameScoreTable } from '../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ago';
-import { UserGameScore } from '../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
-import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { AppScoreList } from '../list/list';
-import { AppScoreboardSelector } from '../scoreboard-selector/scoreboard-selector';
+import AppScoreList from '../list/list.vue';
+import AppScoreboardSelector from '../scoreboard-selector/scoreboard-selector.vue';
 
-@View
 @Component({
 	components: {
 		AppTimeAgo,
@@ -27,7 +25,7 @@ import { AppScoreboardSelector } from '../scoreboard-selector/scoreboard-selecto
 		number,
 	},
 })
-export class AppScoreOverview extends Vue {
+export default class AppScoreOverview extends Vue {
 	@Prop(Game)
 	game!: Game;
 	@Prop(Object)

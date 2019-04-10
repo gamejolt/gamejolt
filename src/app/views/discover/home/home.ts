@@ -1,35 +1,24 @@
-import View from '!view!./home.html';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import { Component } from 'vue-property-decorator';
-import { Location } from 'vue-router';
-import { State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { Environment } from '../../../../lib/gj-lib-client/components/environment/environment.service';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { Meta } from '../../../../lib/gj-lib-client/components/meta/meta-service';
+import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../lib/gj-lib-client/components/route/route-component';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
-import { AppGameGrid } from '../../../components/game/grid/grid';
-import { AppGameGridPlaceholder } from '../../../components/game/grid/placeholder/placeholder';
+import AppGameGrid from '../../../components/game/grid/grid.vue';
+import AppGameGridPlaceholder from '../../../components/game/grid/placeholder/placeholder.vue';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Store } from '../../../store/index';
-import { AppDiscoverHomeBanner } from './_banner/banner';
-import { AppDiscoverHomeCommunities } from './_communities/communities';
-import { AppDiscoverHomeTags } from './_tags/tags';
+import AppDiscoverHomeBanner from './_banner/banner.vue';
+import AppDiscoverHomeCommunities from './_communities/communities.vue';
+import AppDiscoverHomeTags from './_tags/tags.vue';
 
-export interface DiscoverRow {
-	title: string;
-	desc?: string;
-	url: Location;
-	eventLabel: string;
-	games: string;
-}
-
-@View
 @Component({
 	name: 'RouteDiscoverHome',
 	components: {

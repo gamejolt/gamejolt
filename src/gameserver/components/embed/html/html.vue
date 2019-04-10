@@ -1,0 +1,14 @@
+<template>
+	<iframe
+		type="text/html"
+		style="overflow: none;"
+		:width="embedWidth"
+		:height="embedHeight"
+		:src="url"
+		frameborder="0"
+		scrolling="no"
+		allowfullscreen
+	/>
+</template>
+
+<script lang="ts" src="./html"></script>

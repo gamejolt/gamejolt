@@ -1,17 +1,12 @@
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
+import { GamePlaylist } from 'game-jolt-frontend-lib/components/game-playlist/game-playlist.model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
+import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { VuexAction, VuexModule, VuexMutation, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
 import { namespace } from 'vuex-class';
-import { Analytics } from '../../lib/gj-lib-client/components/analytics/analytics.service';
-import { GamePlaylist } from '../../lib/gj-lib-client/components/game-playlist/game-playlist.model';
-import { Game } from '../../lib/gj-lib-client/components/game/game.model';
-import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
-import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import { Scroll } from '../../lib/gj-lib-client/components/scroll/scroll.service';
-import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
-import {
-	VuexAction,
-	VuexModule,
-	VuexMutation,
-	VuexStore,
-} from '../../lib/gj-lib-client/utils/vuex';
 import { GamePlaylistSaveModal } from '../components/game-playlist/save-modal/save-modal.service';
 import { GameCollection } from '../components/game/collection/collection.model';
 import { router } from '../views';

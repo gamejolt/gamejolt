@@ -1,13 +1,11 @@
-import View from '!view!./tags.html?style=./tags.styl';
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';
 import { TagsInfo } from '../../tag/tags-info.service';
 import { GameFilteringContainer } from './container';
 
-@View
 @Component({})
-export class AppGameFilteringTags extends Vue {
+export default class AppGameFilteringTags extends Vue {
 	@Prop(Object)
 	filtering!: GameFilteringContainer;
 

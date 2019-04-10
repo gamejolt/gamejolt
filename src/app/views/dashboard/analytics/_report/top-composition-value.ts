@@ -1,19 +1,17 @@
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./top-composition.html';
 
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
-import { currency } from '../../../../../lib/gj-lib-client/vue/filters/currency';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
 
-@View
 @Component({
 	filters: {
 		number,
 		currency,
 	},
 })
-export class AppAnalyticsReportTopCompositionValue extends Vue {
+export default class AppAnalyticsReportTopCompositionValue extends Vue {
 	@Prop(Object) reportData!: any;
 
 	readonly Screen = Screen;

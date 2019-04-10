@@ -1,13 +1,8 @@
-import View from '!view!./legal.html';
+import { Ads, AdSettingsContainer } from 'game-jolt-frontend-lib/components/ad/ads.service';
+import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { Component } from 'vue-property-decorator';
-import { Ads, AdSettingsContainer } from '../../../lib/gj-lib-client/components/ad/ads.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../lib/gj-lib-client/components/route/route-component';
-import { User } from '../../../lib/gj-lib-client/components/user/user.model';
 
-@View
 @Component({
 	name: 'RouteLegal',
 })

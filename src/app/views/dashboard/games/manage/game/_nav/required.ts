@@ -1,11 +1,8 @@
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./required.html?style=./required.styl';
 
-import { AppJolticon } from '../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-
-@View
 @Component({
 	components: {
 		AppJolticon,
@@ -14,6 +11,6 @@ import { AppTooltip } from '../../../../../../../lib/gj-lib-client/components/to
 		AppTooltip,
 	},
 })
-export class AppManageGameNavRequired extends Vue {
+export default class AppManageGameNavRequired extends Vue {
 	@Prop(Boolean) isComplete?: boolean;
 }

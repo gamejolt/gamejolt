@@ -1,20 +1,18 @@
-import View from '!view!./notification-popover.html?style=./notification-popover.styl';
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive.vue';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
 import { Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';
-import { AppPopper } from 'game-jolt-frontend-lib/components/popper/popper';
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue'
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { AppLoading } from 'game-jolt-frontend-lib/vue/components/loading/loading';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue'
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
 import { Store } from '../../../store';
-import { AppActivityFeed } from '../../activity/feed/feed';
+import AppActivityFeed from '../../activity/feed/feed.vue';
 import { ActivityFeedView } from '../../activity/feed/view';
 
-@View
 @Component({
 	components: {
 		AppPopper,
@@ -26,7 +24,7 @@ import { ActivityFeedView } from '../../activity/feed/view';
 		AppTooltip,
 	},
 })
-export class AppShellNotificationPopover extends Vue {
+export default class AppShellNotificationPopover extends Vue {
 	@State
 	notificationState!: Store['notificationState'];
 

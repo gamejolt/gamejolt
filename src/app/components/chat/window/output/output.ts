@@ -1,17 +1,15 @@
-import View from '!view!./output.html?style=./output.styl';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import AppScrollScroller from 'game-jolt-frontend-lib/components/scroll/scroller/scroller.vue';
+import { date } from 'game-jolt-frontend-lib/vue/filters/date';
 import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppScrollScroller } from '../../../../../lib/gj-lib-client/components/scroll/scroller/scroller';
-import { date } from '../../../../../lib/gj-lib-client/vue/filters/date';
 import { ChatClient } from '../../client';
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
-import { AppChatWindowOutputItem } from './item/item';
+import AppChatWindowOutputItem from './item/item.vue';
 
-@View
 @Component({
 	components: {
 		AppChatWindowOutputItem,
@@ -21,7 +19,7 @@ import { AppChatWindowOutputItem } from './item/item';
 		date,
 	},
 })
-export class AppChatWindowOutput extends Vue {
+export default class AppChatWindowOutput extends Vue {
 	@Prop(ChatRoom)
 	room!: ChatRoom;
 
@@ -58,11 +56,14 @@ export class AppChatWindowOutput extends Vue {
 		// We skip checking the scroll if the element isn't scrollable yet.
 		// This'll be the case if the height of the element is less than its
 		// scroll height.
-		if (this.$el.scrollHeight < this.$el.offsetHeight) {
+		if (this.$el.scrollHeight < (this.$el as HTMLElement).offsetHeight) {
 			return;
 		}
 
-		if (this.$el.scrollHeight - (this.$el.scrollTop + this.$el.offsetHeight) > 30) {
+		if (
+			this.$el.scrollHeight - (this.$el.scrollTop + (this.$el as HTMLElement).offsetHeight) >
+			30
+		) {
 			this.shouldScroll = false;
 		} else {
 			this.shouldScroll = true;

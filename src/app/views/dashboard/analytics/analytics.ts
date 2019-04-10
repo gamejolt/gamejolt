@@ -1,27 +1,26 @@
-import View from '!view!./analytics.html';
-import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { Api } from '../../../../lib/gj-lib-client/components/api/api.service';
-import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { GamePackage } from '../../../../lib/gj-lib-client/components/game/package/package.model';
-import { GameRelease } from '../../../../lib/gj-lib-client/components/game/release/release.model';
-import { AppGraph } from '../../../../lib/gj-lib-client/components/graph/graph';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
+import { GameRelease } from 'game-jolt-frontend-lib/components/game/release/release.model';
+import AppGraph from 'game-jolt-frontend-lib/components/graph/graph.vue';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../lib/gj-lib-client/components/route/route-component';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppScrollAffix } from '../../../../lib/gj-lib-client/components/scroll/affix/affix';
-import { AppScrollTo } from '../../../../lib/gj-lib-client/components/scroll/to/to.directive';
-import { User } from '../../../../lib/gj-lib-client/components/user/user.model';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { currency } from '../../../../lib/gj-lib-client/vue/filters/currency';
-import { date as dateFilter } from '../../../../lib/gj-lib-client/vue/filters/date';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { AppPageHeaderControls } from '../../../components/page-header/controls/controls';
-import { AppPageHeader } from '../../../components/page-header/page-header';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
+import { AppScrollTo } from 'game-jolt-frontend-lib/components/scroll/to/to.directive';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
+import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
+import { date as dateFilter } from 'game-jolt-frontend-lib/vue/filters/date';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
+import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { SiteAnalyticsReport } from '../../../components/site-analytics/report-service';
 import {
 	Metric,
@@ -45,12 +44,13 @@ import {
 	SiteAnalytics,
 } from '../../../components/site-analytics/site-analytics-service';
 import { Store } from '../../../store/index';
-import { AppAnalyticsReportRatingBreakdown } from './_report/rating-breakdown';
-import { AppAnalyticsReportSimpleStat } from './_report/simple-stat';
-import { AppAnalyticsReportTopComposition } from './_report/top-composition';
-import { AppAnalyticsReportTopCompositionValue } from './_report/top-composition-value';
+import AppAnalyticsReportRatingBreakdown from './_report/rating-breakdown.vue';
+import AppAnalyticsReportSimpleStat from './_report/simple-stat.vue';
+import {
+	default as AppAnalyticsReportTopComposition,
+	default as AppAnalyticsReportTopCompositionValue,
+} from './_report/top-composition.vue';
 
-@View
 @Component({
 	name: 'RouteDashAnalytics',
 	components: {
@@ -126,7 +126,7 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 
 		const appUser = this.app.user!;
 		if (this.$route.query.viewAs) {
-			this.viewAs = parseInt(this.$route.query.viewAs, 10);
+			this.viewAs = parseInt(this.$route.query.viewAs as string, 10);
 		}
 
 		if (!this.viewAs) {
@@ -139,7 +139,7 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 		this.release = $payload.release ? new GameRelease($payload.release) : null;
 		this.partnerMode =
 			(!this.user || this.user.id !== this.viewAs) &&
-			!!parseInt(this.$route.query.partner, 10);
+			!!parseInt(this.$route.query.partner as string, 10);
 
 		this.period = (this.$route.query['period'] as any) || 'monthly';
 		this.resource = this.$route.params['resource'] as any;
@@ -199,8 +199,8 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 				year = date.getFullYear();
 				month = date.getMonth();
 			} else {
-				year = parseInt(this.$route.query['year'], 10);
-				month = parseInt(this.$route.query['month'], 10);
+				year = parseInt(this.$route.query['year'] as string, 10);
+				month = parseInt(this.$route.query['month'] as string, 10);
 			}
 
 			this.startTime = new Date(year, month, 1).getTime();

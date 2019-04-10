@@ -1,14 +1,11 @@
+import { AppFocusWhen } from 'game-jolt-frontend-lib/components/form-vue/focus-when.directive';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
-import { State } from 'vuex-class';
 import { Component } from 'vue-property-decorator';
-import View from '!view!./send.html?style=./send.styl';
-
-import { AppJolticon } from '../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppFocusWhen } from '../../../../../lib/gj-lib-client/components/form-vue/focus-when.directive';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import { State } from 'vuex-class';
 import { ChatClient } from '../../client';
 
-@View
 @Component({
 	components: {
 		AppJolticon,
@@ -17,7 +14,7 @@ import { ChatClient } from '../../client';
 		AppFocusWhen,
 	},
 })
-export class AppChatWindowSend extends Vue {
+export default class AppChatWindowSend extends Vue {
 	@State chat!: ChatClient;
 
 	message = '';

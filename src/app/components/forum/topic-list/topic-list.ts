@@ -1,18 +1,16 @@
+import { ForumTopic } from 'game-jolt-frontend-lib/components/forum/topic/topic.model';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
+import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./topic-list.html?style=./topic-list.styl';
+import AppForumTopicUpvoteWidget from '../topic/upvote-widget/upvote-widget.vue';
 
-import { ForumTopic } from '../../../../lib/gj-lib-client/components/forum/topic/topic.model';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { AppTimeAgo } from '../../../../lib/gj-lib-client/components/time/ago/ago';
-import { AppUserAvatar } from '../../../../lib/gj-lib-client/components/user/user-avatar/user-avatar';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { number } from '../../../../lib/gj-lib-client/vue/filters/number';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppForumTopicUpvoteWidget } from '../topic/upvote-widget/upvote-widget';
-import { AppUserCardHover } from '../../../../lib/gj-lib-client/components/user/card/hover/hover';
 
-@View
 @Component({
 	components: {
 		AppJolticon,
@@ -28,7 +26,7 @@ import { AppUserCardHover } from '../../../../lib/gj-lib-client/components/user/
 		number,
 	},
 })
-export class AppForumTopicList extends Vue {
+export default class AppForumTopicList extends Vue {
 	@Prop(Array) topics!: ForumTopic[];
 	@Prop(String) sort!: string;
 	@Prop(Boolean) useUpvotes!: boolean;

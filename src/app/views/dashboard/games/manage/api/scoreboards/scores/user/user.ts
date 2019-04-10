@@ -1,21 +1,19 @@
-import View from '!view!./user.html';
-import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../../../../../lib/gj-lib-client/components/api/api.service';
-import { GameScoreTable } from '../../../../../../../../../lib/gj-lib-client/components/game/score-table/score-table.model';
-import { Growls } from '../../../../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { ModalConfirm } from '../../../../../../../../../lib/gj-lib-client/components/modal/confirm/confirm-service';
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from '../../../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { AppTooltip } from '../../../../../../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { UserGameScore } from '../../../../../../../../../lib/gj-lib-client/components/user/game-score/game-score.model';
-import { User } from '../../../../../../../../../lib/gj-lib-client/components/user/user.model';
-import { AppJolticon } from '../../../../../../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
+} from 'game-jolt-frontend-lib/components/route/route-component';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { UserGameScore } from 'game-jolt-frontend-lib/components/user/game-score/game-score.model';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../../../../manage.store';
-import { AppManageGameListScores } from '../../_list-scores/list-scores';
+import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 
-@View
 @Component({
 	name: 'RouteDashGamesManageApiScoreboardsScoresUser',
 	components: {

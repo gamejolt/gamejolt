@@ -1,18 +1,13 @@
-import View from '!view!./settings.html?style=./settings.styl';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
+import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Component } from 'vue-property-decorator';
-import { AppExpand } from '../../../../../../../lib/gj-lib-client/components/expand/expand';
-import { Game } from '../../../../../../../lib/gj-lib-client/components/game/game.model';
-import { Growls } from '../../../../../../../lib/gj-lib-client/components/growls/growls.service';
-import { BaseRouteComponent } from '../../../../../../../lib/gj-lib-client/components/route/route-component';
-import { Scroll } from '../../../../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import {
-	AppState,
-	AppStore,
-} from '../../../../../../../lib/gj-lib-client/vue/services/app/app-store';
-import { FormGameSettings } from '../../../../../../components/forms/game/settings/settings';
+import FormGameSettings from '../../../../../../components/forms/game/settings/settings.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
-@View
 @Component({
 	name: 'RouteDashGamesManageGameSettings',
 	components: {

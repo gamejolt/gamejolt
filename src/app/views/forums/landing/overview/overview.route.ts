@@ -3,7 +3,7 @@ import { RouteConfig } from 'vue-router';
 export const routeForumsLandingOverview: RouteConfig = {
 	name: 'forums.landing.overview',
 	path: '/forums',
-	component: () => import(/* webpackChunkName: "routeForumsLanding" */ './overview'),
+	component: () => import(/* webpackChunkName: "routeForumsLanding" */ './overview.vue'),
 	children: [
 		{
 			path: '/community/forums',

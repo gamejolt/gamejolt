@@ -1,26 +1,21 @@
-import View from '!view!./intro.html?style=./intro.styl';
+import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
+import { EventBus, EventBusDeregister } from 'game-jolt-frontend-lib/components/event-bus/event-bus.service';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import { sleep } from 'game-jolt-frontend-lib/utils/utils';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
+import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
-import { Connection } from '../../../../lib/gj-lib-client/components/connection/connection-service';
-import {
-	EventBus,
-	EventBusDeregister,
-} from '../../../../lib/gj-lib-client/components/event-bus/event-bus.service';
-import { AppExpand } from '../../../../lib/gj-lib-client/components/expand/expand';
-import { sleep } from '../../../../lib/gj-lib-client/utils/utils';
-import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { AppState, AppStore } from '../../../../lib/gj-lib-client/vue/services/app/app-store';
 import { Client } from '../../../../_common/client/client.service';
 import './intro-global.styl';
 
-@View
 @Component({
 	components: {
 		AppExpand,
 		AppLoading,
 	},
 })
-export class AppClientIntro extends Vue {
+export default class AppClientIntro extends Vue {
 	@AppState
 	user!: AppStore['user'];
 

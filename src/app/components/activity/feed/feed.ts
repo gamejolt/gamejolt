@@ -1,21 +1,20 @@
-import View from '!view!./feed.html?style=./feed.styl';
-import { AppAdWidget } from 'game-jolt-frontend-lib/components/ad/widget/widget';
+import { Ads } from 'game-jolt-frontend-lib/components/ad/ads.service';
+import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
-import { AppExpand } from 'game-jolt-frontend-lib/components/expand/expand';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import { Ruler } from 'game-jolt-frontend-lib/components/ruler/ruler-service';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import 'rxjs/add/operator/sampleTime';
 import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Emit, Prop, Provide, Watch } from 'vue-property-decorator';
-import { Ads } from '../../../../lib/gj-lib-client/components/ad/ads.service';
-import { AppTrackEvent } from '../../../../lib/gj-lib-client/components/analytics/track-event.directive.vue';
-import { Ruler } from '../../../../lib/gj-lib-client/components/ruler/ruler-service';
-import { Screen } from '../../../../lib/gj-lib-client/components/screen/screen-service';
-import { Scroll } from '../../../../lib/gj-lib-client/components/scroll/scroll.service';
-import { AppLoading } from '../../../../lib/gj-lib-client/vue/components/loading/loading';
-import { AppActivityFeedItem } from './item/item';
-import { AppActivityFeedNewButton } from './new-button/new-button';
+import AppActivityFeedItem from './item/item.vue';
+import AppActivityFeedNewButton from './new-button/new-button.vue';
 import { ActivityFeedView } from './view';
 
 /**
@@ -28,7 +27,6 @@ const LoadMoreOffset = Screen.windowHeight * 2;
  */
 const ScrollSampleTime = 1000;
 
-@View
 @Component({
 	components: {
 		AppLoading,
@@ -41,7 +39,7 @@ const ScrollSampleTime = 1000;
 		AppTrackEvent,
 	},
 })
-export class AppActivityFeed extends Vue {
+export default class AppActivityFeed extends Vue {
 	@Provide('feed')
 	@Prop(ActivityFeedView)
 	feed!: ActivityFeedView;

@@ -1,17 +1,14 @@
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
+import { Site } from 'game-jolt-frontend-lib/components/site/site-model';
+import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./manage-page.html?style=./manage-page.styl';
+import AppSitesManagePageDomain from './domain.vue';
+import AppSitesManagePageStatic from './static.vue';
+import AppSitesManagePageTemplate from './template.vue';
 
-import { Site } from '../../../../lib/gj-lib-client/components/site/site-model';
-import { Game } from '../../../../lib/gj-lib-client/components/game/game.model';
-import { AppNavTabList } from '../../../../lib/gj-lib-client/components/nav/tab-list/tab-list';
-import { AppJolticon } from '../../../../lib/gj-lib-client/vue/components/jolticon/jolticon';
-import { AppTooltip } from '../../../../lib/gj-lib-client/components/tooltip/tooltip';
-import { AppSitesManagePageDomain } from './domain';
-import { AppSitesManagePageTemplate } from './template';
-import { AppSitesManagePageStatic } from './static';
-
-@View
 @Component({
 	components: {
 		AppNavTabList,
@@ -24,7 +21,7 @@ import { AppSitesManagePageStatic } from './static';
 		AppTooltip,
 	},
 })
-export class AppSitesManagePage extends Vue {
+export default class AppSitesManagePage extends Vue {
 	@Prop(Site) site!: Site;
 	@Prop(Game) game?: Game;
 

@@ -1,37 +1,19 @@
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Backdrop } from 'game-jolt-frontend-lib/components/backdrop/backdrop.service';
+import AppBackdrop from 'game-jolt-frontend-lib/components/backdrop/backdrop.vue';
+import { CommentActions, CommentMutations, CommentStore } from 'game-jolt-frontend-lib/components/comment/comment-store';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
+import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
+import { ContentFocus } from 'game-jolt-frontend-lib/components/content-focus/content-focus.service';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { ThemeActions, ThemeMutations, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
+import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { VuexAction, VuexModule, VuexMutation, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
+import { Actions as AppActions, AppStore, appStore, Mutations as AppMutations } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Route } from 'vue-router';
 import { sync } from 'vuex-router-sync';
-import { Api } from '../../lib/gj-lib-client/components/api/api.service';
-import { AppBackdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop';
-import { Backdrop } from '../../lib/gj-lib-client/components/backdrop/backdrop.service';
-import {
-	CommentActions,
-	CommentMutations,
-	CommentStore,
-} from '../../lib/gj-lib-client/components/comment/comment-store';
-import { Connection } from '../../lib/gj-lib-client/components/connection/connection-service';
-import { ContentFocus } from '../../lib/gj-lib-client/components/content-focus/content-focus.service';
-import { Growls } from '../../lib/gj-lib-client/components/growls/growls.service';
-import { ModalConfirm } from '../../lib/gj-lib-client/components/modal/confirm/confirm-service';
-import {
-	ThemeActions,
-	ThemeMutations,
-	ThemeStore,
-} from '../../lib/gj-lib-client/components/theme/theme.store';
-import { Translate } from '../../lib/gj-lib-client/components/translate/translate.service';
-import {
-	VuexAction,
-	VuexModule,
-	VuexMutation,
-	VuexStore,
-} from '../../lib/gj-lib-client/utils/vuex';
-import {
-	Actions as AppActions,
-	AppStore,
-	appStore,
-	Mutations as AppMutations,
-} from '../../lib/gj-lib-client/vue/services/app/app-store';
 import { ActivityFeedState } from '../components/activity/feed/state';
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
 import { ChatClient } from '../components/chat/client';

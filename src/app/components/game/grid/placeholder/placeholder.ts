@@ -1,18 +1,15 @@
-import View from '!view!./placeholder.html?style=./placeholder.styl';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
-import { AppGameThumbnailPlaceholder } from '../../../../../_common/game/thumbnail/placeholder/placeholder';
-import { Screen } from '../../../../../lib/gj-lib-client/components/screen/screen-service';
+import AppGameThumbnailPlaceholder from '../../../../../_common/game/thumbnail/placeholder/placeholder.vue';
 import { GameGridRowSizeLg, GameGridRowSizeMd, GameGridRowSizeSm } from '../grid';
 
-@View
 @Component({
 	components: {
 		AppGameThumbnailPlaceholder,
 	},
 })
-export class AppGameGridPlaceholder extends Vue {
+export default class AppGameGridPlaceholder extends Vue {
 	@Prop(Number) num!: number;
 	@Prop(Boolean) truncateToFit?: boolean;
 	@Prop(Boolean) scrollable?: boolean;

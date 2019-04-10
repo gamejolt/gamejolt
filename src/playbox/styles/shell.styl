@@ -1,0 +1,25 @@
+$theme-darkest = black
+$theme-bg = white
+$grid-gutter-width = 40px
+
+// The popping in/out when the page's height changes is really jarring.
+// Always show the vertical scrollbar.
+html
+	overflow-y: scroll
+
+html, body, #content
+	background-color: $theme-darkest
+
+#content
+	background-color: $theme-darkest
+	overflow: hidden
+	margin-bottom: ($grid-gutter-width / 2)
+
+	.container
+		background-color: $theme-bg
+		padding-top: ($grid-gutter-width / 2)
+		padding-bottom: ($grid-gutter-width / 2)
+
+#header
+	.container
+		padding: 0

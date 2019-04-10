@@ -1,0 +1,119 @@
+<template>
+	<div class="site-editor fill-darkest" :class="'site-editor-tab-' + tab">
+		<div class="site-editor-body">
+			<app-loading v-if="!isLoaded" />
+			<div v-else>
+				<div class="site-editor-nav">
+					<nav class="navbar">
+						<div class="navbar-left">
+							<ul class="navbar-items">
+								<li>
+									<router-link
+										replace
+										:to="{
+											name: 'editor',
+											params: { tab: 'theme' },
+											query: $route.query,
+										}"
+										active-class="active"
+									>
+										<translate>Customize Theme</translate>
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										replace
+										:to="{
+											name: 'editor',
+											params: { tab: 'content' },
+											query: $route.query,
+										}"
+										active-class="active"
+									>
+										<translate>Edit Content</translate>
+									</router-link>
+								</li>
+							</ul>
+						</div>
+
+						<div class="navbar-center"></div>
+
+						<div class="navbar-right">
+							<div class="navbar-controls">
+								<app-button primary solid @click="save()">
+									<translate>Save</translate>
+								</app-button>
+							</div>
+						</div>
+					</nav>
+				</div>
+
+				<div
+					class="
+					site-editor-sidebar
+					fill-dark
+					scrollable
+					anim-fade-enter-left
+					anim-fade-leave-left
+				"
+					v-if="tab === 'theme'"
+				>
+					<div class="well">
+						<h3 class="sans-margin-top">
+							<translate>Choose a Theme</translate>
+						</h3>
+
+						<p class="small text-muted">
+							<translate>Themes decide the layout and general styling of your site.</translate>
+						</p>
+
+						<app-theme-selector
+							:templates="templates"
+							:current-template="currentTemplateId"
+							@change="setTemplateId($event)"
+						/>
+
+						<template v-if="!!currentTemplateId">
+							<div v-for="templateId of [currentTemplateId]" :key="templateId">
+								<app-theme-editor
+									window-id="site-editor-iframe"
+									:resource-id="site.id"
+									:template="templateId"
+									:theme="theme.data"
+									@change="themeEdited"
+								/>
+							</div>
+						</template>
+					</div>
+				</div>
+				<div
+					class="
+					site-editor-bottom
+					fill-dark
+					scrollable
+					anim-fade-enter-up
+					anim-fade-leave-down
+				"
+					v-if="tab === 'content'"
+				>
+					<div class="well">
+						<app-content-block-editor
+							window-id="site-editor-iframe"
+							:site="site"
+							:content-block="site.content_blocks[0]"
+							@change="contentEdited"
+						/>
+					</div>
+				</div>
+
+				<div class="site-editor-content">
+					<iframe id="site-editor-iframe" :src="siteUrl"></iframe>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<style lang="stylus" src="./site-editor.styl" scoped></style>
+
+<script lang="ts" src="./site-editor"></script>

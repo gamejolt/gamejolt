@@ -1,23 +1,17 @@
+import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
+import { BaseForm, FormOnInit, FormOnLoad } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { GameSong } from 'game-jolt-frontend-lib/components/game/song/song.model';
+import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component, Prop } from 'vue-property-decorator';
-import View from '!view!./song.html';
 
-import { GameSong } from '../../../../../lib/gj-lib-client/components/game/song/song.model';
-import {
-	BaseForm,
-	FormOnInit,
-	FormOnLoad,
-} from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { Game } from '../../../../../lib/gj-lib-client/components/game/game.model';
-import { number } from '../../../../../lib/gj-lib-client/vue/filters/number';
-import { AppFormControlUpload } from '../../../../../lib/gj-lib-client/components/form-vue/control/upload/upload';
 
-@View
 @Component({
 	components: {
 		AppFormControlUpload,
 	},
 })
-export class FormGameSong extends BaseForm<GameSong> implements FormOnInit, FormOnLoad {
+export default class FormGameSong extends BaseForm<GameSong> implements FormOnInit, FormOnLoad {
 	@Prop(Game) game!: Game;
 
 	modelClass = GameSong;

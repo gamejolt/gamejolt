@@ -1,0 +1,161 @@
+<template>
+	<app-form name="domainForm">
+		<app-form-group name="domain_type" :label="$gettext(`How would you like to access your site?`)">
+			<div class="radio">
+				<label>
+					<app-form-control-radio value="io" />
+					<span v-html="ioUrl"></span>
+				</label>
+			</div>
+			<div class="radio">
+				<label>
+					<app-form-control-radio value="af" />
+					<span v-html="afUrl"></span>
+					&mdash;
+					<router-link :to="{ name: 'landing.indieaf' }" target="_blank" class="link-help small">
+						<translate>Learn more about being indie.AF</translate>
+					</router-link>
+				</label>
+			</div>
+			<div class="radio">
+				<label>
+					<app-form-control-radio value="domain" />
+					<strong><translate>Custom Domain</translate></strong>
+					&mdash;
+					<translate class="help-inline">
+						Use a custom domain that you own to access your site.
+					</translate>
+				</label>
+			</div>
+		</app-form-group>
+
+		<app-expand :when="formModel.domain_type === 'domain'">
+			<app-form-group name="domain" :label="$gettext(`Domain`)">
+				<app-form-control
+					placeholder="example.com"
+					:rules="{
+						max: 100,
+						pattern: 'domain',
+						availability: {
+							url: '/web/dash/sites/check-field-availability/domain',
+							initVal: model.domain,
+						},
+					}"
+				/>
+
+				<app-form-control-errors />
+			</app-form-group>
+
+			<p>
+				<strong>
+					<translate>How to set up your custom domain?</translate>
+				</strong>
+			</p>
+
+			<p>
+				<translate>
+					In order to set up your custom domain you'll need to point its DNS over to us. Look for
+					the DNS options in your registrar's control panel.
+				</translate>
+			</p>
+
+			<p>
+				<translate>
+					If you'd like your main root/apex domain to point to us (such as example.com), you'll have
+					to set two DNS entries for your domain.
+				</translate>
+			</p>
+
+			<table class="table">
+				<thead>
+					<tr>
+						<th><translate>Type</translate></th>
+						<th><translate>Host</translate></th>
+						<th><translate>Value</translate></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<code>A</code>
+							Record
+						</td>
+						<td><code>@</code></td>
+						<td><code>52.54.56.45</code></td>
+					</tr>
+					<tr>
+						<td>
+							<code>CNAME</code>
+							Record
+						</td>
+						<td><code>www</code></td>
+						<td><code>www.gamejolt.io</code></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>
+				<translate>
+					If there is a TTL setting, you can leave that as the default for each entry.
+				</translate>
+			</p>
+
+			<p>
+				<translate>
+					This will set up your DNS to redirect your root/apex domain (example.com) over to a www
+					subdomain (www.example.com). This ensures that people hit the correct host when trying to
+					view your custom domain site.
+				</translate>
+			</p>
+
+			<p>
+				<translate>
+					If you'd like to point a subdomain over to us (such as mygame.mystudio.com), you will only
+					have to set one entry for the subdomain portion of your domain.
+				</translate>
+			</p>
+
+			<table class="table">
+				<thead>
+					<tr>
+						<th><translate>Type</translate></th>
+						<th><translate>Host</translate></th>
+						<th><translate>Value</translate></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<code>CNAME</code>
+							Record
+						</td>
+						<td><code>mygame</code></td>
+						<td><code>www.gamejolt.io</code></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>
+				<strong>
+					<translate>
+						Note that it could take up to 24 hours for your domain registrar to propagate these
+						changes across the internet and for your site to be accessible using your custom domain.
+					</translate>
+				</strong>
+			</p>
+
+			<p>
+				<translate>
+					If you're having trouble, send an email to contact@gamejolt.com with all the information
+					you can and we'll help you out!
+				</translate>
+			</p>
+		</app-expand>
+
+		<app-form-button>
+			<translate>Save</translate>
+		</app-form-button>
+	</app-form>
+</template>
+
+<script lang="ts" src="./domain"></script>

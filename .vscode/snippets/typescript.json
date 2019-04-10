@@ -18,9 +18,7 @@
 		"body": [
 			"import Vue from 'vue';",
 			"import { Component } from 'vue-property-decorator';",
-			"import View from '!view!./$3.html?style=./$3.styl';",
 			"",
-			"@View",
 			"@Component({})",
 			"export class App${2:Component} extends Vue {",
 			"\t$0",
@@ -33,9 +31,7 @@
 		"body": [
 			"import { Route } from 'vue-router';",
 			"import { Component } from 'vue-property-decorator';",
-			"import View from '!view!./$3.html';",
 			"",
-			"@View",
 			"@Component({",
 			"\tname: 'Route${2:Component}',",
 			"})",
@@ -63,9 +59,7 @@
 		"prefix": "vue-form",
 		"body": [
 			"import { Component } from 'vue-property-decorator';",
-			"import View from '!view!./${3:login}.html';",
 			"",
-			"@View",
 			"@Component({})",
 			"export class Form${1:Login} extends BaseForm<$2> implements FormOnInit {",
 			"\tmodelClass = $2;",
@@ -81,9 +75,7 @@
 		"prefix": "vue-modal-component",
 		"body": [
 			"import { Component } from 'vue-property-decorator';",
-			"import View from '!view!./${3:modal}.html';",
 			"",
-			"@View",
 			"@Component({})",
 			"export default class App${1:Login}Modal extends BaseModal {",
 			"$0",

@@ -16,7 +16,7 @@ export class GameSupportersModal {
 			modalId: 'GameSupporters',
 			component: () =>
 				asyncComponentLoader(
-					import(/* webpackChunkName: "GameSupportersModal" */ './modal')
+					import(/* webpackChunkName: "GameSupportersModal" */ './modal.vue')
 				),
 			props: {
 				game,
