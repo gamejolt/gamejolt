@@ -39,7 +39,7 @@
 <script lang="ts" src="./widget" />
 
 <style lang="stylus" scoped>
-.-like-button {
-  margin-right: 10px;
-}
+.-like-button
+	margin-right: 10px
+
 </style>

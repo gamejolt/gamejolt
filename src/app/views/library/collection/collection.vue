@@ -331,28 +331,24 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables';
-@require '~styles-lib/mixins';
+@require '~styles/variables'
+@require '~styles-lib/mixins'
 
-.library-collection-header {
-  .collection-copy {
-    margin-bottom: $font-size-base;
+.library-collection-header
+	.collection-copy
+		margin-bottom: $font-size-base
 
-    h4 {
-      theme-prop('color', 'fg-muted');
-      margin-top: 0;
-    }
+	h4
+		theme-prop('color', 'fg-muted')
+		margin-top: 0
 
-    p {
-      margin-top: $font-size-base;
-      margin-bottom: 0;
-    }
-  }
+	p
+		margin-top: $font-size-base
+		margin-bottom: 0
 
-  @media $media-xs {
-    text-align: center;
-  }
-}
+	@media $media-xs
+		text-align: center
+
 </style>
 
 <script lang="ts" src="./collection" />
