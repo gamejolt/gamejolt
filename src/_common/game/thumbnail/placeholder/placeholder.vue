@@ -15,4 +15,4 @@
 
 <style lang="stylus" src="./placeholder.styl" scoped />
 
-<script lang="ts" src="./placeholder" />
+<script lang="ts" src="./placeholder"></script>

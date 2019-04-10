@@ -11,4 +11,4 @@
 	</app-message-thread>
 </template>
 
-<script lang="ts" src="./post-list" />
+<script lang="ts" src="./post-list"></script>

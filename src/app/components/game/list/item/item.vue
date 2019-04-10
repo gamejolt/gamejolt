@@ -84,4 +84,4 @@ $game-list-item-thumb-width = 145px
 	font-size: $font-size-small
 </style>
 
-<script lang="ts" src="./item" />
+<script lang="ts" src="./item"></script>

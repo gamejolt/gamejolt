@@ -40,4 +40,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./new-build" />
+<script lang="ts" src="./new-build"></script>

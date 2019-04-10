@@ -61,4 +61,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./home" />
+<script lang="ts" src="./home"></script>

@@ -136,4 +136,4 @@
 				text-overflow()
 </style>
 
-<script lang="ts" src="./channel-list" />
+<script lang="ts" src="./channel-list"></script>

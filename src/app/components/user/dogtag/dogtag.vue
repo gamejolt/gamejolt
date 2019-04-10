@@ -12,4 +12,4 @@
 	</span>
 </template>
 
-<script lang="ts" src="./dogtag" />
+<script lang="ts" src="./dogtag"></script>

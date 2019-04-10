@@ -77,4 +77,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./search" />
+<script lang="ts" src="./search"></script>

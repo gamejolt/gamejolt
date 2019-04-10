@@ -254,4 +254,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./analytics" />
+<script lang="ts" src="./analytics"></script>

@@ -142,4 +142,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./profile" />
+<script lang="ts" src="./profile"></script>

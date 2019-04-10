@@ -155,4 +155,4 @@
 	overflow: hidden
 </style>
 
-<script lang="ts" src="./account" />
+<script lang="ts" src="./account"></script>

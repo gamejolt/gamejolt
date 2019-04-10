@@ -50,4 +50,4 @@
 			background-image: linear-gradient(to right, rgba($gj-pink, 0.15) 0, rgba($gj-pink, 0) 25%, rgba($gj-blue, 0) 75%, rgba($gj-blue, 0.15) 100%)
 </style>
 
-<script lang="ts" src="./cover-img" />
+<script lang="ts" src="./cover-img"></script>

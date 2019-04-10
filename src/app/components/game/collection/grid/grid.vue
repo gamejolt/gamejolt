@@ -10,4 +10,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./grid" />
+<script lang="ts" src="./grid"></script>

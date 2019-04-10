@@ -15,4 +15,4 @@
 
 </style>
 
-<script lang="ts" src="./compat-icons" />
+<script lang="ts" src="./compat-icons"></script>

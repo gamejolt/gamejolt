@@ -36,7 +36,7 @@
 	</div>
 </template>
 
-<script lang="ts" src="./widget" />
+<script lang="ts" src="./widget"></script>
 
 <style lang="stylus" scoped>
 .-like-button

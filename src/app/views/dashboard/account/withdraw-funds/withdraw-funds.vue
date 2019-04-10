@@ -128,4 +128,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./withdraw-funds" />
+<script lang="ts" src="./withdraw-funds"></script>

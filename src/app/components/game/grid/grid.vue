@@ -52,7 +52,7 @@
 	</div>
 </template>
 
-<script lang="ts" src="./grid" />
+<script lang="ts" src="./grid"></script>
 
-<style lang="stylus" src="./grid.styl" />
+<style lang="stylus" src="./grid.styl"></style>
 

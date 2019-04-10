@@ -402,4 +402,4 @@
 			padding-top: 0
 </style>
 
-<script lang="ts" src="./managed-account" />
+<script lang="ts" src="./managed-account"></script>

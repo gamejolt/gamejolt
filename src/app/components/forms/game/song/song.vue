@@ -33,4 +33,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./song" />
+<script lang="ts" src="./song"></script>

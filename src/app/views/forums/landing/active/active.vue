@@ -15,4 +15,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./active" />
+<script lang="ts" src="./active"></script>

@@ -93,4 +93,4 @@
 		font-weight: bold
 </style>
 
-<script lang="ts" src="./linked-accounts" />
+<script lang="ts" src="./linked-accounts"></script>

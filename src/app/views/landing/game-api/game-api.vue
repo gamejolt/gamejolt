@@ -131,4 +131,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./game-api" />
+<script lang="ts" src="./game-api"></script>

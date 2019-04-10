@@ -21,4 +21,4 @@
 	</app-modal>
 </template>
 
-<script lang="ts" src="./save-modal" />
+<script lang="ts" src="./save-modal"></script>

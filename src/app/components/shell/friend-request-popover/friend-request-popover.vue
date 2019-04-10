@@ -71,4 +71,4 @@
 	padding-top: ($line-height-computed / 2)
 </style>
 
-<script lang="ts" src="./friend-request-popover" />
+<script lang="ts" src="./friend-request-popover"></script>

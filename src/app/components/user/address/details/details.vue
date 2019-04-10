@@ -30,4 +30,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./details" />
+<script lang="ts" src="./details"></script>

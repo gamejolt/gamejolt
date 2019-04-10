@@ -361,4 +361,4 @@
 			link-underlines($redlight-red, $black, $black)
 </style>
 
-<script lang="ts" src="./redlight" />
+<script lang="ts" src="./redlight"></script>

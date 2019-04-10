@@ -6,4 +6,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./change-password" />
+<script lang="ts" src="./change-password"></script>

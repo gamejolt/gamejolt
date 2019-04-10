@@ -32,4 +32,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./reset-password" />
+<script lang="ts" src="./reset-password"></script>

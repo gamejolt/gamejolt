@@ -351,4 +351,4 @@
 
 </style>
 
-<script lang="ts" src="./collection" />
+<script lang="ts" src="./collection"></script>

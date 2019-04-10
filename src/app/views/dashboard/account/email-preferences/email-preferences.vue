@@ -6,4 +6,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./email-preferences" />
+<script lang="ts" src="./email-preferences"></script>

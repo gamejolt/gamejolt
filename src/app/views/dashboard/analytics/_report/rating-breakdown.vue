@@ -41,6 +41,6 @@
 	</div>
 </template>
 
-<style lang="stylus" src="./report-percentage.styl" scoped />
+<style lang="stylus" src="./report-percentage.styl" scoped></style>
 
-<script lang="ts" src="./rating-breakdown" />
+<script lang="ts" src="./rating-breakdown"></script>

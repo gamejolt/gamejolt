@@ -14,4 +14,4 @@
 	</section>
 </template>
 
-<script lang="ts" src="./following" />
+<script lang="ts" src="./following"></script>

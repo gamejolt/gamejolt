@@ -213,4 +213,4 @@
 	margin-bottom: 0
 </style>
 
-<script lang="ts" src="./package-card-buttons" />
+<script lang="ts" src="./package-card-buttons"></script>

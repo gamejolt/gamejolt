@@ -40,4 +40,4 @@
 	</app-modal>
 </template>
 
-<script lang="ts" src="./install-package-modal" />
+<script lang="ts" src="./install-package-modal"></script>

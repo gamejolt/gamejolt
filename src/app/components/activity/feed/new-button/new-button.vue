@@ -24,4 +24,4 @@
 	text-align: center
 </style>
 
-<script lang="ts" src="./new-button" />
+<script lang="ts" src="./new-button"></script>

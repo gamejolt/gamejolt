@@ -74,4 +74,4 @@
 	user-select: none
 </style>
 
-<script lang="ts" src="./site" />
+<script lang="ts" src="./site"></script>

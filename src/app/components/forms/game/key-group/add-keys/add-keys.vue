@@ -72,4 +72,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./add-keys" />
+<script lang="ts" src="./add-keys"></script>

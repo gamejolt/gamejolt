@@ -46,4 +46,4 @@
 			visibility: visible
 </style>
 
-<script lang="ts" src="./text" />
+<script lang="ts" src="./text"></script>

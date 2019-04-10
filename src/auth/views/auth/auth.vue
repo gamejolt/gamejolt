@@ -81,6 +81,6 @@
 	</div>
 </template>
 
-<style lang="stylus" src="./auth.styl" scoped />
+<style lang="stylus" src="./auth.styl" scoped></style>
 
-<script lang="ts" src="./auth" />
+<script lang="ts" src="./auth"></script>

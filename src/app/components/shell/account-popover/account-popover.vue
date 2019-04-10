@@ -199,4 +199,4 @@
 		theme-prop('color', 'highlight')
 </style>
 
-<script lang="ts" src="./account-popover" />
+<script lang="ts" src="./account-popover"></script>

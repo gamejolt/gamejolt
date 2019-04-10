@@ -29,4 +29,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./wizard-finish" />
+<script lang="ts" src="./wizard-finish"></script>

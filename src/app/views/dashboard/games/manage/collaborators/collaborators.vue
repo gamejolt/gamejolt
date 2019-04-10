@@ -72,4 +72,4 @@
 	</section>
 </template>
 
-<script lang="ts" src="./collaborators" />
+<script lang="ts" src="./collaborators"></script>

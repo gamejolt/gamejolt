@@ -181,4 +181,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./list" />
+<script lang="ts" src="./list"></script>

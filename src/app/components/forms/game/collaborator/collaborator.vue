@@ -55,4 +55,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./collaborator" />
+<script lang="ts" src="./collaborator"></script>

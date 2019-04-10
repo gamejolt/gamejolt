@@ -19,4 +19,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./sketchfab" />
+<script lang="ts" src="./sketchfab"></script>

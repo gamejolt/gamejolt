@@ -45,4 +45,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./user" />
+<script lang="ts" src="./user"></script>

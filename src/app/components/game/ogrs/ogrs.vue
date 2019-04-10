@@ -60,4 +60,4 @@
 		color: $black
 </style>
 
-<script lang="ts" src="./ogrs" />
+<script lang="ts" src="./ogrs"></script>

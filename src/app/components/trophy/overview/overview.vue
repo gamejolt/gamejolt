@@ -103,4 +103,4 @@ $trophy-grid-gutter = 20px
 	margin-bottom: $trophy-grid-gutter
 </style>
 
-<script lang="ts" src="./overview" />
+<script lang="ts" src="./overview"></script>
