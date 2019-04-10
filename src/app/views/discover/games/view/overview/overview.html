@@ -6,7 +6,9 @@
 		:media-items="mediaItems"
 		/>
 
-	<app-ad-placement hidden-xs pos="top" />
+	<section class="fill-offset-back">
+		<app-ad-placement hidden-xs pos="top" />
+	</section>
 
 	<section class="section fill-well">
 		<app-page-container xl>
@@ -181,9 +183,9 @@
 			</template>
 
 			<div class="content-well">
-				<!-- <h4 class="section-header">
+				<h4 class="section-header">
 					<translate>Description</translate>
-				</h4> -->
+				</h4>
 				<div v-if="!isOverviewLoaded">
 					<span class="lazy-placeholder"></span>
 					<span class="lazy-placeholder"></span>
