@@ -1,9 +1,9 @@
 import { ContentContainer } from 'game-jolt-frontend-lib/components/content/content-container';
-import ContentWriter from 'game-jolt-frontend-lib/components/content/content-writer';
+import { ContentWriter } from 'game-jolt-frontend-lib/components/content/content-writer';
 import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
 import AppFormControlContent from 'game-jolt-frontend-lib/components/form-vue/control/content/content.vue';
+import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
 import { BaseForm } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import AppForm from 'game-jolt-frontend-lib/components/form-vue/form.vue';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { AppGamePerms } from '../../../game/perms/perms';
