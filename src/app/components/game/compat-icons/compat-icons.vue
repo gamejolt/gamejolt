@@ -8,11 +8,11 @@
 @require '~styles/variables';
 @require '~styles-lib/mixins';
 
-.-icon {
-  theme-prop('color', 'bg-subtle');
-  position: relative;
-  top: 1px; // Bump it down to match up with the bottom of the text more.
-}
+.-icon
+	theme-prop('color', 'bg-subtle')
+	position: relative
+	top: 1px // Bump it down to match up with the bottom of the text more.
+
 </style>
 
-<script lang="ts" src="./compat-icons" />
+<script lang="ts" src="./compat-icons"></script>

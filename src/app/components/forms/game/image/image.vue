@@ -47,4 +47,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./image" />
+<script lang="ts" src="./image"></script>

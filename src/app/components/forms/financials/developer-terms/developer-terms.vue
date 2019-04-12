@@ -106,4 +106,4 @@
 	</fieldset>
 </template>
 
-<script lang="ts" src="./developer-terms" />
+<script lang="ts" src="./developer-terms"></script>

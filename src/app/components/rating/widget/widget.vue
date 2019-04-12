@@ -36,10 +36,10 @@
 	</div>
 </template>
 
-<script lang="ts" src="./widget" />
+<script lang="ts" src="./widget"></script>
 
 <style lang="stylus" scoped>
-.-like-button {
-  margin-right: 10px;
-}
+.-like-button
+	margin-right: 10px
+
 </style>

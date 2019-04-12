@@ -7,4 +7,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./body" />
+<script lang="ts" src="./body"></script>

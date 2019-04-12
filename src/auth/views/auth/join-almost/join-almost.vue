@@ -41,4 +41,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./join-almost" />
+<script lang="ts" src="./join-almost"></script>

@@ -39,4 +39,4 @@
 		width: 400px
 </style>
 
-<script lang="ts" src="./banner" />
+<script lang="ts" src="./banner"></script>

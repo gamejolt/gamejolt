@@ -77,4 +77,4 @@
 	font-weight: bold
 </style>
 
-<script lang="ts" src="./voting" />
+<script lang="ts" src="./voting"></script>

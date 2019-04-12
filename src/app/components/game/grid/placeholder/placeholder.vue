@@ -12,4 +12,4 @@
 @require '../grid'
 </style>
 
-<script lang="ts" src="./placeholder" />
+<script lang="ts" src="./placeholder"></script>

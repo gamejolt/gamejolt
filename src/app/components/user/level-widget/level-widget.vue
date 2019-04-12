@@ -57,4 +57,4 @@
 	margin-top: 5px
 </style>
 
-<script lang="ts" src="./level-widget" />
+<script lang="ts" src="./level-widget"></script>

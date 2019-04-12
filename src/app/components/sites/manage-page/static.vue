@@ -35,4 +35,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./static" />
+<script lang="ts" src="./static"></script>

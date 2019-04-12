@@ -40,6 +40,6 @@
 	</app-scroll-scroller>
 </template>
 
-<style lang="stylus" src="./media-bar.styl" scoped />
+<style lang="stylus" src="./media-bar.styl" scoped></style>
 
-<script lang="ts" src="./media-bar" />
+<script lang="ts" src="./media-bar"></script>

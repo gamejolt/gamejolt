@@ -62,4 +62,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./sidebar" />
+<script lang="ts" src="./sidebar"></script>

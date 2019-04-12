@@ -39,4 +39,4 @@
 	</section>
 </template>
 
-<script lang="ts" src="./legal" />
+<script lang="ts" src="./legal"></script>

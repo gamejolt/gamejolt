@@ -15,4 +15,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./addresses" />
+<script lang="ts" src="./addresses"></script>

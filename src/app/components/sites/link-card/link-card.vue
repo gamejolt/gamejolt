@@ -17,4 +17,4 @@
 	</app-card>
 </template>
 
-<script lang="ts" src="./link-card" />
+<script lang="ts" src="./link-card"></script>

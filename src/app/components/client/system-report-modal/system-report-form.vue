@@ -14,4 +14,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./system-report-form" />
+<script lang="ts" src="./system-report-form"></script>

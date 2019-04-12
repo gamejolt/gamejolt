@@ -18,4 +18,4 @@
 	</span>
 </template>
 
-<script lang="ts" src="./upvote-widget" />
+<script lang="ts" src="./upvote-widget"></script>

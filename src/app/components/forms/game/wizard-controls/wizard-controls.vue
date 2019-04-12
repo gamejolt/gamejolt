@@ -18,4 +18,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./wizard-controls" />
+<script lang="ts" src="./wizard-controls"></script>

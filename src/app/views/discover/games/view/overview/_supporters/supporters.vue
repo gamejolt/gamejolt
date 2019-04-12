@@ -32,6 +32,6 @@
 	</div>
 </template>
 
-<style lang="stylus" src="./supporters.styl" scoped />
+<style lang="stylus" src="./supporters.styl" scoped></style>
 
-<script lang="ts" src="./supporters" />
+<script lang="ts" src="./supporters"></script>

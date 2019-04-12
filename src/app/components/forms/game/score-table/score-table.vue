@@ -62,4 +62,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./score-table" />
+<script lang="ts" src="./score-table"></script>

@@ -59,4 +59,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./scoreboard-selector" />
+<script lang="ts" src="./scoreboard-selector"></script>

@@ -55,4 +55,4 @@
 			bottom: -65px
 </style>
 
-<script lang="ts" src="./landing" />
+<script lang="ts" src="./landing"></script>

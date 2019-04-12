@@ -36,4 +36,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./shell" />
+<script lang="ts" src="./shell"></script>

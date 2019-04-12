@@ -151,4 +151,4 @@
 		position: relative
 </style>
 
-<script lang="ts" src="./nav" />
+<script lang="ts" src="./nav"></script>

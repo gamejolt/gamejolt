@@ -6,4 +6,4 @@
 	</section>
 </template>
 
-<script lang="ts" src="./library" />
+<script lang="ts" src="./library"></script>

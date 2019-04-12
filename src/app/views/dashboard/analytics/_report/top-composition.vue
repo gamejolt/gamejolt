@@ -67,6 +67,6 @@
 	</div>
 </template>
 
-<style lang="stylus" src="./report-percentage.styl" scoped />
+<style lang="stylus" src="./report-percentage.styl" scoped></style>
 
-<script lang="ts" src="./top-composition" />
+<script lang="ts" src="./top-composition"></script>

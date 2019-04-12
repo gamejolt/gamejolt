@@ -23,4 +23,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./comment-video" />
+<script lang="ts" src="./comment-video"></script>

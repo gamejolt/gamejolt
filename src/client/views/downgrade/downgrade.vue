@@ -21,4 +21,4 @@
 	</section>
 </template>
 
-<script lang="ts" src="./downgrade" />
+<script lang="ts" src="./downgrade"></script>

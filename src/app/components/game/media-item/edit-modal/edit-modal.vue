@@ -83,4 +83,4 @@
 	</app-modal>
 </template>
 
-<script lang="ts" src="./edit-modal" />
+<script lang="ts" src="./edit-modal"></script>

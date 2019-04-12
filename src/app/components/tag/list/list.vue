@@ -30,4 +30,4 @@
 		margin-bottom: 0 !important
 </style>
 
-<script lang="ts" src="./list" />
+<script lang="ts" src="./list"></script>

@@ -83,4 +83,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./mobile-nav" />
+<script lang="ts" src="./mobile-nav"></script>

@@ -91,4 +91,4 @@
 	</app-modal>
 </template>
 
-<script lang="ts" src="./add-modal" />
+<script lang="ts" src="./add-modal"></script>

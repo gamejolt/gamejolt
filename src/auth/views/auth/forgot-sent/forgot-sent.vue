@@ -14,4 +14,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./forgot-sent" />
+<script lang="ts" src="./forgot-sent"></script>

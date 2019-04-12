@@ -27,4 +27,4 @@
 	</app-modal>
 </template>
 
-<script lang="ts" src="./system-report-modal" />
+<script lang="ts" src="./system-report-modal"></script>

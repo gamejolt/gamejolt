@@ -8,4 +8,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./design" />
+<script lang="ts" src="./design"></script>

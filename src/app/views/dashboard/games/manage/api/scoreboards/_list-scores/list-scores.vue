@@ -80,4 +80,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./list-scores" />
+<script lang="ts" src="./list-scores"></script>

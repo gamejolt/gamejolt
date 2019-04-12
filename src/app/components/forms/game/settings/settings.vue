@@ -154,4 +154,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./settings" />
+<script lang="ts" src="./settings"></script>

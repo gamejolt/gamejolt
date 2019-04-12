@@ -31,6 +31,6 @@
 	</div>
 </template>
 
-<style lang="stylus" src="./user-box.styl" scoped />
+<style lang="stylus" src="./user-box.styl" scoped></style>
 
-<script lang="ts" src="./user-box" />
+<script lang="ts" src="./user-box"></script>

@@ -84,4 +84,4 @@
 		theme-prop('color', 'fg-muted')
 </style>
 
-<script lang="ts" src="./item" />
+<script lang="ts" src="./item"></script>

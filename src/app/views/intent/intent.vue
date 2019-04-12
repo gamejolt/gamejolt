@@ -53,4 +53,4 @@
 	</section>
 </template>
 
-<script lang="ts" src="./intent" />
+<script lang="ts" src="./intent"></script>

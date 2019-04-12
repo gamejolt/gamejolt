@@ -17,4 +17,4 @@
 	</section>
 </template>
 
-<script lang="ts" src="./linking" />
+<script lang="ts" src="./linking"></script>

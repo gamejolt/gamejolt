@@ -13,4 +13,4 @@
 	</component>
 </template>
 
-<script lang="ts" src="./time" />
+<script lang="ts" src="./time"></script>

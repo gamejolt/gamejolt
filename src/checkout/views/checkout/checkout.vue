@@ -54,4 +54,4 @@ h4
 	font-family: $font-family-base
 </style>
 
-<script lang="ts" src="./checkout" />
+<script lang="ts" src="./checkout"></script>

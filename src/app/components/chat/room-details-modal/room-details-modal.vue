@@ -18,4 +18,4 @@
 	</app-modal>
 </template>
 
-<script lang="ts" src="./room-details-modal" />
+<script lang="ts" src="./room-details-modal"></script>

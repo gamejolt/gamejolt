@@ -32,4 +32,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./name" />
+<script lang="ts" src="./name"></script>

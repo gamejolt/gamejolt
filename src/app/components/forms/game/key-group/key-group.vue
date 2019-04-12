@@ -180,4 +180,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./key-group" />
+<script lang="ts" src="./key-group"></script>

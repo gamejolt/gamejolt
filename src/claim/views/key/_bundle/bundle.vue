@@ -41,4 +41,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./bundle" />
+<script lang="ts" src="./bundle"></script>

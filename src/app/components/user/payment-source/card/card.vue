@@ -44,4 +44,4 @@
 	margin-left: 70px
 </style>
 
-<script lang="ts" src="./card" />
+<script lang="ts" src="./card"></script>

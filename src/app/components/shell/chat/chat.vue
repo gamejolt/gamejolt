@@ -14,4 +14,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./chat" />
+<script lang="ts" src="./chat"></script>

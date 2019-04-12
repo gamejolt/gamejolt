@@ -33,4 +33,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./join-captcha" />
+<script lang="ts" src="./join-captcha"></script>

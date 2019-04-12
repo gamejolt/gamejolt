@@ -428,6 +428,6 @@
 	</app-card-list-item>
 </template>
 
-<style lang="stylus" src="./build.styl" scoped />
+<style lang="stylus" src="./build.styl" scoped></style>
 
-<script lang="ts" src="./build" />
+<script lang="ts" src="./build"></script>

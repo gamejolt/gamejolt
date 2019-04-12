@@ -140,4 +140,4 @@
 	flex: none
 </style>
 
-<script lang="ts" src="./manage" />
+<script lang="ts" src="./manage"></script>

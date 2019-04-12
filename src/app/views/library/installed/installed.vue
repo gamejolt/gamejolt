@@ -36,4 +36,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./installed" />
+<script lang="ts" src="./installed"></script>

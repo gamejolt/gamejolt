@@ -274,4 +274,4 @@
 				margin-top: 0
 </style>
 
-<script lang="ts" src="./financials" />
+<script lang="ts" src="./financials"></script>

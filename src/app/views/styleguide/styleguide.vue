@@ -41,4 +41,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./styleguide" />
+<script lang="ts" src="./styleguide"></script>

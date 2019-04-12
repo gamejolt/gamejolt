@@ -70,4 +70,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./rules" />
+<script lang="ts" src="./rules"></script>

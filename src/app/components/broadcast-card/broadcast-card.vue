@@ -29,4 +29,4 @@
 	margin-left: 50px
 </style>
 
-<script lang="ts" src="./broadcast-card" />
+<script lang="ts" src="./broadcast-card"></script>

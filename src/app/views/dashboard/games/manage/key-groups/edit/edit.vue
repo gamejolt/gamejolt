@@ -174,4 +174,4 @@
 	</section>
 </template>
 
-<script lang="ts" src="./edit" />
+<script lang="ts" src="./edit"></script>

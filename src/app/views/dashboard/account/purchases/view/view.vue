@@ -204,4 +204,4 @@
 			font-weight: bold
 </style>
 
-<script lang="ts" src="./view" />
+<script lang="ts" src="./view"></script>

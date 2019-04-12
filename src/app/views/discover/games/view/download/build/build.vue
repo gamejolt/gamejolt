@@ -155,4 +155,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./build" />
+<script lang="ts" src="./build"></script>

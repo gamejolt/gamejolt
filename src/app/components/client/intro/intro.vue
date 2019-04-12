@@ -58,4 +58,4 @@
 	margin: 0 4px
 </style>
 
-<script lang="ts" src="./intro" />
+<script lang="ts" src="./intro"></script>

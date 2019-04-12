@@ -435,7 +435,7 @@ for (let component of components) {
 			if (!stylePath.startsWith('../')) {
 				stylePath = './' + stylePath;
 			}
-			templateText += `\n\n<style src="${stylePath}" scoped />`;
+			templateText += `\n\n<style src="${stylePath}" scoped></style>`;
 		}
 	}
 
@@ -444,7 +444,7 @@ for (let component of components) {
 		tsPath = './' + tsPath;
 	}
 	tsPath = tsPath.replace(/\.ts$/, '');
-	templateText += `\n\n<script lang="ts" src="${tsPath}" />`;
+	templateText += `\n\n<script lang="ts" src="${tsPath}"></script>`;
 
 	// Convert export to export defeault
 	if (!component.hasDefaultExport) {

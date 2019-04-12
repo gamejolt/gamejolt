@@ -56,4 +56,4 @@
 		margin-left: 0
 </style>
 
-<script lang="ts" src="./banner" />
+<script lang="ts" src="./banner"></script>

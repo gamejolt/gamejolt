@@ -62,4 +62,4 @@
 	padding-bottom: 0
 </style>
 
-<script lang="ts" src="./overview" />
+<script lang="ts" src="./overview"></script>

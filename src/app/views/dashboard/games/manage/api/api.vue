@@ -24,4 +24,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./api" />
+<script lang="ts" src="./api"></script>

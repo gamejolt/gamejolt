@@ -31,4 +31,4 @@
 	theme-prop('background-color', 'link')
 </style>
 
-<script lang="ts" src="./media-indicator" />
+<script lang="ts" src="./media-indicator"></script>

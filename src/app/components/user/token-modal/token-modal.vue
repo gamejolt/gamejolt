@@ -67,4 +67,4 @@
 	</app-modal>
 </template>
 
-<script lang="ts" src="./token-modal" />
+<script lang="ts" src="./token-modal"></script>

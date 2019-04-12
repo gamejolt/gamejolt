@@ -10,4 +10,4 @@
 	</app-lazy-placeholder>
 </template>
 
-<script lang="ts" src="./placeholder" />
+<script lang="ts" src="./placeholder"></script>

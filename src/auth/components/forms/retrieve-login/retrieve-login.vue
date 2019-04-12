@@ -37,4 +37,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./retrieve-login" />
+<script lang="ts" src="./retrieve-login"></script>

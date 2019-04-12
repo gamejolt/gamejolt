@@ -46,4 +46,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./address" />
+<script lang="ts" src="./address"></script>

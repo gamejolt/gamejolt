@@ -206,4 +206,4 @@
 	theme-prop('color', 'highlight')
 </style>
 
-<script lang="ts" src="./profile" />
+<script lang="ts" src="./profile"></script>

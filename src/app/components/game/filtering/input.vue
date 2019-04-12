@@ -47,4 +47,4 @@
 			color: $black
 </style>
 
-<script lang="ts" src="./input" />
+<script lang="ts" src="./input"></script>

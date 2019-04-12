@@ -185,4 +185,4 @@
 	top: 2px
 </style>
 
-<script lang="ts" src="./top-nav" />
+<script lang="ts" src="./top-nav"></script>

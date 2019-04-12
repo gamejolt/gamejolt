@@ -5,9 +5,10 @@
 				<translate>dash.games.maturity.wip_help</translate>
 			</p>
 
+			<!-- skip the first element, it's a placeholder for unrated maturity that shouldn't be selectable -->
 			<div class="radio" v-for="(item, index) in age.slice(1)" :key="index">
 				<label>
-					<app-form-control-radio :value="index" />
+					<app-form-control-radio :value="index + 1" />
 					{{ item.label }}
 					<span v-if="item.description" class="help-inline">- {{ item.description }}</span>
 				</label>
@@ -208,5 +209,5 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./maturity" />
+<script lang="ts" src="./maturity"></script>
 

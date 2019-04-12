@@ -41,4 +41,4 @@
 	</app-modal>
 </template>
 
-<script lang="ts" src="./moderate-user-modal" />
+<script lang="ts" src="./moderate-user-modal"></script>
