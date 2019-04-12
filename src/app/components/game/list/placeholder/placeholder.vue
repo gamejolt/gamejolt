@@ -15,7 +15,7 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
-@require '../item/item'
+@require '../list-common'
 
 .-placeholder
 	&-thumb
@@ -35,4 +35,4 @@
 		width: 60%
 </style>
 
-<script lang="ts" src="./placeholder" />
+<script lang="ts" src="./placeholder"></script>

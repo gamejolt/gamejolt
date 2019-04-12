@@ -84,4 +84,4 @@
 						display: inline-block
 </style>
 
-<script lang="ts" src="./add-to-popover" />
+<script lang="ts" src="./add-to-popover"></script>

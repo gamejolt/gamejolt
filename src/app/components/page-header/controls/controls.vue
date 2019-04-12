@@ -38,4 +38,4 @@
 			flex: none
 </style>
 
-<script lang="ts" src="./controls" />
+<script lang="ts" src="./controls"></script>

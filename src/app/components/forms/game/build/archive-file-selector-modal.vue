@@ -45,4 +45,4 @@
 	</app-modal>
 </template>
 
-<script lang="ts" src="./archive-file-selector-modal" />
+<script lang="ts" src="./archive-file-selector-modal"></script>

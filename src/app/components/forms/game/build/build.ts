@@ -113,6 +113,34 @@ export default class FormGameBuild extends BaseForm<GameBuildFormModel>
 		}/${this.model!.id}`;
 	}
 
+	get shouldPollProgress() {
+		return this.model && this.model.status === GameBuild.STATUS_ADDING && !this.archiveError;
+	}
+
+	get archiveError() {
+		if (!this.model) {
+			return '';
+		}
+
+		if (this.model.hasError(GameBuild.ERROR_INVALID_ARCHIVE)) {
+			return this.$gettext(
+				`The archive you uploaded looks corrupted, we can't extract it on our end.`
+			);
+		}
+
+		if (this.model.hasError(GameBuild.ERROR_PASSWORD_ARCHIVE)) {
+			return this.$gettext(`The archive you uploaded is password-protected.`);
+		}
+
+		if (this.model.hasError(GameBuild.ERROR_NOT_HTML_ARCHIVE)) {
+			return this.$gettext(
+				`The archive you uploaded doesn't look like a valid html build. We expect a zip with an index.html at the root of the archive.`
+			);
+		}
+
+		return '';
+	}
+
 	get hasBrowserError() {
 		return this.hasCustomError('browser');
 	}
@@ -401,7 +429,7 @@ export default class FormGameBuild extends BaseForm<GameBuildFormModel>
 		this.onBuildFieldChanged();
 	}
 
-	onBuildProcessingComplete(response: any) {
+	processPollerResponse(response: any) {
 		// Just copy over the new build data into our current one.
 		this.model!.assign(response.build);
 		if (response.game) {

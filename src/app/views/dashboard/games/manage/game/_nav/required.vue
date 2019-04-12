@@ -20,4 +20,4 @@
 		right: 0
 </style>
 
-<script lang="ts" src="./required" />
+<script lang="ts" src="./required"></script>

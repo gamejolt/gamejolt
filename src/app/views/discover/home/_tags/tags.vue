@@ -56,4 +56,4 @@
 	text-align: center
 </style>
 
-<script lang="ts" src="./tags" />
+<script lang="ts" src="./tags"></script>

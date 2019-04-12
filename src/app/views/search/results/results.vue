@@ -76,4 +76,4 @@
 	margin-top: $line-height-computed
 </style>
 
-<script lang="ts" src="./results" />
+<script lang="ts" src="./results"></script>

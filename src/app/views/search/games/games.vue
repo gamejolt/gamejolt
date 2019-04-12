@@ -12,4 +12,4 @@
 	</section>
 </template>
 
-<script lang="ts" src="./games" />
+<script lang="ts" src="./games"></script>

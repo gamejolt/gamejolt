@@ -25,4 +25,4 @@
 	font-size: $font-size-small
 </style>
 
-<script lang="ts" src="./media-tags" />
+<script lang="ts" src="./media-tags"></script>

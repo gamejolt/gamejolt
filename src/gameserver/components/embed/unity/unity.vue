@@ -39,4 +39,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./unity" />
+<script lang="ts" src="./unity"></script>

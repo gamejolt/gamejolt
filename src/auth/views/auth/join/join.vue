@@ -14,4 +14,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./join" />
+<script lang="ts" src="./join"></script>

@@ -81,4 +81,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./devlog" />
+<script lang="ts" src="./devlog"></script>

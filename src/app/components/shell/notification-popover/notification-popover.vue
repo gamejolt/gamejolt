@@ -63,4 +63,4 @@
 	text-align: right
 </style>
 
-<script lang="ts" src="./notification-popover" />
+<script lang="ts" src="./notification-popover"></script>

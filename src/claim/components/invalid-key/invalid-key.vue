@@ -19,4 +19,4 @@
 	</section>
 </template>
 
-<script lang="ts" src="./invalid-key" />
+<script lang="ts" src="./invalid-key"></script>

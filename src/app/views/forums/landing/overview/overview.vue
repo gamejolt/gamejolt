@@ -21,4 +21,4 @@
 	</section>
 </template>
 
-<script lang="ts" src="./overview" />
+<script lang="ts" src="./overview"></script>

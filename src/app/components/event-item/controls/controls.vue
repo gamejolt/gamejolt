@@ -66,4 +66,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./controls" />
+<script lang="ts" src="./controls"></script>

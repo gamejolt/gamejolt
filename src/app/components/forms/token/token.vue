@@ -26,4 +26,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./token" />
+<script lang="ts" src="./token"></script>

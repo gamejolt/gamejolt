@@ -77,4 +77,4 @@
 	margin-left: 10px
 </style>
 
-<script lang="ts" src="./notification" />
+<script lang="ts" src="./notification"></script>

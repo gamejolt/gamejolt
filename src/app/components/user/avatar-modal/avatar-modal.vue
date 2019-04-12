@@ -12,4 +12,4 @@
 	</app-modal>
 </template>
 
-<script lang="ts" src="./avatar-modal" />
+<script lang="ts" src="./avatar-modal"></script>

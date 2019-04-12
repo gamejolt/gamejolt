@@ -14,4 +14,4 @@
 	</section>
 </template>
 
-<script lang="ts" src="./users" />
+<script lang="ts" src="./users"></script>

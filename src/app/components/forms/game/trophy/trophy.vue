@@ -107,4 +107,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./trophy" />
+<script lang="ts" src="./trophy"></script>

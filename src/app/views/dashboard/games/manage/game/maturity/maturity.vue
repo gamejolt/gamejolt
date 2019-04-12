@@ -40,4 +40,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./maturity" />
+<script lang="ts" src="./maturity"></script>

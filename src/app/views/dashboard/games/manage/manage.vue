@@ -174,4 +174,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./manage" />
+<script lang="ts" src="./manage"></script>

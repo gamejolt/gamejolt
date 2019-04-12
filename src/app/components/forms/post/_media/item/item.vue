@@ -36,4 +36,4 @@
 	z-index: 2
 </style>
 
-<script lang="ts" src="./item" />
+<script lang="ts" src="./item"></script>

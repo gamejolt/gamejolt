@@ -85,4 +85,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./thumbnail" />
+<script lang="ts" src="./thumbnail"></script>

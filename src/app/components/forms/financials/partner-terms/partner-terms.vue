@@ -71,4 +71,4 @@
 	</fieldset>
 </template>
 
-<script lang="ts" src="./partner-terms" />
+<script lang="ts" src="./partner-terms"></script>

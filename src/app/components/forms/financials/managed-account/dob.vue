@@ -71,4 +71,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./dob" />
+<script lang="ts" src="./dob"></script>

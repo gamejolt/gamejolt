@@ -93,4 +93,4 @@
 }
 </style>
 
-<script lang="ts" src="./feed" />
+<script lang="ts" src="./feed"></script>

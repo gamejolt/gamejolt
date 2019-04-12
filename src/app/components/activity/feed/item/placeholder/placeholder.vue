@@ -48,4 +48,4 @@
 	height: $font-size-small
 </style>
 
-<script lang="ts" src="./placeholder" />
+<script lang="ts" src="./placeholder"></script>

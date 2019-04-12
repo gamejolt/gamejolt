@@ -154,4 +154,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./partners" />
+<script lang="ts" src="./partners"></script>

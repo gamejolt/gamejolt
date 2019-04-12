@@ -11,4 +11,4 @@
 	/>
 </template>
 
-<script lang="ts" src="./html" />
+<script lang="ts" src="./html"></script>

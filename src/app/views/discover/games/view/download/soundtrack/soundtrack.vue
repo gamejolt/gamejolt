@@ -41,4 +41,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./soundtrack" />
+<script lang="ts" src="./soundtrack"></script>

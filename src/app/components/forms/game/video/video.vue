@@ -39,4 +39,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./video" />
+<script lang="ts" src="./video"></script>

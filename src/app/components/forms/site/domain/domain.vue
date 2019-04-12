@@ -158,4 +158,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./domain" />
+<script lang="ts" src="./domain"></script>

@@ -456,4 +456,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./package" />
+<script lang="ts" src="./package"></script>

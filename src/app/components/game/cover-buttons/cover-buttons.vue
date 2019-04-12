@@ -32,4 +32,4 @@
 	position: relative
 </style>
 
-<script lang="ts" src="./cover-buttons" />
+<script lang="ts" src="./cover-buttons"></script>

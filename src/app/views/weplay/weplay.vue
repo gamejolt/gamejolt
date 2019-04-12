@@ -398,4 +398,4 @@
 
 </style>
 
-<script lang="ts" src="./weplay" />
+<script lang="ts" src="./weplay"></script>

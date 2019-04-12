@@ -231,4 +231,4 @@
 	margin-bottom: 0
 </style>
 
-<script lang="ts" src="./release" />
+<script lang="ts" src="./release"></script>

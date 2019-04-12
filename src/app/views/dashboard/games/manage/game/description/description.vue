@@ -24,4 +24,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./description" />
+<script lang="ts" src="./description"></script>

@@ -138,4 +138,4 @@ h4
 	margin-bottom: $line-height-computed * 2
 </style>
 
-<script lang="ts" src="./game" />
+<script lang="ts" src="./game"></script>

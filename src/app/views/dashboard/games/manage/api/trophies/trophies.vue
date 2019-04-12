@@ -120,4 +120,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./trophies" />
+<script lang="ts" src="./trophies"></script>

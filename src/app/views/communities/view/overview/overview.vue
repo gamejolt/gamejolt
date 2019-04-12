@@ -134,4 +134,4 @@
 	margin-top: $shell-top-nav-height + 10px !important
 </style>
 
-<script lang="ts" src="./overview" />
+<script lang="ts" src="./overview"></script>

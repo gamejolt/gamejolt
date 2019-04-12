@@ -106,4 +106,4 @@
 	theme-prop('color', 'white')
 </style>
 
-<script lang="ts" src="./status-bar" />
+<script lang="ts" src="./status-bar"></script>

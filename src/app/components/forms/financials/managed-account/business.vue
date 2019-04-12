@@ -41,4 +41,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./business" />
+<script lang="ts" src="./business"></script>

@@ -72,4 +72,4 @@
 			width: 88px
 </style>
 
-<script lang="ts" src="./maturity-block" />
+<script lang="ts" src="./maturity-block"></script>

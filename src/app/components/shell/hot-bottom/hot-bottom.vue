@@ -12,4 +12,4 @@
 	z-index: $zindex-shell-hot-bottom
 </style>
 
-<script lang="ts" src="./hot-bottom" />
+<script lang="ts" src="./hot-bottom"></script>

@@ -32,4 +32,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./install-progress" />
+<script lang="ts" src="./install-progress"></script>

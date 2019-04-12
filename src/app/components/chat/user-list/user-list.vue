@@ -17,4 +17,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./user-list" />
+<script lang="ts" src="./user-list"></script>

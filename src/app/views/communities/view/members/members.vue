@@ -16,4 +16,4 @@
 	</section>
 </template>
 
-<script lang="ts" src="./members" />
+<script lang="ts" src="./members"></script>

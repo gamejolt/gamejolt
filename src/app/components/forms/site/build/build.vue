@@ -38,4 +38,4 @@
 			text-decoration: underline
 </style>
 
-<script lang="ts" src="./build" />
+<script lang="ts" src="./build"></script>

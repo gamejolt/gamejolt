@@ -42,4 +42,4 @@
 	</nav>
 </template>
 
-<script lang="ts" src="./breadcrumbs" />
+<script lang="ts" src="./breadcrumbs"></script>

@@ -71,4 +71,4 @@
 	overflow: hidden
 </style>
 
-<script lang="ts" src="./design" />
+<script lang="ts" src="./design"></script>

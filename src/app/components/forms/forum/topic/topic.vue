@@ -27,4 +27,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./topic" />
+<script lang="ts" src="./topic"></script>

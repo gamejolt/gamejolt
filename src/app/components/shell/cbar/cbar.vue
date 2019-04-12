@@ -25,4 +25,4 @@
 	transition-timing-function: $ease-out-back
 </style>
 
-<script lang="ts" src="./cbar" />
+<script lang="ts" src="./cbar"></script>

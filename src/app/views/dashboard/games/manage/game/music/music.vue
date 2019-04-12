@@ -59,4 +59,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./music" />
+<script lang="ts" src="./music"></script>

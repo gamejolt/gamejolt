@@ -9,4 +9,4 @@
 	/>
 </template>
 
-<script lang="ts" src="./rom" />
+<script lang="ts" src="./rom"></script>

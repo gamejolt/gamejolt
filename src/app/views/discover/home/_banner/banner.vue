@@ -88,6 +88,6 @@
 	</app-theme>
 </template>
 
-<style lang="stylus" src="./banner.styl" scoped />
+<style lang="stylus" src="./banner.styl" scoped></style>
 
-<script lang="ts" src="./banner" />
+<script lang="ts" src="./banner"></script>

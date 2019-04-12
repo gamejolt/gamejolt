@@ -33,4 +33,4 @@
 	</ul>
 </template>
 
-<script lang="ts" src="./collection-list" />
+<script lang="ts" src="./collection-list"></script>

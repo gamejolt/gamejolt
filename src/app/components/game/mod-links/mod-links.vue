@@ -35,4 +35,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./mod-links" />
+<script lang="ts" src="./mod-links"></script>

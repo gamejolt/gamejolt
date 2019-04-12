@@ -186,4 +186,4 @@
 	</span>
 </template>
 
-<script lang="ts" src="./game-buttons" />
+<script lang="ts" src="./game-buttons"></script>

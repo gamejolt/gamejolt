@@ -72,4 +72,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./header" />
+<script lang="ts" src="./header"></script>

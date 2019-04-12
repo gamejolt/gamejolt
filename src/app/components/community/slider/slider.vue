@@ -26,4 +26,4 @@
 		padding-right: $grid-gutter-width * 0.5
 </style>
 
-<script lang="ts" src="./slider" />
+<script lang="ts" src="./slider"></script>

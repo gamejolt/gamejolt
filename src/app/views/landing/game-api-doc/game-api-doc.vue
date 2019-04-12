@@ -64,4 +64,4 @@
 	@extend .table
 </style>
 
-<script lang="ts" src="./game-api-doc" />
+<script lang="ts" src="./game-api-doc"></script>

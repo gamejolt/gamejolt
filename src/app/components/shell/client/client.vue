@@ -5,4 +5,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./client" />
+<script lang="ts" src="./client"></script>

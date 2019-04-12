@@ -19,4 +19,4 @@
 	padding-left: 40px
 </style>
 
-<script lang="ts" src="./input" />
+<script lang="ts" src="./input"></script>

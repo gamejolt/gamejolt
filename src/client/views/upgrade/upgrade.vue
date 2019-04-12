@@ -46,4 +46,4 @@
 	</section>
 </template>
 
-<script lang="ts" src="./upgrade" />
+<script lang="ts" src="./upgrade"></script>

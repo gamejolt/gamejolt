@@ -48,4 +48,4 @@
 	background-size: cover
 </style>
 
-<script lang="ts" src="./video" />
+<script lang="ts" src="./video"></script>

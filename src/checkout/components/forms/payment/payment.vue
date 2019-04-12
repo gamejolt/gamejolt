@@ -224,6 +224,6 @@
 	</app-form>
 </template>
 
-<style lang="stylus" src="./payment.styl" scoped />
+<style lang="stylus" src="./payment.styl" scoped></style>
 
-<script lang="ts" src="./payment" />
+<script lang="ts" src="./payment"></script>
