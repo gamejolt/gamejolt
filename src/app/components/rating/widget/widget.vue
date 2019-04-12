@@ -20,7 +20,7 @@
 				</span>
 			</a>
 
-			&nbsp;
+			<nbsp />
 		</template>
 
 		<span v-app-auth-required>

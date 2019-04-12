@@ -221,6 +221,14 @@ export default class FormGameBuild extends BaseForm<GameBuildFormModel>
 		);
 	}
 
+	get availablePlatformOptions() {
+		if (!this.model) {
+			return [];
+		}
+
+		return this.platformOptions.filter(platform => (this.model as any)[`os_${platform.key}`]);
+	}
+
 	get emulatorsInfo(): { [type: string]: string } {
 		return {
 			[GameBuild.EMULATOR_GB]: this.$gettext('Game Boy'),

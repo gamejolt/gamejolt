@@ -162,8 +162,8 @@
 				</template>
 
 				<!--
-				Playlists
-			-->
+					Playlists
+				-->
 				<template v-if="isLibraryBootstrapped">
 					<div class="nav-heading" :title="$gettext(`library.nav.playlists`)">
 						<translate>library.nav.playlists</translate>
@@ -197,9 +197,9 @@
 					</div>
 
 					<!--
-					Playlist Folders
-				-->
-					<div v-for="(folder, key) of playlistFolders" :key="key" v-if="key !== 'main'">
+						Playlist Folders
+					-->
+					<div v-for="key of playlistFoldersToDisplay" :key="key">
 						<ul class="shell-nav">
 							<li class="offline-disable">
 								<a @click="toggleFolder(key)">
@@ -208,11 +208,11 @@
 											:icon="openFolders.indexOf(key) === -1 ? 'folder' : 'folder-open'"
 										/>
 									</span>
-									{{ folder.title }}
+									{{ playlistFolders[key].title }}
 								</a>
 								<app-expand :when="openFolders.indexOf(key) !== -1">
 									<app-shell-sidebar-collection-list
-										:collections="folder.collections"
+										:collections="playlistFolders[key].collections"
 										:filter="playlistFilterQuery"
 										:should-sort="key === 'developers'"
 									/>
@@ -222,8 +222,8 @@
 					</div>
 
 					<!--
-					Main Playlists (not in folders)
-				-->
+						Main Playlists (not in folders)
+					-->
 					<app-shell-sidebar-collection-list
 						:collections="playlistFolders.main.collections"
 						:filter="playlistFilterQuery"

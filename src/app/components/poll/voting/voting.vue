@@ -39,7 +39,7 @@
 						<translate>Vote</translate>
 					</app-button>
 				</span>
-				&nbsp;
+				<nbsp />
 			</template>
 
 			<span class="text-muted">

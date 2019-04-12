@@ -44,7 +44,7 @@
 
 					<app-game-perms :game="game">
 						<!-- we need this stupid space for some reason -->
-						&nbsp;
+						<nbsp />
 
 						<app-button
 							circle

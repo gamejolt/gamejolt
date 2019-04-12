@@ -82,7 +82,6 @@
 			/>
 
 			<app-expand :when="!model.errors">
-
 				<br />
 				<app-progress-bar thin indeterminate active :percent="100" />
 
@@ -130,7 +129,10 @@
 					</template>
 
 					<div v-else-if="model.primary_file.is_archive && !model.primary_file.is_archive_ready">
-						<app-loading class="-rummaging" :label="$gettext(`Give us a second, we're rummaging through the archive...`)" />
+						<app-loading
+							class="-rummaging"
+							:label="$gettext(`Give us a second, we're rummaging through the archive...`)"
+						/>
 					</div>
 
 					<template v-else>
@@ -155,11 +157,12 @@
 								</translate>
 							</p>
 
-							<p :class="{
+							<p
+								:class="{
 									'help-block': true,
 									'sans-margin-top': !restrictedPlatforms.length,
-									}"
-								>
+								}"
+							>
 								<translate>
 									Select "Other" if this build is for a platform that's not shown, or if it's a
 									non-executable file such as a PDF.
@@ -167,7 +170,7 @@
 							</p>
 
 							<div class="clearfix">
-								<div v-for="platform of platformOptions">
+								<div v-for="platform of platformOptions" :key="platform.key">
 									<app-form-group :name="`os_${platform.key}`" :optional="true" :hide-label="true">
 										<div class="checkbox" :class="{ disabled: isPlatformDisabled(platform.key) }">
 											<label>
@@ -216,9 +219,8 @@
 
 							<div v-if="model.primary_file.is_archive">
 								<app-form-group
-									v-for="platform of platformOptions"
+									v-for="platform of availablePlatformOptions"
 									:key="platform.key"
-									v-if="model['os_' + platform.key]"
 									:name="`launch_${platform.key}`"
 									:label="platform.label"
 									label-class="col-sm-3"
@@ -261,10 +263,12 @@
 
 							<app-expand :when="serverErrors.launchOptions">
 								<div class="alert alert-notice">
-									<strong><translate>The launch options you entered are invalid.</translate></strong>
+									<strong>
+										<translate>The launch options you entered are invalid.</translate>
+									</strong>
 									<translate>
-										Make sure each selected file is in your build and that it works on the appropriate
-										operating system.
+										Make sure each selected file is in your build and that it works on the
+										appropriate operating system.
 									</translate>
 								</div>
 							</app-expand>
@@ -292,8 +296,8 @@
 
 								<p class="help-block">
 									<translate>
-										If your game can stretch to fit the browser viewport, you can turn this option on
-										to take up the whole available space.
+										If your game can stretch to fit the browser viewport, you can turn this option
+										on to take up the whole available space.
 									</translate>
 								</p>
 							</app-form-group>
@@ -350,13 +354,15 @@
 								<div class="alert alert-notice" v-if="!formModel.https_enabled">
 									<app-jolticon icon="notice" />
 									<strong>
-										<translate>It's highly recommended to get your game working on HTTPS!</translate>
+										<translate>
+											It's highly recommended to get your game working on HTTPS!
+										</translate>
 									</strong>
 									<translate>
-										In order for your game to continue working on Game Jolt we need to pop it out into
-										a new browser window when the user clicks to play it. This results in a worse user
-										experience, but ensures that your game will still continue to be available on the
-										site.
+										In order for your game to continue working on Game Jolt we need to pop it out
+										into a new browser window when the user clicks to play it. This results in a
+										worse user experience, but ensures that your game will still continue to be
+										available on the site.
 									</translate>
 								</div>
 							</app-form-group>
