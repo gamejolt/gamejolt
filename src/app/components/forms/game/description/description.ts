@@ -1,4 +1,4 @@
-import { ContentContainer } from 'game-jolt-frontend-lib/components/content/content-container';
+import { ContentDocument } from 'game-jolt-frontend-lib/components/content/content-document';
 import { ContentWriter } from 'game-jolt-frontend-lib/components/content/content-writer';
 import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
 import AppFormControlContent from 'game-jolt-frontend-lib/components/form-vue/control/content/content.vue';
@@ -42,10 +42,10 @@ export default class FormGameDescription extends BaseForm<DescriptionFormModel> 
 		return this.model && this.model.hasPerms('details');
 	}
 
-	get contentContainer() {
+	get contentDocument() {
 		if (this.formModel.description_content) {
-			const container = ContentContainer.fromJson(this.formModel.description_content);
-			return container;
+			const doc = ContentDocument.fromJson(this.formModel.description_content);
+			return doc;
 		}
 		return null;
 	}
@@ -66,12 +66,12 @@ export default class FormGameDescription extends BaseForm<DescriptionFormModel> 
 	}
 
 	async addTag(tag: string) {
-		const container = this.contentContainer;
-		if (container instanceof ContentContainer) {
-			const writer = new ContentWriter(container);
+		const doc = this.contentDocument;
+		if (doc instanceof ContentDocument) {
+			const writer = new ContentWriter(doc);
 			writer.appendTag(tag);
 
-			this.setField('description_content', container.toJson());
+			this.setField('description_content', doc.toJson());
 		}
 	}
 

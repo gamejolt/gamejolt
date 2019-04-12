@@ -8,7 +8,7 @@
 			<app-form-control-content
 				:placeholder="$gettext(`Write your game description here...`)"
 				content-context="game-description"
-				/>
+			/>
 
 			<app-form-control-errors />
 		</app-form-group>
@@ -17,7 +17,7 @@
 			class="-tags"
 			:text="tagText"
 			:tags="tags"
-			:content="contentContainer"
+			:content="contentDocument"
 			@tag="addTag($event)"
 		/>
 

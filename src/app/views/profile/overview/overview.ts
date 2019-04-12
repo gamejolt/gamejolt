@@ -25,7 +25,6 @@ import { YoutubeChannel } from 'game-jolt-frontend-lib/components/youtube/channe
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { ContentContainer } from '../../../../lib/gj-lib-client/components/content/content-container';
 import { ChatClient } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/overview/overview.vue';
 import AppGameList from '../../../components/game/list/list.vue';
@@ -205,14 +204,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	get canMessage() {
 		return this.isFriend && this.chat && this.chat.connected;
-	}
-
-	get hasBio() {
-		if (this.user instanceof User) {
-			const container = ContentContainer.fromJson(this.user.bio_content);
-			return container.hasContent;
-		}
-		return false;
 	}
 
 	getLinkedAccount(provider: Provider) {

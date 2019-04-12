@@ -1,4 +1,3 @@
-import { ContentContainer } from 'game-jolt-frontend-lib/components/content/content-container';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
@@ -32,11 +31,6 @@ export default class AppManageGameNav extends Vue {
 
 	@State
 	app!: AppStore;
-
-	get hasDescription() {
-		const container = ContentContainer.fromJson(this.game.description_content);
-		return container.hasContent;
-	}
 
 	Game = Game;
 }
