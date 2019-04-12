@@ -124,12 +124,12 @@ export default class FormGameBuild extends BaseForm<GameBuildFormModel>
 
 		if (this.model.hasError(GameBuild.ERROR_INVALID_ARCHIVE)) {
 			return this.$gettext(
-				`The archive you uploaded looks corrupt, we can't extract it on our end.`
+				`The archive you uploaded looks corrupted, we can't extract it on our end.`
 			);
 		}
 
 		if (this.model.hasError(GameBuild.ERROR_PASSWORD_ARCHIVE)) {
-			return this.$gettext(`The archive you uploaded is password protected.`);
+			return this.$gettext(`The archive you uploaded is password-protected.`);
 		}
 
 		if (this.model.hasError(GameBuild.ERROR_NOT_HTML_ARCHIVE)) {
