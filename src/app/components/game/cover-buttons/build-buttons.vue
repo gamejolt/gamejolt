@@ -16,4 +16,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./build-buttons" />
+<script lang="ts" src="./build-buttons"></script>

@@ -35,4 +35,4 @@
 	</app-modal>
 </template>
 
-<script lang="ts" src="./modal" />
+<script lang="ts" src="./modal"></script>

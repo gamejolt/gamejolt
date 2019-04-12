@@ -257,4 +257,4 @@
 	padding: $line-height-computed 0
 </style>
 
-<script lang="ts" src="./sidebar" />
+<script lang="ts" src="./sidebar"></script>

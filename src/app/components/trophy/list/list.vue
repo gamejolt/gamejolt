@@ -85,4 +85,4 @@ $trophy-list-gutter = ($grid-gutter-width / 2)
 		margin-bottom: $font-size-base
 </style>
 
-<script lang="ts" src="./list" />
+<script lang="ts" src="./list"></script>

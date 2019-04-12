@@ -31,4 +31,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./retrieve" />
+<script lang="ts" src="./retrieve"></script>

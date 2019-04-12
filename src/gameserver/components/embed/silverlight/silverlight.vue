@@ -37,4 +37,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./silverlight" />
+<script lang="ts" src="./silverlight"></script>

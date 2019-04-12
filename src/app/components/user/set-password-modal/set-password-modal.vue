@@ -27,4 +27,4 @@
 	</app-modal>
 </template>
 
-<script lang="ts" src="./set-password-modal" />
+<script lang="ts" src="./set-password-modal"></script>

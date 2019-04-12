@@ -20,4 +20,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./poll" />
+<script lang="ts" src="./poll"></script>

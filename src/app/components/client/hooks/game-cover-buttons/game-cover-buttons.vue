@@ -28,4 +28,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./game-cover-buttons" />
+<script lang="ts" src="./game-cover-buttons"></script>

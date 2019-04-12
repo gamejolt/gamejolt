@@ -48,4 +48,4 @@ $-height = 40px
 			caret(var(--theme-link), size: 9px)
 </style>
 
-<script lang="ts" src="./add-button" />
+<script lang="ts" src="./add-button"></script>

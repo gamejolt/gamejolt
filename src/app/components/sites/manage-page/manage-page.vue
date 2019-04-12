@@ -121,4 +121,4 @@
 		margin-right: 5px
 </style>
 
-<script lang="ts" src="./manage-page" />
+<script lang="ts" src="./manage-page"></script>

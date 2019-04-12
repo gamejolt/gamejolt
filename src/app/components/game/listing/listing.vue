@@ -127,4 +127,4 @@
 		margin-bottom: 0
 </style>
 
-<script lang="ts" src="./listing" />
+<script lang="ts" src="./listing"></script>

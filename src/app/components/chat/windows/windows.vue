@@ -26,4 +26,4 @@
 	align-items: flex-end
 </style>
 
-<script lang="ts" src="./windows" />
+<script lang="ts" src="./windows"></script>

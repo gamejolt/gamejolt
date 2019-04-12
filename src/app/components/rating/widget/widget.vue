@@ -20,7 +20,7 @@
 				</span>
 			</a>
 
-			&nbsp;
+			<nbsp />
 		</template>
 
 		<span v-app-auth-required>
@@ -36,10 +36,10 @@
 	</div>
 </template>
 
-<script lang="ts" src="./widget" />
+<script lang="ts" src="./widget"></script>
 
 <style lang="stylus" scoped>
-.-like-button {
-  margin-right: 10px;
-}
+.-like-button
+	margin-right: 10px
+
 </style>

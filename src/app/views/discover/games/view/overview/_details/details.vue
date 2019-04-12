@@ -107,4 +107,4 @@
 	font-weight: bold
 </style>
 
-<script lang="ts" src="./details" />
+<script lang="ts" src="./details"></script>

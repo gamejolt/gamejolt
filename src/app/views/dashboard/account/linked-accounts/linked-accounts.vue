@@ -108,4 +108,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./linked-accounts" />
+<script lang="ts" src="./linked-accounts"></script>

@@ -21,4 +21,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./post" />
+<script lang="ts" src="./post"></script>

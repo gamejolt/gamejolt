@@ -27,7 +27,7 @@
 				>
 					%{ count } Download
 				</translate>
-				&nbsp;
+				<nbsp />
 				<div class="-progress">
 					<app-client-status-bar-patch-item
 						v-for="packageId of currentlyPatchingIds"
@@ -53,7 +53,7 @@
 							<app-jolticon notice icon="notice" />
 							<translate>Try restarting</translate>
 						</a>
-						&nbsp;
+						<nbsp />
 						<a class="-dismiss" @click="dismissUpdaterWarning()">
 							<app-jolticon class="-dismiss" icon="remove" />
 						</a>
@@ -106,4 +106,4 @@
 	theme-prop('color', 'white')
 </style>
 
-<script lang="ts" src="./status-bar" />
+<script lang="ts" src="./status-bar"></script>

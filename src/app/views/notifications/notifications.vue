@@ -28,4 +28,4 @@
 	</section>
 </template>
 
-<script lang="ts" src="./notifications" />
+<script lang="ts" src="./notifications"></script>

@@ -6,4 +6,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./financials" />
+<script lang="ts" src="./financials"></script>

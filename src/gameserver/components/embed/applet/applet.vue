@@ -29,4 +29,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./applet" />
+<script lang="ts" src="./applet"></script>

@@ -14,7 +14,7 @@ export class ArchiveFileSelectorModal {
 			modalId: 'ArchiveFileSelector',
 			component: () =>
 				asyncComponentLoader(
-					import(/* webpackChunkName: "ArchiveFileSelectorModal" */ './archive-file-selector-modal')
+					import(/* webpackChunkName: "ArchiveFileSelectorModal" */ './archive-file-selector-modal.vue')
 				),
 			props: { gameId, packageId, releaseId, buildId, primaryFileId, platform },
 		});

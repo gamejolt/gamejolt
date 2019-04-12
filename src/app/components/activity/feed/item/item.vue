@@ -21,4 +21,4 @@
 	</app-scroll-inview>
 </template>
 
-<script lang="ts" src="./item" />
+<script lang="ts" src="./item"></script>

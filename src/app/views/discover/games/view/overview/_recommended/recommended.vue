@@ -23,4 +23,4 @@
 	margin-bottom: $line-height-computed
 </style>
 
-<script lang="ts" src="./recommended" />
+<script lang="ts" src="./recommended"></script>

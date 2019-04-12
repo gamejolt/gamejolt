@@ -27,4 +27,4 @@
 	margin-top: 4px
 </style>
 
-<script lang="ts" src="./tag" />
+<script lang="ts" src="./tag"></script>

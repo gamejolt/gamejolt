@@ -50,4 +50,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./ssn" />
+<script lang="ts" src="./ssn"></script>

@@ -38,6 +38,6 @@
 	</div>
 </template>
 
-<style lang="stylus" src="./media.styl" scoped />
+<style lang="stylus" src="./media.styl" scoped></style>
 
-<script lang="ts" src="./media" />
+<script lang="ts" src="./media"></script>

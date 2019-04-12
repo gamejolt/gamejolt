@@ -75,4 +75,4 @@ textarea
 		right: 5px
 </style>
 
-<script lang="ts" src="./send" />
+<script lang="ts" src="./send"></script>

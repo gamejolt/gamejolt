@@ -14,4 +14,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./communities" />
+<script lang="ts" src="./communities"></script>

@@ -39,4 +39,4 @@
 			clear: both
 </style>
 
-<script lang="ts" src="./list" />
+<script lang="ts" src="./list"></script>

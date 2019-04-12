@@ -19,4 +19,4 @@
 	</span>
 </template>
 
-<script lang="ts" src="./history-navigator" />
+<script lang="ts" src="./history-navigator"></script>

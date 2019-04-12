@@ -41,4 +41,4 @@
 	</app-modal>
 </template>
 
-<script lang="ts" src="./anti-virus-modal" />
+<script lang="ts" src="./anti-virus-modal"></script>

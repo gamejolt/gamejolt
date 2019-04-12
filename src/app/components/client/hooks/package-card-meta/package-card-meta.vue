@@ -37,4 +37,4 @@
 	</span>
 </template>
 
-<script lang="ts" src="./package-card-meta" />
+<script lang="ts" src="./package-card-meta"></script>

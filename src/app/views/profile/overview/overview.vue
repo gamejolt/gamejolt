@@ -282,4 +282,4 @@
 	spacer()
 </style>
 
-<script lang="ts" src="./overview" />
+<script lang="ts" src="./overview"></script>

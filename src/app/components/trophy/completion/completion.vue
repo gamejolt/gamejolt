@@ -52,4 +52,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./completion" />
+<script lang="ts" src="./completion"></script>

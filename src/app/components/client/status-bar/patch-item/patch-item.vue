@@ -17,4 +17,4 @@
 		margin-left: 1px
 </style>
 
-<script lang="ts" src="./patch-item" />
+<script lang="ts" src="./patch-item"></script>

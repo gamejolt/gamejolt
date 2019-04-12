@@ -230,4 +230,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./marketplace" />
+<script lang="ts" src="./marketplace"></script>

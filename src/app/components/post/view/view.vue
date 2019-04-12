@@ -121,4 +121,4 @@
 			rounded-corners()
 </style>
 
-<script lang="ts" src="./view" />
+<script lang="ts" src="./view"></script>

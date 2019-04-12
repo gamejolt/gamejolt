@@ -4,7 +4,7 @@
 			<ul>
 				<li>
 					<router-link :to="{ name: 'dash.games.manage.game.packages.list' }">
-						<span class="breadcrumb-tag">&nbsp;</span>
+						<span class="breadcrumb-tag"><nbsp /></span>
 						<translate>Packages</translate>
 					</router-link>
 					<span class="breadcrumb-separator"><app-jolticon icon="chevron-right" /></span>
@@ -58,4 +58,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./edit" />
+<script lang="ts" src="./edit"></script>

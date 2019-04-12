@@ -181,6 +181,6 @@
 	</footer>
 </template>
 
-<style lang="stylus" src="./footer.styl" scoped />
+<style lang="stylus" src="./footer.styl" scoped></style>
 
-<script lang="ts" src="./footer" />
+<script lang="ts" src="./footer"></script>

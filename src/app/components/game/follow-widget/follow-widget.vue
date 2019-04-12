@@ -46,4 +46,4 @@
 	</app-popper>
 </template>
 
-<script lang="ts" src="./follow-widget" />
+<script lang="ts" src="./follow-widget"></script>

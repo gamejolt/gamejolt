@@ -44,7 +44,7 @@
 
 					<app-game-perms :game="game">
 						<!-- we need this stupid space for some reason -->
-						&nbsp;
+						<nbsp />
 
 						<app-button
 							circle
@@ -102,4 +102,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./view" />
+<script lang="ts" src="./view"></script>

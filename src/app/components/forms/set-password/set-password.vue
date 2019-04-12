@@ -18,4 +18,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./set-password" />
+<script lang="ts" src="./set-password"></script>

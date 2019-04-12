@@ -74,4 +74,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./avatar" />
+<script lang="ts" src="./avatar"></script>

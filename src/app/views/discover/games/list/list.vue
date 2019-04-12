@@ -166,4 +166,4 @@ $-spotlight-size = 58px
 		margin-left: $-spotlight-size + $grid-gutter-width
 </style>
 
-<script lang="ts" src="./list" />
+<script lang="ts" src="./list"></script>

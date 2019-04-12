@@ -491,4 +491,4 @@
 		color: $white
 </style>
 
-<script lang="ts" src="./learn" />
+<script lang="ts" src="./learn"></script>

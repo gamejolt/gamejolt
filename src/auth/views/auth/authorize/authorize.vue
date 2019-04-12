@@ -24,4 +24,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./authorize" />
+<script lang="ts" src="./authorize"></script>

@@ -28,4 +28,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./flash" />
+<script lang="ts" src="./flash"></script>

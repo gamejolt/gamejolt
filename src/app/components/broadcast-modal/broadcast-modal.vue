@@ -104,4 +104,4 @@
 	</app-modal>
 </template>
 
-<script lang="ts" src="./broadcast-modal" />
+<script lang="ts" src="./broadcast-modal"></script>

@@ -14,4 +14,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./key" />
+<script lang="ts" src="./key"></script>

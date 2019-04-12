@@ -106,4 +106,4 @@
 	display: none
 </style>
 
-<script lang="ts" src="./media" />
+<script lang="ts" src="./media"></script>

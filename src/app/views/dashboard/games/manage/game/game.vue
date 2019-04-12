@@ -65,4 +65,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./game" />
+<script lang="ts" src="./game"></script>

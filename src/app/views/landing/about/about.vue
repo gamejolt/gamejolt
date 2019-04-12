@@ -318,4 +318,4 @@
 		font-weight: bold
 </style>
 
-<script lang="ts" src="./about" />
+<script lang="ts" src="./about"></script>

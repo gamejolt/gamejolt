@@ -19,4 +19,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./payment-methods" />
+<script lang="ts" src="./payment-methods"></script>

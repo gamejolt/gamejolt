@@ -54,4 +54,4 @@
 		filter: blur(15px)
 </style>
 
-<script lang="ts" src="./cover" />
+<script lang="ts" src="./cover"></script>

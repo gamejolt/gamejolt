@@ -53,4 +53,4 @@
 	margin-right: 5px
 </style>
 
-<script lang="ts" src="./tags" />
+<script lang="ts" src="./tags"></script>

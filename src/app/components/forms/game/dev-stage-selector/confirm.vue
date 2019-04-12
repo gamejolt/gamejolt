@@ -66,4 +66,4 @@
 	</app-modal>
 </template>
 
-<script lang="ts" src="./confirm" />
+<script lang="ts" src="./confirm"></script>

@@ -3,7 +3,9 @@
 		<ul>
 			<li>
 				<router-link :to="{ name: 'forums.landing.overview' }">
-					<span class="breadcrumb-tag">&nbsp;</span>
+					<span class="breadcrumb-tag">
+						<nbsp />
+					</span>
 					<translate>Forums</translate>
 				</router-link>
 				<app-jolticon v-if="channel" icon="chevron-right" class="breadcrumb-separator" />
@@ -25,7 +27,9 @@
 
 			<li v-if="page">
 				<span class="active">
-					<span class="breadcrumb-tag">&nbsp;</span>
+					<span class="breadcrumb-tag">
+						<nbsp />
+					</span>
 					<template v-if="page === 'add-topic'">
 						<translate>New Topic</translate>
 					</template>
@@ -38,4 +42,4 @@
 	</nav>
 </template>
 
-<script lang="ts" src="./breadcrumbs" />
+<script lang="ts" src="./breadcrumbs"></script>

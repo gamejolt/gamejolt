@@ -27,6 +27,6 @@
 	</div>
 </template>
 
-<style lang="stylus" src="./thumbnail.styl" scoped />
+<style lang="stylus" src="./thumbnail.styl" scoped></style>
 
-<script lang="ts" src="./thumbnail" />
+<script lang="ts" src="./thumbnail"></script>

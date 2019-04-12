@@ -56,4 +56,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./id-document" />
+<script lang="ts" src="./id-document"></script>

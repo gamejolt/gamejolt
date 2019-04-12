@@ -111,4 +111,4 @@
 		justify-content: center
 </style>
 
-<script lang="ts" src="./dev-stage-selector" />
+<script lang="ts" src="./dev-stage-selector"></script>

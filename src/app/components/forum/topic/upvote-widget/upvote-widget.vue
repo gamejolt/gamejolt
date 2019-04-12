@@ -14,8 +14,8 @@
 			<span class="blip-caret"></span>
 			<span class="blip-count">{{ upvoteCount | number }}</span>
 		</span>
-		&nbsp;
+		<nbsp />
 	</span>
 </template>
 
-<script lang="ts" src="./upvote-widget" />
+<script lang="ts" src="./upvote-widget"></script>

@@ -4,4 +4,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./domain" />
+<script lang="ts" src="./domain"></script>

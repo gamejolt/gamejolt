@@ -20,4 +20,4 @@
 	</div>
 </template>
 
-<script lang="ts" src="./simple-stat" />
+<script lang="ts" src="./simple-stat"></script>

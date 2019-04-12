@@ -74,4 +74,4 @@
 				transition: none
 </style>
 
-<script lang="ts" src="./thumbnail" />
+<script lang="ts" src="./thumbnail"></script>

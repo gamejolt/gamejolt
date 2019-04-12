@@ -20,4 +20,4 @@
 	</app-popper>
 </template>
 
-<script lang="ts" src="./add-to-widget" />
+<script lang="ts" src="./add-to-widget"></script>

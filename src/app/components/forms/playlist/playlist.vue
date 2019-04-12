@@ -18,4 +18,4 @@
 	</app-form>
 </template>
 
-<script lang="ts" src="./playlist" />
+<script lang="ts" src="./playlist"></script>

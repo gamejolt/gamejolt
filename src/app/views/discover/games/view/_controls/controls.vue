@@ -6,4 +6,4 @@
 	</app-page-header-controls>
 </template>
 
-<script lang="ts" src="./controls" />
+<script lang="ts" src="./controls"></script>

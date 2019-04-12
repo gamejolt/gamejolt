@@ -14,4 +14,4 @@
 	</app-tag-suggestion>
 </template>
 
-<script lang="ts" src="./tags" />
+<script lang="ts" src="./tags"></script>

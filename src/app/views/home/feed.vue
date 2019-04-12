@@ -146,4 +146,4 @@
 	margin-bottom: 5px
 </style>
 
-<script lang="ts" src="./feed" />
+<script lang="ts" src="./feed"></script>
