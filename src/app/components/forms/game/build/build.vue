@@ -74,12 +74,17 @@
 		<!--
 			Processing the build.
 		-->
+<<<<<<< HEAD
+		<app-expand :when="!model.errors && model.status === GameBuild.STATUS_ADDING">
+			<app-progress-poller :url="pollUrl" @complete="onBuildProcessingComplete" />
+=======
 		<template v-if="shouldPollProgress">
 			<app-progress-poller
 				:url="pollUrl"
 				@progress="processPollerResponse"
 				@complete="processPollerResponse"
 			/>
+>>>>>>> 15c0afd1e5f07d9daaeb7290b7a9fb0f844fbfce
 
 			<app-expand :when="!model.errors">
 				<br />
@@ -206,6 +211,16 @@
 							</translate>
 						</p>
 
+<<<<<<< HEAD
+						<div class="clearfix">
+							<div v-for="platform of platformOptions" :key="platform.key">
+								<app-form-group :name="`os_${platform.key}`" :optional="true" :hide-label="true">
+									<div class="checkbox" :class="{ disabled: isPlatformDisabled(platform.key) }">
+										<label>
+											<app-form-control-checkbox
+												:disabled="isPlatformDisabled(platform.key)"
+												@changed="platformChanged(platform.key)"
+=======
 						<!--
 							Launch Options
 						-->
@@ -233,6 +248,7 @@
 													max: 500,
 												}"
 												@changed="onBuildFieldChanged"
+>>>>>>> 15c0afd1e5f07d9daaeb7290b7a9fb0f844fbfce
 											/>
 											<!--  TODO: this doesn't register when the file is selected to clear the error -->
 
@@ -287,6 +303,64 @@
 							</app-expand>
 						</fieldset>
 
+<<<<<<< HEAD
+					<!--
+					This happens when it's not a launchable file type.
+					In that case, it is forced as "other".
+				-->
+					<p class="sans-margin" v-if="forceOther">
+						<app-jolticon icon="info-circle" />
+						<translate>
+							This build doesn't seem to be a Windows, Mac, or Linux build, so we've marked it as
+							'Other' for you.
+						</translate>
+					</p>
+
+					<!--
+						Launch Options
+					-->
+					<fieldset
+						v-if="
+							!hasPlatformsError && model.type === GameBuild.TYPE_DOWNLOADABLE && !model.os_other
+						"
+						class="form-horizontal"
+					>
+						<legend><translate>Launch Options</translate></legend>
+
+						<div v-if="model.primary_file.is_archive">
+							<app-form-group
+								v-for="platform of availablePlatformOptions"
+								:key="platform.key"
+								:name="`launch_${platform.key}`"
+								:label="platform.label"
+								label-class="col-sm-3"
+							>
+								<div class="col-sm-9">
+									<div class="input-group input-group-sm">
+										<app-form-control
+											maxlength="500"
+											:rules="{
+												max: 500,
+											}"
+											@changed="onBuildFieldChanged"
+										/>
+										<!--  TODO: this doesn't register when the file is selected to clear the error -->
+
+										<span class="input-group-addon">
+											<a
+												class="link-unstyled"
+												v-app-tooltip="
+													$gettext(
+														`dash.games.releases.builds.launch_options.form.file_selector_tooltip`
+													)
+												"
+												@click="openFileSelector(platform.key)"
+											>
+												<app-jolticon icon="ellipsis-h" />
+											</a>
+										</span>
+									</div>
+=======
 						<!--
 							Browser Embed Dimensions
 						-->
@@ -304,6 +378,7 @@
 
 							<template v-if="!isFitToScreen">
 								<hr />
+>>>>>>> 15c0afd1e5f07d9daaeb7290b7a9fb0f844fbfce
 
 								<p class="help-block">
 									<translate>
