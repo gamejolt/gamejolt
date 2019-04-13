@@ -95,6 +95,7 @@
 					<app-loading v-if="isLoadingPreview" />
 					<template v-else>
 						<app-game-package-card
+							v-if="previewPackage"
 							:game="game"
 							:sellable="previewSellable"
 							:package="previewPackage"
