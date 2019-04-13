@@ -14,7 +14,7 @@
 		</p>
 
 		<div :class="{ 'scrollable-grid': isScrollable }">
-			<div class="game-grid-items">
+			<app-condense-whitespace class="game-grid-items">
 				<div class="game-grid-ad" v-if="Screen.isDesktop && shouldShowAds">
 					<div class="game-grid-ad-inner">
 						<app-ad-widget size="rectangle" :pos="adPos" />
@@ -47,7 +47,7 @@
 						</app-game-thumbnail>
 					</div>
 				</template>
-			</div>
+			</app-condense-whitespace>
 		</div>
 	</div>
 </template>

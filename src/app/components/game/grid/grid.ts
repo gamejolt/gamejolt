@@ -1,6 +1,7 @@
 import { Ads } from 'game-jolt-frontend-lib/components/ad/ads.service';
 import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { AppCondenseWhitespace } from 'game-jolt-frontend-lib/components/condense-whitespace';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
@@ -18,6 +19,7 @@ let idCounter = 0;
 	components: {
 		AppGameThumbnail,
 		AppAdWidget,
+		AppCondenseWhitespace,
 	},
 	directives: {
 		AppTrackEvent,
