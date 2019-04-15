@@ -4,7 +4,7 @@
 			<li>
 				<router-link :to="{ name: 'forums.landing.overview' }">
 					<span class="breadcrumb-tag">
-						<nbsp />
+						&nbsp;
 					</span>
 					<translate>Forums</translate>
 				</router-link>
@@ -28,7 +28,7 @@
 			<li v-if="page">
 				<span class="active">
 					<span class="breadcrumb-tag">
-						<nbsp />
+						&nbsp;
 					</span>
 					<template v-if="page === 'add-topic'">
 						<translate>New Topic</translate>

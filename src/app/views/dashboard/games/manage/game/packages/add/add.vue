@@ -4,14 +4,14 @@
 			<ul>
 				<li>
 					<router-link :to="{ name: 'dash.games.manage.game.packages.list' }">
-						<span class="breadcrumb-tag"><nbsp /></span>
+						<span class="breadcrumb-tag">&nbsp;</span>
 						<translate>Packages</translate>
 					</router-link>
 					<app-jolticon icon="chevron-right" class="breadcrumb-separator" />
 				</li>
 				<li>
 					<span class="active">
-						<span class="breadcrumb-tag"><nbsp /></span>
+						<span class="breadcrumb-tag">&nbsp;</span>
 						<translate>Add Package</translate>
 					</span>
 				</li>

@@ -19,8 +19,7 @@
 					<span class="blip-count">{{ likeCountFormatted }}</span>
 				</span>
 			</a>
-
-			<nbsp />
+			&nbsp;
 		</template>
 
 		<span v-app-auth-required>
