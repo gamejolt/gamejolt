@@ -71,6 +71,10 @@ export default class AppShellSidebar extends Vue {
 		return this.bundleCollections.sort((a, b) => stringSort(a.name, b.name));
 	}
 
+	get playlistFoldersToDisplay() {
+		return Object.keys(this.playlistFolders).filter(folder => folder !== 'main');
+	}
+
 	toggleFolder(key: string) {
 		const index = this.openFolders.indexOf(key);
 		if (index === -1) {

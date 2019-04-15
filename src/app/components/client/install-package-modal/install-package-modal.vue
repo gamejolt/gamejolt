@@ -21,11 +21,10 @@
 			</p>
 
 			<app-loading big v-if="isLoading" />
-			<template v-else-if="packageData.packages.length">
+			<template v-else-if="installablePackages.length">
 				<app-game-package-card
-					v-for="pkg of packageData.packages"
+					v-for="pkg of installablePackages"
 					:key="pkg.id"
-					v-if="buildsByPackage[pkg.id]"
 					:game="game"
 					:sellable="pkg._sellable"
 					:package="pkg"

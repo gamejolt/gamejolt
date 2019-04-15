@@ -12,7 +12,11 @@ import { arrayGroupBy } from 'game-jolt-frontend-lib/utils/array';
 import * as path from 'path';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { ClientLibraryAction, ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
+import {
+	ClientLibraryAction,
+	ClientLibraryState,
+	ClientLibraryStore,
+} from '../../../store/client-library';
 import { ClientInstallPackageModal } from '../install-package-modal/install-package-modal.service';
 import AppClientInstallProgress from '../install-progress/install-progress.vue';
 import { LocalDbPackage } from '../local-db/package/package.model';
@@ -94,8 +98,16 @@ export default class AppClientGameButtons extends Vue {
 		return this.findActiveForGame(this.game.id);
 	}
 
-	get gamePackages(): LocalDbPackage[] | undefined {
-		return this.packagesByGameId[this.game.id];
+	get gamePackages() {
+		return this.packagesByGameId[this.game.id] || [];
+	}
+
+	get settledGamePackages() {
+		return this.gamePackages.filter(p => p.isSettled);
+	}
+
+	get uninstallableGamePackages() {
+		return this.gamePackages.filter(p => !p.install_state && !p.isRemoving);
 	}
 
 	get installTooltip() {

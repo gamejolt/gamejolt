@@ -40,6 +40,11 @@
 	>>> .form-group
 		margin-bottom: $line-height-computed
 
+	// Need to do this because the rule above overrides it.
+	.-archive-error
+		>>> .sans-margin-bottom
+			margin-bottom: 0
+
 	&-submit-button
 		margin-top: ($line-height-computed / 2)
 
@@ -55,3 +60,6 @@
 
 		.checkbox
 			margin-top: 0
+
+	.-rummaging
+		margin-bottom: 0

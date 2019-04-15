@@ -19,7 +19,6 @@
 					<span class="blip-count">{{ likeCountFormatted }}</span>
 				</span>
 			</a>
-
 			&nbsp;
 		</template>
 

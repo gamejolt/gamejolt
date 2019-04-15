@@ -68,8 +68,8 @@
 					</p>
 
 					<app-form-control-select>
-						<optgroup v-for="(timezones, region) of timezones" :label="region">
-							<option v-for="timezone of timezones" :value="timezone.i">
+						<optgroup v-for="(timezones, region) of timezones" :key="region" :label="region">
+							<option v-for="timezone of timezones" :key="timezone.label" :value="timezone.i">
 								{{ timezone.label }}
 							</option>
 						</optgroup>
