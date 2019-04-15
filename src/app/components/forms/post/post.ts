@@ -9,8 +9,8 @@ import {
 	AutosizeBootstrap,
 } from 'game-jolt-frontend-lib/components/form-vue/autosize.directive';
 import AppFormControlCheckbox from 'game-jolt-frontend-lib/components/form-vue/control/checkbox/checkbox.vue';
+import AppFormControlContent from 'game-jolt-frontend-lib/components/form-vue/control/content/content.vue';
 import AppFormControlDate from 'game-jolt-frontend-lib/components/form-vue/control/date/date.vue';
-import AppFormControlMarkdown from 'game-jolt-frontend-lib/components/form-vue/control/markdown/markdown.vue';
 import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
 import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
 import { AppFocusWhen } from 'game-jolt-frontend-lib/components/form-vue/focus-when.directive';
@@ -42,6 +42,8 @@ import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vu
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { determine } from 'jstimezonedetect';
 import { Component, Prop } from 'vue-property-decorator';
+import { ContentDocument } from '../../../../lib/gj-lib-client/components/content/content-document';
+import { ContentWriter } from '../../../../lib/gj-lib-client/components/content/content-writer';
 import AppFormPostTags from './tags/tags.vue';
 import AppFormPostMedia from './_media/media.vue';
 
@@ -75,7 +77,6 @@ type FormPostModel = FiresidePost & {
 	components: {
 		AppFormControlCheckbox,
 		AppFormControlDate,
-		AppFormControlMarkdown,
 		AppFormControlToggle,
 		AppFormControlUpload,
 		AppFormLegend,
@@ -87,6 +88,7 @@ type FormPostModel = FiresidePost & {
 		AppFormPostMedia,
 		AppCommunityPill,
 		AppFormPostTags,
+		AppFormControlContent,
 	},
 	directives: {
 		AppFocusWhen,
@@ -209,9 +211,18 @@ export default class FormPost extends BaseForm<FormPostModel>
 		return this.longEnabled;
 	}
 
-	get tagText() {
-		const longText = this.longEnabled ? this.formModel.content_markdown : '';
-		return `${this.formModel.lead} ${longText || ''}`;
+	get tagContentDocument() {
+		if (this.formModel.hasLead) {
+			const leadDoc = ContentDocument.fromJson(this.formModel.lead_content);
+			if (this.formModel.hasArticle) {
+				const articleDoc = ContentDocument.fromJson(this.formModel.article_content);
+				const mergedDoc = ContentDocument.merge('fireside-post-lead', leadDoc, articleDoc);
+				return mergedDoc;
+			} else {
+				return leadDoc;
+			}
+		}
+		return null;
 	}
 
 	get hasPoll() {
@@ -267,92 +278,12 @@ export default class FormPost extends BaseForm<FormPostModel>
 		return this.wasPublished && this.publishToPlatforms !== null;
 	}
 
-	get urlsInLead() {
-		const lead = this.formModel.lead;
-		if (!lead) {
-			return [];
-		}
-
-		const urlRegex = new RegExp(
-			// Separate by no-word or start of string.
-			'(^|[^\\w@])' +
-				// Optional http/s protocol.
-				'(https?:\\/\\/)?' +
-				// Subdomain and main domain.
-				'((([a-z0-9][a-z0-9-]{0,61}[a-z0-9])|([a-z0-9]))\\.){1,}' +
-				// Top level domain.
-				'[a-z][a-z-]{0,61}[a-z]' +
-				// Port number.
-				'(:(6553[0-5]|655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[0-9]{1,4}))?' +
-				// Path.
-				// tslint:disable-next-line:quotemark
-				"(\\/([a-z0-9-\\._~!$&'\\(\\)\\*\\+,;=:@%]{1,})?)*" +
-				// Query.
-				// tslint:disable-next-line:quotemark max-line-length
-				"(\\?[a-z0-9-\\._~!$\\/'\\(\\)\\*\\+,;:@%]{1,}(=[a-z0-9-\\._~!$\\/'\\(\\)\\*\\+,;:@%]*)?(&[a-z0-9-\\._~!$\\/'\\(\\)\\*\\+,;:@%]{1,}(=[a-z0-9-\\._~!$\\/'\\(\\)\\*\\+,;:@%]*)?)*)?" +
-				// Fragment.
-				// tslint:disable-next-line:quotemark
-				"(#[a-z0-9-\\._~:@\\/\\?!$&'\\(\\)\\*\\+,;=%]{1,})?" +
-				// Lookahead to end url.
-				'(?=\\W|$)',
-			'gi'
-		);
-
-		const matches = lead.match(urlRegex);
-		const urls = [];
-		if (matches && matches.length) {
-			for (const match of matches) {
-				let matchStr = match;
-				// Url has to start with an alphanumeric char.
-				while (matchStr && matchStr.match(/^[^a-z0-9].+/i)) {
-					matchStr = matchStr.substr(1);
-				}
-
-				// Trim common delimiters from end of the url.
-				// If the url ends with ) and has ( in it, do not remove it from the end.
-				const openingParenthesesCount = matchStr.split('(').length - 1;
-				const closingParenthesesCount = matchStr.split(')').length - 1;
-				let removeParenthesesCount = closingParenthesesCount - openingParenthesesCount;
-				while (
-					matchStr &&
-					matchStr.match(/.+[\)\?\]}'"\.:]$/) &&
-					(!matchStr.endsWith(')') || removeParenthesesCount > 0)
-				) {
-					if (matchStr.endsWith(')')) {
-						removeParenthesesCount--;
-					}
-					matchStr = matchStr.substr(0, matchStr.length - 1);
-				}
-
-				urls.push(matchStr);
-			}
-		}
-		return urls;
-	}
-
-	get computedLeadLength() {
-		let lead = this.formModel.lead;
-		if (!lead) {
-			return 0;
-		}
-
-		const urls = this.urlsInLead;
-		for (const url of urls) {
-			lead = lead.replace(url, ' '.repeat(this.leadUrlLength));
-		}
-
-		// js is utf18, we need to calc the byte length
-		// thank you https://github.com/substack/utf8-length !
-		// tslint:disable-next-line:no-bitwise
-		return ~-encodeURI(lead).split(/%..|./).length;
-	}
-
 	get leadLengthPercent() {
-		return 100 - (this.computedLeadLength / this.leadLengthLimit) * 100;
+		return 100 - (this.formModel.leadLength / this.leadLengthLimit) * 100;
 	}
 
 	get isLeadValid() {
-		return this.computedLeadLength <= this.leadLengthLimit;
+		return this.formModel.leadLength <= this.leadLengthLimit;
 	}
 
 	get platformRestrictions() {
@@ -386,7 +317,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 		const model = this.model!;
 
 		// save if the post was a saved draft post (not a new draft post)
-		if (model.status === FiresidePost.STATUS_DRAFT && model.lead) {
+		if (model.status === FiresidePost.STATUS_DRAFT && model.hasLead) {
 			this.isSavedDraftPost = true;
 		}
 
@@ -437,7 +368,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 			this.accessPermissionsEnabled = true;
 		}
 
-		if (model.content_markdown) {
+		if (model.hasArticle) {
 			this.longEnabled = true;
 		}
 	}
@@ -496,7 +427,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 		}
 
 		if (!this.longEnabled) {
-			this.setField('content_markdown', '');
+			this.setField('article_content', '');
 		}
 
 		this.setField('publishToPlatforms', this.publishToPlatforms);
@@ -506,7 +437,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 	}
 
 	onSubmitSuccess() {
-		Object.assign(this.model as FiresidePost, this.formModel);
+		Object.assign(this.model, this.formModel);
 	}
 
 	/**
@@ -560,8 +491,10 @@ export default class FormPost extends BaseForm<FormPostModel>
 	}
 
 	async addTag(tag: string) {
-		const newLead = this.formModel.lead ? `${this.formModel.lead} #${tag}` : `#${tag}`;
-		this.setField('lead', newLead);
+		const doc = ContentDocument.fromJson(this.formModel.lead_content);
+		const writer = new ContentWriter(doc);
+		writer.appendTag(tag);
+		this.setField('lead_content', doc.toJson());
 
 		if (this.updateAutosize) {
 			await this.$nextTick();

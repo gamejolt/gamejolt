@@ -1,4 +1,5 @@
-import AppTagSuggestion from 'game-jolt-frontend-lib/components/tag/suggestion/suggestion.vue'
+import { ContentDocument } from 'game-jolt-frontend-lib/components/content/content-document';
+import AppTagSuggestion from 'game-jolt-frontend-lib/components/tag/suggestion/suggestion.vue';
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 
@@ -11,8 +12,8 @@ export default class AppFormPostTags extends Vue {
 	@Prop(Array)
 	tags!: string[];
 
-	@Prop(String)
-	text!: string;
+	@Prop(ContentDocument)
+	content!: ContentDocument;
 
 	@Emit('tag')
 	emitTag(_tag: string) {}

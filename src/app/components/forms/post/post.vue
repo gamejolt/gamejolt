@@ -121,16 +121,18 @@
 		</div>
 
 		<!-- Post title (short) -->
-		<app-form-group name="lead" class="-lead-form-group" :label="$gettext(`Summary`)" hide-label>
-			<app-form-control-textarea
-				:maxlength="leadTotalLengthLimit"
-				rows="2"
-				v-app-form-autosize="bootstrapAutosize"
-				v-app-focus-when
+		<app-form-group
+			name="lead_content"
+			class="-lead-form-group"
+			:label="$gettext(`Summary`)"
+			hide-label
+		>
+			<app-form-control-content
+				content-context="fireside-post-lead"
+				autofocus
 				:placeholder="
 					!longEnabled ? $gettext(`What's new?`) : $gettext(`Write a summary for your article...`)
 				"
-				@paste="onPaste"
 			/>
 
 			<div class="-hp">
@@ -139,7 +141,7 @@
 					<app-progress-bar thin :percent="leadLengthPercent" :animate="false"></app-progress-bar>
 				</div>
 				<div class="-hp-count" v-if="leadLengthPercent <= 10">
-					{{ leadLengthLimit - computedLeadLength }}
+					{{ leadLengthLimit - formModel.leadLength }}
 				</div>
 			</div>
 
@@ -148,13 +150,13 @@
 			</p>
 
 			<!--
-			Only show tags for community posts at the moment.
-		-->
+				Only show tags for community posts at the moment.
+			-->
 			<app-form-post-tags
 				v-if="defaultCommunity"
 				class="-post-tags"
-				:text="tagText"
 				:tags="featuredTags"
+				:content="tagContentDocument"
 				@tag="addTag($event)"
 			/>
 		</app-form-group>
@@ -167,18 +169,14 @@
 				</app-form-legend>
 
 				<app-form-group
-					name="content_markdown"
+					name="article_content"
 					:label="$gettext(`Article Content`)"
 					hide-label
 					optional
 				>
-					<app-form-control-markdown
-						preview-class="fireside-post-body"
-						preview-url="/web/posts/manage/preview"
-						markdown-mode="devlog"
-						:show-media-items="true"
-						media-item-type="fireside-post-article-image"
+					<app-form-control-content
 						:placeholder="$gettext(`Write your article here...`)"
+						content-context="fireside-post-article"
 					/>
 
 					<app-form-control-errors />
@@ -194,7 +192,7 @@
 				</app-form-legend>
 
 				<!-- i starts from 1 -->
-				<div class="-poll-option" v-for="i of formModel.poll_item_count">
+				<div class="-poll-option" v-for="i of formModel.poll_item_count" :key="i">
 					<app-form-group :name="'poll_item' + i" :label="$gettext(`choice`)" hide-label>
 						<app-form-control
 							type="text"
@@ -337,8 +335,8 @@
 					</p>
 
 					<app-form-control-select>
-						<optgroup v-for="(timezones, region) of timezones" :label="region">
-							<option v-for="timezone of timezones" :value="timezone.i">
+						<optgroup v-for="(timezones, region) of timezones" :label="region" :key="region">
+							<option v-for="timezone of timezones" :value="timezone.i" :key="timezone.i">
 								{{ timezone.label }}
 							</option>
 						</optgroup>
