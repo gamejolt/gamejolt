@@ -64,16 +64,12 @@
 							</span>
 						</div>
 
-						<app-content-viewer
-							:source="post.lead_content"
-							/>
+						<app-content-viewer :source="post.lead_content" />
 
 						<div v-if="post.hasArticle">
 							<div class="page-cut" />
 
-							<app-content-viewer
-								:source="post.article_content"
-								/>
+							<app-content-viewer :source="post.article_content" />
 						</div>
 					</div>
 

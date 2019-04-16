@@ -133,9 +133,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 	isShowingMorePollOptions = false;
 	accessPermissionsEnabled = false;
 	isSavedDraftPost = false;
-	leadUrlLength = 30;
 	leadLengthLimit = 255;
-	leadTotalLengthLimit = 300;
 	isUploadingPastedImage = false;
 
 	private updateAutosize?: () => void;
@@ -380,9 +378,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
-		this.leadUrlLength = payload.leadUrlLength;
 		this.leadLengthLimit = payload.leadLengthLimit;
-		this.leadTotalLengthLimit = payload.leadTotalLengthLimit;
 
 		this.linkedAccounts = LinkedAccount.populate(payload.linkedAccounts);
 		this.publishToPlatforms = payload.publishToPlatforms || null;
