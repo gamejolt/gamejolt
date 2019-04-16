@@ -3,8 +3,8 @@
 		<div class="event-item-controls">
 			<template v-if="post && post.status === FiresidePost.STATUS_ACTIVE">
 				<!--
-				We don't want it clicking into the post when clicking a control.
-			-->
+					We don't want it clicking into the post when clicking a control.
+				-->
 				<span @click.stop>
 					<app-fireside-post-like-widget :post="post" circle />
 
@@ -33,7 +33,7 @@
 
 						<div slot="popover" class="well fill-darkest sans-margin" v-if="isShowingShare">
 							<div class="social-widgets" v-if="!GJ_IS_CLIENT">
-								<app-social-twitter-share :url="shareUrl" :content="post.lead" />
+								<app-social-twitter-share :url="shareUrl" :content="post.leadStr" />
 
 								<span class="dot-separator"></span>
 
