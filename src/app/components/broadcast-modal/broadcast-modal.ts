@@ -1,3 +1,4 @@
+import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
@@ -23,6 +24,7 @@ import AppPollVoting from '../poll/voting/voting.vue';
 		AppWidgetCompiler,
 		AppPollVoting,
 		AppEventItemControls,
+		AppContentViewer,
 	},
 })
 export default class AppBroadcastModal extends BaseModal {
