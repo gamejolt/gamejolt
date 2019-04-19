@@ -178,9 +178,7 @@
 						@require-change="setCanToggleDescription"
 						@expand="toggleDetails()"
 					>
-						<app-content-viewer
-							:source="game.description_content"
-							/>
+						<app-content-viewer :source="game.description_content" />
 					</app-fade-collapse>
 
 					<div v-if="showDetails">

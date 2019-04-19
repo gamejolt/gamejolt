@@ -23,7 +23,9 @@
 				<small class="text-muted">@{{ comment.user.username }}</small>
 			</div>
 			<app-fade-collapse :collapse-height="120">
-				<div class="-content comment-content" v-html="comment.comment_compiled" />
+				<div class="-content">
+					<app-content-viewer :source="comment.comment_content" />
+				</div>
 			</app-fade-collapse>
 		</div>
 	</div>
