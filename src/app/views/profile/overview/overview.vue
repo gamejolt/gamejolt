@@ -173,7 +173,12 @@
 								</div>
 							</template>
 							<div v-if="user.web_site">
-								<a class="link-unstyled" :href="user.web_site" target="_blank">
+								<a
+									class="link-unstyled"
+									:href="user.web_site"
+									rel="nofollow noopener"
+									target="_blank"
+								>
 									<app-jolticon icon="link" />
 									<translate>Website</translate>
 								</a>

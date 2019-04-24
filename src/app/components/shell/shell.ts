@@ -37,13 +37,9 @@ let components: any = {
 };
 
 if (GJ_IS_CLIENT) {
-	// TODO check if .default is actually needed here.
-	components = {
-		...components,
-		...require('../../../_common/client/base/base.vue').default,
-		...require('./client/client.vue').default,
-		...require('../client/status-bar/status-bar.vue').default,
-	};
+	components.AppClientBase = require('../../../_common/client/base/base.vue').default;
+	components.AppShellClient = require('./client/client.vue').default;
+	components.AppClientStatusBar = require('../client/status-bar/status-bar.vue').default;
 }
 
 @Component({

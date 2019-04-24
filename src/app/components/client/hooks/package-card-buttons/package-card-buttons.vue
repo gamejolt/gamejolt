@@ -119,7 +119,7 @@
 				v-if="localPackage.install_state"
 				circle
 				icon="remove"
-				:trans="!overlay"
+				trans
 				@click="cancelInstall()"
 				v-app-tooltip="$gettext('Cancel Installation')"
 			/>
@@ -154,7 +154,7 @@
 			<app-button
 				circle
 				icon="ellipsis-v"
-				:trans="!overlay"
+				trans
 				v-app-track-event="`game-package-card:more-options`"
 			/>
 
