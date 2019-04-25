@@ -1,4 +1,5 @@
-import AppGamePackageCard from 'game-jolt-frontend-lib/components/game/package/card/card';
+import AppGamePackageCardTS from 'game-jolt-frontend-lib/components/game/package/card/card';
+import AppGamePackageCard from 'game-jolt-frontend-lib/components/game/package/card/card.vue';
 import AppGamePackagePurchaseModal from 'game-jolt-frontend-lib/components/game/package/purchase-modal/purchase-modal';
 import { ClientAutoStart } from '../_common/client/autostart/autostart.service';
 import { bootstrapCommonClient } from '../_common/client/bootstrap';
@@ -18,7 +19,7 @@ ClientAutoStart.init();
 ClientShortcut.create();
 
 AppClientTray.hook.menuBuilder = clientTrayMenuBuilder;
-AppGamePackageCard.hook.buttons = AppClientPackageCardButtons;
-AppGamePackageCard.hook.meta = AppClientPackageCardMeta;
+(AppGamePackageCard as typeof AppGamePackageCardTS).hook.buttons = AppClientPackageCardButtons;
+(AppGamePackageCard as typeof AppGamePackageCardTS).hook.meta = AppClientPackageCardMeta;
 AppGameCoverButtons.hook.buildButtons = AppClientGameCoverButtons;
 AppGamePackagePurchaseModal.hook.downloadPackage = hookDownloadPackage;

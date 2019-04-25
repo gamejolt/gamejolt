@@ -10,6 +10,7 @@ const config = {
 			title: 'Game Jolt - Indie games for the love of it',
 			server: true,
 			client: true,
+			crawl: true,
 			offline: true,
 			webAppManifest: {
 				name: 'Game Jolt',
@@ -39,35 +40,32 @@ const config = {
 			title: 'Game Jolt - Indie games for the love of it',
 			server: true,
 			client: true,
+			crawl: true,
 			bodyClass: 'fill-darkest',
 		},
 		checkout: {
 			title: 'Checkout - Game Jolt',
 			client: true,
-			crawl: false,
 			scripts: '<script type="text/javascript" src="https://js.stripe.com/v2/"></script>',
 		},
 		claim: {
 			title: 'Claim - Game Jolt',
-			crawl: false,
 		},
 		'site-editor': {
 			title: 'Edit Site - Game Jolt',
-			crawl: false,
 		},
 		gameserver: {
 			title: 'Playing Game - Game Jolt',
-			crawl: false,
 		},
 		client: {
 			title: 'Game Jolt',
 			client: true,
-			crawl: false,
 			bodyClass: 'fill-darkest',
 		},
 		playbox: {
 			title: 'Playbox - for tests and stuff',
 			server: true,
+			crawl: true,
 		},
 	},
 	translations: 'site-translations',
