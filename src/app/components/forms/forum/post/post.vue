@@ -1,11 +1,7 @@
 <template>
 	<app-form name="forumPostForm">
-		<app-form-group name="content_markdown" :label="$gettext('Post Content')" :hide-label="true">
-			<app-form-control-markdown
-				preview-class="forum-post-body"
-				preview-url="/web/forums/posts/preview"
-				markdown-mode="forums"
-			/>
+		<app-form-group name="text_content" :label="$gettext('Post Content')" :hide-label="true">
+			<app-form-control-content content-context="forum-post" />
 
 			<app-form-control-errors />
 		</app-form-group>

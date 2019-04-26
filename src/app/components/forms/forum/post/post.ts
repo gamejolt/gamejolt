@@ -1,13 +1,12 @@
-import AppFormControlMarkdown from 'game-jolt-frontend-lib/components/form-vue/control/markdown/markdown.vue';
+import AppFormControlContent from 'game-jolt-frontend-lib/components/form-vue/control/content/content.vue';
 import { BaseForm, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { ForumPost } from 'game-jolt-frontend-lib/components/forum/post/post.model';
 import { ForumTopic } from 'game-jolt-frontend-lib/components/forum/topic/topic.model';
 import { Component, Prop } from 'vue-property-decorator';
 
-
 @Component({
 	components: {
-		AppFormControlMarkdown,
+		AppFormControlContent,
 	},
 })
 export default class FormForumPost extends BaseForm<ForumPost> implements FormOnInit {
