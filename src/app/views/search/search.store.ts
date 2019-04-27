@@ -1,4 +1,5 @@
 import { Ads, AdSettingsContainer } from 'game-jolt-frontend-lib/components/ad/ads.service';
+import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import {
 	NamespaceVuexStore,
 	VuexModule,
@@ -67,6 +68,9 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 			this.searchPayload = new SearchPayload('all', {});
 			return;
 		}
+
+		// Search results should always be deindexed.
+		Meta.seo.deindex();
 
 		this.query = route.query.q + '';
 		this.searchPayload = payload;

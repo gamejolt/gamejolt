@@ -1,5 +1,4 @@
 import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import AppPagination from 'game-jolt-frontend-lib/components/pagination/pagination.vue';
 import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
 import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-store';
@@ -54,11 +53,6 @@ export default class RouteSearch extends BaseRouteComponent {
 	readonly Screen = Screen;
 	readonly Search = Search;
 	readonly Scroll = Scroll;
-
-	routeCreated() {
-		// Search results should always be deindexed.
-		Meta.seo.deindex();
-	}
 
 	get routeTitle() {
 		if (this.route.query.q) {
