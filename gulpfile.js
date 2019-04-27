@@ -69,6 +69,12 @@ const config = {
 			title: 'Playbox - for tests and stuff',
 			server: true,
 		},
+		z: {
+			title: 'Game Jolt - Indie games for the love of it',
+			server: true,
+			crawl: false,
+			bodyClass: 'main-body',
+		},
 	},
 	translations: 'site-translations',
 	translationSections: {
