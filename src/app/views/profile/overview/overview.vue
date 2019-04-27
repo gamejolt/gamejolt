@@ -27,7 +27,7 @@
 		</section>
 		<section class="section" v-else>
 			<div>
-				<app-page-container xl>
+				<app-page-container xl order="left,main,right">
 					<div slot="left">
 						<!-- Bio -->
 						<div v-if="!isOverviewLoaded">

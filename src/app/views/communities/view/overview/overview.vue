@@ -1,6 +1,6 @@
 <template>
 	<section class="section">
-		<app-page-container xl>
+		<app-page-container xl order="right,main,left">
 			<div slot="right" v-if="!Screen.isMobile">
 				<div v-if="shouldShowKnownMembers">
 					<h5 class="section-header">

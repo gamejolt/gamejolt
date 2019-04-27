@@ -8,11 +8,15 @@ $-main-max-width = 650px
 	display: flex
 	flex-direction: column
 
-.-left, .-right
+// On mobile the left/right columns show before main.
+.-left
 	order: 0
 
-.-main
+.-right
 	order: 1
+
+.-main
+	order: 2
 
 // On sm we keep them in same column, but set a max size and center the content.
 @media $media-sm
@@ -33,13 +37,15 @@ $-main-max-width = 650px
 		flex: 1 0
 		padding-right: $grid-gutter-width
 		min-width: $percentage-3
+		order: 0
 
 	.-main
 		flex: 2 0
 		max-width: $-main-max-width
-		order: 0
+		order: 1
 
 	.-right
 		flex: 1 0
 		padding-left: $grid-gutter-width
 		min-width: $percentage-3
+		order: 2
