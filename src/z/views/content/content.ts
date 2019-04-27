@@ -43,6 +43,8 @@ export default class RouteContent extends BaseRouteComponent {
 	app!: Store['app'];
 
 	isHydrated = false;
+	isLoading = false;
+	errors = [] as string[];
 
 	contentJson!: string;
 	contentContext!: string;
@@ -84,6 +86,10 @@ export default class RouteContent extends BaseRouteComponent {
 		return null;
 	}
 
+	get hasErrors() {
+		return this.errors.length > 0;
+	}
+
 	routeResolved($payload: any) {
 		this.contentJson = $payload.content;
 		this.contentContext = $payload.context;
@@ -105,16 +111,27 @@ export default class RouteContent extends BaseRouteComponent {
 	}
 
 	async submit() {
+		this.isLoading = true;
 		const doc = this.$refs.editor.getContent();
 		if (doc instanceof ContentDocument) {
 			const contentJson = doc.toJson();
-			const payload = await Api.sendRequest(
-				`/z/content/save/${this.$route.params.resource}/${this.$route.params.resourceId}`,
-				{ content: contentJson, log_reason: this.logReason }
-			);
+			try {
+				const payload = await Api.sendRequest(
+					`/z/content/save/${this.$route.params.resource}/${
+						this.$route.params.resourceId
+					}`,
+					{ content: contentJson, log_reason: this.logReason },
+					{ noErrorRedirect: true }
+				);
 
-			const redirectUrl = payload.redirectUrl;
-			Navigate.gotoExternal(redirectUrl);
+				const redirectUrl = payload.redirectUrl;
+				Navigate.gotoExternal(redirectUrl);
+			} catch (e) {
+				this.errors.push('Failed to save changes.');
+				console.error('Error while trying to process request', e);
+			} finally {
+				this.isLoading = false;
+			}
 		}
 	}
 }
