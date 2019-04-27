@@ -77,6 +77,13 @@ export default class RouteContent extends BaseRouteComponent {
 		return this.app.user!;
 	}
 
+	get routeTitle() {
+		if (this.isHydrated) {
+			return 'Edit ' + this.title;
+		}
+		return null;
+	}
+
 	routeResolved($payload: any) {
 		this.contentJson = $payload.content;
 		this.contentContext = $payload.context;
