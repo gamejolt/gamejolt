@@ -10,7 +10,6 @@ import AppSketchfabEmbed from 'game-jolt-frontend-lib/components/sketchfab/embed
 import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
 import AppVideoEmbed from 'game-jolt-frontend-lib/components/video/embed/embed.vue';
 import AppVideo from 'game-jolt-frontend-lib/components/video/video.vue';
-import { AppWidgetCompiler } from 'game-jolt-frontend-lib/components/widget-compiler/widget-compiler';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
@@ -25,7 +24,6 @@ import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 	components: {
 		AppPostViewPlaceholder,
 		AppTimeAgo,
-		AppWidgetCompiler,
 		AppResponsiveDimensions,
 		AppImgResponsive,
 		AppVideo,

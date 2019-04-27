@@ -7,7 +7,6 @@ import { AppResponsiveDimensions } from 'game-jolt-frontend-lib/components/respo
 import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
 import AppVideoEmbed from 'game-jolt-frontend-lib/components/video/embed/embed.vue';
 import AppVideo from 'game-jolt-frontend-lib/components/video/video.vue';
-import { AppWidgetCompiler } from 'game-jolt-frontend-lib/components/widget-compiler/widget-compiler';
 import { Component, Prop } from 'vue-property-decorator';
 import AppEventItemControls from '../event-item/controls/controls.vue';
 import AppEventItemMediaTags from '../event-item/media-tags/media-tags.vue';
@@ -21,7 +20,6 @@ import AppPollVoting from '../poll/voting/voting.vue';
 		AppVideo,
 		AppVideoEmbed,
 		AppTimeAgo,
-		AppWidgetCompiler,
 		AppPollVoting,
 		AppEventItemControls,
 		AppContentViewer,
