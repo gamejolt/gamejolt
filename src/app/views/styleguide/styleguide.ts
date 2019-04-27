@@ -1,5 +1,4 @@
 import AppButtonStyleguide from 'game-jolt-frontend-lib/components/button/button-styleguide.vue';
-import AppContentEditorStyleguide from 'game-jolt-frontend-lib/components/content/content-editor/content-editor-styleguide.vue';
 import AppJolticonsStyleguide from 'game-jolt-frontend-lib/components/jolticons/jolticons-styleguide.vue';
 import AppListGroupStyleguide from 'game-jolt-frontend-lib/components/list-group/list-group-styleguide.vue';
 import AppProgressBarStyleguide from 'game-jolt-frontend-lib/components/progress/bar/bar-styleguide.vue';
@@ -16,7 +15,6 @@ import { Component } from 'vue-property-decorator';
 	name: 'RouteStyleguide',
 	components: {
 		AppScrollAffix,
-		AppContentEditorStyleguide,
 		AppButtonStyleguide,
 		AppListGroupStyleguide,
 		AppProgressBarStyleguide,
@@ -46,7 +44,6 @@ export default class RouteStyleguide extends BaseRouteComponent {
 
 	get components() {
 		return [
-			AppContentEditorStyleguide,
 			AppButtonStyleguide,
 			AppListGroupStyleguide,
 			AppProgressBarStyleguide,
