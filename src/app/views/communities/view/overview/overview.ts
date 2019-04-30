@@ -110,7 +110,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		}
 
 		let title = this.$gettextInterpolate(
-			`%{ name } Community - Fan Art, Videos, Guides, Polls and More`,
+			`%{ name } Community - Fan art, videos, guides, polls and more`,
 			{
 				name: this.community.name,
 			}
@@ -123,10 +123,10 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		if (this.channel === 'all') {
 			switch (this.sort) {
 				case 'hot':
-					title = this.$gettext('Hot Posts');
+					title = this.$gettext('Hot posts');
 					break;
 				case 'new':
-					title = this.$gettext('New Posts');
+					title = this.$gettext('New posts');
 					break;
 			}
 		} else {

@@ -104,7 +104,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		}
 
 		if (onlyBrowser) {
-			title += ' - ' + this.$gettext('play online');
+			title += ' - ' + this.$gettext('Play online');
 		}
 
 		return titleCase(title);
@@ -168,17 +168,17 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 			case 'fangame':
 				return this.$gettext('fan games');
 			case 'fnaf':
-				return this.$gettext(`Five Nights at Freddy's games`);
+				return this.$gettext(`Five Nights at Freddy's (fnaf) games`);
 			case 'scifi':
 				return this.$gettext('science fiction games');
 			case 'retro':
-				return this.$gettext('nostalgic and retro games');
+				return this.$gettext('retro and old-school games');
 			case 'pointnclick':
 				return this.$gettext('point and click games');
 			case 'altgame':
 				return this.$gettext('alt games');
 			case 'roguelike':
-				return this.$gettext('rogue like games');
+				return this.$gettext('roguelike games');
 			default:
 				return this.$gettextInterpolate(`%{ category } games`, {
 					category: this.tag,
@@ -239,7 +239,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 			.join(', ');
 
 		const descriptionStats = this.$gettextInterpolate(
-			'Discover over %{ count } games like %{ gameTitles }, and more.',
+			'Discover over %{ count } games like %{ gameTitles }',
 			{
 				count,
 				gameTitles,
