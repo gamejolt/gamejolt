@@ -48,7 +48,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 	games: Game[] = [];
 
 	routeCreated() {
-		Meta.title = null;
+		Meta.setTitle(null);
 	}
 
 	routeResolved($payload: any) {

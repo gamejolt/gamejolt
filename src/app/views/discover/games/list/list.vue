@@ -19,7 +19,7 @@
 
 				<div class="-header-content anim-fade-in-right">
 					<h1 v-if="section !== 'by-date'">
-						{{ routeTitle }}
+						{{ listTitle }}
 					</h1>
 					<h1 v-else>
 						<template v-if="!dateRange">
@@ -41,15 +41,19 @@
 						</template>
 					</h1>
 
-					<template v-if="tag">
+					<p class="text-muted small">
+						{{ listDescription }}
+					</p>
+
+					<!-- <template v-if="tag">
 						<p class="text-muted small" v-if="section === 'featured'">
-							<translate :translate-params="{ tag: tag }">
-								Featured %{ tag } games that we love on Game Jolt.
+							<translate :translate-params="{ gamesType: displayGamesType }">
+								Featured %{ gamesType } that we love on Game Jolt.
 							</translate>
 						</p>
 						<p class="text-muted small" v-else-if="section === 'best'">
-							<translate :translate-params="{ tag: tag }">
-								Best %{ tag } games sorted by Voltage on Game Jolt.
+							<translate :translate-params="{ gamesType: displayGamesType }">
+								Best %{ gamesType } sorted by Voltage on Game Jolt.
 							</translate>
 							<app-jolticon
 								icon="help-circle"
@@ -57,8 +61,8 @@
 							/>
 						</p>
 						<p class="text-muted small" v-else-if="!section">
-							<translate :translate-params="{ tag: tag }">
-								New %{ tag } games sorted by Hotness on Game Jolt.
+							<translate :translate-params="{ gamesType: displayGamesType }">
+								New %{ gamesType } sorted by Hotness on Game Jolt.
 							</translate>
 							<app-jolticon
 								icon="help-circle"
@@ -123,7 +127,7 @@
 								v-app-tooltip="$gettext('games.list.voltage_tooltip')"
 							/>
 						</p>
-					</template>
+					</template> -->
 				</div>
 			</div>
 		</app-page-header>

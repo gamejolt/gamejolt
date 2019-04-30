@@ -104,11 +104,16 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	emitRefresh() {}
 
 	get routeTitle() {
-		return this.community
-			? this.$gettextInterpolate(`%{ community } Community`, {
-					community: this.community.name,
-			  })
-			: null;
+		if (!this.community) {
+			return null;
+		}
+
+		return this.$gettextInterpolate(
+			`%{ community } Community - Fan art, videos, guides, polls and more`,
+			{
+				community: this.community.name,
+			}
+		);
 	}
 
 	get channel() {

@@ -6,7 +6,9 @@ import {
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { LocationRedirect } from 'game-jolt-frontend-lib/utils/router';
+import { titleCase } from 'game-jolt-frontend-lib/utils/string';
 import { date } from 'game-jolt-frontend-lib/vue/filters/date';
+import { fuzzynumber } from 'game-jolt-frontend-lib/vue/filters/fuzzynumber';
 import { Component } from 'vue-property-decorator';
 import {
 	checkGameFilteringRoute,
@@ -86,7 +88,31 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	}
 
 	get routeTitle() {
+		let title = this.listTitle;
+
+		let onlyBrowser = false;
+
+		if (this.filtering) {
+			const browserFilters = this.filtering.getFilter('browser');
+			const hasBrowserFilters = Array.isArray(browserFilters) && browserFilters.length > 0;
+
+			const osFilters = this.filtering.getFilter('os');
+			const hasOsFilters = Array.isArray(osFilters) && osFilters.length > 0;
+			onlyBrowser =
+				(hasBrowserFilters && !hasOsFilters) ||
+				(hasOsFilters && osFilters.length === 1 && osFilters[0] === 'rom');
+		}
+
+		if (onlyBrowser) {
+			title += ' - ' + this.$gettext('play online');
+		}
+
+		return titleCase(title);
+	}
+
+	get listTitle() {
 		if (this.section === 'worst') {
+			// Excuse me with this?
 			return 'Ṣ̢̖͇͈͙̹̦Y̱͍͉S̺̳̞͠Y̸̱͚̙͕̺̺ͅS͎̘̲͕̹̀ͅT͉͕̺̲ͅE͓̱̥̠̰̱͚M̪̙̪̥̹ͅ ͏̼̲̫̰E͇̺̩̼R͏̗͙Ŕ͖̦͕Ơ̰̱͖̗̯̞R҉̻̯̠͚';
 		}
 
@@ -106,36 +132,57 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 			});
 		}
 
-		if (this.tag) {
-			switch (this.section) {
-				case 'featured':
-					return this.$gettextInterpolate('Featured %{tag} games', { tag: this.tag });
+		let onlyFree = this.filtering && this.filtering.getFilter('price') === 'free';
 
-				case 'best':
-					return this.$gettextInterpolate('Best %{tag} games (top-rated)', {
-						tag: this.tag,
-					});
+		const title = this.$gettextInterpolate('%{ listOf } %{ free } %{ gamesType }', {
+			listOf: this.displayListOf,
+			free: onlyFree ? this.$gettext('free') : '',
+			gamesType: this.displayGamesType,
+		});
 
-				case 'new':
-					return this.$gettextInterpolate('New %{tag} games', { tag: this.tag });
+		// Remove duplicate whitespaces (formed when a replacement ends up being an empty string)
+		return title.replace(/\s+/g, ' ');
+	}
 
-				default:
-					return this.$gettextInterpolate('Browsing %{tag} games', { tag: this.tag });
-			}
-		}
-
+	get displayListOf() {
 		switch (this.section) {
 			case 'featured':
-				return this.$gettext('Featured games');
-
+				return this.$gettext('Featured');
 			case 'best':
-				return this.$gettext('Best games (top-rated)');
-
+				return this.$gettext('Best');
 			case 'new':
-				return this.$gettext('New games');
-
+				return this.$gettext('Newest');
 			default:
-				return this.$gettext('Browsing games');
+				return this.$gettext('Browse');
+		}
+	}
+
+	get displayGamesType() {
+		if (!this.tag) {
+			return this.$gettext('games');
+		}
+
+		switch (this.tag) {
+			case 'horror':
+				return this.$gettext('scary horror games');
+			case 'fangame':
+				return this.$gettext('fan games');
+			case 'fnaf':
+				return this.$gettext(`Five Nights at Freddy's games`);
+			case 'scifi':
+				return this.$gettext('science fiction games');
+			case 'retro':
+				return this.$gettext('nostalgic and retro games');
+			case 'pointnclick':
+				return this.$gettext('point and click games');
+			case 'altgame':
+				return this.$gettext('alt games');
+			case 'roguelike':
+				return this.$gettext('rogue like games');
+			default:
+				return this.$gettextInterpolate(`%{ category } games`, {
+					category: this.tag,
+				});
 		}
 	}
 
@@ -143,35 +190,63 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	 * This function doesn't translate, but it's only used for meta tags
 	 * currently.
 	 */
-	get routeMeta() {
-		let descriptiveTag = `games`;
-		if (this.tag === 'fangame') {
-			descriptiveTag = `fangames`;
-		} else if (this.tag === 'scifi') {
-			descriptiveTag = `sci-fi games`;
-		} else if (this.tag === 'rpg') {
-			descriptiveTag = `rpgs`;
-		} else if (this.tag === 'rpg') {
-			descriptiveTag = `altgames`;
-		} else if (this.tag === 'fnaf') {
-			descriptiveTag = `five nights at freddy's fangames`;
-		} else if (this.tag) {
-			descriptiveTag = `${this.tag} games`;
-		}
-
+	get listDescription() {
 		if (!this.section) {
-			return `Browse the freshest ${descriptiveTag} on Game Jolt. They're almost too hot!`;
+			return this.$gettextInterpolate(`Browse the trending %{ gamesType } on Game Jolt.`, {
+				gamesType: this.displayGamesType,
+			});
 		} else if (this.section === 'new') {
-			return `Browse new ${descriptiveTag} on Game Jolt. Good or bad, you decide!`;
+			return this.$gettextInterpolate(
+				// tslint:disable-next-line:max-line-length
+				`Browse new %{ gamesType } on Game Jolt. You can find anything here from hidden gems to doodoo land mines!`,
+				{ gamesType: this.displayGamesType }
+			);
 		} else if (this.section === 'featured') {
-			return `Browse unique and alternative ${descriptiveTag} that we have featured on Game Jolt.`;
+			return this.$gettextInterpolate(
+				`Browse our featured list of %{ gamesType }. A unique and alternative gaming experience awaits.`,
+				{ gamesType: this.displayGamesType }
+			);
 		} else if (this.section === 'best') {
-			return `Browse the best ${descriptiveTag} on Game Jolt.`;
+			return this.$gettextInterpolate(
+				`Browse the best %{ gamesType }, top rated by our community on Game Jolt.`,
+				{
+					gamesType: this.displayGamesType,
+				}
+			);
 		} else if (this.section === 'worst') {
-			return `The worst ${descriptiveTag} decided by the Game Jolt community.`;
+			return this.$gettextInterpolate(
+				`The worst %{ gamesType } decided by the Game Jolt community.`,
+				{ gamesType: this.displayGamesType }
+			);
 		}
 
-		return null;
+		return '';
+	}
+
+	get routeMeta() {
+		if (!this.listing) {
+			return this.listDescription;
+		}
+
+		if (!Array.isArray(this.listing.games) || this.listing.games.length === 0) {
+			return this.listDescription;
+		}
+
+		const count = fuzzynumber(this.listing.gamesCount);
+		const gameTitles = this.listing.games
+			.slice(0, 5)
+			.map(game => game.title)
+			.join(', ');
+
+		const descriptionStats = this.$gettextInterpolate(
+			'Discover over %{ count } games like %{ gameTitles }, and more.',
+			{
+				count,
+				gameTitles,
+			}
+		);
+
+		return `${this.listDescription} ${descriptionStats}`;
 	}
 
 	routeCreated() {
@@ -179,24 +254,25 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
+		if (this.listing && $payload) {
+			this.listing.processPayload(this.$route, $payload);
+			this.process();
+		}
+
 		if ($payload) {
 			Meta.description = this.routeMeta;
 
+			// We use the listDescription and not Meta.description for fb and twitter because they are shorter and more "embeddable"
 			Meta.fb.title = this.routeTitle;
-			Meta.fb.description = Meta.description;
+			Meta.fb.description = this.listDescription;
 			Meta.twitter.title = this.routeTitle;
-			Meta.twitter.description = Meta.description;
+			Meta.twitter.description = this.listDescription;
 
 			if (this.spotlightSocial) {
 				Meta.twitter.image = this.spotlightSocial;
 				Meta.twitter.card = 'summary';
 				Meta.fb.image = this.spotlightSocial;
 			}
-		}
-
-		if (this.listing && $payload) {
-			this.listing.processPayload(this.$route, $payload);
-			this.process();
 		}
 	}
 

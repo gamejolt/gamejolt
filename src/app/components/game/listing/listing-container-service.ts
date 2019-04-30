@@ -4,7 +4,7 @@ import { GameFilteringContainer } from '../filtering/container';
 
 export class GameListingContainer {
 	isBootstrapped = false;
-	games: any[] = [];
+	games: Game[] = [];
 	gamesCount = 0;
 	perPage = 10;
 	currentPage = 1;
