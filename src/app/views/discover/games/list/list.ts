@@ -153,7 +153,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 			case 'new':
 				return this.$gettext('Newest');
 			default:
-				return this.$gettext('Browse');
+				return this.$gettext('Find great');
 		}
 	}
 
@@ -192,23 +192,28 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	 */
 	get listDescription() {
 		if (!this.section) {
-			return this.$gettextInterpolate(`Browse the trending %{ gamesType } on Game Jolt.`, {
-				gamesType: this.displayGamesType,
-			});
+			return this.$gettextInterpolate(
+				`Find the hottest trending %{ gamesType } on Game Jolt.`,
+				{
+					gamesType: this.displayGamesType,
+				}
+			);
 		} else if (this.section === 'new') {
 			return this.$gettextInterpolate(
 				// tslint:disable-next-line:max-line-length
-				`Browse new %{ gamesType } on Game Jolt. You can find anything here from hidden gems to doodoo land mines!`,
+				`Find the newest %{ gamesType } on Game Jolt.`,
 				{ gamesType: this.displayGamesType }
 			);
 		} else if (this.section === 'featured') {
 			return this.$gettextInterpolate(
-				`Browse our featured list of %{ gamesType }. A unique and alternative gaming experience awaits.`,
-				{ gamesType: this.displayGamesType }
+				`Browse our featured list of %{ gamesType }, currated by Game Jolt.`,
+				{
+					gamesType: this.displayGamesType,
+				}
 			);
 		} else if (this.section === 'best') {
 			return this.$gettextInterpolate(
-				`Browse the best %{ gamesType }, top rated by our community on Game Jolt.`,
+				`Find the best %{ gamesType }, top rated by our community on Game Jolt.`,
 				{
 					gamesType: this.displayGamesType,
 				}

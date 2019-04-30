@@ -18,30 +18,32 @@
 				/>
 
 				<div class="-header-content anim-fade-in-right">
-					<h1 v-if="section !== 'by-date'">
-						{{ listTitle }}
-					</h1>
-					<h1 v-else>
-						<template v-if="!dateRange">
-							<span v-translate="{ date }">
-								Games published
-								<small>on %{ date }</small>
-							</span>
+					<h1>
+						<template v-if="section !== 'by-date'">
+							{{ listTitle }}
 						</template>
 						<template v-else>
-							<span
-								v-translate="{
-									dateStart: dateRange[0],
-									dateEnd: dateRange[1],
-								}"
-							>
-								Games published
-								<small>between %{ dateStart } and %{ dateEnd }</small>
-							</span>
+							<template v-if="!dateRange">
+								<span v-translate="{ date }">
+									Games published
+									<small>on %{ date }</small>
+								</span>
+							</template>
+							<template v-else>
+								<span
+									v-translate="{
+										dateStart: dateRange[0],
+										dateEnd: dateRange[1],
+									}"
+								>
+									Games published
+									<small>between %{ dateStart } and %{ dateEnd }</small>
+								</span>
+							</template>
 						</template>
 					</h1>
 
-					<p class="text-muted small">
+					<p class="-list-desc text-muted small">
 						{{ listDescription }}
 					</p>
 
@@ -159,6 +161,9 @@
 @require '~styles/variables'
 
 $-spotlight-size = 58px
+
+.-list-desc
+	margin-top: 4px
 
 @media $media-sm-up
 	.-spotlight
