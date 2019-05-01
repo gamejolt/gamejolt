@@ -8,6 +8,7 @@
 			<app-form-control-content
 				:placeholder="$gettext(`Write your game description here...`)"
 				content-context="game-description"
+				:model-id="model.id"
 			/>
 
 			<app-form-control-errors />

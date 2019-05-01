@@ -112,7 +112,8 @@
 			<app-form-control-content
 				content-context="user-bio"
 				:disabled="isBioLocked"
-				/>
+				:model-id="model.id"
+			/>
 
 			<app-form-control-errors />
 

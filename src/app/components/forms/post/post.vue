@@ -133,6 +133,7 @@
 				:placeholder="
 					!longEnabled ? $gettext(`What's new?`) : $gettext(`Write a summary for your article...`)
 				"
+				:model-id="model.id"
 			/>
 
 			<div class="-hp">
@@ -177,6 +178,7 @@
 					<app-form-control-content
 						:placeholder="$gettext(`Write your article here...`)"
 						content-context="fireside-post-article"
+						:model-id="model.id"
 					/>
 
 					<app-form-control-errors />
