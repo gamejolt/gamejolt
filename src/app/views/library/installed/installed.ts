@@ -25,6 +25,6 @@ export default class RouteLibraryInstalled extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		Meta.title = this.$gettext('library.installed.page_title');
+		Meta.setTitle(this.$gettext('library.installed.page_title'));
 	}
 }

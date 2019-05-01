@@ -3,6 +3,7 @@ import { Community } from 'game-jolt-frontend-lib/components/community/community
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
 import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
 import {
 	BaseRouteComponent,
@@ -104,11 +105,53 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	emitRefresh() {}
 
 	get routeTitle() {
-		return this.community
-			? this.$gettextInterpolate(`%{ community } Community`, {
-					community: this.community.name,
-			  })
-			: null;
+		if (!this.community) {
+			return null;
+		}
+
+		let title = this.$gettextInterpolate(
+			`%{ name } Community - Fan art, videos, guides, polls and more`,
+			{
+				name: this.community.name,
+			}
+		);
+
+		if (this.channel === 'featured' || (this.sort !== 'hot' && this.sort !== 'new')) {
+			return title;
+		}
+
+		if (this.channel === 'all') {
+			switch (this.sort) {
+				case 'hot':
+					title = this.$gettext('Hot posts');
+					break;
+				case 'new':
+					title = this.$gettext('New posts');
+					break;
+			}
+		} else {
+			switch (this.sort) {
+				case 'hot':
+					title = this.$gettextInterpolate('Hot #%{ tag } posts', {
+						tag: this.channel,
+					});
+					break;
+				case 'new':
+					title = this.$gettextInterpolate('New #%{ tag } posts', {
+						tag: this.channel,
+					});
+					break;
+			}
+		}
+
+		title +=
+			' - ' +
+			this.$gettextInterpolate(`%{ name } Community on Game Jolt`, {
+				name: this.community.name,
+			});
+
+		this.disableRouteTitleSuffix = true;
+		return title;
 	}
 
 	get channel() {
@@ -165,6 +208,32 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		);
 		this.knownMembers = overviewPayload.knownMembers || [];
 		this.knownMemberCount = overviewPayload.knownMemberCount || 0;
+
+		Meta.description = this.$gettextInterpolate(
+			// tslint:disable-next-line:max-line-length
+			'Welcome to the %{ name } community on Game Jolt! Find and explore %{ name } fan art, lets plays and catch up on the latest news and theories!',
+			{ name: this.community.name }
+		);
+
+		Meta.fb = {
+			type: 'website',
+			title: this.routeTitle,
+			description: Meta.description,
+
+			// TODO temporarily use the header image.
+			// Ideally we'd like toprovide a nice image specifically for SEO from the backend.
+			image: this.community.header ? this.community.header!.mediaserver_url : null,
+		};
+
+		Meta.twitter = {
+			card: 'summary_large_image',
+			title: this.routeTitle,
+			description: Meta.description,
+
+			// TODO temporarily use the header image.
+			// Ideally we'd like toprovide a nice image specifically for SEO from the backend.
+			image: this.community.header ? this.community.header!.mediaserver_url : null,
+		};
 	}
 
 	onPostAdded(post: FiresidePost) {

@@ -7,9 +7,15 @@ import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
 import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import 'game-jolt-frontend-lib/components/lazy/placeholder/placeholder.styl';
-import { LinkedAccount, Provider } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
+import {
+	LinkedAccount,
+	Provider,
+} from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';

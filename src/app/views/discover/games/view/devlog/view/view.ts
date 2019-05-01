@@ -54,7 +54,14 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 	post: FiresidePost | null = null;
 
 	get routeTitle() {
-		return this.post && this.post.lead_snippet;
+		if (!this.post || !this.game) {
+			return null;
+		}
+
+		return this.$gettextInterpolate(
+			`${this.post.lead_snippet} - ${this.game.title} by %{ user }`,
+			{ user: this.post.user.display_name }
+		);
 	}
 
 	routeCreated() {

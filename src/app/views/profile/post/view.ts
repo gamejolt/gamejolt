@@ -3,7 +3,10 @@ import { CommentThreadModal } from 'game-jolt-frontend-lib/components/comment/th
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import { Registry } from 'game-jolt-frontend-lib/components/registry/registry.service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
 import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
 import { Component } from 'vue-property-decorator';
@@ -51,7 +54,16 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 	post: FiresidePost | null = null;
 
 	get routeTitle() {
-		return this.post ? this.post.lead_snippet : null;
+		if (!this.post) {
+			return null;
+		}
+
+		this.disableRouteTitleSuffix = true;
+
+		return this.$gettextInterpolate('%{ user } on Game Jolt: "%{ post }"', {
+			user: this.post.user.display_name,
+			post: this.post.lead_snippet,
+		});
 	}
 
 	routeCreated() {
