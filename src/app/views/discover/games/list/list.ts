@@ -5,6 +5,7 @@ import {
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { arrayShuffle } from 'game-jolt-frontend-lib/utils/array';
 import { LocationRedirect } from 'game-jolt-frontend-lib/utils/router';
 import { titleCase } from 'game-jolt-frontend-lib/utils/string';
 import { date } from 'game-jolt-frontend-lib/vue/filters/date';
@@ -238,7 +239,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		}
 
 		const count = fuzzynumber(this.listing.gamesCount);
-		const gameTitles = this.listing.games
+		const gameTitles = arrayShuffle(this.listing.games.slice())
 			.slice(0, 5)
 			.map(game => game.title)
 			.join(', ');

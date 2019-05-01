@@ -220,17 +220,19 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			title: this.routeTitle,
 			description: Meta.description,
 
-			// TODO provide a nice image specifically for SEO from the backend.
-			// image: this.community.header ? this.community.header!.mediaserver_url,
+			// TODO temporarily use the header image.
+			// Ideally we'd like toprovide a nice image specifically for SEO from the backend.
+			image: this.community.header ? this.community.header!.mediaserver_url : null,
 		};
 
 		Meta.twitter = {
-			card: 'summary',
+			card: 'summary_large_image',
 			title: this.routeTitle,
 			description: Meta.description,
 
-			// TODO provide a nice image specifically for SEO from the backend.
-			// image: this.community.header ? this.community.header!.mediaserver_url,
+			// TODO temporarily use the header image.
+			// Ideally we'd like toprovide a nice image specifically for SEO from the backend.
+			image: this.community.header ? this.community.header!.mediaserver_url : null,
 		};
 	}
 
