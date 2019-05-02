@@ -7,7 +7,7 @@
 					Game Jolt
 				</h1>
 				<div class="user-container" v-if="isHydrated">
-					<span class="text-muted">Logged in as</span>
+					<span class="text-muted"><translate>Logged in as</translate></span>
 					<img :src="user.img_avatar" />
 					<span class="username">{{ user.display_name }}</span>
 				</div>
@@ -21,19 +21,19 @@
 				<h2>Edit {{ title }}</h2>
 				<table class="text-muted">
 					<tr>
-						<th>Source</th>
+						<th><translate>Source</translate></th>
 						<td>
 							<a target="_blank" :href="resourceUrl">{{ resourceTitle }}</a>
 						</td>
 					</tr>
 					<tr v-if="ownerName && ownerUrl">
-						<th>Owner</th>
+						<th><translate>Owner</translate></th>
 						<td>
 							<a target="_blank" :href="ownerUrl">{{ ownerName }}</a>
 						</td>
 					</tr>
 					<tr>
-						<th>Last edit</th>
+						<th><translate>Last edit</translate></th>
 						<td>
 							<app-time-ago :date="lastEdit" strict />
 						</td>
@@ -48,6 +48,10 @@
 						@update="onUpdate"
 					/>
 				</div>
+				<div class="help-block">
+					<app-jolticon icon="info-circle" />
+					<translate>Image uploads are currently unavailable.</translate>
+				</div>
 
 				<div class="log-reason">
 					<textarea
@@ -60,7 +64,9 @@
 				</div>
 
 				<div class="controls">
-					<app-button primary solid :disabled="!canSubmit" @click="submit">Submit</app-button>
+					<app-button primary solid :disabled="!canSubmit" @click="submit">
+						<translate>Submit</translate>
+					</app-button>
 				</div>
 			</template>
 			<app-loading v-else />
