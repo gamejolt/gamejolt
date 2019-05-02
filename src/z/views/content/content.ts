@@ -1,6 +1,5 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { ContentDocument } from 'game-jolt-frontend-lib/components/content/content-document';
-import AppContentEditorTS from 'game-jolt-frontend-lib/components/content/content-editor/content-editor';
 import AppContentEditor from 'game-jolt-frontend-lib/components/content/content-editor/content-editor.vue';
 import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
 import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
@@ -55,10 +54,6 @@ export default class RouteContent extends BaseRouteComponent {
 	ownerUrl!: string;
 	logReason = '';
 
-	$refs!: {
-		editor: AppContentEditorTS;
-	};
-
 	camelCase(str: string) {
 		return str.replace(/-([a-z])/gi, function(_all, letter) {
 			return ' ' + letter.toUpperCase();
@@ -110,9 +105,13 @@ export default class RouteContent extends BaseRouteComponent {
 		this.logReason = elem.value;
 	}
 
+	onUpdate(source: string) {
+		this.contentJson = source;
+	}
+
 	async submit() {
 		this.isLoading = true;
-		const doc = this.$refs.editor.getContent();
+		const doc = ContentDocument.fromJson(this.contentJson);
 		if (doc instanceof ContentDocument) {
 			const contentJson = doc.toJson();
 			try {

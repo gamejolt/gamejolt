@@ -42,10 +42,10 @@
 
 				<div class="content-container">
 					<app-content-editor
-						ref="editor"
 						class="content-editor-moderate"
-						:initial-content="contentJson"
+						:source="contentJson"
 						:content-context="contentContext"
+						@update="onUpdate"
 					/>
 				</div>
 
