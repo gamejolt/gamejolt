@@ -39,7 +39,7 @@ const routes = [
 export const router = initRouter(routes);
 
 router.beforeEach((to, _from, next) => {
-	if (to.matched.some(record => record.meta.hideShell)) {
+	if (to.matched.some(record => record.meta.isFullPage)) {
 		store.commit('hideShell');
 	} else {
 		store.commit('showShell');

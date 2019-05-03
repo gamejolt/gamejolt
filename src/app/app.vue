@@ -3,6 +3,7 @@
 		<app-theme />
 		<app-cookie-banner />
 		<app-shell>
+			<!-- do we need this div? -->
 			<div id="content">
 				<app-error-page>
 					<router-view />

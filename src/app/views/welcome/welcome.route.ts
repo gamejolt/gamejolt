@@ -5,6 +5,6 @@ export const routeWelcome: RouteConfig = {
 	path: '/welcome',
 	component: () => import(/* webpackChunkName: "routeWelcome" */ './welcome.vue'),
 	meta: {
-		hideShell: true,
+		isFullPage: true,
 	},
 };
