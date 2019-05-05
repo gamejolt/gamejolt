@@ -22,13 +22,14 @@ import { darken } from 'polished';
 					ref="bio"
 					class="form-control"
 					v-model="user.description_markdown"
+					@change="onBioChanged"
 					:disabled="inputDisabled"
 					:placeholder="$gettext('Tell people about yourself')"
 				></textarea>
 			</section>
 
 			<section class="-controls">
-				<template v-if="isSkip">
+				<template v-if="!isNext">
 					<app-button class="-muted" block trans :disabled="inputDisabled" @click="onNext">
 						<translate>Skip</translate>
 					</app-button>

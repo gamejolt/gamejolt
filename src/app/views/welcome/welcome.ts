@@ -31,6 +31,7 @@ export default class RouteWelcome extends BaseRouteComponent {
 	};
 
 	selectedAvatar = false;
+	modifiedBio = false;
 	inputDisabled = false;
 
 	get routeTitle() {
@@ -41,8 +42,8 @@ export default class RouteWelcome extends BaseRouteComponent {
 		return !!this.user && !!this.user.description_markdown;
 	}
 
-	get isSkip() {
-		return !this.selectedAvatar || !this.hasBio;
+	get isNext() {
+		return this.selectedAvatar && (this.hasBio || this.modifiedBio);
 	}
 
 	routeResolved() {
@@ -59,6 +60,10 @@ export default class RouteWelcome extends BaseRouteComponent {
 		this.selectedAvatar = true;
 	}
 
+	onBioChanged() {
+		this.modifiedBio = true;
+	}
+
 	async onNext() {
 		if (!this.user) {
 			return;
@@ -66,7 +71,7 @@ export default class RouteWelcome extends BaseRouteComponent {
 
 		this.inputDisabled = true;
 
-		if (this.user.description_markdown) {
+		if (this.modifiedBio) {
 			await this.user.$save();
 		}
 
