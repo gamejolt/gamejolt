@@ -1,0 +1,45 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.-welcome-page
+	theme-prop('background-color', 'darkest')
+	position: absolute
+	top: 0
+	left: 0
+	right: 0
+	bottom: 0
+	overflow-y: auto
+	overflow-x: hidden
+
+.-welcome-col
+	display: flex
+	flex-direction: column
+	align-items: stretch
+	//
+	max-width: 500px
+	margin: 0 auto
+	padding: $grid-gutter-width-xs
+
+	@media $media-sm-up
+		padding: $grid-gutter-width
+
+	text-align: center
+
+	> *:not(:first-child)
+		margin-top: 30px
+
+.-message p
+	margin-bottom: 0
+
+.-avatar .editable-overlay
+	max-width: 130px
+	margin: 0 auto
+	border-radius: 50%
+	overflow: hidden
+
+.-bio textarea
+	min-width: 100%
+	height: 100px
+
+.-muted
+	theme-prop('color', 'fg-muted')

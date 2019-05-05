@@ -54,7 +54,7 @@ export default class RouteJoinAlmost extends BaseRouteComponent {
 			return;
 		}
 
-		// If it worked, redirect to dashboard. They're good to go!
-		Auth.redirectDashboard();
+		// If it worked, redirect to onbaording flow. They're good to go!
+		Auth.redirectOnboarding();
 	}
 }

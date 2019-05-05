@@ -1,15 +1,15 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Auth } from 'game-jolt-frontend-lib/components/auth/auth.service';
 import AppEditableOverlay from 'game-jolt-frontend-lib/components/editable-overlay/editable-overlay.vue';
 import {
 	BaseRouteComponent,
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppThemeSvg } from 'game-jolt-frontend-lib/components/theme/svg/svg';
 import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
 import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { Store } from '../../store/index';
+import { AppState, AppStore } from '../../../lib/gj-lib-client/vue/services/app/app-store';
+import { UserAvatarModal } from '../../components/user/avatar-modal/avatar-modal.service';
 
 @Component({
 	name: 'RouteWelcome',
@@ -20,33 +20,56 @@ import { Store } from '../../store/index';
 	},
 })
 @RouteResolver({
-	resolver: () => Api.sendRequest('/web/touch'),
+	resolver: () => Api.sendRequest('/web/touch?onboard=1'),
 })
 export default class RouteWelcome extends BaseRouteComponent {
-	@State
-	app!: Store['app'];
+	@AppState
+	user!: AppStore['user'];
+
+	$refs!: {
+		bio: HTMLTextAreaElement;
+	};
+
+	selectedAvatar = false;
+	inputDisabled = false;
 
 	get routeTitle() {
 		return this.$gettext('Welcome to Game Jolt!');
 	}
 
-	private get logoScale() {
-		return Screen.isXs ? 0.5 : 1;
-	}
-
-	get logoWidth() {
-		return 328 * this.logoScale;
-	}
-
-	get logoHeight() {
-		return 36 * this.logoScale;
+	get hasBio() {
+		return !!this.user && !!this.user.description_markdown;
 	}
 
 	get isSkip() {
-		return false;
+		return !this.selectedAvatar || !this.hasBio;
 	}
 
-	showEditAvatar() {}
+	routeResolved() {
+		if (!this.user) {
+			this.$router.push('home');
+			return;
+		}
 
-	onNext() {}
+		this.selectedAvatar = !!this.user && !!this.user.avatar_media_item;
+	}
+
+	async chooseAvatar() {
+		await UserAvatarModal.show();
+		this.selectedAvatar = true;
+	}
+
+	async onNext() {
+		if (!this.user) {
+			return;
+		}
+
+		this.inputDisabled = true;
+
+		if (this.user.description_markdown) {
+			await this.user.$save();
+		}
+
+		Auth.redirectDashboard();
+	}
 }
