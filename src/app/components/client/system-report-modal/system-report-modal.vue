@@ -19,7 +19,7 @@
 
 			<p class="text-muted small" v-translate>
 				If you experienced a bug, please report it first on our
-				<external-link href="https://github.com/gamejolt/issue-tracker">
+				<external-link href="https://github.com/gamejolt/issue-tracker" target-self>
 					issue tracker
 				</external-link>
 			</p>

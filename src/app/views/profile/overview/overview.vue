@@ -137,59 +137,39 @@
 						<template v-if="hasLinksSection">
 							<template v-if="linkedAccounts.length">
 								<div v-if="twitchAccount">
-									<external-link
-										class="link-unstyled"
-										:href="twitchAccount.platformLink"
-										target="_blank"
-									>
+									<external-link class="link-unstyled" :href="twitchAccount.platformLink">
 										<app-jolticon :icon="twitchAccount.icon" />
 										{{ twitchAccount.name }}
 									</external-link>
 								</div>
 								<div v-if="mixerAccount">
-									<external-link
-										class="link-unstyled"
-										:href="mixerAccount.platformLink"
-										target="_blank"
-									>
+									<external-link class="link-unstyled" :href="mixerAccount.platformLink">
 										<app-jolticon :icon="mixerAccount.icon" />
 										{{ mixerAccount.name }}
 									</external-link>
 								</div>
 								<div v-if="twitterAccount">
-									<external-link
-										class="link-unstyled"
-										:href="twitterAccount.platformLink"
-										target="_blank"
-									>
+									<external-link class="link-unstyled" :href="twitterAccount.platformLink">
 										<app-jolticon :icon="twitterAccount.icon" />
 										<span>@</span>
 										{{ twitterAccount.name }}
 									</external-link>
 								</div>
 								<div v-if="tumblrAccount">
-									<external-link
-										class="link-unstyled"
-										:href="tumblrAccount.tumblrSelectedBlog.url"
-										target="_blank"
-									>
+									<external-link class="link-unstyled" :href="tumblrAccount.tumblrSelectedBlog.url">
 										<app-jolticon :icon="tumblrAccount.icon" />
 										{{ tumblrAccount.tumblrSelectedBlog.title }}
 									</external-link>
 								</div>
 								<div v-if="googleAccount">
-									<external-link
-										class="link-unstyled"
-										:href="googleAccount.platformLink"
-										target="_blank"
-									>
+									<external-link class="link-unstyled" :href="googleAccount.platformLink">
 										<app-jolticon :icon="googleAccount.icon" />
 										{{ googleAccount.name }}
 									</external-link>
 								</div>
 							</template>
 							<div v-if="user.web_site">
-								<external-link class="link-unstyled" :href="user.web_site" target="_blank">
+								<external-link class="link-unstyled" :href="user.web_site">
 									<app-jolticon icon="link" />
 									<translate>Website</translate>
 								</external-link>
@@ -199,7 +179,6 @@
 									<external-link
 										class="link-unstyled"
 										:href="`https://www.youtube.com/channel/${channel.channel_id}`"
-										target="_blank"
 									>
 										<app-jolticon icon="youtube" />
 										{{ channel.title }}

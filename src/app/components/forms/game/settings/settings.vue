@@ -21,7 +21,7 @@
 			<div class="help-block" v-translate>
 				<p>
 					Use
-					<external-link href="http://google.com/analytics" target="_blank">
+					<external-link href="http://google.com/analytics">
 						Google Analytics
 					</external-link>
 					to track a multitude of stats and get tons of information about your game page. Just enter
@@ -33,7 +33,7 @@
 				<ul>
 					<li>
 						Create (or log into an existing)
-						<external-link href="http://www.google.com/analytics" target="_blank">
+						<external-link href="http://www.google.com/analytics">
 							Google Analytics
 						</external-link>
 						account.

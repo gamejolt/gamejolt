@@ -260,7 +260,7 @@
 								<p>
 									You can view us working on the project, pull it and make changes for the fun of
 									it, release customized versions of the client, or even help fix bugs at the
-									<external-link href="https://github.com/gamejolt/gamejolt" target="_blank">
+									<external-link href="https://github.com/gamejolt/gamejolt">
 										GitHub repository
 									</external-link>
 									.
@@ -361,10 +361,7 @@
 						<p class="sans-margin">
 							<strong>Found a bug?</strong>
 							Post it in the
-							<external-link
-								href="https://github.com/gamejolt/issue-tracker/issues"
-								target="_blank"
-							>
+							<external-link href="https://github.com/gamejolt/issue-tracker/issues">
 								issue tracker
 							</external-link>
 							.
