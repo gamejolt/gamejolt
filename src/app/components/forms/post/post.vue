@@ -134,6 +134,7 @@
 					!longEnabled ? $gettext(`What's new?`) : $gettext(`Write a summary for your article...`)
 				"
 				:model-id="model.id"
+				min-height="72"
 			/>
 
 			<div class="-hp">
