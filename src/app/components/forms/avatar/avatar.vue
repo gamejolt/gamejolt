@@ -66,9 +66,9 @@
 					By default we fallback to using Gravatar if you have one. If you would like to disable the
 					Gravatar fallback, you can toggle this on.
 				</translate>
-				<a href="https://gravatar.com" target="_blank" class="link-help" rel="nofollow noopener">
+				<external-link href="https://gravatar.com" target="_blank" class="link-help">
 					<translate>What is Gravatar?</translate>
-				</a>
+				</external-link>
 			</p>
 		</app-form-group>
 	</app-form>

@@ -21,9 +21,9 @@
 			<div class="help-block" v-translate>
 				<p>
 					Use
-					<a href="http://google.com/analytics" target="_blank" rel="nofollow noopener">
+					<external-link href="http://google.com/analytics" target="_blank">
 						Google Analytics
-					</a>
+					</external-link>
 					to track a multitude of stats and get tons of information about your game page. Just enter
 					your Google Analytics tracking ID here and we'll start sending data over there right away.
 				</p>
@@ -33,9 +33,9 @@
 				<ul>
 					<li>
 						Create (or log into an existing)
-						<a href="http://www.google.com/analytics" target="_blank" rel="nofollow noopener">
+						<external-link href="http://www.google.com/analytics" target="_blank">
 							Google Analytics
-						</a>
+						</external-link>
 						account.
 					</li>
 					<li>

@@ -63,13 +63,9 @@
 								</translate>
 							</p>
 							<p>
-								<a
-									href="https://goo.gl/forms/igg8T9dQnZLT2c1l2"
-									target="_blank"
-									rel="nofollow noopener"
-								>
+								<external-link href="https://goo.gl/forms/igg8T9dQnZLT2c1l2" target="_blank">
 									<translate>Request manual approval here.</translate>
-								</a>
+								</external-link>
 							</p>
 						</div>
 					</app-expand>
@@ -237,13 +233,12 @@
 								information about anybody that owns at least 25% of the company, in addition to the
 								representative.
 							</translate>
-							<a
+							<external-link
 								href="https://en.wikipedia.org/wiki/Single_Euro_Payments_Area"
 								target="_blank"
-								rel="nofollow noopener"
 							>
 								<translate>Learn more</translate>
-							</a>
+							</external-link>
 						</p>
 					</div>
 

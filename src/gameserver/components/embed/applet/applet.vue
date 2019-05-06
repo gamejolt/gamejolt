@@ -18,17 +18,16 @@
 				<translate>You may use the button below to get it.</translate>
 			</p>
 
-			<a
+			<external-link
 				href="https://java.com/download"
 				onclick="window.open( this.href ); return false"
-				rel="nofollow noopener"
 			>
 				<img
 					src="https://java.com/en/img/everywhere/getjava_lg.gif"
 					alt="Get Java"
 					style="border-style: none"
 				/>
-			</a>
+			</external-link>
 		</applet>
 	</div>
 </template>

@@ -9,6 +9,7 @@ import { VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
 import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { VueRouter } from 'vue-router/types/router';
+import AppExternalLink from '../lib/gj-lib-client/vue/components/external-link/external-link.vue';
 import { bootstrapAppTranslations } from '../utils/translations';
 import { Settings } from './settings/settings.service';
 
@@ -35,6 +36,7 @@ export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, rout
 	// Common components.
 	Vue.component('AppButton', AppButton);
 	Vue.component('AppJolticon', AppJolticon);
+	Vue.component('ExternalLink', AppExternalLink);
 
 	// Set some constants so we can use them in templates.
 	Vue.use(vue => {
