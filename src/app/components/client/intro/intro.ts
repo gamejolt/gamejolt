@@ -1,6 +1,10 @@
 import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
-import { EventBus, EventBusDeregister } from 'game-jolt-frontend-lib/components/event-bus/event-bus.service';
+import {
+	EventBus,
+	EventBusDeregister,
+} from 'game-jolt-frontend-lib/components/event-bus/event-bus.service';
 import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import Onboarding from 'game-jolt-frontend-lib/components/onboarding/onboarding.service';
 import { sleep } from 'game-jolt-frontend-lib/utils/utils';
 import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
@@ -56,6 +60,12 @@ export default class AppClientIntro extends Vue {
 		// anyway.
 		if (!this.user && !sessionStorage.getItem('client-intro-login-play')) {
 			console.log('Skip intro -- not logged in.');
+			this.finish();
+			return;
+		}
+
+		if (Onboarding.isOnboarding) {
+			console.log('Skip intro -- onboarding started.');
 			this.finish();
 			return;
 		}
