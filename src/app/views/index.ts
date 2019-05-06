@@ -1,4 +1,5 @@
 import { initRouter } from 'game-jolt-frontend-lib/utils/router';
+import { store } from '../store/index';
 import { routeCommunitiesView } from './communities/view/view.route';
 import { routeDash } from './dashboard/dashboard.route';
 import { routeDiscover } from './discover/discover.route';
@@ -13,6 +14,7 @@ import { routeProfile } from './profile/profile.route';
 import { routeSearch } from './search/search.route';
 import { routeSettings } from './settings/settings.route';
 import { routeStyleguide } from './styleguide/styleguide.route';
+import { routeWelcome } from './welcome/welcome.route';
 import { routeWeplay } from './weplay/weplay.route';
 
 const routes = [
@@ -31,6 +33,19 @@ const routes = [
 	routeLegal,
 	routeIntent,
 	routeWeplay,
+	routeWelcome,
 ];
 
 export const router = initRouter(routes);
+
+// Handles route meta changes during redirects.
+// Routes in the app section can define the following meta:
+// 	isFullPage: boolean - wether to not display the shell and treat the route as a "full page"
+router.beforeEach((to, _from, next) => {
+	if (to.matched.some(record => record.meta.isFullPage)) {
+		store.commit('hideShell');
+	} else {
+		store.commit('showShell');
+	}
+	next();
+});

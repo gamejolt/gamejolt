@@ -53,6 +53,12 @@ export default class AppShell extends Vue {
 	chat!: Store['chat'];
 
 	@State
+	isShellHidden!: Store['isShellHidden'];
+
+	@State
+	hasTopBar!: Store['hasTopBar'];
+
+	@State
 	hasSidebar!: Store['hasSidebar'];
 
 	@State

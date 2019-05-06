@@ -1,17 +1,30 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Backdrop } from 'game-jolt-frontend-lib/components/backdrop/backdrop.service';
 import AppBackdrop from 'game-jolt-frontend-lib/components/backdrop/backdrop.vue';
-import { CommentActions, CommentMutations, CommentStore } from 'game-jolt-frontend-lib/components/comment/comment-store';
+import {
+	CommentActions,
+	CommentMutations,
+	CommentStore,
+} from 'game-jolt-frontend-lib/components/comment/comment-store';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
 import { ContentFocus } from 'game-jolt-frontend-lib/components/content-focus/content-focus.service';
 import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
 import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { ThemeActions, ThemeMutations, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
+import {
+	ThemeActions,
+	ThemeMutations,
+	ThemeStore,
+} from 'game-jolt-frontend-lib/components/theme/theme.store';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
 import { VuexAction, VuexModule, VuexMutation, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
-import { Actions as AppActions, AppStore, appStore, Mutations as AppMutations } from 'game-jolt-frontend-lib/vue/services/app/app-store';
+import {
+	Actions as AppActions,
+	AppStore,
+	appStore,
+	Mutations as AppMutations,
+} from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Route } from 'vue-router';
 import { sync } from 'vuex-router-sync';
 import { ActivityFeedState } from '../components/activity/feed/state';
@@ -54,6 +67,8 @@ export type Mutations = AppMutations &
 	BannerMutations &
 	CommentMutations &
 	_ClientLibraryMod.Mutations & {
+		showShell: void;
+		hideShell: void;
 		setNotificationCount: { type: UnreadItemType; count: number };
 		incrementNotificationCount: { type: UnreadItemType; count: number };
 		setFriendRequestCount: number;
@@ -104,6 +119,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	isBootstrapped = false;
 	isLibraryBootstrapped = false;
 	isShellBootstrapped = false;
+	isShellHidden = false;
 
 	unreadActivityCount = 0; // unread items in the activity feed
 	unreadNotificationsCount = 0; // unread items in the notification feed
@@ -115,12 +131,16 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	communities: Community[] = [];
 
+	get hasTopBar() {
+		return !this.isShellHidden;
+	}
+
 	get hasSidebar() {
-		return Screen.isXs || !!this.app.user;
+		return !this.isShellHidden && (Screen.isXs || !!this.app.user);
 	}
 
 	get hasCbar() {
-		return !Screen.isXs && this.communities.length;
+		return !this.isShellHidden && !Screen.isXs && this.communities.length;
 	}
 
 	get isLeftPaneVisible() {
@@ -286,6 +306,16 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		} else if (backdrop) {
 			this._removeBackdrop();
 		}
+	}
+
+	@VuexMutation
+	hideShell() {
+		this.isShellHidden = true;
+	}
+
+	@VuexMutation
+	showShell() {
+		this.isShellHidden = false;
 	}
 
 	@VuexMutation

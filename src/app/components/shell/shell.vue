@@ -6,15 +6,18 @@
 			'left-pane-visible': isLeftPaneVisible,
 			'right-pane-visible': isRightPaneVisible,
 			'has-cbar': hasCbar,
-			'has-banner': hasBanner,
+			'has-banner': hasBanner && !isShellHidden,
 		}"
 	>
-		<app-shell-banner />
-		<app-shell-top-nav />
+		<app-shell-banner v-if="!isShellHidden" />
+		<app-shell-top-nav v-if="hasTopBar" />
 		<app-shell-cbar v-if="hasCbar" />
 		<app-shell-sidebar v-if="hasSidebar" />
 
-		<app-shell-body>
+		<template v-if="isShellHidden">
+			<slot />
+		</template>
+		<app-shell-body v-else>
 			<slot />
 		</app-shell-body>
 
