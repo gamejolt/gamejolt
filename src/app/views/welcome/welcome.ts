@@ -68,23 +68,23 @@ export default class RouteWelcome extends BaseRouteComponent {
 
 		this.hasSelectedAvatar = !!this.user && !!this.user.avatar_media_item;
 		if (this.hasSelectedAvatar) {
-			Onboarding.trackEvent('avatar:bootstrap');
+			Onboarding.trackEvent('avatar-bootstrap');
 		}
 
 		if (this.hasBio) {
-			Onboarding.trackEvent('bio:bootstrap');
+			Onboarding.trackEvent('bio-bootstrap');
 		}
 	}
 
 	async chooseAvatar() {
-		Onboarding.trackEvent('avatar:set');
+		Onboarding.trackEvent('avatar-set');
 		await UserAvatarModal.show();
 		this.hasSelectedAvatar = true;
 	}
 
 	onBioChanged() {
 		if (!this.hasModifiedBio) {
-			Onboarding.trackEvent('bio:set');
+			Onboarding.trackEvent('bio-set');
 		}
 		this.hasModifiedBio = true;
 	}
