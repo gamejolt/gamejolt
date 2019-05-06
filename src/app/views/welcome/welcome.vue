@@ -19,7 +19,7 @@
 			<section class="-bio">
 				<textarea
 					class="form-control"
-					v-model="user.description_markdown"
+					v-model="bio"
 					@change="onBioChanged"
 					:disabled="isInputDisabled"
 					rows="3"

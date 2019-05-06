@@ -29,6 +29,7 @@ export default class RouteWelcome extends BaseRouteComponent {
 
 	startedOn = Date.now();
 	hasSelectedAvatar = false;
+	bio = '';
 	hasModifiedBio = false;
 	isInputDisabled = false;
 
@@ -37,7 +38,7 @@ export default class RouteWelcome extends BaseRouteComponent {
 	}
 
 	get hasBio() {
-		return !!this.user && !!this.user.description_markdown;
+		return this.bio.length > 0;
 	}
 
 	get isNext() {
@@ -71,6 +72,7 @@ export default class RouteWelcome extends BaseRouteComponent {
 			Onboarding.trackEvent('avatar-bootstrap');
 		}
 
+		this.bio = this.user.description_markdown || '';
 		if (this.hasBio) {
 			Onboarding.trackEvent('bio-bootstrap');
 		}
