@@ -38,6 +38,9 @@ const routes = [
 
 export const router = initRouter(routes);
 
+// Handles route meta changes during redirects.
+// Routes in the app section can define the following meta:
+// 	isFullPage: boolean - wether to not display the shell and treat the route as a "full page"
 router.beforeEach((to, _from, next) => {
 	if (to.matched.some(record => record.meta.isFullPage)) {
 		store.commit('hideShell');

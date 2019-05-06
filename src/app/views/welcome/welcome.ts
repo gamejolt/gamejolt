@@ -26,13 +26,9 @@ export default class RouteWelcome extends BaseRouteComponent {
 	@AppState
 	user!: AppStore['user'];
 
-	$refs!: {
-		bio: HTMLTextAreaElement;
-	};
-
-	selectedAvatar = false;
-	modifiedBio = false;
-	inputDisabled = false;
+	hasSelectedAvatar = false;
+	hasModifiedBio = false;
+	isInputDisabled = false;
 
 	get routeTitle() {
 		return this.$gettext('Welcome to Game Jolt!');
@@ -43,7 +39,7 @@ export default class RouteWelcome extends BaseRouteComponent {
 	}
 
 	get isNext() {
-		return this.selectedAvatar && (this.hasBio || this.modifiedBio);
+		return this.hasSelectedAvatar && (this.hasBio || this.hasModifiedBio);
 	}
 
 	routeResolved() {
@@ -52,16 +48,16 @@ export default class RouteWelcome extends BaseRouteComponent {
 			return;
 		}
 
-		this.selectedAvatar = !!this.user && !!this.user.avatar_media_item;
+		this.hasSelectedAvatar = !!this.user && !!this.user.avatar_media_item;
 	}
 
 	async chooseAvatar() {
 		await UserAvatarModal.show();
-		this.selectedAvatar = true;
+		this.hasSelectedAvatar = true;
 	}
 
 	onBioChanged() {
-		this.modifiedBio = true;
+		this.hasModifiedBio = true;
 	}
 
 	async onNext() {
@@ -69,9 +65,9 @@ export default class RouteWelcome extends BaseRouteComponent {
 			return;
 		}
 
-		this.inputDisabled = true;
+		this.isInputDisabled = true;
 
-		if (this.modifiedBio) {
+		if (this.hasModifiedBio) {
 			await this.user.$save();
 		}
 
