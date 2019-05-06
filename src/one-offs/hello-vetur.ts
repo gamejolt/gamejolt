@@ -446,7 +446,7 @@ for (let component of components) {
 	tsPath = tsPath.replace(/\.ts$/, '');
 	templateText += `\n\n<script lang="ts" src="${tsPath}"></script>`;
 
-	// Convert export to export defeault
+	// Convert export to export default
 	if (!component.hasDefaultExport) {
 		tsText = tsText.replace(/^(\s*export)(\s+)(?=class)/gm, '$1 default$2');
 	}

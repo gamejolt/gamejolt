@@ -65,7 +65,7 @@
 		<ul class="list-unstyled" v-if="hasLinksSection">
 			<li v-if="game.web_site">
 				<app-jolticon icon="world" />
-				<a :href="game.web_site" target="_blank">
+				<a :href="game.web_site" rel="nofollow noopener" target="_blank">
 					<translate>Game Website</translate>
 				</a>
 			</li>

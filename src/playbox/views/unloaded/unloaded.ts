@@ -28,7 +28,7 @@ export default class RouteUnloaded extends BaseRouteComponent {
 	// 		console.error(payload.error);
 	// 		return;
 	// 	}
-	// 	Meta.title = payload.title!;
+	// 	Meta.setTitle(payload.title!);
 	// 	Meta.description = payload.description!;
 	// }
 }

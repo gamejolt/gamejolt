@@ -178,6 +178,9 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	@RouteStoreModule.Mutation
 	setOverviewComments!: RouteStore['setOverviewComments'];
 
+	@RouteStoreModule.State
+	browserBuilds!: RouteStore['browserBuilds'];
+
 	@CommentState
 	getCommentStore!: CommentStore['getCommentStore'];
 
@@ -188,8 +191,16 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	get routeTitle() {
 		if (this.game) {
-			const dev = this.game.developer;
-			return `${this.game.title} by ${dev.display_name} (@${dev.username})`;
+			let title = this.$gettextInterpolate('%{ gameTitle } by %{ user }', {
+				gameTitle: this.game.title,
+				user: this.game.developer.display_name,
+			});
+
+			if (this.browserBuilds.length) {
+				title += ' - ' + this.$gettext('Play Online');
+			}
+
+			return title;
 		}
 		return null;
 	}

@@ -25,11 +25,7 @@ let components: any = {
 };
 
 if (GJ_IS_CLIENT) {
-	// TODO check if .default is actually needed here
-	components = {
-		...components,
-		...require('../../../../_common/client/history-navigator/history-navigator.vue').default,
-	};
+	components.AppClientHistoryNavigator = require('../../../../_common/client/history-navigator/history-navigator.vue').default;
 }
 
 @Component({

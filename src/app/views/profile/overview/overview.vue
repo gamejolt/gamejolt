@@ -27,7 +27,7 @@
 		</section>
 		<section class="section" v-else>
 			<div>
-				<app-page-container xl>
+				<app-page-container xl order="left,main,right">
 					<div slot="left">
 						<!-- Bio -->
 						<div v-if="!isOverviewLoaded">
@@ -173,7 +173,12 @@
 								</div>
 							</template>
 							<div v-if="user.web_site">
-								<a class="link-unstyled" :href="user.web_site" target="_blank">
+								<a
+									class="link-unstyled"
+									:href="user.web_site"
+									rel="nofollow noopener"
+									target="_blank"
+								>
 									<app-jolticon icon="link" />
 									<translate>Website</translate>
 								</a>

@@ -8,7 +8,11 @@ export async function GridClientLazy() {
 }
 
 export async function AppAuthJoinLazy() {
-	return await import(/* webpackChunkName: "authJoin" */ 'game-jolt-frontend-lib/components/auth/join/join.vue');
+	// Don't lazy load in SSR.
+	// If we do, it'll be loaded as an async chunk and included in the page as a prefetch and styling will not apply.
+	return GJ_IS_SSR
+		? require('game-jolt-frontend-lib/components/auth/join/join.vue')
+		: await import(/* webpackChunkName: "authJoin" */ 'game-jolt-frontend-lib/components/auth/join/join.vue');
 }
 
 export async function AppCommentWidgetLazy() {

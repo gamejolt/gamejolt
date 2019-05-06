@@ -1,6 +1,6 @@
 <template>
 	<section v-if="hasSearch">
-		<app-page-container no-left>
+		<app-page-container no-left order="right,main">
 			<!-- Games -->
 			<div slot="right" v-if="searchPayload.games.length">
 				<h3 class="-heading">
