@@ -17,7 +17,11 @@
 				<translate>You may use the button below to get it.</translate>
 			</p>
 
-			<a href="https://www.adobe.com/go/getflash" onclick="window.open( this.href ); return false">
+			<a
+				href="https://www.adobe.com/go/getflash"
+				onclick="window.open( this.href ); return false"
+				rel="nofollow noopener"
+			>
 				<img
 					src="https://www.adobe.com/images/shared/download_buttons/get_flash_player.gif"
 					alt="Get Adobe Flash player"

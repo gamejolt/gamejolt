@@ -13,8 +13,8 @@
 
 		<div v-if="!hasSignedPartnerAgreement">
 			<!--
-			If they accepted a different agreement, then show that they can accept this one too.
-		-->
+				If they accepted a different agreement, then show that they can accept this one too.
+			-->
 			<div class="form-group" v-if="hasSignedSomeAgreement && !showAgreement">
 				<div class="small">
 					<div>
@@ -63,7 +63,7 @@
 					You have agreed to our Partner Agreement on %{ date }.
 				</translate>
 				<br />
-				<a :href="agreementLink" target="_blank">
+				<a :href="agreementLink" target="_blank" rel="nofollow noopener">
 					<translate>View Partner Agreement</translate>
 				</a>
 			</p>

@@ -4,9 +4,9 @@
 
 		<div v-if="isLoaded">
 			<!--
-			Account initialization.
-			We need this information first.
-		-->
+				Account initialization.
+				We need this information first.
+			-->
 			<div v-if="!account.is_stripe_initialized">
 				<app-form-group name="type" :label="$gettext('Account Type')">
 					<div class="radio">
@@ -63,7 +63,11 @@
 								</translate>
 							</p>
 							<p>
-								<a href="https://goo.gl/forms/igg8T9dQnZLT2c1l2" target="_blank">
+								<a
+									href="https://goo.gl/forms/igg8T9dQnZLT2c1l2"
+									target="_blank"
+									rel="nofollow noopener"
+								>
 									<translate>Request manual approval here.</translate>
 								</a>
 							</p>
@@ -141,23 +145,23 @@
 				<!--<pre>{{ formModel | json }}</pre>-->
 
 				<!--
-				Company Info
-			-->
+					Company Info
+				-->
 				<div v-if="account.type === 'company'">
 					<h4><translate>Company Details</translate></h4>
 
 					<app-financials-managed-account-business />
 
 					<!--
-					Business Address
-					It uses the legal entity address.
-				-->
+						Business Address
+						It uses the legal entity address.
+					-->
 					<app-financials-managed-account-address namePrefix="legal_entity.address" />
 				</div>
 
 				<!--
-				Individual/Company Representative
-			-->
+					Individual/Company Representative
+				-->
 				<h4>
 					<template v-if="account.type === 'individual'">
 						<translate>Your Details</translate>
@@ -179,19 +183,19 @@
 				</div>
 
 				<!--
-				Personal Name
-			-->
+					Personal Name
+				-->
 				<app-financials-managed-account-name namePrefix="legal_entity" />
 
 				<!--
-				Personal DOB
-			-->
+					Personal DOB
+				-->
 				<app-financials-managed-account-dob namePrefix="legal_entity.dob" />
 
 				<!--
-				Personal Address
-				Some times required for individual accounts in GB too.
-			-->
+					Personal Address
+					Some times required for individual accounts in GB too.
+				-->
 				<app-financials-managed-account-address
 					:namePrefix="
 						account.type === 'company' ? 'legal_entity.personal_address' : 'legal_entity.address'
@@ -199,25 +203,25 @@
 				/>
 
 				<!--
-				SSN
-			-->
+					SSN
+				-->
 				<app-financials-managed-account-ssn
 					namePrefix="legal_entity"
 					:countryCode="account.country_code"
 				/>
 
 				<!--
-				Personal ID Verification
-			-->
+					Personal ID Verification
+				-->
 				<app-financials-managed-account-id-document
 					ref="id-document"
 					namePrefix="legal_entity.verification"
 				/>
 
 				<!--
-				Additional Owners (for Europe)
-				Anyone that owns at least 25% of the company needs to be listed.
-			-->
+					Additional Owners (for Europe)
+					Anyone that owns at least 25% of the company needs to be listed.
+				-->
 				<div
 					v-if="
 						(requiresField('legal_entity.additional_owners') && account.status === 'unverified') ||
@@ -233,7 +237,11 @@
 								information about anybody that owns at least 25% of the company, in addition to the
 								representative.
 							</translate>
-							<a href="https://en.wikipedia.org/wiki/Single_Euro_Payments_Area" target="_blank">
+							<a
+								href="https://en.wikipedia.org/wiki/Single_Euro_Payments_Area"
+								target="_blank"
+								rel="nofollow noopener"
+							>
 								<translate>Learn more</translate>
 							</a>
 						</p>
@@ -265,8 +273,8 @@
 						</h5>
 
 						<!--
-						These are the only fields we need to collect according to Stripe.
-					-->
+							These are the only fields we need to collect according to Stripe.
+						-->
 						<app-financials-managed-account-name
 							:namePrefix="`legal_entity.additional_owners.${i}`"
 							:forceRequired="true"
@@ -301,66 +309,66 @@
 				</div>
 
 				<!--<div v-if="false">
-				<legend>Bank Account</legend>
-				<div v-if="stripe.current.external_accounts.total_count >= 1">
-					<p><strong>Account Holder</strong>: {{ stripe.current.external_accounts.data[0].account_holder_name }}</p>
-					<p><strong>Account Type</strong>: {{ stripe.current.external_accounts.data[0].account_holder_type | uppercase }}</p>
-					<p><strong>Bank Name</strong>: {{ stripe.current.external_accounts.data[0].bank_name }}</p>
-					<p><strong>Country</strong>: {{ stripe.current.external_accounts.data[0].country }}</p>
-					<p><strong>Account Number (last 4)</strong>: {{ stripe.current.external_accounts.data[0].last4 }}</p>
-					<p><strong>Routing Number</strong>: {{ stripe.current.external_accounts.data[0].routing_number }}</p>
-					<hr>
-				</div>
-				<div v-if="stripe.current.external_accounts.total_count === 0" >
-					<div class="row">
-						<div class="col-sm-6">
-							<app-form-group name="bankAccount_country" label="Country">
-								<select form-control="select" ng-options="code as country for (code, country) in stripe.countries" ng-change="updateCurrencies()"></select>
-							</app-form-group>
+					<legend>Bank Account</legend>
+					<div v-if="stripe.current.external_accounts.total_count >= 1">
+						<p><strong>Account Holder</strong>: {{ stripe.current.external_accounts.data[0].account_holder_name }}</p>
+						<p><strong>Account Type</strong>: {{ stripe.current.external_accounts.data[0].account_holder_type | uppercase }}</p>
+						<p><strong>Bank Name</strong>: {{ stripe.current.external_accounts.data[0].bank_name }}</p>
+						<p><strong>Country</strong>: {{ stripe.current.external_accounts.data[0].country }}</p>
+						<p><strong>Account Number (last 4)</strong>: {{ stripe.current.external_accounts.data[0].last4 }}</p>
+						<p><strong>Routing Number</strong>: {{ stripe.current.external_accounts.data[0].routing_number }}</p>
+						<hr>
+					</div>
+					<div v-if="stripe.current.external_accounts.total_count === 0" >
+						<div class="row">
+							<div class="col-sm-6">
+								<app-form-group name="bankAccount_country" label="Country">
+									<select form-control="select" ng-options="code as country for (code, country) in stripe.countries" ng-change="updateCurrencies()"></select>
+								</app-form-group>
+							</div>
+							<div class="col-sm-6">
+								<app-form-group name="bankAccount_currency" label="Currency">
+									<select form-control="select" ng-options="currency for (country, currency) in formState.currencies"></select>
+								</app-form-group>
+							</div>
 						</div>
-						<div class="col-sm-6">
-							<app-form-group name="bankAccount_currency" label="Currency">
-								<select form-control="select" ng-options="currency for (country, currency) in formState.currencies"></select>
-							</app-form-group>
+						<div class="row">
+							<div class="col-sm-6">
+								<app-form-group name="bankAccount_accountNumber" label="Account Number">
+									<input type="text" form-control>
+									<app-form-control-errors />
+								</app-form-group>
+							</div>
+							<div class="col-sm-6">
+								<app-form-group name="bankAccount_routingNumber" label="Routing Number / Sort Code">
+									<input type="text" form-control>
+									<app-form-control-errors />
+								</app-form-group>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<app-form-group name="bankAccount_accountHolderName" label="Account Holder Name">
+									<input type="text" form-control>
+									<app-form-control-errors />
+								</app-form-group>
+							</div>
+							<div class="col-sm-6">
+								<app-form-group name="bankAccount_accountHolderType" label="Account Holder Type">
+									<select form-control="select">
+										<option ng-value="individual">Individual</option>
+										<option ng-value="company">Company</option>
+									</select>
+								</app-form-group>
+							</div>
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-sm-6">
-							<app-form-group name="bankAccount_accountNumber" label="Account Number">
-								<input type="text" form-control>
-								<app-form-control-errors />
-							</app-form-group>
-						</div>
-						<div class="col-sm-6">
-							<app-form-group name="bankAccount_routingNumber" label="Routing Number / Sort Code">
-								<input type="text" form-control>
-								<app-form-control-errors />
-							</app-form-group>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-6">
-							<app-form-group name="bankAccount_accountHolderName" label="Account Holder Name">
-								<input type="text" form-control>
-								<app-form-control-errors />
-							</app-form-group>
-						</div>
-						<div class="col-sm-6">
-							<app-form-group name="bankAccount_accountHolderType" label="Account Holder Type">
-								<select form-control="select">
-									<option ng-value="individual">Individual</option>
-									<option ng-value="company">Company</option>
-								</select>
-							</app-form-group>
-						</div>
-					</div>
-				</div>
-			</div>-->
+				</div>-->
 			</div>
 
 			<!--
-			There may be a specific error message, or a generic one.
-		-->
+				There may be a specific error message, or a generic one.
+			-->
 			<app-expand :when="!!genericError">
 				<div class="alert alert-notice">
 					<p v-if="genericError !== true">{{ genericError }}</p>

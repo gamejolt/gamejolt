@@ -62,6 +62,7 @@
 									class="list-group-item has-icon"
 									:href="platform.url"
 									target="_blank"
+									rel="nofollow noopener"
 								>
 									<app-jolticon :icon="getProviderIcon(platform.created_resource_provider)" />
 									{{ platform.created_resource_account_name }}

@@ -26,6 +26,7 @@
 			<a
 				href="https://go.microsoft.com/fwlink/?LinkID=124807"
 				onclick="window.open( this.href ); return false"
+				rel="nofollow noopener"
 			>
 				<img
 					src="https://go.microsoft.com/fwlink/?LinkId=108181"

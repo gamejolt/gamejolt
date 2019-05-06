@@ -18,7 +18,11 @@
 				<translate>You may use the button below to get it.</translate>
 			</p>
 
-			<a href="https://java.com/download" onclick="window.open( this.href ); return false">
+			<a
+				href="https://java.com/download"
+				onclick="window.open( this.href ); return false"
+				rel="nofollow noopener"
+			>
 				<img
 					src="https://java.com/en/img/everywhere/getjava_lg.gif"
 					alt="Get Java"

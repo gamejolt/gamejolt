@@ -71,17 +71,19 @@
 			</li>
 			<li v-if="facebookAccount">
 				<app-jolticon icon="facebook" />
-				<a :href="facebookAccount.facebookPageUrl" target="_blank">
+				<a :href="facebookAccount.facebookPageUrl" target="_blank" rel="nofollow noopener">
 					{{ facebookAccount.facebookSelectedPage.name }}
 				</a>
 			</li>
 			<li v-if="twitterAccount">
 				<app-jolticon icon="twitter-bird" />
-				<a :href="twitterAccount.platformLink" target="_blank">@{{ twitterAccount.name }}</a>
+				<a :href="twitterAccount.platformLink" target="_blank" rel="nofollow noopener">
+					@{{ twitterAccount.name }}
+				</a>
 			</li>
 			<li v-if="tumblrAccount">
 				<app-jolticon icon="tumblr" />
-				<a :href="tumblrAccount.tumblrSelectedBlog.url" target="_blank">
+				<a :href="tumblrAccount.tumblrSelectedBlog.url" target="_blank" rel="nofollow noopener">
 					{{ tumblrAccount.tumblrSelectedBlog.title }}
 				</a>
 			</li>

@@ -67,6 +67,7 @@
 						class="link-help"
 						href="https://support.google.com/analytics/answer/1008080"
 						target="_blank"
+						rel="nofollow noopener"
 					>
 						<translate>How do I get my tracking ID?</translate>
 					</a>

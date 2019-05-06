@@ -79,7 +79,12 @@
 						</translate>
 					</p>
 					<p>
-						<a class="link-help" href="https://sketchfab.com/" target="_blank">
+						<a
+							class="link-help"
+							href="https://sketchfab.com/"
+							target="_blank"
+							rel="nofollow noopener"
+						>
 							<translate>Learn more about Sketchfab...</translate>
 						</a>
 					</p>

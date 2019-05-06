@@ -74,7 +74,7 @@
 						<div class="col-xs-4 col-sm-3 hidden-xs">
 							<ol class="list-unstyled footer-link-list">
 								<li>
-									<a href="https://github.com/gamejolt" target="_blank">
+									<a href="https://github.com/gamejolt" target="_blank" rel="nofollow noopener">
 										<translate>footer.open_source</translate>
 									</a>
 								</li>
@@ -86,12 +86,20 @@
 									</router-link>
 								</li>
 								<li>
-									<a href="https://github.com/gamejolt/issue-tracker" target="_blank">
+									<a
+										href="https://github.com/gamejolt/issue-tracker"
+										target="_blank"
+										rel="nofollow noopener"
+									>
 										<translate>Bug Tracker</translate>
 									</a>
 								</li>
 								<li>
-									<a href="https://www.redbubble.com/people/gamejolt/shop" target="_blank">
+									<a
+										href="https://www.redbubble.com/people/gamejolt/shop"
+										target="_blank"
+										rel="nofollow noopener"
+									>
 										<translate>Merch</translate>
 									</a>
 								</li>
@@ -171,7 +179,11 @@
 					<p class="small text-muted">
 						<translate>footer.translations</translate>
 						<br />
-						<a href="https://poeditor.com/join/project/B4nWT6EgnD" target="_blank">
+						<a
+							href="https://poeditor.com/join/project/B4nWT6EgnD"
+							target="_blank"
+							rel="nofollow noopener"
+						>
 							<translate>footer.translations_help</translate>
 						</a>
 					</p>

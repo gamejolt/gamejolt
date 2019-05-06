@@ -1,7 +1,11 @@
 <template>
 	<div style="text-align: center;">
 		<div class="missing" :hidden="!isMissing">
-			<a href="https://unity3d.com/webplayer/" title="Unity Web Player. Install now!">
+			<a
+				href="https://unity3d.com/webplayer/"
+				title="Unity Web Player. Install now!"
+				rel="nofollow noopener"
+			>
 				<p>
 					<translate>This content requires the Unity Web Player.</translate>
 				</p>
@@ -18,6 +22,7 @@
 			<a
 				href="https://unity3d.com/webplayer/"
 				title="Unity Web Player. Install now! Restart your browser after install."
+				rel="nofollow noopener"
 			>
 				<p>
 					<translate>This content requires the Unity Web Player.</translate>
