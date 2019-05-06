@@ -13,6 +13,7 @@ import AuthLinkedAccountProcessing from '../../_processing/processing.vue';
 	name: 'RouteAuthLinkedAccountFacebookCallback',
 })
 @RouteResolver({
+	lazy: true,
 	resolver({ route }) {
 		const { code, state } = route.query;
 		return Api.sendRequest(
