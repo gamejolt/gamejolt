@@ -10,9 +10,8 @@
 				content-context="game-description"
 				:model-id="model.id"
 				:rules="{
-					content_required,
+					content_required: [],
 				}"
-				:validate-on="['blur']"
 			/>
 
 			<app-form-control-errors />
