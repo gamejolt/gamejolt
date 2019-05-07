@@ -9,6 +9,9 @@
 				:placeholder="$gettext(`Write your game description here...`)"
 				content-context="game-description"
 				:model-id="model.id"
+				:rules="{
+					content_required,
+				}"
 			/>
 
 			<app-form-control-errors />

@@ -43,9 +43,9 @@
 				<div class="content-container">
 					<app-content-editor
 						class="content-editor-moderate"
-						:source="contentJson"
+						:value="contentJson"
 						:content-context="contentContext"
-						@update="onUpdate"
+						@input="onUpdate"
 					/>
 				</div>
 				<div class="help-block">

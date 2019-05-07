@@ -124,7 +124,7 @@
 		<app-form-group
 			name="lead_content"
 			class="-lead-form-group"
-			:label="$gettext(`Summary`)"
+			:label="!longEnabled ? $gettext(`Post`) : $gettext(`Summary`)"
 			hide-label
 		>
 			<app-form-control-content
@@ -135,6 +135,10 @@
 				"
 				:model-id="model.id"
 				:min-height="72"
+				:rules="{
+					content_required,
+					max_content_length: [leadLengthLimit],
+				}"
 			/>
 
 			<div class="-hp">
@@ -147,9 +151,7 @@
 				</div>
 			</div>
 
-			<p v-if="!isLeadValid" class="help-block error anim-fade-in">
-				<translate>Your post is too long!</translate>
-			</p>
+			<app-form-control-errors />
 
 			<!--
 				Only show tags for community posts at the moment.

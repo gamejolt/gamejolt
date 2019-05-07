@@ -280,10 +280,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 		return 100 - (this.formModel.leadLength / this.leadLengthLimit) * 100;
 	}
 
-	get isLeadValid() {
-		return this.formModel.leadLength <= this.leadLengthLimit;
-	}
-
 	get platformRestrictions() {
 		// Platform restriction errors returned from server are prefixed with
 		// 'platform-restriction-'.

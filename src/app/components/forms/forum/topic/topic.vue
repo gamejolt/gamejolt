@@ -7,7 +7,12 @@
 		</app-form-group>
 
 		<app-form-group name="text_content" :label="$gettext('Topic Content')">
-			<app-form-control-content content-context="forum-post" />
+			<app-form-control-content
+				content-context="forum-post"
+				:rules="{
+					content_required,
+				}"
+			/>
 
 			<app-form-control-errors />
 		</app-form-group>
