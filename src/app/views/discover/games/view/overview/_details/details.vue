@@ -65,25 +65,27 @@
 		<ul class="list-unstyled" v-if="hasLinksSection">
 			<li v-if="game.web_site">
 				<app-jolticon icon="world" />
-				<a :href="game.web_site" rel="nofollow noopener" target="_blank">
+				<external-link :href="game.web_site">
 					<translate>Game Website</translate>
-				</a>
+				</external-link>
 			</li>
 			<li v-if="facebookAccount">
 				<app-jolticon icon="facebook" />
-				<a :href="facebookAccount.facebookPageUrl" target="_blank">
+				<external-link :href="facebookAccount.facebookPageUrl">
 					{{ facebookAccount.facebookSelectedPage.name }}
-				</a>
+				</external-link>
 			</li>
 			<li v-if="twitterAccount">
 				<app-jolticon icon="twitter-bird" />
-				<a :href="twitterAccount.platformLink" target="_blank">@{{ twitterAccount.name }}</a>
+				<external-link :href="twitterAccount.platformLink">
+					@{{ twitterAccount.name }}
+				</external-link>
 			</li>
 			<li v-if="tumblrAccount">
 				<app-jolticon icon="tumblr" />
-				<a :href="tumblrAccount.tumblrSelectedBlog.url" target="_blank">
+				<external-link :href="tumblrAccount.tumblrSelectedBlog.url">
 					{{ tumblrAccount.tumblrSelectedBlog.title }}
-				</a>
+				</external-link>
 			</li>
 		</ul>
 	</div>

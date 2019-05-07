@@ -17,13 +17,13 @@
 				<translate>You may use the button below to get it.</translate>
 			</p>
 
-			<a href="https://www.adobe.com/go/getflash" onclick="window.open( this.href ); return false">
+			<external-link href="https://www.adobe.com/go/getflash">
 				<img
 					src="https://www.adobe.com/images/shared/download_buttons/get_flash_player.gif"
 					alt="Get Adobe Flash player"
 					style="border-style: none"
 				/>
-			</a>
+			</external-link>
 		</object>
 	</div>
 </template>

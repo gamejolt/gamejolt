@@ -1,8 +1,8 @@
 <template>
 	<div v-if="user">
 		<!--
-		If this user is banned, we show very little.
-	-->
+			If this user is banned, we show very little.
+		-->
 		<app-page-header v-if="!user.status">
 			<h1>
 				{{ user.display_name }}
@@ -109,8 +109,8 @@
 							</router-link>
 						</li>
 						<!--
-						We only need to show this on mobile.
-					-->
+							We only need to show this on mobile.
+						-->
 						<li v-if="user.shouts_enabled && Screen.isMobile">
 							<a @click="showComments()">
 								<translate>Shouts</translate>

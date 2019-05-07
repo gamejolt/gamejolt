@@ -99,9 +99,9 @@
 		</div>
 
 		<!--
-		Cloak this so that it doesn't flash wrong things before we load the user.
-		Fixes: https://github.com/gamejolt/issue-tracker/issues/382
-	-->
+			Cloak this so that it doesn't flash wrong things before we load the user.
+			Fixes: https://github.com/gamejolt/issue-tracker/issues/382
+		-->
 		<div class="navbar-right" v-if="app.userBootstrapped">
 			<template v-if="app.user">
 				<!-- Notifications -->
