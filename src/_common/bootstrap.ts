@@ -2,6 +2,7 @@ import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics
 import AppButton from 'game-jolt-frontend-lib/components/button/button.vue';
 import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
+import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
 import { Payload } from 'game-jolt-frontend-lib/components/payload/payload-service';
 import { Referrer } from 'game-jolt-frontend-lib/components/referrer/referrer.service';
 import { hijackLinks } from 'game-jolt-frontend-lib/utils/router';
@@ -30,6 +31,7 @@ export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, rout
 		Meta.init(router);
 		Referrer.init(router);
 		Analytics.initRouter(router);
+		Navigate.init(router);
 		hijackLinks(router, 'gamejolt.com');
 	}
 

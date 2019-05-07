@@ -28,10 +28,14 @@ export default class RouteWelcome extends BaseRouteComponent {
 	user!: AppStore['user'];
 
 	startedOn = Date.now();
-	hasSelectedAvatar = false;
-	bio = '';
-	hasModifiedBio = false;
 	isInputDisabled = false;
+
+	bio = '';
+	bootstrappedBio = false;
+	hasModifiedBio = false;
+
+	bootstrappedAvatar = false;
+	hasSelectedAvatar = false;
 
 	get routeTitle() {
 		return this.$gettext('Welcome to Game Jolt!');
@@ -67,26 +71,38 @@ export default class RouteWelcome extends BaseRouteComponent {
 
 		Onboarding.startStep('profile');
 
-		this.hasSelectedAvatar = !!this.user && !!this.user.avatar_media_item;
-		if (this.hasSelectedAvatar) {
+		this.bootstrappedAvatar = !!this.user && !!this.user.avatar_media_item;
+		if (this.bootstrappedAvatar) {
 			Onboarding.trackEvent('avatar-bootstrap');
 		}
 
 		this.bio = this.user.description_markdown || '';
 		if (this.hasBio) {
+			this.bootstrappedBio = true;
 			Onboarding.trackEvent('bio-bootstrap');
 		}
 	}
 
 	async chooseAvatar() {
-		Onboarding.trackEvent('avatar-set');
-		await UserAvatarModal.show();
+		if (!this.hasSelectedAvatar) {
+			if (this.bootstrappedAvatar) {
+				Onboarding.trackEvent('avatar-change');
+			} else {
+				Onboarding.trackEvent('avatar-set');
+			}
+		}
 		this.hasSelectedAvatar = true;
+
+		await UserAvatarModal.show();
 	}
 
 	onBioChanged() {
 		if (!this.hasModifiedBio) {
-			Onboarding.trackEvent('bio-set');
+			if (this.bootstrappedBio) {
+				Onboarding.trackEvent('bio-change');
+			} else {
+				Onboarding.trackEvent('bio-set');
+			}
 		}
 		this.hasModifiedBio = true;
 	}
@@ -97,6 +113,15 @@ export default class RouteWelcome extends BaseRouteComponent {
 		}
 
 		this.isInputDisabled = true;
+
+		// If the user did not change their avatar (or bio) it means they either accepted
+		// the bootstrapped value for them or just skipped setting it altogether. Log the appropriate event.
+		if (!this.hasSelectedAvatar) {
+			Onboarding.trackEvent(this.bootstrappedAvatar ? 'avatar-accept' : 'avatar-skip');
+		}
+		if (!this.hasModifiedBio) {
+			Onboarding.trackEvent(this.bootstrappedBio ? 'bio-accept' : 'bio-skip');
+		}
 
 		Onboarding.endStep(!this.isNext);
 
