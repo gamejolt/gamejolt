@@ -139,6 +139,7 @@
 					content_required,
 					max_content_length: [leadLengthLimit],
 				}"
+				:validate-on="['blur']"
 			/>
 
 			<div class="-hp">
