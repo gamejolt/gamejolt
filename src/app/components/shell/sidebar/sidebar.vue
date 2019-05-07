@@ -3,9 +3,9 @@
 		id="shell-sidebar"
 		class="shell-pane shell-pane-left"
 		:class="{ visible: isLeftPaneVisible }"
-		v-shortkey="['m']"
-		@shortkey="toggleLeftPane()"
 	>
+		<app-shortkey shortkey="m" @pressed="toggleLeftPane" />
+
 		<app-scroll-scroller v-if="isLeftPaneVisible" class="-content fill-darkest" overlay>
 			<ul v-if="Screen.isXs" class="shell-nav">
 				<li v-if="app.user" class="offline-disable">

@@ -42,8 +42,8 @@
 			<app-expand :when="formModel.username !== model.username">
 				<div class="alert">
 					<translate>
-						Changing your> username will change your public profile URL. Any current links to your
-						old profile U>RL will not automatically redirect to your new profile URL.
+						Changing your username will change your public profile URL. Any current links to your
+						old profile URL will not automatically redirect to your new profile URL.
 					</translate>
 				</div>
 			</app-expand>

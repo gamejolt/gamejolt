@@ -102,7 +102,6 @@
 		"vue-property-decorator": "7.2.0",
 		"vue-router": "3.0.2",
 		"vue-server-renderer": "2.6.9",
-		"vue-shortkey": "3.1.6",
 		"vue-template-compiler": "2.6.9",
 		"vue-touch": "2.0.0-beta.4",
 		"vuedraggable": "2.16.0",

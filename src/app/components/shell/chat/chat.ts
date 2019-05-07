@@ -1,6 +1,7 @@
 import { EscapeStack } from 'game-jolt-frontend-lib/components/escape-stack/escape-stack.service';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppScrollInviewParent } from 'game-jolt-frontend-lib/components/scroll/inview/parent';
+import AppShortkey from 'game-jolt-frontend-lib/vue/components/shortkey/shortkey.vue';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
@@ -14,6 +15,7 @@ import AppChatWindows from '../../chat/windows/windows.vue';
 		AppScrollInviewParent,
 		AppChatSidebar,
 		AppChatWindows,
+		AppShortkey,
 	},
 })
 export default class AppShellChat extends Vue {

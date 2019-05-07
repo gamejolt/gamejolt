@@ -17,7 +17,6 @@ if (GJ_IS_CLIENT) {
 }
 
 GamePlayModal.init({ canMinimize: true });
-// bootstrapShortkey();
 
 Registry.setConfig('Game', { maxItems: 100 });
 Registry.setConfig('User', { maxItems: 150 });
