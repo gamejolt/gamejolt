@@ -1,5 +1,5 @@
 <template>
-	<app-form name="forumPostForm">
+	<app-form name="forumPostForm" ref="form">
 		<app-form-group name="text_content" :label="$gettext('Post Content')" :hide-label="true">
 			<app-form-control-content
 				content-context="forum-post"

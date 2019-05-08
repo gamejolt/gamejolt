@@ -1,7 +1,9 @@
 import AppFormControlContent from 'game-jolt-frontend-lib/components/form-vue/control/content/content.vue';
+import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
 import { BaseForm, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { ForumPost } from 'game-jolt-frontend-lib/components/forum/post/post.model';
 import { ForumTopic } from 'game-jolt-frontend-lib/components/forum/topic/topic.model';
+import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 
 @Component({
@@ -13,14 +15,25 @@ export default class FormForumPost extends BaseForm<ForumPost> implements FormOn
 	@Prop(ForumTopic) topic!: ForumTopic;
 	@Prop(ForumPost) replyTo?: ForumPost;
 
+	$refs!: {
+		form: AppForm;
+	};
+
 	modelClass = ForumPost;
 	resetOnSubmit = true;
 
-	onInit() {
+	async onInit() {
 		this.setField('topic_id', this.topic.id);
 
 		if (this.replyTo) {
 			this.setField('reply_to', this.replyTo.id); // Post ID.
+		}
+
+		if (!this.model) {
+			this.setField('text_content', '');
+
+			await Vue.nextTick();
+			this.$refs.form.clearErrors();
 		}
 	}
 
