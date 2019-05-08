@@ -136,7 +136,7 @@
 				:model-id="model.id"
 				:min-height="72"
 				:rules="{
-					content_required: [],
+					content_required: true,
 					max_content_length: [leadLengthLimit],
 				}"
 				:validate-on="['blur']"

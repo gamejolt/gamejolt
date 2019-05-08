@@ -1,7 +1,13 @@
 <template>
 	<app-form name="forumPostForm">
 		<app-form-group name="text_content" :label="$gettext('Post Content')" :hide-label="true">
-			<app-form-control-content content-context="forum-post" />
+			<app-form-control-content
+				content-context="forum-post"
+				:rules="{
+					content_required: true,
+				}"
+				:validate-on="['blur']"
+			/>
 
 			<app-form-control-errors />
 		</app-form-group>

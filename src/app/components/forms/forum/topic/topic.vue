@@ -10,7 +10,7 @@
 			<app-form-control-content
 				content-context="forum-post"
 				:rules="{
-					content_required: [],
+					content_required: true,
 				}"
 				:validate-on="['blur']"
 			/>
