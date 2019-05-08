@@ -2,6 +2,7 @@ import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics
 import AppButton from 'game-jolt-frontend-lib/components/button/button.vue';
 import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
+import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
 import { Payload } from 'game-jolt-frontend-lib/components/payload/payload-service';
 import { Referrer } from 'game-jolt-frontend-lib/components/referrer/referrer.service';
 import { hijackLinks } from 'game-jolt-frontend-lib/utils/router';
@@ -9,6 +10,7 @@ import { VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
 import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { VueRouter } from 'vue-router/types/router';
+import AppExternalLink from '../lib/gj-lib-client/vue/components/external-link/external-link.vue';
 import { bootstrapAppTranslations } from '../utils/translations';
 import { Settings } from './settings/settings.service';
 
@@ -29,12 +31,14 @@ export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, rout
 		Meta.init(router);
 		Referrer.init(router);
 		Analytics.initRouter(router);
+		Navigate.init(router);
 		hijackLinks(router, 'gamejolt.com');
 	}
 
 	// Common components.
 	Vue.component('AppButton', AppButton);
 	Vue.component('AppJolticon', AppJolticon);
+	Vue.component('ExternalLink', AppExternalLink);
 
 	// Set some constants so we can use them in templates.
 	Vue.use(vue => {

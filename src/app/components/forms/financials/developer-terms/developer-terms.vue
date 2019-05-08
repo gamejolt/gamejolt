@@ -21,15 +21,15 @@
 					You have agreed to our Distribution Agreement on %{ date }.
 				</translate>
 				<br />
-				<a :href="agreementLink" target="_blank">
+				<external-link :href="agreementLink">
 					<translate>View Distribution Agreement</translate>
-				</a>
+				</external-link>
 			</p>
 		</div>
 		<div v-else>
 			<!--
-			If they accepted a different agreement, then show that they can accept this one too.
-		-->
+				If they accepted a different agreement, then show that they can accept this one too.
+			-->
 			<div class="form-group" v-if="hasSignedSomeAgreement">
 				<div class="small">
 					<div>
@@ -68,16 +68,16 @@
 			</app-button>
 
 			<!--
-			Show a diff between the terms.
-		-->
+				Show a diff between the terms.
+			-->
 			<div class="alert" v-if="showAgreement">
 				<p>
 					<translate>We publicly track and version all of our terms.</translate>
-					<a :href="agreementDiffLink" target="_blank">
+					<external-link :href="agreementDiffLink">
 						<translate>
 							See the "diff" between the version you signed previously and the current version.
 						</translate>
-					</a>
+					</external-link>
 				</p>
 			</div>
 		</div>

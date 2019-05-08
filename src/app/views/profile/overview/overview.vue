@@ -1,8 +1,8 @@
 <template>
 	<div>
 		<!--
-		If this user is banned, we show very little.
-	-->
+			If this user is banned, we show very little.
+		-->
 		<section class="section fill-notice" v-if="!user.status">
 			<div class="container">
 				<p>
@@ -47,9 +47,9 @@
 						</div>
 						<div v-else>
 							<!--
-							Set a :key to let vue know that it should update
-							this when the user changes.
-						-->
+								Set a :key to let vue know that it should update
+								this when the user changes.
+							-->
 							<app-fade-collapse
 								:collapse-height="200"
 								:is-open="showFullDescription"
@@ -137,62 +137,52 @@
 						<template v-if="hasLinksSection">
 							<template v-if="linkedAccounts.length">
 								<div v-if="twitchAccount">
-									<a class="link-unstyled" :href="twitchAccount.platformLink" target="_blank">
+									<external-link class="link-unstyled" :href="twitchAccount.platformLink">
 										<app-jolticon :icon="twitchAccount.icon" />
 										{{ twitchAccount.name }}
-									</a>
+									</external-link>
 								</div>
 								<div v-if="mixerAccount">
-									<a class="link-unstyled" :href="mixerAccount.platformLink" target="_blank">
+									<external-link class="link-unstyled" :href="mixerAccount.platformLink">
 										<app-jolticon :icon="mixerAccount.icon" />
 										{{ mixerAccount.name }}
-									</a>
+									</external-link>
 								</div>
 								<div v-if="twitterAccount">
-									<a class="link-unstyled" :href="twitterAccount.platformLink" target="_blank">
+									<external-link class="link-unstyled" :href="twitterAccount.platformLink">
 										<app-jolticon :icon="twitterAccount.icon" />
 										<span>@</span>
 										{{ twitterAccount.name }}
-									</a>
+									</external-link>
 								</div>
 								<div v-if="tumblrAccount">
-									<a
-										class="link-unstyled"
-										:href="tumblrAccount.tumblrSelectedBlog.url"
-										target="_blank"
-									>
+									<external-link class="link-unstyled" :href="tumblrAccount.tumblrSelectedBlog.url">
 										<app-jolticon :icon="tumblrAccount.icon" />
 										{{ tumblrAccount.tumblrSelectedBlog.title }}
-									</a>
+									</external-link>
 								</div>
 								<div v-if="googleAccount">
-									<a class="link-unstyled" :href="googleAccount.platformLink" target="_blank">
+									<external-link class="link-unstyled" :href="googleAccount.platformLink">
 										<app-jolticon :icon="googleAccount.icon" />
 										{{ googleAccount.name }}
-									</a>
+									</external-link>
 								</div>
 							</template>
 							<div v-if="user.web_site">
-								<a
-									class="link-unstyled"
-									:href="user.web_site"
-									rel="nofollow noopener"
-									target="_blank"
-								>
+								<external-link class="link-unstyled" :href="user.web_site">
 									<app-jolticon icon="link" />
 									<translate>Website</translate>
-								</a>
+								</external-link>
 							</div>
 							<template v-if="youtubeChannels.length">
 								<div v-for="channel of youtubeChannels" :key="channel.id">
-									<a
+									<external-link
 										class="link-unstyled"
 										:href="`https://www.youtube.com/channel/${channel.channel_id}`"
-										target="_blank"
 									>
 										<app-jolticon icon="youtube" />
 										{{ channel.title }}
-									</a>
+									</external-link>
 								</div>
 							</template>
 

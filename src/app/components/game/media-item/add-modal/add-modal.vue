@@ -79,9 +79,9 @@
 						</translate>
 					</p>
 					<p>
-						<a class="link-help" href="https://sketchfab.com/" target="_blank">
+						<external-link class="link-help" href="https://sketchfab.com/">
 							<translate>Learn more about Sketchfab...</translate>
-						</a>
+						</external-link>
 					</p>
 				</div>
 

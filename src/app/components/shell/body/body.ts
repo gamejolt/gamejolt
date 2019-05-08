@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import AppShellFooter from '../footer/footer.vue'
+import AppShellFooter from '../footer/footer.vue';
 
 // Includes global styling.
 require('./body.styl');

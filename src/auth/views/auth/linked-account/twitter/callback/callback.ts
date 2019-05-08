@@ -1,7 +1,10 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Auth } from 'game-jolt-frontend-lib/components/auth/auth.service';
 import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
 import AuthLinkedAccountProcessing from '../../_processing/processing.vue';
@@ -10,6 +13,7 @@ import AuthLinkedAccountProcessing from '../../_processing/processing.vue';
 	name: 'RouteAuthLinkedAccountTwitterCallback',
 })
 @RouteResolver({
+	lazy: true,
 	resolver({ route }) {
 		const { code, state } = route.query;
 		return Api.sendRequest(
@@ -37,6 +41,11 @@ export default class RouteAuthLinkedAccountTwitterCallback extends BaseRouteComp
 				});
 			}
 			this.$router.push({ name: 'auth.join' });
+			return;
+		}
+
+		if ($payload.accountCreated) {
+			Auth.redirectOnboarding();
 			return;
 		}
 

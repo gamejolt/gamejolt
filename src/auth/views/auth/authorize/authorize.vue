@@ -1,5 +1,6 @@
 <template>
-	<div class="anim-fade-in-up" v-if="isRouteBootstrapped">
+	<app-loading :label="$gettext('Just one moment...')" centered big v-if="isRouteLoading" />
+	<div class="anim-fade-in-up" v-else>
 		<template v-if="isSuccess">
 			<h2 class="section-header">
 				<translate>auth.authorize.success_growl_title</translate>

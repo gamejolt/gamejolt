@@ -56,16 +56,15 @@
 								<translate>Published to:</translate>
 							</div>
 							<div class="list-group list-group-dark" style="margin-bottom: 0">
-								<a
+								<external-link
 									v-for="platform of post.platforms_published_to"
 									:key="platform.id"
 									class="list-group-item has-icon"
 									:href="platform.url"
-									target="_blank"
 								>
 									<app-jolticon :icon="getProviderIcon(platform.created_resource_provider)" />
 									{{ platform.created_resource_account_name }}
-								</a>
+								</external-link>
 							</div>
 
 							<hr />
