@@ -1,9 +1,11 @@
+import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
+import { FormOnLoad } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import Onboarding, {
+	OnboardingStep,
+} from 'game-jolt-frontend-lib/components/onboarding/onboarding.service';
 import AppScrollScroller from 'game-jolt-frontend-lib/components/scroll/scroller/scroller.vue';
 import { Component } from 'vue-property-decorator';
-import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
-import { Community } from '../../../../../lib/gj-lib-client/components/community/community.model';
-import { FormOnLoad } from '../../../../../lib/gj-lib-client/components/form-vue/form.service';
-import { OnboardingStep } from '../../../../../lib/gj-lib-client/components/onboarding/onboarding.service';
 import OnboardingComponent from '../base';
 import AppOnboardingFollowsCommunityItem from './community-item/community-item.vue';
 
@@ -40,6 +42,7 @@ export default class FormOnboardingFollows extends OnboardingComponent<any> impl
 	}
 
 	onFollowGames() {
+		Onboarding.trackEvent('follow-games-set');
 		this.followedGames = true;
 
 		// We'd rather fail silently, so detach this.
@@ -49,6 +52,16 @@ export default class FormOnboardingFollows extends OnboardingComponent<any> impl
 			{
 				detach: true,
 			}
+		);
+	}
+
+	async onSubmit() {
+		if (!this.followedGames) {
+			Onboarding.trackEvent('follow-games-skip');
+		}
+
+		Onboarding.trackEvent(
+			this.followsAnyCommunity ? 'follow-communities-set' : 'follow-communities-skip'
 		);
 	}
 }

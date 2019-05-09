@@ -25,6 +25,8 @@ export default class FormOnboardingProfile extends OnboardingComponent<FormModel
 	implements FormOnSubmit {
 	stepName = 'profile' as OnboardingStep;
 
+	hasModifiedUsername = false;
+
 	bootstrappedBio = false;
 	hasModifiedBio = false;
 
@@ -75,6 +77,13 @@ export default class FormOnboardingProfile extends OnboardingComponent<FormModel
 		await UserAvatarModal.show();
 	}
 
+	onUsernameChanged() {
+		if (!this.hasModifiedUsername) {
+			Onboarding.trackEvent('username-change');
+		}
+		this.hasModifiedUsername = true;
+	}
+
 	onBioChanged() {
 		if (!this.hasModifiedBio) {
 			if (this.bootstrappedBio) {
@@ -91,6 +100,9 @@ export default class FormOnboardingProfile extends OnboardingComponent<FormModel
 		// the bootstrapped value for them or just skipped setting it altogether. Log the appropriate event.
 		if (!this.hasSelectedAvatar) {
 			Onboarding.trackEvent(this.bootstrappedAvatar ? 'avatar-accept' : 'avatar-skip');
+		}
+		if (this.isSocialRegistration && !this.hasModifiedUsername) {
+			Onboarding.trackEvent('username-accept');
 		}
 		if (!this.hasModifiedBio) {
 			Onboarding.trackEvent(this.bootstrappedBio ? 'bio-accept' : 'bio-skip');

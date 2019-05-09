@@ -7,7 +7,6 @@ import {
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Component } from 'vue-property-decorator';
-import { Auth } from '../../../lib/gj-lib-client/components/auth/auth.service';
 import OnboardingComponent from '../../components/forms/onboarding/base';
 import FormOnboardingFollows from '../../components/forms/onboarding/follows/follows.vue';
 import FormOnboardingProfile from '../../components/forms/onboarding/profile/profile.vue';
@@ -64,7 +63,8 @@ export default class RouteWelcome extends BaseRouteComponent {
 
 	onNextStep() {
 		if (this.currentStep === this.steps.length - 1) {
-			Auth.redirectDashboard();
+			Onboarding.end();
+			this.$router.push({ name: 'home' });
 			return;
 		}
 
