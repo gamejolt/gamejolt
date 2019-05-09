@@ -1,52 +1,42 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Auth } from 'game-jolt-frontend-lib/components/auth/auth.service';
-import AppEditableOverlay from 'game-jolt-frontend-lib/components/editable-overlay/editable-overlay.vue';
+import AppFormButton from 'game-jolt-frontend-lib/components/form-vue/button/button.vue';
 import Onboarding from 'game-jolt-frontend-lib/components/onboarding/onboarding.service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
-import { AppThemeSvg } from 'game-jolt-frontend-lib/components/theme/svg/svg';
-import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Component } from 'vue-property-decorator';
-import { UserAvatarModal } from '../../components/user/avatar-modal/avatar-modal.service';
+import { Auth } from '../../../lib/gj-lib-client/components/auth/auth.service';
+import OnboardingComponent from '../../components/forms/onboarding/base';
+import FormOnboardingFollows from '../../components/forms/onboarding/follows/follows.vue';
+import FormOnboardingProfile from '../../components/forms/onboarding/profile/profile.vue';
 
 @Component({
 	name: 'RouteWelcome',
 	components: {
-		AppUserAvatar,
-		AppEditableOverlay,
-		AppThemeSvg,
+		FormOnboardingProfile,
+		AppFormButton,
 	},
 })
 @RouteResolver({
-	resolver: () => Api.sendRequest('/web/touch?onboard=1'),
+	resolver: () => Api.sendRequest('/web/onboarding'),
 })
 export default class RouteWelcome extends BaseRouteComponent {
 	@AppState
 	user!: AppStore['user'];
 
-	startedOn = Date.now();
-	isInputDisabled = false;
+	isSocialRegistration = false;
 
-	bio = '';
-	bootstrappedBio = false;
-	hasModifiedBio = false;
-
-	bootstrappedAvatar = false;
-	hasSelectedAvatar = false;
+	currentStep = 0;
+	steps: (new () => OnboardingComponent<any>)[] = [FormOnboardingProfile, FormOnboardingFollows];
 
 	get routeTitle() {
 		return this.$gettext('Welcome to Game Jolt!');
 	}
 
-	get hasBio() {
-		return this.bio.length > 0;
-	}
-
-	get isNext() {
-		return this.hasSelectedAvatar && (this.hasBio || this.hasModifiedBio);
+	get stepComponent() {
+		return this.steps[this.currentStep];
 	}
 
 	routeCreated() {
@@ -63,72 +53,21 @@ export default class RouteWelcome extends BaseRouteComponent {
 		}
 	}
 
-	routeResolved() {
+	routeResolved(payload: any) {
 		if (!this.user) {
 			this.$router.push({ name: 'home' });
 			return;
 		}
 
-		Onboarding.startStep('profile');
-
-		this.bootstrappedAvatar = !!this.user && !!this.user.avatar_media_item;
-		if (this.bootstrappedAvatar) {
-			Onboarding.trackEvent('avatar-bootstrap');
-		}
-
-		this.bio = this.user.description_markdown || '';
-		if (this.hasBio) {
-			this.bootstrappedBio = true;
-			Onboarding.trackEvent('bio-bootstrap');
-		}
+		this.isSocialRegistration = payload.isSocialRegistration;
 	}
 
-	async chooseAvatar() {
-		if (!this.hasSelectedAvatar) {
-			if (this.bootstrappedAvatar) {
-				Onboarding.trackEvent('avatar-change');
-			} else {
-				Onboarding.trackEvent('avatar-set');
-			}
-		}
-		this.hasSelectedAvatar = true;
-
-		await UserAvatarModal.show();
-	}
-
-	onBioChanged() {
-		if (!this.hasModifiedBio) {
-			if (this.bootstrappedBio) {
-				Onboarding.trackEvent('bio-change');
-			} else {
-				Onboarding.trackEvent('bio-set');
-			}
-		}
-		this.hasModifiedBio = true;
-	}
-
-	async onNext() {
-		if (!this.user) {
+	onNextStep() {
+		if (this.currentStep === this.steps.length - 1) {
+			Auth.redirectDashboard();
 			return;
 		}
 
-		this.isInputDisabled = true;
-
-		// If the user did not change their avatar (or bio) it means they either accepted
-		// the bootstrapped value for them or just skipped setting it altogether. Log the appropriate event.
-		if (!this.hasSelectedAvatar) {
-			Onboarding.trackEvent(this.bootstrappedAvatar ? 'avatar-accept' : 'avatar-skip');
-		}
-		if (!this.hasModifiedBio) {
-			Onboarding.trackEvent(this.bootstrappedBio ? 'bio-accept' : 'bio-skip');
-		}
-
-		Onboarding.endStep(!this.isNext);
-
-		if (this.hasModifiedBio) {
-			await this.user.$save();
-		}
-
-		Auth.redirectDashboard();
+		this.currentStep++;
 	}
 }
