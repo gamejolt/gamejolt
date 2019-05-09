@@ -1,3 +1,4 @@
+import AppScrollScroller from 'game-jolt-frontend-lib/components/scroll/scroller/scroller.vue';
 import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../lib/gj-lib-client/components/api/api.service';
 import { Community } from '../../../../../lib/gj-lib-client/components/community/community.model';
@@ -9,6 +10,7 @@ import AppOnboardingFollowsCommunityItem from './community-item/community-item.v
 @Component({
 	components: {
 		AppOnboardingFollowsCommunityItem,
+		AppScrollScroller,
 	},
 })
 export default class FormOnboardingFollows extends OnboardingComponent<any> implements FormOnLoad {
