@@ -29,7 +29,11 @@ export default class AppOnboardingFollowsCommunityItem extends Vue {
 
 	async toggleJoin() {
 		// This matches what's on community join widget. Seems odd but okay.
-		Analytics.trackEvent('community-join', 'any', this.community.is_member ? 'leave' : 'join');
+		Analytics.trackEvent(
+			'community-join',
+			'onboarding',
+			this.community.is_member ? 'leave' : 'join'
+		);
 
 		// Onboarding analytics too
 		Onboarding.trackEvent(
