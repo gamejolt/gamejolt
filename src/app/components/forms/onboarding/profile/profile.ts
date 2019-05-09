@@ -1,5 +1,5 @@
 import AppEditableOverlay from 'game-jolt-frontend-lib/components/editable-overlay/editable-overlay.vue';
-import { FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { FormOnLoad, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import Onboarding, {
 	OnboardingStep,
 } from 'game-jolt-frontend-lib/components/onboarding/onboarding.service';
@@ -22,16 +22,26 @@ export type FormModel = {
 	},
 })
 export default class FormOnboardingProfile extends OnboardingComponent<FormModel>
-	implements FormOnSubmit {
+	implements FormOnLoad, FormOnSubmit {
 	stepName = 'profile' as OnboardingStep;
 
 	hasModifiedUsername = false;
+	allowUsernameChange = false;
 
 	bootstrappedBio = false;
 	hasModifiedBio = false;
+	allowBioChange = false;
 
 	bootstrappedAvatar = false;
 	hasSelectedAvatar = false;
+
+	get loadUrl() {
+		return '/web/onboarding/profile';
+	}
+
+	get showUsername() {
+		return this.isSocialRegistration && this.allowUsernameChange;
+	}
 
 	get hasBio() {
 		return this.formModel.bio.length > 0;
@@ -62,6 +72,11 @@ export default class FormOnboardingProfile extends OnboardingComponent<FormModel
 			this.bootstrappedBio = true;
 			Onboarding.trackEvent('bio-bootstrap');
 		}
+	}
+
+	onLoad(payload: any) {
+		this.allowUsernameChange = payload.allowUsernameChange;
+		this.allowBioChange = payload.allowBioChange;
 	}
 
 	async chooseAvatar() {

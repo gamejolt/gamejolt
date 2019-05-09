@@ -16,7 +16,7 @@
 				</app-editable-overlay>
 			</section>
 
-			<app-form-group v-if="isSocialRegistration" name="username" hide-label>
+			<app-form-group v-if="showUsername" name="username" hide-label>
 				<section class="-username">
 					<div class="-field-row">
 						<div class="-hello text-muted"><translate>Hello! It'sa me,</translate></div>
@@ -47,6 +47,7 @@
 					<app-form-control-textarea
 						@change="onBioChanged"
 						rows="3"
+						:disabled="!allowBioChange"
 						:placeholder="$gettext(`Tell people about yourself`)"
 					/>
 				</app-form-group>
