@@ -1,0 +1,62 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.-form
+	display: flex
+	flex-direction: column
+	max-width: 500px
+	margin: 0 auto
+	padding: ($grid-gutter-width-xs / 2)
+
+	@media $media-sm-up
+		padding: $grid-gutter-width
+
+	text-align: center
+
+	> *:not(:first-child)
+		margin-top: 30px
+
+.-avatar .editable-overlay
+	width: 130px
+	height: 130px
+	margin: 0 auto
+	border-radius: 50%
+	border: 4px solid
+	theme-prop('border-color', 'bg-subtle')
+	overflow: hidden
+
+.-username
+	// pull bio higher
+	margin-bottom: -15px
+
+	.-field-row
+		display: flex
+		align-items: center
+
+		.-hello
+			margin-right: 10px
+			flex: none
+
+		.-field
+			text-align: left
+			position: relative
+			width: 100%
+			flex: auto
+			//
+			display: flex
+			align-items: center
+
+			.-at
+				position: absolute
+				left: 7px
+
+			input
+				padding-left: 23px
+				display: inline-block
+
+>>> .form-group
+	margin-bottom: 0
+
+	>>> .error
+		margin-top: 15px
+		margin-bottom: 0

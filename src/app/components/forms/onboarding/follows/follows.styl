@@ -1,0 +1,38 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.-form
+	display: flex
+	flex-direction: column
+	max-width: 500px
+	margin: 0 auto
+	padding: ($grid-gutter-width-xs / 2)
+
+	@media $media-sm-up
+		padding: $grid-gutter-width
+
+	text-align: center
+
+	> *:not(:first-child)
+		margin-top: 30px
+
+.-follow-games
+	height: 60px
+
+	p
+		margin-top: 5px
+
+.-communities
+	p
+		margin-bottom: 5px
+
+	.-list
+		white-space: nowrap
+		padding: 7px
+		height: 140px
+
+		>>> .-item
+			display: inline-block
+
+			&:not(:last-child)
+				margin-right: 9px
