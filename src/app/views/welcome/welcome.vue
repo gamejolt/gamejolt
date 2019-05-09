@@ -11,7 +11,14 @@
 			<template v-slot:controls="{ shouldShowSkip, canContinue }">
 				<section class="-controls">
 					<template v-if="shouldShowSkip">
-						<app-form-button class="-skip" block trans :disabled="!canContinue">
+						<app-form-button
+							class="-skip"
+							block
+							:primary="false"
+							:solid="false"
+							trans
+							:disabled="!canContinue"
+						>
 							<translate>Skip</translate>
 						</app-form-button>
 					</template>

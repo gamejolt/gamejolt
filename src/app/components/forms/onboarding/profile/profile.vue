@@ -24,7 +24,7 @@
 							<div class="-at text-muted">@</div>
 							<app-form-control
 								type="text"
-								@change="onUsernameChanged"
+								@changed="onUsernameChanged"
 								:rules="{
 									min: 3,
 									max: 30,
