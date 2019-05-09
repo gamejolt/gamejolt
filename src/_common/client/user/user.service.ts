@@ -16,7 +16,7 @@ export class ClientUser {
 		if (localUser) {
 			const user = new User(JSON.parse(localUser));
 			store.commit('app/setUser', user);
-		} else if (Navigate.currentSection !== 'auth') {
+		} else if (Navigate.currentClientSection !== 'auth') {
 			// Must be logged in to use client.
 			this.authRedirect();
 		}
@@ -45,7 +45,7 @@ export class ClientUser {
 		// and the init logic in client service to redirect to downgrade section.
 		//
 		// This hack will not hold if we have other sections under the 'client' section that need to redirect to auth if not logged in.
-		const fromSection = Navigate.currentSection;
+		const fromSection = Navigate.currentClientSection;
 		if (!Navigate.isRedirecting && (!fromSection || fromSection !== 'client')) {
 			Navigate.goto(Environment.authBaseUrl + '/login');
 		}
