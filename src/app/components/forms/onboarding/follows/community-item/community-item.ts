@@ -38,7 +38,6 @@ export default class AppOnboardingFollowsCommunityItem extends Vue {
 		// Onboarding analytics too
 		Onboarding.trackEvent(
 			this.community.is_member ? 'community-leave' : 'community-join',
-			undefined,
 			`${this.community.id}-${this.community.path}`
 		);
 
