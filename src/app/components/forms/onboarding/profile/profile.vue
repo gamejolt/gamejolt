@@ -24,7 +24,6 @@
 							<div class="-at text-muted">@</div>
 							<app-form-control
 								type="text"
-								@changed="onUsernameChanged"
 								:rules="{
 									min: 3,
 									max: 30,
@@ -45,7 +44,6 @@
 			<section class="-bio">
 				<app-form-group name="bio" optional hide-label>
 					<app-form-control-textarea
-						@change="onBioChanged"
 						rows="3"
 						:disabled="!allowBioChange"
 						:placeholder="$gettext(`Tell people about yourself`)"

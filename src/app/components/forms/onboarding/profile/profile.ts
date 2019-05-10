@@ -25,11 +25,10 @@ export default class FormOnboardingProfile extends OnboardingComponent<FormModel
 	implements FormOnLoad, FormOnSubmit {
 	stepName = 'profile' as OnboardingStep;
 
-	hasModifiedUsername = false;
+	originalUsername = '';
 	allowUsernameChange = false;
 
-	bootstrappedBio = false;
-	hasModifiedBio = false;
+	originalBio = '';
 	allowBioChange = false;
 
 	bootstrappedAvatar = false;
@@ -45,6 +44,10 @@ export default class FormOnboardingProfile extends OnboardingComponent<FormModel
 
 	get hasBio() {
 		return this.formModel.bio.length > 0;
+	}
+
+	get hasModifiedBio() {
+		return this.originalBio !== this.formModel.bio;
 	}
 
 	get hasAvatar() {
@@ -65,11 +68,12 @@ export default class FormOnboardingProfile extends OnboardingComponent<FormModel
 			Onboarding.trackEvent('avatar-bootstrap');
 		}
 
-		this.setField('username', this.user.username);
+		this.originalUsername = this.user.username;
+		this.setField('username', this.originalUsername);
 
-		this.setField('bio', this.user.description_markdown || '');
+		this.originalBio = (this.user.description_markdown || '').trim();
+		this.setField('bio', this.originalBio);
 		if (this.hasBio) {
-			this.bootstrappedBio = true;
 			Onboarding.trackEvent('bio-bootstrap');
 		}
 	}
@@ -92,45 +96,27 @@ export default class FormOnboardingProfile extends OnboardingComponent<FormModel
 		await UserAvatarModal.show();
 	}
 
-	onUsernameChanged() {
-		if (!this.hasModifiedUsername) {
-			Onboarding.trackEvent('username-change');
-		}
-		this.hasModifiedUsername = true;
-	}
-
-	onBioChanged() {
-		if (!this.hasModifiedBio) {
-			if (this.bootstrappedBio) {
-				Onboarding.trackEvent('bio-change');
-			} else {
-				Onboarding.trackEvent('bio-set');
-			}
-		}
-		this.hasModifiedBio = true;
-	}
-
 	onSubmit() {
 		// If the user did not change their avatar (or bio) it means they either accepted
 		// the bootstrapped value for them or just skipped setting it altogether. Log the appropriate event.
 		if (!this.hasSelectedAvatar) {
 			Onboarding.trackEvent(this.bootstrappedAvatar ? 'avatar-accept' : 'avatar-skip');
 		}
-		if (this.isSocialRegistration && !this.hasModifiedUsername) {
-			Onboarding.trackEvent('username-accept');
-		}
-		if (!this.hasModifiedBio) {
-			Onboarding.trackEvent(this.bootstrappedBio ? 'bio-accept' : 'bio-skip');
-		}
 
 		if (this.isSocialRegistration) {
+			const usernameChanged = this.originalUsername !== this.formModel.username;
+			Onboarding.trackEvent(usernameChanged ? 'username-change' : 'username-accept');
+
 			this.user.username = this.formModel.username;
 			this.user.name = this.formModel.username;
 		}
 
-		if (this.hasModifiedBio) {
-			this.user.description_markdown = this.formModel.bio;
+		if (this.originalBio.length > 0) {
+			Onboarding.trackEvent(this.hasModifiedBio ? 'bio-change' : 'bio-accept');
+		} else {
+			Onboarding.trackEvent(this.hasModifiedBio ? 'bio-set' : 'bio-skip');
 		}
+		this.user.description_markdown = this.formModel.bio;
 
 		return this.user.$save();
 	}
