@@ -160,9 +160,7 @@
 											@require-change="canToggleDescription = $event"
 											@expand="showFullDescription = true"
 										>
-											<div class="forum-post-body">
-												<app-content-viewer :source="topic.main_post.text_content" />
-											</div>
+											<app-content-viewer :source="topic.main_post.text_content" />
 										</app-fade-collapse>
 
 										<a
@@ -176,9 +174,10 @@
 									<!--
 										No fade collapse on first page.
 									-->
-									<div class="forum-post-body" v-if="currentPage <= 1">
-										<app-content-viewer :source="topic.main_post.text_content" />
-									</div>
+									<app-content-viewer
+										v-if="currentPage <= 1"
+										:source="topic.main_post.text_content"
+									/>
 								</div>
 								<div
 									v-if="shouldShowVoting"
