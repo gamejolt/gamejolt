@@ -6,6 +6,7 @@
 					{{ error }}
 				</div>
 			</div>
+
 			<template v-if="isHydrated">
 				<h2>Edit {{ title }}</h2>
 				<table class="text-muted">
