@@ -1,17 +1,6 @@
 <template>
 	<div class="main">
 		<div class="content">
-			<div class="topbar">
-				<h1>
-					<app-jolticon icon="gamejolt" big />
-					Game Jolt
-				</h1>
-				<div class="user-container" v-if="isHydrated">
-					<span class="text-muted"><translate>Logged in as</translate></span>
-					<img :src="user.img_avatar" />
-					<span class="username">{{ user.display_name }}</span>
-				</div>
-			</div>
 			<div v-if="hasErrors">
 				<div v-for="error of errors" :key="error" class="error-message">
 					{{ error }}
@@ -48,7 +37,10 @@
 						@input="onUpdate"
 					/>
 				</div>
-				<div class="help-block">
+
+				<br />
+
+				<div class="alert alert-info">
 					<app-jolticon icon="info-circle" />
 					<translate>Image uploads are currently unavailable.</translate>
 				</div>
@@ -56,6 +48,7 @@
 				<div class="log-reason">
 					<textarea
 						id="log-reason"
+						rows="2"
 						class="log-field"
 						placeholder="Reason for editing"
 						:value="logReason"

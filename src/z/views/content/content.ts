@@ -10,10 +10,7 @@ import {
 import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
-import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { Store } from '../../store/index';
 
 @Component({
 	name: 'RouteContent',
@@ -35,12 +32,6 @@ import { Store } from '../../store/index';
 	},
 })
 export default class RouteContent extends BaseRouteComponent {
-	@AppState
-	userBootstrapped!: AppStore['userBootstrapped'];
-
-	@State
-	app!: Store['app'];
-
 	isHydrated = false;
 	isLoading = false;
 	errors = [] as string[];
@@ -68,10 +59,6 @@ export default class RouteContent extends BaseRouteComponent {
 
 	get canSubmit() {
 		return this.logReason.length > 0;
-	}
-
-	get user() {
-		return this.app.user!;
 	}
 
 	get routeTitle() {
