@@ -52,6 +52,8 @@ if (cluster.isMaster) {
 		runInNewContext: true,
 		template: fs.readFileSync(resolve('./index-ssr.html'), 'utf-8'),
 		clientManifest,
+		shouldPrefetch: () => false,
+		shouldPreload: () => false,
 	});
 
 	// If testing ssr prod build locally, remove this if so that static assets are served properly.
