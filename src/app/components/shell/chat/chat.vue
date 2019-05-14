@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<app-shortkey shortkey="c" @pressed="showChatPane" />
+		<app-shortkey shortkey="c" @press="showChatPane" />
 
 		<app-scroll-inview-parent
 			id="shell-chat-pane"

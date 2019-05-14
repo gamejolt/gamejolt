@@ -4,7 +4,7 @@
 		class="shell-pane shell-pane-left"
 		:class="{ visible: isLeftPaneVisible }"
 	>
-		<app-shortkey shortkey="m" @pressed="toggleLeftPane" />
+		<app-shortkey shortkey="m" @press="toggleLeftPane" />
 
 		<app-scroll-scroller v-if="isLeftPaneVisible" class="-content fill-darkest" overlay>
 			<ul v-if="Screen.isXs" class="shell-nav">

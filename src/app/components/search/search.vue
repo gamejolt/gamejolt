@@ -1,6 +1,6 @@
 <template>
 	<div class="app-search">
-		<app-shortkey shortkey="s" @pressed="focus" />
+		<app-shortkey shortkey="s" @press="focus" />
 
 		<app-jolticon class="-icon" icon="search" />
 
