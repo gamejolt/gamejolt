@@ -1,6 +1,7 @@
 import { Ads } from 'game-jolt-frontend-lib/components/ad/ads.service';
 import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import AppGameGrid from '../../../../../../components/game/grid/grid.vue';
@@ -19,6 +20,7 @@ const SplitIndex = 3;
 		AppGameListPlaceholder,
 		AppGameList,
 		AppAdWidget,
+		AppScrollAffix,
 	},
 })
 export default class AppDiscoverGamesViewOverviewRecommended extends Vue {
@@ -41,7 +43,7 @@ export default class AppDiscoverGamesViewOverviewRecommended extends Vue {
 	get shouldShowBottomAd() {
 		// We only want to show the bottom ad if there is enough room on the
 		// page.
-		return this.postsCount > 4 && Screen.isLg;
+		return this.postsCount > 2 && Screen.isLg;
 	}
 
 	get gamesBeforeAd() {

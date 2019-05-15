@@ -1,3 +1,4 @@
+import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
@@ -7,6 +8,7 @@ import {
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
 import AppUserCard from 'game-jolt-frontend-lib/components/user/card/card.vue';
 import { numberSort } from 'game-jolt-frontend-lib/utils/array';
 import { fuzzysearch } from 'game-jolt-frontend-lib/utils/string';
@@ -45,6 +47,8 @@ class DashGame {
 		AppCommunitySlider,
 		AppPostAddButton,
 		AppUserCard,
+		AppAdWidget,
+		AppScrollAffix,
 	},
 	directives: {
 		AppTrackEvent,
