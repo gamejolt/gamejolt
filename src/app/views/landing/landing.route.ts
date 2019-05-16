@@ -1,5 +1,6 @@
 import { RouteConfig } from 'vue-router';
 import { routeLandingAbout } from './about/about.route';
+import { routeLandingAdtest } from './adtest/adtest.route';
 import { routeLandingClient } from './client/client.route';
 import { routeLandingGameApiDoc } from './game-api-doc/game-api-doc.route';
 import { routeLandingGameApi } from './game-api/game-api.route';
@@ -23,5 +24,6 @@ export const routeLanding: RouteConfig = {
 		routeLandingPartners,
 		routeLandingRedlight,
 		routeLandingIndieaf,
+		routeLandingAdtest,
 	],
 };
