@@ -11,5 +11,6 @@
 		"source.organizeImports": true
 	},
 	"vetur.format.defaultFormatter.html": "prettier",
+	"vetur.experimental.templateInterpolationService": true,
 	"vetur.format.defaultFormatter.stylus": "none"
 }
