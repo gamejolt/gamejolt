@@ -337,14 +337,22 @@ export default class FormPost extends BaseForm<FormPostModel>
 		}
 
 		const urls = this.urlsInLead;
+		let leadLength = this.getUtf18Length(lead);
+
 		for (const url of urls) {
-			lead = lead.replace(url, ' '.repeat(this.leadUrlLength));
+			const urlLength = this.getUtf18Length(url);
+			leadLength -= urlLength;
+			leadLength += this.leadUrlLength;
 		}
 
+		return leadLength;
+	}
+
+	private getUtf18Length(str: string) {
 		// js is utf18, we need to calc the byte length
 		// thank you https://github.com/substack/utf8-length !
 		// tslint:disable-next-line:no-bitwise
-		return ~-encodeURI(lead).split(/%..|./).length;
+		return ~-encodeURI(str).split(/%..|./).length;
 	}
 
 	get leadLengthPercent() {
