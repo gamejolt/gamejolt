@@ -1,3 +1,4 @@
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
 import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
 import { EventBus } from 'game-jolt-frontend-lib/components/event-bus/event-bus.service';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
@@ -31,6 +32,9 @@ export default class AppRatingWidget extends Vue {
 	@Prop(Boolean)
 	hideCount?: boolean;
 
+	@Prop(String)
+	eventLabel?: string;
+
 	get likeCountFormatted() {
 		return number(this.game.like_count);
 	}
@@ -48,10 +52,12 @@ export default class AppRatingWidget extends Vue {
 	}
 
 	like() {
+		Analytics.trackEvent('game-rating', 'like', this.eventLabel);
 		this.updateVote(GameRating.RATING_LIKE);
 	}
 
 	dislike() {
+		Analytics.trackEvent('game-rating', 'dislike', this.eventLabel);
 		this.updateVote(GameRating.RATING_DISLIKE);
 	}
 
