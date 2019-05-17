@@ -134,8 +134,6 @@
 							</div>
 						</div>
 
-						<app-ad-placement :hidden-desktop="true" pos="bottom" />
-
 						<div :class="{ container: !Screen.isDesktop }">
 							<div :class="{ row: !Screen.isDesktop }">
 								<div class="col-sm-9 col-md-8" :class="{ 'pull-left': Screen.isDesktop }">
@@ -167,8 +165,6 @@
 				</div>
 			</section>
 		</div>
-
-		<app-ad-placement :visible-desktop="true" pos="bottom" />
 	</div>
 </template>
 
