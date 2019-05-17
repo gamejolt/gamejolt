@@ -1,4 +1,4 @@
-import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
+import AppAdPlaywireVideo from 'game-jolt-frontend-lib/components/ad/playwire/video.vue';
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
@@ -47,8 +47,8 @@ class DashGame {
 		AppCommunitySlider,
 		AppPostAddButton,
 		AppUserCard,
-		AppAdWidget,
 		AppScrollAffix,
+		AppAdPlaywireVideo,
 	},
 	directives: {
 		AppTrackEvent,

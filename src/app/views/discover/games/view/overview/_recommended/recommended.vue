@@ -13,8 +13,7 @@
 			<!-- Extra space for the page nav -->
 			<app-scroll-affix :scroll-offset="80">
 				<div class="-ad">
-					<app-ad-playwire-video v-if="shouldShowVideoAd" />
-					<app-ad-widget v-else size="rectangle" pos="bottom" />
+					<app-ad-playwire-video />
 				</div>
 			</app-scroll-affix>
 		</template>

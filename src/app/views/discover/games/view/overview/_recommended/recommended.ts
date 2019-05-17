@@ -3,7 +3,6 @@ import AppAdPlaywireVideo from 'game-jolt-frontend-lib/components/ad/playwire/vi
 import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
@@ -52,10 +51,6 @@ export default class AppDiscoverGamesViewOverviewRecommended extends Vue {
 		// We only want to show the bottom ad if there is enough room on the
 		// page.
 		return this.postsCount > 2 && Screen.isLg;
-	}
-
-	get shouldShowVideoAd() {
-		return !(this.app.user instanceof User);
 	}
 
 	get gamesBeforeAd() {
