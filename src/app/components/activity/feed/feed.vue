@@ -27,7 +27,7 @@
 
 				<div
 					class="-ad-container well fill-offset full-bleed-xs text-center"
-					v-if="shouldShowFeedAd(i)"
+					v-if="shouldShowAd(i)"
 				>
 					<app-ad-widget size="rectangle" pos="bottom" />
 					<div class="-ad-label text-muted small">

@@ -3,10 +3,8 @@ import AppAdPlaywireVideo from 'game-jolt-frontend-lib/components/ad/playwire/vi
 import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
-import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import AppGameGrid from '../../../../../../components/game/grid/grid.vue';
 import AppGameGridPlaceholder from '../../../../../../components/game/grid/placeholder/placeholder.vue';
 import AppGameList from '../../../../../../components/game/list/list.vue';
@@ -33,9 +31,6 @@ export default class AppDiscoverGamesViewOverviewRecommended extends Vue {
 
 	@RouteStoreModule.State
 	postsCount!: RouteStore['postsCount'];
-
-	@State
-	app!: AppStore;
 
 	readonly Screen = Screen;
 

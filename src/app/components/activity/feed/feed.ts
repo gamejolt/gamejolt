@@ -151,25 +151,21 @@ export default class AppActivityFeed extends Vue {
 	}
 
 	get shouldShowAds() {
-		return this.showAds && Ads.shouldShow;
-	}
-
-	get shouldShowFeedAds() {
-		return this.shouldShowAds && Screen.isMobile;
+		return this.showAds && Ads.shouldShow && Screen.isMobile;
 	}
 
 	get lastPostId() {
 		return this.feed.state.endScrollId;
 	}
 
-	shouldShowFeedAd(index: number) {
+	shouldShowAd(index: number) {
 		// Show an ad after this many posts at the beginning of the feed.
 		const firstAd = 2;
 
 		// Show an ad every X posts thereafter.
 		const adGap = 10;
 
-		if (!this.shouldShowFeedAds) {
+		if (!this.shouldShowAds) {
 			return false;
 		}
 
