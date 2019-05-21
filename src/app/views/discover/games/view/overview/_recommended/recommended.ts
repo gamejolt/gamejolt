@@ -11,9 +11,6 @@ import AppGameList from '../../../../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../../../../components/game/list/placeholder/placeholder.vue';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
-/** Number of games to show before inserting an ad. */
-const SplitIndex = 3;
-
 @Component({
 	components: {
 		AppGameGridPlaceholder,
@@ -45,14 +42,6 @@ export default class AppDiscoverGamesViewOverviewRecommended extends Vue {
 	get shouldShowBottomAd() {
 		// We only want to show the bottom ad if there is enough room on the
 		// page.
-		return this.postsCount > 2 && Screen.isLg;
-	}
-
-	get gamesBeforeAd() {
-		return this.recommendedGames.slice(0, SplitIndex);
-	}
-
-	get gamesAfterAd() {
-		return Screen.isLg ? this.recommendedGames.slice(SplitIndex) : [];
+		return this.shouldShowAds && this.postsCount > 2 && Screen.isLg;
 	}
 }

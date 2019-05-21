@@ -1,20 +1,9 @@
 <template>
 	<app-game-list-placeholder v-if="!isLoaded" :num="5" />
 	<div v-else>
-		<app-game-list :games="gamesBeforeAd" event-label="recommended" />
+		<app-game-list :games="recommendedGames" event-label="recommended" />
 
-		<!--
-			Test how ads look like when above the recommended list.
-			TODO: remove if we keep this change
-
-			<div v-if="shouldShowAds" class="-ad">
-				<app-ad-widget size="rectangle" pos="bottom" />
-			</div>
-		-->
-
-		<app-game-list v-if="gamesAfterAd.length > 0" :games="gamesAfterAd" event-label="recommended" />
-
-		<template v-if="shouldShowAds && shouldShowBottomAd">
+		<template v-if="shouldShowBottomAd">
 			<!-- Extra space for the page nav -->
 			<app-scroll-affix :scroll-offset="80">
 				<div class="-ad">
