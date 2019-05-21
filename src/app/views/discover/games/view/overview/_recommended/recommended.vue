@@ -3,9 +3,14 @@
 	<div v-else>
 		<app-game-list :games="gamesBeforeAd" event-label="recommended" />
 
-		<div v-if="shouldShowAds" class="-ad">
-			<app-ad-widget size="rectangle" pos="bottom" />
-		</div>
+		<!--
+			Test how ads look like when above the recommended list.
+			TODO: remove if we keep this change
+
+			<div v-if="shouldShowAds" class="-ad">
+				<app-ad-widget size="rectangle" pos="bottom" />
+			</div>
+		-->
 
 		<app-game-list v-if="gamesAfterAd.length > 0" :games="gamesAfterAd" event-label="recommended" />
 

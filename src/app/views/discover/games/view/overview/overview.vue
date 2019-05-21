@@ -34,6 +34,8 @@
 				</div>
 
 				<div slot="right" v-if="!Screen.isMobile">
+					<app-ad-widget v-if="shouldShowAds" size="rectangle" pos="bottom" />
+
 					<h4 class="section-header">
 						<translate>Recommended</translate>
 					</h4>
