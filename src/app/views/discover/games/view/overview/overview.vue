@@ -244,6 +244,7 @@
 	padding-bottom: 0
 
 .-recommended-ad
+	width: 300px
 	margin-bottom: $line-height-computed
 </style>
 
