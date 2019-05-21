@@ -151,7 +151,7 @@ export default class AppActivityFeed extends Vue {
 	}
 
 	get shouldShowAds() {
-		return this.showAds && Ads.shouldShow && Screen.isMobile;
+		return this.showAds && Ads.shouldShow;
 	}
 
 	get lastPostId() {
@@ -163,7 +163,7 @@ export default class AppActivityFeed extends Vue {
 		const firstAd = 2;
 
 		// Show an ad every X posts thereafter.
-		const adGap = 10;
+		const adGap = 5;
 
 		if (!this.shouldShowAds) {
 			return false;
