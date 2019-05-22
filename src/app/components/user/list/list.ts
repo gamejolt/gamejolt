@@ -11,4 +11,7 @@ import AppUserListItem from './item/item.vue';
 export default class AppUserList extends Vue {
 	@Prop(Array)
 	users!: User[];
+
+	@Prop(String)
+	followEventLabel?: string;
 }

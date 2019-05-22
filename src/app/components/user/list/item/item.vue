@@ -26,7 +26,7 @@
 				@click.native.capture="$event.preventDefault()"
 				:user="user"
 				hide-count
-				event-label="user-list"
+				:event-label="realFollowEventLabel"
 			/>
 		</div>
 	</router-link>

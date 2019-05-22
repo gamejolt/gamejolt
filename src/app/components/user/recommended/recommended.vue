@@ -10,7 +10,7 @@
 				</a>
 			</span>
 		</div>
-		<app-user-list :users="users" />
+		<app-user-list :users="users" follow-event-label="activity" />
 		<div v-if="loading" class="loading-overlay">
 			<app-loading hide-label centered />
 		</div>
