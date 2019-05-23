@@ -133,10 +133,6 @@
 .-communities-heading
 	margin-top: 0
 	margin-bottom: 5px
-
-.-ad
-	width: 300px
-	margin-bottom: $line-height-computed
 </style>
 
 <script lang="ts" src="./feed"></script>
