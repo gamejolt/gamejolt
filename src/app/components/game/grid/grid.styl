@@ -19,6 +19,8 @@
 
 		@media $media-md-up
 			float: right
+			padding-left: ($grid-gutter-width / 2)
+			padding-right: ($grid-gutter-width / 2)
 			width: (100% / 3)
 
 		&-inner
@@ -30,11 +32,16 @@
 				theme-prop('background-color', 'bg-offset')
 				padding: 20px
 
-			&-display
-				width: 300px
+		&-inner-display
+			margin: 0 auto
+			padding: 0
+			text-align: center
+			width: 300px
 
-				@media screen and (min-width: 1550px)
-					width: 300px + @padding * 2
+			@media screen and (min-width: 1550px)
+				theme-prop('background-color', 'bg-offset')
+				padding: 20px
+				width: 300px + @padding * 2
 
 	&-items
 		@media $media-sm-up
