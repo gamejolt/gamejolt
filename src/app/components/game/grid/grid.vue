@@ -17,11 +17,7 @@
 			<app-condense-whitespace class="game-grid-items">
 				<div class="game-grid-ad" v-if="Screen.isDesktop && shouldShowAds">
 					<div class="game-grid-ad-inner">
-						<!--
-							TODO: The playwire video embed freezes its own height to force aspect ratio,
-							so when changing screen sizes between lg and md the embed does not adapt.
-						-->
-						<app-ad-playwire-video />
+						<app-ad-widget size="rectangle" :pos="adPos" />
 						<span class="ad-label visible-lg">
 							<translate>Advertisement</translate>
 						</span>
@@ -35,7 +31,7 @@
 				-->
 				<template v-for="(game, i) of processedGames">
 					<div class="game-grid-ad" v-if="shouldShowAd(i)" :key="game.id + '-ad'">
-						<div class="game-grid-ad-inner-display">
+						<div class="game-grid-ad-inner">
 							<app-ad-widget size="rectangle" pos="bottom" />
 							<span class="ad-label visible-lg">
 								<translate>Advertisement</translate>
