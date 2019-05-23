@@ -17,7 +17,7 @@
 			<app-condense-whitespace class="game-grid-items">
 				<div class="game-grid-ad" v-if="Screen.isDesktop && shouldShowAds">
 					<div class="game-grid-ad-inner">
-						<app-ad-widget size="rectangle" :pos="adPos" />
+						<app-ad-playwire-video />
 						<span class="ad-label visible-lg">
 							<translate>Advertisement</translate>
 						</span>
@@ -31,7 +31,7 @@
 				-->
 				<template v-for="(game, i) of processedGames">
 					<div class="game-grid-ad" v-if="shouldShowAd(i)" :key="game.id + '-ad'">
-						<div class="game-grid-ad-inner">
+						<div class="game-grid-ad-inner-display">
 							<app-ad-widget size="rectangle" pos="bottom" />
 							<span class="ad-label visible-lg">
 								<translate>Advertisement</translate>

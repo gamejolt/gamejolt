@@ -24,13 +24,17 @@
 		&-inner
 			margin: 0 auto
 			padding: 0
-			width: 300px
 			text-align: center
 
 			@media screen and (min-width: 1550px)
 				theme-prop('background-color', 'bg-offset')
 				padding: 20px
-				width: 300px + @padding * 2
+
+			&-display
+				width: 300px
+
+				@media screen and (min-width: 1550px)
+					width: 300px + @padding * 2
 
 	&-items
 		@media $media-sm-up
