@@ -22,8 +22,8 @@ import AppBroadcastCard from '../../components/broadcast-card/broadcast-card.vue
 import AppCommunitySlider from '../../components/community/slider/slider.vue';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
-import AppUserRecommended from '../../components/user/recommended/recommended.vue';
 import { Store, store } from '../../store';
+import AppHomeRecommended from './_recommended/recommended.vue';
 
 class DashGame {
 	constructor(
@@ -46,7 +46,7 @@ class DashGame {
 		AppUserCard,
 		AppScrollAffix,
 		AppAdPlaywireVideo,
-		AppUserRecommended,
+		AppHomeRecommended,
 	},
 	directives: {
 		AppTrackEvent,
@@ -174,8 +174,8 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			.reverse();
 	}
 
-	async mounted() {
-		await this.loadRecommendedUsers(false);
+	mounted() {
+		this.loadRecommendedUsers();
 	}
 
 	loadedNew() {
@@ -192,10 +192,10 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		await this.loadRecommendedUsers(true);
 	}
 
-	async loadRecommendedUsers(refresh: boolean) {
+	async loadRecommendedUsers(refresh = false) {
 		this.loadingRecommendedUsers = true;
 
-		let url = '/web/discover/users/recommended';
+		let url = '/web/dash/recommended';
 		if (refresh) {
 			url += '/refresh';
 		}

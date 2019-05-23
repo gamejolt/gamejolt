@@ -1,3 +1,4 @@
+import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow-widget/follow-widget.vue';
 import AppUserAvatarImg from 'game-jolt-frontend-lib/components/user/user-avatar/img/img.vue';
@@ -12,20 +13,19 @@ import { State } from 'vuex-class';
 		AppUserAvatarImg,
 		AppUserFollowWidget,
 	},
+	directives: {
+		AppTrackEvent,
+	},
 })
 export default class AppUserListItem extends Vue {
 	@Prop(User)
 	user!: User;
 
 	@Prop(String)
-	followEventLabel?: string;
+	eventLabel?: string;
 
 	@State
 	app!: AppStore;
-
-	get realFollowEventLabel() {
-		return this.followEventLabel || 'user-list';
-	}
 
 	readonly Screen = Screen;
 }

@@ -4,7 +4,7 @@
 			v-for="user of users"
 			:key="user.id"
 			:user="user"
-			:follow-event-label="followEventLabel"
+			:event-label="eventLabel"
 		/>
 	</div>
 </template>

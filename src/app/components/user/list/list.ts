@@ -13,5 +13,5 @@ export default class AppUserList extends Vue {
 	users!: User[];
 
 	@Prop(String)
-	followEventLabel?: string;
+	eventLabel?: string;
 }

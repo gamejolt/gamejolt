@@ -57,7 +57,7 @@
 			<div slot="right" v-if="!Screen.isMobile">
 				<app-broadcast-card v-if="latestBroadcast" :post="latestBroadcast" />
 
-				<app-user-recommended
+				<app-home-recommended
 					v-if="shouldShowRecommendedUsers"
 					:users="recommendedUsers"
 					:loading="loadingRecommendedUsers"
