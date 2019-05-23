@@ -1,0 +1,22 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.user-recommended
+	min-height: 200px
+	position: relative
+
+.-header
+	display: flex
+	justify-content: space-between
+
+.loading-overlay
+	theme-prop('background-color', 'bg')
+	position: absolute
+	top: 40px
+	left: 0
+	bottom: 0
+	width: 100%
+	display: flex
+	justify-content: center
+	align-items: center
+	opacity: 0.8

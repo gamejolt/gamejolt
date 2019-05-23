@@ -7,6 +7,7 @@
 				username: user.username,
 			},
 		}"
+		v-app-track-event="`user-list:click:${eventLabel || 'any'}`"
 	>
 		<div class="-avatar">
 			<app-user-avatar-img :user="user" />
@@ -15,17 +16,22 @@
 		<div class="-label">
 			<div class="-name">
 				{{ user.display_name }}
+				<app-jolticon v-if="user.is_verified" icon="verified" />
 			</div>
 			<div class="-username">@{{ user.username }}</div>
 		</div>
 
-		<div class="-button" v-if="user.id !== app.user.id">
-			<!-- Gotta prevent default so that the router-link doesn't go to the user page. -->
+		<div class="-button" v-if="app.user && user.id !== app.user.id">
+			<!--
+				Gotta prevent default so that the router-link doesn't go to the
+				user page. The stop is so that we don't double track events.
+			-->
 			<app-user-follow-widget
-				@click.native.capture="$event.preventDefault()"
+				@click.native.capture.prevent
+				@click.native.stop
 				:user="user"
 				hide-count
-				event-label="user-list"
+				:event-label="eventLabel || `user-list`"
 			/>
 		</div>
 	</router-link>

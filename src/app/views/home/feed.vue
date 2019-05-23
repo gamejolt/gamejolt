@@ -57,29 +57,12 @@
 			<div slot="right" v-if="!Screen.isMobile">
 				<app-broadcast-card v-if="latestBroadcast" :post="latestBroadcast" />
 
-				<h4 class="section-header">
-					<translate>Featured Games</translate>
-				</h4>
-
-				<app-game-list-placeholder v-if="!featuredGames.length" :num="5" />
-				<app-game-list
-					v-else-if="featuredGames.length"
-					:games="featuredGames.slice(0, 7)"
-					event-label="activity"
+				<app-home-recommended
+					v-if="shouldShowRecommendedUsers"
+					:users="recommendedUsers"
+					:loading="loadingRecommendedUsers"
+					@refresh="onRecommendedUsersRefresh"
 				/>
-
-				<p>
-					<router-link
-						class="link-muted"
-						:to="{
-							name: 'discover.games.list._fetch',
-							params: { section: null },
-						}"
-						v-app-track-event="`activity:browse-games`"
-					>
-						<translate>Browse all games</translate>
-					</router-link>
-				</p>
 
 				<app-scroll-affix>
 					<div class="-ad">
