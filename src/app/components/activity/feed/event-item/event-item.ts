@@ -9,7 +9,7 @@ import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/po
 import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
-import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow-widget/follow-widget.vue';
+import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow/widget.vue';
 import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
 import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';

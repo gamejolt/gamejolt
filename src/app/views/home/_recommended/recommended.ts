@@ -1,4 +1,4 @@
-import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow-widget/follow-widget.vue';
+import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow/widget.vue';
 import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';

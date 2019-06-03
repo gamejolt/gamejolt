@@ -13,7 +13,7 @@ import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/the
 import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow-widget/follow-widget.vue';
+import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow/widget.vue';
 import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';
 import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
