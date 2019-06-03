@@ -7,12 +7,12 @@ import {
 	CommentStoreModel,
 } from 'game-jolt-frontend-lib/components/comment/comment-store';
 import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
-import AppCommentVideoLikeWidget from 'game-jolt-frontend-lib/components/comment/video/like-widget/like-widget.vue'
+import AppCommentVideoLikeWidget from 'game-jolt-frontend-lib/components/comment/video/like-widget/like-widget.vue';
 import { CommentVideo } from 'game-jolt-frontend-lib/components/comment/video/video-model';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import AppFiresidePostLikeWidget from 'game-jolt-frontend-lib/components/fireside/post/like/widget/widget.vue'
+import AppFiresidePostLikeWidget from 'game-jolt-frontend-lib/components/fireside/post/like/widget/widget.vue';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue'
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
 import { AppSocialFacebookLike } from 'game-jolt-frontend-lib/components/social/facebook/like/like';
 import { AppSocialTwitterShare } from 'game-jolt-frontend-lib/components/social/twitter/share/share';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
@@ -40,6 +40,9 @@ import { AppCommentWidgetLazy } from '../../lazy';
 export default class AppEventItemControls extends Vue {
 	@Prop(FiresidePost)
 	post?: FiresidePost;
+
+	@Prop(Boolean)
+	showUserFollowOnLike?: boolean;
 
 	@Prop(CommentVideo)
 	video?: CommentVideo;

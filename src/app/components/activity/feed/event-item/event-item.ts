@@ -6,7 +6,6 @@ import { Environment } from 'game-jolt-frontend-lib/components/environment/envir
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
 import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
@@ -99,6 +98,10 @@ export default class AppActivityFeedEventItem extends Vue {
 		}
 	}
 
+	get user() {
+		return this.eventItem.user;
+	}
+
 	get game() {
 		return this.eventItem.game;
 	}
@@ -113,23 +116,6 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	get communities() {
 		return (this.post && this.post.communities) || [];
-	}
-
-	get user() {
-		if (this.eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
-			return (this.eventItem.action as CommentVideo).comment.user;
-		} else if (this.eventItem.type === EventItem.TYPE_GAME_PUBLISH) {
-			return (this.eventItem.action as Game).developer;
-		} else if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
-			const post = this.eventItem.action as FiresidePost;
-			if (post.game && post.as_game_owner) {
-				return post.game.developer;
-			}
-
-			return post.user;
-		}
-
-		return undefined;
 	}
 
 	get link() {
@@ -164,14 +150,18 @@ export default class AppActivityFeedEventItem extends Vue {
 		return this.$router.resolve(this.link).href;
 	}
 
-	get shouldShowFollow() {
+	get shouldShowFollowInHeader() {
 		// Don't show follow for game posts. Only for user posts/videos.
-		return (
-			this.feed.shouldShowFollow &&
-			!(this.post && this.post.game) &&
-			this.user &&
-			!this.user.is_following
-		);
+		if (!this.feed.shouldShowFollowInHeader || !this.post || this.post.game) {
+			return false;
+		}
+
+		// Don't show follow if already following.
+		if (!this.user || this.user.is_following) {
+			return false;
+		}
+
+		return true;
 	}
 
 	get shouldShowManage() {

@@ -8,7 +8,7 @@
 			@click.capture="onClickCapture"
 			@click="onClick"
 		>
-			<div class="-header">
+			<div class="-header" v-if="user">
 				<div class="-header-content">
 					<app-user-card-hover :user="user" :disabled="!feed.shouldShowUserCards">
 						<div class="-header-avatar">
@@ -56,7 +56,7 @@
 				</div>
 				<div class="-header-meta small text-muted">
 					<app-user-follow-widget
-						v-if="shouldShowFollow"
+						v-if="shouldShowFollowInHeader"
 						class="-header-meta-follow"
 						:user="user"
 						:sm="Screen.isXs"
@@ -107,9 +107,10 @@
 				/>
 
 				<!--
-				This shouldn't ever really show a collapser. It's for the jokers that think it would
-				be fun to make a post with a bunch of new lines.
-			-->
+					This shouldn't ever really show a collapser. It's for the jokers that think it would
+					be fun to make a post with a bunch of new lines.
+					TODO: is item.isLeadOpen wrong?
+				-->
 				<app-fade-collapse
 					:collapse-height="600"
 					:is-open="item.isLeadOpen"
@@ -152,7 +153,13 @@
 				/>
 			</div>
 
-			<app-event-item-controls class="-controls" :post="post" :video="video" @expand="onExpand()" />
+			<app-event-item-controls
+				class="-controls"
+				:post="post"
+				:video="video"
+				:show-user-follow-on-like="feed.shouldShowFollowOnLike"
+				@expand="onExpand()"
+			/>
 		</div>
 	</div>
 </template>

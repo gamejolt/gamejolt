@@ -1,6 +1,7 @@
 import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
 import Vue from 'vue';
 import { ActivityFeedItem } from './item-service';
@@ -25,6 +26,7 @@ export interface ActivityFeedStateOptions {
 export class ActivityFeedState {
 	feedType: 'Notification' | 'EventItem';
 	items: ActivityFeedItem[] = [];
+	users: { [k: number]: User } = {};
 	games: { [k: number]: Game } = {};
 	notificationWatermark = 0; // Timestamp.
 	viewedItems: string[] = [];
@@ -56,6 +58,7 @@ export class ActivityFeedState {
 
 	clear() {
 		this.items = [];
+		this.users = {};
 		this.games = {};
 		this.viewedItems = [];
 		this.expandedItems = [];
@@ -71,6 +74,7 @@ export class ActivityFeedState {
 		}
 
 		this.isBootstrapped = true;
+		this.processUsers(items);
 		this.processGames(items);
 	}
 
@@ -101,6 +105,26 @@ export class ActivityFeedState {
 		item.$expanded();
 
 		Analytics.trackEvent('activity-feed', 'expanded-item');
+	}
+
+	/**
+	 * Same as processGames, this ensures that any reference to a particular user
+	 * in any of the feed items are shared across all items.
+	 * We need this to sync the user follows.
+	 */
+	processUsers(items: ActivityFeedItem[]) {
+		for (const item of items) {
+			if (item.feedItem instanceof EventItem) {
+				const user = item.feedItem.user;
+				if (user) {
+					if (!this.users[user.id]) {
+						Vue.set(this.users as any, user.id, user);
+					}
+
+					item.feedItem.user = this.users[user.id];
+				}
+			}
+		}
 	}
 
 	/**
