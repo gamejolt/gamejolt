@@ -69,8 +69,6 @@ const config = {
 		},
 		z: {
 			title: 'Game Jolt - Indie games for the love of it',
-			server: false,
-			crawl: false,
 			bodyClass: 'main-body',
 		},
 	},
