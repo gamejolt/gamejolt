@@ -3,7 +3,6 @@ import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
 import { BaseForm, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { ForumPost } from 'game-jolt-frontend-lib/components/forum/post/post.model';
 import { ForumTopic } from 'game-jolt-frontend-lib/components/forum/topic/topic.model';
-import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 
 @Component({
@@ -32,7 +31,8 @@ export default class FormForumPost extends BaseForm<ForumPost> implements FormOn
 		if (!this.model) {
 			this.setField('text_content', '');
 
-			await Vue.nextTick();
+			// Wait for errors to appear, then clear them.
+			await this.$nextTick();
 			this.$refs.form.clearErrors();
 		}
 	}
