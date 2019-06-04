@@ -1,5 +1,5 @@
 <template>
-	<div class="route-discover-games-view" v-if="game && game.developer">
+	<div class="route-discover-games-view" v-if="game">
 		<app-game-maturity-block :game="game">
 			<section v-if="collaboratorInvite" class="section section-thin fill-highlight">
 				<div class="container text-center">
@@ -17,9 +17,9 @@
 			</section>
 
 			<!--
-			Don't affix the nav on download pages.
-			It takes a lot of space out vertically when on small browser size.
-		-->
+				Don't affix the nav on download pages.
+				It takes a lot of space out vertically when on small browser size.
+			-->
 			<app-page-header
 				:cover-media-item="game.header_media_item"
 				should-affix-nav
