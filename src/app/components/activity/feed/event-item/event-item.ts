@@ -150,9 +150,9 @@ export default class AppActivityFeedEventItem extends Vue {
 		return this.$router.resolve(this.link).href;
 	}
 
-	get shouldShowFollowInHeader() {
+	get shouldShowFollow() {
 		// Don't show follow for game posts. Only for user posts/videos.
-		if (!this.feed.shouldShowFollowInHeader || !this.post || this.post.game) {
+		if (!this.feed.shouldShowFollow || !this.post || this.post.game) {
 			return false;
 		}
 

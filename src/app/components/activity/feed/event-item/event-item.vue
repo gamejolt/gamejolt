@@ -56,7 +56,7 @@
 				</div>
 				<div class="-header-meta small text-muted">
 					<app-user-follow-widget
-						v-if="shouldShowFollowInHeader"
+						v-if="shouldShowFollow"
 						class="-header-meta-follow"
 						:user="user"
 						:sm="Screen.isXs"
@@ -157,7 +157,7 @@
 				class="-controls"
 				:post="post"
 				:video="video"
-				:show-user-follow-on-like="feed.shouldShowFollowOnLike"
+				:show-user-follow-on-like="shouldShowFollow"
 				@expand="onExpand()"
 			/>
 		</div>
