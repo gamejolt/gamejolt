@@ -157,7 +157,7 @@
 				class="-controls"
 				:post="post"
 				:video="video"
-				:show-user-follow-on-like="shouldShowFollow"
+				:show-user-follow="shouldShowFollow"
 				@expand="onExpand()"
 			/>
 		</div>

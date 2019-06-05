@@ -4,7 +4,7 @@ import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
 import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import UserFollowSuggestion from 'game-jolt-frontend-lib/components/user/follow/suggestion.service';
+import { UserFollowSuggestion } from 'game-jolt-frontend-lib/components/user/follow/suggestion.service';
 import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow/widget.vue';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
@@ -102,6 +102,8 @@ export default class AppGameFollowWidget extends Vue {
 			// Do this before attempting to follow.
 			// We don't want to wait till the follow is confirmed to show the dialog,
 			// and even if the follow fails it's not like we'll close it.
+			// The user follow suggestion is not reactive, so we call it on impulse like this
+			// instead of putting it in the shouldShowFollow getter.
 			if (this.shouldShowFollow && UserFollowSuggestion.canSuggest(this.game.developer.id)) {
 				this.isShowingFollowPopover = true;
 			}
@@ -127,7 +129,7 @@ export default class AppGameFollowWidget extends Vue {
 
 	onFollowPopoverDismissed() {
 		if (!this.game.developer.is_following) {
-			UserFollowSuggestion.dontSuggest(this.game.developer.id);
+			UserFollowSuggestion.doNotSuggest(this.game.developer.id);
 		}
 	}
 }

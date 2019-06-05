@@ -151,7 +151,7 @@ export default class AppActivityFeedEventItem extends Vue {
 	}
 
 	get shouldShowFollow() {
-		// Don't show follow for game posts. Only for user posts/videos.
+		// Don't show follow for game posts. Only for user posts.
 		if (!this.feed.shouldShowFollow || !this.post || this.post.game) {
 			return false;
 		}
