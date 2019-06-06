@@ -3,8 +3,6 @@
 		<iframe id="download-frame" class="hidden" nwdisable nwfaketop v-if="src" :src="src"></iframe>
 
 		<div id="page-ad-scroll">
-			<app-ad-placement pos="top" />
-
 			<section class="section">
 				<div :class="{ container: Screen.isDesktop }">
 					<div :class="{ row: Screen.isDesktop }">
@@ -22,54 +20,67 @@
 									</p>
 
 									<!--
-									Set visibility so that the page height doesn't
-									change when we hide. We don't want to change if
-									they're trying to click something.
-								-->
+										Set visibility so that the page height doesn't
+										change when we hide. We don't want to change if
+										they're trying to click something.
+									-->
 									<app-loading
 										:style="{ visibility: src ? 'hidden' : undefined }"
 										:hide-label="true"
 									/>
 
-									<!--
-									Rating widget
-								-->
-									<template v-if="app.user && game.ratings_enabled">
-										<h4>
-											<translate>What did you think?</translate>
-										</h4>
+									<div class="row">
+										<div class="col-sm-6">
+											<!--
+												Rating widget
+											-->
+											<template v-if="app.user && game.ratings_enabled">
+												<h4 class="sans-margin-top">
+													<translate>What did you think?</translate>
+												</h4>
 
-										<p class="small">
-											<translate>
-												Rating the games you play helps us show you better stuff.
-											</translate>
-										</p>
+												<p class="small">
+													<translate>
+														Rating the games you play helps us show you better stuff.
+													</translate>
+												</p>
 
-										<app-rating-widget :game="game" :user-rating="userRating" />
-									</template>
-
-									<!--
-									Social sharing
-								-->
-									<template v-if="!GJ_IS_CLIENT">
-										<h4>
-											<translate>game.download.game.share_heading</translate>
-										</h4>
-										<div class="social-widgets">
-											<app-social-twitter-share
-												:url="Environment.baseUrl + game.getUrl()"
-												:content="twitterShareMessage"
-											/>
-
-											<span class="dot-separator hidden-xs"></span>
-
-											<app-social-facebook-like :url="Environment.baseUrl + game.getUrl()" />
+												<app-rating-widget
+													:game="game"
+													:user-rating="userRating"
+													event-label="download-build"
+												/>
+											</template>
 										</div>
-									</template>
+
+										<div class="col-sm-6">
+											<!--
+												Social sharing
+											-->
+											<template v-if="!GJ_IS_CLIENT">
+												<h4 class="sans-margin-top">
+													<translate>game.download.game.share_heading</translate>
+												</h4>
+												<div class="social-widgets">
+													<app-social-twitter-share
+														:url="Environment.baseUrl + game.getUrl()"
+														:content="twitterShareMessage"
+													/>
+
+													<span class="dot-separator hidden-xs"></span>
+
+													<app-social-facebook-like :url="Environment.baseUrl + game.getUrl()" />
+												</div>
+											</template>
+										</div>
+									</div>
+
+									<br />
+									<app-ad-playwire-video />
 
 									<!--
-									Developer's games
-								-->
+										Developer's games
+									-->
 									<template v-if="developerGames.length">
 										<h2>
 											<router-link
@@ -93,7 +104,10 @@
 													v-for="game of developerGames.slice(0, 2)"
 													:key="game.id"
 												>
-													<app-game-thumbnail :game="game" />
+													<app-game-thumbnail
+														:game="game"
+														v-app-track-event="'developer-games:click:download-build'"
+													/>
 												</div>
 											</div>
 										</div>
@@ -120,14 +134,12 @@
 							</div>
 						</div>
 
-						<app-ad-placement :hidden-desktop="true" pos="bottom" />
-
 						<div :class="{ container: !Screen.isDesktop }">
 							<div :class="{ row: !Screen.isDesktop }">
 								<div class="col-sm-9 col-md-8" :class="{ 'pull-left': Screen.isDesktop }">
 									<!--
-									Recommended games
-								-->
+										Recommended games
+									-->
 									<h2>
 										<translate>game.download.game.recommended_heading</translate>
 									</h2>
@@ -139,7 +151,10 @@
 												v-for="game in recommendedGames.slice(0, 6)"
 												:key="game.id"
 											>
-												<app-game-thumbnail :game="game" />
+												<app-game-thumbnail
+													:game="game"
+													v-app-track-event="'recommended-games:click:download-build'"
+												/>
 											</div>
 										</div>
 									</div>
@@ -150,8 +165,6 @@
 				</div>
 			</section>
 		</div>
-
-		<app-ad-placement :visible-desktop="true" pos="bottom" />
 	</div>
 </template>
 

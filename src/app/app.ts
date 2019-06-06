@@ -1,3 +1,4 @@
+import { Playwire } from 'game-jolt-frontend-lib/components/ad/playwire/playwire.service';
 import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
 import AppErrorPage from 'game-jolt-frontend-lib/components/error/page/page.vue';
 import { AppTheme } from 'game-jolt-frontend-lib/components/theme/theme';
@@ -30,6 +31,8 @@ export default class App extends Vue {
 	}
 
 	mounted() {
+		Playwire.init(this.$router);
+
 		// Let it finish doing all the initial rendering junk and track after
 		// that.
 		setTimeout(() => {

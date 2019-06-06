@@ -3,7 +3,7 @@
 		<!-- Media Bar -->
 		<app-media-bar v-if="game.media_count" :media-items="mediaItems" />
 
-		<app-ad-placement hidden-xs pos="top" />
+		<app-ad-placement class="-cover-ad" hidden-xs pos="top" />
 
 		<section class="section">
 			<app-page-container xl>
@@ -34,6 +34,13 @@
 				</div>
 
 				<div slot="right" v-if="!Screen.isMobile">
+					<app-ad-widget
+						class="-recommended-ad"
+						v-if="shouldShowAds"
+						size="rectangle"
+						pos="bottom"
+					/>
+
 					<h4 class="section-header">
 						<translate>Recommended</translate>
 					</h4>
@@ -232,6 +239,13 @@
 
 .-spacer
 	spacer()
+
+.-cover-ad >>> section
+	padding-bottom: 0
+
+.-recommended-ad
+	width: 300px
+	margin-bottom: $line-height-computed
 </style>
 
 <script lang="ts" src="./overview"></script>

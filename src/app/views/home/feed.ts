@@ -1,13 +1,15 @@
+import AppAdPlaywireVideo from 'game-jolt-frontend-lib/components/ad/playwire/video.vue';
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import {
 	BaseRouteComponent,
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
 import AppUserCard from 'game-jolt-frontend-lib/components/user/card/card.vue';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { numberSort } from 'game-jolt-frontend-lib/utils/array';
 import { fuzzysearch } from 'game-jolt-frontend-lib/utils/string';
 import { Component } from 'vue-property-decorator';
@@ -18,11 +20,10 @@ import AppActivityFeedPlaceholder from '../../components/activity/feed/placehold
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import AppBroadcastCard from '../../components/broadcast-card/broadcast-card.vue';
 import AppCommunitySlider from '../../components/community/slider/slider.vue';
-import AppGameList from '../../components/game/list/list.vue';
-import AppGameListPlaceholder from '../../components/game/list/placeholder/placeholder.vue';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import { Store, store } from '../../store';
+import AppHomeRecommended from './_recommended/recommended.vue';
 
 class DashGame {
 	constructor(
@@ -39,12 +40,13 @@ class DashGame {
 		AppPageContainer,
 		AppActivityFeed,
 		AppActivityFeedPlaceholder,
-		AppGameList,
-		AppGameListPlaceholder,
 		AppBroadcastCard,
 		AppCommunitySlider,
 		AppPostAddButton,
 		AppUserCard,
+		AppScrollAffix,
+		AppAdPlaywireVideo,
+		AppHomeRecommended,
 	},
 	directives: {
 		AppTrackEvent,
@@ -89,11 +91,12 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	setNotificationCount!: Store['setNotificationCount'];
 
 	feed: ActivityFeedView | null = null;
-	featuredGames: Game[] = [];
 	latestBroadcast: FiresidePost | null = null;
 	games: DashGame[] = [];
 	gameFilterQuery = '';
 	isShowingAllGames = false;
+	loadingRecommendedUsers = true;
+	recommendedUsers: User[] = [];
 
 	readonly Screen = Screen;
 
@@ -120,6 +123,10 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 
 	get isShowAllGamesVisible() {
 		return !this.isShowingAllGames && this.games.length > 7 && this.gameFilterQuery === '';
+	}
+
+	get shouldShowRecommendedUsers() {
+		return this.loadingRecommendedUsers || this.recommendedUsers.length > 0;
 	}
 
 	private checkGameFilter(game: DashGame) {
@@ -157,11 +164,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			fromCache
 		);
 
-		this.featuredGames = Game.populate(homePayload.games);
-		if (homePayload.featuredItem && homePayload.featuredItem.game) {
-			this.featuredGames.unshift(new Game(homePayload.featuredItem.game));
-		}
-
 		this.latestBroadcast = homePayload.latestBroadcast
 			? new FiresidePost(homePayload.latestBroadcast)
 			: null;
@@ -172,6 +174,10 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			.reverse();
 	}
 
+	mounted() {
+		this.loadRecommendedUsers();
+	}
+
 	loadedNew() {
 		this.setNotificationCount({ type: 'activity', count: 0 });
 	}
@@ -180,5 +186,30 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		if (this.app.user) {
 			ActivityFeedService.gotoPostFeedManage(post, this);
 		}
+	}
+
+	async onRecommendedUsersRefresh() {
+		await this.loadRecommendedUsers(true);
+	}
+
+	async loadRecommendedUsers(refresh = false) {
+		this.loadingRecommendedUsers = true;
+
+		let url = '/web/dash/recommended';
+		if (refresh) {
+			url += '/refresh';
+		}
+		try {
+			const $payload = await Api.sendRequest(url, undefined, {
+				detach: true,
+			});
+			if ($payload && $payload.users) {
+				this.recommendedUsers = User.populate($payload.users);
+			}
+		} catch (error) {
+			console.error('error during fetching recommended users.', error);
+		}
+
+		this.loadingRecommendedUsers = false;
 	}
 }

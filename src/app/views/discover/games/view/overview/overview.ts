@@ -1,3 +1,4 @@
+import { Ads } from 'game-jolt-frontend-lib/components/ad/ads.service';
 import AppAdPlacement from 'game-jolt-frontend-lib/components/ad/placement/placement.vue';
 import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
@@ -223,6 +224,10 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 			return store ? store.count : 0;
 		}
 		return 0;
+	}
+
+	get shouldShowAds() {
+		return Ads.shouldShow;
 	}
 
 	routeCreated() {
