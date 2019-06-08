@@ -38,9 +38,9 @@ install:
 
 build_script:
   - yarn
-  - yarn run client-build-win
+  # - yarn run client-build-win
   # To make a test package, comment out the previous line and uncomment this line.
-  # - yarn run client-build-win --use-test-package
+  - yarn run client-build-win --use-test-package
 
 test: off
 
