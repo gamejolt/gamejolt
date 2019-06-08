@@ -40,7 +40,7 @@ build_script:
   - yarn
   # - yarn run client-build-win
   # To make a test package, comment out the previous line and uncomment this line.
-  - yarn run client-build-win --use-test-package
+  - yarn run client-build-win --useTestPackage
 
 test: off
 
