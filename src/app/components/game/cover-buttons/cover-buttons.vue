@@ -1,16 +1,16 @@
 <template>
 	<div class="game-cover-buttons">
 		<!--
-		If the primary is for sale and they don't own it yet, the only button we should show is the
-		buy button.
-	-->
+			If the primary is for sale and they don't own it yet, the only button we should show is the
+			buy button.
+		-->
 		<app-button v-if="game._can_buy_primary_sellable" primary @click="buy()">
 			<translate>Buy Game</translate>
 		</app-button>
 
 		<!--
-		If the game is not for sale, or if they own the game, then show the normal buttons.
-	-->
+			If the game is not for sale, or if they own the game, then show the normal buttons.
+		-->
 		<component
 			v-else
 			:is="buildButtonsComponent"
