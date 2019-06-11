@@ -161,7 +161,7 @@
 				v-if="defaultCommunity"
 				class="-post-tags"
 				:tags="featuredTags"
-				:content="tagContentDocument"
+				:content="tagContentDocuments"
 				@tag="addTag($event)"
 			/>
 		</app-form-group>

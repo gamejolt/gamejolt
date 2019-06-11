@@ -18,6 +18,10 @@ export default class AppFormGameDescriptionTags extends Vue {
 	@Prop(ContentDocument)
 	content!: ContentDocument;
 
+	get documents() {
+		return [this.content];
+	}
+
 	@Emit('tag')
 	emitTag(_tag: string) {}
 }

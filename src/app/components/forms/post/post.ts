@@ -209,18 +209,17 @@ export default class FormPost extends BaseForm<FormPostModel>
 		return this.longEnabled;
 	}
 
-	get tagContentDocument() {
+	get tagContentDocuments() {
+		const documents = [] as ContentDocument[];
 		if (this.formModel.hasLead) {
 			const leadDoc = ContentDocument.fromJson(this.formModel.lead_content);
+			documents.push(leadDoc);
 			if (this.formModel.hasArticle) {
 				const articleDoc = ContentDocument.fromJson(this.formModel.article_content);
-				const mergedDoc = ContentDocument.merge('fireside-post-lead', leadDoc, articleDoc);
-				return mergedDoc;
-			} else {
-				return leadDoc;
+				documents.push(articleDoc);
 			}
 		}
-		return null;
+		return documents;
 	}
 
 	get hasPoll() {

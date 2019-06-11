@@ -12,8 +12,8 @@ export default class AppFormPostTags extends Vue {
 	@Prop(Array)
 	tags!: string[];
 
-	@Prop(ContentDocument)
-	content!: ContentDocument;
+	@Prop(Array)
+	content!: ContentDocument[];
 
 	@Emit('tag')
 	emitTag(_tag: string) {}
