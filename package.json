@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "0.29.3",
+	"version": "0.30.0-pre3",
 	"scripts": {
 		"postinstall": "sh ./git-hooks/setup-hooks.sh && yarn run translations",
 		"dev": "gulp watch",
@@ -116,7 +116,7 @@
 	},
 	"dependencies": {
 		"axios": "0.18.0",
-		"client-voodoo": "2.2.12",
+		"client-voodoo": "2.2.13",
 		"fs-extra": "7.0.0",
 		"write-file-atomic": "2.3.0"
 	},
@@ -136,7 +136,7 @@
 		"plugin": true
 	},
 	"clientManifestUrl": "https://d.gamejolt.net/data/client/manifest-2.json",
-	"joltronVersion": "v2.2.3-beta.loader",
+	"joltronVersion": "v2.2.4-beta.loader",
 	"chromium-args": "--enable-webgl --ignore-gpu-blacklist --enable-webaudio --child-clean-exit --enable-devtools-experiments",
 	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
 	"platformOverrides": {

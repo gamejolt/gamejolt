@@ -1994,10 +1994,10 @@ cli-boxes@^1.0.0:
   resolved "https://registry.yarnpkg.com/cli-boxes/-/cli-boxes-1.0.0.tgz#4fa917c3e59c94a004cd61f8ee509da651687143"
   integrity sha1-T6kXw+WclKAEzWH47lCdplFocUM=
 
-client-voodoo@2.2.12:
-  version "2.2.12"
-  resolved "https://registry.yarnpkg.com/client-voodoo/-/client-voodoo-2.2.12.tgz#f4e03b40fb3405125f472afabdde0966bbf7765e"
-  integrity sha512-VNnaUgt9l2EsI9jLU4ZRU0CQbIhxexQKT3yERk9Qr7DMe0O8DXGZAnKkC9vGHnIpnY3ncA2QSrX9SC7sbQdcIQ==
+client-voodoo@2.2.13:
+  version "2.2.13"
+  resolved "https://registry.yarnpkg.com/client-voodoo/-/client-voodoo-2.2.13.tgz#f1b4fd36f4cdca214d95b41d0b28cc3b4b3c47a8"
+  integrity sha512-TdM4tp4suHolPK/UMdtW9LWIOgq38bYN1BwXuSqELpZHBQSH+JMmOozz++oqIqLUeKd4Mb71ou2boWXkPq89iw==
   dependencies:
     JSONStream "github:gamejolt/JSONStream#no-shebang"
     follow-redirects "1.2.6"
