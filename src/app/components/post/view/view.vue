@@ -119,6 +119,10 @@
 	.post-view >>>
 		.-media-item, img, video, iframe
 			rounded-corners()
+
+>>> .mention-avatar-img
+	border-radius: 50% !important
+
 </style>
 
 <script lang="ts" src="./view"></script>
