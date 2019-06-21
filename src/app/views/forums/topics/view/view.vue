@@ -145,14 +145,14 @@
 
 					<div class="col-sm-9 col-sm-pull-3 col-md-8 col-md-pull-4">
 						<!--
-						Hide the main post while it's being edited.
-					-->
+							Hide the main post while it's being edited.
+						-->
 						<template v-if="!isEditingTopic">
 							<div :class="shouldShowVoting ? 'row' : ''">
 								<div :class="shouldShowVoting ? 'col-sm-9' : ''">
 									<!--
-									We do a fade collapse for the main post after the first page.
-								-->
+										We do a fade collapse for the main post after the first page.
+									-->
 									<div v-if="currentPage > 1">
 										<app-fade-collapse
 											:collapse-height="200"
@@ -160,9 +160,7 @@
 											@require-change="canToggleDescription = $event"
 											@expand="showFullDescription = true"
 										>
-											<div class="forum-post-body">
-												<app-widget-compiler :content="topic.main_post.content_compiled" />
-											</div>
+											<app-content-viewer :source="topic.main_post.text_content" />
 										</app-fade-collapse>
 
 										<a
@@ -174,11 +172,12 @@
 									</div>
 
 									<!--
-									No fade collapse on first page.
-								-->
-									<div class="forum-post-body" v-if="currentPage <= 1">
-										<app-widget-compiler :content="topic.main_post.content_compiled" />
-									</div>
+										No fade collapse on first page.
+									-->
+									<app-content-viewer
+										v-if="currentPage <= 1"
+										:source="topic.main_post.text_content"
+									/>
 								</div>
 								<div
 									v-if="shouldShowVoting"

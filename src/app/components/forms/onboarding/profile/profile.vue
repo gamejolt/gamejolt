@@ -43,9 +43,11 @@
 
 			<section class="-bio">
 				<app-form-group name="bio" optional hide-label>
-					<app-form-control-textarea
-						rows="3"
+					<app-form-control-content
+						style="text-align: left;"
+						content-context="user-bio"
 						:disabled="!allowBioChange"
+						:model-id="user.id"
 						:placeholder="$gettext(`Tell people about yourself`)"
 					/>
 				</app-form-group>

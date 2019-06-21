@@ -16,7 +16,7 @@
 			@require-change="canToggleChanged"
 			@expand="toggleFull"
 		>
-			<div class="comment-content" v-html="video.comment.comment_compiled"></div>
+			<app-content-viewer :source="video.comment.comment_content" />
 		</app-fade-collapse>
 
 		<a class="hidden-text-expander" v-if="canToggleContent" @click="toggleFull"></a>

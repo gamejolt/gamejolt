@@ -1,10 +1,14 @@
 import * as distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import AppFormControlMarkdown from 'game-jolt-frontend-lib/components/form-vue/control/markdown/markdown.vue';
+import AppFormControlContent from 'game-jolt-frontend-lib/components/form-vue/control/content/content.vue';
 import AppFormControlTheme from 'game-jolt-frontend-lib/components/form-vue/control/theme/theme.vue';
 import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
-import { BaseForm, FormOnLoad, FormOnSubmitError } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnLoad,
+	FormOnSubmitError,
+} from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { Theme } from 'game-jolt-frontend-lib/components/theme/theme.model';
 import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
@@ -17,9 +21,9 @@ import { Component } from 'vue-property-decorator';
 		AppLoading,
 		AppExpand,
 		AppJolticon,
-		AppFormControlMarkdown,
 		AppFormControlTheme,
 		AppFormControlToggle,
+		AppFormControlContent,
 	},
 })
 export default class FormProfile extends BaseForm<User> implements FormOnLoad, FormOnSubmitError {

@@ -3,6 +3,7 @@ import AppCommentAddButton from 'game-jolt-frontend-lib/components/comment/add-b
 import { Comment } from 'game-jolt-frontend-lib/components/comment/comment-model';
 import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
 import { CommentThreadModal } from 'game-jolt-frontend-lib/components/comment/thread/modal.service';
+import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
 import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
 import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
@@ -42,6 +43,7 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 		AppGameListPlaceholder,
 		AppCommentAddButton,
 		AppCommentOverview,
+		AppContentViewer,
 	},
 	directives: {
 		AppTooltip,

@@ -1,15 +1,15 @@
-import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue'
-import AppCommunityPill from 'game-jolt-frontend-lib/components/community/pill/pill.vue'
+import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
+import AppCommunityPill from 'game-jolt-frontend-lib/components/community/pill/pill.vue';
+import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
 import { AppResponsiveDimensions } from 'game-jolt-frontend-lib/components/responsive-dimensions/responsive-dimensions';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppScrollWhen } from 'game-jolt-frontend-lib/components/scroll/scroll-when.directive';
-import AppSketchfabEmbed from 'game-jolt-frontend-lib/components/sketchfab/embed/embed.vue'
+import AppSketchfabEmbed from 'game-jolt-frontend-lib/components/sketchfab/embed/embed.vue';
 import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
-import AppVideoEmbed from 'game-jolt-frontend-lib/components/video/embed/embed.vue'
-import AppVideo from 'game-jolt-frontend-lib/components/video/video.vue'
-import { AppWidgetCompiler } from 'game-jolt-frontend-lib/components/widget-compiler/widget-compiler';
+import AppVideoEmbed from 'game-jolt-frontend-lib/components/video/embed/embed.vue';
+import AppVideo from 'game-jolt-frontend-lib/components/video/video.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
@@ -24,7 +24,6 @@ import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 	components: {
 		AppPostViewPlaceholder,
 		AppTimeAgo,
-		AppWidgetCompiler,
 		AppResponsiveDimensions,
 		AppImgResponsive,
 		AppVideo,
@@ -36,6 +35,7 @@ import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 		AppPollVoting,
 		AppAdWidget,
 		AppCommunityPill,
+		AppContentViewer,
 	},
 	directives: {
 		AppScrollWhen,

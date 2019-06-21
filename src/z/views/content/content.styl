@@ -1,0 +1,58 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+th
+	width: 70px
+
+.content-container
+	rounded-corners()
+	theme-prop('background-color', 'bg')
+	theme-prop('border-color', 'bg-subtle')
+	margin-top: 20px
+	padding-top: 8px
+	padding-bottom: 4px
+	padding-right: 10px
+	border-style: solid
+	border-width: 2px
+
+.content-editor-moderate
+	padding-left: 12px
+
+.log-reason
+	margin-top: 24px
+
+.log-field
+	rounded-corners()
+	theme-prop('background-color', 'bg')
+	theme-prop('border-color', 'bg-subtle')
+	border-style: solid
+	border-width: 2px
+	padding: 12px
+	width: 100%
+
+.controls
+	margin-top: 12px
+	margin-bottom: 100px
+
+	& > button
+		float: right
+
+.loading-overlay
+	position: absolute
+	top: 0
+	left: 0
+	height: 100%
+	display: flex
+	justify-content: center
+	align-items: center
+	background-color: rgba(255, 255, 255, 0.7)
+
+.error-message
+	rounded-corners()
+	background-color: #f2dede
+	border-color: #eed3d7
+	color: #b94a48
+	border-width: 1px
+	border-style: solid
+	padding: 6px 12px 6px 16px
+	margin-bottom: 6px

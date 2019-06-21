@@ -33,7 +33,7 @@
 					}"
 					active-class="active"
 				>
-					<app-manage-game-nav-required :is-complete="!!game.description_markdown" />
+					<app-manage-game-nav-required :is-complete="game.hasDescription" />
 					<translate>Description</translate>
 				</router-link>
 			</app-game-perms>

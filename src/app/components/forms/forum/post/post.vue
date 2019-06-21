@@ -1,10 +1,12 @@
 <template>
-	<app-form name="forumPostForm">
-		<app-form-group name="content_markdown" :label="$gettext('Post Content')" :hide-label="true">
-			<app-form-control-markdown
-				preview-class="forum-post-body"
-				preview-url="/web/forums/posts/preview"
-				markdown-mode="forums"
+	<app-form name="forumPostForm" ref="form">
+		<app-form-group name="text_content" :label="$gettext('Post Content')" :hide-label="true">
+			<app-form-control-content
+				content-context="forum-post"
+				:rules="{
+					content_required: true,
+				}"
+				:validate-on="['blur']"
 			/>
 
 			<app-form-control-errors />

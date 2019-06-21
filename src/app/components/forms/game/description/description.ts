@@ -1,6 +1,7 @@
+import { ContentDocument } from 'game-jolt-frontend-lib/components/content/content-document';
+import { ContentWriter } from 'game-jolt-frontend-lib/components/content/content-writer';
 import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import AppFormControlMarkdownTS from 'game-jolt-frontend-lib/components/form-vue/control/markdown/markdown';
-import AppFormControlMarkdown from 'game-jolt-frontend-lib/components/form-vue/control/markdown/markdown.vue';
+import AppFormControlContent from 'game-jolt-frontend-lib/components/form-vue/control/content/content.vue';
 import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
 import { BaseForm } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
@@ -17,10 +18,10 @@ type DescriptionFormModel = Game & {
 @Component({
 	components: {
 		AppExpand,
-		AppFormControlMarkdown,
 		AppDashGameWizardControls,
 		AppGamePerms,
 		AppFormGameDescriptionTags,
+		AppFormControlContent,
 	},
 })
 export default class FormGameDescription extends BaseForm<DescriptionFormModel> {
@@ -35,15 +36,22 @@ export default class FormGameDescription extends BaseForm<DescriptionFormModel> 
 
 	$refs!: {
 		form: AppForm;
-		editor: AppFormControlMarkdownTS;
 	};
 
 	get hasDetailsPerms() {
 		return this.model && this.model.hasPerms('details');
 	}
 
+	get contentDocument() {
+		if (this.formModel.description_content) {
+			const doc = ContentDocument.fromJson(this.formModel.description_content);
+			return doc;
+		}
+		return null;
+	}
+
 	get tagText() {
-		return (this.formModel.title + ' ' + this.formModel.description_markdown).toLowerCase();
+		return this.formModel.title.toLowerCase();
 	}
 
 	@Watch('serverErrors')
@@ -58,16 +66,12 @@ export default class FormGameDescription extends BaseForm<DescriptionFormModel> 
 	}
 
 	async addTag(tag: string) {
-		const newDescription = this.formModel.description_markdown
-			? `${this.formModel.description_markdown} #${tag}`
-			: `#${tag}`;
-		this.setField('description_markdown', newDescription);
+		const doc = this.contentDocument;
+		if (doc instanceof ContentDocument) {
+			const writer = new ContentWriter(doc);
+			writer.appendTag(tag);
 
-		// Since we are modifying the description outside the normal flow, we
-		// have to tell the autosizer to try to update itself.
-		if (this.$refs.editor) {
-			await this.$nextTick();
-			this.$refs.editor.updateAutosize();
+			this.setField('description_content', doc.toJson());
 		}
 	}
 

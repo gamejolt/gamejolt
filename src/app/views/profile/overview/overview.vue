@@ -36,7 +36,7 @@
 							<span class="lazy-placeholder" />
 							<span class="lazy-placeholder" style="width: 40%" />
 						</div>
-						<div v-else-if="!user.description_compiled" class="text-muted">
+						<div v-else-if="!user.hasBio" class="text-muted">
 							<p>
 								<em>
 									<translate>
@@ -54,11 +54,11 @@
 								:collapse-height="200"
 								:is-open="showFullDescription"
 								:animate="false"
-								:key="user.description_compiled"
+								:key="user.bio_content"
 								@require-change="canToggleDescription = $event"
 								@expand="showFullDescription = true"
 							>
-								<div class="user-compiled-description" v-html="user.description_compiled" />
+								<app-content-viewer :source="user.bio_content" />
 							</app-fade-collapse>
 
 							<p>

@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<span v-shortkey="['c']" @shortkey="showChatPane()"></span>
+		<app-shortkey shortkey="c" @press="showChatPane" />
 
 		<app-scroll-inview-parent
 			id="shell-chat-pane"

@@ -1,5 +1,5 @@
 <template>
-	<app-tag-suggestion :tags="tags" :text="text" @tag="emitTag($event)">
+	<app-tag-suggestion :tags="tags" :text="''" :content="content" @tag="emitTag($event)">
 		<p class="help-block">
 			<small>
 				<translate>

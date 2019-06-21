@@ -1,4 +1,5 @@
 import AppEditableOverlay from 'game-jolt-frontend-lib/components/editable-overlay/editable-overlay.vue';
+import AppFormControlContent from 'game-jolt-frontend-lib/components/form-vue/control/content/content.vue';
 import { FormOnLoad, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import Onboarding, {
 	OnboardingStep,
@@ -6,6 +7,7 @@ import Onboarding, {
 import { AppThemeSvg } from 'game-jolt-frontend-lib/components/theme/svg/svg';
 import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
 import { Component } from 'vue-property-decorator';
+import { ContentDocument } from '../../../../../lib/gj-lib-client/components/content/content-document';
 import { UserAvatarModal } from '../../../user/avatar-modal/avatar-modal.service';
 import OnboardingComponent from '../base';
 
@@ -19,6 +21,7 @@ export type FormModel = {
 		AppUserAvatar,
 		AppEditableOverlay,
 		AppThemeSvg,
+		AppFormControlContent,
 	},
 })
 export default class FormOnboardingProfile extends OnboardingComponent<FormModel>
@@ -43,7 +46,8 @@ export default class FormOnboardingProfile extends OnboardingComponent<FormModel
 	}
 
 	get hasBio() {
-		return this.formModel.bio.length > 0;
+		const doc = ContentDocument.fromJson(this.formModel.bio);
+		return doc.hasContent;
 	}
 
 	get hasModifiedBio() {
@@ -71,7 +75,8 @@ export default class FormOnboardingProfile extends OnboardingComponent<FormModel
 		this.originalUsername = this.user.username;
 		this.setField('username', this.originalUsername);
 
-		this.originalBio = (this.user.description_markdown || '').trim();
+		const emptyBio = new ContentDocument('user-bio').toJson();
+		this.originalBio = this.user.bio_content || emptyBio;
 		this.setField('bio', this.originalBio);
 		if (this.hasBio) {
 			Onboarding.trackEvent('bio-bootstrap');
@@ -111,12 +116,13 @@ export default class FormOnboardingProfile extends OnboardingComponent<FormModel
 			this.user.name = this.formModel.username;
 		}
 
-		if (this.originalBio.length > 0) {
+		const doc = ContentDocument.fromJson(this.originalBio);
+		if (doc.hasContent) {
 			Onboarding.trackEvent(this.hasModifiedBio ? 'bio-change' : 'bio-accept');
 		} else {
 			Onboarding.trackEvent(this.hasModifiedBio ? 'bio-set' : 'bio-skip');
 		}
-		this.user.description_markdown = this.formModel.bio;
+		this.user.bio_content = this.formModel.bio;
 
 		return this.user.$save();
 	}

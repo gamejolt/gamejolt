@@ -32,4 +32,22 @@ export default class RouteStyleguide extends BaseRouteComponent {
 	get routeTitle() {
 		return 'Styleguide';
 	}
+
+	get nav() {
+		return {
+			buttons: 'Buttons',
+			'list-groups': 'List Groups',
+			'progress-bars': 'Progress Bars',
+			jolticons: 'Jolticons',
+		};
+	}
+
+	get components() {
+		return [
+			AppButtonStyleguide,
+			AppListGroupStyleguide,
+			AppProgressBarStyleguide,
+			AppJolticonsStyleguide,
+		];
+	}
 }

@@ -64,12 +64,12 @@
 							</span>
 						</div>
 
-						<div class="fireside-post-lead" v-html="post.lead_compiled" />
+						<app-content-viewer :source="post.lead_content" />
 
 						<div v-if="post.hasArticle">
 							<div class="page-cut" />
 
-							<app-widget-compiler class="fireside-post-body" :content="post.content_compiled" />
+							<app-content-viewer :source="post.article_content" />
 						</div>
 					</div>
 

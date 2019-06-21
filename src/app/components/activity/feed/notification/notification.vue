@@ -30,18 +30,16 @@
 									@require-change="canToggleContent = $event"
 									@expand="toggleFull"
 								>
-									<div
+									<app-content-viewer
 										v-if="
 											notification.type === 'comment-add' ||
 												notification.type === 'comment-add-object-owner'
 										"
-										class="comment-content"
-										v-html="notification.action_model.comment_compiled"
+										:source="notification.action_model.comment_content"
 									/>
-									<div
+									<app-content-viewer
 										v-else-if="notification.type === 'mention'"
-										class="comment-content"
-										v-html="notification.action_model.comment.comment_compiled"
+										:source="notification.action_model.comment.comment_content"
 									/>
 								</app-fade-collapse>
 

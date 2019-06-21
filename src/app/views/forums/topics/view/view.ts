@@ -1,5 +1,6 @@
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
 import { ForumChannel } from 'game-jolt-frontend-lib/components/forum/channel/channel.model';
@@ -12,7 +13,10 @@ import AppMessageThreadPagination from 'game-jolt-frontend-lib/components/messag
 import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
 import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
 import { ReportModal } from 'game-jolt-frontend-lib/components/report/modal/modal.service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
 import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
@@ -21,7 +25,6 @@ import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
 import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
-import { AppWidgetCompiler } from 'game-jolt-frontend-lib/components/widget-compiler/widget-compiler';
 import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
@@ -46,7 +49,6 @@ import { Store } from '../../../../store/index';
 		AppTimeAgo,
 		AppPopper,
 		AppFadeCollapse,
-		AppWidgetCompiler,
 		AppForumPostList,
 		AppScrollAffix,
 		AppMessageThreadAdd,
@@ -54,6 +56,7 @@ import { Store } from '../../../../store/index';
 		FormForumPost,
 		FormForumTopic,
 		AppForumTopicUpvoteWidget,
+		AppContentViewer,
 	},
 	directives: {
 		AppTooltip,
@@ -107,7 +110,9 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 	readonly Environment = Environment;
 
 	get loginUrl() {
-		return Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath);
+		return (
+			Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath)
+		);
 	}
 
 	get sort() {
