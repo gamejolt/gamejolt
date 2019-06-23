@@ -183,6 +183,9 @@
 						:placeholder="$gettext(`Write your article here...`)"
 						content-context="fireside-post-article"
 						:model-id="model.id"
+						:rules="{
+							content_no_media_uploads: true,
+						}"
 					/>
 
 					<app-form-control-errors />
