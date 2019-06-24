@@ -4,7 +4,10 @@ import { CommentVideo } from 'game-jolt-frontend-lib/components/comment/video/vi
 import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
-import { CustomMessage as CustomGameMessage, Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import {
+	CustomMessage as CustomGameMessage,
+	Game,
+} from 'game-jolt-frontend-lib/components/game/game.model';
 import { GamePackagePayloadModel } from 'game-jolt-frontend-lib/components/game/package/package-payload.model';
 import { GameRating } from 'game-jolt-frontend-lib/components/game/rating/rating.model';
 import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
@@ -16,7 +19,12 @@ import { LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/
 import { Registry } from 'game-jolt-frontend-lib/components/registry/registry.service';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { objectPick } from 'game-jolt-frontend-lib/utils/object';
-import { NamespaceVuexStore, VuexModule, VuexMutation, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
+import {
+	NamespaceVuexStore,
+	VuexModule,
+	VuexMutation,
+	VuexStore,
+} from 'game-jolt-frontend-lib/utils/vuex';
 import { namespace } from 'vuex-class';
 import { store } from '../../../../store';
 import { router } from '../../../index';
@@ -84,7 +92,6 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 	profileCount = 0;
 	downloadCount = 0;
-	playCount = 0;
 	developerGamesCount = 0;
 	supporters: User[] = [];
 	supporterCount = 0;
@@ -249,7 +256,6 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 		this.profileCount = payload.profileCount || 0;
 		this.downloadCount = payload.downloadCount || 0;
-		this.playCount = payload.playCount || 0;
 		this.developerGamesCount = payload.developerGamesCount || 0;
 
 		this.supporters = User.populate(payload.supporters);
