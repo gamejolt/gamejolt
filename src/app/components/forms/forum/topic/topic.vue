@@ -11,6 +11,7 @@
 				content-context="forum-post"
 				:rules="{
 					content_required: true,
+					content_no_media_uploads: true,
 				}"
 				:validate-on="['blur']"
 			/>

@@ -69,6 +69,8 @@
 
 .-main
 	flex: auto
+	max-width: 100%
+	padding-right: 10px
 
 .-actions
 	flex: none
