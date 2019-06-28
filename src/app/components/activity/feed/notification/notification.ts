@@ -40,7 +40,6 @@ export default class AppActivityFeedNotification extends Vue {
 	notification!: Notification;
 
 	canToggleContent = false;
-	showFullContent = false;
 
 	readonly Screen = Screen;
 
@@ -75,10 +74,6 @@ export default class AppActivityFeedNotification extends Vue {
 		this.notification.$read();
 		this.notification.go(this.$router);
 		this.$emit('clicked');
-	}
-
-	toggleFull() {
-		this.showFullContent = !this.showFullContent;
 	}
 
 	onMarkRead() {
