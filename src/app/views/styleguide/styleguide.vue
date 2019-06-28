@@ -7,24 +7,9 @@
 				<app-scroll-affix>
 					<nav class="platform-list">
 						<ul>
-							<li>
-								<a href="#styleguide-button" v-app-scroll-to>
-									Buttons
-								</a>
-							</li>
-							<li>
-								<a href="#styleguide-list-group" v-app-scroll-to>
-									List Groups
-								</a>
-							</li>
-							<li>
-								<a href="#styleguide-progress-bar" v-app-scroll-to>
-									Progress Bars
-								</a>
-							</li>
-							<li>
-								<a href="#styleguide-jolticons" v-app-scroll-to>
-									Jolticons
+							<li v-for="(label, key) of nav" :key="key">
+								<a :href="`#styleguide-${key}`" v-app-scroll-to>
+									{{ label }}
 								</a>
 							</li>
 						</ul>
@@ -32,10 +17,7 @@
 				</app-scroll-affix>
 			</div>
 			<div class="col-sm-9 col-sm-pull-3 col-lg-10 col-lg-pull-2">
-				<app-button-styleguide />
-				<app-list-group-styleguide />
-				<app-progress-bar-styleguide />
-				<app-jolticons-styleguide />
+				<component v-for="(component, key) of components" :key="key" :is="component" />
 			</div>
 		</div>
 	</div>

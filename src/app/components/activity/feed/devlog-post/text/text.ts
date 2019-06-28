@@ -1,8 +1,8 @@
-import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue'
+import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
+import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
-import { AppWidgetCompiler } from 'game-jolt-frontend-lib/components/widget-compiler/widget-compiler';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import { ActivityFeedItem } from '../../item-service';
@@ -11,7 +11,7 @@ import { ActivityFeedView } from '../../view';
 @Component({
 	components: {
 		AppFadeCollapse,
-		AppWidgetCompiler,
+		AppContentViewer,
 	},
 })
 export default class AppActivityFeedDevlogPostText extends Vue {

@@ -3,7 +3,7 @@ import { Environment } from 'game-jolt-frontend-lib/components/environment/envir
 import { FiresidePostCommunity } from 'game-jolt-frontend-lib/components/fireside/post/community/community.model';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { getLinkedAccountPlatformIcon } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue'
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
@@ -56,7 +56,7 @@ export default class AppFiresidePostManage extends Vue {
 	emitReject(_community: Community) {}
 
 	get canPublish() {
-		return this.post.isDraft && !this.post.isScheduled && !!this.post.lead;
+		return this.post.isDraft && !this.post.isScheduled && this.post.hasLead;
 	}
 
 	get hasPerms() {

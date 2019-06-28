@@ -1,4 +1,5 @@
 import { CommentVideo } from 'game-jolt-frontend-lib/components/comment/video/video-model';
+import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
@@ -10,6 +11,7 @@ import AppActivityFeedVideo from '../_video/video.vue';
 	components: {
 		AppActivityFeedVideo,
 		AppFadeCollapse,
+		AppContentViewer,
 	},
 })
 export default class AppActivityFeedCommentVideo extends Vue {

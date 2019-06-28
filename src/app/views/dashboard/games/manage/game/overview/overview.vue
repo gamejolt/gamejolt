@@ -94,7 +94,7 @@
 								<translate>dash.games.overview.stats_plays</translate>
 							</div>
 							<div class="stat-big-digit">
-								{{ (downloadCount + playCount) | number }}
+								{{ downloadCount | number }}
 							</div>
 						</div>
 					</div>

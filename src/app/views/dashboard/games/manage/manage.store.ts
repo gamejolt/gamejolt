@@ -7,7 +7,13 @@ import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.mo
 import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
 import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { NamespaceVuexStore, VuexAction, VuexModule, VuexMutation, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
+import {
+	NamespaceVuexStore,
+	VuexAction,
+	VuexModule,
+	VuexMutation,
+	VuexStore,
+} from 'game-jolt-frontend-lib/utils/vuex';
 import { namespace } from 'vuex-class';
 import { store } from '../../../../store';
 import { router } from '../../../index';
@@ -91,7 +97,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 			return false;
 		}
 
-		if (!this.game.description_markdown) {
+		if (!this.game.hasDescription) {
 			return false;
 		} else if (!this.game.thumbnail_media_item) {
 			return false;

@@ -4,7 +4,10 @@ import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import AppGraphWidget from 'game-jolt-frontend-lib/components/graph/widget/widget.vue';
 import AppProgressBar from 'game-jolt-frontend-lib/components/progress/bar/bar.vue';
 import { AppProgressPoller } from 'game-jolt-frontend-lib/components/progress/poller/poller';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
@@ -32,7 +35,8 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 })
 @RouteResolver({
 	deps: {},
-	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/overview/' + route.params.id),
+	resolver: ({ route }) =>
+		Api.sendRequest('/web/dash/developer/games/overview/' + route.params.id),
 })
 export default class RouteDashGamesManageGameOverview extends BaseRouteComponent {
 	@AppState
@@ -52,7 +56,6 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 
 	viewCount = 0;
 	downloadCount = 0;
-	playCount = 0;
 	commentCount = 0;
 	dislikeCount = 0;
 
@@ -110,7 +113,6 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 	routeResolved($payload: any) {
 		this.viewCount = $payload.viewCount || 0;
 		this.downloadCount = $payload.downloadCount || 0;
-		this.playCount = $payload.playCount || 0;
 		this.commentCount = $payload.commentCount || 0;
 		this.dislikeCount = $payload.dislikeCount || 0;
 

@@ -1,9 +1,9 @@
 <template>
 	<!--
-	We need to refresh the whole feed anytime it's cleared or massively changed.
-	Basically anytime the feed state's items are replaced so that the references
-	to them get picked up again.
--->
+		We need to refresh the whole feed anytime it's cleared or massively changed.
+		Basically anytime the feed state's items are replaced so that the references
+		to them get picked up again.
+	-->
 	<div class="activity-feed" :key="feed.id">
 		<template v-if="newCount > 0">
 			<app-expand v-if="!feed.isLoadingNew" when animate-initial>
@@ -20,7 +20,7 @@
 			<app-loading v-else class="loading-centered" />
 		</template>
 
-		<!-- Need the div so that we can target the last child in teh container. -->
+		<!-- Need the div so that we can target the last child in the container. -->
 		<div>
 			<div class="-item" v-for="(item, i) of feed.items" :key="item.id">
 				<app-activity-feed-item :item="item" />
@@ -38,8 +38,8 @@
 		</div>
 
 		<!--
-		If they are viewing a slice of the state, then we don't want to allow loading more.
-	-->
+			If they are viewing a slice of the state, then we don't want to allow loading more.
+		-->
 		<template v-if="!feed.slice">
 			<div v-if="shouldShowLoadMore" class="page-cut">
 				<app-button

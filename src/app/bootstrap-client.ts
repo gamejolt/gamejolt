@@ -1,6 +1,7 @@
 import AppGamePackageCardTS from 'game-jolt-frontend-lib/components/game/package/card/card';
 import AppGamePackageCard from 'game-jolt-frontend-lib/components/game/package/card/card.vue';
-import AppGamePackagePurchaseModal from 'game-jolt-frontend-lib/components/game/package/purchase-modal/purchase-modal';
+import AppGamePackagePurchaseModalTS from 'game-jolt-frontend-lib/components/game/package/purchase-modal/purchase-modal';
+import AppGamePackagePurchaseModal from 'game-jolt-frontend-lib/components/game/package/purchase-modal/purchase-modal.vue';
 import { ClientAutoStart } from '../_common/client/autostart/autostart.service';
 import { bootstrapCommonClient } from '../_common/client/bootstrap';
 import { ClientShortcut } from '../_common/client/shortcut/shortcut.service';
@@ -10,7 +11,8 @@ import { hookDownloadPackage } from './components/client/hooks/game-package-purc
 import AppClientPackageCardButtons from './components/client/hooks/package-card-buttons/package-card-buttons.vue';
 import AppClientPackageCardMeta from './components/client/hooks/package-card-meta/package-card-meta.vue';
 import { clientTrayMenuBuilder } from './components/client/hooks/tray/tray';
-import AppGameCoverButtons from './components/game/cover-buttons/cover-buttons';
+import AppGameCoverButtonsTS from './components/game/cover-buttons/cover-buttons';
+import AppGameCoverButtons from './components/game/cover-buttons/cover-buttons.vue';
 import { store } from './store/index';
 
 bootstrapCommonClient(store);
@@ -21,5 +23,5 @@ ClientShortcut.create();
 AppClientTray.hook.menuBuilder = clientTrayMenuBuilder;
 (AppGamePackageCard as typeof AppGamePackageCardTS).hook.buttons = AppClientPackageCardButtons;
 (AppGamePackageCard as typeof AppGamePackageCardTS).hook.meta = AppClientPackageCardMeta;
-AppGameCoverButtons.hook.buildButtons = AppClientGameCoverButtons;
-AppGamePackagePurchaseModal.hook.downloadPackage = hookDownloadPackage;
+(AppGameCoverButtons as typeof AppGameCoverButtonsTS).hook.buildButtons = AppClientGameCoverButtons;
+(AppGamePackagePurchaseModal as typeof AppGamePackagePurchaseModalTS).hook.downloadPackage = hookDownloadPackage;

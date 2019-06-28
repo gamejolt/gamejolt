@@ -36,6 +36,8 @@ $-height = 40px
 	position: relative
 	height: $-height
 	line-height: $-height
+	user-select: none
+	-moz-user-select: none
 
 	&::before
 		caret(var(--theme-bg-subtle), size: 9px)

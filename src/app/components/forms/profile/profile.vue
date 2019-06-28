@@ -105,15 +105,14 @@
 		</app-form-group>
 
 		<app-form-group
-			name="description_markdown"
+			name="bio_content"
 			:label="$gettext(`dash.profile.edit.description_label`)"
 			:optional="true"
 		>
-			<app-form-control-markdown
-				preview-class="user-compiled-description"
-				preview-url="/web/dash/profile/preview-description"
-				markdown-mode="users"
+			<app-form-control-content
+				content-context="user-bio"
 				:disabled="isBioLocked"
+				:model-id="model.id"
 			/>
 
 			<app-form-control-errors />

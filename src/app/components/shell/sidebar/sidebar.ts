@@ -5,6 +5,7 @@ import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service'
 import AppScrollScroller from 'game-jolt-frontend-lib/components/scroll/scroller/scroller.vue';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { stringSort } from 'game-jolt-frontend-lib/utils/array';
+import AppShortkey from 'game-jolt-frontend-lib/vue/components/shortkey/shortkey.vue';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
@@ -18,6 +19,7 @@ import AppShellSidebarCollectionList from './collection-list.vue';
 		AppShellSidebarCollectionList,
 		AppExpand,
 		AppScrollScroller,
+		AppShortkey,
 	},
 	directives: {
 		AppTooltip,

@@ -68,7 +68,7 @@
 			@require-change="canToggleDescription = $event"
 			@expand="showingFullDescription = true"
 		>
-			<div class="game-compiled-description" v-html="game.description_compiled"></div>
+			<app-content-viewer :source="game.description_content" />
 		</app-fade-collapse>
 
 		<a

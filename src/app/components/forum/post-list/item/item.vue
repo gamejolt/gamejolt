@@ -25,8 +25,8 @@
 			</a>
 
 			<app-expand :when="showingParent">
-				<div v-if="parent" class="forum-post-body forum-post-body-quoted">
-					<app-widget-compiler :content="parent.content_compiled" />
+				<div v-if="parent" class="forum-post-content-quoted">
+					<app-content-viewer :source="parent.text_content" />
 				</div>
 				<p v-else>
 					<strong><translate>Post removed.</translate></strong>
@@ -34,9 +34,7 @@
 				<hr />
 			</app-expand>
 
-			<div v-if="!isEditing" class="forum-post-body">
-				<app-widget-compiler :content="post.content_compiled" />
-			</div>
+			<app-content-viewer v-if="!isEditing" :source="post.text_content" />
 			<template v-else>
 				<form-forum-post :model="post" :topic="topic" @cancel="closeEdit" @submit="closeEdit" />
 

@@ -13,6 +13,7 @@ import {
 } from 'game-jolt-frontend-lib/components/comment/comment-store';
 import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
 import { CommentThreadModal } from 'game-jolt-frontend-lib/components/comment/thread/modal.service';
+import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
@@ -73,6 +74,7 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 		AppActivityFeedPlaceholder,
 		AppPostAddButton,
 		AppGamePerms,
+		AppContentViewer,
 	},
 	directives: {
 		AppTrackEvent,

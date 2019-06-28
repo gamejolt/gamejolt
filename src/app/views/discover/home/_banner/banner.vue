@@ -64,6 +64,7 @@
 							</div>
 							<div v-else-if="item.jam">
 								<app-button
+									v-if="shouldShowJamViewGames"
 									primary
 									solid
 									:to="location"

@@ -1,24 +1,19 @@
 @require '~game-jolt-frontend-lib/stylus/mixins/compiled-content'
 
-.forum-post
-	&-body
-		compiled-content($font-size-base)
+.forum-post-content
+	compiled-content($font-size-base)
 
-		h1, h2, h3, h4, h5, h6
-			@extend .h5
-			font-weight: bold
+	pre
+		padding-left: ($forum-post-list-icon-size / 2) + $forum-post-list-avatar-margin
+		margin-left: - @padding-left
 
-		pre
-			padding-left: ($forum-post-list-icon-size / 2) + $forum-post-list-avatar-margin
-			margin-left: - @padding-left
+		.form-markdown-editor-preview&
+			// Reset the padding to what it is in scaffolding.styl
+			padding-left: (($line-height-computed - 1) / 2)
+			margin-left: 0
 
-			.form-markdown-editor-preview&
-				// Reset the padding to what it is in scaffolding.styl
-				padding-left: (($line-height-computed - 1) / 2)
-				margin-left: 0
-
-		&-quoted
-			theme-prop('border-left-color', 'bg-offset')
-			border-left-width: 3px
-			border-left-style: solid
-			padding-left: ($grid-gutter-width / 2)
+	&-quoted
+		theme-prop('border-left-color', 'bg-offset')
+		border-left-width: 3px
+		border-left-style: solid
+		padding-left: ($grid-gutter-width / 2)

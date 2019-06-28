@@ -62,10 +62,9 @@ const config = {
 			client: true,
 			bodyClass: 'fill-darkest',
 		},
-		playbox: {
-			title: 'Playbox - for tests and stuff',
-			server: true,
-			crawl: true,
+		z: {
+			title: 'Game Jolt - Indie games for the love of it',
+			bodyClass: 'main-body',
 		},
 	},
 	translations: 'site-translations',
@@ -78,7 +77,6 @@ const config = {
 		],
 		checkout: ['checkout/'],
 		claim: ['claim/'],
-		playbox: ['playbox/'],
 	},
 };
 

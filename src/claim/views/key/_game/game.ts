@@ -1,7 +1,11 @@
+import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
 import { GameBundle } from 'game-jolt-frontend-lib/components/game-bundle/game-bundle.model';
-import { CustomMessage as CustomGameMessage, Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import {
+	CustomMessage as CustomGameMessage,
+	Game,
+} from 'game-jolt-frontend-lib/components/game/game.model';
 import AppGamePackageCard from 'game-jolt-frontend-lib/components/game/package/card/card.vue';
 import { GamePackagePayloadModel } from 'game-jolt-frontend-lib/components/game/package/package-payload.model';
 import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
@@ -19,6 +23,7 @@ import { Store } from '../../../store/index';
 		AppFadeCollapse,
 		AppGamePackageCard,
 		AppMediaItemCover,
+		AppContentViewer,
 	},
 })
 export default class AppKeyGame extends Vue {

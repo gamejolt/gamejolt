@@ -1,5 +1,5 @@
 <template>
-	<app-tag-suggestion :tags="tags" :text="text" @tag="emitTag($event)">
+	<app-tag-suggestion :tags="tags" :text="text" :content="documents" @tag="emitTag($event)">
 		<app-jolticon icon="tags" class="middle" />
 		<strong>
 			<translate>Game Tags</translate>

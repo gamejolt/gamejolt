@@ -1,4 +1,5 @@
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { Jam } from 'game-jolt-frontend-lib/components/jam/jam.model';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppTheme } from 'game-jolt-frontend-lib/components/theme/theme';
 import Vue from 'vue';
@@ -32,6 +33,14 @@ export default class AppDiscoverHomeBanner extends Vue {
 			return this.app.user && !this.item.game.is_following;
 		}
 		return false;
+	}
+
+	get shouldShowJamViewGames() {
+		if (!this.item.jam) {
+			return false;
+		}
+
+		return this.item.jam.getPeriod() >= Jam.PERIOD_RUNNING;
 	}
 
 	get location(): Location | undefined {

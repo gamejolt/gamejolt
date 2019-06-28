@@ -1,5 +1,6 @@
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue'
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
 import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
+import AppShortkey from 'game-jolt-frontend-lib/vue/components/shortkey/shortkey.vue';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import AppSearchAutocomplete from './autocomplete/autocomplete.vue';
@@ -18,6 +19,7 @@ let searchIterator = 0;
 		AppSearchAutocomplete,
 		AppSearchInput,
 		AppPopper,
+		AppShortkey,
 	},
 })
 export default class AppSearch extends Vue {

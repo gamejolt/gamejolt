@@ -1,7 +1,12 @@
 import { Comment } from 'game-jolt-frontend-lib/components/comment/comment-model';
-import { CommentState, CommentStore, CommentStoreModel } from 'game-jolt-frontend-lib/components/comment/comment-store';
+import {
+	CommentState,
+	CommentStore,
+	CommentStoreModel,
+} from 'game-jolt-frontend-lib/components/comment/comment-store';
 import { DisplayMode } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
 import { CommentThreadModal } from 'game-jolt-frontend-lib/components/comment/thread/modal.service';
+import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
 import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
 import AppUserAvatarImg from 'game-jolt-frontend-lib/components/user/user-avatar/img/img.vue';
@@ -13,6 +18,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 		AppFadeCollapse,
 		AppUserAvatarImg,
 		AppUserCardHover,
+		AppContentViewer,
 	},
 })
 export default class AppCommentOverview extends Vue {

@@ -1,19 +1,19 @@
 <template>
 	<app-form name="descriptionForm" ref="form">
 		<app-form-group
-			name="description_markdown"
+			name="description_content"
 			:label="$gettext(`dash.games.form.description_label`)"
 			hide-label
 		>
-			<app-form-control-markdown
-				ref="editor"
-				preview-class="game-compiled-description"
-				preview-url="/web/dash/developer/games/description/preview"
-				markdown-mode="games"
-				show-media-items
-				media-item-type="game-description"
+			<app-form-control-content
 				:placeholder="$gettext(`Write your game description here...`)"
-				:disabled="isDisabled || !hasDetailsPerms"
+				content-context="game-description"
+				:model-id="model.id"
+				:rules="{
+					content_required: true,
+					content_no_media_uploads: true,
+				}"
+				:validate-on="['blur']"
 			/>
 
 			<app-form-control-errors />
@@ -23,6 +23,7 @@
 			class="-tags"
 			:text="tagText"
 			:tags="tags"
+			:content="contentDocument"
 			@tag="addTag($event)"
 		/>
 

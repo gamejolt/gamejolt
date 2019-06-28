@@ -1,7 +1,6 @@
 import { GamePlayModal } from 'game-jolt-frontend-lib/components/game/play-modal/play-modal.service';
 import { Registry } from 'game-jolt-frontend-lib/components/registry/registry.service';
 import 'game-jolt-frontend-lib/utils/polyfills';
-import { bootstrapShortkey } from 'game-jolt-frontend-lib/vue/shortkey';
 import { bootstrapCommon } from '../_common/bootstrap';
 import App from './app.vue';
 import './main.styl';
@@ -18,7 +17,6 @@ if (GJ_IS_CLIENT) {
 }
 
 GamePlayModal.init({ canMinimize: true });
-bootstrapShortkey();
 
 Registry.setConfig('Game', { maxItems: 100 });
 Registry.setConfig('User', { maxItems: 150 });

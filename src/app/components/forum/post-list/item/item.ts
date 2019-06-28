@@ -1,5 +1,6 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
+import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
 import { ForumPost } from 'game-jolt-frontend-lib/components/forum/post/post.model';
@@ -14,7 +15,6 @@ import { ReportModal } from 'game-jolt-frontend-lib/components/report/modal/moda
 import { AppScrollInview } from 'game-jolt-frontend-lib/components/scroll/inview/inview';
 import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { AppWidgetCompiler } from 'game-jolt-frontend-lib/components/widget-compiler/widget-compiler';
 import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import { date } from 'game-jolt-frontend-lib/vue/filters/date';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
@@ -31,10 +31,10 @@ import FormForumPost from '../../../forms/forum/post/post.vue';
 		AppMessageThreadItem,
 		AppMessageThreadAdd,
 		AppJolticon,
-		AppWidgetCompiler,
 		AppExpand,
 		FormForumPost,
 		AppPopper,
+		AppContentViewer,
 
 		// Since it's recursive it needs to be able to resolve itself.
 		AppForumPostListItem: () => Promise.resolve(AppForumPostListItem),

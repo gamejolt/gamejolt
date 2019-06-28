@@ -2,6 +2,7 @@ import { CommentVideoModal } from 'game-jolt-frontend-lib/components/comment/vid
 import { CommentVideo } from 'game-jolt-frontend-lib/components/comment/video/video-model';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import AppCommunityPill from 'game-jolt-frontend-lib/components/community/pill/pill.vue';
+import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
 import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
@@ -49,6 +50,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppUserCardHover,
 		AppFadeCollapse,
 		AppCommunityPill,
+		AppContentViewer,
 	},
 	filters: {
 		number,

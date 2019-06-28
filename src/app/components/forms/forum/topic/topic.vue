@@ -6,11 +6,14 @@
 			<app-form-control-errors />
 		</app-form-group>
 
-		<app-form-group name="content_markdown" :label="$gettext('Topic Content')">
-			<app-form-control-markdown
-				preview-class="forum-post-body"
-				preview-url="/web/forums/posts/preview"
-				markdown-mode="forums"
+		<app-form-group name="text_content" :label="$gettext('Topic Content')">
+			<app-form-control-content
+				content-context="forum-post"
+				:rules="{
+					content_required: true,
+					content_no_media_uploads: true,
+				}"
+				:validate-on="['blur']"
 			/>
 
 			<app-form-control-errors />

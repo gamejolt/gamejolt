@@ -5,19 +5,11 @@ $-font-size = 17px
 $-lead-font-size-xs = 16px
 $-lead-font-size = 19px
 
-.fireside-post-body
+.fireside-post-article-content
 	compiled-content($-font-size-xs)
 
 	@media $media-sm-up
 		compiled-content($-font-size)
-
-	a
-		link-underlines(var(--theme-link), var(--theme-bg), var(--theme-link-hover))
-
-	// We have to cancel the link-underlines styling.
-	.hashtag
-		text-shadow: none
-		background-image: none !important
 
 	.spoiler
 		font-style: normal
@@ -25,7 +17,7 @@ $-lead-font-size = 19px
 	img, iframe
 		rounded-corners()
 
-.fireside-post-lead
+.fireside-post-lead-content
 	font-size: $-lead-font-size-xs
 	line-height: $line-height-base
 	font-weight: 600 // Semibold

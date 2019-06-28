@@ -117,7 +117,7 @@
 					:animate="false"
 					@require-change="canToggleLeadChanged"
 				>
-					<div class="fireside-post-lead" v-html="post.lead_compiled" />
+					<app-content-viewer class="fireside-post-lead" :source="post.lead_content" />
 				</app-fade-collapse>
 
 				<a class="hidden-text-expander" v-if="canToggleLead" @click="toggleLead()"></a>
