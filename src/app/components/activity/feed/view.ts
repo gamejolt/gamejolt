@@ -199,7 +199,7 @@ export class ActivityFeedView {
 
 	toggleItemLeadOpen(item: ActivityFeedItem) {
 		const itemState = this.getItemState(item);
-		itemState.isLeadOpen = !!itemState.isLeadOpen;
+		itemState.isLeadOpen = !itemState.isLeadOpen;
 	}
 
 	isItemLeadOpen(item: ActivityFeedItem) {

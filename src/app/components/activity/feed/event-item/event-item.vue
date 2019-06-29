@@ -8,7 +8,7 @@
 			@click.capture="onClickCapture"
 			@click="onClick"
 		>
-			<div class="-header">
+			<div class="-header" v-if="user">
 				<div class="-header-content">
 					<app-user-card-hover :user="user" :disabled="!feed.shouldShowUserCards">
 						<div class="-header-avatar">
@@ -107,12 +107,12 @@
 				/>
 
 				<!--
-				This shouldn't ever really show a collapser. It's for the jokers that think it would
-				be fun to make a post with a bunch of new lines.
-			-->
+					This shouldn't ever really show a collapser. It's for the jokers that think it would
+					be fun to make a post with a bunch of new lines.
+				-->
 				<app-fade-collapse
 					:collapse-height="600"
-					:is-open="item.isLeadOpen"
+					:is-open="isLeadOpen"
 					:animate="false"
 					@require-change="canToggleLeadChanged"
 				>
@@ -152,7 +152,13 @@
 				/>
 			</div>
 
-			<app-event-item-controls class="-controls" :post="post" :video="video" @expand="onExpand()" />
+			<app-event-item-controls
+				class="-controls"
+				:post="post"
+				:video="video"
+				:show-user-follow="shouldShowFollow"
+				@expand="onExpand()"
+			/>
 		</div>
 	</div>
 </template>

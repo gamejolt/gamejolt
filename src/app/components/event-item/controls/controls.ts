@@ -41,6 +41,9 @@ export default class AppEventItemControls extends Vue {
 	@Prop(FiresidePost)
 	post?: FiresidePost;
 
+	@Prop(Boolean)
+	showUserFollow?: boolean;
+
 	@Prop(CommentVideo)
 	video?: CommentVideo;
 

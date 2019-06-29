@@ -6,7 +6,7 @@
 					We don't want it clicking into the post when clicking a control.
 				-->
 				<span @click.stop>
-					<app-fireside-post-like-widget :post="post" circle />
+					<app-fireside-post-like-widget :post="post" :show-user-follow="showUserFollow" circle />
 
 					&nbsp;
 

@@ -4,7 +4,8 @@ import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
 import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow-widget/follow-widget.vue';
+import { UserFollowSuggestion } from 'game-jolt-frontend-lib/components/user/follow/suggestion.service';
+import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow/widget.vue';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
@@ -53,7 +54,18 @@ export default class AppGameFollowWidget extends Vue {
 	isShowingFollowPopover = false;
 
 	get shouldShowFollow() {
-		return this.showUserFollow && (!this.app.user || this.app.user.id !== this.game.developer.id);
+		if (!this.showUserFollow) {
+			return false;
+		}
+
+		if (
+			(this.app.user && this.app.user.id === this.game.developer.id) ||
+			this.game.developer.is_following
+		) {
+			return false;
+		}
+
+		return true;
 	}
 
 	get widgetId() {
@@ -90,14 +102,18 @@ export default class AppGameFollowWidget extends Vue {
 			// Do this before attempting to follow.
 			// We don't want to wait till the follow is confirmed to show the dialog,
 			// and even if the follow fails it's not like we'll close it.
-			if (this.shouldShowFollow && !this.game.developer.is_following) {
+			// The user follow suggestion is not reactive, so we call it on impulse like this
+			// instead of putting it in the shouldShowFollow getter.
+			if (this.shouldShowFollow && UserFollowSuggestion.canSuggest(this.game.developer.id)) {
 				this.isShowingFollowPopover = true;
 			}
 
 			try {
 				await this.game.$follow();
 			} catch (e) {
-				Growls.error(this.$gettext('Something has prevented you from following this game.'));
+				Growls.error(
+					this.$gettext('Something has prevented you from following this game.')
+				);
 			}
 		} else {
 			try {
@@ -108,6 +124,12 @@ export default class AppGameFollowWidget extends Vue {
 					this.$gettext('library.followed.remove_game_error_growl_title')
 				);
 			}
+		}
+	}
+
+	onFollowPopoverDismissed() {
+		if (!this.game.developer.is_following) {
+			UserFollowSuggestion.doNotSuggest(this.game.developer.id);
 		}
 	}
 }

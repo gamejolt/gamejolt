@@ -1,6 +1,6 @@
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow-widget/follow-widget.vue';
+import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow/widget.vue';
 import AppUserAvatarImg from 'game-jolt-frontend-lib/components/user/user-avatar/img/img.vue';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
