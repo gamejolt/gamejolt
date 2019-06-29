@@ -109,11 +109,10 @@
 				<!--
 					This shouldn't ever really show a collapser. It's for the jokers that think it would
 					be fun to make a post with a bunch of new lines.
-					TODO: is item.isLeadOpen wrong?
 				-->
 				<app-fade-collapse
 					:collapse-height="600"
-					:is-open="item.isLeadOpen"
+					:is-open="isLeadOpen"
 					:animate="false"
 					@require-change="canToggleLeadChanged"
 				>

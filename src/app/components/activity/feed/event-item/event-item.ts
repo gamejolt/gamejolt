@@ -88,6 +88,10 @@ export default class AppActivityFeedEventItem extends Vue {
 		return this.item.feedItem as EventItem;
 	}
 
+	get isLeadOpen() {
+		return this.feed.isItemLeadOpen(this.item);
+	}
+
 	get post() {
 		if (this.eventItem.type === EventItem.TYPE_POST_ADD) {
 			return this.eventItem.action as FiresidePost;
