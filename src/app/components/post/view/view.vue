@@ -1,7 +1,6 @@
 <template>
 	<section class="section" v-if="post">
 		<div v-app-scroll-when="true"></div>
-
 		<div class="container">
 			<div v-if="post.hasVideo" class="full-bleed-xs">
 				<app-video-embed
@@ -93,6 +92,39 @@
 
 					<app-event-item-controls show-comments :post="post" />
 				</div>
+				<div class="col-md-4 col-lg-5" v-if="relevantUsers && Screen.isDesktop">
+					<h4 class="section-header">
+						<translate>Relevant People</translate>
+					</h4>
+					<div v-for="user of relevantUsers" :key="user.id">
+						<router-link
+							:to="{ name: 'profile.overview', params: { username: user.username } }"
+							class="relevant-user"
+						>
+							<hr />
+							<div class="relevant-user-info">
+								<app-user-card-hover :user="user">
+									<app-user-avatar class="relevant-user-avatar" :user="user" />
+								</app-user-card-hover>
+								<div class="relevant-user-content">
+									<div>
+										<strong>{{ user.display_name }}</strong>
+										<app-jolticon v-if="user.is_verified" icon="verified" />
+									</div>
+									<div>
+										<span class="text-muted">@{{ user.username }}</span>
+										<small v-if="user.follows_you" class="text-muted relevant-user-follows-you">
+											<translate>Follows you</translate>
+										</small>
+									</div>
+								</div>
+								<div class="relevant-user-follow">
+									<app-user-follow-widget :user="user" hide-count />
+								</div>
+							</div>
+						</router-link>
+					</div>
+				</div>
 				<div class="col-md-4 col-lg-5" v-if="shouldShowAds && Screen.isDesktop">
 					<app-ad-widget class="pull-right" pos="top" />
 				</div>
@@ -122,6 +154,35 @@
 
 >>> .mention-avatar-img
 	border-radius: 50% !important
+
+.relevant-user
+	display: block
+
+.relevant-user-info
+	display: flex
+
+.relevant-user-avatar
+	width: 44px
+	flex-grow: 0
+	flex-shrink: 0
+	margin-right: 16px
+
+.relevant-user-content
+	flex-grow: 1
+
+.relevant-user-follow
+	height: 100%
+	flex-grow: 0
+	flex-shrink: 0
+
+.relevant-user-follows-you
+	theme-prop('background-color', 'bg-offset')
+	padding-left: 3px
+	padding-right: 3px
+	padding-top: 1px
+	padding-bottom: 1px
+	rounded-corners()
+	margin-left: 4px
 
 </style>
 
