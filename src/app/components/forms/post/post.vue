@@ -589,12 +589,6 @@
 
 			<div class="-controls-submit">
 				<div class="-controls-submit-button">
-					<app-button :disabled="!valid" primary solid :block="Screen.isXs">
-						{{ mainActionText }}
-					</app-button>
-				</div>
-
-				<div class="-controls-submit-button">
 					<app-button
 						v-if="!wasPublished && !isScheduling"
 						:disabled="!valid"
@@ -603,6 +597,12 @@
 						@click.prevent="onDraftSubmit()"
 					>
 						<translate>Save Draft</translate>
+					</app-button>
+				</div>
+
+				<div class="-controls-submit-button">
+					<app-button :disabled="!valid" primary solid :block="Screen.isXs">
+						{{ mainActionText }}
 					</app-button>
 				</div>
 			</div>
