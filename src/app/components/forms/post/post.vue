@@ -32,7 +32,7 @@
 				Sketchfab
 			</app-button>
 		</div>
-		<div class="well fill-offset full-bleed" v-else>
+		<div class="well full-bleed -well-no-margin" v-else>
 			<!-- Images -->
 			<fieldset v-if="enabledImages">
 				<app-form-legend compact deletable @delete="disableAttachments()">
@@ -130,9 +130,7 @@
 			<app-form-control-content
 				content-context="fireside-post-lead"
 				autofocus
-				:placeholder="
-					!longEnabled ? $gettext(`What's new?`) : $gettext(`Write a summary for your article...`)
-				"
+				:placeholder="placeholder"
 				:model-id="model.id"
 				:min-height="72"
 				:rules="{
@@ -167,7 +165,7 @@
 		</app-form-group>
 
 		<!-- Post body (long) -->
-		<div class="well fill-offset full-bleed" v-if="longEnabled">
+		<div class="well full-bleed -well-no-margin" v-if="longEnabled">
 			<fieldset>
 				<app-form-legend compact deletable @delete="toggleLong()">
 					<translate>Article content</translate>
@@ -194,7 +192,7 @@
 		</div>
 
 		<!-- Poll -->
-		<div class="well fill-offset full-bleed" v-if="hasPoll">
+		<div class="well full-bleed -well-no-margin" v-if="hasPoll">
 			<fieldset>
 				<app-form-legend compact :deletable="isPollEditable" @delete="removePoll()">
 					<translate>Set up poll</translate>
@@ -324,7 +322,7 @@
 		</div>
 
 		<!-- Scheduling -->
-		<div class="well fill-offset full-bleed" v-if="!wasPublished && isScheduling && timezones">
+		<div class="well full-bleed -well-no-margin" v-if="!wasPublished && isScheduling && timezones">
 			<fieldset>
 				<app-form-legend compact deletable @delete="removeSchedule()">
 					<translate>Schedule publishing of post</translate>
@@ -366,7 +364,8 @@
 			</fieldset>
 		</div>
 
-		<div class="well fill-offset full-bleed" v-if="isPublishingToPlatforms">
+		<!-- Other platforms -->
+		<div class="well full-bleed -well-no-margin" v-if="isPublishingToPlatforms">
 			<fieldset>
 				<app-form-legend compact deletable @delete="removePublishingToPlatforms()">
 					<translate>Publish your post to other platforms</translate>
@@ -422,7 +421,7 @@
 
 		<!-- Access permissions -->
 		<template v-if="accessPermissionsEnabled">
-			<div class="well fill-offset full-bleed" v-if="!wasPublished">
+			<div class="well full-bleed -well-no-margin" v-if="!wasPublished">
 				<fieldset>
 					<app-form-legend compact deletable @delete="disableAccessPermissions()">
 						<translate>Access permissions</translate>

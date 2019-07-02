@@ -106,6 +106,9 @@ export default class FormPost extends BaseForm<FormPostModel>
 	@Prop(Community)
 	defaultCommunity?: Community;
 
+	@Prop(String)
+	leadPlaceholder?: string;
+
 	$refs!: {
 		form: AppForm;
 	};
@@ -302,6 +305,16 @@ export default class FormPost extends BaseForm<FormPostModel>
 		}
 
 		return [];
+	}
+
+	get placeholder() {
+		if (this.longEnabled) {
+			return this.$gettext(`Write a summary for your article...`);
+		} else if (this.leadPlaceholder) {
+			return this.leadPlaceholder;
+		} else {
+			return this.$gettext(`What's new?`);
+		}
 	}
 
 	async onInit() {

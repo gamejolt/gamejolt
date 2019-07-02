@@ -3,7 +3,15 @@
 		<span class="-avatar">
 			<app-user-avatar-img :user="user" />
 		</span>
-		<div class="-input" @click="open()">
+		<div v-if="opened" class="-form-inline">
+			<form-post
+				form-post
+				:model="localPost"
+				@submit="onSubmitted"
+				:lead-placeholder="placeholderMessage"
+			/>
+		</div>
+		<div v-else class="-input" @click="open()">
 			{{ placeholderMessage }}
 		</div>
 	</div>
@@ -17,7 +25,6 @@ $-height = 40px
 
 .post-add-button
 	display: flex
-	align-items: center
 
 .-avatar
 	theme-prop('background-color', 'bg-subtle')
@@ -29,6 +36,9 @@ $-height = 40px
 
 	@media $media-sm-up
 		margin-right: $grid-gutter-width * 0.5
+
+.-form-inline
+	width: 100%
 
 .-input
 	input-placeholder-button()
