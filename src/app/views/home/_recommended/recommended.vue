@@ -5,12 +5,17 @@
 				<translate>Who to follow</translate>
 			</h4>
 			<span class="help-inline">
-				<a @click="emitRefresh()" class="link-unstyled">
+				<a @click="refresh()" class="link-unstyled">
 					<translate>Refresh</translate>
 				</a>
 			</span>
 		</div>
-		<app-user-list :users="users" event-label="activity" />
+		<app-user-list
+			:users="users"
+			@follow="onFollow()"
+			@unfollow="onUnfollow()"
+			:event-label="eventLabel"
+		/>
 		<div v-if="loading" class="loading-overlay">
 			<app-loading hide-label centered />
 		</div>

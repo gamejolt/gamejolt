@@ -5,7 +5,7 @@ import AppUserAvatarImg from 'game-jolt-frontend-lib/components/user/user-avatar
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Emit, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 
 @Component({
@@ -28,4 +28,10 @@ export default class AppUserListItem extends Vue {
 	app!: AppStore;
 
 	readonly Screen = Screen;
+
+	@Emit('follow')
+	emitFollow() {}
+
+	@Emit('unfollow')
+	emitUnfollow() {}
 }
