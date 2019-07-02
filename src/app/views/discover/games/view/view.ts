@@ -2,12 +2,24 @@ import { Ads, AdSettingsContainer } from 'game-jolt-frontend-lib/components/ad/a
 import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Collaborator } from 'game-jolt-frontend-lib/components/collaborator/collaborator.model';
-import { CommentAction, CommentMutation, CommentState, CommentStore, CommentStoreModel } from 'game-jolt-frontend-lib/components/comment/comment-store';
-import { EventBus, EventBusDeregister } from 'game-jolt-frontend-lib/components/event-bus/event-bus.service';
+import {
+	CommentAction,
+	CommentMutation,
+	CommentState,
+	CommentStore,
+	CommentStoreModel,
+} from 'game-jolt-frontend-lib/components/comment/comment-store';
+import {
+	EventBus,
+	EventBusDeregister,
+} from 'game-jolt-frontend-lib/components/event-bus/event-bus.service';
 import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
 import { HistoryTick } from 'game-jolt-frontend-lib/components/history-tick/history-tick-service';
 import { PartnerReferral } from 'game-jolt-frontend-lib/components/partner-referral/partner-referral-service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-store';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
@@ -15,6 +27,7 @@ import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
 import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
 import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
+import AppUserVerifiedTick from 'game-jolt-frontend-lib/components/user/verified-tick/verified-tick.vue';
 import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
 import { Component } from 'vue-property-decorator';
 import AppGameCoverButtons from '../../../../components/game/cover-buttons/cover-buttons.vue';
@@ -22,7 +35,10 @@ import AppGameMaturityBlock from '../../../../components/game/maturity-block/mat
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
 import AppPageHeader from '../../../../components/page-header/page-header.vue';
-import { RatingWidgetOnChange, RatingWidgetOnChangePayload } from '../../../../components/rating/widget/widget';
+import {
+	RatingWidgetOnChange,
+	RatingWidgetOnChangePayload,
+} from '../../../../components/rating/widget/widget';
 import { store } from '../../../../store';
 import './view-content.styl';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './view.store';
@@ -40,6 +56,7 @@ import AppDiscoverGamesViewNav from './_nav/nav.vue';
 		AppGameMaturityBlock,
 		AppGameCoverButtons,
 		AppGamePerms,
+		AppUserVerifiedTick,
 	},
 	directives: {
 		AppTooltip,

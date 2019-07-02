@@ -2,6 +2,7 @@ import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import AppGameThumbnailImg from 'game-jolt-frontend-lib/components/game/thumbnail-img/thumbnail-img.vue';
 import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
+import AppUserVerifiedTick from 'game-jolt-frontend-lib/components/user/verified-tick/verified-tick.vue';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
@@ -10,6 +11,7 @@ import { Component, Prop } from 'vue-property-decorator';
 	components: {
 		AppGameThumbnailImg,
 		AppUserCardHover,
+		AppUserVerifiedTick,
 	},
 	directives: {
 		AppTrackEvent,
