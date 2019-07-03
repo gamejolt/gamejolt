@@ -12,9 +12,6 @@
 			</div>
 		</div>
 
-		<!--
-		Use ng-show so that the ui-view gets loaded in.
-	-->
 		<section class="section">
 			<div class="container-xl">
 				<app-nav-tab-list v-if="!hideSectionNav">
@@ -112,7 +109,7 @@
 		</section>
 
 		<section class="section section-thin" v-if="shouldShowAds && showFooterAd">
-			<app-ad-widget size="leaderboard" pos="bottom" />
+			<app-ad-widget size="leaderboard" />
 		</section>
 	</div>
 </template>

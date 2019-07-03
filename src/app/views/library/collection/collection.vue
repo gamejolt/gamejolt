@@ -313,7 +313,7 @@
 				<app-loading-fade :is-loading="isLoadingRecommended">
 					<app-game-grid
 						:games="recommendedGames"
-						:scrollable="true"
+						scrollable
 						event-label="collection-games-mix"
 					/>
 				</app-loading-fade>
@@ -326,7 +326,7 @@
 			</div>
 		</section>
 
-		<app-ad-placement pos="bottom" />
+		<app-ad-placement />
 	</div>
 </template>
 

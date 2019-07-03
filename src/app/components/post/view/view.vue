@@ -94,7 +94,7 @@
 					<app-event-item-controls show-comments :post="post" />
 				</div>
 				<div class="col-md-4 col-lg-5" v-if="shouldShowAds && Screen.isDesktop">
-					<app-ad-widget class="pull-right" pos="top" />
+					<app-ad-widget class="pull-right" />
 				</div>
 			</div>
 		</div>

@@ -5,7 +5,7 @@
 		to them get picked up again.
 	-->
 	<div class="activity-feed" :key="feed.id">
-		<template v-if="newCount > 0">
+		<template v-if="newCount && newCount > 0">
 			<app-expand v-if="!feed.isLoadingNew" when animate-initial>
 				<app-activity-feed-new-button @click="loadNew()">
 					<translate
@@ -29,7 +29,7 @@
 					class="-ad-container well fill-offset full-bleed-xs text-center"
 					v-if="shouldShowAd(i)"
 				>
-					<app-ad-widget size="rectangle" pos="bottom" />
+					<app-ad-widget size="rectangle" static-size />
 					<div class="-ad-label text-muted small">
 						<translate>Advertisement</translate>
 					</div>
@@ -63,34 +63,5 @@
 	</div>
 </template>
 
-<style lang="stylus" scoped>
-@require './variables';
-@require '~styles-lib/mixins';
-
-.-ad-container {
-  margin-bottom: 0;
-
-  @media $media-sm-up {
-    margin-bottom: $-item-padding-v;
-  }
-}
-
-.-ad-label {
-  margin-top: 5px;
-}
-
-.-bottom-loading {
-  margin-top: $-item-padding-v;
-
-  @media $media-sm-up {
-    margin-top: 0;
-  }
-}
-
-// Don't show the split for the last item in the list.
-.-item:last-child >>> .timeline-list-item-split {
-  display: none;
-}
-</style>
-
+<style lang="stylus" scoped src="./feed.styl"></style>
 <script lang="ts" src="./feed"></script>

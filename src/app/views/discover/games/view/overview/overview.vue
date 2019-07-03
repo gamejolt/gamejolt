@@ -3,7 +3,7 @@
 		<!-- Media Bar -->
 		<app-media-bar v-if="game.media_count" :media-items="mediaItems" />
 
-		<app-ad-placement class="-cover-ad" hidden-xs pos="top" />
+		<app-ad-placement class="-cover-ad" hidden-xs />
 
 		<section class="section">
 			<app-page-container xl>
@@ -38,7 +38,7 @@
 						class="-recommended-ad"
 						v-if="shouldShowAds"
 						size="rectangle"
-						pos="bottom"
+						static-size
 					/>
 
 					<h4 class="section-header">
@@ -49,10 +49,10 @@
 				</div>
 
 				<!--
-				Convenience Messaging
-				This needs to be a div instead of a template or vue 2.4.4 complains about a
-				patched vnode not existing.
-			-->
+					Convenience Messaging
+					This needs to be a div instead of a template or vue 2.4.4 complains about a
+					patched vnode not existing.
+				-->
 				<div v-if="customGameMessages.length">
 					<div key="wip" v-if="game.canceled" class="alert alert-notice full-bleed-xs" v-translate>
 						This game was canceled, so the current version might be buggy or incomplete. You can
@@ -60,7 +60,8 @@
 					</div>
 
 					<div
-						v-for="msg of customGameMessages"
+						v-for="(msg, i) of customGameMessages"
+						:key="i"
 						class="alert full-bleed-xs"
 						:class="{
 							'alert-notice': msg.type === 'alert',
@@ -74,19 +75,19 @@
 				</div>
 
 				<!--
-				Builds / Soundtrack
-				This is a bit tricky. _has_packages doesn't yet take into account private packages.
-				If the game has only private packages, this will still be set to true.
-				We only use it to figure out if we should show the releases section while loading before
-				we actually have the package data. Because of that, we only use it to figure out what to
-				show while we're loading the section. After it's loaded in, we decide if it should show
-				through the "hasReleasesSection" variable which has the correct data.
-			-->
+					Builds / Soundtrack
+					This is a bit tricky. _has_packages doesn't yet take into account private packages.
+					If the game has only private packages, this will still be set to true.
+					We only use it to figure out if we should show the releases section while loading before
+					we actually have the package data. Because of that, we only use it to figure out what to
+					show while we're loading the section. After it's loaded in, we decide if it should show
+					through the "hasReleasesSection" variable which has the correct data.
+				-->
 				<template v-if="(game._has_packages && !isOverviewLoaded) || hasReleasesSection">
 					<div id="game-releases">
 						<!--
-						Partner Controls
-					-->
+							Partner Controls
+						-->
 						<app-card v-if="hasPartnerControls">
 							<div class="card-content">
 								<p>
@@ -145,9 +146,9 @@
 							</div>
 
 							<!--
-							We want to key it by the game ID so that it
-							resets completely when the page changes.
-						-->
+								We want to key it by the game ID so that it
+								resets completely when the page changes.
+							-->
 							<app-game-soundtrack-card
 								v-if="songs.length"
 								:key="game.id"
@@ -174,9 +175,9 @@
 				</div>
 				<div v-else>
 					<!--
-					Set a :key to let vue know that it should update
-					this when the game changes.
-				-->
+						Set a :key to let vue know that it should update
+						this when the game changes.
+					-->
 					<app-fade-collapse
 						:collapse-height="600"
 						:is-open="showDetails || !postsCount"
