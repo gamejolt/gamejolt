@@ -1,32 +1,32 @@
 <template>
-	<div class="comment-overview">
+	<div class="comment-overview sheet">
 		<!--
 		Capture the click and prevent default so that no links within the content open up.
 	-->
-		<div
-			class="-comment fill-offset"
-			v-for="comment of comments"
-			:key="comment.id"
-			@click.capture="
-				$event.preventDefault();
-				open(comment);
-			"
-		>
-			<div class="-byline">
-				<div class="-avatar">
-					<app-user-card-hover :user="comment.user">
-						<app-user-avatar-img :user="comment.user" />
-					</app-user-card-hover>
-				</div>
+		<div v-for="comment of comments" :key="comment.id" class="-comment-container">
+			<div
+				class="-comment"
+				@click.capture="
+					$event.preventDefault();
+					open(comment);
+				"
+			>
+				<div class="-byline">
+					<div class="-avatar">
+						<app-user-card-hover :user="comment.user">
+							<app-user-avatar-img :user="comment.user" />
+						</app-user-card-hover>
+					</div>
 
-				<strong>{{ comment.user.display_name }}</strong>
-				<small class="text-muted">@{{ comment.user.username }}</small>
-			</div>
-			<app-fade-collapse :collapse-height="120">
-				<div class="-content">
-					<app-content-viewer :source="comment.comment_content" />
+					<strong>{{ comment.user.display_name }}</strong>
+					<small class="text-muted">@{{ comment.user.username }}</small>
 				</div>
-			</app-fade-collapse>
+				<app-fade-collapse :collapse-height="120">
+					<div class="-content">
+						<app-content-viewer :source="comment.comment_content" />
+					</div>
+				</app-fade-collapse>
+			</div>
 		</div>
 	</div>
 </template>
@@ -35,17 +35,19 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+.comment-overview .-comment-container:not(:last-child)
+	border-bottom-width: 1px
+	border-bottom-style: solid
+	theme-prop('border-color', 'bg-subtle')
+
 .-comment
-	rounded-corners()
-	theme-prop('border-color', 'bg-offset')
 	padding: 10px
-	border-width: 2px
-	border-style: solid
-	margin-bottom: 4px
+	transition: background-color 0.085s ease
+	rounded-corners()
 
 	&:hover
-		theme-prop('border-color', 'link')
 		cursor: pointer
+		theme-prop('background-color', 'bg-offset')
 
 .-byline
 	clearfix()

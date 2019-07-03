@@ -25,7 +25,7 @@
 				</app-expand>
 			</div>
 		</section>
-		<section class="section" v-else>
+		<section class="section fill-backdrop" v-else>
 			<div>
 				<app-page-container xl order="left,main,right">
 					<div slot="left">

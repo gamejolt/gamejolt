@@ -5,7 +5,7 @@
 
 		<app-ad-placement class="-cover-ad" hidden-xs pos="top" />
 
-		<section class="section">
+		<section class="section fill-backdrop">
 			<app-page-container xl>
 				<app-discover-games-view-overview-statbar slot="left" />
 
@@ -74,19 +74,19 @@
 				</div>
 
 				<!--
-				Builds / Soundtrack
-				This is a bit tricky. _has_packages doesn't yet take into account private packages.
-				If the game has only private packages, this will still be set to true.
-				We only use it to figure out if we should show the releases section while loading before
-				we actually have the package data. Because of that, we only use it to figure out what to
-				show while we're loading the section. After it's loaded in, we decide if it should show
-				through the "hasReleasesSection" variable which has the correct data.
-			-->
+					Builds / Soundtrack
+					This is a bit tricky. _has_packages doesn't yet take into account private packages.
+					If the game has only private packages, this will still be set to true.
+					We only use it to figure out if we should show the releases section while loading before
+					we actually have the package data. Because of that, we only use it to figure out what to
+					show while we're loading the section. After it's loaded in, we decide if it should show
+					through the "hasReleasesSection" variable which has the correct data.
+				-->
 				<template v-if="(game._has_packages && !isOverviewLoaded) || hasReleasesSection">
 					<div id="game-releases">
 						<!--
-						Partner Controls
-					-->
+							Partner Controls
+						-->
 						<app-card v-if="hasPartnerControls">
 							<div class="card-content">
 								<p>
@@ -145,9 +145,9 @@
 							</div>
 
 							<!--
-							We want to key it by the game ID so that it
-							resets completely when the page changes.
-						-->
+								We want to key it by the game ID so that it
+								resets completely when the page changes.
+							-->
 							<app-game-soundtrack-card
 								v-if="songs.length"
 								:key="game.id"
@@ -166,17 +166,17 @@
 					<div class="-spacer" />
 				</template>
 
-				<div v-if="!isOverviewLoaded">
+				<div v-if="!isOverviewLoaded" class="sheet sheet-padded sheet-elevate">
 					<span class="lazy-placeholder"></span>
 					<span class="lazy-placeholder"></span>
 					<span class="lazy-placeholder"></span>
 					<span class="lazy-placeholder" style="width: 40%"></span>
 				</div>
-				<div v-else>
+				<div v-else class="sheet sheet-padded sheet-elevate">
 					<!--
-					Set a :key to let vue know that it should update
-					this when the game changes.
-				-->
+						Set a :key to let vue know that it should update
+						this when the game changes.
+					-->
 					<app-fade-collapse
 						:collapse-height="600"
 						:is-open="showDetails || !postsCount"
@@ -203,7 +203,7 @@
 						</div>
 					</div>
 
-					<div class="page-cut">
+					<div class="page-cut page-cut-no-margin">
 						<app-button
 							trans
 							@click="toggleDetails()"

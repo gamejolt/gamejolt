@@ -1,5 +1,5 @@
 <template>
-	<section class="section">
+	<section class="section fill-backdrop">
 		<app-page-container xl>
 			<div slot="left">
 				<app-user-card v-if="Screen.isDesktop" :user="app.user" />

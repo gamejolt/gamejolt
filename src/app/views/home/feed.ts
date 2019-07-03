@@ -101,7 +101,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	readonly Screen = Screen;
 
 	get routeTitle() {
-		return this.$gettext(`Your Activity Feed`);
+		return this.$gettext(``);
 	}
 
 	get hasGamesSection() {

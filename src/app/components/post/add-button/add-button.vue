@@ -1,5 +1,5 @@
 <template>
-	<div class="post-add-button well fill-offset full-bleed-xs">
+	<div class="post-add-button well full-bleed-xs sheet sheet-elevate">
 		<span class="-avatar">
 			<app-user-avatar-img :user="user" />
 		</span>
