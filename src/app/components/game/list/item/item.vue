@@ -29,7 +29,10 @@
 					v-app-track-event="eventLabel ? 'game-list:dev:' + eventLabel : undefined"
 				>
 					<translate>by</translate>
-					<strong>{{ game.developer.display_name }}</strong>
+					<strong>
+						{{ game.developer.display_name }}
+					</strong>
+					<app-user-verified-tick :user="game.developer" />
 				</router-link>
 			</app-user-card-hover>
 

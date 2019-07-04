@@ -69,6 +69,7 @@
 
 				<div class="-dev" :title="`${game.developer.display_name} (@${game.developer.username})`">
 					{{ game.developer.display_name }}
+					<small><app-user-verified-tick :user="game.developer" vertical-align /></small>
 				</div>
 
 				<div class="-title" :title="game.title">

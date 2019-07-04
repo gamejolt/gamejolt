@@ -29,6 +29,7 @@
 									}"
 								>
 									{{ user.display_name }}
+									<app-user-verified-tick :user="user" />
 								</router-link>
 							</strong>
 

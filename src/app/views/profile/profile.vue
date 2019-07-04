@@ -27,14 +27,8 @@
 		>
 			<h1>
 				{{ user.display_name }}
+				<app-user-verified-tick :user="user" big />
 				<small>@{{ user.username }}</small>
-				<app-jolticon
-					v-if="user.is_verified"
-					icon="verified"
-					big
-					class="verified-account-tag"
-					v-app-tooltip="$gettext('profile.verified_tooltip')"
-				/>
 			</h1>
 			<div class="small text-muted">
 				<!-- Joined on -->
@@ -198,12 +192,5 @@
 		<router-view />
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-@require '~styles/variables'
-
-.verified-account-tag
-	theme-prop('color', 'highlight')
-</style>
 
 <script lang="ts" src="./profile"></script>

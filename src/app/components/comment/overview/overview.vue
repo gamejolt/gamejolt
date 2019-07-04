@@ -1,8 +1,8 @@
 <template>
 	<div class="comment-overview">
 		<!--
-		Capture the click and prevent default so that no links within the content open up.
-	-->
+			Capture the click and prevent default so that no links within the content open up.
+		-->
 		<div
 			class="-comment fill-offset"
 			v-for="comment of comments"
@@ -20,6 +20,7 @@
 				</div>
 
 				<strong>{{ comment.user.display_name }}</strong>
+				<app-user-verified-tick :user="comment.user" />
 				<small class="text-muted">@{{ comment.user.username }}</small>
 			</div>
 			<app-fade-collapse :collapse-height="120">

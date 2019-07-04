@@ -16,7 +16,7 @@
 		<div class="-label">
 			<div class="-name">
 				{{ user.display_name }}
-				<app-jolticon v-if="user.is_verified" icon="verified" />
+				<app-user-verified-tick :user="user" />
 			</div>
 			<div class="-username">@{{ user.username }}</div>
 		</div>

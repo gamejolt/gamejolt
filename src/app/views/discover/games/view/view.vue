@@ -92,6 +92,7 @@
 						:to="{ name: 'profile.overview', params: { username: game.developer.username } }"
 					>
 						{{ game.developer.display_name }}
+						<app-user-verified-tick :user="game.developer" />
 						<small>@{{ game.developer.username }}</small>
 					</router-link>
 				</div>

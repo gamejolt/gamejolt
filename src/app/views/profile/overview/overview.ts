@@ -126,7 +126,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			this.user &&
 			this.user.id !== this.app.user.id &&
 			!this.userFriendship &&
-			!this.user.is_verified
+			this.user.friend_requests_enabled
 		);
 	}
 

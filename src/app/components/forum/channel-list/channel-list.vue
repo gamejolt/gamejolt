@@ -87,6 +87,7 @@
 										}"
 									>
 										{{ latestPost.user.display_name }}
+										<app-user-verified-tick :user="latestPost.user" small />
 									</router-link>
 								</strong>
 								<span class="tiny">@{{ latestPost.user.username }}</span>

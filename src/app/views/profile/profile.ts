@@ -16,6 +16,7 @@ import { Translate } from 'game-jolt-frontend-lib/components/translate/translate
 import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow/widget.vue';
 import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';
 import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
+import AppUserVerifiedTick from 'game-jolt-frontend-lib/components/user/verified-tick/verified-tick.vue';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
@@ -36,6 +37,7 @@ import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './prof
 		AppUserDogtag,
 		AppPopper,
 		AppUserFollowWidget,
+		AppUserVerifiedTick,
 	},
 	directives: {
 		AppTooltip,

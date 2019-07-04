@@ -3,6 +3,7 @@ import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import AppGameThumbnailImg from 'game-jolt-frontend-lib/components/game/thumbnail-img/thumbnail-img.vue';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import AppUserVerifiedTick from 'game-jolt-frontend-lib/components/user/verified-tick/verified-tick.vue';
 import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
 import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import 'rxjs/add/operator/debounceTime';
@@ -29,6 +30,7 @@ const KEYCODE_ENTER = 13;
 	components: {
 		AppGameThumbnailImg,
 		AppGameCompatIcons,
+		AppUserVerifiedTick,
 	},
 	directives: {
 		AppTrackEvent,

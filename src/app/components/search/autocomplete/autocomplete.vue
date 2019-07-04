@@ -87,6 +87,7 @@
 					>
 						<img :src="user.img_avatar" class="search-user-avatar" alt="" />
 						{{ user.display_name }}
+						<app-user-verified-tick :user="user" small />
 						<span class="tiny text-muted">@{{ user.username }}</span>
 					</router-link>
 				</div>

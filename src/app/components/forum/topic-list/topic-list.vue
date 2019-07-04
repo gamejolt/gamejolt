@@ -52,6 +52,7 @@
 								}"
 							>
 								{{ topic.user.display_name }}
+								<app-user-verified-tick :user="topic.user" />
 							</router-link>
 							<span class="tiny">@{{ topic.user.username }}</span>
 						</div>
@@ -102,6 +103,7 @@
 										}"
 									>
 										{{ topic.latest_post.user.display_name }}
+										<app-user-verified-tick :user="topic.latest_post.user" />
 									</router-link>
 								</div>
 								<div class="text-muted">@{{ topic.latest_post.user.username }}</div>
