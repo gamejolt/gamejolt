@@ -193,7 +193,4 @@
 	</div>
 </template>
 
-<style lang="stylus" scoped>
-</style>
-
 <script lang="ts" src="./profile"></script>
