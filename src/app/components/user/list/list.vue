@@ -4,6 +4,8 @@
 			v-for="user of users"
 			:key="user.id"
 			:user="user"
+			@follow="emitFollow(user)"
+			@unfollow="emitUnfollow(user)"
 			:event-label="eventLabel"
 		/>
 	</div>

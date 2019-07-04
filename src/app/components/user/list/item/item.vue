@@ -30,6 +30,8 @@
 				@click.native.capture.prevent
 				@click.native.stop
 				:user="user"
+				@follow="emitFollow()"
+				@unfollow="emitUnfollow()"
 				hide-count
 				:event-label="eventLabel || `user-list`"
 			/>

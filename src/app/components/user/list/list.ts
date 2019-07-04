@@ -1,6 +1,6 @@
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Emit, Prop } from 'vue-property-decorator';
 import AppUserListItem from './item/item.vue';
 
 @Component({
@@ -14,4 +14,10 @@ export default class AppUserList extends Vue {
 
 	@Prop(String)
 	eventLabel?: string;
+
+	@Emit('follow')
+	emitFollow(_user: User) {}
+
+	@Emit('unfollow')
+	emitUnfollow(_user: User) {}
 }
