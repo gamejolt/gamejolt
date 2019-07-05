@@ -49,6 +49,7 @@ export default class FormDashSiteBuild extends BaseForm<SiteBuild>
 	}
 
 	onSubmit() {
+		// Whyyyyy ⬊
 		console.log('whyyyy');
 		return Api.sendRequest(
 			`/web/dash/sites/upload-build/${this.site.id}`,

@@ -176,7 +176,7 @@
 
 		<!--
 			The buttons in this template do submit the form through their click handlers.
-			We don't use app-form-button because we need to do some async operations before submitting.
+			We don't use app-form-button because we needed to do some async operations before submitting.
 		-->
 		<template v-if="model.status !== GameRelease.STATUS_PUBLISHED">
 			<app-button
