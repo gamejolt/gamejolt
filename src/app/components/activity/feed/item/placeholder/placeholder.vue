@@ -37,7 +37,7 @@
 // Gotta override the border hover styling of event items.
 .-item
 	&, &:hover
-		theme-prop('border-color', 'bg-offset')
+		theme-prop('border-color', 'bg-subtle')
 		cursor: default
 
 .-placeholder-text
