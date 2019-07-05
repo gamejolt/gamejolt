@@ -77,11 +77,9 @@ export default class FormGameDescription extends BaseForm<DescriptionFormModel> 
 
 	addAutotag(tag: string) {
 		this.setField('autotag', tag);
-		this.$refs.form.submit();
 	}
 
 	skipAutotag() {
 		this.setField('autotag_skip', true);
-		this.$refs.form.submit();
 	}
 }

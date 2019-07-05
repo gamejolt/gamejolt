@@ -40,16 +40,9 @@ export default class AppDashGameWizardControls extends Vue {
 		return !this.form || !this.form.hasErrors || this.disabled;
 	}
 
-	async next() {
-		if (!this.canProceed) {
+	async next(_e: Event, formResult?: boolean) {
+		if (!this.canProceed || formResult === false) {
 			return;
-		}
-
-		if (this.form) {
-			const result = await this.form.submit();
-			if (!result) {
-				return;
-			}
 		}
 
 		if (this.manageRoute) {

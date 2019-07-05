@@ -50,7 +50,7 @@
 					<translate>Save</translate>
 				</app-form-button>
 
-				<app-button trans @click.prevent.stop="clearAvatar()">
+				<app-button trans @click="clearAvatar()">
 					<translate>Remove Avatar</translate>
 				</app-button>
 			</div>

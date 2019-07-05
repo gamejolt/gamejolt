@@ -18,7 +18,7 @@
 			<translate v-if="method === 'edit'">Save</translate>
 		</app-form-button>
 
-		<app-button v-if="method === 'edit' || replyTo" trans @click.prevent="onCancel">
+		<app-button v-if="method === 'edit' || replyTo" trans @click="onCancel">
 			<translate>Cancel</translate>
 		</app-button>
 	</app-form>

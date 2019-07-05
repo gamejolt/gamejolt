@@ -601,9 +601,9 @@
 				</div>
 
 				<div class="-controls-submit-button">
-					<app-button :disabled="!valid" primary solid :block="Screen.isXs">
+					<app-form-button :disabled="!valid" primary solid :block="Screen.isXs">
 						{{ mainActionText }}
-					</app-button>
+					</app-form-button>
 				</div>
 			</div>
 		</div>
