@@ -7,7 +7,7 @@
 				:primary="enabledImages"
 				:solid="enabledImages"
 				icon="screenshot"
-				@click.prevent="enableImages()"
+				@click="enableImages()"
 			>
 				<translate>Images/GIFs</translate>
 			</app-button>
@@ -17,7 +17,7 @@
 				:primary="enabledVideo"
 				:solid="enabledVideo"
 				icon="video"
-				@click.prevent="enableVideo()"
+				@click="enableVideo()"
 			>
 				<translate>Video</translate>
 			</app-button>
@@ -27,7 +27,7 @@
 				:primary="enabledSketchfab"
 				:solid="enabledSketchfab"
 				icon="sketchfab"
-				@click.prevent="enableSketchfab()"
+				@click="enableSketchfab()"
 			>
 				Sketchfab
 			</app-button>
@@ -543,7 +543,7 @@
 					circle
 					icon="blog-article"
 					v-app-tooltip="$gettext(`Add Article`)"
-					@click.prevent="toggleLong()"
+					@click="toggleLong()"
 				/>
 
 				<app-button
@@ -553,7 +553,7 @@
 					circle
 					icon="pedestals-numbers"
 					v-app-tooltip="$gettext(`Add Poll`)"
-					@click.prevent="createPoll()"
+					@click="createPoll()"
 				/>
 
 				<app-button
@@ -563,7 +563,7 @@
 					circle
 					icon="calendar-grid"
 					v-app-tooltip="$gettext(`Schedule Post`)"
-					@click.prevent="addSchedule()"
+					@click="addSchedule()"
 				/>
 
 				<app-button
@@ -573,7 +573,7 @@
 					circle
 					icon="key-diagonal"
 					v-app-tooltip="$gettext(`Access Permissions`)"
-					@click.prevent="enableAccessPermissions()"
+					@click="enableAccessPermissions()"
 				/>
 
 				<app-button
@@ -583,21 +583,23 @@
 					circle
 					icon="share-airplane"
 					v-app-tooltip="$gettext(`Publish to Other Platforms`)"
-					@click.prevent="addPublishingToPlatforms()"
+					@click="addPublishingToPlatforms()"
 				/>
 			</div>
 
 			<div class="-controls-submit">
 				<div class="-controls-submit-button">
-					<app-button
+					<app-form-button
 						v-if="!wasPublished && !isScheduling"
 						:disabled="!valid"
+						:solid="false"
+						:primary="false"
 						trans
 						:block="Screen.isXs"
-						@click.prevent="onDraftSubmit()"
+						@before-submit="onDraftSubmit()"
 					>
 						<translate>Save Draft</translate>
-					</app-button>
+					</app-form-button>
 				</div>
 
 				<div class="-controls-submit-button">

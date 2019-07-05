@@ -65,7 +65,7 @@
 			<app-form-button>
 				<translate>Save</translate>
 			</app-form-button>
-			<app-button trans @click.prevent="clearHeader()">
+			<app-button trans @click="clearHeader()">
 				<translate>Remove Header</translate>
 			</app-button>
 		</template>
