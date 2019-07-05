@@ -1,8 +1,8 @@
 <template>
-	<div class="comment-overview sheet">
+	<div class="comment-overview sheet" v-if="comments.length > 0">
 		<!--
-		Capture the click and prevent default so that no links within the content open up.
-	-->
+			Capture the click and prevent default so that no links within the content open up.
+		-->
 		<div v-for="comment of comments" :key="comment.id" class="-comment-container">
 			<div
 				class="-comment"

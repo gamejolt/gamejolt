@@ -1,5 +1,5 @@
 <template>
-	<section class="section">
+	<section class="section fill-backdrop">
 		<app-page-container xl order="right,main,left">
 			<div slot="right" v-if="!Screen.isMobile">
 				<div v-if="shouldShowKnownMembers">
