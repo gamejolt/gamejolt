@@ -41,11 +41,11 @@
 				</div>
 
 				<app-game-perms required="details" tag="div" class="alert-actions">
-					<app-form-button primary icon="tag" @before-submit="addAutotag('fnaf')">
+					<app-form-button icon="tag" @before-submit="addAutotag('fnaf')">
 						<translate>dash.games.add.fnaf_autotag_accept</translate>
 					</app-form-button>
 
-					<app-form-button trans @before-submit="skipAutotag()">
+					<app-form-button :solid="false" trans @before-submit="skipAutotag()">
 						<translate>dash.games.add.fnaf_autotag_reject</translate>
 					</app-form-button>
 				</app-game-perms>
