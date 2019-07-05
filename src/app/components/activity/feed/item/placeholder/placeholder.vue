@@ -37,8 +37,11 @@
 // Gotta override the border hover styling of event items.
 .-item
 	&, &:hover
-		theme-prop('border-color', 'bg-subtle')
+		theme-prop('border-color', 'bg-offset')
 		cursor: default
+
+		@media $media-sm-up
+			theme-prop('border-color', 'bg-subtle')
 
 .-placeholder-text
 	lazy-placeholder-inline()

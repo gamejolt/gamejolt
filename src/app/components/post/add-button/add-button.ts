@@ -1,7 +1,8 @@
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import AppUserAvatarImg from 'game-jolt-frontend-lib/components/user/user-avatar/img/img.vue'
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import AppUserAvatarImg from 'game-jolt-frontend-lib/components/user/user-avatar/img/img.vue';
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
@@ -25,10 +26,11 @@ export default class AppPostAddButton extends Vue {
 	@AppState
 	user!: AppStore['user'];
 
+	_isBlocked = false;
+	readonly Screen = Screen;
+
 	@Emit()
 	add(_post: FiresidePost) {}
-
-	_isBlocked = false;
 
 	get placeholderMessage() {
 		return this.placeholder || this.$gettext(`So, what's on your mind?`);
@@ -42,7 +44,9 @@ export default class AppPostAddButton extends Vue {
 		// Block the modal from appearing multiple times between the post request being sent and the modal opening
 		this._isBlocked = true;
 
-		let post: FiresidePost | undefined = await FiresidePost.$create(this.game ? this.game.id : 0);
+		let post: FiresidePost | undefined = await FiresidePost.$create(
+			this.game ? this.game.id : 0
+		);
 
 		post = await PostEditModal.show(post, { community: this.community });
 		this._isBlocked = false;

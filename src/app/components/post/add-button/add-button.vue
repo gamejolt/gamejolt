@@ -1,5 +1,5 @@
 <template>
-	<div class="post-add-button well full-bleed-xs sheet sheet-elevate">
+	<div class="post-add-button well full-bleed-xs sheet" :class="{ 'sheet-elevate': !Screen.isXs }">
 		<span class="-avatar">
 			<app-user-avatar-img :user="user" />
 		</span>

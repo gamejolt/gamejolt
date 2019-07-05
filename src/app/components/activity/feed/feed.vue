@@ -63,34 +63,5 @@
 	</div>
 </template>
 
-<style lang="stylus" scoped>
-@require './variables';
-@require '~styles-lib/mixins';
-
-.-ad-container {
-  margin-bottom: 0;
-
-  @media $media-sm-up {
-    margin-bottom: $-item-padding-v;
-  }
-}
-
-.-ad-label {
-  margin-top: 5px;
-}
-
-.-bottom-loading {
-  margin-top: $-item-padding-v;
-
-  @media $media-sm-up {
-    margin-top: 0;
-  }
-}
-
-// Don't show the split for the last item in the list.
-.-item:last-child >>> .timeline-list-item-split {
-  display: none;
-}
-</style>
-
+<style lang="stylus" scoped src="./feed.styl"></style>
 <script lang="ts" src="./feed"></script>

@@ -172,7 +172,7 @@
 					<span class="lazy-placeholder"></span>
 					<span class="lazy-placeholder" style="width: 40%"></span>
 				</div>
-				<div v-else class="sheet sheet-padded sheet-elevate">
+				<div v-else :class="{ 'sheet sheet-padded sheet-elevate': !Screen.isXs }">
 					<!--
 						Set a :key to let vue know that it should update
 						this when the game changes.

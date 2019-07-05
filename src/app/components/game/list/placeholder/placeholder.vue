@@ -20,7 +20,7 @@
 .-placeholder
 	&-thumb
 		rounded-corners()
-		theme-prop('background-color', 'bg-offset')
+		theme-prop('background-color', 'bg-subtle')
 		position: relative
 		height: 0
 		padding-top: 56.25% // HD 16:9
