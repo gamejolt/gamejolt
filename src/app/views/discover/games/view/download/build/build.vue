@@ -120,7 +120,7 @@
 
 						<div class="col-md-4 pull-right" v-if="Screen.isDesktop">
 							<div style="width: 300px">
-								<app-ad-widget size="rectangle" pos="top" />
+								<app-ad-widget size="rectangle" />
 							</div>
 
 							<hr />
@@ -130,7 +130,7 @@
 							<hr />
 
 							<div style="width: 300px">
-								<app-ad-widget size="rectangle" pos="bottom" />
+								<app-ad-widget size="rectangle" />
 							</div>
 						</div>
 

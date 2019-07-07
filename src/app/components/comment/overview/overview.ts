@@ -10,6 +10,7 @@ import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-
 import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
 import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
 import AppUserAvatarImg from 'game-jolt-frontend-lib/components/user/user-avatar/img/img.vue';
+import AppUserVerifiedTick from 'game-jolt-frontend-lib/components/user/verified-tick/verified-tick.vue';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 
@@ -19,6 +20,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 		AppUserAvatarImg,
 		AppUserCardHover,
 		AppContentViewer,
+		AppUserVerifiedTick,
 	},
 })
 export default class AppCommentOverview extends Vue {

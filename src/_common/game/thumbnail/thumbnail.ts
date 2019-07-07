@@ -5,6 +5,7 @@ import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service'
 import { AppScrollInview } from 'game-jolt-frontend-lib/components/scroll/inview/inview';
 import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
 import AppUserAvatarImg from 'game-jolt-frontend-lib/components/user/user-avatar/img/img.vue';
+import AppUserVerifiedTick from 'game-jolt-frontend-lib/components/user/verified-tick/verified-tick.vue';
 import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
 import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
@@ -27,6 +28,7 @@ import { Settings } from '../../settings/settings.service';
 		AppScrollInview,
 		AppGameFollowWidget,
 		AppGamePlaylistAddToWidget,
+		AppUserVerifiedTick,
 	},
 })
 export default class AppGameThumbnail extends Vue {

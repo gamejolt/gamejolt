@@ -3,7 +3,7 @@
 		<!-- Media Bar -->
 		<app-media-bar v-if="game.media_count" :media-items="mediaItems" />
 
-		<app-ad-placement class="-cover-ad" hidden-xs pos="top" />
+		<app-ad-placement class="-cover-ad" hidden-xs />
 
 		<section class="section fill-backdrop">
 			<app-page-container xl>
@@ -38,7 +38,7 @@
 						class="-recommended-ad"
 						v-if="shouldShowAds"
 						size="rectangle"
-						pos="bottom"
+						static-size
 					/>
 
 					<h4 class="section-header">
@@ -49,10 +49,10 @@
 				</div>
 
 				<!--
-				Convenience Messaging
-				This needs to be a div instead of a template or vue 2.4.4 complains about a
-				patched vnode not existing.
-			-->
+					Convenience Messaging
+					This needs to be a div instead of a template or vue 2.4.4 complains about a
+					patched vnode not existing.
+				-->
 				<div v-if="customGameMessages.length">
 					<div key="wip" v-if="game.canceled" class="alert alert-notice full-bleed-xs" v-translate>
 						This game was canceled, so the current version might be buggy or incomplete. You can
@@ -60,7 +60,8 @@
 					</div>
 
 					<div
-						v-for="msg of customGameMessages"
+						v-for="(msg, i) of customGameMessages"
+						:key="i"
 						class="alert full-bleed-xs"
 						:class="{
 							'alert-notice': msg.type === 'alert',

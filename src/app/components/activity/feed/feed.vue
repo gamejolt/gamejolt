@@ -5,7 +5,7 @@
 		to them get picked up again.
 	-->
 	<div class="activity-feed" :key="feed.id">
-		<template v-if="newCount > 0">
+		<template v-if="newCount && newCount > 0">
 			<app-expand v-if="!feed.isLoadingNew" when animate-initial>
 				<app-activity-feed-new-button @click="loadNew()">
 					<translate
@@ -29,7 +29,7 @@
 					class="-ad-container well fill-offset full-bleed-xs text-center"
 					v-if="shouldShowAd(i)"
 				>
-					<app-ad-widget size="rectangle" pos="bottom" />
+					<app-ad-widget size="rectangle" static-size />
 					<div class="-ad-label text-muted small">
 						<translate>Advertisement</translate>
 					</div>

@@ -50,9 +50,6 @@ export default class AppGameGrid extends Vue {
 	@Prop(String)
 	eventLabel?: string;
 
-	@Prop({ type: String, default: 'top' })
-	adPos?: string;
-
 	id = ++idCounter;
 
 	readonly number = number;

@@ -25,6 +25,7 @@ import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
 import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
+import AppUserVerifiedTick from 'game-jolt-frontend-lib/components/user/verified-tick/verified-tick.vue';
 import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
@@ -57,6 +58,7 @@ import { Store } from '../../../../store/index';
 		FormForumTopic,
 		AppForumTopicUpvoteWidget,
 		AppContentViewer,
+		AppUserVerifiedTick,
 	},
 	directives: {
 		AppTooltip,

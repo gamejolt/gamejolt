@@ -19,6 +19,7 @@
 					</div>
 
 					<strong>{{ comment.user.display_name }}</strong>
+					<app-user-verified-tick :user="comment.user" />
 					<small class="text-muted">@{{ comment.user.username }}</small>
 				</div>
 				<app-fade-collapse :collapse-height="120">
