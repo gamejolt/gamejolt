@@ -206,7 +206,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			itemsPayload.items,
 			fromCache
 		);
-		this.knownMembers = overviewPayload.knownMembers || [];
+		this.knownMembers = User.populate(overviewPayload.knownMembers || []);
 		this.knownMemberCount = overviewPayload.knownMemberCount || 0;
 
 		Meta.description = this.$gettextInterpolate(
