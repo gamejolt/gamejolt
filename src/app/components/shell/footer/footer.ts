@@ -1,4 +1,5 @@
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
+import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppThemeSvg } from 'game-jolt-frontend-lib/components/theme/svg/svg';
 import AppTranslateLangSelector from 'game-jolt-frontend-lib/components/translate/lang-selector/lang-selector.vue';
@@ -36,5 +37,12 @@ export default class AppShellFooter extends Vue {
 		if (ClientSystemReportModalMod) {
 			ClientSystemReportModalMod.ClientSystemReportModal.show();
 		}
+	}
+
+	onClickEmail() {
+		// If the <a> tag has the mailto in its href attribute,
+		// on certain pages the Vue router replaces part of the url with the email address,
+		// instead of redirecting to the mailto application.
+		Navigate.goto('mailto:contact@gamejolt.com');
 	}
 }
