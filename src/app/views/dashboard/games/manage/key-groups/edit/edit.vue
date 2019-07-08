@@ -109,9 +109,9 @@
 						/>
 					</div>
 
-					<app-button>
+					<app-form-button :solid="false" :primary="false">
 						<translate>Search</translate>
-					</app-button>
+					</app-form-button>
 				</form>
 			</div>
 

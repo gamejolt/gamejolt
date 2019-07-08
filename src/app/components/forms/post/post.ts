@@ -387,7 +387,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	onDraftSubmit() {
 		this.setField('status', FiresidePost.STATUS_DRAFT);
-		this.$refs.form.submit();
 	}
 
 	async onSubmit() {

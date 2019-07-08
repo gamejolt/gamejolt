@@ -45,7 +45,7 @@
 				<app-button
 					:to="GJ_IS_SSR ? { query: { feed_last_id: lastPostId } } : undefined"
 					trans
-					@click.prevent="loadMoreButton"
+					@click="loadMoreButton"
 					v-app-track-event="`activity-feed:more`"
 				>
 					<translate>Load More</translate>

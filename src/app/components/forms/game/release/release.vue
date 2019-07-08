@@ -48,7 +48,7 @@
 				</p>
 
 				<p>
-					<app-button @click.prevent="addSchedule()">
+					<app-button @click="addSchedule()">
 						<translate>Add Schedule</translate>
 					</app-button>
 				</p>
@@ -89,7 +89,7 @@
 				</app-form-group>
 
 				<p class="text-right">
-					<app-button trans @click.prevent="removeSchedule()">
+					<app-button trans @click="removeSchedule()">
 						<translate>Remove Scheduling</translate>
 					</app-button>
 				</p>
@@ -174,13 +174,17 @@
 
 		<hr />
 
+		<!--
+			The buttons in this template do submit the form through their click handlers.
+			We don't use app-form-button because we needed to do some async operations before submitting.
+		-->
 		<template v-if="model.status !== GameRelease.STATUS_PUBLISHED">
 			<app-button
 				primary
 				solid
 				v-if="isScheduling"
 				:disabled="!valid || !builds.length"
-				@click.prevent="saveDraft()"
+				@click="saveDraft()"
 			>
 				<translate>Schedule release</translate>
 			</app-button>
@@ -189,21 +193,17 @@
 				solid
 				v-else
 				:disabled="!valid || !builds.length"
-				@click.prevent="savePublished()"
+				@click="savePublished()"
 			>
 				<translate>Publish Release</translate>
 			</app-button>
 
-			<app-button
-				v-if="!isScheduling"
-				:disabled="!valid || !builds.length"
-				@click.prevent="saveDraft()"
-			>
+			<app-button v-if="!isScheduling" :disabled="!valid || !builds.length" @click="saveDraft()">
 				<translate>Save Draft</translate>
 			</app-button>
 		</template>
 		<template v-else>
-			<app-button primary solid :disabled="!valid || !builds.length" @click.prevent="save()">
+			<app-button primary solid :disabled="!valid || !builds.length" @click="save()">
 				<translate>Save Release</translate>
 			</app-button>
 		</template>
@@ -211,15 +211,11 @@
 		<div :class="{ 'pull-right': !Screen.isXs }">
 			<br class="visible-xs" />
 
-			<app-button
-				trans
-				v-if="model.status === GameRelease.STATUS_PUBLISHED"
-				@click.prevent="unpublish()"
-			>
+			<app-button trans v-if="model.status === GameRelease.STATUS_PUBLISHED" @click="unpublish()">
 				<translate>Unpublish Release</translate>
 			</app-button>
 
-			<app-button trans @click.prevent="remove()">
+			<app-button trans @click="remove()">
 				<translate>Remove Release</translate>
 			</app-button>
 		</div>

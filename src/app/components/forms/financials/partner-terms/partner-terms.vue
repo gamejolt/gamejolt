@@ -25,7 +25,7 @@
 				</div>
 				<br />
 
-				<app-button primary @click.prevent="showAgreement = true">
+				<app-button primary @click="showAgreement = true">
 					<translate>Show Partner Agreement</translate>
 				</app-button>
 			</div>
@@ -47,7 +47,7 @@
 				</div>
 				<br />
 
-				<app-button primary solid :disabled="!checked" @click.prevent="onAccept()">
+				<app-button primary solid :disabled="!checked" @click="onAccept()">
 					<translate>I Agree</translate>
 				</app-button>
 			</div>
