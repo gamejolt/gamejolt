@@ -27,7 +27,7 @@
 								<div class="timeline-list-item-details" v-if="hasDetails">
 									<div class="timeline-list-item-content">
 										<app-fade-collapse
-											:collapse-height="80"
+											:collapse-height="160"
 											:is-open="false"
 											@require-change="canToggleContent = $event"
 										>
