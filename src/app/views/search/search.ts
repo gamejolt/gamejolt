@@ -8,6 +8,7 @@ import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppPageHeader from '../../components/page-header/page-header.vue';
+import AppSearchTS from '../../components/search/search';
 import { Search } from '../../components/search/search-service';
 import AppSearch from '../../components/search/search.vue';
 import { Store, store } from '../../store/index';
@@ -50,6 +51,10 @@ export default class RouteSearch extends BaseRouteComponent {
 	@RouteStoreModule.State
 	searchPayload!: RouteStore['searchPayload'];
 
+	$refs!: {
+		search: AppSearchTS;
+	};
+
 	readonly Screen = Screen;
 	readonly Search = Search;
 	readonly Scroll = Scroll;
@@ -70,5 +75,9 @@ export default class RouteSearch extends BaseRouteComponent {
 			!this.searchPayload.usersCount &&
 			!this.searchPayload.postsCount
 		);
+	}
+
+	mounted() {
+		this.$refs.search.focus();
 	}
 }

@@ -4,6 +4,7 @@ import AppShortkey from 'game-jolt-frontend-lib/vue/components/shortkey/shortkey
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import AppSearchAutocomplete from './autocomplete/autocomplete.vue';
+import AppSearchInputTS from './input/input';
 import AppSearchInput from './input/input.vue';
 import { Search } from './search-service';
 
@@ -31,8 +32,11 @@ export default class AppSearch extends Vue {
 	query = '';
 	isFocused = false;
 	isShowingAutocomplete = false;
-	inputElem: HTMLElement | undefined;
 	keydownSpies: Function[] = [];
+
+	$refs!: {
+		searchInput: AppSearchInputTS;
+	};
 
 	readonly Search = Search;
 
@@ -52,18 +56,12 @@ export default class AppSearch extends Vue {
 
 	async focus() {
 		await this.$nextTick();
-
-		if (this.inputElem) {
-			this.inputElem.focus();
-		}
+		this.$refs.searchInput.focus();
 	}
 
 	async blur() {
 		await this.$nextTick();
-
-		if (this.inputElem) {
-			this.inputElem.blur();
-		}
+		this.$refs.searchInput.blur();
 	}
 
 	/**
@@ -93,6 +91,7 @@ export default class AppSearch extends Vue {
 		// Normally the autocomplete will take control of the submission since they
 		// technically highlight what they want in autocomplete and go to it.
 		if (this.autocompleteDisabled && event.keyCode === KEYCODE_ENTER) {
+			this.blur();
 			this.$router.push({ name: 'search.results', query: { q: this.query } });
 		}
 
