@@ -1,4 +1,5 @@
 import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
+import FormComment from 'game-jolt-frontend-lib/components/comment/add/add.vue';
 import {
 	CommentAction,
 	CommentMutation,
@@ -13,6 +14,7 @@ import { Environment } from 'game-jolt-frontend-lib/components/environment/envir
 import AppFiresidePostLikeWidget from 'game-jolt-frontend-lib/components/fireside/post/like/widget/widget.vue';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppSocialFacebookLike } from 'game-jolt-frontend-lib/components/social/facebook/like/like';
 import { AppSocialTwitterShare } from 'game-jolt-frontend-lib/components/social/twitter/share/share';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
@@ -20,6 +22,7 @@ import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { AppCommentWidgetLazy } from '../../lazy';
+import AppEventItemControlsCommentAddPlaceholder from './comment-add-placeholder/placeholder/placeholder.vue';
 
 @Component({
 	components: {
@@ -29,6 +32,8 @@ import { AppCommentWidgetLazy } from '../../lazy';
 		AppCommentVideoLikeWidget,
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,
+		FormComment,
+		AppEventItemControlsCommentAddPlaceholder,
 	},
 	directives: {
 		AppTooltip,
@@ -64,8 +69,11 @@ export default class AppEventItemControls extends Vue {
 
 	commentStore: CommentStoreModel | null = null;
 	isShowingShare = false;
+	clickedComment = false;
+	openGifModal = false;
 
 	readonly FiresidePost = FiresidePost;
+	readonly Screen = Screen;
 
 	@Emit('comment')
 	emitComments() {}
@@ -115,12 +123,13 @@ export default class AppEventItemControls extends Vue {
 		this.emitExpand();
 	}
 
-	openComments() {
+	openComments(autofocus = false) {
 		if (this.post) {
 			CommentModal.show({
 				resource: 'Fireside_Post',
 				resourceId: this.post.id,
 				displayMode: 'comments',
+				autofocus,
 			});
 		}
 
@@ -129,5 +138,22 @@ export default class AppEventItemControls extends Vue {
 
 	copyShareUrl() {
 		Clipboard.copy(this.shareUrl);
+	}
+
+	onClickCommentAddPlaceholder(type: string) {
+		// On mobile there won't be enough space to fit the editing controls inline
+		if (Screen.isXs) {
+			this.openComments(true);
+		} else {
+			this.clickedComment = true;
+			if (type === 'gif') {
+				this.openGifModal = true;
+			}
+		}
+	}
+
+	onSubmitNewComment() {
+		this.clickedComment = false; // Unloading the editor after submitting
+		this.openComments();
 	}
 }

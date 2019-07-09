@@ -1,0 +1,21 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.-side-control
+	flex-shrink: 0
+	@media $media-sm-up
+		margin-top: ($grid-gutter-width / 4)
+
+.-controls-container
+	display: flex
+	width: 100%
+	align-items: flex-start
+
+	@media $media-sm
+		align-items: center
+
+.-comment-form-container
+	display: inline-block
+	margin-left: 10px
+	margin-right: 10px
+	flex-grow: 1
