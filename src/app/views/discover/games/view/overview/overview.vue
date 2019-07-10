@@ -163,60 +163,58 @@
 						:supporters="supporters"
 						:supporterCount="supporterCount"
 					/>
-
-					<div class="-spacer" />
 				</template>
 
-				<div v-if="!isOverviewLoaded" class="sheet sheet-padded sheet-elevate">
-					<span class="lazy-placeholder"></span>
-					<span class="lazy-placeholder"></span>
-					<span class="lazy-placeholder"></span>
-					<span class="lazy-placeholder" style="width: 40%"></span>
-				</div>
-				<div v-else :class="{ 'sheet sheet-padded sheet-elevate': !Screen.isXs }">
-					<!--
-						Set a :key to let vue know that it should update
-						this when the game changes.
-					-->
-					<app-fade-collapse
-						:collapse-height="600"
-						:is-open="showDetails || !postsCount"
-						:animate="false"
-						:key="game.description_content"
-						@require-change="setCanToggleDescription"
-						@expand="toggleDetails()"
-					>
-						<app-content-viewer :source="game.description_content" />
-					</app-fade-collapse>
+				<div class="sheet sheet-elevate">
+					<div v-if="!isOverviewLoaded">
+						<span class="lazy-placeholder"></span>
+						<span class="lazy-placeholder"></span>
+						<span class="lazy-placeholder"></span>
+						<span class="lazy-placeholder" style="width: 40%"></span>
+					</div>
+					<div v-else>
+						<!--
+							Set a :key to let vue know that it should update
+							this when the game changes.
+						-->
+						<app-fade-collapse
+							:collapse-height="600"
+							:is-open="showDetails || !postsCount"
+							:animate="false"
+							:key="game.description_content"
+							@require-change="setCanToggleDescription"
+							@expand="toggleDetails()"
+						>
+							<app-content-viewer :source="game.description_content" />
+						</app-fade-collapse>
 
-					<div v-if="showDetails">
-						<hr />
-						<div class="row">
-							<div class="col-sm-6">
-								<app-discover-games-view-overview-details :game="game" />
-							</div>
-							<div class="col-sm-6">
-								<app-lazy-placeholder :when="isOverviewLoaded">
-									<div class="lazy-placeholder" style="height: 115px"></div>
-									<app-game-ogrs :game="game" />
-								</app-lazy-placeholder>
+						<div v-if="showDetails">
+							<hr />
+							<div class="row">
+								<div class="col-sm-6">
+									<app-discover-games-view-overview-details :game="game" />
+								</div>
+								<div class="col-sm-6">
+									<app-lazy-placeholder :when="isOverviewLoaded">
+										<div class="lazy-placeholder" style="height: 115px"></div>
+										<app-game-ogrs :game="game" />
+									</app-lazy-placeholder>
+								</div>
 							</div>
 						</div>
-					</div>
 
-					<div class="page-cut page-cut-no-margin">
-						<app-button
-							trans
-							@click="toggleDetails()"
-							v-app-track-event="`game-profile:show-full-description`"
-						>
-							<translate v-if="!showDetails">Show More</translate>
-							<translate v-else>Less</translate>
-						</app-button>
+						<div class="page-cut page-cut-no-margin">
+							<app-button
+								trans
+								@click="toggleDetails()"
+								v-app-track-event="`game-profile:show-full-description`"
+							>
+								<translate v-if="!showDetails">Show More</translate>
+								<translate v-else>Less</translate>
+							</app-button>
+						</div>
 					</div>
 				</div>
-
-				<div class="-spacer" />
 
 				<app-post-add-button v-if="hasDevlogPerms" :game="game" @add="onPostAdded" />
 
@@ -237,9 +235,6 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
-
-.-spacer
-	spacer()
 
 .-cover-ad >>> section
 	padding-bottom: 0

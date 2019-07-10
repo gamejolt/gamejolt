@@ -1,5 +1,5 @@
 <template>
-	<div class="comment-overview sheet" v-if="comments.length > 0">
+	<div class="comment-overview sheet sheet-full" v-if="comments.length > 0">
 		<!--
 			Capture the click and prevent default so that no links within the content open up.
 		-->

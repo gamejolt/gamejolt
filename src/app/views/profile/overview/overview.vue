@@ -260,21 +260,11 @@
 						</app-expand>
 					</template>
 
-					<div class="-spacer visible-xs" />
-
 					<router-view />
 				</app-page-container>
 			</div>
 		</section>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
-.-spacer
-	spacer()
-</style>
 
 <script lang="ts" src="./overview"></script>
