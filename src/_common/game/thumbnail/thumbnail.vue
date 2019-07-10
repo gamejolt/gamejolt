@@ -12,7 +12,7 @@
 
 				<template v-if="showModTools">
 					<app-popper>
-						<app-button overlay circle icon="cog" @click.prevent />
+						<app-button overlay circle icon="cog" />
 
 						<app-game-mod-links slot="popover" :game="game" />
 					</app-popper>

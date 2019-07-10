@@ -1,7 +1,7 @@
 <template>
 	<div class="-item" :style="{ width, height }">
 		<div class="-controls theme-dark">
-			<app-button icon="remove" overlay sparse @click.prevent="emitRemove()" />
+			<app-button icon="remove" overlay sparse @click="emitRemove()" />
 		</div>
 
 		<app-img-responsive :src="item.mediaserver_url" alt="" />

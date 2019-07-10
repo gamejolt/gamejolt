@@ -254,7 +254,7 @@
 									"
 									sparse
 									icon="remove"
-									@click.prevent="removeAdditionalOwner(i)"
+									@click="removeAdditionalOwner(i)"
 								/>
 							</div>
 
@@ -291,7 +291,7 @@
 					<!-- Add additional owner -->
 					<div class="clearfix">
 						<div class="pull-right" v-if="formModel.additional_owners_count <= 3">
-							<app-button @click.prevent="addAdditionalOwner()">
+							<app-button @click="addAdditionalOwner()">
 								<translate>Add Additional Owner</translate>
 							</app-button>
 						</div>

@@ -14,32 +14,38 @@
 				</div>
 				<div class="shell-card-popover-card-body">
 					<div class="shell-card-popover-card-controls">
+						<!--
+							For a tags we need to prevent click events in order to stop navigation.
+							stopping propogation doesn't cut it because all it's doing is stopping
+							the event handlers on the parent elements to fire, but the default beahviour
+							of the elements is only prevented with 'prevent'.
+						-->
 						<template v-if="isPending">
 							<app-button
-								type="span"
+								tag="span"
 								trans
 								circle
 								icon="remove"
 								v-app-tooltip="$gettext(`Cancel`)"
-								@click.stop.prevent="cancel"
+								@click.prevent="cancel"
 							/>
 						</template>
 						<template v-else>
 							<app-button
-								type="span"
+								tag="span"
 								primary
 								circle
 								icon="friend-add-2"
 								v-app-tooltip="$gettext(`Add Friend`)"
-								@click.stop.prevent="accept"
+								@click.prevent="accept"
 							/>
 							<app-button
-								type="span"
+								tag="span"
 								trans
 								circle
 								icon="remove"
 								v-app-tooltip="$gettext(`Dismiss request. Sender will not be notified.`)"
-								@click.stop.prevent="reject"
+								@click.prevent="reject"
 							/>
 						</template>
 					</div>

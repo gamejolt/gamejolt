@@ -110,7 +110,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 		form: AppForm;
 	};
 
-	readonly YOUTUBE_URL_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_\-]{11})(&.+)*$/i;
+	readonly YOUTUBE_URL_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_\-]{11})(?:&.+)*$/i;
 	readonly SKETCHFAB_URL_REGEX = /^(?:(?:https:\/\/)?(?:www.)?(?:sketchfab.com\/3d-models\/(?:[a-z0-9]+-)+([0-9a-f]{32})\/?))$/i;
 	readonly SKETCHFAB_FIELD_REGEX = /^(?:(?:https:\/\/)?(?:www.)?(?:sketchfab.com\/3d-models\/(?:[a-z0-9]+-)+([0-9a-f]{32})\/?))$|^([0-9a-f]{32})$/i;
 	readonly MAX_POLL_ITEMS = 10;
@@ -197,9 +197,9 @@ export default class FormPost extends BaseForm<FormPostModel>
 		const url = this.formModel.video_url;
 		if (url) {
 			// extract video id from url
-			const matches = url.match(/\?v=[a-zA-Z0-9_\-]{11}/);
-			if (matches && matches.length > 0) {
-				const videoId = matches[0].substr(3);
+			const matches = url.match(this.YOUTUBE_URL_REGEX);
+			if (matches && matches.length > 1) {
+				const videoId = matches[1];
 				return videoId;
 			}
 		}
@@ -387,7 +387,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	onDraftSubmit() {
 		this.setField('status', FiresidePost.STATUS_DRAFT);
-		this.$refs.form.submit();
 	}
 
 	async onSubmit() {

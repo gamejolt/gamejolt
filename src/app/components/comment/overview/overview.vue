@@ -22,7 +22,7 @@
 					<app-user-verified-tick :user="comment.user" />
 					<small class="text-muted">@{{ comment.user.username }}</small>
 				</div>
-				<app-fade-collapse :collapse-height="120">
+				<app-fade-collapse :collapse-height="150">
 					<div class="-content">
 						<app-content-viewer :source="comment.comment_content" />
 					</div>

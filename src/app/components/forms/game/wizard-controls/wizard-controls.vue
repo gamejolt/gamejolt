@@ -4,10 +4,10 @@
 			<hr />
 
 			<div class="pull-right">
-				<app-form-button v-if="inForm" :disabled="!canProceed" @click.native="next()">
+				<app-form-button v-if="inForm" :disabled="!canProceed" @after-submit="next">
 					<translate>Save & Next</translate>
 				</app-form-button>
-				<app-button v-else :disabled="!canProceed" @click="next()">
+				<app-button v-else :disabled="!canProceed" @click="next">
 					<translate>Next Step</translate>
 				</app-button>
 			</div>

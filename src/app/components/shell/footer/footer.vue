@@ -100,7 +100,7 @@
 						<div class="col-xs-4 col-sm-3">
 							<ol class="list-unstyled footer-link-list">
 								<li>
-									<a href="mailto:contact@gamejolt.com">
+									<a @click="onClickEmail" title="contact@gamejolt.com">
 										<translate>footer.contact</translate>
 									</a>
 								</li>

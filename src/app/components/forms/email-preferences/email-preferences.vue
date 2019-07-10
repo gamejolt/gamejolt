@@ -19,7 +19,7 @@
 
 		<div class="clearfix">
 			<template v-if="!emailsDisabled">
-				<app-button class="pull-right" trans @click.prevent="toggleEmails(false)">
+				<app-button class="pull-right" trans @click="toggleEmails(false)">
 					<translate>Turn off emails</translate>
 				</app-button>
 			</template>
@@ -30,7 +30,7 @@
 						<translate>Emails are currently turned off.</translate>
 					</p>
 				</div>
-				<app-button class="pull-right" primary solid @click.prevent="toggleEmails(true)">
+				<app-button class="pull-right" primary solid @click="toggleEmails(true)">
 					<translate>Turn on emails</translate>
 				</app-button>
 			</template>

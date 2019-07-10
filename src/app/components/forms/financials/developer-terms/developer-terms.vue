@@ -46,7 +46,7 @@
 				</div>
 				<br />
 
-				<app-button v-if="!showAgreement" primary @click.prevent="showAgreement = true">
+				<app-button v-if="!showAgreement" primary @click="showAgreement = true">
 					<translate>Show Developer Distribution Agreement</translate>
 				</app-button>
 			</div>
@@ -63,7 +63,7 @@
 				</router-link>
 			</div>
 
-			<app-button v-if="!showAgreement" primary @click.prevent="showAgreement = true">
+			<app-button v-if="!showAgreement" primary @click="showAgreement = true">
 				<translate>Show New Distribution Agreement</translate>
 			</app-button>
 
@@ -99,7 +99,7 @@
 			</div>
 			<br />
 
-			<app-button primary solid :disabled="!checked" @click.prevent="onAccept()">
+			<app-button primary solid :disabled="!checked" @click="onAccept()">
 				<translate>I Agree</translate>
 			</app-button>
 		</div>

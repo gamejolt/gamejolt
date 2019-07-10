@@ -37,7 +37,7 @@
 				</p>
 
 				<div v-if="!showDescriptionInput">
-					<app-button :disabled="!hasBuildsPerms" @click.prevent="showDescriptionInput = true">
+					<app-button :disabled="!hasBuildsPerms" @click="showDescriptionInput = true">
 						<translate>dash.games.packages.form.description_change_button</translate>
 					</app-button>
 				</div>
@@ -246,7 +246,7 @@
 			<div v-if="formModel.pricing_type === 'paid'">
 				<app-game-perms tag="div" required="sales" v-if="!promotionalPricing && !isShowingSaleForm">
 					<div>
-						<app-button @click.prevent="isShowingSaleForm = true">
+						<app-button @click="isShowingSaleForm = true">
 							<translate>Set Up Sale</translate>
 						</app-button>
 					</div>
@@ -402,10 +402,10 @@
 					<br />
 
 					<app-game-perms tag="div" required="sales">
-						<app-button v-if="!isShowingSaleForm" @click.prevent="isShowingSaleForm = true">
+						<app-button v-if="!isShowingSaleForm" @click="isShowingSaleForm = true">
 							<translate>Edit Sale</translate>
 						</app-button>
-						<app-button trans @click.prevent="cancelSale()">
+						<app-button trans @click="cancelSale()">
 							<translate>Cancel Sale</translate>
 						</app-button>
 					</app-game-perms>

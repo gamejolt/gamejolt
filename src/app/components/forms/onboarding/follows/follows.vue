@@ -23,7 +23,7 @@
 					block
 					lg
 					icon="add"
-					@click.prevent="onFollowGames"
+					@click="onFollowGames"
 				>
 					<translate>Follow Featured Games</translate>
 				</app-button>

@@ -286,7 +286,8 @@ export default class FormGameBuild extends BaseForm<GameBuildFormModel>
 		this.$emit('remove-build', this.model);
 	}
 
-	save() {
+	// This is called by the release form.
+	public save() {
 		return this.$refs.form.submit();
 	}
 

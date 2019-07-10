@@ -22,7 +22,7 @@
 						<app-button
 							block
 							:solid="whichAgreement === 'developer'"
-							@click.prevent="whichAgreement = 'developer'"
+							@click="whichAgreement = 'developer'"
 						>
 							<translate>I'm a game developer</translate>
 						</app-button>
@@ -31,7 +31,7 @@
 						<app-button
 							block
 							:solid="whichAgreement === 'partner'"
-							@click.prevent="whichAgreement = 'partner'"
+							@click="whichAgreement = 'partner'"
 						>
 							<translate>I'm a partner</translate>
 						</app-button>
@@ -94,7 +94,7 @@
 					<br />
 				</div>
 
-				<app-button @click.prevent="linkPayPal()">
+				<app-button @click="linkPayPal()">
 					<template v-if="!user.paypal_id">
 						<translate>Link PayPal Account</translate>
 					</template>
