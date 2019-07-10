@@ -120,7 +120,7 @@
 						</div>
 
 						<app-lazy-placeholder :when="isOverviewLoaded">
-							<div class="lazy-placeholder" style="height: 135px"></div>
+							<div class="lazy-placeholder -package-placeholder" style="height: 135px"></div>
 
 							<div v-if="externalPackages.length">
 								<app-game-external-package-card
@@ -241,6 +241,9 @@
 
 .-recommended-ad
 	width: 300px
+	margin-bottom: $line-height-computed
+
+.-package-placeholder
 	margin-bottom: $line-height-computed
 </style>
 
