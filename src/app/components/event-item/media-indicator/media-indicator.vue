@@ -20,7 +20,7 @@
 	align-items: center
 
 .-dot
-	theme-prop('background-color', 'bg-subtle')
+	change-bg('bg-subtle')
 	margin-right: 2px
 	margin-left: 2px
 	width: 6px
@@ -28,7 +28,7 @@
 	border-radius: 50%
 
 .-active
-	theme-prop('background-color', 'link')
+	change-bg('link')
 </style>
 
 <script lang="ts" src="./media-indicator"></script>

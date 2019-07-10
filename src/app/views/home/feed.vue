@@ -1,5 +1,5 @@
 <template>
-	<section class="section">
+	<section class="section fill-backdrop">
 		<app-page-container xl>
 			<div slot="left">
 				<app-user-card v-if="Screen.isDesktop" :user="app.user" />
@@ -79,8 +79,6 @@
 				</h6>
 
 				<app-community-slider :communities="communities" />
-
-				<div class="-spacer" />
 			</template>
 
 			<app-broadcast-card v-if="latestBroadcast && Screen.isMobile" :post="latestBroadcast" />
@@ -125,9 +123,6 @@
 .-game-list
 	a
 		text-overflow()
-
-.-spacer
-	spacer()
 
 // Keep things tight since it's on mobile.
 .-communities-heading

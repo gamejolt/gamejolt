@@ -11,7 +11,7 @@ import {
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
-import AppUserAvatarList from 'game-jolt-frontend-lib/components/user/user-avatar/known/list.vue';
+import AppUserAvatarList from 'game-jolt-frontend-lib/components/user/user-avatar/list/list.vue';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component, Emit, Prop } from 'vue-property-decorator';
@@ -206,7 +206,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			itemsPayload.items,
 			fromCache
 		);
-		this.knownMembers = overviewPayload.knownMembers || [];
+		this.knownMembers = User.populate(overviewPayload.knownMembers || []);
 		this.knownMemberCount = overviewPayload.knownMemberCount || 0;
 
 		Meta.description = this.$gettextInterpolate(

@@ -48,7 +48,7 @@
 		font-weight: bold
 
 	&-img
-		theme-prop('background-color', 'bg-offset')
+		change-bg('bg-offset')
 		position: relative
 		display: block
 		height: 180px

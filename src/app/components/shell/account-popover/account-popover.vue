@@ -190,7 +190,7 @@
 		padding: 10px $account-popover-padding
 
 	&-separator
-		theme-prop('background-color', 'bg-subtle')
+		change-bg('bg-subtle')
 		margin: 10px $account-popover-padding
 		height: 1px
 		line-height: 1px

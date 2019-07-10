@@ -1,5 +1,5 @@
 <template>
-	<div class="user-recommended">
+	<div class="user-recommended sheet">
 		<div class="-header">
 			<h4 class="section-header">
 				<translate>Who to follow</translate>
@@ -15,6 +15,7 @@
 			@follow="onFollow()"
 			@unfollow="onUnfollow()"
 			:event-label="eventLabel"
+			user-hover-card
 		/>
 		<div v-if="loading" class="loading-overlay">
 			<app-loading hide-label centered />
@@ -23,4 +24,5 @@
 </template>
 
 <style lang="stylus" scoped src="./recommended.styl"></style>
+
 <script lang="ts" src="./recommended"></script>

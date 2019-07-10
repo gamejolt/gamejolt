@@ -40,6 +40,9 @@
 		theme-prop('border-color', 'bg-offset')
 		cursor: default
 
+		@media $media-sm-up
+			theme-prop('border-color', 'bg-subtle')
+
 .-placeholder-text
 	lazy-placeholder-inline()
 

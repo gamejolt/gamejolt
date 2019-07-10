@@ -1,33 +1,33 @@
 <template>
-	<div class="comment-overview">
+	<div class="comment-overview sheet sheet-full" v-if="comments.length > 0">
 		<!--
 			Capture the click and prevent default so that no links within the content open up.
 		-->
-		<div
-			class="-comment fill-offset"
-			v-for="comment of comments"
-			:key="comment.id"
-			@click.capture="
-				$event.preventDefault();
-				open(comment);
-			"
-		>
-			<div class="-byline">
-				<div class="-avatar">
-					<app-user-card-hover :user="comment.user">
-						<app-user-avatar-img :user="comment.user" />
-					</app-user-card-hover>
-				</div>
+		<div v-for="comment of comments" :key="comment.id" class="-comment-container">
+			<div
+				class="-comment"
+				@click.capture="
+					$event.preventDefault();
+					open(comment);
+				"
+			>
+				<div class="-byline">
+					<div class="-avatar">
+						<app-user-card-hover :user="comment.user">
+							<app-user-avatar-img :user="comment.user" />
+						</app-user-card-hover>
+					</div>
 
-				<strong>{{ comment.user.display_name }}</strong>
-				<app-user-verified-tick :user="comment.user" />
-				<small class="text-muted">@{{ comment.user.username }}</small>
-			</div>
-			<app-fade-collapse :collapse-height="150">
-				<div class="-content">
-					<app-content-viewer :source="comment.comment_content" />
+					<strong>{{ comment.user.display_name }}</strong>
+					<app-user-verified-tick :user="comment.user" />
+					<small class="text-muted">@{{ comment.user.username }}</small>
 				</div>
-			</app-fade-collapse>
+				<app-fade-collapse :collapse-height="150">
+					<div class="-content">
+						<app-content-viewer :source="comment.comment_content" />
+					</div>
+				</app-fade-collapse>
+			</div>
 		</div>
 	</div>
 </template>
@@ -36,16 +36,26 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+.comment-overview .-comment-container:not(:last-child)
+	border-bottom-width: 1px
+	border-bottom-style: solid
+	theme-prop('border-color', 'bg-subtle')
+
+.-comment-container:last-child
+	.-comment
+		border-bottom-left-radius: $border-radius-base
+		border-bottom-right-radius: $border-radius-base
+
+.-comment-container:first-child
+	.-comment
+		border-top-left-radius: $border-radius-base
+		border-top-right-radius: $border-radius-base
+
 .-comment
-	rounded-corners()
-	theme-prop('border-color', 'bg-offset')
 	padding: 10px
-	border-width: 2px
-	border-style: solid
-	margin-bottom: 4px
 
 	&:hover
-		theme-prop('border-color', 'link')
+		change-bg('bg-offset')
 		cursor: pointer
 
 .-byline

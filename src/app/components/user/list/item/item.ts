@@ -1,5 +1,6 @@
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
 import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow/widget.vue';
 import AppUserAvatarImg from 'game-jolt-frontend-lib/components/user/user-avatar/img/img.vue';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
@@ -14,6 +15,7 @@ import { State } from 'vuex-class';
 		AppUserAvatarImg,
 		AppUserFollowWidget,
 		AppUserVerifiedTick,
+		AppUserCardHover,
 	},
 	directives: {
 		AppTrackEvent,
@@ -25,6 +27,9 @@ export default class AppUserListItem extends Vue {
 
 	@Prop(String)
 	eventLabel?: string;
+
+	@Prop(Boolean)
+	userHoverCard?: boolean;
 
 	@State
 	app!: AppStore;

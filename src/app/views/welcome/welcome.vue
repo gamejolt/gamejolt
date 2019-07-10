@@ -38,7 +38,7 @@
 @require '~styles-lib/mixins'
 
 .-welcome
-	theme-prop('background-color', 'darkest')
+	change-bg('darkest')
 	position: absolute
 	z-index: $zindex-shell-top-nav
 	top: 0

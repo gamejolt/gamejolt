@@ -16,8 +16,8 @@ $-bubble-size = 14px
 .-thumb
 	img-circle()
 	pressy()
+	change-bg('dark')
 	theme-prop('border-color', 'gray')
-	theme-prop('background-color', 'gray-dark')
 	border-width: 2px
 	border-style: solid
 	width: $-item-size - 2px
@@ -28,7 +28,7 @@ $-bubble-size = 14px
 		height: $-item-size - 2px
 
 .-blip
-	theme-prop('background-color', 'gray')
+	change-bg('gray')
 	position: absolute
 	width: $-blip-size
 	height: $-blip-size

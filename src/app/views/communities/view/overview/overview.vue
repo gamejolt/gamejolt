@@ -1,8 +1,8 @@
 <template>
-	<section class="section">
+	<section class="section fill-backdrop">
 		<app-page-container xl order="right,main,left">
 			<div slot="right" v-if="!Screen.isMobile">
-				<div v-if="shouldShowKnownMembers">
+				<div v-if="shouldShowKnownMembers" class="sheet">
 					<h5 class="section-header">
 						<translate
 							:translate-n="knownMemberCount"
@@ -46,9 +46,9 @@
 
 			<div slot="left">
 				<!--
-				We put some extra spacing in here because of the affixed header
-				nav.
-			-->
+					We put some extra spacing in here because of the affixed header
+					nav.
+				-->
 				<app-scroll-affix :scroll-offset="80" :disabled="!Screen.isLg">
 					<app-communities-view-overview-nav
 						class="-nav"

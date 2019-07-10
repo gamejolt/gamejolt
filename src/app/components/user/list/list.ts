@@ -15,6 +15,9 @@ export default class AppUserList extends Vue {
 	@Prop(String)
 	eventLabel?: string;
 
+	@Prop(Boolean)
+	userHoverCard?: boolean;
+
 	@Emit('follow')
 	emitFollow(_user: User) {}
 

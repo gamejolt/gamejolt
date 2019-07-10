@@ -180,7 +180,7 @@
 .forum-post
 	&-replied-to-button
 		rounded-corners()
-		theme-prop('background-color', 'bg-offset')
+		change-bg('bg-offset')
 		theme-prop('color', 'fg')
 		display: block
 		margin-bottom: $line-height-computed

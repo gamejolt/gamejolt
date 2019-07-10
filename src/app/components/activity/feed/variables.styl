@@ -1,6 +1,6 @@
 @require '~styles/variables'
 
-$-border-width = 2px
+$-border-width = 1px
 $-item-padding = ($grid-gutter-width / 2)
 $-item-padding-xs = ($grid-gutter-width-xs / 2)
 $-item-padding-v = $-item-padding * 0.75
@@ -23,21 +23,22 @@ $-item-padding-container = $-item-padding - $-border-width
 
 -activity-feed-item()
 	-activity-feed-item-padding()
-	theme-prop('border-color', 'bg-offset')
+	change-bg('bg')
 	margin-left: -($grid-gutter-width-xs / 2)
 	margin-right: -($grid-gutter-width-xs / 2)
-	transition: border-color 100ms
-	border-bottom-width: 6px
-	border-bottom-style: solid
+	// Overwrites the default box shadow animation that is not needed on this element
+	transition: border-color 200ms ease !important
+	elevate-xs()
 
 	@media $media-sm-up
 		rounded-corners()
-		theme-prop('border-color', 'bg-offset')
-		border-width: $-border-width
-		border-style: solid
+		elevate-1()
 		margin-left: 0
 		margin-right: 0
 
-		&:hover
-			theme-prop('border-color', 'link')
-			cursor: pointer
+		@media $media-sm-up
+			border: $-border-width solid var(--theme-bg-subtle)
+
+			&:hover
+				theme-prop('border-color', 'link')
+				cursor: pointer

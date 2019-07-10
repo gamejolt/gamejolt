@@ -15,7 +15,7 @@
 @require '~styles-lib/mixins'
 
 #shell-cbar
-	theme-prop('background-color', 'darkest')
+	change-bg('darkest')
 	position: fixed
 	width: $shell-cbar-width
 	padding: 15px $cbar-h-padding

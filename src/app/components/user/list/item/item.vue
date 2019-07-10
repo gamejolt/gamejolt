@@ -9,9 +9,9 @@
 		}"
 		v-app-track-event="`user-list:click:${eventLabel || 'any'}`"
 	>
-		<div class="-avatar">
+		<component :is="userHoverCard ? 'app-user-card-hover' : 'div'" :user="user" class="-avatar">
 			<app-user-avatar-img :user="user" />
-		</div>
+		</component>
 
 		<div class="-label">
 			<div class="-name">

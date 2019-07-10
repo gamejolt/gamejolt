@@ -1,5 +1,5 @@
 <template>
-	<section class="section">
+	<section class="section fill-backdrop">
 		<div class="container">
 			<div class="alert alert-info" v-if="!community.member_count">
 				<translate>

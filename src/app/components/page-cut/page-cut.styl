@@ -2,7 +2,6 @@
 @require '~styles-lib/mixins'
 
 .page-cut
-	theme-prop('background-color', 'bg')
 	position: relative
 	text-align: center
 	margin-bottom: $line-height-computed
@@ -31,4 +30,7 @@
 		z-index: 2
 
 		&.-outline
-			theme-prop('background-color', 'bg')
+			change-bg('bg')
+
+.page-cut-no-margin
+	margin-bottom: 0

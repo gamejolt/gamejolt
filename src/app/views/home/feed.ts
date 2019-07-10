@@ -2,6 +2,7 @@ import AppAdPlaywireVideo from 'game-jolt-frontend-lib/components/ad/playwire/vi
 import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
@@ -100,10 +101,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 
-	get routeTitle() {
-		return this.$gettext(`Your Activity Feed`);
-	}
-
 	get hasGamesSection() {
 		return this.games.length > 0 && Screen.isLg;
 	}
@@ -149,6 +146,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	}
 
 	routeCreated() {
+		Meta.setTitle(null);
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 

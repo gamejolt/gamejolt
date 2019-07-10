@@ -11,7 +11,7 @@
 			theme-prop('color', 'highlight')
 
 	&.active .-info
-		theme-prop('background-color', 'bi-bg')
+		change-bg('bi-bg')
 		theme-prop('color', 'bi-fg')
 
 .-image-spacer
@@ -21,7 +21,7 @@
 	overflow: hidden
 
 .-image
-	theme-prop('background-color', 'darkest')
+	change-bg('darkest')
 	position: absolute
 	top: 0
 	right: 0
@@ -38,7 +38,7 @@
 		height: 116px * 0.5
 
 .-info
-	theme-prop('background-color', 'darkest')
+	change-bg('darkest')
 	padding: 8px 0
 	color: $white
 	font-size: $font-size-small

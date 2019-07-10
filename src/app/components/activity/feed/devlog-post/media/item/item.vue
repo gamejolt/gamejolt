@@ -50,7 +50,7 @@
 // out any image or video in the item to be full width/height.
 .-img, .-video
 	rounded-corners()
-	theme-prop('background-color', 'bg-offset')
+	change-bg('bg-offset')
 	display: block
 	width: 100%
 	margin-left: auto

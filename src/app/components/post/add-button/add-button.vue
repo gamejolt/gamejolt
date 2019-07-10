@@ -1,5 +1,5 @@
 <template>
-	<div class="post-add-button well fill-offset full-bleed-xs">
+	<div class="post-add-button sheet sheet-elevate">
 		<span class="-avatar">
 			<app-user-avatar-img :user="user" />
 		</span>
@@ -20,7 +20,7 @@ $-height = 40px
 	align-items: center
 
 .-avatar
-	theme-prop('background-color', 'bg-subtle')
+	change-bg('bg-subtle')
 	img-circle()
 	flex: none
 	width: $-height

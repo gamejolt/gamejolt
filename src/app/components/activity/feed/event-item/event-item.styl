@@ -2,6 +2,8 @@
 @require '~styles-lib/mixins'
 
 .-container
+	padding-bottom: $-item-padding-xs-v
+
 	@media $media-sm-up
 		padding-bottom: $-item-padding-v
 
@@ -13,7 +15,7 @@
 	align-items: flex-start
 
 	&-avatar
-		theme-prop('background-color', 'bg-subtle')
+		change-bg('bg-subtle')
 		img-circle()
 		flex: none
 		overflow: hidden
@@ -24,13 +26,13 @@
 
 		.-item.-new &
 			theme-prop('border-color', 'notice')
-			border-width: 2px
+			border-width: $border-width-large
 			border-style: solid
 
 			.-header-avatar-inner
-				theme-prop('background-color', 'bg')
+				change-bg('bg')
 				img-circle()
-				padding: 2px
+				padding: $border-width-large
 
 		@media $media-sm-up
 			margin-right: $-item-padding
@@ -77,10 +79,13 @@
 
 .-manage
 	-activity-feed-item-padding()
-	theme-prop('background-color', 'bg-offset')
 	margin-bottom: $-item-padding-xs-v
 	margin-left: -($-item-padding-xs)
 	margin-right: -($-item-padding-xs)
+	border-top: 1px solid var(--theme-bg-subtle)
+	border-bottom: 1px solid var(--theme-bg-subtle)
+	padding-top: 7px !important
+	padding-bottom: 7px !important
 
 	@media $media-sm-up
 		margin-bottom: $-item-padding-v

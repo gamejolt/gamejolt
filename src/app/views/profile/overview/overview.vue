@@ -25,7 +25,7 @@
 				</app-expand>
 			</div>
 		</section>
-		<section class="section" v-else>
+		<section class="section fill-backdrop" v-else>
 			<div>
 				<app-page-container xl order="left,main,right">
 					<div slot="left">
@@ -260,21 +260,11 @@
 						</app-expand>
 					</template>
 
-					<div class="-spacer visible-xs" />
-
 					<router-view />
 				</app-page-container>
 			</div>
 		</section>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
-.-spacer
-	spacer()
-</style>
 
 <script lang="ts" src="./overview"></script>

@@ -60,7 +60,7 @@
 			</section>
 		</app-expand>
 
-		<div id="search-results">
+		<div id="search-results" class="fill-backdrop">
 			<router-view />
 
 			<br />

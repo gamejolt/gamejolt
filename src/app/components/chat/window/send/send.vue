@@ -58,7 +58,7 @@ textarea
 	color: $white
 
 	@media $media-sm-up
-		theme-prop('background-color', 'dark')
+		change-bg('dark')
 
 .-button
 	display: none

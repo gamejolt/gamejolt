@@ -45,7 +45,7 @@
 		overflow: hidden
 
 		&::before
-			theme-prop('background-color', 'dark')
+			change-bg('dark')
 			content: ''
 			display: block
 			position: absolute
@@ -62,8 +62,9 @@
 		img
 			theme-prop('border-color', 'gray')
 			margin-top: 20px
-			border-width: 2px
+			border-width: $border-width-large
 			border-style: solid
+			rounded-corners()
 
 	section.features-stripe
 		margin-top: 150px
@@ -78,7 +79,7 @@
 			margin-top: 0
 
 		&::before
-			theme-prop('background-color', 'highlight')
+			change-bg('highlight')
 			content: ''
 			display: block
 			position: absolute
@@ -110,7 +111,7 @@
 			color: $white
 
 		&::before
-			theme-prop('background-color', 'darkest')
+			change-bg('darkest')
 			content: ''
 			display: block
 			position: absolute

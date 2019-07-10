@@ -1,5 +1,5 @@
 <template>
-	<section class="section">
+	<section class="section fill-backdrop">
 		<div class="container">
 			<div class="alert alert-info" v-if="!user.following_count">
 				<translate>This person isn't following anyone yet.</translate>
