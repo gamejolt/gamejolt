@@ -74,7 +74,10 @@
 
 		<div class="row">
 			<div class="col-lg-8">
-				<app-graph-widget :url="`/web/dash/developer/games/graphs/overview/${game.id}`" />
+				<app-graph-widget
+					class="-graph"
+					:url="`/web/dash/developer/games/graphs/overview/${game.id}`"
+				/>
 			</div>
 			<div class="col-lg-4">
 				<div class="row">
@@ -160,5 +163,15 @@
 		</app-game-perms>
 	</div>
 </template>
+
+<style lang="stylus" scoped>
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.-graph
+	>>> .graph
+		rounded-corners()
+
+</style>
 
 <script lang="ts" src="./overview"></script>
