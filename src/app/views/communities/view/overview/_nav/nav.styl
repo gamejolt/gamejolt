@@ -26,13 +26,13 @@ li
 	transition: all 250ms
 
 	&:hover
-		theme-prop('background-color', 'bg-offset')
+		change-bg('bg-offset')
 		theme-prop('color', 'fg')
 		transition: none
 
 	&.active
 		&, &:hover
-			theme-prop('background-color', 'bi-bg')
+			change-bg('bi-bg')
 			theme-prop('color', 'bi-fg')
 
 			.-icon

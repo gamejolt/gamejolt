@@ -9,13 +9,15 @@
 						</div>
 						<h1>STAJOLTIA</h1>
 						<p class="lead">
-							<strong><em>
-							The future of gaming is we.
-							</em></strong>
+							<strong>
+								<em>
+									The future of gaming is we.
+								</em>
+							</strong>
 						</p>
 						<p class="lead">
-							Introducing Stajoltia, a new gaming platform from Game Jolt for playing video games across
-							all kinds of screens.
+							Introducing Stajoltia, a new gaming platform from Game Jolt for playing video games
+							across all kinds of screens.
 						</p>
 						<span class="text-muted">
 							(phone screens, watch screens, computer screens, window screens and more!)
@@ -66,12 +68,7 @@
 									/>
 								</td>
 								<td>
-									<app-button
-										circle
-										solid
-										icon="chevron-up"
-										disabled
-									/>
+									<app-button circle solid icon="chevron-up" disabled />
 								</td>
 								<td>
 									<app-button
@@ -85,12 +82,7 @@
 							</tr>
 							<tr>
 								<td>
-									<app-button
-										circle
-										solid
-										icon="chevron-left"
-										disabled
-									/>
+									<app-button circle solid icon="chevron-left" disabled />
 								</td>
 								<td>
 									<app-button
@@ -102,12 +94,7 @@
 									/>
 								</td>
 								<td>
-									<app-button
-										circle
-										solid
-										icon="chevron-right"
-										disabled
-									/>
+									<app-button circle solid icon="chevron-right" disabled />
 								</td>
 							</tr>
 						</table>
@@ -123,22 +110,14 @@
 							<tr>
 								<td />
 								<td>
-									<app-button
-										solid
-										disabled
-										v-app-tooltip="$gettext('Jump')"
-									>
+									<app-button solid disabled v-app-tooltip="$gettext('Jump')">
 										A
 									</app-button>
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<app-button
-										solid
-										disabled
-										v-app-tooltip="$gettext('Attack')"
-									>
+									<app-button solid disabled v-app-tooltip="$gettext('Attack')">
 										B
 									</app-button>
 								</td>
@@ -147,7 +126,8 @@
 					</div>
 
 					<div class="help-block">
-						<strong>April Fool's 2019 is over.</strong> Thanks for participating!
+						<strong>April Fool's 2019 is over.</strong>
+						Thanks for participating!
 					</div>
 				</div>
 			</div>
@@ -163,7 +143,8 @@
 								Game where you want, when you want.
 							</h2>
 							<p>
-								Play across multiple devices including laptops, desktops, and select phones and tablets.
+								Play across multiple devices including laptops, desktops, and select phones and
+								tablets.
 							</p>
 							<p class="help-block">
 								*High speed internet connection and a phat stack of disposable income required.
@@ -177,8 +158,8 @@
 								Up to 4K HDR at 60 FPS. PSYCHE!
 							</h2>
 							<p>
-								Enjoy gaming the way you love, with beautiful 4K HDR graphics and smooth frame rates.
-								Passing G.A.S. to you at 60 FPS.
+								Enjoy gaming the way you love, with beautiful 4K HDR graphics and smooth frame
+								rates. Passing G.A.S. to you at 60 FPS.
 							</p>
 							<p class="help-block">
 								* Gameplay experience may vary because this is not possible.
@@ -190,8 +171,8 @@
 								New ways to play through Twitch and beyond.
 							</h2>
 							<p>
-								Go from watching someone in a video to playing someone else's game in seconds, with even
-								more innovative experiences to come.
+								Go from watching someone in a video to playing someone else's game in seconds, with
+								even more innovative experiences to come.
 							</p>
 							<p class="help-block">
 								* For select--but only one--game(s).
@@ -331,7 +312,7 @@
 .controller-wire
 	width: 8px
 	height: 30px
-	theme-prop('background-color', 'darkest')
+	change-bg('darkest')
 
 .controls
 	margin-bottom: 10px
@@ -339,7 +320,7 @@
 	max-width: 420px
 	width: 100%
 	justify-content: space-between
-	theme-prop('background-color', 'light')
+	change-bg('light')
 	padding: 10px
 	flex-wrap: wrap
 	border-radius: 4px
@@ -349,7 +330,7 @@
 	border-radius: 10px
 	display: block
 	padding: 4px
-	theme-prop('background-color', 'darker')
+	change-bg('darker')
 
 	& > tr > td
 		padding: 4px
@@ -364,7 +345,7 @@
 	width: 100px
 	height: 15px
 	border-radius: 4px
-	theme-prop('background-color', 'darker')
+	change-bg('darker')
 
 .control-up-left
 	transform: rotate(-45deg) !important
@@ -383,7 +364,7 @@
 
 .desc-item
 	margin: 10px
-	theme-prop('background-color', 'darker')
+	change-bg('darker')
 	max-width: 400px
 
 	& > h2

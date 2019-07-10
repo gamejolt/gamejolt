@@ -22,7 +22,7 @@
 @require '~styles-lib/mixins'
 
 .media-item-cover-container
-	theme-prop('background-color', 'gray')
+	change-bg('gray')
 	display: block
 	overflow: hidden
 	width: 100%

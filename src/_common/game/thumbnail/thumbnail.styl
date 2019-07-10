@@ -70,7 +70,7 @@
 	text-align: center
 
 	&-owned
-		theme-prop('background-color', 'highlight')
+		change-bg('highlight')
 		theme-prop('color', 'highlight-fg')
 
 		& ^[-1]-tag
@@ -96,8 +96,8 @@
 
 		.-pricing
 			&-sale-percentage
+				change-bg('gray')
 				theme-prop('color', 'highlight')
-				theme-prop('background-color', 'gray')
 				display: inline-block
 				vertical-align: top
 				margin-right: -10px

@@ -63,7 +63,7 @@ ul.shell-nav
 			line-height: $shell-nav-item-height
 
 			&:hover
-				theme-prop('background-color', 'darker')
+				change-bg('darker')
 				color: $dark-theme-link-hover
 
 			&.no-icon
@@ -89,7 +89,7 @@ ul.shell-nav ul
 		padding-left: 15px
 
 		&::after
-			theme-prop('background-color', 'darker')
+			change-bg('darker')
 			content: ''
 			display: block
 			position: absolute
@@ -145,7 +145,7 @@ ul.shell-nav ul
  * Nav Wells
  */
 .nav-well
-	theme-prop('background-color', 'darker')
+	change-bg('darker')
 	padding: 15px
 	font-size: $font-size-small
 	color: $dark-theme-fg

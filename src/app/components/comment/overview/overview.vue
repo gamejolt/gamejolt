@@ -43,12 +43,11 @@
 
 .-comment
 	padding: 10px
-	transition: background-color 0.085s ease
 	rounded-corners()
 
 	&:hover
+		change-bg('bg-offset')
 		cursor: pointer
-		theme-prop('background-color', 'bg-offset')
 
 .-byline
 	clearfix()

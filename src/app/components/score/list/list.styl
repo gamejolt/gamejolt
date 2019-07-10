@@ -18,7 +18,7 @@ $score-list-gutter = ($grid-gutter-width / 2)
 
 	// Since avatars can be transparent.
 	.user-avatar
-		theme-prop('background-color', 'bg-offset')
+		change-bg('bg-offset')
 
 .score-list-rank
 	@media $media-xs
@@ -31,7 +31,7 @@ $score-list-gutter = ($grid-gutter-width / 2)
 
 	@media $media-sm-up
 		theme-prop('color', 'highlight')
-		theme-prop('background-color', 'darkest')
+		change-bg('darkest')
 		border-bottom-left-radius: $border-radius-base
 		position: absolute
 		left: 0

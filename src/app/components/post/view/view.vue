@@ -106,7 +106,7 @@
 @require '~styles-lib/mixins'
 
 .-media-item
-	theme-prop('background-color', 'bg-offset')
+	change-bg('bg-offset')
 	position: relative
 	margin-left: auto
 	margin-right: auto

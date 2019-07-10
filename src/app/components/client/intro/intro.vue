@@ -28,7 +28,7 @@
 @require '~styles-lib/mixins'
 
 .client-intro
-	theme-prop('background-color', 'darkest')
+	change-bg('darkest')
 	position: fixed
 	top: 0
 	right: 0
@@ -41,7 +41,7 @@
 	flex-direction: column
 
 	&.-leave
-		theme-prop('background-color', 'darkest-trans')
+		background-color: var(--theme-darkest-trans)
 		transition: all 500ms
 		pointer-events: none
 

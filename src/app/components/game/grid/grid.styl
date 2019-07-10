@@ -6,13 +6,13 @@
 	&-ad
 		@media $media-xs
 			full-bleed()
-			theme-prop('background-color', 'bg-offset')
+			change-bg('bg-offset')
 			padding-top: ($grid-gutter-width-xs / 2)
 			padding-bottom: ($grid-gutter-width-xs / 2)
 			margin-bottom: $grid-gutter-width-xs
 
 		@media $media-sm
-			theme-prop('background-color', 'bg-offset')
+			change-bg('bg-offset')
 			padding-top: ($grid-gutter-width / 2)
 			padding-bottom: ($grid-gutter-width / 2)
 			margin-bottom: $grid-gutter-width
@@ -28,7 +28,7 @@
 			text-align: center
 
 			@media screen and (min-width: 1550px)
-				theme-prop('background-color', 'bg-offset')
+				change-bg('bg-offset')
 				padding: 20px
 				width: 300px + @padding * 2
 

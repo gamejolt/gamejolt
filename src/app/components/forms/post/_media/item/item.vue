@@ -14,7 +14,7 @@
 
 .-item
 	rounded-corners()
-	theme-prop('background-color', 'bg-subtle')
+	change-bg('bg-subtle')
 	position: relative
 	display: inline-block
 	vertical-align: top

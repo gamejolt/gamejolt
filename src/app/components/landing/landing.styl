@@ -59,7 +59,7 @@
 			margin-top: $line-height-computed
 
 	a
-		link-underlines(var(--theme-fg), var(--theme-bg), var(--theme-bg))
+		link-underlines(var(--theme-fg), var(--theme-bg-actual), var(--theme-bg-actual))
 		font-weight: bold
 
 	.section
@@ -69,17 +69,13 @@
 		background-image: none !important
 		text-shadow: none !important
 
-	.fill-offset
-		a
-			link-underlines(var(--theme-fg), var(--theme-bg-offset), var(--theme-bg-offset))
-
 	.fill-highlight
 		a
-			link-underlines(var(--theme-bi-fg), var(--theme-bi-bg), var(--theme-bi-bg))
+			link-underlines(var(--theme-bi-fg), var(--theme-bg-actual), var(--theme-bg-actual))
 
 	.fill-darkest
 		a
-			link-underlines(var(--dark-theme-link), var(--theme-darkest), var(--theme-darkest))
+			link-underlines(var(--dark-theme-link), var(--theme-bg-actual), var(--theme-bg-actual))
 
 		.game-thumbnail
 			background: none

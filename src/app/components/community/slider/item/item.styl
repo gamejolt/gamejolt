@@ -27,10 +27,8 @@ $-size = 100px
 
 .-thumb
 	img-circle()
-	theme-prop('border-color', 'bg')
-	theme-prop('background-color', 'bg-offset')
-	border-width: 2px
-	border-style: solid
+	change-bg('bg-offset')
+	border: 2px solid var(--theme-bg-actual)
 	width: $-size-xs
 	height: $-size-xs
 

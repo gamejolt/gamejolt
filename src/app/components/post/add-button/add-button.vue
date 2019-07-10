@@ -20,7 +20,7 @@ $-height = 40px
 	align-items: center
 
 .-avatar
-	theme-prop('background-color', 'bg-subtle')
+	change-bg('bg-subtle')
 	img-circle()
 	flex: none
 	width: $-height
