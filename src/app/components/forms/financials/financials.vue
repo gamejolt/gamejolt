@@ -10,8 +10,8 @@
 			</div>
 
 			<!--
-			If they haven't accepted any terms yet.
-		-->
+				If they haven't accepted any terms yet.
+			-->
 			<fieldset v-if="!hasSignedAgreement && partner">
 				<legend>
 					<translate>To start, which type of account would you like to set up?</translate>
@@ -49,8 +49,8 @@
 		<br />
 
 		<!--
-		First step is to sign an agreement.
-	-->
+			First step is to sign an agreement.
+		-->
 		<app-expand :when="!!whichAgreement || hasSignedAgreement">
 			<app-developer-terms
 				v-if="whichAgreement === 'developer' || hasSignedAgreement"
@@ -266,7 +266,7 @@
 		padding: 10px
 		max-height: 500px
 		font-size: $font-size-small
-		border-width: 2px
+		border-width: $border-width-base
 		border-style: solid
 
 		h1, h2, h3, h4, h5, h6, p
