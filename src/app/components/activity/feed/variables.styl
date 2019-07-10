@@ -23,10 +23,7 @@ $-item-padding-container = $-item-padding - $-border-width
 
 -activity-feed-item()
 	-activity-feed-item-padding()
-	theme-prop('border-color', 'bg-subtle')
 	theme-prop('background-color', 'bg')
-	border-style: solid
-	border-width: 1px 0 1px 0
 	margin-left: -($grid-gutter-width-xs / 2)
 	margin-right: -($grid-gutter-width-xs / 2)
 	transition: border-color 100ms
@@ -34,10 +31,12 @@ $-item-padding-container = $-item-padding - $-border-width
 	@media $media-sm-up
 		rounded-corners()
 		elevate-1()
-		border-width: $-border-width
 		margin-left: 0
 		margin-right: 0
 
-		&:hover
-			theme-prop('border-color', 'link')
-			cursor: pointer
+		@media $media-sm-up
+			border: $-border-width solid var(--theme-bg-subtle)
+
+			&:hover
+				theme-prop('border-color', 'link')
+				cursor: pointer

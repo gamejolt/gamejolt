@@ -79,10 +79,13 @@
 
 .-manage
 	-activity-feed-item-padding()
-	theme-prop('background-color', 'bg-offset')
 	margin-bottom: $-item-padding-xs-v
 	margin-left: -($-item-padding-xs)
 	margin-right: -($-item-padding-xs)
+	border-top: 1px solid var(--theme-bg-subtle)
+	border-bottom: 1px solid var(--theme-bg-subtle)
+	padding-top: 7px !important
+	padding-bottom: 7px !important
 
 	@media $media-sm-up
 		margin-bottom: $-item-padding-v
