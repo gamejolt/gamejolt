@@ -26,7 +26,9 @@ $-item-padding-container = $-item-padding - $-border-width
 	change-bg('bg')
 	margin-left: -($grid-gutter-width-xs / 2)
 	margin-right: -($grid-gutter-width-xs / 2)
-	transition: border-color 100ms
+	// Overwrites the default box shadow animation that is not needed on this element
+	transition: border-color 200ms ease !important
+	elevate-mobile()
 
 	@media $media-sm-up
 		rounded-corners()
