@@ -28,25 +28,21 @@ $-bubble-size = 14px
 		height: $-item-size - 2px
 
 .-blip
-	change-bg('gray')
 	position: absolute
 	width: $-blip-size
 	height: $-blip-size
 	top: $-blip-top
-	left: $-blip-left
+	left: -($-blip-size * 2)
+	background-color: var(--theme-gray)
 	border-radius: 50%
 	will-change: height, top, left
 	z-index: 2
-	transition: height 300ms $ease-in-out-back, top 300ms $ease-in-out-back, background-color 300ms
+	transition: height 300ms $ease-in-out-back, top 300ms $ease-in-out-back, left 300ms $ease-in-out-back, background-color 300ms
+
+.-blip-unread
+	left: $-blip-left
 
 .-blip-active
 	top: 0
+	left: $-blip-left
 	height: $-item-size
-
-.-notification
-	position: absolute
-	width: $-blip-size
-	height: $-blip-size
-	right: 2px
-	bottom: 2px
-	border-radius: 50%

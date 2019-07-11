@@ -1,6 +1,6 @@
 <template>
 	<router-link
-		class="-item -unread"
+		class="-item"
 		:to="{
 			name: 'communities.view.overview',
 			params: { path: community.path },
@@ -11,15 +11,9 @@
 		<div
 			class="-blip"
 			:class="{
+				'-blip-unread': isUnread,
 				'-blip-active': isActive,
 			}"
-			:style="{
-				'background-color': isActive || isUnread ? highlight : undefined,
-			}"
-		/>
-		<div
-			class="-notification"
-			v-if="isUnread"
 			:style="{
 				'background-color': highlight,
 			}"
