@@ -2,6 +2,7 @@
 @require '~styles-lib/mixins'
 
 .page-cut
+	--bg-save: var(--theme-bg-actual)
 	position: relative
 	text-align: center
 	margin-bottom: $line-height-computed
@@ -30,7 +31,7 @@
 		z-index: 2
 
 		&.-outline
-			change-bg('bg')
+			background-color: var(--bg-save)
 
 .page-cut-no-margin
 	margin-bottom: 0
