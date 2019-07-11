@@ -23,6 +23,7 @@
 	padding: 5px
 	font-weight: bold
 	font-size: $font-size-small
+	elevate-1()
 </style>
 
 <script lang="ts" src="./media-tags"></script>

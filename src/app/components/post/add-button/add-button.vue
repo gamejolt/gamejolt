@@ -38,8 +38,10 @@ $-height = 40px
 	line-height: $-height
 	user-select: none
 	-moz-user-select: none
+	transition: border-color 200ms $strong-ease-out
 
 	&::before
+		transition: border-color 200ms $strong-ease-out
 		caret(var(--theme-bg-subtle), size: 9px)
 		content: ''
 
