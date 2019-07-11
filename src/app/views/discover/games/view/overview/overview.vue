@@ -5,7 +5,7 @@
 
 		<app-ad-placement class="-cover-ad" hidden-xs />
 
-		<section class="section fill-backdrop">
+		<section class="section section-thin fill-backdrop">
 			<app-page-container xl>
 				<app-discover-games-view-overview-statbar slot="left" />
 
@@ -235,9 +235,6 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
-
-.-cover-ad >>> section
-	padding-bottom: 0
 
 .-recommended-ad
 	width: 300px
