@@ -118,7 +118,7 @@
 @media $media-sm-up
 	.post-view >>>
 		.-media-item, img, video, iframe
-			rounded-corners()
+			rounded-corners-lg()
 
 >>> .mention-avatar-img
 	border-radius: 50% !important

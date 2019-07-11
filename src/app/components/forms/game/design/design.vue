@@ -67,7 +67,7 @@
 @require '~styles-lib/mixins'
 
 .-thumb-overlay
-	rounded-corners()
+	rounded-corners-lg()
 	overflow: hidden
 </style>
 

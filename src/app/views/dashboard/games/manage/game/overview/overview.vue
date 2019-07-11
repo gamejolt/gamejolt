@@ -170,7 +170,7 @@
 
 .-graph
 	>>> .graph
-		rounded-corners()
+		rounded-corners-lg()
 
 </style>
 

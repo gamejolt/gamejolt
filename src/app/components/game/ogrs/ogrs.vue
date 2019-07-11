@@ -25,7 +25,7 @@
 @require '~styles-lib/mixins'
 
 .game-ogrs
-	rounded-corners()
+	rounded-corners-lg()
 	margin-bottom: $font-size-base
 	border: 4px solid $black
 	background: $black
@@ -43,8 +43,8 @@
 		padding: 10px
 		border-left: 4px solid $black
 		background: $white
-		border-top-right-radius: $border-radius-base
-		border-bottom-right-radius: $border-radius-base
+		border-top-right-radius: $border-radius-large
+		border-bottom-right-radius: $border-radius-large
 		min-height: 114px
 
 		.game-ogrs.hide-tag &

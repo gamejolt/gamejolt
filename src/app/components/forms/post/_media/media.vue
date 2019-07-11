@@ -79,7 +79,7 @@
 	height: $-padding + $-height
 
 .-add
-	rounded-corners()
+	rounded-corners-lg()
 	theme-prop('border-color', 'bg-subtle')
 	display: inline-block
 	vertical-align: top

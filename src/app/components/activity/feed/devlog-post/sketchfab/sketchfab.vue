@@ -22,7 +22,7 @@
 
 .devlog-post-sketchfab
 	&-embed
-		rounded-corners()
+		rounded-corners-lg()
 		change-bg('bg-offset')
 		margin-top: $-item-padding-xs-v
 		margin-left: -($-item-padding-xs)

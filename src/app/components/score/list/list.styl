@@ -16,10 +16,6 @@ $score-list-gutter = ($grid-gutter-width / 2)
 	@media $media-sm-up
 		width: ($score-list-avatar-size - $score-list-gutter)
 
-	// Since avatars can be transparent.
-	.user-avatar
-		change-bg('bg-offset')
-
 .score-list-rank
 	@media $media-xs
 		theme-prop('color', 'fg-muted')
@@ -32,10 +28,10 @@ $score-list-gutter = ($grid-gutter-width / 2)
 	@media $media-sm-up
 		theme-prop('color', 'highlight')
 		change-bg('darkest')
-		border-bottom-left-radius: $border-radius-base
+		rounded-corners()
 		position: absolute
 		left: 0
-		top: ($score-list-avatar-size - $score-list-gutter) - 25px
+		top: 0
 		line-height: 25px
 		height: 25px
 		font-weight: bold

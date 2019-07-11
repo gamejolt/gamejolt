@@ -13,7 +13,7 @@
 @require '~styles-lib/mixins'
 
 .-item
-	rounded-corners()
+	rounded-corners-lg()
 	change-bg('bg-subtle')
 	position: relative
 	display: inline-block
@@ -26,7 +26,7 @@
 		margin-right: 0
 
 	img
-		rounded-corners()
+		rounded-corners-lg()
 		z-index: 1
 
 .-controls

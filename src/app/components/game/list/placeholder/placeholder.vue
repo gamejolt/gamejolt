@@ -19,7 +19,7 @@
 
 .-placeholder
 	&-thumb
-		rounded-corners()
+		rounded-corners-lg()
 		change-bg('bg-subtle')
 		position: relative
 		height: 0

@@ -33,8 +33,8 @@
 	width: 110px
 	height: 140px
 	text-align: center
-	border-top-left-radius: $border-radius-base
-	border-bottom-left-radius: $border-radius-base
+	border-top-left-radius: $border-radius-large
+	border-bottom-left-radius: $border-radius-large
 
 .user-level-widget-level-digit
 	theme-prop('color', 'highlight')
@@ -50,8 +50,8 @@
 .user-level-widget-experience
 	padding: 7px
 	height: 140px
-	border-top-right-radius: $border-radius-base
-	border-bottom-right-radius: $border-radius-base
+	border-top-right-radius: $border-radius-large
+	border-bottom-right-radius: $border-radius-large
 
 .user-level-widget-progress
 	margin-top: 5px

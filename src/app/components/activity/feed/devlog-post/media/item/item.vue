@@ -49,7 +49,7 @@
 // The "item" gets the correct dimensions applied, so we want to stretch
 // out any image or video in the item to be full width/height.
 .-img, .-video
-	rounded-corners()
+	rounded-corners-lg()
 	change-bg('bg-offset')
 	display: block
 	width: 100%

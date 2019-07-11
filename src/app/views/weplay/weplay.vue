@@ -288,8 +288,8 @@
 	position: absolute
 	height: 100%
 	width: 100%
-	border-top-left-radius: $border-radius-base
-	border-bottom-left-radius: $border-radius-base
+	border-top-left-radius: $border-radius-large
+	border-bottom-left-radius: $border-radius-large
 
 .twitch-chat
 	position: absolute
@@ -297,8 +297,8 @@
 	height: 100%
 	width: 25%
 	right: 0
-	border-top-right-radius: $border-radius-base
-	border-bottom-right-radius: $border-radius-base
+	border-top-right-radius: $border-radius-large
+	border-bottom-right-radius: $border-radius-large
 
 @media $media-md-up
 	.twitch-player
@@ -319,6 +319,7 @@
 	change-bg('darkest')
 
 .controls
+	rounded-corners-lg()
 	margin-bottom: 10px
 	display: flex
 	max-width: 420px
@@ -327,7 +328,6 @@
 	change-bg('light')
 	padding: 10px
 	flex-wrap: wrap
-	border-radius: $border-radius-base
 
 .control-table
 	flex-shrink: 0
@@ -346,9 +346,9 @@
 	justify-content: space-between
 
 .controls-stripe
+	rounded-corners-lg()
 	width: 100px
 	height: 15px
-	border-radius: $border-radius-base
 	change-bg('darker')
 
 .control-up-left
