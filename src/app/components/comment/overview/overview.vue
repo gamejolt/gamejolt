@@ -41,6 +41,15 @@
 	border-bottom-style: solid
 	theme-prop('border-color', 'bg-subtle')
 
+.-comment-container:last-child
+	.-comment
+		border-bottom-left-radius: $border-radius-large
+		border-bottom-right-radius: $border-radius-large
+.-comment-container:first-child
+	.-comment
+		border-top-left-radius: $border-radius-large
+		border-top-right-radius: $border-radius-large
+
 .-comment
 	padding: 10px
 
