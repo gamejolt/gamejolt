@@ -1,5 +1,5 @@
 <template>
-	<div class="user-recommended sheet">
+	<div class="user-recommended">
 		<div class="-header">
 			<h4 class="section-header">
 				<translate>Who to follow</translate>
