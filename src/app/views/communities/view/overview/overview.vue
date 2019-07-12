@@ -2,7 +2,7 @@
 	<section class="section fill-backdrop">
 		<app-page-container xl order="right,main,left">
 			<div slot="right" v-if="!Screen.isMobile">
-				<div v-if="shouldShowKnownMembers" class="sheet">
+				<div v-if="shouldShowKnownMembers">
 					<h5 class="section-header">
 						<translate
 							:translate-n="knownMemberCount"
@@ -13,6 +13,7 @@
 						</translate>
 					</h5>
 					<app-user-avatar-list :users="knownMembers" />
+					<br />
 				</div>
 
 				<template v-if="community.game">

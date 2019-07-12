@@ -6,7 +6,7 @@
 					We don't want it clicking into the post when clicking a control.
 				-->
 				<span @click.stop>
-					<app-fireside-post-like-widget :post="post" :show-user-follow="showUserFollow" circle />
+					<app-fireside-post-like-widget :post="post" :show-user-follow="showUserFollow" trans />
 
 					&nbsp;
 
@@ -14,11 +14,12 @@
 						<app-button
 							icon="comment"
 							circle
+							trans
 							@click="openComments()"
 							v-app-tooltip="$gettext('View Comments')"
 						/>
 
-						<span class="blip filled" v-if="commentsCount > 0">
+						<span class="blip" v-if="commentsCount > 0">
 							<span class="blip-caret"></span>
 							<span class="blip-count">
 								{{ commentsCount | number }}
@@ -29,7 +30,7 @@
 					</template>
 
 					<app-popper @show="isShowingShare = true" @hide="isShowingShare = false">
-						<app-button icon="share-airplane" circle v-app-tooltip="$gettext('Share')" />
+						<app-button icon="share-airplane" circle trans v-app-tooltip="$gettext('Share')" />
 
 						<div slot="popover" class="well fill-darkest sans-margin" v-if="isShowingShare">
 							<div class="social-widgets" v-if="!GJ_IS_CLIENT">
@@ -49,10 +50,10 @@
 			</template>
 			<template v-else-if="video">
 				<!--
-				We don't want it clicking into the post when clicking a control.
-			-->
+					We don't want it clicking into the post when clicking a control.
+				-->
 				<span @click.stop>
-					<app-comment-video-like-widget :video="video" circle />
+					<app-comment-video-like-widget :video="video" trans />
 				</span>
 			</template>
 		</div>

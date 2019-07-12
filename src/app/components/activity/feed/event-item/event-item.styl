@@ -65,7 +65,9 @@
 		&-follow
 			margin-bottom: 5px
 
-.fireside-post-lead
+// We need to add some extra padding to just the comment-video controls since it
+// could fade-collapse before the controls, and we need the extra spacing.
+.fireside-post-lead, .-controls-comment-video
 	margin-top: $-item-padding-xs-v
 
 	@media $media-sm-up
