@@ -1,8 +1,18 @@
 <template>
 	<div v-if="community">
-		<app-page-header :cover-media-item="community.header" should-affix-nav>
+		<!-- Blur the header to signify they can't edit it -->
+		<app-page-header
+			:cover-media-item="community.header"
+			should-affix-nav
+			:blur-header="isEditing && !!community.game"
+		>
 			<span class="tag">
-				<translate>Community</translate>
+				<template v-if="community.game">
+					<translate>Game Community</translate>
+				</template>
+				<template v-else>
+					<translate>Community</translate>
+				</template>
 			</span>
 			<h1>
 				<router-link :to="{ name: 'communities.view.overview' }">
@@ -10,7 +20,9 @@
 				</router-link>
 			</h1>
 
-			<app-community-thumbnail-img slot="spotlight" :community="community" />
+			<router-link :to="{ name: 'communities.view.overview' }" slot="spotlight">
+				<app-community-thumbnail-img :community="community" :is-editing="isEditing" />
+			</router-link>
 
 			<nav slot="nav" class="platform-list inline">
 				<ul>
@@ -20,6 +32,11 @@
 							:class="{ active: $route.name === 'communities.view.overview' }"
 						>
 							<translate>Overview</translate>
+						</router-link>
+					</li>
+					<li v-if="community.game">
+						<router-link :to="community.game.getUrl()">
+							<translate>Game</translate>
 						</router-link>
 					</li>
 					<li>
@@ -38,12 +55,7 @@
 			</div>
 		</app-page-header>
 
-		<router-view
-			:community="community"
-			:tags="tags"
-			:unread-watermark="unreadWatermark"
-			@refresh="refresh()"
-		/>
+		<router-view :community="community" :unread-watermark="unreadWatermark" @refresh="refresh()" />
 	</div>
 </template>
 

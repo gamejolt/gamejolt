@@ -15,33 +15,44 @@
 					<app-user-avatar-list :users="knownMembers" />
 				</div>
 
-				<p class="lead" v-translate="{ community: community.name }">
-					Welcome to the
-					<b>%{ community }</b>
-					community on Game Jolt! Explore fan-created artwork, videos, game guides and more.
-				</p>
+				<template v-if="community.game">
+					<p class="lead" v-translate="{ community: community.name }">
+						Welcome to the
+						<b>%{ community }</b>
+						community on Game Jolt!
+					</p>
+					<app-game-thumbnail :game="community.game" class="-community-game" />
+				</template>
 
-				<p>
-					<strong>
-						<translate>Join the community and share your own creations for this game!</translate>
-					</strong>
-				</p>
+				<template v-else>
+					<p class="lead" v-translate="{ community: community.name }">
+						Welcome to the
+						<b>%{ community }</b>
+						community on Game Jolt! Explore fan-created artwork, videos, game guides and more.
+					</p>
 
-				<p>
-					<a
-						href="https://gamejolt.com/games/gj/272864/devlog/communities-ps6r9d4p"
-						class="link-help"
-					>
-						<translate>Learn more</translate>
-					</a>
-				</p>
+					<p>
+						<strong>
+							<translate>Join the community and share your own creations for this game!</translate>
+						</strong>
+					</p>
 
-				<br />
-				<br />
+					<p>
+						<a
+							href="https://gamejolt.com/games/gj/272864/devlog/communities-ps6r9d4p"
+							class="link-help"
+						>
+							<translate>Learn more</translate>
+						</a>
+					</p>
 
-				<div>
-					<img class="img-responsive" src="./communities-mascot.svg" alt="" />
-				</div>
+					<br />
+					<br />
+
+					<div>
+						<img class="img-responsive" src="./communities-mascot.svg" alt="" />
+					</div>
+				</template>
 			</div>
 
 			<div slot="left">
@@ -53,7 +64,6 @@
 					<app-communities-view-overview-nav
 						class="-nav"
 						:community="community"
-						:tags="tags"
 						:channel="channel"
 					/>
 				</app-scroll-affix>
@@ -62,7 +72,7 @@
 			<app-post-add-button
 				:community="community"
 				@add="onPostAdded"
-				:placeholder="$gettext(`Share your creations!`)"
+				:placeholder="placeholderText"
 			/>
 
 			<app-nav-tab-list v-if="channel !== 'featured'">
@@ -116,9 +126,9 @@
 					@reject-post="onPostRejected"
 				/>
 				<div v-else-if="channel !== 'featured'" class="alert">
-					<div v-translate>
+					<div v-translate="{ message: noPostsMessage }">
 						<b>There are no posts here yet.</b>
-						What are you waiting for? Post your creations! Make people happy.
+						What are you waiting for? %{ message } Make people happy.
 					</div>
 				</div>
 			</template>
@@ -132,6 +142,10 @@
 // Put some extra spacing in here because of the affixed game header.
 .gj-scroll-affixed .-nav
 	margin-top: $shell-top-nav-height + 10px !important
+
+.-community-game
+	margin-bottom: 0
+
 </style>
 
 <script lang="ts" src="./overview"></script>

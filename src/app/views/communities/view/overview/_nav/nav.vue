@@ -43,6 +43,31 @@
 					</router-link>
 				</li>
 			</ol>
+
+			<ol>
+				<li>
+					<router-link
+						class="-item"
+						:to="{
+							name: 'communities.view.edit.tags',
+							params: {
+								id: community.id,
+							},
+						}"
+						block
+					>
+						<span class="-icon">
+							<app-jolticon icon="edit" class="middle" />
+						</span>
+						<span class="-label">
+							<translate>Edit</translate>
+							<span class="-label-help help-inline">
+								<translate>Only you can see this</translate>
+							</span>
+						</span>
+					</router-link>
+				</li>
+			</ol>
 		</div>
 	</nav>
 </template>

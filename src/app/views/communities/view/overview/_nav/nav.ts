@@ -26,15 +26,19 @@ export default class AppCommunitiesViewOverviewNav extends Vue {
 	@Prop(Community)
 	community!: Community;
 
-	@Prop(Array)
-	tags!: string[];
-
 	@Prop(String)
 	channel!: string;
 
 	isNavExpanded = false;
 
 	readonly Screen = Screen;
+
+	get tags() {
+		if (this.community.tags) {
+			return this.community.tags.map(t => t.tag);
+		}
+		return [];
+	}
 
 	get groups(): NavGroup[] {
 		return [

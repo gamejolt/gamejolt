@@ -142,7 +142,11 @@ export default class FormPost extends BaseForm<FormPostModel>
 	readonly Screen = Screen;
 
 	get loadUrl() {
-		return `/web/posts/manage/save/${this.model!.id}`;
+		let url = `/web/posts/manage/save/${this.model!.id}`;
+		if (this.defaultCommunity instanceof Community) {
+			url += '?communityId=' + this.defaultCommunity.id;
+		}
+		return url;
 	}
 
 	get shortLabel() {

@@ -1,12 +1,13 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import AppCommunityJoinWidget from 'game-jolt-frontend-lib/components/community/join-widget/join-widget.vue'
-import AppCommunityThumbnailImg from 'game-jolt-frontend-lib/components/community/thumbnail/img/img.vue'
+import AppCommunityJoinWidget from 'game-jolt-frontend-lib/components/community/join-widget/join-widget.vue';
+import AppCommunityThumbnailImg from 'game-jolt-frontend-lib/components/community/thumbnail/img/img.vue';
 import {
 	BaseRouteComponent,
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
+import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { Mutation } from 'vuex-class';
@@ -27,7 +28,18 @@ import { Store } from '../../../store/index';
 @RouteResolver({
 	cache: true,
 	deps: { params: ['path'] },
-	resolver: ({ route }) => Api.sendRequest('/web/communities/view/' + route.params.path),
+	async resolver({ route }) {
+		const payload = await Api.sendRequest('/web/communities/view/' + route.params.path);
+
+		if (payload && payload.community) {
+			const redirect = enforceLocation(route, { path: payload.community.path });
+			if (redirect) {
+				return redirect;
+			}
+		}
+
+		return payload;
+	},
 })
 export default class RouteCommunitiesView extends BaseRouteComponent {
 	@ThemeMutation
@@ -43,12 +55,14 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	viewCommunity!: Store['viewCommunity'];
 
 	community: Community = null as any;
-	tags: string[] = [];
-	unreadWatermark: number = 0;
+	unreadWatermark = 0;
+
+	get isEditing() {
+		return this.$route.name && this.$route.name.includes('communities.view.edit');
+	}
 
 	routeResolved($payload: any) {
 		this.community = new Community($payload.community);
-		this.tags = $payload.tags || [];
 		if ($payload.unreadWatermark) {
 			this.unreadWatermark = $payload.unreadWatermark;
 		}
