@@ -11,15 +11,13 @@
 		<br />
 
 		<app-fade-collapse
-			:collapse-height="300"
+			:collapse-height="200"
 			:is-open="isOpen"
 			@require-change="canToggleChanged"
 			@expand="toggleFull"
 		>
 			<app-content-viewer :source="video.comment.comment_content" />
 		</app-fade-collapse>
-
-		<a class="hidden-text-expander" v-if="canToggleContent" @click="toggleFull"></a>
 	</div>
 </template>
 

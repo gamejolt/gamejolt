@@ -155,6 +155,9 @@
 
 			<app-event-item-controls
 				class="-controls"
+				:class="{
+					'-controls-comment-video': eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD,
+				}"
 				:post="post"
 				:video="video"
 				:show-user-follow="shouldShowFollow"
