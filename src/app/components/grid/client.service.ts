@@ -3,7 +3,10 @@ import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { getNotificationText, Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';
+import {
+	getNotificationText,
+	Notification,
+} from 'game-jolt-frontend-lib/components/notification/notification-model';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
 import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
 import { sleep } from 'game-jolt-frontend-lib/utils/utils';
@@ -344,6 +347,7 @@ export class GridClient {
 		const community = store.state.communities.find(c => c.id === communityId);
 		if (community instanceof Community) {
 			community.is_unread = true;
+			store.commit('incrementNotificationCount', { count: 1, type: 'activity' });
 		}
 	}
 
