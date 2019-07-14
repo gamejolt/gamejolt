@@ -67,6 +67,10 @@ export class ActivityFeedState {
 	}
 
 	addItems(items: ActivityFeedItem[], position: 'start' | 'end' = 'start') {
+		// Remove duplicates before adding.
+		// This may happen if items in the feed change around while loading more.
+		this.removeItems(items);
+
 		if (position === 'start') {
 			this.items = items.concat(this.items);
 		} else if (position === 'end') {
@@ -80,10 +84,7 @@ export class ActivityFeedState {
 
 	removeItems(items: ActivityFeedItem[]) {
 		for (const item of items) {
-			arrayRemove(
-				this.items,
-				i => i.type === item.type && i.feedItem.id === item.feedItem.id
-			);
+			arrayRemove(this.items, i => i.isEqual(item));
 		}
 	}
 

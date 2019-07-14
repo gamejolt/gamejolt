@@ -360,6 +360,7 @@ export class GridClient {
 		const community = store.state.communities.find(c => c.id === communityId);
 		if (community instanceof Community) {
 			community.is_unread = true;
+			store.commit('incrementNotificationCount', { count: 1, type: 'activity' });
 		}
 	}
 

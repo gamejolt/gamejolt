@@ -28,6 +28,10 @@ export class ActivityFeedItem {
 		this.feedItem = sourceItem;
 	}
 
+	isEqual(other: ActivityFeedItem) {
+		return this.type === other.type && this.feedItem.id === other.feedItem.id;
+	}
+
 	$viewed() {
 		if (this.feedItem instanceof EventItem && this.feedItem.type === EventItem.TYPE_POST_ADD) {
 			(this.feedItem.action as FiresidePost).$viewed();
