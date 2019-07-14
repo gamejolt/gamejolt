@@ -3,8 +3,12 @@ import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
 import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { getNotificationText, Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';
+import {
+	getNotificationText,
+	Notification,
+} from 'game-jolt-frontend-lib/components/notification/notification-model';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
 import { sleep } from 'game-jolt-frontend-lib/utils/utils';
 import { Channel, Socket } from 'phoenix';
@@ -261,9 +265,21 @@ export class GridClient {
 		if (message !== undefined) {
 			let title = Translate.$gettext('New Notification');
 			if (notification.type === Notification.TYPE_POST_ADD) {
-				title = Translate.$gettext('New Post');
+				if (notification.from_model instanceof User) {
+					title = Translate.$gettextInterpolate(`New Post by @%{ username }`, {
+						username: notification.from_model.username,
+					});
+				} else {
+					title = Translate.$gettext('New Post');
+				}
 			} else if (notification.type === Notification.TYPE_COMMENT_VIDEO_ADD) {
-				title = Translate.$gettext('New Video');
+				if (notification.from_model instanceof User) {
+					title = Translate.$gettextInterpolate(`New Video by @%{ username }`, {
+						username: notification.from_model.username,
+					});
+				} else {
+					title = Translate.$gettext('New Video');
+				}
 			}
 
 			Growls.info({
