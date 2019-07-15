@@ -4,7 +4,6 @@ import AppShortkey from 'game-jolt-frontend-lib/vue/components/shortkey/shortkey
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import AppSearchAutocomplete from './autocomplete/autocomplete.vue';
-import AppSearchInputTS from './input/input';
 import AppSearchInput from './input/input.vue';
 import { Search } from './search-service';
 
@@ -27,6 +26,9 @@ export default class AppSearch extends Vue {
 	@Prop({ type: Boolean, default: false })
 	autocompleteDisabled!: boolean;
 
+	@Prop(Boolean)
+	autofocus!: boolean;
+
 	id = ++searchIterator;
 
 	query = '';
@@ -42,6 +44,12 @@ export default class AppSearch extends Vue {
 
 	created() {
 		this.query = Search.query;
+	}
+
+	mounted() {
+		if (this.autofocus) {
+			this.focus();
+		}
 	}
 
 	// Sync it.
