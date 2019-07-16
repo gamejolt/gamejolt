@@ -10,11 +10,13 @@ import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../../store';
+import { AppCommunityPerms } from '../../../community/perms/perms';
 import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 
 @Component({
 	components: {
 		AppPopper,
+		AppCommunityPerms,
 	},
 	directives: {
 		AppTooltip,

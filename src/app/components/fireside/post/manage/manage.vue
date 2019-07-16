@@ -73,40 +73,44 @@
 						<div class="list-group list-group-dark">
 							<template v-if="shouldShowManageCommunities">
 								<span v-for="i of post.manageableCommunities" :key="i.id">
-									<a class="list-group-item has-icon" @click.stop="toggleFeatured(i)">
-										<template v-if="i.isFeatured">
-											<app-jolticon icon="remove" />
-											<translate :translate-params="{ community: i.community.name }">
-												Unfeature
-												<template v-if="shouldDisplayCommunityName(i.community)">
-													: %{ community }
-												</template>
-											</translate>
-										</template>
-										<template v-else>
-											<app-jolticon icon="tag" />
-											<translate :translate-params="{ community: i.community.name }">
-												Feature
-												<template v-if="shouldDisplayCommunityName(i.community)">
-													: %{ community }
-												</template>
-											</translate>
-										</template>
-									</a>
-
-									<a class="list-group-item has-icon" @click.stop="rejectFromCommunity(i)">
-										<app-jolticon icon="remove" notice />
-
-										<translate :translate-params="{ community: i.community.name }">
-											Eject
-											<template v-if="shouldDisplayCommunityName(i.community)">
-												: %{ community }
+									<app-community-perms :community="i.community" required="community-feature">
+										<a class="list-group-item has-icon" @click.stop="toggleFeatured(i)">
+											<template v-if="i.isFeatured">
+												<app-jolticon icon="remove" />
+												<translate :translate-params="{ community: i.community.name }">
+													Unfeature
+													<template v-if="shouldDisplayCommunityName(i.community)">
+														: %{ community }
+													</template>
+												</translate>
 											</template>
 											<template v-else>
-												from this community
+												<app-jolticon icon="tag" />
+												<translate :translate-params="{ community: i.community.name }">
+													Feature
+													<template v-if="shouldDisplayCommunityName(i.community)">
+														: %{ community }
+													</template>
+												</translate>
 											</template>
-										</translate>
-									</a>
+										</a>
+									</app-community-perms>
+
+									<app-community-perms :community="i.community" required="community-posts">
+										<a class="list-group-item has-icon" @click.stop="rejectFromCommunity(i)">
+											<app-jolticon icon="remove" notice />
+
+											<translate :translate-params="{ community: i.community.name }">
+												Eject
+												<template v-if="shouldDisplayCommunityName(i.community)">
+													: %{ community }
+												</template>
+												<template v-else>
+													from this community
+												</template>
+											</translate>
+										</a>
+									</app-community-perms>
 								</span>
 							</template>
 

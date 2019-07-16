@@ -7,7 +7,7 @@ import {
 	VuexStore,
 } from 'game-jolt-frontend-lib/utils/vuex';
 import { namespace } from 'vuex-class';
-import { store } from '../../../../store';
+import { store } from '../../../../../store';
 
 export const RouteStoreName = 'editRoute';
 export const RouteStoreModule = namespace(RouteStoreName);

@@ -1,7 +1,10 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Collaborator } from 'game-jolt-frontend-lib/components/collaborator/collaborator.model';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import AppCommunityJoinWidget from 'game-jolt-frontend-lib/components/community/join-widget/join-widget.vue';
 import AppCommunityThumbnailImg from 'game-jolt-frontend-lib/components/community/thumbnail/img/img.vue';
+import AppEditableOverlay from 'game-jolt-frontend-lib/components/editable-overlay/editable-overlay.vue';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
@@ -11,6 +14,7 @@ import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { Mutation } from 'vuex-class';
+import { CommunityThumbnailModal } from '../../../components/forms/community/thumbnail/modal/modal.service';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { Store } from '../../../store/index';
 
@@ -20,6 +24,7 @@ import { Store } from '../../../store/index';
 		AppPageHeader,
 		AppCommunityThumbnailImg,
 		AppCommunityJoinWidget,
+		AppEditableOverlay,
 	},
 	filters: {
 		number,
@@ -56,15 +61,24 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	community: Community = null as any;
 	unreadWatermark = 0;
+	collaboratorInvite: Collaborator | null = null;
 
 	get isEditing() {
-		return this.$route.name && this.$route.name.includes('communities.view.edit');
+		// return this.$route.name && this.$route.name.includes('communities.view.edit');
+		return this.$route.name && this.$route.name.includes('communities.view.overview.edit');
+	}
+
+	get canEditMedia() {
+		return this.community.hasPerms('community-media');
 	}
 
 	routeResolved($payload: any) {
 		this.community = new Community($payload.community);
 		if ($payload.unreadWatermark) {
 			this.unreadWatermark = $payload.unreadWatermark;
+		}
+		if ($payload.invite) {
+			this.collaboratorInvite = new Collaborator($payload.invite);
 		}
 
 		this.setPageTheme(this.community.theme || null);
@@ -85,5 +99,21 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	refresh() {
 		this.reloadRoute();
+	}
+
+	showEditAvatar() {
+		CommunityThumbnailModal.show(this.community);
+	}
+
+	async acceptCollaboration() {
+		await this.collaboratorInvite!.$accept();
+		this.community.perms = this.collaboratorInvite!.perms;
+		this.collaboratorInvite = null;
+		Growls.success(this.$gettext(`You are now a collaborator on this community!`));
+	}
+
+	async declineCollaboration() {
+		await this.collaboratorInvite!.$remove();
+		this.collaboratorInvite = null;
 	}
 }

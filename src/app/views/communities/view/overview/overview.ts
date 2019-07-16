@@ -1,5 +1,6 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
+import { CommunityTag } from 'game-jolt-frontend-lib/components/community/tag/tag.model';
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
 import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
@@ -87,6 +88,9 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	@Prop(Number)
 	unreadWatermark!: number;
+
+	@Prop(Boolean)
+	isEditing!: boolean;
 
 	@State
 	app!: Store['app'];
@@ -265,5 +269,9 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		if (this.feed && this.community.id === community.id) {
 			this.feed.remove([eventItem]);
 		}
+	}
+
+	onTagsChanged(tags: CommunityTag[]) {
+		this.community.tags = tags;
 	}
 }
