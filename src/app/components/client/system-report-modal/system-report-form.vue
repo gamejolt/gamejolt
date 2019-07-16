@@ -14,9 +14,15 @@
 				placeholder="https://github.com/gamejolt/issue-tracker/issues/1313"
 				:rules="{
 					max: 255,
+					pattern: /^(?:https?:\/\/)?github.com\/gamejolt\/issue-tracker\/issues\/\d+/,
 				}"
 			/>
-			<app-form-control-errors />
+			<app-form-control-errors :label="$gettext('link')">
+				<app-form-control-error
+					when="pattern"
+					:message="$gettext(`This doesn't look like a valid issue link`)"
+				/>
+			</app-form-control-errors>
 		</app-form-group>
 
 		<app-form-group name="description" :label="$gettext('system_report.form.description_label')">

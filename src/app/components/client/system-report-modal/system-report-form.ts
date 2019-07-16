@@ -3,12 +3,16 @@ import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { BaseForm, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { Component } from 'vue-property-decorator';
 import { ClientLogger } from '../../../../_common/client/logger/logger.service';
-import { ClientLibraryStore, ClientLibraryState } from '../../../store/client-library';
+import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
+import { LocalDbGame } from '../local-db/game/game.model';
+import { LocalDbPackage } from '../local-db/package/package.model';
 
 interface FormModel {
 	description: string;
 	log_lines: string;
 	os_info: IClientOSInfo;
+	localdb_games: { [id: number]: LocalDbGame };
+	localdb_packages: { [id: number]: LocalDbPackage };
 }
 
 @Component({})
