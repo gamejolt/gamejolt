@@ -4,6 +4,8 @@ import AppCardListItem from 'game-jolt-frontend-lib/components/card/list/item/it
 import AppCardList from 'game-jolt-frontend-lib/components/card/list/list.vue';
 import { Collaborator } from 'game-jolt-frontend-lib/components/collaborator/collaborator.model';
 import { CommunityTag } from 'game-jolt-frontend-lib/components/community/tag/tag.model';
+import AppCommunityThumbnailImg from 'game-jolt-frontend-lib/components/community/thumbnail/img/img.vue';
+import AppEditableOverlay from 'game-jolt-frontend-lib/components/editable-overlay/editable-overlay.vue';
 import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
 import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
 import {
@@ -11,6 +13,7 @@ import {
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-store';
+import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
 import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
@@ -18,6 +21,7 @@ import Component from 'vue-class-component';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import FormCommunityCollaborator from '../../../../../components/forms/community/collaborator/collaborator.vue';
 import FormCommunityTag from '../../../../../components/forms/community/tag/tag.vue';
+import { CommunityThumbnailModal } from '../../../../../components/forms/community/thumbnail/modal/modal.service';
 import { store } from '../../../../../store';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './edit.store';
 import AppCommunitiesOverviewEditNotice from './_notice/notice.vue';
@@ -40,6 +44,8 @@ type CPayload = {
 		AppCardListAdd,
 		FormCommunityCollaborator,
 		AppCommunityPerms,
+		AppEditableOverlay,
+		AppCommunityThumbnailImg,
 	},
 	directives: {
 		AppTooltip,
@@ -88,10 +94,11 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 	isAddingCollaborator = false;
 
 	readonly Collaborator = Collaborator;
+	readonly Screen = Screen;
 
 	get routeTitle() {
 		if (this.community) {
-			return this.$gettextInterpolate(`Edit %{ community }`, {
+			return this.$gettextInterpolate(`Edit Community %{ community }`, {
 				community: this.community.name,
 			});
 		}
@@ -105,6 +112,10 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 	get isOwner() {
 		// The owner's collaboration is not returned from backend.
 		return this.collaboration === null;
+	}
+
+	get shouldShowThumbnail() {
+		return Screen.isXs;
 	}
 
 	routeResolved($payload: CPayload) {
@@ -182,5 +193,9 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 		} catch (e) {
 			Growls.error(this.$gettext('Could not remove collaborator for some reason.'));
 		}
+	}
+
+	showEditAvatar() {
+		CommunityThumbnailModal.show(this.community);
 	}
 }

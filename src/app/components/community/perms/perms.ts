@@ -2,7 +2,10 @@ import { Perm } from 'game-jolt-frontend-lib/components/collaborator/collaborata
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { RouteStore, RouteStoreName } from '../../../views/communities/view/edit/edit.store';
+import {
+	RouteStore,
+	RouteStoreName,
+} from '../../../views/communities/view/overview/edit/edit.store';
 
 @Component({})
 export class AppCommunityPerms extends Vue {

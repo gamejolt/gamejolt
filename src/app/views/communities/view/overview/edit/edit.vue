@@ -5,6 +5,26 @@
 			<div class="-spacer"></div>
 		</template>
 
+		<!--
+			Thumbnail
+			This only shows here on mobile, on desktop the thumbnail can be edited through the
+			spotlight slot in the page header.
+		-->
+		<template v-if="shouldShowThumbnail">
+			<app-community-perms :community="community" required="community-media">
+				<h2 class="section-header">
+					<translate>Thumbnail</translate>
+				</h2>
+
+				<app-editable-overlay class="-edit-thumbnail" @click="showEditAvatar()">
+					<translate slot="overlay">Change</translate>
+					<app-community-thumbnail-img :community="community" />
+				</app-editable-overlay>
+
+				<div class="-spacer"></div>
+			</app-community-perms>
+		</template>
+
 		<!-- Tags -->
 		<app-community-perms :community="community" required="community-tags">
 			<h2 class="section-header">
@@ -128,6 +148,11 @@
 
 	@media $media-sm-up
 		margin-top: $line-height-computed * 2
+
+.-edit-thumbnail
+	width: 120px
+	border-radius: 50%
+	overflow: hidden
 
 .-tag-list
 	list-style: none
