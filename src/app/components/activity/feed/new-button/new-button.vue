@@ -9,10 +9,10 @@
 <style lang="stylus" scoped>
 @require '../variables'
 @require '~styles-lib/mixins'
+@require '~styles/variables'
 
 .-container
-	@media $media-sm-up
-		padding-bottom: $-item-padding-v
+	padding-bottom: $-item-padding-v
 
 .-button
 	-activity-feed-item()
