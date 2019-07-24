@@ -10,6 +10,7 @@ import { routeDashAccountPaymentMethods } from './payment-methods/payment-method
 import { routeDashAccountPurchasesList } from './purchases/list/list.route';
 import { routeDashAccountPurchasesView } from './purchases/view/view.route';
 import { routeDashAccountSite } from './site/site.route';
+import { routeDashAccountVerifiedAccount } from './verified-account/verified-account.route';
 import { routeDashAccountWithdrawFunds } from './withdraw-funds/withdraw-funds.route';
 
 export const routeDashAccount: RouteConfig = {
@@ -28,5 +29,6 @@ export const routeDashAccount: RouteConfig = {
 		routeDashAccountPurchasesView,
 		routeDashAccountSite,
 		routeDashAccountWithdrawFunds,
+		routeDashAccountVerifiedAccount,
 	],
 };

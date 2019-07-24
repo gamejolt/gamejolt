@@ -44,6 +44,14 @@
 					<translate>Password</translate>
 				</router-link>
 				<router-link
+					v-if="shouldShowVerify"
+					class="list-group-item"
+					:to="{ name: 'dash.account.verified-account' }"
+					active-class="active"
+				>
+					<translate>Verify Account</translate>
+				</router-link>
+				<router-link
 					class="list-group-item"
 					:to="{ name: 'dash.account.payment-methods' }"
 					active-class="active"
