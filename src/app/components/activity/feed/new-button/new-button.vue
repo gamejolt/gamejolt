@@ -9,7 +9,6 @@
 <style lang="stylus" scoped>
 @require '../variables'
 @require '~styles-lib/mixins'
-@require '~styles/variables'
 
 .-container
 	padding-bottom: $-item-padding-v
