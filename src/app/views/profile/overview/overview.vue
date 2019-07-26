@@ -104,6 +104,17 @@
 					</div>
 
 					<div slot="right">
+						<div class="-known-followers">
+							<div class="-known-followers-list">
+								<app-user-avatar-list :users="knownFollowers" sm inline />
+							</div>
+							<div class="-known-followers-text-container">
+								<span class="-known-followers-text text-muted">
+									<small>{{ knownFollowersText }}</small>
+								</span>
+							</div>
+						</div>
+
 						<template v-if="hasQuickButtonsSection">
 							<!-- Add Friend -->
 							<app-button v-if="canAddAsFriend" block @click="sendFriendRequest()">
@@ -266,5 +277,20 @@
 		</section>
 	</div>
 </template>
+
+<style lang="stylus" scoped>
+@require '~styles/variables'
+
+.-known-followers
+	display: flex
+	margin-bottom: $line-height-computed
+
+.-known-followers-text-container
+	margin-top: 3px
+	margin-left: 20px
+
+.-known-followers-list
+	flex-shrink: 0
+</style>
 
 <script lang="ts" src="./overview"></script>

@@ -20,6 +20,7 @@ import {
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';
+import AppUserAvatarList from 'game-jolt-frontend-lib/components/user/user-avatar/list/list.vue';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { YoutubeChannel } from 'game-jolt-frontend-lib/components/youtube/channel/channel-model';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
@@ -44,6 +45,7 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 		AppCommentAddButton,
 		AppCommentOverview,
 		AppContentViewer,
+		AppUserAvatarList,
 	},
 	directives: {
 		AppTooltip,
@@ -108,6 +110,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	developerGames: Game[] = [];
 	youtubeChannels: YoutubeChannel[] = [];
 	linkedAccounts: LinkedAccount[] = [];
+	recommendedUsers: User[] = [];
 
 	readonly User = User;
 	readonly UserFriendship = UserFriendship;
@@ -206,6 +209,23 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return this.isFriend && this.chat && this.chat.connected;
 	}
 
+	get knownFollowers() {
+		return this.recommendedUsers.slice(0, 3);
+	}
+
+	get knownFollowersText() {
+		const names = this.recommendedUsers.slice(0, 3).map(i => i.display_name);
+		return this.$gettextInterpolate(
+			'Followed by %{ name1 }, %{ name2 }, %{ name3 } and %{ num } others you follow',
+			{
+				name1: names[0],
+				name2: names[1],
+				name3: names[2],
+				num: this.recommendedUsers.length - 3,
+			}
+		);
+	}
+
 	getLinkedAccount(provider: Provider) {
 		if (
 			this.user &&
@@ -246,6 +266,19 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		}
 
 		this.overviewPayload($payload);
+	}
+
+	async mounted() {
+		const $payload = await Api.sendRequest(
+			'/web/profile/followers/@' + this.user!.username,
+			undefined,
+			{
+				detach: true,
+			}
+		);
+		if ($payload && $payload.users) {
+			this.recommendedUsers = User.populate($payload.users);
+		}
 	}
 
 	showComments() {
