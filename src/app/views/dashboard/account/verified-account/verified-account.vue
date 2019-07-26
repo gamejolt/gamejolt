@@ -26,9 +26,15 @@
 			<template v-if="list">
 				<div class="well fill-offset">
 					In order to have your account verified, you need to complete as many tasks as possible
-					from the following list.<br>
-					<app-jolticon icon="exclamation-circle" notice /> marks tasks that are required before you can submit your application.<br><br>
-					Please note that these requirements are <strong>guidelines</strong> for your presence on Game Jolt. Before making a decision, we review your profile manually.
+					from the following list.
+					<br />
+					<app-jolticon icon="exclamation-circle" notice />
+					marks tasks that are required before you can submit your application.
+					<br />
+					<br />
+					Please note that these requirements are
+					<strong>guidelines</strong>
+					for your presence on Game Jolt. Before making a decision, we review your profile manually.
 				</div>
 
 				<div class="-list">
@@ -55,7 +61,13 @@
 				</div>
 			</template>
 
-			<form-verified-account v-if="bootstrappedApplication" :model="application" :user="app.user" :canSubmit="canApply" />
+			<form-verified-account
+				v-if="bootstrappedApplication"
+				:model="application"
+				:user="app.user"
+				:canSubmit="canApply"
+				@submit="onSubmitApplication"
+			/>
 		</template>
 	</div>
 </template>

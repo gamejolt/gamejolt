@@ -1,11 +1,15 @@
-import { BaseForm, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnInit,
+	FormOnSubmitSuccess,
+} from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { UserVerificationApplication } from 'game-jolt-frontend-lib/components/user/verification-application/verification-application';
 import { Component, Prop } from 'vue-property-decorator';
 
 @Component({})
 export default class FormVerifiedAccount extends BaseForm<UserVerificationApplication>
-	implements FormOnInit {
+	implements FormOnInit, FormOnSubmitSuccess {
 	@Prop(Boolean)
 	canSubmit!: boolean;
 	@Prop(User)
@@ -26,11 +30,17 @@ export default class FormVerifiedAccount extends BaseForm<UserVerificationApplic
 	}
 
 	onInit() {
-		console.log('form init');
 		if (!this.model) {
 			this.setField('application', '');
 		} else {
 			this.existingApplication = true;
+		}
+	}
+
+	onSubmitSuccess(response: any) {
+		if (response.success) {
+			this.existingApplication = true;
+			this.model = new UserVerificationApplication(response.application);
 		}
 	}
 }

@@ -1,4 +1,5 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
@@ -75,5 +76,10 @@ export default class RouteDashAccountVerifiedAccount extends BaseRouteComponent 
 			this.application = new UserVerificationApplication($payload.application);
 		}
 		this.bootstrappedApplication = true;
+	}
+
+	onSubmitApplication(application: UserVerificationApplication) {
+		this.application = application;
+		Growls.success('Your Verification Application has been submitted successfully.');
 	}
 }
