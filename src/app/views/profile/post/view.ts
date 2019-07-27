@@ -1,5 +1,7 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { CommentThreadModal } from 'game-jolt-frontend-lib/components/comment/thread/modal.service';
+import { ContentDocument } from 'game-jolt-frontend-lib/components/content/content-document';
+import { MentionCache } from 'game-jolt-frontend-lib/components/content/mention-cache';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
 import { Registry } from 'game-jolt-frontend-lib/components/registry/registry.service';
@@ -92,6 +94,22 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;
+
+		MentionCache.add(this.$route, 'Fireside_Post-' + this.post.id + '-owner', this.post.user);
+		const leadDoc = ContentDocument.fromJson(this.post.lead_content);
+		MentionCache.addFromDoc(
+			this.$route,
+			'Fireside_Post-' + this.post.id + '-lead-mentions',
+			leadDoc
+		);
+		if (this.post.hasArticle) {
+			const articleDoc = ContentDocument.fromJson(this.post.article_content);
+			MentionCache.addFromDoc(
+				this.$route,
+				'Fireside_Post-' + this.post.id + '-article-mentions',
+				articleDoc
+			);
+		}
 	}
 
 	render(h: CreateElement) {
