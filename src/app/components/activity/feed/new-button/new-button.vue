@@ -11,8 +11,7 @@
 @require '~styles-lib/mixins'
 
 .-container
-	@media $media-sm-up
-		padding-bottom: $-item-padding-v
+	padding-bottom: $-item-padding-v
 
 .-button
 	-activity-feed-item()
