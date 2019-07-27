@@ -135,6 +135,18 @@
 			</p>
 		</app-form-group>
 
+		<app-form-group name="friend_requests_enabled" :label="$gettext(`Allow friend requests?`)">
+			<app-form-control-toggle class="pull-right" />
+
+			<p class="help-block">
+				<translate>
+					Allows people to send you friend requests. Friends can use the private chat feature to
+					send messages to each other. With this feature turned off, you will still be able to send
+					friend requests to other users.
+				</translate>
+			</p>
+		</app-form-group>
+
 		<app-form-button>
 			<translate>dash.profile.edit.submit_button</translate>
 		</app-form-button>
