@@ -8,7 +8,7 @@ import {
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
+import { enforceLocation, LocationRedirect } from 'game-jolt-frontend-lib/utils/router';
 import { Component } from 'vue-property-decorator';
 import { CreateElement } from 'vue/types/vue';
 import { IntentService } from '../../../../../../components/intent/intent.service';
@@ -38,8 +38,24 @@ import { RouteStore, RouteStoreModule } from '../../view.store';
 		const payload = await Api.sendRequest('/web/posts/view/' + postHash);
 
 		if (payload && payload.post) {
-			const redirect = enforceLocation(route, { postSlug: payload.post.slug });
-			if (redirect) {
+			if (payload.post.game) {
+				const redirect = enforceLocation(route, {
+					postSlug: payload.post.slug,
+					slug: payload.post.game.slug,
+					id: payload.post.game.id + '',
+				});
+				if (redirect) {
+					return redirect;
+				}
+			} else {
+				// This is not a game devlog, redirect to the user post view
+				const redirect = new LocationRedirect({
+					name: 'profile.post.view',
+					params: { username: payload.post.user.username, slug: payload.post.slug },
+					query: route.query,
+					hash: route.hash,
+					replace: true,
+				});
 				return redirect;
 			}
 		}
