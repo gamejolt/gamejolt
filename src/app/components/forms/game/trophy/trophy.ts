@@ -1,12 +1,15 @@
 import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
 import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
-import { BaseForm, FormOnInit, FormOnLoad } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnInit,
+	FormOnLoad,
+} from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { GameTrophy } from 'game-jolt-frontend-lib/components/game/trophy/trophy.model';
 import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
 import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 @Component({
 	components: {

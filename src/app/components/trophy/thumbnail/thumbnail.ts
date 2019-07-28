@@ -1,9 +1,9 @@
 import { GameTrophy } from 'game-jolt-frontend-lib/components/game/trophy/trophy.model';
 import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { BaseTrophy } from 'game-jolt-frontend-lib/components/trophy/base-trophy';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 const imgMapping: any = {
 	bronze: require('./bronze.png'),
@@ -28,14 +28,23 @@ const BaseHeight = 35;
 	},
 })
 export default class AppTrophyThumbnail extends Vue {
-	@Prop(GameTrophy) trophy!: GameTrophy;
+	@Prop(Object) trophy!: BaseTrophy;
 	@Prop(Boolean) isAchieved?: boolean;
+	@Prop(Boolean) noTooltip?: boolean;
 
 	thumbWidth = BaseWidth;
 
+	get tooltip() {
+		if (this.noTooltip) {
+			return '';
+		}
+		return this.trophy.title;
+	}
+
 	get hasThumbnailImg() {
 		return (
-			this.trophy.has_thumbnail && (!this.trophy.secret || this.isAchieved || this.trophy.is_owner)
+			this.trophy.has_thumbnail &&
+			(!this.trophy.secret || this.isAchieved || this.trophy.is_owner)
 		);
 	}
 

@@ -5,7 +5,7 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
-import { UserGameTrophy } from 'game-jolt-frontend-lib/components/user/game-trophy/game-trophy.model';
+import { UserGameTrophy } from 'game-jolt-frontend-lib/components/user/trophy/game-trophy.model';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';

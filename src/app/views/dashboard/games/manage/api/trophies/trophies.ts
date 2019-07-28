@@ -3,11 +3,15 @@ import AppCardListAdd from 'game-jolt-frontend-lib/components/card/list/add/add.
 import AppCardListDraggable from 'game-jolt-frontend-lib/components/card/list/draggable/draggable.vue';
 import AppCardListItem from 'game-jolt-frontend-lib/components/card/list/item/item.vue';
 import AppCardList from 'game-jolt-frontend-lib/components/card/list/list.vue';
-import { GameTrophy, GameTrophyDifficulty } from 'game-jolt-frontend-lib/components/game/trophy/trophy.model';
+import { GameTrophy } from 'game-jolt-frontend-lib/components/game/trophy/trophy.model';
 import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { TrophyDifficulty } from 'game-jolt-frontend-lib/components/trophy/base-trophy';
 import { Component } from 'vue-property-decorator';
 import FormGameTrophy from '../../../../../../components/forms/game/trophy/trophy.vue';
 import AppTrophyThumbnail from '../../../../../../components/trophy/thumbnail/thumbnail.vue';
@@ -122,7 +126,7 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 		Scroll.to('trophy-container-' + trophy.id);
 	}
 
-	saveTrophySort(difficulty: GameTrophyDifficulty, trophies: GameTrophy[]) {
+	saveTrophySort(difficulty: TrophyDifficulty, trophies: GameTrophy[]) {
 		// Pull out the trophies and then add them back in in the correct order.
 		const trophyIds = trophies.map(i => i.id);
 		let filtered = this.trophies.filter(i => trophyIds.indexOf(i.id) === -1).concat(trophies);

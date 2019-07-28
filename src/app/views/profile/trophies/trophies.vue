@@ -3,7 +3,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="-item col-sm-6 col-md-4 col-lg-3" v-for="trophy of trophies" :key="trophy.id">
-					<app-trophy-card :trophy="trophy" />
+					<app-trophy-card :user-trophy="trophy" />
 				</div>
 			</div>
 		</div>
