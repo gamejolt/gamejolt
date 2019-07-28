@@ -123,6 +123,11 @@
 								<translate>profile.library_tab</translate>
 							</router-link>
 						</li>
+						<li>
+							<router-link :to="{ name: 'profile.trophies' }" active-class="active">
+								<translate>Trophies</translate>
+							</router-link>
+						</li>
 						<li
 							v-if="
 								app.user &&
