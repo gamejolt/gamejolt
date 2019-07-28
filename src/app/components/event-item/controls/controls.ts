@@ -1,3 +1,4 @@
+import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
 import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
 import FormComment from 'game-jolt-frontend-lib/components/comment/add/add.vue';
 import {
@@ -36,6 +37,7 @@ import AppEventItemControlsCommentAddPlaceholder from './comment-add-placeholder
 	},
 	directives: {
 		AppTooltip,
+		AppAuthRequired,
 	},
 	filters: {
 		number,

@@ -47,7 +47,7 @@
 						</div>
 					</app-popper>
 
-					<div v-if="!showComments" class="-inline-comment">
+					<div v-if="!showComments" class="-inline-comment" v-app-auth-required>
 						<app-event-item-controls-comment-add-placeholder
 							v-if="!clickedComment"
 							@click="onClickCommentAddPlaceholder"
