@@ -1,4 +1,6 @@
+import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
 import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
+import FormComment from 'game-jolt-frontend-lib/components/comment/add/add.vue';
 import {
 	CommentAction,
 	CommentMutation,
@@ -20,6 +22,7 @@ import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { AppCommentWidgetLazy } from '../../lazy';
+import AppEventItemControlsCommentAddPlaceholder from './comment-add-placeholder/placeholder.vue';
 
 @Component({
 	components: {
@@ -29,9 +32,12 @@ import { AppCommentWidgetLazy } from '../../lazy';
 		AppCommentVideoLikeWidget,
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,
+		FormComment,
+		AppEventItemControlsCommentAddPlaceholder,
 	},
 	directives: {
 		AppTooltip,
+		AppAuthRequired,
 	},
 	filters: {
 		number,
@@ -64,6 +70,7 @@ export default class AppEventItemControls extends Vue {
 
 	commentStore: CommentStoreModel | null = null;
 	isShowingShare = false;
+	clickedComment = false;
 
 	readonly FiresidePost = FiresidePost;
 
@@ -129,5 +136,14 @@ export default class AppEventItemControls extends Vue {
 
 	copyShareUrl() {
 		Clipboard.copy(this.shareUrl);
+	}
+
+	onClickCommentAddPlaceholder() {
+		this.clickedComment = true;
+	}
+
+	onSubmitNewComment() {
+		this.clickedComment = false; // Unloading the editor after submitting
+		this.openComments();
 	}
 }

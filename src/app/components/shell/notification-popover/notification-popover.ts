@@ -2,10 +2,10 @@ import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
 import { Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue'
+import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue'
+import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
@@ -31,9 +31,6 @@ export default class AppShellNotificationPopover extends Vue {
 	@State
 	unreadNotificationsCount!: Store['unreadNotificationsCount'];
 
-	@State
-	notificationCount!: Store['notificationCount'];
-
 	@Mutation
 	setNotificationCount!: Store['setNotificationCount'];
 
@@ -47,8 +44,7 @@ export default class AppShellNotificationPopover extends Vue {
 	readonly Connection = Connection;
 
 	get count() {
-		// On mobile, we show all counts since it goes to the "activity" page.
-		return Screen.isXs ? this.notificationCount : this.unreadNotificationsCount;
+		return this.unreadNotificationsCount;
 	}
 
 	/**
