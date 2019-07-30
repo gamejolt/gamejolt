@@ -43,6 +43,7 @@ import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import AppPageContainer from '../../../../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../../../../components/post/add-button/add-button.vue';
 import AppRatingWidget from '../../../../../components/rating/widget/widget.vue';
+import AppUserKnownFollowers from '../../../../../components/user/known-followers/known-followers.vue';
 import { RouteStore, routeStore, RouteStoreModule } from '../view.store';
 import AppDiscoverGamesViewOverviewDetails from './_details/details.vue';
 import AppDiscoverGamesViewOverviewRecommended from './_recommended/recommended.vue';
@@ -75,6 +76,7 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 		AppPostAddButton,
 		AppGamePerms,
 		AppContentViewer,
+		AppUserKnownFollowers,
 	},
 	directives: {
 		AppTrackEvent,
@@ -181,6 +183,12 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	@RouteStoreModule.State
 	browserBuilds!: RouteStore['browserBuilds'];
+
+	@RouteStoreModule.State
+	knownFollowers!: RouteStore['knownFollowers'];
+
+	@RouteStoreModule.State
+	knownFollowerCount!: RouteStore['knownFollowerCount'];
 
 	@CommentState
 	getCommentStore!: CommentStore['getCommentStore'];
