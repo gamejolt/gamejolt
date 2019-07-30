@@ -71,6 +71,7 @@ export default class AppEventItemControls extends Vue {
 	commentStore: CommentStoreModel | null = null;
 	isShowingShare = false;
 	clickedComment = false;
+	clickedCommentType = '';
 
 	readonly FiresidePost = FiresidePost;
 
@@ -138,7 +139,8 @@ export default class AppEventItemControls extends Vue {
 		Clipboard.copy(this.shareUrl);
 	}
 
-	onClickCommentAddPlaceholder() {
+	onClickCommentAddPlaceholder(type: string) {
+		this.clickedCommentType = type;
 		this.clickedComment = true;
 	}
 
