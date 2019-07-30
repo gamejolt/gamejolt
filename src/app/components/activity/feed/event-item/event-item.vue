@@ -56,6 +56,11 @@
 					</div>
 				</div>
 				<div class="-header-meta small text-muted">
+					<span v-if="isPinned" class="tag">
+						<app-jolticon icon="thumbtack" />
+						<translate>Pinned</translate>
+					</span>
+
 					<app-user-follow-widget
 						v-if="shouldShowFollow"
 						class="-header-meta-follow"
@@ -150,6 +155,7 @@
 					@feature="onPostFeatured(eventItem, $event)"
 					@unfeature="onPostUnfeatured(eventItem, $event)"
 					@reject="onPostRejected(eventItem, $event)"
+					@pin="onPostPinned(eventItem)"
 				/>
 			</div>
 

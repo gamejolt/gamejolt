@@ -176,6 +176,14 @@ export default class AppActivityFeedEventItem extends Vue {
 		return this.post && this.post.isManageableByUser(this.app.user);
 	}
 
+	get isPinned() {
+		return (
+			this.post instanceof FiresidePost &&
+			!!this.post.is_pinned &&
+			this.feed.shouldShowEditControls
+		);
+	}
+
 	mounted() {
 		this.feedComponent = findRequiredVueParent(this, AppActivityFeed) as AppActivityFeedTS;
 	}
@@ -289,5 +297,9 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	onPostRejected(item: EventItem, community: Community) {
 		this.feedComponent.onPostRejected(item, community);
+	}
+
+	onPostPinned(item: EventItem) {
+		this.feedComponent.onPostPinned(item);
 	}
 }

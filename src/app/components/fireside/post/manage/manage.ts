@@ -46,6 +46,9 @@ export default class AppFiresidePostManage extends Vue {
 	@Emit('remove')
 	emitRemove() {}
 
+	@Emit('pin')
+	emitPin() {}
+
 	@Emit('feature')
 	emitFeature(_community: Community) {}
 
@@ -77,6 +80,10 @@ export default class AppFiresidePostManage extends Vue {
 
 	get shouldShowModTools() {
 		return this.app.user && this.app.user.isMod;
+	}
+
+	get shouldShowPin() {
+		return this.hasPerms && this.post.key_groups.length === 0;
 	}
 
 	getProviderIcon(provider: string) {
@@ -113,5 +120,14 @@ export default class AppFiresidePostManage extends Vue {
 		if (await this.post.remove()) {
 			this.emitRemove();
 		}
+	}
+
+	async pin() {
+		await this.post.$pin();
+		this.emitPin();
+	}
+
+	unpin() {
+		this.post.$unpin();
 	}
 }

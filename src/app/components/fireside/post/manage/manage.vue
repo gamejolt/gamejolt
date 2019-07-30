@@ -71,6 +71,17 @@
 						</template>
 
 						<div class="list-group list-group-dark">
+							<template v-if="shouldShowPin">
+								<a v-if="post.is_pinned" class="list-group-item has-icon" @click.stop="unpin()">
+									<app-jolticon icon="thumbtack" />
+									<translate>Unpin Post</translate>
+								</a>
+								<a v-else class="list-group-item has-icon" @click.stop="pin()">
+									<app-jolticon icon="thumbtack" />
+									<translate>Pin Post</translate>
+								</a>
+							</template>
+
 							<span
 								v-if="shouldShowManageCommunities"
 								v-for="i of post.manageableCommunities"

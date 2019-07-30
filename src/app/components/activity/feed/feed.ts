@@ -200,6 +200,10 @@ export default class AppActivityFeed extends Vue {
 		this.emitRejectPost(eventItem, community);
 	}
 
+	onPostPinned(eventItem: EventItem) {
+		this.feed.processPinned(eventItem);
+	}
+
 	loadMoreButton() {
 		this.feed.timesLoaded = 0;
 		this.loadMore();

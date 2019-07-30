@@ -1,6 +1,8 @@
 import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
+import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
 import { Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';
 import Vue from 'vue';
 import { ActivityFeedInput, ActivityFeedItem } from './item-service';
@@ -146,6 +148,45 @@ export class ActivityFeedView {
 		const item = this.state.items.find(i => i.id === searchItem.id);
 		if (item) {
 			this.state.processGames([item]);
+		}
+	}
+
+	processPinned(input: EventItem) {
+		const inputIsGame = input.action.game instanceof Game;
+
+		for (const item of this.state.items) {
+			if (
+				item.feedItem instanceof EventItem &&
+				item.feedItem.action instanceof FiresidePost &&
+				input.action instanceof FiresidePost
+			) {
+				// Same post that got pinned
+				if (item.feedItem.action.id === input.action.id) {
+					return;
+				}
+
+				const itemIsGame = item.feedItem.action.game instanceof Game;
+				// Belongs to different game.
+				if (itemIsGame && inputIsGame) {
+					if (item.feedItem.action.game.id !== input.action.game.id) {
+						return;
+					}
+				}
+
+				// Not the same feed types
+				if (itemIsGame !== inputIsGame) {
+					return;
+				}
+
+				// Not a user post from the same user
+				if (!itemIsGame && !inputIsGame) {
+					if (input.action.user.id !== item.feedItem.action.user.id) {
+						return;
+					}
+				}
+
+				item.feedItem.action.is_pinned = false;
+			}
 		}
 	}
 
