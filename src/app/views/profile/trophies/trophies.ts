@@ -4,15 +4,19 @@ import {
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { UserGameTrophy } from 'game-jolt-frontend-lib/components/user/trophy/game-trophy.model';
+import { UserSiteTrophy } from 'game-jolt-frontend-lib/components/user/trophy/site-trophy-model';
 import { UserBaseTrophy } from 'game-jolt-frontend-lib/components/user/trophy/user-base-trophy.model';
+import { numberSort } from 'game-jolt-frontend-lib/utils/array';
 import { Component } from 'vue-property-decorator';
 import AppTrophyCard from '../../../components/trophy/card/card.vue';
+import AppUserLevelWidget from '../../../components/user/level-widget/level-widget.vue';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 
 @Component({
 	name: 'RouteProfileTrophies',
 	components: {
 		AppTrophyCard,
+		AppUserLevelWidget,
 	},
 })
 @RouteResolver({
@@ -24,14 +28,17 @@ export default class RouteProfileTrophies extends BaseRouteComponent {
 	user!: RouteStore['user'];
 
 	gameTrophies: UserGameTrophy[] = [];
+	siteTrophies: UserSiteTrophy[] = [];
 
 	get trophies(): UserBaseTrophy[] {
-		return this.gameTrophies;
+		return (this.gameTrophies as UserBaseTrophy[])
+			.concat(...this.siteTrophies)
+			.sort((a, b) => numberSort(b.logged_on, a.logged_on));
 	}
 
 	get routeTitle() {
 		if (this.user) {
-			return this.$gettextInterpolate(`Trophies of @%{ user }`, {
+			return this.$gettextInterpolate(`@%{ user }'s Trophy Case`, {
 				user: this.user.username,
 			});
 		}
@@ -40,5 +47,6 @@ export default class RouteProfileTrophies extends BaseRouteComponent {
 
 	routeResolved($payload: any) {
 		this.gameTrophies = UserGameTrophy.populate($payload.gameTrophies);
+		this.siteTrophies = UserSiteTrophy.populate($payload.siteTrophies);
 	}
 }

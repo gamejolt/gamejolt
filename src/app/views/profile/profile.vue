@@ -126,6 +126,9 @@
 						<li>
 							<router-link :to="{ name: 'profile.trophies' }" active-class="active">
 								<translate>Trophies</translate>
+								<span class="badge">
+									{{ trophyCount | number }}
+								</span>
 							</router-link>
 						</li>
 						<li

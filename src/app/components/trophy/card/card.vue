@@ -10,11 +10,17 @@
 				<div class="-bg-gradient"></div>
 			</div>
 			<div class="-content">
-				<strong class="-title">{{ trophy.title }}</strong>
+				<strong class="-title" :title="trophy.title">{{ trophy.title }}</strong>
 				<div class="-subline">
 					<small class="text-muted">
-						<app-jolticon icon="game" />
-						<span>Game Trophy</span>
+						<template v-if="isGame">
+							<app-jolticon icon="game" />
+							<span>Game Trophy</span>
+						</template>
+						<template v-else>
+							<app-jolticon icon="gamejolt" />
+							<span>Game Jolt Trophy</span>
+						</template>
 					</small>
 				</div>
 				<div class="-thumbnail">
@@ -95,7 +101,7 @@
 	width: 100%
 	display: inline-block
 	text-align: center
-	word-break: break-word
+	text-overflow()
 
 .-subline
 	width: 100%

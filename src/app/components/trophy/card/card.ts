@@ -1,4 +1,5 @@
 import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
+import { UserGameTrophy } from 'game-jolt-frontend-lib/components/user/trophy/game-trophy.model';
 import { UserBaseTrophy } from 'game-jolt-frontend-lib/components/user/trophy/user-base-trophy.model';
 import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
@@ -33,6 +34,10 @@ export default class AppTrophyCard extends Vue {
 
 	get bgClass() {
 		return '-trophy-difficulty-' + this.trophy.difficulty;
+	}
+
+	get isGame() {
+		return this.userTrophy instanceof UserGameTrophy && !!this.userTrophy.game;
 	}
 
 	onClick() {

@@ -24,21 +24,46 @@
 							<app-trophy-thumbnail :trophy="trophy" no-tooltip />
 						</div>
 						<div class="-info">
+							<small class="-trophy-type text-muted">
+								<template v-if="isGame">
+									<app-jolticon icon="game" />
+									<span>Game Trophy</span>
+								</template>
+								<template v-else>
+									<app-jolticon icon="gamejolt" />
+									<span>Game Jolt Trophy</span>
+								</template>
+							</small>
 							<div class="-user-info">
 								<app-user-avatar class="-avatar" :user="userTrophy.user" />
 								<div>
 									<div>
-										<b>{{ userTrophy.user.display_name }}</b>
+										<b>
+											<template v-if="isAchiever">
+												You
+											</template>
+											<template v-else>
+												{{ userTrophy.user.display_name }}
+											</template>
+										</b>
 										<app-user-verified-tick :user="userTrophy.user" />
 										achieved this trophy
 										<app-time-ago :date="userTrophy.logged_on" />
 										.
 									</div>
-									<div class="-exp text-muted">
+									<div v-if="canReceiveExp" class="-exp text-muted">
 										<app-jolticon icon="exp" />
 										<translate :translate-params="{ num: trophy.experience }">
 											%{ num } EXP
 										</translate>
+									</div>
+									<div v-else-if="isDeveloper">
+										<small class="text-muted">
+											<translate>
+												You are the developer of this trophy's game and are not receiving EXP from
+												it.
+											</translate>
+										</small>
 									</div>
 								</div>
 							</div>
@@ -124,6 +149,13 @@
 	& > *
 		width: 100px
 
+.-trophy-type
+	display: inline-block
+	margin-bottom: 10px
+
+	& > *
+		vertical-align: middle
+
 .-avatar
 	display: inline-block
 	width: 32px
@@ -133,6 +165,7 @@
 .-info
 	@media $media-sm-up
 		margin-left: 20px
+		flex-grow: 1
 
 .-user-info
 	display: flex
