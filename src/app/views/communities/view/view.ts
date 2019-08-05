@@ -64,7 +64,6 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	collaboratorInvite: Collaborator | null = null;
 
 	get isEditing() {
-		// return this.$route.name && this.$route.name.includes('communities.view.edit');
 		return this.$route.name && this.$route.name.includes('communities.view.overview.edit');
 	}
 

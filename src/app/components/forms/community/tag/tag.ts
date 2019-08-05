@@ -18,6 +18,7 @@ export default class FormCommunityTag extends BaseForm<CommunityTag> implements 
 		return (
 			!!this.formModel.tag &&
 			this.formModel.tag.trim().length >= 3 &&
+			this.formModel.tag.trim().length <= 30 &&
 			!this.tags.map(i => i.tag.toLowerCase()).includes(this.formModel.tag.toLowerCase())
 		);
 	}

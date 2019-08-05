@@ -138,6 +138,11 @@
 							What are you waiting for? %{ message } Make people happy.
 						</div>
 					</div>
+					<div v-else class="alert">
+						<div>
+							<translate>There are no featured posts in this community.</translate>
+						</div>
+					</div>
 				</template>
 			</template>
 		</app-page-container>

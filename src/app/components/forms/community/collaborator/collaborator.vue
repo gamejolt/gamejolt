@@ -5,7 +5,7 @@
 				:rules="{
 					max: 100,
 					availability: {
-						url: `/web/dash/developer/games/collaborators/check-field-availability`,
+						url: `/web/dash/communities/collaborators/check-field-availability`,
 						initVal: undefined,
 					},
 				}"

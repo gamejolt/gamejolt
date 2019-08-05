@@ -77,21 +77,29 @@
 										<a class="list-group-item has-icon" @click.stop="toggleFeatured(i)">
 											<template v-if="i.isFeatured">
 												<app-jolticon icon="remove" />
-												<translate :translate-params="{ community: i.community.name }">
-													Unfeature
-													<template v-if="shouldDisplayCommunityName(i.community)">
-														: %{ community }
-													</template>
-												</translate>
+												<template v-if="shouldDisplayCommunityName(i.community)">
+													<translate :translate-params="{ community: i.community.name }">
+														Unfeature : %{ community }
+													</translate>
+												</template>
+												<template v-else>
+													<translate>
+														Unfeature
+													</translate>
+												</template>
 											</template>
 											<template v-else>
 												<app-jolticon icon="tag" />
-												<translate :translate-params="{ community: i.community.name }">
-													Feature
-													<template v-if="shouldDisplayCommunityName(i.community)">
-														: %{ community }
-													</template>
-												</translate>
+												<template v-if="shouldDisplayCommunityName(i.community)">
+													<translate :translate-params="{ community: i.community.name }">
+														Feature : %{ community }
+													</translate>
+												</template>
+												<template v-else>
+													<translate>
+														Feature
+													</translate>
+												</template>
 											</template>
 										</a>
 									</app-community-perms>

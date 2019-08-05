@@ -1,19 +1,20 @@
 <template>
 	<div v-if="!!community.game" class="well fill-offset -notice">
-		<span v-translate="{ game: community.game.title }" class="-main-notice">
+		<div class="-main-notice">
 			<app-jolticon icon="notice" notice />
-			<strong>Some aspects of this community are synced with the game %{ game }:</strong>
+			<strong v-translate="{ game: community.game.title }">
+				Some aspects of this community are synced with the game %{ game }:
+			</strong>
 			<br />
-			<code>Name</code>
-			,
-			<code>Url Path</code>
-			,
-			<code>Theme</code>
-			,
-			<code>Header</code>
-		</span>
-		<div v-translate>
-			To edit them, visit the
+			<code><translate>Name</translate></code>
+			<code><translate>Url Path</translate></code>
+			<code><translate>Theme</translate></code>
+			<code><translate>Header</translate></code>
+		</div>
+		<div>
+			<translate>
+				You can edit them on the game's dashboard.
+			</translate>
 			<router-link
 				:to="{
 					name: 'dash.games.manage.game.overview',
@@ -22,7 +23,9 @@
 					},
 				}"
 			>
-				game's dashboard.
+				<app-button sm>
+					<translate>Go to Dashboard</translate>
+				</app-button>
 			</router-link>
 		</div>
 	</div>
@@ -36,7 +39,6 @@
 	margin-bottom: ($line-height-computed / 2)
 
 .-main-notice
-	display: block
 	margin-bottom: ($line-height-computed / 2)
 </style>
 

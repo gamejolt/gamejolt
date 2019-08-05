@@ -191,8 +191,11 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get placeholderText() {
-		if (this.community.share_message !== null && this.community.share_message.length > 0) {
-			return this.community.share_message;
+		if (
+			!!this.community.post_placeholder_text &&
+			this.community.post_placeholder_text.length > 0
+		) {
+			return this.community.post_placeholder_text;
 		}
 		return this.$gettext(`Share your creations!`);
 	}

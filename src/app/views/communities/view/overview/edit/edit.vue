@@ -55,7 +55,7 @@
 							<app-jolticon icon="tag" class="text-muted" />
 							{{ tag.tag }}
 
-							<a @click.stop="onTagRemove(tag)">
+							<a @click.stop="onClickRemoveTag(tag)">
 								<app-jolticon icon="remove" v-app-tooltip="$gettext(`Remove Tag`)" />
 							</a>
 						</a>
@@ -83,7 +83,7 @@
 			<app-card-list
 				:items="collaborators"
 				:active-item="activeCollaborator"
-				:is-adding="isAddingCollaborator"
+				:is-adding="isShowingCollaboratorAdd"
 				@activate="activeCollaborator = $event"
 			>
 				<app-card-list-item
@@ -91,7 +91,7 @@
 					:key="collaborator.id"
 					:item="collaborator"
 				>
-					<a v-if="hasPerms" class="card-remove" @click.stop="removeCollaborator(collaborator)">
+					<a class="card-remove" @click.stop="removeCollaborator(collaborator)">
 						<app-jolticon icon="remove" />
 					</a>
 
@@ -119,7 +119,7 @@
 						</template>
 					</div>
 
-					<template v-if="hasPerms" slot="body">
+					<template slot="body">
 						<form-community-collaborator
 							:model="collaborator"
 							:community="community"
@@ -129,9 +129,8 @@
 				</app-card-list-item>
 
 				<app-card-list-add
-					v-if="hasPerms"
 					:label="$gettext(`Add Collaborator`)"
-					@toggle="isAddingCollaborator = !isAddingCollaborator"
+					@toggle="isShowingCollaboratorAdd = !isShowingCollaboratorAdd"
 				>
 					<form-community-collaborator :community="community" @submit="onAddedCollaborator" />
 				</app-card-list-add>

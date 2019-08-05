@@ -28,11 +28,6 @@ import AppCommunitiesOverviewEditNotice from './_notice/notice.vue';
 
 const draggable = require('vuedraggable');
 
-type CPayload = {
-	communityPayload: any;
-	collaboratorPayload: any;
-};
-
 @Component({
 	name: 'RouteCommunitiesViewEdit',
 	components: {
@@ -59,27 +54,20 @@ type CPayload = {
 @RouteResolver({
 	deps: { params: ['id'] },
 	async resolver({ route }) {
-		const communityPayload = await Api.sendRequest(
-			'/web/dash/communities/' + route.params.id,
-			{}
-		);
+		const payload = await Api.sendRequest('/web/dash/communities/' + route.params.id, {});
 
-		if (communityPayload && communityPayload.community) {
-			const redirect = enforceLocation(route, { path: communityPayload.community.path });
+		if (payload && payload.community) {
+			const redirect = enforceLocation(route, { path: payload.community.path });
 			if (redirect) {
 				return redirect;
 			}
 		}
 
-		const collaboratorPayload = await Api.sendRequest(
-			'/web/dash/communities/collaborators/' + route.params.id
-		);
-
-		return { communityPayload, collaboratorPayload };
+		return payload;
 	},
 	resolveStore({ payload }) {
-		if (payload.communityPayload) {
-			routeStore.commit('populate', payload.communityPayload);
+		if (payload) {
+			routeStore.commit('populate', payload);
 		}
 	},
 })
@@ -91,7 +79,7 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 
 	collaborators: Collaborator[] = [];
 	activeCollaborator: Collaborator | null = null;
-	isAddingCollaborator = false;
+	isShowingCollaboratorAdd = false;
 
 	readonly Collaborator = Collaborator;
 	readonly Screen = Screen;
@@ -105,10 +93,6 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 		return null;
 	}
 
-	get hasPerms() {
-		return this.community.hasPerms('all');
-	}
-
 	get isOwner() {
 		// The owner's collaboration is not returned from backend.
 		return this.collaboration === null;
@@ -118,11 +102,11 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 		return Screen.isXs;
 	}
 
-	routeResolved($payload: CPayload) {
-		if ($payload.collaboratorPayload.success === true) {
-			this.collaborators = Collaborator.populate($payload.collaboratorPayload.collaborators);
+	routeResolved($payload: any) {
+		if ($payload.collaborators) {
+			this.collaborators = Collaborator.populate($payload.collaborators);
 			if (!this.collaborators.length) {
-				this.isAddingCollaborator = true;
+				this.isShowingCollaboratorAdd = true;
 			}
 		}
 	}
@@ -132,8 +116,13 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 	}
 
 	async saveTagSort() {
-		await CommunityTag.$saveSort(this.community.id, this.community.tags!.map(i => i.id));
-		this.onTagsChange();
+		try {
+			await CommunityTag.$saveSort(this.community.id, this.community.tags!.map(i => i.id));
+			this.onTagsChange();
+		} catch (e) {
+			console.error(e);
+			Growls.error('Could not save tag arrangement.');
+		}
 	}
 
 	onTagAdded(tag: CommunityTag) {
@@ -141,7 +130,7 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 		this.onTagsChange();
 	}
 
-	async onTagRemove(tag: CommunityTag) {
+	async onClickRemoveTag(tag: CommunityTag) {
 		try {
 			await tag.$remove();
 		} catch (e) {
@@ -157,7 +146,7 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 	}
 
 	onAddedCollaborator(collaborator: Collaborator) {
-		this.isAddingCollaborator = false;
+		this.isShowingCollaboratorAdd = false;
 		this.collaborators.push(collaborator);
 	}
 
@@ -188,7 +177,7 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 			arrayRemove(this.collaborators, i => i.id === collaborator.id);
 
 			if (!this.collaborators.length) {
-				this.isAddingCollaborator = true;
+				this.isShowingCollaboratorAdd = true;
 			}
 		} catch (e) {
 			Growls.error(this.$gettext('Could not remove collaborator for some reason.'));
