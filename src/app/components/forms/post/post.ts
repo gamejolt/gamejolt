@@ -3,6 +3,8 @@ import * as startOfDay from 'date-fns/start_of_day';
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import AppCommunityPill from 'game-jolt-frontend-lib/components/community/pill/pill.vue';
+import { ContentDocument } from 'game-jolt-frontend-lib/components/content/content-document';
+import { ContentWriter } from 'game-jolt-frontend-lib/components/content/content-writer';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
 import {
 	AppFormAutosize,
@@ -42,8 +44,6 @@ import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vu
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { determine } from 'jstimezonedetect';
 import { Component, Prop } from 'vue-property-decorator';
-import { ContentDocument } from '../../../../lib/gj-lib-client/components/content/content-document';
-import { ContentWriter } from '../../../../lib/gj-lib-client/components/content/content-writer';
 import AppFormPostTags from './tags/tags.vue';
 import AppFormPostMedia from './_media/media.vue';
 
