@@ -69,18 +69,25 @@
 		</div>
 
 		<div v-if="game.community" class="row">
-			<div class="col-lg-8">
-				<router-link
-					:to="{
-						name: 'communities.view.overview.edit',
-						params: { path: game.community.path, id: game.community.id },
-					}"
-				>
-					<app-button icon="users">
-						Edit Community
-					</app-button>
-				</router-link>
-			</div>
+			<app-community-perms
+				:community="game.community"
+				tag="div"
+				required="community-tags,community-media"
+				either
+			>
+				<div class="col-lg-8">
+					<router-link
+						:to="{
+							name: 'communities.view.overview.edit',
+							params: { path: game.community.path, id: game.community.id },
+						}"
+					>
+						<app-button icon="users">
+							Edit Community
+						</app-button>
+					</router-link>
+				</div>
+			</app-community-perms>
 		</div>
 
 		<h2>
