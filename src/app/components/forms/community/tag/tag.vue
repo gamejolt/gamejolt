@@ -5,9 +5,11 @@
 				<app-form-control
 					type="text"
 					:rules="{
-						pattern: /^[a-z0-9_]{1,30}$/i,
+						pattern: /^[a-z0-9_]{3,30}$/i,
+						min: 3,
 						max: 30,
 					}"
+					:validate-on="['blur']"
 				/>
 				<app-form-control-errors />
 			</app-form-group>

@@ -24,8 +24,8 @@ export default class FormCommunityCollaborator extends BaseForm<Collaborator>
 		this.setField('resource', 'Community');
 		this.setField('resource_id', this.community.id);
 
-		if (this.model && this.model.user) {
-			this.setField('username', this.model.user.username);
+		if (this.model) {
+			this.setField('username', this.model.user!.username);
 		}
 	}
 }

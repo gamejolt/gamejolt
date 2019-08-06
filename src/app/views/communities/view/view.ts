@@ -10,7 +10,6 @@ import {
 	RouteResolver,
 } from 'game-jolt-frontend-lib/components/route/route-component';
 import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
-import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { Mutation } from 'vuex-class';
@@ -33,18 +32,7 @@ import { Store } from '../../../store/index';
 @RouteResolver({
 	cache: true,
 	deps: { params: ['path'] },
-	async resolver({ route }) {
-		const payload = await Api.sendRequest('/web/communities/view/' + route.params.path);
-
-		if (payload && payload.community) {
-			const redirect = enforceLocation(route, { path: payload.community.path });
-			if (redirect) {
-				return redirect;
-			}
-		}
-
-		return payload;
-	},
+	resolver: ({ route }) => Api.sendRequest('/web/communities/view/' + route.params.path),
 })
 export default class RouteCommunitiesView extends BaseRouteComponent {
 	@ThemeMutation
