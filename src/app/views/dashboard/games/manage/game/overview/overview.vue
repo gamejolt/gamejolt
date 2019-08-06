@@ -68,6 +68,21 @@
 			</div>
 		</div>
 
+		<div v-if="game.community" class="row">
+			<div class="col-lg-8">
+				<router-link
+					:to="{
+						name: 'communities.view.overview.edit',
+						params: { path: game.community.path, id: game.community.id },
+					}"
+				>
+					<app-button icon="users">
+						Edit Community
+					</app-button>
+				</router-link>
+			</div>
+		</div>
+
 		<h2>
 			<translate>dash.games.overview.stats_heading</translate>
 		</h2>

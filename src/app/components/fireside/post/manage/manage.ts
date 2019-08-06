@@ -10,11 +10,13 @@ import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../../store';
+import { AppCommunityPerms } from '../../../community/perms/perms';
 import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 
 @Component({
 	components: {
 		AppPopper,
+		AppCommunityPerms,
 	},
 	directives: {
 		AppTooltip,
@@ -77,6 +79,18 @@ export default class AppFiresidePostManage extends Vue {
 
 	get shouldShowModTools() {
 		return this.app.user && this.app.user.isMod;
+	}
+
+	shouldDisplayCommunityName(community: Community) {
+		// If we are in the community in question and it's the only community option available
+		return (
+			this.post.manageableCommunities.length === 1 &&
+			!(
+				this.$route.name &&
+				this.$route.name.includes('communities.view') &&
+				this.$route.params.path === community.path
+			)
+		);
 	}
 
 	getProviderIcon(provider: string) {

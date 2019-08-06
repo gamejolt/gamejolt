@@ -5,7 +5,7 @@
 				:rules="{
 					max: 100,
 					availability: {
-						url: `/web/dash/developer/games/collaborators/check-field-availability`,
+						url: `/web/dash/communities/collaborators/check-field-availability`,
 						initVal: undefined,
 					},
 				}"
@@ -28,20 +28,19 @@
 					<translate>Full Collaborator</translate>
 					&mdash;
 					<translate class="help-inline">
-						They will be able to access and modify everything for the game. They won't be able to
-						add other collaborators.
+						They will be able to access and modify everything for the community. They won't be able
+						to add other collaborators.
 					</translate>
 				</label>
 			</div>
 			<div class="radio">
 				<label>
-					<app-form-control-radio :value="Collaborator.ROLE_COMMUNITY_MANAGER" />
-					<translate>Community Manager</translate>
+					<app-form-control-radio :value="Collaborator.ROLE_MODERATOR" />
+					<translate>Moderator</translate>
 					&mdash;
 					<translate class="help-inline">
-						They will be able to modify the game description, details, maturity, and media, as well
-						as post devlogs. They won't be able to modify packages, game API, key groups, sales, or
-						access analytics.
+						They will be able to feature community posts; as well as ejecting them from the
+						community.
 					</translate>
 				</label>
 			</div>

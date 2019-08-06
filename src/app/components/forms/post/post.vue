@@ -158,7 +158,7 @@
 				Only show tags for community posts at the moment.
 			-->
 			<app-form-post-tags
-				v-if="defaultCommunity"
+				v-if="featuredTags"
 				class="-post-tags"
 				:tags="featuredTags"
 				:content="tagContentDocuments"

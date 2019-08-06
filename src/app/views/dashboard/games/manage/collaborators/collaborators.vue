@@ -34,15 +34,13 @@
 
 							<div class="card-meta">
 								<span class="tag">
-									<template v-if="collaborator.role === Collaborator.ROLE_GAME_COLLABORATOR">
+									<template v-if="collaborator.role === Collaborator.ROLE_EQUAL_COLLABORATOR">
 										<translate>Collaborator</translate>
 									</template>
-									<template
-										v-else-if="collaborator.role === Collaborator.ROLE_GAME_COMMUNITY_MANAGER"
-									>
+									<template v-else-if="collaborator.role === Collaborator.ROLE_COMMUNITY_MANAGER">
 										<translate>Community Manager</translate>
 									</template>
-									<template v-else-if="collaborator.role === Collaborator.ROLE_GAME_DEVELOPER">
+									<template v-else-if="collaborator.role === Collaborator.ROLE_DEVELOPER">
 										<translate>Developer</translate>
 									</template>
 									<template v-else>

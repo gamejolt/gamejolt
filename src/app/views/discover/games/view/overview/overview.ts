@@ -44,6 +44,7 @@ import AppPageContainer from '../../../../../components/page-container/page-cont
 import AppPostAddButton from '../../../../../components/post/add-button/add-button.vue';
 import AppRatingWidget from '../../../../../components/rating/widget/widget.vue';
 import { RouteStore, routeStore, RouteStoreModule } from '../view.store';
+import AppDiscoverGamesViewOverviewCommunity from './_community/community.vue';
 import AppDiscoverGamesViewOverviewDetails from './_details/details.vue';
 import AppDiscoverGamesViewOverviewRecommended from './_recommended/recommended.vue';
 import AppDiscoverGamesViewOverviewStatbar from './_statbar/statbar.vue';
@@ -53,6 +54,7 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 	name: 'RouteDiscoverGamesViewOverview',
 	components: {
 		AppPageContainer,
+		AppDiscoverGamesViewOverviewCommunity,
 		AppDiscoverGamesViewOverviewDetails,
 		AppDiscoverGamesViewOverviewRecommended,
 		AppDiscoverGamesViewOverviewSupporters,
