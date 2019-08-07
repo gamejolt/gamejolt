@@ -56,7 +56,7 @@
 							v-else
 							resource="Fireside_Post"
 							:resource-id="post.id"
-							:editor-startup-arg="clickedCommentType"
+							:editor-startup-activity="clickedCommentType"
 							autofocus
 							@submit="onSubmitNewComment"
 						/>
