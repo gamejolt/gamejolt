@@ -26,18 +26,30 @@ export default class AppSearch extends Vue {
 	@Prop({ type: Boolean, default: false })
 	autocompleteDisabled!: boolean;
 
+	@Prop(Boolean)
+	autofocus!: boolean;
+
 	id = ++searchIterator;
 
 	query = '';
 	isFocused = false;
 	isShowingAutocomplete = false;
-	inputElem: HTMLElement | undefined;
 	keydownSpies: Function[] = [];
+
+	$refs!: {
+		searchInput: AppSearchInputTS;
+	};
 
 	readonly Search = Search;
 
 	created() {
 		this.query = Search.query;
+	}
+
+	mounted() {
+		if (this.autofocus) {
+			this.focus();
+		}
 	}
 
 	// Sync it.
@@ -52,18 +64,12 @@ export default class AppSearch extends Vue {
 
 	async focus() {
 		await this.$nextTick();
-
-		if (this.inputElem) {
-			this.inputElem.focus();
-		}
+		this.$refs.searchInput.focus();
 	}
 
 	async blur() {
 		await this.$nextTick();
-
-		if (this.inputElem) {
-			this.inputElem.blur();
-		}
+		this.$refs.searchInput.blur();
 	}
 
 	/**
@@ -93,6 +99,7 @@ export default class AppSearch extends Vue {
 		// Normally the autocomplete will take control of the submission since they
 		// technically highlight what they want in autocomplete and go to it.
 		if (this.autocompleteDisabled && event.keyCode === KEYCODE_ENTER) {
+			this.blur();
 			this.$router.push({ name: 'search.results', query: { q: this.query } });
 		}
 

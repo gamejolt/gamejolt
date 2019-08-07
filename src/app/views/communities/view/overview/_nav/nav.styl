@@ -30,6 +30,9 @@ li
 		theme-prop('color', 'fg')
 		transition: none
 
+		.-label-help
+			opacity: 1
+
 	&.active
 		&, &:hover
 			change-bg('bi-bg')
@@ -58,6 +61,12 @@ li
 	theme-prop('color', 'fg-muted')
 	flex: none
 	margin-right: 5px
+
+.-label-help
+	display: inline-block
+	margin-left: 10px
+	opacity: 0
+	transition: opacity 200ms
 
 .-label
 	flex: auto

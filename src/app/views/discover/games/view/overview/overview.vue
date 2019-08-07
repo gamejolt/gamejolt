@@ -37,19 +37,26 @@
 					/>
 				</div>
 
-				<div slot="right" v-if="!Screen.isMobile">
+				<div slot="right">
 					<app-ad-widget
 						class="-recommended-ad"
-						v-if="shouldShowAds"
+						v-if="shouldShowAds && !Screen.isMobile"
 						size="rectangle"
 						static-size
 					/>
 
-					<h4 class="section-header">
-						<translate>Recommended</translate>
-					</h4>
+					<app-discover-games-view-overview-community
+						v-if="game.community"
+						:community="game.community"
+					/>
 
-					<app-discover-games-view-overview-recommended />
+					<template v-if="!Screen.isMobile">
+						<h4 class="section-header">
+							<translate>Recommended</translate>
+						</h4>
+
+						<app-discover-games-view-overview-recommended />
+					</template>
 				</div>
 
 				<!--

@@ -1,8 +1,8 @@
-import AppScrollScroller from 'game-jolt-frontend-lib/components/scroll/scroller/scroller.vue'
+import AppScrollScroller from 'game-jolt-frontend-lib/components/scroll/scroller/scroller.vue';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { TagsInfo } from '../tags-info.service';
-import AppTagThumbnail from '../thumbnail/thumbnail.vue'
+import AppTagThumbnail from '../thumbnail/thumbnail.vue';
 
 const FeaturedTags = [
 	'action',
@@ -13,6 +13,7 @@ const FeaturedTags = [
 	'rpg',
 	'other',
 	'multiplayer',
+	'adult',
 	'platformer',
 	'scifi',
 	'retro',
