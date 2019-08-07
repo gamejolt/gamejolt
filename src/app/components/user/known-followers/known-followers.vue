@@ -1,5 +1,5 @@
 <template>
-	<div v-if="users.length" class="-known-followers">
+	<div v-if="app.user && users.length" class="-known-followers">
 		<div class="-known-followers-list">
 			<app-user-avatar-list :users="users" sm inline />
 		</div>

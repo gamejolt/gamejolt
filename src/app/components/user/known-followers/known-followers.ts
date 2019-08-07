@@ -1,7 +1,9 @@
 import AppUserAvatarList from 'game-jolt-frontend-lib/components/user/user-avatar/list/list.vue';
 import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 
 @Component({
 	components: {
@@ -9,6 +11,9 @@ import { Component, Prop } from 'vue-property-decorator';
 	},
 })
 export default class AppUserKnownFollowers extends Vue {
+	@State
+	app!: AppStore;
+
 	@Prop(Array)
 	users!: User[];
 
