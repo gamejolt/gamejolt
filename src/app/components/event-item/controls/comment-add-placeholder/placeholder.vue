@@ -53,6 +53,7 @@
 	margin-right: 12px
 	transition: filter 0.15s, transform 0.2s ease
 	cursor: pointer
+	color: var(--theme-fg)
 
 	&:not(:hover)
 		filter: grayscale(1) opacity(75%)
