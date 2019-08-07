@@ -92,7 +92,7 @@
 					</div>
 
 					<template v-if="post.hasPoll">
-						<app-poll-voting :poll="post.poll" :game="post.game" />
+						<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 
 						<br />
 					</template>
