@@ -24,6 +24,7 @@ import AppActivityFeed from '../../../../components/activity/feed/feed.vue';
 import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
+import AppCommunityDescription from '../../../../components/community/description/description.vue';
 import AppPageContainer from '../../../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
 import { Store } from '../../../../store/index';
@@ -67,6 +68,7 @@ function getFetchUrl(route: Route) {
 		AppNavTabList,
 		AppUserAvatarList,
 		AppGameThumbnail,
+		AppCommunityDescription,
 	},
 })
 @RouteResolver({

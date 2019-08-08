@@ -16,43 +16,11 @@
 					<br />
 				</div>
 
+				<app-community-description :community="community" :is-editing="isEditing" />
+
 				<template v-if="community.game">
-					<p class="lead" v-translate="{ community: community.name }">
-						Welcome to the
-						<b>%{ community }</b>
-						community on Game Jolt!
-					</p>
+					<br />
 					<app-game-thumbnail :game="community.game" class="-community-game" />
-				</template>
-
-				<template v-else>
-					<p class="lead" v-translate="{ community: community.name }">
-						Welcome to the
-						<b>%{ community }</b>
-						community on Game Jolt! Explore fan-created artwork, videos, game guides and more.
-					</p>
-
-					<p>
-						<strong>
-							<translate>Join the community and share your own creations for this game!</translate>
-						</strong>
-					</p>
-
-					<p>
-						<a
-							href="https://gamejolt.com/games/gj/272864/devlog/communities-ps6r9d4p"
-							class="link-help"
-						>
-							<translate>Learn more</translate>
-						</a>
-					</p>
-
-					<br />
-					<br />
-
-					<div>
-						<img class="img-responsive" src="./communities-mascot.svg" alt="" />
-					</div>
 				</template>
 			</div>
 
