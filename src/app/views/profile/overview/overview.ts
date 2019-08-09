@@ -210,6 +210,15 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return this.isFriend && this.chat && this.chat.connected;
 	}
 
+	get shouldShowKnownFollowers() {
+		return (
+			!!this.app.user &&
+			!!this.user &&
+			this.isOverviewLoaded &&
+			this.app.user.id !== this.user.id
+		);
+	}
+
 	getLinkedAccount(provider: Provider) {
 		if (
 			this.user &&

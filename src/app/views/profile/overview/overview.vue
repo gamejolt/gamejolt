@@ -105,7 +105,7 @@
 
 					<div slot="right">
 						<app-user-known-followers
-							v-if="isOverviewLoaded"
+							v-if="shouldShowKnownFollowers"
 							:users="knownFollowers"
 							:count="knownFollowerCount"
 						/>
