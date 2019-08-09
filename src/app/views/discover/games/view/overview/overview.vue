@@ -10,7 +10,11 @@
 				<app-discover-games-view-overview-statbar slot="left" />
 
 				<div v-if="!Screen.isMobile && game.comments_enabled" slot="left-bottom">
-					<br />
+					<app-user-known-followers
+						v-if="isOverviewLoaded"
+						:users="knownFollowers"
+						:count="knownFollowerCount"
+					/>
 					<div class="pull-right">
 						<app-button trans @click="showComments()">
 							<translate>View All</translate>

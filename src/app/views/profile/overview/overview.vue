@@ -104,6 +104,12 @@
 					</div>
 
 					<div slot="right">
+						<app-user-known-followers
+							v-if="isOverviewLoaded"
+							:users="knownFollowers"
+							:count="knownFollowerCount"
+						/>
+
 						<template v-if="hasQuickButtonsSection">
 							<!-- Add Friend -->
 							<app-button v-if="canAddAsFriend" block @click="sendFriendRequest()">
@@ -187,11 +193,11 @@
 							</template>
 
 							<br />
+							<br />
 						</template>
 
 						<!-- Latest Games -->
 						<template v-if="hasGamesSection">
-							<br />
 							<div class="clearfix">
 								<div class="pull-right">
 									<app-button
