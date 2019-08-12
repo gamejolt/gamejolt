@@ -7,14 +7,19 @@
 
 		<section class="section section-thin fill-backdrop">
 			<app-page-container xl>
-				<app-discover-games-view-overview-statbar slot="left" />
+				<div slot="left">
+					<app-discover-games-view-overview-statbar />
 
-				<div v-if="!Screen.isMobile && game.comments_enabled" slot="left-bottom">
 					<app-user-known-followers
 						v-if="isOverviewLoaded"
 						:users="knownFollowers"
 						:count="knownFollowerCount"
 					/>
+
+					<app-game-community-badge v-if="game.community" :community="game.community" />
+				</div>
+
+				<div v-if="!Screen.isMobile && game.comments_enabled" slot="left-bottom">
 					<div class="pull-right">
 						<app-button trans @click="showComments()">
 							<translate>View All</translate>
@@ -43,11 +48,6 @@
 						v-if="shouldShowAds && !Screen.isMobile"
 						size="rectangle"
 						static-size
-					/>
-
-					<app-discover-games-view-overview-community
-						v-if="game.community"
-						:community="game.community"
 					/>
 
 					<template v-if="!Screen.isMobile">

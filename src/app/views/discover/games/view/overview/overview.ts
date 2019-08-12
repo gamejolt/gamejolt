@@ -38,6 +38,7 @@ import AppActivityFeed from '../../../../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import AppCommentOverview from '../../../../../components/comment/overview/overview.vue';
+import AppGameCommunityBadge from '../../../../../components/game/community-badge/community-badge.vue';
 import AppGameOgrs from '../../../../../components/game/ogrs/ogrs.vue';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import AppPageContainer from '../../../../../components/page-container/page-container.vue';
@@ -45,7 +46,6 @@ import AppPostAddButton from '../../../../../components/post/add-button/add-butt
 import AppRatingWidget from '../../../../../components/rating/widget/widget.vue';
 import AppUserKnownFollowers from '../../../../../components/user/known-followers/known-followers.vue';
 import { RouteStore, routeStore, RouteStoreModule } from '../view.store';
-import AppDiscoverGamesViewOverviewCommunity from './_community/community.vue';
 import AppDiscoverGamesViewOverviewDetails from './_details/details.vue';
 import AppDiscoverGamesViewOverviewRecommended from './_recommended/recommended.vue';
 import AppDiscoverGamesViewOverviewStatbar from './_statbar/statbar.vue';
@@ -55,11 +55,11 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 	name: 'RouteDiscoverGamesViewOverview',
 	components: {
 		AppPageContainer,
-		AppDiscoverGamesViewOverviewCommunity,
 		AppDiscoverGamesViewOverviewDetails,
 		AppDiscoverGamesViewOverviewRecommended,
 		AppDiscoverGamesViewOverviewSupporters,
 		AppDiscoverGamesViewOverviewStatbar,
+		AppGameCommunityBadge,
 		AppAdWidget,
 		AppAdPlacement,
 		AppRatingWidget,
@@ -244,7 +244,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		CommentThreadModal.showFromPermalink(
 			this.$router,
 			'Game',
-			parseInt(this.$route.params.id),
+			parseInt(this.$route.params.id, 10),
 			'comments'
 		);
 		this.feed = ActivityFeedService.routeInit(this);
