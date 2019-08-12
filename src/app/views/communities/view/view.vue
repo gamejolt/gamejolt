@@ -57,11 +57,6 @@
 							<translate>Overview</translate>
 						</router-link>
 					</li>
-					<li v-if="community.game">
-						<router-link :to="community.game.getUrl()">
-							<translate>Game</translate>
-						</router-link>
-					</li>
 					<li>
 						<router-link :to="{ name: 'communities.view.members' }" active-class="active">
 							<translate>Members</translate>

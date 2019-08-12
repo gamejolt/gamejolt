@@ -1,6 +1,7 @@
 <template>
 	<nav>
-		<template v-if="Screen.isMobile">
+		<!-- There should always be an active item -->
+		<template v-if="Screen.isMobile && activeItem">
 			<div class="-item active" @click="isNavExpanded = !isNavExpanded">
 				<span class="-menu-icon">
 					<app-jolticon icon="menu" class="-jolticon middle" />
@@ -20,7 +21,7 @@
 				'-mobile-nav-container fill-darker anim-fade-in-up': Screen.isMobile,
 			}"
 		>
-			<ol v-for="group of groups">
+			<ol v-for="group of groups" :key="group">
 				<li v-for="item of group.items" :key="item.channel">
 					<router-link
 						class="-item"

@@ -20,17 +20,6 @@
 					</a>
 				</li>
 
-				<li v-if="game.community">
-					<router-link
-						:to="{
-							name: 'communities.view.overview',
-							params: { path: game.community.path },
-						}"
-					>
-						<translate>Community</translate>
-					</router-link>
-				</li>
-
 				<li>
 					<router-link :to="{ name: 'discover.games.view.followers' }" active-class="active">
 						<translate>Followers</translate>
