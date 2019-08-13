@@ -2,7 +2,7 @@
 	<div>
 		<app-page-header should-affix-nav :hide-nav="!hasSearch">
 			<template v-if="Screen.isXs">
-				<app-search autocomplete-disabled />
+				<app-search autocomplete-disabled autofocus />
 			</template>
 			<template v-else>
 				<template v-if="!hasSearch">

@@ -131,7 +131,7 @@
 				/>
 
 				<div class="-poll" v-if="post.hasPoll" @click.stop>
-					<app-poll-voting :poll="post.poll" :game="post.game" />
+					<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 				</div>
 
 				<div class="-communities" v-if="communities.length && !feed.hideCommunityInfo">

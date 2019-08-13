@@ -97,6 +97,8 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	supporterCount = 0;
 	recommendedGames: Game[] = [];
 	linkedAccounts: LinkedAccount[] = [];
+	knownFollowers: User[] = [];
+	knownFollowerCount = 0;
 
 	canToggleDescription = false;
 	showDetails = GJ_IS_SSR;
@@ -270,6 +272,9 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 		this.partnerKey = payload.partnerReferredKey || '';
 		this.partner = payload.partnerReferredBy ? new User(payload.partnerReferredBy) : null;
+
+		this.knownFollowers = User.populate(payload.knownFollowers);
+		this.knownFollowerCount = payload.knownFollowerCount || 0;
 
 		this.scoresPayload = objectPick(payload, [
 			'scoreTables',

@@ -1,3 +1,4 @@
+import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
 import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
 import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
 import FormComment from 'game-jolt-frontend-lib/components/comment/add/add.vue';
@@ -71,6 +72,7 @@ export default class AppEventItemControls extends Vue {
 	commentStore: CommentStoreModel | null = null;
 	isShowingShare = false;
 	clickedComment = false;
+	clickedCommentType = '';
 
 	readonly FiresidePost = FiresidePost;
 
@@ -138,7 +140,9 @@ export default class AppEventItemControls extends Vue {
 		Clipboard.copy(this.shareUrl);
 	}
 
-	onClickCommentAddPlaceholder() {
+	onClickCommentAddPlaceholder(type: string) {
+		Analytics.trackEvent('inline-comment-form', 'click', type);
+		this.clickedCommentType = type;
 		this.clickedComment = true;
 	}
 

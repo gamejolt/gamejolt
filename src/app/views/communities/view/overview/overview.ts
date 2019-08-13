@@ -1,5 +1,6 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
+import { CommunityTag } from 'game-jolt-frontend-lib/components/community/tag/tag.model';
 import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
 import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
 import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
@@ -17,6 +18,7 @@ import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
+import AppGameThumbnail from '../../../../../_common/game/thumbnail/thumbnail.vue';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import AppActivityFeed from '../../../../components/activity/feed/feed.vue';
 import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';
@@ -64,6 +66,7 @@ function getFetchUrl(route: Route) {
 		AppActivityFeedNewButton,
 		AppNavTabList,
 		AppUserAvatarList,
+		AppGameThumbnail,
 	},
 })
 @RouteResolver({
@@ -83,11 +86,11 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@Prop(Community)
 	community!: Community;
 
-	@Prop(Array)
-	tags!: string[];
-
 	@Prop(Number)
 	unreadWatermark!: number;
+
+	@Prop(Boolean)
+	isEditing!: boolean;
 
 	@State
 	app!: Store['app'];
@@ -97,7 +100,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	feed: ActivityFeedView | null = null;
 	knownMembers: User[] = [];
-	knownMemberCount: number = 0;
+	knownMemberCount = 0;
 
 	readonly Screen = Screen;
 
@@ -187,6 +190,25 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return number(this.knownMemberCount);
 	}
 
+	get placeholderText() {
+		if (
+			!!this.community.post_placeholder_text &&
+			this.community.post_placeholder_text.length > 0
+		) {
+			return this.community.post_placeholder_text;
+		}
+		return this.$gettext(`Share your creations!`);
+	}
+
+	get noPostsMessage() {
+		let message = this.placeholderText;
+		// If the message does not end with one of those chars, append a `-` to separate it from the following text.
+		if (!['!', '.', '?'].some(i => message.endsWith(i))) {
+			message += ' -';
+		}
+		return message;
+	}
+
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
@@ -250,5 +272,9 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		if (this.feed && this.community.id === community.id) {
 			this.feed.remove([eventItem]);
 		}
+	}
+
+	onTagsChanged(tags: CommunityTag[]) {
+		this.community.tags = tags;
 	}
 }
