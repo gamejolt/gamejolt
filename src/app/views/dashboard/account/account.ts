@@ -1,7 +1,10 @@
 import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
 import AppEditableOverlay from 'game-jolt-frontend-lib/components/editable-overlay/editable-overlay.vue';
 import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from 'game-jolt-frontend-lib/components/route/route-component';
 import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-store';
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
@@ -46,6 +49,13 @@ export default class RouteDashAccount extends BaseRouteComponent {
 	heading!: RouteStore['heading'];
 
 	readonly Screen = Screen;
+
+	get shouldShowVerify() {
+		if (this.app.user) {
+			return this.app.user.canBeVerified;
+		}
+		return false;
+	}
 
 	showEditHeader() {
 		UserHeaderModal.show();

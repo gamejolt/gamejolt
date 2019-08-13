@@ -85,6 +85,14 @@
 										<translate>Password</translate>
 									</router-link>
 								</li>
+								<li v-if="shouldShowVerify">
+									<router-link
+										:to="{ name: 'dash.account.verified-account' }"
+										active-class="active"
+									>
+										<translate>Verify Account</translate>
+									</router-link>
+								</li>
 							</ul>
 							<hr />
 							<ul>
