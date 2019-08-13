@@ -3,8 +3,6 @@
 		<!-- Media Bar -->
 		<app-media-bar v-if="game.media_count" :media-items="mediaItems" />
 
-		<app-ad-placement class="-cover-ad" hidden-xs />
-
 		<section class="section section-thin fill-backdrop">
 			<app-page-container xl>
 				<div slot="left">
