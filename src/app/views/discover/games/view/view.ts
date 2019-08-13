@@ -9,6 +9,8 @@ import {
 	CommentStore,
 	CommentStoreModel,
 } from 'game-jolt-frontend-lib/components/comment/comment-store';
+import { ContentDocument } from 'game-jolt-frontend-lib/components/content/content-document';
+import { MentionCache } from 'game-jolt-frontend-lib/components/content/mention-cache';
 import {
 	EventBus,
 	EventBusDeregister,
@@ -254,6 +256,16 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 			resourceId: this.game.id,
 		});
 		this.setCommentCount({ store: this.commentStore, count: $payload.commentsCount || 0 });
+
+		MentionCache.add(this.$route, 'Game-' + this.game.id + '-owner', this.game.developer);
+		if (this.game.hasDescription) {
+			const doc = ContentDocument.fromJson(this.game.description_content);
+			MentionCache.addFromDoc(
+				this.$route,
+				'Game-' + this.game.id + '-description-mentions',
+				doc
+			);
+		}
 	}
 
 	routeDestroyed() {
