@@ -4,6 +4,7 @@ import AppShortkey from 'game-jolt-frontend-lib/vue/components/shortkey/shortkey
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import AppSearchAutocomplete from './autocomplete/autocomplete.vue';
+import AppSearchInputTS from './input/input';
 import AppSearchInput from './input/input.vue';
 import { Search } from './search-service';
 
