@@ -1,6 +1,12 @@
+import { Component, Prop, Watch } from 'vue-property-decorator';
+import { arrayRemove } from '../../../../../utils/array';
+import { findRequiredVueParent } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppCardListItem from '../../../../../_common/card/list/item/item.vue';
 import AppExpand from '../../../../../_common/expand/expand.vue';
+import { filesize } from '../../../../../_common/filters/filesize';
+import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
+import { number } from '../../../../../_common/filters/number';
 import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
 import AppForm from '../../../../../_common/form-vue/form';
 import { BaseForm, FormOnInit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
@@ -10,17 +16,10 @@ import { Game } from '../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { GameRelease } from '../../../../../_common/game/release/release.model';
 import { Growls } from '../../../../../_common/growls/growls.service';
+import AppLoading from '../../../../../_common/loading/loading.vue';
 import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
 import { AppProgressPoller } from '../../../../../_common/progress/poller/poller';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
-import { arrayRemove } from '../../../../../utils/array';
-import { findRequiredVueParent } from '../../../../../utils/vue';
-import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
-import AppLoading from '../../../../../_common/loading/loading.vue';
-import { filesize } from '../../../../../_common/filters/filesize';
-import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
-import { number } from '../../../../../_common/filters/number';
-import { Component, Prop, Watch } from 'vue-property-decorator';
 import FormGameReleaseTS from '../release/release';
 import FormGameRelease from '../release/release.vue';
 import { ArchiveFileSelectorModal } from './archive-file-selector-modal.service';
@@ -38,7 +37,6 @@ type GameBuildFormModel = GameBuild & {
 @Component({
 	components: {
 		AppCardListItem,
-		AppJolticon,
 		AppExpand,
 		AppProgressPoller,
 		AppProgressBar,
@@ -152,7 +150,8 @@ export default class FormGameBuild extends BaseForm<GameBuildFormModel>
 	get isDeprecated() {
 		return (
 			this.model &&
-			(this.model.type === GameBuild.TYPE_APPLET || this.model.type === GameBuild.TYPE_SILVERLIGHT)
+			(this.model.type === GameBuild.TYPE_APPLET ||
+				this.model.type === GameBuild.TYPE_SILVERLIGHT)
 		);
 	}
 

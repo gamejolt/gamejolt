@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../jolticon/jolticon.vue';
 import { date } from '../../filters/date';
 import { AppTimeAgo } from '../../time/ago/ago';
 import AppTimelineListItem from '../../timeline-list/item/item.vue';
@@ -15,7 +14,6 @@ import AppUserVerifiedTick from '../../user/verified-tick/verified-tick.vue';
 		AppUserCardHover,
 		AppUserAvatar,
 		AppTimeAgo,
-		AppJolticon,
 		AppUserVerifiedTick,
 	},
 })

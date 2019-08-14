@@ -1,17 +1,15 @@
-import AppFormButton from '../../../../../_common/form-vue/button/button.vue';
-import AppFormTS from '../../../../../_common/form-vue/form';
-import AppForm from '../../../../../_common/form-vue/form.vue';
-import { findVueParent } from '../../../../../utils/vue';
-import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { findVueParent } from '../../../../../utils/vue';
+import AppFormButton from '../../../../../_common/form-vue/button/button.vue';
+import AppFormTS from '../../../../../_common/form-vue/form';
+import AppForm from '../../../../../_common/form-vue/form.vue';
 import { RouteStore, RouteStoreName } from '../../../../views/dashboard/games/manage/manage.store';
 
 @Component({
 	components: {
 		AppFormButton,
-		AppJolticon,
 	},
 })
 export default class AppDashGameWizardControls extends Vue {

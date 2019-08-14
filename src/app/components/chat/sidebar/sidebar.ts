@@ -1,15 +1,13 @@
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
-import { number } from '../../../../_common/filters/number';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { number } from '../../../../_common/filters/number';
+import { Screen } from '../../../../_common/screen/screen-service';
 import { ChatClient } from '../client';
 import AppChatUserList from '../user-list/user-list.vue';
 
 @Component({
 	components: {
-		AppJolticon,
 		AppChatUserList,
 	},
 	filters: {

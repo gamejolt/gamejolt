@@ -1,3 +1,4 @@
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { GameScoreTable } from '../../../../../../../../../_common/game/score-table/score-table.model';
 import { Growls } from '../../../../../../../../../_common/growls/growls.service';
@@ -9,15 +10,12 @@ import {
 import { AppTooltip } from '../../../../../../../../../_common/tooltip/tooltip';
 import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
 import { User } from '../../../../../../../../../_common/user/user.model';
-import AppJolticon from '../../../../../../../../../_common/jolticon/jolticon.vue';
-import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 
 @Component({
 	name: 'RouteDashGamesManageApiScoreboardsScoresUser',
 	components: {
-		AppJolticon,
 		AppManageGameListScores,
 	},
 	directives: {

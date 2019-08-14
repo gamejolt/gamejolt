@@ -8,7 +8,6 @@ import { GameBundle } from '../../../../_common/game-bundle/game-bundle.model';
 import { CustomMessage as CustomGameMessage, Game } from '../../../../_common/game/game.model';
 import AppGamePackageCard from '../../../../_common/game/package/card/card.vue';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
-import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
 import { KeyGroup } from '../../../../_common/key-group/key-group.model';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
@@ -16,7 +15,6 @@ import { Store } from '../../../store/index';
 
 @Component({
 	components: {
-		AppJolticon,
 		AppFadeCollapse,
 		AppGamePackageCard,
 		AppMediaItemCover,

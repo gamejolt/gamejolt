@@ -1,16 +1,11 @@
-import { BaseModal } from '../../../../_common/modal/base';
-import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { BaseModal } from '../../../../_common/modal/base';
 import { ChatClient } from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 
-@Component({
-	components: {
-		AppJolticon,
-	},
-})
+@Component({})
 export default class AppChatModerateUserModal extends BaseModal {
 	@Prop(ChatRoom) room!: ChatRoom;
 	@Prop(ChatUser) user!: ChatUser;

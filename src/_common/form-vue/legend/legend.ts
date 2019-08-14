@@ -1,12 +1,7 @@
-import AppButton from '../button/button.vue';
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 
-@Component({
-	components: {
-		AppButton,
-	},
-})
+@Component({})
 export default class AppFormLegend extends Vue {
 	@Prop(Boolean)
 	compact?: boolean;

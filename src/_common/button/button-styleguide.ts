@@ -1,12 +1,5 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import AppJolticon from '../jolticon/jolticon.vue';
-import AppButton from './button.vue';
 
-@Component({
-	components: {
-		AppButton,
-		AppJolticon,
-	},
-})
+@Component({})
 export default class AppButtonStyleguide extends Vue {}

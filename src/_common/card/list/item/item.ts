@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../../jolticon/jolticon.vue';
 import { findRequiredVueParent } from '../../../../utils/vue';
 import AppExpand from '../../../expand/expand.vue';
 import { Screen } from '../../../screen/screen-service';
@@ -12,7 +11,6 @@ import AppCardList from '../list.vue';
 	components: {
 		AppExpand,
 		AppCard,
-		AppJolticon,
 	},
 })
 export default class AppCardListItem extends Vue {

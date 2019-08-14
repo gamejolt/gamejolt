@@ -9,7 +9,6 @@ import { Environment } from '../_common/environment/environment.service';
 import AppErrorPage from '../_common/error/page/page.vue';
 import { date } from '../_common/filters/date';
 import AppGrowls from '../_common/growls/growls.vue';
-import AppJolticon from '../_common/jolticon/jolticon.vue';
 import AppLoadingBar from '../_common/loading/bar/bar.vue';
 import AppModals from '../_common/modal/modals.vue';
 import { AppTheme } from '../_common/theme/theme';
@@ -24,7 +23,6 @@ let components: any = {
 	AppGrowls,
 	AppModals,
 	AppUserBar,
-	AppJolticon,
 	AppCookieBanner,
 };
 

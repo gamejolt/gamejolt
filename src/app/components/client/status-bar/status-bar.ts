@@ -1,16 +1,14 @@
-import { AppTooltip } from '../../../../_common/tooltip/tooltip';
-import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
-import { number } from '../../../../_common/filters/number';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { ClientUpdater } from '../../../../_common/client/client-updater.service';
 import { Client } from '../../../../_common/client/client.service';
+import { number } from '../../../../_common/filters/number';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
 import AppClientStatusBarPatchItem from './patch-item/patch-item.vue';
 
 @Component({
 	components: {
-		AppJolticon,
 		AppClientStatusBarPatchItem,
 	},
 	directives: {
@@ -45,7 +43,9 @@ export default class AppClientStatusBar extends Vue {
 	}
 
 	get isShowing() {
-		return this.numPatching > 0 || this.numPlaying > 0 || this.hasUpdate || this.showUpdaterIssue;
+		return (
+			this.numPatching > 0 || this.numPlaying > 0 || this.hasUpdate || this.showUpdaterIssue
+		);
 	}
 
 	get currentlyPlayingList() {

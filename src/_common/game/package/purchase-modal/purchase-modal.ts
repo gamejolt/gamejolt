@@ -1,9 +1,8 @@
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../../jolticon/jolticon.vue';
-import AppLoading from '../../../loading/loading.vue';
 import { VuexStore } from '../../../../utils/vuex';
 import { Analytics } from '../../../analytics/analytics.service';
 import { Growls } from '../../../growls/growls.service';
+import AppLoading from '../../../loading/loading.vue';
 import { BaseModal } from '../../../modal/base';
 import { Sellable } from '../../../sellable/sellable.model';
 import { User } from '../../../user/user.model';
@@ -17,7 +16,6 @@ import FormGamePackagePayment from '../payment-form/payment-form.vue';
 @Component({
 	components: {
 		AppLoading,
-		AppJolticon,
 		FormGamePackagePayment,
 	},
 })
@@ -84,7 +82,11 @@ export default class AppGamePackagePurchaseModal extends BaseModal {
 			this.showBrowserModal(this.build);
 		} else if (operation === 'download') {
 			if (AppGamePackagePurchaseModal.hook.downloadPackage) {
-				AppGamePackagePurchaseModal.hook.downloadPackage(this.$store, this.game, this.build);
+				AppGamePackagePurchaseModal.hook.downloadPackage(
+					this.$store,
+					this.game,
+					this.build
+				);
 			} else {
 				this.download(this.build);
 			}

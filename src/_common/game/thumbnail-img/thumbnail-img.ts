@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../jolticon/jolticon.vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import { Screen } from '../../screen/screen-service';
@@ -9,7 +8,6 @@ import { Game } from '../game.model';
 
 @Component({
 	components: {
-		AppJolticon,
 		AppImgResponsive,
 		AppVideo,
 	},
@@ -27,7 +25,11 @@ export default class AppGameThumbnailImg extends Vue {
 
 	get hasVideo() {
 		return (
-			this.mediaItem && this.mediaItem.is_animated && Screen.isDesktop && !GJ_IS_SSR && this.animate
+			this.mediaItem &&
+			this.mediaItem.is_animated &&
+			Screen.isDesktop &&
+			!GJ_IS_SSR &&
+			this.animate
 		);
 	}
 

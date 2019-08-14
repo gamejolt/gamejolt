@@ -1,13 +1,11 @@
+import { Component, Prop } from 'vue-property-decorator';
 import { Community } from '../../../../_common/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { BaseModal } from '../../../../_common/modal/base';
-import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
-import { Component, Prop } from 'vue-property-decorator';
 import FormPost from '../../forms/post/post.vue';
 
 @Component({
 	components: {
-		AppJolticon,
 		FormPost,
 	},
 })

@@ -1,13 +1,11 @@
+import { Component } from 'vue-property-decorator';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { BaseModal } from '../../../../_common/modal/base';
 import { Translate } from '../../../../_common/translate/translate.service';
-import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
-import { Component } from 'vue-property-decorator';
 import FormClientSystemReport from './system-report-form.vue';
 
 @Component({
 	components: {
-		AppJolticon,
 		FormClientSystemReport,
 	},
 })

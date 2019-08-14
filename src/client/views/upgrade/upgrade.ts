@@ -1,5 +1,4 @@
 import { Component } from 'vue-property-decorator';
-import AppButton from '../../../_common/button/button.vue';
 import { ClientUpdater } from '../../../_common/client/client-updater.service';
 import AppProgressBar from '../../../_common/progress/bar/bar.vue';
 import { BaseRouteComponent } from '../../../_common/route/route-component';
@@ -8,7 +7,6 @@ import { BaseRouteComponent } from '../../../_common/route/route-component';
 	name: 'RouteUpgrade',
 	components: {
 		AppProgressBar,
-		AppButton,
 	},
 })
 export default class RouteUpgrade extends BaseRouteComponent {

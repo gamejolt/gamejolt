@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../jolticon/jolticon.vue';
 import { Connection } from '../../connection/connection-service';
 import { Environment } from '../../environment/environment.service';
 import { Navigate } from '../../navigate/navigate.service';
@@ -9,7 +8,6 @@ import AppAuthLoginForm from './login-form.vue';
 
 @Component({
 	components: {
-		AppJolticon,
 		AppAuthLoginForm,
 	},
 })

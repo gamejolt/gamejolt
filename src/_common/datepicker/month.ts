@@ -1,17 +1,12 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../jolticon/jolticon.vue';
 import { arrayChunk } from '../../utils/array';
 import { findRequiredVueParent } from '../../utils/vue';
 import { date as dateFilter } from '../filters/date';
 import AppDatepickerTS, { DatepickerDate } from './datepicker';
 import AppDatepicker from './datepicker.vue';
 
-@Component({
-	components: {
-		AppJolticon,
-	},
-})
+@Component({})
 export default class AppDatepickerMonth extends Vue {
 	@Prop(Date) value!: Date;
 

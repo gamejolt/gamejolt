@@ -1,16 +1,14 @@
+import Vue from 'vue';
+import { Component } from 'vue-property-decorator';
+import { date } from '../../../../../../../_common/filters/date';
 import { Game } from '../../../../../../../_common/game/game.model';
 import { AppLazyPlaceholder } from '../../../../../../../_common/lazy/placeholder/placeholder';
 import { LinkedAccount } from '../../../../../../../_common/linked-account/linked-account.model';
-import AppJolticon from '../../../../../../../_common/jolticon/jolticon.vue';
-import { date } from '../../../../../../../_common/filters/date';
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
 @Component({
 	components: {
 		AppLazyPlaceholder,
-		AppJolticon,
 	},
 	filters: {
 		date,
@@ -36,7 +34,9 @@ export default class AppDiscoverGamesViewOverviewDetails extends Vue {
 	}
 
 	get hasLinksSection() {
-		return this.game.web_site || this.facebookAccount || this.twitterAccount || this.tumblrAccount;
+		return (
+			this.game.web_site || this.facebookAccount || this.twitterAccount || this.tumblrAccount
+		);
 	}
 
 	get facebookAccount() {

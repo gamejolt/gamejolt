@@ -1,5 +1,7 @@
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
+import { currency } from '../../../../_common/filters/currency';
 import AppForm from '../../../../_common/form-vue/form';
 import {
 	BaseForm,
@@ -14,9 +16,6 @@ import { ReferralEntry } from '../../../../_common/referral-entry/referral-entry
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import { UserStripeManagedAccount } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
 import { User } from '../../../../_common/user/user.model';
-import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
-import { currency } from '../../../../_common/filters/currency';
-import { Component } from 'vue-property-decorator';
 import AppDeveloperTerms from './developer-terms/developer-terms.vue';
 import FormFinancialsManagedAccount from './managed-account/managed-account.vue';
 import AppPartnerTerms from './partner-terms/partner-terms.vue';
@@ -31,7 +30,6 @@ interface FormModel {
 @Component({
 	components: {
 		AppExpand,
-		AppJolticon,
 		AppPartnerTerms,
 		AppDeveloperTerms,
 		FormFinancialsManagedAccount,

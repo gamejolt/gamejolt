@@ -1,8 +1,13 @@
+import Vue from 'vue';
+import { Component, Prop, Watch } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
+import { date } from '../../../../../_common/filters/date';
+import { number } from '../../../../../_common/filters/number';
 import { ForumPost } from '../../../../../_common/forum/post/post.model';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
 import { Growls } from '../../../../../_common/growls/growls.service';
@@ -15,12 +20,6 @@ import { ReportModal } from '../../../../../_common/report/modal/modal.service';
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
-import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
-import { date } from '../../../../../_common/filters/date';
-import { number } from '../../../../../_common/filters/number';
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Store } from '../../../../store/index';
 import FormForumPost from '../../../forms/forum/post/post.vue';
 
@@ -30,7 +29,6 @@ import FormForumPost from '../../../forms/forum/post/post.vue';
 		AppMessageThread,
 		AppMessageThreadItem,
 		AppMessageThreadAdd,
-		AppJolticon,
 		AppExpand,
 		FormForumPost,
 		AppPopper,

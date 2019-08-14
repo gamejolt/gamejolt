@@ -1,5 +1,8 @@
 import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
+import { determine } from 'jstimezonedetect';
+import { Component, Prop } from 'vue-property-decorator';
+import { arrayRemove } from '../../../../../utils/array';
 import AppCardList from '../../../../../_common/card/list/list.vue';
 import AppFormControlDate from '../../../../../_common/form-vue/control/date/date.vue';
 import AppForm from '../../../../../_common/form-vue/form';
@@ -18,10 +21,6 @@ import { GameRelease } from '../../../../../_common/game/release/release.model';
 import { Growls } from '../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
-import { arrayRemove } from '../../../../../utils/array';
-import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
-import { determine } from 'jstimezonedetect';
-import { Component, Prop } from 'vue-property-decorator';
 import FormGameBuildTS from '../build/build';
 import FormGameBuild from '../build/build.vue';
 import FormGameNewBuild from '../new-build/new-build.vue';
@@ -32,7 +31,6 @@ type GameReleaseFormModel = GameRelease & {
 
 @Component({
 	components: {
-		AppJolticon,
 		AppCardList,
 		FormGameBuild,
 		FormGameNewBuild,
@@ -128,7 +126,10 @@ export default class FormGameRelease extends BaseForm<GameReleaseFormModel>
 	updateBuildLaunchOptions(build: GameBuild, launchOptions: GameBuildLaunchOption[]) {
 		// Remove old ones for build.
 		if (this.launchOptions && this.launchOptions.length) {
-			arrayRemove(this.launchOptions, launchOption => launchOption.game_build_id === build.id);
+			arrayRemove(
+				this.launchOptions,
+				launchOption => launchOption.game_build_id === build.id
+			);
 		}
 
 		// If no new ones, skip.

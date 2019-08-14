@@ -1,22 +1,20 @@
+import { Component, Prop, Watch } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
+import { currency } from '../../../../_common/filters/currency';
 import { AppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
 import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../_common/form-vue/form.service';
 import { Geo, Region } from '../../../../_common/geo/geo.service';
-import { Order } from '../../../../_common/order/order.model';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip';
-import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
 import AppLoading from '../../../../_common/loading/loading.vue';
-import { currency } from '../../../../_common/filters/currency';
+import { Order } from '../../../../_common/order/order.model';
 import { AppStore } from '../../../../_common/store/app-store';
-import { Component, Prop, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 
 @Component({
 	components: {
 		AppExpand,
 		AppLoading,
-		AppJolticon,
 	},
 	directives: {
 		AppTooltip,

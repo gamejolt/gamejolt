@@ -1,16 +1,12 @@
-import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
-import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
-import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
-import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
-import { number } from '../../../../../_common/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
+import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
+import { number } from '../../../../../_common/filters/number';
+import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 
 @Component({
-	components: {
-		AppJolticon,
-	},
 	directives: {
 		AppAuthRequired,
 		AppTooltip,

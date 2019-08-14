@@ -1,12 +1,11 @@
+import Vue from 'vue';
+import { Component, Prop, Watch } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import { number } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
 import { GameTrophy } from '../../../../_common/game/trophy/trophy.model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { UserGameTrophy } from '../../../../_common/user/game-trophy/game-trophy.model';
-import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
-import { number } from '../../../../_common/filters/number';
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Store } from '../../../store/index';
 import AppTrophyCompletion from '../completion/completion.vue';
 import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
@@ -15,7 +14,6 @@ import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
 	components: {
 		AppTrophyCompletion,
 		AppTrophyThumbnail,
-		AppJolticon,
 	},
 	filters: {
 		number,

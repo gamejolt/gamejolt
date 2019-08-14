@@ -1,3 +1,6 @@
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import { arrayUnique } from '../../../../utils/array';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Device } from '../../../../_common/device/device.service';
 import { GameBuild } from '../../../../_common/game/build/build.model';
@@ -7,17 +10,9 @@ import { GamePackage } from '../../../../_common/game/package/package.model';
 import { GamePackagePurchaseModal } from '../../../../_common/game/package/purchase-modal/purchase-modal.service';
 import { GamePlayModal } from '../../../../_common/game/play-modal/play-modal.service';
 import { User } from '../../../../_common/user/user.model';
-import { arrayUnique } from '../../../../utils/array';
-import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
 import AppGameCoverButtonsBuildButtons from './build-buttons.vue';
 
-@Component({
-	components: {
-		AppJolticon,
-	},
-})
+@Component({})
 export default class AppGameCoverButtons extends Vue {
 	@Prop(Game)
 	game!: Game;

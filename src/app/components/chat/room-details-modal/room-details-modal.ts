@@ -1,13 +1,8 @@
-import { BaseModal } from '../../../../_common/modal/base';
-import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { BaseModal } from '../../../../_common/modal/base';
 import { ChatRoom } from '../room';
 
-@Component({
-	components: {
-		AppJolticon,
-	},
-})
+@Component({})
 export default class AppChatRoomDetailsModal extends BaseModal {
 	@Prop(ChatRoom) room!: ChatRoom;
 }

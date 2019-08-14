@@ -7,7 +7,7 @@ import { Analytics } from './analytics/analytics.service';
 import AppButton from './button/button.vue';
 import { Connection } from './connection/connection-service';
 import AppExternalLink from './external-link/external-link.vue';
-import AppJolticon from './jolticon/jolticon';
+import AppJolticon from './jolticon/jolticon.vue';
 import { Meta } from './meta/meta-service';
 import { Payload } from './payload/payload-service';
 import { Referrer } from './referrer/referrer.service';

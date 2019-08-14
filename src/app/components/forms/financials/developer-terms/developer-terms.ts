@@ -1,14 +1,10 @@
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
-import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
-import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
-import { date } from '../../../../../_common/filters/date';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { date } from '../../../../../_common/filters/date';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
 
 @Component({
-	components: {
-		AppJolticon,
-	},
 	directives: {
 		AppTooltip,
 	},
@@ -39,7 +35,8 @@ export default class AppDeveloperTerms extends Vue {
 	get hasSignedLatestDeveloperAgreement() {
 		return (
 			this.account &&
-			this.account.tos_signed_developer === UserStripeManagedAccount.TERMS_DISTRIBUTION_VERSION
+			this.account.tos_signed_developer ===
+				UserStripeManagedAccount.TERMS_DISTRIBUTION_VERSION
 		);
 	}
 
@@ -47,13 +44,15 @@ export default class AppDeveloperTerms extends Vue {
 		return (
 			this.account &&
 			this.account.tos_signed_developer > 0 &&
-			this.account.tos_signed_developer !== UserStripeManagedAccount.TERMS_DISTRIBUTION_VERSION
+			this.account.tos_signed_developer !==
+				UserStripeManagedAccount.TERMS_DISTRIBUTION_VERSION
 		);
 	}
 
 	get hasSignedSomeAgreement() {
 		return (
-			this.account && (this.account.tos_signed_developer > 0 || this.account.tos_signed_partner > 0)
+			this.account &&
+			(this.account.tos_signed_developer > 0 || this.account.tos_signed_partner > 0)
 		);
 	}
 

@@ -1,13 +1,11 @@
+import { Component } from 'vue-property-decorator';
 import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
-import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
-import { Component } from 'vue-property-decorator';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 
 @Component({
 	components: {
-		AppJolticon,
 		AppFormControlToggle,
 		AppDashGameWizardControls,
 	},

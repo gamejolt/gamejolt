@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppPill from './pill.vue';
+import AppPill from '../../pill/pill.vue';
 import { Community } from '../community.model';
 import AppCommunityThumbnailImg from '../thumbnail/img/img.vue';
 

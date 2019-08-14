@@ -1,14 +1,12 @@
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
 import AppCard from '../../../../../_common/card/card.vue';
 import { Game } from '../../../../../_common/game/game.model';
 import { Growls } from '../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
 import { GameDevStageSelectorConfirmModal } from './confirm-service';
 
 @Component({
 	components: {
-		AppJolticon,
 		AppCard,
 	},
 })

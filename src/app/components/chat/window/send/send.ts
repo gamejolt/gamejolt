@@ -1,15 +1,11 @@
-import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
+import { Screen } from '../../../../../_common/screen/screen-service';
 import { ChatClient } from '../../client';
 
 @Component({
-	components: {
-		AppJolticon,
-	},
 	directives: {
 		AppFocusWhen,
 	},

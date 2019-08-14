@@ -1,17 +1,15 @@
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import { findRequiredVueParent } from '../../../../../utils/vue';
 import AppFormControlUploadTS from '../../../../../_common/form-vue/control/upload/upload';
 import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
 import { CommonFormComponents } from '../../../../../_common/form-vue/form.service';
-import { findRequiredVueParent } from '../../../../../utils/vue';
-import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
 import FormFinancialsManagedAccountTS from './managed-account';
 import FormFinancialsManagedAccount from './managed-account.vue';
 
 @Component({
 	components: {
 		...CommonFormComponents,
-		AppJolticon,
 		AppFormControlUpload,
 	},
 })

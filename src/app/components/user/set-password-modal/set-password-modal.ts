@@ -1,11 +1,9 @@
-import { BaseModal } from '../../../../_common/modal/base';
-import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
 import { Component } from 'vue-property-decorator';
+import { BaseModal } from '../../../../_common/modal/base';
 import FormSetPassword from '../../forms/set-password/set-password.vue';
 
 @Component({
 	components: {
-		AppJolticon,
 		FormSetPassword,
 	},
 })

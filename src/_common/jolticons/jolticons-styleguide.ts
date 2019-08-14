@@ -1,12 +1,8 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import AppJolticon from '../jolticon/jolticon.vue';
 import { AppTooltip } from '../tooltip/tooltip';
 
 @Component({
-	components: {
-		AppJolticon,
-	},
 	directives: {
 		AppTooltip,
 	},

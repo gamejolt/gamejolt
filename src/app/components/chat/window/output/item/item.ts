@@ -1,9 +1,8 @@
-import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
-import AppJolticon from '../../../../../../_common/jolticon/jolticon.vue';
-import { date } from '../../../../../../_common/filters/date';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
+import { date } from '../../../../../../_common/filters/date';
 import { ChatClient } from '../../../client';
 import { ChatMessage } from '../../../message';
 import { ChatRoom } from '../../../room';
@@ -12,7 +11,6 @@ import './item-content.styl';
 @Component({
 	components: {
 		AppFadeCollapse,
-		AppJolticon,
 	},
 	filters: {
 		date,
@@ -31,7 +29,9 @@ export default class AppChatWindowOutputItem extends Vue {
 	readonly ChatMessage = ChatMessage;
 
 	get shouldFadeCollapse() {
-		return this.message.contentRaw.split('\n').length > 6 || this.message.contentRaw.length >= 500;
+		return (
+			this.message.contentRaw.split('\n').length > 6 || this.message.contentRaw.length >= 500
+		);
 	}
 
 	get canModerate() {

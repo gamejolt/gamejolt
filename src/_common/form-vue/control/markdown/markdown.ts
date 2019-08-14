@@ -1,9 +1,8 @@
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../../jolticon/jolticon.vue';
-import AppLoading from '../../../loading/loading.vue';
 import { Api } from '../../../api/api.service';
 import AppCodemirror from '../../../codemirror/codemirror.vue';
 import { Environment } from '../../../environment/environment.service';
+import AppLoading from '../../../loading/loading.vue';
 import { Screen } from '../../../screen/screen-service';
 import { AppTooltip } from '../../../tooltip/tooltip';
 import { AppFormAutosize, AutosizeBootstrap } from '../../autosize.directive';
@@ -13,7 +12,6 @@ import AppFormControlMarkdownMediaItems from './media-items/media-items.vue';
 
 @Component({
 	components: {
-		AppJolticon,
 		AppLoading,
 		AppCodemirror,
 		AppFormControlMarkdownMediaItems,

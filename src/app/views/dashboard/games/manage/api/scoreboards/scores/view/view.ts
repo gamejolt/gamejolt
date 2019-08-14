@@ -1,4 +1,7 @@
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
+import { date } from '../../../../../../../../../_common/filters/date';
+import { number } from '../../../../../../../../../_common/filters/number';
 import { GameScoreTable } from '../../../../../../../../../_common/game/score-table/score-table.model';
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
@@ -6,17 +9,10 @@ import {
 	RouteResolver,
 } from '../../../../../../../../../_common/route/route-component';
 import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
-import AppJolticon from '../../../../../../../../../_common/jolticon/jolticon.vue';
-import { date } from '../../../../../../../../../_common/filters/date';
-import { number } from '../../../../../../../../../_common/filters/number';
-import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 
 @Component({
 	name: 'RouteDashGamesManageApiScoreboardsScoresView',
-	components: {
-		AppJolticon,
-	},
 	filters: {
 		number,
 		date,

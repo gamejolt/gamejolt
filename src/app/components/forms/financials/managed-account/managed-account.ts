@@ -1,14 +1,13 @@
+import { Component } from 'vue-property-decorator';
+import { loadScript } from '../../../../../utils/utils';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
+import { currency } from '../../../../../_common/filters/currency';
 import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { Geo } from '../../../../../_common/geo/geo.service';
+import AppLoading from '../../../../../_common/loading/loading.vue';
 import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
 import { User } from '../../../../../_common/user/user.model';
-import { loadScript } from '../../../../../utils/utils';
-import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
-import AppLoading from '../../../../../_common/loading/loading.vue';
-import { currency } from '../../../../../_common/filters/currency';
-import { Component } from 'vue-property-decorator';
 import AppFinancialsManagedAccountAddress from './address.vue';
 import AppFinancialsManagedAccountBusiness from './business.vue';
 import AppFinancialsManagedAccountDob from './dob.vue';
@@ -32,7 +31,6 @@ interface FormModel {
 	components: {
 		AppLoading,
 		AppExpand,
-		AppJolticon,
 		AppFinancialsManagedAccountName,
 		AppFinancialsManagedAccountDob,
 		AppFinancialsManagedAccountAddress,
@@ -163,7 +161,11 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 
 	get isVerificationPending() {
 		// If they're in pending state and we don't require more info from them.
-		if (this.account && this.account.status === 'pending' && !this.requiresVerificationDocument) {
+		if (
+			this.account &&
+			this.account.status === 'pending' &&
+			!this.requiresVerificationDocument
+		) {
 			return true;
 		}
 
@@ -265,7 +267,8 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 						`additional-id-document-${i}`
 					] as any;
 					const _response = await idDocument.uploadIdDocument(this.stripePublishableKey);
-					data[`legal_entity.additional_owners.${curIndex}.verification.document`] = _response.id;
+					data[`legal_entity.additional_owners.${curIndex}.verification.document`] =
+						_response.id;
 				}
 			}
 

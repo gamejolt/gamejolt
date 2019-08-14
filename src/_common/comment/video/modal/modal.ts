@@ -1,10 +1,9 @@
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import AppGameThumbnail from '../../../game/thumbnail/thumbnail.vue';
-import AppJolticon from '../../../jolticon/jolticon.vue';
 import { AppTrackEvent } from '../../../analytics/track-event.directive';
 import AppContentViewer from '../../../content/content-viewer/content-viewer.vue';
 import { number } from '../../../filters/number';
+import AppGameThumbnail from '../../../game/thumbnail/thumbnail.vue';
 import { BaseModal } from '../../../modal/base';
 import { AppResponsiveDimensions } from '../../../responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../screen/screen-service';
@@ -19,7 +18,6 @@ import { CommentVideo } from '../video-model';
 
 @Component({
 	components: {
-		AppJolticon,
 		AppResponsiveDimensions,
 		AppVideoEmbed,
 		AppGameThumbnail,

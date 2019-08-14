@@ -1,12 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import AppJolticon from '../jolticon/jolticon.vue';
 
-@Component({
-	components: {
-		AppJolticon,
-	},
-})
+@Component({})
 export default class AppTimepicker extends Vue {
 	@Prop(Date) value!: Date;
 	@Prop({ type: Boolean, default: true })

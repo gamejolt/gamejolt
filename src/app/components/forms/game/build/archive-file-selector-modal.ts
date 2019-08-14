@@ -1,12 +1,10 @@
-import { Api } from '../../../../../_common/api/api.service';
-import { BaseModal } from '../../../../../_common/modal/base';
-import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
-import AppLoading from '../../../../../_common/loading/loading.vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { Api } from '../../../../../_common/api/api.service';
+import AppLoading from '../../../../../_common/loading/loading.vue';
+import { BaseModal } from '../../../../../_common/modal/base';
 
 @Component({
 	components: {
-		AppJolticon,
 		AppLoading,
 	},
 })

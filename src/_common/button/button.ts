@@ -1,12 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../jolticon/jolticon.vue';
 
-@Component({
-	components: {
-		AppJolticon,
-	},
-})
+@Component({})
 export default class AppButton extends Vue {
 	@Prop({ type: String, default: 'button' })
 	tag!: string;

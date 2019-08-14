@@ -1,15 +1,13 @@
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../jolticon/jolticon.vue';
-import { CommentState, CommentStore } from '../comment-store';
 import { number } from '../../filters/number';
 import { BaseModal } from '../../modal/base';
 import { Screen } from '../../screen/screen-service';
+import { CommentState, CommentStore } from '../comment-store';
 import AppCommentWidget from '../widget/widget.vue';
 import { DisplayMode } from './modal.service';
 
 @Component({
 	components: {
-		AppJolticon,
 		AppCommentWidget,
 	},
 })

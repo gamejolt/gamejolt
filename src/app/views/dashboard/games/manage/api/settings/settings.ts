@@ -1,3 +1,4 @@
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { Growls } from '../../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
@@ -5,15 +6,10 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
-import AppJolticon from '../../../../../../../_common/jolticon/jolticon.vue';
-import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @Component({
 	name: 'RouteDashGamesManageApiSettings',
-	components: {
-		AppJolticon,
-	},
 })
 @RouteResolver({
 	deps: {},

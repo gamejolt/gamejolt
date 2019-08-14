@@ -1,12 +1,11 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { loadScript } from '../../../utils/utils';
-import { Ads } from '../ads.service';
 import { Analytics } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
 import { time } from '../../filters/time';
-import AppJolticon from '../../jolticon/jolticon.vue';
 import AppLoading from '../../loading/loading.vue';
+import { Ads } from '../ads.service';
 
 const ImaScriptSrc = 'https://imasdk.googleapis.com/js/sdkloader/ima3.js';
 const AdSlotWidth = 910;
@@ -18,7 +17,6 @@ const AdSlotHeight = 512;
 	},
 	components: {
 		AppLoading,
-		AppJolticon,
 	},
 })
 export default class AppAdVideo extends Vue {
@@ -92,7 +90,10 @@ export default class AppAdVideo extends Vue {
 			)[0] as HTMLElement;
 
 			// Iinitialize the ad container.
-			const adDisplayContainer = new ima.AdDisplayContainer(this.adContainerElem, this.videoElem);
+			const adDisplayContainer = new ima.AdDisplayContainer(
+				this.adContainerElem,
+				this.videoElem
+			);
 			adDisplayContainer.initialize();
 
 			// Set up an ads loader.

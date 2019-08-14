@@ -1,15 +1,13 @@
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { Site } from '../../../../_common/site/site-model';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
-import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
 import FormSiteSettings from '../../forms/site/settings/settings.vue';
 
 @Component({
 	components: {
-		AppJolticon,
 		FormSiteSettings,
 	},
 	directives: {

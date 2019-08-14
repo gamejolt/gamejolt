@@ -43,6 +43,7 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 	revenueWithdrawn = 0;
 	revenueSpent = 0;
 	revenueCurrent = 0;
+	revenuePending = 0;
 	revenuePendingWithdraw = 0;
 	revenuePendingActivation = 0;
 	walletBalance = 0;

@@ -1,16 +1,11 @@
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../jolticon/jolticon.vue';
 import { Minbar } from '../../minbar/minbar.service';
 import { BaseModal } from '../../modal/base';
 import { Game } from '../game.model';
 import { GameRatingGrowl } from '../rating-growl/rating-growl.service';
 import './play-modal-global.styl';
 
-@Component({
-	components: {
-		AppJolticon,
-	},
-})
+@Component({})
 export default class AppGamePlayModal extends BaseModal {
 	@Prop(Game)
 	game!: Game;

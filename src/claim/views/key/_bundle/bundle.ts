@@ -4,12 +4,10 @@ import { State } from 'vuex-class';
 import { GameBundle } from '../../../../_common/game-bundle/game-bundle.model';
 import { Game } from '../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
-import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
 import { Store } from '../../../store/index';
 
 @Component({
 	components: {
-		AppJolticon,
 		AppGameThumbnail,
 	},
 })

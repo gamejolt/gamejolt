@@ -1,9 +1,8 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import AppJolticon from '../../jolticon/jolticon.vue';
-import AppLoading from '../../loading/loading.vue';
 import { number } from '../../filters/number';
+import AppLoading from '../../loading/loading.vue';
 import { AppStore } from '../../store/app-store';
 import { AppTheme } from '../../theme/theme';
 import { AppTooltipContainer } from '../../tooltip/container/container';
@@ -16,7 +15,6 @@ import './card-global.styl';
 
 @Component({
 	components: {
-		AppJolticon,
 		AppUserAvatarImg,
 		AppUserFollowWidget,
 		AppTheme,

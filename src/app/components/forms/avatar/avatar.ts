@@ -1,4 +1,6 @@
+import { Component, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
+import { filesize } from '../../../../_common/filters/filesize';
 import AppFormControlCrop from '../../../../_common/form-vue/control/crop/crop.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
 import AppFormControlUpload from '../../../../_common/form-vue/control/upload/upload.vue';
@@ -11,9 +13,6 @@ import {
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { User } from '../../../../_common/user/user.model';
-import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
-import { filesize } from '../../../../_common/filters/filesize';
-import { Component, Watch } from 'vue-property-decorator';
 
 type FormModel = User & {
 	avatar_crop?: any;
@@ -24,7 +23,6 @@ type FormModel = User & {
 		AppFormControlUpload,
 		AppFormControlCrop,
 		AppFormControlToggle,
-		AppJolticon,
 	},
 })
 export default class FormAvatar extends BaseForm<FormModel>

@@ -1,22 +1,20 @@
 import * as distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
+import { Component } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import AppFormControlContent from '../../../../_common/form-vue/control/content/content.vue';
 import AppFormControlTheme from '../../../../_common/form-vue/control/theme/theme.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnLoad, FormOnSubmitError } from '../../../../_common/form-vue/form.service';
+import AppLoading from '../../../../_common/loading/loading.vue';
 import { Theme } from '../../../../_common/theme/theme.model';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
 import { User } from '../../../../_common/user/user.model';
-import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
-import AppLoading from '../../../../_common/loading/loading.vue';
-import { Component } from 'vue-property-decorator';
 
 @Component({
 	components: {
 		AppLoading,
 		AppExpand,
-		AppJolticon,
 		AppFormControlTheme,
 		AppFormControlToggle,
 		AppFormControlContent,

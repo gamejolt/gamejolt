@@ -1,13 +1,8 @@
+import { Component, Prop } from 'vue-property-decorator';
 import { Game } from '../../../../../_common/game/game.model';
 import { BaseModal } from '../../../../../_common/modal/base';
-import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
-import { Component, Prop } from 'vue-property-decorator';
 
-@Component({
-	components: {
-		AppJolticon,
-	},
-})
+@Component({})
 export default class AppGameDevStageConfirmModal extends BaseModal {
 	@Prop(Game) game!: Game;
 	@Prop(Number) stage!: number;

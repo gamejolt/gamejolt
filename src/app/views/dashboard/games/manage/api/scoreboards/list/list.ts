@@ -5,7 +5,6 @@ import AppCardListDraggable from '../../../../../../../../_common/card/list/drag
 import AppCardListItem from '../../../../../../../../_common/card/list/item/item.vue';
 import AppCardList from '../../../../../../../../_common/card/list/list.vue';
 import { GameScoreTable } from '../../../../../../../../_common/game/score-table/score-table.model';
-import AppJolticon from '../../../../../../../../_common/jolticon/jolticon.vue';
 import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
@@ -22,7 +21,6 @@ import { RouteStore, RouteStoreModule } from '../../../manage.store';
 		AppCardListItem,
 		AppCardListAdd,
 		AppCardListDraggable,
-		AppJolticon,
 		FormGameScoreTable,
 	},
 	directives: {

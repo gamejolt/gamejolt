@@ -1,11 +1,10 @@
 import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../jolticon/jolticon.vue';
-import AppShortkey from '../../shortkey/shortkey.vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { EscapeStack } from '../../escape-stack/escape-stack.service';
 import { Screen } from '../../screen/screen-service';
+import AppShortkey from '../../shortkey/shortkey.vue';
 import AppMediaBar from '../media-bar';
 import AppMediaBarLightboxItem from './item/item.vue';
 import './lightbox-global.styl';
@@ -26,7 +25,6 @@ export const MediaBarLightboxConfig = {
 
 @Component({
 	components: {
-		AppJolticon,
 		AppMediaBarLightboxSlider,
 		AppMediaBarLightboxItem,
 		AppShortkey,

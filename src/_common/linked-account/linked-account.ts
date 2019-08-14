@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
-import AppJolticon from '../jolticon/jolticon.vue';
 import AppCard from '../card/card.vue';
 import {
 	getLinkedAccountPlatformIcon,
@@ -11,7 +10,7 @@ import {
 import { ModalTumblrBlogSelector } from './tumblr-blog-selector-modal/tumblr-blog-selector-modal-service';
 
 @Component({
-	components: { AppJolticon, AppCard },
+	components: { AppCard },
 })
 export default class AppLinkedAccount extends Vue {
 	@Prop(LinkedAccount)

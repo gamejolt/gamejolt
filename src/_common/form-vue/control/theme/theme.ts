@@ -1,8 +1,7 @@
 import { Sketch } from 'vue-color';
 import { Component } from 'vue-property-decorator';
-import AppLoading from '../../../loading/loading.vue';
 import { Api } from '../../../api/api.service';
-import AppButton from '../../button/button.vue';
+import AppLoading from '../../../loading/loading.vue';
 import AppPopper from '../../../popper/popper.vue';
 import AppThemeBubble from '../../../theme/bubble/bubble.vue';
 import { ThemePreset } from '../../../theme/preset/preset.model';
@@ -19,7 +18,6 @@ interface VueColor {
 		AppLoading,
 		AppThemeBubble,
 		AppPopper,
-		AppButton,
 		picker: Sketch,
 	},
 	directives: {

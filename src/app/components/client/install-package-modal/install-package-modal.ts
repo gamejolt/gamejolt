@@ -1,21 +1,19 @@
+import { Component, Prop } from 'vue-property-decorator';
+import { arrayIndexBy } from '../../../../utils/array';
 import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../_common/api/api.service';
 import { Device } from '../../../../_common/device/device.service';
+import { filesize } from '../../../../_common/filters/filesize';
 import { GameBuild } from '../../../../_common/game/build/build.model';
 import { Game } from '../../../../_common/game/game.model';
 import AppGamePackageCard from '../../../../_common/game/package/card/card.vue';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
-import { BaseModal } from '../../../../_common/modal/base';
-import { arrayIndexBy } from '../../../../utils/array';
-import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
 import AppLoading from '../../../../_common/loading/loading.vue';
-import { filesize } from '../../../../_common/filters/filesize';
-import { Component, Prop } from 'vue-property-decorator';
+import { BaseModal } from '../../../../_common/modal/base';
 import { ClientLibraryAction, ClientLibraryStore } from '../../../store/client-library';
 
 @Component({
 	components: {
-		AppJolticon,
 		AppLoading,
 		AppGamePackageCard,
 	},

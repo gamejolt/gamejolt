@@ -3,6 +3,7 @@ import { State } from 'vuex-class';
 import AppAdPlacement from '../../../../../../../_common/ad/placement/placement.vue';
 import AppAdPlaywireVideo from '../../../../../../../_common/ad/playwire/video.vue';
 import AppAdWidget from '../../../../../../../_common/ad/widget/widget.vue';
+import { AppTrackEvent } from '../../../../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { Environment } from '../../../../../../../_common/environment/environment.service';
 import { GameBuild } from '../../../../../../../_common/game/build/build.model';
@@ -18,9 +19,9 @@ import { Screen } from '../../../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { AppSocialFacebookLike } from '../../../../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../../../../_common/social/twitter/share/share';
-import { Store } from '../../../../../../store/index';
 import AppGameOgrs from '../../../../../../components/game/ogrs/ogrs.vue';
 import AppRatingWidget from '../../../../../../components/rating/widget/widget.vue';
+import { Store } from '../../../../../../store/index';
 import AppDiscoverGamesViewOverviewDetails from '../../overview/_details/details.vue';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
@@ -39,6 +40,9 @@ const DownloadDelay = 3000;
 		AppGameOgrs,
 		AppDiscoverGamesViewOverviewDetails,
 		AppAdPlaywireVideo,
+	},
+	directives: {
+		AppTrackEvent,
 	},
 })
 @RouteResolver({
