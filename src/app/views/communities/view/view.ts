@@ -1,18 +1,18 @@
+import { Component } from 'vue-property-decorator';
+import { Mutation } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityJoinWidget from '../../../../_common/community/join-widget/join-widget.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
 import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
+import { number } from '../../../../_common/filters/number';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
-import { number } from '../../../../_common/filters/number';
-import { Component } from 'vue-property-decorator';
-import { Mutation } from 'vuex-class';
-import { CommunityThumbnailModal } from '../../../components/forms/community/thumbnail/modal/modal.service';
-import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { Store } from '../../../store/index';
+import { CommunityThumbnailModal } from '../../forms/community/thumbnail/modal/modal.service';
+import AppPageHeader from '../../page-header/page-header.vue';
 
 @Component({
 	name: 'RouteCommunitiesView',

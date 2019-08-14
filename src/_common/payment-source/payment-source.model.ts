@@ -1,5 +1,5 @@
-import { UserAddress } from '../../components/user/address/address.model';
 import { Model } from '../model/model.service';
+import { UserAddress } from '../user/address/address.model';
 
 export class PaymentSource extends Model {
 	last4!: string;

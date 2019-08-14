@@ -1,10 +1,10 @@
 import { Component, Prop } from 'vue-property-decorator';
-import { CommentState, CommentStore } from '../../../components/comment/comment-store';
-import { BaseModal } from '../../../components/modal/base';
-import { Screen } from '../../../components/screen/screen-service';
-import { AppState, AppStore } from '../../../vue/services/app/app-store';
 import { Analytics } from '../../analytics/analytics.service';
+import { CommentState, CommentStore } from '../../comment/comment-store';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
+import { BaseModal } from '../../modal/base';
+import { Screen } from '../../screen/screen-service';
+import { AppState, AppStore } from '../../store/app-store';
 import FormComment from '../add/add.vue';
 import { Comment } from '../comment-model';
 import { CommentMutation } from '../comment-store';

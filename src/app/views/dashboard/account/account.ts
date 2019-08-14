@@ -1,17 +1,17 @@
+import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
 import AppExpand from '../../../../_common/expand/expand.vue';
+import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { WithRouteStore } from '../../../../_common/route/route-store';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
-import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
-import AppPageHeader from '../../../components/page-header/page-header.vue';
-import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
-import { UserHeaderModal } from '../../../components/user/header-modal/header-modal.service';
 import { Store, store } from '../../../store/index';
+import AppPageHeader from '../../page-header/page-header.vue';
+import { UserAvatarModal } from '../../user/avatar-modal/avatar-modal.service';
+import { UserHeaderModal } from '../../user/header-modal/header-modal.service';
 import { RouteStore, RouteStoreModule, RouteStoreName } from './account.store';
 
 @Component({

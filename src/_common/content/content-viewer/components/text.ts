@@ -1,6 +1,6 @@
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppExternalLink from '../../../../vue/components/external-link/external-link.vue';
+import AppExternalLink from '../../../../external-link/external-link.vue';
 import { ContentObject } from '../../content-object';
 import { ContentOwner } from '../../content-owner';
 import AppContentViewerMention from './mention/mention.vue';

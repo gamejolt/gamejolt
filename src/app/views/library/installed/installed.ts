@@ -1,9 +1,9 @@
+import { Component } from 'vue-property-decorator';
 import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissable.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
-import { Component } from 'vue-property-decorator';
-import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
+import AppPageHeader from '../../page-header/page-header.vue';
 import AppLibraryInstalledGame from './_game/game.vue';
 
 @Component({

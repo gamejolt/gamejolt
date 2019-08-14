@@ -1,7 +1,7 @@
-import { Sellable } from '../../../../components/sellable/sellable.model';
 import { arrayUnique } from '../../../../utils/array';
 import { Device } from '../../../device/device.service';
 import { LinkedKey } from '../../../linked-key/linked-key.model';
+import { Sellable } from '../../../sellable/sellable.model';
 import { GameBuild } from '../../build/build.model';
 import { GameRelease } from '../../release/release.model';
 

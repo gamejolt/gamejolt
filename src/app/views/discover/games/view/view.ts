@@ -1,3 +1,5 @@
+import { Component } from 'vue-property-decorator';
+import { enforceLocation } from '../../../../../utils/router';
 import { Ads, AdSettingsContainer } from '../../../../../_common/ad/ads.service';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../_common/api/api.service';
@@ -22,18 +24,13 @@ import { Translate } from '../../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
-import { enforceLocation } from '../../../../../utils/router';
-import { Component } from 'vue-property-decorator';
-import AppGameCoverButtons from '../../../../components/game/cover-buttons/cover-buttons.vue';
-import AppGameMaturityBlock from '../../../../components/game/maturity-block/maturity-block.vue';
-import { AppGamePerms } from '../../../../components/game/perms/perms';
-import { IntentService } from '../../../../components/intent/intent.service';
-import AppPageHeader from '../../../../components/page-header/page-header.vue';
-import {
-	RatingWidgetOnChange,
-	RatingWidgetOnChangePayload,
-} from '../../../../components/rating/widget/widget';
 import { store } from '../../../../store';
+import AppGameCoverButtons from '../../../game/cover-buttons/cover-buttons.vue';
+import AppGameMaturityBlock from '../../../game/maturity-block/maturity-block.vue';
+import { AppGamePerms } from '../../../game/perms/perms';
+import { IntentService } from '../../../intent/intent.service';
+import AppPageHeader from '../../../page-header/page-header.vue';
+import { RatingWidgetOnChange, RatingWidgetOnChangePayload } from '../../../rating/widget/widget';
 import './view-content.styl';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './view.store';
 import AppDiscoverGamesViewControls from './_controls/controls.vue';

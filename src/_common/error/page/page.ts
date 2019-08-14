@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { AppMutation, AppState, AppStore } from '../../../vue/services/app/app-store';
+import { AppMutation, AppState, AppStore } from '../../store/app-store';
 import { ErrorPages } from './page-components';
 
 @Component({})

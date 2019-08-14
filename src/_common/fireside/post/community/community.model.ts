@@ -1,4 +1,4 @@
-import { Community } from '../../../../components/community/community.model';
+import { Community } from '../../../community/community.model';
 import { Model } from '../../../model/model.service';
 
 export class FiresidePostCommunity extends Model {

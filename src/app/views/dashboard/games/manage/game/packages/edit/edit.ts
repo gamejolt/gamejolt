@@ -1,11 +1,14 @@
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../../../_common/card/card.vue';
 import AppExpand from '../../../../../../../../_common/expand/expand.vue';
+import { number } from '../../../../../../../../_common/filters/number';
 import AppGamePackageCard from '../../../../../../../../_common/game/package/card/card.vue';
 import { GamePackagePayloadModel } from '../../../../../../../../_common/game/package/package-payload.model';
 import { GamePackage } from '../../../../../../../../_common/game/package/package.model';
 import { GameRelease } from '../../../../../../../../_common/game/release/release.model';
 import { Growls } from '../../../../../../../../_common/growls/growls.service';
+import AppLoading from '../../../../../../../../_common/loading/loading.vue';
 import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import AppNavTabList from '../../../../../../../../_common/nav/tab-list/tab-list.vue';
 import { AppProgressPoller } from '../../../../../../../../_common/progress/poller/poller';
@@ -16,13 +19,10 @@ import {
 import { Sellable } from '../../../../../../../../_common/sellable/sellable.model';
 import { AppTimeAgo } from '../../../../../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip';
-import AppLoading from '../../../../../../../../_common/loading/loading.vue';
-import { number } from '../../../../../../../../_common/filters/number';
-import { Component } from 'vue-property-decorator';
-import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
-import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
-import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
-import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
+import FormGamePackage from '../../../../../../forms/game/package/package.vue';
+import AppDashGameWizardControls from '../../../../../../forms/game/wizard-controls/wizard-controls.vue';
+import { GamePackageEditModal } from '../../../../../../game/package/edit-modal/edit-modal.service';
+import { AppGamePerms } from '../../../../../../game/perms/perms';
 import { RouteStore, RouteStoreModule } from '../../../manage.store';
 
 @Component({
@@ -102,7 +102,10 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 		this.isLoadingPreview = true;
 
 		const response = await Api.sendRequest(
-			'/web/dash/developer/games/packages/preview/' + this.package.game_id + '/' + this.package.id,
+			'/web/dash/developer/games/packages/preview/' +
+				this.package.game_id +
+				'/' +
+				this.package.id,
 			null,
 			{ detach: true }
 		);

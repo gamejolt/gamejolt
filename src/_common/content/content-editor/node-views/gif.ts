@@ -1,5 +1,5 @@
-import AppContentGif from '../../components/gif/gif.vue';
 import { ContentEditorService } from '../content-editor.service';
+import AppContentGif from '../gif/gif.vue';
 import { BaseNodeView } from './base';
 
 export class GifNodeView extends BaseNodeView {

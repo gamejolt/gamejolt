@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../../utils/vue';
-import { number } from '../../../vue/filters/number';
+import { number } from '../../filters/number';
 import AppFormTS from '../form';
 import AppFormGroupTS from '../group/group';
 

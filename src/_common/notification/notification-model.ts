@@ -1,14 +1,14 @@
 import VueRouter, { RawLocation } from 'vue-router';
-import { Community } from '../../components/community/community.model';
-import { EventItem } from '../../components/event-item/event-item.model';
 import { assertNever } from '../../utils/utils';
-import { currency } from '../../vue/filters/currency';
 import { Api } from '../api/api.service';
 import { Collaborator } from '../collaborator/collaborator.model';
 import { Comment, getCommentUrl } from '../comment/comment-model';
 import { CommentVideoModal } from '../comment/video/modal/modal.service';
 import { CommentVideo } from '../comment/video/video-model';
+import { Community } from '../community/community.model';
 import { Environment } from '../environment/environment.service';
+import { EventItem } from '../event-item/event-item.model';
+import { currency } from '../filters/currency';
 import { FiresidePost } from '../fireside/post/post-model';
 import { ForumPost } from '../forum/post/post.model';
 import { ForumTopic } from '../forum/topic/topic.model';

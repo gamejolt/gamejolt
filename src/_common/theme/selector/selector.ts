@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { Popper } from '../../../components/popper/popper.service';
-import AppJolticon from '../../../vue/components/jolticon/jolticon.vue';
+import AppJolticon from '../../../jolticon/jolticon.vue';
+import { Popper } from '../../popper/popper.service';
 import AppPopper from '../../popper/popper.vue';
 import { SiteTemplate } from '../../site/template/template-model';
 

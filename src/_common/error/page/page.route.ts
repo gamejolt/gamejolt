@@ -1,7 +1,7 @@
 import Vue, { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
 import { RouteConfig } from 'vue-router';
-import { AppMutation, AppStore } from '../../../vue/services/app/app-store';
+import { AppMutation, AppStore } from '../../store/app-store';
 
 // Just a placeholder that sets the 404 error state.
 @Component({

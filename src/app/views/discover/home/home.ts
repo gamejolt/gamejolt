@@ -1,3 +1,5 @@
+import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
@@ -5,13 +7,11 @@ import { Environment } from '../../../../_common/environment/environment.service
 import { Game } from '../../../../_common/game/game.model';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
-import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
-import AppGameGrid from '../../../components/game/grid/grid.vue';
-import AppGameGridPlaceholder from '../../../components/game/grid/placeholder/placeholder.vue';
-import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Store } from '../../../store/index';
+import { FeaturedItem } from '../../featured-item/featured-item.model';
+import AppGameGrid from '../../game/grid/grid.vue';
+import AppGameGridPlaceholder from '../../game/grid/placeholder/placeholder.vue';
+import { AppAuthJoinLazy } from '../../lazy';
 import AppDiscoverHomeBanner from './_banner/banner.vue';
 import AppDiscoverHomeCommunities from './_communities/communities.vue';
 import AppDiscoverHomeTags from './_tags/tags.vue';

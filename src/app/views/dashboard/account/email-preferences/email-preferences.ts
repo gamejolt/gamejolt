@@ -1,10 +1,10 @@
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Translate } from '../../../../../_common/translate/translate.service';
 import { User } from '../../../../../_common/user/user.model';
-import { Component } from 'vue-property-decorator';
-import FormEmailPreferences from '../../../../components/forms/email-preferences/email-preferences.vue';
-import { IntentService } from '../../../../components/intent/intent.service';
+import FormEmailPreferences from '../../../forms/email-preferences/email-preferences.vue';
+import { IntentService } from '../../../intent/intent.service';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
 @Component({

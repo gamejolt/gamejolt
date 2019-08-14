@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { Api } from '../../../../components/api/api.service';
-import { Screen } from '../../../../components/screen/screen-service';
+import { Api } from '../../../api/api.service';
 import AppPopper from '../../../popper/popper.vue';
+import { Screen } from '../../../screen/screen-service';
 import { User } from '../../user.model';
 import AppUserCard from '../card.vue';
 

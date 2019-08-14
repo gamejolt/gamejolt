@@ -1,8 +1,8 @@
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Translate } from '../../../../../_common/translate/translate.service';
-import { Component } from 'vue-property-decorator';
-import FormChangePassword from '../../../../components/forms/change-password/change-password.vue';
+import FormChangePassword from '../../../forms/change-password/change-password.vue';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
 @Component({

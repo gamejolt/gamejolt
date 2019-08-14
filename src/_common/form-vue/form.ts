@@ -1,8 +1,8 @@
 import * as VeeValidate from 'vee-validate';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import AppLoading from '../../loading/loading.vue';
 import { findRequiredVueParent } from '../../utils/vue';
-import AppLoading from '../../vue/components/loading/loading.vue';
 import AppLoadingFade from '../loading/fade/fade.vue';
 import BaseFormControl from './control/base';
 import { BaseForm } from './form.service';

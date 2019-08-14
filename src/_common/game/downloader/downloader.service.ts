@@ -1,10 +1,10 @@
 import VueRouter from 'vue-router';
-import { Popper } from '../../../components/popper/popper.service';
 import { Analytics } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
 import { Growls } from '../../growls/growls.service';
 import { HistoryTick } from '../../history-tick/history-tick-service';
 import { Navigate } from '../../navigate/navigate.service';
+import { Popper } from '../../popper/popper.service';
 import { Translate } from '../../translate/translate.service';
 import { GameBuild } from '../build/build.model';
 import { Game } from '../game.model';

@@ -1,12 +1,12 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { number } from '../../../vue/filters/number';
-import { AppStore } from '../../../vue/services/app/app-store';
 import { Analytics } from '../../analytics/analytics.service';
 import { AppTrackEvent } from '../../analytics/track-event.directive';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
+import { number } from '../../filters/number';
 import { Growls } from '../../growls/growls.service';
+import { AppStore } from '../../store/app-store';
 import { findTooltipContainer } from '../../tooltip/container/container';
 import { AppTooltip } from '../../tooltip/tooltip';
 import { User } from '../user.model';

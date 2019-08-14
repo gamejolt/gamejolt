@@ -1,10 +1,9 @@
 import Vue from 'vue';
-import VueRouter, { RouteConfig, Route, Location } from 'vue-router';
-
-import { routeError404, RouteError404 } from '../components/error/page/page.route';
-import { initScrollBehavior } from '../components/scroll/auto-scroll/autoscroll.service';
-import { Environment } from '../components/environment/environment.service';
-import { Navigate } from '../components/navigate/navigate.service';
+import VueRouter, { Location, Route, RouteConfig } from 'vue-router';
+import { Environment } from '../_common/environment/environment.service';
+import { routeError404, RouteError404 } from '../_common/error/page/page.route';
+import { Navigate } from '../_common/navigate/navigate.service';
+import { initScrollBehavior } from '../_common/scroll/auto-scroll/autoscroll.service';
 
 const ClientBaseRegex = new RegExp('chrome-extension:\\/\\/game\\-jolt\\-client\\/([^.]+)\\.html#');
 

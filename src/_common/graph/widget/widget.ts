@@ -1,9 +1,8 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-
+import AppLoading from '../../../loading/loading.vue';
 import { Api } from '../../api/api.service';
 import { Graph } from '../graph.service';
-import AppLoading from '../../../vue/components/loading/loading.vue'
 import AppGraph from '../graph.vue';
 
 @Component({

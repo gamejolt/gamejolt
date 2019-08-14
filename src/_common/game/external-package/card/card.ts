@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { Navigate } from '../../../../components/navigate/navigate.service';
 import { Analytics } from '../../../analytics/analytics.service';
 import { AppTrackEvent } from '../../../analytics/track-event.directive';
 import AppCard from '../../../card/card.vue';
 import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
+import { Navigate } from '../../../navigate/navigate.service';
 import { AppTooltip } from '../../../tooltip/tooltip';
 import { GameBuild } from '../../build/build.model';
 import { GameExternalPackage } from '../external-package.model';

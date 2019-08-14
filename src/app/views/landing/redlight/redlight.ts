@@ -1,10 +1,10 @@
+import { Component } from 'vue-property-decorator';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
-import { Component } from 'vue-property-decorator';
-import { AppAuthJoinLazy } from '../../../components/lazy';
+import { AppAuthJoinLazy } from '../../lazy';
 
 function getRandomInt(min: number, max: number) {
 	min = Math.ceil(min);

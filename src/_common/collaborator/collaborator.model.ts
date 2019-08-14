@@ -1,5 +1,5 @@
-import { Community } from '../../components/community/community.model';
 import { Api } from '../api/api.service';
+import { Community } from '../community/community.model';
 import { Game } from '../game/game.model';
 import { Model } from '../model/model.service';
 import { User } from '../user/user.model';

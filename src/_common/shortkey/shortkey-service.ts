@@ -1,4 +1,4 @@
-import { arrayRemove } from '../utils/array';
+import { arrayRemove } from '../../utils/array';
 
 type ShortkeyCallback = (e: Event) => void;
 

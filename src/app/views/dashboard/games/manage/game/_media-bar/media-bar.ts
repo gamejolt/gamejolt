@@ -1,12 +1,12 @@
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
 import AppEditableOverlay from '../../../../../../../_common/editable-overlay/editable-overlay.vue';
 import { Game } from '../../../../../../../_common/game/game.model';
 import { MediaBarItemMaxHeight } from '../../../../../../../_common/media-bar/item/item';
 import AppMediaBarItem from '../../../../../../../_common/media-bar/item/item.vue';
 import AppScrollScroller from '../../../../../../../_common/scroll/scroller/scroller.vue';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { GameMediaItemAddModal } from '../../../../../../components/game/media-item/add-modal/add-modal.service';
-import { GameMediaItemEditModal } from '../../../../../../components/game/media-item/edit-modal/edit-modal.service';
+import { GameMediaItemAddModal } from '../../../../../game/media-item/add-modal/add-modal.service';
+import { GameMediaItemEditModal } from '../../../../../game/media-item/edit-modal/edit-modal.service';
 import { Media, RouteStore, RouteStoreModule } from '../../manage.store';
 
 const draggable = require('vuedraggable');

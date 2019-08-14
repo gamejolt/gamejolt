@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../vue/components/jolticon/jolticon.vue'
+import AppJolticon from '../../jolticon/jolticon.vue';
 import AppCard from '../card/card.vue';
 import {
 	getLinkedAccountPlatformIcon,

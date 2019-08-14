@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { filesize } from '../../../../vue/filters/filesize';
 import { AppTrackEvent } from '../../../analytics/track-event.directive';
+import { filesize } from '../../../filters/filesize';
 import { GameBuild } from '../../build/build.model';
 import { GamePackageCardModel } from './card.model';
 

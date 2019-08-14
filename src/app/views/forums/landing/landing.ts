@@ -1,7 +1,7 @@
+import { Component } from 'vue-property-decorator';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { Component } from 'vue-property-decorator';
-import AppPageHeader from '../../../components/page-header/page-header.vue';
+import AppPageHeader from '../../page-header/page-header.vue';
 
 @Component({
 	name: 'RouteForumsLanding',

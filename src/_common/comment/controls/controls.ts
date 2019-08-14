@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { number } from '../../../vue/filters/number';
 import { AppTrackEvent } from '../../analytics/track-event.directive';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
+import { number } from '../../filters/number';
 import { LikersModal } from '../../likers/modal.service';
 import { AppTooltip } from '../../tooltip/tooltip';
 import { Comment } from '../comment-model';

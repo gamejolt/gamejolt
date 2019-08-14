@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Store } from '../../../../../app/store/index';
-import AppJolticon from '../../../vue/components/jolticon/jolticon.vue';
-import AppLoading from '../../../vue/components/loading/loading.vue';
-import { number } from '../../../vue/filters/number';
+import AppJolticon from '../../../jolticon/jolticon.vue';
+import AppLoading from '../../../loading/loading.vue';
+import { number } from '../../filters/number';
+import { AppStore } from '../../store/app-store';
 import { AppTheme } from '../../theme/theme';
 import { AppTooltipContainer } from '../../tooltip/container/container';
 import { AppTooltip } from '../../tooltip/tooltip';
@@ -39,7 +39,7 @@ export default class AppUserCard extends Vue {
 	isLoading?: boolean;
 
 	@State
-	app!: Store['app'];
+	app!: AppStore;
 
 	readonly number = number;
 

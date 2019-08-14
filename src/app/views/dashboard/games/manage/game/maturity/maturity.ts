@@ -1,12 +1,12 @@
+import { Component } from 'vue-property-decorator';
 import { Game } from '../../../../../../../_common/game/game.model';
 import { Growls } from '../../../../../../../_common/growls/growls.service';
 import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../../../_common/scroll/affix/affix.vue';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
-import { Component } from 'vue-property-decorator';
-import FormGameMaturity from '../../../../../../components/forms/game/maturity/maturity.vue';
-import AppGameOgrs from '../../../../../../components/game/ogrs/ogrs.vue';
+import FormGameMaturity from '../../../../../forms/game/maturity/maturity.vue';
+import AppGameOgrs from '../../../../../game/ogrs/ogrs.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @Component({

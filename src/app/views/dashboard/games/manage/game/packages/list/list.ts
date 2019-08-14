@@ -1,7 +1,10 @@
+import { Component } from 'vue-property-decorator';
+import { arrayIndexBy } from '../../../../../../../../utils/array';
 import { Api } from '../../../../../../../../_common/api/api.service';
 import AppCardListDraggable from '../../../../../../../../_common/card/list/draggable/draggable.vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/item/item.vue';
 import AppCardList from '../../../../../../../../_common/card/list/list.vue';
+import { currency } from '../../../../../../../../_common/filters/currency';
 import { GamePackage } from '../../../../../../../../_common/game/package/package.model';
 import { Growls } from '../../../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
@@ -11,12 +14,9 @@ import {
 } from '../../../../../../../../_common/route/route-component';
 import { Sellable } from '../../../../../../../../_common/sellable/sellable.model';
 import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip';
-import { arrayIndexBy } from '../../../../../../../../utils/array';
-import { currency } from '../../../../../../../../_common/filters/currency';
-import { Component } from 'vue-property-decorator';
-import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
-import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
-import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
+import AppDashGameWizardControls from '../../../../../../forms/game/wizard-controls/wizard-controls.vue';
+import { GamePackageEditModal } from '../../../../../../game/package/edit-modal/edit-modal.service';
+import { AppGamePerms } from '../../../../../../game/perms/perms';
 import { RouteStore, RouteStoreModule } from '../../../manage.store';
 
 @Component({
@@ -37,7 +37,8 @@ import { RouteStore, RouteStoreModule } from '../../../manage.store';
 })
 @RouteResolver({
 	deps: {},
-	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id),
+	resolver: ({ route }) =>
+		Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id),
 })
 export default class RouteDashGamesManageGamePackagesList extends BaseRouteComponent {
 	@RouteStoreModule.State

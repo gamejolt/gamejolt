@@ -1,15 +1,15 @@
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
+import { currency } from '../../../../../_common/filters/currency';
+import { number } from '../../../../../_common/filters/number';
 import { Growls } from '../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import { Translate } from '../../../../../_common/translate/translate.service';
 import { User } from '../../../../../_common/user/user.model';
-import { currency } from '../../../../../_common/filters/currency';
-import { number } from '../../../../../_common/filters/number';
-import { Component } from 'vue-property-decorator';
-import FormWithdrawFunds from '../../../../components/forms/withdraw-funds/withdraw-funds.vue';
+import FormWithdrawFunds from '../../../forms/withdraw-funds/withdraw-funds.vue';
 import { routeStore, RouteStore, RouteStoreModule } from '../account.store';
 
 @Component({

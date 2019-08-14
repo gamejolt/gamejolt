@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { Ads } from '../../../components/ad/ads.service';
+import { Ads } from '../../ad/ads.service';
 import AppAdPlaywire from '../playwire/playwire.vue';
 import './widget-content.styl';
 

@@ -1,7 +1,7 @@
-import { ConnectionReconnect } from './reconnect-service';
-import { AppStore } from '../../vue/services/app/app-store';
-import { VuexStore } from '../../utils/vuex';
 import { makeObservableService } from '../../utils/vue';
+import { VuexStore } from '../../utils/vuex';
+import { AppStore } from '../store/app-store';
+import { ConnectionReconnect } from './reconnect-service';
 
 export class Connection {
 	private static isDeviceOffline = false;

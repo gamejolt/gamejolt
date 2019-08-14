@@ -1,12 +1,12 @@
 import Vue from 'vue';
 import { VueRouter } from 'vue-router/types/router';
-import AppExternalLink from '../lib/gj-lib-client/vue/components/external-link/external-link.vue';
 import { hijackLinks } from '../utils/router';
 import { bootstrapAppTranslations } from '../utils/translations';
 import { VuexStore } from '../utils/vuex';
 import { Analytics } from './analytics/analytics.service';
 import AppButton from './button/button.vue';
 import { Connection } from './connection/connection-service';
+import AppExternalLink from './external-link/external-link.vue';
 import AppJolticon from './jolticon/jolticon';
 import { Meta } from './meta/meta-service';
 import { Navigate } from './navigate/navigate.service';

@@ -1,4 +1,3 @@
-import { Popper } from '../../../components/popper/popper.service';
 import { asyncComponentLoader } from '../../../utils/utils';
 import { Analytics } from '../../analytics/analytics.service';
 import { Device } from '../../device/device.service';
@@ -7,6 +6,7 @@ import { Growls } from '../../growls/growls.service';
 import { HistoryTick } from '../../history-tick/history-tick-service';
 import { Modal } from '../../modal/modal.service';
 import { Navigate } from '../../navigate/navigate.service';
+import { Popper } from '../../popper/popper.service';
 import { Translate } from '../../translate/translate.service';
 import { GameBuild } from '../build/build.model';
 import { Game } from '../game.model';

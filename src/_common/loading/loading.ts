@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
 import { importContext } from '../../../utils/utils';
 
 @Component({})
@@ -13,7 +12,7 @@ export default class AppLoading extends Vue {
 	@Prop(Boolean) stationary!: boolean;
 	@Prop(Boolean) centered!: boolean;
 
-	images = importContext(require.context('../../../components/loading/', false, /\.gif$/));
+	images = importContext(require.context('../../loading/', false, /\.gif$/));
 
 	get img() {
 		const img =

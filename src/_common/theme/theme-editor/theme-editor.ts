@@ -1,13 +1,12 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
-import { SiteTemplate } from '../../site/template/template-model';
+import AppLoading from '../../../loading/loading.vue';
 import { Api } from '../../api/api.service';
 import AppCodemirror from '../../codemirror/codemirror.vue';
-import AppLoading from '../../../vue/components/loading/loading.vue'
+import AppColorpicker from '../../colorpicker/colorpicker.vue';
+import { SiteTemplate } from '../../site/template/template-model';
 import AppThemeEditorFontSelector from './font-selector.vue';
 import AppThemeEditorImage from './image.vue';
-import AppColorpicker from '../../colorpicker/colorpicker.vue';
 
 interface StyleGroup {
 	name: string;
@@ -39,9 +38,13 @@ export default class AppThemeEditor extends Vue {
 	definition: any = {};
 
 	async created() {
-		const response = await Api.sendRequest('/sites-io/get-template/' + this.template, undefined, {
-			detach: true,
-		});
+		const response = await Api.sendRequest(
+			'/sites-io/get-template/' + this.template,
+			undefined,
+			{
+				detach: true,
+			}
+		);
 
 		this.isLoaded = true;
 

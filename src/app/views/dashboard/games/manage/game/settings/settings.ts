@@ -1,11 +1,11 @@
+import { Component } from 'vue-property-decorator';
 import AppExpand from '../../../../../../../_common/expand/expand.vue';
 import { Game } from '../../../../../../../_common/game/game.model';
 import { Growls } from '../../../../../../../_common/growls/growls.service';
 import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { AppState, AppStore } from '../../../../../../../_common/store/app-store';
-import { Component } from 'vue-property-decorator';
-import FormGameSettings from '../../../../../../components/forms/game/settings/settings.vue';
+import FormGameSettings from '../../../../../forms/game/settings/settings.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @Component({

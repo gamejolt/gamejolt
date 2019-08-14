@@ -1,4 +1,4 @@
-import AppContentMediaUpload from '../../components/media-upload/media-upload.vue';
+import AppContentMediaUpload from '../media-upload/media-upload.vue';
 import { HydratableNodeView } from './hydratable';
 
 export class MediaUploadNodeView extends HydratableNodeView {

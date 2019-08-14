@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import AppLoading from '../../../vue/components/loading/loading.vue';
-import { AppState, AppStore } from '../../../vue/services/app/app-store';
+import AppLoading from '../../../loading/loading.vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { AppTrackEvent } from '../../analytics/track-event.directive';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
@@ -11,6 +10,7 @@ import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import AppMessageThreadContent from '../../message-thread/content/content.vue';
 import AppMessageThread from '../../message-thread/message-thread.vue';
 import AppNavTabList from '../../nav/tab-list/tab-list.vue';
+import { AppState, AppStore } from '../../store/app-store';
 import { User } from '../../user/user.model';
 import FormComment from '../add/add.vue';
 import { Comment } from '../comment-model';

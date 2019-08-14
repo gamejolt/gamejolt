@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { Community } from '../../../../components/community/community.model';
+import { Community } from '../../../community/community.model';
 import { AppImgResponsive } from '../../../img/responsive/responsive';
 
 @Component({

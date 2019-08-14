@@ -1,13 +1,12 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-
-import { SiteContentBlock } from '../../site/content-block/content-block-model';
-import { Environment } from '../../environment/environment.service';
+import AppLoading from '../../../loading/loading.vue';
 import { Api } from '../../api/api.service';
+import { Environment } from '../../environment/environment.service';
+import { SiteContentBlock } from '../../site/content-block/content-block-model';
 import { Site } from '../../site/site-model';
-import FormContentBlockEditor from './editor-form.vue';
-import AppLoading from '../../../vue/components/loading/loading.vue'
 import { AppTooltip } from '../../tooltip/tooltip';
+import FormContentBlockEditor from './editor-form.vue';
 
 const PreviewDebounce = 3000;
 

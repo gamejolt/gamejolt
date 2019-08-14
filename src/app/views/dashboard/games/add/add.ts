@@ -1,8 +1,8 @@
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import { Component } from 'vue-property-decorator';
-import FormGame from '../../../../components/forms/game/game.vue';
+import FormGame from '../../../forms/game/game.vue';
 import { startWizard } from '../manage/manage.store';
 
 @Component({

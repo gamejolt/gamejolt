@@ -1,7 +1,6 @@
 import { RawLocation } from 'vue-router';
-import { Perm } from '../../../components/collaborator/collaboratable';
-import { appStore } from '../../../vue/services/app/app-store';
 import { Api } from '../../api/api.service';
+import { Perm } from '../../collaborator/collaboratable';
 import { Community } from '../../community/community.model';
 import { ContentContainerModel } from '../../content/content-container-model';
 import { ContentContext } from '../../content/content-context';
@@ -15,6 +14,7 @@ import { ModalConfirm } from '../../modal/confirm/confirm-service';
 import { Model, ModelSaveRequestOptions } from '../../model/model.service';
 import { Poll } from '../../poll/poll.model';
 import { Registry } from '../../registry/registry.service';
+import { appStore } from '../../store/app-store';
 import { Translate } from '../../translate/translate.service';
 import { User } from '../../user/user.model';
 import { FiresidePostCommunity } from './community/community.model';

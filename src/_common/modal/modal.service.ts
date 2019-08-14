@@ -1,7 +1,7 @@
 import Vue, { AsyncComponent } from 'vue';
-import { Popper } from '../../components/popper/popper.service';
 import { arrayRemove } from '../../utils/array';
 import { makeObservableService } from '../../utils/vue';
+import { Popper } from '../popper/popper.service';
 
 type ModalComponent = typeof Vue | AsyncComponent<Vue>;
 

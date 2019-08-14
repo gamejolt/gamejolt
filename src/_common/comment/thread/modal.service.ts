@@ -1,6 +1,6 @@
 import { VueRouter } from 'vue-router/types/router';
-import { Modal } from '../../../components/modal/modal.service';
 import { asyncComponentLoader } from '../../../utils/utils';
+import { Modal } from '../../modal/modal.service';
 import { DisplayMode } from '../modal/modal.service';
 
 interface CommentThreadModalOptions {

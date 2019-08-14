@@ -4,8 +4,8 @@ import { GameBundle } from '../../../_common/game-bundle/game-bundle.model';
 import { Game } from '../../../_common/game/game.model';
 import { Meta } from '../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
-import FormRetrieve from '../../components/forms/retrieve/retrieve.vue';
-import AppInvalidKey from '../../components/invalid-key/invalid-key.vue';
+import FormRetrieve from '../forms/retrieve/retrieve.vue';
+import AppInvalidKey from '../invalid-key/invalid-key.vue';
 
 interface SuccessPayload {
 	error: false;

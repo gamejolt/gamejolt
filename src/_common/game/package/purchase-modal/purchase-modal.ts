@@ -1,19 +1,19 @@
 import { Component, Prop } from 'vue-property-decorator';
-
-import { BaseModal } from '../../../modal/base';
-import { GamePackage } from '../package.model';
-import { GameBuild } from '../../build/build.model';
-import AppJolticon from '../../../../vue/components/jolticon/jolticon.vue'
-import FormGamePackagePayment from '../payment-form/payment-form.vue';
-import { Game } from '../../game.model';
-import { Sellable } from '../../../sellable/sellable.model';
-import { Analytics } from '../../../analytics/analytics.service';
-import { GameDownloader } from '../../downloader/downloader.service';
-import { User } from '../../../user/user.model';
-import AppLoading from '../../../../vue/components/loading/loading.vue'
-import { Growls } from '../../../growls/growls.service';
+import AppJolticon from '../../../../jolticon/jolticon.vue';
+import AppLoading from '../../../../loading/loading.vue';
 import { VuexStore } from '../../../../utils/vuex';
+import { Analytics } from '../../../analytics/analytics.service';
+import { Growls } from '../../../growls/growls.service';
+import { BaseModal } from '../../../modal/base';
+import { Sellable } from '../../../sellable/sellable.model';
+import { User } from '../../../user/user.model';
+import { GameBuild } from '../../build/build.model';
+import { GameDownloader } from '../../downloader/downloader.service';
+import { Game } from '../../game.model';
 import { GamePlayModal } from '../../play-modal/play-modal.service';
+import { GamePackage } from '../package.model';
+import FormGamePackagePayment from '../payment-form/payment-form.vue';
+
 
 @Component({
 	components: {

@@ -1,10 +1,10 @@
 import { Component, Prop } from 'vue-property-decorator';
+import AppLoading from '../../../loading/loading.vue';
 import { stringSort } from '../../../utils/array';
-import AppLoading from '../../../vue/components/loading/loading.vue'
 import { Api } from '../../api/api.service';
 import { BaseModal } from '../../modal/base';
-import AppLinkedAccount from '../linked-account.vue';
 import { LinkedAccount, TumblrBlog } from '../linked-account.model';
+import AppLinkedAccount from '../linked-account.vue';
 
 @Component({
 	components: {

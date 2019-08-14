@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import AppLoading from '../../../../../vue/components/loading/loading.vue';
+import AppLoading from '../../../../../loading/loading.vue';
 import { Api } from '../../../../api/api.service';
 import { BaseModal } from '../../../../modal/base';
 import AppModalTS from '../../../../modal/modal';

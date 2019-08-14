@@ -1,11 +1,11 @@
+import Vue from 'vue';
+import { Component } from 'vue-property-decorator';
+import { fuzzynumber } from '../../../../../../../_common/filters/fuzzynumber';
+import { number } from '../../../../../../../_common/filters/number';
 import { AppLazyPlaceholder } from '../../../../../../../_common/lazy/placeholder/placeholder';
 import { LikersModal } from '../../../../../../../_common/likers/modal.service';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
-import { fuzzynumber } from '../../../../../../../_common/filters/fuzzynumber';
-import { number } from '../../../../../../../_common/filters/number';
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
-import AppRatingWidget from '../../../../../../components/rating/widget/widget.vue';
+import AppRatingWidget from '../../../../../rating/widget/widget.vue';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
 @Component({

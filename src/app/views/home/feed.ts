@@ -1,3 +1,7 @@
+import { Component } from 'vue-property-decorator';
+import { Mutation, State } from 'vuex-class';
+import { numberSort } from '../../../utils/array';
+import { fuzzysearch } from '../../../utils/string';
 import AppAdPlaywireVideo from '../../../_common/ad/playwire/video.vue';
 import { AppTrackEvent } from '../../../_common/analytics/track-event.directive';
 import { Api } from '../../../_common/api/api.service';
@@ -8,19 +12,15 @@ import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
 import AppUserCard from '../../../_common/user/card/card.vue';
 import { User } from '../../../_common/user/user.model';
-import { numberSort } from '../../../utils/array';
-import { fuzzysearch } from '../../../utils/string';
-import { Component } from 'vue-property-decorator';
-import { Mutation, State } from 'vuex-class';
-import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import AppActivityFeed from '../../components/activity/feed/feed.vue';
-import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
-import { ActivityFeedView } from '../../components/activity/feed/view';
-import AppBroadcastCard from '../../components/broadcast-card/broadcast-card.vue';
-import AppCommunitySlider from '../../components/community/slider/slider.vue';
-import AppPageContainer from '../../components/page-container/page-container.vue';
-import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import { Store, store } from '../../store';
+import { ActivityFeedService } from '../activity/feed/feed-service';
+import AppActivityFeed from '../activity/feed/feed.vue';
+import AppActivityFeedPlaceholder from '../activity/feed/placeholder/placeholder.vue';
+import { ActivityFeedView } from '../activity/feed/view';
+import AppBroadcastCard from '../broadcast-card/broadcast-card.vue';
+import AppCommunitySlider from '../community/slider/slider.vue';
+import AppPageContainer from '../page-container/page-container.vue';
+import AppPostAddButton from '../post/add-button/add-button.vue';
 import AppHomeRecommended from './_recommended/recommended.vue';
 
 class DashGame {

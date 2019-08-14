@@ -1,10 +1,10 @@
 import { Component, Prop } from 'vue-property-decorator';
-import { Provider } from '../../../components/linked-account/linked-account.model';
-import AppLoading from '../../../vue/components/loading/loading.vue';
+import AppLoading from '../../../loading/loading.vue';
 import { Api } from '../../api/api.service';
 import { Connection } from '../../connection/connection-service';
 import { Environment } from '../../environment/environment.service';
 import { BaseForm, FormOnSubmit, FormOnSubmitSuccess } from '../../form-vue/form.service';
+import { Provider } from '../../linked-account/linked-account.model';
 import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
 import { AppTooltip } from '../../tooltip/tooltip';
 

@@ -1,16 +1,10 @@
+import { namespace } from 'vuex-class';
+import { NamespaceVuexStore, VuexAction, VuexModule, VuexMutation, VuexStore } from '../../../utils/vuex';
 import { Registry } from '../../../_common/registry/registry.service';
 import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
 import { User } from '../../../_common/user/user.model';
-import {
-	NamespaceVuexStore,
-	VuexAction,
-	VuexModule,
-	VuexMutation,
-	VuexStore,
-} from '../../../utils/vuex';
-import { namespace } from 'vuex-class';
-import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
 import { store } from '../../store';
+import { UserFriendshipHelper } from '../user/friendships-helper/friendship-helper.service';
 
 type RouteActions = {
 	sendFriendRequest: void;

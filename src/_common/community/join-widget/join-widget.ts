@@ -2,18 +2,14 @@ import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { GridClient } from '../../../../../app/components/grid/client.service';
-import { AppTrackEvent } from '../../../components/analytics/track-event.directive';
-import { AppAuthRequired } from '../../../components/auth/auth-required-directive';
-import {
-	$joinCommunity,
-	$leaveCommunity,
-	Community,
-} from '../../../components/community/community.model';
-import { Growls } from '../../../components/growls/growls.service';
-import { findTooltipContainer } from '../../../components/tooltip/container/container';
-import { AppTooltip } from '../../../components/tooltip/tooltip';
-import { number } from '../../../vue/filters/number';
-import { AppStore } from '../../../vue/services/app/app-store';
+import { AppTrackEvent } from '../../analytics/track-event.directive';
+import { AppAuthRequired } from '../../auth/auth-required-directive';
+import { $joinCommunity, $leaveCommunity, Community } from '../../community/community.model';
+import { number } from '../../filters/number';
+import { Growls } from '../../growls/growls.service';
+import { AppStore } from '../../store/app-store';
+import { findTooltipContainer } from '../../tooltip/container/container';
+import { AppTooltip } from '../../tooltip/tooltip';
 
 @Component({
 	directives: {

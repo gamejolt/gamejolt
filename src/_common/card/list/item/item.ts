@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import AppJolticon from '../../../../jolticon/jolticon.vue';
 import { findRequiredVueParent } from '../../../../utils/vue';
-import AppJolticon from '../../../../vue/components/jolticon/jolticon.vue';
 import AppExpand from '../../../expand/expand.vue';
 import { Screen } from '../../../screen/screen-service';
 import AppCard from '../../card.vue';

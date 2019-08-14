@@ -1,8 +1,8 @@
 import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../../vue/components/jolticon/jolticon.vue';
-import AppShortkey from '../../../vue/components/shortkey/shortkey.vue';
+import AppJolticon from '../../../jolticon/jolticon.vue';
+import AppShortkey from '../../../shortkey/shortkey.vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { EscapeStack } from '../../escape-stack/escape-stack.service';
 import { Screen } from '../../screen/screen-service';

@@ -2,7 +2,7 @@ import * as distanceStrict from 'date-fns/distance_in_words_strict';
 import * as distance from 'date-fns/distance_in_words_to_now';
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { date } from '../../../vue/filters/date';
+import { date } from '../../filters/date';
 
 @Component({})
 export class AppTimeAgo extends Vue {

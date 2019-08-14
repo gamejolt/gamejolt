@@ -1,23 +1,20 @@
-import { Api } from '../../../../../_common/api/api.service';
-import { Meta } from '../../../../../_common/meta/meta-service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { Component } from 'vue-property-decorator';
 import { arrayShuffle } from '../../../../../utils/array';
 import { LocationRedirect } from '../../../../../utils/router';
 import { titleCase } from '../../../../../utils/string';
+import { Api } from '../../../../../_common/api/api.service';
 import { date } from '../../../../../_common/filters/date';
 import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
-import { Component } from 'vue-property-decorator';
-import {
-	checkGameFilteringRoute,
-	GameFilteringContainer,
-} from '../../../../components/game/filtering/container';
-import AppGameGrid from '../../../../components/game/grid/grid.vue';
-import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
-import AppGameListing from '../../../../components/game/listing/listing.vue';
-import AppPageHeader from '../../../../components/page-header/page-header.vue';
-import AppTagList from '../../../../components/tag/list/list.vue';
-import { TagsInfo } from '../../../../components/tag/tags-info.service';
+import { Meta } from '../../../../../_common/meta/meta-service';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { checkGameFilteringRoute, GameFilteringContainer } from '../../../game/filtering/container';
+import AppGameGrid from '../../../game/grid/grid.vue';
+import { GameListingContainer } from '../../../game/listing/listing-container-service';
+import AppGameListing from '../../../game/listing/listing.vue';
+import AppPageHeader from '../../../page-header/page-header.vue';
+import AppTagList from '../../../tag/list/list.vue';
+import { TagsInfo } from '../../../tag/tags-info.service';
 
 @Component({
 	name: 'RouteDiscoverGamesList',
@@ -115,10 +112,13 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		}
 
 		if (this.dateRange) {
-			return this.$gettextInterpolate('Games published between %{ dateStart } and %{ dateEnd }', {
-				dateStart: this.dateRange[0],
-				dateEnd: this.dateRange[1],
-			});
+			return this.$gettextInterpolate(
+				'Games published between %{ dateStart } and %{ dateEnd }',
+				{
+					dateStart: this.dateRange[0],
+					dateEnd: this.dateRange[1],
+				}
+			);
 		}
 
 		if (this.date) {
@@ -189,9 +189,12 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	 */
 	get listDescription() {
 		if (!this.section) {
-			return this.$gettextInterpolate(`Find the hottest trending %{ gamesType } on Game Jolt.`, {
-				gamesType: this.displayGamesType,
-			});
+			return this.$gettextInterpolate(
+				`Find the hottest trending %{ gamesType } on Game Jolt.`,
+				{
+					gamesType: this.displayGamesType,
+				}
+			);
 		} else if (this.section === 'new') {
 			return this.$gettextInterpolate(
 				// tslint:disable-next-line:max-line-length

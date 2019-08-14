@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
-import { Navigate } from '../../components/navigate/navigate.service';
 import { Api } from '../api/api.service';
+import { Navigate } from '../navigate/navigate.service';
 import { Provider } from './linked-account.model';
 
 export class LinkedAccounts {

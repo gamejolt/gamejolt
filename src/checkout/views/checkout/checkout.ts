@@ -9,7 +9,7 @@ import { Order } from '../../../_common/order/order.model';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Sellable } from '../../../_common/sellable/sellable.model';
 import { ThemeMutation, ThemeStore } from '../../../_common/theme/theme.store';
-import FormPayment from '../../components/forms/payment/payment.vue';
+import FormPayment from '../forms/payment/payment.vue';
 
 @Component({
 	name: 'RouteCheckout',

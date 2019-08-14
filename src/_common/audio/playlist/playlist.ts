@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
-import { time } from '../../../vue/filters/time';
 import { AppTrackEvent } from '../../analytics/track-event.directive';
+import { time } from '../../filters/time';
 import { GameSong } from '../../game/song/song.model';
 import { AppAudioPlayer } from '../player/player';
-import AppAudioScrubber from '../scrubber/scrubber.vue'
+import AppAudioScrubber from '../scrubber/scrubber.vue';
 
 @Component({
 	components: {

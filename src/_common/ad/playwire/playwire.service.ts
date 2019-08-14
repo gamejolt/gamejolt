@@ -1,8 +1,8 @@
 import VueRouter from 'vue-router';
-import { AdsDisabledDev } from '../../../components/ad/ads.service';
-import AppAdPlaywireVideo from '../../../components/ad/playwire/video';
-import { EventBus } from '../../../components/event-bus/event-bus.service';
 import { loadScript } from '../../../utils/utils';
+import { AdsDisabledDev } from '../../ad/ads.service';
+import AppAdPlaywireVideo from '../../ad/playwire/video';
+import { EventBus } from '../../event-bus/event-bus.service';
 import AppAdPlaywire from './playwire';
 
 let _isInitialized = false;

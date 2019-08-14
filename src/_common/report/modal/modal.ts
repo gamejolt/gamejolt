@@ -1,14 +1,13 @@
 import { Component, Prop } from 'vue-property-decorator';
-
+import AppJolticon from '../../../jolticon/jolticon.vue';
 import { Comment } from '../../comment/comment-model';
-import { User } from '../../user/user.model';
-import { Game } from '../../game/game.model';
-import AppJolticon from '../../../vue/components/jolticon/jolticon.vue'
-import { Growls } from '../../growls/growls.service';
-import AppReportForm from '../form/form.vue';
-import { ForumTopic } from '../../forum/topic/topic.model';
 import { ForumPost } from '../../forum/post/post.model';
+import { ForumTopic } from '../../forum/topic/topic.model';
+import { Game } from '../../game/game.model';
+import { Growls } from '../../growls/growls.service';
 import { BaseModal } from '../../modal/base';
+import { User } from '../../user/user.model';
+import AppReportForm from '../form/form.vue';
 
 @Component({
 	components: {

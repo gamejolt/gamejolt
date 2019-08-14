@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppTooltip } from '../../../../components/tooltip/tooltip';
-import { number } from '../../../../vue/filters/number';
 import { AppAuthRequired } from '../../../auth/auth-required-directive';
+import { number } from '../../../filters/number';
 import { LikersModal } from '../../../likers/modal.service';
+import { AppTooltip } from '../../../tooltip/tooltip';
 import { CommentVote } from '../../vote/vote-model';
 import { CommentVideo } from '../video-model';
 

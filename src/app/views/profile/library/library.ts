@@ -1,8 +1,8 @@
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
-import { Component } from 'vue-property-decorator';
-import { GameCollection } from '../../../components/game/collection/collection.model';
-import AppGameCollectionGrid from '../../../components/game/collection/grid/grid.vue';
+import { GameCollection } from '../../game/collection/collection.model';
+import AppGameCollectionGrid from '../../game/collection/grid/grid.vue';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 
 @Component({

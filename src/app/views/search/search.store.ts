@@ -1,11 +1,11 @@
-import { Ads, AdSettingsContainer } from '../../../_common/ad/ads.service';
-import { Meta } from '../../../_common/meta/meta-service';
-import { NamespaceVuexStore, VuexModule, VuexMutation, VuexStore } from '../../../utils/vuex';
 import { Route } from 'vue-router';
 import { namespace } from 'vuex-class';
-import { SearchPayload } from '../../components/search/payload-service';
-import { Search } from '../../components/search/search-service';
+import { NamespaceVuexStore, VuexModule, VuexMutation, VuexStore } from '../../../utils/vuex';
+import { Ads, AdSettingsContainer } from '../../../_common/ad/ads.service';
+import { Meta } from '../../../_common/meta/meta-service';
 import { store } from '../../store';
+import { SearchPayload } from '../search/payload-service';
+import { Search } from '../search/search-service';
 
 type RouteActions = {};
 

@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { Ads } from '../../../components/ad/ads.service';
-import { Playwire } from '../../../components/ad/playwire/playwire.service';
-import { FiresidePost } from '../../../components/fireside/post/post-model';
-import { Game } from '../../../components/game/game.model';
-import { User } from '../../../components/user/user.model';
+import { Ads } from '../../ad/ads.service';
+import { Playwire } from '../../ad/playwire/playwire.service';
+import { FiresidePost } from '../../fireside/post/post-model';
+import { Game } from '../../game/game.model';
+import { User } from '../../user/user.model';
 
 @Component({})
 export default class AppAdPlaywireVideo extends Vue {

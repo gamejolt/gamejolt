@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../../vue/components/jolticon/jolticon.vue';
+import AppJolticon from '../../../jolticon/jolticon.vue';
 import { Minbar } from '../../minbar/minbar.service';
 import { BaseModal } from '../../modal/base';
 import { Game } from '../game.model';

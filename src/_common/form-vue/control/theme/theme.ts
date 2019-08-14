@@ -1,6 +1,6 @@
 import { Sketch } from 'vue-color';
 import { Component } from 'vue-property-decorator';
-import AppLoading from '../../../../vue/components/loading/loading.vue';
+import AppLoading from '../../../../loading/loading.vue';
 import { Api } from '../../../api/api.service';
 import AppButton from '../../../button/button.vue';
 import AppPopper from '../../../popper/popper.vue';

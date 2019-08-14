@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Store } from '../../../../../../app/store/index';
 import { AppTrackEvent } from '../../../analytics/track-event.directive';
+import { AppStore } from '../../../store/app-store';
 import { AppTooltip } from '../../../tooltip/tooltip';
-import AppUserCardHover from '../../../user/card/hover/hover.vue'
-import AppUserAvatar from '../../../user/user-avatar/user-avatar.vue'
+import AppUserCardHover from '../../../user/card/hover/hover.vue';
+import AppUserAvatar from '../../../user/user-avatar/user-avatar.vue';
 import { CommentVideoModal } from '../modal/modal.service';
 import { CommentVideo } from '../video-model';
 import './thumbnail-content.styl';
@@ -23,7 +23,7 @@ import './thumbnail-content.styl';
 export default class AppCommentVideoThumbnail extends Vue {
 	@Prop(CommentVideo) video!: CommentVideo;
 
-	@State app!: Store['app'];
+	@State app!: AppStore;
 
 	isLoaded = false;
 

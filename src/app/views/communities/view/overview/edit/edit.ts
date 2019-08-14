@@ -1,3 +1,6 @@
+import Component from 'vue-class-component';
+import { arrayRemove } from '../../../../../../utils/array';
+import { enforceLocation } from '../../../../../../utils/router';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../_common/card/list/add/add.vue';
 import AppCardListItem from '../../../../../../_common/card/list/item/item.vue';
@@ -12,14 +15,11 @@ import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/rou
 import { WithRouteStore } from '../../../../../../_common/route/route-store';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip';
-import { arrayRemove } from '../../../../../../utils/array';
-import { enforceLocation } from '../../../../../../utils/router';
-import Component from 'vue-class-component';
-import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
-import FormCommunityCollaborator from '../../../../../components/forms/community/collaborator/collaborator.vue';
-import FormCommunityTag from '../../../../../components/forms/community/tag/tag.vue';
-import { CommunityThumbnailModal } from '../../../../../components/forms/community/thumbnail/modal/modal.service';
 import { store } from '../../../../../store';
+import { AppCommunityPerms } from '../../../../community/perms/perms';
+import FormCommunityCollaborator from '../../../../forms/community/collaborator/collaborator.vue';
+import FormCommunityTag from '../../../../forms/community/tag/tag.vue';
+import { CommunityThumbnailModal } from '../../../../forms/community/thumbnail/modal/modal.service';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './edit.store';
 import AppCommunitiesOverviewEditNotice from './_notice/notice.vue';
 

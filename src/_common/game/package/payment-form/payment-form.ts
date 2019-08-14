@@ -1,13 +1,12 @@
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import AppLoading from '../../../../loading/loading.vue';
 import { arrayIndexBy } from '../../../../utils/array';
-import AppLoading from '../../../../vue/components/loading/loading.vue';
-import { currency } from '../../../../vue/filters/currency';
-import { AppStore } from '../../../../vue/services/app/app-store';
 import { Api } from '../../../api/api.service';
 import { Device } from '../../../device/device.service';
 import { Environment } from '../../../environment/environment.service';
 import AppExpand from '../../../expand/expand.vue';
+import { currency } from '../../../filters/currency';
 import { AppFocusWhen } from '../../../form-vue/focus-when.directive';
 import AppForm from '../../../form-vue/form';
 import {
@@ -26,6 +25,7 @@ import { OrderPayment } from '../../../order/payment/payment.model';
 import AppPopper from '../../../popper/popper.vue';
 import { Screen } from '../../../screen/screen-service';
 import { Sellable } from '../../../sellable/sellable.model';
+import { AppStore } from '../../../store/app-store';
 import { AppTooltip } from '../../../tooltip/tooltip';
 import { User } from '../../../user/user.model';
 import { GameBuild } from '../../build/build.model';

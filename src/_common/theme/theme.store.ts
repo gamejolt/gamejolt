@@ -1,6 +1,6 @@
 import { namespace } from 'vuex-class';
 import { VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
-import { appStore } from '../../vue/services/app/app-store';
+import { appStore } from '../store/app-store';
 import { Theme } from './theme.model';
 
 export const ThemeStoreNamespace = 'theme';

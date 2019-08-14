@@ -1,16 +1,16 @@
+import { Component } from 'vue-property-decorator';
+import { number } from '../../../../_common/filters/number';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppUserCard from '../../../../_common/user/card/card.vue';
-import { number } from '../../../../_common/filters/number';
-import { Component } from 'vue-property-decorator';
-import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
-import AppActivityFeed from '../../../components/activity/feed/feed.vue';
-import AppActivityFeedPlaceholder from '../../../components/activity/feed/placeholder/placeholder.vue';
-import { ActivityFeedView } from '../../../components/activity/feed/view';
-import AppGameGrid from '../../../components/game/grid/grid.vue';
-import AppGameList from '../../../components/game/list/list.vue';
-import AppPageContainer from '../../../components/page-container/page-container.vue';
-import { Search } from '../../../components/search/search-service';
+import { ActivityFeedService } from '../../activity/feed/feed-service';
+import AppActivityFeed from '../../activity/feed/feed.vue';
+import AppActivityFeedPlaceholder from '../../activity/feed/placeholder/placeholder.vue';
+import { ActivityFeedView } from '../../activity/feed/view';
+import AppGameGrid from '../../game/grid/grid.vue';
+import AppGameList from '../../game/list/list.vue';
+import AppPageContainer from '../../page-container/page-container.vue';
+import { Search } from '../../search/search-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 
 @Component({

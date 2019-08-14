@@ -1,6 +1,6 @@
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../../../vue/components/jolticon/jolticon.vue';
-import { number } from '../../../../vue/filters/number';
+import AppJolticon from '../../../../jolticon/jolticon.vue';
+import { number } from '../../../filters/number';
 import AppProgressBar from '../../../progress/bar/bar.vue';
 import BaseFormControl from '../base';
 import AppFormControlUploadFileTS from './file';

@@ -8,8 +8,8 @@ import { Growls } from '../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
-import AppInvalidKey from '../../components/invalid-key/invalid-key.vue';
 import { Store } from '../../store/index';
+import AppInvalidKey from '../invalid-key/invalid-key.vue';
 import AppKeyBundle from './_bundle/bundle.vue';
 import AppKeyGame from './_game/game.vue';
 

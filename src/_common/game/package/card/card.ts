@@ -1,7 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { currency } from '../../../../vue/filters/currency';
-import { filesize } from '../../../../vue/filters/filesize';
 import { Analytics } from '../../../analytics/analytics.service';
 import { AppTrackEvent } from '../../../analytics/track-event.directive';
 import AppCard from '../../../card/card.vue';
@@ -10,6 +8,8 @@ import { AppCountdown } from '../../../countdown/countdown';
 import { EventBus, EventBusDeregister } from '../../../event-bus/event-bus.service';
 import AppExpand from '../../../expand/expand.vue';
 import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
+import { currency } from '../../../filters/currency';
+import { filesize } from '../../../filters/filesize';
 import { LinkedKey } from '../../../linked-key/linked-key.model';
 import { SellablePricing } from '../../../sellable/pricing/pricing.model';
 import { Sellable } from '../../../sellable/sellable.model';

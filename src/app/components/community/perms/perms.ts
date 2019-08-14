@@ -1,7 +1,7 @@
-import { Perm } from '../../../../_common/collaborator/collaboratable';
-import { Community } from '../../../../_common/community/community.model';
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { Perm } from '../../../../_common/collaborator/collaboratable';
+import { Community } from '../../../../_common/community/community.model';
 import {
 	RouteStore,
 	RouteStoreName,

@@ -1,8 +1,8 @@
 import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import AppJolticon from '../../../../jolticon/jolticon.vue';
 import { findRequiredVueParent } from '../../../../utils/vue';
-import AppJolticon from '../../../../vue/components/jolticon/jolticon.vue';
 import { AppImgResponsive } from '../../../img/responsive/responsive';
 import { Screen } from '../../../screen/screen-service';
 import AppSketchfabEmbed from '../../../sketchfab/embed/embed.vue';

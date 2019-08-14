@@ -1,6 +1,6 @@
 import { DirectiveOptions } from 'vue';
-import { appStore } from '../../vue/services/app/app-store';
 import { Analytics } from '../analytics/analytics.service';
+import { appStore } from '../store/app-store';
 import { AuthModal } from './auth-modal.service';
 
 export const AppAuthRequired: DirectiveOptions = {

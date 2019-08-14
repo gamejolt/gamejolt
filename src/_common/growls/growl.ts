@@ -1,10 +1,9 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
-import { Growl } from './growls.service';
+import AppJolticon from '../../jolticon/jolticon.vue';
 import { Screen } from '../screen/screen-service';
-import AppJolticon from '../../vue/components/jolticon/jolticon.vue'
 import { AppGrowlDynamic } from './growl-dynamic';
+import { Growl } from './growls.service';
 
 require('./growl-content.styl');
 

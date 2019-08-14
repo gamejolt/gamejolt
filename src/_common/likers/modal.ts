@@ -1,9 +1,9 @@
 import { Component, Prop } from 'vue-property-decorator';
 import AppUserList from '../../../../app/components/user/list/list.vue';
-import AppLoading from '../../vue/components/loading/loading.vue';
-import { number } from '../../vue/filters/number';
+import AppLoading from '../../loading/loading.vue';
 import { Api } from '../api/api.service';
 import { Comment } from '../comment/comment-model';
+import { number } from '../filters/number';
 import { FiresidePost } from '../fireside/post/post-model';
 import { Game } from '../game/game.model';
 import { BaseModal } from '../modal/base';

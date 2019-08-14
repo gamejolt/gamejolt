@@ -1,15 +1,15 @@
-import { CommentState, CommentStore } from '../../../../../../_common/comment/comment-store';
-import { CommentModal } from '../../../../../../_common/comment/modal/modal.service';
-import AppPopper from '../../../../../../_common/popper/popper.vue';
-import { ReportModal } from '../../../../../../_common/report/modal/modal.service';
-import { Screen } from '../../../../../../_common/screen/screen-service';
-import { number } from '../../../../../../_common/filters/number';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import AppGameModLinks from '../../../../../components/game/mod-links/mod-links.vue';
-import { AppGamePerms } from '../../../../../components/game/perms/perms';
+import { CommentState, CommentStore } from '../../../../../../_common/comment/comment-store';
+import { CommentModal } from '../../../../../../_common/comment/modal/modal.service';
+import { number } from '../../../../../../_common/filters/number';
+import AppPopper from '../../../../../../_common/popper/popper.vue';
+import { ReportModal } from '../../../../../../_common/report/modal/modal.service';
+import { Screen } from '../../../../../../_common/screen/screen-service';
 import { Store } from '../../../../../store/index';
+import AppGameModLinks from '../../../../game/mod-links/mod-links.vue';
+import { AppGamePerms } from '../../../../game/perms/perms';
 import { RouteStore, RouteStoreModule } from '../view.store';
 
 @Component({

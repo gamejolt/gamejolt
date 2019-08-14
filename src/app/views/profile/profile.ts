@@ -1,6 +1,9 @@
+import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
 import { CommentModal } from '../../../_common/comment/modal/modal.service';
 import { Environment } from '../../../_common/environment/environment.service';
+import { number } from '../../../_common/filters/number';
 import AppPopper from '../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../_common/report/modal/modal.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
@@ -14,14 +17,11 @@ import AppUserFollowWidget from '../../../_common/user/follow/widget.vue';
 import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
 import AppUserAvatar from '../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../_common/user/verified-tick/verified-tick.vue';
-import { number } from '../../../_common/filters/number';
-import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { IntentService } from '../../components/intent/intent.service';
-import AppPageHeaderControls from '../../components/page-header/controls/controls.vue';
-import AppPageHeader from '../../components/page-header/page-header.vue';
-import AppUserDogtag from '../../components/user/dogtag/dogtag.vue';
 import { Store, store } from '../../store';
+import { IntentService } from '../intent/intent.service';
+import AppPageHeaderControls from '../page-header/controls/controls.vue';
+import AppPageHeader from '../page-header/page-header.vue';
+import AppUserDogtag from '../user/dogtag/dogtag.vue';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './profile.store';
 
 @Component({

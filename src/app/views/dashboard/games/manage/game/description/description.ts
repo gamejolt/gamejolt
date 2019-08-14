@@ -1,3 +1,4 @@
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { Growls } from '../../../../../../../_common/growls/growls.service';
 import {
@@ -5,8 +6,7 @@ import {
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
-import { Component } from 'vue-property-decorator';
-import FormGameDescription from '../../../../../../components/forms/game/description/description.vue';
+import FormGameDescription from '../../../../../forms/game/description/description.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @Component({

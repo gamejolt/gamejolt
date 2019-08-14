@@ -1,8 +1,12 @@
+import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import { enforceLocation } from '../../../../../utils/router';
 import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../../_common/api/api.service';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
+import { number } from '../../../../../_common/filters/number';
 import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
 import { ForumPost } from '../../../../../_common/forum/post/post.model';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
@@ -23,18 +27,14 @@ import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
-import { enforceLocation } from '../../../../../utils/router';
-import { number } from '../../../../../_common/filters/number';
-import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import FormForumPost from '../../../../components/forms/forum/post/post.vue';
-import FormForumTopic from '../../../../components/forms/forum/topic/topic.vue';
-import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
-import AppForumPostList from '../../../../components/forum/post-list/post-list.vue';
-import AppForumTopicUpvoteWidget from '../../../../components/forum/topic/upvote-widget/upvote-widget.vue';
-import AppPageHeaderControls from '../../../../components/page-header/controls/controls.vue';
-import AppPageHeader from '../../../../components/page-header/page-header.vue';
 import { Store } from '../../../../store/index';
+import FormForumPost from '../../../forms/forum/post/post.vue';
+import FormForumTopic from '../../../forms/forum/topic/topic.vue';
+import AppForumBreadcrumbs from '../../../forum/breadcrumbs/breadcrumbs.vue';
+import AppForumPostList from '../../../forum/post-list/post-list.vue';
+import AppForumTopicUpvoteWidget from '../../../forum/topic/upvote-widget/upvote-widget.vue';
+import AppPageHeaderControls from '../../../page-header/controls/controls.vue';
+import AppPageHeader from '../../../page-header/page-header.vue';
 
 @Component({
 	name: 'RouteForumsTopicsView',
@@ -109,7 +109,9 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 	readonly Environment = Environment;
 
 	get loginUrl() {
-		return Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath);
+		return (
+			Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath)
+		);
 	}
 
 	get sort() {

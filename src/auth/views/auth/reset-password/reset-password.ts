@@ -1,8 +1,8 @@
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
-import { Component } from 'vue-property-decorator';
-import FormResetPassword from '../../../components/forms/reset-password/reset-password.vue';
+import FormResetPassword from '../../forms/reset-password/reset-password.vue';
 
 @Component({
 	name: 'RouteAuthResetPassword',

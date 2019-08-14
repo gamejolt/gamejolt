@@ -1,17 +1,14 @@
-import { Api } from '../../../../../../../_common/api/api.service';
-import { GameTrophy } from '../../../../../../../_common/game/trophy/trophy.model';
-import AppNavTabList from '../../../../../../../_common/nav/tab-list/tab-list.vue';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../../../_common/route/route-component';
-import { UserGameTrophy } from '../../../../../../../_common/user/game-trophy/game-trophy.model';
-import { number } from '../../../../../../../_common/filters/number';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import AppTrophyCompletion from '../../../../../../components/trophy/completion/completion.vue';
-import AppTrophyList from '../../../../../../components/trophy/list/list.vue';
+import { Api } from '../../../../../../../_common/api/api.service';
+import { number } from '../../../../../../../_common/filters/number';
+import { GameTrophy } from '../../../../../../../_common/game/trophy/trophy.model';
+import AppNavTabList from '../../../../../../../_common/nav/tab-list/tab-list.vue';
+import { BaseRouteComponent, RouteResolver } from '../../../../../../../_common/route/route-component';
+import { UserGameTrophy } from '../../../../../../../_common/user/game-trophy/game-trophy.model';
 import { Store } from '../../../../../../store/index';
+import AppTrophyCompletion from '../../../../../trophy/completion/completion.vue';
+import AppTrophyList from '../../../../../trophy/list/list.vue';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
 @Component({

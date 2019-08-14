@@ -1,10 +1,10 @@
+import { Component } from 'vue-property-decorator';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
 import { AppScrollTo } from '../../../_common/scroll/to/to.directive';
 import { User } from '../../../_common/user/user.model';
-import { Component } from 'vue-property-decorator';
-import FormSettings from '../../components/forms/settings/settings.vue';
-import AppPageHeader from '../../components/page-header/page-header.vue';
+import FormSettings from '../forms/settings/settings.vue';
+import AppPageHeader from '../page-header/page-header.vue';
 
 @Component({
 	name: 'RouteSettings',

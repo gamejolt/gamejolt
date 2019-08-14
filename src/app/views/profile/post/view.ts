@@ -1,3 +1,6 @@
+import { Component } from 'vue-property-decorator';
+import { CreateElement } from 'vue/types/vue';
+import { enforceLocation, LocationRedirect } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import { CommentThreadModal } from '../../../../_common/comment/thread/modal.service';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -5,11 +8,8 @@ import { Meta } from '../../../../_common/meta/meta-service';
 import { Registry } from '../../../../_common/registry/registry.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Translate } from '../../../../_common/translate/translate.service';
-import { enforceLocation, LocationRedirect } from '../../../../utils/router';
-import { Component } from 'vue-property-decorator';
-import { CreateElement } from 'vue/types/vue';
-import { IntentService } from '../../../components/intent/intent.service';
-import AppPostView from '../../../components/post/view/view.vue';
+import { IntentService } from '../../intent/intent.service';
+import AppPostView from '../../post/view/view.vue';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 
 @Component({
@@ -95,7 +95,12 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 			this.post = post;
 		}
 
-		CommentThreadModal.showFromPermalink(this.$router, 'Fireside_Post', this.post.id, 'comments');
+		CommentThreadModal.showFromPermalink(
+			this.$router,
+			'Fireside_Post',
+			this.post.id,
+			'comments'
+		);
 
 		this.post.$viewed();
 		this.post.$expanded();

@@ -1,4 +1,4 @@
-import { Api } from '../../../components/api/api.service';
+import { Api } from '../../api/api.service';
 import { Model } from '../../model/model.service';
 
 export class CommunityTag extends Model {

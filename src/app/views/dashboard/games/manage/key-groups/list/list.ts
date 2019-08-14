@@ -1,17 +1,14 @@
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
 import AppCardListItem from '../../../../../../../_common/card/list/item/item.vue';
 import AppCardList from '../../../../../../../_common/card/list/list.vue';
+import { number } from '../../../../../../../_common/filters/number';
 import { GamePackage } from '../../../../../../../_common/game/package/package.model';
 import { KeyGroup } from '../../../../../../../_common/key-group/key-group.model';
 import AppProgressBar from '../../../../../../../_common/progress/bar/bar.vue';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../../../_common/route/route-component';
-import { number } from '../../../../../../../_common/filters/number';
-import { Component } from 'vue-property-decorator';
-import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/key-group.vue';
+import { BaseRouteComponent, RouteResolver } from '../../../../../../../_common/route/route-component';
+import FormGameKeyGroup from '../../../../../forms/game/key-group/key-group.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @Component({

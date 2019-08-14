@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import AppJolticon from '../../vue/components/jolticon/jolticon.vue'
-import AppButton from './button.vue'
+import AppJolticon from '../../jolticon/jolticon.vue';
+import AppButton from './button.vue';
 
 @Component({
 	components: {

@@ -1,9 +1,9 @@
-import { Game } from '../../../../../../../_common/game/game.model';
-import { AppStore } from '../../../../../../../_common/store/app-store';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { AppGamePerms } from '../../../../../../components/game/perms/perms';
+import { Game } from '../../../../../../../_common/game/game.model';
+import { AppStore } from '../../../../../../../_common/store/app-store';
+import { AppGamePerms } from '../../../../../game/perms/perms';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 import AppManageGameNavRequired from './required.vue';
 

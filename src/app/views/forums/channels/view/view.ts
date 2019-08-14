@@ -1,4 +1,7 @@
+import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
+import { number } from '../../../../../_common/filters/number';
 import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
@@ -6,13 +9,10 @@ import AppPagination from '../../../../../_common/pagination/pagination.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import { number } from '../../../../../_common/filters/number';
-import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
-import AppForumTopicList from '../../../../components/forum/topic-list/topic-list.vue';
-import AppPageHeader from '../../../../components/page-header/page-header.vue';
 import { Store } from '../../../../store/index';
+import AppForumBreadcrumbs from '../../../forum/breadcrumbs/breadcrumbs.vue';
+import AppForumTopicList from '../../../forum/topic-list/topic-list.vue';
+import AppPageHeader from '../../../page-header/page-header.vue';
 
 @Component({
 	name: 'RouteForumsChannelsView',

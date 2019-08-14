@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import AppGameThumbnail from '../../../../../_common/game/thumbnail/thumbnail.vue';
-import AppClientGameButtons from '../../../../components/client/game-buttons/game-buttons.vue';
-import { LocalDbGame } from '../../../../components/client/local-db/game/game.model';
 import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
+import AppClientGameButtons from '../../../client/game-buttons/game-buttons.vue';
+import { LocalDbGame } from '../../../client/local-db/game/game.model';
 
 @Component({
 	components: {

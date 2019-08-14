@@ -1,4 +1,4 @@
-import { appStore } from '../../vue/services/app/app-store';
+import { appStore } from '../store/app-store';
 
 type CmpCommand = 'getConsentData' | 'getVendorConsents' | 'ping';
 

@@ -1,11 +1,11 @@
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
 import { ThemeMutation, ThemeStore } from '../../../../../../../_common/theme/theme.store';
-import { Component } from 'vue-property-decorator';
-import FormGameDesign from '../../../../../../components/forms/game/design/design.vue';
+import FormGameDesign from '../../../../../forms/game/design/design.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @Component({

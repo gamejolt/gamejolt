@@ -1,10 +1,10 @@
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Site } from '../../../../../_common/site/site-model';
 import { Translate } from '../../../../../_common/translate/translate.service';
-import { Component } from 'vue-property-decorator';
-import AppSitesLinkCard from '../../../../components/sites/link-card/link-card.vue';
-import AppSitesManagePage from '../../../../components/sites/manage-page/manage-page.vue';
+import AppSitesLinkCard from '../../../sites/link-card/link-card.vue';
+import AppSitesManagePage from '../../../sites/manage-page/manage-page.vue';
 import { routeStore, RouteStore, RouteStoreModule } from '../account.store';
 
 @Component({

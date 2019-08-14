@@ -1,14 +1,14 @@
-import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
-import { Jam } from '../../../../../_common/jam/jam.model';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import { AppTheme } from '../../../../../_common/theme/theme';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { State } from 'vuex-class';
-import { FeaturedItem } from '../../../../components/featured-item/featured-item.model';
-import AppGameFollowWidget from '../../../../components/game/follow-widget/follow-widget.vue';
+import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
+import { Jam } from '../../../../../_common/jam/jam.model';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import { AppTheme } from '../../../../../_common/theme/theme';
 import { Store } from '../../../../store/index';
+import { FeaturedItem } from '../../../featured-item/featured-item.model';
+import AppGameFollowWidget from '../../../game/follow-widget/follow-widget.vue';
 
 @Component({
 	components: {

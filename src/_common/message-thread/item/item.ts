@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../../vue/components/jolticon/jolticon.vue';
-import { date } from '../../../vue/filters/date';
+import AppJolticon from '../../../jolticon/jolticon.vue';
+import { date } from '../../filters/date';
 import { AppTimeAgo } from '../../time/ago/ago';
 import AppTimelineListItem from '../../timeline-list/item/item.vue';
 import AppUserCardHover from '../../user/card/hover/hover.vue';

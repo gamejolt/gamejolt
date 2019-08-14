@@ -1,7 +1,7 @@
-import { Community } from '../../../../../_common/community/community.model';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppCommunitySlider from '../../../../components/community/slider/slider.vue';
+import { Community } from '../../../../../_common/community/community.model';
+import AppCommunitySlider from '../../../community/slider/slider.vue';
 
 @Component({
 	components: {

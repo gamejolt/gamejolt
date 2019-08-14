@@ -1,3 +1,5 @@
+import { Component } from 'vue-property-decorator';
+import { arrayRemove } from '../../../../../../utils/array';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../_common/card/list/add/add.vue';
 import AppCardListItem from '../../../../../../_common/card/list/item/item.vue';
@@ -7,9 +9,7 @@ import { Growls } from '../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../../../../_common/time/ago/ago';
-import { arrayRemove } from '../../../../../../utils/array';
-import { Component } from 'vue-property-decorator';
-import FormGameCollaborator from '../../../../../components/forms/game/collaborator/collaborator.vue';
+import FormGameCollaborator from '../../../../forms/game/collaborator/collaborator.vue';
 import { RouteStore, RouteStoreModule } from '../manage.store';
 
 @Component({

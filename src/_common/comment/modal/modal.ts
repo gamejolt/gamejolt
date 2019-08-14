@@ -1,7 +1,7 @@
 import { Component, Prop } from 'vue-property-decorator';
-import { CommentState, CommentStore } from '../../../components/comment/comment-store';
-import AppJolticon from '../../../vue/components/jolticon/jolticon.vue';
-import { number } from '../../../vue/filters/number';
+import AppJolticon from '../../../jolticon/jolticon.vue';
+import { CommentState, CommentStore } from '../../comment/comment-store';
+import { number } from '../../filters/number';
 import { BaseModal } from '../../modal/base';
 import { Screen } from '../../screen/screen-service';
 import AppCommentWidget from '../widget/widget.vue';

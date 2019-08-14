@@ -1,8 +1,8 @@
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { Scroll } from '../../../components/scroll/scroll.service';
 import { arrayRemove } from '../../../utils/array';
 import { findVueParent } from '../../../utils/vue';
+import { Scroll } from '../../scroll/scroll.service';
 import { ScrollInviewContainer } from './container';
 import { AppScrollInviewParent } from './parent';
 

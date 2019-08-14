@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
-import { Backdrop } from '../../components/backdrop/backdrop.service';
-import { Popper } from '../../components/popper/popper.service';
+import { Backdrop } from '../backdrop/backdrop.service';
 import AppBackdrop from '../backdrop/backdrop.vue';
+import { Popper } from '../popper/popper.service';
 import { Screen } from '../screen/screen-service';
 import AppScrollScrollerTS from '../scroll/scroller/scroller';
 import AppScrollScroller from '../scroll/scroller/scroller.vue';

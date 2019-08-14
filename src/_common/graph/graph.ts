@@ -1,8 +1,7 @@
-import Vue from 'vue';
 import * as Chart from 'chart.js';
+import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-
-import { date } from '../../vue/filters/date';
+import { date } from '../filters/date';
 import { ThemeState, ThemeStore } from '../theme/theme.store';
 
 // Try to match site styling.
@@ -105,7 +104,13 @@ export default class AppGraph extends Vue {
 		let colors = ['#ffffff', '#ccff00', '#31d6ff', '#ff3fac', '#2f7f6f'];
 		if (this.theme) {
 			if (this.theme.custom) {
-				colors = ['#ffffff', '#' + this.theme.darkHighlight_, '#31d6ff', '#ff3fac', '#2f7f6f'];
+				colors = [
+					'#ffffff',
+					'#' + this.theme.darkHighlight_,
+					'#31d6ff',
+					'#ff3fac',
+					'#2f7f6f',
+				];
 			} else {
 				colors = [
 					'#ffffff',

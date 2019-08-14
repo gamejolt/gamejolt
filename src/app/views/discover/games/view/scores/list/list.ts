@@ -1,22 +1,19 @@
+import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { GameScoreTable } from '../../../../../../../_common/game/score-table/score-table.model';
 import AppLoadingFade from '../../../../../../../_common/loading/fade/fade.vue';
 import AppNavTabList from '../../../../../../../_common/nav/tab-list/tab-list.vue';
 import { Popper } from '../../../../../../../_common/popper/popper.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../../../_common/route/route-component';
+import { BaseRouteComponent, RouteResolver } from '../../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../../../_common/scroll/affix/affix.vue';
 import { AppNoAutoscroll } from '../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { UserGameScore } from '../../../../../../../_common/user/game-score/game-score.model';
-import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import AppScoreList from '../../../../../../components/score/list/list.vue';
-import AppScoreboardSelector from '../../../../../../components/score/scoreboard-selector/scoreboard-selector.vue';
 import { Store } from '../../../../../../store/index';
+import AppScoreList from '../../../../../score/list/list.vue';
+import AppScoreboardSelector from '../../../../../score/scoreboard-selector/scoreboard-selector.vue';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
 @Component({

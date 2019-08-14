@@ -1,7 +1,7 @@
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Component } from 'vue-property-decorator';
-import AppGameGrid from '../../../components/game/grid/grid.vue';
-import { Search } from '../../../components/search/search-service';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import AppGameGrid from '../../game/grid/grid.vue';
+import { Search } from '../../search/search-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 
 @Component({

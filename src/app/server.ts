@@ -4,7 +4,7 @@ import { Meta } from '../_common/meta/meta-service';
 import { createApp } from './bootstrap';
 
 export default (context: any) => {
-	const { app, router, store } = createApp();
+	const { app, router } = createApp();
 
 	return new Promise((resolve, reject) => {
 		const s = Date.now();
