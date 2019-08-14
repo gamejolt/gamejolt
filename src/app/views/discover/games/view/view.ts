@@ -172,9 +172,9 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	private gaTrackingId?: string;
 
 	private roleNames: { [k: string]: string } = {
-		[Collaborator.ROLE_GAME_COLLABORATOR]: this.$gettext('an equal collaborator'),
-		[Collaborator.ROLE_GAME_COMMUNITY_MANAGER]: this.$gettext('a community manager'),
-		[Collaborator.ROLE_GAME_DEVELOPER]: this.$gettext('a developer'),
+		[Collaborator.ROLE_EQUAL_COLLABORATOR]: this.$gettext('an equal collaborator'),
+		[Collaborator.ROLE_COMMUNITY_MANAGER]: this.$gettext('a community manager'),
+		[Collaborator.ROLE_DEVELOPER]: this.$gettext('a developer'),
 	};
 
 	get roleName() {

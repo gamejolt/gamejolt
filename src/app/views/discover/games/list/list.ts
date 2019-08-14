@@ -180,6 +180,8 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 				return this.$gettext('alt games');
 			case 'roguelike':
 				return this.$gettext('roguelike games');
+			case 'adult':
+				return this.$gettext('adult / porn games');
 			default:
 				return this.$gettextInterpolate(`%{ category } games`, {
 					category: this.tag,

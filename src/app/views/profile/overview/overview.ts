@@ -30,6 +30,7 @@ import AppCommentOverview from '../../../components/comment/overview/overview.vu
 import AppGameList from '../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
 import AppPageContainer from '../../../components/page-container/page-container.vue';
+import AppUserKnownFollowers from '../../../components/user/known-followers/known-followers.vue';
 import { Store } from '../../../store/index';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 
@@ -44,6 +45,7 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 		AppCommentAddButton,
 		AppCommentOverview,
 		AppContentViewer,
+		AppUserKnownFollowers,
 	},
 	directives: {
 		AppTooltip,
@@ -108,6 +110,8 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	developerGames: Game[] = [];
 	youtubeChannels: YoutubeChannel[] = [];
 	linkedAccounts: LinkedAccount[] = [];
+	knownFollowers: User[] = [];
+	knownFollowerCount = 0;
 
 	readonly User = User;
 	readonly UserFriendship = UserFriendship;
@@ -206,6 +210,15 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return this.isFriend && this.chat && this.chat.connected;
 	}
 
+	get shouldShowKnownFollowers() {
+		return (
+			!!this.app.user &&
+			!!this.user &&
+			this.isOverviewLoaded &&
+			this.app.user.id !== this.user.id
+		);
+	}
+
 	getLinkedAccount(provider: Provider) {
 		if (
 			this.user &&
@@ -243,6 +256,13 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 		if (this.user) {
 			CommentThreadModal.showFromPermalink(this.$router, 'User', this.user.id, 'shouts');
+		}
+
+		if ($payload.knownFollowers) {
+			this.knownFollowers = User.populate($payload.knownFollowers);
+		}
+		if ($payload.knownFollowerCount) {
+			this.knownFollowerCount = $payload.knownFollowerCount;
 		}
 
 		this.overviewPayload($payload);

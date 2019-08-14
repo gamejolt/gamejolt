@@ -12,6 +12,7 @@ import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
 import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Component } from 'vue-property-decorator';
+import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector.vue';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
@@ -25,6 +26,7 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 		AppGameDevStageSelector,
 		AppGraphWidget,
 		AppGamePerms,
+		AppCommunityPerms,
 	},
 	directives: {
 		AppTooltip,

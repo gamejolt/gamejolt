@@ -24,7 +24,7 @@
 		<app-form-group name="role" :label="$gettext('Role')">
 			<div class="radio">
 				<label>
-					<app-form-control-radio :value="Collaborator.ROLE_GAME_COLLABORATOR" />
+					<app-form-control-radio :value="Collaborator.ROLE_EQUAL_COLLABORATOR" />
 					<translate>Full Collaborator</translate>
 					&mdash;
 					<translate class="help-inline">
@@ -35,7 +35,7 @@
 			</div>
 			<div class="radio">
 				<label>
-					<app-form-control-radio :value="Collaborator.ROLE_GAME_COMMUNITY_MANAGER" />
+					<app-form-control-radio :value="Collaborator.ROLE_COMMUNITY_MANAGER" />
 					<translate>Community Manager</translate>
 					&mdash;
 					<translate class="help-inline">

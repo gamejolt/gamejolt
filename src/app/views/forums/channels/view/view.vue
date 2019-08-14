@@ -11,7 +11,24 @@
 			</div>
 
 			<div class="clearfix">
-				<ul class="stat-list" :class="Screen.isXs ? 'text-center' : 'pull-right'">
+				<div :class="{ 'pull-right': !Screen.isXs }">
+					<div>
+						<app-button
+							primary
+							:block="Screen.isXs"
+							:to="{
+								name: 'forums.topics.add',
+								params: { channel: channel.name },
+							}"
+						>
+							<translate>Add Topic</translate>
+						</app-button>
+					</div>
+				</div>
+
+				<br class="hidden-sm-up" />
+
+				<ul class="stat-list" :class="Screen.isXs ? 'text-center' : 'pull-left'">
 					<li class="stat-big stat-big-smaller">
 						<div class="stat-big-label">
 							Topics
@@ -29,21 +46,6 @@
 						</div>
 					</li>
 				</ul>
-
-				<br class="visible-xs" />
-
-				<div :class="{ 'pull-left': !Screen.isXs }">
-					<app-button
-						primary
-						:block="Screen.isXs"
-						:to="{
-							name: 'forums.topics.add',
-							params: { channel: channel.name },
-						}"
-					>
-						<translate>Add Topic</translate>
-					</app-button>
-				</div>
 			</div>
 
 			<template slot="nav">

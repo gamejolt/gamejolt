@@ -46,6 +46,21 @@
 							</app-button>
 						</div>
 					</app-popper>
+
+					<div v-if="!showComments" class="-inline-comment" v-app-auth-required>
+						<app-event-item-controls-comment-add-placeholder
+							v-if="!clickedComment"
+							@click="onClickCommentAddPlaceholder"
+						/>
+						<form-comment
+							v-else
+							resource="Fireside_Post"
+							:resource-id="post.id"
+							:editor-startup-activity="clickedCommentType"
+							autofocus
+							@submit="onSubmitNewComment"
+						/>
+					</div>
 				</span>
 			</template>
 			<template v-else-if="video">
@@ -66,5 +81,7 @@
 		</template>
 	</div>
 </template>
+
+<style lang="stylus" src="./controls.styl" scoped></style>
 
 <script lang="ts" src="./controls"></script>

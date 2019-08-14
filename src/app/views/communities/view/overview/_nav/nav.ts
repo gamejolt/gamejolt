@@ -2,6 +2,7 @@ import { Community } from 'game-jolt-frontend-lib/components/community/community
 import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 
 type NavItemType = 'general' | 'tag';
 
@@ -21,20 +22,31 @@ class NavGroup {
 	constructor(public readonly items: NavItem[]) {}
 }
 
-@Component({})
+@Component({
+	components: {
+		AppCommunityPerms,
+	},
+})
 export default class AppCommunitiesViewOverviewNav extends Vue {
 	@Prop(Community)
 	community!: Community;
 
-	@Prop(Array)
-	tags!: string[];
-
 	@Prop(String)
 	channel!: string;
+
+	@Prop(Boolean)
+	isEditing!: boolean;
 
 	isNavExpanded = false;
 
 	readonly Screen = Screen;
+
+	get tags() {
+		if (this.community.tags) {
+			return this.community.tags.map(t => t.tag);
+		}
+		return [];
+	}
 
 	get groups(): NavGroup[] {
 		return [

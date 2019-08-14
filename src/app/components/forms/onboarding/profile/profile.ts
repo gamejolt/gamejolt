@@ -1,3 +1,4 @@
+import { ContentDocument } from 'game-jolt-frontend-lib/components/content/content-document';
 import AppEditableOverlay from 'game-jolt-frontend-lib/components/editable-overlay/editable-overlay.vue';
 import AppFormControlContent from 'game-jolt-frontend-lib/components/form-vue/control/content/content.vue';
 import { FormOnLoad, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
@@ -7,7 +8,6 @@ import Onboarding, {
 import { AppThemeSvg } from 'game-jolt-frontend-lib/components/theme/svg/svg';
 import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
 import { Component } from 'vue-property-decorator';
-import { ContentDocument } from '../../../../../lib/gj-lib-client/components/content/content-document';
 import { UserAvatarModal } from '../../../user/avatar-modal/avatar-modal.service';
 import OnboardingComponent from '../base';
 
