@@ -1,9 +1,8 @@
-import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { GameScoreTable } from '../../../../_common/game/score-table/score-table.model';
+import AppPopper from '../../../../_common/popper/popper.vue';
+import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 @Component({
 	components: {

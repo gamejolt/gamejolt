@@ -1,6 +1,6 @@
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import AppCard from 'game-jolt-frontend-lib/components/card/card.vue'
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { AppTrackEvent } from '../../../_common/analytics/track-event.directive';
+import AppCard from 'game-jolt-frontend-lib/components/card/card.vue';
+import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 

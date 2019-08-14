@@ -1,8 +1,8 @@
-import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
-import { AppSocialFacebookLike } from 'game-jolt-frontend-lib/components/social/facebook/like/like';
-import { AppSocialTwitterShare } from 'game-jolt-frontend-lib/components/social/twitter/share/share';
-import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
+import { Meta } from '../../../../_common/meta/meta-service';
+import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
+import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
+import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { Component } from 'vue-property-decorator';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 
@@ -58,9 +58,7 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 
 	readonly slogan = this.slogans[getRandomInt(0, this.slogans.length)];
 	readonly chosenHandle = this.handles[getRandomInt(0, this.handles.length)];
-	readonly tweet = `Hey @${
-		this.chosenHandle
-	}! I think your games would be a good fit for Game Jolt #redlight #gamedev`;
+	readonly tweet = `Hey @${this.chosenHandle}! I think your games would be a good fit for Game Jolt #redlight #gamedev`;
 
 	readonly Screen = Screen;
 

@@ -1,8 +1,7 @@
-import { ForumChannel } from 'game-jolt-frontend-lib/components/forum/channel/channel.model';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { ForumChannel } from '../../../../_common/forum/channel/channel.model';
+import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 @Component({
 	components: {

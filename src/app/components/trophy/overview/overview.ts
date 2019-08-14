@@ -1,16 +1,15 @@
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GameTrophy } from 'game-jolt-frontend-lib/components/game/trophy/trophy.model';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { UserGameTrophy } from 'game-jolt-frontend-lib/components/user/game-trophy/game-trophy.model';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Game } from '../../../../_common/game/game.model';
+import { GameTrophy } from '../../../../_common/game/trophy/trophy.model';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { UserGameTrophy } from '../../../../_common/user/game-trophy/game-trophy.model';
+import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
+import { number } from '../../../../_common/filters/number';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../store/index';
 import AppTrophyCompletion from '../completion/completion.vue';
 import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
-
 
 @Component({
 	components: {

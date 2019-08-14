@@ -1,10 +1,10 @@
 import { IParsedWrapper } from 'client-voodoo';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
-import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
-import { GameBuildLaunchOption } from 'game-jolt-frontend-lib/components/game/build/launch-option/launch-option.model';
-import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import { GameRelease } from 'game-jolt-frontend-lib/components/game/release/release.model';
+import { Api } from '../../../../../_common/api/api.service';
+import { Device } from '../../../../../_common/device/device.service';
+import { GameBuild } from '../../../../../_common/game/build/build.model';
+import { GameBuildLaunchOption } from '../../../../../_common/game/build/launch-option/launch-option.model';
+import { GamePackage } from '../../../../../_common/game/package/package.model';
+import { GameRelease } from '../../../../../_common/game/release/release.model';
 import { LocalDbModel } from '../model.service';
 
 export type LocalDbPackagePid = string | IParsedWrapper;

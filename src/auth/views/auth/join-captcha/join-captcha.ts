@@ -1,6 +1,6 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Api } from '../../../../_common/api/api.service';
+import { Growls } from '../../../../_common/growls/growls.service';
+import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { Component } from 'vue-property-decorator';
 import AppGrecaptchaWidget from '../../../components/grecaptcha/widget/widget.vue';
 

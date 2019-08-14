@@ -1,7 +1,7 @@
-import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow/widget.vue';
-import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
+import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
+import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
+import { User } from '../../../../_common/user/user.model';
+import AppLoading from '../../../../_common/loading/loading.vue';
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Analytics } from '../../../../lib/gj-lib-client/components/analytics/analytics.service';

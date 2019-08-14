@@ -1,8 +1,7 @@
-import { BaseForm, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GameSketchfab } from 'game-jolt-frontend-lib/components/game/sketchfab/sketchfab.model';
+import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
+import { Game } from '../../../../../_common/game/game.model';
+import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 @Component({})
 export default class FormGameSketchfab extends BaseForm<GameSketchfab> implements FormOnInit {

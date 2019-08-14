@@ -1,6 +1,9 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
+import { Api } from '../../../../../../../_common/api/api.service';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../../../_common/route/route-component';
+import { ThemeMutation, ThemeStore } from '../../../../../../../_common/theme/theme.store';
 import { Component } from 'vue-property-decorator';
 import FormGameDesign from '../../../../../../components/forms/game/design/design.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';

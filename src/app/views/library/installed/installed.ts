@@ -1,6 +1,6 @@
-import AppAlertDismissable from 'game-jolt-frontend-lib/components/alert/dismissable/dismissable.vue';
-import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
+import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissable.vue';
+import { Meta } from '../../../../_common/meta/meta-service';
+import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { Component } from 'vue-property-decorator';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';

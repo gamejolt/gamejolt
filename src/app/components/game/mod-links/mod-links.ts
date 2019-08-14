@@ -1,11 +1,10 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { Api } from '../../../../_common/api/api.service';
+import { Environment } from '../../../../_common/environment/environment.service';
+import { Game } from '../../../../_common/game/game.model';
+import { Growls } from '../../../../_common/growls/growls.service';
+import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 @Component({
 	components: {

@@ -1,10 +1,7 @@
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import AppUserCard from 'game-jolt-frontend-lib/components/user/card/card.vue';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppUserCard from '../../../../_common/user/card/card.vue';
+import { number } from '../../../../_common/filters/number';
 import { Component } from 'vue-property-decorator';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import AppActivityFeed from '../../../components/activity/feed/feed.vue';

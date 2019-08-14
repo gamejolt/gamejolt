@@ -1,12 +1,12 @@
-import AppFormControlCrop from 'game-jolt-frontend-lib/components/form-vue/control/crop/crop.vue';
-import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
-import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
+import AppFormControlCrop from '../../../../../_common/form-vue/control/crop/crop.vue';
+import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
+import AppForm from '../../../../../_common/form-vue/form';
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
 	FormOnLoad,
-} from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+} from '../../../../../_common/form-vue/form.service';
+import { Game } from '../../../../../_common/game/game.model';
 import { Component, Watch } from 'vue-property-decorator';
 
 type FormModel = Game & {

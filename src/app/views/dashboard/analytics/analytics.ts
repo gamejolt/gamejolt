@@ -1,22 +1,19 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import { GameRelease } from 'game-jolt-frontend-lib/components/game/release/release.model';
-import AppGraph from 'game-jolt-frontend-lib/components/graph/graph.vue';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
-import { AppScrollTo } from 'game-jolt-frontend-lib/components/scroll/to/to.directive';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
-import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
-import { date as dateFilter } from 'game-jolt-frontend-lib/vue/filters/date';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Api } from '../../../../_common/api/api.service';
+import AppExpand from '../../../../_common/expand/expand.vue';
+import { Game } from '../../../../_common/game/game.model';
+import { GamePackage } from '../../../../_common/game/package/package.model';
+import { GameRelease } from '../../../../_common/game/release/release.model';
+import AppGraph from '../../../../_common/graph/graph.vue';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollAffix from '../../../../_common/scroll/affix/affix.vue';
+import { AppScrollTo } from '../../../../_common/scroll/to/to.directive';
+import { User } from '../../../../_common/user/user.model';
+import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
+import AppLoading from '../../../../_common/loading/loading.vue';
+import { currency } from '../../../../_common/filters/currency';
+import { date as dateFilter } from '../../../../_common/filters/date';
+import { number } from '../../../../_common/filters/number';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
@@ -82,9 +79,7 @@ import {
 		query: ['viewAs', 'partner', 'period', 'year', 'month'],
 	},
 	resolver: ({ route }) =>
-		Api.sendRequest(
-			'/web/dash/analytics/' + route.params.resource + '/' + route.params.resourceId
-		),
+		Api.sendRequest('/web/dash/analytics/' + route.params.resource + '/' + route.params.resourceId),
 })
 export default class RouteDashAnalytics extends BaseRouteComponent {
 	@State
@@ -331,10 +326,7 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 							this.$gettext('Revenue from Partners'),
 							...ReportPartnerGeneratedRevenue
 						);
-						this.pullReport(
-							this.$gettext('Top Profitable Partners'),
-							...ReportTopPartnerRevenue
-						);
+						this.pullReport(this.$gettext('Top Profitable Partners'), ...ReportTopPartnerRevenue);
 					} else {
 						this.pullReport(this.$gettext('Revenue Stats'), ...ReportPartnerRevenue);
 					}
@@ -395,24 +387,15 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 				case 'revenue':
 					if (!this.partnerMode) {
 						this.pullReport(this.$gettext('Revenue Stats'), ...ReportDevRevenue);
-						this.pullReport(
-							this.$gettext('Top Profitable Games'),
-							...ReportTopGameRevenue
-						);
+						this.pullReport(this.$gettext('Top Profitable Games'), ...ReportTopGameRevenue);
 						this.pullReport(
 							this.$gettext('Revenue from Partners'),
 							...ReportPartnerGeneratedRevenue
 						);
-						this.pullReport(
-							this.$gettext('Top Profitable Partners'),
-							...ReportTopPartnerRevenue
-						);
+						this.pullReport(this.$gettext('Top Profitable Partners'), ...ReportTopPartnerRevenue);
 					} else {
 						this.pullReport(this.$gettext('Revenue Stats'), ...ReportPartnerRevenue);
-						this.pullReport(
-							this.$gettext('Top Profitable Games'),
-							...ReportTopGamePartnerRevenue
-						);
+						this.pullReport(this.$gettext('Top Profitable Games'), ...ReportTopGamePartnerRevenue);
 					}
 					break;
 			}

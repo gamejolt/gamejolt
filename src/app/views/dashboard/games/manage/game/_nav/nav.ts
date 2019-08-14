@@ -1,5 +1,5 @@
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
+import { Game } from '../../../../../../../_common/game/game.model';
+import { AppStore } from '../../../../../../../_common/store/app-store';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';

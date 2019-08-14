@@ -1,4 +1,4 @@
-import AppScrollScroller from 'game-jolt-frontend-lib/components/scroll/scroller/scroller.vue';
+import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { TagsInfo } from '../tags-info.service';

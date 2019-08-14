@@ -1,16 +1,13 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue'
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Api } from '../../../../../_common/api/api.service';
+import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
+import { Growls } from '../../../../../_common/growls/growls.service';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { Translate } from '../../../../../_common/translate/translate.service';
+import { User } from '../../../../../_common/user/user.model';
+import { currency } from '../../../../../_common/filters/currency';
+import { number } from '../../../../../_common/filters/number';
 import { Component } from 'vue-property-decorator';
 import FormWithdrawFunds from '../../../../components/forms/withdraw-funds/withdraw-funds.vue';
 import { routeStore, RouteStore, RouteStoreModule } from '../account.store';

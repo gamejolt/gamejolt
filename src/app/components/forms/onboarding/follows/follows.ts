@@ -1,13 +1,8 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import {
-	FormOnBeforeSubmit,
-	FormOnLoad,
-} from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import Onboarding, {
-	OnboardingStep,
-} from 'game-jolt-frontend-lib/components/onboarding/onboarding.service';
-import AppScrollScroller from 'game-jolt-frontend-lib/components/scroll/scroller/scroller.vue';
+import { Api } from '../../../../../_common/api/api.service';
+import { Community } from '../../../../../_common/community/community.model';
+import { FormOnBeforeSubmit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
+import Onboarding, { OnboardingStep } from '../../../../../_common/onboarding/onboarding.service';
+import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import { Component } from 'vue-property-decorator';
 import OnboardingComponent from '../base';
 import AppOnboardingFollowsCommunityItem from './community-item/community-item.vue';

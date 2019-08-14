@@ -1,23 +1,20 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
-import { ReportModal } from 'game-jolt-frontend-lib/components/report/modal/modal.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-store';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
-import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow/widget.vue';
-import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';
-import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
-import AppUserVerifiedTick from 'game-jolt-frontend-lib/components/user/verified-tick/verified-tick.vue';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Api } from '../../../_common/api/api.service';
+import { CommentModal } from '../../../_common/comment/modal/modal.service';
+import { Environment } from '../../../_common/environment/environment.service';
+import AppPopper from '../../../_common/popper/popper.vue';
+import { ReportModal } from '../../../_common/report/modal/modal.service';
+import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { WithRouteStore } from '../../../_common/route/route-store';
+import { Screen } from '../../../_common/screen/screen-service';
+import { ThemeMutation, ThemeStore } from '../../../_common/theme/theme.store';
+import { AppTimeAgo } from '../../../_common/time/ago/ago';
+import { AppTooltip } from '../../../_common/tooltip/tooltip';
+import { Translate } from '../../../_common/translate/translate.service';
+import AppUserFollowWidget from '../../../_common/user/follow/widget.vue';
+import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
+import AppUserAvatar from '../../../_common/user/user-avatar/user-avatar.vue';
+import AppUserVerifiedTick from '../../../_common/user/verified-tick/verified-tick.vue';
+import { number } from '../../../_common/filters/number';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { IntentService } from '../../components/intent/intent.service';

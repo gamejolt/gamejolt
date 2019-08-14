@@ -1,8 +1,11 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { Api } from '../../../../../../../_common/api/api.service';
+import { Growls } from '../../../../../../../_common/growls/growls.service';
+import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../../../_common/route/route-component';
+import AppJolticon from '../../../../../../../_common/jolticon/jolticon.vue';
 import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 

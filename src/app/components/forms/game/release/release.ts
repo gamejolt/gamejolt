@@ -1,28 +1,25 @@
 import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
-import AppCardList from 'game-jolt-frontend-lib/components/card/list/list.vue';
-import AppFormControlDate from 'game-jolt-frontend-lib/components/form-vue/control/date/date.vue';
-import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
+import AppCardList from '../../../../../_common/card/list/list.vue';
+import AppFormControlDate from '../../../../../_common/form-vue/control/date/date.vue';
+import AppForm from '../../../../../_common/form-vue/form';
 import {
 	BaseForm,
 	FormOnInit,
 	FormOnLoad,
 	FormOnSubmitSuccess,
-} from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import AppFormLegend from 'game-jolt-frontend-lib/components/form-vue/legend/legend.vue';
-import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
-import { GameBuildLaunchOption } from 'game-jolt-frontend-lib/components/game/build/launch-option/launch-option.model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import { GameRelease } from 'game-jolt-frontend-lib/components/game/release/release.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import {
-	Timezone,
-	TimezoneData,
-} from 'game-jolt-frontend-lib/components/timezone/timezone.service';
-import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+} from '../../../../../_common/form-vue/form.service';
+import AppFormLegend from '../../../../../_common/form-vue/legend/legend.vue';
+import { GameBuild } from '../../../../../_common/game/build/build.model';
+import { GameBuildLaunchOption } from '../../../../../_common/game/build/launch-option/launch-option.model';
+import { Game } from '../../../../../_common/game/game.model';
+import { GamePackage } from '../../../../../_common/game/package/package.model';
+import { GameRelease } from '../../../../../_common/game/release/release.model';
+import { Growls } from '../../../../../_common/growls/growls.service';
+import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
+import { arrayRemove } from '../../../../../utils/array';
+import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
 import { determine } from 'jstimezonedetect';
 import { Component, Prop } from 'vue-property-decorator';
 import FormGameBuildTS from '../build/build';
@@ -131,10 +128,7 @@ export default class FormGameRelease extends BaseForm<GameReleaseFormModel>
 	updateBuildLaunchOptions(build: GameBuild, launchOptions: GameBuildLaunchOption[]) {
 		// Remove old ones for build.
 		if (this.launchOptions && this.launchOptions.length) {
-			arrayRemove(
-				this.launchOptions,
-				launchOption => launchOption.game_build_id === build.id
-			);
+			arrayRemove(this.launchOptions, launchOption => launchOption.game_build_id === build.id);
 		}
 
 		// If no new ones, skip.

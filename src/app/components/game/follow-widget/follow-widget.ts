@@ -1,12 +1,12 @@
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { UserFollowSuggestion } from 'game-jolt-frontend-lib/components/user/follow/suggestion.service';
-import AppUserFollowWidget from 'game-jolt-frontend-lib/components/user/follow/widget.vue';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
+import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { Game } from '../../../../_common/game/game.model';
+import { Growls } from '../../../../_common/growls/growls.service';
+import AppPopper from '../../../../_common/popper/popper.vue';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
+import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
+import { number } from '../../../../_common/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
@@ -111,9 +111,7 @@ export default class AppGameFollowWidget extends Vue {
 			try {
 				await this.game.$follow();
 			} catch (e) {
-				Growls.error(
-					this.$gettext('Something has prevented you from following this game.')
-				);
+				Growls.error(this.$gettext('Something has prevented you from following this game.'));
 			}
 		} else {
 			try {

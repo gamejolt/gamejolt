@@ -1,11 +1,8 @@
-import AppCard from 'game-jolt-frontend-lib/components/card/card.vue';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import AppCard from '../../../_common/card/card.vue';
+import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { Screen } from '../../../_common/screen/screen-service';
+import { AppTooltip } from '../../../_common/tooltip/tooltip';
+import { User } from '../../../_common/user/user.model';
 import { Component } from 'vue-property-decorator';
 import AppWeplayLogo from '../../components/weplay/logo/logo.vue';
 

@@ -1,11 +1,10 @@
-import AppCard from 'game-jolt-frontend-lib/components/card/card.vue';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import AppCard from '../../../../../_common/card/card.vue';
+import { Game } from '../../../../../_common/game/game.model';
+import { Growls } from '../../../../../_common/growls/growls.service';
+import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { GameDevStageSelectorConfirmModal } from './confirm-service';
-
 
 @Component({
 	components: {

@@ -1,19 +1,16 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import AppGameThumbnailImg from 'game-jolt-frontend-lib/components/game/thumbnail-img/thumbnail-img.vue'
-import { Geo } from 'game-jolt-frontend-lib/components/geo/geo.service';
-import { Order } from 'game-jolt-frontend-lib/components/order/order.model';
-import { OrderPayment } from 'game-jolt-frontend-lib/components/order/payment/payment.model';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { arrayGroupBy, arrayIndexBy } from 'game-jolt-frontend-lib/utils/array';
-import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
-import { date } from 'game-jolt-frontend-lib/vue/filters/date';
+import { Api } from '../../../../../../_common/api/api.service';
+import { Game } from '../../../../../../_common/game/game.model';
+import { GamePackage } from '../../../../../../_common/game/package/package.model';
+import AppGameThumbnailImg from 'game-jolt-frontend-lib/components/game/thumbnail-img/thumbnail-img.vue';
+import { Geo } from '../../../../../../_common/geo/geo.service';
+import { Order } from '../../../../../../_common/order/order.model';
+import { OrderPayment } from '../../../../../../_common/order/payment/payment.model';
+import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import { Screen } from '../../../../../../_common/screen/screen-service';
+import { Translate } from '../../../../../../_common/translate/translate.service';
+import { arrayGroupBy, arrayIndexBy } from '../../../../../../utils/array';
+import { currency } from '../../../../../../_common/filters/currency';
+import { date } from '../../../../../../_common/filters/date';
 import { Component } from 'vue-property-decorator';
 import { routeStore, RouteStore, RouteStoreModule } from '../../account.store';
 

@@ -1,5 +1,5 @@
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
+import AppJolticon from '../../../../../../../_common/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 

@@ -1,10 +1,10 @@
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import AppPagination from 'game-jolt-frontend-lib/components/pagination/pagination.vue';
-import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
-import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-store';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import AppExpand from '../../../_common/expand/expand.vue';
+import AppPagination from '../../../_common/pagination/pagination.vue';
+import { BaseRouteComponent } from '../../../_common/route/route-component';
+import { WithRouteStore } from '../../../_common/route/route-store';
+import { Screen } from '../../../_common/screen/screen-service';
+import { Scroll } from '../../../_common/scroll/scroll.service';
+import { number } from '../../../_common/filters/number';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppPageHeader from '../../components/page-header/page-header.vue';

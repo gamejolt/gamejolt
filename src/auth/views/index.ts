@@ -1,4 +1,4 @@
-import { initRouter } from 'game-jolt-frontend-lib/utils/router';
+import { initRouter } from '../../utils/router';
 import { store } from '../store/index';
 import { routeAuth } from './auth/auth.route';
 

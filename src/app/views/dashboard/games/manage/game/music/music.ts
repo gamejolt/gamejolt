@@ -1,13 +1,16 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppCardListAdd from 'game-jolt-frontend-lib/components/card/list/add/add.vue';
-import AppCardListDraggable from 'game-jolt-frontend-lib/components/card/list/draggable/draggable.vue';
-import AppCardListItem from 'game-jolt-frontend-lib/components/card/list/item/item.vue';
-import AppCardList from 'game-jolt-frontend-lib/components/card/list/list.vue';
-import { GameSong } from 'game-jolt-frontend-lib/components/game/song/song.model';
-import AppLoadingFade from 'game-jolt-frontend-lib/components/loading/fade/fade.vue';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
+import { Api } from '../../../../../../../_common/api/api.service';
+import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
+import AppCardListDraggable from '../../../../../../../_common/card/list/draggable/draggable.vue';
+import AppCardListItem from '../../../../../../../_common/card/list/item/item.vue';
+import AppCardList from '../../../../../../../_common/card/list/list.vue';
+import { GameSong } from '../../../../../../../_common/game/song/song.model';
+import AppLoadingFade from '../../../../../../../_common/loading/fade/fade.vue';
+import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../../../_common/route/route-component';
+import { arrayRemove } from '../../../../../../../utils/array';
 import { Component } from 'vue-property-decorator';
 import FormGameSong from '../../../../../../components/forms/game/song/song.vue';
 import AppDashGameWizardControls from '../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';

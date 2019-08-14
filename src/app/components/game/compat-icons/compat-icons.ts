@@ -1,8 +1,7 @@
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { Game } from '../../../../_common/game/game.model';
+import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 const compatMapping: any = {
 	os_windows: 'windows',

@@ -1,5 +1,5 @@
-import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { Scroll } from '../../../../_common/scroll/scroll.service';
+import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { BannerModule, BannerStore } from '../../../store';

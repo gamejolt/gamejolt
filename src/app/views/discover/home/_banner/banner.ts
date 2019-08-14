@@ -1,7 +1,7 @@
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import { Jam } from 'game-jolt-frontend-lib/components/jam/jam.model';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppTheme } from 'game-jolt-frontend-lib/components/theme/theme';
+import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
+import { Jam } from '../../../../../_common/jam/jam.model';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import { AppTheme } from '../../../../../_common/theme/theme';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Location } from 'vue-router';

@@ -1,8 +1,8 @@
-import AppFormButton from 'game-jolt-frontend-lib/components/form-vue/button/button.vue';
-import AppFormTS from 'game-jolt-frontend-lib/components/form-vue/form';
-import AppForm from 'game-jolt-frontend-lib/components/form-vue/form.vue';
-import { findVueParent } from 'game-jolt-frontend-lib/utils/vue';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import AppFormButton from '../../../../../_common/form-vue/button/button.vue';
+import AppFormTS from '../../../../../_common/form-vue/form';
+import AppForm from '../../../../../_common/form-vue/form.vue';
+import { findVueParent } from '../../../../../utils/vue';
+import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';

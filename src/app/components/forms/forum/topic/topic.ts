@@ -1,7 +1,7 @@
-import AppFormControlContent from 'game-jolt-frontend-lib/components/form-vue/control/content/content.vue';
-import { BaseForm, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { ForumChannel } from 'game-jolt-frontend-lib/components/forum/channel/channel.model';
-import { ForumTopic } from 'game-jolt-frontend-lib/components/forum/topic/topic.model';
+import AppFormControlContent from '../../../../../_common/form-vue/control/content/content.vue';
+import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
+import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
+import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
 import { Component, Prop } from 'vue-property-decorator';
 
 @Component({

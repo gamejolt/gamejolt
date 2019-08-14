@@ -1,7 +1,7 @@
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
-import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
+import { Community } from '../../../../_common/community/community.model';
+import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { Modal } from '../../../../_common/modal/modal.service';
+import { asyncComponentLoader } from '../../../../utils/utils';
 
 export type PostEditModalOptions = {
 	community?: Community;
@@ -13,9 +13,7 @@ export class PostEditModal {
 		return await Modal.show<FiresidePost>({
 			modalId: 'PostEdit',
 			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "PostEditModal" */ './edit-modal.vue')
-				),
+				asyncComponentLoader(import(/* webpackChunkName: "PostEditModal" */ './edit-modal.vue')),
 			noBackdropClose: true,
 			noEscClose: true,
 			size: 'sm',

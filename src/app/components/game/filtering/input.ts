@@ -1,9 +1,8 @@
-import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import { Analytics } from '../../../../_common/analytics/analytics.service';
+import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { GameFilteringContainer } from './container';
-
 
 @Component({
 	components: {

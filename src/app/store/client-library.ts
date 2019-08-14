@@ -1,20 +1,33 @@
-import { Config, getExecutable, Launcher, LaunchInstance, OldLaunchInstance, Patcher, PatchEvents, PatchInstance, Queue, Rollbacker, State as PatcherState, Uninstaller } from 'client-voodoo';
+import {
+	Config,
+	getExecutable,
+	Launcher,
+	LaunchInstance,
+	OldLaunchInstance,
+	Patcher,
+	PatchEvents,
+	PatchInstance,
+	Queue,
+	Rollbacker,
+	State as PatcherState,
+	Uninstaller,
+} from 'client-voodoo';
 import * as fs from 'fs';
-import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
-import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
-import { GameBuildLaunchOption } from 'game-jolt-frontend-lib/components/game/build/launch-option/launch-option.model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import { GameRelease } from 'game-jolt-frontend-lib/components/game/release/release.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { HistoryTick } from 'game-jolt-frontend-lib/components/history-tick/history-tick-service';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { arrayGroupBy, arrayIndexBy, arrayRemove } from 'game-jolt-frontend-lib/utils/array';
-import { fuzzysearch } from 'game-jolt-frontend-lib/utils/string';
-import { isErrnoException } from 'game-jolt-frontend-lib/utils/utils';
-import { VuexAction, VuexGetter, VuexModule, VuexMutation, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
+import { Analytics } from '../../_common/analytics/analytics.service';
+import { Api } from '../../_common/api/api.service';
+import { Device } from '../../_common/device/device.service';
+import { GameBuild } from '../../_common/game/build/build.model';
+import { GameBuildLaunchOption } from '../../_common/game/build/launch-option/launch-option.model';
+import { Game } from '../../_common/game/game.model';
+import { GamePackage } from '../../_common/game/package/package.model';
+import { GameRelease } from '../../_common/game/release/release.model';
+import { Growls } from '../../_common/growls/growls.service';
+import { HistoryTick } from '../../_common/history-tick/history-tick-service';
+import { Translate } from '../../_common/translate/translate.service';
+import { arrayGroupBy, arrayIndexBy, arrayRemove } from '../../utils/array';
+import { fuzzysearch } from '../../utils/string';
+import { isErrnoException } from '../../utils/utils';
+import { VuexAction, VuexGetter, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import * as path from 'path';
 import Vue from 'vue';
 import { Action, Mutation, namespace, State } from 'vuex-class';
@@ -22,7 +35,14 @@ import { Settings } from '../../_common/settings/settings.service';
 import { ClientAntiVirusModal } from '../components/client/anti-virus-modal/anti-virus-modal.service';
 import { LocalDbGame } from '../components/client/local-db/game/game.model';
 import { LocalDb } from '../components/client/local-db/local-db.service';
-import { LocalDbPackage, LocalDbPackagePatchState, LocalDbPackagePid, LocalDbPackageProgress, LocalDbPackageRemoveState, LocalDbPackageRunState } from '../components/client/local-db/package/package.model';
+import {
+	LocalDbPackage,
+	LocalDbPackagePatchState,
+	LocalDbPackagePid,
+	LocalDbPackageProgress,
+	LocalDbPackageRemoveState,
+	LocalDbPackageRunState,
+} from '../components/client/local-db/package/package.model';
 
 export const ClientLibraryState = namespace('clientLibrary', State);
 export const ClientLibraryAction = namespace('clientLibrary', Action);
@@ -412,10 +432,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			});
 
 			patchBegun = true;
-			trackClientVoodooOperation(
-				operation === 'install' ? 'install-begin' : 'update-begin',
-				true
-			);
+			trackClientVoodooOperation(operation === 'install' ? 'install-begin' : 'update-begin', true);
 
 			const canceled = await new Promise<boolean>((resolve, reject) => {
 				this.setCurrentlyPatching([localPackage, patchInstance]);
@@ -459,15 +476,9 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 									this.setPackageDownloadProgress([localPackage, null]);
 
 									if (localPackage.install_state) {
-										this.setPackageInstallState([
-											localPackage,
-											LocalDbPackagePatchState.UNPACKING,
-										]);
+										this.setPackageInstallState([localPackage, LocalDbPackagePatchState.UNPACKING]);
 									} else if (localPackage.update_state) {
-										this.setPackageUpdateState([
-											localPackage,
-											LocalDbPackagePatchState.UNPACKING,
-										]);
+										this.setPackageUpdateState([localPackage, LocalDbPackagePatchState.UNPACKING]);
 									}
 									break;
 							}
@@ -490,9 +501,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 								),
 
 								// divide by 1024 to convert to kbps
-								rate: progress.sample
-									? Math.round(progress.sample.movingAverage / 1024)
-									: 0,
+								rate: progress.sample ? Math.round(progress.sample.movingAverage / 1024) : 0,
 							};
 
 							if (progressType === 'download') {
@@ -506,8 +515,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 						'paused',
 						(listeners.paused = queued => {
 							console.log(
-								'Pause received in gamejolt repo. From queue: ' +
-									(queued ? 'yes' : 'no')
+								'Pause received in gamejolt repo. From queue: ' + (queued ? 'yes' : 'no')
 							);
 
 							if (queued) {
@@ -521,8 +529,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 						'resumed',
 						(listeners.resumed = unqueued => {
 							console.log(
-								'Resume received in gamejolt repo. From queue: ' +
-									(unqueued ? 'yes' : 'no')
+								'Resume received in gamejolt repo. From queue: ' + (unqueued ? 'yes' : 'no')
 							);
 
 							if (unqueued) {
@@ -556,9 +563,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 						(listeners.fatal = err => {
 							cleanupListeners();
 
-							console.log(
-								'Received fatal error in patcher in gamejolt repo: ' + err.message
-							);
+							console.log('Received fatal error in patcher in gamejolt repo: ' + err.message);
 							reject(err);
 						})
 					);
@@ -567,10 +572,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			this.unsetCurrentlyPatching(localPackage);
 
 			// Even if our patch operation has been canceled - as far as the installation flow is concerned it was a success.
-			trackClientVoodooOperation(
-				operation === 'install' ? 'install-end' : 'update-end',
-				true
-			);
+			trackClientVoodooOperation(operation === 'install' ? 'install-end' : 'update-end', true);
 
 			if (!canceled) {
 				if (localPackage.install_state) {
@@ -580,9 +582,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				}
 
 				const action =
-					operation === 'install'
-						? 'finished installing'
-						: 'updated to the latest version';
+					operation === 'install' ? 'finished installing' : 'updated to the latest version';
 				const title = operation === 'install' ? 'Game Installed' : 'Game Updated';
 				Growls.success({ title, message: `${packageTitle} has ${action}.`, system: true });
 			} else {
@@ -601,10 +601,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 					// Calling uninstall normally attempts to spawn a client voodoo uninstall instance.
 					// Override that because the uninstallation should be done automatically by the installation process.
-					await this.packageUninstall([
-						localPackage,
-						{ dbOnly: true, notifications: true },
-					]);
+					await this.packageUninstall([localPackage, { dbOnly: true, notifications: true }]);
 				} else {
 					console.log(
 						'installerInstall: This is an update operation. Attempting to rollback with installerRollback'
@@ -659,10 +656,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 
 			if (localPackage.install_state) {
 				if (localPackage.install_state === LocalDbPackagePatchState.UNPACKING) {
-					await this.setPackageInstallState([
-						localPackage,
-						LocalDbPackagePatchState.UNPACK_FAILED,
-					]);
+					await this.setPackageInstallState([localPackage, LocalDbPackagePatchState.UNPACK_FAILED]);
 				} else {
 					await this.setPackageInstallState([
 						localPackage,
@@ -671,10 +665,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				}
 			} else if (localPackage.update_state) {
 				if (localPackage.update_state === LocalDbPackagePatchState.UNPACKING) {
-					await this.setPackageUpdateState([
-						localPackage,
-						LocalDbPackagePatchState.UNPACK_FAILED,
-					]);
+					await this.setPackageUpdateState([localPackage, LocalDbPackagePatchState.UNPACK_FAILED]);
 				} else {
 					await this.setPackageUpdateState([
 						localPackage,
@@ -805,10 +796,9 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 					handleClientVoodooError(
 						err,
 						uninstallOp,
-						Translate.$gettextInterpolate(
-							'Could not stop the installation of %{ packageTitle }.',
-							{ packageTitle }
-						)
+						Translate.$gettextInterpolate('Could not stop the installation of %{ packageTitle }.', {
+							packageTitle,
+						})
 					);
 				} else {
 					handleClientVoodooError(
@@ -1076,9 +1066,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		}
 
 		const pkg = (data.packages as GamePackage[]).find(a => a.id === localPackage.id);
-		const release = (data.releases as GameRelease[]).find(
-			a => a.id === localPackage.release.id
-		);
+		const release = (data.releases as GameRelease[]).find(a => a.id === localPackage.release.id);
 		const build = (data.builds as GameBuild[]).find(a => a.id === localPackage.build.id);
 		const launchOptions = (data.launchOptions as GameBuildLaunchOption[]).filter(
 			a => a.game_build_id === localPackage.build.id
@@ -1088,9 +1076,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		if (!pkg || !release || !build) {
 			throw new Error(
 				`Package ${localPackage.id} is no longer valid. ` +
-					`The payload did not contain the package, it's release (${
-						localPackage.release.id
-					})` +
+					`The payload did not contain the package, it's release (${localPackage.release.id})` +
 					` or it's build (${localPackage.build.id})`
 			);
 		}
@@ -1162,13 +1148,9 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			return false;
 		}
 
-		const response = await Api.sendRequest(
-			`/web/client/get-build-for-update/${newBuildId}`,
-			null,
-			{
-				detach: true,
-			}
-		);
+		const response = await Api.sendRequest(`/web/client/get-build-for-update/${newBuildId}`, null, {
+			detach: true,
+		});
 
 		if (!response || !response.package) {
 			return false;
@@ -1209,9 +1191,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		// No need to save to the DB.
 		let currentlyUninstalling = this.currentlyUninstalling[localPackage.id];
 		if (currentlyUninstalling) {
-			console.log(
-				'packageUninstall: already handling an uninstallation for this package. noop.'
-			);
+			console.log('packageUninstall: already handling an uninstallation for this package. noop.');
 			return currentlyUninstalling;
 		}
 
@@ -1252,24 +1232,15 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 				// We refetch from db because if canceling a first installation it might remove the local game from the db.
 				localGame = this.db.games.get(localPackage.game_id)!;
 
-				const packageTitle =
-					localPackage.title || (localGame ? localGame.title : 'the package');
+				const packageTitle = localPackage.title || (localGame ? localGame.title : 'the package');
 
 				// Make sure we're clean.
 				await this.clearPackageOperations(localPackage);
-				await this.setPackageRemoveState([
-					localPackage,
-					LocalDbPackageRemoveState.REMOVING,
-				]);
+				await this.setPackageRemoveState([localPackage, LocalDbPackageRemoveState.REMOVING]);
 
 				// Skip removing the package if we don't want to actually uninstall from disk.
 				if (!dbOnly) {
-					await this.doUninstall(
-						localPackage,
-						packageTitle,
-						withNotifications,
-						wasInstalling
-					);
+					await this.doUninstall(localPackage, packageTitle, withNotifications, wasInstalling);
 				}
 
 				// Get the number of packages in this game.
@@ -1298,8 +1269,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 							title: 'Package Removed',
 							message:
 								'Removed ' +
-								(localPackage.title ||
-									(localGame ? localGame.title : 'the package')) +
+								(localPackage.title || (localGame ? localGame.title : 'the package')) +
 								' from your computer.',
 							system: true,
 						});
@@ -1308,17 +1278,13 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 							title: 'Installation Canceled',
 							message:
 								'Canceled installation of ' +
-								(localPackage.title ||
-									(localGame ? localGame.title : 'the package')),
+								(localPackage.title || (localGame ? localGame.title : 'the package')),
 							system: true,
 						});
 					}
 				}
 			} catch (err) {
-				await this.setPackageRemoveState([
-					localPackage,
-					LocalDbPackageRemoveState.REMOVE_FAILED,
-				]);
+				await this.setPackageRemoveState([localPackage, LocalDbPackageRemoveState.REMOVE_FAILED]);
 			} finally {
 				this.unsetCurrentlyUninstalling(localPackage);
 			}
@@ -1334,10 +1300,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexAction
-	async setPackageInstallState([localPackage, state]: [
-		LocalDbPackage,
-		LocalDbPackagePatchState
-	]) {
+	async setPackageInstallState([localPackage, state]: [LocalDbPackage, LocalDbPackagePatchState]) {
 		await this.setPackageData([localPackage, { install_state: state }]);
 	}
 
@@ -1462,10 +1425,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 	}
 
 	@VuexAction
-	async setPackageRemoveState([localPackage, state]: [
-		LocalDbPackage,
-		LocalDbPackageRemoveState
-	]) {
+	async setPackageRemoveState([localPackage, state]: [LocalDbPackage, LocalDbPackageRemoveState]) {
 		await this.setPackageData([localPackage, { remove_state: state }]);
 	}
 

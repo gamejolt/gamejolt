@@ -1,4 +1,4 @@
-import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
+import { BaseModal } from '../../../../_common/modal/base';
 import { Component, Prop } from 'vue-property-decorator';
 
 @Component({})

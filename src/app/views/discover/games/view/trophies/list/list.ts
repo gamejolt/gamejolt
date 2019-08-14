@@ -1,12 +1,12 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { GameTrophy } from 'game-jolt-frontend-lib/components/game/trophy/trophy.model';
-import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
+import { Api } from '../../../../../../../_common/api/api.service';
+import { GameTrophy } from '../../../../../../../_common/game/trophy/trophy.model';
+import AppNavTabList from '../../../../../../../_common/nav/tab-list/tab-list.vue';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { UserGameTrophy } from 'game-jolt-frontend-lib/components/user/game-trophy/game-trophy.model';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+} from '../../../../../../../_common/route/route-component';
+import { UserGameTrophy } from '../../../../../../../_common/user/game-trophy/game-trophy.model';
+import { number } from '../../../../../../../_common/filters/number';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppTrophyCompletion from '../../../../../../components/trophy/completion/completion.vue';

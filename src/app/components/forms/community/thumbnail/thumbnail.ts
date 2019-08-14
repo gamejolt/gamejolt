@@ -1,14 +1,14 @@
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import AppFormControlCrop from 'game-jolt-frontend-lib/components/form-vue/control/crop/crop.vue';
-import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
-import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
-import AppFormTS from 'game-jolt-frontend-lib/components/form-vue/form';
+import { Community } from '../../../../../_common/community/community.model';
+import AppFormControlCrop from '../../../../../_common/form-vue/control/crop/crop.vue';
+import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
+import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
+import AppFormTS from '../../../../../_common/form-vue/form';
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
 	FormOnLoad,
-} from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { filesize } from 'game-jolt-frontend-lib/vue/filters/filesize';
+} from '../../../../../_common/form-vue/form.service';
+import { filesize } from '../../../../../_common/filters/filesize';
 import { Component, Watch } from 'vue-property-decorator';
 
 type FormModel = Community & {

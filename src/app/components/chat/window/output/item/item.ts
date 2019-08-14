@@ -1,6 +1,6 @@
-import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import { date } from 'game-jolt-frontend-lib/vue/filters/date';
+import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
+import AppJolticon from '../../../../../../_common/jolticon/jolticon.vue';
+import { date } from '../../../../../../_common/filters/date';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
@@ -8,7 +8,6 @@ import { ChatClient } from '../../../client';
 import { ChatMessage } from '../../../message';
 import { ChatRoom } from '../../../room';
 import './item-content.styl';
-
 
 @Component({
 	components: {

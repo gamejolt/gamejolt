@@ -1,10 +1,9 @@
-import AppCard from 'game-jolt-frontend-lib/components/card/card.vue';
-import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
-import { Site } from 'game-jolt-frontend-lib/components/site/site-model';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import AppCard from '../../../../_common/card/card.vue';
+import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
+import { Site } from '../../../../_common/site/site-model';
+import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 @Component({
 	components: {

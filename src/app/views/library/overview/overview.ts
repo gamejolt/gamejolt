@@ -1,6 +1,6 @@
-import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
-import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { Connection } from '../../../../_common/connection/connection-service';
+import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { GameCollection } from '../../../components/game/collection/collection.model';

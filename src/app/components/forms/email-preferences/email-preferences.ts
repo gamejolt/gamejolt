@@ -1,9 +1,12 @@
-import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
-import { BaseForm, FormOnBeforeSubmit, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import AppLoadingFade from 'game-jolt-frontend-lib/components/loading/fade/fade.vue';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
+import {
+	BaseForm,
+	FormOnBeforeSubmit,
+	FormOnInit,
+} from '../../../../_common/form-vue/form.service';
+import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
+import { User } from '../../../../_common/user/user.model';
 import { Component } from 'vue-property-decorator';
-
 
 interface FormModel extends User {
 	notifications: string[];

@@ -1,7 +1,7 @@
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { AppProgressPoller } from 'game-jolt-frontend-lib/components/progress/poller/poller';
-import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
+import { Growls } from '../../../../_common/growls/growls.service';
+import { AppProgressPoller } from '../../../../_common/progress/poller/poller';
+import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import AppLoading from '../../../../_common/loading/loading.vue';
 import { Component } from 'vue-property-decorator';
 import * as _ClientMod from '../../../../_common/client/client.service';
 

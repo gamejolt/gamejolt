@@ -1,15 +1,15 @@
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
-import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import AppGamePackageCard from 'game-jolt-frontend-lib/components/game/package/card/card.vue';
-import { GamePackagePayloadModel } from 'game-jolt-frontend-lib/components/game/package/package-payload.model';
-import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
-import { arrayIndexBy } from 'game-jolt-frontend-lib/utils/array';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
-import { filesize } from 'game-jolt-frontend-lib/vue/filters/filesize';
+import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
+import { Api } from '../../../../_common/api/api.service';
+import { Device } from '../../../../_common/device/device.service';
+import { GameBuild } from '../../../../_common/game/build/build.model';
+import { Game } from '../../../../_common/game/game.model';
+import AppGamePackageCard from '../../../../_common/game/package/card/card.vue';
+import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
+import { BaseModal } from '../../../../_common/modal/base';
+import { arrayIndexBy } from '../../../../utils/array';
+import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
+import AppLoading from '../../../../_common/loading/loading.vue';
+import { filesize } from '../../../../_common/filters/filesize';
 import { Component, Prop } from 'vue-property-decorator';
 import { ClientLibraryAction, ClientLibraryStore } from '../../../store/client-library';
 

@@ -1,14 +1,13 @@
-import AppEditableOverlay from 'game-jolt-frontend-lib/components/editable-overlay/editable-overlay.vue';
-import AppFormControlTheme from 'game-jolt-frontend-lib/components/form-vue/control/theme/theme.vue';
-import { BaseForm } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import AppGameThumbnailImg from 'game-jolt-frontend-lib/components/game/thumbnail-img/thumbnail-img.vue';
-import { Theme } from 'game-jolt-frontend-lib/components/theme/theme.model';
-import { ThemeMutation, ThemeState, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
+import AppEditableOverlay from '../../../../../_common/editable-overlay/editable-overlay.vue';
+import AppFormControlTheme from '../../../../../_common/form-vue/control/theme/theme.vue';
+import { BaseForm } from '../../../../../_common/form-vue/form.service';
+import { Game } from '../../../../../_common/game/game.model';
+import AppGameThumbnailImg from '../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
+import { Theme } from '../../../../../_common/theme/theme.model';
+import { ThemeMutation, ThemeState, ThemeStore } from '../../../../../_common/theme/theme.store';
 import { Component, Watch } from 'vue-property-decorator';
 import { GameThumbnailModal } from '../../../game/thumbnail-modal/thumbnail-modal.service';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
-
 
 @Component({
 	components: {

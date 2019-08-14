@@ -1,10 +1,9 @@
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { UserStripeManagedAccount } from 'game-jolt-frontend-lib/components/user/stripe-managed-account/stripe-managed-account';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import { date } from 'game-jolt-frontend-lib/vue/filters/date';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
+import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
+import { date } from '../../../../../_common/filters/date';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 @Component({
 	components: {

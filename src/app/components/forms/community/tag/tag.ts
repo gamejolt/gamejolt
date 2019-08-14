@@ -1,6 +1,6 @@
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import { CommunityTag } from 'game-jolt-frontend-lib/components/community/tag/tag.model';
-import { BaseForm, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Community } from '../../../../../_common/community/community.model';
+import { CommunityTag } from '../../../../../_common/community/tag/tag.model';
+import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
 import { Component, Prop } from 'vue-property-decorator';
 
 @Component({})

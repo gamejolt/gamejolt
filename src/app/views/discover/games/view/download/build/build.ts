@@ -1,20 +1,20 @@
-import AppAdPlacement from 'game-jolt-frontend-lib/components/ad/placement/placement.vue';
-import AppAdPlaywireVideo from 'game-jolt-frontend-lib/components/ad/playwire/video.vue';
-import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { HistoryTick } from 'game-jolt-frontend-lib/components/history-tick/history-tick-service';
+import AppAdPlacement from '../../../../../../../_common/ad/placement/placement.vue';
+import AppAdPlaywireVideo from '../../../../../../../_common/ad/playwire/video.vue';
+import AppAdWidget from '../../../../../../../_common/ad/widget/widget.vue';
+import { Api } from '../../../../../../../_common/api/api.service';
+import { Environment } from '../../../../../../../_common/environment/environment.service';
+import { GameBuild } from '../../../../../../../_common/game/build/build.model';
+import { Game } from '../../../../../../../_common/game/game.model';
+import { HistoryTick } from '../../../../../../../_common/history-tick/history-tick-service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
-import { AppSocialFacebookLike } from 'game-jolt-frontend-lib/components/social/facebook/like/like';
-import { AppSocialTwitterShare } from 'game-jolt-frontend-lib/components/social/twitter/share/share';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
+} from '../../../../../../../_common/route/route-component';
+import { Screen } from '../../../../../../../_common/screen/screen-service';
+import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
+import { AppSocialFacebookLike } from '../../../../../../../_common/social/facebook/like/like';
+import { AppSocialTwitterShare } from '../../../../../../../_common/social/twitter/share/share';
+import AppLoading from '../../../../../../../_common/loading/loading.vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppGameThumbnail from '../../../../../../../_common/game/thumbnail/thumbnail.vue';

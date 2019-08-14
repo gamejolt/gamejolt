@@ -1,4 +1,4 @@
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import { ActivityFeedItem } from '../../item-service';

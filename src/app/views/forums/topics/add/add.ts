@@ -1,9 +1,9 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { ForumChannel } from 'game-jolt-frontend-lib/components/forum/channel/channel.model';
-import { ForumTopic } from 'game-jolt-frontend-lib/components/forum/topic/topic.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
+import { Api } from '../../../../../_common/api/api.service';
+import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
+import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
+import { Growls } from '../../../../../_common/growls/growls.service';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import FormForumTopic from '../../../../components/forms/forum/topic/topic.vue';

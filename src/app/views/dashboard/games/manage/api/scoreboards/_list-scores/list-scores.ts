@@ -1,10 +1,10 @@
-import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
-import { UserGameScore } from 'game-jolt-frontend-lib/components/user/game-score/game-score.model';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import { date } from 'game-jolt-frontend-lib/vue/filters/date';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { GameScoreTable } from '../../../../../../../../_common/game/score-table/score-table.model';
+import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
+import AppPopper from '../../../../../../../../_common/popper/popper.vue';
+import { UserGameScore } from '../../../../../../../../_common/user/game-score/game-score.model';
+import AppJolticon from '../../../../../../../../_common/jolticon/jolticon.vue';
+import { date } from '../../../../../../../../_common/filters/date';
+import { number } from '../../../../../../../../_common/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 

@@ -1,21 +1,21 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
+import { Api } from '../../../../_common/api/api.service';
+import AppExpand from '../../../../_common/expand/expand.vue';
+import AppForm from '../../../../_common/form-vue/form';
 import {
 	BaseForm,
 	FormOnInit,
 	FormOnLoad,
 	FormOnSubmit,
 	FormOnSubmitError,
-} from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
-import { ReferralEntry } from 'game-jolt-frontend-lib/components/referral-entry/referral-entry.model';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { UserStripeManagedAccount } from 'game-jolt-frontend-lib/components/user/stripe-managed-account/stripe-managed-account';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
+} from '../../../../_common/form-vue/form.service';
+import { Growls } from '../../../../_common/growls/growls.service';
+import { Navigate } from '../../../../_common/navigate/navigate.service';
+import { ReferralEntry } from '../../../../_common/referral-entry/referral-entry.model';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { UserStripeManagedAccount } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
+import { User } from '../../../../_common/user/user.model';
+import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
+import { currency } from '../../../../_common/filters/currency';
 import { Component } from 'vue-property-decorator';
 import AppDeveloperTerms from './developer-terms/developer-terms.vue';
 import FormFinancialsManagedAccount from './managed-account/managed-account.vue';

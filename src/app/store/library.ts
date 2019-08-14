@@ -1,11 +1,11 @@
-import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
-import { GamePlaylist } from 'game-jolt-frontend-lib/components/game-playlist/game-playlist.model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { VuexAction, VuexModule, VuexMutation, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
+import { Analytics } from '../../_common/analytics/analytics.service';
+import { GamePlaylist } from '../../_common/game-playlist/game-playlist.model';
+import { Game } from '../../_common/game/game.model';
+import { Growls } from '../../_common/growls/growls.service';
+import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
+import { Scroll } from '../../_common/scroll/scroll.service';
+import { Translate } from '../../_common/translate/translate.service';
+import { VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { namespace } from 'vuex-class';
 import { GamePlaylistSaveModal } from '../components/game-playlist/save-modal/save-modal.service';
 import { GameCollection } from '../components/game/collection/collection.model';
@@ -74,8 +74,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 	 */
 	get mainPlaylists() {
 		return this.collections.filter(
-			item =>
-				item.type !== GameCollection.TYPE_DEVELOPER && item.type !== GameCollection.TYPE_JAM
+			item => item.type !== GameCollection.TYPE_DEVELOPER && item.type !== GameCollection.TYPE_JAM
 		);
 	}
 
@@ -97,10 +96,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 
 		const jamPlaylists: GameCollection[] = this.jamPlaylists;
 		if (jamPlaylists.length) {
-			folders.jams = new GamePlaylistFolder(
-				Translate.$gettext('Followed Jams'),
-				jamPlaylists
-			);
+			folders.jams = new GamePlaylistFolder(Translate.$gettext('Followed Jams'), jamPlaylists);
 		}
 
 		return folders;
@@ -299,9 +295,7 @@ export class LibraryStore extends VuexStore<LibraryStore, Actions, Mutations> {
 			return true;
 		} catch (e) {
 			Growls.error(
-				Translate.$gettext(
-					`Error! Error! This game could not be removed from the playlist.`
-				)
+				Translate.$gettext(`Error! Error! This game could not be removed from the playlist.`)
 			);
 		}
 

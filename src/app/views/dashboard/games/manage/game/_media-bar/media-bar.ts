@@ -1,8 +1,8 @@
-import AppEditableOverlay from 'game-jolt-frontend-lib/components/editable-overlay/editable-overlay.vue';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { MediaBarItemMaxHeight } from 'game-jolt-frontend-lib/components/media-bar/item/item';
-import AppMediaBarItem from 'game-jolt-frontend-lib/components/media-bar/item/item.vue';
-import AppScrollScroller from 'game-jolt-frontend-lib/components/scroll/scroller/scroller.vue';
+import AppEditableOverlay from '../../../../../../../_common/editable-overlay/editable-overlay.vue';
+import { Game } from '../../../../../../../_common/game/game.model';
+import { MediaBarItemMaxHeight } from '../../../../../../../_common/media-bar/item/item';
+import AppMediaBarItem from '../../../../../../../_common/media-bar/item/item.vue';
+import AppScrollScroller from '../../../../../../../_common/scroll/scroller/scroller.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { GameMediaItemAddModal } from '../../../../../../components/game/media-item/add-modal/add-modal.service';

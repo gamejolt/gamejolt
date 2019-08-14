@@ -1,23 +1,23 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppCard from 'game-jolt-frontend-lib/components/card/card.vue';
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import AppGamePackageCard from 'game-jolt-frontend-lib/components/game/package/card/card.vue';
-import { GamePackagePayloadModel } from 'game-jolt-frontend-lib/components/game/package/package-payload.model';
-import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import { GameRelease } from 'game-jolt-frontend-lib/components/game/release/release.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
-import { AppProgressPoller } from 'game-jolt-frontend-lib/components/progress/poller/poller';
+import { Api } from '../../../../../../../../_common/api/api.service';
+import AppCard from '../../../../../../../../_common/card/card.vue';
+import AppExpand from '../../../../../../../../_common/expand/expand.vue';
+import AppGamePackageCard from '../../../../../../../../_common/game/package/card/card.vue';
+import { GamePackagePayloadModel } from '../../../../../../../../_common/game/package/package-payload.model';
+import { GamePackage } from '../../../../../../../../_common/game/package/package.model';
+import { GameRelease } from '../../../../../../../../_common/game/release/release.model';
+import { Growls } from '../../../../../../../../_common/growls/growls.service';
+import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
+import AppNavTabList from '../../../../../../../../_common/nav/tab-list/tab-list.vue';
+import { AppProgressPoller } from '../../../../../../../../_common/progress/poller/poller';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { Sellable } from 'game-jolt-frontend-lib/components/sellable/sellable.model';
-import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+} from '../../../../../../../../_common/route/route-component';
+import { Sellable } from '../../../../../../../../_common/sellable/sellable.model';
+import { AppTimeAgo } from '../../../../../../../../_common/time/ago/ago';
+import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip';
+import AppLoading from '../../../../../../../../_common/loading/loading.vue';
+import { number } from '../../../../../../../../_common/filters/number';
 import { Component } from 'vue-property-decorator';
 import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
 import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
@@ -102,10 +102,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 		this.isLoadingPreview = true;
 
 		const response = await Api.sendRequest(
-			'/web/dash/developer/games/packages/preview/' +
-				this.package.game_id +
-				'/' +
-				this.package.id,
+			'/web/dash/developer/games/packages/preview/' + this.package.game_id + '/' + this.package.id,
 			null,
 			{ detach: true }
 		);

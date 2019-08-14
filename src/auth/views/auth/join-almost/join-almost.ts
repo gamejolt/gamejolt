@@ -1,10 +1,10 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Auth } from 'game-jolt-frontend-lib/components/auth/auth.service';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { AppProgressPoller } from 'game-jolt-frontend-lib/components/progress/poller/poller';
-import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
+import { Api } from '../../../../_common/api/api.service';
+import { Auth } from '../../../../_common/auth/auth.service';
+import { Growls } from '../../../../_common/growls/growls.service';
+import { AppProgressPoller } from '../../../../_common/progress/poller/poller';
+import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
+import AppLoading from '../../../../_common/loading/loading.vue';
 import { Component } from 'vue-property-decorator';
 
 @Component({

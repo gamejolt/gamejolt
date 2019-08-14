@@ -1,7 +1,7 @@
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppScrollInview } from 'game-jolt-frontend-lib/components/scroll/inview/inview';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
+import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
+import { number } from '../../../../../_common/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';

@@ -1,8 +1,8 @@
 // TODO template file is missing, is this intentional?
 // import View from '!view!./finalize.html';
-import { Auth } from 'game-jolt-frontend-lib/components/auth/auth.service';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Auth } from '../../../../../../_common/auth/auth.service';
+import { Growls } from '../../../../../../_common/growls/growls.service';
+import { BaseRouteComponent } from '../../../../../../_common/route/route-component';
 import { Component } from 'vue-property-decorator';
 import FormTwitterEmail from '../../../../../components/forms/twitter-email/twitter-email';
 

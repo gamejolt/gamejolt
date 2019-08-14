@@ -1,7 +1,7 @@
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { Growls } from '../../../../../_common/growls/growls.service';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { Scroll } from '../../../../../_common/scroll/scroll.service';
+import { Translate } from '../../../../../_common/translate/translate.service';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import FormProfile from '../../../../components/forms/profile/profile.vue';

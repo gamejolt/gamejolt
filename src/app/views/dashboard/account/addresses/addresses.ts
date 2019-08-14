@@ -1,8 +1,8 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { UserAddress } from 'game-jolt-frontend-lib/components/user/address/address.model';
-import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
+import { Api } from '../../../../../_common/api/api.service';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { Translate } from '../../../../../_common/translate/translate.service';
+import { UserAddress } from '../../../../../_common/user/address/address.model';
+import { arrayRemove } from '../../../../../utils/array';
 import { Component } from 'vue-property-decorator';
 import AppUserAddressCard from '../../../../components/user/address/card/card.vue';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';

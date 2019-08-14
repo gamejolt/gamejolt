@@ -1,10 +1,10 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
+import { Api } from '../../../_common/api/api.service';
 import {
 	asyncRouteLoader,
 	BaseRouteComponent,
 	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
+} from '../../../_common/route/route-component';
+import { AppState, AppStore } from '../../../_common/store/app-store';
 import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
 import { router } from '..';

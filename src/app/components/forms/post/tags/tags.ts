@@ -1,5 +1,5 @@
-import { ContentDocument } from 'game-jolt-frontend-lib/components/content/content-document';
-import AppTagSuggestion from 'game-jolt-frontend-lib/components/tag/suggestion/suggestion.vue';
+import { ContentDocument } from '../../../../../_common/content/content-document';
+import AppTagSuggestion from '../../../../../_common/tag/suggestion/suggestion.vue';
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 

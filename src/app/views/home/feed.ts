@@ -1,18 +1,15 @@
-import AppAdPlaywireVideo from 'game-jolt-frontend-lib/components/ad/playwire/video.vue';
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
-import AppUserCard from 'game-jolt-frontend-lib/components/user/card/card.vue';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import { numberSort } from 'game-jolt-frontend-lib/utils/array';
-import { fuzzysearch } from 'game-jolt-frontend-lib/utils/string';
+import AppAdPlaywireVideo from '../../../_common/ad/playwire/video.vue';
+import { AppTrackEvent } from '../../../_common/analytics/track-event.directive';
+import { Api } from '../../../_common/api/api.service';
+import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { Meta } from '../../../_common/meta/meta-service';
+import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { Screen } from '../../../_common/screen/screen-service';
+import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
+import AppUserCard from '../../../_common/user/card/card.vue';
+import { User } from '../../../_common/user/user.model';
+import { numberSort } from '../../../utils/array';
+import { fuzzysearch } from '../../../utils/string';
 import { Component } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';

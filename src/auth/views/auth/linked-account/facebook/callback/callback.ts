@@ -1,10 +1,7 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Auth } from 'game-jolt-frontend-lib/components/auth/auth.service';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Api } from '../../../../../../_common/api/api.service';
+import { Auth } from '../../../../../../_common/auth/auth.service';
+import { Growls } from '../../../../../../_common/growls/growls.service';
+import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
 import AuthLinkedAccountProcessing from '../../_processing/processing.vue';

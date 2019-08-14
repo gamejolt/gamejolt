@@ -1,9 +1,8 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
+import { Api } from '../../../../../_common/api/api.service';
+import { BaseModal } from '../../../../../_common/modal/base';
+import AppJolticon from '../../../../../_common/jolticon/jolticon.vue';
+import AppLoading from '../../../../../_common/loading/loading.vue';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 @Component({
 	components: {

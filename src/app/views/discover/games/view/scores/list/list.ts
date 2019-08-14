@@ -1,17 +1,17 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
-import AppLoadingFade from 'game-jolt-frontend-lib/components/loading/fade/fade.vue';
-import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
-import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
+import { Api } from '../../../../../../../_common/api/api.service';
+import { GameScoreTable } from '../../../../../../../_common/game/score-table/score-table.model';
+import AppLoadingFade from '../../../../../../../_common/loading/fade/fade.vue';
+import AppNavTabList from '../../../../../../../_common/nav/tab-list/tab-list.vue';
+import { Popper } from '../../../../../../../_common/popper/popper.service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
-import { AppNoAutoscroll } from 'game-jolt-frontend-lib/components/scroll/auto-scroll/no-autoscroll.directive';
-import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
-import { UserGameScore } from 'game-jolt-frontend-lib/components/user/game-score/game-score.model';
+} from '../../../../../../../_common/route/route-component';
+import { Screen } from '../../../../../../../_common/screen/screen-service';
+import AppScrollAffix from '../../../../../../../_common/scroll/affix/affix.vue';
+import { AppNoAutoscroll } from '../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
+import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
+import { UserGameScore } from '../../../../../../../_common/user/game-score/game-score.model';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppScoreList from '../../../../../../components/score/list/list.vue';

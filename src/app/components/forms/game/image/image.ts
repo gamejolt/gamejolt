@@ -1,12 +1,8 @@
-import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
-import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
-import {
-	BaseForm,
-	FormOnInit,
-	FormOnLoad,
-} from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GameScreenshot } from 'game-jolt-frontend-lib/components/game/screenshot/screenshot.model';
+import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
+import AppForm from '../../../../../_common/form-vue/form';
+import { BaseForm, FormOnInit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
+import { Game } from '../../../../../_common/game/game.model';
+import { GameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
 import { Component, Prop } from 'vue-property-decorator';
 
 @Component({

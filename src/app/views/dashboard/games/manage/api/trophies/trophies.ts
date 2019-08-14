@@ -1,13 +1,19 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppCardListAdd from 'game-jolt-frontend-lib/components/card/list/add/add.vue';
-import AppCardListDraggable from 'game-jolt-frontend-lib/components/card/list/draggable/draggable.vue';
-import AppCardListItem from 'game-jolt-frontend-lib/components/card/list/item/item.vue';
-import AppCardList from 'game-jolt-frontend-lib/components/card/list/list.vue';
-import { GameTrophy, GameTrophyDifficulty } from 'game-jolt-frontend-lib/components/game/trophy/trophy.model';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { Api } from '../../../../../../../_common/api/api.service';
+import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
+import AppCardListDraggable from '../../../../../../../_common/card/list/draggable/draggable.vue';
+import AppCardListItem from '../../../../../../../_common/card/list/item/item.vue';
+import AppCardList from '../../../../../../../_common/card/list/list.vue';
+import {
+	GameTrophy,
+	GameTrophyDifficulty,
+} from '../../../../../../../_common/game/trophy/trophy.model';
+import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../../../_common/route/route-component';
+import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
+import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
 import { Component } from 'vue-property-decorator';
 import FormGameTrophy from '../../../../../../components/forms/game/trophy/trophy.vue';
 import AppTrophyThumbnail from '../../../../../../components/trophy/thumbnail/thumbnail.vue';

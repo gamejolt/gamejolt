@@ -1,6 +1,6 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { ForumTopic } from 'game-jolt-frontend-lib/components/forum/topic/topic.model';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Api } from '../../../../../_common/api/api.service';
+import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Component } from 'vue-property-decorator';
 import AppForumTopicList from '../../../../components/forum/topic-list/topic-list.vue';
 

@@ -1,15 +1,15 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
+import { Api } from '../../../../../../../../../_common/api/api.service';
+import { GameScoreTable } from '../../../../../../../../../_common/game/score-table/score-table.model';
+import { Growls } from '../../../../../../../../../_common/growls/growls.service';
+import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { UserGameScore } from 'game-jolt-frontend-lib/components/user/game-score/game-score.model';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+} from '../../../../../../../../../_common/route/route-component';
+import { AppTooltip } from '../../../../../../../../../_common/tooltip/tooltip';
+import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
+import { User } from '../../../../../../../../../_common/user/user.model';
+import AppJolticon from '../../../../../../../../../_common/jolticon/jolticon.vue';
 import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 import AppManageGameListScores from '../../_list-scores/list-scores.vue';

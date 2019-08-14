@@ -1,8 +1,8 @@
-import { Ads } from 'game-jolt-frontend-lib/components/ad/ads.service';
-import AppAdPlaywireVideo from 'game-jolt-frontend-lib/components/ad/playwire/video.vue';
-import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
+import { Ads } from '../../../../../../../_common/ad/ads.service';
+import AppAdPlaywireVideo from '../../../../../../../_common/ad/playwire/video.vue';
+import AppAdWidget from '../../../../../../../_common/ad/widget/widget.vue';
+import { Screen } from '../../../../../../../_common/screen/screen-service';
+import AppScrollAffix from '../../../../../../../_common/scroll/affix/affix.vue';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import AppGameGrid from '../../../../../../components/game/grid/grid.vue';

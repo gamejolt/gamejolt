@@ -1,7 +1,7 @@
-import AppAuthJoin from 'game-jolt-frontend-lib/components/auth/join/join.vue';
-import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import AppAuthJoin from '../../../../_common/auth/join/join.vue';
+import { Connection } from '../../../../_common/connection/connection-service';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
 import { Component } from 'vue-property-decorator';
 import { loggedUserBlock } from '../auth';
 

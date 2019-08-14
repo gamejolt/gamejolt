@@ -1,10 +1,10 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppEditableOverlay from 'game-jolt-frontend-lib/components/editable-overlay/editable-overlay.vue';
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-store';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import AppUserAvatar from 'game-jolt-frontend-lib/components/user/user-avatar/user-avatar.vue';
+import { Api } from '../../../../_common/api/api.service';
+import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
+import AppExpand from '../../../../_common/expand/expand.vue';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { WithRouteStore } from '../../../../_common/route/route-store';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';

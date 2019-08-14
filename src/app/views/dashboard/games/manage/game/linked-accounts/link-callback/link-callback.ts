@@ -1,13 +1,13 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { Api } from '../../../../../../../../_common/api/api.service';
+import { Growls } from '../../../../../../../../_common/growls/growls.service';
 import {
 	getLinkedAccountProviderDisplayName,
 	LinkedAccount,
-} from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
+} from '../../../../../../../../_common/linked-account/linked-account.model';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
+} from '../../../../../../../../_common/route/route-component';
 import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';

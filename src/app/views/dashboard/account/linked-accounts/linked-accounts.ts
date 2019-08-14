@@ -1,13 +1,18 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { getLinkedAccountProviderDisplayName, LinkedAccount, Provider, TumblrBlog } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
-import AppLinkedAccount from 'game-jolt-frontend-lib/components/linked-account/linked-account.vue';
-import { LinkedAccounts } from 'game-jolt-frontend-lib/components/linked-account/linked-accounts.service';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { YoutubeChannel } from 'game-jolt-frontend-lib/components/youtube/channel/channel-model';
-import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
+import { Api } from '../../../../../_common/api/api.service';
+import { Growls } from '../../../../../_common/growls/growls.service';
+import {
+	getLinkedAccountProviderDisplayName,
+	LinkedAccount,
+	Provider,
+	TumblrBlog,
+} from '../../../../../_common/linked-account/linked-account.model';
+import AppLinkedAccount from '../../../../../_common/linked-account/linked-account.vue';
+import { LinkedAccounts } from '../../../../../_common/linked-account/linked-accounts.service';
+import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { Translate } from '../../../../../_common/translate/translate.service';
+import { YoutubeChannel } from '../../../../../_common/youtube/channel/channel-model';
+import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { Component } from 'vue-property-decorator';
 import { UserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';

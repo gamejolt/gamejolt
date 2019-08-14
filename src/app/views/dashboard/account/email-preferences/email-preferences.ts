@@ -1,7 +1,7 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { Api } from '../../../../../_common/api/api.service';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { Translate } from '../../../../../_common/translate/translate.service';
+import { User } from '../../../../../_common/user/user.model';
 import { Component } from 'vue-property-decorator';
 import FormEmailPreferences from '../../../../components/forms/email-preferences/email-preferences.vue';
 import { IntentService } from '../../../../components/intent/intent.service';

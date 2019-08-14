@@ -1,7 +1,6 @@
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { number } from '../../../../../_common/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 @Component({
 	filters: {

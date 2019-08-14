@@ -1,4 +1,4 @@
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { Screen } from '../../../../../_common/screen/screen-service';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import AppGameThumbnailPlaceholder from '../../../../../_common/game/thumbnail/placeholder/placeholder.vue';

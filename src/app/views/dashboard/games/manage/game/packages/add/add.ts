@@ -1,5 +1,5 @@
-import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
+import { GamePackage } from '../../../../../../../../_common/game/package/package.model';
+import { BaseRouteComponent } from '../../../../../../../../_common/route/route-component';
 import { Component } from 'vue-property-decorator';
 import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
 import { RouteStore, RouteStoreModule } from '../../../manage.store';

@@ -1,22 +1,19 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppCardListAdd from 'game-jolt-frontend-lib/components/card/list/add/add.vue';
-import AppCardListItem from 'game-jolt-frontend-lib/components/card/list/item/item.vue';
-import AppCardList from 'game-jolt-frontend-lib/components/card/list/list.vue';
-import { Collaborator } from 'game-jolt-frontend-lib/components/collaborator/collaborator.model';
-import { CommunityTag } from 'game-jolt-frontend-lib/components/community/tag/tag.model';
-import AppCommunityThumbnailImg from 'game-jolt-frontend-lib/components/community/thumbnail/img/img.vue';
-import AppEditableOverlay from 'game-jolt-frontend-lib/components/editable-overlay/editable-overlay.vue';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { WithRouteStore } from 'game-jolt-frontend-lib/components/route/route-store';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
-import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
+import { Api } from '../../../../../../_common/api/api.service';
+import AppCardListAdd from '../../../../../../_common/card/list/add/add.vue';
+import AppCardListItem from '../../../../../../_common/card/list/item/item.vue';
+import AppCardList from '../../../../../../_common/card/list/list.vue';
+import { Collaborator } from '../../../../../../_common/collaborator/collaborator.model';
+import { CommunityTag } from '../../../../../../_common/community/tag/tag.model';
+import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
+import AppEditableOverlay from '../../../../../../_common/editable-overlay/editable-overlay.vue';
+import { Growls } from '../../../../../../_common/growls/growls.service';
+import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import { WithRouteStore } from '../../../../../../_common/route/route-store';
+import { Screen } from '../../../../../../_common/screen/screen-service';
+import { AppTooltip } from '../../../../../../_common/tooltip/tooltip';
+import { arrayRemove } from '../../../../../../utils/array';
+import { enforceLocation } from '../../../../../../utils/router';
 import Component from 'vue-class-component';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import FormCommunityCollaborator from '../../../../../components/forms/community/collaborator/collaborator.vue';

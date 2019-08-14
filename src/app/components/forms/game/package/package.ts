@@ -1,30 +1,27 @@
 import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
 import * as startOfTomorrow from 'date-fns/start_of_tomorrow';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppFormControlDate from 'game-jolt-frontend-lib/components/form-vue/control/date/date.vue'
-import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue'
+import { Api } from '../../../../../_common/api/api.service';
+import AppFormControlDate from 'game-jolt-frontend-lib/components/form-vue/control/date/date.vue';
+import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
 	FormOnInit,
 	FormOnLoad,
-} from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import AppFormLegend from 'game-jolt-frontend-lib/components/form-vue/legend/legend.vue'
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import AppLoadingFade from 'game-jolt-frontend-lib/components/loading/fade/fade.vue'
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import { SellablePricing } from 'game-jolt-frontend-lib/components/sellable/pricing/pricing.model';
-import { Sellable } from 'game-jolt-frontend-lib/components/sellable/sellable.model';
-import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
-import {
-	Timezone,
-	TimezoneData,
-} from 'game-jolt-frontend-lib/components/timezone/timezone.service';
-import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
-import { date } from 'game-jolt-frontend-lib/vue/filters/date';
-import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
+} from '../../../../../_common/form-vue/form.service';
+import AppFormLegend from 'game-jolt-frontend-lib/components/form-vue/legend/legend.vue';
+import { Game } from '../../../../../_common/game/game.model';
+import { GamePackage } from '../../../../../_common/game/package/package.model';
+import AppLoadingFade from 'game-jolt-frontend-lib/components/loading/fade/fade.vue';
+import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { SellablePricing } from '../../../../../_common/sellable/pricing/pricing.model';
+import { Sellable } from '../../../../../_common/sellable/sellable.model';
+import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
+import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
+import { currency } from '../../../../../_common/filters/currency';
+import { date } from '../../../../../_common/filters/date';
+import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { determine } from 'jstimezonedetect';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { AppGamePerms } from '../../../game/perms/perms';
