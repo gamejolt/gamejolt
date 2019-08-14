@@ -12,7 +12,7 @@ export default class AppLoading extends Vue {
 	@Prop(Boolean) stationary!: boolean;
 	@Prop(Boolean) centered!: boolean;
 
-	images = importContext(require.context('../../loading/', false, /\.gif$/));
+	images = importContext(require.context('./', false, /\.gif$/));
 
 	get img() {
 		const img =
