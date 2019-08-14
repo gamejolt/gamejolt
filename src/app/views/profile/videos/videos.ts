@@ -1,6 +1,6 @@
 import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../_common/api/api.service';
-import AppCommentVideoThumbnail from 'game-jolt-frontend-lib/components/comment/video/thumbnail/thumbnail.vue';
+import AppCommentVideoThumbnail from '../../../../_common/comment/video/thumbnail/thumbnail.vue';
 import { CommentVideo } from '../../../../_common/comment/video/video-model';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Component } from 'vue-property-decorator';

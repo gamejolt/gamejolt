@@ -1,9 +1,9 @@
-import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
-import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
-import { Ruler } from 'game-jolt-frontend-lib/components/ruler/ruler-service';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import { AppImgResponsive } from '../../img/responsive/responsive';
+import { Ruler } from '../../ruler/ruler-service';
+import { Screen } from '../../screen/screen-service';
+import { MediaItem } from '../media-item-model';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 

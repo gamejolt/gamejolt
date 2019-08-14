@@ -1,4 +1,6 @@
-import 'game-jolt-frontend-lib/components/comment/comment.styl';
+import Vue from 'vue';
+import { Component, Inject, Prop } from 'vue-property-decorator';
+import '../../../../../_common/comment/comment.styl';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { Mention } from '../../../../../_common/mention/mention.model';
@@ -12,8 +14,6 @@ import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
 import { ActivityFeedItem } from '../item-service';
 import { ActivityFeedView } from '../view';
 

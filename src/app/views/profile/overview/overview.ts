@@ -1,3 +1,5 @@
+import { Component } from 'vue-property-decorator';
+import { Action, State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
 import { Comment } from '../../../../_common/comment/comment-model';
@@ -6,8 +8,9 @@ import { CommentThreadModal } from '../../../../_common/comment/thread/modal.ser
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
+import { number } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
-import 'game-jolt-frontend-lib/components/lazy/placeholder/placeholder.styl';
+import '../../../../_common/lazy/placeholder/placeholder.styl';
 import { LinkedAccount, Provider } from '../../../../_common/linked-account/linked-account.model';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
@@ -16,9 +19,6 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { User } from '../../../../_common/user/user.model';
 import { YoutubeChannel } from '../../../../_common/youtube/channel/channel-model';
-import { number } from '../../../../_common/filters/number';
-import { Component } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
 import { ChatClient } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/overview/overview.vue';
 import AppGameList from '../../../components/game/list/list.vue';
@@ -206,7 +206,10 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	get shouldShowKnownFollowers() {
 		return (
-			!!this.app.user && !!this.user && this.isOverviewLoaded && this.app.user.id !== this.user.id
+			!!this.app.user &&
+			!!this.user &&
+			this.isOverviewLoaded &&
+			this.app.user.id !== this.user.id
 		);
 	}
 

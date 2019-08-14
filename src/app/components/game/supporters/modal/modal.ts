@@ -2,7 +2,7 @@ import { Api } from '../../../../../_common/api/api.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { User } from '../../../../../_common/user/user.model';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
+import AppLoading from '../../../../../_common/loading/loading.vue';
 import { number } from '../../../../../_common/filters/number';
 import { Component, Prop } from 'vue-property-decorator';
 import AppUserList from '../../../user/list/list.vue';

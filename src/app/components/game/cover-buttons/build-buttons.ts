@@ -2,7 +2,7 @@ import { GameBuild } from '../../../../_common/game/build/build.model';
 import { Game } from '../../../../_common/game/game.model';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
+import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
 
 @Component({
 	components: {

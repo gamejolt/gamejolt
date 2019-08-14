@@ -1,7 +1,7 @@
 import { Api } from '../../../../../../_common/api/api.service';
 import { Game } from '../../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../../_common/game/package/package.model';
-import AppGameThumbnailImg from 'game-jolt-frontend-lib/components/game/thumbnail-img/thumbnail-img.vue';
+import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
 import { Geo } from '../../../../../../_common/geo/geo.service';
 import { Order } from '../../../../../../_common/order/order.model';
 import { OrderPayment } from '../../../../../../_common/order/payment/payment.model';

@@ -2,18 +2,18 @@ import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
 import * as startOfTomorrow from 'date-fns/start_of_tomorrow';
 import { Api } from '../../../../../_common/api/api.service';
-import AppFormControlDate from 'game-jolt-frontend-lib/components/form-vue/control/date/date.vue';
-import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
+import AppFormControlDate from '../../../../../_common/form-vue/control/date/date.vue';
+import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
 	FormOnInit,
 	FormOnLoad,
 } from '../../../../../_common/form-vue/form.service';
-import AppFormLegend from 'game-jolt-frontend-lib/components/form-vue/legend/legend.vue';
+import AppFormLegend from '../../../../../_common/form-vue/legend/legend.vue';
 import { Game } from '../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
-import AppLoadingFade from 'game-jolt-frontend-lib/components/loading/fade/fade.vue';
+import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { SellablePricing } from '../../../../../_common/sellable/pricing/pricing.model';
 import { Sellable } from '../../../../../_common/sellable/sellable.model';

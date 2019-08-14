@@ -4,7 +4,7 @@ import {
 	AppResponsiveDimensions,
 	AppResponsiveDimensionsChangeEvent,
 } from '../../../../../../../_common/responsive-dimensions/responsive-dimensions';
-import AppVideo from 'game-jolt-frontend-lib/components/video/video.vue';
+import AppVideo from '../../../../../../../_common/video/video.vue';
 import Vue from 'vue';
 import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import AppEventItemMediaTags from '../../../../../event-item/media-tags/media-tags.vue';
