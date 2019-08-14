@@ -12,7 +12,7 @@ const readdir = require('fs-readdir-recursive') as (
 const baseDir = path.resolve(__dirname, '..');
 const srcDir = path.join(baseDir, 'src');
 const commonDir = path.join(srcDir, '_common');
-const refactorDir = path.join(srcDir, 'client');
+const refactorDir = path.join(srcDir, 'z');
 
 const prettierConf = prettier.resolveConfig.sync(srcDir)!;
 prettierConf.parser = 'typescript';
