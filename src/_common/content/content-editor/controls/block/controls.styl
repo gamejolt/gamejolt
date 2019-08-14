@@ -1,0 +1,60 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.content-editor-controls
+	position: absolute
+	z-index: $zindex-content-editor
+	filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.1))
+	transition: top 0.05s ease-in-out
+	&:hover
+		outline: 0 solid transparent !important
+
+.-add-button
+	transition: transform 0.2s ease
+
+.-add-button-rotated
+	transform: rotate(-45deg)
+
+.fade-enter-active, .fade-leave-active
+	transition: opacity 0.2s
+
+.fade-enter, .fade-leave-to
+	opacity: 0
+
+.controls-mobile
+	position: fixed
+	top: auto !important
+	bottom: 0 !important
+	left: 0 !important
+	right: 0 !important
+
+	& > div
+		display: flex
+		justify-content: center
+		align-items: center
+		change-bg('bg-offset')
+		theme-prop('border-color', 'bg-subtle')
+		border-top-width: 1px
+		border-top-style: solid
+		padding-left: 4px
+		padding-right: 4px
+		box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.1)
+
+		& > .control-button > span
+			margin-top: 16px
+			margin-bottom: 16px
+			margin-left: 1px
+			margin-right: 1px
+			font-size: 20px !important
+
+.control-button
+	cursor: pointer
+	display: inline-block
+	pressy()
+	background-color: transparent
+	border-style: none
+
+.btn-stagger
+	for i in 2 .. 40
+		&:nth-child({i})
+			animation-delay: 20ms * i

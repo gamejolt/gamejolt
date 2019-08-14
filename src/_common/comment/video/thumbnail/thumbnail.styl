@@ -1,0 +1,84 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.comment-video-thumbnail
+	margin-bottom: $grid-gutter-width-xs
+
+	@media $media-sm-up
+		margin-bottom: $grid-gutter-width
+
+.-thumb
+	rounded-corners-lg()
+	change-bg('bg-offset')
+	position: relative
+	display: block
+	height: 0
+	padding-top: 56.25% // HD 16:9
+	overflow: hidden
+
+	> .inner
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		height: 100%
+
+		.jolticon
+			theme-prop('color', 'fg-muted')
+			position: absolute
+			font-size: 16px * 4
+			left: 50%
+			margin-left: -(@font-size / 2)
+			top: @left
+			margin-top: @margin-left
+
+	img
+		rounded-corners-lg()
+		position: relative
+		opacity: 0
+		transition: opacity 500ms
+
+		&.loaded
+			opacity: 1
+
+	.play-button-overlay
+		display: none
+
+	&:hover
+		.play-button-overlay
+			display: block
+
+.-controls
+	position: absolute
+	top: 5px
+	right: 5px
+	z-index: 2
+
+.-meta
+	padding-top: $comment-video-thumbnail-meta-spacing
+
+.-avatar
+	float: left
+	width: $comment-video-thumbnail-avatar-size
+	height: @height
+
+.-user
+	text-overflow()
+	theme-prop('color', 'fg-muted')
+	display: block
+	margin-left: $comment-video-thumbnail-avatar-size + $comment-video-thumbnail-meta-spacing
+	font-weight: bold
+	font-size: $font-size-h6
+
+.-title
+	text-overflow()
+	theme-prop('color', 'fg')
+	display: block
+	margin: 0
+	margin-left: $comment-video-thumbnail-avatar-size + $comment-video-thumbnail-meta-spacing
+	line-height: 1.3
+	font-weight: bold
+
+.-user, .-title
+	&:hover
+		theme-prop('color', 'link')

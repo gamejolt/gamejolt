@@ -1,20 +1,17 @@
-import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
-import { GameBundle } from 'game-jolt-frontend-lib/components/game-bundle/game-bundle.model';
-import {
-	CustomMessage as CustomGameMessage,
-	Game,
-} from 'game-jolt-frontend-lib/components/game/game.model';
-import AppGamePackageCard from 'game-jolt-frontend-lib/components/game/package/card/card.vue';
-import { GamePackagePayloadModel } from 'game-jolt-frontend-lib/components/game/package/package-payload.model';
-import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
-import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import { Environment } from '../../../../_common/environment/environment.service';
+import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
+import { GameBundle } from '../../../../_common/game-bundle/game-bundle.model';
+import { CustomMessage as CustomGameMessage, Game } from '../../../../_common/game/game.model';
+import AppGamePackageCard from '../../../../_common/game/package/card/card.vue';
+import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
+import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
+import { KeyGroup } from '../../../../_common/key-group/key-group.model';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
+import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
 import { Store } from '../../../store/index';
 
 @Component({

@@ -1,16 +1,13 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import { GameBundle } from 'game-jolt-frontend-lib/components/game-bundle/game-bundle.model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { Api } from '../../../_common/api/api.service';
+import { Environment } from '../../../_common/environment/environment.service';
+import { GameBundle } from '../../../_common/game-bundle/game-bundle.model';
+import { Game } from '../../../_common/game/game.model';
+import { Growls } from '../../../_common/growls/growls.service';
+import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
+import { Navigate } from '../../../_common/navigate/navigate.service';
+import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import AppInvalidKey from '../../components/invalid-key/invalid-key.vue';
 import { Store } from '../../store/index';
 import AppKeyBundle from './_bundle/bundle.vue';

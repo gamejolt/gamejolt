@@ -1,17 +1,16 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import { AppFocusWhen } from 'game-jolt-frontend-lib/components/form-vue/focus-when.directive';
-import { BaseForm, FormOnInit, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { Geo, Region } from 'game-jolt-frontend-lib/components/geo/geo.service';
-import { Order } from 'game-jolt-frontend-lib/components/order/order.model';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
-import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
-import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
+import { Api } from '../../../../_common/api/api.service';
+import AppExpand from '../../../../_common/expand/expand.vue';
+import { AppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
+import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../_common/form-vue/form.service';
+import { Geo, Region } from '../../../../_common/geo/geo.service';
+import { Order } from '../../../../_common/order/order.model';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import AppJolticon from '../../../../_common/jolticon/jolticon.vue';
+import AppLoading from '../../../../_common/loading/loading.vue';
+import { currency } from '../../../../_common/filters/currency';
+import { AppStore } from '../../../../_common/store/app-store';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-
 
 @Component({
 	components: {

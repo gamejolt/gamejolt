@@ -1,0 +1,119 @@
+nav.platform-list
+	font-family: $font-family-heading
+	margin-bottom: ($line-height-computed / 2)
+
+	ul
+		margin: 0
+		padding: 0
+
+		li
+			margin: 0
+			list-style: none
+
+			&:first-child a
+				margin-top: 0
+
+		a
+			theme-prop('color', 'fg')
+			display: block
+			padding: 0 15px
+			margin: $line-height-computed 0
+			margin-left: -18px // Make it so that the list is flush against the left. (subtract padding and border)
+			// Set default border styles.
+			// We override individuals below, so keep these long form.
+			border-style: solid
+			border-color: transparent
+			border-width: 0
+			border-left-width: 3px
+			// Don't allow to select the text when clicking on a "tab".
+			user-select: none
+			// Fade any color changes.
+			transition: color 300ms
+
+			// Show the left border on hover.
+			&:hover
+				theme-prop('border-color', 'bg-subtle')
+				transition: none // Don't transition into the hover. Only transition out of it.
+
+			&.active
+				theme-prop('color', 'link')
+				font-weight: bold
+
+				.jolticon
+					theme-prop('color', 'link')
+
+			.tag
+				margin-right: 5px
+				vertical-align: text-top
+
+			.badge
+				margin-left: 5px
+
+			// Nothing needs to be clickable or anything within the item, since
+			// all the events happen within the <a> tag.
+			& > *
+				pointer-events: none
+
+		.jolticon
+			theme-prop('color', 'fg-muted')
+			margin-right: 10px
+
+	/**
+	 * Inline nav lists
+	 */
+	&.inline ul
+		@extend .clearfix
+
+		li
+			float: left
+			margin-right: ($grid-gutter-width / 2)
+
+			@media $media-xs
+				margin-right: ($grid-gutter-width-xs / 2)
+
+			&:last-child
+				margin-right: 0
+
+		a
+			display: inline-block
+			border-left: 0
+			border-bottom-width: 3px
+			margin: 0
+			// For some reason we need this extra 1px of padding with the font
+			// we use.
+			padding: 0 5px ($line-height-computed / 2) + 1px 0
+
+			&.active
+				font-weight: normal // Don't bold active inline items.
+
+		.jolticon
+			margin-right: 5px
+
+	/**
+	 * Section header nav lists
+	 */
+	header.section &
+		margin-top: ($line-height-computed * 1.5)
+		margin-bottom: 0
+
+		a, &.inline ul a
+			line-height: 2.5
+
+			&.active
+				theme-prop('border-color', 'highlight')
+
+section.nav-only
+	nav.platform-list.inline
+		margin-top: $font-size-base
+		margin-bottom: 0
+
+nav.platform-list
+	font-family: $font-family-heading
+	margin-bottom: ($line-height-computed / 2)
+
+	ul > li > ul
+		font-size: $font-size-small
+
+		> li > a
+			margin: ($line-height-computed / 2) 0
+			padding-left: 30px

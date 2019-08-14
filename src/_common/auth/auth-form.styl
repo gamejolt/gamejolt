@@ -1,0 +1,78 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+$-fb-color = #4267b2
+$-twitter-color = #38A1F3
+$-google-color = #CC3333
+$-twitch-color = #6441A4
+
+-social-button($-color)
+	background-color: $-color
+
+	&:hover
+		background-color: darken($-color, 10%) !important
+
+	&, &:hover
+		color: white !important
+
+.auth-form-overlay
+	.auth-form-container
+		@media $media-sm-up
+			rounded-corners-lg()
+			background-color: rgba($black, 0.4)
+			padding: ($grid-gutter-width / 2)
+			margin-left: -($grid-gutter-width / 2)
+			margin-right: @margin-left
+
+.auth-form
+	// Much less vertical spacing.
+	.form-group
+		margin-top: 0
+		margin-bottom: 5px
+
+	.form-control
+		// Bigger form controls.
+		height: 40px
+
+		// Don't change the color of the border on focus.
+		&:focus
+			theme-prop('border-color', 'lighter')
+
+.auth-line-thru
+	position: relative
+	display: block
+	margin-top: $line-height-computed
+	margin-bottom: $line-height-computed
+	width: 100%
+	text-align: center
+
+	&::before, &::after
+		content: ''
+		position: absolute
+		top: 50%
+		margin-top: 1px
+		height: 1px
+		line-height: 1px
+		border-bottom: 1px solid rgba($black, 0.2)
+
+	&::before
+		left: 0
+		right: 50%
+		margin-right: 40px
+
+	&::after
+		left: 50%
+		right: 0
+		margin-left: 40px
+
+.-fb
+	-social-button($-fb-color)
+
+.-twitter
+	-social-button($-twitter-color)
+
+.-google
+	-social-button($-google-color)
+
+.-twitch
+	-social-button($-twitch-color)

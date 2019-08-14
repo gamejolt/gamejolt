@@ -1,0 +1,14 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+vendors = official
+
+@keyframes fade-out-shrink
+	to
+		opacity: 0
+		transform: scale3d(0.9, 0.9, 0.9)
+
++create-animation('fade', 'out', 'shrink')
+	animation-name: fade-out-shrink
+	animation-duration: 250ms
+	animation-timing-function: $ease-out

@@ -1,0 +1,200 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+// Have to put all the sizing information here.
+make-button-size(size)
+	font-size: lookup('$button-' + size + '-font-size')
+	font-weight: lookup('$button-' + size + '-font-weight')
+	line-height: lookup('$button-' + size + '-line-height')
+	padding: 0 lookup('$button-' + size + '-padding-horizontal')
+	border-radius: lookup('$button-' + size + '-border-radius')
+
+	.-icon
+		margin-right: lookup('$button-' + size + '-icon-spacing-right')
+
+	.-badge
+		padding: 0 (lookup('$button-' + size + '-padding-horizontal') / 2)
+		margin-right: -(lookup('$button-' + size + '-padding-horizontal'))
+		margin-left: (lookup('$button-' + size + '-padding-horizontal') / 2) * 1.5
+		font-size: lookup('$button-' + size + '-font-size')
+		border-top-right-radius: lookup('$button-' + size + '-border-radius')
+		border-bottom-right-radius: lookup('$button-' + size + '-border-radius')
+
+	&.-outline
+		border-width: lookup('$button-' + size + '-outline-border-size')
+		line-height: lookup('$button-' + size + '-line-height') - (@border-width * 2)
+		padding-left: lookup('$button-' + size + '-padding-horizontal') - @border-width
+		padding-right: @padding-left
+
+		.-badge
+			margin-right: -(lookup('$button-' + size + '-padding-horizontal') - lookup('$button-' + size + '-outline-border-size'))
+			border-top-right-radius: lookup('$button-' + size + '-border-radius')
+			border-bottom-right-radius: lookup('$button-' + size + '-border-radius')
+
+	&.-trans
+		.-badge
+			border-radius: lookup('$button-' + size + '-border-radius') !important
+
+	&.-sparse
+		$$button-horizontal-padding = ((lookup('$button-' + size + '-line-height') - $button-icon-size) / 2)
+		padding-left: $$button-horizontal-padding
+		padding-right: $$button-horizontal-padding
+
+		.-icon
+			margin: 0 !important
+
+		.-badge
+			margin-right: -($$button-horizontal-padding)
+			margin-left: $$button-horizontal-padding
+
+		&.-outline
+			$$button-horizontal-padding = ((lookup('$button-' + size + '-line-height') - $button-icon-size) / 2) - lookup('$button-' + size + '-outline-border-size')
+			padding-left: $$button-horizontal-padding
+			padding-right: $$button-horizontal-padding
+
+.button
+	pressy()
+	display: inline-block
+	text-transform: uppercase
+	font-family: $font-family-base
+	vertical-align: middle
+	cursor: pointer
+	border: 0
+	outline: 0
+	white-space: nowrap
+	text-decoration: none !important
+	user-select: none
+
+	// Hover state is always the same.
+	&:hover
+		change-bg('bi-bg', true)
+		theme-prop('border-color', 'bi-bg', true)
+		theme-prop('color', 'bi-fg', true)
+		text-decoration: none
+		cursor: pointer
+
+		>>> .jolticon-addon, >>> small
+			theme-prop('color', 'bi-fg', true)
+
+	// Disabled state.
+	&.-disabled, &[disabled], fieldset[disabled] &
+		cursor: not-allowed
+		opacity: 0.5
+		transform: none
+
+		.jolticon
+			cursor: not-allowed
+
+	// Content
+	>>> .jolticon-addon
+		theme-prop('color', 'fg-muted')
+		position: relative
+		top: -1px
+		vertical-align: middle
+		margin-left: 5px
+
+	>>> small
+		theme-prop('color', 'fg-muted')
+		font-weight: normal
+		font-size: $font-size-tiny
+		vertical-align: baseline
+
+.-icon
+	position: relative
+	top: -1px
+	margin: 0
+	cursor: pointer
+	vertical-align: middle
+
+.-badge
+	theme-prop('color', 'highlight')
+	background-color: $black
+	float: right
+	display: inline-block
+
+/**
+ * Outline buttons
+ */
+.-outline
+	border-style: solid
+
+/**
+ * Button types
+ */
+.button
+	change-bg('fg')
+	theme-prop('color', 'bg')
+
+.-primary
+	change-bg('bi-bg')
+	theme-prop('color', 'bi-fg')
+
+.-outline
+	theme-prop('border-color', 'fg')
+	theme-prop('color', 'fg')
+	background-color: transparent
+
+	&.-primary
+		theme-prop('border-color', 'bi-bg')
+		theme-prop('color', 'fg')
+
+/**
+ * Trans buttons
+ */
+.-trans
+	border-color: transparent
+
+/**
+ * Overlay buttons
+ */
+.-overlay
+	&.-outline, &.-trans
+		color: $dark-theme-fg
+		background-color: rgba($black, 0.65)
+
+	&.-outline
+		border-color: $dark-theme-fg
+
+	&.-trans
+		border-color: transparent
+
+/**
+ * Circle buttons
+ * Only works for sparse buttons.
+ */
+.-circle.-sparse
+	img-circle()
+
+/**
+ * Block buttons
+ */
+.-block
+	display: block
+	width: 100%
+	text-align: center
+
+// Put a bit of spacing between two block buttons on top of each other.
+.-block + .-block
+	margin-top: 5px
+
+// Block only on xs.
+@media $media-xs
+	.-block-xs
+		display: block
+		width: 100%
+		text-align: center
+
+	.-block-xs + .-block-xs, .-block-xs + .button-block, .button-block + .-block-xs
+		margin-top: 5px
+
+/**
+ * Button sizings
+ */
+.button
+	make-button-size('md')
+
+.-sm
+	make-button-size('sm')
+
+.-lg
+	make-button-size('lg')

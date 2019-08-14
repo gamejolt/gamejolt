@@ -1,0 +1,40 @@
+.emoji
+	display: inline-block
+	width: 25px
+	height: 20px
+	vertical-align: middle
+	line-height: 1
+	speak: none
+	cursor: default
+	background-repeat: no-repeat
+
+	> span
+		display: none
+
+	$emojis = {
+		sleeping: 'sleeping'
+		bucktooth: 'bucktooth'
+		crossed: 'crossed'
+		crying: 'crying'
+		dizzy: 'dizzy'
+		grin: 'grin'
+		guh: 'guh'
+		huh: 'huh'
+		innocent: 'innocent'
+		mah: 'mah'
+		ninja: 'ninja'
+		ohyou: 'ohyou'
+		omg: 'omg'
+		ouch: 'ouch'
+		psychotic: 'psychotic'
+		sleeping: 'sleeping'
+		smile: 'smile'
+		snooty: 'snooty'
+		tongue: 'tongue'
+		wha: 'wha'
+		yush: 'yush'
+	}
+
+	for key, val in $emojis
+		&-{ key }
+			background-image: url('./' + val + '.png')

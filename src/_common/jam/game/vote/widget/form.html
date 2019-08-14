@@ -1,0 +1,102 @@
+<!--
+	Not using the form directives.
+	Easier to custom do it.
+-->
+<form gj-form="formModel" name="jamGameVoteWidgetForm" class="jam-game-vote-widget" ng-class="{ 'form-horizontal': jam.voting_type == 'categories' }">
+
+	<!--
+		Category Voting
+	-->
+	<div ng-if="jam.voting_type == 'categories'">
+		<div class="form-group" ng-repeat="category in votingCategories track by category.id">
+			<label class="col-sm-4 control-label">
+				{{ ::category.name }}
+				<span ng-if="::category.description" class="muted-help jolticon jolticon-help-circle" tooltip="{{ category.description }}"></span>
+			</label>
+			<div class="col-sm-8">
+				<label class="radio-inline" ng-class="{ active: !formModel.votes[category.id] }">
+					<input type="radio" ng-model="formModel.votes[category.id]" ng-value="" ng-change="recalcOverall()">
+					n/a
+				</label>
+				<label class="radio-inline" ng-class="{ active: formModel.votes[category.id] === 1 }">
+					<input type="radio" ng-model="formModel.votes[category.id]" ng-value="1" ng-change="recalcOverall()">
+					1
+				</label>
+				<label class="radio-inline" ng-class="{ active: formModel.votes[category.id] === 2 }">
+					<input type="radio" ng-model="formModel.votes[category.id]" ng-value="2" ng-change="recalcOverall()">
+					2
+				</label>
+				<label class="radio-inline" ng-class="{ active: formModel.votes[category.id] === 3 }">
+					<input type="radio" ng-model="formModel.votes[category.id]" ng-value="3" ng-change="recalcOverall()">
+					3
+				</label>
+				<label class="radio-inline" ng-class="{ active: formModel.votes[category.id] === 4 }">
+					<input type="radio" ng-model="formModel.votes[category.id]" ng-value="4" ng-change="recalcOverall()">
+					4
+				</label>
+				<label class="radio-inline" ng-class="{ active: formModel.votes[category.id] === 5 }">
+					<input type="radio" ng-model="formModel.votes[category.id]" ng-value="5" ng-change="recalcOverall()">
+					5
+				</label>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-4 control-label">
+				Your Overall <br>
+				<em class="small" style="font-weight: normal">(calculated)</em>
+			</label>
+			<div class="col-sm-8">
+				<p class="form-control-static text-size-h4"><strong>{{ overallRating || 'n/a' }}</strong></p>
+			</div>
+		</div>
+	</div>
+
+	<!--
+		Single Overall Voting Type
+	-->
+	<div ng-if="jam.voting_type == 'overall'">
+		<div class="form-group">
+			<label class="control-label">Your Rating:</label>
+			<div class="checkboxes">
+				<label class="radio-inline" ng-class="{ active: formModel.vote === 1 }">
+					<input type="radio" ng-model="formModel.vote" ng-value="1" ng-change="recalcOverall()">
+					1
+				</label>
+				<label class="radio-inline" ng-class="{ active: formModel.vote === 2 }">
+					<input type="radio" ng-model="formModel.vote" ng-value="2" ng-change="recalcOverall()">
+					2
+				</label>
+				<label class="radio-inline" ng-class="{ active: formModel.vote === 3 }">
+					<input type="radio" ng-model="formModel.vote" ng-value="3" ng-change="recalcOverall()">
+					3
+				</label>
+				<label class="radio-inline" ng-class="{ active: formModel.vote === 4 }">
+					<input type="radio" ng-model="formModel.vote" ng-value="4" ng-change="recalcOverall()">
+					4
+				</label>
+				<label class="radio-inline" ng-class="{ active: formModel.vote === 5 }">
+					<input type="radio" ng-model="formModel.vote" ng-value="5" ng-change="recalcOverall()">
+					5
+				</label>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group submit-group">
+		<div ng-class="{ 'col-sm-8 col-sm-offset-4': jam.voting_type == 'categories' }">
+
+			<button gj-form-submit-button class="btn" ng-class="{ block: Screen.isMobile }" ng-disabled="!jamGameVoteWidgetForm.$valid || !overallRating" ng-click="onSubmit()">
+				<span class="jolticon jolticon-chevron-right"></span>
+				Save Vote
+			</button>
+
+			<button ng-if="overallRating" class="btn btn-danger" ng-class="{ block: Screen.isMobile }" ng-click="onClear()">
+				<span class="jolticon jolticon-remove"></span>
+				Clear Vote
+			</button>
+
+		</div>
+	</div>
+
+</form>

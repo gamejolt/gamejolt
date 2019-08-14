@@ -1,19 +1,18 @@
-import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
-import AppButton from 'game-jolt-frontend-lib/components/button/button.vue';
-import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
-import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
-import { Payload } from 'game-jolt-frontend-lib/components/payload/payload-service';
-import { Referrer } from 'game-jolt-frontend-lib/components/referrer/referrer.service';
-import { hijackLinks } from 'game-jolt-frontend-lib/utils/router';
-import { VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { VueRouter } from 'vue-router/types/router';
 import AppExternalLink from '../lib/gj-lib-client/vue/components/external-link/external-link.vue';
+import { hijackLinks } from '../utils/router';
 import { bootstrapAppTranslations } from '../utils/translations';
+import { VuexStore } from '../utils/vuex';
+import { Analytics } from './analytics/analytics.service';
+import AppButton from './button/button.vue';
+import { Connection } from './connection/connection-service';
+import AppJolticon from './jolticon/jolticon';
+import { Meta } from './meta/meta-service';
+import { Navigate } from './navigate/navigate.service';
+import { Payload } from './payload/payload-service';
+import { Referrer } from './referrer/referrer.service';
 import { Settings } from './settings/settings.service';
-
 /**
  * Bootstraps common services and returns a "createApp" function that our entry point can call to
  * get what it needs.
