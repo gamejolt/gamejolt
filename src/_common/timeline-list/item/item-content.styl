@@ -1,0 +1,130 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+// Most of this styling needs to be done globally.
+.timeline-list
+	$border-size = 2px
+
+	&-item
+		position: relative
+		display: block
+		color: inherit
+
+		&-bubble
+			change-bg('bg-offset')
+			theme-prop('color', 'fg-muted')
+			img-circle()
+			position: absolute
+			left: 0
+			top: 0
+			width: $timeline-list-icon-size
+			height: $timeline-list-icon-size
+			line-height: $timeline-list-icon-size
+			border: 2px solid var(--theme-bg-actual)
+			border-width: 2px
+			border-style: solid
+			z-index: 1
+
+			/**
+			 * Active Item
+			 */
+			&.active, &.new
+				theme-prop('border-color', 'notice')
+
+				.timeline-list-item-bubble-inner
+					change-bg('bg')
+					padding: 2px
+					img-circle()
+
+		&-main
+			$-padding-left = $timeline-list-avatar-margin + $timeline-list-icon-size
+			clearfix()
+			padding-bottom: $line-height-computed
+			padding-left: $border-size + $-padding-left
+
+			&.is-thread
+				theme-prop('border-left-color', 'bg-subtle')
+				border-left-width: $border-size
+				border-left-style: solid
+				margin-left: ($timeline-list-icon-size / 2)
+				padding-left: ($timeline-list-icon-size / 2) + $timeline-list-avatar-margin
+
+				&.is-last
+					border-left: 0
+					margin-left: 0
+					padding-left: $border-size + $-padding-left
+
+		&-meta
+			theme-prop('color', 'fg-muted')
+			margin-bottom: 10px
+			font-size: $font-size-tiny
+
+		&-title
+			theme-prop('color', 'fg')
+			display: block
+			font-size: $font-size-h4
+
+			em
+				theme-prop('color', 'link')
+				font-style: normal
+				font-weight: bold
+
+		&-title-small
+			font-size: $font-size-base
+
+		&-details
+			margin-top: 5px
+
+		&-content
+			theme-prop('color', 'fg')
+
+			p:last-child
+				margin-bottom: 0
+
+		&-thumb, &-avatar
+			img-circle()
+			float: left
+			width: $timeline-list-avatar-size
+			height: $timeline-list-avatar-size
+			margin-right: $timeline-list-avatar-margin
+
+		&-thumb
+			rounded-corners-lg()
+			change-bg('bg-offset')
+			background-repeat: no-repeat
+			background-position: center center
+			background-size: cover
+
+		&-ad
+			theme-prop('border-left-color', 'bg-subtle')
+			margin-left: ($timeline-list-icon-size / 2)
+			padding-bottom: $line-height-computed
+			border-left-width: $border-size
+			border-left-style: solid
+
+			section
+				border-top-right-radius: $border-radius-large
+				border-bottom-right-radius: $border-radius-large
+
+			&-container
+				margin: 0 auto
+				width: 300px
+				height: 250px
+				margin-bottom: 10px
+
+		&-controls
+			.button
+				margin-right: 5px !important
+
+			// Silly, but we gotta move these back into place.
+			.blip
+				position: relative
+				left: -5px
+
+.timeline-list-item-split
+	full-bleed-xs()
+	theme-prop('border-top-color', 'bg-subtle')
+	border-top-width: 1px
+	border-top-style: solid
+	margin-top: 0
+	margin-bottom: $line-height-computed

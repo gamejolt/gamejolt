@@ -1,10 +1,10 @@
-import { Ads } from 'game-jolt-frontend-lib/components/ad/ads.service';
-import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import { AppCondenseWhitespace } from 'game-jolt-frontend-lib/components/condense-whitespace';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Ads } from '../../../../_common/ad/ads.service';
+import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
+import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
+import { AppCondenseWhitespace } from '../../../../_common/condense-whitespace';
+import { Game } from '../../../../_common/game/game.model';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { number } from '../../../../_common/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';

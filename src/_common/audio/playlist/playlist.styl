@@ -1,0 +1,54 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+$-left-gutter = 55px
+$-playlist-play-size = 20px
+
+.-player
+	margin-bottom: $line-height-computed
+
+	&-play
+		float: left
+
+	&-title
+		margin-left: $-left-gutter
+		font-weight: bold
+
+.-scrubber
+	display: flex
+	align-items: center
+	margin-top: 10px
+	margin-left: $-left-gutter
+
+	&-component
+		flex: auto
+
+	&-playtime
+		flex: none
+		font-size: $font-size-small
+		margin-left: 10px
+		// margin-top: 5px
+
+.-playlist
+	&-item
+		display: flex
+		margin-bottom: 5px
+
+		&.active
+			.-playlist-title
+				font-weight: bold
+
+	&-play
+		flex: none
+		width: $-playlist-play-size
+
+	&-number
+		flex: none
+		margin-right: 5px
+		min-width: $-left-gutter - $-playlist-play-size - @margin-right
+		font-size: $font-size-small
+		text-align: right
+
+	&-title
+		text-overflow()
+		flex: auto

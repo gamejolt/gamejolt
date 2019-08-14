@@ -1,7 +1,7 @@
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { Community } from '../../../../../../_common/community/community.model';
+import { Screen } from '../../../../../../_common/screen/screen-service';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 
 type NavItemType = 'general' | 'tag';

@@ -1,6 +1,0 @@
-{
-	"compilerOptions": {
-		"baseUrl": "../../",
-		"target": "es2015"
-	}
-}

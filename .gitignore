@@ -8,3 +8,4 @@
 .DS_Store
 .cache
 yarn-error.log
+/gulp/tasks/client/vendor/tmp-gamejolt.iss

@@ -1,0 +1,19 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+vendors = official
+
+@keyframes fade-in-enlarge
+	from
+		opacity: 0
+		transform: scale3d(0.8, 0.8, 0.8)
+
+	to
+		opacity: 1
+
++create-animation('fade', 'in', 'enlarge')
+	animation-name: fade-in-enlarge
+	animation-duration: 200ms
+	animation-timing-function: $ease-out
+	animation-fill-mode: both
+	opacity: 1

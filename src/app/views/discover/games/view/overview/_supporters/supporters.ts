@@ -1,9 +1,9 @@
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
-import AppUserAvatarImg from 'game-jolt-frontend-lib/components/user/user-avatar/img/img.vue';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
+import AppUserCardHover from '../../../../../../../_common/user/card/hover/hover.vue';
+import AppUserAvatarImg from '../../../../../../../_common/user/user-avatar/img/img.vue';
+import { User } from '../../../../../../../_common/user/user.model';
 import { GameSupportersModal } from '../../../../../../components/game/supporters/modal/modal.service';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 

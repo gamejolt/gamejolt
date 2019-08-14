@@ -1,4 +1,4 @@
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Game } from '../../../../_common/game/game.model';
 import { Route } from 'vue-router';
 import { GameFilteringContainer } from '../filtering/container';
 

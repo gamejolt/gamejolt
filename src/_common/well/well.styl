@@ -1,0 +1,21 @@
+.well
+	rounded-corners-lg()
+	padding: ($grid-gutter-width / 2)
+	margin-bottom: $line-height-computed
+
+	@media $media-xs
+		padding: ($grid-gutter-width-xs / 2)
+
+	&.sans-margin
+		border-radius: 0
+		margin-top: 0
+		margin-bottom: 0
+
+.well-row
+	padding-top: $grid-gutter-width
+	padding-bottom: $grid-gutter-width
+	border-radius: 0
+
+	@media $media-xs
+		padding-top: $grid-gutter-width-xs
+		padding-bottom: $grid-gutter-width-xs

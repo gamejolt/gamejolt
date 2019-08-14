@@ -1,5 +1,5 @@
-import { CommonFormComponents } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
+import { CommonFormComponents } from '../../../../../_common/form-vue/form.service';
+import { findRequiredVueParent } from '../../../../../utils/vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import {

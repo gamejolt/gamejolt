@@ -1,4 +1,4 @@
-import { NamespaceVuexStore, VuexModule, VuexMutation, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
+import { NamespaceVuexStore, VuexModule, VuexMutation, VuexStore } from '../../../../utils/vuex';
 import { namespace } from 'vuex-class';
 import { store } from '../../../store';
 

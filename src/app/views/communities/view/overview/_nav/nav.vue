@@ -21,7 +21,7 @@
 				'-mobile-nav-container fill-darker anim-fade-in-up': Screen.isMobile,
 			}"
 		>
-			<ol v-for="group of groups" :key="group">
+			<ol v-for="(group, i) of groups" :key="i">
 				<li v-for="item of group.items" :key="item.channel">
 					<router-link
 						class="-item"

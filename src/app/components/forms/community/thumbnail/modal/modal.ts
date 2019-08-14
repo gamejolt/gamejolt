@@ -1,5 +1,5 @@
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
+import { Community } from '../../../../../../_common/community/community.model';
+import { BaseModal } from '../../../../../../_common/modal/base';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import FormCommunityThumbnail from '../thumbnail.vue';

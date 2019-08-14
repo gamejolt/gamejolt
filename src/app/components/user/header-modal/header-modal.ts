@@ -1,5 +1,5 @@
-import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { BaseModal } from '../../../../_common/modal/base';
+import { User } from '../../../../_common/user/user.model';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../store/index';

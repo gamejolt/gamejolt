@@ -1,4 +1,4 @@
-import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
+import { Analytics } from '../../../../_common/analytics/analytics.service';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { TagsInfo } from '../../tag/tags-info.service';

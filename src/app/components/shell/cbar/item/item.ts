@@ -1,6 +1,6 @@
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import AppCommunityThumbnailImg from 'game-jolt-frontend-lib/components/community/thumbnail/img/img.vue'
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { Community } from '../../../../../_common/community/community.model';
+import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 

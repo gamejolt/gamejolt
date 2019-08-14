@@ -1,23 +1,31 @@
 import * as fs from 'fs';
-import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GamePackageCardModel } from 'game-jolt-frontend-lib/components/game/package/card/card.model';
-import AppGamePackageCardMoreOptions from 'game-jolt-frontend-lib/components/game/package/card/more-options.vue';
-import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import { Popper } from 'game-jolt-frontend-lib/components/popper/popper.service';
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { filesize } from 'game-jolt-frontend-lib/vue/filters/filesize';
+import { Analytics } from '../../../../../_common/analytics/analytics.service';
+import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
+import { Device } from '../../../../../_common/device/device.service';
+import AppExpand from '../../../../../_common/expand/expand.vue';
+import { GameBuild } from '../../../../../_common/game/build/build.model';
+import { Game } from '../../../../../_common/game/game.model';
+import { GamePackageCardModel } from '../../../../../_common/game/package/card/card.model';
+import AppGamePackageCardMoreOptions from '../../../../../_common/game/package/card/more-options.vue';
+import { GamePackage } from '../../../../../_common/game/package/package.model';
+import { Popper } from '../../../../../_common/popper/popper.service';
+import AppPopper from '../../../../../_common/popper/popper.vue';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { filesize } from '../../../../../_common/filters/filesize';
 import * as path from 'path';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { ClientLibraryAction, ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
+import {
+	ClientLibraryAction,
+	ClientLibraryState,
+	ClientLibraryStore,
+} from '../../../../store/client-library';
 import AppClientInstallProgress from '../../install-progress/install-progress.vue';
-import { LocalDbPackage, LocalDbPackagePatchState, LocalDbPackageRemoveState } from '../../local-db/package/package.model';
+import {
+	LocalDbPackage,
+	LocalDbPackagePatchState,
+	LocalDbPackageRemoveState,
+} from '../../local-db/package/package.model';
 
 @Component({
 	components: {

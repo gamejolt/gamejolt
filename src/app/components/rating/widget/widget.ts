@@ -1,12 +1,12 @@
-import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
-import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
-import { EventBus } from 'game-jolt-frontend-lib/components/event-bus/event-bus.service';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GameRating } from 'game-jolt-frontend-lib/components/game/rating/rating.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { LikersModal } from 'game-jolt-frontend-lib/components/likers/modal.service';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Analytics } from '../../../../_common/analytics/analytics.service';
+import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { EventBus } from '../../../../_common/event-bus/event-bus.service';
+import { Game } from '../../../../_common/game/game.model';
+import { GameRating } from '../../../../_common/game/rating/rating.model';
+import { Growls } from '../../../../_common/growls/growls.service';
+import { LikersModal } from '../../../../_common/likers/modal.service';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { number } from '../../../../_common/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 

@@ -1,16 +1,16 @@
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppThemeSvg } from 'game-jolt-frontend-lib/components/theme/svg/svg';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
+import { Api } from '../../../../_common/api/api.service';
+import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { Game } from '../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
-import { AppAuthJoinLazy } from '../../../components/lazy';
+import { Meta } from '../../../../_common/meta/meta-service';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import { Store } from '../../../store/index';
+import { AppAuthJoinLazy } from '../../../components/lazy';
 
 @Component({
 	name: 'RouteLandingMarketplace',

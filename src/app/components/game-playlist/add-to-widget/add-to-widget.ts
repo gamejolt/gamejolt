@@ -1,8 +1,8 @@
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
+import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { Game } from '../../../../_common/game/game.model';
+import AppPopper from '../../../../_common/popper/popper.vue';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';

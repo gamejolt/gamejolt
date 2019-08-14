@@ -1,4 +1,4 @@
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
+import { Community } from '../../../../_common/community/community.model';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import AppCommunitySliderItem from './item/item.vue';

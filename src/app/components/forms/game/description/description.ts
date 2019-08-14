@@ -1,10 +1,10 @@
-import { ContentDocument } from 'game-jolt-frontend-lib/components/content/content-document';
-import { ContentWriter } from 'game-jolt-frontend-lib/components/content/content-writer';
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import AppFormControlContent from 'game-jolt-frontend-lib/components/form-vue/control/content/content.vue';
-import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
-import { BaseForm } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import { ContentDocument } from '../../../../../_common/content/content-document';
+import { ContentWriter } from '../../../../../_common/content/content-writer';
+import AppExpand from '../../../../../_common/expand/expand.vue';
+import AppFormControlContent from '../../../../../_common/form-vue/control/content/content.vue';
+import AppForm from '../../../../../_common/form-vue/form';
+import { BaseForm } from '../../../../../_common/form-vue/form.service';
+import { Game } from '../../../../../_common/game/game.model';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { AppGamePerms } from '../../../game/perms/perms';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';

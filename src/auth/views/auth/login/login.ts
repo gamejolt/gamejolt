@@ -1,8 +1,5 @@
-import AppAuthLogin from 'game-jolt-frontend-lib/components/auth/login/login.vue';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
+import AppAuthLogin from '../../../../_common/auth/login/login.vue';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Component } from 'vue-property-decorator';
 import { loggedUserBlock } from '../auth';
 

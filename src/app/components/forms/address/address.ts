@@ -1,8 +1,7 @@
-import { BaseForm } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { Geo, Region } from 'game-jolt-frontend-lib/components/geo/geo.service';
-import { UserAddress } from 'game-jolt-frontend-lib/components/user/address/address.model';
+import { BaseForm } from '../../../../_common/form-vue/form.service';
+import { Geo, Region } from '../../../../_common/geo/geo.service';
+import { UserAddress } from '../../../../_common/user/address/address.model';
 import { Component, Watch } from 'vue-property-decorator';
-
 
 @Component({})
 export default class FormAddress extends BaseForm<UserAddress> {

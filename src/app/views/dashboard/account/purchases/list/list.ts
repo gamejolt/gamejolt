@@ -1,12 +1,9 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Order } from 'game-jolt-frontend-lib/components/order/order.model';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
-import { date } from 'game-jolt-frontend-lib/vue/filters/date';
+import { Api } from '../../../../../../_common/api/api.service';
+import { Order } from '../../../../../../_common/order/order.model';
+import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import { Translate } from '../../../../../../_common/translate/translate.service';
+import { currency } from '../../../../../../_common/filters/currency';
+import { date } from '../../../../../../_common/filters/date';
 import { Component } from 'vue-property-decorator';
 import { routeStore, RouteStore, RouteStoreModule } from '../../account.store';
 

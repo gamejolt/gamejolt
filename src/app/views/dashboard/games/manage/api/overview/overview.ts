@@ -1,8 +1,11 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { duration } from 'game-jolt-frontend-lib/vue/filters/duration';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Api } from '../../../../../../../_common/api/api.service';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../../../_common/route/route-component';
+import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
+import { duration } from '../../../../../../../_common/filters/duration';
+import { number } from '../../../../../../../_common/filters/number';
 import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 

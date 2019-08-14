@@ -1,5 +1,5 @@
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppScrollInview } from 'game-jolt-frontend-lib/components/scroll/inview/inview';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import AppActivityFeedEventItem from '../event-item/event-item.vue';

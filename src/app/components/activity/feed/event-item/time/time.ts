@@ -1,6 +1,6 @@
-import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
+import { EventItem } from '../../../../../../_common/event-item/event-item.model';
+import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
+import { AppTimeAgo } from '../../../../../../_common/time/ago/ago';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 

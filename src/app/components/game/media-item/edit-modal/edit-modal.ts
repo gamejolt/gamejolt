@@ -1,18 +1,17 @@
-import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import AppSketchfabEmbed from 'game-jolt-frontend-lib/components/sketchfab/embed/embed.vue';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import AppVideoEmbed from 'game-jolt-frontend-lib/components/video/embed/embed.vue';
+import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
+import { Environment } from '../../../../../_common/environment/environment.service';
+import { Game } from '../../../../../_common/game/game.model';
+import { BaseModal } from '../../../../../_common/modal/base';
+import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/embed.vue';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Media } from '../../../../views/dashboard/games/manage/manage.store';
 import FormGameImage from '../../../forms/game/image/image.vue';
 import FormGameSketchfab from '../../../forms/game/sketchfab/sketchfab.vue';
 import FormGameVideo from '../../../forms/game/video/video.vue';
 import { GameMediaItemEditModalRemoveCallback } from './edit-modal.service';
-
 
 @Component({
 	components: {

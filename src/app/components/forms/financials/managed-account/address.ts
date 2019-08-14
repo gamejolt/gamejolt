@@ -1,6 +1,6 @@
-import { CommonFormComponents } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { Country, Geo } from 'game-jolt-frontend-lib/components/geo/geo.service';
-import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
+import { CommonFormComponents } from '../../../../../_common/form-vue/form.service';
+import { Country, Geo } from '../../../../../_common/geo/geo.service';
+import { findRequiredVueParent } from '../../../../../utils/vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import FormFinancialsManagedAccountTS from './managed-account';

@@ -1,18 +1,16 @@
-import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { Analytics } from '../../../../_common/analytics/analytics.service';
+import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
+import { number } from '../../../../_common/filters/number';
+import AppPopper from '../../../../_common/popper/popper.vue';
 import { Store } from '../../../store/index';
 import { GameFilteringContainer } from './container';
 
 @Component({
 	components: {
 		AppPopper,
-		AppJolticon,
 	},
 	directives: {
 		AppTrackEvent,

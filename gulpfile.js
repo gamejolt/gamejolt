@@ -80,4 +80,4 @@ const config = {
 	},
 };
 
-require('game-jolt-frontend-lib/gulp/tasks/common')(config, __dirname);
+require('./gulp/tasks/common')(config, __dirname);

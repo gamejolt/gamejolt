@@ -1,8 +1,8 @@
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
-import { BaseForm, FormOnInit, FormOnLoad } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import AppExpand from '../../../../_common/expand/expand.vue';
+import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
+import { BaseForm, FormOnInit, FormOnLoad } from '../../../../_common/form-vue/form.service';
+import { Game } from '../../../../_common/game/game.model';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../store/index';

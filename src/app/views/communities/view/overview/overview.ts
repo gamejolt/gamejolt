@@ -1,32 +1,29 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import { CommunityTag } from 'game-jolt-frontend-lib/components/community/tag/tag.model';
-import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
-import AppUserAvatarList from 'game-jolt-frontend-lib/components/user/user-avatar/list/list.vue';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
+import { Api } from '../../../../../_common/api/api.service';
+import { Community } from '../../../../../_common/community/community.model';
+import { CommunityTag } from '../../../../../_common/community/tag/tag.model';
+import { EventItem } from '../../../../../_common/event-item/event-item.model';
+import AppExpand from '../../../../../_common/expand/expand.vue';
+import { number } from '../../../../../_common/filters/number';
+import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppGameThumbnail from '../../../../../_common/game/thumbnail/thumbnail.vue';
+import { Meta } from '../../../../../_common/meta/meta-service';
+import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import AppScrollAffix from '../../../../../_common/scroll/affix/affix.vue';
+import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
+import { User } from '../../../../../_common/user/user.model';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
+import { ActivityFeedView } from '../../../../components/activity/feed/view';
+import { Store } from '../../../../store/index';
 import AppActivityFeed from '../../../../components/activity/feed/feed.vue';
 import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
-import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppPageContainer from '../../../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
-import { Store } from '../../../../store/index';
 import AppCommunitiesViewOverviewNav from './_nav/nav.vue';
 
 function getChannel(route: Route) {
@@ -191,10 +188,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get placeholderText() {
-		if (
-			!!this.community.post_placeholder_text &&
-			this.community.post_placeholder_text.length > 0
-		) {
+		if (!!this.community.post_placeholder_text && this.community.post_placeholder_text.length > 0) {
 			return this.community.post_placeholder_text;
 		}
 		return this.$gettext(`Share your creations!`);

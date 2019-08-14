@@ -1,0 +1,14 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+vendors = official
+
+@keyframes fade-out-enlarge
+	to
+		opacity: 0
+		transform: scale3d(1.1, 1.1, 1.1)
+
++create-animation('fade', 'out', 'enlarge')
+	animation-name: fade-out-enlarge
+	animation-duration: 250ms
+	animation-timing-function: $strong-ease-out

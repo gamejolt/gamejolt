@@ -1,12 +1,9 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppFormButton from 'game-jolt-frontend-lib/components/form-vue/button/button.vue';
-import Onboarding from 'game-jolt-frontend-lib/components/onboarding/onboarding.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Component } from 'vue-property-decorator';
+import { Api } from '../../../_common/api/api.service';
+import AppFormButton from '../../../_common/form-vue/button/button.vue';
+import Onboarding from '../../../_common/onboarding/onboarding.service';
+import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { AppState, AppStore } from '../../../_common/store/app-store';
 import OnboardingComponent from '../../components/forms/onboarding/base';
 import FormOnboardingFollows from '../../components/forms/onboarding/follows/follows.vue';
 import FormOnboardingProfile from '../../components/forms/onboarding/profile/profile.vue';

@@ -1,5 +1,5 @@
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
+import { Game } from '../../../../_common/game/game.model';
+import { BaseModal } from '../../../../_common/modal/base';
 import { Component, Prop } from 'vue-property-decorator';
 import FormGameHeader from '../../forms/game/header/header.vue';
 

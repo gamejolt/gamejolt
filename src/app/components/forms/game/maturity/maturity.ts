@@ -1,6 +1,6 @@
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import { BaseForm, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
+import AppExpand from '../../../../../_common/expand/expand.vue';
+import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
+import { Game } from '../../../../../_common/game/game.model';
 import { Component } from 'vue-property-decorator';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 

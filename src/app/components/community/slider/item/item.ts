@@ -1,5 +1,5 @@
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import AppCommunityThumbnailImg from 'game-jolt-frontend-lib/components/community/thumbnail/img/img.vue'
+import { Community } from '../../../../../_common/community/community.model';
+import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 

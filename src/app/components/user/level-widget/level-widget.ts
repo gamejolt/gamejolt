@@ -1,10 +1,9 @@
-import AppProgressBar from 'game-jolt-frontend-lib/components/progress/bar/bar.vue';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { User } from '../../../../_common/user/user.model';
+import { number } from '../../../../_common/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 @Component({
 	components: {

@@ -1,9 +1,9 @@
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppThemeSvg } from 'game-jolt-frontend-lib/components/theme/svg/svg';
-import AppTranslateLangSelector from 'game-jolt-frontend-lib/components/translate/lang-selector/lang-selector.vue';
-import { date } from 'game-jolt-frontend-lib/vue/filters/date';
+import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
+import { Navigate } from '../../../../_common/navigate/navigate.service';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
+import AppTranslateLangSelector from '../../../../_common/translate/lang-selector/lang-selector.vue';
+import { date } from '../../../../_common/filters/date';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import * as _ClientSystemReportModalMod from '../../client/system-report-modal/system-report-modal.service';

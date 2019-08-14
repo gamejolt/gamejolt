@@ -1,22 +1,18 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
+import { Component } from 'vue-property-decorator';
+import { Api } from '../../../../../../../../../_common/api/api.service';
+import { date } from '../../../../../../../../../_common/filters/date';
+import { number } from '../../../../../../../../../_common/filters/number';
+import { GameScoreTable } from '../../../../../../../../../_common/game/score-table/score-table.model';
+import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { UserGameScore } from 'game-jolt-frontend-lib/components/user/game-score/game-score.model';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import { date } from 'game-jolt-frontend-lib/vue/filters/date';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
-import { Component } from 'vue-property-decorator';
+} from '../../../../../../../../../_common/route/route-component';
+import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
 import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 
 @Component({
 	name: 'RouteDashGamesManageApiScoreboardsScoresView',
-	components: {
-		AppJolticon,
-	},
 	filters: {
 		number,
 		date,

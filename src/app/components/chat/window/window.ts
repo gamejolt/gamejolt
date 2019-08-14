@@ -1,11 +1,10 @@
-import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppScrollInviewParent } from 'game-jolt-frontend-lib/components/scroll/inview/parent';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
+import { number } from '../../../../_common/filters/number';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { AppScrollInviewParent } from '../../../../_common/scroll/inview/parent';
 import { Store } from '../../../store/index';
 import { ChatClient } from '../client';
 import { ChatMessage } from '../message';
@@ -15,10 +14,8 @@ import AppChatUserList from '../user-list/user-list.vue';
 import AppChatWindowOutput from './output/output.vue';
 import AppChatWindowSend from './send/send.vue';
 
-
 @Component({
 	components: {
-		AppJolticon,
 		AppScrollInviewParent,
 		AppChatUserList,
 		AppChatWindowSend,

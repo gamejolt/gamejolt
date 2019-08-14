@@ -1,11 +1,19 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { ModalFacebookPageSelector } from 'game-jolt-frontend-lib/components/linked-account/facebook-page-selector-modal/facebook-page-selector-modal-service';
-import { getLinkedAccountProviderDisplayName, LinkedAccount, Provider, TumblrBlog } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
-import AppLinkedAccount from 'game-jolt-frontend-lib/components/linked-account/linked-account.vue';
-import { LinkedAccounts } from 'game-jolt-frontend-lib/components/linked-account/linked-accounts.service';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
+import { Api } from '../../../../../../../_common/api/api.service';
+import { Growls } from '../../../../../../../_common/growls/growls.service';
+import { ModalFacebookPageSelector } from '../../../../../../../_common/linked-account/facebook-page-selector-modal/facebook-page-selector-modal-service';
+import {
+	getLinkedAccountProviderDisplayName,
+	LinkedAccount,
+	Provider,
+	TumblrBlog,
+} from '../../../../../../../_common/linked-account/linked-account.model';
+import AppLinkedAccount from '../../../../../../../_common/linked-account/linked-account.vue';
+import { LinkedAccounts } from '../../../../../../../_common/linked-account/linked-accounts.service';
+import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../../../_common/route/route-component';
 import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 

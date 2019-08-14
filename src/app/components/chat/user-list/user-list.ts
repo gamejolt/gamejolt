@@ -1,6 +1,6 @@
-import { AppScrollInviewParent } from 'game-jolt-frontend-lib/components/scroll/inview/parent';
-import { fuzzysearch } from 'game-jolt-frontend-lib/utils/string';
-import { findVueParent } from 'game-jolt-frontend-lib/utils/vue';
+import { AppScrollInviewParent } from '../../../../_common/scroll/inview/parent';
+import { fuzzysearch } from '../../../../utils/string';
+import { findVueParent } from '../../../../utils/vue';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { ChatRoom } from '../room';

@@ -1,9 +1,6 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Auth } from 'game-jolt-frontend-lib/components/auth/auth.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
+import { Api } from '../../../../_common/api/api.service';
+import { Auth } from '../../../../_common/auth/auth.service';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Component } from 'vue-property-decorator';
 
 @Component({

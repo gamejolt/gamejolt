@@ -1,15 +1,10 @@
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { UserStripeManagedAccount } from 'game-jolt-frontend-lib/components/user/stripe-managed-account/stripe-managed-account';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import { date } from 'game-jolt-frontend-lib/vue/filters/date';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
+import { date } from '../../../../../_common/filters/date';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
 
 @Component({
-	components: {
-		AppJolticon,
-	},
 	directives: {
 		AppTooltip,
 	},
@@ -32,7 +27,8 @@ export default class AppPartnerTerms extends Vue {
 
 	get hasSignedSomeAgreement() {
 		return (
-			this.account && (this.account.tos_signed_developer > 0 || this.account.tos_signed_partner > 0)
+			this.account &&
+			(this.account.tos_signed_developer > 0 || this.account.tos_signed_partner > 0)
 		);
 	}
 

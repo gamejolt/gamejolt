@@ -1,8 +1,8 @@
-import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
-import AppErrorPage from 'game-jolt-frontend-lib/components/error/page/page.vue';
-import AppGrowls from 'game-jolt-frontend-lib/components/growls/growls.vue';
-import AppLoadingBar from 'game-jolt-frontend-lib/components/loading/bar/bar.vue';
-import { AppTheme } from 'game-jolt-frontend-lib/components/theme/theme';
+import { Connection } from '../_common/connection/connection-service';
+import AppErrorPage from '../_common/error/page/page.vue';
+import AppGrowls from '../_common/growls/growls.vue';
+import AppLoadingBar from '../_common/loading/bar/bar.vue';
+import { AppTheme } from '../_common/theme/theme';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { loadCurrentLanguage } from '../utils/translations';

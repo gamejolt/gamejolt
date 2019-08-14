@@ -1,0 +1,98 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+-fullscreen()
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+
+.-container
+	-fullscreen()
+	position: fixed
+	overflow: hidden
+	-webkit-overflow-scrolling: touch
+
+	// Animation stuff.
+	// Tells vue that we want to animate for this long, basically.
+	&.v-enter-active, &.v-leave-active
+		transition-duration: 300ms
+
+		.modal-content
+			transition: transform 300ms $strong-ease-out, opacity 300ms
+
+	&.v-enter, &.v-leave-to
+		.modal-content
+			opacity: 0
+
+			// On sm-up we do a expand open animation.
+			@media $media-sm-up
+				transform: scale3d(0.8, 0.8, 0.8)
+
+	>>> .backdrop
+		z-index: 1
+
+// Container that the modal scrolls within
+.modal
+	-fullscreen()
+	position: absolute
+	z-index: 2
+
+	.modal-content
+		opacity: 1
+		transform: none
+
+.modal-content
+	change-bg('bg')
+	theme-prop('color', 'fg')
+	elevate-3()
+	position: relative
+	background-clip: padding-box
+	outline: 0 // Remove focus outline from opened modal
+
+	// Full screen on xs
+	@media $media-xs
+		min-height: 100vh
+
+	@media $media-sm-up
+		rounded-corners-lg()
+		margin: 30px auto
+		margin-top: 100px
+
+@media $media-sm-up
+	.modal-sm
+		.modal-content
+			width: 600px
+
+@media $media-md-up
+	.modal-content
+		width: $container-md
+
+.modal-full
+	change-bg('bg')
+
+	.modal-content
+		-fullscreen()
+		elevate-0()
+		position: absolute
+		width: auto
+		margin: 0
+		border-radius: 0
+		background-color: transparent
+
+.-footer
+	padding: $modal-padding-xs
+	padding-bottom: 0
+	border-bottom-left-radius: $border-radius-large
+	border-bottom-right-radius: $border-radius-large
+
+	@media $media-sm-up
+		padding: $modal-padding
+		padding-bottom: 0
+
+>>> .gj-scroll-affixed
+	z-index: 1
+
+	.-footer
+		border-radius: 0
+		box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.1)

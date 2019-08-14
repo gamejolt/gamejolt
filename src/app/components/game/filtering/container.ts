@@ -1,7 +1,7 @@
-import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { forEach } from 'game-jolt-frontend-lib/utils/collection';
-import { objectEquals } from 'game-jolt-frontend-lib/utils/object';
+import { Scroll } from '../../../../_common/scroll/scroll.service';
+import { Translate } from '../../../../_common/translate/translate.service';
+import { forEach } from '../../../../utils/collection';
+import { objectEquals } from '../../../../utils/object';
 import Vue from 'vue';
 import { Location, Route } from 'vue-router';
 import { router } from '../../../views/index';
