@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import AppLoading from '../../loading/loading.vue';
+import AppLoading from '../loading/loading.vue';
 
 // We have to not use Vue for video embed stuff!
 // https://forum.ionicframework.com/t/ionic-2-video-video-memory-leak-garbage-collection-solved/52333

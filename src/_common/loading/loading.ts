@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { importContext } from '../../../utils/utils';
+import { importContext } from '../../utils/utils';
 
 @Component({})
 export default class AppLoading extends Vue {

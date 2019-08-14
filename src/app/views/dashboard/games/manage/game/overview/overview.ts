@@ -12,9 +12,9 @@ import {
 } from '../../../../../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
-import { AppCommunityPerms } from '../../../../../community/perms/perms';
-import AppGameDevStageSelector from '../../../../../forms/game/dev-stage-selector/dev-stage-selector.vue';
-import { AppGamePerms } from '../../../../../game/perms/perms';
+import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
+import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector.vue';
+import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @Component({
@@ -37,8 +37,7 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 })
 @RouteResolver({
 	deps: {},
-	resolver: ({ route }) =>
-		Api.sendRequest('/web/dash/developer/games/overview/' + route.params.id),
+	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/overview/' + route.params.id),
 })
 export default class RouteDashGamesManageGameOverview extends BaseRouteComponent {
 	@AppState

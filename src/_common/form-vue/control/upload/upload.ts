@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../../../jolticon/jolticon.vue';
+import AppJolticon from '../../../jolticon/jolticon.vue';
 import { number } from '../../../filters/number';
 import AppProgressBar from '../../../progress/bar/bar.vue';
 import BaseFormControl from '../base';
@@ -155,11 +155,7 @@ function traverseFileTree(files: File[], entry: any, path = ''): Promise<void> {
 					const promises = [];
 					for (let i = 0; i < entries.length; ++i) {
 						promises.push(
-							traverseFileTree(
-								files,
-								entries[i],
-								(path ? path : '') + entry.name + '/'
-							)
+							traverseFileTree(files, entries[i], (path ? path : '') + entry.name + '/')
 						);
 					}
 

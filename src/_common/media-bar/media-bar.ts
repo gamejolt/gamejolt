@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import AppLoading from '../../loading/loading.vue';
+import AppLoading from '../loading/loading.vue';
 import { Analytics } from '../analytics/analytics.service';
 import { Growls } from '../growls/growls.service';
 import AppScrollScroller from '../scroll/scroller/scroller.vue';

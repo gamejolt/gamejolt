@@ -1,7 +1,7 @@
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { ContentObject } from '../../content-object';
-import AppContentGif from '../gif/gif.vue';
+import AppContentGif from '../../components/gif/gif.vue';
 
 @Component({})
 export class AppContentViewerGif extends Vue {

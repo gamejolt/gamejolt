@@ -1,6 +1,6 @@
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../../../jolticon/jolticon.vue';
-import AppLoading from '../../../../loading/loading.vue';
+import AppJolticon from '../../../jolticon/jolticon.vue';
+import AppLoading from '../../../loading/loading.vue';
 import { Api } from '../../../api/api.service';
 import AppCodemirror from '../../../codemirror/codemirror.vue';
 import { Environment } from '../../../environment/environment.service';

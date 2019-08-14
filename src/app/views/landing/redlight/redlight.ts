@@ -4,7 +4,7 @@ import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
-import { AppAuthJoinLazy } from '../../lazy';
+import { AppAuthJoinLazy } from '../../../components/lazy';
 
 function getRandomInt(min: number, max: number) {
 	min = Math.ceil(min);

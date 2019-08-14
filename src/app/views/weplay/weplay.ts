@@ -4,7 +4,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-
 import { Screen } from '../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../_common/tooltip/tooltip';
 import { User } from '../../../_common/user/user.model';
-import AppWeplayLogo from '../weplay/logo/logo.vue';
+import AppWeplayLogo from '../../components/weplay/logo/logo.vue';
 
 @Component({
 	name: 'RouteWeplay',

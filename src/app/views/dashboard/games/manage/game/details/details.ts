@@ -3,8 +3,8 @@ import { Growls } from '../../../../../../../_common/growls/growls.service';
 import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { AppState, AppStore } from '../../../../../../../_common/store/app-store';
-import AppGameDevStageSelector from '../../../../../forms/game/dev-stage-selector/dev-stage-selector.vue';
-import FormGame from '../../../../../forms/game/game.vue';
+import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector.vue';
+import FormGame from '../../../../../../components/forms/game/game.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @Component({

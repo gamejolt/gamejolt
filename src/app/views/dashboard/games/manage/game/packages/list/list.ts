@@ -14,9 +14,9 @@ import {
 } from '../../../../../../../../_common/route/route-component';
 import { Sellable } from '../../../../../../../../_common/sellable/sellable.model';
 import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip';
-import AppDashGameWizardControls from '../../../../../../forms/game/wizard-controls/wizard-controls.vue';
-import { GamePackageEditModal } from '../../../../../../game/package/edit-modal/edit-modal.service';
-import { AppGamePerms } from '../../../../../../game/perms/perms';
+import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
+import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
+import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import { RouteStore, RouteStoreModule } from '../../../manage.store';
 
 @Component({
@@ -37,8 +37,7 @@ import { RouteStore, RouteStoreModule } from '../../../manage.store';
 })
 @RouteResolver({
 	deps: {},
-	resolver: ({ route }) =>
-		Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id),
+	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id),
 })
 export default class RouteDashGamesManageGamePackagesList extends BaseRouteComponent {
 	@RouteStoreModule.State

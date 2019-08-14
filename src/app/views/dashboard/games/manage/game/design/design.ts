@@ -5,7 +5,7 @@ import {
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
 import { ThemeMutation, ThemeStore } from '../../../../../../../_common/theme/theme.store';
-import FormGameDesign from '../../../../../forms/game/design/design.vue';
+import FormGameDesign from '../../../../../../components/forms/game/design/design.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @Component({

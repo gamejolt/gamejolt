@@ -6,7 +6,7 @@ import {
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
-import FormGameDescription from '../../../../../forms/game/description/description.vue';
+import FormGameDescription from '../../../../../../components/forms/game/description/description.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @Component({

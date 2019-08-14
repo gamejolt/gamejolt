@@ -12,8 +12,8 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
-import FormGameSong from '../../../../../forms/game/song/song.vue';
-import AppDashGameWizardControls from '../../../../../forms/game/wizard-controls/wizard-controls.vue';
+import FormGameSong from '../../../../../../components/forms/game/song/song.vue';
+import AppDashGameWizardControls from '../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @Component({
@@ -74,9 +74,7 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 	}
 
 	async removeSong(song: GameSong) {
-		const result = await ModalConfirm.show(
-			this.$gettext('dash.games.music.remove_confirmation')
-		);
+		const result = await ModalConfirm.show(this.$gettext('dash.games.music.remove_confirmation'));
 
 		if (!result) {
 			return;

@@ -4,8 +4,8 @@ import { ForumCategory } from '../../../../../_common/forum/category/category.mo
 import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
 import { ForumPost } from '../../../../../_common/forum/post/post.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import AppForumChannelList from '../../../forum/channel-list/channel-list.vue';
-import AppForumRules from '../../../forum/rules/rules.vue';
+import AppForumChannelList from '../../../../components/forum/channel-list/channel-list.vue';
+import AppForumRules from '../../../../components/forum/rules/rules.vue';
 
 @Component({
 	name: 'RouteForumsLandingOverview',

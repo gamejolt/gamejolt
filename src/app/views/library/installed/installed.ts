@@ -3,7 +3,7 @@ import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissab
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
-import AppPageHeader from '../../page-header/page-header.vue';
+import AppPageHeader from '../../../components/page-header/page-header.vue';
 import AppLibraryInstalledGame from './_game/game.vue';
 
 @Component({

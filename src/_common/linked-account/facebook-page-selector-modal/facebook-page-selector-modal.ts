@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import AppLoading from '../../../loading/loading.vue';
+import AppLoading from '../../loading/loading.vue';
 import { stringSort } from '../../../utils/array';
 import { Api } from '../../api/api.service';
 import { BaseModal } from '../../modal/base';
@@ -36,10 +36,7 @@ export default class AppModalFacebookPageSelector extends BaseModal {
 
 	async created() {
 		const payload = await Api.sendRequest(
-			'/web/dash/linked-accounts/facebook-pages/' +
-				this.account.game_id +
-				'/' +
-				this.account.id,
+			'/web/dash/linked-accounts/facebook-pages/' + this.account.game_id + '/' + this.account.id,
 			null,
 			{ detach: true }
 		);

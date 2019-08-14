@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { Ads } from '../../ad/ads.service';
-import { Playwire } from '../../ad/playwire/playwire.service';
+import { Ads } from '../ads.service';
+import { Playwire } from './playwire.service';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { Game } from '../../game/game.model';
 import { User } from '../../user/user.model';

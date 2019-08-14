@@ -3,7 +3,7 @@ import { State } from 'vuex-class';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import { Store } from '../../../store/index';
-import { AppAuthJoinLazy } from '../../lazy';
+import { AppAuthJoinLazy } from '../../../components/lazy';
 
 @Component({
 	name: 'RouteLandingLearn',

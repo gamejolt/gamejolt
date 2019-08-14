@@ -5,7 +5,7 @@ import { Growls } from '../../../../../../../_common/growls/growls.service';
 import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { AppState, AppStore } from '../../../../../../../_common/store/app-store';
-import FormGameSettings from '../../../../../forms/game/settings/settings.vue';
+import FormGameSettings from '../../../../../../components/forms/game/settings/settings.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @Component({

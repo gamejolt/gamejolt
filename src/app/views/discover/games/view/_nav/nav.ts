@@ -8,8 +8,8 @@ import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../../_common/report/modal/modal.service';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { Store } from '../../../../../store/index';
-import AppGameModLinks from '../../../../game/mod-links/mod-links.vue';
-import { AppGamePerms } from '../../../../game/perms/perms';
+import AppGameModLinks from '../../../../../components/game/mod-links/mod-links.vue';
+import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { RouteStore, RouteStoreModule } from '../view.store';
 
 @Component({

@@ -14,7 +14,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { Translate } from '../../../../../_common/translate/translate.service';
 import { YoutubeChannel } from '../../../../../_common/youtube/channel/channel-model';
-import { UserSetPasswordModal } from '../../../user/set-password-modal/set-password-modal.service';
+import { UserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
 @Component({
@@ -87,12 +87,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 
 	async onLink(provider: Provider) {
 		this.loading = true;
-		await LinkedAccounts.link(
-			this.$router,
-			provider,
-			'/web/dash/linked-accounts/link/',
-			'User'
-		);
+		await LinkedAccounts.link(this.$router, provider, '/web/dash/linked-accounts/link/', 'User');
 	}
 
 	async onUnlink(provider: Provider) {
@@ -171,12 +166,9 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 			this.channels = YoutubeChannel.populate(payload.channels);
 		} else {
 			Growls.error(
-				this.$gettextInterpolate(
-					'Failed to remove YouTube channel %{ title } form Game Jolt.',
-					{
-						title: channel.title,
-					}
-				)
+				this.$gettextInterpolate('Failed to remove YouTube channel %{ title } form Game Jolt.', {
+					title: channel.title,
+				})
 			);
 		}
 	}
@@ -210,9 +202,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 			);
 		} else {
 			Growls.error(
-				this.$gettext(
-					'Failed to change to new Tumblr blog. Maybe try to sync your Tumblr account.'
-				)
+				this.$gettext('Failed to change to new Tumblr blog. Maybe try to sync your Tumblr account.')
 			);
 		}
 
@@ -229,9 +219,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 		const tempBlogTitle = this.tumblrAccount.tumblrSelectedBlog.title;
 
 		const payload = await Api.sendRequest(
-			'/web/dash/linked-accounts/unlink-tumblr-blog/' +
-				this.tumblrAccount.id +
-				'?resource=User'
+			'/web/dash/linked-accounts/unlink-tumblr-blog/' + this.tumblrAccount.id + '?resource=User'
 		);
 
 		if (payload.success) {

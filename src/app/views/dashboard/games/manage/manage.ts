@@ -9,9 +9,9 @@ import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import { Translate } from '../../../../../_common/translate/translate.service';
 import { store } from '../../../../store';
-import { AppGamePerms } from '../../../game/perms/perms';
-import { IntentService } from '../../../intent/intent.service';
-import AppPageHeader from '../../../page-header/page-header.vue';
+import { AppGamePerms } from '../../../../components/game/perms/perms';
+import { IntentService } from '../../../../components/intent/intent.service';
+import AppPageHeader from '../../../../components/page-header/page-header.vue';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './manage.store';
 
 @Component({

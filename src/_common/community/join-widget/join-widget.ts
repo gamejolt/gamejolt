@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { GridClient } from '../../../../../app/components/grid/client.service';
+import { GridClient } from '../../../app/components/grid/client.service';
 import { AppTrackEvent } from '../../analytics/track-event.directive';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
-import { $joinCommunity, $leaveCommunity, Community } from '../../community/community.model';
+import { $joinCommunity, $leaveCommunity, Community } from '../community.model';
 import { number } from '../../filters/number';
 import { Growls } from '../../growls/growls.service';
 import { AppStore } from '../../store/app-store';
@@ -68,9 +68,7 @@ export default class AppCommunityJoinWidget extends Vue {
 				this.grid.joinCommunity(this.community);
 				this.join(this.community);
 			} catch (e) {
-				Growls.error(
-					this.$gettext(`Something has prevented you from joining this community.`)
-				);
+				Growls.error(this.$gettext(`Something has prevented you from joining this community.`));
 			}
 		} else {
 			try {

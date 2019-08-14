@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import AppLoading from '../../../../../loading/loading.vue';
+import AppLoading from '../../../../loading/loading.vue';
 import { Api } from '../../../../api/api.service';
 import { BaseModal } from '../../../../modal/base';
 import AppModalTS from '../../../../modal/modal';
@@ -79,10 +79,7 @@ export default class AppContentEditorGifModal extends BaseModal {
 		const term = this.searchValue;
 		this.currentSearchTerm = term;
 		const url =
-			'/web/content/tenor/search?q=' +
-			encodeURIComponent(term) +
-			'&page=' +
-			this.currentSearchPage;
+			'/web/content/tenor/search?q=' + encodeURIComponent(term) + '&page=' + this.currentSearchPage;
 
 		try {
 			const payload = await Api.sendRequest(url, undefined, { detach: true });

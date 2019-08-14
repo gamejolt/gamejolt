@@ -1,7 +1,7 @@
 import { RawLocation } from 'vue-router';
 import { Api } from '../api/api.service';
 import { Collaboratable, Perm } from '../collaborator/collaboratable';
-import { CommunityTag } from '../community/tag/tag.model';
+import { CommunityTag } from './tag/tag.model';
 import { Game } from '../game/game.model';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';

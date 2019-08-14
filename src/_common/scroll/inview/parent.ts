@@ -1,6 +1,6 @@
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { ScrollWatcher } from '../../scroll/watcher.service';
+import { ScrollWatcher } from '../watcher.service';
 import { ScrollInviewContainer } from './container';
 
 @Component({})

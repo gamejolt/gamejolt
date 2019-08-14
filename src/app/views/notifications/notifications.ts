@@ -5,10 +5,10 @@ import { HistoryCache } from '../../../_common/history/cache/cache.service';
 import { Notification } from '../../../_common/notification/notification-model';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Store, store } from '../../store';
-import { ActivityFeedService } from '../activity/feed/feed-service';
-import AppActivityFeed from '../activity/feed/feed.vue';
-import AppActivityFeedPlaceholder from '../activity/feed/placeholder/placeholder.vue';
-import { ActivityFeedView } from '../activity/feed/view';
+import { ActivityFeedService } from '../../components/activity/feed/feed-service';
+import AppActivityFeed from '../../components/activity/feed/feed.vue';
+import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
+import { ActivityFeedView } from '../../components/activity/feed/view';
 
 const HistoryCacheFeedTag = 'notifications-feed';
 

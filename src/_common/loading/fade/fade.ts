@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppLoading from '../../../loading/loading.vue';
+import AppLoading from '../loading.vue';
 
 @Component({
 	components: {

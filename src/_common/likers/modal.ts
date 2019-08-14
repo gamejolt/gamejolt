@@ -1,6 +1,6 @@
 import { Component, Prop } from 'vue-property-decorator';
-import AppUserList from '../../../../app/components/user/list/list.vue';
-import AppLoading from '../../loading/loading.vue';
+import AppUserList from '../../app/components/user/list/list.vue';
+import AppLoading from '../loading/loading.vue';
 import { Api } from '../api/api.service';
 import { Comment } from '../comment/comment-model';
 import { number } from '../filters/number';

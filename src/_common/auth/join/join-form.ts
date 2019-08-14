@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import AppLoading from '../../../loading/loading.vue';
+import AppLoading from '../../loading/loading.vue';
 import { Api } from '../../api/api.service';
 import { Connection } from '../../connection/connection-service';
 import { Environment } from '../../environment/environment.service';

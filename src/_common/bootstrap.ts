@@ -9,7 +9,6 @@ import { Connection } from './connection/connection-service';
 import AppExternalLink from './external-link/external-link.vue';
 import AppJolticon from './jolticon/jolticon';
 import { Meta } from './meta/meta-service';
-import { Navigate } from './navigate/navigate.service';
 import { Payload } from './payload/payload-service';
 import { Referrer } from './referrer/referrer.service';
 import { Settings } from './settings/settings.service';
@@ -30,7 +29,6 @@ export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, rout
 		Meta.init(router);
 		Referrer.init(router);
 		Analytics.initRouter(router);
-		Navigate.init(router);
 		hijackLinks(router, 'gamejolt.com');
 	}
 

@@ -4,9 +4,9 @@ import AppFormButton from '../../../_common/form-vue/button/button.vue';
 import Onboarding from '../../../_common/onboarding/onboarding.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../_common/store/app-store';
-import OnboardingComponent from '../forms/onboarding/base';
-import FormOnboardingFollows from '../forms/onboarding/follows/follows.vue';
-import FormOnboardingProfile from '../forms/onboarding/profile/profile.vue';
+import OnboardingComponent from '../../components/forms/onboarding/base';
+import FormOnboardingFollows from '../../components/forms/onboarding/follows/follows.vue';
+import FormOnboardingProfile from '../../components/forms/onboarding/profile/profile.vue';
 
 @Component({
 	name: 'RouteWelcome',

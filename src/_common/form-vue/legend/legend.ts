@@ -1,4 +1,4 @@
-import AppButton from '../../button/button.vue';
+import AppButton from '../button/button.vue';
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 

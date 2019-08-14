@@ -9,9 +9,9 @@ import { WithRouteStore } from '../../../../_common/route/route-store';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import { Store, store } from '../../../store/index';
-import AppPageHeader from '../../page-header/page-header.vue';
-import { UserAvatarModal } from '../../user/avatar-modal/avatar-modal.service';
-import { UserHeaderModal } from '../../user/header-modal/header-modal.service';
+import AppPageHeader from '../../../components/page-header/page-header.vue';
+import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
+import { UserHeaderModal } from '../../../components/user/header-modal/header-modal.service';
 import { RouteStore, RouteStoreModule, RouteStoreName } from './account.store';
 
 @Component({

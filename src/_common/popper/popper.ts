@@ -2,10 +2,10 @@ import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Backdrop } from '../backdrop/backdrop.service';
 import AppBackdrop from '../backdrop/backdrop.vue';
-import { Popper } from '../popper/popper.service';
 import { Screen } from '../screen/screen-service';
 import AppScrollScrollerTS from '../scroll/scroller/scroller';
 import AppScrollScroller from '../scroll/scroller/scroller.vue';
+import { Popper } from './popper.service';
 import './popper.styl';
 
 const mod: any = require('v-tooltip');

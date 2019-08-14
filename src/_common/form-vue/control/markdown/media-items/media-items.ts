@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../../../../jolticon/jolticon.vue';
+import AppJolticon from '../../../../jolticon/jolticon.vue';
 import { Api } from '../../../../api/api.service';
 import { Clipboard } from '../../../../clipboard/clipboard-service';
 import { MediaItem } from '../../../../media-item/media-item-model';

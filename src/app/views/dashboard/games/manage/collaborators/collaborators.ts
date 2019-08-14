@@ -9,7 +9,7 @@ import { Growls } from '../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../../../../_common/time/ago/ago';
-import FormGameCollaborator from '../../../../forms/game/collaborator/collaborator.vue';
+import FormGameCollaborator from '../../../../../components/forms/game/collaborator/collaborator.vue';
 import { RouteStore, RouteStoreModule } from '../manage.store';
 
 @Component({

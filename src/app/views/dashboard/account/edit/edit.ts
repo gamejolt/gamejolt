@@ -5,7 +5,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { Translate } from '../../../../../_common/translate/translate.service';
 import { Store } from '../../../../store/index';
-import FormProfile from '../../../forms/profile/profile.vue';
+import FormProfile from '../../../../components/forms/profile/profile.vue';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 
 @Component({

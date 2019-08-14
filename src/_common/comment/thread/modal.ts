@@ -1,6 +1,6 @@
 import { Component, Prop } from 'vue-property-decorator';
 import { Analytics } from '../../analytics/analytics.service';
-import { CommentState, CommentStore } from '../../comment/comment-store';
+import { CommentState, CommentStore } from '../comment-store';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import { BaseModal } from '../../modal/base';
 import { Screen } from '../../screen/screen-service';

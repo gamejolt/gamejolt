@@ -1,7 +1,7 @@
 import { Component } from 'vue-property-decorator';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import AppUserCard from '../../../../_common/user/card/card.vue';
-import { Search } from '../../search/search-service';
+import { Search } from '../../../components/search/search-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../search.store';
 
 @Component({

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../jolticon/jolticon.vue';
+import AppJolticon from '../jolticon/jolticon.vue';
 import { Screen } from '../screen/screen-service';
 import { AppGrowlDynamic } from './growl-dynamic';
 import { Growl } from './growls.service';

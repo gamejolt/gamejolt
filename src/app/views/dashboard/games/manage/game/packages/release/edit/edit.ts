@@ -11,7 +11,7 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../../../_common/route/route-component';
-import FormGameRelease from '../../../../../../../forms/game/release/release.vue';
+import FormGameRelease from '../../../../../../../../components/forms/game/release/release.vue';
 import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 
 @Component({
@@ -47,14 +47,11 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 
 	get routeTitle() {
 		if (this.game && this.package && this.release) {
-			return this.$gettextInterpolate(
-				'Edit Release %{ release } - %{ package } - %{ game }',
-				{
-					game: this.game.title,
-					package: this.package.title || this.game.title,
-					release: this.release.version_number,
-				}
-			);
+			return this.$gettextInterpolate('Edit Release %{ release } - %{ package } - %{ game }', {
+				game: this.game.title,
+				package: this.package.title || this.game.title,
+				release: this.release.version_number,
+			});
 		}
 		return null;
 	}

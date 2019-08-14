@@ -20,12 +20,12 @@ import { UserFriendship } from '../../../../_common/user/friendship/friendship.m
 import { User } from '../../../../_common/user/user.model';
 import { YoutubeChannel } from '../../../../_common/youtube/channel/channel-model';
 import { Store } from '../../../store/index';
-import { ChatClient } from '../../chat/client';
-import AppCommentOverview from '../../comment/overview/overview.vue';
-import AppGameList from '../../game/list/list.vue';
-import AppGameListPlaceholder from '../../game/list/placeholder/placeholder.vue';
-import AppPageContainer from '../../page-container/page-container.vue';
-import AppUserKnownFollowers from '../../user/known-followers/known-followers.vue';
+import { ChatClient } from '../../../components/chat/client';
+import AppCommentOverview from '../../../components/comment/overview/overview.vue';
+import AppGameList from '../../../components/game/list/list.vue';
+import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
+import AppPageContainer from '../../../components/page-container/page-container.vue';
+import AppUserKnownFollowers from '../../../components/user/known-followers/known-followers.vue';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 
 @Component({
@@ -206,10 +206,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	get shouldShowKnownFollowers() {
 		return (
-			!!this.app.user &&
-			!!this.user &&
-			this.isOverviewLoaded &&
-			this.app.user.id !== this.user.id
+			!!this.app.user && !!this.user && this.isOverviewLoaded && this.app.user.id !== this.user.id
 		);
 	}
 

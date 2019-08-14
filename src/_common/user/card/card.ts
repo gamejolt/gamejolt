@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import AppJolticon from '../../../jolticon/jolticon.vue';
-import AppLoading from '../../../loading/loading.vue';
+import AppJolticon from '../../jolticon/jolticon.vue';
+import AppLoading from '../../loading/loading.vue';
 import { number } from '../../filters/number';
 import { AppStore } from '../../store/app-store';
 import { AppTheme } from '../../theme/theme';

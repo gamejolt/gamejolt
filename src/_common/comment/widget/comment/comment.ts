@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../../../jolticon/jolticon.vue';
+import AppJolticon from '../../../jolticon/jolticon.vue';
 import { findRequiredVueParent } from '../../../../utils/vue';
 import { AppTrackEvent } from '../../../analytics/track-event.directive';
 import { AppAuthRequired } from '../../../auth/auth-required-directive';
@@ -149,14 +149,11 @@ export default class AppCommentWidgetComment extends Vue {
 		// A collaborator for the game the comment is attached to can remove,
 		// if they have the comments permission.
 		if (this.widget.collaborators) {
-			const collaborator = this.widget.collaborators.find(
-				item => item.user_id === this.user!.id
-			);
+			const collaborator = this.widget.collaborators.find(item => item.user_id === this.user!.id);
 
 			if (
 				collaborator &&
-				(collaborator.perms.indexOf('comments') !== -1 ||
-					collaborator.perms.indexOf('all') !== -1)
+				(collaborator.perms.indexOf('comments') !== -1 || collaborator.perms.indexOf('all') !== -1)
 			) {
 				return true;
 			}

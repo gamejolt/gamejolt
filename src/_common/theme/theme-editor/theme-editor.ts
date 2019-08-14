@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppLoading from '../../../loading/loading.vue';
+import AppLoading from '../../loading/loading.vue';
 import { Api } from '../../api/api.service';
 import AppCodemirror from '../../codemirror/codemirror.vue';
 import AppColorpicker from '../../colorpicker/colorpicker.vue';
@@ -38,13 +38,9 @@ export default class AppThemeEditor extends Vue {
 	definition: any = {};
 
 	async created() {
-		const response = await Api.sendRequest(
-			'/sites-io/get-template/' + this.template,
-			undefined,
-			{
-				detach: true,
-			}
-		);
+		const response = await Api.sendRequest('/sites-io/get-template/' + this.template, undefined, {
+			detach: true,
+		});
 
 		this.isLoaded = true;
 

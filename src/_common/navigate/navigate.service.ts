@@ -1,4 +1,3 @@
-import VueRouter from 'vue-router';
 import { Environment } from '../environment/environment.service';
 
 export type DestructorFunc = (href?: string) => void;
@@ -26,10 +25,6 @@ export class Navigate {
 		}
 
 		return null;
-	}
-
-	static init(router: VueRouter) {
-		this.router = router;
 	}
 
 	private static callDestructors(href?: string) {

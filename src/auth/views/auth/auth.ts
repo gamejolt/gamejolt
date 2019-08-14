@@ -8,7 +8,7 @@ import { BaseRouteComponent } from '../../../_common/route/route-component';
 import { AppThemeSvg } from '../../../_common/theme/svg/svg';
 import AppTranslateLangSelector from '../../../_common/translate/lang-selector/lang-selector.vue';
 import { store } from '../../store/index';
-import AppCoverImg from '../cover-img/cover-img.vue';
+import AppCoverImg from '../../components/cover-img/cover-img.vue';
 import './auth-content.styl';
 
 export function loggedUserBlock() {

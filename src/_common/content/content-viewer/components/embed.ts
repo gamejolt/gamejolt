@@ -2,7 +2,7 @@ import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { ContentObject } from '../../content-object';
 import { ContentOwner } from '../../content-owner';
-import AppContentEmbed from '../embed/embed.vue';
+import AppContentEmbed from '../../../video/embed/embed.vue';
 
 @Component({})
 export class AppContentViewerEmbed extends Vue {

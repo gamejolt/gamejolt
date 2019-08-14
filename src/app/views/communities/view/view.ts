@@ -11,8 +11,8 @@ import { Growls } from '../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
 import { Store } from '../../../store/index';
-import { CommunityThumbnailModal } from '../../forms/community/thumbnail/modal/modal.service';
-import AppPageHeader from '../../page-header/page-header.vue';
+import { CommunityThumbnailModal } from '../../../components/forms/community/thumbnail/modal/modal.service';
+import AppPageHeader from '../../../components/page-header/page-header.vue';
 
 @Component({
 	name: 'RouteCommunitiesView',

@@ -6,7 +6,7 @@ import AppMediaItemCover from '../../../../../../_common/media-item/cover/cover.
 import AppNavTabList from '../../../../../../_common/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
-import { GameHeaderModal } from '../../../../game/header-modal/header-modal.service';
+import { GameHeaderModal } from '../../../../../components/game/header-modal/header-modal.service';
 import { RouteStore, RouteStoreModule } from '../manage.store';
 import AppManageGameMediaBar from './_media-bar/media-bar.vue';
 import AppManageGameNav from './_nav/nav.vue';

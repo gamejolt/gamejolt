@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../../jolticon/jolticon.vue';
+import AppJolticon from '../../jolticon/jolticon.vue';
 import AppExpand from '../../expand/expand.vue';
 
 const STORAGE_KEY_PREFIX = 'dismiss-alert:';

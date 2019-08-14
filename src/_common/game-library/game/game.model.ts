@@ -1,5 +1,5 @@
-import { Model } from '../../model/model.service';
 import { Game } from '../../game/game.model';
+import { Model } from '../../model/model.service';
 
 export class GameLibraryGame extends Model {
 	user_id!: number;

@@ -10,7 +10,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/rou
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import { Store } from '../../../store/index';
-import { AppAuthJoinLazy } from '../../lazy';
+import { AppAuthJoinLazy } from '../../../components/lazy';
 
 @Component({
 	name: 'RouteLandingMarketplace',

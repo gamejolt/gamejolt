@@ -1,8 +1,3 @@
-import { ActivityFeedState } from 'activity/feed/state';
-import { BroadcastModal } from 'broadcast-modal/broadcast-modal.service';
-import { ChatClient } from 'chat/client';
-import { GridClient } from 'grid/client.service';
-import { ChatClientLazy, GridClientLazy } from 'lazy';
 import { Route } from 'vue-router';
 import { sync } from 'vuex-router-sync';
 import { VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
@@ -28,6 +23,11 @@ import {
 } from '../../_common/store/app-store';
 import { ThemeActions, ThemeMutations, ThemeStore } from '../../_common/theme/theme.store';
 import { Translate } from '../../_common/translate/translate.service';
+import { ActivityFeedState } from '../components/activity/feed/state';
+import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
+import { ChatClient } from '../components/chat/client';
+import { GridClient } from '../components/grid/client.service';
+import { ChatClientLazy, GridClientLazy } from '../components/lazy';
 import { router } from '../views';
 import { BannerActions, BannerMutations, BannerStore } from './banner';
 import * as _ClientLibraryMod from './client-library';

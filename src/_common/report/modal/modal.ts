@@ -1,5 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../../jolticon/jolticon.vue';
+import AppJolticon from '../../jolticon/jolticon.vue';
 import { Comment } from '../../comment/comment-model';
 import { ForumPost } from '../../forum/post/post.model';
 import { ForumTopic } from '../../forum/topic/topic.model';

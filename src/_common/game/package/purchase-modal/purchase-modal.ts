@@ -1,6 +1,6 @@
 import { Component, Prop } from 'vue-property-decorator';
-import AppJolticon from '../../../../jolticon/jolticon.vue';
-import AppLoading from '../../../../loading/loading.vue';
+import AppJolticon from '../../../jolticon/jolticon.vue';
+import AppLoading from '../../../loading/loading.vue';
 import { VuexStore } from '../../../../utils/vuex';
 import { Analytics } from '../../../analytics/analytics.service';
 import { Growls } from '../../../growls/growls.service';
@@ -13,7 +13,6 @@ import { Game } from '../../game.model';
 import { GamePlayModal } from '../../play-modal/play-modal.service';
 import { GamePackage } from '../package.model';
 import FormGamePackagePayment from '../payment-form/payment-form.vue';
-
 
 @Component({
 	components: {

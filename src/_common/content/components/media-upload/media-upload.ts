@@ -1,7 +1,7 @@
 import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppLoading from '../../../../loading/loading.vue';
+import AppLoading from '../../../loading/loading.vue';
 import { Api } from '../../../api/api.service';
 import { Growls } from '../../../growls/growls.service';
 import { MediaItem } from '../../../media-item/media-item-model';

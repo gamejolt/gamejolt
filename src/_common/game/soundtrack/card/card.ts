@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import AppJolticon from '../../../../jolticon/jolticon.vue';
+import AppJolticon from '../../../jolticon/jolticon.vue';
 import { AppTrackEvent } from '../../../analytics/track-event.directive';
 import AppAudioPlaylistTS from '../../../audio/playlist/playlist';
 import AppAudioPlaylist from '../../../audio/playlist/playlist.vue';
-import AppCard from '../../../card/card.vue';
+import AppCard from './card.vue';
 import { Environment } from '../../../environment/environment.service';
 import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
 import { number } from '../../../filters/number';
@@ -61,9 +61,7 @@ export default class AppGameSoundtrackCard extends Vue {
 
 		if (GJ_IS_CLIENT) {
 			// Gotta go past the first char since it's # in client.
-			Navigate.gotoExternal(
-				Environment.baseUrl + this.$router.resolve(location).href.substr(1)
-			);
+			Navigate.gotoExternal(Environment.baseUrl + this.$router.resolve(location).href.substr(1));
 			return;
 		}
 

@@ -1,7 +1,7 @@
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import AppGameThumbnail from '../../../../../../_common/game/thumbnail/thumbnail.vue';
-import AppJolticon from '../../../../jolticon/jolticon.vue';
+import AppGameThumbnail from '../../../game/thumbnail/thumbnail.vue';
+import AppJolticon from '../../../jolticon/jolticon.vue';
 import { AppTrackEvent } from '../../../analytics/track-event.directive';
 import AppContentViewer from '../../../content/content-viewer/content-viewer.vue';
 import { number } from '../../../filters/number';

@@ -10,9 +10,9 @@ import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { Store } from '../../../../store/index';
-import AppForumBreadcrumbs from '../../../forum/breadcrumbs/breadcrumbs.vue';
-import AppForumTopicList from '../../../forum/topic-list/topic-list.vue';
-import AppPageHeader from '../../../page-header/page-header.vue';
+import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
+import AppForumTopicList from '../../../../components/forum/topic-list/topic-list.vue';
+import AppPageHeader from '../../../../components/page-header/page-header.vue';
 
 @Component({
 	name: 'RouteForumsChannelsView',

@@ -5,10 +5,10 @@ import AppAdPlaywireVideo from '../../../../../../../_common/ad/playwire/video.v
 import AppAdWidget from '../../../../../../../_common/ad/widget/widget.vue';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../../../_common/scroll/affix/affix.vue';
-import AppGameGrid from '../../../../../game/grid/grid.vue';
-import AppGameGridPlaceholder from '../../../../../game/grid/placeholder/placeholder.vue';
-import AppGameList from '../../../../../game/list/list.vue';
-import AppGameListPlaceholder from '../../../../../game/list/placeholder/placeholder.vue';
+import AppGameGrid from '../../../../../../components/game/grid/grid.vue';
+import AppGameGridPlaceholder from '../../../../../../components/game/grid/placeholder/placeholder.vue';
+import AppGameList from '../../../../../../components/game/list/list.vue';
+import AppGameListPlaceholder from '../../../../../../components/game/list/placeholder/placeholder.vue';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
 @Component({

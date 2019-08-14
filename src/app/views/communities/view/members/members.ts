@@ -4,7 +4,7 @@ import { Api } from '../../../../../_common/api/api.service';
 import { Community } from '../../../../../_common/community/community.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { User } from '../../../../../_common/user/user.model';
-import AppFollowerList from '../../../follower/list/list.vue';
+import AppFollowerList from '../../../../components/follower/list/list.vue';
 
 function getFetchUrl(route: Route) {
 	return `/web/communities/members/${route.params.path}`;

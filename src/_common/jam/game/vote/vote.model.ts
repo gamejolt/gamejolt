@@ -1,6 +1,6 @@
-import { Model } from '../../../model/model.service';
-import { Game } from '../../../game/game.model';
 import { Api } from '../../../api/api.service';
+import { Game } from '../../../game/game.model';
+import { Model } from '../../../model/model.service';
 
 export class JamGameVote extends Model {
 	jam_id!: number;

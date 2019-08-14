@@ -19,11 +19,11 @@ import { User } from '../../../../../_common/user/user.model';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { Store } from '../../../../store/index';
-import AppActivityFeed from '../../../activity/feed/feed.vue';
-import AppActivityFeedNewButton from '../../../activity/feed/new-button/new-button.vue';
-import AppActivityFeedPlaceholder from '../../../activity/feed/placeholder/placeholder.vue';
-import AppPageContainer from '../../../page-container/page-container.vue';
-import AppPostAddButton from '../../../post/add-button/add-button.vue';
+import AppActivityFeed from '../../../../components/activity/feed/feed.vue';
+import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';
+import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
+import AppPageContainer from '../../../../components/page-container/page-container.vue';
+import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
 import AppCommunitiesViewOverviewNav from './_nav/nav.vue';
 
 function getChannel(route: Route) {
@@ -188,10 +188,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get placeholderText() {
-		if (
-			!!this.community.post_placeholder_text &&
-			this.community.post_placeholder_text.length > 0
-		) {
+		if (!!this.community.post_placeholder_text && this.community.post_placeholder_text.length > 0) {
 			return this.community.post_placeholder_text;
 		}
 		return this.$gettext(`Share your creations!`);

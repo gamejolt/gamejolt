@@ -9,7 +9,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import { Translate } from '../../../../../_common/translate/translate.service';
 import { User } from '../../../../../_common/user/user.model';
-import FormWithdrawFunds from '../../../forms/withdraw-funds/withdraw-funds.vue';
+import FormWithdrawFunds from '../../../../components/forms/withdraw-funds/withdraw-funds.vue';
 import { routeStore, RouteStore, RouteStoreModule } from '../account.store';
 
 @Component({

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import AppJolticon from '../../jolticon/jolticon.vue';
+import AppJolticon from '../jolticon/jolticon.vue';
 
 @Component({
 	components: {

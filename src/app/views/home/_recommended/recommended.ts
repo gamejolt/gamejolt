@@ -5,7 +5,7 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import { User } from '../../../../_common/user/user.model';
-import AppUserList from '../../user/list/list.vue';
+import AppUserList from '../../../components/user/list/list.vue';
 
 @Component({
 	components: {

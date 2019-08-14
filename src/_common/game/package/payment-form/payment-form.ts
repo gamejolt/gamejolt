@@ -1,6 +1,6 @@
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import AppLoading from '../../../../loading/loading.vue';
+import AppLoading from '../../../loading/loading.vue';
 import { arrayIndexBy } from '../../../../utils/array';
 import { Api } from '../../../api/api.service';
 import { Device } from '../../../device/device.service';
@@ -99,9 +99,7 @@ export default class FormGamePackagePayment extends BaseForm<any>
 	}
 
 	get _minOrderAmount() {
-		return this.sellable.type === 'paid'
-			? this.pricing.amount / 100
-			: this.minOrderAmount / 100;
+		return this.sellable.type === 'paid' ? this.pricing.amount / 100 : this.minOrderAmount / 100;
 	}
 
 	get formattedAmount() {
@@ -317,13 +315,9 @@ export default class FormGamePackagePayment extends BaseForm<any>
 				throw response;
 			}
 
-			response = await Api.sendRequest(
-				'/web/checkout/charge/' + response.cart.id,
-				chargeData,
-				{
-					detach: true,
-				}
-			);
+			response = await Api.sendRequest('/web/checkout/charge/' + response.cart.id, chargeData, {
+				detach: true,
+			});
 
 			if (response.success === false) {
 				throw response;

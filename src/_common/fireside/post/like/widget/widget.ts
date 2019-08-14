@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class/lib/bindings';
-import { Store } from '../../../../../../../auth/store/index';
+import { Store } from '../../../../../auth/store/index';
 import { AppAuthRequired } from '../../../../auth/auth-required-directive';
 import { number } from '../../../../filters/number';
 import { Growls } from '../../../../growls/growls.service';
@@ -50,10 +50,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 			return false;
 		}
 
-		if (
-			(this.app.user && this.app.user.id === this.post.user.id) ||
-			this.post.user.is_following
-		) {
+		if ((this.app.user && this.app.user.id === this.post.user.id) || this.post.user.is_following) {
 			return false;
 		}
 

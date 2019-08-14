@@ -4,7 +4,7 @@ import { Component } from 'vue-property-decorator';
 import { Auth } from '../../../../../../_common/auth/auth.service';
 import { Growls } from '../../../../../../_common/growls/growls.service';
 import { BaseRouteComponent } from '../../../../../../_common/route/route-component';
-import FormTwitterEmail from '../../../../forms/twitter-email/twitter-email';
+import FormTwitterEmail from '../../../../../components/forms/twitter-email/twitter-email';
 
 @Component({
 	name: 'RouteAuthLinkedAccountTwitterFinalize',

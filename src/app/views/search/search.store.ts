@@ -4,8 +4,8 @@ import { NamespaceVuexStore, VuexModule, VuexMutation, VuexStore } from '../../.
 import { Ads, AdSettingsContainer } from '../../../_common/ad/ads.service';
 import { Meta } from '../../../_common/meta/meta-service';
 import { store } from '../../store';
-import { SearchPayload } from '../search/payload-service';
-import { Search } from '../search/search-service';
+import { SearchPayload } from '../../components/search/payload-service';
+import { Search } from '../../components/search/search-service';
 
 type RouteActions = {};
 

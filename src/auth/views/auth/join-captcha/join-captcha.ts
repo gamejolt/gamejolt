@@ -2,7 +2,7 @@ import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
-import AppGrecaptchaWidget from '../../grecaptcha/widget/widget.vue';
+import AppGrecaptchaWidget from '../../../components/grecaptcha/widget/widget.vue';
 
 @Component({
 	name: 'RouteJoinCaptcha',

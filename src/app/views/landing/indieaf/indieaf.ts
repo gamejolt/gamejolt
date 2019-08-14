@@ -5,7 +5,7 @@ import { AppScrollTo } from '../../../../_common/scroll/to/to.directive';
 import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
-import { AppAuthJoinLazy } from '../../lazy';
+import { AppAuthJoinLazy } from '../../../components/lazy';
 
 @Component({
 	name: 'RouteLandingIndieaf',

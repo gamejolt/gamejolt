@@ -3,7 +3,7 @@ import { Route } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { User } from '../../../../_common/user/user.model';
-import AppFollowerList from '../../follower/list/list.vue';
+import AppFollowerList from '../../../components/follower/list/list.vue';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 
 function getFetchUrl(route: Route) {

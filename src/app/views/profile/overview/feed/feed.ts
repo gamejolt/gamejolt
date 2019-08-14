@@ -7,11 +7,11 @@ import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Store } from '../../../../store/index';
-import { ActivityFeedService } from '../../../activity/feed/feed-service';
-import AppActivityFeed from '../../../activity/feed/feed.vue';
-import AppActivityFeedPlaceholder from '../../../activity/feed/placeholder/placeholder.vue';
-import { ActivityFeedView } from '../../../activity/feed/view';
-import AppPostAddButton from '../../../post/add-button/add-button.vue';
+import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
+import AppActivityFeed from '../../../../components/activity/feed/feed.vue';
+import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
+import { ActivityFeedView } from '../../../../components/activity/feed/view';
+import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
 import { RouteStore, RouteStoreModule } from '../../profile.store';
 
 function getFetchUrl(route: Route) {

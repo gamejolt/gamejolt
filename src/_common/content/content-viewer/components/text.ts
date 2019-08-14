@@ -1,6 +1,6 @@
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppExternalLink from '../../../../external-link/external-link.vue';
+import AppExternalLink from '../../../external-link/external-link.vue';
 import { ContentObject } from '../../content-object';
 import { ContentOwner } from '../../content-owner';
 import AppContentViewerMention from './mention/mention.vue';
@@ -93,11 +93,7 @@ export class AppContentViewerText extends Vue {
 			const attrs = this.getMarkAttrs('tag');
 			const children = [vnode];
 
-			vnode = h(
-				AppContentViewerTag,
-				{ props: { tag: attrs.tag, owner: this.owner } },
-				children
-			);
+			vnode = h(AppContentViewerTag, { props: { tag: attrs.tag, owner: this.owner } }, children);
 		}
 
 		if (this.isBold) {

@@ -10,14 +10,17 @@ import { Game } from '../../../../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../../../../_common/game/thumbnail/thumbnail.vue';
 import { HistoryTick } from '../../../../../../../_common/history-tick/history-tick-service';
 import AppLoading from '../../../../../../../_common/loading/loading.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { AppSocialFacebookLike } from '../../../../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../../../../_common/social/twitter/share/share';
 import { Store } from '../../../../../../store/index';
-import AppGameOgrs from '../../../../../game/ogrs/ogrs.vue';
-import AppRatingWidget from '../../../../../rating/widget/widget.vue';
+import AppGameOgrs from '../../../../../../components/game/ogrs/ogrs.vue';
+import AppRatingWidget from '../../../../../../components/rating/widget/widget.vue';
 import AppDiscoverGamesViewOverviewDetails from '../../overview/_details/details.vue';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 

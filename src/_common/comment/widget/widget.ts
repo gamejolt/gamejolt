@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import AppLoading from '../../../loading/loading.vue';
+import AppLoading from '../../loading/loading.vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { AppTrackEvent } from '../../analytics/track-event.directive';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
@@ -113,15 +113,11 @@ export default class AppCommentWidget extends Vue {
 	collaborators: Collaborator[] = [];
 
 	get loginUrl() {
-		return (
-			Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath)
-		);
+		return Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath);
 	}
 
 	get shouldShowLoadMore() {
-		return (
-			!this.isLoading && !this.isThreadView && this.totalParentCount > this.currentParentCount
-		);
+		return !this.isLoading && !this.isThreadView && this.totalParentCount > this.currentParentCount;
 	}
 
 	get comments() {

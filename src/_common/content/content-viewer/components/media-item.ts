@@ -2,7 +2,7 @@ import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { ContentObject } from '../../content-object';
 import { ContentOwner } from '../../content-owner';
-import AppContentMediaItem from '../media-item/media-item.vue';
+import AppContentMediaItem from '../../components/media-item/media-item.vue';
 
 @Component({})
 export class AppContentViewerMediaItem extends Vue {

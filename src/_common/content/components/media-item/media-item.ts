@@ -1,7 +1,7 @@
 import { ResizeObserver } from 'resize-observer';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppLoading from '../../../../loading/loading.vue';
+import AppLoading from '../../../loading/loading.vue';
 import { MediaItem } from '../../../media-item/media-item-model';
 import { AppTooltip } from '../../../tooltip/tooltip';
 import { ContentEditorLinkModal } from '../../content-editor/modals/link/link-modal.service';

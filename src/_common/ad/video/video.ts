@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { loadScript } from '../../../utils/utils';
-import { Ads } from '../../ad/ads.service';
+import { Ads } from '../ads.service';
 import { Analytics } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
 import { time } from '../../filters/time';
@@ -92,10 +92,7 @@ export default class AppAdVideo extends Vue {
 			)[0] as HTMLElement;
 
 			// Iinitialize the ad container.
-			const adDisplayContainer = new ima.AdDisplayContainer(
-				this.adContainerElem,
-				this.videoElem
-			);
+			const adDisplayContainer = new ima.AdDisplayContainer(this.adContainerElem, this.videoElem);
 			adDisplayContainer.initialize();
 
 			// Set up an ads loader.

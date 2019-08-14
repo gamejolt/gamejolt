@@ -1,7 +1,7 @@
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { ContentContext } from '../../../content/content-context';
 import { AppContentEditorLazy } from '../../../content/content-editor/content-editor-lazy';
-import BaseFormControlTS from '../../../form-vue/control/base';
+import BaseFormControlTS from '../base';
 
 @Component({
 	components: {

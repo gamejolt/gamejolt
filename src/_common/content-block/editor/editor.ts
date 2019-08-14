@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import AppLoading from '../../../loading/loading.vue';
+import AppLoading from '../../loading/loading.vue';
 import { Api } from '../../api/api.service';
 import { Environment } from '../../environment/environment.service';
 import { SiteContentBlock } from '../../site/content-block/content-block-model';
