@@ -7,10 +7,10 @@ import { BaseRouteComponent } from '../../../_common/route/route-component';
 import { WithRouteStore } from '../../../_common/route/route-store';
 import { Screen } from '../../../_common/screen/screen-service';
 import { Scroll } from '../../../_common/scroll/scroll.service';
-import { Store, store } from '../../store/index';
 import AppPageHeader from '../../components/page-header/page-header.vue';
 import { Search } from '../../components/search/search-service';
-import AppSearch from './search.vue';
+import AppSearch from '../../components/search/search.vue';
+import { Store, store } from '../../store/index';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './search.store';
 import './search.styl';
 
