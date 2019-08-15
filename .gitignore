@@ -1,7 +1,5 @@
 /node_modules/
 /npm-debug.log
-/src/bower-lib/
-/typings/
 /build/
 /debug.log
 /src/translations
