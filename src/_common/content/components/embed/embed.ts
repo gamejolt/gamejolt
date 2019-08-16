@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit, Prop } from 'vue-property-decorator';
-import AppLoading from '../../../loading/loading.vue';
 import { arrayShuffle } from '../../../../utils/array';
 import { Growls } from '../../../growls/growls.service';
+import AppLoading from '../../../loading/loading.vue';
 import AppVideoEmbed from '../../../video/embed/embed.vue';
 import { ContentEmbedService } from '../../content-editor/content-embed.service';
 import { ContentOwner } from '../../content-owner';

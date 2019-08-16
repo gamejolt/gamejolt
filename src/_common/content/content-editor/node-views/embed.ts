@@ -1,7 +1,7 @@
 import { Node } from 'prosemirror-model';
 import { isChildElement } from '../../../../utils/dom';
+import AppContentEmbed from '../../components/embed/embed.vue';
 import { ContentEditorService } from '../content-editor.service';
-import AppContentEmbed from '../../../video/embed/embed.vue';
 import { ContentEditorSchema } from '../schemas/content-editor-schema';
 import { HydratableNodeView } from './hydratable';
 
