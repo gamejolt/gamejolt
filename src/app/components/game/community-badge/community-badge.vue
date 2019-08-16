@@ -38,4 +38,5 @@
 </template>
 
 <style lang="stylus" scoped src="./community-badge.styl"></style>
+
 <script lang="ts" src="./community-badge"></script>
