@@ -23,7 +23,6 @@ export class AppTimeAgo extends Vue {
 	private fixedTime = '';
 
 	created() {
-		this.fixedTime = date(this.date, 'medium');
 		this.refresh();
 	}
 
@@ -67,6 +66,8 @@ export class AppTimeAgo extends Vue {
 		} else if (diff < 180) {
 			secondsUntilUpdate = 300;
 		}
+
+		this.fixedTime = date(this.date, 'medium');
 
 		if (!GJ_IS_SSR) {
 			this.timeout = window.setTimeout(() => this.refresh(), secondsUntilUpdate * 1000);
