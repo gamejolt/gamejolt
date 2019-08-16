@@ -1,7 +1,8 @@
-import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
-import { TagsInfo } from '../tags-info.service';
+import { Component, Prop } from 'vue-property-decorator';
+import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
+import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import { TagInfo, TagsInfo } from '../tags-info.service';
 import AppTagThumbnail from '../thumbnail/thumbnail.vue';
 
 const FeaturedTags = [
@@ -34,10 +35,16 @@ const FeaturedTags = [
 		AppScrollScroller,
 		AppTagThumbnail,
 	},
+	directives: {
+		AppTrackEvent,
+	},
 })
 export default class AppTagList extends Vue {
+	@Prop({ type: String, required: false, default: 'global' })
+	eventCat!: string;
+
 	get tags() {
-		const tags = [];
+		const tags: TagInfo[] = [];
 		for (const tag of FeaturedTags) {
 			const info = TagsInfo.tags.find(i => i.id === tag);
 			if (info) {

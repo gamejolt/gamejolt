@@ -9,6 +9,7 @@
 			params: { path: community.path },
 		}"
 		:title="community.name"
+		v-app-track-event="event"
 	>
 		<div
 			class="-bubble"

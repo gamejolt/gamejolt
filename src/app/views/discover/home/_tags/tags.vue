@@ -18,7 +18,7 @@
 			</h2>
 		</div>
 
-		<app-tag-list />
+		<app-tag-list event-cat="home" />
 
 		<div class="-button visible-xs">
 			<div class="container">
