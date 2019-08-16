@@ -37,8 +37,8 @@ export default class AppUserFollowWidget extends Vue {
 	@Prop(Boolean)
 	hideCount?: boolean;
 
-	@Prop(String)
-	eventLabel?: string;
+	@Prop({ type: String, required: false, default: 'global' })
+	eventLabel!: string;
 
 	@State
 	app!: AppStore;
@@ -84,7 +84,7 @@ export default class AppUserFollowWidget extends Vue {
 
 		const category = 'user-follow';
 		const action = this.user.is_following ? 'unfollow' : 'follow';
-		const label = this.eventLabel || 'any';
+		const label = this.eventLabel;
 		Analytics.trackEvent(category, action, label);
 
 		if (!this.user.is_following) {

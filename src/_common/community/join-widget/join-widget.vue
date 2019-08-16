@@ -7,9 +7,7 @@
 		:badge="badge"
 		:disabled="isProcessing"
 		v-app-auth-required
-		v-app-track-event="
-			`community-join:${eventLabel || 'any'}:${!community.is_member ? 'join' : 'leave'}`
-		"
+		v-app-track-event="`community-join:${eventLabel}:${!community.is_member ? 'join' : 'leave'}`"
 		@click="onClick"
 	>
 		<template v-if="!community.is_member">

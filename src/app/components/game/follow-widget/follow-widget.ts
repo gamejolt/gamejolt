@@ -1,15 +1,15 @@
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { number } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
 import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
-import { number } from '../../../../_common/filters/number';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Store } from '../../../store/index';
 
 @Component({
@@ -42,8 +42,8 @@ export default class AppGameFollowWidget extends Vue {
 	@Prop(Boolean)
 	solid?: boolean;
 
-	@Prop(String)
-	eventLabel?: string;
+	@Prop({ type: String, required: false, default: 'global' })
+	eventLabel!: string;
 
 	@Prop(Boolean)
 	showUserFollow?: boolean;
@@ -111,7 +111,9 @@ export default class AppGameFollowWidget extends Vue {
 			try {
 				await this.game.$follow();
 			} catch (e) {
-				Growls.error(this.$gettext('Something has prevented you from following this game.'));
+				Growls.error(
+					this.$gettext('Something has prevented you from following this game.')
+				);
 			}
 		} else {
 			try {

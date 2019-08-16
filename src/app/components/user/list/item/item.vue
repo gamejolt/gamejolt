@@ -7,7 +7,7 @@
 				username: user.username,
 			},
 		}"
-		v-app-track-event="`user-list:click:${eventLabel || 'any'}`"
+		v-app-track-event="`user-list:click:${eventLabel}`"
 	>
 		<component :is="userHoverCard ? 'app-user-card-hover' : 'div'" :user="user" class="-avatar">
 			<app-user-avatar-img :user="user" />

@@ -4,12 +4,12 @@ import { State } from 'vuex-class';
 import { GridClient } from '../../../app/components/grid/client.service';
 import { AppTrackEvent } from '../../analytics/track-event.directive';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
-import { $joinCommunity, $leaveCommunity, Community } from '../community.model';
 import { number } from '../../filters/number';
 import { Growls } from '../../growls/growls.service';
 import { AppStore } from '../../store/app-store';
 import { findTooltipContainer } from '../../tooltip/container/container';
 import { AppTooltip } from '../../tooltip/tooltip';
+import { $joinCommunity, $leaveCommunity, Community } from '../community.model';
 
 @Component({
 	directives: {
@@ -28,8 +28,8 @@ export default class AppCommunityJoinWidget extends Vue {
 	@Prop(Boolean)
 	hideCount?: boolean;
 
-	@Prop(String)
-	eventLabel?: string;
+	@Prop({ type: String, required: false, default: 'global' })
+	eventLabel!: string;
 
 	@State
 	app!: AppStore;
@@ -68,7 +68,9 @@ export default class AppCommunityJoinWidget extends Vue {
 				this.grid.joinCommunity(this.community);
 				this.join(this.community);
 			} catch (e) {
-				Growls.error(this.$gettext(`Something has prevented you from joining this community.`));
+				Growls.error(
+					this.$gettext(`Something has prevented you from joining this community.`)
+				);
 			}
 		} else {
 			try {
