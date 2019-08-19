@@ -1,19 +1,19 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Collaborator } from 'game-jolt-frontend-lib/components/collaborator/collaborator.model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GameScreenshot } from 'game-jolt-frontend-lib/components/game/screenshot/screenshot.model';
-import { GameSketchfab } from 'game-jolt-frontend-lib/components/game/sketchfab/sketchfab.model';
-import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { Api } from '../../../../../_common/api/api.service';
+import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
+import { Game } from '../../../../../_common/game/game.model';
+import { GameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
+import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
+import { GameVideo } from '../../../../../_common/game/video/video.model';
+import { Growls } from '../../../../../_common/growls/growls.service';
+import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { Translate } from '../../../../../_common/translate/translate.service';
 import {
 	NamespaceVuexStore,
 	VuexAction,
 	VuexModule,
 	VuexMutation,
 	VuexStore,
-} from 'game-jolt-frontend-lib/utils/vuex';
+} from '../../../../../utils/vuex';
 import { namespace } from 'vuex-class';
 import { store } from '../../../../store';
 import { router } from '../../../index';
@@ -282,9 +282,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 	@VuexAction
 	async removeGame() {
-		const result = await ModalConfirm.show(
-			Translate.$gettext('dash.games.remove_confirmation')
-		);
+		const result = await ModalConfirm.show(Translate.$gettext('dash.games.remove_confirmation'));
 		if (!result) {
 			return;
 		}

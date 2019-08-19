@@ -1,17 +1,15 @@
-import AppFormControlUploadTS from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload';
-import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
-import { CommonFormComponents } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { findRequiredVueParent } from '../../../../../utils/vue';
+import AppFormControlUploadTS from '../../../../../_common/form-vue/control/upload/upload';
+import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
+import { CommonFormComponents } from '../../../../../_common/form-vue/form.service';
 import FormFinancialsManagedAccountTS from './managed-account';
 import FormFinancialsManagedAccount from './managed-account.vue';
 
 @Component({
 	components: {
 		...CommonFormComponents,
-		AppJolticon,
 		AppFormControlUpload,
 	},
 })

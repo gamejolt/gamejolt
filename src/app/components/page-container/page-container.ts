@@ -1,4 +1,4 @@
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { Screen } from '../../../_common/screen/screen-service';
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 
@@ -58,10 +58,7 @@ export default class AppPageContainer extends Vue {
 		// wtf is this formatting?
 		const cols = {
 			left: this.hasLeftColumn
-				? h('div', { staticClass: '-left' }, [
-						this.$slots['left'],
-						this.$slots['left-bottom'],
-				  ])
+				? h('div', { staticClass: '-left' }, [this.$slots['left'], this.$slots['left-bottom']])
 				: null,
 			main: h('div', { staticClass: '-main' }, this.$slots['default']),
 			right: this.hasRightColumn

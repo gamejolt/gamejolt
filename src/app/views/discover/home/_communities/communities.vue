@@ -10,7 +10,7 @@
 			</translate>
 		</p>
 
-		<app-community-slider :communities="communities" event-label="discover" />
+		<app-community-slider :communities="communities" event-cat="home" />
 	</div>
 </template>
 

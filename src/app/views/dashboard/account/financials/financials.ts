@@ -1,6 +1,6 @@
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
 import { Component } from 'vue-property-decorator';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { Translate } from '../../../../../_common/translate/translate.service';
 import FormFinancials from '../../../../components/forms/financials/financials.vue';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 

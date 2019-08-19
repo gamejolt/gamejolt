@@ -1,5 +1,5 @@
 import * as fs from 'fs-extra';
-import { Properties } from 'game-jolt-frontend-lib/utils/utils';
+import { Properties } from '../../../../utils/utils';
 import * as writeFileAtomic from 'write-file-atomic';
 import { LocalDbModel } from './model.service';
 
@@ -15,7 +15,7 @@ type GroupableFields<T> = Pick<T, Properties<T, Number>>;
 type DataGroups<T> = {
 	[field in keyof GroupableFields<T>]?: {
 		[id: number]: number[];
-	}
+	};
 };
 
 type UpgradeFunc<T> = (oldVersion: any, data: any) => Promise<DataObjects<T>>;

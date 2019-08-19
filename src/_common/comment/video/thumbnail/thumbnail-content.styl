@@ -1,0 +1,8 @@
+@require '~styles/variables'
+
+// Used for subtracting the bottom margin of thumbnails at the end of a grid.
+.comment-video-thumbnail-grid
+	margin-bottom: -($grid-gutter-width-xs)
+
+	@media $media-sm-up
+		margin-bottom: -($grid-gutter-width)

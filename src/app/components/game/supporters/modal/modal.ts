@@ -1,11 +1,11 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue'
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Api } from '../../../../../_common/api/api.service';
+import { Game } from '../../../../../_common/game/game.model';
+import { BaseModal } from '../../../../../_common/modal/base';
+import { User } from '../../../../../_common/user/user.model';
+import AppLoading from '../../../../../_common/loading/loading.vue';
+import { number } from '../../../../../_common/filters/number';
 import { Component, Prop } from 'vue-property-decorator';
-import AppUserList from '../../../user/list/list.vue'
+import AppUserList from '../../../user/list/list.vue';
 
 const UsersPerPage = 20;
 

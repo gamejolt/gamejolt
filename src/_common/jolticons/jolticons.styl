@@ -1,0 +1,48 @@
+$jolticon-size = 16px
+
+@font-face
+	font-family: 'jolticons'
+	src: url('./jolticons.woff') format('woff'), url('./jolticons.ttf') format('truetype'), url('./jolticons.svg#jolticons') format('svg')
+	font-weight: normal
+	font-style: normal
+
+.jolticon
+	display: inline-block
+	margin: 0 2px
+	// use !important to prevent issues with browser extensions that change fonts
+	font-family: 'jolticons' !important
+	speak: none
+	font-style: normal
+	font-weight: normal
+	font-variant: normal
+	text-transform: none
+	line-height: 1
+	font-size: $jolticon-size
+	-webkit-font-smoothing: antialiased
+	-moz-osx-font-smoothing: grayscale
+
+.jolticon.middle
+	vertical-align: middle
+
+a .jolticon
+	cursor: pointer
+
+.jolticon.big, .jolticon-2x
+	margin: 0 4px
+	font-size: $jolticon-size * 2
+
+.jolticon-3x
+	margin: 0 6px
+	font-size: $jolticon-size * 3
+
+.jolticon-4x
+	margin: 0 8px
+	font-size: $jolticon-size * 4
+
+.jolticon.highlight
+	theme-prop('color', 'highlight', true)
+
+.jolticon.notice
+	theme-prop('color', 'notice', true)
+
+@require './jolticon-icon-definitions'

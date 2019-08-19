@@ -1,6 +1,6 @@
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import AppScrollScroller from 'game-jolt-frontend-lib/components/scroll/scroller/scroller.vue';
-import { date } from 'game-jolt-frontend-lib/vue/filters/date';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
+import { date } from '../../../../../_common/filters/date';
 import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';

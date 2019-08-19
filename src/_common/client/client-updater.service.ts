@@ -1,10 +1,10 @@
 import { Logger, MsgProgress, PatcherState, SelfUpdater, SelfUpdaterInstance } from 'client-voodoo';
 import * as fs from 'fs-extra';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
-import { makeObservableService } from 'game-jolt-frontend-lib/utils/vue';
 import * as path from 'path';
 import { LocalDb } from '../../app/components/client/local-db/local-db.service';
+import { makeObservableService } from '../../utils/vue';
+import { Environment } from '../environment/environment.service';
+import { Navigate } from '../navigate/navigate.service';
 import { Client } from './client.service';
 
 export type ClientUpdateStatus = 'checking' | 'none' | 'fetching' | 'ready' | 'error';

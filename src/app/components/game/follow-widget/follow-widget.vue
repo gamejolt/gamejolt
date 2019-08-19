@@ -20,9 +20,7 @@
 			:badge="badge"
 			v-app-auth-required
 			v-app-tooltip="tooltip"
-			v-app-track-event="
-				`game-follow:${eventLabel || 'any'}:${!game.is_following ? 'follow' : 'unfollow'}`
-			"
+			v-app-track-event="`game-follow:${eventLabel}:${!game.is_following ? 'follow' : 'unfollow'}`"
 			@click="onClick"
 		>
 			<template v-if="!circle">

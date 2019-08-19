@@ -1,6 +1,6 @@
-import { Ads, AdSettingsContainer } from 'game-jolt-frontend-lib/components/ad/ads.service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { Ads, AdSettingsContainer } from '../../../_common/ad/ads.service';
+import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { User } from '../../../_common/user/user.model';
 import { Component } from 'vue-property-decorator';
 
 @Component({

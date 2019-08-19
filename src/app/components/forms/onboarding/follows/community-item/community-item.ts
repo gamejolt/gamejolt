@@ -1,11 +1,11 @@
-import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
+import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import {
 	$joinCommunity,
 	$leaveCommunity,
 	Community,
-} from 'game-jolt-frontend-lib/components/community/community.model';
-import AppCommunityThumbnailImg from 'game-jolt-frontend-lib/components/community/thumbnail/img/img.vue';
-import Onboarding from 'game-jolt-frontend-lib/components/onboarding/onboarding.service';
+} from '../../../../../../_common/community/community.model';
+import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
+import Onboarding from '../../../../../../_common/onboarding/onboarding.service';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';

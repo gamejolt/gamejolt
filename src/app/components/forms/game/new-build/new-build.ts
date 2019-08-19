@@ -1,15 +1,11 @@
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
-import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
-import {
-	BaseForm,
-	FormOnInit,
-	FormOnLoad,
-} from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import { GameRelease } from 'game-jolt-frontend-lib/components/game/release/release.model';
+import AppExpand from '../../../../../_common/expand/expand.vue';
+import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
+import AppForm from '../../../../../_common/form-vue/form';
+import { BaseForm, FormOnInit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
+import { GameBuild } from '../../../../../_common/game/build/build.model';
+import { Game } from '../../../../../_common/game/game.model';
+import { GamePackage } from '../../../../../_common/game/package/package.model';
+import { GameRelease } from '../../../../../_common/game/release/release.model';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 
 type NewGameBuildFormModel = GameBuild & {
@@ -47,9 +43,7 @@ export default class FormGameNewBuild extends BaseForm<NewGameBuildFormModel>
 	private browserTypes: { [ext: string]: string } = {};
 
 	get loadUrl() {
-		return `/web/dash/developer/games/builds/save/${this.game.id}/${this.package.id}/${
-			this.release.id
-		}`;
+		return `/web/dash/developer/games/builds/save/${this.game.id}/${this.package.id}/${this.release.id}`;
 	}
 
 	get uploadAccept() {

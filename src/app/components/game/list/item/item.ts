@@ -1,9 +1,9 @@
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import AppGameThumbnailImg from 'game-jolt-frontend-lib/components/game/thumbnail-img/thumbnail-img.vue';
-import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
-import AppUserVerifiedTick from 'game-jolt-frontend-lib/components/user/verified-tick/verified-tick.vue';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
+import { Game } from '../../../../../_common/game/game.model';
+import AppGameThumbnailImg from '../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
+import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
+import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
+import { number } from '../../../../../_common/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 

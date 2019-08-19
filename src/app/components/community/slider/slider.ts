@@ -1,6 +1,6 @@
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { Community } from '../../../../_common/community/community.model';
 import AppCommunitySliderItem from './item/item.vue';
 
 @Component({
@@ -9,6 +9,6 @@ import AppCommunitySliderItem from './item/item.vue';
 	},
 })
 export default class AppCommunitySlider extends Vue {
-	@Prop(Array)
-	communities!: Community[];
+	@Prop({ type: Array, required: true }) communities!: Community[];
+	@Prop({ type: String, required: false, default: 'global' }) eventCat!: string;
 }

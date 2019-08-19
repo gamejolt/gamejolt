@@ -1,7 +1,7 @@
-import { Playwire } from 'game-jolt-frontend-lib/components/ad/playwire/playwire.service';
-import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
-import AppErrorPage from 'game-jolt-frontend-lib/components/error/page/page.vue';
-import { AppTheme } from 'game-jolt-frontend-lib/components/theme/theme';
+import { Playwire } from '../_common/ad/playwire/playwire.service';
+import { Analytics } from '../_common/analytics/analytics.service';
+import AppErrorPage from '../_common/error/page/page.vue';
+import { AppTheme } from '../_common/theme/theme';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { loadCurrentLanguage } from '../utils/translations';

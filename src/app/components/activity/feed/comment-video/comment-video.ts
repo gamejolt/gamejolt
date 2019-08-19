@@ -1,6 +1,6 @@
-import { CommentVideo } from 'game-jolt-frontend-lib/components/comment/video/video-model';
-import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
-import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
+import { CommentVideo } from '../../../../../_common/comment/video/video-model';
+import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
+import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import { ActivityFeedItem } from '../item-service';

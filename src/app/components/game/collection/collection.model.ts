@@ -1,9 +1,9 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { GamePlaylist } from 'game-jolt-frontend-lib/components/game-playlist/game-playlist.model';
-import { Jam } from 'game-jolt-frontend-lib/components/jam/jam.model';
-import { Model } from 'game-jolt-frontend-lib/components/model/model.service';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import { appStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
+import { Api } from '../../../../_common/api/api.service';
+import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
+import { Jam } from '../../../../_common/jam/jam.model';
+import { Model } from '../../../../_common/model/model.service';
+import { User } from '../../../../_common/user/user.model';
+import { appStore } from '../../../../_common/store/app-store';
 
 export class GameCollection extends Model {
 	static readonly TYPE_FOLLOWED = 'followed';

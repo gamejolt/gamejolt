@@ -1,6 +1,6 @@
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
+import { MediaItem } from '../../../../../../_common/media-item/media-item-model';
+import { Screen } from '../../../../../../_common/screen/screen-service';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import AppEventItemMediaIndicator from '../../../../event-item/media-indicator/media-indicator.vue';

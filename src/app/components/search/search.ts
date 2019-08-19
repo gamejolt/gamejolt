@@ -1,9 +1,10 @@
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
-import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
-import AppShortkey from 'game-jolt-frontend-lib/vue/components/shortkey/shortkey.vue';
+import AppPopper from '../../../_common/popper/popper.vue';
+import { arrayRemove } from '../../../utils/array';
+import AppShortkey from '../../../_common/shortkey/shortkey.vue';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import AppSearchAutocomplete from './autocomplete/autocomplete.vue';
+import AppSearchInputTS from './input/input';
 import AppSearchInput from './input/input.vue';
 import { Search } from './search-service';
 

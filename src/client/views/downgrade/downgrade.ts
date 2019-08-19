@@ -1,10 +1,7 @@
 import Axios from 'axios';
-import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
+import { Device } from '../../../_common/device/device.service';
+import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 
 const ManifestUrl = 'https://d.gamejolt.net/data/client/manifest-2.json';
 

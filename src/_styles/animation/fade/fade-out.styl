@@ -1,0 +1,40 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+vendors = official
+
+@keyframes fade-out
+	to
+		opacity: 0
+
+@keyframes fade-out-left
+	to
+		opacity: 0
+		transform: translate3d(-50px, 0, 0)
+
+@keyframes fade-out-right
+	to
+		opacity: 0
+		transform: translate3d(50px, 0, 0)
+
+@keyframes fade-out-down
+	to
+		opacity: 0
+		transform: translate3d(0, 50px, 0)
+
+@keyframes fade-out-up
+	to
+		opacity: 0
+		transform: translate3d(0, -50px, 0)
+
++create-animation('fade', 'out')
+	opacity: 1
+	animation-name: fade-out
+	animation-duration: 500ms
+
+for direction in 'up' 'right' 'down' 'left'
+	+create-animation('fade', 'out', direction)
+		opacity: 1
+		animation-name: unquote('fade-out-' + direction)
+		animation-duration: 600ms
+		animation-timing-function: $strong-ease-out

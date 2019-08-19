@@ -1,0 +1,29 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.growl-inner
+	h4
+		margin: 0
+		font-weight: 300
+
+	p
+		margin-bottom: 9px
+		font-size: $font-size-small
+
+	.progress
+		margin-bottom: 9px
+
+	p:last-child, .progress:last-child
+		margin-bottom: 0
+
+.growl-type-success
+	.growl-title
+		theme-prop('color', 'highlight')
+
+.growl-type-error
+	.growl-title
+		theme-prop('color', 'notice')
+
+.growl-type-info
+	.growl-title
+		color: $white

@@ -1,4 +1,4 @@
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { User } from '../../../../_common/user/user.model';
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import AppUserListItem from './item/item.vue';

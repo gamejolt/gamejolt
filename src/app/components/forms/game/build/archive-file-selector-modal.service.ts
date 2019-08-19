@@ -1,5 +1,5 @@
-import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
-import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
+import { Modal } from '../../../../../_common/modal/modal.service';
+import { asyncComponentLoader } from '../../../../../utils/utils';
 
 export class ArchiveFileSelectorModal {
 	static async show(
@@ -14,7 +14,9 @@ export class ArchiveFileSelectorModal {
 			modalId: 'ArchiveFileSelector',
 			component: () =>
 				asyncComponentLoader(
-					import(/* webpackChunkName: "ArchiveFileSelectorModal" */ './archive-file-selector-modal.vue')
+					import(
+						/* webpackChunkName: "ArchiveFileSelectorModal" */ './archive-file-selector-modal.vue'
+					)
 				),
 			props: { gameId, packageId, releaseId, buildId, primaryFileId, platform },
 		});

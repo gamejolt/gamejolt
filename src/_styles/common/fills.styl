@@ -1,0 +1,70 @@
+/**
+ * Fills
+ */
+.fill-offset
+	change-bg('bg-offset')
+
+	// Select all children
+	*
+		// Since a bunch of elements use the "bg-offset" color, we want to set
+		// the var so they all use the "bg" color instead.
+		--theme-bg-offset: var(--theme-bg)
+
+.fill-backdrop
+	@media $media-xs
+		change-bg('bg-backdrop-xs')
+
+	@media $media-sm-up
+		change-bg('bg-backdrop')
+
+// Use this class to reset the fill to the same as the original background. You
+// can use this to reset a container to the background color if it's being
+// placed within a fill-offset, for example.
+.fill-bg
+	change-bg('bg')
+
+.fill-highlight
+	change-bg('bi-bg')
+	theme-prop('color', 'bi-fg')
+
+	a
+		theme-prop('color', 'bi-fg')
+		text-decoration: underline
+
+		&:hover
+			text-decoration: none
+
+	.button
+		theme-dark()
+
+.fill-notice
+	change-bg('notice')
+	theme-prop('color', 'notice-fg')
+
+	a
+		theme-prop('color', 'notice-fg')
+		text-decoration: underline
+
+		&:hover
+			text-decoration: none
+
+	.button
+		theme-dark()
+
+.fill-gray
+	change-bg('gray')
+
+.fill-dark
+	change-bg('dark')
+
+.fill-darker
+	change-bg('darker')
+
+.fill-darkest
+	change-bg('darkest')
+
+.fill-black
+	background-color: $black
+
+.fill-black, .fill-darkest, .fill-darker, .fill-dark, .fill-gray
+	theme-prop('color', 'fg')

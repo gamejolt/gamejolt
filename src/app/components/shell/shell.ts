@@ -1,15 +1,12 @@
-import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
-import { ContentFocus } from 'game-jolt-frontend-lib/components/content-focus/content-focus.service';
-import {
-	EventBus,
-	EventBusDeregister,
-} from 'game-jolt-frontend-lib/components/event-bus/event-bus.service';
-import AppGrowls from 'game-jolt-frontend-lib/components/growls/growls.vue';
-import AppLoadingBar from 'game-jolt-frontend-lib/components/loading/bar/bar.vue';
-import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import AppMinbar from 'game-jolt-frontend-lib/components/minbar/minbar.vue';
-import AppModals from 'game-jolt-frontend-lib/components/modal/modals.vue';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
+import { Connection } from '../../../_common/connection/connection-service';
+import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
+import { EventBus, EventBusDeregister } from '../../../_common/event-bus/event-bus.service';
+import AppGrowls from '../../../_common/growls/growls.vue';
+import AppLoadingBar from '../../../_common/loading/bar/bar.vue';
+import { Meta } from '../../../_common/meta/meta-service';
+import AppMinbar from '../../../_common/minbar/minbar.vue';
+import AppModals from '../../../_common/modal/modals.vue';
+import { Screen } from '../../../_common/screen/screen-service';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
@@ -90,8 +87,7 @@ export default class AppShell extends Vue {
 
 	get totalChatNotificationsCount() {
 		return (
-			(this.chat ? this.chat.roomNotificationsCount : 0) +
-			this.unfocusedChatNotificationsCount
+			(this.chat ? this.chat.roomNotificationsCount : 0) + this.unfocusedChatNotificationsCount
 		);
 	}
 
@@ -160,8 +156,6 @@ export default class AppShell extends Vue {
 	@Watch('unreadNotificationsCount')
 	onNotificationsCountChange() {
 		Meta.notificationsCount =
-			this.unreadActivityCount +
-			this.unreadNotificationsCount +
-			this.totalChatNotificationsCount;
+			this.unreadActivityCount + this.unreadNotificationsCount + this.totalChatNotificationsCount;
 	}
 }

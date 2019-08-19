@@ -1,13 +1,11 @@
-import { AppResponsiveDimensions } from 'game-jolt-frontend-lib/components/responsive-dimensions/responsive-dimensions';
-import AppVideoEmbed from 'game-jolt-frontend-lib/components/video/embed/embed.vue';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
+import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
+import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
 import { ActivityFeedView } from '../view';
 
 @Component({
 	components: {
-		AppJolticon,
 		AppVideoEmbed,
 		AppResponsiveDimensions,
 	},

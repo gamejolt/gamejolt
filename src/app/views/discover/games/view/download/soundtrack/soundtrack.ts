@@ -1,11 +1,14 @@
-import AppAdPlacement from 'game-jolt-frontend-lib/components/ad/placement/placement.vue';
-import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
-import { GameSong } from 'game-jolt-frontend-lib/components/game/song/song.model';
-import { HistoryTick } from 'game-jolt-frontend-lib/components/history-tick/history-tick-service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
+import AppAdPlacement from '../../../../../../../_common/ad/placement/placement.vue';
+import AppAdWidget from '../../../../../../../_common/ad/widget/widget.vue';
+import { GameSong } from '../../../../../../../_common/game/song/song.model';
+import { HistoryTick } from '../../../../../../../_common/history-tick/history-tick-service';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../../../_common/route/route-component';
+import { Screen } from '../../../../../../../_common/screen/screen-service';
+import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
+import AppLoading from '../../../../../../../_common/loading/loading.vue';
 import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 

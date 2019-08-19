@@ -1,8 +1,7 @@
-import { AppFocusWhen } from 'game-jolt-frontend-lib/components/form-vue/focus-when.directive';
-import { BaseForm } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { GamePlaylist } from 'game-jolt-frontend-lib/components/game-playlist/game-playlist.model';
+import { AppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
+import { BaseForm } from '../../../../_common/form-vue/form.service';
+import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
 import { Component } from 'vue-property-decorator';
-
 
 @Component({
 	directives: {

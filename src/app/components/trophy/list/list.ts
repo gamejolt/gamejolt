@@ -1,17 +1,14 @@
-import { GameTrophy } from 'game-jolt-frontend-lib/components/game/trophy/trophy.model';
-import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { UserGameTrophy } from 'game-jolt-frontend-lib/components/user/game-trophy/game-trophy.model';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { number } from '../../../../_common/filters/number';
+import { GameTrophy } from '../../../../_common/game/trophy/trophy.model';
+import { AppTimeAgo } from '../../../../_common/time/ago/ago';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { UserGameTrophy } from '../../../../_common/user/game-trophy/game-trophy.model';
 import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
-
 
 @Component({
 	components: {
-		AppJolticon,
 		AppTrophyThumbnail,
 		AppTimeAgo,
 	},

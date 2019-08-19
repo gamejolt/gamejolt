@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="SVGRoot"
+   version="1.1"
+   viewBox="0 0 16 16"
+   height="16px"
+   width="16px">
+  <defs
+     id="defs815" />
+  <metadata
+     id="metadata818">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>T. Gantt</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     style="opacity:1"
+     id="layer2">
+    <path
+       id="rect1410"
+       d="M 1.5898438,1.0019531 C 1.2695052,1.016945 0.94951548,1.1252485 0.671875,1.3320312 -0.06849962,1.8834522 -0.21938961,2.9236879 0.33203125,3.6640625 L 3.5625,8 0.33203125,12.335938 C -0.2193896,13.076311 -0.06849962,14.116548 0.671875,14.667969 1.4122496,15.21939 2.4524854,15.0685 3.0039062,14.328125 L 7.5234375,8.2597656 C 7.5699395,8.1973296 7.6074219,8.101543 7.6074219,8 c 0,-0.101543 -0.037482,-0.1973293 -0.083984,-0.2597656 C 6.0170661,5.7172961 4.5098269,3.6951287 3.0039062,1.671875 2.6592683,1.2091409 2.1237412,0.97696674 1.5898438,1.0019531 Z m 12.8203122,0 C 13.876259,0.97696668 13.340635,1.2091378 12.996094,1.671875 L 8.4765625,7.7402344 C 8.4300605,7.8026707 8.3925781,7.898457 8.3925781,8 c 0,0.101543 0.037482,0.1973296 0.083984,0.2597656 l 4.5195319,6.0683594 c 0.551421,0.740375 1.591657,0.891265 2.332031,0.339844 0.740375,-0.551421 0.891265,-1.591658 0.339844,-2.332031 L 12.4375,8 15.667969,3.6640625 C 16.21939,2.9236879 16.0685,1.8834521 15.328125,1.3320312 15.050485,1.1252484 14.730495,1.0169451 14.410156,1.0019531 Z"
+       style="opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  </g>
+</svg>

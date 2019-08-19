@@ -1,8 +1,8 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Graph } from 'game-jolt-frontend-lib/components/graph/graph.service';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { arrayIndexBy } from 'game-jolt-frontend-lib/utils/array';
-import { objectPick } from 'game-jolt-frontend-lib/utils/object';
+import { Api } from '../../../_common/api/api.service';
+import { Graph } from '../../../_common/graph/graph.service';
+import { Translate } from '../../../_common/translate/translate.service';
+import { arrayIndexBy } from '../../../utils/array';
+import { objectPick } from '../../../utils/object';
 
 export type ResourceName = 'Partner' | 'User' | 'Game' | 'Game_Package' | 'Game_Release';
 

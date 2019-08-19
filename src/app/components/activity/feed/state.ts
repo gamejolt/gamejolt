@@ -1,8 +1,8 @@
-import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
-import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
+import { Analytics } from '../../../../_common/analytics/analytics.service';
+import { EventItem } from '../../../../_common/event-item/event-item.model';
+import { Game } from '../../../../_common/game/game.model';
+import { User } from '../../../../_common/user/user.model';
+import { arrayRemove } from '../../../../utils/array';
 import Vue from 'vue';
 import { ActivityFeedItem } from './item-service';
 

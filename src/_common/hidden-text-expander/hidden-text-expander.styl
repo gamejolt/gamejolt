@@ -1,0 +1,26 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.hidden-text-expander
+	rounded-corners-sm()
+	change-bg('bg-subtle')
+	color: inherit
+	display: block
+	vertical-align: middle
+	height: 20px
+	width: 40px
+	line-height: 13px
+	font-size: 12px
+	font-weight: bold
+	text-decoration: none
+	user-select: none
+	text-align: center
+
+	&.inline
+		display: inline-block
+
+	&:after
+		content: '...'
+
+	&:hover
+		transform: scale(1.1)

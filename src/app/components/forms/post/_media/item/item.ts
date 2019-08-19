@@ -1,5 +1,5 @@
-import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
-import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
+import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
+import { MediaItem } from '../../../../../../_common/media-item/media-item-model';
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 

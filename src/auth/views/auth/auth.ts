@@ -1,14 +1,14 @@
-import { Auth } from 'game-jolt-frontend-lib/components/auth/auth.service';
-import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
-import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
-import { AppThemeSvg } from 'game-jolt-frontend-lib/components/theme/svg/svg';
-import AppTranslateLangSelector from 'game-jolt-frontend-lib/components/translate/lang-selector/lang-selector.vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import AppCoverImg from '../../components/cover-img/cover-img.vue';
+import { Auth } from '../../../_common/auth/auth.service';
+import { Connection } from '../../../_common/connection/connection-service';
+import { Environment } from '../../../_common/environment/environment.service';
+import { MediaItem } from '../../../_common/media-item/media-item-model';
+import { BaseRouteComponent } from '../../../_common/route/route-component';
+import { AppThemeSvg } from '../../../_common/theme/svg/svg';
+import AppTranslateLangSelector from '../../../_common/translate/lang-selector/lang-selector.vue';
 import { store } from '../../store/index';
+import AppCoverImg from '../../components/cover-img/cover-img.vue';
 import './auth-content.styl';
 
 export function loggedUserBlock() {

@@ -1,13 +1,10 @@
-import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
-import {
-	EventBus,
-	EventBusDeregister,
-} from 'game-jolt-frontend-lib/components/event-bus/event-bus.service';
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import Onboarding from 'game-jolt-frontend-lib/components/onboarding/onboarding.service';
-import { sleep } from 'game-jolt-frontend-lib/utils/utils';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
-import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
+import { Connection } from '../../../../_common/connection/connection-service';
+import { EventBus, EventBusDeregister } from '../../../../_common/event-bus/event-bus.service';
+import AppExpand from '../../../../_common/expand/expand.vue';
+import Onboarding from '../../../../_common/onboarding/onboarding.service';
+import { sleep } from '../../../../utils/utils';
+import AppLoading from '../../../../_common/loading/loading.vue';
+import { AppState, AppStore } from '../../../../_common/store/app-store';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { Client } from '../../../../_common/client/client.service';

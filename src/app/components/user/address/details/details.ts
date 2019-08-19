@@ -1,8 +1,7 @@
-import { Geo } from 'game-jolt-frontend-lib/components/geo/geo.service';
-import { UserAddress } from 'game-jolt-frontend-lib/components/user/address/address.model';
+import { Geo } from '../../../../../_common/geo/geo.service';
+import { UserAddress } from '../../../../../_common/user/address/address.model';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 @Component({})
 export default class AppUserAddressDetails extends Vue {
