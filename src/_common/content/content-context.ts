@@ -8,7 +8,8 @@ export type ContentContext =
 	| 'game-comment'
 	| 'user-comment'
 	| 'user-bio'
-	| 'forum-post';
+	| 'forum-post'
+	| 'community-description';
 
 enum ContextCapabilityType {
 	TextBold,
@@ -170,6 +171,7 @@ export class ContextCapabilities {
 					ContextCapabilityType.Gif,
 				]);
 			case 'game-description':
+			case 'community-description':
 				return new ContextCapabilities([
 					ContextCapabilityType.TextBold,
 					ContextCapabilityType.TextItalic,
@@ -243,6 +245,8 @@ export function getMediaItemTypeForContext(context: ContentContext) {
 			return MediaItem.TYPE_COMMENT;
 		case 'forum-post':
 			return MediaItem.TYPE_FORUM_POST;
+		case 'community-description':
+			return MediaItem.TYPE_COMMUNITY_DESCRIPTION;
 	}
 	throw new Error('There is no matching media item type for the context ' + context);
 }

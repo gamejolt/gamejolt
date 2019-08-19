@@ -1,11 +1,11 @@
 import { RawLocation } from 'vue-router';
 import { Api } from '../api/api.service';
 import { Collaboratable, Perm } from '../collaborator/collaboratable';
-import { CommunityTag } from './tag/tag.model';
 import { Game } from '../game/game.model';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { Theme } from '../theme/theme.model';
+import { CommunityTag } from './tag/tag.model';
 
 export async function $joinCommunity(community: Community) {
 	community.is_member = true;
@@ -48,6 +48,7 @@ export class Community extends Collaboratable(Model) {
 	path!: string;
 	added_on!: number;
 	post_placeholder_text!: string | null;
+	description_content!: string;
 
 	thumbnail?: MediaItem;
 	header?: MediaItem;
@@ -111,6 +112,10 @@ export class Community extends Collaboratable(Model) {
 			file: this.file,
 			allowComplexData: ['crop'],
 		});
+	}
+
+	$saveDescription() {
+		return this.$_save('/web/dash/communities/description/save/' + this.id, 'community');
 	}
 }
 
