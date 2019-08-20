@@ -1,8 +1,8 @@
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
-import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { Community } from '../../../../_common/community/community.model';
+import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import FormCommunityDescription from '../../forms/community/description/description.vue';
 
 @Component({
@@ -13,11 +13,8 @@ import FormCommunityDescription from '../../forms/community/description/descript
 	},
 })
 export default class AppCommunityDescription extends Vue {
-	@Prop(Community)
-	community!: Community;
-
-	@Prop(Boolean)
-	isEditing!: boolean;
+	@Prop({ type: Community, required: true }) community!: Community;
+	@Prop({ type: Boolean, required: true }) isEditing!: boolean;
 
 	canToggleDescription = false;
 	isDescriptionOpen = false;

@@ -1,7 +1,7 @@
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import AppFormControlContent from 'game-jolt-frontend-lib/components/form-vue/control/content/content.vue';
-import { BaseForm } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { Component } from 'vue-property-decorator';
+import { Community } from '../../../../../_common/community/community.model';
+import AppFormControlContent from '../../../../../_common/form-vue/control/content/content.vue';
+import { BaseForm } from '../../../../../_common/form-vue/form.service';
 
 @Component({
 	components: {
