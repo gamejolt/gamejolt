@@ -9,11 +9,7 @@
 				</h3>
 
 				<p class="text-muted">
-					<span v-translate>
-						We have fanart, lets plays, guides,
-						<i>DANK</i>
-						memes and more!
-					</span>
+					<translate>Explore fan-created artwork, videos, game guides and more.</translate>
 				</p>
 			</section>
 
