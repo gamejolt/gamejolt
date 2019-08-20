@@ -1,0 +1,45 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.tag
+	rounded-corners-sm()
+	change-bg('bg-offset')
+	theme-prop('color', 'fg')
+	display: inline-block
+	padding: 1px 4px 2px
+	font-family: $font-family-tiny
+	font-size: $font-size-tiny
+	font-weight: bold
+	vertical-align: text-bottom
+	white-space: nowrap
+	line-height: 16px // Same size as a jolticon.
+	transition: transform 300ms $ease-out-back
+
+	a&:hover
+		transform: scale(1.1)
+
+	&:empty
+		display: none
+
+	.jolticon
+		vertical-align: bottom
+		margin: 0
+
+	&.big
+		padding-left: 8px
+		padding-right: @padding-left
+		font-size: $font-size-large
+		line-height: 16px * 2
+
+		.jolticon
+			vertical-align: baseline
+
+.tag-highlight
+	&, &:hover
+		change-bg('highlight')
+		theme-prop('color', 'highlight-fg')
+
+.tag-notice
+	&, &:hover
+		change-bg('notice')
+		theme-prop('color', 'notice-fg')

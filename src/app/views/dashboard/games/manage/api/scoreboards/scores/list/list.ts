@@ -1,11 +1,11 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
+import { Api } from '../../../../../../../../../_common/api/api.service';
+import { GameScoreTable } from '../../../../../../../../../_common/game/score-table/score-table.model';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
-import { UserGameScore } from 'game-jolt-frontend-lib/components/user/game-score/game-score.model';
+} from '../../../../../../../../../_common/route/route-component';
+import { Scroll } from '../../../../../../../../../_common/scroll/scroll.service';
+import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
 import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 import AppManageGameListScores from '../../_list-scores/list-scores.vue';

@@ -1,11 +1,6 @@
-import {
-	BaseForm,
-	FormOnSubmitSuccess,
-} from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import Onboarding, {
-	OnboardingStep,
-} from 'game-jolt-frontend-lib/components/onboarding/onboarding.service';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { BaseForm, FormOnSubmitSuccess } from '../../../../_common/form-vue/form.service';
+import Onboarding, { OnboardingStep } from '../../../../_common/onboarding/onboarding.service';
+import { User } from '../../../../_common/user/user.model';
 import { Prop } from 'vue-property-decorator';
 
 export default abstract class OnboardingComponent<T> extends BaseForm<T>

@@ -1,7 +1,7 @@
-import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import { EventBus } from 'game-jolt-frontend-lib/components/event-bus/event-bus.service';
-import { Primus } from 'game-jolt-frontend-lib/components/primus/primus.service';
+import { Analytics } from '../../../_common/analytics/analytics.service';
+import { Environment } from '../../../_common/environment/environment.service';
+import { EventBus } from '../../../_common/event-bus/event-bus.service';
+import { Primus } from '../../../_common/primus/primus.service';
 import Vue from 'vue';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { store } from '../../store/index';
@@ -316,10 +316,7 @@ export class ChatClient {
 		} else if (msg.event === 'friends-list') {
 			const friendsList = msg.data.friendsList;
 			if (friendsList) {
-				this.friendsList = new ChatUserCollection(
-					ChatUserCollection.TYPE_FRIEND,
-					friendsList
-				);
+				this.friendsList = new ChatUserCollection(ChatUserCollection.TYPE_FRIEND, friendsList);
 				this.friendsPopulated = true;
 			}
 		} else if (msg.event === 'public-rooms') {

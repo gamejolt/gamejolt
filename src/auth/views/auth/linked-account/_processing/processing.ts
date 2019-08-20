@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue'
+import AppLoading from '../../../../../_common/loading/loading.vue';
 
 /**
  * Used by multiple components to show a processing message.

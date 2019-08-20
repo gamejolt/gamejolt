@@ -1,16 +1,13 @@
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { Site } from 'game-jolt-frontend-lib/components/site/site-model';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { Environment } from '../../../../_common/environment/environment.service';
+import { Growls } from '../../../../_common/growls/growls.service';
+import { Site } from '../../../../_common/site/site-model';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import FormSiteSettings from '../../forms/site/settings/settings.vue';
-
 
 @Component({
 	components: {
-		AppJolticon,
 		FormSiteSettings,
 	},
 	directives: {

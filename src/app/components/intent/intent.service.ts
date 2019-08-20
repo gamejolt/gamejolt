@@ -1,5 +1,5 @@
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { LocationRedirect } from 'game-jolt-frontend-lib/utils/router';
+import { Growls } from '../../../_common/growls/growls.service';
+import { LocationRedirect } from '../../../utils/router';
 import { Route } from 'vue-router';
 
 export interface Intent {

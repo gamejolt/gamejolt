@@ -1,16 +1,16 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
+import { Component } from 'vue-property-decorator';
+import { Api } from '../../../../../../../../../_common/api/api.service';
+import { GameBuild } from '../../../../../../../../../_common/game/build/build.model';
 // tslint:disable-next-line:max-line-length
-import { GameBuildLaunchOption } from 'game-jolt-frontend-lib/components/game/build/launch-option/launch-option.model';
-import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import { GameRelease } from 'game-jolt-frontend-lib/components/game/release/release.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
+import { GameBuildLaunchOption } from '../../../../../../../../../_common/game/build/launch-option/launch-option.model';
+import { GamePackage } from '../../../../../../../../../_common/game/package/package.model';
+import { GameRelease } from '../../../../../../../../../_common/game/release/release.model';
+import { Growls } from '../../../../../../../../../_common/growls/growls.service';
+import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { Component } from 'vue-property-decorator';
+} from '../../../../../../../../../_common/route/route-component';
 import FormGameRelease from '../../../../../../../../components/forms/game/release/release.vue';
 import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 

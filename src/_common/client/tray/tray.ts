@@ -1,9 +1,9 @@
-import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue, { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { Navigate } from '../../navigate/navigate.service';
+import { Screen } from '../../screen/screen-service';
+import { AppStore } from '../../store/app-store';
 import { Client } from '../client.service';
 
 @Component({})

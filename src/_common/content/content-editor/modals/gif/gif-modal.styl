@@ -1,0 +1,193 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+$panel-height = 160px
+$panel-margin = 8px
+$result-border-width = 4px
+
+@keyframes search-result-loading-anim
+	0%
+		change-bg('bg-offset')
+
+	50%
+		change-bg('bg-subtle')
+
+	100%
+		change-bg('bg-offset')
+
+@keyframes search-result-incoming
+	0%
+		transform: translateY(32px)
+		opacity: 0
+
+	100%
+		transform: none
+		opacity: 100%
+
+.input-container
+	display: flex
+	align-items: center
+
+.search-bar
+	flex-grow: 1
+	margin-left: 8px
+	position: relative
+
+.search
+	display: inline-block
+	height: $button-md-line-height
+	padding-left: 40px
+	padding-right: 40px
+
+.search-icon
+	position: absolute
+	top: 10px
+	left: 14px
+
+.search-clear
+	position: absolute
+	display: flex
+	align-items: center
+	justify-content: center
+	top: 0
+	right: 0
+	width: $button-md-line-height
+	height: $button-md-line-height
+	cursor: pointer
+
+	.-icon
+		color: var(--theme-fg-muted)
+
+	&:hover .-icon
+		color: var(--theme-fg)
+
+.loading-categories
+	display: flex
+	justify-content: center
+	margin-top: 80px
+	margin-bottom: 80px
+
+.gif-content
+	margin-top: 24px
+	position: relative
+
+	// On mobile we allow the normal scrollbar to scroll the content, otherwise
+	// we want to put the scrollbar in the modal.
+	@media $media-md-up
+		height: 60vh
+		overflow-y: scroll
+		margin-left: -($panel-margin)
+		margin-right: -($panel-margin)
+
+.gif-content-noscroll
+	overflow-y: hidden !important
+
+.-grid
+	display: flex
+	flex-wrap: wrap
+	justify-content: center
+
+	&-item
+		display: flex
+		justify-content: center
+		position: relative
+		width: 100%
+		height: $panel-height
+		padding: $panel-margin
+		animation-duration: 0.4s
+
+		@media $media-sm-up
+			width: (100% / 3)
+
+		@media $media-lg-up
+			width: (100% / 3)
+
+		img
+			rounded-corners-lg()
+			display: block
+			width: 100%
+			height: $panel-height - $panel-margin * 2
+			// This will center it within the container and make sure it covers
+			// the full space.
+			object-fit: cover
+			object-position: center
+
+.category
+	rounded-corners-lg()
+	overflow: hidden
+	width: 100%
+	cursor: pointer
+
+	img
+		transition: filter 0.1s ease
+		filter: brightness(0.6)
+
+	&:hover img
+		filter: brightness(0.3)
+
+.category-text
+	position: absolute
+	top: 0
+	left: 0
+	right: 0
+	bottom: 0
+	display: flex
+	justify-content: center
+	align-items: center
+	color: $gray-lightest
+	text-align: center
+
+	& > span
+		text-shadow: 0 2px rgba(0, 0, 0, 0.5)
+		font-size: $font-size-h4
+		font-weight: bold
+
+.search-result
+	rounded-corners-lg()
+	width: 100%
+	overflow: hidden
+	background-color: transparent
+	cursor: pointer
+	border-color: transparent
+	transition: border-color 0.2s, background-color 0.2s ease
+	box-sizing: content-box
+	position: relative
+	border: $result-border-width solid transparent
+	margin: -($result-border-width)
+
+	&:hover
+		border-color: var(--theme-backlight)
+		background-color: var(--theme-backlight)
+
+.search-result-placeholder
+	rounded-corners-lg()
+	width: 100%
+	height: $panel-height - ($panel-margin * 2)
+	animation-duration: 0.8s
+	animation-name: search-result-loading-anim
+	animation-iteration-count: infinite
+
+.end-of-scroll
+	display: flex
+	align-items: center
+	padding-top: 64px
+	padding-bottom: 40px
+	flex-direction: column
+
+	& img
+		height: 80px
+		margin-bottom: 32px
+
+.more-container
+	display: flex
+	justify-content: center
+	margin-top: 10px
+	margin-bottom: 10px
+
+.error-container
+	width: 100%
+	display: flex
+	justify-content: center
+	align-items: center
+	flex-direction: column
+	min-height: 200px

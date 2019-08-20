@@ -1,17 +1,14 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
 import { Component } from 'vue-property-decorator';
+import { Api } from '../../../../_common/api/api.service';
+import AppExpand from '../../../../_common/expand/expand.vue';
+import { Growls } from '../../../../_common/growls/growls.service';
+import AppLoading from '../../../../_common/loading/loading.vue';
+import { BaseModal } from '../../../../_common/modal/base';
+import { Translate } from '../../../../_common/translate/translate.service';
 import FormToken from '../../forms/token/token.vue';
-
 
 @Component({
 	components: {
-		AppJolticon,
 		AppLoading,
 		AppExpand,
 		FormToken,

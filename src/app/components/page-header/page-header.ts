@@ -1,7 +1,7 @@
-import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import AppScrollAffix from 'game-jolt-frontend-lib/components/scroll/affix/affix.vue';
-import { AppAutoscrollAnchor } from 'game-jolt-frontend-lib/components/scroll/auto-scroll/anchor';
+import { MediaItem } from '../../../_common/media-item/media-item-model';
+import { Screen } from '../../../_common/screen/screen-service';
+import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
+import { AppAutoscrollAnchor } from '../../../_common/scroll/auto-scroll/anchor';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import AppMediaItemCover from '../../../_common/media-item/cover/cover.vue';

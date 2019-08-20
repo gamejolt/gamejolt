@@ -1,0 +1,71 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+@require '../variables'
+
+.media-bar-lightbox-item
+	display: block
+	flex: 0 0 100%
+	overflow-x: hidden
+	overflow-y: scroll
+	// Apply control padding to child container on mobile to allow for dynamic heights
+	height: 'calc(100vh - %s)' % $-controls-height
+	padding-bottom: $-controls-height
+
+	@media only screen and (orientation: landscape)
+		height: 100vh
+
+	@media $media-sm-up
+		height: 100%
+		padding-bottom: 0
+		overflow-x: visible
+		overflow-y: visible
+		// Gotta allow some room on left/right for the next/prev buttons.
+		padding-left: 110px
+		padding-right: 110px
+
+// Browsers will allow you to drag the image somewhere to paste the URL.
+// Turn that off since we want to enable dragging to switch images.
+img
+	pointer-events: none
+
+.-inner
+	display: flex
+	flex-flow: column nowrap
+	justify-content: center
+	align-content: center
+	align-items: center
+	width: 100%
+	min-height: 100%
+
+	@media only screen and (orientation: landscape)
+		padding-bottom: $-controls-height
+
+	@media $media-sm-up
+		height: 100%
+
+.-embed
+	flex: 0 0 auto
+	width: 100%
+	position: relative
+
+	>>>
+		img, iframe
+			rounded-corners-lg()
+			display: block
+			margin: 0 auto
+
+.-caption
+	flex: 0 0 auto
+	padding: $font-size-base $font-size-base 0
+	text-align: center
+	color: $white
+	max-width: 900px
+	white-space: normal
+
+	@media $media-sm-up
+		padding: $font-size-base 0 0
+
+	h4
+		margin-top: 0
+		color: $white
+		font-weight: 300

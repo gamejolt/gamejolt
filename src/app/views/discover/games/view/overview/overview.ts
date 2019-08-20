@@ -1,43 +1,38 @@
-import { Ads } from 'game-jolt-frontend-lib/components/ad/ads.service';
-import AppAdPlacement from 'game-jolt-frontend-lib/components/ad/placement/placement.vue';
-import AppAdWidget from 'game-jolt-frontend-lib/components/ad/widget/widget.vue';
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppCard from 'game-jolt-frontend-lib/components/card/card.vue';
-import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
-import AppCommentAddButton from 'game-jolt-frontend-lib/components/comment/add-button/add-button.vue';
-import { Comment } from 'game-jolt-frontend-lib/components/comment/comment-model';
-import {
-	CommentState,
-	CommentStore,
-} from 'game-jolt-frontend-lib/components/comment/comment-store';
-import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
-import { CommentThreadModal } from 'game-jolt-frontend-lib/components/comment/thread/modal.service';
-import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import AppGameExternalPackageCard from 'game-jolt-frontend-lib/components/game/external-package/card/card.vue';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import AppGamePackageCard from 'game-jolt-frontend-lib/components/game/package/card/card.vue';
-import AppGameSoundtrackCard from 'game-jolt-frontend-lib/components/game/soundtrack/card/card.vue';
-import { HistoryTick } from 'game-jolt-frontend-lib/components/history-tick/history-tick-service';
-import { AppLazyPlaceholder } from 'game-jolt-frontend-lib/components/lazy/placeholder/placeholder';
-import AppMediaBar from 'game-jolt-frontend-lib/components/media-bar/media-bar.vue';
-import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import { PartnerReferral } from 'game-jolt-frontend-lib/components/partner-referral/partner-referral-service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
+import { Ads } from '../../../../../../_common/ad/ads.service';
+import AppAdPlacement from '../../../../../../_common/ad/placement/placement.vue';
+import AppAdWidget from '../../../../../../_common/ad/widget/widget.vue';
+import { AppTrackEvent } from '../../../../../../_common/analytics/track-event.directive';
+import { Api } from '../../../../../../_common/api/api.service';
+import AppCard from '../../../../../../_common/card/card.vue';
+import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
+import AppCommentAddButton from '../../../../../../_common/comment/add-button/add-button.vue';
+import { Comment } from '../../../../../../_common/comment/comment-model';
+import { CommentState, CommentStore } from '../../../../../../_common/comment/comment-store';
+import { CommentModal } from '../../../../../../_common/comment/modal/modal.service';
+import { CommentThreadModal } from '../../../../../../_common/comment/thread/modal.service';
+import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
+import { Environment } from '../../../../../../_common/environment/environment.service';
+import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
+import { number } from '../../../../../../_common/filters/number';
+import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
+import AppGameExternalPackageCard from '../../../../../../_common/game/external-package/card/card.vue';
+import { Game } from '../../../../../../_common/game/game.model';
+import AppGamePackageCard from '../../../../../../_common/game/package/card/card.vue';
+import AppGameSoundtrackCard from '../../../../../../_common/game/soundtrack/card/card.vue';
+import { HistoryTick } from '../../../../../../_common/history-tick/history-tick-service';
+import { AppLazyPlaceholder } from '../../../../../../_common/lazy/placeholder/placeholder';
+import AppMediaBar from '../../../../../../_common/media-bar/media-bar.vue';
+import { Meta } from '../../../../../../_common/meta/meta-service';
+import { PartnerReferral } from '../../../../../../_common/partner-referral/partner-referral-service';
+import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import { Screen } from '../../../../../../_common/screen/screen-service';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import AppActivityFeed from '../../../../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import AppCommentOverview from '../../../../../components/comment/overview/overview.vue';
+import AppGameCommunityBadge from '../../../../../components/game/community-badge/community-badge.vue';
 import AppGameOgrs from '../../../../../components/game/ogrs/ogrs.vue';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import AppPageContainer from '../../../../../components/page-container/page-container.vue';
@@ -45,7 +40,6 @@ import AppPostAddButton from '../../../../../components/post/add-button/add-butt
 import AppRatingWidget from '../../../../../components/rating/widget/widget.vue';
 import AppUserKnownFollowers from '../../../../../components/user/known-followers/known-followers.vue';
 import { RouteStore, routeStore, RouteStoreModule } from '../view.store';
-import AppDiscoverGamesViewOverviewCommunity from './_community/community.vue';
 import AppDiscoverGamesViewOverviewDetails from './_details/details.vue';
 import AppDiscoverGamesViewOverviewRecommended from './_recommended/recommended.vue';
 import AppDiscoverGamesViewOverviewStatbar from './_statbar/statbar.vue';
@@ -55,11 +49,11 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 	name: 'RouteDiscoverGamesViewOverview',
 	components: {
 		AppPageContainer,
-		AppDiscoverGamesViewOverviewCommunity,
 		AppDiscoverGamesViewOverviewDetails,
 		AppDiscoverGamesViewOverviewRecommended,
 		AppDiscoverGamesViewOverviewSupporters,
 		AppDiscoverGamesViewOverviewStatbar,
+		AppGameCommunityBadge,
 		AppAdWidget,
 		AppAdPlacement,
 		AppRatingWidget,
@@ -244,7 +238,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		CommentThreadModal.showFromPermalink(
 			this.$router,
 			'Game',
-			parseInt(this.$route.params.id),
+			parseInt(this.$route.params.id, 10),
 			'comments'
 		);
 		this.feed = ActivityFeedService.routeInit(this);

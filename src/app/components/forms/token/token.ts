@@ -1,8 +1,12 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { AppFocusWhen } from 'game-jolt-frontend-lib/components/form-vue/focus-when.directive';
-import { BaseForm, FormOnInit, FormOnSubmit, FormOnSubmitSuccess } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Api } from '../../../../_common/api/api.service';
+import { AppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
+import {
+	BaseForm,
+	FormOnInit,
+	FormOnSubmit,
+	FormOnSubmitSuccess,
+} from '../../../../_common/form-vue/form.service';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 @Component({
 	directives: {

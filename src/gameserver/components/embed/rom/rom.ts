@@ -1,11 +1,10 @@
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
-import { loadScript } from 'game-jolt-frontend-lib/utils/utils';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { loadScript } from '../../../../utils/utils';
+import { Environment } from '../../../../_common/environment/environment.service';
+import { GameBuild } from '../../../../_common/game/build/build.model';
 import { Store } from '../../../store/index';
-
 
 declare const RetroJolt: any;
 

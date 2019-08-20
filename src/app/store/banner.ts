@@ -1,8 +1,8 @@
-import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
-import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { VuexModule, VuexMutation, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
+import { Analytics } from '../../_common/analytics/analytics.service';
+import { Connection } from '../../_common/connection/connection-service';
+import { Screen } from '../../_common/screen/screen-service';
+import { Translate } from '../../_common/translate/translate.service';
+import { VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { namespace } from 'vuex-class';
 import { Settings } from '../../_common/settings/settings.service';
 import { store } from './index';

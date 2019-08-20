@@ -1,0 +1,32 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+@require './../../well/well.styl'
+
+.card-list-item
+	&-body
+		position: relative
+		margin-top: -17px
+
+		.card-list-add &
+			margin-top: 5px
+
+		&:before
+			caret(color: var(--theme-bg-offset), direction: 'up', size: 10px)
+			content: ''
+			opacity: 0
+			pointer-events: none
+			transition: opacity 400ms
+
+		~/.active &:before
+			opacity: 1
+
+	>>> form
+		@extend .well
+		change-bg('bg')
+
+		&:last-child
+			margin-bottom: 0
+
+	& .card-drag-handle
+		border-top-right-radius: $border-radius-large
+		border-bottom-right-radius: $border-radius-large

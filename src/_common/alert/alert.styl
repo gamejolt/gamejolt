@@ -1,0 +1,80 @@
+$alert-padding = ($grid-gutter-width / 2)
+$alert-padding-xs = ($grid-gutter-width-xs / 2)
+
+.alert
+	rounded-corners-lg()
+	change-bg('bg-offset')
+	position: relative
+	padding: $alert-padding-xs
+	margin-bottom: $line-height-computed
+	font-size: $font-size-small
+
+	@media $media-sm-up
+		padding: $alert-padding
+
+	h4
+		margin-top: 0
+
+	p, ul
+		margin-bottom: 0
+
+	p + p
+		margin-top: 5px
+
+	// We add spacing to the top proportionate to the amount of spacing that would
+	// usually be above the top of text.
+	.button
+		margin-top: 5px + ($line-height-computed - $font-size-base)
+
+	.jolticon
+		@extend .jolticon.middle
+
+	// alert-well is for styling it as a full-width row
+	&-well
+		border-radius: 0
+
+// Invert when it's in a fill of the same background color.
+.fill-offset .alert
+	change-bg('bg')
+
+.alert.alert-highlight
+	&, .fill-offset &
+		@extend .fill-highlight
+
+.alert.alert-notice
+	&, .fill-offset &
+		@extend .fill-notice
+
+.alert.alert-dark
+	&, .fill-offset &
+		@extend .fill-darkest
+
+.alert-dismiss
+	position: absolute
+	top: $alert-padding-xs
+	right: $alert-padding-xs
+
+	@media $media-sm-up
+		top: $alert-padding
+		right: $alert-padding
+
+// To be used with .alert-dismiss to give space to the right side.
+.alert-content
+	margin-right: 30px
+
+.alert-actions
+	theme-dark()
+	change-bg('darkest')
+	position: relative
+	margin: -($alert-padding)
+	margin-top: $alert-padding
+	padding: $alert-padding
+	border-bottom-left-radius: $border-radius-large
+	border-bottom-right-radius: $border-radius-large
+
+	&::before
+		content: ''
+		caret(color: var(--theme-darkest), direction: 'up', size: 5px)
+
+	> .button
+		margin-top: 0

@@ -1,0 +1,122 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+gj-card
+	display: block
+
+.card
+	clearfix()
+	full-bleed-xs()
+	rounded-corners-lg()
+	position: relative
+	padding: 15px
+	margin-bottom: $line-height-computed
+
+	a &:hover
+		background-color: $black
+
+	&-expandable
+		padding-left: 40px
+		cursor: pointer
+		user-select: none
+
+	&-draggable
+		padding-right: 40px
+
+		// Since we full-bleed on mobile, if it has a drag handle, then we don't want to full bleed the right.
+		// This makes it easier to grab the drag handle since it's away from the edge a bit.
+		@media $media-xs
+			margin-right: 0
+
+	&-remove
+		theme-prop('color', 'fg-muted', true)
+		float: right
+		margin-left: 10px
+
+		&, .jolticon
+			cursor: pointer
+
+		&:hover
+			color: $white !important
+
+	&-thumb
+		position: relative
+		background-repeat: no-repeat
+		background-position: center center
+		background-size: cover
+		height: 0
+		padding-bottom: 100%
+
+	&-title
+		margin-top: 0
+		margin-bottom: 5px
+
+		h4, h5
+			margin-top: 0
+			margin-bottom: 0
+
+			@media $media-xs
+				font-size: $font-size-base
+
+	&-meta
+		theme-prop('color', 'fg-muted')
+		margin-top: 5px
+		font-size: $font-size-small
+
+		&-sm
+			font-size: $font-size-tiny
+
+	&-content
+		theme-prop('color', 'lighter')
+		margin-top: 8px
+		font-size: $font-size-small
+
+	&-stats
+		float: right
+		margin-left: 15px
+		text-align: right
+
+	&-controls
+		margin-top: $line-height-computed
+
+	.hidden-text-expander
+		margin-bottom: $line-height-computed
+
+	.alert
+		// Less padding than normal.
+		padding-top: $font-size-base
+		padding-bottom: $font-size-base
+
+		.jolticon
+			vertical-align: text-bottom
+
+	&-chevron
+		position: absolute
+		left: 0
+		top: 18px
+		width: 40px
+		text-align: center
+
+		> .jolticon
+			cursor: inherit
+
+	&-drag-handle
+		change-bg('gray')
+		position: absolute
+		right: 0
+		top: 0
+		bottom: 0
+		width: 20px
+		cursor: move
+		user-select: none
+
+		> .jolticon
+			position: absolute
+			top: 50%
+			left: 0
+			margin-top: -8px
+			cursor: inherit
+			color: $white
+
+	&-disabled.card
+		cursor: not-allowed

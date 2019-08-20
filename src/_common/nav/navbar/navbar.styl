@@ -1,0 +1,118 @@
+$navbar-height = $shell-top-nav-height is defined ? $shell-top-nav-height : 50px
+
+.navbar
+	@extend .clearfix
+	change-bg('darkest')
+	theme-dark()
+	height: $navbar-height
+	display: flex
+
+	a
+		theme-prop('color', 'lighter')
+
+.navbar-left
+	flex: none
+
+.navbar-center
+	flex: auto
+
+.navbar-right
+	flex: none
+
+.navbar-items
+	@extend .list-unstyled
+
+.navbar-items, .navbar-items > li
+	display: inline-block
+	vertical-align: top
+	margin-bottom: 0
+
+.navbar-items > li > a, .navbar-item
+	display: inline-block
+	vertical-align: top
+	overflow: hidden
+	height: $navbar-height
+	line-height: 20px
+	user-select: none
+	padding: 15px 10px
+
+	@media $media-sm-up
+		padding: 15px
+
+	> .notification-tag
+		position: absolute
+		top: 0
+		right: 0
+		line-height: 15px
+		text-align: center
+
+.navbar-separator
+	change-bg('dark')
+	position: relative
+	display: inline-block
+	height: 24px
+	width: 1px
+	margin: 0 10px
+	vertical-align: top
+	top: ($navbar-height - @height) * 0.5
+
+.navbar-avatar
+	display: inline-block
+	vertical-align: top
+	overflow: hidden
+	padding: 10px
+	line-height: 30px
+	width: 30px + (@padding * 2)
+	height: @width
+	user-select: none
+
+	img
+		width: 30px
+		height: @width
+		display: inline-block
+		vertical-align: bottom
+
+.navbar-form
+	padding: 0
+	padding-right: 20px
+	width: 100%
+	height: $navbar-height
+	overflow: hidden
+
+	.form-control
+		border: 0
+		background-color: transparent
+		color: $white
+		width: 100%
+		height: $navbar-height
+
+.navbar-controls
+	margin-top: ($navbar-height - $button-md-line-height) * 0.5
+	padding-right: @margin-top
+
+/**
+ * Hover/active state underline.
+ */
+.navbar-items > li > a, .navbar-item, .navbar-form-control, .navbar-avatar
+	position: relative
+
+	&::before
+		change-bg('gray')
+		position: absolute
+		content: ''
+		right: 0
+		left: 0
+		bottom: 0
+		height: 3px
+		transform: translate(0, 4px)
+		transition: transform 300ms $strong-ease-out, background-color 200ms linear
+
+	&:hover
+		&::before
+			transform: translate(0, 0)
+
+	&.active
+		&, &:hover
+			&::before
+				change-bg('highlight')
+				transform: translate(0, 0)

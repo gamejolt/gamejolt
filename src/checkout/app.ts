@@ -1,20 +1,19 @@
-import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import AppErrorPage from 'game-jolt-frontend-lib/components/error/page/page.vue';
-import AppGrowls from 'game-jolt-frontend-lib/components/growls/growls.vue';
-import AppLoadingBar from 'game-jolt-frontend-lib/components/loading/bar/bar.vue';
-import AppModals from 'game-jolt-frontend-lib/components/modal/modals.vue';
-import { AppTheme } from 'game-jolt-frontend-lib/components/theme/theme';
-import AppUserBar from 'game-jolt-frontend-lib/components/user/user-bar/user-bar.vue';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import { date } from 'game-jolt-frontend-lib/vue/filters/date';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { loadCurrentLanguage } from '../utils/translations';
 import * as _ClientHistoryNavigatorMod from '../_common/client/history-navigator/history-navigator.service';
+import { Connection } from '../_common/connection/connection-service';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
+import { Environment } from '../_common/environment/environment.service';
+import AppErrorPage from '../_common/error/page/page.vue';
+import { date } from '../_common/filters/date';
+import AppGrowls from '../_common/growls/growls.vue';
+import AppLoadingBar from '../_common/loading/bar/bar.vue';
+import AppModals from '../_common/modal/modals.vue';
+import { AppTheme } from '../_common/theme/theme';
+import AppUserBar from '../_common/user/user-bar/user-bar.vue';
+import { User } from '../_common/user/user.model';
 import { Store } from './store/index';
 
 let components: any = {
@@ -24,7 +23,6 @@ let components: any = {
 	AppGrowls,
 	AppModals,
 	AppUserBar,
-	AppJolticon,
 	AppCookieBanner,
 };
 

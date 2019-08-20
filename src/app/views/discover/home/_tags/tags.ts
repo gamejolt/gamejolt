@@ -1,6 +1,6 @@
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
+import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import AppTagList from '../../../../components/tag/list/list.vue';
 
 @Component({

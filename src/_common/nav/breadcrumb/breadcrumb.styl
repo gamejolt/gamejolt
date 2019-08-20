@@ -1,0 +1,36 @@
+.breadcrumb
+	ul
+		@extend .list-unstyled, .clearfix
+		font-family: $font-family-heading
+		margin-bottom: 0
+
+		> li
+			float: left
+			padding: 0
+			margin-bottom: 0
+
+			> a, > span
+				theme-prop('color', 'fg-muted')
+				display: inline-block
+
+				&.active
+					theme-prop('color', 'fg')
+					font-weight: bold
+
+				&:hover
+					text-decoration: none
+
+	&-tag
+		theme-prop('color', 'fg-muted')
+		display: block
+		font-family: $font-family-base
+		font-size: $font-size-tiny
+		text-transform: lowercase
+		font-weight: normal
+
+	&-separator
+		theme-prop('color', 'bg-subtle')
+		margin: 2px 12px 0 8px
+		// Just to make it look a tad nicer?
+		position: relative
+		top: 1px

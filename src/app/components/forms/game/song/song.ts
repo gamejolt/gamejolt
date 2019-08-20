@@ -1,10 +1,9 @@
-import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
-import { BaseForm, FormOnInit, FormOnLoad } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GameSong } from 'game-jolt-frontend-lib/components/game/song/song.model';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
+import { BaseForm, FormOnInit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
+import { Game } from '../../../../../_common/game/game.model';
+import { GameSong } from '../../../../../_common/game/song/song.model';
+import { number } from '../../../../../_common/filters/number';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 @Component({
 	components: {

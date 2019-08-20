@@ -1,7 +1,7 @@
-import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
-import { Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';
+import { Analytics } from '../../../../_common/analytics/analytics.service';
+import { Api } from '../../../../_common/api/api.service';
+import { EventItem } from '../../../../_common/event-item/event-item.model';
+import { Notification } from '../../../../_common/notification/notification-model';
 import Vue from 'vue';
 import { ActivityFeedInput, ActivityFeedItem } from './item-service';
 import { ActivityFeedState } from './state';
@@ -91,10 +91,7 @@ export class ActivityFeedView {
 	get shouldScrollLoadMore() {
 		// We don't allow loading more if they are viewing a slice of the items.
 		return (
-			!this.slice &&
-			!this.isLoadingMore &&
-			!this.reachedEnd &&
-			this.timesLoaded < LoadMoreTimes
+			!this.slice && !this.isLoadingMore && !this.reachedEnd && this.timesLoaded < LoadMoreTimes
 		);
 	}
 

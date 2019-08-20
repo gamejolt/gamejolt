@@ -1,10 +1,10 @@
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppThemeSvg } from 'game-jolt-frontend-lib/components/theme/svg/svg';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
+import { Connection } from '../../../../_common/connection/connection-service';
+import { Environment } from '../../../../_common/environment/environment.service';
+import AppPopper from '../../../../_common/popper/popper.vue';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';

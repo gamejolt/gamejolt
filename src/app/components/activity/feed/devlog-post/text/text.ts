@@ -1,8 +1,8 @@
-import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
-import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
+import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
+import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
+import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
+import { Screen } from '../../../../../../_common/screen/screen-service';
+import { Scroll } from '../../../../../../_common/scroll/scroll.service';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import { ActivityFeedItem } from '../../item-service';

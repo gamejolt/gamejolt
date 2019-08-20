@@ -1,12 +1,15 @@
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import { BaseForm, FormOnInit, FormOnSubmitSuccess } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import AppExpand from '../../../../../_common/expand/expand.vue';
+import {
+	BaseForm,
+	FormOnInit,
+	FormOnSubmitSuccess,
+} from '../../../../../_common/form-vue/form.service';
+import { Game } from '../../../../../_common/game/game.model';
+import { GamePackage } from '../../../../../_common/game/package/package.model';
+import { KeyGroup } from '../../../../../_common/key-group/key-group.model';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { number } from '../../../../../_common/filters/number';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 @Component({
 	components: {

@@ -1,6 +1,6 @@
 import { Autostarter } from 'client-voodoo';
-import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
 import * as path from 'path';
+import { Device } from '../../device/device.service';
 import { Settings } from '../../settings/settings.service';
 import { Client } from '../client.service';
 

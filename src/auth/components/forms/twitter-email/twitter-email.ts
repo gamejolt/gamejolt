@@ -1,7 +1,7 @@
 // TODO missing component template, is this intentional?
 // import View from '!view!./twitter-email.html';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { BaseForm, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Api } from '../../../../_common/api/api.service';
+import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
 import { Component, Prop } from 'vue-property-decorator';
 
 @Component({})

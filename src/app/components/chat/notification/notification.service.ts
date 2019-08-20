@@ -1,4 +1,4 @@
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { Growls } from '../../../../_common/growls/growls.service';
 import { store } from '../../../store/index';
 import { ChatMessage } from '../message';
 

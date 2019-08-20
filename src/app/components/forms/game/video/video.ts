@@ -1,8 +1,7 @@
-import { BaseForm, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
+import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
+import { Game } from '../../../../../_common/game/game.model';
+import { GameVideo } from '../../../../../_common/game/video/video.model';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-
 
 type FormModel = GameVideo & {
 	_url: string;

@@ -1,0 +1,16 @@
+/**
+ * Media Helper
+ */
+media( min = false, max = false )
+	if min != false and max != false
+		'screen and (min-width: ' + min + ') and (max-width: ' + max + ')'
+	else if min != false
+		'screen and (min-width: ' + min + ')'
+	else if max != false
+		'screen and (max-width: ' + max + ')'
+
+/**
+ * Calculating widescreen 16:9 height
+ */
+calc-hd-height( width )
+	width / (16 / 9)

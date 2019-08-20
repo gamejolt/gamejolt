@@ -1,9 +1,8 @@
-import { GameTrophy } from 'game-jolt-frontend-lib/components/game/trophy/trophy.model';
-import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { GameTrophy } from '../../../../_common/game/trophy/trophy.model';
+import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 const imgMapping: any = {
 	bronze: require('./bronze.png'),

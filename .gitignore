@@ -1,10 +1,9 @@
 /node_modules/
 /npm-debug.log
-/src/bower-lib/
-/typings/
 /build/
 /debug.log
 /src/translations
 .DS_Store
 .cache
 yarn-error.log
+/gulp/tasks/client/vendor/tmp-gamejolt.iss

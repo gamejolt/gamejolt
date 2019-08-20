@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   id="svg2985"
+   height="16px"
+   width="16px">
+  <defs
+     id="defs2987" />
+  <metadata
+     id="metadata2990">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>T. Gantt</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     style="display:inline;opacity:1"
+     id="layer2">
+    <path
+       id="rect815"
+       d="M 1,0 C 0.446,0 0,0.446 0,1 v 14 c 0,0.554 0.446,1 1,1 h 14 c 0.554,0 1,-0.446 1,-1 V 1 C 16,0.446 15.554,0 15,0 Z m 1.25,2 h 1.5 C 3.8885,2 4,2.1115 4,2.25 v 1.5 C 4,3.8885 3.8885,4 3.75,4 H 2.25 C 2.1115,4 2,3.8885 2,3.75 V 2.25 C 2,2.1115 2.1115,2 2.25,2 Z m 3,0 h 0.5 C 5.8885,2 6,2.1115 6,2.25 v 1.5 C 6,3.8885 5.8885,4 5.75,4 H 5.25 C 5.1115,4 5,3.8885 5,3.75 V 2.25 C 5,2.1115 5.1115,2 5.25,2 Z m 3,0 h 0.5 C 8.8885,2 9,2.1115 9,2.25 V 8 H 8 V 2.25 C 8,2.1115 8.1115,2 8.25,2 Z m 4,0 h 0.5 C 12.8885,2 13,2.1115 13,2.25 V 4 H 12 V 2.25 C 12,2.1115 12.1115,2 12.25,2 Z M 4,5 C 5.1045695,5 6,5.8954305 6,7 6,8.1045695 5.1045695,9 4,9 2.8954305,9 2,8.1045695 2,7 2,5.8954305 2.8954305,5 4,5 Z m 7.25,0 h 2.5 C 13.8885,5 14,5.1115 14,5.25 v 1.5 C 14,6.8885 13.8885,7 13.75,7 h -2.5 C 11.1115,7 11,6.8885 11,6.75 V 5.25 C 11,5.1115 11.1115,5 11.25,5 Z M 4,6 C 3.4477153,6 3,6.4477153 3,7 3,7.5522847 3.4477153,8 4,8 4.5522847,8 5,7.5522847 5,7 5,6.4477153 4.5522847,6 4,6 Z m 8,2 h 1 v 5.75 C 13,13.8885 12.8885,14 12.75,14 h -0.5 C 12.1115,14 12,13.8885 12,13.75 Z M 7.25,9 h 2.5 C 9.8885,9 10,9.1115 10,9.25 v 1.5 C 10,10.8885 9.8885,11 9.75,11 H 7.25 C 7.1115,11 7,10.8885 7,10.75 V 9.25 C 7,9.1115 7.1115,9 7.25,9 Z M 4,10 c 1.1045695,0 2,0.895431 2,2 0,1.104569 -0.8954305,2 -2,2 -1.1045695,0 -2,-0.895431 -2,-2 0,-1.104569 0.8954305,-2 2,-2 z m 0,1 c -0.5522847,0 -1,0.447715 -1,1 0,0.552285 0.4477153,1 1,1 0.5522847,0 1,-0.447715 1,-1 0,-0.552285 -0.4477153,-1 -1,-1 z m 4,1 h 1 v 1.75 C 9,13.8885 8.8885,14 8.75,14 H 8.25 C 8.1115,14 8,13.8885 8,13.75 Z"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate" />
+  </g>
+</svg>

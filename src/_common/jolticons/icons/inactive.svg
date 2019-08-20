@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   id="svg3870"
+   height="16px"
+   width="16px">
+  <defs
+     id="defs3872" />
+  <metadata
+     id="metadata3875">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>T. Gantt</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     style="opacity:1"
+     id="layer2">
+    <path
+       id="rect815"
+       d="M 2,1 C 1.446,1 1,1.446 1,2 V 5 H 3 V 3.5 C 3,3.223 3.223,3 3.5,3 H 5 V 1 Z m 4,0 v 2 h 4 V 1 Z m 5,0 v 2 h 1.5 C 12.777,3 13,3.223 13,3.5 V 5 h 2 V 2 C 15,1.446 14.554,1 14,1 Z M 1,6 v 4 H 3 V 6 Z m 12,0 v 4 h 2 V 6 Z M 4.5,9 C 4.223,9 4,9.223 4,9.5 4,9.777 4.223,10 4.5,10 h 1 C 5.777,10 6,9.777 6,9.5 6,9.223 5.777,9 5.5,9 Z m 6,0 C 10.223,9 10,9.223 10,9.5 10,9.777 10.223,10 10.5,10 h 1 C 11.777,10 12,9.777 12,9.5 12,9.223 11.777,9 11.5,9 Z M 1,11 v 3 c 0,0.554 0.446,1 1,1 H 5 V 13 H 3.5 C 3.223,13 3,12.777 3,12.5 V 11 Z m 3.5,0 C 4.223,11 4,11.223 4,11.5 4,11.777 4.223,12 4.5,12 h 7 C 11.777,12 12,11.777 12,11.5 12,11.223 11.777,11 11.5,11 Z m 8.5,0 v 1.5 C 13,12.777 12.777,13 12.5,13 H 11 v 2 h 3 c 0.554,0 1,-0.446 1,-1 v -3 z m -7,2 v 2 h 4 v -2 z"
+       style="opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  </g>
+</svg>

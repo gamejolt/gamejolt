@@ -1,13 +1,3 @@
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import AppGameThumbnailImg from 'game-jolt-frontend-lib/components/game/thumbnail-img/thumbnail-img.vue';
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppScrollInview } from 'game-jolt-frontend-lib/components/scroll/inview/inview';
-import AppUserCardHover from 'game-jolt-frontend-lib/components/user/card/hover/hover.vue';
-import AppUserAvatarImg from 'game-jolt-frontend-lib/components/user/user-avatar/img/img.vue';
-import AppUserVerifiedTick from 'game-jolt-frontend-lib/components/user/verified-tick/verified-tick.vue';
-import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
-import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
@@ -15,7 +5,17 @@ import AppGamePlaylistAddToWidget from '../../../app/components/game-playlist/ad
 import AppGameCompatIcons from '../../../app/components/game/compat-icons/compat-icons.vue';
 import AppGameFollowWidget from '../../../app/components/game/follow-widget/follow-widget.vue';
 import AppGameModLinks from '../../../app/components/game/mod-links/mod-links.vue';
+import { currency } from '../../filters/currency';
+import AppPopper from '../../popper/popper.vue';
+import { Screen } from '../../screen/screen-service';
+import { AppScrollInview } from '../../scroll/inview/inview';
 import { Settings } from '../../settings/settings.service';
+import { AppStore } from '../../store/app-store';
+import AppUserCardHover from '../../user/card/hover/hover.vue';
+import AppUserAvatarImg from '../../user/user-avatar/img/img.vue';
+import AppUserVerifiedTick from '../../user/verified-tick/verified-tick.vue';
+import { Game } from '../game.model';
+import AppGameThumbnailImg from '../thumbnail-img/thumbnail-img.vue';
 
 @Component({
 	components: {

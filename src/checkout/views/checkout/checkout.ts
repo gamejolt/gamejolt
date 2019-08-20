@@ -1,17 +1,14 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
-import { Order } from 'game-jolt-frontend-lib/components/order/order.model';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { Sellable } from 'game-jolt-frontend-lib/components/sellable/sellable.model';
-import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
 import { Component } from 'vue-property-decorator';
+import { Api } from '../../../_common/api/api.service';
+import { Environment } from '../../../_common/environment/environment.service';
+import { Game } from '../../../_common/game/game.model';
+import { Growls } from '../../../_common/growls/growls.service';
 import AppMediaItemCover from '../../../_common/media-item/cover/cover.vue';
+import { Navigate } from '../../../_common/navigate/navigate.service';
+import { Order } from '../../../_common/order/order.model';
+import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { Sellable } from '../../../_common/sellable/sellable.model';
+import { ThemeMutation, ThemeStore } from '../../../_common/theme/theme.store';
 import FormPayment from '../../components/forms/payment/payment.vue';
 
 @Component({

@@ -13,7 +13,7 @@
 			:circle="circle"
 			v-app-auth-required
 			v-app-tooltip.bottom="$gettext('Add to Playlist')"
-			v-app-track-event="`add-to-playlist:widget:${eventLabel || 'any'}`"
+			v-app-track-event="`add-to-playlist:widget:${eventLabel}`"
 		/>
 
 		<app-game-playlist-add-to-popover v-if="isShown" slot="popover" :game="game" />

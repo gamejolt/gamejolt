@@ -1,9 +1,9 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { PaymentSource } from 'game-jolt-frontend-lib/components/payment-source/payment-source.model';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
 import { Component } from 'vue-property-decorator';
+import { arrayRemove } from '../../../../../utils/array';
+import { Api } from '../../../../../_common/api/api.service';
+import { PaymentSource } from '../../../../../_common/payment-source/payment-source.model';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { Translate } from '../../../../../_common/translate/translate.service';
 import AppUserPaymentSourceCard from '../../../../components/user/payment-source/card/card.vue';
 import { RouteStore, routeStore, RouteStoreModule } from '../account.store';
 

@@ -1,21 +1,18 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Collaborator } from 'game-jolt-frontend-lib/components/collaborator/collaborator.model';
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import AppCommunityJoinWidget from 'game-jolt-frontend-lib/components/community/join-widget/join-widget.vue';
-import AppCommunityThumbnailImg from 'game-jolt-frontend-lib/components/community/thumbnail/img/img.vue';
-import AppEditableOverlay from 'game-jolt-frontend-lib/components/editable-overlay/editable-overlay.vue';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { Mutation } from 'vuex-class';
+import { Api } from '../../../../_common/api/api.service';
+import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
+import { Community } from '../../../../_common/community/community.model';
+import AppCommunityJoinWidget from '../../../../_common/community/join-widget/join-widget.vue';
+import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
+import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
+import { number } from '../../../../_common/filters/number';
+import { Growls } from '../../../../_common/growls/growls.service';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
+import { Store } from '../../../store/index';
 import { CommunityThumbnailModal } from '../../../components/forms/community/thumbnail/modal/modal.service';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
-import { Store } from '../../../store/index';
 
 @Component({
 	name: 'RouteCommunitiesView',
