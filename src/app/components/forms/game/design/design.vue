@@ -21,13 +21,9 @@
 						</translate>
 					</p>
 					<p>
-						<router-link
-							:to="{ name: 'landing.help', params: { path: 'dev-thumbnails' } }"
-							class="link-help"
-							target="_blank"
-						>
+						<a href="https://gamejolt.com/help/dev-thumbnails" class="link-help" target="_blank">
 							<translate>dash.games.thumbnail.page_help_link</translate>
-						</router-link>
+						</a>
 					</p>
 				</div>
 			</div>

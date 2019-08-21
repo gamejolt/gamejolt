@@ -17,13 +17,9 @@
 				</translate>
 			</p>
 			<p>
-				<router-link
-					:to="{ name: 'landing.help', params: { path: 'dev-data-storage' } }"
-					class="link-help"
-					target="_blank"
-				>
+				<a href="https://gamejolt.com/help/dev-data-storage" class="link-help" target="_blank">
 					<translate>dash.games.data_store.items.page_help_link</translate>
-				</router-link>
+				</a>
 			</p>
 		</div>
 

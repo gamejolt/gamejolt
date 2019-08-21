@@ -15,13 +15,9 @@
 					</translate>
 				</p>
 				<p>
-					<router-link
-						:to="{ name: 'landing.help', params: { path: 'dev-packages' } }"
-						class="link-help"
-						target="_blank"
-					>
+					<a href="https://gamejolt.com/help/dev-packages" class="link-help" target="_blank">
 						<translate>dash.games.packages.page_help_link</translate>
-					</router-link>
+					</a>
 				</p>
 			</div>
 		</div>

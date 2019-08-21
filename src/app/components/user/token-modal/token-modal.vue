@@ -21,13 +21,9 @@
 					scores and achievements.
 				</translate>
 				[
-				<router-link
-					:to="{ name: 'landing.help', params: { path: 'tokens' } }"
-					target="_blank"
-					class="link-help"
-				>
+				<a href="https://gamejolt.com/help/tokens" target="_blank" class="link-help">
 					<translate>more info</translate>
-				</router-link>
+				</a>
 				]
 			</p>
 

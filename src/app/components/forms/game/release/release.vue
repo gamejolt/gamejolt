@@ -12,16 +12,9 @@
 					<code>MAJOR.MINOR.PATCH</code>
 					.
 				</p>
-				<router-link
-					:to="{
-						name: 'landing.help',
-						params: { path: 'dev-packages' },
-					}"
-					class="link-help"
-					target="_blank"
-				>
+				<a href="https://gamejolt.com/help/dev-packages" class="link-help" target="_blank">
 					<translate>dash.games.releases.form.version_number_help_link</translate>
-				</router-link>
+				</a>
 			</div>
 
 			<app-form-control

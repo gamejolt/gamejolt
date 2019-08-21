@@ -14,13 +14,9 @@
 					</translate>
 				</p>
 				<p>
-					<router-link
-						:to="{ name: 'landing.help', params: { path: 'dev-trophies' } }"
-						class="link-help"
-						target="_blank"
-					>
+					<a href="https://gamejolt.com/help/dev-trophies" class="link-help" target="_blank">
 						<translate>dash.games.trophies.page_help_link</translate>
-					</router-link>
+					</a>
 				</p>
 			</div>
 

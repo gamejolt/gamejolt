@@ -16,13 +16,13 @@
 					</translate>
 				</p>
 				<p>
-					<router-link
-						:to="{ name: 'landing.help', params: { path: 'dev-maturity-ratings' } }"
+					<a
+						href="https://gamejolt.com/help/dev-maturity-ratings"
 						class="link-help"
 						target="_blank"
 					>
 						<translate>dash.games.maturity.page_help_link</translate>
-					</router-link>
+					</a>
 				</p>
 			</div>
 		</div>
