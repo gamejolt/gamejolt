@@ -17,13 +17,14 @@ import AppScrollAffix from '../../../../../_common/scroll/affix/affix.vue';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
-import { ActivityFeedView } from '../../../../components/activity/feed/view';
-import { Store } from '../../../../store/index';
 import AppActivityFeed from '../../../../components/activity/feed/feed.vue';
 import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
+import { ActivityFeedView } from '../../../../components/activity/feed/view';
+import AppCommunityDescription from '../../../../components/community/description/description.vue';
 import AppPageContainer from '../../../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
+import { Store } from '../../../../store/index';
 import AppCommunitiesViewOverviewNav from './_nav/nav.vue';
 
 function getChannel(route: Route) {
@@ -64,6 +65,7 @@ function getFetchUrl(route: Route) {
 		AppNavTabList,
 		AppUserAvatarList,
 		AppGameThumbnail,
+		AppCommunityDescription,
 	},
 })
 @RouteResolver({
@@ -188,7 +190,10 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get placeholderText() {
-		if (!!this.community.post_placeholder_text && this.community.post_placeholder_text.length > 0) {
+		if (
+			!!this.community.post_placeholder_text &&
+			this.community.post_placeholder_text.length > 0
+		) {
 			return this.community.post_placeholder_text;
 		}
 		return this.$gettext(`Share your creations!`);
