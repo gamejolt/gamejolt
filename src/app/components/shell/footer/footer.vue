@@ -1,6 +1,9 @@
 <template>
 	<footer id="footer" class="section">
 		<div class="container">
+			<app-ad-widget size="footer" />
+			<br />
+
 			<template v-if="!Screen.isXs">
 				<div class="text-center" v-if="!GJ_IS_CLIENT">
 					<p>

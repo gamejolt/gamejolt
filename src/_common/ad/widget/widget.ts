@@ -11,7 +11,7 @@ import './widget-content.styl';
 })
 export default class AppAdWidget extends Vue {
 	@Prop({ type: String, default: 'rectangle' })
-	size!: 'rectangle' | 'leaderboard';
+	size!: 'rectangle' | 'leaderboard' | 'footer';
 
 	@Prop({ type: Boolean, default: false })
 	staticSize!: boolean;

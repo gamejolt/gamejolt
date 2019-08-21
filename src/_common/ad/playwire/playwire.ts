@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { Ads } from '../ads.service';
-import { Playwire } from './playwire.service';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { Game } from '../../game/game.model';
 import { User } from '../../user/user.model';
+import { Ads } from '../ads.service';
+import { Playwire } from './playwire.service';
 
 function generateSlotId() {
 	return Math.random() + '';
@@ -48,7 +48,7 @@ function initClickTracking() {
 @Component({})
 export default class AppAdPlaywire extends Vue {
 	@Prop({ type: String, default: 'rectangle' })
-	size!: 'rectangle' | 'leaderboard';
+	size!: 'rectangle' | 'leaderboard' | 'footer';
 
 	@Prop({ type: Boolean, default: false })
 	staticSize!: boolean;
@@ -60,15 +60,24 @@ export default class AppAdPlaywire extends Vue {
 	slotId: string | null = null;
 
 	/**
-	 * This is a Playwire placement key ad must match their system.
+	 * This is a Playwire placement key and must match their system.
 	 */
 	get placement() {
-		const size = this.size === 'rectangle' ? 'med_rect' : 'leaderboard';
-		// We got Playwire to make it so that "btf" ads will never change size.
-		// We can use this when their is content below it that we never want
-		// being pushed around, such as feeds.
-		const position = this.staticSize ? 'btf' : 'atf';
-		return `${size}_${position}`;
+		if (this.size === 'rectangle') {
+			// We got Playwire to make it so that "btf" ads will never change size.
+			// We can use this when there is content below it that we never want
+			// being pushed around, such as feeds.
+			const position = this.staticSize ? 'btf' : 'atf';
+			return `med_rect_${position}`;
+		}
+
+		// Footer is a special case ad that should show below all content, right
+		// above the footer.
+		if (this.size === 'footer') {
+			return 'leaderboard_btf';
+		}
+
+		return 'leaderboard_atf';
 	}
 
 	get resourceInfo() {

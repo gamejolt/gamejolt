@@ -1,7 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { enforceLocation } from '../../../../utils/router';
-import AppAdPlacement from '../../../../_common/ad/placement/placement.vue';
 import { Api } from '../../../../_common/api/api.service';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { number } from '../../../../_common/filters/number';
@@ -17,8 +16,6 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import { User } from '../../../../_common/user/user.model';
-import { store, Store, tillStoreBootstrapped } from '../../../store/index';
-import { LibraryModule, LibraryStore } from '../../../store/library';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import AppGameCollectionFollowWidget from '../../../components/game/collection/follow-widget/follow-widget.vue';
 import AppGameCollectionThumbnail from '../../../components/game/collection/thumbnail/thumbnail.vue';
@@ -28,6 +25,8 @@ import { GameListingContainer } from '../../../components/game/listing/listing-c
 import AppGameListing from '../../../components/game/listing/listing.vue';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
+import { store, Store, tillStoreBootstrapped } from '../../../store/index';
+import { LibraryModule, LibraryStore } from '../../../store/library';
 
 const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
 const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
@@ -43,7 +42,6 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 		AppGameGrid,
 		AppGameCollectionFollowWidget,
 		AppLoadingFade,
-		AppAdPlacement,
 	},
 	directives: {
 		AppTooltip,
@@ -158,7 +156,11 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 				} else {
 					return this.$gettextInterpolate('%{ playlist } by %{ user }', params);
 				}
-			} else if (this.type === GameCollection.TYPE_DEVELOPER && this.user && this.collection) {
+			} else if (
+				this.type === GameCollection.TYPE_DEVELOPER &&
+				this.user &&
+				this.collection
+			) {
 				const params = { user: '@' + this.user.username };
 				if (this.collection.isOwner) {
 					return this.$gettext('Your Games');
@@ -172,7 +174,11 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 				} else {
 					return this.$gettextInterpolate('Games Owned by %{ user }', params);
 				}
-			} else if (this.type === GameCollection.TYPE_RECOMMENDED && this.collection && this.user) {
+			} else if (
+				this.type === GameCollection.TYPE_RECOMMENDED &&
+				this.collection &&
+				this.user
+			) {
 				const params = { user: '@' + this.user.username };
 				if (this.collection.isOwner) {
 					return this.$gettext('Your Daily Mix');
@@ -317,7 +323,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		const action = shouldRefresh ? 'refresh-mix' : 'mix';
 
 		this.isLoadingRecommended = true;
-		const payload = await Api.sendRequest(`/web/library/games/${action}/` + this.type + '/' + id);
+		const payload = await Api.sendRequest(
+			`/web/library/games/${action}/` + this.type + '/' + id
+		);
 		this.recommendedGames = Game.populate(payload.games);
 		this.isLoadingRecommended = false;
 	}
