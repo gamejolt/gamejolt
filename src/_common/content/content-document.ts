@@ -78,4 +78,17 @@ export class ContentDocument extends ContentNode {
 		// Don't count the first paragraph.
 		return super.getLength() - 1;
 	}
+
+	/**
+	 * Ensures that the last content object is a paragraph.
+	 */
+	public ensureEndParagraph() {
+		if (
+			this.content.length === 0 ||
+			this.content[this.content.length - 1].type !== 'paragraph'
+		) {
+			const p = new ContentObject('paragraph');
+			this.appendChild(p);
+		}
+	}
 }

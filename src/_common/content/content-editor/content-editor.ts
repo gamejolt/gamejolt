@@ -289,6 +289,9 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 			);
 		}
 		if (this.schema instanceof ContentEditorSchema) {
+			// Do this here so we don't fire an update direclty after populating.
+			doc.ensureEndParagraph();
+
 			this.hydrator = new ContentHydrator(doc.hydration);
 			const jsonObj = ContentFormatAdapter.adaptIn(doc);
 			const state = EditorState.create({
