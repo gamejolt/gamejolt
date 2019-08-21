@@ -81,6 +81,9 @@ export class ContentDocument extends ContentNode {
 
 	/**
 	 * Ensures that the last content object is a paragraph.
+	 *
+	 * This is needed only because the content editor appends a paragraph node at the end of the document.
+	 * That is done to allow the user to click into it to use the + menu/easily add an empty paragraph.
 	 */
 	public ensureEndParagraph() {
 		if (
