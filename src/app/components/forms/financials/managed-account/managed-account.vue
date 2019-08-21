@@ -79,9 +79,13 @@
 							This information is needed for tax purposes as well as account verification. We use
 							Stripe to store and verify this data.
 						</translate>
-						<a href="https://help.gamejolt.com/why-tax-forms" class="link-help" target="_blank">
+						<router-link
+							:to="{ name: 'landing.help', params: { path: 'why-tax-forms' } }"
+							class="link-help"
+							target="_blank"
+						>
 							<translate>Learn more</translate>
-						</a>
+						</router-link>
 					</p>
 				</div>
 

@@ -12,13 +12,16 @@
 					<code>MAJOR.MINOR.PATCH</code>
 					.
 				</p>
-				<a
+				<router-link
+					:to="{
+						name: 'landing.help',
+						params: { path: 'dev-packages' },
+					}"
 					class="link-help"
-					href="https://help.gamejolt.com/dev-packages#release-version-numbers"
 					target="_blank"
 				>
 					<translate>dash.games.releases.form.version_number_help_link</translate>
-				</a>
+				</router-link>
 			</div>
 
 			<app-form-control
@@ -27,9 +30,7 @@
 					pattern: 'semver',
 					max: 50,
 					availability: {
-						url: `/web/dash/developer/games/releases/check-field-availability/${game.id}/${
-							package.id
-						}/version_number`,
+						url: `/web/dash/developer/games/releases/check-field-availability/${game.id}/${package.id}/version_number`,
 						initVal: model.version_number,
 					},
 				}"

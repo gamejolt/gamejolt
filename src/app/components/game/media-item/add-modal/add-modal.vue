@@ -39,9 +39,13 @@
 					</p>
 					<br />
 					<div>
-						<a class="link-help" href="https://help.gamejolt.com/dev-media-images" target="_blank">
+						<router-link
+							:to="{ name: 'landing.help', params: { path: 'dev-media-images' } }"
+							class="link-help"
+							target="_blank"
+						>
 							<translate>dash.games.media.add.image.page_help_link</translate>
-						</a>
+						</router-link>
 					</div>
 				</div>
 
@@ -62,9 +66,13 @@
 					</p>
 					<br />
 					<div>
-						<a class="link-help" href="https://help.gamejolt.com/dev-media-videos" target="_blank">
+						<router-link
+							:to="{ name: 'landing.help', params: { path: 'dev-media-videos' } }"
+							class="link-help"
+							target="_blank"
+						>
 							<translate>dash.games.media.add.video.page_help_link</translate>
-						</a>
+						</router-link>
 					</div>
 				</div>
 
