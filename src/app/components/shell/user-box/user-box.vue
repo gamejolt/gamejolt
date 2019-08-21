@@ -6,7 +6,9 @@
 				<em>{{ app.user.level }}</em>
 				<span class="user-box-exp-stats-help">
 					[
-					<a href="https://help.gamejolt.com/user-exp" target="_blank">?</a>
+					<router-link :to="{ name: 'landing.help', params: { path: 'user-exp' } }" target="_blank">
+						?
+					</router-link>
 					]
 				</span>
 			</div>

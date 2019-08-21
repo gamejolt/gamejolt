@@ -36,13 +36,13 @@
 						</translate>
 					</p>
 					<p>
-						<a
+						<router-link
+							:to="{ name: 'landing.help', params: { path: 'dev-packages' } }"
 							class="link-help"
-							href="https://help.gamejolt.com/dev-packages#packages"
 							target="_blank"
 						>
 							<translate>dash.games.packages.page_help_link</translate>
-						</a>
+						</router-link>
 					</p>
 				</div>
 			</div>

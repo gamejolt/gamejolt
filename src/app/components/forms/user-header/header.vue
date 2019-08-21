@@ -23,9 +23,13 @@
 				(ratio of 4 ÷ 1).
 			</p>
 			<p class="help-block">
-				<a class="link-help" href="https://help.gamejolt.com/dev-page-headers" target="_blank">
+				<router-link
+					:to="{ name: 'landing.help', params: { path: 'dev-page-headers' } }"
+					class="link-help"
+					target="_blank"
+				>
 					<translate>What are the header requirements and guidelines?</translate>
-				</a>
+				</router-link>
 			</p>
 
 			<app-form-control-upload

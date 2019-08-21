@@ -18,9 +18,13 @@
 				</translate>
 			</p>
 			<p>
-				<a class="link-help" href="https://help.gamejolt.com/dev-scoreboards" target="_blank">
+				<router-link
+					:to="{ name: 'landing.help', params: { path: 'dev-scoreboards' } }"
+					class="link-help"
+					target="_blank"
+				>
 					<translate>dash.games.scoreboards.page_help_link</translate>
-				</a>
+				</router-link>
 			</p>
 		</div>
 
