@@ -105,7 +105,7 @@ export class User extends Model implements ContentContainerModel {
 	}
 
 	get hasBio() {
-		if (this._contentSetCache === undefined) {
+		if (this._contentSetCache === undefined || !this._contentSetCache.checkRef(this)) {
 			this._contentSetCache = new ContentSetCache(this, 'user-bio');
 		}
 		return this._contentSetCache.hasContent;

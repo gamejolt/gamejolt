@@ -163,21 +163,21 @@ export class FiresidePost extends Model implements ContentContainerModel {
 	}
 
 	get hasArticle() {
-		if (this._articleSetCache === undefined) {
+		if (this._articleSetCache === undefined || !this._articleSetCache.checkRef(this)) {
 			this._articleSetCache = new ContentSetCache(this, 'fireside-post-article');
 		}
 		return this._articleSetCache.hasContent;
 	}
 
 	get hasLead() {
-		if (this._leadSetCache === undefined) {
+		if (this._leadSetCache === undefined || !this._leadSetCache.checkRef(this)) {
 			this._leadSetCache = new ContentSetCache(this, 'fireside-post-lead');
 		}
 		return this._leadSetCache.hasContent;
 	}
 
 	get leadLength() {
-		if (this._leadSetCache === undefined) {
+		if (this._leadSetCache === undefined || !this._leadSetCache.checkRef(this)) {
 			this._leadSetCache = new ContentSetCache(this, 'fireside-post-lead');
 		}
 		return this._leadSetCache.length;

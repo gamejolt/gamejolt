@@ -18,6 +18,10 @@ export class ContentSetCache {
 		this._context = context;
 	}
 
+	public checkRef(container: ContentContainerModel) {
+		return container === this._container;
+	}
+
 	public get hasContent() {
 		const content = this._container.getContent(this._context);
 		if (this._checkValue !== content) {

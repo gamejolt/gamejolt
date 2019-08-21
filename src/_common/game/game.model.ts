@@ -217,7 +217,7 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	}
 
 	get hasDescription() {
-		if (this._contentSetCache === undefined) {
+		if (this._contentSetCache === undefined || !this._contentSetCache.checkRef(this)) {
 			this._contentSetCache = new ContentSetCache(this, 'game-description');
 		}
 		return this._contentSetCache.hasContent;

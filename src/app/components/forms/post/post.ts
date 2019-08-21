@@ -1,5 +1,8 @@
 import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
+import { determine } from 'jstimezonedetect';
+import { Component, Prop } from 'vue-property-decorator';
+import { arrayRemove } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
@@ -28,19 +31,16 @@ import AppFormLegend from '../../../../_common/form-vue/legend/legend.vue';
 import { GameVideo } from '../../../../_common/game/video/video.model';
 import { KeyGroup } from '../../../../_common/key-group/key-group.model';
 import { LinkedAccount } from '../../../../_common/linked-account/linked-account.model';
+import AppLoading from '../../../../_common/loading/loading.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
+import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
-import { arrayRemove } from '../../../../utils/array';
-import AppLoading from '../../../../_common/loading/loading.vue';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
-import { determine } from 'jstimezonedetect';
-import { Component, Prop } from 'vue-property-decorator';
 import AppFormPostTags from './tags/tags.vue';
 import AppFormPostMedia from './_media/media.vue';
 
@@ -176,7 +176,8 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	get hasValidSketchfabModelId() {
 		return (
-			this.formModel.sketchfab_id && this.formModel.sketchfab_id.match(this.SKETCHFAB_FIELD_REGEX)
+			this.formModel.sketchfab_id &&
+			this.formModel.sketchfab_id.match(this.SKETCHFAB_FIELD_REGEX)
 		);
 	}
 
@@ -323,7 +324,10 @@ export default class FormPost extends BaseForm<FormPostModel>
 		}
 
 		if (model.videos.length) {
-			this.setField('video_url', 'https://www.youtube.com/watch?v=' + model.videos[0].video_id);
+			this.setField(
+				'video_url',
+				'https://www.youtube.com/watch?v=' + model.videos[0].video_id
+			);
 			this.enableVideo();
 		} else if (model.sketchfabs.length) {
 			this.setField('sketchfab_id', model.sketchfabs[0].sketchfab_id);
