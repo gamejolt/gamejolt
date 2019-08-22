@@ -1,7 +1,7 @@
 <template>
 	<div style="text-align: center;">
 		<div class="missing" :hidden="!isMissing">
-			<external-link href="https://unity3d.com/webplayer/" title="Unity Web Player. Install now!">
+			<app-link-external href="https://unity3d.com/webplayer/" title="Unity Web Player. Install now!">
 				<p>
 					<translate>This content requires the Unity Web Player.</translate>
 				</p>
@@ -15,7 +15,7 @@
 		</div>
 
 		<div class="broken" :hidden="!isBroken">
-			<external-link
+			<app-link-external
 				href="https://unity3d.com/webplayer/"
 				title="Unity Web Player. Install now! Restart your browser after install."
 			>

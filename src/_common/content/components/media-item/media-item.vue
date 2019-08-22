@@ -48,7 +48,7 @@
 			</div>
 			<div v-if="isHydrated && hasLink && isEditing" class="link-overlay">
 				<small>
-					<external-link
+					<app-link-external
 						:href="href"
 						class="link-overlay-display"
 						v-app-tooltip="$gettext('This image is linked, click to open')"

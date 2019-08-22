@@ -209,7 +209,7 @@
 							<hr class="underbar underbar-center" />
 
 							<p>
-								<external-link
+								<app-link-external
 									href="https://docs.google.com/document/d/1RMMr-9ZTfTFSQMD8Q-1JFkFo9ztX0OktORAn9Se02fg/edit"
 								>
 									We sent out an email to all the top players.

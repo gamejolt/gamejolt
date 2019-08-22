@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 
 @Component({})
-export default class AppExternalLink extends Vue {
+export default class AppLinkExternal extends Vue {
 	@Prop(Boolean)
 	targetSelf!: boolean;
 

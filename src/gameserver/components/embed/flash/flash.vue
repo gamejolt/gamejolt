@@ -17,7 +17,7 @@
 				<translate>You may use the button below to get it.</translate>
 			</p>
 
-			<external-link href="https://www.adobe.com/go/getflash">
+			<app-link-external href="https://www.adobe.com/go/getflash">
 				<img
 					src="https://www.adobe.com/images/shared/download_buttons/get_flash_player.gif"
 					alt="Get Adobe Flash player"

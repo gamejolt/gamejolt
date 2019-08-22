@@ -4,4 +4,4 @@
 	</a>
 </template>
 
-<script lang="ts" src="./external-link"></script>
+<script lang="ts" src="./external"></script>

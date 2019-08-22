@@ -63,7 +63,7 @@
 					</translate>
 				</p>
 				<p>
-					<external-link
+					<app-link-external
 						class="link-help"
 						href="https://support.google.com/analytics/answer/1008080"
 					>
