@@ -65,7 +65,7 @@
 							<p>
 								<app-link-external href="https://goo.gl/forms/igg8T9dQnZLT2c1l2">
 									<translate>Request manual approval here.</translate>
-								</external-link>
+								</app-link-external>
 							</p>
 						</div>
 					</app-expand>
@@ -235,7 +235,7 @@
 							</translate>
 							<app-link-external href="https://en.wikipedia.org/wiki/Single_Euro_Payments_Area">
 								<translate>Learn more</translate>
-							</external-link>
+							</app-link-external>
 						</p>
 					</div>
 

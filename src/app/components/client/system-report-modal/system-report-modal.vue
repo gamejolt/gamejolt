@@ -21,7 +21,7 @@
 				If you experienced a bug, please report it first on our
 				<app-link-external href="https://github.com/gamejolt/issue-tracker" target-self>
 					issue tracker
-				</external-link>
+				</app-link-external>
 			</p>
 
 			<form-client-system-report @submit="onSubmit" />

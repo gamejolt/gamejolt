@@ -262,7 +262,7 @@
 									it, release customized versions of the client, or even help fix bugs at the
 									<app-link-external href="https://github.com/gamejolt/gamejolt">
 										GitHub repository
-									</external-link>
+									</app-link-external>
 									.
 								</p>
 							</div>
@@ -363,7 +363,7 @@
 							Post it in the
 							<app-link-external href="https://github.com/gamejolt/issue-tracker/issues">
 								issue tracker
-							</external-link>
+							</app-link-external>
 							.
 						</p>
 					</div>

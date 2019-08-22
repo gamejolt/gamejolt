@@ -64,7 +64,7 @@
 								>
 									<app-jolticon :icon="getProviderIcon(platform.created_resource_provider)" />
 									{{ platform.created_resource_account_name }}
-								</external-link>
+								</app-link-external>
 							</div>
 
 							<hr />

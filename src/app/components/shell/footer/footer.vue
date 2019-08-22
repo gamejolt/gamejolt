@@ -79,7 +79,7 @@
 								<li>
 									<app-link-external href="https://github.com/gamejolt">
 										<translate>footer.open_source</translate>
-									</external-link>
+									</app-link-external>
 								</li>
 								<li>
 									<router-link
@@ -91,12 +91,12 @@
 								<li>
 									<app-link-external href="https://github.com/gamejolt/issue-tracker">
 										<translate>Bug Tracker</translate>
-									</external-link>
+									</app-link-external>
 								</li>
 								<li>
 									<app-link-external href="https://www.redbubble.com/people/gamejolt/shop">
 										<translate>Merch</translate>
-									</external-link>
+									</app-link-external>
 								</li>
 							</ol>
 						</div>
@@ -176,7 +176,7 @@
 						<br />
 						<app-link-external href="https://poeditor.com/join/project/B4nWT6EgnD">
 							<translate>footer.translations_help</translate>
-						</external-link>
+						</app-link-external>
 					</p>
 				</div>
 			</div>

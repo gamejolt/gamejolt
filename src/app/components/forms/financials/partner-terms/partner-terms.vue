@@ -65,7 +65,7 @@
 				<br />
 				<app-link-external :href="agreementLink">
 					<translate>View Partner Agreement</translate>
-				</external-link>
+				</app-link-external>
 			</p>
 		</div>
 	</fieldset>

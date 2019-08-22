@@ -11,7 +11,7 @@
 					width="193"
 					height="63"
 				/>
-			</external-link>
+			</app-link-external>
 		</div>
 
 		<div class="broken" :hidden="!isBroken">
@@ -28,7 +28,7 @@
 					width="193"
 					height="63"
 				/>
-			</external-link>
+			</app-link-external>
 		</div>
 
 		<div class="unsupported" :hidden="!isUnsupported">

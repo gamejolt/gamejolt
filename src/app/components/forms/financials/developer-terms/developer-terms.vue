@@ -23,7 +23,7 @@
 				<br />
 				<app-link-external :href="agreementLink">
 					<translate>View Distribution Agreement</translate>
-				</external-link>
+				</app-link-external>
 			</p>
 		</div>
 		<div v-else>
@@ -77,7 +77,7 @@
 						<translate>
 							See the "diff" between the version you signed previously and the current version.
 						</translate>
-					</external-link>
+					</app-link-external>
 				</p>
 			</div>
 		</div>

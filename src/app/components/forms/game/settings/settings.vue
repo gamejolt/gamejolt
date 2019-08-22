@@ -23,7 +23,7 @@
 					Use
 					<app-link-external href="http://google.com/analytics">
 						Google Analytics
-					</external-link>
+					</app-link-external>
 					to track a multitude of stats and get tons of information about your game page. Just enter
 					your Google Analytics tracking ID here and we'll start sending data over there right away.
 				</p>
@@ -35,7 +35,7 @@
 						Create (or log into an existing)
 						<app-link-external href="http://www.google.com/analytics">
 							Google Analytics
-						</external-link>
+						</app-link-external>
 						account.
 					</li>
 					<li>

@@ -55,7 +55,7 @@
 					>
 						<app-jolticon icon="link" />
 						<span>{{ displayHref }}</span>
-					</external-link>
+					</app-link-external>
 				</small>
 			</div>
 			<span v-if="isHydrated && hasCaption" class="text-muted">

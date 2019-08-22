@@ -68,7 +68,7 @@
 				</translate>
 				<app-link-external href="https://gravatar.com" class="link-help">
 					<translate>What is Gravatar?</translate>
-				</external-link>
+				</app-link-external>
 			</p>
 		</app-form-group>
 	</app-form>

@@ -29,7 +29,7 @@
 					alt="Get Microsoft Silverlight"
 					style="border-style: none"
 				/>
-			</external-link>
+			</app-link-external>
 		</object>
 	</div>
 </template>

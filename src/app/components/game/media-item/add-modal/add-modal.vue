@@ -81,7 +81,7 @@
 					<p>
 						<app-link-external class="link-help" href="https://sketchfab.com/">
 							<translate>Learn more about Sketchfab...</translate>
-						</external-link>
+						</app-link-external>
 					</p>
 				</div>
 

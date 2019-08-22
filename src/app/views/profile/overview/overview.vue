@@ -146,39 +146,39 @@
 									<app-link-external class="link-unstyled" :href="twitchAccount.platformLink">
 										<app-jolticon :icon="twitchAccount.icon" />
 										{{ twitchAccount.name }}
-									</external-link>
+									</app-link-external>
 								</div>
 								<div v-if="mixerAccount">
 									<app-link-external class="link-unstyled" :href="mixerAccount.platformLink">
 										<app-jolticon :icon="mixerAccount.icon" />
 										{{ mixerAccount.name }}
-									</external-link>
+									</app-link-external>
 								</div>
 								<div v-if="twitterAccount">
 									<app-link-external class="link-unstyled" :href="twitterAccount.platformLink">
 										<app-jolticon :icon="twitterAccount.icon" />
 										<span>@</span>
 										{{ twitterAccount.name }}
-									</external-link>
+									</app-link-external>
 								</div>
 								<div v-if="tumblrAccount">
 									<app-link-external class="link-unstyled" :href="tumblrAccount.tumblrSelectedBlog.url">
 										<app-jolticon :icon="tumblrAccount.icon" />
 										{{ tumblrAccount.tumblrSelectedBlog.title }}
-									</external-link>
+									</app-link-external>
 								</div>
 								<div v-if="googleAccount">
 									<app-link-external class="link-unstyled" :href="googleAccount.platformLink">
 										<app-jolticon :icon="googleAccount.icon" />
 										{{ googleAccount.name }}
-									</external-link>
+									</app-link-external>
 								</div>
 							</template>
 							<div v-if="user.web_site">
 								<app-link-external class="link-unstyled" :href="user.web_site">
 									<app-jolticon icon="link" />
 									<translate>Website</translate>
-								</external-link>
+								</app-link-external>
 							</div>
 							<template v-if="youtubeChannels.length">
 								<div v-for="channel of youtubeChannels" :key="channel.id">
@@ -188,7 +188,7 @@
 									>
 										<app-jolticon icon="youtube" />
 										{{ channel.title }}
-									</external-link>
+									</app-link-external>
 								</div>
 							</template>
 

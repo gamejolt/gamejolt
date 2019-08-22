@@ -24,7 +24,7 @@
 					alt="Get Java"
 					style="border-style: none"
 				/>
-			</external-link>
+			</app-link-external>
 		</applet>
 	</div>
 </template>

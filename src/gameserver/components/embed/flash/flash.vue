@@ -23,7 +23,7 @@
 					alt="Get Adobe Flash player"
 					style="border-style: none"
 				/>
-			</external-link>
+			</app-link-external>
 		</object>
 	</div>
 </template>
