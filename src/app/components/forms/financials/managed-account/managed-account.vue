@@ -79,9 +79,9 @@
 							This information is needed for tax purposes as well as account verification. We use
 							Stripe to store and verify this data.
 						</translate>
-						<a href="https://gamejolt.com/help/why-tax-forms" class="link-help" target="_blank">
+						<app-link-help page="why-tax-forms" class="link-help">
 							<translate>Learn more</translate>
-						</a>
+						</app-link-help>
 					</p>
 				</div>
 

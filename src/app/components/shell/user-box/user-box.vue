@@ -6,9 +6,9 @@
 				<em>{{ app.user.level }}</em>
 				<span class="user-box-exp-stats-help">
 					[
-					<a href="https://gamejolt.com/help/user-exp" target="_blank">
+					<app-link-help page="user-exp">
 						?
-					</a>
+					</app-link-help>
 					]
 				</span>
 			</div>

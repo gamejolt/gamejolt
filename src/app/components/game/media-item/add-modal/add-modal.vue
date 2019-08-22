@@ -39,9 +39,9 @@
 					</p>
 					<br />
 					<div>
-						<a href="https://gamejolt.com/help/dev-media-images" class="link-help" target="_blank">
+						<app-link-help page="dev-media-images" class="link-help">
 							<translate>dash.games.media.add.image.page_help_link</translate>
-						</a>
+						</app-link-help>
 					</div>
 				</div>
 
@@ -62,9 +62,9 @@
 					</p>
 					<br />
 					<div>
-						<a href="https://gamejolt.com/help/dev-media-videos" class="link-help" target="_blank">
+						<app-link-help page="dev-media-videos" class="link-help">
 							<translate>dash.games.media.add.video.page_help_link</translate>
-						</a>
+						</app-link-help>
 					</div>
 				</div>
 

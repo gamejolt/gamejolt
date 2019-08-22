@@ -21,9 +21,9 @@
 						</translate>
 					</p>
 					<p>
-						<a href="https://gamejolt.com/help/dev-thumbnails" class="link-help" target="_blank">
+						<app-link-help page="dev-thumbnails" class="link-help">
 							<translate>dash.games.thumbnail.page_help_link</translate>
-						</a>
+						</app-link-help>
 					</p>
 				</div>
 			</div>

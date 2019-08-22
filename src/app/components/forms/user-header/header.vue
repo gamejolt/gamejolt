@@ -23,9 +23,9 @@
 				(ratio of 4 ÷ 1).
 			</p>
 			<p class="help-block">
-				<a href="https://gamejolt.com/help/dev-page-headers" class="link-help" target="_blank">
+				<app-link-help page="dev-page-headers" class="link-help">
 					<translate>What are the header requirements and guidelines?</translate>
-				</a>
+				</app-link-help>
 			</p>
 
 			<app-form-control-upload

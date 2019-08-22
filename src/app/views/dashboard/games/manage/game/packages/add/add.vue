@@ -36,9 +36,9 @@
 						</translate>
 					</p>
 					<p>
-						<a href="https://gamejolt.com/help/dev-packages" class="link-help" target="_blank">
+						<app-link-help page="dev-packages" class="link-help">
 							<translate>dash.games.packages.page_help_link</translate>
-						</a>
+						</app-link-help>
 					</p>
 				</div>
 			</div>

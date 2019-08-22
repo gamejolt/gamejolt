@@ -27,12 +27,12 @@ export class Environment {
 	static wttfBaseUrl = 'https://gamejolt.com';
 	static authBaseUrl = 'https://gamejolt.com';
 	static checkoutBaseUrl = 'https://gamejolt.com';
+	static helpBaseUrl = 'https://gamejolt.com/help';
 	static clientSectionUrl = '';
 
 	static jamsBaseUrl = 'http://jams.gamejolt.com';
 	static jamsIoBaseUrl = 'http://jams.gamejolt.io';
 	static firesideBaseUrl = 'http://fireside.gamejolt.com';
-	static helpBaseUrl = 'https://gamejolt.com/help';
 	static devBaseUrl = 'http://dev.gamejolt.com';
 	static gameserverUrl = (isSecure ? 'https' : 'http') + '://gamejolt.net';
 	static mediaserverUrl = 'https://m.gjcdn.net';
@@ -52,11 +52,11 @@ if (GJ_ENVIRONMENT === 'development') {
 	Environment.wttfBaseUrl = GJ_TUNNELS.frontend || 'http://localhost:8080';
 	Environment.authBaseUrl = GJ_TUNNELS.frontend || 'http://localhost:8080';
 	Environment.checkoutBaseUrl = GJ_TUNNELS.frontend || 'http://localhost:8080';
+	Environment.helpBaseUrl = 'http://localhost:8080/help';
 
 	Environment.jamsBaseUrl = 'http://jams.development.gamejolt.com';
 	Environment.jamsIoBaseUrl = 'http://jams.development.gamejolt.io';
 	Environment.firesideBaseUrl = 'http://fireside.development.gamejolt.com';
-	Environment.helpBaseUrl = 'http://development.gamejolt.com/help';
 	Environment.devBaseUrl = 'http://dev.development.gamejolt.com';
 	Environment.gameserverUrl = 'http://development.gamejolt.net';
 	Environment.mediaserverUrl = 'http://media.development.gamejolt.com';

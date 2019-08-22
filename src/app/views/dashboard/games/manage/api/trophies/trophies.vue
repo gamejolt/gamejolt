@@ -14,9 +14,9 @@
 					</translate>
 				</p>
 				<p>
-					<a href="https://gamejolt.com/help/dev-trophies" class="link-help" target="_blank">
+					<app-link-help page="dev-trophies" class="link-help">
 						<translate>dash.games.trophies.page_help_link</translate>
-					</a>
+					</app-link-help>
 				</p>
 			</div>
 

@@ -21,9 +21,9 @@
 					scores and achievements.
 				</translate>
 				[
-				<a href="https://gamejolt.com/help/tokens" target="_blank" class="link-help">
+				<app-link-help page="tokens" target="_blank">
 					<translate>more info</translate>
-				</a>
+				</app-link-help>
 				]
 			</p>
 

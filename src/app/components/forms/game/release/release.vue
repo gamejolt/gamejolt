@@ -12,9 +12,9 @@
 					<code>MAJOR.MINOR.PATCH</code>
 					.
 				</p>
-				<a href="https://gamejolt.com/help/dev-packages" class="link-help" target="_blank">
+				<app-link-help page="dev-packages" class="link-help">
 					<translate>dash.games.releases.form.version_number_help_link</translate>
-				</a>
+				</app-link-help>
 			</div>
 
 			<app-form-control

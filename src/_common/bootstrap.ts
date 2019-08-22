@@ -8,6 +8,7 @@ import AppButton from './button/button.vue';
 import { Connection } from './connection/connection-service';
 import AppJolticon from './jolticon/jolticon.vue';
 import AppLinkExternal from './link/external/external.vue';
+import AppLinkHelp from './link/help/help.vue';
 import { Meta } from './meta/meta-service';
 import { Payload } from './payload/payload-service';
 import { Referrer } from './referrer/referrer.service';
@@ -36,6 +37,7 @@ export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, rout
 	Vue.component('AppButton', AppButton);
 	Vue.component('AppJolticon', AppJolticon);
 	Vue.component('AppLinkExternal', AppLinkExternal);
+	Vue.component('AppLinkHelp', AppLinkHelp);
 
 	// Set some constants so we can use them in templates.
 	Vue.use(vue => {

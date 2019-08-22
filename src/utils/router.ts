@@ -147,11 +147,9 @@ function guardHijackEvent(e: any): 'passthrough' | 'window' | 'handle' {
 }
 
 function newWindow(e: Event, url: string) {
+	Navigate.gotoExternal(url);
 	if (GJ_IS_CLIENT) {
-		Navigate.gotoExternal(url);
 		e.preventDefault();
-	} else {
-		window.open(url, '_blank');
 	}
 }
 
