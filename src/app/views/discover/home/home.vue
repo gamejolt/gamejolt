@@ -1,6 +1,8 @@
 <template>
 	<div>
-		<app-discover-home-banner v-if="featuredItem" :item="featuredItem" />
+		<!-- Temporarily disabled to show the custom component -->
+		<!-- <app-discover-home-banner v-if="featuredItem" :item="featuredItem" /> -->
+		<app-discover-home-banner-custom />
 
 		<app-discover-home-tags />
 
