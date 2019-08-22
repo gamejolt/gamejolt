@@ -1,9 +1,9 @@
-import { Scroll } from '../../../../_common/scroll/scroll.service';
-import { Translate } from '../../../../_common/translate/translate.service';
-import { forEach } from '../../../../utils/collection';
-import { objectEquals } from '../../../../utils/object';
 import Vue from 'vue';
 import { Location, Route } from 'vue-router';
+import { forEach } from '../../../../utils/collection';
+import { objectEquals } from '../../../../utils/object';
+import { Scroll } from '../../../../_common/scroll/scroll.service';
+import { Translate } from '../../../../_common/translate/translate.service';
 import { router } from '../../../views/index';
 
 const STORAGE_KEY = 'game-filtering:filters-v2';
@@ -84,7 +84,7 @@ export class GameFilteringContainer {
 				options: {
 					everyone: Translate.$gettext('games.filtering.maturity_everyone'),
 					teen: Translate.$gettext('games.filtering.maturity_teen'),
-					adult: Translate.$gettext('games.filtering.maturity_adult'),
+					adult: Translate.$gettext('Mature Content'),
 				},
 			},
 			status: {
