@@ -4,7 +4,7 @@
 			<h2 class="sans-margin clearfix">
 				<app-button
 					class="hidden-xs pull-right"
-					trans
+					outline
 					:to="{
 						name: 'discover.games.list._fetch',
 						params: { section: null },
@@ -23,8 +23,7 @@
 		<div class="-button visible-xs">
 			<div class="container">
 				<app-button
-					block
-					trans
+					outline
 					:to="{
 						name: 'discover.games.list._fetch',
 						params: { section: null },
