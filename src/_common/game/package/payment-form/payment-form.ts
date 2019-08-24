@@ -1,6 +1,5 @@
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import AppLoading from '../../../loading/loading.vue';
 import { arrayIndexBy } from '../../../../utils/array';
 import { Api } from '../../../api/api.service';
 import { Device } from '../../../device/device.service';
@@ -20,6 +19,7 @@ import { Geo, Region } from '../../../geo/geo.service';
 import { Growls } from '../../../growls/growls.service';
 import { HistoryTick } from '../../../history-tick/history-tick-service';
 import AppLoadingFade from '../../../loading/fade/fade.vue';
+import AppLoading from '../../../loading/loading.vue';
 import { Navigate } from '../../../navigate/navigate.service';
 import { OrderPayment } from '../../../order/payment/payment.model';
 import AppPopper from '../../../popper/popper.vue';
@@ -51,20 +51,13 @@ type CheckoutType = 'cc-stripe' | 'paypal' | 'wallet';
 })
 export default class FormGamePackagePayment extends BaseForm<any>
 	implements FormOnInit, FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError {
-	@Prop(Game)
-	game!: Game;
-	@Prop(GamePackage)
-	package!: GamePackage;
-	@Prop(GameBuild)
-	build?: GameBuild;
-	@Prop(Sellable)
-	sellable!: Sellable;
-	@Prop(String)
-	partnerKey?: string;
-	@Prop(User)
-	partner?: User;
-	@Prop(String)
-	operation!: 'download' | 'play';
+	@Prop(Game) game!: Game;
+	@Prop(GamePackage) package!: GamePackage;
+	@Prop(GameBuild) build?: GameBuild;
+	@Prop(Sellable) sellable!: Sellable;
+	@Prop(String) partnerKey?: string;
+	@Prop(User) partner?: User;
+	@Prop(String) operation!: 'download' | 'play';
 
 	@State
 	app!: AppStore;
@@ -94,12 +87,30 @@ export default class FormGamePackagePayment extends BaseForm<any>
 
 	readonly Screen = Screen;
 
+	get isNameYourPrice() {
+		return this.sellable.type === 'pwyw';
+	}
+
+	get isPlaying() {
+		return this.operation === 'play';
+	}
+
+	get isDownloading() {
+		return this.operation === 'download' && !GJ_IS_CLIENT;
+	}
+
+	get isInstalling() {
+		return this.operation === 'download' && GJ_IS_CLIENT;
+	}
+
 	get pricing() {
 		return this.sellable.pricings[0];
 	}
 
 	get _minOrderAmount() {
-		return this.sellable.type === 'paid' ? this.pricing.amount / 100 : this.minOrderAmount / 100;
+		return this.sellable.type === 'paid'
+			? this.pricing.amount / 100
+			: this.minOrderAmount / 100;
 	}
 
 	get formattedAmount() {
@@ -142,7 +153,9 @@ export default class FormGamePackagePayment extends BaseForm<any>
 	}
 
 	onInit() {
-		this.setField('amount', this.pricing.amount ? this.pricing.amount / 100 : null);
+		// If they don't have a default pricing amount set for this sellable,
+		// just do $1.
+		this.setField('amount', this.pricing.amount ? this.pricing.amount / 100 : 1);
 		this.setField('country', 'us');
 		this.load();
 	}
@@ -315,9 +328,13 @@ export default class FormGamePackagePayment extends BaseForm<any>
 				throw response;
 			}
 
-			response = await Api.sendRequest('/web/checkout/charge/' + response.cart.id, chargeData, {
-				detach: true,
-			});
+			response = await Api.sendRequest(
+				'/web/checkout/charge/' + response.cart.id,
+				chargeData,
+				{
+					detach: true,
+				}
+			);
 
 			if (response.success === false) {
 				throw response;
