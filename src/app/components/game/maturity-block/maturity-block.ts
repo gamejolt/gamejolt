@@ -1,9 +1,9 @@
-import { Analytics } from '../../../../_common/analytics/analytics.service';
-import { Game } from '../../../../_common/game/game.model';
-import { Scroll } from '../../../../_common/scroll/scroll.service';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { Analytics } from '../../../../_common/analytics/analytics.service';
+import { Game } from '../../../../_common/game/game.model';
+import { Scroll } from '../../../../_common/scroll/scroll.service';
 import { Settings } from '../../../../_common/settings/settings.service';
 import { Store } from '../../../store/index';
 import AppGameOgrs from '../ogrs/ogrs.vue';
@@ -26,6 +26,7 @@ export default class AppGameMaturityBlock extends Vue {
 			this.game.tigrs_age === 3 &&
 			!GJ_IS_SSR &&
 			Settings.get('restricted-browsing') &&
+			!this.game.is_following &&
 			!this.game.hasPerms() &&
 			!this.hasBypassed
 		);
