@@ -42,7 +42,7 @@
 			:optional="true"
 		>
 			<p class="help-block" v-translate>
-				Your image must be a PNG, JPG, or GIF.
+				Your image must be a PNG or JPG.
 				<br />
 				<strong>PNGs are highly recommended as they produce a lossless image.</strong>
 			</p>
@@ -58,7 +58,7 @@
 					filesize: maxFilesize,
 					max_img_dimensions: [maxWidth, maxHeight],
 				}"
-				accept=".png,.jpg,.jpeg,.gif"
+				accept=".png,.jpg,.jpeg"
 			/>
 
 			<app-form-control-errors :label="$gettext(`dash.games.trophies.form.image_error_label`)" />

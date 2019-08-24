@@ -2,7 +2,7 @@
 	<app-form name="avatarForm" ref="form">
 		<app-form-group name="file" :label="$gettext(`Upload New Avatar`)" :optional="true">
 			<p class="help-block" v-translate>
-				Your image must be a PNG, JPG, or GIF.
+				Your image must be a PNG or JPG.
 				<br />
 				<strong>PNGs are highly recommended as they produce a lossless image.</strong>
 			</p>
@@ -18,7 +18,7 @@
 					min_img_dimensions: [minSize, minSize],
 					max_img_dimensions: [maxSize, maxSize],
 				}"
-				accept=".png,.jpg,.jpeg,.gif"
+				accept=".png,.jpg,.jpeg"
 				@changed="avatarSelected()"
 			/>
 
