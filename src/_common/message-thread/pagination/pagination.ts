@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppPagination from './pagination.vue';
+import AppPagination from '../../pagination/pagination.vue';
 import AppTimelineListItem from '../../timeline-list/item/item.vue';
 
 @Component({
