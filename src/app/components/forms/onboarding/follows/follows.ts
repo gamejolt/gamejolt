@@ -1,14 +1,8 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import {
-	FormOnBeforeSubmit,
-	FormOnLoad,
-} from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import Onboarding, {
-	OnboardingStep,
-} from 'game-jolt-frontend-lib/components/onboarding/onboarding.service';
-import AppScrollScroller from 'game-jolt-frontend-lib/components/scroll/scroller/scroller.vue';
 import { Component } from 'vue-property-decorator';
+import { Community } from '../../../../../_common/community/community.model';
+import { FormOnBeforeSubmit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
+import Onboarding, { OnboardingStep } from '../../../../../_common/onboarding/onboarding.service';
+import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import OnboardingComponent from '../base';
 import AppOnboardingFollowsCommunityItem from './community-item/community-item.vue';
 
@@ -22,7 +16,6 @@ export default class FormOnboardingFollows extends OnboardingComponent<any>
 	implements FormOnLoad, FormOnBeforeSubmit {
 	stepName = 'follows' as OnboardingStep;
 
-	followedGames = false;
 	communities: Community[] = [];
 
 	get loadUrl() {
@@ -34,7 +27,7 @@ export default class FormOnboardingFollows extends OnboardingComponent<any>
 	}
 
 	get shouldShowSkip() {
-		return !this.followedGames && !this.followsAnyCommunity;
+		return !this.followsAnyCommunity;
 	}
 
 	get followsAnyCommunity() {
@@ -49,25 +42,7 @@ export default class FormOnboardingFollows extends OnboardingComponent<any>
 		this.communities = Community.populate(payload.communities);
 	}
 
-	onFollowGames() {
-		Onboarding.trackEvent('follow-games-set');
-		this.followedGames = true;
-
-		// We'd rather fail silently, so detach this.
-		Api.sendRequest(
-			'/web/onboarding/follows/save',
-			{},
-			{
-				detach: true,
-			}
-		);
-	}
-
 	onBeforeSubmit() {
-		if (!this.followedGames) {
-			Onboarding.trackEvent('follow-games-skip');
-		}
-
 		Onboarding.trackEvent(
 			this.followsAnyCommunity ? 'follow-communities-set' : 'follow-communities-skip'
 		);

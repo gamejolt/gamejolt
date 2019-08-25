@@ -1,10 +1,9 @@
-import { ForumPost } from 'game-jolt-frontend-lib/components/forum/post/post.model';
-import { ForumTopic } from 'game-jolt-frontend-lib/components/forum/topic/topic.model';
-import AppMessageThread from 'game-jolt-frontend-lib/components/message-thread/message-thread.vue';
+import { ForumPost } from '../../../../_common/forum/post/post.model';
+import { ForumTopic } from '../../../../_common/forum/topic/topic.model';
+import AppMessageThread from '../../../../_common/message-thread/message-thread.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import AppForumPostListItem from './item/item.vue';
-
 
 @Component({
 	components: {

@@ -1,21 +1,18 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { ForumChannel } from 'game-jolt-frontend-lib/components/forum/channel/channel.model';
-import { ForumTopic } from 'game-jolt-frontend-lib/components/forum/topic/topic.model';
-import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
-import AppPagination from 'game-jolt-frontend-lib/components/pagination/pagination.vue';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { Api } from '../../../../../_common/api/api.service';
+import { number } from '../../../../../_common/filters/number';
+import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
+import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
+import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
+import AppPagination from '../../../../../_common/pagination/pagination.vue';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import { Scroll } from '../../../../../_common/scroll/scroll.service';
+import { Store } from '../../../../store/index';
 import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
 import AppForumTopicList from '../../../../components/forum/topic-list/topic-list.vue';
 import AppPageHeader from '../../../../components/page-header/page-header.vue';
-import { Store } from '../../../../store/index';
 
 @Component({
 	name: 'RouteForumsChannelsView',

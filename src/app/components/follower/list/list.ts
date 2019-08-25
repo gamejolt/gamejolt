@@ -1,10 +1,10 @@
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import AppUserCard from 'game-jolt-frontend-lib/components/user/card/card.vue';
-import AppUserCardPlaceholder from 'game-jolt-frontend-lib/components/user/card/placeholder/placeholder.vue';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
+import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
+import { Api } from '../../../../_common/api/api.service';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppUserCard from '../../../../_common/user/card/card.vue';
+import AppUserCardPlaceholder from '../../../../_common/user/card/placeholder/placeholder.vue';
+import { User } from '../../../../_common/user/user.model';
+import AppLoading from '../../../../_common/loading/loading.vue';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 

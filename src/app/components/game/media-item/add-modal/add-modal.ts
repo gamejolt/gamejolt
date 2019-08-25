@@ -1,9 +1,9 @@
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GameScreenshot } from 'game-jolt-frontend-lib/components/game/screenshot/screenshot.model';
-import { GameSketchfab } from 'game-jolt-frontend-lib/components/game/sketchfab/sketchfab.model';
-import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
-import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
-import AppNavTabList from 'game-jolt-frontend-lib/components/nav/tab-list/tab-list.vue';
+import { Game } from '../../../../../_common/game/game.model';
+import { GameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
+import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
+import { GameVideo } from '../../../../../_common/game/video/video.model';
+import { BaseModal } from '../../../../../_common/modal/base';
+import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { Component, Prop } from 'vue-property-decorator';
 import FormGameImage from '../../../forms/game/image/image.vue';
 import FormGameSketchfab from '../../../forms/game/sketchfab/sketchfab.vue';

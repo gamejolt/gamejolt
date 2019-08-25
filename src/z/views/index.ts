@@ -1,4 +1,4 @@
-import { initRouter } from 'game-jolt-frontend-lib/utils/router';
+import { initRouter } from '../../utils/router';
 import { routeContent } from './content/content.route';
 
 const routes = [routeContent];

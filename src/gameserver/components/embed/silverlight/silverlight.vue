@@ -23,13 +23,13 @@
 				<translate>You may use the button below to get it.</translate>
 			</p>
 
-			<external-link href="https://go.microsoft.com/fwlink/?LinkID=124807">
+			<app-link-external href="https://go.microsoft.com/fwlink/?LinkID=124807">
 				<img
 					src="https://go.microsoft.com/fwlink/?LinkId=108181"
 					alt="Get Microsoft Silverlight"
 					style="border-style: none"
 				/>
-			</external-link>
+			</app-link-external>
 		</object>
 	</div>
 </template>

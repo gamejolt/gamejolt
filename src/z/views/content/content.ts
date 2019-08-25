@@ -1,15 +1,12 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { ContentDocument } from 'game-jolt-frontend-lib/components/content/content-document';
-import AppContentEditor from 'game-jolt-frontend-lib/components/content/content-editor/content-editor.vue';
-import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
-import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
+import { Api } from '../../../_common/api/api.service';
+import { ContentDocument } from '../../../_common/content/content-document';
+import AppContentEditor from '../../../_common/content/content-editor/content-editor.vue';
+import AppContentViewer from '../../../_common/content/content-viewer/content-viewer.vue';
+import { Navigate } from '../../../_common/navigate/navigate.service';
+import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { AppTimeAgo } from '../../../_common/time/ago/ago';
+import { User } from '../../../_common/user/user.model';
+import AppLoading from '../../../_common/loading/loading.vue';
 import { Component } from 'vue-property-decorator';
 
 @Component({
@@ -103,9 +100,7 @@ export default class RouteContent extends BaseRouteComponent {
 			const contentJson = doc.toJson();
 			try {
 				const payload = await Api.sendRequest(
-					`/z/content/save/${this.$route.params.resource}/${
-						this.$route.params.resourceId
-					}`,
+					`/z/content/save/${this.$route.params.resource}/${this.$route.params.resourceId}`,
 					{ content: contentJson, log_reason: this.logReason },
 					{ noErrorRedirect: true }
 				);

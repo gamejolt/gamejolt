@@ -1,8 +1,8 @@
-import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';
-import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
-import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
+import { EventItem } from '../../../../_common/event-item/event-item.model';
+import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { Notification } from '../../../../_common/notification/notification-model';
+import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { arrayRemove } from '../../../../utils/array';
 import { Dictionary, Route } from 'vue-router/types/router';
 import { ActivityFeedInput } from './item-service';
 import { ActivityFeedState, ActivityFeedStateOptions } from './state';

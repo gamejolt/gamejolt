@@ -1,11 +1,11 @@
-import { Collaborator } from 'game-jolt-frontend-lib/components/collaborator/collaborator.model';
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
+import { Collaborator } from '../../../../../../_common/collaborator/collaborator.model';
+import { Community } from '../../../../../../_common/community/community.model';
 import {
 	NamespaceVuexStore,
 	VuexModule,
 	VuexMutation,
 	VuexStore,
-} from 'game-jolt-frontend-lib/utils/vuex';
+} from '../../../../../../utils/vuex';
 import { namespace } from 'vuex-class';
 import { store } from '../../../../../store';
 

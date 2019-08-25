@@ -63,9 +63,9 @@
 					You have agreed to our Partner Agreement on %{ date }.
 				</translate>
 				<br />
-				<external-link :href="agreementLink">
+				<app-link-external :href="agreementLink">
 					<translate>View Partner Agreement</translate>
-				</external-link>
+				</app-link-external>
 			</p>
 		</div>
 	</fieldset>

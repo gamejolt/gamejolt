@@ -17,9 +17,9 @@
 				</translate>
 			</p>
 			<p>
-				<a class="link-help" href="https://help.gamejolt.com/dev-data-storage" target="_blank">
+				<app-link-help page="dev-data-storage" class="link-help">
 					<translate>dash.games.data_store.items.page_help_link</translate>
-				</a>
+				</app-link-help>
 			</p>
 		</div>
 

@@ -1,19 +1,18 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppFormControlCrop from 'game-jolt-frontend-lib/components/form-vue/control/crop/crop.vue';
-import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
-import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
-import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
+import { Component, Watch } from 'vue-property-decorator';
+import { Api } from '../../../../_common/api/api.service';
+import { filesize } from '../../../../_common/filters/filesize';
+import AppFormControlCrop from '../../../../_common/form-vue/control/crop/crop.vue';
+import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
+import AppFormControlUpload from '../../../../_common/form-vue/control/upload/upload.vue';
+import AppForm from '../../../../_common/form-vue/form';
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
 	FormOnLoad,
-} from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import { filesize } from 'game-jolt-frontend-lib/vue/filters/filesize';
-import { Component, Watch } from 'vue-property-decorator';
+} from '../../../../_common/form-vue/form.service';
+import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { User } from '../../../../_common/user/user.model';
 
 type FormModel = User & {
 	avatar_crop?: any;
@@ -24,7 +23,6 @@ type FormModel = User & {
 		AppFormControlUpload,
 		AppFormControlCrop,
 		AppFormControlToggle,
-		AppJolticon,
 	},
 })
 export default class FormAvatar extends BaseForm<FormModel>

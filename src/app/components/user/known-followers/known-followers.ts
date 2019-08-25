@@ -1,6 +1,6 @@
-import AppUserAvatarList from 'game-jolt-frontend-lib/components/user/user-avatar/list/list.vue';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import { AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
+import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
+import { User } from '../../../../_common/user/user.model';
+import { AppStore } from '../../../../_common/store/app-store';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';

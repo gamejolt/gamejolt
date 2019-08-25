@@ -1,5 +1,5 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { makeObservableService } from 'game-jolt-frontend-lib/utils/vue';
+import { Api } from '../../../_common/api/api.service';
+import { makeObservableService } from '../../../utils/vue';
 import { store } from '../../store/index';
 import { SearchPayload } from './payload-service';
 
@@ -62,11 +62,7 @@ export class Search {
 
 		// Catch failures and return an empty success instead.
 		try {
-			return await Api.sendRequest(
-				endpoint + '?' + searchParams.join('&'),
-				null,
-				requestOptions
-			);
+			return await Api.sendRequest(endpoint + '?' + searchParams.join('&'), null, requestOptions);
 		} catch (_e) {
 			return Promise.resolve({});
 		}

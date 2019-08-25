@@ -1,11 +1,10 @@
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
-import { BaseForm, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { Site } from 'game-jolt-frontend-lib/components/site/site-model';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import AppExpand from '../../../../../_common/expand/expand.vue';
+import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
+import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
+import { Game } from '../../../../../_common/game/game.model';
+import { Site } from '../../../../../_common/site/site-model';
+import { User } from '../../../../../_common/user/user.model';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 interface FormModel {
 	type: string;

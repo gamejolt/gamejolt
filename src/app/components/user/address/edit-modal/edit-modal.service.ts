@@ -1,6 +1,6 @@
-import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
-import { UserAddress } from 'game-jolt-frontend-lib/components/user/address/address.model';
-import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
+import { Modal } from '../../../../../_common/modal/modal.service';
+import { UserAddress } from '../../../../../_common/user/address/address.model';
+import { asyncComponentLoader } from '../../../../../utils/utils';
 
 export class UserAddressEditModal {
 	static async show(address: UserAddress) {

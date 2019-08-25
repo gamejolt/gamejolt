@@ -1,26 +1,20 @@
 import * as distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import AppFormControlContent from 'game-jolt-frontend-lib/components/form-vue/control/content/content.vue';
-import AppFormControlTheme from 'game-jolt-frontend-lib/components/form-vue/control/theme/theme.vue';
-import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
-import {
-	BaseForm,
-	FormOnLoad,
-	FormOnSubmitError,
-} from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { Theme } from 'game-jolt-frontend-lib/components/theme/theme.model';
-import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
 import { Component } from 'vue-property-decorator';
+import { Environment } from '../../../../_common/environment/environment.service';
+import AppExpand from '../../../../_common/expand/expand.vue';
+import AppFormControlContent from '../../../../_common/form-vue/control/content/content.vue';
+import AppFormControlTheme from '../../../../_common/form-vue/control/theme/theme.vue';
+import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
+import { BaseForm, FormOnLoad, FormOnSubmitError } from '../../../../_common/form-vue/form.service';
+import AppLoading from '../../../../_common/loading/loading.vue';
+import { Theme } from '../../../../_common/theme/theme.model';
+import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
+import { User } from '../../../../_common/user/user.model';
 
 @Component({
 	components: {
 		AppLoading,
 		AppExpand,
-		AppJolticon,
 		AppFormControlTheme,
 		AppFormControlToggle,
 		AppFormControlContent,

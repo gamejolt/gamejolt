@@ -1,7 +1,7 @@
-import { Collaborator } from 'game-jolt-frontend-lib/components/collaborator/collaborator.model';
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import { AppFocusWhen } from 'game-jolt-frontend-lib/components/form-vue/focus-when.directive';
-import { BaseForm, FormOnInit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
+import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
+import { Community } from '../../../../../_common/community/community.model';
+import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
+import { BaseForm, FormOnInit } from '../../../../../_common/form-vue/form.service';
 import { Component, Prop } from 'vue-property-decorator';
 
 @Component({

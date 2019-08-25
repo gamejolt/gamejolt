@@ -1,4 +1,4 @@
-import { initRouter } from 'game-jolt-frontend-lib/utils/router';
+import { initRouter } from '../../utils/router';
 import { routeDowngrade } from './downgrade/downgrade.route';
 import { routeUpgrade } from './upgrade/upgrade.route';
 

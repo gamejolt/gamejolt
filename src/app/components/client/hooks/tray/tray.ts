@@ -1,4 +1,4 @@
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
+import { Translate } from '../../../../../_common/translate/translate.service';
 import { Location } from 'vue-router';
 import { Client } from '../../../../../_common/client/client.service';
 import { store } from '../../../../store/index';

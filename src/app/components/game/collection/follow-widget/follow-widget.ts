@@ -1,8 +1,8 @@
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
-import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
+import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
+import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { number } from '../../../../../_common/filters/number';
+import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { LibraryModule, LibraryStore } from '../../../../store/library';

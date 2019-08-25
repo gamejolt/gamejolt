@@ -1,12 +1,11 @@
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { Site } from 'game-jolt-frontend-lib/components/site/site-model';
+import { Game } from '../../../../_common/game/game.model';
+import { Growls } from '../../../../_common/growls/growls.service';
+import { Site } from '../../../../_common/site/site-model';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../store/index';
 import FormSiteDomain from '../../forms/site/domain/domain.vue';
-
 
 @Component({
 	components: {

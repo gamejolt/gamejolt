@@ -1,4 +1,4 @@
-import { ImgHelper } from 'game-jolt-frontend-lib/components/img/helper/helper-service';
+import { ImgHelper } from '../../../_common/img/helper/helper-service';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 

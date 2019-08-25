@@ -1,5 +1,5 @@
-import { GJ_EMOJIS } from 'game-jolt-frontend-lib/components/content/content-editor/schemas/specs/nodes/gj-emoji-nodespec';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
+import { GJ_EMOJIS } from '../../../../../_common/content/content-editor/schemas/specs/nodes/gj-emoji-nodespec';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 

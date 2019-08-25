@@ -1,9 +1,9 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppContentBlockEditor from 'game-jolt-frontend-lib/components/content-block/editor/editor.vue';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import AppThemeSelector from 'game-jolt-frontend-lib/components/theme/selector/selector.vue';
-import AppThemeEditor from 'game-jolt-frontend-lib/components/theme/theme-editor/theme-editor.vue';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
+import { Api } from '../../../_common/api/api.service';
+import AppContentBlockEditor from '../../../_common/content-block/editor/editor.vue';
+import { Growls } from '../../../_common/growls/growls.service';
+import AppThemeSelector from '../../../_common/theme/selector/selector.vue';
+import AppThemeEditor from '../../../_common/theme/theme-editor/theme-editor.vue';
+import AppLoading from '../../../_common/loading/loading.vue';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class';

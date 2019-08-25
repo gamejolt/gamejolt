@@ -1,7 +1,7 @@
-import { EscapeStack } from 'game-jolt-frontend-lib/components/escape-stack/escape-stack.service';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppScrollInviewParent } from 'game-jolt-frontend-lib/components/scroll/inview/parent';
-import AppShortkey from 'game-jolt-frontend-lib/vue/components/shortkey/shortkey.vue';
+import { EscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { AppScrollInviewParent } from '../../../../_common/scroll/inview/parent';
+import AppShortkey from '../../../../_common/shortkey/shortkey.vue';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';

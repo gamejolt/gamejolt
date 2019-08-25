@@ -1,8 +1,7 @@
-import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { currency } from '../../../../../_common/filters/currency';
+import { number } from '../../../../../_common/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 @Component({
 	filters: {

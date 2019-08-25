@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>LSBackgroundOnly</key>
+	<true/>
+	<key>CFBundleDisplayName</key>
+	<string>Game Jolt Client</string>
+	<key>CFBundleExecutable</key>
+	<string>run.sh</string>
+	<key>CFBundleIconFile</key>
+	<string>nw.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.gamejolt.client</string>
+	<key>CFBundleName</key>
+	<string>Game Jolt Client</string>
+	<key>CFBundleShortVersionString</key>
+	<string>Version {{VERSION}}</string>
+	<key>CFBundleVersion</key>
+	<string>{{APP_VERSION}}</string>
+</dict>
+</plist>

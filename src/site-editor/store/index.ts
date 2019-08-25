@@ -1,19 +1,15 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Site } from 'game-jolt-frontend-lib/components/site/site-model';
-import { SiteTemplate } from 'game-jolt-frontend-lib/components/site/template/template-model';
-import { SiteTheme } from 'game-jolt-frontend-lib/components/site/theme/theme-model';
-import {
-	ThemeActions,
-	ThemeMutations,
-	ThemeStore,
-} from 'game-jolt-frontend-lib/components/theme/theme.store';
-import { VuexAction, VuexModule, VuexMutation, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
+import { Api } from '../../_common/api/api.service';
+import { Site } from '../../_common/site/site-model';
+import { SiteTemplate } from '../../_common/site/template/template-model';
+import { SiteTheme } from '../../_common/site/theme/theme-model';
+import { ThemeActions, ThemeMutations, ThemeStore } from '../../_common/theme/theme.store';
+import { VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import {
 	Actions as AppActions,
 	AppStore,
 	appStore,
 	Mutations as AppMutations,
-} from 'game-jolt-frontend-lib/vue/services/app/app-store';
+} from '../../_common/store/app-store';
 
 type Tab = 'theme' | 'editor';
 

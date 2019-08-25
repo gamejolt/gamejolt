@@ -1,30 +1,22 @@
-import { Collaborator } from 'game-jolt-frontend-lib/components/collaborator/collaborator.model';
-import { Comment } from 'game-jolt-frontend-lib/components/comment/comment-model';
-import { CommentVideo } from 'game-jolt-frontend-lib/components/comment/video/video-model';
-import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
-import {
-	CustomMessage as CustomGameMessage,
-	Game,
-} from 'game-jolt-frontend-lib/components/game/game.model';
-import { GamePackagePayloadModel } from 'game-jolt-frontend-lib/components/game/package/package-payload.model';
-import { GameRating } from 'game-jolt-frontend-lib/components/game/rating/rating.model';
-import { GameScoreTable } from 'game-jolt-frontend-lib/components/game/score-table/score-table.model';
-import { GameScreenshot } from 'game-jolt-frontend-lib/components/game/screenshot/screenshot.model';
-import { GameSketchfab } from 'game-jolt-frontend-lib/components/game/sketchfab/sketchfab.model';
-import { GameSong } from 'game-jolt-frontend-lib/components/game/song/song.model';
-import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
-import { LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
-import { Registry } from 'game-jolt-frontend-lib/components/registry/registry.service';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import { objectPick } from 'game-jolt-frontend-lib/utils/object';
-import {
-	NamespaceVuexStore,
-	VuexModule,
-	VuexMutation,
-	VuexStore,
-} from 'game-jolt-frontend-lib/utils/vuex';
+import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
+import { Comment } from '../../../../../_common/comment/comment-model';
+import { CommentVideo } from '../../../../../_common/comment/video/video-model';
+import { Device } from '../../../../../_common/device/device.service';
+import { Environment } from '../../../../../_common/environment/environment.service';
+import { GameBuild } from '../../../../../_common/game/build/build.model';
+import { CustomMessage as CustomGameMessage, Game } from '../../../../../_common/game/game.model';
+import { GamePackagePayloadModel } from '../../../../../_common/game/package/package-payload.model';
+import { GameRating } from '../../../../../_common/game/rating/rating.model';
+import { GameScoreTable } from '../../../../../_common/game/score-table/score-table.model';
+import { GameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
+import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
+import { GameSong } from '../../../../../_common/game/song/song.model';
+import { GameVideo } from '../../../../../_common/game/video/video.model';
+import { LinkedAccount } from '../../../../../_common/linked-account/linked-account.model';
+import { Registry } from '../../../../../_common/registry/registry.service';
+import { User } from '../../../../../_common/user/user.model';
+import { objectPick } from '../../../../../utils/object';
+import { NamespaceVuexStore, VuexModule, VuexMutation, VuexStore } from '../../../../../utils/vuex';
 import { namespace } from 'vuex-class';
 import { store } from '../../../../store';
 import { router } from '../../../index';
@@ -162,9 +154,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 	get hasReleasesSection() {
 		// The releases section exists if there are releases or songs.
-		return (
-			this.externalPackages.length > 0 || this.packages.length > 0 || this.songs.length > 0
-		);
+		return this.externalPackages.length > 0 || this.packages.length > 0 || this.songs.length > 0;
 	}
 
 	get partnerLink() {

@@ -1,16 +1,15 @@
-import AppFormControlCrop from 'game-jolt-frontend-lib/components/form-vue/control/crop/crop.vue';
-import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
-import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
+import { Component, Watch } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import AppFormControlCrop from '../../../../_common/form-vue/control/crop/crop.vue';
+import AppFormControlUpload from '../../../../_common/form-vue/control/upload/upload.vue';
+import AppForm from '../../../../_common/form-vue/form';
 import {
 	BaseForm,
 	FormOnBeforeSubmit,
 	FormOnLoad,
-} from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import { Component, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+} from '../../../../_common/form-vue/form.service';
+import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { User } from '../../../../_common/user/user.model';
 import { Store } from '../../../store/index';
 
 type FormModel = User & {
@@ -21,7 +20,6 @@ type FormModel = User & {
 	components: {
 		AppFormControlUpload,
 		AppFormControlCrop,
-		AppJolticon,
 	},
 })
 export default class FormUserHeader extends BaseForm<FormModel>

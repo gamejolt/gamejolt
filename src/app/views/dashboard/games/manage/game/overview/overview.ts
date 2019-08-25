@@ -1,17 +1,17 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import AppGraphWidget from 'game-jolt-frontend-lib/components/graph/widget/widget.vue';
-import AppProgressBar from 'game-jolt-frontend-lib/components/progress/bar/bar.vue';
-import { AppProgressPoller } from 'game-jolt-frontend-lib/components/progress/poller/poller';
+import { Component } from 'vue-property-decorator';
+import { Api } from '../../../../../../../_common/api/api.service';
+import AppExpand from '../../../../../../../_common/expand/expand.vue';
+import { number } from '../../../../../../../_common/filters/number';
+import { Game } from '../../../../../../../_common/game/game.model';
+import AppGraphWidget from '../../../../../../../_common/graph/widget/widget.vue';
+import AppProgressBar from '../../../../../../../_common/progress/bar/bar.vue';
+import { AppProgressPoller } from '../../../../../../../_common/progress/poller/poller';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
-import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
-import { Component } from 'vue-property-decorator';
+} from '../../../../../../../_common/route/route-component';
+import { AppState, AppStore } from '../../../../../../../_common/store/app-store';
+import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector.vue';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
@@ -37,8 +37,7 @@ import { RouteStore, RouteStoreModule } from '../../manage.store';
 })
 @RouteResolver({
 	deps: {},
-	resolver: ({ route }) =>
-		Api.sendRequest('/web/dash/developer/games/overview/' + route.params.id),
+	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/overview/' + route.params.id),
 })
 export default class RouteDashGamesManageGameOverview extends BaseRouteComponent {
 	@AppState

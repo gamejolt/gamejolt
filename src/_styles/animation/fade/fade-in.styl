@@ -1,0 +1,62 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+vendors = official
+
+@keyframes fade-in
+	from
+		opacity: 0
+
+	to
+		opacity: 1
+		// transform: none
+
+@keyframes fade-in-left
+	from
+		opacity: 0
+		transform: translate3d(-50px, 0, 0)
+
+	to
+		opacity: 1
+		transform: none
+
+@keyframes fade-in-right
+	from
+		opacity: 0
+		transform: translate3d(50px, 0, 0)
+
+	to
+		opacity: 1
+		transform: none
+
+@keyframes fade-in-down
+	from
+		opacity: 0
+		transform: translate3d(0, -50px, 0)
+
+	to
+		opacity: 1
+		transform: none
+
+@keyframes fade-in-up
+	from
+		opacity: 0
+		transform: translate3d(0, 50px, 0)
+
+	to
+		opacity: 1
+		transform: none
+
++create-animation('fade', 'in')
+	animation-name: fade-in
+	animation-duration: 500ms
+	animation-fill-mode: both
+	opacity: 1
+
+for direction in 'up' 'right' 'down' 'left'
+	+create-animation('fade', 'in', direction)
+		animation-duration: 600ms
+		animation-timing-function: $strong-ease-out
+		animation-name: unquote('fade-in-' + direction)
+		animation-fill-mode: both
+		opacity: 1

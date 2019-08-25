@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppProgressBar from 'game-jolt-frontend-lib/components/progress/bar/bar.vue'
+import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
 import { ClientLibraryStore, ClientLibraryState } from '../../../../store/client-library';
 
 @Component({

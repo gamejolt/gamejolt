@@ -1,5 +1,5 @@
-import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
-import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
+import { Modal } from '../../../../_common/modal/modal.service';
+import { asyncComponentLoader } from '../../../../utils/utils';
 
 export class UserAvatarModal {
 	static async show() {

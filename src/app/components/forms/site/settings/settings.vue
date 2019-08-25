@@ -63,12 +63,12 @@
 					</translate>
 				</p>
 				<p>
-					<external-link
+					<app-link-external
 						class="link-help"
 						href="https://support.google.com/analytics/answer/1008080"
 					>
 						<translate>How do I get my tracking ID?</translate>
-					</external-link>
+					</app-link-external>
 				</p>
 			</div>
 		</app-form-group>

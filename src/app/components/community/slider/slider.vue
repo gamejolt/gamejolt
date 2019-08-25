@@ -4,6 +4,7 @@
 			v-for="community of communities"
 			:key="community.id"
 			:community="community"
+			:event-cat="eventCat"
 		/>
 	</div>
 </template>

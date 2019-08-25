@@ -260,12 +260,7 @@
 			</app-page-header-controls>
 		</app-page-header>
 
-		<app-game-listing
-			:listing="listing"
-			:hide-section-nav="true"
-			:is-loading="isRouteLoading"
-			:show-footer-ad="false"
-		>
+		<app-game-listing :listing="listing" :hide-section-nav="true" :is-loading="isRouteLoading">
 			<app-game-grid v-if="listing" :games="listing.games" event-label="collection-games">
 				<template v-slot:thumbnail-controls="props">
 					<app-button
@@ -311,11 +306,7 @@
 				</div>
 
 				<app-loading-fade :is-loading="isLoadingRecommended">
-					<app-game-grid
-						:games="recommendedGames"
-						scrollable
-						event-label="collection-games-mix"
-					/>
+					<app-game-grid :games="recommendedGames" scrollable event-label="collection-games-mix" />
 				</app-loading-fade>
 
 				<p class="visible-xs">
@@ -325,8 +316,6 @@
 				</p>
 			</div>
 		</section>
-
-		<app-ad-placement />
 	</div>
 </template>
 

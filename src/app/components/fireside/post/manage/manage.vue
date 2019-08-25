@@ -56,7 +56,7 @@
 								<translate>Published to:</translate>
 							</div>
 							<div class="list-group list-group-dark" style="margin-bottom: 0">
-								<external-link
+								<app-link-external
 									v-for="platform of post.platforms_published_to"
 									:key="platform.id"
 									class="list-group-item has-icon"
@@ -64,7 +64,7 @@
 								>
 									<app-jolticon :icon="getProviderIcon(platform.created_resource_provider)" />
 									{{ platform.created_resource_account_name }}
-								</external-link>
+								</app-link-external>
 							</div>
 
 							<hr />

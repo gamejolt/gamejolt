@@ -1,15 +1,15 @@
-import { CommentState, CommentStore } from 'game-jolt-frontend-lib/components/comment/comment-store';
-import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
-import { ReportModal } from 'game-jolt-frontend-lib/components/report/modal/modal.service';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { CommentState, CommentStore } from '../../../../../../_common/comment/comment-store';
+import { CommentModal } from '../../../../../../_common/comment/modal/modal.service';
+import { number } from '../../../../../../_common/filters/number';
+import AppPopper from '../../../../../../_common/popper/popper.vue';
+import { ReportModal } from '../../../../../../_common/report/modal/modal.service';
+import { Screen } from '../../../../../../_common/screen/screen-service';
+import { Store } from '../../../../../store/index';
 import AppGameModLinks from '../../../../../components/game/mod-links/mod-links.vue';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
-import { Store } from '../../../../../store/index';
 import { RouteStore, RouteStoreModule } from '../view.store';
 
 @Component({

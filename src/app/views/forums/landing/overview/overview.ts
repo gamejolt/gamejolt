@@ -1,9 +1,9 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { ForumCategory } from 'game-jolt-frontend-lib/components/forum/category/category.model';
-import { ForumChannel } from 'game-jolt-frontend-lib/components/forum/channel/channel.model';
-import { ForumPost } from 'game-jolt-frontend-lib/components/forum/post/post.model';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
+import { Api } from '../../../../../_common/api/api.service';
+import { ForumCategory } from '../../../../../_common/forum/category/category.model';
+import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
+import { ForumPost } from '../../../../../_common/forum/post/post.model';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import AppForumChannelList from '../../../../components/forum/channel-list/channel-list.vue';
 import AppForumRules from '../../../../components/forum/rules/rules.vue';
 

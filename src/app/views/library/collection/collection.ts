@@ -1,25 +1,21 @@
-import AppAdPlacement from 'game-jolt-frontend-lib/components/ad/placement/placement.vue';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
-import { GameBundle } from 'game-jolt-frontend-lib/components/game-bundle/game-bundle.model';
-import { GamePlaylist } from 'game-jolt-frontend-lib/components/game-playlist/game-playlist.model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { Jam } from 'game-jolt-frontend-lib/components/jam/jam.model';
-import AppLoadingFade from 'game-jolt-frontend-lib/components/loading/fade/fade.vue';
-import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import { enforceLocation } from 'game-jolt-frontend-lib/utils/router';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { enforceLocation } from '../../../../utils/router';
+import { Api } from '../../../../_common/api/api.service';
+import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { number } from '../../../../_common/filters/number';
+import { GameBundle } from '../../../../_common/game-bundle/game-bundle.model';
+import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
+import { Game } from '../../../../_common/game/game.model';
+import { Jam } from '../../../../_common/jam/jam.model';
+import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
+import { Meta } from '../../../../_common/meta/meta-service';
+import AppPopper from '../../../../_common/popper/popper.vue';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { User } from '../../../../_common/user/user.model';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import AppGameCollectionFollowWidget from '../../../components/game/collection/follow-widget/follow-widget.vue';
 import AppGameCollectionThumbnail from '../../../components/game/collection/thumbnail/thumbnail.vue';
@@ -46,7 +42,6 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 		AppGameGrid,
 		AppGameCollectionFollowWidget,
 		AppLoadingFade,
-		AppAdPlacement,
 	},
 	directives: {
 		AppTooltip,

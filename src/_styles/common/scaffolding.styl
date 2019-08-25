@@ -1,0 +1,458 @@
+@require 'fonts'
+
+//
+// Scaffolding
+// --------------------------------------------------
+
+// Reset the box-sizing
+//
+// Heads up! This reset may cause conflicts with some third-party widgets.
+// For recommendations on resolving such conflicts, see
+// http://getbootstrap.com/getting-started/#third-box-sizing
+*
+	box-sizing: border-box
+
+*:before, *:after
+	box-sizing: border-box
+
+// Body reset
+html
+	font-size: 62.5%
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+
+// iOS and macOS makes text look terrible without this
+// https://www.mobomo.com/2014/05/better-font-smoothing-in-chrome-on-mac-os-x/
+*, html, body, button, input, select, textarea
+	-webkit-font-smoothing: antialiased
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.25), only screen and (min-device-pixel-ratio: 1.25), only screen and (min-resolution: 200dpi), only screen and (min-resolution: 1.25dppx)
+	-webkit-font-smoothing: subpixel-antialiased
+
+body
+	change-bg('bg')
+	theme-prop('color', 'fg')
+	font-family: $font-family-base
+	font-size: $font-size-base
+	line-height: $line-height-base
+
+// https://github.com/ftlabs/fastclick#when-it-isnt-needed
+// http://msdn.microsoft.com/en-us/library/ie/hh772044(v=vs.85).aspx
+a, input, button
+	touch-action: manipulation
+
+// Reset fonts for relevant elements
+input, button, select, textarea
+	font-family: inherit
+	font-size: inherit
+	line-height: inherit
+
+// Links
+a
+	theme-prop('color', 'link')
+	text-decoration: none
+	// Force pointer. Some times we don't have "href" attributes.
+	cursor: pointer
+
+	&:hover, &:focus
+		theme-prop('color', 'link-hover')
+		text-decoration: none
+
+	&:focus
+		tab-focus()
+
+.link-muted
+	theme-prop('color', 'fg-muted')
+
+.link-unstyled
+	link-unstyled()
+
+.link-help
+	theme-prop('color', 'fg-muted')
+	theme-prop('border-bottom-color', 'fg-muted')
+	border-bottom-width: 1px
+	border-bottom-style: solid
+
+	&:hover, &:focus
+		border-bottom: 0
+		text-decoration: underline
+
+.link-block
+	display: block
+
+// Figures
+//
+// We reset this here because previously Normalize had no `figure` margins. This
+// ensures we don't break anyone's use of the element.
+figure
+	margin: 0
+
+// Images
+img
+	vertical-align: middle
+
+// Responsive images (ensure images don't scale beyond their parents)
+.img-responsive
+	img-responsive()
+
+// Rounded corners image
+.img-rounded
+	rounded-corners-lg()
+
+// Perfect circle
+.img-circle
+	img-circle()
+
+// Horizontal rules
+hr
+	border: 0
+	theme-prop('border-top-color', 'bg-subtle')
+	margin-top: $line-height-computed
+	margin-bottom: $line-height-computed
+	border-top-width: 1px
+	border-top-style: solid
+
+// Underbar
+hr.underbar
+	theme-prop('border-top-color', 'bg-subtle')
+	margin-top: 0
+	border-top-width: 3px
+	border-top-style: solid
+	width: 50px
+	margin-left: 0
+	margin-right: 0
+	display: none
+	text-align: left
+
+	@media $media-sm-up
+		display: block
+
+	&.underbar-center
+		margin-left: auto
+		margin-right: auto
+
+// Only display content to screen readers
+//
+// See: http://a11yproject.com/posts/how-to-hide-content/
+.sr-only
+	position: absolute
+	width: 1px
+	height: 1px
+	margin: -1px
+	padding: 0
+	overflow: hidden
+	clip: rect(0 0 0 0)
+	border: 0
+
+// Headings
+// -------------------------
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6
+	font-family: $headings-font-family
+	font-weight: $headings-font-weight
+	line-height: $headings-line-height
+	word-wrap: break-word
+	font-weight: bold
+
+	small, .small, code
+		font-weight: normal
+
+	small, .small
+		theme-prop('color', 'fg-muted')
+		line-height: 1
+
+h1, .h1, h2, .h2, h3, .h3, h4, .h4
+	margin-top: ($line-height-computed * 2.5)
+	margin-bottom: $font-size-base
+
+	small, .small
+		font-size: 65%
+
+h5, .h5, h6, .h6
+	margin-top: ($line-height-computed * 2)
+	margin-bottom: $font-size-base
+
+	small, .small
+		font-size: 75%
+
+h1, .h1, .text-size-h1
+	font-size: $font-size-h1
+
+h2, .h2, .text-size-h2
+	font-size: $font-size-h2
+
+h3, .h3, .text-size-h3
+	font-size: $font-size-h3
+
+h4, .h4, .text-size-h4
+	font-size: $font-size-h4
+
+h5, .h5, .text-size-h5
+	font-size: $font-size-h5
+
+h6, .h6, .text-size-h6
+	font-size: $font-size-h6
+
+@media $media-xs
+	h1, .h1, .text-size-h1
+		font-size: $font-size-h1-xs
+
+	h2, .h2, .text-size-h2
+		font-size: $font-size-h2-xs
+
+	h3, .h3, .text-size-h3
+		font-size: $font-size-h3-xs
+
+	h4, .h4, .text-size-h4
+		font-size: $font-size-h4-xs
+
+	h5, .h5, .text-size-h5
+		font-size: $font-size-h5-xs
+
+	h6, .h6, .text-size-h6
+		font-size: $font-size-h6-xs
+
+// Body text
+// -------------------------
+p
+	margin-top: 0
+	margin-bottom: $font-size-base
+	word-wrap: break-word
+
+.lead
+	margin-bottom: $line-height-computed
+	font-size: floor(($font-size-base * 1.15))
+	line-height: 1.4
+
+	@media $media-min-tablet
+		font-size: ($font-size-base * 1.5)
+
+// Emphasis & misc
+// -------------------------
+
+// Ex: 14px base font * 85% = about 12px
+small, .small
+	font-size: $font-size-small
+
+.tiny
+	font-size: $font-size-tiny
+
+// Undo browser default styling
+cite
+	font-style: normal
+
+// Alignment
+.text-left
+	text-align: left
+
+.text-right
+	text-align: right
+
+.text-center
+	text-align: center
+
+.text-justify
+	text-align: justify
+
+// Contextual colors
+.text-muted
+	theme-prop('color', 'fg-muted')
+
+.text-help
+	theme-prop('border-bottom-color', 'fg-muted')
+	cursor: help
+	border-bottom-width: 1px
+	border-bottom-style: solid
+
+// Page header
+// -------------------------
+.page-header
+	theme-prop('border-bottom-color', 'bg-subtle')
+	padding-bottom: ($line-height-computed / 2) - 1
+	margin: ($line-height-computed * 2) 0 $line-height-computed
+	border-bottom-width: 1px
+	border-bottom-style: solid
+
+// Lists
+// --------------------------------------------------
+
+// Unordered and Ordered lists
+ul, ol
+	margin-top: 0
+	margin-bottom: ($line-height-computed / 2)
+
+	ul, ol
+		margin-bottom: 0
+
+li
+	margin-top: 0
+	margin-bottom: $font-size-base
+
+// List options
+
+// Unstyled keeps list items block level, just removes default browser padding and list-style
+.list-unstyled
+	padding-left: 0
+	list-style: none
+
+// Inline turns list items into inline-block
+.list-inline
+	@extend .list-unstyled
+	margin-left: -5px
+
+	> li
+		display: inline-block
+		padding-left: 5px
+		padding-right: 5px
+
+// Description Lists
+dl
+	margin-top: 0 // Remove browser default
+	margin-bottom: $line-height-computed
+
+dt, dd
+	line-height: $line-height-base
+
+dt
+	font-weight: bold
+
+dd
+	margin-left: 0 // Undo browser default
+
+// Horizontal description lists
+//
+// Defaults to being stacked without any of the below styles applied, until the
+// grid breakpoint is reached (default of ~768px).
+@media $media-min-grid-float-breakpoint
+	.dl-horizontal
+		dt
+			float: left
+			width: ($component-offset-horizontal - 20)
+			clear: left
+			text-align: right
+			text-overflow()
+
+		dd
+			@extend .clearfix
+			margin-left: $component-offset-horizontal
+
+// MISC
+// ----
+
+// Abbreviations and acronyms
+abbr[title], abbr[data-original-title]
+	cursor: help
+	border-bottom: 1px dotted $abbr-border-color
+
+.initialism
+	font-size: 90%
+	text-transform: uppercase
+
+.text-upper
+	text-transform: uppercase
+
+.text-lower
+	text-transform: lowercase
+
+// Blockquotes
+blockquote
+	theme-prop('border-left-color', 'bg-subtle')
+	padding: ($line-height-computed / 2) $line-height-computed
+	margin: 0 0 $line-height-computed
+	font-size: ($font-size-base * 1.25)
+	border-left-width: 5px
+	border-left-style: solid
+
+	p, ul, ol
+		&:last-child
+			margin-bottom: 0
+
+// Quotes
+blockquote:before, blockquote:after
+	content: ''
+
+// Addresses
+address
+	margin-bottom: $line-height-computed
+	font-style: normal
+	line-height: $line-height-base
+
+// Inline and block code styles
+code, kbd, pre, samp
+	font-family: $font-family-monospace
+
+// Inline code
+code
+	rounded-corners()
+	change-bg('bg-offset')
+	theme-prop('color', 'fg')
+	padding: 2px 4px
+	font-size: 90%
+	white-space: nowrap
+
+// User input typically entered via keyboard
+kbd
+	rounded-corners()
+	change-bg('bg-offset')
+	theme-prop('color', 'fg')
+	padding: 2px 4px
+	font-size: 90%
+
+// Blocks of code
+pre
+	rounded-corners-lg()
+	change-bg('darkest')
+	display: block
+	padding: (($line-height-computed - 1) / 2)
+	margin: 0 0 ($line-height-computed / 2)
+	font-size: ($font-size-base - 1) // 14px to 13px
+	line-height: $line-height-base
+	word-break: break-all
+	word-wrap: break-word
+	color: $dark-theme-fg
+
+	// Account for some code outputs that place code tags in pre tags
+	code
+		padding: 0
+		font-size: inherit
+		color: inherit
+		white-space: pre-wrap
+		background-color: transparent
+		border-radius: 0
+
+// Enable scrollable blocks of code
+.pre-scrollable
+	max-height: $pre-scrollable-max-height
+	overflow-y: scroll
+
+/**
+ * Scrollable
+ */
+.scrollable
+	scrollable()
+
+.scrollable-x
+	scrollable-x()
+
+/**
+ * Full Bleeds
+ */
+.full-bleed
+	full-bleed()
+
+.full-bleed-xs
+	full-bleed-xs()
+
+.full-bleed-sm
+	full-bleed-sm()
+
+/**
+ * Sans margin
+ */
+.sans-margin.sans-margin
+	margin-top: 0
+	margin-bottom: 0
+
+.sans-margin-bottom.sans-margin-bottom
+	margin-bottom: 0
+
+.sans-margin-top.sans-margin-top
+	margin-top: 0

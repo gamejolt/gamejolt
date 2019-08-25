@@ -106,9 +106,7 @@
 						<template v-if="buildsProcessingCount > 0">
 							<app-progress-poller
 								:url="
-									`/web/dash/developer/games/packages/poll-processing-builds/${game.id}/${
-										package.id
-									}/${buildsProcessingCount}`
+									`/web/dash/developer/games/packages/poll-processing-builds/${game.id}/${package.id}/${buildsProcessingCount}`
 								"
 								@complete="onBuildsProcessed($event)"
 							/>
@@ -140,13 +138,9 @@
 							</translate>
 						</p>
 						<p>
-							<a
-								class="link-help"
-								href="https://help.gamejolt.com/dev-packages#releases"
-								target="_blank"
-							>
+							<app-link-help page="dev-packages" class="link-help">
 								<translate>dash.games.packages.manage.releases.page_help_link</translate>
-							</a>
+							</app-link-help>
 						</p>
 					</div>
 				</div>

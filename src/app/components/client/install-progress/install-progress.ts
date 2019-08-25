@@ -1,5 +1,5 @@
-import AppProgressBar from 'game-jolt-frontend-lib/components/progress/bar/bar.vue';
-import { duration } from 'game-jolt-frontend-lib/vue/filters/duration';
+import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import { duration } from '../../../../_common/filters/duration';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { LocalDbPackage, LocalDbPackagePatchState } from '../local-db/package/package.model';

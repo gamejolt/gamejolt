@@ -1,9 +1,9 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { Modal } from 'game-jolt-frontend-lib/components/modal/modal.service';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { asyncComponentLoader } from 'game-jolt-frontend-lib/utils/utils';
-import { appStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
+import { Api } from '../../../_common/api/api.service';
+import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { Modal } from '../../../_common/modal/modal.service';
+import { Screen } from '../../../_common/screen/screen-service';
+import { asyncComponentLoader } from '../../../utils/utils';
+import { appStore } from '../../../_common/store/app-store';
 import { Settings } from '../../../_common/settings/settings.service';
 
 const STORAGE_KEY_PREFIX = 'broadcast-modal:date:';

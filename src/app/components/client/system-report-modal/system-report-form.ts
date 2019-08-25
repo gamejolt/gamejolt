@@ -1,8 +1,8 @@
 import { IClientOSInfo } from 'client-voodoo';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { BaseForm, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
 import { Component } from 'vue-property-decorator';
+import { Api } from '../../../../_common/api/api.service';
 import { ClientLogger } from '../../../../_common/client/logger/logger.service';
+import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
 import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
 import { LocalDbGame } from '../local-db/game/game.model';
 import { LocalDbPackage } from '../local-db/package/package.model';
