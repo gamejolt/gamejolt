@@ -548,6 +548,8 @@ module.exports = function(config) {
 
 	if (!config.noClean) {
 		webpackSectionTasks.unshift('clean');
+		webpackSectionTasks.unshift('clean:main');
+		webpackSectionTasks.unshift('clean:client');
 	}
 
 	webpackSectionTasks.unshift('translations:compile');
