@@ -13,7 +13,6 @@ import AppGameGridPlaceholder from '../../../components/game/grid/placeholder/pl
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { Store } from '../../../store/index';
 import AppDiscoverHomeBanner from './_banner/banner.vue';
-import AppDiscoverHomeBannerCustom from './_banner/custom/custom.vue';
 import AppDiscoverHomeCommunities from './_communities/communities.vue';
 import AppDiscoverHomeTags from './_tags/tags.vue';
 
@@ -26,7 +25,6 @@ import AppDiscoverHomeTags from './_tags/tags.vue';
 		AppGameGrid,
 		AppGameGridPlaceholder,
 		AppAuthJoin: AppAuthJoinLazy,
-		AppDiscoverHomeBannerCustom,
 	},
 	directives: {
 		AppTrackEvent,
