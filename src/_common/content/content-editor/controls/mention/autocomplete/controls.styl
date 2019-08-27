@@ -1,0 +1,76 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.fade-enter-active, .fade-leave-active
+	transition: opacity 0.1s
+
+.fade-enter, .fade-leave-to
+	opacity: 0
+
+.-container
+	position: absolute
+	z-index: $zindex-content-editor
+	rounded-corners-lg()
+	overflow: hidden
+	elevate-2()
+
+.-autocomplete
+	change-bg('bg')
+	overflow-y: auto
+	width: 300px
+	max-height: 500px // We don't want this to get out of control
+
+	// On mobile, take up the full width
+	@media $media-xs
+		width: 100vw
+
+.-suggestion
+	padding-bottom: 10px
+	padding-top: 10px
+	padding-left: 8px
+	padding-right: 8px
+	cursor: pointer
+	transition: background-color 200ms $strong-ease-out
+
+	// Override button styling
+	display: block
+	width: 100%
+	outline: 0
+	border: 0
+	change-bg('bg')
+	text-align: left
+
+	&:hover
+		change-bg('bg-offset')
+
+	&:not(:last-child)
+		border-bottom-width: 1px
+		border-bottom-style: solid
+		theme-prop('border-bottom-color', 'bg-subtle')
+
+.-suggestion-selected
+	change-bg('bg-offset')
+
+.-follow-indicator
+	margin-left: 24px
+	margin-bottom: 4px
+
+	& *
+		vertical-align: middle
+
+.-user
+	display: flex
+	align-items: center
+
+.-avatar
+	width: 40px
+	margin-right: 16px
+
+.-name-row *
+	vertical-align: middle
+
+.-loading-top
+	margin-top: 16px
+
+.-loading-bottom
+	margin-top: 16px
