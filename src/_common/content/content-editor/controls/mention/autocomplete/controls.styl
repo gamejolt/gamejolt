@@ -40,6 +40,10 @@
 	change-bg('bg')
 	text-align: left
 
+	@media $media-xs
+		padding-bottom: 6px
+		padding-top: 6px
+
 	&:hover
 		change-bg('bg-offset')
 
@@ -61,16 +65,38 @@
 .-user
 	display: flex
 	align-items: center
+	overflow-x: hidden
 
 .-avatar
 	width: 40px
 	margin-right: 16px
+	flex-shrink: 0
 
-.-name-row *
-	vertical-align: middle
+	@media $media-xs
+		margin-right: 8px
+		width: 24px
+
+.-names
+	@media $media-xs
+		& > *
+			display: inline-block
+		& *
+			vertical-align: middle
+
+.-name-row
+	text-overflow()
+
+	&*
+		vertical-align: middle
 
 .-loading-top
 	margin-top: 16px
 
+	@media $media-xs
+		margin-top: 8px
+
 .-loading-bottom
 	margin-top: 16px
+
+	@media $media-xs
+		margin-top: 8px

@@ -1,13 +1,23 @@
 import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
-import { Prop, Watch } from 'vue-property-decorator';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../../api/api.service';
+import AppLoading from '../../../../../loading/loading.vue';
 import { Screen } from '../../../../../screen/screen-service';
+import AppUserAvatarImg from '../../../../../user/user-avatar/img/img.vue';
 import { User } from '../../../../../user/user.model';
+import AppUserVerifiedTick from '../../../../../user/verified-tick/verified-tick.vue';
 import { ContentEditorService } from '../../../content-editor.service';
 import { ContentEditorSchema } from '../../../schemas/content-editor-schema';
 import ContentEditorMentionCache from '../cache.service';
 
+@Component({
+	components: {
+		AppLoading,
+		AppUserAvatarImg,
+		AppUserVerifiedTick,
+	},
+})
 export default class AppContentEditorControlsMentionAutocompleteControls extends Vue {
 	@Prop(Object)
 	view!: EditorView<ContentEditorSchema>;
@@ -38,7 +48,7 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 
 	get displayUsers() {
 		if (this.isInverted) {
-			return this.users.reverse();
+			return this.users.slice().reverse();
 		}
 		return this.users;
 	}
@@ -118,10 +128,14 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 			this.isLoading = false;
 		}
 
+		this.selectedIndex = 0;
 		// If we already have the search results cached, use those and don't query backend.
 		if (ContentEditorMentionCache.hasResults(query)) {
 			this.users = ContentEditorMentionCache.getResults(query);
+			await this.handleInverted();
 		} else {
+			this.users = [];
+
 			// We set a timeout for 200ms here to not send right away when the user is typing fast.
 			this.remoteSuggestionTimeout = setTimeout(async () => {
 				this.isLoading = true;
@@ -146,8 +160,17 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 					}
 				}
 
+				await this.handleInverted();
 				this.isLoading = false;
 			}, 200);
+		}
+	}
+
+	private async handleInverted() {
+		// If we are inverted, scroll the container down.
+		if (this.isInverted) {
+			await this.$nextTick(); // Need to wait here for the list to get bootstrapped before scrolling it.
+			this.$refs.list.scrollTop = this.$refs.list.scrollHeight;
 		}
 	}
 

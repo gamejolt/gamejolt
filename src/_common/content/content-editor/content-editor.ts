@@ -316,7 +316,6 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 	private onFocusIn() {
 		if (!this.isFocused) {
-			this.canShowMentionSuggestions = 0;
 			this.$emit('editor-focus');
 		}
 		this.isFocused = true;
@@ -324,6 +323,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 	private onFocusOut() {
 		if (this.isFocused) {
+			this.canShowMentionSuggestions = 0;
 			this.$emit('editor-blur');
 		}
 		this.isFocused = false;
