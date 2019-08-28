@@ -1,5 +1,5 @@
 <template>
-	<div class="post-add-button sheet sheet-elevate">
+	<div v-app-auth-required class="post-add-button sheet sheet-elevate">
 		<span class="-avatar">
 			<app-user-avatar-img :user="user" />
 		</span>

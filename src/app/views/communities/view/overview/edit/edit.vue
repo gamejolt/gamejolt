@@ -25,38 +25,41 @@
 			</app-community-perms>
 		</template>
 
-		<!-- Tags -->
-		<app-community-perms :community="community" required="community-tags">
+		<!-- Channels -->
+		<app-community-perms :community="community" required="community-channels">
 			<h2 class="section-header">
-				<translate>Tags</translate>
+				<translate>Channels</translate>
 			</h2>
 
 			<div class="page-help">
 				<p>
 					<translate>
-						Tags are used to group up posts by topic. They show on the left of the community page,
-						and users can click them to filter which posts they see.
+						Channels are used to group up posts by topic. They show on the left of the community
+						page, and users can click them to filter which posts they see.
 					</translate>
 				</p>
 				<p>
 					<translate>
-						Choosing good tags can help direct the conversation to the topics the community is
+						Choosing good channels can help direct the conversation to the topics the community is
 						about.
 					</translate>
 				</p>
 			</div>
 
-			<form-community-tag :community="community" @submit="onTagAdded" :tags="community.tags" />
+			<form-community-channel
+				:community="community"
+				@submit="onChannelAdded"
+				:channels="community.channels"
+			/>
 
-			<ul class="-tag-list" v-if="community.tags">
-				<draggable v-model="community.tags" @change="saveTagSort">
-					<li v-for="tag in community.tags" :key="tag.id">
-						<a class="tag">
-							<app-jolticon icon="tag" class="text-muted" />
-							{{ tag.tag }}
+			<ul class="-channel-list" v-if="community.channels">
+				<draggable v-model="community.channels" @change="saveChannelSort">
+					<li v-for="channel in community.channels" :key="channel.id">
+						<a class="channel">
+							{{ channel.title }}
 
-							<a @click.stop="onClickRemoveTag(tag)">
-								<app-jolticon icon="remove" v-app-tooltip="$gettext(`Remove Tag`)" />
+							<a @click.stop="onClickRemoveChannel(channel)">
+								<app-jolticon icon="remove" v-app-tooltip="$gettext(`Remove Channel`)" />
 							</a>
 						</a>
 					</li>
@@ -153,14 +156,14 @@
 	border-radius: 50%
 	overflow: hidden
 
-.-tag-list
+.-channel-list
 	list-style: none
 	padding-left: 0
 
 	li
 		margin-bottom: 10px
 
-	.tag
+	.channel
 		border-radius: 10px
 		font-weight: normal
 		cursor: move !important

@@ -6,7 +6,7 @@ import AppCardListAdd from '../../../../../../_common/card/list/add/add.vue';
 import AppCardListItem from '../../../../../../_common/card/list/item/item.vue';
 import AppCardList from '../../../../../../_common/card/list/list.vue';
 import { Collaborator } from '../../../../../../_common/collaborator/collaborator.model';
-import { CommunityTag } from '../../../../../../_common/community/tag/tag.model';
+import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/editable-overlay.vue';
 import { Growls } from '../../../../../../_common/growls/growls.service';
@@ -15,11 +15,11 @@ import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/rou
 import { WithRouteStore } from '../../../../../../_common/route/route-store';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip';
-import { store } from '../../../../../store';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
+import FormCommunityChannel from '../../../../../components/forms/community/channel/channel.vue';
 import FormCommunityCollaborator from '../../../../../components/forms/community/collaborator/collaborator.vue';
-import FormCommunityTag from '../../../../../components/forms/community/tag/tag.vue';
 import { CommunityThumbnailModal } from '../../../../../components/forms/community/thumbnail/modal/modal.service';
+import { store } from '../../../../../store';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './edit.store';
 import AppCommunitiesOverviewEditNotice from './_notice/notice.vue';
 
@@ -29,7 +29,7 @@ const draggable = require('vuedraggable');
 	name: 'RouteCommunitiesViewEdit',
 	components: {
 		AppCommunitiesOverviewEditNotice,
-		FormCommunityTag,
+		FormCommunityChannel,
 		draggable,
 		AppCardList,
 		AppCardListItem,
@@ -108,38 +108,41 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 		}
 	}
 
-	onTagsChange() {
-		this.$emit('tags-change', this.community.tags);
+	onChannelsChange() {
+		this.$emit('channels-change', this.community.channels);
 	}
 
-	async saveTagSort() {
+	async saveChannelSort() {
 		try {
-			await CommunityTag.$saveSort(this.community.id, this.community.tags!.map(i => i.id));
-			this.onTagsChange();
+			await CommunityChannel.$saveSort(
+				this.community.id,
+				this.community.channels!.map(i => i.id)
+			);
+			this.onChannelsChange();
 		} catch (e) {
 			console.error(e);
-			Growls.error('Could not save tag arrangement.');
+			Growls.error('Could not save channel arrangement.');
 		}
 	}
 
-	onTagAdded(tag: CommunityTag) {
-		this.community.tags!.unshift(tag);
-		this.onTagsChange();
+	onChannelAdded(channel: CommunityChannel) {
+		this.community.channels!.unshift(channel);
+		this.onChannelsChange();
 	}
 
-	async onClickRemoveTag(tag: CommunityTag) {
+	async onClickRemoveChannel(channel: CommunityChannel) {
 		try {
-			await tag.$remove();
+			await channel.$remove();
 		} catch (e) {
 			console.error(e);
-			Growls.error('Could not remove tag');
+			Growls.error('Could not remove channel');
 		}
 
-		if (tag._removed) {
-			this.community.tags = this.community.tags!.filter(i => i.id !== tag.id);
+		if (channel._removed) {
+			this.community.channels = this.community.channels!.filter(i => i.id !== channel.id);
 		}
 
-		this.onTagsChange();
+		this.onChannelsChange();
 	}
 
 	onAddedCollaborator(collaborator: Collaborator) {

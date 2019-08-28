@@ -5,7 +5,7 @@ import { Game } from '../game/game.model';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { Theme } from '../theme/theme.model';
-import { CommunityTag } from './tag/tag.model';
+import { CommunityChannel } from './channel/channel.model';
 
 export async function $joinCommunity(community: Community) {
 	community.is_member = true;
@@ -54,7 +54,7 @@ export class Community extends Collaboratable(Model) {
 	header?: MediaItem;
 	theme!: Theme | null;
 	game!: Game | null;
-	tags?: CommunityTag[] | null;
+	channels?: CommunityChannel[] | null;
 
 	member_count!: number;
 	is_member?: boolean;
@@ -82,8 +82,8 @@ export class Community extends Collaboratable(Model) {
 			this.game = new Game(data.game);
 		}
 
-		if (data.tags) {
-			this.tags = CommunityTag.populate(data.tags);
+		if (data.channels) {
+			this.channels = CommunityChannel.populate(data.channels);
 		}
 	}
 

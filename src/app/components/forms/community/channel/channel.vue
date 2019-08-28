@@ -1,7 +1,7 @@
 <template>
-	<app-form name="communityTagForm">
+	<app-form name="communityChannelForm">
 		<div class="-form">
-			<app-form-group name="tag" :label="$gettext(`Tag`)" hide-label optional>
+			<app-form-group name="title" :label="$gettext(`Title`)" hide-label optional>
 				<app-form-control
 					type="text"
 					:rules="{
@@ -30,4 +30,4 @@
 		margin-left: 5px
 </style>
 
-<script lang="ts" src="./tag"></script>
+<script lang="ts" src="./channel"></script>
