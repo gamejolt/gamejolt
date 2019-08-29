@@ -5,7 +5,7 @@ import { Model } from '../../../model/model.service';
 export class FiresidePostCommunity extends Model {
 	fireside_post_id!: number;
 	community!: Community;
-	channel!: CommunityChannel;
+	channel?: CommunityChannel;
 	added_on!: number;
 	featured_on!: number;
 

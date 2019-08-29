@@ -313,10 +313,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 		return [];
 	}
 
-	// get communityChannels() {
-	// 	return this.communities.flatMap(i => i.channels || []);
-	// }
-
 	@Watch('selectedChannel')
 	validateSelectedChannel() {
 		if (this.selectedChannel) {
@@ -342,7 +338,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 		if (model.communities.length > 0) {
 			this.setField('community_id', model.communities[0].community.id);
-			this.selectedChannel = model.communities[0].channel;
+			this.selectedChannel = model.communities[0].channel || null;
 		} else if (this.defaultCommunity) {
 			this.setField('community_id', this.defaultCommunity.id);
 		}

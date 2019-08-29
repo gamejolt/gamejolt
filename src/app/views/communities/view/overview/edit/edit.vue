@@ -58,7 +58,7 @@
 						<a class="channel">
 							{{ channel.title }}
 
-							<a @click.stop="onClickRemoveChannel(channel)">
+							<a v-if="canRemoveChannel" @click.stop="onClickRemoveChannel(channel)">
 								<app-jolticon icon="remove" v-app-tooltip="$gettext(`Remove Channel`)" />
 							</a>
 						</a>

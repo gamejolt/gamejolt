@@ -130,7 +130,24 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 		this.onChannelsChange();
 	}
 
+	get canRemoveChannel() {
+		if (!this.community.channels) {
+			return false;
+		}
+
+		return this.community.channels.length > 1;
+	}
+
 	async onClickRemoveChannel(channel: CommunityChannel) {
+		const shouldRemove = await ModalConfirm.show(
+			this.$gettext('All posts made on this channel will be removed from the community'),
+			this.$gettextInterpolate('Remove "%{ title }" channel?', { title: channel.title })
+		);
+
+		if (!shouldRemove) {
+			return;
+		}
+
 		try {
 			await channel.$remove();
 		} catch (e) {
