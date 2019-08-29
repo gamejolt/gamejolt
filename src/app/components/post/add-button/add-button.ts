@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../_common/game/game.model';
@@ -23,6 +24,9 @@ export default class AppPostAddButton extends Vue {
 
 	@Prop(Community)
 	community?: Community;
+
+	@Prop(CommunityChannel)
+	channel?: CommunityChannel;
 
 	@Prop(String)
 	placeholder?: string;
@@ -52,7 +56,7 @@ export default class AppPostAddButton extends Vue {
 			this.game ? this.game.id : 0
 		);
 
-		post = await PostEditModal.show(post, { community: this.community });
+		post = await PostEditModal.show(post, { community: this.community, channel: this.channel });
 		this._isBlocked = false;
 
 		if (!post) {

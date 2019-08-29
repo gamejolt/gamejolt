@@ -46,6 +46,7 @@
 			<template v-else>
 				<app-post-add-button
 					:community="community"
+					:channel="communityChannel"
 					@add="onPostAdded"
 					:placeholder="placeholderText"
 				/>

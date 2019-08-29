@@ -7,7 +7,12 @@
 		</div>
 
 		<div class="modal-body">
-			<form-post :model="post" :default-community="community" @submit="onSubmitted" />
+			<form-post
+				:model="post"
+				:default-community="community"
+				:default-channel="channel"
+				@submit="onSubmitted"
+			/>
 		</div>
 	</app-modal>
 </template>

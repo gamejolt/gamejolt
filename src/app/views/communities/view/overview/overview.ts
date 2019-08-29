@@ -160,6 +160,15 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return getChannel(this.$route);
 	}
 
+	get communityChannel() {
+		const channel = this.channel;
+		if (channel === 'all' || channel === 'featured') {
+			return null;
+		}
+
+		return (this.community.channels || []).find(i => i.title === channel) || null;
+	}
+
 	get sort() {
 		return getSort(this.$route);
 	}

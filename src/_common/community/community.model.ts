@@ -1,4 +1,4 @@
-import { RawLocation } from 'vue-router';
+import { Location } from 'vue-router';
 import { Api } from '../api/api.service';
 import { Collaboratable, Perm } from '../collaborator/collaboratable';
 import { Game } from '../game/game.model';
@@ -94,13 +94,19 @@ export class Community extends Collaboratable(Model) {
 		return require('./no-thumb.png');
 	}
 
-	get routeLocation(): RawLocation {
+	get routeLocation(): Location {
 		return {
 			name: 'communities.view.overview',
 			params: {
 				path: this.path,
 			},
 		};
+	}
+
+	channelRouteLocation(channel: CommunityChannel): Location {
+		const communityLocation = this.routeLocation;
+		communityLocation.params!.channel = channel.title;
+		return communityLocation;
 	}
 
 	$save() {

@@ -40,8 +40,10 @@
 		font-size: $font-size-small
 		font-weight: bold
 
-.-post-tags
+.-channels
 	margin-top: 10px
+
+.-channels, .-channel-error, .-community-message
 	margin-bottom: 10px
 
 .-as-owner
@@ -103,7 +105,11 @@
 	font-weight: bold
 
 .-communities-list
-	flex: auto
+	flex: 0 auto
+
+.-current-channel
+	pointer-events: none
+	user-select: none
 
 @media $media-xs
 	.-controls
