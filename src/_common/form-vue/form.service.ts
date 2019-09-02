@@ -7,6 +7,7 @@ import { AppFormControlError } from './control-errors/control-error';
 import AppFormControlErrors from './control-errors/control-errors.vue';
 import AppFormControlCheckbox from './control/checkbox/checkbox.vue';
 import AppFormControl from './control/control.vue';
+import AppFormControlPrefixedInput from './control/prefixed-input/prefixed-input.vue';
 import AppFormControlRadio from './control/radio/radio.vue';
 import AppFormControlSelect from './control/select/select.vue';
 import AppFormControlTextarea from './control/textarea/textarea.vue';
@@ -46,6 +47,7 @@ export const CommonFormComponents = {
 	AppFormControlTextarea,
 	AppFormControlRadio,
 	AppFormControlCheckbox,
+	AppFormControlPrefixedInput,
 	AppFormGroup,
 	AppFormControlErrors,
 	AppFormControlError,

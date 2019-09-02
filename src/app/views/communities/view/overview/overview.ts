@@ -276,4 +276,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	onTagsChanged(tags: CommunityTag[]) {
 		this.community.tags = tags;
 	}
+
+	onDetailsChanged(community: Community) {
+		this.community.assign(community);
+	}
 }
