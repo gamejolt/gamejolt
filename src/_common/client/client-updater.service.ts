@@ -173,8 +173,9 @@ export abstract class ClientUpdater {
 			this.setClientUpdateStatus('checking');
 
 			console.log('Sending checkForClientUpdates...');
-			const checked = await updaterInstance.checkForUpdates();
-			if (!checked.success) {
+			try {
+				await updaterInstance.checkForUpdates();
+			} catch (err) {
 				// There is a race condition when a client that needs to be force updated is started.
 				// After initializing the client updater service and starting an update the client
 				// figures out it has to force update and redirects to the client section.
@@ -186,11 +187,10 @@ export abstract class ClientUpdater {
 				// the check if its already in progress. Something weird is going on.
 				//
 				// Either way, this is an error we should be able to tolerate and just try syncing with joltron's state again.
-				if (checked.err === 'Already running an update') {
+				if (err.message === 'Already running an update') {
 					await this.queryUpdaterState(updaterInstance);
 				} else {
-					const joltronErr = checked.err || 'no error message from joltron';
-					throw new Error(`Failed to check for updates. Joltron says: ${joltronErr}`);
+					throw err;
 				}
 			}
 		} catch (err) {
@@ -213,11 +213,7 @@ export abstract class ClientUpdater {
 				throw new Error('Failed to apply the update. Joltron is not in a ready state');
 			}
 
-			const applyResult = await updaterInstance.updateApply();
-			if (!applyResult.success) {
-				const joltronErr = applyResult.err || 'no error message from joltron';
-				throw new Error(`Failed to apply the update. Joltron says: ${joltronErr}`);
-			}
+			await updaterInstance.updateApply();
 		} catch (err) {
 			console.error(err);
 			this.setClientUpdateStatus('error');
@@ -247,21 +243,10 @@ export abstract class ClientUpdater {
 						this.setClientUpdateStatus('none');
 					})
 					.on('updateAvailable', () => {
-						thisInstance!
-							.updateBegin()
-							.then(beginResult => {
-								if (!beginResult.success) {
-									const joltronErr =
-										beginResult.err || 'no error message from joltron';
-									throw new Error(
-										`Failed to begin update. Joltron says: ${joltronErr}`
-									);
-								}
-							})
-							.catch((err: Error) => {
-								console.error(err);
-								this.setClientUpdateStatus('error');
-							});
+						thisInstance!.updateBegin().catch((err: Error) => {
+							console.error(err);
+							this.setClientUpdateStatus('error');
+						});
 					})
 					.on('updateBegin', () => {
 						this.setClientUpdateStatus('fetching');
