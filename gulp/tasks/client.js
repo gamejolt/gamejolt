@@ -370,7 +370,7 @@ module.exports = config => {
 			let gitClone =
 				'git clone --branch ' +
 				joltronVersion +
-				'https://github.com/gamejolt/joltron ' +
+				' https://github.com/gamejolt/joltron ' +
 				joltronRepoDir;
 
 			if (config.platform === 'osx') {
