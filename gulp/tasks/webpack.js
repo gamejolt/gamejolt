@@ -349,6 +349,9 @@ module.exports = function(config) {
 				new VueLoaderPlugin(),
 				prodNoop || new webpack.ProgressPlugin(),
 				new webpack.DefinePlugin({
+					GJ_TUNNELS: JSON.stringify({}),
+				}),
+				new webpack.DefinePlugin({
 					GJ_SECTION: JSON.stringify(section),
 					GJ_ENVIRONMENT: JSON.stringify(
 						!config.developmentEnv ? 'production' : 'development'
@@ -504,8 +507,8 @@ module.exports = function(config) {
 						// Insert another define plugin with the GJ_TUNNELS const.
 						const sectionConfig = webpackSectionConfigs[buildSection];
 						sectionConfig.plugins.splice(
-							2, // insert before the first define plugin.
-							0,
+							2, // replace the default GJ_TUNNELS define plugin.
+							1,
 							new webpack.DefinePlugin({
 								GJ_TUNNELS: JSON.stringify(GJ_TUNNELS),
 							})
