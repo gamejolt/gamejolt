@@ -366,15 +366,23 @@ module.exports = config => {
 
 	gulp.task('client:get-joltron', () => {
 		return new Promise((resolve, reject) => {
-			const func = shell.task([
-				'git -C ' +
-					joltronRepoDir +
-					' status' +
-					' || git clone --branch ' +
-					joltronVersion +
-					' https://github.com/gamejolt/joltron ' +
-					joltronRepoDir,
-			]);
+			const gitStatus = 'git -C ' + joltronRepoDir + ' status';
+			let gitClone =
+				'git clone --branch ' +
+				joltronVersion +
+				'https://github.com/gamejolt/joltron ' +
+				joltronRepoDir;
+
+			if (config.platform === 'osx') {
+				// Git lfs checks out files using ssh deploy keys,
+				// but fails with the ssh key circleci injects on osx.
+				// Setting HOME to /dev/null makes it not find the ssh keys
+				// and do https as intended.
+				gitClone = 'HOME=/dev/null ' + gitClone;
+			}
+
+			// Do status first, if it fails it means the repo doesn't exist, so try cloning.
+			const func = shell.task([gitStatus + ' || ' + gitClone]);
 
 			func(err => {
 				if (err) {
