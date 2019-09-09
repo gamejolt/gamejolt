@@ -57,6 +57,7 @@ export abstract class ClientUpdater {
 		});
 
 		Logger.hijack(console);
+		Navigate.registerDestructor(() => Logger.unhijack());
 
 		if (GJ_WITH_UPDATER) {
 			this.checkForClientUpdates();
@@ -172,9 +173,25 @@ export abstract class ClientUpdater {
 			this.setClientUpdateStatus('checking');
 
 			console.log('Sending checkForClientUpdates...');
-			const checked = await updaterInstance.checkForUpdates();
-			if (!checked) {
-				throw new Error('Failed to check for updates');
+			try {
+				await updaterInstance.checkForUpdates();
+			} catch (err) {
+				// There is a race condition when a client that needs to be force updated is started.
+				// After initializing the client updater service and starting an update the client
+				// figures out it has to force update and redirects to the client section.
+				// The client updater is initialized again and somehow doesn't figure out an update has already
+				// begun and attempt to check for updates again. Joltron responds with the following error message.
+				//
+				// This should not be possible because at the time of initializing the updater service
+				// it checks the current state of joltron before attempting to check for updates and would skip
+				// the check if its already in progress. Something weird is going on.
+				//
+				// Either way, this is an error we should be able to tolerate and just try syncing with joltron's state again.
+				if (err.message === 'Already running an update') {
+					await this.queryUpdaterState(updaterInstance);
+				} else {
+					throw err;
+				}
 			}
 		} catch (err) {
 			console.error(err);
@@ -192,14 +209,11 @@ export abstract class ClientUpdater {
 
 			const updaterInstance = await this.ensureUpdaterInstance();
 
-			let updateStarted = false;
-			if (this.clientUpdateStatus === 'ready') {
-				updateStarted = await updaterInstance.updateApply();
+			if (this.clientUpdateStatus !== 'ready') {
+				throw new Error('Failed to apply the update. Joltron is not in a ready state');
 			}
 
-			if (!updateStarted) {
-				throw new Error('Failed to apply the update');
-			}
+			await updaterInstance.updateApply();
 		} catch (err) {
 			console.error(err);
 			this.setClientUpdateStatus('error');
@@ -222,23 +236,17 @@ export abstract class ClientUpdater {
 				console.log('Attaching selfupdater instance for manifest ' + manifestPath);
 
 				thisInstance = await SelfUpdater.attach(manifestPath);
+				Navigate.registerDestructor(() => this.disposeUpdaterInstance(thisInstance!));
 
 				thisInstance
 					.on('noUpdateAvailable', () => {
 						this.setClientUpdateStatus('none');
 					})
 					.on('updateAvailable', () => {
-						thisInstance!
-							.updateBegin()
-							.catch((err: Error) => {
-								console.error(err);
-								this.setClientUpdateStatus('error');
-							})
-							.then(began => {
-								if (!began) {
-									throw new Error('Failed to begin update');
-								}
-							});
+						thisInstance!.updateBegin().catch((err: Error) => {
+							console.error(err);
+							this.setClientUpdateStatus('error');
+						});
 					})
 					.on('updateBegin', () => {
 						this.setClientUpdateStatus('fetching');
@@ -267,27 +275,7 @@ export abstract class ClientUpdater {
 						this.disposeUpdaterInstance(thisInstance!);
 					});
 
-				// Sync the current state of joltron. We might be in the middle of a self update already.
-				const state = await thisInstance.controller.sendGetState(false, 5000);
-				console.log(state);
-				if (state.state !== 'updating') {
-					this.setClientUpdateStatus('none');
-				} else {
-					switch (state.patcherState) {
-						case PatcherState.UpdateReady:
-							this.setClientUpdateStatus('ready');
-							break;
-
-						case PatcherState.Start:
-						case PatcherState.Preparing:
-						case PatcherState.Download:
-						case PatcherState.PrepareExtract:
-						case PatcherState.Extract:
-						case PatcherState.Cleanup:
-							this.setClientUpdateStatus('fetching');
-							break;
-					}
-				}
+				await this.queryUpdaterState(thisInstance);
 
 				this.updaterInstance = thisInstance;
 
@@ -321,6 +309,34 @@ export abstract class ClientUpdater {
 		// Setting the instance to null allows the updater to retry with a new one.
 		if (this.updaterInstance === instance) {
 			this.updaterInstance = null;
+		}
+	}
+
+	// Queries the current state of joltron. We might already by in the middle of an update,
+	// or even ready to apply an update that finished processing.
+	private static async queryUpdaterState(instance: SelfUpdaterInstance) {
+		console.log('Checking current status of joltron...');
+		const state = await instance.controller.sendGetState(false, 5000);
+		console.log('Current joltron status: ');
+		console.log(state);
+
+		if (state.state !== 'updating') {
+			this.setClientUpdateStatus('none');
+		} else {
+			switch (state.patcherState) {
+				case PatcherState.UpdateReady:
+					this.setClientUpdateStatus('ready');
+					break;
+
+				case PatcherState.Start:
+				case PatcherState.Preparing:
+				case PatcherState.Download:
+				case PatcherState.PrepareExtract:
+				case PatcherState.Extract:
+				case PatcherState.Cleanup:
+					this.setClientUpdateStatus('fetching');
+					break;
+			}
 		}
 	}
 }
