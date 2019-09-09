@@ -12,6 +12,9 @@ export default class AppFormControlPrefixedInput extends BaseFormControl {
 	@Prop(String)
 	prefix?: string;
 
+	@Prop({ type: Boolean, default: false })
+	disabled!: boolean;
+
 	@Prop(Array) validateOn!: string[];
 	@Prop(Number) validateDelay!: number;
 	@Prop(Array) mask!: (string | RegExp)[];

@@ -11,6 +11,7 @@
 			v-validate="{ rules: validationRules }"
 			:data-vv-validate-on="validateOn"
 			:data-vv-delay="validateDelay"
+			:disabled="disabled"
 		/>
 		<span v-if="prefix" ref="prefix" class="-prefix text-muted">
 			<em>{{ prefix }}</em>
