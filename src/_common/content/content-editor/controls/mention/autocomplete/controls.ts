@@ -162,7 +162,7 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 
 				await this.handleInverted();
 				this.isLoading = false;
-			}, 200);
+			}, 500);
 		}
 	}
 
