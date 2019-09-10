@@ -4,7 +4,7 @@ import { Collaboratable } from '../collaborator/collaboratable';
 import { Community } from '../community/community.model';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
-import { ContentSetCache } from '../content/content-set-cache';
+import { ContentSetCacheService } from '../content/content-set-cache';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
@@ -50,8 +50,6 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	static readonly DEVELOPMENT_STATUS_WIP = 2;
 	static readonly DEVELOPMENT_STATUS_CANCELED = 3;
 	static readonly DEVELOPMENT_STATUS_DEVLOG = 4;
-
-	private _contentSetCache: ContentSetCache | undefined;
 
 	developer!: User;
 	thumbnail_media_item?: MediaItem;
@@ -217,10 +215,8 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	}
 
 	get hasDescription() {
-		if (this._contentSetCache === undefined) {
-			this._contentSetCache = new ContentSetCache(this, 'game-description');
-		}
-		return this._contentSetCache.hasContent;
+		const cache = ContentSetCacheService.getCache(this, 'game-description');
+		return cache.hasContent;
 	}
 
 	getContent(context: ContentContext) {
