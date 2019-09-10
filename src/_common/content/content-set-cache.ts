@@ -5,7 +5,7 @@ import { ContentDocument } from './content-document';
 /**
  * Caches ContentDocument computed results.
  */
-export class ContentSetCache {
+class ContentSetCache {
 	private readonly _container: ContentContainerModel;
 	private readonly _context: ContentContext;
 
@@ -36,5 +36,34 @@ export class ContentSetCache {
 		}
 
 		return this._length;
+	}
+}
+
+export class ContentSetCacheService {
+	private static _caches = new WeakMap<
+		ContentContainerModel,
+		Map<ContentContext, ContentSetCache>
+	>();
+
+	public static getCache(
+		container: ContentContainerModel,
+		context: ContentContext
+	): ContentSetCache {
+		let containerMap = this._caches.get(container);
+
+		if (containerMap) {
+			if (containerMap.has(context)) {
+				return containerMap.get(context)!;
+			}
+
+			const newCache = new ContentSetCache(container, context);
+			containerMap.set(context, newCache);
+		} else {
+			containerMap = new Map<ContentContext, ContentSetCache>();
+			this._caches.set(container, containerMap);
+		}
+
+		// After updating the maps, try to get the cache again.
+		return this.getCache(container, context);
 	}
 }
