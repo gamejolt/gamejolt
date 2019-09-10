@@ -55,7 +55,7 @@
 			<ul class="-channel-list" v-if="community.channels">
 				<draggable v-model="community.channels" @change="saveChannelSort">
 					<li v-for="channel in community.channels" :key="channel.id">
-						<a class="channel">
+						<a class="tag">
 							{{ channel.title }}
 
 							<a v-if="canRemoveChannel" @click.stop="onClickRemoveChannel(channel)">
@@ -163,7 +163,7 @@
 	li
 		margin-bottom: 10px
 
-	.channel
+	.tag
 		border-radius: 10px
 		font-weight: normal
 		cursor: move !important
