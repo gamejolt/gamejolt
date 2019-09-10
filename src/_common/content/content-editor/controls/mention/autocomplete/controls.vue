@@ -5,6 +5,7 @@
 			top: this.top,
 			left: this.left,
 			bottom: this.bottom,
+			visibility: this.showControl ? 'visible' : 'hidden',
 		}"
 		class="-container"
 	>

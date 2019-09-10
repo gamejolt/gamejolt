@@ -53,6 +53,10 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 		return this.users;
 	}
 
+	get showControl() {
+		return this.visible && (this.isLoading || this.users.length > 0);
+	}
+
 	mounted() {
 		this.update();
 		document.addEventListener('keydown', this.onKeyDown);
