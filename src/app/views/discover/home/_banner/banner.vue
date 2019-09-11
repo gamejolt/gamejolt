@@ -55,7 +55,7 @@
 								</app-button>
 
 								<app-game-follow-widget
-									v-if="shouldShowFollow"
+									v-if="shouldShowFollowGame"
 									:game="item.game"
 									solid
 									primary
@@ -82,7 +82,7 @@
 								</app-button>
 
 								<app-community-join-widget
-									v-if="shouldShowJoin"
+									v-if="shouldShowJoinCommunity"
 									:community="item.community"
 									solid
 									primary
