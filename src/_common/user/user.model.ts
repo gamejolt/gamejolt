@@ -1,7 +1,7 @@
 import { Api } from '../api/api.service';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
-import { ContentSetCache } from '../content/content-set-cache';
+import { ContentSetCacheService } from '../content/content-set-cache';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
@@ -10,8 +10,6 @@ import { Theme } from '../theme/theme.model';
 export class User extends Model implements ContentContainerModel {
 	static readonly TYPE_GAMER = 'User';
 	static readonly TYPE_DEVELOPER = 'Developer';
-
-	private _contentSetCache: ContentSetCache | undefined;
 
 	type!: 'User' | 'Developer';
 	username!: string;
@@ -105,10 +103,8 @@ export class User extends Model implements ContentContainerModel {
 	}
 
 	get hasBio() {
-		if (this._contentSetCache === undefined) {
-			this._contentSetCache = new ContentSetCache(this, 'user-bio');
-		}
-		return this._contentSetCache.hasContent;
+		const cache = ContentSetCacheService.getCache(this, 'user-bio');
+		return cache.hasContent;
 	}
 
 	getContent(context: ContentContext) {
