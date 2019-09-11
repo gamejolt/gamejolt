@@ -11,22 +11,10 @@
 			<app-form-control-errors />
 		</app-form-group>
 
+		<!-- URL Path is never editable in this screen
+			it is set once in the community form on creation -->
 		<app-form-group name="path" :label="$gettext(`URL Path`)">
-			<app-form-control-prefixed-input
-				prefix="gamejolt.com/c/"
-				data-vv-delay="500"
-				:rules="{
-					pattern: 'urlPath',
-					max: 50,
-					availability: {
-						url: '/web/dash/communities/check-field-availability/path',
-						initVal: model ? model.path : undefined,
-					},
-				}"
-				:disabled="!!formModel.game"
-			/>
-
-			<app-form-control-errors />
+			<app-form-control-prefixed-input prefix="gamejolt.com/c/" disabled />
 		</app-form-group>
 
 		<app-form-button v-if="!formModel.game">
