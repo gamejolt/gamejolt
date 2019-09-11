@@ -6,7 +6,7 @@
 				:class="{ '-selected': value && value.id === channel.id }"
 				@click="emitInput(channel)"
 			>
-				#{{ channel.title }}
+				{{ channel.title }}
 			</a>
 		</span>
 	</div>

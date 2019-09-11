@@ -142,7 +142,7 @@
 							class="badge"
 							:to="postCommunity.community.channelRouteLocation(postCommunity.channel)"
 							>
-							#{{ postCommunity.channel.title }}
+							{{ postCommunity.channel.title }}
 						</router-link>
 					</div>
 				</div>

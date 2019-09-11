@@ -15,7 +15,7 @@
 					/>
 				</div>
 				<a v-if="wasPublished && selectedChannel" class="badge -current-channel">
-					#{{ selectedChannel.title }}
+					{{ selectedChannel.title }}
 				</a>
 			</div>
 
