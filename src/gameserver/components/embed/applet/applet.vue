@@ -18,13 +18,13 @@
 				<translate>You may use the button below to get it.</translate>
 			</p>
 
-			<external-link href="https://java.com/download">
+			<app-link-external href="https://java.com/download">
 				<img
 					src="https://java.com/en/img/everywhere/getjava_lg.gif"
 					alt="Get Java"
 					style="border-style: none"
 				/>
-			</external-link>
+			</app-link-external>
 		</applet>
 	</div>
 </template>

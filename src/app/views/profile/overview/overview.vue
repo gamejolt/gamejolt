@@ -104,6 +104,12 @@
 					</div>
 
 					<div slot="right">
+						<app-user-known-followers
+							v-if="shouldShowKnownFollowers"
+							:users="knownFollowers"
+							:count="knownFollowerCount"
+						/>
+
 						<template v-if="hasQuickButtonsSection">
 							<!-- Add Friend -->
 							<app-button v-if="canAddAsFriend" block @click="sendFriendRequest()">
@@ -137,61 +143,61 @@
 						<template v-if="hasLinksSection">
 							<template v-if="linkedAccounts.length">
 								<div v-if="twitchAccount">
-									<external-link class="link-unstyled" :href="twitchAccount.platformLink">
+									<app-link-external class="link-unstyled" :href="twitchAccount.platformLink">
 										<app-jolticon :icon="twitchAccount.icon" />
 										{{ twitchAccount.name }}
-									</external-link>
+									</app-link-external>
 								</div>
 								<div v-if="mixerAccount">
-									<external-link class="link-unstyled" :href="mixerAccount.platformLink">
+									<app-link-external class="link-unstyled" :href="mixerAccount.platformLink">
 										<app-jolticon :icon="mixerAccount.icon" />
 										{{ mixerAccount.name }}
-									</external-link>
+									</app-link-external>
 								</div>
 								<div v-if="twitterAccount">
-									<external-link class="link-unstyled" :href="twitterAccount.platformLink">
+									<app-link-external class="link-unstyled" :href="twitterAccount.platformLink">
 										<app-jolticon :icon="twitterAccount.icon" />
 										<span>@</span>
 										{{ twitterAccount.name }}
-									</external-link>
+									</app-link-external>
 								</div>
 								<div v-if="tumblrAccount">
-									<external-link class="link-unstyled" :href="tumblrAccount.tumblrSelectedBlog.url">
+									<app-link-external class="link-unstyled" :href="tumblrAccount.tumblrSelectedBlog.url">
 										<app-jolticon :icon="tumblrAccount.icon" />
 										{{ tumblrAccount.tumblrSelectedBlog.title }}
-									</external-link>
+									</app-link-external>
 								</div>
 								<div v-if="googleAccount">
-									<external-link class="link-unstyled" :href="googleAccount.platformLink">
+									<app-link-external class="link-unstyled" :href="googleAccount.platformLink">
 										<app-jolticon :icon="googleAccount.icon" />
 										{{ googleAccount.name }}
-									</external-link>
+									</app-link-external>
 								</div>
 							</template>
 							<div v-if="user.web_site">
-								<external-link class="link-unstyled" :href="user.web_site">
+								<app-link-external class="link-unstyled" :href="user.web_site">
 									<app-jolticon icon="link" />
 									<translate>Website</translate>
-								</external-link>
+								</app-link-external>
 							</div>
 							<template v-if="youtubeChannels.length">
 								<div v-for="channel of youtubeChannels" :key="channel.id">
-									<external-link
+									<app-link-external
 										class="link-unstyled"
 										:href="`https://www.youtube.com/channel/${channel.channel_id}`"
 									>
 										<app-jolticon icon="youtube" />
 										{{ channel.title }}
-									</external-link>
+									</app-link-external>
 								</div>
 							</template>
 
+							<br />
 							<br />
 						</template>
 
 						<!-- Latest Games -->
 						<template v-if="hasGamesSection">
-							<br />
 							<div class="clearfix">
 								<div class="pull-right">
 									<app-button

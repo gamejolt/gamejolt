@@ -1,8 +1,5 @@
-import { PayloadError } from 'game-jolt-frontend-lib/components/payload/payload-service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
+import { PayloadError } from '../../../_common/payload/payload-service';
+import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Component } from 'vue-property-decorator';
 
 const ActionUnsubscribeNotification = 'unsubscribe-notification';

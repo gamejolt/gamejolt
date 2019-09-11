@@ -1,15 +1,12 @@
-import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { GameBuild } from '../../../../../_common/game/build/build.model';
+import { Game } from '../../../../../_common/game/game.model';
 import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
 import AppClientGameButtons from '../../game-buttons/game-buttons.vue';
 
-
 @Component({
 	components: {
-		AppJolticon,
 		AppClientGameButtons,
 	},
 })

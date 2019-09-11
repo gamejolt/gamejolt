@@ -36,6 +36,7 @@
 					>
 						<app-search-input
 							:id="`search-input-${id}`"
+							ref="searchInput"
 							v-model="query"
 							@focus="onFocus"
 							@blur="onBlur"

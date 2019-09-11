@@ -1,13 +1,11 @@
-import { GamePlaylist } from 'game-jolt-frontend-lib/components/game-playlist/game-playlist.model';
-import { BaseModal } from 'game-jolt-frontend-lib/components/modal/base';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
+import { BaseModal } from '../../../../_common/modal/base';
 import FormPlaylist from '../../forms/playlist/playlist.vue';
 import { GameCollection } from '../../game/collection/collection.model';
 
 @Component({
 	components: {
-		AppJolticon,
 		FormPlaylist,
 	},
 })

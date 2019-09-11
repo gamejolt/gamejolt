@@ -1,7 +1,7 @@
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Location } from 'vue-router';
+import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { TagsInfo } from '../tags-info.service';
 
 @Component({
@@ -10,8 +10,11 @@ import { TagsInfo } from '../tags-info.service';
 	},
 })
 export default class AppTagThumbnail extends Vue {
-	@Prop(String)
+	@Prop({ type: String, required: true })
 	tag!: string;
+
+	@Prop({ type: String, required: false, default: 'global' })
+	eventCat!: string;
 
 	get tagInfo() {
 		return TagsInfo.tags.find(i => i.id === this.tag)!;
@@ -30,7 +33,12 @@ export default class AppTagThumbnail extends Vue {
 
 	get active() {
 		return (
-			this.$route.name === 'discover.games.list._fetch-tag' && this.$route.params.tag === this.tag
+			this.$route.name === 'discover.games.list._fetch-tag' &&
+			this.$route.params.tag === this.tag
 		);
+	}
+
+	get event() {
+		return `${this.eventCat || 'global'}:tag-list:${this.tagInfo.id}`;
 	}
 }

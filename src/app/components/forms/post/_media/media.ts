@@ -1,17 +1,17 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import AppFormControlUploadTS from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload';
-import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
-import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
+import { Api } from '../../../../../_common/api/api.service';
+import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import AppFormControlUploadTS from '../../../../../_common/form-vue/control/upload/upload';
+import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
+import AppForm from '../../../../../_common/form-vue/form';
 import {
 	BaseForm,
 	FormOnSubmit,
 	FormOnSubmitSuccess,
-} from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { AppImgResponsive } from 'game-jolt-frontend-lib/components/img/responsive/responsive';
-import AppLoadingFade from 'game-jolt-frontend-lib/components/loading/fade/fade.vue';
-import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
-import AppScrollScroller from 'game-jolt-frontend-lib/components/scroll/scroller/scroller.vue';
+} from '../../../../../_common/form-vue/form.service';
+import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
+import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
+import { MediaItem } from '../../../../../_common/media-item/media-item-model';
+import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import AppFormPostMediaItem from './item/item.vue';
 

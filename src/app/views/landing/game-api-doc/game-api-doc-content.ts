@@ -1,8 +1,8 @@
-import { PayloadError } from 'game-jolt-frontend-lib/components/payload/payload-service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import { importContext } from 'game-jolt-frontend-lib/utils/utils';
 import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
+import { importContext } from '../../../../utils/utils';
+import { PayloadError } from '../../../../_common/payload/payload-service';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 
 // We don't emit files since we just want to pull the directory listing.
 const paths = importContext(
@@ -21,11 +21,15 @@ const paths = importContext(
 		}
 
 		if (paths[`./${path}.md`]) {
-			return (await import(/* webpackChunkName: "gameApiDocContent" */
-			`../../../../lib/doc-game-api/v1.x/${path}.md`)).default;
+			return (await import(
+				/* webpackChunkName: "gameApiDocContent" */
+				`../../../../lib/doc-game-api/v1.x/${path}.md`
+			)).default;
 		} else if (paths[`./${path}/index.md`]) {
-			return (await import(/* webpackChunkName: "gameApiDocContent" */
-			`../../../../lib/doc-game-api/v1.x/${path}/index.md`)).default;
+			return (await import(
+				/* webpackChunkName: "gameApiDocContent" */
+				`../../../../lib/doc-game-api/v1.x/${path}/index.md`
+			)).default;
 		}
 
 		return PayloadError.fromHttpError(404);
@@ -33,6 +37,18 @@ const paths = importContext(
 })
 export default class RouteLandingGameApiDoc extends BaseRouteComponent {
 	content = '';
+
+	get routeTitle() {
+		let title = this.$gettext(`Game API Documentation`);
+
+		// We try to pull the first h1 for the title of the page.
+		const matches = this.content.match(/<h1([^>]*)>(.*?)<\/h1>/);
+		if (matches) {
+			title = `${matches[2]} - ${title}`;
+		}
+
+		return title;
+	}
 
 	routeResolved($payload: any) {
 		this.content = $payload;

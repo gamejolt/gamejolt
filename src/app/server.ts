@@ -1,10 +1,10 @@
-import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
+import { Device } from '../_common/device/device.service';
+import { Environment } from '../_common/environment/environment.service';
+import { Meta } from '../_common/meta/meta-service';
 import { createApp } from './bootstrap';
 
 export default (context: any) => {
-	const { app, router, store } = createApp();
+	const { app, router } = createApp();
 
 	return new Promise((resolve, reject) => {
 		const s = Date.now();

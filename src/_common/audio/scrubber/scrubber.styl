@@ -1,0 +1,44 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.audio-scrubber
+	user-select: none
+
+	&-timebar
+		position: relative
+
+	&-timebar-unfilled
+		change-bg('bg-subtle')
+		position: absolute
+		width: 100%
+		top: 50%
+		margin-top: -2px
+		height: 5px
+
+	&-timebar-filled
+		change-bg('highlight')
+		position: absolute
+		top: 0
+		left: 0
+		bottom: 0
+		right: 0
+
+	&-timebar-handle
+		position: absolute
+		width: 13px
+		height: @width
+		top: 50%
+		margin-top: -(@width / 2)
+		margin-right: -(@width / 2)
+		background-color: $white
+		border-radius: 50%
+		cursor: pointer
+		transition: width 200ms, height 200ms, margin-top 200ms, margin-right 200ms
+		z-index: 11
+
+		.audio-scrubber.dragging &
+			change-bg('highlight')
+			width: 17px
+			height: @width
+			margin-top: -(@width / 2)
+			margin-right: -(@width / 2)

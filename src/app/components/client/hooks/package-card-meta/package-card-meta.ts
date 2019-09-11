@@ -1,11 +1,10 @@
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GamePackageCardModel } from 'game-jolt-frontend-lib/components/game/package/card/card.model';
-import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
+import { Game } from '../../../../../_common/game/game.model';
+import { GamePackageCardModel } from '../../../../../_common/game/package/card/card.model';
+import { GamePackage } from '../../../../../_common/game/package/package.model';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
 import { LocalDbPackage } from '../../local-db/package/package.model';
-
 
 @Component({})
 export default class AppClientPackageCardMeta extends Vue {

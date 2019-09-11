@@ -1,0 +1,36 @@
+.spoiler
+	$fade-in-time = 0.7s
+	$fade-in-delay = 0.3s
+	$fade-out-time = 0.3s
+	$easing = ease-in
+	theme-prop('color', 'bg-offset')
+	change-bg('bg-offset')
+	rounded-corners-lg()
+	position: relative
+	transition: color $fade-out-time $easing
+	// Clear inherited values from blockquote
+	font-size: $font-size-base
+	border-left: 0
+
+	&::before
+		theme-prop('color', 'fg-muted')
+		content: 'Spoiler'
+		position: absolute
+		top: 2px
+		right: 5px
+		font-size: $font-size-tiny
+		text-transform: uppercase
+
+	a, img, .emoji, code, pre
+		opacity: 0
+		transition: opacity $fade-out-time $easing
+
+	&:hover
+		theme-prop('color', 'fg')
+		transition-duration: $fade-in-time
+		transition-delay: $fade-in-delay
+
+		a, img, .emoji, code, pre
+			opacity: 1
+			transition-duration: $fade-in-time
+			transition-delay: $fade-in-delay

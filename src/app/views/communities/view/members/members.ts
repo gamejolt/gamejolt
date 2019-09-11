@@ -1,12 +1,9 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
 import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
+import { Api } from '../../../../../_common/api/api.service';
+import { Community } from '../../../../../_common/community/community.model';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { User } from '../../../../../_common/user/user.model';
 import AppFollowerList from '../../../../components/follower/list/list.vue';
 
 function getFetchUrl(route: Route) {

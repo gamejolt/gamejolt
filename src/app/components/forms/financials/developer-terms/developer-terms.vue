@@ -21,9 +21,9 @@
 					You have agreed to our Distribution Agreement on %{ date }.
 				</translate>
 				<br />
-				<external-link :href="agreementLink">
+				<app-link-external :href="agreementLink">
 					<translate>View Distribution Agreement</translate>
-				</external-link>
+				</app-link-external>
 			</p>
 		</div>
 		<div v-else>
@@ -73,11 +73,11 @@
 			<div class="alert" v-if="showAgreement">
 				<p>
 					<translate>We publicly track and version all of our terms.</translate>
-					<external-link :href="agreementDiffLink">
+					<app-link-external :href="agreementDiffLink">
 						<translate>
 							See the "diff" between the version you signed previously and the current version.
 						</translate>
-					</external-link>
+					</app-link-external>
 				</p>
 			</div>
 		</div>

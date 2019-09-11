@@ -1,49 +1,46 @@
 import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import AppCommunityPill from 'game-jolt-frontend-lib/components/community/pill/pill.vue';
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
+import { Api } from '../../../../_common/api/api.service';
+import { Community } from '../../../../_common/community/community.model';
+import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
+import { ContentDocument } from '../../../../_common/content/content-document';
+import { ContentWriter } from '../../../../_common/content/content-writer';
+import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import {
 	AppFormAutosize,
 	AutosizeBootstrap,
-} from 'game-jolt-frontend-lib/components/form-vue/autosize.directive';
-import AppFormControlCheckbox from 'game-jolt-frontend-lib/components/form-vue/control/checkbox/checkbox.vue';
-import AppFormControlContent from 'game-jolt-frontend-lib/components/form-vue/control/content/content.vue';
-import AppFormControlDate from 'game-jolt-frontend-lib/components/form-vue/control/date/date.vue';
-import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
-import AppFormControlUpload from 'game-jolt-frontend-lib/components/form-vue/control/upload/upload.vue';
-import { AppFocusWhen } from 'game-jolt-frontend-lib/components/form-vue/focus-when.directive';
-import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
+} from '../../../../_common/form-vue/autosize.directive';
+import AppFormControlCheckbox from '../../../../_common/form-vue/control/checkbox/checkbox.vue';
+import AppFormControlContent from '../../../../_common/form-vue/control/content/content.vue';
+import AppFormControlDate from '../../../../_common/form-vue/control/date/date.vue';
+import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
+import AppFormControlUpload from '../../../../_common/form-vue/control/upload/upload.vue';
+import { AppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
+import AppForm from '../../../../_common/form-vue/form';
 import {
 	BaseForm,
 	FormOnInit,
 	FormOnLoad,
 	FormOnSubmit,
 	FormOnSubmitSuccess,
-} from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import AppFormLegend from 'game-jolt-frontend-lib/components/form-vue/legend/legend.vue';
-import { GameVideo } from 'game-jolt-frontend-lib/components/game/video/video.model';
-import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
-import { LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
-import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
-import AppProgressBar from 'game-jolt-frontend-lib/components/progress/bar/bar.vue';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import AppSketchfabEmbed from 'game-jolt-frontend-lib/components/sketchfab/embed/embed.vue';
-import {
-	Timezone,
-	TimezoneData,
-} from 'game-jolt-frontend-lib/components/timezone/timezone.service';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import AppUserAvatarImg from 'game-jolt-frontend-lib/components/user/user-avatar/img/img.vue';
-import AppVideoEmbed from 'game-jolt-frontend-lib/components/video/embed/embed.vue';
-import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
-import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
+} from '../../../../_common/form-vue/form.service';
+import AppFormLegend from '../../../../_common/form-vue/legend/legend.vue';
+import { GameVideo } from '../../../../_common/game/video/video.model';
+import { KeyGroup } from '../../../../_common/key-group/key-group.model';
+import { LinkedAccount } from '../../../../_common/linked-account/linked-account.model';
+import { MediaItem } from '../../../../_common/media-item/media-item-model';
+import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
+import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.service';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
+import { arrayRemove } from '../../../../utils/array';
+import AppLoading from '../../../../_common/loading/loading.vue';
+import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { determine } from 'jstimezonedetect';
 import { Component, Prop } from 'vue-property-decorator';
-import { ContentDocument } from '../../../../lib/gj-lib-client/components/content/content-document';
-import { ContentWriter } from '../../../../lib/gj-lib-client/components/content/content-writer';
 import AppFormPostTags from './tags/tags.vue';
 import AppFormPostMedia from './_media/media.vue';
 
@@ -142,7 +139,11 @@ export default class FormPost extends BaseForm<FormPostModel>
 	readonly Screen = Screen;
 
 	get loadUrl() {
-		return `/web/posts/manage/save/${this.model!.id}`;
+		let url = `/web/posts/manage/save/${this.model!.id}`;
+		if (this.defaultCommunity instanceof Community) {
+			url += '?communityId=' + this.defaultCommunity.id;
+		}
+		return url;
 	}
 
 	get shortLabel() {
@@ -175,8 +176,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	get hasValidSketchfabModelId() {
 		return (
-			this.formModel.sketchfab_id &&
-			this.formModel.sketchfab_id.match(this.SKETCHFAB_FIELD_REGEX)
+			this.formModel.sketchfab_id && this.formModel.sketchfab_id.match(this.SKETCHFAB_FIELD_REGEX)
 		);
 	}
 
@@ -323,10 +323,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 		}
 
 		if (model.videos.length) {
-			this.setField(
-				'video_url',
-				'https://www.youtube.com/watch?v=' + model.videos[0].video_id
-			);
+			this.setField('video_url', 'https://www.youtube.com/watch?v=' + model.videos[0].video_id);
 			this.enableVideo();
 		} else if (model.sketchfabs.length) {
 			this.setField('sketchfab_id', model.sketchfabs[0].sketchfab_id);

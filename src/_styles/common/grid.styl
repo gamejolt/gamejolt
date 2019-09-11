@@ -1,0 +1,129 @@
+//
+// Grid system
+// --------------------------------------------------
+
+// Container widths
+//
+// Set the container width, and override it for fixed navbars in media queries.
+.container
+	container-fixed()
+
+	@media $media-min-tablet
+		width: $container-sm
+
+	@media $media-min-desktop
+		width: $container-md
+
+	@media $media-min-lg-desktop
+		width: $container-lg
+
+.container-xl
+	container-fixed()
+	max-width: $container-xl
+
+// Fluid container
+//
+// Utilizes the mixin meant for fixed width containers, but without any defined
+// width for fluid, full width layouts.
+.container-fluid
+	container-fixed()
+
+// Row
+//
+// Rows contain and clear the floats of your columns.
+.row
+	make-row()
+
+// Columns
+//
+// Common styles for small and large grid columns
+make-grid-columns()
+// Extra small grid
+//
+// Columns, offsets, pushes, and pulls for extra small devices like
+// smartphones.
+make-grid-col-float(xs)
+make-grid($grid-columns, xs, width)
+make-grid($grid-columns, xs, pull)
+make-grid($grid-columns, xs, push)
+make-grid($grid-columns, xs, offset)
+
+// Small grid
+//
+// Columns, offsets, pushes, and pulls for the small device range, from phones
+// to tablets.
+@media $media-min-tablet
+	make-grid-col-float(sm)
+	make-grid($grid-columns, sm, width)
+	make-grid($grid-columns, sm, pull)
+	make-grid($grid-columns, sm, push)
+	make-grid($grid-columns, sm, offset)
+
+// Medium grid
+//
+// Columns, offsets, pushes, and pulls for the desktop device range.
+@media $media-min-desktop
+	make-grid-col-float(md)
+	make-grid($grid-columns, md, width)
+	make-grid($grid-columns, md, pull)
+	make-grid($grid-columns, md, push)
+	make-grid($grid-columns, md, offset)
+
+// Large grid
+//
+// Columns, offsets, pushes, and pulls for the large desktop device range.
+@media $media-min-lg-desktop
+	make-grid-col-float(lg)
+	make-grid($grid-columns, lg, width)
+	make-grid($grid-columns, lg, pull)
+	make-grid($grid-columns, lg, push)
+	make-grid($grid-columns, lg, offset)
+
+/**
+ * Centered
+ */
+.col-centered
+	float: none !important
+	margin: 0 auto
+
+@media $media-lg
+	.col-centered-lg
+		float: none !important
+		margin: 0 auto
+
+@media $media-md
+	.col-centered-md
+		float: none !important
+		margin: 0 auto
+
+@media $media-sm
+	.col-centered-sm
+		float: none !important
+		margin: 0 auto
+
+/**
+ * xs grid changes
+ */
+@media $media-xs
+	// Make the container spacing on the sides smaller for small phones
+	.container, .container-fluid, .container-xl
+		padding-left: ($grid-gutter-width-xs / 2)
+		padding-right: ($grid-gutter-width-xs / 2)
+
+	// Smaller gutters for grid.
+	.row
+		margin-left: -($grid-gutter-width-xs / 2)
+		margin-right: -($grid-gutter-width-xs / 2)
+
+	// Horizontal form groups behave like rows.
+	.form-horizontal .form-group
+		margin-left: -($grid-gutter-width-xs / 2)
+		margin-right: -($grid-gutter-width-xs / 2)
+
+	$xs-col-properties
+		padding-left: ($grid-gutter-width-xs / 2)
+		padding-right: ($grid-gutter-width-xs / 2)
+
+	for i in 1 .. $grid-columns
+		.col-xs-{i}, .col-sm-{i}, .col-md-{i}, .col-lg-{i}
+			@extend $xs-col-properties

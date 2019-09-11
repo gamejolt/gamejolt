@@ -1,4 +1,4 @@
-import { AppLazyPlaceholder } from 'game-jolt-frontend-lib/components/lazy/placeholder/placeholder';
+import { AppLazyPlaceholder } from '../../../../../_common/lazy/placeholder/placeholder';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 

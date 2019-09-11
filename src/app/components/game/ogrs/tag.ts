@@ -1,8 +1,7 @@
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { AppThemeSvg } from 'game-jolt-frontend-lib/components/theme/svg/svg';
+import { Game } from '../../../../_common/game/game.model';
+import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 @Component({
 	components: {

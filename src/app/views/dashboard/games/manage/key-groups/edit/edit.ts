@@ -1,19 +1,22 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
-import { Key } from 'game-jolt-frontend-lib/components/key/key-model';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import AppProgressBar from 'game-jolt-frontend-lib/components/progress/bar/bar.vue';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import { AppTimeAgo } from 'game-jolt-frontend-lib/components/time/ago/ago';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
+import { arrayRemove } from '../../../../../../../utils/array';
+import { Api } from '../../../../../../../_common/api/api.service';
+import { Clipboard } from '../../../../../../../_common/clipboard/clipboard-service';
+import { Environment } from '../../../../../../../_common/environment/environment.service';
+import AppExpand from '../../../../../../../_common/expand/expand.vue';
+import { number } from '../../../../../../../_common/filters/number';
+import { GamePackage } from '../../../../../../../_common/game/package/package.model';
+import { Growls } from '../../../../../../../_common/growls/growls.service';
+import { KeyGroup } from '../../../../../../../_common/key-group/key-group.model';
+import { Key } from '../../../../../../../_common/key/key-model';
+import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
+import AppProgressBar from '../../../../../../../_common/progress/bar/bar.vue';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../../../_common/route/route-component';
+import { AppTimeAgo } from '../../../../../../../_common/time/ago/ago';
+import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
 import FormGameKeyGroupAddKeys from '../../../../../../components/forms/game/key-group/add-keys/add-keys.vue';
 import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/key-group.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';

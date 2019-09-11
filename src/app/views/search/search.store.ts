@@ -1,16 +1,11 @@
-import { Ads, AdSettingsContainer } from 'game-jolt-frontend-lib/components/ad/ads.service';
-import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import {
-	NamespaceVuexStore,
-	VuexModule,
-	VuexMutation,
-	VuexStore,
-} from 'game-jolt-frontend-lib/utils/vuex';
 import { Route } from 'vue-router';
 import { namespace } from 'vuex-class';
+import { NamespaceVuexStore, VuexModule, VuexMutation, VuexStore } from '../../../utils/vuex';
+import { Ads, AdSettingsContainer } from '../../../_common/ad/ads.service';
+import { Meta } from '../../../_common/meta/meta-service';
+import { store } from '../../store';
 import { SearchPayload } from '../../components/search/payload-service';
 import { Search } from '../../components/search/search-service';
-import { store } from '../../store';
 
 type RouteActions = {};
 

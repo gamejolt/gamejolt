@@ -1,0 +1,121 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.content-container
+	position: relative
+
+// Added to the content container dom when the emoji panel is available.
+.content-container-with-gutter
+	padding-right: 32px
+
+.content-editor
+	position: relative
+	padding-top: 0
+	padding-bottom: 0
+
+.content-placeholder
+	top: 0
+	left: 4px
+	position: absolute
+	font-style: italic
+	pointer-events: none
+
+.disabled
+	theme-prop('color', 'fg-muted')
+
+// Do not show dotted selection outline
+>>> .ProseMirror
+	outline: 0 solid transparent !important
+
+// Override prosemirror selection border around selected nodes
+>>> .ProseMirror-selectednode
+	theme-prop('outline-color', 'bi-bg') !important
+
+>>> .content-editor-spoiler
+	change-bg('bg-offset')
+	font-size: $font-size-base
+	padding-top: 1px
+	border-width: 0
+	rounded-corners-lg()
+	position: relative
+
+	&::before
+		theme-prop('color', 'fg-muted')
+		content: 'Spoiler'
+		position: absolute
+		top: 2px
+		right: 5px
+		font-size: $font-size-tiny
+		text-transform: uppercase
+
+>>> .content-editor-spoiler:after
+	content: none
+
+>>> p
+	margin-top: 10px
+	margin-bottom: 10px
+
+>>> code
+	white-space: pre-wrap
+
+>>> td
+	border-width: 1px
+	border-style: solid
+	padding: 4px
+	min-width: 2em
+
+>>> th
+	padding: 4px
+
+>>> blockquote::before
+	white-space: normal
+
+>>> blockquote::after
+	white-space: normal
+
+>>> table
+	table-layout: fixed
+	width: 100%
+
+	& > tr:first-child
+		& > td, & > th
+			border-top-width: 0
+
+	& > tr > th
+		border-width: 0 1px 2px 0
+		border-bottom-style: solid
+		border-right-style: dashed
+		theme-prop('border-color', 'fg-muted')
+
+	& > tr > th:last-child
+		border-right-width: 0
+
+	& > tr > td
+		border-width: 1px 1px 0 0
+		border-top-style: solid
+		border-right-style: dashed
+		theme-prop('border-color', 'fg-muted')
+
+	& > tr > td:last-child
+		border-right-width: 0
+
+.fade-enter-active, .fade-leave-active
+	transition: opacity 200ms $strong-ease-out
+
+.fade-enter, .fade-leave-to
+	opacity: 0
+
+>>> a
+	cursor: inherit
+
+	&:hover
+		theme-prop('color', 'link')
+
+>>> .content-editor-mention
+	theme-prop('color', 'link')
+
+>>> .content-editor-tag
+	theme-prop('color', 'link')
+
+>>> .content-editor-link
+	theme-prop('color', 'link')

@@ -1,16 +1,16 @@
-import { Registry } from 'game-jolt-frontend-lib/components/registry/registry.service';
-import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { namespace } from 'vuex-class';
 import {
 	NamespaceVuexStore,
 	VuexAction,
 	VuexModule,
 	VuexMutation,
 	VuexStore,
-} from 'game-jolt-frontend-lib/utils/vuex';
-import { namespace } from 'vuex-class';
-import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
+} from '../../../utils/vuex';
+import { Registry } from '../../../_common/registry/registry.service';
+import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
+import { User } from '../../../_common/user/user.model';
 import { store } from '../../store';
+import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
 
 type RouteActions = {
 	sendFriendRequest: void;

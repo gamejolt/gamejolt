@@ -1,15 +1,13 @@
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { AppResponsiveDimensions } from 'game-jolt-frontend-lib/components/responsive-dimensions/responsive-dimensions';
-import AppSketchfabEmbed from 'game-jolt-frontend-lib/components/sketchfab/embed/embed.vue';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
+import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
+import { AppResponsiveDimensions } from '../../../../../../_common/responsive-dimensions/responsive-dimensions';
+import AppSketchfabEmbed from '../../../../../../_common/sketchfab/embed/embed.vue';
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedView } from '../../view';
 
 @Component({
 	components: {
-		AppJolticon,
 		AppSketchfabEmbed,
 		AppResponsiveDimensions,
 	},

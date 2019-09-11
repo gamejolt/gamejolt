@@ -1,10 +1,9 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import { BaseForm, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { KeyGroup } from 'game-jolt-frontend-lib/components/key-group/key-group.model';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import { Api } from '../../../../../../_common/api/api.service';
+import AppExpand from '../../../../../../_common/expand/expand.vue';
+import { BaseForm, FormOnSubmit } from '../../../../../../_common/form-vue/form.service';
+import { KeyGroup } from '../../../../../../_common/key-group/key-group.model';
+import { number } from '../../../../../../_common/filters/number';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 @Component({
 	components: {

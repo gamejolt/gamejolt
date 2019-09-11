@@ -1,9 +1,12 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { getLinkedAccountProviderDisplayName, LinkedAccount } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import { YoutubeChannel } from 'game-jolt-frontend-lib/components/youtube/channel/channel-model';
-import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
+import { Api } from '../../../../../../_common/api/api.service';
+import { Growls } from '../../../../../../_common/growls/growls.service';
+import {
+	getLinkedAccountProviderDisplayName,
+	LinkedAccount,
+} from '../../../../../../_common/linked-account/linked-account.model';
+import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import { YoutubeChannel } from '../../../../../../_common/youtube/channel/channel-model';
+import { AppState, AppStore } from '../../../../../../_common/store/app-store';
 import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
@@ -73,9 +76,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 
 				case 'channel-taken':
 					Growls.error(
-						this.$gettext(
-							'This YouTube channel is already linked to another Game Jolt account.'
-						)
+						this.$gettext('This YouTube channel is already linked to another Game Jolt account.')
 					);
 					break;
 
@@ -84,9 +85,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 					break;
 
 				case 'invalid-google-account':
-					Growls.error(
-						this.$gettext('This Google account does not support Sign Up with Google.')
-					);
+					Growls.error(this.$gettext('This Google account does not support Sign Up with Google.'));
 					break;
 
 				default:
@@ -103,13 +102,10 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 					{
 						const account = new LinkedAccount($payload.account);
 						Growls.success(
-							this.$gettextInterpolate(
-								'Your %{ provider } account (@%{ name }) has been linked.',
-								{
-									name: account.name,
-									provider: providerName,
-								}
-							),
+							this.$gettextInterpolate('Your %{ provider } account (@%{ name }) has been linked.', {
+								name: account.name,
+								provider: providerName,
+							}),
 							this.$gettext('Account Linked')
 						);
 					}
@@ -122,13 +118,10 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 					{
 						const account = new LinkedAccount($payload.account);
 						Growls.success(
-							this.$gettextInterpolate(
-								'Your %{ provider } account (%{ name }) has been linked.',
-								{
-									name: account.name,
-									provider: providerName,
-								}
-							),
+							this.$gettextInterpolate('Your %{ provider } account (%{ name }) has been linked.', {
+								name: account.name,
+								provider: providerName,
+							}),
 							this.$gettext('Account Linked')
 						);
 					}
@@ -138,12 +131,9 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 					{
 						const channel = new YoutubeChannel($payload.channel);
 						Growls.success(
-							this.$gettextInterpolate(
-								'Your YouTube channel (%{ title }) has been linked.',
-								{
-									title: channel.title,
-								}
-							),
+							this.$gettextInterpolate('Your YouTube channel (%{ title }) has been linked.', {
+								title: channel.title,
+							}),
 							this.$gettext('YouTube Channel Linked')
 						);
 					}

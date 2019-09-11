@@ -1,10 +1,10 @@
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { BaseRouteComponent } from 'game-jolt-frontend-lib/components/route/route-component';
-import { Scroll } from 'game-jolt-frontend-lib/components/scroll/scroll.service';
-import { AppState, AppStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
 import { Component } from 'vue-property-decorator';
+import AppExpand from '../../../../../../../_common/expand/expand.vue';
+import { Game } from '../../../../../../../_common/game/game.model';
+import { Growls } from '../../../../../../../_common/growls/growls.service';
+import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
+import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
+import { AppState, AppStore } from '../../../../../../../_common/store/app-store';
 import FormGameSettings from '../../../../../../components/forms/game/settings/settings.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 

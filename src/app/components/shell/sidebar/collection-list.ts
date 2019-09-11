@@ -1,14 +1,10 @@
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import { stringSort } from 'game-jolt-frontend-lib/utils/array';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { stringSort } from '../../../../utils/array';
+import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { GameCollection } from '../../game/collection/collection.model';
 
 @Component({
-	components: {
-		AppJolticon,
-	},
 	directives: {
 		AppTrackEvent,
 	},

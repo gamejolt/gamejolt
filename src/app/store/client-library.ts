@@ -1,28 +1,49 @@
-import { Config, getExecutable, Launcher, LaunchInstance, OldLaunchInstance, Patcher, PatchEvents, PatchInstance, Queue, Rollbacker, State as PatcherState, Uninstaller } from 'client-voodoo';
+import {
+	Config,
+	getExecutable,
+	Launcher,
+	LaunchInstance,
+	OldLaunchInstance,
+	Patcher,
+	PatchEvents,
+	PatchInstance,
+	Queue,
+	Rollbacker,
+	State as PatcherState,
+	Uninstaller,
+} from 'client-voodoo';
 import * as fs from 'fs';
-import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
-import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
-import { GameBuildLaunchOption } from 'game-jolt-frontend-lib/components/game/build/launch-option/launch-option.model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import { GameRelease } from 'game-jolt-frontend-lib/components/game/release/release.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { HistoryTick } from 'game-jolt-frontend-lib/components/history-tick/history-tick-service';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { arrayGroupBy, arrayIndexBy, arrayRemove } from 'game-jolt-frontend-lib/utils/array';
-import { fuzzysearch } from 'game-jolt-frontend-lib/utils/string';
-import { isErrnoException } from 'game-jolt-frontend-lib/utils/utils';
-import { VuexAction, VuexGetter, VuexModule, VuexMutation, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
 import * as path from 'path';
 import Vue from 'vue';
 import { Action, Mutation, namespace, State } from 'vuex-class';
+import { arrayGroupBy, arrayIndexBy, arrayRemove } from '../../utils/array';
+import { fuzzysearch } from '../../utils/string';
+import { isErrnoException } from '../../utils/utils';
+import { VuexAction, VuexGetter, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
+import { Analytics } from '../../_common/analytics/analytics.service';
+import { Api } from '../../_common/api/api.service';
+import { ClientUpdater } from '../../_common/client/client-updater.service';
+import { Device } from '../../_common/device/device.service';
+import { GameBuild } from '../../_common/game/build/build.model';
+import { GameBuildLaunchOption } from '../../_common/game/build/launch-option/launch-option.model';
+import { Game } from '../../_common/game/game.model';
+import { GamePackage } from '../../_common/game/package/package.model';
+import { GameRelease } from '../../_common/game/release/release.model';
+import { Growls } from '../../_common/growls/growls.service';
+import { HistoryTick } from '../../_common/history-tick/history-tick-service';
 import { Settings } from '../../_common/settings/settings.service';
+import { Translate } from '../../_common/translate/translate.service';
 import { ClientAntiVirusModal } from '../components/client/anti-virus-modal/anti-virus-modal.service';
 import { LocalDbGame } from '../components/client/local-db/game/game.model';
 import { LocalDb } from '../components/client/local-db/local-db.service';
-import { LocalDbPackage, LocalDbPackagePatchState, LocalDbPackagePid, LocalDbPackageProgress, LocalDbPackageRemoveState, LocalDbPackageRunState } from '../components/client/local-db/package/package.model';
+import {
+	LocalDbPackage,
+	LocalDbPackagePatchState,
+	LocalDbPackagePid,
+	LocalDbPackageProgress,
+	LocalDbPackageRemoveState,
+	LocalDbPackageRunState,
+} from '../components/client/local-db/package/package.model';
 
 export const ClientLibraryState = namespace('clientLibrary', State);
 export const ClientLibraryAction = namespace('clientLibrary', Action);
@@ -187,6 +208,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			Config.env = 'development';
 		}
 
+		await ClientUpdater.init();
 		this.installerInit();
 		this.launcherInit();
 
@@ -807,7 +829,9 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 						uninstallOp,
 						Translate.$gettextInterpolate(
 							'Could not stop the installation of %{ packageTitle }.',
-							{ packageTitle }
+							{
+								packageTitle,
+							}
 						)
 					);
 				} else {
@@ -1088,9 +1112,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 		if (!pkg || !release || !build) {
 			throw new Error(
 				`Package ${localPackage.id} is no longer valid. ` +
-					`The payload did not contain the package, it's release (${
-						localPackage.release.id
-					})` +
+					`The payload did not contain the package, it's release (${localPackage.release.id})` +
 					` or it's build (${localPackage.build.id})`
 			);
 		}

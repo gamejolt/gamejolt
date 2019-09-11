@@ -1,9 +1,8 @@
-import AppGraph from 'game-jolt-frontend-lib/components/graph/graph.vue';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+import AppGraph from '../../../../../_common/graph/graph.vue';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import { number } from '../../../../../_common/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 @Component({
 	components: {

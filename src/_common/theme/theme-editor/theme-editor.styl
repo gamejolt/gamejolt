@@ -1,0 +1,62 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.theme-editor >>> .CodeMirror
+	theme-prop('border-color', 'bg-offset')
+	height: 400px
+
+	&-focused
+		theme-prop('border-color', 'bg-subtle')
+
+.theme-editor-definitions
+	rounded-corners-lg()
+
+	.form-group
+		clearfix()
+		theme-prop('border-bottom-color', 'bg-subtle')
+		animation-duration: 0
+		margin-bottom: 0
+		border-bottom-width: 1px
+		border-bottom-style: solid
+
+		&:first-child
+			border-top-left-radius: $border-radius-large
+			border-top-right-radius: $border-radius-large
+
+		&:last-child
+			border-bottom: 0
+
+			&, >>> .fill-offset
+				border-bottom-left-radius: $border-radius-large
+				border-bottom-right-radius: $border-radius-large
+
+	.control-label
+		float: left
+		padding: 8px 15px
+		margin-bottom: 0
+
+.theme-editor-colorpicker
+	float: right
+	padding-top: 8px
+	padding-left: 15px
+	padding-right: 15px
+
+.clear-link
+	theme-prop('color', 'fg-muted', true)
+	padding: 0 8px
+
+	&:hover
+		theme-prop('color', 'link-hover', true)
+
+.theme-editor-dropdown
+	clear: both
+	padding: 0 15px 8px
+
+.theme-editor-font-family
+	clear: both
+
+.form-group.theme-editor-definition-css
+	border: 0
+
+.theme-editor-code
+	clear: both

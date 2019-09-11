@@ -1,8 +1,5 @@
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { User } from '../../../_common/user/user.model';
 import { CreateElement } from 'vue';
 import { Component } from 'vue-property-decorator';
 

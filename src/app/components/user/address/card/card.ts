@@ -1,12 +1,11 @@
-import AppCard from 'game-jolt-frontend-lib/components/card/card.vue';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import { UserAddress } from 'game-jolt-frontend-lib/components/user/address/address.model';
+import AppCard from '../../../../../_common/card/card.vue';
+import { Growls } from '../../../../../_common/growls/growls.service';
+import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { UserAddress } from '../../../../../_common/user/address/address.model';
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import AppUserAddressDetails from '../details/details.vue';
 import { UserAddressEditModal } from '../edit-modal/edit-modal.service';
-
 
 @Component({
 	components: {

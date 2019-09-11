@@ -13,7 +13,7 @@
 				</translate>
 			</p>
 			<p class="help-block" v-translate>
-				Your image must be a PNG, JPG, or GIF.
+				Your image must be a PNG or JPG.
 				<br />
 				<strong>PNGs are highly recommended as they produce a lossless image.</strong>
 			</p>
@@ -23,9 +23,9 @@
 				(ratio of 4 ÷ 1).
 			</p>
 			<p class="help-block">
-				<a class="link-help" href="https://help.gamejolt.com/dev-page-headers" target="_blank">
+				<app-link-help page="dev-page-headers" class="link-help">
 					<translate>What are the header requirements and guidelines?</translate>
-				</a>
+				</app-link-help>
 			</p>
 
 			<app-form-control-upload
@@ -34,7 +34,7 @@
 					min_img_dimensions: [minWidth, minHeight],
 					max_img_dimensions: [maxWidth, maxHeight],
 				}"
-				accept=".png,.jpg,.jpeg,.gif"
+				accept=".png,.jpg,.jpeg"
 				@changed="headerSelected()"
 			/>
 

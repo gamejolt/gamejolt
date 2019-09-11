@@ -1,20 +1,22 @@
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import { FiresidePostCommunity } from 'game-jolt-frontend-lib/components/fireside/post/community/community.model';
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { getLinkedAccountPlatformIcon } from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { Community } from '../../../../../_common/community/community.model';
+import { Environment } from '../../../../../_common/environment/environment.service';
+import { number } from '../../../../../_common/filters/number';
+import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
+import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { getLinkedAccountPlatformIcon } from '../../../../../_common/linked-account/linked-account.model';
+import AppPopper from '../../../../../_common/popper/popper.vue';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import { Store } from '../../../../store';
+import { AppCommunityPerms } from '../../../community/perms/perms';
 import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 
 @Component({
 	components: {
 		AppPopper,
+		AppCommunityPerms,
 	},
 	directives: {
 		AppTooltip,
@@ -84,6 +86,18 @@ export default class AppFiresidePostManage extends Vue {
 
 	get shouldShowPin() {
 		return this.hasPerms && this.post.key_groups.length === 0;
+	}
+
+	shouldDisplayCommunityName(community: Community) {
+		// If we are in the community in question and it's the only community option available
+		return (
+			this.post.manageableCommunities.length === 1 &&
+			!(
+				this.$route.name &&
+				this.$route.name.includes('communities.view') &&
+				this.$route.params.path === community.path
+			)
+		);
 	}
 
 	getProviderIcon(provider: string) {

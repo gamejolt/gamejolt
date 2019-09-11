@@ -107,10 +107,6 @@
 				</div>
 			</div>
 		</section>
-
-		<section class="section section-thin" v-if="shouldShowAds && showFooterAd">
-			<app-ad-widget size="leaderboard" />
-		</section>
 	</div>
 </template>
 

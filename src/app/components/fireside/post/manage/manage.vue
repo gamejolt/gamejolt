@@ -56,7 +56,7 @@
 								<translate>Published to:</translate>
 							</div>
 							<div class="list-group list-group-dark" style="margin-bottom: 0">
-								<external-link
+								<app-link-external
 									v-for="platform of post.platforms_published_to"
 									:key="platform.id"
 									class="list-group-item has-icon"
@@ -64,52 +64,74 @@
 								>
 									<app-jolticon :icon="getProviderIcon(platform.created_resource_provider)" />
 									{{ platform.created_resource_account_name }}
-								</external-link>
+								</app-link-external>
 							</div>
 
 							<hr />
 						</template>
 
 						<div class="list-group list-group-dark">
-							<template v-if="shouldShowPin">
-								<a v-if="post.is_pinned" class="list-group-item has-icon" @click.stop="unpin()">
-									<app-jolticon icon="thumbtack" />
-									<translate>Unpin Post</translate>
-								</a>
-								<a v-else class="list-group-item has-icon" @click.stop="pin()">
-									<app-jolticon icon="thumbtack" />
-									<translate>Pin Post</translate>
-								</a>
+							<template v-if="shouldShowManageCommunities">
+								<span v-for="i of post.manageableCommunities" :key="i.id">
+									<template v-if="shouldShowPin">
+										<a v-if="post.is_pinned" class="list-group-item has-icon" @click.stop="unpin()">
+											<app-jolticon icon="thumbtack" />
+											<translate>Unpin Post</translate>
+										</a>
+										<a v-else class="list-group-item has-icon" @click.stop="pin()">
+											<app-jolticon icon="thumbtack" />
+											<translate>Pin Post</translate>
+										</a>
+									</template>
+
+									<app-community-perms :community="i.community" required="community-features">
+										<a class="list-group-item has-icon" @click.stop="toggleFeatured(i)">
+											<template v-if="i.isFeatured">
+												<app-jolticon icon="remove" />
+												<template v-if="shouldDisplayCommunityName(i.community)">
+													<translate :translate-params="{ community: i.community.name }">
+														Unfeature : %{ community }
+													</translate>
+												</template>
+												<template v-else>
+													<translate>
+														Unfeature
+													</translate>
+												</template>
+											</template>
+											<template v-else>
+												<app-jolticon icon="tag" />
+												<template v-if="shouldDisplayCommunityName(i.community)">
+													<translate :translate-params="{ community: i.community.name }">
+														Feature : %{ community }
+													</translate>
+												</template>
+												<template v-else>
+													<translate>
+														Feature
+													</translate>
+												</template>
+											</template>
+										</a>
+									</app-community-perms>
+
+									<app-community-perms :community="i.community" required="community-posts">
+										<a class="list-group-item has-icon" @click.stop="rejectFromCommunity(i)">
+											<app-jolticon icon="remove" notice />
+
+											<translate :translate-params="{ community: i.community.name }">
+												Eject
+												<template v-if="shouldDisplayCommunityName(i.community)">
+													: %{ community }
+												</template>
+												<template v-else>
+													from this community
+												</template>
+											</translate>
+										</a>
+									</app-community-perms>
+								</span>
 							</template>
-
-							<span
-								v-if="shouldShowManageCommunities"
-								v-for="i of post.manageableCommunities"
-								:key="i.id"
-							>
-								<a class="list-group-item has-icon" @click.stop="toggleFeatured(i)">
-									<app-jolticon icon="tag" />
-
-									<translate
-										v-if="i.isFeatured"
-										:translate-params="{ community: i.community.name }"
-									>
-										Unfeature: %{ community }
-									</translate>
-
-									<translate v-else :translate-params="{ community: i.community.name }">
-										Feature: %{ community }
-									</translate>
-								</a>
-
-								<a class="list-group-item has-icon" @click.stop="rejectFromCommunity(i)">
-									<app-jolticon icon="remove" notice />
-
-									<translate :translate-params="{ community: i.community.name }">
-										Remove: %{ community }
-									</translate>
-								</a>
-							</span>
 
 							<a v-if="shouldShowEdit" class="list-group-item has-icon" @click.stop="remove()">
 								<app-jolticon icon="remove" notice />

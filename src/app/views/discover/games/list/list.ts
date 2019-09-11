@@ -1,16 +1,13 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { arrayShuffle } from 'game-jolt-frontend-lib/utils/array';
-import { LocationRedirect } from 'game-jolt-frontend-lib/utils/router';
-import { titleCase } from 'game-jolt-frontend-lib/utils/string';
-import { date } from 'game-jolt-frontend-lib/vue/filters/date';
-import { fuzzynumber } from 'game-jolt-frontend-lib/vue/filters/fuzzynumber';
 import { Component } from 'vue-property-decorator';
+import { arrayShuffle } from '../../../../../utils/array';
+import { LocationRedirect } from '../../../../../utils/router';
+import { titleCase } from '../../../../../utils/string';
+import { Api } from '../../../../../_common/api/api.service';
+import { date } from '../../../../../_common/filters/date';
+import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
+import { Meta } from '../../../../../_common/meta/meta-service';
+import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import {
 	checkGameFilteringRoute,
 	GameFilteringContainer,
@@ -118,13 +115,10 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		}
 
 		if (this.dateRange) {
-			return this.$gettextInterpolate(
-				'Games published between %{ dateStart } and %{ dateEnd }',
-				{
-					dateStart: this.dateRange[0],
-					dateEnd: this.dateRange[1],
-				}
-			);
+			return this.$gettextInterpolate('Games published between %{ dateStart } and %{ dateEnd }', {
+				dateStart: this.dateRange[0],
+				dateEnd: this.dateRange[1],
+			});
 		}
 
 		if (this.date) {
@@ -180,6 +174,8 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 				return this.$gettext('alt games');
 			case 'roguelike':
 				return this.$gettext('roguelike games');
+			case 'adult':
+				return this.$gettext('adult / porn games');
 			default:
 				return this.$gettextInterpolate(`%{ category } games`, {
 					category: this.tag,
@@ -193,12 +189,9 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	 */
 	get listDescription() {
 		if (!this.section) {
-			return this.$gettextInterpolate(
-				`Find the hottest trending %{ gamesType } on Game Jolt.`,
-				{
-					gamesType: this.displayGamesType,
-				}
-			);
+			return this.$gettextInterpolate(`Find the hottest trending %{ gamesType } on Game Jolt.`, {
+				gamesType: this.displayGamesType,
+			});
 		} else if (this.section === 'new') {
 			return this.$gettextInterpolate(
 				// tslint:disable-next-line:max-line-length

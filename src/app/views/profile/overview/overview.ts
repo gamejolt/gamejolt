@@ -1,36 +1,31 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppCommentAddButton from 'game-jolt-frontend-lib/components/comment/add-button/add-button.vue';
-import { Comment } from 'game-jolt-frontend-lib/components/comment/comment-model';
-import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
-import { CommentThreadModal } from 'game-jolt-frontend-lib/components/comment/thread/modal.service';
-import AppContentViewer from 'game-jolt-frontend-lib/components/content/content-viewer/content-viewer.vue';
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import AppFadeCollapse from 'game-jolt-frontend-lib/components/fade-collapse/fade-collapse.vue';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import 'game-jolt-frontend-lib/components/lazy/placeholder/placeholder.styl';
-import {
-	LinkedAccount,
-	Provider,
-} from 'game-jolt-frontend-lib/components/linked-account/linked-account.model';
-import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import { YoutubeChannel } from 'game-jolt-frontend-lib/components/youtube/channel/channel-model';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import { Api } from '../../../../_common/api/api.service';
+import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
+import { Comment } from '../../../../_common/comment/comment-model';
+import { CommentModal } from '../../../../_common/comment/modal/modal.service';
+import { CommentThreadModal } from '../../../../_common/comment/thread/modal.service';
+import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import AppExpand from '../../../../_common/expand/expand.vue';
+import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
+import { number } from '../../../../_common/filters/number';
+import { Game } from '../../../../_common/game/game.model';
+import '../../../../_common/lazy/placeholder/placeholder.styl';
+import { LinkedAccount, Provider } from '../../../../_common/linked-account/linked-account.model';
+import { Meta } from '../../../../_common/meta/meta-service';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
+import { User } from '../../../../_common/user/user.model';
+import { YoutubeChannel } from '../../../../_common/youtube/channel/channel-model';
+import { Store } from '../../../store/index';
 import { ChatClient } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/overview/overview.vue';
 import AppGameList from '../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
 import AppPageContainer from '../../../components/page-container/page-container.vue';
-import { Store } from '../../../store/index';
+import AppUserKnownFollowers from '../../../components/user/known-followers/known-followers.vue';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 
 @Component({
@@ -44,6 +39,7 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 		AppCommentAddButton,
 		AppCommentOverview,
 		AppContentViewer,
+		AppUserKnownFollowers,
 	},
 	directives: {
 		AppTooltip,
@@ -108,6 +104,8 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	developerGames: Game[] = [];
 	youtubeChannels: YoutubeChannel[] = [];
 	linkedAccounts: LinkedAccount[] = [];
+	knownFollowers: User[] = [];
+	knownFollowerCount = 0;
 
 	readonly User = User;
 	readonly UserFriendship = UserFriendship;
@@ -206,6 +204,12 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return this.isFriend && this.chat && this.chat.connected;
 	}
 
+	get shouldShowKnownFollowers() {
+		return (
+			!!this.app.user && !!this.user && this.isOverviewLoaded && this.app.user.id !== this.user.id
+		);
+	}
+
 	getLinkedAccount(provider: Provider) {
 		if (
 			this.user &&
@@ -243,6 +247,13 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 		if (this.user) {
 			CommentThreadModal.showFromPermalink(this.$router, 'User', this.user.id, 'shouts');
+		}
+
+		if ($payload.knownFollowers) {
+			this.knownFollowers = User.populate($payload.knownFollowers);
+		}
+		if ($payload.knownFollowerCount) {
+			this.knownFollowerCount = $payload.knownFollowerCount;
 		}
 
 		this.overviewPayload($payload);

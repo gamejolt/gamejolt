@@ -1,7 +1,7 @@
-import AppErrorPage from 'game-jolt-frontend-lib/components/error/page/page.vue';
-import { AppTheme } from 'game-jolt-frontend-lib/components/theme/theme';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
+import AppErrorPage from '../_common/error/page/page.vue';
+import { AppTheme } from '../_common/theme/theme';
 
 @Component({
 	components: {

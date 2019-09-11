@@ -21,9 +21,9 @@
 				(ratio of 16 ÷ 9).
 			</p>
 			<p class="help-block">
-				<a class="link-help" href="https://help.gamejolt.com/dev-thumbnails" target="_blank">
+				<app-link-help page="dev-thumbnails" class="link-help">
 					<translate>dash.games.thumbnail.page_help_link</translate>
-				</a>
+				</app-link-help>
 			</p>
 
 			<app-form-control-upload

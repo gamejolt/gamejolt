@@ -1,9 +1,8 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { BaseForm, FormOnInit, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import { currency } from 'game-jolt-frontend-lib/vue/filters/currency';
+import { Api } from '../../../../_common/api/api.service';
+import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../_common/form-vue/form.service';
+import { User } from '../../../../_common/user/user.model';
+import { currency } from '../../../../_common/filters/currency';
 import { Component, Prop } from 'vue-property-decorator';
-
 
 interface WithdrawFundsFormModel {
 	email_address: string;

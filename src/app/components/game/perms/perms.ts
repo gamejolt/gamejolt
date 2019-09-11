@@ -1,4 +1,5 @@
-import { Game, Perm } from 'game-jolt-frontend-lib/components/game/game.model';
+import { Perm } from '../../../../_common/collaborator/collaboratable';
+import { Game } from '../../../../_common/game/game.model';
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { RouteStore, RouteStoreName } from '../../../views/dashboard/games/manage/manage.store';

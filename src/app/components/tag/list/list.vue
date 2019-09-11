@@ -2,7 +2,7 @@
 	<app-scroll-scroller horizontal overlay>
 		<div class="-list">
 			<div class="-list-item" v-for="tag of tags" :key="tag.id">
-				<app-tag-thumbnail class="-list-thumb" :tag="tag.id" />
+				<app-tag-thumbnail class="-list-thumb" :tag="tag.id" :event-cat="eventCat" />
 			</div>
 		</div>
 	</app-scroll-scroller>

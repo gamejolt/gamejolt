@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   id="svg2985"
+   height="16px"
+   width="16px">
+  <defs
+     id="defs2987" />
+  <metadata
+     id="metadata2990">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>T. Gantt</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer2">
+    <path
+       id="rect815"
+       d="M 0.25,0 C 0.1115,0 0,0.1115 0,0.25 v 6.5 C 0,6.8885 0.1115,7 0.25,7 h 6.5 C 6.8885,7 7,6.8885 7,6.75 V 0.25 C 7,0.1115 6.8885,0 6.75,0 Z M 9,0 V 1.75 C 9,1.8885 9.1115,2 9.25,2 h 6.5 C 15.8885,2 16,1.8885 16,1.75 V 0 Z M 9.25,4 C 9.1115,4 9,4.1115 9,4.25 v 6.5 C 9,10.8885 9.1115,11 9.25,11 h 6.5 C 15.8885,11 16,10.8885 16,10.75 V 4.25 C 16,4.1115 15.8885,4 15.75,4 Z m -9,5 C 0.1115,9 0,9.1115 0,9.25 v 6.5 C 0,15.8885 0.1115,16 0.25,16 h 6.5 C 6.8885,16 7,15.8885 7,15.75 V 9.25 C 7,9.1115 6.8885,9 6.75,9 Z m 9,4 C 9.1115,13 9,13.1115 9,13.25 V 16 h 7 V 13.25 C 16,13.1115 15.8885,13 15.75,13 Z"
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:7.5;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>

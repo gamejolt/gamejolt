@@ -1,5 +1,5 @@
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { MediaItem } from 'game-jolt-frontend-lib/components/media-item/media-item-model';
+import { Game } from '../../../../../_common/game/game.model';
+import { MediaItem } from '../../../../../_common/media-item/media-item-model';
 import { LocalDbModel } from '../model.service';
 
 export class LocalDbGame extends LocalDbModel<LocalDbGame> {

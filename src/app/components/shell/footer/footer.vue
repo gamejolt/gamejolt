@@ -1,6 +1,9 @@
 <template>
 	<footer id="footer" class="section">
 		<div class="container">
+			<app-ad-widget size="footer" />
+			<br />
+
 			<template v-if="!Screen.isXs">
 				<div class="text-center" v-if="!GJ_IS_CLIENT">
 					<p>
@@ -74,9 +77,9 @@
 						<div class="col-xs-4 col-sm-3 hidden-xs">
 							<ol class="list-unstyled footer-link-list">
 								<li>
-									<external-link href="https://github.com/gamejolt">
+									<app-link-external href="https://github.com/gamejolt">
 										<translate>footer.open_source</translate>
-									</external-link>
+									</app-link-external>
 								</li>
 								<li>
 									<router-link
@@ -86,14 +89,14 @@
 									</router-link>
 								</li>
 								<li>
-									<external-link href="https://github.com/gamejolt/issue-tracker">
+									<app-link-external href="https://github.com/gamejolt/issue-tracker">
 										<translate>Bug Tracker</translate>
-									</external-link>
+									</app-link-external>
 								</li>
 								<li>
-									<external-link href="https://www.redbubble.com/people/gamejolt/shop">
+									<app-link-external href="https://www.redbubble.com/people/gamejolt/shop">
 										<translate>Merch</translate>
-									</external-link>
+									</app-link-external>
 								</li>
 							</ol>
 						</div>
@@ -171,9 +174,9 @@
 					<p class="small text-muted">
 						<translate>footer.translations</translate>
 						<br />
-						<external-link href="https://poeditor.com/join/project/B4nWT6EgnD">
+						<app-link-external href="https://poeditor.com/join/project/B4nWT6EgnD">
 							<translate>footer.translations_help</translate>
-						</external-link>
+						</app-link-external>
 					</p>
 				</div>
 			</div>

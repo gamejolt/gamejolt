@@ -1,14 +1,14 @@
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GamePackagePayloadModel } from 'game-jolt-frontend-lib/components/game/package/package-payload.model';
-import { HistoryTick } from 'game-jolt-frontend-lib/components/history-tick/history-tick-service';
-import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
-import { BaseRouteComponent, RouteResolver } from 'game-jolt-frontend-lib/components/route/route-component';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import { AppScrollTo } from 'game-jolt-frontend-lib/components/scroll/to/to.directive';
-import { AppThemeSvg } from 'game-jolt-frontend-lib/components/theme/svg/svg';
+import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
+import { Api } from '../../../../_common/api/api.service';
+import { Device } from '../../../../_common/device/device.service';
+import { Game } from '../../../../_common/game/game.model';
+import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
+import { HistoryTick } from '../../../../_common/history-tick/history-tick-service';
+import { Navigate } from '../../../../_common/navigate/navigate.service';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { AppScrollTo } from '../../../../_common/scroll/to/to.directive';
+import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import { Component } from 'vue-property-decorator';
 
 @Component({

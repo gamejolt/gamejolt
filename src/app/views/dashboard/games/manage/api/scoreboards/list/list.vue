@@ -18,9 +18,9 @@
 				</translate>
 			</p>
 			<p>
-				<a class="link-help" href="https://help.gamejolt.com/dev-scoreboards" target="_blank">
+				<app-link-help page="dev-scoreboards" class="link-help">
 					<translate>dash.games.scoreboards.page_help_link</translate>
-				</a>
+				</app-link-help>
 			</p>
 		</div>
 

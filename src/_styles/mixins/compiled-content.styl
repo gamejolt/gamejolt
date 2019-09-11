@@ -1,0 +1,50 @@
+compiled-content($-font-size)
+	$-computed-line-height = $-font-size * $line-height-base
+
+	blockquote > p
+		font: inherit
+
+	&, p
+		font-size: $-font-size
+		line-height: $line-height-base
+
+	p
+		margin-bottom: $-font-size
+
+	hr
+		margin-top: $-computed-line-height
+		margin-bottom: $-computed-line-height
+
+	h3, h4
+		margin-top: $-computed-line-height * 1.5
+
+		// Content compiler puts p tags inside the headings.
+		> p
+			font: inherit
+			color: inherit
+
+		&:first-child
+			margin-top: 0
+
+	h3
+		font-size: $font-size-h3
+
+	h4
+		font-size: $font-size-h4
+
+	// Widgets some times create empty P tags.
+	// This hides them so they don't add extra spacing to the page.
+	p:empty
+		display: none
+
+	table
+		@extend .table
+
+	// Removes the added spacing after iframes since they aren't block elements.
+	// They basically by default add their line spacing to the bottom.
+	iframe
+		display: block
+
+	// Style hashtags as normal tags.
+	.hashtag
+		@extend .tag

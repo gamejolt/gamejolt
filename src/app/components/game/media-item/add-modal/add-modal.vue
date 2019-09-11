@@ -39,9 +39,9 @@
 					</p>
 					<br />
 					<div>
-						<a class="link-help" href="https://help.gamejolt.com/dev-media-images" target="_blank">
+						<app-link-help page="dev-media-images" class="link-help">
 							<translate>dash.games.media.add.image.page_help_link</translate>
-						</a>
+						</app-link-help>
 					</div>
 				</div>
 
@@ -62,9 +62,9 @@
 					</p>
 					<br />
 					<div>
-						<a class="link-help" href="https://help.gamejolt.com/dev-media-videos" target="_blank">
+						<app-link-help page="dev-media-videos" class="link-help">
 							<translate>dash.games.media.add.video.page_help_link</translate>
-						</a>
+						</app-link-help>
 					</div>
 				</div>
 
@@ -79,9 +79,9 @@
 						</translate>
 					</p>
 					<p>
-						<external-link class="link-help" href="https://sketchfab.com/">
+						<app-link-external class="link-help" href="https://sketchfab.com/">
 							<translate>Learn more about Sketchfab...</translate>
-						</external-link>
+						</app-link-external>
 					</p>
 				</div>
 

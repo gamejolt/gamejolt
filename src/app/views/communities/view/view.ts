@@ -1,17 +1,18 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import AppCommunityJoinWidget from 'game-jolt-frontend-lib/components/community/join-widget/join-widget.vue'
-import AppCommunityThumbnailImg from 'game-jolt-frontend-lib/components/community/thumbnail/img/img.vue'
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { ThemeMutation, ThemeStore } from 'game-jolt-frontend-lib/components/theme/theme.store';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component } from 'vue-property-decorator';
 import { Mutation } from 'vuex-class';
-import AppPageHeader from '../../../components/page-header/page-header.vue';
+import { Api } from '../../../../_common/api/api.service';
+import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
+import { Community } from '../../../../_common/community/community.model';
+import AppCommunityJoinWidget from '../../../../_common/community/join-widget/join-widget.vue';
+import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
+import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
+import { number } from '../../../../_common/filters/number';
+import { Growls } from '../../../../_common/growls/growls.service';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
 import { Store } from '../../../store/index';
+import { CommunityThumbnailModal } from '../../../components/forms/community/thumbnail/modal/modal.service';
+import AppPageHeader from '../../../components/page-header/page-header.vue';
 
 @Component({
 	name: 'RouteCommunitiesView',
@@ -19,6 +20,7 @@ import { Store } from '../../../store/index';
 		AppPageHeader,
 		AppCommunityThumbnailImg,
 		AppCommunityJoinWidget,
+		AppEditableOverlay,
 	},
 	filters: {
 		number,
@@ -43,14 +45,24 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	viewCommunity!: Store['viewCommunity'];
 
 	community: Community = null as any;
-	tags: string[] = [];
-	unreadWatermark: number = 0;
+	unreadWatermark = 0;
+	collaboratorInvite: Collaborator | null = null;
+
+	get isEditing() {
+		return this.$route.name && this.$route.name.includes('communities.view.overview.edit');
+	}
+
+	get canEditMedia() {
+		return this.community.hasPerms('community-media');
+	}
 
 	routeResolved($payload: any) {
 		this.community = new Community($payload.community);
-		this.tags = $payload.tags || [];
 		if ($payload.unreadWatermark) {
 			this.unreadWatermark = $payload.unreadWatermark;
+		}
+		if ($payload.invite) {
+			this.collaboratorInvite = new Collaborator($payload.invite);
 		}
 
 		this.setPageTheme(this.community.theme || null);
@@ -71,5 +83,21 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	refresh() {
 		this.reloadRoute();
+	}
+
+	showEditAvatar() {
+		CommunityThumbnailModal.show(this.community);
+	}
+
+	async acceptCollaboration() {
+		await this.collaboratorInvite!.$accept();
+		this.community.perms = this.collaboratorInvite!.perms;
+		this.collaboratorInvite = null;
+		Growls.success(this.$gettext(`You are now a collaborator on this community!`));
+	}
+
+	async declineCollaboration() {
+		await this.collaboratorInvite!.$remove();
+		this.collaboratorInvite = null;
 	}
 }

@@ -1,8 +1,17 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Geo } from 'game-jolt-frontend-lib/components/geo/geo.service';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { arrayUnique } from 'game-jolt-frontend-lib/utils/array';
-import { Analyzer, Collection, Condition, Field, ReportComponent, Request, ResourceFields, ResourceName } from './site-analytics-service';
+import { Api } from '../../../_common/api/api.service';
+import { Geo } from '../../../_common/geo/geo.service';
+import { Translate } from '../../../_common/translate/translate.service';
+import { arrayUnique } from '../../../utils/array';
+import {
+	Analyzer,
+	Collection,
+	Condition,
+	Field,
+	ReportComponent,
+	Request,
+	ResourceFields,
+	ResourceName,
+} from './site-analytics-service';
 
 export class SiteAnalyticsReport {
 	isLoaded = false;
@@ -106,8 +115,7 @@ export class SiteAnalyticsReport {
 				component.total = response.total;
 
 				if (component.type === 'sum' || component.type === 'average') {
-					component.hasData =
-						typeof component.data !== 'undefined' && component.data !== null;
+					component.hasData = typeof component.data !== 'undefined' && component.data !== null;
 				} else {
 					component.hasData = component.data && Object.keys(component.data).length > 0;
 				}
@@ -278,10 +286,7 @@ export class SiteAnalyticsReport {
 				for (let i = 0; i < Math.min(response.result.length, 3); i++) {
 					const dataEntry = response.result[i];
 					graph.push({
-						label:
-							typeof dataEntry.label === 'object'
-								? dataEntry.label.value
-								: dataEntry.label,
+						label: typeof dataEntry.label === 'object' ? dataEntry.label.value : dataEntry.label,
 						value: dataEntry.value,
 					});
 				}

@@ -1,9 +1,9 @@
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { UserFriendship } from 'game-jolt-frontend-lib/components/user/friendship/friendship.model';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
-import { appStore } from 'game-jolt-frontend-lib/vue/services/app/app-store';
+import { Growls } from '../../../../_common/growls/growls.service';
+import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { Translate } from '../../../../_common/translate/translate.service';
+import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
+import { User } from '../../../../_common/user/user.model';
+import { appStore } from '../../../../_common/store/app-store';
 
 export class UserFriendshipHelper {
 	static async sendRequest(targetUser: User) {

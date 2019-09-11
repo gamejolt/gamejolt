@@ -1,32 +1,28 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Backdrop } from 'game-jolt-frontend-lib/components/backdrop/backdrop.service';
-import AppBackdrop from 'game-jolt-frontend-lib/components/backdrop/backdrop.vue';
+import { Route } from 'vue-router';
+import { sync } from 'vuex-router-sync';
+import { VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
+import { Api } from '../../_common/api/api.service';
+import { Backdrop } from '../../_common/backdrop/backdrop.service';
+import AppBackdrop from '../../_common/backdrop/backdrop.vue';
 import {
 	CommentActions,
 	CommentMutations,
 	CommentStore,
-} from 'game-jolt-frontend-lib/components/comment/comment-store';
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
-import { ContentFocus } from 'game-jolt-frontend-lib/components/content-focus/content-focus.service';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import { Screen } from 'game-jolt-frontend-lib/components/screen/screen-service';
-import {
-	ThemeActions,
-	ThemeMutations,
-	ThemeStore,
-} from 'game-jolt-frontend-lib/components/theme/theme.store';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { VuexAction, VuexModule, VuexMutation, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
+} from '../../_common/comment/comment-store';
+import { Community } from '../../_common/community/community.model';
+import { Connection } from '../../_common/connection/connection-service';
+import { ContentFocus } from '../../_common/content-focus/content-focus.service';
+import { Growls } from '../../_common/growls/growls.service';
+import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
+import { Screen } from '../../_common/screen/screen-service';
 import {
 	Actions as AppActions,
 	AppStore,
 	appStore,
 	Mutations as AppMutations,
-} from 'game-jolt-frontend-lib/vue/services/app/app-store';
-import { Route } from 'vue-router';
-import { sync } from 'vuex-router-sync';
+} from '../../_common/store/app-store';
+import { ThemeActions, ThemeMutations, ThemeStore } from '../../_common/theme/theme.store';
+import { Translate } from '../../_common/translate/translate.service';
 import { ActivityFeedState } from '../components/activity/feed/state';
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
 import { ChatClient } from '../components/chat/client';

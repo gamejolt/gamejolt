@@ -1,10 +1,5 @@
 <template>
-	<router-link
-		class="tag-thumbnail"
-		:class="{ active }"
-		:to="location"
-		v-app-track-event="`tag-list:${tagInfo.id}`"
-	>
+	<router-link class="tag-thumbnail" :class="{ active }" :to="location" v-app-track-event="event">
 		<div class="-image-spacer">
 			<div class="-image">
 				<img :src="tagInfo.image" alt="" />

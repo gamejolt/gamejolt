@@ -1,24 +1,25 @@
-import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
-import { Clipboard } from 'game-jolt-frontend-lib/components/clipboard/clipboard-service';
-import FormComment from 'game-jolt-frontend-lib/components/comment/add/add.vue';
+import { Analytics } from '../../../../_common/analytics/analytics.service';
+import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
+import FormComment from '../../../../_common/comment/add/add.vue';
 import {
 	CommentAction,
 	CommentMutation,
 	CommentState,
 	CommentStore,
 	CommentStoreModel,
-} from 'game-jolt-frontend-lib/components/comment/comment-store';
-import { CommentModal } from 'game-jolt-frontend-lib/components/comment/modal/modal.service';
-import AppCommentVideoLikeWidget from 'game-jolt-frontend-lib/components/comment/video/like-widget/like-widget.vue';
-import { CommentVideo } from 'game-jolt-frontend-lib/components/comment/video/video-model';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import AppFiresidePostLikeWidget from 'game-jolt-frontend-lib/components/fireside/post/like/widget/widget.vue';
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
-import { AppSocialFacebookLike } from 'game-jolt-frontend-lib/components/social/facebook/like/like';
-import { AppSocialTwitterShare } from 'game-jolt-frontend-lib/components/social/twitter/share/share';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
+} from '../../../../_common/comment/comment-store';
+import { CommentModal } from '../../../../_common/comment/modal/modal.service';
+import AppCommentVideoLikeWidget from '../../../../_common/comment/video/like-widget/like-widget.vue';
+import { CommentVideo } from '../../../../_common/comment/video/video-model';
+import { Environment } from '../../../../_common/environment/environment.service';
+import AppFiresidePostLikeWidget from '../../../../_common/fireside/post/like/widget/widget.vue';
+import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import AppPopper from '../../../../_common/popper/popper.vue';
+import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
+import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { number } from '../../../../_common/filters/number';
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { AppCommentWidgetLazy } from '../../lazy';
@@ -71,6 +72,7 @@ export default class AppEventItemControls extends Vue {
 	commentStore: CommentStoreModel | null = null;
 	isShowingShare = false;
 	clickedComment = false;
+	clickedCommentType = '';
 
 	readonly FiresidePost = FiresidePost;
 
@@ -138,7 +140,9 @@ export default class AppEventItemControls extends Vue {
 		Clipboard.copy(this.shareUrl);
 	}
 
-	onClickCommentAddPlaceholder() {
+	onClickCommentAddPlaceholder(type: string) {
+		Analytics.trackEvent('inline-comment-form', 'click', type);
+		this.clickedCommentType = type;
 		this.clickedComment = true;
 	}
 

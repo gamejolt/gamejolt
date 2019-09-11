@@ -1,15 +1,16 @@
 import Axios from 'axios';
-import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
-import { Community } from 'game-jolt-frontend-lib/components/community/community.model';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
+import { Analytics } from '../../../_common/analytics/analytics.service';
+import { Community } from '../../../_common/community/community.model';
+import { Environment } from '../../../_common/environment/environment.service';
+import { Growls } from '../../../_common/growls/growls.service';
 import {
 	getNotificationText,
 	Notification,
-} from 'game-jolt-frontend-lib/components/notification/notification-model';
-import { Translate } from 'game-jolt-frontend-lib/components/translate/translate.service';
-import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
-import { sleep } from 'game-jolt-frontend-lib/utils/utils';
+} from '../../../_common/notification/notification-model';
+import { Translate } from '../../../_common/translate/translate.service';
+import { User } from '../../../_common/user/user.model';
+import { arrayRemove } from '../../../utils/array';
+import { sleep } from '../../../utils/utils';
 import { Channel, Socket } from 'phoenix';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Settings } from '../../../_common/settings/settings.service';
@@ -91,9 +92,7 @@ export class GridClient {
 		console.log('[Grid] Connecting...');
 
 		// get hostname from loadbalancer first
-		const hostResult = await pollRequest('Select server', () =>
-			Axios.get(Environment.gridHost)
-		);
+		const hostResult = await pollRequest('Select server', () => Axios.get(Environment.gridHost));
 		const host = `${hostResult.data}/grid/socket`;
 
 		console.log('[Grid] Server selected:', host);
@@ -258,15 +257,26 @@ export class GridClient {
 		}
 
 		const message = getNotificationText(notification, true);
-		const icon =
-			notification.from_model === undefined ? '' : notification.from_model.img_avatar;
+		const icon = notification.from_model === undefined ? '' : notification.from_model.img_avatar;
 
 		if (message !== undefined) {
 			let title = Translate.$gettext('New Notification');
 			if (notification.type === Notification.TYPE_POST_ADD) {
-				title = Translate.$gettext('New Post');
+				if (notification.from_model instanceof User) {
+					title = Translate.$gettextInterpolate(`New Post by @%{ username }`, {
+						username: notification.from_model.username,
+					});
+				} else {
+					title = Translate.$gettext('New Post');
+				}
 			} else if (notification.type === Notification.TYPE_COMMENT_VIDEO_ADD) {
-				title = Translate.$gettext('New Video');
+				if (notification.from_model instanceof User) {
+					title = Translate.$gettextInterpolate(`New Video by @%{ username }`, {
+						username: notification.from_model.username,
+					});
+				} else {
+					title = Translate.$gettext('New Video');
+				}
 			}
 
 			Growls.info({

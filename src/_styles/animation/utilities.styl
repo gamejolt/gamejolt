@@ -1,0 +1,73 @@
+// For class-based animations.
+/**
+ * Staggers
+ */
+.stagger
+	for i in 2 .. 40
+		&:nth-child({i})
+			animation-delay: 50ms * i
+
+.stagger-fast
+	for i in 2 .. 40
+		&:nth-child({i})
+			animation-delay: 25ms * i
+
+// For angular based animations.
+.stagger-enter
+	&.ng-enter-stagger
+		animation-delay: 50ms
+
+.stagger-leave
+	&.ng-leave-stagger
+		animation-delay: 50ms
+
+/**
+ * Turning off animations.
+ */
+.no-animate
+	animation-name: none !important
+	animation-duration: 0s !important
+	transition-duration: 0s !important
+	opacity: 1 !important
+
+.no-animate-enter
+	&.ng-enter, &.v-enter, &.v-enter-to, &.v-enter-active
+		animation-name: none !important
+		animation-duration: 0s !important
+		transition-duration: 0s !important
+		opacity: 1 !important
+
+.no-animate-leave
+	&.ng-leave, &.v-leave, &.v-leave-to, &.v-leave-active
+		animation-name: none !important
+		animation-duration: 0s !important
+		transition-duration: 0s !important
+		opacity: 1 !important
+
+@media $media-xs
+	.no-animate-xs
+		animation-name: none !important
+		animation-duration: 0s !important
+		transition-duration: 0s !important
+		opacity: 1 !important
+
+@media $media-sm
+	.no-animate-sm
+		animation-name: none !important
+		animation-duration: 0s !important
+		transition-duration: 0s !important
+		opacity: 1 !important
+
+@media $media-md
+	.no-animate-md
+		animation-name: none !important
+		animation-duration: 0s !important
+		transition-duration: 0s !important
+		opacity: 1 !important
+
+@media $media-lg
+	.no-animate-lg
+		animation-name: none !important
+		animation-duration: 0s !important
+		transition-duration: 0s !important
+		opacity: 1 !important

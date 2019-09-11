@@ -1,11 +1,11 @@
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import { AppTheme } from 'game-jolt-frontend-lib/components/theme/theme';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import { Environment } from '../_common/environment/environment.service';
+import { GameBuild } from '../_common/game/build/build.model';
+import { Game } from '../_common/game/game.model';
+import { GamePackage } from '../_common/game/package/package.model';
+import { AppTheme } from '../_common/theme/theme';
 import { Store } from './store/index';
 
 @Component({
@@ -18,11 +18,15 @@ import { Store } from './store/index';
 		AppEmbedUnity: () =>
 			import(/* webpackChunkName: "gameserverUnity" */ './components/embed/unity/unity.vue'),
 		AppEmbedApplet: () =>
-			import(/* webpackChunkName: "gameserverApplet" */ './components/embed/applet/applet.vue'),
+			import(
+				/* webpackChunkName: "gameserverApplet" */ './components/embed/applet/applet.vue'
+			),
 		AppEmbedRom: () =>
 			import(/* webpackChunkName: "gameserverRom" */ './components/embed/rom/rom.vue'),
 		AppEmbedSilverlight: () =>
-			import(/* webpackChunkName: "gameserverSilverlight" */ './components/embed/silverlight/silverlight.vue'),
+			import(
+				/* webpackChunkName: "gameserverSilverlight" */ './components/embed/silverlight/silverlight.vue'
+			),
 	},
 })
 export default class App extends Vue {

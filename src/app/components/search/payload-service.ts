@@ -1,6 +1,6 @@
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { User } from 'game-jolt-frontend-lib/components/user/user.model';
+import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { Game } from '../../../_common/game/game.model';
+import { User } from '../../../_common/user/user.model';
 import { LocalDbGame } from '../client/local-db/game/game.model';
 
 export class SearchPayload {

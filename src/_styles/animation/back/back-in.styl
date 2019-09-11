@@ -1,0 +1,78 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+vendors = official
+
+@keyframes back-in
+	0%
+		opacity: 0
+		transform: scale3d(0.3, 0.3, 0.3)
+
+	30%
+		opacity: 0.5
+		transform: scale3d(1.1, 1.1, 1.1)
+
+	100%
+		opacity: 1
+
+@keyframes back-in-left
+	0%
+		opacity: 0
+		transform: translate3d(-100px, 0, 0)
+
+	50%
+		opacity: 0.5
+		transform: translate3d(20px, 0, 0)
+
+	100%
+		opacity: 1
+
+@keyframes back-in-right
+	0%
+		opacity: 0
+		transform: translate3d(100px, 0, 0)
+
+	50%
+		opacity: 0.5
+		transform: translate3d(-20px, 0, 0)
+
+	100%
+		opacity: 1
+
+@keyframes back-in-up
+	0%
+		opacity: 0
+		transform: translate3d(0, 100px, 0)
+
+	50%
+		opacity: 0.5
+		transform: translate3d(0, -20px, 0)
+
+	100%
+		opacity: 1
+
+@keyframes back-in-down
+	0%
+		opacity: 0
+		transform: translate3d(0, -100px, 0)
+
+	50%
+		opacity: 0.5
+		transform: translate3d(0, 20px, 0)
+
+	100%
+		opacity: 1
+
++create-animation('back', 'in')
+	animation-name: back-in
+	animation-duration: 400ms
+	animation-timing-function: $ease-out
+	animation-fill-mode: both
+	opacity: 1
+
+for direction in 'up' 'right' 'down' 'left'
+	+create-animation('back', 'in', direction)
+		animation-name: unquote('back-in-' + direction)
+		animation-duration: 400ms
+		animation-fill-mode: both
+		opacity: 1

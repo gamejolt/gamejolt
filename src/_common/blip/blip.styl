@@ -1,0 +1,42 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.blip
+	change-bg('bg-offset')
+	position: relative
+	top: 1px // Needed to play nicely with buttons for some reason
+	display: inline-block
+	margin: 0 3px
+	padding: 0 5px
+	text-align: center
+	font-family: $font-family-tiny
+	font-weight: bold
+	font-size: $font-size-tiny
+	line-height: 20px
+	border-radius: 20px
+	min-width: 20px
+	text-align: center
+	vertical-align: baseline
+	// Make sure to override any link colors around the blip.
+	color: var(--theme-fg)
+
+	a &:hover
+		color: var(--theme-link)
+
+	/**
+	 * Carets
+	 */
+	.blip-caret
+		// Set to white since we'll have to override with content prop anyway.
+		caret(direction: left, color: $white, size: 5px)
+		border-right-color: var(--theme-bg-offset)
+		// Since the blip is a circle, we need to pull it away less from the edge, otherwise it shows a gap.
+		left: -3px
+
+	&.filled
+		change-bg('bi-bg')
+		// important to override the link hover from above
+		color: var(--theme-bi-fg) !important
+
+		.blip-caret
+			border-right-color: var(--theme-bi-bg)

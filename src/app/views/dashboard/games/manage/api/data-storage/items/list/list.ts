@@ -1,12 +1,12 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { GameDataStoreItem } from 'game-jolt-frontend-lib/components/game/data-store/item/item.model';
-import { ModalConfirm } from 'game-jolt-frontend-lib/components/modal/confirm/confirm-service';
-import AppPopper from 'game-jolt-frontend-lib/components/popper/popper.vue';
+import { Api } from '../../../../../../../../../_common/api/api.service';
+import { GameDataStoreItem } from '../../../../../../../../../_common/game/data-store/item/item.model';
+import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
+import AppPopper from '../../../../../../../../../_common/popper/popper.vue';
 import {
 	BaseRouteComponent,
 	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
-import { date } from 'game-jolt-frontend-lib/vue/filters/date';
+} from '../../../../../../../../../_common/route/route-component';
+import { date } from '../../../../../../../../../_common/filters/date';
 import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../../../../manage.store';
 

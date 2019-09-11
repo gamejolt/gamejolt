@@ -1,30 +1,25 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import AppCardListItem from 'game-jolt-frontend-lib/components/card/list/item/item.vue';
-import AppExpand from 'game-jolt-frontend-lib/components/expand/expand.vue';
-import AppFormControlToggle from 'game-jolt-frontend-lib/components/form-vue/control/toggle/toggle.vue';
-import AppForm from 'game-jolt-frontend-lib/components/form-vue/form';
-import {
-	BaseForm,
-	FormOnInit,
-	FormOnLoad,
-} from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
-import { GameBuildLaunchOption } from 'game-jolt-frontend-lib/components/game/build/launch-option/launch-option.model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import { GameRelease } from 'game-jolt-frontend-lib/components/game/release/release.model';
-import { Growls } from 'game-jolt-frontend-lib/components/growls/growls.service';
-import AppProgressBar from 'game-jolt-frontend-lib/components/progress/bar/bar.vue';
-import { AppProgressPoller } from 'game-jolt-frontend-lib/components/progress/poller/poller';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import { arrayRemove } from 'game-jolt-frontend-lib/utils/array';
-import { findRequiredVueParent } from 'game-jolt-frontend-lib/utils/vue';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import AppLoading from 'game-jolt-frontend-lib/vue/components/loading/loading.vue';
-import { filesize } from 'game-jolt-frontend-lib/vue/filters/filesize';
-import { fuzzynumber } from 'game-jolt-frontend-lib/vue/filters/fuzzynumber';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import { arrayRemove } from '../../../../../utils/array';
+import { findRequiredVueParent } from '../../../../../utils/vue';
+import { Api } from '../../../../../_common/api/api.service';
+import AppCardListItem from '../../../../../_common/card/list/item/item.vue';
+import AppExpand from '../../../../../_common/expand/expand.vue';
+import { filesize } from '../../../../../_common/filters/filesize';
+import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
+import { number } from '../../../../../_common/filters/number';
+import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
+import AppForm from '../../../../../_common/form-vue/form';
+import { BaseForm, FormOnInit, FormOnLoad } from '../../../../../_common/form-vue/form.service';
+import { GameBuild } from '../../../../../_common/game/build/build.model';
+import { GameBuildLaunchOption } from '../../../../../_common/game/build/launch-option/launch-option.model';
+import { Game } from '../../../../../_common/game/game.model';
+import { GamePackage } from '../../../../../_common/game/package/package.model';
+import { GameRelease } from '../../../../../_common/game/release/release.model';
+import { Growls } from '../../../../../_common/growls/growls.service';
+import AppLoading from '../../../../../_common/loading/loading.vue';
+import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
+import { AppProgressPoller } from '../../../../../_common/progress/poller/poller';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import FormGameReleaseTS from '../release/release';
 import FormGameRelease from '../release/release.vue';
 import { ArchiveFileSelectorModal } from './archive-file-selector-modal.service';
@@ -42,7 +37,6 @@ type GameBuildFormModel = GameBuild & {
 @Component({
 	components: {
 		AppCardListItem,
-		AppJolticon,
 		AppExpand,
 		AppProgressPoller,
 		AppProgressBar,

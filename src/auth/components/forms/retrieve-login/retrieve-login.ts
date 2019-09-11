@@ -1,15 +1,9 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
-import { BaseForm, FormOnSubmit } from 'game-jolt-frontend-lib/components/form-vue/form.service';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import { Component } from 'vue-property-decorator';
+import { Api } from '../../../../_common/api/api.service';
+import { Connection } from '../../../../_common/connection/connection-service';
+import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
 
-
-@Component({
-	components: {
-		AppJolticon,
-	},
-})
+@Component({})
 export default class FormRetrieveLogin extends BaseForm<any> implements FormOnSubmit {
 	warnOnDiscard = false;
 

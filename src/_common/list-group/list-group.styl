@@ -1,0 +1,195 @@
+$list-group-item-padding = 10px
+$list-group-item-padding-thin = 7px
+$list-group-icon-width = 30px
+$list-group-addon-width = 40px
+$list-group-drag-handle-width = 20px
+
+.list-group
+	rounded-corners-lg()
+	theme-prop('border-color', 'bg-subtle')
+	change-bg('bg')
+	margin-bottom: $font-size-base
+	border-width: 1px
+	border-style: solid
+	overflow: hidden
+
+	&.nowrap
+		white-space: nowrap
+
+.list-group-item
+	theme-prop('border-bottom-color', 'bg-subtle')
+	color: inherit
+	position: relative
+	display: block
+	padding: $list-group-item-padding
+	text-decoration: none
+	border-bottom-width: 1px
+	border-bottom-style: solid
+
+	&:last-child
+		border-bottom: 0
+
+	a&
+		user-select: none
+
+	a&:hover, &.active
+		change-bg('bg-offset')
+
+	// Disabled styling.
+	&.disabled
+		theme-prop('color', 'fg-muted')
+		cursor: default
+
+		a&
+			cursor: not-allowed
+
+		&:hover
+			change-bg('bg')
+
+	// Badges should float right and be correctly aligned vertically.
+	.badge
+		position: relative
+		float: right
+		vertical-align: text-top
+		top: 3px // Arbitrary
+		margin-left: $list-group-item-padding
+
+	// Tags should be correctly aligned vertically.
+	.tag
+		position: relative
+		vertical-align: text-top
+		top: 1px // Arbitrary
+		margin-right: $list-group-item-padding
+
+	// Notice tags are notifications and should be floated right.
+	.tag-notice, .tag-highlight
+		margin-right: 0
+		margin-left: $list-group-item-padding
+		float: right
+
+	// When it has an icon, bump all content in a bit.
+	&.has-icon
+		padding-left: $list-group-icon-width + ($list-group-item-padding / 2)
+
+		// There is some extra spacing on the right from the browser adding spacing in between inline items.
+		// That's why we have to subtract 1px and 2px. It ends up being around 3px of extra spacing we have to subtract.
+		> .jolticon, > .list-group-item-heading > .jolticon, .list-group-item-icon
+			position: relative
+			top: 2px // Arbitrary
+			margin-right: -2px
+			margin-left: -($list-group-icon-width + 1px)
+			width: $list-group-icon-width
+			text-align: center
+
+	&.has-addon
+		padding-left: $list-group-addon-width + $list-group-item-padding
+
+	&.has-icon.has-addon
+		padding-left: ($list-group-addon-width + $list-group-icon-width + ($list-group-item-padding / 2))
+
+	&.has-drag-handle
+		padding-right: $list-group-drag-handle-width + $list-group-item-padding
+
+.list-group-item-heading
+	margin-top: 0
+	margin-bottom: $list-group-item-padding
+
+	&:last-child
+		margin-bottom: 0
+
+.list-group-item-text
+	theme-prop('color', 'fg-muted')
+	font-size: $font-size-small
+	margin-bottom: $list-group-item-padding
+
+	&:last-child
+		margin-bottom: 0
+
+.list-group-item-addon
+	change-bg('bg-offset')
+	position: absolute
+	top: 0
+	left: 0
+	bottom: 0
+	width: 40px
+	text-align: center
+	padding: $list-group-item-padding 0
+
+.list-group.thin
+	.list-group-item
+		font-size: $font-size-small
+		padding-top: $list-group-item-padding-thin
+		padding-bottom: $list-group-item-padding-thin
+
+		.badge
+			top: 1px
+
+		.tag
+			top: -1px
+
+// When a list-group is inside a popover.
+// Darken the borders.
+.popover .list-group, .popper .list-group
+	margin-bottom: $list-group-item-padding
+
+	&:last-child
+		margin-bottom: 0
+
+	> .list-group-item
+		border-left: 0
+		border-right: 0
+		border-radius: 0 !important
+
+/**
+ * Dark list groups
+ */
+.list-group-dark
+	@extend .fill-darkest
+	change-bg('darkest')
+	border: 0
+
+	.list-group-item
+		border: 0
+
+		&.disabled
+			theme-prop('color', 'gray', true)
+
+			&:hover
+				change-bg('darkest')
+				theme-prop('color', 'gray', true)
+
+		> .jolticon, > .list-group-item-heading > .jolticon
+			theme-prop('color', 'light')
+
+		&:first-child
+			border-top-left-radius: $border-radius-large
+			border-top-right-radius: $border-radius-large
+
+		&:last-child
+			border-bottom-left-radius: $border-radius-large
+			border-bottom-right-radius: $border-radius-large
+
+	.list-group-item-heading
+		theme-prop('color', 'lighter')
+
+	.list-group-item-addon
+		background-color: transparent
+
+		&:before
+			change-bg('dark')
+			content: ''
+			position: absolute
+			right: 0
+			top: 50%
+			width: 1px
+			height: 25px
+			line-height: @height
+			margin-top: -(@height / 2)
+			overflow: hidden
+
+	a.list-group-item:hover, .list-group-item.active
+		change-bg('darker')
+		color: $white !important
+
+		> .jolticon, > .list-group-item-heading > .jolticon
+			theme-prop('color', 'lightest')

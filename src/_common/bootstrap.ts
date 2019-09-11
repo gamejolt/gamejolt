@@ -1,19 +1,18 @@
-import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
-import AppButton from 'game-jolt-frontend-lib/components/button/button.vue';
-import { Connection } from 'game-jolt-frontend-lib/components/connection/connection-service';
-import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import { Navigate } from 'game-jolt-frontend-lib/components/navigate/navigate.service';
-import { Payload } from 'game-jolt-frontend-lib/components/payload/payload-service';
-import { Referrer } from 'game-jolt-frontend-lib/components/referrer/referrer.service';
-import { hijackLinks } from 'game-jolt-frontend-lib/utils/router';
-import { VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
 import Vue from 'vue';
 import { VueRouter } from 'vue-router/types/router';
-import AppExternalLink from '../lib/gj-lib-client/vue/components/external-link/external-link.vue';
+import { hijackLinks } from '../utils/router';
 import { bootstrapAppTranslations } from '../utils/translations';
+import { VuexStore } from '../utils/vuex';
+import { Analytics } from './analytics/analytics.service';
+import AppButton from './button/button.vue';
+import { Connection } from './connection/connection-service';
+import AppJolticon from './jolticon/jolticon.vue';
+import AppLinkExternal from './link/external/external.vue';
+import AppLinkHelp from './link/help/help.vue';
+import { Meta } from './meta/meta-service';
+import { Payload } from './payload/payload-service';
+import { Referrer } from './referrer/referrer.service';
 import { Settings } from './settings/settings.service';
-
 /**
  * Bootstraps common services and returns a "createApp" function that our entry point can call to
  * get what it needs.
@@ -31,14 +30,14 @@ export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, rout
 		Meta.init(router);
 		Referrer.init(router);
 		Analytics.initRouter(router);
-		Navigate.init(router);
 		hijackLinks(router, 'gamejolt.com');
 	}
 
 	// Common components.
 	Vue.component('AppButton', AppButton);
 	Vue.component('AppJolticon', AppJolticon);
-	Vue.component('ExternalLink', AppExternalLink);
+	Vue.component('AppLinkExternal', AppLinkExternal);
+	Vue.component('AppLinkHelp', AppLinkHelp);
 
 	// Set some constants so we can use them in templates.
 	Vue.use(vue => {

@@ -1,8 +1,5 @@
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from 'game-jolt-frontend-lib/components/route/route-component';
 import { Component } from 'vue-property-decorator';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import AppGameGrid from '../../../components/game/grid/grid.vue';
 import { Search } from '../../../components/search/search-service';
 import { RouteStore, routeStore, RouteStoreModule } from '../search.store';

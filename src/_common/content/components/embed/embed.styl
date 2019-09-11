@@ -1,0 +1,74 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.embed-main
+	margin-bottom: $line-height-computed
+
+.embed-container
+	position: relative
+	width: 100%
+	rounded-corners-lg()
+	overflow: hidden
+	cursor: default
+
+	& > div
+		margin-left: auto
+		margin-right: auto
+
+.embed-overlay-img
+	position: absolute
+	top: 0
+	left: 0
+	width: 100%
+	height: 100%
+	background-image: url('./shell-bg.png')
+	background-repeat: repeat
+	z-index: 6
+	mask-image: radial-gradient(rgba(0, 0, 0, 0.3) 0, rgba(0, 0, 0, 0.5) 3%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.85) 80%)
+
+.input-container
+	position: relative
+	white-space: normal
+	margin-bottom: 10px
+	cursor: default
+
+.-input
+	background-color: transparent
+	border-width: 0
+	width: 100%
+	font-size: $font-size-large
+	margin-top: 4px
+
+.input-overlay
+	position: absolute
+	top: 0
+	left: 0
+	width: 100%
+	height: 100%
+	background-color: rgba(0, 0, 0, 0.5)
+	display: flex
+	justify-content: center
+	rounded-corners-lg()
+
+.embed-pill-container
+	& > span, a
+		margin-right: 8px
+
+.embed-pill
+	rounded-corners-sm()
+	display: inline-flex
+	align-items: center
+	font-size: $font-size-tiny
+	padding-top: 4px
+	opacity: 0.8
+	theme-prop('color', 'fg', true)
+
+.embed-pill-icon
+	padding-right: 2px
+
+.embed-pill-more
+	theme-prop('border-color', 'light')
+	theme-prop('color', 'light', true)
+
+.embed-pill-icon-more
+	theme-prop('color', 'light')

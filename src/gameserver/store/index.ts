@@ -1,22 +1,18 @@
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { Environment } from 'game-jolt-frontend-lib/components/environment/environment.service';
-import { GameBuild } from 'game-jolt-frontend-lib/components/game/build/build.model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { GamePackage } from 'game-jolt-frontend-lib/components/game/package/package.model';
-import { Meta } from 'game-jolt-frontend-lib/components/meta/meta-service';
-import {
-	ThemeActions,
-	ThemeMutations,
-	ThemeStore,
-} from 'game-jolt-frontend-lib/components/theme/theme.store';
-import { VuexAction, VuexModule, VuexMutation, VuexStore } from 'game-jolt-frontend-lib/utils/vuex';
+import { parse } from 'qs';
+import { VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
+import { Api } from '../../_common/api/api.service';
+import { Environment } from '../../_common/environment/environment.service';
+import { GameBuild } from '../../_common/game/build/build.model';
+import { Game } from '../../_common/game/game.model';
+import { GamePackage } from '../../_common/game/package/package.model';
+import { Meta } from '../../_common/meta/meta-service';
 import {
 	Actions as AppActions,
 	AppStore,
 	appStore,
 	Mutations as AppMutations,
-} from 'game-jolt-frontend-lib/vue/services/app/app-store';
-import { parse } from 'qs';
+} from '../../_common/store/app-store';
+import { ThemeActions, ThemeMutations, ThemeStore } from '../../_common/theme/theme.store';
 
 export type Actions = AppActions &
 	ThemeActions & {

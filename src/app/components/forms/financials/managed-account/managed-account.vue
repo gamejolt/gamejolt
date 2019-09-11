@@ -63,9 +63,9 @@
 								</translate>
 							</p>
 							<p>
-								<external-link href="https://goo.gl/forms/igg8T9dQnZLT2c1l2">
+								<app-link-external href="https://goo.gl/forms/igg8T9dQnZLT2c1l2">
 									<translate>Request manual approval here.</translate>
-								</external-link>
+								</app-link-external>
 							</p>
 						</div>
 					</app-expand>
@@ -79,9 +79,9 @@
 							This information is needed for tax purposes as well as account verification. We use
 							Stripe to store and verify this data.
 						</translate>
-						<a href="https://help.gamejolt.com/why-tax-forms" class="link-help" target="_blank">
+						<app-link-help page="why-tax-forms" class="link-help">
 							<translate>Learn more</translate>
-						</a>
+						</app-link-help>
 					</p>
 				</div>
 
@@ -233,9 +233,9 @@
 								information about anybody that owns at least 25% of the company, in addition to the
 								representative.
 							</translate>
-							<external-link href="https://en.wikipedia.org/wiki/Single_Euro_Payments_Area">
+							<app-link-external href="https://en.wikipedia.org/wiki/Single_Euro_Payments_Area">
 								<translate>Learn more</translate>
-							</external-link>
+							</app-link-external>
 						</p>
 					</div>
 

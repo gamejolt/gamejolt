@@ -107,5 +107,11 @@
 			"\tresolver: ({ route }) => Api.sendRequest($1),",
 			"})$0"
 		]
+	},
+	"Vue prop definition": {
+		"prefix": "vue-prop",
+		"body": [
+			"@Prop({ type: ${1:String}, required: ${2:true} })"
+		]
 	}
 }

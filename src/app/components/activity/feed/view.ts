@@ -1,10 +1,10 @@
-import { Analytics } from 'game-jolt-frontend-lib/components/analytics/analytics.service';
-import { Api } from 'game-jolt-frontend-lib/components/api/api.service';
-import { EventItem } from 'game-jolt-frontend-lib/components/event-item/event-item.model';
-import { FiresidePost } from 'game-jolt-frontend-lib/components/fireside/post/post-model';
-import { Game } from 'game-jolt-frontend-lib/components/game/game.model';
-import { Notification } from 'game-jolt-frontend-lib/components/notification/notification-model';
 import Vue from 'vue';
+import { Analytics } from '../../../../_common/analytics/analytics.service';
+import { Api } from '../../../../_common/api/api.service';
+import { EventItem } from '../../../../_common/event-item/event-item.model';
+import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { Game } from '../../../../_common/game/game.model';
+import { Notification } from '../../../../_common/notification/notification-model';
 import { ActivityFeedInput, ActivityFeedItem } from './item-service';
 import { ActivityFeedState } from './state';
 

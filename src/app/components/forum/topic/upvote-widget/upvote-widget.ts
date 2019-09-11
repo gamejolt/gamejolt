@@ -1,16 +1,12 @@
-import { AppTrackEvent } from 'game-jolt-frontend-lib/components/analytics/track-event.directive';
-import { AppAuthRequired } from 'game-jolt-frontend-lib/components/auth/auth-required-directive';
-import { ForumTopic } from 'game-jolt-frontend-lib/components/forum/topic/topic.model';
-import { AppTooltip } from 'game-jolt-frontend-lib/components/tooltip/tooltip';
-import AppJolticon from 'game-jolt-frontend-lib/vue/components/jolticon/jolticon.vue';
-import { number } from 'game-jolt-frontend-lib/vue/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
+import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
+import { number } from '../../../../../_common/filters/number';
+import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 
 @Component({
-	components: {
-		AppJolticon,
-	},
 	directives: {
 		AppAuthRequired,
 		AppTooltip,

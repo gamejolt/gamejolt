@@ -1,6 +1,6 @@
-import { Device } from 'game-jolt-frontend-lib/components/device/device.service';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
+import { Device } from '../../device/device.service';
 import { AppClientMacAppMenu } from '../mac-app-menu/mac-app-menu';
 import { AppClientTray } from '../tray/tray';
 
