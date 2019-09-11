@@ -183,11 +183,18 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 
 	async onKeyDown(e: KeyboardEvent) {
 		if (this.visible) {
-			if (e.key === 'ArrowDown' && this.selectedIndex < this.users.length - 1) {
+			let direction = '';
+			if (e.key === 'ArrowDown') {
+				direction = this.isInverted ? 'up' : 'down';
+			} else if (e.key === 'ArrowUp') {
+				direction = this.isInverted ? 'down' : 'up';
+			}
+
+			if (direction === 'down' && this.selectedIndex < this.users.length - 1) {
 				this.selectedIndex++;
 				e.stopPropagation();
 				e.preventDefault();
-			} else if (e.key === 'ArrowUp' && this.selectedIndex > 0) {
+			} else if (direction === 'up' && this.selectedIndex > 0) {
 				this.selectedIndex--;
 				e.stopPropagation();
 				e.preventDefault();
