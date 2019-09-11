@@ -17,6 +17,7 @@ import AppContentEditorControlsEmojiPanelTS from './controls/emoji/panel';
 import AppContentEditorControlsEmojiPanel from './controls/emoji/panel.vue';
 import AppContentEditorControlsGifControls from './controls/gif/controls.vue';
 import AppContentEditorControlsInsetContainer from './controls/inset/container.vue';
+import AppContentEditorControlsMentionAutocompleteControls from './controls/mention/autocomplete/controls.vue';
 import AppContentEditorTextControls from './controls/text/controls.vue';
 import buildEvents from './events/build-events';
 import { FocusWatcher } from './focus-watcher';
@@ -34,6 +35,7 @@ import { ContentEditorSchema, generateSchema } from './schemas/content-editor-sc
 		AppContentEditorControlsEmojiPanel,
 		AppContentEditorControlsGifControls,
 		AppContentEditorControlsInsetContainer,
+		AppContentEditorControlsMentionAutocompleteControls,
 	},
 })
 export default class AppContentEditor extends Vue implements ContentOwner {
@@ -84,9 +86,11 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	controlsCollapsed = true;
 	isEmpty = true; // Gets updated through the update-is-empty-plugin
 	openedStartup = false; // When the gif or emoji panel opened on startup. Prevents them from opening again.
+	canShowMentionSuggestions = 0; // Indicates whether we want to currently show the mention suggestion panel. Values > 0 indicate true.
 
 	_tempModelId: number | null = null; // If no model id if gets passed in, we store a temp model's id here
-	_sourceControlVal: string | null = null; // Keep a copy of the json version of the doc, to only set the content if the external source changed.
+	// Keep a copy of the json version of the doc, to only set the content if the external source changed.
+	_sourceControlVal: string | null = null;
 
 	$refs!: {
 		editor: HTMLElement;
@@ -319,6 +323,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 	private onFocusOut() {
 		if (this.isFocused) {
+			this.canShowMentionSuggestions = 0; // When the editor goes out of focus, hide the mention suggestions panel.
 			this.$emit('editor-blur');
 		}
 		this.isFocused = false;
@@ -371,5 +376,10 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 	onOpenedStartup() {
 		this.openedStartup = true;
+	}
+
+	onInsertMention() {
+		this.highlightCurrentSelection();
+		this.canShowMentionSuggestions = 0; // Hide control
 	}
 }

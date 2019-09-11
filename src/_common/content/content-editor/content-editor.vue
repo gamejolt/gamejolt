@@ -64,6 +64,14 @@
 				@click="onTextControlClicked"
 			/>
 		</transition>
+		<transition name="fade">
+			<app-content-editor-controls-mention-autocomplete-controls
+				:can-show="canShowMentionSuggestions"
+				:view="view"
+				:state-counter="stateCounter"
+				@insert="onInsertMention"
+			/>
+		</transition>
 	</div>
 </template>
 

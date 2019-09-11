@@ -6,6 +6,7 @@ import AppContentEditorTS from '../content-editor';
 import { ContentEditorService } from '../content-editor.service';
 import { dropEventHandler } from './drop-event-handler';
 import { focusEventHandler } from './focus-event-handler';
+import { keydownEventHandler } from './keydown-event-handler';
 import { pasteEventHandler } from './paste-event-handler';
 
 type EventHandlers = {
@@ -20,6 +21,7 @@ export default function buildEvents(editor: AppContentEditorTS): EventHandlers {
 		handlers.drop = dropEventHandler(editor.capabilities);
 	}
 	handlers.focus = focusEventHandler(editor);
+	handlers.keydown = keydownEventHandler(editor);
 
 	return handlers;
 }
