@@ -3,7 +3,7 @@ import { User } from '../../../../user/user.model';
 export default class ContentEditorMentionCache {
 	private static _results: { [query: string]: User[] } = {};
 
-	public static addResults(query: string, users: User[]) {
+	public static setResults(query: string, users: User[]) {
 		this._results[query] = users;
 	}
 

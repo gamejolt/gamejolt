@@ -8,6 +8,7 @@ import AppUserAvatarImg from '../../../../../user/user-avatar/img/img.vue';
 import { User } from '../../../../../user/user.model';
 import AppUserVerifiedTick from '../../../../../user/verified-tick/verified-tick.vue';
 import { ContentEditorService } from '../../../content-editor.service';
+import { BasicMentionRegex } from '../../../plugins/input-rules/detect-mention-suggestion';
 import { ContentEditorSchema } from '../../../schemas/content-editor-schema';
 import ContentEditorMentionCache from '../cache.service';
 
@@ -35,7 +36,7 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 	selectedIndex = 0;
 	isListening = false; // If we are listening to the document keydown event, to be able to unbind it later.
 	isInverted = false; // If the list is inverted due to screen size constraints. It shows above the control instead if below.
-	remoteSuggestionTimeout?: NodeJS.Timer; // Timeout between requests to search backend
+	remoteSuggestionDebounceTimeout: NodeJS.Timer | null = null; // Timeout between requests to search backend
 	isLoading = false; // Loading more users from backend
 	users: User[] = [];
 
@@ -69,9 +70,9 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 			this.isListening = false;
 		}
 
-		if (this.remoteSuggestionTimeout) {
-			clearTimeout(this.remoteSuggestionTimeout);
-			this.remoteSuggestionTimeout = undefined;
+		if (this.remoteSuggestionDebounceTimeout) {
+			clearTimeout(this.remoteSuggestionDebounceTimeout);
+			this.remoteSuggestionDebounceTimeout = null;
 		}
 	}
 
@@ -87,7 +88,7 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 				// Then from the end of that slice, get the mention text.
 				const slice = state.doc.slice(0, state.selection.from);
 				const text = ContentEditorService.getFragmentText(slice.content);
-				const matches = /@([\w_-]+)$/i.exec(text);
+				const matches = BasicMentionRegex.exec(text);
 
 				if (matches && matches.length >= 2) {
 					const start = this.view.coordsAtPos(state.selection.from);
@@ -126,9 +127,9 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 
 	private async updateSuggestions(query: string) {
 		// Stop any existing queued search timeout.
-		if (this.remoteSuggestionTimeout) {
-			clearTimeout(this.remoteSuggestionTimeout);
-			this.remoteSuggestionTimeout = undefined;
+		if (this.remoteSuggestionDebounceTimeout) {
+			clearTimeout(this.remoteSuggestionDebounceTimeout);
+			this.remoteSuggestionDebounceTimeout = null;
 			this.isLoading = false;
 		}
 
@@ -140,8 +141,8 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 		} else {
 			this.users = [];
 
-			// We set a timeout for 200ms here to not send right away when the user is typing fast.
-			this.remoteSuggestionTimeout = setTimeout(async () => {
+			// We set a timeout here to not send right away when the user is typing fast.
+			this.remoteSuggestionDebounceTimeout = setTimeout(async () => {
 				this.isLoading = true;
 
 				const payload = await Api.sendRequest(
@@ -154,17 +155,15 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 					const searchUsers = User.populate(payload.users);
 
 					// Add to cache
-					if (!ContentEditorMentionCache.hasResults(query)) {
-						ContentEditorMentionCache.addResults(query, searchUsers);
-					}
+					ContentEditorMentionCache.setResults(query, searchUsers);
 
 					// Only process results if the currently active suggestion is still the one we initiated the search with.
 					if (query === this.query) {
 						this.users = searchUsers;
+						await this.handleInverted();
 					}
 				}
 
-				await this.handleInverted();
 				this.isLoading = false;
 			}, 500);
 		}
