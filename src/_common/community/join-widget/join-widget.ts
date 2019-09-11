@@ -31,6 +31,9 @@ export default class AppCommunityJoinWidget extends Vue {
 	@Prop({ type: String, required: false, default: 'global' })
 	eventLabel!: string;
 
+	@Prop(Boolean)
+	solid?: boolean;
+
 	@State
 	app!: AppStore;
 
