@@ -50,20 +50,17 @@ export class ContentSetCacheService {
 		context: ContentContext
 	): ContentSetCache {
 		let containerMap = this._caches.get(container);
-
-		if (containerMap) {
-			if (containerMap.has(context)) {
-				return containerMap.get(context)!;
-			}
-
-			const newCache = new ContentSetCache(container, context);
-			containerMap.set(context, newCache);
-		} else {
+		if (containerMap === undefined) {
 			containerMap = new Map<ContentContext, ContentSetCache>();
 			this._caches.set(container, containerMap);
 		}
 
-		// After updating the maps, try to get the cache again.
-		return this.getCache(container, context);
+		let cache = containerMap.get(context);
+		if (cache === undefined) {
+			cache = new ContentSetCache(container, context);
+			containerMap.set(context, cache);
+		}
+
+		return cache;
 	}
 }
