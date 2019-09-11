@@ -3,17 +3,19 @@ import { Component, Prop } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { State } from 'vuex-class';
 import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
+import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
 import { Jam } from '../../../../../_common/jam/jam.model';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppTheme } from '../../../../../_common/theme/theme';
-import { Store } from '../../../../store/index';
 import { FeaturedItem } from '../../../../components/featured-item/featured-item.model';
 import AppGameFollowWidget from '../../../../components/game/follow-widget/follow-widget.vue';
+import { Store } from '../../../../store/index';
 
 @Component({
 	components: {
 		AppGameFollowWidget,
 		AppTheme,
+		AppCommunityJoinWidget,
 	},
 	directives: {
 		AppTrackEvent,
@@ -31,6 +33,13 @@ export default class AppDiscoverHomeBanner extends Vue {
 	get shouldShowFollow() {
 		if (this.item.game) {
 			return this.app.user && !this.item.game.is_following;
+		}
+		return false;
+	}
+
+	get shouldShowJoin() {
+		if (this.item.community) {
+			return this.app.user && !this.item.community.is_member;
 		}
 		return false;
 	}
@@ -59,12 +68,21 @@ export default class AppDiscoverHomeBanner extends Vue {
 					id: this.item.jam.url,
 				},
 			};
+		} else if (this.item.community) {
+			return {
+				name: 'communities.view.overview',
+				params: {
+					path: this.item.community.path,
+				},
+			};
 		}
 	}
 
 	get theme() {
 		if (this.item.game) {
 			return this.item.game.theme;
+		} else if (this.item.community) {
+			return this.item.community.theme;
 		}
 	}
 }
