@@ -33,14 +33,13 @@ export default class AppDiscoverHomeBanner extends Vue {
 	get shouldShowFollowGame() {
 		if (this.item.game) {
 			return !this.app.user || !this.item.game.is_following;
-			// return this.app.user && !this.item.game.is_following;
 		}
 		return false;
 	}
 
 	get shouldShowJoinCommunity() {
 		if (this.item.community) {
-			return this.app.user && !this.item.community.is_member;
+			return !this.app.user || !this.item.community.is_member;
 		}
 		return false;
 	}
