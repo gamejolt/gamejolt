@@ -17,7 +17,7 @@
 			}"
 		>
 			<app-editable-overlay
-				v-if="!!coverMediaItem || coverEditable"
+				v-if="coverEditable"
 				:class="{ '-cover-img': !!coverMediaItem }"
 				:disabled="!coverEditable"
 				@click="emitEditCover"
@@ -43,6 +43,13 @@
 					/>
 				</div>
 			</app-editable-overlay>
+			<div class="-cover-img" v-else-if="!!coverMediaItem">
+				<app-media-item-cover
+					:media-item="coverMediaItem"
+					:max-height="coverMaxHeight"
+					:blur="blurHeader"
+				/>
+			</div>
 
 			<div class="page-header-cover-buttons" v-if="showCoverButtons">
 				<div class="page-header-cover-buttons-inner">
