@@ -72,6 +72,23 @@ export default class AppFormControlErrors extends Vue {
 			return this.processMessage('server', label);
 		}
 
+		// There may be multiple server errors that are relevant for the
+		// same field. For example when adding a community channel a title
+		// can be invalid because its already in use, or is a reserved name.
+		//
+		// If we need to show different error messages for these, we need
+		// to be able to capture different custom server error, for example:
+		// "title-in-use" and "title-reserved".
+		//
+		// For this reason, we check the rest of the returning serverErrors
+		// against the error messages we overrided.
+		const serverErrors = this.form.base.serverErrors;
+		for (let errorType of Object.keys(serverErrors)) {
+			if (serverErrors[errorType] && this.errorMessageOverrides[errorType]) {
+				return this.processMessage(errorType, label);
+			}
+		}
+
 		return undefined;
 	}
 
