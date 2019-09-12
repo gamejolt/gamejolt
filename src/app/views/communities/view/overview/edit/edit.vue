@@ -25,6 +25,16 @@
 			</app-community-perms>
 		</template>
 
+		<app-community-perms :community="community" required="community-details">
+			<h2 class="section-header">
+				<translate>Details</translate>
+			</h2>
+
+			<form-community-details :model="community" @submit="onDetailsChange" />
+
+			<div class="-spacer"></div>
+		</app-community-perms>
+
 		<!-- Tags -->
 		<app-community-perms :community="community" required="community-tags">
 			<h2 class="section-header">

@@ -41,7 +41,7 @@
 
 			<!-- If we are editing, we are showing the subroute's <edit> view here. Otherwise display feed stuff. -->
 			<template v-if="isEditing">
-				<router-view @tags-change="onTagsChanged" />
+				<router-view @details-change="onDetailsChanged" @tags-change="onTagsChanged" />
 			</template>
 			<template v-else>
 				<app-post-add-button

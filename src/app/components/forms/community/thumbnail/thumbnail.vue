@@ -1,6 +1,10 @@
 <template>
 	<app-form name="thumbnailForm" ref="form">
-		<app-form-group name="file" :label="$gettext(`Upload New Thumbnail`)">
+		<app-form-group
+			name="file"
+			:label="$gettext(`Upload New Thumbnail`)"
+			:optional="!!formModel.thumbnail"
+		>
 			<p class="help-block">
 				<translate>Your image must be a PNG or JPG.</translate>
 				<br />

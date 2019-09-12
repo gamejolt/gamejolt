@@ -15,6 +15,7 @@ export type Perm =
 	| 'community-features'
 	| 'community-posts'
 	| 'community-media'
+	| 'community-details'
 	| 'community-tags'
 	| 'community-description';
 
