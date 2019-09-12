@@ -2,8 +2,8 @@ import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
+import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
-import { CommunityTag } from '../../../../../_common/community/tag/tag.model';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { number } from '../../../../../_common/filters/number';
@@ -38,15 +38,15 @@ function getSort(route: Route) {
 function getFetchUrl(route: Route) {
 	const channel = getChannel(route);
 	const sort = getSort(route);
-	const tags: string[] = [sort];
+	const channels: string[] = [sort];
 
 	if (channel !== 'all') {
-		tags.push(channel);
+		channels.push(channel);
 	}
 
 	let url = `/web/posts/fetch/community/${route.params.path}`;
-	if (tags.length) {
-		url += '?' + tags.map(tag => `tags[]=` + encodeURIComponent(tag)).join('&');
+	if (channels.length) {
+		url += '?' + channels.map(name => `channels[]=` + encodeURIComponent(name)).join('&');
 	}
 	return url;
 }
@@ -134,12 +134,12 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		} else {
 			switch (this.sort) {
 				case 'hot':
-					title = this.$gettextInterpolate('Hot #%{ tag } posts', {
+					title = this.$gettextInterpolate('Hot %{ tag } posts', {
 						tag: this.channel,
 					});
 					break;
 				case 'new':
-					title = this.$gettextInterpolate('New #%{ tag } posts', {
+					title = this.$gettextInterpolate('New %{ tag } posts', {
 						tag: this.channel,
 					});
 					break;
@@ -158,6 +158,15 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	get channel() {
 		return getChannel(this.$route);
+	}
+
+	get communityChannel() {
+		const channel = this.channel;
+		if (channel === 'all' || channel === 'featured') {
+			return null;
+		}
+
+		return (this.community.channels || []).find(i => i.title === channel) || null;
 	}
 
 	get sort() {
@@ -273,8 +282,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		}
 	}
 
-	onTagsChanged(tags: CommunityTag[]) {
-		this.community.tags = tags;
+	onChannelsChanged(channels: CommunityChannel[]) {
+		this.community.channels = channels;
 	}
 
 	onDetailsChanged(community: Community) {

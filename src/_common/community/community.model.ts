@@ -1,11 +1,11 @@
-import { RawLocation } from 'vue-router';
+import { Location } from 'vue-router';
 import { Api } from '../api/api.service';
 import { Collaboratable, Perm } from '../collaborator/collaboratable';
 import { Game } from '../game/game.model';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { Theme } from '../theme/theme.model';
-import { CommunityTag } from './tag/tag.model';
+import { CommunityChannel } from './channel/channel.model';
 
 export async function $joinCommunity(community: Community) {
 	community.is_member = true;
@@ -54,7 +54,7 @@ export class Community extends Collaboratable(Model) {
 	header?: MediaItem;
 	theme!: Theme | null;
 	game!: Game | null;
-	tags?: CommunityTag[] | null;
+	channels?: CommunityChannel[] | null;
 
 	member_count!: number;
 	is_member?: boolean;
@@ -82,8 +82,8 @@ export class Community extends Collaboratable(Model) {
 			this.game = new Game(data.game);
 		}
 
-		if (data.tags) {
-			this.tags = CommunityTag.populate(data.tags);
+		if (data.channels) {
+			this.channels = CommunityChannel.populate(data.channels);
 		}
 	}
 
@@ -94,13 +94,23 @@ export class Community extends Collaboratable(Model) {
 		return require('./no-thumb.png');
 	}
 
-	get routeLocation(): RawLocation {
+	get routeLocation(): Location {
 		return {
 			name: 'communities.view.overview',
 			params: {
 				path: this.path,
 			},
 		};
+	}
+
+	channelRouteLocation(channel: CommunityChannel): Location {
+		const communityLocation = this.routeLocation;
+		communityLocation.params!.channel = channel.title;
+		return communityLocation;
+	}
+
+	$save() {
+		return this.$_save('/web/dash/communities/save/' + this.id, 'community');
 	}
 
 	$saveHeader() {

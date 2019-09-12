@@ -6,9 +6,6 @@
 				<span class="-menu-icon">
 					<app-jolticon icon="menu" class="-jolticon middle" />
 				</span>
-				<span class="-icon" v-if="activeItem.type === 'tag'">
-					<app-jolticon icon="tag" class="middle" />
-				</span>
 				<span class="-label">
 					{{ activeItem.label }}
 				</span>
@@ -35,9 +32,6 @@
 						block
 						@click.native="isNavExpanded = false"
 					>
-						<span class="-icon" v-if="item.type === 'tag'">
-							<app-jolticon icon="tag" class="middle" />
-						</span>
 						<span class="-label">
 							{{ item.label }}
 						</span>
@@ -48,7 +42,7 @@
 			<app-community-perms
 				:community="community"
 				tag="ol"
-				required="community-tags,community-media"
+				required="community-channels,community-media"
 				either
 			>
 				<li>

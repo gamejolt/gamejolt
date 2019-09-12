@@ -1,10 +1,15 @@
 import * as addWeeks from 'date-fns/add_weeks';
 import * as startOfDay from 'date-fns/start_of_day';
+import { determine } from 'jstimezonedetect';
+import { Component, Prop, Watch } from 'vue-property-decorator';
+import { arrayRemove } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
+import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { ContentDocument } from '../../../../_common/content/content-document';
 import { ContentWriter } from '../../../../_common/content/content-writer';
+import AppExpand from '../../../../_common/expand/expand.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import {
 	AppFormAutosize,
@@ -28,20 +33,17 @@ import AppFormLegend from '../../../../_common/form-vue/legend/legend.vue';
 import { GameVideo } from '../../../../_common/game/video/video.model';
 import { KeyGroup } from '../../../../_common/key-group/key-group.model';
 import { LinkedAccount } from '../../../../_common/linked-account/linked-account.model';
+import AppLoading from '../../../../_common/loading/loading.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
+import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
-import { arrayRemove } from '../../../../utils/array';
-import AppLoading from '../../../../_common/loading/loading.vue';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
-import { determine } from 'jstimezonedetect';
-import { Component, Prop } from 'vue-property-decorator';
-import AppFormPostTags from './tags/tags.vue';
+import AppFormPostChannels from './channels/channels.vue';
 import AppFormPostMedia from './_media/media.vue';
 
 type FormPostModel = FiresidePost & {
@@ -51,6 +53,7 @@ type FormPostModel = FiresidePost & {
 	video_url: string;
 	sketchfab_id: string;
 	community_id: number;
+	channel_id: number;
 
 	poll_item_count: number;
 	poll_duration: number;
@@ -84,8 +87,9 @@ type FormPostModel = FiresidePost & {
 		AppProgressBar,
 		AppFormPostMedia,
 		AppCommunityPill,
-		AppFormPostTags,
+		AppFormPostChannels,
 		AppFormControlContent,
+		AppExpand,
 	},
 	directives: {
 		AppFocusWhen,
@@ -103,6 +107,9 @@ export default class FormPost extends BaseForm<FormPostModel>
 	@Prop(Community)
 	defaultCommunity?: Community;
 
+	@Prop(CommunityChannel)
+	defaultChannel?: CommunityChannel;
+
 	$refs!: {
 		form: AppForm;
 	};
@@ -115,7 +122,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 	readonly MAX_POLL_DURATION = 20160;
 
 	keyGroups: KeyGroup[] = [];
-	featuredTags: string[] = [];
 	wasPublished = false;
 	attachmentType = '';
 	enabledAttachments = false;
@@ -132,6 +138,8 @@ export default class FormPost extends BaseForm<FormPostModel>
 	isSavedDraftPost = false;
 	leadLengthLimit = 255;
 	isUploadingPastedImage = false;
+	communityChannels: CommunityChannel[] = [];
+	selectedChannel: CommunityChannel | null = null;
 
 	private updateAutosize?: () => void;
 
@@ -176,7 +184,8 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	get hasValidSketchfabModelId() {
 		return (
-			this.formModel.sketchfab_id && this.formModel.sketchfab_id.match(this.SKETCHFAB_FIELD_REGEX)
+			this.formModel.sketchfab_id &&
+			this.formModel.sketchfab_id.match(this.SKETCHFAB_FIELD_REGEX)
 		);
 	}
 
@@ -304,9 +313,20 @@ export default class FormPost extends BaseForm<FormPostModel>
 		return [];
 	}
 
-	async onInit() {
-		await this.fetchTimezones();
+	@Watch('selectedChannel')
+	validateSelectedChannel() {
+		if (this.selectedChannel) {
+			this.clearCustomError('channel');
+		} else if (this.communities.length > 0) {
+			this.setCustomError('channel');
+		}
+	}
 
+	get hasChannelError() {
+		return this.hasCustomError('channel');
+	}
+
+	async onInit() {
 		const model = this.model!;
 
 		// save if the post was a saved draft post (not a new draft post)
@@ -318,12 +338,22 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 		if (model.communities.length > 0) {
 			this.setField('community_id', model.communities[0].community.id);
+			this.selectedChannel = model.communities[0].channel || null;
 		} else if (this.defaultCommunity) {
 			this.setField('community_id', this.defaultCommunity.id);
 		}
 
+		if (!this.selectedChannel) {
+			this.selectedChannel = this.defaultChannel || null;
+		}
+
+		this.validateSelectedChannel();
+
 		if (model.videos.length) {
-			this.setField('video_url', 'https://www.youtube.com/watch?v=' + model.videos[0].video_id);
+			this.setField(
+				'video_url',
+				'https://www.youtube.com/watch?v=' + model.videos[0].video_id
+			);
 			this.enableVideo();
 		} else if (model.sketchfabs.length) {
 			this.setField('sketchfab_id', model.sketchfabs[0].sketchfab_id);
@@ -361,16 +391,21 @@ export default class FormPost extends BaseForm<FormPostModel>
 		if (model.hasArticle) {
 			this.longEnabled = true;
 		}
+
+		await this.fetchTimezones();
 	}
 
 	onLoad(payload: any) {
 		this.keyGroups = KeyGroup.populate(payload.keyGroups);
-		this.featuredTags = payload.tags;
 		this.wasPublished = payload.wasPublished;
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
 		this.leadLengthLimit = payload.leadLengthLimit;
+
+		if (payload.channels) {
+			this.communityChannels = CommunityChannel.populate(payload.channels);
+		}
 
 		this.linkedAccounts = LinkedAccount.populate(payload.linkedAccounts);
 		this.publishToPlatforms = payload.publishToPlatforms || null;
@@ -382,6 +417,10 @@ export default class FormPost extends BaseForm<FormPostModel>
 		}
 	}
 
+	selectChannel(channelId: number) {
+		this.setField('channel_id', channelId);
+	}
+
 	onDraftSubmit() {
 		this.setField('status', FiresidePost.STATUS_DRAFT);
 	}
@@ -391,6 +430,8 @@ export default class FormPost extends BaseForm<FormPostModel>
 		if (this.isScheduling) {
 			this.setField('status', FiresidePost.STATUS_DRAFT);
 		}
+
+		this.setField('channel_id', this.selectedChannel ? this.selectedChannel.id : 0);
 
 		// Set or clear attachments as needed
 		if (this.attachmentType === FiresidePost.TYPE_MEDIA && this.formModel.media) {

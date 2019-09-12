@@ -41,11 +41,12 @@
 
 			<!-- If we are editing, we are showing the subroute's <edit> view here. Otherwise display feed stuff. -->
 			<template v-if="isEditing">
-				<router-view @details-change="onDetailsChanged" @tags-change="onTagsChanged" />
+				<router-view @details-change="onDetailsChanged" @channels-change="onChannelsChanged" />
 			</template>
 			<template v-else>
 				<app-post-add-button
 					:community="community"
+					:channel="communityChannel"
 					@add="onPostAdded"
 					:placeholder="placeholderText"
 				/>

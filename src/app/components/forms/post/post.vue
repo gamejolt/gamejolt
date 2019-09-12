@@ -1,5 +1,50 @@
 <template>
-	<app-form name="postForm" ref="form">
+	<app-form v-if="model" name="postForm" ref="form">
+		<!-- Communities -->
+		<template v-if="communities.length">
+			<div class="-communities">
+				<div class="-communities-label">
+					<translate>Community</translate>
+				</div>
+				<div class="-communities-list">
+					<app-community-pill
+						v-for="community of communities"
+						:key="community.id"
+						:community="community"
+						static
+					/>
+				</div>
+				<a v-if="wasPublished && selectedChannel" class="badge -current-channel">
+					{{ selectedChannel.title }}
+				</a>
+			</div>
+
+			<template v-if="!wasPublished">
+				<app-form-post-channels
+					v-if="communityChannels.length"
+					class="-channels"
+					v-model="selectedChannel"
+					:channels="communityChannels"
+				/>
+
+				<app-expand :when="hasChannelError">
+					<div class="-channel-error alert alert-notice">
+						<translate>
+							Choose a channel to post to.
+						</translate>
+					</div>
+				</app-expand>
+
+				<div class="-community-message alert alert-info full-bleed">
+					<strong><translate>Looks like you're posting into a community!</translate></strong>
+					<translate>
+						Your post will be shown within the community, as well as on your profile page and to any
+						people that follow you.
+					</translate>
+				</div>
+			</template>
+		</template>
+
 		<!-- Attachments -->
 		<div class="-attachment-controls" v-if="!enabledAttachments">
 			<app-button
@@ -153,17 +198,6 @@
 			</div>
 
 			<app-form-control-errors />
-
-			<!--
-				Only show tags for community posts at the moment.
-			-->
-			<app-form-post-tags
-				v-if="featuredTags"
-				class="-post-tags"
-				:tags="featuredTags"
-				:content="tagContentDocuments"
-				@tag="addTag($event)"
-			/>
 		</app-form-group>
 
 		<!-- Post body (long) -->
@@ -495,31 +529,6 @@
 				</div>
 			</div>
 		</app-form-group>
-
-		<!-- Communities -->
-		<template v-if="communities.length">
-			<div class="-communities">
-				<div class="-communities-label">
-					<translate>Community</translate>
-				</div>
-				<div class="-communities-list">
-					<app-community-pill
-						v-for="community of communities"
-						:key="community.id"
-						:community="community"
-						static
-					/>
-				</div>
-			</div>
-
-			<div v-if="!wasPublished" class="alert alert-info full-bleed">
-				<strong><translate>Looks like you're posting into a community!</translate></strong>
-				<translate>
-					Your post will be shown within the community, as well as on your profile page and to any
-					people that follow you.
-				</translate>
-			</div>
-		</template>
 
 		<template v-if="platformRestrictions.length">
 			<div

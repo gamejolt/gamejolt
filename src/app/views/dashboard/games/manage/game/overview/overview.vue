@@ -72,7 +72,7 @@
 			<app-community-perms
 				:community="game.community"
 				tag="div"
-				required="community-tags,community-media"
+				required="community-channels,community-media"
 				either
 			>
 				<div class="col-lg-8">

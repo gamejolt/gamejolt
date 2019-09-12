@@ -4,14 +4,8 @@ import { Community } from '../../../../../../_common/community/community.model';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 
-type NavItemType = 'general' | 'tag';
-
 class NavItem {
-	constructor(
-		public readonly type: NavItemType,
-		public readonly label: string,
-		public readonly channel: 'featured' | string
-	) {}
+	constructor(public readonly label: string, public readonly channel: 'featured' | string) {}
 
 	get routeParam() {
 		return this.channel === 'featured' ? undefined : this.channel;
@@ -41,9 +35,9 @@ export default class AppCommunitiesViewOverviewNav extends Vue {
 
 	readonly Screen = Screen;
 
-	get tags() {
-		if (this.community.tags) {
-			return this.community.tags.map(t => t.tag);
+	get titles() {
+		if (this.community.channels) {
+			return this.community.channels.map(t => t.title);
 		}
 		return [];
 	}
@@ -51,10 +45,10 @@ export default class AppCommunitiesViewOverviewNav extends Vue {
 	get groups(): NavGroup[] {
 		return [
 			new NavGroup([
-				new NavItem('general', this.$gettext('Featured'), 'featured'),
-				new NavItem('general', this.$gettext('All Posts'), 'all'),
+				new NavItem(this.$gettext('Featured'), 'featured'),
+				new NavItem(this.$gettext('All Posts'), 'all'),
 			]),
-			new NavGroup(this.tags.map(i => new NavItem('tag', i, i))),
+			new NavGroup(this.titles.map(i => new NavItem(i, i))),
 		];
 	}
 

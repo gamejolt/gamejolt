@@ -1,16 +1,21 @@
+import Vue from 'vue';
+import { Component, Emit, Prop } from 'vue-property-decorator';
+import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../_common/game/game.model';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { PostEditModal } from '../edit-modal/edit-modal-service';
 
 @Component({
 	components: {
 		AppUserAvatarImg,
+	},
+	directives: {
+		AppAuthRequired,
 	},
 })
 export default class AppPostAddButton extends Vue {
@@ -19,6 +24,9 @@ export default class AppPostAddButton extends Vue {
 
 	@Prop(Community)
 	community?: Community;
+
+	@Prop(CommunityChannel)
+	channel?: CommunityChannel;
 
 	@Prop(String)
 	placeholder?: string;
@@ -44,9 +52,11 @@ export default class AppPostAddButton extends Vue {
 		// Block the modal from appearing multiple times between the post request being sent and the modal opening
 		this._isBlocked = true;
 
-		let post: FiresidePost | undefined = await FiresidePost.$create(this.game ? this.game.id : 0);
+		let post: FiresidePost | undefined = await FiresidePost.$create(
+			this.game ? this.game.id : 0
+		);
 
-		post = await PostEditModal.show(post, { community: this.community });
+		post = await PostEditModal.show(post, { community: this.community, channel: this.channel });
 		this._isBlocked = false;
 
 		if (!post) {
