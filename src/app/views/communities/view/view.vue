@@ -17,9 +17,16 @@
 		<!-- Blur the header to signify they can't edit it -->
 		<app-page-header
 			:cover-media-item="community.header"
+			:cover-editable="isEditing && canEditMedia && !community.game"
 			should-affix-nav
 			:blur-header="isEditing && !!community.game"
+			@edit-cover="showEditHeader()"
 		>
+			<span slot="cover-edit-buttons">
+				<translate v-if="!community.header">Upload Header</translate>
+				<translate v-else>Change Header</translate>
+			</span>
+
 			<span class="tag">
 				<template v-if="community.game">
 					<translate>Game Community</translate>

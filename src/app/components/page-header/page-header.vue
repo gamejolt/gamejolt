@@ -13,15 +13,36 @@
 			:class="{
 				'has-cover-image': !!coverMediaItem,
 				'has-cover-buttons': showCoverButtons,
+				'is-editable': coverEditable,
 			}"
 		>
-			<div class="-cover-img" v-if="!!coverMediaItem">
-				<app-media-item-cover
-					:media-item="coverMediaItem"
-					:max-height="coverMaxHeight"
-					:blur="blurHeader"
-				/>
-			</div>
+			<app-editable-overlay
+				v-if="!!coverMediaItem || coverEditable"
+				:class="{ '-cover-img': !!coverMediaItem }"
+				:disabled="!coverEditable"
+				@click="emitEditCover"
+			>
+				<span slot="overlay">
+					<slot name="cover-edit-buttons" />
+				</span>
+
+				<!--
+					If no cover media, reserve space with a min-height.
+				-->
+				<div
+					class="fill-gray"
+					:style="{
+						'min-height': !coverMediaItem ? '200px' : '',
+					}"
+				>
+					<app-media-item-cover
+						v-if="!!coverMediaItem"
+						:media-item="coverMediaItem"
+						:max-height="coverMaxHeight"
+						:blur="blurHeader"
+					/>
+				</div>
+			</app-editable-overlay>
 
 			<div class="page-header-cover-buttons" v-if="showCoverButtons">
 				<div class="page-header-cover-buttons-inner">

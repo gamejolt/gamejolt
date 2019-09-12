@@ -285,4 +285,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	onChannelsChanged(channels: CommunityChannel[]) {
 		this.community.channels = channels;
 	}
+
+	onDetailsChanged(community: Community) {
+		this.community.assign(community);
+	}
 }

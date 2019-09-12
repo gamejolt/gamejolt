@@ -10,9 +10,10 @@ import { number } from '../../../../_common/filters/number';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
-import { Store } from '../../../store/index';
+import { CommunityHeaderModal } from '../../../components/forms/community/header/modal/modal.service';
 import { CommunityThumbnailModal } from '../../../components/forms/community/thumbnail/modal/modal.service';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
+import { Store } from '../../../store/index';
 
 @Component({
 	name: 'RouteCommunitiesView',
@@ -87,6 +88,10 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	showEditAvatar() {
 		CommunityThumbnailModal.show(this.community);
+	}
+
+	showEditHeader() {
+		CommunityHeaderModal.show(this.community);
 	}
 
 	async acceptCollaboration() {

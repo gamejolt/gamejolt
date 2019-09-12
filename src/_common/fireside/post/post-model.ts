@@ -4,7 +4,7 @@ import { Perm } from '../../collaborator/collaboratable';
 import { Community } from '../../community/community.model';
 import { ContentContainerModel } from '../../content/content-container-model';
 import { ContentContext } from '../../content/content-context';
-import { ContentSetCache } from '../../content/content-set-cache';
+import { ContentSetCacheService } from '../../content/content-set-cache';
 import { EventItem } from '../../event-item/event-item.model';
 import { Game } from '../../game/game.model';
 import { HistoryTick } from '../../history-tick/history-tick-service';
@@ -38,9 +38,6 @@ export class FiresidePost extends Model implements ContentContainerModel {
 	static STATUS_DRAFT = 'draft';
 	static STATUS_ACTIVE = 'active';
 	static STATUS_REMOVED = 'removed';
-
-	private _articleSetCache: ContentSetCache | undefined;
-	private _leadSetCache: ContentSetCache | undefined;
 
 	type!: 'text' | 'media' | 'video' | 'sketchfab' | 'comment-video';
 	hash!: string;
@@ -163,24 +160,18 @@ export class FiresidePost extends Model implements ContentContainerModel {
 	}
 
 	get hasArticle() {
-		if (this._articleSetCache === undefined) {
-			this._articleSetCache = new ContentSetCache(this, 'fireside-post-article');
-		}
-		return this._articleSetCache.hasContent;
+		const cache = ContentSetCacheService.getCache(this, 'fireside-post-article');
+		return cache.hasContent;
 	}
 
 	get hasLead() {
-		if (this._leadSetCache === undefined) {
-			this._leadSetCache = new ContentSetCache(this, 'fireside-post-lead');
-		}
-		return this._leadSetCache.hasContent;
+		const cache = ContentSetCacheService.getCache(this, 'fireside-post-lead');
+		return cache.hasContent;
 	}
 
 	get leadLength() {
-		if (this._leadSetCache === undefined) {
-			this._leadSetCache = new ContentSetCache(this, 'fireside-post-lead');
-		}
-		return this._leadSetCache.length;
+		const cache = ContentSetCacheService.getCache(this, 'fireside-post-lead');
+		return cache.length;
 	}
 
 	get hasPoll() {

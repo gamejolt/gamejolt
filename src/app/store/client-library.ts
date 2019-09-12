@@ -22,6 +22,7 @@ import { isErrnoException } from '../../utils/utils';
 import { VuexAction, VuexGetter, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { Analytics } from '../../_common/analytics/analytics.service';
 import { Api } from '../../_common/api/api.service';
+import { ClientUpdater } from '../../_common/client/client-updater.service';
 import { Device } from '../../_common/device/device.service';
 import { GameBuild } from '../../_common/game/build/build.model';
 import { GameBuildLaunchOption } from '../../_common/game/build/launch-option/launch-option.model';
@@ -207,6 +208,7 @@ export class ClientLibraryStore extends VuexStore<ClientLibraryStore, Actions, M
 			Config.env = 'development';
 		}
 
+		await ClientUpdater.init();
 		this.installerInit();
 		this.launcherInit();
 

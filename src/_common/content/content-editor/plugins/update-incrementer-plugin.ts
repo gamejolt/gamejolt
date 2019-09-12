@@ -22,6 +22,12 @@ export class UpdateIncrementerPlugin {
 		}
 		// If anything in the editor changes (content or selection), make sure we increment, so we can for example reposition controls.
 		this.appEditor.stateCounter++;
+
+		// Hide the control after an input was performed. Check detect-mention-suggestion plugin for more info.
+		if (this.appEditor.canShowMentionSuggestions > 0) {
+			this.appEditor.canShowMentionSuggestions--;
+		}
+
 		if (!lastState || !lastState.doc.eq(state.doc)) {
 			this.appEditor.onUpdate(state);
 		}

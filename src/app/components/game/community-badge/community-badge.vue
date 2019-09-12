@@ -7,8 +7,14 @@
 			}"
 		>
 			<div class="-community-container fill-darkest">
-				<div v-if="community.header" class="-header">
-					<img :src="community.header.mediaserver_url" />
+				<div
+					v-if="community.header"
+					class="-header"
+					:style="{
+						'background-image': 'url(' + community.header.mediaserver_url + ')',
+					}"
+				>
+					<div class="-header-gradient" />
 				</div>
 				<div class="-content">
 					<div class="-thumbnail">

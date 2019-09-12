@@ -1,10 +1,11 @@
+import Vue from 'vue';
+import { Component, Emit, Prop } from 'vue-property-decorator';
+import AppEditableOverlay from '../../../_common/editable-overlay/editable-overlay.vue';
+import AppMediaItemCover from '../../../_common/media-item/cover/cover.vue';
 import { MediaItem } from '../../../_common/media-item/media-item-model';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
 import { AppAutoscrollAnchor } from '../../../_common/scroll/auto-scroll/anchor';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import AppMediaItemCover from '../../../_common/media-item/cover/cover.vue';
 import './page-header-content.styl';
 
 @Component({
@@ -12,6 +13,7 @@ import './page-header-content.styl';
 		AppAutoscrollAnchor,
 		AppScrollAffix,
 		AppMediaItemCover,
+		AppEditableOverlay,
 	},
 })
 export default class AppPageHeader extends Vue {
@@ -23,6 +25,9 @@ export default class AppPageHeader extends Vue {
 
 	@Prop(Boolean)
 	coverAutoHeight?: boolean;
+
+	@Prop(Boolean)
+	coverEditable?: boolean;
 
 	@Prop(Boolean)
 	hideNav?: boolean;
@@ -49,6 +54,9 @@ export default class AppPageHeader extends Vue {
 	showCoverButtons?: boolean;
 
 	readonly Screen = Screen;
+
+	@Emit('edit-cover')
+	emitEditCover() {}
 
 	get hasSpotlight() {
 		return !!this.$slots['spotlight'] && !Screen.isXs;

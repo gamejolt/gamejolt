@@ -13,12 +13,7 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"importHelpers": true,
-		"lib": [
-			"esnext",
-			"dom",
-			"dom.iterable",
-			"scripthost"
-		]
+		"lib": ["esnext", "dom", "dom.iterable", "scripthost"]
 	},
-	"exclude": ["build", "node_modules"]
+	"exclude": ["build", "node_modules", ".cache"]
 }
