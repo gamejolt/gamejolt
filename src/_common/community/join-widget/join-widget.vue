@@ -3,7 +3,7 @@
 		class="community-follow-widget"
 		primary
 		:block="block"
-		:solid="community.is_member"
+		:solid="community.is_member || solid"
 		:badge="badge"
 		:disabled="isProcessing"
 		v-app-auth-required
