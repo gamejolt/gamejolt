@@ -23,7 +23,7 @@
 
 					<app-form-control-error
 						when="availability"
-						:message="$gettext('A channel already exists by that name')"
+						:message="$gettext('A channel with that name already exists')"
 					/>
 				</app-form-control-errors>
 			</app-form-group>
