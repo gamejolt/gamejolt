@@ -8,10 +8,24 @@
 						pattern: /^[a-z0-9_]{3,30}$/i,
 						min: 3,
 						max: 30,
+						availability: {
+							url: `/web/dash/communities/channels/check-field-availability/${community.id}`,
+						},
 					}"
+					data-vv-delay="500"
 					:validate-on="['blur']"
 				/>
-				<app-form-control-errors />
+				<app-form-control-errors>
+					<app-form-control-error
+						when="too_many_channels"
+						:message="$gettext('Too many channels')"
+					/>
+
+					<app-form-control-error
+						when="availability"
+						:message="$gettext('A channel already exists by that name')"
+					/>
+				</app-form-control-errors>
 			</app-form-group>
 
 			<app-form-button :disabled="!isValid">
