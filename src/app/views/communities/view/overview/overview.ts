@@ -1,4 +1,4 @@
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
@@ -103,11 +103,9 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	feed: ActivityFeedView | null = null;
 	knownMembers: User[] = [];
 	knownMemberCount = 0;
+	finishedLoading = false;
 
 	readonly Screen = Screen;
-
-	@Emit('refresh')
-	emitRefresh() {}
 
 	get routeTitle() {
 		if (!this.community) {
@@ -185,7 +183,22 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get shouldShowLoadNew() {
-		return this.channel === 'featured' && this.communityState.unreadFeatureCount > 0;
+		if (this.channel === 'featured' && this.communityState.unreadFeatureCount > 0) {
+			return true;
+		}
+
+		const channel = this.community.channels!.find(i => i.title === this.channel);
+		// Finished loading prevents the button from showing and quickly disappearing again because loading the route
+		// clears the unread state on this channel.
+		if (
+			this.finishedLoading &&
+			channel &&
+			this.communityState.unreadChannels.includes(channel.id)
+		) {
+			return true;
+		}
+
+		return false;
 	}
 
 	get shouldShowKnownMembers() {
@@ -273,6 +286,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 				this.communityState.markChannelRead(channel.id);
 			}
 		}
+		this.finishedLoading = true;
 	}
 
 	onPostAdded(post: FiresidePost) {
@@ -297,5 +311,13 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	onDetailsChanged(community: Community) {
 		this.community.assign(community);
+	}
+
+	onClickLoadNew() {
+		const channel = this.community.channels!.find(i => i.title === this.channel);
+		if (channel) {
+			this.communityState.markChannelRead(channel.id);
+		}
+		this.$emit('refresh');
 	}
 }

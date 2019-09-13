@@ -88,7 +88,7 @@
 				</app-nav-tab-list>
 
 				<app-expand v-if="shouldShowLoadNew" when animate-initial>
-					<app-activity-feed-new-button @click="emitRefresh()">
+					<app-activity-feed-new-button @click="onClickLoadNew">
 						<translate>Show New Posts</translate>
 					</app-activity-feed-new-button>
 				</app-expand>
