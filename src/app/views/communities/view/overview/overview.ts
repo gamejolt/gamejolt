@@ -88,9 +88,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@Prop(Community)
 	community!: Community;
 
-	@Prop(Number)
-	unreadWatermark!: number;
-
 	@Prop(Boolean)
 	isEditing!: boolean;
 
@@ -248,7 +245,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 				shouldShowCommunityControls: true,
 				hideCommunityInfo: true,
 				shouldShowFollow: true,
-				notificationWatermark: this.unreadWatermark,
+				notificationWatermark: $payload.unreadWatermark,
 			},
 			$payload.items,
 			fromCache
