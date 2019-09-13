@@ -1,8 +1,10 @@
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Store } from '../../../../store/index';
 
 @Component({
 	components: {
@@ -16,8 +18,19 @@ export default class AppShellCbarItem extends Vue {
 	@Prop(Community)
 	community!: Community;
 
+	@State
+	communityStates!: Store['communityStates'];
+
+	get communityState() {
+		return this.communityStates.getCommunityState(this.community);
+	}
+
 	get isUnread() {
-		return this.community.is_unread;
+		return this.communityState.isUnread;
+	}
+
+	get featureCount() {
+		return this.communityState.unreadFeatureCount;
 	}
 
 	get isActive() {
@@ -29,9 +42,11 @@ export default class AppShellCbarItem extends Vue {
 	}
 
 	get highlight() {
-		const highlight = this.community.theme && this.community.theme.highlight_;
-		if (highlight) {
-			return '#' + highlight;
+		if (this.isActive) {
+			const highlight = this.community.theme && this.community.theme.highlight_;
+			if (highlight) {
+				return '#' + highlight;
+			}
 		}
 		return null;
 	}

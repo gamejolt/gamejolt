@@ -1,19 +1,19 @@
 import Axios from 'axios';
+import { Channel, Socket } from 'phoenix';
+import { arrayRemove } from '../../../utils/array';
+import { sleep } from '../../../utils/utils';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Community } from '../../../_common/community/community.model';
+import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { Growls } from '../../../_common/growls/growls.service';
 import {
 	getNotificationText,
 	Notification,
 } from '../../../_common/notification/notification-model';
+import { Settings } from '../../../_common/settings/settings.service';
 import { Translate } from '../../../_common/translate/translate.service';
 import { User } from '../../../_common/user/user.model';
-import { arrayRemove } from '../../../utils/array';
-import { sleep } from '../../../utils/utils';
-import { Channel, Socket } from 'phoenix';
-import { getCookie } from '../../../_common/cookie/cookie.service';
-import { Settings } from '../../../_common/settings/settings.service';
 import { store } from '../../store/index';
 import { router } from '../../views';
 import { CommunityChannel } from './community-channel';
@@ -24,7 +24,11 @@ interface NewNotificationPayload {
 	};
 }
 
-interface CommunityNotification {}
+interface CommunityFeaturePayload {}
+
+interface CommunityNewPostPayload {
+	channel_id: string;
+}
 
 interface BootstrapPayload {
 	status: string;
@@ -92,7 +96,9 @@ export class GridClient {
 		console.log('[Grid] Connecting...');
 
 		// get hostname from loadbalancer first
-		const hostResult = await pollRequest('Select server', () => Axios.get(Environment.gridHost));
+		const hostResult = await pollRequest('Select server', () =>
+			Axios.get(Environment.gridHost)
+		);
 		const host = `${hostResult.data}/grid/socket`;
 
 		console.log('[Grid] Server selected:', host);
@@ -231,10 +237,8 @@ export class GridClient {
 
 			// communities
 			for (const communityId of payload.body.unreadCommunities) {
-				const community = store.state.communities.find(c => c.id === communityId);
-				if (community instanceof Community) {
-					community.is_unread = true;
-				}
+				const communityState = store.state.communityStates.getCommunityState(communityId);
+				communityState.unreadFeatureCount = 1; // TODO: Set proper count here.
 			}
 		} else {
 			// error
@@ -257,7 +261,8 @@ export class GridClient {
 		}
 
 		const message = getNotificationText(notification, true);
-		const icon = notification.from_model === undefined ? '' : notification.from_model.img_avatar;
+		const icon =
+			notification.from_model === undefined ? '' : notification.from_model.img_avatar;
 
 		if (message !== undefined) {
 			let title = Translate.$gettext('New Notification');
@@ -337,8 +342,11 @@ export class GridClient {
 					})
 			);
 
-			channel.on('new-notification', (payload: CommunityNotification) =>
-				this.handleCommunityNotification(community.id, payload)
+			channel.on('feature', (payload: CommunityFeaturePayload) =>
+				this.handleCommunityFeature(community.id, payload)
+			);
+			channel.on('new-post', (payload: CommunityNewPostPayload) =>
+				this.handleCommunityNewPost(community.id, payload)
 			);
 		}
 	}
@@ -353,12 +361,16 @@ export class GridClient {
 		}
 	}
 
-	handleCommunityNotification(communityId: number, _payload: CommunityNotification) {
-		const community = store.state.communities.find(c => c.id === communityId);
-		if (community instanceof Community) {
-			community.is_unread = true;
-			store.commit('incrementNotificationCount', { count: 1, type: 'activity' });
-		}
+	handleCommunityFeature(communityId: number, _payload: CommunityFeaturePayload) {
+		const communityState = store.state.communityStates.getCommunityState(communityId);
+		communityState.unreadFeatureCount++;
+		store.commit('incrementNotificationCount', { count: 1, type: 'activity' });
+	}
+
+	handleCommunityNewPost(communityId: number, payload: CommunityNewPostPayload) {
+		const channelId = Number.parseInt(payload.channel_id, 10);
+		const communityState = store.state.communityStates.getCommunityState(communityId);
+		communityState.markChannelUnread(channelId);
 	}
 
 	leaveChannel(channel: Channel) {

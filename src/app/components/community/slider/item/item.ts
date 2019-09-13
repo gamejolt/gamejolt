@@ -1,8 +1,10 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
+import { Store } from '../../../../store/index';
 
 @Component({
 	components: {
@@ -16,8 +18,11 @@ export default class AppCommunitySliderItem extends Vue {
 	@Prop({ type: Community, required: true }) community!: Community;
 	@Prop({ type: String, required: false, default: 'global' }) eventCat!: string;
 
+	@State
+	communityStates!: Store['communityStates'];
+
 	get isUnread() {
-		return this.community.is_unread;
+		return this.communityStates.getCommunityState(this.community).isUnread;
 	}
 
 	get gradient() {

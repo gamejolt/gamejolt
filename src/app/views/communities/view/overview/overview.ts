@@ -97,6 +97,9 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@State
 	communities!: Store['communities'];
 
+	@State
+	communityStates!: Store['communityStates'];
+
 	feed: ActivityFeedView | null = null;
 	knownMembers: User[] = [];
 	knownMemberCount = 0;
@@ -182,12 +185,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get shouldShowLoadNew() {
-		// We need to access the reactive community from the Store here to react to is_unread changing
-		const stateCommunity = this.communities.find(c => c.id === this.community.id);
-		if (stateCommunity) {
-			return this.channel === 'featured' && stateCommunity.is_unread;
-		}
-		return false;
+		return this.channel === 'featured' && this.communityState.unreadFeatureCount > 0;
 	}
 
 	get shouldShowKnownMembers() {
@@ -215,6 +213,10 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			message += ' -';
 		}
 		return message;
+	}
+
+	get communityState() {
+		return this.communityStates.getCommunityState(this.community);
 	}
 
 	routeCreated() {
@@ -264,6 +266,13 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			// Ideally we'd like toprovide a nice image specifically for SEO from the backend.
 			image: this.community.header ? this.community.header!.mediaserver_url : null,
 		};
+
+		if (this.community.channels) {
+			const channel = this.community.channels!.find(i => i.title === this.channel);
+			if (channel) {
+				this.communityState.markChannelRead(channel.id);
+			}
+		}
 	}
 
 	onPostAdded(post: FiresidePost) {
