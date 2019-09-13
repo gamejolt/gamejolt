@@ -33,7 +33,7 @@ $-bubble-size = 14px
 	height: $-blip-size
 	top: $-blip-top
 	left: -($-blip-size * 2)
-	background-color: var(--theme-gray)
+	background-color: var(--theme-light)
 	border-radius: 50%
 	will-change: height, top, left
 	z-index: 2
@@ -46,3 +46,23 @@ $-bubble-size = 14px
 	top: 0
 	left: $-blip-left
 	height: $-item-size
+
+.-feature-counter
+	position: absolute
+	right: -2px
+	bottom: -2px
+	z-index: 2
+
+	border-radius: 10px
+	border-color: var(--theme-darkest)
+	border-width: 3px
+	border-style: solid
+
+	padding-left: 4px
+	padding-right: 4px
+
+	font-size: $font-size-tiny
+	text-align: center
+	font-weight: bolder
+	color: white
+	background-color: rgb(255, 0, 0)

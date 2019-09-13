@@ -33,6 +33,13 @@ export default class AppShellCbarItem extends Vue {
 		return this.communityState.unreadFeatureCount;
 	}
 
+	get featureCountText() {
+		if (this.featureCount > 99) {
+			return '99+';
+		}
+		return this.featureCount.toString();
+	}
+
 	get isActive() {
 		return (
 			this.$route.name &&

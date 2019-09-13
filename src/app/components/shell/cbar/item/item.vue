@@ -18,6 +18,9 @@
 				'background-color': highlight,
 			}"
 		/>
+		<div v-if="featureCount > 0" class="-feature-counter">
+			{{ featureCountText }}
+		</div>
 	</router-link>
 </template>
 
