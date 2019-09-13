@@ -32,7 +32,7 @@ function getChannel(route: Route) {
 }
 
 function getSort(route: Route) {
-	return (route.query.sort || 'hot').toString();
+	return (route.query.sort || 'new').toString();
 }
 
 function getFetchUrl(route: Route) {
