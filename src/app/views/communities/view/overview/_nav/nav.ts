@@ -52,10 +52,7 @@ export default class AppCommunitiesViewOverviewNav extends Vue {
 
 	get groups(): NavGroup[] {
 		return [
-			new NavGroup([
-				new NavItem(this.$gettext('Featured'), 'featured'),
-				new NavItem(this.$gettext('All Posts'), 'all'),
-			]),
+			new NavGroup([new NavItem(this.$gettext('Featured'), 'featured')]),
 			new NavGroup(this.titles.map(i => new NavItem(i, i))),
 		];
 	}
