@@ -21,8 +21,23 @@ export default class AppCommunitySliderItem extends Vue {
 	@State
 	communityStates!: Store['communityStates'];
 
+	get communityState() {
+		return this.communityStates.getCommunityState(this.community);
+	}
+
 	get isUnread() {
-		return this.communityStates.getCommunityState(this.community).isUnread;
+		return this.communityState.isUnread;
+	}
+
+	get featureCount() {
+		return this.communityState.unreadFeatureCount;
+	}
+
+	get featureCountText() {
+		if (this.featureCount > 99) {
+			return '99+';
+		}
+		return this.featureCount.toString();
 	}
 
 	get gradient() {

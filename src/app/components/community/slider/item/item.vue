@@ -23,6 +23,9 @@
 		<div class="-label">
 			{{ community.name }}
 		</div>
+		<div v-if="featureCount > 0" class="-feature-counter">
+			{{ featureCountText }}
+		</div>
 	</router-link>
 </template>
 
