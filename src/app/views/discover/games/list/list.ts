@@ -115,10 +115,13 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		}
 
 		if (this.dateRange) {
-			return this.$gettextInterpolate('Games published between %{ dateStart } and %{ dateEnd }', {
-				dateStart: this.dateRange[0],
-				dateEnd: this.dateRange[1],
-			});
+			return this.$gettextInterpolate(
+				'Games published between %{ dateStart } and %{ dateEnd }',
+				{
+					dateStart: this.dateRange[0],
+					dateEnd: this.dateRange[1],
+				}
+			);
 		}
 
 		if (this.date) {
@@ -189,9 +192,12 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	 */
 	get listDescription() {
 		if (!this.section) {
-			return this.$gettextInterpolate(`Find the hottest trending %{ gamesType } on Game Jolt.`, {
-				gamesType: this.displayGamesType,
-			});
+			return this.$gettextInterpolate(
+				`Find the hottest trending %{ gamesType } on Game Jolt.`,
+				{
+					gamesType: this.displayGamesType,
+				}
+			);
 		} else if (this.section === 'new') {
 			return this.$gettextInterpolate(
 				// tslint:disable-next-line:max-line-length
@@ -253,6 +259,11 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
+		// Remove adult category from search results.
+		if (this.tag === 'adult') {
+			Meta.seo.deindex();
+		}
+
 		if (this.listing && $payload) {
 			this.listing.processPayload(this.$route, $payload);
 			this.process();
