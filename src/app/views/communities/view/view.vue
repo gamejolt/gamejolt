@@ -82,7 +82,7 @@
 
 		<router-view
 			:community="community"
-			:unread-watermark="unreadWatermark"
+			:unread-watermark="unreadFeaturedWatermark"
 			:is-editing="isEditing"
 			@refresh="refresh()"
 		/>

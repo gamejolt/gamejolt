@@ -75,11 +75,14 @@ function getFetchUrl(route: Route) {
 		params: ['path', 'channel'],
 		query: ['sort'],
 	},
-	resolver: ({ route }) =>
-		Promise.all([
-			Api.sendRequest(getFetchUrl(route)),
-			Api.sendRequest('/web/communities/overview/' + route.params.path),
-		]),
+	resolver: ({ route }) => {
+		const channel = getChannel(route);
+		const sort = getSort(route);
+
+		return Api.sendRequest(
+			`/web/communities/overview/${route.params.path}/${channel}?sort=${sort}`
+		);
+	},
 })
 export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@Prop(Community)
@@ -237,7 +240,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {
-		const [itemsPayload, overviewPayload] = $payload;
 		this.feed = ActivityFeedService.routed(
 			this.feed,
 			{
@@ -248,11 +250,11 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 				shouldShowFollow: true,
 				notificationWatermark: this.unreadWatermark,
 			},
-			itemsPayload.items,
+			$payload.items,
 			fromCache
 		);
-		this.knownMembers = User.populate(overviewPayload.knownMembers || []);
-		this.knownMemberCount = overviewPayload.knownMemberCount || 0;
+		this.knownMembers = User.populate($payload.knownMembers || []);
+		this.knownMemberCount = $payload.knownMemberCount || 0;
 
 		Meta.description = this.$gettextInterpolate(
 			// tslint:disable-next-line:max-line-length
@@ -286,6 +288,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 				this.communityState.markChannelRead(channel.id);
 			}
 		}
+
 		this.finishedLoading = true;
 	}
 

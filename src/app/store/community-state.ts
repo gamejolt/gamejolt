@@ -6,6 +6,7 @@ export class CommunityState {
 
 	/** Ids of unread channels. */
 	public unreadChannels: number[] = [];
+	public hasUnreadPosts = false;
 	public unreadFeatureCount = 0;
 
 	constructor(communityId: number) {
@@ -13,7 +14,7 @@ export class CommunityState {
 	}
 
 	get isUnread() {
-		return this.unreadChannels.length > 0;
+		return this.hasUnreadPosts || this.unreadChannels.length > 0;
 	}
 
 	public markChannelUnread(channelId: number) {
@@ -30,6 +31,7 @@ export class CommunityState {
 
 	public reset() {
 		this.unreadChannels = [];
+		this.hasUnreadPosts = false;
 		this.unreadFeatureCount = 0;
 	}
 }

@@ -38,6 +38,7 @@ interface BootstrapPayload {
 		notificationCount: number;
 		activityUnreadCount: number;
 		notificationUnreadCount: number;
+		unreadFeaturedCommunities: { [communityId: number]: number };
 		unreadCommunities: number[];
 	};
 }
@@ -235,10 +236,19 @@ export class GridClient {
 			}
 			this.notificationBacklog = [];
 
-			// communities
+			// communities - unread featured counts
+			const unreadFeatured = payload.body.unreadFeaturedCommunities;
+			for (const communityIdStr in unreadFeatured) {
+				const communityId = parseInt(communityIdStr, 10);
+
+				const communityState = store.state.communityStates.getCommunityState(communityId);
+				communityState.unreadFeatureCount = unreadFeatured[communityId] || 0;
+			}
+
+			// communities - has unread posts?
 			for (const communityId of payload.body.unreadCommunities) {
 				const communityState = store.state.communityStates.getCommunityState(communityId);
-				communityState.unreadFeatureCount = 1; // TODO: Set proper count here.
+				communityState.hasUnreadPosts = true;
 			}
 		} else {
 			// error
