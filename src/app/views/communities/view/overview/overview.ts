@@ -183,6 +183,10 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get shouldShowLoadNew() {
+		if (!this.finishedLoading) {
+			return false;
+		}
+
 		if (this.channel === 'featured' && this.communityState.unreadFeatureCount > 0) {
 			return true;
 		}
@@ -190,11 +194,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		const channel = this.community.channels!.find(i => i.title === this.channel);
 		// Finished loading prevents the button from showing and quickly disappearing again because loading the route
 		// clears the unread state on this channel.
-		if (
-			this.finishedLoading &&
-			channel &&
-			this.communityState.unreadChannels.includes(channel.id)
-		) {
+		if (channel && this.communityState.unreadChannels.includes(channel.id)) {
 			return true;
 		}
 
@@ -279,10 +279,14 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			image: this.community.header ? this.community.header!.mediaserver_url : null,
 		};
 
-		if (this.community.channels) {
-			const channel = this.community.channels!.find(i => i.title === this.channel);
-			if (channel) {
-				this.communityState.markChannelRead(channel.id);
+		if (this.channel === 'featured') {
+			this.communityState.unreadFeatureCount = 0;
+		} else {
+			if (this.community.channels) {
+				const channel = this.community.channels!.find(i => i.title === this.channel);
+				if (channel) {
+					this.communityState.markChannelRead(channel.id);
+				}
 			}
 		}
 
