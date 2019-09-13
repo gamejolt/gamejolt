@@ -72,6 +72,10 @@ export default class AppCommunitiesViewOverviewNav extends Vue {
 	}
 
 	isChannelUnread(title: string) {
+		if (title === 'featured') {
+			return this.communityState.unreadFeatureCount > 0;
+		}
+
 		const channel = this.community.channels!.find(i => i.title === title);
 		// We need to access the reactive community from the Store here.
 		const stateCommunity = this.communities.find(c => c.id === this.community.id);
