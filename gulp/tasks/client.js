@@ -62,10 +62,20 @@ module.exports = config => {
 	const nwjsVersion = '0.35.5';
 
 	const clientVoodooDir = path.join(config.buildDir, 'node_modules', 'client-voodoo');
+	const trashDir = path.join(config.clientBuildDir, '.trash');
+
+	function ensureTrashDir() {
+		try {
+			fs.mkdirSync(trashDir);
+		} catch (e) {
+			console.log(e);
+			console.log(e.code);
+		}
+	}
 
 	let nodeModulesTask = [
-		'cd ' + config.buildDir + ' && yarn --production --ignore-scripts',
-		'cd ' + clientVoodooDir + ' && yarn run postinstall', // We have to run client-voodoo's post install to get the joltron binaries in.
+		'yarn --cwd ' + path.normalize(config.buildDir) + ' --production --ignore-scripts',
+		'yarn --cwd ' + clientVoodooDir + ' run postinstall', // We have to run client-voodoo's post install to get the joltron binaries in.
 	];
 
 	if (!config.production) {
@@ -255,6 +265,10 @@ module.exports = config => {
 
 					unzipper.on('error', reject);
 					unzipper.on('extract', () => {
+						// This prevents package.nw to remain in use after extraction is done.
+						// For some reason on Windows, unzipper does not release the file handle.
+						unzipper.closeFile();
+
 						// This solves an issue on windows where for some reason we get permission errors when moving the node_modules folder.
 						setTimeout(() => {
 							// We pull some stuff out of the package folder into the main folder.
@@ -276,7 +290,16 @@ module.exports = config => {
 												return;
 											}
 
-											fs.unlink(packageNw, err => {
+											// For some reason unlinking package.nw fails so we
+											// just move it out of the way instead.
+											ensureTrashDir();
+											const trashNw = path.join(
+												trashDir,
+												'package.nw-' + Date.now()
+											);
+
+											console.log('Moving package.nw to ' + trashNw);
+											mv(packageNw, trashNw, err => {
 												if (err) {
 													reject(err);
 													return;
@@ -484,7 +507,7 @@ module.exports = config => {
 
 		if (config.noGjPush) {
 			// If we want to skip gjpush to test the packaging we need to provide the build id ourselves because we won't be hitting service-api to get it.
-			const gjGameBuildId = 1;
+			const gjGameBuildId = 739828; // 1;
 
 			buildIdPromise = buildIdPromise.then(() => gjGameBuildId);
 		} else {
@@ -665,14 +688,14 @@ module.exports = config => {
 			const clientApp = path.resolve(config.clientBuildDir, 'Game Jolt Client.app');
 
 			// We copy it over to the build dir
-			cp.execSync('cp -r "' + appTemplate + '" "' + clientApp + '"');
+			cp.execSync('cp -a "' + appTemplate + '" "' + clientApp + '"');
 
 			// We copy the entire joltron folder we generated in the previous step into the app's Contents/Resources/app folder.
 			const buildDir = path.join(config.clientBuildDir, 'build');
 			const appDir = path.join(clientApp, 'Contents', 'Resources', 'app');
 
 			// The . after the build dir makes it also copy hidden dot files
-			cp.execSync('cp -r "' + path.join(buildDir, '.') + '" "' + appDir + '"');
+			cp.execSync('cp -a "' + path.join(buildDir, '.') + '" "' + appDir + '"');
 
 			// The info plist in our template has placeholder we need to replace with this build's version
 			const infoPlistFile = path.join(clientApp, 'Contents', 'Info.plist');

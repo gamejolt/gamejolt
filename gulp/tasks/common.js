@@ -3,6 +3,7 @@ const os = require('os');
 const gulp = require('gulp');
 const shell = require('gulp-shell');
 const FwdRef = require('undertaker-forward-reference');
+const path = require('path');
 
 // https://github.com/gulpjs/undertaker-forward-reference
 // https://github.com/gulpjs/gulp/issues/802
@@ -67,7 +68,10 @@ module.exports = (config, projectBase) => {
 	}
 
 	config.projectBase = projectBase;
-	config.buildBaseDir = process.env.BUILD_DIR || './';
+	config.buildBaseDir = process.env.BUILD_DIR || '.';
+	if (!config.buildBaseDir.endsWith(path.sep)) {
+		config.buildBaseDir += path.sep;
+	}
 	config.buildDir = config.buildBaseDir + (config.production ? 'build/prod' : 'build/dev');
 	config.libDir = 'src/lib/';
 
