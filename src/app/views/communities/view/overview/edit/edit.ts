@@ -18,7 +18,7 @@ import { AppTooltip } from '../../../../../../_common/tooltip/tooltip';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import FormCommunityChannel from '../../../../../components/forms/community/channel/channel.vue';
 import FormCommunityCollaborator from '../../../../../components/forms/community/collaborator/collaborator.vue';
-import FormCommunityDetails from '../../../../../components/forms/community/details/details.vue';
+import FormCommunity from '../../../../../components/forms/community/community.vue';
 import { CommunityThumbnailModal } from '../../../../../components/forms/community/thumbnail/modal/modal.service';
 import { store } from '../../../../../store';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './edit.store';
@@ -39,7 +39,7 @@ const draggable = require('vuedraggable');
 		AppCommunityPerms,
 		AppEditableOverlay,
 		AppCommunityThumbnailImg,
-		FormCommunityDetails,
+		FormCommunity,
 	},
 	directives: {
 		AppTooltip,

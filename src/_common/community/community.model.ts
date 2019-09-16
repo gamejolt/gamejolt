@@ -110,7 +110,11 @@ export class Community extends Collaboratable(Model) {
 	}
 
 	$save() {
-		return this.$_save('/web/dash/communities/save/' + this.id, 'community');
+		if (this.id) {
+			return this.$_save('/web/dash/communities/save/' + this.id, 'community');
+		} else {
+			return this.$_save('/web/dash/communities/save', 'community');
+		}
 	}
 
 	$saveHeader() {
@@ -125,10 +129,6 @@ export class Community extends Collaboratable(Model) {
 			file: this.file,
 			allowComplexData: ['crop'],
 		});
-	}
-
-	$saveDetails() {
-		return this.$_save('/web/dash/communities/details/save/' + this.id, 'community');
 	}
 
 	$saveDescription() {
