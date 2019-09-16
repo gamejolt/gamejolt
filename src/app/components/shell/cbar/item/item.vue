@@ -1,6 +1,6 @@
 <template>
 	<router-link
-		class="-item"
+		class="-item link-unstyled"
 		:to="{
 			name: 'communities.view.overview',
 			params: { path: community.path },
