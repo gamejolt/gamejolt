@@ -1,6 +1,21 @@
 <template>
-	<router-link class="-add" :to="{ name: 'dash.communities.add' }">
-		<app-jolticon class="-icon" icon="add" big />
+	<router-link
+		class="-add"
+		:style="{
+			width: `${size}px`,
+			height: `${size}px`,
+		}"
+		:to="{ name: 'dash.communities.add' }"
+	>
+		<app-jolticon
+			class="-icon"
+			:style="{
+				// size - (border size * 2)
+				'line-height': `${size - 8}px`,
+			}"
+			icon="add"
+			big
+		/>
 	</router-link>
 </template>
 
@@ -9,15 +24,10 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-$-border-size = 4px
-$-item-size = $shell-cbar-width - $cbar-h-padding * 2 - 2px
-
 .-add
 	pressy()
 	display: block
-	width: $-item-size
-	height: $-item-size
-	border: $-border-size solid
+	border: 4px solid
 	border-radius: 100%
 	text-align: center
 	cursor: pointer
@@ -27,7 +37,7 @@ $-item-size = $shell-cbar-width - $cbar-h-padding * 2 - 2px
 
 	.-icon
 		margin: 0
-		line-height: $-item-size - ($-border-size * 2)
+		// line-height: $-item-size - ($-border-size * 2)
 
 </style>
 

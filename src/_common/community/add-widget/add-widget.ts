@@ -1,5 +1,13 @@
 import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
+import { AppTooltip } from '../../tooltip/tooltip';
 
-@Component({})
-export default class AppCommunityAddWidget extends Vue {}
+@Component({
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppCommunityAddWidget extends Vue {
+	@Prop(Number)
+	size!: number;
+}

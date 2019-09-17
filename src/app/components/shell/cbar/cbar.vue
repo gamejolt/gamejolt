@@ -6,7 +6,12 @@
 				:key="community.id"
 				:community="community"
 			/>
-			<app-community-add-widget key="add" />
+			<!-- size is same as cbar item -->
+			<app-community-add-widget
+				v-app-tooltip.right="$gettext(`Create a Community`)"
+				size="48"
+				key="add"
+			/>
 		</transition-group>
 	</div>
 </template>
