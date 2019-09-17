@@ -38,37 +38,6 @@
 					</router-link>
 				</li>
 			</ol>
-
-			<app-community-perms
-				:community="community"
-				tag="ol"
-				required="community-channels,community-media"
-				either
-			>
-				<li>
-					<router-link
-						class="-item"
-						:class="{ active: isEditing }"
-						:to="{
-							name: 'communities.view.overview.edit',
-							params: {
-								id: community.id,
-							},
-						}"
-						block
-					>
-						<span class="-icon">
-							<app-jolticon icon="edit" class="middle" />
-						</span>
-						<span class="-label">
-							<translate>Edit</translate>
-							<span v-if="!isEditing" class="-label-help help-inline">
-								<translate>Only you can see this</translate>
-							</span>
-						</span>
-					</router-link>
-				</li>
-			</app-community-perms>
 		</div>
 	</nav>
 </template>

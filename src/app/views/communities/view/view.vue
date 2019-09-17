@@ -76,7 +76,49 @@
 			</nav>
 
 			<div slot="controls">
-				<app-community-join-widget :community="community" @join="onJoin" @leave="onLeave" block />
+				<template v-if="community.hasPerms()">
+					<app-community-perms
+						:community="community"
+						required="community-channels,community-media"
+						either
+					>
+						<app-button
+							v-if="!isEditing"
+							primary
+							block
+							:to="{
+								name: 'communities.view.overview.edit',
+								params: {
+									id: community.id,
+								},
+							}"
+						>
+							<app-jolticon icon="edit" class="middle" />
+							<translate>Edit Community</translate>
+						</app-button>
+						<app-button
+							v-else
+							primary
+							block
+							:to="{
+								name: 'communities.view.overview',
+								params: {
+									path: community.path,
+								},
+							}"
+						>
+							<translate>View Community</translate>
+						</app-button>
+					</app-community-perms>
+				</template>
+
+				<app-community-join-widget
+					v-else
+					:community="community"
+					@join="onJoin"
+					@leave="onLeave"
+					block
+				/>
 			</div>
 		</app-page-header>
 

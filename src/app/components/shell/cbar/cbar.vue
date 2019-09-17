@@ -6,6 +6,7 @@
 				:key="community.id"
 				:community="community"
 			/>
+			<app-community-add-widget key="add" />
 		</transition-group>
 	</div>
 </template>

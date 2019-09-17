@@ -103,6 +103,15 @@ export class Community extends Collaboratable(Model) {
 		};
 	}
 
+	get routeEditLocation(): Location {
+		return {
+			name: 'communities.view.overview.edit',
+			params: {
+				id: this.id + '',
+			},
+		};
+	}
+
 	channelRouteLocation(channel: CommunityChannel): Location {
 		const communityLocation = this.routeLocation;
 		communityLocation.params!.channel = channel.title;
