@@ -283,7 +283,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			this.communityState.unreadFeatureCount = 0;
 		} else {
 			if (this.community.channels) {
-				const channel = this.community.channels!.find(i => i.title === this.channel);
+				const channel = this.community.channels.find(i => i.title === this.channel);
 				if (channel) {
 					this.communityState.markChannelRead(channel.id);
 				}
