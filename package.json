@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "0.36.2",
+	"version": "0.36.3",
 	"scripts": {
 		"postinstall": "yarn run translations",
 		"dev": "gulp watch",
