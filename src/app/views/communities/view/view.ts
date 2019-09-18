@@ -67,6 +67,12 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 		}
 		if ($payload.unreadChannels) {
 			const communityState = this.communityStates.getCommunityState(this.community);
+
+			// This flag was set to true in grid bootstrap and we need to unset it
+			// now that we have the actual unread channels in this community.
+			// read comment in client service for more info.
+			communityState.hasUnreadPosts = false;
+
 			for (const channelId of $payload.unreadChannels as number[]) {
 				communityState.markChannelUnread(channelId);
 			}
