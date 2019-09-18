@@ -246,6 +246,10 @@ export class GridClient {
 			}
 
 			// communities - has unread posts?
+			// When bootstrapping grid, we only get a list of communities and we don't
+			// care which channels in them are unread, just if it has any unread posts in them.
+			// when navigating into the community itself - this flag is cleared and the actual counts
+			// for the channels are populated.
 			for (const communityId of payload.body.unreadCommunities) {
 				const communityState = store.state.communityStates.getCommunityState(communityId);
 				communityState.hasUnreadPosts = true;
