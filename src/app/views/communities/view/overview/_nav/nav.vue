@@ -32,7 +32,7 @@
 						block
 						@click.native="isNavExpanded = false"
 					>
-						<span class="-label">
+						<span class="-label" :class="{ '-label-unread': isChannelUnread(item.channel) }">
 							{{ item.label }}
 						</span>
 					</router-link>

@@ -80,12 +80,7 @@
 			</div>
 		</app-page-header>
 
-		<router-view
-			:community="community"
-			:unread-watermark="unreadWatermark"
-			:is-editing="isEditing"
-			@refresh="refresh()"
-		/>
+		<router-view :community="community" :is-editing="isEditing" @refresh="refresh()" />
 	</div>
 </template>
 

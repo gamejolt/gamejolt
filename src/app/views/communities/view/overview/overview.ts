@@ -1,4 +1,4 @@
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
@@ -32,7 +32,7 @@ function getChannel(route: Route) {
 }
 
 function getSort(route: Route) {
-	return (route.query.sort || 'hot').toString();
+	return (route.query.sort || 'new').toString();
 }
 
 function getFetchUrl(route: Route) {
@@ -75,18 +75,18 @@ function getFetchUrl(route: Route) {
 		params: ['path', 'channel'],
 		query: ['sort'],
 	},
-	resolver: ({ route }) =>
-		Promise.all([
-			Api.sendRequest(getFetchUrl(route)),
-			Api.sendRequest('/web/communities/overview/' + route.params.path),
-		]),
+	resolver: ({ route }) => {
+		const channel = getChannel(route);
+		const sort = getSort(route);
+
+		return Api.sendRequest(
+			`/web/communities/overview/${route.params.path}/${channel}?sort=${sort}`
+		);
+	},
 })
 export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@Prop(Community)
 	community!: Community;
-
-	@Prop(Number)
-	unreadWatermark!: number;
 
 	@Prop(Boolean)
 	isEditing!: boolean;
@@ -97,14 +97,15 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@State
 	communities!: Store['communities'];
 
+	@State
+	communityStates!: Store['communityStates'];
+
 	feed: ActivityFeedView | null = null;
 	knownMembers: User[] = [];
 	knownMemberCount = 0;
+	finishedLoading = false;
 
 	readonly Screen = Screen;
-
-	@Emit('refresh')
-	emitRefresh() {}
 
 	get routeTitle() {
 		if (!this.community) {
@@ -182,11 +183,21 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get shouldShowLoadNew() {
-		// We need to access the reactive community from the Store here to react to is_unread changing
-		const stateCommunity = this.communities.find(c => c.id === this.community.id);
-		if (stateCommunity) {
-			return this.channel === 'featured' && stateCommunity.is_unread;
+		if (!this.finishedLoading) {
+			return false;
 		}
+
+		if (this.channel === 'featured' && this.communityState.unreadFeatureCount > 0) {
+			return true;
+		}
+
+		const channel = this.community.channels!.find(i => i.title === this.channel);
+		// Finished loading prevents the button from showing and quickly disappearing again because loading the route
+		// clears the unread state on this channel.
+		if (channel && this.communityState.unreadChannels.includes(channel.id)) {
+			return true;
+		}
+
 		return false;
 	}
 
@@ -217,12 +228,15 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return message;
 	}
 
+	get communityState() {
+		return this.communityStates.getCommunityState(this.community);
+	}
+
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {
-		const [itemsPayload, overviewPayload] = $payload;
 		this.feed = ActivityFeedService.routed(
 			this.feed,
 			{
@@ -231,13 +245,13 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 				shouldShowCommunityControls: true,
 				hideCommunityInfo: true,
 				shouldShowFollow: true,
-				notificationWatermark: this.unreadWatermark,
+				notificationWatermark: $payload.unreadWatermark,
 			},
-			itemsPayload.items,
+			$payload.items,
 			fromCache
 		);
-		this.knownMembers = User.populate(overviewPayload.knownMembers || []);
-		this.knownMemberCount = overviewPayload.knownMemberCount || 0;
+		this.knownMembers = User.populate($payload.knownMembers || []);
+		this.knownMemberCount = $payload.knownMemberCount || 0;
 
 		Meta.description = this.$gettextInterpolate(
 			// tslint:disable-next-line:max-line-length
@@ -264,6 +278,19 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			// Ideally we'd like toprovide a nice image specifically for SEO from the backend.
 			image: this.community.header ? this.community.header!.mediaserver_url : null,
 		};
+
+		if (this.channel === 'featured') {
+			this.communityState.unreadFeatureCount = 0;
+		} else {
+			if (this.community.channels) {
+				const channel = this.community.channels!.find(i => i.title === this.channel);
+				if (channel) {
+					this.communityState.markChannelRead(channel.id);
+				}
+			}
+		}
+
+		this.finishedLoading = true;
 	}
 
 	onPostAdded(post: FiresidePost) {
@@ -288,5 +315,13 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	onDetailsChanged(community: Community) {
 		this.community.assign(community);
+	}
+
+	onClickLoadNew() {
+		const channel = this.community.channels!.find(i => i.title === this.channel);
+		if (channel) {
+			this.communityState.markChannelRead(channel.id);
+		}
+		this.$emit('refresh');
 	}
 }

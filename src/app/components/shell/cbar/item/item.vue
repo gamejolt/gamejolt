@@ -1,6 +1,6 @@
 <template>
 	<router-link
-		class="-item"
+		class="-item link-unstyled"
 		:to="{
 			name: 'communities.view.overview',
 			params: { path: community.path },
@@ -18,6 +18,9 @@
 				'background-color': highlight,
 			}"
 		/>
+		<div v-if="featureCount > 0" class="-feature-counter">
+			{{ featureCountText }}
+		</div>
 	</router-link>
 </template>
 
