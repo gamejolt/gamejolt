@@ -15,6 +15,8 @@ const TransitionTime = 200;
 
 let PopperIndex = 0;
 
+type ActualTrigger = 'click' | 'hover' | 'manual';
+
 @Component({
 	components: {
 		VPopover: mod.VPopover,
@@ -26,7 +28,7 @@ export default class AppPopper extends Vue {
 	placement!: 'top' | 'right' | 'bottom' | 'left';
 
 	@Prop({ type: String, default: 'click' })
-	trigger!: 'click' | 'hover' | 'manual';
+	trigger!: ActualTrigger | 'right-click';
 
 	/**
 	 * By default the popper will stay on the page until the user clicks outside
@@ -99,6 +101,10 @@ export default class AppPopper extends Vue {
 			classes.push('-force-max-width');
 		}
 		return classes.join(' ');
+	}
+
+	get actualTrigger(): ActualTrigger {
+		return this.trigger === 'right-click' ? 'manual' : this.trigger;
 	}
 
 	mounted() {
@@ -174,4 +180,14 @@ export default class AppPopper extends Vue {
 
 	@Emit('auto-hide')
 	private onAutoHide() {}
+
+	private onContextMenu(e: MouseEvent) {
+		if (this.trigger !== 'right-click') {
+			return;
+		}
+
+		e.preventDefault();
+		Popper.hideAll();
+		this.$refs.popover.show();
+	}
 }

@@ -11,7 +11,7 @@
 		popover-arrow-class="popper-arrow"
 		:popover-inner-class="popoverInnerClass"
 		:placement="placement"
-		:trigger="trigger"
+		:trigger="actualTrigger"
 		:delay="delay"
 		:disabled="disabled"
 		:open="show"
@@ -20,6 +20,7 @@
 		@apply-show="onShow"
 		@apply-hide="onHide"
 		@auto-hide="onAutoHide"
+		@contextmenu.native="onContextMenu"
 	>
 		<slot />
 		<div
