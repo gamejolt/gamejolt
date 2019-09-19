@@ -1,43 +1,28 @@
 <template>
-	<router-link
-		class="-add"
-		:style="{
-			width: `${size}px`,
-			height: `${size}px`,
-		}"
-		:to="{ name: 'dash.communities.add' }"
-	>
-		<app-jolticon
-			class="-icon"
-			:style="{
-				// size - (border size * 2)
-				'line-height': `${size - 8}px`,
-			}"
-			icon="add"
-			big
-		/>
+	<router-link class="-add" :to="{ name: 'dash.communities.add' }">
+		<app-jolticon class="-icon" icon="add" big />
 	</router-link>
 </template>
 
 <style lang="stylus" scoped>
-
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
 .-add
 	pressy()
-	display: block
-	border: 4px solid
+	display: flex
+	justify-content: center
+	align-items: center
+	border: 3px solid
 	border-radius: 100%
-	text-align: center
 	cursor: pointer
+	position: absolute
+	width: 100%
+	height: 100%
 
 	theme-prop('border-color', 'gray-subtle')
 	theme-prop('color', 'gray-subtle')
 
-	.-icon
-		margin: 0
-		// line-height: $-item-size - ($-border-size * 2)
 
 </style>
 

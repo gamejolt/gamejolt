@@ -7,12 +7,7 @@
 			:event-cat="eventCat"
 		/>
 
-		<app-community-add-widget
-			v-if="withAddButton"
-			class="-add"
-			v-app-tooltip.bottom="$gettext(`Create a Community`)"
-			:size="addButtonSize"
-			/>
+		<app-community-slider-add-item v-if="withAddButton" />
 	</div>
 </template>
 
@@ -32,15 +27,6 @@
 	@media $media-sm-up
 		padding-left: $grid-gutter-width * 0.5
 		padding-right: $grid-gutter-width * 0.5
-
-.-add
-	display: inline-block
-	vertical-align: middle
-	margin-top: 2px
-
-	// Needed to counteract the height of the label the add button does not have.
-	@media $media-md-up
-		vertical-align: top
 </style>
 
 <script lang="ts" src="./slider"></script>

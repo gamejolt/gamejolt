@@ -79,20 +79,10 @@
 				<template v-if="community.hasPerms()">
 					<app-community-perms
 						:community="community"
-						required="community-channels,community-media"
+						required="community-details,community-channels,community-media"
 						either
 					>
-						<app-button
-							v-if="!isEditing"
-							primary
-							block
-							:to="{
-								name: 'communities.view.overview.edit',
-								params: {
-									id: community.id,
-								},
-							}"
-						>
+						<app-button v-if="!isEditing" primary block :to="community.routeEditLocation">
 							<app-jolticon icon="edit" class="middle" />
 							<translate>Edit Community</translate>
 						</app-button>

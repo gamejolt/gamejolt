@@ -72,16 +72,11 @@
 			<app-community-perms
 				:community="game.community"
 				tag="div"
-				required="community-channels,community-media"
+				required="community-details,community-channels,community-media"
 				either
 			>
 				<div class="col-lg-8">
-					<router-link
-						:to="{
-							name: 'communities.view.overview.edit',
-							params: { path: game.community.path, id: game.community.id },
-						}"
-					>
+					<router-link :to="game.community.routeEditLocation">
 						<app-button icon="users">
 							Edit Community
 						</app-button>

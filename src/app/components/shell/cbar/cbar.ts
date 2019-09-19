@@ -1,16 +1,15 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import AppCommunityAddWidget from '../../../../_common/community/add-widget/add-widget.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import { Store } from '../../../store';
+import AppShellCbarAddItem from './add-item/add-item.vue';
 import AppShellCbarItem from './item/item.vue';
 
 @Component({
 	components: {
 		AppShellCbarItem,
-		AppCommunityAddWidget,
+		AppShellCbarAddItem,
 	},
 	directives: {
 		AppTooltip,
@@ -19,6 +18,4 @@ import AppShellCbarItem from './item/item.vue';
 export default class AppShellCbar extends Vue {
 	@State
 	communities!: Store['communities'];
-
-	Screen = Screen;
 }

@@ -1,5 +1,5 @@
 import { Component } from 'vue-property-decorator';
-import { Mutation } from 'vuex-class';
+import { Action, Mutation } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
 import { Community } from '../../../../_common/community/community.model';
@@ -38,10 +38,10 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	@ThemeMutation
 	setPageTheme!: ThemeStore['setPageTheme'];
 
-	@Mutation
+	@Action
 	joinCommunity!: Store['joinCommunity'];
 
-	@Mutation
+	@Action
 	leaveCommunity!: Store['leaveCommunity'];
 
 	@Mutation

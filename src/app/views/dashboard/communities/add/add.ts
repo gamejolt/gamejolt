@@ -15,12 +15,6 @@ export default class RouteDashCommunitiesAdd extends BaseRouteComponent {
 	}
 
 	onSubmit(community: Community) {
-		this.$router.push({
-			name: 'communities.view.overview.edit',
-			params: {
-				path: community.path,
-				id: community.id + '',
-			},
-		});
+		this.$router.push(community.routeEditLocation);
 	}
 }

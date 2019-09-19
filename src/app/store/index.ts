@@ -9,7 +9,11 @@ import {
 	CommentMutations,
 	CommentStore,
 } from '../../_common/comment/comment-store';
-import { Community } from '../../_common/community/community.model';
+import {
+	$joinCommunity,
+	$leaveCommunity,
+	Community,
+} from '../../_common/community/community.model';
 import { Connection } from '../../_common/connection/connection-service';
 import { ContentFocus } from '../../_common/content-focus/content-focus.service';
 import { Growls } from '../../_common/growls/growls.service';
@@ -55,6 +59,8 @@ export type Actions = AppActions &
 		toggleLeftPane: void;
 		toggleRightPane: void;
 		clearPanes: void;
+		joinCommunity: Community;
+		leaveCommunity: Community;
 	};
 
 export type Mutations = AppMutations &
@@ -69,8 +75,6 @@ export type Mutations = AppMutations &
 		incrementNotificationCount: { type: UnreadItemType; count: number };
 		setFriendRequestCount: number;
 		changeFriendRequestCount: number;
-		joinCommunity: Community;
-		leaveCommunity: Community;
 		viewCommunity: Community;
 	};
 
@@ -361,8 +365,19 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		this.communities = Community.populate(payload.communities);
 	}
 
+	@VuexAction
+	async joinCommunity(community: Actions['joinCommunity']) {
+		await $joinCommunity(community);
+
+		if (this.grid) {
+			await this.grid.joinCommunity(community);
+		}
+
+		this._joinCommunity(community);
+	}
+
 	@VuexMutation
-	joinCommunity(community: Mutations['joinCommunity']) {
+	private _joinCommunity(community: Community) {
 		if (this.communities.find(c => c.id === community.id)) {
 			return;
 		}
@@ -370,8 +385,19 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		this.communities.unshift(community);
 	}
 
+	@VuexAction
+	async leaveCommunity(community: Actions['leaveCommunity']) {
+		await $leaveCommunity(community);
+
+		if (this.grid) {
+			await this.grid.leaveCommunity(community);
+		}
+
+		this._leaveCommunity(community);
+	}
+
 	@VuexMutation
-	leaveCommunity(community: Mutations['leaveCommunity']) {
+	private _leaveCommunity(community: Community) {
 		const idx = this.communities.findIndex(c => c.id === community.id);
 		if (idx === -1) {
 			return;
@@ -381,7 +407,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	viewCommunity(community: Mutations['leaveCommunity']) {
+	viewCommunity(community: Mutations['viewCommunity']) {
 		community.is_unread = false;
 
 		const idx = this.communities.findIndex(c => c.id === community.id);

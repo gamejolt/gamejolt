@@ -12,13 +12,7 @@ export async function $joinCommunity(community: Community) {
 	++community.member_count;
 
 	try {
-		const response = await Api.sendRequest(
-			'/web/communities/join/' + community.path,
-			{},
-			{ detach: true }
-		);
-
-		return response;
+		await Api.sendRequest('/web/communities/join/' + community.path, {}, { detach: true });
 	} catch (e) {
 		community.is_member = false;
 		--community.member_count;
@@ -31,14 +25,10 @@ export async function $leaveCommunity(community: Community) {
 	--community.member_count;
 
 	try {
-		const response = await Api.sendRequest(
-			'/web/communities/leave/' + community.path,
-			{},
-			{ detach: true }
-		);
-
-		return response;
+		await Api.sendRequest('/web/communities/leave/' + community.path, {}, { detach: true });
 	} catch (e) {
+		community.is_member = false;
+		++community.member_count;
 		throw e;
 	}
 }
@@ -107,6 +97,7 @@ export class Community extends Collaboratable(Model) {
 		return {
 			name: 'communities.view.overview.edit',
 			params: {
+				path: this.path,
 				id: this.id + '',
 			},
 		};

@@ -1,19 +1,6 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
-
-$-size-xs = 60px
-$-size = 100px
-
-.-item
-	pressy()
-	display: inline-block
-	margin-right: 10px
-	vertical-align: middle
-	width: $-size-xs
-
-	@media $media-sm-up
-		width: $-size
-		margin-right: 20px
+@require '../common'
 
 .-bubble
 	img-circle()

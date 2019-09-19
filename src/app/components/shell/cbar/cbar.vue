@@ -6,12 +6,8 @@
 				:key="community.id"
 				:community="community"
 			/>
-			<!-- size is same as cbar item -->
-			<app-community-add-widget
-				v-app-tooltip.right="$gettext(`Create a Community`)"
-				size="48"
-				key="add"
-			/>
+
+			<app-shell-cbar-add-item key="add" />
 		</transition-group>
 	</div>
 </template>
@@ -19,6 +15,7 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
+@require './common';
 
 #shell-cbar
 	change-bg('darkest')
