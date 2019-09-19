@@ -19,6 +19,7 @@
 	position: absolute
 	width: 100%
 	height: 100%
+	outline: 0
 
 	theme-prop('border-color', 'gray-subtle')
 	theme-prop('color', 'gray-subtle')

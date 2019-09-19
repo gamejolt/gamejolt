@@ -149,7 +149,47 @@
 					<form-community-collaborator :community="community" @submit="onAddedCollaborator" />
 				</app-card-list-add>
 			</app-card-list>
+
+			<div class="-spacer"></div>
 		</template>
+
+		<div class="-danger-zone well fill-offset">
+			<template v-if="isOwner">
+				<h2>
+					<translate>Remove Community</translate>
+				</h2>
+
+				<div class="page-help">
+					<p v-translate>
+						Removing your community will remove it from the site completely.
+						<b>This is permanent!</b>
+					</p>
+				</div>
+
+				<app-button @click="removeCommunity()">
+					<translate>Remove Community</translate>
+				</app-button>
+			</template>
+
+			<template v-else>
+				<h2>
+					<translate>Leave Community</translate>
+				</h2>
+
+				<div class="page-help">
+					<p>
+						<translate>
+							You are currently a collaborator on this community. Leaving the community will revoke
+							all moderation permissions you have to it.
+						</translate>
+					</p>
+				</div>
+
+				<app-button @click="leaveCommunity()">
+					<translate>Leave Community</translate>
+				</app-button>
+			</template>
+		</div>
 	</div>
 </template>
 
@@ -180,6 +220,10 @@
 		cursor: move !important
 		font-size: $font-size-base
 		padding: 6px
+
+.-danger-zone
+	h2:first-of-type
+		margin-top: 0
 </style>
 
 <script lang="ts" src="./edit"></script>

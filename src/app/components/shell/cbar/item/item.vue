@@ -28,18 +28,13 @@
 			@hide="popperVisible = false"
 		>
 			<div slot="popover" class="list-group list-group-dark">
-				<app-community-perms
-					:community="community"
-					tag="span"
-					required="community-details,community-channels,community-media"
-					either
-				>
+				<app-community-perms :community="community" tag="span">
 					<router-link class="list-group-item has-icon" :to="community.routeEditLocation">
 						<app-jolticon icon="edit" />
 						<translate>Edit Community</translate>
 					</router-link>
 				</app-community-perms>
-				<a class="list-group-item has-icon" v-if="!isCommunityOwner" @click="onLeaveCommunityClick">
+				<a class="list-group-item has-icon" v-if="shouldShowLeave" @click="onLeaveCommunityClick">
 					<app-jolticon icon="remove" />
 					<translate class="-notice">Leave Community</translate>
 				</a>

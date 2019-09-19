@@ -1,5 +1,5 @@
 <template>
-	<div class="-list" v-if="communities.length || withAddButton">
+	<div class="-list" v-if="communities.length || showAddButton">
 		<app-community-slider-item
 			v-for="community of communities"
 			:key="community.id"
@@ -7,7 +7,7 @@
 			:event-cat="eventCat"
 		/>
 
-		<app-community-slider-add-item v-if="withAddButton" />
+		<app-community-slider-add-item v-if="showAddButton" />
 	</div>
 </template>
 

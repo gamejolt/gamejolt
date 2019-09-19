@@ -73,8 +73,15 @@ const draggable = require('vuedraggable');
 export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 	@RouteStoreModule.State
 	community!: RouteStore['community'];
+
 	@RouteStoreModule.State
 	collaboration!: RouteStore['collaboration'];
+
+	@RouteStoreModule.Action
+	removeCommunity!: RouteStore['removeCommunity'];
+
+	@RouteStoreModule.Action
+	leaveCommunity!: RouteStore['leaveCommunity'];
 
 	collaborators: Collaborator[] = [];
 	activeCollaborator: Collaborator | null = null;

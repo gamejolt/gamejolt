@@ -79,8 +79,6 @@
 				<template v-if="community.hasPerms()">
 					<app-community-perms
 						:community="community"
-						required="community-details,community-channels,community-media"
-						either
 					>
 						<app-button v-if="!isEditing" primary block :to="community.routeEditLocation">
 							<app-jolticon icon="edit" class="middle" />

@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Action, Mutation } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
@@ -98,7 +99,16 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	async acceptCollaboration() {
 		await this.collaboratorInvite!.$accept();
-		this.community.perms = this.collaboratorInvite!.perms;
+
+		// Accepting the collaboration also automatically follows you to the community.
+		// To avoid sending the api request needlessly we update the community model
+		// before calling joinCommunity.
+
+		// Also, using Vue.set because perms and is_member are not initialized in the model.
+		Vue.set(this.community, 'perms', this.collaboratorInvite!.perms);
+		Vue.set(this.community, 'is_member', true);
+		this.joinCommunity(this.community);
+
 		this.collaboratorInvite = null;
 		Growls.success(this.$gettext(`You are now a collaborator on this community!`));
 	}

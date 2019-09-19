@@ -134,6 +134,10 @@ export class Community extends Collaboratable(Model) {
 	$saveDescription() {
 		return this.$_save('/web/dash/communities/description/save/' + this.id, 'community');
 	}
+
+	$remove() {
+		return this.$_remove('/web/dash/communities/remove/' + this.id);
+	}
 }
 
 Model.create(Community);

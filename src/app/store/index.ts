@@ -367,7 +367,13 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async joinCommunity(community: Actions['joinCommunity']) {
-		await $joinCommunity(community);
+		if (community._removed) {
+			return;
+		}
+
+		if (!community.is_member) {
+			await $joinCommunity(community);
+		}
 
 		if (this.grid) {
 			await this.grid.joinCommunity(community);
@@ -387,7 +393,9 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async leaveCommunity(community: Actions['leaveCommunity']) {
-		await $leaveCommunity(community);
+		if (community.is_member && !community._removed) {
+			await $leaveCommunity(community);
+		}
 
 		if (this.grid) {
 			await this.grid.leaveCommunity(community);

@@ -69,12 +69,7 @@
 		</div>
 
 		<div v-if="game.community" class="row">
-			<app-community-perms
-				:community="game.community"
-				tag="div"
-				required="community-details,community-channels,community-media"
-				either
-			>
+			<app-community-perms :community="game.community" tag="div">
 				<div class="col-lg-8">
 					<router-link :to="game.community.routeEditLocation">
 						<app-button icon="users">
