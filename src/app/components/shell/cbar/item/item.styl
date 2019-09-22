@@ -11,12 +11,20 @@ $-bubble-size = 14px
 	img-circle()
 	pressy()
 	change-bg('dark')
+<<<<<<< HEAD
 	theme-prop('border-color', 'gray')
 	border-width: 2px
 	border-style: solid
 	position: absolute
 	width: 100%
 	height: 100%
+=======
+	// theme-prop('border-color', 'gray')
+	// border-width: 2px
+	// border-style: solid
+	width: $-item-size - 2px
+	height: $-item-size - 2px
+>>>>>>> e4dfc10e4a000ce975fe0e09ff02585c1e85a9a4
 
 	>>> img
 		width: calc(100% - 2px)
@@ -28,7 +36,7 @@ $-bubble-size = 14px
 	height: $-blip-size
 	top: $-blip-top
 	left: -($-blip-size * 2)
-	background-color: var(--theme-gray)
+	background-color: var(--theme-lighter)
 	border-radius: 50%
 	will-change: height, top, left
 	z-index: 2
@@ -41,6 +49,26 @@ $-bubble-size = 14px
 	top: 0
 	left: $-blip-left
 	height: $-item-size
+
+.-feature-counter
+	position: absolute
+	right: -2px
+	bottom: -2px
+	z-index: 2
+
+	border-radius: 10px
+	border-color: var(--theme-darkest)
+	border-width: 3px
+	border-style: solid
+
+	padding-left: 4px
+	padding-right: 4px
+
+	font-size: $font-size-tiny
+	text-align: center
+	font-weight: bolder
+	color: white
+	background-color: red
 
 .-popper
 	position: absolute

@@ -17,7 +17,9 @@
 	change-bg('bg-offset')
 	border: 2px solid var(--theme-bg-actual)
 	width: $-size-xs
-	height: $-size-xs
+
+	@media $media-xs
+		max-height: $-size-xs
 
 	@media $media-sm-up
 		width: $-size
@@ -38,3 +40,20 @@
 
 		.-item:hover &
 			theme-prop('color', 'link')
+
+.-feature-counter
+	position: absolute
+	right: -2px
+	bottom: -2px
+	z-index: 2
+	border-radius: 10px
+	border-color: var(--theme-bg-actual)
+	border-width: 3px
+	border-style: solid
+	padding-left: 4px
+	padding-right: 4px
+	font-size: $font-size-tiny
+	text-align: center
+	font-weight: bolder
+	color: white
+	background-color: rgb(255, 0, 0)

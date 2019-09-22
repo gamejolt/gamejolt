@@ -61,10 +61,10 @@
 										channel,
 									},
 								}"
-								:class="{ active: sort === 'hot' }"
+								:class="{ active: sort === 'new' }"
 								block
 							>
-								<translate>Hot</translate>
+								<translate>New</translate>
 							</router-link>
 						</li>
 						<li>
@@ -75,20 +75,20 @@
 										channel,
 									},
 									query: {
-										sort: 'new',
+										sort: 'hot',
 									},
 								}"
-								:class="{ active: sort === 'new' }"
+								:class="{ active: sort === 'hot' }"
 								block
 							>
-								<translate>New</translate>
+								<translate>Hot</translate>
 							</router-link>
 						</li>
 					</ul>
 				</app-nav-tab-list>
 
 				<app-expand v-if="shouldShowLoadNew" when animate-initial>
-					<app-activity-feed-new-button @click="emitRefresh()">
+					<app-activity-feed-new-button @click="onClickLoadNew">
 						<translate>Show New Posts</translate>
 					</app-activity-feed-new-button>
 				</app-expand>

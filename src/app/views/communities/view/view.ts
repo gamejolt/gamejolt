@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { Action, Mutation } from 'vuex-class';
+import { Action, Mutation, State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
 import { Community } from '../../../../_common/community/community.model';
@@ -48,8 +48,11 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	@Mutation
 	viewCommunity!: Store['viewCommunity'];
 
+	@State
+	communityStates!: Store['communityStates'];
+
 	community: Community = null as any;
-	unreadWatermark = 0;
+	unreadFeaturedWatermark = 0;
 	collaboratorInvite: Collaborator | null = null;
 
 	get isEditing() {
@@ -62,8 +65,20 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	routeResolved($payload: any) {
 		this.community = new Community($payload.community);
-		if ($payload.unreadWatermark) {
-			this.unreadWatermark = $payload.unreadWatermark;
+		if ($payload.unreadFeaturedWatermark) {
+			this.unreadFeaturedWatermark = $payload.unreadFeaturedWatermark;
+		}
+		if ($payload.unreadChannels) {
+			const communityState = this.communityStates.getCommunityState(this.community);
+
+			// This flag was set to true in grid bootstrap and we need to unset it
+			// now that we have the actual unread channels in this community.
+			// read comment in client service for more info.
+			communityState.hasUnreadPosts = false;
+
+			for (const channelId of $payload.unreadChannels as number[]) {
+				communityState.markChannelUnread(channelId);
+			}
 		}
 		if ($payload.invite) {
 			this.collaboratorInvite = new Collaborator($payload.invite);

@@ -35,12 +35,30 @@ export default class AppShellCbarItem extends Vue {
 	@Action
 	leaveCommunity!: Store['leaveCommunity'];
 
+	@State
+	communityStates!: Store['communityStates'];
+
 	popperVisible = false;
 
 	readonly Environment = Environment;
 
+	get communityState() {
+		return this.communityStates.getCommunityState(this.community);
+	}
+
 	get isUnread() {
-		return this.community.is_unread;
+		return this.communityState.isUnread;
+	}
+
+	get featureCount() {
+		return this.communityState.unreadFeatureCount;
+	}
+
+	get featureCountText() {
+		if (this.featureCount > 99) {
+			return '99+';
+		}
+		return this.featureCount.toString();
 	}
 
 	get isActive() {
@@ -52,9 +70,11 @@ export default class AppShellCbarItem extends Vue {
 	}
 
 	get highlight() {
-		const highlight = this.community.theme && this.community.theme.highlight_;
-		if (highlight) {
-			return '#' + highlight;
+		if (this.isActive) {
+			const highlight = this.community.theme && this.community.theme.highlight_;
+			if (highlight) {
+				return '#' + highlight;
+			}
 		}
 		return null;
 	}

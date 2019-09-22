@@ -35,6 +35,7 @@ import { ChatClientLazy, GridClientLazy } from '../components/lazy';
 import { router } from '../views';
 import { BannerActions, BannerMutations, BannerStore } from './banner';
 import * as _ClientLibraryMod from './client-library';
+import { CommunityStates } from './community-state';
 import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
 
 // Re-export our sub-modules.
@@ -130,6 +131,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	isRightPaneOverlayed = false;
 
 	communities: Community[] = [];
+	communityStates: CommunityStates = new CommunityStates();
 
 	get hasTopBar() {
 		return !this.isShellHidden;
@@ -406,6 +408,9 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexMutation
 	private _leaveCommunity(community: Community) {
+		const communityState = this.communityStates.getCommunityState(community);
+		communityState.reset();
+
 		const idx = this.communities.findIndex(c => c.id === community.id);
 		if (idx === -1) {
 			return;
@@ -416,7 +421,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexMutation
 	viewCommunity(community: Mutations['viewCommunity']) {
-		community.is_unread = false;
+		const communityState = this.communityStates.getCommunityState(community);
+		communityState.unreadFeatureCount = 0;
 
 		const idx = this.communities.findIndex(c => c.id === community.id);
 		if (idx === -1) {

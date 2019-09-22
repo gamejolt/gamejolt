@@ -51,8 +51,6 @@ export class Community extends Collaboratable(Model) {
 
 	perms?: Perm[];
 
-	is_unread = false;
-
 	constructor(data: any = {}) {
 		super(data);
 
