@@ -13,7 +13,7 @@
 	display: flex
 	justify-content: center
 	align-items: center
-	border: 3px solid
+	border: 1px dashed
 	border-radius: 100%
 	cursor: pointer
 	position: absolute
@@ -21,8 +21,12 @@
 	height: 100%
 	outline: 0
 
-	theme-prop('border-color', 'gray-subtle')
-	theme-prop('color', 'gray-subtle')
+	theme-prop('border-color', 'fg-muted')
+	theme-prop('color', 'fg-muted')
+
+	&:hover
+		theme-prop('border-color', 'highlight')
+		theme-prop('color', 'highlight')
 
 
 </style>

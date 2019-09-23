@@ -1,6 +1,10 @@
 <template>
 	<div>
 		<template v-if="shouldShowEdit">
+			<h2 class="section-header">
+				<translate>Edit Description</translate>
+			</h2>
+
 			<form-community-description :model="community" />
 		</template>
 		<template v-else>

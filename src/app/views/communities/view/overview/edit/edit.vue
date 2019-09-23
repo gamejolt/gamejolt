@@ -1,5 +1,53 @@
 <template>
 	<div>
+		<app-alert-dismissable
+			v-if="isOwner"
+			alert-type="info"
+			:dismiss-key="`community-${community.id}.welcome-msg`"
+		>
+			<h2 class="section-header"><translate>Welcome to your new community! 🎉</translate></h2>
+
+			<ul>
+				<li>
+					<p>
+						<strong><translate>Your community is live!</translate></strong>
+						<br />
+						<translate>
+							Users can already see your community on the site.
+						</translate>
+					</p>
+				</li>
+
+				<li>
+					<strong><translate>Customize the %$@#! out of it</translate></strong>
+					<br />
+					<translate>
+						You can edit every aspect of your community in this page. Set a description, upload a
+						thumbnail and header, customize your channels - make it real pretty!
+					</translate>
+				</li>
+
+				<li>
+					<strong><translate>Keep it moderated</translate></strong>
+					<br />
+					<translate>
+						Invite collaborators to help you moderate your community. This is your community. We
+						won't intervene with how you choose to moderate it, as long as it isn't breaking our own
+						site rules.
+					</translate>
+				</li>
+
+				<li>
+					<strong><translate>Whats next?</translate></strong>
+					<br />
+					<translate>
+						Share the community with your friends, post about it on reddit, facebook, twitter,
+						everywhere! An active community is a happy community. It's up to you to promote it.
+					</translate>
+				</li>
+			</ul>
+		</app-alert-dismissable>
+
 		<template v-if="isOwner && !!community.game">
 			<app-communities-overview-edit-notice :community="community" />
 			<div class="-spacer"></div>

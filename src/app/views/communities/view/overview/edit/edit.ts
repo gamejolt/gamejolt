@@ -1,6 +1,7 @@
 import Component from 'vue-class-component';
 import { arrayRemove } from '../../../../../../utils/array';
 import { enforceLocation } from '../../../../../../utils/router';
+import AppAlertDismissable from '../../../../../../_common/alert/dismissable/dismissable.vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../_common/card/list/add/add.vue';
 import AppCardListItem from '../../../../../../_common/card/list/item/item.vue';
@@ -29,6 +30,7 @@ const draggable = require('vuedraggable');
 @Component({
 	name: 'RouteCommunitiesViewEdit',
 	components: {
+		AppAlertDismissable,
 		AppCommunitiesOverviewEditNotice,
 		FormCommunityChannel,
 		draggable,
