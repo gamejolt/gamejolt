@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
+import { enforceLocation } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
 import { Community } from '../../../../_common/community/community.model';
@@ -33,7 +34,18 @@ import { Store } from '../../../store/index';
 @RouteResolver({
 	cache: true,
 	deps: { params: ['path'] },
-	resolver: ({ route }) => Api.sendRequest('/web/communities/view/' + route.params.path),
+	async resolver({ route }) {
+		const payload = await Api.sendRequest('/web/communities/view/' + route.params.path);
+
+		if (payload && payload.community) {
+			const redirect = enforceLocation(route, { path: payload.community.path });
+			if (redirect) {
+				return redirect;
+			}
+		}
+
+		return payload;
+	},
 })
 export default class RouteCommunitiesView extends BaseRouteComponent {
 	@ThemeMutation
