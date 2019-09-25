@@ -58,6 +58,12 @@ export default class AppCommunityJoinWidget extends Vue {
 		return findTooltipContainer(this);
 	}
 
+	get canJoin() {
+		// Guests should always be allowed to attempt to join stuff.
+		// When they log in, we can check if they are actually allowed.
+		return !this.app.user || !!this.app.user.can_join_communities;
+	}
+
 	async onClick() {
 		if (!this.app.user || this.isProcessing) {
 			return;
@@ -71,9 +77,15 @@ export default class AppCommunityJoinWidget extends Vue {
 				this.grid.joinCommunity(this.community);
 				this.join(this.community);
 			} catch (e) {
-				Growls.error(
-					this.$gettext(`Something has prevented you from joining this community.`)
+				console.log(e);
+				let message = this.$gettext(
+					`Something has prevented you from joining this community.`
 				);
+				if (e.errors && e.errors['limit-reached']) {
+					message = this.$gettext(`You already joined too many communities!`);
+				}
+
+				Growls.error(message);
 			}
 		} else {
 			try {

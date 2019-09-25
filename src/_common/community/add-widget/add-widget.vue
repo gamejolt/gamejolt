@@ -1,7 +1,15 @@
 <template>
-	<router-link class="-add" :to="{ name: 'dash.communities.add' }">
-		<app-jolticon class="-icon" icon="add" big />
+	<router-link
+		v-if="canCreate"
+		class="-add"
+		:to="{ name: 'dash.communities.add' }"
+		v-app-tooltip="tooltip"
+	>
+		<app-jolticon icon="add" big />
 	</router-link>
+	<a v-else class="-add -disabled" v-app-tooltip="tooltip">
+		<app-jolticon icon="add" big />
+	</a>
 </template>
 
 <style lang="stylus" scoped>
@@ -24,10 +32,19 @@
 	theme-prop('border-color', 'fg-muted')
 	theme-prop('color', 'fg-muted')
 
-	&:hover
-		theme-prop('border-color', 'highlight')
-		theme-prop('color', 'highlight')
+	&:not(.-disabled):hover
+			theme-prop('border-color', 'highlight')
+			theme-prop('color', 'highlight')
 
+.-disabled
+	cursor: not-allowed
+
+	// Undoes pressy()
+	transition: none !important
+	transform: none !important
+
+	> *
+		pointer-events: none
 
 </style>
 

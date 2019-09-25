@@ -11,12 +11,27 @@ export async function $joinCommunity(community: Community) {
 	community.is_member = true;
 	++community.member_count;
 
+	let success = false;
 	try {
-		await Api.sendRequest('/web/communities/join/' + community.path, {}, { detach: true });
-	} catch (e) {
-		community.is_member = false;
-		--community.member_count;
-		throw e;
+		const response = await Api.sendRequest(
+			'/web/communities/join/' + community.path,
+			{},
+			{ detach: true }
+		);
+
+		success = !!response.success;
+
+		if (!success) {
+			if (response) {
+				throw response;
+			}
+			throw new Error('Empty response');
+		}
+	} finally {
+		if (!success) {
+			community.is_member = false;
+			--community.member_count;
+		}
 	}
 }
 

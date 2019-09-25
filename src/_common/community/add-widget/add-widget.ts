@@ -1,5 +1,6 @@
 import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
+import { AppState, AppStore } from '../../store/app-store';
 import { AppTooltip } from '../../tooltip/tooltip';
 
 @Component({
@@ -7,4 +8,38 @@ import { AppTooltip } from '../../tooltip/tooltip';
 		AppTooltip,
 	},
 })
-export default class AppCommunityAddWidget extends Vue {}
+export default class AppCommunityAddWidget extends Vue {
+	@AppState
+	user!: AppStore['user'];
+
+	@Prop({ type: String, default: 'bottom' })
+	tooltipPlacement!:
+		| 'auto'
+		| 'auto-start'
+		| 'auto-end'
+		| 'top'
+		| 'top-start'
+		| 'top-end'
+		| 'right'
+		| 'right-start'
+		| 'right-end'
+		| 'bottom'
+		| 'bottom-start'
+		| 'bottom-end'
+		| 'left'
+		| 'left-start'
+		| 'left-end';
+
+	get canCreate() {
+		return this.user && !!this.user.can_create_communities;
+	}
+
+	get tooltip() {
+		return {
+			content: this.canCreate
+				? this.$gettext(`Create a Community`)
+				: this.$gettext(`You own too many communities`),
+			placement: this.tooltipPlacement,
+		};
+	}
+}

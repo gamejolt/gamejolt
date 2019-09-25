@@ -1,9 +1,6 @@
 <template>
 	<div class="-item">
-		<app-community-add-widget
-			v-app-tooltip.right="$gettext(`Create a Community`)"
-			@contextmenu.native.prevent
-		/>
+		<app-community-add-widget tooltip-placement="right" @contextmenu.native.prevent />
 	</div>
 </template>
 

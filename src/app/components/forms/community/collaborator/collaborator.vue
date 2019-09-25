@@ -10,7 +10,6 @@
 					},
 				}"
 				:validate-on="['blur']"
-				v-app-focus-when
 			/>
 
 			<app-form-control-errors :label="$gettext('username')">

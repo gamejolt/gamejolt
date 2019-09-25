@@ -1,6 +1,6 @@
 <template>
 	<div class="-item">
-		<app-community-add-widget v-app-tooltip.bottom="$gettext(`Create a Community`)" />
+		<app-community-add-widget />
 	</div>
 </template>
 
@@ -20,6 +20,11 @@
 
 	>>> .jolticon
 		@extend .jolticon-3x
+
+	&:not(.-disabled)
+		// Undoes pressy()
+		transition: none !important
+		transform: none !important
 </style>
 
 <script lang="ts" src="./add-item"></script>
