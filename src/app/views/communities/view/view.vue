@@ -5,7 +5,12 @@
 				<p v-translate>
 					<b>You've been invited you to collaborate on this community.</b>
 				</p>
-				<app-button primary @click="acceptCollaboration()">
+				<app-button
+					primary
+					:disabled="!canAcceptCollaboration"
+					v-app-tooltip.bottom="acceptCollaborationTooltip"
+					@click="acceptCollaboration()"
+				>
 					<translate>Accept</translate>
 				</app-button>
 				<app-button trans @click="declineCollaboration()">
@@ -77,9 +82,7 @@
 
 			<div slot="controls">
 				<template v-if="community.hasPerms()">
-					<app-community-perms
-						:community="community"
-					>
+					<app-community-perms :community="community">
 						<app-button v-if="!isEditing" primary block :to="community.routeEditLocation">
 							<app-jolticon icon="edit" class="middle" />
 							<translate>Edit Community</translate>

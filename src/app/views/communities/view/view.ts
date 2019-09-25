@@ -11,7 +11,9 @@ import AppEditableOverlay from '../../../../_common/editable-overlay/editable-ov
 import { number } from '../../../../_common/filters/number';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import { AppCommunityPerms } from '../../../components/community/perms/perms';
 import { CommunityHeaderModal } from '../../../components/forms/community/header/modal/modal.service';
 import { CommunityThumbnailModal } from '../../../components/forms/community/thumbnail/modal/modal.service';
@@ -26,6 +28,9 @@ import { Store } from '../../../store/index';
 		AppCommunityJoinWidget,
 		AppEditableOverlay,
 		AppCommunityPerms,
+	},
+	directives: {
+		AppTooltip,
 	},
 	filters: {
 		number,
@@ -48,6 +53,9 @@ import { Store } from '../../../store/index';
 	},
 })
 export default class RouteCommunitiesView extends BaseRouteComponent {
+	@AppState
+	user!: AppStore['user'];
+
 	@ThemeMutation
 	setPageTheme!: ThemeStore['setPageTheme'];
 
@@ -73,6 +81,14 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	get canEditMedia() {
 		return this.community.hasPerms('community-media');
+	}
+
+	get canAcceptCollaboration() {
+		return this.community.is_member || (this.user && this.user.can_join_communities);
+	}
+
+	get acceptCollaborationTooltip() {
+		return this.canAcceptCollaboration ? '' : this.$gettext(`You are in too many communities`);
 	}
 
 	routeResolved($payload: any) {

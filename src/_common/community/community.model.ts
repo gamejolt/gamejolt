@@ -16,7 +16,10 @@ export async function $joinCommunity(community: Community) {
 		const response = await Api.sendRequest(
 			'/web/communities/join/' + community.path,
 			{},
-			{ detach: true }
+			// Normally we would call the request with detach,
+			// but in this specific case we want to process the updates
+			// to the user to see if they just went over the join limit
+			{ ignoreLoadingBar: true, noErrorRedirect: true }
 		);
 
 		success = !!response.success;
@@ -40,7 +43,14 @@ export async function $leaveCommunity(community: Community) {
 	--community.member_count;
 
 	try {
-		await Api.sendRequest('/web/communities/leave/' + community.path, {}, { detach: true });
+		await Api.sendRequest(
+			'/web/communities/leave/' + community.path,
+			{},
+			// We use these options for the request for the same reason
+			// commented in the $joinCommunity function, only to update
+			// when the user goes under the join limit.
+			{ ignoreLoadingBar: true, noErrorRedirect: true }
+		);
 	} catch (e) {
 		community.is_member = false;
 		++community.member_count;
