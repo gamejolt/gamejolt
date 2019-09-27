@@ -7,16 +7,18 @@ $-blip-left = (-($cbar-h-padding + $-blip-size * 0.5))
 $-blip-top = $-item-size * 0.5 - $-blip-size * 0.5
 $-bubble-size = 14px
 
+.-item
+	// Gotta set pressy here and not in common since the add-item component
+	// needs to disable pressy when they can't add anymore.
+	pressy()
+
 .-thumb
 	img-circle()
-	pressy()
 	change-bg('dark')
 	position: absolute
 	width: 100%
 	height: 100%
 
-	// width: $-item-size - 2px
-	// height: $-item-size - 2px
 	>>> img
 		width: calc(100% - 2px)
 		height: calc(100% - 2px)
