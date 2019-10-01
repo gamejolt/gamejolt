@@ -20,7 +20,7 @@
 			</div>
 
 			<template v-if="!wasPublished">
-				<app-form-post-channels
+				<app-community-channel-select
 					v-if="communityChannels.length"
 					class="-channels"
 					v-model="selectedChannel"

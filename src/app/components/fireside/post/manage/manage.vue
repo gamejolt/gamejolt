@@ -105,6 +105,14 @@
 									</app-community-perms>
 
 									<app-community-perms :community="i.community" required="community-posts">
+										<a
+											class="list-group-item has-icon"
+											@click.stop="movePostFromCommunityChannel(i)"
+										>
+											<app-jolticon icon="arrow-forward" />
+											<translate>Move to a different channel</translate>
+										</a>
+
 										<a class="list-group-item has-icon" @click.stop="rejectFromCommunity(i)">
 											<app-jolticon icon="remove" notice />
 

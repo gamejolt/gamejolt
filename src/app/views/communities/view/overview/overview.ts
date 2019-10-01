@@ -309,6 +309,12 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		}
 	}
 
+	onPostMovedChannel(eventItem: EventItem, movedTo: CommunityChannel) {
+		if (this.feed && this.channel !== 'featured' && this.channel !== movedTo.title) {
+			this.feed.remove([eventItem]);
+		}
+	}
+
 	onChannelsChanged(channels: CommunityChannel[]) {
 		this.community.channels = channels;
 	}

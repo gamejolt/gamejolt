@@ -26,4 +26,4 @@
 
 </style>
 
-<script lang="ts" src="./channels"></script>
+<script lang="ts" src="./select"></script>

@@ -5,6 +5,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
+import AppCommunityChannelSelect from '../../../../_common/community/channel/select/select.vue';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { ContentDocument } from '../../../../_common/content/content-document';
@@ -43,7 +44,6 @@ import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.se
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
-import AppFormPostChannels from './channels/channels.vue';
 import AppFormPostMedia from './_media/media.vue';
 
 type FormPostModel = FiresidePost & {
@@ -87,7 +87,7 @@ type FormPostModel = FiresidePost & {
 		AppProgressBar,
 		AppFormPostMedia,
 		AppCommunityPill,
-		AppFormPostChannels,
+		AppCommunityChannelSelect,
 		AppFormControlContent,
 		AppExpand,
 	},
