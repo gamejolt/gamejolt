@@ -8,8 +8,10 @@ import { Community } from '../../../../_common/community/community.model';
 import AppCommunityJoinWidget from '../../../../_common/community/join-widget/join-widget.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
 import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
+import { Environment } from '../../../../_common/environment/environment.service';
 import { number } from '../../../../_common/filters/number';
 import { Growls } from '../../../../_common/growls/growls.service';
+import AppPopper from '../../../../_common/popper/popper.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
@@ -28,6 +30,7 @@ import { Store } from '../../../store/index';
 		AppCommunityJoinWidget,
 		AppEditableOverlay,
 		AppCommunityPerms,
+		AppPopper,
 	},
 	directives: {
 		AppTooltip,
@@ -75,6 +78,8 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	unreadFeaturedWatermark = 0;
 	collaboratorInvite: Collaborator | null = null;
 
+	readonly Environment = Environment;
+
 	get isEditing() {
 		return this.$route.name && this.$route.name.includes('communities.view.overview.edit');
 	}
@@ -89,6 +94,10 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	get acceptCollaborationTooltip() {
 		return this.canAcceptCollaboration ? '' : this.$gettext(`You are in too many communities`);
+	}
+
+	get shouldShowModTools() {
+		return this.user && this.user.isMod;
 	}
 
 	routeResolved($payload: any) {

@@ -77,6 +77,25 @@
 							</span>
 						</router-link>
 					</li>
+
+					<li v-if="shouldShowModTools">
+						<app-popper>
+							<a>
+								<app-jolticon icon="ellipsis-h" />
+							</a>
+
+							<div slot="popover" class="list-group list-group-dark">
+								<a
+									class="list-group-item has-icon"
+									:href="Environment.baseUrl + `/moderate/communities/view/${community.id}`"
+									target="_blank"
+								>
+									<app-jolticon icon="cog" />
+									<span>Moderate Community</span>
+								</a>
+							</div>
+						</app-popper>
+					</li>
 				</ul>
 			</nav>
 
