@@ -9,8 +9,8 @@ import {
 import { Registry } from '../../../_common/registry/registry.service';
 import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
 import { User } from '../../../_common/user/user.model';
-import { store } from '../../store';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
+import { store } from '../../store';
 
 type RouteActions = {
 	sendFriendRequest: void;
@@ -52,6 +52,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	user: User | null = null;
 
 	gamesCount = 0;
+	communitiesCount = 0;
 	videosCount = 0;
 	isOnline = false;
 	userFriendship: UserFriendship | null = null;
@@ -110,6 +111,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 		if ((this.user && this.user.id) !== prevId) {
 			this.isOverviewLoaded = false;
 			this.gamesCount = 0;
+			this.communitiesCount = 0;
 			this.isOnline = false;
 			this.videosCount = 0;
 			this.userFriendship = null;
@@ -122,6 +124,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 		this.user = updateUser(this.user, user);
 
 		this.gamesCount = $payload.gamesCount || 0;
+		this.communitiesCount = $payload.communitiesCount || 0;
 		this.isOnline = $payload.isOnline || false;
 		this.videosCount = $payload.videosCount || 0;
 
