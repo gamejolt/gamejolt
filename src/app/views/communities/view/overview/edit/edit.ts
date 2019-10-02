@@ -165,7 +165,7 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 
 	async onClickRemoveChannel(channel: CommunityChannel) {
 		const shouldRemove = await ModalConfirm.show(
-			this.$gettext('All posts made on this channel will be removed from the community'),
+			this.$gettext('All posts made on this channel will be ejected from the community'),
 			this.$gettextInterpolate('Remove "%{ title }" channel?', { title: channel.title })
 		);
 
