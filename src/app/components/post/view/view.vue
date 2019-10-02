@@ -80,8 +80,19 @@
 					</template>
 
 					<template v-if="communities.length">
-						<div>
-							<app-community-pill v-for="i of communities" :key="i.id" :community="i.community" />
+						<div
+							class="-community-row"
+							v-for="postCommunity of communities"
+							:key="postCommunity.id"
+						>
+							<app-community-pill :community="postCommunity.community" />
+							<router-link
+								v-if="postCommunity.channel"
+								class="badge"
+								:to="postCommunity.community.channelRouteLocation(postCommunity.channel)"
+							>
+								{{ postCommunity.channel.title }}
+							</router-link>
 						</div>
 
 						<br />
@@ -122,6 +133,10 @@
 
 >>> .mention-avatar-img
 	border-radius: 50% !important
+
+.-community-row
+	display: flex
+	align-items: center
 
 </style>
 
