@@ -1,15 +1,19 @@
-import { Community } from '../../../../../_common/community/community.model';
-import { Environment } from '../../../../../_common/environment/environment.service';
-import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import { getLinkedAccountPlatformIcon } from '../../../../../_common/linked-account/linked-account.model';
-import AppPopper from '../../../../../_common/popper/popper.vue';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
-import { number } from '../../../../../_common/filters/number';
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { Api } from '../../../../../_common/api/api.service';
+import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
+import { Community } from '../../../../../_common/community/community.model';
+import { Environment } from '../../../../../_common/environment/environment.service';
+import { number } from '../../../../../_common/filters/number';
+import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
+import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { Growls } from '../../../../../_common/growls/growls.service';
+import { getLinkedAccountPlatformIcon } from '../../../../../_common/linked-account/linked-account.model';
+import AppPopper from '../../../../../_common/popper/popper.vue';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import { Store } from '../../../../store';
+import { CommunityMovePostModal } from '../../../community/move-post/modal/modal.service';
 import { AppCommunityPerms } from '../../../community/perms/perms';
 import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 
@@ -53,6 +57,9 @@ export default class AppFiresidePostManage extends Vue {
 
 	@Emit('unfeature')
 	emitUnfeature(_community: Community) {}
+
+	@Emit('move-channel')
+	emitMoveChannel(_movedTo: CommunityChannel) {}
 
 	@Emit('reject')
 	emitReject(_community: Community) {}
@@ -105,6 +112,43 @@ export default class AppFiresidePostManage extends Vue {
 			await this.post.$feature(postCommunity.community);
 			this.emitFeature(postCommunity.community);
 		}
+	}
+
+	async movePostFromCommunityChannel(postCommunity: FiresidePostCommunity) {
+		let possibleChannels = postCommunity.community.channels;
+		if (!possibleChannels) {
+			possibleChannels = await this.fetchCommunityChannels(postCommunity.community);
+		}
+
+		const channel = await CommunityMovePostModal.show(postCommunity, possibleChannels);
+		if (!channel) {
+			return;
+		}
+
+		try {
+			await this.post.$moveChannel(postCommunity.community, channel);
+			this.emitMoveChannel(channel);
+		} catch (e) {
+			console.error('Failed to move community post to a channel');
+			console.error(e);
+			Growls.error(this.$gettext('Could not move the post, try again later.'));
+		}
+	}
+
+	private async fetchCommunityChannels(community: Community) {
+		const payload = await Api.sendRequest(
+			`/web/communities/manage/list-channels/${community.id}`,
+			null,
+			{
+				detach: true,
+			}
+		);
+
+		if (!payload || !payload.success) {
+			throw new Error('Could not fetch community channels');
+		}
+
+		return CommunityChannel.populate(payload.channels) as CommunityChannel[];
 	}
 
 	async rejectFromCommunity(postCommunity: FiresidePostCommunity) {

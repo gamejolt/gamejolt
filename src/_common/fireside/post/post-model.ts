@@ -1,6 +1,7 @@
 import { RawLocation } from 'vue-router';
 import { Api } from '../../api/api.service';
 import { Perm } from '../../collaborator/collaboratable';
+import { CommunityChannel } from '../../community/channel/channel.model';
 import { Community } from '../../community/community.model';
 import { ContentContainerModel } from '../../content/content-container-model';
 import { ContentContext } from '../../content/content-context';
@@ -319,6 +320,21 @@ export class FiresidePost extends Model implements ContentContainerModel {
 		}
 
 		return this.$_save(`/web/communities/manage/reject/${c.id}`, 'post');
+	}
+
+	$moveChannel(community: Community, channel: CommunityChannel) {
+		const c = this.getTaggedCommunity(community);
+		if (!c) {
+			throw new Error('Cannot move a post to a channel in a community it is not tagged in');
+		}
+
+		if (community.id !== channel.community_id) {
+			throw new Error(
+				'Attempted to move a community post to a channel of a different community'
+			);
+		}
+
+		return this.$_save(`/web/communities/manage/move-post/${c.id}/${channel.id}`, 'post');
 	}
 
 	getTaggedCommunity(community: Community) {

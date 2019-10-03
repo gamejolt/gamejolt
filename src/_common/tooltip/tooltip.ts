@@ -15,4 +15,21 @@ if (!GJ_IS_SSR) {
 	VTooltip.enabled = window.innerWidth > 768;
 }
 
+export type TooltipPlacement =
+	| 'auto'
+	| 'auto-start'
+	| 'auto-end'
+	| 'top'
+	| 'top-start'
+	| 'top-end'
+	| 'right'
+	| 'right-start'
+	| 'right-end'
+	| 'bottom'
+	| 'bottom-start'
+	| 'bottom-end'
+	| 'left'
+	| 'left-start'
+	| 'left-end';
+
 export { AppTooltip };

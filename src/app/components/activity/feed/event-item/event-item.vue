@@ -158,6 +158,7 @@
 					@remove="onPostRemoved(eventItem)"
 					@feature="onPostFeatured(eventItem, $event)"
 					@unfeature="onPostUnfeatured(eventItem, $event)"
+					@move-channel="onPostMoveChannel(eventItem, $event)"
 					@reject="onPostRejected(eventItem, $event)"
 				/>
 			</div>

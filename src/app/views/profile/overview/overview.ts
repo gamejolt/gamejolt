@@ -5,6 +5,8 @@ import AppCommentAddButton from '../../../../_common/comment/add-button/add-butt
 import { Comment } from '../../../../_common/comment/comment-model';
 import { CommentModal } from '../../../../_common/comment/modal/modal.service';
 import { CommentThreadModal } from '../../../../_common/comment/thread/modal.service';
+import { Community } from '../../../../_common/community/community.model';
+import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
@@ -19,13 +21,13 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { User } from '../../../../_common/user/user.model';
 import { YoutubeChannel } from '../../../../_common/youtube/channel/channel-model';
-import { Store } from '../../../store/index';
 import { ChatClient } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/overview/overview.vue';
 import AppGameList from '../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
 import AppPageContainer from '../../../components/page-container/page-container.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/known-followers.vue';
+import { Store } from '../../../store/index';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 
 @Component({
@@ -34,6 +36,7 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 		AppPageContainer,
 		AppExpand,
 		AppFadeCollapse,
+		AppCommunityThumbnailImg,
 		AppGameList,
 		AppGameListPlaceholder,
 		AppCommentAddButton,
@@ -68,6 +71,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	gamesCount!: RouteStore['gamesCount'];
 
 	@RouteStoreModule.State
+	communitiesCount!: RouteStore['communitiesCount'];
+
+	@RouteStoreModule.State
 	videosCount!: RouteStore['videosCount'];
 
 	@RouteStoreModule.State
@@ -99,9 +105,12 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	showFullDescription = false;
 	canToggleDescription = false;
+	showAllCommunities = false;
+	isLoadingAllCommunities = false;
 	games: Game[] = [];
+	communities: Community[] = [];
+	allCommunities: Community[] | null = null;
 	overviewComments: Comment[] = [];
-	developerGames: Game[] = [];
 	youtubeChannels: YoutubeChannel[] = [];
 	linkedAccounts: LinkedAccount[] = [];
 	knownFollowers: User[] = [];
@@ -147,6 +156,10 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	get hasGamesSection() {
 		return !Screen.isMobile && this.gamesCount > 0;
+	}
+
+	get hasCommunitiesSection() {
+		return !Screen.isMobile && this.communitiesCount > 0;
 	}
 
 	get twitterAccount() {
@@ -204,9 +217,26 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return this.isFriend && this.chat && this.chat.connected;
 	}
 
+	get previewCommunityCount() {
+		return this.isLoadingAllCommunities ? this.communitiesCount : 4;
+	}
+
+	get canShowMoreCommunities() {
+		return this.communitiesCount > this.communities.length;
+	}
+
+	get shownCommunities() {
+		return this.showAllCommunities && this.allCommunities
+			? this.allCommunities
+			: this.communities;
+	}
+
 	get shouldShowKnownFollowers() {
 		return (
-			!!this.app.user && !!this.user && this.isOverviewLoaded && this.app.user.id !== this.user.id
+			!!this.app.user &&
+			!!this.user &&
+			this.isOverviewLoaded &&
+			this.app.user.id !== this.user.id
 		);
 	}
 
@@ -226,7 +256,11 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	routeCreated() {
 		this.showFullDescription = false;
+		this.showAllCommunities = false;
+		this.isLoadingAllCommunities = false;
 		this.games = [];
+		this.communities = [];
+		this.allCommunities = null;
 		this.youtubeChannels = [];
 		this.linkedAccounts = [];
 		this.overviewComments = [];
@@ -240,8 +274,11 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		Meta.twitter.title = this.routeTitle;
 
 		this.showFullDescription = false;
+		this.showAllCommunities = false;
+		this.isLoadingAllCommunities = false;
 		this.youtubeChannels = YoutubeChannel.populate($payload.youtubeChannels);
 		this.games = Game.populate($payload.developerGamesTeaser);
+		this.communities = Community.populate($payload.communities);
 		this.linkedAccounts = LinkedAccount.populate($payload.linkedAccounts);
 		this.overviewComments = Comment.populate($payload.comments);
 
@@ -278,6 +315,36 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 				} else {
 					this.chat.enterRoom(chatUser.roomId);
 				}
+			}
+		}
+	}
+
+	async toggleShowAllCommunities() {
+		if (!this.user) {
+			return;
+		}
+
+		if (this.isLoadingAllCommunities) {
+			return;
+		}
+
+		this.showAllCommunities = !this.showAllCommunities;
+		if (this.showAllCommunities && this.allCommunities === null) {
+			this.isLoadingAllCommunities = true;
+
+			try {
+				const payload = await Api.sendRequest(
+					`/web/profile/communities/@${this.user.username}`,
+					null,
+					{ detach: true }
+				);
+				this.allCommunities = Community.populate(payload.communities);
+			} catch (e) {
+				console.error(`Failed to load all communities for user ${this.user.id}`);
+				console.error(e);
+				this.showAllCommunities = false;
+			} finally {
+				this.isLoadingAllCommunities = false;
 			}
 		}
 	}

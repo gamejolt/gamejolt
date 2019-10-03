@@ -5,9 +5,10 @@
 		:block="block"
 		:solid="community.is_member || solid"
 		:badge="badge"
-		:disabled="isProcessing"
+		:disabled="isDisabled"
 		v-app-auth-required
 		v-app-track-event="`community-join:${eventLabel}:${!community.is_member ? 'join' : 'leave'}`"
+		v-app-tooltip="canJoin ? '' : $gettext(`You already joined too many communities`)"
 		@click="onClick"
 	>
 		<template v-if="!community.is_member">

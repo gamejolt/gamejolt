@@ -69,19 +69,9 @@
 		</div>
 
 		<div v-if="game.community" class="row">
-			<app-community-perms
-				:community="game.community"
-				tag="div"
-				required="community-channels,community-media"
-				either
-			>
+			<app-community-perms :community="game.community" tag="div">
 				<div class="col-lg-8">
-					<router-link
-						:to="{
-							name: 'communities.view.overview.edit',
-							params: { path: game.community.path, id: game.community.id },
-						}"
-					>
+					<router-link :to="game.community.routeEditLocation">
 						<app-button icon="users">
 							Edit Community
 						</app-button>

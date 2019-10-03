@@ -241,6 +241,7 @@ module.exports = function(config) {
 					img: path.resolve(base, 'src/app/img'),
 					styles: path.resolve(base, 'src/' + section + '/styles'),
 					'styles-lib': path.resolve(base, 'src/_styles/common'),
+					common: path.resolve(base, 'src/_common'),
 					vue$: 'vue/dist/vue.esm.js',
 				},
 			},

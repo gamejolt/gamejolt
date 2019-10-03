@@ -11,18 +11,30 @@ export async function $joinCommunity(community: Community) {
 	community.is_member = true;
 	++community.member_count;
 
+	let success = false;
 	try {
 		const response = await Api.sendRequest(
 			'/web/communities/join/' + community.path,
 			{},
-			{ detach: true }
+			// Normally we would call the request with detach,
+			// but in this specific case we want to process the updates
+			// to the user to see if they just went over the join limit
+			{ ignoreLoadingBar: true, noErrorRedirect: true }
 		);
 
-		return response;
-	} catch (e) {
-		community.is_member = false;
-		--community.member_count;
-		throw e;
+		success = !!response.success;
+
+		if (!success) {
+			if (response) {
+				throw response;
+			}
+			throw new Error('Empty response');
+		}
+	} finally {
+		if (!success) {
+			community.is_member = false;
+			--community.member_count;
+		}
 	}
 }
 
@@ -31,14 +43,17 @@ export async function $leaveCommunity(community: Community) {
 	--community.member_count;
 
 	try {
-		const response = await Api.sendRequest(
+		await Api.sendRequest(
 			'/web/communities/leave/' + community.path,
 			{},
-			{ detach: true }
+			// We use these options for the request for the same reason
+			// commented in the $joinCommunity function, only to update
+			// when the user goes under the join limit.
+			{ ignoreLoadingBar: true, noErrorRedirect: true }
 		);
-
-		return response;
 	} catch (e) {
+		community.is_member = false;
+		++community.member_count;
 		throw e;
 	}
 }
@@ -101,6 +116,16 @@ export class Community extends Collaboratable(Model) {
 		};
 	}
 
+	get routeEditLocation(): Location {
+		return {
+			name: 'communities.view.overview.edit',
+			params: {
+				path: this.path,
+				id: this.id + '',
+			},
+		};
+	}
+
 	channelRouteLocation(channel: CommunityChannel): Location {
 		const communityLocation = this.routeLocation;
 		communityLocation.params!.channel = channel.title;
@@ -108,7 +133,11 @@ export class Community extends Collaboratable(Model) {
 	}
 
 	$save() {
-		return this.$_save('/web/dash/communities/save/' + this.id, 'community');
+		if (this.id) {
+			return this.$_save('/web/dash/communities/save/' + this.id, 'community');
+		} else {
+			return this.$_save('/web/dash/communities/save', 'community');
+		}
 	}
 
 	$saveHeader() {
@@ -125,12 +154,12 @@ export class Community extends Collaboratable(Model) {
 		});
 	}
 
-	$saveDetails() {
-		return this.$_save('/web/dash/communities/details/save/' + this.id, 'community');
-	}
-
 	$saveDescription() {
 		return this.$_save('/web/dash/communities/description/save/' + this.id, 'community');
+	}
+
+	$remove() {
+		return this.$_remove('/web/dash/communities/remove/' + this.id);
 	}
 }
 

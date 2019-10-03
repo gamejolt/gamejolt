@@ -1,23 +1,6 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
-
-$-size-xs = 60px
-$-size = 100px
-
-.-item
-	pressy()
-	display: inline-block
-	margin-right: 10px
-	vertical-align: middle
-	width: $-size-xs
-	position: relative
-
-	@media $media-xs
-		height: $-size-xs
-
-	@media $media-sm-up
-		width: $-size
-		margin-right: 20px
+@require '../common'
 
 .-bubble
 	img-circle()
@@ -63,15 +46,12 @@ $-size = 100px
 	right: -2px
 	bottom: -2px
 	z-index: 2
-
 	border-radius: 10px
 	border-color: var(--theme-bg-actual)
 	border-width: 3px
 	border-style: solid
-
 	padding-left: 4px
 	padding-right: 4px
-
 	font-size: $font-size-tiny
 	text-align: center
 	font-weight: bolder

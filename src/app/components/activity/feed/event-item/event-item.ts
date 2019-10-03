@@ -1,11 +1,17 @@
+import Vue from 'vue';
+import { Component, Inject, Prop } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import { findRequiredVueParent } from '../../../../../utils/vue';
 import { CommentVideoModal } from '../../../../../_common/comment/video/modal/modal.service';
 import { CommentVideo } from '../../../../../_common/comment/video/video-model';
+import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../../_common/community/pill/pill.vue';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
+import { number } from '../../../../../_common/filters/number';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -13,11 +19,6 @@ import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
-import { findRequiredVueParent } from '../../../../../utils/vue';
-import { number } from '../../../../../_common/filters/number';
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Store } from '../../../../store';
 import AppEventItemControls from '../../../event-item/controls/controls.vue';
 import AppFiresidePostManage from '../../../fireside/post/manage/manage.vue';
@@ -285,6 +286,10 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	onPostUnfeatured(item: EventItem, community: Community) {
 		this.feedComponent.onPostUnfeatured(item, community);
+	}
+
+	onPostMoveChannel(item: EventItem, movedTo: CommunityChannel) {
+		this.feedComponent.onPostMovedChannel(item, movedTo);
 	}
 
 	onPostRejected(item: EventItem, community: Community) {

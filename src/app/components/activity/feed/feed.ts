@@ -1,18 +1,19 @@
-import { Ads } from '../../../../_common/ad/ads.service';
-import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
-import { Community } from '../../../../_common/community/community.model';
-import { EventItem } from '../../../../_common/event-item/event-item.model';
-import AppExpand from '../../../../_common/expand/expand.vue';
-import { Ruler } from '../../../../_common/ruler/ruler-service';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { Scroll } from '../../../../_common/scroll/scroll.service';
-import AppLoading from '../../../../_common/loading/loading.vue';
-import { number } from '../../../../_common/filters/number';
 import 'rxjs/add/operator/sampleTime';
 import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Emit, Prop, Provide, Watch } from 'vue-property-decorator';
+import { Ads } from '../../../../_common/ad/ads.service';
+import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
+import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
+import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
+import { Community } from '../../../../_common/community/community.model';
+import { EventItem } from '../../../../_common/event-item/event-item.model';
+import AppExpand from '../../../../_common/expand/expand.vue';
+import { number } from '../../../../_common/filters/number';
+import AppLoading from '../../../../_common/loading/loading.vue';
+import { Ruler } from '../../../../_common/ruler/ruler-service';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppActivityFeedItem from './item/item.vue';
 import AppActivityFeedNewButton from './new-button/new-button.vue';
 import { ActivityFeedView } from './view';
@@ -74,6 +75,9 @@ export default class AppActivityFeed extends Vue {
 
 	@Emit('unfeature-post')
 	emitUnfeaturePost(_eventItem: EventItem, _community: Community) {}
+
+	@Emit('move-channel-post')
+	emitMoveChannelPost(_eventItem: EventItem, _: any) {}
 
 	@Emit('reject-post')
 	emitRejectPost(_eventItem: EventItem, _community: Community) {}
@@ -194,6 +198,10 @@ export default class AppActivityFeed extends Vue {
 
 	onPostUnfeatured(eventItem: EventItem, community: Community) {
 		this.emitUnfeaturePost(eventItem, community);
+	}
+
+	onPostMovedChannel(eventItem: EventItem, movedTo: CommunityChannel) {
+		this.emitMoveChannelPost(eventItem, movedTo);
 	}
 
 	onPostRejected(eventItem: EventItem, community: Community) {

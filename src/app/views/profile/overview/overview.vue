@@ -162,7 +162,10 @@
 									</app-link-external>
 								</div>
 								<div v-if="tumblrAccount">
-									<app-link-external class="link-unstyled" :href="tumblrAccount.tumblrSelectedBlog.url">
+									<app-link-external
+										class="link-unstyled"
+										:href="tumblrAccount.tumblrSelectedBlog.url"
+									>
 										<app-jolticon :icon="tumblrAccount.icon" />
 										{{ tumblrAccount.tumblrSelectedBlog.title }}
 									</app-link-external>
@@ -194,6 +197,48 @@
 
 							<br />
 							<br />
+						</template>
+
+						<!-- Communities -->
+						<template v-if="hasCommunitiesSection">
+							<div class="clearfix">
+								<div class="pull-right" v-if="canShowMoreCommunities">
+									<app-button
+										trans
+										:disabled="isLoadingAllCommunities"
+										@click="toggleShowAllCommunities"
+									>
+										<translate>View All</translate>
+										<small>({{ communitiesCount | number }})</small>
+									</app-button>
+								</div>
+
+								<h4 class="section-header">
+									<translate>Communities</translate>
+								</h4>
+							</div>
+
+							<template v-if="!isOverviewLoaded || isLoadingAllCommunities">
+								<div
+									v-for="i in previewCommunityCount"
+									:key="i"
+									class="-community-item -community-thumb-placeholder"
+								></div>
+							</template>
+							<template v-else>
+								<router-link
+									v-for="community of shownCommunities"
+									:key="community.id"
+									class="-community-item link-unstyled"
+									:to="{
+										name: 'communities.view.overview',
+										params: { path: community.path },
+									}"
+									v-app-tooltip.bottom="community.name"
+								>
+									<app-community-thumbnail-img class="-community-thumb" :community="community" />
+								</router-link>
+							</template>
 						</template>
 
 						<!-- Latest Games -->
@@ -272,5 +317,35 @@
 		</section>
 	</div>
 </template>
+
+<style lang="stylus" scoped>
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.-community-item
+	pressy()
+	display: inline-block
+	position: relative
+	outline: 0
+	margin-right: 10px
+	margin-bottom: 5px
+	width: 55px
+	height: 55px
+
+.-community-thumb
+	img-circle()
+	change-bg('dark')
+	position: absolute
+	width: 100%
+	height: 100%
+
+	>>> img
+		width: calc(100% - 2px)
+		height: calc(100% - 2px)
+
+.-community-thumb-placeholder
+	img-circle()
+	change-bg('bg-subtle')
+</style>
 
 <script lang="ts" src="./overview"></script>

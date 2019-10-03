@@ -22,8 +22,8 @@
 							:key="collection._id"
 						>
 							<!--
-							Followed Games
-						-->
+								Followed Games
+							-->
 							<template v-if="type === 'followed'">
 								<template v-if="collection.isOwner">
 									<h1>
@@ -61,8 +61,8 @@
 							</template>
 
 							<!--
-							Developer Games
-						-->
+								Developer Games
+							-->
 							<template v-else-if="type === 'developer'">
 								<template v-if="collection.isOwner">
 									<h1>
@@ -101,8 +101,8 @@
 							</template>
 
 							<!--
-							Owned Games
-						-->
+								Owned Games
+							-->
 							<template v-else-if="type === 'owned'">
 								<template v-if="collection.isOwner">
 									<h1>
@@ -135,8 +135,8 @@
 							</template>
 
 							<!--
-							Recommended Games
-						-->
+								Recommended Games
+							-->
 							<template v-else-if="type === 'recommended'">
 								<template v-if="collection.isOwner">
 									<h1>
@@ -166,8 +166,8 @@
 							</template>
 
 							<!--
-							Playlist
-						-->
+								Playlist
+							-->
 							<template v-else-if="type === 'playlist'">
 								<h1>
 									{{ playlist.name }}
@@ -186,16 +186,16 @@
 							</template>
 
 							<!--
-							Bundle
-						-->
+								Bundle
+							-->
 							<template v-else-if="type === 'bundle'">
 								<h1>{{ bundle.title }}</h1>
 								<p class="text-muted small">{{ bundle.description }}</p>
 							</template>
 
 							<!--
-							Jam
-						-->
+								Jam
+							-->
 							<template v-else-if="type === 'jam'">
 								<h1>{{ jam.name }}</h1>
 								<p class="text-muted small">

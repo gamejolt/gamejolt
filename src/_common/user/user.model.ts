@@ -98,6 +98,9 @@ export class User extends Model implements ContentContainerModel {
 	is_gamer = false;
 	is_developer = false;
 
+	can_join_communities?: boolean;
+	can_create_communities?: boolean;
+
 	get isMod() {
 		return this.permission_level >= 3;
 	}

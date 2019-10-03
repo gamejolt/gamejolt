@@ -1,14 +1,12 @@
-import { Analytics } from '../../../../../../_common/analytics/analytics.service';
-import {
-	$joinCommunity,
-	$leaveCommunity,
-	Community,
-} from '../../../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
-import Onboarding from '../../../../../../_common/onboarding/onboarding.service';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
+import { Action } from 'vuex-class';
+import { Analytics } from '../../../../../../_common/analytics/analytics.service';
+import { Community } from '../../../../../../_common/community/community.model';
+import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
+import Onboarding from '../../../../../../_common/onboarding/onboarding.service';
+import { Store } from '../../../../../store';
 
 @Component({
 	components: {
@@ -18,6 +16,12 @@ import { Prop } from 'vue-property-decorator';
 export default class AppOnboardingFollowsCommunityItem extends Vue {
 	@Prop(Community)
 	community!: Community;
+
+	@Action
+	joinCommunity!: Store['joinCommunity'];
+
+	@Action
+	leaveCommunity!: Store['leaveCommunity'];
 
 	get highlight() {
 		const highlight = this.community.theme && this.community.theme.highlight_;
@@ -42,9 +46,9 @@ export default class AppOnboardingFollowsCommunityItem extends Vue {
 		);
 
 		if (!this.community.is_member) {
-			$joinCommunity(this.community);
+			this.joinCommunity(this.community);
 		} else {
-			$leaveCommunity(this.community);
+			this.leaveCommunity(this.community);
 		}
 	}
 }

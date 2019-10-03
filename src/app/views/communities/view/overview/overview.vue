@@ -100,6 +100,7 @@
 						:feed="feed"
 						@unfeature-post="onPostUnfeatured"
 						@reject-post="onPostRejected"
+						@move-channel-post="onPostMovedChannel"
 					/>
 					<div v-else-if="channel !== 'featured'" class="alert">
 						<div v-translate="{ message: noPostsMessage }">

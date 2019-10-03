@@ -5,7 +5,12 @@
 				<p v-translate>
 					<b>You've been invited you to collaborate on this community.</b>
 				</p>
-				<app-button primary @click="acceptCollaboration()">
+				<app-button
+					primary
+					:disabled="!canAcceptCollaboration"
+					v-app-tooltip.bottom="acceptCollaborationTooltip"
+					@click="acceptCollaboration()"
+				>
 					<translate>Accept</translate>
 				</app-button>
 				<app-button trans @click="declineCollaboration()">
@@ -72,11 +77,58 @@
 							</span>
 						</router-link>
 					</li>
+
+					<li v-if="shouldShowModTools">
+						<app-popper>
+							<a>
+								<app-jolticon icon="ellipsis-h" />
+							</a>
+
+							<div slot="popover" class="list-group list-group-dark">
+								<a
+									class="list-group-item has-icon"
+									:href="Environment.baseUrl + `/moderate/communities/view/${community.id}`"
+									target="_blank"
+								>
+									<app-jolticon icon="cog" />
+									<span>Moderate Community</span>
+								</a>
+							</div>
+						</app-popper>
+					</li>
 				</ul>
 			</nav>
 
 			<div slot="controls">
-				<app-community-join-widget :community="community" @join="onJoin" @leave="onLeave" block />
+				<template v-if="community.hasPerms()">
+					<app-community-perms :community="community">
+						<app-button v-if="!isEditing" primary block :to="community.routeEditLocation">
+							<app-jolticon icon="edit" class="middle" />
+							<translate>Edit Community</translate>
+						</app-button>
+						<app-button
+							v-else
+							primary
+							block
+							:to="{
+								name: 'communities.view.overview',
+								params: {
+									path: community.path,
+								},
+							}"
+						>
+							<translate>View Community</translate>
+						</app-button>
+					</app-community-perms>
+				</template>
+
+				<app-community-join-widget
+					v-else
+					:community="community"
+					@join="onJoin"
+					@leave="onLeave"
+					block
+				/>
 			</div>
 		</app-page-header>
 

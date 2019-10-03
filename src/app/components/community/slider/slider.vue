@@ -1,11 +1,13 @@
 <template>
-	<div class="-list" v-if="communities.length">
+	<div class="-list" v-if="communities.length || showAddButton">
 		<app-community-slider-item
 			v-for="community of communities"
 			:key="community.id"
 			:community="community"
 			:event-cat="eventCat"
 		/>
+
+		<app-community-slider-add-item v-if="showAddButton" />
 	</div>
 </template>
 

@@ -10,7 +10,6 @@
 					},
 				}"
 				:validate-on="['blur']"
-				v-app-focus-when
 			/>
 
 			<app-form-control-errors :label="$gettext('username')">
@@ -39,8 +38,8 @@
 					<translate>Moderator</translate>
 					&mdash;
 					<translate class="help-inline">
-						They will be able to feature community posts; as well as ejecting them from the
-						community.
+						They will be able to feature community posts, move them between channels and eject them
+						from the community.
 					</translate>
 				</label>
 			</div>

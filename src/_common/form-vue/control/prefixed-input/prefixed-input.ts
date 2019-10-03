@@ -34,13 +34,11 @@ export default class AppFormControlPrefixedInput extends BaseFormControl {
 		prefix: HTMLSpanElement;
 	};
 
-	$el!: HTMLInputElement;
-
 	mounted() {
 		const mask = this.mask;
 		if (mask) {
 			this.maskedInputElem = createTextMaskInputElement({
-				inputElement: this.$el,
+				inputElement: this.$refs.input,
 				mask,
 			});
 			this.maskedInputElem.update(this.controlVal);
@@ -62,10 +60,10 @@ export default class AppFormControlPrefixedInput extends BaseFormControl {
 
 	onChange() {
 		if (this.maskedInputElem) {
-			this.maskedInputElem.update(this.$el.value);
+			this.maskedInputElem.update(this.$refs.input.value);
 		}
 
-		this.applyValue(this.$el.value);
+		this.applyValue(this.$refs.input.value);
 	}
 
 	beforeDestroy() {

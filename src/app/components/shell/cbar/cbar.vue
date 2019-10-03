@@ -6,6 +6,8 @@
 				:key="community.id"
 				:community="community"
 			/>
+
+			<app-shell-cbar-add-item key="add" />
 		</transition-group>
 	</div>
 </template>
@@ -13,6 +15,7 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
+@require './common';
 
 #shell-cbar
 	change-bg('darkest')
