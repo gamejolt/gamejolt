@@ -101,6 +101,6 @@ export default class AppShellCbarItem extends Vue {
 	gotoModerate() {
 		Popper.hideAll();
 
-		Navigate.newWindow(Environment.baseUrl + `/moderate/games/view/${this.community.id}`);
+		Navigate.newWindow(Environment.baseUrl + `/moderate/communities/view/${this.community.id}`);
 	}
 }
