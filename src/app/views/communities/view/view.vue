@@ -3,7 +3,7 @@
 		<section v-if="collaboratorInvite" class="section section-thin fill-highlight">
 			<div class="container text-center">
 				<p v-translate>
-					<b>You've been invited you to collaborate on this community.</b>
+					<b>You've been invited to collaborate on this community.</b>
 				</p>
 				<app-button
 					primary
