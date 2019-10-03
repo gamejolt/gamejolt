@@ -13,7 +13,7 @@
 						<strong><translate>Your community is live!</translate></strong>
 						<br />
 						<translate>
-							Users can already see your community on the site.
+							Users can already see and join your community on Game Jolt.
 						</translate>
 					</p>
 				</li>
@@ -28,21 +28,20 @@
 				</li>
 
 				<li>
-					<strong><translate>Keep it moderated</translate></strong>
+					<strong><translate>Assign moderators and collaborators</translate></strong>
 					<br />
 					<translate>
-						Invite collaborators to help you moderate your community. This is your community. We
-						won't intervene with how you choose to moderate it, as long as it isn't breaking our own
-						site rules.
+						Invite others to help you moderate and contribute to your community.
 					</translate>
 				</li>
 
 				<li>
-					<strong><translate>Whats next?</translate></strong>
+					<strong><translate>Get Featured</translate></strong>
 					<br />
 					<translate>
-						Share the community with your friends, post about it on reddit, facebook, twitter,
-						everywhere! An active community is a happy community. It's up to you to promote it.
+						Share your community with your friends, post about it on Reddit, Facebook, Twitter and
+						Discord. Game Jolt staff will be looking for active communities to feature on the home
+						page.
 					</translate>
 				</li>
 			</ul>
@@ -93,14 +92,12 @@
 			<div class="page-help">
 				<p>
 					<translate>
-						Channels are used to group up posts by topic. They show on the left of the community
-						page, and users can click them to filter which posts they see.
+						Channels make it easier for your community members to organize their posts into groups.
 					</translate>
 				</p>
 				<p>
 					<translate>
-						Choosing good channels can help direct the conversation to the topics the community is
-						about.
+						Create new channels or edit the below channels for your community.
 					</translate>
 				</p>
 			</div>
@@ -131,13 +128,13 @@
 		<!-- Collaborators -->
 		<template v-if="isOwner">
 			<h2 class="section-header">
-				<translate>Collaborators</translate>
+				<translate>Moderators</translate>
 			</h2>
 
 			<div class="page-help">
 				<p>
 					<translate>
-						Allow other users to manage your community by giving them collaborator roles.
+						Assign moderators and choose their access level to help manage your community.
 					</translate>
 				</p>
 			</div>
@@ -228,7 +225,7 @@
 					<p>
 						<translate>
 							You are currently a collaborator on this community. Leaving the community will revoke
-							all moderation permissions you have to it.
+							all of your moderation permissions.
 						</translate>
 					</p>
 				</div>

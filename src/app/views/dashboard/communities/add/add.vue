@@ -5,33 +5,51 @@
 				<h3><translate>What are Communities?</translate></h3>
 				<p>
 					<translate>
-						Communities are a magical place where people of similar interest gather to post and
-						comment about stuff. Can't find a community for that game you like? Good news, now you
-						can make one!
+						Gather around a specific interest or game to share your thoughts, art, wiki, game
+						guides, music, and videos. Read our FAQ for more info.
 					</translate>
 				</p>
 
-				<h3><translate>This is Beta</translate></h3>
+				<h3><translate>Get Featured</translate></h3>
 				<p>
 					<translate>
-						Communities are new. Things may change around a lot in the near future that may impact
-						how they work and how you manage them. Keep an eye out for updates on our devlog!
+						We are looking for Communities that can act as role models. We feature the most active
+						communities with a constant stream of awesome content, all over Game Jolt.
 					</translate>
-					<br />
-					<a href="https://gamejolt.com/games/gj/272864">
-						<translate>Here's a link to it</translate>
-					</a>
 				</p>
 			</div>
 
 			<h2>
 				<translate>Create Your Community</translate>
 				<br />
-				<small><translate>the best place to commune.</translate></small>
+				<small>
+					<translate>
+						Communities are a magical place where people of similar interests gather.
+					</translate>
+				</small>
 			</h2>
+
 			<form-community @submit="onSubmit" />
+
+			<div class="-beta-message">
+				<h3><translate>Communities are Beta</translate></h3>
+				<p>
+					<translate>
+						we will be updating and changing how communities function as we gather feedback from
+						users. Have a suggestions? Let us know!
+					</translate>
+				</p>
+			</div>
 		</app-page-container>
 	</section>
 </template>
+
+<style lang="stylus" scoped>
+@require '~styles/variables'
+
+.-beta-message
+	h3
+		margin-top: $line-height-computed * 2
+</style>
 
 <script lang="ts" src="./add"></script>

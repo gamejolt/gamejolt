@@ -40,7 +40,9 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	@VuexAction
 	async removeCommunity() {
 		const result = await ModalConfirm.show(
-			Translate.$gettext('Are you sure you want to permanently remove your community?')
+			Translate.$gettext(
+				`Are you sure you want to permanently remove your community? Once it's gone, it's gone forever.`
+			)
 		);
 		if (!result) {
 			return;
