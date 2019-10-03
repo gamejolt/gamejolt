@@ -203,7 +203,11 @@
 						<template v-if="hasCommunitiesSection">
 							<div class="clearfix">
 								<div class="pull-right" v-if="canShowMoreCommunities">
-									<app-button trans @click="showAllCommunities = !showAllCommunities">
+									<app-button
+										trans
+										:disabled="isLoadingAllCommunities"
+										@click="toggleShowAllCommunities"
+									>
 										<translate>View All</translate>
 										<small>({{ communitiesCount | number }})</small>
 									</app-button>
@@ -214,7 +218,7 @@
 								</h4>
 							</div>
 
-							<template v-if="!isOverviewLoaded">
+							<template v-if="!isOverviewLoaded || isLoadingAllCommunities">
 								<div
 									v-for="i in previewCommunityCount"
 									:key="i"

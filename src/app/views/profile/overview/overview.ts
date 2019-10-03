@@ -106,15 +106,15 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	showFullDescription = false;
 	canToggleDescription = false;
 	showAllCommunities = false;
+	isLoadingAllCommunities = false;
 	games: Game[] = [];
 	communities: Community[] = [];
+	allCommunities: Community[] | null = null;
 	overviewComments: Comment[] = [];
 	youtubeChannels: YoutubeChannel[] = [];
 	linkedAccounts: LinkedAccount[] = [];
 	knownFollowers: User[] = [];
 	knownFollowerCount = 0;
-
-	readonly previewCommunityCount = 4;
 
 	readonly User = User;
 	readonly UserFriendship = UserFriendship;
@@ -217,14 +217,18 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return this.isFriend && this.chat && this.chat.connected;
 	}
 
+	get previewCommunityCount() {
+		return this.isLoadingAllCommunities ? this.communitiesCount : 4;
+	}
+
 	get canShowMoreCommunities() {
-		return this.communitiesCount > this.previewCommunityCount;
+		return this.communitiesCount > this.communities.length;
 	}
 
 	get shownCommunities() {
-		return this.showAllCommunities || !this.canShowMoreCommunities
-			? this.communities
-			: this.communities.slice(0, this.previewCommunityCount);
+		return this.showAllCommunities && this.allCommunities
+			? this.allCommunities
+			: this.communities;
 	}
 
 	get shouldShowKnownFollowers() {
@@ -253,8 +257,10 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	routeCreated() {
 		this.showFullDescription = false;
 		this.showAllCommunities = false;
+		this.isLoadingAllCommunities = false;
 		this.games = [];
 		this.communities = [];
+		this.allCommunities = null;
 		this.youtubeChannels = [];
 		this.linkedAccounts = [];
 		this.overviewComments = [];
@@ -269,6 +275,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 		this.showFullDescription = false;
 		this.showAllCommunities = false;
+		this.isLoadingAllCommunities = false;
 		this.youtubeChannels = YoutubeChannel.populate($payload.youtubeChannels);
 		this.games = Game.populate($payload.developerGamesTeaser);
 		this.communities = Community.populate($payload.communities);
@@ -308,6 +315,36 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 				} else {
 					this.chat.enterRoom(chatUser.roomId);
 				}
+			}
+		}
+	}
+
+	async toggleShowAllCommunities() {
+		if (!this.user) {
+			return;
+		}
+
+		if (this.isLoadingAllCommunities) {
+			return;
+		}
+
+		this.showAllCommunities = !this.showAllCommunities;
+		if (this.showAllCommunities && this.allCommunities === null) {
+			this.isLoadingAllCommunities = true;
+
+			try {
+				const payload = await Api.sendRequest(
+					`/web/profile/communities/@${this.user.username}`,
+					null,
+					{ detach: true }
+				);
+				this.allCommunities = Community.populate(payload.communities);
+			} catch (e) {
+				console.error(`Failed to load all communities for user ${this.user.id}`);
+				console.error(e);
+				this.showAllCommunities = false;
+			} finally {
+				this.isLoadingAllCommunities = false;
 			}
 		}
 	}
