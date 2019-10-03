@@ -25,6 +25,11 @@
 						when="availability"
 						:message="$gettext('A channel with that name already exists')"
 					/>
+
+					<app-form-control-error
+						when="pattern"
+						:message="$gettext('Channel names must not contain special characters or spaces')"
+					/>
 				</app-form-control-errors>
 			</app-form-group>
 
