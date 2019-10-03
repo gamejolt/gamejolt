@@ -64,6 +64,19 @@ export default class AppCommunityJoinWidget extends Vue {
 		return !this.app.user || !!this.app.user.can_join_communities;
 	}
 
+	get isDisabled() {
+		if (this.isProcessing) {
+			return true;
+		}
+
+		// Always allow users to leave a community
+		if (this.community.is_member) {
+			return false;
+		}
+
+		return !this.canJoin;
+	}
+
 	async onClick() {
 		if (!this.app.user || this.isProcessing) {
 			return;

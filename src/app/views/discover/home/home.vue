@@ -6,8 +6,10 @@
 
 		<section class="section">
 			<div class="container-xl">
-				<!-- v-if="featuredCommunities.length > 0" -->
-				<app-discover-home-communities :communities="featuredCommunities" />
+				<app-discover-home-communities
+					v-if="featuredCommunities.length > 0"
+					:communities="featuredCommunities"
+				/>
 
 				<h2 class="sans-margin-bottom">
 					<translate>Featured Games</translate>

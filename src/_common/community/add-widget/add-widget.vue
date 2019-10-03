@@ -37,11 +37,8 @@
 			theme-prop('color', 'highlight')
 
 .-disabled
+	unpressy()
 	cursor: not-allowed
-
-	// Undoes pressy()
-	transition: none !important
-	transform: none !important
 
 	> *
 		pointer-events: none

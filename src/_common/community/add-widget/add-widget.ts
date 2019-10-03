@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { AppState, AppStore } from '../../store/app-store';
-import { AppTooltip } from '../../tooltip/tooltip';
+import { AppTooltip, TooltipPlacement } from '../../tooltip/tooltip';
 
 @Component({
 	directives: {
@@ -13,22 +13,7 @@ export default class AppCommunityAddWidget extends Vue {
 	user!: AppStore['user'];
 
 	@Prop({ type: String, default: 'bottom' })
-	tooltipPlacement!:
-		| 'auto'
-		| 'auto-start'
-		| 'auto-end'
-		| 'top'
-		| 'top-start'
-		| 'top-end'
-		| 'right'
-		| 'right-start'
-		| 'right-end'
-		| 'bottom'
-		| 'bottom-start'
-		| 'bottom-end'
-		| 'left'
-		| 'left-start'
-		| 'left-end';
+	tooltipPlacement!: TooltipPlacement;
 
 	get canCreate() {
 		return this.user && !!this.user.can_create_communities;
