@@ -234,6 +234,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
+		this.finishedLoading = false;
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {
