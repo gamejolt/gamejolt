@@ -37,8 +37,6 @@
 					</li>
 				</draggable>
 			</ul>
-
-			<div class="-spacer"></div>
 		</app-community-perms>
 	</div>
 </template>
