@@ -25,6 +25,7 @@ import AppCommunityDescription from '../../../../components/community/descriptio
 import AppPageContainer from '../../../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
 import { Store } from '../../../../store/index';
+import AppCommunitiesViewOverviewNavEdit from './_nav/edit/edit.vue';
 import AppCommunitiesViewOverviewNav from './_nav/nav.vue';
 
 function getChannel(route: Route) {
@@ -66,6 +67,7 @@ function getFetchUrl(route: Route) {
 		AppUserAvatarList,
 		AppGameThumbnail,
 		AppCommunityDescription,
+		AppCommunitiesViewOverviewNavEdit,
 	},
 })
 @RouteResolver({

@@ -118,7 +118,7 @@ export class Community extends Collaboratable(Model) {
 
 	get routeEditLocation(): Location {
 		return {
-			name: 'communities.view.overview.edit',
+			name: 'communities.view.overview.edit.details',
 			params: {
 				path: this.path,
 				id: this.id + '',
