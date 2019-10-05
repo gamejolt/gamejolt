@@ -64,6 +64,7 @@ export class Community extends Collaboratable(Model) {
 	added_on!: number;
 	post_placeholder_text!: string | null;
 	description_content!: string;
+	is_verified!: boolean;
 
 	thumbnail?: MediaItem;
 	header?: MediaItem;
