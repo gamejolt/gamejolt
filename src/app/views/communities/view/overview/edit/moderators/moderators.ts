@@ -26,8 +26,7 @@ import { RouteStore, RouteStoreModule } from '../edit.store';
 @RouteResolver({
 	deps: { params: ['id'] },
 	resolver({ route }) {
-		// TODO: separate request here
-		return Api.sendRequest('/web/dash/communities/' + route.params.id, {});
+		return Api.sendRequest('/web/dash/communities/collaborators/' + route.params.id, {});
 	},
 })
 export default class RouteCommunitiesViewEditModerators extends BaseRouteComponent {
