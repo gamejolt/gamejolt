@@ -14,6 +14,7 @@ import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../_common/scroll/affix/affix.vue';
+import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
@@ -66,6 +67,7 @@ function getFetchUrl(route: Route) {
 		AppUserAvatarList,
 		AppGameThumbnail,
 		AppCommunityDescription,
+		AppUserCardHover,
 	},
 })
 @RouteResolver({
@@ -104,6 +106,11 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	knownMembers: User[] = [];
 	knownMemberCount = 0;
 	finishedLoading = false;
+	owner: User | null = null;
+	collaborators: User[] | null = null;
+	hasMoreCollaborators = false;
+	collaboratorListCollapsed = false;
+	isLoadingMoreCollaborators = false;
 
 	readonly Screen = Screen;
 
@@ -232,6 +239,36 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return this.communityStates.getCommunityState(this.community);
 	}
 
+	get shouldShowCollabSection() {
+		return (
+			this.owner instanceof User ||
+			(this.collaborators !== null && this.collaborators.length > 0)
+		);
+	}
+
+	get moderators(): User[] {
+		const mods = [];
+		if (this.owner) {
+			mods.push(this.owner);
+		}
+		if (this.collaborators) {
+			if (this.collaboratorListCollapsed) {
+				mods.push(...this.collaborators.slice(0, 4));
+			} else {
+				mods.push(...this.collaborators);
+			}
+		}
+		return mods;
+	}
+
+	get shouldShowLoadMoreCollaborators() {
+		return (
+			this.hasMoreCollaborators ||
+			this.isLoadingMoreCollaborators ||
+			(this.collaborators !== null && this.collaborators.length > 4)
+		);
+	}
+
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 		this.finishedLoading = false;
@@ -253,6 +290,13 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		);
 		this.knownMembers = User.populate($payload.knownMembers || []);
 		this.knownMemberCount = $payload.knownMemberCount || 0;
+		if ($payload.owner) {
+			this.owner = new User($payload.owner);
+		}
+		if ($payload.collaborators) {
+			this.collaborators = User.populate($payload.collaborators);
+		}
+		this.hasMoreCollaborators = !!$payload.hasMoreCollaborators;
 
 		Meta.description = this.$gettextInterpolate(
 			// tslint:disable-next-line:max-line-length
@@ -330,5 +374,27 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			this.communityState.markChannelRead(channel.id);
 		}
 		this.$emit('refresh');
+	}
+
+	toggleCollaboratorList() {
+		if (this.hasMoreCollaborators) {
+			this.loadMoreCollaborators();
+		} else {
+			this.collaboratorListCollapsed = !this.collaboratorListCollapsed;
+		}
+	}
+
+	async loadMoreCollaborators() {
+		this.hasMoreCollaborators = false;
+		this.isLoadingMoreCollaborators = true;
+		const payload = await Api.sendRequest(
+			`/web/communities/more-collaborators/${this.community.id}`
+		);
+		const collaborators = User.populate(payload.collaborators);
+		if (this.collaborators) {
+			this.collaborators.push(...collaborators);
+		}
+		this.isLoadingMoreCollaborators = false;
+		this.collaboratorListCollapsed = false;
 	}
 }
