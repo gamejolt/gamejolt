@@ -22,6 +22,30 @@
 					<br />
 					<app-game-thumbnail :game="community.game" class="-community-game" />
 				</template>
+
+				<h5>
+					<translate>Share this community</translate>
+				</h5>
+				<app-popper @show="isShowingShare = true" @hide="isShowingShare = false">
+					<app-button>
+						{{ shareButtonText }}
+					</app-button>
+					<!-- <app-button icon="share-airplane" circle trans v-app-tooltip="$gettext('Share')" /> -->
+
+					<div slot="popover" class="well fill-darkest sans-margin" v-if="isShowingShare">
+						<div class="social-widgets" v-if="!GJ_IS_CLIENT">
+							<app-social-twitter-share :url="shareUrl" :content="shareContent" />
+
+							<span class="dot-separator"></span>
+
+							<app-social-facebook-like :url="shareUrl" />
+						</div>
+
+						<app-button block @click="copyShareUrl">
+							<translate>Copy Permalink</translate>
+						</app-button>
+					</div>
+				</app-popper>
 			</div>
 
 			<div slot="left">

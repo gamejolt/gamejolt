@@ -2,8 +2,10 @@ import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
+import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
+import { Environment } from '../../../../../_common/environment/environment.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { number } from '../../../../../_common/filters/number';
@@ -11,9 +13,12 @@ import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppGameThumbnail from '../../../../../_common/game/thumbnail/thumbnail.vue';
 import { Meta } from '../../../../../_common/meta/meta-service';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
+import AppPopper from '../../../../../_common/popper/popper.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../_common/scroll/affix/affix.vue';
+import { AppSocialFacebookLike } from '../../../../../_common/social/facebook/like/like';
+import { AppSocialTwitterShare } from '../../../../../_common/social/twitter/share/share';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
@@ -66,6 +71,9 @@ function getFetchUrl(route: Route) {
 		AppUserAvatarList,
 		AppGameThumbnail,
 		AppCommunityDescription,
+		AppPopper,
+		AppSocialTwitterShare,
+		AppSocialFacebookLike,
 	},
 })
 @RouteResolver({
@@ -104,6 +112,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	knownMembers: User[] = [];
 	knownMemberCount = 0;
 	finishedLoading = false;
+	shareButtonText = '';
+	isShowingShare = false;
 
 	readonly Screen = Screen;
 
@@ -232,9 +242,20 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return this.communityStates.getCommunityState(this.community);
 	}
 
+	get shareUrl() {
+		return Environment.baseUrl + this.$router.resolve(this.community.routeLocation).href;
+	}
+
+	get shareContent() {
+		return this.$gettextInterpolate('%{ name } Community - Game Jolt', {
+			name: this.community.name,
+		});
+	}
+
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 		this.finishedLoading = false;
+		this.setRandomShareMessage();
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {
@@ -330,5 +351,15 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			this.communityState.markChannelRead(channel.id);
 		}
 		this.$emit('refresh');
+	}
+
+	setRandomShareMessage() {
+		const messages = ['Tell a friend', 'Show a buddy', 'Generate exposure', 'Let someone know'];
+		const r = Math.floor(Math.random() * messages.length);
+		this.shareButtonText = this.$gettext(messages[r]);
+	}
+
+	copyShareUrl() {
+		Clipboard.copy(this.shareUrl);
 	}
 }
