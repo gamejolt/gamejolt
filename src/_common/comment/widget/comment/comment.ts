@@ -4,6 +4,7 @@ import { findRequiredVueParent } from '../../../../utils/vue';
 import { AppTrackEvent } from '../../../analytics/track-event.directive';
 import { AppAuthRequired } from '../../../auth/auth-required-directive';
 import { Clipboard } from '../../../clipboard/clipboard-service';
+import { Collaborator } from '../../../collaborator/collaborator.model';
 import { Environment } from '../../../environment/environment.service';
 import AppExpand from '../../../expand/expand.vue';
 import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
@@ -151,12 +152,14 @@ export default class AppCommentWidgetComment extends Vue {
 				item => item.user_id === this.user!.id
 			);
 
-			if (
-				collaborator &&
-				(collaborator.perms.indexOf('comments') !== -1 ||
-					collaborator.perms.indexOf('all') !== -1)
-			) {
-				return true;
+			if (collaborator instanceof Collaborator) {
+				if (
+					collaborator.perms.includes('all') ||
+					collaborator.perms.includes('comments') ||
+					collaborator.perms.includes('community-posts')
+				) {
+					return true;
+				}
 			}
 		}
 
