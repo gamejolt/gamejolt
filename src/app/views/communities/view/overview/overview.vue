@@ -78,11 +78,13 @@
 				-->
 				<app-scroll-affix :scroll-offset="80" :disabled="!Screen.isLg">
 					<app-communities-view-overview-nav
+						v-if="!isEditing"
 						class="-nav"
 						:community="community"
 						:channel="channel"
 						:is-editing="isEditing"
 					/>
+					<app-communities-view-overview-nav-edit v-else class="-nav" :community="community" />
 				</app-scroll-affix>
 			</div>
 

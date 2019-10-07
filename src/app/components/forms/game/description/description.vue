@@ -1,10 +1,13 @@
 <template>
 	<app-form name="descriptionForm" ref="form">
-		<app-form-group
-			name="description_content"
-			:label="$gettext(`dash.games.form.description_label`)"
-			hide-label
-		>
+		<app-form-group name="description_content" :label="$gettext('Description')">
+			<template slot="label">
+				<app-jolticon icon="edit" />
+				<strong>
+					<translate>Game Description</translate>
+				</strong>
+			</template>
+
 			<app-form-control-content
 				:placeholder="$gettext(`Write your game description here...`)"
 				content-context="game-description"
@@ -64,6 +67,10 @@
 
 <style lang="stylus" scoped>
 @require '~styles/variables'
+@require '../../../../../_styles/common/forms'
+
+.-label
+	margin-bottom: $form-common-spacing
 
 .-tags
 	margin-bottom: $line-height-computed

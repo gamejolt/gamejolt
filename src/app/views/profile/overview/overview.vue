@@ -237,6 +237,11 @@
 									v-app-tooltip.bottom="community.name"
 								>
 									<app-community-thumbnail-img class="-community-thumb" :community="community" />
+									<app-community-verified-tick
+										class="-community-verified-tick"
+										:community="community"
+										no-tooltip
+									/>
 								</router-link>
 							</template>
 						</template>
@@ -346,6 +351,13 @@
 .-community-thumb-placeholder
 	img-circle()
 	change-bg('bg-subtle')
+
+.-community-verified-tick
+	position: absolute
+	right: -3px
+	bottom: -1px
+	change-bg('bg-offset')
+	border-radius: 50%
 </style>
 
 <script lang="ts" src="./overview"></script>

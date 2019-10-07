@@ -7,6 +7,7 @@ import { Collaborator } from '../../../../_common/collaborator/collaborator.mode
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityJoinWidget from '../../../../_common/community/join-widget/join-widget.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
 import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { number } from '../../../../_common/filters/number';
@@ -31,6 +32,7 @@ import { Store } from '../../../store/index';
 		AppEditableOverlay,
 		AppCommunityPerms,
 		AppPopper,
+		AppCommunityVerifiedTick,
 	},
 	directives: {
 		AppTooltip,
