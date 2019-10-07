@@ -135,9 +135,13 @@ export class Community extends Collaboratable(Model) {
 
 	$save() {
 		if (this.id) {
-			return this.$_save('/web/dash/communities/save/' + this.id, 'community');
+			return this.$_save('/web/dash/communities/save/' + this.id, 'community', {
+				allowComplexData: ['theme'],
+			});
 		} else {
-			return this.$_save('/web/dash/communities/save', 'community');
+			return this.$_save('/web/dash/communities/save', 'community', {
+				allowComplexData: ['theme'],
+			});
 		}
 	}
 
