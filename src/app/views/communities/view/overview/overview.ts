@@ -19,6 +19,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../_common/scroll/affix/affix.vue';
 import { AppSocialFacebookLike } from '../../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../../_common/social/twitter/share/share';
+import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
@@ -78,6 +79,7 @@ function getFetchUrl(route: Route) {
 		AppSocialFacebookLike,
 		AppUserCardHover,
 		AppCommunitiesViewOverviewNavEdit,
+		AppTimeAgo,
 	},
 })
 @RouteResolver({
@@ -116,7 +118,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	knownMembers: User[] = [];
 	knownMemberCount = 0;
 	finishedLoading = false;
-	shareButtonText = '';
 	isShowingShare = false;
 	owner: User | null = null;
 	collaborators: User[] | null = null;
@@ -296,7 +297,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 		this.finishedLoading = false;
-		this.setRandomShareMessage();
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {
@@ -400,12 +400,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			this.communityState.markChannelRead(channel.id);
 		}
 		this.$emit('refresh');
-	}
-
-	setRandomShareMessage() {
-		const messages = ['Tell a friend', 'Show a buddy', 'Generate exposure', 'Let someone know'];
-		const r = Math.floor(Math.random() * messages.length);
-		this.shareButtonText = this.$gettext(messages[r]);
 	}
 
 	copyShareUrl() {
