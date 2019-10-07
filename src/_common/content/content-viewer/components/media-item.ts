@@ -1,8 +1,8 @@
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import AppContentMediaItem from '../../components/media-item/media-item.vue';
 import { ContentObject } from '../../content-object';
 import { ContentOwner } from '../../content-owner';
-import AppContentMediaItem from '../../components/media-item/media-item.vue';
 
 @Component({})
 export class AppContentViewerMediaItem extends Vue {
@@ -13,6 +13,7 @@ export class AppContentViewerMediaItem extends Vue {
 
 	render(h: CreateElement) {
 		return h(AppContentMediaItem, {
+			key: this.data.attrs.id.toString(),
 			props: {
 				mediaItemId: this.data.attrs.id,
 				mediaItemWidth: this.data.attrs.width,
