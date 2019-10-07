@@ -19,6 +19,14 @@ export default class AppCommunitiesViewOverviewNavEdit extends Vue {
 	readonly Screen = Screen;
 
 	get activeItem() {
-		return 'Overview';
+		switch (this.$route.name) {
+			case 'communities.view.overview.edit.details':
+				return this.$gettext('Details');
+			case 'communities.view.overview.edit.channels':
+				return this.$gettext('Channels');
+			case 'communities.view.overview.edit.moderators':
+				return this.$gettext('Moderators');
+		}
+		return '<Invalid Item>';
 	}
 }
