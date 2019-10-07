@@ -1,0 +1,110 @@
+<template>
+	<div>
+		<h4 class="section-header">
+			<translate>Level progression</translate>
+		</h4>
+		<app-user-level-widget class="-level-widget" :user="user" />
+
+		<h4 class="section-header -trophy-header">
+			<translate>Trophy activity</translate>
+		</h4>
+
+		<div v-if="!hasTrophies" class="alert alert-info">
+			<span>
+				<translate>This user has not achieved any trophies ... yet.</translate>
+			</span>
+		</div>
+
+		<app-timeline-list v-else>
+			<div v-for="entry of trophyEntries" :key="entry.trophies[0].key">
+				<app-timeline-list-item>
+					<div slot="bubble">
+						<div class="-timeline-icon">
+							<app-jolticon v-if="entry.game" icon="trophy" />
+							<app-jolticon v-else icon="gamejolt" />
+						</div>
+					</div>
+
+					<div>
+						<div class="timeline-list-item-title">
+							<template v-if="entry.game">
+								<template v-if="entry.trophies.length === 1">
+									Achieved 1 trophy for the game
+									<router-link :to="entry.game.getUrl()">{{ entry.game.title }}</router-link>
+								</template>
+								<template v-else>
+									Achieved {{ entry.trophies.length }} trophies for the game
+									<router-link :to="entry.game.getUrl()">{{ entry.game.title }}</router-link>
+								</template>
+							</template>
+							<template v-else>
+								<template v-if="entry.trophies.length === 1">
+									Achieved 1
+									<router-link :to="{ name: 'profile.trophies.site' }">
+										Game Jolt Trophy
+									</router-link>
+								</template>
+								<template v-else>
+									Achieved {{ entry.trophies.length }}
+									<router-link :to="{ name: 'profile.trophies.site' }">
+										Game Jolt Trophies
+									</router-link>
+								</template>
+							</template>
+						</div>
+					</div>
+
+					<div class="timeline-list-item-meta">
+						<app-time-ago :date="entry.trophies[0].logged_on" />
+					</div>
+
+					<div class="timeline-list-item-details">
+						<div class="timeline-list-item-content">
+							<app-trophy-thumbnail
+								class="-trophy-thumb"
+								v-for="userTrophy of entry.trophies"
+								:key="userTrophy.id"
+								:trophy="userTrophy.trophy"
+								@click.native="onClickTrophy(userTrophy)"
+							/>
+						</div>
+					</div>
+				</app-timeline-list-item>
+				<div class="timeline-list-item-split" />
+			</div>
+			<router-link
+				:to="{
+					name: 'profile.trophies.all',
+				}"
+			>
+				<app-button>
+					<translate>View all trophies</translate>
+				</app-button>
+			</router-link>
+		</app-timeline-list>
+	</div>
+</template>
+
+<style lang="stylus" scoped>
+
+.-level-widget
+	max-width: 340px
+
+.-trophy-header
+	margin-top: 20px
+	margin-bottom: 24px
+
+.-timeline-icon > *
+	width: 50%
+	margin: 0 auto
+
+.-trophy-thumb
+	display: inline-block
+	width: 80px
+	margin-right: 10px
+	margin-bottom: 10px
+	cursor: pointer
+
+</style>
+
+<script lang="ts" src="./overview"></script>

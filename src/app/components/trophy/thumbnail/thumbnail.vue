@@ -4,7 +4,7 @@
 		:class="{
 			'trophy-thumbnail-achieved': isAchieved,
 		}"
-		v-app-tooltip="trophy.title"
+		v-app-tooltip="tooltip"
 	>
 		<div class="trophy-thumbnail-img" ref="thumb">
 			<div class="trophy-thumbnail-img-inner">

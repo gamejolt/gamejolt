@@ -4,10 +4,7 @@ import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
 import AppCardListDraggable from '../../../../../../../_common/card/list/draggable/draggable.vue';
 import AppCardListItem from '../../../../../../../_common/card/list/item/item.vue';
 import AppCardList from '../../../../../../../_common/card/list/list.vue';
-import {
-	GameTrophy,
-	GameTrophyDifficulty,
-} from '../../../../../../../_common/game/trophy/trophy.model';
+import { GameTrophy } from '../../../../../../../_common/game/trophy/trophy.model';
 import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
@@ -15,6 +12,7 @@ import {
 } from '../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
+import { TrophyDifficulty } from '../../../../../../../_common/trophy/base-trophy.model';
 import FormGameTrophy from '../../../../../../components/forms/game/trophy/trophy.vue';
 import AppTrophyThumbnail from '../../../../../../components/trophy/thumbnail/thumbnail.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
@@ -128,7 +126,7 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 		Scroll.to('trophy-container-' + trophy.id);
 	}
 
-	saveTrophySort(difficulty: GameTrophyDifficulty, trophies: GameTrophy[]) {
+	saveTrophySort(difficulty: TrophyDifficulty, trophies: GameTrophy[]) {
 		// Pull out the trophies and then add them back in in the correct order.
 		const trophyIds = trophies.map(i => i.id);
 		let filtered = this.trophies.filter(i => trophyIds.indexOf(i.id) === -1).concat(trophies);

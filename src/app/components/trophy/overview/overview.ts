@@ -5,7 +5,7 @@ import { number } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
 import { GameTrophy } from '../../../../_common/game/trophy/trophy.model';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { UserGameTrophy } from '../../../../_common/user/game-trophy/game-trophy.model';
+import { UserGameTrophy } from '../../../../_common/user/trophy/game-trophy.model';
 import { Store } from '../../../store/index';
 import AppTrophyCompletion from '../completion/completion.vue';
 import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';

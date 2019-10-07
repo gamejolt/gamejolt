@@ -17,11 +17,11 @@ import AppUserFollowWidget from '../../../_common/user/follow/widget.vue';
 import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
 import AppUserAvatar from '../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../_common/user/verified-tick/verified-tick.vue';
-import { Store, store } from '../../store';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPageHeaderControls from '../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../components/page-header/page-header.vue';
 import AppUserDogtag from '../../components/user/dogtag/dogtag.vue';
+import { Store, store } from '../../store';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './profile.store';
 
 @Component({
@@ -95,6 +95,9 @@ export default class RouteProfile extends BaseRouteComponent {
 
 	@RouteStoreModule.State
 	videosCount!: RouteStore['videosCount'];
+
+	@RouteStoreModule.State
+	trophyCount!: RouteStore['trophyCount'];
 
 	@RouteStoreModule.State
 	isOnline!: RouteStore['isOnline'];

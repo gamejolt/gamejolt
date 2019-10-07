@@ -1,8 +1,9 @@
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
 import { GameTrophy } from '../../../../_common/game/trophy/trophy.model';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { BaseTrophy } from '../../../../_common/trophy/base-trophy.model';
 
 const imgMapping: any = {
 	bronze: require('./bronze.png'),
@@ -27,14 +28,26 @@ const BaseHeight = 35;
 	},
 })
 export default class AppTrophyThumbnail extends Vue {
-	@Prop(GameTrophy) trophy!: GameTrophy;
-	@Prop(Boolean) isAchieved?: boolean;
+	@Prop(Object)
+	trophy!: BaseTrophy;
+	@Prop(Boolean)
+	isAchieved?: boolean;
+	@Prop(Boolean)
+	noTooltip?: boolean;
 
 	thumbWidth = BaseWidth;
 
+	get tooltip() {
+		if (this.noTooltip) {
+			return '';
+		}
+		return this.trophy.title;
+	}
+
 	get hasThumbnailImg() {
 		return (
-			this.trophy.has_thumbnail && (!this.trophy.secret || this.isAchieved || this.trophy.is_owner)
+			this.trophy.has_thumbnail &&
+			(!this.trophy.secret || this.isAchieved || this.trophy.is_owner)
 		);
 	}
 
