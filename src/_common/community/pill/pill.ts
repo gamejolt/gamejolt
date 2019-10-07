@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppPillBi from '../../pill/bi/bi.vue';
 import AppPill from '../../pill/pill.vue';
 import { CommunityChannel } from '../channel/channel.model';
 import { Community } from '../community.model';
@@ -9,7 +8,6 @@ import AppCommunityThumbnailImg from '../thumbnail/img/img.vue';
 @Component({
 	components: {
 		AppPill,
-		AppPillBi,
 		AppCommunityThumbnailImg,
 	},
 })
