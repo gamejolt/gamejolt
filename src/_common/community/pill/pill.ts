@@ -32,4 +32,12 @@ export default class AppCommunityPill extends Vue {
 			? undefined
 			: this.community.channelRouteLocation(this.channel);
 	}
+
+	get leftColor() {
+		return 'lime';
+	}
+
+	get rightColor() {
+		return 'yellow';
+	}
 }
