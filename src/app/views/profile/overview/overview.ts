@@ -7,6 +7,7 @@ import { CommentModal } from '../../../../_common/comment/modal/modal.service';
 import { CommentThreadModal } from '../../../../_common/comment/thread/modal.service';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
@@ -43,6 +44,7 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 		AppCommentOverview,
 		AppContentViewer,
 		AppUserKnownFollowers,
+		AppCommunityVerifiedTick,
 	},
 	directives: {
 		AppTooltip,

@@ -3,6 +3,7 @@
 		<app-community-thumbnail-img slot="img" :community="community" />
 
 		{{ community.name }}
+		<app-community-verified-tick :community="community" small />
 	</app-pill>
 </template>
 
