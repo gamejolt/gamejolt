@@ -8,6 +8,7 @@ import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { ThemeState, ThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import { Store } from '../../../../store';
 import { AppCommunityPerms } from '../../../community/perms/perms';
@@ -37,6 +38,9 @@ export default class AppShellCbarItem extends Vue {
 
 	@State
 	communityStates!: Store['communityStates'];
+
+	@ThemeState
+	userTheme!: ThemeStore['userTheme'];
 
 	popperVisible = false;
 
@@ -71,9 +75,9 @@ export default class AppShellCbarItem extends Vue {
 
 	get highlight() {
 		if (this.isActive) {
-			const highlight = this.community.theme && this.community.theme.highlight_;
-			if (highlight) {
-				return '#' + highlight;
+			const theme = this.community.theme || this.userTheme;
+			if (theme) {
+				return '#' + theme.highlight_;
 			}
 		}
 		return null;

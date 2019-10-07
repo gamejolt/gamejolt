@@ -23,9 +23,10 @@ export default class AppCommunityHeaderModal extends BaseModal {
 	}
 
 	onSubmit(community: Community) {
-		const newHeaderId = (community.header && community.header.id) || null;
-		if (this.previousHeaderId === newHeaderId) {
+		const newHeaderId = community.header ? community.header.id : null;
+		if (!newHeaderId || this.previousHeaderId === newHeaderId) {
 			this.modal.resolve(this.community);
+			return;
 		}
 		this.previousHeaderId = newHeaderId;
 	}
