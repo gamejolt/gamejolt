@@ -31,7 +31,13 @@
 								:disabled="isLoadingMoreCollaborators"
 								@click="toggleCollaboratorList"
 							>
-								<translate v-if="collaboratorListCollapsed || isLoadingMoreCollaborators || hasMoreCollaborators">View All</translate>
+								<translate
+									v-if="
+										collaboratorListCollapsed || isLoadingMoreCollaborators || hasMoreCollaborators
+									"
+								>
+									View All
+								</translate>
 								<translate v-else>Show fewer</translate>
 							</app-button>
 						</div>
@@ -45,7 +51,7 @@
 						<app-user-card-hover :user="user">
 							<router-link :to="user.url">
 								<span>
-									{{ user.display_name }}
+									@{{ user.username }}
 									<span class="-mod-avatar-container">
 										<img
 											key="user"
@@ -58,7 +64,7 @@
 								</span>
 							</router-link>
 						</app-user-card-hover>
-						<span v-if="owner && user.id === owner.id" class="text-muted small">
+						<span v-if="owner && user.id === owner.id" class="badge">
 							<translate>owner</translate>
 						</span>
 					</div>

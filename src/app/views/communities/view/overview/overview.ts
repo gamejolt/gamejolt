@@ -111,6 +111,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	hasMoreCollaborators = false;
 	collaboratorListCollapsed = false;
 	isLoadingMoreCollaborators = false;
+	initialCollaboratorCount = 0;
 
 	readonly Screen = Screen;
 
@@ -253,7 +254,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		}
 		if (this.collaborators) {
 			if (this.collaboratorListCollapsed) {
-				mods.push(...this.collaborators.slice(0, 4));
+				mods.push(...this.collaborators.slice(0, this.initialCollaboratorCount));
 			} else {
 				mods.push(...this.collaborators);
 			}
@@ -265,7 +266,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return (
 			this.hasMoreCollaborators ||
 			this.isLoadingMoreCollaborators ||
-			(this.collaborators !== null && this.collaborators.length > 4)
+			(this.collaborators !== null &&
+				this.collaborators.length > this.initialCollaboratorCount)
 		);
 	}
 
@@ -297,6 +299,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			this.collaborators = User.populate($payload.collaborators);
 		}
 		this.hasMoreCollaborators = !!$payload.hasMoreCollaborators;
+		this.initialCollaboratorCount = $payload.initialCollaboratorCount;
 
 		Meta.description = this.$gettextInterpolate(
 			// tslint:disable-next-line:max-line-length
