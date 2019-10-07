@@ -41,7 +41,7 @@ export class Collaborator extends Model {
 	constructor(data: any = {}) {
 		super(data);
 
-		// TODO: can someone explain why this is needed?
+		// Object assign doesn't overwrite this because of its default value.
 		this.perms = data.perms;
 
 		if (data.resource_model) {
