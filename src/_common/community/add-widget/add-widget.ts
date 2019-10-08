@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { Growls } from '../../growls/growls.service';
 import { AppState, AppStore } from '../../store/app-store';
 import { AppTooltip, TooltipPlacement } from '../../tooltip/tooltip';
 
@@ -26,5 +27,14 @@ export default class AppCommunityAddWidget extends Vue {
 				: this.$gettext(`You own too many communities`),
 			placement: this.tooltipPlacement,
 		};
+	}
+
+	showGrowl() {
+		Growls.error({
+			message: this.$gettext(
+				`You own too many communities. You must remove one before creating another.`
+			),
+			sticky: true,
+		});
 	}
 }
