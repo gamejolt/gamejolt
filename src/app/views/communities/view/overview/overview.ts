@@ -258,7 +258,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get shareContent() {
-		return this.$gettextInterpolate('%{ name } Community - Game Jolt', {
+		return this.$gettextInterpolate('Check out %{ name } community - Game Jolt', {
 			name: this.community.name,
 		});
 	}
