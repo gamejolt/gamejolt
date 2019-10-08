@@ -37,6 +37,57 @@
 					</li>
 				</draggable>
 			</ul>
+
+			<app-card-list
+				v-if="community.channels"
+				:items="community.channels"
+				:active-item="activeItem"
+				@activate="activeItem = $event"
+			>
+				<app-card-list-draggable @change="saveChannelSort">
+					<app-card-list-item
+						v-for="channel in community.channels"
+						:key="channel.id"
+						:id="`channel-container-${channel.id}`"
+						:item="channel"
+					>
+						<div class="row">
+							<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
+								<img width="50px" src="https://i.imgur.com/AWfyZSn.png" />
+
+								<br class="visible-xs" />
+							</div>
+							<div class="col-xs-12 col-sm-10">
+								<a
+									v-if="canRemoveChannel"
+									class="card-remove"
+									@click.stop="onClickRemoveChannel(channel)"
+									v-app-tooltip="$gettext(`Remove Channel`)"
+								>
+									<app-jolticon icon="remove" />
+								</a>
+
+								<div class="card-title">
+									<h5>{{ channel.title }}</h5>
+								</div>
+
+								<div class="card-content">
+									<template v-if="channel.description">
+										{{ channel.description }}
+									</template>
+									<em class="text-muted" v-else>
+										<translate>Empty channel description</translate>
+									</em>
+								</div>
+							</div>
+						</div>
+
+						<template slot="body">
+							My name Jeff
+						</template>
+					</app-card-list-item>
+				</app-card-list-draggable>
+			</app-card-list>
 		</app-community-perms>
 	</div>
 </template>

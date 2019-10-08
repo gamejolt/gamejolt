@@ -6,6 +6,7 @@ export class CommunityChannel extends Model {
 	title!: string;
 	added_on!: number;
 	sort!: number;
+	description!: string;
 
 	static $saveSort(communityId: number, channelIds: number[]) {
 		return Api.sendRequest(
