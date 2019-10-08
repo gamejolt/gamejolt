@@ -1,7 +1,9 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Emit, Prop } from 'vue-property-decorator';
 import AppCommentVideoLikeWidget from '../../../../_common/comment/video/like-widget/like-widget.vue';
 import { CommentVideo } from '../../../../_common/comment/video/video-model';
+import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
+import { Community } from '../../../../_common/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { AppCommentWidgetLazy } from '../../lazy';
 import AppEventItemControlsFiresidePost from './fireside-post/fireside-post.vue';
@@ -25,6 +27,27 @@ export default class AppEventItemControls extends Vue {
 
 	@Prop(Boolean)
 	showComments?: boolean;
+
+	@Emit('post-edit')
+	emitPostEdit() {}
+
+	@Emit('post-publish')
+	emitPostPublish() {}
+
+	@Emit('post-remove')
+	emitPostRemove() {}
+
+	@Emit('post-feature')
+	emitPostFeature(_community: Community) {}
+
+	@Emit('post-unfeature')
+	emitPostUnfeature(_community: Community) {}
+
+	@Emit('post-move-channel')
+	emitPostMoveChannel(_movedTo: CommunityChannel) {}
+
+	@Emit('post-reject')
+	emitPostReject() {}
 
 	get hasActivePost() {
 		return this.post && this.post.status === FiresidePost.STATUS_ACTIVE;

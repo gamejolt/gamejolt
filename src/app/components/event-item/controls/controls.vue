@@ -1,11 +1,18 @@
 <template>
 	<div>
 		<div class="event-item-controls">
-			<template v-if="hasActivePost">
+			<template v-if="post">
 				<app-event-item-controls-fireside-post
 					:post="post"
 					:show-user-follow="showUserFollow"
 					:show-comments="showComments"
+					@edit="emitPostEdit"
+					@publish="emitPostPublish"
+					@remove="emitPostRemove"
+					@feature="emitPostFeature"
+					@unfeature="emitPostUnfeature"
+					@move-channel="emitPostMoveChannel"
+					@reject="emitPostReject"
 				/>
 			</template>
 			<template v-else-if="video">

@@ -144,20 +144,13 @@
 				</div>
 			</template>
 
-			<div class="-manage" v-if="shouldShowManage && !!post">
+			<!-- <div class="-manage" v-if="shouldShowManage && !!post">
 				<app-fireside-post-manage
 					:post="post"
 					:show-edit-controls="feed.shouldShowEditControls"
 					:show-community-controls="feed.shouldShowCommunityControls"
-					@edit="onPostEdited(eventItem)"
-					@publish="onPostPublished(eventItem)"
-					@remove="onPostRemoved(eventItem)"
-					@feature="onPostFeatured(eventItem, $event)"
-					@unfeature="onPostUnfeatured(eventItem, $event)"
-					@move-channel="onPostMoveChannel(eventItem, $event)"
-					@reject="onPostRejected(eventItem, $event)"
 				/>
-			</div>
+			</div> -->
 
 			<app-event-item-controls
 				class="-controls"
@@ -167,7 +160,13 @@
 				:post="post"
 				:video="video"
 				:show-user-follow="shouldShowFollow"
-				@expand="onExpand()"
+				@post-edit="onPostEdited(eventItem)"
+				@post-publish="onPostPublished(eventItem)"
+				@post-remove="onPostRemoved(eventItem)"
+				@post-feature="onPostFeatured(eventItem, $event)"
+				@post-unfeature="onPostUnfeatured(eventItem, $event)"
+				@post-move-channel="onPostMoveChannel(eventItem, $event)"
+				@post-reject="onPostRejected(eventItem, $event)"
 			/>
 		</div>
 	</div>

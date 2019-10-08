@@ -7,9 +7,9 @@
 		<app-activity-feed-item-placeholder v-if="item.type !== 'notification' && !isBootstrapped" />
 		<template v-else>
 			<!--
-			Notifications are so small that there's no reason to not include them
-			into the view.
-		-->
+				Notifications are so small that there's no reason to not include them
+				into the view.
+			-->
 			<app-activity-feed-event-item
 				v-if="item.type === 'event-item'"
 				:item="item"

@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
@@ -12,6 +12,8 @@ import {
 } from '../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../_common/comment/modal/modal.service';
 import AppCommentVideoLikeWidget from '../../../../../_common/comment/video/like-widget/like-widget.vue';
+import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
+import { Community } from '../../../../../_common/community/community.model';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { number } from '../../../../../_common/filters/number';
 import AppFiresidePostLikeWidget from '../../../../../_common/fireside/post/like/widget/widget.vue';
@@ -22,6 +24,7 @@ import { AppSocialTwitterShare } from '../../../../../_common/social/twitter/sha
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import { AppCommentWidgetLazy } from '../../../lazy';
 import AppEventItemControlsCommentAddPlaceholder from '../comment-add-placeholder/placeholder.vue';
+import AppEventItemControlsFiresidePostExtra from './extra/extra.vue';
 
 @Component({
 	components: {
@@ -33,6 +36,7 @@ import AppEventItemControlsCommentAddPlaceholder from '../comment-add-placeholde
 		AppSocialFacebookLike,
 		FormComment,
 		AppEventItemControlsCommentAddPlaceholder,
+		AppEventItemControlsFiresidePostExtra,
 	},
 	directives: {
 		AppTooltip,
@@ -65,6 +69,31 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	isShowingShare = false;
 	clickedComment = false;
 	clickedCommentType = '';
+
+	@Emit('edit')
+	emitEdit() {}
+
+	@Emit('publish')
+	emitPublish() {}
+
+	@Emit('remove')
+	emitRemove() {}
+
+	@Emit('feature')
+	emitFeature(_community: Community) {}
+
+	@Emit('unfeature')
+	emitUnfeature(_community: Community) {}
+
+	@Emit('move-channel')
+	emitMoveChannel(_movedTo: CommunityChannel) {}
+
+	@Emit('reject')
+	emitReject() {}
+
+	get showUserControls() {
+		return this.post.status === FiresidePost.STATUS_ACTIVE;
+	}
 
 	get shareUrl() {
 		return Environment.baseUrl + this.$router.resolve(this.post.routeLocation).href;
