@@ -1,0 +1,86 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+$-separator-width = 20px
+// It looks a bit better if the right bit slightly overlaps
+// with the separator.
+$-separator-overlap = $-separator-width * 0.25
+
+.-pill-bi
+	display: inline-flex
+	align-items: stretch
+	font-size: $font-size-small
+	user-select: none
+	// Margin to next element
+	margin-right: 5px
+	margin-bottom: 5px
+
+.-content
+	display: inline-flex
+	align-items: center
+
+.-left
+	change-bg('bg-offset')
+	theme-prop('fill', 'bg-offset')
+	// Needed to make sure -sep takes the full height of the left side.
+	// padding for the content itself is done in the nested -container
+	display: inline-flex
+	align-items: stretch
+	// Shape of the left side of the pill
+	border-radius: $border-radius-base 0 0 $border-radius-base
+	// The separator element inside -left needs to overlay -right.
+	z-index: 2
+
+	// We need to apply the padding only the content and not the entire
+	// -left because we need the -sep element to be stretched to the full
+	// height of the parent properly.
+	.-content
+		padding: 5px 0 5px 10px
+
+.-right
+	change-bg('bg')
+	@extend .-content
+	// Shape of the right side of the pill
+	border-radius: 0 $border-radius-base $border-radius-base 0
+	// The separator overlays the -right element.
+	// We need to extend the padding to get the right side background
+	// color below the transparent -sep svg.
+	padding: 5px 10px 5px ($-separator-width - $-separator-overlap)
+	border: 1px solid
+	theme-prop('border-color', 'bg-subtle')
+	z-index: 1
+
+.-sep
+	// This makes is possible to overlay the separator without extending
+	// the area of the parent -left element.
+	width: 0
+
+	// This container is needed purely to prevent the svg from extending the parent height.
+	.-container
+		position: relative
+		display: inline-block
+		width: $-separator-width
+		height: 100%
+
+		svg
+			position: absolute
+			width: 100%
+			height: 100%
+
+// Basic button stuff common to both left and right sides.
+.-left, .-right
+	theme-prop('color', 'fg')
+	pressy()
+	cursor: pointer
+
+	&:hover
+		change-bg('bi-bg')
+		theme-prop('fill', 'bi-bg')
+		theme-prop('color', 'bi-fg')
+
+.-img
+	img-circle()
+	overflow: hidden
+	margin-right: 5px
+	width: 18px
+	height: 18px

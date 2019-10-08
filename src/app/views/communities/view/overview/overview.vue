@@ -69,6 +69,33 @@
 						</span>
 					</div>
 				</div>
+
+				<div class="-community-end small">
+					<app-popper @show="isShowingShare = true" @hide="isShowingShare = false">
+						<a>
+							<translate>Share this community</translate>
+						</a>
+
+						<div slot="popover" class="well fill-darkest sans-margin" v-if="isShowingShare">
+							<div class="social-widgets" v-if="!GJ_IS_CLIENT">
+								<app-social-twitter-share :url="shareUrl" :content="shareContent" />
+
+								<span class="dot-separator"></span>
+
+								<app-social-facebook-like :url="shareUrl" />
+							</div>
+
+							<app-button block @click="copyShareUrl">
+								<translate>Copy Permalink</translate>
+							</app-button>
+						</div>
+					</app-popper>
+
+					<div class="text-muted ">
+						A community for
+						<app-time-ago :date="community.added_on" without-suffix />
+					</div>
+				</div>
 			</div>
 
 			<div slot="left">
@@ -204,6 +231,9 @@
 
 .-mod-list
 	margin-top: $line-height-computed
+
+.-community-end
+	margin-top: $line-height-computed * 1.5
 
 </style>
 
