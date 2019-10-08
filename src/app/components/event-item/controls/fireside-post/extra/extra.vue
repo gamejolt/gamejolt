@@ -35,7 +35,7 @@
 				<div class="list-group list-group-dark">
 					<template v-if="shouldShowManageCommunities">
 						<span v-for="i of post.manageableCommunities" :key="i.id">
-							<app-community-perms v-if="postIsActive" :community="i.community" required="community-features">
+							<app-community-perms :community="i.community" required="community-features">
 								<a class="list-group-item has-icon" @click.stop="toggleFeatured(i)">
 									<template v-if="i.isFeatured">
 										<app-jolticon icon="remove" />
