@@ -12,8 +12,10 @@ import { Environment } from '../../../../../_common/environment/environment.serv
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { number } from '../../../../../_common/filters/number';
+import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
+import AppPill from '../../../../../_common/pill/pill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
@@ -52,6 +54,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppUserCardHover,
 		AppFadeCollapse,
 		AppCommunityPill,
+		AppPill,
 		AppContentViewer,
 		AppUserVerifiedTick,
 	},
@@ -177,6 +180,14 @@ export default class AppActivityFeedEventItem extends Vue {
 		return this.post && this.post.isManageableByUser(this.app.user);
 	}
 
+	get shouldShowCommunities() {
+		if (!this.communities.length) {
+			return false;
+		}
+
+		return !this.feed.hideCommunity || !this.feed.hideCommunityChannel;
+	}
+
 	mounted() {
 		this.feedComponent = findRequiredVueParent(this, AppActivityFeed) as AppActivityFeedTS;
 	}
@@ -294,5 +305,17 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	onPostRejected(item: EventItem, community: Community) {
 		this.feedComponent.onPostRejected(item, community);
+	}
+
+	getChannelRoute(postCommunity: FiresidePostCommunity) {
+		if (!postCommunity.channel) {
+			return undefined;
+		}
+
+		return postCommunity.community.channelRouteLocation(postCommunity.channel);
+	}
+
+	getChannelTitle(postCommunity: FiresidePostCommunity) {
+		return postCommunity.channel ? postCommunity.channel.title : '';
 	}
 }
