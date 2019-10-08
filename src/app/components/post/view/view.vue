@@ -85,14 +85,10 @@
 							v-for="postCommunity of communities"
 							:key="postCommunity.id"
 						>
-							<app-community-pill :community="postCommunity.community" />
-							<router-link
-								v-if="postCommunity.channel"
-								class="badge"
-								:to="postCommunity.community.channelRouteLocation(postCommunity.channel)"
-							>
-								{{ postCommunity.channel.title }}
-							</router-link>
+							<app-community-pill
+								:community="postCommunity.community"
+								:channel="postCommunity.channel"
+							/>
 						</div>
 
 						<br />
