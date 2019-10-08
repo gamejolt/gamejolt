@@ -2,8 +2,10 @@ import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
+import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
+import { Environment } from '../../../../../_common/environment/environment.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { number } from '../../../../../_common/filters/number';
@@ -11,9 +13,13 @@ import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppGameThumbnail from '../../../../../_common/game/thumbnail/thumbnail.vue';
 import { Meta } from '../../../../../_common/meta/meta-service';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
+import AppPopper from '../../../../../_common/popper/popper.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../_common/scroll/affix/affix.vue';
+import { AppSocialFacebookLike } from '../../../../../_common/social/facebook/like/like';
+import { AppSocialTwitterShare } from '../../../../../_common/social/twitter/share/share';
+import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
@@ -68,8 +74,12 @@ function getFetchUrl(route: Route) {
 		AppUserAvatarList,
 		AppGameThumbnail,
 		AppCommunityDescription,
+		AppPopper,
+		AppSocialTwitterShare,
+		AppSocialFacebookLike,
 		AppUserCardHover,
 		AppCommunitiesViewOverviewNavEdit,
+		AppTimeAgo,
 	},
 })
 @RouteResolver({
@@ -108,6 +118,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	knownMembers: User[] = [];
 	knownMemberCount = 0;
 	finishedLoading = false;
+	isShowingShare = false;
 	owner: User | null = null;
 	collaborators: User[] | null = null;
 	hasMoreCollaborators = false;
@@ -240,6 +251,16 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	get communityState() {
 		return this.communityStates.getCommunityState(this.community);
+	}
+
+	get shareUrl() {
+		return Environment.baseUrl + this.$router.resolve(this.community.routeLocation).href;
+	}
+
+	get shareContent() {
+		return this.$gettextInterpolate('Check out %{ name } community - Game Jolt', {
+			name: this.community.name,
+		});
 	}
 
 	get shouldShowCollabSection() {
@@ -379,6 +400,10 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			this.communityState.markChannelRead(channel.id);
 		}
 		this.$emit('refresh');
+	}
+
+	copyShareUrl() {
+		Clipboard.copy(this.shareUrl);
 	}
 
 	toggleCollaboratorList() {
