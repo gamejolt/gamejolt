@@ -33,6 +33,6 @@
 	</span>
 </template>
 
-<style lang="stylus" src="./pill.styl" scoped />
+<style lang="stylus" src="./pill.styl" scoped></style>
 
 <script lang="ts" src="./pill"></script>
