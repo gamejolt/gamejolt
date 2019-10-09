@@ -16,7 +16,5 @@ export default class AppCommunityChannelSelect extends Vue {
 	channels!: CommunityChannel[];
 
 	@Emit('input')
-	emitInput(_value: CommunityChannel) {
-		console.log('emitting input');
-	}
+	emitInput(_value: CommunityChannel) {}
 }
