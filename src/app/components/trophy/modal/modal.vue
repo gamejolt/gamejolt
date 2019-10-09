@@ -34,62 +34,36 @@
 									<span>Game Jolt Trophy</span>
 								</template>
 							</small>
-							<div class="-user-info">
-								<app-user-avatar class="-avatar" :user="userTrophy.user" />
-								<div>
-									<div>
-										<b>
-											<template v-if="isAchiever">
-												You
-											</template>
-											<template v-else>
-												{{ userTrophy.user.display_name }}
-											</template>
-										</b>
-										<app-user-verified-tick :user="userTrophy.user" />
-										achieved this trophy
-										<app-time-ago :date="userTrophy.logged_on" />
-										.
-									</div>
-									<div v-if="canReceiveExp" class="-exp text-muted">
-										<app-jolticon icon="exp" />
-										<translate :translate-params="{ num: trophy.experience }">
-											%{ num } EXP
-										</translate>
-									</div>
-									<div v-else-if="isDeveloper">
-										<small class="text-muted">
-											<translate>
-												You are the developer of this trophy's game and are not receiving EXP from
-												it.
-											</translate>
-										</small>
-									</div>
-									<div v-if="completionPercentageDisplay" class="small">
-										<span v-if="completionPercentageDisplay === 1">
-											<translate>Less than 1% of players unlocked this trophy.</translate>
-										</span>
-										<span v-else-if="completionPercentageDisplay === 100">
-											<translate>
-												100% of players unlocked this trophy. That's incredible!
-											</translate>
-										</span>
-										<span v-else v-translate="{ num: completionPercentageDisplay }">
-											~%{ num }% of players unlocked this trophy.
-										</span>
-									</div>
-								</div>
+							<span class="dot-separator small" />
+							<span class="text-muted small">
+								Achieved
+								<app-time-ago :date="userTrophy.logged_on" />
+							</span>
+
+							<div v-if="completionPercentageDisplay" class="text-muted small">
+								<span v-if="completionPercentageDisplay === 1">
+									<translate>&lt;1% of players unlocked this trophy</translate>
+								</span>
+								<span v-else-if="completionPercentageDisplay === 100">
+									<translate>
+										All players unlocked this trophy
+									</translate>
+								</span>
+								<span v-else v-translate="{ num: completionPercentageDisplay }">
+									~%{ num }% of players unlocked this trophy
+								</span>
 							</div>
+
 							<div class="-description well fill-offset">
 								{{ trophy.description }}
 							</div>
 
-							<div v-if="shouldShowFriends">
+							<div v-if="shouldShowFriends" class="small">
 								<div>
-									<translate>Friends who have achieved this trophy</translate>
+									<translate>Friends who unlocked this trophy</translate>
 								</div>
 
-								<app-user-avatar-list :users="friends" />
+								<app-user-avatar-list :users="friends" sm />
 							</div>
 						</div>
 					</div>

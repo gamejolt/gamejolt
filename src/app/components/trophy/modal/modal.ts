@@ -9,17 +9,13 @@ import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import { UserGameTrophy } from '../../../../_common/user/trophy/game-trophy.model';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
-import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import { User } from '../../../../_common/user/user.model';
-import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
 
 @Component({
 	components: {
 		AppTrophyThumbnail,
-		AppUserAvatar,
 		AppTimeAgo,
-		AppUserVerifiedTick,
 		AppUserAvatarList,
 	},
 })

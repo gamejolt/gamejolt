@@ -64,30 +64,16 @@
 
 .-trophy-type
 	display: inline-block
-	margin-bottom: 10px
 
 	& > *
 		vertical-align: middle
-
-.-avatar
-	display: inline-block
-	width: 32px
-	margin-right: 10px
-	flex-shrink: 0
 
 .-info
 	@media $media-sm-up
 		margin-left: 20px
 		flex-grow: 1
 
-.-user-info
-	display: flex
-	align-items: center
-	margin-bottom: $line-height-computed
-
 .-description
+	margin-top: ($line-height-computed / 2)
 	word-break: break-word
-	margin-bottom: $line-height-computed
-
-.-game-thumbnail
-	max-width: 300px
+	margin-bottom: ($line-height-computed / 2)
