@@ -64,6 +64,7 @@ export class Community extends Collaboratable(Model) {
 	added_on!: number;
 	post_placeholder_text!: string | null;
 	description_content!: string;
+	is_verified!: boolean;
 
 	thumbnail?: MediaItem;
 	header?: MediaItem;
@@ -118,7 +119,7 @@ export class Community extends Collaboratable(Model) {
 
 	get routeEditLocation(): Location {
 		return {
-			name: 'communities.view.overview.edit',
+			name: 'communities.view.overview.edit.details',
 			params: {
 				path: this.path,
 				id: this.id + '',
@@ -134,9 +135,13 @@ export class Community extends Collaboratable(Model) {
 
 	$save() {
 		if (this.id) {
-			return this.$_save('/web/dash/communities/save/' + this.id, 'community');
+			return this.$_save('/web/dash/communities/save/' + this.id, 'community', {
+				allowComplexData: ['theme'],
+			});
 		} else {
-			return this.$_save('/web/dash/communities/save', 'community');
+			return this.$_save('/web/dash/communities/save', 'community', {
+				allowComplexData: ['theme'],
+			});
 		}
 	}
 
@@ -145,6 +150,10 @@ export class Community extends Collaboratable(Model) {
 			file: this.file,
 			allowComplexData: ['crop'],
 		});
+	}
+
+	async $clearHeader() {
+		return this.$_save('/web/dash/communities/design/clear-header/' + this.id, 'community');
 	}
 
 	$saveThumbnail() {

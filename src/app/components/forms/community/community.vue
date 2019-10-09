@@ -33,6 +33,17 @@
 			<app-form-control-errors />
 		</app-form-group>
 
+		<!-- Color Theme - only show this in the edit part, not creation -->
+		<app-form-group v-if="method !== 'add'" name="theme" :label="$gettext(`Color Theme`)">
+			<app-form-control-theme class="pull-right" @changed="onThemeChanged()" />
+			<p class="help-block">
+				<translate>
+					Give your page a splash of color! When people view this community, they'll be switched to
+					this theme.
+				</translate>
+			</p>
+		</app-form-group>
+
 		<app-form-button>
 			<translate v-if="method === 'add'">Create</translate>
 			<translate v-else>Save</translate>

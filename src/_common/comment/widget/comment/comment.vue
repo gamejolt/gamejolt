@@ -83,12 +83,7 @@
 						target="_blank"
 					>
 						<app-jolticon icon="remove" notice />
-						<template
-							v-if="
-								user.id === comment.user.id ||
-									(widget.resourceOwner && widget.resourceOwner.id === user.id)
-							"
-						>
+						<template v-if="canRemove">
 							<translate>Remove Comment (Moderate)</translate>
 						</template>
 						<template v-else>

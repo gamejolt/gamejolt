@@ -6,7 +6,7 @@
 		}"
 	>
 		<label class="control-label" :class="labelClasses" :for="`${form.name}-${name}`">
-			{{ humanLabel }}
+			<slot name="label">{{ humanLabel }}</slot>
 		</label>
 
 		<slot />

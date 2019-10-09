@@ -41,6 +41,9 @@ export class Collaborator extends Model {
 	constructor(data: any = {}) {
 		super(data);
 
+		// Object assign doesn't overwrite this because of its default value.
+		this.perms = data.perms;
+
 		if (data.resource_model) {
 			if (this.resource === 'Game') {
 				this.game = new Game(data.resource_model);

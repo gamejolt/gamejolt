@@ -44,6 +44,7 @@
 				<router-link :to="{ name: 'communities.view.overview' }">
 					{{ community.name }}
 				</router-link>
+				<app-community-verified-tick :community="community" big />
 			</h1>
 
 			<app-editable-overlay
