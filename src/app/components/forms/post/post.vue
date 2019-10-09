@@ -11,7 +11,7 @@
 						v-for="community of communities"
 						:key="community.id"
 						:community="community"
-						static
+						no-links
 					/>
 				</div>
 				<a v-if="wasPublished && selectedChannel" class="badge -current-channel">

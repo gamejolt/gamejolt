@@ -1,5 +1,5 @@
 <template>
-	<component :is="component" class="pill" :to="to">
+	<component :is="component" class="pill" :to="to" @click="onClick">
 		<span class="-img" v-if="hasImg">
 			<slot name="img" />
 		</span>

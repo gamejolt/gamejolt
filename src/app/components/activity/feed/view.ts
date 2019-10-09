@@ -1,8 +1,8 @@
+import Vue from 'vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
 import { Notification } from '../../../../_common/notification/notification-model';
-import Vue from 'vue';
 import { ActivityFeedInput, ActivityFeedItem } from './item-service';
 import { ActivityFeedState } from './state';
 
@@ -33,7 +33,8 @@ class ActivityFeedViewItemState {
 export interface ActivityFeedViewOptions {
 	slice?: number;
 	shouldScroll?: boolean;
-	hideCommunityInfo?: boolean;
+	hideCommunity?: boolean;
+	hideCommunityChannel?: boolean;
 	hideGameInfo?: boolean;
 	shouldShowCommunityControls?: boolean;
 	shouldShowEditControls?: boolean;
@@ -55,7 +56,8 @@ export class ActivityFeedView {
 	scroll = 0;
 	shouldScroll = true;
 	hideGameInfo = false;
-	hideCommunityInfo = false;
+	hideCommunity = false;
+	hideCommunityChannel = false;
 	shouldShowCommunityControls = false;
 	shouldShowEditControls = false;
 	shouldShowUserCards = true;
@@ -91,7 +93,10 @@ export class ActivityFeedView {
 	get shouldScrollLoadMore() {
 		// We don't allow loading more if they are viewing a slice of the items.
 		return (
-			!this.slice && !this.isLoadingMore && !this.reachedEnd && this.timesLoaded < LoadMoreTimes
+			!this.slice &&
+			!this.isLoadingMore &&
+			!this.reachedEnd &&
+			this.timesLoaded < LoadMoreTimes
 		);
 	}
 
@@ -101,7 +106,8 @@ export class ActivityFeedView {
 			slice,
 			shouldScroll = true,
 			hideGameInfo = false,
-			hideCommunityInfo = false,
+			hideCommunity = false,
+			hideCommunityChannel = false,
 			shouldShowCommunityControls = false,
 			shouldShowEditControls = false,
 			shouldShowUserCards = true,
@@ -112,7 +118,8 @@ export class ActivityFeedView {
 		this.slice = slice || null;
 		this.shouldScroll = shouldScroll;
 		this.hideGameInfo = hideGameInfo;
-		this.hideCommunityInfo = hideCommunityInfo;
+		this.hideCommunity = hideCommunity;
+		this.hideCommunityChannel = hideCommunityChannel;
 		this.shouldShowCommunityControls = shouldShowCommunityControls;
 		this.shouldShowEditControls = shouldShowEditControls;
 		this.shouldShowUserCards = shouldShowUserCards;

@@ -21,15 +21,19 @@ export default class AppCommunityPill extends Vue {
 	channel?: CommunityChannel;
 
 	@Prop(Boolean)
-	static?: boolean;
+	noLinks?: boolean;
 
 	get toCommunity() {
-		return this.static ? undefined : this.community.routeLocation;
+		if (this.noLinks) {
+			return undefined;
+		}
+		return this.community.routeLocation;
 	}
 
 	get toChannel() {
-		return this.static || !this.channel
-			? undefined
-			: this.community.channelRouteLocation(this.channel);
+		if (this.noLinks || !this.channel) {
+			return undefined;
+		}
+		return this.community.channelRouteLocation(this.channel);
 	}
 }
