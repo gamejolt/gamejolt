@@ -2,18 +2,28 @@ import { Component } from 'vue-property-decorator';
 import { LocationRedirect } from '../../../../../utils/router';
 import { Api } from '../../../../../_common/api/api.service';
 import { Game } from '../../../../../_common/game/game.model';
+import AppGameThumbnailImg from '../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import AppTrophyCard from '../../../../components/trophy/card/card.vue';
+import AppTrophyCompletion from '../../../../components/trophy/completion/completion.vue';
 import AppTrophyListPaged from '../../../../components/trophy/list/paged/paged.vue';
 import { RouteStore, RouteStoreModule } from '../../profile.store';
+
+type CompletionData = {
+	experience: number;
+	totalCount: number;
+	achievedCount: number;
+};
 
 @Component({
 	name: 'RouteProfileTrophiesGame',
 	components: {
 		AppTrophyCard,
 		AppTrophyListPaged,
+		AppTrophyCompletion,
+		AppGameThumbnailImg,
 	},
 })
 @RouteResolver({
@@ -40,6 +50,7 @@ export default class RouteProfileTrophiesGame extends BaseRouteComponent {
 
 	game: Game | null = null;
 	trophies: UserBaseTrophy[] = [];
+	completion: CompletionData | null = null;
 
 	get routeTitle() {
 		if (this.user && this.game) {
@@ -62,6 +73,9 @@ export default class RouteProfileTrophiesGame extends BaseRouteComponent {
 		this.game = new Game($payload.game);
 		if ($payload.trophies) {
 			this.trophies = populateTrophies($payload.trophies);
+		}
+		if ($payload.completion) {
+			this.completion = $payload.completion;
 		}
 	}
 }
