@@ -65,10 +65,31 @@
 											</translate>
 										</small>
 									</div>
+									<div v-if="completionPercentageDisplay" class="small">
+										<span v-if="completionPercentageDisplay === 1">
+											<translate>Less than 1% of players unlocked this trophy.</translate>
+										</span>
+										<span v-else-if="completionPercentageDisplay === 100">
+											<translate>
+												100% of players unlocked this trophy. That's incredible!
+											</translate>
+										</span>
+										<span v-else v-translate="{ num: completionPercentageDisplay }">
+											~%{ num }% of players unlocked this trophy.
+										</span>
+									</div>
 								</div>
 							</div>
 							<div class="-description well fill-offset">
 								{{ trophy.description }}
+							</div>
+
+							<div v-if="shouldShowFriends">
+								<div>
+									<translate>Friends who have achieved this trophy</translate>
+								</div>
+
+								<app-user-avatar-list :users="friends" />
 							</div>
 						</div>
 					</div>
