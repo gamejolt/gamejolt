@@ -52,9 +52,15 @@
 							},
 						}"
 						active-class="active"
+						class="-nav-item-game"
 					>
 						{{ game.title }}
-						<span class="badge">{{ game.trophyCount | number }}</span>
+						<span class="badge -game-counter">
+							{{ game.trophyCount | number }}
+							<span v-if="gameHasUnviewedTrophies(game.id)" class="-new-notice">
+								<app-jolticon icon="exclamation-circle" notice />
+							</span>
+						</span>
 					</router-link>
 				</li>
 			</ul>
@@ -63,7 +69,18 @@
 </template>
 
 <style lang="stylus" scoped>
+@require '~styles/variables'
 
+.-game-counter > *
+	vertical-align: middle
+
+.-new-notice
+	display: inline-block
+	margin-bottom: 1px
+	margin-left: 2px
+
+	& > .jolticon
+		margin: 0
 </style>
 
 <script lang="ts" src="./nav"></script>

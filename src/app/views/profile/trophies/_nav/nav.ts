@@ -22,10 +22,17 @@ export default class AppProfileTrophiesNav extends Vue {
 	@Prop(Number)
 	siteTrophyCount!: number;
 
+	@Prop(Array)
+	unviewedGames!: number[];
+
 	@RouteStoreModule.State
 	trophyCount!: RouteStore['trophyCount'];
 
 	get hasGames() {
 		return this.games.length > 0;
+	}
+
+	gameHasUnviewedTrophies(gameId: number) {
+		return this.unviewedGames.includes(gameId);
 	}
 }

@@ -17,11 +17,15 @@ import AppProfileTrophiesNav from './_nav/nav.vue';
 export default class RouteProfileTrophies extends BaseRouteComponent {
 	games: TrophyNavGame[] = [];
 	siteTrophyCount = 0;
+	unviewedGames: number[] = [];
 
 	routeResolved($payload: any) {
 		if ($payload.games) {
 			this.games = $payload.games;
 		}
 		this.siteTrophyCount = $payload.siteTrophyCount || 0;
+		if ($payload.unviewedGames) {
+			this.unviewedGames = $payload.unviewedGames;
+		}
 	}
 }

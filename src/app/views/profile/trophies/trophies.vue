@@ -5,7 +5,11 @@
 				<div class="row">
 					<div class="col-md-3">
 						<nav class="platform-list">
-							<app-profile-trophies-nav :games="games" :site-trophy-count="siteTrophyCount" />
+							<app-profile-trophies-nav
+								:games="games"
+								:site-trophy-count="siteTrophyCount"
+								:unviewed-games="unviewedGames"
+							/>
 						</nav>
 					</div>
 					<div class="col-xs-12 col-md-9">
