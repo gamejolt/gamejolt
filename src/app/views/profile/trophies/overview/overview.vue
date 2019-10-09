@@ -94,9 +94,17 @@
 	margin-top: 20px
 	margin-bottom: 24px
 
-.-timeline-icon > *
-	width: 50%
-	margin: 0 auto
+// Used to center the icon
+>>> .timeline-list-item-bubble-inner, .timeline-list-item-bubble-inner > div
+	position: relative
+	height: 100%
+
+.-timeline-icon
+	display: flex
+	position: relative
+	height: 100%
+	justify-content: center
+	align-items: center
 
 .-trophy-thumb
 	display: inline-block
