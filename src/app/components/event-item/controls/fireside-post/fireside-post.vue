@@ -9,7 +9,7 @@
 
 				&nbsp;
 
-				<template v-if="!showComments">
+				<template v-if="showCommentsButton">
 					<app-button
 						icon="comment"
 						circle

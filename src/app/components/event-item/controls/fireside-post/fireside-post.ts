@@ -45,7 +45,10 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	showUserFollow?: boolean;
 
 	@Prop(Boolean)
-	showComments?: boolean;
+	showCommentsButton?: boolean;
+
+	@Prop({ type: Number, default: 0 })
+	commentsCount!: number;
 
 	@AppState
 	user!: AppStore['user'];
@@ -86,12 +89,6 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 
 	get shareUrl() {
 		return Environment.baseUrl + this.$router.resolve(this.post.routeLocation).href;
-	}
-
-	// TODO
-	get commentsCount() {
-		// return this.commentStore ? this.commentStore.count : 0;
-		return 0;
 	}
 
 	get hasPerms() {

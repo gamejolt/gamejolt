@@ -92,7 +92,7 @@ export default class AppEventItemControlsComments extends Vue {
 
 	@Watch('commentsCount', { immediate: true })
 	onCommentsCountChanged(newCount: number) {
-		this.$emit('comments-count', newCount);
+		this.$emit('count', newCount);
 	}
 
 	openComments() {

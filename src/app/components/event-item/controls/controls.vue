@@ -5,7 +5,8 @@
 				<app-event-item-controls-fireside-post
 					:post="post"
 					:show-user-follow="showUserFollow"
-					:show-comments="showComments"
+					:show-comments-button="!showCommentFeed"
+					:comments-count="commentsCount"
 					@edit="emitPostEdit"
 					@publish="emitPostPublish"
 					@remove="emitPostRemove"
@@ -25,7 +26,14 @@
 			</template>
 		</div>
 
-		<app-event-item-controls-comments @click.stop v-if="post" :model="post" />
+		<span @click.stop>
+			<app-event-item-controls-comments
+				v-if="post"
+				:model="post"
+				:show-feed="showCommentFeed"
+				@count="commentsCount = $event"
+			/>
+		</span>
 	</div>
 </template>
 

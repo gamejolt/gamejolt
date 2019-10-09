@@ -28,6 +28,8 @@ export default class AppEventItemControls extends Vue {
 	@Prop(Boolean)
 	showComments?: boolean;
 
+	commentsCount = 0;
+
 	@Emit('post-edit')
 	emitPostEdit() {}
 
@@ -51,5 +53,9 @@ export default class AppEventItemControls extends Vue {
 
 	get hasActivePost() {
 		return this.post && this.post.status === FiresidePost.STATUS_ACTIVE;
+	}
+
+	get showCommentFeed() {
+		return !!this.showComments;
 	}
 }
