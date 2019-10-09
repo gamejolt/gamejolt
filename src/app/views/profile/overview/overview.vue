@@ -218,32 +218,36 @@
 								</h4>
 							</div>
 
-							<template v-if="!isOverviewLoaded || isLoadingAllCommunities">
-								<div
-									v-for="i in previewCommunityCount"
-									:key="i"
-									class="-community-item -community-thumb-placeholder"
-								></div>
-							</template>
-							<template v-else>
-								<router-link
-									v-for="community of shownCommunities"
-									:key="community.id"
-									class="-community-item link-unstyled"
-									:to="{
-										name: 'communities.view.overview',
-										params: { path: community.path },
-									}"
-									v-app-tooltip.bottom="community.name"
-								>
-									<app-community-thumbnail-img class="-community-thumb" :community="community" />
-									<app-community-verified-tick
-										class="-community-verified-tick"
-										:community="community"
-										no-tooltip
-									/>
-								</router-link>
-							</template>
+							<span class="-communities">
+								<template v-if="!isOverviewLoaded || isLoadingAllCommunities">
+									<div
+										v-for="i in previewCommunityCount"
+										:key="i"
+										class="-community-item -community-thumb-placeholder"
+									></div>
+								</template>
+								<template v-else>
+									<router-link
+										v-for="community of shownCommunities"
+										:key="community.id"
+										class="-community-item link-unstyled"
+										:to="{
+											name: 'communities.view.overview',
+											params: { path: community.path },
+										}"
+										v-app-tooltip.bottom="community.name"
+									>
+										<app-community-thumbnail-img class="-community-thumb" :community="community" />
+										<app-community-verified-tick
+											class="-community-verified-tick"
+											:community="community"
+											no-tooltip
+										/>
+									</router-link>
+								</template>
+							</span>
+
+							<br />
 						</template>
 
 						<!-- Latest Games -->
@@ -327,13 +331,16 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+.-communities
+	display: grid
+	grid-template-columns: repeat(5, 55px)
+	grid-gap: 5px 10px
+
 .-community-item
 	pressy()
 	display: inline-block
 	position: relative
 	outline: 0
-	margin-right: 10px
-	margin-bottom: 5px
 	width: 55px
 	height: 55px
 
