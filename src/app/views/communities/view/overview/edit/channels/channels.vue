@@ -24,20 +24,6 @@
 				:channels="community.channels"
 			/>
 
-			<ul class="-channel-list" v-if="community.channels">
-				<draggable v-model="community.channels" @change="saveChannelSort">
-					<li v-for="channel in community.channels" :key="channel.id">
-						<a class="tag">
-							{{ channel.title }}
-
-							<a v-if="canRemoveChannel" @click.stop="onClickRemoveChannel(channel)">
-								<app-jolticon icon="remove" v-app-tooltip="$gettext(`Remove Channel`)" />
-							</a>
-						</a>
-					</li>
-				</draggable>
-			</ul>
-
 			<app-card-list
 				v-if="community.channels"
 				:items="community.channels"
@@ -53,7 +39,11 @@
 					>
 						<div class="row">
 							<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
-								<img width="50px" src="https://i.imgur.com/AWfyZSn.png" />
+								<img
+									v-if="channel.background"
+									class="-channel-img-preview"
+									:src="channel.background.img_url"
+								/>
 
 								<br class="visible-xs" />
 							</div>
@@ -83,7 +73,11 @@
 						</div>
 
 						<template slot="body">
-							My name Jeff
+							<form-community-channel-edit
+								:community="community"
+								:model="channel"
+								@save="channelEdited"
+							/>
 						</template>
 					</app-card-list-item>
 				</app-card-list-draggable>
@@ -94,20 +88,12 @@
 
 <style lang="stylus" scoped>
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
-.-channel-list
-	list-style: none
-	padding-left: 0
-
-	li
-		margin-bottom: 10px
-
-	.tag
-		border-radius: 10px
-		font-weight: normal
-		cursor: move !important
-		font-size: $font-size-base
-		padding: 6px
+.-channel-img-preview
+	width: 68px
+	height: 25px
+	rounded-corners()
 
 </style>
 

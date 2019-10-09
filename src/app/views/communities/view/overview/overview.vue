@@ -99,19 +99,18 @@
 			</div>
 
 			<div slot="left">
+				<app-communities-view-overview-nav
+					v-if="!isEditing"
+					class="-nav"
+					:community="community"
+					:active-channel-title="channel"
+				/>
 				<!--
 					We put some extra spacing in here because of the affixed header
 					nav.
 				-->
-				<app-scroll-affix :scroll-offset="80" :disabled="!Screen.isLg">
-					<app-communities-view-overview-nav
-						v-if="!isEditing"
-						class="-nav"
-						:community="community"
-						:channel="channel"
-						:is-editing="isEditing"
-					/>
-					<app-communities-view-overview-nav-edit v-else class="-nav" :community="community" />
+				<app-scroll-affix v-else :scroll-offset="80" :disabled="!Screen.isLg">
+					<app-communities-view-overview-nav-edit class="-nav" :community="community" />
 				</app-scroll-affix>
 			</div>
 

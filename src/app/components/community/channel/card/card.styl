@@ -1,0 +1,119 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+@require './channel-card'
+
+.-card
+	position: relative
+
+	margin-bottom: 8px
+	width: $card-width
+	height: $card-height
+	overflow: hidden
+
+	border-left-width: 8px
+	border-left-color: var(--theme-bi-bg)
+	rounded-corners-lg()
+
+	change-bg('bg-offset')
+	theme-prop('color', 'fg')
+
+	transition: all 250ms
+
+	&-link
+		display: block
+		width: $card-width
+		outline: none
+
+	&:hover
+		.-hover-glare
+			transform: rotateZ(30deg) translateY(-100px)
+			opacity: 0.07
+
+		.-card-bg-img
+			filter: grayscale(0.75)
+			transform: scale(1.05)
+
+	&-content
+		padding: 10px
+		position: relative
+		z-index: 2
+
+	&-bg
+		position: absolute
+		width: 100%
+		height: 100%
+		z-index: 1
+
+		&-img
+			display: block
+			// 102% and transform to combat filter: blur's artifacts around the edges
+			width: 102%
+			height: 102%
+			transform: translateX(-1%) translateY(-1%)
+			opacity: 0.9
+			filter: blur(1px) grayscale(1)
+			transition: filter 200ms, transform 200ms
+
+		&-gradient
+			position: absolute
+			left: 0
+			top: 0
+			width: 100%
+			height: 100%
+			background: linear-gradient(to bottom, rgba(60, 60, 60, 0.2), rgba(60, 60, 60, 0.7))
+
+	&.-active
+		border-left-style: solid
+
+		&:hover
+			.-card-bg-img
+				filter: none
+
+		.-card
+			&-bg-img
+				opacity: 0.9
+				filter: blur(1px)
+
+	&-dark
+		change-bg('darkest')
+		theme-prop('color', 'lightest')
+
+		.-hover-glare
+			background: linear-gradient(to bottom, rgba(220, 220, 220, 0.7), rgba(220, 220, 220, 1))
+
+		.-card-description, .-card-title
+			text-shadow: var(--theme-darkest) 1px 0 6px
+
+	&-description
+		margin-top: 4px
+		word-break: normal
+
+	&-title
+		display: flex
+		align-items: center
+		font-size: $font-size-h4
+		font-weight: bolder
+
+		&-unread
+			font-weight: bold
+
+.-unread-dot
+	width: 8px
+	height: 8px
+	change-bg('notice')
+	border-radius: 50%
+	display: inline-block
+	margin-right: 6px
+	margin-left: 4px
+
+.-hover-glare
+	position: absolute
+	width: $card-width
+	height: $card-height
+	background: linear-gradient(to bottom, rgba(128, 128, 128, 0.5), rgba(128, 128, 128, 0.9))
+	z-index: 3
+	right: 0
+	bottom: 0
+	transform: rotateZ(30deg) translateY(-200px)
+	transition: opacity 500ms, transform 1s $strong-ease-out
+	opacity: 0

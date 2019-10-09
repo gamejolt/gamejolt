@@ -10,20 +10,19 @@ import { BaseRouteComponent } from '../../../../../../../_common/route/route-com
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import FormCommunityChannel from '../../../../../../components/forms/community/channel/channel.vue';
+import FormCommunityChannelEdit from '../../../../../../components/forms/community/channel/edit.vue';
 import { RouteStore, RouteStoreModule } from '../edit.store';
-
-const draggable = require('vuedraggable');
 
 @Component({
 	name: 'RouteCommunitiesViewEditChannels',
 	components: {
 		AppCommunityPerms,
 		FormCommunityChannel,
-		draggable,
 		AppCardList,
 		AppCardListDraggable,
 		AppCardListItem,
 		AppCardListAdd,
+		FormCommunityChannelEdit,
 	},
 	directives: {
 		AppTooltip,
@@ -62,7 +61,7 @@ export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent
 	}
 
 	onChannelAdded(channel: CommunityChannel) {
-		this.community.channels!.unshift(channel);
+		this.community.channels!.push(channel);
 		this.onChannelsChange();
 	}
 
@@ -87,6 +86,10 @@ export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent
 			this.community.channels = this.community.channels!.filter(i => i.id !== channel.id);
 		}
 
+		this.onChannelsChange();
+	}
+
+	channelEdited() {
 		this.onChannelsChange();
 	}
 }
