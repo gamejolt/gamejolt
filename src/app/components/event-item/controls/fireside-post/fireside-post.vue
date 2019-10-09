@@ -46,47 +46,80 @@
 					</div>
 				</app-popper>
 			</div>
-			<app-event-item-controls-fireside-post-extra
-				:post="post"
-				@edit="emitEdit"
-				@publish="emitPublish"
-				@remove="emitRemove"
-				@feature="emitFeature"
-				@unfeature="emitUnfeature"
-				@move-channel="emitMoveChannel"
-				@reject="emitReject"
-			/>
-		</div>
 
-		<div v-if="!showComments" class="-inline-comment" v-app-auth-required>
-			<app-event-item-controls-comment-add-placeholder
-				v-if="!clickedComment"
-				@click="onClickCommentAddPlaceholder"
-			/>
-			<form-comment
-				v-else
-				resource="Fireside_Post"
-				:resource-id="post.id"
-				:editor-startup-activity="clickedCommentType"
-				autofocus
-				@submit="onSubmitNewComment"
-			/>
+			<div class="-stats" v-if="shouldShowStats">
+				<translate
+					:translate-n="post.view_count || 0"
+					:translate-params="{ count: number(post.view_count || 0) }"
+					translate-plural="%{ count } views"
+				>
+					%{ count } view
+				</translate>
+
+				<span class="dot-separator" />
+
+				<translate
+					:translate-n="post.expand_count || 0"
+					:translate-params="{ count: number(post.expand_count || 0) }"
+					translate-plural="%{ count } expands"
+				>
+					%{ count } expand
+				</translate>
+
+				<span
+					class="hidden-xs"
+					v-app-tooltip="
+						$gettext(
+							'An expand is some sort of interaction with your post. For example, playing a video post, or clicking into your post.'
+						)
+					"
+				>
+					<app-jolticon icon="help-circle" />
+				</span>
+			</div>
+
+			<span>
+				<template v-if="shouldShowEdit">
+					<app-button v-if="canPublish" class="-inline-button" primary @click="publish()">
+						<translate>Publish</translate>
+					</app-button>
+					<app-button class="-inline-button" @click="openEdit()">
+						<translate>Edit</translate>
+					</app-button>
+				</template>
+
+				<app-event-item-controls-fireside-post-extra
+					:post="post"
+					@remove="emitRemove"
+					@feature="emitFeature"
+					@unfeature="emitUnfeature"
+					@move-channel="emitMoveChannel"
+					@reject="emitReject"
+				/>
+			</span>
 		</div>
 	</span>
 </template>
 
 <style lang="stylus" scoped>
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 .-controls
 	display: flex
 	justify-content: flex-end
+	align-items: center
 
 .-user-controls
 	flex-grow: 1
 
-.-inline-comment
-	margin-top: ($grid-gutter-width / 2)
+.-stats
+	theme-prop('color', 'fg-muted')
+	font-size: $font-size-small
+	flex: auto
+
+.-inline-button
+	margin-right: 10px
 </style>
 
 <script lang="ts" src="./fireside-post"></script>

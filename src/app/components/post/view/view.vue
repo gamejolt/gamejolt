@@ -98,9 +98,9 @@
 						<br />
 					</template>
 
-					<div class="well fill-offset full-bleed-xs" v-if="shouldShowManage">
+					<!-- <div class="well fill-offset full-bleed-xs" v-if="shouldShowManage">
 						<app-fireside-post-manage :post="post" show-community-controls />
-					</div>
+					</div> -->
 
 					<app-event-item-controls show-comments :post="post" />
 				</div>

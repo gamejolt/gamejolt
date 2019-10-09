@@ -1,14 +1,14 @@
-import { GJ_EMOJIS } from '../../../../../_common/content/content-editor/schemas/specs/nodes/gj-emoji-nodespec';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import { GJ_EMOJIS } from '../../../../../../_common/content/content-editor/schemas/specs/nodes/gj-emoji-nodespec';
+import { AppTooltip } from '../../../../../../_common/tooltip/tooltip';
 
 @Component({
 	directives: {
 		AppTooltip,
 	},
 })
-export default class AppEventItemControlsCommentAddPlaceholder extends Vue {
+export default class AppEventItemControlsCommentsAddPlaceholder extends Vue {
 	emoji = 'huh'; // Gets set to a random one at created
 
 	get emojis() {

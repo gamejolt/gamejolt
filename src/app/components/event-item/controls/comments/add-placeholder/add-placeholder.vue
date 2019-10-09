@@ -80,4 +80,4 @@
 
 </style>
 
-<script lang="ts" src="./placeholder"></script>
+<script lang="ts" src="./add-placeholder"></script>

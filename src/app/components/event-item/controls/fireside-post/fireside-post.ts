@@ -1,15 +1,7 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
-import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
-import FormComment from '../../../../../_common/comment/add/add.vue';
-import {
-	CommentAction,
-	CommentMutation,
-	CommentStore,
-	CommentStoreModel,
-} from '../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../_common/comment/modal/modal.service';
 import AppCommentVideoLikeWidget from '../../../../../_common/comment/video/like-widget/like-widget.vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
@@ -21,9 +13,10 @@ import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { AppSocialFacebookLike } from '../../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../../_common/social/twitter/share/share';
+import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import { AppCommentWidgetLazy } from '../../../lazy';
-import AppEventItemControlsCommentAddPlaceholder from '../comment-add-placeholder/placeholder.vue';
+import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 import AppEventItemControlsFiresidePostExtra from './extra/extra.vue';
 
 @Component({
@@ -34,8 +27,6 @@ import AppEventItemControlsFiresidePostExtra from './extra/extra.vue';
 		AppCommentVideoLikeWidget,
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,
-		FormComment,
-		AppEventItemControlsCommentAddPlaceholder,
 		AppEventItemControlsFiresidePostExtra,
 	},
 	directives: {
@@ -56,19 +47,13 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	@Prop(Boolean)
 	showComments?: boolean;
 
-	@CommentAction
-	lockCommentStore!: CommentStore['lockCommentStore'];
+	@AppState
+	user!: AppStore['user'];
 
-	@CommentMutation
-	releaseCommentStore!: CommentStore['releaseCommentStore'];
-
-	@CommentMutation
-	setCommentCount!: CommentStore['setCommentCount'];
-
-	commentStore: CommentStoreModel | null = null;
 	isShowingShare = false;
-	clickedComment = false;
-	clickedCommentType = '';
+
+	readonly number = number;
+	readonly GJ_IS_CLIENT!: boolean;
 
 	@Emit('edit')
 	emitEdit() {}
@@ -91,33 +76,37 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	@Emit('reject')
 	emitReject() {}
 
+	get canPublish() {
+		return this.post.isDraft && !this.post.isScheduled && this.post.hasLead;
+	}
+
 	get showUserControls() {
-		return this.post.status === FiresidePost.STATUS_ACTIVE;
+		return this.post.isActive;
 	}
 
 	get shareUrl() {
 		return Environment.baseUrl + this.$router.resolve(this.post.routeLocation).href;
 	}
 
+	// TODO
 	get commentsCount() {
-		return this.commentStore ? this.commentStore.count : 0;
+		// return this.commentStore ? this.commentStore.count : 0;
+		return 0;
 	}
 
-	async created() {
-		this.commentStore = await this.lockCommentStore({
-			resource: 'Fireside_Post',
-			resourceId: this.post.id,
-		});
-
-		// Bootstrap it with the post comment count since that's all we have.
-		this.setCommentCount({ store: this.commentStore, count: this.post.comment_count });
-	}
-
-	destroyed() {
-		if (this.commentStore) {
-			this.releaseCommentStore(this.commentStore);
-			this.commentStore = null;
+	get hasPerms() {
+		if (!this.user) {
+			return false;
 		}
+		return this.post.isEditableByUser(this.user);
+	}
+
+	get shouldShowStats() {
+		return this.hasPerms && this.post.isActive;
+	}
+
+	get shouldShowEdit() {
+		return this.hasPerms;
 	}
 
 	copyShareUrl() {
@@ -132,14 +121,14 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 		});
 	}
 
-	onClickCommentAddPlaceholder(type: string) {
-		Analytics.trackEvent('inline-comment-form', 'click', type);
-		this.clickedCommentType = type;
-		this.clickedComment = true;
+	async openEdit() {
+		if (await PostEditModal.show(this.post)) {
+			this.emitEdit();
+		}
 	}
 
-	onSubmitNewComment() {
-		this.clickedComment = false; // Unloading the editor after submitting
-		this.openComments();
+	async publish() {
+		await this.post.$publish();
+		this.emitPublish();
 	}
 }

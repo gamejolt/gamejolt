@@ -25,12 +25,7 @@
 			</template>
 		</div>
 
-		<template v-if="post && showComments">
-			<br />
-			<br />
-
-			<app-comment-widget resource="Fireside_Post" :resource-id="post.id" />
-		</template>
+		<app-event-item-controls-comments @click.stop v-if="post" :model="post" />
 	</div>
 </template>
 

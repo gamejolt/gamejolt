@@ -5,14 +5,14 @@ import { CommentVideo } from '../../../../_common/comment/video/video-model';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
-import { AppCommentWidgetLazy } from '../../lazy';
+import AppEventItemControlsComments from './comments/comments.vue';
 import AppEventItemControlsFiresidePost from './fireside-post/fireside-post.vue';
 
 @Component({
 	components: {
-		AppCommentWidget: AppCommentWidgetLazy,
 		AppCommentVideoLikeWidget,
 		AppEventItemControlsFiresidePost,
+		AppEventItemControlsComments,
 	},
 })
 export default class AppEventItemControls extends Vue {

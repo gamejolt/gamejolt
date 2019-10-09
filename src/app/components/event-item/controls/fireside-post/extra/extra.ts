@@ -12,7 +12,6 @@ import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
 import { CommunityMovePostModal } from '../../../../community/move-post/modal/modal.service';
 import { AppCommunityPerms } from '../../../../community/perms/perms';
-import { PostEditModal } from '../../../../post/edit-modal/edit-modal-service';
 
 @Component({
 	components: {
@@ -24,25 +23,8 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 	@Prop(FiresidePost)
 	post!: FiresidePost;
 
-	// TODO: figure out if we need to ever provide these props,
-	// or is it safe to just always pull all context for the post instead
-	// @Prop(Boolean)
-	// showEditControls?: boolean;
-
-	// @Prop(Boolean)
-	// showCommunityControls?: boolean;
-
 	@AppState
 	user!: AppStore['user'];
-
-	showEditControls = true;
-	showCommunityControls = true;
-
-	@Emit('edit')
-	emitEdit() {}
-
-	@Emit('publish')
-	emitPublish() {}
 
 	@Emit('remove')
 	emitRemove() {}
@@ -59,27 +41,14 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 	@Emit('reject')
 	emitReject(_community: Community) {}
 
-	get canPublish() {
-		return this.post.isDraft && !this.post.isScheduled && this.post.hasLead;
-	}
-
-	get hasPerms() {
+	get canEdit() {
 		return this.post.isEditableByUser(this.user);
-	}
-
-	get shouldShowStats() {
-		return this.hasPerms;
-	}
-
-	get shouldShowEdit() {
-		return this.hasPerms && this.showEditControls;
 	}
 
 	get shouldShowManageCommunities() {
 		return (
 			this.post.status === FiresidePost.STATUS_ACTIVE &&
-			this.post.manageableCommunities.length !== 0 &&
-			this.showCommunityControls
+			this.post.manageableCommunities.length !== 0
 		);
 	}
 
@@ -157,17 +126,6 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 	async rejectFromCommunity(postCommunity: FiresidePostCommunity) {
 		await this.post.$reject(postCommunity.community);
 		this.emitReject(postCommunity.community);
-	}
-
-	async openEdit() {
-		if (await PostEditModal.show(this.post)) {
-			this.emitEdit();
-		}
-	}
-
-	async publish() {
-		await this.post.$publish();
-		this.emitPublish();
 	}
 
 	async remove() {
