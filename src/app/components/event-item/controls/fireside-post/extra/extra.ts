@@ -9,6 +9,7 @@ import { FiresidePost } from '../../../../../../_common/fireside/post/post-model
 import { Growls } from '../../../../../../_common/growls/growls.service';
 import { getLinkedAccountPlatformIcon } from '../../../../../../_common/linked-account/linked-account.model';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
+import { ReportModal } from '../../../../../../_common/report/modal/modal.service';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
 import { CommunityMovePostModal } from '../../../../community/move-post/modal/modal.service';
 import { AppCommunityPerms } from '../../../../community/perms/perms';
@@ -126,6 +127,10 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 	async rejectFromCommunity(postCommunity: FiresidePostCommunity) {
 		await this.post.$reject(postCommunity.community);
 		this.emitReject(postCommunity.community);
+	}
+
+	report() {
+		ReportModal.show(this.post);
 	}
 
 	async remove() {

@@ -79,6 +79,11 @@
 					</span>
 				</template>
 
+				<a class="list-group-item has-icon" v-if="user && user.id !== post.user.id" @click="report">
+					<app-jolticon icon="flag" notice />
+					<translate>Report Post</translate>
+				</a>
+
 				<a v-if="canEdit" class="list-group-item has-icon" @click.stop="remove()">
 					<app-jolticon icon="remove" notice />
 					<translate>Remove Post</translate>
