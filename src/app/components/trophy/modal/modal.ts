@@ -2,7 +2,6 @@ import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class/lib/bindings';
 import { Game } from '../../../../_common/game/game.model';
-import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import { AppStore } from '../../../../_common/store/app-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
@@ -17,7 +16,6 @@ import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
 	components: {
 		AppTrophyThumbnail,
 		AppUserAvatar,
-		AppGameThumbnail,
 		AppTimeAgo,
 		AppUserVerifiedTick,
 	},

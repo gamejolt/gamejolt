@@ -70,12 +70,6 @@
 							<div class="-description well fill-offset">
 								{{ trophy.description }}
 							</div>
-							<div v-if="isGame" class="-game-thumbnail">
-								<div class="help-inline">
-									<translate>View the game this trophy belongs to</translate>
-								</div>
-								<app-game-thumbnail :game="userTrophy.game" />
-							</div>
 						</div>
 					</div>
 				</div>
