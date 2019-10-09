@@ -98,10 +98,6 @@
 						<br />
 					</template>
 
-					<!-- <div class="well fill-offset full-bleed-xs" v-if="shouldShowManage">
-						<app-fireside-post-manage :post="post" show-community-controls />
-					</div> -->
-
 					<app-event-item-controls show-comments :post="post" />
 				</div>
 				<div class="col-md-4 col-lg-5" v-if="shouldShowAds && Screen.isDesktop">
