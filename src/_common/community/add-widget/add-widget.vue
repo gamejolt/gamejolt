@@ -7,7 +7,7 @@
 	>
 		<app-jolticon icon="add" big />
 	</router-link>
-	<a v-else class="-add -disabled" v-app-tooltip="tooltip">
+	<a v-else class="-add -disabled" v-app-tooltip="tooltip" @click="showGrowl">
 		<app-jolticon icon="add" big />
 	</a>
 </template>
