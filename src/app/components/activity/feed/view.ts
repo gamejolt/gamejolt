@@ -1,8 +1,8 @@
+import Vue from 'vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
 import { Notification } from '../../../../_common/notification/notification-model';
-import Vue from 'vue';
 import { ActivityFeedInput, ActivityFeedItem } from './item-service';
 import { ActivityFeedState } from './state';
 
@@ -35,8 +35,6 @@ export interface ActivityFeedViewOptions {
 	shouldScroll?: boolean;
 	hideCommunityInfo?: boolean;
 	hideGameInfo?: boolean;
-	shouldShowCommunityControls?: boolean;
-	shouldShowEditControls?: boolean;
 	shouldShowUserCards?: boolean;
 	shouldShowFollow?: boolean;
 }
@@ -56,8 +54,6 @@ export class ActivityFeedView {
 	shouldScroll = true;
 	hideGameInfo = false;
 	hideCommunityInfo = false;
-	shouldShowCommunityControls = false;
-	shouldShowEditControls = false;
 	shouldShowUserCards = true;
 	shouldShowFollow = false;
 
@@ -91,7 +87,10 @@ export class ActivityFeedView {
 	get shouldScrollLoadMore() {
 		// We don't allow loading more if they are viewing a slice of the items.
 		return (
-			!this.slice && !this.isLoadingMore && !this.reachedEnd && this.timesLoaded < LoadMoreTimes
+			!this.slice &&
+			!this.isLoadingMore &&
+			!this.reachedEnd &&
+			this.timesLoaded < LoadMoreTimes
 		);
 	}
 
@@ -102,8 +101,6 @@ export class ActivityFeedView {
 			shouldScroll = true,
 			hideGameInfo = false,
 			hideCommunityInfo = false,
-			shouldShowCommunityControls = false,
-			shouldShowEditControls = false,
 			shouldShowUserCards = true,
 			shouldShowFollow = false,
 		}: ActivityFeedViewOptions = {}
@@ -113,8 +110,6 @@ export class ActivityFeedView {
 		this.shouldScroll = shouldScroll;
 		this.hideGameInfo = hideGameInfo;
 		this.hideCommunityInfo = hideCommunityInfo;
-		this.shouldShowCommunityControls = shouldShowCommunityControls;
-		this.shouldShowEditControls = shouldShowEditControls;
 		this.shouldShowUserCards = shouldShowUserCards;
 		this.shouldShowFollow = shouldShowFollow;
 	}

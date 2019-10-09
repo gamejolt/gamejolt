@@ -144,14 +144,6 @@
 				</div>
 			</template>
 
-			<!-- <div class="-manage" v-if="shouldShowManage && !!post">
-				<app-fireside-post-manage
-					:post="post"
-					:show-edit-controls="feed.shouldShowEditControls"
-					:show-community-controls="feed.shouldShowCommunityControls"
-				/>
-			</div> -->
-
 			<app-event-item-controls
 				class="-controls"
 				:class="{

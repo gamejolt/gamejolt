@@ -305,7 +305,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			{
 				type: 'EventItem',
 				url: getFetchUrl(this.$route),
-				shouldShowCommunityControls: true,
 				hideCommunityInfo: true,
 				shouldShowFollow: true,
 				notificationWatermark: $payload.unreadWatermark,
