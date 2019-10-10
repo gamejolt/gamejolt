@@ -23,7 +23,6 @@ import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.v
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
 import { Store } from '../../../../store';
 import AppEventItemControls from '../../../event-item/controls/controls.vue';
-import AppFiresidePostManage from '../../../fireside/post/manage/manage.vue';
 import AppPollVoting from '../../../poll/voting/voting.vue';
 import AppActivityFeedCommentVideo from '../comment-video/comment-video.vue';
 import AppActivityFeedDevlogPostMedia from '../devlog-post/media/media.vue';
@@ -48,7 +47,6 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppActivityFeedDevlogPostMedia,
 		AppActivityFeedDevlogPostSketchfab,
 		AppActivityFeedDevlogPostVideo,
-		AppFiresidePostManage,
 		AppEventItemControls,
 		AppPollVoting,
 		AppUserCardHover,
@@ -299,7 +297,7 @@ export default class AppActivityFeedEventItem extends Vue {
 		this.feedComponent.onPostUnfeatured(item, community);
 	}
 
-	onPostMoveChannel(item: EventItem, movedTo: CommunityChannel) {
+	onPostMovedChannel(item: EventItem, movedTo: CommunityChannel) {
 		this.feedComponent.onPostMovedChannel(item, movedTo);
 	}
 

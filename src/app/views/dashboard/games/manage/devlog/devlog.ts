@@ -59,7 +59,6 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 			{
 				type: 'EventItem',
 				url: getFetchUrl(this.$route),
-				shouldShowEditControls: true,
 			},
 			$payload.items,
 			fromCache

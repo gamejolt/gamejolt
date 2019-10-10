@@ -36,8 +36,6 @@ export interface ActivityFeedViewOptions {
 	hideCommunity?: boolean;
 	hideCommunityChannel?: boolean;
 	hideGameInfo?: boolean;
-	shouldShowCommunityControls?: boolean;
-	shouldShowEditControls?: boolean;
 	shouldShowUserCards?: boolean;
 	shouldShowFollow?: boolean;
 }
@@ -58,8 +56,6 @@ export class ActivityFeedView {
 	hideGameInfo = false;
 	hideCommunity = false;
 	hideCommunityChannel = false;
-	shouldShowCommunityControls = false;
-	shouldShowEditControls = false;
 	shouldShowUserCards = true;
 	shouldShowFollow = false;
 
@@ -108,8 +104,6 @@ export class ActivityFeedView {
 			hideGameInfo = false,
 			hideCommunity = false,
 			hideCommunityChannel = false,
-			shouldShowCommunityControls = false,
-			shouldShowEditControls = false,
 			shouldShowUserCards = true,
 			shouldShowFollow = false,
 		}: ActivityFeedViewOptions = {}
@@ -120,8 +114,6 @@ export class ActivityFeedView {
 		this.hideGameInfo = hideGameInfo;
 		this.hideCommunity = hideCommunity;
 		this.hideCommunityChannel = hideCommunityChannel;
-		this.shouldShowCommunityControls = shouldShowCommunityControls;
-		this.shouldShowEditControls = shouldShowEditControls;
 		this.shouldShowUserCards = shouldShowUserCards;
 		this.shouldShowFollow = shouldShowFollow;
 	}

@@ -1,3 +1,6 @@
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
@@ -10,13 +13,9 @@ import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
 import AppVideo from '../../../../_common/video/video.vue';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Store } from '../../../store';
 import AppEventItemControls from '../../event-item/controls/controls.vue';
 import AppEventItemMediaTags from '../../event-item/media-tags/media-tags.vue';
-import AppFiresidePostManage from '../../fireside/post/manage/manage.vue';
 import AppPollVoting from '../../poll/voting/voting.vue';
 import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 
@@ -29,7 +28,6 @@ import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 		AppVideo,
 		AppVideoEmbed,
 		AppSketchfabEmbed,
-		AppFiresidePostManage,
 		AppEventItemControls,
 		AppEventItemMediaTags,
 		AppPollVoting,

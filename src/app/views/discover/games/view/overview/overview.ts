@@ -258,7 +258,6 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 			{
 				type: 'EventItem',
 				url: `/web/posts/fetch/game/${this.game.id}`,
-				shouldShowEditControls: true,
 				hideGameInfo: true,
 			},
 			$payload.posts,
