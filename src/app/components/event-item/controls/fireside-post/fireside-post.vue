@@ -89,6 +89,7 @@
 				</template>
 
 				<app-event-item-controls-fireside-post-extra
+					v-if="shouldShowExtra"
 					:post="post"
 					@remove="emitRemove"
 					@feature="emitFeature"

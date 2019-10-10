@@ -15,6 +15,7 @@ import { AppSocialFacebookLike } from '../../../../../_common/social/facebook/li
 import { AppSocialTwitterShare } from '../../../../../_common/social/twitter/share/share';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { User } from '../../../../../_common/user/user.model';
 import { AppCommentWidgetLazy } from '../../../lazy';
 import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 import AppEventItemControlsFiresidePostExtra from './extra/extra.vue';
@@ -104,6 +105,10 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 
 	get shouldShowEdit() {
 		return this.hasPerms;
+	}
+
+	get shouldShowExtra() {
+		return this.user instanceof User;
 	}
 
 	copyShareUrl() {
