@@ -85,24 +85,16 @@
 							v-for="postCommunity of communities"
 							:key="postCommunity.id"
 						>
-							<app-community-pill :community="postCommunity.community" />
-							<router-link
-								v-if="postCommunity.channel"
-								class="badge"
-								:to="postCommunity.community.channelRouteLocation(postCommunity.channel)"
-							>
-								{{ postCommunity.channel.title }}
-							</router-link>
+							<app-community-pill
+								:community="postCommunity.community"
+								:channel="postCommunity.channel"
+							/>
 						</div>
 
 						<br />
 					</template>
 
-					<div class="well fill-offset full-bleed-xs" v-if="shouldShowManage">
-						<app-fireside-post-manage :post="post" show-community-controls />
-					</div>
-
-					<app-event-item-controls show-comments :post="post" />
+					<app-event-item-controls show-comments :post="post" @post-remove="onPostRemoved" />
 				</div>
 				<div class="col-md-4 col-lg-5" v-if="shouldShowAds && Screen.isDesktop">
 					<app-ad-widget class="pull-right" />

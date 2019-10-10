@@ -54,7 +54,6 @@
 			<app-activity-feed
 				v-if="feed.hasItems"
 				:feed="feed"
-				:show-community-controls="feed.shouldShowCommunityControls"
 				@edit-post="onPostEdited"
 				@publish-post="onPostPublished"
 				@remove-post="onPostRemoved"

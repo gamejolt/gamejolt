@@ -25,7 +25,9 @@
 			<!-- Video -->
 			<template v-else-if="item.media_type === 'video'">
 				<div class="-embed" v-if="isActive">
+					<!-- We want to wait until the size is properly calculated, otherwise the player won't size properly. -->
 					<app-video-embed
+						v-if="initialized"
 						:video-provider="item.type"
 						:video-id="item.url"
 						:max-video-width="maxWidth"

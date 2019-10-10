@@ -3,7 +3,7 @@
 		<app-community-thumbnail-img slot="img" :community="community" />
 
 		{{ community.name }}
-		<app-community-verified-tick :community="community" small />
+		<app-community-verified-tick class="-tick" :community="community" small />
 	</app-pill>
 	<span class="-pill-bi" v-else>
 		<router-link class="-left" :to="toCommunity">
@@ -12,6 +12,7 @@
 					<app-community-thumbnail-img :community="community" />
 				</span>
 				{{ community.name }}
+				<app-community-verified-tick class="-tick" :community="community" small />
 			</span>
 
 			<span class="-sep">

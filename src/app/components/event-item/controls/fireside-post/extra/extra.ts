@@ -1,53 +1,31 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { Api } from '../../../../../_common/api/api.service';
-import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../../_common/community/community.model';
-import { Environment } from '../../../../../_common/environment/environment.service';
-import { number } from '../../../../../_common/filters/number';
-import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import { Growls } from '../../../../../_common/growls/growls.service';
-import { getLinkedAccountPlatformIcon } from '../../../../../_common/linked-account/linked-account.model';
-import AppPopper from '../../../../../_common/popper/popper.vue';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
-import { Store } from '../../../../store';
-import { CommunityMovePostModal } from '../../../community/move-post/modal/modal.service';
-import { AppCommunityPerms } from '../../../community/perms/perms';
-import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
+import { Api } from '../../../../../../_common/api/api.service';
+import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
+import { Community } from '../../../../../../_common/community/community.model';
+import { Environment } from '../../../../../../_common/environment/environment.service';
+import { FiresidePostCommunity } from '../../../../../../_common/fireside/post/community/community.model';
+import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
+import { Growls } from '../../../../../../_common/growls/growls.service';
+import { getLinkedAccountPlatformIcon } from '../../../../../../_common/linked-account/linked-account.model';
+import AppPopper from '../../../../../../_common/popper/popper.vue';
+import { ReportModal } from '../../../../../../_common/report/modal/modal.service';
+import { AppState, AppStore } from '../../../../../../_common/store/app-store';
+import { CommunityMovePostModal } from '../../../../community/move-post/modal/modal.service';
+import { AppCommunityPerms } from '../../../../community/perms/perms';
 
 @Component({
 	components: {
 		AppPopper,
 		AppCommunityPerms,
 	},
-	directives: {
-		AppTooltip,
-	},
 })
-export default class AppFiresidePostManage extends Vue {
+export default class AppEventItemControlsFiresidePostExtra extends Vue {
 	@Prop(FiresidePost)
 	post!: FiresidePost;
 
-	@Prop(Boolean)
-	showEditControls?: boolean;
-
-	@Prop(Boolean)
-	showCommunityControls?: boolean;
-
-	@State
-	app!: Store['app'];
-
-	Environment = Environment;
-
-	readonly number = number;
-
-	@Emit('edit')
-	emitEdit() {}
-
-	@Emit('publish')
-	emitPublish() {}
+	@AppState
+	user!: AppStore['user'];
 
 	@Emit('remove')
 	emitRemove() {}
@@ -64,28 +42,23 @@ export default class AppFiresidePostManage extends Vue {
 	@Emit('reject')
 	emitReject(_community: Community) {}
 
-	get canPublish() {
-		return this.post.isDraft && !this.post.isScheduled && this.post.hasLead;
-	}
-
-	get hasPerms() {
-		return this.post.isEditableByUser(this.app.user);
-	}
-
-	get shouldShowStats() {
-		return this.hasPerms;
-	}
-
-	get shouldShowEdit() {
-		return this.hasPerms && this.showEditControls;
+	get canEdit() {
+		return this.post.isEditableByUser(this.user);
 	}
 
 	get shouldShowManageCommunities() {
-		return this.post.manageableCommunities.length !== 0 && this.showCommunityControls;
+		return (
+			this.post.status === FiresidePost.STATUS_ACTIVE &&
+			this.post.manageableCommunities.length !== 0
+		);
 	}
 
 	get shouldShowModTools() {
-		return this.app.user && this.app.user.isMod;
+		return this.user && this.user.isMod;
+	}
+
+	get siteModerateLink() {
+		return Environment.baseUrl + `/moderate/fireside-posts/view/${this.post.id}`;
 	}
 
 	shouldDisplayCommunityName(community: Community) {
@@ -156,15 +129,8 @@ export default class AppFiresidePostManage extends Vue {
 		this.emitReject(postCommunity.community);
 	}
 
-	async openEdit() {
-		if (await PostEditModal.show(this.post)) {
-			this.emitEdit();
-		}
-	}
-
-	async publish() {
-		await this.post.$publish();
-		this.emitPublish();
+	report() {
+		ReportModal.show(this.post);
 	}
 
 	async remove() {

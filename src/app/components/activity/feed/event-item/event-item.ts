@@ -12,8 +12,10 @@ import { Environment } from '../../../../../_common/environment/environment.serv
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { number } from '../../../../../_common/filters/number';
+import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
+import AppPill from '../../../../../_common/pill/pill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
@@ -21,7 +23,6 @@ import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.v
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
 import { Store } from '../../../../store';
 import AppEventItemControls from '../../../event-item/controls/controls.vue';
-import AppFiresidePostManage from '../../../fireside/post/manage/manage.vue';
 import AppPollVoting from '../../../poll/voting/voting.vue';
 import AppActivityFeedCommentVideo from '../comment-video/comment-video.vue';
 import AppActivityFeedDevlogPostMedia from '../devlog-post/media/media.vue';
@@ -46,12 +47,12 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppActivityFeedDevlogPostMedia,
 		AppActivityFeedDevlogPostSketchfab,
 		AppActivityFeedDevlogPostVideo,
-		AppFiresidePostManage,
 		AppEventItemControls,
 		AppPollVoting,
 		AppUserCardHover,
 		AppFadeCollapse,
 		AppCommunityPill,
+		AppPill,
 		AppContentViewer,
 		AppUserVerifiedTick,
 	},
@@ -177,6 +178,14 @@ export default class AppActivityFeedEventItem extends Vue {
 		return this.post && this.post.isManageableByUser(this.app.user);
 	}
 
+	get shouldShowCommunities() {
+		if (!this.communities.length) {
+			return false;
+		}
+
+		return !this.feed.hideCommunity || !this.feed.hideCommunityChannel;
+	}
+
 	mounted() {
 		this.feedComponent = findRequiredVueParent(this, AppActivityFeed) as AppActivityFeedTS;
 	}
@@ -288,11 +297,23 @@ export default class AppActivityFeedEventItem extends Vue {
 		this.feedComponent.onPostUnfeatured(item, community);
 	}
 
-	onPostMoveChannel(item: EventItem, movedTo: CommunityChannel) {
+	onPostMovedChannel(item: EventItem, movedTo: CommunityChannel) {
 		this.feedComponent.onPostMovedChannel(item, movedTo);
 	}
 
 	onPostRejected(item: EventItem, community: Community) {
 		this.feedComponent.onPostRejected(item, community);
+	}
+
+	getChannelRoute(postCommunity: FiresidePostCommunity) {
+		if (!postCommunity.channel) {
+			return undefined;
+		}
+
+		return postCommunity.community.channelRouteLocation(postCommunity.channel);
+	}
+
+	getChannelTitle(postCommunity: FiresidePostCommunity) {
+		return postCommunity.channel ? postCommunity.channel.title : '';
 	}
 }

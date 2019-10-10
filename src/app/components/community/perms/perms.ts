@@ -9,10 +9,15 @@ import {
 
 @Component({})
 export class AppCommunityPerms extends Vue {
-	@Prop(Community) community?: Community;
+	@Prop(Community)
+	community?: Community;
+
 	@Prop({ type: String, default: '' })
 	required!: string;
-	@Prop(Boolean) either?: boolean;
+
+	@Prop(Boolean)
+	either?: boolean;
+
 	@Prop({ type: String, default: 'span' })
 	tag!: string;
 
