@@ -134,12 +134,16 @@
 					<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 				</div>
 
-				<div class="-communities" v-if="communities.length && !feed.hideCommunityInfo">
+				<div class="-communities" v-if="shouldShowCommunities">
 					<div class="-community-row" v-for="postCommunity of communities" :key="postCommunity.id">
 						<app-community-pill
+							v-if="!feed.hideCommunity"
 							:community="postCommunity.community"
-							:channel="postCommunity.channel"
+							:channel="feed.hideCommunityChannel ? undefined : postCommunity.channel"
 						/>
+						<app-pill v-else :to="getChannelRoute(postCommunity)">
+							{{ getChannelTitle(postCommunity) }}
+						</app-pill>
 					</div>
 				</div>
 			</template>

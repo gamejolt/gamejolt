@@ -17,7 +17,11 @@
 		<!-- URL Path is only editable during community creation -->
 		<app-form-group v-if="method === 'add'" name="path" :label="$gettext(`URL Path`)">
 			<div class="help-block">
-				<translate>Community URLs should be memorable, unique, and as short as possible.</translate>
+				<p>
+					<translate>
+						Community URLs should be memorable, unique, and as short as possible.
+					</translate>
+				</p>
 			</div>
 			<app-form-control-prefixed-input
 				prefix="gamejolt.com/c/"
@@ -30,6 +34,11 @@
 				}"
 				data-vv-delay="500"
 			/>
+			<div class="help-block">
+				<p>
+					<strong><translate>Once a URL path is chosen it cannot be changed!</translate></strong>
+				</p>
+			</div>
 			<app-form-control-errors />
 		</app-form-group>
 

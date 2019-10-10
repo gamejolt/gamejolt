@@ -33,7 +33,8 @@ class ActivityFeedViewItemState {
 export interface ActivityFeedViewOptions {
 	slice?: number;
 	shouldScroll?: boolean;
-	hideCommunityInfo?: boolean;
+	hideCommunity?: boolean;
+	hideCommunityChannel?: boolean;
 	hideGameInfo?: boolean;
 	shouldShowUserCards?: boolean;
 	shouldShowFollow?: boolean;
@@ -53,7 +54,8 @@ export class ActivityFeedView {
 	scroll = 0;
 	shouldScroll = true;
 	hideGameInfo = false;
-	hideCommunityInfo = false;
+	hideCommunity = false;
+	hideCommunityChannel = false;
 	shouldShowUserCards = true;
 	shouldShowFollow = false;
 
@@ -100,7 +102,8 @@ export class ActivityFeedView {
 			slice,
 			shouldScroll = true,
 			hideGameInfo = false,
-			hideCommunityInfo = false,
+			hideCommunity = false,
+			hideCommunityChannel = false,
 			shouldShowUserCards = true,
 			shouldShowFollow = false,
 		}: ActivityFeedViewOptions = {}
@@ -109,7 +112,8 @@ export class ActivityFeedView {
 		this.slice = slice || null;
 		this.shouldScroll = shouldScroll;
 		this.hideGameInfo = hideGameInfo;
-		this.hideCommunityInfo = hideCommunityInfo;
+		this.hideCommunity = hideCommunity;
+		this.hideCommunityChannel = hideCommunityChannel;
 		this.shouldShowUserCards = shouldShowUserCards;
 		this.shouldShowFollow = shouldShowFollow;
 	}

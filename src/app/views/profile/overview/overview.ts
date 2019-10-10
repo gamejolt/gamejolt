@@ -76,6 +76,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	communitiesCount!: RouteStore['communitiesCount'];
 
 	@RouteStoreModule.State
+	placeholderCommunitiesCount!: RouteStore['placeholderCommunitiesCount'];
+
+	@RouteStoreModule.State
 	videosCount!: RouteStore['videosCount'];
 
 	@RouteStoreModule.State
@@ -220,7 +223,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	get previewCommunityCount() {
-		return this.isLoadingAllCommunities ? this.communitiesCount : 4;
+		return this.isLoadingAllCommunities
+			? this.communitiesCount
+			: this.placeholderCommunitiesCount;
 	}
 
 	get canShowMoreCommunities() {
