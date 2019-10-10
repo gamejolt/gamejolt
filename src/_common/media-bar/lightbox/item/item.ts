@@ -26,6 +26,7 @@ export default class AppMediaBarLightboxItem extends Vue {
 	isActive = false;
 	isNext = false;
 	isPrev = false;
+	initialized = false;
 
 	maxWidth = 0;
 	maxHeight = 0;
@@ -36,12 +37,14 @@ export default class AppMediaBarLightboxItem extends Vue {
 		caption: HTMLDivElement;
 	};
 
-	mounted() {
+	async mounted() {
 		this.lightbox = findRequiredVueParent(this, AppMediaBarLightbox) as AppMediaBarLightboxTS;
-		this.calcActive();
-		this.calcDimensions();
+		await this.calcActive();
+		await this.calcDimensions();
 
 		this.resize$ = Screen.resizeChanges.subscribe(() => this.calcDimensions());
+
+		this.initialized = true;
 	}
 
 	destroyed() {
