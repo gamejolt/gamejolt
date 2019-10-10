@@ -286,7 +286,7 @@ export default class AppActivityFeedEventItem extends Vue {
 		this.feedComponent.onPostUnfeatured(item, community);
 	}
 
-	onPostMoveChannel(item: EventItem, movedTo: CommunityChannel) {
+	onPostMovedChannel(item: EventItem, movedTo: CommunityChannel) {
 		this.feedComponent.onPostMovedChannel(item, movedTo);
 	}
 

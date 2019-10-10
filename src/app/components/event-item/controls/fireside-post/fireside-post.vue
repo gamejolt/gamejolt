@@ -103,7 +103,6 @@
 
 <style lang="stylus" scoped>
 @require '~styles/variables'
-@require '~styles-lib/mixins'
 
 .-controls
 	display: flex
@@ -114,7 +113,7 @@
 	flex-grow: 1
 
 .-stats
-	theme-prop('color', 'fg-muted')
+	color: var(--theme-fg-muted)
 	font-size: $font-size-small
 	flex: auto
 
