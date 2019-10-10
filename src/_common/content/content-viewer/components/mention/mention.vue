@@ -60,6 +60,7 @@
 	padding-left: 4px
 	padding-right: 4px
 	rounded-corners()
+	font-weight: bold
 
 	.-text-container
 		// Overwrite the link color here to make sure it works on the yellow background.
