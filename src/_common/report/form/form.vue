@@ -4,7 +4,11 @@
 			<div
 				class="radio"
 				v-if="
-					type === 'Game' || type === 'Comment' || type === 'Forum_Topic' || type === 'Forum_Post'
+					type === 'Game' ||
+						type === 'Fireside_Post' ||
+						type === 'Comment' ||
+						type === 'Forum_Topic' ||
+						type === 'Forum_Post'
 				"
 			>
 				<label>
@@ -43,7 +47,12 @@
 			</template>
 			<div
 				class="radio"
-				v-if="type === 'Comment' || type === 'Forum_Post' || type === 'Forum_Topic'"
+				v-if="
+					type === 'Comment' ||
+						type === 'Fireside_Post' ||
+						type === 'Forum_Post' ||
+						type === 'Forum_Topic'
+				"
 			>
 				<label>
 					<app-form-control-radio type="radio" value="abuse" />
@@ -52,7 +61,12 @@
 			</div>
 			<div
 				class="radio"
-				v-if="type === 'Comment' || type === 'Forum_Topic' || type === 'Forum_Post'"
+				v-if="
+					type === 'Comment' ||
+						type === 'Fireside_Post' ||
+						type === 'Forum_Topic' ||
+						type === 'Forum_Post'
+				"
 			>
 				<label>
 					<app-form-control-radio type="radio" value="explicit" />
@@ -61,7 +75,12 @@
 			</div>
 			<div
 				class="radio"
-				v-if="type === 'Comment' || type === 'Forum_Topic' || type === 'Forum_Post'"
+				v-if="
+					type === 'Comment' ||
+						type === 'Fireside_Post' ||
+						type === 'Forum_Topic' ||
+						type === 'Forum_Post'
+				"
 			>
 				<label>
 					<app-form-control-radio type="radio" value="harassment" />
