@@ -76,6 +76,9 @@ export default class AppPostView extends Vue {
 	}
 
 	onPostPublished() {
-		Growls.success({ title: 'Huzzah!', message: 'Your post has been published.' });
+		Growls.success({
+			title: this.$gettext('Huzzah!'),
+			message: this.$gettext('Your post has been published.'),
+		});
 	}
 }
