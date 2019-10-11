@@ -10,6 +10,7 @@ import { Community } from '../../../../_common/community/community.model';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import { number } from '../../../../_common/filters/number';
+import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Ruler } from '../../../../_common/ruler/ruler-service';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -206,6 +207,38 @@ export default class AppActivityFeed extends Vue {
 
 	onPostRejected(eventItem: EventItem, community: Community) {
 		this.emitRejectPost(eventItem, community);
+	}
+
+	onPostPinned(eventItem: EventItem) {
+		// Pin the passed in item, and unpin all others.
+		for (const item of this.feed.items) {
+			if (
+				item.feedItem instanceof EventItem &&
+				item.feedItem.type === EventItem.TYPE_POST_ADD &&
+				item.feedItem.action instanceof FiresidePost
+			) {
+				item.feedItem.action.is_pinned = false;
+			}
+		}
+
+		if (
+			eventItem.type === EventItem.TYPE_POST_ADD &&
+			eventItem.action instanceof FiresidePost
+		) {
+			eventItem.action.is_pinned = true;
+		}
+
+		this.onPostEdited(eventItem);
+	}
+
+	onPostUnpinned(eventItem: EventItem) {
+		if (
+			eventItem.type === EventItem.TYPE_POST_ADD &&
+			eventItem.action instanceof FiresidePost
+		) {
+			eventItem.action.is_pinned = false;
+		}
+		this.onPostEdited(eventItem);
 	}
 
 	loadMoreButton() {

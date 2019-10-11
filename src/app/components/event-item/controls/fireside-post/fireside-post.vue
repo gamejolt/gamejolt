@@ -96,6 +96,8 @@
 					@unfeature="emitUnfeature"
 					@move-channel="emitMoveChannel"
 					@reject="emitReject"
+					@pin="emitPin"
+					@unpin="emitUnpin"
 				/>
 			</span>
 		</div>

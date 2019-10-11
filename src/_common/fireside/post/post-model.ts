@@ -1,4 +1,5 @@
 import { RawLocation } from 'vue-router';
+import { Route } from 'vue-router/types/router';
 import { Api } from '../../api/api.service';
 import { Perm } from '../../collaborator/collaboratable';
 import { CommunityChannel } from '../../community/channel/channel.model';
@@ -30,6 +31,47 @@ interface FiresidePostPublishedPlatform {
 	url: string;
 }
 
+export function isInCommunityPinContext(post: FiresidePost, route: Route) {
+	if (post.communities.length > 0) {
+		const communityLink = post.communities[0];
+		const community = communityLink.community;
+		const channelTitle = communityLink.channel!.title;
+		if (
+			route.name === 'communities.view.overview' &&
+			route.params.path === community.path &&
+			route.params.channel === channelTitle
+		) {
+			return true;
+		}
+	}
+	return false;
+}
+
+export function isInPinContext(post: FiresidePost, route: Route) {
+	// For the pin option to show, the user has to look at the correct feed for the post's context.
+	// A game post can only be pinned from the game's overview or game's dash feeds.
+	// A user post can only be pinned to the user from the user's overview
+	// 		OR a user post can be pinned to a community channel from a community channel, NOT featured though.
+
+	if (post.game instanceof Game) {
+		return (
+			(route.name === 'discover.games.view.overview' ||
+				route.name === 'dash.games.manage.devlog') &&
+			route.params.id.toString() === post.game.id.toString()
+		);
+	}
+
+	if (isInCommunityPinContext(post, route)) {
+		return true;
+	}
+
+	if (route.name === 'profile.overview' && route.params.username === post.user.username) {
+		return true;
+	}
+
+	return false;
+}
+
 export class FiresidePost extends Model implements ContentContainerModel {
 	static TYPE_TEXT = 'text';
 	static TYPE_MEDIA = 'media';
@@ -58,6 +100,7 @@ export class FiresidePost extends Model implements ContentContainerModel {
 	url!: string;
 	view_count?: number;
 	expand_count?: number;
+	is_pinned = false; // Field is only gathered, cannot be directly set.
 
 	lead_snippet!: string;
 	lead_content!: string;
@@ -131,6 +174,11 @@ export class FiresidePost extends Model implements ContentContainerModel {
 
 		if (data.platforms_published_to) {
 			this.platforms_published_to = data.platforms_published_to;
+		}
+
+		// Need to assign manually due to default value.
+		if (data.is_pinned) {
+			this.is_pinned = true;
 		}
 
 		Registry.store('FiresidePost', this);
@@ -343,6 +391,24 @@ export class FiresidePost extends Model implements ContentContainerModel {
 
 	$publish() {
 		return this.$_save(`/web/posts/manage/publish/${this.id}`, 'firesidePost');
+	}
+
+	$pin(targetModel: string) {
+		const $payload = this.$_save(
+			`/web/posts/manage/toggle-pin/${this.id}/${targetModel}`,
+			'post'
+		);
+		this.is_pinned = true; // Set this manually, the request does not gather this field.
+		return $payload;
+	}
+
+	$unpin(targetModel: string) {
+		const $payload = this.$_save(
+			`/web/posts/manage/toggle-pin/${this.id}/${targetModel}`,
+			'post'
+		);
+		this.is_pinned = false; // Set this manually, the request does not gather this field.
+		return $payload;
 	}
 
 	async remove() {

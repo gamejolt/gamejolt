@@ -80,6 +80,12 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	@Emit('reject')
 	emitReject() {}
 
+	@Emit('pin')
+	emitPin() {}
+
+	@Emit('unpin')
+	emitUnpin() {}
+
 	get canPublish() {
 		return this.post.isDraft && !this.post.isScheduled && this.post.hasLead;
 	}

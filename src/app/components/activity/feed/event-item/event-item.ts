@@ -13,7 +13,7 @@ import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { number } from '../../../../../_common/filters/number';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { FiresidePost, isInPinContext } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import AppPill from '../../../../../_common/pill/pill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -186,6 +186,14 @@ export default class AppActivityFeedEventItem extends Vue {
 		return !this.feed.hideCommunity || !this.feed.hideCommunityChannel;
 	}
 
+	get shouldShowIsPinned() {
+		if (!this.post || !this.post.is_pinned) {
+			return false;
+		}
+
+		return isInPinContext(this.post, this.$route);
+	}
+
 	mounted() {
 		this.feedComponent = findRequiredVueParent(this, AppActivityFeed) as AppActivityFeedTS;
 	}
@@ -303,6 +311,14 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	onPostRejected(item: EventItem, community: Community) {
 		this.feedComponent.onPostRejected(item, community);
+	}
+
+	onPostPinned(item: EventItem) {
+		this.feedComponent.onPostPinned(item);
+	}
+
+	onPostUnpinned(item: EventItem) {
+		this.feedComponent.onPostUnpinned(item);
 	}
 
 	getChannelRoute(postCommunity: FiresidePostCommunity) {
