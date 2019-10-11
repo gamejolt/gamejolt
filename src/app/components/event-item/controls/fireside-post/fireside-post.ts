@@ -111,6 +111,19 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 		return this.user instanceof User;
 	}
 
+	get shouldShowCommentsButton() {
+		if (!this.showCommentsButton) {
+			return false;
+		}
+
+		if (this.commentsCount === 0 && this.post.communities.length > 0) {
+			const community = this.post.communities[0].community;
+			return !community.isBlocked;
+		}
+
+		return true;
+	}
+
 	copyShareUrl() {
 		Clipboard.copy(this.shareUrl);
 	}

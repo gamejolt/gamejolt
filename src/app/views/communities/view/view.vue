@@ -100,7 +100,7 @@
 				</ul>
 			</nav>
 
-			<div slot="controls">
+			<div v-if="!community.isBlocked" slot="controls">
 				<template v-if="community.hasPerms()">
 					<app-community-perms :community="community">
 						<app-button v-if="!isEditing" primary block :to="community.routeEditLocation">

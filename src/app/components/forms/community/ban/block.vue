@@ -1,0 +1,86 @@
+<template>
+	<app-form name="communityBlockForm">
+		<app-form-group name="username">
+			<app-form-control
+				type="text"
+				:rules="{
+					max: 100,
+					availability: {
+						url: `/web/dash/communities/blocks/check-field-availability`,
+						initVal: undefined,
+					},
+				}"
+				:validate-on="['blur']"
+			/>
+
+			<app-form-control-errors :label="$gettext('username')">
+				<app-form-control-error
+					when="availability"
+					:message="$gettext(`This user does not exist or is already blocked.`)"
+				/>
+			</app-form-control-errors>
+		</app-form-group>
+
+		<app-form-group name="reasonType" :label="$gettext('Block Reason')">
+			<div class="radio" v-for="reason of defaultReasons" :key="reason">
+				<label>
+					<app-form-control-radio :value="reason" />
+					<translate>{{ reason }}</translate>
+				</label>
+			</div>
+			<app-form-control-errors />
+		</app-form-group>
+
+		<app-form-group v-if="showReasonOther" name="reason" hide-label>
+			<div class="help-inline">
+				<span v-translate>
+					Enter other block reason.
+					<b>This is shown to the blocked user.</b>
+				</span>
+			</div>
+			<app-form-control
+				type="text"
+				:rules="{
+					max: 100,
+				}"
+			/>
+			<app-form-control-errors />
+		</app-form-group>
+
+		<app-form-group name="expiry" :label="$gettext('Block expires in...')">
+			<div class="radio" v-for="expiry of expiryOptions" :key="expiry">
+				<label>
+					<app-form-control-radio :value="expiry" />
+					<translate>{{ expiry }}</translate>
+				</label>
+			</div>
+			<app-form-control-errors />
+		</app-form-group>
+
+		<app-form-group name="ejectPosts" :label="$gettext(`Eject user's Posts from the Community?`)">
+			<app-form-control-toggle class="pull-right" />
+			<p class="help-block">
+				<translate>
+					Once the user is blocked, all their posts will be ejected from the community. This also
+					affects their featured posts.
+				</translate>
+			</p>
+		</app-form-group>
+
+		<app-form-group name="removeComments" :label="$gettext(`Remove the user's Comments?`)">
+			<app-form-control-toggle class="pull-right" />
+			<p class="help-block">
+				<translate>
+					Once the user is blocked, all their comments on posts remaining in the community will be
+					removed. This does not affect comments on posts the user has made themselves.
+				</translate>
+			</p>
+		</app-form-group>
+
+		<app-form-button>
+			<translate>Block</translate>
+		</app-form-button>
+	</app-form>
+</template>
+
+<script lang="ts" src="./block"></script>
