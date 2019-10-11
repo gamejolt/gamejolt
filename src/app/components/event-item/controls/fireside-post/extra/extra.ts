@@ -8,6 +8,7 @@ import { FiresidePostCommunity } from '../../../../../../_common/fireside/post/c
 import {
 	FiresidePost,
 	isInCommunityPinContext,
+	isInGamePinContext,
 	isInPinContext,
 } from '../../../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../../../_common/game/game.model';
@@ -186,7 +187,7 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 
 	getPinTargetModel() {
 		let targetModel = 'User';
-		if (this.post.game instanceof Game) {
+		if (isInGamePinContext(this.post, this.$route)) {
 			targetModel = 'Game';
 		} else if (isInCommunityPinContext(this.post, this.$route)) {
 			targetModel = 'Community_Channel';

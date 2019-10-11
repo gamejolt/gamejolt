@@ -227,8 +227,6 @@ export default class AppActivityFeed extends Vue {
 		) {
 			eventItem.action.is_pinned = true;
 		}
-
-		this.onPostEdited(eventItem);
 	}
 
 	onPostUnpinned(eventItem: EventItem) {
