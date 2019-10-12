@@ -392,7 +392,7 @@ module.exports = config => {
 			const gitStatus = 'git -C ' + joltronRepoDir + ' status';
 			let gitClone =
 				'git clone --branch ' +
-				'govendor' + // joltronVersion +
+				joltronVersion +
 				' https://github.com/gamejolt/joltron ' +
 				joltronRepoDir;
 
