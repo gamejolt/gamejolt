@@ -9,7 +9,7 @@ export class UserBlock extends Model {
 	resource_id!: number;
 
 	user!: User;
-	blockedByUser?: User | null;
+	blocked_by_user?: User | null;
 
 	get doesExpire() {
 		return this.expires_on > 0;
@@ -21,8 +21,8 @@ export class UserBlock extends Model {
 		if (data.user) {
 			this.user = new User(data.user);
 		}
-		if (data.blockedByUser) {
-			this.user = new User(data.blockedByUser);
+		if (data.blocked_by_user) {
+			this.blocked_by_user = new User(data.blocked_by_user);
 		}
 	}
 }

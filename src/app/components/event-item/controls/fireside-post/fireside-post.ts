@@ -116,7 +116,7 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 			return false;
 		}
 
-		if (this.commentsCount === 0 && this.post.communities.length > 0) {
+		if (!this.commentsCount && this.post.communities.length > 0) {
 			const community = this.post.communities[0].community;
 			return !community.isBlocked;
 		}

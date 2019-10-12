@@ -63,11 +63,33 @@ export default class FormCommunityBlock extends BaseForm<BlockData>
 				});
 			}
 		} else {
-			Growls.success({
-				message: this.$gettextInterpolate('%{ user } was blocked from this Community.', {
-					user: this.formModel.username,
-				}),
-			});
+			if (this.formModel.removeComments || this.formModel.ejectPosts) {
+				let message =
+					'%{ user } was blocked from this Community. It might take a few moments for their ';
+				if (this.formModel.removeComments && this.formModel.ejectPosts) {
+					message += 'comments and posts';
+				} else if (this.formModel.removeComments) {
+					message += 'comments';
+				} else {
+					message += 'posts';
+				}
+				message += ' to disappear.';
+
+				Growls.success({
+					message: this.$gettextInterpolate(message, {
+						user: this.formModel.username,
+					}),
+				});
+			} else {
+				Growls.success({
+					message: this.$gettextInterpolate(
+						'%{ user } was blocked from this Community.',
+						{
+							user: this.formModel.username,
+						}
+					),
+				});
+			}
 		}
 
 		return response;

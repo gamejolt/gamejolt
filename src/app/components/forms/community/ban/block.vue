@@ -6,7 +6,7 @@
 				:rules="{
 					max: 100,
 					availability: {
-						url: `/web/dash/communities/blocks/check-field-availability`,
+						url: `/web/dash/communities/blocks/check-field-availability/${community.id}`,
 						initVal: undefined,
 					},
 				}"

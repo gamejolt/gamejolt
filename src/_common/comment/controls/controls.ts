@@ -5,6 +5,7 @@ import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { number } from '../../filters/number';
 import { LikersModal } from '../../likers/modal.service';
 import { AppTooltip } from '../../tooltip/tooltip';
+import { UserBlock } from '../../user/block/block.model';
 import { Comment } from '../comment-model';
 import { CommentThreadModal } from '../thread/modal.service';
 import { CommentVote } from '../vote/vote-model';
@@ -28,6 +29,9 @@ export default class AppCommentControls extends Vue {
 
 	@Prop(Boolean)
 	showReply?: boolean;
+
+	@Prop(UserBlock)
+	userBlock?: UserBlock;
 
 	get votingTooltip() {
 		const userHasVoted = !!this.comment.user_vote;

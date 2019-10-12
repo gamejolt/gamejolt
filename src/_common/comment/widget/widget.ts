@@ -186,7 +186,11 @@ export default class AppCommentWidget extends Vue {
 	}
 
 	get shouldShowTabs() {
-		return (this.showTabs && !this.userBlock) || this.comments.length > 0;
+		if (!this.showTabs) {
+			return false;
+		}
+
+		return !this.userBlock || this.comments.length > 0;
 	}
 
 	async created() {
@@ -270,6 +274,7 @@ export default class AppCommentWidget extends Vue {
 
 			if (payload.userBlock) {
 				this.userBlock = new UserBlock(payload.userBlock);
+				this.$emit('get-user-block', this.userBlock);
 			}
 		} catch (e) {
 			console.error(e);

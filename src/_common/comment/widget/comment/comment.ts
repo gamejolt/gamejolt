@@ -19,6 +19,7 @@ import AppPopper from '../../../popper/popper.vue';
 import { ReportModal } from '../../../report/modal/modal.service';
 import { AppState, AppStore } from '../../../store/app-store';
 import { AppTooltip } from '../../../tooltip/tooltip';
+import { UserBlock } from '../../../user/block/block.model';
 import FormComment from '../../add/add.vue';
 import { Comment } from '../../comment-model';
 import AppCommentContent from '../../content/content.vue';
@@ -74,6 +75,9 @@ export default class AppCommentWidgetComment extends Vue {
 
 	@Prop(Boolean)
 	showChildren?: boolean;
+
+	@Prop(UserBlock)
+	userBlock?: UserBlock;
 
 	@AppState
 	user!: AppStore['user'];

@@ -1,13 +1,13 @@
 import { Component, Prop } from 'vue-property-decorator';
 import { Analytics } from '../../analytics/analytics.service';
-import { CommentState, CommentStore } from '../comment-store';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import { BaseModal } from '../../modal/base';
 import { Screen } from '../../screen/screen-service';
 import { AppState, AppStore } from '../../store/app-store';
+import { UserBlock } from '../../user/block/block.model';
 import FormComment from '../add/add.vue';
 import { Comment } from '../comment-model';
-import { CommentMutation } from '../comment-store';
+import { CommentMutation, CommentState, CommentStore } from '../comment-store';
 import { DisplayMode } from '../modal/modal.service';
 import AppCommentWidget from '../widget/widget.vue';
 
@@ -45,6 +45,7 @@ export default class AppCommentThreadModal extends BaseModal {
 
 	hasError = false;
 	isEditorFocused = false;
+	userBlock: UserBlock | null = null;
 
 	readonly Screen = Screen;
 
@@ -80,6 +81,14 @@ export default class AppCommentThreadModal extends BaseModal {
 		return '';
 	}
 
+	get shouldShowReply() {
+		if (this.userBlock) {
+			return false;
+		}
+
+		return this.user && !this.hasError;
+	}
+
 	_onCommentAdd(comment: Comment) {
 		Analytics.trackEvent('comment-widget', 'add');
 		this.onCommentAdd(comment);
@@ -103,5 +112,9 @@ export default class AppCommentThreadModal extends BaseModal {
 
 	onEditorBlur() {
 		this.isEditorFocused = false;
+	}
+
+	onWidgetGotUserBlock(userBlock: UserBlock) {
+		this.userBlock = userBlock;
 	}
 }
