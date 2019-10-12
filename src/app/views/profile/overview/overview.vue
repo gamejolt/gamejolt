@@ -320,6 +320,9 @@
 						</app-expand>
 					</template>
 
+					<!-- Spawn day -->
+					<app-user-spawn-day :user="user" />
+
 					<router-view />
 				</app-page-container>
 			</div>
