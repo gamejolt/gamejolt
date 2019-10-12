@@ -94,7 +94,12 @@
 						<br />
 					</template>
 
-					<app-event-item-controls show-comments :post="post" @post-remove="onPostRemoved" />
+					<app-event-item-controls
+						show-comments
+						:post="post"
+						@post-remove="onPostRemoved"
+						@post-publish="onPostPublished"
+					/>
 				</div>
 				<div class="col-md-4 col-lg-5" v-if="shouldShowAds && Screen.isDesktop">
 					<app-ad-widget class="pull-right" />
