@@ -13,7 +13,7 @@ import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { number } from '../../../../../_common/filters/number';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
-import { FiresidePost, isInPinContext } from '../../../../../_common/fireside/post/post-model';
+import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import AppPill from '../../../../../_common/pill/pill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -191,7 +191,7 @@ export default class AppActivityFeedEventItem extends Vue {
 			return false;
 		}
 
-		return isInPinContext(this.post, this.$route);
+		return this.post.getPinContextFor(this.$route) !== null;
 	}
 
 	mounted() {

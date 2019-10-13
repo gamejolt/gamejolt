@@ -31,57 +31,6 @@ interface FiresidePostPublishedPlatform {
 	url: string;
 }
 
-export function isInCommunityPinContext(post: FiresidePost, route: Route) {
-	if (post.communities.length > 0) {
-		const communityLink = post.communities[0];
-		const community = communityLink.community;
-		const channelTitle = communityLink.channel!.title;
-		if (
-			route.name === 'communities.view.overview' &&
-			route.params.path === community.path &&
-			route.params.channel === channelTitle
-		) {
-			return true;
-		}
-	}
-	return false;
-}
-
-export function isInGamePinContext(post: FiresidePost, route: Route) {
-	if (post.game instanceof Game) {
-		return (
-			(route.name === 'discover.games.view.overview' ||
-				route.name === 'dash.games.manage.devlog') &&
-			route.params.id.toString() === post.game.id.toString()
-		);
-	}
-}
-
-export function isInPinContext(post: FiresidePost, route: Route) {
-	// For the pin option to show, the user has to look at the correct feed for the post's context.
-	// A game post can only be pinned from the game's overview or game's dash feeds.
-	// A user post can only be pinned to the user from the user's overview
-	// 		OR a user post can be pinned to a community channel from a community channel, NOT featured though.
-
-	if (post.game instanceof Game) {
-		if (isInGamePinContext(post, route)) {
-			return true;
-		} else if (post.as_game_owner) {
-			return false;
-		}
-	} else {
-		if (isInCommunityPinContext(post, route)) {
-			return true;
-		}
-	}
-
-	if (route.name === 'profile.overview' && route.params.username === post.user.username) {
-		return true;
-	}
-
-	return false;
-}
-
 export class FiresidePost extends Model implements ContentContainerModel {
 	static TYPE_TEXT = 'text';
 	static TYPE_MEDIA = 'media';
@@ -201,6 +150,15 @@ export class FiresidePost extends Model implements ContentContainerModel {
 		return !!this.scheduled_for;
 	}
 
+	// Which user is displayed as the author of this post
+	get displayUser() {
+		if (!this.game) {
+			return this.user;
+		}
+
+		return this.as_game_owner ? this.game.developer : this.user;
+	}
+
 	get hasMedia() {
 		return this.media.length > 0;
 	}
@@ -299,6 +257,75 @@ export class FiresidePost extends Model implements ContentContainerModel {
 		if (this.game && this.game.hasPerms('devlogs')) {
 			return true;
 		}
+	}
+
+	getPinContextFor(route: Route) {
+		if (this.isInGamePinContext(route)) {
+			return this.game;
+		}
+
+		if (this.isInCommunityPinContext(route)) {
+			return this.communities[0];
+		}
+
+		if (this.isInUserPinContext(route)) {
+			return this.user;
+		}
+
+		return null;
+	}
+
+	private isInCommunityPinContext(route: Route) {
+		// A post can be pinned to a community if:
+		// 1. viewing the community feed.
+		// 2. the post was published to the community.
+		// 3. viewing the channel the post was published to.
+		// NOTE: this means posts cannot be pinned to meta channels like 'featured' and 'all posts'
+
+		if (route.name !== 'communities.view.overview') {
+			return false;
+		}
+
+		if (this.communities.length === 0) {
+			return false;
+		}
+
+		const communityLink = this.communities[0];
+		const community = communityLink.community;
+		const channelTitle = communityLink.channel!.title;
+
+		return route.params.path === community.path && route.params.channel === channelTitle;
+	}
+
+	private isInGamePinContext(route: Route) {
+		// A post can be pinned to a game if:
+		// 1. viewing the game feed, or the game's dashboard feed.
+		// 2. the post is a game post (sanity check)
+		// 3. the post belongs to the game we're viewing (sanity check)
+
+		if (
+			route.name !== 'discover.games.view.overview' &&
+			route.name !== 'dash.games.manage.devlog'
+		) {
+			return false;
+		}
+
+		if (!this.game) {
+			return false;
+		}
+
+		return route.params.id.toString() === this.game.id.toString();
+	}
+
+	private isInUserPinContext(route: Route) {
+		// A post can be pinned to a user if:
+		// 1. viewing the user's profile
+		// 2. the post is shown to be written by the user we're viewing (sanity check)
+		if (route.name !== 'profile.overview') {
+			return false;
+		}
+
+		return route.params.username === this.displayUser.username;
 	}
 
 	static async $create(gameId?: number) {
