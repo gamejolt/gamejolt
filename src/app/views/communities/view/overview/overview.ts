@@ -191,6 +191,23 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return (this.community.channels || []).find(i => i.title === channel) || null;
 	}
 
+	get communityBlockReason() {
+		if (!this.community.block_reason) {
+			return '';
+		}
+
+		return this.defaultBlockReasons[this.community.block_reason] || this.community.block_reason;
+	}
+
+	get defaultBlockReasons(): { [reason: string]: string } {
+		return {
+			spam: this.$gettext('Spam'),
+			'off-topic': this.$gettext('Off Topic'),
+			abuse: this.$gettext('Offensive or insulting'),
+			other: this.$gettext('Other'),
+		};
+	}
+
 	get sort() {
 		return getSort(this.$route);
 	}

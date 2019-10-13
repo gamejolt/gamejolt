@@ -126,7 +126,7 @@
 				<br />
 				<br />
 				<div class="well fill-offset">
-					{{ community.block_reason }}
+					{{ communityBlockReason }}
 				</div>
 
 				<div>

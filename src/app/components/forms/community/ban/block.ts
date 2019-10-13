@@ -48,7 +48,7 @@ export default class FormCommunityBlock extends BaseForm<BlockData>
 	}
 
 	get showReasonOther() {
-		return this.formModel.reasonType === 'Other';
+		return this.formModel.reasonType === 'other';
 	}
 
 	onInit() {
