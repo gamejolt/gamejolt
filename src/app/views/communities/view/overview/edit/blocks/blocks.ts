@@ -116,14 +116,23 @@ export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
 		);
 
 		if (response) {
-			const payload = await Api.sendRequest(
-				`/web/dash/communities/blocks/lift/${block.id}`,
-				undefined,
-				{
-					detach: true,
-				}
-			);
-			if (payload.success) {
+			let success = false;
+			try {
+				const payload = await Api.sendRequest(
+					`/web/dash/communities/blocks/lift/${block.id}`,
+					undefined,
+					{
+						detach: true,
+					}
+				);
+
+				success = payload && payload.success;
+			} catch (e) {
+				console.error(e);
+				success = false;
+			}
+
+			if (success) {
 				this.refetch();
 			} else {
 				Growls.error(this.$gettext('Failed to lift block.'));

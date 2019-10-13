@@ -102,7 +102,7 @@
 				:comment="comment"
 				:children="children"
 				:show-reply="!parent && !showChildren"
-				:user-block="userBlock"
+				:is-blocked="isBlocked"
 			/>
 		</template>
 		<template v-else>

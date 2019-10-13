@@ -88,9 +88,9 @@
 				</td>
 
 				<td>
-					<span v-if="!block.expires_on" v-translate>
+					<translate v-if="!block.doesExpire">
 						Never
-					</span>
+					</translate>
 					<app-time-ago v-else :date="block.expires_on" is-future />
 				</td>
 

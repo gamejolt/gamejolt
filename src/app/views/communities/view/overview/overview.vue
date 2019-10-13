@@ -115,7 +115,7 @@
 				</app-scroll-affix>
 			</div>
 
-			<div v-if="community.user_block" class="alert alert-notice">
+			<div v-if="community.isBlocked" class="alert alert-notice">
 				<app-jolticon icon="notice" />
 				<span v-translate>
 					<b>You have been blocked from this community.</b>
@@ -126,7 +126,7 @@
 				<br />
 				<br />
 				<div class="well fill-offset">
-					{{ community.user_block.reason }}
+					{{ community.block_reason }}
 				</div>
 
 				<div>
@@ -136,9 +136,9 @@
 					</translate>
 				</div>
 
-				<div v-if="community.user_block.doesExpire">
+				<div v-if="community.block_expires_on">
 					Your block will expire in
-					<b><app-time-ago :date="community.user_block.expires_on" without-suffix /></b>
+					<b><app-time-ago :date="community.block_expires_on" without-suffix /></b>
 				</div>
 			</div>
 

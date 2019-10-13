@@ -28,11 +28,23 @@ export default class FormCommunityBlock extends BaseForm<BlockData>
 	resetOnSubmit = true;
 
 	get defaultReasons() {
-		return ['Spam', 'Off Topic', 'Offensive or insulting', 'Other'];
+		return {
+			spam: this.$gettext('Spam'),
+			'off-topic': this.$gettext('Off Topic'),
+			abuse: this.$gettext('Offensive or insulting'),
+			other: this.$gettext('Other'),
+		};
 	}
 
 	get expiryOptions() {
-		return ['1 Hour', '1 Day', '1 Week', '1 Month', '1 Year', 'Never'];
+		return {
+			hour: this.$gettext('1 Hour'),
+			day: this.$gettext('1 Day'),
+			week: this.$gettext('1 Week'),
+			month: this.$gettext('1 Month'),
+			year: this.$gettext('1 Year'),
+			never: this.$gettext('Never'),
+		};
 	}
 
 	get showReasonOther() {
@@ -40,8 +52,8 @@ export default class FormCommunityBlock extends BaseForm<BlockData>
 	}
 
 	onInit() {
-		this.setField('reasonType', this.defaultReasons[0]);
-		this.setField('expiry', this.expiryOptions[2]); // One week by default.
+		this.setField('reasonType', this.defaultReasons.spam);
+		this.setField('expiry', this.expiryOptions.week);
 		this.setField('ejectPosts', true);
 		this.setField('removeComments', true);
 	}
@@ -64,16 +76,24 @@ export default class FormCommunityBlock extends BaseForm<BlockData>
 			}
 		} else {
 			if (this.formModel.removeComments || this.formModel.ejectPosts) {
-				let message =
-					'%{ user } was blocked from this Community. It might take a few moments for their ';
-				if (this.formModel.removeComments && this.formModel.ejectPosts) {
-					message += 'comments and posts';
-				} else if (this.formModel.removeComments) {
-					message += 'comments';
+				let whatsRemoved: string;
+				if (this.formModel.removeComments) {
+					if (this.formModel.ejectPosts) {
+						whatsRemoved = this.$gettext('comments and posts');
+					} else {
+						whatsRemoved = this.$gettext('comments');
+					}
 				} else {
-					message += 'posts';
+					whatsRemoved = this.$gettext('posts');
 				}
-				message += ' to disappear.';
+
+				const message = this.$gettextInterpolate(
+					'%{ user } was blocked from this Community. It might take a few moments for their %{ stuff } to disappear.',
+					{
+						user: this.formModel.username,
+						stuff: whatsRemoved,
+					}
+				);
 
 				Growls.success({
 					message: this.$gettextInterpolate(message, {
