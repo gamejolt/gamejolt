@@ -22,7 +22,7 @@
 		</app-form-group>
 
 		<app-form-group name="reasonType" :label="$gettext('Block Reason')">
-			<div class="radio" v-for="(reason, reasonDisplay) in defaultReasons" :key="reason">
+			<div class="radio" v-for="(reasonDisplay, reason) in defaultReasons" :key="reason">
 				<label>
 					<app-form-control-radio :value="reason" />
 					{{ reasonDisplay }}
@@ -48,7 +48,7 @@
 		</app-form-group>
 
 		<app-form-group name="expiry" :label="$gettext('Block expires in...')">
-			<div class="radio" v-for="(expiry, expiryDisplay) in expiryOptions" :key="expiry">
+			<div class="radio" v-for="(expiryDisplay, expiry) in expiryOptions" :key="expiry">
 				<label>
 					<app-form-control-radio :value="expiry" />
 					{{ expiryDisplay }}
