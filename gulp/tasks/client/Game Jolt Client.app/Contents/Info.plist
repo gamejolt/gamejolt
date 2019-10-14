@@ -15,7 +15,7 @@
 	<key>CFBundleName</key>
 	<string>Game Jolt Client</string>
 	<key>CFBundleShortVersionString</key>
-	<string>Version {{VERSION}}</string>
+	<string>Version {{APP_VERSION}}</string>
 	<key>CFBundleVersion</key>
 	<string>{{APP_VERSION}}</string>
 </dict>

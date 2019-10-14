@@ -346,7 +346,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			description: Meta.description,
 
 			// TODO temporarily use the header image.
-			// Ideally we'd like toprovide a nice image specifically for SEO from the backend.
+			// Ideally we'd like to provide a nice image specifically for SEO from the backend.
 			image: this.community.header ? this.community.header!.mediaserver_url : null,
 		};
 
@@ -365,7 +365,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	onPostAdded(post: FiresidePost) {
-		ActivityFeedService.gotoPostFeedManage(post, this);
+		ActivityFeedService.onPostAdded(this.feed!, post, this);
 	}
 
 	onPostUnfeatured(eventItem: EventItem, community: Community) {

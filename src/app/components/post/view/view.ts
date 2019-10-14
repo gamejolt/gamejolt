@@ -74,4 +74,11 @@ export default class AppPostView extends Vue {
 		this.$router.replace({ name: 'home' });
 		Growls.info(this.$gettext('Your post has been removed'));
 	}
+
+	onPostPublished() {
+		Growls.success({
+			title: this.$gettext('Huzzah!'),
+			message: this.$gettext('Your post has been published.'),
+		});
+	}
 }
