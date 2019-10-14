@@ -358,7 +358,22 @@ export class FiresidePost extends Model implements ContentContainerModel {
 			}
 		}
 
-		return this.$_save(`/web/posts/manage/save/${this.id}`, 'firesidePost', options);
+		return new Promise(async resolve => {
+			// Preserve the is pinned status.
+			// The backend will not know the context in which we edit the post,
+			// so we save the pinned status, which won't change between edits, and then reapply it manully.
+			const isPinned = this.is_pinned;
+
+			const payload = await this.$_save(
+				`/web/posts/manage/save/${this.id}`,
+				'firesidePost',
+				options
+			);
+
+			this.is_pinned = isPinned;
+
+			resolve(payload);
+		});
 	}
 
 	$viewed() {
