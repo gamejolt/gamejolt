@@ -339,7 +339,7 @@ export class FiresidePost extends Model implements ContentContainerModel {
 		return new FiresidePost(response.post);
 	}
 
-	$save() {
+	async $save() {
 		if (!this.id) {
 			throw new Error(
 				`Can't add fireside posts through $save() anymore. Use $create() instead`
@@ -358,22 +358,20 @@ export class FiresidePost extends Model implements ContentContainerModel {
 			}
 		}
 
-		return new Promise(async resolve => {
-			// Preserve the is pinned status.
-			// The backend will not know the context in which we edit the post,
-			// so we save the pinned status, which won't change between edits, and then reapply it manully.
-			const isPinned = this.is_pinned;
+		// Preserve the is pinned status.
+		// The backend will not know the context in which we edit the post,
+		// so we save the pinned status, which won't change between edits, and then reapply it manully.
+		const isPinned = this.is_pinned;
 
-			const payload = await this.$_save(
-				`/web/posts/manage/save/${this.id}`,
-				'firesidePost',
-				options
-			);
+		const payload = await this.$_save(
+			`/web/posts/manage/save/${this.id}`,
+			'firesidePost',
+			options
+		);
 
-			this.is_pinned = isPinned;
+		this.is_pinned = isPinned;
 
-			resolve(payload);
-		});
+		return payload;
 	}
 
 	$viewed() {
