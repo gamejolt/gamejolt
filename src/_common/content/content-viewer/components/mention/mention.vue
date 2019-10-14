@@ -20,7 +20,7 @@
 		</template>
 		<!-- Placeholder until the user data is hydrated: -->
 		<template v-else>
-			<router-link :to="'@' + username">
+			<router-link :to="'/@' + username">
 				<span :title="'@' + username">
 					<slot />
 				</span>
