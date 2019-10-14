@@ -14,6 +14,8 @@
 					@unfeature="emitPostUnfeature"
 					@move-channel="emitPostMoveChannel"
 					@reject="emitPostReject"
+					@pin="emitPostPin"
+					@unpin="emitPostUnpin"
 				/>
 			</template>
 			<template v-else-if="video">

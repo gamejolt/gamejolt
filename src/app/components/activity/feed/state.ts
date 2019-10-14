@@ -1,9 +1,10 @@
+import Vue from 'vue';
+import { arrayRemove } from '../../../../utils/array';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
+import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../_common/game/game.model';
 import { User } from '../../../../_common/user/user.model';
-import { arrayRemove } from '../../../../utils/array';
-import Vue from 'vue';
 import { ActivityFeedItem } from './item-service';
 
 export interface ActivityFeedStateOptions {
@@ -72,7 +73,23 @@ export class ActivityFeedState {
 		this.removeItems(items);
 
 		if (position === 'start') {
+			// When adding to the start, make sure to not bury the pinned post below the new ones.
+			// We assume that new posts will not be pinned.
+			let pinnedItem: ActivityFeedItem | undefined;
+			if (this.items.length > 0) {
+				const firstItem = this.items[0].feedItem;
+				if (
+					firstItem instanceof EventItem &&
+					firstItem.action instanceof FiresidePost &&
+					firstItem.action.is_pinned
+				) {
+					pinnedItem = this.items.shift();
+				}
+			}
 			this.items = items.concat(this.items);
+			if (pinnedItem) {
+				this.items.unshift(pinnedItem);
+			}
 		} else if (position === 'end') {
 			this.items = this.items.concat(items);
 		}

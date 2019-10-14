@@ -51,6 +51,12 @@ export default class AppEventItemControls extends Vue {
 	@Emit('post-reject')
 	emitPostReject() {}
 
+	@Emit('post-pin')
+	emitPostPin() {}
+
+	@Emit('post-unpin')
+	emitPostUnpin() {}
+
 	get hasActivePost() {
 		return this.post && this.post.status === FiresidePost.STATUS_ACTIVE;
 	}
