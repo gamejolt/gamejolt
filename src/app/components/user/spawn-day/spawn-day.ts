@@ -44,7 +44,7 @@ export default class AppUserSpawnDay extends Vue {
 		if (this.user) {
 			const distance = distanceStrict(this.user.created_on, Date.now(), {
 				unit: 'Y',
-				partialMethod: 'floor',
+				partialMethod: 'ceil',
 			});
 			return distance;
 		}
