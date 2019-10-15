@@ -2,10 +2,16 @@ import * as distanceStrict from 'date-fns/distance_in_words_strict';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { sleep } from '../../../../utils/utils';
 import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissable.vue';
 import { CommentModal } from '../../../../_common/comment/modal/modal.service';
+import { ContentDocument } from '../../../../_common/content/content-document';
+import { ContentWriter } from '../../../../_common/content/content-writer';
+import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { AppStore } from '../../../../_common/store/app-store';
 import { User } from '../../../../_common/user/user.model';
+import { PostEditModal } from '../../post/edit-modal/edit-modal-service';
 
 @Component({
 	components: {
@@ -16,9 +22,14 @@ export default class AppUserSpawnDay extends Vue {
 	@Prop(User)
 	user!: User;
 
+	@State
+	app!: AppStore;
+
 	$refs!: {
 		container: HTMLElement;
 	};
+
+	_isBlocked = false;
 
 	get shouldShowSpawnDay() {
 		if (this.user) {
@@ -40,6 +51,10 @@ export default class AppUserSpawnDay extends Vue {
 		return false;
 	}
 
+	get isOwnSpawnDay() {
+		return this.app.user && this.user.id === this.app.user.id;
+	}
+
 	get spawnDayYear() {
 		if (this.user) {
 			const distance = distanceStrict(this.user.created_on, Date.now(), {
@@ -59,6 +74,33 @@ export default class AppUserSpawnDay extends Vue {
 				displayMode: 'shouts',
 			});
 		}
+	}
+
+	async showNewPost() {
+		if (this._isBlocked) {
+			return;
+		}
+
+		// Block the modal from appearing multiple times between the post request being sent and the modal opening
+		this._isBlocked = true;
+
+		let post: FiresidePost | undefined = await FiresidePost.$create();
+
+		// Create a doc and append the "#spawnday" tag.
+		const spawnDayDoc = new ContentDocument('fireside-post-lead', []);
+		const writer = new ContentWriter(spawnDayDoc);
+		writer.appendTag('spawnday');
+
+		post.lead_content = spawnDayDoc.toJson();
+
+		post = await PostEditModal.show(post);
+		this._isBlocked = false;
+
+		if (!post) {
+			return;
+		}
+
+		this.$emit('post-add', post);
 	}
 
 	async mounted() {

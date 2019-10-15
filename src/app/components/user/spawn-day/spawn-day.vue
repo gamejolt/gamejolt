@@ -6,23 +6,44 @@
 	>
 		<div ref="container" class="-confetti-container"></div>
 
-		<h4>
-			<span v-translate="{ username: user.display_name }">
-				&nbsp;&nbsp; 🥳 &nbsp;&nbsp; %{ username } is celebrating their Spawn Day!
-			</span>
-		</h4>
+		<template v-if="isOwnSpawnDay">
+			<h4>
+				<span v-translate="{ username: user.display_name }">
+					&nbsp;&nbsp; 🥳 &nbsp;&nbsp; You are celebrating your Spawn Day today!
+				</span>
+			</h4>
 
-		<p v-translate="{ years: spawnDayYear }">
-			That means on this day, they have been on Game Jolt for %{ years }!
-		</p>
-		<p>
-			<translate>
-				It is customary to wish them a happy Spawn Day, so you should too.
-			</translate>
-		</p>
-		<app-button @click="showComments">
-			<translate>Send your wishes</translate>
-		</app-button>
+			<p v-translate="{ years: spawnDayYear }">
+				That means on this day, you have been on Game Jolt for %{ years }!
+			</p>
+			<p>
+				<translate>
+					Tell your followers, let the world know!
+				</translate>
+			</p>
+			<app-button @click="showNewPost">
+				<translate>Celebrate</translate>
+			</app-button>
+		</template>
+		<template v-else>
+			<h4>
+				<span v-translate="{ username: user.display_name }">
+					&nbsp;&nbsp; 🥳 &nbsp;&nbsp; %{ username } is celebrating their Spawn Day!
+				</span>
+			</h4>
+
+			<p v-translate="{ years: spawnDayYear }">
+				That means on this day, they have been on Game Jolt for %{ years }!
+			</p>
+			<p>
+				<translate>
+					It is customary to wish them a happy Spawn Day, so you should too.
+				</translate>
+			</p>
+			<app-button @click="showComments">
+				<translate>Send your wishes</translate>
+			</app-button>
+		</template>
 	</app-alert-dismissable>
 </template>
 
