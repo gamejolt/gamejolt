@@ -9,6 +9,7 @@ import { Community } from '../community/community.model';
 import { Environment } from '../environment/environment.service';
 import { EventItem } from '../event-item/event-item.model';
 import { currency } from '../filters/currency';
+import { FiresidePostCommunity } from '../fireside/post/community/community.model';
 import { FiresidePost } from '../fireside/post/post-model';
 import { ForumPost } from '../forum/post/post.model';
 import { ForumTopic } from '../forum/topic/topic.model';
@@ -49,6 +50,7 @@ export class Notification extends Model {
 	static TYPE_GAME_RATING_ADD = 'game-rating-add';
 	static TYPE_GAME_FOLLOW = 'game-follow';
 	static TYPE_POST_ADD = 'post-add';
+	static TYPE_POST_FEATURED_IN_COMMUNITY = 'post-featured-in-community';
 	static TYPE_SELLABLE_SELL = 'sellable-sell';
 	static TYPE_USER_FOLLOW = 'user-follow';
 	static TYPE_COLLABORATOR_INVITE = 'collaborator-invite';
@@ -68,6 +70,7 @@ export class Notification extends Model {
 		Notification.TYPE_FRIENDSHIP_ACCEPT,
 		Notification.TYPE_GAME_RATING_ADD,
 		Notification.TYPE_GAME_FOLLOW,
+		Notification.TYPE_POST_FEATURED_IN_COMMUNITY,
 		Notification.TYPE_SELLABLE_SELL,
 		Notification.TYPE_USER_FOLLOW,
 		Notification.TYPE_MENTION,
@@ -92,6 +95,7 @@ export class Notification extends Model {
 		| GameRating
 		| GameLibraryGame
 		| FiresidePost
+		| FiresidePostCommunity
 		| OrderItem
 		| Subscription
 		| Collaborator
@@ -158,6 +162,8 @@ export class Notification extends Model {
 		} else if (this.type === Notification.TYPE_POST_ADD) {
 			this.action_model = new FiresidePost(data.action_resource_model);
 			this.is_game_based = this.to_model instanceof Game;
+		} else if (this.type === Notification.TYPE_POST_FEATURED_IN_COMMUNITY) {
+			this.action_model = new FiresidePostCommunity(data.action_resource_model);
 		} else if (this.type === Notification.TYPE_SELLABLE_SELL) {
 			this.action_model = new OrderItem(data.action_resource_model);
 			this.is_user_based = true;
@@ -200,6 +206,11 @@ export class Notification extends Model {
 
 			case Notification.TYPE_GAME_FOLLOW:
 				return getRouteLocationForModel(this.from_model!);
+
+			case Notification.TYPE_POST_FEATURED_IN_COMMUNITY:
+				return getRouteLocationForModel(
+					(this.action_model as FiresidePostCommunity).community
+				);
 
 			case Notification.TYPE_COLLABORATOR_INVITE:
 				switch (this.to_resource) {
@@ -421,6 +432,19 @@ export function getNotificationText(notification: Notification, plaintext = fals
 				postTitle = notification.action_model.lead_snippet;
 			}
 			return gameTitle + postTitle;
+		}
+
+		case Notification.TYPE_POST_FEATURED_IN_COMMUNITY: {
+			const postCommunity = notification.action_model as FiresidePostCommunity;
+
+			return _process(
+				Translate.$gettextInterpolate(
+					`Your post in <em>%{ community }</em> community got featured!`,
+					{
+						community: postCommunity.community.name,
+					}
+				)
+			);
 		}
 
 		case Notification.TYPE_COMMENT_VIDEO_ADD: {
