@@ -40,16 +40,16 @@
 								<app-time-ago :date="userTrophy.logged_on" />
 							</span>
 
-							<div v-if="completionPercentageDisplay" class="text-muted small">
-								<span v-if="completionPercentageDisplay === 1">
+							<div v-if="completionPercentageForDisplay" class="text-muted small">
+								<span v-if="completionPercentageForDisplay === 1">
 									<translate>&lt;1% of players unlocked this trophy</translate>
 								</span>
-								<span v-else-if="completionPercentageDisplay === 100">
+								<span v-else-if="completionPercentageForDisplay === 100">
 									<translate>
 										All players unlocked this trophy
 									</translate>
 								</span>
-								<span v-else v-translate="{ num: completionPercentageDisplay }">
+								<span v-else v-translate="{ num: completionPercentageForDisplay }">
 									~%{ num }% of players unlocked this trophy
 								</span>
 							</div>

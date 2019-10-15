@@ -53,20 +53,7 @@ export default class AppTrophyModal extends BaseModal {
 		);
 	}
 
-	get isDeveloper() {
-		return (
-			this.userTrophy instanceof UserGameTrophy &&
-			this.userTrophy.game instanceof Game &&
-			this.app.user instanceof User &&
-			this.userTrophy.game.developer.id === this.app.user.id
-		);
-	}
-
-	get isAchiever() {
-		return this.app.user instanceof User && this.userTrophy.user_id === this.app.user.id;
-	}
-
-	get completionPercentageDisplay() {
+	get completionPercentageForDisplay() {
 		if (this.completionPercentage) {
 			if (this.completionPercentage <= 1) {
 				return 1;
