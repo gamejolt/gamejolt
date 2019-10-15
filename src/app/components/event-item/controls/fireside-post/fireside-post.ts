@@ -11,6 +11,7 @@ import { number } from '../../../../../_common/filters/number';
 import AppFiresidePostLikeWidget from '../../../../../_common/fireside/post/like/widget/widget.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppPopper from '../../../../../_common/popper/popper.vue';
+import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppSocialFacebookLike } from '../../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../../_common/social/twitter/share/share';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
@@ -19,6 +20,7 @@ import { User } from '../../../../../_common/user/user.model';
 import { AppCommentWidgetLazy } from '../../../lazy';
 import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 import AppEventItemControlsFiresidePostExtra from './extra/extra.vue';
+import AppEventItemControlsFiresidePostStats from './stats/stats.vue';
 
 @Component({
 	components: {
@@ -28,6 +30,7 @@ import AppEventItemControlsFiresidePostExtra from './extra/extra.vue';
 		AppCommentVideoLikeWidget,
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,
+		AppEventItemControlsFiresidePostStats,
 		AppEventItemControlsFiresidePostExtra,
 	},
 	directives: {
@@ -56,7 +59,6 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 
 	isShowingShare = false;
 
-	readonly number = number;
 	readonly GJ_IS_CLIENT!: boolean;
 
 	@Emit('edit')
@@ -105,16 +107,16 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 		return this.post.isEditableByUser(this.user);
 	}
 
-	get shouldShowStats() {
-		return this.hasPerms && this.post.isActive;
-	}
-
 	get shouldShowEdit() {
 		return this.hasPerms;
 	}
 
 	get shouldShowExtra() {
 		return this.user instanceof User;
+	}
+
+	get shouldShowStatsInNewLine() {
+		return Screen.isXs;
 	}
 
 	copyShareUrl() {
