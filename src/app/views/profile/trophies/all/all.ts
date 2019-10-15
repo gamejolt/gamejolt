@@ -15,7 +15,6 @@ import { RouteStore, RouteStoreModule } from '../../profile.store';
 	},
 })
 @RouteResolver({
-	deps: {},
 	resolver: ({ route }) => Api.sendRequest('/web/profile/trophies/all/@' + route.params.username),
 })
 export default class RouteProfileTrophiesAll extends BaseRouteComponent {

@@ -59,7 +59,9 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 			trophies = populateTrophies($payload.trophies);
 		}
 
-		// Group the trophies into feed entries
+		// Group the trophies into feed entries:
+		// Each entry is a group of trophies of the same origin (same game or site).
+		// It also creates a new entry if the difference between achieved trophies is larger than 24 hours.
 		for (const userTrophy of trophies) {
 			// Set the game/id for this user trophy (undefined for site trophies)
 			let game: Game | undefined = undefined;

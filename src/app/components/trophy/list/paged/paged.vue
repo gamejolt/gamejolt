@@ -15,7 +15,7 @@
 
 			<app-loading v-if="isLoading" centered />
 			<div class="page-cut" v-else-if="shouldShowLoadMore">
-				<app-button trans @click="loadMore()" v-app-track-event="`profile-trophies:more`">
+				<app-button trans @click="onClickLoadMore()" v-app-track-event="`profile-trophies:more`">
 					<translate>Load More</translate>
 				</app-button>
 			</div>

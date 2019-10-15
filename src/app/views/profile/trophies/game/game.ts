@@ -34,6 +34,7 @@ type CompletionData = {
 		);
 
 		// If the game doesn't have any trophies or the user has not achieved any for this game, redirect to their overview.
+		// This is to prevent showing an empty game page with no entry in the left nav.
 		if (payload.noTrophies || !payload.trophies || payload.trophies.length === 0) {
 			const redirect = new LocationRedirect({
 				name: 'profile.trophies',
@@ -66,7 +67,9 @@ export default class RouteProfileTrophiesGame extends BaseRouteComponent {
 	}
 
 	get listLoadMoreUrl() {
-		return `/web/profile/trophies/game/@${this.user!.username}/${this.game!.id}`;
+		if (this.game) {
+			return `/web/profile/trophies/game/@${this.user!.username}/${this.game.id}`;
+		}
 	}
 
 	routeResolved($payload: any) {

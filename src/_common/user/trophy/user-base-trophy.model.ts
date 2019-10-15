@@ -18,7 +18,7 @@ export abstract class UserBaseTrophy extends Model {
 	}
 
 	abstract get trophy(): BaseTrophy | undefined;
-	abstract get key(): string;
+	abstract get key(): string; // Used to uniquely identify a user trophy.
 
 	abstract $view(): void;
 }

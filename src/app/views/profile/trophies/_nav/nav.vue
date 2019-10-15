@@ -21,7 +21,6 @@
 						name: 'profile.trophies.all',
 					}"
 					active-class="active"
-					exact
 				>
 					<translate>All Trophies</translate>
 					<span class="badge">{{ trophyCount | number }}</span>
@@ -33,7 +32,6 @@
 						name: 'profile.trophies.site',
 					}"
 					active-class="active"
-					exact
 				>
 					<translate>Game Jolt Trophies</translate>
 					<span class="badge">{{ siteTrophyCount | number }}</span>

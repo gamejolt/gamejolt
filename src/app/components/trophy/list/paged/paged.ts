@@ -74,7 +74,7 @@ export default class AppTrophyListPaged extends Vue {
 		return trophies;
 	}
 
-	async loadMore() {
+	async onClickLoadMore() {
 		if (this.isLoading) {
 			return;
 		}

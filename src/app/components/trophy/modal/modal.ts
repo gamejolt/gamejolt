@@ -7,6 +7,7 @@ import { BaseModal } from '../../../../_common/modal/base';
 import { AppStore } from '../../../../_common/store/app-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import { UserGameTrophy } from '../../../../_common/user/trophy/game-trophy.model';
+import { UserSiteTrophy } from '../../../../_common/user/trophy/site-trophy.model';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../_common/user/user.model';
@@ -42,13 +43,13 @@ export default class AppTrophyModal extends BaseModal {
 	}
 
 	get canReceiveExp() {
-		if (!this.isGame) {
+		if (this.userTrophy instanceof UserSiteTrophy) {
 			return true;
 		}
 		return (
 			this.userTrophy instanceof UserGameTrophy &&
 			this.userTrophy.game instanceof Game &&
-			this.userTrophy.game.developer.id !== this.userTrophy.user_id
+			this.userTrophy.game.developer.id !== this.userTrophy.user_id // Devs can't get exp from their own trophies.
 		);
 	}
 
