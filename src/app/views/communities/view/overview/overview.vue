@@ -3,7 +3,6 @@
 		<app-page-container xl order="right,main,left">
 			<div slot="right" v-if="!Screen.isMobile">
 				<app-community-sidebar
-					:key="community.id"
 					:community="community"
 					:is-editing="isEditing"
 					:owner="owner"

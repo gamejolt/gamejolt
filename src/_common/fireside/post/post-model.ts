@@ -1,4 +1,5 @@
 import { RawLocation } from 'vue-router';
+import { Route } from 'vue-router/types/router';
 import { Api } from '../../api/api.service';
 import { Perm } from '../../collaborator/collaboratable';
 import { CommunityChannel } from '../../community/channel/channel.model';
@@ -58,6 +59,7 @@ export class FiresidePost extends Model implements ContentContainerModel {
 	url!: string;
 	view_count?: number;
 	expand_count?: number;
+	is_pinned!: boolean;
 
 	lead_snippet!: string;
 	lead_content!: string;
@@ -146,6 +148,15 @@ export class FiresidePost extends Model implements ContentContainerModel {
 
 	get isScheduled() {
 		return !!this.scheduled_for;
+	}
+
+	// Which user is displayed as the author of this post
+	get displayUser() {
+		if (!this.game) {
+			return this.user;
+		}
+
+		return this.as_game_owner ? this.game.developer : this.user;
 	}
 
 	get hasMedia() {
@@ -248,6 +259,75 @@ export class FiresidePost extends Model implements ContentContainerModel {
 		}
 	}
 
+	getPinContextFor(route: Route) {
+		if (this.isInGamePinContext(route)) {
+			return this.game;
+		}
+
+		if (this.isInCommunityPinContext(route)) {
+			return this.communities[0];
+		}
+
+		if (this.isInUserPinContext(route)) {
+			return this.user;
+		}
+
+		return null;
+	}
+
+	private isInCommunityPinContext(route: Route) {
+		// A post can be pinned to a community if:
+		// 1. viewing the community feed.
+		// 2. the post was published to the community.
+		// 3. viewing the channel the post was published to.
+		// NOTE: this means posts cannot be pinned to meta channels like 'featured' and 'all posts'
+
+		if (route.name !== 'communities.view.overview') {
+			return false;
+		}
+
+		if (this.communities.length === 0) {
+			return false;
+		}
+
+		const communityLink = this.communities[0];
+		const community = communityLink.community;
+		const channelTitle = communityLink.channel!.title;
+
+		return route.params.path === community.path && route.params.channel === channelTitle;
+	}
+
+	private isInGamePinContext(route: Route) {
+		// A post can be pinned to a game if:
+		// 1. viewing the game feed, or the game's dashboard feed.
+		// 2. the post is a game post (sanity check)
+		// 3. the post belongs to the game we're viewing (sanity check)
+
+		if (
+			route.name !== 'discover.games.view.overview' &&
+			route.name !== 'dash.games.manage.devlog'
+		) {
+			return false;
+		}
+
+		if (!this.game) {
+			return false;
+		}
+
+		return route.params.id.toString() === this.game.id.toString();
+	}
+
+	private isInUserPinContext(route: Route) {
+		// A post can be pinned to a user if:
+		// 1. viewing the user's profile
+		// 2. the post is shown to be written by the user we're viewing (sanity check)
+		if (route.name !== 'profile.overview') {
+			return false;
+		}
+
+		return route.params.username === this.displayUser.username;
+	}
+
 	static async $create(gameId?: number) {
 		let url = `/web/posts/manage/new-post`;
 		if (gameId) {
@@ -259,7 +339,7 @@ export class FiresidePost extends Model implements ContentContainerModel {
 		return new FiresidePost(response.post);
 	}
 
-	$save() {
+	async $save() {
 		if (!this.id) {
 			throw new Error(
 				`Can't add fireside posts through $save() anymore. Use $create() instead`
@@ -278,7 +358,20 @@ export class FiresidePost extends Model implements ContentContainerModel {
 			}
 		}
 
-		return this.$_save(`/web/posts/manage/save/${this.id}`, 'firesidePost', options);
+		// Preserve the is pinned status.
+		// The backend will not know the context in which we edit the post,
+		// so we save the pinned status, which won't change between edits, and then reapply it manully.
+		const isPinned = this.is_pinned;
+
+		const payload = await this.$_save(
+			`/web/posts/manage/save/${this.id}`,
+			'firesidePost',
+			options
+		);
+
+		this.is_pinned = isPinned;
+
+		return payload;
 	}
 
 	$viewed() {
@@ -343,6 +436,14 @@ export class FiresidePost extends Model implements ContentContainerModel {
 
 	$publish() {
 		return this.$_save(`/web/posts/manage/publish/${this.id}`, 'firesidePost');
+	}
+
+	$pin(targetModel: string) {
+		return this.$_save(`/web/posts/manage/toggle-pin/${this.id}/${targetModel}`, 'post');
+	}
+
+	$unpin(targetModel: string) {
+		return this.$_save(`/web/posts/manage/toggle-pin/${this.id}/${targetModel}`, 'post');
 	}
 
 	async remove() {

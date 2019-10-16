@@ -14,7 +14,7 @@
 			<br />
 		</div>
 
-		<app-community-description :community="community" :is-editing="isEditing" />
+		<app-community-description :community="community" :is-editing="isEditing" :key="community.id" />
 
 		<template v-if="community.game">
 			<br />

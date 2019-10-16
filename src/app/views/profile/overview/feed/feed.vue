@@ -1,5 +1,8 @@
 <template>
 	<div>
+		<!-- Spawn day -->
+		<app-user-spawn-day :user="user" @post-add="onPostAdded" />
+
 		<template v-if="isOwner">
 			<app-post-add-button @add="onPostAdded" />
 

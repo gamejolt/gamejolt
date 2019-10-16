@@ -6,11 +6,13 @@ import { Community } from '../../../../../../_common/community/community.model';
 import { Environment } from '../../../../../../_common/environment/environment.service';
 import { FiresidePostCommunity } from '../../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
+import { Game } from '../../../../../../_common/game/game.model';
 import { Growls } from '../../../../../../_common/growls/growls.service';
 import { getLinkedAccountPlatformIcon } from '../../../../../../_common/linked-account/linked-account.model';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../../_common/report/modal/modal.service';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
+import { User } from '../../../../../../_common/user/user.model';
 import { CommunityMovePostModal } from '../../../../community/move-post/modal/modal.service';
 import { AppCommunityPerms } from '../../../../community/perms/perms';
 
@@ -42,6 +44,12 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 	@Emit('reject')
 	emitReject(_community: Community) {}
 
+	@Emit('pin')
+	emitPin() {}
+
+	@Emit('unpin')
+	emitUnpin() {}
+
 	get canEdit() {
 		return this.post.isEditableByUser(this.user);
 	}
@@ -59,6 +67,34 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 
 	get siteModerateLink() {
 		return Environment.baseUrl + `/moderate/fireside-posts/view/${this.post.id}`;
+	}
+
+	get shouldShowPins() {
+		// Has to be in the correct context for the post to appear pinnable.
+		// Only active posts can be pinned.
+		// Permissions:
+		// A game post can be pinned by the game owner or the game's collaborator with the devlogs permission.
+		// A user post can be pinned to the user by only the user themselves.
+		// A user post can be pinned to a community channel by a community collaborator (including owner) with the community-posts permission.
+
+		if (!this.user) {
+			return false;
+		}
+
+		if (this.post.status !== FiresidePost.STATUS_ACTIVE) {
+			return false;
+		}
+
+		const pinContext = this.post.getPinContextFor(this.$route);
+		if (pinContext instanceof Game) {
+			return this.canEdit;
+		} else if (pinContext instanceof FiresidePostCommunity) {
+			return pinContext.community.hasPerms('community-posts');
+		} else if (pinContext instanceof User) {
+			return true;
+		}
+
+		return false;
 	}
 
 	shouldDisplayCommunityName(community: Community) {
@@ -137,5 +173,28 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 		if (await this.post.remove()) {
 			this.emitRemove();
 		}
+	}
+
+	getPinTargetModel() {
+		const pinContext = this.post.getPinContextFor(this.$route);
+		if (pinContext instanceof Game) {
+			return 'Game';
+		} else if (pinContext instanceof FiresidePostCommunity) {
+			return 'Community_Channel';
+		} else if (pinContext instanceof User) {
+			return 'User';
+		}
+
+		throw new Error('Post is not pinnable in this context');
+	}
+
+	async pin() {
+		await this.post.$pin(this.getPinTargetModel());
+		this.emitPin();
+	}
+
+	async unpin() {
+		await this.post.$unpin(this.getPinTargetModel());
+		this.emitUnpin();
 	}
 }

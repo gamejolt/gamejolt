@@ -116,6 +116,12 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			return null;
 		}
 
+		if (this.isEditing) {
+			return this.$gettextInterpolate(`Edit Community %{ community }`, {
+				community: this.community.name,
+			});
+		}
+
 		let title = this.$gettextInterpolate(
 			`%{ name } Community - Fan art, videos, guides, polls and more`,
 			{

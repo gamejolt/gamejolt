@@ -186,6 +186,14 @@ export default class AppActivityFeedEventItem extends Vue {
 		return !this.feed.hideCommunity || !this.feed.hideCommunityChannel;
 	}
 
+	get shouldShowIsPinned() {
+		if (!this.post || !this.post.is_pinned) {
+			return false;
+		}
+
+		return this.post.getPinContextFor(this.$route) !== null;
+	}
+
 	mounted() {
 		this.feedComponent = findRequiredVueParent(this, AppActivityFeed) as AppActivityFeedTS;
 	}
@@ -303,6 +311,14 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	onPostRejected(item: EventItem, community: Community) {
 		this.feedComponent.onPostRejected(item, community);
+	}
+
+	onPostPinned(item: EventItem) {
+		this.feedComponent.onPostPinned(item);
+	}
+
+	onPostUnpinned(item: EventItem) {
+		this.feedComponent.onPostUnpinned(item);
 	}
 
 	getChannelRoute(postCommunity: FiresidePostCommunity) {
