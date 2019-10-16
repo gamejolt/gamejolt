@@ -471,11 +471,11 @@ export default class FormPost extends BaseForm<FormPostModel>
 	}
 
 	onSubmitError($payload: any) {
-		if ($payload.errors.youtube_private) {
+		if ($payload.errors.video_unavailable) {
 			Growls.error({
 				title: this.$gettext(`Failed to submit post`),
 				message: this.$gettext(
-					`The YouTube video linked in the post is most likely private. Set it to unlisted or public to be able to post it.`
+					`The video linked in the post is private or otherwise unavailable. Make sure other people can see the video before you post it.`
 				),
 			});
 		}
