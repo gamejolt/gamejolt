@@ -42,6 +42,27 @@
 			<app-form-control-errors />
 		</app-form-group>
 
+		<!-- Post placeholder text only shows whens editing -->
+		<app-form-group
+			v-if="method !== 'add'"
+			name="post_placeholder_text"
+			:label="$gettext(`Post Placeholder`)"
+			optional
+		>
+			<div class="help-block">
+				<translate>Customize the placeholder message for post creations.</translate>
+			</div>
+
+			<app-post-add-button-form-control
+				:placeholder="$gettext(`Share your creations!`)"
+				:rules="{
+					max: 100,
+				}"
+			/>
+
+			<app-form-control-errors />
+		</app-form-group>
+
 		<!-- Color Theme - only show this in the edit part, not creation -->
 		<app-form-group v-if="method !== 'add'" name="theme" :label="$gettext(`Color Theme`)">
 			<app-form-control-theme class="pull-right" @changed="onThemeChanged()" />
