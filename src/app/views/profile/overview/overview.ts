@@ -27,6 +27,7 @@ import AppCommentOverview from '../../../components/comment/overview/overview.vu
 import AppGameList from '../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
 import AppPageContainer from '../../../components/page-container/page-container.vue';
+import AppUserHalloweenMonsterWidget from '../../../components/user/halloween-monster-widget/halloween-monster-widget.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/known-followers.vue';
 import { Store } from '../../../store/index';
 import { RouteStore, RouteStoreModule } from '../profile.store';
@@ -45,6 +46,7 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 		AppContentViewer,
 		AppUserKnownFollowers,
 		AppCommunityVerifiedTick,
+		AppUserHalloweenMonsterWidget,
 	},
 	directives: {
 		AppTooltip,

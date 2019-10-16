@@ -66,6 +66,10 @@ const defaultSettings: { [k: string]: Setting } = {
 		type: 'boolean',
 		val: 1,
 	},
+	'halloween-2019-opted-out': {
+		type: 'boolean',
+		val: 0,
+	},
 };
 
 export class Settings {

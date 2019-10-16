@@ -13,6 +13,7 @@ import {
 } from '../../../../../_common/comment/comment-store';
 import { EventBus, EventBusDeregister } from '../../../../../_common/event-bus/event-bus.service';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
+import { HalloweenMonster } from '../../../../../_common/halloween-monster/halloween-monster.model';
 import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../_common/partner-referral/partner-referral-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
@@ -24,7 +25,6 @@ import { Translate } from '../../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
-import { store } from '../../../../store';
 import AppGameCoverButtons from '../../../../components/game/cover-buttons/cover-buttons.vue';
 import AppGameMaturityBlock from '../../../../components/game/maturity-block/maturity-block.vue';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
@@ -34,6 +34,7 @@ import {
 	RatingWidgetOnChange,
 	RatingWidgetOnChangePayload,
 } from '../../../../components/rating/widget/widget';
+import { store } from '../../../../store';
 import './view-content.styl';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './view.store';
 import AppDiscoverGamesViewControls from './_controls/controls.vue';
@@ -229,7 +230,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		}
 	}
 
-	async routeResolved($payload: any) {
+	async routeResolved($payload: any, fromCache: boolean) {
 		this._setAdSettings();
 
 		// If the game has a GA tracking ID, then we attach it to this
@@ -248,6 +249,10 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 			resourceId: this.game.id,
 		});
 		this.setCommentCount({ store: this.commentStore, count: $payload.commentsCount || 0 });
+
+		if (!fromCache && $payload.halloweenMonster) {
+			HalloweenMonster.add(new HalloweenMonster($payload.halloweenMonster));
+		}
 	}
 
 	routeDestroyed() {
