@@ -31,7 +31,7 @@
 					<app-communities-view-overview-nav-edit v-else class="-nav" :community="community" />
 				</app-scroll-affix>
 
-				<app-button v-if="Screen.isXs" class="-mobile-info-btn" @click="onClickAbout" block>
+				<app-button v-if="Screen.isMobile" class="-mobile-info-btn" @click="onClickAbout" block>
 					<app-community-thumbnail-img class="-mobile-info-btn-img" :community="community" />
 					<translate>About this community</translate>
 				</app-button>
