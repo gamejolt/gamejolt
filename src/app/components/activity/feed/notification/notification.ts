@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import '../../../../../_common/comment/comment.styl';
+import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { Mention } from '../../../../../_common/mention/mention.model';
@@ -25,6 +26,7 @@ import { ActivityFeedView } from '../view';
 		AppUserCardHover,
 		AppUserAvatar,
 		AppContentViewer,
+		AppCommunityThumbnailImg,
 	},
 	directives: {
 		AppTooltip,
@@ -42,6 +44,7 @@ export default class AppActivityFeedNotification extends Vue {
 	canToggleContent = false;
 
 	readonly Screen = Screen;
+	readonly Notification = Notification;
 
 	get isNew() {
 		return this.feed.isItemUnread(this.item);
@@ -60,9 +63,11 @@ export default class AppActivityFeedNotification extends Vue {
 		}
 
 		return (
-			[Notification.TYPE_COMMENT_ADD, Notification.TYPE_COMMENT_ADD_OBJECT_OWNER].indexOf(
-				this.notification.type
-			) !== -1
+			[
+				Notification.TYPE_COMMENT_ADD,
+				Notification.TYPE_COMMENT_ADD_OBJECT_OWNER,
+				Notification.TYPE_POST_FEATURED_IN_COMMUNITY,
+			].indexOf(this.notification.type) !== -1
 		);
 	}
 
