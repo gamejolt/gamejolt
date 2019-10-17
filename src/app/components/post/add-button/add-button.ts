@@ -31,6 +31,9 @@ export default class AppPostAddButton extends Vue {
 	@Prop(String)
 	placeholder?: string;
 
+	@Prop(Boolean)
+	previewOnly?: boolean;
+
 	@AppState
 	user!: AppStore['user'];
 
@@ -45,7 +48,7 @@ export default class AppPostAddButton extends Vue {
 	}
 
 	async open() {
-		if (this._isBlocked) {
+		if (this._isBlocked || this.previewOnly) {
 			return;
 		}
 

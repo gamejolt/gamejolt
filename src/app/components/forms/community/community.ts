@@ -6,9 +6,11 @@ import { BaseForm, FormOnSubmitSuccess } from '../../../../_common/form-vue/form
 import { Theme } from '../../../../_common/theme/theme.model';
 import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
 import { Store } from '../../../store';
+import AppPostAddButtonFormControl from '../../post/add-button/form-control/form-control.vue';
 
 @Component({
 	components: {
+		AppPostAddButtonFormControl,
 		AppFormControlTheme,
 	},
 })
@@ -34,6 +36,10 @@ export default class FormCommunity extends BaseForm<Community> implements FormOn
 		this.joinCommunity(community);
 
 		this.$router.push(community.routeEditLocation);
+	}
+
+	onPostPlaceholderChange(placeholder: string) {
+		this.setField('post_placeholder_text', placeholder || null);
 	}
 
 	onThemeChanged() {
