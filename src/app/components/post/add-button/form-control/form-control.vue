@@ -21,6 +21,7 @@
 	margin: 0
 	display: inline-block
 	color:  var(--theme-fg-muted)
+	background-color: transparent
 </style>
 
 <script lang="ts" src="./form-control"></script>
