@@ -439,7 +439,7 @@ export function getNotificationText(notification: Notification, plaintext = fals
 
 			return _process(
 				Translate.$gettextInterpolate(
-					`Your post in <em>%{ community }</em> community has been featured!`,
+					`Your post in the <em>%{ community }</em> community has been featured!`,
 					{
 						community: postCommunity.community.name,
 					}
