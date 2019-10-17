@@ -65,11 +65,17 @@
 						event-label="feed"
 					/>
 
-					<app-activity-feed-event-item-time
-						:event-item="eventItem"
-						:post="post"
-						:link="linkResolved"
-					/>
+					<span>
+						<span v-if="shouldShowIsPinned" class="tag">
+							<app-jolticon icon="thumbtack" />
+							<translate>Pinned</translate>
+						</span>
+						<app-activity-feed-event-item-time
+							:event-item="eventItem"
+							:post="post"
+							:link="linkResolved"
+						/>
+					</span>
 				</div>
 			</div>
 
@@ -163,6 +169,8 @@
 				@post-unfeature="onPostUnfeatured(eventItem, $event)"
 				@post-move-channel="onPostMovedChannel(eventItem, $event)"
 				@post-reject="onPostRejected(eventItem, $event)"
+				@post-pin="onPostPinned(eventItem)"
+				@post-unpin="onPostUnpinned(eventItem)"
 			/>
 		</div>
 	</div>

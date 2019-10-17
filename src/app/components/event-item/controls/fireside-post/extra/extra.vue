@@ -3,6 +3,7 @@
 		<app-button sparse circle trans icon="ellipsis-v" />
 
 		<div slot="popover" class="fill-darkest">
+			<!-- When published to platforms, shows links to created resources. -->
 			<template v-if="canEdit && post.platforms_published_to.length > 0">
 				<div class="popper-heading">
 					<translate>Published to:</translate>
@@ -23,6 +24,18 @@
 			</template>
 
 			<div class="list-group list-group-dark">
+				<template v-if="shouldShowPins">
+					<a class="list-group-item has-icon" v-if="post.is_pinned" @click="unpin">
+						<app-jolticon icon="thumbtack" />
+						<translate>Unpin</translate>
+					</a>
+					<a class="list-group-item has-icon" v-else @click="pin">
+						<app-jolticon icon="thumbtack" />
+						<translate>Pin</translate>
+					</a>
+				</template>
+
+				<!-- Community feature/unfeature, move to channel and eject -->
 				<template v-if="shouldShowManageCommunities">
 					<span v-for="i of post.manageableCommunities" :key="i.id">
 						<app-community-perms :community="i.community" required="community-features">
@@ -79,16 +92,19 @@
 					</span>
 				</template>
 
+				<!-- User reports -->
 				<a class="list-group-item has-icon" v-if="user && user.id !== post.user.id" @click="report">
 					<app-jolticon icon="flag" notice />
 					<translate>Report Post</translate>
 				</a>
 
+				<!-- Remove -->
 				<a v-if="canEdit" class="list-group-item has-icon" @click.stop="remove()">
 					<app-jolticon icon="remove" notice />
 					<translate>Remove Post</translate>
 				</a>
 
+				<!-- Moderate -->
 				<a
 					v-if="shouldShowModTools"
 					class="list-group-item has-icon"

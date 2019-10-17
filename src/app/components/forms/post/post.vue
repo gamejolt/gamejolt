@@ -177,6 +177,7 @@
 					max_content_length: [leadLengthLimit],
 				}"
 				:validate-on="['blur']"
+				@paste.native="onPaste"
 			/>
 
 			<div class="-hp">

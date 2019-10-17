@@ -12,6 +12,17 @@
 								<app-user-avatar :user="notification.from_model" />
 							</app-user-card-hover>
 						</div>
+						<div
+							slot="bubble"
+							v-else-if="notification.type === Notification.TYPE_POST_FEATURED_IN_COMMUNITY"
+						>
+							<div class="-community-thumb">
+								<app-community-thumbnail-img
+									class="img-circle"
+									:community="notification.action_model.community"
+								/>
+							</div>
+						</div>
 
 						<div class="-container">
 							<div class="-main">
@@ -42,6 +53,13 @@
 												v-else-if="notification.type === 'mention'"
 												:source="notification.action_model.comment.comment_content"
 											/>
+											<span
+												v-else-if="
+													notification.type === Notification.TYPE_POST_FEATURED_IN_COMMUNITY
+												"
+											>
+												{{ notification.action_model.fireside_post.lead_snippet }}
+											</span>
 										</app-fade-collapse>
 									</div>
 								</div>
@@ -92,6 +110,18 @@
 	left: 0
 	right: 0
 	bottom: 0
+
+.-community-thumb
+	position: absolute
+	width: 100%
+	height: 100%
+	top: 0
+	left: 0
+
+	> img
+		width: 100%
+		height: 100%
+
 </style>
 
 <script lang="ts" src="./notification"></script>
