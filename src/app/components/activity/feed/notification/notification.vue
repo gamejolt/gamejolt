@@ -69,6 +69,14 @@
 											>
 												{{ notification.action_model.fireside_post.lead_snippet }}
 											</span>
+											<span
+												v-else-if="
+													notification.type === Notification.TYPE_GAME_TROPHY_ACHIEVED ||
+														notification.type === Notification.TYPE_SITE_TROPHY_ACHIEVED
+												"
+											>
+												{{ notification.action_model.trophy.description }}
+											</span>
 										</app-fade-collapse>
 									</div>
 								</div>

@@ -65,13 +65,13 @@ export default class AppActivityFeedNotification extends Vue {
 			return true;
 		}
 
-		return (
-			[
-				Notification.TYPE_COMMENT_ADD,
-				Notification.TYPE_COMMENT_ADD_OBJECT_OWNER,
-				Notification.TYPE_POST_FEATURED_IN_COMMUNITY,
-			].indexOf(this.notification.type) !== -1
-		);
+		return [
+			Notification.TYPE_COMMENT_ADD,
+			Notification.TYPE_COMMENT_ADD_OBJECT_OWNER,
+			Notification.TYPE_POST_FEATURED_IN_COMMUNITY,
+			Notification.TYPE_GAME_TROPHY_ACHIEVED,
+			Notification.TYPE_SITE_TROPHY_ACHIEVED,
+		].includes(this.notification.type);
 	}
 
 	get trophyImg() {
