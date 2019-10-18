@@ -60,6 +60,8 @@ export default class AppTrophyThumbnail extends Vue {
 	isAchieved?: boolean;
 	@Prop(Boolean)
 	noTooltip?: boolean;
+	@Prop(Boolean)
+	noDifficulty?: boolean;
 
 	thumbWidth = BaseWidth;
 

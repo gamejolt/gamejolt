@@ -21,7 +21,7 @@
 			</div>
 		</div>
 
-		<span class="trophy-thumbnail-difficulty">
+		<span v-if="!noDifficulty" class="trophy-thumbnail-difficulty">
 			{{ trophy.difficultyLabel }}
 		</span>
 	</div>

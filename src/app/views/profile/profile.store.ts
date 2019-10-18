@@ -8,6 +8,8 @@ import {
 } from '../../../utils/vuex';
 import { Registry } from '../../../_common/registry/registry.service';
 import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
+import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
+import { UserBaseTrophy } from '../../../_common/user/trophy/user-base-trophy.model';
 import { User } from '../../../_common/user/user.model';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
 import { store } from '../../store';
@@ -58,6 +60,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	trophyCount = 0;
 	isOnline = false;
 	userFriendship: UserFriendship | null = null;
+	previewTrophies: UserBaseTrophy[] | null = null;
 
 	@VuexAction
 	async sendFriendRequest() {
@@ -119,6 +122,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 			this.videosCount = 0;
 			this.trophyCount = 0;
 			this.userFriendship = null;
+			this.previewTrophies = null;
 		}
 	}
 
@@ -138,6 +142,12 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 			this.userFriendship = new UserFriendship($payload.userFriendship);
 		} else {
 			this.userFriendship = null;
+		}
+
+		if ($payload.previewTrophies) {
+			this.previewTrophies = populateTrophies($payload.previewTrophies);
+		} else {
+			this.previewTrophies = null;
 		}
 	}
 
