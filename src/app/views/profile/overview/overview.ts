@@ -258,7 +258,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	get shouldShowTrophies() {
-		return !!this.previewTrophies && this.previewTrophies.length > 0;
+		return !Screen.isMobile && !!this.previewTrophies && this.previewTrophies.length > 0;
 	}
 
 	get shouldShowMoreTrophies() {
