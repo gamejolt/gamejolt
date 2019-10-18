@@ -41,10 +41,6 @@ export default class AppTrophyCard extends Vue {
 	}
 
 	onClick() {
-		if (this.isNew) {
-			this.userTrophy.$view();
-		}
-
 		TrophyModal.show(this.userTrophy);
 	}
 }

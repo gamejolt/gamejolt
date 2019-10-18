@@ -72,6 +72,10 @@ export default class AppTrophyModal extends BaseModal {
 		}
 		if (this.app.user) {
 			this.populateFriends();
+
+			if (this.userTrophy.user_id === this.app.user.id && !this.userTrophy.viewed_on) {
+				this.userTrophy.$view();
+			}
 		}
 	}
 
