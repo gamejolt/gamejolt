@@ -13,8 +13,11 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { BaseTrophy } from '../../../../../_common/trophy/base-trophy.model';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
+import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
+import { getTrophyImg } from '../../../trophy/thumbnail/thumbnail';
 import { ActivityFeedItem } from '../item-service';
 import { ActivityFeedView } from '../view';
 
@@ -69,6 +72,15 @@ export default class AppActivityFeedNotification extends Vue {
 				Notification.TYPE_POST_FEATURED_IN_COMMUNITY,
 			].indexOf(this.notification.type) !== -1
 		);
+	}
+
+	get trophyImg() {
+		if (
+			this.notification.action_model instanceof UserBaseTrophy &&
+			this.notification.action_model.trophy instanceof BaseTrophy
+		) {
+			return getTrophyImg(this.notification.action_model.trophy);
+		}
 	}
 
 	created() {

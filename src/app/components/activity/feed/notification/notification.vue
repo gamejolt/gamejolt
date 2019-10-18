@@ -23,6 +23,15 @@
 								/>
 							</div>
 						</div>
+						<div
+							slot="bubble"
+							v-else-if="
+								notification.type === Notification.TYPE_GAME_TROPHY_ACHIEVED ||
+									notification.type === Notification.TYPE_SITE_TROPHY_ACHIEVED
+							"
+						>
+							<img class="img-circle -trophy-img" :src="trophyImg" />
+						</div>
 
 						<div class="-container">
 							<div class="-main">
@@ -121,6 +130,11 @@
 	> img
 		width: 100%
 		height: 100%
+
+.-trophy-img
+	display: block
+	width: 100%
+	height: 100%
 
 </style>
 

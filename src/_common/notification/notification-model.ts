@@ -1,4 +1,5 @@
 import VueRouter, { RawLocation } from 'vue-router';
+import { TrophyModal } from '../../app/components/trophy/modal/modal.service';
 import { assertNever } from '../../utils/utils';
 import { Api } from '../api/api.service';
 import { Collaborator } from '../collaborator/collaborator.model';
@@ -16,15 +17,20 @@ import { ForumTopic } from '../forum/topic/topic.model';
 import { GameLibraryGame } from '../game-library/game/game.model';
 import { Game } from '../game/game.model';
 import { GameRating } from '../game/rating/rating.model';
+import { GameTrophy } from '../game/trophy/trophy.model';
 import { Growls } from '../growls/growls.service';
 import { Mention } from '../mention/mention.model';
 import { Model } from '../model/model.service';
 import { Navigate } from '../navigate/navigate.service';
 import { OrderItem } from '../order/item/item.model';
 import { Sellable } from '../sellable/sellable.model';
+import { SiteTrophy } from '../site/trophy/trophy.model';
 import { Subscription } from '../subscription/subscription.model';
 import { Translate } from '../translate/translate.service';
 import { UserFriendship } from '../user/friendship/friendship.model';
+import { UserGameTrophy } from '../user/trophy/game-trophy.model';
+import { UserSiteTrophy } from '../user/trophy/site-trophy.model';
+import { UserBaseTrophy } from '../user/trophy/user-base-trophy.model';
 import { User } from '../user/user.model';
 
 function getRouteLocationForModel(model: Game | User | FiresidePost | Community): RawLocation {
@@ -56,6 +62,8 @@ export class Notification extends Model {
 	static TYPE_COLLABORATOR_INVITE = 'collaborator-invite';
 	static TYPE_MENTION = 'mention';
 	static TYPE_COMMENT_VIDEO_ADD = 'comment-video-add';
+	static TYPE_GAME_TROPHY_ACHIEVED = 'game-trophy-achieved';
+	static TYPE_SITE_TROPHY_ACHIEVED = 'site-trophy-achieved';
 
 	static ACTIVITY_FEED_TYPES = [
 		EventItem.TYPE_POST_ADD,
@@ -75,6 +83,8 @@ export class Notification extends Model {
 		Notification.TYPE_USER_FOLLOW,
 		Notification.TYPE_MENTION,
 		Notification.TYPE_COLLABORATOR_INVITE,
+		Notification.TYPE_GAME_TROPHY_ACHIEVED,
+		Notification.TYPE_SITE_TROPHY_ACHIEVED,
 	];
 
 	user_id!: number;
@@ -100,7 +110,9 @@ export class Notification extends Model {
 		| Subscription
 		| Collaborator
 		| Mention
-		| CommentVideo;
+		| CommentVideo
+		| UserGameTrophy
+		| UserSiteTrophy;
 
 	to_resource!: string | null;
 	to_resource_id!: number | null;
@@ -178,6 +190,12 @@ export class Notification extends Model {
 			this.is_user_based = true;
 		} else if (this.type === Notification.TYPE_COMMENT_VIDEO_ADD) {
 			this.action_model = new CommentVideo(data.action_resource_model);
+			this.is_user_based = true;
+		} else if (this.type === Notification.TYPE_GAME_TROPHY_ACHIEVED) {
+			this.action_model = new UserGameTrophy(data.action_resource_model);
+			this.is_user_based = true;
+		} else if (this.type === Notification.TYPE_SITE_TROPHY_ACHIEVED) {
+			this.action_model = new UserSiteTrophy(data.action_resource_model);
 			this.is_user_based = true;
 		}
 
@@ -271,6 +289,13 @@ export class Notification extends Model {
 		} else if (this.type === Notification.TYPE_COMMENT_VIDEO_ADD) {
 			if (this.action_model instanceof CommentVideo) {
 				CommentVideoModal.show(this.action_model);
+			}
+		} else if (
+			this.type === Notification.TYPE_GAME_TROPHY_ACHIEVED ||
+			this.type === Notification.TYPE_SITE_TROPHY_ACHIEVED
+		) {
+			if (this.action_model instanceof UserBaseTrophy) {
+				TrophyModal.show(this.action_model);
 			}
 		} else if (
 			this.type === Notification.TYPE_COMMENT_ADD ||
@@ -445,6 +470,42 @@ export function getNotificationText(notification: Notification, plaintext = fals
 					}
 				)
 			);
+		}
+
+		case Notification.TYPE_GAME_TROPHY_ACHIEVED: {
+			if (
+				notification.action_model instanceof UserGameTrophy &&
+				notification.action_model.trophy instanceof GameTrophy &&
+				notification.action_model.game instanceof Game
+			) {
+				return _process(
+					Translate.$gettextInterpolate(
+						`You achieved <em>%{ trophyTitle }</em> on %{ gameTitle }!`,
+						{
+							trophyTitle: notification.action_model.trophy.title,
+							gameTitle: notification.action_model.game.title,
+						}
+					)
+				);
+			}
+			return '';
+		}
+
+		case Notification.TYPE_SITE_TROPHY_ACHIEVED: {
+			if (
+				notification.action_model instanceof UserSiteTrophy &&
+				notification.action_model.trophy instanceof SiteTrophy
+			) {
+				return _process(
+					Translate.$gettextInterpolate(
+						`You achieved the Game Jolt Trophy <em>%{ trophyTitle }</em>!`,
+						{
+							trophyTitle: notification.action_model.trophy.title,
+						}
+					)
+				);
+			}
+			return '';
 		}
 
 		case Notification.TYPE_COMMENT_VIDEO_ADD: {
