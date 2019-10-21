@@ -1,10 +1,10 @@
 import Component from 'vue-class-component';
 import { CommunityChannel } from '../../../../../../../_common/community/channel/channel.model';
 import { Growls } from '../../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
+import { CommunityRemoveChannelModal } from '../../../../../../components/community/remove-channel/modal/modal.service';
 import FormCommunityChannel from '../../../../../../components/forms/community/channel/channel.vue';
 import { RouteStore, RouteStoreModule } from '../edit.store';
 
@@ -56,26 +56,11 @@ export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent
 	}
 
 	async onClickRemoveChannel(channel: CommunityChannel) {
-		const shouldRemove = await ModalConfirm.show(
-			this.$gettext('All posts made on this channel will be ejected from the community'),
-			this.$gettextInterpolate('Remove "%{ title }" channel?', { title: channel.title })
-		);
-
-		if (!shouldRemove) {
-			return;
-		}
-
-		try {
-			await channel.$remove();
-		} catch (e) {
-			console.error(e);
-			Growls.error('Could not remove channel');
-		}
+		await CommunityRemoveChannelModal.show(this.community, channel);
 
 		if (channel._removed) {
 			this.community.channels = this.community.channels!.filter(i => i.id !== channel.id);
+			this.onChannelsChange();
 		}
-
-		this.onChannelsChange();
 	}
 }
