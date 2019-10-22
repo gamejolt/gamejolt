@@ -1,10 +1,12 @@
 <template>
-	<span class="user-mention">
+	<span class="user-mention" :class="{ '-user-mention-self': isLoggedInUser }">
 		<template v-if="user">
 			<app-user-card-hover :user="user">
 				<router-link :to="user.url">
 					<span>
-						<slot />
+						<span class="-text-container">
+							<slot />
+						</span>
 						<span class="avatar-container">
 							<img
 								key="user"
@@ -48,9 +50,21 @@
 .mention-verified
 	position: absolute
 	right: -4px
-	bottom: -4px
+	bottom: -3px
 	change-bg('bg-offset')
 	border-radius: 100%
+	font-size: 13px
+
+.-user-mention-self
+	background-color: rgba(255, 255, 0, 0.2)
+	padding-left: 4px
+	padding-right: 4px
+	rounded-corners()
+	font-weight: bold
+
+	.-text-container
+		// Overwrite the link color here to make sure it works on the yellow background.
+		color: var(--theme-fg) !important
 
 </style>
 
