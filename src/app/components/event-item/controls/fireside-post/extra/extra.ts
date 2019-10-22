@@ -13,6 +13,7 @@ import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../../_common/report/modal/modal.service';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
 import { User } from '../../../../../../_common/user/user.model';
+import { store } from '../../../../../store';
 import { CommunityMovePostModal } from '../../../../community/move-post/modal/modal.service';
 import { AppCommunityPerms } from '../../../../community/perms/perms';
 
@@ -119,6 +120,9 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 			this.emitUnfeature(postCommunity.community);
 		} else {
 			await this.post.$feature(postCommunity.community);
+			if (store.grid) {
+				store.grid.recordFeaturedPost(this.post);
+			}
 			this.emitFeature(postCommunity.community);
 		}
 	}

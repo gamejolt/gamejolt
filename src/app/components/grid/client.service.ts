@@ -6,6 +6,7 @@ import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Community } from '../../../_common/community/community.model';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
+import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Growls } from '../../../_common/growls/growls.service';
 import {
 	getNotificationText,
@@ -24,7 +25,9 @@ interface NewNotificationPayload {
 	};
 }
 
-interface CommunityFeaturePayload {}
+interface CommunityFeaturePayload {
+	post_id: string;
+}
 
 interface CommunityNewPostPayload {
 	channel_id: string;
@@ -80,6 +83,13 @@ export class GridClient {
 	notificationBacklog: NewNotificationPayload[] = [];
 	bootstrapReceived = false;
 	bootstrapTimestamp = 0;
+
+	/**
+	 * Store ids of posts the user has featured.
+	 * The Grid client will ignore any incoming feature notifications for posts recorded here,
+	 * because users that feature posts should not get notified about those exact posts.
+	 */
+	featuredPostIds: number[] = [];
 
 	constructor() {
 		this.connect();
@@ -375,7 +385,15 @@ export class GridClient {
 		}
 	}
 
-	handleCommunityFeature(communityId: number, _payload: CommunityFeaturePayload) {
+	handleCommunityFeature(communityId: number, payload: CommunityFeaturePayload) {
+		// Suppress notification if the user featured that post.
+		if (payload.post_id) {
+			const postId = Number.parseInt(payload.post_id, 10);
+			if (this.featuredPostIds.includes(postId)) {
+				return;
+			}
+		}
+
 		const communityState = store.state.communityStates.getCommunityState(communityId);
 		communityState.unreadFeatureCount++;
 		store.commit('incrementNotificationCount', { count: 1, type: 'activity' });
@@ -410,6 +428,12 @@ export class GridClient {
 				this.socket.disconnect();
 				this.socket = null;
 			}
+		}
+	}
+
+	public recordFeaturedPost(post: FiresidePost) {
+		if (!this.featuredPostIds.includes(post.id)) {
+			this.featuredPostIds.push(post.id);
 		}
 	}
 }
