@@ -13,6 +13,7 @@ import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../_common/scroll/affix/affix.vue';
+import { ThemeMutation, ThemeStore } from '../../../../../_common/theme/theme.store';
 import { User } from '../../../../../_common/user/user.model';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import AppActivityFeed from '../../../../components/activity/feed/feed.vue';
@@ -99,6 +100,9 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	@State
 	communityStates!: Store['communityStates'];
+
+	@ThemeMutation
+	setPageTheme!: ThemeStore['setPageTheme'];
 
 	feed: ActivityFeedView | null = null;
 	knownMembers: User[] = [];
@@ -332,6 +336,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	onDetailsChanged(community: Community) {
 		this.community.assign(community);
+		this.setPageTheme(community.theme || null);
 	}
 
 	onClickLoadNew() {
