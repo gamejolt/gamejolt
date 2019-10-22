@@ -29,8 +29,6 @@ export default class AppUserSpawnDay extends Vue {
 		container: HTMLElement;
 	};
 
-	_isBlocked = false;
-
 	get shouldShowSpawnDay() {
 		if (this.user) {
 			// Don't show for new users or users from the future
@@ -77,13 +75,6 @@ export default class AppUserSpawnDay extends Vue {
 	}
 
 	async showNewPost() {
-		if (this._isBlocked) {
-			return;
-		}
-
-		// Block the modal from appearing multiple times between the post request being sent and the modal opening
-		this._isBlocked = true;
-
 		const postProvider = FiresidePost.$create().then(newPost => {
 			// Create a doc and append the "#spawnday" tag.
 			const spawnDayDoc = new ContentDocument('fireside-post-lead', []);
@@ -95,7 +86,6 @@ export default class AppUserSpawnDay extends Vue {
 		});
 
 		const post = await PostEditModal.show(postProvider);
-		this._isBlocked = false;
 
 		if (!post) {
 			return;
