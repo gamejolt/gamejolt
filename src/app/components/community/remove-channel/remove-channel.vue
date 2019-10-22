@@ -42,7 +42,7 @@
 			<translate>Removing a channel is irreversible. Once it's gone, it's gone for good.</translate>
 			<template v-if="moving">
 				<br />
-				<translate>It might take a few minutes for the posts to show in the new channel.</translate>
+				<translate>It might take a few moments for the posts to show in the new channel.</translate>
 			</template>
 		</p>
 	</div>
