@@ -84,16 +84,17 @@ export default class AppUserSpawnDay extends Vue {
 		// Block the modal from appearing multiple times between the post request being sent and the modal opening
 		this._isBlocked = true;
 
-		let post: FiresidePost | undefined = await FiresidePost.$create();
+		const postProvider = FiresidePost.$create().then(newPost => {
+			// Create a doc and append the "#spawnday" tag.
+			const spawnDayDoc = new ContentDocument('fireside-post-lead', []);
+			const writer = new ContentWriter(spawnDayDoc);
+			writer.appendTag('spawnday');
 
-		// Create a doc and append the "#spawnday" tag.
-		const spawnDayDoc = new ContentDocument('fireside-post-lead', []);
-		const writer = new ContentWriter(spawnDayDoc);
-		writer.appendTag('spawnday');
+			newPost.lead_content = spawnDayDoc.toJson();
+			return newPost;
+		});
 
-		post.lead_content = spawnDayDoc.toJson();
-
-		post = await PostEditModal.show(post);
+		const post = await PostEditModal.show(postProvider);
 		this._isBlocked = false;
 
 		if (!post) {

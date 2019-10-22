@@ -55,11 +55,12 @@ export default class AppPostAddButton extends Vue {
 		// Block the modal from appearing multiple times between the post request being sent and the modal opening
 		this._isBlocked = true;
 
-		let post: FiresidePost | undefined = await FiresidePost.$create(
-			this.game ? this.game.id : 0
-		);
+		const postProvider = FiresidePost.$create(this.game ? this.game.id : 0);
 
-		post = await PostEditModal.show(post, { community: this.community, channel: this.channel });
+		const post = await PostEditModal.show(postProvider, {
+			community: this.community,
+			channel: this.channel,
+		});
 		this._isBlocked = false;
 
 		if (!post) {
