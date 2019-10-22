@@ -16,6 +16,7 @@ import {
 } from '../../_common/community/community.model';
 import { Connection } from '../../_common/connection/connection-service';
 import { ContentFocus } from '../../_common/content-focus/content-focus.service';
+import { FiresidePost } from '../../_common/fireside/post/post-model';
 import { Growls } from '../../_common/growls/growls.service';
 import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../_common/screen/screen-service';
@@ -77,6 +78,7 @@ export type Mutations = AppMutations &
 		setFriendRequestCount: number;
 		changeFriendRequestCount: number;
 		viewCommunity: Community;
+		featuredPost: FiresidePost;
 	};
 
 let bootstrapResolver: Function | null = null;
@@ -431,6 +433,13 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 		this.communities.splice(idx, 1);
 		this.communities.unshift(community);
+	}
+
+	@VuexMutation
+	featuredPost(post: Mutations['featuredPost']) {
+		if (this.grid) {
+			this.grid.recordFeaturedPost(post);
+		}
 	}
 
 	@VuexMutation

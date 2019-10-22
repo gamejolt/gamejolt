@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Mutation } from 'vuex-class';
 import { Api } from '../../../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
@@ -13,7 +14,7 @@ import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../../_common/report/modal/modal.service';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
 import { User } from '../../../../../../_common/user/user.model';
-import { store } from '../../../../../store';
+import { Store } from '../../../../../store/index';
 import { CommunityMovePostModal } from '../../../../community/move-post/modal/modal.service';
 import { AppCommunityPerms } from '../../../../community/perms/perms';
 
@@ -29,6 +30,9 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 
 	@AppState
 	user!: AppStore['user'];
+
+	@Mutation
+	featuredPost!: Store['featuredPost'];
 
 	@Emit('remove')
 	emitRemove() {}
@@ -120,9 +124,7 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 			this.emitUnfeature(postCommunity.community);
 		} else {
 			await this.post.$feature(postCommunity.community);
-			if (store.grid) {
-				store.grid.recordFeaturedPost(this.post);
-			}
+			this.featuredPost(this.post);
 			this.emitFeature(postCommunity.community);
 		}
 	}
