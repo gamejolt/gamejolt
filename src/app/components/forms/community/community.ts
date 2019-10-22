@@ -2,7 +2,11 @@ import { Component } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import { Community } from '../../../../_common/community/community.model';
 import AppFormControlTheme from '../../../../_common/form-vue/control/theme/theme.vue';
-import { BaseForm, FormOnSubmitSuccess } from '../../../../_common/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnInit,
+	FormOnSubmitSuccess,
+} from '../../../../_common/form-vue/form.service';
 import { Theme } from '../../../../_common/theme/theme.model';
 import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
 import { Store } from '../../../store';
@@ -14,9 +18,9 @@ import AppPostAddButtonFormControl from '../../post/add-button/form-control/form
 		AppFormControlTheme,
 	},
 })
-export default class FormCommunity extends BaseForm<Community> implements FormOnSubmitSuccess {
+export default class FormCommunity extends BaseForm<Community>
+	implements FormOnInit, FormOnSubmitSuccess {
 	modelClass = Community;
-	warnOnDiscard = false;
 
 	@Action
 	joinCommunity!: Store['joinCommunity'];
@@ -27,7 +31,15 @@ export default class FormCommunity extends BaseForm<Community> implements FormOn
 	@ThemeState
 	userTheme!: ThemeStore['userTheme'];
 
+	onInit() {
+		this.warnOnDiscard = this.method === 'edit';
+	}
+
 	onSubmitSuccess(response: any) {
+		if (this.method !== 'add') {
+			return;
+		}
+
 		const community = new Community(response.community);
 
 		// When creating a community you get auto joined to it,
@@ -40,6 +52,10 @@ export default class FormCommunity extends BaseForm<Community> implements FormOn
 
 	onPostPlaceholderChange(placeholder: string) {
 		this.setField('post_placeholder_text', placeholder || null);
+	}
+
+	destroyed() {
+		this.setFormTheme(null);
 	}
 
 	onThemeChanged() {
