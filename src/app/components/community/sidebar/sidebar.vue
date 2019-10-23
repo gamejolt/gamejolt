@@ -21,13 +21,11 @@
 			<app-game-thumbnail :game="community.game" class="-community-game" />
 		</template>
 
-		<div v-if="shouldShowCollabSection" class="-mod-list">
+		<div class="-mod-list">
 			<div class="clearfix">
-				<div class="pull-right" v-if="shouldShowLoadMoreCollaborators">
+				<div class="pull-right" v-if="hasMoreCollaborators">
 					<app-button trans :disabled="isLoadingMoreCollaborators" @click="toggleCollaboratorList">
-						<translate
-							v-if="collaboratorListCollapsed || isLoadingMoreCollaborators || hasMoreCollaborators"
-						>
+						<translate v-if="collaboratorListCollapsed || isLoadingMoreCollaborators">
 							View All
 						</translate>
 						<translate v-else>Show fewer</translate>
