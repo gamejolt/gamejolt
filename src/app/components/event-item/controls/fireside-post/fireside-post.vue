@@ -1,8 +1,5 @@
 <template>
-	<!--
-		We don't want it clicking into the post when clicking a control.
-	-->
-	<span @click.stop>
+	<span>
 		<app-event-item-controls-fireside-post-stats
 			v-if="shouldShowStatsInNewLine"
 			:key="'stats'"
