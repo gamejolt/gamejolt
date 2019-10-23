@@ -19,7 +19,7 @@
 			</app-card-list-add>
 		</app-card-list>
 
-		<table v-if="blocks" class="table">
+		<table v-if="hasBlocks" class="table">
 			<thead>
 				<tr>
 					<th class="-header" @click="changeSort('name')">

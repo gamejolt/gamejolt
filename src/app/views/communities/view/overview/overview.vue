@@ -136,9 +136,9 @@
 					</translate>
 				</div>
 
-				<div v-if="community.block_expires_on">
+				<div v-if="community.user_block.doesExpire">
 					Your block will expire in
-					<b><app-time-ago :date="community.block_expires_on" without-suffix /></b>
+					<b><app-time-ago :date="community.user_block.expires_on" without-suffix /></b>
 				</div>
 			</div>
 

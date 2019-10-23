@@ -20,6 +20,7 @@ import AppScrollAffix from '../../../../../_common/scroll/affix/affix.vue';
 import { AppSocialFacebookLike } from '../../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../../_common/social/twitter/share/share';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
+import { getBlockReason } from '../../../../../_common/user/block/block.model';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
@@ -192,20 +193,11 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get communityBlockReason() {
-		if (!this.community.block_reason) {
+		if (!this.community.user_block) {
 			return '';
 		}
 
-		return this.defaultBlockReasons[this.community.block_reason] || this.community.block_reason;
-	}
-
-	get defaultBlockReasons(): { [reason: string]: string } {
-		return {
-			spam: this.$gettext('Spam'),
-			'off-topic': this.$gettext('Off Topic'),
-			abuse: this.$gettext('Offensive or insulting'),
-			other: this.$gettext('Other'),
-		};
+		return getBlockReason(this.$gettext, this.community.user_block.reason);
 	}
 
 	get sort() {

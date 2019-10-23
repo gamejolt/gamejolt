@@ -68,6 +68,10 @@ export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
 		}
 	}
 
+	get hasBlocks() {
+		return this.blocks && this.blocks.length > 0;
+	}
+
 	routeResolved($payload: any) {
 		if ($payload.blocks) {
 			this.blocks = UserBlock.populate($payload.blocks);

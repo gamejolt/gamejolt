@@ -4,6 +4,7 @@ import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import { BaseModal } from '../../modal/base';
 import { Screen } from '../../screen/screen-service';
 import { AppState, AppStore } from '../../store/app-store';
+import { UserBlock } from '../../user/block/block.model';
 import FormComment from '../add/add.vue';
 import { Comment } from '../comment-model';
 import { CommentMutation, CommentState, CommentStore } from '../comment-store';
@@ -44,7 +45,7 @@ export default class AppCommentThreadModal extends BaseModal {
 
 	hasError = false;
 	isEditorFocused = false;
-	isBlocked = false;
+	userBlock: UserBlock | null = null;
 
 	readonly Screen = Screen;
 
@@ -81,7 +82,7 @@ export default class AppCommentThreadModal extends BaseModal {
 	}
 
 	get shouldShowReply() {
-		if (this.isBlocked) {
+		if (this.userBlock) {
 			return false;
 		}
 
@@ -113,7 +114,7 @@ export default class AppCommentThreadModal extends BaseModal {
 		this.isEditorFocused = false;
 	}
 
-	setUserBlocked() {
-		this.isBlocked = true;
+	onWidgetGotUserBlock(userBlock: UserBlock) {
+		this.userBlock = userBlock;
 	}
 }
