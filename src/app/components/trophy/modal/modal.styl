@@ -58,12 +58,21 @@
 
 	@media $media-xs
 		margin-bottom: $line-height-computed
+		display: flex
 
 	& > *
 		width: 100px
 
 .-trophy-type
 	display: inline-block
+
+	& > *
+		vertical-align: middle
+
+.-game-link
+
+	&:hover
+		text-decoration: none
 
 	& > *
 		vertical-align: middle
@@ -77,3 +86,9 @@
 	margin-top: ($line-height-computed / 2)
 	word-break: break-word
 	margin-bottom: ($line-height-computed / 2)
+
+.-exp
+	display: flex
+	justify-content: center
+	align-items: center
+	margin-top: 10px

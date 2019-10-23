@@ -2,12 +2,11 @@ import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class/lib/bindings';
 import { Api } from '../../../../_common/api/api.service';
-import { Game } from '../../../../_common/game/game.model';
 import { BaseModal } from '../../../../_common/modal/base';
 import { AppStore } from '../../../../_common/store/app-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import { UserGameTrophy } from '../../../../_common/user/trophy/game-trophy.model';
-import { UserSiteTrophy } from '../../../../_common/user/trophy/site-trophy.model';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../_common/user/user.model';
@@ -18,6 +17,9 @@ import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
 		AppTrophyThumbnail,
 		AppTimeAgo,
 		AppUserAvatarList,
+	},
+	directives: {
+		AppTooltip,
 	},
 })
 export default class AppTrophyModal extends BaseModal {
@@ -43,14 +45,11 @@ export default class AppTrophyModal extends BaseModal {
 	}
 
 	get canReceiveExp() {
-		if (this.userTrophy instanceof UserSiteTrophy) {
-			return true;
+		if (!this.userTrophy.trophy) {
+			return false;
 		}
-		return (
-			this.userTrophy instanceof UserGameTrophy &&
-			this.userTrophy.game instanceof Game &&
-			this.userTrophy.game.developer.id !== this.userTrophy.user_id // Devs can't get exp from their own trophies.
-		);
+
+		return !this.userTrophy.trophy.is_owner;
 	}
 
 	get completionPercentageForDisplay() {
@@ -64,6 +63,12 @@ export default class AppTrophyModal extends BaseModal {
 
 	get shouldShowFriends() {
 		return this.friends && this.friends.length > 0;
+	}
+
+	get game() {
+		if (this.userTrophy instanceof UserGameTrophy) {
+			return this.userTrophy.game;
+		}
 	}
 
 	mounted() {

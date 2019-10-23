@@ -22,12 +22,24 @@
 					<div class="-trophy-view">
 						<div class="-thumbnail">
 							<app-trophy-thumbnail :trophy="trophy" no-tooltip />
+							<div v-if="canReceiveExp" class="-exp text-muted">
+								<app-jolticon icon="exp" />
+								<span v-translate="{ exp: trophy.experience }">
+									%{ exp } EXP
+								</span>
+							</div>
 						</div>
 						<div class="-info">
 							<small class="-trophy-type text-muted">
 								<template v-if="isGame">
-									<app-jolticon icon="game" />
-									<span>Game Trophy</span>
+									<router-link
+										:to="game.routeLocation"
+										class="-game-link link-unstyled"
+										v-app-tooltip="game.title"
+									>
+										<app-jolticon icon="game" />
+										<span>Game Trophy</span>
+									</router-link>
 								</template>
 								<template v-else>
 									<app-jolticon icon="gamejolt" />

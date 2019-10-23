@@ -1,7 +1,7 @@
 import { Api } from '../../api/api.service';
 import { Model } from '../../model/model.service';
 import { BaseTrophy } from '../../trophy/base-trophy.model';
-import { UserGameTrophy } from '../../user/game-trophy/game-trophy.model';
+import { UserGameTrophy } from '../../user/trophy/game-trophy.model';
 
 export class GameTrophy extends BaseTrophy {
 	game_id!: number;
