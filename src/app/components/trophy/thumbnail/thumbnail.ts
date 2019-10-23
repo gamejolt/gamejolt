@@ -20,7 +20,6 @@ export function getTrophyImg(trophy: BaseTrophy, isAchieved = true) {
 	// Make sure we don't show thumbnails for secret trophies unless they've
 	// been achieved.
 	if (trophy.has_thumbnail && (!trophy.secret || isAchieved || trophy.is_owner)) {
-		console.log(trophy.img_thumbnail);
 		return trophy.img_thumbnail;
 	}
 
