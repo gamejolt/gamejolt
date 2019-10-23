@@ -61,14 +61,15 @@
 									<h5>{{ channel.title }}</h5>
 								</div>
 
-								<div class="card-content">
+								<!-- TODO: Community-channel-description-enable -->
+								<!-- <div class="card-content">
 									<template v-if="channel.description">
 										{{ channel.description }}
 									</template>
 									<em class="text-muted" v-else>
 										<translate>Empty channel description</translate>
 									</em>
-								</div>
+								</div> -->
 							</div>
 						</div>
 

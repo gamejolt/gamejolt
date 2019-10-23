@@ -47,7 +47,8 @@
 			<app-form-control-errors />
 		</app-form-group>
 
-		<app-form-group name="description" :optional="true">
+		<!-- TODO: Community-channel-description-enable -->
+		<!-- <app-form-group name="description" :optional="true">
 			<app-form-control-textarea
 				rows="2"
 				:rules="{
@@ -55,7 +56,7 @@
 				}"
 			/>
 			<app-form-control-errors />
-		</app-form-group>
+		</app-form-group> -->
 
 		<app-form-button>
 			<translate>Save Channel</translate>
