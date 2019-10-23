@@ -2,6 +2,7 @@ import { Schema } from 'prosemirror-model';
 import { schema as basicSchema } from 'prosemirror-schema-basic';
 import { ContextCapabilities } from '../../content-context';
 import { ContentObjectType } from '../../content-object';
+import { community } from './specs/marks/community-markspec';
 import { link } from './specs/marks/link-markspec';
 import { mention } from './specs/marks/mention-markspec';
 import { strike } from './specs/marks/strike-markspec';
@@ -39,7 +40,7 @@ export class ContentEditorSchema extends Schema<
 	| 'spoiler'
 	| 'heading'
 	| 'gif',
-	'strong' | 'em' | 'code' | 'link' | 'strike' | 'mention' | 'tag'
+	'strong' | 'em' | 'code' | 'link' | 'strike' | 'mention' | 'tag' | 'community'
 > {}
 
 export function generateSchema(capabilities: ContextCapabilities) {
@@ -133,6 +134,9 @@ function generateMarks(capabilities: ContextCapabilities) {
 	}
 	if (capabilities.tag) {
 		marks.tag = tag;
+	}
+	if (capabilities.community) {
+		marks.community = community;
 	}
 
 	return marks;

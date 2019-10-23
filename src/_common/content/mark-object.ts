@@ -1,4 +1,12 @@
-export type MarkObjectType = 'strong' | 'em' | 'code' | 'link' | 'strike' | 'mention' | 'tag';
+export type MarkObjectType =
+	| 'strong'
+	| 'em'
+	| 'code'
+	| 'link'
+	| 'strike'
+	| 'mention'
+	| 'tag'
+	| 'community';
 
 export class MarkObject {
 	public type!: MarkObjectType;

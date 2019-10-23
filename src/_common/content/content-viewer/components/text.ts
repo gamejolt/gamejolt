@@ -3,6 +3,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import AppLinkExternal from '../../../link/external/external.vue';
 import { ContentObject } from '../../content-object';
 import { ContentOwner } from '../../content-owner';
+import AppContentViewerCommunity from './community/community.vue';
 import AppContentViewerMention from './mention/mention.vue';
 import AppContentViewerTag from './tag/tag.vue';
 
@@ -10,6 +11,7 @@ import AppContentViewerTag from './tag/tag.vue';
 export class AppContentViewerText extends Vue {
 	@Prop(ContentObject)
 	data!: ContentObject;
+
 	@Prop(Object)
 	owner!: ContentOwner;
 
@@ -56,6 +58,10 @@ export class AppContentViewerText extends Vue {
 		return this.hasMark('tag');
 	}
 
+	get isCommunity() {
+		return this.hasMark('community');
+	}
+
 	render(h: CreateElement) {
 		let vnode = h('span', this.text);
 		if (this.isLink) {
@@ -94,6 +100,15 @@ export class AppContentViewerText extends Vue {
 			vnode = h(
 				AppContentViewerTag,
 				{ props: { tag: attrs.tag, owner: this.owner } },
+				children
+			);
+		} else if (this.isCommunity) {
+			const attrs = this.getMarkAttrs('community');
+			const children = [vnode];
+
+			vnode = h(
+				AppContentViewerCommunity,
+				{ props: { path: attrs.community, owner: this.owner } },
 				children
 			);
 		}

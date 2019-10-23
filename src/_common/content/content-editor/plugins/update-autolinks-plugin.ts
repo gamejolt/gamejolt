@@ -43,6 +43,7 @@ export default class UpdateAutolinkPlugin extends Plugin {
 
 		const mentionMarkType = this.view.state.schema.marks.mention;
 		const tagMarkType = this.view.state.schema.marks.tag;
+		const communityMarkType = this.view.state.schema.marks.community;
 		const linkMarkType = this.view.state.schema.marks.link;
 
 		const paragraphs = this.getParagraphs(tr.doc);
@@ -70,6 +71,9 @@ export default class UpdateAutolinkPlugin extends Plugin {
 			if (this.capabilities.tag) {
 				tr.removeMark(paragraphPos, paragraphPos + paragraph.nodeSize, tagMarkType);
 			}
+			if (this.capabilities.community) {
+				tr.removeMark(paragraphPos, paragraphPos + paragraph.nodeSize, communityMarkType);
+			}
 			if (this.capabilities.textLink) {
 				this.removeAutolinkMarks(tr, paragraphPos, paragraph);
 			}
@@ -81,7 +85,7 @@ export default class UpdateAutolinkPlugin extends Plugin {
 			const cells = this.getTextCells(paragraph);
 
 			for (const cell of cells) {
-				// These have to be processed in this order, because links have to have preceedens over mentions:
+				// These have to be processed in this order, because links have to have preceedens over mentions and communities:
 				// `gamejolt.com/@user` would become an autolink, and not a mention when processing links first.
 
 				if (this.capabilities.textLink) {
@@ -89,6 +93,9 @@ export default class UpdateAutolinkPlugin extends Plugin {
 				}
 				if (this.capabilities.mention) {
 					this.processMentions(tr, cell, mentionMarkType, paragraphPos);
+				}
+				if (this.capabilities.community) {
+					this.processCommunities(tr, cell, communityMarkType, paragraphPos);
 				}
 				if (this.capabilities.tag) {
 					this.processTags(tr, cell, tagMarkType, paragraphPos);
@@ -100,16 +107,18 @@ export default class UpdateAutolinkPlugin extends Plugin {
 	}
 
 	/**
-	 * Checks whether the given range (from - to) has one of the three mark types attached to it:
+	 * Checks whether the given range (from - to) has one of the four mark types attached to it:
 	 *  - mention
 	 *  - tag
 	 *  - link
+	 *  - community
 	 */
 	rangeHasLinks(tr: Transaction<ContentEditorSchema>, from: number, to: number) {
 		const markTypes = [
 			this.view.state.schema.marks.mention,
 			this.view.state.schema.marks.tag,
 			this.view.state.schema.marks.link,
+			this.view.state.schema.marks.community,
 		];
 		for (const markType of markTypes) {
 			if (tr.doc.rangeHasMark(from, to, markType)) {
@@ -146,9 +155,44 @@ export default class UpdateAutolinkPlugin extends Plugin {
 		for (const match of matches) {
 			const from = paragraphPos + match.index;
 			const to = from + match.match.length;
-			// Make sure to only apply a tag mark if the given range does not already have a link/mention/tag mark on it.
+			// Make sure to only apply a tag mark if the given range does not already have a link/mention/tag/community mark on it.
 			if (!this.rangeHasLinks(tr, from, to)) {
 				const mark = markType.create({ tag: match.match.substr(1) });
+				tr.addMark(from, to, mark);
+			}
+		}
+	}
+
+	processCommunities(
+		tr: Transaction<ContentEditorSchema>,
+		cell: TextCell,
+		markType: MarkType<ContentEditorSchema>,
+		paragraphPos: number
+	) {
+		const matches = [] as RegexResult[];
+		const regex = /(^|[^a-z0-9_])(c\/[a-z0-9_]{1,50})/gi;
+
+		let cellMatch = regex.exec(cell.text);
+		while (cellMatch !== null) {
+			// Find the offset of the c/ part of the match in the regex.
+			// We want to exclude the boundary bit (group 0).
+			const communityIdx = cellMatch[1].length;
+			const communityText = cellMatch[2];
+
+			matches.push({
+				index: cell.index + communityIdx + 1, // +1 to skip the paragraph node index
+				match: communityText,
+			});
+
+			cellMatch = regex.exec(cell.text);
+		}
+
+		for (const match of matches) {
+			const from = paragraphPos + match.index;
+			const to = from + match.match.length;
+			// Make sure to only apply a community mark if the given range does not already have a link/mention/tag/community mark on it.
+			if (!this.rangeHasLinks(tr, from, to)) {
+				const mark = markType.create({ community: match.match.substr(2) });
 				tr.addMark(from, to, mark);
 			}
 		}
@@ -181,7 +225,7 @@ export default class UpdateAutolinkPlugin extends Plugin {
 		for (const match of matches) {
 			const from = paragraphPos + match.index;
 			const to = from + match.match.length;
-			// Make sure to only apply a mention mark if the given range does not already have a link/mention/tag mark on it.
+			// Make sure to only apply a mention mark if the given range does not already have a link/mention/tag/community mark on it.
 			if (!this.rangeHasLinks(tr, from, to)) {
 				const mark = markType.create({ username: match.match.substr(1) });
 				tr.addMark(from, to, mark);
@@ -200,7 +244,7 @@ export default class UpdateAutolinkPlugin extends Plugin {
 		for (const match of matches) {
 			const from = paragraphPos + match.index;
 			const to = from + match.match.length;
-			// Make sure to only apply a link mark if the given range does not already have a link/mention/tag mark on it.
+			// Make sure to only apply a link mark if the given range does not already have a link/mention/tag/community mark on it.
 			if (!this.rangeHasLinks(tr, from, to)) {
 				const mark = markType.create({
 					href: match.match,

@@ -9,7 +9,8 @@ export type ContentHydrationType =
 	| 'media-item-id'
 	| 'username'
 	| 'soundcloud-track-url'
-	| 'soundcloud-track-id';
+	| 'soundcloud-track-id'
+	| 'community-path';
 
 export type ContentHydrationDataEntry = {
 	type: ContentHydrationType;

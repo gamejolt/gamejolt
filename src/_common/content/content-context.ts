@@ -21,6 +21,7 @@ enum ContextCapabilityType {
 	CustomLink,
 	Emoji,
 	Tag,
+	Community,
 	Mention,
 
 	Media,
@@ -116,6 +117,9 @@ export class ContextCapabilities {
 	get tag() {
 		return this.hasCapability(ContextCapabilityType.Tag);
 	}
+	get community() {
+		return this.hasCapability(ContextCapabilityType.Community);
+	}
 	get heading() {
 		return this.hasCapability(ContextCapabilityType.Heading);
 	}
@@ -144,6 +148,7 @@ export class ContextCapabilities {
 				return new ContextCapabilities([
 					ContextCapabilityType.TextLink,
 					ContextCapabilityType.Tag,
+					ContextCapabilityType.Community,
 					ContextCapabilityType.Mention,
 				]);
 			case 'fireside-post-article':
@@ -166,6 +171,7 @@ export class ContextCapabilities {
 					ContextCapabilityType.HorizontalRule,
 					ContextCapabilityType.Spoiler,
 					ContextCapabilityType.Tag,
+					ContextCapabilityType.Community,
 					ContextCapabilityType.Heading,
 					ContextCapabilityType.Mention,
 					ContextCapabilityType.Gif,
@@ -187,6 +193,7 @@ export class ContextCapabilities {
 					ContextCapabilityType.HorizontalRule,
 					ContextCapabilityType.Spoiler,
 					ContextCapabilityType.Tag,
+					ContextCapabilityType.Community,
 					ContextCapabilityType.Heading,
 					ContextCapabilityType.Mention,
 				]);
@@ -208,6 +215,7 @@ export class ContextCapabilities {
 					ContextCapabilityType.HorizontalRule,
 					ContextCapabilityType.Spoiler,
 					ContextCapabilityType.Tag,
+					ContextCapabilityType.Community,
 					ContextCapabilityType.Mention,
 					ContextCapabilityType.Gif,
 				]);
@@ -226,6 +234,7 @@ export class ContextCapabilities {
 					ContextCapabilityType.HorizontalRule,
 					ContextCapabilityType.Spoiler,
 					ContextCapabilityType.Tag,
+					ContextCapabilityType.Community,
 					ContextCapabilityType.Mention,
 				]);
 		}
