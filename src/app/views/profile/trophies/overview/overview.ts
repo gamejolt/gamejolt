@@ -1,7 +1,9 @@
 import Component from 'vue-class-component';
+import { State } from 'vuex-class/lib/bindings';
 import { Api } from '../../../../../_common/api/api.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { AppStore } from '../../../../../_common/store/app-store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
 import AppTimelineList from '../../../../../_common/timeline-list/timeline-list.vue';
@@ -38,6 +40,9 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 	@RouteStoreModule.State
 	user!: RouteStore['user'];
 
+	@State
+	app!: AppStore;
+
 	trophyEntries: TrophyEntry[] = [];
 
 	get routeTitle() {
@@ -51,6 +56,10 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 
 	get hasTrophies() {
 		return this.trophyEntries.length > 0;
+	}
+
+	get isDev() {
+		return this.app.user && this.app.user.is_developer;
 	}
 
 	routeResolved($payload: any) {

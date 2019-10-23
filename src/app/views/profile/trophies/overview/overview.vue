@@ -3,7 +3,23 @@
 		<h4 class="section-header">
 			<translate>Level progression</translate>
 		</h4>
-		<app-user-level-widget class="-level-widget" :user="user" />
+		<div class="-exp">
+			<app-user-level-widget class="-level-widget" :user="user" />
+			<div>
+				<div>
+					<app-link-help page="user-exp">
+						<app-jolticon icon="exp" />
+						<translate>Learn more about EXP</translate>
+					</app-link-help>
+				</div>
+				<div v-if="isDev">
+					<app-link-help page="dev-trophies">
+						<app-jolticon icon="trophy" />
+						<translate>Learn how to integrate Trophies into YOUR game.</translate>
+					</app-link-help>
+				</div>
+			</div>
+		</div>
 
 		<h4 class="section-header -trophy-header">
 			<translate>Trophy activity</translate>
@@ -86,9 +102,12 @@
 </template>
 
 <style lang="stylus" scoped>
+@require '~styles/variables'
 
 .-level-widget
 	max-width: 340px
+	width: 100%
+	margin-right: 20px
 
 .-trophy-header
 	margin-top: 20px
@@ -112,6 +131,15 @@
 	margin-right: 10px
 	margin-bottom: 10px
 	cursor: pointer
+
+.-exp
+	display: flex
+
+	@media $media-xs
+		flex-direction: column
+
+		.-level-widget
+			margin: 0
 
 </style>
 
