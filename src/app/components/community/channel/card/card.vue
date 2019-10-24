@@ -23,9 +23,9 @@
 						{{ channel.description }}
 					</template>
 					<template v-else>
-						<span v-translate="{ title: channel.title }">
+						<!-- <span v-translate="{ title: channel.title }">
 							The place for '%{ title }' posts
-						</span>
+						</span> -->
 					</template>
 				</div>
 			</div>
