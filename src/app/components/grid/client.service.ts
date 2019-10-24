@@ -89,7 +89,7 @@ export class GridClient {
 	 * The Grid client will ignore any incoming feature notifications for posts recorded here,
 	 * because users that feature posts should not get notified about those exact posts.
 	 */
-	featuredPostIds: number[] = [];
+	private featuredPostIds: number[] = [];
 
 	constructor() {
 		this.connect();
