@@ -22,7 +22,7 @@
 						v-app-tooltip="$gettext('View Comments')"
 					/>
 
-					<span class="blip" v-if="commentsCount > 0" @click="openComments()">
+					<span class="blip" v-if="commentsCount > 0" @click.stop="openComments()">
 						<span class="blip-caret"></span>
 						<span class="blip-count">
 							{{ commentsCount | number }}
