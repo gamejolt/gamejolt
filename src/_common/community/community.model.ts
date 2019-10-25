@@ -58,6 +58,8 @@ export async function $leaveCommunity(community: Community) {
 	}
 }
 
+export const placeholderThumbnailImg = require('./no-thumb.png');
+
 export class Community extends Collaboratable(Model) {
 	name!: string;
 	path!: string;
@@ -105,7 +107,7 @@ export class Community extends Collaboratable(Model) {
 		if (this.thumbnail instanceof MediaItem) {
 			return this.thumbnail.mediaserver_url;
 		}
-		return require('./no-thumb.png');
+		return placeholderThumbnailImg;
 	}
 
 	get routeLocation(): Location {

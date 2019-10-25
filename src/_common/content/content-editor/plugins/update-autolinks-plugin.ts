@@ -170,13 +170,13 @@ export default class UpdateAutolinkPlugin extends Plugin {
 		paragraphPos: number
 	) {
 		const matches = [] as RegexResult[];
-		const regex = /(^|[^a-z0-9_])(c\/[a-z0-9_]{1,50})/gi;
+		const regex = /(^|[^a-z0-9_])(c\/[\w\-]{1,50})/gi;
 
 		let cellMatch = regex.exec(cell.text);
 		while (cellMatch !== null) {
 			// Find the offset of the c/ part of the match in the regex.
-			// We want to exclude the boundary bit (group 0).
-			const communityIdx = cellMatch[1].length;
+			// We want to exclude the boundary bit (group 1).
+			const communityIdx = cellMatch.index + cellMatch[1].length;
 			const communityText = cellMatch[2];
 
 			matches.push({
