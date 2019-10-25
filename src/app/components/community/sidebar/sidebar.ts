@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Emit, Prop, Watch } from 'vue-property-decorator';
+import { Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
@@ -63,13 +63,10 @@ export default class AppCommunitySidebar extends Vue {
 
 	collaboratorListCollapsed = true;
 	isLoadingMoreCollaborators = false;
+	loadedAllCollaborators = false;
 	isShowingShare = false;
-	loadedAll = false;
 
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
-
-	@Emit('collaborators')
-	emitCollaborators(_collaborators: User[]) {}
 
 	@Watch('collaborators', { immediate: true })
 	onCollaboratorsUpdated(collaborators: User[]) {
@@ -135,7 +132,7 @@ export default class AppCommunitySidebar extends Vue {
 	}
 
 	async loadAllCollaborators() {
-		if (this.loadedAll) {
+		if (this.loadedAllCollaborators || this.isLoadingMoreCollaborators) {
 			return;
 		}
 
@@ -148,8 +145,8 @@ export default class AppCommunitySidebar extends Vue {
 		const collaborators = User.populate(payload.collaborators);
 		this.currentCollaborators = collaborators;
 		this.currentCollaboratorCount = collaborators.length;
-		this.emitCollaborators(collaborators);
 
 		this.isLoadingMoreCollaborators = false;
+		this.loadedAllCollaborators = true;
 	}
 }
