@@ -7,7 +7,6 @@
 				:achieved="completion.achievedCount"
 				:experience="completion.experience"
 			/>
-			<hr />
 		</template>
 		<template v-if="game">
 			<div class="-game-links">
@@ -18,17 +17,16 @@
 				</div>
 				<div class="-game-links-nav">
 					<router-link :to="game.routeLocation">
-						<translate>View Game</translate>
+						<translate>View game</translate>
 					</router-link>
 					<br />
 					<router-link
 						:to="{ name: 'discover.games.view.trophies.list', params: game.getSrefParams() }"
 					>
-						<translate>View all Trophies</translate>
+						<translate>View all trophies</translate>
 					</router-link>
 				</div>
 			</div>
-			<hr />
 		</template>
 		<app-trophy-list-paged :initial-trophies="trophies" :url="listLoadMoreUrl" />
 	</div>
@@ -42,6 +40,7 @@
 	&-links
 		display: flex
 		align-items: center
+		margin-bottom: 32px
 
 		&-nav
 			margin-left: 10px

@@ -13,12 +13,12 @@
 				<strong class="-title" :title="trophy.title">{{ trophy.title }}</strong>
 				<div class="-subline">
 					<small class="text-muted">
-						<template v-if="isGame">
+						<span v-if="isGame" class="-game-title">
 							<app-jolticon icon="game" />
 							<span>
-								<translate>Game Trophy</translate>
+								{{ gameTitle }}
 							</span>
-						</template>
+						</span>
 						<template v-else>
 							<app-jolticon icon="gamejolt" />
 							<span>

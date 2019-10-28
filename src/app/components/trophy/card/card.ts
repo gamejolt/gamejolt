@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
+import { Game } from '../../../../_common/game/game.model';
 import { AppStore } from '../../../../_common/store/app-store';
 import { UserGameTrophy } from '../../../../_common/user/trophy/game-trophy.model';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
@@ -38,6 +39,13 @@ export default class AppTrophyCard extends Vue {
 
 	get isGame() {
 		return this.userTrophy instanceof UserGameTrophy && !!this.userTrophy.game;
+	}
+
+	get gameTitle() {
+		if (this.userTrophy instanceof UserGameTrophy && this.userTrophy.game instanceof Game) {
+			return this.userTrophy.game.title;
+		}
+		return this.$gettext(`Game Trophy`);
 	}
 
 	onClick() {

@@ -1,29 +1,14 @@
 <template>
 	<div>
-		<h4 class="section-header">
-			<translate>Level progression</translate>
-		</h4>
-		<div class="-exp">
-			<app-user-level-widget class="-level-widget" :user="user" />
-			<div>
-				<div>
-					<app-link-help page="user-exp">
-						<app-jolticon icon="exp" />
-						<translate>Learn more about EXP</translate>
-					</app-link-help>
-				</div>
-				<div v-if="isDev">
-					<app-link-help page="dev-trophies">
-						<app-jolticon icon="trophy" />
-						<translate>Learn how to integrate Trophies into YOUR game.</translate>
-					</app-link-help>
-				</div>
-			</div>
-		</div>
-
 		<h4 class="section-header -trophy-header">
-			<translate>Trophy activity</translate>
+			<translate>Activity</translate>
 		</h4>
+		<div v-if="isDev" class="-dev-trophy-link small">
+			<app-link-help page="dev-trophies" class="link-help">
+				<app-jolticon icon="trophy" />
+				<translate>Learn how to integrate trophies into YOUR game.</translate>
+			</app-link-help>
+		</div>
 
 		<div v-if="!hasTrophies" class="alert alert-info">
 			<span>
@@ -110,7 +95,9 @@
 	margin-right: 20px
 
 .-trophy-header
-	margin-top: 20px
+	margin-bottom: 4px
+
+.-dev-trophy-link
 	margin-bottom: 24px
 
 // Used to center the icon

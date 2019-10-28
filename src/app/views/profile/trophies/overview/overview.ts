@@ -12,7 +12,6 @@ import { populateTrophies } from '../../../../../_common/user/trophy/trophy-util
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import { TrophyModal } from '../../../../components/trophy/modal/modal.service';
 import AppTrophyThumbnail from '../../../../components/trophy/thumbnail/thumbnail.vue';
-import AppUserLevelWidget from '../../../../components/user/level-widget/level-widget.vue';
 import { RouteStore, RouteStoreModule } from '../../profile.store';
 
 type TrophyEntry = {
@@ -24,7 +23,6 @@ type TrophyEntry = {
 @Component({
 	name: 'RouteProfileTrophiesOverview',
 	components: {
-		AppUserLevelWidget,
 		AppTimelineList,
 		AppTimelineListItem,
 		AppTimeAgo,

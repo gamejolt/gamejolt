@@ -9,12 +9,9 @@
 					active-class="active"
 					exact
 				>
-					<translate>Overview</translate>
+					<translate>Activity</translate>
 				</router-link>
 			</li>
-		</ul>
-		<hr />
-		<ul class="sans-margin">
 			<li>
 				<router-link
 					:to="{

@@ -3,7 +3,7 @@
 		<section class="section">
 			<div class="container">
 				<div class="row">
-					<div class="col-md-3">
+					<div v-if="Screen.isDesktop" class="col-md-3">
 						<nav class="platform-list">
 							<app-profile-trophies-nav
 								:games="games"

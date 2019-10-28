@@ -13,9 +13,28 @@
 				</div>
 
 				<div class="modal-header">
-					<h2 class="modal-title">
+					<h2 class="modal-title -title">
 						{{ trophy.title }}
 					</h2>
+					<div class="-subtitle small text-muted">
+						<template v-if="isGame">
+							<router-link
+								:to="game.routeLocation"
+								class="-game-link link-unstyled"
+								v-app-tooltip="game.title"
+							>
+								<app-jolticon icon="game" />
+								<span v-translate="{ title: game.title }">
+									Game Trophy of
+									<b>%{ title }</b>
+								</span>
+							</router-link>
+						</template>
+						<template v-else>
+							<app-jolticon icon="gamejolt" />
+							<span>Game Jolt Trophy</span>
+						</template>
+					</div>
 				</div>
 
 				<div class="modal-body">
@@ -30,41 +49,25 @@
 							</div>
 						</div>
 						<div class="-info">
-							<small class="-trophy-type text-muted">
-								<template v-if="isGame">
-									<router-link
-										:to="game.routeLocation"
-										class="-game-link link-unstyled"
-										v-app-tooltip="game.title"
-									>
-										<app-jolticon icon="game" />
-										<span>Game Trophy</span>
-									</router-link>
-								</template>
-								<template v-else>
-									<app-jolticon icon="gamejolt" />
-									<span>Game Jolt Trophy</span>
-								</template>
-							</small>
-							<span class="dot-separator small" />
 							<span class="text-muted small">
 								Achieved
 								<app-time-ago :date="userTrophy.logged_on" />
 							</span>
 
-							<div v-if="completionPercentageForDisplay" class="text-muted small">
+							<span v-if="completionPercentageForDisplay" class="text-muted small">
+								<span class="dot-separator small" />
 								<span v-if="completionPercentageForDisplay === 1">
 									<translate>&lt;1% of players unlocked this trophy</translate>
 								</span>
 								<span v-else-if="completionPercentageForDisplay === 100">
 									<translate>
-										All players unlocked this trophy
+										100% of players unlocked this trophy
 									</translate>
 								</span>
 								<span v-else v-translate="{ num: completionPercentageForDisplay }">
 									~%{ num }% of players unlocked this trophy
 								</span>
-							</div>
+							</span>
 
 							<div class="-description well fill-offset">
 								{{ trophy.description }}
