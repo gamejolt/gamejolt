@@ -76,7 +76,7 @@
 
 		<app-form-button>
 			<translate v-if="method === 'add'">Create</translate>
-			<translate v-else>Save</translate>
+			<translate v-else>Save Details</translate>
 		</app-form-button>
 	</app-form>
 </template>
