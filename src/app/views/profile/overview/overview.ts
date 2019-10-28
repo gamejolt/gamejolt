@@ -20,6 +20,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/rou
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
+import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import { User } from '../../../../_common/user/user.model';
 import { YoutubeChannel } from '../../../../_common/youtube/channel/channel-model';
 import { ChatClient } from '../../../components/chat/client';
@@ -27,6 +28,8 @@ import AppCommentOverview from '../../../components/comment/overview/overview.vu
 import AppGameList from '../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
 import AppPageContainer from '../../../components/page-container/page-container.vue';
+import { TrophyModal } from '../../../components/trophy/modal/modal.service';
+import AppTrophyThumbnail from '../../../components/trophy/thumbnail/thumbnail.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/known-followers.vue';
 import { Store } from '../../../store/index';
 import { RouteStore, RouteStoreModule } from '../profile.store';
@@ -45,6 +48,7 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 		AppContentViewer,
 		AppUserKnownFollowers,
 		AppCommunityVerifiedTick,
+		AppTrophyThumbnail,
 	},
 	directives: {
 		AppTooltip,
@@ -101,6 +105,12 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	@RouteStoreModule.Action
 	removeFriend!: RouteStore['removeFriend'];
+
+	@RouteStoreModule.State
+	previewTrophies!: RouteStore['previewTrophies'];
+
+	@RouteStoreModule.State
+	trophyCount!: RouteStore['trophyCount'];
 
 	@Action
 	toggleRightPane!: Store['toggleRightPane'];
@@ -247,6 +257,18 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		);
 	}
 
+	get shouldShowTrophies() {
+		return !Screen.isMobile && !!this.previewTrophies && this.previewTrophies.length > 0;
+	}
+
+	get shouldShowMoreTrophies() {
+		return this.shouldShowTrophies && this.trophyCount > this.previewTrophies!.length;
+	}
+
+	get moreTrophyCount() {
+		return this.trophyCount - (this.previewTrophies || []).length;
+	}
+
 	getLinkedAccount(provider: Provider) {
 		if (
 			this.user &&
@@ -364,5 +386,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			this.overviewComments = Comment.populate($payload.comments);
 			this.user.comment_count = $payload.count;
 		}
+	}
+
+	onClickTrophy(userTrophy: UserBaseTrophy) {
+		TrophyModal.show(userTrophy);
 	}
 }
