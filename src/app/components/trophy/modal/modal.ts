@@ -3,6 +3,7 @@ import { Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class/lib/bindings';
 import { Api } from '../../../../_common/api/api.service';
 import { BaseModal } from '../../../../_common/modal/base';
+import { Screen } from '../../../../_common/screen/screen-service';
 import { AppStore } from '../../../../_common/store/app-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
@@ -31,6 +32,8 @@ export default class AppTrophyModal extends BaseModal {
 
 	completionPercentage: number | null = null;
 	friends: User[] | null = null;
+
+	readonly Screen = Screen;
 
 	get trophy() {
 		return this.userTrophy.trophy!;

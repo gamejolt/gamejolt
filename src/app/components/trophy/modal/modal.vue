@@ -55,7 +55,8 @@
 							</span>
 
 							<span v-if="completionPercentageForDisplay" class="text-muted small">
-								<span class="dot-separator small" />
+								<span class="dot-separator small" v-if="Screen.isDesktop" />
+								<br v-else />
 								<span v-if="completionPercentageForDisplay === 1">
 									<translate>&lt;1% of players unlocked this trophy</translate>
 								</span>
