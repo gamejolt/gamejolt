@@ -1,8 +1,5 @@
 <template>
-	<!--
-		We don't want it clicking into the post when clicking a control.
-	-->
-	<span @click.stop>
+	<span>
 		<app-event-item-controls-fireside-post-stats
 			v-if="shouldShowStatsInNewLine"
 			:key="'stats'"
@@ -25,7 +22,7 @@
 						v-app-tooltip="$gettext('View Comments')"
 					/>
 
-					<span class="blip" v-if="commentsCount > 0" @click="openComments()">
+					<span class="blip" v-if="commentsCount > 0" @click.stop="openComments()">
 						<span class="blip-caret"></span>
 						<span class="blip-count">
 							{{ commentsCount | number }}
