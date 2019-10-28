@@ -89,7 +89,7 @@ export class GridClient {
 	 * The Grid client will ignore any incoming feature notifications for posts recorded here,
 	 * because users that feature posts should not get notified about those exact posts.
 	 */
-	private featuredPostIds: number[] = [];
+	private featuredPostIds: Set<number> = new Set<number>();
 
 	constructor() {
 		this.connect();
@@ -389,7 +389,7 @@ export class GridClient {
 		// Suppress notification if the user featured that post.
 		if (payload.post_id) {
 			const postId = Number.parseInt(payload.post_id, 10);
-			if (this.featuredPostIds.includes(postId)) {
+			if (this.featuredPostIds.has(postId)) {
 				return;
 			}
 		}
@@ -432,8 +432,8 @@ export class GridClient {
 	}
 
 	public recordFeaturedPost(post: FiresidePost) {
-		if (!this.featuredPostIds.includes(post.id)) {
-			this.featuredPostIds.push(post.id);
+		if (!this.featuredPostIds.has(post.id)) {
+			this.featuredPostIds.add(post.id);
 		}
 	}
 }
