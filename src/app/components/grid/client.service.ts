@@ -98,7 +98,7 @@ export class GridClient {
 
 		// get hostname from loadbalancer first
 		const hostResult = await pollRequest('Select server', () =>
-			Axios.get(Environment.gridHost)
+			Axios.get(Environment.gridHost, { ignoreLoadingBar: true })
 		);
 		const host = `${hostResult.data}/grid/socket`;
 
