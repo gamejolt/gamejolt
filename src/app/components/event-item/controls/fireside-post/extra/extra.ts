@@ -91,7 +91,7 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 		} else if (pinContext instanceof FiresidePostCommunity) {
 			return pinContext.community.hasPerms('community-posts');
 		} else if (pinContext instanceof User) {
-			return true;
+			return pinContext.id === this.user.id;
 		}
 
 		return false;
