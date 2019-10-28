@@ -1,5 +1,5 @@
 import Component from 'vue-class-component';
-import { State } from 'vuex-class/lib/bindings';
+import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';

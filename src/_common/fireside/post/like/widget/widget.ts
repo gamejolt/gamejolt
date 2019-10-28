@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class/lib/bindings';
+import { State } from 'vuex-class';
 import { Store } from '../../../../../auth/store/index';
 import { AppAuthRequired } from '../../../../auth/auth-required-directive';
 import { number } from '../../../../filters/number';

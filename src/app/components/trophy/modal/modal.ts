@@ -1,6 +1,6 @@
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class/lib/bindings';
+import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { BaseModal } from '../../../../_common/modal/base';
 import { Screen } from '../../../../_common/screen/screen-service';
