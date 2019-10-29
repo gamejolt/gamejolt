@@ -74,6 +74,10 @@ export default class AppTrophyModal extends BaseModal {
 		}
 	}
 
+	get loggedInUserUnlocked() {
+		return this.app.user && this.userTrophy.user_id === this.app.user.id;
+	}
+
 	mounted() {
 		if (this.isGame) {
 			this.populatePercentage();

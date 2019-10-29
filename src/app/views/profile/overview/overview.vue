@@ -263,6 +263,7 @@
 									:key="trophy.key"
 									:trophy="trophy.trophy"
 									no-difficulty
+									no-highlight
 									@click.native="onClickTrophy(trophy)"
 								/>
 

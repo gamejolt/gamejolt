@@ -40,7 +40,11 @@
 				<div class="modal-body">
 					<div class="-trophy-view">
 						<div class="-thumbnail">
-							<app-trophy-thumbnail :trophy="trophy" no-tooltip />
+							<app-trophy-thumbnail
+								:trophy="trophy"
+								no-tooltip
+								:no-highlight="loggedInUserUnlocked"
+							/>
 							<div v-if="canReceiveExp" class="-exp text-muted">
 								<app-jolticon icon="exp" />
 								<span v-translate="{ exp: trophy.experience }">

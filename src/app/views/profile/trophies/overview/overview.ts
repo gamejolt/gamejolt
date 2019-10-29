@@ -60,6 +60,10 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 		return this.app.user && this.app.user.is_developer;
 	}
 
+	get isLoggedInUser() {
+		return this.user && this.app.user && this.app.user.id === this.user.id;
+	}
+
 	routeResolved($payload: any) {
 		let trophies: UserBaseTrophy[] = [];
 		if ($payload.trophies) {
