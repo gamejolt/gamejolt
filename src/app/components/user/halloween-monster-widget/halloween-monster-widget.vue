@@ -1,5 +1,5 @@
 <template>
-	<div class="halloween-monster-widget sheet" v-if="caughtAnything">
+	<div class="sheet" v-if="caughtAnything">
 		<h4 class="-title">
 			Halloween Monster Hunt
 		</h4>
@@ -36,9 +36,6 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
-
-.halloween-monster-widget
-	margin-top: 25px
 
 .-title
 	text-align: center
