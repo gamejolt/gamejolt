@@ -72,13 +72,16 @@
 	& > *
 		vertical-align: middle
 
-.-game-link
+.-subtitle-link
 
 	&:hover
 		text-decoration: none
 
-	& > *
+	& *
 		vertical-align: middle
+	// Override user hover card display block
+	& > div
+		display: inline-block !important
 
 .-info
 	@media $media-sm-up
@@ -95,3 +98,10 @@
 	justify-content: center
 	align-items: center
 	margin-top: 10px
+
+.-subtitle-avatar
+	width: $line-height-computed
+	height: $line-height-computed
+	display: inline-block
+	& > span
+		display: inline-block

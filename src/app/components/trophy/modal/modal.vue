@@ -20,7 +20,7 @@
 						<template v-if="isGame">
 							<router-link
 								:to="game.routeLocation"
-								class="-game-link link-unstyled"
+								class="-subtitle-link link-unstyled"
 								v-app-tooltip="game.title"
 							>
 								<app-jolticon icon="game" />
@@ -33,6 +33,18 @@
 						<template v-else>
 							<app-jolticon icon="gamejolt" />
 							<span>Game Jolt Trophy</span>
+							<router-link v-if="artist" :to="artist.url" class="-subtitle-link link-unstyled">
+								<span class="dot-separator" />
+								<app-user-card-hover :user="artist">
+									<span v-translate="{ username: artist.username }">
+										Art by
+										<b>@%{ username }</b>
+									</span>
+									<span class="-subtitle-avatar">
+										<app-user-avatar-img :user="artist" />
+									</span>
+								</app-user-card-hover>
+							</router-link>
 						</template>
 					</div>
 				</div>

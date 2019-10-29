@@ -4,11 +4,14 @@ import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { BaseModal } from '../../../../_common/modal/base';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { SiteTrophy } from '../../../../_common/site/trophy/trophy.model';
 import { AppStore } from '../../../../_common/store/app-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import { UserGameTrophy } from '../../../../_common/user/trophy/game-trophy.model';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../_common/user/user.model';
 import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
@@ -18,6 +21,8 @@ import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
 		AppTrophyThumbnail,
 		AppTimeAgo,
 		AppUserAvatarList,
+		AppUserAvatarImg,
+		AppUserCardHover,
 	},
 	directives: {
 		AppTooltip,
@@ -76,6 +81,12 @@ export default class AppTrophyModal extends BaseModal {
 
 	get loggedInUserUnlocked() {
 		return this.app.user && this.userTrophy.user_id === this.app.user.id;
+	}
+
+	get artist() {
+		if (this.trophy instanceof SiteTrophy && this.trophy.artist instanceof User) {
+			return this.trophy.artist;
+		}
 	}
 
 	mounted() {
