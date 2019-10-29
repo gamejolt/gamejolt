@@ -4,6 +4,7 @@ import { routeLandingAdtest } from './adtest/adtest.route';
 import { routeLandingClient } from './client/client.route';
 import { routeLandingGameApiDoc } from './game-api-doc/game-api-doc.route';
 import { routeLandingGameApi } from './game-api/game-api.route';
+import { routeLandingHalloween } from './halloween/halloween.route';
 import { routeLandingHelp } from './help/help.route';
 import { routeLandingIndieaf } from './indieaf/indieaf.route';
 import RouteLanding from './landing';
@@ -27,5 +28,6 @@ export const routeLanding: RouteConfig = {
 		routeLandingRedlight,
 		routeLandingIndieaf,
 		routeLandingAdtest,
+		routeLandingHalloween,
 	],
 };

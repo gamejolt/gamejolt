@@ -2,6 +2,7 @@ import { Api } from '../api/api.service';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
 import { ContentSetCacheService } from '../content/content-set-cache';
+import { HalloweenMonsterType } from '../halloween-monster/halloween-monster.model';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
@@ -100,6 +101,10 @@ export class User extends Model implements ContentContainerModel {
 
 	can_join_communities?: boolean;
 	can_create_communities?: boolean;
+
+	// Halloween 2019
+	halloween_2019_breakdown?: { [key in HalloweenMonsterType]: Halloween2019MonsterBreakdown };
+	halloween_2019_level?: number;
 
 	get isMod() {
 		return this.permission_level >= 3;
@@ -246,3 +251,13 @@ export class User extends Model implements ContentContainerModel {
 }
 
 Model.create(User);
+
+export type Halloween2019MonsterBreakdown = {
+	rank: string;
+	current: number;
+	start: number;
+	end: number;
+
+	type: string;
+	imgUrl: string;
+};

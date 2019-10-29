@@ -5,6 +5,7 @@ import { titleCase } from '../../../../../utils/string';
 import { Api } from '../../../../../_common/api/api.service';
 import { date } from '../../../../../_common/filters/date';
 import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
+import { HalloweenMonster } from '../../../../../_common/halloween-monster/halloween-monster.model';
 import { Meta } from '../../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
@@ -115,10 +116,13 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		}
 
 		if (this.dateRange) {
-			return this.$gettextInterpolate('Games published between %{ dateStart } and %{ dateEnd }', {
-				dateStart: this.dateRange[0],
-				dateEnd: this.dateRange[1],
-			});
+			return this.$gettextInterpolate(
+				'Games published between %{ dateStart } and %{ dateEnd }',
+				{
+					dateStart: this.dateRange[0],
+					dateEnd: this.dateRange[1],
+				}
+			);
 		}
 
 		if (this.date) {
@@ -189,9 +193,12 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	 */
 	get listDescription() {
 		if (!this.section) {
-			return this.$gettextInterpolate(`Find the hottest trending %{ gamesType } on Game Jolt.`, {
-				gamesType: this.displayGamesType,
-			});
+			return this.$gettextInterpolate(
+				`Find the hottest trending %{ gamesType } on Game Jolt.`,
+				{
+					gamesType: this.displayGamesType,
+				}
+			);
 		} else if (this.section === 'new') {
 			return this.$gettextInterpolate(
 				// tslint:disable-next-line:max-line-length
@@ -252,7 +259,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		this.process();
 	}
 
-	routeResolved($payload: any) {
+	routeResolved($payload: any, fromCache: boolean) {
 		if (this.listing && $payload) {
 			this.listing.processPayload(this.$route, $payload);
 			this.process();
@@ -271,6 +278,10 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 				Meta.twitter.image = this.spotlightSocial;
 				Meta.twitter.card = 'summary';
 				Meta.fb.image = this.spotlightSocial;
+			}
+
+			if (!fromCache && $payload.halloweenMonster) {
+				HalloweenMonster.add(new HalloweenMonster($payload.halloweenMonster));
 			}
 		}
 	}

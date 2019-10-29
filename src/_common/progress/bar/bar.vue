@@ -3,7 +3,6 @@
 		class="progress"
 		:class="[
 			thin ? 'progress-thin' : undefined,
-			variant ? 'progress-' + variant : undefined,
 			indeterminate ? 'progress-striped' : undefined,
 			active ? 'active' : undefined,
 			animate ? 'animate' : undefined,
