@@ -250,6 +250,31 @@
 							<br />
 						</template>
 
+						<!-- Latest Games -->
+						<template v-if="hasGamesSection">
+							<div class="clearfix">
+								<div class="pull-right">
+									<app-button
+										trans
+										:to="{
+											name: 'library.collection.developer',
+											params: { id: user.username },
+										}"
+									>
+										<translate>View All</translate>
+										<small>({{ gamesCount | number }})</small>
+									</app-button>
+								</div>
+
+								<h4 class="section-header">
+									<translate>Latest Games</translate>
+								</h4>
+							</div>
+
+							<app-game-list-placeholder v-if="!isOverviewLoaded" :num="7" />
+							<app-game-list v-else-if="games.length" :games="games" event-label="profile" />
+						</template>
+
 						<!-- Trophies -->
 						<template v-if="shouldShowTrophies">
 							<h4 class="section-header">
@@ -280,30 +305,6 @@
 							<br />
 						</template>
 
-						<!-- Latest Games -->
-						<template v-if="hasGamesSection">
-							<div class="clearfix">
-								<div class="pull-right">
-									<app-button
-										trans
-										:to="{
-											name: 'library.collection.developer',
-											params: { id: user.username },
-										}"
-									>
-										<translate>View All</translate>
-										<small>({{ gamesCount | number }})</small>
-									</app-button>
-								</div>
-
-								<h4 class="section-header">
-									<translate>Latest Games</translate>
-								</h4>
-							</div>
-
-							<app-game-list-placeholder v-if="!isOverviewLoaded" :num="7" />
-							<app-game-list v-else-if="games.length" :games="games" event-label="profile" />
-						</template>
 					</div>
 
 					<!-- Friend Requests -->
