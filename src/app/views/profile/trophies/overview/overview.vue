@@ -31,11 +31,29 @@
 							<template v-if="entry.game">
 								<template v-if="entry.trophies.length === 1">
 									Achieved 1 trophy for the game
-									<router-link :to="entry.game.getUrl()">{{ entry.game.title }}</router-link>
+									<router-link
+										:to="{
+											name: 'profile.trophies.game',
+											params: {
+												id: entry.game.id,
+											},
+										}"
+									>
+										{{ entry.game.title }}
+									</router-link>
 								</template>
 								<template v-else>
 									Achieved {{ entry.trophies.length }} trophies for the game
-									<router-link :to="entry.game.getUrl()">{{ entry.game.title }}</router-link>
+									<router-link
+										:to="{
+											name: 'profile.trophies.game',
+											params: {
+												id: entry.game.id,
+											},
+										}"
+									>
+										{{ entry.game.title }}
+									</router-link>
 								</template>
 							</template>
 							<template v-else>
