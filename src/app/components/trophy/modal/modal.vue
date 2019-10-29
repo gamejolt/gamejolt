@@ -58,15 +58,15 @@
 								<span class="dot-separator small" v-if="Screen.isDesktop" />
 								<br v-else />
 								<span v-if="completionPercentageForDisplay === 1">
-									<translate>&lt;1% of players unlocked this trophy</translate>
+									<translate>&lt;1% of players achieved this trophy</translate>
 								</span>
 								<span v-else-if="completionPercentageForDisplay === 100">
 									<translate>
-										100% of players unlocked this trophy
+										100% of players achieved this trophy
 									</translate>
 								</span>
 								<span v-else v-translate="{ num: completionPercentageForDisplay }">
-									~%{ num }% of players unlocked this trophy
+									~%{ num }% of players achieved this trophy
 								</span>
 							</span>
 
@@ -76,7 +76,7 @@
 
 							<div v-if="shouldShowFriends" class="small">
 								<div>
-									<translate>Friends who unlocked this trophy</translate>
+									<translate>Friends who achieved this trophy</translate>
 								</div>
 
 								<app-user-avatar-list :users="friends" sm />
