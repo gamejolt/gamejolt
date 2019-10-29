@@ -62,6 +62,6 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 	}
 
 	onChannelsChange(channels: CommunityChannel[]) {
-		this.$emit('details-change', channels);
+		this.$emit('channels-change', channels);
 	}
 }

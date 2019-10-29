@@ -1,8 +1,12 @@
 <template>
-	<!--
-		We don't want it clicking into the post when clicking a control.
-	-->
-	<span @click.stop>
+	<span>
+		<app-event-item-controls-fireside-post-stats
+			v-if="shouldShowStatsInNewLine"
+			:key="'stats'"
+			class="-stats-newline well fill-offset full-bleed-xs"
+			:post="post"
+		/>
+
 		<div class="-controls">
 			<div class="-user-controls" v-if="showUserControls">
 				<app-fireside-post-like-widget :post="post" :show-user-follow="showUserFollow" trans />
@@ -18,7 +22,7 @@
 						v-app-tooltip="$gettext('View Comments')"
 					/>
 
-					<span class="blip" v-if="commentsCount > 0">
+					<span class="blip" v-if="commentsCount > 0" @click.stop="openComments()">
 						<span class="blip-caret"></span>
 						<span class="blip-count">
 							{{ commentsCount | number }}
@@ -47,36 +51,12 @@
 				</app-popper>
 			</div>
 
-			<div class="-stats" v-if="shouldShowStats">
-				<translate
-					:translate-n="post.view_count || 0"
-					:translate-params="{ count: number(post.view_count || 0) }"
-					translate-plural="%{ count } views"
-				>
-					%{ count } view
-				</translate>
-
-				<span class="dot-separator" />
-
-				<translate
-					:translate-n="post.expand_count || 0"
-					:translate-params="{ count: number(post.expand_count || 0) }"
-					translate-plural="%{ count } expands"
-				>
-					%{ count } expand
-				</translate>
-
-				<span
-					class="hidden-xs"
-					v-app-tooltip="
-						$gettext(
-							'An expand is some sort of interaction with your post. For example, playing a video post, or clicking into your post.'
-						)
-					"
-				>
-					<app-jolticon icon="help-circle" />
-				</span>
-			</div>
+			<app-event-item-controls-fireside-post-stats
+				v-if="!shouldShowStatsInNewLine"
+				:key="'stats'"
+				class="-stats-inline"
+				:post="post"
+			/>
 
 			<span>
 				<template v-if="shouldShowEdit">
@@ -107,6 +87,18 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 
+.-stats
+	&-newline, &-inline
+		color: var(--theme-fg-muted)
+		font-size: $font-size-small
+
+	&-newline
+		text-align: center
+		margin-bottom: 10px
+
+	&-inline
+		flex: auto
+
 .-controls
 	display: flex
 	justify-content: flex-end
@@ -114,11 +106,6 @@
 
 .-user-controls
 	flex-grow: 1
-
-.-stats
-	color: var(--theme-fg-muted)
-	font-size: $font-size-small
-	flex: auto
 
 .-inline-button
 	margin-right: 10px

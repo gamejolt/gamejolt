@@ -121,7 +121,9 @@
 			<app-form-group name="theme_always_ours" :label="$gettext('Always use your theme?')">
 				<app-form-control-toggle class="pull-right" />
 				<p class="help-block">
-					<translate>Don't switch to other themes when viewing profiles or games.</translate>
+					<translate>
+						Don't switch to other themes when viewing profiles, games or communities.
+					</translate>
 				</p>
 			</app-form-group>
 
