@@ -60,6 +60,7 @@
 	-moz-user-select: none
 	-o-user-select: none
 	user-select: none
+	user-drag: none
 </style>
 
 <script lang="ts" src="./monster"></script>
