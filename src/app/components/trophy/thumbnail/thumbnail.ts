@@ -19,7 +19,7 @@ const imgMapping: any = {
 export function getTrophyImg(trophy: BaseTrophy) {
 	// Make sure we don't show thumbnails for secret trophies unless they've
 	// been achieved.
-	if (trophy.has_thumbnail && (!trophy.secret || trophy.is_achieved || trophy.has_perms)) {
+	if (trophy.has_thumbnail && trophy.isInfoRevealed) {
 		return trophy.img_thumbnail;
 	}
 
@@ -75,10 +75,7 @@ export default class AppTrophyThumbnail extends Vue {
 	}
 
 	get hasThumbnailImg() {
-		return (
-			this.trophy.has_thumbnail &&
-			(!this.trophy.secret || this.trophy.is_achieved || this.trophy.has_perms)
-		);
+		return this.trophy.has_thumbnail && this.trophy.isInfoRevealed;
 	}
 
 	get imgSrc() {
