@@ -93,10 +93,9 @@
 							<br />
 							<h4 class="sans-margin-top">Rare? share!</h4>
 							<p>
-								Post links to where you found rare monsters on the
-								<a href="/c/halloween-2019">Halloween Community</a>
-								. Everyone can see the same monsters, so you can work together to unlock the rare
-								monster trophies!
+								Share the location of monsters you encounter with the
+								<a href="/c/halloween-2019">community.</a>
+								Be quick, monsters don't stay in one place for long!
 							</p>
 						</div>
 					</div>
