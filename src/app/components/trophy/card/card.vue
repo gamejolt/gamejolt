@@ -28,7 +28,7 @@
 					</small>
 				</div>
 				<div class="-thumbnail">
-					<app-trophy-thumbnail :trophy="trophy" no-tooltip />
+					<app-trophy-thumbnail :trophy="trophy" no-tooltip :no-highlight="loggedInUserUnlocked" />
 				</div>
 				<div class="-description">
 					<app-fade-collapse :collapse-height="64">

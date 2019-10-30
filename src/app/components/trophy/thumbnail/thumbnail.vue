@@ -2,7 +2,7 @@
 	<div
 		class="trophy-thumbnail"
 		:class="{
-			'trophy-thumbnail-achieved': isAchieved,
+			'trophy-thumbnail-achieved': this.trophy.is_achieved && !this.noHighlight,
 		}"
 		v-app-tooltip="tooltip"
 	>

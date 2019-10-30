@@ -84,6 +84,7 @@
 								v-for="userTrophy of entry.trophies"
 								:key="userTrophy.id"
 								:trophy="userTrophy.trophy"
+								:no-highlight="isLoggedInUser"
 								@click.native="onClickTrophy(userTrophy)"
 							/>
 						</div>

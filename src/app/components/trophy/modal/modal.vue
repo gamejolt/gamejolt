@@ -20,7 +20,7 @@
 						<template v-if="isGame">
 							<router-link
 								:to="game.routeLocation"
-								class="-game-link link-unstyled"
+								class="-subtitle-link link-unstyled"
 								v-app-tooltip="game.title"
 							>
 								<app-jolticon icon="game" />
@@ -33,6 +33,18 @@
 						<template v-else>
 							<app-jolticon icon="gamejolt" />
 							<span>Game Jolt Trophy</span>
+							<router-link v-if="artist" :to="artist.url" class="-subtitle-link link-unstyled">
+								<span class="dot-separator" />
+								<app-user-card-hover :user="artist">
+									<span v-translate="{ username: artist.username }">
+										Art by
+										<b>@%{ username }</b>
+									</span>
+									<span class="-subtitle-avatar">
+										<app-user-avatar-img :user="artist" />
+									</span>
+								</app-user-card-hover>
+							</router-link>
 						</template>
 					</div>
 				</div>
@@ -40,7 +52,11 @@
 				<div class="modal-body">
 					<div class="-trophy-view">
 						<div class="-thumbnail">
-							<app-trophy-thumbnail :trophy="trophy" no-tooltip />
+							<app-trophy-thumbnail
+								:trophy="trophy"
+								no-tooltip
+								:no-highlight="loggedInUserUnlocked"
+							/>
 							<div v-if="canReceiveExp" class="-exp text-muted">
 								<app-jolticon icon="exp" />
 								<span v-translate="{ exp: trophy.experience }">
@@ -58,15 +74,15 @@
 								<span class="dot-separator small" v-if="Screen.isDesktop" />
 								<br v-else />
 								<span v-if="completionPercentageForDisplay === 1">
-									<translate>&lt;1% of players unlocked this trophy</translate>
+									<translate>&lt;1% of players achieved this trophy</translate>
 								</span>
 								<span v-else-if="completionPercentageForDisplay === 100">
 									<translate>
-										100% of players unlocked this trophy
+										100% of players achieved this trophy
 									</translate>
 								</span>
 								<span v-else v-translate="{ num: completionPercentageForDisplay }">
-									~%{ num }% of players unlocked this trophy
+									~%{ num }% of players achieved this trophy
 								</span>
 							</span>
 
@@ -76,7 +92,7 @@
 
 							<div v-if="shouldShowFriends" class="small">
 								<div>
-									<translate>Friends who unlocked this trophy</translate>
+									<translate>Friends who achieved this trophy</translate>
 								</div>
 
 								<app-user-avatar-list :users="friends" sm />

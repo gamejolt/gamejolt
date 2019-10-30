@@ -48,6 +48,10 @@ export default class AppTrophyCard extends Vue {
 		return this.$gettext(`Game Trophy`);
 	}
 
+	get loggedInUserUnlocked() {
+		return this.app.user && this.userTrophy.user_id === this.app.user.id;
+	}
+
 	onClick() {
 		TrophyModal.show(this.userTrophy);
 	}

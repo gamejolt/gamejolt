@@ -16,10 +16,10 @@ const imgMapping: any = {
 	'platinum-secret': require('./platinum-secret.png'),
 };
 
-export function getTrophyImg(trophy: BaseTrophy, isAchieved = true) {
+export function getTrophyImg(trophy: BaseTrophy) {
 	// Make sure we don't show thumbnails for secret trophies unless they've
 	// been achieved.
-	if (trophy.has_thumbnail && (!trophy.secret || isAchieved || trophy.is_owner)) {
+	if (trophy.has_thumbnail && trophy.isInfoRevealed) {
 		return trophy.img_thumbnail;
 	}
 
@@ -34,7 +34,7 @@ export function getTrophyImg(trophy: BaseTrophy, isAchieved = true) {
 		img = 'platinum';
 	}
 
-	if (trophy.secret && !isAchieved) {
+	if (trophy.secret && !(trophy.is_achieved || trophy.has_perms)) {
 		img += '-secret';
 	}
 
@@ -55,12 +55,15 @@ const BaseHeight = 35;
 export default class AppTrophyThumbnail extends Vue {
 	@Prop(Object)
 	trophy!: BaseTrophy;
-	@Prop(Boolean)
-	isAchieved?: boolean;
+
 	@Prop(Boolean)
 	noTooltip?: boolean;
+
 	@Prop(Boolean)
 	noDifficulty?: boolean;
+
+	@Prop(Boolean)
+	noHighlight?: boolean;
 
 	thumbWidth = BaseWidth;
 
@@ -72,14 +75,11 @@ export default class AppTrophyThumbnail extends Vue {
 	}
 
 	get hasThumbnailImg() {
-		return (
-			this.trophy.has_thumbnail &&
-			(!this.trophy.secret || this.isAchieved || this.trophy.is_owner)
-		);
+		return this.trophy.has_thumbnail && this.trophy.isInfoRevealed;
 	}
 
 	get imgSrc() {
-		return getTrophyImg(this.trophy, this.isAchieved);
+		return getTrophyImg(this.trophy);
 	}
 
 	get imgMultiplier() {

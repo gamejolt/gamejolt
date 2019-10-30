@@ -31,6 +31,12 @@ export abstract class BaseTrophy extends Model {
 	secret!: boolean;
 	is_owner!: boolean;
 	visible!: boolean;
+	is_achieved?: boolean;
+	has_perms?: boolean;
+
+	get isInfoRevealed() {
+		return !this.secret || this.is_achieved || this.has_perms;
+	}
 
 	get difficultyLabel() {
 		return BaseTrophy.difficultyLabels[this.difficulty];
