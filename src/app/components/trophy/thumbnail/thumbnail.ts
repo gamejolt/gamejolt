@@ -55,10 +55,13 @@ const BaseHeight = 35;
 export default class AppTrophyThumbnail extends Vue {
 	@Prop(Object)
 	trophy!: BaseTrophy;
+
 	@Prop(Boolean)
 	noTooltip?: boolean;
+
 	@Prop(Boolean)
 	noDifficulty?: boolean;
+
 	@Prop(Boolean)
 	noHighlight?: boolean;
 
