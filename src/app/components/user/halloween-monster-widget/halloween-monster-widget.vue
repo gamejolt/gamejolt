@@ -1,5 +1,5 @@
 <template>
-	<div class="sheet" v-if="caughtAnything">
+	<div class="sheet -container" v-if="caughtAnything">
 		<h4 class="-title">
 			Halloween Monster Hunt
 		</h4>
@@ -30,12 +30,22 @@
 				/>
 			</div>
 		</div>
+		<div>
+			<router-link :to="{ name: 'landing.halloween', hash: '#monster-stats' }">
+				<app-button icon="world" class="pull-right">
+					Global Stats
+				</app-button>
+			</router-link>
+		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
+
+.-container
+	padding-bottom: 56px
 
 .-title
 	text-align: center
