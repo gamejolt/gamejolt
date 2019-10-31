@@ -1,5 +1,21 @@
-<template>
-	<app-img-responsive :src="community.img_thumbnail" class="community-thumbnail-img" alt="" />
-</template>
+<script lang="ts">
+import { createComponent } from '@vue/composition-api';
+import { AppImgResponsive } from '../../../img/responsive/responsive';
+import { Community } from '../../community.model';
+import { requiredProp } from '../../../../utils/vue';
 
-<script lang="ts" src="./img"></script>
+const AppCommunityThumbnailImg = createComponent({
+	components: {
+		AppImgResponsive,
+	},
+	props: {
+		community: requiredProp(Community),
+	},
+});
+
+export default AppCommunityThumbnailImg;
+</script>
+
+<template>
+	<AppImgResponsive :src="community.img_thumbnail" class="community-thumbnail-img" alt="" />
+</template>
