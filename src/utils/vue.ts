@@ -1,5 +1,12 @@
 import Vue from 'vue';
 
+export function requiredProp<T>(type: T) {
+	return {
+		type,
+		required: true,
+	} as const;
+}
+
 export function findVueParent<T extends Vue>(component: Vue, parentType: { new (): T }) {
 	let parent = component.$parent;
 	while (parent) {
@@ -16,8 +23,7 @@ export function findRequiredVueParent<T extends Vue>(component: Vue, parentType:
 	const parent = findVueParent(component, parentType);
 	if (!parent) {
 		throw new Error(
-			`Couldn't find parent component (${parentType.name}) from child component (${component
-				.$options.name}).`
+			`Couldn't find parent component (${parentType.name}) from child component (${component.$options.name}).`
 		);
 	}
 

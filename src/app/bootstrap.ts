@@ -1,3 +1,5 @@
+import VueCompositionApi from '@vue/composition-api';
+import Vue from 'vue';
 import '../utils/polyfills';
 import { bootstrapCommon } from '../_common/bootstrap';
 import { GamePlayModal } from '../_common/game/play-modal/play-modal.service';
@@ -11,6 +13,8 @@ const _createApp = bootstrapCommon(App, store, router);
 export function createApp() {
 	return { app: _createApp(), store, router };
 }
+
+Vue.use(VueCompositionApi);
 
 if (GJ_IS_CLIENT) {
 	require('./bootstrap-client');
