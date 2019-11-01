@@ -344,7 +344,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		this.setPageTheme(community.theme || null);
 	}
 
-	onClickLoadNew() {
+	async onClickLoadNew() {
 		const channel = this.community.channels!.find(i => i.title === this.channel);
 		let loadNewCount = 0;
 		if (channel) {
@@ -354,13 +354,13 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			loadNewCount = this.communityState.unreadFeatureCount;
 			this.communityState.unreadFeatureCount = 0; // Set to read.
 		}
-		// Load 10 new posts for channels or if we are unable to acquire the count.
+		// Load 15 new posts for channels or if we are unable to acquire the count.
 		if (loadNewCount <= 0) {
-			loadNewCount = 10;
+			loadNewCount = 15;
 		}
-		this.feed!.loadNew(loadNewCount);
+		await this.feed!.loadNew(loadNewCount);
 
-		// Mark the community/channel as read afterwards.
+		// Mark the community/channel as read after loading new posts.
 		Api.sendRequest(
 			`/web/communities/mark-as-read/${this.community.path}/${this.channel}`,
 			undefined,
