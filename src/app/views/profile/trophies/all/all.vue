@@ -2,7 +2,7 @@
 	<div>
 		<div v-if="!hasTrophies" class="alert alert-info">
 			<span>
-				<translate>This user has not achieved any trophies ... yet.</translate>
+				<translate>This user has not achieved any trophies...yet.</translate>
 			</span>
 		</div>
 

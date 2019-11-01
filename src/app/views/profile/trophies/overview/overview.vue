@@ -1,15 +1,5 @@
 <template>
 	<div>
-		<h4 class="section-header -trophy-header">
-			<translate>Activity</translate>
-		</h4>
-		<div v-if="isDev" class="-dev-trophy-link small">
-			<app-link-help page="dev-trophies" class="link-help">
-				<app-jolticon icon="trophy" />
-				<translate>Learn how to integrate trophies into YOUR game.</translate>
-			</app-link-help>
-		</div>
-
 		<div v-if="!hasTrophies" class="alert alert-info">
 			<span>
 				<translate>This user has not achieved any trophies ... yet.</translate>
@@ -92,15 +82,22 @@
 				</app-timeline-list-item>
 				<div class="timeline-list-item-split" />
 			</div>
-			<router-link
-				:to="{
-					name: 'profile.trophies.all',
-				}"
-			>
-				<app-button>
-					<translate>View all trophies</translate>
-				</app-button>
-			</router-link>
+			<p>
+				<router-link
+					:to="{
+						name: 'profile.trophies.all',
+					}"
+				>
+					<app-button>
+						<translate>View all trophies</translate>
+					</app-button>
+				</router-link>
+			</p>
+			<p v-if="isDev" class="-dev-trophy-link small">
+				<app-link-help page="dev-trophies" class="link-help">
+					<translate>Learn how to integrate trophies into YOUR game!</translate>
+				</app-link-help>
+			</p>
 		</app-timeline-list>
 	</div>
 </template>

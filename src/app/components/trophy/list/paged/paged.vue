@@ -1,5 +1,5 @@
 <template>
-	<div class="container">
+	<div>
 		<div class="row" v-if="!trophies.length">
 			<div class="-item col-sm-6 col-md-4 col-lg-4" v-for="i of placeholderCount" :key="i">
 				<!-- TODO: Make real placeholder -->
