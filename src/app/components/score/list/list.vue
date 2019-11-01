@@ -6,7 +6,9 @@
 			:key="score.id"
 		>
 			<div class="score-list-media">
-				<app-user-avatar :user="score.user" />
+				<app-user-card-hover :user="score.user">
+					<app-user-avatar :user="score.user" />
+				</app-user-card-hover>
 			</div>
 
 			<div class="score-list-content">
@@ -21,6 +23,7 @@
 					<template v-if="score.user">
 						<router-link :to="score.user.url">
 							{{ score.user.display_name }}
+							<app-user-verified-tick :user="score.user" />
 						</router-link>
 						<small class="text-muted">@{{ score.user.username }}</small>
 					</template>
