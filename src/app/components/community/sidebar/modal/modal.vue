@@ -14,7 +14,7 @@
 				:known-members="knownMembers"
 				:known-member-count="knownMemberCount"
 				:collaborators="collaborators"
-				:has-more-collaborators="hasMoreCollaborators"
+				:collaborator-count="collaboratorCount"
 				:initial-collaborator-count="initialCollaboratorCount"
 			/>
 		</div>

@@ -110,8 +110,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	knownMemberCount = 0;
 	finishedLoading = false;
 	owner: User | null = null;
-	collaborators: User[] | null = null;
-	hasMoreCollaborators = false;
+	collaborators: User[] = [];
+	collaboratorCount = 0;
 	initialCollaboratorCount = 0;
 
 	readonly Screen = Screen;
@@ -266,7 +266,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		if ($payload.collaborators) {
 			this.collaborators = User.populate($payload.collaborators);
 		}
-		this.hasMoreCollaborators = !!$payload.hasMoreCollaborators;
+		this.collaboratorCount = $payload.collaboratorCount;
 		this.initialCollaboratorCount = $payload.initialCollaboratorCount;
 
 		Meta.description = this.$gettextInterpolate(
@@ -375,8 +375,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			owner: this.owner,
 			knownMembers: this.knownMembers,
 			knownMemberCount: this.knownMemberCount,
-			collaborators: this.collaborators || [],
-			hasMoreCollaborators: this.hasMoreCollaborators,
+			collaborators: this.collaborators,
+			collaboratorCount: this.collaboratorCount,
 			initialCollaboratorCount: this.initialCollaboratorCount,
 		});
 	}

@@ -10,7 +10,7 @@ interface CommunitySidebarModalOptions {
 	knownMembers: User[];
 	knownMemberCount: number;
 	collaborators: User[];
-	hasMoreCollaborators: boolean;
+	collaboratorCount: number;
 	initialCollaboratorCount: number;
 }
 
@@ -23,7 +23,7 @@ export class CommunitySidebarModal {
 			knownMembers,
 			knownMemberCount,
 			collaborators,
-			hasMoreCollaborators,
+			collaboratorCount,
 			initialCollaboratorCount,
 		} = options;
 
@@ -40,7 +40,7 @@ export class CommunitySidebarModal {
 				knownMembers,
 				knownMemberCount,
 				collaborators,
-				hasMoreCollaborators,
+				collaboratorCount,
 				initialCollaboratorCount,
 			},
 			size: 'sm',

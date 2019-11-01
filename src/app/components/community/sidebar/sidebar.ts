@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
@@ -49,8 +49,8 @@ export default class AppCommunitySidebar extends Vue {
 	@Prop(Array)
 	collaborators!: User[];
 
-	@Prop(Boolean)
-	hasMoreCollaborators!: boolean;
+	@Prop(Number)
+	collaboratorCount!: number;
 
 	@Prop(Number)
 	initialCollaboratorCount!: number;
@@ -58,9 +58,25 @@ export default class AppCommunitySidebar extends Vue {
 	@State
 	app!: Store['app'];
 
-	collaboratorListCollapsed = false;
+	currentCollaborators: User[] = [];
+	currentCollaboratorCount = 0;
+
+	collaboratorListCollapsed = true;
 	isLoadingMoreCollaborators = false;
+	loadedAllCollaborators = false;
 	isShowingShare = false;
+
+	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
+
+	@Watch('collaborators', { immediate: true })
+	onCollaboratorsUpdated(collaborators: User[]) {
+		this.currentCollaborators = collaborators;
+	}
+
+	@Watch('collaboratorCount', { immediate: true })
+	onCollaboratorsCountUpdated(collaboratorCount: number) {
+		this.currentCollaboratorCount = collaboratorCount;
+	}
 
 	get shouldShowKnownMembers() {
 		return !!this.app.user && this.knownMembers && this.knownMembers.length > 0;
@@ -80,11 +96,8 @@ export default class AppCommunitySidebar extends Vue {
 		});
 	}
 
-	get shouldShowCollabSection() {
-		return (
-			this.owner instanceof User ||
-			(this.collaborators !== null && this.collaborators.length > 0)
-		);
+	get hasMoreCollaborators() {
+		return this.currentCollaboratorCount > this.initialCollaboratorCount;
 	}
 
 	get moderators(): User[] {
@@ -92,23 +105,14 @@ export default class AppCommunitySidebar extends Vue {
 		if (this.owner) {
 			mods.push(this.owner);
 		}
-		if (this.collaborators) {
+		if (this.currentCollaborators) {
 			if (this.collaboratorListCollapsed) {
-				mods.push(...this.collaborators.slice(0, this.initialCollaboratorCount));
+				mods.push(...this.currentCollaborators.slice(0, this.initialCollaboratorCount));
 			} else {
-				mods.push(...this.collaborators);
+				mods.push(...this.currentCollaborators);
 			}
 		}
 		return mods;
-	}
-
-	get shouldShowLoadMoreCollaborators() {
-		return (
-			this.hasMoreCollaborators ||
-			this.isLoadingMoreCollaborators ||
-			(this.collaborators !== null &&
-				this.collaborators.length > this.initialCollaboratorCount)
-		);
 	}
 
 	copyShareUrl() {
@@ -116,23 +120,33 @@ export default class AppCommunitySidebar extends Vue {
 	}
 
 	toggleCollaboratorList() {
-		if (this.hasMoreCollaborators) {
-			this.loadMoreCollaborators();
-		} else {
-			this.collaboratorListCollapsed = !this.collaboratorListCollapsed;
+		if (this.isLoadingMoreCollaborators) {
+			return;
+		}
+
+		this.collaboratorListCollapsed = !this.collaboratorListCollapsed;
+
+		if (!this.collaboratorListCollapsed) {
+			this.loadAllCollaborators();
 		}
 	}
 
-	async loadMoreCollaborators() {
-		this.isLoadingMoreCollaborators = true;
-		const payload = await Api.sendRequest(
-			`/web/communities/more-collaborators/${this.community.id}`
-		);
-		const collaborators = User.populate(payload.collaborators);
-		if (this.collaborators) {
-			this.collaborators.push(...collaborators);
+	async loadAllCollaborators() {
+		if (this.loadedAllCollaborators || this.isLoadingMoreCollaborators) {
+			return;
 		}
+
+		this.isLoadingMoreCollaborators = true;
+
+		const payload = await Api.sendRequest(
+			`/web/communities/collaborators/${this.community.id}`
+		);
+
+		const collaborators = User.populate(payload.collaborators);
+		this.currentCollaborators = collaborators;
+		this.currentCollaboratorCount = collaborators.length;
+
 		this.isLoadingMoreCollaborators = false;
-		this.collaboratorListCollapsed = false;
+		this.loadedAllCollaborators = true;
 	}
 }
