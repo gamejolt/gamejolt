@@ -346,10 +346,26 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	onClickLoadNew() {
 		const channel = this.community.channels!.find(i => i.title === this.channel);
+		let loadNewCount = 0;
 		if (channel) {
 			this.communityState.markChannelRead(channel.id);
+		} else {
+			// For the featured view, we know how many posts are new. Load that many.
+			loadNewCount = this.communityState.unreadFeatureCount;
+			this.communityState.unreadFeatureCount = 0; // Set to read.
 		}
-		this.$emit('refresh');
+		// Load 10 new posts for channels or if we are unable to acquire the count.
+		if (loadNewCount <= 0) {
+			loadNewCount = 10;
+		}
+		this.feed!.loadNew(loadNewCount);
+
+		// Mark the community/channel as read afterwards.
+		Api.sendRequest(
+			`/web/communities/mark-as-read/${this.community.path}/${this.channel}`,
+			undefined,
+			{ detach: true }
+		);
 	}
 
 	onClickAbout() {
