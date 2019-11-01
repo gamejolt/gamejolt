@@ -5,7 +5,7 @@
 		to them get picked up again.
 	-->
 	<div class="activity-feed" :key="feed.id">
-		<template v-if="newCount && newCount > 0">
+		<template v-if="(newCount && newCount > 0) || feed.isLoadingNew">
 			<app-expand v-if="!feed.isLoadingNew" when animate-initial>
 				<app-activity-feed-new-button @click="loadNew()">
 					<translate

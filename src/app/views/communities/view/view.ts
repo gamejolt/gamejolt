@@ -139,10 +139,6 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 		this.leaveCommunity(this.community);
 	}
 
-	refresh() {
-		this.reloadRoute();
-	}
-
 	showEditAvatar() {
 		CommunityThumbnailModal.show(this.community);
 	}
