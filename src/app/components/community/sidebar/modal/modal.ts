@@ -29,8 +29,8 @@ export default class AppCommunitySidebarModal extends BaseModal {
 	@Prop(Array)
 	collaborators!: User[];
 
-	@Prop(Boolean)
-	hasMoreCollaborators!: boolean;
+	@Prop(Number)
+	collaboratorCount!: number;
 
 	@Prop(Number)
 	initialCollaboratorCount!: number;

@@ -55,7 +55,7 @@
 						>
 							<div class="row">
 								<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
-									<app-trophy-thumbnail :trophy="trophy" />
+									<app-trophy-thumbnail :trophy="trophy" no-highlight />
 
 									<br class="visible-xs" />
 								</div>

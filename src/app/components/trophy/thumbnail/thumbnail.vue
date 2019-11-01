@@ -2,9 +2,9 @@
 	<div
 		class="trophy-thumbnail"
 		:class="{
-			'trophy-thumbnail-achieved': isAchieved,
+			'trophy-thumbnail-achieved': this.trophy.is_achieved && !this.noHighlight,
 		}"
-		v-app-tooltip="trophy.title"
+		v-app-tooltip="tooltip"
 	>
 		<div class="trophy-thumbnail-img" ref="thumb">
 			<div class="trophy-thumbnail-img-inner">
@@ -21,7 +21,7 @@
 			</div>
 		</div>
 
-		<span class="trophy-thumbnail-difficulty">
+		<span v-if="!noDifficulty" class="trophy-thumbnail-difficulty">
 			{{ trophy.difficultyLabel }}
 		</span>
 	</div>

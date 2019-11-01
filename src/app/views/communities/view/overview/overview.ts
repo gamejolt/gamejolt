@@ -8,11 +8,13 @@ import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { HalloweenMonster } from '../../../../../_common/halloween-monster/halloween-monster.model';
 import { Meta } from '../../../../../_common/meta/meta-service';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../_common/scroll/affix/affix.vue';
+import { ThemeMutation, ThemeStore } from '../../../../../_common/theme/theme.store';
 import { User } from '../../../../../_common/user/user.model';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import AppActivityFeed from '../../../../components/activity/feed/feed.vue';
@@ -100,13 +102,16 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@State
 	communityStates!: Store['communityStates'];
 
+	@ThemeMutation
+	setPageTheme!: ThemeStore['setPageTheme'];
+
 	feed: ActivityFeedView | null = null;
 	knownMembers: User[] = [];
 	knownMemberCount = 0;
 	finishedLoading = false;
 	owner: User | null = null;
-	collaborators: User[] | null = null;
-	hasMoreCollaborators = false;
+	collaborators: User[] = [];
+	collaboratorCount = 0;
 	initialCollaboratorCount = 0;
 
 	readonly Screen = Screen;
@@ -261,7 +266,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		if ($payload.collaborators) {
 			this.collaborators = User.populate($payload.collaborators);
 		}
-		this.hasMoreCollaborators = !!$payload.hasMoreCollaborators;
+		this.collaboratorCount = $payload.collaboratorCount;
 		this.initialCollaboratorCount = $payload.initialCollaboratorCount;
 
 		Meta.description = this.$gettextInterpolate(
@@ -301,6 +306,10 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			}
 		}
 
+		if (!fromCache && $payload.halloweenMonster) {
+			HalloweenMonster.add(new HalloweenMonster($payload.halloweenMonster));
+		}
+
 		this.finishedLoading = true;
 	}
 
@@ -332,14 +341,31 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	onDetailsChanged(community: Community) {
 		this.community.assign(community);
+		this.setPageTheme(community.theme || null);
 	}
 
-	onClickLoadNew() {
+	async onClickLoadNew() {
 		const channel = this.community.channels!.find(i => i.title === this.channel);
+		let loadNewCount = 0;
 		if (channel) {
 			this.communityState.markChannelRead(channel.id);
+		} else {
+			// For the featured view, we know how many posts are new. Load that many.
+			loadNewCount = this.communityState.unreadFeatureCount;
+			this.communityState.unreadFeatureCount = 0; // Set to read.
 		}
-		this.$emit('refresh');
+		// Load 15 new posts for channels or if we are unable to acquire the count.
+		if (loadNewCount <= 0) {
+			loadNewCount = 15;
+		}
+		await this.feed!.loadNew(loadNewCount);
+
+		// Mark the community/channel as read after loading new posts.
+		Api.sendRequest(
+			`/web/communities/mark-as-read/${this.community.path}/${this.channel}`,
+			undefined,
+			{ detach: true }
+		);
 	}
 
 	onClickAbout() {
@@ -349,8 +375,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			owner: this.owner,
 			knownMembers: this.knownMembers,
 			knownMemberCount: this.knownMemberCount,
-			collaborators: this.collaborators || [],
-			hasMoreCollaborators: this.hasMoreCollaborators,
+			collaborators: this.collaborators,
+			collaboratorCount: this.collaboratorCount,
 			initialCollaboratorCount: this.initialCollaboratorCount,
 		});
 	}

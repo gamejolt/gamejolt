@@ -22,7 +22,7 @@ export class CommunityChannel extends Model {
 		return this.$_save('/web/dash/communities/channels/save/' + this.community_id, 'channel');
 	}
 
-	$remove() {
+	$remove(moveToChannel?: CommunityChannel) {
 		if (!this.id) {
 			return;
 		}
@@ -31,6 +31,7 @@ export class CommunityChannel extends Model {
 			'/web/dash/communities/channels/remove/' + this.community_id + '/' + this.id,
 			{
 				detach: true,
+				data: moveToChannel ? { move_to_channel: moveToChannel.id } : {},
 			}
 		);
 	}

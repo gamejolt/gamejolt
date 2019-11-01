@@ -8,10 +8,10 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
-import { UserGameTrophy } from '../../../../../../../_common/user/game-trophy/game-trophy.model';
-import { Store } from '../../../../../../store/index';
+import { UserGameTrophy } from '../../../../../../../_common/user/trophy/game-trophy.model';
 import AppTrophyCompletion from '../../../../../../components/trophy/completion/completion.vue';
 import AppTrophyList from '../../../../../../components/trophy/list/list.vue';
+import { Store } from '../../../../../../store/index';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
 @Component({
