@@ -47,7 +47,7 @@ InnoSetup.prototype.build = function() {
 			shellEscape(this.certFile) +
 			' /p ' +
 			this.certPw +
-			' /t http://timestamp.verisign.com/scripts/timstamp.dll $f',
+			' /t http://timestamp.digicert.com $f',
 		'/Q',
 		scriptFile,
 	]);
