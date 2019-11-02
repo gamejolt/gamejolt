@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import AppErrorPage from '../_common/error/page/page.vue';
-import { AppTheme } from '../_common/theme/theme';
+import AppCommonShell from '../_common/shell/shell.vue';
 
 @Component({
 	components: {
-		AppTheme,
+		AppCommonShell,
 		AppErrorPage,
 	},
 })

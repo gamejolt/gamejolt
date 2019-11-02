@@ -9,6 +9,8 @@
 			'has-banner': hasBanner && !isShellHidden,
 		}"
 	>
+		<app-modals />
+
 		<app-shell-halloween />
 		<app-shell-banner v-if="!isShellHidden" />
 		<app-shell-top-nav v-if="hasTopBar" />
@@ -28,10 +30,6 @@
 			<app-client-base />
 			<app-shell-client />
 		</div>
-
-		<app-loading-bar />
-		<app-growls />
-		<app-modals />
 
 		<app-shell-hot-bottom>
 			<app-minbar v-show="!isRightPaneVisible" />

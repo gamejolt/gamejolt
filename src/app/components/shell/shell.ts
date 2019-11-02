@@ -4,8 +4,6 @@ import { Action, State } from 'vuex-class';
 import { Connection } from '../../../_common/connection/connection-service';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
 import { EventBus, EventBusDeregister } from '../../../_common/event-bus/event-bus.service';
-import AppGrowls from '../../../_common/growls/growls.vue';
-import AppLoadingBar from '../../../_common/loading/bar/bar.vue';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMinbar from '../../../_common/minbar/minbar.vue';
 import AppModals from '../../../_common/modal/modals.vue';
@@ -26,9 +24,7 @@ let components: any = {
 	AppShellHotBottom,
 	AppShellCbar,
 	AppMinbar,
-	AppGrowls,
 	AppModals,
-	AppLoadingBar,
 	AppShellBanner: () => import(/* webpackChunkName: "shell" */ './banner/banner.vue'),
 	AppShellChat: () => import(/* webpackChunkName: "chat" */ './chat/chat.vue'),
 	AppShellHalloween: () => import(/* webackChunkName: "halloween" */ './halloween/halloween.vue'),

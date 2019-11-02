@@ -1,6 +1,6 @@
 <template>
 	<div id="shell-cbar" v-if="shouldShow">
-		<app-scroll-scroller class="-scroller" overlay hide-scrollbar :inview-throttle="0">
+		<app-scroll-scroller class="-scroller" overlay hide-scrollbar>
 			<div class="-inner">
 				<transition-group name="-items">
 					<app-shell-cbar-item

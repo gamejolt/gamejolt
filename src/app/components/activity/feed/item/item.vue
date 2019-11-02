@@ -1,6 +1,6 @@
 <template>
 	<app-scroll-inview
-		:extra-padding="inviewPadding"
+		:margin="`${inviewMargin}px`"
 		@inview="onInviewChange(true)"
 		@outview="onInviewChange(false)"
 	>

@@ -6,20 +6,16 @@ import AppCookieBanner from '../_common/cookie/banner/banner.vue';
 import { Environment } from '../_common/environment/environment.service';
 import AppErrorPage from '../_common/error/page/page.vue';
 import { date } from '../_common/filters/date';
-import AppGrowls from '../_common/growls/growls.vue';
-import AppLoadingBar from '../_common/loading/bar/bar.vue';
 import AppModals from '../_common/modal/modals.vue';
-import { AppTheme } from '../_common/theme/theme';
+import AppCommonShell from '../_common/shell/shell.vue';
 import AppUserBar from '../_common/user/user-bar/user-bar.vue';
 import { User } from '../_common/user/user.model';
 import { Store } from './store/index';
 
 @Component({
 	components: {
-		AppTheme,
+		AppCommonShell,
 		AppErrorPage,
-		AppLoadingBar,
-		AppGrowls,
 		AppModals,
 		AppUserBar,
 		AppCookieBanner,

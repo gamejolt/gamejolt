@@ -1,16 +1,21 @@
 <template>
-	<div>
+	<app-scroll-inview strict :margin="inviewMargin" @inview="inview" @outview="outview">
 		<div
 			ref="placeholder"
 			class="gj-scroll-affix-placeholder"
 			v-if="isAffixed"
-			:style="{ height: placeholderHeight + 'px' }"
-		></div>
+			:style="{ height: `${height}px` }"
+		/>
 
-		<div ref="container" class="scroll-affix-container" :style="{ width }" :class="cssClasses">
+		<div
+			ref="container"
+			class="scroll-affix-container"
+			:style="{ width: isAffixed ? `${width}px` : null }"
+			:class="cssClasses"
+		>
 			<slot></slot>
 		</div>
-	</div>
+	</app-scroll-inview>
 </template>
 
 <style lang="stylus" scoped>

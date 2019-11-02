@@ -1,5 +1,5 @@
 <template>
-	<div
+	<app-common-shell
 		v-if="build"
 		class="-build-embed fill-darker -shell-padding"
 		:style="{
@@ -7,15 +7,13 @@
 			height: embedHeightStyle,
 		}"
 	>
-		<app-theme />
-
 		<app-embed-flash v-if="build.type === GameBuild.TYPE_FLASH" />
 		<app-embed-html v-if="build.type === GameBuild.TYPE_HTML" />
 		<app-embed-unity v-if="build.type === GameBuild.TYPE_UNITY" />
 		<app-embed-silverlight v-if="build.type === GameBuild.TYPE_SILVERLIGHT" />
 		<app-embed-applet v-if="build.type === GameBuild.TYPE_APPLET" />
 		<app-embed-rom v-if="build.type === GameBuild.TYPE_ROM" />
-	</div>
+	</app-common-shell>
 </template>
 
 <style lang="stylus" scoped>

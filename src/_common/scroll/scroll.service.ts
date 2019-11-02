@@ -1,7 +1,6 @@
 import { Ruler } from '../ruler/ruler-service';
 import { Screen } from '../screen/screen-service';
 import { AppAutoscrollAnchor } from './auto-scroll/anchor';
-import { ScrollWatcher } from './watcher.service';
 
 // Polyfill smooth scrolling.
 if (!GJ_IS_SSR) {
@@ -13,10 +12,6 @@ export type ScrollContext = HTMLElement | HTMLDocument;
 export class Scroll {
 	static shouldAutoScroll = true;
 	static autoscrollAnchor?: AppAutoscrollAnchor;
-
-	// For SSR context we have to set this to undefined. No methods should be
-	// called that would use the context.
-	static watcher: ScrollWatcher;
 	static offsetTop = 0;
 
 	/**
@@ -25,17 +20,6 @@ export class Scroll {
 	 */
 	static setOffsetTop(offset: number) {
 		this.offsetTop = offset;
-	}
-
-	/**
-	 * Sets the element that we will scroll when any scroll commands are issued.
-	 */
-	static init() {
-		this.watcher = new ScrollWatcher(document);
-
-		// Set up events to let the Screen service know if we're scrolling or not.
-		this.watcher.start.subscribe(() => (Screen.isScrolling = true));
-		this.watcher.stop.subscribe(() => (Screen.isScrolling = false));
 	}
 
 	static getScrollTop(element?: ScrollContext): number {
@@ -171,9 +155,4 @@ export class Scroll {
 	private static scrollTo(to: number, options: { animate?: boolean } = {}) {
 		window.scrollTo({ top: to, behavior: options.animate ? 'smooth' : 'auto' });
 	}
-}
-
-if (!GJ_IS_SSR) {
-	// Sets the document as the scroll context.
-	Scroll.init();
 }

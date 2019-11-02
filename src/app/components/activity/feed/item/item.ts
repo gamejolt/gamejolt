@@ -1,7 +1,7 @@
-import { Screen } from '../../../../../_common/screen/screen-service';
-import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
 import AppActivityFeedEventItem from '../event-item/event-item.vue';
 import { ActivityFeedItem } from '../item-service';
 import AppActivityFeedNotification from '../notification/notification.vue';
@@ -23,7 +23,7 @@ export default class AppActivityFeedItem extends Vue {
 	@Prop(ActivityFeedItem)
 	item!: ActivityFeedItem;
 
-	inviewPadding = Screen.windowHeight;
+	inviewMargin = Screen.windowHeight;
 
 	mounted() {
 		const height = this.feed.getItemHeight(this.item);

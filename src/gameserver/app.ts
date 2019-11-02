@@ -5,12 +5,12 @@ import { Environment } from '../_common/environment/environment.service';
 import { GameBuild } from '../_common/game/build/build.model';
 import { Game } from '../_common/game/game.model';
 import { GamePackage } from '../_common/game/package/package.model';
-import { AppTheme } from '../_common/theme/theme';
+import AppCommonShell from '../_common/shell/shell.vue';
 import { Store } from './store/index';
 
 @Component({
 	components: {
-		AppTheme,
+		AppCommonShell,
 		AppEmbedHtml: () =>
 			import(/* webpackChunkName: "gameserverHtml" */ './components/embed/html/html.vue'),
 		AppEmbedFlash: () =>

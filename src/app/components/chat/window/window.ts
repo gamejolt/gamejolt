@@ -4,7 +4,7 @@ import { Action, State } from 'vuex-class';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import { number } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { AppScrollInviewParent } from '../../../../_common/scroll/inview/parent';
+import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { Store } from '../../../store/index';
 import { ChatClient } from '../client';
 import { ChatMessage } from '../message';
@@ -16,7 +16,7 @@ import AppChatWindowSend from './send/send.vue';
 
 @Component({
 	components: {
-		AppScrollInviewParent,
+		AppScrollScroller,
 		AppChatUserList,
 		AppChatWindowSend,
 		AppChatWindowOutput,

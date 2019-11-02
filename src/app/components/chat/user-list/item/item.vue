@@ -2,7 +2,7 @@
 	<app-scroll-inview
 		tag="li"
 		class="chat-user"
-		:extra-padding="Screen.height / 2"
+		:margin="`${Screen.height / 2}px`"
 		@inview="isInview = true"
 		@outview="isInview = false"
 	>

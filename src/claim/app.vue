@@ -1,6 +1,5 @@
 <template>
-	<div>
-		<app-theme />
+	<app-common-shell>
 		<app-cookie-banner />
 
 		<div id="shell">
@@ -14,8 +13,6 @@
 				</app-error-page>
 			</div>
 
-			<app-loading-bar />
-			<app-growls />
 			<app-modals />
 		</div>
 
@@ -43,7 +40,7 @@
 				</div>
 			</div>
 		</footer>
-	</div>
+	</app-common-shell>
 </template>
 
 <script lang="ts" src="./app"></script>

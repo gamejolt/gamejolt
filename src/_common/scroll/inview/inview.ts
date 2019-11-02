@@ -1,76 +1,62 @@
 import Vue, { CreateElement } from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
-import { arrayRemove } from '../../../utils/array';
-import { findVueParent } from '../../../utils/vue';
-import { Scroll } from '../scroll.service';
-import { ScrollInviewContainer } from './container';
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { findRequiredVueParent } from '../../../utils/vue';
 import { AppScrollInviewParent } from './parent';
-
-// This is the root container we use if there's no inview parent.
-let BaseContainer: ScrollInviewContainer;
-if (!GJ_IS_SSR) {
-	BaseContainer = new ScrollInviewContainer(Scroll.watcher);
-}
 
 @Component({})
 export class AppScrollInview extends Vue {
 	@Prop({ type: String, default: 'div' })
 	tag!: string;
 
-	@Prop({ type: Number, default: 0 })
-	extraPadding!: number;
+	/**
+	 * The margin will effectively get added to the bounding box of this element
+	 * to make it larger or smaller. It should be in the format of a CSS margin
+	 * property and always have the "px" after each value.
+	 */
+	@Prop({ type: String, default: '0px' })
+	margin!: string;
 
+	/**
+	 * The strict prop will cause the outview event to trigger when any part of
+	 * the element is out of view, instead of requiring the whole element to be
+	 * out of view.
+	 */
+	@Prop({ type: Boolean, default: false })
+	strict!: boolean;
+
+	// This will get set by AppScrollInviewContainer as this element goes into
+	// and out of view.
 	inView = false;
 
-	// Don't have Vue watch these by not setting their default values.
-	top!: number;
-	bottom!: number;
-
-	get container() {
-		const parent = findVueParent(this, AppScrollInviewParent);
-		return parent ? parent._container : BaseContainer;
+	private get parent() {
+		return findRequiredVueParent(this, AppScrollInviewParent);
 	}
 
-	async mounted() {
-		// Wait for the parent container to bootstrap in.
-		await this.$nextTick();
-		this.container.items.push(this);
-
-		// Queue a check so that we can group together all the other components that may mount in
-		// and do one single check.
-		this.container.queueCheck();
+	private get container() {
+		return this.parent.getContainer(this.margin);
 	}
 
-	destroyed() {
-		arrayRemove(this.container.items, i => i === this);
-	}
-
-	render(h: CreateElement) {
-		return h(this.tag, this.$slots.default);
-	}
+	@Emit('inview') emitInView() {}
+	@Emit('outview') emitOutView() {}
 
 	@Watch('inView')
 	inViewChanged() {
 		if (this.inView) {
-			this.$emit('inview');
+			this.emitInView();
 		} else {
-			this.$emit('outview');
+			this.emitOutView();
 		}
 	}
 
-	recalcBox() {
-		const rect = this.$el.getBoundingClientRect();
-		let top = rect.top;
+	mounted() {
+		this.container.observeItem(this);
+	}
 
-		if (this.container.context instanceof HTMLDocument) {
-			top += window.pageYOffset || document.documentElement.scrollTop;
-		} else if (!(this.container.context instanceof HTMLDocument)) {
-			const parentRect = this.container.context.getBoundingClientRect();
-			top -= parentRect.top;
-			top += this.container.context.scrollTop;
-		}
+	destroyed() {
+		this.container.unobserveItem(this);
+	}
 
-		this.top = top - this.extraPadding;
-		this.bottom = top + rect.height + this.extraPadding;
+	render(h: CreateElement) {
+		return h(this.tag, this.$slots.default);
 	}
 }

@@ -1,10 +1,10 @@
-import { EscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { AppScrollInviewParent } from '../../../../_common/scroll/inview/parent';
-import AppShortkey from '../../../../_common/shortkey/shortkey.vue';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import { EscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import AppShortkey from '../../../../_common/shortkey/shortkey.vue';
 import { Store } from '../../../store/index';
 import { ChatClient } from '../../chat/client';
 import AppChatSidebar from '../../chat/sidebar/sidebar.vue';
@@ -12,7 +12,7 @@ import AppChatWindows from '../../chat/windows/windows.vue';
 
 @Component({
 	components: {
-		AppScrollInviewParent,
+		AppScrollScroller,
 		AppChatSidebar,
 		AppChatWindows,
 		AppShortkey,

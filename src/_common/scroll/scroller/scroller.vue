@@ -10,24 +10,14 @@
 		<template v-if="shouldOverlay">
 			<div class="simplebar-scroll-content">
 				<div class="simplebar-content">
-					<app-scroll-inview-parent
-						v-if="isMounted"
-						:container="_inviewContainer"
-						:velocity="inviewVelocity"
-						:throttle="inviewThrottle"
-					>
+					<app-scroll-inview-parent v-if="isMounted" :scroller="this">
 						<slot />
 					</app-scroll-inview-parent>
 				</div>
 			</div>
 		</template>
 		<template v-else>
-			<app-scroll-inview-parent
-				v-if="isMounted"
-				:container="_inviewContainer"
-				:velocity="inviewVelocity"
-				:throttle="inviewThrottle"
-			>
+			<app-scroll-inview-parent v-if="isMounted" :scroller="this">
 				<slot />
 			</app-scroll-inview-parent>
 		</template>
