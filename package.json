@@ -3,6 +3,7 @@
 	"version": "0.40.2",
 	"scripts": {
 		"postinstall": "yarn run translations",
+		"start": "gulp watch",
 		"dev": "gulp watch",
 		"translations": "gulp translations:compile",
 		"client": "nw build/dev-client",
