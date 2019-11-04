@@ -25,7 +25,6 @@ type FormModel = {
 	autostart_client: boolean;
 	theme_dark: boolean;
 	theme_always_ours: boolean;
-	halloween_2019_opted_out: boolean;
 };
 
 @Component({
@@ -56,8 +55,6 @@ export default class FormSettings extends BaseForm<FormModel> implements FormOnI
 		this.setField('feed_notifications', Settings.get('feed-notifications'));
 		this.setField('theme_dark', this.isDark);
 		this.setField('theme_always_ours', this.alwaysOurs);
-
-		this.setField('halloween_2019_opted_out', Settings.get('halloween-2019-opted-out'));
 
 		if (GJ_IS_CLIENT) {
 			this.setField('game_install_dir', Settings.get('game-install-dir'));
@@ -117,8 +114,6 @@ export default class FormSettings extends BaseForm<FormModel> implements FormOnI
 		Settings.set('theme-always-ours', this.formModel.theme_always_ours);
 		this.setDark(this.formModel.theme_dark);
 		this.setAlwaysOurs(this.formModel.theme_always_ours);
-
-		Settings.set('halloween-2019-opted-out', this.formModel.halloween_2019_opted_out);
 
 		if (GJ_IS_CLIENT) {
 			Settings.set('game-install-dir', this.formModel.game_install_dir);

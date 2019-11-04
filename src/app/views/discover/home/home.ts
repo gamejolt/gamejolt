@@ -5,7 +5,6 @@ import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { Game } from '../../../../_common/game/game.model';
-import { HalloweenMonster } from '../../../../_common/halloween-monster/halloween-monster.model';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
@@ -49,7 +48,7 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 		Meta.setTitle(null);
 	}
 
-	routeResolved($payload: any, fromCache: boolean) {
+	routeResolved($payload: any) {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;
@@ -80,9 +79,5 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 
 		this.featuredCommunities = Community.populate($payload.featuredCommunities);
 		this.games = Game.populate($payload.games);
-
-		if (!fromCache && $payload.halloweenMonster) {
-			HalloweenMonster.add(new HalloweenMonster($payload.halloweenMonster));
-		}
 	}
 }

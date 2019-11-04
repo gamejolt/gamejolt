@@ -30,7 +30,6 @@ import AppGameListPlaceholder from '../../../components/game/list/placeholder/pl
 import AppPageContainer from '../../../components/page-container/page-container.vue';
 import { TrophyModal } from '../../../components/trophy/modal/modal.service';
 import AppTrophyThumbnail from '../../../components/trophy/thumbnail/thumbnail.vue';
-import AppUserHalloweenMonsterWidget from '../../../components/user/halloween-monster-widget/halloween-monster-widget.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/known-followers.vue';
 import { Store } from '../../../store/index';
 import { RouteStore, RouteStoreModule } from '../profile.store';
@@ -50,7 +49,6 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 		AppUserKnownFollowers,
 		AppCommunityVerifiedTick,
 		AppTrophyThumbnail,
-		AppUserHalloweenMonsterWidget,
 	},
 	directives: {
 		AppTooltip,

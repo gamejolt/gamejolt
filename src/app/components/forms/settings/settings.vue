@@ -126,16 +126,6 @@
 					</translate>
 				</p>
 			</app-form-group>
-
-			<app-form-group
-				name="halloween_2019_opted_out"
-				:label="$gettext('Opt out of Halloween event?')"
-			>
-				<app-form-control-toggle class="pull-right" />
-				<p class="help-block">
-					<translate>Turning this on will opt you out of the halloween event experience.</translate>
-				</p>
-			</app-form-group>
 		</fieldset>
 
 		<fieldset id="settings-restrictions">
