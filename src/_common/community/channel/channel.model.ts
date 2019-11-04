@@ -7,7 +7,6 @@ export class CommunityChannel extends Model {
 	title!: string;
 	added_on!: number;
 	sort!: number;
-	description!: string;
 	background?: MediaItem;
 
 	constructor(data: any = {}) {
