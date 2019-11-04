@@ -14,7 +14,7 @@
 						@complete="onAllBuildsProcessed"
 					/>
 
-					<app-progress-bar thin active indeterminate :percent="100" />
+					<app-progress-bar thin active striped :percent="100" />
 
 					<p>
 						<app-jolticon icon="notice" />
