@@ -17,6 +17,7 @@ import AppVideo from '../../../../_common/video/video.vue';
 import { Store } from '../../../store';
 import AppEventItemControls from '../../event-item/controls/controls.vue';
 import AppEventItemMediaTags from '../../event-item/media-tags/media-tags.vue';
+import { GridClient } from '../../grid/client.service';
 import AppPollVoting from '../../poll/voting/voting.vue';
 import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 
@@ -50,6 +51,9 @@ export default class AppPostView extends Vue {
 	@State
 	app!: Store['app'];
 
+	@State
+	grid!: GridClient;
+
 	readonly Screen = Screen;
 
 	get communities() {
@@ -80,5 +84,37 @@ export default class AppPostView extends Vue {
 			title: this.$gettext('Huzzah!'),
 			message: this.$gettext('Your post has been published.'),
 		});
+	}
+
+	async mounted() {
+		let startedListening = false;
+		setInterval(() => {
+			if (startedListening) {
+				return;
+			}
+
+			if (this.grid && this.grid.connected) {
+				startedListening = true;
+				this.grid.startListenPost(this.post, (event: string, payload: any) => {
+					switch (event) {
+						case 'poll-vote':
+							if (this.post.poll) {
+								const pollItemId = parseInt(payload.poll_item_id, 10);
+								const item = this.post.poll.items.find(i => i.id === pollItemId);
+								if (item) {
+									item.vote_count++;
+									this.post.poll.vote_count++;
+								}
+							}
+
+							break;
+					}
+				});
+			}
+		}, 2000);
+	}
+
+	destroyed() {
+		this.grid.stopListenPost(this.post);
 	}
 }
