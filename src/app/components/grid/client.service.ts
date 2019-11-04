@@ -23,6 +23,7 @@ import { store } from '../../store/index';
 import { router } from '../../views';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail';
 import { CommunityChannel } from './community-channel';
+import { PostChannel } from './post-channel';
 
 interface NewNotificationPayload {
 	notification_data: {
@@ -425,6 +426,44 @@ export class GridClient {
 		const channelId = Number.parseInt(payload.channel_id, 10);
 		const communityState = store.state.communityStates.getCommunityState(communityId);
 		communityState.markChannelUnread(channelId);
+	}
+
+	async startListenPost(post: FiresidePost, handler: (event: string, response: any) => void) {
+		const cookie = await getCookie('frontend');
+		const user = store.state.app.user;
+
+		if (this.socket && user && cookie) {
+			const userId = user.id.toString();
+
+			const channel = new PostChannel(post, this.socket, {
+				frontend_cookie: cookie,
+				user_id: userId,
+			});
+
+			await pollRequest(
+				`Join post ${post.id} channel`,
+				() =>
+					new Promise((resolve, reject) => {
+						channel
+							.join()
+							.receive('error', reject)
+							.receive('ok', () => {
+								this.channels.push(channel);
+								resolve();
+							});
+					})
+			);
+
+			channel.on('poll-vote', (payload: any) => handler('poll-vote', payload));
+		}
+	}
+
+	async stopListenPost(post: FiresidePost) {
+		const channel = this.channels.find(i => i instanceof PostChannel && i.post.id === post.id);
+		if (channel) {
+			this.leaveChannel(channel);
+			arrayRemove(this.channels, c => c === channel);
+		}
 	}
 
 	leaveChannel(channel: Channel) {
