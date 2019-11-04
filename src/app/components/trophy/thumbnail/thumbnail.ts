@@ -1,8 +1,9 @@
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
 import { GameTrophy } from '../../../../_common/game/trophy/trophy.model';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { BaseTrophy } from '../../../../_common/trophy/base-trophy.model';
 
 const imgMapping: any = {
 	bronze: require('./bronze.png'),
@@ -14,6 +15,31 @@ const imgMapping: any = {
 	platinum: require('./platinum.png'),
 	'platinum-secret': require('./platinum-secret.png'),
 };
+
+export function getTrophyImg(trophy: BaseTrophy) {
+	// Make sure we don't show thumbnails for secret trophies unless they've
+	// been achieved.
+	if (trophy.has_thumbnail && trophy.isInfoRevealed) {
+		return trophy.img_thumbnail;
+	}
+
+	let img = '';
+	if (trophy.difficulty === GameTrophy.DIFFICULTY_BRONZE) {
+		img = 'bronze';
+	} else if (trophy.difficulty === GameTrophy.DIFFICULTY_SILVER) {
+		img = 'silver';
+	} else if (trophy.difficulty === GameTrophy.DIFFICULTY_GOLD) {
+		img = 'gold';
+	} else if (trophy.difficulty === GameTrophy.DIFFICULTY_PLATINUM) {
+		img = 'platinum';
+	}
+
+	if (trophy.secret && !(trophy.is_achieved || trophy.has_perms)) {
+		img += '-secret';
+	}
+
+	return imgMapping[img];
+}
 
 const BaseWidth = 34;
 const BaseHeight = 35;
@@ -27,40 +53,33 @@ const BaseHeight = 35;
 	},
 })
 export default class AppTrophyThumbnail extends Vue {
-	@Prop(GameTrophy) trophy!: GameTrophy;
-	@Prop(Boolean) isAchieved?: boolean;
+	@Prop(Object)
+	trophy!: BaseTrophy;
+
+	@Prop(Boolean)
+	noTooltip?: boolean;
+
+	@Prop(Boolean)
+	noDifficulty?: boolean;
+
+	@Prop(Boolean)
+	noHighlight?: boolean;
 
 	thumbWidth = BaseWidth;
 
+	get tooltip() {
+		if (this.noTooltip) {
+			return '';
+		}
+		return this.trophy.title;
+	}
+
 	get hasThumbnailImg() {
-		return (
-			this.trophy.has_thumbnail && (!this.trophy.secret || this.isAchieved || this.trophy.is_owner)
-		);
+		return this.trophy.has_thumbnail && this.trophy.isInfoRevealed;
 	}
 
 	get imgSrc() {
-		// Make sure we don't show thumbnails for secret trophies unless they've
-		// been achieved.
-		if (this.hasThumbnailImg) {
-			return this.trophy.img_thumbnail;
-		} else {
-			let img = '';
-			if (this.trophy.difficulty === GameTrophy.DIFFICULTY_BRONZE) {
-				img = 'bronze';
-			} else if (this.trophy.difficulty === GameTrophy.DIFFICULTY_SILVER) {
-				img = 'silver';
-			} else if (this.trophy.difficulty === GameTrophy.DIFFICULTY_GOLD) {
-				img = 'gold';
-			} else if (this.trophy.difficulty === GameTrophy.DIFFICULTY_PLATINUM) {
-				img = 'platinum';
-			}
-
-			if (this.trophy.secret && !this.isAchieved) {
-				img += '-secret';
-			}
-
-			return imgMapping[img];
-		}
+		return getTrophyImg(this.trophy);
 	}
 
 	get imgMultiplier() {

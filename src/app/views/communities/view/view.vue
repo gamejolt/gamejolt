@@ -133,7 +133,7 @@
 			</div>
 		</app-page-header>
 
-		<router-view :community="community" :is-editing="isEditing" @refresh="refresh()" />
+		<router-view :community="community" :is-editing="isEditing" />
 	</div>
 </template>
 

@@ -11,7 +11,7 @@
 						v-for="community of communities"
 						:key="community.id"
 						:community="community"
-						static
+						no-links
 					/>
 				</div>
 				<a v-if="wasPublished && selectedChannel" class="badge -current-channel">
@@ -34,14 +34,6 @@
 						</translate>
 					</div>
 				</app-expand>
-
-				<div class="-community-message alert alert-info full-bleed">
-					<strong><translate>Looks like you're posting into a community!</translate></strong>
-					<translate>
-						Your post will be shown within the community, as well as on your profile page and to any
-						people that follow you.
-					</translate>
-				</div>
 			</template>
 		</template>
 
@@ -185,6 +177,7 @@
 					max_content_length: [leadLengthLimit],
 				}"
 				:validate-on="['blur']"
+				@paste.native="onPaste"
 			/>
 
 			<div class="-hp">

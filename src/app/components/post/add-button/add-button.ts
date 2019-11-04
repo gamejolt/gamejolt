@@ -31,10 +31,12 @@ export default class AppPostAddButton extends Vue {
 	@Prop(String)
 	placeholder?: string;
 
+	@Prop(Boolean)
+	previewOnly?: boolean;
+
 	@AppState
 	user!: AppStore['user'];
 
-	_isBlocked = false;
 	readonly Screen = Screen;
 
 	@Emit()
@@ -45,19 +47,16 @@ export default class AppPostAddButton extends Vue {
 	}
 
 	async open() {
-		if (this._isBlocked) {
+		if (this.previewOnly) {
 			return;
 		}
 
-		// Block the modal from appearing multiple times between the post request being sent and the modal opening
-		this._isBlocked = true;
+		const postProvider = FiresidePost.$create(this.game ? this.game.id : 0);
 
-		let post: FiresidePost | undefined = await FiresidePost.$create(
-			this.game ? this.game.id : 0
-		);
-
-		post = await PostEditModal.show(post, { community: this.community, channel: this.channel });
-		this._isBlocked = false;
+		const post = await PostEditModal.show(postProvider, {
+			community: this.community,
+			channel: this.channel,
+		});
 
 		if (!post) {
 			return;

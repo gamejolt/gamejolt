@@ -6,12 +6,13 @@ import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import { Store } from '../../../../store/index';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import AppActivityFeed from '../../../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
+import AppUserSpawnDay from '../../../../components/user/spawn-day/spawn-day.vue';
+import { Store } from '../../../../store/index';
 import { RouteStore, RouteStoreModule } from '../../profile.store';
 
 function getFetchUrl(route: Route) {
@@ -26,6 +27,7 @@ function getFetchUrl(route: Route) {
 		AppActivityFeedPlaceholder,
 		AppNavTabList,
 		AppPostAddButton,
+		AppUserSpawnDay,
 	},
 })
 @RouteResolver({
@@ -58,8 +60,6 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 			{
 				type: 'EventItem',
 				url: getFetchUrl(this.$route),
-				shouldShowCommunityControls: true,
-				shouldShowEditControls: true,
 			},
 			$payload.items,
 			fromCache

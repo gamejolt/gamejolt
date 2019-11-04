@@ -17,7 +17,11 @@
 		<!-- URL Path is only editable during community creation -->
 		<app-form-group v-if="method === 'add'" name="path" :label="$gettext(`URL Path`)">
 			<div class="help-block">
-				<translate>Community URLs should be memorable, unique, and as short as possible.</translate>
+				<p>
+					<translate>
+						Community URLs should be memorable, unique, and as short as possible.
+					</translate>
+				</p>
 			</div>
 			<app-form-control-prefixed-input
 				prefix="gamejolt.com/c/"
@@ -30,6 +34,32 @@
 				}"
 				data-vv-delay="500"
 			/>
+			<div class="help-block">
+				<p>
+					<strong><translate>Once a URL path is chosen it cannot be changed!</translate></strong>
+				</p>
+			</div>
+			<app-form-control-errors />
+		</app-form-group>
+
+		<!-- Post placeholder text only shows whens editing -->
+		<app-form-group
+			v-if="method !== 'add'"
+			name="post_placeholder_text"
+			:label="$gettext(`Post Placeholder`)"
+			optional
+		>
+			<div class="help-block">
+				<translate>Customize the placeholder message for post creations.</translate>
+			</div>
+
+			<app-post-add-button-form-control
+				:placeholder="$gettext(`Share your creations!`)"
+				:rules="{
+					max: 100,
+				}"
+			/>
+
 			<app-form-control-errors />
 		</app-form-group>
 
@@ -46,7 +76,7 @@
 
 		<app-form-button>
 			<translate v-if="method === 'add'">Create</translate>
-			<translate v-else>Save</translate>
+			<translate v-else>Save Details</translate>
 		</app-form-button>
 	</app-form>
 </template>

@@ -1,9 +1,12 @@
+import { RawLocation } from 'vue-router';
+import { Route } from 'vue-router/types/router';
+import { arrayRemove } from '../../../../utils/array';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
+import { FiresidePostGotoGrowl } from '../../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { Game } from '../../../../_common/game/game.model';
 import { Notification } from '../../../../_common/notification/notification-model';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
-import { arrayRemove } from '../../../../utils/array';
-import { Dictionary, Route } from 'vue-router/types/router';
 import { ActivityFeedInput } from './item-service';
 import { ActivityFeedState, ActivityFeedStateOptions } from './state';
 import { ActivityFeedView, ActivityFeedViewOptions } from './view';
@@ -83,6 +86,76 @@ export class ActivityFeedService {
 		return ActivityFeedService.bootstrapFeed(items, options);
 	}
 
+	/**
+	 * Determines if we are in the correct managing route for the post.
+	 * Does NOT check if we are in the correct feed on that route.
+	 */
+	private static isInCorrectManageRoute(post: FiresidePost, route: Route) {
+		if (post.game instanceof Game) {
+			return (
+				route.name === 'dash.games.manage.devlog' &&
+				route.params.id.toString() === post.game.id.toString()
+			);
+		} else {
+			return (
+				route.name === 'profile.overview' && route.params.username === post.user.username
+			);
+		}
+	}
+
+	/**
+	 * Checks if the feed is correct for the post on the current route.
+	 */
+	private static isInCorrectManageFeed(post: FiresidePost, route: Route) {
+		if (post.status === FiresidePost.STATUS_ACTIVE) {
+			return !route.query['tab'];
+		} else if (post.status === FiresidePost.STATUS_DRAFT) {
+			if (post.isScheduled) {
+				return route.query['tab'] === 'scheduled';
+			}
+
+			return route.query['tab'] === 'draft';
+		}
+		return false;
+	}
+
+	/**
+	 * Checks if the currently active feed is a scheduled feed.
+	 */
+	private static isScheduledFeed(route: Route) {
+		return route.query['tab'] === 'scheduled';
+	}
+
+	/**
+	 * Checks if we are in the correct game overview route for a post.
+	 */
+	private static isInCorrectGameOverview(post: FiresidePost, route: Route) {
+		return (
+			post.game instanceof Game &&
+			route.name === 'discover.games.view.overview' &&
+			route.params.id.toString() === post.game.id.toString() &&
+			post.status === FiresidePost.STATUS_ACTIVE
+		);
+	}
+
+	/**
+	 * Returns the correct location for a post's manage feed.
+	 * Assumes the route name/params are already correct.
+	 */
+	private static getCorrectManageFeedLocation(post: FiresidePost, route: Route): RawLocation {
+		const location = {
+			name: route.name,
+			params: route.params,
+		} as any;
+
+		let tab = getTabForPost(post);
+		if (tab !== 'active') {
+			location.query = { tab };
+		}
+
+		return location;
+	}
+
 	static onPostAdded(
 		feed: ActivityFeedView,
 		post: FiresidePost,
@@ -92,73 +165,71 @@ export class ActivityFeedService {
 			throw new Error('Post was expected to have an event_item field after being added');
 		}
 
-		// If we are already on the feed page that we need to be, let's just
-		// insert the post into the feed.
-		if (!this.gotoPostFeedManage(post, routeComponent)) {
+		const route = routeComponent.$route;
+
+		if (this.isInCorrectManageRoute(post, route)) {
+			if (this.isInCorrectManageFeed(post, route)) {
+				// We are in the correct route and feed.
+				if (this.isScheduledFeed(route)) {
+					// Reload the route because scheduled feeds aren't ordered by added on, so we can't prepend.
+					routeComponent.reloadRoute();
+				} else {
+					// We are go to prepend.
+					feed.prepend([post.event_item]);
+				}
+			} else {
+				// Redirect to the correct feed.
+				const location = this.getCorrectManageFeedLocation(post, route);
+				routeComponent.$router.push(location);
+			}
+		} else if (this.isInCorrectGameOverview(post, route)) {
+			// When an active post got created in the correct game overview, we can prepend.
 			feed.prepend([post.event_item]);
+		} else {
+			// Otherwise show a growl with links to the post.
+			FiresidePostGotoGrowl.show(post, 'add');
 		}
 	}
 
 	static onPostEdited(eventItem: EventItem, routeComponent: BaseRouteComponent) {
 		const post = postFromEventItem(eventItem);
-		this.gotoPostFeedManage(post, routeComponent);
+		const route = routeComponent.$route;
+
+		// The post gets its changes applied when edited through a non-manage feed.
+		// That also means that it's always a published post.
+
+		// If we are in a manage feed though, check if we are NOT in the correct feed anymore.
+		if (this.isInCorrectManageRoute(post, route)) {
+			if (!this.isInCorrectManageFeed(post, route)) {
+				// Redirect to the correct feed.
+				const location = this.getCorrectManageFeedLocation(post, route);
+				routeComponent.$router.push(location);
+			} else if (this.isScheduledFeed(route)) {
+				// If we still are in the correct feed, but it's a scheduled feed:
+				// Means we had a scheduled post that remained a scheduled post and it got changed in another way.
+				// Since we cannot make sure its position within the feed is still valid, we reload.
+				routeComponent.reloadRoute();
+			}
+		}
 	}
 
 	static onPostPublished(eventItem: EventItem, routeComponent: BaseRouteComponent) {
 		const post = postFromEventItem(eventItem);
-		this.gotoPostFeedManage(post, routeComponent);
+		const route = routeComponent.$route;
+
+		// Redirect to the active posts feed.
+		// A post can only be published from the draft/scheduled feed of the correct route, no need to redirect.
+		const location = this.getCorrectManageFeedLocation(post, route);
+		routeComponent.$router.push(location);
+
+		// Show the publish growl to give them an option to go to the community.
+		if (post.communities.length > 0) {
+			FiresidePostGotoGrowl.show(post, 'publish');
+		}
 	}
 
 	static onPostRemoved(_eventItem: EventItem, _routeComponent: BaseRouteComponent) {
 		// Do nothing.
-	}
-
-	/**
-	 * Returns true if it went to a new page, or false if we were already on the
-	 * page required.
-	 */
-	static gotoPostFeedManage(post: FiresidePost, routeComponent: BaseRouteComponent) {
-		const route = routeComponent.$route;
-		const router = routeComponent.$router;
-		const tab = getTabForPost(post);
-
-		let query: Dictionary<string> = {};
-		if (tab !== 'active') {
-			query = { tab: tab };
-		}
-
-		let name = 'profile.overview';
-		let params: Dictionary<string> = {
-			username: post.user.username,
-		};
-
-		if (post.game) {
-			name = 'dash.games.manage.devlog';
-			params = {
-				id: post.game.id + '',
-			};
-		}
-
-		const location = {
-			name,
-			query,
-			params,
-		};
-
-		if (router.resolve(location).href === route.fullPath) {
-			// If we are already on the page, we shouldn't have to do anything.
-			// UNLESS we are on scheduled posts page. Since it works based on a
-			// date that can change we need to refresh the feed to properly sort
-			// everything again.
-			if (tab === 'scheduled') {
-				routeComponent.reloadRoute();
-				return true;
-			}
-			return false;
-		}
-
-		router.push(location);
-		return true;
 	}
 
 	private static getCachedStateKey() {

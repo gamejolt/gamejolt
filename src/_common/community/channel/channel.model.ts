@@ -43,7 +43,7 @@ export class CommunityChannel extends Model {
 		);
 	}
 
-	$remove() {
+	$remove(moveToChannel?: CommunityChannel) {
 		if (!this.id) {
 			return;
 		}
@@ -52,6 +52,7 @@ export class CommunityChannel extends Model {
 			'/web/dash/communities/channels/remove/' + this.community_id + '/' + this.id,
 			{
 				detach: true,
+				data: moveToChannel ? { move_to_channel: moveToChannel.id } : {},
 			}
 		);
 	}

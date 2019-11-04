@@ -6,16 +6,22 @@ import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Community } from '../../../_common/community/community.model';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
+import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { GameTrophy } from '../../../_common/game/trophy/trophy.model';
 import { Growls } from '../../../_common/growls/growls.service';
 import {
 	getNotificationText,
 	Notification,
 } from '../../../_common/notification/notification-model';
 import { Settings } from '../../../_common/settings/settings.service';
+import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
 import { Translate } from '../../../_common/translate/translate.service';
+import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
+import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
 import { User } from '../../../_common/user/user.model';
 import { store } from '../../store/index';
 import { router } from '../../views';
+import { getTrophyImg } from '../trophy/thumbnail/thumbnail';
 import { CommunityChannel } from './community-channel';
 
 interface NewNotificationPayload {
@@ -24,7 +30,9 @@ interface NewNotificationPayload {
 	};
 }
 
-interface CommunityFeaturePayload {}
+interface CommunityFeaturePayload {
+	post_id: string;
+}
 
 interface CommunityNewPostPayload {
 	channel_id: string;
@@ -81,6 +89,13 @@ export class GridClient {
 	bootstrapReceived = false;
 	bootstrapTimestamp = 0;
 
+	/**
+	 * Store ids of posts the user has featured.
+	 * The Grid client will ignore any incoming feature notifications for posts recorded here,
+	 * because users that feature posts should not get notified about those exact posts.
+	 */
+	private featuredPostIds: Set<number> = new Set<number>();
+
 	constructor() {
 		this.connect();
 	}
@@ -98,7 +113,7 @@ export class GridClient {
 
 		// get hostname from loadbalancer first
 		const hostResult = await pollRequest('Select server', () =>
-			Axios.get(Environment.gridHost)
+			Axios.get(Environment.gridHost, { ignoreLoadingBar: true })
 		);
 		const host = `${hostResult.data}/grid/socket`;
 
@@ -274,9 +289,8 @@ export class GridClient {
 			return;
 		}
 
-		const message = getNotificationText(notification, true);
-		const icon =
-			notification.from_model === undefined ? '' : notification.from_model.img_avatar;
+		let message = getNotificationText(notification, true);
+		let icon = notification.from_model === undefined ? '' : notification.from_model.img_avatar;
 
 		if (message !== undefined) {
 			let title = Translate.$gettext('New Notification');
@@ -295,6 +309,24 @@ export class GridClient {
 					});
 				} else {
 					title = Translate.$gettext('New Video');
+				}
+			} else if (notification.type === Notification.TYPE_GAME_TROPHY_ACHIEVED) {
+				if (
+					notification.action_model instanceof UserGameTrophy &&
+					notification.action_model.trophy instanceof GameTrophy
+				) {
+					title = Translate.$gettext(`Trophy Unlocked!`);
+					message = notification.action_model.trophy.title;
+					icon = getTrophyImg(notification.action_model.trophy);
+				}
+			} else if (notification.type === Notification.TYPE_SITE_TROPHY_ACHIEVED) {
+				if (
+					notification.action_model instanceof UserSiteTrophy &&
+					notification.action_model.trophy instanceof SiteTrophy
+				) {
+					title = Translate.$gettext(`Trophy Unlocked!`);
+					message = notification.action_model.trophy.title;
+					icon = getTrophyImg(notification.action_model.trophy);
 				}
 			}
 
@@ -375,7 +407,15 @@ export class GridClient {
 		}
 	}
 
-	handleCommunityFeature(communityId: number, _payload: CommunityFeaturePayload) {
+	handleCommunityFeature(communityId: number, payload: CommunityFeaturePayload) {
+		// Suppress notification if the user featured that post.
+		if (payload.post_id) {
+			const postId = Number.parseInt(payload.post_id, 10);
+			if (this.featuredPostIds.has(postId)) {
+				return;
+			}
+		}
+
 		const communityState = store.state.communityStates.getCommunityState(communityId);
 		communityState.unreadFeatureCount++;
 		store.commit('incrementNotificationCount', { count: 1, type: 'activity' });
@@ -410,6 +450,12 @@ export class GridClient {
 				this.socket.disconnect();
 				this.socket = null;
 			}
+		}
+	}
+
+	public recordFeaturedPost(post: FiresidePost) {
+		if (!this.featuredPostIds.has(post.id)) {
+			this.featuredPostIds.add(post.id);
 		}
 	}
 }

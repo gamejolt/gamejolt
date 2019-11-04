@@ -218,32 +218,36 @@
 								</h4>
 							</div>
 
-							<template v-if="!isOverviewLoaded || isLoadingAllCommunities">
-								<div
-									v-for="i in previewCommunityCount"
-									:key="i"
-									class="-community-item -community-thumb-placeholder"
-								></div>
-							</template>
-							<template v-else>
-								<router-link
-									v-for="community of shownCommunities"
-									:key="community.id"
-									class="-community-item link-unstyled"
-									:to="{
-										name: 'communities.view.overview',
-										params: { path: community.path },
-									}"
-									v-app-tooltip.bottom="community.name"
-								>
-									<app-community-thumbnail-img class="-community-thumb" :community="community" />
-									<app-community-verified-tick
-										class="-community-verified-tick"
-										:community="community"
-										no-tooltip
-									/>
-								</router-link>
-							</template>
+							<span class="-communities">
+								<template v-if="!isOverviewLoaded || isLoadingAllCommunities">
+									<div
+										v-for="i in previewCommunityCount"
+										:key="i"
+										class="-community-item -community-thumb-placeholder"
+									></div>
+								</template>
+								<template v-else>
+									<router-link
+										v-for="community of shownCommunities"
+										:key="community.id"
+										class="-community-item link-unstyled"
+										:to="{
+											name: 'communities.view.overview',
+											params: { path: community.path },
+										}"
+										v-app-tooltip.bottom="community.name"
+									>
+										<app-community-thumbnail-img class="-community-thumb" :community="community" />
+										<app-community-verified-tick
+											class="-community-verified-tick"
+											:community="community"
+											no-tooltip
+										/>
+									</router-link>
+								</template>
+							</span>
+
+							<br />
 						</template>
 
 						<!-- Latest Games -->
@@ -270,6 +274,37 @@
 							<app-game-list-placeholder v-if="!isOverviewLoaded" :num="7" />
 							<app-game-list v-else-if="games.length" :games="games" event-label="profile" />
 						</template>
+
+						<!-- Trophies -->
+						<template v-if="shouldShowTrophies">
+							<h4 class="section-header">
+								<translate>Trophies</translate>
+							</h4>
+
+							<div class="-trophies">
+								<app-trophy-thumbnail
+									class="-trophy"
+									v-for="trophy of previewTrophies"
+									:key="trophy.key"
+									:trophy="trophy.trophy"
+									no-difficulty
+									no-highlight
+									@click.native="onClickTrophy(trophy)"
+								/>
+
+								<router-link
+									v-if="shouldShowMoreTrophies"
+									class="-trophies-more -trophy link-unstyled"
+									:to="{ name: 'profile.trophies' }"
+									v-app-tooltip="$gettext(`View All Trophies...`)"
+								>
+									+{{ moreTrophyCount }}
+								</router-link>
+							</div>
+
+							<br />
+						</template>
+
 					</div>
 
 					<!-- Friend Requests -->
@@ -327,13 +362,16 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+.-communities
+	display: grid
+	grid-template-columns: repeat(5, 55px)
+	grid-gap: 5px 10px
+
 .-community-item
 	pressy()
 	display: inline-block
 	position: relative
 	outline: 0
-	margin-right: 10px
-	margin-bottom: 5px
 	width: 55px
 	height: 55px
 
@@ -358,6 +396,32 @@
 	bottom: -1px
 	change-bg('bg-offset')
 	border-radius: 50%
+
+.-trophies
+	display: grid
+	grid-template-columns: repeat(5, 55px)
+	grid-gap: 5px 10px
+
+	&-more
+		change-bg('bg-offset')
+		rounded-corners-lg()
+		display: flex !important
+		justify-content: center
+		align-items: center
+		font-size: $font-size-h4
+		user-select: none
+
+		&:hover
+			text-decoration: none
+
+.-trophy
+	width: 55px
+	height: 55px
+	pressy()
+	display: inline-block
+	position: relative
+	cursor: pointer
+
 </style>
 
 <script lang="ts" src="./overview"></script>

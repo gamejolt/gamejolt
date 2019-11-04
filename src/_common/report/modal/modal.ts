@@ -1,5 +1,6 @@
 import { Component, Prop } from 'vue-property-decorator';
 import { Comment } from '../../comment/comment-model';
+import { FiresidePost } from '../../fireside/post/post-model';
 import { ForumPost } from '../../forum/post/post.model';
 import { ForumTopic } from '../../forum/topic/topic.model';
 import { Game } from '../../game/game.model';
@@ -14,7 +15,8 @@ import AppReportForm from '../form/form.vue';
 	},
 })
 export default class AppReportModal extends BaseModal {
-	@Prop(Object) resource!: Comment | User | Game | ForumTopic | ForumPost;
+	@Prop(Object)
+	resource!: Comment | User | Game | FiresidePost | ForumTopic | ForumPost;
 
 	get type() {
 		if (this.resource instanceof Comment) {
@@ -23,6 +25,8 @@ export default class AppReportModal extends BaseModal {
 			return 'User';
 		} else if (this.resource instanceof Game) {
 			return 'Game';
+		} else if (this.resource instanceof FiresidePost) {
+			return 'Fireside_Post';
 		} else if (this.resource instanceof ForumTopic) {
 			return 'Forum_Topic';
 		} else if (this.resource instanceof ForumPost) {
@@ -37,6 +41,8 @@ export default class AppReportModal extends BaseModal {
 				return this.$gettext('Report Comment');
 			case 'Game':
 				return this.$gettext('Report Game');
+			case 'Fireside_Post':
+				return this.$gettext('Report Post');
 			case 'User':
 				return this.$gettext('Report User');
 			case 'Forum_Topic':

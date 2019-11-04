@@ -65,11 +65,17 @@
 						event-label="feed"
 					/>
 
-					<app-activity-feed-event-item-time
-						:event-item="eventItem"
-						:post="post"
-						:link="linkResolved"
-					/>
+					<span>
+						<span v-if="shouldShowIsPinned" class="tag">
+							<app-jolticon icon="thumbtack" />
+							<translate>Pinned</translate>
+						</span>
+						<app-activity-feed-event-item-time
+							:event-item="eventItem"
+							:post="post"
+							:link="linkResolved"
+						/>
+					</span>
 				</div>
 			</div>
 
@@ -134,30 +140,19 @@
 					<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 				</div>
 
-				<div class="-communities" v-if="communities.length && !feed.hideCommunityInfo">
+				<div class="-communities" v-if="shouldShowCommunities">
 					<div class="-community-row" v-for="postCommunity of communities" :key="postCommunity.id">
 						<app-community-pill
+							v-if="!feed.hideCommunity"
 							:community="postCommunity.community"
-							:channel="postCommunity.channel"
+							:channel="feed.hideCommunityChannel ? undefined : postCommunity.channel"
 						/>
+						<app-pill v-else :to="getChannelRoute(postCommunity)">
+							{{ getChannelTitle(postCommunity) }}
+						</app-pill>
 					</div>
 				</div>
 			</template>
-
-			<div class="-manage" v-if="shouldShowManage && !!post">
-				<app-fireside-post-manage
-					:post="post"
-					:show-edit-controls="feed.shouldShowEditControls"
-					:show-community-controls="feed.shouldShowCommunityControls"
-					@edit="onPostEdited(eventItem)"
-					@publish="onPostPublished(eventItem)"
-					@remove="onPostRemoved(eventItem)"
-					@feature="onPostFeatured(eventItem, $event)"
-					@unfeature="onPostUnfeatured(eventItem, $event)"
-					@move-channel="onPostMoveChannel(eventItem, $event)"
-					@reject="onPostRejected(eventItem, $event)"
-				/>
-			</div>
 
 			<app-event-item-controls
 				class="-controls"
@@ -167,7 +162,15 @@
 				:post="post"
 				:video="video"
 				:show-user-follow="shouldShowFollow"
-				@expand="onExpand()"
+				@post-edit="onPostEdited(eventItem)"
+				@post-publish="onPostPublished(eventItem)"
+				@post-remove="onPostRemoved(eventItem)"
+				@post-feature="onPostFeatured(eventItem, $event)"
+				@post-unfeature="onPostUnfeatured(eventItem, $event)"
+				@post-move-channel="onPostMovedChannel(eventItem, $event)"
+				@post-reject="onPostRejected(eventItem, $event)"
+				@post-pin="onPostPinned(eventItem)"
+				@post-unpin="onPostUnpinned(eventItem)"
 			/>
 		</div>
 	</div>
