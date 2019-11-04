@@ -9,7 +9,6 @@
 			'has-banner': hasBanner && !isShellHidden,
 		}"
 	>
-		<app-shell-halloween />
 		<app-shell-banner v-if="!isShellHidden" />
 		<app-shell-top-nav v-if="hasTopBar" />
 		<app-shell-cbar v-if="hasCbar" />

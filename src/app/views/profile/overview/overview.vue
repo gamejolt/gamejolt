@@ -139,8 +139,6 @@
 							<br />
 						</template>
 
-						<app-user-halloween-monster-widget :user="user" />
-
 						<!-- Social links -->
 						<template v-if="hasLinksSection">
 							<template v-if="linkedAccounts.length">

@@ -31,7 +31,6 @@ let components: any = {
 	AppLoadingBar,
 	AppShellBanner: () => import(/* webpackChunkName: "shell" */ './banner/banner.vue'),
 	AppShellChat: () => import(/* webpackChunkName: "chat" */ './chat/chat.vue'),
-	AppShellHalloween: () => import(/* webackChunkName: "halloween" */ './halloween/halloween.vue'),
 };
 
 if (GJ_IS_CLIENT) {
