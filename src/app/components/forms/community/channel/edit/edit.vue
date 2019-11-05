@@ -15,7 +15,7 @@
 			<br />
 
 			<div class="clearfix">
-				<app-button class="pull-right" trans @click="clearBackground">
+				<app-button @click="clearBackground">
 					<translate>Clear Background</translate>
 				</app-button>
 			</div>
@@ -47,17 +47,6 @@
 			<app-form-control-errors />
 		</app-form-group>
 
-		<!-- TODO: Community-channel-description-enable -->
-		<!-- <app-form-group name="description" :optional="true">
-			<app-form-control-textarea
-				rows="2"
-				:rules="{
-					max: maxDescriptionLength,
-				}"
-			/>
-			<app-form-control-errors />
-		</app-form-group> -->
-
 		<app-form-button>
 			<translate>Save Channel</translate>
 		</app-form-button>
@@ -67,7 +56,7 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
-@require '../../../community/channel/card/channel-card'
+@require '../../../../community/channel/card/channel-card'
 
 .-background-preview
 	display: block

@@ -1,14 +1,14 @@
 import { Component, Prop } from 'vue-property-decorator';
-import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../../_common/community/community.model';
-import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
+import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
+import { Community } from '../../../../../../_common/community/community.model';
+import AppFormControlUpload from '../../../../../../_common/form-vue/control/upload/upload.vue';
 import {
 	BaseForm,
 	FormOnLoad,
 	FormOnSubmitSuccess,
-} from '../../../../../_common/form-vue/form.service';
-import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+} from '../../../../../../_common/form-vue/form.service';
+import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
+import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 
 @Component({
 	components: {
@@ -26,7 +26,6 @@ export default class FormCommunityChannelEdit extends BaseForm<CommunityChannel>
 	maxFilesize = 0;
 	maxWidth = 0;
 	maxHeight = 0;
-	maxDescriptionLength = 0;
 
 	get loadUrl() {
 		return `/web/dash/communities/channels/save/${this.community.id}`;
@@ -36,7 +35,6 @@ export default class FormCommunityChannelEdit extends BaseForm<CommunityChannel>
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
-		this.maxDescriptionLength = payload.maxDescriptionLength;
 	}
 
 	onSubmitSuccess() {
@@ -59,5 +57,6 @@ export default class FormCommunityChannelEdit extends BaseForm<CommunityChannel>
 		await this.model!.$clearBackground();
 
 		this.setField('background', this.model!.background);
+		this.$emit('clear');
 	}
 }

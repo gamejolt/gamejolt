@@ -1,13 +1,19 @@
 import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
-import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
+import { Component, Prop } from 'vue-property-decorator';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 
-@Component({})
+@Component({
+	directives: {
+		AppTooltip,
+	},
+})
 export default class AppCommunityChannelCard extends Vue {
-	@Prop(CommunityChannel)
-	channel!: CommunityChannel;
+	@Prop(MediaItem)
+	backgroundItem?: MediaItem;
+
+	@Prop(String)
+	title!: string;
 
 	@Prop(Boolean)
 	isActive!: boolean;
@@ -15,11 +21,17 @@ export default class AppCommunityChannelCard extends Vue {
 	@Prop(Boolean)
 	isUnread!: boolean;
 
-	get hasBackgroundImg() {
-		return this.channel.background instanceof MediaItem;
+	get hasBackgroundImage() {
+		return this.backgroundItem instanceof MediaItem;
 	}
 
-	get backgroundSrc() {
-		return this.channel.background!.img_url;
+	get linkTo() {
+		const link = { name: 'communities.view.overview' } as any;
+		if (this.title === 'featured') {
+			return link;
+		}
+
+		link.params = { channel: this.title };
+		return link;
 	}
 }

@@ -4,116 +4,115 @@
 
 .-card
 	position: relative
+	display: block
+	flex-shrink: 0
 
-	margin-bottom: 8px
 	width: $card-width
 	height: $card-height
 	overflow: hidden
 
-	border-left-width: 8px
-	border-left-color: var(--theme-bi-bg)
+	margin-bottom: ($line-height-computed / 2)
+
 	rounded-corners-lg()
 
 	change-bg('bg-offset')
-	theme-prop('color', 'fg')
+	color: var(--theme-fg)
 
-	transition: all 250ms
+	cursor: pointer
 
-	&-link
-		display: block
-		width: $card-width
-		outline: none
+	outline: none
 
 	&:hover
-		.-hover-glare
-			transform: rotateZ(30deg) translateY(-100px)
-			opacity: 0.07
+		elevate-2()
 
 		.-card-bg-img
-			filter: grayscale(0.75)
 			transform: scale(1.05)
-
-	&-content
-		padding: 10px
-		position: relative
-		z-index: 2
+			filter: grayscale(0.8)
 
 	&-bg
 		position: absolute
+		top: 0
+		left: 0
 		width: 100%
 		height: 100%
 		z-index: 1
 
 		&-img
-			display: block
-			// 102% and transform to combat filter: blur's artifacts around the edges
-			width: 102%
-			height: 102%
-			transform: translateX(-1%) translateY(-1%)
-			opacity: 0.9
+			position: absolute
+			top: 0
+			left: 0
+			width: 100%
+			height: 100%
+			background-size: cover
+			background-position: center center
+			background-repeat: no-repeat
+
 			filter: grayscale(1)
-			transition: filter 200ms, transform 200ms
+
+			transition: transform 200ms, filter 200ms
+
+			&-active
+				filter: none !important
 
 		&-gradient
 			position: absolute
-			left: 0
 			top: 0
+			left: 0
 			width: 100%
 			height: 100%
-			background: linear-gradient(to bottom, rgba(60, 60, 60, 0.2), rgba(60, 60, 60, 0.7))
+			background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8))
 
-	&.-active
-		border-left-style: solid
+	&-active-indicator
+		z-index: 2
+		position: absolute
+		left: 0
+		top: 0
 
-		&:hover
-			.-card-bg-img
-				filter: none
+		width: 10px
+		height: 100%
+		background-color: var(--theme-bi-bg)
 
-		.-card
-			&-bg-img
-				opacity: 0.9
-				filter: none
-
-	&-dark
-		change-bg('darkest')
-		theme-prop('color', 'lightest')
-
-		.-hover-glare
-			background: linear-gradient(to bottom, rgba(220, 220, 220, 0.7), rgba(220, 220, 220, 1))
-
-		.-card-description, .-card-title
-			text-shadow: var(--theme-darkest) 1px 0 6px
-
-	&-description
-		margin-top: 4px
-		word-break: normal
-
-	&-title
+	&-content
+		position: relative
+		z-index: 3
+		margin-top: 10px
+		margin-left: 20px
+		margin-right: 10px
 		display: flex
-		align-items: center
-		font-size: $font-size-h4
-		font-weight: bolder
+		justify-content: space-between
+
+		&-title
+			font-weight: bold
+			margin-right: 10px
+			text-overflow()
+
+			&-overlay
+				text-shadow: var(--theme-darkest) 1px 0 4px
+				color: var(--theme-lightest)
 
 		&-unread
-			font-weight: bold
+			margin-top: 4px
+			width: 12px
+			height: 12px
+			background-color: var(--theme-notice)
 
-.-unread-dot
-	width: 8px
-	height: 8px
-	change-bg('notice')
-	border-radius: 50%
-	display: inline-block
-	margin-right: 6px
-	margin-left: 4px
+			flex-shrink: 0
 
-.-hover-glare
-	position: absolute
-	width: $card-width
-	height: $card-height
-	background: linear-gradient(to bottom, rgba(128, 128, 128, 0.5), rgba(128, 128, 128, 0.9))
-	z-index: 3
-	right: 0
-	bottom: 0
-	transform: rotateZ(30deg) translateY(-200px)
-	transition: opacity 500ms, transform 1s $strong-ease-out
-	opacity: 0
+			border-color: var(--theme-bg-offset)
+			border-width: 2px
+			border-style: solid
+			rounded-corners-lg()
+
+			filter: drop-shadow(0 0 7px var(--theme-notice))
+
+			animation-name: unread
+			animation-duration: 2s
+			animation-iteration-count: infinite
+
+@keyframes unread
+	0%
+		filter: drop-shadow(0 0 1px var(--theme-notice))
+	50%
+		filter: drop-shadow(0 0 7px var(--theme-notice))
+	100%
+		filter: drop-shadow(0 0 1px var(--theme-notice))

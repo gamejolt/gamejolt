@@ -13,7 +13,7 @@
 			<br />
 
 			<div class="clearfix">
-				<app-button class="pull-right" trans @click="clearImage">
+				<app-button @click="clearImage">
 					<translate>Clear Image</translate>
 				</app-button>
 			</div>

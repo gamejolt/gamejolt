@@ -4,13 +4,15 @@ import AppCardListDraggable from '../../../../../../../_common/card/list/draggab
 import AppCardListItem from '../../../../../../../_common/card/list/item/item.vue';
 import AppCardList from '../../../../../../../_common/card/list/list.vue';
 import { CommunityChannel } from '../../../../../../../_common/community/channel/channel.model';
+import { Community } from '../../../../../../../_common/community/community.model';
 import { Growls } from '../../../../../../../_common/growls/growls.service';
 import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import { CommunityRemoveChannelModal } from '../../../../../../components/community/remove-channel/modal/modal.service';
 import FormCommunityChannel from '../../../../../../components/forms/community/channel/channel.vue';
-import FormCommunityChannelEdit from '../../../../../../components/forms/community/channel/edit.vue';
+import FormCommunityChannelEdit from '../../../../../../components/forms/community/channel/edit/edit.vue';
+import FormCommunityChannelEditFeatured from '../../../../../../components/forms/community/channel/edit/featured.vue';
 import { RouteStore, RouteStoreModule } from '../edit.store';
 
 @Component({
@@ -23,6 +25,7 @@ import { RouteStore, RouteStoreModule } from '../edit.store';
 		AppCardListItem,
 		AppCardListAdd,
 		FormCommunityChannelEdit,
+		FormCommunityChannelEditFeatured,
 	},
 	directives: {
 		AppTooltip,
@@ -32,7 +35,7 @@ export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent
 	@RouteStoreModule.State
 	community!: RouteStore['community'];
 
-	activeItem: CommunityChannel | null = null;
+	activeItem: CommunityChannel | Community | null = null;
 
 	get canRemoveChannel() {
 		if (!this.community.channels) {
@@ -76,5 +79,9 @@ export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent
 
 	channelEdited() {
 		this.onChannelsChange();
+	}
+
+	featuredBackgroundEdited() {
+		this.$emit('details-change', this.community);
 	}
 }
