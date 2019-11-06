@@ -7,8 +7,7 @@
 		<div class="page-help">
 			<p>
 				<translate>
-					Block users from contributing to this community. They will not be able to join, post or
-					comment.
+					Block users from contributing to this community. They will not be able to join or post.
 				</translate>
 			</p>
 		</div>

@@ -14,6 +14,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../_common/scroll/affix/affix.vue';
 import { ThemeMutation, ThemeStore } from '../../../../../_common/theme/theme.store';
+import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { getBlockReason } from '../../../../../_common/user/block/block.model';
 import { User } from '../../../../../_common/user/user.model';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
@@ -68,6 +69,7 @@ function getFetchUrl(route: Route) {
 		AppCommunitiesViewOverviewNavEdit,
 		AppCommunitySidebar,
 		AppCommunityThumbnailImg,
+		AppTimeAgo,
 	},
 })
 @RouteResolver({

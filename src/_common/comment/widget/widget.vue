@@ -41,7 +41,7 @@
 								<translate>New</translate>
 							</a>
 						</li>
-						<li v-if="!userBlock">
+						<li>
 							<a @click="sortYou()" :class="{ active: isSortYou }">
 								<translate>You</translate>
 							</a>
@@ -59,7 +59,6 @@
 					:comment="comment"
 					:children="childComments[comment.id]"
 					:show-children="isThreadView"
-					:user-block="userBlock"
 				/>
 			</app-message-thread>
 

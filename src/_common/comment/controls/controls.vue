@@ -41,7 +41,7 @@
 		<template v-if="showReply">
 			&nbsp;
 
-			<span v-if="!userBlock" v-app-auth-required>
+			<span v-app-auth-required>
 				<app-button
 					icon="reply"
 					circle

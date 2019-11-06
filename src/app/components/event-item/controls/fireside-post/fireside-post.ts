@@ -116,16 +116,7 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	}
 
 	get shouldShowCommentsButton() {
-		if (!this.showCommentsButton) {
-			return false;
-		}
-
-		if (!this.commentsCount && this.post.communities.length > 0) {
-			const community = this.post.communities[0].community;
-			return !community.isBlocked;
-		}
-
-		return true;
+		return this.showCommentsButton;
 	}
 
 	get shouldShowStatsInNewLine() {

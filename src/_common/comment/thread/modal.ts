@@ -4,7 +4,6 @@ import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import { BaseModal } from '../../modal/base';
 import { Screen } from '../../screen/screen-service';
 import { AppState, AppStore } from '../../store/app-store';
-import { UserBlock } from '../../user/block/block.model';
 import FormComment from '../add/add.vue';
 import { Comment } from '../comment-model';
 import { CommentMutation, CommentState, CommentStore } from '../comment-store';
@@ -45,7 +44,6 @@ export default class AppCommentThreadModal extends BaseModal {
 
 	hasError = false;
 	isEditorFocused = false;
-	userBlock: UserBlock | null = null;
 
 	readonly Screen = Screen;
 
@@ -82,10 +80,6 @@ export default class AppCommentThreadModal extends BaseModal {
 	}
 
 	get shouldShowReply() {
-		if (this.userBlock) {
-			return false;
-		}
-
 		return this.user && !this.hasError;
 	}
 
@@ -112,9 +106,5 @@ export default class AppCommentThreadModal extends BaseModal {
 
 	onEditorBlur() {
 		this.isEditorFocused = false;
-	}
-
-	onWidgetGotUserBlock(userBlock: UserBlock) {
-		this.userBlock = userBlock;
 	}
 }

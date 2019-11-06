@@ -15,7 +15,6 @@
 				:show-add="false"
 				@remove="onRemove"
 				@error="onError"
-				@get-user-block="onWidgetGotUserBlock"
 			/>
 		</div>
 

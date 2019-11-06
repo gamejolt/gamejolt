@@ -102,7 +102,6 @@
 				:comment="comment"
 				:children="children"
 				:show-reply="!parent && !showChildren"
-				:user-block="userBlock"
 			/>
 		</template>
 		<template v-else>

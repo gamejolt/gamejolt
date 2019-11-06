@@ -11,7 +11,6 @@ import AppMessageThreadContent from '../../message-thread/content/content.vue';
 import AppMessageThread from '../../message-thread/message-thread.vue';
 import AppNavTabList from '../../nav/tab-list/tab-list.vue';
 import { AppState, AppStore } from '../../store/app-store';
-import { UserBlock } from '../../user/block/block.model';
 import { User } from '../../user/user.model';
 import FormComment from '../add/add.vue';
 import { Comment } from '../comment-model';
@@ -110,7 +109,6 @@ export default class AppCommentWidget extends Vue {
 	resourceOwner: User | null = null;
 	perPage = 10;
 	currentPage = 1;
-	userBlock: UserBlock | null = null;
 
 	collaborators: Collaborator[] = [];
 
@@ -178,11 +176,11 @@ export default class AppCommentWidget extends Vue {
 	}
 
 	get shouldShowAdd() {
-		return this.showAdd && !this.userBlock;
+		return this.showAdd;
 	}
 
 	get shouldShowEmptyMessage() {
-		return !this.comments.length && !this.userBlock;
+		return !this.comments.length;
 	}
 
 	get shouldShowTabs() {
@@ -190,7 +188,7 @@ export default class AppCommentWidget extends Vue {
 			return false;
 		}
 
-		return !this.userBlock || this.comments.length > 0;
+		return this.comments.length > 0;
 	}
 
 	async created() {
@@ -271,11 +269,6 @@ export default class AppCommentWidget extends Vue {
 			this.collaborators = payload.collaborators
 				? Collaborator.populate(payload.collaborators)
 				: [];
-
-			if (payload.userBlock) {
-				this.userBlock = new UserBlock(payload.userBlock);
-				this.$emit('get-user-block', this.userBlock);
-			}
 		} catch (e) {
 			console.error(e);
 			this.hasError = true;

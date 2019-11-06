@@ -43,17 +43,21 @@
 					<br />
 					The reason for your block is as follows:
 				</span>
+				<br />
+
+				<em>
+					<strong>
+						{{ communityBlockReason }}
+					</strong>
+				</em>
 
 				<br />
 				<br />
-				<div class="well fill-offset">
-					{{ communityBlockReason }}
-				</div>
 
 				<div>
 					<translate>
-						You are unable to create any new posts or comment on posts in this community until your
-						block gets lifted or expires.
+						You are unable to create any new posts in this community until your block gets lifted or
+						expires.
 					</translate>
 				</div>
 

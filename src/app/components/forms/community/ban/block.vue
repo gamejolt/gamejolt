@@ -21,7 +21,7 @@
 			</app-form-control-errors>
 		</app-form-group>
 
-		<app-form-group name="reasonType" :label="$gettext('Block Reason')">
+		<app-form-group name="reasonType" :label="$gettext('Block reason')">
 			<div class="radio" v-for="(reasonDisplay, reason) in defaultReasons" :key="reason">
 				<label>
 					<app-form-control-radio :value="reason" />
@@ -57,22 +57,12 @@
 			<app-form-control-errors />
 		</app-form-group>
 
-		<app-form-group name="ejectPosts" :label="$gettext(`Eject user's Posts from the Community?`)">
+		<app-form-group name="ejectPosts" :label="$gettext(`Eject user's posts from the community?`)">
 			<app-form-control-toggle class="pull-right" />
 			<p class="help-block">
 				<translate>
 					Once the user is blocked, all their posts will be ejected from the community. This also
 					affects their featured posts.
-				</translate>
-			</p>
-		</app-form-group>
-
-		<app-form-group name="removeComments" :label="$gettext(`Remove the user's Comments?`)">
-			<app-form-control-toggle class="pull-right" />
-			<p class="help-block">
-				<translate>
-					Once the user is blocked, all their comments on posts remaining in the community will be
-					removed. This does not affect comments on posts the user has made themselves.
 				</translate>
 			</p>
 		</app-form-group>

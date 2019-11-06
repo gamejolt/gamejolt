@@ -12,7 +12,6 @@ type BlockData = {
 	reason: string;
 	expiry: string;
 	ejectPosts: boolean;
-	removeComments: boolean;
 };
 
 @Component({
@@ -53,9 +52,8 @@ export default class FormCommunityBlock extends BaseForm<BlockData>
 
 	onInit() {
 		this.setField('reasonType', this.defaultReasons.spam);
-		this.setField('expiry', this.expiryOptions.week);
+		this.setField('expiry', 'week');
 		this.setField('ejectPosts', true);
-		this.setField('removeComments', true);
 	}
 
 	async onSubmit() {
@@ -75,17 +73,8 @@ export default class FormCommunityBlock extends BaseForm<BlockData>
 				});
 			}
 		} else {
-			if (this.formModel.removeComments || this.formModel.ejectPosts) {
-				let whatsRemoved: string;
-				if (this.formModel.removeComments) {
-					if (this.formModel.ejectPosts) {
-						whatsRemoved = this.$gettext('comments and posts');
-					} else {
-						whatsRemoved = this.$gettext('comments');
-					}
-				} else {
-					whatsRemoved = this.$gettext('posts');
-				}
+			if (this.formModel.ejectPosts) {
+				const whatsRemoved = this.$gettext('posts');
 
 				const message = this.$gettextInterpolate(
 					'%{ user } was blocked from this Community. It might take a few moments for their %{ stuff } to disappear.',
