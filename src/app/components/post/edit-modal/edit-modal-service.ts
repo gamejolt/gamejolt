@@ -10,7 +10,10 @@ export type PostEditModalOptions = {
 };
 
 export class PostEditModal {
-	static async show(post: FiresidePost, options: PostEditModalOptions = {}) {
+	static async show(
+		postProvider: FiresidePost | Promise<FiresidePost>,
+		options: PostEditModalOptions = {}
+	) {
 		options = options || {};
 		return await Modal.show<FiresidePost>({
 			modalId: 'PostEdit',
@@ -22,7 +25,7 @@ export class PostEditModal {
 			noEscClose: true,
 			size: 'sm',
 			props: {
-				post: post,
+				postProvider: postProvider,
 				community: options.community,
 				channel: options.channel,
 			},

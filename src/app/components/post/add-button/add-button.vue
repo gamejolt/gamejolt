@@ -9,47 +9,6 @@
 	</div>
 </template>
 
-<style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
-$-height = 40px
-
-.post-add-button
-	display: flex
-	align-items: center
-
-.-avatar
-	change-bg('bg-subtle')
-	img-circle()
-	flex: none
-	width: $-height
-	height: $-height
-	margin-right: $grid-gutter-width-xs * 0.5
-
-	@media $media-sm-up
-		margin-right: $grid-gutter-width * 0.5
-
-.-input
-	input-placeholder-button()
-	flex: auto
-	position: relative
-	height: $-height
-	line-height: $-height
-	user-select: none
-	-moz-user-select: none
-	transition: border-color 200ms $strong-ease-out
-
-	&::before
-		transition: border-color 200ms $strong-ease-out
-		caret(var(--theme-bg-subtle), size: 9px)
-		content: ''
-
-	&:hover
-		theme-prop('border-color', 'link')
-
-		&::before
-			caret(var(--theme-link), size: 9px)
-</style>
+<style lang="stylus" src="./add-button.styl" scoped></style>
 
 <script lang="ts" src="./add-button"></script>

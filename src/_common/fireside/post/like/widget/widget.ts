@@ -1,12 +1,13 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class/lib/bindings';
+import { State } from 'vuex-class';
 import { Store } from '../../../../../auth/store/index';
 import { AppAuthRequired } from '../../../../auth/auth-required-directive';
 import { number } from '../../../../filters/number';
 import { Growls } from '../../../../growls/growls.service';
 import { LikersModal } from '../../../../likers/modal.service';
 import AppPopper from '../../../../popper/popper.vue';
+import { Screen } from '../../../../screen/screen-service';
 import { AppTooltip } from '../../../../tooltip/tooltip';
 import { UserFollowSuggestion } from '../../../../user/follow/suggestion.service';
 import AppUserFollowWidget from '../../../../user/follow/widget.vue';
@@ -46,11 +47,14 @@ export default class AppFiresidePostLikeWidget extends Vue {
 	showLikeAnim = false;
 
 	get shouldShowFollow() {
-		if (!this.showUserFollow) {
+		if (!this.showUserFollow || Screen.isMobile) {
 			return false;
 		}
 
-		if ((this.app.user && this.app.user.id === this.post.user.id) || this.post.user.is_following) {
+		if (
+			(this.app.user && this.app.user.id === this.post.user.id) ||
+			this.post.user.is_following
+		) {
 			return false;
 		}
 

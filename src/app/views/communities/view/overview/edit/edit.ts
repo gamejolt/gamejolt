@@ -52,15 +52,6 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 
-	get routeTitle() {
-		if (this.community) {
-			return this.$gettextInterpolate(`Edit Community %{ community }`, {
-				community: this.community.name,
-			});
-		}
-		return null;
-	}
-
 	get isOwner() {
 		// The owner's collaboration is not returned from backend.
 		return this.collaboration === null;
@@ -71,6 +62,6 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 	}
 
 	onChannelsChange(channels: CommunityChannel[]) {
-		this.$emit('details-change', channels);
+		this.$emit('channels-change', channels);
 	}
 }

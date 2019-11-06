@@ -1,3 +1,5 @@
+import { namespace } from 'vuex-class';
+import { NamespaceVuexStore, VuexModule, VuexMutation, VuexStore } from '../../../../../utils/vuex';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
 import { Comment } from '../../../../../_common/comment/comment-model';
 import { CommentVideo } from '../../../../../_common/comment/video/video-model';
@@ -15,9 +17,6 @@ import { GameVideo } from '../../../../../_common/game/video/video.model';
 import { LinkedAccount } from '../../../../../_common/linked-account/linked-account.model';
 import { Registry } from '../../../../../_common/registry/registry.service';
 import { User } from '../../../../../_common/user/user.model';
-import { objectPick } from '../../../../../utils/object';
-import { NamespaceVuexStore, VuexModule, VuexMutation, VuexStore } from '../../../../../utils/vuex';
-import { namespace } from 'vuex-class';
 import { store } from '../../../../store';
 import { router } from '../../../index';
 
@@ -101,9 +100,6 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	videoCommentsCount = 0;
 	videoCommentsPage = 0;
 
-	scoresPayload: any = null;
-	trophiesPayload: any = null;
-
 	customGameMessages: CustomGameMessage[] = [];
 
 	get packages() {
@@ -154,7 +150,9 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 	get hasReleasesSection() {
 		// The releases section exists if there are releases or songs.
-		return this.externalPackages.length > 0 || this.packages.length > 0 || this.songs.length > 0;
+		return (
+			this.externalPackages.length > 0 || this.packages.length > 0 || this.songs.length > 0
+		);
 	}
 
 	get partnerLink() {
@@ -265,22 +263,6 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 		this.knownFollowers = User.populate(payload.knownFollowers);
 		this.knownFollowerCount = payload.knownFollowerCount || 0;
-
-		this.scoresPayload = objectPick(payload, [
-			'scoreTables',
-			'scoreTable',
-			'scores',
-			'scoresUserBestScore',
-			'scoresUserScorePlacement',
-			'scoresUserScoreExperience',
-		]);
-
-		this.trophiesPayload = objectPick(payload, [
-			'trophies',
-			'trophiesAchieved',
-			'trophiesExperienceAchieved',
-			'trophiesShowInvisibleTrophyMessage',
-		]);
 
 		this.customGameMessages = payload.customMessages || [];
 	}

@@ -12,7 +12,6 @@ import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
 import AppUserCard from '../../../_common/user/card/card.vue';
 import { User } from '../../../_common/user/user.model';
-import { Store, store } from '../../store';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import AppActivityFeed from '../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
@@ -21,6 +20,7 @@ import AppBroadcastCard from '../../components/broadcast-card/broadcast-card.vue
 import AppCommunitySlider from '../../components/community/slider/slider.vue';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
+import { Store, store } from '../../store';
 import AppHomeRecommended from './_recommended/recommended.vue';
 
 class DashGame {
@@ -179,7 +179,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 
 	onPostAdded(post: FiresidePost) {
 		if (this.app.user) {
-			ActivityFeedService.gotoPostFeedManage(post, this);
+			ActivityFeedService.onPostAdded(this.feed!, post, this);
 		}
 	}
 

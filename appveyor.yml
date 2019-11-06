@@ -18,7 +18,7 @@ install:
   # Software we need - provided by Appveyor's VS2015 image:
   # Node 10.13.0
   # Yarn 1.9.4
-  # Go 1.10.4
+  # Go 1.10.8
   # InnoSetup 5.x Unicode
   # MinGW 32-bit
 

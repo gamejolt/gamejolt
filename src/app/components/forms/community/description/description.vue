@@ -16,7 +16,7 @@
 		</app-form-group>
 
 		<app-form-button>
-			<translate>Save</translate>
+			<translate>Save Description</translate>
 		</app-form-button>
 	</app-form>
 </template>

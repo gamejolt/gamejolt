@@ -1,3 +1,6 @@
+import Vue from 'vue';
+import { Component, Watch } from 'vue-property-decorator';
+import { Action, State } from 'vuex-class';
 import { Connection } from '../../../_common/connection/connection-service';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
 import { EventBus, EventBusDeregister } from '../../../_common/event-bus/event-bus.service';
@@ -7,9 +10,6 @@ import { Meta } from '../../../_common/meta/meta-service';
 import AppMinbar from '../../../_common/minbar/minbar.vue';
 import AppModals from '../../../_common/modal/modals.vue';
 import { Screen } from '../../../_common/screen/screen-service';
-import Vue from 'vue';
-import { Component, Watch } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
 import { BannerModule, BannerStore, Store } from '../../store/index';
 import { ChatNewMessageEvent } from '../chat/client';
 import AppShellBody from './body/body.vue';
@@ -87,7 +87,8 @@ export default class AppShell extends Vue {
 
 	get totalChatNotificationsCount() {
 		return (
-			(this.chat ? this.chat.roomNotificationsCount : 0) + this.unfocusedChatNotificationsCount
+			(this.chat ? this.chat.roomNotificationsCount : 0) +
+			this.unfocusedChatNotificationsCount
 		);
 	}
 
@@ -156,6 +157,8 @@ export default class AppShell extends Vue {
 	@Watch('unreadNotificationsCount')
 	onNotificationsCountChange() {
 		Meta.notificationsCount =
-			this.unreadActivityCount + this.unreadNotificationsCount + this.totalChatNotificationsCount;
+			this.unreadActivityCount +
+			this.unreadNotificationsCount +
+			this.totalChatNotificationsCount;
 	}
 }

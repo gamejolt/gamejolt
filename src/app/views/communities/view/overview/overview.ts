@@ -2,34 +2,27 @@ import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
-import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
-import { Environment } from '../../../../../_common/environment/environment.service';
+import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../../_common/expand/expand.vue';
-import { number } from '../../../../../_common/filters/number';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import AppGameThumbnail from '../../../../../_common/game/thumbnail/thumbnail.vue';
 import { Meta } from '../../../../../_common/meta/meta-service';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
-import AppPopper from '../../../../../_common/popper/popper.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../_common/scroll/affix/affix.vue';
-import { AppSocialFacebookLike } from '../../../../../_common/social/facebook/like/like';
-import { AppSocialTwitterShare } from '../../../../../_common/social/twitter/share/share';
-import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
+import { ThemeMutation, ThemeStore } from '../../../../../_common/theme/theme.store';
 import { getBlockReason } from '../../../../../_common/user/block/block.model';
-import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
-import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import AppActivityFeed from '../../../../components/activity/feed/feed.vue';
 import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
-import AppCommunityDescription from '../../../../components/community/description/description.vue';
+import { CommunitySidebarModal } from '../../../../components/community/sidebar/modal/modal.service';
+import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
 import AppPageContainer from '../../../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
 import { Store } from '../../../../store/index';
@@ -72,15 +65,9 @@ function getFetchUrl(route: Route) {
 		AppExpand,
 		AppActivityFeedNewButton,
 		AppNavTabList,
-		AppUserAvatarList,
-		AppGameThumbnail,
-		AppCommunityDescription,
-		AppPopper,
-		AppSocialTwitterShare,
-		AppSocialFacebookLike,
-		AppUserCardHover,
 		AppCommunitiesViewOverviewNavEdit,
-		AppTimeAgo,
+		AppCommunitySidebar,
+		AppCommunityThumbnailImg,
 	},
 })
 @RouteResolver({
@@ -115,16 +102,16 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@State
 	communityStates!: Store['communityStates'];
 
+	@ThemeMutation
+	setPageTheme!: ThemeStore['setPageTheme'];
+
 	feed: ActivityFeedView | null = null;
 	knownMembers: User[] = [];
 	knownMemberCount = 0;
 	finishedLoading = false;
-	isShowingShare = false;
 	owner: User | null = null;
-	collaborators: User[] | null = null;
-	hasMoreCollaborators = false;
-	collaboratorListCollapsed = false;
-	isLoadingMoreCollaborators = false;
+	collaborators: User[] = [];
+	collaboratorCount = 0;
 	initialCollaboratorCount = 0;
 
 	readonly Screen = Screen;
@@ -132,6 +119,12 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	get routeTitle() {
 		if (!this.community) {
 			return null;
+		}
+
+		if (this.isEditing) {
+			return this.$gettextInterpolate(`Edit Community %{ community }`, {
+				community: this.community.name,
+			});
 		}
 
 		let title = this.$gettextInterpolate(
@@ -231,14 +224,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return false;
 	}
 
-	get shouldShowKnownMembers() {
-		return !!this.app.user && this.knownMembers && this.knownMembers.length > 0;
-	}
-
-	get membersYouKnowCount() {
-		return number(this.knownMemberCount);
-	}
-
 	get placeholderText() {
 		if (
 			!!this.community.post_placeholder_text &&
@@ -260,47 +245,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	get communityState() {
 		return this.communityStates.getCommunityState(this.community);
-	}
-
-	get shareUrl() {
-		return Environment.baseUrl + this.$router.resolve(this.community.routeLocation).href;
-	}
-
-	get shareContent() {
-		return this.$gettextInterpolate('Check out %{ name } community - Game Jolt', {
-			name: this.community.name,
-		});
-	}
-
-	get shouldShowCollabSection() {
-		return (
-			this.owner instanceof User ||
-			(this.collaborators !== null && this.collaborators.length > 0)
-		);
-	}
-
-	get moderators(): User[] {
-		const mods = [];
-		if (this.owner) {
-			mods.push(this.owner);
-		}
-		if (this.collaborators) {
-			if (this.collaboratorListCollapsed) {
-				mods.push(...this.collaborators.slice(0, this.initialCollaboratorCount));
-			} else {
-				mods.push(...this.collaborators);
-			}
-		}
-		return mods;
-	}
-
-	get shouldShowLoadMoreCollaborators() {
-		return (
-			this.hasMoreCollaborators ||
-			this.isLoadingMoreCollaborators ||
-			(this.collaborators !== null &&
-				this.collaborators.length > this.initialCollaboratorCount)
-		);
 	}
 
 	routeCreated() {
@@ -330,7 +274,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		if ($payload.collaborators) {
 			this.collaborators = User.populate($payload.collaborators);
 		}
-		this.hasMoreCollaborators = !!$payload.hasMoreCollaborators;
+		this.collaboratorCount = $payload.collaboratorCount;
 		this.initialCollaboratorCount = $payload.initialCollaboratorCount;
 
 		Meta.description = this.$gettextInterpolate(
@@ -355,7 +299,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			description: Meta.description,
 
 			// TODO temporarily use the header image.
-			// Ideally we'd like toprovide a nice image specifically for SEO from the backend.
+			// Ideally we'd like to provide a nice image specifically for SEO from the backend.
 			image: this.community.header ? this.community.header!.mediaserver_url : null,
 		};
 
@@ -374,7 +318,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	onPostAdded(post: FiresidePost) {
-		ActivityFeedService.gotoPostFeedManage(post, this);
+		ActivityFeedService.onPostAdded(this.feed!, post, this);
 	}
 
 	onPostUnfeatured(eventItem: EventItem, community: Community) {
@@ -401,39 +345,43 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	onDetailsChanged(community: Community) {
 		this.community.assign(community);
+		this.setPageTheme(community.theme || null);
 	}
 
-	onClickLoadNew() {
+	async onClickLoadNew() {
 		const channel = this.community.channels!.find(i => i.title === this.channel);
+		let loadNewCount = 0;
 		if (channel) {
 			this.communityState.markChannelRead(channel.id);
-		}
-		this.$emit('refresh');
-	}
-
-	copyShareUrl() {
-		Clipboard.copy(this.shareUrl);
-	}
-
-	toggleCollaboratorList() {
-		if (this.hasMoreCollaborators) {
-			this.loadMoreCollaborators();
 		} else {
-			this.collaboratorListCollapsed = !this.collaboratorListCollapsed;
+			// For the featured view, we know how many posts are new. Load that many.
+			loadNewCount = this.communityState.unreadFeatureCount;
+			this.communityState.unreadFeatureCount = 0; // Set to read.
 		}
+		// Load 15 new posts for channels or if we are unable to acquire the count.
+		if (loadNewCount <= 0) {
+			loadNewCount = 15;
+		}
+		await this.feed!.loadNew(loadNewCount);
+
+		// Mark the community/channel as read after loading new posts.
+		Api.sendRequest(
+			`/web/communities/mark-as-read/${this.community.path}/${this.channel}`,
+			undefined,
+			{ detach: true }
+		);
 	}
 
-	async loadMoreCollaborators() {
-		this.hasMoreCollaborators = false;
-		this.isLoadingMoreCollaborators = true;
-		const payload = await Api.sendRequest(
-			`/web/communities/more-collaborators/${this.community.id}`
-		);
-		const collaborators = User.populate(payload.collaborators);
-		if (this.collaborators) {
-			this.collaborators.push(...collaborators);
-		}
-		this.isLoadingMoreCollaborators = false;
-		this.collaboratorListCollapsed = false;
+	onClickAbout() {
+		CommunitySidebarModal.show({
+			community: this.community,
+			isEditing: this.isEditing,
+			owner: this.owner,
+			knownMembers: this.knownMembers,
+			knownMemberCount: this.knownMemberCount,
+			collaborators: this.collaborators,
+			collaboratorCount: this.collaboratorCount,
+			initialCollaboratorCount: this.initialCollaboratorCount,
+		});
 	}
 }

@@ -1,9 +1,9 @@
-import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
-import { BaseForm, FormOnInit } from '../../../../_common/form-vue/form.service';
-import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
 import { Component, Watch } from 'vue-property-decorator';
 import * as _ClientAutoStartMod from '../../../../_common/client/autostart/autostart.service';
+import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
+import { BaseForm, FormOnInit } from '../../../../_common/form-vue/form.service';
 import { Settings } from '../../../../_common/settings/settings.service';
+import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
 
 let ClientAutoStartMod: typeof _ClientAutoStartMod | undefined;
 if (GJ_IS_CLIENT) {
@@ -98,7 +98,10 @@ export default class FormSettings extends BaseForm<FormModel> implements FormOnI
 
 	@Watch('formModel.limit_extractions')
 	limitExtractionsChange(shouldLimit: boolean) {
-		this.setField('max_extract_count', shouldLimit ? Settings.getDefault('max-extract-count') : -1);
+		this.setField(
+			'max_extract_count',
+			shouldLimit ? Settings.getDefault('max-extract-count') : -1
+		);
 		this.onChange();
 	}
 

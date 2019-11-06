@@ -1,47 +1,14 @@
-import { Model } from '../../model/model.service';
-import { UserGameTrophy } from '../../user/game-trophy/game-trophy.model';
 import { Api } from '../../api/api.service';
+import { Model } from '../../model/model.service';
+import { BaseTrophy } from '../../trophy/base-trophy.model';
+import { UserGameTrophy } from '../../user/trophy/game-trophy.model';
 
-export type GameTrophyDifficulty = 1 | 2 | 3 | 4;
-
-export class GameTrophy extends Model {
-	static readonly DIFFICULTY_BRONZE = 1;
-	static readonly DIFFICULTY_SILVER = 2;
-	static readonly DIFFICULTY_GOLD = 3;
-	static readonly DIFFICULTY_PLATINUM = 4;
-
-	static readonly difficulties = [
-		GameTrophy.DIFFICULTY_BRONZE,
-		GameTrophy.DIFFICULTY_SILVER,
-		GameTrophy.DIFFICULTY_GOLD,
-		GameTrophy.DIFFICULTY_PLATINUM,
-	];
-
-	static readonly difficultyLabels: { [k: string]: string } = {
-		[GameTrophy.DIFFICULTY_BRONZE]: 'Bronze',
-		[GameTrophy.DIFFICULTY_SILVER]: 'Silver',
-		[GameTrophy.DIFFICULTY_GOLD]: 'Gold',
-		[GameTrophy.DIFFICULTY_PLATINUM]: 'Platinum',
-	};
-
+export class GameTrophy extends BaseTrophy {
 	game_id!: number;
-	difficulty!: number;
-	title!: string;
-	description!: string;
-	secret!: boolean;
-	visible!: boolean;
 	sort!: number;
-	experience!: number;
-	img_thumbnail!: string;
-	has_thumbnail!: boolean;
-	is_owner!: boolean;
 
 	constructor(data: any = {}) {
 		super(data);
-	}
-
-	get difficultyLabel() {
-		return GameTrophy.difficultyLabels[this.difficulty];
 	}
 
 	/**
