@@ -30,11 +30,27 @@ export default class AppDiscoverHomeBanner extends Vue {
 
 	readonly Screen = Screen;
 
+	get shouldShowViewGame() {
+		if (!this.item.game) {
+			return false;
+		}
+
+		return !this.item.custom_url || !this.shouldShowFollowGame;
+	}
+
 	get shouldShowFollowGame() {
 		if (this.item.game) {
 			return !this.app.user || !this.item.game.is_following;
 		}
 		return false;
+	}
+
+	get shouldShowViewCommunity() {
+		if (!this.item.community) {
+			return false;
+		}
+
+		return !this.item.custom_url || !this.shouldShowJoinCommunity;
 	}
 
 	get shouldShowJoinCommunity() {
