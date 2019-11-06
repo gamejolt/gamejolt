@@ -21,6 +21,14 @@ import { GridClient } from '../../grid/client.service';
 import AppPollVoting from '../../poll/voting/voting.vue';
 import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 
+type GridEvent = 'poll-vote' | 'like' | 'unlike';
+
+interface GridEventPayload {
+	user_id: number;
+
+	poll_item_id?: number;
+}
+
 @Component({
 	components: {
 		AppPostViewPlaceholder,
@@ -54,6 +62,9 @@ export default class AppPostView extends Vue {
 	@State
 	grid!: GridClient;
 
+	startListenInterval: NodeJS.Timer | null = null;
+	startedListeningGrid = false;
+
 	readonly Screen = Screen;
 
 	get communities() {
@@ -86,35 +97,67 @@ export default class AppPostView extends Vue {
 		});
 	}
 
-	async mounted() {
-		let startedListening = false;
-		setInterval(() => {
-			if (startedListening) {
+	mounted() {
+		this.listenGrid();
+	}
+
+	private listenGrid() {
+		// Check every 2 seconds if we are connected to grid.
+		// Grid bootstraps async to the site load, so this page might be mounted before grid finished loading.
+		// Once connected, start listening to the post's channel.
+		this.startListenInterval = setInterval(() => {
+			if (this.startedListeningGrid) {
+				if (this.startListenInterval) {
+					clearInterval(this.startListenInterval);
+					this.startListenInterval = null;
+				}
 				return;
 			}
 
 			if (this.grid && this.grid.connected) {
-				startedListening = true;
-				this.grid.startListenPost(this.post, (event: string, payload: any) => {
-					switch (event) {
-						case 'poll-vote':
-							if (this.post.poll) {
-								const pollItemId = parseInt(payload.poll_item_id, 10);
-								const item = this.post.poll.items.find(i => i.id === pollItemId);
-								if (item) {
-									item.vote_count++;
-									this.post.poll.vote_count++;
-								}
-							}
-
-							break;
-					}
-				});
+				this.startedListeningGrid = true;
+				this.grid.startListenPost(this.post, this.handleGridEvent);
 			}
 		}, 2000);
 	}
 
+	handleGridEvent(event: GridEvent, payload: GridEventPayload) {
+		// If the logged in user has taken an action, don't update:
+		// That change is already visible (like++, poll vote etc)
+		if (this.app.user && this.app.user.id === payload.user_id) {
+			return;
+		}
+
+		switch (event) {
+			case 'poll-vote':
+				if (this.post.poll && payload.poll_item_id) {
+					const item = this.post.poll.items.find(i => i.id === payload.poll_item_id);
+					if (item) {
+						item.vote_count++;
+						this.post.poll.vote_count++;
+					}
+				}
+
+				break;
+
+			case 'like':
+				this.post.like_count++;
+				break;
+
+			case 'unlike':
+				this.post.like_count--;
+				break;
+		}
+	}
+
 	destroyed() {
-		this.grid.stopListenPost(this.post);
+		if (this.startListenInterval) {
+			clearInterval(this.startListenInterval);
+			this.startListenInterval = null;
+		}
+
+		if (this.grid) {
+			this.grid.stopListenPost(this.post);
+		}
 	}
 }

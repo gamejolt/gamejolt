@@ -455,6 +455,8 @@ export class GridClient {
 			);
 
 			channel.on('poll-vote', (payload: any) => handler('poll-vote', payload));
+			channel.on('like', (payload: any) => handler('like', payload));
+			channel.on('unlike', (payload: any) => handler('unlike', payload));
 		}
 	}
 
