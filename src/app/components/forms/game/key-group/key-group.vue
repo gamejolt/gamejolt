@@ -111,7 +111,7 @@
 			<app-form-control-textarea
 				rows="10"
 				:rules="{
-					max: 750,
+					max: 25000,
 				}"
 			/>
 			<app-form-control-errors />
@@ -128,7 +128,7 @@
 			<app-form-control-textarea
 				rows="10"
 				:rules="{
-					max: 750,
+					max: 25000,
 				}"
 			/>
 			<app-form-control-errors />
