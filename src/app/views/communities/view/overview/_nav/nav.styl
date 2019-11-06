@@ -1,111 +1,36 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
+@require '../../../../../components/community/channel/card/channel-card'
 
-nav
-	margin-bottom: $line-height-computed
-
-ol
-	padding-left: 0
-	margin-bottom: $line-height-computed
-	list-style: none
-
-	&:last-child
-		margin-bottom: 0
-
-li
-	margin: 0
-
-.-item
+.-nav-featured
 	rounded-corners()
 	theme-prop('color', 'fg')
 	display: flex
 	padding: 5px 10px
-	margin-bottom: 5px
+	margin-bottom: 15px
 	user-select: none
 	cursor: pointer
 	transition: all 250ms
+	width: $card-width
+
+	@media $media-xs
+		width: auto
 
 	&:hover
 		change-bg('bg-offset')
 		theme-prop('color', 'fg')
 		transition: none
 
-		.-label-help
-			opacity: 1
-
 	&.active
 		&, &:hover
 			change-bg('bi-bg')
 			theme-prop('color', 'bi-fg')
 
-			.-icon
-				theme-prop('color', 'bi-fg')
-
-.-menu-icon
-	theme-prop('border-right-color', 'bi-fg')
-	flex: none
+.-mobile-nav
 	display: flex
-	align-items: center
-	justify-content: center
-	margin-top: -5px
-	margin-bottom: -5px
-	margin-right: 5px
-	padding-right: 10px
-	border-right-style: solid
-	border-right-width: 1px
+	overflow-x: scroll
+	margin-bottom: 10px
 
-	.-jolticon
-		margin: 0
-
-.-icon
-	theme-prop('color', 'fg-muted')
-	flex: none
-	margin-right: 5px
-
-.-label-help
-	display: inline-block
-	margin-left: 10px
-	opacity: 0
-	transition: opacity 200ms
-
-.-label
-	flex: auto
-
-	&-unread
-		font-weight: bold
-		animation-name: new-post-anim
-		animation-duration: 0.25s
-		animation-iteration-count: 1
-		animation-fill-mode: forwards
-
-@keyframes new-post-anim
-	0%
-		transform: scale(1)
-
-	30%
-		transform: scaleY(2)
-
-	100%
-		transform: scale(1)
-
-.-mobile-nav-container
-	theme-prop('border-color', 'bg-subtle')
-	position: relative
-	margin-left: -($grid-gutter-width-xs * 0.5)
-	margin-right: -($grid-gutter-width-xs * 0.5)
-	padding: $grid-gutter-width-xs * 0.5
-	border-style: solid
-	border-width: $border-width-base
-	border-left-width: 0
-	border-right-width: 0
-
-	@media $media-sm-up
-		rounded-corners-lg()
-		margin-left: 0
-		margin-right: 0
-		padding: $grid-gutter-width * 0.5
-		border-width: $border-width-base
-
-	&::before
-		caret(var(--theme-bg-subtle), size: 7px, direction: 'up')
-		content: ''
+	.-card
+		margin-right: 10px
+		width: 200px
