@@ -13,7 +13,6 @@ import {
 } from '../../../../../_common/comment/comment-store';
 import { EventBus, EventBusDeregister } from '../../../../../_common/event-bus/event-bus.service';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
-import { HalloweenMonster } from '../../../../../_common/halloween-monster/halloween-monster.model';
 import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../_common/partner-referral/partner-referral-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
@@ -230,7 +229,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		}
 	}
 
-	async routeResolved($payload: any, fromCache: boolean) {
+	async routeResolved($payload: any) {
 		this._setAdSettings();
 
 		// If the game has a GA tracking ID, then we attach it to this
@@ -249,10 +248,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 			resourceId: this.game.id,
 		});
 		this.setCommentCount({ store: this.commentStore, count: $payload.commentsCount || 0 });
-
-		if (!fromCache && $payload.halloweenMonster) {
-			HalloweenMonster.add(new HalloweenMonster($payload.halloweenMonster));
-		}
 	}
 
 	routeDestroyed() {
