@@ -184,7 +184,7 @@ export class Community extends Collaboratable(Model) {
 
 	$clearFeaturedBackground() {
 		return this.$_save(
-			`/web/dash/communities/channels/clear-background/${this.id}`,
+			`/web/dash/communities/channels/clear-featured-background/${this.id}`,
 			'community'
 		);
 	}
