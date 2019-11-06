@@ -8,6 +8,7 @@ import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
 import AppTimelineList from '../../../../../_common/timeline-list/timeline-list.vue';
 import { UserGameTrophy } from '../../../../../_common/user/trophy/game-trophy.model';
+import { UserSiteTrophy } from '../../../../../_common/user/trophy/site-trophy.model';
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import { TrophyModal } from '../../../../components/trophy/modal/modal.service';
@@ -19,6 +20,8 @@ type TrophyEntry = {
 	game?: Game;
 	trophies: UserBaseTrophy[];
 };
+
+const PAGE_SIZE = 12;
 
 @Component({
 	name: 'RouteProfileTrophiesOverview',
@@ -42,6 +45,9 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 	app!: AppStore;
 
 	trophyEntries: TrophyEntry[] = [];
+
+	canLoadMore = false;
+	isLoadingMore = false;
 
 	get routeTitle() {
 		if (this.user) {
@@ -70,41 +76,127 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 			trophies = populateTrophies($payload.trophies);
 		}
 
-		// Group the trophies into feed entries:
-		// Each entry is a group of trophies of the same origin (same game or site).
-		// It also creates a new entry if the difference between achieved trophies is larger than 24 hours.
-		for (const userTrophy of trophies) {
-			// Set the game/id for this user trophy (undefined for site trophies)
-			let game: Game | undefined = undefined;
-			let gameId: number | undefined = undefined;
-			if (userTrophy instanceof UserGameTrophy) {
-				game = userTrophy.game;
-				gameId = userTrophy.game_id;
+		if (trophies.length === 0) {
+			this.canLoadMore = false;
+		} else {
+			for (const userTrophy of trophies) {
+				this.insertTrophy(userTrophy);
 			}
-			// Find the previous entry for that game
-			let entry = this.trophyEntries
-				.slice()
-				.reverse()
-				.find(i => i.gameId === gameId);
-			// If we have a previous entry, either append the trophy,
-			// or if the entry was too long ago (more than 24 hours), unset the entry to create a new one afterwards.
-			if (entry) {
-				const lastTrophy = entry.trophies[entry.trophies.length - 1];
-				if (Math.abs(lastTrophy.logged_on - userTrophy.logged_on) > 24 * 60 * 60 * 1000) {
-					entry = undefined;
-				} else {
-					entry.trophies.push(userTrophy);
-				}
-			}
-			// Create a new entry if none exist for this game/trophy
-			if (!entry) {
-				entry = { game, gameId, trophies: [userTrophy] };
-				this.trophyEntries.push(entry);
+			this.updateCanLoadMore(trophies);
+		}
+	}
+
+	/**
+	 * Group the trophies into feed entries:
+	 * Each entry is a group of trophies of the same origin (same game or site).
+	 * It also creates a new entry if the difference between achieved trophies is larger than 24 hours.
+	 */
+	private insertTrophy(userTrophy: UserBaseTrophy) {
+		// Set the game/id for this user trophy (undefined for site trophies)
+		let game: Game | undefined = undefined;
+		let gameId: number | undefined = undefined;
+		if (userTrophy instanceof UserGameTrophy) {
+			game = userTrophy.game;
+			gameId = userTrophy.game_id;
+		}
+		// Find the previous entry for that game
+		let entry = this.trophyEntries
+			.slice()
+			.reverse()
+			.find(i => i.gameId === gameId);
+		// If we have a previous entry, either append the trophy,
+		// or if the entry was too long ago (more than 24 hours), unset the entry to create a new one afterwards.
+		if (entry) {
+			const lastTrophy = entry.trophies[entry.trophies.length - 1];
+			if (Math.abs(lastTrophy.logged_on - userTrophy.logged_on) > 24 * 60 * 60 * 1000) {
+				entry = undefined;
+			} else {
+				entry.trophies.push(userTrophy);
 			}
 		}
+		// Create a new entry if none exist for this game/trophy
+		if (!entry) {
+			entry = { game, gameId, trophies: [userTrophy] };
+			this.trophyEntries.push(entry);
+		}
+	}
+
+	private updateCanLoadMore(loadedTrophies: UserBaseTrophy[]) {
+		const loadedGameTrophies = loadedTrophies.filter(i => i instanceof UserGameTrophy);
+		const loadedSiteTrophies = loadedTrophies.filter(i => i instanceof UserSiteTrophy);
+		if (loadedGameTrophies.length < PAGE_SIZE && loadedSiteTrophies.length < PAGE_SIZE) {
+			this.canLoadMore = false;
+			return;
+		}
+
+		const allTrophies = this.trophyEntries.flatMap(i => i.trophies);
+		const gameTrophies = allTrophies.filter(i => i instanceof UserGameTrophy);
+		const siteTrophies = allTrophies.filter(i => i instanceof UserSiteTrophy);
+
+		this.canLoadMore =
+			(loadedGameTrophies.length > 0 &&
+				gameTrophies.length > 0 &&
+				gameTrophies.length % PAGE_SIZE === 0) ||
+			(loadedSiteTrophies.length > 0 &&
+				siteTrophies.length > 0 &&
+				siteTrophies.length % PAGE_SIZE === 0);
 	}
 
 	onClickTrophy(userTrophy: UserBaseTrophy) {
 		TrophyModal.show(userTrophy);
+	}
+
+	async onClickShowMore() {
+		if (!this.user || !this.canLoadMore) {
+			return;
+		}
+
+		this.isLoadingMore = true;
+
+		let url = '/web/profile/trophies/overview/@' + this.user.username;
+
+		// Find the oldest game and site trophy to use as scroll
+		let oldestGameTrophy: UserGameTrophy | null = null,
+			oldestSiteTrophy: UserSiteTrophy | null = null;
+
+		const allTrophies = this.trophyEntries.flatMap(i => i.trophies);
+
+		for (const userTrophy of allTrophies) {
+			if (userTrophy instanceof UserGameTrophy) {
+				if (!oldestGameTrophy || oldestGameTrophy.logged_on > userTrophy.logged_on) {
+					oldestGameTrophy = userTrophy;
+				}
+			} else if (userTrophy instanceof UserSiteTrophy) {
+				if (!oldestSiteTrophy || oldestSiteTrophy.logged_on > userTrophy.logged_on) {
+					oldestSiteTrophy = userTrophy;
+				}
+			}
+		}
+
+		if (oldestGameTrophy) {
+			url += `?game-scroll=${oldestGameTrophy.logged_on}`;
+		}
+		if (oldestSiteTrophy) {
+			url += oldestGameTrophy ? '&' : '?';
+			url += `site-scroll=${oldestSiteTrophy.logged_on}`;
+		}
+
+		const payload = await Api.sendRequest(url);
+
+		let trophies: UserBaseTrophy[] = [];
+		if (payload.trophies) {
+			trophies = populateTrophies(payload.trophies);
+		}
+
+		if (trophies.length === 0) {
+			this.canLoadMore = false;
+		} else {
+			for (const userTrophy of trophies) {
+				this.insertTrophy(userTrophy);
+			}
+			this.updateCanLoadMore(trophies);
+		}
+
+		this.isLoadingMore = false;
 	}
 }

@@ -83,6 +83,9 @@
 				<div class="timeline-list-item-split" />
 			</div>
 			<p>
+				<app-button v-if="canLoadMore" @click="onClickShowMore" :disabled="isLoadingMore">
+					<translate>Show More</translate>
+				</app-button>
 				<router-link
 					:to="{
 						name: 'profile.trophies.all',
