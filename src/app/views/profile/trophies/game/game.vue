@@ -1,12 +1,14 @@
 <template>
 	<div>
 		<div class="row" v-if="game">
-			<div v-if="completion" class="col-sm-7">
+			<div class="col-sm-7">
 				<app-trophy-completion
+					v-if="completion"
 					class="-completion"
 					:total="completion.totalCount"
 					:achieved="completion.achievedCount"
 					:experience="completion.experience"
+					:is-logged-in-user="isLoggedInUser"
 				/>
 				<p>
 					<app-button :to="game.routeLocation">
