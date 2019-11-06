@@ -5,7 +5,7 @@
 				class="-card-bg-img"
 				:class="{ '-card-bg-img-active': isActive }"
 				:style="{
-					'background-image': `url('${backgroundItem.img_url}')`,
+					'background-image': `url('${backgroundItem.mediaserver_url}')`,
 				}"
 			></div>
 
