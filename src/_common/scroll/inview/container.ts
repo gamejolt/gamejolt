@@ -5,7 +5,7 @@ export class ScrollInviewContainer {
 	private observer: IntersectionObserver = null as any;
 	private queuedChanges: Function[] = [];
 
-	constructor(root: Element | null, public readonly rootMargin: string) {
+	constructor(root: Element | null, rootMargin: string) {
 		this.observer = new IntersectionObserver(this.processUpdatedEntries, {
 			root,
 			rootMargin,
@@ -33,7 +33,7 @@ export class ScrollInviewContainer {
 	 * Gets called by the IntersectionObserver any time at least some entries
 	 * are updated.
 	 */
-	private processUpdatedEntries: IntersectionObserverCallback = (entries, observer) => {
+	private processUpdatedEntries: IntersectionObserverCallback = entries => {
 		for (const entry of entries) {
 			// console.log('entry', entry.intersectionRatio, entry.isIntersecting);
 			const item = this.items.get(entry.target);
