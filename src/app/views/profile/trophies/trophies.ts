@@ -1,4 +1,5 @@
 import Component from 'vue-class-component';
+import { stringSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -25,6 +26,7 @@ export default class RouteProfileTrophies extends BaseRouteComponent {
 	routeResolved($payload: any) {
 		if ($payload.games) {
 			this.games = $payload.games;
+			this.games = this.games.sort((a, b) => stringSort(a.title, b.title));
 		}
 		this.siteTrophyCount = $payload.siteTrophyCount || 0;
 		if ($payload.unviewedGames) {
