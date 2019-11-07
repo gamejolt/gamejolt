@@ -21,8 +21,6 @@ type TrophyEntry = {
 	trophies: UserBaseTrophy[];
 };
 
-const PAGE_SIZE = 12;
-
 @Component({
 	name: 'RouteProfileTrophiesOverview',
 	components: {
@@ -48,6 +46,7 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 
 	canLoadMore = false;
 	isLoadingMore = false;
+	pageSize?: number;
 
 	get routeTitle() {
 		if (this.user) {
@@ -71,6 +70,8 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
+		this.pageSize = $payload.pageSize;
+
 		let trophies: UserBaseTrophy[] = [];
 		if ($payload.trophies) {
 			trophies = populateTrophies($payload.trophies);
@@ -122,9 +123,20 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 	}
 
 	private updateCanLoadMore(loadedTrophies: UserBaseTrophy[]) {
+		// We have to receive a page size from the api to be able to load more.
+		if (!this.pageSize) {
+			this.canLoadMore = false;
+			return;
+		}
+
+		// When we have less than the page size in new trophies for both game AND site trophies,
+		// we know there are no new trophies to load at all.
 		const loadedGameTrophies = loadedTrophies.filter(i => i instanceof UserGameTrophy);
 		const loadedSiteTrophies = loadedTrophies.filter(i => i instanceof UserSiteTrophy);
-		if (loadedGameTrophies.length < PAGE_SIZE && loadedSiteTrophies.length < PAGE_SIZE) {
+		if (
+			loadedGameTrophies.length < this.pageSize &&
+			loadedSiteTrophies.length < this.pageSize
+		) {
 			this.canLoadMore = false;
 			return;
 		}
@@ -133,13 +145,19 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 		const gameTrophies = allTrophies.filter(i => i instanceof UserGameTrophy);
 		const siteTrophies = allTrophies.filter(i => i instanceof UserSiteTrophy);
 
+		// For either trophy type:
+		// When we have more than 0 new trophies and more than 0 total,
+		// and the total number of trophies are divisible by the page size,
+		// we can assume that there are more trophies to load.
+		// This would show the load more button if there are exactly 0 new trophies to load,
+		// but in that case it would load no new trophies and the above condition would hide the button afterwards.
 		this.canLoadMore =
 			(loadedGameTrophies.length > 0 &&
 				gameTrophies.length > 0 &&
-				gameTrophies.length % PAGE_SIZE === 0) ||
+				gameTrophies.length % this.pageSize === 0) ||
 			(loadedSiteTrophies.length > 0 &&
 				siteTrophies.length > 0 &&
-				siteTrophies.length % PAGE_SIZE === 0);
+				siteTrophies.length % this.pageSize === 0);
 	}
 
 	onClickTrophy(userTrophy: UserBaseTrophy) {
