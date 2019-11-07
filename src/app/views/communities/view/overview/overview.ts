@@ -15,7 +15,6 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../_common/scroll/affix/affix.vue';
 import { ThemeMutation, ThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
-import { getBlockReason } from '../../../../../_common/user/block/block.model';
 import { User } from '../../../../../_common/user/user.model';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import AppActivityFeed from '../../../../components/activity/feed/feed.vue';
@@ -192,7 +191,17 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			return '';
 		}
 
-		return getBlockReason(this.$gettext, this.community.user_block.reason);
+		const reason = this.community.user_block.reason;
+		const reasons = {
+			spam: this.$gettext('Spam'),
+			'off-topic': this.$gettext('Off Topic'),
+			abuse: this.$gettext('Offensive or insulting'),
+			other: this.$gettext('Other'),
+		} as { [reason: string]: string };
+		if (reasons[reason]) {
+			return reasons[reason];
+		}
+		return reason;
 	}
 
 	get sort() {

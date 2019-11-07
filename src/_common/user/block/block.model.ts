@@ -1,19 +1,6 @@
 import { Model } from '../../model/model.service';
 import { User } from '../user.model';
 
-export function getBlockReason(gettext: (msgid: string) => string, reason: string): string {
-	const reasons = {
-		spam: gettext('Spam'),
-		'off-topic': gettext('Off Topic'),
-		abuse: gettext('Offensive or insulting'),
-		other: gettext('Other'),
-	} as { [reason: string]: string };
-	if (reasons[reason]) {
-		return reasons[reason];
-	}
-	return reason;
-}
-
 export class UserBlock extends Model {
 	blocked_on!: number;
 	expires_on!: number;
