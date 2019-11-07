@@ -1,5 +1,6 @@
 import Component from 'vue-class-component';
 import { State } from 'vuex-class';
+import { numberSort } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
@@ -83,6 +84,7 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 			for (const userTrophy of trophies) {
 				this.insertTrophy(userTrophy);
 			}
+			this.sortEntries();
 			this.updateCanLoadMore(trophies);
 		}
 	}
@@ -160,6 +162,12 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 				siteTrophies.length % this.pageSize === 0);
 	}
 
+	private sortEntries() {
+		this.trophyEntries = this.trophyEntries.sort((a, b) =>
+			numberSort(b.trophies[0].logged_on, a.trophies[0].logged_on)
+		);
+	}
+
 	onClickTrophy(userTrophy: UserBaseTrophy) {
 		TrophyModal.show(userTrophy);
 	}
@@ -212,6 +220,7 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 			for (const userTrophy of trophies) {
 				this.insertTrophy(userTrophy);
 			}
+			this.sortEntries();
 			this.updateCanLoadMore(trophies);
 		}
 
