@@ -1,55 +1,38 @@
 <template>
 	<div>
-		<template v-if="completion">
-			<app-trophy-completion
-				class="-completion"
-				:total="completion.totalCount"
-				:achieved="completion.achievedCount"
-				:experience="completion.experience"
-			/>
-		</template>
-		<template v-if="game">
-			<div class="-game-links">
-				<div>
-					<router-link :to="game.routeLocation">
-						<app-game-thumbnail-img class="-game-thumbnail" :game="game" />
-					</router-link>
-				</div>
-				<div class="-game-links-nav">
-					<router-link :to="game.routeLocation">
-						<translate>View game</translate>
-					</router-link>
-					<br />
-					<router-link
+		<div class="row" v-if="game">
+			<div class="col-sm-7">
+				<app-trophy-completion
+					v-if="completion"
+					class="-completion"
+					:total="completion.totalCount"
+					:achieved="completion.achievedCount"
+					:experience="completion.experience"
+					:is-logged-in-user="isLoggedInUser"
+				/>
+				<p>
+					<app-button :to="game.routeLocation">
+						<translate>View Game</translate>
+					</app-button>
+					<app-button
 						:to="{ name: 'discover.games.view.trophies.list', params: game.getSrefParams() }"
 					>
-						<translate>View all trophies</translate>
-					</router-link>
-				</div>
+						<translate>View All Trophies</translate>
+					</app-button>
+				</p>
 			</div>
-		</template>
+			<div class="col-sm-5 hidden-xs">
+				<app-game-thumbnail class="-game-thumbnail" :game="game" />
+			</div>
+		</div>
+		<hr class="hidden-xs" />
 		<app-trophy-list-paged :initial-trophies="trophies" :url="listLoadMoreUrl" />
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
-.-game
-	&-links
-		display: flex
-		align-items: center
-		margin-bottom: 32px
-
-		&-nav
-			margin-left: 10px
-
-	&-thumbnail
-		width: 100px
-
-.-completion
-	max-width: 400px
+.-game-thumbnail
+	margin-bottom: 0
 </style>
 
 <script lang="ts" src="./game"></script>

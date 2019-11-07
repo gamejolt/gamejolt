@@ -8,12 +8,26 @@
 		<template v-if="achieved > 0">
 			<p>
 				<span
+					v-if="isLoggedInUser"
 					v-translate="{
 						achieved: number(achieved),
 						total: number(total),
 					}"
 				>
 					You've achieved
+					<b>%{ achieved }</b>
+					trophies out of a possible
+					<b>%{ total }</b>
+					.
+				</span>
+				<span
+					v-else
+					v-translate="{
+						achieved: number(achieved),
+						total: number(total),
+					}"
+				>
+					They've achieved
 					<b>%{ achieved }</b>
 					trophies out of a possible
 					<b>%{ total }</b>

@@ -37,9 +37,6 @@
 				</div>
 			</div>
 		</div>
-		<div v-if="isNew" class="-new-notice">
-			<app-jolticon icon="exclamation-circle" notice big />
-		</div>
 	</div>
 </template>
 

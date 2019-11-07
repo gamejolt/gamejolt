@@ -9,7 +9,7 @@
 					active-class="active"
 					exact
 				>
-					<translate>Activity</translate>
+					<translate>Latest Activity</translate>
 				</router-link>
 			</li>
 			<li>
@@ -37,45 +37,19 @@
 		</ul>
 		<template v-if="hasGames">
 			<hr />
-			<ul class="sans-margin">
-				<li v-for="game of games" :key="game.id">
-					<router-link
-						:to="{
-							name: 'profile.trophies.game',
-							params: {
-								id: game.id,
-							},
-						}"
-						active-class="active"
-						class="-nav-item-game"
-					>
-						{{ game.title }}
-						<span class="badge -game-counter">
-							{{ game.trophyCount | number }}
-							<span v-if="gameHasUnviewedTrophies(game.id)" class="-new-notice">
-								<app-jolticon icon="exclamation-circle" notice />
-							</span>
+			<app-list-group-selector :items="games" :current="currentGame" @change="changeGame($event)">
+				<template v-slot="{ item }">
+					<translate v-if="!item">Choose a game...</translate>
+					<template v-else>
+						<span class="badge" :class="{ 'badge-notice': gameHasUnviewedTrophies(item.id) }">
+							{{ item.trophyCount | number }}
 						</span>
-					</router-link>
-				</li>
-			</ul>
+						{{ item.title }}
+					</template>
+				</template>
+			</app-list-group-selector>
 		</template>
 	</nav>
 </template>
-
-<style lang="stylus" scoped>
-@require '~styles/variables'
-
-.-game-counter > *
-	vertical-align: middle
-
-.-new-notice
-	display: inline-block
-	margin-bottom: 1px
-	margin-left: 2px
-
-	& > .jolticon
-		margin: 0
-</style>
 
 <script lang="ts" src="./nav"></script>
