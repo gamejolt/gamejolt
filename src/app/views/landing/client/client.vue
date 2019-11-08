@@ -38,7 +38,7 @@
 								:lg="!Screen.isXs"
 								v-if="platform === 'linux'"
 								v-app-track-event="`client-landing:download:linux`"
-								@click="download(platform, arch)"
+								@click="download(platform, '64')"
 							>
 								<app-jolticon icon="download" />
 								Download for Linux 64bit
@@ -49,7 +49,7 @@
 								:lg="!Screen.isXs"
 								v-if="platform === 'mac'"
 								v-app-track-event="`client-landing:download:mac`"
-								@click="download(platform, arch)"
+								@click="download(platform, '64')"
 							>
 								<app-jolticon icon="download" />
 								Download for OS X
@@ -60,7 +60,7 @@
 								:lg="!Screen.isXs"
 								v-if="platform === 'windows'"
 								v-app-track-event="`client-landing:download:win`"
-								@click="download(platform, arch)"
+								@click="download(platform, '32')"
 							>
 								<app-jolticon icon="download" />
 								Download for Windows

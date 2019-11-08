@@ -35,7 +35,6 @@ export default class RouteLandingClient extends BaseRouteComponent {
 	private fallbackUrl = 'https://gamejolt.com';
 
 	readonly platform = Device.os();
-	readonly arch = Device.arch();
 	readonly Screen = Screen;
 
 	routeResolved(payload: any) {
