@@ -33,59 +33,85 @@
 				<div class="row">
 					<div class="col-lg-6 col-centered">
 						<div>
-							<app-button
-								primary
-								:lg="!Screen.isXs"
-								v-if="platform === 'linux'"
-								v-app-track-event="`client-landing:download:linux`"
-								@click="download(platform, '64')"
-							>
-								<app-jolticon icon="download" />
-								Download for Linux 64bit
-							</app-button>
+							<template v-if="isDetectedPlatformIncompatible">
+								<p v-if="platform === 'other'">
+									We could not detect what platform you are on.
+									<br />
+									Download the correct version below:
+								</p>
+								<template v-else>
+									<p>
+										We detected you are running on
+										<strong>{{ detectedPlatformDisplay }} {{ arch }}bit</strong>
+										<br />
+										Oof! looks like the client is incompatible with it.
+									</p>
 
-							<app-button
-								primary
-								:lg="!Screen.isXs"
-								v-if="platform === 'mac'"
-								v-app-track-event="`client-landing:download:mac`"
-								@click="download(platform, '64')"
-							>
-								<app-jolticon icon="download" />
-								Download for OS X
-							</app-button>
-
-							<app-button
-								primary
-								:lg="!Screen.isXs"
-								v-if="platform === 'windows'"
-								v-app-track-event="`client-landing:download:win`"
-								@click="download(platform, '32')"
-							>
-								<app-jolticon icon="download" />
-								Download for Windows
-							</app-button>
+									<p>Did we get it wrong? Download the correct version below:</p>
+								</template>
+							</template>
 						</div>
-						<br />
 
-						<div>
-							or download for
-							<a href="#all-downloads" v-app-scroll-to>other platforms</a>
-							<br />
-							<br />
-							<app-jolticon icon="windows" class="text-muted" />
-							<app-jolticon icon="mac" class="text-muted" />
-							<app-jolticon icon="linux" class="text-muted" />
-						</div>
 						<br />
 					</div>
+				</div>
+
+				<div class="row">
+					<div class="header-download-buttons">
+						<app-button
+							primary
+							lg
+							v-if="shouldOfferWindows"
+							v-app-track-event="`client-landing:download:win`"
+							@click="download(platform, '32')"
+						>
+							<app-jolticon icon="download" />
+							Download for Windows
+						</app-button>
+
+						<app-button
+							primary
+							lg
+							v-if="shouldOfferMac"
+							v-app-track-event="`client-landing:download:mac`"
+							@click="download(platform, '64')"
+						>
+							<app-jolticon icon="download" />
+							Download for OS X
+						</app-button>
+
+						<app-button
+							primary
+							lg
+							v-if="shouldOfferLinux"
+							v-app-track-event="`client-landing:download:linux`"
+							@click="download(platform, arch)"
+						>
+							<app-jolticon icon="download" />
+							Download for Linux 64bit
+						</app-button>
+					</div>
+				</div>
+
+				<!--
+					If we did detect a valid platform, we offer only the matching version
+					in the header. In case we got it wrong, we want to offer alternatives.
+				-->
+				<div v-if="!isDetectedPlatformIncompatible">
+					or download for
+					<a href="#all-downloads" v-app-scroll-to>other platforms</a>
+					<br />
+					<br />
+					<app-jolticon icon="windows" class="text-muted" />
+					<app-jolticon icon="mac" class="text-muted" />
+					<app-jolticon icon="linux" class="text-muted" />
 				</div>
 			</div>
 		</section>
 
 		<div class="fill-darker">
 			<section class="client-presentation">
-				<div class="container hidden-xs">
+				<div class="container" v-if="showMascot">
 					<img
 						class="client-presentation-mascot"
 						src="./clyde-video-overlay.png"
@@ -303,7 +329,7 @@
 						<div class="col-lg-9 col-centered">
 							<div class="row">
 								<div class="download-footer-col col-sm-4">
-									<p><app-jolticon icon="jolticon-linux" class="jolticon-4x" /></p>
+									<p><app-jolticon icon="linux" class="jolticon-4x" /></p>
 									<p>
 										<app-button
 											primary
@@ -317,7 +343,7 @@
 									</p>
 								</div>
 								<div class="download-footer-col col-sm-4">
-									<p><app-jolticon icon="jolticon-mac" class="jolticon-4x" /></p>
+									<p><app-jolticon icon="mac" class="jolticon-4x" /></p>
 									<p>
 										<app-button
 											primary
@@ -331,7 +357,7 @@
 									</p>
 								</div>
 								<div class="download-footer-col col-sm-4">
-									<p><app-jolticon icon="jolticon-windows" class="jolticon-4x" /></p>
+									<p><app-jolticon icon="windows" class="jolticon-4x" /></p>
 									<p>
 										<app-button
 											primary
