@@ -1,3 +1,4 @@
+import { Component } from 'vue-property-decorator';
 import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../_common/api/api.service';
 import { Device } from '../../../../_common/device/device.service';
@@ -9,7 +10,6 @@ import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/rou
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppScrollTo } from '../../../../_common/scroll/to/to.directive';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
-import { Component } from 'vue-property-decorator';
 
 @Component({
 	name: 'RouteLandingClient',
@@ -35,6 +35,7 @@ export default class RouteLandingClient extends BaseRouteComponent {
 	private fallbackUrl = 'https://gamejolt.com';
 
 	readonly platform = Device.os();
+	readonly arch = Device.arch();
 	readonly Screen = Screen;
 
 	routeResolved(payload: any) {
@@ -46,13 +47,13 @@ export default class RouteLandingClient extends BaseRouteComponent {
 		return `Game Jolt Client`;
 	}
 
-	async download(platform: string) {
+	async download(platform: string, arch: string) {
 		// This will reset the iframe since it removes it when there is no download src.
 		this.downloadSrc = '';
 
 		HistoryTick.sendBeacon('client-download');
 
-		const downloadUrl = await this.getDownloadUrl(platform);
+		const downloadUrl = await this.getDownloadUrl(platform, arch);
 		if (downloadUrl === null) {
 			Navigate.gotoExternal(this.fallbackUrl);
 			return;
@@ -61,13 +62,17 @@ export default class RouteLandingClient extends BaseRouteComponent {
 		this.downloadSrc = downloadUrl;
 	}
 
-	private async getDownloadUrl(platform: string) {
+	private async getDownloadUrl(platform: string, arch: string) {
 		if (!this.packageData) {
 			return null;
 		}
 
-		const installableBuilds = Game.pluckInstallableBuilds(this.packageData.packages, platform);
-		const bestBuild = Game.chooseBestBuild(installableBuilds, platform);
+		const installableBuilds = Game.pluckInstallableBuilds(
+			this.packageData.packages,
+			platform,
+			arch
+		);
+		const bestBuild = Game.chooseBestBuild(installableBuilds, platform, arch);
 		if (!bestBuild) {
 			return null;
 		}
