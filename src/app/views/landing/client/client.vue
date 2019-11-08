@@ -98,6 +98,7 @@
 					in the header. In case we got it wrong, we want to offer alternatives.
 				-->
 				<div v-if="!isDetectedPlatformIncompatible">
+					<br />
 					or download for
 					<a href="#all-downloads" v-app-scroll-to>other platforms</a>
 					<br />
