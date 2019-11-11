@@ -110,8 +110,8 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 		// If we have a previous entry, either append the trophy,
 		// or if the entry was too long ago (more than 24 hours), unset the entry to create a new one afterwards.
 		if (entry) {
-			const lastTrophy = entry.trophies[entry.trophies.length - 1];
-			if (Math.abs(lastTrophy.logged_on - userTrophy.logged_on) > 24 * 60 * 60 * 1000) {
+			const firstTrophy = entry.trophies[0];
+			if (Math.abs(firstTrophy.logged_on - userTrophy.logged_on) > 24 * 60 * 60 * 1000) {
 				entry = undefined;
 			} else {
 				entry.trophies.push(userTrophy);
