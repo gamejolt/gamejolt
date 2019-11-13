@@ -1,4 +1,5 @@
 import { Api } from '../../api/api.service';
+import { MediaItem } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
 
 export class CommunityChannel extends Model {
@@ -6,6 +7,15 @@ export class CommunityChannel extends Model {
 	title!: string;
 	added_on!: number;
 	sort!: number;
+	background?: MediaItem;
+
+	constructor(data: any = {}) {
+		super(data);
+
+		if (data.background) {
+			this.background = new MediaItem(data.background);
+		}
+	}
 
 	static $saveSort(communityId: number, channelIds: number[]) {
 		return Api.sendRequest(
@@ -16,10 +26,21 @@ export class CommunityChannel extends Model {
 
 	$save() {
 		if (this.id) {
-			throw new Error('Updating an existing channel is not supported');
+			return this.$_save(
+				'/web/dash/communities/channels/save/' + this.community_id + '/' + this.id,
+				'channel',
+				{ file: this.file }
+			);
 		}
 
 		return this.$_save('/web/dash/communities/channels/save/' + this.community_id, 'channel');
+	}
+
+	$clearBackground() {
+		return this.$_save(
+			`/web/dash/communities/channels/clear-background/${this.community_id}/${this.id}`,
+			'channel'
+		);
 	}
 
 	$remove(moveToChannel?: CommunityChannel) {

@@ -1,9 +1,11 @@
 import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class/lib/bindings';
 import { LocationRedirect } from '../../../../../utils/router';
 import { Api } from '../../../../../_common/api/api.service';
 import { Game } from '../../../../../_common/game/game.model';
-import AppGameThumbnailImg from '../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
+import AppGameThumbnail from '../../../../../_common/game/thumbnail/thumbnail.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { AppStore } from '../../../../../_common/store/app-store';
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import AppTrophyCard from '../../../../components/trophy/card/card.vue';
@@ -23,7 +25,7 @@ type CompletionData = {
 		AppTrophyCard,
 		AppTrophyListPaged,
 		AppTrophyCompletion,
-		AppGameThumbnailImg,
+		AppGameThumbnail,
 	},
 })
 @RouteResolver({
@@ -49,6 +51,9 @@ export default class RouteProfileTrophiesGame extends BaseRouteComponent {
 	@RouteStoreModule.State
 	user!: RouteStore['user'];
 
+	@State
+	app!: AppStore;
+
 	game: Game | null = null;
 	trophies: UserBaseTrophy[] = [];
 	completion: CompletionData | null = null;
@@ -70,6 +75,10 @@ export default class RouteProfileTrophiesGame extends BaseRouteComponent {
 		if (this.game) {
 			return `/web/profile/trophies/game/@${this.user!.username}/${this.game.id}`;
 		}
+	}
+
+	get isLoggedInUser() {
+		return this.user && this.app.user && this.app.user.id === this.user.id;
 	}
 
 	routeResolved($payload: any) {

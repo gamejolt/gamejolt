@@ -1,44 +1,22 @@
 <template>
-	<nav>
-		<!-- There should always be an active item -->
-		<template v-if="Screen.isMobile && activeItem">
-			<div class="-item active" @click="isNavExpanded = !isNavExpanded">
-				<span class="-menu-icon">
-					<app-jolticon icon="menu" class="-jolticon middle" />
-				</span>
-				<span class="-label">
-					{{ activeItem.label }}
-				</span>
-			</div>
-		</template>
+	<nav :class="{ '-mobile-nav': Screen.isMobile }">
+		<app-community-channel-card
+			title="featured"
+			:background-item="community.featured_background"
+			:is-active="activeChannelTitle === 'featured'"
+			:is-unread="isChannelUnread('featured')"
+		/>
 
-		<div
-			v-if="!Screen.isMobile || isNavExpanded"
-			:class="{
-				'-mobile-nav-container fill-darker anim-fade-in-up': Screen.isMobile,
-			}"
-		>
-			<ol v-for="(group, i) of groups" :key="i">
-				<li v-for="item of group.items" :key="item.channel">
-					<router-link
-						class="-item"
-						:class="{ active: item === activeItem && !isEditing }"
-						:to="{
-							name: 'communities.view.overview',
-							params: {
-								channel: item.routeParam,
-							},
-						}"
-						block
-						@click.native="isNavExpanded = false"
-					>
-						<span class="-label" :class="{ '-label-unread': isChannelUnread(item.channel) }">
-							{{ item.label }}
-						</span>
-					</router-link>
-				</li>
-			</ol>
-		</div>
+		<template v-if="community.channels">
+			<app-community-channel-card
+				v-for="channel of community.channels"
+				:key="channel.id"
+				:title="channel.title"
+				:background-item="channel.background"
+				:is-active="activeChannelTitle === channel.title"
+				:is-unread="isChannelUnread(channel.title)"
+			/>
+		</template>
 	</nav>
 </template>
 

@@ -8,7 +8,6 @@ import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import { HalloweenMonster } from '../../../../../_common/halloween-monster/halloween-monster.model';
 import { Meta } from '../../../../../_common/meta/meta-service';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
@@ -304,10 +303,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 					this.communityState.markChannelRead(channel.id);
 				}
 			}
-		}
-
-		if (!fromCache && $payload.halloweenMonster) {
-			HalloweenMonster.add(new HalloweenMonster($payload.halloweenMonster));
 		}
 
 		this.finishedLoading = true;

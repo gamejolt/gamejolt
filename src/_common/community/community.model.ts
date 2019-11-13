@@ -71,6 +71,7 @@ export class Community extends Collaboratable(Model) {
 	theme!: Theme | null;
 	game!: Game | null;
 	channels?: CommunityChannel[] | null;
+	featured_background?: MediaItem;
 
 	member_count!: number;
 	is_member?: boolean;
@@ -98,6 +99,10 @@ export class Community extends Collaboratable(Model) {
 
 		if (data.channels) {
 			this.channels = CommunityChannel.populate(data.channels);
+		}
+
+		if (data.featured_background) {
+			this.featured_background = new MediaItem(data.featured_background);
 		}
 	}
 
@@ -169,6 +174,19 @@ export class Community extends Collaboratable(Model) {
 
 	$remove() {
 		return this.$_remove('/web/dash/communities/remove/' + this.id);
+	}
+
+	$saveFeaturedBackground() {
+		return this.$_save('/web/dash/communities/channels/save-featured/' + this.id, 'community', {
+			file: this.file,
+		});
+	}
+
+	$clearFeaturedBackground() {
+		return this.$_save(
+			`/web/dash/communities/channels/clear-featured-background/${this.id}`,
+			'community'
+		);
 	}
 }
 

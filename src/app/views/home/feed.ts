@@ -6,7 +6,6 @@ import AppAdPlaywireVideo from '../../../_common/ad/playwire/video.vue';
 import { AppTrackEvent } from '../../../_common/analytics/track-event.directive';
 import { Api } from '../../../_common/api/api.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
-import { HalloweenMonster } from '../../../_common/halloween-monster/halloween-monster.model';
 import { Meta } from '../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -168,10 +167,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			.map(i => new DashGame(i.id, i.title, i.ownerName, i.createdOn))
 			.sort((a, b) => numberSort(a.createdOn, b.createdOn))
 			.reverse();
-
-		if (!fromCache && homePayload.halloweenMonster) {
-			HalloweenMonster.add(new HalloweenMonster(homePayload.halloweenMonster));
-		}
 	}
 
 	mounted() {

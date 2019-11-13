@@ -5,7 +5,6 @@ import { titleCase } from '../../../../../utils/string';
 import { Api } from '../../../../../_common/api/api.service';
 import { date } from '../../../../../_common/filters/date';
 import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
-import { HalloweenMonster } from '../../../../../_common/halloween-monster/halloween-monster.model';
 import { Meta } from '../../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
@@ -259,7 +258,7 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		this.process();
 	}
 
-	routeResolved($payload: any, fromCache: boolean) {
+	routeResolved($payload: any) {
 		if (this.listing && $payload) {
 			this.listing.processPayload(this.$route, $payload);
 			this.process();
@@ -278,10 +277,6 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 				Meta.twitter.image = this.spotlightSocial;
 				Meta.twitter.card = 'summary';
 				Meta.fb.image = this.spotlightSocial;
-			}
-
-			if (!fromCache && $payload.halloweenMonster) {
-				HalloweenMonster.add(new HalloweenMonster($payload.halloweenMonster));
 			}
 		}
 	}

@@ -1,0 +1,118 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+@require './channel-card'
+
+.-card
+	position: relative
+	display: block
+	flex-shrink: 0
+
+	width: $card-width
+	height: $card-height
+	overflow: hidden
+
+	margin-bottom: ($line-height-computed / 2)
+
+	rounded-corners-lg()
+
+	change-bg('bg-offset')
+	color: var(--theme-fg)
+
+	cursor: pointer
+
+	outline: none
+
+	&:hover
+		elevate-2()
+
+		.-card-bg-img
+			transform: scale(1.05)
+			filter: grayscale(0.8)
+
+	&-bg
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		height: 100%
+		z-index: 1
+
+		&-img
+			position: absolute
+			top: 0
+			left: 0
+			width: 100%
+			height: 100%
+			background-size: cover
+			background-position: center center
+			background-repeat: no-repeat
+
+			filter: grayscale(1)
+
+			transition: transform 200ms, filter 200ms
+
+			&-active
+				filter: none !important
+
+		&-gradient
+			position: absolute
+			top: 0
+			left: 0
+			width: 100%
+			height: 100%
+			background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8))
+
+	&-active-indicator
+		z-index: 2
+		position: absolute
+		left: 0
+		top: 0
+
+		width: 10px
+		height: 100%
+		background-color: var(--theme-bi-bg)
+
+	&-content
+		position: relative
+		z-index: 3
+		margin-top: 10px
+		margin-left: 20px
+		margin-right: 10px
+		display: flex
+		justify-content: space-between
+
+		&-title
+			font-weight: bold
+			margin-right: 10px
+			text-overflow()
+
+			&-overlay
+				text-shadow: var(--theme-darkest) 1px 0 4px
+				color: var(--theme-lightest)
+
+		&-unread
+			margin-top: 4px
+			width: 12px
+			height: 12px
+			background-color: var(--theme-notice)
+
+			flex-shrink: 0
+
+			border-color: var(--theme-bg-offset)
+			border-width: 2px
+			border-style: solid
+			rounded-corners-lg()
+
+			filter: drop-shadow(0 0 7px var(--theme-notice))
+
+			animation-name: unread
+			animation-duration: 2s
+			animation-iteration-count: infinite
+
+@keyframes unread
+	0%
+		filter: drop-shadow(0 0 1px var(--theme-notice))
+	50%
+		filter: drop-shadow(0 0 7px var(--theme-notice))
+	100%
+		filter: drop-shadow(0 0 1px var(--theme-notice))

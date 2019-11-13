@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { GameScoreTable } from '../../../../_common/game/score-table/score-table.model';
-import AppPopper from '../../../../_common/popper/popper.vue';
+import AppListGroupSelector from '../../../../_common/list-group/selector/selector.vue';
 
 @Component({
 	components: {
-		AppPopper,
+		AppListGroupSelector,
 	},
 })
 export default class AppScoreboardSelector extends Vue {

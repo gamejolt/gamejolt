@@ -3,24 +3,14 @@ import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Community } from '../../../../../../_common/community/community.model';
 import { Screen } from '../../../../../../_common/screen/screen-service';
+import AppCommunityChannelCard from '../../../../../components/community/channel/card/card.vue';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import { Store } from '../../../../../store/index';
-
-class NavItem {
-	constructor(public readonly label: string, public readonly channel: 'featured' | string) {}
-
-	get routeParam() {
-		return this.channel === 'featured' ? undefined : this.channel;
-	}
-}
-
-class NavGroup {
-	constructor(public readonly items: NavItem[]) {}
-}
 
 @Component({
 	components: {
 		AppCommunityPerms,
+		AppCommunityChannelCard,
 	},
 })
 export default class AppCommunitiesViewOverviewNav extends Vue {
@@ -28,10 +18,7 @@ export default class AppCommunitiesViewOverviewNav extends Vue {
 	community!: Community;
 
 	@Prop(String)
-	channel!: string;
-
-	@Prop(Boolean)
-	isEditing!: boolean;
+	activeChannelTitle!: string;
 
 	@State
 	communities!: Store['communities'];
@@ -39,33 +26,7 @@ export default class AppCommunitiesViewOverviewNav extends Vue {
 	@State
 	communityStates!: Store['communityStates'];
 
-	isNavExpanded = false;
-
 	readonly Screen = Screen;
-
-	get titles() {
-		if (this.community.channels) {
-			return this.community.channels.map(t => t.title);
-		}
-		return [];
-	}
-
-	get groups(): NavGroup[] {
-		return [
-			new NavGroup([new NavItem(this.$gettext('Featured'), 'featured')]),
-			new NavGroup(this.titles.map(i => new NavItem(i, i))),
-		];
-	}
-
-	get activeItem() {
-		for (const group of this.groups) {
-			for (const item of group.items) {
-				if (item.channel === this.channel) {
-					return item;
-				}
-			}
-		}
-	}
 
 	get communityState() {
 		return this.communityStates.getCommunityState(this.community);
