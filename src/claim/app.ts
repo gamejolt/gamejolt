@@ -6,7 +6,6 @@ import AppCookieBanner from '../_common/cookie/banner/banner.vue';
 import { Environment } from '../_common/environment/environment.service';
 import AppErrorPage from '../_common/error/page/page.vue';
 import { date } from '../_common/filters/date';
-import AppModals from '../_common/modal/modals.vue';
 import AppCommonShell from '../_common/shell/shell.vue';
 import AppUserBar from '../_common/user/user-bar/user-bar.vue';
 import { User } from '../_common/user/user.model';
@@ -16,7 +15,6 @@ import { Store } from './store/index';
 	components: {
 		AppCommonShell,
 		AppErrorPage,
-		AppModals,
 		AppUserBar,
 		AppCookieBanner,
 	},

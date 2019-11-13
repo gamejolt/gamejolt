@@ -9,12 +9,10 @@ export class ScrollInviewContainer {
 		this.observer = new IntersectionObserver(this.processUpdatedEntries, {
 			root,
 			rootMargin,
-			// We set two thresholds so that we can support the case of "strict"
-			// items. They need to know if any part of the item is out of view,
-			// which a threshold of 1 will tell us. The threshold of 0 will
-			// trigger when all of the item is out of view so that we can check
-			// for the non-strict case that needs all of the item out of view in
-			// order to trigger.
+			// Some components need to react on when an element is fully in view vs just partially
+			// (see 'emits-on' prop in AppScrollInview). For this reason we need to set both 1 and 0 thresholds.
+			// A threshold of 1 triggers when an element becomes fully in view or goes partially out of view.
+			// A threshold of 0 triggers when an element becomes partially in view or goes completely out of view.
 			threshold: [1, 0],
 		});
 	}

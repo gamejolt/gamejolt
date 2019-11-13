@@ -24,7 +24,7 @@ export default class AppScrollScroller extends Vue {
 	// Underscored so that vue doesn't watch.
 	private _scrollElement!: HTMLElement;
 	private _isDestroyed?: boolean;
-	_simplebar?: SimpleBar;
+	private _simplebar?: SimpleBar;
 
 	get shouldOverlay() {
 		return this.overlay && !GJ_IS_SSR;
@@ -53,8 +53,10 @@ export default class AppScrollScroller extends Vue {
 				// mouse/trackpad.
 				autoHide: !this.horizontal,
 			});
+		}
 
-			// Change the scrollable element to the simplebar one.
+		if (this._simplebar) {
+			// Change the scrollable element to the simplebar one, if provided.
 			this._scrollElement = this._simplebar.getScrollElement() as HTMLDivElement;
 		}
 

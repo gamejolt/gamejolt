@@ -1,5 +1,10 @@
 <template>
-	<app-scroll-inview strict :margin="inviewMargin" @inview="inview" @outview="outview">
+	<app-scroll-inview
+		:margin="inviewMargin"
+		emits-on="full-overlap"
+		@inview="inview"
+		@outview="outview"
+	>
 		<div
 			ref="placeholder"
 			class="gj-scroll-affix-placeholder"
