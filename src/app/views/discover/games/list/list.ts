@@ -2,6 +2,7 @@ import { Component } from 'vue-property-decorator';
 import { arrayShuffle } from '../../../../../utils/array';
 import { LocationRedirect } from '../../../../../utils/router';
 import { titleCase } from '../../../../../utils/string';
+import { Ads, AdSettingsContainer } from '../../../../../_common/ad/ads.service';
 import { Api } from '../../../../../_common/api/api.service';
 import { date } from '../../../../../_common/filters/date';
 import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
@@ -291,6 +292,11 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 
 			this.listing = new GameListingContainer(this.filtering);
 		}
+
+		// Disable ads if necessary.
+		const settings = new AdSettingsContainer();
+		settings.isPageDisabled = !this.listing.shouldShowAds;
+		Ads.setPageSettings(settings);
 
 		this.filtering.init(this.$route);
 	}

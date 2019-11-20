@@ -68,7 +68,7 @@
 				</div>
 			</div>
 
-			<app-game-grid :games="listing.games" :show-ads="true" event-label="browse-games" />
+			<app-game-grid :games="listing.games" show-ads event-label="browse-games" />
 		</app-game-listing>
 	</div>
 </template>

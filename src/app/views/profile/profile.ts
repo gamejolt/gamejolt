@@ -1,5 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { Ads, AdSettingsContainer } from '../../../_common/ad/ads.service';
 import { Api } from '../../../_common/api/api.service';
 import { CommentModal } from '../../../_common/comment/modal/modal.service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -105,6 +106,9 @@ export default class RouteProfile extends BaseRouteComponent {
 	@RouteStoreModule.State
 	userFriendship!: RouteStore['userFriendship'];
 
+	@RouteStoreModule.State
+	shouldShowAds!: RouteStore['shouldShowAds'];
+
 	@RouteStoreModule.Mutation
 	bootstrapUser!: RouteStore['bootstrapUser'];
 
@@ -145,6 +149,14 @@ export default class RouteProfile extends BaseRouteComponent {
 
 	routeDestroyed() {
 		this.setPageTheme(null);
+	}
+
+	routeResolved() {
+		const settings = new AdSettingsContainer();
+		settings.resource = this.user;
+		settings.isPageDisabled = !this.shouldShowAds;
+
+		Ads.setPageSettings(settings);
 	}
 
 	showComments() {
