@@ -156,10 +156,10 @@ export default class RouteProfile extends BaseRouteComponent {
 		this.setPageTheme(null);
 	}
 
-	@Watch('adsDisabled')
+	@Watch('adsDisabled', { immediate: true })
 	onAdsDisabledChanged() {
 		Ads.deregisterDisabler(this.adDisabler);
-		this.adDisabler = this.adDisabler ? Ads.registerDisabler(this.user || undefined) : null;
+		this.adDisabler = this.adsDisabled ? Ads.registerDisabler(this.user || undefined) : null;
 	}
 
 	showComments() {

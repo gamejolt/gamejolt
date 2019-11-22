@@ -4,6 +4,10 @@ import { FiresidePost } from '../fireside/post/post-model';
 import { Game } from '../game/game.model';
 import { User } from '../user/user.model';
 
+// To show ads on the page for dev, just change this to false.
+// export const AdsDisabledDev = GJ_BUILD_TYPE === 'development';
+export const AdsDisabledDev = false;
+
 type AdControllable = Game | User | FiresidePost;
 
 type ResourceInfo = {
@@ -38,6 +42,7 @@ export class Ads {
 	];
 
 	private static disablers = new Set<AdDisabler>();
+	private static disablerCount = 0;
 
 	static registerDisabler(resource?: AdControllable) {
 		const disabler = new AdDisabler(resource);
@@ -45,6 +50,7 @@ export class Ads {
 		// Note: equal value disablers will still show up multiple times in the set because
 		// sets are doing strict equality checks. This is by design.
 		this.disablers.add(disabler);
+		this.disablerCount = this.disablers.size;
 		return disabler as unknown;
 	}
 
@@ -59,7 +65,9 @@ export class Ads {
 			return false;
 		}
 
-		return this.disablers.delete(disabler);
+		const result = this.disablers.delete(disabler);
+		this.disablerCount = this.disablers.size;
+		return result;
 	}
 
 	static get shouldShow() {
@@ -67,7 +75,7 @@ export class Ads {
 			return false;
 		}
 
-		return this.disablers.size === 0;
+		return this.disablerCount === 0;
 	}
 
 	private static resourceInfo(disabler: AdDisabler): ResourceInfo {
