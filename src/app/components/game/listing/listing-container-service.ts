@@ -11,7 +11,7 @@ export class GameListingContainer {
 	currentPage = 1;
 
 	section = 'hot';
-	shouldShowAds = true;
+	adsDisabled = false;
 
 	constructor(public filteringContainer?: GameFilteringContainer) {}
 
@@ -24,6 +24,6 @@ export class GameListingContainer {
 		this.currentPage = route.query.page ? parseInt(route.query.page + '', 10) : 1;
 
 		this.section = route.params.section || 'hot';
-		this.shouldShowAds = payload.shouldShowAds;
+		this.adsDisabled = payload.adsDisabled;
 	}
 }

@@ -1,8 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { FiresidePost } from '../../fireside/post/post-model';
-import { Game } from '../../game/game.model';
-import { User } from '../../user/user.model';
 import { Ads } from '../ads.service';
 import { Playwire } from './playwire.service';
 
@@ -80,25 +77,6 @@ export default class AppAdPlaywire extends Vue {
 		return 'leaderboard_atf';
 	}
 
-	get resourceInfo() {
-		let resource: string = undefined as any;
-		let resourceId: number = undefined as any;
-
-		const adResource = Ads.settings.resource;
-		if (adResource instanceof Game) {
-			resource = 'Game';
-			resourceId = adResource.id;
-		} else if (adResource instanceof User) {
-			resource = 'User';
-			resourceId = adResource.id;
-		} else if (adResource instanceof FiresidePost) {
-			resource = 'Fireside_Post';
-			resourceId = adResource.id;
-		}
-
-		return { resource, resourceId };
-	}
-
 	mounted() {
 		Playwire.addAd(this);
 	}
@@ -117,11 +95,6 @@ export default class AppAdPlaywire extends Vue {
 	}
 
 	private sendBeacon(event: string) {
-		Ads.sendBeacon(
-			event,
-			Ads.TYPE_DISPLAY,
-			this.resourceInfo.resource,
-			this.resourceInfo.resourceId
-		);
+		Ads.sendBeacon(event, Ads.TYPE_DISPLAY);
 	}
 }

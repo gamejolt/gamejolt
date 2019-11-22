@@ -62,9 +62,9 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	userFriendship: UserFriendship | null = null;
 	previewTrophies: UserBaseTrophy[] | null = null;
 
-	// setting it to false by default because the route displaying a user profile is lazy loaded,
+	// setting it to true by default because the route displaying a user profile is lazy loaded,
 	// and we don't want to be accidentally show ads on inappropriate content.
-	shouldShowAds = false;
+	adsDisabled = true;
 
 	@VuexAction
 	async sendFriendRequest() {
@@ -137,7 +137,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 			this.trophyCount = 0;
 			this.userFriendship = null;
 			this.previewTrophies = null;
-			this.shouldShowAds = false;
+			this.adsDisabled = true;
 		}
 	}
 
@@ -165,7 +165,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 			this.previewTrophies = null;
 		}
 
-		this.shouldShowAds = $payload.shouldShowAds;
+		this.adsDisabled = $payload.adsDisabled;
 	}
 
 	@VuexMutation

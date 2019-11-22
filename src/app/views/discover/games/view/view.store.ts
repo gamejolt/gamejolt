@@ -102,6 +102,10 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 	customGameMessages: CustomGameMessage[] = [];
 
+	// setting it to true by default because the route displaying a game page is lazy loaded,
+	// and we don't want to be accidentally show ads on inappropriate content.
+	adsDisabled = true;
+
 	get packages() {
 		if (!this.packagePayload) {
 			return [];
@@ -194,6 +198,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 			this.overviewComments = [];
 			this.userRating = null;
 			this.linkedAccounts = [];
+			this.adsDisabled = true;
 		}
 	}
 
@@ -213,6 +218,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 
 		this.userPartnerKey = payload.userPartnerKey;
 		this.collaboratorInvite = payload.invite ? new Collaborator(payload.invite) : null;
+		this.adsDisabled = payload.adsDisabled;
 	}
 
 	@VuexMutation

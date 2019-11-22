@@ -1,6 +1,7 @@
 import { Component } from 'vue-property-decorator';
 import { CreateElement } from 'vue/types/vue';
 import { enforceLocation, LocationRedirect } from '../../../../../../../utils/router';
+import { Ads } from '../../../../../../../_common/ad/ads.service';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { CommentThreadModal } from '../../../../../../../_common/comment/thread/modal.service';
 import { FiresidePost } from '../../../../../../../_common/fireside/post/post-model';
@@ -68,15 +69,19 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 	game!: RouteStore['game'];
 
 	post: FiresidePost | null = null;
+	private adDisabler: unknown | null = null;
 
 	get routeTitle() {
 		if (!this.post || !this.game) {
 			return null;
 		}
 
-		return this.$gettextInterpolate(`${this.post.lead_snippet} - ${this.game.title} by %{ user }`, {
-			user: this.post.user.display_name,
-		});
+		return this.$gettextInterpolate(
+			`${this.post.lead_snippet} - ${this.game.title} by %{ user }`,
+			{
+				user: this.post.user.display_name,
+			}
+		);
 	}
 
 	routeCreated() {
@@ -92,7 +97,12 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 			this.post = post;
 		}
 
-		CommentThreadModal.showFromPermalink(this.$router, 'Fireside_Post', this.post.id, 'comments');
+		CommentThreadModal.showFromPermalink(
+			this.$router,
+			'Fireside_Post',
+			this.post.id,
+			'comments'
+		);
 
 		this.post.$viewed();
 		this.post.$expanded();
@@ -100,6 +110,17 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;
+
+		// The page settings for ads will be set by the game.
+		// Even if the game is not ad disabled, we need to be able to disable
+		// ads on a post by post basis.
+		Ads.deregisterDisabler(this.adDisabler);
+		this.adDisabler = $payload.adsDisabled ? Ads.registerDisabler(this.post) : null;
+	}
+
+	routeDestroyed() {
+		Ads.deregisterDisabler(this.adDisabler);
+		this.adDisabler = null;
 	}
 
 	render(h: CreateElement) {
