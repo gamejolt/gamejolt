@@ -5,7 +5,7 @@ import { ContentEditorSchema } from '../../schemas/content-editor-schema';
 
 export function insertOrderedListRule() {
 	return new InputRule(
-		/^1. $/,
+		/^1\. $/,
 		(state: EditorState<ContentEditorSchema>, _match: string[], start: number, end: number) => {
 			// We don't want to insert lists inside code text.
 			if (ContentEditorService.checkCurrentNodeIsCode(state)) {
