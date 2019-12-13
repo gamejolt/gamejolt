@@ -74,16 +74,7 @@ export default class AppEventItemControlsComments extends Vue {
 	}
 
 	get shouldShowInlineComment() {
-		if (this.showFeed) {
-			return false;
-		}
-
-		if (this.model instanceof FiresidePost && this.model.communities.length > 0) {
-			const community = this.model.communities[0].community;
-			return !community.isBlocked;
-		}
-
-		return true;
+		return !this.showFeed;
 	}
 
 	async created() {
