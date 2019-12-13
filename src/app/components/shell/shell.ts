@@ -4,11 +4,8 @@ import { Action, State } from 'vuex-class';
 import { Connection } from '../../../_common/connection/connection-service';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
 import { EventBus, EventBusDeregister } from '../../../_common/event-bus/event-bus.service';
-import AppGrowls from '../../../_common/growls/growls.vue';
-import AppLoadingBar from '../../../_common/loading/bar/bar.vue';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMinbar from '../../../_common/minbar/minbar.vue';
-import AppModals from '../../../_common/modal/modals.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import { BannerModule, BannerStore, Store } from '../../store/index';
 import { ChatNewMessageEvent } from '../chat/client';
@@ -26,9 +23,6 @@ let components: any = {
 	AppShellHotBottom,
 	AppShellCbar,
 	AppMinbar,
-	AppGrowls,
-	AppModals,
-	AppLoadingBar,
 	AppShellBanner: () => import(/* webpackChunkName: "shell" */ './banner/banner.vue'),
 	AppShellChat: () => import(/* webpackChunkName: "chat" */ './chat/chat.vue'),
 };

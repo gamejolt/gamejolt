@@ -35,23 +35,24 @@
 						</p>
 
 						<div class="-controls">
-							<div v-if="item.game">
+							<template v-if="item.game">
 								<app-button
-									v-if="!item.custom_url"
-									solid
-									:to="location"
-									v-app-track-event="`home:banner:${item.game.id}`"
-								>
-									<translate>View Game</translate>
-								</app-button>
-								<app-button
-									v-else-if="item.custom_url"
+									v-if="item.custom_url"
 									solid
 									:href="item.custom_url"
 									target="_blank"
 									v-app-track-event="`home:banner:custom-${item.game.id}`"
 								>
 									{{ item.custom_text }}
+								</app-button>
+
+								<app-button
+									v-if="shouldShowViewGame"
+									solid
+									:to="location"
+									v-app-track-event="`home:banner:${item.game.id}`"
+								>
+									<translate>View Game</translate>
 								</app-button>
 
 								<app-game-follow-widget
@@ -61,24 +62,25 @@
 									primary
 									v-app-track-event="`home:banner:follow-${item.game.id}`"
 								/>
-							</div>
-							<div v-else-if="item.community">
+							</template>
+							<template v-else-if="item.community">
 								<app-button
-									v-if="!item.custom_url"
-									solid
-									:to="location"
-									v-app-track-event="`home:banner:community-${item.community.path}`"
-								>
-									<translate>View Community</translate>
-								</app-button>
-								<app-button
-									v-else-if="item.custom_url"
+									v-if="item.custom_url"
 									solid
 									:href="item.custom_url"
 									target="_blank"
 									v-app-track-event="`home:banner:custom-community-${item.community.path}`"
 								>
 									{{ item.custom_text }}
+								</app-button>
+
+								<app-button
+									v-if="shouldShowViewCommunity"
+									solid
+									:to="location"
+									v-app-track-event="`home:banner:community-${item.community.path}`"
+								>
+									<translate>View Community</translate>
 								</app-button>
 
 								<app-community-join-widget
@@ -88,8 +90,8 @@
 									primary
 									event-label="home-banner"
 								/>
-							</div>
-							<div v-else-if="item.jam">
+							</template>
+							<template v-else-if="item.jam">
 								<app-button
 									v-if="shouldShowJamViewGames"
 									primary
@@ -107,7 +109,7 @@
 								>
 									<translate>View Jam Page</translate>
 								</app-button>
-							</div>
+							</template>
 						</div>
 					</div>
 				</div>

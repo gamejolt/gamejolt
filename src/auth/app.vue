@@ -1,6 +1,5 @@
 <template>
-	<div :class="{ 'is-client-offline': Connection.isClientOffline }">
-		<app-theme />
+	<app-common-shell :class="{ 'is-client-offline': Connection.isClientOffline }">
 		<app-cookie-banner />
 
 		<div id="content">
@@ -10,9 +9,7 @@
 		</div>
 
 		<app-client-base v-if="GJ_IS_CLIENT" />
-		<app-loading-bar />
-		<app-growls />
-	</div>
+	</app-common-shell>
 </template>
 
 <script lang="ts" src="./app"></script>

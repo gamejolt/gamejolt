@@ -1,5 +1,4 @@
 import 'rxjs/add/operator/sampleTime';
-import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Emit, Prop, Provide, Watch } from 'vue-property-decorator';
 import { Ads } from '../../../../_common/ad/ads.service';
@@ -12,22 +11,12 @@ import AppExpand from '../../../../_common/expand/expand.vue';
 import { number } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppLoading from '../../../../_common/loading/loading.vue';
-import { Ruler } from '../../../../_common/ruler/ruler-service';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { AppScrollInview } from '../../../../_common/scroll/inview/inview';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppActivityFeedItem from './item/item.vue';
 import AppActivityFeedNewButton from './new-button/new-button.vue';
 import { ActivityFeedView } from './view';
-
-/**
- * The distance from the bottom of the feed that we should start loading more.
- */
-const LoadMoreOffset = Screen.windowHeight * 2;
-
-/**
- * Wait this long between scroll checks.
- */
-const ScrollSampleTime = 1000;
 
 @Component({
 	components: {
@@ -36,6 +25,7 @@ const ScrollSampleTime = 1000;
 		AppActivityFeedNewButton,
 		AppAdWidget,
 		AppExpand,
+		AppScrollInview,
 	},
 	directives: {
 		AppTrackEvent,
@@ -52,13 +42,20 @@ export default class AppActivityFeed extends Vue {
 	@Prop(Boolean)
 	showAds?: boolean;
 
-	// We save the scroll position every time it changes. When clicking back to
-	// the same feed we can scroll to the previous position that way.
+	/**
+	 * We save the scroll position every time it changes. When clicking back to
+	 * the same feed we can scroll to the previous position that way. We don't
+	 * set a default so that vue doesn't watch it.
+	 */
 	private scroll!: number;
-	private scroll$: Subscription | undefined;
-	private scrollSampled$: Subscription | undefined;
 
 	readonly number = number;
+
+	/**
+	 * The distance from the bottom of the feed that we should start loading
+	 * more.
+	 */
+	readonly loadMoreMargin = `${Screen.height * 2}px`;
 
 	$el!: HTMLDivElement;
 
@@ -90,41 +87,17 @@ export default class AppActivityFeed extends Vue {
 	emitLoadMore() {}
 
 	mounted() {
-		this.scroll$ = Scroll.watcher.changes.subscribe(() => {
-			// We use the scroll top directly, instead of going through scroll
-			// watcher, so that we can keep this as fast as possible.
-			this.scroll = Scroll.getScrollTop();
-		});
-
-		this.scrollSampled$ = Scroll.watcher.changes.sampleTime(ScrollSampleTime).subscribe(() => {
-			const { top, height } = Scroll.watcher.getScrollChange();
-
-			// Auto-loading while scrolling.
-			if (this.feed.shouldScrollLoadMore) {
-				const feedOffset = Ruler.offset(this.$el as HTMLElement);
-				const feedBottom = feedOffset.top + feedOffset.height;
-				const scrollBottom = top + height;
-
-				if (feedBottom - scrollBottom < LoadMoreOffset) {
-					this.loadMore();
-				}
-			}
-		});
+		window.addEventListener('scroll', this.onScroll);
 	}
 
 	destroyed() {
 		this.feed.scroll = this.scroll;
-
-		if (this.scroll$) {
-			this.scroll$.unsubscribe();
-			this.scroll$ = undefined;
-		}
-
-		if (this.scrollSampled$) {
-			this.scrollSampled$.unsubscribe();
-			this.scrollSampled$ = undefined;
-		}
+		window.removeEventListener('scroll', this.onScroll);
 	}
+
+	onScroll = () => {
+		this.scroll = Scroll.getScrollTop();
+	};
 
 	// TODO: This shouldn't be needed anymore, since we always show placholder
 	// if no feed yet, and feeds aren't allowed to swap in the middle.
@@ -237,6 +210,15 @@ export default class AppActivityFeed extends Vue {
 			eventItem.action.is_pinned = false;
 		}
 		this.onPostEdited(eventItem);
+	}
+
+	// Auto-loading while scrolling.
+	onScrollLoadMore() {
+		if (!this.feed.shouldScrollLoadMore) {
+			return;
+		}
+
+		this.loadMore();
 	}
 
 	loadMoreButton() {

@@ -40,7 +40,7 @@
 		<!--
 			If they are viewing a slice of the state, then we don't want to allow loading more.
 		-->
-		<template v-if="!feed.slice">
+		<app-scroll-inview v-if="!feed.slice" :margin="loadMoreMargin" @inview="onScrollLoadMore">
 			<div v-if="shouldShowLoadMore" class="page-cut">
 				<app-button
 					:to="GJ_IS_SSR ? { query: { feed_last_id: lastPostId } } : undefined"
@@ -59,7 +59,7 @@
 					A wild Snorlax blocks your path. Looks like it's the end of this feed.
 				</translate>
 			</div>
-		</template>
+		</app-scroll-inview>
 	</div>
 </template>
 

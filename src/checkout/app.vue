@@ -1,6 +1,5 @@
 <template>
-	<div :class="{ 'is-client-offline': Connection.isClientOffline }">
-		<app-theme />
+	<app-common-shell :class="{ 'is-client-offline': Connection.isClientOffline }">
 		<app-cookie-banner />
 
 		<div id="shell">
@@ -19,9 +18,6 @@
 			</div>
 
 			<app-client-base v-if="GJ_IS_CLIENT" />
-			<app-loading-bar />
-			<app-growls />
-			<app-modals />
 		</div>
 
 		<footer id="footer">
@@ -33,10 +29,14 @@
 							&nbsp; | &nbsp;
 							<a :href="Environment.baseUrl + '/terms'" target="_blank">Terms</a>
 							&nbsp; | &nbsp;
-							<a :href="Environment.baseUrl + '/privacy'" target="_blank">Privacy Policy</a>
+							<a :href="Environment.baseUrl + '/privacy'" target="_blank">
+								Privacy Policy
+							</a>
 							<template v-if="!GJ_IS_CLIENT">
 								&nbsp; | &nbsp;
-								<a :href="Environment.baseUrl + '/cookies'" target="_blank">Cookie Policy</a>
+								<a :href="Environment.baseUrl + '/cookies'" target="_blank">
+									Cookie Policy
+								</a>
 							</template>
 						</p>
 					</div>
@@ -48,7 +48,7 @@
 				</div>
 			</div>
 		</footer>
-	</div>
+	</app-common-shell>
 </template>
 
 <script lang="ts" src="./app"></script>

@@ -1,8 +1,6 @@
-import { AppScrollInviewParent } from '../../../../_common/scroll/inview/parent';
-import { fuzzysearch } from '../../../../utils/string';
-import { findVueParent } from '../../../../utils/vue';
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
+import { fuzzysearch } from '../../../../utils/string';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 import AppChatUserListItem from './item/item.vue';
@@ -38,16 +36,5 @@ export default class AppChatUserList extends Vue {
 				fuzzysearch(filter, i.displayName.toLowerCase()) ||
 				fuzzysearch(filter, i.username.toLowerCase())
 		);
-	}
-
-	/**
-	 * When our list changes, make sure to recheck items in view since things shifted.
-	 */
-	@Watch('filteredUsers')
-	onUsersChange() {
-		const inviewParent = findVueParent(this, AppScrollInviewParent);
-		if (inviewParent) {
-			inviewParent.queueCheck();
-		}
 	}
 }

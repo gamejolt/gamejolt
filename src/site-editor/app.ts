@@ -1,18 +1,14 @@
-import AppErrorPage from '../_common/error/page/page.vue';
-import AppGrowls from '../_common/growls/growls.vue';
-import AppLoadingBar from '../_common/loading/bar/bar.vue';
-import { AppTheme } from '../_common/theme/theme';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { loadCurrentLanguage } from '../utils/translations';
+import AppErrorPage from '../_common/error/page/page.vue';
+import AppCommonShell from '../_common/shell/shell.vue';
 import AppSiteEditor from './components/site-editor/site-editor.vue';
 
 @Component({
 	components: {
-		AppTheme,
+		AppCommonShell,
 		AppErrorPage,
-		AppLoadingBar,
-		AppGrowls,
 		AppSiteEditor,
 	},
 })

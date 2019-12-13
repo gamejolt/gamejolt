@@ -1,6 +1,6 @@
 <template>
 	<router-link class="game-thumbnail" :to="url">
-		<app-scroll-inview :extra-padding="Screen.height" @inview="inView" @outview="outView">
+		<app-scroll-inview :margin="`${Screen.height}px`" @inview="inView" @outview="outView">
 			<div class="-controls theme-dark" v-if="app.user && Screen.isLg && isHydrated" @click.prevent>
 				<slot />
 

@@ -1,8 +1,5 @@
 <template>
-	<div>
-		<app-theme />
-		<app-cookie-banner />
-
+	<app-common-shell>
 		<app-user-bar :user="app.user" site="main" :hide-site-selector="true" />
 
 		<div id="content" class="container">
@@ -10,10 +7,7 @@
 				<router-view />
 			</app-error-page>
 		</div>
-
-		<app-loading-bar />
-		<app-growls />
-	</div>
+	</app-common-shell>
 </template>
 
 <script lang="ts" src="./app"></script>

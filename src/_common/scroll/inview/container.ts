@@ -1,105 +1,71 @@
-import 'rxjs/add/operator/throttleTime';
-import { Scroll } from '../scroll.service';
-import { ScrollWatcher } from '../watcher.service';
 import { AppScrollInview } from './inview';
 
-/**
- * When the scroll velocity is below this minimum distance in px, we will check inview items every
- * ScrollThrottleTime. This ensures that if they're scrolling constantly, but really slowly, we'll be
- * able to do the checks even though debounce won't fire.
- */
-const DefaultScrollVelocityMinimum = 2000;
-const DefaultScrollThrottleTime = 300;
-
 export class ScrollInviewContainer {
-	items: AppScrollInview[] = [];
+	private items = new WeakMap<Element, AppScrollInview>();
+	private observer: IntersectionObserver = null as any;
+	private queuedChanges: Function[] = [];
 
-	private lastScrollTop = 0;
-	private lastThrottleTime = Date.now();
-	private lastScrollHeight?: number;
-	private queueTimeout?: number;
-
-	get context() {
-		return this.scrollWatcher.context;
-	}
-
-	constructor(
-		private readonly scrollWatcher: ScrollWatcher,
-		private readonly throttle = DefaultScrollThrottleTime,
-		private readonly velocity = DefaultScrollVelocityMinimum
-	) {
-		if (GJ_IS_SSR) {
-			return;
-		}
-
-		this.scrollWatcher.stop.subscribe(() => this.check());
-
-		// If we don't want a throttle, then simply watch every scroll change.
-		if (this.throttle !== 0) {
-			this.scrollWatcher.changes
-				.throttleTime(this.throttle)
-				.subscribe(() => this.onScrollThrottle());
-		} else {
-			this.scrollWatcher.changes.subscribe(() => this.check());
-		}
-	}
-
-	private onScrollThrottle() {
-		const now = Date.now();
-		const scrollTop = Scroll.getScrollTop();
-		const deltaDistance = scrollTop - this.lastScrollTop;
-		const deltaTime = (now - this.lastThrottleTime) / 1000;
-		const velocity = deltaDistance / deltaTime;
-
-		if (Math.abs(velocity) < this.velocity) {
-			this.check();
-		}
-
-		this.lastThrottleTime = now;
-		this.lastScrollTop = scrollTop;
-	}
-
-	queueCheck() {
-		// Since a check was queued, it means something probably changed. Let's reset the scroll
-		// watcher's cached scroll changes so we get fresh data.
-		this.scrollWatcher.resetScrollChange();
-
-		if (this.queueTimeout) {
-			return;
-		}
-
-		this.queueTimeout = setTimeout(() => {
-			// We force a recalc of all the items.
-			this.check(true);
-			this.queueTimeout = undefined;
+	constructor(root: Element | null, rootMargin: string) {
+		this.observer = new IntersectionObserver(this.processUpdatedEntries, {
+			root,
+			rootMargin,
+			// Some components need to react on when an element is fully in view vs just partially
+			// (see 'emits-on' prop in AppScrollInview). For this reason we need to set both 1 and 0 thresholds.
+			// A threshold of 1 triggers when an element becomes fully in view or goes partially out of view.
+			// A threshold of 0 triggers when an element becomes partially in view or goes completely out of view.
+			threshold: [1, 0],
 		});
 	}
 
-	private check(forceRecalc?: boolean) {
-		const { top, height, scrollHeight } = this.scrollWatcher.getScrollChange();
+	observeItem(item: AppScrollInview) {
+		this.items.set(item.$el, item);
+		this.observer.observe(item.$el);
+	}
 
-		// We only calculate the bounding box when scroll height changes. This reduces the amount of
-		// reflows and what not.
-		const shouldRecalc = forceRecalc || this.lastScrollHeight !== scrollHeight;
+	unobserveItem(item: AppScrollInview) {
+		this.items.delete(item.$el);
+		this.observer.unobserve(item.$el);
+	}
 
-		for (const item of this.items) {
-			if (shouldRecalc) {
-				item.recalcBox();
+	/**
+	 * Gets called by the IntersectionObserver any time at least some entries
+	 * are updated.
+	 */
+	private processUpdatedEntries: IntersectionObserverCallback = entries => {
+		for (const entry of entries) {
+			// console.log('entry', entry.intersectionRatio, entry.isIntersecting);
+			const item = this.items.get(entry.target);
+			if (!item) {
+				continue;
 			}
 
-			let inView = true;
-			if (item.top > top + height) {
-				inView = false;
-			} else if (item.bottom < top) {
-				inView = false;
-			}
+			// If the item is in strict mode, then it has to be 100% visible for
+			// it to be considered in view, and we can use the intersectionRatio
+			// value for this case. Otherwise, we can just use the
+			// isIntersecting variable which will be true if any of the element
+			// is visible.
+			const isInView = item.strict ? entry.intersectionRatio === 1 : entry.isIntersecting;
+			// console.log('calculated inview', isInView, observer.rootMargin, observer.root);
 
-			// Update the item with its new in-view state.
-			if (inView !== item.inView) {
-				item.inView = inView;
+			if (isInView !== item.inView) {
+				this.queueChange(() => (item.inView = isInView));
 			}
 		}
+	};
 
-		this.lastScrollHeight = scrollHeight;
+	private queueChange(cb: Function) {
+		// Queue up the changes to be processed next animation frame. We will
+		// process them all at once.
+		this.queuedChanges.push(cb);
+		if (this.queuedChanges.length === 1) {
+			window.requestAnimationFrame(this.processQueue);
+		}
 	}
+
+	private processQueue = () => {
+		for (const cb of this.queuedChanges) {
+			cb();
+		}
+		this.queuedChanges = [];
+	};
 }

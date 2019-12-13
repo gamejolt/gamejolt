@@ -1,7 +1,7 @@
 <template>
 	<div class="row">
 		<div class="col-sm-5 col-sm-push-7">
-			<app-scroll-affix v-if="current" :shouldAffix="Screen.isDesktop" :scrollOffset="15">
+			<app-scroll-affix v-if="current" :disabled="!Screen.isDesktop" :scroll-offset="15">
 				<div class="anim-fade-enter anim-fade-leave" v-if="current.tigrs_age">
 					<app-game-ogrs :game="current"></app-game-ogrs>
 				</div>

@@ -2,14 +2,13 @@
 	<div>
 		<app-shortkey shortkey="c" @press="showChatPane" />
 
-		<app-scroll-inview-parent
+		<app-scroll-scroller
 			id="shell-chat-pane"
-			class="shell-pane shell-pane-right scrollable"
+			class="shell-pane shell-pane-right"
 			:class="{ visible: isRightPaneVisible }"
-			:throttle="0"
 		>
 			<app-chat-sidebar v-if="isRightPaneVisible" />
-		</app-scroll-inview-parent>
+		</app-scroll-scroller>
 		<app-chat-windows />
 	</div>
 </template>

@@ -1,8 +1,8 @@
 <template>
 	<app-form name="trophyForm">
 		<!--
-		Show the current image if there is one.
-	-->
+			Show the current image if there is one.
+		-->
 		<div class="form-group" v-if="formModel.has_thumbnail">
 			<label class="control-label">
 				<translate>Current Trophy Image</translate>
@@ -13,7 +13,7 @@
 			<br />
 
 			<div class="clearfix">
-				<app-button class="pull-right" trans @click="clearImage">
+				<app-button @click="clearImage">
 					<translate>Clear Image</translate>
 				</app-button>
 			</div>

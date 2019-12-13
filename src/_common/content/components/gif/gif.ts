@@ -42,7 +42,7 @@ export default class AppContentGif extends Vue {
 	resizeObserver!: ResizeObserver;
 	computedHeight = this.height;
 	isInview = false;
-	inviewPadding = Screen.windowHeight * 0.25;
+	inviewMargin = Screen.windowHeight * 0.25;
 
 	get containerWidth() {
 		// Always have SSR fullwidth the image. We never let SSR calculate the height of the container based on the width.

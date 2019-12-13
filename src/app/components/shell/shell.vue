@@ -28,10 +28,6 @@
 			<app-shell-client />
 		</div>
 
-		<app-loading-bar />
-		<app-growls />
-		<app-modals />
-
 		<app-shell-hot-bottom>
 			<app-minbar v-show="!isRightPaneVisible" />
 			<app-client-status-bar v-if="GJ_IS_CLIENT" key="shell-client-status-bar" />

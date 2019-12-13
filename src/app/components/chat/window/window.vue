@@ -1,18 +1,15 @@
 <template>
 	<div class="chat-window-wrap">
-		<!--
-		We sadly need the chat close thing twice.
-		It takes up the empty background space so you can click that to close chat.
-	-->
+		<!-- We sadly need the chat close thing twice. It takes up the empty
+		background space so you can click that to close chat. -->
 		<div class="chat-window-back-close" @click="closeChat"></div>
 		<div class="chat-window">
 			<div class="chat-window-back-close" @click="closeChat"></div>
 
 			<!-- Room Users -->
-			<app-scroll-inview-parent
-				class="fill-darkest chat-window-users scrollable"
+			<app-scroll-scroller
+				class="fill-darkest chat-window-users"
 				v-if="!room.isPmRoom && isShowingUsers"
-				:throttle="0"
 			>
 				<template v-if="Screen.isXs">
 					<br />
@@ -48,7 +45,7 @@
 					:users="users.collection"
 					:show-mod-tools="room.isMod"
 				></app-chat-user-list>
-			</app-scroll-inview-parent>
+			</app-scroll-scroller>
 
 			<div class="chat-window-main">
 				<!-- Window Header -->
@@ -75,9 +72,7 @@
 							<app-button sparse icon="remove" @click="close" :title="$gettext('Close Room')" />
 						</div>
 
-						<!--
-						Animation scope.
-					-->
+						<!-- Animation scope. -->
 						<div class="chat-window-header-content" v-for="room of [room]" :key="room.id">
 							<router-link
 								class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
@@ -129,10 +124,8 @@
 					</div>
 				</div>
 
-				<!--
-				The v-for is a hack to make sure we destroy/recreate each time
-				the room changes.
-			-->
+				<!-- The v-for is a hack to make sure we destroy/recreate each
+				time the room changes. -->
 				<div class="chat-window-output fill-darker">
 					<app-chat-window-output
 						v-for="room of [room]"

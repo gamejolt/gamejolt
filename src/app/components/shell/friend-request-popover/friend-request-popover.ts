@@ -1,14 +1,13 @@
+import Vue from 'vue';
+import { Component } from 'vue-property-decorator';
+import { Mutation, State } from 'vuex-class/lib/bindings';
 import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { Connection } from '../../../../_common/connection/connection-service';
-import AppPopperTS from '../../../../_common/popper/popper';
+import AppLoading from '../../../../_common/loading/loading.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
+import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
-import AppLoading from '../../../../_common/loading/loading.vue';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
-import Vue from 'vue';
-import { Component, Watch } from 'vue-property-decorator';
-import { Mutation, State } from 'vuex-class/lib/bindings';
 import { Store } from '../../../store';
 import { UserFriendshipHelper } from '../../user/friendships-helper/friendship-helper.service';
 import AppShellFriendRequestPopoverItem from './item/item.vue';
@@ -43,24 +42,10 @@ export default class AppShellFriendRequestPopover extends Vue {
 	incoming: UserFriendship[] = [];
 	outgoing: UserFriendship[] = [];
 
-	$refs!: {
-		popper: AppPopperTS;
-	};
-
 	readonly Connection = Connection;
 
 	get requests() {
 		return this.activeTab === 'requests' ? this.incoming : this.outgoing;
-	}
-
-	/**
-	 * When our list changes, make sure to recheck items in view since things shifted.
-	 */
-	@Watch('requests')
-	onRequestsChange() {
-		if (this.$refs.popper && this.$refs.popper.$refs.scroller) {
-			this.$refs.popper.$refs.scroller.queueInviewCheck();
-		}
 	}
 
 	async onShow() {

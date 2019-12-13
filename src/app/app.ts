@@ -1,16 +1,16 @@
-import { Playwire } from '../_common/ad/playwire/playwire.service';
-import { Analytics } from '../_common/analytics/analytics.service';
-import AppErrorPage from '../_common/error/page/page.vue';
-import { AppTheme } from '../_common/theme/theme';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { loadCurrentLanguage } from '../utils/translations';
+import { Playwire } from '../_common/ad/playwire/playwire.service';
+import { Analytics } from '../_common/analytics/analytics.service';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
+import AppErrorPage from '../_common/error/page/page.vue';
+import AppCommonShell from '../_common/shell/shell.vue';
 import AppShell from './components/shell/shell.vue';
 
 @Component({
 	components: {
-		AppTheme,
+		AppCommonShell,
 		AppShell,
 		AppErrorPage,
 		AppCookieBanner,

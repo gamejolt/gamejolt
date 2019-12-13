@@ -132,3 +132,21 @@
 
 			&:last-child
 				margin-bottom: 0
+
+.header-download-buttons
+	display: flex
+	justify-content: center
+	flex-direction: column
+	margin: 0 auto
+	max-width: 370px
+
+	@media $media-md-up
+		max-width: 100%
+		flex-direction: row
+
+	> *
+		display: block
+		margin: 5px 10px
+
+		@media $media-md-up
+			margin: 0 10px

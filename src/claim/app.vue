@@ -1,6 +1,5 @@
 <template>
-	<div>
-		<app-theme />
+	<app-common-shell>
 		<app-cookie-banner />
 
 		<div id="shell">
@@ -13,10 +12,6 @@
 					<router-view />
 				</app-error-page>
 			</div>
-
-			<app-loading-bar />
-			<app-growls />
-			<app-modals />
 		</div>
 
 		<footer id="footer">
@@ -28,10 +23,14 @@
 							&nbsp; | &nbsp;
 							<a :href="Environment.baseUrl + '/terms'" target="_blank">Terms</a>
 							&nbsp; | &nbsp;
-							<a :href="Environment.baseUrl + '/privacy'" target="_blank">Privacy Policy</a>
+							<a :href="Environment.baseUrl + '/privacy'" target="_blank">
+								Privacy Policy
+							</a>
 							<template v-if="!GJ_IS_CLIENT">
 								&nbsp; | &nbsp;
-								<a :href="Environment.baseUrl + '/cookies'" target="_blank">Cookie Policy</a>
+								<a :href="Environment.baseUrl + '/cookies'" target="_blank">
+									Cookie Policy
+								</a>
 							</template>
 						</p>
 					</div>
@@ -43,7 +42,7 @@
 				</div>
 			</div>
 		</footer>
-	</div>
+	</app-common-shell>
 </template>
 
 <script lang="ts" src="./app"></script>
