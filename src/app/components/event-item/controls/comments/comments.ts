@@ -73,6 +73,19 @@ export default class AppEventItemControlsComments extends Vue {
 		throw new Error('Unexpected model type for app-event-item-control-comments');
 	}
 
+	get shouldShowInlineComment() {
+		if (this.showFeed) {
+			return false;
+		}
+
+		if (this.model instanceof FiresidePost && this.model.communities.length > 0) {
+			const community = this.model.communities[0].community;
+			return !community.isBlocked;
+		}
+
+		return true;
+	}
+
 	async created() {
 		this.commentStore = await this.lockCommentStore({
 			resource: this.resource,

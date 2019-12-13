@@ -14,6 +14,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../_common/scroll/affix/affix.vue';
 import { ThemeMutation, ThemeStore } from '../../../../../_common/theme/theme.store';
+import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { User } from '../../../../../_common/user/user.model';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import AppActivityFeed from '../../../../components/activity/feed/feed.vue';
@@ -67,6 +68,7 @@ function getFetchUrl(route: Route) {
 		AppCommunitiesViewOverviewNavEdit,
 		AppCommunitySidebar,
 		AppCommunityThumbnailImg,
+		AppTimeAgo,
 	},
 })
 @RouteResolver({
@@ -182,6 +184,24 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		}
 
 		return (this.community.channels || []).find(i => i.title === channel) || null;
+	}
+
+	get communityBlockReason() {
+		if (!this.community.user_block) {
+			return '';
+		}
+
+		const reason = this.community.user_block.reason;
+		const reasons = {
+			spam: this.$gettext('Spam'),
+			'off-topic': this.$gettext('Off Topic'),
+			abuse: this.$gettext('Offensive or insulting'),
+			other: this.$gettext('Other'),
+		} as { [reason: string]: string };
+		if (reasons[reason]) {
+			return reasons[reason];
+		}
+		return reason;
 	}
 
 	get sort() {

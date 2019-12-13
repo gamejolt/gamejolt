@@ -175,6 +175,22 @@ export default class AppCommentWidget extends Vue {
 		return !!this.threadCommentId;
 	}
 
+	get shouldShowAdd() {
+		return this.showAdd;
+	}
+
+	get shouldShowEmptyMessage() {
+		return !this.comments.length;
+	}
+
+	get shouldShowTabs() {
+		if (!this.showTabs) {
+			return false;
+		}
+
+		return this.comments.length > 0;
+	}
+
 	async created() {
 		await this.init();
 	}

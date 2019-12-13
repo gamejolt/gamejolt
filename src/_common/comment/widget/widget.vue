@@ -5,7 +5,7 @@
 			<translate>Couldn't fetch comments.</translate>
 		</div>
 		<div v-else-if="hasBootstrapped">
-			<template v-if="showAdd">
+			<template v-if="shouldShowAdd">
 				<app-message-thread-add v-if="user" hide-message-split>
 					<form-comment
 						:resource="resource"
@@ -23,7 +23,7 @@
 				</div>
 			</template>
 
-			<div v-if="showTabs">
+			<div v-if="shouldShowTabs">
 				<app-nav-tab-list>
 					<ul>
 						<li>
@@ -69,7 +69,7 @@
 			</div>
 
 			<app-loading v-if="isLoading" class="loading-centered" />
-			<div v-else-if="!comments.length">
+			<div v-else-if="shouldShowEmptyMessage">
 				<div class="alert alert-info">
 					<translate>It's feeling a bit empty in here. Start talking!</translate>
 				</div>

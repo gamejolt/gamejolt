@@ -115,6 +115,10 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 		return this.user instanceof User;
 	}
 
+	get shouldShowCommentsButton() {
+		return this.showCommentsButton;
+	}
+
 	get shouldShowStatsInNewLine() {
 		return Screen.isXs;
 	}

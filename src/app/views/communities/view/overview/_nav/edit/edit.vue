@@ -83,6 +83,26 @@
 						</router-link>
 					</li>
 				</app-community-perms>
+				<app-community-perms :community="community" required="community-blocks">
+					<li>
+						<router-link
+							class="-item"
+							:to="{
+								name: 'communities.view.overview.edit.blocks',
+								params: {
+									id: community.id,
+								},
+							}"
+							active-class="active"
+							block
+							@click.native="isNavExpanded = false"
+						>
+							<span class="-label">
+								<translate>Blocks</translate>
+							</span>
+						</router-link>
+					</li>
+				</app-community-perms>
 			</ol>
 		</div>
 	</nav>

@@ -35,12 +35,44 @@
 				</app-button>
 			</div>
 
+			<div v-if="community.isBlocked" class="alert alert-notice">
+				<app-jolticon icon="notice" />
+				<span v-translate>
+					<b>You have been blocked from this community.</b>
+					<br />
+					The reason for your block is as follows:
+				</span>
+				<br />
+
+				<em>
+					<strong>
+						{{ communityBlockReason }}
+					</strong>
+				</em>
+
+				<br />
+				<br />
+
+				<div>
+					<translate>
+						You are unable to create any new posts in this community until your block gets lifted or
+						expires.
+					</translate>
+				</div>
+
+				<div v-if="community.user_block.doesExpire">
+					Your block will expire in
+					<b><app-time-ago :date="community.user_block.expires_on" without-suffix /></b>
+				</div>
+			</div>
+
 			<!-- If we are editing, we are showing the subroute's <edit> view here. Otherwise display feed stuff. -->
 			<template v-if="isEditing">
 				<router-view @details-change="onDetailsChanged" @channels-change="onChannelsChanged" />
 			</template>
 			<template v-else>
 				<app-post-add-button
+					v-if="!community.isBlocked"
 					:community="community"
 					:channel="communityChannel"
 					@add="onPostAdded"
