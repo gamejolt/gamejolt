@@ -1,7 +1,7 @@
 <template>
 	<select class="translate-lang-selector form-control" v-model="lang" @change="onChange">
-		<option v-for="lang of langs" :key="lang.code" :value="lang.code">
-			{{ lang.label }}
+		<option v-for="langData of langs" :key="langData.code" :value="langData.code">
+			{{ langData.label }}
 		</option>
 	</select>
 </template>

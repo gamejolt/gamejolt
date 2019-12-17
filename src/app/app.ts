@@ -6,6 +6,7 @@ import { Analytics } from '../_common/analytics/analytics.service';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
 import AppErrorPage from '../_common/error/page/page.vue';
 import AppCommonShell from '../_common/shell/shell.vue';
+import { getTranslationLang } from '../_common/translate/translate.service';
 import AppShell from './components/shell/shell.vue';
 
 @Component({
@@ -27,6 +28,10 @@ export default class App extends Vue {
 	created() {
 		if (!GJ_IS_SSR) {
 			Analytics.trackTiming('shell', 'vue-init', Date.now() - window._gjStartTime);
+			const lang = getTranslationLang();
+			if (lang !== 'en_US') {
+				Analytics.trackEvent('translations', 'loaded', lang);
+			}
 		}
 	}
 
