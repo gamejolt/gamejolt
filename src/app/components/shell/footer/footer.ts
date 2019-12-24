@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { date } from '../../../../_common/filters/date';
 import { Navigate } from '../../../../_common/navigate/navigate.service';
@@ -18,7 +17,6 @@ if (GJ_IS_CLIENT) {
 	components: {
 		AppTranslateLangSelector,
 		AppThemeSvg,
-		AppAdWidget,
 	},
 	directives: {
 		AppTrackEvent,
