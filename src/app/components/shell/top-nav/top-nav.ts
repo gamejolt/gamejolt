@@ -102,7 +102,7 @@ export default class AppShellTopNav extends Vue {
 			return;
 		}
 
-		// Page content is centered within a column that is offset by the cbar,
+		// Page content is centered within a column that is offset by the cbar (value of $shell-cbar-width),
 		// so this does the same offseting within the top nav for the search bar
 		// to align properly in the center with the page content.
 		if (this.hasCbar) {

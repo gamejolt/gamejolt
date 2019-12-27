@@ -12,10 +12,10 @@
 				</label>
 
 				<!--
-				We use the 'click-show' trigger event.
-				This will make sure that the autocomplete popover doesn't disappear when
-				clicking the search input again.'
-			-->
+					We use the 'click-show' trigger event.
+					This will make sure that the autocomplete popover doesn't disappear when
+					clicking the search input again.'
+				-->
 				<app-popper
 					trigger="manual"
 					block
