@@ -3,7 +3,6 @@ import { Mutation, State } from 'vuex-class';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
 import AppAdPlaywireVideo from '../../../_common/ad/playwire/video.vue';
-import { AppTrackEvent } from '../../../_common/analytics/track-event.directive';
 import { Api } from '../../../_common/api/api.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Meta } from '../../../_common/meta/meta-service';
@@ -45,9 +44,6 @@ class DashGame {
 		AppScrollAffix,
 		AppAdPlaywireVideo,
 		AppHomeRecommended,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 })
 @RouteResolver({

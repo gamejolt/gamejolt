@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../../../utils/vue';
-import { AppTrackEvent } from '../../../analytics/track-event.directive';
 import { AppAuthRequired } from '../../../auth/auth-required-directive';
 import { Clipboard } from '../../../clipboard/clipboard-service';
 import { Collaborator } from '../../../collaborator/collaborator.model';
@@ -44,7 +43,6 @@ let CommentNum = 0;
 		AppCommentWidgetComment: () => Promise.resolve(AppCommentWidgetComment),
 	},
 	directives: {
-		AppTrackEvent,
 		AppTooltip,
 		AppAuthRequired,
 	},

@@ -1,6 +1,5 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { Environment } from '../../../../_common/environment/environment.service';
@@ -25,9 +24,6 @@ import AppDiscoverHomeTags from './_tags/tags.vue';
 		AppGameGrid,
 		AppGameGridPlaceholder,
 		AppAuthJoin: AppAuthJoinLazy,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 })
 @RouteResolver({

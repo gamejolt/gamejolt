@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { number } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
@@ -19,7 +18,6 @@ import { Store } from '../../../store/index';
 	},
 	directives: {
 		AppAuthRequired,
-		AppTrackEvent,
 		AppTooltip,
 	},
 })

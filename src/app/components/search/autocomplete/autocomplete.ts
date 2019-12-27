@@ -1,16 +1,15 @@
-import { Analytics } from '../../../../_common/analytics/analytics.service';
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
-import { Game } from '../../../../_common/game/game.model';
-import AppGameThumbnailImg from '../../../../_common/game/thumbnail-img/thumbnail-img.vue';
-import { User } from '../../../../_common/user/user.model';
-import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
-import { findRequiredVueParent } from '../../../../utils/vue';
-import { AppStore } from '../../../../_common/store/app-store';
 import 'rxjs/add/operator/debounceTime';
 import { Subject } from 'rxjs/Subject';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { findRequiredVueParent } from '../../../../utils/vue';
+import { Analytics } from '../../../../_common/analytics/analytics.service';
+import { Game } from '../../../../_common/game/game.model';
+import AppGameThumbnailImg from '../../../../_common/game/thumbnail-img/thumbnail-img.vue';
+import { AppStore } from '../../../../_common/store/app-store';
+import { User } from '../../../../_common/user/user.model';
+import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import * as _LocalDbGameMod from '../../client/local-db/game/game.model';
 import AppGameCompatIcons from '../../game/compat-icons/compat-icons.vue';
 import AppSearchTS from '../search';
@@ -31,9 +30,6 @@ const KEYCODE_ENTER = 13;
 		AppGameThumbnailImg,
 		AppGameCompatIcons,
 		AppUserVerifiedTick,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 })
 export default class AppSearchAutocomplete extends Vue {

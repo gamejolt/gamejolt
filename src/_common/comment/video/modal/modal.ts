@@ -1,6 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { AppTrackEvent } from '../../../analytics/track-event.directive';
 import AppContentViewer from '../../../content/content-viewer/content-viewer.vue';
 import { number } from '../../../filters/number';
 import AppGameThumbnail from '../../../game/thumbnail/thumbnail.vue';
@@ -26,9 +25,6 @@ import { CommentVideo } from '../video-model';
 		AppUserFollowWidget,
 		AppCommentVideoLikeWidget,
 		AppContentViewer,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 	filters: {
 		number,

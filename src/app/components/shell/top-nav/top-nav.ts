@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
@@ -33,7 +32,6 @@ if (GJ_IS_CLIENT) {
 	components,
 	directives: {
 		AppTooltip,
-		AppTrackEvent,
 		AppObserveDimensions,
 	},
 })

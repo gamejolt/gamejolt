@@ -1,7 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { enforceLocation } from '../../../../../utils/router';
-import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../../_common/api/api.service';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
@@ -27,7 +26,6 @@ import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
-import { Store } from '../../../../store/index';
 import FormForumPost from '../../../../components/forms/forum/post/post.vue';
 import FormForumTopic from '../../../../components/forms/forum/topic/topic.vue';
 import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
@@ -35,6 +33,7 @@ import AppForumPostList from '../../../../components/forum/post-list/post-list.v
 import AppForumTopicUpvoteWidget from '../../../../components/forum/topic/upvote-widget/upvote-widget.vue';
 import AppPageHeaderControls from '../../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../../components/page-header/page-header.vue';
+import { Store } from '../../../../store/index';
 
 @Component({
 	name: 'RouteForumsTopicsView',
@@ -60,7 +59,6 @@ import AppPageHeader from '../../../../components/page-header/page-header.vue';
 	directives: {
 		AppTooltip,
 		AppScrollTo,
-		AppTrackEvent,
 	},
 	filters: {
 		number,
@@ -109,7 +107,9 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 	readonly Environment = Environment;
 
 	get loginUrl() {
-		return Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath);
+		return (
+			Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath)
+		);
 	}
 
 	get sort() {

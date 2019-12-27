@@ -1,16 +1,14 @@
-import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
-import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
-import { number } from '../../../../../_common/filters/number';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
+import { number } from '../../../../../_common/filters/number';
+import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import { LibraryModule, LibraryStore } from '../../../../store/library';
 import { GameCollection } from '../collection.model';
 
 @Component({
 	directives: {
-		AppTrackEvent,
 		AppTooltip,
 		AppAuthRequired,
 	},
@@ -50,13 +48,16 @@ export default class AppGameCollectionFollowWidget extends Vue {
 
 		return (
 			this.collections.findIndex(
-				item => item.type === this.collection.type && (item as any).id === this.collection.id
+				item =>
+					item.type === this.collection.type && (item as any).id === this.collection.id
 			) !== -1
 		);
 	}
 
 	get badge() {
-		return !this.circle && this.isFollowing && this.followerCount ? number(this.followerCount) : '';
+		return !this.circle && this.isFollowing && this.followerCount
+			? number(this.followerCount)
+			: '';
 	}
 
 	get tooltip() {

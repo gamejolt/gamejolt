@@ -1,5 +1,4 @@
 import { Component } from 'vue-property-decorator';
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../_common/api/api.service';
 import { Device } from '../../../../_common/device/device.service';
 import { Game } from '../../../../_common/game/game.model';
@@ -17,7 +16,6 @@ import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 		AppThemeSvg,
 	},
 	directives: {
-		AppTrackEvent,
 		AppScrollTo,
 	},
 })

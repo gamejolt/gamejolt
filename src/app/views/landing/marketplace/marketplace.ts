@@ -1,6 +1,5 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../_common/api/api.service';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../_common/game/game.model';
@@ -9,8 +8,8 @@ import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
-import { Store } from '../../../store/index';
 import { AppAuthJoinLazy } from '../../../components/lazy';
+import { Store } from '../../../store/index';
 
 @Component({
 	name: 'RouteLandingMarketplace',
@@ -18,9 +17,6 @@ import { AppAuthJoinLazy } from '../../../components/lazy';
 		AppGameThumbnail,
 		AppAuthJoin: AppAuthJoinLazy,
 		AppThemeSvg,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 })
 @RouteResolver({
