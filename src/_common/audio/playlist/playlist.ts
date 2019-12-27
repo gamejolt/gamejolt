@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
-import { AppTrackEvent } from '../../analytics/track-event.directive';
 import { time } from '../../filters/time';
 import { GameSong } from '../../game/song/song.model';
 import { AppAudioPlayer } from '../player/player';
@@ -10,9 +9,6 @@ import AppAudioScrubber from '../scrubber/scrubber.vue';
 	components: {
 		AppAudioPlayer,
 		AppAudioScrubber,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 	filters: {
 		time,

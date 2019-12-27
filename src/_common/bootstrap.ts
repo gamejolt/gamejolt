@@ -4,6 +4,7 @@ import { hijackLinks } from '../utils/router';
 import { bootstrapAppTranslations } from '../utils/translations';
 import { VuexStore } from '../utils/vuex';
 import { Analytics } from './analytics/analytics.service';
+import { AppTrackEvent } from './analytics/track-event.directive';
 import AppButton from './button/button.vue';
 import { Connection } from './connection/connection-service';
 import AppJolticon from './jolticon/jolticon.vue';
@@ -38,6 +39,7 @@ export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, rout
 	Vue.component('AppJolticon', AppJolticon);
 	Vue.component('AppLinkExternal', AppLinkExternal);
 	Vue.component('AppLinkHelp', AppLinkHelp);
+	Vue.directive('AppTrackEvent', AppTrackEvent);
 
 	// Set some constants so we can use them in templates.
 	Vue.use(vue => {

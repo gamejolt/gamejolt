@@ -2,7 +2,6 @@ import { Component } from 'vue-property-decorator';
 import { Ads } from '../../../../../../_common/ad/ads.service';
 import AppAdPlacement from '../../../../../../_common/ad/placement/placement.vue';
 import AppAdWidget from '../../../../../../_common/ad/widget/widget.vue';
-import { AppTrackEvent } from '../../../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../_common/card/card.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
@@ -73,9 +72,6 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 		AppGamePerms,
 		AppContentViewer,
 		AppUserKnownFollowers,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 	filters: {
 		number,

@@ -2,7 +2,6 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { number } from '../../../../_common/filters/number';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Store } from '../../../store/index';
@@ -11,9 +10,6 @@ import { GameFilteringContainer } from './container';
 @Component({
 	components: {
 		AppPopper,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 	filters: {
 		number,

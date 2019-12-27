@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppTrackEvent } from '../../analytics/track-event.directive';
 import AppContentViewer from '../../content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../fade-collapse/fade-collapse.vue';
 import { date } from '../../filters/date';
@@ -13,9 +12,6 @@ import AppCommentVideoThumbnail from '../video/thumbnail/thumbnail.vue';
 		AppFadeCollapse,
 		AppCommentVideoThumbnail,
 		AppContentViewer,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 	filters: {
 		date,

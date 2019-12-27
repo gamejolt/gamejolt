@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { date } from '../../../../_common/filters/date';
 import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -17,9 +16,6 @@ if (GJ_IS_CLIENT) {
 	components: {
 		AppTranslateLangSelector,
 		AppThemeSvg,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 	filters: {
 		date,

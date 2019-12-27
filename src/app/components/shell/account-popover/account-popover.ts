@@ -1,18 +1,17 @@
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
-import { Api } from '../../../../_common/api/api.service';
-import { Connection } from '../../../../_common/connection/connection-service';
-import AppPopper from '../../../../_common/popper/popper.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
-import { currency } from '../../../../_common/filters/currency';
-import { AppStore } from '../../../../_common/store/app-store';
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import { Api } from '../../../../_common/api/api.service';
 import * as _ClientMod from '../../../../_common/client/client.service';
+import { Connection } from '../../../../_common/connection/connection-service';
+import { currency } from '../../../../_common/filters/currency';
+import AppPopper from '../../../../_common/popper/popper.vue';
+import { Screen } from '../../../../_common/screen/screen-service';
 import { Settings } from '../../../../_common/settings/settings.service';
+import { AppStore } from '../../../../_common/store/app-store';
+import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { Store } from '../../../store/index';
 import { UserTokenModal } from '../../user/token-modal/token-modal.service';
 import AppShellUserBox from '../user-box/user-box.vue';
@@ -29,7 +28,6 @@ if (GJ_IS_CLIENT) {
 		AppShellUserBox,
 	},
 	directives: {
-		AppTrackEvent,
 		AppTooltip,
 	},
 	filters: {

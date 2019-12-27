@@ -1,6 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
 import { arrayIndexBy } from '../../../../utils/array';
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../_common/api/api.service';
 import { Device } from '../../../../_common/device/device.service';
 import { filesize } from '../../../../_common/filters/filesize';
@@ -16,9 +15,6 @@ import { ClientLibraryAction, ClientLibraryStore } from '../../../store/client-l
 	components: {
 		AppLoading,
 		AppGamePackageCard,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 	filters: {
 		filesize,

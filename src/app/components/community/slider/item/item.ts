@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
 import { Store } from '../../../../store/index';
@@ -9,9 +8,6 @@ import { Store } from '../../../../store/index';
 @Component({
 	components: {
 		AppCommunityThumbnailImg,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 })
 export default class AppCommunitySliderItem extends Vue {

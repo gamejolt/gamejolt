@@ -2,7 +2,6 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
 import { Jam } from '../../../../../_common/jam/jam.model';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -16,9 +15,6 @@ import { Store } from '../../../../store/index';
 		AppGameFollowWidget,
 		AppTheme,
 		AppCommunityJoinWidget,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 })
 export default class AppDiscoverHomeBanner extends Vue {

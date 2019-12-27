@@ -3,7 +3,6 @@ import { State } from 'vuex-class';
 import AppAdPlacement from '../../../../../../../_common/ad/placement/placement.vue';
 import AppAdPlaywireVideo from '../../../../../../../_common/ad/playwire/video.vue';
 import AppAdWidget from '../../../../../../../_common/ad/widget/widget.vue';
-import { AppTrackEvent } from '../../../../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { Environment } from '../../../../../../../_common/environment/environment.service';
 import { GameBuild } from '../../../../../../../_common/game/build/build.model';
@@ -40,9 +39,6 @@ const DownloadDelay = 3000;
 		AppGameOgrs,
 		AppDiscoverGamesViewOverviewDetails,
 		AppAdPlaywireVideo,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 })
 @RouteResolver({

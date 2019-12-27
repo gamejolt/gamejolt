@@ -1,14 +1,13 @@
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
+import Vue from 'vue';
+import { Component, Watch } from 'vue-property-decorator';
+import { Action, Mutation, State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
+import AppLoading from '../../../../_common/loading/loading.vue';
 import { Notification } from '../../../../_common/notification/notification-model';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
-import AppLoading from '../../../../_common/loading/loading.vue';
-import Vue from 'vue';
-import { Component, Watch } from 'vue-property-decorator';
-import { Action, Mutation, State } from 'vuex-class';
 import { Store } from '../../../store';
 import AppActivityFeed from '../../activity/feed/feed.vue';
 import { ActivityFeedView } from '../../activity/feed/view';
@@ -20,7 +19,6 @@ import { ActivityFeedView } from '../../activity/feed/view';
 		AppActivityFeed,
 	},
 	directives: {
-		AppTrackEvent,
 		AppTooltip,
 	},
 })

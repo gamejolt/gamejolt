@@ -1,4 +1,3 @@
-import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
@@ -9,9 +8,6 @@ import AppGameCollectionThumbnail from '../thumbnail/thumbnail.vue';
 @Component({
 	components: {
 		AppGameCollectionThumbnail,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 })
 export default class AppGameCollectionList extends Vue {

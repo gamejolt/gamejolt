@@ -1,14 +1,9 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Location } from 'vue-router';
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { TagsInfo } from '../tags-info.service';
 
-@Component({
-	directives: {
-		AppTrackEvent,
-	},
-})
+@Component({})
 export default class AppTagThumbnail extends Vue {
 	@Prop({ type: String, required: true })
 	tag!: string;

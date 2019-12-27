@@ -1,13 +1,12 @@
-import { Ads } from '../../../../_common/ad/ads.service';
-import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
-import { AppCondenseWhitespace } from '../../../../_common/condense-whitespace';
-import { Game } from '../../../../_common/game/game.model';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { number } from '../../../../_common/filters/number';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { Ads } from '../../../../_common/ad/ads.service';
+import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
+import { AppCondenseWhitespace } from '../../../../_common/condense-whitespace';
+import { number } from '../../../../_common/filters/number';
+import { Game } from '../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
+import { Screen } from '../../../../_common/screen/screen-service';
 
 export const GameGridRowSizeSm = 2;
 export const GameGridRowSizeMd = 3;
@@ -20,9 +19,6 @@ let idCounter = 0;
 		AppGameThumbnail,
 		AppAdWidget,
 		AppCondenseWhitespace,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 })
 export default class AppGameGrid extends Vue {

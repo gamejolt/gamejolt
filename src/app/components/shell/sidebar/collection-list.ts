@@ -1,14 +1,9 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { stringSort } from '../../../../utils/array';
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { GameCollection } from '../../game/collection/collection.model';
 
-@Component({
-	directives: {
-		AppTrackEvent,
-	},
-})
+@Component({})
 export default class AppShellSidebarCollectionList extends Vue {
 	@Prop(Array) collections!: GameCollection[];
 	@Prop(String) filter!: string;
