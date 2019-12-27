@@ -3,6 +3,7 @@ import { Component } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
 import { enforceLocation } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
+import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityJoinWidget from '../../../../_common/community/join-widget/join-widget.vue';
@@ -145,6 +146,12 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	showEditHeader() {
 		CommunityHeaderModal.show(this.community);
+	}
+
+	copyShareUrl() {
+		Clipboard.copy(
+			Environment.baseUrl + this.$router.resolve(this.community.routeLocation).href
+		);
 	}
 
 	async acceptCollaboration() {

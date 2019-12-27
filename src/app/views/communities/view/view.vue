@@ -79,14 +79,23 @@
 						</router-link>
 					</li>
 
-					<li v-if="shouldShowModTools">
+					<li>
 						<app-popper>
 							<a>
-								<app-jolticon icon="ellipsis-h" />
+								<app-jolticon icon="ellipsis-v" />
 							</a>
 
 							<div slot="popover" class="list-group list-group-dark">
 								<a
+									class="list-group-item has-icon"
+									@click="copyShareUrl"
+									v-app-track-event="`copy-link:community`"
+								>
+									<app-jolticon icon="link" />
+									<translate>Copy link to community</translate>
+								</a>
+								<a
+									v-if="shouldShowModTools"
 									class="list-group-item has-icon"
 									:href="Environment.baseUrl + `/moderate/communities/view/${community.id}`"
 									target="_blank"
