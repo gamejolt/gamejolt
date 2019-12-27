@@ -13,10 +13,4 @@
 	/>
 </template>
 
-<style lang="stylus" scoped>
-// Gotta make room for the search history icon
-.search-input
-	padding-left: 40px
-</style>
-
 <script lang="ts" src="./input"></script>
