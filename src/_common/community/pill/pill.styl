@@ -4,7 +4,7 @@
 $-separator-width = 20px
 // It looks a bit better if the right bit slightly overlaps
 // with the separator.
-$-separator-overlap = $-separator-width * 0.25
+$-separator-overlap = 2px
 
 .-pill-bi
 	display: inline-flex
@@ -12,8 +12,12 @@ $-separator-overlap = $-separator-width * 0.25
 	font-size: $font-size-small
 	user-select: none
 	// Margin to next element
-	margin-right: 5px
-	margin-bottom: 5px
+	margin-right: 4px
+	margin-bottom: 4px
+	border: 1px solid
+	theme-prop('border-color', 'bg-subtle')
+	border-radius: $border-radius-base
+	overflow: hidden
 
 .-content
 	display: inline-flex
@@ -26,8 +30,6 @@ $-separator-overlap = $-separator-width * 0.25
 	// padding for the content itself is done in the nested -container
 	display: inline-flex
 	align-items: stretch
-	// Shape of the left side of the pill
-	border-radius: $border-radius-base 0 0 $border-radius-base
 	// The separator element inside -left needs to overlay -right.
 	z-index: 2
 
@@ -35,19 +37,15 @@ $-separator-overlap = $-separator-width * 0.25
 	// -left because we need the -sep element to be stretched to the full
 	// height of the parent properly.
 	.-content
-		padding: 5px 0 5px 10px
+		padding: 4px 0 4px 8px
 
 .-right
-	change-bg('bg')
 	@extend .-content
-	// Shape of the right side of the pill
-	border-radius: 0 $border-radius-base $border-radius-base 0
+	change-bg('bg')
 	// The separator overlays the -right element.
 	// We need to extend the padding to get the right side background
 	// color below the transparent -sep svg.
-	padding: 5px 10px 5px ($-separator-width - $-separator-overlap)
-	border: 1px solid
-	theme-prop('border-color', 'bg-subtle')
+	padding: 4px 8px 4px ($-separator-width - $-separator-overlap)
 	z-index: 1
 
 .-sep
@@ -55,7 +53,8 @@ $-separator-overlap = $-separator-width * 0.25
 	// the area of the parent -left element.
 	width: 0
 
-	// This container is needed purely to prevent the svg from extending the parent height.
+	// This container is needed purely to prevent the svg from extending the
+	// parent height.
 	.-container
 		position: relative
 		display: inline-block
@@ -81,9 +80,9 @@ $-separator-overlap = $-separator-width * 0.25
 .-img
 	img-circle()
 	overflow: hidden
-	margin-right: 5px
-	width: 18px
-	height: 18px
+	margin-right: 4px
+	width: 16px
+	height: 16px
 
 .-tick
 	margin-left: 5px
