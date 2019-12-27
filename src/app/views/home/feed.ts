@@ -89,7 +89,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	setNotificationCount!: Store['setNotificationCount'];
 
 	feed: ActivityFeedView | null = null;
-	latestBroadcast: FiresidePost | null = null;
 	games: DashGame[] = [];
 	gameFilterQuery = '';
 	isShowingAllGames = false;
@@ -158,10 +157,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			feedPayload.items,
 			fromCache
 		);
-
-		this.latestBroadcast = homePayload.latestBroadcast
-			? new FiresidePost(homePayload.latestBroadcast)
-			: null;
 
 		this.games = (homePayload.ownerGames as DashGame[])
 			.map(i => new DashGame(i.id, i.title, i.ownerName, i.createdOn))
