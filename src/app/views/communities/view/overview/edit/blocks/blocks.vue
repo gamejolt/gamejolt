@@ -123,7 +123,7 @@
 .-row > td
 	padding-top: 5px
 	padding-bottom: 5px
-	border-bottom: 1px solid var(--theme-bg-offset)
+	border-bottom: $border-width-base solid var(--theme-bg-offset)
 
 .-header
 	*

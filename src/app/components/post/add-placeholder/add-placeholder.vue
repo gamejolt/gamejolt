@@ -79,8 +79,8 @@
 			justify-content: center
 			margin-bottom: $line-height-computed
 			padding: 10px 0
-			border-top: 1px solid var(--theme-bg-subtle)
-			border-bottom: 1px solid var(--theme-bg-subtle)
+			border-top: $border-width-base solid var(--theme-bg-subtle)
+			border-bottom: $border-width-base solid var(--theme-bg-subtle)
 
 			> :not(:first-child)
 				margin-left: 10px

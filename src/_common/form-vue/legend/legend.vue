@@ -45,8 +45,8 @@
 .-compactbar
 	theme-prop('border-bottom-color', 'bg-subtle')
 	flex: auto
-	height: 1px
-	border-bottom-width: 2px
+	height: 0
+	border-bottom-width: $border-width-large
 	border-bottom-style: solid
 	margin-left: 20px
 

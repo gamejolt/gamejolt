@@ -192,8 +192,7 @@
 	&-separator
 		change-bg('bg-subtle')
 		margin: 10px $account-popover-padding
-		height: 1px
-		line-height: 1px
+		height: $border-width-base
 
 	&-currency
 		theme-prop('color', 'highlight')

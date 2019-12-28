@@ -31,7 +31,6 @@
 	padding-right: 8px
 	cursor: pointer
 	transition: background-color 200ms $strong-ease-out
-
 	// Override button styling
 	display: block
 	width: 100%
@@ -48,7 +47,7 @@
 		change-bg('bg-offset')
 
 	&:not(:last-child)
-		border-bottom-width: 1px
+		border-bottom-width: $border-width-small
 		border-bottom-style: solid
 		theme-prop('border-bottom-color', 'bg-subtle')
 
@@ -80,6 +79,7 @@
 	@media $media-xs
 		& > *
 			display: inline-block
+
 		& *
 			vertical-align: middle
 
