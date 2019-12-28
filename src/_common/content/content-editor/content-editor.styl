@@ -33,10 +33,10 @@
 
 >>> .content-editor-spoiler
 	change-bg('bg-offset')
+	rounded-corners-lg()
 	font-size: $font-size-base
 	padding-top: 1px
 	border-width: 0
-	rounded-corners-lg()
 	position: relative
 
 	&::before
@@ -59,7 +59,7 @@
 	white-space: pre-wrap
 
 >>> td
-	border-width: 1px
+	border-width: $border-width-small
 	border-style: solid
 	padding: 4px
 	min-width: 2em
@@ -82,7 +82,7 @@
 			border-top-width: 0
 
 	& > tr > th
-		border-width: 0 1px 2px 0
+		border-width: 0 $border-width-small $border-width-large 0
 		border-bottom-style: solid
 		border-right-style: dashed
 		theme-prop('border-color', 'fg-muted')
@@ -91,7 +91,7 @@
 		border-right-width: 0
 
 	& > tr > td
-		border-width: 1px 1px 0 0
+		border-width: $border-width-small $border-width-small 0 0
 		border-top-style: solid
 		border-right-style: dashed
 		theme-prop('border-color', 'fg-muted')
