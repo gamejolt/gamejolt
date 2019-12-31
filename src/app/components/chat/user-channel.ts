@@ -1,21 +1,12 @@
 import { Channel, Presence, Socket } from 'phoenix';
 import { User } from '../../../_common/user/user.model';
-import { ChatUser } from './user';
 import { ChatUserCollection } from './user-collection';
-
-interface UserPresences {
-	[key: string]: {
-		metas: { phx_ref: string }[];
-	};
-}
 
 export class UserChannel extends Channel {
 	friendsList: ChatUserCollection = null as any;
-	currentUser: ChatUser | null = null;
-	friendsPopulated = false;
 
 	private socket: Socket;
-	private presences!: UserPresences;
+	private presences = {};
 
 	constructor(user: User, socket: Socket, params?: object) {
 		super('user:' + user.id, params, socket);
