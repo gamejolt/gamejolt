@@ -131,26 +131,27 @@
 								</span>
 							</router-link>
 						</li>
-						<li
-							v-if="
-								app.user &&
-									(app.user.permission_level > 0 ||
-										(userFriendship && userFriendship.state) === UserFriendship.STATE_FRIENDS ||
-										user.id !== app.user.id)
-							"
-						>
+						<li>
 							<app-popper>
 								<a>
-									<app-jolticon icon="ellipsis-h" />
+									<app-jolticon icon="ellipsis-v" />
 								</a>
 
 								<div slot="popover" class="list-group list-group-dark">
 									<a
 										class="list-group-item has-icon"
+										@click="copyShareUrl"
+										v-app-track-event="`copy-link:user`"
+									>
+										<app-jolticon icon="link" />
+										<translate>Copy link to user</translate>
+									</a>
+									<a
+										class="list-group-item has-icon"
 										v-if="app.user && user.id !== app.user.id"
 										@click="report"
 									>
-										<app-jolticon icon="flag" notice />
+										<app-jolticon icon="flag" />
 										<translate>profile.report_user_button</translate>
 									</a>
 									<a
