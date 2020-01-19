@@ -98,7 +98,7 @@
 							@click.native="isNavExpanded = false"
 						>
 							<span class="-label">
-								<translate>Blocks</translate>
+								<translate>Blocked Users</translate>
 							</span>
 						</router-link>
 					</li>
