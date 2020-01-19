@@ -3,22 +3,26 @@
 		<div v-if="shouldShowKnownMembers">
 			<h5 class="section-header">
 				<translate
-					:translate-n="knownMemberCount"
+					:translate-n="data.knownMemberCount"
 					:translate-params="{ count: membersYouKnowCount }"
 					translate-plural="%{ count } members you know"
 				>
 					1 member you know
 				</translate>
 			</h5>
-			<app-user-avatar-list :users="knownMembers" />
+			<app-user-avatar-list :users="data.knownMembers" />
 			<br />
 		</div>
 
-		<app-community-description :community="community" :is-editing="isEditing" :key="community.id" />
+		<app-community-description
+			:community="data.community"
+			:is-editing="isEditing"
+			:key="data.community.id"
+		/>
 
-		<template v-if="community.game">
+		<template v-if="data.community.game">
 			<br />
-			<app-game-thumbnail :game="community.game" class="-community-game" />
+			<app-game-thumbnail :game="data.community.game" class="-community-game" />
 		</template>
 
 		<div class="-mod-list">
@@ -54,7 +58,7 @@
 						</span>
 					</router-link>
 				</app-user-card-hover>
-				<span v-if="owner && user.id === owner.id" class="badge">
+				<span v-if="data.owner && user.id === data.owner.id" class="badge">
 					<translate>owner</translate>
 				</span>
 			</div>
@@ -83,7 +87,7 @@
 
 			<div class="text-muted ">
 				A community for
-				<app-time-ago :date="community.added_on" without-suffix />
+				<app-time-ago :date="data.community.added_on" without-suffix />
 			</div>
 		</div>
 	</div>

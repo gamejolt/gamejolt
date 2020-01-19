@@ -7,16 +7,7 @@
 		</div>
 
 		<div class="modal-body">
-			<app-community-sidebar
-				:community="community"
-				:is-editing="isEditing"
-				:owner="owner"
-				:known-members="knownMembers"
-				:known-member-count="knownMemberCount"
-				:collaborators="collaborators"
-				:collaborator-count="collaboratorCount"
-				:initial-collaborator-count="initialCollaboratorCount"
-			/>
+			<app-community-sidebar :is-editing="isEditing" :data="data" />
 		</div>
 	</app-modal>
 </template>
