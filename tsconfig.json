@@ -13,7 +13,9 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"importHelpers": true,
-		"lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+		"lib": ["esnext", "dom", "dom.iterable", "scripthost"],
+		"incremental": true,
+		"outDir": "./lib"
 	},
 	"exclude": ["build", "node_modules", ".cache"]
 }
