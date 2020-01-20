@@ -7,7 +7,7 @@
 		</div>
 
 		<div class="modal-body">
-			<app-community-sidebar :is-editing="isEditing" :data="data" />
+			<app-community-sidebar :is-editing="isEditing" :community="community" :data="data" />
 		</div>
 	</app-modal>
 </template>

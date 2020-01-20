@@ -4,6 +4,7 @@ import { Prop, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
+import { Community } from '../../../../_common/community/community.model';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { number } from '../../../../_common/filters/number';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
@@ -34,6 +35,9 @@ export default class AppCommunitySidebar extends Vue {
 	@Prop(Boolean)
 	isEditing!: boolean;
 
+	@Prop(Community)
+	community!: Community;
+
 	@Prop(CommunitySidebarData)
 	data!: CommunitySidebarData;
 
@@ -50,12 +54,12 @@ export default class AppCommunitySidebar extends Vue {
 
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 
-	@Watch('collaborators', { immediate: true })
+	@Watch('data.collaborators', { immediate: true })
 	onCollaboratorsUpdated(collaborators: User[]) {
 		this.currentCollaborators = collaborators;
 	}
 
-	@Watch('collaboratorCount', { immediate: true })
+	@Watch('data.collaboratorCount', { immediate: true })
 	onCollaboratorsCountUpdated(collaboratorCount: number) {
 		this.currentCollaboratorCount = collaboratorCount;
 	}
@@ -69,12 +73,12 @@ export default class AppCommunitySidebar extends Vue {
 	}
 
 	get shareUrl() {
-		return Environment.baseUrl + this.$router.resolve(this.data.community.routeLocation).href;
+		return Environment.baseUrl + this.$router.resolve(this.community.routeLocation).href;
 	}
 
 	get shareContent() {
 		return this.$gettextInterpolate('Check out %{ name } community - Game Jolt', {
-			name: this.data.community.name,
+			name: this.community.name,
 		});
 	}
 
@@ -123,7 +127,7 @@ export default class AppCommunitySidebar extends Vue {
 		this.isLoadingMoreCollaborators = true;
 
 		const payload = await Api.sendRequest(
-			`/web/communities/collaborators/${this.data.community.id}`
+			`/web/communities/collaborators/${this.community.id}`
 		);
 
 		const collaborators = User.populate(payload.collaborators);

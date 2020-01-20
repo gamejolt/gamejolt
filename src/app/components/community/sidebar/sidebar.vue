@@ -14,15 +14,11 @@
 			<br />
 		</div>
 
-		<app-community-description
-			:community="data.community"
-			:is-editing="isEditing"
-			:key="data.community.id"
-		/>
+		<app-community-description :community="community" :is-editing="isEditing" :key="community.id" />
 
-		<template v-if="data.community.game">
+		<template v-if="community.game">
 			<br />
-			<app-game-thumbnail :game="data.community.game" class="-community-game" />
+			<app-game-thumbnail :game="community.game" class="-community-game" />
 		</template>
 
 		<div class="-mod-list">
@@ -87,7 +83,7 @@
 
 			<div class="text-muted ">
 				A community for
-				<app-time-ago :date="data.community.added_on" without-suffix />
+				<app-time-ago :date="community.added_on" without-suffix />
 			</div>
 		</div>
 	</div>

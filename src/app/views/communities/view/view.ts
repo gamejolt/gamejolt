@@ -128,7 +128,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 		if ($payload.invite) {
 			this.collaboratorInvite = new Collaborator($payload.invite);
 		}
-		this.sidebarData = new CommunitySidebarData(this.community, $payload);
+		this.sidebarData = new CommunitySidebarData($payload);
 
 		this.setPageTheme(this.community.theme || null);
 		this.viewCommunity(this.community);
@@ -174,6 +174,17 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 		this.collaboratorInvite = null;
 		Growls.success(this.$gettext(`You are now a collaborator on this community!`));
+
+		// Add the user to the list of collaborators.
+		if (this.user && this.sidebarData) {
+			// When there are hidden collaborators because the list hasn't been fully expanded, just increase the number.
+			// The new collaborator will be loaded when clicking Load More.
+			if (this.sidebarData.collaboratorCount > this.sidebarData.collaborators.length) {
+				this.sidebarData.collaboratorCount++;
+			} else {
+				this.sidebarData.collaborators.push(this.user!);
+			}
+		}
 	}
 
 	async declineCollaboration() {
@@ -186,6 +197,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 			CommunitySidebarModal.show({
 				isEditing: this.isEditing,
 				data: this.sidebarData,
+				community: this.community,
 			});
 		}
 	}

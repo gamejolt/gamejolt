@@ -93,6 +93,9 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@Prop(Boolean)
 	isEditing!: boolean;
 
+	@Prop(CommunitySidebarData)
+	sidebarData!: CommunitySidebarData;
+
 	@State
 	app!: Store['app'];
 
@@ -107,7 +110,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	feed: ActivityFeedView | null = null;
 	finishedLoading = false;
-	sidebarData: CommunitySidebarData | null = null;
 
 	readonly Screen = Screen;
 
@@ -271,8 +273,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			$payload.items,
 			fromCache
 		);
-
-		this.sidebarData = new CommunitySidebarData(this.community, $payload);
 
 		Meta.description = this.$gettextInterpolate(
 			// tslint:disable-next-line:max-line-length

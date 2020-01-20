@@ -2,7 +2,7 @@
 	<section class="section fill-backdrop">
 		<app-page-container xl order="right,main,left">
 			<div slot="right" v-if="!Screen.isMobile && sidebarData">
-				<app-community-sidebar :is-editing="isEditing" :data="sidebarData" />
+				<app-community-sidebar :is-editing="isEditing" :data="sidebarData" :community="community" />
 			</div>
 
 			<div slot="left">

@@ -1,32 +1,29 @@
-import { Community } from '../../../../_common/community/community.model';
 import { User } from '../../../../_common/user/user.model';
 
 export class CommunitySidebarData {
-	community!: Community;
-	owner!: User;
+	owner: User;
 
-	knownMembers!: User[];
-	knownMemberCount!: number;
+	knownMembers: User[];
+	knownMemberCount: number;
 
-	collaborators!: User[];
-	collaboratorCount!: number;
-	initialCollaboratorCount!: number;
+	collaborators: User[];
+	collaboratorCount: number;
+	initialCollaboratorCount: number;
 
-	constructor(community: Community, $payload: any = undefined) {
-		this.community = community;
+	constructor($payload: any) {
+		this.knownMembers = User.populate($payload.knownMembers || []);
+		this.knownMemberCount = $payload.knownMemberCount || 0;
 
-		if ($payload) {
-			this.knownMembers = User.populate($payload.knownMembers || []);
-			this.knownMemberCount = $payload.knownMemberCount || 0;
-
-			if ($payload.owner) {
-				this.owner = new User($payload.owner);
-			}
-			if ($payload.collaborators) {
-				this.collaborators = User.populate($payload.collaborators);
-			}
-			this.collaboratorCount = $payload.collaboratorCount;
-			this.initialCollaboratorCount = $payload.initialCollaboratorCount;
+		if (!$payload.owner) {
+			throw new Error('No owner returned in payload.');
 		}
+		this.owner = new User($payload.owner);
+
+		if (!$payload.collaborators) {
+			throw new Error('No collaborator list returned in payload.');
+		}
+		this.collaborators = User.populate($payload.collaborators);
+		this.collaboratorCount = $payload.collaboratorCount;
+		this.initialCollaboratorCount = $payload.initialCollaboratorCount;
 	}
 }
