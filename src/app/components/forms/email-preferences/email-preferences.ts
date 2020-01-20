@@ -1,3 +1,4 @@
+import { Component } from 'vue-property-decorator';
 import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
 import {
 	BaseForm,
@@ -6,7 +7,6 @@ import {
 } from '../../../../_common/form-vue/form.service';
 import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
 import { User } from '../../../../_common/user/user.model';
-import { Component } from 'vue-property-decorator';
 
 interface FormModel extends User {
 	notifications: string[];
@@ -74,6 +74,10 @@ export default class FormEmailPreferences extends BaseForm<FormModel>
 			{
 				key: 'notify_forum_posts',
 				label: this.$gettext(`When someone replies to a forum topic you're following.`),
+			},
+			{
+				key: 'notify_post_featured_in_community',
+				label: this.$gettext(`When one of your posts gets featured in a community.`),
 			},
 		];
 	}
