@@ -2,7 +2,7 @@ import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
 import { BaseModal } from '../../../../../_common/modal/base';
-import { User } from '../../../../../_common/user/user.model';
+import { CommunitySidebarData } from '../sidebar-data';
 import AppCommunitySidebar from '../sidebar.vue';
 
 @Component({
@@ -11,27 +11,12 @@ import AppCommunitySidebar from '../sidebar.vue';
 	},
 })
 export default class AppCommunitySidebarModal extends BaseModal {
-	@Prop(Community)
-	community!: Community;
-
 	@Prop(Boolean)
 	isEditing!: boolean;
 
-	@Prop(User)
-	owner!: User;
+	@Prop(CommunitySidebarData)
+	data!: CommunitySidebarData;
 
-	@Prop(Array)
-	knownMembers!: User[];
-
-	@Prop(Number)
-	knownMemberCount!: number;
-
-	@Prop(Array)
-	collaborators!: User[];
-
-	@Prop(Number)
-	collaboratorCount!: number;
-
-	@Prop(Number)
-	initialCollaboratorCount!: number;
+	@Prop(Community)
+	community!: Community;
 }

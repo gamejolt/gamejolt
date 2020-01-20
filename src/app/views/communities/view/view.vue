@@ -78,6 +78,11 @@
 							</span>
 						</router-link>
 					</li>
+					<li v-if="Screen.isMobile && sidebarData">
+						<a @click="onClickAbout">
+							<translate>About</translate>
+						</a>
+					</li>
 
 					<li>
 						<app-popper>
@@ -142,7 +147,7 @@
 			</div>
 		</app-page-header>
 
-		<router-view :community="community" :is-editing="isEditing" />
+		<router-view :community="community" :is-editing="isEditing" :sidebar-data="sidebarData" />
 	</div>
 </template>
 

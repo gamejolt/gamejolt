@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<h2 class="section-header">
-			<translate>Blocks</translate>
+			<translate>Blocked Users</translate>
 		</h2>
 
 		<div class="page-help">

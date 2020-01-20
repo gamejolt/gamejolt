@@ -1,17 +1,8 @@
 <template>
 	<section class="section fill-backdrop">
 		<app-page-container xl order="right,main,left">
-			<div slot="right" v-if="!Screen.isMobile">
-				<app-community-sidebar
-					:community="community"
-					:is-editing="isEditing"
-					:owner="owner"
-					:known-members="knownMembers"
-					:known-member-count="knownMemberCount"
-					:collaborators="collaborators"
-					:collaborator-count="collaboratorCount"
-					:initial-collaborator-count="initialCollaboratorCount"
-				/>
+			<div slot="right" v-if="!Screen.isMobile && sidebarData">
+				<app-community-sidebar :is-editing="isEditing" :data="sidebarData" :community="community" />
 			</div>
 
 			<div slot="left">
@@ -28,11 +19,6 @@
 				<app-scroll-affix v-else :scroll-offset="80" :disabled="!Screen.isLg">
 					<app-communities-view-overview-nav-edit class="-nav" :community="community" />
 				</app-scroll-affix>
-
-				<app-button v-if="Screen.isMobile" class="-mobile-info-btn" @click="onClickAbout" block>
-					<app-community-thumbnail-img class="-mobile-info-btn-img" :community="community" />
-					<translate>About this community</translate>
-				</app-button>
 			</div>
 
 			<div v-if="community.isBlocked" class="alert alert-notice">
