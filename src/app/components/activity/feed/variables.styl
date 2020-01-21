@@ -35,10 +35,8 @@ $-item-padding-container = $-item-padding - $-border-width
 		elevate-1()
 		margin-left: 0
 		margin-right: 0
+		border: $-border-width solid var(--theme-bg-subtle)
 
-		@media $media-sm-up
-			border: $-border-width solid var(--theme-bg-subtle)
-
-			&:hover
-				theme-prop('border-color', 'link')
-				cursor: pointer
+		&:hover
+			theme-prop('border-color', 'link')
+			cursor: pointer
