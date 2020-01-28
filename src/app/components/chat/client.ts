@@ -211,6 +211,7 @@ export class ChatClient {
 								this.friendsList = friendsList;
 								this.userChannel.friendsList = friendsList;
 								this.friendsPopulated = true;
+								this.notifications = response.notifications;
 								this.publicRooms = response.public_rooms.map(
 									(room: any) => new ChatRoom(room)
 								);
@@ -264,7 +265,7 @@ export class ChatClient {
 
 		if (newRoom) {
 			if (this.currentUser) {
-				// TODO: Room focus.
+				this.roomChannels[newRoom.id].push('focus', { roomId: newRoom.id });
 			}
 
 			if (newRoom.isGroupRoom) {
@@ -349,6 +350,12 @@ export class ChatClient {
 				const message = new ChatMessage(data);
 
 				this._processNewOutput([message], false);
+
+				const friend = this.friendsList.getByRoom(message.roomId);
+				if (friend) {
+					friend.lastMessageOn = message.loggedOn.getTime();
+					this.friendsList.update(friend);
+				}
 
 				// TODO: Old functionality, change this later on. This was for checking if the message was sent successfully or not.
 				this.sendingMessage = false;
@@ -598,9 +605,9 @@ export class ChatClient {
 
 		if (this.room && this.currentUser) {
 			if (this.isFocused) {
-				// TODO: room focus.
+				this.roomChannels[this.room.id].push('focus', { roomId: this.room.id });
 			} else {
-				// TODO: room unfocus.
+				this.roomChannels[this.room.id].push('unfocus', { roomId: this.room.id });
 			}
 		}
 	}
