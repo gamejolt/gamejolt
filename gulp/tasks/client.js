@@ -473,15 +473,15 @@ module.exports = config => {
 						cmds = [
 							path.join('build', 'deps.bat'),
 							path.join('build', 'build.bat') +
-								' -l' +
-								(config.development ? 'd' : ''),
+								//' -l' +
+								(config.development ? ' -d' : ''),
 						];
 					} else {
 						cmds = [
 							path.join('build', 'deps.sh'),
 							path.join('build', 'build.sh') +
-								' -l' +
-								(config.development ? 'd' : ''),
+								//' -l' +
+								(config.development ? ' -d' : ''),
 						];
 					}
 
