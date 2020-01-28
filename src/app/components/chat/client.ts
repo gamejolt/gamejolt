@@ -224,7 +224,9 @@ export class ChatClient {
 	private syncPresentUsers(presences: any, room: ChatRoom) {
 		const presentUsers: ChatUser[] = [];
 		Presence.list(presences).map((presence: any) => {
-			presentUsers.push(new ChatUser(presence.user));
+			const user = new ChatUser(presence.user);
+			user.isOnline = true;
+			presentUsers.push(user);
 		});
 
 		if (room.isGroupRoom) {
