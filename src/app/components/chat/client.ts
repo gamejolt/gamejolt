@@ -365,6 +365,12 @@ export class ChatClient {
 					this._sendNextMessage();
 				}
 			});
+
+			channel.on('clear_notifications', data => {
+				if (this.isInRoom(data.room_id)) {
+					Vue.delete(this.notifications, '' + data.room_id);
+				}
+			});
 		}
 	}
 
