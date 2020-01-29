@@ -1,6 +1,6 @@
 <template>
 	<router-link
-		class="-card sheet sheet-no-full-bleed sheet-full"
+		class="community-channel-card sheet sheet-no-full-bleed sheet-full"
 		:class="{ '-active': isActive, 'theme-dark': backgroundItem }"
 		:to="linkTo"
 		:title="title"

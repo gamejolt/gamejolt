@@ -2,7 +2,6 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Community } from '../../../../../../_common/community/community.model';
-import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppCommunityChannelCard from '../../../../../components/community/channel/card/card.vue';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import { Store } from '../../../../../store/index';
@@ -25,8 +24,6 @@ export default class AppCommunitiesViewOverviewNav extends Vue {
 
 	@State
 	communityStates!: Store['communityStates'];
-
-	readonly Screen = Screen;
 
 	get communityState() {
 		return this.communityStates.getCommunityState(this.community);
