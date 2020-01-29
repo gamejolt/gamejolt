@@ -17,6 +17,11 @@ export class ChatRoom {
 
 	description!: string;
 
+	staff!: {
+		permission: string;
+		userId: number;
+	}[];
+
 	get chat() {
 		return store.state.chat!;
 	}
