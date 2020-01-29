@@ -1,5 +1,5 @@
 <template>
-	<nav :class="{ '-mobile-nav': Screen.isMobile }">
+	<nav>
 		<app-community-channel-card
 			title="featured"
 			:background-item="community.featured_background"
