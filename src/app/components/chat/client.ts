@@ -6,6 +6,7 @@ import { EventBus } from '../../../_common/event-bus/event-bus.service';
 import { User } from '../../../_common/user/user.model';
 import { store } from '../../store';
 import { ChatMessage, ChatMessageType } from './message';
+import { ChatNotification } from './notification/notification.service';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
 import { UserChannel } from './user-channel';
@@ -219,6 +220,24 @@ export class ChatClient {
 							});
 					})
 			);
+
+			channel.on('notification', data => {
+				const message = new ChatMessage(data);
+
+				// We got a notification for some room.
+				// If the notification key is null, set it to 1.
+				this.newNotification(message.roomId);
+
+				const friend = this.friendsList.getByRoom(message.roomId);
+				if (friend) {
+					console.log(message);
+					friend.lastMessageOn = message.loggedOn.getTime();
+					console.log('Updated friend timestamp to ' + friend.lastMessageOn);
+					this.friendsList.update(friend);
+				}
+
+				ChatNotification.notification(message);
+			});
 		}
 	}
 

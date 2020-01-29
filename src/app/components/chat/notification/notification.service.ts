@@ -15,7 +15,7 @@ export class ChatNotification {
 
 		Growls.info({
 			title: message.user.displayName,
-			message: message.contentRaw, // Use the raw message so we don't show compiled markdown.
+			message: message.content, // Use the raw message so we don't show compiled markdown.
 			icon: message.user.imgAvatar,
 			onclick: () => {
 				this.chat.enterRoom(message.roomId);
