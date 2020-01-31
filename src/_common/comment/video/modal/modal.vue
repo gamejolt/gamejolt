@@ -13,7 +13,7 @@
 						v-if="video"
 						video-provider="youtube"
 						:video-id="video.video_id"
-						:autoplay="true"
+						autoplay
 					/>
 				</app-responsive-dimensions>
 			</div>

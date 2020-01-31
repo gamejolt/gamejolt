@@ -32,7 +32,7 @@
 						:video-id="item.url"
 						:max-video-width="maxWidth"
 						:max-video-height="maxHeight"
-						:autoplay="true"
+						autoplay
 					/>
 				</div>
 
