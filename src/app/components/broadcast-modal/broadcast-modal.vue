@@ -71,7 +71,7 @@
 						<app-video-embed
 							video-provider="youtube"
 							:video-id="post.videos[0].video_id"
-							:autoplay="true"
+							autoplay
 						/>
 
 						<br />
