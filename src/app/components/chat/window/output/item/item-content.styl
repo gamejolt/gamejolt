@@ -4,25 +4,21 @@
 .chat-window-message
 	&-content
 		p
-			margin-bottom: 5px
+			margin-bottom: 4px
 
 		ul, ol
 			list-style-position: inside
 			padding-left: 0
-			margin-bottom: 5px
+			margin-bottom: 4px
 
 			& > li
 				margin-bottom: 0
 
 		pre
-			margin-bottom: 5px
+			margin-bottom: 4px
 
 		// Overwrite for dark theme
 		code, pre
 			change-bg('darkest')
 			color: inherit
 			border: 0
-
-		// If this pre tag is the first part of the first message, be sure to move it down past the avatar.
-		.chat-window-message-not-combined & pre:first-child
-			margin-top: 30px
