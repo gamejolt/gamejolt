@@ -4,10 +4,8 @@
 
 		<div class="auth-page-links text-right anim-fade-in">
 			<div class="auth-page-link">
-				<translate>auth.or</translate>
 				<router-link class="link-unstyled" :to="{ name: 'auth.login' }">
-					<translate>auth.login_link</translate>
-					<app-jolticon icon="sign-in" />
+					<translate>or Log In</translate>
 				</router-link>
 			</div>
 		</div>

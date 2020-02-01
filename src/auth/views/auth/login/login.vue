@@ -4,18 +4,13 @@
 
 		<div class="auth-page-links text-right anim-fade-in">
 			<div class="auth-page-link">
-				<translate>auth.or</translate>
 				<router-link class="link-unstyled" :to="{ name: 'auth.join' }">
-					<translate>auth.join_link</translate>
-					<app-jolticon icon="friends" />
+					<translate>or Sign Up</translate>
 				</router-link>
 			</div>
 			<div class="auth-page-link">
 				<router-link class="link-unstyled" :to="{ name: 'auth.forgot' }">
-					<translate>
-						Forgot Username or Password
-					</translate>
-					<app-jolticon icon="help-circle" />
+					<translate>Forgot Username or Password?</translate>
 				</router-link>
 			</div>
 		</div>

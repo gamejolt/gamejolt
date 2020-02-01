@@ -33,21 +33,19 @@
 				</a>
 			</div>
 
-			<div class="container">
-				<div class="col-sm-8 col-md-6 col-lg-4 col-centered">
-					<div class="auth-island">
-						<div class="alert alert-notice" v-if="Connection.isClientOffline">
-							<p>
-								<app-jolticon icon="offline" />
-								<translate>
-									We're having trouble connecting to Game Jolt. Please check your connection to the
-									Internet.
-								</translate>
-							</p>
-						</div>
-
-						<router-view />
+			<div class="container-fluid">
+				<div class="auth-island">
+					<div class="alert alert-notice" v-if="Connection.isClientOffline">
+						<p>
+							<app-jolticon icon="offline" />
+							<translate>
+								We're having trouble connecting to Game Jolt. Please check your connection to the
+								Internet.
+							</translate>
+						</p>
 					</div>
+
+					<router-view />
 				</div>
 			</div>
 
