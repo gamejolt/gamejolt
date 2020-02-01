@@ -13,7 +13,6 @@ const FeaturedTags = [
 	'rpg',
 	'other',
 	'multiplayer',
-	'adult',
 	'platformer',
 	'scifi',
 	'retro',
@@ -27,6 +26,7 @@ const FeaturedTags = [
 	'puzzle',
 	'strategy',
 	'sports',
+	'adult',
 ];
 
 @Component({
