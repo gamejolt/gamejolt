@@ -3,17 +3,30 @@
 
 $-fb-color = #4267b2
 $-twitter-color = #38A1F3
-$-google-color = #CC3333
+$-google-color = #4285F4
 $-twitch-color = #6441A4
 
 -social-button($-color)
 	background-color: $-color
+	text-align: left
+	padding: 0 12px
+	margin-bottom: 8px
+	height: 40px
+	text-transform: none
+	font-size: $font-size-base
+
+	img
+		margin-right: 12px
 
 	&:hover
-		background-color: darken($-color, 10%) !important
+		background-color: $-color !important
 
 	&, &:hover
 		color: white !important
+
+-social-button-block()
+	display: flex
+	align-items: center
 
 .auth-form-overlay
 	.auth-form-container
@@ -28,7 +41,10 @@ $-twitch-color = #6441A4
 	// Much less vertical spacing.
 	.form-group
 		margin-top: 0
-		margin-bottom: 5px
+		margin-bottom: 4px
+
+	.button
+		margin-top: 8px
 
 	.form-control
 		// Bigger form controls.
@@ -66,12 +82,24 @@ $-twitch-color = #6441A4
 
 .-fb
 	-social-button($-fb-color)
+	-social-button-block()
+	padding-left: 8px
 
-.-twitter
-	-social-button($-twitter-color)
+	img
+		width: 30px
+		height: 30px
 
 .-google
 	-social-button($-google-color)
+	-social-button-block()
+	padding-left: 0
+
+	img
+		width: 40px
+		height: 40px
+
+.-twitter
+	-social-button($-twitter-color)
 
 .-twitch
 	-social-button($-twitch-color)
