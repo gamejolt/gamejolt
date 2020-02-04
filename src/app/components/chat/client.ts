@@ -238,6 +238,21 @@ export class ChatClient {
 
 				ChatNotification.notification(message);
 			});
+
+			channel.on('friend_add', data => {
+				this.friendsList.add(new ChatUser(data));
+			});
+
+			channel.on('friend_remove', data => {
+				const userId = data.user_id;
+				const friend = this.friendsList.get(userId);
+
+				if (friend && this.isInRoom(friend.roomId)) {
+					this.leaveRoom();
+				}
+
+				this.friendsList.remove(userId);
+			});
 		}
 	}
 
@@ -390,6 +405,16 @@ export class ChatClient {
 					Vue.delete(this.notifications, '' + data.room_id);
 				}
 			});
+
+			channel.onClose(() => {
+				if (this.isInRoom(roomId)) {
+					this.setRoom(undefined);
+
+					// Reset the room we were in
+					Vue.delete(this.usersOnline, roomId);
+					Vue.delete(this.messages, roomId);
+				}
+			});
 		}
 	}
 
@@ -416,8 +441,8 @@ export class ChatClient {
 		}
 		const channel = this.roomChannels[this.room.id];
 		if (channel) {
-			this.leaveChannel(channel);
 			delete this.roomChannels[this.room.id];
+			this.leaveChannel(channel);
 		}
 	}
 
