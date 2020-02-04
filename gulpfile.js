@@ -11,6 +11,7 @@ const config = {
 			server: true,
 			client: true,
 			crawl: true,
+			offline: true,
 			webAppManifest: {
 				name: 'Game Jolt',
 				short_name: 'Game Jolt',
