@@ -17,6 +17,7 @@ import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vu
 import { User } from '../../../../_common/user/user.model';
 import { Store } from '../../../store';
 import AppCommunityDescription from '../description/description.vue';
+import { CommunitySidebarData } from './sidebar-data';
 
 @Component({
 	components: {
@@ -31,29 +32,14 @@ import AppCommunityDescription from '../description/description.vue';
 	},
 })
 export default class AppCommunitySidebar extends Vue {
-	@Prop(Community)
-	community!: Community;
-
 	@Prop(Boolean)
 	isEditing!: boolean;
 
-	@Prop(User)
-	owner!: User;
+	@Prop(Community)
+	community!: Community;
 
-	@Prop(Array)
-	knownMembers!: User[];
-
-	@Prop(Number)
-	knownMemberCount!: number;
-
-	@Prop(Array)
-	collaborators!: User[];
-
-	@Prop(Number)
-	collaboratorCount!: number;
-
-	@Prop(Number)
-	initialCollaboratorCount!: number;
+	@Prop(CommunitySidebarData)
+	data!: CommunitySidebarData;
 
 	@State
 	app!: Store['app'];
@@ -68,22 +54,22 @@ export default class AppCommunitySidebar extends Vue {
 
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 
-	@Watch('collaborators', { immediate: true })
+	@Watch('data.collaborators', { immediate: true })
 	onCollaboratorsUpdated(collaborators: User[]) {
 		this.currentCollaborators = collaborators;
 	}
 
-	@Watch('collaboratorCount', { immediate: true })
+	@Watch('data.collaboratorCount', { immediate: true })
 	onCollaboratorsCountUpdated(collaboratorCount: number) {
 		this.currentCollaboratorCount = collaboratorCount;
 	}
 
 	get shouldShowKnownMembers() {
-		return !!this.app.user && this.knownMembers && this.knownMembers.length > 0;
+		return !!this.app.user && this.data.knownMembers && this.data.knownMembers.length > 0;
 	}
 
 	get membersYouKnowCount() {
-		return number(this.knownMemberCount);
+		return number(this.data.knownMemberCount);
 	}
 
 	get shareUrl() {
@@ -97,17 +83,19 @@ export default class AppCommunitySidebar extends Vue {
 	}
 
 	get hasMoreCollaborators() {
-		return this.currentCollaboratorCount > this.initialCollaboratorCount;
+		return this.currentCollaboratorCount > this.data.initialCollaboratorCount;
 	}
 
 	get moderators(): User[] {
 		const mods = [];
-		if (this.owner) {
-			mods.push(this.owner);
+		if (this.data.owner) {
+			mods.push(this.data.owner);
 		}
 		if (this.currentCollaborators) {
 			if (this.collaboratorListCollapsed) {
-				mods.push(...this.currentCollaborators.slice(0, this.initialCollaboratorCount));
+				mods.push(
+					...this.currentCollaborators.slice(0, this.data.initialCollaboratorCount)
+				);
 			} else {
 				mods.push(...this.currentCollaborators);
 			}

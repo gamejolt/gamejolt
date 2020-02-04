@@ -54,7 +54,8 @@
 						<div class="chat-window-header-controls">
 							<app-button
 								v-if="!room.isPmRoom"
-								sparse
+								circle
+								trans
 								icon="users"
 								class="anim-fade-in"
 								@click="toggleUsers"
@@ -62,14 +63,21 @@
 
 							<app-button
 								v-if="room.isMod"
-								sparse
+								circle
+								trans
 								icon="edit"
 								class="anim-fade-in"
 								@click="showEditRoomModal"
 								:title="$gettext('Edit Room Details')"
 							/>
 
-							<app-button sparse icon="remove" @click="close" :title="$gettext('Close Room')" />
+							<app-button
+								circle
+								trans
+								icon="remove"
+								@click="close"
+								:title="$gettext('Close Room')"
+							/>
 						</div>
 
 						<!-- Animation scope. -->

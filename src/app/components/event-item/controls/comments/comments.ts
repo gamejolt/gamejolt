@@ -73,6 +73,10 @@ export default class AppEventItemControlsComments extends Vue {
 		throw new Error('Unexpected model type for app-event-item-control-comments');
 	}
 
+	get shouldShowInlineComment() {
+		return !this.showFeed;
+	}
+
 	async created() {
 		this.commentStore = await this.lockCommentStore({
 			resource: this.resource,

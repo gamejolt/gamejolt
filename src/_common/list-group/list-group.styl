@@ -9,7 +9,7 @@ $list-group-drag-handle-width = 20px
 	theme-prop('border-color', 'bg-subtle')
 	change-bg('bg')
 	margin-bottom: $font-size-base
-	border-width: 1px
+	border-width: $border-width-base
 	border-style: solid
 	overflow: hidden
 
@@ -23,7 +23,7 @@ $list-group-drag-handle-width = 20px
 	display: block
 	padding: $list-group-item-padding
 	text-decoration: none
-	border-bottom-width: 1px
+	border-bottom-width: $border-width-small
 	border-bottom-style: solid
 
 	&:last-child
@@ -161,14 +161,6 @@ $list-group-drag-handle-width = 20px
 		> .jolticon, > .list-group-item-heading > .jolticon
 			theme-prop('color', 'light')
 
-		&:first-child
-			border-top-left-radius: $border-radius-large
-			border-top-right-radius: $border-radius-large
-
-		&:last-child
-			border-bottom-left-radius: $border-radius-large
-			border-bottom-right-radius: $border-radius-large
-
 	.list-group-item-heading
 		theme-prop('color', 'lighter')
 
@@ -181,7 +173,7 @@ $list-group-drag-handle-width = 20px
 			position: absolute
 			right: 0
 			top: 50%
-			width: 1px
+			width: $border-width-base
 			height: 25px
 			line-height: @height
 			margin-top: -(@height / 2)

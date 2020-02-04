@@ -21,7 +21,7 @@
 	display: flex
 	justify-content: center
 	align-items: center
-	border: 1px dashed
+	border: $border-width-base dashed
 	border-radius: 100%
 	cursor: pointer
 	position: absolute

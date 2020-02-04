@@ -7,20 +7,15 @@
 		<div class="auth-form-container">
 			<p class="page-help">
 				By logging in, you agree to the
-				<a :href="Environment.baseUrl + '/terms'">Terms of Use</a>
-				and
-				<a :href="Environment.baseUrl + '/privacy'">Privacy Policy</a>
-				, including the
-				<a :href="Environment.baseUrl + '/cookies'">Cookie Policy</a>
-				.
+				<a :href="Environment.baseUrl + '/terms'">Terms of Use</a> and
+				<a :href="Environment.baseUrl + '/privacy'">Privacy Policy</a>, including the
+				<a :href="Environment.baseUrl + '/cookies'">Cookie Policy</a>.
 			</p>
 
 			<app-form class="auth-form" name="loginForm">
 				<fieldset :disabled="Connection.isClientOffline">
-					<!--
-					Min not needed since the login will fail if incorrect anyway.
-				-->
-
+					<!-- Min not needed since the login will fail if incorrect
+					anyway. -->
 					<app-form-group name="username" :label="$gettext('Username')" :hide-label="true">
 						<app-form-control
 							type="text"
@@ -42,8 +37,6 @@
 
 						<app-form-control-errors />
 					</app-form-group>
-
-					<br />
 
 					<div class="alert alert-notice anim-fade-in-enlarge no-animate-leave" v-if="invalidLogin">
 						<p><translate>Incorrect username or password.</translate></p>
@@ -82,58 +75,72 @@
 					</div>
 				</fieldset>
 			</app-form>
+
+			<div class="auth-line-thru">
+				<translate>or</translate>
+			</div>
+
+			<div class="anim-fade-in">
+				<app-button
+					class="-google"
+					solid
+					block
+					:disabled="Connection.isClientOffline"
+					@click="linkedChoose('google')"
+				>
+					<img src="../google-icon.svg" alt="" />
+					<span><translate>Sign in with Google</translate></span>
+				</app-button>
+
+				<app-button
+					class="-fb"
+					solid
+					block
+					:disabled="Connection.isClientOffline"
+					@click="linkedChoose('facebook')"
+				>
+					<img src="../fb-icon.png" alt="" />
+					<span><translate>Continue with Facebook</translate></span>
+				</app-button>
+
+				<div class="-extra-options">
+					<app-button
+						class="-twitter"
+						solid
+						:disabled="Connection.isClientOffline"
+						@click="linkedChoose('twitter')"
+					>
+						<translate>Twitter</translate>
+					</app-button>
+
+					<app-button
+						class="-twitch"
+						solid
+						:disabled="Connection.isClientOffline"
+						@click="linkedChoose('twitch')"
+					>
+						<translate>Twitch</translate>
+					</app-button>
+				</div>
+			</div>
 		</div>
-
-		<div class="auth-line-thru">
-			<translate>or</translate>
-		</div>
-
-		<p>
-			<app-button
-				class="-fb anim-fade-in-enlarge stagger"
-				block
-				solid
-				:disabled="Connection.isClientOffline"
-				@click="linkedChoose('facebook')"
-			>
-				<translate>Continue with Facebook</translate>
-			</app-button>
-
-			<app-button
-				class="-twitter anim-fade-in-enlarge stagger"
-				block
-				solid
-				:disabled="Connection.isClientOffline"
-				@click="linkedChoose('twitter')"
-			>
-				<translate>Continue with Twitter</translate>
-			</app-button>
-
-			<app-button
-				class="-google anim-fade-in-enlarge stagger"
-				block
-				solid
-				:disabled="Connection.isClientOffline"
-				@click="linkedChoose('google')"
-			>
-				<translate>Continue with Google</translate>
-			</app-button>
-
-			<app-button
-				class="-twitch anim-fade-in-enlarge stagger"
-				block
-				solid
-				:disabled="Connection.isClientOffline"
-				@click="linkedChoose('twitch')"
-			>
-				<translate>Continue with Twitch</translate>
-			</app-button>
-		</p>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
 @require '../auth-form'
+
+.-extra-options
+	display: flex
+	align-items: center
+	justify-content: space-between
+	margin-left: -4px
+	margin-right: -4px
+
+	.button
+		flex: 1 1
+		margin: 0 4px
+		text-align: center
 </style>
 
 <script lang="ts" src="./login-form"></script>

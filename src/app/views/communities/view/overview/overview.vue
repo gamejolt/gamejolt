@@ -1,17 +1,8 @@
 <template>
 	<section class="section fill-backdrop">
 		<app-page-container xl order="right,main,left">
-			<div slot="right" v-if="!Screen.isMobile">
-				<app-community-sidebar
-					:community="community"
-					:is-editing="isEditing"
-					:owner="owner"
-					:known-members="knownMembers"
-					:known-member-count="knownMemberCount"
-					:collaborators="collaborators"
-					:collaborator-count="collaboratorCount"
-					:initial-collaborator-count="initialCollaboratorCount"
-				/>
+			<div slot="right" v-if="!Screen.isMobile && sidebarData">
+				<app-community-sidebar :is-editing="isEditing" :data="sidebarData" :community="community" />
 			</div>
 
 			<div slot="left">
@@ -28,11 +19,37 @@
 				<app-scroll-affix v-else :scroll-offset="80" :disabled="!Screen.isLg">
 					<app-communities-view-overview-nav-edit class="-nav" :community="community" />
 				</app-scroll-affix>
+			</div>
 
-				<app-button v-if="Screen.isMobile" class="-mobile-info-btn" @click="onClickAbout" block>
-					<app-community-thumbnail-img class="-mobile-info-btn-img" :community="community" />
-					<translate>About this community</translate>
-				</app-button>
+			<div v-if="community.isBlocked" class="alert alert-notice">
+				<app-jolticon icon="notice" />
+				<span v-translate>
+					<b>You have been blocked from this community.</b>
+					<br />
+					The reason for your block is as follows:
+				</span>
+				<br />
+
+				<em>
+					<strong>
+						{{ communityBlockReason }}
+					</strong>
+				</em>
+
+				<br />
+				<br />
+
+				<div>
+					<translate>
+						You are unable to create any new posts in this community until your block gets lifted or
+						expires.
+					</translate>
+				</div>
+
+				<div v-if="community.user_block && community.user_block.doesExpire">
+					Your block will expire in
+					<b><app-time-ago :date="community.user_block.expires_on" without-suffix /></b>
+				</div>
 			</div>
 
 			<!-- If we are editing, we are showing the subroute's <edit> view here. Otherwise display feed stuff. -->
@@ -41,6 +58,7 @@
 			</template>
 			<template v-else>
 				<app-post-add-button
+					v-if="!community.isBlocked"
 					:community="community"
 					:channel="communityChannel"
 					@add="onPostAdded"

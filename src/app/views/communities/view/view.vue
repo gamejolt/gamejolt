@@ -78,15 +78,29 @@
 							</span>
 						</router-link>
 					</li>
+					<li v-if="Screen.isMobile && sidebarData">
+						<a @click="onClickAbout">
+							<translate>About</translate>
+						</a>
+					</li>
 
-					<li v-if="shouldShowModTools">
+					<li>
 						<app-popper>
 							<a>
-								<app-jolticon icon="ellipsis-h" />
+								<app-jolticon icon="ellipsis-v" />
 							</a>
 
 							<div slot="popover" class="list-group list-group-dark">
 								<a
+									class="list-group-item has-icon"
+									@click="copyShareUrl"
+									v-app-track-event="`copy-link:community`"
+								>
+									<app-jolticon icon="link" />
+									<translate>Copy link to community</translate>
+								</a>
+								<a
+									v-if="shouldShowModTools"
 									class="list-group-item has-icon"
 									:href="Environment.baseUrl + `/moderate/communities/view/${community.id}`"
 									target="_blank"
@@ -100,7 +114,7 @@
 				</ul>
 			</nav>
 
-			<div slot="controls">
+			<div v-if="!community.isBlocked" slot="controls">
 				<template v-if="community.hasPerms()">
 					<app-community-perms :community="community">
 						<app-button v-if="!isEditing" primary block :to="community.routeEditLocation">
@@ -133,7 +147,7 @@
 			</div>
 		</app-page-header>
 
-		<router-view :community="community" :is-editing="isEditing" />
+		<router-view :community="community" :is-editing="isEditing" :sidebar-data="sidebarData" />
 	</div>
 </template>
 

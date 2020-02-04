@@ -55,8 +55,6 @@
 			</div>
 
 			<div slot="right" v-if="!Screen.isMobile">
-				<app-broadcast-card v-if="latestBroadcast" :post="latestBroadcast" />
-
 				<app-home-recommended
 					v-if="shouldShowRecommendedUsers"
 					:users="recommendedUsers"
@@ -80,8 +78,6 @@
 
 				<app-community-slider :communities="communities" />
 			</template>
-
-			<app-broadcast-card v-if="latestBroadcast && Screen.isMobile" :post="latestBroadcast" />
 
 			<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
 			<template v-else>

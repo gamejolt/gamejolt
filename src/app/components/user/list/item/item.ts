@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppStore } from '../../../../../_common/store/app-store';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
@@ -16,9 +15,6 @@ import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verif
 		AppUserFollowWidget,
 		AppUserVerifiedTick,
 		AppUserCardHover,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 })
 export default class AppUserListItem extends Vue {

@@ -10,30 +10,26 @@
 			</span>
 		</div>
 
-		<!--
-		ctrl+enter sends key code 10 on Chrome. Yeah.
-		binding the :key allows it to refocus each time the room changes
-	-->
 		<div class="-container">
 			<div class="-button" @click="sendClicked()">
 				<app-jolticon icon="add-comment" />
 			</div>
-			<div class="-input">
-				<textarea
-					ref="input"
-					:key="chat.room.id"
-					class="form-control"
-					placeholder="Enter message..."
-					:rows="Screen.isXs ? 1 : 2"
-					v-app-focus-when
-					v-model="message"
-					@change="onChange"
-					@keydown.shift.enter="shiftEnter"
-					@keydown.ctrl.enter.prevent="ctrlEnter"
-					@keydown.ctrl.10.prevent="ctrlEnter"
-					@keydown.enter="enter"
-				></textarea>
-			</div>
+			<!-- ctrl+enter sends key code 10 on Chrome. Yeah. binding the :key
+			allows it to refocus each time the room changes -->
+			<textarea
+				ref="input"
+				:key="chat.room.id"
+				class="form-control"
+				placeholder="Enter message..."
+				:rows="Screen.isXs ? 1 : 2"
+				v-app-focus-when
+				v-model="message"
+				@change="onChange"
+				@keydown.shift.enter="shiftEnter"
+				@keydown.ctrl.enter.prevent="ctrlEnter"
+				@keydown.ctrl.10.prevent="ctrlEnter"
+				@keydown.enter="enter"
+			/>
 		</div>
 	</div>
 </template>
@@ -44,35 +40,33 @@
 
 .-multiline-notice
 	theme-prop('color', 'light')
-	margin-bottom: 5px
+	margin-bottom: 4px
 	font-size: $font-size-small
 
 .-container
 	position: relative
 
 textarea
+	change-bg('dark')
+	padding: 8px
 	resize: none
 	font-size: $font-size-small
 	border: 0
-	background-color: transparent
 	color: $white
-
-	@media $media-sm-up
-		change-bg('dark')
 
 .-button
 	display: none
 
 @media $media-mobile
-	.-input
-		margin-right: 70px
+	textarea
+		padding-right: 20px + (8px * 2)
 
 	.-button
-		theme-prop('color', 'gray')
+		theme-prop('color', 'fg-muted')
 		display: block
 		position: absolute
-		top: 7px
-		right: 5px
+		top: 10px
+		right: 6px
 </style>
 
 <script lang="ts" src="./send"></script>

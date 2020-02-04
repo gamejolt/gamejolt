@@ -1,6 +1,7 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
+import { Clipboard } from '../../../_common/clipboard/clipboard-service';
 import { CommentModal } from '../../../_common/comment/modal/modal.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { number } from '../../../_common/filters/number';
@@ -155,6 +156,13 @@ export default class RouteProfile extends BaseRouteComponent {
 				displayMode: 'shouts',
 			});
 		}
+	}
+
+	copyShareUrl() {
+		if (!this.user) {
+			return;
+		}
+		Clipboard.copy(Environment.baseUrl + this.user.url);
 	}
 
 	report() {

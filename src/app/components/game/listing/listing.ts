@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { number } from '../../../../_common/filters/number';
 import AppLoadingFade from '../../../../_common/loading/fade/fade.vue';
@@ -21,9 +20,6 @@ import { GameListingContainer } from './listing-container-service';
 		AppGameFilteringTags,
 		AppGameGridPlaceholder,
 		AppNavTabList,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 })
 export default class AppGameListing extends Vue {

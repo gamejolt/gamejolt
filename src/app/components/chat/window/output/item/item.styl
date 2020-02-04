@@ -1,9 +1,11 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+$-avatar-size = 32px
+
 .chat-window-message
 	position: relative
-	margin-bottom: 3px
+	margin-bottom: 4px
 	line-height: $font-size-base * 1.25
 
 	@media $media-xs
@@ -14,17 +16,17 @@
 		position: absolute
 		left: 0
 		top: 0
-		width: 35px
+		width: $-avatar-size
 		z-index: 1
 
 		& > img
 			img-circle()
 
 	&-container
-		margin-left: 35px + 20px
+		margin-left: $-avatar-size + 16px
 
 	&-byline
-		margin-bottom: 5px
+		margin-bottom: 4px
 
 	&-user
 		text-overflow()
@@ -39,23 +41,19 @@
 
 	&-time
 		theme-prop('color', 'fg-muted')
-		margin-left: 5px
+		margin-left: 4px
 		font-size: $font-size-tiny
 
 	// Some different styling for the fade collapse.
 	.fade-collapse-collapsed
 		theme-prop('border-bottom-color', 'light')
-		margin-bottom: 5px
-		border-bottom-width: 1px
+		margin-bottom: 4px
+		border-bottom-width: $border-width-base
 		border-bottom-style: dashed
 
 		&::before
 			theme-prop('background', 'darker', true)
-			max-height: 5px !important
-
-	// Only shown during fade-collapse of messages that are too long.
-	.hidden-text-expander
-		margin-left: 35px + 10px + $chat-room-window-padding
+			max-height: 4px !important
 
 	&-mod-tools
 		display: none
@@ -66,7 +64,7 @@
 			position: absolute
 			top: 0
 			right: 0
-			padding: 2px
+			padding: 4px
 			z-index: 2
 
 			../:hover &

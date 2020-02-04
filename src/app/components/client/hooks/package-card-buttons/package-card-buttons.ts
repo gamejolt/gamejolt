@@ -1,8 +1,11 @@
 import * as fs from 'fs';
+import * as path from 'path';
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
-import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import { Device } from '../../../../../_common/device/device.service';
 import AppExpand from '../../../../../_common/expand/expand.vue';
+import { filesize } from '../../../../../_common/filters/filesize';
 import { GameBuild } from '../../../../../_common/game/build/build.model';
 import { Game } from '../../../../../_common/game/game.model';
 import { GamePackageCardModel } from '../../../../../_common/game/package/card/card.model';
@@ -11,10 +14,6 @@ import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
-import { filesize } from '../../../../../_common/filters/filesize';
-import * as path from 'path';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
 import {
 	ClientLibraryAction,
 	ClientLibraryState,
@@ -36,7 +35,6 @@ import {
 	},
 	directives: {
 		AppTooltip,
-		AppTrackEvent,
 	},
 	filters: {
 		filesize,

@@ -5,7 +5,7 @@
 				:rules="{
 					max: 100,
 					availability: {
-						url: `/web/dash/communities/collaborators/check-field-availability`,
+						url: `/web/dash/communities/collaborators/check-field-availability/${community.id}`,
 						initVal: undefined,
 					},
 				}"
@@ -15,7 +15,7 @@
 			<app-form-control-errors :label="$gettext('username')">
 				<app-form-control-error
 					when="availability"
-					:message="$gettext(`This user does not exist.`)"
+					:message="$gettext(`This user does not exist or is blocked.`)"
 				/>
 			</app-form-control-errors>
 		</app-form-group>

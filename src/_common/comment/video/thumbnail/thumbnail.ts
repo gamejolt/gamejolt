@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { AppTrackEvent } from '../../../analytics/track-event.directive';
 import { AppStore } from '../../../store/app-store';
 import { AppTooltip } from '../../../tooltip/tooltip';
 import AppUserCardHover from '../../../user/card/hover/hover.vue';
@@ -16,7 +15,6 @@ import './thumbnail-content.styl';
 		AppUserAvatar,
 	},
 	directives: {
-		AppTrackEvent,
 		AppTooltip,
 	},
 })

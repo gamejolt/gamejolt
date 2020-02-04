@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { TagInfo, TagsInfo } from '../tags-info.service';
 import AppTagThumbnail from '../thumbnail/thumbnail.vue';
@@ -14,7 +13,6 @@ const FeaturedTags = [
 	'rpg',
 	'other',
 	'multiplayer',
-	'adult',
 	'platformer',
 	'scifi',
 	'retro',
@@ -28,15 +26,13 @@ const FeaturedTags = [
 	'puzzle',
 	'strategy',
 	'sports',
+	'adult',
 ];
 
 @Component({
 	components: {
 		AppScrollScroller,
 		AppTagThumbnail,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 })
 export default class AppTagList extends Vue {

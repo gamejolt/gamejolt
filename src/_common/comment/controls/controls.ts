@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppTrackEvent } from '../../analytics/track-event.directive';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { number } from '../../filters/number';
 import { LikersModal } from '../../likers/modal.service';
@@ -13,7 +12,6 @@ import { CommentVote } from '../vote/vote-model';
 	directives: {
 		AppAuthRequired,
 		AppTooltip,
-		AppTrackEvent,
 	},
 	filters: {
 		number,

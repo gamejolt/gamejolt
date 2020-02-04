@@ -18,7 +18,7 @@
 			/>
 		</div>
 
-		<div slot="footer" v-if="user && !hasError">
+		<div slot="footer" v-if="shouldShowReply">
 			<app-message-thread-add
 				v-if="parent"
 				hide-message-split

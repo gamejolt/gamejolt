@@ -33,7 +33,6 @@ export class ScrollInviewContainer {
 	 */
 	private processUpdatedEntries: IntersectionObserverCallback = entries => {
 		for (const entry of entries) {
-			// console.log('entry', entry.intersectionRatio, entry.isIntersecting);
 			const item = this.items.get(entry.target);
 			if (!item) {
 				continue;
@@ -44,8 +43,10 @@ export class ScrollInviewContainer {
 			// value for this case. Otherwise, we can just use the
 			// isIntersecting variable which will be true if any of the element
 			// is visible.
-			const isInView = item.strict ? entry.intersectionRatio === 1 : entry.isIntersecting;
-			// console.log('calculated inview', isInView, observer.rootMargin, observer.root);
+			const isInView =
+				item.emitsOn === 'full-overlap'
+					? entry.intersectionRatio === 1
+					: entry.isIntersecting;
 
 			if (isInView !== item.inView) {
 				this.queueChange(() => (item.inView = isInView));

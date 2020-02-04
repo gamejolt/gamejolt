@@ -24,6 +24,7 @@
 	justify-content: center
 	width: 100%
 	height: 100%
+	max-width: $chat-room-window-width
 	z-index: 1
 
 	@media $media-xs
@@ -76,24 +77,26 @@
 .chat-window-header
 	clearfix()
 	padding: $chat-room-window-padding
+	border-top-left-radius: $border-radius-base
+	border-top-right-radius: $border-radius-base
 
 	h2, h3
 		text-overflow()
 		margin: 0
 		line-height: 1
-		margin-bottom: 5px
+		margin-bottom: 4px
 
 	&-avatar
 		float: left
-		margin-right: 15px
-		width: 45px
-		height: 45px
+		margin-right: 16px
+		width: 48px
+		height: 48px
 
 		img
 			img-circle()
 			display: block
-			width: 45px
-			height: 45px
+			width: 48px
+			height: 48px
 
 .chat-window-header-controls
 	float: right
@@ -101,7 +104,7 @@
 	> .button
 		position: relative
 		vertical-align: top
-		margin-left: 5px
+		margin-left: 4px
 
 /**
  * Chat Window Output
@@ -121,9 +124,6 @@
 
 .chat-window-send-container
 	change-bg('darker')
-	theme-prop('border-top-color', 'dark')
 	width: 100%
 	flex: none
-	border-top-width: 1px
-	border-top-style: solid
 	padding: $chat-room-window-padding

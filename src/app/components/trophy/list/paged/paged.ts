@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop, Watch } from 'vue-property-decorator';
-import { AppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../../_common/api/api.service';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -15,9 +14,6 @@ const PAGE_SIZE = 12;
 	components: {
 		AppTrophyCard,
 		AppLoading,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 })
 export default class AppTrophyListPaged extends Vue {

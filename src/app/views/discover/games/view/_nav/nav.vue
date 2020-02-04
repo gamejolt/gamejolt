@@ -29,7 +29,7 @@
 					</router-link>
 				</li>
 
-				<li v-if="hasScores">
+				<li v-if="hasScores && primaryScoreTable">
 					<router-link
 						:to="{
 							name: 'discover.games.view.scores.list',
@@ -51,13 +51,21 @@
 					</router-link>
 				</li>
 
-				<li v-if="app.user">
+				<li>
 					<app-popper>
 						<a>
-							<app-jolticon icon="ellipsis-h" />
+							<app-jolticon icon="ellipsis-v" />
 						</a>
 
 						<div slot="popover" class="list-group list-group-dark">
+							<a
+								class="list-group-item has-icon"
+								@click="copyShareUrl"
+								v-app-track-event="`copy-link:game`"
+							>
+								<app-jolticon icon="link" />
+								<translate>Copy link to game</translate>
+							</a>
 							<app-game-perms :game="game">
 								<router-link
 									class="list-group-item has-icon"
@@ -67,12 +75,12 @@
 									}"
 								>
 									<app-jolticon icon="cog" />
-									<translate>Manage Game</translate>
+									<translate>Manage game</translate>
 								</router-link>
 							</app-game-perms>
 							<a class="list-group-item has-icon" v-if="app.user && !hasAnyPerms" @click="report">
-								<app-jolticon icon="flag" notice />
-								<translate>games.view.report_game_button</translate>
+								<app-jolticon icon="flag" />
+								<translate>Report game</translate>
 							</a>
 							<app-game-mod-links v-if="shouldShowModTools" :game="game" />
 						</div>

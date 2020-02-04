@@ -56,7 +56,7 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
-@require '../../../../community/channel/card/channel-card'
+@require '../../../../community/channel/card/variables'
 
 .-background-preview
 	display: block

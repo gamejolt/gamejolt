@@ -33,19 +33,11 @@ export default class RouteCommunitiesViewEditModerators extends BaseRouteCompone
 	@RouteStoreModule.State
 	community!: RouteStore['community'];
 
-	@RouteStoreModule.State
-	collaboration!: RouteStore['collaboration'];
-
 	collaborators: Collaborator[] = [];
 	activeCollaborator: Collaborator | null = null;
 	isShowingCollaboratorAdd = false;
 
 	readonly Collaborator = Collaborator;
-
-	get isOwner() {
-		// The owner's collaboration is not returned from backend.
-		return this.collaboration === null;
-	}
 
 	routeResolved($payload: any) {
 		if ($payload.collaborators) {

@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Mutation } from 'vuex-class';
 import { Api } from '../../../../../../_common/api/api.service';
+import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
 import { Environment } from '../../../../../../_common/environment/environment.service';
@@ -169,6 +170,10 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 	async rejectFromCommunity(postCommunity: FiresidePostCommunity) {
 		await this.post.$reject(postCommunity.community);
 		this.emitReject(postCommunity.community);
+	}
+
+	copyShareUrl() {
+		Clipboard.copy(this.post.url);
 	}
 
 	report() {

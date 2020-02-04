@@ -14,13 +14,13 @@ import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../_common/scroll/affix/affix.vue';
 import { ThemeMutation, ThemeStore } from '../../../../../_common/theme/theme.store';
-import { User } from '../../../../../_common/user/user.model';
+import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import AppActivityFeed from '../../../../components/activity/feed/feed.vue';
 import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
-import { CommunitySidebarModal } from '../../../../components/community/sidebar/modal/modal.service';
+import { CommunitySidebarData } from '../../../../components/community/sidebar/sidebar-data';
 import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
 import AppPageContainer from '../../../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
@@ -67,6 +67,7 @@ function getFetchUrl(route: Route) {
 		AppCommunitiesViewOverviewNavEdit,
 		AppCommunitySidebar,
 		AppCommunityThumbnailImg,
+		AppTimeAgo,
 	},
 })
 @RouteResolver({
@@ -92,6 +93,9 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@Prop(Boolean)
 	isEditing!: boolean;
 
+	@Prop(CommunitySidebarData)
+	sidebarData!: CommunitySidebarData;
+
 	@State
 	app!: Store['app'];
 
@@ -105,13 +109,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	setPageTheme!: ThemeStore['setPageTheme'];
 
 	feed: ActivityFeedView | null = null;
-	knownMembers: User[] = [];
-	knownMemberCount = 0;
 	finishedLoading = false;
-	owner: User | null = null;
-	collaborators: User[] = [];
-	collaboratorCount = 0;
-	initialCollaboratorCount = 0;
 
 	readonly Screen = Screen;
 
@@ -182,6 +180,24 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		}
 
 		return (this.community.channels || []).find(i => i.title === channel) || null;
+	}
+
+	get communityBlockReason() {
+		if (!this.community.user_block) {
+			return '';
+		}
+
+		const reason = this.community.user_block.reason;
+		const reasons = {
+			spam: this.$gettext('Spam'),
+			'off-topic': this.$gettext('Off Topic'),
+			abuse: this.$gettext('Offensive or insulting'),
+			other: this.$gettext('Other'),
+		} as { [reason: string]: string };
+		if (reasons[reason]) {
+			return reasons[reason];
+		}
+		return reason;
 	}
 
 	get sort() {
@@ -257,16 +273,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			$payload.items,
 			fromCache
 		);
-		this.knownMembers = User.populate($payload.knownMembers || []);
-		this.knownMemberCount = $payload.knownMemberCount || 0;
-		if ($payload.owner) {
-			this.owner = new User($payload.owner);
-		}
-		if ($payload.collaborators) {
-			this.collaborators = User.populate($payload.collaborators);
-		}
-		this.collaboratorCount = $payload.collaboratorCount;
-		this.initialCollaboratorCount = $payload.initialCollaboratorCount;
 
 		Meta.description = this.$gettextInterpolate(
 			// tslint:disable-next-line:max-line-length
@@ -361,18 +367,5 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			undefined,
 			{ detach: true }
 		);
-	}
-
-	onClickAbout() {
-		CommunitySidebarModal.show({
-			community: this.community,
-			isEditing: this.isEditing,
-			owner: this.owner,
-			knownMembers: this.knownMembers,
-			knownMemberCount: this.knownMemberCount,
-			collaborators: this.collaborators,
-			collaboratorCount: this.collaboratorCount,
-			initialCollaboratorCount: this.initialCollaboratorCount,
-		});
 	}
 }

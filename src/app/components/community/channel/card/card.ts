@@ -21,10 +21,6 @@ export default class AppCommunityChannelCard extends Vue {
 	@Prop(Boolean)
 	isUnread!: boolean;
 
-	get hasBackgroundImage() {
-		return this.backgroundItem instanceof MediaItem;
-	}
-
 	get linkTo() {
 		const link = { name: 'communities.view.overview' } as any;
 		if (this.title === 'featured') {

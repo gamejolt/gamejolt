@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class/lib/bindings';
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { Connection } from '../../../../_common/connection/connection-service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
@@ -22,7 +21,6 @@ type Tab = 'requests' | 'pending';
 	},
 	directives: {
 		AppTooltip,
-		AppTrackEvent,
 	},
 })
 export default class AppShellFriendRequestPopover extends Vue {

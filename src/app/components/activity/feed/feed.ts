@@ -3,7 +3,6 @@ import Vue from 'vue';
 import { Component, Emit, Prop, Provide, Watch } from 'vue-property-decorator';
 import { Ads } from '../../../../_common/ad/ads.service';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
@@ -26,9 +25,6 @@ import { ActivityFeedView } from './view';
 		AppAdWidget,
 		AppExpand,
 		AppScrollInview,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 })
 export default class AppActivityFeed extends Vue {

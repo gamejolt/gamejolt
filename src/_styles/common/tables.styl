@@ -20,14 +20,14 @@ th
 				padding: $table-cell-padding
 				line-height: $line-height-base
 				vertical-align: top
-				border-top-width: 1px
+				border-top-width: $border-width-small
 				border-top-style: solid
 
 	// Bottom align for column headings
 	> thead > tr > th
 		theme-prop('border-bottom-color', 'bg-subtle')
 		vertical-align: bottom
-		border-bottom-width: 2px
+		border-bottom-width: $border-width-large
 		border-bottom-style: solid
 
 	// Remove top border from thead by default
@@ -39,7 +39,7 @@ th
 	// Account for multiple tbody instances
 	> tbody + tbody
 		theme-prop('border-top-color', 'bg-subtle')
-		border-top-width: 2px
+		border-top-width: $border-width-large
 		border-top-style: solid
 
 // Condensed table w/ half padding
@@ -54,19 +54,19 @@ th
 // Add borders all around the table and between all the columns.
 .table-bordered
 	theme-prop('border-color', 'bg-subtle')
-	border-width: 1px
+	border-width: $border-width-base
 	border-style: solid
 
 	> thead, > tbody, > tfoot
 		> tr
 			> th, > td
 				theme-prop('border-color', 'bg-subtle')
-				border-width: 1px
+				border-width: $border-width-small
 				border-style: solid
 
 	> thead > tr
 		> th, > td
-			border-bottom-width: 2px
+			border-bottom-width: $border-width-large
 
 // Zebra-striping
 //
@@ -132,7 +132,7 @@ td, th
 @media $media-max-sm
 	.table-responsive
 		theme-prop('border-color', 'bg-subtle')
-		border-width: 1px
+		border-width: $border-width-base
 		border-style: solid
 		width: 100%
 		margin-bottom: ($line-height-computed * 0.75)

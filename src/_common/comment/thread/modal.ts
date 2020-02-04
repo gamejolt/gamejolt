@@ -1,13 +1,12 @@
 import { Component, Prop } from 'vue-property-decorator';
 import { Analytics } from '../../analytics/analytics.service';
-import { CommentState, CommentStore } from '../comment-store';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import { BaseModal } from '../../modal/base';
 import { Screen } from '../../screen/screen-service';
 import { AppState, AppStore } from '../../store/app-store';
 import FormComment from '../add/add.vue';
 import { Comment } from '../comment-model';
-import { CommentMutation } from '../comment-store';
+import { CommentMutation, CommentState, CommentStore } from '../comment-store';
 import { DisplayMode } from '../modal/modal.service';
 import AppCommentWidget from '../widget/widget.vue';
 
@@ -78,6 +77,10 @@ export default class AppCommentThreadModal extends BaseModal {
 				return this.$gettext('Shout');
 		}
 		return '';
+	}
+
+	get shouldShowReply() {
+		return this.user && !this.hasError;
 	}
 
 	_onCommentAdd(comment: Comment) {

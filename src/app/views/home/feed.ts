@@ -3,7 +3,6 @@ import { Mutation, State } from 'vuex-class';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
 import AppAdPlaywireVideo from '../../../_common/ad/playwire/video.vue';
-import { AppTrackEvent } from '../../../_common/analytics/track-event.directive';
 import { Api } from '../../../_common/api/api.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Meta } from '../../../_common/meta/meta-service';
@@ -46,9 +45,6 @@ class DashGame {
 		AppAdPlaywireVideo,
 		AppHomeRecommended,
 	},
-	directives: {
-		AppTrackEvent,
-	},
 })
 @RouteResolver({
 	cache: true,
@@ -89,7 +85,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	setNotificationCount!: Store['setNotificationCount'];
 
 	feed: ActivityFeedView | null = null;
-	latestBroadcast: FiresidePost | null = null;
 	games: DashGame[] = [];
 	gameFilterQuery = '';
 	isShowingAllGames = false;
@@ -158,10 +153,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			feedPayload.items,
 			fromCache
 		);
-
-		this.latestBroadcast = homePayload.latestBroadcast
-			? new FiresidePost(homePayload.latestBroadcast)
-			: null;
 
 		this.games = (homePayload.ownerGames as DashGame[])
 			.map(i => new DashGame(i.id, i.title, i.ownerName, i.createdOn))

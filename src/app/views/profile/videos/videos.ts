@@ -1,18 +1,14 @@
-import { AppTrackEvent } from '../../../../_common/analytics/track-event.directive';
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommentVideoThumbnail from '../../../../_common/comment/video/thumbnail/thumbnail.vue';
 import { CommentVideo } from '../../../../_common/comment/video/video-model';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
-import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../profile.store';
 
 @Component({
 	name: 'RouteProfileVideos',
 	components: {
 		AppCommentVideoThumbnail,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 })
 @RouteResolver({

@@ -69,12 +69,11 @@ a
 .link-help
 	theme-prop('color', 'fg-muted')
 	theme-prop('border-bottom-color', 'fg-muted')
-	border-bottom-width: 1px
+	border-bottom-width: $border-width-base
 	border-bottom-style: solid
 
 	&:hover, &:focus
-		border-bottom: 0
-		text-decoration: underline
+		theme-prop('border-bottom-color', 'link-hover')
 
 .link-block
 	display: block
@@ -108,7 +107,7 @@ hr
 	theme-prop('border-top-color', 'bg-subtle')
 	margin-top: $line-height-computed
 	margin-bottom: $line-height-computed
-	border-top-width: 1px
+	border-top-width: $border-width-base
 	border-top-style: solid
 
 // Underbar
@@ -259,7 +258,7 @@ cite
 .text-help
 	theme-prop('border-bottom-color', 'fg-muted')
 	cursor: help
-	border-bottom-width: 1px
+	border-bottom-width: $border-width-base
 	border-bottom-style: solid
 
 // Page header
@@ -268,7 +267,7 @@ cite
 	theme-prop('border-bottom-color', 'bg-subtle')
 	padding-bottom: ($line-height-computed / 2) - 1
 	margin: ($line-height-computed * 2) 0 $line-height-computed
-	border-bottom-width: 1px
+	border-bottom-width: $border-width-base
 	border-bottom-style: solid
 
 // Lists
@@ -340,7 +339,7 @@ dd
 // Abbreviations and acronyms
 abbr[title], abbr[data-original-title]
 	cursor: help
-	border-bottom: 1px dotted $abbr-border-color
+	border-bottom: $border-width-base dotted $abbr-border-color
 
 .initialism
 	font-size: 90%

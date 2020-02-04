@@ -51,7 +51,7 @@ $navbar-height = $shell-top-nav-height is defined ? $shell-top-nav-height : 50px
 	position: relative
 	display: inline-block
 	height: 24px
-	width: 1px
+	width: $border-width-base
 	margin: 0 10px
 	vertical-align: top
 	top: ($navbar-height - @height) * 0.5
@@ -73,18 +73,17 @@ $navbar-height = $shell-top-nav-height is defined ? $shell-top-nav-height : 50px
 		vertical-align: bottom
 
 .navbar-form
+	display: flex
+	align-items: center
+	justify-content: center
 	padding: 0
-	padding-right: 20px
 	width: 100%
 	height: $navbar-height
 	overflow: hidden
 
 	.form-control
-		border: 0
-		background-color: transparent
-		color: $white
+		border-width: 0
 		width: 100%
-		height: $navbar-height
 
 .navbar-controls
 	margin-top: ($navbar-height - $button-md-line-height) * 0.5
@@ -93,7 +92,7 @@ $navbar-height = $shell-top-nav-height is defined ? $shell-top-nav-height : 50px
 /**
  * Hover/active state underline.
  */
-.navbar-items > li > a, .navbar-item, .navbar-form-control, .navbar-avatar
+.navbar-items > li > a, .navbar-item, .navbar-avatar
 	position: relative
 
 	&::before

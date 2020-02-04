@@ -35,14 +35,16 @@
 			<p v-translate="{ years: spawnDayYear }">
 				That means on this day, they have been on Game Jolt for %{ years }!
 			</p>
-			<p>
-				<translate>
-					It is customary to wish them a happy Spawn Day, so you should too.
-				</translate>
-			</p>
-			<app-button @click="showComments">
-				<translate>Send your wishes</translate>
-			</app-button>
+			<template v-if="user.shouts_enabled">
+				<p>
+					<translate>
+						It is customary to wish them a happy Spawn Day, so you should too.
+					</translate>
+				</p>
+				<app-button @click="showComments">
+					<translate>Send your wishes</translate>
+				</app-button>
+			</template>
 		</template>
 	</app-alert-dismissable>
 </template>

@@ -1,28 +1,29 @@
 <template>
-	<router-link class="-card" :class="{ '-card-active': isActive }" :to="linkTo" :title="title">
-		<div class="-card-bg" v-if="hasBackgroundImage">
+	<router-link
+		class="community-channel-card sheet sheet-no-full-bleed sheet-full"
+		:class="{ '-active': isActive, 'theme-dark': backgroundItem }"
+		:to="linkTo"
+		:title="title"
+	>
+		<div class="-card-bg" v-if="backgroundItem">
 			<div
 				class="-card-bg-img"
-				:class="{ '-card-bg-img-active': isActive }"
 				:style="{
 					'background-image': `url('${backgroundItem.mediaserver_url}')`,
 				}"
-			></div>
-
-			<div class="-card-bg-gradient"></div>
+			/>
 		</div>
 
-		<div v-if="isActive" class="-card-active-indicator"></div>
-
 		<div class="-card-content">
-			<div
-				class="-card-content-title"
-				:class="{ '-card-content-title-overlay': hasBackgroundImage }"
-			>
+			<div class="-card-content-title">
 				{{ title }}
 			</div>
 
-			<div v-if="isUnread" class="-card-content-unread" v-app-tooltip="$gettext(`Unread`)"></div>
+			<div
+				v-if="isUnread"
+				class="-card-content-unread"
+				v-app-tooltip="$gettext(`There are new posts since you last viewed this channel`)"
+			></div>
 		</div>
 	</router-link>
 </template>

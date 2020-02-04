@@ -1,19 +1,14 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
-import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { CommentModal } from '../../../../../_common/comment/modal/modal.service';
 import AppCommentVideoLikeWidget from '../../../../../_common/comment/video/like-widget/like-widget.vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
-import { Environment } from '../../../../../_common/environment/environment.service';
 import { number } from '../../../../../_common/filters/number';
 import AppFiresidePostLikeWidget from '../../../../../_common/fireside/post/like/widget/widget.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import AppPopper from '../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { AppSocialFacebookLike } from '../../../../../_common/social/facebook/like/like';
-import { AppSocialTwitterShare } from '../../../../../_common/social/twitter/share/share';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import { User } from '../../../../../_common/user/user.model';
@@ -24,12 +19,9 @@ import AppEventItemControlsFiresidePostStats from './stats/stats.vue';
 
 @Component({
 	components: {
-		AppPopper,
 		AppCommentWidget: AppCommentWidgetLazy,
 		AppFiresidePostLikeWidget,
 		AppCommentVideoLikeWidget,
-		AppSocialTwitterShare,
-		AppSocialFacebookLike,
 		AppEventItemControlsFiresidePostStats,
 		AppEventItemControlsFiresidePostExtra,
 	},
@@ -56,8 +48,6 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 
 	@AppState
 	user!: AppStore['user'];
-
-	isShowingShare = false;
 
 	readonly GJ_IS_CLIENT!: boolean;
 
@@ -96,10 +86,6 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 		return this.post.isActive;
 	}
 
-	get shareUrl() {
-		return Environment.baseUrl + this.$router.resolve(this.post.routeLocation).href;
-	}
-
 	get hasPerms() {
 		if (!this.user) {
 			return false;
@@ -115,12 +101,12 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 		return this.user instanceof User;
 	}
 
-	get shouldShowStatsInNewLine() {
-		return Screen.isXs;
+	get shouldShowCommentsButton() {
+		return this.showCommentsButton;
 	}
 
-	copyShareUrl() {
-		Clipboard.copy(this.shareUrl);
+	get shouldShowStatsInNewLine() {
+		return Screen.isXs;
 	}
 
 	openComments() {

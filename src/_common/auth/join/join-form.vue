@@ -7,13 +7,38 @@
 		<div class="auth-form-container">
 			<p class="page-help">
 				By signing up, you agree to the
-				<a :href="Environment.baseUrl + '/terms'">Terms of Use</a>
-				and
-				<a :href="Environment.baseUrl + '/privacy'">Privacy Policy</a>
-				, including the
-				<a :href="Environment.baseUrl + '/cookies'">Cookie Policy</a>
-				.
+				<a :href="Environment.baseUrl + '/terms'">Terms of Use</a> and
+				<a :href="Environment.baseUrl + '/privacy'">Privacy Policy</a>, including the
+				<a :href="Environment.baseUrl + '/cookies'">Cookie Policy</a>.
 			</p>
+
+			<div class="anim-fade-in">
+				<app-button
+					class="-google"
+					block
+					solid
+					:disabled="Connection.isClientOffline || blocked"
+					@click="linkedChoose('google')"
+				>
+					<img src="../google-icon.svg" alt="" />
+					<span><translate>Sign up with Google</translate></span>
+				</app-button>
+
+				<app-button
+					class="-fb"
+					block
+					solid
+					:disabled="Connection.isClientOffline || blocked"
+					@click="linkedChoose('facebook')"
+				>
+					<img src="../fb-icon.png" alt="" />
+					<span><translate>Continue with Facebook</translate></span>
+				</app-button>
+			</div>
+
+			<div class="auth-line-thru">
+				<translate>or</translate>
+			</div>
 
 			<app-form class="auth-form" name="joinForm">
 				<fieldset :disabled="Connection.isClientOffline">
@@ -63,8 +88,6 @@
 						<app-form-control-errors />
 					</app-form-group>
 
-					<br />
-
 					<div class="form-group">
 						<app-form-button block :disabled="blocked">
 							<translate>Sign Up</translate>
@@ -77,52 +100,6 @@
 				</div>
 			</app-form>
 		</div>
-
-		<div class="auth-line-thru">
-			<translate>or</translate>
-		</div>
-
-		<p>
-			<app-button
-				class="-fb anim-fade-in-enlarge stagger"
-				block
-				solid
-				:disabled="Connection.isClientOffline || blocked"
-				@click="linkedChoose('facebook')"
-			>
-				<translate>Continue with Facebook</translate>
-			</app-button>
-
-			<app-button
-				class="-twitter anim-fade-in-enlarge stagger"
-				block
-				solid
-				:disabled="Connection.isClientOffline || blocked"
-				@click="linkedChoose('twitter')"
-			>
-				<translate>Continue with Twitter</translate>
-			</app-button>
-
-			<app-button
-				class="-google anim-fade-in-enlarge stagger"
-				block
-				solid
-				:disabled="Connection.isClientOffline || blocked"
-				@click="linkedChoose('google')"
-			>
-				<translate>Continue with Google</translate>
-			</app-button>
-
-			<app-button
-				class="-twitch anim-fade-in-enlarge stagger"
-				block
-				solid
-				:disabled="Connection.isClientOffline || blocked"
-				@click="linkedChoose('twitch')"
-			>
-				<translate>Continue with Twitch</translate>
-			</app-button>
-		</p>
 	</div>
 </template>
 

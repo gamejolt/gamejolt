@@ -5,6 +5,7 @@ import { Game } from '../game/game.model';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { Theme } from '../theme/theme.model';
+import { UserBlock } from '../user/block/block.model';
 import { CommunityChannel } from './channel/channel.model';
 
 export async function $joinCommunity(community: Community) {
@@ -72,6 +73,7 @@ export class Community extends Collaboratable(Model) {
 	game!: Game | null;
 	channels?: CommunityChannel[] | null;
 	featured_background?: MediaItem;
+	user_block?: UserBlock | null;
 
 	member_count!: number;
 	is_member?: boolean;
@@ -104,6 +106,10 @@ export class Community extends Collaboratable(Model) {
 		if (data.featured_background) {
 			this.featured_background = new MediaItem(data.featured_background);
 		}
+
+		if (data.user_block) {
+			this.user_block = new UserBlock(data.user_block);
+		}
 	}
 
 	get img_thumbnail() {
@@ -130,6 +136,10 @@ export class Community extends Collaboratable(Model) {
 				id: this.id + '',
 			},
 		};
+	}
+
+	get isBlocked() {
+		return this.user_block instanceof UserBlock;
 	}
 
 	channelRouteLocation(channel: CommunityChannel): Location {

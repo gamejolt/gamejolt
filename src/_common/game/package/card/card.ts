@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Analytics } from '../../../analytics/analytics.service';
-import { AppTrackEvent } from '../../../analytics/track-event.directive';
 import AppCard from '../../../card/card.vue';
 import { Clipboard } from '../../../clipboard/clipboard-service';
 import { AppCountdown } from '../../../countdown/countdown';
@@ -36,7 +35,6 @@ import { GamePackageCardModel } from './card.model';
 	},
 	directives: {
 		AppTooltip,
-		AppTrackEvent,
 	},
 	filters: {
 		currency,

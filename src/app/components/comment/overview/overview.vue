@@ -37,7 +37,7 @@
 @require '~styles-lib/mixins'
 
 .comment-overview .-comment-container:not(:last-child)
-	border-bottom-width: 1px
+	border-bottom-width: $border-width-small
 	border-bottom-style: solid
 	theme-prop('border-color', 'bg-subtle')
 

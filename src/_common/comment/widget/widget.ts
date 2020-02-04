@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { Analytics } from '../../analytics/analytics.service';
-import { AppTrackEvent } from '../../analytics/track-event.directive';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { Collaborator } from '../../collaborator/collaborator.model';
 import { Environment } from '../../environment/environment.service';
@@ -42,7 +41,6 @@ let incrementer = 0;
 	},
 	directives: {
 		AppAuthRequired,
-		AppTrackEvent,
 	},
 })
 export default class AppCommentWidget extends Vue {
@@ -173,6 +171,22 @@ export default class AppCommentWidget extends Vue {
 
 	get isThreadView() {
 		return !!this.threadCommentId;
+	}
+
+	get shouldShowAdd() {
+		return this.showAdd;
+	}
+
+	get shouldShowEmptyMessage() {
+		return !this.comments.length;
+	}
+
+	get shouldShowTabs() {
+		if (!this.showTabs) {
+			return false;
+		}
+
+		return this.comments.length > 0;
 	}
 
 	async created() {

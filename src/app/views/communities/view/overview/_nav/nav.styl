@@ -1,36 +1,23 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
-@require '../../../../../components/community/channel/card/channel-card'
+@require '../../../../../components/community/channel/card/variables'
 
-.-nav-featured
-	rounded-corners()
-	theme-prop('color', 'fg')
-	display: flex
-	padding: 5px 10px
-	margin-bottom: 15px
-	user-select: none
-	cursor: pointer
-	transition: all 250ms
-	width: $card-width
+nav
+	@media $media-lg-up
+		display: flex
+		flex-direction: column
+		align-items: flex-end
 
-	@media $media-xs
-		width: auto
+	// The nav shifts to the right side of the screen on MD size specifially. Add
+	// some spacing between the content.
+	@media $media-md
+		margin-bottom: $line-height-computed
 
-	&:hover
-		change-bg('bg-offset')
-		theme-prop('color', 'fg')
-		transition: none
+	@media $media-mobile
+		display: flex
+		overflow-x: scroll
+		margin-bottom: 8px
 
-	&.active
-		&, &:hover
-			change-bg('bi-bg')
-			theme-prop('color', 'bi-fg')
-
-.-mobile-nav
-	display: flex
-	overflow-x: scroll
-	margin-bottom: 10px
-
-	.-card
-		margin-right: 10px
-		width: 200px
+		.community-channel-card
+			margin-right: 8px
+			width: 200px

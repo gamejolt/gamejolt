@@ -24,6 +24,15 @@
 			</template>
 
 			<div class="list-group list-group-dark">
+				<a
+					class="list-group-item has-icon"
+					@click="copyShareUrl"
+					v-app-track-event="`copy-link:post`"
+				>
+					<app-jolticon icon="link" />
+					<translate>Copy link to post</translate>
+				</a>
+
 				<template v-if="shouldShowPins">
 					<a class="list-group-item has-icon" v-if="post.is_pinned" @click="unpin">
 						<app-jolticon icon="thumbtack" />
@@ -40,11 +49,11 @@
 					<span v-for="i of post.manageableCommunities" :key="i.id">
 						<app-community-perms :community="i.community" required="community-features">
 							<a class="list-group-item has-icon" @click.stop="toggleFeatured(i)">
+								<app-jolticon icon="tag" />
 								<template v-if="i.isFeatured">
-									<app-jolticon icon="remove" />
 									<template v-if="shouldDisplayCommunityName(i.community)">
 										<translate :translate-params="{ community: i.community.name }">
-											Unfeature : %{ community }
+											Unfeature from %{ community }
 										</translate>
 									</template>
 									<template v-else>
@@ -54,10 +63,9 @@
 									</template>
 								</template>
 								<template v-else>
-									<app-jolticon icon="tag" />
 									<template v-if="shouldDisplayCommunityName(i.community)">
 										<translate :translate-params="{ community: i.community.name }">
-											Feature : %{ community }
+											Feature in %{ community }
 										</translate>
 									</template>
 									<template v-else>
@@ -76,12 +84,12 @@
 							</a>
 
 							<a class="list-group-item has-icon" @click.stop="rejectFromCommunity(i)">
-								<app-jolticon icon="remove" notice />
+								<app-jolticon icon="remove" />
 
 								<translate :translate-params="{ community: i.community.name }">
 									Eject
 									<template v-if="shouldDisplayCommunityName(i.community)">
-										: %{ community }
+										from %{ community }
 									</template>
 									<template v-else>
 										from this community
@@ -94,14 +102,14 @@
 
 				<!-- User reports -->
 				<a class="list-group-item has-icon" v-if="user && user.id !== post.user.id" @click="report">
-					<app-jolticon icon="flag" notice />
-					<translate>Report Post</translate>
+					<app-jolticon icon="flag" />
+					<translate>Report post</translate>
 				</a>
 
 				<!-- Remove -->
 				<a v-if="canEdit" class="list-group-item has-icon" @click.stop="remove()">
 					<app-jolticon icon="remove" notice />
-					<translate>Remove Post</translate>
+					<translate>Remove</translate>
 				</a>
 
 				<!-- Moderate -->
@@ -112,7 +120,7 @@
 					target="_blank"
 				>
 					<app-jolticon icon="cog" />
-					<translate>Moderate Post</translate>
+					<translate>Moderate</translate>
 				</a>
 			</div>
 		</div>

@@ -2,6 +2,9 @@
 	<div>
 		<app-page-header should-affix-nav :hide-nav="!hasSearch">
 			<template v-if="Screen.isXs">
+				<label>
+					<translate>Enter your search</translate>
+				</label>
 				<!--
 					If they click into a tag (which goes to search page), we
 					don't want to autofocus the input since they're trying to

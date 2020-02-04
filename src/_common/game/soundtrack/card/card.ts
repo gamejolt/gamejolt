@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { AppTrackEvent } from '../../../analytics/track-event.directive';
 import AppAudioPlaylistTS from '../../../audio/playlist/playlist';
 import AppAudioPlaylist from '../../../audio/playlist/playlist.vue';
 import AppCard from '../../../card/card.vue';
@@ -17,9 +16,6 @@ import { GameSong } from '../../song/song.model';
 		AppCard,
 		AppFadeCollapse,
 		AppAudioPlaylist,
-	},
-	directives: {
-		AppTrackEvent,
 	},
 })
 export default class AppGameSoundtrackCard extends Vue {

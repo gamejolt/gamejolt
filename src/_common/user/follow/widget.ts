@@ -2,7 +2,6 @@ import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Analytics } from '../../analytics/analytics.service';
-import { AppTrackEvent } from '../../analytics/track-event.directive';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { number } from '../../filters/number';
 import { Growls } from '../../growls/growls.service';
@@ -14,7 +13,6 @@ import { User } from '../user.model';
 @Component({
 	directives: {
 		AppAuthRequired,
-		AppTrackEvent,
 		AppTooltip,
 	},
 })
