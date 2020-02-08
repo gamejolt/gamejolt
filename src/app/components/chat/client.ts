@@ -3,10 +3,8 @@ import Vue from 'vue';
 import { sleep } from '../../../utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { EventBus } from '../../../_common/event-bus/event-bus.service';
-import { User } from '../../../_common/user/user.model';
 import { store } from '../../store';
 import { ChatMessage, ChatMessageType } from './message';
-import { ChatNotification } from './notification/notification.service';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
 import { UserChannel } from './user-channel';
@@ -186,74 +184,38 @@ export class ChatClient {
 				})
 		);
 
-		this.joinUserChannel(user);
+		this.joinUserChannel(user.id);
 	}
 
-	private async joinUserChannel(user: User) {
-		if (this.socket !== null) {
-			const channel = new UserChannel(user, this.socket);
-			const request = `Join user channel ${user.id}`;
+	private async joinUserChannel(userId: number) {
+		const channel = new UserChannel(userId, this);
+		const request = `Join user channel ${userId}`;
 
-			await pollRequest(
-				request,
-				() =>
-					new Promise((resolve, reject) => {
-						channel
-							.join()
-							.receive('error', reject)
-							.receive('ok', response => {
-								const currentUser = new ChatUser(response.user);
-								const friendsList = new ChatUserCollection(
-									ChatUserCollection.TYPE_FRIEND,
-									response.friends || []
-								);
-								this.userChannel = channel;
-								this.currentUser = currentUser;
-								this.friendsList = friendsList;
-								this.userChannel.friendsList = friendsList;
-								this.friendsPopulated = true;
-								this.notifications = response.notifications;
-								this.publicRooms = response.public_rooms.map(
-									(room: any) => new ChatRoom(room)
-								);
-								resolve();
-							});
-					})
-			);
-
-			channel.on('notification', data => {
-				const message = new ChatMessage(data);
-
-				// We got a notification for some room.
-				// If the notification key is null, set it to 1.
-				this.newNotification(message.roomId);
-
-				const friend = this.friendsList.getByRoom(message.roomId);
-				if (friend) {
-					console.log(message);
-					friend.lastMessageOn = message.loggedOn.getTime();
-					console.log('Updated friend timestamp to ' + friend.lastMessageOn);
-					this.friendsList.update(friend);
-				}
-
-				ChatNotification.notification(message);
-			});
-
-			channel.on('friend_add', data => {
-				this.friendsList.add(new ChatUser(data));
-			});
-
-			channel.on('friend_remove', data => {
-				const userId = data.user_id;
-				const friend = this.friendsList.get(userId);
-
-				if (friend && this.isInRoom(friend.roomId)) {
-					this.leaveRoom();
-				}
-
-				this.friendsList.remove(userId);
-			});
-		}
+		await pollRequest(
+			request,
+			() =>
+				new Promise((resolve, reject) => {
+					channel
+						.join()
+						.receive('error', reject)
+						.receive('ok', response => {
+							const currentUser = new ChatUser(response.user);
+							const friendsList = new ChatUserCollection(
+								ChatUserCollection.TYPE_FRIEND,
+								response.friends || []
+							);
+							this.userChannel = channel;
+							this.currentUser = currentUser;
+							this.friendsList = friendsList;
+							this.friendsPopulated = true;
+							this.notifications = response.notifications;
+							this.publicRooms = response.public_rooms.map(
+								(room: any) => new ChatRoom(room)
+							);
+							resolve();
+						});
+				})
+		);
 	}
 
 	private syncPresentUsers(presences: any, room: ChatRoom) {
@@ -312,7 +274,7 @@ export class ChatClient {
 		this.room = newRoom || null;
 	}
 
-	private newNotification(roomId: number) {
+	newNotification(roomId: number) {
 		if (this.isInRoom(roomId) && this.isFocused) {
 		} else {
 			if (this.notifications[roomId]) {
