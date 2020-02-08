@@ -6,7 +6,7 @@ export class UserChannel extends Channel {
 	friendsList: ChatUserCollection = null as any;
 
 	private socket: Socket;
-	private presences = {};
+	private friendPresences = {};
 
 	constructor(user: User, socket: Socket, params?: object) {
 		super('user:' + user.id, params, socket);
@@ -16,32 +16,36 @@ export class UserChannel extends Channel {
 		this.setupPresence();
 	}
 
+	private mapFriendPresences() {
+		Object.keys(this.friendPresences).map(presenceId => this.friendsList.online(+presenceId));
+	}
+
 	private setupPresence() {
 		this.on('presence_state', state => {
-			this.presences = Presence.syncState(this.presences, state);
-			Object.keys(this.presences).map(presenceId => this.friendsList.online(+presenceId));
+			this.friendPresences = Presence.syncState(this.friendPresences, state);
+			this.mapFriendPresences();
 		});
 
 		this.on('presence_diff', diff => {
-			this.presences = Presence.syncDiff(this.presences, diff);
-			Object.keys(this.presences).map(presenceId => this.friendsList.online(+presenceId));
+			this.friendPresences = Presence.syncDiff(this.friendPresences, diff);
+			this.mapFriendPresences();
 		});
 
 		this.socket.onMessage(
 			({ topic, event, payload }: { topic: string; event: string; payload: any }) => {
 				if (event === 'presence_diff' && /^user_presence:\d+$/.test(topic)) {
-					this.presences = Presence.syncDiff(
-						this.presences,
+					this.friendPresences = Presence.syncDiff(
+						this.friendPresences,
 						payload,
-						this.onJoin.bind(this),
-						this.onLeave.bind(this)
+						this.onFriendJoin.bind(this),
+						this.onFriendLeave.bind(this)
 					);
 				}
 			}
 		);
 	}
 
-	private onJoin(presenceId: string, currentPresence: any) {
+	private onFriendJoin(presenceId: string, currentPresence: any) {
 		// If this is the first user presence from a device.
 		if (!currentPresence) {
 			const userId = +presenceId;
@@ -49,7 +53,7 @@ export class UserChannel extends Channel {
 		}
 	}
 
-	private onLeave(presenceId: string, currentPresence: any) {
+	private onFriendLeave(presenceId: string, currentPresence: any) {
 		// If the user has left all devices.
 		if (currentPresence && currentPresence.metas.length === 0) {
 			const userId = +presenceId;
