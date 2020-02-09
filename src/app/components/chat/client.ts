@@ -2,6 +2,7 @@ import { Channel, Presence, Socket } from 'phoenix';
 import Vue from 'vue';
 import { sleep } from '../../../utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
+import { Environment } from '../../../_common/environment/environment.service';
 import { EventBus } from '../../../_common/event-bus/event-bus.service';
 import { store } from '../../store';
 import { ChatMessage, ChatMessageType } from './message';
@@ -154,7 +155,7 @@ export class ChatClient {
 	}
 
 	private async connect() {
-		const host = `ws://localhost:4000/socket`;
+		const host = `${Environment.chatHost}/socket`;
 		const frontend = await getCookie('frontend');
 		const user = store.state.app.user;
 
