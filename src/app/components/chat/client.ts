@@ -306,7 +306,7 @@ export class ChatClient {
 
 			const channel = this.socket.channel(`room:${roomId}`);
 			let presences: any = {};
-			let room: ChatRoom | null = null;
+			let room: ChatRoom;
 
 			await pollRequest(
 				`Join room channel: ${roomId}`,
@@ -329,17 +329,13 @@ export class ChatClient {
 			);
 
 			channel.on('presence_state', state => {
-				if (room) {
-					presences = Presence.syncState(presences, state);
-					this.syncPresentUsers(presences, room);
-				}
+				presences = Presence.syncState(presences, state);
+				this.syncPresentUsers(presences, room);
 			});
 
 			channel.on('presence_diff', diff => {
-				if (room) {
-					presences = Presence.syncDiff(presences, diff);
-					this.syncPresentUsers(presences, room);
-				}
+				presences = Presence.syncDiff(presences, diff);
+				this.syncPresentUsers(presences, room);
 			});
 
 			channel.on('message', data => {
@@ -365,6 +361,12 @@ export class ChatClient {
 			channel.on('clear_notifications', data => {
 				if (this.isInRoom(data.room_id)) {
 					Vue.delete(this.notifications, '' + data.room_id);
+				}
+			});
+
+			channel.on('user_updated', data => {
+				if (this.room && this.isInRoom(roomId) && this.room.isGroupRoom) {
+					this.usersOnline[roomId].update(data);
 				}
 			});
 
