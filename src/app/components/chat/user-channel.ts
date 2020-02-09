@@ -18,9 +18,11 @@ export class UserChannel extends Channel {
 
 		this.setupPresence();
 
+		this.on('friend_updated', this.onFriendUpdated.bind(this));
 		this.on('friend_add', this.onFriendAdd.bind(this));
 		this.on('friend_remove', this.onFriendRemove.bind(this));
 		this.on('notification', this.onNotification.bind(this));
+		this.on('you_updated', this.onYouUpdated.bind(this));
 	}
 
 	private mapFriendPresences() {
@@ -85,6 +87,16 @@ export class UserChannel extends Channel {
 		this.client.friendsList.remove(userId);
 	}
 
+	private onFriendUpdated(data: Partial<ChatUser>) {
+		const userId = data.id;
+
+		if (userId) {
+			const friend = this.client.friendsList.get(userId);
+			data.isOnline = friend?.isOnline;
+			this.client.friendsList.update(new ChatUser(data));
+		}
+	}
+
 	private onNotification(data: Partial<ChatMessage>) {
 		const message = new ChatMessage(data);
 
@@ -100,5 +112,10 @@ export class UserChannel extends Channel {
 		}
 
 		ChatNotification.notification(message);
+	}
+
+	private onYouUpdated(data: Partial<ChatUser>) {
+		const newUser = new ChatUser(data);
+		this.client.currentUser = newUser;
 	}
 }
