@@ -38,7 +38,7 @@
 	transition: 0.25s
 
 .-img:hover
-		box-shadow: 0px 0px 3px var(--theme-bi-bg) !important
+	box-shadow: 0px 0px 3px var(--theme-bi-bg) !important
 
 .-flow-col
 	display: flex
