@@ -162,7 +162,6 @@
 	},
 	"dependencies": {
 		"axios": "0.18.0",
-		"client-voodoo": "2.5.1",
 		"fs-extra": "7.0.0",
 		"write-file-atomic": "2.3.0"
 	},
