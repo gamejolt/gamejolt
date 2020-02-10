@@ -7,7 +7,7 @@ import { BaseRouteComponent } from '../../../_common/route/route-component';
 import { AppThemeSvg } from '../../../_common/theme/svg/svg';
 import AppTranslateLangSelector from '../../../_common/translate/lang-selector/lang-selector.vue';
 import AppCoverImg from '../../components/cover-img/cover-img.vue';
-import GameImgCredits from '../../components/game-img/game-img.vue';
+import AppGameCoverCredits from '../../components/game-cover-credits/game-cover-credits.vue';
 import { store, Store } from '../../store/index';
 import './auth-content.styl';
 
@@ -27,7 +27,7 @@ export function loggedUserBlock() {
 		AppCoverImg,
 		AppTranslateLangSelector,
 		AppThemeSvg,
-		GameImgCredits,
+		AppGameCoverCredits,
 	},
 	async beforeRouteEnter(_to, _from, next) {
 		await store.dispatch('bootstrap');
