@@ -48,7 +48,8 @@
 					<router-view />
 				</div>
 			</div>
-			<game-img-credits :game="coverGame" />
+
+			<app-game-cover-credits :game="coverGame" />
 
 			<div class="auth-shell-bottom-links">
 				<a
