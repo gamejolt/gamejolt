@@ -14,14 +14,24 @@ export default class GameCoverCredits extends Vue {
 	@State coverGame: Store['coverGame'];
 
 	get gameTitle() {
-		return this.$store.state.coverGame.title;
+		return this.coverGame!.title;
 	}
 
 	get developerName() {
-		return this.$store.state.coverGame.developer.display_name;
+		return this.coverGame!.developer.display_name;
 	}
 
 	get gameUrl() {
-		return 'https://gamejolt.com/games/0/' + this.$store.state.coverGame.compatibility.game_id;
+		return `https://gamejolt.com/games/${this.coverGame!.path}/${
+			this.coverGame!.compatibility.game_id
+		}`;
+	}
+
+	get devUrl() {
+		return `https://gamejolt.com${this.coverGame!.developer.url}`;
+	}
+
+	get gameFollows() {
+		return this.coverGame!.follower_count;
 	}
 }
