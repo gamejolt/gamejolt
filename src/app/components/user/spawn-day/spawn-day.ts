@@ -31,6 +31,11 @@ export default class AppUserSpawnDay extends Vue {
 
 	get shouldShowSpawnDay() {
 		if (this.user) {
+			// Don't show if the current user blocked the other, or vice versa.
+			if (this.user.blocked_you || this.user.is_blocked) {
+				return false;
+			}
+
 			// Don't show for new users or users from the future
 			if (Date.now() - this.user.created_on < 30 * 60 * 60 * 1000) {
 				return false;
@@ -67,8 +72,7 @@ export default class AppUserSpawnDay extends Vue {
 	showComments() {
 		if (this.user) {
 			CommentModal.show({
-				resource: 'User',
-				resourceId: this.user.id,
+				model: this.user,
 				displayMode: 'shouts',
 			});
 		}

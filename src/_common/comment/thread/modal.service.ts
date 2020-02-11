@@ -1,11 +1,11 @@
 import { VueRouter } from 'vue-router/types/router';
 import { asyncComponentLoader } from '../../../utils/utils';
 import { Modal } from '../../modal/modal.service';
+import { Model } from '../../model/model.service';
 import { DisplayMode } from '../modal/modal.service';
 
 interface CommentThreadModalOptions {
-	resource: string;
-	resourceId: number;
+	model: Model;
 	commentId: number;
 	displayMode: DisplayMode;
 	autofocus?: boolean;
@@ -13,15 +13,16 @@ interface CommentThreadModalOptions {
 
 export class CommentThreadModal {
 	static async show(options: CommentThreadModalOptions) {
-		const { resource, resourceId, commentId, displayMode, autofocus } = options;
+		const { model, commentId, displayMode, autofocus } = options;
 
 		return await Modal.show<void>({
-			modalId: 'CommentThread-' + [resource, resourceId, commentId].join('-'),
+			modalId: 'CommentThread-' + [model.constructor.name, model.id, commentId].join('-'),
 			component: () =>
-				asyncComponentLoader(import(/* webpackChunkName: "CommentModal" */ './modal.vue')),
+				asyncComponentLoader(
+					import(/* webpackChunkName: "CommentThreadModal" */ './modal.vue')
+				),
 			props: {
-				resource,
-				resourceId,
+				model,
 				commentId,
 				displayMode,
 				autofocus: autofocus || false,
@@ -33,12 +34,7 @@ export class CommentThreadModal {
 	/**
 	 * Checks if the url has a comment permalink and opens the modal
 	 */
-	static async showFromPermalink(
-		router: VueRouter,
-		resource: string,
-		resourceId: number,
-		displayMode: DisplayMode
-	) {
+	static async showFromPermalink(router: VueRouter, model: Model, displayMode: DisplayMode) {
 		const hash = router.currentRoute.hash;
 		if (!hash || hash.indexOf('#comment-') !== 0) {
 			return;
@@ -49,6 +45,6 @@ export class CommentThreadModal {
 			return;
 		}
 
-		CommentThreadModal.show({ commentId: id, resource, resourceId, displayMode });
+		CommentThreadModal.show({ commentId: id, model, displayMode });
 	}
 }

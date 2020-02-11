@@ -74,9 +74,12 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 			return null;
 		}
 
-		return this.$gettextInterpolate(`${this.post.lead_snippet} - ${this.game.title} by %{ user }`, {
-			user: this.post.user.display_name,
-		});
+		return this.$gettextInterpolate(
+			`${this.post.lead_snippet} - ${this.game.title} by %{ user }`,
+			{
+				user: this.post.user.display_name,
+			}
+		);
 	}
 
 	routeCreated() {
@@ -92,7 +95,7 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 			this.post = post;
 		}
 
-		CommentThreadModal.showFromPermalink(this.$router, 'Fireside_Post', this.post.id, 'comments');
+		CommentThreadModal.showFromPermalink(this.$router, this.post, 'comments');
 
 		this.post.$viewed();
 		this.post.$expanded();

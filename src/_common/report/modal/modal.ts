@@ -1,4 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
+import AppBlockForm from '../../block/form/form.vue';
 import { Comment } from '../../comment/comment-model';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { ForumPost } from '../../forum/post/post.model';
@@ -12,11 +13,14 @@ import AppReportForm from '../form/form.vue';
 @Component({
 	components: {
 		AppReportForm,
+		AppBlockForm,
 	},
 })
 export default class AppReportModal extends BaseModal {
 	@Prop(Object)
 	resource!: Comment | User | Game | FiresidePost | ForumTopic | ForumPost;
+
+	showBlockForm = false;
 
 	get type() {
 		if (this.resource instanceof Comment) {
@@ -36,6 +40,10 @@ export default class AppReportModal extends BaseModal {
 	}
 
 	get title() {
+		if (this.showBlockForm) {
+			return this.$gettext('Block User');
+		}
+
 		switch (this.type) {
 			case 'Comment':
 				return this.$gettext('Report Comment');
@@ -53,13 +61,30 @@ export default class AppReportModal extends BaseModal {
 		return '';
 	}
 
-	onSubmitted() {
+	onSubmittedReport() {
 		Growls.info(
 			this.$gettext(
 				`Thanks for helping us make Game Jolt a place for everyone. We will take a look as soon as possible!`
 			),
 			this.$gettext('Reported')
 		);
+
+		if (this.type === 'User') {
+			this.showBlockForm = true;
+		} else {
+			this.modal.resolve();
+		}
+	}
+
+	onSubmittedBlock() {
+		if (this.resource instanceof User) {
+			Growls.info(
+				this.$gettextInterpolate(`You blocked %{ user }!`, {
+					user: this.resource.username,
+				}),
+				this.$gettext('Blocked')
+			);
+		}
 
 		this.modal.resolve();
 	}

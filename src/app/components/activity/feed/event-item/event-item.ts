@@ -33,6 +33,7 @@ import AppActivityFeedTS from '../feed';
 import AppActivityFeed from '../feed.vue';
 import { ActivityFeedItem } from '../item-service';
 import { ActivityFeedView } from '../view';
+import AppActivityFeedEventItemBlockOverlay from './block-overlay/block-overlay.vue';
 import AppActivityFeedEventItemTime from './time/time.vue';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
@@ -55,6 +56,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppPill,
 		AppContentViewer,
 		AppUserVerifiedTick,
+		AppActivityFeedEventItemBlockOverlay,
 	},
 	filters: {
 		number,

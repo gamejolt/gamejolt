@@ -6,14 +6,14 @@
 			:is-thread="isShowingReplies || isReply"
 			:is-last="isLast"
 		>
-			<div slot="bubble">
+			<div slot="bubble" v-if="user">
 				<app-user-card-hover :user="user">
 					<app-user-avatar :user="user" />
 				</app-user-card-hover>
 			</div>
 
 			<div class="timeline-list-item-details">
-				<div class="-meta clearfix">
+				<div class="-meta clearfix" v-if="user">
 					<span class="-meta-slot">
 						<slot name="tags" />
 						<slot name="meta" />

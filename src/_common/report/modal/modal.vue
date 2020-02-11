@@ -13,7 +13,8 @@
 		</div>
 
 		<div class="modal-body">
-			<app-report-form :type="type" :resource="resource" @submit="onSubmitted" />
+			<app-block-form v-if="showBlockForm" :user="resource" @submit="onSubmittedBlock" />
+			<app-report-form v-else :type="type" :resource="resource" @submit="onSubmittedReport" />
 		</div>
 	</app-modal>
 </template>

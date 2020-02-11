@@ -13,15 +13,18 @@ import AppMessageThreadAdd from '../../../message-thread/add/add.vue';
 import AppMessageThreadItem from '../../../message-thread/item/item.vue';
 import AppMessageThread from '../../../message-thread/message-thread.vue';
 import { ModalConfirm } from '../../../modal/confirm/confirm-service';
+import { Model } from '../../../model/model.service';
 import { Popper } from '../../../popper/popper.service';
 import AppPopper from '../../../popper/popper.vue';
 import { ReportModal } from '../../../report/modal/modal.service';
 import { AppState, AppStore } from '../../../store/app-store';
+import AppTimelineListItem from '../../../timeline-list/item/item.vue';
 import { AppTooltip } from '../../../tooltip/tooltip';
 import FormComment from '../../add/add.vue';
-import { Comment } from '../../comment-model';
+import { Comment, getCommentBlockReason } from '../../comment-model';
 import AppCommentContent from '../../content/content.vue';
 import AppCommentControls from '../../controls/controls.vue';
+import AppCommentWidgetCommentBlockOverlay from '../block-overlay/block-overlay.vue';
 import AppCommentWidgetTS from '../widget';
 import AppCommentWidget from '../widget.vue';
 
@@ -34,9 +37,11 @@ let CommentNum = 0;
 		AppMessageThread,
 		AppMessageThreadItem,
 		AppMessageThreadAdd,
+		AppTimelineListItem,
 		AppFadeCollapse,
 		AppPopper,
 		AppExpand,
+		AppCommentWidgetCommentBlockOverlay,
 		FormComment,
 
 		// Since it's recursive it needs to be able to resolve itself.
@@ -61,11 +66,8 @@ export default class AppCommentWidgetComment extends Vue {
 	@Prop(Comment)
 	parent?: Comment;
 
-	@Prop(String)
-	resource!: string;
-
-	@Prop(Number)
-	resourceId!: number;
+	@Prop(Model)
+	model!: Model;
 
 	@Prop(Boolean)
 	isLastInThread?: boolean;
@@ -79,6 +81,7 @@ export default class AppCommentWidgetComment extends Vue {
 	componentId = ++CommentNum;
 	isFollowPending = false;
 	isEditing = false;
+	hasBypassedBlock = false;
 
 	widget!: AppCommentWidgetTS;
 
@@ -206,6 +209,18 @@ export default class AppCommentWidgetComment extends Vue {
 		return true;
 	}
 
+	get blockReason() {
+		return getCommentBlockReason(this.comment);
+	}
+
+	get shouldBlock() {
+		if (this.hasBypassedBlock || !this.comment) {
+			return false;
+		}
+
+		return this.blockReason !== false;
+	}
+
 	startEdit() {
 		this.isEditing = true;
 		Popper.hideAll();
@@ -258,5 +273,9 @@ export default class AppCommentWidgetComment extends Vue {
 
 	report() {
 		ReportModal.show(this.comment);
+	}
+
+	onUnhideBlock() {
+		this.hasBypassedBlock = true;
 	}
 }

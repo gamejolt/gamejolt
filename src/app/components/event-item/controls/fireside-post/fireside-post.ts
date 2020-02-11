@@ -111,8 +111,7 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 
 	openComments() {
 		CommentModal.show({
-			resource: 'Fireside_Post',
-			resourceId: this.post.id,
+			model: this.post,
 			displayMode: 'comments',
 		});
 	}

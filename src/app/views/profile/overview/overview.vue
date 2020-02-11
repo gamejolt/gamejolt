@@ -87,16 +87,15 @@
 							</h4>
 
 							<app-comment-add-button
-								resource="User"
-								:resource-id="user.id"
+								v-if="shouldShowShoutAdd"
+								:model="user"
 								:placeholder="addCommentPlaceholder"
 								display-mode="shouts"
 							/>
 
 							<app-comment-overview
 								:comments="overviewComments"
-								resource="User"
-								:resource-id="user.id"
+								:model="user"
 								displayMode="shouts"
 								@reload-comments="reloadPreviewComments"
 							/>
@@ -304,8 +303,26 @@
 
 							<br />
 						</template>
-
 					</div>
+
+					<!-- User blocked -->
+					<template v-if="userBlockedYou">
+						<div class="alert">
+							<p>
+								<app-jolticon icon="notice" notice />
+								<b><translate>This user blocked you!</translate></b>
+							</p>
+							<p>
+								<translate>
+									You are unable to shout at them or comment on their posts and games.
+								</translate>
+								<br />
+								<app-link-help page="user-blocks" class="link-help">
+									<translate>More info.</translate>
+								</app-link-help>
+							</p>
+						</div>
+					</template>
 
 					<!-- Friend Requests -->
 					<template v-if="userFriendship">

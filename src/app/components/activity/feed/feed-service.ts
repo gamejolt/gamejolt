@@ -1,6 +1,7 @@
 import { RawLocation } from 'vue-router';
 import { Route } from 'vue-router/types/router';
 import { arrayRemove } from '../../../../utils/array';
+import { CommentVideo } from '../../../../_common/comment/video/video-model';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
 import { FiresidePostGotoGrowl } from '../../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -40,6 +41,32 @@ type BootstrapOptions = ActivityFeedViewOptions & ActivityFeedStateOptions;
 
 export class ActivityFeedService {
 	private static cache: ActivityFeedCachedState[] = [];
+
+	static shouldBlockPost(post: FiresidePost, route: Route) {
+		if (post.game === null) {
+			if (post.user.is_blocked) {
+				if (
+					route.name !== 'profile.overview' ||
+					route.params.username !== post.user.username
+				) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	static shouldBlockVideo(video: CommentVideo, route: Route) {
+		if (video.comment.user.is_blocked) {
+			if (
+				route.name !== 'profile.overview' ||
+				route.params.username !== video.comment.user.username
+			) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	static makeFeedUrl(route: Route, url: string) {
 		if (url.indexOf('?') === -1) {

@@ -1,6 +1,7 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
+import { BlockModal } from '../../../_common/block/modal/modal.service';
 import { Clipboard } from '../../../_common/clipboard/clipboard-service';
 import { CommentModal } from '../../../_common/comment/modal/modal.service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -21,6 +22,7 @@ import AppUserVerifiedTick from '../../../_common/user/verified-tick/verified-ti
 import { IntentService } from '../../components/intent/intent.service';
 import AppPageHeaderControls from '../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../components/page-header/page-header.vue';
+import AppUserBlockOverlay from '../../components/user/block-overlay/block-overlay.vue';
 import AppUserDogtag from '../../components/user/dogtag/dogtag.vue';
 import { Store, store } from '../../store';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './profile.store';
@@ -36,6 +38,7 @@ import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './prof
 		AppPopper,
 		AppUserFollowWidget,
 		AppUserVerifiedTick,
+		AppUserBlockOverlay,
 	},
 	directives: {
 		AppTooltip,
@@ -139,6 +142,26 @@ export default class RouteProfile extends BaseRouteComponent {
 		return 0;
 	}
 
+	get canBlock() {
+		return (
+			this.user && !this.user.is_blocked && this.app.user && this.user.id !== this.app.user.id
+		);
+	}
+
+	get shouldShowFollow() {
+		return (
+			this.app.user &&
+			this.user &&
+			this.app.user.id !== this.user.id &&
+			!this.user.is_blocked &&
+			!this.user.blocked_you
+		);
+	}
+
+	get shouldShowEdit() {
+		return this.app.user && this.user && this.app.user.id === this.user.id;
+	}
+
 	routeCreated() {
 		// This isn't needed by SSR or anything, so it's fine to call it here.
 		this.bootstrapUser(this.$route.params.username);
@@ -151,8 +174,7 @@ export default class RouteProfile extends BaseRouteComponent {
 	showComments() {
 		if (this.user) {
 			CommentModal.show({
-				resource: 'User',
-				resourceId: this.user.id,
+				model: this.user,
 				displayMode: 'shouts',
 			});
 		}
@@ -168,6 +190,19 @@ export default class RouteProfile extends BaseRouteComponent {
 	report() {
 		if (this.user) {
 			ReportModal.show(this.user);
+		}
+	}
+
+	async blockUser() {
+		if (this.user) {
+			const result = await BlockModal.show(this.user);
+
+			// Navigate away from the page after blocking.
+			if (result) {
+				this.$router.push({
+					name: 'dash.account.blocks',
+				});
+			}
 		}
 	}
 }
