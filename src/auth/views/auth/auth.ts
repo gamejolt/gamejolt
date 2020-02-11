@@ -4,6 +4,7 @@ import { Auth } from '../../../_common/auth/auth.service';
 import { Connection } from '../../../_common/connection/connection-service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { BaseRouteComponent } from '../../../_common/route/route-component';
+import { Screen } from '../../../_common/screen/screen-service';
 import { AppThemeSvg } from '../../../_common/theme/svg/svg';
 import AppTranslateLangSelector from '../../../_common/translate/lang-selector/lang-selector.vue';
 import AppCoverImg from '../../components/cover-img/cover-img.vue';
@@ -41,4 +42,5 @@ export default class RouteAuth extends BaseRouteComponent {
 
 	readonly Environment = Environment;
 	readonly Connection = Connection;
+	readonly Screen = Screen;
 }

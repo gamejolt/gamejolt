@@ -49,7 +49,9 @@
 				</div>
 			</div>
 
-			<app-game-cover-credits :game="coverGame" />
+			<div v-if="!GJ_IS_CLIENT && Screen.isDesktop" class="-game-credits">
+				<app-game-cover-credits :game="coverGame" />
+			</div>
 
 			<div class="auth-shell-bottom-links">
 				<a
