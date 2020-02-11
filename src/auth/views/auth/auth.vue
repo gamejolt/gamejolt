@@ -49,9 +49,14 @@
 				</div>
 			</div>
 
-			<div v-if="!GJ_IS_CLIENT && Screen.isDesktop" class="-game-credits">
-				<app-game-cover-credits :game="coverGame" />
-			</div>
+			<transition>
+				<div
+					v-if="!GJ_IS_CLIENT && shouldShowCoverImage && Screen.isDesktop"
+					class="-game-credits anim-fade-in-up"
+				>
+					<app-game-cover-credits :game="coverGame" />
+				</div>
+			</transition>
 
 			<div class="auth-shell-bottom-links">
 				<a
