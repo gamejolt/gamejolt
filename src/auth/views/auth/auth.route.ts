@@ -11,7 +11,7 @@ import { routeAuthLogin } from './login/login.route';
 import { routeAuthResetPassword } from './reset-password/reset-password.route';
 
 export const routeAuth: RouteConfig = {
-	path: '/',
+	path: '/login',
 	component: RouteAuth,
 	children: [
 		routeAuthLogin,
