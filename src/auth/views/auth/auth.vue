@@ -49,7 +49,10 @@
 				</div>
 			</div>
 
-			<div v-if="!GJ_IS_CLIENT && Screen.isDesktop" class="-game-credits">
+			<div
+				v-if="!GJ_IS_CLIENT && shouldShowCoverImage && Screen.isDesktop"
+				class="-game-credits anim-fade-in-up"
+			>
 				<app-game-cover-credits :game="coverGame" />
 			</div>
 
