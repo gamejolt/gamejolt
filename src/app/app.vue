@@ -1,6 +1,8 @@
 <template>
 	<div :id="id">
 		<app-common-shell>
+			<app-cookie-banner />
+
 			<app-shell>
 				<div id="content">
 					<app-error-page>
