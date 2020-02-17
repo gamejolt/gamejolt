@@ -41,7 +41,6 @@ export default class RouteDashAccountBlocks extends BaseRouteComponent {
 	isBlocking = false;
 	blocks: UserBlock[] = [];
 	totalCount = 0;
-	page = 1;
 	isLoading = true;
 	isLoadingMore = false;
 
@@ -68,10 +67,10 @@ export default class RouteDashAccountBlocks extends BaseRouteComponent {
 	}
 
 	async loadMore() {
-		this.page++;
 		this.isLoadingMore = true;
 
-		const payload = await Api.sendRequest('/web/dash/blocks/more?page=' + this.page);
+		const from = this.blocks.length > 0 ? this.blocks[this.blocks.length - 1].blocked_on : '';
+		const payload = await Api.sendRequest('/web/dash/blocks/more?from=' + from);
 		if (payload.blocks) {
 			const blocks = UserBlock.populate(payload.blocks);
 			this.blocks.push(...blocks);
@@ -84,8 +83,6 @@ export default class RouteDashAccountBlocks extends BaseRouteComponent {
 		this.isBlocking = false;
 		this.blocks = [];
 		this.totalCount++;
-		// Not 1 because the page will be incremented by loadMore.
-		this.page = 0;
 		this.loadMore();
 	}
 
@@ -103,7 +100,7 @@ export default class RouteDashAccountBlocks extends BaseRouteComponent {
 		);
 
 		if (confirm) {
-			const payload = await Api.sendRequest('/web/dash/blocks/lift/' + block.id);
+			const payload = await Api.sendRequest('/web/dash/blocks/remove/' + block.id);
 			if (payload.success) {
 				Growls.success(
 					this.$gettextInterpolate('Unblocked %{ name }!', {
@@ -115,7 +112,6 @@ export default class RouteDashAccountBlocks extends BaseRouteComponent {
 				this.blocks = [];
 				if (this.totalCount > 0) {
 					// Reload list
-					this.page = 0;
 					this.isLoading = true;
 					await this.loadMore();
 					this.isLoading = false;
