@@ -317,8 +317,8 @@
 									You are unable to shout at them or comment on their posts and games.
 								</translate>
 								<br />
-								<app-link-help page="user-blocks" class="link-help">
-									<translate>More info.</translate>
+								<app-link-help page="blocking-users" class="link-help">
+									<translate>Learn more</translate>
 								</app-link-help>
 							</p>
 						</div>

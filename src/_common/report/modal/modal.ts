@@ -20,7 +20,7 @@ export default class AppReportModal extends BaseModal {
 	@Prop(Object)
 	resource!: Comment | User | Game | FiresidePost | ForumTopic | ForumPost;
 
-	showBlockForm = false;
+	page: 'report' | 'block' = 'report';
 
 	get type() {
 		if (this.resource instanceof Comment) {
@@ -40,7 +40,7 @@ export default class AppReportModal extends BaseModal {
 	}
 
 	get title() {
-		if (this.showBlockForm) {
+		if (this.page === 'block') {
 			return this.$gettext('Block User');
 		}
 
@@ -58,6 +58,7 @@ export default class AppReportModal extends BaseModal {
 			case 'Forum_Post':
 				return this.$gettext('Report Post');
 		}
+
 		return '';
 	}
 
@@ -70,7 +71,7 @@ export default class AppReportModal extends BaseModal {
 		);
 
 		if (this.type === 'User') {
-			this.showBlockForm = true;
+			this.page = 'block';
 		} else {
 			this.modal.resolve();
 		}

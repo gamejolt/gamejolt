@@ -3,28 +3,29 @@
 		<div>
 			<p>
 				<span v-translate="{ username: user.username }">
-					Do you want to block
-					<b>@%{ username }</b>
-					?
+					Are you sure you want to block
+					<b>@%{ username }</b>?
 				</span>
 			</p>
 
 			<p>
 				<translate>
-					They won't be able to follow you, send you a friend request or reply to your posts and
+					They won't be able to follow you, send you a friend request, or reply to your posts and
 					comments.
 				</translate>
 			</p>
 
 			<p>
-				<app-link-help page="user-blocks" class="link-help">
-					<translate>More info.</translate>
+				<app-link-help page="blocking-users" class="link-help">
+					<translate>Learn more about what happens when you block a user</translate>
 				</app-link-help>
 			</p>
 		</div>
 
+		<br />
+
 		<app-form-button>
-			<translate>Block</translate>
+			<translate>Block User</translate>
 		</app-form-button>
 	</app-form>
 </template>

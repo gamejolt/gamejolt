@@ -6,12 +6,6 @@
 			</app-button>
 		</div>
 
-		<div class="modal-header">
-			<h2 class="modal-title">
-				<translate>Block User</translate>
-			</h2>
-		</div>
-
 		<div class="modal-body">
 			<app-block-form :user="user" @submit="onSubmittedBlock" />
 		</div>

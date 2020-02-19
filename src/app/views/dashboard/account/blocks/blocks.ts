@@ -1,4 +1,5 @@
 import { Component } from 'vue-property-decorator';
+import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../_common/card/list/add/add.vue';
 import AppCardList from '../../../../../_common/card/list/list.vue';
@@ -29,6 +30,7 @@ import { routeStore, RouteStore, RouteStoreModule } from '../account.store';
 })
 @RouteResolver({
 	deps: {},
+	lazy: false,
 	resolver: () => Api.sendRequest('/web/dash/blocks'),
 	resolveStore({}) {
 		routeStore.commit('setHeading', Translate.$gettext(`Blocked Users`));
@@ -41,7 +43,6 @@ export default class RouteDashAccountBlocks extends BaseRouteComponent {
 	isBlocking = false;
 	blocks: UserBlock[] = [];
 	totalCount = 0;
-	isLoading = true;
 	isLoadingMore = false;
 
 	get routeTitle() {
@@ -53,17 +54,8 @@ export default class RouteDashAccountBlocks extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		if ($payload.blocks) {
-			this.blocks = UserBlock.populate($payload.blocks);
-		}
-
-		this.totalCount = $payload.total;
-
-		if (!this.blocks || this.blocks.length === 0) {
-			this.isBlocking = true;
-		}
-
-		this.isLoading = false;
+		this.blocks = UserBlock.populate($payload.blocks);
+		this.totalCount = $payload.total || 0;
 	}
 
 	async loadMore() {
@@ -86,39 +78,31 @@ export default class RouteDashAccountBlocks extends BaseRouteComponent {
 		this.loadMore();
 	}
 
-	onClickLoadMore() {
-		this.loadMore();
-	}
-
 	async onClickUnblock(block: UserBlock) {
 		const confirm = await ModalConfirm.show(
-			this.$gettextInterpolate('Are you sure you want to unblock %{ name }?', {
+			this.$gettextInterpolate(`Are you sure you want to unblock %{ name }?`, {
 				name: block.user.display_name,
 			}),
-			this.$gettext('Unblock user'),
+			this.$gettext(`Unblock user`),
 			'yes'
 		);
-
-		if (confirm) {
-			const payload = await Api.sendRequest('/web/dash/blocks/remove/' + block.id);
-			if (payload.success) {
-				Growls.success(
-					this.$gettextInterpolate('Unblocked %{ name }!', {
-						name: block.user.display_name,
-					})
-				);
-
-				this.totalCount--;
-				this.blocks = [];
-				if (this.totalCount > 0) {
-					// Reload list
-					this.isLoading = true;
-					await this.loadMore();
-					this.isLoading = false;
-				}
-			} else {
-				Growls.error(this.$gettext('Failed to unblock user. Try again in a bit.'));
-			}
+		if (!confirm) {
+			return;
 		}
+
+		const payload = await Api.sendRequest(`/web/dash/blocks/remove/${block.id}`);
+		if (!payload.success) {
+			Growls.error(this.$gettext('Failed to unblock user. Try again in a bit.'));
+			return;
+		}
+
+		Growls.success(
+			this.$gettextInterpolate('Unblocked %{ name }!', {
+				name: block.user.display_name,
+			})
+		);
+
+		this.totalCount--;
+		arrayRemove(this.blocks, i => i.id === block.id);
 	}
 }

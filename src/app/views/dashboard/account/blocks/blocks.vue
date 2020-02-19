@@ -1,44 +1,45 @@
 <template>
-	<div>
-		<div class="page-help">
-			<translate>
-				When you block someone, that user won't be able to shout at you, comment on your posts or
-				comments, and you won't get any notifications from them.
-			</translate>
-			<app-link-help page="user-blocks" class="link-help">
-				<translate>More info.</translate>
-			</app-link-help>
+	<div class="row">
+		<div class="col-md-3 col-md-push-9 col-lg-4 col-lg-push-8">
+			<div class="page-help">
+				<translate>
+					When you block someone, that user won't be able to follow you, send you a friend request,
+					or reply to your posts and comments.
+				</translate>
+				<app-link-help page="blocking-users" class="link-help">
+					<translate>Learn more about what happens when you block a user</translate>
+				</app-link-help>
+			</div>
 		</div>
-
-		<template v-if="isLoading">
-			<app-loading />
-		</template>
-		<template v-else>
-			<app-card-list :is-adding="isBlocking">
-				<app-card-list-add :label="$gettext('Block User')" @toggle="isBlocking = !isBlocking">
-					<form-user-block @submit="onBlockSubmit" />
-				</app-card-list-add>
-			</app-card-list>
-			<div v-if="totalCount === 0">
-				<br />
-				<div class="col-md-6 col-centered">
+		<div class="col-md-9 col-md-pull-3 col-lg-8 col-lg-pull-4">
+			<template v-if="!isRouteBootstrapped || isRouteLoading">
+				<app-loading centered />
+			</template>
+			<template v-else>
+				<template v-if="totalCount === 0">
 					<p class="lead text-center">
 						<translate>You aren't blocking anyone.</translate>
 					</p>
-				</div>
-			</div>
-			<div v-else>
-				<div class="-block-list">
-					<div v-for="block of blocks" :key="block.id" class="-block-item">
-						<app-user-avatar class="-block-item-avatar" :user="block.user" />
+					<br />
+				</template>
 
-						<div class="-block-item-label">
-							<div class="-block-item-name">
+				<app-card-list :is-adding="isBlocking">
+					<app-card-list-add :label="$gettext('Block User')" @toggle="isBlocking = !isBlocking">
+						<form-user-block @submit="onBlockSubmit" />
+					</app-card-list-add>
+				</app-card-list>
+
+				<template v-if="totalCount !== 0">
+					<div v-for="block of blocks" :key="block.id" class="-item">
+						<app-user-avatar class="-item-avatar" :user="block.user" />
+
+						<div class="-item-label">
+							<div class="-item-name">
 								{{ block.user.display_name }}
 								<app-user-verified-tick :user="block.user" />
 							</div>
 
-							<div class="-block-item-username">@{{ block.user.username }}</div>
+							<div class="-item-username">@{{ block.user.username }}</div>
 
 							<small>
 								<translate>Blocked:</translate>
@@ -46,20 +47,20 @@
 							</small>
 						</div>
 
-						<app-button @click="onClickUnblock(block)">
+						<app-button class="-item-controls" @click="onClickUnblock(block)">
 							<translate>Unblock</translate>
 						</app-button>
 					</div>
-				</div>
 
-				<div class="page-cut" v-if="shouldShowLoadMore">
-					<app-button trans @click="onClickLoadMore" v-app-track-event="`profile-edit-blocks:more`">
-						<translate>Load More</translate>
-					</app-button>
-				</div>
-				<app-loading v-else-if="isLoadingMore" centered />
-			</div>
-		</template>
+					<div class="page-cut" v-if="shouldShowLoadMore">
+						<app-button trans @click="loadMore()" v-app-track-event="`profile-edit-blocks:more`">
+							<translate>Load More</translate>
+						</app-button>
+					</div>
+					<app-loading v-else-if="isLoadingMore" centered />
+				</template>
+			</template>
+		</div>
 	</div>
 </template>
 
@@ -69,41 +70,41 @@
 
 $-height = 50px
 $-avatar-height = 40px
-$-v-padding = 15px
+$-v-padding = 16px
 $-h-padding = 20px
 
-.-block
-	&-item
-		border-bottom-style: solid
-		border-bottom-color: var(--theme-bg-subtle)
-		border-bottom-width: $border-width-small
-		display: flex
-		align-items: center
-		padding: $-v-padding 0
-		height: $-height + $-v-padding * 2
+.-item
+	display: flex
+	align-items: center
+	padding: $-v-padding 0
+	overflow: hidden
+	border-bottom: $border-width-small solid var(--theme-bg-subtle)
+
+	&:last-child
+		border-bottom: 0
+
+	&-avatar
+		flex: none
+		width: $-avatar-height
+		margin-right: $-h-padding
+
+	&-controls
+		flex: none
+		margin-left: $-h-padding
+
+	&-label
+		flex: auto
 		overflow: hidden
 
-		&:last-child
-			border-bottom: 0
+	&-name, &-username
+		text-overflow()
 
-		&-avatar
-			flex: none
-			width: $-avatar-height
-			margin-right: $-h-padding
+	&-name
+		font-weight: bold
 
-		&-label
-			flex: auto
-			overflow: hidden
-
-		&-name, &-username
-			text-overflow()
-
-		&-name
-			font-weight: bold
-
-		&-username
-			theme-prop('color', 'fg-muted')
-			font-size: $font-size-small
+	&-username
+		color: var(--theme-fg-muted)
+		font-size: $font-size-small
 
 </style>
 

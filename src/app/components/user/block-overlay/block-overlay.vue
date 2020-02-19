@@ -12,11 +12,6 @@
 							<br />
 
 							<p class="-buttons">
-								<router-link :to="{ name: 'home' }">
-									<app-button primary>
-										<translate>Get me out of here</translate>
-									</app-button>
-								</router-link>
 								<app-button trans @click="proceed">
 									<translate>Proceed to Profile</translate>
 								</app-button>
@@ -27,7 +22,7 @@
 
 							<p>
 								<router-link class="link-muted" :to="{ name: 'dash.account.blocks' }">
-									<translate>Manage my block list</translate>
+									<translate>Manage blocked users</translate>
 								</router-link>
 							</p>
 						</div>
