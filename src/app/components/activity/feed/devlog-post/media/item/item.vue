@@ -7,6 +7,7 @@
 		}"
 		:ratio="mediaItem.width / mediaItem.height"
 		:max-width="mediaItem.width"
+		:max-height="400"
 		@change="onDimensionsChange"
 	>
 		<app-event-item-media-tags :gif="mediaItem.is_animated" />
@@ -16,6 +17,7 @@
 			class="-img"
 			:style="{
 				maxWidth: mediaItem.width + 'px',
+				maxHeight: mediaItem.height + 'px',
 			}"
 			:src="mediaItem.mediaserver_url"
 			alt=""
@@ -52,7 +54,8 @@
 	rounded-corners-lg()
 	change-bg('bg-offset')
 	display: block
-	width: 100%
+	height: 100%
+	width: auto
 	margin-left: auto
 	margin-right: auto
 	position: absolute

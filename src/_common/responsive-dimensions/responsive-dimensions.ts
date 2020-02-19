@@ -16,6 +16,9 @@ export class AppResponsiveDimensions extends Vue {
 	@Prop(Number)
 	maxWidth?: number;
 
+	@Prop(Number)
+	maxHeight?: number;
+
 	private resize$: Subscription | undefined;
 	private height = 'auto';
 
@@ -37,6 +40,7 @@ export class AppResponsiveDimensions extends Vue {
 			{
 				style: {
 					height: this.height,
+					maxHeight: this.maxHeight ? this.maxHeight + 'px' : undefined,
 					maxWidth: this.maxWidth ? this.maxWidth + 'px' : undefined,
 				},
 			},
@@ -48,17 +52,21 @@ export class AppResponsiveDimensions extends Vue {
 	private updateDimensions() {
 		let isFilled = true;
 		let containerWidth = Ruler.width(this.$el.parentNode as HTMLElement);
+		let containerHeight = Ruler.height(this.$el.parentNode as HTMLElement);
 
 		if (this.maxWidth && containerWidth > this.maxWidth) {
 			containerWidth = this.maxWidth;
 			isFilled = false;
 		}
 
+		if (this.maxHeight && containerHeight > this.maxHeight) {
+			containerHeight = this.maxHeight;
+			isFilled = false;
+		}
+
 		const height = containerWidth / this.ratio;
+		const width = containerHeight * this.ratio;
 		this.height = `${height}px`;
-		this.$emit(
-			'change',
-			new AppResponsiveDimensionsChangeEvent(containerWidth, height, isFilled)
-		);
+		this.$emit('change', new AppResponsiveDimensionsChangeEvent(width, height, isFilled));
 	}
 }
