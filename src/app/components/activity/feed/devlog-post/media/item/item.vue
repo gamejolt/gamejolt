@@ -7,7 +7,7 @@
 			}"
 			:ratio="mediaItem.width / mediaItem.height"
 			:max-width="mediaItem.width"
-			:max-height="400"
+			:max-height="Screen.height * 0.45"
 			@change="onDimensionsChange"
 		>
 			<app-event-item-media-tags :gif="mediaItem.is_animated" />
@@ -15,10 +15,6 @@
 			<app-img-responsive
 				v-if="!isPostHydrated || !mediaItem.is_animated"
 				class="-img"
-				:style="{
-					maxWidth: mediaItem.width + 'px',
-					maxHeight: mediaItem.height + 'px',
-				}"
 				:src="mediaItem.mediaserver_url"
 				alt=""
 				ondragstart="return false"
@@ -26,9 +22,6 @@
 			<app-video
 				v-else-if="shouldVideoPlay"
 				class="-video"
-				:style="{
-					maxWidth: mediaItem.width + 'px',
-				}"
 				:poster="mediaItem.mediaserver_url"
 				:webm="mediaItem.mediaserver_url_webm"
 				:mp4="mediaItem.mediaserver_url_mp4"
@@ -58,7 +51,6 @@
 	display: block
 	height: 100%
 	width: auto
-	// width: 100%
 	margin-left: auto
 	margin-right: auto
 	position: absolute

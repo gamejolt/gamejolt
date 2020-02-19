@@ -1,12 +1,13 @@
+import Vue from 'vue';
+import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { AppImgResponsive } from '../../../../../../../_common/img/responsive/responsive';
 import { MediaItem } from '../../../../../../../_common/media-item/media-item-model';
 import {
 	AppResponsiveDimensions,
 	AppResponsiveDimensionsChangeEvent,
 } from '../../../../../../../_common/responsive-dimensions/responsive-dimensions';
+import { Screen } from '../../../../../../../_common/screen/screen-service';
 import AppVideo from '../../../../../../../_common/video/video.vue';
-import Vue from 'vue';
-import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import AppEventItemMediaTags from '../../../../../event-item/media-tags/media-tags.vue';
 import { ActivityFeedView } from '../../../view';
 
@@ -32,6 +33,8 @@ export default class AppActivityFeedDevlogPostMediaItem extends Vue {
 	isActive!: boolean;
 
 	isFilled = false;
+
+	readonly Screen = Screen;
 
 	@Emit('bootstrap')
 	emitBootstrap() {}
