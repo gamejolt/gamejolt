@@ -1,40 +1,41 @@
 <template>
-	<app-responsive-dimensions
-		class="-item"
-		:class="{
-			'-ssr': GJ_IS_SSR,
-			'-filled': isFilled,
-		}"
-		:ratio="mediaItem.width / mediaItem.height"
-		:max-width="mediaItem.width"
-		:max-height="400"
-		@change="onDimensionsChange"
-	>
-		<app-event-item-media-tags :gif="mediaItem.is_animated" />
+	<div class="-item">
+		<app-responsive-dimensions
+			:class="{
+				'-ssr': GJ_IS_SSR,
+				'-filled': isFilled,
+			}"
+			:ratio="mediaItem.width / mediaItem.height"
+			:max-width="mediaItem.width"
+			:max-height="400"
+			@change="onDimensionsChange"
+		>
+			<app-event-item-media-tags :gif="mediaItem.is_animated" />
 
-		<app-img-responsive
-			v-if="!isPostHydrated || !mediaItem.is_animated"
-			class="-img"
-			:style="{
-				maxWidth: mediaItem.width + 'px',
-				maxHeight: mediaItem.height + 'px',
-			}"
-			:src="mediaItem.mediaserver_url"
-			alt=""
-			ondragstart="return false"
-		/>
-		<app-video
-			v-else-if="shouldVideoPlay"
-			class="-video"
-			:style="{
-				maxWidth: mediaItem.width + 'px',
-			}"
-			:poster="mediaItem.mediaserver_url"
-			:webm="mediaItem.mediaserver_url_webm"
-			:mp4="mediaItem.mediaserver_url_mp4"
-			show-loading
-		/>
-	</app-responsive-dimensions>
+			<app-img-responsive
+				v-if="!isPostHydrated || !mediaItem.is_animated"
+				class="-img"
+				:style="{
+					maxWidth: mediaItem.width + 'px',
+					maxHeight: mediaItem.height + 'px',
+				}"
+				:src="mediaItem.mediaserver_url"
+				alt=""
+				ondragstart="return false"
+			/>
+			<app-video
+				v-else-if="shouldVideoPlay"
+				class="-video"
+				:style="{
+					maxWidth: mediaItem.width + 'px',
+				}"
+				:poster="mediaItem.mediaserver_url"
+				:webm="mediaItem.mediaserver_url_webm"
+				:mp4="mediaItem.mediaserver_url_mp4"
+				show-loading
+			/>
+		</app-responsive-dimensions>
+	</div>
 </template>
 
 <style lang="stylus" scoped>
@@ -43,7 +44,8 @@
 
 .-item
 	position: relative
-	display: inline-block
+	display: inline-flex
+	justify-content: center
 	vertical-align: middle
 	width: 100%
 	max-width: 100% !important
@@ -56,6 +58,7 @@
 	display: block
 	height: 100%
 	width: auto
+	// width: 100%
 	margin-left: auto
 	margin-right: auto
 	position: absolute
