@@ -61,8 +61,7 @@
 	rounded-corners-lg()
 	change-bg('bg-offset')
 	display: block
-	height: 100%
-	width: auto
+	width: inherit
 	margin-left: auto
 	margin-right: auto
 	position: absolute
@@ -80,6 +79,7 @@
 	// show it.
 	.-ssr &
 		position: static
+		width: 100%
 </style>
 
 <script lang="ts" src="./item"></script>
