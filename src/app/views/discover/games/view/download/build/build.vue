@@ -1,5 +1,7 @@
 <template>
 	<div>
+		<a ref="download-link" class="hidden" v-if="src" :href="src"></a>
+
 		<div id="page-ad-scroll">
 			<section class="section">
 				<div :class="{ container: Screen.isDesktop }">
@@ -14,7 +16,7 @@
 									</h2>
 
 									<p class="small text-muted">
-										<translate>Preparing your download link, just a moment...</translate>
+										<translate>game.download.game.downloading_wait_message</translate>
 									</p>
 
 									<!--
@@ -22,10 +24,10 @@
 										change when we hide. We don't want to change if
 										they're trying to click something.
 									-->
-									<app-loading v-if="!src" class="-download-loading" :hide-label="true" />
-									<app-button v-else type="a" :href="src" download class="-download-button">
-										<translate>Download</translate>
-									</app-button>
+									<app-loading
+										:style="{ visibility: src ? 'hidden' : undefined }"
+										:hide-label="true"
+									/>
 
 									<div class="row">
 										<div class="col-sm-6">
@@ -166,9 +168,4 @@
 	</div>
 </template>
 
-<style lang="stylus" scoped>
-.-download-loading, .-download-button
-	height: 33px
-	margin-bottom: 15px
-</style>
 <script lang="ts" src="./build"></script>
