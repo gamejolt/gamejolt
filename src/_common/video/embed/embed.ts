@@ -12,13 +12,11 @@ export default class AppVideoEmbed extends Vue {
 	@Prop(String) videoId!: string;
 	@Prop(Number) maxVideoHeight!: number;
 	@Prop(Number) maxVideoWidth!: number;
-	@Prop({ type: Boolean, default: false })
-	autoplay!: boolean;
+	@Prop({ type: Boolean, default: false }) autoplay!: boolean;
 
 	embedUrl = '';
 	width: number | 'auto' = 'auto';
 	height: number | 'auto' = 'auto';
-	initialWidth: number | null = null;
 
 	private resize$: Subscription | undefined;
 
@@ -62,12 +60,9 @@ export default class AppVideoEmbed extends Vue {
 	async recalculateDimensions() {
 		await this.$nextTick();
 
-		if (this.initialWidth === null) {
-			this.initialWidth = Ruler.width(this.$el.getElementsByClassName(
-				'video-embed-inner'
-			)[0] as HTMLElement);
-		}
-		this.width = this.initialWidth;
+		this.width = Ruler.width(this.$el.getElementsByClassName(
+			'video-embed-inner'
+		)[0] as HTMLElement);
 
 		if (this.maxVideoWidth) {
 			this.width = Math.min(this.maxVideoWidth, this.width);
