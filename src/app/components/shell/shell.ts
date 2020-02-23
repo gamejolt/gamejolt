@@ -145,6 +145,14 @@ export default class AppShell extends Vue {
 		}
 	}
 
+	// Since the cbar takes up width from the whole screen, we want to trigger a
+	// screen "resize" event so that content can recalculate.
+	@Watch('hasCbar')
+	async onShouldShowChange() {
+		await this.$nextTick();
+		Screen._onResize();
+	}
+
 	// Keep the title up to date with notification counts.
 	@Watch('totalChatNotificationsCount')
 	@Watch('unreadActivityCount')
