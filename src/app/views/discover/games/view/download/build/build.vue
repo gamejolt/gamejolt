@@ -1,15 +1,6 @@
 <template>
 	<div>
-		<iframe
-			id="download-frame"
-			class="hidden"
-			nwdisable
-			nwfaketop
-			sandbox="allow-downloads allow-downloads-without-user-activation"
-			v-if="src"
-			:src="src"
-		>
-		</iframe>
+		<iframe id="download-frame" class="hidden" nwdisable nwfaketop v-if="src" :src="src"></iframe>
 
 		<div id="page-ad-scroll">
 			<section class="section">

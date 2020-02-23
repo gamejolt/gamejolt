@@ -1,14 +1,6 @@
 <template>
 	<div class="route-landing-client">
-		<iframe
-			nwdisable
-			nwfaketop
-			class="hidden"
-			sandbox="allow-downloads allow-downloads-without-user-activation"
-			v-if="downloadSrc"
-			:src="downloadSrc"
-		>
-		</iframe>
+		<iframe nwdisable nwfaketop class="hidden" v-if="downloadSrc" :src="downloadSrc"></iframe>
 
 		<div class="alert alert-notice sans-margin">
 			<div class="container text-center">
