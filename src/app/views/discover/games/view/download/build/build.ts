@@ -71,6 +71,10 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 	recommendedGames: Game[] = [];
 	twitterShareMessage = '';
 
+	$refs!: {
+		'download-link': HTMLAnchorElement;
+	};
+
 	readonly Screen = Screen;
 	readonly Environment = Environment;
 
@@ -114,6 +118,10 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 		]);
 
 		this.src = data[0].downloadUrl;
+
+		// Wait for next tick for the ref to exist.
+		await this.$nextTick();
+		this.$refs['download-link'].click();
 	}
 
 	private async timeout() {
