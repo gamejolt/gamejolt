@@ -144,7 +144,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	get hasCbar() {
-		return !this.isShellHidden && !Screen.isXs && this.communities.length;
+		return !this.isShellHidden && !Screen.isXs && this.communities.length && !!this.app.user;
 	}
 
 	get isLeftPaneVisible() {

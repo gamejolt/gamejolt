@@ -1,5 +1,5 @@
 <template>
-	<div id="shell-cbar" v-if="shouldShow">
+	<div id="shell-cbar">
 		<app-scroll-scroller class="-scroller" overlay hide-scrollbar>
 			<div class="-inner">
 				<transition-group name="-items">
