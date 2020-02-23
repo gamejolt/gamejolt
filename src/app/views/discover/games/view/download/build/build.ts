@@ -10,6 +10,7 @@ import { Game } from '../../../../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../../../../_common/game/thumbnail/thumbnail.vue';
 import { HistoryTick } from '../../../../../../../_common/history-tick/history-tick-service';
 import AppLoading from '../../../../../../../_common/loading/loading.vue';
+import { Navigate } from '../../../../../../../_common/navigate/navigate.service';
 import {
 	BaseRouteComponent,
 	RouteResolver,
@@ -65,7 +66,7 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 	@State
 	app!: Store['app'];
 
-	src: string | null = null;
+	started = false;
 	build: GameBuild = null as any;
 	developerGames: Game[] = [];
 	recommendedGames: Game[] = [];
@@ -85,7 +86,7 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 
 	async routeResolved($payload: any) {
 		this.build = new GameBuild($payload.build);
-		this.src = null;
+		this.started = false;
 
 		this.developerGames = Game.populate($payload.developerGames);
 		this.recommendedGames = Game.populate($payload.recommendedGames);
@@ -104,7 +105,7 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 
 		// We do it like this so that we start getting the download URL right
 		// away while still waiting for the timeout.
-		const data = await Promise.all<any>([
+		const [data] = await Promise.all<any>([
 			this.build.getDownloadUrl({
 				forceDownload: true,
 			}),
@@ -113,7 +114,8 @@ export default class RouteDiscoverGamesViewDownloadBuild extends BaseRouteCompon
 			this.timeout(),
 		]);
 
-		this.src = data[0].downloadUrl;
+		this.started = true;
+		Navigate.goto(data.downloadUrl);
 	}
 
 	private async timeout() {

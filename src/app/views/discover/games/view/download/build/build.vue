@@ -1,7 +1,5 @@
 <template>
 	<div>
-		<iframe id="download-frame" class="hidden" nwdisable nwfaketop v-if="src" :src="src"></iframe>
-
 		<div id="page-ad-scroll">
 			<section class="section">
 				<div :class="{ container: Screen.isDesktop }">
@@ -25,7 +23,7 @@
 										they're trying to click something.
 									-->
 									<app-loading
-										:style="{ visibility: src ? 'hidden' : undefined }"
+										:style="{ visibility: started ? 'hidden' : undefined }"
 										:hide-label="true"
 									/>
 
