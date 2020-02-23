@@ -1,15 +1,15 @@
-import { Component } from 'vue-property-decorator';
 import AppAdPlacement from '../../../../../../../_common/ad/placement/placement.vue';
 import AppAdWidget from '../../../../../../../_common/ad/widget/widget.vue';
 import { GameSong } from '../../../../../../../_common/game/song/song.model';
 import { HistoryTick } from '../../../../../../../_common/history-tick/history-tick-service';
-import AppLoading from '../../../../../../../_common/loading/loading.vue';
 import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
+import AppLoading from '../../../../../../../_common/loading/loading.vue';
+import { Component } from 'vue-property-decorator';
 import { RouteStore, RouteStoreModule } from '../../view.store';
 
 const DownloadDelay = 3000;
@@ -38,10 +38,6 @@ export default class RouteDiscoverGamesViewDownloadSoundtrack extends BaseRouteC
 	game!: RouteStore['game'];
 
 	src: string | null = null;
-
-	$refs!: {
-		'download-link': HTMLAnchorElement;
-	};
 
 	readonly Screen = Screen;
 
@@ -76,10 +72,6 @@ export default class RouteDiscoverGamesViewDownloadSoundtrack extends BaseRouteC
 		]);
 
 		this.src = data[0].downloadUrl;
-
-		// Wait for next tick for the ref to exist.
-		await this.$nextTick();
-		this.$refs['download-link'].click();
 	}
 
 	private async timeout() {

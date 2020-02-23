@@ -1,6 +1,15 @@
 <template>
 	<div>
-		<a ref="download-link" class="hidden" v-if="src" :href="src"></a>
+		<iframe
+			id="download-frame"
+			class="hidden"
+			nwdisable
+			nwfaketop
+			sandbox="allow-downloads allow-downloads-without-user-activation"
+			v-if="src"
+			:src="src"
+		>
+		</iframe>
 
 		<div id="page-ad-scroll">
 			<app-ad-placement />
