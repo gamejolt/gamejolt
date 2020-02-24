@@ -3,9 +3,13 @@
 
 $-main-max-width = 650px
 
--main-max-width($-container-width, $-num-columns)
-	$-col-width = $-container-width / 12 * 3
-	max-width: 'calc(100% - %s)' % (($-col-width + $grid-gutter-width) * $-num-columns)
+// Because flexbox allows the columns to flexibly size, we need to do a manual
+// cut-off by setting the width forcefully. This calc line basically tries to
+// find the correct width for the main content column and should work at any
+// screen width since it's using calc() with the percentage.
+-main-max-width($-num-columns)
+	width: s('calc(100% - calc(100% / 12 * 3 * %s) - %s)', $-num-columns, ($grid-gutter-width * $-num-columns))
+	max-width: $-main-max-width
 
 // On xs the content stacks, we shove "main" to the bottom.
 .-row
@@ -43,7 +47,7 @@ $-main-max-width = 650px
 		order: 0
 
 	.-main
-		-main-max-width($container-lg, 1)
+		-main-max-width(1)
 		flex: 2 0
 		order: 1
 
@@ -55,8 +59,4 @@ $-main-max-width = 650px
 
 @media $media-lg
 	.-main
-		-main-max-width($container-lg, 2)
-
-@media $media-xl
-	.-main
-		-main-max-width($container-xl, 2)
+		-main-max-width(2)
