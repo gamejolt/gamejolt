@@ -5,8 +5,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~common/jolticons/jolticons'
 @require '../common'
+@require '~common/jolticons/jolticons'
 
 .-item
 	position: relative

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { findRequiredVueParent } from '../../../../utils/vue';
+import { findRequiredVueParent, propOptional, propRequired } from '../../../../utils/vue';
 import { AppAuthRequired } from '../../../auth/auth-required-directive';
 import { Clipboard } from '../../../clipboard/clipboard-service';
 import { Collaborator } from '../../../collaborator/collaborator.model';
@@ -24,7 +24,7 @@ import FormComment from '../../add/add.vue';
 import { Comment, getCommentBlockReason } from '../../comment-model';
 import AppCommentContent from '../../content/content.vue';
 import AppCommentControls from '../../controls/controls.vue';
-import AppCommentWidgetCommentBlockOverlay from '../block-overlay/block-overlay.vue';
+import AppCommentWidgetCommentBlocked from '../comment-blocked/comment-blocked.vue';
 import AppCommentWidgetTS from '../widget';
 import AppCommentWidget from '../widget.vue';
 
@@ -41,7 +41,7 @@ let CommentNum = 0;
 		AppFadeCollapse,
 		AppPopper,
 		AppExpand,
-		AppCommentWidgetCommentBlockOverlay,
+		AppCommentWidgetCommentBlocked,
 		FormComment,
 
 		// Since it's recursive it needs to be able to resolve itself.
@@ -57,26 +57,14 @@ let CommentNum = 0;
 	},
 })
 export default class AppCommentWidgetComment extends Vue {
-	@Prop(Comment)
-	comment!: Comment;
+	@Prop(propRequired(Model)) model!: Model;
+	@Prop(propRequired(Comment)) comment!: Comment;
+	@Prop(propOptional(Array, [])) children!: Comment[];
+	@Prop(propOptional(Comment)) parent?: Comment;
+	@Prop(propOptional(Boolean, false)) isLastInThread!: boolean;
+	@Prop(propOptional(Boolean, false)) showChildren!: boolean;
 
-	@Prop(Array)
-	children?: Comment[];
-
-	@Prop(Comment)
-	parent?: Comment;
-
-	@Prop(Model)
-	model!: Model;
-
-	@Prop(Boolean)
-	isLastInThread?: boolean;
-
-	@Prop(Boolean)
-	showChildren?: boolean;
-
-	@AppState
-	user!: AppStore['user'];
+	@AppState user!: AppStore['user'];
 
 	componentId = ++CommentNum;
 	isFollowPending = false;
@@ -190,7 +178,7 @@ export default class AppCommentWidgetComment extends Vue {
 	}
 
 	get shouldShowReplies() {
-		return this.children && this.children.length > 0 && this.showChildren;
+		return this.children.length > 0 && this.showChildren;
 	}
 
 	get canFollow() {

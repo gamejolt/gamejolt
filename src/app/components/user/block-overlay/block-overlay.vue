@@ -1,11 +1,11 @@
 <template>
 	<div v-if="user">
-		<section class="section fill-darker" v-if="shouldBlock">
+		<section v-if="shouldBlock" key="blocked" class="section fill-darker">
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
 						<div class="user-block">
-							<app-jolticon icon="friend-remove-2" big notice />
+							<app-jolticon class="jolticon-4x" icon="friend-remove-2" notice />
 
 							<h4><translate>You blocked this user.</translate></h4>
 							<p><translate>Are you sure you want to view their profile?</translate></p>
@@ -30,8 +30,7 @@
 				</div>
 			</div>
 		</section>
-
-		<div v-else>
+		<div v-else key="allowed">
 			<slot />
 		</div>
 	</div>

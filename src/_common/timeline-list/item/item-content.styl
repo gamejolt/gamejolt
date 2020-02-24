@@ -3,7 +3,8 @@
 
 // Most of this styling needs to be done globally.
 .timeline-list
-	$border-size = 2px
+	$-connector-width = 2px
+	$-padding-left = $timeline-list-avatar-margin + $timeline-list-icon-size
 
 	&-item
 		position: relative
@@ -25,35 +26,20 @@
 			border-style: solid
 			z-index: 1
 
-			/**
-			 * Active Item
-			 */
-			&.active, &.new
-				theme-prop('border-color', 'notice')
+			.timeline-list-item.active, .timeline-list-item.new
+				&
+					theme-prop('border-color', 'notice')
 
-				.timeline-list-item-bubble-inner
-					height: 100%
-					change-bg('bg')
-					padding: 2px
-					img-circle()
+					.timeline-list-item-bubble-inner
+						height: 100%
+						change-bg('bg')
+						padding: 2px
+						img-circle()
 
 		&-main
-			$-padding-left = $timeline-list-avatar-margin + $timeline-list-icon-size
 			clearfix()
 			padding-bottom: $line-height-computed
-			padding-left: $border-size + $-padding-left
-
-			&.is-thread
-				theme-prop('border-left-color', 'bg-subtle')
-				border-left-width: $border-size
-				border-left-style: solid
-				margin-left: ($timeline-list-icon-size / 2)
-				padding-left: ($timeline-list-icon-size / 2) + $timeline-list-avatar-margin
-
-				&.is-last
-					border-left: 0
-					margin-left: 0
-					padding-left: $border-size + $-padding-left
+			padding-left: $-padding-left
 
 		&-meta
 			theme-prop('color', 'fg-muted')
@@ -100,7 +86,7 @@
 			theme-prop('border-left-color', 'bg-subtle')
 			margin-left: ($timeline-list-icon-size / 2)
 			padding-bottom: $line-height-computed
-			border-left-width: $border-size
+			border-left-width: $-connector-width
 			border-left-style: solid
 
 			section
@@ -122,10 +108,25 @@
 				position: relative
 				left: -5px
 
-.timeline-list-item-split
-	full-bleed-xs()
-	theme-prop('border-top-color', 'bg-subtle')
-	border-top-width: $border-width-small
-	border-top-style: solid
-	margin-top: 0
-	margin-bottom: $line-height-computed
+		&-split
+			full-bleed-xs()
+			theme-prop('border-top-color', 'bg-subtle')
+			border-top-width: $border-width-small
+			border-top-style: solid
+			margin-top: 0
+			margin-bottom: $line-height-computed
+
+		&-connector
+			display: none
+			position: absolute
+			top: 0
+			bottom: 0
+			left: ($timeline-list-icon-size / 2) - ($-connector-width / 2)
+			width: $-connector-width
+			background-color: var(--theme-bg-subtle)
+
+			.timeline-list-item.is-thread &
+				display: block
+
+			.timeline-list-item.is-last &
+				display: none

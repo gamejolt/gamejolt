@@ -21,7 +21,9 @@ export async function fetchComment(id: number) {
 	}
 }
 
-export function getCommentBlockReason(comment: Comment) {
+export type CommentBlockReason = 'commenter-blocked' | 'mentioned-blocked-user';
+
+export function getCommentBlockReason(comment: Comment): CommentBlockReason | false {
 	if (comment.user.is_blocked) {
 		return 'commenter-blocked';
 	}
