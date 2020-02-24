@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div v-if="user">
 		<!--
 			If this user is banned, we show very little.
 		-->
@@ -160,7 +160,7 @@
 										{{ twitterAccount.name }}
 									</app-link-external>
 								</div>
-								<div v-if="tumblrAccount">
+								<div v-if="tumblrAccount && tumblrAccount.tumblrSelectedBlog">
 									<app-link-external
 										class="link-unstyled"
 										:href="tumblrAccount.tumblrSelectedBlog.url"
@@ -310,16 +310,10 @@
 						<div class="alert">
 							<p>
 								<app-jolticon icon="notice" notice />
-								<b><translate>This user blocked you!</translate></b>
-							</p>
-							<p>
+								<b><translate>This user blocked you.</translate></b>
 								<translate>
 									You are unable to shout at them or comment on their posts and games.
 								</translate>
-								<br />
-								<app-link-help page="blocking-users" class="link-help">
-									<translate>Learn more</translate>
-								</app-link-help>
 							</p>
 						</div>
 					</template>

@@ -42,32 +42,6 @@ type BootstrapOptions = ActivityFeedViewOptions & ActivityFeedStateOptions;
 export class ActivityFeedService {
 	private static cache: ActivityFeedCachedState[] = [];
 
-	static shouldBlockPost(post: FiresidePost, route: Route) {
-		if (post.game === null) {
-			if (post.user.is_blocked) {
-				if (
-					route.name !== 'profile.overview' ||
-					route.params.username !== post.user.username
-				) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	static shouldBlockVideo(video: CommentVideo, route: Route) {
-		if (video.comment.user.is_blocked) {
-			if (
-				route.name !== 'profile.overview' ||
-				route.params.username !== video.comment.user.username
-			) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	static makeFeedUrl(route: Route, url: string) {
 		if (url.indexOf('?') === -1) {
 			url += '?ignore';
@@ -320,4 +294,27 @@ export class ActivityFeedService {
 		const state = this.makeCachedState(populatedItems, options);
 		return state.view;
 	}
+}
+
+export function feedShouldBlockPost(post: FiresidePost, route: Route) {
+	if (post.game === null && post.user.is_blocked) {
+		// We need to show if they force viewed the profile.
+		if (route.name !== 'profile.overview' || route.params.username !== post.user.username) {
+			return true;
+		}
+	}
+	return false;
+}
+
+export function feedShouldBlockVideo(video: CommentVideo, route: Route) {
+	if (video.comment.user.is_blocked) {
+		// We need to show if they force viewed the profile.
+		if (
+			route.name !== 'profile.overview' ||
+			route.params.username !== video.comment.user.username
+		) {
+			return true;
+		}
+	}
+	return false;
 }
