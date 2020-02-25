@@ -21,6 +21,32 @@
 			</app-form-control-errors>
 		</app-form-group>
 
+		<app-form-group
+			name="removeShouts"
+			:label="$gettext(`Remove the user's shouts from your profile?`)"
+		>
+			<app-form-control-toggle class="pull-right" />
+			<p class="help-block">
+				<translate>
+					Once the user is blocked, all of their shouts on your profile and responses to shouts on
+					your profile will be removed.
+				</translate>
+			</p>
+		</app-form-group>
+
+		<app-form-group
+			name="removePostComments"
+			:label="$gettext(`Remove the user's comments from your posts?`)"
+		>
+			<app-form-control-toggle class="pull-right" />
+			<p class="help-block">
+				<translate>
+					Once the user is blocked, all of their comments on your posts (including responses) will
+					be removed.
+				</translate>
+			</p>
+		</app-form-group>
+
 		<app-form-button>
 			<translate>Block</translate>
 		</app-form-button>
