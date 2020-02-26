@@ -6,8 +6,7 @@ import { Growls } from '../../../../../_common/growls/growls.service';
 
 type BlockData = {
 	username: string;
-	removeShouts: boolean;
-	removePostComments: boolean;
+	removeComments: boolean;
 };
 
 @Component({
@@ -21,7 +20,7 @@ export default class FormUserBlock extends BaseForm<BlockData> implements FormOn
 	async onSubmit() {
 		const response = await Api.sendRequest(`/web/dash/blocks/add`, this.formModel);
 		if (response.success) {
-			if (this.formModel.removeShouts || this.formModel.removePostComments) {
+			if (this.formModel.removeComments) {
 				Growls.info({
 					message: this.$gettextInterpolate(
 						'You blocked %{ user }! It might take a few moments for their comments/shouts to disappear',
