@@ -22,6 +22,9 @@ install:
   # InnoSetup 5.x Unicode
   # MinGW 32-bit
 
+  - type c:\users\appveyor\.ssh\id_rsa_test
+  - git clone --branch v2.2.8-beta.1 git@github.com:gamejolt/joltron
+
   # Enable VS2015 toolset
   - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
 
