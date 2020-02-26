@@ -393,7 +393,7 @@ module.exports = config => {
 			let gitClone =
 				'git clone --branch ' +
 				joltronVersion +
-				' https://github.com/gamejolt/joltron ' +
+				' git@github.com:gamejolt/joltron ' +
 				joltronRepoDir;
 
 			// Do status first, if it fails it means the repo doesn't exist, so try cloning.
