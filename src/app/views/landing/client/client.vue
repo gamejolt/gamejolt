@@ -1,7 +1,5 @@
 <template>
 	<div class="route-landing-client">
-		<iframe nwdisable nwfaketop class="hidden" v-if="downloadSrc" :src="downloadSrc"></iframe>
-
 		<div class="alert alert-notice sans-margin">
 			<div class="container text-center">
 				<p>
