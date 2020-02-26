@@ -22,7 +22,17 @@ install:
   # InnoSetup 5.x Unicode
   # MinGW 32-bit
 
-  - type c:\users\appveyor\.ssh\id_rsa_test
+  - dir C:\Users
+  - dir C:\Users\appveyor
+  - dir C:\Users\appveyor\.ssh
+
+  - ps: |
+    $fileContent = "-----BEGIN RSA PRIVATE KEY-----`n"
+    $fileContent += "test"
+    $fileContent += "`n-----END RSA PRIVATE KEY-----`n"
+    Set-Content C:\Users\appveyor\.ssh\id_rsa_test $fileContent
+
+  - type C:\Users\appveyor\.ssh\id_rsa_test
   - git clone --branch v2.2.8-beta.1 git@github.com:gamejolt/joltron
 
   # Enable VS2015 toolset
