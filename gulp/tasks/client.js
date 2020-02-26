@@ -396,14 +396,6 @@ module.exports = config => {
 				' https://github.com/gamejolt/joltron ' +
 				joltronRepoDir;
 
-			if (config.platform === 'osx') {
-				// Git lfs checks out files using ssh deploy keys,
-				// but fails with the ssh key circleci injects on osx.
-				// Setting HOME to /dev/null makes it not find the ssh keys
-				// and do https as intended.
-				gitClone = 'HOME=/dev/null ' + gitClone;
-			}
-
 			// Do status first, if it fails it means the repo doesn't exist, so try cloning.
 			const func = shell.task([gitStatus + ' || ' + gitClone]);
 
