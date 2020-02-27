@@ -18,13 +18,13 @@
 			}"
 		>
 			<app-community-thumbnail-img class="-thumb" :community="community" />
+			<div v-if="featureCount > 0" class="-feature-counter">
+				{{ featureCountText }}
+			</div>
 		</div>
 
 		<div class="-label">
 			{{ community.name }}
-		</div>
-		<div v-if="featureCount > 0" class="-feature-counter">
-			{{ featureCountText }}
 		</div>
 	</router-link>
 </template>

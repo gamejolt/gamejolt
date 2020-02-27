@@ -42,7 +42,7 @@
 					:translate-params="{ count: number(game.follower_count || 0) }"
 					translate-plural="%{ count } followers"
 				>
-					%{ count } followers
+					%{ count } follower
 				</translate>
 			</div>
 		</div>

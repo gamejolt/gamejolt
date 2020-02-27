@@ -11,7 +11,7 @@
 		</p>
 		<div class="text-right">
 			<app-button @click="close()">
-				<translate>Got it!</translate>
+				<translate>Okay!</translate>
 			</app-button>
 		</div>
 	</div>
@@ -21,9 +21,12 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+$-width = 450px
+
 .cookie-banner
 	rounded-corners-lg()
 	position: fixed
+	border:  $border-width-base solid var(--theme-bg-subtle)
 	box-shadow: 0 5px 15px rgba($black, 0.5)
 	z-index: 10000
 	bottom: ($grid-gutter-width-xs / 2)
@@ -33,10 +36,10 @@
 
 	@media $media-sm-up
 		bottom: ($grid-gutter-width / 2)
-		right: ($grid-gutter-width / 2)
 		padding: ($grid-gutter-width / 2)
-		left: auto
-		width: 400px
+		left: 50%
+		margin-left: -($-width / 2)
+		width: $-width
 </style>
 
 <script lang="ts" src="./banner"></script>

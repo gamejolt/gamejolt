@@ -51,7 +51,7 @@
 		border-top-right-radius: $border-radius-large
 
 .-comment
-	padding: 10px
+	padding: 12px 8px
 
 	&:hover
 		change-bg('bg-offset')
@@ -59,13 +59,14 @@
 
 .-byline
 	clearfix()
-	margin-bottom: 10px
+	text-overflow()
+	margin-bottom: 12px
 	line-height: 30px
 
 .-avatar
 	float: left
-	margin-right: 10px
-	width: 30px
+	margin-right: 8px
+	width: 28px
 
 .-content
 	font-size: $font-size-small

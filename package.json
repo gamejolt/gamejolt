@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "0.41.1",
+	"version": "0.41.2",
 	"scripts": {
 		"postinstall": "yarn run translations",
 		"start": "gulp watch",
@@ -162,7 +162,7 @@
 	},
 	"dependencies": {
 		"axios": "0.18.0",
-		"client-voodoo": "2.5.1",
+		"client-voodoo": "2.5.3",
 		"fs-extra": "7.0.0",
 		"write-file-atomic": "2.3.0"
 	},

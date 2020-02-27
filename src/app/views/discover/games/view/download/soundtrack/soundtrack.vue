@@ -1,7 +1,5 @@
 <template>
 	<div>
-		<iframe id="download-frame" class="hidden" nwdisable nwfaketop v-if="src" :src="src"></iframe>
-
 		<div id="page-ad-scroll">
 			<app-ad-placement />
 
@@ -24,7 +22,10 @@
 								change when we hide. We don't want to change if
 								they're trying to click something.
 							-->
-							<app-loading :style="{ visibility: src ? 'hidden' : undefined }" :hide-label="true" />
+							<app-loading
+								:style="{ visibility: started ? 'hidden' : undefined }"
+								:hide-label="true"
+							/>
 						</div>
 
 						<!--
