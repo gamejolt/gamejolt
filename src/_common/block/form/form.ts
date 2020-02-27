@@ -5,16 +5,16 @@ import AppFormControlToggle from '../../form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnSubmit } from '../../form-vue/form.service';
 import { User } from '../../user/user.model';
 
-type BlockData = {
+interface FormModel {
 	removeComments: boolean;
-};
+}
 
 @Component({
 	components: {
 		AppFormControlToggle,
 	},
 })
-export default class AppBlockForm extends BaseForm<BlockData> implements FormOnSubmit {
+export default class AppBlockForm extends BaseForm<FormModel> implements FormOnSubmit {
 	@Prop(User)
 	user!: User;
 

@@ -1,24 +1,32 @@
 import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
-import { BaseForm, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnSubmit,
+	FormOnSubmitSuccess,
+} from '../../../../../_common/form-vue/form.service';
 import { Growls } from '../../../../../_common/growls/growls.service';
 
-type BlockData = {
+interface FormModel {
 	username: string;
 	removeComments: boolean;
-};
+}
 
 @Component({
 	components: {
 		AppFormControlToggle,
 	},
 })
-export default class FormUserBlock extends BaseForm<BlockData> implements FormOnSubmit {
+export default class FormUserBlock extends BaseForm<FormModel>
+	implements FormOnSubmit, FormOnSubmitSuccess {
 	resetOnSubmit = true;
 
-	async onSubmit() {
-		const response = await Api.sendRequest(`/web/dash/blocks/add`, this.formModel);
+	onSubmit() {
+		return Api.sendRequest(`/web/dash/blocks/add`, this.formModel);
+	}
+
+	onSubmitSuccess(response: any) {
 		if (response.success) {
 			if (this.formModel.removeComments) {
 				Growls.info({
@@ -37,7 +45,5 @@ export default class FormUserBlock extends BaseForm<BlockData> implements FormOn
 				});
 			}
 		}
-
-		return response;
 	}
 }
