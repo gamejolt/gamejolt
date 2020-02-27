@@ -133,8 +133,8 @@ export default class AppCommentWidget extends Vue {
 		return this.store ? this.store.childComments : [];
 	}
 
-	get commentsCount() {
-		return this.store ? this.store.count : 0;
+	get totalCommentsCount() {
+		return this.store ? this.store.totalCount : 0;
 	}
 
 	get totalParentCount() {
@@ -186,7 +186,7 @@ export default class AppCommentWidget extends Vue {
 			return false;
 		}
 
-		return this.comments.length > 0;
+		return this.totalCommentsCount > 0;
 	}
 
 	async created() {
@@ -231,9 +231,7 @@ export default class AppCommentWidget extends Vue {
 			const resource = this.resource;
 			const resourceId = this.resourceId;
 
-			if (!this.store) {
-				this.store = await this.lockCommentStore({ resource, resourceId });
-			}
+			this.store = await this.lockCommentStore({ resource, resourceId });
 
 			let payload: any;
 			if (this.isThreadView && this.threadCommentId) {
