@@ -29,7 +29,7 @@ export default class AppCommentModal extends BaseModal {
 
 	get commentsCount() {
 		const store = this.getCommentStore(this.resource, this.resourceId);
-		return store ? store.count : 0;
+		return store ? store.totalCount : 0;
 	}
 
 	get autofocusAdd() {
