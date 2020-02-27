@@ -31,6 +31,7 @@ export type CommentMutations = {
 };
 
 export class CommentStoreModel {
+	totalCount = 0;
 	count = 0;
 	parentCount = 0;
 	comments: Comment[] = [];
@@ -38,6 +39,7 @@ export class CommentStoreModel {
 	sort = Comment.SORT_HOT;
 	// This flag gets set for every change (add/remove/update), that prompts the overview component owner to update the commment info
 	overviewNeedsRefresh = false;
+	resetSort = false;
 
 	constructor(public resource: string, public resourceId: number) {}
 
@@ -72,7 +74,7 @@ export class CommentStoreModel {
 		this.comments = [];
 		this.count = 0;
 		this.parentCount = 0;
-		this.locks = 0;
+		--this.locks;
 	}
 
 	afterModification() {
@@ -120,6 +122,11 @@ export class CommentStore extends VuexStore<CommentStore, CommentActions, Commen
 	async fetchComments(payload: CommentActions['comment/fetchComments']) {
 		const { store, page } = payload;
 		let response: any;
+
+		if (store.resetSort) {
+			store.sort = Comment.SORT_HOT;
+			store.resetSort = false;
+		}
 
 		// 'new' and 'you' sort by last timestamp using scroll
 		if (store.sort === Comment.SORT_NEW || store.sort === Comment.SORT_YOU) {
@@ -198,6 +205,10 @@ export class CommentStore extends VuexStore<CommentStore, CommentActions, Commen
 	setCommentCount(payload: CommentMutations['comment/setCommentCount']) {
 		const { store, count } = payload;
 		store.count = count;
+
+		if (count) {
+			store.totalCount = count;
+		}
 	}
 
 	@VuexMutation
@@ -287,6 +298,10 @@ export class CommentStore extends VuexStore<CommentStore, CommentActions, Commen
 				`Tried releasing a comment store that doesn't exist: ${storeId} - most likely it was released twice`
 			);
 			return;
+		}
+
+		if (this.stores[storeId].sort !== Comment.SORT_HOT) {
+			this.stores[storeId].resetSort = true;
 		}
 
 		--this.stores[storeId].locks;
