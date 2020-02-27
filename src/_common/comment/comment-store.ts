@@ -206,7 +206,7 @@ export class CommentStore extends VuexStore<CommentStore, CommentActions, Commen
 		const { store, count } = payload;
 		store.count = count;
 
-		if (count) {
+		if (count && store.sort !== Comment.SORT_YOU) {
 			store.totalCount = count;
 		}
 	}
