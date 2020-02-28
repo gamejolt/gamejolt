@@ -29,7 +29,7 @@ install:
       Set-Content C:\Users\appveyor\.ssh\id_rsa $fileContent
 
   - git config --list
-  - ssh-agent -s
+  - ps: Start-Service ssh-agent
   - ssh-add -l
   - ssh-add
   - git clone --branch v2.2.8-beta.1 git@github.com:gamejolt/joltron
