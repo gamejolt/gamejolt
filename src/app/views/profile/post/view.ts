@@ -1,6 +1,7 @@
 import { Component } from 'vue-property-decorator';
 import { CreateElement } from 'vue/types/vue';
 import { enforceLocation, LocationRedirect } from '../../../../utils/router';
+import { Ads } from '../../../../_common/ad/ads.service';
 import { Api } from '../../../../_common/api/api.service';
 import { CommentThreadModal } from '../../../../_common/comment/thread/modal.service';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -68,6 +69,7 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 	user!: RouteStore['user'];
 
 	post: FiresidePost | null = null;
+	private adDisabler: unknown | null = null;
 
 	get routeTitle() {
 		if (!this.post) {
@@ -95,7 +97,12 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 			this.post = post;
 		}
 
-		CommentThreadModal.showFromPermalink(this.$router, 'Fireside_Post', this.post.id, 'comments');
+		CommentThreadModal.showFromPermalink(
+			this.$router,
+			'Fireside_Post',
+			this.post.id,
+			'comments'
+		);
 
 		this.post.$viewed();
 		this.post.$expanded();
@@ -103,6 +110,17 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;
+
+		// The page settings for ads will be set by the user profile.
+		// Even if the user is not ad disabled, we need to be able to disable
+		// ads on a post by post basis.
+		Ads.deregisterDisabler(this.adDisabler);
+		this.adDisabler = $payload.adDisabler ? Ads.registerDisabler(this.post) : null;
+	}
+
+	routeDestroyed() {
+		Ads.deregisterDisabler(this.adDisabler);
+		this.adDisabler = null;
 	}
 
 	render(h: CreateElement) {

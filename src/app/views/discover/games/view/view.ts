@@ -1,6 +1,6 @@
-import { Component } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-property-decorator';
 import { enforceLocation } from '../../../../../utils/router';
-import { Ads, AdSettingsContainer } from '../../../../../_common/ad/ads.service';
+import { Ads } from '../../../../../_common/ad/ads.service';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../_common/api/api.service';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
@@ -128,6 +128,9 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	@RouteStoreModule.State
 	installableBuilds!: RouteStore['installableBuilds'];
 
+	@RouteStoreModule.State
+	adsDisabled!: RouteStore['adsDisabled'];
+
 	@RouteStoreModule.Mutation
 	bootstrapGame!: RouteStore['bootstrapGame'];
 
@@ -170,6 +173,8 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		[Collaborator.ROLE_COMMUNITY_MANAGER]: this.$gettext('a community manager'),
 		[Collaborator.ROLE_DEVELOPER]: this.$gettext('a developer'),
 	};
+
+	private adDisabler: unknown | null = null;
 
 	get roleName() {
 		if (!this.collaboratorInvite) {
@@ -289,19 +294,22 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		Scroll.to('game-releases');
 	}
 
+	@Watch('adsDisabled')
+	@Watch('game._should_show_ads')
 	private _setAdSettings() {
 		if (!this.game) {
 			return;
 		}
 
-		const settings = new AdSettingsContainer();
-		settings.resource = this.game;
-		settings.isPageDisabled = !this.game._should_show_ads;
-
-		Ads.setPageSettings(settings);
+		Ads.deregisterDisabler(this.adDisabler);
+		this.adDisabler =
+			this.adsDisabled || !this.game._should_show_ads
+				? Ads.registerDisabler(this.game)
+				: null;
 	}
 
 	private _releaseAdSettings() {
-		Ads.releasePageSettings();
+		Ads.deregisterDisabler(this.adDisabler);
+		this.adDisabler = null;
 	}
 }

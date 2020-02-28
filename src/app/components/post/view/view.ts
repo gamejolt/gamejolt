@@ -64,8 +64,8 @@ export default class AppPostView extends Vue {
 	}
 
 	get shouldShowAds() {
-		// Only show ads for game posts. The game will set the page settings for
-		// whether or not it should show an ad for this game page, so no need to
+		// Only show ads for game posts. The containing route/component will set the page settings for
+		// whether or not it should show an ad for its page, so no need to
 		// do that here.
 		return this.post && this.post.game;
 	}

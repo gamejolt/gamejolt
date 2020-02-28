@@ -1,5 +1,6 @@
-import { Component } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { Ads } from '../../../_common/ad/ads.service';
 import { Api } from '../../../_common/api/api.service';
 import { Clipboard } from '../../../_common/clipboard/clipboard-service';
 import { CommentModal } from '../../../_common/comment/modal/modal.service';
@@ -106,6 +107,9 @@ export default class RouteProfile extends BaseRouteComponent {
 	@RouteStoreModule.State
 	userFriendship!: RouteStore['userFriendship'];
 
+	@RouteStoreModule.State
+	adsDisabled!: RouteStore['adsDisabled'];
+
 	@RouteStoreModule.Mutation
 	bootstrapUser!: RouteStore['bootstrapUser'];
 
@@ -118,6 +122,8 @@ export default class RouteProfile extends BaseRouteComponent {
 	readonly UserFriendship = UserFriendship;
 	readonly Environment = Environment;
 	readonly Screen = Screen;
+
+	private adDisabler: unknown | null = null;
 
 	get shouldShowFullCover() {
 		return Screen.isXs || this.$route.name !== 'profile.post.view';
@@ -145,7 +151,16 @@ export default class RouteProfile extends BaseRouteComponent {
 	}
 
 	routeDestroyed() {
+		Ads.deregisterDisabler(this.adDisabler);
+		this.adDisabler = null;
+
 		this.setPageTheme(null);
+	}
+
+	@Watch('adsDisabled', { immediate: true })
+	onAdsDisabledChanged() {
+		Ads.deregisterDisabler(this.adDisabler);
+		this.adDisabler = this.adsDisabled ? Ads.registerDisabler(this.user || undefined) : null;
 	}
 
 	showComments() {

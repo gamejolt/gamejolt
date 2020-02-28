@@ -2,6 +2,7 @@ import { Component } from 'vue-property-decorator';
 import { arrayShuffle } from '../../../../../utils/array';
 import { LocationRedirect } from '../../../../../utils/router';
 import { titleCase } from '../../../../../utils/string';
+import { Ads } from '../../../../../_common/ad/ads.service';
 import { Api } from '../../../../../_common/api/api.service';
 import { date } from '../../../../../_common/filters/date';
 import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
@@ -47,6 +48,8 @@ import { TagsInfo } from '../../../../components/tag/tags-info.service';
 export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	filtering: GameFilteringContainer | null = null;
 	listing: GameListingContainer | null = null;
+
+	private adDisabler: unknown | null = null;
 
 	get section() {
 		return this.$route.params.section && this.$route.params.section.toLowerCase();
@@ -259,26 +262,33 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		if (this.listing && $payload) {
+		if (!$payload) {
+			return;
+		}
+
+		if (this.listing) {
 			this.listing.processPayload(this.$route, $payload);
 			this.process();
 		}
 
-		if ($payload) {
-			Meta.description = this.routeMeta;
+		Meta.description = this.routeMeta;
 
-			// We use the listDescription and not Meta.description for fb and twitter because they are shorter and more "embeddable"
-			Meta.fb.title = this.routeTitle;
-			Meta.fb.description = this.listDescription;
-			Meta.twitter.title = this.routeTitle;
-			Meta.twitter.description = this.listDescription;
+		// We use the listDescription and not Meta.description for fb and twitter because they are shorter and more "embeddable"
+		Meta.fb.title = this.routeTitle;
+		Meta.fb.description = this.listDescription;
+		Meta.twitter.title = this.routeTitle;
+		Meta.twitter.description = this.listDescription;
 
-			if (this.spotlightSocial) {
-				Meta.twitter.image = this.spotlightSocial;
-				Meta.twitter.card = 'summary';
-				Meta.fb.image = this.spotlightSocial;
-			}
+		if (this.spotlightSocial) {
+			Meta.twitter.image = this.spotlightSocial;
+			Meta.twitter.card = 'summary';
+			Meta.fb.image = this.spotlightSocial;
 		}
+	}
+
+	routeDestroyed() {
+		Ads.deregisterDisabler(this.adDisabler);
+		this.adDisabler = null;
 	}
 
 	/**
@@ -291,6 +301,10 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 
 			this.listing = new GameListingContainer(this.filtering);
 		}
+
+		// Disable ads if necessary.
+		Ads.deregisterDisabler(this.adDisabler);
+		this.adDisabler = this.listing.adsDisabled ? Ads.registerDisabler() : null;
 
 		this.filtering.init(this.$route);
 	}

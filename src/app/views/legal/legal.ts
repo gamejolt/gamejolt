@@ -1,7 +1,7 @@
-import { Ads, AdSettingsContainer } from '../../../_common/ad/ads.service';
+import { Component } from 'vue-property-decorator';
+import { Ads } from '../../../_common/ad/ads.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { User } from '../../../_common/user/user.model';
-import { Component } from 'vue-property-decorator';
 
 @Component({
 	name: 'RouteLegal',
@@ -11,13 +11,13 @@ import { Component } from 'vue-property-decorator';
 	resolver: () => User.touch(),
 })
 export default class RouteLegal extends BaseRouteComponent {
+	private adDisabler!: unknown;
+
 	routeCreated() {
-		const settings = new AdSettingsContainer();
-		settings.isPageDisabled = true;
-		Ads.setPageSettings(settings);
+		this.adDisabler = Ads.registerDisabler();
 	}
 
 	routeDestroyed() {
-		Ads.releasePageSettings();
+		Ads.deregisterDisabler(this.adDisabler);
 	}
 }
