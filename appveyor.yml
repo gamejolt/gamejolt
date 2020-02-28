@@ -28,11 +28,7 @@ install:
       $fileContent += "`n-----END RSA PRIVATE KEY-----`n"
       Set-Content C:\Users\appveyor\.ssh\id_rsa $fileContent
 
-  - git config --list
-  - ssh -V
-  - start-ssh-agent
-  - ssh-add -l
-  - ssh-add
+  # - start-ssh-agent
   - git clone --branch v2.2.8-beta.1 git@github.com:gamejolt/joltron
 
   # Enable VS2015 toolset
