@@ -1,26 +1,25 @@
 import { asyncComponentLoader } from '../../../utils/utils';
 import { Modal } from '../../modal/modal.service';
+import { Model } from '../../model/model.service';
 
 export type DisplayMode = 'comments' | 'shouts';
 
 interface CommentModalOptions {
-	resource?: string;
-	resourceId?: number;
 	displayMode?: DisplayMode;
+	model: Model;
 }
 
 export class CommentModal {
 	static async show(options: CommentModalOptions) {
-		const { resource, resourceId, displayMode } = options;
+		const { displayMode, model } = options;
 
 		return await Modal.show<void>({
-			modalId: 'Comment-' + [resource, resourceId].join('-'),
+			modalId: 'Comment-' + [model.constructor.name, model.id].join('-'),
 			component: () =>
 				asyncComponentLoader(import(/* webpackChunkName: "CommentModal" */ './modal.vue')),
 			props: {
-				resource,
-				resourceId,
 				displayMode,
+				model,
 			},
 			size: 'sm',
 		});

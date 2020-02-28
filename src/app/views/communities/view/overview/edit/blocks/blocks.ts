@@ -123,7 +123,7 @@ export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
 			let success = false;
 			try {
 				const payload = await Api.sendRequest(
-					`/web/dash/communities/blocks/lift/${block.id}`,
+					`/web/dash/communities/blocks/remove/${block.id}`,
 					undefined,
 					{
 						detach: true,

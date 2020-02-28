@@ -62,7 +62,7 @@ export default class AppDiscoverGamesViewNav extends Vue {
 	}
 
 	showComments() {
-		CommentModal.show({ resource: 'Game', resourceId: this.game.id, displayMode: 'comments' });
+		CommentModal.show({ model: this.game, displayMode: 'comments' });
 	}
 
 	copyShareUrl() {

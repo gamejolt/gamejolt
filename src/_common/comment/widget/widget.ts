@@ -8,11 +8,12 @@ import AppLoading from '../../loading/loading.vue';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import AppMessageThreadContent from '../../message-thread/content/content.vue';
 import AppMessageThread from '../../message-thread/message-thread.vue';
+import { Model } from '../../model/model.service';
 import AppNavTabList from '../../nav/tab-list/tab-list.vue';
 import { AppState, AppStore } from '../../store/app-store';
 import { User } from '../../user/user.model';
 import FormComment from '../add/add.vue';
-import { Comment } from '../comment-model';
+import { Comment, getCanCommentOnModel, getCommentModelResourceName } from '../comment-model';
 import {
 	CommentAction,
 	CommentMutation,
@@ -44,11 +45,8 @@ let incrementer = 0;
 	},
 })
 export default class AppCommentWidget extends Vue {
-	@Prop(String)
-	resource!: string;
-
-	@Prop(Number)
-	resourceId!: number;
+	@Prop(Model)
+	model!: Model;
 
 	@Prop(Boolean)
 	onlyAdd?: boolean;
@@ -166,7 +164,7 @@ export default class AppCommentWidget extends Vue {
 	}
 
 	get showTopSorting() {
-		return this.resource === 'Game';
+		return getCommentModelResourceName(this.model) === 'Game';
 	}
 
 	get isThreadView() {
@@ -174,6 +172,9 @@ export default class AppCommentWidget extends Vue {
 	}
 
 	get shouldShowAdd() {
+		if (!getCanCommentOnModel(this.model)) {
+			return false;
+		}
 		return this.showAdd;
 	}
 
@@ -203,7 +204,7 @@ export default class AppCommentWidget extends Vue {
 	@Watch('resourceId')
 	@Watch('resourceName')
 	async init() {
-		if (!this.resource || !this.resourceId) {
+		if (!this.model) {
 			return;
 		}
 
@@ -228,8 +229,8 @@ export default class AppCommentWidget extends Vue {
 		try {
 			this.isLoading = true;
 
-			const resource = this.resource;
-			const resourceId = this.resourceId;
+			const resource = getCommentModelResourceName(this.model);
+			const resourceId = this.model.id;
 
 			if (!this.store) {
 				this.store = await this.lockCommentStore({ resource, resourceId });

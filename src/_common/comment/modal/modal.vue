@@ -28,11 +28,7 @@
 		</div>
 
 		<div class="modal-body">
-			<app-comment-widget
-				:resource="resource"
-				:resource-id="resourceId"
-				:autofocus="autofocusAdd"
-			/>
+			<app-comment-widget :model="model" :autofocus="autofocusAdd" />
 		</div>
 	</app-modal>
 </template>

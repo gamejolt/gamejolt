@@ -28,7 +28,7 @@
 
 			<div v-if="canModerate" class="chat-window-message-mod-tools">
 				<a class="link-muted" @click="muteUser" :title="$gettext('Mute User')">
-					<app-jolticon icon="friend-remove-2" />
+					<app-jolticon icon="friend-remove-1" />
 				</a>
 			</div>
 

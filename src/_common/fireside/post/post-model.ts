@@ -13,7 +13,7 @@ import { HistoryTick } from '../../history-tick/history-tick-service';
 import { KeyGroup } from '../../key-group/key-group.model';
 import { MediaItem } from '../../media-item/media-item-model';
 import { ModalConfirm } from '../../modal/confirm/confirm-service';
-import { Model, ModelSaveRequestOptions } from '../../model/model.service';
+import { CommentableModel, Model, ModelSaveRequestOptions } from '../../model/model.service';
 import { Poll } from '../../poll/poll.model';
 import { Registry } from '../../registry/registry.service';
 import { appStore } from '../../store/app-store';
@@ -31,7 +31,7 @@ interface FiresidePostPublishedPlatform {
 	url: string;
 }
 
-export class FiresidePost extends Model implements ContentContainerModel {
+export class FiresidePost extends Model implements ContentContainerModel, CommentableModel {
 	static TYPE_TEXT = 'text';
 	static TYPE_MEDIA = 'media';
 	static TYPE_VIDEO = 'video';
@@ -222,6 +222,18 @@ export class FiresidePost extends Model implements ContentContainerModel {
 
 	get manageableCommunities() {
 		return this.getManageableCommunities(['community-features', 'community-posts'], true);
+	}
+
+	get canComment() {
+		if (this.user.blocked_you || this.user.is_blocked) {
+			return false;
+		}
+
+		if (this.game && !this.game.canComment) {
+			return false;
+		}
+
+		return true;
 	}
 
 	getContent(context: ContentContext) {

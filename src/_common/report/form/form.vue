@@ -1,6 +1,6 @@
 <template>
 	<app-form name="reportForm">
-		<app-form-group name="reason" :label="$gettext(`Why are you reporting this?`)">
+		<app-form-group name="reason" :label="$gettext(`What's the reason?`)">
 			<div
 				class="radio"
 				v-if="

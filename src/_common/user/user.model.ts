@@ -3,11 +3,11 @@ import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
 import { ContentSetCacheService } from '../content/content-set-cache';
 import { MediaItem } from '../media-item/media-item-model';
-import { Model } from '../model/model.service';
+import { CommentableModel, Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
 import { Theme } from '../theme/theme.model';
 
-export class User extends Model implements ContentContainerModel {
+export class User extends Model implements ContentContainerModel, CommentableModel {
 	static readonly TYPE_GAMER = 'User';
 	static readonly TYPE_DEVELOPER = 'Developer';
 
@@ -37,6 +37,8 @@ export class User extends Model implements ContentContainerModel {
 	comment_count!: number;
 	is_following?: boolean;
 	follows_you?: boolean;
+	is_blocked?: boolean;
+	blocked_you?: boolean;
 
 	// exp settings.
 	level?: number;
@@ -108,6 +110,14 @@ export class User extends Model implements ContentContainerModel {
 	get hasBio() {
 		const cache = ContentSetCacheService.getCache(this, 'user-bio');
 		return cache.hasContent;
+	}
+
+	get canComment() {
+		if (this.blocked_you || this.is_blocked) {
+			return false;
+		}
+
+		return true;
 	}
 
 	getContent(context: ContentContext) {

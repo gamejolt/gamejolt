@@ -5,7 +5,7 @@ export class UserBlock extends Model {
 	blocked_on!: number;
 	expires_on!: number;
 	reason!: string;
-	resource!: 'Community';
+	resource!: 'Community' | 'User';
 	resource_id!: number;
 
 	user!: User;
