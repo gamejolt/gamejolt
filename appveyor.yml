@@ -29,6 +29,7 @@ install:
       Set-Content C:\Users\appveyor\.ssh\id_rsa $fileContent
 
   - git config --list
+  - ssh -V
   - start-ssh-agent
   - ssh-add -l
   - ssh-add
