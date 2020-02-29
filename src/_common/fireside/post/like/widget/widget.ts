@@ -75,12 +75,17 @@ export default class AppFiresidePostLikeWidget extends Vue {
 
 	async toggleLike() {
 		const currentLike = this.post.user_like;
+
+		// @check, move this into the conditional below. Also change !currentLike to shouldShowFollow.
+		this.$emit('show-user-follow', !currentLike);
+
 		if (!currentLike) {
 			// Do this before attempting to follow.
 			// We don't want to wait till the follow is confirmed to show the dialog,
 			// and even if the follow fails it's not like we'll close it.
 			if (this.shouldShowFollow && UserFollowSuggestion.canSuggest(this.post.user.id)) {
 				this.isShowingFollowPopover = true;
+				// @check, put the $emit here
 			}
 
 			const newLike = new FiresidePostLike({
@@ -117,6 +122,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 		LikersModal.show({ count: this.post.like_count, resource: this.post });
 	}
 
+	// @check, maybe move this into user-follow or controls?
 	onFollowPopoverDismissed() {
 		if (!this.post.user.is_following) {
 			UserFollowSuggestion.doNotSuggest(this.post.user.id);

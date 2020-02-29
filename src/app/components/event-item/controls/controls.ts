@@ -7,12 +7,14 @@ import { Community } from '../../../../_common/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppEventItemControlsComments from './comments/comments.vue';
 import AppEventItemControlsFiresidePost from './fireside-post/fireside-post.vue';
+import AppEventItemControlsUserFollow from './user-follow/user-follow.vue';
 
 @Component({
 	components: {
 		AppCommentVideoLikeWidget,
 		AppEventItemControlsFiresidePost,
 		AppEventItemControlsComments,
+		AppEventItemControlsUserFollow,
 	},
 })
 export default class AppEventItemControls extends Vue {
@@ -29,6 +31,12 @@ export default class AppEventItemControls extends Vue {
 	showComments?: boolean;
 
 	commentsCount = 0;
+	toggleUserFollow = false;
+	transitionHeight = 0;
+
+	get testHeight() {
+		return this.transitionHeight;
+	}
 
 	@Emit('post-edit')
 	emitPostEdit() {}

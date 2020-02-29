@@ -116,6 +116,10 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 		});
 	}
 
+	_showUserFollow(event: boolean) {
+		this.$emit('show-user-follow', event);
+	}
+
 	async openEdit() {
 		if (await PostEditModal.show(this.post)) {
 			this.emitEdit();

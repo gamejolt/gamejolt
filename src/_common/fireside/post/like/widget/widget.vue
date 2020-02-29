@@ -1,37 +1,18 @@
 <template>
 	<span class="fireside-post-like-widget">
 		<span class="-like">
-			<app-popper
-				trigger="manual"
-				:show="isShowingFollowPopover"
+			<app-button
+				icon="heart"
+				circle
+				:trans="trans"
+				:overlay="overlay"
 				:block="block"
-				@hide="isShowingFollowPopover = false"
-				@auto-hide="onFollowPopoverDismissed"
-			>
-				<app-button
-					icon="heart"
-					circle
-					:trans="trans"
-					:overlay="overlay"
-					:block="block"
-					:primary="!!post.user_like"
-					:solid="!!post.user_like"
-					v-app-tooltip="tooltip"
-					v-app-auth-required
-					@click="toggleLike"
-				/>
-
-				<div slot="popover" class="well fill-darkest">
-					<p class="small">
-						<translate>
-							Would you also like to follow this user?
-						</translate>
-						<br />
-						<translate>You will get notified when they post new stuff.</translate>
-					</p>
-					<app-user-follow-widget :user="post.user" block event-label="fireside-post-like-widget" />
-				</div>
-			</app-popper>
+				:primary="!!post.user_like"
+				:solid="!!post.user_like"
+				v-app-tooltip="tooltip"
+				v-app-auth-required
+				@click="toggleLike"
+			/>
 
 			<div v-if="showLikeAnim" class="-like-anim-container">
 				<app-jolticon class="-like-anim" icon="heart" notice />
