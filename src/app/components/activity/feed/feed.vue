@@ -43,7 +43,7 @@
 		<app-scroll-inview v-if="!feed.slice" :margin="loadMoreMargin" @inview="onScrollLoadMore">
 			<div v-if="shouldShowLoadMore" class="page-cut">
 				<app-button
-					:to="GJ_IS_SSR ? { query: { feed_last_id: lastPostId } } : undefined"
+					:to="GJ_IS_SSR ? { query: { feed_last_id: lastPostScrollId } } : undefined"
 					trans
 					@click="loadMoreButton"
 					v-app-track-event="`activity-feed:more`"
