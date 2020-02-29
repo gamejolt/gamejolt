@@ -234,7 +234,7 @@ export default class AppCommentWidget extends Vue {
 		// work.
 		const metadata = this.store.metadata;
 		if (!metadata.widgetLocks) {
-			metadata.widgetLocks = 1;
+			metadata.widgetLocks = 0;
 		}
 		metadata.widgetLocks += 1;
 	}
