@@ -74,7 +74,6 @@ export class CommentStoreModel {
 		this.comments = [];
 		this.count = 0;
 		this.parentCount = 0;
-		--this.locks;
 	}
 
 	afterModification() {

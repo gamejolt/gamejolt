@@ -215,6 +215,10 @@ export default class AppCommentWidget extends Vue {
 			this.store = null;
 		}
 
+		const resource = this.resource;
+		const resourceId = this.resourceId;
+		this.store = await this.lockCommentStore({ resource, resourceId });
+
 		if (this.isThreadView && this.threadCommentId) {
 			this.storeView = new CommentStoreThreadView(this.threadCommentId);
 		} else {
@@ -225,13 +229,12 @@ export default class AppCommentWidget extends Vue {
 	}
 
 	private async _fetchComments() {
+		if (!this.store) {
+			throw new Error(`You need a store set before fetching comments.`);
+		}
+
 		try {
 			this.isLoading = true;
-
-			const resource = this.resource;
-			const resourceId = this.resourceId;
-
-			this.store = await this.lockCommentStore({ resource, resourceId });
 
 			let payload: any;
 			if (this.isThreadView && this.threadCommentId) {
@@ -320,11 +323,13 @@ export default class AppCommentWidget extends Vue {
 	}
 
 	private _setSort(sort: string) {
-		if (this.store) {
-			this.currentPage = 1;
-			this.setSort({ store: this.store, sort: sort });
-			this._fetchComments();
+		if (!this.store) {
+			return;
 		}
+
+		this.currentPage = 1;
+		this.setSort({ store: this.store, sort: sort });
+		this._fetchComments();
 	}
 
 	loadMore() {
