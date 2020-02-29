@@ -233,7 +233,10 @@ export default class AppCommentWidget extends Vue {
 		// need this data when closing the last widget to do some tear down
 		// work.
 		const metadata = this.store.metadata;
-		metadata.widgetLocks = metadata.widgetLocks ? metadata.widgetLocks + 1 : 1;
+		if (!metadata.widgetLocks) {
+			metadata.widgetLocks = 1;
+		}
+		metadata.widgetLocks += 1;
 	}
 
 	private async _releaseStore() {
