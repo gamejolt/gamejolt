@@ -46,7 +46,7 @@ export default class AppEventItemControlsComments extends Vue {
 	clickedCommentType = '';
 
 	get commentsCount() {
-		return this.commentStore ? this.commentStore.count : 0;
+		return this.commentStore ? this.commentStore.totalCount : 0;
 	}
 
 	get resource() {
