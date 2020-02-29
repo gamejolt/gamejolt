@@ -56,7 +56,7 @@ export default class AppDiscoverGamesViewNav extends Vue {
 	get commentsCount() {
 		if (this.game) {
 			const store = this.getCommentStore('Game', this.game.id);
-			return store ? store.count : 0;
+			return store ? store.totalCount : 0;
 		}
 		return 0;
 	}
