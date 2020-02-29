@@ -195,8 +195,7 @@ export default class AppCommentWidget extends Vue {
 
 	destroyed() {
 		if (this.store) {
-			this.releaseCommentStore(this.store);
-			this.store = null;
+			this._releaseStore();
 		}
 	}
 
@@ -211,13 +210,10 @@ export default class AppCommentWidget extends Vue {
 		this.hasError = false;
 
 		if (this.store) {
-			this.releaseCommentStore(this.store);
-			this.store = null;
+			await this._releaseStore();
 		}
 
-		const resource = this.resource;
-		const resourceId = this.resourceId;
-		this.store = await this.lockCommentStore({ resource, resourceId });
+		await this._lockStore();
 
 		if (this.isThreadView && this.threadCommentId) {
 			this.storeView = new CommentStoreThreadView(this.threadCommentId);
@@ -226,6 +222,38 @@ export default class AppCommentWidget extends Vue {
 		}
 
 		await this._fetchComments();
+	}
+
+	private async _lockStore() {
+		const resource = this.resource;
+		const resourceId = this.resourceId;
+		this.store = await this.lockCommentStore({ resource, resourceId });
+
+		// Keep track of how many comment widgets have a lock on this store. We
+		// need this data when closing the last widget to do some tear down
+		// work.
+		const metadata = this.store.metadata;
+		metadata.widgetLocks = metadata.widgetLocks ? metadata.widgetLocks + 1 : 1;
+	}
+
+	private async _releaseStore() {
+		if (!this.store) {
+			return;
+		}
+
+		const metadata = this.store.metadata;
+		metadata.widgetLocks -= 1;
+
+		// If we are releasing the comment widget for this comment store, we
+		// want to set the state back to how it was when we loaded up the first
+		// comment widget. This way if you open up a new comment widget in the
+		// future, we'll correctly start at the "hot" sort.
+		if (metadata.widgetLocks === 0) {
+			this.setSort({ store: this.store, sort: Comment.SORT_HOT });
+		}
+
+		this.releaseCommentStore(this.store);
+		this.store = null;
 	}
 
 	private async _fetchComments() {

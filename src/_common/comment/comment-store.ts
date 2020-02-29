@@ -37,16 +37,21 @@ export class CommentStoreModel {
 	comments: Comment[] = [];
 	locks = 0;
 	sort = Comment.SORT_HOT;
-	// This flag gets set for every change (add/remove/update), that prompts the overview component owner to update the commment info
+	// This flag gets set for every change (add/remove/update), that prompts the
+	// overview component owner to update the commment info
 	overviewNeedsRefresh = false;
-	resetSort = false;
+
+	/**
+	 * Components that get a lock on this comment store can use this metadata to
+	 * store information for their own purposes. The store itself doesn't use
+	 * it.
+	 * */
+	metadata: any = {};
 
 	constructor(public resource: string, public resourceId: number) {}
 
 	get parentComments() {
-		const comments = this.comments.filter(i => !i.parent_id);
-
-		return comments;
+		return this.comments.filter(i => !i.parent_id);
 	}
 
 	get childComments() {
@@ -99,6 +104,34 @@ export class CommentStore extends VuexStore<CommentStore, CommentActions, Commen
 		return this.stores[storeId];
 	}
 
+	@VuexMutation
+	private _ensureCommentStore(payload: { resource: string; resourceId: number }) {
+		const { resource, resourceId } = payload;
+		const storeId = resource + '/' + resourceId;
+
+		if (!this.stores[storeId]) {
+			Vue.set(this.stores, storeId, new CommentStoreModel(resource, resourceId));
+		}
+
+		++this.stores[storeId].locks;
+	}
+
+	@VuexMutation
+	releaseCommentStore(store: CommentMutations['comment/releaseCommentStore']) {
+		const storeId = store.resource + '/' + store.resourceId;
+		if (!this.stores[storeId]) {
+			console.warn(
+				`Tried releasing a comment store that doesn't exist: ${storeId} - most likely it was released twice`
+			);
+			return;
+		}
+
+		--this.stores[storeId].locks;
+		if (this.stores[storeId].locks <= 0) {
+			Vue.delete(this.stores, storeId);
+		}
+	}
+
 	@VuexAction
 	async fetchThread(payload: CommentActions['comment/fetchThread']) {
 		const { store, parentId } = payload;
@@ -121,11 +154,6 @@ export class CommentStore extends VuexStore<CommentStore, CommentActions, Commen
 	async fetchComments(payload: CommentActions['comment/fetchComments']) {
 		const { store, page } = payload;
 		let response: any;
-
-		if (store.resetSort) {
-			store.sort = Comment.SORT_HOT;
-			store.resetSort = false;
-		}
 
 		// 'new' and 'you' sort by last timestamp using scroll
 		if (store.sort === Comment.SORT_NEW || store.sort === Comment.SORT_YOU) {
@@ -274,38 +302,6 @@ export class CommentStore extends VuexStore<CommentStore, CommentActions, Commen
 			}
 			arrayRemove(store.comments, i => i.id === comment.id);
 			store.afterModification();
-		}
-	}
-
-	@VuexMutation
-	private _ensureCommentStore(payload: { resource: string; resourceId: number }) {
-		const { resource, resourceId } = payload;
-		const storeId = resource + '/' + resourceId;
-
-		if (!this.stores[storeId]) {
-			Vue.set(this.stores, storeId, new CommentStoreModel(resource, resourceId));
-		}
-
-		++this.stores[storeId].locks;
-	}
-
-	@VuexMutation
-	releaseCommentStore(store: CommentMutations['comment/releaseCommentStore']) {
-		const storeId = store.resource + '/' + store.resourceId;
-		if (!this.stores[storeId]) {
-			console.warn(
-				`Tried releasing a comment store that doesn't exist: ${storeId} - most likely it was released twice`
-			);
-			return;
-		}
-
-		if (this.stores[storeId].sort !== Comment.SORT_HOT) {
-			this.stores[storeId].resetSort = true;
-		}
-
-		--this.stores[storeId].locks;
-		if (this.stores[storeId].locks <= 0) {
-			Vue.delete(this.stores, storeId);
 		}
 	}
 }
