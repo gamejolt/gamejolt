@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Watch } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { AppModalWrapper } from './modal-wrapper';
 import { Modal } from './modal.service';
 import './modals-global.styl';
@@ -16,18 +16,20 @@ export default class AppModals extends Vue {
 		return Modal.modals;
 	}
 
-	@Watch('activeModals.length')
-	watchModalLength() {
-		// We only count modals that have backdrops. If all the modals don't
-		// have backdrops, then we don't add `modal-open`.
-		const backdropModals = Modal.modals.filter(item => !item.noBackdrop);
+	// Below is a duplicate scroll-disabling backdrop. Breaks the stuff in 'backdrop.service.ts' for some reason.
 
-		if (!GJ_IS_SSR) {
-			if (backdropModals.length) {
-				document.body.classList.add('modal-open');
-			} else {
-				document.body.classList.remove('modal-open');
-			}
-		}
-	}
+	// @Watch('activeModals.length')
+	// watchModalLength() {
+	// 	// We only count modals that have backdrops. If all the modals don't
+	// 	// have backdrops, then we don't add `modal-open`.
+	// 	const backdropModals = Modal.modals.filter(item => !item.noBackdrop);
+
+	// 	if (!GJ_IS_SSR) {
+	// 		if (backdropModals.length) {
+	// 			document.body.classList.add('modal-open');
+	// 		} else {
+	// 			document.body.classList.remove('modal-open');
+	// 		}
+	// 	}
+	// }
 }
