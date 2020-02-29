@@ -1,6 +1,12 @@
 <template>
 	<div class="-container">
+		<app-activity-feed-event-item-blocked
+			v-if="shouldBlock"
+			:username="user.username"
+			@show="onUnhideBlock"
+		/>
 		<div
+			v-else
 			class="-item"
 			:class="{
 				'-new': isNew,
@@ -114,9 +120,9 @@
 				/>
 
 				<!--
-					This shouldn't ever really show a collapser. It's for the jokers that think it would
-					be fun to make a post with a bunch of new lines.
-				-->
+						This shouldn't ever really show a collapser. It's for the jokers that think it would
+						be fun to make a post with a bunch of new lines.
+					-->
 				<app-fade-collapse
 					:collapse-height="600"
 					:is-open="isLeadOpen"

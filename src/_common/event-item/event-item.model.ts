@@ -51,7 +51,7 @@ export class EventItem extends Model {
 	 * not necessarily the real owner of the resource. e.g.
 	 * for collaborators posting as the owner, the owner will be used.
 	 */
-	set user(user: User | undefined) {
+	set user(user: User) {
 		if (!user) {
 			return;
 		}
@@ -76,21 +76,20 @@ export class EventItem extends Model {
 	 * not necessarily the real owner of the resource. e.g.
 	 * for collaborators posting as the owner, the owner will be used.
 	 */
-	get user() {
-		if (this.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
-			return (this.action as CommentVideo).comment.user;
-		} else if (this.type === EventItem.TYPE_GAME_PUBLISH) {
-			return (this.action as Game).developer;
-		} else if (this.type === EventItem.TYPE_POST_ADD) {
-			const post = this.action as FiresidePost;
-			if (post.game && post.as_game_owner) {
-				return post.game.developer;
-			}
+	get user(): User {
+		switch (this.type) {
+			case EventItem.TYPE_COMMENT_VIDEO_ADD:
+				return (this.action as CommentVideo).comment.user;
+			case EventItem.TYPE_GAME_PUBLISH:
+				return (this.action as Game).developer;
+			case EventItem.TYPE_POST_ADD:
+				const post = this.action as FiresidePost;
+				if (post.game && post.as_game_owner) {
+					return post.game.developer;
+				}
 
-			return post.user;
+				return post.user;
 		}
-
-		return undefined;
 	}
 
 	set game(game: Game | undefined) {

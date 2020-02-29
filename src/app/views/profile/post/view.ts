@@ -95,7 +95,7 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 			this.post = post;
 		}
 
-		CommentThreadModal.showFromPermalink(this.$router, 'Fireside_Post', this.post.id, 'comments');
+		CommentThreadModal.showFromPermalink(this.$router, this.post, 'comments');
 
 		this.post.$viewed();
 		this.post.$expanded();

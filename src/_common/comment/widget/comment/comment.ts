@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { findRequiredVueParent } from '../../../../utils/vue';
+import { findRequiredVueParent, propOptional, propRequired } from '../../../../utils/vue';
 import { AppAuthRequired } from '../../../auth/auth-required-directive';
 import { Clipboard } from '../../../clipboard/clipboard-service';
 import { Collaborator } from '../../../collaborator/collaborator.model';
@@ -13,15 +13,18 @@ import AppMessageThreadAdd from '../../../message-thread/add/add.vue';
 import AppMessageThreadItem from '../../../message-thread/item/item.vue';
 import AppMessageThread from '../../../message-thread/message-thread.vue';
 import { ModalConfirm } from '../../../modal/confirm/confirm-service';
+import { Model } from '../../../model/model.service';
 import { Popper } from '../../../popper/popper.service';
 import AppPopper from '../../../popper/popper.vue';
 import { ReportModal } from '../../../report/modal/modal.service';
 import { AppState, AppStore } from '../../../store/app-store';
+import AppTimelineListItem from '../../../timeline-list/item/item.vue';
 import { AppTooltip } from '../../../tooltip/tooltip';
 import FormComment from '../../add/add.vue';
-import { Comment } from '../../comment-model';
+import { Comment, getCommentBlockReason } from '../../comment-model';
 import AppCommentContent from '../../content/content.vue';
 import AppCommentControls from '../../controls/controls.vue';
+import AppCommentWidgetCommentBlocked from '../comment-blocked/comment-blocked.vue';
 import AppCommentWidgetTS from '../widget';
 import AppCommentWidget from '../widget.vue';
 
@@ -34,9 +37,11 @@ let CommentNum = 0;
 		AppMessageThread,
 		AppMessageThreadItem,
 		AppMessageThreadAdd,
+		AppTimelineListItem,
 		AppFadeCollapse,
 		AppPopper,
 		AppExpand,
+		AppCommentWidgetCommentBlocked,
 		FormComment,
 
 		// Since it's recursive it needs to be able to resolve itself.
@@ -52,33 +57,19 @@ let CommentNum = 0;
 	},
 })
 export default class AppCommentWidgetComment extends Vue {
-	@Prop(Comment)
-	comment!: Comment;
+	@Prop(propRequired(Model)) model!: Model;
+	@Prop(propRequired(Comment)) comment!: Comment;
+	@Prop(propOptional(Array, () => [])) children!: Comment[];
+	@Prop(propOptional(Comment)) parent?: Comment;
+	@Prop(propOptional(Boolean, false)) isLastInThread!: boolean;
+	@Prop(propOptional(Boolean, false)) showChildren!: boolean;
 
-	@Prop(Array)
-	children?: Comment[];
-
-	@Prop(Comment)
-	parent?: Comment;
-
-	@Prop(String)
-	resource!: string;
-
-	@Prop(Number)
-	resourceId!: number;
-
-	@Prop(Boolean)
-	isLastInThread?: boolean;
-
-	@Prop(Boolean)
-	showChildren?: boolean;
-
-	@AppState
-	user!: AppStore['user'];
+	@AppState user!: AppStore['user'];
 
 	componentId = ++CommentNum;
 	isFollowPending = false;
 	isEditing = false;
+	hasBypassedBlock = false;
 
 	widget!: AppCommentWidgetTS;
 
@@ -187,7 +178,7 @@ export default class AppCommentWidgetComment extends Vue {
 	}
 
 	get shouldShowReplies() {
-		return this.children && this.children.length > 0 && this.showChildren;
+		return this.children.length > 0 && this.showChildren;
 	}
 
 	get canFollow() {
@@ -204,6 +195,18 @@ export default class AppCommentWidgetComment extends Vue {
 		}
 
 		return true;
+	}
+
+	get blockReason() {
+		return getCommentBlockReason(this.comment);
+	}
+
+	get shouldBlock() {
+		if (this.hasBypassedBlock || !this.comment) {
+			return false;
+		}
+
+		return this.blockReason !== false;
 	}
 
 	startEdit() {
@@ -258,5 +261,9 @@ export default class AppCommentWidgetComment extends Vue {
 
 	report() {
 		ReportModal.show(this.comment);
+	}
+
+	onUnhideBlock() {
+		this.hasBypassedBlock = true;
 	}
 }

@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
+import { Model } from '../../model/model.service';
 import { CommentModal, DisplayMode } from '../modal/modal.service';
 
 @Component({
@@ -9,11 +10,8 @@ import { CommentModal, DisplayMode } from '../modal/modal.service';
 	},
 })
 export default class AppCommentAddButton extends Vue {
-	@Prop(String)
-	resource!: string;
-
-	@Prop(Number)
-	resourceId!: number;
+	@Prop(Model)
+	model!: Model;
 
 	@Prop(String)
 	placeholder?: string;
@@ -27,8 +25,7 @@ export default class AppCommentAddButton extends Vue {
 
 	open() {
 		CommentModal.show({
-			resource: this.resource,
-			resourceId: this.resourceId,
+			model: this.model,
 			displayMode: this.displayMode,
 		});
 	}

@@ -30,8 +30,8 @@
 				<translate slot="overlay">Change Profile Header</translate>
 
 				<!--
-				If no header yet, show their highlight color with a min-height.
-			-->
+					If no header yet, show their highlight color with a min-height.
+				-->
 				<div
 					class="fill-highlight"
 					:style="{
@@ -62,6 +62,11 @@
 								<li>
 									<router-link :to="{ name: 'dash.account.site' }" active-class="active">
 										<translate>Portfolio Site</translate>
+									</router-link>
+								</li>
+								<li>
+									<router-link :to="{ name: 'dash.account.blocks' }" active-class="active">
+										<translate>Blocked Users</translate>
 									</router-link>
 								</li>
 							</ul>

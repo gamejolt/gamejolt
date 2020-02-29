@@ -30,9 +30,11 @@ import AppActivityFeedDevlogPostSketchfab from '../devlog-post/sketchfab/sketchf
 import AppActivityFeedDevlogPostText from '../devlog-post/text/text.vue';
 import AppActivityFeedDevlogPostVideo from '../devlog-post/video/video.vue';
 import AppActivityFeedTS from '../feed';
+import { feedShouldBlockPost, feedShouldBlockVideo } from '../feed-service';
 import AppActivityFeed from '../feed.vue';
 import { ActivityFeedItem } from '../item-service';
 import { ActivityFeedView } from '../view';
+import AppActivityFeedEventItemBlocked from './blocked/blocked.vue';
 import AppActivityFeedEventItemTime from './time/time.vue';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
@@ -55,6 +57,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppPill,
 		AppContentViewer,
 		AppUserVerifiedTick,
+		AppActivityFeedEventItemBlocked,
 	},
 	filters: {
 		number,
@@ -71,6 +74,7 @@ export default class AppActivityFeedEventItem extends Vue {
 	app!: Store['app'];
 
 	canToggleLead = false;
+	hasBypassedBlock = false;
 
 	private resizeSensor?: any;
 	private feedComponent!: AppActivityFeedTS;
@@ -161,6 +165,10 @@ export default class AppActivityFeedEventItem extends Vue {
 	}
 
 	get shouldShowFollow() {
+		if (this.isBlocked) {
+			return false;
+		}
+
 		// Don't show follow for game posts. Only for user posts.
 		if (!this.feed.shouldShowFollow || !this.post || this.post.game) {
 			return false;
@@ -192,6 +200,20 @@ export default class AppActivityFeedEventItem extends Vue {
 		}
 
 		return this.post.getPinContextFor(this.$route) !== null;
+	}
+
+	get isBlocked() {
+		if (this.post) {
+			return feedShouldBlockPost(this.post, this.$route);
+		}
+		if (this.video) {
+			return feedShouldBlockVideo(this.video, this.$route);
+		}
+		return false;
+	}
+
+	get shouldBlock() {
+		return !this.hasBypassedBlock && this.isBlocked;
 	}
 
 	mounted() {
@@ -274,6 +296,10 @@ export default class AppActivityFeedEventItem extends Vue {
 
 			this.$router.push(this.link);
 		}
+	}
+
+	onUnhideBlock() {
+		this.hasBypassedBlock = true;
 	}
 
 	toggleLead() {

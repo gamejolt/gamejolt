@@ -1,5 +1,8 @@
 import { Api } from '../api/api.service';
+import { ContentDocument } from '../content/content-document';
 import { Environment } from '../environment/environment.service';
+import { FiresidePost } from '../fireside/post/post-model';
+import { Game } from '../game/game.model';
 import { Growls } from '../growls/growls.service';
 import { Model } from '../model/model.service';
 import { Subscription } from '../subscription/subscription.model';
@@ -16,6 +19,52 @@ export async function fetchComment(id: number) {
 	} catch (e) {
 		// Probably removed.
 	}
+}
+
+export type CommentBlockReason = 'commenter-blocked' | 'mentioned-blocked-user';
+
+export function getCommentBlockReason(comment: Comment): CommentBlockReason | false {
+	if (comment.user.is_blocked) {
+		return 'commenter-blocked';
+	}
+
+	const doc = ContentDocument.fromJson(comment.comment_content);
+	const mentions = doc.getMarks('mention');
+
+	for (const mention of mentions) {
+		const hydrated = doc.hydration.find(
+			i => i.source === mention.attrs.username && i.type === 'username'
+		);
+
+		if (hydrated && hydrated.data.is_blocked) {
+			return 'mentioned-blocked-user';
+		}
+	}
+
+	return false;
+}
+
+export function getCommentModelResourceName(model: Model) {
+	if (model instanceof Game) {
+		return 'Game';
+	} else if (model instanceof User) {
+		return 'User';
+	} else if (model instanceof FiresidePost) {
+		return 'Fireside_Post';
+	}
+	throw new Error('Model cannot contain comments');
+}
+
+export function getCanCommentOnModel(model: Model) {
+	if (model instanceof User) {
+		return model.canComment;
+	} else if (model instanceof FiresidePost) {
+		return model.canComment;
+	} else if (model instanceof Game) {
+		return model.canComment;
+	}
+
+	return true;
 }
 
 /**

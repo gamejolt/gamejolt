@@ -6,14 +6,9 @@
 			</app-button>
 		</div>
 
-		<div class="modal-header">
-			<h2 class="modal-title">
-				{{ title }}
-			</h2>
-		</div>
-
 		<div class="modal-body">
-			<app-report-form :type="type" :resource="resource" @submit="onSubmitted" />
+			<app-block-form v-if="page === 'block'" :user="resource" @submit="onSubmittedBlock" />
+			<app-report-form v-else :type="type" :resource="resource" @submit="onSubmittedReport" />
 		</div>
 	</app-modal>
 </template>

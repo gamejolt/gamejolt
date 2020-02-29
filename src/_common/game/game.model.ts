@@ -6,7 +6,7 @@ import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
 import { ContentSetCacheService } from '../content/content-set-cache';
 import { MediaItem } from '../media-item/media-item-model';
-import { Model } from '../model/model.service';
+import { CommentableModel, Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
 import { Sellable } from '../sellable/sellable.model';
 import { Site } from '../site/site-model';
@@ -39,7 +39,7 @@ function pluckBuilds(packages: GamePackage[], func: (build: GameBuild) => boolea
 	return pluckedBuilds;
 }
 
-export class Game extends Collaboratable(Model) implements ContentContainerModel {
+export class Game extends Collaboratable(Model) implements ContentContainerModel, CommentableModel {
 	static readonly CREATION_TOOL_OTHER = 'Other';
 
 	static readonly STATUS_HIDDEN = 0;
@@ -217,6 +217,14 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	get hasDescription() {
 		const cache = ContentSetCacheService.getCache(this, 'game-description');
 		return cache.hasContent;
+	}
+
+	get canComment() {
+		if (this.developer.blocked_you) {
+			return false;
+		}
+
+		return true;
 	}
 
 	getContent(context: ContentContext) {

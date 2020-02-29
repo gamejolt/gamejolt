@@ -6,20 +6,20 @@ import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle
 import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { Growls } from '../../../../../_common/growls/growls.service';
 
-type BlockData = {
+interface FormModel {
 	username: string;
 	reasonType: string;
 	reason: string;
 	expiry: string;
 	ejectPosts: boolean;
-};
+}
 
 @Component({
 	components: {
 		AppFormControlToggle,
 	},
 })
-export default class FormCommunityBlock extends BaseForm<BlockData>
+export default class FormCommunityBlock extends BaseForm<FormModel>
 	implements FormOnInit, FormOnSubmit {
 	@Prop(Community)
 	community!: Community;

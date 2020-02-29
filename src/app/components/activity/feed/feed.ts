@@ -128,7 +128,7 @@ export default class AppActivityFeed extends Vue {
 		return this.showAds && Ads.shouldShow;
 	}
 
-	get lastPostId() {
+	get lastPostScrollId() {
 		return this.feed.state.endScrollId;
 	}
 
