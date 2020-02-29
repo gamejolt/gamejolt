@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { Ads } from '../ads.service';
+import { propOptional } from '../../../utils/vue';
 import AppAdPlaywire from '../playwire/playwire.vue';
 import './widget-content.styl';
 
@@ -10,13 +10,12 @@ import './widget-content.styl';
 	},
 })
 export default class AppAdWidget extends Vue {
-	@Prop({ type: String, default: 'rectangle' })
+	@Prop(propOptional(String, 'rectangle'))
 	size!: 'rectangle' | 'leaderboard' | 'footer';
 
-	@Prop({ type: Boolean, default: false })
-	staticSize!: boolean;
+	@Prop(propOptional(Boolean, false)) staticSize!: boolean;
 
 	get shouldShow() {
-		return Ads.shouldShow;
+		return this.$ad.shouldShow;
 	}
 }

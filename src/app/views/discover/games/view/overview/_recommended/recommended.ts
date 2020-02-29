@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { Ads } from '../../../../../../../_common/ad/ads.service';
 import AppAdPlaywireVideo from '../../../../../../../_common/ad/playwire/video.vue';
 import AppAdWidget from '../../../../../../../_common/ad/widget/widget.vue';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
@@ -23,11 +22,8 @@ import { RouteStore, RouteStoreModule } from '../../view.store';
 	},
 })
 export default class AppDiscoverGamesViewOverviewRecommended extends Vue {
-	@RouteStoreModule.State
-	recommendedGames!: RouteStore['recommendedGames'];
-
-	@RouteStoreModule.State
-	postsCount!: RouteStore['postsCount'];
+	@RouteStoreModule.State recommendedGames!: RouteStore['recommendedGames'];
+	@RouteStoreModule.State postsCount!: RouteStore['postsCount'];
 
 	readonly Screen = Screen;
 
@@ -36,7 +32,7 @@ export default class AppDiscoverGamesViewOverviewRecommended extends Vue {
 	}
 
 	get shouldShowAds() {
-		return Ads.shouldShow;
+		return this.$ad.shouldShow;
 	}
 
 	get shouldShowBottomAd() {

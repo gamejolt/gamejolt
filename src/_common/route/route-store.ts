@@ -11,12 +11,12 @@ export interface RouteStoreOptions {
 	destroyed?: () => void;
 }
 
-export function WithRouteStore(options: RouteStoreOptions) {
+export function WithRouteStore(config: RouteStoreOptions) {
 	return createDecorator(componentOptions => {
 		// Store the options passed in.
 		componentOptions.routeStoreOptions = {
 			...componentOptions.routeStoreOptions,
-			...options,
+			...config,
 		};
 
 		// We unshift so that this always goes first before the RouteResolver

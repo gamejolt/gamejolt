@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { propOptional } from '../../../utils/vue';
 import { Screen } from '../../screen/screen-service';
-import { Ads } from '../ads.service';
 import AppAdWidget from '../widget/widget.vue';
 
 @Component({
@@ -10,31 +10,18 @@ import AppAdWidget from '../widget/widget.vue';
 	},
 })
 export default class AppAdPlacement extends Vue {
-	@Prop({ type: Boolean, default: false })
-	staticSize!: boolean;
-
-	@Prop(Boolean)
-	hiddenXs?: boolean;
-
-	@Prop(Boolean)
-	hiddenSm?: boolean;
-
-	@Prop(Boolean)
-	hiddenDesktop?: boolean;
-
-	@Prop(Boolean)
-	visibleXs?: boolean;
-
-	@Prop(Boolean)
-	visibleSm?: boolean;
-
-	@Prop(Boolean)
-	visibleDesktop?: boolean;
+	@Prop(propOptional(Boolean, false)) staticSize!: boolean;
+	@Prop(propOptional(Boolean, false)) hiddenXs!: boolean;
+	@Prop(propOptional(Boolean, false)) hiddenSm!: boolean;
+	@Prop(propOptional(Boolean, false)) hiddenDesktop!: boolean;
+	@Prop(propOptional(Boolean, false)) visibleXs!: boolean;
+	@Prop(propOptional(Boolean, false)) visibleSm!: boolean;
+	@Prop(propOptional(Boolean, false)) visibleDesktop!: boolean;
 
 	readonly Screen = Screen;
 
 	get isVisible() {
-		if (!Ads.shouldShow) {
+		if (!this.$ad.shouldShow) {
 			return false;
 		}
 

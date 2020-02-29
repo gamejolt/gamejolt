@@ -66,3 +66,37 @@ export function propOptional<T>(
 		default: defaultValue,
 	};
 }
+
+export function installVuePlugin<T>(
+	key: string,
+	constructor: Constructor<T>,
+	init?: (this: T, vm: Vue) => void
+) {
+	Vue.mixin({
+		beforeCreate() {
+			const self = this as any;
+			const parent = this.$options.parent as Record<string, any> | undefined;
+			if (!self[key]) {
+				// We pass the service down from the main parent component into
+				// every child. For the intial service object, we have to make
+				// sure to make it observable so that vue can track it within
+				// its dependency system.
+				if (parent?.[key]) {
+					self[key] = parent[key];
+				} else {
+					const service = new constructor();
+					if (init) {
+						init.call(service, this);
+					}
+					self[key] = Vue.observable(service);
+				}
+			}
+		},
+		// For state debugging.
+		// data() {
+		// 	return {
+		// 		[key]: (this as any)[key],
+		// 	};
+		// },
+	});
+}

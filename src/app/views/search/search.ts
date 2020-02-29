@@ -1,5 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { AdSettingsContainer } from '../../../_common/ad/ad-store';
 import AppExpand from '../../../_common/expand/expand.vue';
 import { number } from '../../../_common/filters/number';
 import AppPagination from '../../../_common/pagination/pagination.vue';
@@ -32,9 +33,6 @@ import './search.styl';
 	routeStoreClass: RouteStore,
 	created({ route }) {
 		routeStore.commit('initStore', route);
-	},
-	destroyed() {
-		routeStore.commit('destroyStore');
 	},
 })
 export default class RouteSearch extends BaseRouteComponent {
@@ -70,5 +68,17 @@ export default class RouteSearch extends BaseRouteComponent {
 			!this.searchPayload.usersCount &&
 			!this.searchPayload.postsCount
 		);
+	}
+
+	routeCreated() {
+		// Always disable ads for now, until we get better controls of when
+		// adult content is shown in search.
+		const adSettings = new AdSettingsContainer();
+		adSettings.isPageDisabled = true;
+		this.$ad.setPageSettings(adSettings);
+	}
+
+	routeDestroyed() {
+		this.$ad.releasePageSettings();
 	}
 }

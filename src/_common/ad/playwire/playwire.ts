@@ -1,57 +1,21 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { propOptional } from '../../../utils/vue';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { Game } from '../../game/game.model';
 import { User } from '../../user/user.model';
-import { Ads } from '../ads.service';
-import { Playwire } from './playwire.service';
+import { AdEventClick, AdEventView, AdTypeDisplay } from '../ad-store';
 
 function generateSlotId() {
 	return Math.random() + '';
 }
 
-let clickTrackerBootstrapped = false;
-let focusedElem: Element | null = null;
-const clickTrackers: Map<Element, Function> = new Map();
-
-function addClickTracker(elem: Element, cb: Function) {
-	clickTrackers.set(elem, cb);
-	initClickTracking();
-}
-
-function removeClickTracker(elem: Element) {
-	clickTrackers.delete(elem);
-}
-
-function initClickTracking() {
-	if (clickTrackerBootstrapped || !Ads.shouldShow) {
-		return;
-	}
-
-	clickTrackerBootstrapped = true;
-
-	// Checking the active element in an interval seems to be the only way of tracking clicks.
-	setInterval(function() {
-		if (document.activeElement === focusedElem) {
-			return;
-		}
-
-		focusedElem = document.activeElement;
-		clickTrackers.forEach((cb, adElem) => {
-			if (focusedElem && adElem.contains(focusedElem)) {
-				cb();
-			}
-		});
-	}, 1000);
-}
-
 @Component({})
 export default class AppAdPlaywire extends Vue {
-	@Prop({ type: String, default: 'rectangle' })
+	@Prop(propOptional(String, 'rectangle'))
 	size!: 'rectangle' | 'leaderboard' | 'footer';
 
-	@Prop({ type: Boolean, default: false })
-	staticSize!: boolean;
+	@Prop(propOptional(Boolean, false)) staticSize!: boolean;
 
 	/**
 	 * We populate this when we first decide to show the ad, and then we change
@@ -84,7 +48,7 @@ export default class AppAdPlaywire extends Vue {
 		let resource: string = undefined as any;
 		let resourceId: number = undefined as any;
 
-		const adResource = Ads.settings.resource;
+		const adResource = this.$ad.settings.resource;
 		if (adResource instanceof Game) {
 			resource = 'Game';
 			resourceId = adResource.id;
@@ -100,28 +64,24 @@ export default class AppAdPlaywire extends Vue {
 	}
 
 	mounted() {
-		Playwire.addAd(this);
+		this.$playwire.addAd(this);
 	}
 
 	beforeDestroy() {
-		Playwire.removeAd(this);
-		removeClickTracker(this.$el);
+		this.$playwire.removeAd(this);
+		this.$ad.removeClickTracker(this.$el);
 	}
 
 	display() {
 		this.slotId = generateSlotId();
 
 		// Log that we viewed this ad immediately.
-		this.sendBeacon(Ads.EVENT_VIEW);
-		addClickTracker(this.$el, () => this.sendBeacon(Ads.EVENT_CLICK));
+		this.sendBeacon(AdEventView);
+		this.$ad.addClickTracker(this.$el, () => this.sendBeacon(AdEventClick));
 	}
 
 	private sendBeacon(event: string) {
-		Ads.sendBeacon(
-			event,
-			Ads.TYPE_DISPLAY,
-			this.resourceInfo.resource,
-			this.resourceInfo.resourceId
-		);
+		const { resource, resourceId } = this.resourceInfo;
+		this.$ad.sendBeacon(event, AdTypeDisplay, resource, resourceId);
 	}
 }

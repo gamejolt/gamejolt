@@ -1,12 +1,12 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { loadScript } from '../../../utils/utils';
+import { propOptional, propRequired } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
 import { time } from '../../filters/time';
 import AppLoading from '../../loading/loading.vue';
-import { Ads } from '../ads.service';
-
+import { AdEventView, AdTypeVideo } from '../ad-store';
 const ImaScriptSrc = 'https://imasdk.googleapis.com/js/sdkloader/ima3.js';
 const AdSlotWidth = 910;
 const AdSlotHeight = 512;
@@ -20,11 +20,10 @@ const AdSlotHeight = 512;
 	},
 })
 export default class AppAdVideo extends Vue {
-	@Prop(String) resource!: string;
-	@Prop(Number) resourceId!: number;
-	@Prop({ type: String, default: 'game' })
-	resourceLabel!: string;
-	@Prop(String) trackingLabel!: string;
+	@Prop(propRequired(String)) resource!: string;
+	@Prop(propRequired(Number)) resourceId!: number;
+	@Prop(propOptional(String, 'game')) resourceLabel!: string;
+	@Prop(propOptional(String)) trackingLabel?: string;
 
 	private videoElem!: HTMLVideoElement;
 	private adContainerElem!: HTMLElement;
@@ -167,7 +166,8 @@ export default class AppAdVideo extends Vue {
 		});
 
 		this.adsManager.addEventListener(ima.AdEvent.Type.IMPRESSION, () => {
-			Ads.sendBeacon(Ads.EVENT_VIEW, Ads.TYPE_VIDEO, this.resource, this.resourceId);
+			const { resource, resourceId } = this;
+			this.$ad.sendBeacon(AdEventView, AdTypeVideo, resource, resourceId);
 		});
 
 		this.adsManager.addEventListener(ima.AdEvent.Type.CLICK, () => {

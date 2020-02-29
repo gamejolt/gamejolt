@@ -1,10 +1,9 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { Ads } from '../ads.service';
-import { Playwire } from './playwire.service';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { Game } from '../../game/game.model';
 import { User } from '../../user/user.model';
+import { AdEventView, AdTypeDisplay } from '../ad-store';
 
 @Component({})
 export default class AppAdPlaywireVideo extends Vue {
@@ -12,7 +11,7 @@ export default class AppAdPlaywireVideo extends Vue {
 		let resource: string = undefined as any;
 		let resourceId: number = undefined as any;
 
-		const adResource = Ads.settings.resource;
+		const adResource = this.$ad.settings.resource;
 		if (adResource instanceof Game) {
 			resource = 'Game';
 			resourceId = adResource.id;
@@ -28,27 +27,23 @@ export default class AppAdPlaywireVideo extends Vue {
 	}
 
 	mounted() {
-		Playwire.addAd(this);
+		this.$playwire.addAd(this);
 	}
 
 	beforeDestroy() {
-		Playwire.removeAd(this);
+		this.$playwire.removeAd(this);
 	}
 
 	display() {
 		this.renderScript();
 
 		// Log that we viewed this ad immediately.
-		this.sendBeacon(Ads.EVENT_VIEW);
+		this.sendBeacon(AdEventView);
 	}
 
 	private sendBeacon(event: string) {
-		Ads.sendBeacon(
-			event,
-			Ads.TYPE_DISPLAY,
-			this.resourceInfo.resource,
-			this.resourceInfo.resourceId
-		);
+		const { resource, resourceId } = this.resourceInfo;
+		this.$ad.sendBeacon(event, AdTypeDisplay, resource, resourceId);
 	}
 
 	private renderScript() {

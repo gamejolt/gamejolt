@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { loadCurrentLanguage } from '../utils/translations';
-import { Playwire } from '../_common/ad/playwire/playwire.service';
 import { Analytics } from '../_common/analytics/analytics.service';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
 import AppErrorPage from '../_common/error/page/page.vue';
@@ -36,8 +35,6 @@ export default class App extends Vue {
 	}
 
 	mounted() {
-		Playwire.init(this.$router);
-
 		// Let it finish doing all the initial rendering junk and track after
 		// that.
 		setTimeout(() => {

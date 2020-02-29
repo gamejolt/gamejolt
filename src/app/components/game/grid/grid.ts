@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { Ads } from '../../../../_common/ad/ads.service';
+import { propOptional } from '../../../../utils/vue';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import { AppCondenseWhitespace } from '../../../../_common/condense-whitespace';
 import { number } from '../../../../_common/filters/number';
@@ -22,29 +22,14 @@ let idCounter = 0;
 	},
 })
 export default class AppGameGrid extends Vue {
-	@Prop({ type: Array, default: () => [] })
-	games!: Game[];
-
-	@Prop(Number)
-	gamesCount?: number;
-
-	@Prop(Number)
-	currentPage?: number;
-
-	@Prop(Boolean)
-	truncateToFit?: boolean;
-
-	@Prop(Boolean)
-	scrollable?: boolean;
-
-	@Prop(Boolean)
-	forceScrollable?: boolean;
-
-	@Prop(Boolean)
-	showAds?: boolean;
-
-	@Prop(String)
-	eventLabel?: string;
+	@Prop(propOptional(Array, () => [])) games!: Game[];
+	@Prop(propOptional(Number, 0)) gamesCount!: number;
+	@Prop(propOptional(Number, 0)) currentPage!: number;
+	@Prop(propOptional(Boolean, false)) truncateToFit!: boolean;
+	@Prop(propOptional(Boolean, false)) scrollable!: boolean;
+	@Prop(propOptional(Boolean, false)) forceScrollable!: boolean;
+	@Prop(propOptional(Boolean, false)) showAds!: boolean;
+	@Prop(propOptional(String)) eventLabel?: string;
 
 	id = ++idCounter;
 
@@ -52,7 +37,7 @@ export default class AppGameGrid extends Vue {
 	readonly Screen = Screen;
 
 	get shouldShowAds() {
-		return this.showAds && Ads.shouldShow;
+		return this.showAds && this.$ad.shouldShow;
 	}
 
 	get isScrollable() {
