@@ -5,6 +5,8 @@ import AppAdPlaywire from './playwire.vue';
 import AppAdPlaywireVideo from './video';
 
 export class AdPlaywireAdapter extends AdAdapterBase {
+	hasVideoSupport = true;
+
 	component(slot: AdSlot) {
 		return slot.size === 'video' ? AppAdPlaywireVideo : AppAdPlaywire;
 	}

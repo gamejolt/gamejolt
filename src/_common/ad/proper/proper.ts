@@ -16,8 +16,6 @@ export default class AppAdProper extends Vue {
 		let placement: AdProperAdapterPlacement = 'content_1';
 		if (size === 'leaderboard') {
 			placement = 'leaderboard';
-		} else if (size === 'video') {
-			placement = 'side_1';
 		}
 		return placement;
 	}

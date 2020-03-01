@@ -3,8 +3,8 @@
 		v-if="shouldShow"
 		class="-container"
 		:class="{
-			'-size-leaderboard': size === 'leaderboard',
-			'-size-rectangle': size === 'rectangle',
+			'-size-leaderboard': adSlot.size === 'leaderboard',
+			'-size-rectangle': adSlot.size === 'rectangle',
 		}"
 	>
 		<div class="-inner">
