@@ -12,8 +12,8 @@ declare module 'vue/types/vue' {
 }
 
 // To show ads on the page for dev, just change this to false.
-// export const AdsDisabledDev = GJ_BUILD_TYPE === 'development';
-export const AdsDisabledDev = false;
+export const AdsDisabledDev = GJ_BUILD_TYPE === 'development';
+// export const AdsDisabledDev = false;
 
 /**
  * Whether or not we want to have click tracking enabled. It is not very
