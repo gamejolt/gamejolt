@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import { Screen } from '../../screen/screen-service';
+import { AdSlotMeta } from '../ad-slot-info';
 import AppAdWidget from '../widget/widget.vue';
 
 @Component({
@@ -10,7 +11,7 @@ import AppAdWidget from '../widget/widget.vue';
 	},
 })
 export default class AppAdPlacement extends Vue {
-	@Prop(propOptional(Boolean, false)) staticSize!: boolean;
+	@Prop(propOptional(Object, () => {})) meta!: AdSlotMeta;
 	@Prop(propOptional(Boolean, false)) hiddenXs!: boolean;
 	@Prop(propOptional(Boolean, false)) hiddenSm!: boolean;
 	@Prop(propOptional(Boolean, false)) hiddenDesktop!: boolean;

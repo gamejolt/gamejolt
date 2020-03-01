@@ -29,7 +29,7 @@
 					class="-ad-container well fill-offset full-bleed-xs text-center"
 					v-if="shouldShowAd(i)"
 				>
-					<app-ad-widget size="rectangle" static-size />
+					<app-ad-widget size="rectangle" :meta="{ staticSize: true }" />
 					<div class="-ad-label text-muted small">
 						<translate>Advertisement</translate>
 					</div>

@@ -67,10 +67,17 @@ export function propOptional<T>(
 	};
 }
 
+type VuePluginLifecycleHook<T> = (this: T, vm: Vue) => void;
+
 export function installVuePlugin<T>(
 	key: string,
 	constructor: Constructor<T>,
-	init?: (this: T, vm: Vue) => void
+	pluginOptions?: {
+		beforeCreate?: VuePluginLifecycleHook<T>;
+		created?: VuePluginLifecycleHook<T>;
+		beforeMount?: VuePluginLifecycleHook<T>;
+		mounted?: VuePluginLifecycleHook<T>;
+	}
 ) {
 	Vue.mixin({
 		beforeCreate() {
@@ -84,19 +91,40 @@ export function installVuePlugin<T>(
 				if (parent?.[key]) {
 					self[key] = parent[key];
 				} else {
-					const service = new constructor();
-					if (init) {
-						init.call(service, this);
-					}
-					self[key] = Vue.observable(service);
+					// This is the top-level root element for this plugin.
+					self[`_${key}IsRoot`] = true;
+					self[key] = Vue.observable(new constructor());
+					runHook(this, pluginOptions?.beforeCreate);
 				}
 			}
 		},
-		// For state debugging.
-		// data() {
-		// 	return {
-		// 		[key]: (this as any)[key],
-		// 	};
-		// },
+		created() {
+			runHook(this, pluginOptions?.created);
+		},
+		beforeMount() {
+			runHook(this, pluginOptions?.beforeMount);
+		},
+		mounted() {
+			runHook(this, pluginOptions?.mounted);
+		},
+		// For debugging purposes in development.
+		data() {
+			const self = this as any;
+			if (GJ_BUILD_TYPE === 'development' && self[`_${key}IsRoot`]) {
+				return {
+					[key]: self[key],
+				};
+			}
+			return {};
+		},
 	});
+
+	function runHook(self: any, cb?: VuePluginLifecycleHook<T>) {
+		// We only run hooks in the root component of the hierarchy.
+		if (!self[`_${key}IsRoot`] || !cb) {
+			return;
+		}
+
+		cb.call(self[key], self);
+	}
 }

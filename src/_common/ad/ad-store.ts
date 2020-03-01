@@ -1,6 +1,9 @@
 import { installVuePlugin } from '../../utils/vue';
 import { Environment } from '../environment/environment.service';
+import { EventBus } from '../event-bus/event-bus.service';
 import { Model } from '../model/model.service';
+import { AdPlaywireAdapter } from './playwire/playwire-adapter';
+import AppAdWidgetInner from './widget/inner';
 
 declare module 'vue/types/vue' {
 	interface Vue {
@@ -9,8 +12,8 @@ declare module 'vue/types/vue' {
 }
 
 // To show ads on the page for dev, just change this to false.
-export const AdsDisabledDev = GJ_BUILD_TYPE === 'development';
-// export const AdsDisabledDev = false;
+// export const AdsDisabledDev = GJ_BUILD_TYPE === 'development';
+export const AdsDisabledDev = false;
 
 /**
  * Whether or not we want to have click tracking enabled. It is not very
@@ -36,14 +39,38 @@ export const AdResourceTypeFiresidePost = 4;
 
 const defaultSettings = new AdSettingsContainer();
 
+type AdComponent = AppAdWidgetInner;
+
 export class AdStore {
+	adapter = new AdPlaywireAdapter();
+
+	private routeResolved = false;
+	private ads: Set<AdComponent> = new Set();
 	private pageSettings: AdSettingsContainer | null = null;
 	private clickTrackerBootstrapped = false;
-	private focusedElem: Element | null = null;
 	private clickTrackers: Map<Element, Function> = new Map();
+	private focusedElem: Element | null = null;
 
 	static install() {
-		installVuePlugin('$ad', this);
+		installVuePlugin('$ad', this, {
+			mounted(vm) {
+				if (GJ_IS_CLIENT || GJ_IS_SSR || AdsDisabledDev) {
+					return;
+				}
+
+				// We set up events so that we know when a route begins and when the
+				// routing is fully resolved.
+				vm.$router.beforeEach((_to, _from, next) => {
+					this.routeResolved = false;
+					next();
+				});
+
+				EventBus.on('routeChangeAfter', () => {
+					this.routeResolved = true;
+					this.displayAds(Array.from(this.ads));
+				});
+			},
+		});
 	}
 
 	get settings() {
@@ -70,6 +97,26 @@ export class AdStore {
 		this.pageSettings = null;
 	}
 
+	addAd(ad: AdComponent) {
+		this.ads.add(ad);
+
+		// If the route already resolved then this ad was mounted after the
+		// fact. We have to call the initial display.
+		if (this.routeResolved) {
+			this.displayAds([ad]);
+		}
+	}
+
+	removeAd(ad: AdComponent) {
+		this.ads.delete(ad);
+	}
+
+	private async displayAds(ads: AdComponent[]) {
+		for (const ad of ads) {
+			ad.display();
+		}
+	}
+
 	async sendBeacon(event: string, type: string, resource?: string, resourceId?: number) {
 		let queryString = '';
 
@@ -94,6 +141,10 @@ export class AdStore {
 			path += '/click';
 		} else {
 			path += `/log/${type}`;
+		}
+
+		if (GJ_BUILD_TYPE === 'development') {
+			console.log('Sending ad beacon.', { event, type, resource, resourceId });
 		}
 
 		// This is enough to send the beacon.
