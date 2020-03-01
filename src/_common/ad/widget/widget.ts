@@ -3,7 +3,6 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import { AdSlot, AdSlotMeta, AdSlotSize } from '../ad-slot-info';
 import AppAdWidgetInner from './inner.vue';
-import './widget-content.styl';
 
 @Component({
 	components: {

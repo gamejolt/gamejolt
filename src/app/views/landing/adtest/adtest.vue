@@ -4,7 +4,7 @@
 			<div class="row">
 				<div class="col-6">
 					<app-scroll-affix>
-						<app-ad-widget size="video" />
+						<app-ad-widget :size="size" />
 					</app-scroll-affix>
 				</div>
 			</div>

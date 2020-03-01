@@ -18,9 +18,6 @@
 				<div class="game-grid-ad" v-if="Screen.isDesktop && shouldShowAds">
 					<div class="game-grid-ad-inner">
 						<app-ad-widget size="rectangle" :meta="{ staticSize: true }" />
-						<span class="ad-label visible-lg">
-							<translate>Advertisement</translate>
-						</span>
 					</div>
 				</div>
 
@@ -33,9 +30,6 @@
 					<div class="game-grid-ad" v-if="shouldShowAd(i)" :key="game.id + '-ad'">
 						<div class="game-grid-ad-inner">
 							<app-ad-widget size="rectangle" :meta="{ staticSize: true }" />
-							<span class="ad-label visible-lg">
-								<translate>Advertisement</translate>
-							</span>
 						</div>
 					</div>
 					<div class="game-grid-item" :key="game.id">

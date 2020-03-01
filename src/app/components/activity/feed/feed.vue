@@ -30,9 +30,6 @@
 					v-if="shouldShowAd(i)"
 				>
 					<app-ad-widget size="rectangle" :meta="{ staticSize: true }" />
-					<div class="-ad-label text-muted small">
-						<translate>Advertisement</translate>
-					</div>
 				</div>
 			</div>
 		</div>

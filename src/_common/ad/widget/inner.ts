@@ -7,9 +7,19 @@ import { User } from '../../user/user.model';
 import { AdSlot } from '../ad-slot-info';
 import { AdEventClick, AdEventView, AdTypeDisplay } from '../ad-store';
 
+function generateSlotId() {
+	return Math.random() + '';
+}
+
 @Component({})
 export default class AppAdWidgetInner extends Vue {
 	@Prop(propRequired(AdSlot)) adSlot!: AdSlot;
+
+	/**
+	 * We change this as the route changes. This way we can tell any of the ad
+	 * adapters when the slot needs to load a new ad in.
+	 */
+	slotId = '';
 
 	get resourceInfo() {
 		let resource: string = undefined as any;
@@ -42,7 +52,7 @@ export default class AppAdWidgetInner extends Vue {
 	display() {
 		// This will completely regenerate the rendered ad component so that it
 		// displays a new ad.
-		this.adSlot.regenerateId();
+		this.slotId = generateSlotId();
 
 		// Log that we viewed this ad immediately.
 		this.sendBeacon(AdEventView);
