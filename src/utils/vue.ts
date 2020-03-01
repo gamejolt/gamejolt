@@ -66,3 +66,65 @@ export function propOptional<T>(
 		default: defaultValue,
 	};
 }
+
+type VuePluginLifecycleHook<T> = (this: T, vm: Vue) => void;
+
+export function installVuePlugin<T>(
+	key: string,
+	constructor: Constructor<T>,
+	pluginOptions?: {
+		beforeCreate?: VuePluginLifecycleHook<T>;
+		created?: VuePluginLifecycleHook<T>;
+		beforeMount?: VuePluginLifecycleHook<T>;
+		mounted?: VuePluginLifecycleHook<T>;
+	}
+) {
+	Vue.mixin({
+		beforeCreate() {
+			const self = this as any;
+			const parent = this.$options.parent as Record<string, any> | undefined;
+			if (!self[key]) {
+				// We pass the service down from the main parent component into
+				// every child. For the intial service object, we have to make
+				// sure to make it observable so that vue can track it within
+				// its dependency system.
+				if (parent?.[key]) {
+					self[key] = parent[key];
+				} else {
+					// This is the top-level root element for this plugin.
+					self[`_${key}IsRoot`] = true;
+					self[key] = Vue.observable(new constructor());
+					runHook(this, pluginOptions?.beforeCreate);
+				}
+			}
+		},
+		created() {
+			runHook(this, pluginOptions?.created);
+		},
+		beforeMount() {
+			runHook(this, pluginOptions?.beforeMount);
+		},
+		mounted() {
+			runHook(this, pluginOptions?.mounted);
+		},
+		// For debugging purposes in development.
+		data() {
+			const self = this as any;
+			if (GJ_BUILD_TYPE === 'development' && self[`_${key}IsRoot`]) {
+				return {
+					[key]: self[key],
+				};
+			}
+			return {};
+		},
+	});
+
+	function runHook(self: any, cb?: VuePluginLifecycleHook<T>) {
+		// We only run hooks in the root component of the hierarchy.
+		if (!self[`_${key}IsRoot`] || !cb) {
+			return;
+		}
+
+		cb.call(self[key], self);
+	}
+}

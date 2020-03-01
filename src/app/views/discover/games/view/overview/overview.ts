@@ -1,5 +1,4 @@
 import { Component } from 'vue-property-decorator';
-import { Ads } from '../../../../../../_common/ad/ads.service';
 import AppAdPlacement from '../../../../../../_common/ad/placement/placement.vue';
 import AppAdWidget from '../../../../../../_common/ad/widget/widget.vue';
 import { Api } from '../../../../../../_common/api/api.service';
@@ -227,7 +226,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	get shouldShowAds() {
-		return Ads.shouldShow;
+		return this.$ad.shouldShow;
 	}
 
 	get shouldShowCommentAdd() {

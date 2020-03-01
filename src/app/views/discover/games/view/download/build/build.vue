@@ -74,7 +74,7 @@
 									</div>
 
 									<br />
-									<app-ad-playwire-video />
+									<app-ad-widget size="video" />
 
 									<!--
 										Developer's games

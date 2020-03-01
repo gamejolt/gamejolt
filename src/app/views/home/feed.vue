@@ -64,7 +64,7 @@
 
 				<app-scroll-affix>
 					<div class="-ad">
-						<app-ad-playwire-video />
+						<app-ad-widget size="video" />
 					</div>
 				</app-scroll-affix>
 			</div>

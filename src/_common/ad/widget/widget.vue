@@ -3,12 +3,12 @@
 		v-if="shouldShow"
 		class="-container"
 		:class="{
-			'-size-leaderboard': size === 'leaderboard',
-			'-size-rectangle': size === 'rectangle',
+			'-size-leaderboard': adSlot.size === 'leaderboard',
+			'-size-rectangle': adSlot.size === 'rectangle',
 		}"
 	>
 		<div class="-inner">
-			<app-ad-playwire :size="size" :static-size="staticSize" />
+			<app-ad-widget-inner :ad-slot="adSlot" />
 		</div>
 	</div>
 </template>
@@ -25,12 +25,10 @@
 
 .-size-leaderboard
 	.-inner
-		// min-width: 728px
 		min-height: 90px
 
 .-size-rectangle
 	.-inner
-		// min-width: 300px
 		min-height: 250px
 </style>
 
