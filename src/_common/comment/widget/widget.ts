@@ -200,8 +200,7 @@ export default class AppCommentWidget extends Vue {
 		}
 	}
 
-	@Watch('resourceId')
-	@Watch('resourceName')
+	@Watch('model')
 	async init() {
 		if (!this.model) {
 			return;
