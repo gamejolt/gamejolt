@@ -1,5 +1,5 @@
 <template>
-	<nav id="shell-top-nav" class="navbar">
+	<nav id="shell-top-nav" class="navbar backdrop-affected">
 		<div ref="left" class="navbar-left" :style="{ 'min-width': minColWidth }">
 			<div class="-col" v-app-observe-dimensions="checkColWidths">
 				<a
