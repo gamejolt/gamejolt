@@ -31,10 +31,14 @@ export class Backdrop {
 		this.backdrops.push(backdrop);
 		document.body.classList.add('backdrop-active');
 
+		// Take up the space that the scrollbar was taking so that things don't
+		// shift to the right when showing a backdrop.
 		document.body.style.marginRight = scrollbarWidth + 'px';
-		// setting the max-width to the difference in width from scrollbar
-		document.getElementById('shell-top-nav').style.maxWidth =
-			window.innerWidth - scrollbarWidth + 'px';
+		document.querySelectorAll('.backdrop-affected').forEach(i => {
+			if (i instanceof HTMLElement) {
+				i.style.paddingRight = scrollbarWidth + 'px';
+			}
+		});
 
 		return backdrop;
 	}
@@ -42,14 +46,20 @@ export class Backdrop {
 	static checkBackdrops() {
 		const active = this.backdrops.filter(i => i.active);
 		if (active.length === 0) {
-			document.body.style.marginRight = '';
 			document.body.classList.remove('backdrop-active');
+
+			// Now we have to remove the spacing that we took up when we pushed
+			// the backdrop onto the page.
+			document.body.style.marginRight = '';
+			document.querySelectorAll('.backdrop-affected').forEach(i => {
+				if (i instanceof HTMLElement) {
+					i.style.paddingRight = '';
+				}
+			});
 		}
 	}
 
 	static remove(backdrop: AppBackdrop) {
-		// setting max-width to 100vw here will make sure it's set at the proper time
-		document.getElementById('shell-top-nav').style.maxWidth = '100vw';
 		backdrop.$destroy();
 		backdrop.$el.parentNode!.removeChild(backdrop.$el);
 		arrayRemove(this.backdrops, i => i === backdrop);
