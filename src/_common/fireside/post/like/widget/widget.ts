@@ -75,8 +75,10 @@ export default class AppFiresidePostLikeWidget extends Vue {
 
 	async toggleLike() {
 		const currentLike = this.post.user_like;
+		// @check, remove this
+		console.log(this.shouldShowFollow);
 
-		// @check, move this into the conditional below. Also change !currentLike to shouldShowFollow.
+		// @check, move this into the conditional below. Also change !currentLike to this.shouldShowFollow.
 		this.$emit('show-user-follow', !currentLike);
 
 		if (!currentLike) {

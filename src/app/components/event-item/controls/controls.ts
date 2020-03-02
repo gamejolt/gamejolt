@@ -4,6 +4,7 @@ import AppCommentVideoLikeWidget from '../../../../_common/comment/video/like-wi
 import { CommentVideo } from '../../../../_common/comment/video/video-model';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
+import AppExpand from '../../../../_common/expand/expand.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppEventItemControlsComments from './comments/comments.vue';
 import AppEventItemControlsFiresidePost from './fireside-post/fireside-post.vue';
@@ -15,6 +16,7 @@ import AppEventItemControlsUserFollow from './user-follow/user-follow.vue';
 		AppEventItemControlsFiresidePost,
 		AppEventItemControlsComments,
 		AppEventItemControlsUserFollow,
+		AppExpand,
 	},
 })
 export default class AppEventItemControls extends Vue {
@@ -32,11 +34,6 @@ export default class AppEventItemControls extends Vue {
 
 	commentsCount = 0;
 	toggleUserFollow = false;
-	transitionHeight = 0;
-
-	get testHeight() {
-		return this.transitionHeight;
-	}
 
 	@Emit('post-edit')
 	emitPostEdit() {}

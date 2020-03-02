@@ -29,18 +29,12 @@
 		</div>
 
 		<!-- v-if="showUserFollow" -->
-		<app-event-item-controls-user-follow
-			v-if="true"
-			class="anim-fade-in-down"
-			:post="post"
-			:toggle-user-follow="toggleUserFollow"
-			@follow-height="transitionHeight = $event"
-		/>
+		<app-expand v-if="showUserFollow" when animate-initial>
+			<app-event-item-controls-user-follow :post="post" :toggle-user-follow="toggleUserFollow" />
+		</app-expand>
 		<span @click.stop>
 			<app-event-item-controls-comments
 				v-if="post"
-				class="test-transition"
-				:style="{ marginTop: testHeight + 40 + 'px' }"
 				:model="post"
 				:show-feed="showCommentFeed"
 				@count="commentsCount = $event"
@@ -50,9 +44,3 @@
 </template>
 
 <script lang="ts" src="./controls"></script>
-
-<style lang="stylus" scoped>
-.test-transition
-	transition: 1s
-
-</style>

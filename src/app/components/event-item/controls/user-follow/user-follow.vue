@@ -1,5 +1,5 @@
 <template>
-	<div v-if="toggleUserFollow" class="-user-follow well fill-darkest">
+	<div v-if="toggleUserFollow" class="-user-follow well fill-darkest anim-fade-in">
 		<p class="small">
 			<translate>
 				Would you also like to follow this user?
@@ -18,5 +18,5 @@
 
 .-user-follow
 	margin-top: $grid-gutter-width * 0.5;
-	position: absolute
+	margin-bottom: 0
 </style>
