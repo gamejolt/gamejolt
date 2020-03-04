@@ -1,10 +1,10 @@
+import { Component, Prop } from 'vue-property-decorator';
 import { Game } from '../../../../../_common/game/game.model';
 import { GameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
 import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
 import { GameVideo } from '../../../../../_common/game/video/video.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
-import { Component, Prop } from 'vue-property-decorator';
 import FormGameImage from '../../../forms/game/image/image.vue';
 import FormGameSketchfab from '../../../forms/game/sketchfab/sketchfab.vue';
 import FormGameVideo from '../../../forms/game/video/video.vue';
@@ -31,6 +31,6 @@ export default class AppGameMediaItemAddModal extends BaseModal {
 	}
 
 	onSketchfabAdd(sketchfab: GameSketchfab) {
-		this.modal.resolve(sketchfab);
+		this.modal.resolve([sketchfab]);
 	}
 }
