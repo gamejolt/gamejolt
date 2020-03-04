@@ -29,7 +29,6 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	friend_requests_enabled!: boolean;
 
 	created_on!: number;
-	last_logged_on!: number;
 
 	theme!: Theme | null;
 	follower_count!: number;
