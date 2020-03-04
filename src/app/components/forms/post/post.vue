@@ -135,7 +135,8 @@
 					v-app-focus-when="!wasPublished"
 				>
 					<p class="help-block">
-						<translate>Enter your Sketchfab model's URL. For example:</translate>
+						<translate>Enter your Sketchfab model's URL or ID. For example:</translate>
+						<br />
 						<code>
 							https://sketchfab.com/3d-models/your-model-name-ID
 						</code>
