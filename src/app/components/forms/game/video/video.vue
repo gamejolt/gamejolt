@@ -11,11 +11,15 @@
 				The URL should look something like:
 				<br />
 				<strong>YouTube:</strong>
-				http://www.youtube.com/watch?v=oHg5SJYRHA0
+				<code>https://youtube.com/watch?v=oHg5SJYRHA0</code>
 				<br />
 				<strong>Vimeo:</strong>
-				http://www.vimeo.com/2619976
+				<code>https://vimeo.com/243244233</code>
 			</p>
+			<template v-if="hasValidVideoUrl && videoData">
+				<br />
+				<app-video-embed :video-provider="videoData.type" :video-id="videoData.id" />
+			</template>
 		</app-form-group>
 
 		<app-form-group name="title" :label="$gettext(`dash.games.media.video.form.title_label`)">

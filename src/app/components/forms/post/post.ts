@@ -117,8 +117,9 @@ export default class FormPost extends BaseForm<FormPostModel>
 	};
 
 	readonly YOUTUBE_URL_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_\-]{11})(?:&.+)*$/i;
-	readonly SKETCHFAB_URL_REGEX = /^(?:(?:https:\/\/)?(?:www.)?(?:sketchfab.com\/3d-models\/(?:[a-z0-9]+-)+([0-9a-f]{32})\/?))$/i;
-	readonly SKETCHFAB_FIELD_REGEX = /^(?:(?:https:\/\/)?(?:www.)?(?:sketchfab.com\/3d-models\/(?:[a-z0-9]+-)+([0-9a-f]{32})\/?))$|^([0-9a-f]{32})$/i;
+	readonly SKETCHFAB_URL_REGEX_1 = /^(?:(?:https:\/\/)?(?:www.)?(?:sketchfab.com\/3d-models\/(?:[a-z0-9]+-)+([0-9a-f]{32})\/?))$/i;
+	readonly SKETCHFAB_URL_REGEX_2 = /^(?:(?:https:\/\/)?(?:www.)?(?:sketchfab.com\/models\/([0-9a-f]{32})\/?))$/i;
+	readonly SKETCHFAB_FIELD_REGEX = /^(?:(?:https:\/\/)?(?:www.)?(?:sketchfab.com\/3d-models\/(?:[a-z0-9]+-)+([0-9a-f]{32})\/?))$|^(?:(?:https:\/\/)?(?:www.)?(?:sketchfab.com\/models\/([0-9a-f]{32})\/?))$|^([0-9a-f]{32})$/i;
 	readonly MAX_POLL_ITEMS = 10;
 	readonly MIN_POLL_DURATION = 5;
 	readonly MAX_POLL_DURATION = 20160;
@@ -192,10 +193,12 @@ export default class FormPost extends BaseForm<FormPostModel>
 	}
 
 	get sketchfabId() {
-		const urlMatches = this.SKETCHFAB_URL_REGEX.exec(this.formModel.sketchfab_id.trim());
-		if (urlMatches !== null && urlMatches.length === 2) {
-			const id = urlMatches[1];
-			return id;
+		for (const regex of [this.SKETCHFAB_URL_REGEX_1, this.SKETCHFAB_URL_REGEX_2]) {
+			const urlMatches = regex.exec(this.formModel.sketchfab_id.trim());
+			if (urlMatches !== null && urlMatches.length === 2) {
+				const id = urlMatches[1];
+				return id;
+			}
 		}
 		return this.formModel.sketchfab_id;
 	}

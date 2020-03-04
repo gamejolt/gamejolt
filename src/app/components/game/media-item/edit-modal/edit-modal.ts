@@ -1,12 +1,10 @@
+import { Component, Prop } from 'vue-property-decorator';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/embed.vue';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
-import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
-import { Component, Prop } from 'vue-property-decorator';
 import { Media } from '../../../../views/dashboard/games/manage/manage.store';
 import FormGameImage from '../../../forms/game/image/image.vue';
 import FormGameSketchfab from '../../../forms/game/sketchfab/sketchfab.vue';
@@ -18,8 +16,6 @@ import { GameMediaItemEditModalRemoveCallback } from './edit-modal.service';
 		FormGameImage,
 		FormGameVideo,
 		FormGameSketchfab,
-		AppVideoEmbed,
-		AppSketchfabEmbed,
 	},
 	directives: {
 		AppTooltip,
@@ -40,7 +36,9 @@ export default class AppGameMediaItemEditModal extends BaseModal {
 		}
 
 		if (this.item.media_type === 'sketchfab') {
-			return this.$gettext(`Copy the direct link to view this sketchfab model on your game page.`);
+			return this.$gettext(
+				`Copy the direct link to view this sketchfab model on your game page.`
+			);
 		}
 	}
 
@@ -68,10 +66,13 @@ export default class AppGameMediaItemEditModal extends BaseModal {
 			typeLabel = this.$gettext('sketchfab model').toLowerCase();
 		}
 
-		/// {{ type }} contains the translated media item type (image/video/sketchfab)
-		const message = this.$gettextInterpolate('Are you sure you want to remove this %{ type }?', {
-			type: typeLabel,
-		});
+		// {{ type }} contains the translated media item type (image/video/sketchfab)
+		const message = this.$gettextInterpolate(
+			'Are you sure you want to remove this %{ type }?',
+			{
+				type: typeLabel,
+			}
+		);
 
 		const result = await ModalConfirm.show(message);
 		if (!result) {
