@@ -40,6 +40,10 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import {
+	getSketchfabIdFromInput,
+	SKETCHFAB_FIELD_VALIDATION_REGEX,
+} from '../../../../_common/sketchfab/embed/embed';
 import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.service';
@@ -117,9 +121,8 @@ export default class FormPost extends BaseForm<FormPostModel>
 	};
 
 	readonly YOUTUBE_URL_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_\-]{11})(?:&.+)*$/i;
-	readonly SKETCHFAB_URL_REGEX_1 = /^(?:(?:https:\/\/)?(?:www.)?(?:sketchfab.com\/3d-models\/(?:[a-z0-9]+-)+([0-9a-f]{32})\/?))$/i;
-	readonly SKETCHFAB_URL_REGEX_2 = /^(?:(?:https:\/\/)?(?:www.)?(?:sketchfab.com\/models\/([0-9a-f]{32})\/?))$/i;
-	readonly SKETCHFAB_FIELD_REGEX = /^(?:(?:https:\/\/)?(?:www.)?(?:sketchfab.com\/3d-models\/(?:[a-z0-9]+-)+([0-9a-f]{32})\/?))$|^(?:(?:https:\/\/)?(?:www.)?(?:sketchfab.com\/models\/([0-9a-f]{32})\/?))$|^([0-9a-f]{32})$/i;
+	readonly SKETCHFAB_FIELD_REGEX = SKETCHFAB_FIELD_VALIDATION_REGEX;
+
 	readonly MAX_POLL_ITEMS = 10;
 	readonly MIN_POLL_DURATION = 5;
 	readonly MAX_POLL_DURATION = 20160;
@@ -193,14 +196,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 	}
 
 	get sketchfabId() {
-		for (const regex of [this.SKETCHFAB_URL_REGEX_1, this.SKETCHFAB_URL_REGEX_2]) {
-			const urlMatches = regex.exec(this.formModel.sketchfab_id.trim());
-			if (urlMatches !== null && urlMatches.length === 2) {
-				const id = urlMatches[1];
-				return id;
-			}
-		}
-		return this.formModel.sketchfab_id;
+		return getSketchfabIdFromInput(this.formModel.sketchfab_id);
 	}
 
 	get hasValidYouTubeUrl() {

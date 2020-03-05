@@ -28,16 +28,15 @@ export default class FormGameVideo extends BaseForm<FormModel> implements FormOn
 
 	get videoData() {
 		const url = this.formModel._url;
-		if (!url) {
-			return undefined;
-		}
-		const youtubeMatch = url.match(GameVideo.REGEX.YOUTUBE);
-		const vimeoMatch = url.match(GameVideo.REGEX.VIMEO);
+		if (url) {
+			const youtubeMatch = url.match(GameVideo.REGEX.YOUTUBE);
+			const vimeoMatch = url.match(GameVideo.REGEX.VIMEO);
 
-		if (youtubeMatch) {
-			return { id: youtubeMatch[4], type: GameVideo.TYPE_YOUTUBE };
-		} else if (vimeoMatch) {
-			return { id: vimeoMatch[4], type: GameVideo.TYPE_VIMEO };
+			if (youtubeMatch) {
+				return { id: youtubeMatch[4], type: GameVideo.TYPE_YOUTUBE };
+			} else if (vimeoMatch) {
+				return { id: vimeoMatch[4], type: GameVideo.TYPE_VIMEO };
+			}
 		}
 	}
 
@@ -58,9 +57,12 @@ export default class FormGameVideo extends BaseForm<FormModel> implements FormOn
 	onUrlChange(url: string) {
 		// Check if we need to scrub out anything from the URL.
 		// Will be the case if they entered in a full URL such as http://www.youtube.com/watch?v=something, etc.
-		if (url && this.hasValidVideoUrl) {
-			this.setField('type', this.videoData!.type);
-			this.setField('url', this.videoData!.id);
+		if (url) {
+			const videoData = this.videoData;
+			if (!!videoData) {
+				this.setField('type', videoData!.type);
+				this.setField('url', videoData!.id);
+			}
 		}
 	}
 }

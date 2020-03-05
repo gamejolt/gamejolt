@@ -2,6 +2,10 @@ import { Component, Prop } from 'vue-property-decorator';
 import { BaseForm, FormOnInit, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
+import {
+	getSketchfabIdFromInput,
+	SKETCHFAB_FIELD_VALIDATION_REGEX,
+} from '../../../../../_common/sketchfab/embed/embed';
 import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/embed.vue';
 
 @Component({
@@ -13,23 +17,14 @@ export default class FormGameSketchfab extends BaseForm<GameSketchfab>
 	implements FormOnInit, FormOnSubmit {
 	@Prop(Game) game!: Game;
 
-	readonly SKETCHFAB_URL_REGEX_1 = /^(?:(?:https:\/\/)?(?:www.)?(?:sketchfab.com\/3d-models\/(?:[a-z0-9]+-)+([0-9a-f]{32})\/?))$/i;
-	readonly SKETCHFAB_URL_REGEX_2 = /^(?:(?:https:\/\/)?(?:www.)?(?:sketchfab.com\/models\/([0-9a-f]{32})\/?))$/i;
-	readonly SKETCHFAB_FIELD_REGEX = /^(?:(?:https:\/\/)?(?:www.)?(?:sketchfab.com\/3d-models\/(?:[a-z0-9]+-)+([0-9a-f]{32})\/?))$|^(?:(?:https:\/\/)?(?:www.)?(?:sketchfab.com\/models\/([0-9a-f]{32})\/?))$|^([0-9a-f]{32})$/i;
+	readonly SKETCHFAB_FIELD_REGEX = SKETCHFAB_FIELD_VALIDATION_REGEX;
 
 	modelClass = GameSketchfab;
 	resetOnSubmit = true;
 	warnOnDiscard = false;
 
 	get sketchfabId() {
-		for (const regex of [this.SKETCHFAB_URL_REGEX_1, this.SKETCHFAB_URL_REGEX_2]) {
-			const urlMatches = regex.exec(this.formModel.sketchfab_id.trim());
-			if (urlMatches !== null && urlMatches.length === 2) {
-				const id = urlMatches[1];
-				return id;
-			}
-		}
-		return this.formModel.sketchfab_id;
+		return getSketchfabIdFromInput(this.formModel.sketchfab_id);
 	}
 
 	get hasValidSketchfabModelId() {
