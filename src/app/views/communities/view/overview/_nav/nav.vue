@@ -7,6 +7,7 @@
 			:is-unread="isChannelUnread('featured')"
 		/>
 		<app-community-channel-card
+			:key="community.id"
 			title="all"
 			:is-active="activeChannelTitle === 'all'"
 			:is-unread="isChannelUnread('all')"
