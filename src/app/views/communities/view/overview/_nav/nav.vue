@@ -6,6 +6,11 @@
 			:is-active="activeChannelTitle === 'featured'"
 			:is-unread="isChannelUnread('featured')"
 		/>
+		<app-community-channel-card
+			title="all"
+			:is-active="activeChannelTitle === 'all'"
+			:is-unread="isChannelUnread('all')"
+		/>
 
 		<template v-if="community.channels">
 			<app-community-channel-card
