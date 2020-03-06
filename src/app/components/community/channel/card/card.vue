@@ -3,7 +3,7 @@
 		class="community-channel-card sheet sheet-no-full-bleed sheet-full"
 		:class="{ '-active': isActive, 'theme-dark': backgroundItem }"
 		:to="linkTo"
-		:title="title"
+		:title="label"
 	>
 		<div class="-card-bg" v-if="backgroundItem">
 			<div
@@ -16,7 +16,7 @@
 
 		<div class="-card-content">
 			<div class="-card-content-title">
-				{{ title }}
+				{{ label }}
 			</div>
 
 			<div
