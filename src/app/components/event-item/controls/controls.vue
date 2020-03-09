@@ -15,7 +15,7 @@
 					@reject="emitPostReject"
 					@pin="emitPostPin"
 					@unpin="emitPostUnpin"
-					@show-user-follow="toggleUserFollow = $event"
+					@like-change="setUserFollow"
 				/>
 			</template>
 			<template v-else-if="video">
@@ -28,10 +28,11 @@
 			</template>
 		</div>
 
-		<!-- v-if="showUserFollow" -->
-		<app-expand v-if="showUserFollow" when animate-initial>
-			<app-event-item-controls-user-follow :post="post" :toggle-user-follow="toggleUserFollow" />
-		</app-expand>
+		<app-event-item-controls-user-follow
+			:post="post"
+			:should-show="isShowingFollow"
+			@close="setUserFollow(false)"
+		/>
 		<span @click.stop>
 			<app-event-item-controls-comments
 				v-if="post"

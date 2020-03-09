@@ -90,8 +90,9 @@
 					</template>
 
 					<app-event-item-controls
-						show-comments
 						:post="post"
+						show-comments
+						show-user-follow
 						@post-remove="onPostRemoved"
 						@post-publish="onPostPublished"
 					/>
