@@ -36,7 +36,7 @@ export function getCommentBlockReason(comment: Comment): CommentBlockReason | fa
 			i => i.source === mention.attrs.username && i.type === 'username'
 		);
 
-		if (hydrated && hydrated.data.is_blocked) {
+		if (hydrated?.data?.is_blocked) {
 			return 'mentioned-blocked-user';
 		}
 	}

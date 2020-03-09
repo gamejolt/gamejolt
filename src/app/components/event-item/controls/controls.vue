@@ -4,7 +4,6 @@
 			<template v-if="post">
 				<app-event-item-controls-fireside-post
 					:post="post"
-					:show-user-follow="showUserFollow"
 					:show-comments-button="!showCommentFeed"
 					:comments-count="commentsCount"
 					@edit="emitPostEdit"
@@ -16,6 +15,7 @@
 					@reject="emitPostReject"
 					@pin="emitPostPin"
 					@unpin="emitPostUnpin"
+					@like-change="setUserFollow"
 				/>
 			</template>
 			<template v-else-if="video">
@@ -28,6 +28,11 @@
 			</template>
 		</div>
 
+		<app-event-item-controls-user-follow
+			:post="post"
+			:should-show="isShowingFollow"
+			@close="setUserFollow(false)"
+		/>
 		<span @click.stop>
 			<app-event-item-controls-comments
 				v-if="post"

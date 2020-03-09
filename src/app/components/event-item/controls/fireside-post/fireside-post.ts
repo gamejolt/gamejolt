@@ -38,9 +38,6 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	post!: FiresidePost;
 
 	@Prop(Boolean)
-	showUserFollow?: boolean;
-
-	@Prop(Boolean)
 	showCommentsButton?: boolean;
 
 	@Prop({ type: Number, default: 0 })
@@ -77,6 +74,9 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 
 	@Emit('unpin')
 	emitUnpin() {}
+
+	@Emit('like-change')
+	emitLikeChange(_value: boolean) {}
 
 	get canPublish() {
 		return this.post.isDraft && !this.post.isScheduled && this.post.hasLead;

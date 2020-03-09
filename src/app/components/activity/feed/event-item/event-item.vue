@@ -166,8 +166,10 @@
 					'-controls-comment-video': eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD,
 				}"
 				:post="post"
+				:feed="feed"
+				:item="item"
 				:video="video"
-				:show-user-follow="shouldShowFollow"
+				:should-show-follow="shouldShowFollow"
 				@post-edit="onPostEdited(eventItem)"
 				@post-publish="onPostPublished(eventItem)"
 				@post-remove="onPostRemoved(eventItem)"
