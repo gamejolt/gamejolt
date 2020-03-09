@@ -6,7 +6,6 @@ import { AppAuthRequired } from '../../../../auth/auth-required-directive';
 import { number } from '../../../../filters/number';
 import { Growls } from '../../../../growls/growls.service';
 import { LikersModal } from '../../../../likers/modal.service';
-import AppPopper from '../../../../popper/popper.vue';
 import { AppTooltip } from '../../../../tooltip/tooltip';
 import AppUserFollowWidget from '../../../../user/follow/widget.vue';
 import { FiresidePost } from '../../post-model';
@@ -15,7 +14,6 @@ import { FiresidePostLike } from '../like-model';
 @Component({
 	components: {
 		AppUserFollowWidget,
-		AppPopper,
 	},
 	directives: {
 		AppAuthRequired,
