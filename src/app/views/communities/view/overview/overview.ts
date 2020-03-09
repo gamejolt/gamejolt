@@ -75,15 +75,15 @@ function getFetchUrl(route: Route) {
 	lazy: true,
 	deps: {
 		params: ['path', 'channel'],
-		query: ['sort'],
+		query: ['sort', 'feed_last_id'],
 	},
 	resolver: ({ route }) => {
 		const channel = getChannel(route);
 		const sort = getSort(route);
 
-		return Api.sendRequest(
-			`/web/communities/overview/${route.params.path}/${channel}?sort=${sort}`
-		);
+		let apiOverviewUrl = `/web/communities/overview/${route.params.path}/${channel}?sort=${sort}`;
+
+		return Api.sendRequest(ActivityFeedService.makeFeedUrl(route, apiOverviewUrl));
 	},
 })
 export default class RouteCommunitiesViewOverview extends BaseRouteComponent {

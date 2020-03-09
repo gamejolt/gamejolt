@@ -48,7 +48,7 @@
 						class="-recommended-ad"
 						v-if="shouldShowAds && !Screen.isMobile"
 						size="rectangle"
-						static-size
+						:meta="{ staticSize: true }"
 					/>
 
 					<template v-if="!Screen.isMobile">

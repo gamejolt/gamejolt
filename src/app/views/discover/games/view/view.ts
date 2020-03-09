@@ -1,6 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { enforceLocation } from '../../../../../utils/router';
-import { Ads, AdSettingsContainer } from '../../../../../_common/ad/ads.service';
+import { AdSettingsContainer } from '../../../../../_common/ad/ad-store';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../_common/api/api.service';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
@@ -298,10 +298,10 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		settings.resource = this.game;
 		settings.isPageDisabled = !this.game._should_show_ads;
 
-		Ads.setPageSettings(settings);
+		this.$ad.setPageSettings(settings);
 	}
 
 	private _releaseAdSettings() {
-		Ads.releasePageSettings();
+		this.$ad.releasePageSettings();
 	}
 }

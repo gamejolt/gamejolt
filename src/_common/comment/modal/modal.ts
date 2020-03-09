@@ -28,7 +28,7 @@ export default class AppCommentModal extends BaseModal {
 
 	get commentsCount() {
 		const store = this.getCommentStore(getCommentModelResourceName(this.model), this.model.id);
-		return store ? store.count : 0;
+		return store ? store.totalCount : 0;
 	}
 
 	get autofocusAdd() {

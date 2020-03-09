@@ -1,5 +1,4 @@
 import { Component } from 'vue-property-decorator';
-import { Ads } from '../../../../../../_common/ad/ads.service';
 import AppAdPlacement from '../../../../../../_common/ad/placement/placement.vue';
 import AppAdWidget from '../../../../../../_common/ad/widget/widget.vue';
 import { Api } from '../../../../../../_common/api/api.service';
@@ -221,13 +220,13 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	get commentsCount() {
 		if (this.game) {
 			const store = this.getCommentStore('Game', this.game.id);
-			return store ? store.count : 0;
+			return store ? store.totalCount : 0;
 		}
 		return 0;
 	}
 
 	get shouldShowAds() {
-		return Ads.shouldShow;
+		return this.$ad.shouldShow;
 	}
 
 	get shouldShowCommentAdd() {
