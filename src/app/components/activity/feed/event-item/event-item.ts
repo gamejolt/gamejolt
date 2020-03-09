@@ -165,7 +165,7 @@ export default class AppActivityFeedEventItem extends Vue {
 	}
 
 	get shouldShowFollow() {
-		if (this.isBlocked) {
+		if (this.isBlocked || this.post?.user.blocked_you) {
 			return false;
 		}
 

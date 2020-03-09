@@ -48,7 +48,13 @@ export default class AppUserFollowWidget extends Vue {
 	emitUnfollow() {}
 
 	get shouldShow() {
-		return !this.app.user || this.app.user.id !== this.user.id;
+		if (!this.app.user) {
+			return true;
+		}
+		if (this.app.user.id !== this.user.id && !this.user.blocked_you && !this.user.is_blocked) {
+			return true;
+		}
+		return false;
 	}
 
 	get badge() {

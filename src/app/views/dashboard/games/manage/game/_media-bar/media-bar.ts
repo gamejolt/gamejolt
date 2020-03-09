@@ -53,9 +53,14 @@ export default class AppManageGameMediaBar extends Vue {
 		}
 	}
 
-	open(item: Media) {
-		GameMediaItemEditModal.show(this.game, item, () => {
+	async open(item: Media) {
+		const newItem = await GameMediaItemEditModal.show(this.game, item, () => {
 			this.removeMedia(item);
 		});
+
+		// Copy properties of new item into old item to update it.
+		if (newItem) {
+			Object.assign(item, newItem);
+		}
 	}
 }
