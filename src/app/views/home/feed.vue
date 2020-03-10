@@ -64,7 +64,7 @@
 
 				<app-scroll-affix>
 					<div class="-ad">
-						<app-ad-widget size="video" />
+						<app-ad-widget size="video" placement="side" />
 					</div>
 				</app-scroll-affix>
 			</div>

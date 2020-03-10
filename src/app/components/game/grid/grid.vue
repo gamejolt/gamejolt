@@ -17,7 +17,7 @@
 			<app-condense-whitespace class="game-grid-items">
 				<div class="game-grid-ad" v-if="Screen.isDesktop && shouldShowAds">
 					<div class="game-grid-ad-inner">
-						<app-ad-widget size="rectangle" :meta="{ staticSize: true }" />
+						<app-ad-widget size="rectangle" placement="content" :meta="{ staticSize: true }" />
 					</div>
 				</div>
 
@@ -29,7 +29,7 @@
 				<template v-for="(game, i) of processedGames">
 					<div class="game-grid-ad" v-if="shouldShowAd(i)" :key="game.id + '-ad'">
 						<div class="game-grid-ad-inner">
-							<app-ad-widget size="rectangle" :meta="{ staticSize: true }" />
+							<app-ad-widget size="rectangle" placement="content" :meta="{ staticSize: true }" />
 						</div>
 					</div>
 					<div class="game-grid-item" :key="game.id">
