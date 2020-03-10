@@ -375,21 +375,20 @@
 
 .-communities
 	display: grid
-	grid-template-columns: repeat(5, 55px)
-	grid-gap: 5px 10px
+	grid-template-columns: repeat(5, minmax(55px, 1fr))
+	grid-gap: 10px
 
 .-community-item
 	pressy()
 	display: inline-block
 	position: relative
 	outline: 0
-	width: 55px
-	height: 55px
+	width: 100%
+	height: auto
 
 .-community-thumb
 	img-circle()
 	change-bg('dark')
-	position: absolute
 	width: 100%
 	height: 100%
 
@@ -400,6 +399,7 @@
 .-community-thumb-placeholder
 	img-circle()
 	change-bg('bg-subtle')
+	padding-top: 100%
 
 .-community-verified-tick
 	position: absolute
