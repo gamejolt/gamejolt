@@ -1,17 +1,12 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../utils/vue';
-import { AppScrollInview } from '../../scroll/inview/inview';
 import { AdSlot } from '../ad-slot-info';
 import { AdProperAdapter, ProperTagUnits } from './proper-adapter';
 
 type TagPlacement = keyof typeof ProperTagUnits;
 
-@Component({
-	components: {
-		AppScrollInview,
-	},
-})
+@Component({})
 export default class AppAdProper extends Vue {
 	@Prop(propRequired(AdSlot)) adSlot!: AdSlot;
 	@Prop(propRequired(AdProperAdapter)) adapter!: AdProperAdapter;
@@ -20,27 +15,7 @@ export default class AppAdProper extends Vue {
 	tagUnit: string | null = null;
 	tagId: string | null = null;
 
-	// mounted() {
-	// 	this.setUp();
-	// }
-
-	beforeDestroy() {
-		this.tearDown();
-	}
-
-	inview() {
-		this.setUp();
-	}
-
-	outview() {
-		this.tearDown();
-	}
-
-	private async setUp() {
-		if (this.tagId) {
-			return;
-		}
-
+	created() {
 		const { placement, size } = this.adSlot;
 
 		let tagPlacement: TagPlacement;
@@ -62,17 +37,22 @@ export default class AppAdProper extends Vue {
 		this.tagPlacement = tagPlacement;
 		this.tagUnit = tagUnit;
 		this.tagId = `gamejolt_${this.tagUnit}`;
+	}
 
-		await this.$nextTick();
+	mounted() {
+		if (!this.tagId) {
+			return;
+		}
+
 		this.doProperDisplay(this.tagId);
 	}
 
-	private tearDown() {
+	beforeDestroy() {
 		if (!this.tagPlacement || !this.tagUnit || !this.tagId) {
 			return;
 		}
 
-		this.adapter.tagUnits[this.tagPlacement].push(this.tagUnit);
+		this.adapter.tagUnits[this.tagPlacement].unshift(this.tagUnit);
 		this.doProperDelete(this.tagId);
 
 		this.tagPlacement = null;
@@ -82,17 +62,14 @@ export default class AppAdProper extends Vue {
 
 	private doProperDisplay(tagId: string) {
 		this.adapter.run(() => {
-			console.log('displaying', tagId);
 			(window as any).proper_display(tagId);
 		});
 	}
 
 	private doProperDelete(tagId: string) {
 		this.adapter.run(() => {
-			console.log('deleting', tagId);
-			(window as any).properDeleteSlot(tagId);
 			(window as any).properDestroyDfpSlot(tagId);
-			// (window as any).properSpaNewPage();
+			(window as any).properDeleteSlot(tagId);
 		});
 	}
 }

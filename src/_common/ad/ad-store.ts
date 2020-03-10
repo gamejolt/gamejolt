@@ -2,7 +2,7 @@ import { installVuePlugin } from '../../utils/vue';
 import { Environment } from '../environment/environment.service';
 import { EventBus } from '../event-bus/event-bus.service';
 import { Model } from '../model/model.service';
-import { AdProperAdapter } from './proper/proper-adapter';
+import { AdPlaywireAdapter } from './playwire/playwire-adapter';
 import AppAdWidgetInner from './widget/inner';
 
 declare module 'vue/types/vue' {
@@ -12,8 +12,8 @@ declare module 'vue/types/vue' {
 }
 
 // To show ads on the page for dev, just change this to false.
-// export const AdsDisabledDev = GJ_BUILD_TYPE === 'development';
-export const AdsDisabledDev = false;
+export const AdsDisabledDev = GJ_BUILD_TYPE === 'development';
+// export const AdsDisabledDev = false;
 
 /**
  * Whether or not we want to have click tracking enabled. It is not very
@@ -42,8 +42,7 @@ const defaultSettings = new AdSettingsContainer();
 type AdComponent = AppAdWidgetInner;
 
 export class AdStore {
-	// adapter = new AdPlaywireAdapter();
-	adapter = new AdProperAdapter();
+	adapter = new AdPlaywireAdapter();
 
 	private routeResolved = false;
 	private ads: Set<AdComponent> = new Set();

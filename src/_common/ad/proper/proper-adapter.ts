@@ -6,7 +6,18 @@ import AppAdProper from './proper.vue';
 export const ProperTagUnits = {
 	side: ['side_1', 'side_2'],
 	leaderboard: ['leaderboard'],
-	content: ['content_1', 'content_2', 'content_3', 'content_4'],
+	content: [
+		'content_1',
+		'content_2',
+		'content_3',
+		'content_4',
+		'content_5',
+		'content_6',
+		'content_7',
+		'content_8',
+		'content_9',
+		'content_10',
+	],
 };
 
 export class AdProperAdapter extends AdAdapterBase {
@@ -40,16 +51,8 @@ export class AdProperAdapter extends AdAdapterBase {
 		(window as any).propertag.cmd.push(cb);
 	}
 
-	// onBeforeRouteChange() {
-	// 	// Reset the tag units so that we reset the slot IDs back to the
-	// 	// beginning.
-	// 	// console.log('resetting tag units');
-	// 	// this.tagUnits = { ...ProperTagUnits };
-	// }
-
-	onRouteChanged() {
+	onBeforeRouteChange() {
 		this.run(() => {
-			console.log('new page');
 			(window as any).properSpaNewPage();
 		});
 	}
