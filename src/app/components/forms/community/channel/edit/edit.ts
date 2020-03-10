@@ -10,13 +10,17 @@ import {
 import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 
+interface FormModel extends CommunityChannel {
+	_permissions: string;
+}
+
 @Component({
 	components: {
 		AppImgResponsive,
 		AppFormControlUpload,
 	},
 })
-export default class FormCommunityChannelEdit extends BaseForm<CommunityChannel>
+export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 	implements FormOnLoad, FormOnSubmitSuccess {
 	@Prop(Community)
 	community!: Community;
@@ -28,13 +32,22 @@ export default class FormCommunityChannelEdit extends BaseForm<CommunityChannel>
 	maxHeight = 0;
 
 	get loadUrl() {
-		return `/web/dash/communities/channels/save/${this.community.id}`;
+		return `/web/dash/communities/channels/save/${this.community.id}/${this.formModel.id}`;
+	}
+
+	get permissionOptions() {
+		return {
+			all: this.$gettext('Everyone'),
+			mods: this.$gettext('Moderators only'),
+		};
 	}
 
 	onLoad(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
+
+		this.setField('_permissions', !!payload._permissions ? 'mods' : 'all');
 	}
 
 	onSubmitSuccess() {

@@ -17,4 +17,8 @@ export default class AppCommunityChannelSelect extends Vue {
 
 	@Emit('input')
 	emitInput(_value: CommunityChannel) {}
+
+	get validChannels() {
+		return this.channels.filter(i => i.permissions.canPerform('posts'));
+	}
 }

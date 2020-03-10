@@ -256,6 +256,24 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return this.communityStates.getCommunityState(this.community);
 	}
 
+	get shouldShowPostAdd() {
+		if (this.community.isBlocked) {
+			return false;
+		}
+
+		if (this.communityChannel) {
+			return this.communityChannel.permissions.canPerform('posts');
+		} else {
+			// We are in a special channel like "featured".
+			// Only show the post add if we have at least one target channel to post to.
+			if (this.community.channels) {
+				return this.community.channels.some(i => i.permissions.canPerform('posts'));
+			}
+		}
+
+		return true;
+	}
+
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 		this.finishedLoading = false;

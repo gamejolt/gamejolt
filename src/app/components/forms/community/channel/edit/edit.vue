@@ -47,6 +47,25 @@
 			<app-form-control-errors />
 		</app-form-group>
 
+		<app-form-group name="_permissions" :label="$gettext('Channel posting permissions')">
+			<div class="help-inline">
+				<span v-translate>
+					Choose who can post to this channel.
+				</span>
+			</div>
+			<div
+				class="radio"
+				v-for="(permissionDisplay, permission) in permissionOptions"
+				:key="permission"
+			>
+				<label>
+					<app-form-control-radio :value="permission" />
+					{{ permissionDisplay }}
+				</label>
+			</div>
+			<app-form-control-errors />
+		</app-form-group>
+
 		<app-form-button>
 			<translate>Save Channel</translate>
 		</app-form-button>
