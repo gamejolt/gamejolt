@@ -92,7 +92,7 @@
 					<app-event-item-controls
 						:post="post"
 						show-comments
-						show-user-follow
+						should-show-follow
 						@post-remove="onPostRemoved"
 						@post-publish="onPostPublished"
 					/>
