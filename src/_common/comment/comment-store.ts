@@ -14,7 +14,7 @@ export const CommentMutation = namespace(CommentStoreNamespace, Mutation);
 
 export type CommentActions = {
 	'comment/lockCommentStore': { resource: string; resourceId: number };
-	'comment/fetchComments': { store: CommentStoreModel; page?: number };
+	'comment/fetchComments': { store: CommentStoreModel; page?: number; initialTab?: string };
 	'comment/pinComment': { comment: Comment };
 	'comment/setSort': { store: CommentStoreModel; sort: string };
 	'comment/fetchThread': { store: CommentStoreModel; parentId: number };
@@ -233,7 +233,7 @@ export class CommentStore extends VuexStore<CommentStore, CommentActions, Commen
 		const { store, count } = payload;
 		store.count = count;
 
-		if (count && store.sort !== Comment.SORT_YOU) {
+		if (count) {
 			store.totalCount = count;
 		}
 	}
@@ -297,8 +297,10 @@ export class CommentStore extends VuexStore<CommentStore, CommentActions, Commen
 				// reduce comment count by amount of child comments on this parent + 1 for the parent
 				const childAmount = store.comments.filter(c => c.parent_id === comment.id).length;
 				store.count -= childAmount + 1;
+				store.totalCount -= childAmount + 1;
 			} else {
 				--store.count;
+				--store.totalCount;
 			}
 			arrayRemove(store.comments, i => i.id === comment.id);
 			store.afterModification();
