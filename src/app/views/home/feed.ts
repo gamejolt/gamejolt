@@ -154,6 +154,12 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			fromCache
 		);
 
+		// Stating that we should allow follow buttons
+		// and menus to appear on the home feed.
+		if (this.feed) {
+			this.feed.shouldShowFollow = true;
+		}
+
 		this.games = (homePayload.ownerGames as DashGame[])
 			.map(i => new DashGame(i.id, i.title, i.ownerName, i.createdOn))
 			.sort((a, b) => numberSort(a.createdOn, b.createdOn))
