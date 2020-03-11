@@ -1,5 +1,4 @@
 import { Component } from 'vue-property-decorator';
-import AppAdPlacement from '../../../../../../_common/ad/placement/placement.vue';
 import AppAdWidget from '../../../../../../_common/ad/widget/widget.vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../_common/card/card.vue';
@@ -53,7 +52,6 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 		AppDiscoverGamesViewOverviewStatbar,
 		AppGameCommunityBadge,
 		AppAdWidget,
-		AppAdPlacement,
 		AppRatingWidget,
 		AppCard,
 		AppFadeCollapse,

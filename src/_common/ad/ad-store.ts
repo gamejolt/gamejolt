@@ -61,12 +61,14 @@ export class AdStore {
 				// We set up events so that we know when a route begins and when the
 				// routing is fully resolved.
 				vm.$router.beforeEach((_to, _from, next) => {
+					this.adapter.onBeforeRouteChange();
 					this.routeResolved = false;
 					next();
 				});
 
 				EventBus.on('routeChangeAfter', () => {
 					this.routeResolved = true;
+					this.adapter.onRouteChanged();
 					this.displayAds(Array.from(this.ads));
 				});
 			},

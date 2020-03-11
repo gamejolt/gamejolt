@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
-import { AdSlot, AdSlotMeta, AdSlotSize } from '../ad-slot-info';
+import { AdSlot, AdSlotMeta, AdSlotPlacement, AdSlotSize } from '../ad-slot-info';
 import AppAdWidgetInner from './inner.vue';
 
 @Component({
@@ -10,9 +10,8 @@ import AppAdWidgetInner from './inner.vue';
 	},
 })
 export default class AppAdWidget extends Vue {
-	@Prop(propOptional(String, 'rectangle'))
-	size!: AdSlotSize;
-
+	@Prop(propOptional(String, 'rectangle')) size!: AdSlotSize;
+	@Prop(propOptional(String, 'content')) placement!: AdSlotPlacement;
 	@Prop(propOptional(Object, () => {})) meta!: AdSlotMeta;
 
 	adSlot: AdSlot = null as any;
@@ -27,9 +26,10 @@ export default class AppAdWidget extends Vue {
 
 	// We need to make sure we update the ad slot anytime input changes.
 	@Watch('size')
+	@Watch('placement')
 	@Watch('meta', { deep: true })
 	generateAdSlot() {
-		let { size, meta } = this;
+		let { size, placement, meta } = this;
 
 		// For ad adapters without video support, we should the video as a
 		// rectangle ad instead.
@@ -37,6 +37,6 @@ export default class AppAdWidget extends Vue {
 			size = 'rectangle';
 		}
 
-		this.adSlot = new AdSlot(size, meta);
+		this.adSlot = new AdSlot(size, placement, meta);
 	}
 }

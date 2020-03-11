@@ -1,8 +1,6 @@
 <template>
 	<div>
 		<div id="page-ad-scroll">
-			<app-ad-placement />
-
 			<section class="section">
 				<div class="container">
 					<div class="row">
@@ -26,6 +24,8 @@
 								:style="{ visibility: started ? 'hidden' : undefined }"
 								:hide-label="true"
 							/>
+
+							<app-ad-widget size="video" placement="content" />
 						</div>
 
 						<!--
@@ -33,7 +33,7 @@
 							amirite?
 						-->
 						<div class="col-md-4 col-lg-5 text-right" v-if="Screen.isDesktop">
-							<app-ad-widget size="rectangle" />
+							<app-ad-widget size="rectangle" placement="side" />
 						</div>
 					</div>
 				</div>

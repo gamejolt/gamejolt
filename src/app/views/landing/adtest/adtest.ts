@@ -16,10 +16,6 @@ export default class RouteAdtest extends BaseRouteComponent {
 		return this.$route.query;
 	}
 
-	get size() {
-		return this.q.size || 'rectangle';
-	}
-
 	get meta() {
 		return {
 			staticSize: this.q.staticSize || false,

@@ -48,7 +48,7 @@ export default class AppActivityFeed extends Vue {
 	 * The distance from the bottom of the feed that we should start loading
 	 * more.
 	 */
-	readonly loadMoreMargin = `${Screen.height * 2}px`;
+	readonly loadMoreMargin = `${Screen.height * 1.5}px`;
 
 	$el!: HTMLDivElement;
 

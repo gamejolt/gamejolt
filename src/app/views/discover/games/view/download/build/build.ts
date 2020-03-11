@@ -1,6 +1,5 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import AppAdPlacement from '../../../../../../../_common/ad/placement/placement.vue';
 import AppAdWidget from '../../../../../../../_common/ad/widget/widget.vue';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { Environment } from '../../../../../../../_common/environment/environment.service';
@@ -30,7 +29,6 @@ const DownloadDelay = 3000;
 	name: 'RouteDiscoverGamesViewDownloadBuild',
 	components: {
 		AppAdWidget,
-		AppAdPlacement,
 		AppGameThumbnail,
 		AppRatingWidget,
 		AppSocialFacebookLike,
