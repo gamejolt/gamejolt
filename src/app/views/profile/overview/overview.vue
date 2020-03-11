@@ -376,7 +376,7 @@
 .-communities
 	display: grid
 	grid-template-columns: repeat(5, minmax(55px, 1fr))
-	grid-gap: 10px
+	grid-gap: 8px
 
 .-community-item
 	pressy()
@@ -399,6 +399,9 @@
 .-community-thumb-placeholder
 	img-circle()
 	change-bg('bg-subtle')
+	// Setting 'padding-top' with a percentage goes off the elements width,
+	// rather than the height. This will allow us to use a 1:1 aspect ratio
+	// for the loading placeholders, matching them up with our thumbnails.
 	padding-top: 100%
 
 .-community-verified-tick
