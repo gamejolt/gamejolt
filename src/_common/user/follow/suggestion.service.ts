@@ -6,9 +6,6 @@ type SessionStorageSuggestions = {
 };
 const Key = 'user-follow-suggestions';
 
-// How many suggestion dismissals we are allowing per interval.
-const MaxPerDay = 3;
-
 // The interval used to rate limit dismissed suggestions in ms.
 const RateLimitInterval = 86400000; // 1 day
 
@@ -43,11 +40,6 @@ export abstract class UserFollowSuggestion {
 		const dismissed = s.dismissed;
 		while (dismissed.length > 0 && now - dismissed[0] > RateLimitInterval) {
 			dismissed.splice(0);
-		}
-
-		// Check if after removing the old entries we are still capped.
-		if (dismissed.length >= MaxPerDay) {
-			canSuggest = false;
 		}
 
 		this.suggestions = s;
