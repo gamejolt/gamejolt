@@ -86,6 +86,20 @@
 							/>
 						</div>
 
+						<template v-if="shouldShowCommunityPublishError">
+							<br />
+							<div class="well fill-offset">
+								<app-jolticon icon="notice" notice />
+								<span
+									><translate
+										>This post can currently not be published to the selected community channel
+										because you are not allowed to post there. Click Edit below and select a
+										different channel.</translate
+									></span
+								>
+							</div>
+						</template>
+
 						<br />
 					</template>
 

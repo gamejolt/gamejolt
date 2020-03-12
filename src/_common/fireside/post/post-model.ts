@@ -287,6 +287,18 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return null;
 	}
 
+	canPublishToCommunities() {
+		if (!this.communities) {
+			return true;
+		}
+		for (const community of this.communities) {
+			if (!community.channel || !community.channel.permissions.canPerform('posts')) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	private isInCommunityPinContext(route: Route) {
 		// A post can be pinned to a community if:
 		// 1. viewing the community feed.
