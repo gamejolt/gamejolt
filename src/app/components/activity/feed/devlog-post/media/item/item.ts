@@ -48,8 +48,12 @@ export default class AppActivityFeedDevlogPostMediaItem extends Vue {
 			return;
 		}
 
+		// If the screen size is considered mobile, we want to treat
+		// the mobile keyboard as if it doesn't exist. Using the
+		// 'window.screen.height' will let us get the height of
+		// the screen, rather than the viewport.
 		if (Screen.isMobile) {
-			return screen.height * 0.45;
+			return window.screen.height * 0.45;
 		}
 		return Screen.height * 0.45;
 	}
