@@ -49,7 +49,7 @@ export default class AppActivityFeedDevlogPostMediaItem extends Vue {
 		}
 
 		if (Screen.isMobile) {
-			return window.outerHeight * 0.45;
+			return screen.height * 0.45;
 		}
 		return Screen.height * 0.45;
 	}
