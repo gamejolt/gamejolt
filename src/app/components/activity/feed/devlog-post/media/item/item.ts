@@ -43,6 +43,17 @@ export default class AppActivityFeedDevlogPostMediaItem extends Vue {
 		return this.isActive;
 	}
 
+	get deviceMaxHeight() {
+		if (GJ_IS_SSR) {
+			return;
+		}
+
+		if (Screen.isMobile) {
+			return window.outerHeight * 0.45;
+		}
+		return Screen.height * 0.45;
+	}
+
 	async onDimensionsChange(e: AppResponsiveDimensionsChangeEvent) {
 		this.emitBootstrap();
 		this.isFilled = e.isFilled;

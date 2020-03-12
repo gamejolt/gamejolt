@@ -7,7 +7,7 @@
 			}"
 			:ratio="mediaItem.width / mediaItem.height"
 			:max-width="mediaItem.width"
-			:max-height="!GJ_IS_SSR ? Screen.height * 0.45 : undefined"
+			:max-height="deviceMaxHeight"
 			@change="onDimensionsChange"
 		>
 			<app-event-item-media-tags :gif="mediaItem.is_animated" />
