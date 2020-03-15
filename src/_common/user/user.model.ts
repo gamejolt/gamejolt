@@ -147,6 +147,8 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 			this.theme = new Theme(data.theme);
 		}
 
+		// this.img_avatar = this.img_avatar.replace('https://m.gjcdn.net', 'http://mediaserver:9010');
+
 		Registry.store('User', this);
 	}
 
