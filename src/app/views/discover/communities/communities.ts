@@ -20,11 +20,9 @@ const endpoint = '/web/discover/communities';
 })
 @RouteResolver({
 	lazy: true,
-	// cache is annoying in this route.
-	// cache: true,
+	deps: { query: ['q'] },
 	async resolver({ route }) {
 		const url = `${endpoint}?q=${route.query.q || ''}`;
-		console.log(`new search at ${url}`);
 		return Api.sendRequest(url);
 	},
 })
@@ -55,10 +53,6 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		this.communities = [];
-		this.page = 1;
-		this.isLoading = false;
-		this.hasMore = true;
 		this.searchText = (this.$route.query.q || '') as string;
 	}
 
