@@ -11,55 +11,62 @@
 			<div class="row">
 				<div class="col-sm-10 col-md-8 col-lg-7" :class="{ 'col-centered': Screen.isMobile }">
 					<div class="post-view">
-						<div v-if="post.hasMedia" class="full-bleed-xs">
-							<div v-for="item of post.media" :key="item.id">
-								<app-responsive-dimensions
-									class="-media-item"
-									:ratio="item.width / item.height"
-									:max-width="item.width"
-								>
-									<app-event-item-media-tags :gif="item.is_animated" />
+						<app-sticker-target
+							:stickers="post.stickers"
+							resource="Fireside_Post"
+							:resource-id="post.id"
+							@sticker-add="onStickerAdd"
+						>
+							<div v-if="post.hasMedia" class="full-bleed-xs">
+								<div v-for="item of post.media" :key="item.id">
+									<app-responsive-dimensions
+										class="-media-item"
+										:ratio="item.width / item.height"
+										:max-width="item.width"
+									>
+										<app-event-item-media-tags :gif="item.is_animated" />
 
-									<app-img-responsive
-										class="-img"
-										v-if="!item.is_animated"
-										:src="item.mediaserver_url"
-										alt=""
-									/>
+										<app-img-responsive
+											class="-img"
+											v-if="!item.is_animated"
+											:src="item.mediaserver_url"
+											alt=""
+										/>
 
-									<app-video
-										v-else
-										class="-video"
-										:poster="item.mediaserver_url"
-										:webm="item.mediaserver_url_webm"
-										:mp4="item.mediaserver_url_mp4"
-										show-loading
-									/>
-								</app-responsive-dimensions>
+										<app-video
+											v-else
+											class="-video"
+											:poster="item.mediaserver_url"
+											:webm="item.mediaserver_url_webm"
+											:mp4="item.mediaserver_url_mp4"
+											show-loading
+										/>
+									</app-responsive-dimensions>
 
-								<br />
+									<br />
+								</div>
 							</div>
-						</div>
 
-						<div v-if="post.hasSketchfab" class="full-bleed-xs">
-							<app-sketchfab-embed :sketchfab-id="post.sketchfabs[0].sketchfab_id" autoplay />
-						</div>
+							<div v-if="post.hasSketchfab" class="full-bleed-xs">
+								<app-sketchfab-embed :sketchfab-id="post.sketchfabs[0].sketchfab_id" autoplay />
+							</div>
 
-						<div class="tiny text-muted">
-							<app-time-ago v-if="post.isActive" :date="post.published_on" strict />
-							<template v-else-if="post.isScheduled">
-								<span class="tag" style="vertical-align: middle">
-									<app-jolticon icon="calendar-grid" />
-									<translate>Scheduled</translate>
+							<div class="tiny text-muted">
+								<app-time-ago v-if="post.isActive" :date="post.published_on" strict />
+								<template v-else-if="post.isScheduled">
+									<span class="tag" style="vertical-align: middle">
+										<app-jolticon icon="calendar-grid" />
+										<translate>Scheduled</translate>
+									</span>
+									<app-time-ago :date="post.scheduled_for" strict without-suffix />
+								</template>
+								<span v-else-if="post.isDraft" class="tag" style="vertical-align: middle">
+									<translate>Draft</translate>
 								</span>
-								<app-time-ago :date="post.scheduled_for" strict without-suffix />
-							</template>
-							<span v-else-if="post.isDraft" class="tag" style="vertical-align: middle">
-								<translate>Draft</translate>
-							</span>
-						</div>
+							</div>
 
-						<app-content-viewer :source="post.lead_content" />
+							<app-content-viewer :source="post.lead_content" />
+						</app-sticker-target>
 
 						<div v-if="post.hasArticle">
 							<div class="page-cut" />

@@ -16,6 +16,8 @@ import { AppCommentWidgetLazy } from '../../../lazy';
 import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 import AppEventItemControlsFiresidePostExtra from './extra/extra.vue';
 import AppEventItemControlsFiresidePostStats from './stats/stats.vue';
+import AppEventItemControlsFiresidePostStickers from './stickers/stickers.vue';
+import AppEventItemControlsFiresidePostStickersTray from './stickers/tray/tray.vue';
 
 @Component({
 	components: {
@@ -24,6 +26,8 @@ import AppEventItemControlsFiresidePostStats from './stats/stats.vue';
 		AppCommentVideoLikeWidget,
 		AppEventItemControlsFiresidePostStats,
 		AppEventItemControlsFiresidePostExtra,
+		AppEventItemControlsFiresidePostStickers,
+		AppEventItemControlsFiresidePostStickersTray,
 	},
 	directives: {
 		AppTooltip,
@@ -47,6 +51,8 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	user!: AppStore['user'];
 
 	readonly GJ_IS_CLIENT!: boolean;
+
+	stickersTrayOpen = false;
 
 	@Emit('edit')
 	emitEdit() {}
@@ -125,5 +131,9 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	async publish() {
 		await this.post.$publish();
 		this.emitPublish();
+	}
+
+	onClickStickers() {
+		this.stickersTrayOpen = !this.stickersTrayOpen;
 	}
 }

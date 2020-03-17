@@ -31,6 +31,11 @@
 
 					&nbsp;
 				</template>
+
+				<app-event-item-controls-fireside-post-stickers
+					:is-active="stickersTrayOpen"
+					@click="onClickStickers"
+				/>
 			</div>
 
 			<app-event-item-controls-fireside-post-stats
@@ -63,6 +68,12 @@
 				/>
 			</span>
 		</div>
+
+		<app-event-item-controls-fireside-post-stickers-tray
+			v-if="stickersTrayOpen"
+			resource="Fireside_Post"
+			:resource-id="post.id"
+		/>
 	</span>
 </template>
 
