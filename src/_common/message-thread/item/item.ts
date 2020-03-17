@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { propOptional, propRequired } from '../../../utils/vue';
 import { date } from '../../filters/date';
 import { AppTimeAgo } from '../../time/ago/ago';
 import AppTimelineListItem from '../../timeline-list/item/item.vue';
@@ -18,16 +19,16 @@ import AppUserVerifiedTick from '../../user/verified-tick/verified-tick.vue';
 	},
 })
 export default class AppMessageThreadItem extends Vue {
-	@Prop(User) user!: User;
-	@Prop(User) repliedTo?: User;
-	@Prop(Number) date!: number;
-	@Prop(String) id?: string;
-	@Prop(Boolean) isActive?: boolean;
-	@Prop(Boolean) isNew?: boolean;
-	@Prop(Boolean) isReply?: boolean;
-	@Prop(Boolean) isLast?: boolean;
-
-	@Prop(Boolean) isShowingReplies?: boolean;
+	@Prop(propRequired(User)) user!: User;
+	@Prop(propOptional(User)) repliedTo?: User;
+	@Prop(propRequired(Number)) date!: number;
+	@Prop(propOptional(String)) id?: string;
+	@Prop(propOptional(Boolean, false)) isActive!: boolean;
+	@Prop(propOptional(Boolean, false)) isNew!: boolean;
+	@Prop(propOptional(Boolean, false)) isReply!: boolean;
+	@Prop(propOptional(Boolean, false)) isLast!: boolean;
+	@Prop(propOptional(Boolean, false)) isShowingReplies!: boolean;
+	@Prop(propOptional(Boolean, false)) isBlocked!: boolean;
 
 	dateFilter = date;
 }

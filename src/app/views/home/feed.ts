@@ -2,7 +2,7 @@ import { Component } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
-import AppAdPlaywireVideo from '../../../_common/ad/playwire/video.vue';
+import AppAdWidget from '../../../_common/ad/widget/widget.vue';
 import { Api } from '../../../_common/api/api.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Meta } from '../../../_common/meta/meta-service';
@@ -42,7 +42,7 @@ class DashGame {
 		AppPostAddButton,
 		AppUserCard,
 		AppScrollAffix,
-		AppAdPlaywireVideo,
+		AppAdWidget,
 		AppHomeRecommended,
 	},
 })
@@ -148,6 +148,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			{
 				type: 'EventItem',
 				url: `/web/dash/activity/more/activity`,
+				shouldShowFollow: true,
 				notificationWatermark: feedPayload.unreadWatermark,
 			},
 			feedPayload.items,

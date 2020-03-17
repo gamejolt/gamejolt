@@ -290,10 +290,27 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	}
 
 	get shouldShowFollow() {
-		return !(
-			this.collection &&
-			(this.collection.isOwner || this.collection.type === GameCollection.TYPE_OWNED)
-		);
+		if (!this.collection) {
+			return false;
+		}
+
+		// Don't show follow for owned collections
+		if (this.collection.isOwner || this.collection.type === GameCollection.TYPE_OWNED) {
+			return false;
+		}
+
+		// Special case for developer collections: They prompt to follow the user instead of a playlist,
+		// so we need to make sure we hide the button if the user is blocked.
+		if (
+			this.collection.type === 'developer' &&
+			this.collection.owner &&
+			this.app.user &&
+			this.collection.owner.id !== this.app.user.id
+		) {
+			return !this.collection.owner.is_blocked && !this.collection.owner.blocked_you;
+		}
+
+		return true;
 	}
 
 	async removeFromPlaylist(game: Game) {

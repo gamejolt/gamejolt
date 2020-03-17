@@ -2037,10 +2037,10 @@ cli-boxes@^1.0.0:
   resolved "https://registry.yarnpkg.com/cli-boxes/-/cli-boxes-1.0.0.tgz#4fa917c3e59c94a004cd61f8ee509da651687143"
   integrity sha1-T6kXw+WclKAEzWH47lCdplFocUM=
 
-client-voodoo@2.5.1:
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/client-voodoo/-/client-voodoo-2.5.1.tgz#b8af108f66a5d39d2e3dfefc36db12372d43d338"
-  integrity sha512-ub90Gd08PIzkFaoWby2pflq/sEpRXJkNkRcajOBT2CHuGZOnoYL0r+hWE6uyWE45jFJDBqcvJv3HQOhTA4fWcQ==
+client-voodoo@2.5.3:
+  version "2.5.3"
+  resolved "https://registry.yarnpkg.com/client-voodoo/-/client-voodoo-2.5.3.tgz#69335759383129058e75e3ce7a9419aa02720da6"
+  integrity sha512-MNlUzqA9Fqy6d0KbaTMbXtxnvsnpCMSFgIJtZKAyy8vhbkxoETbLbkEK46meCbcHhnCFweLwCNfYRZY/CKhFBg==
   dependencies:
     JSONStream "github:gamejolt/JSONStream#no-shebang"
     follow-redirects "1.7.0"
@@ -9296,10 +9296,10 @@ prettier@1.16.3:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.16.3.tgz#8c62168453badef702f34b45b6ee899574a6a65d"
   integrity sha512-kn/GU6SMRYPxUakNXhpP0EedT/KmaPzr0H5lIsDogrykbaxOpOfAFfk5XA7DZrJyMAv1wlMV3CPcZruGXVVUZw==
 
-prettier@1.18.2:
-  version "1.18.2"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.18.2.tgz#6823e7c5900017b4bd3acf46fe9ac4b4d7bda9ea"
-  integrity sha512-OeHeMc0JhFE9idD4ZdtNibzY0+TPHSpSSb9h8FqtP+YnoZZ1sl8Vc9b1sasjfymH3SonAF4QcA2+mzHPhMvIiw==
+prettier@1.19.1:
+  version "1.19.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
+  integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
 
 pretty-error@^2.0.2:
   version "2.1.1"

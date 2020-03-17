@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div v-if="user">
 		<!--
 			If this user is banned, we show very little.
 		-->
@@ -87,16 +87,15 @@
 							</h4>
 
 							<app-comment-add-button
-								resource="User"
-								:resource-id="user.id"
+								v-if="shouldShowShoutAdd"
+								:model="user"
 								:placeholder="addCommentPlaceholder"
 								display-mode="shouts"
 							/>
 
 							<app-comment-overview
 								:comments="overviewComments"
-								resource="User"
-								:resource-id="user.id"
+								:model="user"
 								displayMode="shouts"
 								@reload-comments="reloadPreviewComments"
 							/>
@@ -161,7 +160,7 @@
 										{{ twitterAccount.name }}
 									</app-link-external>
 								</div>
-								<div v-if="tumblrAccount">
+								<div v-if="tumblrAccount && tumblrAccount.tumblrSelectedBlog">
 									<app-link-external
 										class="link-unstyled"
 										:href="tumblrAccount.tumblrSelectedBlog.url"
@@ -304,8 +303,20 @@
 
 							<br />
 						</template>
-
 					</div>
+
+					<!-- User blocked -->
+					<template v-if="userBlockedYou">
+						<div class="alert">
+							<p>
+								<app-jolticon icon="notice" notice />
+								<b><translate>This user blocked you.</translate></b>
+								<translate>
+									You are unable to shout at them or comment on their posts and games.
+								</translate>
+							</p>
+						</div>
+					</template>
 
 					<!-- Friend Requests -->
 					<template v-if="userFriendship">
@@ -364,21 +375,20 @@
 
 .-communities
 	display: grid
-	grid-template-columns: repeat(5, 55px)
-	grid-gap: 5px 10px
+	grid-template-columns: repeat(5, minmax(55px, 1fr))
+	grid-gap: 8px
 
 .-community-item
 	pressy()
 	display: inline-block
 	position: relative
 	outline: 0
-	width: 55px
-	height: 55px
+	width: 100%
+	height: auto
 
 .-community-thumb
 	img-circle()
 	change-bg('dark')
-	position: absolute
 	width: 100%
 	height: 100%
 
@@ -389,6 +399,10 @@
 .-community-thumb-placeholder
 	img-circle()
 	change-bg('bg-subtle')
+	// Setting 'padding-top' with a percentage goes off the elements width,
+	// rather than the height. This will allow us to use a 1:1 aspect ratio
+	// for the loading placeholders, matching them up with our thumbnails.
+	padding-top: 100%
 
 .-community-verified-tick
 	position: absolute

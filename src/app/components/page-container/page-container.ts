@@ -1,6 +1,6 @@
-import { Screen } from '../../../_common/screen/screen-service';
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { Screen } from '../../../_common/screen/screen-service';
 
 const validOrder = ['main', 'left', 'right'];
 
@@ -55,14 +55,33 @@ export default class AppPageContainer extends Vue {
 	// We do this in a render function so that we can change the order of
 	// content.
 	render(h: CreateElement) {
-		// wtf is this formatting?
+		// Vue tries as hard as possible not to have to recreate DOM elements
+		// and instead bind new vnodes to the same DOM elements. This was
+		// breaking when we resized and went from 2-col to 3-col, etc. If we
+		// instead always regenerate a new key when these properties change,
+		// then it actually recompiles into the DOM perfectly and we don't get
+		// any errors.
+		const keySuffix = [
+			this.hasLeftColumn ? 'l' : '-',
+			this.hasRightColumn ? 'r' : '-',
+			this.shouldCombineColumns ? 'c' : '-',
+			':' + this.order,
+		].join('');
+
 		const cols = {
 			left: this.hasLeftColumn
-				? h('div', { staticClass: '-left' }, [this.$slots['left'], this.$slots['left-bottom']])
+				? h('div', { key: `left:${keySuffix}`, staticClass: '-left' }, [
+						this.$slots['left'],
+						this.$slots['left-bottom'],
+				  ])
 				: null,
-			main: h('div', { staticClass: '-main' }, this.$slots['default']),
+			main: h(
+				'div',
+				{ key: `main:${keySuffix}`, staticClass: '-main' },
+				this.$slots['default']
+			),
 			right: this.hasRightColumn
-				? h('div', { staticClass: '-right' }, [
+				? h('div', { key: `right:${keySuffix}`, staticClass: '-right' }, [
 						this.shouldCombineColumns ? this.$slots['left'] : null,
 						this.$slots['right'],
 						this.shouldCombineColumns ? this.$slots['left-bottom'] : null,

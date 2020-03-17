@@ -2,10 +2,11 @@ import { Component, Prop } from 'vue-property-decorator';
 import { Analytics } from '../../analytics/analytics.service';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import { BaseModal } from '../../modal/base';
+import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
 import { AppState, AppStore } from '../../store/app-store';
 import FormComment from '../add/add.vue';
-import { Comment } from '../comment-model';
+import { Comment, getCanCommentOnModel, getCommentModelResourceName } from '../comment-model';
 import { CommentMutation, CommentState, CommentStore } from '../comment-store';
 import { DisplayMode } from '../modal/modal.service';
 import AppCommentWidget from '../widget/widget.vue';
@@ -21,11 +22,8 @@ export default class AppCommentThreadModal extends BaseModal {
 	@Prop(Number)
 	commentId!: number;
 
-	@Prop(String)
-	resource!: string;
-
-	@Prop(Number)
-	resourceId!: number;
+	@Prop(Model)
+	model!: Model;
 
 	@Prop(String)
 	displayMode!: DisplayMode;
@@ -48,7 +46,7 @@ export default class AppCommentThreadModal extends BaseModal {
 	readonly Screen = Screen;
 
 	get parent() {
-		const store = this.getCommentStore(this.resource, this.resourceId);
+		const store = this.getCommentStore(getCommentModelResourceName(this.model), this.model.id);
 		if (store) {
 			const comment = store.comments.find(c => c.id === this.commentId);
 			if (comment && comment.parent_id) {
@@ -60,7 +58,7 @@ export default class AppCommentThreadModal extends BaseModal {
 	}
 
 	get username() {
-		const store = this.getCommentStore(this.resource, this.resourceId);
+		const store = this.getCommentStore(getCommentModelResourceName(this.model), this.model.id);
 		if (store) {
 			const comment = store.comments.find(c => c.id === this.commentId);
 			if (comment) {
@@ -80,6 +78,13 @@ export default class AppCommentThreadModal extends BaseModal {
 	}
 
 	get shouldShowReply() {
+		if (this.parent && !this.parent.user.canComment) {
+			return false;
+		}
+		if (!getCanCommentOnModel(this.model)) {
+			return false;
+		}
+
 		return this.user && !this.hasError;
 	}
 

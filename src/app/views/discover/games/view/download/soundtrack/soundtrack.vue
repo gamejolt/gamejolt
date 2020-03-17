@@ -1,10 +1,6 @@
 <template>
 	<div>
-		<iframe id="download-frame" class="hidden" nwdisable nwfaketop v-if="src" :src="src"></iframe>
-
 		<div id="page-ad-scroll">
-			<app-ad-placement />
-
 			<section class="section">
 				<div class="container">
 					<div class="row">
@@ -24,7 +20,12 @@
 								change when we hide. We don't want to change if
 								they're trying to click something.
 							-->
-							<app-loading :style="{ visibility: src ? 'hidden' : undefined }" :hide-label="true" />
+							<app-loading
+								:style="{ visibility: started ? 'hidden' : undefined }"
+								:hide-label="true"
+							/>
+
+							<app-ad-widget size="video" placement="content" />
 						</div>
 
 						<!--
@@ -32,7 +33,7 @@
 							amirite?
 						-->
 						<div class="col-md-4 col-lg-5 text-right" v-if="Screen.isDesktop">
-							<app-ad-widget size="rectangle" />
+							<app-ad-widget size="rectangle" placement="side" />
 						</div>
 					</div>
 				</div>

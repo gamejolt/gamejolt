@@ -3,6 +3,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { number } from '../../filters/number';
 import { LikersModal } from '../../likers/modal.service';
+import { Model } from '../../model/model.service';
 import { AppTooltip } from '../../tooltip/tooltip';
 import { Comment } from '../comment-model';
 import { CommentThreadModal } from '../thread/modal.service';
@@ -18,6 +19,9 @@ import { CommentVote } from '../vote/vote-model';
 	},
 })
 export default class AppCommentControls extends Vue {
+	@Prop(Model)
+	model!: Model;
+
 	@Prop(Comment)
 	comment!: Comment;
 
@@ -84,8 +88,7 @@ export default class AppCommentControls extends Vue {
 
 	onReplyClick(autofocus: boolean) {
 		CommentThreadModal.show({
-			resource: this.comment.resource,
-			resourceId: this.comment.resource_id,
+			model: this.model,
 			commentId: this.comment.id,
 			displayMode: 'comments',
 			autofocus,

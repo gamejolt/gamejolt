@@ -8,11 +8,12 @@ import AppLoading from '../../loading/loading.vue';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import AppMessageThreadContent from '../../message-thread/content/content.vue';
 import AppMessageThread from '../../message-thread/message-thread.vue';
+import { Model } from '../../model/model.service';
 import AppNavTabList from '../../nav/tab-list/tab-list.vue';
 import { AppState, AppStore } from '../../store/app-store';
 import { User } from '../../user/user.model';
 import FormComment from '../add/add.vue';
-import { Comment } from '../comment-model';
+import { Comment, getCanCommentOnModel, getCommentModelResourceName } from '../comment-model';
 import {
 	CommentAction,
 	CommentMutation,
@@ -44,11 +45,8 @@ let incrementer = 0;
 	},
 })
 export default class AppCommentWidget extends Vue {
-	@Prop(String)
-	resource!: string;
-
-	@Prop(Number)
-	resourceId!: number;
+	@Prop(Model)
+	model!: Model;
 
 	@Prop(Boolean)
 	onlyAdd?: boolean;
@@ -133,8 +131,8 @@ export default class AppCommentWidget extends Vue {
 		return this.store ? this.store.childComments : [];
 	}
 
-	get commentsCount() {
-		return this.store ? this.store.count : 0;
+	get totalCommentsCount() {
+		return this.store ? this.store.totalCount : 0;
 	}
 
 	get totalParentCount() {
@@ -166,7 +164,7 @@ export default class AppCommentWidget extends Vue {
 	}
 
 	get showTopSorting() {
-		return this.resource === 'Game';
+		return getCommentModelResourceName(this.model) === 'Game';
 	}
 
 	get isThreadView() {
@@ -174,6 +172,9 @@ export default class AppCommentWidget extends Vue {
 	}
 
 	get shouldShowAdd() {
+		if (!getCanCommentOnModel(this.model)) {
+			return false;
+		}
 		return this.showAdd;
 	}
 
@@ -186,7 +187,7 @@ export default class AppCommentWidget extends Vue {
 			return false;
 		}
 
-		return this.comments.length > 0;
+		return this.totalCommentsCount > 0;
 	}
 
 	async created() {
@@ -195,15 +196,13 @@ export default class AppCommentWidget extends Vue {
 
 	destroyed() {
 		if (this.store) {
-			this.releaseCommentStore(this.store);
-			this.store = null;
+			this._releaseStore();
 		}
 	}
 
-	@Watch('resourceId')
-	@Watch('resourceName')
+	@Watch('model')
 	async init() {
-		if (!this.resource || !this.resourceId) {
+		if (!this.model) {
 			return;
 		}
 
@@ -211,9 +210,10 @@ export default class AppCommentWidget extends Vue {
 		this.hasError = false;
 
 		if (this.store) {
-			this.releaseCommentStore(this.store);
-			this.store = null;
+			await this._releaseStore();
 		}
+
+		await this._lockStore();
 
 		if (this.isThreadView && this.threadCommentId) {
 			this.storeView = new CommentStoreThreadView(this.threadCommentId);
@@ -224,16 +224,48 @@ export default class AppCommentWidget extends Vue {
 		await this._fetchComments();
 	}
 
+	private async _lockStore() {
+		const resource = getCommentModelResourceName(this.model);
+		const resourceId = this.model.id;
+		this.store = await this.lockCommentStore({ resource, resourceId });
+
+		// Keep track of how many comment widgets have a lock on this store. We
+		// need this data when closing the last widget to do some tear down
+		// work.
+		const metadata = this.store.metadata;
+		if (!metadata.widgetLocks) {
+			metadata.widgetLocks = 0;
+		}
+		metadata.widgetLocks += 1;
+	}
+
+	private async _releaseStore() {
+		if (!this.store) {
+			return;
+		}
+
+		const metadata = this.store.metadata;
+		metadata.widgetLocks -= 1;
+
+		// If we are releasing the comment widget for this comment store, we
+		// want to set the state back to how it was when we loaded up the first
+		// comment widget. This way if you open up a new comment widget in the
+		// future, we'll correctly start at the "hot" sort.
+		if (metadata.widgetLocks === 0) {
+			this.setSort({ store: this.store, sort: Comment.SORT_HOT });
+		}
+
+		this.releaseCommentStore(this.store);
+		this.store = null;
+	}
+
 	private async _fetchComments() {
+		if (!this.store) {
+			throw new Error(`You need a store set before fetching comments.`);
+		}
+
 		try {
 			this.isLoading = true;
-
-			const resource = this.resource;
-			const resourceId = this.resourceId;
-
-			if (!this.store) {
-				this.store = await this.lockCommentStore({ resource, resourceId });
-			}
 
 			let payload: any;
 			if (this.isThreadView && this.threadCommentId) {
@@ -322,11 +354,13 @@ export default class AppCommentWidget extends Vue {
 	}
 
 	private _setSort(sort: string) {
-		if (this.store) {
-			this.currentPage = 1;
-			this.setSort({ store: this.store, sort: sort });
-			this._fetchComments();
+		if (!this.store) {
+			return;
 		}
+
+		this.currentPage = 1;
+		this.setSort({ store: this.store, sort: sort });
+		this._fetchComments();
 	}
 
 	loadMore() {

@@ -9,7 +9,7 @@
 
 		<div class="-controls">
 			<div class="-user-controls" v-if="showUserControls">
-				<app-fireside-post-like-widget :post="post" :show-user-follow="showUserFollow" trans />
+				<app-fireside-post-like-widget :post="post" trans @change="emitLikeChange" />
 
 				&nbsp;
 

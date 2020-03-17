@@ -1,10 +1,21 @@
 <template>
-	<section class="section" style="height: 2000px;">
+	<section class="section">
 		<div class="container">
 			<div class="row">
-				<div class="col-6">
+				<div class="col-lg-9">
+					<app-ad-widget size="leaderboard" placement="top" />
+					<app-ad-widget size="rectangle" placement="content" />
+
+					<div class="alert" style="height: 2500px;" />
+
+					<app-ad-widget size="rectangle" placement="content" />
+					<app-ad-widget size="rectangle" placement="content" />
+				</div>
+
+				<div class="col-lg-3">
+					<app-ad-widget size="rectangle" placement="side" />
 					<app-scroll-affix>
-						<app-ad-playwire-video />
+						<app-ad-widget size="video" placement="side" />
 					</app-scroll-affix>
 				</div>
 			</div>

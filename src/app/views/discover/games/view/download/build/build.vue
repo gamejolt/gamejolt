@@ -1,7 +1,5 @@
 <template>
 	<div>
-		<iframe id="download-frame" class="hidden" nwdisable nwfaketop v-if="src" :src="src"></iframe>
-
 		<div id="page-ad-scroll">
 			<section class="section">
 				<div :class="{ container: Screen.isDesktop }">
@@ -25,7 +23,7 @@
 										they're trying to click something.
 									-->
 									<app-loading
-										:style="{ visibility: src ? 'hidden' : undefined }"
+										:style="{ visibility: started ? 'hidden' : undefined }"
 										:hide-label="true"
 									/>
 
@@ -76,7 +74,7 @@
 									</div>
 
 									<br />
-									<app-ad-playwire-video />
+									<app-ad-widget size="video" placement="content" />
 
 									<!--
 										Developer's games
@@ -120,7 +118,7 @@
 
 						<div class="col-md-4 pull-right" v-if="Screen.isDesktop">
 							<div style="width: 300px">
-								<app-ad-widget size="rectangle" />
+								<app-ad-widget size="rectangle" placement="side" />
 							</div>
 
 							<hr />
@@ -130,7 +128,7 @@
 							<hr />
 
 							<div style="width: 300px">
-								<app-ad-widget size="rectangle" />
+								<app-ad-widget size="rectangle" placement="side" />
 							</div>
 						</div>
 

@@ -29,12 +29,15 @@
 						<small v-if="commentsCount > 0">({{ commentsCount | number }})</small>
 					</h4>
 
-					<app-comment-add-button resource="Game" :resource-id="game.id" displayMode="comments" />
+					<app-comment-add-button
+						v-if="shouldShowCommentAdd"
+						:model="game"
+						displayMode="comments"
+					/>
 
 					<app-comment-overview
 						:comments="overviewComments"
-						resource="Game"
-						:resource-id="game.id"
+						:model="game"
 						displayMode="comments"
 						@reload-comments="reloadPreviewComments"
 					/>
@@ -45,7 +48,7 @@
 						class="-recommended-ad"
 						v-if="shouldShowAds && !Screen.isMobile"
 						size="rectangle"
-						static-size
+						placement="side"
 					/>
 
 					<template v-if="!Screen.isMobile">

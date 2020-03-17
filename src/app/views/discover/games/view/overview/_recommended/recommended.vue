@@ -7,7 +7,7 @@
 			<!-- Extra space for the page nav -->
 			<app-scroll-affix :scroll-offset="80">
 				<div class="-ad">
-					<app-ad-playwire-video />
+					<app-ad-widget size="video" placement="side" />
 				</div>
 			</app-scroll-affix>
 		</template>

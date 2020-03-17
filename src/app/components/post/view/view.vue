@@ -1,6 +1,6 @@
 <template>
 	<section class="section" v-if="post">
-		<div v-app-scroll-when="true"></div>
+		<div v-app-scroll-when="true" />
 
 		<div class="container">
 			<div v-if="post.hasVideo" class="full-bleed-xs">
@@ -90,14 +90,15 @@
 					</template>
 
 					<app-event-item-controls
-						show-comments
 						:post="post"
+						show-comments
+						should-show-follow
 						@post-remove="onPostRemoved"
 						@post-publish="onPostPublished"
 					/>
 				</div>
 				<div class="col-md-4 col-lg-5" v-if="shouldShowAds && Screen.isDesktop">
-					<app-ad-widget class="pull-right" />
+					<app-ad-widget size="rectangle" placement="side" class="pull-right" />
 				</div>
 			</div>
 		</div>

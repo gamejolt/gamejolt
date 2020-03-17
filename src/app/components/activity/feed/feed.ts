@@ -1,7 +1,7 @@
 import 'rxjs/add/operator/sampleTime';
 import Vue from 'vue';
 import { Component, Emit, Prop, Provide, Watch } from 'vue-property-decorator';
-import { Ads } from '../../../../_common/ad/ads.service';
+import { propOptional, propRequired } from '../../../../utils/vue';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
@@ -29,14 +29,11 @@ import { ActivityFeedView } from './view';
 })
 export default class AppActivityFeed extends Vue {
 	@Provide('feed')
-	@Prop(ActivityFeedView)
+	@Prop(propRequired(ActivityFeedView))
 	feed!: ActivityFeedView;
 
-	@Prop(Number)
-	newCount?: number;
-
-	@Prop(Boolean)
-	showAds?: boolean;
+	@Prop(propOptional(Number, 0)) newCount!: number;
+	@Prop(propOptional(Boolean, false)) showAds!: boolean;
 
 	/**
 	 * We save the scroll position every time it changes. When clicking back to
@@ -51,7 +48,7 @@ export default class AppActivityFeed extends Vue {
 	 * The distance from the bottom of the feed that we should start loading
 	 * more.
 	 */
-	readonly loadMoreMargin = `${Screen.height * 2}px`;
+	readonly loadMoreMargin = `${Screen.height * 1.5}px`;
 
 	$el!: HTMLDivElement;
 
@@ -125,10 +122,10 @@ export default class AppActivityFeed extends Vue {
 	}
 
 	get shouldShowAds() {
-		return this.showAds && Ads.shouldShow;
+		return this.showAds && this.$ad.shouldShow;
 	}
 
-	get lastPostId() {
+	get lastPostScrollId() {
 		return this.feed.state.endScrollId;
 	}
 

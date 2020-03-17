@@ -8,8 +8,7 @@
 
 		<div class="modal-body">
 			<app-comment-widget
-				:resource="resource"
-				:resource-id="resourceId"
+				:model="model"
 				:thread-comment-id="commentId"
 				:show-tabs="false"
 				:show-add="false"
@@ -25,8 +24,7 @@
 				:class="{ '-thread-editor-focus': isEditorFocused }"
 			>
 				<form-comment
-					:resource="resource"
-					:resource-id="resourceId"
+					:comment-model="model"
 					:parent-id="parent.id"
 					:placeholder="$gettext(`Leave a reply...`)"
 					:autofocus="autofocus"

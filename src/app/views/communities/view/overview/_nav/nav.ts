@@ -32,6 +32,8 @@ export default class AppCommunitiesViewOverviewNav extends Vue {
 	isChannelUnread(title: string) {
 		if (title === 'featured') {
 			return this.communityState.unreadFeatureCount > 0;
+		} else if (title === 'all') {
+			return this.communityState.unreadChannels.length > 0;
 		}
 
 		const channel = this.community.channels!.find(i => i.title === title);

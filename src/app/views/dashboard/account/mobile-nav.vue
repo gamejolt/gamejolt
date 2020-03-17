@@ -24,6 +24,13 @@
 				</router-link>
 				<router-link
 					class="list-group-item"
+					:to="{ name: 'dash.account.blocks' }"
+					active-class="active"
+				>
+					<translate>Blocked Users</translate>
+				</router-link>
+				<router-link
+					class="list-group-item"
 					:to="{ name: 'dash.account.linked-accounts' }"
 					active-class="active"
 				>

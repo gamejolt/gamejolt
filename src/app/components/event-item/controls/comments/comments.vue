@@ -6,8 +6,7 @@
 		/>
 		<form-comment
 			v-else
-			:resource="resource"
-			:resource-id="resourceId"
+			:comment-model="model"
 			:editor-startup-activity="clickedCommentType"
 			autofocus
 			@submit="onSubmitNewComment"
@@ -18,7 +17,7 @@
 		<br />
 		<br />
 
-		<app-comment-widget :resource="resource" :resource-id="resourceId" :model="model" />
+		<app-comment-widget :model="model" />
 	</div>
 </template>
 

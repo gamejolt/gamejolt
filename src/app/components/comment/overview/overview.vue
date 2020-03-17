@@ -1,9 +1,9 @@
 <template>
-	<div class="comment-overview sheet sheet-full" v-if="comments.length > 0">
+	<div class="comment-overview sheet sheet-full" v-if="displayComments.length > 0">
 		<!--
 			Capture the click and prevent default so that no links within the content open up.
 		-->
-		<div v-for="comment of comments" :key="comment.id" class="-comment-container">
+		<div v-for="comment of displayComments" :key="comment.id" class="-comment-container">
 			<div
 				class="-comment"
 				@click.capture="
@@ -51,7 +51,7 @@
 		border-top-right-radius: $border-radius-large
 
 .-comment
-	padding: 10px
+	padding: 12px 8px
 
 	&:hover
 		change-bg('bg-offset')
@@ -59,13 +59,14 @@
 
 .-byline
 	clearfix()
-	margin-bottom: 10px
+	text-overflow()
+	margin-bottom: 12px
 	line-height: 30px
 
 .-avatar
 	float: left
-	margin-right: 10px
-	width: 30px
+	margin-right: 8px
+	width: 28px
 
 .-content
 	font-size: $font-size-small

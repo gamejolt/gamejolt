@@ -13,22 +13,6 @@
 	overflow: hidden
 	-webkit-overflow-scrolling: touch
 
-	// Animation stuff.
-	// Tells vue that we want to animate for this long, basically.
-	&.v-enter-active, &.v-leave-active
-		transition-duration: 300ms
-
-		.modal-content
-			transition: transform 300ms $strong-ease-out, opacity 300ms
-
-	&.v-enter, &.v-leave-to
-		.modal-content
-			opacity: 0
-
-			// On sm-up we do a expand open animation.
-			@media $media-sm-up
-				transform: scale3d(0.8, 0.8, 0.8)
-
 	>>> .backdrop
 		z-index: 1
 
@@ -37,10 +21,6 @@
 	-fullscreen()
 	position: absolute
 	z-index: 2
-
-	.modal-content
-		opacity: 1
-		transform: none
 
 .modal-content
 	change-bg('bg')

@@ -7,12 +7,7 @@
 		<div v-else-if="hasBootstrapped">
 			<template v-if="shouldShowAdd">
 				<app-message-thread-add v-if="user" hide-message-split>
-					<form-comment
-						:resource="resource"
-						:resource-id="resourceId"
-						:autofocus="autofocus"
-						@submit="_onCommentAdd"
-					/>
+					<form-comment :comment-model="model" :autofocus="autofocus" @submit="_onCommentAdd" />
 				</app-message-thread-add>
 				<div v-else class="alert">
 					<p>
@@ -54,8 +49,7 @@
 				<app-comment-widget-comment
 					v-for="comment of comments"
 					:key="comment.id"
-					:resource="resource"
-					:resource-id="resourceId"
+					:model="model"
 					:comment="comment"
 					:children="childComments[comment.id]"
 					:show-children="isThreadView"
@@ -71,7 +65,12 @@
 			<app-loading v-if="isLoading" class="loading-centered" />
 			<div v-else-if="shouldShowEmptyMessage">
 				<div class="alert alert-info">
-					<translate>It's feeling a bit empty in here. Start talking!</translate>
+					<template v-if="shouldShowAdd">
+						<translate>It's feeling a bit empty in here. Start talking!</translate>
+					</template>
+					<template v-else>
+						<translate>There are no comments here...</translate>
+					</template>
 				</div>
 			</div>
 		</div>

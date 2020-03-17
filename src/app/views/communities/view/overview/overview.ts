@@ -29,7 +29,7 @@ import AppCommunitiesViewOverviewNavEdit from './_nav/edit/edit.vue';
 import AppCommunitiesViewOverviewNav from './_nav/nav.vue';
 
 function getChannel(route: Route) {
-	return route.params.channel || 'featured';
+	return route.params.channel || 'featured' || 'all';
 }
 
 function getSort(route: Route) {
@@ -75,15 +75,15 @@ function getFetchUrl(route: Route) {
 	lazy: true,
 	deps: {
 		params: ['path', 'channel'],
-		query: ['sort'],
+		query: ['sort', 'feed_last_id'],
 	},
 	resolver: ({ route }) => {
 		const channel = getChannel(route);
 		const sort = getSort(route);
 
-		return Api.sendRequest(
-			`/web/communities/overview/${route.params.path}/${channel}?sort=${sort}`
-		);
+		let apiOverviewUrl = `/web/communities/overview/${route.params.path}/${channel}?sort=${sort}`;
+
+		return Api.sendRequest(ActivityFeedService.makeFeedUrl(route, apiOverviewUrl));
 	},
 })
 export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
@@ -219,6 +219,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 		if (this.channel === 'featured' && this.communityState.unreadFeatureCount > 0) {
 			return true;
+		} else if (this.channel === 'all' && this.communityState.unreadChannels.length > 0) {
+			return true;
 		}
 
 		const channel = this.community.channels!.find(i => i.title === this.channel);
@@ -266,7 +268,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 				type: 'EventItem',
 				url: getFetchUrl(this.$route),
 				hideCommunity: true,
-				hideCommunityChannel: this.channel !== 'featured',
+				hideCommunityChannel: this.channel !== 'featured' && this.channel !== 'all',
 				shouldShowFollow: true,
 				notificationWatermark: $payload.unreadWatermark,
 			},
@@ -302,6 +304,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 		if (this.channel === 'featured') {
 			this.communityState.unreadFeatureCount = 0;
+		} else if (this.channel === 'all') {
+			this.communityState.markAllChannelsRead();
 		} else {
 			if (this.community.channels) {
 				const channel = this.community.channels.find(i => i.title === this.channel);
@@ -331,7 +335,11 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	onPostMovedChannel(eventItem: EventItem, movedTo: CommunityChannel) {
-		if (this.feed && this.channel !== 'featured' && this.channel !== movedTo.title) {
+		if (
+			this.feed &&
+			(this.channel !== 'featured' && this.channel !== 'all') &&
+			this.channel !== movedTo.title
+		) {
 			this.feed.remove([eventItem]);
 		}
 	}
@@ -350,10 +358,12 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		let loadNewCount = 0;
 		if (channel) {
 			this.communityState.markChannelRead(channel.id);
-		} else {
+		} else if (this.channel === 'featured') {
 			// For the featured view, we know how many posts are new. Load that many.
 			loadNewCount = this.communityState.unreadFeatureCount;
 			this.communityState.unreadFeatureCount = 0; // Set to read.
+		} else if (this.channel === 'all') {
+			this.communityState.markAllChannelsRead(); // Set to read.
 		}
 		// Load 15 new posts for channels or if we are unable to acquire the count.
 		if (loadNewCount <= 0) {

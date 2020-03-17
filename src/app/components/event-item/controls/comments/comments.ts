@@ -46,7 +46,7 @@ export default class AppEventItemControlsComments extends Vue {
 	clickedCommentType = '';
 
 	get commentsCount() {
-		return this.commentStore ? this.commentStore.count : 0;
+		return this.commentStore ? this.commentStore.totalCount : 0;
 	}
 
 	get resource() {
@@ -74,6 +74,9 @@ export default class AppEventItemControlsComments extends Vue {
 	}
 
 	get shouldShowInlineComment() {
+		if (this.model instanceof FiresidePost && !this.model.canComment) {
+			return false;
+		}
 		return !this.showFeed;
 	}
 
@@ -101,8 +104,7 @@ export default class AppEventItemControlsComments extends Vue {
 
 	openComments() {
 		CommentModal.show({
-			resource: this.resource,
-			resourceId: this.resourceId,
+			model: this.model,
 			displayMode: 'comments',
 		});
 	}

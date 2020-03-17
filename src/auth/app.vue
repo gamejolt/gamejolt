@@ -1,7 +1,5 @@
 <template>
 	<app-common-shell :class="{ 'is-client-offline': Connection.isClientOffline }">
-		<app-cookie-banner />
-
 		<div id="content">
 			<app-error-page>
 				<router-view />

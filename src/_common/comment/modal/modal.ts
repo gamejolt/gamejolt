@@ -1,7 +1,9 @@
 import { Component, Prop } from 'vue-property-decorator';
 import { number } from '../../filters/number';
 import { BaseModal } from '../../modal/base';
+import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
+import { getCommentModelResourceName } from '../comment-model';
 import { CommentState, CommentStore } from '../comment-store';
 import AppCommentWidget from '../widget/widget.vue';
 import { DisplayMode } from './modal.service';
@@ -13,13 +15,10 @@ import { DisplayMode } from './modal.service';
 })
 export default class AppCommentModal extends BaseModal {
 	@Prop(String)
-	resource!: string;
-
-	@Prop(Number)
-	resourceId!: number;
-
-	@Prop(String)
 	displayMode!: DisplayMode;
+
+	@Prop(Model)
+	model!: Model;
 
 	@CommentState
 	getCommentStore!: CommentStore['getCommentStore'];
@@ -28,8 +27,8 @@ export default class AppCommentModal extends BaseModal {
 	readonly Screen = Screen;
 
 	get commentsCount() {
-		const store = this.getCommentStore(this.resource, this.resourceId);
-		return store ? store.count : 0;
+		const store = this.getCommentStore(getCommentModelResourceName(this.model), this.model.id);
+		return store ? store.totalCount : 0;
 	}
 
 	get autofocusAdd() {

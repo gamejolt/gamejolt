@@ -71,12 +71,6 @@
 					/>
 				</div>
 			</template>
-			<template v-else-if="item.media_type === 'video'">
-				<app-video-embed :video-provider="item.type" :video-id="item.url" />
-			</template>
-			<template v-else-if="item.media_type === 'sketchfab'">
-				<app-sketchfab-embed :sketchfab-id="item.sketchfab_id" />
-			</template>
 			<!-- </div> -->
 			<!-- </div> -->
 		</div>

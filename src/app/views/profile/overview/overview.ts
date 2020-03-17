@@ -148,7 +148,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			this.user &&
 			this.user.id !== this.app.user.id &&
 			!this.userFriendship &&
-			this.user.friend_requests_enabled
+			this.user.friend_requests_enabled &&
+			!this.user.is_blocked &&
+			!this.user.blocked_you
 		);
 	}
 
@@ -269,6 +271,14 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return this.trophyCount - (this.previewTrophies || []).length;
 	}
 
+	get shouldShowShoutAdd() {
+		return this.user && this.user.canComment;
+	}
+
+	get userBlockedYou() {
+		return this.user && this.user.blocked_you;
+	}
+
 	getLinkedAccount(provider: Provider) {
 		if (
 			this.user &&
@@ -312,7 +322,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		this.overviewComments = Comment.populate($payload.comments);
 
 		if (this.user) {
-			CommentThreadModal.showFromPermalink(this.$router, 'User', this.user.id, 'shouts');
+			CommentThreadModal.showFromPermalink(this.$router, this.user, 'shouts');
 		}
 
 		if ($payload.knownFollowers) {
@@ -328,8 +338,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	showComments() {
 		if (this.user) {
 			CommentModal.show({
-				resource: 'User',
-				resourceId: this.user.id,
+				model: this.user,
 				displayMode: 'shouts',
 			});
 		}

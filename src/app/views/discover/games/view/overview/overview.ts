@@ -1,12 +1,10 @@
 import { Component } from 'vue-property-decorator';
-import { Ads } from '../../../../../../_common/ad/ads.service';
-import AppAdPlacement from '../../../../../../_common/ad/placement/placement.vue';
 import AppAdWidget from '../../../../../../_common/ad/widget/widget.vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../_common/card/card.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import AppCommentAddButton from '../../../../../../_common/comment/add-button/add-button.vue';
-import { Comment } from '../../../../../../_common/comment/comment-model';
+import { Comment, getCanCommentOnModel } from '../../../../../../_common/comment/comment-model';
 import { CommentState, CommentStore } from '../../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../../_common/comment/modal/modal.service';
 import { CommentThreadModal } from '../../../../../../_common/comment/thread/modal.service';
@@ -54,7 +52,6 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 		AppDiscoverGamesViewOverviewStatbar,
 		AppGameCommunityBadge,
 		AppAdWidget,
-		AppAdPlacement,
 		AppRatingWidget,
 		AppCard,
 		AppFadeCollapse,
@@ -221,22 +218,20 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	get commentsCount() {
 		if (this.game) {
 			const store = this.getCommentStore('Game', this.game.id);
-			return store ? store.count : 0;
+			return store ? store.totalCount : 0;
 		}
 		return 0;
 	}
 
 	get shouldShowAds() {
-		return Ads.shouldShow;
+		return this.$ad.shouldShow;
+	}
+
+	get shouldShowCommentAdd() {
+		return getCanCommentOnModel(this.game);
 	}
 
 	routeCreated() {
-		CommentThreadModal.showFromPermalink(
-			this.$router,
-			'Game',
-			parseInt(this.$route.params.id, 10),
-			'comments'
-		);
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
@@ -247,6 +242,10 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 		if ($payload.microdata) {
 			Meta.microdata = $payload.microdata;
+		}
+
+		if (this.game) {
+			CommentThreadModal.showFromPermalink(this.$router, this.game, 'comments');
 		}
 
 		this.feed = ActivityFeedService.routed(
@@ -268,7 +267,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	showComments() {
-		CommentModal.show({ resource: 'Game', resourceId: this.game.id, displayMode: 'comments' });
+		CommentModal.show({ model: this.game, displayMode: 'comments' });
 	}
 
 	onPostAdded(post: FiresidePost) {

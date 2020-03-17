@@ -131,14 +131,14 @@
 				<app-form-group
 					name="sketchfab_id"
 					hide-label
-					:label="$gettext(`Sketchfab Model ID`)"
+					:label="$gettext(`Sketchfab Model URL`)"
 					v-app-focus-when="!wasPublished"
 				>
 					<p class="help-block">
-						<translate>Enter the ID in your Sketchfab model's URL. For example:</translate>
+						<translate>Enter your Sketchfab model's URL or ID. For example:</translate>
+						<br />
 						<code>
-							https://sketchfab.com/3d-models/your-model-name-
-							<strong>ID</strong>
+							https://sketchfab.com/3d-models/your-model-name-ID
 						</code>
 					</p>
 

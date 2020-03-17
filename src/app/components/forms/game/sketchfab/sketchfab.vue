@@ -1,15 +1,24 @@
 <template>
 	<app-form name="mediaForm">
-		<app-form-group name="sketchfab_id" :label="$gettext(`Sketchfab Model ID`)">
+		<app-form-group name="sketchfab_id" :label="$gettext(`Sketchfab Model URL`)">
 			<p class="help-block">
-				<translate>This is the ID in your model's URL. For example:</translate>
+				<translate>Enter your Sketchfab model's URL or ID. For example:</translate>
+				<br />
 				<code>
-					https://sketchfab.com/models/
-					<strong>ID</strong>
+					https://sketchfab.com/3d-models/your-model-name-ID
 				</code>
 			</p>
-			<app-form-control type="text" />
+			<app-form-control
+				type="text"
+				:rules="{
+					pattern: SKETCHFAB_FIELD_REGEX,
+				}"
+			/>
 			<app-form-control-errors />
+			<div v-if="hasValidSketchfabModelId">
+				<br />
+				<app-sketchfab-embed :sketchfab-id="sketchfabId" />
+			</div>
 		</app-form-group>
 
 		<app-form-button show-when-valid>

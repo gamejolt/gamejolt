@@ -22,6 +22,12 @@ install:
   # InnoSetup 5.x Unicode
   # MinGW 32-bit
 
+  - ps: |
+      $fileContent = "-----BEGIN RSA PRIVATE KEY-----`n"
+      $fileContent += $env:SSH_KEY.Replace(' ', "`n")
+      $fileContent += "`n-----END RSA PRIVATE KEY-----`n"
+      Set-Content C:\Users\appveyor\.ssh\id_rsa $fileContent
+
   # Enable VS2015 toolset
   - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
 

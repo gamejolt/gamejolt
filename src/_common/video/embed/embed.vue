@@ -13,7 +13,7 @@
 				:width="width"
 				:height="height"
 				:src="embedUrl"
-			></iframe>
+			/>
 
 			<iframe
 				nwdisable
@@ -26,7 +26,7 @@
 				:width="width"
 				:height="height"
 				:src="embedUrl"
-			></iframe>
+			/>
 		</div>
 	</div>
 </template>

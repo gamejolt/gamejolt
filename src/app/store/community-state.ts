@@ -29,6 +29,12 @@ export class CommunityState {
 		}
 	}
 
+	public markAllChannelsRead() {
+		while (this.unreadChannels.length > 0) {
+			this.unreadChannels.pop();
+		}
+	}
+
 	public reset() {
 		this.unreadChannels = [];
 		this.hasUnreadPosts = false;

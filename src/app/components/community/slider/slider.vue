@@ -20,6 +20,7 @@
 	white-space: nowrap
 	padding-left: $grid-gutter-width-xs * 0.5
 	padding-right: $grid-gutter-width-xs * 0.5
+	padding-bottom: 8px
 	overflow-x: auto
 	overflow-y: hidden
 	margin-bottom: $line-height-computed
@@ -27,6 +28,10 @@
 	@media $media-sm-up
 		padding-left: $grid-gutter-width * 0.5
 		padding-right: $grid-gutter-width * 0.5
+
+	@media $media-md-up
+		padding-bottom: 0
+
 </style>
 
 <script lang="ts" src="./slider"></script>

@@ -1,5 +1,6 @@
 import { RouteConfig } from 'vue-router';
 import { routeDashAccountAddresses } from './addresses/addresses.route';
+import { routeDashAccountBlocks } from './blocks/blocks.route';
 import { routeDashAccountChangePassword } from './change-password/change-password.route';
 import { routeDashAccountEdit } from './edit/edit.route';
 import { routeDashAccountEmailPreferences } from './email-preferences/email-preferences.route';
@@ -28,5 +29,6 @@ export const routeDashAccount: RouteConfig = {
 		routeDashAccountPurchasesView,
 		routeDashAccountSite,
 		routeDashAccountWithdrawFunds,
+		routeDashAccountBlocks,
 	],
 };

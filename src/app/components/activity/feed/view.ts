@@ -27,6 +27,7 @@ class ActivityFeedViewItemState {
 	isHydrated = false;
 	isOpen = false;
 	isLeadOpen = false;
+	isShowingFollow = false;
 	height: string | null = null;
 }
 
@@ -213,6 +214,14 @@ export class ActivityFeedView {
 
 	isItemOpen(item: ActivityFeedItem) {
 		return this.getItemState(item).isOpen;
+	}
+
+	setItemShowingFollow(item: ActivityFeedItem, showFollow: boolean) {
+		this.getItemState(item).isShowingFollow = showFollow;
+	}
+
+	isItemShowingFollow(item: ActivityFeedItem) {
+		return this.getItemState(item).isShowingFollow;
 	}
 
 	resetBootstrapped() {

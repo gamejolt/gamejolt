@@ -26,9 +26,6 @@ import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 	resolver: () => Api.sendRequest('/web/client'),
 })
 export default class RouteLandingClient extends BaseRouteComponent {
-	// When this is set, it triggers the iframe that begins the download
-	downloadSrc = '';
-
 	private packageData: GamePackagePayloadModel | null = null;
 	private fallbackUrl = 'https://gamejolt.com';
 
@@ -102,9 +99,6 @@ export default class RouteLandingClient extends BaseRouteComponent {
 	}
 
 	async download(platform: string, arch: string) {
-		// This will reset the iframe since it removes it when there is no download src.
-		this.downloadSrc = '';
-
 		HistoryTick.sendBeacon('client-download');
 
 		const downloadUrl = await this.getDownloadUrl(platform, arch);
@@ -113,7 +107,7 @@ export default class RouteLandingClient extends BaseRouteComponent {
 			return;
 		}
 
-		this.downloadSrc = downloadUrl;
+		Navigate.goto(downloadUrl);
 	}
 
 	private async getDownloadUrl(platform: string, arch: string) {

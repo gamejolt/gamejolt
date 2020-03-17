@@ -16,7 +16,11 @@ export class AppResponsiveDimensions extends Vue {
 	@Prop(Number)
 	maxWidth?: number;
 
+	@Prop(Number)
+	maxHeight?: number;
+
 	private resize$: Subscription | undefined;
+	private width: string | null = null;
 	private height = 'auto';
 
 	mounted() {
@@ -36,8 +40,10 @@ export class AppResponsiveDimensions extends Vue {
 			'div',
 			{
 				style: {
+					width: this.width,
 					height: this.height,
 					maxWidth: this.maxWidth ? this.maxWidth + 'px' : undefined,
+					maxHeight: this.maxHeight ? this.maxHeight + 'px' : undefined,
 				},
 			},
 			this.$slots.default
@@ -45,20 +51,27 @@ export class AppResponsiveDimensions extends Vue {
 	}
 
 	@Watch('ratio')
+	@Watch('maxWidth')
+	@Watch('maxHeight')
 	private updateDimensions() {
 		let isFilled = true;
-		let containerWidth = Ruler.width(this.$el.parentNode as HTMLElement);
+		let width = Ruler.width(this.$el.parentNode as HTMLElement);
 
-		if (this.maxWidth && containerWidth > this.maxWidth) {
-			containerWidth = this.maxWidth;
+		if (this.maxWidth && width > this.maxWidth) {
+			width = this.maxWidth;
 			isFilled = false;
 		}
 
-		const height = containerWidth / this.ratio;
+		let height = width / this.ratio;
+
+		if (this.maxHeight && height > this.maxHeight) {
+			height = this.maxHeight;
+			isFilled = false;
+			width = height * this.ratio;
+		}
+
+		this.width = `${width}px`;
 		this.height = `${height}px`;
-		this.$emit(
-			'change',
-			new AppResponsiveDimensionsChangeEvent(containerWidth, height, isFilled)
-		);
+		this.$emit('change', new AppResponsiveDimensionsChangeEvent(width, height, isFilled));
 	}
 }
