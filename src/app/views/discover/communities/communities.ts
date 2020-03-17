@@ -22,10 +22,7 @@ const endpoint = '/web/discover/communities';
 	cache: true,
 	lazy: true,
 	deps: { query: ['q'] },
-	resolver({ route }) {
-		const url = `${endpoint}?q=${route.query.q || ''}`;
-		return Api.sendRequest(url);
-	},
+	resolver: ({ route }) => Api.sendRequest(`${endpoint}?q=${route.query.q || ''}`),
 })
 export default class RouteDiscoverCommunities extends BaseRouteComponent {
 	searchText = '';
@@ -55,9 +52,18 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 
 	routeCreated() {
 		this.searchText = (this.$route.query.q || '') as string;
+		this.communities = [];
+		this.page = 1;
+		this.isLoading = false;
+		this.hasMore = true;
 	}
 
 	routeResolved(payload: any) {
+		// Set the communities to empty because the processSearchResults
+		// appends instead of sets, and routeResolved is called twice - once for cache,
+		// and one for the actual results, resulting in duplicate entries.
+		this.communities = [];
+
 		this.processSearchResults(payload);
 	}
 
