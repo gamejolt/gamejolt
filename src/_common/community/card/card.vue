@@ -20,12 +20,6 @@
 					</router-link>
 				</div>
 
-				<div class="-path">
-					<router-link :to="community.routeLocation" class="link-unstyled"
-						>c/{{ community.path }}</router-link
-					>
-				</div>
-
 				<div class="-member-counts small">
 					<router-link
 						:to="{

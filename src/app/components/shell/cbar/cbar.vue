@@ -9,6 +9,7 @@
 						:community="community"
 					/>
 
+					<app-shell-cbar-discover-item key="discover" />
 					<app-shell-cbar-add-item key="add" />
 				</transition-group>
 			</div>

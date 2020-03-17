@@ -4,7 +4,9 @@ import { Api } from '../../../../_common/api/api.service';
 import AppCommunityCard from '../../../../_common/community/card/card.vue';
 import { Community } from '../../../../_common/community/community.model';
 import AppLoading from '../../../../_common/loading/loading.vue';
-import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { AppScrollInview } from '../../../../_common/scroll/inview/inview';
 
 const endpoint = '/web/discover/communities';
 
@@ -13,28 +15,60 @@ const endpoint = '/web/discover/communities';
 	components: {
 		AppCommunityCard,
 		AppLoading,
+		AppScrollInview,
+	},
+})
+@RouteResolver({
+	lazy: true,
+	// cache is annoying in this route.
+	// cache: true,
+	async resolver({ route }) {
+		const url = `${endpoint}?q=${route.query.q || ''}`;
+		console.log(`new search at ${url}`);
+		return Api.sendRequest(url);
 	},
 })
 export default class RouteDiscoverCommunities extends BaseRouteComponent {
 	searchText = '';
 	communities: Community[] = [];
 	page = 1;
+
 	isLoading = false;
+	hasMore = true;
 
 	private nextSearchId = 0;
 
+	$refs!: {
+		inview: AppScrollInview;
+	};
+
+	get isLoadingFirst() {
+		return this.isRouteLoading;
+	}
+
 	get isLoadingMore() {
-		return this.isLoading && this.page !== 1;
+		return this.isLoading;
 	}
 
-	@Watch('searchText', { immediate: true })
-	onSearchTextChanged() {
-		this.nextSearchId++;
-		this.sendSearch(this.nextSearchId, this.searchText);
+	get loadMoreMargin() {
+		return `${Screen.height * 2}px`;
 	}
 
-	async sendSearch(searchId: number, searchText: string) {
-		this.isLoading = true;
+	routeCreated() {
+		this.communities = [];
+		this.page = 1;
+		this.isLoading = false;
+		this.hasMore = true;
+		this.searchText = (this.$route.query.q || '') as string;
+	}
+
+	routeResolved(payload: any) {
+		this.processSearchResults(payload);
+	}
+
+	@Watch('searchText')
+	async onSearchTextChanged() {
+		const searchId = ++this.nextSearchId;
 
 		// Debounce
 		await sleep(500);
@@ -42,23 +76,55 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 			return;
 		}
 
+		this.$router.replace({
+			name: 'discover.communities',
+			query: { q: this.searchText || undefined },
+		});
+	}
+
+	onScrollLoadMore() {
+		// Don't attempt to load more results if we're still loading,
+		// or if a previous attempt for the same search string returned empty.
+		if (this.isRouteLoading || this.isLoading || !this.hasMore) {
+			return;
+		}
+
+		this.page++;
+		this.nextSearchId++;
+		this.sendSearch(this.nextSearchId, this.searchText);
+	}
+
+	async sendSearch(searchId: number, searchText: string) {
+		this.isLoading = true;
+
 		const url = `${endpoint}?q=${encodeURIComponent(searchText)}&page=${this.page}`;
 		const result = await Api.sendRequest(url, null, {
 			detach: true,
 		});
-		console.log(result);
 
 		// Abort if a new search was already made while this was sent.
 		if (searchId !== this.nextSearchId) {
 			return;
 		}
 
-		this._populatePayload(result);
-
 		this.isLoading = false;
+
+		this.processSearchResults(result);
 	}
 
-	private _populatePayload(payload: any) {
-		this.communities = Community.populate(payload.communities || []);
+	private async processSearchResults(payload: any) {
+		if (!payload || !Array.isArray(payload.communities) || payload.communities.length === 0) {
+			this.hasMore = false;
+			return;
+		}
+
+		this.communities.push(...Community.populate(payload.communities));
+
+		// inview won't emit if the scroll didn't go out of view.
+		// We have to check if we still have room to load more entries manually then.
+		await this.$nextTick();
+		if (this.$refs.inview.inView) {
+			this.onScrollLoadMore();
+		}
 	}
 }
