@@ -19,9 +19,10 @@ const endpoint = '/web/discover/communities';
 	},
 })
 @RouteResolver({
+	cache: true,
 	lazy: true,
 	deps: { query: ['q'] },
-	async resolver({ route }) {
+	resolver({ route }) {
 		const url = `${endpoint}?q=${route.query.q || ''}`;
 		return Api.sendRequest(url);
 	},
