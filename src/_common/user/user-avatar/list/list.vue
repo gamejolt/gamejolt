@@ -1,9 +1,18 @@
 <template>
-	<div class="-list" :class="{ '-inline-list': sm }">
-		<div class="-user" :class="{ '-user-sm': sm }" v-for="user of users" :key="user.id">
+	<div class="-list" :class="{ '-inline-list': inline }">
+		<div
+			class="-user"
+			:class="{
+				'-user-sm': sm,
+			}"
+			v-for="user of users"
+			:key="user.id"
+		>
 			<app-user-avatar
 				class="-avatar"
-				:class="{ '-avatar-sm': sm }"
+				:class="{
+					'-avatar-sm': sm,
+				}"
 				:user="user"
 				v-app-tooltip="user.display_name + ' (@' + user.username + ')'"
 			/>
