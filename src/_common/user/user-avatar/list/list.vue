@@ -25,44 +25,20 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-$-size = 40px
-$-spacing = 3px
-
-$-size-sm = 24px
-
 .-list
-	position: relative
-	flex: 1
-	display: flex
-	flex-wrap: wrap
 	padding-top: 4px
 	padding-bottom: 4px
-
-.-inline-list
-	display: inline-flex
+	display: grid
+	grid-template-columns: repeat(auto-fill, minmax(40px, 1fr))
+	grid-gap: 8px
 
 .-user
-	flex: none
-	width: $-size
-	height: $-size
-	margin: 0 $-spacing $-spacing
 	position: relative
-
-.-user-sm
-	width: $-size-sm * 0.4
-	height: $-size-sm
 
 .-avatar
 	img-circle()
 	change-bg('bg-subtle')
 	pressy()
-	flex: none
-	width: $-size
-	height: $-size
-
-.-avatar-sm
-	width: $-size-sm
-	height: $-size-sm
 
 .-tick
 	change-bg('bg')
