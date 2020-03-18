@@ -18,4 +18,10 @@ import AppUserAvatar from '../user-avatar.vue';
 export default class AppUserAvatarList extends Vue {
 	@Prop(Array)
 	users!: User[];
+
+	@Prop(Boolean)
+	sm?: boolean;
+
+	@Prop(Boolean)
+	inline?: boolean;
 }
