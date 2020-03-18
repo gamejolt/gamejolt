@@ -31,7 +31,7 @@ export default class AppEventItemControlsFiresidePostStickersTray extends Vue {
 	stickerCounts: StickerCount[] = [];
 
 	async mounted() {
-		const result = (await Api.sendRequest('/web/posts/stickers/get-stickers', undefined, {
+		const result = (await Api.sendRequest('/web/stickers/get-stickers', undefined, {
 			detach: true,
 		})) as StickersResponse;
 

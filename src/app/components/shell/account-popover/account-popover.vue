@@ -5,8 +5,14 @@
 		@hide="onHide()"
 		v-app-track-event="`top-nav:user-menu:toggle`"
 	>
-		<a class="navbar-avatar" :class="{ active: isShowing }">
+		<a class="navbar-item navbar-avatar" :class="{ active: isShowing }">
 			<app-user-avatar-img :user="app.user" />
+			<span
+				v-if="showNew"
+				class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
+			>
+				<translate>NEW</translate>
+			</span>
 		</a>
 
 		<template v-if="isShowing">
@@ -40,6 +46,16 @@
 						v-app-track-event="`account-popover:account`"
 					>
 						<translate>Edit Account</translate>
+					</router-link>
+					<router-link
+						class="list-group-item offline-disable"
+						:to="{ name: 'dash.stickers' }"
+						v-app-track-event="`account-popover:stickers`"
+					>
+						<span class="tag tag-highlight">
+							<translate>NEW</translate>
+						</span>
+						<translate>Stickers</translate>
 					</router-link>
 					<a
 						class="list-group-item offline-disable"

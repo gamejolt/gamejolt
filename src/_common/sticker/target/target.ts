@@ -58,7 +58,7 @@ export default class AppStickerTarget extends Vue {
 
 	async dropSticker(stickerId: number, positionX: number, positionY: number) {
 		console.log(stickerId, positionX, positionY);
-		const result = await Api.sendRequest('/web/posts/stickers/add', {
+		const result = await Api.sendRequest('/web/stickers/add', {
 			stickerId,
 			positionX,
 			positionY,
