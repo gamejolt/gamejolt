@@ -1,22 +1,12 @@
 <template>
-	<div class="-list" :class="{ '-inline-list': inline }">
-		<div
-			class="-user"
-			:class="{
-				'-user-sm': sm,
-			}"
-			v-for="user of users"
-			:key="user.id"
-		>
+	<div class="-list">
+		<div class="-user" v-for="user of users" :key="user.id">
 			<app-user-avatar
 				class="-avatar"
-				:class="{
-					'-avatar-sm': sm,
-				}"
 				:user="user"
 				v-app-tooltip="user.display_name + ' (@' + user.username + ')'"
 			/>
-			<app-user-verified-tick v-if="!sm" class="-tick" :user="user" />
+			<app-user-verified-tick class="-tick" :user="user" />
 		</div>
 	</div>
 </template>
