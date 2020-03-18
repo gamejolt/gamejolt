@@ -1,12 +1,13 @@
 <template>
-	<div class="-list">
-		<div class="-user" v-for="user of users" :key="user.id">
+	<div class="-list" :class="{ '-inline-list': sm }">
+		<div class="-user" :class="{ '-user-sm': sm }" v-for="user of users" :key="user.id">
 			<app-user-avatar
 				class="-avatar"
+				:class="{ '-avatar-sm': sm }"
 				:user="user"
 				v-app-tooltip="user.display_name + ' (@' + user.username + ')'"
 			/>
-			<app-user-verified-tick class="-tick" :user="user" />
+			<app-user-verified-tick v-if="!sm" class="-tick" :user="user" />
 		</div>
 	</div>
 </template>
@@ -15,20 +16,38 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+$-size = 40px
+$-spacing = 4px
+
+$-size-sm = 24px
+
+
 .-list
-	padding-top: 4px
-	padding-bottom: 4px
 	display: grid
-	grid-template-columns: repeat(auto-fill, minmax(40px, 1fr))
-	grid-gap: 8px
+	grid-template-columns: repeat(auto-fill, minmax($-size, 1fr))
+	grid-gap: $-spacing * 2
+
+.-inline-list
+	display: inline-flex
+	padding-top: $-spacing
+	padding-bottom: $-spacing
 
 .-user
 	position: relative
+
+.-user-sm
+	width: $-size-sm * 0.4
+	height: $-size-sm
+	margin: 0 3px 3px
 
 .-avatar
 	img-circle()
 	change-bg('bg-subtle')
 	pressy()
+
+.-avatar-sm
+	width: $-size-sm
+	height: $-size-sm
 
 .-tick
 	change-bg('bg')
