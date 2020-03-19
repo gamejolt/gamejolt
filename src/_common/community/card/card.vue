@@ -34,6 +34,15 @@
 						member
 					</router-link>
 				</div>
+
+				<div class="-join" v-if="app.user">
+					<app-community-join-widget
+						:community="community"
+						block
+						hide-count
+						event-label="community-card"
+					/>
+				</div>
 			</div>
 		</div>
 	</app-theme>

@@ -1,12 +1,15 @@
 import { Component, Watch } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { sleep } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
+import AppCommunityAddWidget from '../../../../_common/community/add-widget/add-widget.vue';
 import AppCommunityCard from '../../../../_common/community/card/card.vue';
 import { Community } from '../../../../_common/community/community.model';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppScrollInview } from '../../../../_common/scroll/inview/inview';
+import { AppStore } from '../../../../_common/store/app-store';
 
 const endpoint = '/web/discover/communities';
 
@@ -16,6 +19,7 @@ const endpoint = '/web/discover/communities';
 		AppCommunityCard,
 		AppLoading,
 		AppScrollInview,
+		AppCommunityAddWidget,
 	},
 })
 @RouteResolver({
@@ -25,6 +29,9 @@ const endpoint = '/web/discover/communities';
 	resolver: ({ route }) => Api.sendRequest(`${endpoint}?q=${route.query.q || ''}`),
 })
 export default class RouteDiscoverCommunities extends BaseRouteComponent {
+	@State
+	app!: AppStore;
+
 	searchText = '';
 	communities: Community[] = [];
 	page = 1;
@@ -48,6 +55,10 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 
 	get loadMoreMargin() {
 		return `${Screen.height * 2}px`;
+	}
+
+	get showCreateCommunity() {
+		return this.app.user && !!this.app.user.can_create_communities;
 	}
 
 	routeCreated() {
@@ -81,6 +92,11 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 			name: 'discover.communities',
 			query: { q: this.searchText || undefined },
 		});
+	}
+
+	clearSearch() {
+		console.log('clearing search');
+		this.searchText = '';
 	}
 
 	onScrollLoadMore() {
