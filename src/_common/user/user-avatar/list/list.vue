@@ -33,8 +33,9 @@ $-size-sm = 24px
 
 .-list
 	display: grid
-	grid-template-columns: repeat(auto-fill, minmax($-size, 1fr))
+	grid-template-columns: repeat(auto-fill, $-size)
 	grid-gap: $-spacing * 2
+	justify-content: space-between
 
 .-inline-list
 	display: inline-flex
