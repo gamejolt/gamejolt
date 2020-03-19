@@ -42,7 +42,7 @@ export class MediaItem extends Model {
 	mediaserver_url_webm!: string;
 	mediaserver_url_mp4!: string;
 	mediaserver_url!: string;
-	avg_img_color!: string;
+	avg_img_color!: null | string;
 	img_has_transparency!: boolean;
 
 	post_id?: number;

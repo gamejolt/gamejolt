@@ -53,7 +53,7 @@ export default class AppActivityFeedDevlogPostMediaItem extends Vue {
 			});
 		}
 
-		if (!this.mediaItem.img_has_transparency) {
+		if (this.mediaItem.avg_img_color && !this.mediaItem.img_has_transparency) {
 			Object.assign(style, {
 				backgroundColor: '#' + this.mediaItem.avg_img_color,
 			});
