@@ -34,7 +34,15 @@
 
 			<div class="chat-window-message-content-wrap">
 				<template v-if="!shouldFadeCollapse">
-					<div class="chat-window-message-content" lang="en" v-html="message.content"></div>
+					<div
+						class="chat-window-message-content"
+						:class="{
+								'chat-msg-pending': message.state === 'PENDING',
+								'chat-msg-failed': message.state === 'FAILED',
+							}"
+						lang="en"
+						v-html="message.content"
+					></div>
 				</template>
 				<template v-else>
 					<app-fade-collapse
@@ -43,7 +51,15 @@
 						@require-change="isCollapsable = $event"
 						@expand="isExpanded = true"
 					>
-						<div class="chat-window-message-content" lang="en" v-html="message.content"></div>
+						<div
+							class="chat-window-message-content"
+							:class="{
+								'chat-msg-pending': message.state === 'PENDING',
+								'chat-msg-failed': message.state === 'FAILED',
+							}"
+							lang="en"
+							v-html="message.content"
+						></div>
 					</app-fade-collapse>
 
 					<p v-if="isCollapsable">

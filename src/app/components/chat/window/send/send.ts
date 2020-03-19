@@ -63,7 +63,11 @@ export default class AppChatWindowSend extends Vue {
 
 	sendMessage() {
 		const message = this.message;
-		this.chat.queueMessage(message);
+		const room = this.chat.room;
+
+		if (room) {
+			this.chat.queueMessage(message, room.id);
+		}
 
 		this.message = '';
 		this.multiLineMode = false;

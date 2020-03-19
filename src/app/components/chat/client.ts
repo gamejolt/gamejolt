@@ -67,8 +67,7 @@ export class ChatClient {
 	notifications: { [k: string]: number } = {};
 	isFocused = true;
 
-	private messageQueue: string[] = [];
-	private sendingMessage = false;
+	private messageQueue: ChatMessage[] = [];
 
 	/**
 	 * The session room is stored within their local session. It's their last active room. We reopen
@@ -139,7 +138,6 @@ export class ChatClient {
 		this.isFocused = true;
 
 		this.messageQueue = [];
-		this.sendingMessage = false;
 	}
 
 	private async reconnect() {
@@ -340,22 +338,17 @@ export class ChatClient {
 			});
 
 			channel.on('message', data => {
-				const message = new ChatMessage(data);
+				if (this.currentUser && data.user.id === this.currentUser.id) {
+					return;
+				}
 
+				const message = new ChatMessage(data);
 				this._processNewOutput([message], false);
 
 				const friend = this.friendsList.getByRoom(message.roomId);
 				if (friend) {
 					friend.lastMessageOn = message.loggedOn.getTime();
 					this.friendsList.update(friend);
-				}
-
-				// TODO: Old functionality, change this later on. This was for checking if the message was sent successfully or not.
-				this.sendingMessage = false;
-
-				// You would have to receive confirmation that your last message was sent before sending your new one.
-				if (this.messageQueue.length) {
-					this._sendNextMessage();
 				}
 			});
 
@@ -411,15 +404,28 @@ export class ChatClient {
 		}
 	}
 
-	queueMessage(message: string) {
+	queueMessage(content: string, roomId: number) {
 		// Trim the message of whitespace.
-		message = message.replace(/^\s+/, '').replace(/\s+$/, '');
+		content = content.replace(/^\s+/, '').replace(/\s+$/, '');
 
-		if (message === '') {
+		if (content === '' || this.currentUser === null) {
 			return;
 		}
 
+		const tempId = Math.floor(Math.random() * Date.now());
+		const message = new ChatMessage({
+			id: tempId,
+			type: ChatMessage.TypeNormal,
+			userId: this.currentUser.id,
+			user: this.currentUser,
+			state: ChatMessage.StatePending,
+			roomId,
+			content,
+			loggedOn: new Date(),
+		});
+
 		this.messageQueue.push(message);
+
 		this._sendNextMessage();
 	}
 
@@ -530,15 +536,13 @@ export class ChatClient {
 	}
 
 	private _sendNextMessage() {
-		if (this.sendingMessage || !this.room) {
+		if (!this.room) {
 			return;
 		}
 
-		this.sendingMessage = true;
 		const message = this.messageQueue.shift();
 
 		if (!message) {
-			this.sendingMessage = false;
 			return;
 		}
 
@@ -548,13 +552,24 @@ export class ChatClient {
 				// tslint:disable-next-line:max-line-length
 				`Beep boop bop. You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. Bzzzzzzzzt.`
 			);
-			this.sendingMessage = false;
 			return;
 		}
 
-		this.roomChannels[this.room.id].push('message', {
-			content: message,
-		});
+		this.outputMessage(message.roomId, ChatMessage.TypeNormal, message, false);
+		this.roomChannels[message.roomId]
+			.push('message', {
+				content: message.content,
+			})
+			.receive('ok', data => {
+				message.id = data.id;
+				message.state = ChatMessage.StateSent;
+			})
+			.receive('error', () => {
+				message.state = ChatMessage.StateFailed;
+			})
+			.receive('timeout', () => {
+				message.state = ChatMessage.StateFailed;
+			});
 	}
 
 	private sendRoboJolt(roomId: number, content: string) {
