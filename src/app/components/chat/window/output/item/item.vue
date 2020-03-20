@@ -37,12 +37,16 @@
 					<div
 						class="chat-window-message-content"
 						:class="{
-								'chat-msg-pending': message.state === 'PENDING',
-								'chat-msg-failed': message.state === 'FAILED',
-							}"
+							'chat-msg-pending': message.state === 'PENDING',
+							'chat-msg-failed': message.state === 'FAILED',
+						}"
 						lang="en"
 						v-html="message.content"
 					></div>
+					<div v-if="message.state === 'FAILED'" class="chat-window-message-retry chat-msg-failed">
+						Failed to send message.
+						<a class="link-muted" @click="resendMessage(message)">Resend</a>
+					</div>
 				</template>
 				<template v-else>
 					<app-fade-collapse
@@ -60,6 +64,10 @@
 							lang="en"
 							v-html="message.content"
 						></div>
+						<div v-if="message.state === 'FAILED'" class="chat-window-message-retry chat-msg-failed">
+							Failed to send message.
+							<a class="link-muted" @click="resendMessage(message)">Resend</a>
+						</div>
 					</app-fade-collapse>
 
 					<p v-if="isCollapsable">

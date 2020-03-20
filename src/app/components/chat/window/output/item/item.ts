@@ -47,4 +47,8 @@ export default class AppChatWindowOutputItem extends Vue {
 	removeMessage(msgId: number) {
 		this.chat.removeMessage(msgId, this.room.id);
 	}
+
+	resendMessage(message: ChatMessage) {
+		this.chat.resendMessage(message);
+	}
 }

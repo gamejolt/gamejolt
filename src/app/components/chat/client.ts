@@ -519,6 +519,14 @@ export class ChatClient {
 		console.log('Message remove', msgId, roomId);
 	}
 
+	resendMessage(message: ChatMessage) {
+		this.messages[message.roomId] = this.messages[message.roomId].filter(
+			msg => msg.objectId !== message.objectId
+		);
+
+		this.queueMessage(message.content, message.roomId);
+	}
+
 	private _processNewOutput(messages: ChatMessage[], isPrimer: boolean) {
 		if (!messages.length) {
 			return;
@@ -556,6 +564,11 @@ export class ChatClient {
 		}
 
 		this.outputMessage(message.roomId, ChatMessage.TypeNormal, message, false);
+
+		this.sendMessage(message);
+	}
+
+	sendMessage(message: ChatMessage) {
 		this.roomChannels[message.roomId]
 			.push('message', {
 				content: message.content,
