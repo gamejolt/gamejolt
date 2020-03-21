@@ -7,8 +7,7 @@
 			<div class="text-muted small">
 				<p>
 					<translate>
-						Your place to marvel at your sticker collection, get more stickers and open any gifts
-						you've received.
+						Your place to marvel at your sticker collection and get even more stickers.
 					</translate>
 				</p>
 			</div>
@@ -18,24 +17,22 @@
 			<section class="section">
 				<div class="container">
 					<h2 class="section-header" :class="{ h4: Screen.isXs }">
-						Memes
+						<translate>Get more stickers</translate>
 					</h2>
 
-					<translate>Your current value:</translate>
-					<span class="-value">{{ displayValue }}</span>
-				</div>
-			</section>
-			<section class="section">
-				<div class="container">
-					<h2 class="section-header" :class="{ h4: Screen.isXs }">
-						Purchase Pack
-					</h2>
+					<app-progress-bar :percent="stickerProgress">
+						<translate>Progress to next Sticker</translate>
+					</app-progress-bar>
 
-					<div v-for="packInfo of packData" :key="packInfo.id">
-						<a @click="onPurchasePack(packInfo.id)">
-							{{ packInfo.name }}
-						</a>
-					</div>
+					<translate
+						:translate-n="stickersBuyableAmount"
+						:translate-params="{ count: number(stickersBuyableAmount) }"
+						translate-plural="You can acquire %{ count } stickers"
+					>
+						You can acquire 1 sticker
+					</translate>
+
+					<app-button @click="onPurchaseStickers">Acquire</app-button>
 				</div>
 			</section>
 			<section class="section">
@@ -84,25 +81,34 @@
 								:class="{
 									'-sticker-hidden': !purchasedSticker.revealed,
 									'-sticker-hidden-rarity-common':
-										!purchasedSticker.revealed && purchasedSticker.sticker.rarity === 0,
+										!purchasedSticker.revealed &&
+										purchasedSticker.sticker.rarity === 0,
 									'-sticker-hidden-rarity-uncommon':
-										!purchasedSticker.revealed && purchasedSticker.sticker.rarity === 1,
+										!purchasedSticker.revealed &&
+										purchasedSticker.sticker.rarity === 1,
 									'-sticker-hidden-rarity-rare':
-										!purchasedSticker.revealed && purchasedSticker.sticker.rarity === 2,
+										!purchasedSticker.revealed &&
+										purchasedSticker.sticker.rarity === 2,
 									'-sticker-hidden-rarity-epic':
-										!purchasedSticker.revealed && purchasedSticker.sticker.rarity === 3,
+										!purchasedSticker.revealed &&
+										purchasedSticker.sticker.rarity === 3,
 								}"
 								@click="onClickRevealSticker(purchasedSticker.id)"
 							>
 								<img :src="purchasedSticker.sticker.media_item.mediaserver_url" />
 								<template v-if="purchasedSticker.revealed">
-									<div class="-sticker-name">{{ purchasedSticker.sticker.name }}</div>
+									<div class="-sticker-name">
+										{{ purchasedSticker.sticker.name }}
+									</div>
 									<div
 										class="-sticker-rarity"
 										:class="{
-											'-sticker-rarity-uncommon': purchasedSticker.sticker.rarity === 1,
-											'-sticker-rarity-rare': purchasedSticker.sticker.rarity === 2,
-											'-sticker-rarity-epic': purchasedSticker.sticker.rarity === 3,
+											'-sticker-rarity-uncommon':
+												purchasedSticker.sticker.rarity === 1,
+											'-sticker-rarity-rare':
+												purchasedSticker.sticker.rarity === 2,
+											'-sticker-rarity-epic':
+												purchasedSticker.sticker.rarity === 3,
 										}"
 									>
 										{{ getStickerRarityLabel(purchasedSticker.sticker.rarity) }}
@@ -127,17 +133,12 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-.-value
-	font-size: 30px
-	display: inline-block
-	margin-left: 16px
-
 .-purchasing-padding
 	margin-bottom: 100px
 
 .-sticker-container
 	display: flex
-	justify-content: space-between
+	justify-content: space-around
 	position: relative
 	margin-bottom: 32px
 
@@ -240,7 +241,6 @@ $hiddenTransformRotate = rotate3d(0, 1, 0, -180deg)
 	&-name
 		text-align: center
 		font-weight: bold
-
 </style>
 
 <script lang="ts" src="./stickers"></script>

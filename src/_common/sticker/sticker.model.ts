@@ -5,7 +5,6 @@ import { User } from '../user/user.model';
 export class Sticker extends Model {
 	name!: string;
 	rarity!: number;
-	series!: string;
 
 	media_item!: MediaItem;
 	artist!: User;

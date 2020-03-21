@@ -1,25 +1,20 @@
 import Component from 'vue-class-component';
 import { numberSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
+import { number } from '../../../../_common/filters/number';
 import { Growls } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
+import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { Sticker } from '../../../../_common/sticker/sticker.model';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 
 type InitPayload = {
-	packData: PackInfo[];
 	value: number;
 	stickerCounts: StickerCountPayload[];
 	stickers: any[];
-};
-
-type PackInfo = {
-	description: string;
-	id: string;
-	name: string;
-	'pack-cost': number;
+	stickerCost: number;
 };
 
 type PurchasedSticker = {
@@ -44,6 +39,7 @@ type StickerCount = {
 	components: {
 		AppPageHeader,
 		AppLoading,
+		AppProgressBar,
 	},
 })
 @RouteResolver({
@@ -52,10 +48,11 @@ type StickerCount = {
 })
 export default class RouteDashStickers extends BaseRouteComponent {
 	readonly Screen = Screen;
+	readonly number = number;
 
-	packData: PackInfo[] = [];
 	value = 0;
 	stickerCollection: StickerCount[] = [];
+	stickerCost = 10;
 
 	// Shows the opening view. Also contains the purchasing loading.
 	isOpening = false;
@@ -83,13 +80,25 @@ export default class RouteDashStickers extends BaseRouteComponent {
 		return Math.max(0, this.value);
 	}
 
+	get stickerProgress() {
+		let progress = this.value;
+		while (progress >= this.stickerCost) {
+			progress -= this.stickerCost;
+		}
+		return (progress / this.stickerCost) * 100;
+	}
+
+	get stickersBuyableAmount() {
+		return Math.floor(this.value / this.stickerCost);
+	}
+
 	routeResolved($payload: InitPayload) {
 		this._initData($payload);
 	}
 
 	private _initData($payload: InitPayload) {
-		this.packData = $payload.packData;
 		this.value = $payload.value;
+		this.stickerCost = $payload.stickerCost;
 
 		this.stickerCollection = [];
 		for (const stickerCountPayload of $payload.stickerCounts) {
@@ -117,18 +126,20 @@ export default class RouteDashStickers extends BaseRouteComponent {
 		}
 	}
 
-	async onPurchasePack(packId: string) {
+	async onPurchaseStickers() {
 		this.isOpening = true;
 		this.isPurchasing = true;
 
+		const amount = Math.min(3, this.stickersBuyableAmount);
+
 		try {
 			const payload = await Api.sendRequest(
-				'/web/stickers/buy-pack/' + packId,
+				'/web/stickers/buy-stickers/' + amount.toString(),
 				{},
 				{ noErrorRedirect: true }
 			);
 			if (!payload || !payload.stickers) {
-				throw new Error('Failed to purchase pack.');
+				throw new Error('Failed to purchase stickers.');
 			}
 			this.purchasedStickers = [];
 			for (const stickerData of payload.stickers) {
@@ -142,7 +153,7 @@ export default class RouteDashStickers extends BaseRouteComponent {
 				);
 			}
 		} catch (error) {
-			Growls.error(this.$gettext(`Failed to purchase pack.`));
+			Growls.error(this.$gettext(`Failed to purchase stickers.`));
 			this.isOpening = false;
 		}
 		this.isPurchasing = false;
