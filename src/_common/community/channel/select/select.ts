@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import AppPill from '../../../pill/pill.vue';
+import { ChannelPermissions } from '../channel-permissions';
 import { CommunityChannel } from '../channel.model';
 
 @Component({
@@ -19,6 +20,8 @@ export default class AppCommunityChannelSelect extends Vue {
 	emitInput(_value: CommunityChannel) {}
 
 	get validChannels() {
-		return this.channels.filter(i => i.permissions.canPerform('posts'));
+		return this.channels.filter(i =>
+			i.permissions.canPerform(ChannelPermissions.ACTION_POSTING)
+		);
 	}
 }

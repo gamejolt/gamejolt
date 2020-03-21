@@ -27,7 +27,7 @@
 				:background-item="channel.background"
 				:is-active="activeChannelTitle === channel.title"
 				:is-unread="isChannelUnread(channel.title)"
-				:is-locked="!channel.permissions.canPerform('posts')"
+				:is-locked="isChannelLocked(channel)"
 			/>
 		</template>
 	</nav>

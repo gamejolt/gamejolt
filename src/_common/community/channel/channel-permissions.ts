@@ -1,4 +1,6 @@
 export class ChannelPermissions {
+	public static readonly ACTION_POSTING = 'posting';
+
 	allPermissions = false;
 	noPermissions = false;
 

@@ -47,7 +47,7 @@
 			<app-form-control-errors />
 		</app-form-group>
 
-		<app-form-group name="_permissions" :label="$gettext('Channel posting permissions')">
+		<app-form-group name="permission_posting" :label="$gettext('Channel posting permissions')">
 			<div class="help-inline">
 				<span v-translate>
 					Choose who can post to this channel.
@@ -55,7 +55,7 @@
 			</div>
 			<div
 				class="radio"
-				v-for="(permissionDisplay, permission) in permissionOptions"
+				v-for="(permissionDisplay, permission) in permissionPostingOptions"
 				:key="permission"
 			>
 				<label>
@@ -82,7 +82,6 @@
 	width: $card-width
 	height: $card-height
 	rounded-corners-lg()
-
 </style>
 
 <script lang="ts" src="./edit"></script>

@@ -2,16 +2,12 @@ import { Component, Prop } from 'vue-property-decorator';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
 import AppFormControlUpload from '../../../../../../_common/form-vue/control/upload/upload.vue';
-import {
-	BaseForm,
-	FormOnLoad,
-	FormOnSubmitSuccess,
-} from '../../../../../../_common/form-vue/form.service';
+import { BaseForm, FormOnLoad, FormOnSubmit, FormOnSubmitSuccess } from '../../../../../../_common/form-vue/form.service';
 import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 
 interface FormModel extends CommunityChannel {
-	_permissions: string;
+	permission_posting: string;
 }
 
 @Component({
@@ -21,11 +17,9 @@ interface FormModel extends CommunityChannel {
 	},
 })
 export default class FormCommunityChannelEdit extends BaseForm<FormModel>
-	implements FormOnLoad, FormOnSubmitSuccess {
+	implements FormOnLoad, FormOnSubmitSuccess, FormOnSubmit {
 	@Prop(Community)
 	community!: Community;
-
-	modelClass = CommunityChannel;
 
 	maxFilesize = 0;
 	maxWidth = 0;
@@ -35,7 +29,7 @@ export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 		return `/web/dash/communities/channels/save/${this.community.id}/${this.formModel.id}`;
 	}
 
-	get permissionOptions() {
+	get permissionPostingOptions() {
 		return {
 			all: this.$gettext('Everyone'),
 			mods: this.$gettext('Moderators only'),
@@ -47,7 +41,13 @@ export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
 
-		this.setField('_permissions', !!payload._permissions ? 'mods' : 'all');
+		this.setField('permission_posting', payload.permission_posting ?? 'all');
+	}
+
+	onSubmit() {
+		// Assign data over to model so we can call save on it.
+		Object.assign(this.model, this.formModel);
+		return this.model!.$save();
 	}
 
 	onSubmitSuccess() {
