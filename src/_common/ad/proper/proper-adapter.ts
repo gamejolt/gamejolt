@@ -53,7 +53,11 @@ export class AdProperAdapter extends AdAdapterBase {
 
 	onBeforeRouteChange() {
 		this.run(() => {
-			(window as any).properSpaNewPage();
+			try {
+				(window as any).properSpaNewPage();
+			} catch (error) {
+				console.log('Failed to execute ad properSpaNewPage.');
+			}
 		});
 	}
 }
