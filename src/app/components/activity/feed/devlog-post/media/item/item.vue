@@ -15,12 +15,7 @@
 			<app-img-responsive
 				v-if="!isPostHydrated || !mediaItem.is_animated"
 				class="-img"
-				:style="
-					!GJ_IS_SSR && {
-						maxWidth: mediaItem.width + 'px',
-						maxHeight: mediaItem.height + 'px',
-					}
-				"
+				:style="itemStyling"
 				:src="mediaItem.mediaserver_url"
 				alt=""
 				ondragstart="return false"
@@ -28,12 +23,7 @@
 			<app-video
 				v-else-if="shouldVideoPlay"
 				class="-video"
-				:style="
-					!GJ_IS_SSR && {
-						maxWidth: mediaItem.width + 'px',
-						maxHeight: mediaItem.height + 'px',
-					}
-				"
+				:style="itemStyling"
 				:poster="mediaItem.mediaserver_url"
 				:webm="mediaItem.mediaserver_url_webm"
 				:mp4="mediaItem.mediaserver_url_mp4"
