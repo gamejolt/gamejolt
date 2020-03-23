@@ -26,39 +26,34 @@
 @require '~styles-lib/mixins'
 
 $-size = 40px
-$-spacing = 3px
+$-spacing = 4px
 
 $-size-sm = 24px
 
+
 .-list
-	position: relative
-	flex: 1
-	display: flex
-	flex-wrap: wrap
-	padding-top: 4px
-	padding-bottom: 4px
+	display: grid
+	grid-template-columns: repeat(auto-fill, $-size)
+	grid-gap: $-spacing * 2
+	justify-content: space-between
 
 .-inline-list
 	display: inline-flex
+	padding-top: $-spacing
+	padding-bottom: $-spacing
 
 .-user
-	flex: none
-	width: $-size
-	height: $-size
-	margin: 0 $-spacing $-spacing
 	position: relative
 
 .-user-sm
 	width: $-size-sm * 0.4
 	height: $-size-sm
+	margin: 0 3px 3px
 
 .-avatar
 	img-circle()
 	change-bg('bg-subtle')
 	pressy()
-	flex: none
-	width: $-size
-	height: $-size
 
 .-avatar-sm
 	width: $-size-sm
