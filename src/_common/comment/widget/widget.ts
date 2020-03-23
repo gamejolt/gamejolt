@@ -109,7 +109,6 @@ export default class AppCommentWidget extends Vue {
 	resourceOwner: User | null = null;
 	perPage = 10;
 	currentPage = 1;
-	tabSet = false;
 
 	collaborators: Collaborator[] = [];
 
@@ -226,6 +225,12 @@ export default class AppCommentWidget extends Vue {
 			this.storeView = new CommentStoreSliceView();
 		}
 
+		// Filter comments based on the 'initialTab' prop. This allows us to set the comment
+		// sorting to the "You" tab when you leave a comment from an event item.
+		if (this.store && this.initialTab) {
+			this.setSort({ store: this.store, sort: this.initialTab });
+		}
+
 		await this._fetchComments();
 	}
 
@@ -267,14 +272,6 @@ export default class AppCommentWidget extends Vue {
 	private async _fetchComments() {
 		if (!this.store) {
 			throw new Error(`You need a store set before fetching comments.`);
-		}
-
-		// Check to see if we received 'initialTab' as a prop. If so, we want to setSort()
-		// to filter comments based on that parameter. This allows us to set the comment
-		// sorting to the "You" tab when you leave a comment from an event item.
-		if (this.initialTab && !this.tabSet) {
-			this.setSort({ store: this.store, sort: this.initialTab });
-			this.tabSet = true;
 		}
 
 		try {
