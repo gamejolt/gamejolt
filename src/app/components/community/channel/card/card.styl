@@ -3,6 +3,7 @@
 @require './variables'
 
 .community-channel-card
+	elevate-hover-1()
 	position: relative
 	display: block
 	flex-shrink: 0
@@ -16,7 +17,6 @@
 	margin-bottom: ($line-height-computed / 2)
 
 	&:hover
-		elevate-1()
 		theme-prop('border-color', 'link')
 
 		.-card-bg-img
