@@ -11,8 +11,12 @@
 	@media $media-sm-up
 		margin-bottom: $grid-gutter-width
 
-		.-thumb
-			elevate-hover-2()
+		&:hover
+			.-thumb
+				elevate-2()
+
+.-thumb
+	elevate-0()
 
 .-controls
 	position: absolute
