@@ -17,9 +17,7 @@
 				/>
 			</div>
 			<div class="-cancel">
-				<a class="link-muted" @click.stop="emitClose()">
-					<app-jolticon icon="remove" />
-				</a>
+				<app-button class="-cancel" circle trans icon="remove" @click="emitClose()" />
 			</div>
 		</div>
 	</app-expand>
@@ -44,14 +42,16 @@
 	width: 100%
 
 	> p
-		margin: 4px
+		margin: 4px 0
 
 	> button
-		margin: 4px 12px 4px 4px
+		margin: 4px 8px 4px 0
 
 .-cancel
-	padding: 28px 20px 0 0
-	margin-bottom: auto
+	margin: 20px 16px auto 8px
+
+	button
+		margin: 0
 
 .-flex-auto
 	flex: auto
