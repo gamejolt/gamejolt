@@ -45,6 +45,10 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 		inview: AppScrollInview;
 	};
 
+	get routeTitle() {
+		return 'Discover Communities - They are grandiose!';
+	}
+
 	get isLoadingFirst() {
 		return this.isRouteLoading;
 	}
@@ -58,7 +62,7 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 	}
 
 	get showCreateCommunity() {
-		return this.app.user && !!this.app.user.can_create_communities;
+		return this.app.user && !!this.app.user.can_create_communities && !this.hasMore;
 	}
 
 	routeCreated() {
