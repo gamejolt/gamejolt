@@ -1,5 +1,5 @@
 <template>
-	<div class="-list" :class="{ '-inline-list': inline }">
+	<div class="-list" :class="{ '-list-sm': sm, '-inline-list': inline }">
 		<div
 			class="-user"
 			:class="{
@@ -37,10 +37,18 @@ $-size-sm = 24px
 	grid-gap: $-spacing * 2
 	justify-content: space-between
 
-.-inline-list
-	display: inline-flex
+.-list-sm
+	position: relative
+	flex: 1
+	display: flex
+	flex-wrap: wrap
 	padding-top: $-spacing
 	padding-bottom: $-spacing
+	justify-content: normal
+	grid-gap: 0
+
+.-inline-list
+	display: inline-flex
 
 .-user
 	position: relative
