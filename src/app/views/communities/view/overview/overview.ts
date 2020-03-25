@@ -262,6 +262,11 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			return false;
 		}
 
+		// We always show the post add button for guests.
+		if (!this.app.user) {
+			return true;
+		}
+
 		if (this.communityChannel) {
 			return this.communityChannel.permissions.canPerform(
 				COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING
@@ -360,7 +365,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	onPostMovedChannel(eventItem: EventItem, movedTo: CommunityChannel) {
 		if (
 			this.feed &&
-			this.channel !== 'featured' && this.channel !== 'all' &&
+			this.channel !== 'featured' &&
+			this.channel !== 'all' &&
 			this.channel !== movedTo.title
 		) {
 			this.feed.remove([eventItem]);
