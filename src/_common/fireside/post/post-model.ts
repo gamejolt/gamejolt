@@ -294,8 +294,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		}
 		for (const community of this.communities) {
 			if (
-				!community.channel ||
-				!community.channel.permissions.canPerform(
+				!community.channel?.permissions.canPerform(
 					COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING
 				)
 			) {

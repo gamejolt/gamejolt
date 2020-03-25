@@ -92,9 +92,9 @@
 								<app-jolticon icon="notice" notice />
 								<span
 									><translate
-										>This post can currently not be published to the selected community channel
-										because you are not allowed to post there. Click Edit below and select a
-										different channel.</translate
+										>You can't publish this post to the selected community channel because you don't
+										have permissions to post into that specific channel. Please select a different
+										channel.</translate
 									></span
 								>
 							</div>

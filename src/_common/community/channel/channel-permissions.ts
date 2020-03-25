@@ -4,7 +4,7 @@ export class CommunityChannelPermissions {
 	allPermissions = false;
 	noPermissions = false;
 
-	perms?: { [key: string]: boolean };
+	perms?: Record<string, boolean>;
 
 	constructor(input: any) {
 		if (!input) {

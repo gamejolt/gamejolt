@@ -55,7 +55,7 @@
 			</div>
 			<div
 				class="radio"
-				v-for="(permissionDisplay, permission) in permissionPostingOptions"
+				v-for="(permissionDisplay, permission) of permissionPostingOptions"
 				:key="permission"
 			>
 				<label>

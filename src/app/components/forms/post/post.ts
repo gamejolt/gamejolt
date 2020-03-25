@@ -349,8 +349,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 			this.selectedChannel = this.defaultChannel || null;
 		}
 		if (
-			this.selectedChannel &&
-			!this.selectedChannel.permissions.canPerform(
+			!this.selectedChannel?.permissions.canPerform(
 				COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING
 			)
 		) {

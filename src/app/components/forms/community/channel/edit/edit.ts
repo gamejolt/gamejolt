@@ -2,12 +2,16 @@ import { Component, Prop } from 'vue-property-decorator';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
 import AppFormControlUpload from '../../../../../../_common/form-vue/control/upload/upload.vue';
-import { BaseForm, FormOnLoad, FormOnSubmit, FormOnSubmitSuccess } from '../../../../../../_common/form-vue/form.service';
+import {
+	BaseForm,
+	FormOnLoad,
+	FormOnSubmitSuccess,
+} from '../../../../../../_common/form-vue/form.service';
 import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 
-interface FormModel extends CommunityChannel {
-	permission_posting: string;
+class FormModel extends CommunityChannel {
+	permission_posting = 'all';
 }
 
 @Component({
@@ -17,13 +21,15 @@ interface FormModel extends CommunityChannel {
 	},
 })
 export default class FormCommunityChannelEdit extends BaseForm<FormModel>
-	implements FormOnLoad, FormOnSubmitSuccess, FormOnSubmit {
+	implements FormOnLoad, FormOnSubmitSuccess {
 	@Prop(Community)
 	community!: Community;
 
 	maxFilesize = 0;
 	maxWidth = 0;
 	maxHeight = 0;
+
+	modelClass = FormModel;
 
 	get loadUrl() {
 		return `/web/dash/communities/channels/save/${this.community.id}/${this.formModel.id}`;
@@ -42,12 +48,6 @@ export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 		this.maxHeight = payload.maxHeight;
 
 		this.setField('permission_posting', payload.permission_posting ?? 'all');
-	}
-
-	onSubmit() {
-		// Assign data over to model so we can call save on it.
-		Object.assign(this.model, this.formModel);
-		return this.model!.$save();
 	}
 
 	onSubmitSuccess() {
