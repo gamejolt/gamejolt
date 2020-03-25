@@ -12,10 +12,15 @@
 			:community="community"
 			path="all"
 			label="All Posts"
+			:background-item="community.all_background"
 			sort="hot"
 			:is-active="activeChannelTitle === 'all'"
 			:is-unread="isChannelUnread('all')"
 		/>
+
+		<h5 v-if="Screen.isDesktop" class="-channels-header">
+			<translate>Channels</translate>
+		</h5>
 
 		<template v-if="community.channels">
 			<app-community-channel-card

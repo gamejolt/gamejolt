@@ -8,7 +8,8 @@
 			<div class="page-help">
 				<p>
 					<translate>
-						Channels make it easier for your community members to organize their posts into groups.
+						Channels make it easier for your community members to organize their posts
+						into groups.
 					</translate>
 				</p>
 				<p>
@@ -25,32 +26,45 @@
 			/>
 
 			<app-card-list
-				:items="community.channels"
+				v-for="presetType of communityPresetChannels"
+				:key="presetType"
+				:items="communityPresetChannels"
 				:active-item="activeItem"
 				@activate="activeItem = $event"
 			>
-				<app-card-list-item :id="`channel-container-featured`" :item="community">
+				<app-card-list-item :id="`channel-container-` + presetType" :item="presetType">
 					<div class="row">
 						<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
 							<img
-								v-if="community.featured_background"
+								v-if="community[presetType + '_background']"
 								class="-channel-img-preview"
-								:src="community.featured_background.img_url"
+								:src="community[presetType + '_background'].mediaserver_url"
 							/>
 
 							<br class="visible-xs" />
 						</div>
 						<div class="col-xs-12 col-sm-10">
 							<div class="card-title">
-								<h5><translate>featured</translate></h5>
+								<h5>
+									<template v-if="presetType === 'featured'">
+										<translate>Featured</translate>
+									</template>
+									<template v-else-if="presetType === 'all'">
+										<translate>All Posts</translate>
+									</template>
+									<span v-else>
+										{{ presetType }}
+									</span>
+								</h5>
 							</div>
 						</div>
 					</div>
 					<template slot="body">
-						<form-community-channel-edit-featured
+						<form-community-channel-edit-preset
 							:model="community"
-							@save="featuredBackgroundEdited"
-							@clear="featuredBackgroundEdited"
+							:preset-type="presetType"
+							@save="presetBackgroundEdited"
+							@clear="presetBackgroundEdited"
 						/>
 					</template>
 				</app-card-list-item>
@@ -118,7 +132,6 @@
 	width: 68px
 	height: 25px
 	rounded-corners()
-
 </style>
 
 <script lang="ts" src="./channels"></script>

@@ -1,9 +1,11 @@
-import { Component } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../../../utils/vue';
 import { Community } from '../../../../../../_common/community/community.model';
 import AppFormControlUpload from '../../../../../../_common/form-vue/control/upload/upload.vue';
 import {
 	BaseForm,
 	FormOnLoad,
+	FormOnSubmit,
 	FormOnSubmitSuccess,
 } from '../../../../../../_common/form-vue/form.service';
 import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
@@ -15,24 +17,40 @@ import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-se
 		AppFormControlUpload,
 	},
 })
-export default class FormCommunityChannelEditFeatured extends BaseForm<Community>
-	implements FormOnLoad, FormOnSubmitSuccess {
+export default class FormCommunityChannelEditPreset extends BaseForm<Community>
+	implements FormOnLoad, FormOnSubmitSuccess, FormOnSubmit {
+	@Prop(propRequired(String)) presetType!: string;
+
 	modelClass = Community;
 
 	maxFilesize = 0;
 	maxWidth = 0;
 	maxHeight = 0;
 
-	saveMethod: '$saveFeaturedBackground' = '$saveFeaturedBackground';
-
 	get loadUrl() {
-		return `/web/dash/communities/channels/save-featured/${this.formModel.id}`;
+		return `/web/dash/communities/channels/save-preset-background/${this.formModel.id}`;
+	}
+
+	get channelArtMediaItemFieldName() {
+		return this.presetType + '_background';
+	}
+
+	get hasChannelImage() {
+		return !!(this.formModel as any)[this.channelArtMediaItemFieldName];
+	}
+
+	get channelImg() {
+		return (this.formModel as any)[this.channelArtMediaItemFieldName].mediaserver_url;
 	}
 
 	onLoad(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
+	}
+
+	onSubmit() {
+		return this.formModel.$savePresetChannelBackground(this.presetType);
 	}
 
 	onSubmitSuccess() {
@@ -52,9 +70,12 @@ export default class FormCommunityChannelEditFeatured extends BaseForm<Community
 		// This way we don't overwrite the form model with the current values from the server.
 		// They may have made changes and just want to clear the image and then save their form.
 		// Doing it in this order allows them to do that.
-		await this.model!.$clearFeaturedBackground();
+		await this.model!.$clearPresetChannelBackground(this.presetType);
 
-		this.setField('featured_background', this.model!.featured_background);
+		(this as any).setField(
+			this.channelArtMediaItemFieldName,
+			(this.model as any)[this.channelArtMediaItemFieldName]
+		);
 		this.$emit('clear');
 	}
 }

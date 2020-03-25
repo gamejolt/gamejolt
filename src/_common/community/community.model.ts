@@ -59,6 +59,9 @@ export async function $leaveCommunity(community: Community) {
 	}
 }
 
+export const COMMUNITY_PRESET_CHANNEL_TYPE_FEATURED = 'featured';
+export const COMMUNITY_PRESET_CHANNEL_TYPE_ALL = 'all';
+
 export class Community extends Collaboratable(Model) {
 	name!: string;
 	path!: string;
@@ -73,6 +76,7 @@ export class Community extends Collaboratable(Model) {
 	game!: Game | null;
 	channels?: CommunityChannel[] | null;
 	featured_background?: MediaItem;
+	all_background?: MediaItem;
 	user_block?: UserBlock | null;
 
 	member_count!: number;
@@ -105,6 +109,10 @@ export class Community extends Collaboratable(Model) {
 
 		if (data.featured_background) {
 			this.featured_background = new MediaItem(data.featured_background);
+		}
+
+		if (data.all_background) {
+			this.all_background = new MediaItem(data.all_background);
 		}
 
 		if (data.user_block) {
@@ -186,15 +194,19 @@ export class Community extends Collaboratable(Model) {
 		return this.$_remove('/web/dash/communities/remove/' + this.id);
 	}
 
-	$saveFeaturedBackground() {
-		return this.$_save('/web/dash/communities/channels/save-featured/' + this.id, 'community', {
-			file: this.file,
-		});
+	$savePresetChannelBackground(presetType: string) {
+		return this.$_save(
+			`/web/dash/communities/channels/save-preset-background/${this.id}/${presetType}`,
+			'community',
+			{
+				file: this.file,
+			}
+		);
 	}
 
-	$clearFeaturedBackground() {
+	$clearPresetChannelBackground(presetType: string) {
 		return this.$_save(
-			`/web/dash/communities/channels/clear-featured-background/${this.id}`,
+			`/web/dash/communities/channels/clear-preset-background/${this.id}/${presetType}`,
 			'community'
 		);
 	}
