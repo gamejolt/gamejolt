@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppState, AppStore } from '../../store/app-store';
 import { AppTooltip, TooltipPlacement } from '../../tooltip/tooltip';
 
 @Component({
@@ -9,9 +8,6 @@ import { AppTooltip, TooltipPlacement } from '../../tooltip/tooltip';
 	},
 })
 export default class AppCommunityDiscoverWidget extends Vue {
-	@AppState
-	user!: AppStore['user'];
-
 	@Prop({ type: String, default: 'bottom' })
 	tooltipPlacement!: TooltipPlacement;
 

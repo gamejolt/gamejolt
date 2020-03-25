@@ -45,15 +45,6 @@ export class MediaItem extends Model {
 
 	post_id?: number;
 
-	// constructor(data: any) {
-	// 	super(data);
-
-	// 	this.mediaserver_url = this.mediaserver_url.replace(
-	// 		'https://m.gjcdn.net',
-	// 		'http://mediaserver:9010'
-	// 	);
-	// }
-
 	get croppedWidth() {
 		const crop = this.getCrop();
 		if (!crop) {
