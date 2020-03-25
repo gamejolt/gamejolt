@@ -10,7 +10,7 @@ export class CommunityChannel extends Model {
 	sort!: number;
 	background?: MediaItem;
 
-	permissions!: CommunityChannelPermissions;
+	perms!: CommunityChannelPermissions;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -19,7 +19,7 @@ export class CommunityChannel extends Model {
 			this.background = new MediaItem(data.background);
 		}
 
-		this.permissions = new CommunityChannelPermissions(data.permissions);
+		this.perms = new CommunityChannelPermissions(data.perms);
 	}
 
 	static $saveSort(communityId: number, channelIds: number[]) {

@@ -21,7 +21,7 @@ export default class AppCommunityChannelSelect extends Vue {
 
 	get validChannels() {
 		return this.channels.filter(i =>
-			i.permissions.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING)
+			i.perms.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING)
 		);
 	}
 }
