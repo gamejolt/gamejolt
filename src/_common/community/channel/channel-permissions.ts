@@ -1,6 +1,6 @@
-export class ChannelPermissions {
-	public static readonly ACTION_POSTING = 'posting';
+export const COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING = 'posting';
 
+export class CommunityChannelPermissions {
 	allPermissions = false;
 	noPermissions = false;
 

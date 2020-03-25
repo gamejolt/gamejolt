@@ -4,7 +4,7 @@ import { determine } from 'jstimezonedetect';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
-import { ChannelPermissions } from '../../../../_common/community/channel/channel-permissions';
+import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../../../_common/community/channel/channel-permissions';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import AppCommunityChannelSelect from '../../../../_common/community/channel/select/select.vue';
 import { Community } from '../../../../_common/community/community.model';
@@ -350,7 +350,9 @@ export default class FormPost extends BaseForm<FormPostModel>
 		}
 		if (
 			this.selectedChannel &&
-			!this.selectedChannel.permissions.canPerform(ChannelPermissions.ACTION_POSTING)
+			!this.selectedChannel.permissions.canPerform(
+				COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING
+			)
 		) {
 			this.selectedChannel = null;
 		}
@@ -443,7 +445,10 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 		// Set or clear attachments as needed
 		if (this.attachmentType === FiresidePost.TYPE_MEDIA && this.formModel.media) {
-			this.setField('mediaItemIds', this.formModel.media.map(item => item.id));
+			this.setField(
+				'mediaItemIds',
+				this.formModel.media.map(item => item.id)
+			);
 		} else {
 			this.setField('mediaItemIds', []);
 		}

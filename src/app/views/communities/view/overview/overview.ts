@@ -2,7 +2,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
-import { ChannelPermissions } from '../../../../../_common/community/channel/channel-permissions';
+import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../../../../_common/community/channel/channel-permissions';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
@@ -263,13 +263,15 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		}
 
 		if (this.communityChannel) {
-			return this.communityChannel.permissions.canPerform(ChannelPermissions.ACTION_POSTING);
+			return this.communityChannel.permissions.canPerform(
+				COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING
+			);
 		} else {
 			// We are in a special channel like "featured".
 			// Only show the post add if we have at least one target channel to post to.
 			if (this.community.channels) {
 				return this.community.channels.some(i =>
-					i.permissions.canPerform(ChannelPermissions.ACTION_POSTING)
+					i.permissions.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING)
 				);
 			}
 		}
@@ -358,7 +360,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	onPostMovedChannel(eventItem: EventItem, movedTo: CommunityChannel) {
 		if (
 			this.feed &&
-			(this.channel !== 'featured' && this.channel !== 'all') &&
+			this.channel !== 'featured' && this.channel !== 'all' &&
 			this.channel !== movedTo.title
 		) {
 			this.feed.remove([eventItem]);

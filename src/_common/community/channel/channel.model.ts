@@ -1,7 +1,7 @@
 import { Api } from '../../api/api.service';
 import { MediaItem } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
-import { ChannelPermissions } from './channel-permissions';
+import { CommunityChannelPermissions } from './channel-permissions';
 
 export class CommunityChannel extends Model {
 	community_id!: number;
@@ -10,8 +10,7 @@ export class CommunityChannel extends Model {
 	sort!: number;
 	background?: MediaItem;
 
-	permissions!: ChannelPermissions;
-	_permissions!: string;
+	permissions!: CommunityChannelPermissions;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -20,7 +19,7 @@ export class CommunityChannel extends Model {
 			this.background = new MediaItem(data.background);
 		}
 
-		this.permissions = new ChannelPermissions(data.permissions);
+		this.permissions = new CommunityChannelPermissions(data.permissions);
 	}
 
 	static $saveSort(communityId: number, channelIds: number[]) {
