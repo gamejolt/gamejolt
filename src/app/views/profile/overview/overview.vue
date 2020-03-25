@@ -24,7 +24,7 @@
 					</app-button>
 				</app-expand>
 
-				<app-expand :when="!user.is_following">
+				<app-expand :when="user.is_following">
 					<!-- Create some padding -->
 					<template v-if="isFriend"><br /><br /></template>
 
