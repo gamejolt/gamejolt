@@ -21,7 +21,7 @@ export class CommunityChannelPermissions {
 			return false;
 		} else if (this.allPermissions) {
 			return true;
-		} else if (this.perms && this.perms[action] === true) {
+		} else if (this.perms?.[action] === true) {
 			return true;
 		}
 		return false;
