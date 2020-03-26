@@ -1,6 +1,6 @@
 <template>
-	<app-expand :when="shouldShow" :animate-initial="false">
-		<div class="-user-follow alert">
+	<transition>
+		<div v-if="shouldShow" class="-user-follow anim-fade-enter alert">
 			<div class="-content">
 				<p class="-flex-auto small">
 					<translate>
@@ -20,7 +20,7 @@
 				<app-button class="-cancel" circle trans icon="remove" @click="emitClose()" />
 			</div>
 		</div>
-	</app-expand>
+	</transition>
 </template>
 
 <script lang="ts" src="./user-follow"></script>
