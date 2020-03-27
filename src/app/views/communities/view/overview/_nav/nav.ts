@@ -1,7 +1,10 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../../../../../_common/community/channel/channel-permissions';
+import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
+import { AppStore } from '../../../../../../_common/store/app-store';
 import AppCommunityChannelCard from '../../../../../components/community/channel/card/card.vue';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import { Store } from '../../../../../store/index';
@@ -25,8 +28,17 @@ export default class AppCommunitiesViewOverviewNav extends Vue {
 	@State
 	communityStates!: Store['communityStates'];
 
+	@State
+	app!: AppStore;
+
 	get communityState() {
 		return this.communityStates.getCommunityState(this.community);
+	}
+
+	isChannelLocked(channel: CommunityChannel) {
+		return (
+			this.app.user && !channel.perms.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING)
+		);
 	}
 
 	isChannelUnread(title: string) {

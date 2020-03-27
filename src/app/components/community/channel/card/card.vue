@@ -16,6 +16,11 @@
 
 		<div class="-card-content">
 			<div class="-card-content-title">
+				<app-jolticon
+					v-if="isLocked"
+					icon="lock"
+					v-app-tooltip.left="$gettext(`You do not have permissions to post to this channel.`)"
+				/>
 				{{ label }}
 			</div>
 

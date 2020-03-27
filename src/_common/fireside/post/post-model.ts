@@ -2,6 +2,7 @@ import { RawLocation } from 'vue-router';
 import { Route } from 'vue-router/types/router';
 import { Api } from '../../api/api.service';
 import { Perm } from '../../collaborator/collaboratable';
+import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../community/channel/channel-permissions';
 import { CommunityChannel } from '../../community/channel/channel.model';
 import { Community } from '../../community/community.model';
 import { ContentContainerModel } from '../../content/content-container-model';
@@ -285,6 +286,20 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		}
 
 		return null;
+	}
+
+	canPublishToCommunities() {
+		if (!this.communities) {
+			return true;
+		}
+		for (const community of this.communities) {
+			if (
+				!community.channel?.perms.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING)
+			) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private isInCommunityPinContext(route: Route) {

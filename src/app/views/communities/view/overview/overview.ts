@@ -2,6 +2,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
+import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../../../../_common/community/channel/channel-permissions';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
@@ -256,6 +257,33 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return this.communityStates.getCommunityState(this.community);
 	}
 
+	get shouldShowPostAdd() {
+		if (this.community.isBlocked) {
+			return false;
+		}
+
+		// We always show the post add button for guests.
+		if (!this.app.user) {
+			return true;
+		}
+
+		if (this.communityChannel) {
+			return this.communityChannel.perms.canPerform(
+				COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING
+			);
+		} else {
+			// We are in a special channel like "featured".
+			// Only show the post add if we have at least one target channel to post to.
+			if (this.community.channels) {
+				return this.community.channels.some(i =>
+					i.perms.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING)
+				);
+			}
+		}
+
+		return true;
+	}
+
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 		this.finishedLoading = false;
@@ -337,7 +365,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	onPostMovedChannel(eventItem: EventItem, movedTo: CommunityChannel) {
 		if (
 			this.feed &&
-			(this.channel !== 'featured' && this.channel !== 'all') &&
+			this.channel !== 'featured' &&
+			this.channel !== 'all' &&
 			this.channel !== movedTo.title
 		) {
 			this.feed.remove([eventItem]);
