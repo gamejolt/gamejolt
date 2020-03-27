@@ -2,9 +2,23 @@
 	<div>
 		<section class="section">
 			<div class="container -collect-page">
-				<h2 class="section-header" :class="{ h4: Screen.isXs }">
-					<translate>Collect Stickers</translate>
-				</h2>
+				<nav class="breadcrumb">
+					<ul>
+						<li>
+							<router-link :to="{ name: 'dash.stickers' }">
+								<span class="breadcrumb-tag">&nbsp;</span>
+								<translate>Stickers</translate>
+							</router-link>
+							<app-jolticon icon="chevron-right" class="breadcrumb-separator" />
+						</li>
+						<li>
+							<span class="active">
+								<span class="breadcrumb-tag">&nbsp;</span>
+								<translate>Collect</translate>
+							</span>
+						</li>
+					</ul>
+				</nav>
 
 				<div class="-reveal">
 					<div v-if="!canReveal">

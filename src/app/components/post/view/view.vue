@@ -4,18 +4,24 @@
 
 		<div class="container">
 			<div v-if="post.hasVideo" class="full-bleed-xs">
-				<app-video-embed video-provider="youtube" :video-id="post.videos[0].video_id" autoplay />
+				<app-video-embed
+					video-provider="youtube"
+					:video-id="post.videos[0].video_id"
+					autoplay
+				/>
 				<br />
 			</div>
 
 			<div class="row">
-				<div class="col-sm-10 col-md-8 col-lg-7" :class="{ 'col-centered': Screen.isMobile }">
+				<div
+					class="col-sm-10 col-md-8 col-lg-7"
+					:class="{ 'col-centered': Screen.isMobile }"
+				>
 					<div class="post-view">
 						<app-sticker-target
 							:stickers="post.stickers"
 							resource="Fireside_Post"
 							:resource-id="post.id"
-							@sticker-add="onStickerAdd"
 						>
 							<div v-if="post.hasMedia" class="full-bleed-xs">
 								<div v-for="item of post.media" :key="item.id">
@@ -48,19 +54,34 @@
 							</div>
 
 							<div v-if="post.hasSketchfab" class="full-bleed-xs">
-								<app-sketchfab-embed :sketchfab-id="post.sketchfabs[0].sketchfab_id" autoplay />
+								<app-sketchfab-embed
+									:sketchfab-id="post.sketchfabs[0].sketchfab_id"
+									autoplay
+								/>
 							</div>
 
 							<div class="tiny text-muted">
-								<app-time-ago v-if="post.isActive" :date="post.published_on" strict />
+								<app-time-ago
+									v-if="post.isActive"
+									:date="post.published_on"
+									strict
+								/>
 								<template v-else-if="post.isScheduled">
 									<span class="tag" style="vertical-align: middle">
 										<app-jolticon icon="calendar-grid" />
 										<translate>Scheduled</translate>
 									</span>
-									<app-time-ago :date="post.scheduled_for" strict without-suffix />
+									<app-time-ago
+										:date="post.scheduled_for"
+										strict
+										without-suffix
+									/>
 								</template>
-								<span v-else-if="post.isDraft" class="tag" style="vertical-align: middle">
+								<span
+									v-else-if="post.isDraft"
+									class="tag"
+									style="vertical-align: middle"
+								>
 									<translate>Draft</translate>
 								</span>
 							</div>
@@ -137,7 +158,6 @@
 .-community-row
 	display: flex
 	align-items: center
-
 </style>
 
 <script lang="ts" src="./view"></script>

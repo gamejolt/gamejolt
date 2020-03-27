@@ -32,10 +32,18 @@
 					&nbsp;
 				</template>
 
-				<app-event-item-controls-fireside-post-stickers
-					:is-active="stickersTrayOpen"
-					@click="onClickStickers"
-				/>
+				<template v-if="shouldShowStickersButton">
+					<app-button
+						icon="bolt-unfilled"
+						circle
+						trans
+						@click="placeSticker()"
+						v-app-tooltip="$gettext('Place Sticker')"
+						v-app-auth-required
+					/>
+
+					&nbsp;
+				</template>
 			</div>
 
 			<app-event-item-controls-fireside-post-stats

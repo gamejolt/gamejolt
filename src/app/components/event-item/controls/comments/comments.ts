@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import FormComment from '../../../../../_common/comment/add/add.vue';
 import {
@@ -107,12 +106,6 @@ export default class AppEventItemControlsComments extends Vue {
 			model: this.model,
 			displayMode: 'comments',
 		});
-	}
-
-	onClickCommentAddPlaceholder(type: string) {
-		Analytics.trackEvent('inline-comment-form', 'click', type);
-		this.clickedCommentType = type;
-		this.clickedComment = true;
 	}
 
 	onSubmitNewComment() {

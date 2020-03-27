@@ -4,7 +4,7 @@
 			<em>Leave a comment...</em>
 			<div class="-controls" @click.stop>
 				<app-jolticon
-					class="-gif"
+					class="-icon-btn"
 					icon="gif"
 					v-app-tooltip="$gettext('Insert Gif')"
 					@click.native="onClick('gif')"
@@ -12,7 +12,7 @@
 				<span
 					:class="'emoji-button emoji emoji-' + emoji"
 					v-app-tooltip="$gettext('Insert Emoji')"
-					@mouseenter="onMouseEnter"
+					@mouseenter="onMouseEnterEmoji"
 					@click="onClick('emoji')"
 				/>
 			</div>
@@ -48,7 +48,7 @@
 	display: flex
 	align-items: center
 
-.-gif
+.-icon-btn
 	font-size: 20px
 	margin-right: 12px
 	transition: filter 0.15s, transform 0.2s ease
@@ -77,7 +77,6 @@
 
 	&:focus
 		outline: none
-
 </style>
 
 <script lang="ts" src="./add-placeholder"></script>

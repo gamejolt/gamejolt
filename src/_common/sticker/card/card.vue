@@ -1,6 +1,6 @@
 <template>
 	<div class="-card">
-		<img class="-img" :src="sticker.media_item.mediaserver_url" />
+		<img class="-img" :src="sticker.img_url" />
 		<div class="-pocket fill-darkest">
 			<div
 				class="-name"
@@ -54,7 +54,6 @@
 		color: #18a5f2
 	&-epic
 		color: #ffbc56
-
 </style>
 
 <script lang="ts" src="./card"></script>

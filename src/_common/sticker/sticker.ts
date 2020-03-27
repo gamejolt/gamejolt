@@ -1,20 +1,34 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
-import { propRequired } from '../../utils/vue';
+import { Prop, Watch } from 'vue-property-decorator';
+import { propOptional, propRequired } from '../../utils/vue';
 import { StickerPlacement } from './placement/placement.model';
 
 @Component({})
 export default class AppSticker extends Vue {
 	@Prop(propRequired(StickerPlacement)) sticker!: StickerPlacement;
+	@Prop(propOptional(Boolean, true)) canRemove!: boolean;
 
 	$refs!: {
 		sticker: HTMLDivElement;
 	};
 
-	mounted() {
-		this.$refs.sticker.style.left = this.sticker.position_x * 100 + '%';
-		this.$refs.sticker.style.top = this.sticker.position_y * 100 + '%';
+	async mounted() {
+		this.onUpdateStickerPlacement();
+	}
+
+	@Watch('sticker', { deep: true })
+	async onUpdateStickerPlacement() {
+		await this.$nextTick();
+
+		this.$refs.sticker.style.left = `calc(${this.sticker.position_x * 100}% - 32px)`;
+		this.$refs.sticker.style.top = `calc(${this.sticker.position_y * 100}% - 32px)`;
 		this.$refs.sticker.style.transform = `rotate(${this.sticker.rotation * 90 - 45}deg)`;
+	}
+
+	onClickRemove() {
+		if (this.canRemove) {
+			(this.$el as HTMLElement).hidden = true;
+		}
 	}
 }

@@ -9,6 +9,8 @@ import { number } from '../../../../../_common/filters/number';
 import AppFiresidePostLikeWidget from '../../../../../_common/fireside/post/like/widget/widget.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import { StickerPlacementModal } from '../../../../../_common/sticker/placement/modal/modal.service';
+import { StickerSelectModal } from '../../../../../_common/sticker/select-modal.ts/select-modal.service';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import { User } from '../../../../../_common/user/user.model';
@@ -16,8 +18,6 @@ import { AppCommentWidgetLazy } from '../../../lazy';
 import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 import AppEventItemControlsFiresidePostExtra from './extra/extra.vue';
 import AppEventItemControlsFiresidePostStats from './stats/stats.vue';
-import AppEventItemControlsFiresidePostStickers from './stickers/stickers.vue';
-import AppEventItemControlsFiresidePostStickersTray from './stickers/tray/tray.vue';
 
 @Component({
 	components: {
@@ -26,8 +26,6 @@ import AppEventItemControlsFiresidePostStickersTray from './stickers/tray/tray.v
 		AppCommentVideoLikeWidget,
 		AppEventItemControlsFiresidePostStats,
 		AppEventItemControlsFiresidePostExtra,
-		AppEventItemControlsFiresidePostStickers,
-		AppEventItemControlsFiresidePostStickersTray,
 	},
 	directives: {
 		AppTooltip,
@@ -111,6 +109,10 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 		return this.showCommentsButton;
 	}
 
+	get shouldShowStickersButton() {
+		return this.post.canPlaceSticker;
+	}
+
 	get shouldShowStatsInNewLine() {
 		return Screen.isXs;
 	}
@@ -133,7 +135,12 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 		this.emitPublish();
 	}
 
-	onClickStickers() {
-		this.stickersTrayOpen = !this.stickersTrayOpen;
+	async placeSticker() {
+		const sticker = await StickerSelectModal.show(this.post);
+		if (sticker) {
+			const post = await StickerPlacementModal.show(this.post, sticker);
+			Object.assign(this.post, post);
+			this.emitEdit();
+		}
 	}
 }

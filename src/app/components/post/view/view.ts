@@ -83,8 +83,4 @@ export default class AppPostView extends Vue {
 			message: this.$gettext('Your post has been published.'),
 		});
 	}
-
-	onStickerAdd(post: FiresidePost) {
-		this.$emit('post-update', post);
-	}
 }

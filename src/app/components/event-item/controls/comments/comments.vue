@@ -1,9 +1,6 @@
 <template>
 	<div v-if="shouldShowInlineComment" class="-add" v-app-auth-required>
-		<app-event-item-controls-comments-add-placeholder
-			v-if="!clickedComment"
-			@click="onClickCommentAddPlaceholder"
-		/>
+		<app-event-item-controls-comments-add-placeholder v-if="!clickedComment" />
 		<form-comment
 			v-else
 			:comment-model="model"

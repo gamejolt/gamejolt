@@ -242,6 +242,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return true;
 	}
 
+	get canPlaceSticker() {
+		return this.canComment;
+	}
+
 	getContent(context: ContentContext) {
 		if (context === 'fireside-post-lead') {
 			return this.lead_content;
