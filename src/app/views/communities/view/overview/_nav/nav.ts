@@ -37,7 +37,8 @@ export default class AppCommunitiesViewOverviewNav extends Vue {
 
 	isChannelLocked(channel: CommunityChannel) {
 		return (
-			this.app.user && !channel.perms.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING)
+			this.app.user &&
+			!channel.permissions.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING)
 		);
 	}
 

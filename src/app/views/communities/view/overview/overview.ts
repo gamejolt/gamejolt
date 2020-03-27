@@ -268,7 +268,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		}
 
 		if (this.communityChannel) {
-			return this.communityChannel.perms.canPerform(
+			return this.communityChannel.permissions.canPerform(
 				COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING
 			);
 		} else {
@@ -276,7 +276,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			// Only show the post add if we have at least one target channel to post to.
 			if (this.community.channels) {
 				return this.community.channels.some(i =>
-					i.perms.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING)
+					i.permissions.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING)
 				);
 			}
 		}
