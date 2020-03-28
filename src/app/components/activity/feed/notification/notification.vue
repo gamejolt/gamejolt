@@ -25,6 +25,17 @@
 						</div>
 						<div
 							slot="bubble"
+							v-else-if="notification.type === Notification.TYPE_COMMUNITY_VERIFIED"
+						>
+							<div class="-community-thumb">
+								<app-community-thumbnail-img
+									class="img-circle"
+									:community="notification.action_model"
+								/>
+							</div>
+						</div>
+						<div
+							slot="bubble"
 							v-else-if="
 								notification.type === Notification.TYPE_GAME_TROPHY_ACHIEVED ||
 									notification.type === Notification.TYPE_SITE_TROPHY_ACHIEVED

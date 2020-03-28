@@ -64,6 +64,7 @@ export class Notification extends Model {
 	static TYPE_COMMENT_VIDEO_ADD = 'comment-video-add';
 	static TYPE_GAME_TROPHY_ACHIEVED = 'game-trophy-achieved';
 	static TYPE_SITE_TROPHY_ACHIEVED = 'site-trophy-achieved';
+	static TYPE_COMMUNITY_VERIFIED = 'community-verified';
 
 	static ACTIVITY_FEED_TYPES = [
 		EventItem.TYPE_POST_ADD,
@@ -85,6 +86,7 @@ export class Notification extends Model {
 		Notification.TYPE_COLLABORATOR_INVITE,
 		Notification.TYPE_GAME_TROPHY_ACHIEVED,
 		Notification.TYPE_SITE_TROPHY_ACHIEVED,
+		Notification.TYPE_COMMUNITY_VERIFIED,
 	];
 
 	user_id!: number;
@@ -112,7 +114,8 @@ export class Notification extends Model {
 		| Mention
 		| CommentVideo
 		| UserGameTrophy
-		| UserSiteTrophy;
+		| UserSiteTrophy
+		| Community;
 
 	to_resource!: string | null;
 	to_resource_id!: number | null;
@@ -197,6 +200,8 @@ export class Notification extends Model {
 		} else if (this.type === Notification.TYPE_SITE_TROPHY_ACHIEVED) {
 			this.action_model = new UserSiteTrophy(data.action_resource_model);
 			this.is_user_based = true;
+		} else if (this.type === Notification.TYPE_COMMUNITY_VERIFIED) {
+			this.action_model = new Community(data.action_resource_model);
 		}
 
 		// Keep memory clean after bootstrapping the models.
@@ -229,6 +234,9 @@ export class Notification extends Model {
 				return getRouteLocationForModel(
 					(this.action_model as FiresidePostCommunity).community
 				);
+
+			case Notification.TYPE_COMMUNITY_VERIFIED:
+				return getRouteLocationForModel(this.action_model as Community);
 
 			case Notification.TYPE_COLLABORATOR_INVITE:
 				switch (this.to_resource) {
@@ -447,6 +455,19 @@ export function getNotificationText(notification: Notification, plaintext = fals
 	}
 
 	switch (notification.type) {
+		case Notification.TYPE_COMMUNITY_VERIFIED: {
+			const community = notification.action_model as Community;
+
+			return _process(
+				Translate.$gettextInterpolate(
+					'Your community <em>%{ community }</em> has been verified!',
+					{
+						community: community.name,
+					}
+				)
+			);
+		}
+
 		case Notification.TYPE_POST_ADD: {
 			let gameTitle = '';
 			let postTitle = '';
