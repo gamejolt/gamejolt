@@ -14,13 +14,6 @@ export default class AppImgBackdrop extends Vue {
 	@Prop(propOptional(String))
 	radius?: string;
 
-	// @Prop(propOptional(Number))
-	// height?: number;
-
-	/* maybe for Community cards - they have a transparency filter */
-	// @Prop(propOptional(Boolean))
-	// trans?: boolean;
-
 	get _borderRadius() {
 		if (this.block) {
 			return;
@@ -34,26 +27,6 @@ export default class AppImgBackdrop extends Vue {
 		}
 	}
 
-	// get itemWidth() {
-	// 	if (this.mediaItem && this.mediaItem.width) {
-	// 		return this.mediaItem.width;
-	// 	}
-
-	// 	return;
-	// }
-
-	// get itemHeight() {
-	// 	if (this.mediaItem && this.mediaItem.height) {
-	// 		return this.mediaItem.height;
-	// 	}
-
-	// 	return;
-	// }
-
-	// get setHeight() {
-	// 	return this.height;
-	// }
-
 	get wrapperStyling() {
 		let style = {};
 
@@ -62,17 +35,6 @@ export default class AppImgBackdrop extends Vue {
 		if (!this.item) {
 			return style;
 		}
-
-		// Object.assign(style, {
-		// 	height: this.itemHeight,
-		// 	width: this.itemWidth,
-		// });
-
-		// if (this.setHeight) {
-		// 	Object.assign(style, {
-		// 		height: this.setHeight,
-		// 	});
-		// }
 
 		if (this.item.avg_img_color && !this.item.img_has_transparency) {
 			Object.assign(style, {

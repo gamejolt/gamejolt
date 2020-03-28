@@ -18,13 +18,6 @@
 	position: absolute
 	width: 100%
 	height: 100%
-	background-color: white !important
-	// padding: 1px
-
-	// testing
-	border-radius: 0 !important
-	padding: 0 !important
-
 	background-clip: content-box
 </style>
 
