@@ -2,6 +2,7 @@ import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../../../utils/vue';
+import AppImgBackdrop from '../../../img/backdrop/backdrop.vue';
 import { AppImgResponsive } from '../../../img/responsive/responsive';
 import { Screen } from '../../../screen/screen-service';
 import AppSketchfabEmbed from '../../../sketchfab/embed/embed.vue';
@@ -14,6 +15,7 @@ import AppMediaBarLightbox from '../lightbox.vue';
 		AppVideoEmbed,
 		AppSketchfabEmbed,
 		AppImgResponsive,
+		AppImgBackdrop,
 	},
 })
 export default class AppMediaBarLightboxItem extends Vue {

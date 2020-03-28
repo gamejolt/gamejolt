@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import AppImgBackdrop from '../../../../../../../_common/img/backdrop/backdrop.vue';
 import { AppImgResponsive } from '../../../../../../../_common/img/responsive/responsive';
 import { MediaItem } from '../../../../../../../_common/media-item/media-item-model';
 import {
@@ -14,6 +15,7 @@ import { ActivityFeedView } from '../../../view';
 @Component({
 	components: {
 		AppImgResponsive,
+		AppImgBackdrop,
 		AppVideo,
 		AppResponsiveDimensions,
 		AppEventItemMediaTags,
@@ -33,6 +35,8 @@ export default class AppActivityFeedDevlogPostMediaItem extends Vue {
 	isActive!: boolean;
 
 	isFilled = false;
+	scaledWidth = 0;
+	scaledHeight = 0;
 
 	readonly Screen = Screen;
 
@@ -41,6 +45,14 @@ export default class AppActivityFeedDevlogPostMediaItem extends Vue {
 
 	get shouldVideoPlay() {
 		return this.isActive;
+	}
+
+	get width() {
+		return this.scaledWidth + 'px';
+	}
+
+	get height() {
+		return this.scaledHeight + 'px';
 	}
 
 	get itemStyling() {
@@ -53,9 +65,10 @@ export default class AppActivityFeedDevlogPostMediaItem extends Vue {
 			});
 		}
 
-		if (this.mediaItem.avg_img_color && !this.mediaItem.img_has_transparency) {
+		if (this.width && this.height) {
 			Object.assign(style, {
-				backgroundColor: '#' + this.mediaItem.avg_img_color,
+				width: this.width,
+				height: this.height,
 			});
 		}
 
@@ -80,5 +93,8 @@ export default class AppActivityFeedDevlogPostMediaItem extends Vue {
 	async onDimensionsChange(e: AppResponsiveDimensionsChangeEvent) {
 		this.emitBootstrap();
 		this.isFilled = e.isFilled;
+
+		this.scaledWidth = e.containerWidth;
+		this.scaledHeight = e.height;
 	}
 }

@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import AppImgBackdrop from '../../img/backdrop/backdrop.vue';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 
 export const MediaBarItemMaxHeight = 150;
@@ -7,6 +8,7 @@ export const MediaBarItemMaxHeight = 150;
 @Component({
 	components: {
 		AppImgResponsive,
+		AppImgBackdrop,
 	},
 })
 export default class AppMediaBarItem extends Vue {

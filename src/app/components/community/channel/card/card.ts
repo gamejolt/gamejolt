@@ -2,10 +2,14 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
 import { Community } from '../../../../../_common/community/community.model';
+import AppImgBackdrop from '../../../../../_common/img/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 
 @Component({
+	components: {
+		AppImgBackdrop,
+	},
 	directives: {
 		AppTooltip,
 	},

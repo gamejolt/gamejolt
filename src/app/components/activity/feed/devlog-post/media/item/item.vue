@@ -11,24 +11,25 @@
 			@change="onDimensionsChange"
 		>
 			<app-event-item-media-tags :gif="mediaItem.is_animated" />
-
-			<app-img-responsive
-				v-if="!isPostHydrated || !mediaItem.is_animated"
-				class="-img"
-				:style="itemStyling"
-				:src="mediaItem.mediaserver_url"
-				alt=""
-				ondragstart="return false"
-			/>
-			<app-video
-				v-else-if="shouldVideoPlay"
-				class="-video"
-				:style="itemStyling"
-				:poster="mediaItem.mediaserver_url"
-				:webm="mediaItem.mediaserver_url_webm"
-				:mp4="mediaItem.mediaserver_url_mp4"
-				show-loading
-			/>
+			<app-img-backdrop :item="mediaItem" :block="isFilled" radius="8px">
+				<app-img-responsive
+					v-if="!isPostHydrated || !mediaItem.is_animated"
+					class="-img"
+					:style="itemStyling"
+					:src="mediaItem.mediaserver_url"
+					alt=""
+					ondragstart="return false"
+				/>
+				<app-video
+					v-else-if="shouldVideoPlay"
+					class="-video"
+					:style="itemStyling"
+					:poster="mediaItem.mediaserver_url"
+					:webm="mediaItem.mediaserver_url_webm"
+					:mp4="mediaItem.mediaserver_url_mp4"
+					show-loading
+				/>
+			</app-img-backdrop>
 		</app-responsive-dimensions>
 	</div>
 </template>

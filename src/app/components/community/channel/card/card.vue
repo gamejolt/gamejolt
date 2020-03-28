@@ -6,12 +6,14 @@
 		:title="label"
 	>
 		<div class="-card-bg" v-if="backgroundItem">
-			<div
-				class="-card-bg-img"
-				:style="{
-					'background-image': `url('${backgroundItem.mediaserver_url}')`,
-				}"
-			/>
+			<app-img-backdrop :item="backgroundItem" radius="8px" trans>
+				<div
+					class="-card-bg-img"
+					:style="{
+						'background-image': `url('${backgroundItem.mediaserver_url}')`,
+					}"
+				/>
+			</app-img-backdrop>
 		</div>
 
 		<div class="-card-content">

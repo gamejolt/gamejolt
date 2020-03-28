@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import AppImgBackdrop from '../../img/backdrop/backdrop.vue';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
@@ -10,6 +11,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 @Component({
 	components: {
 		AppImgResponsive,
+		AppImgBackdrop,
 	},
 })
 export default class AppMediaItemCover extends Vue {

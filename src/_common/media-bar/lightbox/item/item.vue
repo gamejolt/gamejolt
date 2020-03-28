@@ -7,14 +7,25 @@
 					<!--
 					The min/max will be the actual dimensions for the image thumbnail.
 				-->
-					<app-img-responsive
-						:src="item.img_thumbnail"
-						:alt="item.caption"
+					<app-img-backdrop
+						:item="item.media_item"
 						:style="{
 							width: maxWidth ? maxWidth + 'px' : undefined,
 							height: maxHeight ? maxHeight + 'px' : undefined,
+							marginLeft: 'auto',
+							marginRight: 'auto',
 						}"
-					/>
+						radius="8px"
+					>
+						<app-img-responsive
+							:src="item.img_thumbnail"
+							:alt="item.caption"
+							:style="{
+								width: 'inherit',
+								height: 'inherit',
+							}"
+						/>
+					</app-img-backdrop>
 				</div>
 
 				<div class="-caption" v-if="item.caption" ref="caption">

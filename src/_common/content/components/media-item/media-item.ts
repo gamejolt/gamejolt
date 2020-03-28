@@ -1,6 +1,7 @@
 import { ResizeObserver } from 'resize-observer';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import AppImgBackdrop from '../../../img/backdrop/backdrop.vue';
 import AppLoading from '../../../loading/loading.vue';
 import { MediaItem } from '../../../media-item/media-item-model';
 import { AppTooltip } from '../../../tooltip/tooltip';
@@ -12,6 +13,7 @@ import AppBaseContentComponent from '../base/base-content-component.vue';
 	components: {
 		AppBaseContentComponent,
 		AppLoading,
+		AppImgBackdrop,
 	},
 	directives: {
 		AppTooltip,

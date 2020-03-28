@@ -2,12 +2,14 @@
 	<div class="media-item-cover-container" :class="{ '-blur': blur }" :style="{ height }">
 		<section class="section media-item-cover" :class="{ loaded: isLoaded }">
 			<div class="media-item-cover-img">
-				<app-img-responsive
-					v-show="isLoaded"
-					:src="mediaItem.mediaserver_url"
-					@imgloadchange="onLoadChange"
-					alt=""
-				/>
+				<app-img-backdrop :item="mediaItem" :style="{ height }" block>
+					<app-img-responsive
+						v-show="isLoaded"
+						:src="mediaItem.mediaserver_url"
+						@imgloadchange="onLoadChange"
+						alt=""
+					/>
+				</app-img-backdrop>
 			</div>
 
 			<div class="media-item-cover-content">
@@ -47,7 +49,7 @@
 
 		img
 			width: 100%
-			height: auto
+			height: 100%
 
 .-blur
 	img

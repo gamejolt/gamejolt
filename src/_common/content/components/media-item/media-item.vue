@@ -30,13 +30,15 @@
 						rel="nofollow noopener"
 						target="_blank"
 					>
-						<img
-							class="img-responsive content-image"
-							:src="mediaItem.img_url"
-							:alt="title"
-							:title="title"
-							@load="onImageLoad"
-						/>
+						<app-img-backdrop :item="mediaItem">
+							<img
+								class="img-responsive content-image"
+								:src="mediaItem.img_url"
+								:alt="title"
+								:title="title"
+								@load="onImageLoad"
+							/>
+						</app-img-backdrop>
 					</component>
 				</template>
 				<template v-else-if="hasError">
