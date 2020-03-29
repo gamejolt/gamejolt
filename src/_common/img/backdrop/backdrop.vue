@@ -1,23 +1,20 @@
 <template>
-	<div class="-app-img-backdrop">
-		<div class="-bg-color-styling" :style="wrapperStyling" />
+	<div class="img-backdrop" :style="wrapperStyling">
 		<slot />
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-.-app-img-backdrop
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.img-backdrop
+	rounded-corners-lg()
+	overflow: hidden
 	position: relative
 	width: inherit
 	height: 100%
-
-	img
-		position: relative
-
-.-bg-color-styling
-	position: absolute
-	width: 100%
-	height: 100%
+	overflow: hidden
 	background-clip: content-box
 </style>
 
