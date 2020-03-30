@@ -1,6 +1,14 @@
 <template>
 	<div>
-		<div v-if="!parent.getStripeField(namePrefix + '.year')">
+		<div
+			v-if="
+				!parent.getStripeField(namePrefix + '.year') &&
+					(parent.requiresField(namePrefix + '.year') ||
+						parent.requiresField(namePrefix + '.month') ||
+						parent.requiresField(namePrefix + '.day') ||
+						forceRequired)
+			"
+		>
 			<div>
 				<label class="control-label"><translate>Date of Birth</translate></label>
 			</div>

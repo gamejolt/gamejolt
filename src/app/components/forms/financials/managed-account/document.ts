@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { findRequiredVueParent } from '../../../../../utils/vue';
+import { findRequiredVueParent, propRequired } from '../../../../../utils/vue';
 import AppFormControlUploadTS from '../../../../../_common/form-vue/control/upload/upload';
 import AppFormControlUpload from '../../../../../_common/form-vue/control/upload/upload.vue';
 import { CommonFormComponents } from '../../../../../_common/form-vue/form.service';
@@ -13,10 +13,23 @@ import FormFinancialsManagedAccount from './managed-account.vue';
 		AppFormControlUpload,
 	},
 })
-export default class AppFinancialsManagedAccountIdDocument extends Vue {
-	@Prop(String) namePrefix!: string;
+export default class AppFinancialsManagedAccountDocument extends Vue {
+	@Prop(propRequired(String))
+	namePrefix!: string;
+
+	@Prop(propRequired(String))
+	type!: 'id' | 'additional';
 
 	parent: FormFinancialsManagedAccountTS = null as any;
+
+	get prefix() {
+		return `${this.namePrefix}.${this.type === 'id' ? 'document' : 'additional_document'}`;
+	}
+
+	get fieldName() {
+		return this.type === 'id' ? this.$gettext('ID Document') : this.$gettext('Utility / Bill');
+	}
+
 	created() {
 		this.parent = findRequiredVueParent(
 			this,
@@ -24,7 +37,7 @@ export default class AppFinancialsManagedAccountIdDocument extends Vue {
 		) as FormFinancialsManagedAccountTS;
 	}
 
-	uploadIdDocument(stripePublishableKey: string) {
+	uploadDocument(stripePublishableKey: string) {
 		return new Promise<any>((resolve, reject) => {
 			const formData = new FormData();
 			formData.append('purpose', 'identity_document');
@@ -40,6 +53,7 @@ export default class AppFinancialsManagedAccountIdDocument extends Vue {
 
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === 4) {
+					console.log(xhr.responseText);
 					if (xhr.status === 200) {
 						resolve(JSON.parse(xhr.responseText));
 					} else {

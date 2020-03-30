@@ -1,8 +1,8 @@
 <template>
-	<div v-if="parent.requiresField(namePrefix + '.personal_id_number')">
+	<div v-if="parent.requiresField(namePrefix + '.id_number')">
 		<app-form-group
-			v-if="!parent.getStripeField(namePrefix + '.personal_id_number_provided')"
-			:name="`${namePrefix}.personal_id_number`"
+			v-if="!parent.getStripeField(namePrefix + '.id_number_provided')"
+			:name="`${namePrefix}.id_number`"
 			:label="
 				countryCode === 'us'
 					? 'Social Security Number or ITIN'
@@ -29,10 +29,7 @@
 			<app-form-control-errors />
 		</app-form-group>
 
-		<div
-			v-if="parent.getStripeField(namePrefix + '.personal_id_number_provided')"
-			class="form-horizontal"
-		>
+		<div v-if="parent.getStripeField(namePrefix + '.id_number_provided')" class="form-horizontal">
 			<div class="form-group">
 				<label class="control-label col-sm-4">
 					<template v-if="countryCode === 'us'">

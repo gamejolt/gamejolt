@@ -10,13 +10,10 @@ import FormFinancialsManagedAccount from './managed-account.vue';
 		...CommonFormComponents,
 	},
 })
-export default class AppFinancialsManagedAccountDob extends Vue {
+export default class AppFinancialsManagedAccountContact extends Vue {
 	@Prop(Boolean) forceRequired!: boolean;
 
 	@Prop(String) namePrefix!: string;
-
-	days: string[] = [];
-	years: string[] = [];
 
 	parent: FormFinancialsManagedAccountTS = null as any;
 
@@ -25,16 +22,5 @@ export default class AppFinancialsManagedAccountDob extends Vue {
 			this,
 			FormFinancialsManagedAccount
 		) as FormFinancialsManagedAccountTS;
-
-		this.days = [];
-		for (let i = 1; i <= 31; ++i) {
-			this.days.push('' + i);
-		}
-
-		this.years = [];
-		const maxYear = new Date().getFullYear() - 13;
-		for (let i = maxYear; i > maxYear - 100; --i) {
-			this.years.push('' + i);
-		}
 	}
 }

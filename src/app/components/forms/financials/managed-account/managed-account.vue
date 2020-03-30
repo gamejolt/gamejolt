@@ -152,7 +152,12 @@
 						Business Address
 						It uses the legal entity address.
 					-->
-					<app-financials-managed-account-address namePrefix="legal_entity.address" />
+					<app-financials-managed-account-address :namePrefix="`${account.type}.address`" />
+
+					<!--
+						Contact info (email and phone)
+					-->
+					<app-financials-managed-account-contact :namePrefix="account.type" />
 				</div>
 
 				<!--
@@ -178,40 +183,54 @@
 					</p>
 				</div>
 
-				<!--
-					Personal Name
-				-->
-				<app-financials-managed-account-name namePrefix="legal_entity" />
+				<template v-if="account.type === 'individual'">
+					<!--
+						Personal Name
+					-->
+					<app-financials-managed-account-name :namePrefix="account.type" />
 
-				<!--
-					Personal DOB
-				-->
-				<app-financials-managed-account-dob namePrefix="legal_entity.dob" />
+					<!--
+						Personal DOB
+					-->
+					<app-financials-managed-account-dob :namePrefix="`${account.type}.dob`" />
 
-				<!--
-					Personal Address
-					Some times required for individual accounts in GB too.
-				-->
-				<app-financials-managed-account-address
-					:namePrefix="
-						account.type === 'company' ? 'legal_entity.personal_address' : 'legal_entity.address'
-					"
-				/>
+					<!--
+						Personal Address
+						Some times required for individual accounts in GB too.
+					-->
+					<app-financials-managed-account-address :namePrefix="`${account.type}.address`" />
 
-				<!--
-					SSN
-				-->
-				<app-financials-managed-account-ssn
-					namePrefix="legal_entity"
-					:countryCode="account.country_code"
-				/>
+					<!--
+						Contact info (email and phone)
+					-->
+					<app-financials-managed-account-contact :namePrefix="account.type" />
+
+					<!--
+						SSN
+					-->
+					<app-financials-managed-account-ssn
+						:namePrefix="account.type"
+						:countryCode="account.country_code"
+					/>
+				</template>
 
 				<!--
 					Personal ID Verification
 				-->
-				<app-financials-managed-account-id-document
+				<app-financials-managed-account-document
 					ref="id-document"
-					namePrefix="legal_entity.verification"
+					type="id"
+					:namePrefix="`${account.type}.verification`"
+				/>
+
+				<!--
+					Additional Verification Document
+					A utility bill that proves the user's address.
+				-->
+				<app-financials-managed-account-document
+					ref="additional-document"
+					type="additional"
+					:namePrefix="`${account.type}.verification`"
 				/>
 
 				<!--
@@ -279,6 +298,11 @@
 
 						<app-financials-managed-account-address
 							:namePrefix="`legal_entity.additional_owners.${i}.address`"
+							:forceRequired="true"
+						/>
+
+						<app-financials-managed-account-contact
+							:namePrefix="`legal_entity.additional_owners.${i}.email`"
 							:forceRequired="true"
 						/>
 
