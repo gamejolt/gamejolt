@@ -41,7 +41,7 @@
 	rounded-corners-lg()
 
 .-full
-	border-radius: 50%
+	img-circle()
 
 </style>
 
