@@ -1,5 +1,5 @@
 <template>
-	<div class="-sticker" ref="sticker" @click="onClickRemove">
+	<div class="-sticker" ref="sticker" @click.stop="onClickRemove">
 		<img
 			draggable="false"
 			onmousedown="return false"
