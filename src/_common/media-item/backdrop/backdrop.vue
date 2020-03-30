@@ -27,7 +27,6 @@
 	bottom: 1px
 	left: 1px
 	width: auto
-	background-color: white !important
 
 	.spoiler &
 		opacity: 0
