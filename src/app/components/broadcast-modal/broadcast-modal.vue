@@ -41,49 +41,55 @@
 					</div>
 				</div>
 				<div class="col-sm-8 col-sm-pull-4">
-					<div v-if="post.hasMedia">
-						<div v-for="item of post.media" :key="item.id">
-							<app-responsive-dimensions class="-media-item" :ratio="item.width / item.height">
-								<app-event-item-media-tags :gif="item.is_animated" />
+					<app-sticker-target
+						:stickers="post.stickers"
+						resource="Fireside_Post"
+						:resource-id="post.id"
+					>
+						<div v-if="post.hasMedia">
+							<div v-for="item of post.media" :key="item.id">
+								<app-responsive-dimensions class="-media-item" :ratio="item.width / item.height">
+									<app-event-item-media-tags :gif="item.is_animated" />
 
-								<app-img-responsive
-									class="-img"
-									v-if="!item.is_animated"
-									:src="item.mediaserver_url"
-									alt=""
-								/>
+									<app-img-responsive
+										class="-img"
+										v-if="!item.is_animated"
+										:src="item.mediaserver_url"
+										alt=""
+									/>
 
-								<app-video
-									v-else
-									class="-video"
-									:poster="item.mediaserver_url"
-									:webm="item.mediaserver_url_webm"
-									:mp4="item.mediaserver_url_mp4"
-									:show-loading="true"
-								/>
-							</app-responsive-dimensions>
+									<app-video
+										v-else
+										class="-video"
+										:poster="item.mediaserver_url"
+										:webm="item.mediaserver_url_webm"
+										:mp4="item.mediaserver_url_mp4"
+										:show-loading="true"
+									/>
+								</app-responsive-dimensions>
+
+								<br />
+							</div>
+						</div>
+
+						<div v-if="post.hasVideo">
+							<app-video-embed
+								video-provider="youtube"
+								:video-id="post.videos[0].video_id"
+								autoplay
+							/>
 
 							<br />
 						</div>
-					</div>
 
-					<div v-if="post.hasVideo">
-						<app-video-embed
-							video-provider="youtube"
-							:video-id="post.videos[0].video_id"
-							autoplay
-						/>
+						<!-- No need for sketchfab -->
 
-						<br />
-					</div>
+						<div class="tiny text-muted">
+							<app-time-ago v-if="post.isActive" :date="post.published_on" />
+						</div>
 
-					<!-- No need for sketchfab -->
-
-					<div class="tiny text-muted">
-						<app-time-ago v-if="post.isActive" :date="post.published_on" />
-					</div>
-
-					<app-content-viewer :source="post.lead_content" />
+						<app-content-viewer :source="post.lead_content" />
+					</app-sticker-target>
 
 					<div v-if="post.hasArticle">
 						<div class="page-cut" />
