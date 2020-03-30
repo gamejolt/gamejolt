@@ -34,6 +34,7 @@ export default class AppStickerPlacementModal extends BaseModal {
 	placement: StickerPlacement | null = null;
 	isDragging = false;
 	waitingForFrame = false;
+	hasDragged = false;
 
 	lastPanX = 0;
 	lastPanY = 0;
@@ -61,6 +62,7 @@ export default class AppStickerPlacementModal extends BaseModal {
 
 	panStart() {
 		this.isDragging = true;
+		this.hasDragged = true;
 
 		this.lastPanX = 0;
 		this.lastPanY = 0;

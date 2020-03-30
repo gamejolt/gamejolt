@@ -13,8 +13,7 @@
 		<div class="modal-body">
 			<div class="help-block">
 				<translate
-					>Position the sticker in the outlined target area below, then press
-					"Place".</translate
+					>Position the sticker in the outlined target area below, then press "Place".</translate
 				>
 			</div>
 
@@ -28,6 +27,7 @@
 						:can-remove="false"
 						:class="{
 							'-sticker-dragging': isDragging,
+							'-sticker-glowing': !hasDragged,
 						}"
 					/>
 				</v-touch>
@@ -75,6 +75,11 @@
 .-sticker
 	cursor: pointer
 
+.-sticker-glowing
+	animation-name: sticker-placed-glow
+	animation-duration: 2s
+	animation-iteration-count: infinite
+
 .-sticker-dragging
 	filter: drop-shadow(4px 4px 5px black)
 	cursor: move
@@ -83,6 +88,13 @@
 	animation-duration: 2s
 	animation-iteration-count: infinite
 
+@keyframes sticker-placed-glow
+	0%
+		filter: drop-shadow(0 0 10px #ccff00)
+	50%
+		filter: drop-shadow(0 0 4px #ccff00)
+	100%
+		filter: drop-shadow(0 0 10px #ccff00)
 
 @keyframes sticker-dragging-rotate
 	0%
