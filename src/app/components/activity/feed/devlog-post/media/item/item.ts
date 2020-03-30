@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
-import AppImgBackdrop from '../../../../../../../_common/img/backdrop/backdrop.vue';
 import { AppImgResponsive } from '../../../../../../../_common/img/responsive/responsive';
+import AppMediaItemBackdrop from '../../../../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../../../../_common/media-item/media-item-model';
 import {
 	AppResponsiveDimensions,
@@ -15,7 +15,7 @@ import { ActivityFeedView } from '../../../view';
 @Component({
 	components: {
 		AppImgResponsive,
-		AppImgBackdrop,
+		AppMediaItemBackdrop,
 		AppVideo,
 		AppResponsiveDimensions,
 		AppEventItemMediaTags,

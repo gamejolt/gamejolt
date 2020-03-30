@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import AppImgBackdrop from '../../img/backdrop/backdrop.vue';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
+import AppMediaItemBackdrop from '../backdrop/backdrop.vue';
 import { MediaItem } from '../media-item-model';
 
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
@@ -11,7 +11,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 @Component({
 	components: {
 		AppImgResponsive,
-		AppImgBackdrop,
+		AppMediaItemBackdrop,
 	},
 })
 export default class AppMediaItemCover extends Vue {

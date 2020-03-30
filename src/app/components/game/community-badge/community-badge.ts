@@ -3,13 +3,13 @@ import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import { Community } from '../../../../_common/community/community.model';
 import { number } from '../../../../_common/filters/number';
-import AppImgBackdrop from '../../../../_common/img/backdrop/backdrop.vue';
+import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
 import { AppTheme } from '../../../../_common/theme/theme';
 
 @Component({
 	components: {
 		AppTheme,
-		AppImgBackdrop,
+		AppMediaItemBackdrop,
 	},
 })
 export default class AppGameCommunityBadge extends Vue {
