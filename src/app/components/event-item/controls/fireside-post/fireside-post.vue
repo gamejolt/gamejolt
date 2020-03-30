@@ -76,12 +76,6 @@
 				/>
 			</span>
 		</div>
-
-		<app-event-item-controls-fireside-post-stickers-tray
-			v-if="stickersTrayOpen"
-			resource="Fireside_Post"
-			:resource-id="post.id"
-		/>
 	</span>
 </template>
 

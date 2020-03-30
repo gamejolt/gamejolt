@@ -50,8 +50,6 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 
 	readonly GJ_IS_CLIENT!: boolean;
 
-	stickersTrayOpen = false;
-
 	@Emit('edit')
 	emitEdit() {}
 
