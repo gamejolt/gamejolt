@@ -1,14 +1,14 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppImgBackdrop from '../../img/backdrop/backdrop.vue';
 import { AppImgResponsive } from '../../img/responsive/responsive';
+import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
 
 export const MediaBarItemMaxHeight = 150;
 
 @Component({
 	components: {
 		AppImgResponsive,
-		AppImgBackdrop,
+		AppMediaItemBackdrop,
 	},
 })
 export default class AppMediaBarItem extends Vue {
@@ -32,5 +32,13 @@ export default class AppMediaBarItem extends Vue {
 			// Video thumbnails are hardcoded to this width.
 			this.width = '200px';
 		}
+	}
+
+	get mediaItem() {
+		if (this.item.media_item) {
+			return this.item.media_item;
+		}
+
+		return this.item;
 	}
 }
