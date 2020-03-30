@@ -9,14 +9,9 @@ import { Geo } from '../../../../../_common/geo/geo.service';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
 import { User } from '../../../../../_common/user/user.model';
-import AppFinancialsManagedAccountAddress from './address.vue';
-import AppFinancialsManagedAccountBusiness from './business.vue';
-import AppFinancialsManagedAccountContact from './contact.vue';
-import AppFinancialsManagedAccountDob from './dob.vue';
-import AppFinancialsManagedAccountDocumentTS from './document';
-import AppFinancialsManagedAccountDocument from './document.vue';
-import AppFinancialsManagedAccountName from './name.vue';
-import AppFinancialsManagedAccountSsn from './ssn.vue';
+import AppFinancialsManagedAccountCompanyDetails from './company-details.vue';
+import AppFinancialsManagedAccountPersonTS from './person';
+import AppFinancialsManagedAccountPerson from './person.vue';
 
 interface FormModel {
 	// Step 1 params.
@@ -45,19 +40,19 @@ type PayloadStripeData = {
 
 	required: StripeMeta;
 	current: StripeData.accounts.IAccount;
+	persons: { [id: string]: StripeData.accounts.IPerson } | null;
 };
+
+type PersonRelationship = keyof NonNullable<StripeData.accounts.IPerson['relationship']>;
+
+const PERSON_FIELD_REGEX = new RegExp(`^person-(.*?)\\.`);
 
 @Component({
 	components: {
 		AppLoading,
 		AppExpand,
-		AppFinancialsManagedAccountName,
-		AppFinancialsManagedAccountDob,
-		AppFinancialsManagedAccountAddress,
-		AppFinancialsManagedAccountContact,
-		AppFinancialsManagedAccountSsn,
-		AppFinancialsManagedAccountDocument,
-		AppFinancialsManagedAccountBusiness,
+		AppFinancialsManagedAccountPerson,
+		AppFinancialsManagedAccountCompanyDetails,
 	},
 })
 export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
@@ -80,6 +75,11 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 	readonly StripeFileUploadUrl = 'https://uploads.stripe.com/v1/files';
 	readonly Geo = Geo;
 	readonly currency = currency;
+
+	$refs!: {
+		individual: AppFinancialsManagedAccountPersonTS;
+		representative: AppFinancialsManagedAccountPersonTS;
+	};
 
 	async onInit() {
 		if (!this.scriptLoaded) {
@@ -108,8 +108,6 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 		this.stripe = stripePayload;
 		this.stripeMeta = stripePayload.required;
 
-		console.log(this.stripe);
-
 		// TODO(Persons API)
 		// this.setField('additional_owners_count', 0);
 		// if (
@@ -136,17 +134,49 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 			return false;
 		}
 
-		return (
-			this.stripeMeta.minimum.indexOf(field) !== -1 ||
-			// We special case id_number.
-			// We need it for taxes, so we collect it if it's just in "additional".
-			(field === `${this.account.type}.id_number` &&
-				this.stripeMeta.additional.indexOf(field) !== -1) ||
-			(this.stripe.current &&
-				this.stripe.current.requirements &&
-				this.stripe.current.requirements.past_due &&
-				this.stripe.current.requirements.past_due.indexOf(field) !== -1)
-		);
+		// We special case id_number.
+		// We need it for taxes, so we collect it even if it's just in "additional".
+		const isTaxIdField = field === `individual.id_number` || field === `company.tax_id`;
+		if (isTaxIdField && this.stripeMeta.additional.indexOf(field) !== -1) {
+			return true;
+		}
+
+		// // If the field is a person field, it is using a different name prefix from
+		// // the one specified in the requirements, e.g. relationship.owner will become person-STRIPE_ID in the component's namePrefix prop.
+		// // In order to correlate it to the required field we need to map it back.
+		// const person = this.getPersonFromField(field);
+		// if (person) {
+		// 	// Companies may only have one representative,
+		// 	// so an account that is marked as a representative has to be mapped
+		// 	// exactly to relationship.representative.
+		// 	// Other people then are owners by default since we don't gather
+		// 	// info for any other company people.
+		// 	const replacement = person.relationship?.representative
+		// 		? 'relationship.representative'
+		// 		: 'relationship.owner';
+
+		// 	field = replacement + field.substr(this.getPersonPrefix(person).length);
+		// }
+
+		// A field is considered required if it, or its parent field is required. For example,
+		// if verification.document is specified, it means verification.document.front is required too.
+		//
+		// A field may be required as part of the minimum requirements from the country specs,
+		// or from the specific account resource's requirements field.
+		const fieldParts = field.split('.');
+		do {
+			field = fieldParts.join('.');
+			if (this.stripeMeta.minimum.indexOf(field) !== -1) {
+				return true;
+			}
+
+			if (this.stripe.current?.requirements?.past_due?.indexOf(field) !== -1) {
+				return true;
+			}
+			fieldParts.pop();
+		} while (fieldParts.length);
+
+		return false;
 	}
 
 	getStripeField(fieldPath: string) {
@@ -173,6 +203,42 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 
 		return obj[field];
 	}
+
+	get representative() {
+		return this.getByRelationship('representative');
+	}
+
+	get owner() {
+		return this.getByRelationship('owner');
+	}
+
+	getByRelationship(relationship: PersonRelationship) {
+		if (!this.stripe.persons) {
+			return null;
+		}
+
+		for (let personId in this.stripe.persons) {
+			const person = this.stripe.persons[personId];
+			if (person.relationship?.[relationship]) {
+				return person;
+			}
+		}
+
+		return null;
+	}
+
+	// getPersonPrefix(person: StripeData.accounts.IPerson) {
+	// 	return `person-${person.id}`;
+	// }
+
+	// getPersonFromField(field: string) {
+	// 	const match = PERSON_FIELD_REGEX.exec(field);
+	// 	if (!match) {
+	// 		return null;
+	// 	}
+
+	// 	return this.stripe.persons?.[match[1]] || null;
+	// }
 
 	// This is only needed after the initial submission in some instances.
 	get requiresVerificationDocument() {
@@ -275,40 +341,38 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 
 		let id;
 		try {
-			const documentUploadRequests = [];
+			if (this.account.type === 'individual') {
+				const [
+					idDocumentUploadId,
+					additionalDocumentUploadId,
+				] = await this.$refs.individual.uploadDocuments(this.stripePublishableKey);
 
-			if (this.formModel[`${this.account.type}.verification.status`] !== 'verified') {
-				if (this.formModel[`${this.account.type}.verification.document.front`]) {
-					const idDocument: AppFinancialsManagedAccountDocumentTS = this.$refs[
-						'id-document'
-					] as any;
-
-					documentUploadRequests.push(
-						idDocument.uploadDocument(this.stripePublishableKey).then(_response => {
-							data[`${this.account.type}.verification.document.front`] = _response.id;
-						})
-					);
+				if (idDocumentUploadId) {
+					data['individual.verification.document.front'] = idDocumentUploadId;
 				}
 
-				if (this.formModel[`${this.account.type}.verification.additional_document.front`]) {
-					const additionalDocument: AppFinancialsManagedAccountDocumentTS = this.$refs[
-						'additional-document'
-					] as any;
-
-					documentUploadRequests.push(
-						additionalDocument
-							.uploadDocument(this.stripePublishableKey)
-							.then(_response => {
-								data[
-									`${this.account.type}.verification.additional_document.front`
-								] = _response.id;
-							})
-					);
+				if (additionalDocumentUploadId) {
+					data[
+						'individual.verification.additional_document.front'
+					] = additionalDocumentUploadId;
 				}
-			}
+			} else if (this.account.type === 'company') {
+				const [
+					idDocumentUploadId,
+					additionalDocumentUploadId,
+				] = await this.$refs.representative.uploadDocuments(this.stripePublishableKey);
 
-			if (documentUploadRequests.length > 0) {
-				await Promise.all(documentUploadRequests);
+				if (idDocumentUploadId) {
+					data[
+						'relationship.representative.verification.document.front'
+					] = idDocumentUploadId;
+				}
+
+				if (additionalDocumentUploadId) {
+					data[
+						'relationship.representative.verification.additional_document.front'
+					] = additionalDocumentUploadId;
+				}
 			}
 
 			console.log(data);

@@ -21,11 +21,11 @@
 			</app-form-group>
 
 			<!--
-			We only ask for their country if this is an additional owner.
-			Additional owners can live in any country.
-		-->
+				We only ask for their country if this is an additional owner.
+				Additional owners can live in any country.
+			-->
 			<app-form-group
-				v-if="forceRequired"
+				v-if="parent.requiresField(namePrefix + '.country') || forceRequired"
 				:name="`${namePrefix}.country`"
 				:label="$gettext('Country')"
 			>
@@ -85,7 +85,7 @@
 						{{ Geo.getCountryName(parent.getStripeField(namePrefix + '.country')) }}
 					</div>
 					<div v-if="!parent.getStripeField(namePrefix + '.country')">
-						{{ Geo.getCountryName(account.country_code) }}
+						{{ Geo.getCountryName(parent.account.country_code) }}
 					</div>
 				</div>
 			</div>

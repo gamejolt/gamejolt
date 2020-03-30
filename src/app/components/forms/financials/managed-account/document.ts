@@ -37,8 +37,11 @@ export default class AppFinancialsManagedAccountDocument extends Vue {
 		) as FormFinancialsManagedAccountTS;
 	}
 
+	/**
+	 * Returns the stripe upload id.
+	 */
 	uploadDocument(stripePublishableKey: string) {
-		return new Promise<any>((resolve, reject) => {
+		return new Promise<string>((resolve, reject) => {
 			const formData = new FormData();
 			formData.append('purpose', 'identity_document');
 
@@ -52,13 +55,26 @@ export default class AppFinancialsManagedAccountDocument extends Vue {
 			xhr.send(formData);
 
 			xhr.onreadystatechange = function() {
-				if (xhr.readyState === 4) {
-					console.log(xhr.responseText);
-					if (xhr.status === 200) {
-						resolve(JSON.parse(xhr.responseText));
-					} else {
-						reject(JSON.parse(xhr.responseText).error);
+				if (xhr.readyState !== 4) {
+					return;
+				}
+
+				try {
+					const data = JSON.parse(xhr.responseText);
+
+					if (xhr.status !== 200) {
+						throw new Error(data.error || 'Unknown error');
 					}
+
+					if (!data.id) {
+						throw new Error(
+							`Unexpected response (missing id field): ${xhr.responseText}`
+						);
+					}
+
+					resolve(data.id);
+				} catch (e) {
+					reject(e);
 				}
 			};
 		});

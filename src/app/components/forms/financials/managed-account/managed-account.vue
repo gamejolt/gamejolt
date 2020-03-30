@@ -141,102 +141,52 @@
 				<!--<pre>{{ formModel | json }}</pre>-->
 
 				<!--
-					Company Info
+					Individual Account Setup
 				-->
-				<div v-if="account.type === 'company'">
+				<div v-if="account.type === 'individual'">
+					<h4><translate>Your Details</translate></h4>
+
+					<div class="alert" v-if="account.status === 'unverified'">
+						<p><translate>Please fill in your personal information.</translate></p>
+					</div>
+
+					<app-financials-managed-account-person
+						ref="individual"
+						namePrefix="individual"
+						:country-code="account.country_code"
+					/>
+				</div>
+
+				<!--
+					Company Account Setup
+				-->
+				<div v-else-if="account.type === 'company'">
 					<h4><translate>Company Details</translate></h4>
 
-					<app-financials-managed-account-business />
+					<app-financials-managed-account-company-details />
 
-					<!--
-						Business Address
-						It uses the legal entity address.
-					-->
-					<app-financials-managed-account-address :namePrefix="`${account.type}.address`" />
+					<h4><translate>Representative Details</translate></h4>
 
-					<!--
-						Contact info (email and phone)
-					-->
-					<app-financials-managed-account-contact :namePrefix="account.type" />
-				</div>
+					<div class="alert" v-if="account.status === 'unverified'">
+						<p>
+							<translate>
+								We are required to collection information for a representative of your company.
+							</translate>
+						</p>
+					</div>
 
-				<!--
-					Individual/Company Representative
-				-->
-				<h4>
-					<template v-if="account.type === 'individual'">
-						<translate>Your Details</translate>
-					</template>
-					<template v-else-if="account.type === 'company'">
-						<translate>Representative Details</translate>
-					</template>
-				</h4>
-
-				<div class="alert" v-if="account.status === 'unverified'">
-					<p v-if="account.type === 'individual'">
-						<translate>Please fill in your personal information.</translate>
-					</p>
-					<p v-else-if="account.type === 'company'">
-						<translate>
-							We are required to collection information for a representative of your company.
-						</translate>
-					</p>
-				</div>
-
-				<template v-if="account.type === 'individual'">
-					<!--
-						Personal Name
-					-->
-					<app-financials-managed-account-name :namePrefix="account.type" />
-
-					<!--
-						Personal DOB
-					-->
-					<app-financials-managed-account-dob :namePrefix="`${account.type}.dob`" />
-
-					<!--
-						Personal Address
-						Some times required for individual accounts in GB too.
-					-->
-					<app-financials-managed-account-address :namePrefix="`${account.type}.address`" />
-
-					<!--
-						Contact info (email and phone)
-					-->
-					<app-financials-managed-account-contact :namePrefix="account.type" />
-
-					<!--
-						SSN
-					-->
-					<app-financials-managed-account-ssn
-						:namePrefix="account.type"
-						:countryCode="account.country_code"
+					<app-financials-managed-account-person
+						ref="representative"
+						v-if="representative"
+						:namePrefix="representative.id"
 					/>
-				</template>
+				</div>
 
 				<!--
-					Personal ID Verification
-				-->
-				<app-financials-managed-account-document
-					ref="id-document"
-					type="id"
-					:namePrefix="`${account.type}.verification`"
-				/>
-
-				<!--
-					Additional Verification Document
-					A utility bill that proves the user's address.
-				-->
-				<app-financials-managed-account-document
-					ref="additional-document"
-					type="additional"
-					:namePrefix="`${account.type}.verification`"
-				/>
-
-				<!--
+				<!- -
 					Additional Owners (for Europe)
 					Anyone that owns at least 25% of the company needs to be listed.
-				-->
+				- ->
 				<div
 					v-if="
 						(requiresField('legal_entity.additional_owners') && account.status === 'unverified') ||
@@ -258,12 +208,12 @@
 						</p>
 					</div>
 
-					<!-- Funny syntax for zero based v-for iteration -->
+					<!- - Funny syntax for zero based v-for iteration - ->
 					<div v-for="(_, i) in formModel.additional_owners_count" :key="i">
-						<!--
+						<!- -
 							We only use this when gathering info for the additional owner.
 							It's pointless after they've filled out all the owners.
-						-->
+						- ->
 						<h5 class="clearfix" v-if="account.status === 'unverified'">
 							<div class="pull-right">
 								<app-button
@@ -283,9 +233,9 @@
 							</span>
 						</h5>
 
-						<!--
+						<!- -
 							These are the only fields we need to collect according to Stripe.
-						-->
+						- ->
 						<app-financials-managed-account-name
 							:namePrefix="`legal_entity.additional_owners.${i}`"
 							:forceRequired="true"
@@ -312,7 +262,7 @@
 						/>
 					</div>
 
-					<!-- Add additional owner -->
+					<!- - Add additional owner - ->
 					<div class="clearfix">
 						<div class="pull-right" v-if="formModel.additional_owners_count <= 3">
 							<app-button @click="addAdditionalOwner()">
@@ -323,6 +273,7 @@
 
 					<hr />
 				</div>
+				-->
 
 				<!--<div v-if="false">
 					<legend>Bank Account</legend>

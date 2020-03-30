@@ -1,9 +1,12 @@
 <template>
 	<div>
-		<div class="row" v-if="!parent.getStripeField(namePrefix + '.email')">
+		<div class="row">
 			<div
 				class="col-sm-6"
-				v-if="parent.requiresField(namePrefix + '.email') || forceRequired"
+				v-if="
+					!parent.getStripeField(namePrefix + '.email') &&
+						(parent.requiresField(namePrefix + '.email') || forceRequired)
+				"
 			>
 				<app-form-group :name="`${namePrefix}.email`" :label="$gettext('Email')">
 					<app-form-control type="email" />
@@ -12,7 +15,10 @@
 			</div>
 			<div
 				class="col-sm-6"
-				v-if="parent.requiresField(namePrefix + '.phone') || forceRequired"
+				v-if="
+					!parent.getStripeField(namePrefix + '.phone') &&
+						(parent.requiresField(namePrefix + '.phone') || forceRequired)
+				"
 			>
 				<app-form-group :name="`${namePrefix}.phone`" :label="$gettext('Phone')">
 					<app-form-control />
@@ -21,14 +27,23 @@
 			</div>
 		</div>
 
-		<div class="form-horizontal" v-if="parent.getStripeField(namePrefix + '.email')">
+		<div
+			class="form-horizontal"
+			v-if="
+				parent.getStripeField(namePrefix + '.email') || parent.getStripeField(namePrefix + '.phone')
+			"
+		>
 			<div class="form-group">
 				<label class="control-label col-sm-4">
 					<translate>Contact</translate>
 				</label>
 				<div class="form-static col-sm-8">
-					<div>{{ parent.getStripeField(namePrefix + '.email') }}</div>
-					<div>{{ parent.getStripeField(namePrefix + '.phone') }}</div>
+					<div v-if="parent.getStripeField(namePrefix + '.email')">
+						{{ parent.getStripeField(namePrefix + '.email') }}
+					</div>
+					<div v-if="parent.getStripeField(namePrefix + '.phone')">
+						{{ parent.getStripeField(namePrefix + '.phone') }}
+					</div>
 				</div>
 			</div>
 		</div>
