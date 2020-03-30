@@ -6,7 +6,7 @@
 		}"
 	>
 		<div class="-inner">
-			<app-img-backdrop :item="mediaItem" radius="8px">
+			<app-media-item-backdrop :media-item="mediaItem" radius="lg">
 				<app-jolticon class="-icon" icon="game" />
 
 				<div class="-media" v-if="mediaItem && !hideMedia">
@@ -26,7 +26,7 @@
 						:should-play="shouldPlayVideo"
 					/>
 				</div>
-			</app-img-backdrop>
+			</app-media-item-backdrop>
 		</div>
 	</div>
 </template>

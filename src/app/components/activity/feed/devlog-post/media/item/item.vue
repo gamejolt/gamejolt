@@ -11,7 +11,11 @@
 			@change="onDimensionsChange"
 		>
 			<app-event-item-media-tags :gif="mediaItem.is_animated" />
-			<app-img-backdrop :item="mediaItem" :block="isFilled" radius="8px">
+			<app-media-item-backdrop
+				class="-backdrop"
+				:media-item="mediaItem"
+				:radius="isFilled ? null : 'lg'"
+			>
 				<app-img-responsive
 					v-if="!isPostHydrated || !mediaItem.is_animated"
 					class="-img"
@@ -29,7 +33,7 @@
 					:mp4="mediaItem.mediaserver_url_mp4"
 					show-loading
 				/>
-			</app-img-backdrop>
+			</app-media-item-backdrop>
 		</app-responsive-dimensions>
 	</div>
 </template>
@@ -46,11 +50,12 @@
 	width: 100%
 	max-width: 100% !important
 
+.-backdrop
+	change-bg('bg-offset')
+
 // The "item" gets the correct dimensions applied, so we want to stretch
 // out any image or video in the item to be full width/height.
 .-img, .-video
-	rounded-corners-lg()
-	change-bg('bg-offset')
 	display: block
 	width: inherit
 	margin-left: auto

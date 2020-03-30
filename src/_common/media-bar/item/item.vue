@@ -2,7 +2,7 @@
 	<div class="media-bar-item" :style="{ width, height }">
 		<a class="-wrapper">
 			<slot />
-			<app-img-backdrop :item="item.media_item" radius="8px">
+			<app-media-item-backdrop :media-item="mediaItem" :style="{ height }" radius="lg">
 				<app-img-responsive
 					v-if="item.media_type !== 'sketchfab'"
 					:src="item.img_thumbnail"
@@ -11,7 +11,7 @@
 				/>
 
 				<img v-else class="img-responsive" :src="item.img_thumbnail" alt="" />
-			</app-img-backdrop>
+			</app-media-item-backdrop>
 			<span class="-play" v-if="item.media_type === 'video'">
 				<app-jolticon icon="play" />
 			</span>

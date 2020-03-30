@@ -1,15 +1,15 @@
 <template>
-	<div class="media-item-cover-container" :class="{ '-blur': blur }" :style="{ height }">
+	<div class="media-item-cover-container" :class="{ '-blur': blur }">
 		<section class="section media-item-cover" :class="{ loaded: isLoaded }">
 			<div class="media-item-cover-img">
-				<app-img-backdrop :item="mediaItem" :style="{ height }" block>
+				<app-media-item-backdrop class="-backdrop" :media-item="mediaItem" :style="{ height }">
 					<app-img-responsive
 						v-show="isLoaded"
 						:src="mediaItem.mediaserver_url"
 						@imgloadchange="onLoadChange"
 						alt=""
 					/>
-				</app-img-backdrop>
+				</app-media-item-backdrop>
 			</div>
 
 			<div class="media-item-cover-content">
@@ -22,6 +22,10 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
+
+.-backdrop
+	display: flex
+	align-items: center
 
 .media-item-cover-container
 	change-bg('gray')
@@ -48,8 +52,8 @@
 			margin-left: -20%
 
 		img
+			position: relative
 			width: 100%
-			height: 100%
 
 .-blur
 	img

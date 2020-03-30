@@ -7,7 +7,7 @@
 			}"
 		>
 			<div class="-community-container fill-darkest">
-				<app-img-backdrop :item="community.header" radius="8px">
+				<app-media-item-backdrop class="-backdrop" :media-item="community.header" radius="lg">
 					<div
 						v-if="community.header"
 						class="-header"
@@ -17,7 +17,7 @@
 					>
 						<div class="-header-gradient" />
 					</div>
-				</app-img-backdrop>
+				</app-media-item-backdrop>
 
 				<div class="-content">
 					<div class="-thumbnail">
