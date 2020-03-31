@@ -29,7 +29,7 @@ import { InitPayload } from '../stickers';
 export default class RouteDashStickersCollect extends BaseRouteComponent {
 	readonly Screen = Screen;
 
-	value = 0;
+	balance = 0;
 	stickerCost = 10;
 	purchasedSticker: Sticker | null = null;
 
@@ -42,11 +42,11 @@ export default class RouteDashStickersCollect extends BaseRouteComponent {
 	}
 
 	get canReveal() {
-		return this.value >= this.stickerCost;
+		return this.balance >= this.stickerCost;
 	}
 
 	routeResolved($payload: InitPayload) {
-		this.value = $payload.value;
+		this.balance = $payload.balance;
 		this.stickerCost = $payload.stickerCost;
 	}
 
@@ -61,7 +61,7 @@ export default class RouteDashStickersCollect extends BaseRouteComponent {
 			new Promise(async resolve => {
 				try {
 					const payload = await Api.sendRequest(
-						'/web/stickers/buy-sticker',
+						'/web/stickers/acquire-sticker',
 						{},
 						{ detach: true }
 					);
@@ -99,6 +99,6 @@ export default class RouteDashStickersCollect extends BaseRouteComponent {
 		this.showCollectControls = false;
 		this.purchasedSticker = null;
 
-		this.value -= this.stickerCost;
+		this.balance -= this.stickerCost;
 	}
 }

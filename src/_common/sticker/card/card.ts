@@ -9,7 +9,7 @@ export default class AppStickerCard extends Vue {
 	@Prop(propRequired(Sticker)) sticker!: Sticker;
 	@Prop(propOptional(Number, 0)) count!: number;
 
-	get stickerRarityLabel() {
+	get rarityLabel() {
 		switch (this.sticker.rarity) {
 			case 0:
 				return this.$gettext(`Common`);

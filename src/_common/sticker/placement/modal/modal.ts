@@ -119,7 +119,7 @@ export default class AppStickerPlacementModal extends BaseModal {
 
 	async onClickPlace() {
 		const result = await Api.sendRequest(
-			'/web/stickers/add',
+			'/web/stickers/place',
 			{
 				stickerId: this.sticker.id,
 				positionX: this.placement?.position_x,

@@ -24,7 +24,7 @@ export default class RouteDashStickersOverview extends BaseRouteComponent {
 	readonly Screen = Screen;
 	readonly number = number;
 
-	value = 0;
+	balance = 0;
 	stickerCollection: StickerCount[] = [];
 	stickerCost = 10;
 
@@ -37,31 +37,26 @@ export default class RouteDashStickersOverview extends BaseRouteComponent {
 	}
 
 	get stickerProgress() {
-		let progress = this.value;
-		while (progress >= this.stickerCost) {
-			progress -= this.stickerCost;
-		}
+		let progress = this.balance % this.stickerCost;
 		return (progress / this.stickerCost) * 100;
 	}
 
 	get stickersBuyableAmount() {
-		return Math.floor(this.value / this.stickerCost);
+		return Math.floor(this.balance / this.stickerCost);
 	}
 
 	routeResolved($payload: InitPayload) {
-		this._initData($payload);
-	}
-
-	private _initData($payload: InitPayload) {
-		this.value = $payload.value;
+		this.balance = $payload.balance;
 		this.stickerCost = $payload.stickerCost;
 
 		this.stickerCollection = [];
 		for (const stickerCountPayload of $payload.stickerCounts) {
-			const stickerData = $payload.stickers.find(i => i.id == stickerCountPayload.sticker_id);
+			const stickerData = $payload.stickers.find(
+				i => i.id === stickerCountPayload.sticker_id
+			);
 			const stickerCount = {
-				count: parseInt(stickerCountPayload.count, 10),
-				sticker_id: parseInt(stickerCountPayload.sticker_id, 10),
+				count: stickerCountPayload.count,
+				sticker_id: stickerCountPayload.sticker_id,
 				sticker: new Sticker(stickerData),
 			} as StickerCount;
 			this.stickerCollection.push(stickerCount);

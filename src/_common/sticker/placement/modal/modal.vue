@@ -19,6 +19,7 @@
 
 			<div class="-mount">
 				<div class="-mount-inner" ref="mount"></div>
+
 				<v-touch @panstart="panStart" @panmove="pan" @panend="panEnd">
 					<app-sticker
 						ref="sticker"
@@ -58,6 +59,7 @@
 
 .-mount-inner
 	overflow: hidden
+	pointer-events: none
 
 	& >>>
 		// Make it obvious which one is the new sticker

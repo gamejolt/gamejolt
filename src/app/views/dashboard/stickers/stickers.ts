@@ -5,15 +5,15 @@ import { Sticker } from '../../../../_common/sticker/sticker.model';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 
 export type InitPayload = {
-	value: number;
+	balance: number;
 	stickerCounts: StickerCountPayload[];
 	stickers: any[];
 	stickerCost: number;
 };
 
 type StickerCountPayload = {
-	sticker_id: string;
-	count: string;
+	sticker_id: number;
+	count: number;
 };
 
 export type StickerCount = {

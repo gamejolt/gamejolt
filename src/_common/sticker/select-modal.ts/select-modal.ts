@@ -7,15 +7,6 @@ import { BaseModal } from '../../modal/base';
 import { Model } from '../../model/model.service';
 import { Sticker } from '../sticker.model';
 
-type StickersResponse = {
-	stickers: object[];
-	stickerCounts: {
-		count: number;
-		sticker_id: number;
-	}[];
-	canPlace: boolean;
-};
-
 type StickerCount = {
 	count: number;
 	sticker: Sticker;
@@ -41,21 +32,22 @@ export default class AppStickerSelectModal extends BaseModal {
 	}
 
 	async mounted() {
-		const result = (await Api.sendRequest(
-			'/web/stickers/get-stickers/Fireside_Post/' + this.model.id,
-			undefined,
-			{
-				detach: true,
-			}
-		)) as StickersResponse;
+		const [collectionPayload, canPlacePayload] = await Promise.all(
+			[
+				'/web/stickers/collection',
+				`/web/stickers/can-place/Fireside_Post/${this.model.id}`,
+			].map(url => Api.sendRequest(url, undefined, { detach: true }))
+		);
 
-		for (const stickerData of result.stickers) {
+		for (const stickerData of collectionPayload.stickers) {
 			const sticker = new Sticker(stickerData);
-			const count = result.stickerCounts.find(i => i.sticker_id == sticker.id)!.count;
+			const count = collectionPayload.stickerCounts.find(
+				(i: any) => i.sticker_id === sticker.id
+			)!.count;
 			this.stickerCounts.push({ count, sticker });
 		}
 
-		this.canPlace = result.canPlace;
+		this.canPlace = canPlacePayload.canPlace;
 
 		this.loading = false;
 	}

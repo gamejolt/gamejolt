@@ -6,7 +6,7 @@ import { Sticker } from '../../sticker.model';
 export class StickerPlacementModal {
 	static async show(model: Model, sticker: Sticker) {
 		return await Modal.show<void>({
-			modalId: 'SelectSticker',
+			modalId: 'StickerPlacement',
 			component: () =>
 				asyncComponentLoader(
 					import(/* webpackChunkName: "StickerPlacementModal" */ './modal.vue')

@@ -5,11 +5,11 @@
 			<div
 				class="-name"
 				:class="{
-					'-sticker-rarity-uncommon': sticker.rarity === 1,
-					'-sticker-rarity-rare': sticker.rarity === 2,
-					'-sticker-rarity-epic': sticker.rarity === 3,
+					'-rarity-uncommon': sticker.rarity === 1,
+					'-rarity-rare': sticker.rarity === 2,
+					'-rarity-epic': sticker.rarity === 3,
 				}"
-				:title="stickerRarityLabel"
+				:title="rarityLabel"
 			>
 				{{ sticker.name }}
 			</div>
@@ -47,7 +47,7 @@
 .-name
 	font-weight: bold
 
-.-sticker-rarity
+.-rarity
 	&-uncommon
 		color: #1bb804
 	&-rare
