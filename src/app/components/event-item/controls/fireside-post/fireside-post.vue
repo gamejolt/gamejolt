@@ -34,7 +34,7 @@
 
 				<template v-if="shouldShowStickersButton">
 					<app-button
-						icon="bolt-unfilled"
+						icon="sticker"
 						circle
 						trans
 						@click="placeSticker()"
