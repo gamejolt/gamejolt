@@ -11,8 +11,6 @@ import FormFinancialsManagedAccount from './managed-account.vue';
 	},
 })
 export default class AppFinancialsManagedAccountContact extends Vue {
-	@Prop(Boolean) forceRequired!: boolean;
-
 	@Prop(String) namePrefix!: string;
 
 	parent: FormFinancialsManagedAccountTS = null as any;

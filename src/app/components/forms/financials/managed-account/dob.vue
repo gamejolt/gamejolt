@@ -5,8 +5,7 @@
 				!parent.getStripeField(namePrefix + '.year') &&
 					(parent.requiresField(namePrefix + '.year') ||
 						parent.requiresField(namePrefix + '.month') ||
-						parent.requiresField(namePrefix + '.day') ||
-						forceRequired)
+						parent.requiresField(namePrefix + '.day'))
 			"
 		>
 			<div>
@@ -14,7 +13,7 @@
 			</div>
 
 			<div class="row">
-				<div class="col-sm-4" v-if="parent.requiresField(namePrefix + '.month') || forceRequired">
+				<div class="col-sm-4" v-if="parent.requiresField(namePrefix + '.month')">
 					<app-form-group
 						:name="`${namePrefix}.month`"
 						:label="$gettext('Month')"
@@ -39,7 +38,7 @@
 						<app-form-control-errors />
 					</app-form-group>
 				</div>
-				<div class="col-sm-4" v-if="parent.requiresField(namePrefix + '.day') || forceRequired">
+				<div class="col-sm-4" v-if="parent.requiresField(namePrefix + '.day')">
 					<app-form-group :name="`${namePrefix}.day`" :label="$gettext('Day')" :hideLabel="true">
 						<app-form-control-select>
 							<option value=""><translate>Day</translate></option>
@@ -51,7 +50,7 @@
 						<app-form-control-errors />
 					</app-form-group>
 				</div>
-				<div class="col-sm-4" v-if="parent.requiresField(namePrefix + '.year') || forceRequired">
+				<div class="col-sm-4" v-if="parent.requiresField(namePrefix + '.year')">
 					<app-form-group :name="`${namePrefix}.year`" :label="$gettext('Year')" :hideLabel="true">
 						<app-form-control-select>
 							<option value=""><translate>Year</translate></option>

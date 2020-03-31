@@ -1,16 +1,13 @@
 <template>
 	<div>
 		<div class="row" v-if="!parent.getStripeField(namePrefix + '.first_name')">
-			<div
-				class="col-sm-6"
-				v-if="parent.requiresField(namePrefix + '.first_name') || forceRequired"
-			>
+			<div class="col-sm-6" v-if="parent.requiresField(namePrefix + '.first_name')">
 				<app-form-group :name="`${namePrefix}.first_name`" :label="$gettext('First Name')">
 					<app-form-control />
 					<app-form-control-errors />
 				</app-form-group>
 			</div>
-			<div class="col-sm-6" v-if="parent.requiresField(namePrefix + '.last_name') || forceRequired">
+			<div class="col-sm-6" v-if="parent.requiresField(namePrefix + '.last_name')">
 				<app-form-group :name="`${namePrefix}.last_name`" :label="$gettext('Last Name')">
 					<app-form-control />
 					<app-form-control-errors />
@@ -21,7 +18,7 @@
 		<div
 			v-if="
 				!parent.getStripeField(namePrefix + '.relationship.title') &&
-					(parent.requiresField(namePrefix + '.relationship.title') || forceRequired)
+					parent.requiresField(namePrefix + '.relationship.title')
 			"
 		>
 			<app-form-group :name="`${namePrefix}.relationship.title`" :label="$gettext('Job Title')">

@@ -5,7 +5,7 @@
 				class="col-sm-6"
 				v-if="
 					!parent.getStripeField(namePrefix + '.email') &&
-						(parent.requiresField(namePrefix + '.email') || forceRequired)
+						parent.requiresField(namePrefix + '.email')
 				"
 			>
 				<app-form-group :name="`${namePrefix}.email`" :label="$gettext('Email')">
@@ -17,7 +17,7 @@
 				class="col-sm-6"
 				v-if="
 					!parent.getStripeField(namePrefix + '.phone') &&
-						(parent.requiresField(namePrefix + '.phone') || forceRequired)
+						parent.requiresField(namePrefix + '.phone')
 				"
 			>
 				<app-form-group
