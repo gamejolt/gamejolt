@@ -9,6 +9,7 @@ import { BaseModal } from '../../../modal/base';
 import { Model } from '../../../model/model.service';
 import { Sticker } from '../../sticker.model';
 import AppSticker from '../../sticker.vue';
+import AppStickerTarget from '../../target/target.vue';
 import { StickerPlacement } from '../placement.model';
 
 if (!GJ_IS_SSR) {
@@ -20,6 +21,7 @@ if (!GJ_IS_SSR) {
 	components: {
 		AppSticker,
 		AppContentViewer,
+		AppStickerTarget,
 	},
 })
 export default class AppStickerPlacementModal extends BaseModal {

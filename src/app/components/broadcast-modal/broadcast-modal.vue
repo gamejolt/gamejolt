@@ -86,11 +86,7 @@
 						<app-time-ago v-if="post.isActive" :date="post.published_on" />
 					</div>
 
-					<app-sticker-target
-						:stickers="post.stickers"
-						resource="Fireside_Post"
-						:resource-id="post.id"
-					>
+					<app-sticker-target :stickers="post.stickers">
 						<app-content-viewer :source="post.lead_content" />
 					</app-sticker-target>
 

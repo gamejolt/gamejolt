@@ -119,11 +119,7 @@
 					@content-bootstrapped="onContentBootstrapped"
 				/>
 
-				<app-sticker-target
-					:stickers="post.stickers"
-					resource="Fireside_Post"
-					:resource-id="post.id"
-				>
+				<app-sticker-target :stickers="post.stickers">
 					<!--
 						This shouldn't ever really show a collapser. It's for the jokers that think it would
 						be fun to make a post with a bunch of new lines.
