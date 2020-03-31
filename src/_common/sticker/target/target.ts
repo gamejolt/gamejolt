@@ -14,4 +14,9 @@ export default class AppStickerTarget extends Vue {
 	@Prop(propRequired(Array)) stickers!: StickerPlacement[];
 	@Prop(propRequired(String)) resource!: string;
 	@Prop(propRequired(Number)) resourceId!: number;
+
+	// Sort so that the newer stickers go on top of the older ones.
+	get sorted() {
+		return this.stickers.sort((a, b) => a.id - b.id);
+	}
 }
