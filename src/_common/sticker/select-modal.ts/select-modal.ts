@@ -7,10 +7,10 @@ import { BaseModal } from '../../modal/base';
 import { Model } from '../../model/model.service';
 import { Sticker } from '../sticker.model';
 
-type StickerCount = {
+interface StickerCount {
 	count: number;
 	sticker: Sticker;
-};
+}
 
 @Component({
 	components: {

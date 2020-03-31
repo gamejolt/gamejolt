@@ -64,7 +64,7 @@
 	flex-wrap: wrap
 
 .-sticker
-	margin-bottom: 10px
+	margin-bottom: 12px
 	margin-right: 8px
 
 	& > img

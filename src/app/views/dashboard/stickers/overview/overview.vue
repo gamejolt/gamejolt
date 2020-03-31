@@ -61,7 +61,7 @@
 	flex-wrap: wrap
 
 	& > div
-		margin: 10px
+		margin: 8px
 </style>
 
 <script lang="ts" src="./overview"></script>

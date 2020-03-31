@@ -143,7 +143,6 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 		if (sticker) {
 			const post = await StickerPlacementModal.show(this.post, sticker);
 			Object.assign(this.post, post);
-			this.emitEdit();
 		}
 	}
 }

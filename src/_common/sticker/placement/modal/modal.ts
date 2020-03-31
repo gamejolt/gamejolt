@@ -44,8 +44,13 @@ export default class AppStickerPlacementModal extends BaseModal {
 		const targetElem = document.getElementById(targetId);
 
 		this.placement = new StickerPlacement({
+			// Randomly place the sticker within the rectangle, with a padding of 20% on each side
+			// --------------
+			// |  |      |  |
+			// 0.2  0.6   0.2
 			position_x: 0.2 + 0.6 * Math.random(),
 			position_y: 0.2 + 0.6 * Math.random(),
+			// 0 is rotated left, 1 is rotated right, 0.5 is no rotation
 			rotation: 0.5,
 			sticker: this.sticker,
 		});
@@ -135,7 +140,7 @@ export default class AppStickerPlacementModal extends BaseModal {
 			const post = new FiresidePost(result.post);
 			this.modal.resolve(post);
 		} else {
-			Growls.error('Failed to place sticker.');
+			Growls.error(this.$gettext(`Failed to place sticker.`));
 			this.modal.dismiss();
 		}
 	}

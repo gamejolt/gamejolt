@@ -1,9 +1,11 @@
 <template>
 	<div>
 		<app-page-header :cover-media-item="coverMediaItem" cover-max-height="250">
-			<h1 class="section-header sans-margin-bottom">
-				<translate>Your Stickers</translate>
-			</h1>
+			<router-link :to="{ name: 'dash.stickers' }">
+				<h1 class="section-header sans-margin-bottom">
+					<translate>Your Stickers</translate>
+				</h1>
+			</router-link>
 			<div class="text-muted small">
 				<p>
 					<translate>

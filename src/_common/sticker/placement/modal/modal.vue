@@ -13,7 +13,8 @@
 		<div class="modal-body">
 			<div class="help-block">
 				<translate
-					>Position the sticker in the outlined target area below, then press "Place".</translate
+					>Position the sticker in the outlined target area below, then press
+					"Place".</translate
 				>
 			</div>
 
@@ -47,7 +48,10 @@
 @require '~styles-lib/mixins'
 
 .-mount
-	margin: 10px
+	margin-top: 32px
+	margin-bottom: 16px
+	margin-left: 8px
+	margin-right: 8px
 	border-width: 4px
 	border-style: dashed
 	rounded-corners-lg()
@@ -58,13 +62,8 @@
 	animation-iteration-count: infinite
 
 .-mount-inner
-	overflow: hidden
 	pointer-events: none
-
-	& >>>
-		// Make it obvious which one is the new sticker
-		.-sticker
-			opacity: 0.75
+	filter: grayscale(0.5) brightness(0.75)
 
 @keyframes border-color-animate
 	0%

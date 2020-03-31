@@ -2,24 +2,6 @@
 	<div>
 		<section class="section">
 			<div class="container -collect-page">
-				<nav class="breadcrumb">
-					<ul>
-						<li>
-							<router-link :to="{ name: 'dash.stickers' }">
-								<span class="breadcrumb-tag">&nbsp;</span>
-								<translate>Stickers</translate>
-							</router-link>
-							<app-jolticon icon="chevron-right" class="breadcrumb-separator" />
-						</li>
-						<li>
-							<span class="active">
-								<span class="breadcrumb-tag">&nbsp;</span>
-								<translate>Collect</translate>
-							</span>
-						</li>
-					</ul>
-				</nav>
-
 				<div class="-reveal">
 					<div v-if="!canReveal">
 						<app-sticker-card-hidden
@@ -52,7 +34,11 @@
 							</app-button>
 						</app-expand>
 					</template>
-					<app-sticker-card-hidden v-else @click.native="onBuySticker" class="-card-hidden" />
+					<app-sticker-card-hidden
+						v-else
+						@click.native="onBuySticker"
+						class="-card-hidden"
+					/>
 				</div>
 
 				<div v-if="!canReveal">
@@ -62,8 +48,8 @@
 					</h3>
 					<div class="help-block">
 						<translate>
-							You do not have sufficient credit to collect more stickers. Interact with Game Jolt,
-							like some posts, you might get some more.
+							You do not have sufficient credit to collect more stickers. Interact
+							with Game Jolt, like some posts, you might get some more.
 						</translate>
 					</div>
 					<router-link :to="{ name: 'dash.stickers' }">
@@ -243,7 +229,6 @@ $hiddenCardColorShadowLarge = 20px
 	100%
 		filter: none
 		transform: rotate(-45deg) translateX(-150px) translateY(90px)
-
 </style>
 
 <script lang="ts" src="./collect"></script>

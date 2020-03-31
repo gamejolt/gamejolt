@@ -110,11 +110,6 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 			props: {
 				post: this.post,
 			},
-			on: {
-				'post-update': (post: FiresidePost) => {
-					Object.assign(this.post, post);
-				},
-			},
 		});
 	}
 }

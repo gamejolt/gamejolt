@@ -9,6 +9,8 @@ export default class AppSticker extends Vue {
 	@Prop(propRequired(StickerPlacement)) sticker!: StickerPlacement;
 	@Prop(propOptional(Boolean, true)) canRemove!: boolean;
 
+	isRemoved = false;
+
 	$refs!: {
 		sticker: HTMLDivElement;
 	};
@@ -17,7 +19,9 @@ export default class AppSticker extends Vue {
 		this.onUpdateStickerPlacement();
 	}
 
-	@Watch('sticker', { deep: true })
+	@Watch('sticker.position_x')
+	@Watch('sticker.position_y')
+	@Watch('sticker.rotation')
 	async onUpdateStickerPlacement() {
 		await this.$nextTick();
 
@@ -28,7 +32,7 @@ export default class AppSticker extends Vue {
 
 	onClickRemove() {
 		if (this.canRemove) {
-			(this.$el as HTMLElement).hidden = true;
+			this.isRemoved = true;
 		}
 	}
 }

@@ -23,27 +23,24 @@
 	rounded-corners-lg()
 	position: relative
 	overflow: hidden
-
-	&:hover
-		elevate-1()
+	elevate-hover-1()
 
 .-img
-	margin: 10px
-	width: 130px
-	height: 130px
+	margin: 12px
+	width: 126px
+	height: 126px
 	display: flex
 	justify-content: center
 	align-items: center
 
 .-pocket
-	padding: 10px
+	padding: 12px
 	display: flex
 	flex-direction: column
 	align-items: center
 
 .-name
 	font-weight: bold
-
 </style>
 
 <script lang="ts" src="./hidden"></script>
