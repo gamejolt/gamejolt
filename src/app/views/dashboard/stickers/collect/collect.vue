@@ -13,11 +13,7 @@
 					</div>
 					<template v-else-if="isRevealed && purchasedSticker">
 						<div class="-card-revealed-container">
-							<app-sticker-card
-								class="-card-revealed"
-								:sticker="purchasedSticker"
-								label="+1"
-							/>
+							<app-sticker-card class="-card-revealed" :sticker="purchasedSticker" label="+1" />
 							<div
 								v-if="purchasedSticker.rarity > 0"
 								class="-card-revealed-effect"
@@ -36,16 +32,11 @@
 					</template>
 					<template v-else>
 						<div>
-							<app-sticker-card-hidden
-								@click.native="onBuySticker"
-								class="-card-hidden"
-							/>
+							<app-sticker-card-hidden @click.native="onBuySticker" class="-card-hidden" />
 						</div>
 						<hr class="underbar underbar-center" />
 						<p>
-							<translate
-								>What's it gonna be? The suspense is almost too much!</translate
-							>
+							<translate>What's it gonna be? The suspense is almost too much!</translate>
 						</p>
 					</template>
 				</div>
@@ -54,8 +45,8 @@
 					<div class="page-cut"></div>
 					<p>
 						<translate>
-							You do not have enough points to unlock more stickers. Use Game Jolt,
-							like some posts, you might get some more.
+							You do not have enough points to unlock more stickers. Use Game Jolt, like some posts,
+							you might get some more.
 						</translate>
 					</p>
 					<app-button :to="{ name: 'dash.stickers.overview' }">
@@ -70,6 +61,8 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
+
+vendors = official
 
 .-collect-page
 	min-height: 600px
@@ -124,39 +117,39 @@
 .-revealed-controls
 	margin-top: 20px
 
-$hidden-card-color-shadow-small = 10px
-$hidden-card-color-shadow-large = 20px
+$-hidden-card-color-shadow-small = 10px
+$-hidden-card-color-shadow-large = 20px
 
 @keyframes hidden-card-color
 	0%
-		filter: drop-shadow(0 0 $hidden-card-color-shadow-small #1868f2)
+		filter: drop-shadow(0 0 $-hidden-card-color-shadow-small #1868f2)
 
 	11%
-		filter: drop-shadow(0 0 $hidden-card-color-shadow-large #1868f2)
+		filter: drop-shadow(0 0 $-hidden-card-color-shadow-large #1868f2)
 
 	22%
-		filter: drop-shadow(0 0 $hidden-card-color-shadow-small #26ddb4)
+		filter: drop-shadow(0 0 $-hidden-card-color-shadow-small #26ddb4)
 
 	33%
-		filter: drop-shadow(0 0 $hidden-card-color-shadow-large #26ddb4)
+		filter: drop-shadow(0 0 $-hidden-card-color-shadow-large #26ddb4)
 
 	44%
-		filter: drop-shadow(0 0 $hidden-card-color-shadow-small #fcee43)
+		filter: drop-shadow(0 0 $-hidden-card-color-shadow-small #fcee43)
 
 	55%
-		filter: drop-shadow(0 0 $hidden-card-color-shadow-large #fcee43)
+		filter: drop-shadow(0 0 $-hidden-card-color-shadow-large #fcee43)
 
 	66%
-		filter: drop-shadow(0 0 $hidden-card-color-shadow-small #fb4684)
+		filter: drop-shadow(0 0 $-hidden-card-color-shadow-small #fb4684)
 
 	77%
-		filter: drop-shadow(0 0 $hidden-card-color-shadow-large #fb4684)
+		filter: drop-shadow(0 0 $-hidden-card-color-shadow-large #fb4684)
 
 	88%
-		filter: drop-shadow(0 0 $hidden-card-color-shadow-small #b3b3b3)
+		filter: drop-shadow(0 0 $-hidden-card-color-shadow-small #b3b3b3)
 
 	100%
-		filter: drop-shadow(0 0 $hidden-card-color-shadow-large #b3b3b3)
+		filter: drop-shadow(0 0 $-hidden-card-color-shadow-large #b3b3b3)
 
 
 @keyframes hidden-card-shake

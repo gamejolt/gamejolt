@@ -50,6 +50,8 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+vendors = official
+
 .-mount
 	margin-top: 32px
 	margin-bottom: 16px
