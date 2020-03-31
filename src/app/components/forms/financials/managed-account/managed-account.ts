@@ -19,13 +19,6 @@ interface FormModel {
 	country_code: string;
 
 	// Step 2 params.
-	additional_owners_count: number;
-	'legal_entity.verification.document': any;
-	'legal_entity.verification.status': any;
-	'legal_entity.additional_owners.0.verification.document': any;
-	'legal_entity.additional_owners.1.verification.document': any;
-	'legal_entity.additional_owners.2.verification.document': any;
-	'legal_entity.additional_owners.3.verification.document': any;
 	[k: string]: any;
 }
 
@@ -88,15 +81,6 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 			this.scriptLoaded = true;
 		}
 
-		// if ( Environment.env === 'development' ) {
-		// 	scope.formModel.bankAccount_country = 'GB';
-		// 	scope.formModel.bankAccount_currency = 'GBP',
-		// 	scope.formModel.bankAccount_accountNumber = '00012345';
-		// 	scope.formModel.bankAccount_routingNumber = '108800';
-		// 	scope.formModel.bankAccount_accountHolderName = 'MR I C ROFLCOPTER';
-		// 	scope.formModel.bankAccount_accountHolderType = 'individual';
-		// }
-
 		this.isLoaded = false;
 		const payload = await Api.sendRequest('/web/dash/financials/account');
 
@@ -109,48 +93,7 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 		this.stripe = stripePayload;
 		this.stripeMeta = stripePayload.required;
 
-		// // This is hacky and kind of hard to explain.
-		// // Sometimes fields need to be checked against the account resource's requirements field,
-		// // and sometimes against the person's requirement field. This depends on the field name -
-		// // if it starts with a stripe person id (looks like person_ID) its a person field.
-		// //
-		// // To differentiate between when we are referring to an account field or a person field
-		// // (and also which person the field belongs to), we pass our components the "fully qualified"
-		// // field name. e.g. person_ID.address.line1.
-		// //
-		// // The functions this.requiresField and this.getStripeField look at the field name
-		// // to check against the correct resource. The issue is the way our form components
-		// // work force us to work with a single formModel resource. This means we need to
-		// // be able to reference both the account fields and the person fields on the same object.
-		// //
-		// // To do this, we set the person object on the account object keyed by the person ID,
-		// // so we can reference the account field by account.address.line1,
-		// // and reference the accoutn's person field by account.person_ID.address.line1.
-		// if (this.stripe.persons) {
-		// 	for (let personId in this.stripe.persons) {
-		// 		(this.stripe.current as any)[personId] = this.stripe.persons[personId];
-		// 	}
-		// }
-
-		// TODO(Persons API)
-		// this.setField('additional_owners_count', 0);
-		// if (
-		// 	payload.stripe &&
-		// 	payload.stripe.current &&
-		// 	payload.stripe.current.legal_entity.additional_owners
-		// ) {
-		// 	this.setField(
-		// 		'additional_owners_count',
-		// 		payload.stripe.current.legal_entity.additional_owners.length
-		// 	);
-		// }
-
 		this.isLoaded = true;
-
-		// scope.updateCurrencies = function( )
-		// {
-		// 	scope.formState.currencies = scope.stripe.currencies[ scope.formModel.bankAccount_country ];
-		// }
 	}
 
 	requiresField(field: string) {
@@ -297,44 +240,6 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 		}
 
 		return !this.requiresVerificationDocument;
-	}
-
-	addAdditionalOwner() {
-		this.setField('additional_owners_count', this.formModel.additional_owners_count + 1);
-	}
-
-	private removeOwnerData(idx: number) {
-		const regex = new RegExp('legal_entity\\.additional_owners\\.' + idx + '\\.');
-		for (let field in this.formModel) {
-			if (regex.test(field)) {
-				this.$delete(this.formModel, field);
-			}
-		}
-	}
-
-	private copyOwnerData(oldIndex: number, newIndex: number) {
-		const regex = new RegExp('legal_entity\\.additional_owners\\.' + oldIndex + '\\.');
-		for (let field in this.formModel) {
-			if (regex.test(field)) {
-				const newField = field.replace('.' + oldIndex + '.', '.' + newIndex + '.');
-				this.setField(newField, this.formModel[newField]);
-			}
-		}
-	}
-
-	removeAdditionalOwner(index: number) {
-		// Reindex all the owners after the one that was removed to be shifted over once.
-		for (let i = index + 1; i < this.formModel.additional_owners_count; ++i) {
-			// We have to remove the owner data from the index before.
-			// If the current owner doesn't have all fields filled, it won't overwrite completely.
-			// It needs a "pristine" state to copy into.
-			this.removeOwnerData(i - 1);
-			this.copyOwnerData(i, i - 1);
-		}
-
-		// Clear out all the fields for the last one as well since it's now shifted.
-		this.removeOwnerData(this.formModel.additional_owners_count - 1);
-		this.setField('additional_owners_count', this.formModel.additional_owners_count - 1);
 	}
 
 	get isComplete() {
