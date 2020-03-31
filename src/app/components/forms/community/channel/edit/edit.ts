@@ -10,31 +10,44 @@ import {
 import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 
+class FormModel extends CommunityChannel {
+	permission_posting = 'all';
+}
+
 @Component({
 	components: {
 		AppImgResponsive,
 		AppFormControlUpload,
 	},
 })
-export default class FormCommunityChannelEdit extends BaseForm<CommunityChannel>
+export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 	implements FormOnLoad, FormOnSubmitSuccess {
 	@Prop(Community)
 	community!: Community;
-
-	modelClass = CommunityChannel;
 
 	maxFilesize = 0;
 	maxWidth = 0;
 	maxHeight = 0;
 
+	modelClass = FormModel;
+
 	get loadUrl() {
-		return `/web/dash/communities/channels/save/${this.community.id}`;
+		return `/web/dash/communities/channels/save/${this.community.id}/${this.formModel.id}`;
+	}
+
+	get permissionPostingOptions() {
+		return {
+			all: this.$gettext('Everyone'),
+			mods: this.$gettext('Moderators only'),
+		};
 	}
 
 	onLoad(payload: any) {
 		this.maxFilesize = payload.maxFilesize;
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
+
+		this.setField('permission_posting', payload.permission_posting ?? 'all');
 	}
 
 	onSubmitSuccess() {

@@ -72,6 +72,12 @@ export default class AppPostView extends Vue {
 		return this.post && this.post.game;
 	}
 
+	get shouldShowCommunityPublishError() {
+		return (
+			this.post.status === FiresidePost.STATUS_DRAFT && !this.post.canPublishToCommunities()
+		);
+	}
+
 	onPostRemoved() {
 		this.$router.replace({ name: 'home' });
 		Growls.info(this.$gettext('Your post has been removed'));

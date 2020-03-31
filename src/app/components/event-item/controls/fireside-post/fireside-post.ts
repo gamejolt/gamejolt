@@ -81,7 +81,12 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	emitLikeChange(_value: boolean) {}
 
 	get canPublish() {
-		return this.post.isDraft && !this.post.isScheduled && this.post.hasLead;
+		return (
+			this.post.isDraft &&
+			!this.post.isScheduled &&
+			this.post.hasLead &&
+			this.post.canPublishToCommunities()
+		);
 	}
 
 	get showUserControls() {

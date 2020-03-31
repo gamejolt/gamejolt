@@ -43,6 +43,25 @@ export default class AppActivityFeedDevlogPostMediaItem extends Vue {
 		return this.isActive;
 	}
 
+	get itemStyling() {
+		let style = {};
+
+		if (!GJ_IS_SSR) {
+			Object.assign(style, {
+				maxWidth: this.mediaItem.width + 'px',
+				maxHeight: this.mediaItem.height + 'px',
+			});
+		}
+
+		if (this.mediaItem.avg_img_color && !this.mediaItem.img_has_transparency) {
+			Object.assign(style, {
+				backgroundColor: '#' + this.mediaItem.avg_img_color,
+			});
+		}
+
+		return style;
+	}
+
 	get deviceMaxHeight() {
 		if (GJ_IS_SSR) {
 			return;

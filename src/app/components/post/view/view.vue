@@ -114,6 +114,20 @@
 							/>
 						</div>
 
+						<template v-if="shouldShowCommunityPublishError">
+							<br />
+							<div class="well fill-offset">
+								<app-jolticon icon="notice" notice />
+								<span
+									><translate
+										>You can't publish this post to the selected community channel because you don't
+										have permissions to post into that specific channel. Please select a different
+										channel.</translate
+									></span
+								>
+							</div>
+						</template>
+
 						<br />
 					</template>
 
