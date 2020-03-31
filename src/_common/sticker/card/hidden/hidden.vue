@@ -2,7 +2,7 @@
 	<div class="-card">
 		<div class="-img">
 			<span class="-img-hidden">
-				<app-jolticon icon="other-os" big />
+				<app-jolticon icon="sticker" big />
 			</span>
 		</div>
 		<div class="-pocket fill-darkest">
