@@ -1,5 +1,5 @@
 <template>
-	<div class="-sticker-target" :id="divId">
+	<div class="-sticker-target">
 		<app-sticker v-for="sticker of stickers" :key="sticker.id" :sticker="sticker" />
 		<slot />
 	</div>

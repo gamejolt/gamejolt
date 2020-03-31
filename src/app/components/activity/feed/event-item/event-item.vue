@@ -93,37 +93,37 @@
 				@content-bootstrapped="onContentBootstrapped"
 			/>
 			<template v-if="post">
+				<app-activity-feed-devlog-post-video
+					v-if="post.hasVideo"
+					:item="item"
+					:post="post"
+					@click.native.stop
+					@expanded="onExpand"
+					@content-bootstrapped="onContentBootstrapped"
+				/>
+
+				<app-activity-feed-devlog-post-sketchfab
+					v-if="post.hasSketchfab"
+					:item="item"
+					:post="post"
+					@click.native.stop
+					@expanded="onExpand"
+					@content-bootstrapped="onContentBootstrapped"
+				/>
+
+				<app-activity-feed-devlog-post-media
+					v-if="post.hasMedia"
+					:item="item"
+					:post="post"
+					@expanded="onExpand"
+					@content-bootstrapped="onContentBootstrapped"
+				/>
+
 				<app-sticker-target
 					:stickers="post.stickers"
 					resource="Fireside_Post"
 					:resource-id="post.id"
 				>
-					<app-activity-feed-devlog-post-video
-						v-if="post.hasVideo"
-						:item="item"
-						:post="post"
-						@click.native.stop
-						@expanded="onExpand"
-						@content-bootstrapped="onContentBootstrapped"
-					/>
-
-					<app-activity-feed-devlog-post-sketchfab
-						v-if="post.hasSketchfab"
-						:item="item"
-						:post="post"
-						@click.native.stop
-						@expanded="onExpand"
-						@content-bootstrapped="onContentBootstrapped"
-					/>
-
-					<app-activity-feed-devlog-post-media
-						v-if="post.hasMedia"
-						:item="item"
-						:post="post"
-						@expanded="onExpand"
-						@content-bootstrapped="onContentBootstrapped"
-					/>
-
 					<!--
 						This shouldn't ever really show a collapser. It's for the jokers that think it would
 						be fun to make a post with a bunch of new lines.
@@ -134,7 +134,10 @@
 						:animate="false"
 						@require-change="canToggleLeadChanged"
 					>
-						<app-content-viewer class="fireside-post-lead" :source="post.lead_content" />
+						<app-content-viewer
+							class="fireside-post-lead"
+							:source="post.lead_content"
+						/>
 					</app-fade-collapse>
 				</app-sticker-target>
 
@@ -153,7 +156,11 @@
 				</div>
 
 				<div class="-communities" v-if="shouldShowCommunities">
-					<div class="-community-row" v-for="postCommunity of communities" :key="postCommunity.id">
+					<div
+						class="-community-row"
+						v-for="postCommunity of communities"
+						:key="postCommunity.id"
+					>
 						<app-community-pill
 							v-if="!feed.hideCommunity"
 							:community="postCommunity.community"

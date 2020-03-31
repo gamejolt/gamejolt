@@ -18,74 +18,66 @@
 					:class="{ 'col-centered': Screen.isMobile }"
 				>
 					<div class="post-view">
+						<div v-if="post.hasMedia" class="full-bleed-xs">
+							<div v-for="item of post.media" :key="item.id">
+								<app-responsive-dimensions
+									class="-media-item"
+									:ratio="item.width / item.height"
+									:max-width="item.width"
+								>
+									<app-event-item-media-tags :gif="item.is_animated" />
+
+									<app-img-responsive
+										class="-img"
+										v-if="!item.is_animated"
+										:src="item.mediaserver_url"
+										alt=""
+									/>
+
+									<app-video
+										v-else
+										class="-video"
+										:poster="item.mediaserver_url"
+										:webm="item.mediaserver_url_webm"
+										:mp4="item.mediaserver_url_mp4"
+										show-loading
+									/>
+								</app-responsive-dimensions>
+
+								<br />
+							</div>
+						</div>
+
+						<div v-if="post.hasSketchfab" class="full-bleed-xs">
+							<app-sketchfab-embed
+								:sketchfab-id="post.sketchfabs[0].sketchfab_id"
+								autoplay
+							/>
+						</div>
+
+						<div class="tiny text-muted">
+							<app-time-ago v-if="post.isActive" :date="post.published_on" strict />
+							<template v-else-if="post.isScheduled">
+								<span class="tag" style="vertical-align: middle">
+									<app-jolticon icon="calendar-grid" />
+									<translate>Scheduled</translate>
+								</span>
+								<app-time-ago :date="post.scheduled_for" strict without-suffix />
+							</template>
+							<span
+								v-else-if="post.isDraft"
+								class="tag"
+								style="vertical-align: middle"
+							>
+								<translate>Draft</translate>
+							</span>
+						</div>
+
 						<app-sticker-target
 							:stickers="post.stickers"
 							resource="Fireside_Post"
 							:resource-id="post.id"
 						>
-							<div v-if="post.hasMedia" class="full-bleed-xs">
-								<div v-for="item of post.media" :key="item.id">
-									<app-responsive-dimensions
-										class="-media-item"
-										:ratio="item.width / item.height"
-										:max-width="item.width"
-									>
-										<app-event-item-media-tags :gif="item.is_animated" />
-
-										<app-img-responsive
-											class="-img"
-											v-if="!item.is_animated"
-											:src="item.mediaserver_url"
-											alt=""
-										/>
-
-										<app-video
-											v-else
-											class="-video"
-											:poster="item.mediaserver_url"
-											:webm="item.mediaserver_url_webm"
-											:mp4="item.mediaserver_url_mp4"
-											show-loading
-										/>
-									</app-responsive-dimensions>
-
-									<br />
-								</div>
-							</div>
-
-							<div v-if="post.hasSketchfab" class="full-bleed-xs">
-								<app-sketchfab-embed
-									:sketchfab-id="post.sketchfabs[0].sketchfab_id"
-									autoplay
-								/>
-							</div>
-
-							<div class="tiny text-muted">
-								<app-time-ago
-									v-if="post.isActive"
-									:date="post.published_on"
-									strict
-								/>
-								<template v-else-if="post.isScheduled">
-									<span class="tag" style="vertical-align: middle">
-										<app-jolticon icon="calendar-grid" />
-										<translate>Scheduled</translate>
-									</span>
-									<app-time-ago
-										:date="post.scheduled_for"
-										strict
-										without-suffix
-									/>
-								</template>
-								<span
-									v-else-if="post.isDraft"
-									class="tag"
-									style="vertical-align: middle"
-								>
-									<translate>Draft</translate>
-								</span>
-							</div>
-
 							<app-content-viewer :source="post.lead_content" />
 						</app-sticker-target>
 
@@ -120,8 +112,9 @@
 								<app-jolticon icon="notice" notice />
 								<span
 									><translate
-										>You can't publish this post to the selected community channel because you don't
-										have permissions to post into that specific channel. Please select a different
+										>You can't publish this post to the selected community
+										channel because you don't have permissions to post into that
+										specific channel. Please select a different
 										channel.</translate
 									></span
 								>

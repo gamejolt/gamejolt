@@ -2,13 +2,13 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../utils/vue';
 import { Api } from '../../../api/api.service';
+import AppContentViewer from '../../../content/content-viewer/content-viewer.vue';
 import { FiresidePost } from '../../../fireside/post/post-model';
 import { Growls } from '../../../growls/growls.service';
 import { BaseModal } from '../../../modal/base';
 import { Model } from '../../../model/model.service';
 import { Sticker } from '../../sticker.model';
 import AppSticker from '../../sticker.vue';
-import { getStickerTargetId } from '../../target/target';
 import { StickerPlacement } from '../placement.model';
 
 if (!GJ_IS_SSR) {
@@ -19,6 +19,7 @@ if (!GJ_IS_SSR) {
 @Component({
 	components: {
 		AppSticker,
+		AppContentViewer,
 	},
 })
 export default class AppStickerPlacementModal extends BaseModal {
@@ -39,10 +40,11 @@ export default class AppStickerPlacementModal extends BaseModal {
 	lastPanX = 0;
 	lastPanY = 0;
 
-	async mounted() {
-		const targetId = getStickerTargetId('Fireside_Post', this.model.id);
-		const targetElem = document.getElementById(targetId);
+	get postLeadContent() {
+		return (this.model as FiresidePost).lead_content;
+	}
 
+	created() {
 		this.placement = new StickerPlacement({
 			// Randomly place the sticker within the rectangle, with a padding of 20% on each side
 			// --------------
@@ -54,15 +56,6 @@ export default class AppStickerPlacementModal extends BaseModal {
 			rotation: 0.5,
 			sticker: this.sticker,
 		});
-
-		if (targetElem) {
-			await this.$nextTick();
-
-			const elemCopy = targetElem.cloneNode(true) as HTMLElement;
-			if (elemCopy) {
-				this.$refs.mount.appendChild(elemCopy);
-			}
-		}
 	}
 
 	panStart() {

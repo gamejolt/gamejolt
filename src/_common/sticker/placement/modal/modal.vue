@@ -19,7 +19,9 @@
 			</div>
 
 			<div class="-mount">
-				<div class="-mount-inner" ref="mount"></div>
+				<div class="-mount-inner" ref="mount">
+					<app-content-viewer :source="postLeadContent" />
+				</div>
 
 				<v-touch @panstart="panStart" @panmove="pan" @panend="panEnd">
 					<app-sticker

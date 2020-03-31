@@ -25,8 +25,8 @@ export default class AppSticker extends Vue {
 	async onUpdateStickerPlacement() {
 		await this.$nextTick();
 
-		this.$refs.sticker.style.left = `calc(${this.sticker.position_x * 100}% - 32px)`;
-		this.$refs.sticker.style.top = `calc(${this.sticker.position_y * 100}% - 32px)`;
+		this.$refs.sticker.style.left = `calc(${5 + this.sticker.position_x * 90}% - 32px)`;
+		this.$refs.sticker.style.top = `calc(${5 + this.sticker.position_y * 90}% - 32px)`;
 		this.$refs.sticker.style.transform = `rotate(${this.sticker.rotation * 90 - 45}deg)`;
 	}
 
