@@ -32,21 +32,21 @@
 		<!--
 			Personal ID Verification
 		-->
-		<!-- <app-financials-managed-account-document
+		<app-financials-managed-account-document
 			ref="id-document"
 			type="id"
 			:namePrefix="`${namePrefix}.verification`"
-		/> -->
+		/>
 
 		<!--
 			Additional Verification Document
 			A utility bill that proves the user's address.
 		-->
-		<!-- <app-financials-managed-account-document
+		<app-financials-managed-account-document
 			ref="additional-document"
 			type="additional"
 			:namePrefix="`${namePrefix}.verification`"
-		/> -->
+		/>
 	</div>
 </template>
 

@@ -20,7 +20,10 @@
 						(parent.requiresField(namePrefix + '.phone') || forceRequired)
 				"
 			>
-				<app-form-group :name="`${namePrefix}.phone`" :label="$gettext('Phone')">
+				<app-form-group
+					:name="`${namePrefix}.phone`"
+					:label="$gettext('Phone (with country code)')"
+				>
 					<app-form-control />
 					<app-form-control-errors />
 				</app-form-group>

@@ -45,7 +45,8 @@ type PayloadStripeData = {
 
 type PersonRelationship = keyof NonNullable<StripeData.accounts.IPerson['relationship']>;
 
-const PERSON_FIELD_REGEX = new RegExp(`^person-(.*?)\\.`);
+// Person requirement fields start with the person id, which looks like "person_ID"
+const PERSON_REQUIREMENT_FIELD = new RegExp(`^(person_.*?)\\.`);
 
 @Component({
 	components: {
@@ -108,6 +109,29 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 		this.stripe = stripePayload;
 		this.stripeMeta = stripePayload.required;
 
+		// // This is hacky and kind of hard to explain.
+		// // Sometimes fields need to be checked against the account resource's requirements field,
+		// // and sometimes against the person's requirement field. This depends on the field name -
+		// // if it starts with a stripe person id (looks like person_ID) its a person field.
+		// //
+		// // To differentiate between when we are referring to an account field or a person field
+		// // (and also which person the field belongs to), we pass our components the "fully qualified"
+		// // field name. e.g. person_ID.address.line1.
+		// //
+		// // The functions this.requiresField and this.getStripeField look at the field name
+		// // to check against the correct resource. The issue is the way our form components
+		// // work force us to work with a single formModel resource. This means we need to
+		// // be able to reference both the account fields and the person fields on the same object.
+		// //
+		// // To do this, we set the person object on the account object keyed by the person ID,
+		// // so we can reference the account field by account.address.line1,
+		// // and reference the accoutn's person field by account.person_ID.address.line1.
+		// if (this.stripe.persons) {
+		// 	for (let personId in this.stripe.persons) {
+		// 		(this.stripe.current as any)[personId] = this.stripe.persons[personId];
+		// 	}
+		// }
+
 		// TODO(Persons API)
 		// this.setField('additional_owners_count', 0);
 		// if (
@@ -141,28 +165,28 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 			return true;
 		}
 
-		// // If the field is a person field, it is using a different name prefix from
-		// // the one specified in the requirements, e.g. relationship.owner will become person-STRIPE_ID in the component's namePrefix prop.
-		// // In order to correlate it to the required field we need to map it back.
-		// const person = this.getPersonFromField(field);
-		// if (person) {
-		// 	// Companies may only have one representative,
-		// 	// so an account that is marked as a representative has to be mapped
-		// 	// exactly to relationship.representative.
-		// 	// Other people then are owners by default since we don't gather
-		// 	// info for any other company people.
-		// 	const replacement = person.relationship?.representative
-		// 		? 'relationship.representative'
-		// 		: 'relationship.owner';
+		let requirements: string[] = this.stripe.current?.requirements?.past_due!;
 
-		// 	field = replacement + field.substr(this.getPersonPrefix(person).length);
-		// }
+		// If the field is a person field, we need to look it up in the person object's
+		// requirement fields instead of the account's requirement fields.
+		// Note: the country spec minimum requirements do not list these directly,
+		// they only specify which relationships they need the people attached to the
+		// account to be satisfied, e.g. relationship.representative and relationship.owner
+		const person = this.getPersonFromField(field);
+		if (person) {
+			// The requirements listed on the person object don't have the person id
+			// as the start of the field, so we need to trim our provided field to match
+			// against these. The +1 is for the dot that comes after the person id.
+			// person_blah.address.line1 => address.line1
+			field = field.substr(person.id.length + 1);
+			requirements = person.requirements.past_due;
+		}
 
 		// A field is considered required if it, or its parent field is required. For example,
-		// if verification.document is specified, it means verification.document.front is required too.
+		// if verification.document is specified, it means verification.document.front is implicitly required too.
 		//
 		// A field may be required as part of the minimum requirements from the country specs,
-		// or from the specific account resource's requirements field.
+		// or from the specific account or person object's requirements field.
 		const fieldParts = field.split('.');
 		do {
 			field = fieldParts.join('.');
@@ -170,7 +194,7 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 				return true;
 			}
 
-			if (this.stripe.current?.requirements?.past_due?.indexOf(field) !== -1) {
+			if (requirements.indexOf(field) !== -1) {
 				return true;
 			}
 			fieldParts.pop();
@@ -184,11 +208,20 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 			return undefined;
 		}
 
+		let obj = this.stripe.current as any;
+
+		// Same as this.requiresField, if the field is a person field,
+		// we need to check if its set on the person object.
+		const person = this.getPersonFromField(fieldPath);
+		if (person) {
+			fieldPath = fieldPath.substr(person.id.length + 1);
+			obj = person as any;
+		}
+
 		// Gotta traverse the object chain.
 		// We should return false if any of the paths don't exist.
 		const pieces = fieldPath.split('.');
 		const field = pieces.pop();
-		let obj = this.stripe.current as any;
 
 		for (let piece of pieces) {
 			if (!obj[piece]) {
@@ -227,48 +260,43 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 		return null;
 	}
 
-	// getPersonPrefix(person: StripeData.accounts.IPerson) {
-	// 	return `person-${person.id}`;
-	// }
+	getPersonFromField(field: string) {
+		if (!this.stripe.persons) {
+			return null;
+		}
 
-	// getPersonFromField(field: string) {
-	// 	const match = PERSON_FIELD_REGEX.exec(field);
-	// 	if (!match) {
-	// 		return null;
-	// 	}
+		const match = PERSON_REQUIREMENT_FIELD.exec(field);
+		if (!match) {
+			return null;
+		}
 
-	// 	return this.stripe.persons?.[match[1]] || null;
-	// }
+		return this.stripe.persons[match[1]] || null;
+	}
 
 	// This is only needed after the initial submission in some instances.
 	get requiresVerificationDocument() {
-		return this.requiresField(`${this.account.type}.verification.document`);
-		// this.requiresField('legal_entity.additional_owners.0.verification.document') ||
-		// this.requiresField('legal_entity.additional_owners.1.verification.document') ||
-		// this.requiresField('legal_entity.additional_owners.2.verification.document') ||
-		// this.requiresField('legal_entity.additional_owners.3.verification.document')
-	}
+		const personIds = ['individual'];
+		personIds.push(...Object.keys(this.stripe.persons || {}));
 
-	get requiresAdditionalVerificationDocument() {
-		return this.requiresField(`${this.account.type}.verification.additional_document`);
-		// this.requiresField('legal_entity.additional_owners.0.verification.additional_document') ||
-		// this.requiresField('legal_entity.additional_owners.1.verification.additional_document') ||
-		// this.requiresField('legal_entity.additional_owners.2.verification.additional_document') ||
-		// this.requiresField('legal_entity.additional_owners.3.verification.additional_document')
+		for (let personId of personIds) {
+			if (
+				this.requiresField(`${personId}.verification.document`) ||
+				this.requiresField(`${personId}.verification.additional_document`)
+			) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	get isVerificationPending() {
 		// If they're in pending state and we don't require more info from them.
-		if (
-			this.account &&
-			this.account.status === 'pending' &&
-			!this.requiresVerificationDocument &&
-			!this.requiresAdditionalVerificationDocument
-		) {
-			return true;
+		if (!this.account || this.account.status !== 'pending') {
+			return false;
 		}
 
-		return false;
+		return !this.requiresVerificationDocument;
 	}
 
 	addAdditionalOwner() {
@@ -310,13 +338,16 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 	}
 
 	get isComplete() {
-		if (!this.account) {
+		if (!this.account?.is_verified) {
 			return false;
 		}
 
-		// Current deadline will be set if this account is required to fill in more by a specific date.
-		// This is for additional collection of fields beyond what we want initially.
-		return this.account.is_verified && !this.stripe.current.requirements!.current_deadline;
+		const allPersons = Object.values(this.stripe.persons || []);
+		if (this.account.type === 'individual') {
+			allPersons.push(this.stripe.current.individual as any);
+		}
+
+		return allPersons.find(person => person.verification.status !== 'verified') === undefined;
 	}
 
 	async createPiiToken(data: any) {
@@ -341,54 +372,35 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 
 		let id;
 		try {
-			if (this.account.type === 'individual') {
-				const [
-					idDocumentUploadId,
-					additionalDocumentUploadId,
-				] = await this.$refs.individual.uploadDocuments(this.stripePublishableKey);
-
-				if (idDocumentUploadId) {
-					data['individual.verification.document.front'] = idDocumentUploadId;
+			const uploadPromises = [];
+			const documentUploadElements = [this.$refs.individual, this.$refs.representative];
+			for (let ref of documentUploadElements) {
+				if (!ref) {
+					continue;
 				}
 
-				if (additionalDocumentUploadId) {
-					data[
-						'individual.verification.additional_document.front'
-					] = additionalDocumentUploadId;
-				}
-			} else if (this.account.type === 'company') {
-				const [
-					idDocumentUploadId,
-					additionalDocumentUploadId,
-				] = await this.$refs.representative.uploadDocuments(this.stripePublishableKey);
+				const uploadPromise = ref
+					.uploadDocuments(this.stripePublishableKey)
+					.then(([idDocumentUploadId, additionalDocumentUploadId]) => {
+						if (idDocumentUploadId) {
+							data[
+								`${ref.namePrefix}.verification.document.front`
+							] = idDocumentUploadId;
+						}
 
-				if (idDocumentUploadId) {
-					data[
-						'relationship.representative.verification.document.front'
-					] = idDocumentUploadId;
-				}
+						if (additionalDocumentUploadId) {
+							data[
+								`${ref.namePrefix}.verification.additional_document.front`
+							] = additionalDocumentUploadId;
+						}
+					});
 
-				if (additionalDocumentUploadId) {
-					data[
-						'relationship.representative.verification.additional_document.front'
-					] = additionalDocumentUploadId;
-				}
+				uploadPromises.push(uploadPromise);
 			}
 
-			console.log(data);
-
-			// // Additional files
-			// for (let i = 0; i < 4; i++) {
-			// 	if (this.formModel[`legal_entity.additional_owners.${i}.verification.document`]) {
-			// 		const curIndex = i;
-			// 		const idDocument: AppFinancialsManagedAccountIdDocumentTS = this.$refs[
-			// 			`additional-id-document-${i}`
-			// 		] as any;
-			// 		const _response = await idDocument.uploadIdDocument(this.stripePublishableKey);
-			// 		data[`legal_entity.additional_owners.${curIndex}.verification.document`] =
-			// 			_response.id;
-			// 	}
-			// }
+			if (uploadPromises.length) {
+				await Promise.all(uploadPromises);
+			}
 
 			this.genericError = false;
 
