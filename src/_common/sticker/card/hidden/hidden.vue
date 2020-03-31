@@ -1,13 +1,11 @@
 <template>
 	<div class="-card">
 		<div class="-img">
-			<span class="-img-hidden">
-				<app-jolticon icon="sticker" big />
-			</span>
+			<app-jolticon class="-icon jolticon-3x" icon="sticker" />
 		</div>
 		<div class="-pocket fill-darkest">
 			<div class="-name">
-				???
+				<translate>Unlock</translate>
 			</div>
 		</div>
 	</div>

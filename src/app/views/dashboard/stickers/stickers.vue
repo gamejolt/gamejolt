@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<app-page-header :cover-media-item="coverMediaItem" cover-max-height="250">
-			<router-link :to="{ name: 'dash.stickers' }">
+			<router-link :to="{ name: 'dash.stickers.overview' }">
 				<h1 class="section-header sans-margin-bottom">
 					<translate>Your Stickers</translate>
 				</h1>
@@ -9,7 +9,7 @@
 			<div class="text-muted small">
 				<p>
 					<translate>
-						Your place to marvel at your sticker collection and get even more stickers.
+						Marvel at your collection of beautiful stickers.
 					</translate>
 				</p>
 			</div>

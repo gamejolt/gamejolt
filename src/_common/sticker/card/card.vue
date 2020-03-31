@@ -1,19 +1,8 @@
 <template>
 	<div class="-card">
 		<img class="-img" :src="sticker.img_url" />
-		<div class="-pocket fill-darkest">
-			<div
-				class="-name"
-				:class="{
-					'-rarity-uncommon': sticker.rarity === 1,
-					'-rarity-rare': sticker.rarity === 2,
-					'-rarity-epic': sticker.rarity === 3,
-				}"
-				:title="rarityLabel"
-			>
-				{{ sticker.name }}
-			</div>
-			<div v-if="count">x{{ count }}</div>
+		<div v-if="count" class="-pocket fill-darkest">
+			<div>x{{ count }}</div>
 		</div>
 	</div>
 </template>

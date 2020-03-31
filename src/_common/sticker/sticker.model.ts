@@ -6,7 +6,6 @@ export class Sticker extends Model {
 	public static readonly RARITY_RARE = 2;
 	public static readonly RARITY_EPIC = 3;
 
-	name!: string;
 	rarity!: number;
 	img_url!: string;
 

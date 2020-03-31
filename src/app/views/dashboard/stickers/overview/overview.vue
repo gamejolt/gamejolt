@@ -1,55 +1,53 @@
 <template>
-	<div>
-		<section class="section">
-			<div class="container">
-				<h2 class="section-header" :class="{ h4: Screen.isXs }">
-					<translate>Collect more Stickers</translate>
-				</h2>
+	<section class="section">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 col-md-push-8">
+					<app-progress-bar class="-progress" :percent="stickerProgress">
+						<strong>{{ stickerProgress }}% to next sticker</strong>
+					</app-progress-bar>
 
-				<p>
-					<translate>Progress towards your next sticker:</translate>
-				</p>
+					<template v-if="stickersBuyableAmount > 0">
+						<p>
+							<translate
+								:translate-n="stickersBuyableAmount"
+								:translate-params="{ count: number(stickersBuyableAmount) }"
+								translate-plural="You currently have enough points to unlock %{ count } new stickers!"
+							>
+								You currently have enough points to unlock %{ count } new sticker!
+							</translate>
+						</p>
+						<p>
+							<app-button :to="{ name: 'dash.stickers.collect' }">
+								<translate>Unlock a Sticker</translate>
+							</app-button>
+						</p>
+						<br />
+					</template>
 
-				<app-progress-bar class="-progress" :percent="stickerProgress" />
-
-				<template v-if="stickersBuyableAmount > 0">
-					<p>
-						<translate
-							:translate-n="stickersBuyableAmount"
-							:translate-params="{ count: number(stickersBuyableAmount) }"
-							translate-plural="You can collect %{ count } new stickers!"
-						>
-							You can collect %{ count } new sticker!
+					<p class="small">
+						<translate>
+							Get more stickers by liking posts on Game Jolt. Every time you like a post, you gain
+							progress to getting your next sticker. Like posts, get stickers!
 						</translate>
 					</p>
-					<router-link :to="{ name: 'dash.stickers.collect' }">
-						<app-button>
-							<translate>Collect</translate>
-						</app-button>
-					</router-link>
-				</template>
-			</div>
-		</section>
-		<section class="section">
-			<div class="container">
-				<h2 class="section-header" :class="{ h4: Screen.isXs }">
-					<translate>Sticker Collection</translate>
-				</h2>
-
-				<div v-if="hasStickersInCollection" class="-collection">
-					<app-sticker-card
-						v-for="stickerCount of stickerCollection"
-						:key="stickerCount.sticker_id"
-						:sticker="stickerCount.sticker"
-						:count="stickerCount.count"
-					/>
 				</div>
-				<div v-else class="help-block">
-					<translate>You don't have any stickers yet.</translate>
+				<div class="col-md-8 col-md-pull-4">
+					<div v-if="hasStickersInCollection" class="-collection">
+						<app-sticker-card
+							v-for="stickerCount of stickerCollection"
+							:key="stickerCount.sticker_id"
+							:sticker="stickerCount.sticker"
+							:count="stickerCount.count"
+						/>
+					</div>
+					<p v-else>
+						<translate>You don't have any stickers yet.</translate>
+					</p>
 				</div>
 			</div>
-		</section>
-	</div>
+		</div>
+	</section>
 </template>
 
 <style lang="stylus" scoped>

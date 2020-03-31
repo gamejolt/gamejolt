@@ -24,39 +24,34 @@
 								}"
 							></div>
 						</div>
-						<app-expand
-							:when="showCollectControls"
-							:animate-initial="true"
-							class="-revealed-controls"
-						>
+						<div v-if="showCollectControls" class="-revealed-controls anim-fade-in">
 							<app-button primary @click="onClickCollect">
 								<translate>Collect</translate>
 							</app-button>
-						</app-expand>
+						</div>
 					</template>
-					<app-sticker-card-hidden
-						v-else
-						@click.native="onBuySticker"
-						class="-card-hidden"
-					/>
+					<template v-else>
+						<div>
+							<app-sticker-card-hidden @click.native="onBuySticker" class="-card-hidden" />
+						</div>
+						<hr class="underbar underbar-center" />
+						<p>
+							<translate>What's it gonna be? The suspense is almost too much!</translate>
+						</p>
+					</template>
 				</div>
 
-				<div v-if="!canReveal">
+				<div v-if="!canReveal" class="text-center">
 					<div class="page-cut"></div>
-					<h3 class="section-header" :class="{ h4: Screen.isXs }">
-						<translate>Insufficient Credits</translate>
-					</h3>
-					<div class="help-block">
+					<p>
 						<translate>
-							You do not have sufficient credit to collect more stickers. Interact
-							with Game Jolt, like some posts, you might get some more.
+							You do not have enough points to collect more stickers. Use Game Jolt, like some
+							posts, you might get some more.
 						</translate>
-					</div>
-					<router-link :to="{ name: 'dash.stickers' }">
-						<app-button>
-							<translate>View Collection</translate>
-						</app-button>
-					</router-link>
+					</p>
+					<app-button :to="{ name: 'dash.stickers.overview' }">
+						<translate>View Collection</translate>
+					</app-button>
 				</div>
 			</div>
 		</section>
@@ -81,6 +76,7 @@
 
 .-card-hidden
 	cursor: pointer
+	margin-bottom: 24px
 
 	&:hover
 		animation: hidden-card-color 5s linear infinite alternate,

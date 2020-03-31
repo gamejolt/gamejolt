@@ -21,33 +21,29 @@
 						v-for="stickerCount of stickerCounts"
 						:key="stickerCount.sticker.id"
 					>
-						<img
-							:src="stickerCount.sticker.img_url"
-							v-app-tooltip="stickerCount.sticker.name"
-							@click="selectSticker(stickerCount.sticker)"
-						/>
+						<img :src="stickerCount.sticker.img_url" @click="selectSticker(stickerCount.sticker)" />
 						<div class="-sticker-num">x{{ stickerCount.count }}</div>
 					</div>
 				</div>
 				<div v-else>
 					<p>
-						<translate
-							>This post is already chock full of awesome stickers. Find a different
-							post to place more stickers on!</translate
-						>
+						<translate>
+							This post is already chock full of awesome stickers. Find a different post to place
+							stickers on!
+						</translate>
 					</p>
 				</div>
 			</template>
 			<div v-else>
-				<p><translate>Looks like you don't have any stickers right now...</translate></p>
 				<p>
-					<translate
-						>Maybe check in your collection, you could get some more there!</translate
-					>
+					<translate>
+						Looks like you don't have any stickers right now. Maybe you can unlock more in your
+						sticker collection.
+					</translate>
 				</p>
-				<router-link :to="{ name: 'dash.stickers.collect' }">
+				<router-link :to="{ name: 'dash.stickers.overview' }">
 					<app-button>
-						<translate>Collect Stickers</translate>
+						<translate>View Sticker Collection</translate>
 					</app-button>
 				</router-link>
 			</div>

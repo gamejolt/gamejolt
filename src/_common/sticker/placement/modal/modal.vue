@@ -12,10 +12,9 @@
 		</div>
 		<div class="modal-body">
 			<div class="help-block">
-				<translate
-					>Position the sticker in the outlined target area below, then press
-					"Place".</translate
-				>
+				<translate>
+					Position the sticker in the outlined target area below, then press Place.
+				</translate>
 			</div>
 
 			<div class="-mount">

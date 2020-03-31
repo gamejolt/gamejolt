@@ -49,7 +49,7 @@
 					</router-link>
 					<router-link
 						class="list-group-item offline-disable"
-						:to="{ name: 'dash.stickers' }"
+						:to="{ name: 'dash.stickers.overview' }"
 						v-app-track-event="`account-popover:stickers`"
 					>
 						<span class="tag tag-highlight">

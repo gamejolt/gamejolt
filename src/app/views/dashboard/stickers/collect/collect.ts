@@ -1,7 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { sleep } from '../../../../../utils/utils';
 import { Api } from '../../../../../_common/api/api.service';
-import AppExpand from '../../../../../_common/expand/expand.vue';
 import { Growls } from '../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -16,7 +15,6 @@ import { InitPayload } from '../stickers';
 	components: {
 		AppStickerCard,
 		AppStickerCardHidden,
-		AppExpand,
 	},
 	directives: {
 		AppTooltip,
