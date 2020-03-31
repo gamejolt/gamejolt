@@ -5,7 +5,7 @@
 				<div class="-reveal">
 					<div v-if="!canReveal">
 						<app-sticker-card-hidden
-							v-app-tooltip="$gettext(`Not enough credit to collect sticker`)"
+							v-app-tooltip="$gettext(`Not enough credit to unlock sticker`)"
 						/>
 					</div>
 					<div v-else-if="isRevealing" class="-card-revealing-outer">
@@ -45,8 +45,8 @@
 					<div class="page-cut"></div>
 					<p>
 						<translate>
-							You do not have enough points to collect more stickers. Use Game Jolt, like some
-							posts, you might get some more.
+							You do not have enough points to unlock more stickers. Use Game Jolt, like some posts,
+							you might get some more.
 						</translate>
 					</p>
 					<app-button :to="{ name: 'dash.stickers.overview' }">
