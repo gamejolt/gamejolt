@@ -17,6 +17,7 @@ import { ModalConfirm } from '../../modal/confirm/confirm-service';
 import { CommentableModel, Model, ModelSaveRequestOptions } from '../../model/model.service';
 import { Poll } from '../../poll/poll.model';
 import { Registry } from '../../registry/registry.service';
+import { StickerPlacement } from '../../sticker/placement/placement.model';
 import { appStore } from '../../store/app-store';
 import { Translate } from '../../translate/translate.service';
 import { User } from '../../user/user.model';
@@ -76,6 +77,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	key_groups: KeyGroup[] = [];
 	poll!: Poll | null;
 	platforms_published_to: FiresidePostPublishedPlatform[] = [];
+	stickers: StickerPlacement[] = [];
 
 	// Used for forms and saving.
 	key_group_ids: number[] = [];
@@ -134,6 +136,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 		if (data.platforms_published_to) {
 			this.platforms_published_to = data.platforms_published_to;
+		}
+
+		if (data.stickers) {
+			this.stickers = StickerPlacement.populate(data.stickers);
 		}
 
 		Registry.store('FiresidePost', this);
@@ -235,6 +241,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		}
 
 		return true;
+	}
+
+	get canPlaceSticker() {
+		return this.canComment;
 	}
 
 	getContent(context: ContentContext) {

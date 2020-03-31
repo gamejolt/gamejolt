@@ -46,6 +46,7 @@ export default class AppShellAccountPopover extends Vue {
 
 	isShowing = false;
 	walletAmount: number | false = false;
+	showNew = false;
 
 	readonly Screen = Screen;
 	readonly Connection = Connection;
@@ -53,9 +54,18 @@ export default class AppShellAccountPopover extends Vue {
 	@Action
 	logout!: Store['logout'];
 
+	mounted() {
+		const lsValue = localStorage.getItem('gj-stickers-new');
+		this.showNew = lsValue !== '1';
+	}
+
 	onShow() {
 		this.isShowing = true;
 		this.getWallet();
+		if (this.showNew) {
+			this.showNew = false;
+			localStorage.setItem('gj-stickers-new', '1');
+		}
 	}
 
 	onHide() {
