@@ -5,7 +5,7 @@
 				<div class="-reveal">
 					<div v-if="!canReveal">
 						<app-sticker-card-hidden
-							v-app-tooltip="$gettext(`Not enough credit to unlock sticker`)"
+							v-app-tooltip="$gettext(`Not enough progress to unlock sticker`)"
 						/>
 					</div>
 					<div v-else-if="isRevealing" class="-card-revealing-outer">
