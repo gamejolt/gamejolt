@@ -38,7 +38,7 @@
 							v-for="stickerCount of stickerCollection"
 							:key="stickerCount.sticker_id"
 							:sticker="stickerCount.sticker"
-							:count="stickerCount.count"
+							:label="`x${stickerCount.count}`"
 						/>
 					</div>
 					<p v-else>

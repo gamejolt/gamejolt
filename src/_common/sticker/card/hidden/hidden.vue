@@ -4,9 +4,7 @@
 			<app-jolticon class="-icon jolticon-3x" icon="sticker" />
 		</div>
 		<div class="-pocket fill-darkest">
-			<div class="-name">
-				<translate>Unlock</translate>
-			</div>
+			<translate>Unlock</translate>
 		</div>
 	</div>
 </template>
@@ -36,8 +34,6 @@
 	display: flex
 	flex-direction: column
 	align-items: center
-
-.-name
 	font-weight: bold
 </style>
 

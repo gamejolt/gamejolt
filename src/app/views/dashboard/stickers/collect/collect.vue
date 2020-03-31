@@ -13,7 +13,7 @@
 					</div>
 					<template v-else-if="isRevealed && purchasedSticker">
 						<div class="-card-revealed-container">
-							<app-sticker-card class="-card-revealed" :sticker="purchasedSticker" />
+							<app-sticker-card class="-card-revealed" :sticker="purchasedSticker" label="+1" />
 							<div
 								v-if="purchasedSticker.rarity > 0"
 								class="-card-revealed-effect"
@@ -22,7 +22,7 @@
 									'-card-revealed-effect-rare': purchasedSticker.rarity === 2,
 									'-card-revealed-effect-epic': purchasedSticker.rarity === 3,
 								}"
-							></div>
+							/>
 						</div>
 						<div v-if="showCollectControls" class="-revealed-controls anim-fade-in">
 							<app-button primary @click="onClickCollect">
