@@ -62,8 +62,6 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-vendors = official
-
 .-collect-page
 	min-height: 600px
 
@@ -154,7 +152,7 @@ $-hidden-card-color-shadow-large = 20px
 
 @keyframes hidden-card-shake
 	0%
-		transform: rotate3d(0)
+		transform: none
 
 	33%
 		transform: rotate3d(0, 0, 1, 6deg)
@@ -163,7 +161,7 @@ $-hidden-card-color-shadow-large = 20px
 		transform: rotate3d(0, 0, 1, -6deg)
 
 	100%
-		transform: rotate3d(0)
+		transform: none
 
 @keyframes card-revealing
 	0%
