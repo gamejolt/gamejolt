@@ -10,7 +10,6 @@
 
 interface Window {
 	_gjStartTime: number;
-	Stripe: StripeStatic;
 	grecaptcha: ReCaptchaV2.ReCaptcha;
 	gapi: any;
 	__INITIAL_STATE__?: {

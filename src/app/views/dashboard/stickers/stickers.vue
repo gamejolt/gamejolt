@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<app-page-header :cover-media-item="coverMediaItem" cover-max-height="250">
+		<app-page-header :cover-media-item="coverMediaItem" :cover-max-height="250">
 			<router-link :to="{ name: 'dash.stickers.overview' }">
 				<h1 class="section-header sans-margin-bottom">
 					<translate>Your Stickers</translate>
