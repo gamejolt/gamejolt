@@ -22,6 +22,9 @@
 		.-card-bg-img
 			filter: grayscale(0.6)
 
+		.-overlay
+			opacity: 0
+
 	&.-active
 		elevate-2()
 		border-color: var(--theme-link)
@@ -29,6 +32,9 @@
 		.-card-bg-img
 			filter: none !important
 			transform: scale(1.1)
+
+		.-overlay
+			opacity: 0
 
 		.-card-content-title
 			background-color: var(--theme-bi-bg)
@@ -40,6 +46,7 @@
 	opacity: 0.2
 	width: 100%
 	height: 100%
+	transition: opacity 200ms
 
 .-card
 	&-bg
