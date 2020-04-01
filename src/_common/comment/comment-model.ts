@@ -202,7 +202,7 @@ export class Comment extends Model {
 		this.votes += operation;
 
 		try {
-			await newVote.$save();
+			return await newVote.$save();
 		} catch (e) {
 			this.votes -= operation;
 			this.user_vote = previousVote;
@@ -224,7 +224,7 @@ export class Comment extends Model {
 		this.user_vote = undefined;
 
 		try {
-			await previousVote.$remove();
+			return await previousVote.$remove();
 		} catch (e) {
 			this.user_vote = previousVote;
 			++this.votes;
