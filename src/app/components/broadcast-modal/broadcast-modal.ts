@@ -5,7 +5,6 @@ import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { AppImgResponsive } from '../../../_common/img/responsive/responsive';
 import { BaseModal } from '../../../_common/modal/base';
 import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
-import { Scroll } from '../../../_common/scroll/scroll.service';
 import AppStickerTargetTS from '../../../_common/sticker/target/target';
 import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
@@ -48,9 +47,5 @@ export default class AppBroadcastModal extends BaseModal {
 
 	onPostStickersVisibilityChange(visible: boolean) {
 		this.stickersVisible = visible;
-		// Scroll to the sticker target to show stickers.
-		if (visible) {
-			Scroll.to(this.$refs.stickerTarget.$el as HTMLElement, { preventDirections: ['down'] });
-		}
 	}
 }
