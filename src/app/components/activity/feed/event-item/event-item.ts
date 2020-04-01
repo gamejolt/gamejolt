@@ -17,6 +17,7 @@ import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import AppPill from '../../../../../_common/pill/pill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
@@ -58,6 +59,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppContentViewer,
 		AppUserVerifiedTick,
 		AppActivityFeedEventItemBlocked,
+		AppStickerTarget,
 	},
 	filters: {
 		number,

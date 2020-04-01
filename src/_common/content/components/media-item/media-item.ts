@@ -1,4 +1,4 @@
-import { ResizeObserver } from 'resize-observer';
+import ResizeObserver from 'resize-observer-polyfill';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import AppLoading from '../../../loading/loading.vue';

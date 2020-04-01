@@ -12,6 +12,7 @@ import { AppResponsiveDimensions } from '../../../../_common/responsive-dimensio
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
 import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
+import AppStickerTarget from '../../../../_common/sticker/target/target.vue';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
 import AppVideo from '../../../../_common/video/video.vue';
@@ -37,6 +38,7 @@ import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 		AppAdWidget,
 		AppCommunityPill,
 		AppContentViewer,
+		AppStickerTarget,
 	},
 	directives: {
 		AppScrollWhen,
