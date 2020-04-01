@@ -81,6 +81,7 @@ export default class AppActivityFeedEventItem extends Vue {
 	canToggleLead = false;
 	hasBypassedBlock = false;
 	stickersVisible = false;
+	animateStickers = true;
 
 	private resizeSensor?: any;
 	private feedComponent!: AppActivityFeedTS;
@@ -229,6 +230,9 @@ export default class AppActivityFeedEventItem extends Vue {
 	created() {
 		if (!GJ_IS_SSR) {
 			this.stickersVisible = Settings.get('always-show-stickers');
+			if (this.stickersVisible) {
+				this.animateStickers = false;
+			}
 		}
 	}
 
@@ -364,6 +368,7 @@ export default class AppActivityFeedEventItem extends Vue {
 	}
 
 	onPostStickersVisibilityChange(visible: boolean) {
+		this.animateStickers = true;
 		this.stickersVisible = visible;
 		// Scroll to the sticker target to show stickers.
 		if (visible) {

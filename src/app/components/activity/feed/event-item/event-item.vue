@@ -122,6 +122,7 @@
 				<app-sticker-target
 					:stickers="post.stickers"
 					:show-stickers="stickersVisible"
+					:no-animate-in="!animateStickers"
 					ref="stickerTarget"
 				>
 					<!--

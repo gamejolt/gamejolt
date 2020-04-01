@@ -13,6 +13,7 @@ import AppSticker from '../sticker.vue';
 export default class AppStickerTarget extends Vue {
 	@Prop(propRequired(Array)) stickers!: StickerPlacement[];
 	@Prop(propOptional(Boolean, false)) showStickers!: boolean;
+	@Prop(propOptional(Boolean, false)) noAnimateIn!: boolean;
 
 	// Sort so that the newer stickers go on top of the older ones.
 	get sorted() {

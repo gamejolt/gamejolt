@@ -4,7 +4,7 @@
 			<app-sticker
 				v-for="sticker of sorted"
 				:key="sticker.id"
-				class="-sticker"
+				:class="{ '-sticker-animate': !noAnimateIn }"
 				:style="{ 'animation-delay': getStickerAnimationDelay(sticker) }"
 				:sticker="sticker"
 			/>
@@ -17,7 +17,7 @@
 .-sticker-target
 	position: relative
 
-.-sticker
+.-sticker-animate
 	animation-name: sticker-animate-in
 	animation-duration: 0.5s
 	animation-fill-mode: forwards
