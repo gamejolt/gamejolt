@@ -18,6 +18,7 @@ import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import AppPill from '../../../../../_common/pill/pill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
+import { Settings } from '../../../../../_common/settings/settings.service';
 import AppStickerTargetTS from '../../../../../_common/sticker/target/target';
 import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
@@ -223,6 +224,12 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	get shouldBlock() {
 		return !this.hasBypassedBlock && this.isBlocked;
+	}
+
+	created() {
+		if (!GJ_IS_SSR) {
+			this.stickersVisible = Settings.get('always-show-stickers');
+		}
 	}
 
 	mounted() {

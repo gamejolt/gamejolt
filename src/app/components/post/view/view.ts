@@ -11,6 +11,7 @@ import { AppResponsiveDimensions } from '../../../../_common/responsive-dimensio
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
+import { Settings } from '../../../../_common/settings/settings.service';
 import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
 import AppStickerTargetTS from '../../../../_common/sticker/target/target';
 import AppStickerTarget from '../../../../_common/sticker/target/target.vue';
@@ -84,6 +85,12 @@ export default class AppPostView extends Vue {
 		return (
 			this.post.status === FiresidePost.STATUS_DRAFT && !this.post.canPublishToCommunities()
 		);
+	}
+
+	created() {
+		if (!GJ_IS_SSR) {
+			this.stickersVisible = Settings.get('always-show-stickers');
+		}
 	}
 
 	onPostRemoved() {
