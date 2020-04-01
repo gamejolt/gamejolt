@@ -4,7 +4,6 @@ import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { number } from '../../filters/number';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
-import { handleNewStickerNotification } from '../../sticker/sticker.model';
 import { AppTooltip } from '../../tooltip/tooltip';
 import { Comment } from '../comment-model';
 import { CommentThreadModal } from '../thread/modal.service';
@@ -71,15 +70,8 @@ export default class AppCommentControls extends Vue {
 		return this.comment.user_vote && this.comment.user_vote.vote === CommentVote.VOTE_DOWNVOTE;
 	}
 
-	async onUpvoteClick() {
-		const payload = await this.voteComment(CommentVote.VOTE_UPVOTE);
-		if (payload.success && payload.newSticker) {
-			handleNewStickerNotification(
-				this.$gettext(`You can unlock a new sticker!`),
-				this.$gettext(`Click this message to unlock right away.`),
-				this.$router
-			);
-		}
+	onUpvoteClick() {
+		this.voteComment(CommentVote.VOTE_UPVOTE);
 	}
 
 	onDownvoteClick() {
@@ -88,9 +80,9 @@ export default class AppCommentControls extends Vue {
 
 	voteComment(vote: number) {
 		if (!this.comment.user_vote || this.comment.user_vote.vote !== vote) {
-			return this.comment.$vote(vote);
+			this.comment.$vote(vote);
 		} else {
-			return this.comment.$removeVote();
+			this.comment.$removeVote();
 		}
 	}
 

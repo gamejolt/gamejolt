@@ -8,7 +8,7 @@ import { currency } from '../../../../_common/filters/currency';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { Settings } from '../../../../_common/settings/settings.service';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
+import { AppStore } from '../../../../_common/store/app-store';
 import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
@@ -44,11 +44,9 @@ export default class AppShellAccountPopover extends Vue {
 	@ThemeMutation
 	setDark!: ThemeStore['setDark'];
 
-	@AppState
-	hasNewStickers!: AppStore['hasNewStickers'];
-
 	isShowing = false;
 	walletAmount: number | false = false;
+	showNew = false;
 
 	readonly Screen = Screen;
 	readonly Connection = Connection;
@@ -56,17 +54,18 @@ export default class AppShellAccountPopover extends Vue {
 	@Action
 	logout!: Store['logout'];
 
-	get shouldShowNew() {
-		return this.shouldShowNewStickers;
-	}
-
-	get shouldShowNewStickers() {
-		return this.hasNewStickers;
+	mounted() {
+		const lsValue = localStorage.getItem('gj-stickers-new');
+		this.showNew = lsValue !== '1';
 	}
 
 	onShow() {
 		this.isShowing = true;
 		this.getWallet();
+		if (this.showNew) {
+			this.showNew = false;
+			localStorage.setItem('gj-stickers-new', '1');
+		}
 	}
 
 	onHide() {

@@ -2,7 +2,6 @@ import Component from 'vue-class-component';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { Sticker } from '../../../../_common/sticker/sticker.model';
-import { AppMutation, AppStore } from '../../../../_common/store/app-store';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 
 export type InitPayload = {
@@ -30,13 +29,6 @@ export type StickerCount = {
 	},
 })
 export default class RouteDashStickers extends BaseRouteComponent {
-	@AppMutation
-	setHasNewStickers!: AppStore['setHasNewStickers'];
-
-	created() {
-		this.setHasNewStickers(false);
-	}
-
 	get coverMediaItem() {
 		// Create fake media item resource to pass into the page header.
 		const url = require('./background.png');

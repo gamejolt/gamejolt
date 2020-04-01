@@ -8,7 +8,7 @@
 		<a class="navbar-item navbar-avatar" :class="{ active: isShowing }">
 			<app-user-avatar-img :user="app.user" />
 			<span
-				v-if="shouldShowNew"
+				v-if="showNew"
 				class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
 			>
 				<translate>NEW</translate>
@@ -52,7 +52,7 @@
 						:to="{ name: 'dash.stickers.overview' }"
 						v-app-track-event="`account-popover:stickers`"
 					>
-						<span v-if="shouldShowNewStickers" class="tag tag-highlight">
+						<span class="tag tag-highlight">
 							<translate>NEW</translate>
 						</span>
 						<translate>Stickers</translate>
@@ -99,8 +99,8 @@
 				<app-shell-user-box></app-shell-user-box>
 
 				<!--
-					We don't know if they have revenue until we do the call.
-				-->
+				We don't know if they have revenue until we do the call.
+			-->
 				<template v-if="walletAmount === false || walletAmount > 0">
 					<div class="account-popover-separator"></div>
 
