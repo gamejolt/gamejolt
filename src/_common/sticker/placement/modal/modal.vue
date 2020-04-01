@@ -77,7 +77,7 @@
 		border-color: #26ddb4
 
 .-sticker
-	cursor: pointer
+	cursor: grab
 
 .-sticker-glowing
 	animation-name: sticker-placed-glow
@@ -86,7 +86,7 @@
 
 .-sticker-dragging
 	filter: drop-shadow(4px 4px 5px black)
-	cursor: move
+	cursor: grabbing
 
 	animation-name: sticker-dragging-rotate
 	animation-duration: 2s

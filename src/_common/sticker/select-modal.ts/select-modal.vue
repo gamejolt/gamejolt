@@ -22,7 +22,16 @@
 						:key="stickerCount.sticker.id"
 					>
 						<img :src="stickerCount.sticker.img_url" @click="selectSticker(stickerCount.sticker)" />
-						<div class="-sticker-num">x{{ stickerCount.count }}</div>
+						<div
+							class="-sticker-num"
+							:class="{
+								'-sticker-rarity-uncommon': stickerCount.sticker.rarity === 1,
+								'-sticker-rarity-rare': stickerCount.sticker.rarity === 2,
+								'-sticker-rarity-epic': stickerCount.sticker.rarity === 3,
+							}"
+						>
+							x{{ stickerCount.count }}
+						</div>
 					</div>
 				</div>
 				<div v-else>
@@ -71,6 +80,15 @@
 
 	&-num
 		text-align: center
+		font-weight: bold
+
+	&-rarity
+		&-uncommon
+			color: #1bb804
+		&-rare
+			color: #18a5f2
+		&-epic
+			color: #ffbc56
 </style>
 
 <script lang="ts" src="./select-modal"></script>

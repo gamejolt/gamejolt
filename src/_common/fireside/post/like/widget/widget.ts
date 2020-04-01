@@ -6,6 +6,7 @@ import { AppAuthRequired } from '../../../../auth/auth-required-directive';
 import { number } from '../../../../filters/number';
 import { Growls } from '../../../../growls/growls.service';
 import { LikersModal } from '../../../../likers/modal.service';
+import { handleNewStickerNotification } from '../../../../sticker/sticker.model';
 import { AppTooltip } from '../../../../tooltip/tooltip';
 import AppUserFollowWidget from '../../../../user/follow/widget.vue';
 import { FiresidePost } from '../../post-model';
@@ -68,7 +69,14 @@ export default class AppFiresidePostLikeWidget extends Vue {
 			this.showLikeAnim = true;
 
 			try {
-				await newLike.$save();
+				const payload = await newLike.$save();
+				if (payload.success && payload.newSticker) {
+					handleNewStickerNotification(
+						this.$gettext(`You can unlock a new sticker!`),
+						this.$gettext(`Click this message to unlock right away.`),
+						this.$router
+					);
+				}
 			} catch (e) {
 				this.post.user_like = null;
 				--this.post.like_count;
