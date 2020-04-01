@@ -1,5 +1,5 @@
 <template>
-	<app-modal>
+	<app-modal ref="modal">
 		<div class="modal-controls">
 			<app-button @click="modal.dismiss()">
 				<translate>Close</translate>
