@@ -43,10 +43,7 @@
 				<div class="col-sm-8 col-sm-pull-4">
 					<div v-if="post.hasMedia">
 						<div v-for="item of post.media" :key="item.id">
-							<app-responsive-dimensions
-								class="-media-item"
-								:ratio="item.width / item.height"
-							>
+							<app-responsive-dimensions class="-media-item" :ratio="item.width / item.height">
 								<app-event-item-media-tags :gif="item.is_animated" />
 
 								<app-img-responsive
@@ -102,7 +99,13 @@
 						<br />
 					</template>
 
-					<app-event-item-controls show-comments :post="post" />
+					<app-event-item-controls
+						show-comments
+						:post="post"
+						:show-stickers="stickersVisible"
+						ref="stickerTarget"
+						@post-stickers-visibility-change="onPostStickersVisibilityChange"
+					/>
 				</div>
 			</div>
 		</div>

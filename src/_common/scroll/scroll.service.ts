@@ -9,6 +9,11 @@ if (!GJ_IS_SSR) {
 
 export type ScrollContext = HTMLElement | HTMLDocument;
 
+interface ScrollToOptions {
+	animate?: boolean;
+	preventDirections?: ('up' | 'down')[];
+}
+
 export class Scroll {
 	static shouldAutoScroll = true;
 	static autoscrollAnchor?: AppAutoscrollAnchor;
@@ -106,7 +111,7 @@ export class Scroll {
 	/**
 	 * Scrolls to the element passed in.
 	 */
-	static to(input: string | number | HTMLElement, options: { animate?: boolean } = {}) {
+	static to(input: string | number | HTMLElement, options: ScrollToOptions = {}) {
 		if (GJ_IS_SSR) {
 			return;
 		}
@@ -146,13 +151,23 @@ export class Scroll {
 	private static scrollToElement(
 		element: HTMLElement,
 		offset: number,
-		options: { animate?: boolean } = {}
+		options: ScrollToOptions = {}
 	) {
 		let top = this.getScrollTop(document) + element.getBoundingClientRect().top - offset;
 		this.scrollTo(top, options);
 	}
 
-	private static scrollTo(to: number, options: { animate?: boolean } = {}) {
+	private static scrollTo(to: number, options: ScrollToOptions = {}) {
+		if (options.preventDirections) {
+			const scrollY = window.scrollY;
+			if (
+				(options.preventDirections.includes('down') && to > scrollY) ||
+				(options.preventDirections.includes('up') && to < scrollY)
+			) {
+				return;
+			}
+		}
+
 		window.scrollTo({ top: to, behavior: options.animate ? 'smooth' : 'auto' });
 	}
 }

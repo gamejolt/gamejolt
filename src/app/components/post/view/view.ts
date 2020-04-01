@@ -10,7 +10,9 @@ import { AppImgResponsive } from '../../../../_common/img/responsive/responsive'
 import { AppResponsiveDimensions } from '../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
+import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
+import AppStickerTargetTS from '../../../../_common/sticker/target/target';
 import AppStickerTarget from '../../../../_common/sticker/target/target.vue';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
@@ -52,6 +54,12 @@ export default class AppPostView extends Vue {
 	@State
 	app!: Store['app'];
 
+	stickersVisible = false;
+
+	$refs!: {
+		stickerTarget: AppStickerTargetTS;
+	};
+
 	readonly Screen = Screen;
 
 	get communities() {
@@ -88,5 +96,13 @@ export default class AppPostView extends Vue {
 			title: this.$gettext('Huzzah!'),
 			message: this.$gettext('Your post has been published.'),
 		});
+	}
+
+	onPostStickersVisibilityChange(visible: boolean) {
+		this.stickersVisible = visible;
+		// Scroll to the sticker target to show stickers.
+		if (visible) {
+			Scroll.to(this.$refs.stickerTarget.$el as HTMLElement, { preventDirections: ['down'] });
+		}
 	}
 }

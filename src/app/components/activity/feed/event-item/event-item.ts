@@ -17,6 +17,8 @@ import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import AppPill from '../../../../../_common/pill/pill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import { Scroll } from '../../../../../_common/scroll/scroll.service';
+import AppStickerTargetTS from '../../../../../_common/sticker/target/target';
 import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
@@ -77,6 +79,7 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	canToggleLead = false;
 	hasBypassedBlock = false;
+	stickersVisible = false;
 
 	private resizeSensor?: any;
 	private feedComponent!: AppActivityFeedTS;
@@ -85,6 +88,10 @@ export default class AppActivityFeedEventItem extends Vue {
 	readonly EventItem = EventItem;
 
 	$el!: HTMLDivElement;
+
+	$refs!: {
+		stickerTarget: AppStickerTargetTS;
+	};
 
 	get isNew() {
 		return this.feed.isItemUnread(this.item);
@@ -347,6 +354,14 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	onPostUnpinned(item: EventItem) {
 		this.feedComponent.onPostUnpinned(item);
+	}
+
+	onPostStickersVisibilityChange(visible: boolean) {
+		this.stickersVisible = visible;
+		// Scroll to the sticker target to show stickers.
+		if (visible) {
+			Scroll.to(this.$refs.stickerTarget.$el as HTMLElement, { preventDirections: ['down'] });
+		}
 	}
 
 	getChannelRoute(postCommunity: FiresidePostCommunity) {

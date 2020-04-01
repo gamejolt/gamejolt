@@ -5,6 +5,8 @@ import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { AppImgResponsive } from '../../../_common/img/responsive/responsive';
 import { BaseModal } from '../../../_common/modal/base';
 import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
+import { Scroll } from '../../../_common/scroll/scroll.service';
+import AppStickerTargetTS from '../../../_common/sticker/target/target';
 import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import AppVideoEmbed from '../../../_common/video/embed/embed.vue';
@@ -32,10 +34,23 @@ export default class AppBroadcastModal extends BaseModal {
 	posts!: FiresidePost[];
 
 	post: FiresidePost | null = null;
+	stickersVisible = false;
 
 	readonly Environment = Environment;
 
+	$refs!: {
+		stickerTarget: AppStickerTargetTS;
+	};
+
 	created() {
 		this.post = this.posts[0];
+	}
+
+	onPostStickersVisibilityChange(visible: boolean) {
+		this.stickersVisible = visible;
+		// Scroll to the sticker target to show stickers.
+		if (visible) {
+			Scroll.to(this.$refs.stickerTarget.$el as HTMLElement, { preventDirections: ['down'] });
+		}
 	}
 }
