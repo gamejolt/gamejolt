@@ -1,10 +1,15 @@
 import { VueRouter } from 'vue-router/types/router';
-import { store } from '../../app/store/index';
+import { VuexStore } from '../../utils/vuex';
 import { Growls } from '../growls/growls.service';
 import { Model } from '../model/model.service';
 import { appStore } from '../store/app-store';
 
-export function handleNewStickerNotification(title: string, message: string, router: VueRouter) {
+export function handleNewStickerNotification(
+	title: string,
+	message: string,
+	store: VuexStore,
+	router: VueRouter
+) {
 	// Only show the growl when we haven't already notified the user of a new sticker.
 	if (!appStore.state.hasNewStickers) {
 		Growls.success({
