@@ -48,7 +48,7 @@ export default class RouteCheckout extends BaseRouteComponent {
 		this.game = new Game($payload.game);
 		this.setPageTheme(this.game.theme || null);
 
-		window.Stripe.setPublishableKey($payload.stripePublishableKey);
+		Stripe($payload.stripePublishableKey);
 	}
 
 	onSubmit(_formModel: any, response: any) {

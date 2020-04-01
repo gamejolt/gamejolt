@@ -1,3 +1,4 @@
+import * as StripeData from 'stripe';
 import { Component } from 'vue-property-decorator';
 import { loadScript } from '../../../../../utils/utils';
 import { Api } from '../../../../../_common/api/api.service';
@@ -8,35 +9,44 @@ import { Geo } from '../../../../../_common/geo/geo.service';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
 import { User } from '../../../../../_common/user/user.model';
-import AppFinancialsManagedAccountAddress from './address.vue';
-import AppFinancialsManagedAccountBusiness from './business.vue';
-import AppFinancialsManagedAccountDob from './dob.vue';
-import AppFinancialsManagedAccountIdDocumentTS from './id-document';
-import AppFinancialsManagedAccountIdDocument from './id-document.vue';
-import AppFinancialsManagedAccountName from './name.vue';
-import AppFinancialsManagedAccountSsn from './ssn.vue';
+import AppFinancialsManagedAccountCompanyDetails from './company-details.vue';
+import AppFinancialsManagedAccountPersonTS from './person';
+import AppFinancialsManagedAccountPerson from './person.vue';
 
 interface FormModel {
-	additional_owners_count: number;
-	'legal_entity.verification.document': any;
-	'legal_entity.verification.status': any;
-	'legal_entity.additional_owners.0.verification.document': any;
-	'legal_entity.additional_owners.1.verification.document': any;
-	'legal_entity.additional_owners.2.verification.document': any;
-	'legal_entity.additional_owners.3.verification.document': any;
+	// Step 1 params.
+	type: 'individual' | 'country';
+	country_code: string;
+
+	// Step 2 params.
 	[k: string]: any;
 }
+
+type StripeMeta =
+	| StripeData.countrySpecs.ICountrySpec['verification_fields']['individual']
+	| StripeData.countrySpecs.ICountrySpec['verification_fields']['company'];
+
+type PayloadStripeData = {
+	publishableKey: string;
+	countries: { [code: string]: string };
+	currencies: { [code: string]: string[] };
+
+	required: StripeMeta;
+	current: StripeData.accounts.IAccount;
+	persons: { [id: string]: StripeData.accounts.IPerson } | null;
+};
+
+type PersonRelationship = keyof NonNullable<StripeData.accounts.IPerson['relationship']>;
+
+// Person requirement fields start with the person id, which looks like "person_ID"
+const PERSON_REQUIREMENT_FIELD = new RegExp(`^(person_.*?)\\.`);
 
 @Component({
 	components: {
 		AppLoading,
 		AppExpand,
-		AppFinancialsManagedAccountName,
-		AppFinancialsManagedAccountDob,
-		AppFinancialsManagedAccountAddress,
-		AppFinancialsManagedAccountSsn,
-		AppFinancialsManagedAccountIdDocument,
-		AppFinancialsManagedAccountBusiness,
+		AppFinancialsManagedAccountPerson,
+		AppFinancialsManagedAccountCompanyDetails,
 	},
 })
 export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
@@ -46,81 +56,94 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 	isLoaded = false;
 
 	stripePublishableKey = '';
-	stripeMeta: any = null;
+	stripeMeta: StripeMeta = null as any;
 	additionalOwnerIndex = 0;
 	genericError = false;
 	currencies: any[] = [];
 
-	user?: User = null as any;
-	account?: UserStripeManagedAccount = null as any;
-	stripe?: any = null;
+	user: User = null as any;
+	account: UserStripeManagedAccount = null as any;
+	stripe: PayloadStripeData = null as any;
+	stripeInst: stripe.Stripe = null as any;
 
 	readonly StripeFileUploadUrl = 'https://uploads.stripe.com/v1/files';
 	readonly Geo = Geo;
 	readonly currency = currency;
 
+	$refs!: {
+		individual: AppFinancialsManagedAccountPersonTS;
+		representative: AppFinancialsManagedAccountPersonTS;
+	};
+
 	async onInit() {
 		if (!this.scriptLoaded) {
-			await loadScript('https://js.stripe.com/v2/');
+			await loadScript('https://js.stripe.com/v3/');
 			this.scriptLoaded = true;
 		}
-
-		// if ( Environment.env === 'development' ) {
-		// 	scope.formModel.bankAccount_country = 'GB';
-		// 	scope.formModel.bankAccount_currency = 'GBP',
-		// 	scope.formModel.bankAccount_accountNumber = '00012345';
-		// 	scope.formModel.bankAccount_routingNumber = '108800';
-		// 	scope.formModel.bankAccount_accountHolderName = 'MR I C ROFLCOPTER';
-		// 	scope.formModel.bankAccount_accountHolderType = 'individual';
-		// }
 
 		this.isLoaded = false;
 		const payload = await Api.sendRequest('/web/dash/financials/account');
 
-		this.stripePublishableKey = payload.stripe.publishableKey;
-		Stripe.setPublishableKey(payload.stripe.publishableKey);
+		const stripePayload = payload.stripe as PayloadStripeData;
+		this.stripePublishableKey = stripePayload.publishableKey;
+		this.stripeInst = Stripe(stripePayload.publishableKey);
 
 		this.user = new User(payload.user);
 		this.account = new UserStripeManagedAccount(payload.account);
-		this.stripe = payload.stripe;
-		this.stripeMeta = payload.stripe.required;
-
-		this.setField('additional_owners_count', 0);
-		if (
-			payload.stripe &&
-			payload.stripe.current &&
-			payload.stripe.current.legal_entity.additional_owners
-		) {
-			this.setField(
-				'additional_owners_count',
-				payload.stripe.current.legal_entity.additional_owners.length
-			);
-		}
+		this.stripe = stripePayload;
+		this.stripeMeta = stripePayload.required;
 
 		this.isLoaded = true;
-
-		// scope.updateCurrencies = function( )
-		// {
-		// 	scope.formState.currencies = scope.stripe.currencies[ scope.formModel.bankAccount_country ];
-		// }
 	}
 
 	requiresField(field: string) {
 		if (!this.stripeMeta) {
-			return undefined;
+			return false;
 		}
 
-		return (
-			this.stripeMeta.minimum.indexOf(field) !== -1 ||
-			// We special case personal_id_number.
-			// We need it for taxes, so we collect it if it's just in "additional".
-			(field === 'legal_entity.personal_id_number' &&
-				this.stripeMeta.additional.indexOf(field) !== -1) ||
-			(this.stripe.current &&
-				this.stripe.current.verification &&
-				this.stripe.current.verification.fields_needed &&
-				this.stripe.current.verification.fields_needed.indexOf(field) !== -1)
-		);
+		// We special case id_number.
+		// We need it for taxes, so we collect it even if it's just in "additional".
+		const isTaxIdField = field === `individual.id_number` || field === `company.tax_id`;
+		if (isTaxIdField && this.stripeMeta.additional.indexOf(field) !== -1) {
+			return true;
+		}
+
+		let requirements: string[] = this.stripe.current?.requirements?.past_due!;
+
+		// If the field is a person field, we need to look it up in the person object's
+		// requirement fields instead of the account's requirement fields.
+		// Note: the country spec minimum requirements do not list these directly,
+		// they only specify which relationships they need the people attached to the
+		// account to be satisfied, e.g. relationship.representative and relationship.owner
+		const person = this.getPersonFromField(field);
+		if (person) {
+			// The requirements listed on the person object don't have the person id
+			// as the start of the field, so we need to trim our provided field to match
+			// against these. The +1 is for the dot that comes after the person id.
+			// person_blah.address.line1 => address.line1
+			field = field.substr(person.id.length + 1);
+			requirements = person.requirements.past_due;
+		}
+
+		// A field is considered required if it, or its parent field is required. For example,
+		// if verification.document is specified, it means verification.document.front is implicitly required too.
+		//
+		// A field may be required as part of the minimum requirements from the country specs,
+		// or from the specific account or person object's requirements field.
+		const fieldParts = field.split('.');
+		do {
+			field = fieldParts.join('.');
+			if (this.stripeMeta.minimum.indexOf(field) !== -1) {
+				return true;
+			}
+
+			if (requirements.indexOf(field) !== -1) {
+				return true;
+			}
+			fieldParts.pop();
+		} while (fieldParts.length);
+
+		return false;
 	}
 
 	getStripeField(fieldPath: string) {
@@ -128,11 +151,20 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 			return undefined;
 		}
 
+		let obj = this.stripe.current as any;
+
+		// Same as this.requiresField, if the field is a person field,
+		// we need to check if its set on the person object.
+		const person = this.getPersonFromField(fieldPath);
+		if (person) {
+			fieldPath = fieldPath.substr(person.id.length + 1);
+			obj = person as any;
+		}
+
 		// Gotta traverse the object chain.
 		// We should return false if any of the paths don't exist.
 		const pieces = fieldPath.split('.');
 		const field = pieces.pop();
-		let obj = this.stripe.current;
 
 		for (let piece of pieces) {
 			if (!obj[piece]) {
@@ -148,98 +180,95 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 		return obj[field];
 	}
 
-	// This is only needed after the initial submission in some instances.
-	get requiresVerificationDocument() {
-		return (
-			this.requiresField('legal_entity.verification.document') ||
-			this.requiresField('legal_entity.additional_owners.0.verification.document') ||
-			this.requiresField('legal_entity.additional_owners.1.verification.document') ||
-			this.requiresField('legal_entity.additional_owners.2.verification.document') ||
-			this.requiresField('legal_entity.additional_owners.3.verification.document')
-		);
+	get representative() {
+		return this.getByRelationship('representative');
 	}
 
-	get isVerificationPending() {
-		// If they're in pending state and we don't require more info from them.
-		if (
-			this.account &&
-			this.account.status === 'pending' &&
-			!this.requiresVerificationDocument
-		) {
-			return true;
+	get owner() {
+		return this.getByRelationship('owner');
+	}
+
+	getByRelationship(relationship: PersonRelationship) {
+		if (!this.stripe.persons) {
+			return null;
+		}
+
+		for (let personId in this.stripe.persons) {
+			const person = this.stripe.persons[personId];
+			if (person.relationship?.[relationship]) {
+				return person;
+			}
+		}
+
+		return null;
+	}
+
+	getPersonFromField(field: string) {
+		if (!this.stripe.persons) {
+			return null;
+		}
+
+		const match = PERSON_REQUIREMENT_FIELD.exec(field);
+		if (!match) {
+			return null;
+		}
+
+		return this.stripe.persons[match[1]] || null;
+	}
+
+	// This is only needed after the initial submission in some instances.
+	get requiresVerificationDocument() {
+		const personIds = ['individual'];
+		personIds.push(...Object.keys(this.stripe.persons || {}));
+
+		for (let personId of personIds) {
+			if (
+				this.requiresField(`${personId}.verification.document`) ||
+				this.requiresField(`${personId}.verification.additional_document`)
+			) {
+				return true;
+			}
 		}
 
 		return false;
 	}
 
-	addAdditionalOwner() {
-		this.setField('additional_owners_count', this.formModel.additional_owners_count + 1);
-	}
-
-	private removeOwnerData(idx: number) {
-		const regex = new RegExp('legal_entity\\.additional_owners\\.' + idx + '\\.');
-		for (let field in this.formModel) {
-			if (regex.test(field)) {
-				this.$delete(this.formModel, field);
-			}
-		}
-	}
-
-	private copyOwnerData(oldIndex: number, newIndex: number) {
-		const regex = new RegExp('legal_entity\\.additional_owners\\.' + oldIndex + '\\.');
-		for (let field in this.formModel) {
-			if (regex.test(field)) {
-				const newField = field.replace('.' + oldIndex + '.', '.' + newIndex + '.');
-				this.setField(newField, this.formModel[newField]);
-			}
-		}
-	}
-
-	removeAdditionalOwner(index: number) {
-		// Reindex all the owners after the one that was removed to be shifted over once.
-		for (let i = index + 1; i < this.formModel.additional_owners_count; ++i) {
-			// We have to remove the owner data from the index before.
-			// If the current owner doesn't have all fields filled, it won't overwrite completely.
-			// It needs a "pristine" state to copy into.
-			this.removeOwnerData(i - 1);
-			this.copyOwnerData(i, i - 1);
-		}
-
-		// Clear out all the fields for the last one as well since it's now shifted.
-		this.removeOwnerData(this.formModel.additional_owners_count - 1);
-		this.setField('additional_owners_count', this.formModel.additional_owners_count - 1);
-	}
-
-	get isComplete() {
-		if (!this.account) {
+	get isVerificationPending() {
+		// If they're in pending state and we don't require more info from them.
+		if (!this.account || this.account.status !== 'pending') {
 			return false;
 		}
 
-		// Due by will be set if this account is required to fill in more by a specific date.
-		// This is for additional collection of fields beyond what we want initially.
-		return this.account.is_verified && !this.stripe.current.verification.due_by;
+		return !this.requiresVerificationDocument;
 	}
 
-	createPiiToken(data: any) {
-		return new Promise<any>((resolve, reject) => {
-			if (!data['legal_entity.personal_id_number']) {
-				resolve(null);
-				return;
-			}
+	get isComplete() {
+		if (!this.account?.is_verified) {
+			return false;
+		}
 
-			(Stripe as any).piiData.createToken(
-				{
-					personal_id_number: data['legal_entity.personal_id_number'],
-				},
-				(_: any, response: any) => {
-					if (response.error) {
-						reject(response.error);
-					} else {
-						resolve(response.id);
-					}
-				}
-			);
+		const allPersons = Object.values(this.stripe.persons || []);
+		if (this.account.type === 'individual') {
+			allPersons.push(this.stripe.current.individual as any);
+		}
+
+		return allPersons.find(person => person.verification.status !== 'verified') === undefined;
+	}
+
+	async createPiiToken(data: any) {
+		if (!data[`${this.account.type}.id_number`]) {
+			return null;
+		}
+
+		const response = await this.stripeInst.createToken('pii', {
+			personal_id_number: data[`${this.account.type}.id_number`],
 		});
+
+		if (response.error) {
+			throw response.error;
+		}
+
+		return response.token?.id;
 	}
 
 	async onSubmit() {
@@ -248,28 +277,34 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 
 		let id;
 		try {
-			if (
-				this.formModel['legal_entity.verification.document'] &&
-				this.formModel['legal_entity.verification.status'] !== 'verified'
-			) {
-				const idDocument: AppFinancialsManagedAccountIdDocumentTS = this.$refs[
-					'id-document'
-				] as any;
-				const _response = await idDocument.uploadIdDocument(this.stripePublishableKey);
-				data['legal_entity.verification.document'] = _response.id;
+			const uploadPromises = [];
+			const documentUploadElements = [this.$refs.individual, this.$refs.representative];
+			for (let ref of documentUploadElements) {
+				if (!ref) {
+					continue;
+				}
+
+				const uploadPromise = ref
+					.uploadDocuments(this.stripePublishableKey)
+					.then(([idDocumentUploadId, additionalDocumentUploadId]) => {
+						if (idDocumentUploadId) {
+							data[
+								`${ref.namePrefix}.verification.document.front`
+							] = idDocumentUploadId;
+						}
+
+						if (additionalDocumentUploadId) {
+							data[
+								`${ref.namePrefix}.verification.additional_document.front`
+							] = additionalDocumentUploadId;
+						}
+					});
+
+				uploadPromises.push(uploadPromise);
 			}
 
-			// Additional files
-			for (let i = 0; i < 4; i++) {
-				if (this.formModel[`legal_entity.additional_owners.${i}.verification.document`]) {
-					const curIndex = i;
-					const idDocument: AppFinancialsManagedAccountIdDocumentTS = this.$refs[
-						`additional-id-document-${i}`
-					] as any;
-					const _response = await idDocument.uploadIdDocument(this.stripePublishableKey);
-					data[`legal_entity.additional_owners.${curIndex}.verification.document`] =
-						_response.id;
-				}
+			if (uploadPromises.length) {
+				await Promise.all(uploadPromises);
 			}
 
 			this.genericError = false;
@@ -287,12 +322,8 @@ export default class FormFinancialsManagedAccount extends BaseForm<FormModel>
 		// Override the SSN with the token.
 		// This way the raw SSN never hits our server. Only the token.
 		if (id) {
-			data['legal_entity.personal_id_number'] = id;
+			data[`${this.account.type}.id_number`] = id;
 		}
-
-		// This signals the backend that the field names we're expecting to work with are dotted and not hyphenated.
-		// This is for backwards compatibility support with angular which used hyphenated fields.
-		data['dotted'] = true;
 
 		const response = await Api.sendRequest('/web/dash/financials/account', data);
 		if (response.success === false) {

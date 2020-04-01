@@ -268,10 +268,17 @@
   resolved "https://registry.yarnpkg.com/@types/simplebar/-/simplebar-2.4.1.tgz#19d40e2982115be98cb743debf3b286c3a014550"
   integrity sha512-ONFvoe5jHDmbpxXHkXGexP5nJTAmSuBUk47Bm1mo/fOmNCnrO0oiszIhriSFRXI3jBykXys0p2vhzToI+X/W3g==
 
-"@types/stripe@2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@types/stripe/-/stripe-2.0.2.tgz#d27c2f5a26ded985f83f7159e135ba2fcbc7b16f"
-  integrity sha1-0nwvWibe2YX4P3FZ4TW6L8vHsW8=
+"@types/stripe-v3@3.1.17":
+  version "3.1.17"
+  resolved "https://registry.yarnpkg.com/@types/stripe-v3/-/stripe-v3-3.1.17.tgz#0fd3c4b134daa1cd61631f58eeb6d756e0377668"
+  integrity sha512-ZnADc7cgvrnRpz9lkENMgMhBWYR6ybz/745WYPlKZZXzU05ZaADRRtafPfZDTpQhALLpX/KYKmWN/j9GmbIg4g==
+
+"@types/stripe@7.13.22":
+  version "7.13.22"
+  resolved "https://registry.yarnpkg.com/@types/stripe/-/stripe-7.13.22.tgz#7927d30c3dd1a4cb7333d3c5eb0fa2fa8402f16b"
+  integrity sha512-iAYycvdjpquHGvPymWSzplrLENxp4SiBre2mfAqNOqPNS6UtVCHcYz5g9Gqlci0fCekqvUbeiARJ/VmovBqIMA==
+  dependencies:
+    "@types/node" "*"
 
 "@types/twitter-text@2.0.0":
   version "2.0.0"
