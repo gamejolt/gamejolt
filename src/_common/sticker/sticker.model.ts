@@ -1,17 +1,24 @@
 import { VueRouter } from 'vue-router/types/router';
+import { store } from '../../app/store/index';
 import { Growls } from '../growls/growls.service';
 import { Model } from '../model/model.service';
+import { appStore } from '../store/app-store';
 
 export function handleNewStickerNotification(title: string, message: string, router: VueRouter) {
-	Growls.success({
-		title,
-		message,
-		onclick: () => {
-			router.push({
-				name: 'dash.stickers.collect',
-			});
-		},
-	});
+	// Only show the growl when we haven't already notified the user of a new sticker.
+	if (!appStore.hasNewStickers) {
+		Growls.success({
+			title,
+			message,
+			onclick: () => {
+				router.push({
+					name: 'dash.stickers.collect',
+				});
+			},
+		});
+
+		store.commit('app/setHasNewStickers', true);
+	}
 }
 
 export class Sticker extends Model {

@@ -17,6 +17,7 @@ export type Mutations = {
 	'app/setError': number;
 	'app/clearError': undefined;
 	'app/redirect': string;
+	'app/setHasNewStickers': boolean;
 };
 
 interface UserConsents {
@@ -24,12 +25,15 @@ interface UserConsents {
 	eea?: boolean;
 }
 
+const STICKER_LOCAL_STORAGE_NEW_KEY = 'gj-stickers-new-2';
+
 @VuexModule()
 export class AppStore extends VuexStore<AppStore, Actions, Mutations> {
 	user: User | null = null;
 	userBootstrapped = false;
 	consents: UserConsents = {};
 	error: number | string | null = null;
+	hasNewStickers = false;
 
 	@VuexMutation
 	setUser(user: Mutations['app/setUser']) {
@@ -39,6 +43,11 @@ export class AppStore extends VuexStore<AppStore, Actions, Mutations> {
 			this.user = user;
 		}
 		this.userBootstrapped = true;
+
+		// Set the new stickers indicator.
+		const lsValue = localStorage.getItem(STICKER_LOCAL_STORAGE_NEW_KEY);
+		// TODO: Remove the null check when we don't want to show NEW by default anymore.
+		this.hasNewStickers = lsValue === '1' || lsValue === null;
 	}
 
 	@VuexMutation
@@ -69,6 +78,15 @@ export class AppStore extends VuexStore<AppStore, Actions, Mutations> {
 			Environment.ssrContext.redirect = location;
 		} else {
 			Navigate.goto(location);
+		}
+	}
+
+	@VuexMutation
+	setHasNewStickers(has: Mutations['app/setHasNewStickers']) {
+		if (this.userBootstrapped) {
+			this.hasNewStickers = has;
+
+			localStorage.setItem(STICKER_LOCAL_STORAGE_NEW_KEY, has ? '1' : '0');
 		}
 	}
 }
