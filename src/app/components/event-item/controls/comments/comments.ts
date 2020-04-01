@@ -3,6 +3,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import FormComment from '../../../../../_common/comment/add/add.vue';
+import { Comment } from '../../../../../_common/comment/comment-model';
 import {
 	CommentAction,
 	CommentMutation,
@@ -106,6 +107,7 @@ export default class AppEventItemControlsComments extends Vue {
 		CommentModal.show({
 			model: this.model,
 			displayMode: 'comments',
+			initialTab: Comment.SORT_YOU,
 		});
 	}
 

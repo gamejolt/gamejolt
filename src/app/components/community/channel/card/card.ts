@@ -18,6 +18,7 @@ export default class AppCommunityChannelCard extends Vue {
 	@Prop(propOptional(Boolean, false)) isActive!: boolean;
 	@Prop(propOptional(Boolean, false)) isUnread!: boolean;
 	@Prop(propOptional(String)) sort!: string;
+	@Prop(propOptional(Boolean, false)) isLocked!: boolean;
 
 	get linkTo() {
 		const link = { name: 'communities.view.overview' } as any;

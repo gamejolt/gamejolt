@@ -1,15 +1,22 @@
 <template>
 	<section class="section" v-if="post">
-		<div v-app-scroll-when="true"></div>
+		<div v-app-scroll-when="true" />
 
 		<div class="container">
 			<div v-if="post.hasVideo" class="full-bleed-xs">
-				<app-video-embed video-provider="youtube" :video-id="post.videos[0].video_id" autoplay />
+				<app-video-embed
+					video-provider="youtube"
+					:video-id="post.videos[0].video_id"
+					autoplay
+				/>
 				<br />
 			</div>
 
 			<div class="row">
-				<div class="col-sm-10 col-md-8 col-lg-7" :class="{ 'col-centered': Screen.isMobile }">
+				<div
+					class="col-sm-10 col-md-8 col-lg-7"
+					:class="{ 'col-centered': Screen.isMobile }"
+				>
 					<div class="post-view">
 						<div v-if="post.hasMedia" class="full-bleed-xs">
 							<div v-for="item of post.media" :key="item.id">
@@ -42,7 +49,10 @@
 						</div>
 
 						<div v-if="post.hasSketchfab" class="full-bleed-xs">
-							<app-sketchfab-embed :sketchfab-id="post.sketchfabs[0].sketchfab_id" autoplay />
+							<app-sketchfab-embed
+								:sketchfab-id="post.sketchfabs[0].sketchfab_id"
+								autoplay
+							/>
 						</div>
 
 						<div class="tiny text-muted">
@@ -54,12 +64,18 @@
 								</span>
 								<app-time-ago :date="post.scheduled_for" strict without-suffix />
 							</template>
-							<span v-else-if="post.isDraft" class="tag" style="vertical-align: middle">
+							<span
+								v-else-if="post.isDraft"
+								class="tag"
+								style="vertical-align: middle"
+							>
 								<translate>Draft</translate>
 							</span>
 						</div>
 
-						<app-content-viewer :source="post.lead_content" />
+						<app-sticker-target :stickers="post.stickers">
+							<app-content-viewer :source="post.lead_content" />
+						</app-sticker-target>
 
 						<div v-if="post.hasArticle">
 							<div class="page-cut" />
@@ -86,19 +102,34 @@
 							/>
 						</div>
 
+						<template v-if="shouldShowCommunityPublishError">
+							<br />
+							<div class="well fill-offset">
+								<app-jolticon icon="notice" notice />
+								<span
+									><translate
+										>You can't publish this post to the selected community
+										channel because you don't have permissions to post into that
+										specific channel. Please select a different
+										channel.</translate
+									></span
+								>
+							</div>
+						</template>
+
 						<br />
 					</template>
 
 					<app-event-item-controls
 						:post="post"
 						show-comments
-						show-user-follow
+						should-show-follow
 						@post-remove="onPostRemoved"
 						@post-publish="onPostPublished"
 					/>
 				</div>
 				<div class="col-md-4 col-lg-5" v-if="shouldShowAds && Screen.isDesktop">
-					<app-ad-widget class="pull-right" />
+					<app-ad-widget size="rectangle" placement="side" class="pull-right" />
 				</div>
 			</div>
 		</div>
@@ -130,7 +161,6 @@
 .-community-row
 	display: flex
 	align-items: center
-
 </style>
 
 <script lang="ts" src="./view"></script>

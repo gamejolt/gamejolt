@@ -1,4 +1,4 @@
-import { ResizeObserver } from 'resize-observer';
+import ResizeObserver from 'resize-observer-polyfill';
 import { createTextMaskInputElement } from 'text-mask-core/dist/textMaskCore';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { Ruler } from '../../../ruler/ruler-service';

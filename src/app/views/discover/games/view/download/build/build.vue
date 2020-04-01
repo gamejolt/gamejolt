@@ -74,7 +74,7 @@
 									</div>
 
 									<br />
-									<app-ad-widget size="video" />
+									<app-ad-widget size="video" placement="content" />
 
 									<!--
 										Developer's games
@@ -118,7 +118,7 @@
 
 						<div class="col-md-4 pull-right" v-if="Screen.isDesktop">
 							<div style="width: 300px">
-								<app-ad-widget size="rectangle" />
+								<app-ad-widget size="rectangle" placement="side" />
 							</div>
 
 							<hr />
@@ -128,7 +128,7 @@
 							<hr />
 
 							<div style="width: 300px">
-								<app-ad-widget size="rectangle" />
+								<app-ad-widget size="rectangle" placement="side" />
 							</div>
 						</div>
 

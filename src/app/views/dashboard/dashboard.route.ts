@@ -5,6 +5,7 @@ import { routeDashAnalytics } from './analytics/analytics.route';
 import { routeDashCommunities } from './communities/communities.route';
 import { routeDashGames } from './games/games.route';
 import { routeDashLinking } from './linking/linking.route';
+import { routeDashStickers } from './stickers/stickers.route';
 
 export const routeDash: RouteConfig = {
 	name: 'dashboard',
@@ -17,5 +18,6 @@ export const routeDash: RouteConfig = {
 		routeDashCommunities,
 		routeDashAnalytics,
 		routeDashLinking,
+		routeDashStickers,
 	],
 };

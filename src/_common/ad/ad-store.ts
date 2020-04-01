@@ -3,6 +3,7 @@ import { Environment } from '../environment/environment.service';
 import { EventBus } from '../event-bus/event-bus.service';
 import { Model } from '../model/model.service';
 import { AdPlaywireAdapter } from './playwire/playwire-adapter';
+import { AdProperAdapter } from './proper/proper-adapter';
 import AppAdWidgetInner from './widget/inner';
 
 declare module 'vue/types/vue' {
@@ -41,8 +42,22 @@ const defaultSettings = new AdSettingsContainer();
 
 type AdComponent = AppAdWidgetInner;
 
+/**
+ * Inclusive of min and exclusive of max.
+ */
+function getRandom(min: number, max: number) {
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function chooseAdapter() {
+	const adapters = [AdPlaywireAdapter, AdProperAdapter];
+	return adapters[getRandom(0, adapters.length)];
+}
+
 export class AdStore {
-	adapter = new AdPlaywireAdapter();
+	adapter = new (chooseAdapter())();
 
 	private routeResolved = false;
 	private ads: Set<AdComponent> = new Set();
@@ -61,12 +76,14 @@ export class AdStore {
 				// We set up events so that we know when a route begins and when the
 				// routing is fully resolved.
 				vm.$router.beforeEach((_to, _from, next) => {
+					this.adapter.onBeforeRouteChange();
 					this.routeResolved = false;
 					next();
 				});
 
 				EventBus.on('routeChangeAfter', () => {
 					this.routeResolved = true;
+					this.adapter.onRouteChanged();
 					this.displayAds(Array.from(this.ads));
 				});
 			},

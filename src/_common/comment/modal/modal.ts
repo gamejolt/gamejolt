@@ -1,4 +1,5 @@
 import { Component, Prop } from 'vue-property-decorator';
+import { propOptional } from '../../../utils/vue';
 import { number } from '../../filters/number';
 import { BaseModal } from '../../modal/base';
 import { Model } from '../../model/model.service';
@@ -19,6 +20,9 @@ export default class AppCommentModal extends BaseModal {
 
 	@Prop(Model)
 	model!: Model;
+
+	@Prop(propOptional(String))
+	initialTab?: string;
 
 	@CommentState
 	getCommentStore!: CommentStore['getCommentStore'];

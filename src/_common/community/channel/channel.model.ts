@@ -1,6 +1,7 @@
 import { Api } from '../../api/api.service';
 import { MediaItem } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
+import { CommunityChannelPermissions } from './channel-permissions';
 
 export class CommunityChannel extends Model {
 	community_id!: number;
@@ -9,12 +10,16 @@ export class CommunityChannel extends Model {
 	sort!: number;
 	background?: MediaItem;
 
+	permissions!: CommunityChannelPermissions;
+
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.background) {
 			this.background = new MediaItem(data.background);
 		}
+
+		this.permissions = new CommunityChannelPermissions(data.perms);
 	}
 
 	static $saveSort(communityId: number, channelIds: number[]) {

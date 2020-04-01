@@ -7,13 +7,17 @@ export abstract class AdAdapterBase {
 
 	abstract component(slot: AdSlot): typeof Vue;
 
+	// Callbacks.
+	onBeforeRouteChange() {}
+	onRouteChanged() {}
+
 	/**
 	 * Convenience method to run something just once for this adapter. Most
 	 * likely an adapter would use this to load the ad script just once on the
 	 * first ad display (lazy initialization).
 	 */
 	protected runOnce(cb: () => void) {
-		if (this.ranOnce) {
+		if (GJ_IS_SSR || this.ranOnce) {
 			return;
 		}
 

@@ -2,38 +2,74 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../utils/vue';
 import { AdSlot } from '../ad-slot-info';
-import { AdProperAdapter, AdProperAdapterPlacement } from './proper-adapter';
+import { AdProperAdapter, ProperTagUnits } from './proper-adapter';
+
+type TagPlacement = keyof typeof ProperTagUnits;
 
 @Component({})
 export default class AppAdProper extends Vue {
 	@Prop(propRequired(AdSlot)) adSlot!: AdSlot;
 	@Prop(propRequired(AdProperAdapter)) adapter!: AdProperAdapter;
 
-	counter = 0;
-
-	get placement() {
-		const { size } = this.adSlot;
-		let placement: AdProperAdapterPlacement = 'content_1';
-		if (size === 'leaderboard') {
-			placement = 'leaderboard';
-		}
-		return placement;
-	}
-
-	get tagId() {
-		return `gamejolt_${this.placement}-${this.counter}`;
-	}
+	tagPlacement: TagPlacement | null = null;
+	tagUnit: string | null = null;
+	tagId: string | null = null;
 
 	created() {
-		// We have to increment a new counter ID for each new ad we show.
-		this.counter = ++this.adapter.tagCounts[this.placement];
+		const { placement, size } = this.adSlot;
+
+		let tagPlacement: TagPlacement;
+		if (placement === 'top') {
+			if (size === 'leaderboard') {
+				tagPlacement = 'leaderboard';
+			} else {
+				tagPlacement = 'content';
+			}
+		} else {
+			tagPlacement = placement;
+		}
+
+		const tagUnit = this.adapter.tagUnits[tagPlacement].shift() || null;
+		if (!tagUnit) {
+			return;
+		}
+
+		this.tagPlacement = tagPlacement;
+		this.tagUnit = tagUnit;
+		this.tagId = `gamejolt_${this.tagUnit}`;
 	}
 
 	mounted() {
-		this.adapter.ensureLoaded();
+		if (!this.tagId) {
+			return;
+		}
 
-		const w = window as any;
-		w.propertag.cmd.push(() => w.proper_display(this.tagId));
-		console.log('displaying', this.tagId);
+		this.doProperDisplay(this.tagId);
+	}
+
+	beforeDestroy() {
+		if (!this.tagPlacement || !this.tagUnit || !this.tagId) {
+			return;
+		}
+
+		this.adapter.tagUnits[this.tagPlacement].unshift(this.tagUnit);
+		this.doProperDelete(this.tagId);
+
+		this.tagPlacement = null;
+		this.tagUnit = null;
+		this.tagId = null;
+	}
+
+	private doProperDisplay(tagId: string) {
+		this.adapter.run(() => {
+			(window as any).proper_display(tagId);
+		});
+	}
+
+	private doProperDelete(tagId: string) {
+		this.adapter.run(() => {
+			(window as any).properDestroyDfpSlot(tagId);
+			(window as any).properDeleteSlot(tagId);
+		});
 	}
 }

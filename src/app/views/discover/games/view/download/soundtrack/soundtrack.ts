@@ -1,5 +1,4 @@
 import { Component } from 'vue-property-decorator';
-import AppAdPlacement from '../../../../../../../_common/ad/placement/placement.vue';
 import AppAdWidget from '../../../../../../../_common/ad/widget/widget.vue';
 import { GameSong } from '../../../../../../../_common/game/song/song.model';
 import { HistoryTick } from '../../../../../../../_common/history-tick/history-tick-service';
@@ -19,7 +18,6 @@ const DownloadDelay = 3000;
 	name: 'RouteDiscoverGamesViewDownloadSoundtrack',
 	components: {
 		AppAdWidget,
-		AppAdPlacement,
 		AppLoading,
 	},
 })

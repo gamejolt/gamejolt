@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import { propOptional } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { Collaborator } from '../../collaborator/collaborator.model';
@@ -62,6 +63,9 @@ export default class AppCommentWidget extends Vue {
 
 	@Prop({ type: Boolean, default: true })
 	showTabs!: boolean;
+
+	@Prop(propOptional(String))
+	initialTab?: string;
 
 	@AppState
 	user!: AppStore['user'];
@@ -219,6 +223,12 @@ export default class AppCommentWidget extends Vue {
 			this.storeView = new CommentStoreThreadView(this.threadCommentId);
 		} else {
 			this.storeView = new CommentStoreSliceView();
+		}
+
+		// Filter comments based on the 'initialTab' prop. This allows us to set the comment
+		// sorting to the "You" tab when you leave a comment from an event item.
+		if (this.store && this.initialTab) {
+			this.setSort({ store: this.store, sort: this.initialTab });
 		}
 
 		await this._fetchComments();
