@@ -2,7 +2,19 @@
 	<div class="media-bar-item" :style="{ width, height }">
 		<a class="-wrapper">
 			<slot />
-			<app-media-item-backdrop :media-item="mediaItem" :style="{ height }" radius="lg">
+			<template v-if="item.media_item">
+				<app-media-item-backdrop :media-item="item.media_item" radius="lg">
+					<app-img-responsive
+						v-if="item.media_type !== 'sketchfab'"
+						:src="item.img_thumbnail"
+						:title="item.media_type == 'image' ? item.caption : item.title"
+						alt=""
+					/>
+
+					<img v-else class="img-responsive" :src="item.img_thumbnail" alt="" />
+				</app-media-item-backdrop>
+			</template>
+			<template v-else>
 				<app-img-responsive
 					v-if="item.media_type !== 'sketchfab'"
 					:src="item.img_thumbnail"
@@ -11,7 +23,7 @@
 				/>
 
 				<img v-else class="img-responsive" :src="item.img_thumbnail" alt="" />
-			</app-media-item-backdrop>
+			</template>
 			<span class="-play" v-if="item.media_type === 'video'">
 				<app-jolticon icon="play" />
 			</span>

@@ -33,12 +33,4 @@ export default class AppMediaBarItem extends Vue {
 			this.width = '200px';
 		}
 	}
-
-	get mediaItem() {
-		if (this.item.media_item) {
-			return this.item.media_item;
-		}
-
-		return this.item;
-	}
 }
