@@ -6,7 +6,7 @@ import { appStore } from '../store/app-store';
 
 export function handleNewStickerNotification(title: string, message: string, router: VueRouter) {
 	// Only show the growl when we haven't already notified the user of a new sticker.
-	if (!appStore.hasNewStickers) {
+	if (!appStore.state.hasNewStickers) {
 		Growls.success({
 			title,
 			message,
