@@ -76,6 +76,25 @@
 				/>
 			</span>
 		</div>
+
+		<div
+			v-if="shouldShowStickersBar"
+			class="-stickers"
+			@click.stop="onClickShowStickers"
+			v-app-tooltip="$gettext(`Toggle Stickers`)"
+		>
+			<span class="-stickers-count blip">
+				<span class="blip-caret"></span>
+				<span class="blip-count">
+					{{ post.stickers.length | number }}
+				</span>
+			</span>
+			&nbsp;
+
+			<span v-for="sticker of previewStickers" :key="sticker.id" class="-sticker">
+				<img :src="sticker.img_url" />
+			</span>
+		</div>
 	</span>
 </template>
 
@@ -104,6 +123,29 @@
 
 .-inline-button
 	margin-right: 10px
+
+.-stickers
+	cursor: pointer
+	margin-top: 16px
+	display: inline-flex
+	align-items: center
+	flex-direction: row-reverse
+
+	&-count
+		margin-left: 16px
+
+.-sticker
+	width: 24px
+	height: 24px
+	position: relative
+	margin-right: -10px
+	display: inline-block
+
+	& > img
+		display: block
+		width: 100%
+		height: 100%
+
 </style>
 
 <script lang="ts" src="./fireside-post"></script>

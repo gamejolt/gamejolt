@@ -126,6 +126,16 @@
 					</translate>
 				</p>
 			</app-form-group>
+
+			<app-form-group name="always_show_stickers" :label="$gettext('Always show stickers?')">
+				<app-form-control-toggle class="pull-right" />
+				<p class="help-block">
+					<translate>
+						Shows stickers on posts by default. You can still hide them individually or by clicking
+						on the sticker bar below the post.
+					</translate>
+				</p>
+			</app-form-group>
 		</fieldset>
 
 		<fieldset id="settings-restrictions">
