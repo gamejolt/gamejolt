@@ -9,6 +9,7 @@ import { Community } from '../../../../../_common/community/community.model';
 import { number } from '../../../../../_common/filters/number';
 import AppFiresidePostLikeWidget from '../../../../../_common/fireside/post/like/widget/widget.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { LikersModal } from '../../../../../_common/likers/modal.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { StickerPlacementModal } from '../../../../../_common/sticker/placement/modal/modal.service';
 import { StickerSelectModal } from '../../../../../_common/sticker/select-modal.ts/select-modal.service';
@@ -17,11 +18,10 @@ import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import { User } from '../../../../../_common/user/user.model';
 import { AppCommentWidgetLazy } from '../../../lazy';
-import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 import AppEventItemControlsFiresidePostExtra from './extra/extra.vue';
 import AppEventItemControlsFiresidePostStats from './stats/stats.vue';
 
-const PREVIEW_STICKER_MAX = 16;
+const PREVIEW_STICKER_MAX = 5;
 
 @Component({
 	components: {
@@ -49,12 +49,6 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	user!: AppStore['user'];
 
 	readonly GJ_IS_CLIENT!: boolean;
-
-	@Emit('edit')
-	emitEdit() {}
-
-	@Emit('publish')
-	emitPublish() {}
 
 	@Emit('remove')
 	emitRemove() {}
@@ -86,28 +80,8 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 		}
 	}
 
-	get canPublish() {
-		return (
-			this.post.isDraft &&
-			!this.post.isScheduled &&
-			this.post.hasLead &&
-			this.post.canPublishToCommunities()
-		);
-	}
-
 	get showUserControls() {
 		return this.post.isActive;
-	}
-
-	get hasPerms() {
-		if (!this.user) {
-			return false;
-		}
-		return this.post.isEditableByUser(this.user);
-	}
-
-	get shouldShowEdit() {
-		return this.hasPerms;
 	}
 
 	get shouldShowExtra() {
@@ -140,7 +114,9 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 				}
 			}
 		}
-		return uniqueStickers;
+
+		// uniqueStickers.reverse();
+		return uniqueStickers.reverse();
 	}
 
 	openComments() {
@@ -148,17 +124,6 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 			model: this.post,
 			displayMode: 'comments',
 		});
-	}
-
-	async openEdit() {
-		if (await PostEditModal.show(this.post)) {
-			this.emitEdit();
-		}
-	}
-
-	async publish() {
-		await this.post.$publish();
-		this.emitPublish();
 	}
 
 	async placeSticker() {
@@ -174,5 +139,9 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 
 	onClickShowStickers() {
 		this.emitStickersVisibilityChange(!this.showStickers);
+	}
+
+	showLikers() {
+		LikersModal.show({ count: this.post.like_count, resource: this.post });
 	}
 }
