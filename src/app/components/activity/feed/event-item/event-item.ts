@@ -28,6 +28,7 @@ import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verif
 import { Store } from '../../../../store';
 import AppEventItemControls from '../../../event-item/controls/controls.vue';
 import AppPollVoting from '../../../poll/voting/voting.vue';
+import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 import AppActivityFeedCommentVideo from '../comment-video/comment-video.vue';
 import AppActivityFeedDevlogPostMedia from '../devlog-post/media/media.vue';
 import AppActivityFeedDevlogPostSketchfab from '../devlog-post/sketchfab/sketchfab.vue';
@@ -117,6 +118,31 @@ export default class AppActivityFeedEventItem extends Vue {
 		}
 	}
 
+	get canPublish() {
+		if (!this.post) {
+			return false;
+		}
+
+		return (
+			this.post.isDraft &&
+			!this.post.isScheduled &&
+			this.post.hasLead &&
+			this.post.canPublishToCommunities()
+		);
+	}
+
+	get hasPerms() {
+		if (!this.app.user || !this.post) {
+			return false;
+		}
+
+		return this.post.isEditableByUser(this.app.user);
+	}
+
+	get shouldShowEdit() {
+		return this.hasPerms;
+	}
+
 	get video() {
 		if (this.eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD) {
 			return this.eventItem.action as CommentVideo;
@@ -176,12 +202,12 @@ export default class AppActivityFeedEventItem extends Vue {
 	}
 
 	get shouldShowFollow() {
-		if (this.isBlocked || this.post?.user.blocked_you) {
+		// Don't show follow for game posts. Only for user posts.
+		if (!this.feed.shouldShowFollow || !this.post || this.post.game) {
 			return false;
 		}
 
-		// Don't show follow for game posts. Only for user posts.
-		if (!this.feed.shouldShowFollow || !this.post || this.post.game) {
+		if (this.isBlocked || this.post.user.blocked_you) {
 			return false;
 		}
 
@@ -243,6 +269,23 @@ export default class AppActivityFeedEventItem extends Vue {
 	destroyed() {
 		this.feedComponent = undefined as any;
 		this.resizeSensor = undefined;
+	}
+
+	async openEdit() {
+		if (!this.post) {
+			return;
+		}
+
+		if (await PostEditModal.show(this.post)) {
+			this.onPostEdited(this.eventItem);
+		}
+	}
+
+	async publish() {
+		if (this.post) {
+			await this.post.$publish();
+			this.onPostPublished(this.eventItem);
+		}
 	}
 
 	/**
