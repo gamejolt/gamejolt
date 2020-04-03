@@ -96,7 +96,7 @@
 		<div class="navbar-center">
 			<div class="-search">
 				<!-- Search Input -->
-				<app-search v-if="!Screen.isXs"></app-search>
+				<app-search v-if="shouldShowSearch"></app-search>
 			</div>
 		</div>
 

@@ -7,7 +7,8 @@
 			:event-cat="eventCat"
 		/>
 
-		<app-community-slider-add-item v-if="showAddButton" />
+		<app-community-slider-discover-item key="discover" />
+		<app-community-slider-add-item key="add" v-if="showAddButton" />
 	</div>
 </template>
 
@@ -31,7 +32,6 @@
 
 	@media $media-md-up
 		padding-bottom: 0
-
 </style>
 
 <script lang="ts" src="./slider"></script>
