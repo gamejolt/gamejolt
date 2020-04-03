@@ -1,5 +1,7 @@
 <template>
 	<div v-if="shouldShowStats">
+		<span class="dot-separator" />
+
 		<translate
 			:translate-n="post.view_count || 0"
 			:translate-params="{ count: number(post.view_count || 0) }"
