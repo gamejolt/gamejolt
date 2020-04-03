@@ -188,6 +188,25 @@ make-button-size(size)
 		margin-top: 5px
 
 /**
+ * Inset buttons
+ */
+.-inset
+	change-bg('bg-trans')
+
+	&:hover
+		change-bg('bg-trans', true)
+		theme-prop('color', 'bi-bg', true)
+
+		&.-trans
+			theme-prop('border-color', 'bg-trans', true)
+
+	&.-primary
+		theme-prop('color', 'bi-bg', true)
+
+		&:hover
+			theme-prop('color', 'fg', true)
+
+/**
  * Button sizings
  */
 .button

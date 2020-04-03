@@ -11,6 +11,7 @@ export default class AppButton extends Vue {
 	@Prop(Boolean) overlay?: boolean;
 	@Prop(Boolean) sparse?: boolean;
 	@Prop(Boolean) circle?: boolean;
+	@Prop(Boolean) inset?: boolean;
 	@Prop(Boolean) disabled?: boolean;
 	@Prop(Boolean) lg?: boolean;
 	@Prop(Boolean) sm?: boolean;

@@ -10,6 +10,7 @@
 			'-overlay': this.overlay,
 			'-circle': this.circle,
 			'-sparse': this.sparse || this.circle,
+			'-inset': this.inset,
 			'-lg': this.lg,
 			'-sm': this.sm,
 			'-block': this.block,
