@@ -34,10 +34,17 @@ export default class AppFiresidePostLikeWidget extends Vue {
 	@Prop(Boolean)
 	block?: boolean;
 
+	@Prop(Boolean)
+	inset?: boolean;
+
+	@Prop(Boolean)
+	hideBlip?: boolean;
+
 	@State
 	app!: Store['app'];
 
 	showLikeAnim = false;
+	showDislikeAnim = false;
 
 	@Emit('change')
 	emitChange(_value: boolean) {}
@@ -67,6 +74,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 			this.post.user_like = newLike;
 			++this.post.like_count;
 			this.showLikeAnim = true;
+			this.showDislikeAnim = false;
 
 			try {
 				const payload = await newLike.$save();
@@ -89,6 +97,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 			this.post.user_like = null;
 			--this.post.like_count;
 			this.showLikeAnim = false;
+			this.showDislikeAnim = true;
 
 			try {
 				await currentLike.$remove();
