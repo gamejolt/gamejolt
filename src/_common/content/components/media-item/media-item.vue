@@ -30,7 +30,16 @@
 						rel="nofollow noopener"
 						target="_blank"
 					>
+						<app-img-responsive
+							v-if="useResponsiveImg"
+							class="img-responsive content-image"
+							:src="mediaItem.mediaserver_url"
+							:alt="title"
+							:title="title"
+							@load.native="onImageLoad"
+						/>
 						<img
+							v-else
 							class="img-responsive content-image"
 							:src="mediaItem.img_url"
 							:alt="title"
