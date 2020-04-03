@@ -14,7 +14,7 @@
 						:key="mediaItem.id"
 						:media-item="mediaItem"
 						:is-post-hydrated="isHydrated"
-						:is-active="mediaItem === activeMediaItem"
+						:is-active="getIsActiveMediaItem(mediaItem)"
 						@bootstrap="onItemBootstrapped()"
 					/>
 				</div>
