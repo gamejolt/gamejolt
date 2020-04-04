@@ -52,14 +52,6 @@
 							</small>
 						</div>
 
-						<small class="link-muted">
-							<app-activity-feed-event-item-time
-								:event-item="eventItem"
-								:post="post"
-								:link="linkResolved"
-							/>
-						</small>
-
 						<div class="-header-byline-game" v-if="game && !feed.hideGameInfo">
 							<strong class="text-muted">
 								<router-link :to="gameUrl" class="link-unstyled">
@@ -80,19 +72,30 @@
 					/>
 
 					<span>
+						<div v-if="shouldShowEdit">
+							<app-button
+								v-if="canPublish"
+								:class="{ '-sm': Screen.isXs }"
+								primary
+								@click="publish()"
+							>
+								<translate>Publish</translate>
+							</app-button>
+							<app-button :class="{ '-sm': Screen.isXs }" @click="openEdit()">
+								<translate>Edit</translate>
+							</app-button>
+						</div>
+
 						<span v-if="shouldShowIsPinned" class="tag">
 							<app-jolticon icon="thumbtack" />
 							<translate>Pinned</translate>
 						</span>
 
-						<template v-if="shouldShowEdit">
-							<app-button v-if="canPublish" primary @click="publish()">
-								<translate>Publish</translate>
-							</app-button>
-							<app-button @click="openEdit()">
-								<translate>Edit</translate>
-							</app-button>
-						</template>
+						<app-activity-feed-event-item-time
+							:event-item="eventItem"
+							:post="post"
+							:link="linkResolved"
+						/>
 					</span>
 				</div>
 			</div>
