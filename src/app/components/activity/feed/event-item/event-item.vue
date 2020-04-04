@@ -58,7 +58,6 @@
 								:post="post"
 								:link="linkResolved"
 							/>
-							ago
 						</small>
 
 						<div class="-header-byline-game" v-if="game && !feed.hideGameInfo">
