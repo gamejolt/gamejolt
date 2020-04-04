@@ -21,8 +21,6 @@ import { AppCommentWidgetLazy } from '../../../lazy';
 import AppEventItemControlsFiresidePostExtra from './extra/extra.vue';
 import AppEventItemControlsFiresidePostStats from './stats/stats.vue';
 
-const PREVIEW_STICKER_MAX = 5;
-
 @Component({
 	components: {
 		AppCommentWidget: AppCommentWidgetLazy,
@@ -104,12 +102,20 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 		return this.post.stickers.length > 0;
 	}
 
+	get previewStickerMax() {
+		if (Screen.isXs) {
+			return 5;
+		}
+
+		return 16;
+	}
+
 	get previewStickers() {
 		const uniqueStickers = [] as Sticker[];
 		for (const stickerPlacement of this.post.stickers) {
 			if (uniqueStickers.every(i => i.id !== stickerPlacement.sticker.id)) {
 				uniqueStickers.push(stickerPlacement.sticker);
-				if (uniqueStickers.length === PREVIEW_STICKER_MAX) {
+				if (uniqueStickers.length === this.previewStickerMax) {
 					break;
 				}
 			}
