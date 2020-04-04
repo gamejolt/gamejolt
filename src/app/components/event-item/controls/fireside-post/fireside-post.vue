@@ -1,83 +1,86 @@
 <template>
-	<span>
-		<div class="-controls">
-			<div class="-user-controls" v-if="showUserControls">
-				<div class="-row">
-					<span class="-inline-button">
-						<app-fireside-post-like-widget
-							class="-like"
-							:post="post"
-							trans
-							inset
-							hide-blip
-							@change="emitLikeChange"
-						/>
-						<small class="text-muted">
-							{{ post.like_count }}
-						</small>
-					</span>
-
-					<div class="-inline-button" v-if="shouldShowCommentsButton">
-						<app-button
-							icon="comment"
-							circle
-							trans
-							inset
-							@click="openComments()"
-							v-app-tooltip="$gettext('View Comments')"
-						/>
-						<small class="text-muted">
-							{{ commentsCount | number }}
-						</small>
-					</div>
-
-					<template v-if="shouldShowStickersButton">
-						<app-button
-							icon="sticker"
-							circle
-							trans
-							inset
-							@click="placeSticker()"
-							v-app-tooltip="$gettext('Place Sticker')"
-							v-app-auth-required
-						/>
-
-						&nbsp;
-					</template>
-
-					<div
-						v-if="shouldShowStickersBar"
-						class="-stickers"
-						:class="{ blip: showStickers }"
-						@click.stop="onClickShowStickers"
-						v-app-tooltip="$gettext(`Toggle Stickers`)"
-					>
-						<span v-if="showStickers" class="blip-caret"></span>
-
-						<span v-for="sticker of previewStickers" :key="sticker.id" class="-sticker">
-							<img :src="sticker.img_url" />
-						</span>
-
-						<span class="-stickers-count text-muted">
-							{{ post.stickers.length | number }}
-						</span>
-
-						&nbsp;
-					</div>
-				</div>
-				<div class="-row -details text-muted">
+	<div class="-controls">
+		<div class="-user-controls" v-if="showUserControls">
+			<div class="-row">
+				<span class="-inline-button">
+					<app-fireside-post-like-widget
+						class="-like"
+						:post="post"
+						trans
+						inset
+						hide-blip
+						@change="emitLikeChange"
+					/>
 					<a
-						class="link-unstyled"
+						class="link-muted"
 						@click="showLikers()"
 						v-app-tooltip="$gettext(`View all people that liked this post`)"
 					>
-						<span>show likes</span>
+						<div class="-button-info" :class="{ '-liked': post.user_like }">
+							<small>
+								{{ post.like_count }}
+							</small>
+						</div>
 					</a>
+				</span>
 
-					<app-event-item-controls-fireside-post-stats :key="'stats'" class="-row" :post="post" />
+				<div class="-inline-button" v-if="shouldShowCommentsButton">
+					<app-button
+						icon="comment"
+						circle
+						trans
+						@click="openComments()"
+						v-app-tooltip="$gettext('View Comments')"
+					/>
+
+					<div v-if="commentsCount > 0" class="-button-info">
+						<small class="text-muted">
+							{{ commentsCount }}
+						</small>
+					</div>
+					<template v-else>
+						&nbsp;
+					</template>
+				</div>
+
+				<template v-if="shouldShowStickersButton">
+					<app-button
+						icon="sticker"
+						circle
+						trans
+						@click="placeSticker()"
+						v-app-tooltip="$gettext('Place Sticker')"
+						v-app-auth-required
+					/>
+
+					&nbsp;
+				</template>
+
+				<div
+					v-if="shouldShowStickersBar"
+					class="-stickers"
+					:class="{ blip: showStickers }"
+					@click.stop="onClickShowStickers"
+					v-app-tooltip="$gettext(`Toggle Stickers`)"
+				>
+					<span v-if="showStickers" class="blip-caret"></span>
+
+					<span v-for="sticker of previewStickers" :key="sticker.id" class="-sticker">
+						<img :src="sticker.img_url" />
+					</span>
+
+					<small class="-stickers-count text-muted">
+						{{ post.stickers.length | number }}
+					</small>
 				</div>
 			</div>
-
+			<app-event-item-controls-fireside-post-stats
+				:key="'stats'"
+				class="-row -details text-muted"
+				:post="post"
+			/>
+		</div>
+		<span class="-extra">
 			<app-event-item-controls-fireside-post-extra
 				v-if="shouldShowExtra"
 				:post="post"
@@ -89,19 +92,20 @@
 				@pin="emitPin"
 				@unpin="emitUnpin"
 			/>
-		</div>
-	</span>
+		</span>
+	</div>
 </template>
 
 <style lang="stylus" scoped>
 @require '~styles/variables'
-
-$-blip-margin = -4px
+@require '~styles-lib/mixins'
 
 .-controls
 	display: flex
-	justify-content: flex-end
-	// align-items: center
+
+.-row
+	display: flex
+	align-items: center
 
 .-user-controls
 	display: flex
@@ -109,7 +113,19 @@ $-blip-margin = -4px
 	flex-grow: 1
 
 .-inline-button
-	margin-right: 20px
+	display: inline-flex
+	align-items: center
+
+	.-button-info
+		display: flex
+		align-items: center
+		width: 32px
+		height: 36px
+		padding-left: 4px
+		font-weight: 700
+
+		&.-liked
+			theme-prop('color', 'bi-bg', true)
 
 .-stickers-container
 	display: inline-flex
@@ -120,14 +136,25 @@ $-blip-margin = -4px
 	align-items: center
 	flex-direction: row
 	padding: 0 8px
-	margin-left: $-blip-margin
+	margin: 0
+	top: 0
+	border-radius: 20px
+
+	&:hover
+		change-bg('bg-offset')
+
+	&.blip
+		change-bg('bi-bg')
+
+		.blip-caret
+			theme-prop('border-right-color', 'bi-bg')
 
 	&-count
 		margin-left: 18px
-		font-size: 11px
 		font-weight: normal
-		font-style: italic
-		line-height: normal
+
+	small
+		font-weight: 700
 
 .-sticker
 	width: 24px
@@ -146,9 +173,8 @@ $-blip-margin = -4px
 	font-size: 11px
 	margin-top: 8px
 
-.-row
-	display: flex
-	align-items: center
+.-extra
+	margin-left: auto
 </style>
 
 <script lang="ts" src="./fireside-post"></script>
