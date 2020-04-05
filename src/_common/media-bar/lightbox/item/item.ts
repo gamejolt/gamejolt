@@ -1,7 +1,7 @@
-import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../../../utils/vue';
+import { Subscription } from '../../../events/subscription';
 import { AppImgResponsive } from '../../../img/responsive/responsive';
 import { Screen } from '../../../screen/screen-service';
 import AppSketchfabEmbed from '../../../sketchfab/embed/embed.vue';

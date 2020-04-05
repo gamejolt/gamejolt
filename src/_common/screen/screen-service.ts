@@ -1,7 +1,6 @@
-import { Subject } from 'rxjs/Subject';
-import { fromEvent } from 'rxjs/observable/fromEvent';
-import 'rxjs/add/operator/debounceTime';
+import { debounce } from '../../utils/utils';
 import { makeObservableService } from '../../utils/vue';
+import { Topic } from '../events/topic';
 
 /**
  * Media query breakpoints.
@@ -83,14 +82,14 @@ export class Screen {
 					', only screen and (min-resolution: ' +
 					HIDPI_BREAKPOINT * 96 +
 					'dpi)'
-			).matches;
+		  ).matches;
 
 	/**
 	 * Whether or now the window is being scrolled. Gets updated by the Scroll service.
 	 */
 	static isScrolling = false;
 
-	static resizeChanges = new Subject<void>();
+	static resizeChanges = new Topic<void>();
 
 	/**
 	 * Simply recalculates the breakpoint checks.
@@ -224,7 +223,8 @@ if (!GJ_IS_SSR) {
 	 * This is used internally to check things every time window resizes.
 	 * We debounce this and afterwards fire the resizeChanges for everyone else.
 	 */
-	fromEvent(window, 'resize')
-		.debounceTime(250)
-		.subscribe(() => Screen._onResize());
+	window.addEventListener(
+		'resize',
+		debounce(() => Screen._onResize(), 250)
+	);
 }

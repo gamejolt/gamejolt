@@ -1,7 +1,6 @@
-import 'rxjs/add/operator/sampleTime';
-import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { Subscription } from '../../events/subscription';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
 import { AppScrollInview } from '../inview/inview';

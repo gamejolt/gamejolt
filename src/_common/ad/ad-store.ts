@@ -1,6 +1,6 @@
 import { installVuePlugin } from '../../utils/vue';
 import { Environment } from '../environment/environment.service';
-import { EventBus } from '../event-bus/event-bus.service';
+import { EventBus } from '../events/event-bus.service';
 import { Model } from '../model/model.service';
 import { AdPlaywireAdapter } from './playwire/playwire-adapter';
 import { AdProperAdapter } from './proper/proper-adapter';

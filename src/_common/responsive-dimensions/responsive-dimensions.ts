@@ -1,6 +1,6 @@
-import { Subscription } from 'rxjs/Subscription';
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Subscription } from '../events/subscription';
 import { Ruler } from '../ruler/ruler-service';
 import { Screen } from '../screen/screen-service';
 

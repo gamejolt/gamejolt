@@ -1,14 +1,14 @@
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import { EventBus } from '../../../../_common/event-bus/event-bus.service';
+import { EventBus } from '../../../../_common/events/event-bus.service';
+import { number } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
 import { GameRating } from '../../../../_common/game/rating/rating.model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { LikersModal } from '../../../../_common/likers/modal.service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
-import { number } from '../../../../_common/filters/number';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
 
 export const RatingWidgetOnChange = 'GameRating.changed';
 export interface RatingWidgetOnChangePayload {

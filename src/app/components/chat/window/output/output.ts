@@ -1,10 +1,10 @@
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
-import { date } from '../../../../../_common/filters/date';
-import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { Subscription } from '../../../../../_common/events/subscription';
+import { date } from '../../../../../_common/filters/date';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import { ChatClient } from '../../client';
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';

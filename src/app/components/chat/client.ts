@@ -1,9 +1,9 @@
-import { Analytics } from '../../../_common/analytics/analytics.service';
-import { Environment } from '../../../_common/environment/environment.service';
-import { EventBus } from '../../../_common/event-bus/event-bus.service';
-import { Primus } from '../../../_common/primus/primus.service';
 import Vue from 'vue';
+import { Analytics } from '../../../_common/analytics/analytics.service';
 import { getCookie } from '../../../_common/cookie/cookie.service';
+import { Environment } from '../../../_common/environment/environment.service';
+import { EventBus } from '../../../_common/events/event-bus.service';
+import { Primus } from '../../../_common/primus/primus.service';
 import { store } from '../../store/index';
 import { ChatMessage, ChatMessageType } from './message';
 import { ChatNotification } from './notification/notification.service';
@@ -316,7 +316,10 @@ export class ChatClient {
 		} else if (msg.event === 'friends-list') {
 			const friendsList = msg.data.friendsList;
 			if (friendsList) {
-				this.friendsList = new ChatUserCollection(ChatUserCollection.TYPE_FRIEND, friendsList);
+				this.friendsList = new ChatUserCollection(
+					ChatUserCollection.TYPE_FRIEND,
+					friendsList
+				);
 				this.friendsPopulated = true;
 			}
 		} else if (msg.event === 'public-rooms') {

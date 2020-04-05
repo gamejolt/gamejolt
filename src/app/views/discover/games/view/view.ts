@@ -11,7 +11,7 @@ import {
 	CommentStore,
 	CommentStoreModel,
 } from '../../../../../_common/comment/comment-store';
-import { EventBus, EventBusDeregister } from '../../../../../_common/event-bus/event-bus.service';
+import { EventBus, EventBusDeregister } from '../../../../../_common/events/event-bus.service';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../_common/partner-referral/partner-referral-service';

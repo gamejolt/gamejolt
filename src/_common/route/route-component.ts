@@ -5,7 +5,7 @@ import VueRouter, { RawLocation, Route } from 'vue-router';
 import { arrayRemove } from '../../utils/array';
 import { LocationRedirect } from '../../utils/router';
 import { asyncComponentLoader } from '../../utils/utils';
-import { EventBus } from '../event-bus/event-bus.service';
+import { EventBus } from '../events/event-bus.service';
 import { HistoryCache } from '../history/cache/cache.service';
 import { Meta } from '../meta/meta-service';
 import { Navigate } from '../navigate/navigate.service';

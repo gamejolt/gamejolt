@@ -1,4 +1,3 @@
-import 'rxjs/add/operator/sampleTime';
 import Vue from 'vue';
 import { Component, Emit, Prop, Provide, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../utils/vue';

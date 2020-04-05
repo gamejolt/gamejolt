@@ -4,7 +4,7 @@ import { Analytics } from '../../../analytics/analytics.service';
 import AppCard from '../../../card/card.vue';
 import { Clipboard } from '../../../clipboard/clipboard-service';
 import { AppCountdown } from '../../../countdown/countdown';
-import { EventBus, EventBusDeregister } from '../../../event-bus/event-bus.service';
+import { EventBus, EventBusDeregister } from '../../../events/event-bus.service';
 import AppExpand from '../../../expand/expand.vue';
 import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
 import { currency } from '../../../filters/currency';

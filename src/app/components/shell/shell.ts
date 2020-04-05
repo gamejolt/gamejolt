@@ -3,7 +3,7 @@ import { Component, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Connection } from '../../../_common/connection/connection-service';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
-import { EventBus, EventBusDeregister } from '../../../_common/event-bus/event-bus.service';
+import { EventBus, EventBusDeregister } from '../../../_common/events/event-bus.service';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMinbar from '../../../_common/minbar/minbar.vue';
 import { Screen } from '../../../_common/screen/screen-service';

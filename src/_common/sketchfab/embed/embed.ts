@@ -1,6 +1,6 @@
-import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Subscription } from '../../events/subscription';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
 
@@ -79,9 +79,9 @@ export default class AppSketchfabEmbed extends Vue {
 	async recalculateDimensions() {
 		await this.$nextTick();
 
-		this.width = Ruler.width(this.$el.getElementsByClassName(
-			'sketchfab-embed-inner'
-		)[0] as HTMLElement);
+		this.width = Ruler.width(
+			this.$el.getElementsByClassName('sketchfab-embed-inner')[0] as HTMLElement
+		);
 
 		if (this.maxWidth) {
 			this.width = Math.min(this.maxWidth, this.width);

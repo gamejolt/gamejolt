@@ -1,8 +1,8 @@
-import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Analytics } from '../../analytics/analytics.service';
 import { EscapeStack } from '../../escape-stack/escape-stack.service';
+import { Subscription } from '../../events/subscription';
 import { Screen } from '../../screen/screen-service';
 import AppShortkey from '../../shortkey/shortkey.vue';
 import AppMediaBar from '../media-bar';
