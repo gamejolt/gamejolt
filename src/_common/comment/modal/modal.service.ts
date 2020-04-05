@@ -7,11 +7,12 @@ export type DisplayMode = 'comments' | 'shouts';
 interface CommentModalOptions {
 	displayMode?: DisplayMode;
 	model: Model;
+	initialTab?: string;
 }
 
 export class CommentModal {
 	static async show(options: CommentModalOptions) {
-		const { displayMode, model } = options;
+		const { displayMode, model, initialTab } = options;
 
 		return await Modal.show<void>({
 			modalId: 'Comment-' + [model.constructor.name, model.id].join('-'),
@@ -20,6 +21,7 @@ export class CommentModal {
 			props: {
 				displayMode,
 				model,
+				initialTab,
 			},
 			size: 'sm',
 		});

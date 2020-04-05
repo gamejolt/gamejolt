@@ -2,6 +2,7 @@ import { RawLocation } from 'vue-router';
 import { Route } from 'vue-router/types/router';
 import { Api } from '../../api/api.service';
 import { Perm } from '../../collaborator/collaboratable';
+import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../community/channel/channel-permissions';
 import { CommunityChannel } from '../../community/channel/channel.model';
 import { Community } from '../../community/community.model';
 import { ContentContainerModel } from '../../content/content-container-model';
@@ -16,6 +17,7 @@ import { ModalConfirm } from '../../modal/confirm/confirm-service';
 import { CommentableModel, Model, ModelSaveRequestOptions } from '../../model/model.service';
 import { Poll } from '../../poll/poll.model';
 import { Registry } from '../../registry/registry.service';
+import { StickerPlacement } from '../../sticker/placement/placement.model';
 import { appStore } from '../../store/app-store';
 import { Translate } from '../../translate/translate.service';
 import { User } from '../../user/user.model';
@@ -75,6 +77,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	key_groups: KeyGroup[] = [];
 	poll!: Poll | null;
 	platforms_published_to: FiresidePostPublishedPlatform[] = [];
+	stickers: StickerPlacement[] = [];
 
 	// Used for forms and saving.
 	key_group_ids: number[] = [];
@@ -133,6 +136,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 		if (data.platforms_published_to) {
 			this.platforms_published_to = data.platforms_published_to;
+		}
+
+		if (data.stickers) {
+			this.stickers = StickerPlacement.populate(data.stickers);
 		}
 
 		Registry.store('FiresidePost', this);
@@ -236,6 +243,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return true;
 	}
 
+	get canPlaceSticker() {
+		return this.canComment;
+	}
+
 	getContent(context: ContentContext) {
 		if (context === 'fireside-post-lead') {
 			return this.lead_content;
@@ -285,6 +296,22 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		}
 
 		return null;
+	}
+
+	canPublishToCommunities() {
+		if (!this.communities) {
+			return true;
+		}
+		for (const community of this.communities) {
+			if (
+				!community.channel?.permissions.canPerform(
+					COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING
+				)
+			) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private isInCommunityPinContext(route: Route) {

@@ -5,22 +5,39 @@
 		-->
 		<section class="section fill-notice" v-if="!user.status">
 			<div class="container">
-				<p>
+				<h2 class="-banned-header">
 					<translate>profile.banned_message_html</translate>
-				</p>
+				</h2>
 
 				<app-expand :when="isFriend">
 					<p>
 						<strong><translate>This user was your friend.</translate></strong>
 						<br />
 						<translate>
-							If you remove them from your friends list, you will no longer be able to access your
-							chat history with them.
+							If you remove them from your friends list, you will no longer be able to
+							access your chat history with them.
 						</translate>
 					</p>
 
 					<app-button solid @click="removeFriend()">
 						<translate>profile.remove_friend_button</translate>
+					</app-button>
+				</app-expand>
+
+				<app-expand :when="user.is_following">
+					<!-- Create some padding -->
+					<template v-if="isFriend"><br /><br /></template>
+
+					<p>
+						<strong><translate>You were following this user.</translate></strong>
+						<br />
+						<translate>
+							If you unfollow them now, you won't be able to follow them again.
+						</translate>
+					</p>
+
+					<app-button solid @click="onClickUnfollow()">
+						<translate>Unfollow</translate>
 					</app-button>
 				</app-expand>
 			</div>
@@ -114,7 +131,12 @@
 							<app-button v-if="canAddAsFriend" block @click="sendFriendRequest()">
 								<translate>profile.friend_request_button</translate>
 							</app-button>
-							<app-button v-else-if="canMessage" block icon="user-messages" @click="openMessaging">
+							<app-button
+								v-else-if="canMessage"
+								block
+								icon="user-messages"
+								@click="openMessaging"
+							>
 								<translate>Message</translate>
 							</app-button>
 
@@ -130,7 +152,11 @@
 									{{ gamesCount | number }} Games
 								</app-button>
 
-								<app-button v-if="videosCount > 0" block :to="{ name: 'profile.videos' }">
+								<app-button
+									v-if="videosCount > 0"
+									block
+									:to="{ name: 'profile.videos' }"
+								>
 									{{ videosCount | number }} Videos
 								</app-button>
 							</template>
@@ -142,19 +168,28 @@
 						<template v-if="hasLinksSection">
 							<template v-if="linkedAccounts.length">
 								<div v-if="twitchAccount">
-									<app-link-external class="link-unstyled" :href="twitchAccount.platformLink">
+									<app-link-external
+										class="link-unstyled"
+										:href="twitchAccount.platformLink"
+									>
 										<app-jolticon :icon="twitchAccount.icon" />
 										{{ twitchAccount.name }}
 									</app-link-external>
 								</div>
 								<div v-if="mixerAccount">
-									<app-link-external class="link-unstyled" :href="mixerAccount.platformLink">
+									<app-link-external
+										class="link-unstyled"
+										:href="mixerAccount.platformLink"
+									>
 										<app-jolticon :icon="mixerAccount.icon" />
 										{{ mixerAccount.name }}
 									</app-link-external>
 								</div>
 								<div v-if="twitterAccount">
-									<app-link-external class="link-unstyled" :href="twitterAccount.platformLink">
+									<app-link-external
+										class="link-unstyled"
+										:href="twitterAccount.platformLink"
+									>
 										<app-jolticon :icon="twitterAccount.icon" />
 										<span>@</span>
 										{{ twitterAccount.name }}
@@ -170,7 +205,10 @@
 									</app-link-external>
 								</div>
 								<div v-if="googleAccount">
-									<app-link-external class="link-unstyled" :href="googleAccount.platformLink">
+									<app-link-external
+										class="link-unstyled"
+										:href="googleAccount.platformLink"
+									>
 										<app-jolticon :icon="googleAccount.icon" />
 										{{ googleAccount.name }}
 									</app-link-external>
@@ -186,7 +224,9 @@
 								<div v-for="channel of youtubeChannels" :key="channel.id">
 									<app-link-external
 										class="link-unstyled"
-										:href="`https://www.youtube.com/channel/${channel.channel_id}`"
+										:href="
+											`https://www.youtube.com/channel/${channel.channel_id}`
+										"
 									>
 										<app-jolticon icon="youtube" />
 										{{ channel.title }}
@@ -236,7 +276,10 @@
 										}"
 										v-app-tooltip.bottom="community.name"
 									>
-										<app-community-thumbnail-img class="-community-thumb" :community="community" />
+										<app-community-thumbnail-img
+											class="-community-thumb"
+											:community="community"
+										/>
 										<app-community-verified-tick
 											class="-community-verified-tick"
 											:community="community"
@@ -271,7 +314,11 @@
 							</div>
 
 							<app-game-list-placeholder v-if="!isOverviewLoaded" :num="7" />
-							<app-game-list v-else-if="games.length" :games="games" event-label="profile" />
+							<app-game-list
+								v-else-if="games.length"
+								:games="games"
+								event-label="profile"
+							/>
 						</template>
 
 						<!-- Trophies -->
@@ -312,7 +359,8 @@
 								<app-jolticon icon="notice" notice />
 								<b><translate>This user blocked you.</translate></b>
 								<translate>
-									You are unable to shout at them or comment on their posts and games.
+									You are unable to shout at them or comment on their posts and
+									games.
 								</translate>
 							</p>
 						</div>
@@ -327,7 +375,9 @@
 							<div class="alert">
 								<p>
 									<translate
-										:translate-params="{ username: '@' + userFriendship.target_user.username }"
+										:translate-params="{
+											username: '@' + userFriendship.target_user.username,
+										}"
 									>
 										Friend request to %{ username } pending acceptance.
 									</translate>
@@ -344,7 +394,11 @@
 						>
 							<div class="alert">
 								<p>
-									<translate :translate-params="{ username: '@' + userFriendship.user.username }">
+									<translate
+										:translate-params="{
+											username: '@' + userFriendship.user.username,
+										}"
+									>
 										%{ username } would like to be your friend.
 									</translate>
 								</p>
@@ -354,7 +408,9 @@
 								<app-button
 									trans
 									@click="rejectFriendRequest()"
-									v-app-tooltip="$gettext('profile.friend_request_decline_tooltip')"
+									v-app-tooltip="
+										$gettext('profile.friend_request_decline_tooltip')
+									"
 								>
 									<translate>profile.friend_request_decline</translate>
 								</app-button>
@@ -373,23 +429,25 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+.-banned-header
+	margin-top: 0
+
 .-communities
 	display: grid
-	grid-template-columns: repeat(5, 55px)
-	grid-gap: 5px 10px
+	grid-template-columns: repeat(5, minmax(55px, 1fr))
+	grid-gap: 8px
 
 .-community-item
 	pressy()
 	display: inline-block
 	position: relative
 	outline: 0
-	width: 55px
-	height: 55px
+	width: 100%
+	height: auto
 
 .-community-thumb
 	img-circle()
 	change-bg('dark')
-	position: absolute
 	width: 100%
 	height: 100%
 
@@ -400,6 +458,10 @@
 .-community-thumb-placeholder
 	img-circle()
 	change-bg('bg-subtle')
+	// Setting 'padding-top' with a percentage goes off the elements width,
+	// rather than the height. This will allow us to use a 1:1 aspect ratio
+	// for the loading placeholders, matching them up with our thumbnails.
+	padding-top: 100%
 
 .-community-verified-tick
 	position: absolute
@@ -432,7 +494,6 @@
 	display: inline-block
 	position: relative
 	cursor: pointer
-
 </style>
 
 <script lang="ts" src="./overview"></script>

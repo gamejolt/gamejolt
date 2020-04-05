@@ -27,7 +27,7 @@ export default class AppEventItemControlsCommentsAddPlaceholder extends Vue {
 		} while (prev === this.emoji);
 	}
 
-	onMouseEnter() {
+	onMouseEnterEmoji() {
 		this.setRandomEmoji();
 	}
 

@@ -59,7 +59,13 @@
 							</span>
 						</div>
 
-						<app-content-viewer :source="post.lead_content" />
+						<app-sticker-target
+							:stickers="post.stickers"
+							:show-stickers="stickersVisible"
+							ref="stickerTarget"
+						>
+							<app-content-viewer :source="post.lead_content" />
+						</app-sticker-target>
 
 						<div v-if="post.hasArticle">
 							<div class="page-cut" />
@@ -86,6 +92,20 @@
 							/>
 						</div>
 
+						<template v-if="shouldShowCommunityPublishError">
+							<br />
+							<div class="well fill-offset">
+								<app-jolticon icon="notice" notice />
+								<span
+									><translate
+										>You can't publish this post to the selected community channel because you don't
+										have permissions to post into that specific channel. Please select a different
+										channel.</translate
+									></span
+								>
+							</div>
+						</template>
+
 						<br />
 					</template>
 
@@ -93,8 +113,10 @@
 						:post="post"
 						show-comments
 						should-show-follow
+						:show-stickers="stickersVisible"
 						@post-remove="onPostRemoved"
 						@post-publish="onPostPublished"
+						@post-stickers-visibility-change="onPostStickersVisibilityChange"
 					/>
 				</div>
 				<div class="col-md-4 col-lg-5" v-if="shouldShowAds && Screen.isDesktop">
@@ -130,7 +152,6 @@
 .-community-row
 	display: flex
 	align-items: center
-
 </style>
 
 <script lang="ts" src="./view"></script>

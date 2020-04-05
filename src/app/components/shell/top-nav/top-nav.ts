@@ -75,6 +75,10 @@ export default class AppShellTopNav extends Vue {
 	readonly Screen = Screen;
 	readonly Connection = Connection;
 
+	get shouldShowSearch() {
+		return !Screen.isXs && this.$route.name !== 'discover.communities';
+	}
+
 	get minColWidth() {
 		// When we are smaller than this, we just set the search to stretch
 		// full-width with a max-width. It mostly looks fine on sizes smaller

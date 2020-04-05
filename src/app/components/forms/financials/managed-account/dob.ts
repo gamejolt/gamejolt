@@ -1,11 +1,9 @@
-import { CommonFormComponents } from '../../../../../_common/form-vue/form.service';
-import { findRequiredVueParent } from '../../../../../utils/vue';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import {
-	default as FormFinancialsManagedAccount,
-	default as FormFinancialsManagedAccountTS,
-} from './managed-account.vue';
+import { findRequiredVueParent } from '../../../../../utils/vue';
+import { CommonFormComponents } from '../../../../../_common/form-vue/form.service';
+import FormFinancialsManagedAccountTS from './managed-account';
+import FormFinancialsManagedAccount from './managed-account.vue';
 
 @Component({
 	components: {
@@ -13,8 +11,6 @@ import {
 	},
 })
 export default class AppFinancialsManagedAccountDob extends Vue {
-	@Prop(Boolean) forceRequired!: boolean;
-
 	@Prop(String) namePrefix!: string;
 
 	days: string[] = [];

@@ -48,7 +48,7 @@
 
 				<div v-if="community.user_block && community.user_block.doesExpire">
 					Your block will expire in
-					<b><app-time-ago :date="community.user_block.expires_on" without-suffix /></b>
+					<b><app-time-ago :date="community.user_block.expires_on" without-suffix/></b>
 				</div>
 			</div>
 
@@ -58,7 +58,7 @@
 			</template>
 			<template v-else>
 				<app-post-add-button
-					v-if="!community.isBlocked"
+					v-if="shouldShowPostAdd"
 					:community="community"
 					:channel="communityChannel"
 					@add="onPostAdded"

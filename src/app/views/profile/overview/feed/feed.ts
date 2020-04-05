@@ -35,7 +35,11 @@ function getFetchUrl(route: Route) {
 	lazy: true,
 	deps: { query: ['tab', 'feed_last_id'] },
 	resolver: ({ route }) =>
-		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, getFetchUrl(route))),
+		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, getFetchUrl(route)), undefined, {
+			// Don't error redirect here. It would go to 404 if the user is banned, and prevent us
+			// from showing the "This user is banned" page.
+			noErrorRedirect: true,
+		}),
 })
 export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 	@State

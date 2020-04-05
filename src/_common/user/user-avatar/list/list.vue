@@ -1,5 +1,5 @@
 <template>
-	<div class="-list" :class="{ '-inline-list': inline }">
+	<div class="-list" :class="{ '-list-sm': sm, '-inline-list': inline }">
 		<div
 			class="-user"
 			:class="{
@@ -26,39 +26,42 @@
 @require '~styles-lib/mixins'
 
 $-size = 40px
-$-spacing = 3px
+$-spacing = 4px
 
 $-size-sm = 24px
 
+
 .-list
+	display: grid
+	grid-template-columns: repeat(auto-fill, $-size)
+	grid-gap: $-spacing * 2
+	justify-content: space-between
+
+.-list-sm
 	position: relative
 	flex: 1
 	display: flex
 	flex-wrap: wrap
-	padding-top: 4px
-	padding-bottom: 4px
+	padding-top: $-spacing
+	padding-bottom: $-spacing
+	justify-content: normal
+	grid-gap: 0
 
 .-inline-list
 	display: inline-flex
 
 .-user
-	flex: none
-	width: $-size
-	height: $-size
-	margin: 0 $-spacing $-spacing
 	position: relative
 
 .-user-sm
 	width: $-size-sm * 0.4
 	height: $-size-sm
+	margin: 0 3px 3px
 
 .-avatar
 	img-circle()
 	change-bg('bg-subtle')
 	pressy()
-	flex: none
-	width: $-size
-	height: $-size
 
 .-avatar-sm
 	width: $-size-sm

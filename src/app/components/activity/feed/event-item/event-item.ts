@@ -17,6 +17,10 @@ import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import AppPill from '../../../../../_common/pill/pill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import { Scroll } from '../../../../../_common/scroll/scroll.service';
+import { Settings } from '../../../../../_common/settings/settings.service';
+import AppStickerTargetTS from '../../../../../_common/sticker/target/target';
+import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
@@ -58,6 +62,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppContentViewer,
 		AppUserVerifiedTick,
 		AppActivityFeedEventItemBlocked,
+		AppStickerTarget,
 	},
 	filters: {
 		number,
@@ -75,6 +80,8 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	canToggleLead = false;
 	hasBypassedBlock = false;
+	stickersVisible = false;
+	animateStickers = true;
 
 	private resizeSensor?: any;
 	private feedComponent!: AppActivityFeedTS;
@@ -83,6 +90,10 @@ export default class AppActivityFeedEventItem extends Vue {
 	readonly EventItem = EventItem;
 
 	$el!: HTMLDivElement;
+
+	$refs!: {
+		stickerTarget: AppStickerTargetTS;
+	};
 
 	get isNew() {
 		return this.feed.isItemUnread(this.item);
@@ -216,6 +227,15 @@ export default class AppActivityFeedEventItem extends Vue {
 		return !this.hasBypassedBlock && this.isBlocked;
 	}
 
+	created() {
+		if (!GJ_IS_SSR) {
+			this.stickersVisible = Settings.get('always-show-stickers');
+			if (this.stickersVisible) {
+				this.animateStickers = false;
+			}
+		}
+	}
+
 	mounted() {
 		this.feedComponent = findRequiredVueParent(this, AppActivityFeed) as AppActivityFeedTS;
 	}
@@ -345,6 +365,15 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	onPostUnpinned(item: EventItem) {
 		this.feedComponent.onPostUnpinned(item);
+	}
+
+	onPostStickersVisibilityChange(visible: boolean) {
+		this.animateStickers = true;
+		this.stickersVisible = visible;
+		// Scroll to the sticker target to show stickers.
+		if (visible) {
+			Scroll.to(this.$refs.stickerTarget.$el as HTMLElement, { preventDirections: ['down'] });
+		}
 	}
 
 	getChannelRoute(postCommunity: FiresidePostCommunity) {
