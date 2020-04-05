@@ -36,6 +36,7 @@
 <style lang="stylus" scoped>
 .-like
 	position: relative
+	display: flex
 
 .-like-anim-container
 	position: absolute
@@ -74,14 +75,10 @@
 	&.-left
 		animation-name: dislike-anim-left
 		clip-path: polygon(50% 0%, 50% 100%, 0% 100%, 0% 0%)
-		// clip-path: polygon(50% 0%, 50% 20%, 40% 40%, 60% 60%, 45% 80%, 50% 100%, 0% 100%, 0% 0%)
 
 	&.-right
 		animation-name: dislike-anim-right
 		clip-path: polygon(50% 0%, 50% 100%, 100% 100%, 100% 0%)
-		// clip-path: polygon(50% 0%, 50% 20%, 40% 40%, 60% 60%, 45% 80%, 50% 100%, 100% 100%, 100% 0%)
-
-
 
 @keyframes dislike-anim-left
 	0%
