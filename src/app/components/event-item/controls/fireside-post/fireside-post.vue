@@ -116,12 +116,17 @@
 	display: inline-flex
 	align-items: center
 
+	.-like >>> .button
+		width: 36px
+		height: 36px
+
 	.-button-info
 		display: flex
 		align-items: center
-		width: 32px
+		min-width: 32px
 		height: 36px
 		padding-left: 4px
+		padding-right: 8px
 		font-weight: 700
 
 		&.-liked
@@ -148,6 +153,9 @@
 
 		.blip-caret
 			theme-prop('border-right-color', 'bi-bg')
+
+		small
+			theme-prop('color', 'bg-offset')
 
 	&-count
 		margin-left: 18px
