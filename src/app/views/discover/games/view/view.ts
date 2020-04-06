@@ -12,7 +12,6 @@ import {
 	CommentStoreModel,
 } from '../../../../../_common/comment/comment-store';
 import { EventBus, EventBusDeregister } from '../../../../../_common/events/event-bus.service';
-import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../_common/partner-referral/partner-referral-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
@@ -277,11 +276,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	async declineCollaboration() {
 		await this.collaboratorInvite!.$remove();
 		this.declineCollaboratorInvite();
-	}
-
-	scrollToPackagePayment(package_: GamePackage) {
-		Scroll.to(`game-package-card-${package_.id}`);
-		EventBus.emit('GamePackageCard.showPaymentOptions', package_);
 	}
 
 	scrollToMultiplePackages() {
