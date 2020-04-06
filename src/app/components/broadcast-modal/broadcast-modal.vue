@@ -1,5 +1,5 @@
 <template>
-	<app-modal>
+	<app-modal ref="modal">
 		<div class="modal-controls">
 			<app-button @click="modal.dismiss()">
 				<translate>Close</translate>
@@ -43,10 +43,7 @@
 				<div class="col-sm-8 col-sm-pull-4">
 					<div v-if="post.hasMedia">
 						<div v-for="item of post.media" :key="item.id">
-							<app-responsive-dimensions
-								class="-media-item"
-								:ratio="item.width / item.height"
-							>
+							<app-responsive-dimensions class="-media-item" :ratio="item.width / item.height">
 								<app-event-item-media-tags :gif="item.is_animated" />
 
 								<app-img-responsive
@@ -86,7 +83,11 @@
 						<app-time-ago v-if="post.isActive" :date="post.published_on" />
 					</div>
 
-					<app-sticker-target :stickers="post.stickers">
+					<app-sticker-target
+						:stickers="post.stickers"
+						:show-stickers="stickersVisible"
+						ref="stickerTarget"
+					>
 						<app-content-viewer :source="post.lead_content" />
 					</app-sticker-target>
 
@@ -102,7 +103,13 @@
 						<br />
 					</template>
 
-					<app-event-item-controls show-comments :post="post" />
+					<app-event-item-controls
+						show-comments
+						:post="post"
+						:show-stickers="stickersVisible"
+						ref="stickerTarget"
+						@post-stickers-visibility-change="onPostStickersVisibilityChange"
+					/>
 				</div>
 			</div>
 		</div>
