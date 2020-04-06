@@ -7,7 +7,7 @@
 		}"
 		v-app-tooltip.right="tooltip"
 	>
-		<app-media-item-backdrop class="-backdrop" :media-item="community.header" radius="full">
+		<app-media-item-backdrop class="-backdrop" :media-item="community.thumbnail" radius="full">
 			<app-community-thumbnail-img class="-thumb" :community="community" />
 		</app-media-item-backdrop>
 		<div

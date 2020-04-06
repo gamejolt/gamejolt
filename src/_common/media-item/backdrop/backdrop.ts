@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../utils/vue';
+import { propOptional } from '../../../utils/vue';
 import { MediaItem } from '../../media-item/media-item-model';
 
 @Component({})
 export default class AppMediaItemBackdrop extends Vue {
-	@Prop(propRequired(MediaItem))
+	@Prop(propOptional(MediaItem))
 	mediaItem!: MediaItem;
 
 	@Prop(propOptional(String))
@@ -20,7 +20,11 @@ export default class AppMediaItemBackdrop extends Vue {
 	}
 
 	get wrapperStyling() {
-		if (!this.mediaItem.avg_img_color || this.mediaItem.img_has_transparency) {
+		if (
+			!this.mediaItem ||
+			!this.mediaItem.avg_img_color ||
+			this.mediaItem.img_has_transparency
+		) {
 			return;
 		}
 
