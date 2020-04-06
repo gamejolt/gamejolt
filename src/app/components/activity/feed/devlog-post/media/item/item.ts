@@ -35,8 +35,6 @@ export default class AppActivityFeedDevlogPostMediaItem extends Vue {
 	isActive!: boolean;
 
 	isFilled = false;
-	scaledWidth = 0;
-	scaledHeight = 0;
 
 	readonly Screen = Screen;
 
@@ -78,8 +76,5 @@ export default class AppActivityFeedDevlogPostMediaItem extends Vue {
 	async onDimensionsChange(e: AppResponsiveDimensionsChangeEvent) {
 		this.emitBootstrap();
 		this.isFilled = e.isFilled;
-
-		this.scaledWidth = e.containerWidth;
-		this.scaledHeight = e.height;
 	}
 }
