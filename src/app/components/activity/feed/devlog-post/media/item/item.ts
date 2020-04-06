@@ -47,14 +47,6 @@ export default class AppActivityFeedDevlogPostMediaItem extends Vue {
 		return this.isActive;
 	}
 
-	get width() {
-		return this.scaledWidth + 'px';
-	}
-
-	get height() {
-		return this.scaledHeight + 'px';
-	}
-
 	get itemStyling() {
 		let style = {};
 
@@ -62,13 +54,6 @@ export default class AppActivityFeedDevlogPostMediaItem extends Vue {
 			Object.assign(style, {
 				maxWidth: this.mediaItem.width + 'px',
 				maxHeight: this.mediaItem.height + 'px',
-			});
-		}
-
-		if (this.width && this.height) {
-			Object.assign(style, {
-				width: this.width,
-				height: this.height,
 			});
 		}
 
