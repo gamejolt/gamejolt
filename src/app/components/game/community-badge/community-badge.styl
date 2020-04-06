@@ -2,8 +2,9 @@
 @require '~styles-lib/mixins'
 
 .-backdrop
+	// For some reason we need position static
+	// so the backdrop can get the height.
 	position: static
-	// margin: -10px -15px
 
 .-community-container
 	clearfix()
