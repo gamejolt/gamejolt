@@ -20,25 +20,25 @@
 	> *
 		position: relative
 
-.-color
-	position: absolute
-	top: 1px
-	right: 1px
-	bottom: 1px
-	left: 1px
-	width: auto
+	.-color
+		position: absolute
+		top: 1px
+		right: 1px
+		bottom: 1px
+		left: 1px
+		width: auto
 
-.-sm
-	rounded-corners-sm()
+	&.-sm, .-color.-sm
+		rounded-corners-sm()
 
-.-md
-	rounded-corners()
+	&.-md, .-color.-md
+		rounded-corners()
 
-.-lg
-	rounded-corners-lg()
+	&.-lg, .-color.-lg
+		rounded-corners-lg()
 
-.-full
-	img-circle()
+	&.-full, .-color.-full
+		img-circle()
 
 </style>
 
