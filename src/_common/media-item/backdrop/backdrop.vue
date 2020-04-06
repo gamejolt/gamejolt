@@ -1,5 +1,5 @@
 <template>
-	<div class="img-backdrop" :class="radiusClass">
+	<div class="media-item-backdrop" :class="radiusClass">
 		<div class="-color" :class="radiusClass" :style="wrapperStyling" />
 		<slot />
 	</div>
@@ -10,7 +10,7 @@
 @require '~styles-lib/mixins'
 
 
-.img-backdrop
+.media-item-backdrop
 	display: flex
 	overflow: hidden
 	width: inherit
@@ -27,9 +27,6 @@
 	bottom: 1px
 	left: 1px
 	width: auto
-
-	.spoiler &
-		opacity: 0
 
 .-sm
 	rounded-corners-sm()
