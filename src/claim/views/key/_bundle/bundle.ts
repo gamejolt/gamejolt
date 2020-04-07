@@ -13,7 +13,7 @@ import { Store } from '../../../store/index';
 	},
 })
 export default class AppKeyBundle extends Vue {
-	@Prop({ required: true })
+	@Prop(propRequired(Object))
 	payload!: any;
 
 	@Prop(propRequired(String))
