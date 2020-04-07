@@ -116,39 +116,33 @@ export default class AppEventItemControls extends Vue {
 	}
 
 	setUserFollow(showing: boolean) {
-		// Check if we're able to suggest following the user of the post
-		// that was liked. 'UserFollowSuggestion' will only allow us to
-		// suggest once in 'X' amount of time for each user. This way we
-		// make sure we're not spam-requesting users to follow people.
-		if (this.post && UserFollowSuggestion.canSuggest(this.post.user.id)) {
-			this.shouldShowFollowState = showing;
-
-			// If we're part of the activity feed, synchronize it with that state as well.
-			if (this.item && this.feed) {
-				this.feed.setItemShowingFollow(this.item, showing);
+		if (showing && this.post) {
+			// Do nothing if a post is liked and we recently suggested
+			// to follow that user - so we don't spam them.
+			if (!UserFollowSuggestion.canSuggest(this.post.user.id)) {
+				return;
 			}
 
-			// If we're showing the user-follow component, we want to stop suggesting it.
-			if (showing) {
-				Analytics.trackEvent('user-follow', 'show', 'fireside-post-like-widget');
-				UserFollowSuggestion.doNotSuggest(this.post.user.id);
-			}
-		} else {
-			// Since we're only going to display user-follow if we pass the
-			// 'UserFollowSuggestion' check, we need set things back to normal
-			// if a user closes out of the menu or unlikes a post.
-			this.shouldShowFollowState = false;
+			// Track analytics for how many people see user-follow,
+			// and stop suggesting to follow the user for 'X' amount
+			// of time - specified in UserFollowSuggestion.
+			Analytics.trackEvent('user-follow', 'show', 'fireside-post-like-widget');
+			UserFollowSuggestion.doNotSuggest(this.post.user.id);
+		}
 
-			if (this.item && this.feed) {
-				this.feed.setItemShowingFollow(this.item, false);
-			}
+		this.shouldShowFollowState = showing;
+
+		// If we're part of the activity feed, synchronize it with that state as well.
+		if (this.item && this.feed) {
+			console.log('item && feed');
+
+			this.feed.setItemShowingFollow(this.item, showing);
 		}
 	}
 
 	onUserFollowDismissal() {
-		if (this.post) {
-			UserFollowSuggestion.doNotSuggest(this.post.user.id);
-		}
+		// Track analytics for how often people click
+		// on the 'X' button to hide user-follow.
 		Analytics.trackEvent('user-follow', 'hide', 'fireside-post-like-widget');
 		this.setUserFollow(false);
 	}
