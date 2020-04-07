@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { Subscription } from '../../events/subscription';
+import { EventSubscription } from '../../events/subscription';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
 import { AppScrollInview } from '../inview/inview';
@@ -32,7 +32,7 @@ export default class AppScrollAffix extends Vue {
 	width: number | null = null;
 	height = 0;
 
-	private resize$: Subscription | undefined;
+	private resize$: EventSubscription | undefined;
 
 	$refs!: {
 		container: HTMLElement;

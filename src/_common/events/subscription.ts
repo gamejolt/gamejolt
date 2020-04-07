@@ -1,6 +1,6 @@
 export type UnsubscribeFunc = () => void;
 
-export class Subscription {
+export class EventSubscription {
 	private unsubFunc: UnsubscribeFunc | null;
 
 	constructor(private subscriber: () => UnsubscribeFunc) {

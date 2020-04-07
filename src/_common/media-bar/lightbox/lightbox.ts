@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Analytics } from '../../analytics/analytics.service';
 import { EscapeStack } from '../../escape-stack/escape-stack.service';
-import { Subscription } from '../../events/subscription';
+import { EventSubscription } from '../../events/subscription';
 import { Screen } from '../../screen/screen-service';
 import AppShortkey from '../../shortkey/shortkey.vue';
 import AppMediaBar from '../media-bar';
@@ -39,7 +39,7 @@ export default class AppMediaBarLightbox extends Vue {
 	isDragging = false;
 	waitingForFrame = false;
 
-	private resize$?: Subscription;
+	private resize$?: EventSubscription;
 	private escapeCallback?: Function;
 
 	mounted() {

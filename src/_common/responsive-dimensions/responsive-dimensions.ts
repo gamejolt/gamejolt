@@ -1,6 +1,6 @@
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { Subscription } from '../events/subscription';
+import { EventSubscription } from '../events/subscription';
 import { Ruler } from '../ruler/ruler-service';
 import { Screen } from '../screen/screen-service';
 
@@ -19,7 +19,7 @@ export class AppResponsiveDimensions extends Vue {
 	@Prop(Number)
 	maxHeight?: number;
 
-	private resize$: Subscription | undefined;
+	private resize$: EventSubscription | undefined;
 	private width: string | null = null;
 	private height = 'auto';
 

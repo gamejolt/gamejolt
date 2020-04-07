@@ -1,6 +1,6 @@
 import { debounce } from '../../utils/utils';
 import { makeObservableService } from '../../utils/vue';
-import { Topic } from '../events/topic';
+import { EventTopic } from '../events/topic';
 
 /**
  * Media query breakpoints.
@@ -89,7 +89,7 @@ export class Screen {
 	 */
 	static isScrolling = false;
 
-	static resizeChanges = new Topic<void>();
+	static resizeChanges = new EventTopic<void>();
 
 	/**
 	 * Simply recalculates the breakpoint checks.

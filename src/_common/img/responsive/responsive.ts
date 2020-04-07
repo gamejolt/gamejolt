@@ -1,6 +1,6 @@
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { Subscription } from '../../events/subscription';
+import { EventSubscription } from '../../events/subscription';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
 import { ImgHelper } from '../helper/helper-service';
@@ -14,7 +14,7 @@ export class AppImgResponsive extends Vue {
 
 	private initialized = false;
 	private processedSrc = '';
-	private resize$: Subscription | undefined;
+	private resize$: EventSubscription | undefined;
 
 	created() {
 		this.processedSrc = this.src;

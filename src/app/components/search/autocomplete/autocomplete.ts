@@ -4,7 +4,7 @@ import { State } from 'vuex-class';
 import { debounce } from '../../../../utils/utils';
 import { findRequiredVueParent } from '../../../../utils/vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
-import { Topic } from '../../../../_common/events/topic';
+import { EventTopic } from '../../../../_common/events/topic';
 import { Game } from '../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../_common/game/thumbnail-img/thumbnail-img.vue';
 import { AppStore } from '../../../../_common/store/app-store';
@@ -44,7 +44,7 @@ export default class AppSearchAutocomplete extends Vue {
 
 	search: AppSearchTS | null = null;
 
-	searchChanges = new Topic<string>();
+	searchChanges = new EventTopic<string>();
 	searched$ = this.searchChanges.subscribe(
 		debounce((query: string) => this.sendSearch(query), 500)
 	);

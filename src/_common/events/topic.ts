@@ -1,7 +1,7 @@
 import { EventBus } from './event-bus.service';
-import { Subscription } from './subscription';
+import { EventSubscription } from './subscription';
 
-export class Topic<T> {
+export class EventTopic<T> {
 	private e!: EventBus;
 
 	constructor() {
@@ -9,7 +9,7 @@ export class Topic<T> {
 	}
 
 	subscribe(callback: (arg: T) => any) {
-		return new Subscription(() => this.e.on('value', callback)).subscribe();
+		return new EventSubscription(() => this.e.on('value', callback)).subscribe();
 	}
 
 	next(value: T) {

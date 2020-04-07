@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../../../utils/vue';
-import { Subscription } from '../../../events/subscription';
+import { EventSubscription } from '../../../events/subscription';
 import { AppImgResponsive } from '../../../img/responsive/responsive';
 import { Screen } from '../../../screen/screen-service';
 import AppSketchfabEmbed from '../../../sketchfab/embed/embed.vue';
@@ -31,7 +31,7 @@ export default class AppMediaBarLightboxItem extends Vue {
 	maxWidth = 0;
 	maxHeight = 0;
 
-	private resize$: Subscription | undefined;
+	private resize$: EventSubscription | undefined;
 
 	$refs!: {
 		caption: HTMLDivElement;

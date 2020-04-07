@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { Subscription } from '../../events/subscription';
+import { EventSubscription } from '../../events/subscription';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
 
@@ -18,7 +18,7 @@ export default class AppVideoEmbed extends Vue {
 	width: number | 'auto' = 'auto';
 	height: number | 'auto' = 'auto';
 
-	private resize$: Subscription | undefined;
+	private resize$: EventSubscription | undefined;
 
 	mounted() {
 		this.recalculateDimensions();
