@@ -134,8 +134,6 @@ export default class AppEventItemControls extends Vue {
 
 		// If we're part of the activity feed, synchronize it with that state as well.
 		if (this.item && this.feed) {
-			console.log('item && feed');
-
 			this.feed.setItemShowingFollow(this.item, showing);
 		}
 	}
