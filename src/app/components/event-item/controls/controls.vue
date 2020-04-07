@@ -34,7 +34,7 @@
 			v-if="post"
 			:post="post"
 			:should-show="isShowingFollow"
-			@close="setUserFollow(false)"
+			@close="onUserFollowDismissal"
 		/>
 		<span @click.stop>
 			<app-event-item-controls-comments
