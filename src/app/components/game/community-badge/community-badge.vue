@@ -7,15 +7,22 @@
 			}"
 		>
 			<div class="-community-container fill-darkest">
-				<div
+				<app-media-item-backdrop
 					v-if="community.header"
-					class="-header"
-					:style="{
-						'background-image': 'url(' + community.header.mediaserver_url + ')',
-					}"
+					class="-backdrop"
+					:media-item="community.header"
+					radius="lg"
 				>
-					<div class="-header-gradient" />
-				</div>
+					<div
+						class="-header"
+						:style="{
+							'background-image': 'url(' + community.header.mediaserver_url + ')',
+						}"
+					>
+						<div class="-header-gradient" />
+					</div>
+				</app-media-item-backdrop>
+
 				<div class="-content">
 					<div class="-thumbnail">
 						<img :src="community.img_thumbnail" />

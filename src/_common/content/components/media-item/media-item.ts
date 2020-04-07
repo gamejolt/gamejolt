@@ -2,6 +2,7 @@ import ResizeObserver from 'resize-observer-polyfill';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import AppLoading from '../../../loading/loading.vue';
+import AppMediaItemBackdrop from '../../../media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../media-item/media-item-model';
 import { AppTooltip } from '../../../tooltip/tooltip';
 import { ContentEditorLinkModal } from '../../content-editor/modals/link/link-modal.service';
@@ -12,6 +13,7 @@ import AppBaseContentComponent from '../base/base-content-component.vue';
 	components: {
 		AppBaseContentComponent,
 		AppLoading,
+		AppMediaItemBackdrop,
 	},
 	directives: {
 		AppTooltip,
