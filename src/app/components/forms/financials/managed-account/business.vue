@@ -1,18 +1,15 @@
 <template>
 	<div>
-		<div v-if="!parent.getStripeField('legal_entity.business_name')">
+		<div v-if="!parent.getStripeField('company.name')">
 			<div class="row">
-				<div class="col-sm-6" v-if="parent.requiresField('legal_entity.business_name')">
-					<app-form-group name="legal_entity.business_name" :label="$gettext('Business Name')">
+				<div class="col-sm-6" v-if="parent.requiresField('company.name')">
+					<app-form-group name="company.name" :label="$gettext('Business Name')">
 						<app-form-control />
 						<app-form-control-errors />
 					</app-form-group>
 				</div>
-				<div class="col-sm-6" v-if="parent.requiresField('legal_entity.business_tax_id')">
-					<app-form-group
-						name="legal_entity.business_tax_id"
-						:label="$gettext('Employer Identification Number')"
-					>
+				<div class="col-sm-6" v-if="parent.requiresField('company.tax_id')">
+					<app-form-group name="company.tax_id" :label="$gettext('Employer Identification Number')">
 						<app-form-control />
 						<app-form-control-errors />
 					</app-form-group>
@@ -20,13 +17,13 @@
 			</div>
 		</div>
 
-		<div v-if="parent.getStripeField('legal_entity.business_name')" class="form-horizontal">
+		<div v-if="parent.getStripeField('company.name')" class="form-horizontal">
 			<div class="form-group">
 				<label class="control-label col-sm-4">
 					<translate>Business Name</translate>
 				</label>
 				<div class="form-static col-sm-8">
-					{{ parent.getStripeField('legal_entity.business_name') }}
+					{{ parent.getStripeField('company.name') }}
 				</div>
 			</div>
 			<div class="form-group">

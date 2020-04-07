@@ -28,7 +28,7 @@
 		</div>
 
 		<div class="modal-body">
-			<app-comment-widget :model="model" :autofocus="autofocusAdd" />
+			<app-comment-widget :model="model" :autofocus="autofocusAdd" :initial-tab="initialTab" />
 		</div>
 	</app-modal>
 </template>

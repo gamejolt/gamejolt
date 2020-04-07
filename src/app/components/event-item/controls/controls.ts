@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../../auth/store/index';
+import { propOptional } from '../../../../utils/vue';
 import AppCommentVideoLikeWidget from '../../../../_common/comment/video/like-widget/like-widget.vue';
 import { CommentVideo } from '../../../../_common/comment/video/video-model';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
@@ -40,6 +41,8 @@ export default class AppEventItemControls extends Vue {
 	@Prop(Boolean)
 	showComments?: boolean;
 
+	@Prop(propOptional(Boolean, false)) showStickers!: boolean;
+
 	@State
 	app!: Store['app'];
 
@@ -72,6 +75,10 @@ export default class AppEventItemControls extends Vue {
 
 	@Emit('post-unpin')
 	emitPostUnpin() {}
+
+	emitStickersVisibilityChange(visible: boolean) {
+		this.$emit('post-stickers-visibility-change', visible);
+	}
 
 	created() {
 		// The 'feed' and 'item' props will be included when this is used in the

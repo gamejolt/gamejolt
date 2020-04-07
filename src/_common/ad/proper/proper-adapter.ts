@@ -48,7 +48,13 @@ export class AdProperAdapter extends AdAdapterBase {
 			loadScript('https://global.proper.io/gamejolt.min.js');
 		});
 
-		(window as any).propertag.cmd.push(cb);
+		(window as any).propertag.cmd.push(() => {
+			try {
+				cb();
+			} catch (e) {
+				console.warn('Proper: Failed to execute Proper function call.', e);
+			}
+		});
 	}
 
 	onBeforeRouteChange() {

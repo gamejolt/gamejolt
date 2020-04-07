@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { AppImgResponsive } from '../../../../../../../_common/img/responsive/responsive';
+import AppMediaItemBackdrop from '../../../../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../../../../_common/media-item/media-item-model';
 import {
 	AppResponsiveDimensions,
@@ -14,6 +15,7 @@ import { ActivityFeedView } from '../../../view';
 @Component({
 	components: {
 		AppImgResponsive,
+		AppMediaItemBackdrop,
 		AppVideo,
 		AppResponsiveDimensions,
 		AppEventItemMediaTags,
@@ -41,6 +43,19 @@ export default class AppActivityFeedDevlogPostMediaItem extends Vue {
 
 	get shouldVideoPlay() {
 		return this.isActive;
+	}
+
+	get itemStyling() {
+		let style = {};
+
+		if (!GJ_IS_SSR) {
+			Object.assign(style, {
+				maxWidth: this.mediaItem.width + 'px',
+				maxHeight: this.mediaItem.height + 'px',
+			});
+		}
+
+		return style;
 	}
 
 	get deviceMaxHeight() {

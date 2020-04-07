@@ -1,5 +1,5 @@
 <template>
-	<app-modal>
+	<app-modal ref="modal">
 		<div class="modal-controls">
 			<app-button @click="modal.dismiss()">
 				<translate>Close</translate>
@@ -83,7 +83,13 @@
 						<app-time-ago v-if="post.isActive" :date="post.published_on" />
 					</div>
 
-					<app-content-viewer :source="post.lead_content" />
+					<app-sticker-target
+						:stickers="post.stickers"
+						:show-stickers="stickersVisible"
+						ref="stickerTarget"
+					>
+						<app-content-viewer :source="post.lead_content" />
+					</app-sticker-target>
 
 					<div v-if="post.hasArticle">
 						<div class="page-cut" />
@@ -97,7 +103,13 @@
 						<br />
 					</template>
 
-					<app-event-item-controls show-comments :post="post" />
+					<app-event-item-controls
+						show-comments
+						:post="post"
+						:show-stickers="stickersVisible"
+						ref="stickerTarget"
+						@post-stickers-visibility-change="onPostStickersVisibilityChange"
+					/>
 				</div>
 			</div>
 		</div>

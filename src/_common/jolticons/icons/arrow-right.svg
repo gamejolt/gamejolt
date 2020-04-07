@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   id="svg2985"
+   height="16px"
+   width="16px">
+  <defs
+     id="defs2987" />
+  <metadata
+     id="metadata2990">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>T. Gantt</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     style="display:inline;opacity:1"
+     id="layer2">
+    <path
+       id="rect821"
+       d="M 8.0019531,2 C 7.7461504,1.9998568 7.4908212,2.097489 7.2949219,2.2929688 c -0.3917987,0.3909595 -0.3922386,1.0207106 0,1.4121093 L 10.595703,7 H 3 C 2.446,7 2,7.446 2,8 2,8.554 2.446,9 3,9 h 7.595703 l -3.3007811,3.294922 c -0.3922386,0.391399 -0.3917987,1.02115 0,1.412109 0.3917987,0.39096 1.0218239,0.391399 1.4140625,0 L 13.707031,8.7167969 C 13.906198,8.5180579 14.002946,8.2592033 14,8 14.00293,7.7408162 13.906182,7.481927 13.707031,7.2832031 L 8.7089844,2.2949219 C 8.5128651,2.0992225 8.257756,2.0001432 8.0019531,2 Z"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.00000072;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate" />
+  </g>
+</svg>
