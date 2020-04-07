@@ -6,12 +6,15 @@
 		:title="label"
 	>
 		<div class="-card-bg" v-if="backgroundItem">
-			<div
-				class="-card-bg-img"
-				:style="{
-					'background-image': `url('${backgroundItem.mediaserver_url}')`,
-				}"
-			/>
+			<app-media-item-backdrop :media-item="backgroundItem">
+				<div
+					class="-card-bg-img"
+					:style="{
+						'background-image': `url('${backgroundItem.mediaserver_url}')`,
+					}"
+				/>
+				<div class="-overlay" />
+			</app-media-item-backdrop>
 		</div>
 
 		<div class="-card-content">

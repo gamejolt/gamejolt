@@ -9,7 +9,9 @@
 			/>
 
 			<router-link :to="community.routeLocation" class="-thumbnail">
-				<app-community-thumbnail-img :community="community" />
+				<app-media-item-backdrop :media-item="community.thumbnail">
+					<app-community-thumbnail-img :community="community" />
+				</app-media-item-backdrop>
 			</router-link>
 
 			<div class="-well fill-bg">
