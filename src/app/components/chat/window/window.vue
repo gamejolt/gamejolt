@@ -27,7 +27,7 @@
 
 					<div class="nav-well">
 						<div class="chat-compiled-room-description">
-							<div v-html="room.description_compiled"></div>
+							<div v-html="room.description"></div>
 						</div>
 					</div>
 				</template>
@@ -114,7 +114,7 @@
 									<div class="chat-window-header-room-description chat-compiled-room-description">
 										<div
 											class="anim-fade-in no-animate-xs"
-											v-html="room.description_compiled"
+											v-html="room.description"
 										></div>
 									</div>
 								</app-fade-collapse>

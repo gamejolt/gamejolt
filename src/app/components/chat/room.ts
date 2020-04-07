@@ -15,8 +15,7 @@ export class ChatRoom {
 	type!: ChatRoomType;
 	user?: ChatUser;
 
-	description_compiled!: string;
-	description_markdown!: string;
+	description!: string;
 
 	staff!: {
 		permission: string;

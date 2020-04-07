@@ -64,7 +64,7 @@ if (GJ_ENVIRONMENT === 'development') {
 	Environment.apiHost = GJ_TUNNELS.backend || 'http://development.gamejolt.com';
 	Environment.gameserverApiHost = 'http://development.gamejolt.com';
 	Environment.activityStreamHost = 'http://activity.development.gamejolt.com';
-	Environment.chatHost = 'http://chat.development.gamejolt.com';
+	Environment.chatHost = 'ws://chat:4001';
 	Environment.widgetHost = 'http://localhost:8086';
 	Environment.gridHost = 'http://grid:4000/grid/host';
 	Environment.recaptchaSiteKey = '6LcwTkEUAAAAAHTT67TB8gkM0ft5hUzz_r_tFFaT';

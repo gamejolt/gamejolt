@@ -6,7 +6,7 @@ export class ChatUser {
 	displayName!: string;
 	imgAvatar!: string;
 
-	isOnline!: boolean;
+	isOnline = false;
 	isMutedRoom!: boolean;
 	isMutedGlobal!: boolean;
 	isMod: 'owner' | 'moderator' | false = false;

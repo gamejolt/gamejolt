@@ -2,7 +2,11 @@
 	<app-scroll-scroller @scroll.native="onScroll">
 		<div class="-container">
 			<transition-group @enter="onMessageTransition">
-				<div class="anim-fade-in no-animate-leave" v-for="message of messages" :key="message.id">
+				<div
+					class="anim-fade-in no-animate-leave"
+					v-for="message of messages"
+					:key="message.objectId"
+				>
 					<div class="-date-split" v-if="message.dateSplit">
 						<span class="-inner">{{ message.loggedOn | date('mediumDate') }}</span>
 					</div>

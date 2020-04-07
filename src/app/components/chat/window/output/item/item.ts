@@ -29,9 +29,7 @@ export default class AppChatWindowOutputItem extends Vue {
 	readonly ChatMessage = ChatMessage;
 
 	get shouldFadeCollapse() {
-		return (
-			this.message.contentRaw.split('\n').length > 6 || this.message.contentRaw.length >= 500
-		);
+		return this.message.content.split('\n').length > 6 || this.message.content.length >= 500;
 	}
 
 	get canModerate() {
@@ -48,5 +46,9 @@ export default class AppChatWindowOutputItem extends Vue {
 
 	removeMessage(msgId: number) {
 		this.chat.removeMessage(msgId, this.room.id);
+	}
+
+	resendMessage(message: ChatMessage) {
+		this.chat.resendMessage(message);
 	}
 }

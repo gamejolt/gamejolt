@@ -1,21 +1,26 @@
 import { ChatUser } from './user';
 
 export type ChatMessageType = 0 | 1;
+export type ChatMessageState = 'PENDING' | 'SENT' | 'FAILED';
 
 export class ChatMessage {
 	static readonly TypeNormal = 0;
 	static readonly TypeSystem = 1;
+	static readonly StatePending = 'PENDING';
+	static readonly StateSent = 'SENT';
+	static readonly StateFailed = 'FAILED';
 
 	id!: number;
 	type!: ChatMessageType;
 	userId!: number;
 	user!: ChatUser;
 	roomId!: number;
-	contentRaw!: string;
 	content!: string;
 	loggedOn!: Date;
 	combine?: boolean;
 	dateSplit?: boolean;
+	state?: ChatMessageState;
+	objectId: symbol = Symbol();
 
 	// Used for rendering.
 	_collapsable = false;
