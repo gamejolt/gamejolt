@@ -31,8 +31,8 @@
 						target="_blank"
 					>
 						<app-img-responsive
-							v-if="useResponsiveImg"
-							class="img-responsive content-image"
+							v-if="shouldUseMediaserver"
+							class="content-image"
 							:src="mediaItem.mediaserver_url"
 							:alt="title"
 							:title="title"
