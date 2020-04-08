@@ -38,6 +38,10 @@
 	position: relative
 	display: flex
 
+	> button
+		width: 36px
+		height: 36px
+
 .-like-anim-container
 	position: absolute
 	top: 0
