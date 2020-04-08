@@ -3,6 +3,7 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { AppImgResponsive } from '../../../img/responsive/responsive';
 import AppLoading from '../../../loading/loading.vue';
+import AppMediaItemBackdrop from '../../../media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../media-item/media-item-model';
 import { AppTooltip } from '../../../tooltip/tooltip';
 import { ContentEditorLinkModal } from '../../content-editor/modals/link/link-modal.service';
@@ -14,6 +15,7 @@ import AppBaseContentComponent from '../base/base-content-component.vue';
 		AppBaseContentComponent,
 		AppLoading,
 		AppImgResponsive,
+		AppMediaItemBackdrop,
 	},
 	directives: {
 		AppTooltip,

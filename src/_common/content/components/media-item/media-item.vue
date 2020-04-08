@@ -23,37 +23,39 @@
 					height: containerHeight,
 				}"
 			>
-				<template v-if="isHydrated">
-					<component
-						:is="hasLink && !isEditing ? 'a' : 'span'"
-						:href="hasLink && !isEditing ? href : undefined"
-						rel="nofollow noopener"
-						target="_blank"
-					>
-						<app-img-responsive
-							v-if="shouldUseMediaserver"
-							class="content-image"
-							:src="mediaItem.mediaserver_url"
-							:alt="title"
-							:title="title"
-							@load.native="onImageLoad"
-						/>
-						<img
-							v-else
-							class="img-responsive content-image"
-							:src="mediaItem.img_url"
-							:alt="title"
-							:title="title"
-							@load="onImageLoad"
-						/>
-					</component>
-				</template>
-				<template v-else-if="hasError">
-					<translate>Error loading media item.</translate>
-				</template>
-				<template v-else>
-					<app-loading />
-				</template>
+				<app-media-item-backdrop :media-item="mediaItem" radius="lg">
+					<template v-if="isHydrated">
+						<component
+							:is="hasLink && !isEditing ? 'a' : 'span'"
+							:href="hasLink && !isEditing ? href : undefined"
+							rel="nofollow noopener"
+							target="_blank"
+						>
+							<app-img-responsive
+								v-if="shouldUseMediaserver"
+								class="content-image"
+								:src="mediaItem.mediaserver_url"
+								:alt="title"
+								:title="title"
+								@load.native="onImageLoad"
+							/>
+							<img
+								v-else
+								class="img-responsive content-image"
+								:src="mediaItem.img_url"
+								:alt="title"
+								:title="title"
+								@load="onImageLoad"
+							/>
+						</component>
+					</template>
+					<template v-else-if="hasError">
+						<translate>Error loading media item.</translate>
+					</template>
+					<template v-else>
+						<app-loading />
+					</template>
+				</app-media-item-backdrop>
 			</div>
 			<div v-if="isHydrated && hasLink && isEditing" class="link-overlay">
 				<small>
@@ -90,7 +92,6 @@
 	display: flex
 	justify-content: center
 	align-items: center
-	rounded-corners-lg()
 	overflow: hidden
 	max-width: 100%
 	position: relative

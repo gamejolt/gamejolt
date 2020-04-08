@@ -19,22 +19,23 @@
 									:max-width="item.width"
 								>
 									<app-event-item-media-tags :gif="item.is_animated" />
+									<app-media-item-backdrop :media-item="item" radius="lg">
+										<app-img-responsive
+											class="-img"
+											v-if="!item.is_animated"
+											:src="item.mediaserver_url"
+											alt=""
+										/>
 
-									<app-img-responsive
-										class="-img"
-										v-if="!item.is_animated"
-										:src="item.mediaserver_url"
-										alt=""
-									/>
-
-									<app-video
-										v-else
-										class="-video"
-										:poster="item.mediaserver_url"
-										:webm="item.mediaserver_url_webm"
-										:mp4="item.mediaserver_url_mp4"
-										show-loading
-									/>
+										<app-video
+											v-else
+											class="-video"
+											:poster="item.mediaserver_url"
+											:webm="item.mediaserver_url_webm"
+											:mp4="item.mediaserver_url_mp4"
+											show-loading
+										/>
+									</app-media-item-backdrop>
 								</app-responsive-dimensions>
 
 								<br />
@@ -131,8 +132,10 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-.-media-item
+.-backdrop
 	change-bg('bg-offset')
+
+.-media-item
 	position: relative
 	margin-left: auto
 	margin-right: auto
@@ -143,7 +146,7 @@
 
 @media $media-sm-up
 	.post-view >>>
-		.-media-item, img, video, iframe
+		iframe
 			rounded-corners-lg()
 
 >>> .mention-avatar-img

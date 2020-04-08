@@ -400,4 +400,8 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	onClickTrophy(userTrophy: UserBaseTrophy) {
 		TrophyModal.show(userTrophy);
 	}
+
+	onClickUnfollow() {
+		this.user?.$unfollow();
+	}
 }

@@ -1,8 +1,8 @@
+import Vue from 'vue';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import { MediaItem } from '../../../../../../_common/media-item/media-item-model';
 import { Screen } from '../../../../../../_common/screen/screen-service';
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
 import AppEventItemMediaIndicator from '../../../../event-item/media-indicator/media-indicator.vue';
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedView } from '../../view';
@@ -112,5 +112,9 @@ export default class AppActivityFeedDevlogPostMedia extends Vue {
 		}
 
 		this._updateSliderOffset();
+	}
+
+	getIsActiveMediaItem(item: MediaItem) {
+		return this.activeMediaItem?.id === item.id;
 	}
 }
