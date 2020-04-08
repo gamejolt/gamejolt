@@ -18,6 +18,7 @@ import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 import { User } from '../../../../../_common/user/user.model';
 import { AppCommentWidgetLazy } from '../../../lazy';
+import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
 import AppEventItemControlsFiresidePostExtra from './extra/extra.vue';
 import AppEventItemControlsFiresidePostStats from './stats/stats.vue';
 
@@ -47,6 +48,13 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	user!: AppStore['user'];
 
 	readonly GJ_IS_CLIENT!: boolean;
+	readonly Screen = Screen;
+
+	@Emit('edit')
+	emitEdit() {}
+
+	@Emit('publish')
+	emitPublish() {}
 
 	@Emit('remove')
 	emitRemove() {}
@@ -78,8 +86,28 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 		}
 	}
 
+	get canPublish() {
+		return (
+			this.post.isDraft &&
+			!this.post.isScheduled &&
+			this.post.hasLead &&
+			this.post.canPublishToCommunities()
+		);
+	}
+
 	get showUserControls() {
 		return this.post.isActive;
+	}
+
+	get hasPerms() {
+		if (!this.user) {
+			return false;
+		}
+		return this.post.isEditableByUser(this.user);
+	}
+
+	get shouldShowEdit() {
+		return this.hasPerms;
 	}
 
 	get shouldShowExtra() {
@@ -121,7 +149,6 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 			}
 		}
 
-		// uniqueStickers.reverse();
 		return uniqueStickers.reverse();
 	}
 
@@ -130,6 +157,17 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 			model: this.post,
 			displayMode: 'comments',
 		});
+	}
+
+	async openEdit() {
+		if (await PostEditModal.show(this.post)) {
+			this.emitEdit();
+		}
+	}
+
+	async publish() {
+		await this.post.$publish();
+		this.emitPublish();
 	}
 
 	async placeSticker() {

@@ -72,20 +72,6 @@
 					/>
 
 					<span>
-						<div v-if="shouldShowEdit">
-							<app-button
-								v-if="canPublish"
-								:class="{ '-sm': Screen.isXs }"
-								primary
-								@click="publish()"
-							>
-								<translate>Publish</translate>
-							</app-button>
-							<app-button :class="{ '-sm': Screen.isXs }" @click="openEdit()">
-								<translate>Edit</translate>
-							</app-button>
-						</div>
-
 						<span v-if="shouldShowIsPinned" class="tag">
 							<app-jolticon icon="thumbtack" />
 							<translate>Pinned</translate>
@@ -193,6 +179,8 @@
 				:video="video"
 				:should-show-follow="shouldShowFollow"
 				:show-stickers="stickersVisible"
+				@post-edit="onPostEdited(eventItem)"
+				@post-publish="onPostPublished(eventItem)"
 				@post-remove="onPostRemoved(eventItem)"
 				@post-feature="onPostFeatured(eventItem, $event)"
 				@post-unfeature="onPostUnfeatured(eventItem, $event)"

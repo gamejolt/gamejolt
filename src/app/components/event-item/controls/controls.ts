@@ -51,6 +51,12 @@ export default class AppEventItemControls extends Vue {
 	commentsCount = 0;
 	shouldShowFollowState = false;
 
+	@Emit('post-edit')
+	emitPostEdit() {}
+
+	@Emit('post-publish')
+	emitPostPublish() {}
+
 	@Emit('post-remove')
 	emitPostRemove() {}
 

@@ -7,6 +7,8 @@
 					:show-comments-button="!showCommentFeed"
 					:comments-count="commentsCount"
 					:show-stickers="showStickers"
+					@edit="emitPostEdit"
+					@publish="emitPostPublish"
 					@remove="emitPostRemove"
 					@feature="emitPostFeature"
 					@unfeature="emitPostUnfeature"
