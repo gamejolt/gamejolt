@@ -42,7 +42,6 @@
 			border-right-color: var(--theme-bi-bg)
 
 	&-alt
-		pressy()
 		theme-prop('color', 'fg-muted')
 		display: inline-flex
 		align-items: center
@@ -53,8 +52,8 @@
 		font-weight: 700
 		font-size: $font-size-small
 
-		&:hover
-			theme-prop('color', 'link-hover')
+		a&
+			pressy()
 
 		&.liked
 			theme-prop('color', 'bi-bg')
