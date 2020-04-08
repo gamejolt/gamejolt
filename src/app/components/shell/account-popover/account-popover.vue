@@ -11,7 +11,7 @@
 				v-if="shouldShowNew"
 				class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
 			>
-				<translate>NEW</translate>
+				!
 			</span>
 		</a>
 
@@ -42,7 +42,9 @@
 					</router-link>
 					<router-link
 						class="list-group-item offline-disable"
-						:to="{ name: Screen.isXs ? 'dash.account-mobile-nav' : 'dash.account.edit' }"
+						:to="{
+							name: Screen.isXs ? 'dash.account-mobile-nav' : 'dash.account.edit',
+						}"
 						v-app-track-event="`account-popover:account`"
 					>
 						<translate>Edit Account</translate>
@@ -117,7 +119,9 @@
 								class="pull-right"
 								icon="help-circle"
 								v-app-tooltip="
-									$gettext(`These are your available funds to either buy games with or withdraw.`)
+									$gettext(
+										`These are your available funds to either buy games with or withdraw.`
+									)
 								"
 							/>
 

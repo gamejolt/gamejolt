@@ -33,6 +33,7 @@ export default class AppSticker extends Vue {
 	onClickRemove() {
 		if (this.canRemove) {
 			this.isRemoved = true;
+			this.$emit('remove');
 		}
 	}
 }

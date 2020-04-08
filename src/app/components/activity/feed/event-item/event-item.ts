@@ -387,4 +387,8 @@ export default class AppActivityFeedEventItem extends Vue {
 	getChannelTitle(postCommunity: FiresidePostCommunity) {
 		return postCommunity.channel ? postCommunity.channel.title : '';
 	}
+
+	onAllStickersHidden() {
+		this.stickersVisible = false;
+	}
 }

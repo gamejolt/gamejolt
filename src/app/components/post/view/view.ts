@@ -114,4 +114,8 @@ export default class AppPostView extends Vue {
 			Scroll.to(this.$refs.stickerTarget.$el as HTMLElement, { preventDirections: ['down'] });
 		}
 	}
+
+	onAllStickersHidden() {
+		this.stickersVisible = false;
+	}
 }

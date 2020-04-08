@@ -15,6 +15,8 @@ export default class AppStickerTarget extends Vue {
 	@Prop(propOptional(Boolean, false)) showStickers!: boolean;
 	@Prop(propOptional(Boolean, false)) noAnimateIn!: boolean;
 
+	hiddenStickers = 0;
+
 	// Sort so that the newer stickers go on top of the older ones.
 	get sorted() {
 		return [...this.stickers].sort((a, b) => a.id - b.id);
@@ -22,5 +24,13 @@ export default class AppStickerTarget extends Vue {
 
 	getStickerAnimationDelay(placement: StickerPlacement) {
 		return this.sorted.indexOf(placement) * 0.05 + 's';
+	}
+
+	onStickerRemoved() {
+		this.hiddenStickers++;
+		if (this.hiddenStickers === this.stickers.length) {
+			this.hiddenStickers = 0;
+			this.$emit('hide-all');
+		}
 	}
 }
