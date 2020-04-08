@@ -40,3 +40,24 @@
 
 		.blip-caret
 			border-right-color: var(--theme-bi-bg)
+
+	&-alt
+		pressy()
+		theme-prop('color', 'fg-muted')
+		display: inline-flex
+		align-items: center
+		min-width: 20px
+		height: 36px
+		padding-right: 4px
+		margin: 0 8px
+		font-weight: 700
+		font-size: $font-size-small
+
+		&:hover
+			theme-prop('color', 'link-hover')
+
+		&.liked
+			theme-prop('color', 'bi-bg')
+
+			&:hover
+				theme-prop('color', 'link-hover')
