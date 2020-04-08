@@ -1,26 +1,16 @@
 <template>
-	<div class="-controls">
-		<div class="-user-controls" v-if="showUserControls">
-			<div class="-row">
+	<div class="-user-controls">
+		<div class="-row">
+			<div v-if="showUserControls" class="-row">
 				<span class="-inline-button">
-					<app-fireside-post-like-widget
-						class="-like"
-						:post="post"
-						trans
-						inset
-						hide-blip
-						@change="emitLikeChange"
-					/>
+					<app-fireside-post-like-widget :post="post" trans hide-blip @change="emitLikeChange" />
 					<a
-						class="link-muted"
+						class="blip-alt"
+						:class="{ liked: post.user_like }"
 						@click="showLikers()"
 						v-app-tooltip="$gettext(`View all people that liked this post`)"
 					>
-						<div class="-button-info" :class="{ '-liked': post.user_like }">
-							<small>
-								{{ post.like_count }}
-							</small>
-						</div>
+						{{ post.like_count | number | fuzzynumber }}
 					</a>
 				</span>
 
@@ -33,14 +23,10 @@
 						v-app-tooltip="$gettext('View Comments')"
 					/>
 
-					<div v-if="commentsCount > 0" class="-button-info">
-						<small class="text-muted">
-							{{ commentsCount }}
-						</small>
-					</div>
-					<template v-else>
-						&nbsp;
-					</template>
+					<span v-if="commentsCount > 0" class="blip-alt">
+						{{ commentsCount | number | fuzzynumber }}
+					</span>
+					<span v-else class="-spacing-right" />
 				</div>
 
 				<template v-if="shouldShowStickersButton">
@@ -59,11 +45,11 @@
 				<div
 					v-if="shouldShowStickersBar"
 					class="-stickers"
-					:class="{ blip: showStickers }"
+					:class="{ '-showing': showStickers }"
 					@click.stop="onClickShowStickers"
 					v-app-tooltip="$gettext(`Toggle Stickers`)"
 				>
-					<span v-if="showStickers" class="blip-caret"></span>
+					<span class="-caret"></span>
 
 					<span v-for="sticker of previewStickers" :key="sticker.id" class="-sticker">
 						<img :src="sticker.img_url" />
@@ -74,25 +60,42 @@
 					</small>
 				</div>
 			</div>
-			<app-event-item-controls-fireside-post-stats
-				:key="'stats'"
-				class="-row -details text-muted"
-				:post="post"
-			/>
+			<span v-if="shouldShowExtra" class="-extra">
+				<span v-if="shouldShowEdit && !showUserControls" class="-extra">
+					<app-button v-if="canPublish" class="-inline-button" primary @click="publish()">
+						<translate>Publish</translate>
+					</app-button>
+					<app-button class="-inline-button" @click="openEdit()">
+						<translate>Edit</translate>
+					</app-button>
+					<span class="-spacing-right" />
+				</span>
+
+				<app-event-item-controls-fireside-post-extra
+					:post="post"
+					@remove="emitRemove"
+					@feature="emitFeature"
+					@unfeature="emitUnfeature"
+					@move-channel="emitMoveChannel"
+					@reject="emitReject"
+					@pin="emitPin"
+					@unpin="emitUnpin"
+				/>
+			</span>
 		</div>
-		<span class="-extra">
-			<app-event-item-controls-fireside-post-extra
-				v-if="shouldShowExtra"
-				:post="post"
-				@remove="emitRemove"
-				@feature="emitFeature"
-				@unfeature="emitUnfeature"
-				@move-channel="emitMoveChannel"
-				@reject="emitReject"
-				@pin="emitPin"
-				@unpin="emitUnpin"
-			/>
-		</span>
+
+		<div class="-row small" :class="{ '-spacing-top': shouldShowEdit, tiny: Screen.isXs }">
+			<app-event-item-controls-fireside-post-stats :key="'stats'" class="text-muted" :post="post" />
+
+			<span v-if="shouldShowEdit && showUserControls" class="-extra">
+				<app-button v-if="canPublish" class="-inline-button" primary @click="publish()">
+					<translate>Publish</translate>
+				</app-button>
+				<app-button class="-inline-button" @click="openEdit()">
+					<translate>Edit</translate>
+				</app-button>
+			</span>
+		</div>
 	</div>
 </template>
 
@@ -100,58 +103,44 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-.-controls
-	display: flex
-
-.-row
-	display: flex
-	align-items: center
-
 .-user-controls
 	display: flex
 	flex-direction: column
 	flex-grow: 1
 
+	.-row
+		display: flex
+		align-items: center
+
 .-inline-button
 	display: inline-flex
 	align-items: center
 
-	.-like >>> .button
-		width: 36px
-		height: 36px
-
-	.-button-info
-		display: flex
-		align-items: center
-		min-width: 32px
-		height: 36px
-		padding-left: 4px
-		padding-right: 8px
-		font-weight: 700
-
-		&.-liked
-			theme-prop('color', 'bi-bg', true)
-
-.-stickers-container
-	display: inline-flex
-
 .-stickers
+	pressy()
 	cursor: pointer
+	position: relative
 	display: inline-flex
 	align-items: center
 	flex-direction: row
-	padding: 0 8px
-	margin: 0
-	top: 0
+	padding-right: 4px
+	padding-left: 6px
 	border-radius: 20px
 
 	&:hover
 		change-bg('bg-offset')
 
-	&.blip
+		.-caret
+			theme-prop('border-right-color', 'bg-offset')
+
+	&.-showing
 		change-bg('bi-bg')
 
-		.blip-caret
+		&:hover
+			.-caret
+				theme-prop('border-right-color', 'bi-bg')
+
+		.-caret
 			theme-prop('border-right-color', 'bi-bg')
 
 		small
@@ -159,30 +148,36 @@
 
 	&-count
 		margin-left: 18px
-		font-weight: normal
-
-	small
 		font-weight: 700
 
-.-sticker
-	width: 24px
-	height: 24px
-	position: relative
-	margin-right: -14px
-	display: inline-block
+	.-caret
+			caret(direction: left, color: $trans, size: 5px)
+			left: -3px
 
-	& > img
-		display: block
-		width: 100%
-		height: 100%
-		filter: drop-shadow(1px 0 #fff) drop-shadow(-1px 0 #fff)
+	.-sticker
+		width: 24px
+		height: 24px
+		position: relative
+		margin-right: -14px
+		display: inline-block
 
-.-details
-	font-size: 11px
-	margin-top: 8px
+		& > img
+			display: block
+			width: 100%
+			height: 100%
+			filter: drop-shadow(1px 0 #fff) drop-shadow(-1px 0 #fff)
+
+.-spacing
+	&-top
+		margin-top: 12px
+	&-right
+		margin-right: 8px
 
 .-extra
 	margin-left: auto
+
+	.-inline-button
+		margin-left: 12px
 </style>
 
 <script lang="ts" src="./fireside-post"></script>

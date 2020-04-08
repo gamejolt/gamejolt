@@ -12,20 +12,15 @@
 				v-app-track-event="`comment-widget:vote-click`"
 			/>
 
-			<a @click="showLikers()" v-app-tooltip="$gettext(`View all people that liked this comment`)">
-				<span
-					v-if="comment.votes > 0"
-					class="blip"
-					:class="{
-						filled: hasUpvote,
-					}"
-				>
-					<span class="blip-caret"></span>
-					<span class="blip-count">{{ comment.votes | number }}</span>
-				</span>
+			<a
+				v-if="comment.votes > 0"
+				class="blip-alt"
+				:class="{ liked: comment.user_vote }"
+				@click="showLikers()"
+				v-app-tooltip="$gettext(`View all people that liked this comment`)"
+			>
+				{{ comment.votes | number | fuzzynumber }}
 			</a>
-
-			&nbsp;
 
 			<app-button
 				icon="thumbs-down"
