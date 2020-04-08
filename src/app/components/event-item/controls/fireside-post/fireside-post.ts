@@ -6,6 +6,7 @@ import { CommentModal } from '../../../../../_common/comment/modal/modal.service
 import AppCommentVideoLikeWidget from '../../../../../_common/comment/video/like-widget/like-widget.vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
+import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { number } from '../../../../../_common/filters/number';
 import AppFiresidePostLikeWidget from '../../../../../_common/fireside/post/like/widget/widget.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
@@ -36,6 +37,7 @@ import AppEventItemControlsFiresidePostStats from './stats/stats.vue';
 	},
 	filters: {
 		number,
+		fuzzynumber,
 	},
 })
 export default class AppEventItemControlsFiresidePost extends Vue {

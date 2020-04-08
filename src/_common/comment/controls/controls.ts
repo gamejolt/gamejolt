@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
+import { fuzzynumber } from '../../filters/fuzzynumber';
 import { number } from '../../filters/number';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
@@ -17,6 +18,7 @@ import { CommentVote } from '../vote/vote-model';
 	},
 	filters: {
 		number,
+		fuzzynumber,
 	},
 })
 export default class AppCommentControls extends Vue {
