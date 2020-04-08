@@ -15,7 +15,7 @@ import AppPostAddPlaceholder from '../add-placeholder/add-placeholder.vue';
 	},
 })
 export default class AppPostEditModal extends BaseModal {
-	@Prop()
+	@Prop([FiresidePost, Promise])
 	postProvider!: FiresidePost | Promise<FiresidePost>;
 
 	@Prop(Community)

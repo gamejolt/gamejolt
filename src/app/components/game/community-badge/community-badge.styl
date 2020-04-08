@@ -1,6 +1,11 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+.-backdrop
+	// For some reason we need position static
+	// so the backdrop can get the height.
+	position: static
+
 .-community-container
 	clearfix()
 	full-bleed-xs()
