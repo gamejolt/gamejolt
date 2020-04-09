@@ -116,6 +116,7 @@
 			<app-button
 				v-if="!topic.is_locked && app.user"
 				circle
+				trans
 				icon="reply"
 				v-app-tooltip="$gettext('Reply')"
 				:disabled="isEditing"
@@ -126,9 +127,9 @@
 				<translate
 					:translate-n="post.replies_count"
 					:translate-params="{ count: post.replies_count }"
-					translate-plural="%{ count } replies"
+					translate-plural="+ %{ count } replies"
 				>
-					%{ count } reply
+					+ %{ count } reply
 				</translate>
 			</app-button>
 		</template>
