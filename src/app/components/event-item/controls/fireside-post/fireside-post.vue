@@ -2,17 +2,13 @@
 	<div class="-user-controls">
 		<div class="-row">
 			<div v-if="showUserControls" class="-row">
-				<span class="-inline-button">
-					<app-fireside-post-like-widget :post="post" trans hide-blip @change="emitLikeChange" />
-					<a
-						class="blip-alt"
-						:class="{ liked: post.user_like }"
-						@click="showLikers()"
-						v-app-tooltip="$gettext(`View all people that liked this post`)"
-					>
-						{{ post.like_count | number | fuzzynumber }}
-					</a>
-				</span>
+				<app-fireside-post-like-widget
+					:post="post"
+					:screen-xs="Screen.isXs"
+					blip-alt
+					trans
+					@change="emitLikeChange"
+				/>
 
 				<div class="-inline-button" v-if="shouldShowCommentsButton">
 					<app-button
@@ -23,8 +19,8 @@
 						v-app-tooltip="$gettext('View Comments')"
 					/>
 
-					<span v-if="commentsCount > 0" class="blip-alt">
-						{{ commentsCount | number | fuzzynumber }}
+					<span v-if="commentsCount > 0" class="blip-alt" :class="{ mobile: Screen.isXs }">
+						{{ commentsCount | fuzzynumber }}
 					</span>
 					<span v-else class="-spacing-right" />
 				</div>
@@ -68,6 +64,7 @@
 					<app-button class="-inline-button" @click="openEdit()">
 						<translate>Edit</translate>
 					</app-button>
+
 					<span class="-spacing-right" />
 				</span>
 
