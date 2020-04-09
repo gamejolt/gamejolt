@@ -76,7 +76,6 @@
 							<app-jolticon icon="thumbtack" />
 							<translate>Pinned</translate>
 						</span>
-
 						<app-activity-feed-event-item-time
 							:event-item="eventItem"
 							:post="post"
