@@ -3,6 +3,7 @@ import { Component, Emit, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../../../auth/store/index';
 import { AppAuthRequired } from '../../../../auth/auth-required-directive';
+import { fuzzynumber } from '../../../../filters/fuzzynumber';
 import { number } from '../../../../filters/number';
 import { Growls } from '../../../../growls/growls.service';
 import { LikersModal } from '../../../../likers/modal.service';
@@ -19,6 +20,9 @@ import { FiresidePostLike } from '../like-model';
 	directives: {
 		AppAuthRequired,
 		AppTooltip,
+	},
+	filters: {
+		fuzzynumber,
 	},
 })
 export default class AppFiresidePostLikeWidget extends Vue {
@@ -38,7 +42,10 @@ export default class AppFiresidePostLikeWidget extends Vue {
 	inset?: boolean;
 
 	@Prop(Boolean)
-	hideBlip?: boolean;
+	blipAlt?: boolean;
+
+	@Prop(Boolean)
+	screenXs?: boolean;
 
 	@State
 	app!: Store['app'];

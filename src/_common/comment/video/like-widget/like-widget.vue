@@ -16,8 +16,8 @@
 			@click="showLikers()"
 			v-app-tooltip="$gettext(`View all people that liked this video`)"
 		>
-			<template v-if="blipAlt" class="blip-alt" :class="{ liked: !!comment.user_vote }">
-				{{ blip }}
+			<template v-if="blip && blipAlt">
+				{{ blip | fuzzynumber }}
 			</template>
 			<span v-else-if="blip" class="blip" :class="{ filled: !!comment.user_vote }">
 				<span class="blip-caret"></span>

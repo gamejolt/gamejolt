@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../../auth/auth-required-directive';
+import { fuzzynumber } from '../../../filters/fuzzynumber';
 import { number } from '../../../filters/number';
 import { LikersModal } from '../../../likers/modal.service';
 import { AppTooltip } from '../../../tooltip/tooltip';
@@ -11,6 +12,9 @@ import { CommentVideo } from '../video-model';
 	directives: {
 		AppAuthRequired,
 		AppTooltip,
+	},
+	filters: {
+		fuzzynumber,
 	},
 })
 export default class AppCommentVideoLikeWidget extends Vue {

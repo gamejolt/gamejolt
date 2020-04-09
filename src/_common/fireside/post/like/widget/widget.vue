@@ -24,8 +24,15 @@
 			</div>
 		</span>
 
-		<a @click="showLikers()" v-app-tooltip="$gettext(`View all people that liked this post`)">
-			<span v-if="blip && !hideBlip" class="blip" :class="{ filled: !!post.user_like }">
+		<a
+			:class="{ 'blip-alt': blipAlt, liked: !!post.user_like, mobile: screenXs }"
+			@click="showLikers()"
+			v-app-tooltip="$gettext(`View all people that liked this post`)"
+		>
+			<template v-if="blip && blipAlt">
+				{{ blip | fuzzynumber }}
+			</template>
+			<span v-else-if="blip" class="blip" :class="{ filled: !!post.user_like }">
 				<span class="blip-caret"></span>
 				<span class="blip-count">{{ blip }}</span>
 			</span>
@@ -34,13 +41,15 @@
 </template>
 
 <style lang="stylus" scoped>
-.-like
-	position: relative
-	display: flex
+.fireside-post-like-widget
+	display: inline-flex
 
-	> button
-		width: 36px
-		height: 36px
+	.-like
+		position: relative
+
+		> button
+			width: 36px
+			height: 36px
 
 .-like-anim-container
 	position: absolute
