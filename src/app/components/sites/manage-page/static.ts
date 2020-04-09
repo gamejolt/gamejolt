@@ -1,10 +1,10 @@
+import Vue from 'vue';
+import { Component, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { SiteBuild } from '../../../../_common/site/build/build-model';
 import { Site } from '../../../../_common/site/site-model';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
 import FormDashSiteBuild from '../../forms/site/build/build.vue';
 
 @Component({
@@ -46,9 +46,17 @@ export default class AppSitesManagePageStatic extends Vue {
 		try {
 			const response = await Api.sendRequest(
 				`/web/dash/sites/activate-primary-build/${this.site.id}`,
-				{}
+				{},
+				{ noErrorRedirect: true }
 			);
-			this.site.assign(response.site);
+
+			if (response.errors && response.errors.domain_in_use) {
+				Growls.error(this.$gettext('Domain is already in use in another site.'));
+			}
+
+			if (response.site) {
+				this.site.assign(response.site);
+			}
 		} catch (e) {
 			console.error(e);
 			Growls.error(this.$gettext(`Something went wrong.`));
