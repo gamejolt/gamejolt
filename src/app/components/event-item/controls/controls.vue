@@ -25,7 +25,7 @@
 					We don't want it clicking into the post when clicking a control.
 				-->
 				<span @click.stop>
-					<app-comment-video-like-widget :video="video" trans />
+					<app-comment-video-like-widget :video="video" trans blip-alt />
 				</span>
 			</template>
 		</div>
