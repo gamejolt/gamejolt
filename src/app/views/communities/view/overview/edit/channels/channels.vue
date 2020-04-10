@@ -32,11 +32,9 @@
 				<app-card-list-item :id="`channel-container-featured`" :item="community">
 					<div class="row">
 						<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
-							<img
-								v-if="community.featured_background"
-								class="-channel-img-preview"
-								:src="community.featured_background.img_url"
-							/>
+							<div v-if="community.featured_background" class="-channel-img-preview">
+								<img :src="community.featured_background.mediaserver_url" />
+							</div>
 
 							<br class="visible-xs" />
 						</div>
@@ -71,11 +69,9 @@
 					>
 						<div class="row">
 							<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
-								<img
-									v-if="channel.background"
-									class="-channel-img-preview"
-									:src="channel.background.img_url"
-								/>
+								<div v-if="channel.background" class="-channel-img-preview">
+									<img :src="channel.background.mediaserver_url" />
+								</div>
 
 								<br class="visible-xs" />
 							</div>
@@ -115,10 +111,15 @@
 @require '~styles-lib/mixins'
 
 .-channel-img-preview
+	rounded-corners()
+	display: flex
+	align-items: center
 	width: 68px
 	height: 25px
-	rounded-corners()
+	overflow: hidden
 
+	img
+		width: 100%
 </style>
 
 <script lang="ts" src="./channels"></script>
