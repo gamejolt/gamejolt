@@ -24,17 +24,30 @@ export const routeStore = NamespaceVuexStore<RouteStore, RouteActions, RouteMuta
 type RouteActions = {};
 type RouteMutations = {
 	populate: any;
+	setCanLinkNewGames: boolean;
 };
 
 @VuexModule()
 export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutations> {
 	community: Community = null as any;
 	collaboration: Collaborator | null = null;
+	canLinkNewGames = false;
+	linkGameCount = 10;
 
 	@VuexMutation
 	populate(payload: RouteMutations['populate']) {
 		this.community = new Community(payload.community);
 		this.collaboration = payload.collaboration ? new Collaborator(payload.collaboration) : null;
+		this.canLinkNewGames = !!payload.canLinkNewGames;
+
+		if (payload.linkGameCount) {
+			this.linkGameCount = payload.linkGameCount;
+		}
+	}
+
+	@VuexMutation
+	setCanLinkNewGames(can: RouteMutations['setCanLinkNewGames']) {
+		this.canLinkNewGames = can;
 	}
 
 	@VuexAction

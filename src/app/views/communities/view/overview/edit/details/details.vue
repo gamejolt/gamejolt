@@ -20,8 +20,8 @@
 			</app-community-perms>
 		</template>
 
-		<!-- Details - only makes sense to show for non game communities -->
-		<app-community-perms v-if="!community.game" :community="community" required="community-details">
+		<!-- Details -->
+		<app-community-perms :community="community" required="community-details">
 			<h2 class="section-header">
 				<translate>Details</translate>
 			</h2>
