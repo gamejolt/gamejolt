@@ -74,8 +74,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 					handleNewStickerNotification(
 						this.$gettext(`You can unlock a new sticker!`),
 						this.$gettext(`Click this message to unlock right away.`),
-						this.$store,
-						this.$router
+						this.$store
 					);
 				}
 			} catch (e) {
