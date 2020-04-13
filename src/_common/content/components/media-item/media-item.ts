@@ -137,7 +137,7 @@ export default class AppContentMediaItem extends Vue {
 	get shouldUseMediaserver() {
 		// For animated media items (gifs):
 		// Always return the direct url because gifs do not get returned by mediaserver.
-		return this.mediaItem?.is_animated && !!this.mediaItem?.mediaserver_url;
+		return !this.mediaItem?.is_animated && !!this.mediaItem?.mediaserver_url;
 	}
 
 	created() {
