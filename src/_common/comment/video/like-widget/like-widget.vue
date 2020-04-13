@@ -1,6 +1,7 @@
 <template>
 	<span v-app-auth-required>
 		<app-button
+			class="-like-button"
 			icon="heart"
 			circle
 			:trans="trans"
@@ -28,3 +29,9 @@
 </template>
 
 <script lang="ts" src="./like-widget"></script>
+
+<style lang="stylus" scoped>
+.-like-button
+	width: 36px
+	height: 36px
+</style>
