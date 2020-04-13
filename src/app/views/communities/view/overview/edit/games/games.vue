@@ -17,7 +17,7 @@
 			</div>
 
 			<div v-if="canLinkNewGames">
-				<app-button icon="add" @click="onClickLinkGame">
+				<app-button block primary @click="onClickLinkGame">
 					<translate>Link Game</translate>
 				</app-button>
 			</div>
@@ -32,15 +32,15 @@
 
 			<br />
 
-			<div v-if="!community.games">
+			<div v-if="!hasLinkedGames">
 				<p>
 					<translate>There are currently no games linked.</translate>
 				</p>
 			</div>
-			<app-card-list v-else :items="community.games">
+			<app-card-list v-else :items="games">
 				<app-card-list-draggable @change="saveSort">
 					<app-card-list-item
-						v-for="game in community.games"
+						v-for="game in games"
 						:key="game.id"
 						:id="`game-container-${game.id}`"
 						:item="game"
@@ -62,6 +62,18 @@
 
 								<div class="card-title">
 									<h5>{{ game.title }}</h5>
+								</div>
+
+								<div v-if="isGameHidden(game)" class="card-meta card-meta-sm">
+									<span
+										v-app-tooltip.bottom="
+											$gettext(`Hidden games do not show in the community sidebar`)
+										"
+									>
+										<translate>
+											(Hidden)
+										</translate>
+									</span>
 								</div>
 							</div>
 						</div>

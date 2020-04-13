@@ -36,7 +36,8 @@
 			<div v-else class="page-help">
 				<p>
 					<translate>
-						Text about how there are no games to link
+						Text about how there are no games to link, maybe how they are already linked to another
+						community.
 					</translate>
 				</p>
 			</div>

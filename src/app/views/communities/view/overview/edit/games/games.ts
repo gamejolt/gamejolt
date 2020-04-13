@@ -7,7 +7,10 @@ import AppCardList from '../../../../../../../_common/card/list/list.vue';
 import { Game } from '../../../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
 import { Growls } from '../../../../../../../_common/growls/growls.service';
-import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
 import { CommunityLinkGameModal } from '../../../../../../components/community/link-game-modal/link-game-modal.service';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
@@ -27,6 +30,10 @@ import { RouteStore, RouteStoreModule } from '../edit.store';
 		AppTooltip,
 	},
 })
+@RouteResolver({
+	deps: { params: ['id'] },
+	resolver: ({ route }) => Api.sendRequest('/web/dash/communities/games/' + route.params.id),
+})
 export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 	@RouteStoreModule.State
 	community!: RouteStore['community'];
@@ -40,15 +47,34 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 	@RouteStoreModule.Mutation
 	setCanLinkNewGames!: RouteStore['setCanLinkNewGames'];
 
+	games: Game[] = [];
+
+	get hasLinkedGames() {
+		return this.games.length > 0;
+	}
+
+	get visibleGames() {
+		return this.games.filter(i => i.status === Game.STATUS_VISIBLE);
+	}
+
+	routeResolved($payload: any) {
+		// Request and populate games so hidden games are also shown.
+		this.games = Game.populate($payload.games);
+	}
+
+	isGameHidden(game: Game) {
+		return game.status !== Game.STATUS_VISIBLE;
+	}
+
 	async saveSort(sortedGames: Game[]) {
 		// Reorder the games to see the result of the ordering right away.
-		this.community.games!.splice(0, this.community.games!.length, ...sortedGames);
+		this.games!.splice(0, this.games!.length, ...sortedGames);
 
 		const sortedIds = sortedGames.map(i => i.id);
 		try {
 			const payload = await this.community.saveGameSort(sortedIds);
 			if (payload.success) {
-				this.$emit('games-change', this.community.games);
+				this.$emit('games-change', this.visibleGames);
 			}
 		} catch (e) {
 			console.error(e);
@@ -70,8 +96,8 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 				);
 				if (payload.success) {
 					this.community.assign(payload.community);
-					this.$emit('games-change', this.community.games);
-					if (this.community.games!.length >= this.linkGameCount) {
+					this.$emit('games-change', this.visibleGames);
+					if (this.games.length >= this.linkGameCount) {
 						this.setCanLinkNewGames(false);
 					}
 				}
@@ -94,7 +120,7 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 			);
 			if (payload.success) {
 				this.community.assign(payload.community);
-				this.$emit('games-change', this.community.games);
+				this.$emit('games-change', this.visibleGames);
 				// After unlinking a game, there is a free slot and at least one more game to link.
 				this.setCanLinkNewGames(true);
 			}
