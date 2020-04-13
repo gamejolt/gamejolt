@@ -13,9 +13,14 @@
 						v-app-tooltip="$gettext('View Comments')"
 					/>
 
-					<span v-if="commentsCount > 0" class="blip" :class="{ mobile: Screen.isXs }">
+					<a
+						v-if="commentsCount > 0"
+						class="blip"
+						:class="{ mobile: Screen.isXs }"
+						@click="openComments()"
+					>
 						{{ commentsCount | fuzzynumber }}
-					</span>
+					</a>
 					<span v-else class="-spacing-right" />
 				</div>
 
