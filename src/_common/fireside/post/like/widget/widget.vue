@@ -30,9 +30,7 @@
 			@click="showLikers()"
 			v-app-tooltip="$gettext(`View all people that liked this post`)"
 		>
-			<template v-if="blip">
-				{{ blip | fuzzynumber }}
-			</template>
+			{{ blip | fuzzynumber }}
 		</a>
 	</span>
 </template>

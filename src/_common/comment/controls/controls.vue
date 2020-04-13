@@ -14,8 +14,8 @@
 
 			<a
 				v-if="comment.votes > 0"
-				class="blip-alt"
-				:class="{ liked: comment.user_vote }"
+				class="blip"
+				:class="{ 'blip-active': comment.user_vote }"
 				@click="showLikers()"
 				v-app-tooltip="$gettext(`View all people that liked this comment`)"
 			>
