@@ -1,6 +1,9 @@
 import { Component, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
-import { Community } from '../../../../../../_common/community/community.model';
+import {
+	Community,
+	CommunityPresetChannelType,
+} from '../../../../../../_common/community/community.model';
 import AppFormControlUpload from '../../../../../../_common/form-vue/control/upload/upload.vue';
 import {
 	BaseForm,
@@ -19,7 +22,7 @@ import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-se
 })
 export default class FormCommunityChannelEditPreset extends BaseForm<Community>
 	implements FormOnLoad, FormOnSubmitSuccess, FormOnSubmit {
-	@Prop(propRequired(String)) presetType!: string;
+	@Prop(propRequired(String)) presetType!: CommunityPresetChannelType;
 
 	modelClass = Community;
 
@@ -54,6 +57,8 @@ export default class FormCommunityChannelEditPreset extends BaseForm<Community>
 	}
 
 	onSubmitSuccess() {
+		// Because we use a custom save function, do this here.
+		Object.assign(this.model, this.formModel);
 		this.$emit('save');
 	}
 
@@ -72,8 +77,8 @@ export default class FormCommunityChannelEditPreset extends BaseForm<Community>
 		// Doing it in this order allows them to do that.
 		await this.model!.$clearPresetChannelBackground(this.presetType);
 
-		(this as any).setField(
-			this.channelArtMediaItemFieldName,
+		this.setField(
+			this.channelArtMediaItemFieldName as any,
 			(this.model as any)[this.channelArtMediaItemFieldName]
 		);
 		this.$emit('clear');

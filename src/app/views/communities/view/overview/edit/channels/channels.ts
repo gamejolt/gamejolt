@@ -6,17 +6,16 @@ import AppCardList from '../../../../../../../_common/card/list/list.vue';
 import { CommunityChannel } from '../../../../../../../_common/community/channel/channel.model';
 import {
 	Community,
-	COMMUNITY_PRESET_CHANNEL_TYPE_ALL,
-	COMMUNITY_PRESET_CHANNEL_TYPE_FEATURED,
+	CommunityPresetChannelType,
 } from '../../../../../../../_common/community/community.model';
 import { Growls } from '../../../../../../../_common/growls/growls.service';
 import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
+import AppCommunityChannelPresetListItem from '../../../../../../components/community/channel/preset-list-item/preset-list-item.vue';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import { CommunityRemoveChannelModal } from '../../../../../../components/community/remove-channel/modal/modal.service';
 import FormCommunityChannel from '../../../../../../components/forms/community/channel/channel.vue';
 import FormCommunityChannelEdit from '../../../../../../components/forms/community/channel/edit/edit.vue';
-import FormCommunityChannelEditPreset from '../../../../../../components/forms/community/channel/edit/preset.vue';
 import { RouteStore, RouteStoreModule } from '../edit.store';
 
 @Component({
@@ -29,7 +28,7 @@ import { RouteStore, RouteStoreModule } from '../edit.store';
 		AppCardListItem,
 		AppCardListAdd,
 		FormCommunityChannelEdit,
-		FormCommunityChannelEditPreset,
+		AppCommunityChannelPresetListItem,
 	},
 	directives: {
 		AppTooltip,
@@ -39,7 +38,7 @@ export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent
 	@RouteStoreModule.State
 	community!: RouteStore['community'];
 
-	activeItem: CommunityChannel | Community | String | null = null;
+	activeItem: CommunityChannel | Community | CommunityPresetChannelType | null = null;
 
 	get canRemoveChannel() {
 		if (!this.community.channels) {
@@ -50,7 +49,7 @@ export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent
 	}
 
 	get communityPresetChannels() {
-		return [COMMUNITY_PRESET_CHANNEL_TYPE_FEATURED, COMMUNITY_PRESET_CHANNEL_TYPE_ALL];
+		return [CommunityPresetChannelType.FEATURED, CommunityPresetChannelType.ALL];
 	}
 
 	onChannelsChange() {

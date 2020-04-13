@@ -26,48 +26,17 @@
 			/>
 
 			<app-card-list
-				v-for="presetType of communityPresetChannels"
-				:key="presetType"
 				:items="communityPresetChannels"
 				:active-item="activeItem"
 				@activate="activeItem = $event"
 			>
-				<app-card-list-item :id="`channel-container-` + presetType" :item="presetType">
-					<div class="row">
-						<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
-							<img
-								v-if="community[presetType + '_background']"
-								class="-channel-img-preview"
-								:src="community[presetType + '_background'].mediaserver_url"
-							/>
-
-							<br class="visible-xs" />
-						</div>
-						<div class="col-xs-12 col-sm-10">
-							<div class="card-title">
-								<h5>
-									<template v-if="presetType === 'featured'">
-										<translate>Featured</translate>
-									</template>
-									<template v-else-if="presetType === 'all'">
-										<translate>All Posts</translate>
-									</template>
-									<span v-else>
-										{{ presetType }}
-									</span>
-								</h5>
-							</div>
-						</div>
-					</div>
-					<template slot="body">
-						<form-community-channel-edit-preset
-							:model="community"
-							:preset-type="presetType"
-							@save="presetBackgroundEdited"
-							@clear="presetBackgroundEdited"
-						/>
-					</template>
-				</app-card-list-item>
+				<app-community-channel-preset-list-item
+					v-for="presetType of communityPresetChannels"
+					:key="presetType"
+					:community="community"
+					:preset-type="presetType"
+					@edit="presetBackgroundEdited"
+				/>
 			</app-card-list>
 
 			<app-card-list

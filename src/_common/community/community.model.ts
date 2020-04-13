@@ -59,8 +59,10 @@ export async function $leaveCommunity(community: Community) {
 	}
 }
 
-export const COMMUNITY_PRESET_CHANNEL_TYPE_FEATURED = 'featured';
-export const COMMUNITY_PRESET_CHANNEL_TYPE_ALL = 'all';
+export enum CommunityPresetChannelType {
+	FEATURED = 'featured',
+	ALL = 'all',
+}
 
 export class Community extends Collaboratable(Model) {
 	name!: string;
@@ -194,7 +196,7 @@ export class Community extends Collaboratable(Model) {
 		return this.$_remove('/web/dash/communities/remove/' + this.id);
 	}
 
-	$savePresetChannelBackground(presetType: string) {
+	$savePresetChannelBackground(presetType: CommunityPresetChannelType) {
 		return this.$_save(
 			`/web/dash/communities/channels/save-preset-background/${this.id}/${presetType}`,
 			'community',
@@ -204,7 +206,7 @@ export class Community extends Collaboratable(Model) {
 		);
 	}
 
-	$clearPresetChannelBackground(presetType: string) {
+	$clearPresetChannelBackground(presetType: CommunityPresetChannelType) {
 		return this.$_save(
 			`/web/dash/communities/channels/clear-preset-background/${this.id}/${presetType}`,
 			'community'
