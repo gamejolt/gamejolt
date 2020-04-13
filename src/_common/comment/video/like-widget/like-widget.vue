@@ -13,17 +13,14 @@
 			@click="toggle"
 		/>
 		<a
-			:class="{ 'blip-alt': blipAlt, liked: !!comment.user_vote }"
+			class="blip"
+			:class="{ 'blip-active': !!comment.user_vote }"
 			@click="showLikers()"
 			v-app-tooltip="$gettext(`View all people that liked this video`)"
 		>
-			<template v-if="blip && blipAlt">
+			<template v-if="blip">
 				{{ blip | fuzzynumber }}
 			</template>
-			<span v-else-if="blip" class="blip" :class="{ filled: !!comment.user_vote }">
-				<span class="blip-caret"></span>
-				<span class="blip-count">{{ blip }}</span>
-			</span>
 		</a>
 	</span>
 </template>

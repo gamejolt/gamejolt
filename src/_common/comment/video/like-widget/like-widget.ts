@@ -30,9 +30,6 @@ export default class AppCommentVideoLikeWidget extends Vue {
 	@Prop(Boolean)
 	block?: boolean;
 
-	@Prop(Boolean)
-	blipAlt?: boolean;
-
 	isProcessing = false;
 
 	get comment() {
