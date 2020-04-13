@@ -123,24 +123,25 @@
 			change-bg('bg-offset')
 
 			.-caret
-				theme-prop('border-right-color', 'bg-offset')
-
-		&.-showing
-			change-bg('bi-bg')
-			&:hover
-
-				.-caret
-					theme-prop('border-right-color', 'bi-bg')
-
-			.-caret
-				theme-prop('border-right-color', 'bi-bg')
-
-			small
-				theme-prop('color', 'bi-fg')
+				border-right-color: var(--theme-bg-offset)
 
 		&-count
 			margin-left: 18px
 			font-weight: 700
+
+		&.-showing
+			change-bg('bi-bg')
+
+			&:hover
+				.-caret
+					border-right-color: var(--theme-bi-bg)
+
+			.-caret
+				border-right-color: var(--theme-bi-bg)
+
+			small
+				color: var(--theme-bi-fg)
+
 
 		.-caret
 				caret(direction: left, color: $trans, size: 5px)
