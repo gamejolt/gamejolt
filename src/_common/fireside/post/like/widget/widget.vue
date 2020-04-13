@@ -52,24 +52,38 @@
 			width: 36px
 			height: 36px
 
-.-like-anim-container
-	position: absolute
-	top: 0
-	width: 100%
-	height: 100%
-	display: flex
-	justify-content: center
-	align-items: center
-	pointer-events: none
+	.-like-anim-container
+		position: absolute
+		top: 0
+		width: 100%
+		height: 100%
+		display: flex
+		justify-content: center
+		align-items: center
+		pointer-events: none
 
-	.jolticon
-		margin: 0
+		.jolticon
+			margin: 0
 
-.-like-anim
-	animation-name: like-anim
-	animation-duration: 1s
-	animation-iteration-count: 1
-	animation-fill-mode: forwards
+	.-like-anim
+		animation-name: like-anim
+		animation-duration: 1s
+		animation-iteration-count: 1
+		animation-fill-mode: forwards
+
+	.-dislike-anim
+		position: absolute
+		animation-duration: 1s
+		animation-iteration-count: 1
+		animation-fill-mode: forwards
+
+		&.-left
+			animation-name: dislike-anim-left
+			clip-path: polygon(50% 0%, 50% 100%, 0% 100%, 0% 0%)
+
+		&.-right
+			animation-name: dislike-anim-right
+			clip-path: polygon(50% 0%, 50% 100%, 100% 100%, 100% 0%)
 
 @keyframes like-anim
 	0%
@@ -80,19 +94,6 @@
 		transform: scale(6)
 		opacity: 0
 
-.-dislike-anim
-	position: absolute
-	animation-duration: 1s
-	animation-iteration-count: 1
-	animation-fill-mode: forwards
-
-	&.-left
-		animation-name: dislike-anim-left
-		clip-path: polygon(50% 0%, 50% 100%, 0% 100%, 0% 0%)
-
-	&.-right
-		animation-name: dislike-anim-right
-		clip-path: polygon(50% 0%, 50% 100%, 100% 100%, 100% 0%)
 
 @keyframes dislike-anim-left
 	0%
@@ -111,7 +112,6 @@
 	100%
 		transform: scale(2) rotate(45deg) translate(6px, -6px)
 		opacity: 0
-
 </style>
 
 <script lang="ts" src="./widget"></script>
