@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
+import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { number } from '../../../../../_common/filters/number';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
@@ -12,10 +13,12 @@ import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 	},
 	filters: {
 		number,
+		fuzzynumber,
 	},
 })
 export default class AppForumTopicUpvoteWidget extends Vue {
 	@Prop(ForumTopic) topic!: ForumTopic;
+	@Prop(Boolean) blipAlt?: boolean;
 
 	get canUpvote() {
 		return this.topic.can_upvote;
