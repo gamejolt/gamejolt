@@ -142,7 +142,7 @@
 			theme-prop('border-right-color', 'bi-bg')
 
 		small
-			theme-prop('color', 'bg-offset')
+			theme-prop('color', 'bi-fg')
 
 	&-count
 		margin-left: 18px
