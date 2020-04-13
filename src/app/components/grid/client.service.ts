@@ -88,6 +88,7 @@ export class GridClient {
 	notificationBacklog: NewNotificationPayload[] = [];
 	bootstrapReceived = false;
 	bootstrapTimestamp = 0;
+	bootstrapDelay = 1;
 
 	/**
 	 * Store ids of posts the user has featured.
@@ -269,10 +270,15 @@ export class GridClient {
 				const communityState = store.state.communityStates.getCommunityState(communityId);
 				communityState.hasUnreadPosts = true;
 			}
+
+			// Reset delay when the bootstrap went through successfully.
+			this.bootstrapDelay = 1;
 		} else {
 			// error
 			console.log(`[Grid] Failed to fetch notification count bootstrap (${payload.body}).`);
-			this.restart();
+
+			this.bootstrapDelay = Math.min(30, this.bootstrapDelay * 2);
+			this.restart(this.bootstrapDelay * 1000);
 		}
 	}
 
