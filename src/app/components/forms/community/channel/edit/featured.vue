@@ -36,6 +36,11 @@
 				<strong>PNGs are highly recommended as they produce a lossless image.</strong>
 			</p>
 
+			<p class="help-block strong" v-translate="{ dimensions: maxWidth + 'x' + maxHeight }">
+				The required dimensions for a background image is under
+				<code>%{dimensions}</code>.
+			</p>
+
 			<app-form-control-upload
 				:rules="{
 					filesize: maxFilesize,
