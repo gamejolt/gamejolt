@@ -59,7 +59,7 @@ export async function $leaveCommunity(community: Community) {
 	}
 }
 
-export enum CommunityPresetChannelType {
+export const enum CommunityPresetChannelType {
 	FEATURED = 'featured',
 	ALL = 'all',
 }
