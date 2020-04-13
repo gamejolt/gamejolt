@@ -39,12 +39,6 @@ export default class AppFiresidePostLikeWidget extends Vue {
 	@Prop(Boolean)
 	block?: boolean;
 
-	@Prop(Boolean)
-	inset?: boolean;
-
-	@Prop(Boolean)
-	blipAlt?: boolean;
-
 	@State
 	app!: Store['app'];
 

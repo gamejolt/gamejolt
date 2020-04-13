@@ -10,7 +10,6 @@
 				:block="block"
 				:primary="!!post.user_like"
 				:solid="!!post.user_like"
-				:inset="inset"
 				v-app-tooltip="tooltip"
 				v-app-auth-required
 				@click="toggleLike"
@@ -26,17 +25,14 @@
 		</span>
 
 		<a
-			:class="{ 'blip-alt': blipAlt, liked: !!post.user_like, mobile: Screen.isXs }"
+			class="blip"
+			:class="{ 'blip-active': !!post.user_like }"
 			@click="showLikers()"
 			v-app-tooltip="$gettext(`View all people that liked this post`)"
 		>
-			<template v-if="blip && blipAlt">
+			<template v-if="blip">
 				{{ blip | fuzzynumber }}
 			</template>
-			<span v-else-if="blip" class="blip" :class="{ filled: !!post.user_like }">
-				<span class="blip-caret"></span>
-				<span class="blip-count">{{ blip }}</span>
-			</span>
 		</a>
 	</span>
 </template>
