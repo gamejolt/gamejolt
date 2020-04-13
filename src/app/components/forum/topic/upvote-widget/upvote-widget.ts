@@ -18,7 +18,6 @@ import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 })
 export default class AppForumTopicUpvoteWidget extends Vue {
 	@Prop(ForumTopic) topic!: ForumTopic;
-	@Prop(Boolean) blipAlt?: boolean;
 
 	get canUpvote() {
 		return this.topic.can_upvote;

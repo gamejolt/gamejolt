@@ -11,16 +11,9 @@
 			v-app-track-event="`topic-upvote-widget:click`"
 		/>
 
-		<span v-if="blipAlt" class="blip-alt" :class="{ liked: isUpvoted }">
+		<span class="blip-alt" :class="{ 'blip-active': isUpvoted }">
 			{{ upvoteCount | fuzzynumber }}
 		</span>
-		<template v-else>
-			<span class="blip filled" v-if="upvoteCount > 0">
-				<span class="blip-caret"></span>
-				<span class="blip-count">{{ upvoteCount | number }}</span>
-			</span>
-			&nbsp;
-		</template>
 	</span>
 </template>
 
