@@ -1,14 +1,8 @@
 <template>
-	<div class="-user-controls">
+	<div class="event-item-controls-fireside-post">
 		<div class="-row">
 			<div v-if="showUserControls" class="-row">
-				<app-fireside-post-like-widget
-					:post="post"
-					:screen-xs="Screen.isXs"
-					blip-alt
-					trans
-					@change="emitLikeChange"
-				/>
+				<app-fireside-post-like-widget :post="post" trans @change="emitLikeChange" />
 
 				<div class="-inline-button" v-if="shouldShowCommentsButton">
 					<app-button
@@ -19,7 +13,7 @@
 						v-app-tooltip="$gettext('View Comments')"
 					/>
 
-					<span v-if="commentsCount > 0" class="blip-alt" :class="{ mobile: Screen.isXs }">
+					<span v-if="commentsCount > 0" class="blip" :class="{ mobile: Screen.isXs }">
 						{{ commentsCount | fuzzynumber }}
 					</span>
 					<span v-else class="-spacing-right" />
@@ -100,7 +94,7 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-.-user-controls
+.event-item-controls-fireside-post
 	display: flex
 	flex-direction: column
 	flex-grow: 1
@@ -109,73 +103,74 @@
 		display: flex
 		align-items: center
 
-.-inline-button
-	display: inline-flex
-	align-items: center
+	.-inline-button
+		display: inline-flex
+		align-items: center
 
-.-stickers
-	pressy()
-	cursor: pointer
-	position: relative
-	display: inline-flex
-	align-items: center
-	flex-direction: row
-	padding-right: 4px
-	padding-left: 6px
-	border-radius: 20px
-	will-change: transform
-
-	&:hover
-		change-bg('bg-offset')
-
-		.-caret
-			theme-prop('border-right-color', 'bg-offset')
-
-	&.-showing
-		change-bg('bi-bg')
+	.-stickers
+		pressy()
+		cursor: pointer
+		position: relative
+		display: inline-flex
+		align-items: center
+		flex-direction: row
+		padding-right: 4px
+		padding-left: 6px
+		border-radius: 20px
+		will-change: transform
 
 		&:hover
+			change-bg('bg-offset')
+
+			.-caret
+				theme-prop('border-right-color', 'bg-offset')
+
+		&.-showing
+			change-bg('bi-bg')
+			&:hover
+
+				.-caret
+					theme-prop('border-right-color', 'bi-bg')
+
 			.-caret
 				theme-prop('border-right-color', 'bi-bg')
 
+			small
+				theme-prop('color', 'bi-fg')
+
+		&-count
+			margin-left: 18px
+			font-weight: 700
+
 		.-caret
-			theme-prop('border-right-color', 'bi-bg')
+				caret(direction: left, color: $trans, size: 5px)
+				left: -3px
 
-		small
-			theme-prop('color', 'bi-fg')
+		.-sticker
+			width: 24px
+			height: 24px
+			position: relative
+			margin-right: -14px
+			display: inline-block
 
-	&-count
-		margin-left: 18px
-		font-weight: 700
+			& > img
+				display: block
+				width: 100%
+				height: 100%
+				filter: drop-shadow(1px 0 #fff) drop-shadow(-1px 0 #fff)
 
-	.-caret
-			caret(direction: left, color: $trans, size: 5px)
-			left: -3px
+	.-extra
+		margin-left: auto
 
-	.-sticker
-		width: 24px
-		height: 24px
-		position: relative
-		margin-right: -14px
-		display: inline-block
+		.-inline-button
+			margin-left: 12px
 
-		& > img
-			display: block
-			width: 100%
-			height: 100%
-			filter: drop-shadow(1px 0 #fff) drop-shadow(-1px 0 #fff)
+	.-spacing
+		&-top
+			margin-top: 12px
+		&-right
+			margin-right: 8px
 
-.-spacing
-	&-top
-		margin-top: 12px
-	&-right
-		margin-right: 8px
-
-.-extra
-	margin-left: auto
-
-	.-inline-button
-		margin-left: 12px
 </style>
 
 <script lang="ts" src="./fireside-post"></script>
