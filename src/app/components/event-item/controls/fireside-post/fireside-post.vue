@@ -123,6 +123,7 @@
 	padding-right: 4px
 	padding-left: 6px
 	border-radius: 20px
+	will-change: transform
 
 	&:hover
 		change-bg('bg-offset')
