@@ -2,64 +2,24 @@
 @require '~styles-lib/mixins'
 
 .blip
-	change-bg('bg-offset')
-	position: relative
-	top: 1px // Needed to play nicely with buttons for some reason
-	display: inline-block
-	margin: 0 3px
-	padding: 0 5px
-	text-align: center
-	font-family: $font-family-tiny
-	font-weight: bold
-	font-size: $font-size-tiny
-	line-height: 20px
-	border-radius: 20px
+	theme-prop('color', 'fg-muted')
+	display: inline-flex
+	align-items: center
 	min-width: 20px
-	text-align: center
-	vertical-align: baseline
-	// Make sure to override any link colors around the blip.
-	color: var(--theme-fg)
+	height: 36px
+	padding-right: 4px
+	margin: 0 8px
+	font-weight: 700
+	font-size: $font-size-small
 
-	a &:hover
-		color: var(--theme-link)
+	a&
+		pressy()
 
-	/**
-	 * Carets
-	 */
-	.blip-caret
-		// Set to white since we'll have to override with content prop anyway.
-		caret(direction: left, color: $white, size: 5px)
-		border-right-color: var(--theme-bg-offset)
-		// Since the blip is a circle, we need to pull it away less from the edge, otherwise it shows a gap.
-		left: -3px
+	&.mobile
+		padding-right: 0
 
-	&.filled
-		change-bg('bi-bg')
-		// important to override the link hover from above
-		color: var(--theme-bi-fg) !important
+	&.blip-active
+		theme-prop('color', 'bi-bg')
 
-		.blip-caret
-			border-right-color: var(--theme-bi-bg)
-
-	&-alt
-		theme-prop('color', 'fg-muted')
-		display: inline-flex
-		align-items: center
-		min-width: 20px
-		height: 36px
-		padding-right: 4px
-		margin: 0 8px
-		font-weight: 700
-		font-size: $font-size-small
-
-		a&
-			pressy()
-
-		&.mobile
-			padding-right: 0
-
-		&.liked
-			theme-prop('color', 'bi-bg')
-
-			&:hover
-				theme-prop('color', 'link-hover')
+		&:hover
+			theme-prop('color', 'link-hover')
