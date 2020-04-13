@@ -25,6 +25,7 @@ type FormModel = {
 	autostart_client: boolean;
 	theme_dark: boolean;
 	theme_always_ours: boolean;
+	always_show_stickers: boolean;
 };
 
 @Component({
@@ -49,10 +50,12 @@ export default class FormSettings extends BaseForm<FormModel> implements FormOnI
 	}
 
 	onInit() {
+		console.log(Settings.get('always-show-stickers'));
 		this.setField('restricted_browsing', Settings.get('restricted-browsing'));
 		this.setField('broadcast_modal', Settings.get('broadcast-modal'));
 		this.setField('animated_thumbnails', Settings.get('animated-thumbnails'));
 		this.setField('feed_notifications', Settings.get('feed-notifications'));
+		this.setField('always_show_stickers', Settings.get('always-show-stickers'));
 		this.setField('theme_dark', this.isDark);
 		this.setField('theme_always_ours', this.alwaysOurs);
 
@@ -112,6 +115,7 @@ export default class FormSettings extends BaseForm<FormModel> implements FormOnI
 		Settings.set('feed-notifications', this.formModel.feed_notifications);
 		Settings.set('theme-dark', this.formModel.theme_dark);
 		Settings.set('theme-always-ours', this.formModel.theme_always_ours);
+		Settings.set('always-show-stickers', this.formModel.always_show_stickers);
 		this.setDark(this.formModel.theme_dark);
 		this.setAlwaysOurs(this.formModel.theme_always_ours);
 

@@ -19,22 +19,23 @@
 									:max-width="item.width"
 								>
 									<app-event-item-media-tags :gif="item.is_animated" />
+									<app-media-item-backdrop :media-item="item" radius="lg">
+										<app-img-responsive
+											class="-img"
+											v-if="!item.is_animated"
+											:src="item.mediaserver_url"
+											alt=""
+										/>
 
-									<app-img-responsive
-										class="-img"
-										v-if="!item.is_animated"
-										:src="item.mediaserver_url"
-										alt=""
-									/>
-
-									<app-video
-										v-else
-										class="-video"
-										:poster="item.mediaserver_url"
-										:webm="item.mediaserver_url_webm"
-										:mp4="item.mediaserver_url_mp4"
-										show-loading
-									/>
+										<app-video
+											v-else
+											class="-video"
+											:poster="item.mediaserver_url"
+											:webm="item.mediaserver_url_webm"
+											:mp4="item.mediaserver_url_mp4"
+											show-loading
+										/>
+									</app-media-item-backdrop>
 								</app-responsive-dimensions>
 
 								<br />
@@ -59,7 +60,13 @@
 							</span>
 						</div>
 
-						<app-content-viewer :source="post.lead_content" />
+						<app-sticker-target
+							:stickers="post.stickers"
+							:show-stickers="stickersVisible"
+							ref="stickerTarget"
+						>
+							<app-content-viewer :source="post.lead_content" />
+						</app-sticker-target>
 
 						<div v-if="post.hasArticle">
 							<div class="page-cut" />
@@ -86,6 +93,20 @@
 							/>
 						</div>
 
+						<template v-if="shouldShowCommunityPublishError">
+							<br />
+							<div class="well fill-offset">
+								<app-jolticon icon="notice" notice />
+								<span
+									><translate
+										>You can't publish this post to the selected community channel because you don't
+										have permissions to post into that specific channel. Please select a different
+										channel.</translate
+									></span
+								>
+							</div>
+						</template>
+
 						<br />
 					</template>
 
@@ -93,8 +114,10 @@
 						:post="post"
 						show-comments
 						should-show-follow
+						:show-stickers="stickersVisible"
 						@post-remove="onPostRemoved"
 						@post-publish="onPostPublished"
+						@post-stickers-visibility-change="onPostStickersVisibilityChange"
 					/>
 				</div>
 				<div class="col-md-4 col-lg-5" v-if="shouldShowAds && Screen.isDesktop">
@@ -109,8 +132,10 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-.-media-item
+.-backdrop
 	change-bg('bg-offset')
+
+.-media-item
 	position: relative
 	margin-left: auto
 	margin-right: auto
@@ -121,7 +146,7 @@
 
 @media $media-sm-up
 	.post-view >>>
-		.-media-item, img, video, iframe
+		iframe
 			rounded-corners-lg()
 
 >>> .mention-avatar-img
@@ -130,7 +155,6 @@
 .-community-row
 	display: flex
 	align-items: center
-
 </style>
 
 <script lang="ts" src="./view"></script>

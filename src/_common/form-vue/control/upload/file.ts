@@ -1,13 +1,14 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { propOptional } from '../../../../utils/vue';
 
 @Component({})
 export default class AppFormControlUploadFile extends Vue {
 	@Prop() id!: any;
 	@Prop() name!: any;
-	@Prop() value!: File | File[] | null;
-	@Prop() multiple?: boolean;
-	@Prop() accept?: string;
+	@Prop({ type: File }) value!: File | File[] | null;
+	@Prop(propOptional(Boolean)) multiple?: boolean;
+	@Prop(propOptional(String)) accept?: string;
 
 	$el!: HTMLInputElement;
 

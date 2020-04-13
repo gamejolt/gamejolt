@@ -1,6 +1,5 @@
 import { asyncComponentLoader } from '../../../utils/utils';
 import { Analytics } from '../../analytics/analytics.service';
-import { Device } from '../../device/device.service';
 import { Environment } from '../../environment/environment.service';
 import { Growls } from '../../growls/growls.service';
 import { HistoryTick } from '../../history-tick/history-tick-service';
@@ -51,12 +50,13 @@ export class GamePlayModal {
 			return;
 		}
 
-		// Safari doesn't allow you to set cookies on a domain that isn't the
+		// Modern browsers don't allow you to set cookies on a domain that isn't the
 		// same as the current domain. That means our cookie signing breaks in
 		// the iframe. To fix we have to open a new tab to the gameserver.
 		// We also open the game in a new tab if it's not https enabled so the
 		// site doesn't complain about mixed security elements.
-		if (!build.https_enabled || Device.browser()!.indexOf('Safari') !== -1) {
+		// In the client however we can continue to embed because we don't have cookie issues.
+		if (!build.https_enabled || !GJ_IS_CLIENT) {
 			// We have to open the window first before getting the URL. The
 			// browser will block the popup unless it's done directly in the
 			// onclick handler. Once we have the download URL we can direct the

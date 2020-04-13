@@ -32,6 +32,7 @@
 				:background-item="channel.background"
 				:is-active="activeChannelTitle === channel.title"
 				:is-unread="isChannelUnread(channel.title)"
+				:is-locked="isChannelLocked(channel)"
 			/>
 		</template>
 	</nav>

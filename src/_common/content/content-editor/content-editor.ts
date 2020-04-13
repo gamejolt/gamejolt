@@ -2,7 +2,7 @@ import { DOMParser, Node } from 'prosemirror-model';
 import { EditorState, Plugin, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import 'prosemirror-view/style/prosemirror.css';
-import { ResizeObserver } from 'resize-observer';
+import ResizeObserver from 'resize-observer-polyfill';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { ContentContext, ContextCapabilities } from '../content-context';

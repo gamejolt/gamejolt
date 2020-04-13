@@ -6,16 +6,24 @@
 		:title="label"
 	>
 		<div class="-card-bg" v-if="backgroundItem">
-			<div
-				class="-card-bg-img"
-				:style="{
-					'background-image': `url('${backgroundItem.mediaserver_url}')`,
-				}"
-			/>
+			<app-media-item-backdrop :media-item="backgroundItem">
+				<div
+					class="-card-bg-img"
+					:style="{
+						'background-image': `url('${backgroundItem.mediaserver_url}')`,
+					}"
+				/>
+				<div class="-overlay" />
+			</app-media-item-backdrop>
 		</div>
 
 		<div class="-card-content">
 			<div class="-card-content-title">
+				<app-jolticon
+					v-if="isLocked"
+					icon="lock"
+					v-app-tooltip.left="$gettext(`You do not have permissions to post to this channel.`)"
+				/>
 				{{ label }}
 			</div>
 

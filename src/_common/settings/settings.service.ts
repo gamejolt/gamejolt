@@ -18,6 +18,10 @@ const defaultSettings: { [k: string]: Setting } = {
 		type: 'boolean',
 		val: false,
 	},
+	'always-show-stickers': {
+		type: 'boolean',
+		val: false,
+	},
 	'game-install-dir': {
 		type: 'string',
 		val: () => {

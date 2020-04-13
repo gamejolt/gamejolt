@@ -2,10 +2,14 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
 import { Community } from '../../../../../_common/community/community.model';
+import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
 
 @Component({
+	components: {
+		AppMediaItemBackdrop,
+	},
 	directives: {
 		AppTooltip,
 	},
@@ -18,6 +22,7 @@ export default class AppCommunityChannelCard extends Vue {
 	@Prop(propOptional(Boolean, false)) isActive!: boolean;
 	@Prop(propOptional(Boolean, false)) isUnread!: boolean;
 	@Prop(propOptional(String)) sort!: string;
+	@Prop(propOptional(Boolean, false)) isLocked!: boolean;
 
 	get linkTo() {
 		const link = { name: 'communities.view.overview' } as any;
