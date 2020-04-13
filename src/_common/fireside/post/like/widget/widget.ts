@@ -7,6 +7,7 @@ import { fuzzynumber } from '../../../../filters/fuzzynumber';
 import { number } from '../../../../filters/number';
 import { Growls } from '../../../../growls/growls.service';
 import { LikersModal } from '../../../../likers/modal.service';
+import { Screen } from '../../../../screen/screen-service';
 import { handleNewStickerNotification } from '../../../../sticker/sticker.model';
 import { AppTooltip } from '../../../../tooltip/tooltip';
 import AppUserFollowWidget from '../../../../user/follow/widget.vue';
@@ -44,14 +45,12 @@ export default class AppFiresidePostLikeWidget extends Vue {
 	@Prop(Boolean)
 	blipAlt?: boolean;
 
-	@Prop(Boolean)
-	screenXs?: boolean;
-
 	@State
 	app!: Store['app'];
 
 	showLikeAnim = false;
 	showDislikeAnim = false;
+	readonly Screen = Screen;
 
 	@Emit('change')
 	emitChange(_value: boolean) {}

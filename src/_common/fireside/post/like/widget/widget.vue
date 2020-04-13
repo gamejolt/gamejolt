@@ -26,7 +26,7 @@
 		</span>
 
 		<a
-			:class="{ 'blip-alt': blipAlt, liked: !!post.user_like, mobile: screenXs }"
+			:class="{ 'blip-alt': blipAlt, liked: !!post.user_like, mobile: Screen.isXs }"
 			@click="showLikers()"
 			v-app-tooltip="$gettext(`View all people that liked this post`)"
 		>
