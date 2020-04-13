@@ -10,7 +10,6 @@ import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { number } from '../../../../../_common/filters/number';
 import AppFiresidePostLikeWidget from '../../../../../_common/fireside/post/like/widget/widget.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import { LikersModal } from '../../../../../_common/likers/modal.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { StickerPlacementModal } from '../../../../../_common/sticker/placement/modal/modal.service';
 import { StickerSelectModal } from '../../../../../_common/sticker/select-modal.ts/select-modal.service';
@@ -185,9 +184,5 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 
 	onClickShowStickers() {
 		this.emitStickersVisibilityChange(!this.showStickers);
-	}
-
-	showLikers() {
-		LikersModal.show({ count: this.post.like_count, resource: this.post });
 	}
 }
