@@ -19,7 +19,7 @@
 				@click="showLikers()"
 				v-app-tooltip="$gettext(`View all people that liked this comment`)"
 			>
-				{{ comment.votes | number | fuzzynumber }}
+				{{ comment.votes | fuzzynumber }}
 			</a>
 
 			<app-button

@@ -2,7 +2,6 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { fuzzynumber } from '../../filters/fuzzynumber';
-import { number } from '../../filters/number';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
 import { handleNewStickerNotification } from '../../sticker/sticker.model';
@@ -17,7 +16,6 @@ import { CommentVote } from '../vote/vote-model';
 		AppTooltip,
 	},
 	filters: {
-		number,
 		fuzzynumber,
 	},
 })
