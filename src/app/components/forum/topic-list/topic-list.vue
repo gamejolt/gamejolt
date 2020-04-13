@@ -7,7 +7,7 @@
 			:class="{ '-has-voting': shouldShowVoting(topic) }"
 		>
 			<div class="-vote" v-if="shouldShowVoting(topic)">
-				<app-forum-topic-upvote-widget :topic="topic" blip-alt />
+				<app-forum-topic-upvote-widget :topic="topic" />
 			</div>
 			<div class="-main">
 				<div class="row">
