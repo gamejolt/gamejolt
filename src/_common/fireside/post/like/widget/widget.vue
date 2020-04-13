@@ -48,13 +48,9 @@
 	.-like
 		position: relative
 
-		> button
+		&-button
 			width: 36px
 			height: 36px
-
-	&-button
-		width: 36px
-		height: 36px
 
 .-like-anim-container
 	position: absolute
