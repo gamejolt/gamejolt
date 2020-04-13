@@ -2,6 +2,7 @@
 	<span class="fireside-post-like-widget">
 		<span class="-like">
 			<app-button
+				class="-like-button"
 				icon="heart"
 				circle
 				:trans="trans"
@@ -31,6 +32,10 @@
 <style lang="stylus" scoped>
 .-like
 	position: relative
+
+	&-button
+		width: 36px
+		height: 36px
 
 .-like-anim-container
 	position: absolute
