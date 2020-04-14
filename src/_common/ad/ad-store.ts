@@ -2,6 +2,8 @@ import { installVuePlugin } from '../../utils/vue';
 import { Environment } from '../environment/environment.service';
 import { EventBus } from '../event-bus/event-bus.service';
 import { Model } from '../model/model.service';
+import { AdSlot } from './ad-slot-info';
+import { AdAdapterBase } from './adapter-base';
 import { AdPlaywireAdapter } from './playwire/playwire-adapter';
 import { AdProperAdapter } from './proper/proper-adapter';
 import AppAdWidgetInner from './widget/inner';
@@ -52,12 +54,13 @@ function getRandom(min: number, max: number) {
 }
 
 function chooseAdapter() {
-	const adapters = [AdPlaywireAdapter, AdProperAdapter];
+	const adapters = [AdProperAdapter];
 	return adapters[getRandom(0, adapters.length)];
 }
 
 export class AdStore {
-	adapter = new (chooseAdapter())();
+	private videoAdapter = new AdPlaywireAdapter();
+	private adapter = new (chooseAdapter())() as AdAdapterBase;
 
 	private routeResolved = false;
 	private ads: Set<AdComponent> = new Set();
@@ -112,6 +115,20 @@ export class AdStore {
 
 	releasePageSettings() {
 		this.pageSettings = null;
+	}
+
+	chooseAdapterForSlot(slot: AdSlot) {
+		if (slot.size === 'video') {
+			return this.videoAdapter;
+		}
+		return this.adapter;
+	}
+
+	/**
+	 * Should only be used for testing!
+	 */
+	overrideAdapter(adapter: AdAdapterBase) {
+		this.adapter = adapter;
 	}
 
 	addAd(ad: AdComponent) {

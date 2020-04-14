@@ -2,7 +2,7 @@
 	<!-- We completely regenerate it when the slot ID changes -->
 	<div v-if="slotId" :key="slotId">
 		<!-- Load the ad component for the currently running ad adapter -->
-		<component :is="$ad.adapter.component(adSlot)" :ad-slot="adSlot" :adapter="$ad.adapter" />
+		<component :is="adapter.component(adSlot)" :ad-slot="adSlot" :adapter="adapter" />
 	</div>
 </template>
 
