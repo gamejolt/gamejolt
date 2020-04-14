@@ -11,7 +11,7 @@
 			v-app-track-event="`topic-upvote-widget:click`"
 		/>
 
-		<span class="blip-alt" :class="{ 'blip-active': isUpvoted }">
+		<span class="blip" :class="{ 'blip-active': isUpvoted }">
 			{{ upvoteCount | fuzzynumber }}
 		</span>
 	</span>
