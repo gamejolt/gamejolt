@@ -43,6 +43,8 @@ export default class AppActivityFeed extends Vue {
 	private scroll!: number;
 
 	readonly number = number;
+	readonly Scroll = Scroll;
+	isNewButtonInview = false;
 
 	/**
 	 * The distance from the bottom of the feed that we should start loading
@@ -142,6 +144,10 @@ export default class AppActivityFeed extends Vue {
 
 		++index;
 		return index === firstAd || (index - firstAd) % adGap === 0;
+	}
+
+	onNewButtonInview() {
+		this.isNewButtonInview = true;
 	}
 
 	onPostEdited(eventItem: EventItem) {
