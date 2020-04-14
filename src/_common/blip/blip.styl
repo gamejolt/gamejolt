@@ -7,10 +7,9 @@ $-spacing = 8px
 	color: var(--theme-fg-muted)
 	display: inline-flex
 	align-items: center
-	min-width: 20px
+	min-width: 36px
 	height: 36px
-	padding-right: ($-spacing / 2)
-	margin: 0 $-spacing
+	padding: 0 ($-spacing * 1.5) 0 $-spacing
 	font-weight: 700
 	font-size: $font-size-small
 
@@ -21,7 +20,7 @@ $-spacing = 8px
 		pressy()
 
 	&.mobile
-		padding-right: 0
+		padding-right: $-spacing
 
 	&.blip-active
 		color: var(--theme-bi-bg)
