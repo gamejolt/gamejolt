@@ -115,6 +115,7 @@
 		<template v-if="!isReply" slot="controls">
 			<app-button
 				v-if="!topic.is_locked && app.user"
+				class="forum-post-reply-button"
 				circle
 				trans
 				icon="reply"
@@ -187,6 +188,9 @@
 		margin-bottom: $line-height-computed
 		padding: 5px 10px
 		font-size: $font-size-small
+
+	&-reply-button
+		margin-right: 8px
 </style>
 
 <script lang="ts" src="./item"></script>
