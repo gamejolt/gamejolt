@@ -21,7 +21,7 @@
 					>
 						{{ commentsCount | fuzzynumber }}
 					</a>
-					<span v-else class="-spacing-right" />
+					<span v-else class="blip-missing" />
 				</div>
 
 				<template v-if="shouldShowStickersButton">

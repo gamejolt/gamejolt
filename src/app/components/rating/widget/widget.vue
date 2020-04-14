@@ -13,14 +13,18 @@
 		</span>
 
 		<template v-if="!hideCount">
-			<a @click="showLikers()" v-app-tooltip="$gettext(`View all people that liked this game`)">
-				<span class="blip filled" v-if="game.like_count > 0">
-					<span class="blip-caret"></span>
-					<span class="blip-count">{{ likeCountFormatted }}</span>
-				</span>
+			<a
+				v-if="game.like_count > 0"
+				class="blip"
+				:class="{ 'blip-active': userRating }"
+				@click="showLikers()"
+				v-app-tooltip="$gettext(`View all people that liked this game`)"
+			>
+				{{ likeCountFormatted | fuzzynumber }}
 			</a>
-			&nbsp;
+			<span v-else class="blip-missing" />
 		</template>
+		<span v-else class="blip-missing" />
 
 		<span v-app-auth-required>
 			<app-button
@@ -38,7 +42,7 @@
 <script lang="ts" src="./widget"></script>
 
 <style lang="stylus" scoped>
-.-like-button
-	margin-right: 10px
+// .-like-button
+// 	margin-right: 10px
 
 </style>

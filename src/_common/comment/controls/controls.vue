@@ -21,6 +21,7 @@
 			>
 				{{ comment.votes | fuzzynumber }}
 			</a>
+			<span v-else class="blip-missing" />
 
 			<app-button
 				icon="thumbs-down"
