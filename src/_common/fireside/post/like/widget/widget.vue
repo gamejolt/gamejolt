@@ -26,7 +26,7 @@
 
 		<a
 			class="blip"
-			:class="{ 'blip-active': !!post.user_like }"
+			:class="{ 'blip-active': !!post.user_like, mobile: Screen.isXs }"
 			@click="showLikers()"
 			v-app-tooltip="$gettext(`View all people that liked this post`)"
 		>
