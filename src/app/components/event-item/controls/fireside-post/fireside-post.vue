@@ -4,7 +4,7 @@
 			<div v-if="showUserControls" class="-row">
 				<app-fireside-post-like-widget :post="post" trans @change="emitLikeChange" />
 
-				<div class="-inline-button" v-if="shouldShowCommentsButton">
+				<div v-if="shouldShowCommentsButton" class="-inline-button">
 					<app-button
 						icon="comment"
 						circle
@@ -149,8 +149,8 @@
 
 
 		.-caret
-				caret(direction: left, color: $trans, size: 5px)
-				left: -3px
+			caret(direction: left, color: $trans, size: 5px)
+			left: -3px
 
 		.-sticker
 			width: 24px
