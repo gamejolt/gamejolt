@@ -1,4 +1,6 @@
 import Component from 'vue-class-component';
+import { Emit } from 'vue-property-decorator';
+import { arrayRemove } from '../../../../../../../utils/array';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
 import AppCardListDraggable from '../../../../../../../_common/card/list/draggable/draggable.vue';
@@ -57,6 +59,9 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 		return this.games.filter(i => i.status === Game.STATUS_VISIBLE);
 	}
 
+	@Emit('games-change')
+	emitGamesChanged(_games: Game[]) {}
+
 	routeResolved($payload: any) {
 		// Request and populate games so hidden games are also shown.
 		this.games = Game.populate($payload.games);
@@ -74,7 +79,7 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 		try {
 			const payload = await this.community.saveGameSort(sortedIds);
 			if (payload.success) {
-				this.$emit('games-change', this.visibleGames);
+				this.emitGamesChanged(this.visibleGames);
 			}
 		} catch (e) {
 			console.error(e);
@@ -95,8 +100,9 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 					{ noErrorRedirect: true }
 				);
 				if (payload.success) {
+					this.games.push(game);
 					this.community.assign(payload.community);
-					this.$emit('games-change', this.visibleGames);
+					this.emitGamesChanged(this.visibleGames);
 					if (this.games.length >= this.linkGameCount) {
 						this.setCanLinkNewGames(false);
 					}
@@ -119,8 +125,9 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 				{ noErrorRedirect: true }
 			);
 			if (payload.success) {
+				arrayRemove(this.games, i => i.id === game.id);
 				this.community.assign(payload.community);
-				this.$emit('games-change', this.visibleGames);
+				this.emitGamesChanged(this.visibleGames);
 				// After unlinking a game, there is a free slot and at least one more game to link.
 				this.setCanLinkNewGames(true);
 			}
