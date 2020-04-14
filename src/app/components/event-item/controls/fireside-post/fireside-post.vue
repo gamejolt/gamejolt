@@ -119,8 +119,7 @@
 		display: inline-flex
 		align-items: center
 		flex-direction: row
-		padding-right: 4px
-		padding-left: 6px
+		padding: 2px 4px 2px 6px
 		border-radius: 20px
 		will-change: transform
 
@@ -152,18 +151,18 @@
 			caret(direction: left, color: $trans, size: 5px)
 			left: -3px
 
-		.-sticker
-			width: 24px
-			height: 24px
-			position: relative
-			margin-right: -14px
-			display: inline-block
+	.-sticker
+		width: 20px
+		height: 20px
+		position: relative
+		margin-right: -10px
+		display: inline-block
 
-			& > img
-				display: block
-				width: 100%
-				height: 100%
-				filter: drop-shadow(1px 0 #fff) drop-shadow(-1px 0 #fff)
+		& > img
+			display: block
+			width: 100%
+			height: 100%
+			filter: drop-shadow(1px 1px 0 white) drop-shadow(-1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px -1px 0 white)
 
 	.-extra
 		margin-left: auto
