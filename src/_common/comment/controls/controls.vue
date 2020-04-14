@@ -15,7 +15,7 @@
 			<a
 				v-if="comment.votes > 0"
 				class="blip"
-				:class="{ 'blip-active': comment.user_vote }"
+				:class="{ 'blip-active': comment.user_vote, mobile: Screen.isXs }"
 				@click="showLikers()"
 				v-app-tooltip="$gettext(`View all people that liked this comment`)"
 			>
@@ -34,10 +34,9 @@
 		</span>
 
 		<template v-if="showReply">
-			&nbsp;
-
 			<span v-app-auth-required>
 				<app-button
+					class="comment-controls-reply"
 					icon="reply"
 					circle
 					trans
@@ -61,3 +60,9 @@
 </template>
 
 <script lang="ts" src="./controls"></script>
+
+<style lang="stylus" scoped>
+.comment-controls
+	&-reply
+		margin-left: 8px
+</style>
