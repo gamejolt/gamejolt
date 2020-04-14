@@ -21,13 +21,22 @@
 
 			<template v-if="games.length">
 				<div v-for="game of games" :key="game.id" class="-game">
-					<span class="-game-thumb">
+					<div class="-game-thumb">
 						<app-game-thumbnail-img :game="game" />
-					</span>
-					<div class="-game-meta">
-						<span class="-game-title">{{ game.title }}</span>
-						<br />
-						<app-button @click="onClickLink(game)">
+					</div>
+
+					<div class="-game-label">
+						<div class="-game-title">{{ game.title }}</div>
+						<div v-if="isGameHidden(game)" class="-game-hidden">
+							<span
+								v-app-tooltip.bottom="$gettext(`Hidden games do not show in the community sidebar`)"
+								><translate>Hidden</translate></span
+							>
+						</div>
+					</div>
+
+					<div class="-game-button">
+						<app-button @click="onClickLink(game)" primary>
 							<translate>Link</translate>
 						</app-button>
 					</div>
@@ -55,19 +64,48 @@
 </template>
 
 <style lang="stylus" scoped>
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+$-v-padding = 15px
+$-h-padding = 20px
+$-height = 44px
+
 .-game
+	theme-prop('border-bottom-color', 'bg-subtle')
 	display: flex
-	margin-bottom: 12px
+	align-items: center
+	padding: $-v-padding 0
+	height: $-height + $-v-padding * 2
+	overflow: hidden
+	border-bottom-width: $border-width-small
+	border-bottom-style: solid
+
+	&:last-child
+		border-bottom: 0
 
 	&-thumb
-		width: 45%
-		max-width: 200px
+		flex: none
+		width: $-height * 2
+		margin-right: $-h-padding
 
-	&-meta
-		margin-left: 12px
+	&-label
+		flex: auto
+		overflow: hidden
+
+	&-title, &-hidden
+		text-overflow()
 
 	&-title
 		font-weight: bold
+
+	&-hidden
+		theme-prop('color', 'fg-muted')
+		font-size: $font-size-small
+
+	&-button
+		flex: none
+		margin-left: $-h-padding
 
 </style>
 

@@ -47,7 +47,9 @@
 					>
 						<div class="row">
 							<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
-								<app-game-thumbnail-img :game="game" />
+								<router-link :to="{ name: game.getSref(), params: game.getSrefParams() }">
+									<app-game-thumbnail-img :game="game" />
+								</router-link>
 
 								<br class="visible-xs" />
 							</div>

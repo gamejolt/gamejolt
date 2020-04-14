@@ -7,11 +7,15 @@ import AppGameThumbnailImg from '../../../../_common/game/thumbnail-img/thumbnai
 import { Growls } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 
 @Component({
 	components: {
 		AppLoading,
 		AppGameThumbnailImg,
+	},
+	directives: {
+		AppTooltip,
 	},
 })
 export default class AppCommunityLinkGameModal extends BaseModal {
@@ -57,5 +61,9 @@ export default class AppCommunityLinkGameModal extends BaseModal {
 
 	onClickLink(game: Game) {
 		this.modal.resolve(game);
+	}
+
+	isGameHidden(game: Game) {
+		return game.status !== Game.STATUS_VISIBLE;
 	}
 }
