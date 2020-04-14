@@ -12,11 +12,13 @@
 			:disabled="isProcessing"
 			@click="toggle"
 		/>
-		<a @click="showLikers()" v-app-tooltip="$gettext(`View all people that liked this video`)">
-			<span v-if="blip" class="blip" :class="{ filled: !!comment.user_vote }">
-				<span class="blip-caret"></span>
-				<span class="blip-count">{{ blip }}</span>
-			</span>
+		<a
+			class="blip"
+			:class="{ 'blip-active': !!comment.user_vote }"
+			@click="showLikers()"
+			v-app-tooltip="$gettext(`View all people that liked this video`)"
+		>
+			{{ blip | fuzzynumber }}
 		</a>
 	</span>
 </template>
