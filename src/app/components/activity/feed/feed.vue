@@ -6,18 +6,20 @@
 	-->
 	<div class="activity-feed" :key="feed.id">
 		<template v-if="newCount > 0 || feed.isLoadingNew">
-			<app-expand v-if="!feed.isLoadingNew" when animate-initial>
-				<app-activity-feed-new-button @click="loadNew()">
-					<translate
-						:translate-n="newCount"
-						:translate-params="{ count: number(newCount) }"
-						translate-plural="%{count} new items"
-					>
-						1 new item
-					</translate>
-				</app-activity-feed-new-button>
-			</app-expand>
-			<app-loading v-else class="loading-centered" />
+			<app-scroll-inview :margin="`-${Scroll.offsetTop}px`" @inview="onNewButtonInview">
+				<app-expand v-if="!feed.isLoadingNew" :when="isNewButtonInview" animate-initial>
+					<app-activity-feed-new-button @click="loadNew()">
+						<translate
+							:translate-n="newCount"
+							:translate-params="{ count: number(newCount) }"
+							translate-plural="%{count} new items"
+						>
+							1 new item
+						</translate>
+					</app-activity-feed-new-button>
+				</app-expand>
+				<app-loading v-else class="loading-centered" />
+			</app-scroll-inview>
 		</template>
 
 		<!-- Need the div so that we can target the last child in the container. -->
