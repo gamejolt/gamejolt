@@ -16,11 +16,6 @@
 
 				<div class="timeline-list-item-details">
 					<div class="-meta clearfix" v-if="user">
-						<span class="-meta-slot">
-							<slot name="tags" />
-							<slot name="meta" />
-						</span>
-
 						<div class="-byline">
 							<span class="-author">
 								<router-link
@@ -54,6 +49,11 @@
 									<span class="text-muted">@{{ repliedTo.username }}</span>
 								</span>
 							</template>
+
+							<span class="-meta-slot">
+								<slot name="tags" />
+								<slot name="meta" />
+							</span>
 
 							<slot name="authors" />
 						</div>
