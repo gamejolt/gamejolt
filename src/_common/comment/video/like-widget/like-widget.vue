@@ -13,6 +13,7 @@
 			@click="toggle"
 		/>
 		<a
+			v-if="blip"
 			class="blip"
 			:class="{ 'blip-active': !!comment.user_vote }"
 			@click="showLikers()"
@@ -20,6 +21,7 @@
 		>
 			{{ blip | fuzzynumber }}
 		</a>
+		<span v-else class="blip-missing" />
 	</span>
 </template>
 
