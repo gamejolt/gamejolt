@@ -7,12 +7,7 @@
 	>
 		<a class="navbar-item navbar-avatar" :class="{ active: isShowing }">
 			<app-user-avatar-img :user="app.user" />
-			<span
-				v-if="shouldShowNew"
-				class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
-			>
-				!
-			</span>
+			<div class="-new-tag anim-fade-enter anim-fade-leave"></div>
 		</a>
 
 		<template v-if="isShowing">
@@ -119,9 +114,7 @@
 								class="pull-right"
 								icon="help-circle"
 								v-app-tooltip="
-									$gettext(
-										`These are your available funds to either buy games with or withdraw.`
-									)
+									$gettext(`These are your available funds to either buy games with or withdraw.`)
 								"
 							/>
 
@@ -216,6 +209,16 @@
 
 	&-currency
 		theme-prop('color', 'highlight')
+
+.-new-tag
+	border-radius: 50%
+	width: 12px
+	height: 12px
+	display: block
+	position: absolute
+	top: 0
+	right: 0
+	change-bg('highlight')
 </style>
 
 <script lang="ts" src="./account-popover"></script>

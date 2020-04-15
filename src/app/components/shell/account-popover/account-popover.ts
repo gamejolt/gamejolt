@@ -57,6 +57,7 @@ export default class AppShellAccountPopover extends Vue {
 	logout!: Store['logout'];
 
 	get shouldShowNew() {
+		return true;
 		return this.shouldShowNewStickers;
 	}
 
