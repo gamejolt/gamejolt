@@ -1,4 +1,5 @@
 import Component from 'vue-class-component';
+import { Emit } from 'vue-property-decorator';
 import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
 import AppCardListDraggable from '../../../../../../../_common/card/list/draggable/draggable.vue';
 import AppCardListItem from '../../../../../../../_common/card/list/item/item.vue';
@@ -52,9 +53,11 @@ export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent
 		return [CommunityPresetChannelType.FEATURED, CommunityPresetChannelType.ALL];
 	}
 
-	onChannelsChange() {
-		this.$emit('channels-change', this.community.channels);
-	}
+	@Emit('channels-change')
+	emitChannelsChange(_channels: CommunityChannel[] | undefined | null) {}
+
+	@Emit('details-change')
+	emitDetailsChange(_community: Community) {}
 
 	async saveChannelSort(sortedChannels: CommunityChannel[]) {
 		// Reorder the channels to see the result of the ordering right away.
@@ -63,7 +66,7 @@ export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent
 		const sortedIds = sortedChannels.map(i => i.id);
 		try {
 			await CommunityChannel.$saveSort(this.community.id, sortedIds);
-			this.onChannelsChange();
+			this.emitChannelsChange(this.community.channels);
 		} catch (e) {
 			console.error(e);
 			Growls.error('Could not save channel arrangement.');
@@ -72,7 +75,7 @@ export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent
 
 	onChannelAdded(channel: CommunityChannel) {
 		this.community.channels!.push(channel);
-		this.onChannelsChange();
+		this.emitChannelsChange(this.community.channels);
 	}
 
 	async onClickRemoveChannel(channel: CommunityChannel) {
@@ -80,15 +83,15 @@ export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent
 
 		if (channel._removed) {
 			this.community.channels = this.community.channels!.filter(i => i.id !== channel.id);
-			this.onChannelsChange();
+			this.emitChannelsChange(this.community.channels);
 		}
 	}
 
-	channelEdited() {
-		this.onChannelsChange();
+	onChannelEdited() {
+		this.emitChannelsChange(this.community.channels);
 	}
 
 	presetBackgroundEdited() {
-		this.$emit('details-change', this.community);
+		this.emitDetailsChange(this.community);
 	}
 }

@@ -8,8 +8,7 @@
 			<div class="page-help">
 				<p>
 					<translate>
-						Channels make it easier for your community members to organize their posts
-						into groups.
+						Channels make it easier for your community members to organize their posts into groups.
 					</translate>
 				</p>
 				<p>
@@ -82,8 +81,8 @@
 							<form-community-channel-edit
 								:community="community"
 								:model="channel"
-								@save="channelEdited"
-								@clear="channelEdited"
+								@save="onChannelEdited"
+								@clear="onChannelEdited"
 							/>
 						</template>
 					</app-card-list-item>
