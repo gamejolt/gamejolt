@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import { EventSubscription } from '../../../../system/event/event-topic';
 import { findRequiredVueParent } from '../../../../utils/vue';
-import { EventSubscription } from '../../../events/subscription';
 import { AppImgResponsive } from '../../../img/responsive/responsive';
 import { Screen } from '../../../screen/screen-service';
 import AppSketchfabEmbed from '../../../sketchfab/embed/embed.vue';

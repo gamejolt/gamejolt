@@ -3,13 +3,9 @@ import Vue from 'vue';
 export type EventBusDeregister = () => void;
 
 export class EventBus {
-	private e!: Vue;
-
 	private static global = new EventBus();
 
-	constructor() {
-		this.e = new Vue();
-	}
+	private e = new Vue();
 
 	emit(event: string, ...args: any[]) {
 		this.e.$emit(event, ...args);

@@ -1,8 +1,8 @@
 import Vue from 'vue';
+import { EventBus } from '../../../system/event/event-bus.service';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
-import { EventBus } from '../../../_common/events/event-bus.service';
 import { Primus } from '../../../_common/primus/primus.service';
 import { store } from '../../store/index';
 import { ChatMessage, ChatMessageType } from './message';

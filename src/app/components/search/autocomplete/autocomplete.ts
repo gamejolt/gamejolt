@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { EventTopic } from '../../../../system/event/event-topic';
 import { debounce } from '../../../../utils/utils';
 import { findRequiredVueParent } from '../../../../utils/vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
-import { EventTopic } from '../../../../_common/events/topic';
 import { Game } from '../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../_common/game/thumbnail-img/thumbnail-img.vue';
 import { AppStore } from '../../../../_common/store/app-store';

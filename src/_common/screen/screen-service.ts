@@ -1,6 +1,6 @@
+import { EventTopic } from '../../system/event/event-topic';
 import { debounce } from '../../utils/utils';
 import { makeObservableService } from '../../utils/vue';
-import { EventTopic } from '../events/topic';
 
 /**
  * Media query breakpoints.

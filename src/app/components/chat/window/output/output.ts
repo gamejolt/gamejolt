@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { EventSubscription } from '../../../../../_common/events/subscription';
+import { EventSubscription } from '../../../../../system/event/event-topic';
 import { date } from '../../../../../_common/filters/date';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';

@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { EventBus } from '../../../../system/event/event-bus.service';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import { EventBus } from '../../../../_common/events/event-bus.service';
 import { number } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
 import { GameRating } from '../../../../_common/game/rating/rating.model';

@@ -1,4 +1,5 @@
 import { Component } from 'vue-property-decorator';
+import { EventBus, EventBusDeregister } from '../../../../../system/event/event-bus.service';
 import { enforceLocation } from '../../../../../utils/router';
 import { AdSettingsContainer } from '../../../../../_common/ad/ad-store';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
@@ -11,7 +12,6 @@ import {
 	CommentStore,
 	CommentStoreModel,
 } from '../../../../../_common/comment/comment-store';
-import { EventBus, EventBusDeregister } from '../../../../../_common/events/event-bus.service';
 import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../_common/partner-referral/partner-referral-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';

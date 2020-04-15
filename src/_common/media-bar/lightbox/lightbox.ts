@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { EventSubscription } from '../../../system/event/event-topic';
 import { Analytics } from '../../analytics/analytics.service';
 import { EscapeStack } from '../../escape-stack/escape-stack.service';
-import { EventSubscription } from '../../events/subscription';
 import { Screen } from '../../screen/screen-service';
 import AppShortkey from '../../shortkey/shortkey.vue';
 import AppMediaBar from '../media-bar';

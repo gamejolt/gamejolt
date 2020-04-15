@@ -5,7 +5,7 @@ import {
 	RatingWidgetOnChangePayload,
 } from '../../../app/components/rating/widget/widget';
 import AppRatingWidget from '../../../app/components/rating/widget/widget.vue';
-import { EventBus, EventBusDeregister } from '../../events/event-bus.service';
+import { EventBus, EventBusDeregister } from '../../../system/event/event-bus.service';
 import { Game } from '../game.model';
 
 @Component({
