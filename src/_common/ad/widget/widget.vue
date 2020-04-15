@@ -21,15 +21,19 @@
 	text-align: center
 
 .-inner
+	display: flex
+	align-items: center
+	justify-content: center
 	margin: 0 auto
 
+// We reserve some extra space for the "report ad" link below the ad itself.
 .-size-leaderboard
 	.-inner
-		min-height: 90px
+		min-height: 115px
 
 .-size-rectangle
 	.-inner
-		min-height: 250px
+		min-height: 275px
 </style>
 
 <script lang="ts" src="./widget"></script>

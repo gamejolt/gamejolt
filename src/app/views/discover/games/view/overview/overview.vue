@@ -3,6 +3,13 @@
 		<!-- Media Bar -->
 		<app-media-bar v-if="game.media_count" :media-items="mediaItems" />
 
+		<app-ad-widget
+			class="-leaderboard-ad"
+			v-if="shouldShowAds && !Screen.isMobile"
+			size="leaderboard"
+			placement="top"
+		/>
+
 		<section class="section section-thin fill-backdrop">
 			<app-page-container xl>
 				<div slot="left">
@@ -247,6 +254,10 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
+
+.-leaderboard-ad
+	padding-top: 16px
+	padding-bottom: 8px
 
 .-recommended-ad
 	width: 300px

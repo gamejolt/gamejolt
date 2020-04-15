@@ -3,11 +3,13 @@ import { Component, Emit, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../../auth/store/index';
 import { propOptional } from '../../../../utils/vue';
+import { Analytics } from '../../../../_common/analytics/analytics.service';
 import AppCommentVideoLikeWidget from '../../../../_common/comment/video/like-widget/like-widget.vue';
 import { CommentVideo } from '../../../../_common/comment/video/video-model';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
 import { ActivityFeedItem } from '../../activity/feed/item-service';
 import { ActivityFeedView } from '../../activity/feed/view';
 import AppEventItemControlsComments from './comments/comments.vue';
@@ -47,7 +49,7 @@ export default class AppEventItemControls extends Vue {
 	app!: Store['app'];
 
 	commentsCount = 0;
-	isShowingFollowState = false;
+	shouldShowFollowState = false;
 
 	@Emit('post-edit')
 	emitPostEdit() {}
@@ -86,7 +88,7 @@ export default class AppEventItemControls extends Vue {
 		// the activity feed item state so that if they click away from the feed and
 		// back to it, it can initialize with the previous state.
 		if (this.item && this.feed) {
-			this.isShowingFollowState = this.feed.isItemShowingFollow(this.item);
+			this.shouldShowFollowState = this.feed.isItemShowingFollow(this.item);
 		}
 	}
 
@@ -99,7 +101,7 @@ export default class AppEventItemControls extends Vue {
 	}
 
 	get isShowingFollow() {
-		if (!this.shouldShowFollow || !this.isShowingFollowState || !this.post) {
+		if (!this.shouldShowFollow || !this.shouldShowFollowState || !this.post) {
 			return false;
 		}
 
@@ -114,11 +116,32 @@ export default class AppEventItemControls extends Vue {
 	}
 
 	setUserFollow(showing: boolean) {
-		this.isShowingFollowState = showing;
+		if (showing && this.post) {
+			// Do nothing if a post is liked and we recently suggested
+			// to follow that user - so we don't spam them.
+			if (!UserFollowSuggestion.canSuggest(this.post.user.id)) {
+				return;
+			}
+
+			// Track analytics for how many people see user-follow,
+			// and stop suggesting to follow the user for 'X' amount
+			// of time - specified in UserFollowSuggestion.
+			Analytics.trackEvent('user-follow', 'show', 'fireside-post-like-widget');
+			UserFollowSuggestion.doNotSuggest(this.post.user.id);
+		}
+
+		this.shouldShowFollowState = showing;
 
 		// If we're part of the activity feed, synchronize it with that state as well.
 		if (this.item && this.feed) {
 			this.feed.setItemShowingFollow(this.item, showing);
 		}
+	}
+
+	onUserFollowDismissal() {
+		// Track analytics for how often people click
+		// on the 'X' button to hide user-follow.
+		Analytics.trackEvent('user-follow', 'hide', 'fireside-post-like-widget');
+		this.setUserFollow(false);
 	}
 }

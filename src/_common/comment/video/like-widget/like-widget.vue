@@ -1,6 +1,7 @@
 <template>
 	<span v-app-auth-required>
 		<app-button
+			class="-like-button"
 			icon="heart"
 			circle
 			:trans="trans"
@@ -11,13 +12,21 @@
 			:disabled="isProcessing"
 			@click="toggle"
 		/>
-		<a @click="showLikers()" v-app-tooltip="$gettext(`View all people that liked this video`)">
-			<span v-if="blip" class="blip" :class="{ filled: !!comment.user_vote }">
-				<span class="blip-caret"></span>
-				<span class="blip-count">{{ blip }}</span>
-			</span>
+		<a
+			class="blip"
+			:class="{ 'blip-active': !!comment.user_vote }"
+			@click="showLikers()"
+			v-app-tooltip="$gettext(`View all people that liked this video`)"
+		>
+			{{ blip | fuzzynumber }}
 		</a>
 	</span>
 </template>
 
 <script lang="ts" src="./like-widget"></script>
+
+<style lang="stylus" scoped>
+.-like-button
+	width: 36px
+	height: 36px
+</style>

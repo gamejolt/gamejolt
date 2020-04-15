@@ -2,8 +2,6 @@
 @require '~styles-lib/mixins'
 
 .media-bar-item
-	rounded-corners-lg()
-	change-bg('darkest')
 	position: relative
 	display: inline-block
 	vertical-align: top
@@ -20,8 +18,10 @@
 			margin-left: 20px
 
 	img
-		rounded-corners-lg()
 		z-index: 0
+
+.-backdrop
+	change-bg('darkest')
 
 .-play
 	@extend $play-button-overlay, $play-button-overlay.small

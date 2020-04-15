@@ -30,13 +30,6 @@ export default class AppAdWidget extends Vue {
 	@Watch('meta', { deep: true })
 	generateAdSlot() {
 		let { size, placement, meta } = this;
-
-		// For ad adapters without video support, we should the video as a
-		// rectangle ad instead.
-		if (!this.$ad.adapter.hasVideoSupport && size === 'video') {
-			size = 'rectangle';
-		}
-
 		this.adSlot = new AdSlot(size, placement, meta);
 	}
 }

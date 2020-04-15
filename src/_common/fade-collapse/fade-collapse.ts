@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { sleep } from '../../utils/utils';
 import { Screen } from '../screen/screen-service';
 import { Scroll } from '../scroll/scroll.service';
 
@@ -39,8 +40,8 @@ export default class AppFadeCollapse extends Vue {
 	emitExpand(_e: Event) {}
 
 	async mounted() {
-		// Let it compile DOM.
-		await this.$nextTick();
+		// Let it compile DOM and wait for any images to be resized.
+		await sleep(0);
 
 		// Take threshold into account only if our collapse height is big enough
 		// for threshold to matter.

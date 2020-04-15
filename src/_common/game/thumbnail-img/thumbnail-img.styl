@@ -17,7 +17,8 @@
 	height: 100%
 
 .-icon
-	theme-prop('color', 'bg-subtle')
+	color: white
+	opacity: 0.4
 	position: absolute
 	font-size: 16px * 2
 	left: 50%
@@ -28,12 +29,12 @@
 .-media
 	opacity: 0
 	transition: opacity 500ms
+	width: 100%
 
 	.-loaded &
 		opacity: 1
 
 .-img, .-video
-	rounded-corners-lg()
 	position: absolute !important
 	top: 0
 	left: 0

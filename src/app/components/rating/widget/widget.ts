@@ -3,7 +3,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import { EventBus } from '../../../../system/event/event-bus.service';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import { number } from '../../../../_common/filters/number';
+import { fuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { Game } from '../../../../_common/game/game.model';
 import { GameRating } from '../../../../_common/game/rating/rating.model';
 import { Growls } from '../../../../_common/growls/growls.service';
@@ -21,6 +21,9 @@ export interface RatingWidgetOnChangePayload {
 		AppAuthRequired,
 		AppTooltip,
 	},
+	filters: {
+		fuzzynumber,
+	},
 })
 export default class AppRatingWidget extends Vue {
 	@Prop(Game)
@@ -34,10 +37,6 @@ export default class AppRatingWidget extends Vue {
 
 	@Prop(String)
 	eventLabel?: string;
-
-	get likeCountFormatted() {
-		return number(this.game.like_count);
-	}
 
 	get hasLiked() {
 		return this.userRating && this.userRating.rating === GameRating.RATING_LIKE;

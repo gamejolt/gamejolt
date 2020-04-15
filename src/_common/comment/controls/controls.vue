@@ -12,20 +12,16 @@
 				v-app-track-event="`comment-widget:vote-click`"
 			/>
 
-			<a @click="showLikers()" v-app-tooltip="$gettext(`View all people that liked this comment`)">
-				<span
-					v-if="comment.votes > 0"
-					class="blip"
-					:class="{
-						filled: hasUpvote,
-					}"
-				>
-					<span class="blip-caret"></span>
-					<span class="blip-count">{{ comment.votes | number }}</span>
-				</span>
+			<a
+				v-if="comment.votes > 0"
+				class="blip"
+				:class="{ 'blip-active': comment.user_vote, mobile: Screen.isXs }"
+				@click="showLikers()"
+				v-app-tooltip="$gettext(`View all people that liked this comment`)"
+			>
+				{{ comment.votes | fuzzynumber }}
 			</a>
-
-			&nbsp;
+			<span v-else class="blip-missing" />
 
 			<app-button
 				icon="thumbs-down"
@@ -39,10 +35,9 @@
 		</span>
 
 		<template v-if="showReply">
-			&nbsp;
-
 			<span v-app-auth-required>
 				<app-button
+					class="comment-controls-reply"
 					icon="reply"
 					circle
 					trans
@@ -66,3 +61,9 @@
 </template>
 
 <script lang="ts" src="./controls"></script>
+
+<style lang="stylus" scoped>
+.comment-controls
+	&-reply
+		margin-left: 8px
+</style>

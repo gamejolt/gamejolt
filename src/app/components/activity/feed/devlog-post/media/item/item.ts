@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { AppImgResponsive } from '../../../../../../../_common/img/responsive/responsive';
+import AppMediaItemBackdrop from '../../../../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../../../../_common/media-item/media-item-model';
 import {
 	AppResponsiveDimensions,
@@ -14,6 +15,7 @@ import { ActivityFeedView } from '../../../view';
 @Component({
 	components: {
 		AppImgResponsive,
+		AppMediaItemBackdrop,
 		AppVideo,
 		AppResponsiveDimensions,
 		AppEventItemMediaTags,
@@ -50,12 +52,6 @@ export default class AppActivityFeedDevlogPostMediaItem extends Vue {
 			Object.assign(style, {
 				maxWidth: this.mediaItem.width + 'px',
 				maxHeight: this.mediaItem.height + 'px',
-			});
-		}
-
-		if (this.mediaItem.avg_img_color && !this.mediaItem.img_has_transparency) {
-			Object.assign(style, {
-				backgroundColor: '#' + this.mediaItem.avg_img_color,
 			});
 		}
 
