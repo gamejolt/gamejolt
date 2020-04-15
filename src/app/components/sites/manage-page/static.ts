@@ -52,6 +52,7 @@ export default class AppSitesManagePageStatic extends Vue {
 
 			if (response.errors && response.errors.domain_in_use) {
 				Growls.error(this.$gettext('Domain is already in use in another site.'));
+				return;
 			}
 
 			if (response.site) {

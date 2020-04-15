@@ -34,7 +34,7 @@ export default class AppSitesManagePageTemplate extends Vue {
 
 		this.site.$activate().catch(e => {
 			if (e.errors && e.errors.domain_in_use) {
-				Growls.error('Domain is already in use in another site.');
+				Growls.error(this.$gettext('Domain is already in use in another site.'));
 			}
 		});
 	}
