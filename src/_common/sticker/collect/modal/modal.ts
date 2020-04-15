@@ -16,18 +16,22 @@ export default class AppStickerCollectModal extends BaseModal {
 	stickerCost = 10;
 
 	async mounted() {
-		const paylaod = await Api.sendRequest('/web/stickers/dash');
+		const payload = await Api.sendRequest('/web/stickers/dash');
 
-		this.balance = paylaod.balance;
-		this.stickerCost = paylaod.stickerCost;
+		this.balance = payload.balance;
+		this.stickerCost = payload.stickerCost;
 
 		this.isLoading = false;
 	}
 
-	onStickerPurchase() {
+	onCollected() {
 		this.balance -= this.stickerCost;
 		if (this.balance < this.stickerCost) {
-			this.modal.resolve();
+			this.modal.resolve(this.balance);
 		}
+	}
+
+	onClose() {
+		this.modal.resolve(this.balance);
 	}
 }

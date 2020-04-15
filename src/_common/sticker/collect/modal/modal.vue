@@ -1,13 +1,13 @@
 <template>
 	<app-modal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
+			<app-button @click="onClose">
 				<translate>Close</translate>
 			</app-button>
 		</div>
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Collect Sticker</translate>
+				<translate>Unlock Sticker</translate>
 			</h2>
 		</div>
 		<div class="modal-body">
@@ -16,12 +16,10 @@
 				v-else
 				:balance="balance"
 				:sticker-cost="stickerCost"
-				@sticker-purchase="onStickerPurchase"
+				@collect="onCollected"
 			/>
 		</div>
 	</app-modal>
 </template>
-
-<style lang="stylus" scoped></style>
 
 <script lang="ts" src="./modal"></script>

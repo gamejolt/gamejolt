@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Emit, Prop } from 'vue-property-decorator';
 import { sleep } from '../../../utils/utils';
 import { propRequired } from '../../../utils/vue';
 import { Api } from '../../api/api.service';
@@ -36,6 +36,9 @@ export default class AppStickerCollect extends Vue {
 	get canBuyStickerAmount() {
 		return Math.floor(this.balance / this.stickerCost);
 	}
+
+	@Emit('collect')
+	emitCollect() {}
 
 	async onBuySticker() {
 		this.isRevealing = true;
@@ -86,6 +89,6 @@ export default class AppStickerCollect extends Vue {
 		this.showCollectControls = false;
 		this.purchasedSticker = null;
 
-		this.$emit('sticker-purchase');
+		this.emitCollect();
 	}
 }

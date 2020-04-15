@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Prop, Watch } from 'vue-property-decorator';
+import { Emit, Prop, Watch } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../utils/vue';
 import { StickerPlacement } from './placement/placement.model';
 
@@ -14,6 +14,9 @@ export default class AppSticker extends Vue {
 	$refs!: {
 		sticker: HTMLDivElement;
 	};
+
+	@Emit('remove')
+	emitRemove() {}
 
 	async mounted() {
 		this.onUpdateStickerPlacement();
@@ -33,7 +36,7 @@ export default class AppSticker extends Vue {
 	onClickRemove() {
 		if (this.canRemove) {
 			this.isRemoved = true;
-			this.$emit('remove');
+			this.emitRemove();
 		}
 	}
 }
