@@ -90,9 +90,11 @@
 	margin-bottom: 1em
 
 .-byline
-	text-overflow()
+	display: flex
+	justify-content: space-between
 
 .-author
+	text-overflow()
 	margin-right: 2px
 
 	a
@@ -106,7 +108,7 @@
 		margin-right: 5px
 
 .-meta-slot
-	float: right
+	display: inline-flex
 	margin-left: 5px
 
 	>>> .tag
