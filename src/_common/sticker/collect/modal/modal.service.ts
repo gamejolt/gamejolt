@@ -9,7 +9,7 @@ export class StickerCollectModal {
 				asyncComponentLoader(
 					import(/* webpackChunkName: "StickerCollectModal" */ './modal.vue')
 				),
-			size: 'full',
+			size: 'lg',
 		});
 	}
 }
