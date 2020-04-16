@@ -39,14 +39,10 @@
 							</div>
 						</a>
 
-						<draggable style="display: inline-block" v-model="internalItems">
-							<app-form-post-media-item
-								class="-item"
-								v-for="item of internalItems"
-								:key="item.id"
-								:item="item"
-								@remove="emitRemove(item)"
-							/>
+						<draggable style="display: inline-flex" v-model="internalItems">
+							<div class="-item" v-for="item of internalItems" :key="item.id">
+								<app-form-post-media-item :item="item" @remove="emitRemove(item)" />
+							</div>
 						</draggable>
 					</div>
 				</app-scroll-scroller>
@@ -77,6 +73,12 @@
 	white-space: nowrap
 	// Only put padding once so that it only pads the bottom.
 	height: $-padding + $-height
+
+.-item
+	margin-right: 20px
+
+	&:last-child
+		margin-right: 0
 
 .-add
 	rounded-corners-lg()

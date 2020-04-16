@@ -19,22 +19,18 @@
 				</div>
 			</a>
 
-			<draggable style="display: inline-block" v-model="draggableItems">
-				<app-media-bar-item
-					class="-item"
-					v-for="item of draggableItems"
-					:key="item.id"
-					:item="item"
-					@click.native="open(item)"
-				>
-					<app-editable-overlay class="-item-hover hidden-xs" @click="open(item)">
-						<template slot="overlay">
-							<translate>click to edit</translate>
-							<br />
-							<translate>drag to sort</translate>
-						</template>
-					</app-editable-overlay>
-				</app-media-bar-item>
+			<draggable style="display: inline-flex" v-model="draggableItems">
+				<div v-for="item of draggableItems" :key="item.id">
+					<app-media-bar-item class="-item" :item="item" @click.native="open(item)">
+						<app-editable-overlay class="-item-hover hidden-xs" @click="open(item)">
+							<template slot="overlay">
+								<translate>click to edit</translate>
+								<br />
+								<translate>drag to sort</translate>
+							</template>
+						</app-editable-overlay>
+					</app-media-bar-item>
+				</div>
 			</draggable>
 		</div>
 	</app-scroll-scroller>
