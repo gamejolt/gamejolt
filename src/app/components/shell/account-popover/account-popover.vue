@@ -7,7 +7,10 @@
 	>
 		<a class="navbar-item navbar-avatar" :class="{ active: isShowing }">
 			<app-user-avatar-img :user="app.user" />
-			<div class="-new-tag anim-fade-enter anim-fade-leave"></div>
+			<div
+				v-if="shouldShowNew"
+				class="-new-tag -new-tag-account anim-fade-enter anim-fade-leave"
+			></div>
 		</a>
 
 		<template v-if="isShowing">
@@ -49,9 +52,7 @@
 						:to="{ name: 'dash.stickers.overview' }"
 						v-app-track-event="`account-popover:stickers`"
 					>
-						<span v-if="shouldShowNewStickers" class="tag tag-highlight">
-							<translate>NEW</translate>
-						</span>
+						<span v-if="shouldShowNewStickers" class="-new-tag -new-tag-list"></span>
 						<translate>Stickers</translate>
 					</router-link>
 					<a
@@ -215,10 +216,17 @@
 	width: 12px
 	height: 12px
 	display: block
-	position: absolute
-	top: 0
-	right: 0
 	change-bg('highlight')
+
+	&-account
+		position: absolute
+		top: 4px
+		right: 4px
+		display: block
+
+	&-list
+		display: inline-block
+		margin-right: 8px
 </style>
 
 <script lang="ts" src="./account-popover"></script>
