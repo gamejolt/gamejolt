@@ -25,6 +25,7 @@
 		</span>
 
 		<a
+			v-if="blip"
 			class="blip"
 			:class="{ 'blip-active': !!post.user_like, mobile: Screen.isXs }"
 			@click="showLikers()"
@@ -32,6 +33,7 @@
 		>
 			{{ blip | fuzzynumber }}
 		</a>
+		<span v-else class="blip-missing" />
 	</span>
 </template>
 
