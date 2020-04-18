@@ -237,5 +237,6 @@ export default class AppActivityFeed extends Vue {
 
 		await this.feed.loadNew(this.newCount);
 		this.emitLoadNew();
+		this.isNewButtonInview = false;
 	}
 }

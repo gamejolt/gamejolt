@@ -7,7 +7,7 @@
 	<div class="activity-feed" :key="feed.id">
 		<template v-if="newCount > 0 || feed.isLoadingNew">
 			<app-scroll-inview :margin="`-${Scroll.offsetTop}px`" @inview="onNewButtonInview">
-				<app-expand v-if="!feed.isLoadingNew" :when="isNewButtonInview" animate-initial>
+				<app-expand v-if="!feed.isLoadingNew" :when="isNewButtonInview">
 					<app-activity-feed-new-button @click="loadNew()">
 						<translate
 							:translate-n="newCount"
