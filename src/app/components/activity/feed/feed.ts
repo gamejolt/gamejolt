@@ -43,6 +43,8 @@ export default class AppActivityFeed extends Vue {
 	private scroll!: number;
 
 	readonly number = number;
+	readonly Scroll = Scroll;
+	isNewButtonInview = false;
 
 	/**
 	 * The distance from the bottom of the feed that we should start loading
@@ -144,6 +146,10 @@ export default class AppActivityFeed extends Vue {
 		return index === firstAd || (index - firstAd) % adGap === 0;
 	}
 
+	onNewButtonInview() {
+		this.isNewButtonInview = true;
+	}
+
 	onPostEdited(eventItem: EventItem) {
 		this.feed.update(eventItem);
 		this.emitEditPost(eventItem);
@@ -231,5 +237,7 @@ export default class AppActivityFeed extends Vue {
 
 		await this.feed.loadNew(this.newCount);
 		this.emitLoadNew();
+		// Make sure this is after the emitter so we remove the button before resetting
+		this.isNewButtonInview = false;
 	}
 }
