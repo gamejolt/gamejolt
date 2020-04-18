@@ -237,6 +237,7 @@ export default class AppActivityFeed extends Vue {
 
 		await this.feed.loadNew(this.newCount);
 		this.emitLoadNew();
+		// Make sure this is after the emitter so we remove the button before resetting
 		this.isNewButtonInview = false;
 	}
 }
