@@ -12,7 +12,7 @@ import AppAdWidgetInner from './inner.vue';
 export default class AppAdWidget extends Vue {
 	@Prop(propOptional(String, 'rectangle')) size!: AdSlotSize;
 	@Prop(propOptional(String, 'content')) placement!: AdSlotPlacement;
-	@Prop(propOptional(Object, () => {})) meta!: AdSlotMeta;
+	@Prop(propOptional(Object, () => ({}))) meta!: AdSlotMeta;
 
 	adSlot: AdSlot = null as any;
 
