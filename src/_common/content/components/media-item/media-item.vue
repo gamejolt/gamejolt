@@ -87,7 +87,6 @@
 	overflow: hidden
 	max-width: 100%
 	position: relative
-	transition: background-color 0.1s ease
 
 	// While the image is still loading, we show a dimmed background as a fallback for app-media-item-backdrop
 	.-backdrop
