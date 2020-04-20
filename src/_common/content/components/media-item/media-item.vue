@@ -14,16 +14,17 @@
 		>
 			<div
 				class="media-item-container"
-				:class="{
-					'media-item-container-placeholder': shouldShowPlaceholder,
-				}"
 				ref="container"
 				:style="{
 					width: containerWidth,
 					height: containerHeight,
 				}"
 			>
-				<app-media-item-backdrop :media-item="mediaItem" radius="lg">
+				<app-media-item-backdrop
+					:class="{ '-backdrop': shouldShowPlaceholder }"
+					:media-item="mediaItem"
+					radius="lg"
+				>
 					<template v-if="isHydrated">
 						<component
 							:is="hasLink && !isEditing ? 'a' : 'span'"
@@ -88,9 +89,9 @@
 	position: relative
 	transition: background-color 0.1s ease
 
-// While the image is still loading, we show a dimmed background to better indicate the size of the placeholder
-.media-item-container-placeholder
-	change-bg('bg-offset')
+	// While the image is still loading, we show a dimmed background as a fallback for app-media-item-backdrop
+	.-backdrop
+		change-bg('bg-offset')
 
 .link-overlay
 	position: absolute
