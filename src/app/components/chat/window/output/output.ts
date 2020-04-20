@@ -1,10 +1,10 @@
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
-import { date } from '../../../../../_common/filters/date';
-import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { EventSubscription } from '../../../../../system/event/event-topic';
+import { date } from '../../../../../_common/filters/date';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import { ChatClient } from '../../client';
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
@@ -30,7 +30,7 @@ export default class AppChatWindowOutput extends Vue {
 	chat!: ChatClient;
 
 	private shouldScroll = true;
-	private resize$: Subscription | undefined;
+	private resize$: EventSubscription | undefined;
 
 	async mounted() {
 		this.resize$ = Screen.resizeChanges.subscribe(() => this.autoscroll());

@@ -39,7 +39,6 @@
 						:partner-key="partnerKey"
 						:partner="partner"
 						@show-multiple-packages="scrollToMultiplePackages"
-						@show-package-payment="scrollToPackagePayment"
 					/>
 
 					<app-game-perms :game="game">
@@ -89,7 +88,10 @@
 				<div>
 					<translate>by</translate>
 					<router-link
-						:to="{ name: 'profile.overview', params: { username: game.developer.username } }"
+						:to="{
+							name: 'profile.overview',
+							params: { username: game.developer.username },
+						}"
 					>
 						{{ game.developer.display_name }}
 						<app-user-verified-tick :user="game.developer" />

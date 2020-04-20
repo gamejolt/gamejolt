@@ -1,6 +1,6 @@
+import { EventBus } from '../../system/event/event-bus.service';
 import { installVuePlugin } from '../../utils/vue';
 import { Environment } from '../environment/environment.service';
-import { EventBus } from '../event-bus/event-bus.service';
 import { Model } from '../model/model.service';
 import { AdSlot } from './ad-slot-info';
 import { AdAdapterBase } from './adapter-base';

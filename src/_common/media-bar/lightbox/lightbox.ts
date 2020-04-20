@@ -1,6 +1,6 @@
-import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { EventSubscription } from '../../../system/event/event-topic';
 import { Analytics } from '../../analytics/analytics.service';
 import { EscapeStack } from '../../escape-stack/escape-stack.service';
 import { Screen } from '../../screen/screen-service';
@@ -39,7 +39,7 @@ export default class AppMediaBarLightbox extends Vue {
 	isDragging = false;
 	waitingForFrame = false;
 
-	private resize$?: Subscription;
+	private resize$?: EventSubscription;
 	private escapeCallback?: Function;
 
 	mounted() {
