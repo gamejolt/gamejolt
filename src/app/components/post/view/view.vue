@@ -19,7 +19,11 @@
 									:max-width="item.width"
 								>
 									<app-event-item-media-tags :gif="item.is_animated" />
-									<app-media-item-backdrop :media-item="item" radius="lg">
+									<app-media-item-backdrop
+										class="-backdrop"
+										:media-item="item"
+										:radius="Screen.isXs ? null : 'lg'"
+									>
 										<app-img-responsive
 											class="-img"
 											v-if="!item.is_animated"
