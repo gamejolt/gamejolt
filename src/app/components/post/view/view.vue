@@ -136,13 +136,13 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-.-backdrop
-	change-bg('bg-offset')
-
 .-media-item
 	position: relative
 	margin-left: auto
 	margin-right: auto
+
+	.-backdrop
+		change-bg('bg-offset')
 
 .-img, .-video
 	width: 100%
