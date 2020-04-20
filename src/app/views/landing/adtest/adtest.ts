@@ -34,11 +34,5 @@ export default class RouteAdtest extends BaseRouteComponent {
 			const adapterConstructor = adapterMap[adapter];
 			this.$ad.overrideAdapter(new adapterConstructor());
 		}
-
-		if (this.q.adapter === 'proper') {
-			this.$ad.overrideAdapter(new AdProperAdapter());
-		} else if (this.q.adapter === 'playwire') {
-			this.$ad.overrideAdapter(new AdPlaywireAdapter());
-		}
 	}
 }
