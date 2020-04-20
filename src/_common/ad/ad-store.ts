@@ -22,7 +22,7 @@ export const AdsDisabledDev = GJ_BUILD_TYPE === 'development';
  * Whether or not we want to have click tracking enabled. It is not very
  * performant, so we should only turn on when needed.
  */
-const ClickTrackingEnabled = true;
+const ClickTrackingEnabled = false;
 
 export class AdSettingsContainer {
 	isPageDisabled = false;
