@@ -66,6 +66,8 @@ export default class AppActivityFeedDevlogPostMedia extends Vue {
 			await this.$nextTick();
 			this.$emit('content-bootstrapped');
 		}
+
+		this._updateSliderOffset();
 	}
 
 	private _updateSliderOffset(extraOffsetPx = 0) {
