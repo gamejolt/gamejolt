@@ -12,11 +12,7 @@
 			@change="onDimensionsChange"
 		>
 			<app-event-item-media-tags :gif="mediaItem.is_animated" />
-			<app-media-item-backdrop
-				:class="{ '-backdrop': inline }"
-				:media-item="mediaItem"
-				:radius="itemRadius"
-			>
+			<app-media-item-backdrop class="-backdrop" :media-item="mediaItem" :radius="itemRadius">
 				<app-img-responsive
 					v-if="!isPostHydrated || !mediaItem.is_animated"
 					class="-img"
