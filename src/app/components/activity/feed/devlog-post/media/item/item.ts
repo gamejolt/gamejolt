@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { Component, Emit, Prop } from 'vue-property-decorator';
 import { AppImgResponsive } from '../../../../../../../_common/img/responsive/responsive';
 import AppMediaItemBackdrop from '../../../../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../../../../_common/media-item/media-item-model';
@@ -10,7 +10,6 @@ import {
 import { Screen } from '../../../../../../../_common/screen/screen-service';
 import AppVideo from '../../../../../../../_common/video/video.vue';
 import AppEventItemMediaTags from '../../../../../event-item/media-tags/media-tags.vue';
-import { ActivityFeedView } from '../../../view';
 
 @Component({
 	components: {
@@ -22,9 +21,6 @@ import { ActivityFeedView } from '../../../view';
 	},
 })
 export default class AppActivityFeedDevlogPostMediaItem extends Vue {
-	@Inject()
-	feed!: ActivityFeedView;
-
 	@Prop(MediaItem)
 	mediaItem!: MediaItem;
 
