@@ -2,11 +2,11 @@ import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import { MediaItem } from '../../../../../../_common/media-item/media-item-model';
+import AppMediaItemPost from '../../../../../../_common/media-item/post/post.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppEventItemMediaIndicator from '../../../../event-item/media-indicator/media-indicator.vue';
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedView } from '../../view';
-import AppActivityFeedDevlogPostMediaItem from './item/item.vue';
 
 if (!GJ_IS_SSR) {
 	const VueTouch = require('vue-touch');
@@ -15,7 +15,7 @@ if (!GJ_IS_SSR) {
 
 @Component({
 	components: {
-		AppActivityFeedDevlogPostMediaItem,
+		AppMediaItemPost,
 		AppEventItemMediaIndicator,
 	},
 })

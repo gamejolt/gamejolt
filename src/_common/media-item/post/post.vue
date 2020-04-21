@@ -78,4 +78,4 @@
 		width: 100%
 </style>
 
-<script lang="ts" src="./item"></script>
+<script lang="ts" src="./post"></script>
