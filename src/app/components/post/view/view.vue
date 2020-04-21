@@ -108,18 +108,6 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-.-media-item
-	position: relative
-	margin-left: auto
-	margin-right: auto
-
-	.-backdrop
-		change-bg('bg-offset')
-
-.-img, .-video
-	width: 100%
-	height: 100%
-
 @media $media-sm-up
 	.post-view >>>
 		iframe
