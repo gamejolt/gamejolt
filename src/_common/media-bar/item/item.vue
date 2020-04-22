@@ -1,6 +1,6 @@
 <template>
 	<div class="media-bar-item" :style="{ width, height }">
-		<a class="-wrapper">
+		<a class="-wrapper" :style="{ height }">
 			<slot />
 			<app-media-item-backdrop class="-backdrop" :media-item="item.media_item" radius="lg">
 				<app-img-responsive

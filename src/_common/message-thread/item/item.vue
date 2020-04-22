@@ -16,11 +16,6 @@
 
 				<div class="timeline-list-item-details">
 					<div class="-meta clearfix" v-if="user">
-						<span class="-meta-slot">
-							<slot name="tags" />
-							<slot name="meta" />
-						</span>
-
 						<div class="-byline">
 							<span class="-author">
 								<router-link
@@ -54,6 +49,11 @@
 									<span class="text-muted">@{{ repliedTo.username }}</span>
 								</span>
 							</template>
+
+							<span class="-meta-slot">
+								<slot name="tags" />
+								<slot name="meta" />
+							</span>
 
 							<slot name="authors" />
 						</div>
@@ -90,9 +90,11 @@
 	margin-bottom: 1em
 
 .-byline
-	text-overflow()
+	display: flex
+	justify-content: space-between
 
 .-author
+	text-overflow()
 	margin-right: 2px
 
 	a
@@ -106,7 +108,7 @@
 		margin-right: 5px
 
 .-meta-slot
-	float: right
+	display: inline-flex
 	margin-left: 5px
 
 	>>> .tag

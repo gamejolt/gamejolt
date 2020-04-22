@@ -1,6 +1,6 @@
-import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import { EventSubscription } from '../../../../system/event/event-topic';
 import { findRequiredVueParent } from '../../../../utils/vue';
 import { AppImgResponsive } from '../../../img/responsive/responsive';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/backdrop.vue';
@@ -33,7 +33,7 @@ export default class AppMediaBarLightboxItem extends Vue {
 	maxWidth = 0;
 	maxHeight = 0;
 
-	private resize$: Subscription | undefined;
+	private resize$: EventSubscription | undefined;
 
 	$refs!: {
 		caption: HTMLDivElement;

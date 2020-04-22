@@ -40,6 +40,10 @@ export default class AppAdWidgetInner extends Vue {
 		return { resource, resourceId };
 	}
 
+	get adapter() {
+		return this.$ad.chooseAdapterForSlot(this.adSlot);
+	}
+
 	mounted() {
 		this.$ad.addAd(this);
 	}
