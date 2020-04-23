@@ -42,7 +42,7 @@
 					</div>
 					<div class="col-sm-6">
 						<p class="footer-copyright">
-							&copy; {{ curDate | date('YYYY') }} Lucent Web Creative, LLC
+							&copy; {{ curDate | date('yyyy') }} Lucent Web Creative, LLC
 						</p>
 					</div>
 				</div>
