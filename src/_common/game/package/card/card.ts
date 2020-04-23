@@ -4,7 +4,6 @@ import { Analytics } from '../../../analytics/analytics.service';
 import AppCard from '../../../card/card.vue';
 import { Clipboard } from '../../../clipboard/clipboard-service';
 import { AppCountdown } from '../../../countdown/countdown';
-import { EventBus, EventBusDeregister } from '../../../event-bus/event-bus.service';
 import AppExpand from '../../../expand/expand.vue';
 import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
 import { currency } from '../../../filters/currency';
@@ -87,8 +86,6 @@ export default class AppGamePackageCard extends Vue {
 		steam: 'steam',
 	};
 
-	private showPaymentOptionsDeregister?: EventBusDeregister;
-
 	readonly AppGamePackageCard = AppGamePackageCard;
 
 	get metaComponent() {
@@ -141,28 +138,6 @@ export default class AppGamePackageCard extends Vue {
 					100
 				).toFixed(0);
 			}
-		}
-
-		// Event to be able to open up the payment form.
-		this.showPaymentOptionsDeregister = EventBus.on(
-			'GamePackageCard.showPaymentOptions',
-			(pkg: GamePackage) => {
-				// Ensure that the payment well opens with the correct build
-				// for "skip paying".
-				if (this.package.id === pkg.id) {
-					this.showPayment(
-						this.card.downloadableBuild ? this.card.downloadableBuild : null,
-						false
-					);
-				}
-			}
-		);
-	}
-
-	destroyed() {
-		if (this.showPaymentOptionsDeregister) {
-			this.showPaymentOptionsDeregister();
-			this.showPaymentOptionsDeregister = undefined;
 		}
 	}
 

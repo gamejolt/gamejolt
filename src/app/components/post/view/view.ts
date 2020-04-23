@@ -7,6 +7,7 @@ import AppContentViewer from '../../../../_common/content/content-viewer/content
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
+import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
 import { AppResponsiveDimensions } from '../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
@@ -30,6 +31,7 @@ import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 		AppTimeAgo,
 		AppResponsiveDimensions,
 		AppImgResponsive,
+		AppMediaItemBackdrop,
 		AppVideo,
 		AppVideoEmbed,
 		AppSketchfabEmbed,
@@ -111,5 +113,9 @@ export default class AppPostView extends Vue {
 		if (visible) {
 			Scroll.to(this.$refs.stickerTarget.$el as HTMLElement, { preventDirections: ['down'] });
 		}
+	}
+
+	onAllStickersHidden() {
+		this.stickersVisible = false;
 	}
 }

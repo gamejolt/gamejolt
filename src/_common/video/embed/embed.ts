@@ -1,6 +1,6 @@
-import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import { EventSubscription } from '../../../system/event/event-topic';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
 
@@ -18,7 +18,7 @@ export default class AppVideoEmbed extends Vue {
 	width: number | 'auto' = 'auto';
 	height: number | 'auto' = 'auto';
 
-	private resize$: Subscription | undefined;
+	private resize$: EventSubscription | undefined;
 
 	mounted() {
 		this.recalculateDimensions();
@@ -60,9 +60,9 @@ export default class AppVideoEmbed extends Vue {
 	async recalculateDimensions() {
 		await this.$nextTick();
 
-		this.width = Ruler.width(this.$el.getElementsByClassName(
-			'video-embed-inner'
-		)[0] as HTMLElement);
+		this.width = Ruler.width(
+			this.$el.getElementsByClassName('video-embed-inner')[0] as HTMLElement
+		);
 
 		if (this.maxVideoWidth) {
 			this.width = Math.min(this.maxVideoWidth, this.width);

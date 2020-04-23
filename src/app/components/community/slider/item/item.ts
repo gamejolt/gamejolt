@@ -3,11 +3,13 @@ import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
+import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
 import { Store } from '../../../../store/index';
 
 @Component({
 	components: {
 		AppCommunityThumbnailImg,
+		AppMediaItemBackdrop,
 	},
 })
 export default class AppCommunitySliderItem extends Vue {

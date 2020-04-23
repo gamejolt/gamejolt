@@ -4,6 +4,13 @@
 		<app-media-bar v-if="game.media_count" :media-items="mediaItems" />
 
 		<section class="section section-thin fill-backdrop">
+			<app-ad-widget
+				class="-leaderboard-ad"
+				v-if="shouldShowAds && !Screen.isMobile"
+				size="leaderboard"
+				placement="top"
+			/>
+
 			<app-page-container xl>
 				<div slot="left">
 					<app-discover-games-view-overview-statbar />
@@ -247,6 +254,11 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
+
+.-leaderboard-ad
+	padding-bottom: 8px
+	margin-bottom: $line-height-computed
+	border-bottom: $border-width-small solid var(--theme-bg-subtle)
 
 .-recommended-ad
 	width: 300px

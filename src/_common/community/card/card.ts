@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { number } from '../../filters/number';
+import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
 import { AppStore } from '../../store/app-store';
 import { AppTheme } from '../../theme/theme';
 import { Community } from '../community.model';
@@ -15,6 +16,7 @@ import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 		AppTheme,
 		AppCommunityVerifiedTick,
 		AppCommunityJoinWidget,
+		AppMediaItemBackdrop,
 	},
 })
 export default class AppCommunityCard extends Vue {

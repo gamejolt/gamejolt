@@ -176,12 +176,12 @@ export default class AppActivityFeedEventItem extends Vue {
 	}
 
 	get shouldShowFollow() {
-		if (this.isBlocked || this.post?.user.blocked_you) {
+		// Don't show follow for game posts. Only for user posts.
+		if (!this.feed.shouldShowFollow || !this.post || this.post.game) {
 			return false;
 		}
 
-		// Don't show follow for game posts. Only for user posts.
-		if (!this.feed.shouldShowFollow || !this.post || this.post.game) {
+		if (this.isBlocked || this.post.user.blocked_you) {
 			return false;
 		}
 
@@ -386,5 +386,9 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	getChannelTitle(postCommunity: FiresidePostCommunity) {
 		return postCommunity.channel ? postCommunity.channel.title : '';
+	}
+
+	onAllStickersHidden() {
+		this.stickersVisible = false;
 	}
 }

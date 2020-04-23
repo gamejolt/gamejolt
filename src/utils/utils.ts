@@ -33,6 +33,33 @@ export function sleep(ms: number) {
 	});
 }
 
+// A function type, because Function is actually an interface and not a true type.
+type FunctionType = (...args: any) => any;
+
+// Changes the return type of a given function.
+type ChangeReturnType<T extends FunctionType, U> = (...args: Parameters<T>) => U;
+
+/**
+ * Debounces `fn` by `delayMs`.
+ */
+export function debounce<T extends FunctionType>(
+	fn: T,
+	delayMs: number
+): ChangeReturnType<T, void> {
+	let timeout: NodeJS.Timer | null = null;
+
+	return function(this: unknown, ...args: any) {
+		if (timeout) {
+			clearTimeout(timeout);
+		}
+
+		timeout = setTimeout(() => {
+			timeout = null;
+			fn.apply(this, args);
+		}, delayMs);
+	};
+}
+
 // For exhaustive switch matching: https://www.typescriptlang.org/docs/handbook/advanced-types.html
 export function assertNever(x: never): never {
 	throw new Error('Unexpected object: ' + x);

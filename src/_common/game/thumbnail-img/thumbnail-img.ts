@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { ContentFocus } from '../../content-focus/content-focus.service';
 import { AppImgResponsive } from '../../img/responsive/responsive';
+import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
 import { Screen } from '../../screen/screen-service';
 import AppVideo from '../../video/video.vue';
 import { Game } from '../game.model';
@@ -9,6 +10,7 @@ import { Game } from '../game.model';
 @Component({
 	components: {
 		AppImgResponsive,
+		AppMediaItemBackdrop,
 		AppVideo,
 	},
 })

@@ -4,12 +4,19 @@
 
 		<div class="container">
 			<div v-if="post.hasVideo" class="full-bleed-xs">
-				<app-video-embed video-provider="youtube" :video-id="post.videos[0].video_id" autoplay />
+				<app-video-embed
+					video-provider="youtube"
+					:video-id="post.videos[0].video_id"
+					autoplay
+				/>
 				<br />
 			</div>
 
 			<div class="row">
-				<div class="col-sm-10 col-md-8 col-lg-7" :class="{ 'col-centered': Screen.isMobile }">
+				<div
+					class="col-sm-10 col-md-8 col-lg-7"
+					:class="{ 'col-centered': Screen.isMobile }"
+				>
 					<div class="post-view">
 						<div v-if="post.hasMedia" class="full-bleed-xs">
 							<div v-for="item of post.media" :key="item.id">
@@ -19,22 +26,23 @@
 									:max-width="item.width"
 								>
 									<app-event-item-media-tags :gif="item.is_animated" />
+									<app-media-item-backdrop :media-item="item" radius="lg">
+										<app-img-responsive
+											class="-img"
+											v-if="!item.is_animated"
+											:src="item.mediaserver_url"
+											alt=""
+										/>
 
-									<app-img-responsive
-										class="-img"
-										v-if="!item.is_animated"
-										:src="item.mediaserver_url"
-										alt=""
-									/>
-
-									<app-video
-										v-else
-										class="-video"
-										:poster="item.mediaserver_url"
-										:webm="item.mediaserver_url_webm"
-										:mp4="item.mediaserver_url_mp4"
-										show-loading
-									/>
+										<app-video
+											v-else
+											class="-video"
+											:poster="item.mediaserver_url"
+											:webm="item.mediaserver_url_webm"
+											:mp4="item.mediaserver_url_mp4"
+											show-loading
+										/>
+									</app-media-item-backdrop>
 								</app-responsive-dimensions>
 
 								<br />
@@ -42,7 +50,10 @@
 						</div>
 
 						<div v-if="post.hasSketchfab" class="full-bleed-xs">
-							<app-sketchfab-embed :sketchfab-id="post.sketchfabs[0].sketchfab_id" autoplay />
+							<app-sketchfab-embed
+								:sketchfab-id="post.sketchfabs[0].sketchfab_id"
+								autoplay
+							/>
 						</div>
 
 						<div class="tiny text-muted">
@@ -54,7 +65,11 @@
 								</span>
 								<app-time-ago :date="post.scheduled_for" strict without-suffix />
 							</template>
-							<span v-else-if="post.isDraft" class="tag" style="vertical-align: middle">
+							<span
+								v-else-if="post.isDraft"
+								class="tag"
+								style="vertical-align: middle"
+							>
 								<translate>Draft</translate>
 							</span>
 						</div>
@@ -63,6 +78,7 @@
 							:stickers="post.stickers"
 							:show-stickers="stickersVisible"
 							ref="stickerTarget"
+							@hide-all="onAllStickersHidden"
 						>
 							<app-content-viewer :source="post.lead_content" />
 						</app-sticker-target>
@@ -98,8 +114,9 @@
 								<app-jolticon icon="notice" notice />
 								<span
 									><translate
-										>You can't publish this post to the selected community channel because you don't
-										have permissions to post into that specific channel. Please select a different
+										>You can't publish this post to the selected community
+										channel because you don't have permissions to post into that
+										specific channel. Please select a different
 										channel.</translate
 									></span
 								>
@@ -131,8 +148,10 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-.-media-item
+.-backdrop
 	change-bg('bg-offset')
+
+.-media-item
 	position: relative
 	margin-left: auto
 	margin-right: auto
@@ -143,7 +162,7 @@
 
 @media $media-sm-up
 	.post-view >>>
-		.-media-item, img, video, iframe
+		iframe
 			rounded-corners-lg()
 
 >>> .mention-avatar-img
