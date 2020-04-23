@@ -33,7 +33,7 @@
 						>
 							<app-img-responsive
 								v-if="shouldUseMediaserver"
-								class="img-responsive content-image"
+								class="content-image"
 								:src="mediaItem.mediaserver_url"
 								:alt="title"
 								:title="title"
