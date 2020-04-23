@@ -1,60 +1,69 @@
 <template>
 	<div>
-		<section class="section">
-			<div class="container -collect-page">
-				<div class="-reveal">
-					<div v-if="!canReveal">
-						<app-sticker-card-hidden
-							v-app-tooltip="$gettext(`Not enough progress to unlock sticker`)"
-						/>
-					</div>
-					<div v-else-if="isRevealing" class="-card-revealing-outer">
-						<app-sticker-card-hidden class="-card-revealing" />
-					</div>
-					<template v-else-if="isRevealed && purchasedSticker">
-						<div class="-card-revealed-container">
-							<app-sticker-card class="-card-revealed" :sticker="purchasedSticker" label="+1" />
-							<div
-								v-if="purchasedSticker.rarity > 0"
-								class="-card-revealed-effect"
-								:class="{
-									'-card-revealed-effect-uncommon': purchasedSticker.rarity === 1,
-									'-card-revealed-effect-rare': purchasedSticker.rarity === 2,
-									'-card-revealed-effect-epic': purchasedSticker.rarity === 3,
-								}"
-							/>
-						</div>
-						<div v-if="showCollectControls" class="-revealed-controls anim-fade-in">
-							<app-button primary @click="onClickCollect">
-								<translate>Collect</translate>
-							</app-button>
-						</div>
-					</template>
-					<template v-else>
-						<div>
-							<app-sticker-card-hidden @click.native="onBuySticker" class="-card-hidden" />
-						</div>
-						<hr class="underbar underbar-center" />
-						<p>
-							<translate>What's it gonna be? The suspense is almost too much!</translate>
-						</p>
-					</template>
+		<div class="-reveal">
+			<div v-if="!canReveal">
+				<app-sticker-card-hidden
+					v-app-tooltip="$gettext(`Not enough progress to unlock sticker`)"
+				/>
+			</div>
+			<div v-else-if="isRevealing" class="-card-revealing-outer">
+				<app-sticker-card-hidden class="-card-revealing" />
+			</div>
+			<template v-else-if="isRevealed && purchasedSticker">
+				<div class="-card-revealed-container">
+					<app-sticker-card
+						class="-card-revealed"
+						:sticker="purchasedSticker"
+						label="+1"
+					/>
+					<div
+						v-if="purchasedSticker.rarity > 0"
+						class="-card-revealed-effect"
+						:class="{
+							'-card-revealed-effect-uncommon': purchasedSticker.rarity === 1,
+							'-card-revealed-effect-rare': purchasedSticker.rarity === 2,
+							'-card-revealed-effect-epic': purchasedSticker.rarity === 3,
+						}"
+					/>
 				</div>
-
-				<div v-if="!canReveal" class="text-center">
-					<div class="page-cut"></div>
-					<p>
-						<translate>
-							You do not have enough points to unlock more stickers. Use Game Jolt, like some posts,
-							you might get some more.
-						</translate>
-					</p>
-					<app-button :to="{ name: 'dash.stickers.overview' }">
-						<translate>View Collection</translate>
+				<div v-if="showCollectControls" class="-revealed-controls anim-fade-in">
+					<app-button primary @click="onClickCollect">
+						<translate>Collect</translate>
 					</app-button>
 				</div>
-			</div>
-		</section>
+			</template>
+			<template v-else>
+				<div>
+					<app-sticker-card-hidden @click.native="onBuySticker" class="-card-hidden" />
+				</div>
+				<hr class="underbar underbar-center" />
+				<div class="-collect-flavor-text">
+					<translate>What's it gonna be? The suspense is almost too much!</translate>
+				</div>
+				<small class="text-muted -sticker-amount">
+					<translate
+						:translate-n="canBuyStickerAmount"
+						:translate-params="{ count: canBuyStickerAmount }"
+						translate-plural="You can unlock %{ count } more stickers."
+					>
+						You can unlock %{ count } more sticker.
+					</translate>
+				</small>
+			</template>
+		</div>
+
+		<div v-if="!canReveal" class="text-center">
+			<div class="page-cut"></div>
+			<p>
+				<translate>
+					You do not have enough points to unlock more stickers. Use Game Jolt, like some
+					posts, you might get some more.
+				</translate>
+			</p>
+			<app-button :to="{ name: 'dash.stickers.overview' }">
+				<translate>View Collection</translate>
+			</app-button>
+		</div>
 	</div>
 </template>
 
@@ -62,17 +71,22 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-.-collect-page
-	min-height: 600px
+.-sticker-amount
+	margin-top: 4px
+	display: block
+	text-align: center
+
+.-collect-flavor-text
+	text-align: center
 
 .-reveal
 	display: flex
 	justify-content: center
 	align-items: center
 	flex-direction: column
+	position: relative
 	padding-top: 100px
 	padding-bottom: 120px
-	position: relative
 
 .-card-hidden
 	cursor: pointer

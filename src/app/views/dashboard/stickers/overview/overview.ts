@@ -6,6 +6,7 @@ import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppStickerCard from '../../../../../_common/sticker/card/card.vue';
+import { StickerCollectModal } from '../../../../../_common/sticker/collect/modal/modal.service';
 import { Sticker } from '../../../../../_common/sticker/sticker.model';
 import { InitPayload, StickerCount } from '../stickers';
 
@@ -62,5 +63,10 @@ export default class RouteDashStickersOverview extends BaseRouteComponent {
 			this.stickerCollection.push(stickerCount);
 		}
 		this.stickerCollection.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
+	}
+
+	async onCollect() {
+		const remainingBalance = await StickerCollectModal.show();
+		this.balance = remainingBalance ?? 0;
 	}
 }

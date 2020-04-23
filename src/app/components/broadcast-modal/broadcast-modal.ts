@@ -53,4 +53,8 @@ export default class AppBroadcastModal extends BaseModal {
 			this.$refs.modal.scrollTo(0);
 		}
 	}
+
+	onAllStickersHidden() {
+		this.stickersVisible = false;
+	}
 }

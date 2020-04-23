@@ -18,7 +18,7 @@
 							</translate>
 						</p>
 						<p>
-							<app-button :to="{ name: 'dash.stickers.collect' }">
+							<app-button @click="onCollect">
 								<translate>Unlock a Sticker</translate>
 							</app-button>
 						</p>
