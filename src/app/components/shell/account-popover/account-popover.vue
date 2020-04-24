@@ -52,8 +52,8 @@
 						:to="{ name: 'dash.stickers.overview' }"
 						v-app-track-event="`account-popover:stickers`"
 					>
-						<span v-if="shouldShowNewStickers" class="-new-tag -new-tag-list"></span>
 						<translate>Stickers</translate>
+						<span v-if="shouldShowNewStickers" class="-new-tag -new-tag-list"></span>
 					</router-link>
 					<a
 						class="list-group-item offline-disable"
@@ -220,13 +220,16 @@
 
 	&-account
 		position: absolute
-		top: 4px
-		right: 4px
+		bottom: 8px
+		right: 8px
 		display: block
+		border-color: var(--theme-darkest)
+		border-width: 2px
+		border-style: solid
 
 	&-list
 		display: inline-block
-		margin-right: 8px
+		margin-left: 8px
 </style>
 
 <script lang="ts" src="./account-popover"></script>
