@@ -1,7 +1,7 @@
-import { Model } from '../../model/model.service';
-import { MediaItem } from '../../media-item/media-item-model';
-import { Game } from '../game.model';
 import { Api } from '../../api/api.service';
+import { MediaItem } from '../../media-item/media-item-model';
+import { Model } from '../../model/model.service';
+import { Game } from '../game.model';
 
 export class GameScreenshot extends Model {
 	media_type!: 'image';
@@ -11,9 +11,15 @@ export class GameScreenshot extends Model {
 	posted_on!: number;
 	status!: number;
 	media_item!: MediaItem;
-	img_thumbnail!: string;
-	img_thumbnail_med!: string;
-	img_thumbnail_large!: string;
+
+	// Needed for lightbox and other components that are used together with GameVideo.
+	get img_thumbnail() {
+		return this.media_item.mediaserver_url;
+	}
+
+	set img_thumbnail(img: string) {
+		this.media_item.mediaserver_url = img;
+	}
 
 	constructor(data: any = {}) {
 		super(data);
