@@ -3,9 +3,11 @@ import { Component, Emit, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Store } from '../../../../../auth/store/index';
 import { AppAuthRequired } from '../../../../auth/auth-required-directive';
+import { fuzzynumber } from '../../../../filters/fuzzynumber';
 import { number } from '../../../../filters/number';
 import { Growls } from '../../../../growls/growls.service';
 import { LikersModal } from '../../../../likers/modal.service';
+import { Screen } from '../../../../screen/screen-service';
 import { handleNewStickerNotification } from '../../../../sticker/sticker.model';
 import { AppTooltip } from '../../../../tooltip/tooltip';
 import AppUserFollowWidget from '../../../../user/follow/widget.vue';
@@ -19,6 +21,9 @@ import { FiresidePostLike } from '../like-model';
 	directives: {
 		AppAuthRequired,
 		AppTooltip,
+	},
+	filters: {
+		fuzzynumber,
 	},
 })
 export default class AppFiresidePostLikeWidget extends Vue {
@@ -38,6 +43,8 @@ export default class AppFiresidePostLikeWidget extends Vue {
 	app!: Store['app'];
 
 	showLikeAnim = false;
+	showDislikeAnim = false;
+	readonly Screen = Screen;
 
 	@Emit('change')
 	emitChange(_value: boolean) {}
@@ -67,6 +74,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 			this.post.user_like = newLike;
 			++this.post.like_count;
 			this.showLikeAnim = true;
+			this.showDislikeAnim = false;
 
 			try {
 				const payload = await newLike.$save();
@@ -74,8 +82,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 					handleNewStickerNotification(
 						this.$gettext(`You can unlock a new sticker!`),
 						this.$gettext(`Click this message to unlock right away.`),
-						this.$store,
-						this.$router
+						this.$store
 					);
 				}
 			} catch (e) {
@@ -89,6 +96,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 			this.post.user_like = null;
 			--this.post.like_count;
 			this.showLikeAnim = false;
+			this.showDislikeAnim = true;
 
 			try {
 				await currentLike.$remove();

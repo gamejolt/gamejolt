@@ -1,6 +1,7 @@
 import ResizeObserver from 'resize-observer-polyfill';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { AppImgResponsive } from '../../../img/responsive/responsive';
 import AppLoading from '../../../loading/loading.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../media-item/media-item-model';
@@ -13,6 +14,7 @@ import AppBaseContentComponent from '../base/base-content-component.vue';
 	components: {
 		AppBaseContentComponent,
 		AppLoading,
+		AppImgResponsive,
 		AppMediaItemBackdrop,
 	},
 	directives: {
@@ -130,6 +132,12 @@ export default class AppContentMediaItem extends Vue {
 	get shouldShowPlaceholder() {
 		// Never show the placeholder for SSR, because the events to clear it are not fired.
 		return !this.imageLoaded && !GJ_IS_SSR;
+	}
+
+	get shouldUseMediaserver() {
+		// For animated media items (gifs):
+		// Always return the direct url because gifs do not get returned by mediaserver.
+		return !this.mediaItem?.is_animated && !!this.mediaItem?.mediaserver_url;
 	}
 
 	created() {

@@ -7,12 +7,10 @@
 	>
 		<a class="navbar-item navbar-avatar" :class="{ active: isShowing }">
 			<app-user-avatar-img :user="app.user" />
-			<span
+			<div
 				v-if="shouldShowNew"
-				class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
-			>
-				<translate>NEW</translate>
-			</span>
+				class="-new-tag -new-tag-account anim-fade-enter anim-fade-leave"
+			></div>
 		</a>
 
 		<template v-if="isShowing">
@@ -42,7 +40,9 @@
 					</router-link>
 					<router-link
 						class="list-group-item offline-disable"
-						:to="{ name: Screen.isXs ? 'dash.account-mobile-nav' : 'dash.account.edit' }"
+						:to="{
+							name: Screen.isXs ? 'dash.account-mobile-nav' : 'dash.account.edit',
+						}"
 						v-app-track-event="`account-popover:account`"
 					>
 						<translate>Edit Account</translate>
@@ -52,9 +52,7 @@
 						:to="{ name: 'dash.stickers.overview' }"
 						v-app-track-event="`account-popover:stickers`"
 					>
-						<span v-if="shouldShowNewStickers" class="tag tag-highlight">
-							<translate>NEW</translate>
-						</span>
+						<span v-if="shouldShowNewStickers" class="-new-tag -new-tag-list"></span>
 						<translate>Stickers</translate>
 					</router-link>
 					<a
@@ -212,6 +210,23 @@
 
 	&-currency
 		theme-prop('color', 'highlight')
+
+.-new-tag
+	border-radius: 50%
+	width: 12px
+	height: 12px
+	display: block
+	change-bg('highlight')
+
+	&-account
+		position: absolute
+		top: 4px
+		right: 4px
+		display: block
+
+	&-list
+		display: inline-block
+		margin-right: 8px
 </style>
 
 <script lang="ts" src="./account-popover"></script>

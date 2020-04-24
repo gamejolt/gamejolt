@@ -7,6 +7,7 @@
 				:class="{ '-sticker-animate': !noAnimateIn }"
 				:style="{ 'animation-delay': getStickerAnimationDelay(sticker) }"
 				:sticker="sticker"
+				@remove="onStickerRemoved"
 			/>
 		</template>
 		<slot />

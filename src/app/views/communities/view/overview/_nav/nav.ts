@@ -4,6 +4,7 @@ import { State } from 'vuex-class';
 import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../../../../../_common/community/channel/channel-permissions';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
+import { Screen } from '../../../../../../_common/screen/screen-service';
 import { AppStore } from '../../../../../../_common/store/app-store';
 import AppCommunityChannelCard from '../../../../../components/community/channel/card/card.vue';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
@@ -31,6 +32,8 @@ export default class AppCommunitiesViewOverviewNav extends Vue {
 	@State
 	app!: AppStore;
 
+	readonly Screen = Screen;
+
 	get communityState() {
 		return this.communityStates.getCommunityState(this.community);
 	}
@@ -46,7 +49,7 @@ export default class AppCommunitiesViewOverviewNav extends Vue {
 		if (title === 'featured') {
 			return this.communityState.unreadFeatureCount > 0;
 		} else if (title === 'all') {
-			return this.communityState.unreadChannels.length > 0;
+			return false; // Never show "unread" status on the All Posts channel.
 		}
 
 		const channel = this.community.channels!.find(i => i.title === title);
