@@ -25,35 +25,17 @@
 			/>
 
 			<app-card-list
-				:items="community.channels"
+				:items="communityPresetChannels"
 				:active-item="activeItem"
 				@activate="activeItem = $event"
 			>
-				<app-card-list-item :id="`channel-container-featured`" :item="community">
-					<div class="row">
-						<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
-							<img
-								v-if="community.featured_background"
-								class="-channel-img-preview"
-								:src="community.featured_background.img_url"
-							/>
-
-							<br class="visible-xs" />
-						</div>
-						<div class="col-xs-12 col-sm-10">
-							<div class="card-title">
-								<h5><translate>featured</translate></h5>
-							</div>
-						</div>
-					</div>
-					<template slot="body">
-						<form-community-channel-edit-featured
-							:model="community"
-							@save="featuredBackgroundEdited"
-							@clear="featuredBackgroundEdited"
-						/>
-					</template>
-				</app-card-list-item>
+				<app-community-channel-preset-list-item
+					v-for="presetType of communityPresetChannels"
+					:key="presetType"
+					:community="community"
+					:preset-type="presetType"
+					@edit="presetBackgroundEdited"
+				/>
 			</app-card-list>
 
 			<app-card-list
@@ -99,8 +81,8 @@
 							<form-community-channel-edit
 								:community="community"
 								:model="channel"
-								@save="channelEdited"
-								@clear="channelEdited"
+								@save="onChannelEdited"
+								@clear="onChannelEdited"
 							/>
 						</template>
 					</app-card-list-item>
@@ -118,7 +100,6 @@
 	width: 68px
 	height: 25px
 	rounded-corners()
-
 </style>
 
 <script lang="ts" src="./channels"></script>

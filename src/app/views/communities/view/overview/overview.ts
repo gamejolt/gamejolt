@@ -4,7 +4,10 @@ import { State } from 'vuex-class';
 import { Api } from '../../../../../_common/api/api.service';
 import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../../../../_common/community/channel/channel-permissions';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../../_common/community/community.model';
+import {
+	Community,
+	CommunityPresetChannelType,
+} from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../../_common/expand/expand.vue';
@@ -30,7 +33,11 @@ import AppCommunitiesViewOverviewNavEdit from './_nav/edit/edit.vue';
 import AppCommunitiesViewOverviewNav from './_nav/nav.vue';
 
 function getChannel(route: Route) {
-	return route.params.channel || 'featured' || 'all';
+	return (
+		route.params.channel ||
+		CommunityPresetChannelType.FEATURED ||
+		CommunityPresetChannelType.ALL
+	);
 }
 
 function getSort(route: Route) {
@@ -42,7 +49,7 @@ function getFetchUrl(route: Route) {
 	const sort = getSort(route);
 	const channels: string[] = [sort];
 
-	if (channel !== 'all') {
+	if (channel !== CommunityPresetChannelType.ALL) {
 		channels.push(channel);
 	}
 
@@ -132,11 +139,14 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			}
 		);
 
-		if (this.channel === 'featured' || (this.sort !== 'hot' && this.sort !== 'new')) {
+		if (
+			this.channel === CommunityPresetChannelType.FEATURED ||
+			(this.sort !== 'hot' && this.sort !== 'new')
+		) {
 			return title;
 		}
 
-		if (this.channel === 'all') {
+		if (this.channel === CommunityPresetChannelType.ALL) {
 			switch (this.sort) {
 				case 'hot':
 					title = this.$gettext('Hot posts');
@@ -176,7 +186,10 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	get communityChannel() {
 		const channel = this.channel;
-		if (channel === 'all' || channel === 'featured') {
+		if (
+			channel === CommunityPresetChannelType.ALL ||
+			channel === CommunityPresetChannelType.FEATURED
+		) {
 			return null;
 		}
 
@@ -218,10 +231,13 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			return false;
 		}
 
-		if (this.channel === 'featured' && this.communityState.unreadFeatureCount > 0) {
+		if (
+			this.channel === CommunityPresetChannelType.FEATURED &&
+			this.communityState.unreadFeatureCount > 0
+		) {
 			return true;
-		} else if (this.channel === 'all' && this.communityState.unreadChannels.length > 0) {
-			return true;
+		} else if (this.channel === CommunityPresetChannelType.ALL) {
+			return false;
 		}
 
 		const channel = this.community.channels!.find(i => i.title === this.channel);
@@ -296,7 +312,9 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 				type: 'EventItem',
 				url: getFetchUrl(this.$route),
 				hideCommunity: true,
-				hideCommunityChannel: this.channel !== 'featured' && this.channel !== 'all',
+				hideCommunityChannel:
+					this.channel !== CommunityPresetChannelType.FEATURED &&
+					this.channel !== CommunityPresetChannelType.ALL,
 				shouldShowFollow: true,
 				notificationWatermark: $payload.unreadWatermark,
 			},
@@ -330,11 +348,9 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			image: this.community.header ? this.community.header!.mediaserver_url : null,
 		};
 
-		if (this.channel === 'featured') {
+		if (this.channel === CommunityPresetChannelType.FEATURED) {
 			this.communityState.unreadFeatureCount = 0;
-		} else if (this.channel === 'all') {
-			this.communityState.markAllChannelsRead();
-		} else {
+		} else if (this.channel !== CommunityPresetChannelType.ALL) {
 			if (this.community.channels) {
 				const channel = this.community.channels.find(i => i.title === this.channel);
 				if (channel) {
@@ -351,7 +367,11 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	onPostUnfeatured(eventItem: EventItem, community: Community) {
-		if (this.feed && this.channel === 'featured' && this.community.id === community.id) {
+		if (
+			this.feed &&
+			this.channel === CommunityPresetChannelType.FEATURED &&
+			this.community.id === community.id
+		) {
 			this.feed.remove([eventItem]);
 		}
 	}
@@ -365,8 +385,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	onPostMovedChannel(eventItem: EventItem, movedTo: CommunityChannel) {
 		if (
 			this.feed &&
-			this.channel !== 'featured' &&
-			this.channel !== 'all' &&
+			this.channel !== CommunityPresetChannelType.FEATURED &&
+			this.channel !== CommunityPresetChannelType.ALL &&
 			this.channel !== movedTo.title
 		) {
 			this.feed.remove([eventItem]);
@@ -387,12 +407,10 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		let loadNewCount = 0;
 		if (channel) {
 			this.communityState.markChannelRead(channel.id);
-		} else if (this.channel === 'featured') {
+		} else if (this.channel === CommunityPresetChannelType.FEATURED) {
 			// For the featured view, we know how many posts are new. Load that many.
 			loadNewCount = this.communityState.unreadFeatureCount;
 			this.communityState.unreadFeatureCount = 0; // Set to read.
-		} else if (this.channel === 'all') {
-			this.communityState.markAllChannelsRead(); // Set to read.
 		}
 		// Load 15 new posts for channels or if we are unable to acquire the count.
 		if (loadNewCount <= 0) {
