@@ -228,8 +228,8 @@
 		border-style: solid
 
 	&-list
-		display: inline-block
-		margin-left: 8px
+		float: right
+		margin-top: 4px
 </style>
 
 <script lang="ts" src="./account-popover"></script>
