@@ -1,21 +1,20 @@
 <template>
 	<app-card-list-item :id="elementId" :item="presetType">
-		<div class="row">
-			<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
-				<img
-					v-if="background"
-					class="-channel-img-preview"
-					:src="background.mediaserver_url"
-				/>
-
-				<br class="visible-xs" />
-			</div>
-			<div class="col-xs-12 col-sm-10">
-				<div class="card-title">
-					<h5>
-						{{ label }}
-					</h5>
+		<div class="-row">
+			<div>
+				<div class="-channel-img-preview">
+					<img
+						v-if="background"
+						:src="background.mediaserver_url"
+						:alt="background.mediaserver_url"
+					/>
 				</div>
+			</div>
+
+			<div class="card-title">
+				<h5>
+					{{ label }}
+				</h5>
 			</div>
 		</div>
 		<template slot="body">
@@ -33,10 +32,24 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+.-row
+	display: flex
+	align-items: center
+
 .-channel-img-preview
-	width: 68px
-	height: 25px
 	rounded-corners()
+	display: flex
+	align-items: center
+	width: 96px
+	height: 25px
+	overflow: hidden
+
+	> img
+		width: 100%
+
+.card-title
+	margin-left: 16px
+	margin-bottom: 0
 </style>
 
 <script lang="ts" src="./preset-list-item"></script>
