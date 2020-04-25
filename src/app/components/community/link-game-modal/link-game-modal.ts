@@ -21,7 +21,7 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 export default class AppCommunityLinkGameModal extends BaseModal {
 	@Prop(propRequired(Community)) community!: Community;
 
-	page = 0;
+	page = 1;
 	isLoading = true;
 	lastPage = false;
 	games: Game[] = [];
@@ -35,7 +35,7 @@ export default class AppCommunityLinkGameModal extends BaseModal {
 
 		try {
 			const payload = await Api.sendRequest(
-				'/web/dash/communities/games/list/' + this.community.id + '/' + this.page,
+				'/web/dash/communities/games/list/' + this.community.id + '?page=' + this.page,
 				undefined,
 				{ noErrorRedirect: true }
 			);
