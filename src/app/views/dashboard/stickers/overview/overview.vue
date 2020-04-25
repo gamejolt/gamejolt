@@ -51,16 +51,20 @@
 </template>
 
 <style lang="stylus" scoped>
+// @require 'src/_common/sticker/card/variables'
+@require '../../../../../_common/sticker/card/variables'
+
+// $-card-width = 150px
+// $-card-margin = 8px
+
 .-progress
 	max-width: 350px
 
 .-collection
-	display: flex
-	flex-wrap: wrap
+	display: grid
+	grid-template-columns: repeat(auto-fill, $card-width)
 	justify-content: space-between
-
-	& > div
-		margin: 8px
+	grid-gap: $card-margin * 2
 </style>
 
 <script lang="ts" src="./overview"></script>
