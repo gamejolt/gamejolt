@@ -1,13 +1,13 @@
-import { Connection } from '../../../../_common/connection/connection-service';
-import { EventBus, EventBusDeregister } from '../../../../_common/event-bus/event-bus.service';
-import AppExpand from '../../../../_common/expand/expand.vue';
-import Onboarding from '../../../../_common/onboarding/onboarding.service';
-import { sleep } from '../../../../utils/utils';
-import AppLoading from '../../../../_common/loading/loading.vue';
-import { AppState, AppStore } from '../../../../_common/store/app-store';
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
+import { EventBus, EventBusDeregister } from '../../../../system/event/event-bus.service';
+import { sleep } from '../../../../utils/utils';
 import { Client } from '../../../../_common/client/client.service';
+import { Connection } from '../../../../_common/connection/connection-service';
+import AppExpand from '../../../../_common/expand/expand.vue';
+import AppLoading from '../../../../_common/loading/loading.vue';
+import Onboarding from '../../../../_common/onboarding/onboarding.service';
+import { AppState, AppStore } from '../../../../_common/store/app-store';
 import './intro-global.styl';
 
 @Component({

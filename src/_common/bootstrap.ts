@@ -53,6 +53,8 @@ export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, rout
 		bootstrapAppTranslations();
 
 		return new Vue({
+			// Needed for our vue plugins to know when it's the root vue instance.
+			gjIsRoot: true,
 			store,
 			router,
 			render: h => h(appComponent),

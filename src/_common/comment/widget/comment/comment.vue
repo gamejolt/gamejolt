@@ -98,14 +98,6 @@
 
 			<template v-if="!isEditing">
 				<app-comment-content :comment="comment" :content="comment.comment_content" />
-
-				<app-comment-controls
-					slot="controls"
-					:comment="comment"
-					:children="children"
-					:show-reply="!parent && !showChildren"
-					:model="model"
-				/>
 			</template>
 			<template v-else>
 				<form-comment
@@ -115,6 +107,15 @@
 					@cancel="isEditing = false"
 				/>
 			</template>
+		</template>
+
+		<template slot="controls">
+			<app-comment-controls
+				:comment="comment"
+				:children="children"
+				:show-reply="!parent && !showChildren"
+				:model="model"
+			/>
 		</template>
 
 		<!-- Child Comments -->

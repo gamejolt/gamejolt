@@ -1,5 +1,5 @@
 import VueRouter from 'vue-router';
-import { EventBus } from '../event-bus/event-bus.service';
+import { EventBus } from '../../system/event/event-bus.service';
 
 /**
  * Since we're in a single page app, the referrer doesn't get reset on every

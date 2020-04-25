@@ -1,7 +1,6 @@
-import 'rxjs/add/operator/sampleTime';
-import { Subscription } from 'rxjs/Subscription';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { EventSubscription } from '../../../system/event/event-topic';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
 import { AppScrollInview } from '../inview/inview';
@@ -33,7 +32,7 @@ export default class AppScrollAffix extends Vue {
 	width: number | null = null;
 	height = 0;
 
-	private resize$: Subscription | undefined;
+	private resize$: EventSubscription | undefined;
 
 	$refs!: {
 		container: HTMLElement;
