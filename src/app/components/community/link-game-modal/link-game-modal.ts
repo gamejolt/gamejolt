@@ -62,8 +62,4 @@ export default class AppCommunityLinkGameModal extends BaseModal {
 	onClickLink(game: Game) {
 		this.modal.resolve(game);
 	}
-
-	isGameHidden(game: Game) {
-		return game.status !== Game.STATUS_VISIBLE;
-	}
 }

@@ -32,7 +32,7 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	community: Community = null as any;
 	collaboration: Collaborator | null = null;
 	canLinkNewGames = false;
-	linkGameCount = 10;
+	maxLinkedGames = 10;
 
 	@VuexMutation
 	populate(payload: RouteMutations['populate']) {
@@ -40,8 +40,8 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 		this.collaboration = payload.collaboration ? new Collaborator(payload.collaboration) : null;
 		this.canLinkNewGames = !!payload.canLinkNewGames;
 
-		if (payload.linkGameCount) {
-			this.linkGameCount = payload.linkGameCount;
+		if (payload.maxLinkedGames) {
+			this.maxLinkedGames = payload.maxLinkedGames;
 		}
 	}
 

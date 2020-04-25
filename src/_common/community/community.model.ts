@@ -213,10 +213,10 @@ export class Community extends Collaboratable(Model) {
 		);
 	}
 
-	async saveGameSort(gameIds: number[]) {
+	async saveGameSort() {
 		const response = await Api.sendRequest(
 			`/web/dash/communities/games/save-sort/${this.id}`,
-			gameIds,
+			this.games!.map(i => i.id),
 			{
 				noErrorRedirect: true,
 			}

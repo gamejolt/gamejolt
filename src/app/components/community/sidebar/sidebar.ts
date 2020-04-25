@@ -108,24 +108,30 @@ export default class AppCommunitySidebar extends Vue {
 		return mods;
 	}
 
+	get filteredGames() {
+		// We only show visible games. Collaborators with the right permissions also get hidden games,
+		// but to avoid confusion we don't show them in the sidebar. They do show when editing the community.
+		return this.community.games?.filter(i => i.isVisible);
+	}
+
 	get shouldShowGames() {
-		return this.community.games && this.community.games.length;
+		return this.filteredGames && this.filteredGames.length;
 	}
 
 	get hasMoreGames() {
-		return this.community.games && this.community.games.length > GAME_LIST_COLLAPSED_COUNT;
+		return this.filteredGames && this.filteredGames.length > GAME_LIST_COLLAPSED_COUNT;
 	}
 
 	get visibleGames() {
-		if (!this.community.games) {
+		if (!this.filteredGames) {
 			return [];
 		}
 
 		if (this.gameListCollapsed) {
-			return this.community.games.slice(0, GAME_LIST_COLLAPSED_COUNT);
+			return this.filteredGames.slice(0, GAME_LIST_COLLAPSED_COUNT);
 		}
 
-		return this.community.games;
+		return this.filteredGames;
 	}
 
 	copyShareUrl() {

@@ -8,10 +8,10 @@
 			<div class="page-help">
 				<p>
 					<translate>
-						Link your games to your community to do something something more flavor text here.
-						Probably something about how the community appears on the game page, and the game
-						appears in the sidebar. Also maybe that hidden games don't appear in the sidebar, but
-						the community does appear on the game page
+						Link your games to your community to do something something more flavor text
+						here. Probably something about how the community appears on the game page,
+						and the game appears in the sidebar. Also maybe that hidden games don't
+						appear in the sidebar, but the community does appear on the game page
 					</translate>
 				</p>
 			</div>
@@ -23,9 +23,9 @@
 			</div>
 			<div v-else>
 				<p>
-					<translate :translate-params="{ count: linkGameCount }">
-						Probably some text about how you can only link %{ count } games; or that there are no
-						more games left to link.
+					<translate :translate-params="{ count: maxLinkedGames }">
+						Probably some text about how you can only link %{ count } games; or that
+						there are no more games left to link.
 					</translate>
 				</p>
 			</div>
@@ -37,17 +37,19 @@
 					<translate>There are currently no games linked.</translate>
 				</p>
 			</div>
-			<app-card-list v-else :items="games">
+			<app-card-list v-else :items="community.games">
 				<app-card-list-draggable @change="saveSort">
 					<app-card-list-item
-						v-for="game in games"
+						v-for="game in community.games"
 						:key="game.id"
 						:id="`game-container-${game.id}`"
 						:item="game"
 					>
 						<div class="row">
 							<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
-								<router-link :to="{ name: game.getSref(), params: game.getSrefParams() }">
+								<router-link
+									:to="{ name: game.getSref(), params: game.getSrefParams() }"
+								>
 									<app-game-thumbnail-img :game="game" />
 								</router-link>
 
@@ -66,10 +68,12 @@
 									<h5>{{ game.title }}</h5>
 								</div>
 
-								<div v-if="isGameHidden(game)" class="card-meta card-meta-sm">
+								<div v-if="!game.isVisible" class="card-meta card-meta-sm">
 									<span
 										v-app-tooltip.bottom="
-											$gettext(`Hidden games do not show in the community sidebar`)
+											$gettext(
+												`Hidden games do not show in the community sidebar`
+											)
 										"
 									>
 										<translate>
@@ -85,9 +89,5 @@
 		</app-community-perms>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-
-</style>
 
 <script lang="ts" src="./games"></script>

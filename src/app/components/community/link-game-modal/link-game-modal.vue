@@ -27,9 +27,11 @@
 
 					<div class="-game-label">
 						<div class="-game-title">{{ game.title }}</div>
-						<div v-if="isGameHidden(game)" class="-game-hidden">
+						<div v-if="!game.isVisible" class="-game-hidden">
 							<span
-								v-app-tooltip.bottom="$gettext(`Hidden games do not show in the community sidebar`)"
+								v-app-tooltip.bottom="
+									$gettext(`Hidden games do not show in the community sidebar`)
+								"
 								><translate>Hidden</translate></span
 							>
 						</div>
@@ -45,8 +47,8 @@
 			<div v-else class="page-help">
 				<p>
 					<translate>
-						Text about how there are no games to link, maybe how they are already linked to another
-						community.
+						Text about how there are no games to link, maybe how they are already linked
+						to another community.
 					</translate>
 				</p>
 			</div>
@@ -106,7 +108,6 @@ $-height = 44px
 	&-button
 		flex: none
 		margin-left: $-h-padding
-
 </style>
 
 <script lang="ts" src="./link-game-modal"></script>

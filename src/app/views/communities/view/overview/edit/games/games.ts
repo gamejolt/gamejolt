@@ -1,6 +1,5 @@
 import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../../../utils/array';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
 import AppCardListDraggable from '../../../../../../../_common/card/list/draggable/draggable.vue';
@@ -9,10 +8,7 @@ import AppCardList from '../../../../../../../_common/card/list/list.vue';
 import { Game } from '../../../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
 import { Growls } from '../../../../../../../_common/growls/growls.service';
-import {
-	BaseRouteComponent,
-	RouteResolver,
-} from '../../../../../../../_common/route/route-component';
+import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
 import { CommunityLinkGameModal } from '../../../../../../components/community/link-game-modal/link-game-modal.service';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
@@ -32,10 +28,6 @@ import { RouteStore, RouteStoreModule } from '../edit.store';
 		AppTooltip,
 	},
 })
-@RouteResolver({
-	deps: { params: ['id'] },
-	resolver: ({ route }) => Api.sendRequest('/web/dash/communities/games/' + route.params.id),
-})
 export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 	@RouteStoreModule.State
 	community!: RouteStore['community'];
@@ -44,42 +36,26 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 	canLinkNewGames!: RouteStore['canLinkNewGames'];
 
 	@RouteStoreModule.State
-	linkGameCount!: RouteStore['linkGameCount'];
+	maxLinkedGames!: RouteStore['maxLinkedGames'];
 
 	@RouteStoreModule.Mutation
 	setCanLinkNewGames!: RouteStore['setCanLinkNewGames'];
 
-	games: Game[] = [];
-
 	get hasLinkedGames() {
-		return this.games.length > 0;
-	}
-
-	get visibleGames() {
-		return this.games.filter(i => i.status === Game.STATUS_VISIBLE);
+		return this.community.games && this.community.games.length > 0;
 	}
 
 	@Emit('games-change')
 	emitGamesChanged(_games: Game[]) {}
 
-	routeResolved($payload: any) {
-		// Request and populate games so hidden games are also shown.
-		this.games = Game.populate($payload.games);
-	}
-
-	isGameHidden(game: Game) {
-		return game.status !== Game.STATUS_VISIBLE;
-	}
-
 	async saveSort(sortedGames: Game[]) {
 		// Reorder the games to see the result of the ordering right away.
-		this.games!.splice(0, this.games!.length, ...sortedGames);
+		this.community.games!.splice(0, this.community.games!.length, ...sortedGames);
 
-		const sortedIds = sortedGames.map(i => i.id);
 		try {
-			const payload = await this.community.saveGameSort(sortedIds);
+			const payload = await this.community.saveGameSort();
 			if (payload.success) {
-				this.emitGamesChanged(this.visibleGames);
+				this.emitGamesChanged(this.community.games!);
 			}
 		} catch (e) {
 			console.error(e);
@@ -100,10 +76,9 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 					{ noErrorRedirect: true }
 				);
 				if (payload.success) {
-					this.games.push(game);
-					this.community.assign(payload.community);
-					this.emitGamesChanged(this.visibleGames);
-					if (this.games.length >= this.linkGameCount) {
+					this.community.games = Game.populate(payload.community.games);
+					this.emitGamesChanged(this.community.games);
+					if (this.community.games.length >= this.maxLinkedGames) {
 						this.setCanLinkNewGames(false);
 					}
 				}
@@ -125,9 +100,8 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 				{ noErrorRedirect: true }
 			);
 			if (payload.success) {
-				arrayRemove(this.games, i => i.id === game.id);
-				this.community.assign(payload.community);
-				this.emitGamesChanged(this.visibleGames);
+				this.community.games = Game.populate(payload.community.games);
+				this.emitGamesChanged(this.community.games!);
 				// After unlinking a game, there is a free slot and at least one more game to link.
 				this.setCanLinkNewGames(true);
 			}
