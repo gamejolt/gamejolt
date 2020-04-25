@@ -54,6 +54,7 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 
 		try {
 			const payload = await this.community.saveGameSort();
+
 			if (payload.success) {
 				this.emitGamesChanged(this.community.games!);
 			}
@@ -65,27 +66,30 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 
 	async onClickLinkGame() {
 		const game = await CommunityLinkGameModal.show(this.community);
-		if (game) {
-			try {
-				const payload = await Api.sendRequest(
-					'/web/dash/communities/games/link',
-					{
-						community_id: this.community.id,
-						game_id: game.id,
-					},
-					{ noErrorRedirect: true }
-				);
-				if (payload.success) {
-					this.community.games = Game.populate(payload.community.games);
-					this.emitGamesChanged(this.community.games);
-					if (this.community.games.length >= this.maxLinkedGames) {
-						this.setCanLinkNewGames(false);
-					}
+		if (!game) {
+			return;
+		}
+
+		try {
+			const payload = await Api.sendRequest(
+				'/web/dash/communities/games/link',
+				{
+					community_id: this.community.id,
+					game_id: game.id,
+				},
+				{ noErrorRedirect: true }
+			);
+
+			if (payload.success) {
+				this.community.games = Game.populate(payload.community.games);
+				this.emitGamesChanged(this.community.games);
+				if (this.community.games.length >= this.maxLinkedGames) {
+					this.setCanLinkNewGames(false);
 				}
-			} catch (e) {
-				console.error(e);
-				Growls.error(this.$gettext(`Failed to link game to community.`));
 			}
+		} catch (e) {
+			console.error(e);
+			Growls.error(this.$gettext(`Failed to link game to community.`));
 		}
 	}
 
@@ -99,6 +103,7 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 				},
 				{ noErrorRedirect: true }
 			);
+
 			if (payload.success) {
 				this.community.games = Game.populate(payload.community.games);
 				this.emitGamesChanged(this.community.games!);
