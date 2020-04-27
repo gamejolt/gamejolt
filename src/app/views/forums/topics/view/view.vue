@@ -204,26 +204,6 @@
 							/>
 						</template>
 
-						<p class="text-muted small" v-if="topic.main_post.modified_by">
-							Last modified on
-							<span :title="date(topic.main_post.modified_on, 'medium')">
-								{{ topic.main_post.modified_on | date }}
-							</span>
-							by
-							<router-link
-								class="link-unstyled"
-								:to="{
-									name: 'profile.overview',
-									params: { username: topic.main_post.modified_by_user.username },
-								}"
-							>
-								<strong>
-									{{ topic.main_post.modified_by_user.display_name }}
-								</strong>
-							</router-link>
-							<small>@{{ topic.main_post.modified_by_user.username }}</small>
-						</p>
-
 						<hr />
 
 						<p class="text-muted small" v-if="topic.replies_count > perPage">
