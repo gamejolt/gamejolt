@@ -49,11 +49,11 @@ export default class AppMediaItemPost extends Vue {
 	}
 
 	get itemRadius() {
-		if (Screen.isXs && this.isFilled) {
-			return;
+		if (this.inline) {
+			return this.isFilled ? undefined : 'lg';
 		}
 
-		return 'lg';
+		return Screen.isXs && this.isFilled ? undefined : 'lg';
 	}
 
 	get itemStyling() {
