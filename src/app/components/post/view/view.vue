@@ -13,7 +13,7 @@
 					<div class="post-view">
 						<div v-if="post.hasMedia" class="full-bleed-xs">
 							<div v-for="item of post.media" :key="item.id">
-								<app-media-item-post :media-item="item" />
+								<app-media-item-post :media-item="item" is-active />
 								<br />
 							</div>
 						</div>

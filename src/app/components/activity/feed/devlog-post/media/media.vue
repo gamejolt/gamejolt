@@ -17,7 +17,6 @@
 						:is-active="getIsActiveMediaItem(mediaItem)"
 						@bootstrap="onItemBootstrapped()"
 						restrict-device-max-height
-						restrict-should-play-video
 						inline
 					/>
 				</div>

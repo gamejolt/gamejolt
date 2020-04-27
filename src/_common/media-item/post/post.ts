@@ -35,9 +35,6 @@ export default class AppMediaItemPost extends Vue {
 	restrictDeviceMaxHeight?: boolean;
 
 	@Prop(propOptional(Boolean))
-	restrictShouldVideoPlay?: boolean;
-
-	@Prop(propOptional(Boolean))
 	inline?: boolean;
 
 	isFilled = false;
@@ -48,11 +45,7 @@ export default class AppMediaItemPost extends Vue {
 	emitBootstrap() {}
 
 	get shouldVideoPlay() {
-		if (this.restrictShouldVideoPlay) {
-			return this.isActive;
-		}
-
-		return true;
+		return this.isActive;
 	}
 
 	get itemRadius() {
