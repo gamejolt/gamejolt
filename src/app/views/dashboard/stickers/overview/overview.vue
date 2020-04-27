@@ -51,11 +51,7 @@
 </template>
 
 <style lang="stylus" scoped>
-// @require 'src/_common/sticker/card/variables'
 @require '../../../../../_common/sticker/card/variables'
-
-// $-card-width = 150px
-// $-card-margin = 8px
 
 .-progress
 	max-width: 350px
