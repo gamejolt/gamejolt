@@ -12329,10 +12329,10 @@ vue-prism-component@1.2.0:
   resolved "https://registry.yarnpkg.com/vue-prism-component/-/vue-prism-component-1.2.0.tgz#406252e16979def13b5d28827d95b2b6dc647825"
   integrity sha512-0N9CNuQu+36CJpdsZHrhdq7d18oBvjVMjawyKdIr8xuzFWLfdxECZQYbFaYoopPBg3SvkEEMtkhYqdgTQl5Y+A==
 
-vue-property-decorator@8.3.0:
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/vue-property-decorator/-/vue-property-decorator-8.3.0.tgz#536f027dc7d626f37c8d85a2dc02f0a6cb979440"
-  integrity sha512-77YtTbZHd5CNiPzbqv51kEgL48yvD2dUDfF28vEyw3MbQ9bBAb/tDyFzskcqjNRbWyXk1vq4oM2CK/LfhxuIBg==
+vue-property-decorator@8.4.2:
+  version "8.4.2"
+  resolved "https://registry.yarnpkg.com/vue-property-decorator/-/vue-property-decorator-8.4.2.tgz#016e17f259f73bc547e77a50ce282ba18db4ee41"
+  integrity sha512-IqbARlvgPE2pzKfbecKxsu2yEH0Wv7hfHR6m4eZA3LTnNw9hveAX77vDfLFyTeMISS5N7Kucp/xRSHjcQ6bAfQ==
   dependencies:
     vue-class-component "^7.1.0"
 
