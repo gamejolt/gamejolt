@@ -20,31 +20,7 @@
 					<div class="post-view">
 						<div v-if="post.hasMedia" class="full-bleed-xs">
 							<div v-for="item of post.media" :key="item.id">
-								<app-responsive-dimensions
-									class="-media-item"
-									:ratio="item.width / item.height"
-									:max-width="item.width"
-								>
-									<app-event-item-media-tags :gif="item.is_animated" />
-									<app-media-item-backdrop :media-item="item" radius="lg">
-										<app-img-responsive
-											class="-img"
-											v-if="!item.is_animated"
-											:src="item.mediaserver_url"
-											alt=""
-										/>
-
-										<app-video
-											v-else
-											class="-video"
-											:poster="item.mediaserver_url"
-											:webm="item.mediaserver_url_webm"
-											:mp4="item.mediaserver_url_mp4"
-											show-loading
-										/>
-									</app-media-item-backdrop>
-								</app-responsive-dimensions>
-
+								<app-media-item-post :media-item="item" is-active />
 								<br />
 							</div>
 						</div>
@@ -147,18 +123,6 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
-
-.-backdrop
-	change-bg('bg-offset')
-
-.-media-item
-	position: relative
-	margin-left: auto
-	margin-right: auto
-
-.-img, .-video
-	width: 100%
-	height: 100%
 
 @media $media-sm-up
 	.post-view >>>

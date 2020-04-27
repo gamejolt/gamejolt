@@ -8,6 +8,7 @@ import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
+import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
 import { AppResponsiveDimensions } from '../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
@@ -42,6 +43,7 @@ import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 		AppCommunityPill,
 		AppContentViewer,
 		AppStickerTarget,
+		AppMediaItemPost,
 	},
 	directives: {
 		AppScrollWhen,

@@ -9,13 +9,15 @@
 		>
 			<div class="-container">
 				<div class="-slider" ref="slider">
-					<app-activity-feed-devlog-post-media-item
+					<app-media-item-post
 						v-for="mediaItem of post.media"
 						:key="mediaItem.id"
 						:media-item="mediaItem"
 						:is-post-hydrated="isHydrated"
 						:is-active="getIsActiveMediaItem(mediaItem)"
 						@bootstrap="onItemBootstrapped()"
+						restrict-device-max-height
+						inline
 					/>
 				</div>
 			</div>
