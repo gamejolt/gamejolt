@@ -57,6 +57,7 @@
 			<app-activity-feed
 				v-if="feed.hasItems"
 				:feed="feed"
+				:show-ads="!isOwner"
 				@edit-post="onPostEdited"
 				@publish-post="onPostPublished"
 				@remove-post="onPostRemoved"
