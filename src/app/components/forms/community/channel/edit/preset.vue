@@ -6,7 +6,9 @@
 				<translate>Current Channel Background Image</translate>
 			</label>
 
-			<img class="-background-preview" :src="channelImg" :alt="channelImg" />
+			<div class="-background-preview">
+				<img v-if="channelImg" :src="channelImg" :alt="channelImg" />
+			</div>
 
 			<br />
 
@@ -55,10 +57,15 @@
 @require '../../../../community/channel/card/variables'
 
 .-background-preview
-	display: block
+	rounded-corners-lg()
+	display: flex
+	align-items: center
 	width: $card-width
 	height: $card-height
-	rounded-corners-lg()
+	overflow: hidden
+
+	> img
+		width: 100%
 </style>
 
 <script lang="ts" src="./preset"></script>

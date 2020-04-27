@@ -51,30 +51,23 @@
 						:id="`channel-container-${channel.id}`"
 						:item="channel"
 					>
-						<div class="row">
-							<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
-								<img
-									v-if="channel.background"
-									class="-channel-img-preview"
-									:src="channel.background.img_url"
-								/>
-
-								<br class="visible-xs" />
+						<div class="-row">
+							<div class="-channel-img-preview">
+								<img v-if="channel.background" :src="channel.background.mediaserver_url" />
 							</div>
-							<div class="col-xs-12 col-sm-10">
-								<a
-									v-if="canRemoveChannel"
-									class="card-remove"
-									@click.stop="onClickRemoveChannel(channel)"
-									v-app-tooltip="$gettext(`Remove Channel`)"
-								>
-									<app-jolticon icon="remove" />
-								</a>
 
-								<div class="card-title">
-									<h5>{{ channel.title }}</h5>
-								</div>
+							<div class="card-title">
+								<h5>{{ channel.title }}</h5>
 							</div>
+
+							<a
+								v-if="canRemoveChannel"
+								class="-remove"
+								@click.stop="onClickRemoveChannel(channel)"
+								v-app-tooltip="$gettext(`Remove Channel`)"
+							>
+								<app-jolticon icon="remove" />
+							</a>
 						</div>
 
 						<template slot="body">
@@ -96,10 +89,38 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+.-row
+	display: flex
+	align-items: center
+
+	.-remove
+		color: var(--theme-fg-muted)
+		margin-left: auto
+
+		&, .jolticon
+			cursor: pointer
+			vertical-align: middle
+
+		&:hover
+			color: $white !important
+
 .-channel-img-preview
-	width: 68px
-	height: 25px
 	rounded-corners()
+	display: flex
+	align-items: center
+	width: 96px
+	height: 25px
+	overflow: hidden
+
+	> img
+		width: 100%
+
+.card-title
+	margin-left: 16px
+	margin-bottom: 0
+
+	> *
+		text-overflow()
 </style>
 
 <script lang="ts" src="./channels"></script>

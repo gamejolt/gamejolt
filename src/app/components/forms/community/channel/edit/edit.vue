@@ -6,11 +6,12 @@
 				<translate>Current Channel Background Image</translate>
 			</label>
 
-			<img
-				class="-background-preview"
-				:src="formModel.background.img_url"
-				:alt="formModel.background.img_url"
-			/>
+			<div class="-background-preview">
+				<img
+					:src="formModel.background.mediaserver_url"
+					:alt="formModel.background.mediaserver_url"
+				/>
+			</div>
 
 			<br />
 
@@ -78,10 +79,15 @@
 @require '../../../../community/channel/card/variables'
 
 .-background-preview
-	display: block
+	rounded-corners-lg()
+	display: flex
+	align-items: center
 	width: $card-width
 	height: $card-height
-	rounded-corners-lg()
+	overflow: hidden
+
+	img
+		width: 100%
 </style>
 
 <script lang="ts" src="./edit"></script>
