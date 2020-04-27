@@ -7,18 +7,10 @@
 		</div>
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Link a Game</translate>
+				<translate>Choose a game to link</translate>
 			</h2>
 		</div>
 		<div class="modal-body">
-			<div class="page-help">
-				<p>
-					<translate>
-						Some text about linking a game.
-					</translate>
-				</p>
-			</div>
-
 			<template v-if="games.length">
 				<div v-for="game of games" :key="game.id" class="-game">
 					<div class="-game-thumb">
@@ -29,9 +21,7 @@
 						<div class="-game-title">{{ game.title }}</div>
 						<div v-if="!game.isVisible" class="-game-hidden">
 							<span
-								v-app-tooltip.bottom="
-									$gettext(`Hidden games do not show in the community sidebar`)
-								"
+								v-app-tooltip.bottom="$gettext(`Hidden games do not show in the community sidebar`)"
 								><translate>Hidden</translate></span
 							>
 						</div>
@@ -47,8 +37,8 @@
 			<div v-else class="page-help">
 				<p>
 					<translate>
-						Text about how there are no games to link, maybe how they are already linked
-						to another community.
+						You have no more games available to link. Just remember, games can only be linked to a
+						single community.
 					</translate>
 				</p>
 			</div>

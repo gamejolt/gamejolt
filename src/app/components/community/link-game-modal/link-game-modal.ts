@@ -47,7 +47,7 @@ export default class AppCommunityLinkGameModal extends BaseModal {
 			this.games.push(...games);
 		} catch (error) {
 			console.error(error);
-			Growls.error(this.$gettext(`Failed to load games list.`));
+			Growls.error(this.$gettext(`Failed to load games.`));
 			this.modal.resolve();
 		}
 

@@ -8,10 +8,9 @@
 			<div class="page-help">
 				<p>
 					<translate>
-						Link your games to your community to do something something more flavor text
-						here. Probably something about how the community appears on the game page,
-						and the game appears in the sidebar. Also maybe that hidden games don't
-						appear in the sidebar, but the community does appear on the game page
+						Link your games to this community. Doing so will show the game in your community sidebar
+						as well as showing the community on your game page. Each of your games can only be
+						linked to a single community.
 					</translate>
 				</p>
 			</div>
@@ -24,20 +23,15 @@
 			<div v-else>
 				<p>
 					<translate :translate-params="{ count: maxLinkedGames }">
-						Probably some text about how you can only link %{ count } games; or that
-						there are no more games left to link.
+						Probably some text about how you can only link %{ count } games; or that there are no
+						more games left to link.
 					</translate>
 				</p>
 			</div>
 
 			<br />
 
-			<div v-if="!hasLinkedGames">
-				<p>
-					<translate>There are currently no games linked.</translate>
-				</p>
-			</div>
-			<app-card-list v-else :items="community.games">
+			<app-card-list v-if="hasLinkedGames" :items="community.games">
 				<app-card-list-draggable @change="saveSort">
 					<app-card-list-item
 						v-for="game in community.games"
@@ -47,9 +41,7 @@
 					>
 						<div class="row">
 							<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
-								<router-link
-									:to="{ name: game.getSref(), params: game.getSrefParams() }"
-								>
+								<router-link :to="{ name: game.getSref(), params: game.getSrefParams() }">
 									<app-game-thumbnail-img :game="game" />
 								</router-link>
 
@@ -69,17 +61,15 @@
 								</div>
 
 								<div v-if="!game.isVisible" class="card-meta card-meta-sm">
-									<span
+									<translate
 										v-app-tooltip.bottom="
 											$gettext(
-												`Hidden games do not show in the community sidebar`
+												`This game is hidden and won't show in the community sidebar until you unhide it.`
 											)
 										"
 									>
-										<translate>
-											(Hidden)
-										</translate>
-									</span>
+										(Hidden)
+									</translate>
 								</div>
 							</div>
 						</div>
