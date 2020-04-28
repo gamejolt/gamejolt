@@ -117,7 +117,6 @@ export default class AppContentMediaUpload extends Vue {
 					detach: true,
 				}
 			);
-			console.log(sizePayload);
 
 			const maxWidth = sizePayload.maxWidth;
 			const maxHeight = sizePayload.maxWidth;
