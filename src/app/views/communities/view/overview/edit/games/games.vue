@@ -15,18 +15,24 @@
 				</p>
 			</div>
 
-			<div v-if="canLinkNewGames">
+			<div v-if="!canLinkNewGames">
+				<p>
+					<translate :translate-params="{ count: maxLinkedGames }">
+						Text about how you already linked the max amount: %{ maxLinkedGames }.
+					</translate>
+				</p>
+			</div>
+			<div v-else-if="!hasMoreGamesToLink">
+				<p>
+					<translate>
+						Text about how you have no more games to link that you own.
+					</translate>
+				</p>
+			</div>
+			<div v-else>
 				<app-button block primary @click="onClickLinkGame">
 					<translate>Link Game</translate>
 				</app-button>
-			</div>
-			<div v-else>
-				<p>
-					<translate :translate-params="{ count: maxLinkedGames }">
-						Probably some text about how you can only link %{ count } games; or that there are no
-						more games left to link.
-					</translate>
-				</p>
 			</div>
 
 			<br />

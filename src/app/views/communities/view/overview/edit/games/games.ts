@@ -8,7 +8,10 @@ import AppCardList from '../../../../../../../_common/card/list/list.vue';
 import { Game } from '../../../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
 import { Growls } from '../../../../../../../_common/growls/growls.service';
-import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	RouteResolver,
+} from '../../../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
 import { CommunityLinkGameModal } from '../../../../../../components/community/link-game-modal/link-game-modal.service';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
@@ -28,25 +31,34 @@ import { RouteStore, RouteStoreModule } from '../edit.store';
 		AppTooltip,
 	},
 })
+@RouteResolver({
+	deps: { params: ['id'] },
+	resolver({ route }) {
+		return Api.sendRequest('/web/dash/communities/games/' + route.params.id, {});
+	},
+})
 export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 	@RouteStoreModule.State
 	community!: RouteStore['community'];
 
-	@RouteStoreModule.State
-	canLinkNewGames!: RouteStore['canLinkNewGames'];
-
-	@RouteStoreModule.State
-	maxLinkedGames!: RouteStore['maxLinkedGames'];
-
-	@RouteStoreModule.Mutation
-	setCanLinkNewGames!: RouteStore['setCanLinkNewGames'];
+	maxLinkedGames = 10;
+	hasMoreGamesToLink = false;
 
 	get hasLinkedGames() {
 		return this.community.games && this.community.games.length > 0;
 	}
 
+	get canLinkNewGames() {
+		return this.community.games && this.community.games.length < this.maxLinkedGames;
+	}
+
 	@Emit('games-change')
 	emitGamesChanged(_games: Game[]) {}
+
+	routeResolved($payload: any) {
+		this.hasMoreGamesToLink = !!$payload.hasMoreGamesToLink;
+		this.maxLinkedGames = $payload.maxLinkedGames;
+	}
 
 	async saveSort(sortedGames: Game[]) {
 		// Reorder the games to see the result of the ordering right away.
@@ -83,9 +95,6 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 			if (payload.success) {
 				this.community.games = Game.populate(payload.community.games);
 				this.emitGamesChanged(this.community.games);
-				if (this.community.games.length >= this.maxLinkedGames) {
-					this.setCanLinkNewGames(false);
-				}
 			}
 		} catch (e) {
 			console.error(e);
@@ -108,7 +117,7 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 				this.community.games = Game.populate(payload.community.games);
 				this.emitGamesChanged(this.community.games!);
 				// After unlinking a game, there is a free slot and at least one more game to link.
-				this.setCanLinkNewGames(true);
+				this.hasMoreGamesToLink = true;
 			}
 		} catch (e) {
 			console.error(e);
