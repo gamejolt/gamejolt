@@ -106,7 +106,7 @@ export default class AppContentMediaUpload extends Vue {
 		);
 		if ($payload.success && $payload.mediaItems && $payload.mediaItems.length === 1) {
 			return new MediaItem($payload.mediaItems[0]);
-		} else if ($payload.success === false && $payload.errors.file) {
+		} else if (!$payload.success && $payload.errors.file) {
 			const sizePayload = await Api.sendRequest(
 				'/web/dash/media-items',
 				{
@@ -120,12 +120,13 @@ export default class AppContentMediaUpload extends Vue {
 
 			const maxWidth = sizePayload.maxWidth;
 			const maxHeight = sizePayload.maxWidth;
+			const maxFilesize = sizePayload.maxFilesize;
 
 			Growls.error({
 				title: this.$gettext('Oh no!'),
 				message: this.$gettextInterpolate(
 					"It looks like your image's filesize or dimensions are too large. The maximum allowed size is %{ width }x%{ height } pixels.",
-					{ width: maxWidth, height: maxHeight }
+					{ width: maxWidth, height: maxHeight, size: maxFilesize }
 				),
 			});
 
