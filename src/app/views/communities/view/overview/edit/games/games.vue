@@ -18,14 +18,15 @@
 			<div v-if="!canLinkNewGames">
 				<p>
 					<translate :translate-params="{ count: maxLinkedGames }">
-						Text about how you already linked the max amount: %{ maxLinkedGames }.
+						You've reached the maximum limit of %{ maxLinkedGames } games linked to this community.
 					</translate>
 				</p>
 			</div>
 			<div v-else-if="!hasMoreGamesToLink">
 				<p>
 					<translate>
-						Text about how you have no more games to link that you own.
+						All your games are linked to a community. Remember, each game can only be linked to a
+						single community at this time.
 					</translate>
 				</p>
 			</div>
