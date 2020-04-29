@@ -1,16 +1,16 @@
 import Vue from 'vue';
-import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
-import { AppImgResponsive } from '../../../../../../../_common/img/responsive/responsive';
-import AppMediaItemBackdrop from '../../../../../../../_common/media-item/backdrop/backdrop.vue';
-import { MediaItem } from '../../../../../../../_common/media-item/media-item-model';
+import { Component, Emit, Prop } from 'vue-property-decorator';
+import AppEventItemMediaTags from '../../../app/components/event-item/media-tags/media-tags.vue';
+import { propOptional, propRequired } from '../../../utils/vue';
+import { AppImgResponsive } from '../../img/responsive/responsive';
 import {
 	AppResponsiveDimensions,
 	AppResponsiveDimensionsChangeEvent,
-} from '../../../../../../../_common/responsive-dimensions/responsive-dimensions';
-import { Screen } from '../../../../../../../_common/screen/screen-service';
-import AppVideo from '../../../../../../../_common/video/video.vue';
-import AppEventItemMediaTags from '../../../../../event-item/media-tags/media-tags.vue';
-import { ActivityFeedView } from '../../../view';
+} from '../../responsive-dimensions/responsive-dimensions';
+import { Screen } from '../../screen/screen-service';
+import AppVideo from '../../video/video.vue';
+import AppMediaItemBackdrop from '../backdrop/backdrop.vue';
+import { MediaItem } from '../media-item-model';
 
 @Component({
 	components: {
@@ -21,18 +21,21 @@ import { ActivityFeedView } from '../../../view';
 		AppEventItemMediaTags,
 	},
 })
-export default class AppActivityFeedDevlogPostMediaItem extends Vue {
-	@Inject()
-	feed!: ActivityFeedView;
-
-	@Prop(MediaItem)
+export default class AppMediaItemPost extends Vue {
+	@Prop(propRequired(MediaItem))
 	mediaItem!: MediaItem;
 
-	@Prop(Boolean)
-	isPostHydrated!: boolean;
+	@Prop(propOptional(Boolean))
+	isPostHydrated?: boolean;
 
-	@Prop(Boolean)
+	@Prop(propOptional(Boolean))
 	isActive!: boolean;
+
+	@Prop(propOptional(Boolean))
+	restrictDeviceMaxHeight?: boolean;
+
+	@Prop(propOptional(Boolean))
+	inline?: boolean;
 
 	isFilled = false;
 
@@ -43,6 +46,14 @@ export default class AppActivityFeedDevlogPostMediaItem extends Vue {
 
 	get shouldVideoPlay() {
 		return this.isActive;
+	}
+
+	get itemRadius() {
+		if (this.inline) {
+			return this.isFilled ? undefined : 'lg';
+		}
+
+		return Screen.isXs && this.isFilled ? undefined : 'lg';
 	}
 
 	get itemStyling() {
@@ -59,7 +70,7 @@ export default class AppActivityFeedDevlogPostMediaItem extends Vue {
 	}
 
 	get deviceMaxHeight() {
-		if (GJ_IS_SSR) {
+		if (GJ_IS_SSR || !this.restrictDeviceMaxHeight) {
 			return;
 		}
 

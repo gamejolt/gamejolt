@@ -1,9 +1,10 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
-import { number } from '../../filters/number';
+import { fuzzynumber } from '../../filters/fuzzynumber';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
+import { Screen } from '../../screen/screen-service';
 import { handleNewStickerNotification } from '../../sticker/sticker.model';
 import { AppTooltip } from '../../tooltip/tooltip';
 import { Comment } from '../comment-model';
@@ -16,7 +17,7 @@ import { CommentVote } from '../vote/vote-model';
 		AppTooltip,
 	},
 	filters: {
-		number,
+		fuzzynumber,
 	},
 })
 export default class AppCommentControls extends Vue {
@@ -31,6 +32,8 @@ export default class AppCommentControls extends Vue {
 
 	@Prop(Boolean)
 	showReply?: boolean;
+
+	readonly Screen = Screen;
 
 	get votingTooltip() {
 		const userHasVoted = !!this.comment.user_vote;
@@ -77,8 +80,7 @@ export default class AppCommentControls extends Vue {
 			handleNewStickerNotification(
 				this.$gettext(`You can unlock a new sticker!`),
 				this.$gettext(`Click this message to unlock right away.`),
-				this.$store,
-				this.$router
+				this.$store
 			);
 		}
 	}

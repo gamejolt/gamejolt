@@ -19,10 +19,11 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
+@require './variables'
 
 .-card
 	change-bg('bg-offset')
-	width: 150px
+	width: $card-width
 	rounded-corners-lg()
 	position: relative
 	overflow: hidden

@@ -1,16 +1,14 @@
 <template>
 	<app-form name="communityFeaturedFormEdit">
 		<!-- Show the current backgroud image if there is one -->
-		<div v-if="formModel.featured_background" class="form-group">
+		<div v-if="hasChannelImage" class="form-group">
 			<label class="control-label">
 				<translate>Current Channel Background Image</translate>
 			</label>
 
-			<img
-				class="-background-preview"
-				:src="formModel.featured_background.img_url"
-				:alt="formModel.featured_background.img_url"
-			/>
+			<div class="-background-preview">
+				<img v-if="channelImg" :src="channelImg" :alt="channelImg" />
+			</div>
 
 			<br />
 
@@ -64,11 +62,15 @@
 @require '../../../../community/channel/card/variables'
 
 .-background-preview
-	display: block
+	rounded-corners-lg()
+	display: flex
+	align-items: center
 	width: $card-width
 	height: $card-height
-	rounded-corners-lg()
+	overflow: hidden
 
+	> img
+		width: 100%
 </style>
 
-<script lang="ts" src="./featured"></script>
+<script lang="ts" src="./preset"></script>

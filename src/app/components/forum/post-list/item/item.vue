@@ -115,7 +115,9 @@
 		<template v-if="!isReply" slot="controls">
 			<app-button
 				v-if="!topic.is_locked && app.user"
+				class="forum-post-reply-button"
 				circle
+				trans
 				icon="reply"
 				v-app-tooltip="$gettext('Reply')"
 				:disabled="isEditing"
@@ -126,9 +128,9 @@
 				<translate
 					:translate-n="post.replies_count"
 					:translate-params="{ count: post.replies_count }"
-					translate-plural="%{ count } replies"
+					translate-plural="+ %{ count } replies"
 				>
-					%{ count } reply
+					+ %{ count } reply
 				</translate>
 			</app-button>
 		</template>
@@ -186,6 +188,9 @@
 		margin-bottom: $line-height-computed
 		padding: 5px 10px
 		font-size: $font-size-small
+
+	&-reply-button
+		margin-right: 8px
 </style>
 
 <script lang="ts" src="./item"></script>

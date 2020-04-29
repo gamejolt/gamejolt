@@ -13,7 +13,7 @@ export class SeoMetaContainer extends MetaContainer {
 	}
 
 	private _updateRobotsTag() {
-		const tags = Object.keys(this.robotsTags).join(' ');
+		const tags = Object.keys(this.robotsTags).join(',');
 		if (tags) {
 			this.set('robots', tags);
 		}

@@ -1,7 +1,11 @@
+import { Route } from 'vue-router';
+import { EventBus } from '../../system/event/event-bus.service';
+import { objectEquals } from '../../utils/object';
 import { installVuePlugin } from '../../utils/vue';
 import { Environment } from '../environment/environment.service';
-import { EventBus } from '../event-bus/event-bus.service';
 import { Model } from '../model/model.service';
+import { AdSlot } from './ad-slot-info';
+import { AdAdapterBase } from './adapter-base';
 import { AdPlaywireAdapter } from './playwire/playwire-adapter';
 import { AdProperAdapter } from './proper/proper-adapter';
 import AppAdWidgetInner from './widget/inner';
@@ -20,7 +24,7 @@ export const AdsDisabledDev = GJ_BUILD_TYPE === 'development';
  * Whether or not we want to have click tracking enabled. It is not very
  * performant, so we should only turn on when needed.
  */
-const ClickTrackingEnabled = true;
+const ClickTrackingEnabled = false;
 
 export class AdSettingsContainer {
 	isPageDisabled = false;
@@ -52,12 +56,23 @@ function getRandom(min: number, max: number) {
 }
 
 function chooseAdapter() {
-	const adapters = [AdPlaywireAdapter, AdProperAdapter];
+	const adapters = [AdProperAdapter];
 	return adapters[getRandom(0, adapters.length)];
 }
 
+function didRouteChange(from: Route, to: Route) {
+	// We don't want to consider a route changing if just the hash changed. This
+	// helps with stuff like media bar.
+	return (
+		from.path !== to.path ||
+		!objectEquals(from.params, to.params) ||
+		!objectEquals(from.query, to.query)
+	);
+}
+
 export class AdStore {
-	adapter = new (chooseAdapter())();
+	private videoAdapter = new AdPlaywireAdapter();
+	private adapter = new (chooseAdapter())() as AdAdapterBase;
 
 	private routeResolved = false;
 	private ads: Set<AdComponent> = new Set();
@@ -75,13 +90,22 @@ export class AdStore {
 
 				// We set up events so that we know when a route begins and when the
 				// routing is fully resolved.
-				vm.$router.beforeEach((_to, _from, next) => {
-					this.adapter.onBeforeRouteChange();
-					this.routeResolved = false;
+				vm.$router.beforeEach((to, from, next) => {
+					// Make sure we only update if the route actually changed,
+					// since this gets called even if just a simple hash has
+					// changed.
+					if (didRouteChange(from, to)) {
+						this.adapter.onBeforeRouteChange();
+						this.routeResolved = false;
+					}
 					next();
 				});
 
 				EventBus.on('routeChangeAfter', () => {
+					if (this.routeResolved) {
+						return;
+					}
+
 					this.routeResolved = true;
 					this.adapter.onRouteChanged();
 					this.displayAds(Array.from(this.ads));
@@ -112,6 +136,20 @@ export class AdStore {
 
 	releasePageSettings() {
 		this.pageSettings = null;
+	}
+
+	chooseAdapterForSlot(slot: AdSlot) {
+		if (slot.size === 'video') {
+			return this.videoAdapter;
+		}
+		return this.adapter;
+	}
+
+	/**
+	 * Should only be used for testing!
+	 */
+	overrideAdapter(adapter: AdAdapterBase) {
+		this.adapter = adapter;
 	}
 
 	addAd(ad: AdComponent) {

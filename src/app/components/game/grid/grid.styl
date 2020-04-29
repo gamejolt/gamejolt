@@ -32,6 +32,13 @@
 				padding: 20px
 				width: 300px + @padding * 2
 
+		&-video-inner
+			padding-left: 20px
+			padding-right: 20px
+			// It needs to take up some height so that it pushes the next item
+			// in the grid down.
+			min-height: 50px
+
 	&-items
 		@media $media-sm-up
 			margin-left: -($grid-gutter-width / 2)

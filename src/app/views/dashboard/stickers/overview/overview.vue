@@ -18,7 +18,7 @@
 							</translate>
 						</p>
 						<p>
-							<app-button :to="{ name: 'dash.stickers.collect' }">
+							<app-button @click="onCollect">
 								<translate>Unlock a Sticker</translate>
 							</app-button>
 						</p>
@@ -51,15 +51,16 @@
 </template>
 
 <style lang="stylus" scoped>
+@require '../../../../../_common/sticker/card/variables'
+
 .-progress
 	max-width: 350px
 
 .-collection
-	display: flex
-	flex-wrap: wrap
-
-	& > div
-		margin: 8px
+	display: grid
+	grid-template-columns: repeat(auto-fill, $card-width)
+	justify-content: space-between
+	grid-gap: $card-margin * 2
 </style>
 
 <script lang="ts" src="./overview"></script>

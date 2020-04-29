@@ -124,6 +124,7 @@
 					:show-stickers="stickersVisible"
 					:no-animate-in="!animateStickers"
 					ref="stickerTarget"
+					@hide-all="onAllStickersHidden"
 				>
 					<!--
 						This shouldn't ever really show a collapser. It's for the jokers that think it would
@@ -135,7 +136,10 @@
 						:animate="false"
 						@require-change="canToggleLeadChanged"
 					>
-						<app-content-viewer class="fireside-post-lead" :source="post.lead_content" />
+						<app-content-viewer
+							class="fireside-post-lead"
+							:source="post.lead_content"
+						/>
 					</app-fade-collapse>
 				</app-sticker-target>
 
@@ -154,7 +158,11 @@
 				</div>
 
 				<div class="-communities" v-if="shouldShowCommunities">
-					<div class="-community-row" v-for="postCommunity of communities" :key="postCommunity.id">
+					<div
+						class="-community-row"
+						v-for="postCommunity of communities"
+						:key="postCommunity.id"
+					>
 						<app-community-pill
 							v-if="!feed.hideCommunity"
 							:community="postCommunity.community"
