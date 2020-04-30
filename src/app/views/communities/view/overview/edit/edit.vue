@@ -47,12 +47,11 @@
 			</ul>
 		</app-alert-dismissable>
 
-		<template v-if="isOwner && !!community.game">
-			<app-communities-overview-edit-notice :community="community" />
-			<div class="-spacer"></div>
-		</template>
-
-		<router-view @details-change="onDetailsChange" @channels-change="onChannelsChange" />
+		<router-view
+			@details-change="onDetailsChange"
+			@channels-change="onChannelsChange"
+			@games-change="onGamesChange"
+		/>
 	</div>
 </template>
 

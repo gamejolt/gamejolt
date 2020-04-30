@@ -16,10 +16,25 @@
 
 		<app-community-description :community="community" :is-editing="isEditing" :key="community.id" />
 
-		<template v-if="community.game">
-			<br />
-			<app-game-thumbnail :game="community.game" class="-community-game" />
-		</template>
+		<div v-if="shouldShowGames" class="-game-list">
+			<div class="clearfix">
+				<div class="pull-right" v-if="hasMoreGames">
+					<app-button trans @click="toggleGamesList">
+						<translate v-if="gameListCollapsed">
+							View All
+						</translate>
+						<translate v-else>
+							Show fewer
+						</translate>
+					</app-button>
+				</div>
+
+				<h5 class="section-header">
+					<translate>Games</translate>
+				</h5>
+			</div>
+			<app-game-list :games="visibleGames" event-label="community-sidebar" />
+		</div>
 
 		<div class="-mod-list">
 			<div class="clearfix">
@@ -93,9 +108,6 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-.-community-game
-	margin-bottom: 0
-
 .-mod-list-entry
 	margin-bottom: ($line-height-computed / 4)
 
@@ -118,6 +130,9 @@
 	change-bg('bg-offset')
 	border-radius: 100%
 	font-size: 14px
+
+.-game-list
+	margin-top: $line-height-computed
 
 .-mod-list
 	margin-top: $line-height-computed

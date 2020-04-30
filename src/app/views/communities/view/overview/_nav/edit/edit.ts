@@ -24,6 +24,8 @@ export default class AppCommunitiesViewOverviewNavEdit extends Vue {
 				return this.$gettext('Details');
 			case 'communities.view.overview.edit.channels':
 				return this.$gettext('Channels');
+			case 'communities.view.overview.edit.games':
+				return this.$gettext('Games');
 			case 'communities.view.overview.edit.moderators':
 				return this.$gettext('Moderators');
 			case 'communities.view.overview.edit.blocks':

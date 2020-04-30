@@ -4,18 +4,17 @@ import AppAlertDismissable from '../../../../../../_common/alert/dismissable/dis
 import { Api } from '../../../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
+import { Game } from '../../../../../../_common/game/game.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { WithRouteStore } from '../../../../../../_common/route/route-store';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { store } from '../../../../../store';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './edit.store';
-import AppCommunitiesOverviewEditNotice from './_notice/notice.vue';
 
 @Component({
 	name: 'RouteCommunitiesViewEdit',
 	components: {
 		AppAlertDismissable,
-		AppCommunitiesOverviewEditNotice,
 	},
 })
 @WithRouteStore({
@@ -63,5 +62,9 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 
 	onChannelsChange(channels: CommunityChannel[]) {
 		this.$emit('channels-change', channels);
+	}
+
+	onGamesChange(games: Game[]) {
+		this.$emit('games-change', games);
 	}
 }
