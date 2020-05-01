@@ -35,8 +35,9 @@
 			</p>
 
 			<p class="help-block strong" v-translate="{ dimensions: maxWidth + '×' + maxHeight }">
-				The required dimensions for a background image is under
-				<code>%{dimensions}</code>.
+				The required size for a background image is under
+				<code>%{dimensions}</code>
+				(ratio of 3.8 ÷ 1).
 			</p>
 
 			<app-form-control-upload
