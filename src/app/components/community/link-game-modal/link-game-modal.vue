@@ -34,7 +34,7 @@
 					</div>
 				</div>
 			</template>
-			<div v-else class="page-help">
+			<div v-else-if="!isLoading" class="page-help">
 				<p>
 					<translate>
 						You have no more games available to link. Just remember, games can only be linked to a
