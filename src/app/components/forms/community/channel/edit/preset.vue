@@ -35,7 +35,7 @@
 			</p>
 
 			<p class="help-block" v-translate="{ dimensions: maxWidth + '×' + maxHeight }">
-				The required size for a background image is under
+				Your background image must be smaller than
 				<code>%{dimensions}</code>.
 				<br />
 				<strong>Images are cropped to a ratio of 3.8 ÷ 1.</strong>
