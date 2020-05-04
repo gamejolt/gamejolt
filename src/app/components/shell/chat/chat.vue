@@ -6,6 +6,7 @@
 			id="shell-chat-pane"
 			class="shell-pane shell-pane-right"
 			:class="{ visible: isRightPaneVisible }"
+			overlay
 		>
 			<app-chat-sidebar v-if="isRightPaneVisible" />
 		</app-scroll-scroller>
