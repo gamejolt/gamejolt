@@ -34,10 +34,11 @@
 				<strong>PNGs are highly recommended as they produce a lossless image.</strong>
 			</p>
 
-			<p class="help-block strong" v-translate="{ dimensions: maxWidth + '×' + maxHeight }">
+			<p class="help-block" v-translate="{ dimensions: maxWidth + '×' + maxHeight }">
 				The required size for a background image is under
-				<code>%{dimensions}</code>
-				(ratio of 3.8 ÷ 1).
+				<code>%{dimensions}</code>.
+				<br />
+				<strong>Images are cropped to a ratio of 3.8 ÷ 1.</strong>
 			</p>
 
 			<app-form-control-upload
