@@ -50,6 +50,7 @@
 
 				<app-popper
 					v-if="!Screen.isXs"
+					content-class="fill-darkest"
 					hide-on-state-change
 					@show="moreMenuShowing = true"
 					@hide="moreMenuShowing = false"
@@ -59,7 +60,7 @@
 						<app-jolticon icon="ellipsis-v" />
 					</a>
 
-					<div class="fill-darkest" slot="popover">
+					<div slot="popover">
 						<div class="list-group-dark">
 							<router-link
 								class="list-group-item has-icon offline-disable"
