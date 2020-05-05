@@ -5,10 +5,8 @@ import { ChatNotification } from './notification/notification.service';
 import { ChatUser } from './user';
 
 export class UserChannel extends Channel {
-	client: ChatClient;
-	socket: Socket;
-
-	private friendPresences = {};
+	readonly client: ChatClient;
+	readonly socket: Socket;
 
 	constructor(userId: number, client: ChatClient, params?: object) {
 		super('user:' + userId, params, client.socket as Socket);
@@ -25,34 +23,15 @@ export class UserChannel extends Channel {
 		this.on('you_updated', this.onYouUpdated.bind(this));
 	}
 
-	private mapFriendPresences() {
-		Object.keys(this.friendPresences).map(presenceId =>
-			this.client.friendsList.online(+presenceId)
-		);
-	}
-
 	private setupPresence() {
-		this.on('presence_state', state => {
-			this.friendPresences = Presence.syncState(this.friendPresences, state);
-			this.mapFriendPresences();
-		});
+		const presence = new Presence(this);
 
-		this.on('presence_diff', diff => {
-			this.friendPresences = Presence.syncDiff(this.friendPresences, diff);
-			this.mapFriendPresences();
-		});
-
-		this.socket.onMessage(
-			({ topic, event, payload }: { topic: string; event: string; payload: any }) => {
-				if (event === 'presence_diff' && /^user_presence:\d+$/.test(topic)) {
-					this.friendPresences = Presence.syncDiff(
-						this.friendPresences,
-						payload,
-						this.onFriendJoin.bind(this),
-						this.onFriendLeave.bind(this)
-					);
-				}
-			}
+		presence.onJoin(this.onFriendJoin.bind(this));
+		presence.onLeave(this.onFriendLeave.bind(this));
+		presence.onSync(() =>
+			presence.list((id, _user) => {
+				this.client.friendsList.online(+id);
+			})
 		);
 	}
 

@@ -217,10 +217,10 @@ export class ChatClient {
 		);
 	}
 
-	private syncPresentUsers(presences: any, room: ChatRoom) {
+	private syncPresentUsers(presence: any, room: ChatRoom) {
 		const presentUsers: ChatUser[] = [];
-		Presence.list(presences).map((presence: any) => {
-			const user = new ChatUser(presence.user);
+		presence.list((_id: number, pres: any) => {
+			const user = new ChatUser(pres.user);
 			user.isOnline = true;
 			presentUsers.push(user);
 		});
@@ -327,15 +327,8 @@ export class ChatClient {
 					})
 			);
 
-			channel.on('presence_state', state => {
-				presences = Presence.syncState(presences, state);
-				this.syncPresentUsers(presences, room);
-			});
-
-			channel.on('presence_diff', diff => {
-				presences = Presence.syncDiff(presences, diff);
-				this.syncPresentUsers(presences, room);
-			});
+			const presence = new Presence(channel);
+			presence.onSync(() => this.syncPresentUsers(presence, room));
 
 			channel.on('message', data => {
 				if (this.currentUser && data.user.id === this.currentUser.id) {
