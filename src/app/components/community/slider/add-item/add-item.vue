@@ -12,6 +12,7 @@
 	position: relative
 	height: $-size-xs
 	vertical-align: middle
+	margin-right: 0
 
 	@media $media-sm-up
 		height: $-size
