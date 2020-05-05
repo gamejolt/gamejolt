@@ -15,7 +15,7 @@
 				<br />
 				For still images, PNGs are recommended because they produce lossless images.
 			</p>
-			<p class="help-block strong" v-translate="{ dimensions: '1280x720' }">
+			<p class="help-block strong" v-translate="{ dimensions: '1280×720' }">
 				The recommended size for a thumbnail is
 				<code>%{dimensions}</code>
 				(ratio of 16 ÷ 9).

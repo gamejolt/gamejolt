@@ -16,8 +16,11 @@ import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../_common/user/user.model';
 import { Store } from '../../../store';
+import AppGameList from '../../game/list/list.vue';
 import AppCommunityDescription from '../description/description.vue';
 import { CommunitySidebarData } from './sidebar-data';
+
+const GAME_LIST_COLLAPSED_COUNT = 3;
 
 @Component({
 	components: {
@@ -29,6 +32,7 @@ import { CommunitySidebarData } from './sidebar-data';
 		AppSocialTwitterShare,
 		AppSocialFacebookLike,
 		AppTimeAgo,
+		AppGameList,
 	},
 })
 export default class AppCommunitySidebar extends Vue {
@@ -51,6 +55,7 @@ export default class AppCommunitySidebar extends Vue {
 	isLoadingMoreCollaborators = false;
 	loadedAllCollaborators = false;
 	isShowingShare = false;
+	gameListCollapsed = true;
 
 	readonly GJ_IS_CLIENT = GJ_IS_CLIENT;
 
@@ -103,6 +108,32 @@ export default class AppCommunitySidebar extends Vue {
 		return mods;
 	}
 
+	get filteredGames() {
+		// We only show visible games. Collaborators with the right permissions also get hidden games,
+		// but to avoid confusion we don't show them in the sidebar. They do show when editing the community.
+		return this.community.games?.filter(i => i.isVisible);
+	}
+
+	get shouldShowGames() {
+		return this.filteredGames && this.filteredGames.length;
+	}
+
+	get hasMoreGames() {
+		return this.filteredGames && this.filteredGames.length > GAME_LIST_COLLAPSED_COUNT;
+	}
+
+	get visibleGames() {
+		if (!this.filteredGames) {
+			return [];
+		}
+
+		if (this.gameListCollapsed) {
+			return this.filteredGames.slice(0, GAME_LIST_COLLAPSED_COUNT);
+		}
+
+		return this.filteredGames;
+	}
+
 	copyShareUrl() {
 		Clipboard.copy(this.shareUrl);
 	}
@@ -136,5 +167,9 @@ export default class AppCommunitySidebar extends Vue {
 
 		this.isLoadingMoreCollaborators = false;
 		this.loadedAllCollaborators = true;
+	}
+
+	toggleGamesList() {
+		this.gameListCollapsed = !this.gameListCollapsed;
 	}
 }

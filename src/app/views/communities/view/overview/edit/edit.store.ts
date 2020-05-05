@@ -24,6 +24,7 @@ export const routeStore = NamespaceVuexStore<RouteStore, RouteActions, RouteMuta
 type RouteActions = {};
 type RouteMutations = {
 	populate: any;
+	setCanLinkNewGames: boolean;
 };
 
 @VuexModule()

@@ -14,16 +14,17 @@
 		>
 			<div
 				class="media-item-container"
-				:class="{
-					'media-item-container-placeholder': shouldShowPlaceholder,
-				}"
 				ref="container"
 				:style="{
 					width: containerWidth,
 					height: containerHeight,
 				}"
 			>
-				<app-media-item-backdrop :media-item="mediaItem" radius="lg">
+				<app-media-item-backdrop
+					:class="{ '-backdrop': shouldShowPlaceholder }"
+					:media-item="mediaItem"
+					radius="lg"
+				>
 					<template v-if="isHydrated">
 						<component
 							:is="hasLink && !isEditing ? 'a' : 'span'"
@@ -31,7 +32,16 @@
 							rel="nofollow noopener"
 							target="_blank"
 						>
+							<app-img-responsive
+								v-if="shouldUseMediaserver"
+								class="content-image"
+								:src="mediaItem.mediaserver_url"
+								:alt="title"
+								:title="title"
+								@load.native="onImageLoad"
+							/>
 							<img
+								v-else
 								class="img-responsive content-image"
 								:src="mediaItem.img_url"
 								:alt="title"
@@ -86,11 +96,10 @@
 	overflow: hidden
 	max-width: 100%
 	position: relative
-	transition: background-color 0.1s ease
 
-// While the image is still loading, we show a dimmed background to better indicate the size of the placeholder
-.media-item-container-placeholder
-	change-bg('bg-offset')
+	// While the image is still loading, we show a dimmed background as a fallback for app-media-item-backdrop
+	.-backdrop
+		change-bg('bg-offset')
 
 .link-overlay
 	position: absolute

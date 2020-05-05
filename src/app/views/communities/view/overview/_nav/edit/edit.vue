@@ -63,6 +63,26 @@
 						</router-link>
 					</li>
 				</app-community-perms>
+				<app-community-perms :community="community" required="community-games">
+					<li>
+						<router-link
+							class="-item"
+							:to="{
+								name: 'communities.view.overview.edit.games',
+								params: {
+									id: community.id,
+								},
+							}"
+							active-class="active"
+							block
+							@click.native="isNavExpanded = false"
+						>
+							<span class="-label">
+								<translate>Games</translate>
+							</span>
+						</router-link>
+					</li>
+				</app-community-perms>
 				<app-community-perms :community="community" required="community-moderators">
 					<li>
 						<router-link

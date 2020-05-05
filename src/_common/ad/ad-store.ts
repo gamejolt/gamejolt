@@ -1,4 +1,6 @@
+import { Route } from 'vue-router';
 import { EventBus } from '../../system/event/event-bus.service';
+import { objectEquals } from '../../utils/object';
 import { installVuePlugin } from '../../utils/vue';
 import { Environment } from '../environment/environment.service';
 import { Model } from '../model/model.service';
@@ -58,6 +60,16 @@ function chooseAdapter() {
 	return adapters[getRandom(0, adapters.length)];
 }
 
+function didRouteChange(from: Route, to: Route) {
+	// We don't want to consider a route changing if just the hash changed. This
+	// helps with stuff like media bar.
+	return (
+		from.path !== to.path ||
+		!objectEquals(from.params, to.params) ||
+		!objectEquals(from.query, to.query)
+	);
+}
+
 export class AdStore {
 	private videoAdapter = new AdPlaywireAdapter();
 	private adapter = new (chooseAdapter())() as AdAdapterBase;
@@ -78,13 +90,22 @@ export class AdStore {
 
 				// We set up events so that we know when a route begins and when the
 				// routing is fully resolved.
-				vm.$router.beforeEach((_to, _from, next) => {
-					this.adapter.onBeforeRouteChange();
-					this.routeResolved = false;
+				vm.$router.beforeEach((to, from, next) => {
+					// Make sure we only update if the route actually changed,
+					// since this gets called even if just a simple hash has
+					// changed.
+					if (didRouteChange(from, to)) {
+						this.adapter.onBeforeRouteChange();
+						this.routeResolved = false;
+					}
 					next();
 				});
 
 				EventBus.on('routeChangeAfter', () => {
+					if (this.routeResolved) {
+						return;
+					}
+
 					this.routeResolved = true;
 					this.adapter.onRouteChanged();
 					this.displayAds(Array.from(this.ads));

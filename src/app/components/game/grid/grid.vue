@@ -16,8 +16,8 @@
 		<div :class="{ 'scrollable-grid': isScrollable }">
 			<app-condense-whitespace class="game-grid-items">
 				<div class="game-grid-ad" v-if="Screen.isDesktop && shouldShowAds">
-					<div class="game-grid-ad-inner">
-						<app-ad-widget size="rectangle" placement="content" :meta="{ staticSize: true }" />
+					<div class="game-grid-ad-video-inner">
+						<app-ad-widget size="video" placement="content" />
 					</div>
 				</div>
 
