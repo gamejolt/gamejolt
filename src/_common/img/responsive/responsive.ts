@@ -53,9 +53,9 @@ export class AppImgResponsive extends Vue {
 		const containerWidth = Ruler.width(this.$el.parentNode as HTMLElement);
 		const containerHeight = Ruler.height(this.$el.parentNode as HTMLElement);
 
-		// Make sure we never do a 0 width, just in case.
+		// Make sure we never do a 0 size, just in case.
 		// Seems to happen in some situations.
-		if (containerWidth <= 0 || containerHeight <= 0) {
+		if (containerWidth <= 0 && containerHeight <= 0) {
 			return;
 		}
 
