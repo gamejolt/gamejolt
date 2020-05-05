@@ -1,6 +1,6 @@
 <template>
 	<div class="-list" v-if="communities.length || showAddButton">
-		<app-scroll-scroller horizontal overlay>
+		<app-scroll-scroller horizontal thin>
 			<app-community-slider-item
 				v-for="community of communities"
 				:key="community.id"

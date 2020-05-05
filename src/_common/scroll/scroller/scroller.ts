@@ -10,7 +10,7 @@ import { AppScrollInviewParent } from '../inview/parent';
 })
 export default class AppScrollScroller extends Vue {
 	@Prop(propOptional(Boolean))
-	overlay?: boolean;
+	thin?: boolean;
 
 	@Prop(propOptional(Boolean))
 	horizontal?: boolean;

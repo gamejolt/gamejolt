@@ -1,5 +1,5 @@
 <template>
-	<app-scroll-scroller overlay @scroll.native="onScroll">
+	<app-scroll-scroller thin @scroll.native="onScroll">
 		<div class="-container">
 			<transition-group @enter="onMessageTransition">
 				<div class="anim-fade-in no-animate-leave" v-for="message of messages" :key="message.id">

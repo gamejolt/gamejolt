@@ -37,7 +37,7 @@
 			<div class="-header">
 				<slot name="header" />
 			</div>
-			<app-scroll-scroller ref="scroller" class="-main" overlay>
+			<app-scroll-scroller ref="scroller" class="-main" thin>
 				<slot name="popover" />
 			</app-scroll-scroller>
 			<div class="-footer">
