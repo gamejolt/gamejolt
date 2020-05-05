@@ -1,6 +1,6 @@
 <template>
 	<app-popper
-		content-class="list-group-dark"
+		popover-class="list-group-dark"
 		hide-on-state-change
 		@show="onShow()"
 		@hide="onHide()"

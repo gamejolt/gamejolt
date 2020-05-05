@@ -1,8 +1,8 @@
 <template>
 	<app-popper
 		v-if="!Connection.isClientOffline"
+		popover-class="fill-dark"
 		hide-on-state-change
-		content-class="fill-dark"
 		@show="onShow()"
 		@hide="onHide()"
 	>

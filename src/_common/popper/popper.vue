@@ -27,7 +27,7 @@
 			v-if="isVisible"
 			slot="popover"
 			class="-container"
-			:class="contentClass"
+			:class="popoverClass"
 			:style="{
 				maxHeight,
 				width,

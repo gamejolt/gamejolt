@@ -67,7 +67,7 @@
 						</td>
 						<td class="text-right">
 							<div class="table-controls">
-								<app-popper content-class="list-group-dark">
+								<app-popper popover-class="list-group-dark">
 									<a class="link-muted">
 										<app-jolticon icon="cog" />
 									</a>

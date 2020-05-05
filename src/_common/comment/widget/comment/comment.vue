@@ -23,7 +23,7 @@
 		</template>
 
 		<template #meta>
-			<app-popper v-if="user" content-class="list-group-dark">
+			<app-popper v-if="user" popover-class="list-group-dark">
 				<a class="link-muted" v-app-tooltip="$gettext('More Options')">
 					<app-jolticon icon="ellipsis-v" class="middle" />
 				</a>

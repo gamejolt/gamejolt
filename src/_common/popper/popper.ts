@@ -72,7 +72,7 @@ export default class AppPopper extends Vue {
 	openGroup?: string;
 
 	@Prop(String)
-	contentClass?: string;
+	popoverClass?: string;
 
 	$refs!: {
 		popover: any;

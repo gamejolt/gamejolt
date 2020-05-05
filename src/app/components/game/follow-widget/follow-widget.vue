@@ -1,7 +1,7 @@
 <template>
 	<app-popper
 		class="game-follow-widget"
-		content-class="fill-darkest"
+		popover-class="fill-darkest"
 		trigger="manual"
 		track-trigger-width
 		:show="isShowingFollowPopover"

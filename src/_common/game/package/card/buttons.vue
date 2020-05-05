@@ -25,7 +25,7 @@
 		[...] after. If the package has normal builds too, then we just show it as a more options
 		sparse button.
 	-->
-		<app-popper content-class="list-group-dark" v-if="card.extraBuilds.length">
+		<app-popper popover-class="list-group-dark" v-if="card.extraBuilds.length">
 			<app-button
 				icon="ellipsis-v"
 				:primary="card.otherOnly"

@@ -103,7 +103,7 @@
 			-->
 				<app-popper
 					v-if="gamePackages.length > 1"
-					content-class="list-group-dark"
+					popover-class="list-group-dark"
 					@show="$emit('show-launch-options', $event)"
 					@hide="$emit('hide-launch-options', $event)"
 				>

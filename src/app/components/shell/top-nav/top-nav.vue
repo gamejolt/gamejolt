@@ -50,7 +50,7 @@
 
 				<app-popper
 					v-if="!Screen.isXs"
-					content-class="fill-darkest"
+					popover-class="fill-darkest"
 					hide-on-state-change
 					@show="moreMenuShowing = true"
 					@hide="moreMenuShowing = false"

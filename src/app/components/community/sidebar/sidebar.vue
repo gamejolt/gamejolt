@@ -77,7 +77,7 @@
 
 		<div class="-community-end small">
 			<app-popper
-				content-class="fill-darkest"
+				popover-class="fill-darkest"
 				@show="isShowingShare = true"
 				@hide="isShowingShare = false"
 			>

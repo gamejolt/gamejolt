@@ -1,5 +1,5 @@
 <template>
-	<app-popper content-class="fill-darkest">
+	<app-popper popover-class="fill-darkest">
 		<app-button sparse circle trans icon="ellipsis-v" />
 
 		<div slot="popover">
