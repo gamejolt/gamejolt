@@ -11,7 +11,7 @@
 				</template>
 
 				<template v-if="showModTools">
-					<app-popper>
+					<app-popper content-class="list-group-dark">
 						<app-button overlay circle icon="cog" />
 
 						<app-game-mod-links slot="popover" :game="game" />
@@ -69,7 +69,7 @@
 
 				<div class="-dev" :title="`${game.developer.display_name} (@${game.developer.username})`">
 					{{ game.developer.display_name }}
-					<small><app-user-verified-tick :user="game.developer" vertical-align /></small>
+					<small><app-user-verified-tick :user="game.developer" vertical-align/></small>
 				</div>
 
 				<div class="-title" :title="game.title">

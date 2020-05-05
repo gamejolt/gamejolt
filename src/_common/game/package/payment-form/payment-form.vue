@@ -209,7 +209,11 @@
 												</span>
 											</div>
 
-											<app-popper v-if="cards.length > 1" class="saved-card-more">
+											<app-popper
+												v-if="cards.length > 1"
+												class="saved-card-more"
+												content-class="list-group-dark"
+											>
 												<span
 													:class="{ disabled: isLoadingMethods }"
 													v-app-tooltip="$gettext('Select another card')"

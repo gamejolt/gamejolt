@@ -48,10 +48,7 @@
 							<!-- Friend status -->
 							<span
 								class="tag tag-highlight"
-								v-if="
-									userFriendship &&
-										userFriendship.state === UserFriendship.STATE_FRIENDS
-								"
+								v-if="userFriendship && userFriendship.state === UserFriendship.STATE_FRIENDS"
 								v-app-tooltip="$gettext('profile.friend_tooltip')"
 							>
 								<translate>profile.friend_tag</translate>
@@ -102,10 +99,7 @@
 									</router-link>
 								</li>
 								<li>
-									<router-link
-										:to="{ name: 'profile.following' }"
-										active-class="active"
-									>
+									<router-link :to="{ name: 'profile.following' }" active-class="active">
 										<translate>Following</translate>
 										<span class="badge">
 											{{ user.following_count | number }}
@@ -113,10 +107,7 @@
 									</router-link>
 								</li>
 								<li>
-									<router-link
-										:to="{ name: 'profile.followers' }"
-										active-class="active"
-									>
+									<router-link :to="{ name: 'profile.followers' }" active-class="active">
 										<translate>Followers</translate>
 										<span class="badge">
 											{{ user.follower_count | number }}
@@ -135,26 +126,17 @@
 									</a>
 								</li>
 								<li v-if="videosCount > 0">
-									<router-link
-										:to="{ name: 'profile.videos' }"
-										active-class="active"
-									>
+									<router-link :to="{ name: 'profile.videos' }" active-class="active">
 										<translate>Videos</translate>
 									</router-link>
 								</li>
 								<li>
-									<router-link
-										:to="{ name: 'profile.library' }"
-										active-class="active"
-									>
+									<router-link :to="{ name: 'profile.library' }" active-class="active">
 										<translate>profile.library_tab</translate>
 									</router-link>
 								</li>
 								<li>
-									<router-link
-										:to="{ name: 'profile.trophies' }"
-										active-class="active"
-									>
+									<router-link :to="{ name: 'profile.trophies' }" active-class="active">
 										<translate>Trophies</translate>
 										<span class="badge">
 											{{ trophyCount | number }}
@@ -162,7 +144,7 @@
 									</router-link>
 								</li>
 								<li>
-									<app-popper>
+									<app-popper content-class="list-group-dark">
 										<a>
 											<app-jolticon icon="ellipsis-v" />
 										</a>
@@ -187,29 +169,21 @@
 											<a
 												class="list-group-item has-icon"
 												v-if="
-													userFriendship &&
-														userFriendship.state ===
-															UserFriendship.STATE_FRIENDS
+													userFriendship && userFriendship.state === UserFriendship.STATE_FRIENDS
 												"
 												@click="removeFriend()"
 											>
 												<app-jolticon icon="friend-remove-1" notice />
 												<translate>profile.remove_friend_button</translate>
 											</a>
-											<a
-												class="list-group-item has-icon"
-												v-if="canBlock"
-												@click="blockUser"
-											>
+											<a class="list-group-item has-icon" v-if="canBlock" @click="blockUser">
 												<app-jolticon icon="friend-remove-2" notice />
 												<translate>Block user</translate>
 											</a>
 											<a
 												class="list-group-item has-icon"
 												v-if="app.user && app.user.permission_level > 0"
-												:href="
-													`${Environment.baseUrl}/moderate/users/view/${user.id}`
-												"
+												:href="`${Environment.baseUrl}/moderate/users/view/${user.id}`"
 												target="_blank"
 											>
 												<app-jolticon icon="cog" />

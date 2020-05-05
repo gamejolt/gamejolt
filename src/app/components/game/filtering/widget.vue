@@ -3,7 +3,7 @@
 		<nav class="game-filtering-widget-list platform-list inline">
 			<ul>
 				<li v-for="filter of filters" :key="filter">
-					<app-popper>
+					<app-popper content-class="list-group-dark">
 						<a v-app-track-event="`game-filtering:tab-${filter}`">
 							{{ definitions[filter].label }}
 							<template v-if="definitions[filter].type === 'radio'">

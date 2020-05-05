@@ -60,7 +60,7 @@
 					</td>
 					<td class="text-right">
 						<div class="table-controls">
-							<app-popper>
+							<app-popper content-class="list-group-dark">
 								<a class="text-muted">
 									<app-jolticon icon="cog" />
 								</a>

@@ -27,6 +27,7 @@
 
 		<app-popper
 			class="-popper"
+			content-class="list-group-dark"
 			trigger="right-click"
 			placement="right"
 			hide-on-state-change
