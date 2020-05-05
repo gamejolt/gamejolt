@@ -2,9 +2,9 @@
 	<div
 		class="scroll-scroller"
 		:class="{
+			'-thin': thin,
 			'-horizontal': horizontal,
 			'-hide-scrollbar': hideScrollbar,
-			'-overlay': overlay,
 		}"
 	>
 		<app-scroll-inview-parent v-if="isMounted" :scroller="_scrollElement">
@@ -20,37 +20,46 @@
 // 6px appears to be the width for the 'thin' scrollbar on Firefox
 $-scroll-width = 6px
 $-thumb-radius = $-scroll-width / 2
+$-thumb-color = var(--theme-light)
 
 .scroll-scroller
 	scrollable()
+	// Firefox styling
+	scrollbar-color: $-thumb-color transparent
+
+	// Other browser styling - track
+	&::-webkit-scrollbar
+		background-color: transparent
+
+		// thumb-bar
+		&-thumb
+			background-color: $-thumb-color
 
 	&.-horizontal
 		scrollable-x()
 
-	&.-overlay
-		// Firefox styling
+	&.-thin
 		scrollbar-width: thin
-		scrollbar-color: var(--theme-light) transparent
 
-		// Other browser styling
-		// track
 		&::-webkit-scrollbar
-			background-color: transparent
 			width: $-scroll-width
 			height: $-scroll-width
 
-			// thumb-bar
 			&-thumb
-				background-color: var(--theme-light)
 				border-radius: $-thumb-radius
 
 	&.-hide-scrollbar
-		// Firefox styling
 		scrollbar-width: none
 
-		// other browser styling
 		&::-webkit-scrollbar
 			display: none
+
+	// Making sure that we don't have transparency issues with the track in modals
+	&.modal
+		scrollbar-color: $-thumb-color var(--theme-darkest)
+
+		&::-webkit-scrollbar
+			background-color: var(--theme-darkest)
 </style>
 
 <script lang="ts" src="./scroller"></script>
