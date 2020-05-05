@@ -1,5 +1,5 @@
 <template>
-	<app-scroll-inview-parent
+	<div
 		class="scroll-scroller"
 		:class="{
 			'-horizontal': horizontal,
@@ -7,8 +7,10 @@
 			'-overlay': overlay,
 		}"
 	>
-		<slot />
-	</app-scroll-inview-parent>
+		<app-scroll-inview-parent v-if="isMounted" :scroller="_scrollElement">
+			<slot />
+		</app-scroll-inview-parent>
+	</div>
 </template>
 
 <style lang="stylus" scoped>
@@ -37,7 +39,7 @@ $-thumb-radius = $-scroll-width / 2
 			width: $-scroll-width
 			height: $-scroll-width
 
-			// bar
+			// thumb-bar
 			&-thumb
 				background-color: var(--theme-light)
 				border-radius: $-thumb-radius
