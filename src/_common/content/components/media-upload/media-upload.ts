@@ -125,7 +125,7 @@ export default class AppContentMediaUpload extends Vue {
 			Growls.error({
 				title: this.$gettext('Oh no!'),
 				message: this.$gettextInterpolate(
-					"It looks like your image's filesize or dimensions are too large. The maximum allowed size is %{ width }x%{ height } pixels.",
+					"It looks like your image's filesize or dimensions are too large. Its filesize must be less than %{ filesize } and its dimensions less than %{ width }×%{ height }",
 					{ width: maxWidth, height: maxHeight, size: maxFilesize }
 				),
 			});
