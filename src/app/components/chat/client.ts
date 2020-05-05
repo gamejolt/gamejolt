@@ -1,4 +1,4 @@
-import { Channel, Presence, Socket } from 'phoenix';
+import { Channel, Socket } from 'phoenix';
 import Vue from 'vue';
 import { EventBus } from '../../../system/event/event-bus.service';
 import { sleep } from '../../../utils/utils';
@@ -7,6 +7,7 @@ import { Environment } from '../../../_common/environment/environment.service';
 import { store } from '../../store';
 import { ChatMessage, ChatMessageType } from './message';
 import { ChatRoom } from './room';
+import { RoomChannel } from './room-channel';
 import { ChatUser } from './user';
 import { UserChannel } from './user-channel';
 import { ChatUserCollection } from './user-collection';
@@ -61,7 +62,7 @@ export class ChatClient {
 	room: ChatRoom | null = null;
 
 	// The following are indexed by room ID.
-	roomChannels: { [k: string]: Channel } = {};
+	roomChannels: { [k: string]: RoomChannel } = {};
 	messages: { [k: string]: ChatMessage[] } = {};
 	usersOnline: { [k: string]: ChatUserCollection } = {};
 	notifications: { [k: string]: number } = {};
@@ -217,21 +218,28 @@ export class ChatClient {
 		);
 	}
 
-	private syncPresentUsers(presence: any, room: ChatRoom) {
-		const presentUsers: ChatUser[] = [];
-		presence.list((_id: number, pres: any) => {
-			const user = new ChatUser(pres.user);
-			user.isOnline = true;
-			presentUsers.push(user);
-		});
+	private async joinRoomChannel(roomId: number) {
+		const channel = new RoomChannel(roomId, this);
 
-		if (room.isGroupRoom) {
-			Vue.set(
-				this.usersOnline,
-				'' + room.id,
-				new ChatUserCollection(ChatUserCollection.TYPE_ROOM, presentUsers)
-			);
-		}
+		await pollRequest(
+			`Join room channel: ${roomId}`,
+			() =>
+				new Promise((resolve, reject) => {
+					channel
+						.join()
+						.receive('error', reject)
+						.receive('ok', response => {
+							this.roomChannels[roomId] = channel;
+							channel.room = new ChatRoom(response.room);
+							const messages = response.messages.map(
+								(msg: ChatMessage) => new ChatMessage(msg)
+							);
+							messages.reverse();
+							this.setupRoom(channel.room, messages);
+							resolve();
+						});
+				})
+		);
 	}
 
 	disconnect() {
@@ -253,7 +261,7 @@ export class ChatClient {
 		}
 	}
 
-	private setRoom(newRoom: ChatRoom | undefined) {
+	setRoom(newRoom: ChatRoom | undefined) {
 		// In single-room mode, if there is a currently active room, we always want
 		// to clear it out. Whether we're setting to null or a new room.
 		this.leaveRoom();
@@ -288,7 +296,7 @@ export class ChatClient {
 	 * Call this to open a room. It'll do the correct thing to either open the chat if closed, or
 	 * enter the room.
 	 */
-	async enterRoom(roomId: number) {
+	enterRoom(roomId: number) {
 		if (this.isInRoom(roomId)) {
 			return;
 		}
@@ -303,69 +311,7 @@ export class ChatClient {
 				return;
 			}
 
-			const channel = this.socket.channel(`room:${roomId}`);
-			let presences: any = {};
-			let room: ChatRoom;
-
-			await pollRequest(
-				`Join room channel: ${roomId}`,
-				() =>
-					new Promise((resolve, reject) => {
-						channel
-							.join()
-							.receive('error', reject)
-							.receive('ok', response => {
-								this.roomChannels[roomId] = channel;
-								room = new ChatRoom(response.room);
-								const msgs = response.messages.map(
-									(msg: ChatMessage) => new ChatMessage(msg)
-								);
-								msgs.reverse();
-								this._joinRoom(room, msgs);
-								resolve();
-							});
-					})
-			);
-
-			const presence = new Presence(channel);
-			presence.onSync(() => this.syncPresentUsers(presence, room));
-
-			channel.on('message', data => {
-				if (this.currentUser && data.user.id === this.currentUser.id) {
-					return;
-				}
-
-				const message = new ChatMessage(data);
-				this._processNewOutput([message], false);
-
-				const friend = this.friendsList.getByRoom(message.roomId);
-				if (friend) {
-					friend.lastMessageOn = message.loggedOn.getTime();
-					this.friendsList.update(friend);
-				}
-			});
-
-			channel.on('clear_notifications', data => {
-				if (this.isInRoom(data.room_id)) {
-					Vue.delete(this.notifications, '' + data.room_id);
-				}
-			});
-
-			channel.on('user_updated', data => {
-				if (this.room && this.isInRoom(roomId) && this.room.isGroupRoom) {
-					this.usersOnline[roomId].update(data);
-				}
-			});
-
-			channel.onClose(() => {
-				if (this.isInRoom(roomId)) {
-					this.setRoom(undefined);
-
-					// Reset the room we were in
-					Vue.delete(this.usersOnline, roomId);
-					Vue.delete(this.messages, roomId);
-				}
-			});
+			this.joinRoomChannel(roomId);
 		}
 	}
 
@@ -470,7 +416,7 @@ export class ChatClient {
 		}
 	}
 
-	private _joinRoom(room: ChatRoom, messages: ChatMessage[]) {
+	private setupRoom(room: ChatRoom, messages: ChatMessage[]) {
 		if (!this.isInRoom(room.id)) {
 			if (room.type === ChatRoom.ROOM_PM) {
 				// We need to rename the room to the username
@@ -483,7 +429,7 @@ export class ChatClient {
 			Vue.set(this.messages, '' + room.id, []);
 
 			this.setRoom(room);
-			this._processNewOutput(messages, true);
+			this.processNewOutput(messages, true);
 		}
 	}
 
@@ -520,7 +466,7 @@ export class ChatClient {
 		this.queueMessage(message.content, message.roomId);
 	}
 
-	private _processNewOutput(messages: ChatMessage[], isPrimer: boolean) {
+	processNewOutput(messages: ChatMessage[], isPrimer: boolean) {
 		if (!messages.length) {
 			return;
 		}
