@@ -62,7 +62,7 @@ export class AppImgResponsive extends Vue {
 		// Update width in the URL.
 		// We keep width within 100px increment bounds.
 		let newSrc = this.src;
-		let largerDimension = containerWidth > containerHeight ? containerWidth : containerHeight;
+		let largerDimension = Math.max(containerWidth, containerHeight);
 
 		if (Screen.isHiDpi) {
 			// For high dpi, double the width.
