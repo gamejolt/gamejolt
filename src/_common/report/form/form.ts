@@ -6,12 +6,19 @@ import AppFormControlTextarea from '../../form-vue/control/textarea/textarea.vue
 import { BaseForm, FormOnSubmit } from '../../form-vue/form.service';
 import { Game } from '../../game/game.model';
 
+interface FormModel {
+	reason: string;
+	context: string[];
+	description: string;
+	source: string;
+}
+
 @Component({
 	components: {
 		AppFormControlTextarea,
 	},
 })
-export default class AppReportForm extends BaseForm<any> implements FormOnSubmit {
+export default class AppReportForm extends BaseForm<FormModel> implements FormOnSubmit {
 	@Prop(String) type!: string;
 	@Prop(Object) resource!: any;
 
@@ -20,6 +27,36 @@ export default class AppReportForm extends BaseForm<any> implements FormOnSubmit
 	// Default values, get overwritten from backend.
 	maxLengthDescription = 200;
 	maxLengthSource = 255;
+
+	get valid() {
+		if (!this._isValid()) {
+			return false;
+		}
+
+		// Check that if we have contexts to choose from, at least one of them is selected.
+		if (!this.formModel.reason) {
+			return true;
+		}
+		const reason = this.reasons.find(i => i.radioValue === this.formModel.reason);
+		if (!reason) {
+			return true;
+		}
+		if (reason.contexts && reason.contexts.length > 0) {
+			if (!this.formModel.context || this.formModel.context.length === 0) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	get isDescriptionOptional() {
+		if (!this.formModel.reason || !this.formModel.context) {
+			return true;
+		}
+
+		return !(this.formModel.context.length > 0 && this.formModel.context.includes('other'));
+	}
 
 	get reasons(): any[] {
 		switch (this.type) {
@@ -149,6 +186,10 @@ export default class AppReportForm extends BaseForm<any> implements FormOnSubmit
 								checkValue: 'user/website',
 								text: this.$gettext('Website'),
 							},
+							{
+								checkValue: 'other',
+								text: this.$gettext('Other (please describe below)'),
+							},
 						],
 					},
 					{
@@ -185,6 +226,10 @@ export default class AppReportForm extends BaseForm<any> implements FormOnSubmit
 								checkValue: 'user/website',
 								text: this.$gettext('Website or socials'),
 							},
+							{
+								checkValue: 'other',
+								text: this.$gettext('Other (please describe below)'),
+							},
 						],
 					},
 					{
@@ -204,6 +249,10 @@ export default class AppReportForm extends BaseForm<any> implements FormOnSubmit
 							{
 								checkValue: 'user/bio',
 								text: this.$gettext('Bio'),
+							},
+							{
+								checkValue: 'other',
+								text: this.$gettext('Other (please describe below)'),
 							},
 						],
 					},
@@ -227,6 +276,10 @@ export default class AppReportForm extends BaseForm<any> implements FormOnSubmit
 
 		this.maxLengthDescription = payload.maxLengthDescription;
 		this.maxLengthSource = payload.maxLengthSource;
+	}
+
+	onChangeReason() {
+		this.setField('context', []);
 	}
 
 	onSubmit() {

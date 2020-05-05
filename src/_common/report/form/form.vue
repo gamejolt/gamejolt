@@ -4,7 +4,11 @@
 			<div v-for="reason of reasons" :key="reason.radioValue">
 				<div class="radio">
 					<label>
-						<app-form-control-radio type="radio" :value="reason.radioValue" />
+						<app-form-control-radio
+							type="radio"
+							:value="reason.radioValue"
+							@changed="onChangeReason"
+						/>
 						{{ reason.text }}
 					</label>
 				</div>
@@ -53,7 +57,7 @@
 		<app-form-group
 			name="description"
 			:label="$gettext(/** TODO(copy) */ `Describe your report`)"
-			optional
+			:optional="isDescriptionOptional"
 		>
 			<app-form-control-textarea
 				type="text"
@@ -62,10 +66,10 @@
 				}"
 			/>
 
-			<app-form-control-errors />
+			<app-form-control-errors :label="$gettext(`description`)" />
 		</app-form-group>
 
-		<app-form-button>
+		<app-form-button :disabled="!valid">
 			<translate>Send Report</translate>
 		</app-form-button>
 	</app-form>
