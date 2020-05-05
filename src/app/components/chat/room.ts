@@ -92,6 +92,6 @@ export class ChatRoom {
 			return undefined;
 		}
 
-		return this.chat.usersOnline[this.id].get(this.chat.currentUser.id);
+		return this.chat.usersOnline[this.id]?.get(this.chat.currentUser.id);
 	}
 }
