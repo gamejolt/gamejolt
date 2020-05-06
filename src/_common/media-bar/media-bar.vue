@@ -1,5 +1,5 @@
 <template>
-	<app-scroll-scroller class="media-bar fill-darker" :thin="thinScrollbar" horizontal>
+	<app-scroll-scroller class="media-bar fill-darker" horizontal thin>
 		<div class="-items" :style="{ height: mediaBarHeight + 'px' }">
 			<div v-if="!mediaItems || !mediaItems.length" class="-loading-container">
 				<app-loading centered no-color stationary hide-label />

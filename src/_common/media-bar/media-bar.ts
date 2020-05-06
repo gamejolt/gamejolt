@@ -19,7 +19,6 @@ import AppMediaBarLightbox from './lightbox/lightbox.vue';
 })
 export default class AppMediaBar extends Vue {
 	@Prop(Array) mediaItems!: any[];
-	@Prop(Boolean) thinScrollbar?: boolean;
 
 	private urlChecked = false;
 	private lightbox?: AppMediaBarLightboxTS;
