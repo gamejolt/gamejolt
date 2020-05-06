@@ -54,7 +54,11 @@
 
 			<!-- If we are editing, we are showing the subroute's <edit> view here. Otherwise display feed stuff. -->
 			<template v-if="isEditing">
-				<router-view @details-change="onDetailsChanged" @channels-change="onChannelsChanged" />
+				<router-view
+					@details-change="onDetailsChanged"
+					@channels-change="onChannelsChanged"
+					@games-change="onGamesChanged"
+				/>
 			</template>
 			<template v-else>
 				<app-post-add-button

@@ -17,7 +17,7 @@
 				<br />
 				<strong>PNGs are highly recommended as they produce a lossless image.</strong>
 			</p>
-			<p class="help-block strong" v-translate="{ dimensions: '2000x500' }">
+			<p class="help-block strong" v-translate="{ dimensions: '2000×500' }">
 				The recommended size for a header image is
 				<code>%{dimensions}</code>
 				(ratio of 4 ÷ 1).

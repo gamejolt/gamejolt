@@ -12,7 +12,7 @@
 					<translate>PNGs are highly recommended as they produce a lossless image.</translate>
 				</strong>
 			</p>
-			<p class="help-block strong" v-translate="{ dimensions: '1000x1000' }">
+			<p class="help-block strong" v-translate="{ dimensions: '1000×1000' }">
 				The recommended size for a community thumbnail is
 				<code>%{dimensions}</code>
 				.

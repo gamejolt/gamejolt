@@ -1,6 +1,5 @@
 import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
-import AppCardListAdd from '../../../../../../../_common/card/list/add/add.vue';
 import AppCardListDraggable from '../../../../../../../_common/card/list/draggable/draggable.vue';
 import AppCardListItem from '../../../../../../../_common/card/list/item/item.vue';
 import AppCardList from '../../../../../../../_common/card/list/list.vue';
@@ -27,7 +26,6 @@ import { RouteStore, RouteStoreModule } from '../edit.store';
 		AppCardList,
 		AppCardListDraggable,
 		AppCardListItem,
-		AppCardListAdd,
 		FormCommunityChannelEdit,
 		AppCommunityChannelPresetListItem,
 	},

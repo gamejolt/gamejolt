@@ -75,7 +75,7 @@ export class Community extends Collaboratable(Model) {
 	thumbnail?: MediaItem;
 	header?: MediaItem;
 	theme!: Theme | null;
-	game!: Game | null;
+	games!: Game[] | null;
 	channels?: CommunityChannel[] | null;
 	featured_background?: MediaItem;
 	all_background?: MediaItem;
@@ -101,8 +101,8 @@ export class Community extends Collaboratable(Model) {
 			this.theme = new Theme(data.theme);
 		}
 
-		if (data.game) {
-			this.game = new Game(data.game);
+		if (data.games) {
+			this.games = Game.populate(data.games);
 		}
 
 		if (data.channels) {
@@ -211,6 +211,20 @@ export class Community extends Collaboratable(Model) {
 			`/web/dash/communities/channels/clear-preset-background/${this.id}/${presetType}`,
 			'community'
 		);
+	}
+
+	async saveGameSort() {
+		const response = await Api.sendRequest(
+			`/web/dash/communities/games/save-sort/${this.id}`,
+			this.games!.map(i => i.id),
+			{
+				noErrorRedirect: true,
+			}
+		);
+		if (response.success) {
+			this.assign(response.community);
+		}
+		return response;
 	}
 }
 
