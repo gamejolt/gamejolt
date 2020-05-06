@@ -77,7 +77,7 @@
 					</li>
 
 					<li>
-						<app-popper popover-class="list-group-dark">
+						<app-popper popover-class="fill-darkest">
 							<a>
 								<app-jolticon icon="ellipsis-v" />
 							</a>

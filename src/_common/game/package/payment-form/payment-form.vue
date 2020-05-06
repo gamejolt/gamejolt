@@ -212,7 +212,7 @@
 											<app-popper
 												v-if="cards.length > 1"
 												class="saved-card-more"
-												popover-class="list-group-dark"
+												popover-class="fill-darkest"
 											>
 												<span
 													:class="{ disabled: isLoadingMethods }"

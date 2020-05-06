@@ -152,7 +152,7 @@
 
 		<app-popper
 			v-if="card.extraBuilds.length || (localPackage && !localPackage.install_state)"
-			popover-class="list-group-dark"
+			popover-class="fill-darkest"
 		>
 			<app-button
 				circle

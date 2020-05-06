@@ -246,7 +246,7 @@
 					</app-button>
 
 					<!-- More options -->
-					<app-popper popover-class="list-group-dark" slot="end">
+					<app-popper popover-class="fill-darkest" slot="end">
 						<app-button icon="ellipsis-v" circle trans />
 
 						<div slot="popover" class="list-group list-group-dark">

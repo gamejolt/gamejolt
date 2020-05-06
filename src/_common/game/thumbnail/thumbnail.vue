@@ -11,7 +11,7 @@
 				</template>
 
 				<template v-if="showModTools">
-					<app-popper popover-class="list-group-dark">
+					<app-popper popover-class="fill-darkest">
 						<app-button overlay circle icon="cog" />
 
 						<app-game-mod-links slot="popover" :game="game" />
