@@ -9,20 +9,18 @@ import { AppScrollInviewParent } from '../inview/parent';
 	},
 })
 export default class AppScrollScroller extends Vue {
-	@Prop(propOptional(Boolean))
-	thin?: boolean;
+	@Prop(propOptional(Boolean, false))
+	thin!: boolean;
 
-	@Prop(propOptional(Boolean))
-	horizontal?: boolean;
+	@Prop(propOptional(Boolean, false))
+	horizontal!: boolean;
 
-	@Prop(propOptional(Boolean))
-	hideScrollbar?: boolean;
+	@Prop(propOptional(Boolean, false))
+	hideScrollbar!: boolean;
 
 	isMounted = GJ_IS_SSR;
-	_scrollElement!: HTMLElement;
 
 	mounted() {
-		this._scrollElement = this.$el as HTMLElement;
 		this.isMounted = true;
 	}
 
