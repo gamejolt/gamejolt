@@ -1,9 +1,6 @@
 <template>
 	<div class="colorpicker">
 		<app-popper>
-			<!-- position-horizontal="left"
-			@focused="isOpen = true"
-			@blurred="isOpen = false" -->
 			<div
 				class="color"
 				:class="{ empty: !colors.hex }"
@@ -66,6 +63,10 @@
 		padding: 0 5px
 
 .colorpicker-popover
+	.vc_sketch
+		margin-left: auto
+		margin-right: auto
+
 	>>> .vue-color__sketch
 		box-shadow: none
 </style>

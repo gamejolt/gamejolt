@@ -27,6 +27,7 @@
 
 		<app-popper
 			class="-popper"
+			popover-class="fill-darkest"
 			trigger="right-click"
 			placement="right"
 			hide-on-state-change
