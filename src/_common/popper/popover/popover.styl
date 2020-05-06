@@ -1,0 +1,137 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+// Sync with the JS so we know how long hides take.
+$-transition-time = 200ms
+
+.v-popover
+	display: inline-block
+
+	> .wrapper
+		display: inline-block
+
+.v-popover.-block
+	&, .trigger
+		display: block !important
+
+.popper
+	display: block !important
+	z-index: $zindex-popover
+	outline: 0
+
+	// We don't want to show the popover stuff at all on SSR, or it breaks
+	// styling since it tries to fit the container into the page.
+	.-ssr &
+		display: none !important
+
+	&-backdrop
+		z-index: $zindex-popover - 1 !important
+
+	.popper-arrow
+		width: 0
+		height: 0
+		border-style: solid
+		position: absolute
+		margin: $popover-arrow-size
+		border-color: var(--theme-bg-subtle)
+		z-index: 1
+
+	&[x-placement^='top']
+		padding-bottom: $popover-arrow-size
+
+		.popper-arrow
+			border-width: $popover-arrow-size $popover-arrow-size 0 $popover-arrow-size
+			border-left-color: transparent !important
+			border-right-color: transparent !important
+			border-bottom-color: transparent !important
+			bottom: 0
+			margin-top: 0
+			margin-bottom: 0
+
+	&[x-placement^='bottom']
+		padding-top: $popover-arrow-size
+
+		.popper-arrow
+			border-width: 0 $popover-arrow-size $popover-arrow-size $popover-arrow-size
+			border-left-color: transparent !important
+			border-right-color: transparent !important
+			border-top-color: transparent !important
+			top: 0
+			margin-top: 0
+			margin-bottom: 0
+
+	&[x-placement^='right']
+		padding-left: $popover-arrow-size
+
+		.popper-arrow
+			border-width: $popover-arrow-size $popover-arrow-size $popover-arrow-size 0
+			border-left-color: transparent !important
+			border-top-color: transparent !important
+			border-bottom-color: transparent !important
+			left: 0
+			margin-left: 0
+			margin-right: 0
+
+	&[x-placement^='left']
+		padding-right: $popover-arrow-size
+
+		.popper-arrow
+			border-width: $popover-arrow-size 0 $popover-arrow-size $popover-arrow-size
+			border-top-color: transparent !important
+			border-right-color: transparent !important
+			border-bottom-color: transparent !important
+			right: 0
+			margin-left: 0
+			margin-right: 0
+
+	&[aria-hidden='true']
+		visibility: hidden
+		opacity: 0
+		transition: opacity $-transition-time, visibility $-transition-time
+
+	&[aria-hidden='false']
+		visibility: visible
+		opacity: 1
+		transition: none
+
+.popper-content
+	elevate-2()
+	rounded-corners-lg()
+	change-bg('bg-offset')
+	theme-prop('border-color', 'bg-subtle')
+	overflow: hidden
+	max-width: $popover-size
+	min-width: 200px
+	border-width: $border-width-base
+	border-style: solid
+
+	&.-track-trigger-width
+		max-width: none
+		min-width: none
+
+	&.-force-max-width
+		min-width: none
+		width: calc(100vw - 10px)
+		max-width: $popover-size
+
+	> nav.pills > ul, > .button
+		margin-bottom: $popover-spacing !important
+
+	> nav.platform-list
+		margin-bottom: 0
+		margin-top: $popover-spacing * 2
+
+	.alert
+		margin-bottom: 0
+
+	.well
+		margin-bottom: 0
+
+	hr
+		margin-top: $popover-spacing
+		margin-bottom: $popover-spacing
+
+.popper-heading
+	padding: $popover-spacing
+	white-space: nowrap
+	font-weight: bold
