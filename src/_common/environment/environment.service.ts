@@ -66,7 +66,7 @@ if (GJ_ENVIRONMENT === 'development') {
 	Environment.activityStreamHost = 'http://activity.development.gamejolt.com';
 	Environment.chatHost = 'http://chat.development.gamejolt.com';
 	Environment.widgetHost = 'http://localhost:8086';
-	Environment.gridHost = 'http://grid:4000/grid/host';
+	Environment.gridHost = 'http://grid.development.gamejolt.com/grid/host';
 	Environment.recaptchaSiteKey = '6LcwTkEUAAAAAHTT67TB8gkM0ft5hUzz_r_tFFaT';
 }
 
