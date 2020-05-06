@@ -25,6 +25,5 @@ export function date(now: Date | number, formatTo = ShortcutFormats.medium) {
 		formatTo = (ShortcutFormats as any)[formatTo];
 	}
 
-	// review, format doesn't accept string anymore.
 	return format(now, formatTo);
 }
