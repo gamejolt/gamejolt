@@ -91,15 +91,6 @@ export class BaseForm<T> extends Vue {
 	private customErrors: string[] = [];
 
 	get valid() {
-		return this._isValid();
-	}
-
-	/**
-	 * This exists so we have a backing field in case we want to override valid()
-	 * and want to extend its function body.
-	 * Since you cannot invoke super getters directly, call this function instead of `super.valid`.
-	 */
-	protected _isValid() {
 		return !this.hasFormErrors && this.customErrors.length === 0;
 	}
 

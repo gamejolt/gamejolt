@@ -36,11 +36,13 @@
 					>
 						<div class="checkbox" v-for="context of reason.contexts" :key="context.checkValue">
 							<label>
-								<app-form-control-checkbox :value="context.checkValue" />
+								<app-form-control-checkbox :value="context.checkValue" @changed="onChangeContext" />
 
 								{{ context.text }}
 							</label>
 						</div>
+
+						<app-form-control-errors />
 					</app-form-group>
 				</div>
 

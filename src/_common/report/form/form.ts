@@ -28,28 +28,6 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 	maxLengthDescription = 200;
 	maxLengthSource = 255;
 
-	get valid() {
-		if (!this._isValid()) {
-			return false;
-		}
-
-		// Check that if we have contexts to choose from, at least one of them is selected.
-		if (!this.formModel.reason) {
-			return true;
-		}
-		const reason = this.reasons.find(i => i.radioValue === this.formModel.reason);
-		if (!reason) {
-			return true;
-		}
-		if (reason.contexts && reason.contexts.length > 0) {
-			if (!this.formModel.context || this.formModel.context.length === 0) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
 	get isDescriptionOptional() {
 		if (!this.formModel.reason || !this.formModel.context) {
 			return true;
@@ -280,6 +258,35 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 
 	onChangeReason() {
 		this.setField('context', []);
+
+		this.validateContextSelected();
+	}
+
+	onChangeContext() {
+		this.validateContextSelected();
+	}
+
+	private validateContextSelected() {
+		let hasErrors = false;
+
+		// Check that if we have contexts to choose from, at least one of them is selected.
+		if (!!this.formModel.reason) {
+			const reason = this.reasons.find(i => i.radioValue === this.formModel.reason);
+			if (!reason) {
+				throw new Error('Invalid reason selected.');
+			}
+			if (reason.contexts && reason.contexts.length > 0) {
+				if (!this.formModel.context || this.formModel.context.length === 0) {
+					hasErrors = true;
+				}
+			}
+		}
+
+		if (hasErrors) {
+			this.setCustomError('context');
+		} else {
+			this.clearCustomError('context');
+		}
 	}
 
 	onSubmit() {
