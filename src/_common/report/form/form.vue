@@ -30,9 +30,7 @@
 				<div v-if="formModel.reason === reason.radioValue && !!reason.contexts" class="-context">
 					<app-form-group
 						name="context"
-						:label="
-							$gettext(/** TODO(copy) */ `Select one or more options that the report applies to`)
-						"
+						:label="$gettext(`Select one or more options that the report applies to`)"
 					>
 						<div class="checkbox" v-for="context of reason.contexts" :key="context.checkValue">
 							<label>
@@ -48,7 +46,6 @@
 
 				<div v-if="formModel.reason === reason.radioValue && !!reason.infoText">
 					<p class="help-block">
-						<!-- TODO(copy) -->
 						<app-jolticon icon="exclamation-circle" />
 						{{ reason.infoText }}
 					</p>
@@ -58,7 +55,7 @@
 
 		<app-form-group
 			name="description"
-			:label="$gettext(/** TODO(copy) */ `Describe your report`)"
+			:label="$gettext(`Describe your report`)"
 			:optional="isDescriptionOptional"
 		>
 			<app-form-control-textarea

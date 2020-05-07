@@ -54,9 +54,7 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 						radioValue: 'stolen',
 						text: this.$gettext('Game does not belong to this developer'),
 						source: {
-							placeholder: this.$gettext(
-								/** TODO(copy) */ 'Tell us where this game was stolen from'
-							),
+							placeholder: this.$gettext('Tell us where this game was stolen from'),
 						},
 					},
 					{
@@ -68,9 +66,6 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 					{
 						radioValue: 'malware',
 						text: this.$gettext('Virus or other form of malware'),
-						infoText: this.$gettext(
-							/** TODO(copy) */ "Some text about that just because that game doesn't start or their antivirus detects it, it does not have to be a virus."
-						),
 					},
 				];
 			case 'Fireside_Post':
@@ -98,7 +93,7 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 						text: this.$gettext('Content in this post does not belong to the author'),
 						source: {
 							placeholder: this.$gettext(
-								/** TODO(copy) */ 'Tell us where content in this post was stolen from'
+								'Tell us where content in this post was stolen from'
 							),
 						},
 					},
@@ -212,9 +207,7 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 					},
 					{
 						radioValue: 'harassment',
-						text: this.$gettext(
-							/** TODO(copy) */ 'This user is harassing or bullying others'
-						),
+						text: this.$gettext('This user is harassing or bullying others'),
 						contexts: [
 							{
 								checkValue: 'user/posts',
@@ -236,10 +229,10 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 					},
 					{
 						radioValue: 'impersonation',
-						text: this.$gettext(/** TODO(copy) */ 'Impersonating'),
+						text: this.$gettext('Impersonating'),
 						source: {
 							placeholder: this.$gettext(
-								/** TODO(copy) */ 'Tell us which person this user is impersonating'
+								'Tell us which person this user is impersonating'
 							),
 						},
 					},
