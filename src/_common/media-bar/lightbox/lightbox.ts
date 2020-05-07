@@ -3,9 +3,9 @@ import { Component, Prop } from 'vue-property-decorator';
 import { EventSubscription } from '../../../system/event/event-topic';
 import { Analytics } from '../../analytics/analytics.service';
 import { EscapeStack } from '../../escape-stack/escape-stack.service';
+import { MediaItem } from '../../media-item/media-item-model';
 import { Screen } from '../../screen/screen-service';
 import AppShortkey from '../../shortkey/shortkey.vue';
-import AppMediaBar from '../media-bar';
 import AppMediaBarLightboxItem from './item/item.vue';
 import './lightbox-global.styl';
 import AppMediaBarLightboxSlider from './slider.vue';
@@ -23,6 +23,26 @@ export const MediaBarLightboxConfig = {
 	buttonSize: 110,
 };
 
+export interface LightboxMediaSource {
+	goNext(): void;
+	goPrev(): void;
+	clearActiveItem(): void;
+	getActiveIndex(): number;
+	getActiveItem(): LightboxMediaModel;
+	getItemCount(): number;
+	getItems(): LightboxMediaModel[];
+}
+
+export type LightboxMediaType = 'image' | 'video' | 'sketchfab';
+
+export interface LightboxMediaModel {
+	getModelId(): number;
+	getMediaType(): LightboxMediaType;
+
+	// Screenshot/Media Item
+	getMediaItem(): MediaItem | undefined;
+}
+
 @Component({
 	components: {
 		AppMediaBarLightboxSlider,
@@ -32,7 +52,7 @@ export const MediaBarLightboxConfig = {
 })
 export default class AppMediaBarLightbox extends Vue {
 	@Prop(Object)
-	mediaBar!: AppMediaBar;
+	mediaBar!: LightboxMediaSource;
 
 	sliderElem?: HTMLElement;
 	currentSliderOffset = 0;
@@ -87,7 +107,7 @@ export default class AppMediaBarLightbox extends Vue {
 	}
 
 	refreshSliderPosition() {
-		const newOffset = -(Screen.width * this.mediaBar.activeIndex!);
+		const newOffset = -(Screen.width * this.mediaBar.getActiveIndex());
 		if (this.sliderElem) {
 			this.sliderElem.style.transform = `translate3d( ${newOffset}px, 0, 0 )`;
 		}

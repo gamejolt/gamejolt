@@ -1,5 +1,5 @@
 <template>
-	<div class="-item" :class="{ '-inline': inline }">
+	<div class="-item" :class="{ '-inline': inline }" @click="onClickImage">
 		<app-responsive-dimensions
 			class="-item-media"
 			:class="{
@@ -12,6 +12,15 @@
 			@change="onDimensionsChange"
 		>
 			<app-event-item-media-tags :gif="mediaItem.is_animated" />
+			<div v-if="inline" class="-fullscreen">
+				<app-button
+					@click="emitFullscreen(mediaItem)"
+					overlay
+					circle
+					icon="bolt-filled"
+					v-app-tooltip="$gettext(`Fullscreen`)"
+				/>
+			</div>
 			<app-media-item-backdrop class="-backdrop" :media-item="mediaItem" :radius="itemRadius">
 				<app-img-responsive
 					v-if="!isPostHydrated || !mediaItem.is_animated"
@@ -53,6 +62,11 @@
 	&.-inline
 		display: inline-block
 
+	// Show fullscreen button on hover over image
+	&:hover
+		.-fullscreen
+			opacity: 1
+
 .-backdrop
 	change-bg('bg-offset')
 
@@ -76,6 +90,15 @@
 	.-ssr &
 		position: static
 		width: 100%
+
+.-fullscreen
+	position: absolute
+	bottom: 10px
+	right: 10px
+	z-index: 6
+	opacity: 0
+
+	transition: opacity 0.2s ease
 </style>
 
 <script lang="ts" src="./post"></script>

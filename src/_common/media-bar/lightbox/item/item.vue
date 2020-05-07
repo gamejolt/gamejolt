@@ -2,13 +2,13 @@
 	<div class="media-bar-lightbox-item">
 		<div class="-inner" v-if="isActive || isNext || isPrev">
 			<!-- Image -->
-			<template v-if="item.media_type === 'image'">
+			<template v-if="item.getMediaType() === 'image'">
 				<div class="-embed">
 					<!--
-					The min/max will be the actual dimensions for the image thumbnail.
-				-->
+						The min/max will be the actual dimensions for the image thumbnail.
+					-->
 					<app-media-item-backdrop
-						:media-item="item.media_item"
+						:media-item="item.getMediaItem()"
 						:style="{
 							width: maxWidth ? maxWidth + 'px' : undefined,
 							height: maxHeight ? maxHeight + 'px' : undefined,
@@ -18,12 +18,21 @@
 						radius="lg"
 					>
 						<app-img-responsive
+							v-if="!item.getMediaItem().is_animated || !shouldVideoPlay"
 							:src="item.img_thumbnail"
 							:alt="item.caption"
 							:style="{
 								width: 'inherit',
 								height: 'inherit',
 							}"
+						/>
+						<app-video
+							v-else
+							class="-video"
+							:poster="item.getMediaItem().mediaserver_url"
+							:webm="item.getMediaItem().mediaserver_url_webm"
+							:mp4="item.getMediaItem().mediaserver_url_mp4"
+							show-loading
 						/>
 					</app-media-item-backdrop>
 				</div>
@@ -34,7 +43,7 @@
 			</template>
 
 			<!-- Video -->
-			<template v-else-if="item.media_type === 'video'">
+			<template v-else-if="item.getMediaType() === 'video'">
 				<div class="-embed" v-if="isActive">
 					<!-- We want to wait until the size is properly calculated, otherwise the player won't size properly. -->
 					<app-video-embed
@@ -55,7 +64,7 @@
 			</template>
 
 			<!-- Sketchfab -->
-			<template v-else-if="item.media_type === 'sketchfab'">
+			<template v-else-if="item.getMediaType() === 'sketchfab'">
 				<div class="-embed" v-if="isActive">
 					<app-sketchfab-embed
 						:sketchfab-id="item.sketchfab_id"

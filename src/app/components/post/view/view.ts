@@ -7,7 +7,12 @@ import AppContentViewer from '../../../../_common/content/content-viewer/content
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
+import AppMediaBarLightboxTS, {
+	LightboxMediaSource,
+} from '../../../../_common/media-bar/lightbox/lightbox';
+import AppMediaBarLightbox from '../../../../_common/media-bar/lightbox/lightbox.vue';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
+import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
 import { AppResponsiveDimensions } from '../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -49,7 +54,7 @@ import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 		AppScrollWhen,
 	},
 })
-export default class AppPostView extends Vue {
+export default class AppPostView extends Vue implements LightboxMediaSource {
 	@Prop(FiresidePost)
 	post!: FiresidePost;
 
@@ -60,6 +65,8 @@ export default class AppPostView extends Vue {
 	app!: Store['app'];
 
 	stickersVisible = false;
+	activeImageIndex = 0;
+	private lightbox?: AppMediaBarLightboxTS;
 
 	$refs!: {
 		stickerTarget: AppStickerTargetTS;
@@ -97,6 +104,34 @@ export default class AppPostView extends Vue {
 		}
 	}
 
+	clearActiveItem() {
+		this.destroyLightbox();
+	}
+
+	getActiveIndex() {
+		return this.activeImageIndex;
+	}
+
+	getActiveItem() {
+		return this.post.media[this.activeImageIndex];
+	}
+
+	getItemCount() {
+		return this.post.media.length;
+	}
+
+	getItems() {
+		return this.post.media;
+	}
+
+	goNext() {
+		this.activeImageIndex = Math.min(this.activeImageIndex + 1, this.post.media.length - 1);
+	}
+
+	goPrev() {
+		this.activeImageIndex = Math.max(this.activeImageIndex - 1, 0);
+	}
+
 	onPostRemoved() {
 		this.$router.replace({ name: 'home' });
 		Growls.info(this.$gettext('Your post has been removed'));
@@ -119,5 +154,36 @@ export default class AppPostView extends Vue {
 
 	onAllStickersHidden() {
 		this.stickersVisible = false;
+	}
+
+	private createLightbox() {
+		if (this.lightbox) {
+			return;
+		}
+		const elem = document.createElement('div');
+		window.document.body.appendChild(elem);
+
+		this.lightbox = new AppMediaBarLightbox({
+			propsData: {
+				mediaBar: this,
+			},
+		});
+
+		this.lightbox.$mount(elem);
+	}
+
+	private destroyLightbox() {
+		if (!this.lightbox) {
+			return;
+		}
+
+		this.lightbox.$destroy();
+		window.document.body.removeChild(this.lightbox.$el);
+		this.lightbox = undefined;
+	}
+
+	onClickFullscreen(mediaItem: MediaItem) {
+		this.activeImageIndex = this.post.media.findIndex(i => i.id === mediaItem.id);
+		this.createLightbox();
 	}
 }

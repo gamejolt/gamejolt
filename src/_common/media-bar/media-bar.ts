@@ -1,12 +1,12 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import AppLoading from '../loading/loading.vue';
 import { Analytics } from '../analytics/analytics.service';
 import { Growls } from '../growls/growls.service';
+import AppLoading from '../loading/loading.vue';
 import AppScrollScroller from '../scroll/scroller/scroller.vue';
 import { MediaBarItemMaxHeight } from './item/item';
 import AppMediaBarItem from './item/item.vue';
-import AppMediaBarLightboxTS from './lightbox/lightbox';
+import AppMediaBarLightboxTS, { LightboxMediaSource } from './lightbox/lightbox';
 import AppMediaBarLightbox from './lightbox/lightbox.vue';
 
 @Component({
@@ -17,7 +17,7 @@ import AppMediaBarLightbox from './lightbox/lightbox.vue';
 		AppScrollScroller,
 	},
 })
-export default class AppMediaBar extends Vue {
+export default class AppMediaBar extends Vue implements LightboxMediaSource {
 	@Prop(Array) mediaItems!: any[];
 	@Prop(Boolean) noOverlayScrollbars?: boolean;
 
@@ -66,6 +66,22 @@ export default class AppMediaBar extends Vue {
 
 	destroyed() {
 		this.destroyLightbox();
+	}
+
+	getActiveIndex() {
+		return this.activeIndex!;
+	}
+
+	getItemCount() {
+		return this.mediaItems.length;
+	}
+
+	getActiveItem() {
+		return this.activeItem;
+	}
+
+	getItems() {
+		return this.mediaItems;
 	}
 
 	setActiveItem(item: any) {

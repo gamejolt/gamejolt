@@ -7,7 +7,8 @@ import AppMediaItemBackdrop from '../../../media-item/backdrop/backdrop.vue';
 import { Screen } from '../../../screen/screen-service';
 import AppSketchfabEmbed from '../../../sketchfab/embed/embed.vue';
 import AppVideoEmbed from '../../../video/embed/embed.vue';
-import AppMediaBarLightboxTS, { MediaBarLightboxConfig } from '../lightbox';
+import AppVideo from '../../../video/video.vue';
+import AppMediaBarLightboxTS, { LightboxMediaModel, MediaBarLightboxConfig } from '../lightbox';
 import AppMediaBarLightbox from '../lightbox.vue';
 
 @Component({
@@ -16,10 +17,11 @@ import AppMediaBarLightbox from '../lightbox.vue';
 		AppSketchfabEmbed,
 		AppImgResponsive,
 		AppMediaItemBackdrop,
+		AppVideo,
 	},
 })
 export default class AppMediaBarLightboxItem extends Vue {
-	@Prop(Object) item!: any;
+	@Prop(Object) item!: LightboxMediaModel;
 	@Prop(Number) itemIndex!: number;
 	@Prop(Number) activeIndex!: number;
 
@@ -38,6 +40,10 @@ export default class AppMediaBarLightboxItem extends Vue {
 	$refs!: {
 		caption: HTMLDivElement;
 	};
+
+	get shouldVideoPlay() {
+		return this.isActive;
+	}
 
 	async mounted() {
 		this.lightbox = findRequiredVueParent(this, AppMediaBarLightbox) as AppMediaBarLightboxTS;
@@ -76,8 +82,10 @@ export default class AppMediaBarLightboxItem extends Vue {
 			this.maxHeight -= this.$refs.caption.offsetHeight;
 		}
 
-		if (this.item.media_type === 'image') {
-			const dimensions = this.item.media_item.getDimensions(this.maxWidth, this.maxHeight);
+		if (this.item.getMediaType() === 'image') {
+			const dimensions = this.item
+				.getMediaItem()!
+				.getDimensions(this.maxWidth, this.maxHeight);
 			this.maxWidth = dimensions.width;
 			this.maxHeight = dimensions.height;
 		}

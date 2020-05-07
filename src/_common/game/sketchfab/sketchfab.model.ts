@@ -1,8 +1,9 @@
+import { LightboxMediaModel, LightboxMediaType } from '../../media-bar/lightbox/lightbox';
 import { MediaItem } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
 import { Game } from '../game.model';
 
-export class GameSketchfab extends Model {
+export class GameSketchfab extends Model implements LightboxMediaModel {
 	media_type!: 'sketchfab';
 
 	game_id!: number;
@@ -26,6 +27,18 @@ export class GameSketchfab extends Model {
 		if (data.media_item) {
 			this.media_item = new MediaItem(data.media_item);
 		}
+	}
+
+	getModelId() {
+		return this.id;
+	}
+
+	getMediaType() {
+		return 'sketchfab' as LightboxMediaType;
+	}
+
+	getMediaItem() {
+		return this.media_item;
 	}
 
 	getUrl(game: Game) {
