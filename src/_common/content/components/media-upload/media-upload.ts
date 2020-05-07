@@ -1,9 +1,9 @@
 import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import AppLoading from '../../../loading/loading.vue';
 import { Api } from '../../../api/api.service';
 import { Growls } from '../../../growls/growls.service';
+import AppLoading from '../../../loading/loading.vue';
 import { MediaItem } from '../../../media-item/media-item-model';
 import AppProgressBar from '../../../progress/bar/bar.vue';
 import { getMediaItemTypeForContext } from '../../content-context';
@@ -76,16 +76,11 @@ export default class AppContentMediaUpload extends Vue {
 				}
 			}
 		} catch (error) {
-			const nodePos = this.findTargetNodePos();
-			if (nodePos !== -1) {
-				const tr = this.editorView.state.tr;
-				tr.delete(nodePos, nodePos + 1);
-				this.editorView.dispatch(tr);
-			}
+			this.removeNode();
 
 			Growls.error({
-				title: 'Oh no!',
-				message: 'Something went wrong while uploading your image.',
+				title: this.$gettext('Oh no!'),
+				message: this.$gettext('Something went wrong while uploading your image.'),
 			});
 		} finally {
 			ContentEditorService.UploadFileCache[this.uploadId] = undefined;
@@ -111,6 +106,44 @@ export default class AppContentMediaUpload extends Vue {
 		);
 		if ($payload.success && $payload.mediaItems && $payload.mediaItems.length === 1) {
 			return new MediaItem($payload.mediaItems[0]);
+		} else if (!$payload.success && $payload.errors.file) {
+			const sizePayload = await Api.sendRequest(
+				'/web/dash/media-items',
+				{
+					type: itemType,
+					parent_id: parentId,
+				},
+				{
+					detach: true,
+				}
+			);
+
+			const maxWidth = sizePayload.maxWidth;
+			const maxHeight = sizePayload.maxWidth;
+			const maxFilesize = sizePayload.maxFilesize;
+
+			Growls.error({
+				title: this.$gettext('Oh no!'),
+				message: this.$gettextInterpolate(
+					"It looks like your image's filesize or dimensions are too large. Its filesize must be less than %{ filesize } and its dimensions less than %{ width }×%{ height }",
+					{ width: maxWidth, height: maxHeight, size: maxFilesize }
+				),
+			});
+
+			this.removeNode();
+
+			return;
+		}
+
+		throw new Error('General failure while uploading file.');
+	}
+
+	private removeNode() {
+		const nodePos = this.findTargetNodePos();
+		if (nodePos !== -1) {
+			const tr = this.editorView.state.tr;
+			tr.delete(nodePos, nodePos + 1);
+			this.editorView.dispatch(tr);
 		}
 	}
 

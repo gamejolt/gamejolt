@@ -1,6 +1,6 @@
 <template>
 	<div id="shell-cbar">
-		<app-scroll-scroller class="-scroller" overlay hide-scrollbar>
+		<app-scroll-scroller class="-scroller" hide-scrollbar>
 			<div class="-inner">
 				<transition-group name="-items">
 					<app-shell-cbar-item

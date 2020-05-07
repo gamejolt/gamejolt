@@ -14,7 +14,7 @@
 					<b><translate>Animated GIFs are supported.</translate></b>
 				</p>
 
-				<app-scroll-scroller overlay horizontal>
+				<app-scroll-scroller horizontal thin>
 					<div
 						class="-items"
 						@dragover="onDragOver($event)"

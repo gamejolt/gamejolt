@@ -71,6 +71,9 @@ export default class AppPopper extends Vue {
 	@Prop(String)
 	openGroup?: string;
 
+	@Prop(String)
+	popoverClass?: string;
+
 	$refs!: {
 		popover: any;
 		scroller: AppScrollScrollerTS;

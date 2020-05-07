@@ -1,7 +1,7 @@
 <template>
-	<app-scroll-scroller :overlay="!noOverlayScrollbars" horizontal class="media-bar fill-darker">
+	<app-scroll-scroller class="media-bar fill-darker" horizontal thin>
 		<div class="-items" :style="{ height: mediaBarHeight + 'px' }">
-			<div class="-loading-container" v-if="!mediaItems || !mediaItems.length">
+			<div v-if="!mediaItems || !mediaItems.length" class="-loading-container">
 				<app-loading centered no-color stationary hide-label />
 			</div>
 
