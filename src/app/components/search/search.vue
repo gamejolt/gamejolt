@@ -17,6 +17,7 @@
 					clicking the search input again.'
 				-->
 				<app-popper
+					popover-class="fill-darkest"
 					trigger="manual"
 					block
 					hide-on-state-change

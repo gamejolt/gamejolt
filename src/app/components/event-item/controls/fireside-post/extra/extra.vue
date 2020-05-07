@@ -1,8 +1,8 @@
 <template>
-	<app-popper>
+	<app-popper popover-class="fill-darkest">
 		<app-button sparse circle trans icon="ellipsis-v" />
 
-		<div slot="popover" class="fill-darkest">
+		<div slot="popover">
 			<!-- When published to platforms, shows links to created resources. -->
 			<template v-if="canEdit && post.platforms_published_to.length > 0">
 				<div class="popper-heading">

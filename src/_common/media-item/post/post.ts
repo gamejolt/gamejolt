@@ -25,7 +25,7 @@ export default class AppMediaItemPost extends Vue {
 	@Prop(propRequired(MediaItem))
 	mediaItem!: MediaItem;
 
-	@Prop(propOptional(Boolean))
+	@Prop(propOptional(Boolean, true))
 	isPostHydrated?: boolean;
 
 	@Prop(propOptional(Boolean))

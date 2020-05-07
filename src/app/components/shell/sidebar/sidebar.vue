@@ -6,7 +6,7 @@
 	>
 		<app-shortkey shortkey="m" @press="toggleLeftPane" />
 
-		<app-scroll-scroller v-if="isLeftPaneVisible" class="-content fill-darkest" overlay>
+		<app-scroll-scroller v-if="isLeftPaneVisible" class="-content fill-darkest" thin>
 			<ul v-if="Screen.isXs" class="shell-nav">
 				<li v-if="app.user" class="offline-disable">
 					<router-link
