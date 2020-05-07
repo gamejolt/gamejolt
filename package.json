@@ -159,6 +159,7 @@
 		"appdmg": "0.5.2"
 	},
 	"dependencies": {
+		"@popperjs/core": "^2.4.0",
 		"axios": "0.18.0",
 		"client-voodoo": "2.5.3",
 		"fs-extra": "7.0.0",
