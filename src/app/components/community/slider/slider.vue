@@ -18,6 +18,9 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+.scroll-scroller
+	padding-bottom: 4px
+
 .-list
 	full-bleed()
 	white-space: nowrap
