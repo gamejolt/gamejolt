@@ -3,6 +3,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { EventSubscription } from '../../../../../system/event/event-topic';
 import { date } from '../../../../../_common/filters/date';
+import AppLoading from '../../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import { ChatClient } from '../../client';
@@ -12,6 +13,7 @@ import AppChatWindowOutputItem from './item/item.vue';
 
 @Component({
 	components: {
+		AppLoading,
 		AppChatWindowOutputItem,
 		AppScrollScroller,
 	},
@@ -28,6 +30,21 @@ export default class AppChatWindowOutput extends Vue {
 
 	@State
 	chat!: ChatClient;
+
+	get hasMoreMessages() {
+		const roomId = this.chat.room?.id;
+		const pagination = this.chat.pagination;
+
+		if (roomId) {
+			return pagination[roomId].totalPages > pagination[roomId].pageNumber;
+		}
+
+		return false;
+	}
+
+	get shouldShowLoadMore() {
+		return !this.chat.loadingOlderMessages && this.hasMoreMessages;
+	}
 
 	private shouldScroll = true;
 	private resize$: EventSubscription | undefined;
@@ -67,6 +84,13 @@ export default class AppChatWindowOutput extends Vue {
 			this.shouldScroll = false;
 		} else {
 			this.shouldScroll = true;
+		}
+	}
+
+	loadMore() {
+		const roomId = this.chat.room?.id;
+		if (roomId) {
+			this.chat.loadOlderMessages(roomId);
 		}
 	}
 

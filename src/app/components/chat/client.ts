@@ -12,12 +12,18 @@ import { ChatUser } from './user';
 import { UserChannel } from './user-channel';
 import { ChatUserCollection } from './user-collection';
 
-export const ChatMaxNumMessages = 200;
 export const ChatSiteModPermission = 2;
 
 export interface ChatNewMessageEvent {
 	isPrimer: boolean;
 	message: ChatMessage;
+}
+
+interface Pagination {
+	pageNumber: number;
+	pageSize: number;
+	totalEntries: number;
+	totalPages: number;
 }
 
 /**
@@ -58,12 +64,14 @@ export class ChatClient {
 	currentUser: ChatUser | null = null;
 	friendsList: ChatUserCollection = null as any;
 	friendsPopulated = false;
+	loadingOlderMessages = false;
 
 	room: ChatRoom | null = null;
 
 	// The following are indexed by room ID.
 	roomChannels: { [k: string]: RoomChannel } = {};
 	messages: { [k: string]: ChatMessage[] } = {};
+	pagination: { [k: string]: Pagination } = {};
 	usersOnline: { [k: string]: ChatUserCollection } = {};
 	notifications: { [k: string]: number } = {};
 	isFocused = true;
@@ -230,6 +238,7 @@ export class ChatClient {
 						.receive('error', reject)
 						.receive('ok', response => {
 							this.roomChannels[roomId] = channel;
+							this.pagination[roomId] = response.pagination;
 							channel.room = new ChatRoom(response.room);
 							const messages = response.messages.map(
 								(msg: ChatMessage) => new ChatMessage(msg)
@@ -408,11 +417,6 @@ export class ChatClient {
 
 			// Push it into the room's message list.
 			this.messages[roomId].push(message);
-
-			// If we are over our max message count, then remove older messages.
-			if (this.messages[roomId].length > ChatMaxNumMessages) {
-				this.messages[roomId].splice(0, 1); // Just remove the oldest.
-			}
 		}
 	}
 
@@ -542,6 +546,23 @@ export class ChatClient {
 		});
 
 		this.outputMessage(roomId, ChatMessage.TypeSystem, message, false);
+	}
+
+	loadOlderMessages(roomId: number) {
+		this.loadingOlderMessages = true;
+		this.roomChannels[roomId]
+			.push('load_messages', { before_id: this.messages[roomId][0].id })
+			.receive('ok', data => {
+				const oldMessages = data.messages.map((msg: ChatMessage) => new ChatMessage(msg));
+				const messages = [...oldMessages.reverse(), ...this.messages[roomId]];
+				this.pagination[roomId] = data.pagination;
+				this.messages[roomId] = [];
+				this.loadingOlderMessages = false;
+
+				this.processNewOutput(messages, false);
+			})
+			.receive('error', () => (this.loadingOlderMessages = false))
+			.receive('timeout', () => (this.loadingOlderMessages = false));
 	}
 
 	canModerate(room: ChatRoom, targetUser: ChatUser, action = '') {

@@ -1,6 +1,12 @@
 <template>
 	<app-scroll-scroller @scroll.native="onScroll">
 		<div class="-container">
+			<div v-if="shouldShowLoadMore" class="page-cut">
+				<app-button trans @click="loadMore">
+					<translate>Load More Messages</translate>
+				</app-button>
+			</div>
+			<app-loading v-if="chat.loadingOlderMessages" class="loading-centered" />
 			<transition-group @enter="onMessageTransition">
 				<div
 					class="anim-fade-in no-animate-leave"
