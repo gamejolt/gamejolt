@@ -18,7 +18,7 @@
 @require '~styles-lib/mixins'
 
 // 6px appears to be the width for the 'thin' scrollbar on Firefox
-$-size-thick = 10px
+$-size-default = 10px
 $-size-thin = 6px
 $-thumb-default = var(--theme-light)
 $-track-default = transparent
@@ -45,12 +45,12 @@ $-track-modal = var(--theme-bg)
 
 		&::-webkit-scrollbar
 			background-color: $-track-default
-			width: $-size-thick
-			height: $-size-thick
+			width: $-size-default
+			height: $-size-default
 
 			&-thumb
 				background-color: $-thumb-default
-				border-radius: $-size-thick
+				border-radius: $-size-default
 
 		&.-thin
 			scrollbar-width: thin
