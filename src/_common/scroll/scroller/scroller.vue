@@ -18,12 +18,12 @@
 @require '~styles-lib/mixins'
 
 // 6px appears to be the width for the 'thin' scrollbar on Firefox
-$-scrollbar-size = 6px
-$-thumb-radius = $-scrollbar-size / 2
-$-default-thumb = var(--theme-light)
-$-default-track = transparent
-$-modal-thumb = var(--dark-theme-bg-subtle)
-$-modal-track = var(--theme-bg)
+$-size-thick = 10px
+$-size-thin = 6px
+$-thumb-default = var(--theme-light)
+$-track-default = transparent
+$-thumb-modal = var(--dark-theme-bg-subtle)
+$-track-modal = var(--theme-bg)
 
 .scroll-scroller
 	scrollable()
@@ -41,34 +41,37 @@ $-modal-track = var(--theme-bg)
 
 	/* mouse, touch pad, and stylus-based screens */
 	@media (pointer: fine)
-		scrollbar-color: $-default-thumb $-default-track
+		scrollbar-color: $-thumb-default $-track-default
 
 		&::-webkit-scrollbar
-			background-color: $-default-track
+			background-color: $-track-default
+			width: $-size-thick
+			height: $-size-thick
 
 			&-thumb
-				background-color: $-default-thumb
+				background-color: $-thumb-default
+				border-radius: $-size-thick
 
 		&.-thin
 			scrollbar-width: thin
 
 			&::-webkit-scrollbar
-				width: $-scrollbar-size
-				height: $-scrollbar-size
+				width: $-size-thin
+				height: $-size-thin
 
 				&-thumb
-					border-radius: $-thumb-radius
+					border-radius: $-size-thin
 
 		// Override colors so transparency doesn't look weird
 		// with body background or others in full-screen modals.
 		&.modal
-			scrollbar-color: $-modal-thumb $-modal-track
+			scrollbar-color: $-thumb-modal $-track-modal
 
 			&::-webkit-scrollbar
-				background-color: $-modal-track
+				background-color: $-track-modal
 
 				&-thumb
-					background-color: $-modal-thumb
+					background-color: $-thumb-modal
 </style>
 
 <script lang="ts" src="./scroller"></script>
