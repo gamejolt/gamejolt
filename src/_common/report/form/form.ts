@@ -29,11 +29,21 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 	maxLengthSource = 255;
 
 	get isDescriptionOptional() {
-		if (!this.formModel.reason || !this.formModel.context) {
+		if (!this.formModel.reason) {
 			return true;
 		}
 
-		return !(this.formModel.context.length > 0 && this.formModel.context.includes('other'));
+		// When "other" is selected as reason, they have to provide a description.
+		if (this.formModel.reason === 'other') {
+			return false;
+		}
+
+		// When "other" is selected as context, they have to provide a description.
+		if (this.formModel.context && this.formModel.context.includes('other')) {
+			return false;
+		}
+
+		return true;
 	}
 
 	get reasons(): any[] {
@@ -67,6 +77,10 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 						radioValue: 'malware',
 						text: this.$gettext('Virus or other form of malware'),
 					},
+					{
+						radioValue: 'other',
+						text: this.$gettext('Other'),
+					},
 				];
 			case 'Fireside_Post':
 				const reasons = [
@@ -96,6 +110,10 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 								'Tell us where content in this post was stolen from'
 							),
 						},
+					},
+					{
+						radioValue: 'other',
+						text: this.$gettext('Other'),
 					},
 				];
 
@@ -131,6 +149,10 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 					{
 						radioValue: 'harassment',
 						text: this.$gettext('It is harassment or bullying'),
+					},
+					{
+						radioValue: 'other',
+						text: this.$gettext('Other'),
 					},
 				];
 			case 'User':
@@ -235,6 +257,10 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 								'Tell us which person this user is impersonating'
 							),
 						},
+					},
+					{
+						radioValue: 'other',
+						text: this.$gettext('Other'),
 					},
 				];
 		}
