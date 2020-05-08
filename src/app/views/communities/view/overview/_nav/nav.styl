@@ -3,6 +3,10 @@
 @require '../../../../../components/community/channel/card/variables'
 
 .scroll-scroller
+	// bleed left
+	@media $media-lg-up
+		margin-left: -($grid-gutter-width / 2)
+
 	// The nav shifts to the right side of the screen on MD size specifially.
 	// Add some spacing between the content below, and allow content to bleed-right.
 	@media $media-md
@@ -12,9 +16,7 @@
 	@media $media-mobile
 		margin-bottom: 8px
 
-	// We need to target the AppScrollInviewParent child of
-	// AppScrollScroller to make sure things are displaying properly.
-	>>> > div
+	div
 		@media $media-lg-up
 			display: flex
 			flex-direction: column
