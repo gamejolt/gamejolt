@@ -1,7 +1,7 @@
 <template>
 	<nav>
 		<app-scroll-scroller :horizontal="Screen.isMobile" thin>
-			<div>
+			<div class="-inner">
 				<app-community-channel-card
 					:community="community"
 					path="featured"
