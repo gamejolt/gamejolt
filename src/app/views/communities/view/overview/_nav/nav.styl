@@ -2,25 +2,30 @@
 @require '~styles-lib/mixins'
 @require '../../../../../components/community/channel/card/variables'
 
-nav
-	@media $media-lg-up
-		display: flex
-		flex-direction: column
-		align-items: flex-end
-
-	// The nav shifts to the right side of the screen on MD size specifially. Add
-	// some spacing between the content.
+.scroll-scroller
+	// The nav shifts to the right side of the screen on MD size specifially.
+	// Add some spacing between the content below, and allow content to bleed-right.
 	@media $media-md
+		margin-right: -($grid-gutter-width / 2)
 		margin-bottom: $line-height-computed
 
 	@media $media-mobile
-		display: flex
-		overflow-x: scroll
 		margin-bottom: 8px
 
-		.community-channel-card
-			margin-right: 8px
-			width: 200px
+	// We need to target the AppScrollInviewParent child of
+	// AppScrollScroller to make sure things are displaying properly.
+	>>> > div
+		@media $media-lg-up
+			display: flex
+			flex-direction: column
+			align-items: flex-end
+
+		@media $media-mobile
+			display: flex
+
+			.community-channel-card
+				margin-right: 8px
+				width: 200px
 
 .-channels-header
 	margin-top: 10px
