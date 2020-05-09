@@ -3,6 +3,7 @@
 		<app-responsive-dimensions
 			class="-item-media"
 			:class="{
+				'-ssr': GJ_IS_SSR,
 				'-filled': isFilled,
 			}"
 			:ratio="mediaItem.width / mediaItem.height"
@@ -58,8 +59,23 @@
 // The "item" gets the correct dimensions applied, so we want to stretch
 // out any image or video in the item to be full width/height.
 .-img, .-video
-	width: 100%
+	display: block
+	width: inherit
+	margin-left: auto
+	margin-right: auto
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	overflow: hidden
 
+	// For SSR responsive-dimensions component doesn't work, so we want
+	// to instead just try showing the media however the browser would
+	// show it.
+	.-ssr &
+		position: static
+		width: 100%
 </style>
 
 <script lang="ts" src="./post"></script>
