@@ -7,7 +7,7 @@
 			'-hide-scrollbar': hideScrollbar,
 		}"
 	>
-		<app-scroll-inview-parent v-if="isMounted" :scroller="$el">
+		<app-scroll-inview-parent v-if="isMounted" :scroller="scrollElement">
 			<slot />
 		</app-scroll-inview-parent>
 	</div>
