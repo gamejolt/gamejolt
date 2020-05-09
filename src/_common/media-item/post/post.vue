@@ -55,11 +55,10 @@
 .-backdrop
 	change-bg('bg-offset')
 
-// The "item" gets the correct dimensions applied, so we want to stretch
-// out any image or video in the item to be full width/height.
+// Set the width to be what AppResponsiveDimensions gives us,
+// so we don't overflow past what it sets.
 .-img, .-video
 	width: 100%
-
 </style>
 
 <script lang="ts" src="./post"></script>
