@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import AppLoading from '../loading/loading.vue';
 import { Analytics } from '../analytics/analytics.service';
 import { Growls } from '../growls/growls.service';
+import AppLoading from '../loading/loading.vue';
 import AppScrollScroller from '../scroll/scroller/scroller.vue';
 import { MediaBarItemMaxHeight } from './item/item';
 import AppMediaBarItem from './item/item.vue';
@@ -19,7 +19,6 @@ import AppMediaBarLightbox from './lightbox/lightbox.vue';
 })
 export default class AppMediaBar extends Vue {
 	@Prop(Array) mediaItems!: any[];
-	@Prop(Boolean) noOverlayScrollbars?: boolean;
 
 	private urlChecked = false;
 	private lightbox?: AppMediaBarLightboxTS;

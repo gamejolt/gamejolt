@@ -183,10 +183,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		return this.getLinkedAccount(LinkedAccount.PROVIDER_TWITTER);
 	}
 
-	get googleAccount() {
-		return this.getLinkedAccount(LinkedAccount.PROVIDER_GOOGLE);
-	}
-
 	get twitchAccount() {
 		return this.getLinkedAccount(LinkedAccount.PROVIDER_TWITCH);
 	}

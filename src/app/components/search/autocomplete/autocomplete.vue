@@ -1,5 +1,5 @@
 <template>
-	<div slot="popover" class="search-autocomplete-popover fill-darkest">
+	<div slot="popover" class="search-autocomplete-popover">
 		<div v-if="isHidden" class="well sans-margin-bottom">
 			<app-jolticon icon="chevron-up" />
 			<translate>Enter your search query for maximum finding...</translate>

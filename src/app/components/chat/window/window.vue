@@ -8,8 +8,8 @@
 
 			<!-- Room Users -->
 			<app-scroll-scroller
-				class="fill-darkest chat-window-users"
 				v-if="!room.isPmRoom && isShowingUsers"
+				class="fill-darkest chat-window-users"
 			>
 				<template v-if="Screen.isXs">
 					<br />

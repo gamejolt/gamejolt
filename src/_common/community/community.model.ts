@@ -59,6 +59,11 @@ export async function $leaveCommunity(community: Community) {
 	}
 }
 
+export const enum CommunityPresetChannelType {
+	FEATURED = 'featured',
+	ALL = 'all',
+}
+
 export class Community extends Collaboratable(Model) {
 	name!: string;
 	path!: string;
@@ -70,9 +75,10 @@ export class Community extends Collaboratable(Model) {
 	thumbnail?: MediaItem;
 	header?: MediaItem;
 	theme!: Theme | null;
-	game!: Game | null;
+	games!: Game[] | null;
 	channels?: CommunityChannel[] | null;
 	featured_background?: MediaItem;
+	all_background?: MediaItem;
 	user_block?: UserBlock | null;
 
 	member_count!: number;
@@ -95,8 +101,8 @@ export class Community extends Collaboratable(Model) {
 			this.theme = new Theme(data.theme);
 		}
 
-		if (data.game) {
-			this.game = new Game(data.game);
+		if (data.games) {
+			this.games = Game.populate(data.games);
 		}
 
 		if (data.channels) {
@@ -105,6 +111,10 @@ export class Community extends Collaboratable(Model) {
 
 		if (data.featured_background) {
 			this.featured_background = new MediaItem(data.featured_background);
+		}
+
+		if (data.all_background) {
+			this.all_background = new MediaItem(data.all_background);
 		}
 
 		if (data.user_block) {
@@ -186,17 +196,35 @@ export class Community extends Collaboratable(Model) {
 		return this.$_remove('/web/dash/communities/remove/' + this.id);
 	}
 
-	$saveFeaturedBackground() {
-		return this.$_save('/web/dash/communities/channels/save-featured/' + this.id, 'community', {
-			file: this.file,
-		});
+	$savePresetChannelBackground(presetType: CommunityPresetChannelType) {
+		return this.$_save(
+			`/web/dash/communities/channels/save-preset-background/${this.id}/${presetType}`,
+			'community',
+			{
+				file: this.file,
+			}
+		);
 	}
 
-	$clearFeaturedBackground() {
+	$clearPresetChannelBackground(presetType: CommunityPresetChannelType) {
 		return this.$_save(
-			`/web/dash/communities/channels/clear-featured-background/${this.id}`,
+			`/web/dash/communities/channels/clear-preset-background/${this.id}/${presetType}`,
 			'community'
 		);
+	}
+
+	async saveGameSort() {
+		const response = await Api.sendRequest(
+			`/web/dash/communities/games/save-sort/${this.id}`,
+			this.games!.map(i => i.id),
+			{
+				noErrorRedirect: true,
+			}
+		);
+		if (response.success) {
+			this.assign(response.community);
+		}
+		return response;
 	}
 }
 

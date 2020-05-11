@@ -22,9 +22,9 @@
 		<!-- Blur the header to signify they can't edit it -->
 		<app-page-header
 			:cover-media-item="community.header"
-			:cover-editable="isEditing && canEditMedia && !community.game"
+			:cover-editable="isEditing && canEditMedia"
 			should-affix-nav
-			:blur-header="isEditing && !!community.game"
+			:blur-header="isEditing"
 			@edit-cover="showEditHeader()"
 		>
 			<span slot="cover-edit-buttons">
@@ -32,14 +32,6 @@
 				<translate v-else>Change Header</translate>
 			</span>
 
-			<span class="tag">
-				<template v-if="community.game">
-					<translate>Game Community</translate>
-				</template>
-				<template v-else>
-					<translate>Community</translate>
-				</template>
-			</span>
 			<h1>
 				<router-link :to="{ name: 'communities.view.overview' }">
 					{{ community.name }}
@@ -85,7 +77,7 @@
 					</li>
 
 					<li>
-						<app-popper>
+						<app-popper popover-class="fill-darkest">
 							<a>
 								<app-jolticon icon="ellipsis-v" />
 							</a>

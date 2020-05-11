@@ -1,4 +1,4 @@
-import Vue, { PropType } from 'vue';
+import Vue, { PropOptions, PropType } from 'vue';
 
 type Constructor<T> = { new (): T };
 
@@ -38,11 +38,11 @@ export function makeObservableService<T>(service: T): T {
 	return service;
 }
 
-export function propRequired<T>(type: PropType<T>) {
+export function propRequired<T>(type?: PropType<T>) {
 	return {
 		type,
 		required: true,
-	};
+	} as PropOptions;
 }
 
 // We do this so that you get a type error if you try to assign any non-scalar
@@ -57,14 +57,14 @@ type DefaultValue<T> = T extends boolean
 	: never;
 
 export function propOptional<T>(
-	type: PropType<T>,
+	type: PropType<T> | undefined,
 	defaultValue: DefaultValue<T> | null | undefined | (() => T | null | undefined) = undefined
 ) {
 	return {
 		type,
 		required: false,
 		default: defaultValue,
-	};
+	} as PropOptions;
 }
 
 declare module 'vue/types/options' {

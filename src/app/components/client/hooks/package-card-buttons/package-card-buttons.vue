@@ -150,7 +150,10 @@
 			<app-jolticon icon="addon" :class="`jolticon-${card.showcasedBrowserIcon}`" />
 		</app-button>
 
-		<app-popper v-if="card.extraBuilds.length || (localPackage && !localPackage.install_state)">
+		<app-popper
+			v-if="card.extraBuilds.length || (localPackage && !localPackage.install_state)"
+			popover-class="fill-darkest"
+		>
 			<app-button
 				circle
 				icon="ellipsis-v"

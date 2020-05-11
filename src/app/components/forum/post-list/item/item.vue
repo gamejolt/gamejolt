@@ -63,7 +63,7 @@
 		</app-scroll-inview>
 
 		<template slot="meta">
-			<app-popper v-if="app.user">
+			<app-popper v-if="app.user" popover-class="fill-darkest">
 				<a class="link-muted" v-app-tooltip="$gettext('Options')">
 					<app-jolticon icon="ellipsis-v" class="middle" />
 				</a>

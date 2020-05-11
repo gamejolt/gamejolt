@@ -61,7 +61,7 @@
 					<translate>Following</translate>
 				</app-button>
 
-				<app-popper v-if="app.user" slot="end">
+				<app-popper v-if="app.user" popover-class="fill-darkest" slot="end">
 					<app-button circle trans icon="ellipsis-v" />
 
 					<div slot="popover" class="list-group list-group-dark thin">

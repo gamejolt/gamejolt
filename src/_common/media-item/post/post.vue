@@ -1,8 +1,8 @@
 <template>
-	<div class="-item">
+	<div class="-item" :class="{ '-inline': inline }">
 		<app-responsive-dimensions
+			class="-item-media"
 			:class="{
-				'-ssr': GJ_IS_SSR,
 				'-filled': isFilled,
 			}"
 			:ratio="mediaItem.width / mediaItem.height"
@@ -11,11 +11,7 @@
 			@change="onDimensionsChange"
 		>
 			<app-event-item-media-tags :gif="mediaItem.is_animated" />
-			<app-media-item-backdrop
-				class="-backdrop"
-				:media-item="mediaItem"
-				:radius="isFilled ? null : 'lg'"
-			>
+			<app-media-item-backdrop class="-backdrop" :media-item="mediaItem" :radius="itemRadius">
 				<app-img-responsive
 					v-if="!isPostHydrated || !mediaItem.is_animated"
 					class="-img"
@@ -44,38 +40,25 @@
 
 .-item
 	position: relative
-	display: inline-flex
-	justify-content: center
+	display: block
 	vertical-align: middle
 	width: 100%
 	max-width: 100% !important
 
+	&-media
+		margin-left: auto
+		margin-right: auto
+
+	&.-inline
+		display: inline-block
+
 .-backdrop
 	change-bg('bg-offset')
 
-// The "item" gets the correct dimensions applied, so we want to stretch
-// out any image or video in the item to be full width/height.
+// Set the width to be what AppResponsiveDimensions gives us,
+// so we don't overflow past what it sets.
 .-img, .-video
-	display: block
-	width: inherit
-	margin-left: auto
-	margin-right: auto
-	position: absolute
-	top: 0
-	right: 0
-	bottom: 0
-	left: 0
-	overflow: hidden
-
-	.-filled &
-		border-radius: 0
-
-	// For SSR responsive-dimensions component doesn't work, so we want
-	// to instead just try showing the media however the browser would
-	// show it.
-	.-ssr &
-		position: static
-		width: 100%
+	width: 100%
 </style>
 
-<script lang="ts" src="./item"></script>
+<script lang="ts" src="./post"></script>

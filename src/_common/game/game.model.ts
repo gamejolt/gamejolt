@@ -227,6 +227,10 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 		return true;
 	}
 
+	get isVisible() {
+		return this.status === Game.STATUS_VISIBLE;
+	}
+
 	getContent(context: ContentContext) {
 		if (context === 'game-description') {
 			return this.description_content;

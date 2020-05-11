@@ -279,11 +279,6 @@
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
 
-"@types/simplebar@2.4.1":
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/@types/simplebar/-/simplebar-2.4.1.tgz#19d40e2982115be98cb743debf3b286c3a014550"
-  integrity sha512-ONFvoe5jHDmbpxXHkXGexP5nJTAmSuBUk47Bm1mo/fOmNCnrO0oiszIhriSFRXI3jBykXys0p2vhzToI+X/W3g==
-
 "@types/stripe-v3@3.1.17":
   version "3.1.17"
   resolved "https://registry.yarnpkg.com/@types/stripe-v3/-/stripe-v3-3.1.17.tgz#0fd3c4b134daa1cd61631f58eeb6d756e0377668"
@@ -1816,11 +1811,6 @@ camelcase@^4.0.0, camelcase@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-4.1.0.tgz#d545635be1e33c542649c69173e5de6acfae34dd"
   integrity sha1-1UVjW+HjPFQmScaRc+Xeas+uNN0=
-
-can-use-dom@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/can-use-dom/-/can-use-dom-0.1.0.tgz#22cc4a34a0abc43950f42c6411024a3f6366b45a"
-  integrity sha1-IsxKNKCrxDlQ9CxkEQJKP2NmtFo=
 
 caniuse-api@^3.0.0:
   version "3.0.0"
@@ -7152,7 +7142,7 @@ lodash.templatesettings@~2.4.1:
     lodash._reinterpolate "~2.4.1"
     lodash.escape "~2.4.1"
 
-lodash.throttle@^4.0.0, lodash.throttle@^4.1.1:
+lodash.throttle@^4.0.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
   integrity sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=
@@ -8793,10 +8783,10 @@ performance-now@^2.1.0:
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
-phoenix@1.3.4:
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/phoenix/-/phoenix-1.3.4.tgz#431f473f7db1d8950b017219f9dc470319c216ac"
-  integrity sha512-Hn+LgWbBs/jd8VxbfsapoVUO8z8YSf0rHj4GtDm60V6u8kJLMdLAdyGdIvz9EPZvHQ4MMonbsqqjDwlSGoUDtw==
+phoenix@1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/phoenix/-/phoenix-1.5.1.tgz#a8bee36a02a9448c052ad3ba6f7e3ba061d46ce2"
+  integrity sha512-0cTQ5XfAqt8l3+KnnX0AW3hww0N37bOgTTeyt1cH80VJNeEMab8+0bK421XhVoaQ8R0Vsc0GS3W6CyI4eND0Ew==
 
 picomatch@^2.0.5:
   version "2.2.1"
@@ -10303,11 +10293,6 @@ schema-utils@^1.0.0:
     ajv-errors "^1.0.0"
     ajv-keywords "^3.1.0"
 
-scrollbarwidth@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/scrollbarwidth/-/scrollbarwidth-0.1.3.tgz#1b0de64e288c38c427f4a01fe00a462a04b94fdf"
-  integrity sha1-Gw3mTiiMOMQn9KAf4ApGKgS5T98=
-
 seek-bzip@^1.0.3, seek-bzip@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/seek-bzip/-/seek-bzip-1.0.5.tgz#cfe917cb3d274bcffac792758af53173eb1fabdc"
@@ -10570,16 +10555,6 @@ simple-swizzle@^0.2.2:
   integrity sha1-pNprY1/8zMoz9w0Xy5JZLeleVXo=
   dependencies:
     is-arrayish "^0.3.1"
-
-simplebar@3.0.0-beta.5:
-  version "3.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/simplebar/-/simplebar-3.0.0-beta.5.tgz#31cd3344863a88ce2a2371f3c9b7bb7a8ea19b45"
-  integrity sha512-uJjZiSHnQbRRxE+t+UO5NH5Vpynd2yHN//XUkN6LQUPv+tyWwfykMgpd2Zh2nOjxEcmGKumN+aZv/i0NspXQ5Q==
-  dependencies:
-    can-use-dom "^0.1.0"
-    lodash.throttle "^4.1.1"
-    resize-observer-polyfill "^1.5.0"
-    scrollbarwidth "^0.1.3"
 
 slash@^1.0.0:
   version "1.0.0"

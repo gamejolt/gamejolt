@@ -1,17 +1,16 @@
-import { Component } from 'vue-property-decorator';
-import { sleep } from '../../../../../utils/utils';
-import { Api } from '../../../../../_common/api/api.service';
-import { Growls } from '../../../../../_common/growls/growls.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppStickerCard from '../../../../../_common/sticker/card/card.vue';
-import AppStickerCardHidden from '../../../../../_common/sticker/card/hidden/hidden.vue';
-import { Sticker } from '../../../../../_common/sticker/sticker.model';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
-import { InitPayload } from '../stickers';
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { Emit, Prop } from 'vue-property-decorator';
+import { sleep } from '../../../utils/utils';
+import { propRequired } from '../../../utils/vue';
+import { Api } from '../../api/api.service';
+import { Growls } from '../../growls/growls.service';
+import { AppTooltip } from '../../tooltip/tooltip';
+import AppStickerCard from '../card/card.vue';
+import AppStickerCardHidden from '../card/hidden/hidden.vue';
+import { Sticker } from '../sticker.model';
 
 @Component({
-	name: 'RouteDashStickersCollect',
 	components: {
 		AppStickerCard,
 		AppStickerCardHidden,
@@ -20,33 +19,26 @@ import { InitPayload } from '../stickers';
 		AppTooltip,
 	},
 })
-@RouteResolver({
-	deps: {},
-	resolver: () => Api.sendRequest('/web/stickers/dash'),
-})
-export default class RouteDashStickersCollect extends BaseRouteComponent {
-	readonly Screen = Screen;
+export default class AppStickerCollect extends Vue {
+	@Prop(propRequired(Number)) balance!: number;
+	@Prop(propRequired(Number)) stickerCost!: number;
 
-	balance = 0;
-	stickerCost = 10;
 	purchasedSticker: Sticker | null = null;
 
 	isRevealing = false;
 	isRevealed = false;
 	showCollectControls = false;
 
-	get routeTitle() {
-		return this.$gettext(`Collect Stickers`);
-	}
-
 	get canReveal() {
 		return this.balance >= this.stickerCost;
 	}
 
-	routeResolved($payload: InitPayload) {
-		this.balance = $payload.balance;
-		this.stickerCost = $payload.stickerCost;
+	get canBuyStickerAmount() {
+		return Math.floor(this.balance / this.stickerCost);
 	}
+
+	@Emit('collect')
+	emitCollect() {}
 
 	async onBuySticker() {
 		this.isRevealing = true;
@@ -63,7 +55,7 @@ export default class RouteDashStickersCollect extends BaseRouteComponent {
 						{},
 						{ detach: true }
 					);
-					if (!payload || !payload.stickers) {
+					if (!payload || !payload.stickers || !payload.stickers.length) {
 						throw new Error('Failed to purchase sticker.');
 					}
 					const stickerData = payload.stickers[0];
@@ -97,6 +89,6 @@ export default class RouteDashStickersCollect extends BaseRouteComponent {
 		this.showCollectControls = false;
 		this.purchasedSticker = null;
 
-		this.balance -= this.stickerCost;
+		this.emitCollect();
 	}
 }

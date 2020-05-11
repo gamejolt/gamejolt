@@ -31,8 +31,6 @@ export class GameVideo extends Model {
 	posted_on!: number;
 	status!: number;
 	img_thumbnail!: string;
-	img_thumbnail_med!: string;
-	img_thumbnail_large!: string;
 
 	getUrl(game: Game) {
 		return game.getUrl() + `#video-${this.id}`;
@@ -40,7 +38,10 @@ export class GameVideo extends Model {
 
 	$save() {
 		if (!this.id) {
-			return this.$_save('/web/dash/developer/games/media/save/video/' + this.game_id, 'gameVideo');
+			return this.$_save(
+				'/web/dash/developer/games/media/save/video/' + this.game_id,
+				'gameVideo'
+			);
 		} else {
 			return this.$_save(
 				'/web/dash/developer/games/media/save/video/' + this.game_id + '/' + this.id,
