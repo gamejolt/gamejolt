@@ -58,7 +58,6 @@
 
 				<div class="-caption" v-if="item.title || item.description" ref="caption">
 					<h4>{{ item.title }}</h4>
-					<!--TODO: This used to link links-->
 					<p v-if="item.description" v-text="item.description"></p>
 				</div>
 			</template>

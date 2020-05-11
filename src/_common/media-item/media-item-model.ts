@@ -85,10 +85,6 @@ export class MediaItem extends Model implements LightboxMediaModel {
 		return this;
 	}
 
-	get caption() {
-		return this.filename;
-	}
-
 	getDimensions(
 		maxWidth: number | undefined,
 		maxHeight: number | undefined,

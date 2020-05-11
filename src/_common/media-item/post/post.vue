@@ -1,7 +1,7 @@
 <template>
-	<div class="-item" :class="{ '-inline': inline }" @click="onClickImage">
+	<div class="media-item-post" :class="{ '-inline': inline }" @click="onClickImage">
 		<app-responsive-dimensions
-			class="-item-media"
+			class="-media"
 			:class="{
 				'-ssr': GJ_IS_SSR,
 				'-filled': isFilled,
@@ -11,13 +11,13 @@
 			:max-height="deviceMaxHeight"
 			@change="onDimensionsChange"
 		>
-			<app-event-item-media-tags :gif="mediaItem.is_animated" />
-			<div v-if="inline" class="-fullscreen">
+			<div v-if="inline" class="-toolbar">
 				<app-button
 					@click="emitFullscreen(mediaItem)"
 					overlay
 					circle
-					icon="bolt-filled"
+					trans
+					icon="fullscreen"
 					v-app-tooltip="$gettext(`Fullscreen`)"
 				/>
 			</div>
@@ -48,57 +48,62 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-.-item
+.media-item-post
 	position: relative
 	display: block
 	vertical-align: middle
 	width: 100%
 	max-width: 100% !important
 
-	&-media
-		margin-left: auto
-		margin-right: auto
-
 	&.-inline
 		display: inline-block
 
-	// Show fullscreen button on hover over image
+	.-media
+		margin-left: auto
+		margin-right: auto
+
+	.-backdrop
+		change-bg('bg-offset')
+
+	// The "item" gets the correct dimensions applied, so we want to stretch
+	// out any image or video in the item to be full width/height.
+	.-img, .-video
+		display: block
+		width: inherit
+		margin-left: auto
+		margin-right: auto
+		position: absolute
+		top: 0
+		right: 0
+		bottom: 0
+		left: 0
+		overflow: hidden
+
+		// For SSR responsive-dimensions component doesn't work, so we want
+		// to instead just try showing the media however the browser would
+		// show it.
+		.-ssr &
+			position: static
+			width: 100%
+
+	.-toolbar
+		position: absolute
+		left: 0
+		right: 0
+		bottom: 12px
+		display: flex
+		align-items: center
+		justify-content: center
+		z-index: 6
+		opacity: 0
+		transition: opacity 0.2s ease
+
+		@media (hover: none)
+			display: none
+
 	&:hover
-		.-fullscreen
+		.-toolbar
 			opacity: 1
-
-.-backdrop
-	change-bg('bg-offset')
-
-// The "item" gets the correct dimensions applied, so we want to stretch
-// out any image or video in the item to be full width/height.
-.-img, .-video
-	display: block
-	width: inherit
-	margin-left: auto
-	margin-right: auto
-	position: absolute
-	top: 0
-	right: 0
-	bottom: 0
-	left: 0
-	overflow: hidden
-
-	// For SSR responsive-dimensions component doesn't work, so we want
-	// to instead just try showing the media however the browser would
-	// show it.
-	.-ssr &
-		position: static
-		width: 100%
-
-.-fullscreen
-	position: absolute
-	bottom: 10px
-	right: 10px
-	z-index: 6
-	opacity: 0
-
-	transition: opacity 0.2s ease
 </style>
 
 <script lang="ts" src="./post"></script>

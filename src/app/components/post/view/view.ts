@@ -27,7 +27,6 @@ import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
 import AppVideo from '../../../../_common/video/video.vue';
 import { Store } from '../../../store';
 import AppEventItemControls from '../../event-item/controls/controls.vue';
-import AppEventItemMediaTags from '../../event-item/media-tags/media-tags.vue';
 import AppPollVoting from '../../poll/voting/voting.vue';
 import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 
@@ -42,7 +41,6 @@ import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 		AppVideoEmbed,
 		AppSketchfabEmbed,
 		AppEventItemControls,
-		AppEventItemMediaTags,
 		AppPollVoting,
 		AppAdWidget,
 		AppCommunityPill,

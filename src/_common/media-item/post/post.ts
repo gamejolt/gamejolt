@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
-import AppEventItemMediaTags from '../../../app/components/event-item/media-tags/media-tags.vue';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import {
@@ -19,7 +18,6 @@ import { MediaItem } from '../media-item-model';
 		AppMediaItemBackdrop,
 		AppVideo,
 		AppResponsiveDimensions,
-		AppEventItemMediaTags,
 	},
 	directives: {
 		AppTooltip,
