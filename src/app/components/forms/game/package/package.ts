@@ -1,7 +1,9 @@
-import * as addWeeks from 'date-fns/add_weeks';
-import * as startOfDay from 'date-fns/start_of_day';
-import * as startOfTomorrow from 'date-fns/start_of_tomorrow';
+import { addWeeks, startOfDay, startOfTomorrow } from 'date-fns';
+import { determine } from 'jstimezonedetect';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
+import { currency } from '../../../../../_common/filters/currency';
+import { date } from '../../../../../_common/filters/date';
 import AppFormControlDate from '../../../../../_common/form-vue/control/date/date.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/control/toggle/toggle.vue';
 import {
@@ -17,13 +19,9 @@ import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { SellablePricing } from '../../../../../_common/sellable/pricing/pricing.model';
 import { Sellable } from '../../../../../_common/sellable/sellable.model';
+import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
-import { currency } from '../../../../../_common/filters/currency';
-import { date } from '../../../../../_common/filters/date';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
-import { determine } from 'jstimezonedetect';
-import { Component, Prop, Watch } from 'vue-property-decorator';
 import { AppGamePerms } from '../../../game/perms/perms';
 
 type FormGamePackageModel = GamePackage & {
@@ -210,9 +208,13 @@ export default class FormGamePackage extends BaseForm<FormGamePackageModel>
 
 				this.originalPricing = SellablePricing.getOriginalPricing(this.pricings) || null;
 
-				this.promotionalPricing = SellablePricing.getPromotionalPricing(this.pricings) || null;
+				this.promotionalPricing =
+					SellablePricing.getPromotionalPricing(this.pricings) || null;
 
-				this.setField('price', this.originalPricing ? this.originalPricing.amount / 100 : 0);
+				this.setField(
+					'price',
+					this.originalPricing ? this.originalPricing.amount / 100 : 0
+				);
 
 				if (this.promotionalPricing) {
 					this.setField('sale_timezone', this.promotionalPricing.timezone!);
@@ -254,7 +256,9 @@ export default class FormGamePackage extends BaseForm<FormGamePackageModel>
 		this.isProcessing = true;
 
 		const params = [this.formModel.game_id, this.formModel.id];
-		await Api.sendRequest('/web/dash/developer/games/packages/cancel-sales/' + params.join('/'));
+		await Api.sendRequest(
+			'/web/dash/developer/games/packages/cancel-sales/' + params.join('/')
+		);
 
 		this.promotionalPricing = null;
 		this.setField('sale_timezone', determine().name());

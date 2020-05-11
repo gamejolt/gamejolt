@@ -7,7 +7,7 @@ import {
 	parseToRgb,
 	readableColor,
 	rgb,
-	toColorString,
+	rgbToColorString,
 } from 'polished';
 import { RgbColor } from 'polished/lib/types/color';
 import { lab2rgb, rgb2lab } from '../../utils/color';
@@ -51,7 +51,7 @@ export function makeThemeFromColor(color: string) {
 }
 
 function rgb2hsl(color: RgbColor) {
-	const str = toColorString(color);
+	const str = rgbToColorString(color);
 	return parseToHsl(str);
 }
 

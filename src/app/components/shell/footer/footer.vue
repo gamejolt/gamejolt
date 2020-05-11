@@ -151,7 +151,7 @@
 						/>
 					</p>
 
-					<p class="tiny">&copy; {{ curDate | date('YYYY') }} Lucent Web Creative, LLC</p>
+					<p class="tiny">&copy; {{ curDate | date('yyyy') }} Lucent Web Creative, LLC</p>
 
 					<p class="tiny text-muted" v-if="GJ_IS_CLIENT">
 						<a @click="showSystemReport" class="link-muted">
