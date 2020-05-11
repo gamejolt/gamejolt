@@ -11,17 +11,16 @@
 
 
 .media-item-backdrop
+	position: relative
+	z-index: 0
 	display: flex
 	overflow: hidden
 	width: 100%
 	height: 100%
-	position: relative
-
-	> *
-		position: relative
 
 	.-color
 		position: absolute
+		z-index: -1
 		top: 1px
 		right: 1px
 		bottom: 1px
