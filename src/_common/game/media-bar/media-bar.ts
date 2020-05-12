@@ -21,7 +21,6 @@ import AppGameMediaBarItem from './item/item.vue';
 })
 export default class AppGameMediaBar extends Vue implements LightboxMediaSource {
 	@Prop(Array) mediaItems!: any[];
-	@Prop(Boolean) noOverlayScrollbars?: boolean;
 
 	private urlChecked = false;
 	private lightbox?: AppLightboxTS;
