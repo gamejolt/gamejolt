@@ -69,8 +69,8 @@ export default class AppPopper extends Vue {
 	// @Prop({ type: Boolean, default: true })
 	// autoHide!: boolean;
 
-	// @Prop(Boolean)
-	// block?: boolean;
+	@Prop(propOptional(Boolean))
+	block?: boolean;
 
 	// @Prop(String)
 	// openGroup?: string;
@@ -120,29 +120,27 @@ export default class AppPopper extends Vue {
 		return classes.join(' ');
 	}
 
-	get popperOptions(): object {
-		const general = {
+	get popperOptions(): Options {
+		return {
 			placement: this.placement,
-			modifiers: [],
+			modifiers: [
+				{
+					// offset between popper and trigger
+					name: 'offset',
+					options: {
+						offset: [0, 12],
+					},
+				} as OffsetModifier,
+				{
+					// padding between popper and viewport
+					name: 'preventOverflow',
+					options: {
+						padding: 8,
+					},
+				} as PreventOverflowModifier,
+			],
 			strategy: this.strategy,
-		} as Options;
-
-		const modifiers = [
-			{
-				name: 'offset',
-				options: {
-					offset: [0, 12],
-				},
-			} as OffsetModifier,
-			{
-				name: 'preventOverflow',
-				options: {
-					padding: 8,
-				},
-			} as PreventOverflowModifier,
-		];
-
-		return { general, modifiers };
+		};
 	}
 
 	mounted() {
@@ -180,6 +178,7 @@ export default class AppPopper extends Vue {
 			}
 		});
 		this.ResizeObserver.observe(this.$refs.popper);
+		console.log(this.popperInstance);
 	}
 
 	@Emit('show')
