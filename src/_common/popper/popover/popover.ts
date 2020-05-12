@@ -1,6 +1,7 @@
 import { createPopper, Instance, Options } from '@popperjs/core';
 import { OffsetModifier } from '@popperjs/core/lib/modifiers/offset';
 import { PreventOverflowModifier } from '@popperjs/core/lib/modifiers/preventOverflow';
+import ResizeObserver from 'resize-observer-polyfill';
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
@@ -89,6 +90,7 @@ export default class AppPopper extends Vue {
 	popperIndex = PopperIndex++;
 
 	private _popperElement!: HTMLElement;
+	ResizeObserver!: ResizeObserver;
 	popperInstance!: Instance | null;
 	// private _isDestroyed?: boolean;
 
@@ -165,11 +167,19 @@ export default class AppPopper extends Vue {
 	async createPopper() {
 		this.isVisible = true;
 		await this.$nextTick();
+
 		this.popperInstance = createPopper(
 			this._popperElement,
 			this.$refs.popper,
 			this.popperOptions
 		);
+
+		this.ResizeObserver = new ResizeObserver(() => {
+			if (this.popperInstance) {
+				this.popperInstance.forceUpdate();
+			}
+		});
+		this.ResizeObserver.observe(this.$refs.popper);
 	}
 
 	@Emit('show')
