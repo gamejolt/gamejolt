@@ -92,7 +92,7 @@
 						v-app-track-event="`sidebar:collection:owned`"
 					>
 						<span class="shell-nav-icon">
-							<app-jolticon icon="heart" />
+							<app-jolticon icon="heart-filled" />
 						</span>
 						<span class="shell-nav-label">
 							<translate>Owned Games</translate>
