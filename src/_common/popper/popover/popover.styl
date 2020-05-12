@@ -14,29 +14,22 @@ $-transition-time = 200ms
 	&, .trigger
 		display: block !important
 
-.popper
+/* .popper
 	z-index: $zindex-popover
 	outline: 0
 
+	&-backdrop
+		z-index: $zindex-popover - 1 !important */
+.popper-wrapper
 	// We don't want to show the popover stuff at all on SSR, or it breaks
 	// styling since it tries to fit the container into the page.
-	.-ssr &
+	&.-ssr
 		display: none !important
 
-	&-backdrop
-		z-index: $zindex-popover - 1 !important
-
-	&[aria-hidden='true']
-		visibility: hidden
+	&.-hide
 		opacity: 0
-		transition: opacity $-transition-time, visibility $-transition-time
+		transition: opacity $-transition-time
 
-	&[aria-hidden='false']
-		visibility: visible
-		opacity: 1
-		transition: none
-
-.popper-wrapper
 	.popper-arrow
 		width: 0
 		height: 0
@@ -113,7 +106,7 @@ $-transition-time = 200ms
 		margin-top: $popover-spacing
 		margin-bottom: $popover-spacing
 
-.popper-heading
-	padding: $popover-spacing
-	white-space: nowrap
-	font-weight: bold
+/* .popper-heading
+padding: $popover-spacing
+white-space: nowrap
+font-weight: bold */
