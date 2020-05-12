@@ -1,6 +1,7 @@
 <template>
 	<app-popper
 		v-if="!Connection.isClientOffline"
+		popover-class="fill-dark"
 		hide-on-state-change
 		force-max-width
 		@show="onShow()"
@@ -40,7 +41,7 @@
 					</ul>
 				</nav>
 			</div>
-			<div class="shell-card-popover fill-dark" slot="popover">
+			<div class="shell-card-popover" slot="popover">
 				<template v-if="isLoading">
 					<br />
 					<app-loading centered />

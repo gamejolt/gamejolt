@@ -1,5 +1,5 @@
 <template>
-	<app-scroll-scroller horizontal overlay>
+	<app-scroll-scroller horizontal thin>
 		<div class="-list">
 			<div class="-list-item" v-for="tag of tags" :key="tag.id">
 				<app-tag-thumbnail class="-list-thumb" :tag="tag.id" :event-cat="eventCat" />

@@ -125,7 +125,7 @@
 
 				<div class="text-center">
 					<strong>
-						{{ startTime | date('MMMM YYYY') }}
+						{{ startTime | date('LLLL yyyy') }}
 					</strong>
 				</div>
 

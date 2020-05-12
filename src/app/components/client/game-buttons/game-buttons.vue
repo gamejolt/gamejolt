@@ -103,6 +103,7 @@
 			-->
 				<app-popper
 					v-if="gamePackages.length > 1"
+					popover-class="fill-darkest"
 					@show="$emit('show-launch-options', $event)"
 					@hide="$emit('hide-launch-options', $event)"
 				>
@@ -129,6 +130,7 @@
 
 			<app-popper
 				v-if="!localPackage.install_state"
+				class="fill-darkest"
 				@show="$emit('show-options', $event)"
 				@hide="$emit('hide-options', $event)"
 			>

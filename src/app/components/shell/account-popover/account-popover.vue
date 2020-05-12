@@ -1,5 +1,6 @@
 <template>
 	<app-popper
+		popover-class="fill-darkest"
 		hide-on-state-change
 		@show="onShow()"
 		@hide="onHide()"

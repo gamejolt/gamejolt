@@ -76,12 +76,16 @@
 		</div>
 
 		<div class="-community-end small">
-			<app-popper @show="isShowingShare = true" @hide="isShowingShare = false">
+			<app-popper
+				popover-class="fill-darkest"
+				@show="isShowingShare = true"
+				@hide="isShowingShare = false"
+			>
 				<a>
 					<translate>Share this community</translate>
 				</a>
 
-				<div slot="popover" class="well fill-darkest sans-margin" v-if="isShowingShare">
+				<div slot="popover" class="well sans-margin" v-if="isShowingShare">
 					<div class="social-widgets" v-if="!GJ_IS_CLIENT">
 						<app-social-twitter-share :url="shareUrl" :content="shareContent" />
 

@@ -14,7 +14,7 @@
 			</section>
 
 			<section class="-communities">
-				<app-scroll-scroller horizontal overlay>
+				<app-scroll-scroller horizontal thin>
 					<div class="-list">
 						<app-onboarding-follows-community-item
 							v-for="community of communities"

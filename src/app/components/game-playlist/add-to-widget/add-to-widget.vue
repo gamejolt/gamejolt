@@ -1,6 +1,7 @@
 <template>
 	<app-popper
 		v-if="game.status === Game.STATUS_VISIBLE"
+		popover-class="fill-darkest"
 		placement="bottom"
 		:disabled="!app.user"
 		@show="isShown = true"

@@ -1,5 +1,5 @@
 <template>
-	<app-scroll-scroller overlay horizontal class="fill-darker">
+	<app-scroll-scroller class="fill-darker" horizontal thin>
 		<div class="-items" :style="{ height: mediaBarHeight + 'px' }">
 			<a class="-add" @click="add()">
 				<div

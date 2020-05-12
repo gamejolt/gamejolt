@@ -1,14 +1,13 @@
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
-import AppScrollScrollerTS from '../scroller/scroller';
 import { ScrollInviewContainer } from './container';
 
 @Component({})
 export class AppScrollInviewParent extends Vue {
 	// If this is a child of AppScrollScroller, we need to get it as a prop so
 	// we can use that scroll element as the root context.
-	@Prop(propOptional(Object)) scroller?: AppScrollScrollerTS;
+	@Prop(propOptional(undefined, null)) scroller!: null | HTMLElement;
 
 	// We need to create a new container for each unique "margin" that our
 	// AppScrollInview children need. This is a map of margin => container.
@@ -23,7 +22,7 @@ export class AppScrollInviewParent extends Vue {
 	getContainer(margin: string) {
 		const container = this.containers.get(margin);
 		if (!container) {
-			const root = (this.scroller && this.scroller.scrollElement) || null;
+			const root = this.scroller;
 			const newContainer = new ScrollInviewContainer(root, margin);
 			this.containers.set(margin, newContainer);
 			return newContainer;
