@@ -1,23 +1,25 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { Analytics } from '../analytics/analytics.service';
-import { Growls } from '../growls/growls.service';
-import AppLoading from '../loading/loading.vue';
-import AppScrollScroller from '../scroll/scroller/scroller.vue';
+import { Analytics } from '../../analytics/analytics.service';
+import { Growls } from '../../growls/growls.service';
+import AppLoading from '../../loading/loading.vue';
+import AppMediaBarLightboxItem from '../../media-bar/lightbox/item/item.vue';
+import AppMediaBarLightboxTS, { LightboxMediaSource } from '../../media-bar/lightbox/lightbox';
+import AppMediaBarLightbox from '../../media-bar/lightbox/lightbox.vue';
+import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { MediaBarItemMaxHeight } from './item/item';
-import AppMediaBarItem from './item/item.vue';
-import AppMediaBarLightboxTS, { LightboxMediaSource } from './lightbox/lightbox';
-import AppMediaBarLightbox from './lightbox/lightbox.vue';
+import AppGameMediaBarItem from './item/item.vue';
 
 @Component({
 	components: {
 		AppLoading,
-		AppMediaBarItem,
+		AppMediaBarLightboxItem,
 		AppMediaBarLightbox,
 		AppScrollScroller,
+		AppGameMediaBarItem,
 	},
 })
-export default class AppMediaBar extends Vue implements LightboxMediaSource {
+export default class AppGameMediaBar extends Vue implements LightboxMediaSource {
 	@Prop(Array) mediaItems!: any[];
 	@Prop(Boolean) noOverlayScrollbars?: boolean;
 

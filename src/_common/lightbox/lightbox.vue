@@ -38,15 +38,15 @@
 					</app-button>
 				</div>
 
-				<app-media-bar-lightbox-slider class="-slider">
-					<app-media-bar-lightbox-item
+				<app-lightbox-slider class="-slider">
+					<app-lightbox-item
 						v-for="(item, index) of mediaBar.getItems()"
 						:key="item.getModelId()"
 						:item="item"
 						:item-index="index"
 						:active-index="mediaBar.getActiveIndex()"
 					/>
-				</app-media-bar-lightbox-slider>
+				</app-lightbox-slider>
 			</div>
 		</v-touch>
 	</div>

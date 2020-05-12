@@ -1,21 +1,21 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { EventSubscription } from '../../../system/event/event-topic';
-import { Analytics } from '../../analytics/analytics.service';
-import { EscapeStack } from '../../escape-stack/escape-stack.service';
-import { MediaItem } from '../../media-item/media-item-model';
-import { Screen } from '../../screen/screen-service';
-import AppShortkey from '../../shortkey/shortkey.vue';
-import AppMediaBarLightboxItem from './item/item.vue';
+import { EventSubscription } from '../../system/event/event-topic';
+import { Analytics } from '../analytics/analytics.service';
+import { EscapeStack } from '../escape-stack/escape-stack.service';
+import { MediaItem } from '../media-item/media-item-model';
+import { Screen } from '../screen/screen-service';
+import AppShortkey from '../shortkey/shortkey.vue';
+import AppLightboxItem from './item/item.vue';
 import './lightbox-global.styl';
-import AppMediaBarLightboxSlider from './slider.vue';
+import AppLightboxSlider from './slider.vue';
 
 if (!GJ_IS_SSR) {
 	const VueTouch = require('vue-touch');
 	Vue.use(VueTouch);
 }
 
-export const MediaBarLightboxConfig = {
+export const LightboxConfig = {
 	// This should match the $-controls-height variable in lightbox.styl
 	controlsHeight: 80,
 
@@ -45,12 +45,12 @@ export interface LightboxMediaModel {
 
 @Component({
 	components: {
-		AppMediaBarLightboxSlider,
-		AppMediaBarLightboxItem,
+		AppLightboxSlider,
+		AppLightboxItem,
 		AppShortkey,
 	},
 })
-export default class AppMediaBarLightbox extends Vue {
+export default class AppLightbox extends Vue {
 	@Prop(Object)
 	mediaBar!: LightboxMediaSource;
 
