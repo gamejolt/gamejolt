@@ -1,10 +1,13 @@
-import { createPopper } from '@popperjs/core';
+import { createPopper, Instance, Options } from '@popperjs/core';
+import { OffsetModifier } from '@popperjs/core/lib/modifiers/offset';
+import { PreventOverflowModifier } from '@popperjs/core/lib/modifiers/preventOverflow';
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
+import { propOptional } from '../../../utils/vue';
 import { Backdrop } from '../../backdrop/backdrop.service';
 import AppBackdrop from '../../backdrop/backdrop.vue';
 import { Screen } from '../../screen/screen-service';
-import AppScrollScrollerTS from '../../scroll/scroller/scroller';
+// import AppScrollScrollerTS from '../../scroll/scroller/scroller';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { Popover } from './popover.service';
 import './popover.styl';
@@ -22,10 +25,13 @@ type ActualTrigger = 'click' | 'hover' | 'manual';
 	},
 })
 export default class AppPopper extends Vue {
-	@Prop({ type: String, default: 'bottom' })
+	@Prop(propOptional(String, 'bottom'))
 	placement!: 'top' | 'right' | 'bottom' | 'left';
 
-	@Prop({ type: String, default: 'click' })
+	@Prop(propOptional(String, 'absolute'))
+	strategy!: 'fixed' | 'absolute';
+
+	@Prop(propOptional(String, 'click'))
 	trigger!: ActualTrigger | 'right-click';
 
 	/**
@@ -33,14 +39,14 @@ export default class AppPopper extends Vue {
 	 * of the popper. This tells the popper to close anytime the state changes.
 	 * Useful for poppers in the shell that link to other pages on the site.
 	 */
-	@Prop(Boolean)
+	@Prop(propOptional(Boolean))
 	hideOnStateChange?: boolean;
 
 	/**
 	 * Whether or not the popper should size itself to the same width as the
 	 * trigger. Useful for poppers that work like "select" type controls.
 	 */
-	@Prop(Boolean)
+	@Prop(propOptional(Boolean))
 	trackTriggerWidth?: boolean;
 
 	/**
@@ -48,30 +54,32 @@ export default class AppPopper extends Vue {
 	 * relying on its content to size itself. Useful for poppers that change the
 	 * content dynamically and you want it to stay one consistent size.
 	 */
-	@Prop(Boolean)
+	@Prop(propOptional(Boolean))
 	forceMaxWidth?: boolean;
 
-	@Prop()
-	delay?: any;
+	// @Prop()
+	// delay?: any;
 
-	@Prop(Boolean)
-	disabled?: boolean;
+	// @Prop(Boolean)
+	// disabled?: boolean;
 
-	@Prop(Boolean)
-	show?: boolean;
+	// @Prop(Boolean)
+	// show?: boolean;
 
-	@Prop({ type: Boolean, default: true })
-	autoHide!: boolean;
+	// @Prop({ type: Boolean, default: true })
+	// autoHide!: boolean;
 
-	@Prop(Boolean)
-	block?: boolean;
+	// @Prop(Boolean)
+	// block?: boolean;
 
-	@Prop(String)
-	openGroup?: string;
+	// @Prop(String)
+	// openGroup?: string;
+
+	@Prop(propOptional(String))
+	popoverClass?: string;
 
 	$refs!: {
 		popover: any;
-		scroller: AppScrollScrollerTS;
 		popper: any;
 	};
 
@@ -81,7 +89,7 @@ export default class AppPopper extends Vue {
 	popperIndex = PopperIndex++;
 
 	private _popperElement!: HTMLElement;
-	private _popper?: any;
+	rootPopper!: Instance;
 	// private _isDestroyed?: boolean;
 
 	private hideTimeout?: NodeJS.Timer;
@@ -95,8 +103,11 @@ export default class AppPopper extends Vue {
 		return 'popper-' + this.popperIndex;
 	}
 
-	get popoverInnerClass() {
-		let classes = ['popper-content'];
+	get popperClass() {
+		let classes = [];
+		if (this.popoverClass) {
+			classes.push(this.popoverClass);
+		}
 		if (this.trackTriggerWidth) {
 			classes.push('-track-trigger-width');
 		}
@@ -110,15 +121,44 @@ export default class AppPopper extends Vue {
 		return this.trigger === 'right-click' ? 'manual' : this.trigger;
 	}
 
-	newPopper() {
-		this._popperElement = this.$el as HTMLDivElement;
-		this._popper = this.$el.getElementsByClassName('-container')[0];
-		console.log(this._popperElement, this._popper);
-		createPopper(this._popperElement, this._popper);
+	get popperOptions(): object {
+		const general = {
+			placement: this.placement,
+			modifiers: [],
+			strategy: this.strategy,
+		} as Options;
+
+		const modifiers = [
+			{
+				name: 'offset',
+				options: {
+					offset: [4, 12],
+				},
+			} as OffsetModifier,
+			{
+				name: 'preventOverflow',
+				options: {
+					padding: 8,
+				},
+			} as PreventOverflowModifier,
+		];
+
+		return { general, modifiers };
+	}
+
+	async showPopper() {
+		this.isVisible = true;
+		await this.$nextTick();
+		this.rootPopper = createPopper(this._popperElement, this.$refs.popper, this.popperOptions);
+		// detectOverflow(this.rootPopper.state, {
+		// 	padding: 20,
+		// });
+		console.log(this.rootPopper);
 	}
 
 	mounted() {
 		Popover.registerPopper(this.$router, this);
+		this._popperElement = this.$el as HTMLDivElement;
 	}
 
 	destroyed() {
@@ -127,14 +167,18 @@ export default class AppPopper extends Vue {
 		this.removeBackdrop();
 	}
 
-	hide() {
-		this.$refs.popover.hide();
+	triggerClicked() {
+		if (this.isVisible) {
+			return this.onHide();
+		}
+
+		return this.onShow();
 	}
 
 	@Emit('show')
 	onShow() {
 		this.clearHideTimeout();
-		this.isVisible = true;
+		this.showPopper();
 
 		// If we are tracking a particular element's width, then we set this popover to be the same
 		// width as the element. We don't track width when it's an XS screen since we do a full
@@ -155,7 +199,6 @@ export default class AppPopper extends Vue {
 		}
 
 		this.addBackdrop();
-		this.newPopper();
 	}
 
 	onHide() {
@@ -177,6 +220,16 @@ export default class AppPopper extends Vue {
 		}
 	}
 
+	private onContextMenu(e: MouseEvent) {
+		if (this.trigger !== 'right-click') {
+			return;
+		}
+
+		e.preventDefault();
+		Popover.hideAll();
+		this.onShow();
+	}
+
 	@Emit('hide')
 	private hideDone() {
 		this.isVisible = false;
@@ -191,14 +244,4 @@ export default class AppPopper extends Vue {
 
 	@Emit('auto-hide')
 	private onAutoHide() {}
-
-	private onContextMenu(e: MouseEvent) {
-		if (this.trigger !== 'right-click') {
-			return;
-		}
-
-		e.preventDefault();
-		Popover.hideAll();
-		this.$refs.popover.show();
-	}
 }

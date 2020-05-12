@@ -1,24 +1,26 @@
 <template>
 	<div :id="popperId" class="v-popover" ref="popover" @click="onShow">
 		<slot />
-		<div
-			v-if="isVisible"
-			class="-container popper-content"
-			ref="popper"
-			:style="{
-				maxHeight,
-				width,
-				maxWidth,
-			}"
-		>
-			<div class="-header">
-				<slot name="header" />
-			</div>
-			<app-scroll-scroller ref="scroller" class="-main" overlay>
-				<slot name="popover" />
-			</app-scroll-scroller>
-			<div class="-footer">
-				<slot name="footer" />
+		<div v-if="isVisible" class="popper-boundary" ref="popper">
+			<div class="popper-arrow" data-popper-arrow />
+			<div
+				class="popper-content"
+				:class="popperClass"
+				:style="{
+					maxHeight,
+					width,
+					maxWidth,
+				}"
+			>
+				<div class="-header">
+					<slot name="header" />
+				</div>
+				<app-scroll-scroller ref="scroller" class="-main" thin>
+					<slot name="popover" />
+				</app-scroll-scroller>
+				<div class="-footer">
+					<slot name="footer" />
+				</div>
 			</div>
 		</div>
 	</div>
@@ -28,16 +30,15 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-.-container
+.popper-content
 	display: flex
 	flex-direction: column
-	position: absolute
 
-.-header, .-footer
-	flex: none
+// .-header, .-footer
+// 	flex: none
 
-.-main
-	flex: auto
+// .-main
+// 	flex: auto
 </style>
 
 <script lang="ts" src="./popover"></script>
