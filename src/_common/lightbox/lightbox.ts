@@ -3,44 +3,15 @@ import { Component, Prop } from 'vue-property-decorator';
 import { EventSubscription } from '../../system/event/event-topic';
 import { Analytics } from '../analytics/analytics.service';
 import { EscapeStack } from '../escape-stack/escape-stack.service';
-import { MediaItem } from '../media-item/media-item-model';
 import { Screen } from '../screen/screen-service';
 import AppShortkey from '../shortkey/shortkey.vue';
 import AppLightboxItem from './item/item.vue';
-import './lightbox-global.styl';
+import { LightboxMediaSource } from './lightbox-helpers';
 import AppLightboxSlider from './slider.vue';
 
 if (!GJ_IS_SSR) {
 	const VueTouch = require('vue-touch');
 	Vue.use(VueTouch);
-}
-
-export const LightboxConfig = {
-	// This should match the $-controls-height variable in lightbox.styl
-	controlsHeight: 80,
-
-	// This should match the $-button-size variable in lightbox.styl + some extra padding.
-	buttonSize: 110,
-};
-
-export interface LightboxMediaSource {
-	goNext(): void;
-	goPrev(): void;
-	clearActiveItem(): void;
-	getActiveIndex(): number;
-	getActiveItem(): LightboxMediaModel;
-	getItemCount(): number;
-	getItems(): LightboxMediaModel[];
-}
-
-export type LightboxMediaType = 'image' | 'video' | 'sketchfab';
-
-export interface LightboxMediaModel {
-	getModelId(): number;
-	getMediaType(): LightboxMediaType;
-
-	// Screenshot/Media Item
-	getMediaItem(): MediaItem | undefined;
 }
 
 @Component({
@@ -61,6 +32,26 @@ export default class AppLightbox extends Vue {
 
 	private resize$?: EventSubscription;
 	private escapeCallback?: Function;
+
+	get items() {
+		return this.mediaSource.getItems();
+	}
+
+	get activeIndex() {
+		return this.mediaSource.getActiveIndex();
+	}
+
+	get hasNext() {
+		return this.activeIndex < this.mediaSource.getItemCount() - 1;
+	}
+
+	get activeMediaItem() {
+		return this.mediaSource.getActiveItem().getMediaItem()!;
+	}
+
+	get activeMediaType() {
+		return this.mediaSource.getActiveItem().getMediaType();
+	}
 
 	mounted() {
 		document.body.classList.add('media-bar-lightbox-open');
@@ -103,7 +94,13 @@ export default class AppLightbox extends Vue {
 	}
 
 	close() {
-		this.mediaSource.clearActiveItem();
+		if (this.mediaSource.onLightboxClose) {
+			this.mediaSource.onLightboxClose();
+		}
+
+		this.$destroy();
+		(this.mediaSource as any) = undefined;
+		window.document.body.removeChild(this.$el);
 	}
 
 	refreshSliderPosition() {

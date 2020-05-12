@@ -3,7 +3,8 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import { Analytics } from '../../analytics/analytics.service';
 import { Growls } from '../../growls/growls.service';
 import AppLightboxItem from '../../lightbox/item/item.vue';
-import AppLightboxTS, { LightboxMediaSource } from '../../lightbox/lightbox';
+import AppLightboxTS from '../../lightbox/lightbox';
+import { createLightbox, LightboxMediaSource } from '../../lightbox/lightbox-helpers';
 import AppLightbox from '../../lightbox/lightbox.vue';
 import AppLoading from '../../loading/loading.vue';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
@@ -34,7 +35,7 @@ export default class AppGameMediaBar extends Vue implements LightboxMediaSource 
 		if (this.activeItem && !this.lightbox) {
 			this.createLightbox();
 		} else if (!this.activeItem && this.lightbox) {
-			this.destroyLightbox();
+			this.closeLightbox();
 		}
 
 		let hash = '';
@@ -66,7 +67,14 @@ export default class AppGameMediaBar extends Vue implements LightboxMediaSource 
 	}
 
 	destroyed() {
-		this.destroyLightbox();
+		this.closeLightbox();
+	}
+
+	onLightboxClose() {
+		this.lightbox = undefined;
+		this.activeItem = null;
+		this.activeIndex = null;
+		this.trackEvent('close');
 	}
 
 	getActiveIndex() {
@@ -116,12 +124,6 @@ export default class AppGameMediaBar extends Vue implements LightboxMediaSource 
 	go(index: number) {
 		this.activeIndex = index;
 		this.activeItem = this.mediaItems[this.activeIndex];
-	}
-
-	clearActiveItem() {
-		this.activeItem = null;
-		this.activeIndex = null;
-		this.trackEvent('close');
 	}
 
 	private checkUrl() {
@@ -179,25 +181,14 @@ export default class AppGameMediaBar extends Vue implements LightboxMediaSource 
 		if (this.lightbox) {
 			return;
 		}
-		const elem = document.createElement('div');
-		window.document.body.appendChild(elem);
-
-		this.lightbox = new AppLightbox({
-			propsData: {
-				mediaSource: this,
-			},
-		});
-
-		this.lightbox.$mount(elem);
+		this.lightbox = createLightbox(this);
 	}
 
-	private destroyLightbox() {
+	private closeLightbox() {
 		if (!this.lightbox) {
 			return;
 		}
-
-		this.lightbox.$destroy();
-		window.document.body.removeChild(this.lightbox.$el);
+		this.lightbox.close();
 		this.lightbox = undefined;
 	}
 

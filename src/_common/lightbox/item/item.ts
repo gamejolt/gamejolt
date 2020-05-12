@@ -8,7 +8,8 @@ import { Screen } from '../../screen/screen-service';
 import AppSketchfabEmbed from '../../sketchfab/embed/embed.vue';
 import AppVideoEmbed from '../../video/embed/embed.vue';
 import AppVideo from '../../video/video.vue';
-import AppLightboxTS, { LightboxConfig, LightboxMediaModel } from '../lightbox';
+import AppLightboxTS from '../lightbox';
+import { LightboxConfig, LightboxMediaModel } from '../lightbox-helpers';
 import AppLightbox from '../lightbox.vue';
 
 @Component({

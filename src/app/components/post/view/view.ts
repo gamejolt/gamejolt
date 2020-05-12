@@ -7,8 +7,8 @@ import AppContentViewer from '../../../../_common/content/content-viewer/content
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
-import AppLightboxTS, { LightboxMediaSource } from '../../../../_common/lightbox/lightbox';
-import AppLightbox from '../../../../_common/lightbox/lightbox.vue';
+import AppLightboxTS from '../../../../_common/lightbox/lightbox';
+import { createLightbox, LightboxMediaSource } from '../../../../_common/lightbox/lightbox-helpers';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
@@ -100,8 +100,12 @@ export default class AppPostView extends Vue implements LightboxMediaSource {
 		}
 	}
 
-	clearActiveItem() {
-		this.destroyLightbox();
+	destroyed() {
+		this.closeLightbox();
+	}
+
+	onLightboxClose() {
+		this.lightbox = undefined;
 	}
 
 	getActiveIndex() {
@@ -152,34 +156,23 @@ export default class AppPostView extends Vue implements LightboxMediaSource {
 		this.stickersVisible = false;
 	}
 
+	onClickFullscreen(mediaItem: MediaItem) {
+		this.activeImageIndex = this.post.media.findIndex(i => i.id === mediaItem.id);
+		this.createLightbox();
+	}
+
 	private createLightbox() {
 		if (this.lightbox) {
 			return;
 		}
-		const elem = document.createElement('div');
-		window.document.body.appendChild(elem);
-
-		this.lightbox = new AppLightbox({
-			propsData: {
-				mediaSource: this,
-			},
-		});
-
-		this.lightbox.$mount(elem);
+		this.lightbox = createLightbox(this);
 	}
 
-	private destroyLightbox() {
+	private closeLightbox() {
 		if (!this.lightbox) {
 			return;
 		}
-
-		this.lightbox.$destroy();
-		window.document.body.removeChild(this.lightbox.$el);
+		this.lightbox.close();
 		this.lightbox = undefined;
-	}
-
-	onClickFullscreen(mediaItem: MediaItem) {
-		this.activeImageIndex = this.post.media.findIndex(i => i.id === mediaItem.id);
-		this.createLightbox();
 	}
 }

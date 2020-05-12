@@ -1,8 +1,11 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
-import AppLightboxTS, { LightboxMediaSource } from '../../../../../../_common/lightbox/lightbox';
-import AppLightbox from '../../../../../../_common/lightbox/lightbox.vue';
+import AppLightboxTS from '../../../../../../_common/lightbox/lightbox';
+import {
+	createLightbox,
+	LightboxMediaSource,
+} from '../../../../../../_common/lightbox/lightbox-helpers';
 import { MediaItem } from '../../../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../../../_common/media-item/post/post.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
@@ -49,11 +52,11 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 	}
 
 	destroyed() {
-		this.destroyLightbox();
+		this.closeLightbox();
 	}
 
-	clearActiveItem() {
-		this.destroyLightbox();
+	onLightboxClose() {
+		this.lightbox = undefined;
 	}
 
 	getActiveIndex() {
@@ -143,37 +146,26 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 		this._updateSliderOffset();
 	}
 
-	private createLightbox() {
-		if (this.lightbox) {
-			return;
-		}
-		const elem = document.createElement('div');
-		window.document.body.appendChild(elem);
-
-		this.lightbox = new AppLightbox({
-			propsData: {
-				mediaSource: this,
-			},
-		});
-
-		this.lightbox.$mount(elem);
-	}
-
-	private destroyLightbox() {
-		if (!this.lightbox) {
-			return;
-		}
-
-		this.lightbox.$destroy();
-		window.document.body.removeChild(this.lightbox.$el);
-		this.lightbox = undefined;
-	}
-
 	getIsActiveMediaItem(item: MediaItem) {
 		return this.activeMediaItem?.id === item.id;
 	}
 
 	onClickFullscreen() {
 		this.createLightbox();
+	}
+
+	private createLightbox() {
+		if (this.lightbox) {
+			return;
+		}
+		this.lightbox = createLightbox(this);
+	}
+
+	private closeLightbox() {
+		if (!this.lightbox) {
+			return;
+		}
+		this.lightbox.close();
+		this.lightbox = undefined;
 	}
 }

@@ -1,4 +1,4 @@
-import { LightboxMediaModel, LightboxMediaType } from '../../lightbox/lightbox';
+import { LightboxMediaModel, LightboxMediaType } from '../../lightbox/lightbox-helpers';
 import { MediaItem } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
 import { Game } from '../game.model';
