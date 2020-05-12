@@ -1,7 +1,12 @@
 <template>
-	<div :id="popperId" class="v-popover" ref="popover" @click="onShow">
+	<div :id="popperId" class="v-popover" ref="popover" @click="triggerClicked()">
 		<slot />
-		<div v-if="isVisible" class="popper-wrapper" ref="popper">
+		<div
+			v-if="isVisible"
+			class="popper-wrapper"
+			:class="{ '-hide': isHiding, '-ssr': GJ_IS_SSR }"
+			ref="popper"
+		>
 			<div class="popper-arrow" data-popper-arrow />
 			<div
 				class="popper-content"

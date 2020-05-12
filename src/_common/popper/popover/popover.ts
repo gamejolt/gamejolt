@@ -8,7 +8,6 @@ import { propOptional } from '../../../utils/vue';
 import { Backdrop } from '../../backdrop/backdrop.service';
 import AppBackdrop from '../../backdrop/backdrop.vue';
 import { Screen } from '../../screen/screen-service';
-// import AppScrollScrollerTS from '../../scroll/scroller/scroller';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { Popover } from './popover.service';
 import './popover.styl';
@@ -84,13 +83,14 @@ export default class AppPopper extends Vue {
 		popper: any;
 	};
 
+	isHiding = false;
 	isVisible = false;
 	width = '';
 	maxWidth = '';
 	popperIndex = PopperIndex++;
 
 	private _popperElement!: HTMLElement;
-	ResizeObserver!: ResizeObserver;
+	ResizeObserver!: ResizeObserver | null;
 	popperInstance!: Instance | null;
 	// private _isDestroyed?: boolean;
 
@@ -209,6 +209,7 @@ export default class AppPopper extends Vue {
 	}
 
 	onHide() {
+		this.isHiding = true;
 		this.clearHideTimeout();
 		this.hideTimeout = setTimeout(() => this.hideDone(), TransitionTime);
 		this.removeBackdrop();
@@ -242,9 +243,16 @@ export default class AppPopper extends Vue {
 		// Making sure that popper doesn't keep tracking positioning
 		if (this.popperInstance) {
 			this.popperInstance.destroy();
+			this.popperInstance = null;
 		}
-		this.popperInstance = null;
+		// or keep watching
+		if (this.ResizeObserver) {
+			this.ResizeObserver.unobserve(this.$refs.popper);
+			this.ResizeObserver = null;
+		}
+
 		this.isVisible = false;
+		this.isHiding = false;
 	}
 
 	private clearHideTimeout() {
