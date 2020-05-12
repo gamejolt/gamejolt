@@ -1,6 +1,6 @@
 <template>
 	<div v-if="_items.length" class="widget-compiler-widget-game-media">
-		<app-game-media-bar no-overlay-scrollbars :media-items="_items" />
+		<app-game-media-bar :media-items="_items" />
 	</div>
 </template>
 
