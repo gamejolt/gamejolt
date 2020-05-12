@@ -1,4 +1,5 @@
 import { createPopper, Instance, Options } from '@popperjs/core';
+import { ArrowModifier } from '@popperjs/core/lib/modifiers/arrow';
 import { OffsetModifier } from '@popperjs/core/lib/modifiers/offset';
 import { PreventOverflowModifier } from '@popperjs/core/lib/modifiers/preventOverflow';
 import ResizeObserver from 'resize-observer-polyfill';
@@ -18,6 +19,30 @@ const TransitionTime = 200;
 let PopperIndex = 0;
 
 type ActualTrigger = 'click' | 'hover' | 'manual';
+
+const modifiers = [
+	{
+		// offset between popper and trigger
+		name: 'offset',
+		options: {
+			offset: [0, 12],
+		},
+	} as OffsetModifier,
+	{
+		// padding between popper and viewport
+		name: 'preventOverflow',
+		options: {
+			padding: 8,
+		},
+	} as PreventOverflowModifier,
+	{
+		// padding between popper-arrow and border-radius corner
+		name: 'arrow',
+		options: {
+			padding: 8,
+		},
+	} as ArrowModifier,
+];
 
 @Component({
 	components: {
@@ -123,22 +148,7 @@ export default class AppPopper extends Vue {
 	get popperOptions(): Options {
 		return {
 			placement: this.placement,
-			modifiers: [
-				{
-					// offset between popper and trigger
-					name: 'offset',
-					options: {
-						offset: [0, 12],
-					},
-				} as OffsetModifier,
-				{
-					// padding between popper and viewport
-					name: 'preventOverflow',
-					options: {
-						padding: 8,
-					},
-				} as PreventOverflowModifier,
-			],
+			modifiers: [...modifiers],
 			strategy: this.strategy,
 		};
 	}
