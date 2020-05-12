@@ -1,7 +1,7 @@
 <template>
 	<div :id="popperId" class="v-popover" ref="popover" @click="onShow">
 		<slot />
-		<div v-if="isVisible" class="popper-boundary" ref="popper">
+		<div v-if="isVisible" class="popper-wrapper" ref="popper">
 			<div class="popper-arrow" data-popper-arrow />
 			<div
 				class="popper-content"
