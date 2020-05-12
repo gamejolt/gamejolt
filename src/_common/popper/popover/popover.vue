@@ -5,7 +5,7 @@
 			<div class="popper-arrow" data-popper-arrow />
 			<div
 				class="popper-content"
-				:class="popperClass"
+				:class="contentClass"
 				:style="{
 					maxHeight,
 					width,

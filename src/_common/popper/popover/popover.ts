@@ -60,8 +60,8 @@ export default class AppPopper extends Vue {
 	// @Prop()
 	// delay?: any;
 
-	// @Prop(Boolean)
-	// disabled?: boolean;
+	@Prop(propOptional(Boolean))
+	disabled?: boolean;
 
 	// @Prop(Boolean)
 	// show?: boolean;
@@ -75,8 +75,8 @@ export default class AppPopper extends Vue {
 	// @Prop(String)
 	// openGroup?: string;
 
-	@Prop(propOptional(String))
-	popoverClass?: string;
+	@Prop(propOptional(String, null))
+	popoverClass!: null | string;
 
 	$refs!: {
 		popover: any;
@@ -89,7 +89,7 @@ export default class AppPopper extends Vue {
 	popperIndex = PopperIndex++;
 
 	private _popperElement!: HTMLElement;
-	rootPopper!: Instance;
+	popperInstance!: Instance | null;
 	// private _isDestroyed?: boolean;
 
 	private hideTimeout?: NodeJS.Timer;
@@ -103,11 +103,12 @@ export default class AppPopper extends Vue {
 		return 'popper-' + this.popperIndex;
 	}
 
-	get popperClass() {
-		let classes = [];
-		if (this.popoverClass) {
-			classes.push(this.popoverClass);
-		}
+	get actualTrigger(): ActualTrigger {
+		return this.trigger === 'right-click' ? 'manual' : this.trigger;
+	}
+
+	get contentClass() {
+		let classes = [this.popoverClass];
 		if (this.trackTriggerWidth) {
 			classes.push('-track-trigger-width');
 		}
@@ -115,10 +116,6 @@ export default class AppPopper extends Vue {
 			classes.push('-force-max-width');
 		}
 		return classes.join(' ');
-	}
-
-	get actualTrigger(): ActualTrigger {
-		return this.trigger === 'right-click' ? 'manual' : this.trigger;
 	}
 
 	get popperOptions(): object {
@@ -132,7 +129,7 @@ export default class AppPopper extends Vue {
 			{
 				name: 'offset',
 				options: {
-					offset: [4, 12],
+					offset: [0, 12],
 				},
 			} as OffsetModifier,
 			{
@@ -144,16 +141,6 @@ export default class AppPopper extends Vue {
 		];
 
 		return { general, modifiers };
-	}
-
-	async showPopper() {
-		this.isVisible = true;
-		await this.$nextTick();
-		this.rootPopper = createPopper(this._popperElement, this.$refs.popper, this.popperOptions);
-		// detectOverflow(this.rootPopper.state, {
-		// 	padding: 20,
-		// });
-		console.log(this.rootPopper);
 	}
 
 	mounted() {
@@ -175,10 +162,20 @@ export default class AppPopper extends Vue {
 		return this.onShow();
 	}
 
+	async createPopper() {
+		this.isVisible = true;
+		await this.$nextTick();
+		this.popperInstance = createPopper(
+			this._popperElement,
+			this.$refs.popper,
+			this.popperOptions
+		);
+	}
+
 	@Emit('show')
 	onShow() {
 		this.clearHideTimeout();
-		this.showPopper();
+		this.createPopper();
 
 		// If we are tracking a particular element's width, then we set this popover to be the same
 		// width as the element. We don't track width when it's an XS screen since we do a full
@@ -232,6 +229,11 @@ export default class AppPopper extends Vue {
 
 	@Emit('hide')
 	private hideDone() {
+		// Making sure that popper doesn't keep tracking positioning
+		if (this.popperInstance) {
+			this.popperInstance.destroy();
+		}
+		this.popperInstance = null;
 		this.isVisible = false;
 	}
 
