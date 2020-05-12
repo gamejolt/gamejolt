@@ -40,7 +40,7 @@ $-track-modal = var(--theme-bg)
 			display: none
 
 	/* mouse, touch pad, and stylus-based screens */
-	@media (pointer: fine)
+	@media not screen and (pointer: coarse)
 		scrollbar-color: $-thumb-default $-track-default
 
 		&::-webkit-scrollbar
