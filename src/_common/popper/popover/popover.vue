@@ -2,6 +2,7 @@
 	<div
 		:id="popperId"
 		class="v-popover"
+		:class="{ '-block': block }"
 		ref="popover"
 		@click="triggerClicked()"
 		@click.right="onContextMenu"
