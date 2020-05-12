@@ -15,12 +15,13 @@ $-transition-time = 200ms
 		display: block !important
 
 /* .popper
-	z-index: $zindex-popover
 	outline: 0
 
 	&-backdrop
 		z-index: $zindex-popover - 1 !important */
 .popper-wrapper
+	z-index: $zindex-popover
+
 	// We don't want to show the popover stuff at all on SSR, or it breaks
 	// styling since it tries to fit the container into the page.
 	&.-ssr
