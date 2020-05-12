@@ -169,7 +169,7 @@ export default class AppPopper extends Vue {
 	}
 
 	triggerClicked() {
-		if (this.trigger !== 'click') {
+		if (this.trigger === 'right-click') {
 			return;
 		}
 
