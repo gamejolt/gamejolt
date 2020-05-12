@@ -1,5 +1,11 @@
 <template>
-	<div :id="popperId" class="v-popover" ref="popover" @click="triggerClicked()">
+	<div
+		:id="popperId"
+		class="v-popover"
+		ref="popover"
+		@click="triggerClicked()"
+		@click.right="onContextMenu"
+	>
 		<slot />
 		<div
 			v-if="isVisible"
