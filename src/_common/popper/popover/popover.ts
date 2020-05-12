@@ -53,11 +53,15 @@ export default class AppPopper extends Vue {
 	@Prop(propOptional(String, 'bottom'))
 	placement!: 'top' | 'right' | 'bottom' | 'left';
 
-	@Prop(propOptional(String, 'absolute'))
-	strategy!: 'fixed' | 'absolute';
-
 	@Prop(propOptional(String, 'click'))
 	trigger!: ActualTrigger | 'right-click';
+
+	/**
+	 * We want the popper to be 'display: fixed' if we use it on a fixed parent.
+	 * This should prevent stuttering on scroll if the popper is attached to the nav.
+	 */
+	@Prop(propOptional(Boolean))
+	fixed?: boolean;
 
 	/**
 	 * By default the popper will stay on the page until the user clicks outside
@@ -149,7 +153,7 @@ export default class AppPopper extends Vue {
 		return {
 			placement: this.placement,
 			modifiers: [...modifiers],
-			strategy: this.strategy,
+			strategy: this.fixed ? 'fixed' : 'absolute',
 		};
 	}
 
@@ -165,6 +169,10 @@ export default class AppPopper extends Vue {
 	}
 
 	triggerClicked() {
+		if (this.trigger !== 'click') {
+			return;
+		}
+
 		if (this.isVisible) {
 			return this.onHide();
 		}
@@ -188,7 +196,8 @@ export default class AppPopper extends Vue {
 			}
 		});
 		this.ResizeObserver.observe(this.$refs.popper);
-		console.log(this.popperInstance);
+
+		document.body.appendChild(this.$refs.popper);
 	}
 
 	@Emit('show')
