@@ -12,13 +12,11 @@ import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import AppVideoEmbed from '../../../_common/video/embed/embed.vue';
 import AppVideo from '../../../_common/video/video.vue';
 import AppEventItemControls from '../event-item/controls/controls.vue';
-import AppEventItemMediaTags from '../event-item/media-tags/media-tags.vue';
 import AppPollVoting from '../poll/voting/voting.vue';
 
 @Component({
 	components: {
 		AppResponsiveDimensions,
-		AppEventItemMediaTags,
 		AppImgResponsive,
 		AppVideo,
 		AppVideoEmbed,

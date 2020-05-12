@@ -1,7 +1,7 @@
 <template>
-	<div class="-item" :class="{ '-inline': inline }">
+	<div class="media-item-post" :class="{ '-inline': inline }" @click="onClickImage">
 		<app-responsive-dimensions
-			class="-item-media"
+			class="-media"
 			:class="{
 				'-filled': isFilled,
 			}"
@@ -10,7 +10,16 @@
 			:max-height="deviceMaxHeight"
 			@change="onDimensionsChange"
 		>
-			<app-event-item-media-tags :gif="mediaItem.is_animated" />
+			<div v-if="inline" class="-toolbar">
+				<app-button
+					@click="emitFullscreen(mediaItem)"
+					overlay
+					circle
+					trans
+					icon="fullscreen"
+					v-app-tooltip="$gettext(`Fullscreen`)"
+				/>
+			</div>
 			<app-media-item-backdrop class="-backdrop" :media-item="mediaItem" :radius="itemRadius">
 				<app-img-responsive
 					v-if="!isPostHydrated || !mediaItem.is_animated"
@@ -38,27 +47,46 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-.-item
+.media-item-post
 	position: relative
 	display: block
 	vertical-align: middle
 	width: 100%
 	max-width: 100% !important
 
-	&-media
-		margin-left: auto
-		margin-right: auto
-
 	&.-inline
 		display: inline-block
 
-.-backdrop
-	change-bg('bg-offset')
+	.-media
+		margin-left: auto
+		margin-right: auto
 
-// Set the width to be what AppResponsiveDimensions gives us,
-// so we don't overflow past what it sets.
-.-img, .-video
-	width: 100%
+	.-backdrop
+		change-bg('bg-offset')
+
+	// Set the width to be what AppResponsiveDimensions gives us,
+	// so we don't overflow past what it sets.
+	.-img, .-video
+		width: 100%
+
+	.-toolbar
+		position: absolute
+		left: 0
+		right: 0
+		bottom: 12px
+		display: flex
+		align-items: center
+		justify-content: center
+		z-index: 6
+		opacity: 0
+		transition: opacity 0.2s ease
+
+		@media (hover: none)
+			display: none
+
+	&:hover
+		.-toolbar
+			opacity: 1
 </style>
 
 <script lang="ts" src="./post"></script>

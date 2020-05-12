@@ -6,7 +6,7 @@
 			</div>
 
 			<div v-if="mediaItems && mediaItems.length">
-				<app-media-bar-item
+				<app-game-media-bar-item
 					v-for="item of mediaItems"
 					:key="item.id"
 					:item="item"

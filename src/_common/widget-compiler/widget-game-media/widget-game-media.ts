@@ -1,12 +1,11 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-
-import AppMediaBar from '../../media-bar/media-bar.vue';
+import AppGameMediaBar from '../../game/media-bar/media-bar.vue';
 import { MediaItem } from '../../media-item/media-item-model';
 
 @Component({
 	components: {
-		AppMediaBar,
+		AppGameMediaBar,
 	},
 })
 export default class AppWidgetCompilerWidgetGameMedia extends Vue {
