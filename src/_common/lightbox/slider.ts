@@ -7,7 +7,7 @@ import AppLightbox from './lightbox.vue';
 @Component({})
 export default class AppLightboxSlider extends Vue {
 	mounted() {
-		const mediaBar = findRequiredVueParent(this, AppLightbox) as AppLightboxTS;
-		mediaBar.setSlider(this.$el as HTMLElement);
+		const lightbox = findRequiredVueParent(this, AppLightbox) as AppLightboxTS;
+		lightbox.setSlider(this.$el as HTMLElement);
 	}
 }

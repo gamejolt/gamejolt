@@ -1,10 +1,8 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
-import AppMediaBarLightboxTS, {
-	LightboxMediaSource,
-} from '../../../../../../_common/media-bar/lightbox/lightbox';
-import AppMediaBarLightbox from '../../../../../../_common/media-bar/lightbox/lightbox.vue';
+import AppLightboxTS, { LightboxMediaSource } from '../../../../../../_common/lightbox/lightbox';
+import AppLightbox from '../../../../../../_common/lightbox/lightbox.vue';
 import { MediaItem } from '../../../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../../../_common/media-item/post/post.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
@@ -38,7 +36,7 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 	isDragging = false;
 	isWaitingForFrame = false;
 	contentBootstrapped = false;
-	private lightbox?: AppMediaBarLightboxTS;
+	private lightbox?: AppLightboxTS;
 
 	readonly Screen = Screen;
 
@@ -152,9 +150,9 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 		const elem = document.createElement('div');
 		window.document.body.appendChild(elem);
 
-		this.lightbox = new AppMediaBarLightbox({
+		this.lightbox = new AppLightbox({
 			propsData: {
-				mediaBar: this,
+				mediaSource: this,
 			},
 		});
 

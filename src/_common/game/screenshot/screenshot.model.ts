@@ -1,5 +1,5 @@
 import { Api } from '../../api/api.service';
-import { LightboxMediaModel, LightboxMediaType } from '../../media-bar/lightbox/lightbox';
+import { LightboxMediaModel, LightboxMediaType } from '../../lightbox/lightbox';
 import { MediaItem } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
 import { Game } from '../game.model';

@@ -2,10 +2,10 @@ import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { Analytics } from '../../analytics/analytics.service';
 import { Growls } from '../../growls/growls.service';
+import AppLightboxItem from '../../lightbox/item/item.vue';
+import AppLightboxTS, { LightboxMediaSource } from '../../lightbox/lightbox';
+import AppLightbox from '../../lightbox/lightbox.vue';
 import AppLoading from '../../loading/loading.vue';
-import AppMediaBarLightboxItem from '../../media-bar/lightbox/item/item.vue';
-import AppMediaBarLightboxTS, { LightboxMediaSource } from '../../media-bar/lightbox/lightbox';
-import AppMediaBarLightbox from '../../media-bar/lightbox/lightbox.vue';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { MediaBarItemMaxHeight } from './item/item';
 import AppGameMediaBarItem from './item/item.vue';
@@ -13,8 +13,8 @@ import AppGameMediaBarItem from './item/item.vue';
 @Component({
 	components: {
 		AppLoading,
-		AppMediaBarLightboxItem,
-		AppMediaBarLightbox,
+		AppLightboxItem,
+		AppLightbox,
 		AppScrollScroller,
 		AppGameMediaBarItem,
 	},
@@ -24,7 +24,7 @@ export default class AppGameMediaBar extends Vue implements LightboxMediaSource 
 	@Prop(Boolean) noOverlayScrollbars?: boolean;
 
 	private urlChecked = false;
-	private lightbox?: AppMediaBarLightboxTS;
+	private lightbox?: AppLightboxTS;
 
 	activeItem: any | null = null;
 	activeIndex: number | null = null;
@@ -183,9 +183,9 @@ export default class AppGameMediaBar extends Vue implements LightboxMediaSource 
 		const elem = document.createElement('div');
 		window.document.body.appendChild(elem);
 
-		this.lightbox = new AppMediaBarLightbox({
+		this.lightbox = new AppLightbox({
 			propsData: {
-				mediaBar: this,
+				mediaSource: this,
 			},
 		});
 

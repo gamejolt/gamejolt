@@ -52,7 +52,7 @@ export interface LightboxMediaModel {
 })
 export default class AppLightbox extends Vue {
 	@Prop(Object)
-	mediaBar!: LightboxMediaSource;
+	mediaSource!: LightboxMediaSource;
 
 	sliderElem?: HTMLElement;
 	currentSliderOffset = 0;
@@ -93,21 +93,21 @@ export default class AppLightbox extends Vue {
 	}
 
 	goNext() {
-		this.mediaBar.goNext();
+		this.mediaSource.goNext();
 		this.refreshSliderPosition();
 	}
 
 	goPrev() {
-		this.mediaBar.goPrev();
+		this.mediaSource.goPrev();
 		this.refreshSliderPosition();
 	}
 
 	close() {
-		this.mediaBar.clearActiveItem();
+		this.mediaSource.clearActiveItem();
 	}
 
 	refreshSliderPosition() {
-		const newOffset = -(Screen.width * this.mediaBar.getActiveIndex());
+		const newOffset = -(Screen.width * this.mediaSource.getActiveIndex());
 		if (this.sliderElem) {
 			this.sliderElem.style.transform = `translate3d( ${newOffset}px, 0, 0 )`;
 		}

@@ -1,7 +1,7 @@
 <template>
 	<div class="route-game-overview">
 		<!-- Media Bar -->
-		<app-media-bar v-if="game.media_count" :media-items="mediaItems" />
+		<app-game-media-bar v-if="game.media_count" :media-items="mediaItems" />
 
 		<section class="section section-thin fill-backdrop">
 			<app-ad-widget

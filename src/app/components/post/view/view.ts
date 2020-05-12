@@ -7,10 +7,8 @@ import AppContentViewer from '../../../../_common/content/content-viewer/content
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
-import AppMediaBarLightboxTS, {
-	LightboxMediaSource,
-} from '../../../../_common/media-bar/lightbox/lightbox';
-import AppMediaBarLightbox from '../../../../_common/media-bar/lightbox/lightbox.vue';
+import AppLightboxTS, { LightboxMediaSource } from '../../../../_common/lightbox/lightbox';
+import AppLightbox from '../../../../_common/lightbox/lightbox.vue';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
@@ -64,7 +62,7 @@ export default class AppPostView extends Vue implements LightboxMediaSource {
 
 	stickersVisible = false;
 	activeImageIndex = 0;
-	private lightbox?: AppMediaBarLightboxTS;
+	private lightbox?: AppLightboxTS;
 
 	$refs!: {
 		stickerTarget: AppStickerTargetTS;
@@ -161,9 +159,9 @@ export default class AppPostView extends Vue implements LightboxMediaSource {
 		const elem = document.createElement('div');
 		window.document.body.appendChild(elem);
 
-		this.lightbox = new AppMediaBarLightbox({
+		this.lightbox = new AppLightbox({
 			propsData: {
-				mediaBar: this,
+				mediaSource: this,
 			},
 		});
 

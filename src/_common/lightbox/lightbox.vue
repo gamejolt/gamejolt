@@ -11,13 +11,13 @@
 			<app-shortkey shortkey="arrowright" @press="goNext" />
 
 			<div class="-inner">
-				<a class="-prev" v-if="mediaBar.getActiveIndex() > 0" @mousedown="goPrev">
+				<a class="-prev" v-if="mediaSource.getActiveIndex() > 0" @mousedown="goPrev">
 					<app-jolticon icon="chevron-left" />
 				</a>
 
 				<a
 					class="-next"
-					v-if="mediaBar.getActiveIndex() < mediaBar.getItemCount() - 1"
+					v-if="mediaSource.getActiveIndex() < mediaSource.getItemCount() - 1"
 					@mousedown="goNext"
 				>
 					<app-jolticon icon="chevron-right" />
@@ -27,8 +27,8 @@
 					<app-button
 						icon="download"
 						trans
-						v-if="mediaBar.getActiveItem().getMediaType() === 'image'"
-						:href="mediaBar.getActiveItem().getMediaItem().img_url"
+						v-if="mediaSource.getActiveItem().getMediaType() === 'image'"
+						:href="mediaSource.getActiveItem().getMediaItem().img_url"
 						target="_blank"
 					>
 						<translate>Download</translate>
@@ -40,11 +40,11 @@
 
 				<app-lightbox-slider class="-slider">
 					<app-lightbox-item
-						v-for="(item, index) of mediaBar.getItems()"
+						v-for="(item, index) of mediaSource.getItems()"
 						:key="item.getModelId()"
 						:item="item"
 						:item-index="index"
-						:active-index="mediaBar.getActiveIndex()"
+						:active-index="mediaSource.getActiveIndex()"
 					/>
 				</app-lightbox-slider>
 			</div>
