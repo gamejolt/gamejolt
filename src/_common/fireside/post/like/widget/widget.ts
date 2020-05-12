@@ -53,6 +53,10 @@ export default class AppFiresidePostLikeWidget extends Vue {
 		return this.post.like_count ? number(this.post.like_count) : '';
 	}
 
+	get liked() {
+		return !!this.post.user_like;
+	}
+
 	get tooltip() {
 		if (!this.post.user_like) {
 			return this.$gettext('Like This Post');

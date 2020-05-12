@@ -40,6 +40,10 @@ export default class AppCommentVideoLikeWidget extends Vue {
 		return this.comment.votes ? number(this.comment.votes) : '';
 	}
 
+	get voted() {
+		return !!this.comment.user_vote;
+	}
+
 	async toggle() {
 		this.isProcessing = true;
 
