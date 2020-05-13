@@ -2,6 +2,7 @@
 	<app-popper
 		v-if="!Connection.isClientOffline"
 		popover-class="fill-dark"
+		fixed
 		hide-on-state-change
 		force-max-width
 		@show="onShow()"

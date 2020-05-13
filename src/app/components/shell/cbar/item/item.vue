@@ -30,6 +30,7 @@
 			popover-class="fill-darkest"
 			trigger="right-click"
 			placement="right"
+			fixed
 			hide-on-state-change
 			@show="popperVisible = true"
 			@hide="popperVisible = false"

@@ -52,6 +52,7 @@
 					v-if="!Screen.isXs"
 					popover-class="fill-darkest"
 					hide-on-state-change
+					fixed
 					@show="moreMenuShowing = true"
 					@hide="moreMenuShowing = false"
 					v-app-track-event="`top-nav:more-menu:toggle`"

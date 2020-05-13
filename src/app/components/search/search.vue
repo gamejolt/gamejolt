@@ -20,6 +20,7 @@
 					popover-class="fill-darkest"
 					trigger="manual"
 					block
+					fixed
 					hide-on-state-change
 					track-trigger-width
 					:show="isShowingAutocomplete"
