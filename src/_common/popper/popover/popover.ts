@@ -36,7 +36,7 @@ const modifiers = [
 		},
 	} as PreventOverflowModifier,
 	{
-		// padding between popper-arrow and border-radius corner
+		// padding between popper-arrow and corner, to prevent overflow with border-radius
 		name: 'arrow',
 		options: {
 			padding: 8,
@@ -69,7 +69,7 @@ export default class AppPopper extends Vue {
 	 * Useful for poppers in the shell that link to other pages on the site.
 	 */
 	@Prop(propOptional(Boolean))
-	hideOnStateChange?: boolean;
+	hideOnStateChange?: boolean; // @CHECK, needs work
 
 	/**
 	 * Whether or not the popper should size itself to the same width as the
@@ -169,15 +169,22 @@ export default class AppPopper extends Vue {
 	}
 
 	triggerClicked() {
-		if (this.trigger === 'right-click') {
+		// We want to prevent right-click based triggers from being left-clicked.
+		// clickListener() will hide items, so we only need to show poppers here.
+		if (this.trigger === 'right-click' || this.isVisible) {
 			return;
 		}
 
-		if (this.isVisible) {
-			return this.onHide();
+		this.onShow();
+	}
+
+	private clickListener(event: Event) {
+		if (this.$refs.popper.contains(event.target)) {
+			return;
 		}
 
-		return this.onShow();
+		this.onHide();
+		document.removeEventListener('click', this.clickListener, true);
 	}
 
 	async createPopper() {
@@ -192,12 +199,13 @@ export default class AppPopper extends Vue {
 
 		this.ResizeObserver = new ResizeObserver(() => {
 			if (this.popperInstance) {
-				this.popperInstance.forceUpdate();
+				this.popperInstance.update();
 			}
 		});
 		this.ResizeObserver.observe(this.$refs.popper);
 
 		document.body.appendChild(this.$refs.popper);
+		document.addEventListener('click', this.clickListener, true);
 	}
 
 	@Emit('show')
@@ -227,6 +235,10 @@ export default class AppPopper extends Vue {
 	}
 
 	onHide() {
+		// In case a popper was hidden from something other
+		// than a click, like right-clicking a cbar item.
+		document.removeEventListener('click', this.clickListener, true);
+
 		this.isHiding = true;
 		this.clearHideTimeout();
 		this.hideTimeout = setTimeout(() => this.hideDone(), TransitionTime);
@@ -248,6 +260,11 @@ export default class AppPopper extends Vue {
 
 	private onContextMenu(e: MouseEvent) {
 		if (this.trigger !== 'right-click') {
+			return;
+		}
+
+		if (this.isVisible) {
+			e.preventDefault();
 			return;
 		}
 
