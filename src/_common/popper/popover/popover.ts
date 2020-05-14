@@ -68,8 +68,8 @@ export default class AppPopper extends Vue {
 	 * of the popper. This tells the popper to close anytime the state changes.
 	 * Useful for poppers in the shell that link to other pages on the site.
 	 */
-	// @Prop(propOptional(Boolean))
-	// hideOnStateChange?: boolean; // @CHECK, needs work
+	@Prop(propOptional(Boolean))
+	hideOnStateChange?: boolean;
 
 	/**
 	 * Whether or not the popper should size itself to the same width as the
@@ -98,6 +98,10 @@ export default class AppPopper extends Vue {
 	// @Prop({ type: Boolean, default: true })
 	// autoHide!: boolean;
 
+	/**
+	 * Trigger elements are set to be styled inline-block, but
+	 * this sets 'block !important' on elements that pass this.
+	 */
 	@Prop(propOptional(Boolean))
 	block?: boolean;
 
