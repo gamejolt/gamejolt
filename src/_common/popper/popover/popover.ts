@@ -68,8 +68,8 @@ export default class AppPopper extends Vue {
 	 * of the popper. This tells the popper to close anytime the state changes.
 	 * Useful for poppers in the shell that link to other pages on the site.
 	 */
-	@Prop(propOptional(Boolean))
-	hideOnStateChange?: boolean; // @CHECK, needs work
+	// @Prop(propOptional(Boolean))
+	// hideOnStateChange?: boolean; // @CHECK, needs work
 
 	/**
 	 * Whether or not the popper should size itself to the same width as the
@@ -89,8 +89,8 @@ export default class AppPopper extends Vue {
 	// @Prop()
 	// delay?: any;
 
-	@Prop(propOptional(Boolean))
-	disabled?: boolean;
+	// @Prop(propOptional(Boolean))
+	// disabled?: boolean;
 
 	// @Prop(Boolean)
 	// show?: boolean;
@@ -140,12 +140,15 @@ export default class AppPopper extends Vue {
 
 	get contentClass() {
 		let classes = [this.popoverClass];
+
 		if (this.trackTriggerWidth) {
 			classes.push('-track-trigger-width');
 		}
+
 		if (this.forceMaxWidth) {
 			classes.push('-force-max-width');
 		}
+
 		return classes.join(' ');
 	}
 
@@ -178,7 +181,21 @@ export default class AppPopper extends Vue {
 		this.onShow();
 	}
 
-	private clickListener(event: Event) {
+	onContextMenu(event: MouseEvent) {
+		if (this.trigger !== 'right-click') {
+			return;
+		}
+
+		if (this.isVisible) {
+			return event.preventDefault();
+		}
+
+		event.preventDefault();
+		Popover.hideAll();
+		this.onShow();
+	}
+
+	private clickListener(event: MouseEvent) {
 		if (this.$refs.popper.contains(event.target)) {
 			return;
 		}
@@ -245,34 +262,6 @@ export default class AppPopper extends Vue {
 		this.removeBackdrop();
 	}
 
-	private addBackdrop() {
-		if (Screen.isXs && !this.mobileBackdrop) {
-			this.mobileBackdrop = Backdrop.push({ className: 'popper-backdrop' });
-		}
-	}
-
-	private removeBackdrop() {
-		if (Screen.isXs && this.mobileBackdrop) {
-			Backdrop.remove(this.mobileBackdrop);
-			this.mobileBackdrop = null;
-		}
-	}
-
-	private onContextMenu(e: MouseEvent) {
-		if (this.trigger !== 'right-click') {
-			return;
-		}
-
-		if (this.isVisible) {
-			e.preventDefault();
-			return;
-		}
-
-		e.preventDefault();
-		Popover.hideAll();
-		this.onShow();
-	}
-
 	@Emit('hide')
 	private hideDone() {
 		// Making sure that popper doesn't keep tracking positioning
@@ -288,6 +277,19 @@ export default class AppPopper extends Vue {
 
 		this.isVisible = false;
 		this.isHiding = false;
+	}
+
+	private addBackdrop() {
+		if (Screen.isXs && !this.mobileBackdrop) {
+			this.mobileBackdrop = Backdrop.push({ className: 'popper-backdrop' });
+		}
+	}
+
+	private removeBackdrop() {
+		if (Screen.isXs && this.mobileBackdrop) {
+			Backdrop.remove(this.mobileBackdrop);
+			this.mobileBackdrop = null;
+		}
 	}
 
 	private clearHideTimeout() {
