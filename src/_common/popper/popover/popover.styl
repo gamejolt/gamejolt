@@ -39,36 +39,44 @@ $-transition-time = 200ms
 		z-index: 1
 
 	[data-popper-placement^='top']&
+		padding-bottom: $popover-arrow-size
+
 		.popper-arrow
 			border-width: $popover-arrow-size $popover-arrow-size 0 $popover-arrow-size
 			border-left-color: transparent !important
 			border-right-color: transparent !important
 			border-bottom-color: transparent !important
-			bottom: -($popover-arrow-size)
+			bottom: 0
 
 	[data-popper-placement^='bottom']&
+		padding-top: $popover-arrow-size
+
 		.popper-arrow
 			border-width: 0 $popover-arrow-size $popover-arrow-size $popover-arrow-size
 			border-left-color: transparent !important
 			border-right-color: transparent !important
 			border-top-color: transparent !important
-			top: -($popover-arrow-size)
+			top: 0
 
 	[data-popper-placement^='right']&
+		padding-left: $popover-arrow-size
+
 		.popper-arrow
 			border-width: $popover-arrow-size $popover-arrow-size $popover-arrow-size 0
 			border-left-color: transparent !important
 			border-top-color: transparent !important
 			border-bottom-color: transparent !important
-			left: -($popover-arrow-size)
+			left: 0
 
 	[data-popper-placement^='left']&
+		padding-right: $popover-arrow-size
+
 		.popper-arrow
 			border-width: $popover-arrow-size 0 $popover-arrow-size $popover-arrow-size
 			border-top-color: transparent !important
 			border-right-color: transparent !important
 			border-bottom-color: transparent !important
-			right: -($popover-arrow-size)
+			right: 0
 
 .popper-content
 	elevate-2()
