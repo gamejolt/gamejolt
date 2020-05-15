@@ -3,7 +3,7 @@ import { ArrowModifier } from '@popperjs/core/lib/modifiers/arrow';
 import { PreventOverflowModifier } from '@popperjs/core/lib/modifiers/preventOverflow';
 import ResizeObserver from 'resize-observer-polyfill';
 import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import { Backdrop } from '../../backdrop/backdrop.service';
 import AppBackdrop from '../../backdrop/backdrop.vue';
@@ -20,13 +20,6 @@ let PopperIndex = 0;
 type ActualTrigger = 'click' | 'hover' | 'manual';
 
 const modifiers = [
-	// {
-	// 	// offset between popper and trigger
-	// 	name: 'offset',
-	// 	options: {
-	// 		offset: [0, 0],
-	// 	},
-	// } as OffsetModifier,
 	{
 		// padding between popper and viewport
 		name: 'preventOverflow',
@@ -92,9 +85,8 @@ export default class AppPopper extends Vue {
 	// @Prop(propOptional(Boolean))
 	// disabled?: boolean;
 
-	// used when trigger is manual
-	// @Prop(Boolean)
-	// show?: boolean;
+	@Prop(Boolean)
+	show?: boolean;
 
 	/* not a clue why we need this */
 	// @Prop(propOptional(Boolean, true))
@@ -221,24 +213,24 @@ export default class AppPopper extends Vue {
 
 	onHoverEnter(event: MouseEvent) {
 		// this.setHoverState(event, true);
+		this.clearHideTimeout();
 
 		if (this.isVisible) {
-			return this.clearHideTimeout();
+			return;
 		}
 
-		this.clearHideTimeout();
 		this.hideTimeout = setTimeout(() => this.onShow(), 500); // @CHECK, this needs to be taken from our delay prop
 	}
 
 	onHoverLeave(event: MouseEvent) {
 		// this.setHoverState(event, false);
+		this.clearHideTimeout();
 		if (!this.isVisible /* || this.hoveringPopper || this.hoveringTrigger */) {
 			return;
 		}
 
 		// @CHECK, need to figure out these eventlistener race conditions,
 		// or a better system for when moving between trigger/popper.
-		this.clearHideTimeout();
 		this.hideTimeout = setTimeout(() => {
 			this.onHide();
 		}, 50);
@@ -275,7 +267,7 @@ export default class AppPopper extends Vue {
 
 		document.body.appendChild(this.$refs.popper);
 
-		if (this.trigger === 'click') {
+		if (this.trigger === 'click' || this.trigger === 'manual') {
 			document.addEventListener('click', this.clickAway, true);
 		}
 
@@ -314,7 +306,7 @@ export default class AppPopper extends Vue {
 	onHide() {
 		// In case a popper was hidden from something other
 		// than a click, like right-clicking a cbar item.
-		if (this.trigger === 'click') {
+		if (this.trigger === 'click' || this.trigger === 'manual') {
 			document.removeEventListener('click', this.clickAway, true);
 		}
 
@@ -361,6 +353,13 @@ export default class AppPopper extends Vue {
 		}
 	}
 
-	@Emit('auto-hide')
-	private onAutoHide() {}
+	// @Emit('auto-hide')
+	// private onAutoHide() {}
+
+	@Watch('show')
+	onManualShow() {
+		if (this.show && this.trigger === 'manual') {
+			return this.onShow();
+		}
+	}
 }
