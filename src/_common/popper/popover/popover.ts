@@ -1,6 +1,5 @@
 import { createPopper, Instance, Options } from '@popperjs/core';
 import { ArrowModifier } from '@popperjs/core/lib/modifiers/arrow';
-import { OffsetModifier } from '@popperjs/core/lib/modifiers/offset';
 import { PreventOverflowModifier } from '@popperjs/core/lib/modifiers/preventOverflow';
 import ResizeObserver from 'resize-observer-polyfill';
 import Vue from 'vue';
@@ -21,13 +20,13 @@ let PopperIndex = 0;
 type ActualTrigger = 'click' | 'hover' | 'manual';
 
 const modifiers = [
-	{
-		// offset between popper and trigger
-		name: 'offset',
-		options: {
-			offset: [0, 12],
-		},
-	} as OffsetModifier,
+	// {
+	// 	// offset between popper and trigger
+	// 	name: 'offset',
+	// 	options: {
+	// 		offset: [0, 0],
+	// 	},
+	// } as OffsetModifier,
 	{
 		// padding between popper and viewport
 		name: 'preventOverflow',
@@ -89,13 +88,16 @@ export default class AppPopper extends Vue {
 	// @Prop()
 	// delay?: any;
 
+	// used to disable adding games to playlists when not logged in
 	// @Prop(propOptional(Boolean))
 	// disabled?: boolean;
 
+	// used when trigger is manual
 	// @Prop(Boolean)
 	// show?: boolean;
 
-	// @Prop({ type: Boolean, default: true })
+	/* not a clue why we need this */
+	// @Prop(propOptional(Boolean, true))
 	// autoHide!: boolean;
 
 	/**
@@ -112,7 +114,7 @@ export default class AppPopper extends Vue {
 	popoverClass!: null | string;
 
 	$refs!: {
-		popover: any;
+		trigger: any;
 		popper: any;
 	};
 
@@ -121,6 +123,9 @@ export default class AppPopper extends Vue {
 	width = '';
 	maxWidth = '';
 	popperIndex = PopperIndex++;
+
+	// private hoveringTrigger = false;
+	// private hoveringPopper = false;
 
 	private _popperElement!: HTMLElement;
 	ResizeObserver!: ResizeObserver | null;
@@ -138,9 +143,10 @@ export default class AppPopper extends Vue {
 		return 'popper-' + this.popperIndex;
 	}
 
-	get actualTrigger(): ActualTrigger {
-		return this.trigger === 'right-click' ? 'manual' : this.trigger;
-	}
+	/* really doubt we need this */
+	// get actualTrigger(): ActualTrigger {
+	// 	return this.trigger === 'right-click' ? 'manual' : this.trigger;
+	// }
 
 	get contentClass() {
 		let classes = [this.popoverClass];
@@ -167,6 +173,10 @@ export default class AppPopper extends Vue {
 	mounted() {
 		Popover.registerPopper(this.$router, this);
 		this._popperElement = this.$el as HTMLDivElement;
+		if (this.trigger === 'hover') {
+			this._popperElement.addEventListener('mouseenter', this.onHoverEnter);
+			this._popperElement.addEventListener('mouseleave', this.onHoverLeave);
+		}
 	}
 
 	destroyed() {
@@ -176,12 +186,13 @@ export default class AppPopper extends Vue {
 	}
 
 	triggerClicked() {
-		// We want to prevent right-click based triggers from being left-clicked.
-		// clickListener() will hide items, so we only need to show poppers here.
-		if (this.trigger === 'right-click' || this.isVisible) {
+		// We want to prevent right-click, hover, and manual
+		// triggers from showing poppers on left-click.
+		if (this.trigger !== 'click' || this.isVisible) {
 			return;
 		}
 
+		// clickListener will hide poppers when needed, so we only need to show poppers here.
 		this.onShow();
 	}
 
@@ -199,14 +210,51 @@ export default class AppPopper extends Vue {
 		this.onShow();
 	}
 
-	private clickListener(event: MouseEvent) {
+	private clickAway(event: MouseEvent) {
 		if (this.$refs.popper.contains(event.target)) {
 			return;
 		}
 
 		this.onHide();
-		document.removeEventListener('click', this.clickListener, true);
+		document.removeEventListener('click', this.clickAway, true);
 	}
+
+	onHoverEnter(event: MouseEvent) {
+		// this.setHoverState(event, true);
+
+		if (this.isVisible) {
+			return this.clearHideTimeout();
+		}
+
+		this.clearHideTimeout();
+		this.hideTimeout = setTimeout(() => this.onShow(), 500); // @CHECK, this needs to be taken from our delay prop
+	}
+
+	onHoverLeave(event: MouseEvent) {
+		// this.setHoverState(event, false);
+		if (!this.isVisible /* || this.hoveringPopper || this.hoveringTrigger */) {
+			return;
+		}
+
+		// @CHECK, need to figure out these eventlistener race conditions,
+		// or a better system for when moving between trigger/popper.
+		this.clearHideTimeout();
+		this.hideTimeout = setTimeout(() => {
+			this.onHide();
+		}, 50);
+	}
+
+	// private setHoverState(event: MouseEvent, isHovering: boolean) {
+	// 	if (event.target === this.$refs.popper) {
+	// 		console.log('popper', isHovering);
+	// 		return (this.hoveringPopper = isHovering);
+	// 	}
+
+	// 	if (event.target === this._popperElement) {
+	// 		console.log('trigger', isHovering);
+	// 		return (this.hoveringTrigger = isHovering);
+	// 	}
+	// }
 
 	async createPopper() {
 		this.isVisible = true;
@@ -226,7 +274,15 @@ export default class AppPopper extends Vue {
 		this.ResizeObserver.observe(this.$refs.popper);
 
 		document.body.appendChild(this.$refs.popper);
-		document.addEventListener('click', this.clickListener, true);
+
+		if (this.trigger === 'click') {
+			document.addEventListener('click', this.clickAway, true);
+		}
+
+		if (this.trigger === 'hover') {
+			this.$refs.popper.addEventListener('mouseenter', this.onHoverEnter);
+			this.$refs.popper.addEventListener('mouseleave', this.onHoverLeave);
+		}
 	}
 
 	@Emit('show')
@@ -239,7 +295,7 @@ export default class AppPopper extends Vue {
 		// width popover in those cases.
 		let widthElem: HTMLElement | undefined;
 		if (this.trackTriggerWidth && !Screen.isWindowXs) {
-			widthElem = document.querySelector('#' + this.popperId) as HTMLElement | undefined;
+			widthElem = this._popperElement as HTMLElement | undefined;
 			if (widthElem) {
 				this.width = widthElem.offsetWidth + 'px';
 				this.maxWidth = 'none';
@@ -258,7 +314,9 @@ export default class AppPopper extends Vue {
 	onHide() {
 		// In case a popper was hidden from something other
 		// than a click, like right-clicking a cbar item.
-		document.removeEventListener('click', this.clickListener, true);
+		if (this.trigger === 'click') {
+			document.removeEventListener('click', this.clickAway, true);
+		}
 
 		this.isHiding = true;
 		this.clearHideTimeout();
