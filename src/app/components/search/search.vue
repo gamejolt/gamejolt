@@ -25,7 +25,6 @@
 					track-trigger-width
 					:show="isShowingAutocomplete"
 					:disabled="autocompleteDisabled"
-					:auto-hide="false"
 				>
 					<app-search-input
 						:id="`search-input-${id}`"

@@ -3,7 +3,7 @@
 		:id="popperId"
 		class="v-popover"
 		:class="{ '-block': block }"
-		ref="popover"
+		ref="trigger"
 		@click="triggerClicked()"
 		@click.right="onContextMenu"
 	>

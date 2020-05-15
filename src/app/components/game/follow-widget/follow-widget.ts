@@ -126,6 +126,8 @@ export default class AppGameFollowWidget extends Vue {
 	}
 
 	onFollowPopoverDismissed() {
+		this.isShowingFollowPopover = false;
+
 		if (!this.game.developer.is_following) {
 			UserFollowSuggestion.doNotSuggest(this.game.developer.id);
 		}

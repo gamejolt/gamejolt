@@ -6,8 +6,7 @@
 		track-trigger-width
 		:show="isShowingFollowPopover"
 		:block="block"
-		@hide="isShowingFollowPopover = false"
-		@auto-hide="onFollowPopoverDismissed"
+		@hide="onFollowPopoverDismissed"
 	>
 		<app-button
 			:id="widgetId"

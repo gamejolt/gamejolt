@@ -88,19 +88,9 @@ export default class AppPopper extends Vue {
 	@Prop(Boolean)
 	show?: boolean;
 
-	/* not a clue why we need this */
-	// @Prop(propOptional(Boolean, true))
-	// autoHide!: boolean;
-
-	/**
-	 * Trigger elements are set to be styled inline-block, but
-	 * this sets 'block !important' on elements that pass this.
-	 */
+	// sets 'display: block !important'
 	@Prop(propOptional(Boolean))
 	block?: boolean;
-
-	// @Prop(String)
-	// openGroup?: string;
 
 	@Prop(propOptional(String, null))
 	popoverClass!: null | string;
@@ -122,7 +112,6 @@ export default class AppPopper extends Vue {
 	private _popperElement!: HTMLElement;
 	ResizeObserver!: ResizeObserver | null;
 	popperInstance!: Instance | null;
-	// private _isDestroyed?: boolean;
 
 	private hideTimeout?: NodeJS.Timer;
 	private mobileBackdrop: AppBackdrop | null = null;
@@ -134,11 +123,6 @@ export default class AppPopper extends Vue {
 	get popperId() {
 		return 'popper-' + this.popperIndex;
 	}
-
-	/* really doubt we need this */
-	// get actualTrigger(): ActualTrigger {
-	// 	return this.trigger === 'right-click' ? 'manual' : this.trigger;
-	// }
 
 	get contentClass() {
 		let classes = [this.popoverClass];
@@ -203,7 +187,10 @@ export default class AppPopper extends Vue {
 	}
 
 	private clickAway(event: MouseEvent) {
-		if (this.$refs.popper.contains(event.target)) {
+		if (
+			this.$refs.popper.contains(event.target) ||
+			(this.$refs.trigger.contains(event.target) && this.trigger === 'manual')
+		) {
 			return;
 		}
 
@@ -353,13 +340,16 @@ export default class AppPopper extends Vue {
 		}
 	}
 
-	// @Emit('auto-hide')
-	// private onAutoHide() {}
-
 	@Watch('show')
 	onManualShow() {
-		if (this.show && this.trigger === 'manual') {
+		if (this.trigger !== 'manual') {
+			return;
+		}
+
+		if (this.show) {
 			return this.onShow();
 		}
+
+		return this.onHide();
 	}
 }
