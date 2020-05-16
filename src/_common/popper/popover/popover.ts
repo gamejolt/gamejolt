@@ -106,10 +106,7 @@ export default class AppPopper extends Vue {
 	maxWidth = '';
 	popperIndex = PopperIndex++;
 
-	// private hoveringTrigger = false;
-	// private hoveringPopper = false;
-
-	private _popperElement!: HTMLElement;
+	private _triggerElement!: HTMLElement;
 	ResizeObserver!: ResizeObserver | null;
 	popperInstance!: Instance | null;
 
@@ -148,10 +145,10 @@ export default class AppPopper extends Vue {
 
 	mounted() {
 		Popover.registerPopper(this.$router, this);
-		this._popperElement = this.$el as HTMLDivElement;
+		this._triggerElement = this.$el as HTMLDivElement;
 		if (this.trigger === 'hover') {
-			this._popperElement.addEventListener('mouseenter', this.onHoverEnter);
-			this._popperElement.addEventListener('mouseleave', this.onHoverLeave);
+			this._triggerElement.addEventListener('mouseenter', this.onMouseEnter);
+			this._triggerElement.addEventListener('mouseleave', this.onMouseLeave);
 		}
 	}
 
@@ -162,13 +159,12 @@ export default class AppPopper extends Vue {
 	}
 
 	triggerClicked() {
-		// We want to prevent right-click, hover, and manual
-		// triggers from showing poppers on left-click.
+		// We want to prevent right-click, hover, and manual triggers from showing poppers on left-click.
+		// clickAway() listener will hide poppers when needed, so we only need to show poppers here.
 		if (this.trigger !== 'click' || this.isVisible) {
 			return;
 		}
 
-		// clickListener will hide poppers when needed, so we only need to show poppers here.
 		this.onShow();
 	}
 
@@ -198,8 +194,7 @@ export default class AppPopper extends Vue {
 		document.removeEventListener('click', this.clickAway, true);
 	}
 
-	onHoverEnter(event: MouseEvent) {
-		// this.setHoverState(event, true);
+	onMouseEnter() {
 		this.clearHideTimeout();
 
 		if (this.isVisible) {
@@ -209,10 +204,9 @@ export default class AppPopper extends Vue {
 		this.hideTimeout = setTimeout(() => this.onShow(), 500); // @CHECK, this needs to be taken from our delay prop
 	}
 
-	onHoverLeave(event: MouseEvent) {
-		// this.setHoverState(event, false);
+	onMouseLeave() {
 		this.clearHideTimeout();
-		if (!this.isVisible /* || this.hoveringPopper || this.hoveringTrigger */) {
+		if (!this.isVisible) {
 			return;
 		}
 
@@ -223,24 +217,12 @@ export default class AppPopper extends Vue {
 		}, 50);
 	}
 
-	// private setHoverState(event: MouseEvent, isHovering: boolean) {
-	// 	if (event.target === this.$refs.popper) {
-	// 		console.log('popper', isHovering);
-	// 		return (this.hoveringPopper = isHovering);
-	// 	}
-
-	// 	if (event.target === this._popperElement) {
-	// 		console.log('trigger', isHovering);
-	// 		return (this.hoveringTrigger = isHovering);
-	// 	}
-	// }
-
 	async createPopper() {
 		this.isVisible = true;
 		await this.$nextTick();
 
 		this.popperInstance = createPopper(
-			this._popperElement,
+			this._triggerElement,
 			this.$refs.popper,
 			this.popperOptions
 		);
@@ -254,14 +236,13 @@ export default class AppPopper extends Vue {
 
 		document.body.appendChild(this.$refs.popper);
 
-		if (this.trigger === 'click' || this.trigger === 'manual') {
+		if (this.trigger !== 'hover') {
 			document.addEventListener('click', this.clickAway, true);
+		} else {
+			this.$refs.popper.addEventListener('mouseenter', this.onMouseEnter);
+			this.$refs.popper.addEventListener('mouseleave', this.onMouseLeave);
 		}
-
-		if (this.trigger === 'hover') {
-			this.$refs.popper.addEventListener('mouseenter', this.onHoverEnter);
-			this.$refs.popper.addEventListener('mouseleave', this.onHoverLeave);
-		}
+		// console.log(this.$refs.trigger instanceof (AppButton));
 	}
 
 	@Emit('show')
@@ -274,7 +255,7 @@ export default class AppPopper extends Vue {
 		// width popover in those cases.
 		let widthElem: HTMLElement | undefined;
 		if (this.trackTriggerWidth && !Screen.isWindowXs) {
-			widthElem = this._popperElement as HTMLElement | undefined;
+			widthElem = this._triggerElement as HTMLElement | undefined;
 			if (widthElem) {
 				this.width = widthElem.offsetWidth + 'px';
 				this.maxWidth = 'none';
@@ -291,9 +272,9 @@ export default class AppPopper extends Vue {
 	}
 
 	onHide() {
-		// In case a popper was hidden from something other
-		// than a click, like right-clicking a cbar item.
-		if (this.trigger === 'click' || this.trigger === 'manual') {
+		// In case a popper was hidden from something other than a click,
+		// like right-clicking a cbar item or Popover.hideAll() being triggered.
+		if (this.trigger !== 'hover') {
 			document.removeEventListener('click', this.clickAway, true);
 		}
 
