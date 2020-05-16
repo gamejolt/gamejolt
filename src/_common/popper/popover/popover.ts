@@ -19,6 +19,11 @@ let PopperIndex = 0;
 
 type ActualTrigger = 'click' | 'hover' | 'manual';
 
+type DelayFormat = {
+	show: number;
+	hide: number;
+};
+
 const modifiers = [
 	{
 		// padding between popper and viewport
@@ -78,8 +83,13 @@ export default class AppPopper extends Vue {
 	@Prop(propOptional(Boolean))
 	forceMaxWidth?: boolean;
 
-	// @Prop()
-	// delay?: any;
+	/**
+	 * Delay for a hover-based popper showing and hiding. 'show' currently defaults
+	 * to TransitionTime if there is no delay specified, and 'hide' defaults to at
+	 * least 50ms to make sure there are no issues when moving between popper and trigger.
+	 */
+	@Prop(propOptional(Object))
+	delay?: DelayFormat;
 
 	// used to disable adding games to playlists when not logged in
 	// @Prop(propOptional(Boolean))
@@ -201,20 +211,33 @@ export default class AppPopper extends Vue {
 			return;
 		}
 
-		this.hideTimeout = setTimeout(() => this.onShow(), 500); // @CHECK, this needs to be taken from our delay prop
+		let showDelay = TransitionTime;
+
+		if (this.delay && this.delay.show >= 0) {
+			showDelay = this.delay.show;
+		}
+
+		this.hideTimeout = setTimeout(() => this.onShow(), showDelay);
 	}
 
 	onMouseLeave() {
 		this.clearHideTimeout();
+
 		if (!this.isVisible) {
 			return;
 		}
 
-		// @CHECK, need to figure out these eventlistener race conditions,
-		// or a better system for when moving between trigger/popper.
+		// Need at least 50ms delay between hiding until I can figure out
+		// any timing issues when moving from trigger to popper.
+		let hideDelay = 50;
+
+		if (this.delay && this.delay.hide > hideDelay) {
+			hideDelay = this.delay.hide;
+		}
+
 		this.hideTimeout = setTimeout(() => {
 			this.onHide();
-		}, 50);
+		}, hideDelay);
 	}
 
 	async createPopper() {
@@ -242,7 +265,6 @@ export default class AppPopper extends Vue {
 			this.$refs.popper.addEventListener('mouseenter', this.onMouseEnter);
 			this.$refs.popper.addEventListener('mouseleave', this.onMouseLeave);
 		}
-		// console.log(this.$refs.trigger instanceof (AppButton));
 	}
 
 	@Emit('show')
