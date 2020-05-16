@@ -1,6 +1,14 @@
-import { createPopper, Instance, Options } from '@popperjs/core';
-import { ArrowModifier } from '@popperjs/core/lib/modifiers/arrow';
-import { PreventOverflowModifier } from '@popperjs/core/lib/modifiers/preventOverflow';
+import arrow, { ArrowModifier } from '@popperjs/core/lib/modifiers/arrow';
+import flip from '@popperjs/core/lib/modifiers/flip';
+import preventOverflow, {
+	PreventOverflowModifier,
+} from '@popperjs/core/lib/modifiers/preventOverflow';
+import {
+	defaultModifiers,
+	Instance,
+	Options,
+	popperGenerator,
+} from '@popperjs/core/lib/popper-lite';
 import ResizeObserver from 'resize-observer-polyfill';
 import Vue from 'vue';
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
@@ -25,6 +33,9 @@ type DelayFormat = {
 };
 
 const modifiers = [
+	flip,
+	preventOverflow,
+	arrow,
 	{
 		// padding between popper and viewport
 		name: 'preventOverflow',
@@ -40,6 +51,10 @@ const modifiers = [
 		},
 	} as ArrowModifier,
 ];
+
+const createPopper = popperGenerator({
+	defaultModifiers: [...defaultModifiers],
+});
 
 @Component({
 	components: {
