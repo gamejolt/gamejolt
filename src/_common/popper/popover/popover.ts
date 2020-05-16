@@ -29,7 +29,7 @@ const modifiers = [
 		// padding between popper and viewport
 		name: 'preventOverflow',
 		options: {
-			padding: 8,
+			padding: 5,
 		},
 	} as PreventOverflowModifier,
 	{
@@ -64,6 +64,9 @@ export default class AppPopper extends Vue {
 	 * By default the popper will stay on the page until the user clicks outside
 	 * of the popper. This tells the popper to close anytime the state changes.
 	 * Useful for poppers in the shell that link to other pages on the site.
+	 *
+	 * Does not work on 'hover' poppers, so instead we run
+	 * 'popperInstance.destroy()' in the 'destroyed()' lifecycle.
 	 */
 	@Prop(propOptional(Boolean))
 	hideOnStateChange?: boolean;
@@ -84,21 +87,18 @@ export default class AppPopper extends Vue {
 	forceMaxWidth?: boolean;
 
 	/**
-	 * Delay for a hover-based popper showing and hiding. 'show' currently defaults
-	 * to TransitionTime if there is no delay specified, and 'hide' defaults to at
+	 * Delay for a hover-based popper showing and hiding. 'show' delay currently defaults
+	 * to TransitionTime if there is no delay specified, and 'hide' delay defaults to at
 	 * least 50ms to make sure there are no issues when moving between popper and trigger.
 	 */
 	@Prop(propOptional(Object))
 	delay?: DelayFormat;
 
-	// used to disable adding games to playlists when not logged in
-	// @Prop(propOptional(Boolean))
-	// disabled?: boolean;
-
+	// We set a watch on this prop so we know when to display 'manual' triggers
 	@Prop(Boolean)
 	show?: boolean;
 
-	// sets 'display: block !important'
+	// Sets 'display: block !important' on the trigger element.
 	@Prop(propOptional(Boolean))
 	block?: boolean;
 
@@ -116,10 +116,10 @@ export default class AppPopper extends Vue {
 	maxWidth = '';
 	popperIndex = PopperIndex++;
 
-	private _triggerElement!: HTMLElement;
 	ResizeObserver!: ResizeObserver | null;
 	popperInstance!: Instance | null;
 
+	private _triggerElement!: HTMLElement;
 	private hideTimeout?: NodeJS.Timer;
 	private mobileBackdrop: AppBackdrop | null = null;
 
@@ -153,9 +153,23 @@ export default class AppPopper extends Vue {
 		};
 	}
 
+	get actualDelay(): DelayFormat {
+		// Need at least 50ms delay for 'hide' to prevent any
+		// timing issues when moving between trigger and popper.
+		if (this.delay) {
+			return {
+				show: Math.max(this.delay.show, 0),
+				hide: Math.max(this.delay.hide, 50),
+			};
+		}
+
+		return { show: TransitionTime, hide: 50 };
+	}
+
 	mounted() {
 		Popover.registerPopper(this.$router, this);
 		this._triggerElement = this.$el as HTMLDivElement;
+
 		if (this.trigger === 'hover') {
 			this._triggerElement.addEventListener('mouseenter', this.onMouseEnter);
 			this._triggerElement.addEventListener('mouseleave', this.onMouseLeave);
@@ -166,6 +180,12 @@ export default class AppPopper extends Vue {
 		Popover.deregisterPopper(this);
 		this.clearHideTimeout();
 		this.removeBackdrop();
+
+		// Destroy any poppers that had their trigger element removed,
+		// removing things like floating 'hover' poppers on state change.
+		if (this.popperInstance) {
+			this.popperInstance.destroy();
+		}
 	}
 
 	triggerClicked() {
@@ -207,17 +227,17 @@ export default class AppPopper extends Vue {
 	onMouseEnter() {
 		this.clearHideTimeout();
 
+		// We need to skip the hideTimeout in 'onMouseLeave()' if the
+		// user hovers while the popper is in the process of hiding.
+		if (this.isHiding) {
+			this.hideDone();
+		}
+
 		if (this.isVisible) {
 			return;
 		}
 
-		let showDelay = TransitionTime;
-
-		if (this.delay && this.delay.show >= 0) {
-			showDelay = this.delay.show;
-		}
-
-		this.hideTimeout = setTimeout(() => this.onShow(), showDelay);
+		this.hideTimeout = setTimeout(() => this.onShow(), this.actualDelay.show);
 	}
 
 	onMouseLeave() {
@@ -227,17 +247,9 @@ export default class AppPopper extends Vue {
 			return;
 		}
 
-		// Need at least 50ms delay between hiding until I can figure out
-		// any timing issues when moving from trigger to popper.
-		let hideDelay = 50;
-
-		if (this.delay && this.delay.hide > hideDelay) {
-			hideDelay = this.delay.hide;
-		}
-
 		this.hideTimeout = setTimeout(() => {
 			this.onHide();
-		}, hideDelay);
+		}, this.actualDelay.hide);
 	}
 
 	async createPopper() {
