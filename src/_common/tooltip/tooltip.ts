@@ -14,10 +14,10 @@ if (!GJ_IS_SSR) {
 	let hideTimeout: NodeJS.Timer | null = null;
 
 	const getOptions = (modifiers: any) => {
-		// need to figure out what we want as a default
 		let placement: Placement = 'top';
 
-		// how do better??? 'binding.modifiers' is an object with things like { right: true }.
+		// @REVIEW
+		// how do better??? 'binding.modifiers' is an object like { right: true }.
 		// We should only be getting one value through it for placement.
 		if (modifiers instanceof Object) {
 			placement = Object.entries(modifiers)[0][0] as Placement;
@@ -115,9 +115,5 @@ if (!GJ_IS_SSR) {
 
 	AppTooltip = Vue.directive('app-tooltip', tooltipDirective);
 }
-
-// @Component({})
-// export class AppTooltipClass extends Vue {
-// }
 
 export { AppTooltip };
