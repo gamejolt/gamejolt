@@ -20,13 +20,6 @@
 	.tooltip-arrow
 		display: none
 
-	&[aria-hidden='true']
-		visibility: hidden
+	&.-hide
 		opacity: 0
-		transition: opacity 200ms, visibility 200ms
-
-	&[aria-hidden='false']
-		visibility: visible
-		opacity: 1
-		// Instant in.
-		transition: none
+		transition: opacity 200ms
