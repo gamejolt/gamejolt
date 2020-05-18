@@ -5,7 +5,7 @@ import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Notification } from '../../../../_common/notification/notification-model';
-import AppPopper from '../../../../_common/popper/popover/popover.vue';
+import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import { Store } from '../../../store';
