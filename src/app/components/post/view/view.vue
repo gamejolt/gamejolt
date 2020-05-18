@@ -4,32 +4,27 @@
 
 		<div class="container">
 			<div v-if="post.hasVideo" class="full-bleed-xs">
-				<app-video-embed
-					video-provider="youtube"
-					:video-id="post.videos[0].video_id"
-					autoplay
-				/>
+				<app-video-embed video-provider="youtube" :video-id="post.videos[0].video_id" autoplay />
 				<br />
 			</div>
 
 			<div class="row">
-				<div
-					class="col-sm-10 col-md-8 col-lg-7"
-					:class="{ 'col-centered': Screen.isMobile }"
-				>
+				<div class="col-sm-10 col-md-8 col-lg-7" :class="{ 'col-centered': Screen.isMobile }">
 					<div class="post-view">
 						<div v-if="post.hasMedia" class="full-bleed-xs">
 							<div v-for="item of post.media" :key="item.id">
-								<app-media-item-post :media-item="item" is-active />
+								<app-media-item-post
+									class="-media-item"
+									:media-item="item"
+									is-active
+									@fullscreen="onClickFullscreen"
+								/>
 								<br />
 							</div>
 						</div>
 
 						<div v-if="post.hasSketchfab" class="full-bleed-xs">
-							<app-sketchfab-embed
-								:sketchfab-id="post.sketchfabs[0].sketchfab_id"
-								autoplay
-							/>
+							<app-sketchfab-embed :sketchfab-id="post.sketchfabs[0].sketchfab_id" autoplay />
 						</div>
 
 						<div class="tiny text-muted">
@@ -41,11 +36,7 @@
 								</span>
 								<app-time-ago :date="post.scheduled_for" strict without-suffix />
 							</template>
-							<span
-								v-else-if="post.isDraft"
-								class="tag"
-								style="vertical-align: middle"
-							>
+							<span v-else-if="post.isDraft" class="tag" style="vertical-align: middle">
 								<translate>Draft</translate>
 							</span>
 						</div>
@@ -90,9 +81,8 @@
 								<app-jolticon icon="notice" notice />
 								<span
 									><translate
-										>You can't publish this post to the selected community
-										channel because you don't have permissions to post into that
-										specific channel. Please select a different
+										>You can't publish this post to the selected community channel because you don't
+										have permissions to post into that specific channel. Please select a different
 										channel.</translate
 									></span
 								>
@@ -128,6 +118,9 @@
 	.post-view >>>
 		iframe
 			rounded-corners-lg()
+
+.-media-item
+	cursor: zoom-in
 
 >>> .mention-avatar-img
 	border-radius: 50% !important

@@ -1,5 +1,4 @@
-import * as addWeeks from 'date-fns/add_weeks';
-import * as startOfDay from 'date-fns/start_of_day';
+import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../utils/array';

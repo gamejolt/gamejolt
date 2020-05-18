@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppImgResponsive } from '../../img/responsive/responsive';
-import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
+import { AppImgResponsive } from '../../../img/responsive/responsive';
+import AppMediaItemBackdrop from '../../../media-item/backdrop/backdrop.vue';
 
 export const MediaBarItemMaxHeight = 150;
 
@@ -11,7 +11,7 @@ export const MediaBarItemMaxHeight = 150;
 		AppMediaItemBackdrop,
 	},
 })
-export default class AppMediaBarItem extends Vue {
+export default class AppGameMediaBarItem extends Vue {
 	@Prop(Object) item!: any;
 
 	width = 'auto';

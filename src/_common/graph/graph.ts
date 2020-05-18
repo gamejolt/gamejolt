@@ -204,7 +204,7 @@ export default class AppGraph extends Vue {
 
 				for (const row of series.data) {
 					if (i === 0) {
-						this.data.labels.push(date(row[0], 'MMM DD'));
+						this.data.labels.push(date(row[0], 'LLL dd'));
 					}
 
 					dataset.data.push(row[1]);

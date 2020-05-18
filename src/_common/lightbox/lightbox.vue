@@ -11,15 +11,11 @@
 			<app-shortkey shortkey="arrowright" @press="goNext" />
 
 			<div class="-inner">
-				<a class="-prev" v-if="mediaBar.activeIndex > 0" @mousedown="goPrev">
+				<a class="-prev" v-if="activeIndex > 0" @mousedown="goPrev">
 					<app-jolticon icon="chevron-left" />
 				</a>
 
-				<a
-					class="-next"
-					v-if="mediaBar.activeIndex < mediaBar.mediaItems.length - 1"
-					@mousedown="goNext"
-				>
+				<a class="-next" v-if="hasNext" @mousedown="goNext">
 					<app-jolticon icon="chevron-right" />
 				</a>
 
@@ -27,8 +23,8 @@
 					<app-button
 						icon="download"
 						trans
-						v-if="mediaBar.activeItem.media_type === 'image'"
-						:href="mediaBar.activeItem.media_item.img_url"
+						v-if="activeMediaType === 'image'"
+						:href="activeMediaItem.img_url"
 						target="_blank"
 					>
 						<translate>Download</translate>
@@ -38,20 +34,21 @@
 					</app-button>
 				</div>
 
-				<app-media-bar-lightbox-slider class="-slider">
-					<app-media-bar-lightbox-item
-						v-for="(item, index) of mediaBar.mediaItems"
-						:key="item.id"
+				<app-lightbox-slider class="-slider">
+					<app-lightbox-item
+						v-for="(item, index) of items"
+						:key="item.getModelId()"
 						:item="item"
 						:item-index="index"
-						:active-index="mediaBar.activeIndex"
+						:active-index="activeIndex"
 					/>
-				</app-media-bar-lightbox-slider>
+				</app-lightbox-slider>
 			</div>
 		</v-touch>
 	</div>
 </template>
 
+<style lang="stylus" src="./lightbox-global.styl"></style>
 <style lang="stylus" src="./lightbox.styl" scoped></style>
 
 <script lang="ts" src="./lightbox"></script>

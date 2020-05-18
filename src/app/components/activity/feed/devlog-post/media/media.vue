@@ -16,17 +16,18 @@
 						:is-post-hydrated="isHydrated"
 						:is-active="getIsActiveMediaItem(mediaItem)"
 						@bootstrap="onItemBootstrapped()"
+						@fullscreen="onClickFullscreen"
 						restrict-device-max-height
 						inline
 					/>
 				</div>
 			</div>
 
-			<a class="-prev" v-if="page > 1" @click.stop="prev">
+			<a class="-prev" v-if="page > 1" @click.stop="goPrev">
 				<app-jolticon icon="chevron-left" />
 			</a>
 
-			<a class="-next" v-if="page < post.media.length" @click.stop="next">
+			<a class="-next" v-if="page < post.media.length" @click.stop="goNext">
 				<app-jolticon icon="chevron-right" />
 			</a>
 		</v-touch>

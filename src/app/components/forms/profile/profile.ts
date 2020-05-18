@@ -1,4 +1,4 @@
-import * as distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
+import { formatDistanceToNow } from 'date-fns';
 import { Component } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/expand.vue';
@@ -48,7 +48,7 @@ export default class FormProfile extends BaseForm<User> implements FormOnLoad, F
 		this.usernameTimeLeft = payload.usernameTimeLeft;
 
 		if (this.usernameTimeLeft) {
-			this.usernameDuration = distanceInWordsToNow(Date.now() + this.usernameTimeLeft);
+			this.usernameDuration = formatDistanceToNow(Date.now() + this.usernameTimeLeft);
 		}
 
 		this.isBioLocked = payload.isBioLocked;

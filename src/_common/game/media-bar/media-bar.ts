@@ -1,27 +1,30 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { Analytics } from '../analytics/analytics.service';
-import { Growls } from '../growls/growls.service';
-import AppLoading from '../loading/loading.vue';
-import AppScrollScroller from '../scroll/scroller/scroller.vue';
+import { Analytics } from '../../analytics/analytics.service';
+import { Growls } from '../../growls/growls.service';
+import AppLightboxItem from '../../lightbox/item/item.vue';
+import AppLightboxTS from '../../lightbox/lightbox';
+import { createLightbox, LightboxMediaSource } from '../../lightbox/lightbox-helpers';
+import AppLightbox from '../../lightbox/lightbox.vue';
+import AppLoading from '../../loading/loading.vue';
+import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { MediaBarItemMaxHeight } from './item/item';
-import AppMediaBarItem from './item/item.vue';
-import AppMediaBarLightboxTS from './lightbox/lightbox';
-import AppMediaBarLightbox from './lightbox/lightbox.vue';
+import AppGameMediaBarItem from './item/item.vue';
 
 @Component({
 	components: {
 		AppLoading,
-		AppMediaBarItem,
-		AppMediaBarLightbox,
+		AppLightboxItem,
+		AppLightbox,
 		AppScrollScroller,
+		AppGameMediaBarItem,
 	},
 })
-export default class AppMediaBar extends Vue {
+export default class AppGameMediaBar extends Vue implements LightboxMediaSource {
 	@Prop(Array) mediaItems!: any[];
 
 	private urlChecked = false;
-	private lightbox?: AppMediaBarLightboxTS;
+	private lightbox?: AppLightboxTS;
 
 	activeItem: any | null = null;
 	activeIndex: number | null = null;
@@ -32,7 +35,7 @@ export default class AppMediaBar extends Vue {
 		if (this.activeItem && !this.lightbox) {
 			this.createLightbox();
 		} else if (!this.activeItem && this.lightbox) {
-			this.destroyLightbox();
+			this.closeLightbox();
 		}
 
 		let hash = '';
@@ -64,7 +67,30 @@ export default class AppMediaBar extends Vue {
 	}
 
 	destroyed() {
-		this.destroyLightbox();
+		this.closeLightbox();
+	}
+
+	onLightboxClose() {
+		this.lightbox = undefined;
+		this.activeItem = null;
+		this.activeIndex = null;
+		this.trackEvent('close');
+	}
+
+	getActiveIndex() {
+		return this.activeIndex!;
+	}
+
+	getItemCount() {
+		return this.mediaItems.length;
+	}
+
+	getActiveItem() {
+		return this.activeItem;
+	}
+
+	getItems() {
+		return this.mediaItems;
 	}
 
 	setActiveItem(item: any) {
@@ -98,12 +124,6 @@ export default class AppMediaBar extends Vue {
 	go(index: number) {
 		this.activeIndex = index;
 		this.activeItem = this.mediaItems[this.activeIndex];
-	}
-
-	clearActiveItem() {
-		this.activeItem = null;
-		this.activeIndex = null;
-		this.trackEvent('close');
 	}
 
 	private checkUrl() {
@@ -161,25 +181,14 @@ export default class AppMediaBar extends Vue {
 		if (this.lightbox) {
 			return;
 		}
-		const elem = document.createElement('div');
-		window.document.body.appendChild(elem);
-
-		this.lightbox = new AppMediaBarLightbox({
-			propsData: {
-				mediaBar: this,
-			},
-		});
-
-		this.lightbox.$mount(elem);
+		this.lightbox = createLightbox(this);
 	}
 
-	private destroyLightbox() {
+	private closeLightbox() {
 		if (!this.lightbox) {
 			return;
 		}
-
-		this.lightbox.$destroy();
-		window.document.body.removeChild(this.lightbox.$el);
+		this.lightbox.close();
 		this.lightbox = undefined;
 	}
 

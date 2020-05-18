@@ -7,7 +7,10 @@ import AppContentViewer from '../../../../_common/content/content-viewer/content
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
+import AppLightboxTS from '../../../../_common/lightbox/lightbox';
+import { createLightbox, LightboxMediaSource } from '../../../../_common/lightbox/lightbox-helpers';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
+import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
 import { AppResponsiveDimensions } from '../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -22,7 +25,6 @@ import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
 import AppVideo from '../../../../_common/video/video.vue';
 import { Store } from '../../../store';
 import AppEventItemControls from '../../event-item/controls/controls.vue';
-import AppEventItemMediaTags from '../../event-item/media-tags/media-tags.vue';
 import AppPollVoting from '../../poll/voting/voting.vue';
 import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 
@@ -37,7 +39,6 @@ import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 		AppVideoEmbed,
 		AppSketchfabEmbed,
 		AppEventItemControls,
-		AppEventItemMediaTags,
 		AppPollVoting,
 		AppAdWidget,
 		AppCommunityPill,
@@ -49,7 +50,7 @@ import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 		AppScrollWhen,
 	},
 })
-export default class AppPostView extends Vue {
+export default class AppPostView extends Vue implements LightboxMediaSource {
 	@Prop(FiresidePost)
 	post!: FiresidePost;
 
@@ -60,6 +61,8 @@ export default class AppPostView extends Vue {
 	app!: Store['app'];
 
 	stickersVisible = false;
+	activeImageIndex = 0;
+	private lightbox?: AppLightboxTS;
 
 	$refs!: {
 		stickerTarget: AppStickerTargetTS;
@@ -97,6 +100,38 @@ export default class AppPostView extends Vue {
 		}
 	}
 
+	destroyed() {
+		this.closeLightbox();
+	}
+
+	onLightboxClose() {
+		this.lightbox = undefined;
+	}
+
+	getActiveIndex() {
+		return this.activeImageIndex;
+	}
+
+	getActiveItem() {
+		return this.post.media[this.activeImageIndex];
+	}
+
+	getItemCount() {
+		return this.post.media.length;
+	}
+
+	getItems() {
+		return this.post.media;
+	}
+
+	goNext() {
+		this.activeImageIndex = Math.min(this.activeImageIndex + 1, this.post.media.length - 1);
+	}
+
+	goPrev() {
+		this.activeImageIndex = Math.max(this.activeImageIndex - 1, 0);
+	}
+
 	onPostRemoved() {
 		this.$router.replace({ name: 'home' });
 		Growls.info(this.$gettext('Your post has been removed'));
@@ -119,5 +154,25 @@ export default class AppPostView extends Vue {
 
 	onAllStickersHidden() {
 		this.stickersVisible = false;
+	}
+
+	onClickFullscreen(mediaItem: MediaItem) {
+		this.activeImageIndex = this.post.media.findIndex(i => i.id === mediaItem.id);
+		this.createLightbox();
+	}
+
+	private createLightbox() {
+		if (this.lightbox) {
+			return;
+		}
+		this.lightbox = createLightbox(this);
+	}
+
+	private closeLightbox() {
+		if (!this.lightbox) {
+			return;
+		}
+		this.lightbox.close();
+		this.lightbox = undefined;
 	}
 }

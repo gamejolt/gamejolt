@@ -15,11 +15,11 @@ import { number } from '../../../../../../_common/filters/number';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import AppGameExternalPackageCard from '../../../../../../_common/game/external-package/card/card.vue';
 import { Game } from '../../../../../../_common/game/game.model';
+import AppGameMediaBar from '../../../../../../_common/game/media-bar/media-bar.vue';
 import AppGamePackageCard from '../../../../../../_common/game/package/card/card.vue';
 import AppGameSoundtrackCard from '../../../../../../_common/game/soundtrack/card/card.vue';
 import { HistoryTick } from '../../../../../../_common/history-tick/history-tick-service';
 import { AppLazyPlaceholder } from '../../../../../../_common/lazy/placeholder/placeholder';
-import AppMediaBar from '../../../../../../_common/media-bar/media-bar.vue';
 import { Meta } from '../../../../../../_common/meta/meta-service';
 import { PartnerReferral } from '../../../../../../_common/partner-referral/partner-referral-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
@@ -60,7 +60,7 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 		AppGameExternalPackageCard,
 		AppGamePackageCard,
 		AppGameSoundtrackCard,
-		AppMediaBar,
+		AppGameMediaBar,
 		AppCommentAddButton,
 		AppCommentOverview,
 		AppActivityFeed,

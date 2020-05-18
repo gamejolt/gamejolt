@@ -21,7 +21,7 @@
 
 			<draggable style="display: inline-flex" v-model="draggableItems">
 				<div v-for="item of draggableItems" :key="item.id">
-					<app-media-bar-item class="-item" :item="item" @click.native="open(item)">
+					<app-game-media-bar-item class="-item" :item="item" @click.native="open(item)">
 						<app-editable-overlay class="-item-hover hidden-xs" @click="open(item)">
 							<template slot="overlay">
 								<translate>click to edit</translate>
@@ -29,7 +29,7 @@
 								<translate>drag to sort</translate>
 							</template>
 						</app-editable-overlay>
-					</app-media-bar-item>
+					</app-game-media-bar-item>
 				</div>
 			</draggable>
 		</div>
