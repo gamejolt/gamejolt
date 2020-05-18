@@ -1,42 +1,5 @@
 <template>
 	<app-form v-if="model" name="postForm" ref="form">
-		<!-- Communities -->
-		<template v-if="communities.length">
-			<div class="-communities">
-				<div class="-communities-label">
-					<translate>Community</translate>
-				</div>
-				<div class="-communities-list">
-					<app-community-pill
-						v-for="community of communities"
-						:key="community.id"
-						:community="community"
-						no-links
-					/>
-				</div>
-				<a v-if="wasPublished && selectedChannel" class="badge -current-channel">
-					{{ selectedChannel.title }}
-				</a>
-			</div>
-
-			<template v-if="!wasPublished">
-				<app-community-channel-select
-					v-if="communityChannels.length"
-					class="-channels"
-					v-model="selectedChannel"
-					:channels="communityChannels"
-				/>
-
-				<app-expand :when="hasChannelError">
-					<div class="-channel-error alert alert-notice">
-						<translate>
-							Choose a channel to post to.
-						</translate>
-					</div>
-				</app-expand>
-			</template>
-		</template>
-
 		<!-- Attachments -->
 		<div class="-attachment-controls" v-if="!enabledAttachments">
 			<app-button
@@ -534,6 +497,50 @@
 				</strong>
 			</div>
 		</template>
+
+		<!-- Communities -->
+		<div class="-communities">
+			<transition-group name="-community-list" tag="span">
+				<app-form-post-community-pill
+					class="-community-pill"
+					v-for="{ community, channel } of attachedCommunities"
+					:key="community.id"
+					:community="community"
+					:channel="channel"
+					@remove="removeCommunity(community)"
+				/>
+
+				<template v-if="!wasPublished && canAddCommunity">
+					<app-form-post-community-pill-add
+						class="-community-pill"
+						key="add"
+						:communities="possibleCommunities"
+						@add="attachCommunity"
+					/>
+				</template>
+			</transition-group>
+
+			<!-- <a v-if="wasPublished && selectedChannel" class="badge -current-channel">
+				{{ selectedChannel.title }}
+			</a> -->
+		</div>
+
+		<!-- <template v-if="!wasPublished">
+			<app-community-channel-select
+				v-if="communityChannels.length"
+				class="-channels"
+				v-model="selectedChannel"
+				:channels="communityChannels"
+			/>
+
+			<app-expand :when="hasChannelError">
+				<div class="-channel-error alert alert-notice">
+					<translate>
+						Choose a channel to post to.
+					</translate>
+				</div>
+			</app-expand>
+		</template> -->
 
 		<!-- Controls -->
 		<div class="-controls">

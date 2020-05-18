@@ -50,6 +50,8 @@ import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.se
 import { AppTooltip } from '../../../../_common/tooltip/tooltip';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
+import AppFormPostCommunityPillAdd from './_community-pill/add/add.vue';
+import AppFormPostCommunityPill from './_community-pill/community-pill.vue';
 import AppFormPostMedia from './_media/media.vue';
 
 type FormPostModel = FiresidePost & {
@@ -92,6 +94,8 @@ type FormPostModel = FiresidePost & {
 		AppUserAvatarImg,
 		AppProgressBar,
 		AppFormPostMedia,
+		AppFormPostCommunityPill,
+		AppFormPostCommunityPillAdd,
 		AppCommunityPill,
 		AppCommunityChannelSelect,
 		AppFormControlContent,
@@ -145,6 +149,9 @@ export default class FormPost extends BaseForm<FormPostModel>
 	leadLengthLimit = 255;
 	isUploadingPastedImage = false;
 	communityChannels: CommunityChannel[] = [];
+	maxCommunities = 0;
+	attachedCommunities: { community: Community; channel: CommunityChannel }[] = [];
+	targetableCommunities: Community[] = [];
 	selectedChannel: CommunityChannel | null = null;
 
 	private updateAutosize?: () => void;
@@ -314,6 +321,13 @@ export default class FormPost extends BaseForm<FormPostModel>
 		return [];
 	}
 
+	get canAddCommunity() {
+		return (
+			this.attachedCommunities.length < this.maxCommunities &&
+			this.possibleCommunities.length > 0
+		);
+	}
+
 	@Watch('selectedChannel')
 	validateSelectedChannel() {
 		if (this.selectedChannel) {
@@ -325,6 +339,13 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	get hasChannelError() {
 		return this.hasCustomError('channel');
+	}
+
+	get possibleCommunities() {
+		// Difference between targetable and attached communities.
+		return this.targetableCommunities.filter(
+			c1 => !this.attachedCommunities.find(c2 => c1.id === c2.community.id)
+		);
 	}
 
 	async onInit() {
@@ -415,6 +436,22 @@ export default class FormPost extends BaseForm<FormPostModel>
 			this.communityChannels = CommunityChannel.populate(payload.channels);
 		}
 
+		this.maxCommunities = payload.maxCommunities;
+
+		if (payload.attachedCommunities) {
+			this.attachedCommunities = [];
+			for (let { community, channel } of payload.attachedCommunities) {
+				this.attachedCommunities.push({
+					community: new Community(community),
+					channel: new CommunityChannel(channel),
+				});
+			}
+		}
+
+		if (payload.targetableCommunities) {
+			this.targetableCommunities = Community.populate(payload.targetableCommunities);
+		}
+
 		this.linkedAccounts = LinkedAccount.populate(payload.linkedAccounts);
 		this.publishToPlatforms = payload.publishToPlatforms || null;
 
@@ -427,6 +464,20 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	selectChannel(channelId: number) {
 		this.setField('channel_id', channelId);
+	}
+
+	attachCommunity(community: Community, channel: CommunityChannel) {
+		this.attachedCommunities.push({ community, channel });
+	}
+
+	removeCommunity(community: Community) {
+		const idx = this.attachedCommunities.findIndex(i => i.community.id === community.id);
+		if (idx === -1) {
+			console.warn('Attempted to remove a community that is not attached');
+			return;
+		}
+
+		this.attachedCommunities.splice(idx, 1);
 	}
 
 	onDraftSubmit() {

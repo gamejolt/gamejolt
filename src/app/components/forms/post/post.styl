@@ -93,23 +93,22 @@
 		flex: none
 
 .-communities
-	margin-bottom: 10px
-	display: flex
-	align-items: center
+	margin: 10px 0
+	white-space: nowrap
+	overflow-x: auto
+	overflow-y: hidden
 
-.-communities-label
-	theme-prop('color', 'fg-muted')
-	flex: none
-	margin-right: 10px
-	font-size: $font-size-small
-	font-weight: bold
+.-community-pill
+	transition: all 300ms $strong-ease-out
 
-.-communities-list
-	flex: 0 auto
+	>>> .pill-bi
+		height: 28px
 
-.-current-channel
-	pointer-events: none
-	user-select: none
+.-community-list
+	&-leave-active
+		transition-duration: 0 !important
+		opacity: 0
+		position: absolute
 
 @media $media-xs
 	.-controls
