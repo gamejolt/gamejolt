@@ -227,6 +227,7 @@ export default class FormGamePackagePayment extends BaseForm<any>
 		if (this.addresses.length) {
 			if (checkoutType === 'paypal') {
 				this.checkoutPaypal();
+				this.$refs.form.submit();
 				return;
 			} else if (checkoutType === 'wallet') {
 				this.checkoutWallet();
