@@ -10,7 +10,7 @@
 						active: isLeftPaneVisible,
 					}"
 					@click="toggleLeftPane"
-					v-app-tooltip.right="$gettext(`Playlists (m)`)"
+					v-app-tooltip.bottom-end="$gettext(`Playlists (m)`)"
 					v-app-track-event="`top-nav:main-menu:toggle`"
 				>
 					<app-jolticon icon="menu" />
@@ -127,7 +127,7 @@
 						class="navbar-item"
 						:class="{ active: isRightPaneVisible }"
 						@click="toggleRightPane"
-						v-app-tooltip.left="$gettext(`Chat and Friends List (c)`)"
+						v-app-tooltip.bottom="$gettext(`Chat and Friends List (c)`)"
 						v-app-track-event="`top-nav:chat:toggle`"
 					>
 						<span
