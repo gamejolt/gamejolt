@@ -38,6 +38,12 @@ $-transition-time = 200ms
 		border-color: var(--theme-bg-subtle)
 		z-index: 1
 
+	[data-popper-reference-hidden]&
+		opacity: 0
+		visibility: hidden
+		pointer-events: none
+		transition: opacity $-transition-time, visibility $-transition-time
+
 	[data-popper-placement^='top']&
 		padding-bottom: $popover-arrow-size * 1.5
 
