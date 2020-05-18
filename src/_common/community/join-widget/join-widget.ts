@@ -6,7 +6,6 @@ import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { number } from '../../filters/number';
 import { Growls } from '../../growls/growls.service';
 import { AppStore } from '../../store/app-store';
-import { findTooltipContainer } from '../../tooltip/container/container';
 import { AppTooltip } from '../../tooltip/tooltip';
 import { $joinCommunity, $leaveCommunity, Community } from '../community.model';
 
@@ -50,10 +49,6 @@ export default class AppCommunityJoinWidget extends Vue {
 		return !this.hideCount && this.community.member_count
 			? number(this.community.member_count)
 			: '';
-	}
-
-	get tooltipContainer() {
-		return findTooltipContainer(this);
 	}
 
 	get canJoin() {

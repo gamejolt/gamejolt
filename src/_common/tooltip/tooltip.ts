@@ -54,19 +54,17 @@ if (!GJ_IS_SSR) {
 	};
 
 	const onMouseEnter = (trigger: HTMLElement, binding: DirectiveBinding) => {
-		hideTooltip();
-
 		let tooltipText;
 
-		if (!(binding.value instanceof Object)) {
+		if (binding.value) {
 			tooltipText = binding.value;
-		} else if (binding.value.content) {
-			tooltipText = binding.value.content;
 		}
 
 		if (!tooltipText) {
 			return;
 		}
+
+		hideTooltip();
 
 		const _tooltip = document.createElement('div');
 		const _inner = document.createElement('div');
@@ -93,7 +91,6 @@ if (!GJ_IS_SSR) {
 
 	const tooltipDirective: DirectiveOptions = {
 		bind: (el, binding) => {
-			// console.log('binding');
 			el.addEventListener('mouseenter', () => {
 				onMouseEnter(el, binding);
 			});
