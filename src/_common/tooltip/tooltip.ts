@@ -94,6 +94,14 @@ if (!GJ_IS_SSR) {
 		document.body.appendChild(_tooltip);
 	};
 
+	const onMouseUp = (trigger: any, event: MouseEvent) => {
+		setTimeout(() => {
+			if (trigger.contains(event.target) || !shouldShowTooltip(trigger)) {
+				return hideTooltip();
+			}
+		}, 0);
+	};
+
 	const onMouseLeave = () => {
 		// use same timeout as the stylus file
 		if (TooltipElement) {
@@ -105,11 +113,7 @@ if (!GJ_IS_SSR) {
 	const tooltipDirective: DirectiveOptions = {
 		bind: (el, binding) => {
 			el.addEventListener('mouseup', event => {
-				setTimeout(() => {
-					if ((el as any).contains(event.target) || !shouldShowTooltip(el)) {
-						return hideTooltip();
-					}
-				}, 0);
+				onMouseUp(el, event);
 			});
 
 			el.addEventListener('mouseenter', () => {
@@ -121,6 +125,10 @@ if (!GJ_IS_SSR) {
 			});
 		},
 		unbind: (el, binding) => {
+			el.removeEventListener('mouseup', event => {
+				onMouseUp(el, event);
+			});
+
 			el.removeEventListener('mouseenter', () => {
 				onMouseEnter(el, binding);
 			});
