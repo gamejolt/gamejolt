@@ -2,9 +2,9 @@
 	<div
 		:id="popperId"
 		class="v-popover"
-		:class="{ '-block': block }"
+		:class="triggerClass"
 		ref="trigger"
-		@click="triggerClicked()"
+		@click="triggerClicked"
 		@click.right="onContextMenu"
 	>
 		<slot />
@@ -45,12 +45,6 @@
 .popper-content
 	display: flex
 	flex-direction: column
-
-// .-header, .-footer
-// 	flex: none
-
-// .-main
-// 	flex: auto
 </style>
 
 <script lang="ts" src="./popover"></script>
