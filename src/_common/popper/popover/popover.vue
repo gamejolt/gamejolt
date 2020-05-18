@@ -10,7 +10,7 @@
 		<slot />
 		<div
 			v-if="isVisible"
-			class="popper-wrapper"
+			class="popper"
 			:class="{ '-hide': isHiding, '-ssr': GJ_IS_SSR }"
 			ref="popper"
 		>

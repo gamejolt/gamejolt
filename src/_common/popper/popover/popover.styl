@@ -11,19 +11,17 @@ $-transition-time = 200ms
 	&, .trigger
 		display: block !important
 
-/* .popper
-	outline: 0
-
-	// @REVIEW, Gotta figure out what to do with this
-	&-backdrop
-		z-index: $zindex-popover - 1 !important */
-.popper-wrapper
+.popper
 	z-index: $zindex-popover
+	outline: 0
 
 	// We don't want to show the popover stuff at all on SSR, or it breaks
 	// styling since it tries to fit the container into the page.
 	&.-ssr
 		display: none !important
+
+	&-backdrop
+		z-index: $zindex-popover - 1 !important
 
 	&.-hide
 		opacity: 0
@@ -36,7 +34,7 @@ $-transition-time = 200ms
 		border-color: var(--theme-bg-subtle)
 		z-index: 1
 
-	[data-popper-reference-hidden]&
+	[data-popper-escaped]&
 		opacity: 0
 		visibility: hidden
 		pointer-events: none
