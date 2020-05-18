@@ -1,5 +1,6 @@
 import arrow, { ArrowModifier } from '@popperjs/core/lib/modifiers/arrow';
 import flip from '@popperjs/core/lib/modifiers/flip';
+import hide from '@popperjs/core/lib/modifiers/hide';
 import preventOverflow, {
 	PreventOverflowModifier,
 } from '@popperjs/core/lib/modifiers/preventOverflow';
@@ -31,6 +32,7 @@ const modifiers = [
 	flip,
 	preventOverflow,
 	arrow,
+	hide,
 	{
 		// padding between popper and viewport
 		name: 'preventOverflow',
@@ -135,6 +137,20 @@ export default class AppPopper extends Vue {
 
 	get popperId() {
 		return 'popper-' + this.popperIndex;
+	}
+
+	get triggerClass() {
+		let classes = [];
+
+		if (this.block) {
+			classes.push('-block');
+		}
+
+		if (this.isVisible) {
+			classes.push('popped');
+		}
+
+		return classes.join(' ');
 	}
 
 	get contentClass() {
