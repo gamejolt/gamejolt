@@ -53,18 +53,31 @@ if (!GJ_IS_SSR) {
 		}
 	};
 
+	const shouldShowTooltip = (trigger: HTMLElement) => {
+		// we aren't very consistent with where we attach tooltips for poppers.
+		// cbar items had them on the parent of the popper trigger, but nav
+		// items have them on the first child of the popper trigger.
+		if (
+			trigger.parentElement?.classList.contains('popped') ||
+			trigger.classList.contains('popped')
+		) {
+			return false;
+		}
+
+		return true;
+	};
+
 	const onMouseEnter = (trigger: HTMLElement, binding: DirectiveBinding) => {
+		hideTooltip();
 		let tooltipText;
 
 		if (binding.value) {
 			tooltipText = binding.value;
 		}
 
-		if (!tooltipText) {
+		if (!tooltipText || !shouldShowTooltip(trigger)) {
 			return;
 		}
-
-		hideTooltip();
 
 		const _tooltip = document.createElement('div');
 		const _inner = document.createElement('div');
@@ -91,6 +104,14 @@ if (!GJ_IS_SSR) {
 
 	const tooltipDirective: DirectiveOptions = {
 		bind: (el, binding) => {
+			el.addEventListener('mouseup', event => {
+				setTimeout(() => {
+					if ((el as any).contains(event.target) || !shouldShowTooltip(el)) {
+						return hideTooltip();
+					}
+				}, 0);
+			});
+
 			el.addEventListener('mouseenter', () => {
 				onMouseEnter(el, binding);
 			});

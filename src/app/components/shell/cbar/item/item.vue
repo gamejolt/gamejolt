@@ -5,7 +5,6 @@
 			name: 'communities.view.overview',
 			params: { path: community.path },
 		}"
-		v-app-tooltip.right="tooltip"
 	>
 		<app-media-item-backdrop class="-backdrop" :media-item="community.thumbnail" radius="full">
 			<app-community-thumbnail-img class="-thumb" :community="community" />
@@ -34,6 +33,7 @@
 			hide-on-state-change
 			@show="popperVisible = true"
 			@hide="popperVisible = false"
+			v-app-tooltip.right="tooltip"
 		>
 			<div slot="popover" class="list-group list-group-dark">
 				<app-community-perms :community="community" tag="span">
