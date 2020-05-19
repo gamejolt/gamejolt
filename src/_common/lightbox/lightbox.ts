@@ -1,38 +1,29 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { EventSubscription } from '../../../system/event/event-topic';
-import { Analytics } from '../../analytics/analytics.service';
-import { EscapeStack } from '../../escape-stack/escape-stack.service';
-import { Screen } from '../../screen/screen-service';
-import AppShortkey from '../../shortkey/shortkey.vue';
-import AppMediaBar from '../media-bar';
-import AppMediaBarLightboxItem from './item/item.vue';
-import './lightbox-global.styl';
-import AppMediaBarLightboxSlider from './slider.vue';
+import { EventSubscription } from '../../system/event/event-topic';
+import { Analytics } from '../analytics/analytics.service';
+import { EscapeStack } from '../escape-stack/escape-stack.service';
+import { Screen } from '../screen/screen-service';
+import AppShortkey from '../shortkey/shortkey.vue';
+import AppLightboxItem from './item/item.vue';
+import { LightboxMediaSource } from './lightbox-helpers';
+import AppLightboxSlider from './slider.vue';
 
 if (!GJ_IS_SSR) {
 	const VueTouch = require('vue-touch');
 	Vue.use(VueTouch);
 }
 
-export const MediaBarLightboxConfig = {
-	// This should match the $-controls-height variable in lightbox.styl
-	controlsHeight: 80,
-
-	// This should match the $-button-size variable in lightbox.styl + some extra padding.
-	buttonSize: 110,
-};
-
 @Component({
 	components: {
-		AppMediaBarLightboxSlider,
-		AppMediaBarLightboxItem,
+		AppLightboxSlider,
+		AppLightboxItem,
 		AppShortkey,
 	},
 })
-export default class AppMediaBarLightbox extends Vue {
+export default class AppLightbox extends Vue {
 	@Prop(Object)
-	mediaBar!: AppMediaBar;
+	mediaSource!: LightboxMediaSource;
 
 	sliderElem?: HTMLElement;
 	currentSliderOffset = 0;
@@ -41,6 +32,26 @@ export default class AppMediaBarLightbox extends Vue {
 
 	private resize$?: EventSubscription;
 	private escapeCallback?: Function;
+
+	get items() {
+		return this.mediaSource.getItems();
+	}
+
+	get activeIndex() {
+		return this.mediaSource.getActiveIndex();
+	}
+
+	get hasNext() {
+		return this.activeIndex < this.mediaSource.getItemCount() - 1;
+	}
+
+	get activeMediaItem() {
+		return this.mediaSource.getActiveItem().getMediaItem()!;
+	}
+
+	get activeMediaType() {
+		return this.mediaSource.getActiveItem().getMediaType();
+	}
 
 	mounted() {
 		document.body.classList.add('media-bar-lightbox-open');
@@ -73,21 +84,27 @@ export default class AppMediaBarLightbox extends Vue {
 	}
 
 	goNext() {
-		this.mediaBar.goNext();
+		this.mediaSource.goNext();
 		this.refreshSliderPosition();
 	}
 
 	goPrev() {
-		this.mediaBar.goPrev();
+		this.mediaSource.goPrev();
 		this.refreshSliderPosition();
 	}
 
 	close() {
-		this.mediaBar.clearActiveItem();
+		if (this.mediaSource.onLightboxClose) {
+			this.mediaSource.onLightboxClose();
+		}
+
+		this.$destroy();
+		(this.mediaSource as any) = undefined;
+		window.document.body.removeChild(this.$el);
 	}
 
 	refreshSliderPosition() {
-		const newOffset = -(Screen.width * this.mediaBar.activeIndex!);
+		const newOffset = -(Screen.width * this.mediaSource.getActiveIndex());
 		if (this.sliderElem) {
 			this.sliderElem.style.transform = `translate3d( ${newOffset}px, 0, 0 )`;
 		}

@@ -86,12 +86,12 @@ export default class AppDatepicker extends Vue {
 	pickerMode: DateMode = 'day';
 	viewDate: Date = null as any;
 
-	readonly formatDay = 'D';
-	readonly formatMonth = 'MMMM';
-	readonly formatDayHeader = 'ddd';
-	readonly formatDayName = 'dddd';
-	readonly formatDayTitle = 'MMMM YYYY';
-	readonly formatMonthTitle = 'YYYY';
+	readonly formatDay = 'd';
+	readonly formatMonth = 'LLLL';
+	readonly formatDayHeader = 'iii';
+	readonly formatDayName = 'iiii';
+	readonly formatDayTitle = 'LLLL yyyy';
+	readonly formatMonthTitle = 'yyyy';
 
 	created() {
 		this.viewDate = new Date(this.value.getFullYear(), this.value.getMonth());

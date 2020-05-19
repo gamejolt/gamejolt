@@ -51,7 +51,7 @@
 						name: 'discover.games.list._fetch-date',
 						params: {
 							section: 'by-date',
-							date: date(game.published_on, 'YYYY-MM-DD'),
+							date: date(game.published_on, 'yyyy-LL-dd'),
 						},
 					}"
 				>

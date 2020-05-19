@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
-import AppEventItemMediaTags from '../../../app/components/event-item/media-tags/media-tags.vue';
 import { propOptional, propRequired } from '../../../utils/vue';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import {
@@ -8,6 +7,7 @@ import {
 	AppResponsiveDimensionsChangeEvent,
 } from '../../responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../screen/screen-service';
+import { AppTooltip } from '../../tooltip/tooltip';
 import AppVideo from '../../video/video.vue';
 import AppMediaItemBackdrop from '../backdrop/backdrop.vue';
 import { MediaItem } from '../media-item-model';
@@ -18,7 +18,9 @@ import { MediaItem } from '../media-item-model';
 		AppMediaItemBackdrop,
 		AppVideo,
 		AppResponsiveDimensions,
-		AppEventItemMediaTags,
+	},
+	directives: {
+		AppTooltip,
 	},
 })
 export default class AppMediaItemPost extends Vue {
@@ -43,6 +45,9 @@ export default class AppMediaItemPost extends Vue {
 
 	@Emit('bootstrap')
 	emitBootstrap() {}
+
+	@Emit('fullscreen')
+	emitFullscreen(_mediaItem: MediaItem) {}
 
 	get shouldVideoPlay() {
 		return this.isActive;
@@ -87,5 +92,14 @@ export default class AppMediaItemPost extends Vue {
 	async onDimensionsChange(e: AppResponsiveDimensionsChangeEvent) {
 		this.emitBootstrap();
 		this.isFilled = e.isFilled;
+	}
+
+	onClickImage() {
+		// In feed means we are inline, and we use the fullscreen button to go fullscreen.
+		// Clicking on the image in feed does nothing.
+		// In the post view however, we don't show the button and instead a click anywhere on the image goes fullscreen.
+		if (!this.inline) {
+			this.emitFullscreen(this.mediaItem);
+		}
 	}
 }

@@ -1,7 +1,8 @@
+import { LightboxMediaModel, LightboxMediaType } from '../../lightbox/lightbox-helpers';
 import { Model } from '../../model/model.service';
 import { Game } from '../game.model';
 
-export class GameVideo extends Model {
+export class GameVideo extends Model implements LightboxMediaModel {
 	static readonly TYPE_YOUTUBE = 'youtube';
 	static readonly TYPE_VIMEO = 'vimeo';
 
@@ -31,6 +32,19 @@ export class GameVideo extends Model {
 	posted_on!: number;
 	status!: number;
 	img_thumbnail!: string;
+
+	getModelId() {
+		return this.id;
+	}
+
+	getMediaType() {
+		return 'video' as LightboxMediaType;
+	}
+
+	getMediaItem() {
+		// Videos don't have and don't need a media item for lightbox.
+		return undefined;
+	}
 
 	getUrl(game: Game) {
 		return game.getUrl() + `#video-${this.id}`;

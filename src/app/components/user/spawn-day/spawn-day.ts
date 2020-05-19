@@ -1,4 +1,4 @@
-import * as distanceStrict from 'date-fns/distance_in_words_strict';
+import { formatDistanceStrict } from 'date-fns';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
@@ -60,9 +60,9 @@ export default class AppUserSpawnDay extends Vue {
 
 	get spawnDayYear() {
 		if (this.user) {
-			const distance = distanceStrict(this.user.created_on, Date.now(), {
-				unit: 'Y',
-				partialMethod: 'round',
+			const distance = formatDistanceStrict(this.user.created_on, Date.now(), {
+				unit: 'year',
+				roundingMethod: 'round',
 			});
 			return distance;
 		}

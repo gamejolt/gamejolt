@@ -90,7 +90,6 @@ export default class AppJolticonsStyleguide extends Vue {
 			'google',
 			'h1',
 			'h2',
-			'heart',
 			'help-circle',
 			'help',
 			'hr',
@@ -162,6 +161,13 @@ export default class AppJolticonsStyleguide extends Vue {
 			'windows',
 			'world',
 			'youtube',
+			'arrow-left',
+			'arrow-right',
+			'sticker',
+			'fullscreen',
+			'unfullscreen',
+			'heart',
+			'heart-filled',
 		]
 			.sort()
 			.filter(i => i.indexOf(this.filter) !== -1);

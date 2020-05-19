@@ -1,4 +1,4 @@
-import * as format from 'date-fns/format';
+import { format } from 'date-fns';
 
 // 'medium': Sep 3, 2010 12:05:08 PM
 // 'short': 9/3/10 12:05 PM
@@ -10,17 +10,17 @@ import * as format from 'date-fns/format';
 // 'shortTime': 12:05 PM
 
 const ShortcutFormats = {
-	medium: 'MMM D, YYYY h:mm:ss A',
-	short: 'M/D/YY h:mm A',
-	fullDate: 'dddd, MMMM D, YYYY',
-	longDate: 'MMMM D, YYYY',
-	mediumDate: 'MMM D, YYYY',
-	shortDate: 'M/D/YY',
-	mediumTime: 'h:mm:ss A',
-	shortTime: 'h:mm A',
+	medium: 'LLL d, yyyy h:mm:ss a',
+	short: 'L/d/yy h:mm a',
+	fullDate: 'iiii, LLLL d, yyyy',
+	longDate: 'LLLL d, yyyy',
+	mediumDate: 'LLL d, yyyy',
+	shortDate: 'L/d/yy',
+	mediumTime: 'h:mm:ss a',
+	shortTime: 'h:mm a',
 };
 
-export function date(now: Date | string | number, formatTo?: string) {
+export function date(now: Date | number, formatTo = ShortcutFormats.medium) {
 	if (formatTo && (ShortcutFormats as any)[formatTo]) {
 		formatTo = (ShortcutFormats as any)[formatTo];
 	}

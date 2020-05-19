@@ -1,7 +1,7 @@
 import { Model } from '../model/model.service';
-import { SiteTheme } from './theme/theme-model';
-import { SiteContentBlock } from './content-block/content-block-model';
 import { SiteBuild } from './build/build-model';
+import { SiteContentBlock } from './content-block/content-block-model';
+import { SiteTheme } from './theme/theme-model';
 
 export class Site extends Model {
 	static STATUS_INACTIVE = 'inactive';
@@ -47,7 +47,9 @@ export class Site extends Model {
 	}
 
 	$activate() {
-		return this.$_save(`/web/dash/sites/activate/${this.id}`, 'site');
+		return this.$_save(`/web/dash/sites/activate/${this.id}`, 'site', {
+			noErrorRedirect: true,
+		});
 	}
 
 	$deactivate() {

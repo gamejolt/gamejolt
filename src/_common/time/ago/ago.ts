@@ -1,5 +1,4 @@
-import * as distanceStrict from 'date-fns/distance_in_words_strict';
-import * as distance from 'date-fns/distance_in_words_to_now';
+import { formatDistanceStrict, formatDistanceToNow } from 'date-fns';
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { date } from '../../filters/date';
@@ -44,7 +43,9 @@ export class AppTimeAgo extends Vue {
 	}
 
 	private refresh() {
-		const time = this.strict ? distanceStrict(this.date, new Date()) : distance(this.date);
+		const time = this.strict
+			? formatDistanceStrict(new Date(), this.date)
+			: formatDistanceToNow(this.date);
 
 		if (this.withoutSuffix) {
 			this.timeAgo = time;
