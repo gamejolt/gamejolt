@@ -17,6 +17,7 @@
 			ref="popper"
 			@mouseenter="onMouseEnter"
 			@mouseleave="onMouseLeave"
+			v-app-observe-dimensions="onDimensionsChanged"
 		>
 			<div class="popper-arrow" data-popper-arrow />
 			<div

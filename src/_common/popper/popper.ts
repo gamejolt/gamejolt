@@ -4,12 +4,12 @@ import preventOverflow, {
 	PreventOverflowModifier,
 } from '@popperjs/core/lib/modifiers/preventOverflow';
 import { createPopper, Instance, Options } from '@popperjs/core/lib/popper-lite';
-import ResizeObserver from 'resize-observer-polyfill';
 import Vue from 'vue';
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../utils/vue';
 import { Backdrop } from '../backdrop/backdrop.service';
 import AppBackdrop from '../backdrop/backdrop.vue';
+import { AppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../screen/screen-service';
 import AppScrollScroller from '../scroll/scroller/scroller.vue';
 import { Popper } from './popper.service';
@@ -46,6 +46,9 @@ const modifiers = [
 @Component({
 	components: {
 		AppScrollScroller,
+	},
+	directives: {
+		AppObserveDimensions,
 	},
 })
 export default class AppPopper extends Vue {
@@ -111,7 +114,6 @@ export default class AppPopper extends Vue {
 	maxWidth = '';
 	popperIndex = PopperIndex++;
 
-	ResizeObserver!: ResizeObserver | null;
 	popperInstance!: Instance | null;
 
 	$el!: HTMLDivElement;
@@ -181,6 +183,7 @@ export default class AppPopper extends Vue {
 		// Destroy any poppers that had their trigger element removed
 		if (this.popperInstance) {
 			this.popperInstance.destroy();
+			this.popperInstance = null;
 		}
 	}
 
@@ -251,7 +254,6 @@ export default class AppPopper extends Vue {
 			return;
 		}
 
-		// @CHECK, should use a different timer
 		this.showDelayTimer = setTimeout(() => this.show(), this.showDelay);
 	}
 
@@ -261,8 +263,6 @@ export default class AppPopper extends Vue {
 		if (this.trigger !== 'hover') {
 			return;
 		}
-
-		// this.clearHideTimeout();
 
 		if (this.showDelayTimer) {
 			clearTimeout(this.showDelayTimer);
@@ -276,21 +276,20 @@ export default class AppPopper extends Vue {
 		this.hide();
 	}
 
+	onDimensionsChanged() {
+		if (this.popperInstance) {
+			console.log('changed');
+			this.popperInstance.update();
+		}
+	}
+
 	async createPopper() {
 		this.isVisible = true;
 		await this.$nextTick();
 
 		this.popperInstance = createPopper(this.$el, this.$refs.popper, this.popperOptions);
 
-		this.ResizeObserver = new ResizeObserver(() => {
-			if (this.popperInstance) {
-				this.popperInstance.update();
-			}
-		});
-		this.ResizeObserver.observe(this.$refs.popper); // @REVIEW, use observe-dimensions directive
-
 		document.body.appendChild(this.$refs.popper);
-
 		document.addEventListener('click', this.onClickAway, true);
 	}
 
@@ -337,11 +336,6 @@ export default class AppPopper extends Vue {
 		if (this.popperInstance) {
 			this.popperInstance.destroy();
 			this.popperInstance = null;
-		}
-		// or keep watching
-		if (this.ResizeObserver) {
-			this.ResizeObserver.unobserve(this.$refs.popper);
-			this.ResizeObserver = null;
 		}
 
 		this.isVisible = false;
