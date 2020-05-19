@@ -80,11 +80,9 @@ const onMouseEnter = (trigger: HTMLElement, binding: DirectiveBinding) => {
 };
 
 const onMouseUp = (trigger: any, event: MouseEvent) => {
-	setTimeout(() => {
-		if (trigger.contains(event.target)) {
-			return hideTooltip();
-		}
-	}, 0);
+	if (trigger.contains(event.target)) {
+		hideTooltip();
+	}
 };
 
 const onMouseLeave = () => {
