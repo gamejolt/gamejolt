@@ -278,7 +278,6 @@ export default class AppPopper extends Vue {
 
 	onDimensionsChanged() {
 		if (this.popperInstance) {
-			console.log('changed');
 			this.popperInstance.update();
 		}
 	}

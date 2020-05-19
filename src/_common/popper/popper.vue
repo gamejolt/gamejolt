@@ -1,7 +1,7 @@
 <template>
 	<div
 		:id="popperId"
-		class="v-popover"
+		class="popper"
 		:class="triggerClass"
 		ref="trigger"
 		@click="onTriggerClicked"
@@ -12,7 +12,7 @@
 		<slot />
 		<div
 			v-if="isVisible"
-			class="popper"
+			class="popper-wrapper"
 			:class="{ '-hide': isHiding, '-ssr': GJ_IS_SSR }"
 			ref="popper"
 			@mouseenter="onMouseEnter"

@@ -4,14 +4,14 @@
 // Sync with the JS so we know how long hides take.
 $-transition-time = 200ms
 
-.v-popover
+.popper
 	display: inline-block
 
-.v-popover.-block
+.popper.-block
 	&, .trigger
 		display: block !important
 
-.popper
+.popper-wrapper
 	z-index: $zindex-popover
 	outline: 0
 	transition: opacity $-transition-time, visibility $-transition-time
@@ -34,10 +34,6 @@ $-transition-time = 200ms
 		border-color: var(--theme-bg-subtle)
 		z-index: 1
 
-	// [data-popper-escaped]&
-	// opacity: 0
-	// visibility: hidden
-	// pointer-events: none
 	/**
 	 * Need to figure out a good way to hide open poppers that could be in scrollable elements.
 	 * [data-popper-escaped] doesn't seem to work well with hover triggers, and
