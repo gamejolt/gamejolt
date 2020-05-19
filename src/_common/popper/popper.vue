@@ -2,7 +2,7 @@
 	<div
 		:id="popperId"
 		class="popper"
-		:class="triggerClass"
+		:class="{ '-block': block }"
 		ref="trigger"
 		@click="onTriggerClicked"
 		@contextmenu="onContextMenu"

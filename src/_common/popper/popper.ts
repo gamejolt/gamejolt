@@ -135,20 +135,6 @@ export default class AppPopper extends Vue {
 		return 'popper-' + this.popperIndex;
 	}
 
-	get triggerClass() {
-		let classes = [];
-
-		if (this.block) {
-			classes.push('-block');
-		}
-
-		if (this.isVisible) {
-			classes.push('popped');
-		}
-
-		return classes.join(' ');
-	}
-
 	get contentClass() {
 		let classes = [this.popoverClass];
 

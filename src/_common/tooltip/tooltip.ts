@@ -42,29 +42,15 @@ if (!GJ_IS_SSR) {
 	const hideTooltip = () => {
 		clearHideTimeout();
 
-		if (TooltipElement) {
-			document.body.removeChild(TooltipElement);
-			TooltipElement = null;
-		}
-
 		if (PopperElement) {
 			PopperElement.destroy();
 			PopperElement = null;
 		}
-	};
 
-	const shouldShowTooltip = (trigger: HTMLElement) => {
-		// we aren't very consistent with where we attach tooltips for poppers.
-		// cbar items had them on the parent of the popper trigger, but nav
-		// items have them on the first child of the popper trigger.
-		if (
-			trigger.parentElement?.classList.contains('popped') ||
-			trigger.classList.contains('popped')
-		) {
-			return false;
+		if (TooltipElement) {
+			document.body.removeChild(TooltipElement);
+			TooltipElement = null;
 		}
-
-		return true;
 	};
 
 	const onMouseEnter = (trigger: HTMLElement, binding: DirectiveBinding) => {
@@ -75,7 +61,7 @@ if (!GJ_IS_SSR) {
 			tooltipText = binding.value;
 		}
 
-		if (!tooltipText || !shouldShowTooltip(trigger)) {
+		if (!tooltipText) {
 			return;
 		}
 
@@ -96,7 +82,7 @@ if (!GJ_IS_SSR) {
 
 	const onMouseUp = (trigger: any, event: MouseEvent) => {
 		setTimeout(() => {
-			if (trigger.contains(event.target) || !shouldShowTooltip(trigger)) {
+			if (trigger.contains(event.target)) {
 				return hideTooltip();
 			}
 		}, 0);
@@ -111,7 +97,7 @@ if (!GJ_IS_SSR) {
 	};
 
 	const tooltipDirective: DirectiveOptions = {
-		bind: (el, binding) => {
+		bind(el, binding) {
 			el.addEventListener('mouseup', event => {
 				onMouseUp(el, event);
 			});
@@ -124,7 +110,7 @@ if (!GJ_IS_SSR) {
 				onMouseLeave();
 			});
 		},
-		unbind: (el, binding) => {
+		unbind(el, binding) {
 			el.removeEventListener('mouseup', event => {
 				onMouseUp(el, event);
 			});
