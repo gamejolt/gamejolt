@@ -40,7 +40,7 @@ export default class AppUserCardHover extends Vue {
 			: {
 					placement: 'top',
 					trigger: 'hover',
-					delay: { show: 500, hide: 0 },
+					showDelay: 500,
 					block: true,
 			  };
 	}

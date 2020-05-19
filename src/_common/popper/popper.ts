@@ -22,11 +22,6 @@ let PopperIndex = 0;
 
 type ActualTrigger = 'click' | 'hover' | 'manual';
 
-type DelayFormat = {
-	show: number;
-	hide: number;
-};
-
 const modifiers = [
 	flip,
 	preventOverflow,
@@ -65,7 +60,7 @@ export default class AppPopper extends Vue {
 	 * This should prevent stuttering on scroll if the popper is attached to the nav.
 	 */
 	@Prop(propOptional(Boolean, false))
-	fixed?: boolean;
+	fixed!: boolean;
 
 	/**
 	 * By default the popper will stay on the page until the user clicks outside
@@ -73,14 +68,14 @@ export default class AppPopper extends Vue {
 	 * Useful for poppers in the shell that link to other pages on the site.
 	 */
 	@Prop(propOptional(Boolean, false))
-	hideOnStateChange?: boolean;
+	hideOnStateChange!: boolean;
 
 	/**
 	 * Whether or not the popper should size itself to the same width as the
 	 * trigger. Useful for poppers that work like "select" type controls.
 	 */
 	@Prop(propOptional(Boolean, false))
-	trackTriggerWidth?: boolean;
+	trackTriggerWidth!: boolean;
 
 	/**
 	 * Whether or not the popper should take up the full max width instead of
@@ -88,23 +83,19 @@ export default class AppPopper extends Vue {
 	 * content dynamically and you want it to stay one consistent size.
 	 */
 	@Prop(propOptional(Boolean, false))
-	forceMaxWidth?: boolean;
+	forceMaxWidth!: boolean;
 
-	/**
-	 * Delay for a hover-based popper showing and hiding. 'show' delay currently defaults
-	 * to TransitionTime if there is no delay specified, and 'hide' delay defaults to at
-	 * least 50ms to make sure there are no issues when moving between popper and trigger.
-	 */
-	@Prop(propOptional(Object))
-	delay?: DelayFormat;
-
-	// We set a watch on this prop so we know when to display 'manual' triggers
+	// We set a watch on this prop so we know when to display 'manual' triggers.
 	@Prop(propOptional(Boolean, false))
-	show?: boolean;
+	show!: boolean;
 
 	// Sets 'display: block !important' on the trigger element.
 	@Prop(propOptional(Boolean, false))
-	block?: boolean;
+	block!: boolean;
+
+	// Delay for showing a hover-based popper.
+	@Prop(propOptional(Number, 0))
+	showDelay!: number;
 
 	@Prop(propOptional(String, null))
 	popoverClass!: null | string;
@@ -123,7 +114,7 @@ export default class AppPopper extends Vue {
 	ResizeObserver!: ResizeObserver | null;
 	popperInstance!: Instance | null;
 
-	private _triggerElement!: HTMLElement;
+	$el!: HTMLDivElement;
 	private hideTimeout?: NodeJS.Timer;
 	private mobileBackdrop: AppBackdrop | null = null;
 
@@ -171,26 +162,12 @@ export default class AppPopper extends Vue {
 		};
 	}
 
-	get actualDelay(): DelayFormat {
-		// Need at least 50ms delay for 'hide' to prevent any
-		// timing issues when moving between trigger and popper.
-		if (this.delay) {
-			return {
-				show: Math.max(this.delay.show, 0),
-				hide: Math.max(this.delay.hide, 50),
-			};
-		}
-
-		return { show: TransitionTime, hide: 50 };
-	}
-
 	mounted() {
 		Popper.registerPopper(this.$router, this);
-		this._triggerElement = this.$el as HTMLDivElement;
 
 		if (this.trigger === 'hover') {
-			this._triggerElement.addEventListener('mouseenter', this.onMouseEnter);
-			this._triggerElement.addEventListener('mouseleave', this.onMouseLeave);
+			this.$el.addEventListener('mouseenter', this.onMouseEnter);
+			this.$el.addEventListener('mouseleave', this.onMouseLeave);
 		}
 	}
 
@@ -251,14 +228,15 @@ export default class AppPopper extends Vue {
 		// We need to skip the hideTimeout in 'onMouseLeave()' if the
 		// user hovers while the popper is in the process of hiding.
 		if (this.isHiding) {
-			this.hideDone();
+			this.isHiding = false;
+			return;
 		}
 
 		if (this.isVisible) {
 			return;
 		}
 
-		this.hideTimeout = setTimeout(() => this.onShow(), this.actualDelay.show);
+		this.hideTimeout = setTimeout(() => this.onShow(), this.showDelay);
 	}
 
 	onMouseLeave() {
@@ -268,20 +246,14 @@ export default class AppPopper extends Vue {
 			return;
 		}
 
-		this.hideTimeout = setTimeout(() => {
-			this.onHide();
-		}, this.actualDelay.hide);
+		this.onHide();
 	}
 
 	async createPopper() {
 		this.isVisible = true;
 		await this.$nextTick();
 
-		this.popperInstance = createPopper(
-			this._triggerElement,
-			this.$refs.popper,
-			this.popperOptions
-		);
+		this.popperInstance = createPopper(this.$el, this.$refs.popper, this.popperOptions);
 
 		this.ResizeObserver = new ResizeObserver(() => {
 			if (this.popperInstance) {
@@ -311,7 +283,7 @@ export default class AppPopper extends Vue {
 		// width popover in those cases.
 		let widthElem: HTMLElement | undefined;
 		if (this.trackTriggerWidth && !Screen.isWindowXs) {
-			widthElem = this._triggerElement as HTMLElement | undefined;
+			widthElem = this.$el as HTMLDivElement | undefined;
 			if (widthElem) {
 				this.width = widthElem.offsetWidth + 'px';
 				this.maxWidth = 'none';
