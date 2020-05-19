@@ -23,8 +23,9 @@
 					fixed
 					hide-on-state-change
 					track-trigger-width
-					:show="isShowingAutocomplete"
+					:manual-show="isShowingAutocomplete"
 				>
+					<!-- @CHECK -->
 					<app-search-input
 						:id="`search-input-${id}`"
 						ref="searchInput"

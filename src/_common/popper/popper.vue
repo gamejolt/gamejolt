@@ -6,6 +6,8 @@
 		ref="trigger"
 		@click="onTriggerClicked"
 		@contextmenu="onContextMenu"
+		@mouseenter="onMouseEnter"
+		@mouseleave="onMouseLeave"
 	>
 		<slot />
 		<div
@@ -13,6 +15,8 @@
 			class="popper"
 			:class="{ '-hide': isHiding, '-ssr': GJ_IS_SSR }"
 			ref="popper"
+			@mouseenter="onMouseEnter"
+			@mouseleave="onMouseLeave"
 		>
 			<div class="popper-arrow" data-popper-arrow />
 			<div

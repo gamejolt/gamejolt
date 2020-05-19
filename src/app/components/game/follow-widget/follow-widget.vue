@@ -4,10 +4,11 @@
 		popover-class="fill-darkest"
 		trigger="manual"
 		track-trigger-width
-		:show="isShowingFollowPopover"
+		:manual-show="isShowingFollowPopover"
 		:block="block"
 		@hide="onFollowPopoverDismissed"
 	>
+		<!-- @CHECK -->
 		<app-button
 			:id="widgetId"
 			primary
