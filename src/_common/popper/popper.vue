@@ -5,7 +5,7 @@
 		:class="triggerClass"
 		ref="trigger"
 		@click="triggerClicked"
-		@click.right="onContextMenu"
+		@contextmenu="onContextMenu"
 	>
 		<slot />
 		<div

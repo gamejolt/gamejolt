@@ -1,6 +1,5 @@
 import arrow, { ArrowModifier } from '@popperjs/core/lib/modifiers/arrow';
 import flip from '@popperjs/core/lib/modifiers/flip';
-import hide from '@popperjs/core/lib/modifiers/hide';
 import preventOverflow, {
 	PreventOverflowModifier,
 } from '@popperjs/core/lib/modifiers/preventOverflow';
@@ -32,7 +31,7 @@ const modifiers = [
 	flip,
 	preventOverflow,
 	arrow,
-	hide,
+	// @CHECK, Want to figure out how to hide poppers if trigger is not visible
 	{
 		// padding between popper and viewport
 		name: 'preventOverflow',
@@ -65,25 +64,22 @@ export default class AppPopper extends Vue {
 	 * We want the popper to be 'display: fixed' if we use it on a fixed parent.
 	 * This should prevent stuttering on scroll if the popper is attached to the nav.
 	 */
-	@Prop(propOptional(Boolean))
+	@Prop(propOptional(Boolean, false))
 	fixed?: boolean;
 
 	/**
 	 * By default the popper will stay on the page until the user clicks outside
 	 * of the popper. This tells the popper to close anytime the state changes.
 	 * Useful for poppers in the shell that link to other pages on the site.
-	 *
-	 * Does not work on 'hover' poppers, so instead we run
-	 * 'popperInstance.destroy()' in the 'destroyed()' lifecycle.
 	 */
-	@Prop(propOptional(Boolean))
+	@Prop(propOptional(Boolean, false))
 	hideOnStateChange?: boolean;
 
 	/**
 	 * Whether or not the popper should size itself to the same width as the
 	 * trigger. Useful for poppers that work like "select" type controls.
 	 */
-	@Prop(propOptional(Boolean))
+	@Prop(propOptional(Boolean, false))
 	trackTriggerWidth?: boolean;
 
 	/**
@@ -91,7 +87,7 @@ export default class AppPopper extends Vue {
 	 * relying on its content to size itself. Useful for poppers that change the
 	 * content dynamically and you want it to stay one consistent size.
 	 */
-	@Prop(propOptional(Boolean))
+	@Prop(propOptional(Boolean, false))
 	forceMaxWidth?: boolean;
 
 	/**
@@ -103,11 +99,11 @@ export default class AppPopper extends Vue {
 	delay?: DelayFormat;
 
 	// We set a watch on this prop so we know when to display 'manual' triggers
-	@Prop(Boolean)
+	@Prop(propOptional(Boolean, false))
 	show?: boolean;
 
 	// Sets 'display: block !important' on the trigger element.
-	@Prop(propOptional(Boolean))
+	@Prop(propOptional(Boolean, false))
 	block?: boolean;
 
 	@Prop(propOptional(String, null))
@@ -203,8 +199,7 @@ export default class AppPopper extends Vue {
 		this.clearHideTimeout();
 		this.removeBackdrop();
 
-		// Destroy any poppers that had their trigger element removed,
-		// removing things like floating 'hover' poppers on state change.
+		// Destroy any poppers that had their trigger element removed
 		if (this.popperInstance) {
 			this.popperInstance.destroy();
 		}
@@ -216,6 +211,7 @@ export default class AppPopper extends Vue {
 		if (this.trigger !== 'click' || this.isVisible) {
 			return;
 		}
+		// @REVIEW, make this call a private 'toggle' function that checks for isVisible, and returns either onShow or onHide
 
 		this.onShow();
 	}
@@ -229,10 +225,13 @@ export default class AppPopper extends Vue {
 			return event.preventDefault();
 		}
 
+		// @REVIEW, make this call a private 'toggle' function that checks for isVisible, and returns either onShow or onHide
 		event.preventDefault();
 		Popper.hideAll();
 		this.onShow();
 	}
+
+	// private toggle() {}
 
 	private clickAway(event: MouseEvent) {
 		if (
@@ -289,7 +288,7 @@ export default class AppPopper extends Vue {
 				this.popperInstance.update();
 			}
 		});
-		this.ResizeObserver.observe(this.$refs.popper);
+		this.ResizeObserver.observe(this.$refs.popper); // @REVIEW, use observe-dimensions directive
 
 		document.body.appendChild(this.$refs.popper);
 
@@ -301,6 +300,7 @@ export default class AppPopper extends Vue {
 		}
 	}
 
+	// @REVIEW, rename this and onHide to 'show' and 'hide'
 	@Emit('show')
 	onShow() {
 		this.clearHideTimeout();
@@ -327,6 +327,7 @@ export default class AppPopper extends Vue {
 		this.addBackdrop();
 	}
 
+	// @REVIEW, rename this and onHide to 'show' and 'hide'
 	onHide() {
 		// In case a popper was hidden from something other than a click,
 		// like right-clicking a cbar item or Popover.hideAll() being triggered.
