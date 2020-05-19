@@ -4,7 +4,7 @@
 		class="v-popover"
 		:class="triggerClass"
 		ref="trigger"
-		@click="triggerClicked"
+		@click="onTriggerClicked"
 		@contextmenu="onContextMenu"
 	>
 		<slot />

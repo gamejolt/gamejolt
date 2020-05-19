@@ -196,8 +196,12 @@ export default class AppPopper extends Vue {
 
 		// We want to prevent right-click, hover, and manual triggers from showing poppers on left-click.
 		// clickAway() listener will hide poppers when needed, so we only need to show poppers here.
-		if (this.trigger !== 'click' || this.isVisible) {
+		if (this.trigger !== 'click') {
 			return;
+		}
+
+		if (this.isVisible) {
+			return this.onHide();
 		}
 
 		this.onShow();
