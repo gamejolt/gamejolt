@@ -4,6 +4,7 @@
 		trigger="right-click"
 		placement="right"
 		fixed
+		block
 		hide-on-state-change
 		@show="popperVisible = true"
 		@hide="popperVisible = false"
