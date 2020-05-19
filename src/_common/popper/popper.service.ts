@@ -33,7 +33,7 @@ export class Popper {
 			}
 
 			if (popper.isVisible) {
-				popper.onHide();
+				popper.hide();
 			}
 		}
 	}
@@ -41,7 +41,7 @@ export class Popper {
 	private static hideStateChange() {
 		for (const popper of this.poppers) {
 			if (popper.isVisible && popper.hideOnStateChange) {
-				popper.onHide();
+				popper.hide();
 			}
 		}
 	}
