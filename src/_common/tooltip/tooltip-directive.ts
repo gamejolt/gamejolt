@@ -8,7 +8,6 @@ import AppTooltipVue from './tooltip.vue';
 
 let TooltipElement: Vue | null = null;
 let PopperElement: Instance | null = null;
-let hideTimeout: NodeJS.Timer | null = null;
 let state = new WeakMap<HTMLElement, Tooltip>();
 
 const getOptions = (modifiers: any) => {
@@ -30,20 +29,24 @@ const getOptions = (modifiers: any) => {
 	return options;
 };
 
-const clearHideTimeout = () => {
-	if (hideTimeout) {
-		clearTimeout(hideTimeout);
-		hideTimeout = null;
-	}
-};
-
 const hideTooltip = () => {
-	clearHideTimeout();
-	console.log('faded out');
+	if (!TooltipElement) {
+		return;
+	}
+
+	if (!TooltipElement.$el.classList.contains('-hide')) {
+		TooltipElement.$el.classList.add('-hide');
+	}
 };
 
 const createTooltip = (trigger: HTMLElement, binding: DirectiveBinding) => {
 	TooltipElement = new AppTooltipVue({
+		props: {
+			// I don't know why the prop in tooltip.ts isn't working
+			tooltipText: {
+				type: String,
+			},
+		},
 		propsData: {
 			tooltipText: binding.value,
 		},
@@ -59,10 +62,8 @@ const createTooltip = (trigger: HTMLElement, binding: DirectiveBinding) => {
 			TooltipElement.$el as HTMLElement,
 			getOptions(binding.modifiers)
 		);
-		PopperElement.update();
 	}
 
-	console.log('props', TooltipElement.$props.tooltipText);
 	return TooltipElement;
 };
 
@@ -70,20 +71,20 @@ const updateTooltip = (trigger: HTMLElement, binding: DirectiveBinding) => {
 	if (!TooltipElement || !PopperElement) {
 		return;
 	}
-	console.log('updating');
 
 	PopperElement.state.elements.reference = trigger;
 	PopperElement.state.options = getOptions(binding.modifiers);
 
-	console.log(PopperElement, state.get(trigger));
+	// updates to the old value, displaying "Liked" when you unlike a post - but state.get(trigger).binding.value has the correct value
+	TooltipElement.$props.tooltipText = binding.value;
 
+	console.log('updating', PopperElement, state.get(trigger));
+
+	// Update the position of the popper to track the proper trigger
 	PopperElement.update();
 };
 
 const onMouseEnter = (trigger: HTMLElement, binding: DirectiveBinding) => {
-	clearHideTimeout();
-
-	// create a tooltip if none exist
 	if (!TooltipElement) {
 		console.log('creating Popper and Tooltip instance');
 		return createTooltip(trigger, binding);
@@ -91,23 +92,17 @@ const onMouseEnter = (trigger: HTMLElement, binding: DirectiveBinding) => {
 
 	// update tooltip state for current trigger
 	updateTooltip(trigger, binding);
+	TooltipElement.$el.classList.remove('-hide');
 };
 
-const onMouseUp = (trigger: any, binding: DirectiveBinding, event: MouseEvent) => {
-	if (trigger.contains(event.target)) {
-		updateTooltip(trigger, binding);
-		hideTooltip();
-	}
+const onMouseUp = async (trigger: HTMLElement, binding: DirectiveBinding) => {
+	hideTooltip();
+	// await sleep(0);
+	updateTooltip(trigger, binding);
 };
 
 const onMouseLeave = () => {
-	// console.log('left');
-
-	// use same timeout as the stylus file
-	if (TooltipElement) {
-		hideTimeout = setTimeout(() => hideTooltip(), 200);
-		// TooltipElement.classList.add('-hide');
-	}
+	hideTooltip();
 };
 
 class Tooltip {
@@ -117,8 +112,8 @@ class Tooltip {
 		el.addEventListener('mouseleave', this.onMouseLeave);
 	}
 
-	private onMouseUp = (event: MouseEvent) => {
-		onMouseUp(this.el, this.binding, event);
+	private onMouseUp = () => {
+		onMouseUp(this.el, this.binding);
 	};
 
 	private onMouseEnter = () => {
@@ -136,20 +131,24 @@ class Tooltip {
 	}
 }
 
-export const AppTooltip: DirectiveOptions = {
+const TooltipDirective: DirectiveOptions = {
 	bind(el, binding) {
 		state.set(el, new Tooltip(el, binding));
 		// console.log(el, state);
 		// el._tooltip = new Tooltip(el, binding);
 	},
-	update(el, binding) {
+	componentUpdated(el, binding) {
+		state.get(el)?.destroy();
+		state.delete(el);
 		state.set(el, new Tooltip(el, binding));
 	},
 	unbind(el) {
-		state.delete(el);
 		state.get(el)?.destroy();
+		state.delete(el);
 		// state = undefined;
 		// el._tooltip.destroy();
 		// el._tooltip = undefined;
 	},
 };
+
+export { TooltipDirective as AppTooltip };
