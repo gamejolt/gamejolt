@@ -19,7 +19,7 @@ import { Growls } from '../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
 import { AppProgressPoller } from '../../../../../_common/progress/poller/poller';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import FormGameReleaseTS from '../release/release';
 import FormGameRelease from '../release/release.vue';
 import { ArchiveFileSelectorModal } from './archive-file-selector-modal.service';

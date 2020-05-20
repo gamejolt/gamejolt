@@ -6,7 +6,7 @@ import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { number } from '../../filters/number';
 import { Growls } from '../../growls/growls.service';
 import { AppStore } from '../../store/app-store';
-import { AppTooltip } from '../../tooltip/tooltip';
+import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { $joinCommunity, $leaveCommunity, Community } from '../community.model';
 
 @Component({

@@ -2,7 +2,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../api/api.service';
 import { Clipboard } from '../../../../clipboard/clipboard-service';
 import { MediaItem } from '../../../../media-item/media-item-model';
-import { AppTooltip } from '../../../../tooltip/tooltip';
+import { AppTooltip } from '../../../../tooltip/tooltip-directive';
 import AppForm from '../../../form';
 import { BaseForm, FormOnInit, FormOnLoad, FormOnSubmit } from '../../../form.service';
 import AppFormControlUpload from '../../upload/upload.vue';

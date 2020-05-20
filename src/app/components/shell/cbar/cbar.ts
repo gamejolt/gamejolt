@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store';
 import AppShellCbarAddItem from './add-item/add-item.vue';
 import AppShellCbarDiscoverItem from './discover-item/discover-item.vue';

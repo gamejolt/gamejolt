@@ -15,7 +15,7 @@ import { StickerPlacementModal } from '../../../../../_common/sticker/placement/
 import { StickerSelectModal } from '../../../../../_common/sticker/select-modal.ts/select-modal.service';
 import { Sticker } from '../../../../../_common/sticker/sticker.model';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { User } from '../../../../../_common/user/user.model';
 import { AppCommentWidgetLazy } from '../../../lazy';
 import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';

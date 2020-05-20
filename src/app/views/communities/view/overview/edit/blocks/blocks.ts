@@ -10,7 +10,7 @@ import {
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { UserBlock } from '../../../../../../../_common/user/block/block.model';
 import AppUserCardHover from '../../../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarImg from '../../../../../../../_common/user/user-avatar/img/img.vue';

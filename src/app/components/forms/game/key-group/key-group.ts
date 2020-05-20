@@ -1,4 +1,6 @@
+import { Component, Prop } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/expand.vue';
+import { number } from '../../../../../_common/filters/number';
 import {
 	BaseForm,
 	FormOnInit,
@@ -7,9 +9,7 @@ import {
 import { Game } from '../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { KeyGroup } from '../../../../../_common/key-group/key-group.model';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
-import { number } from '../../../../../_common/filters/number';
-import { Component, Prop } from 'vue-property-decorator';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
 @Component({
 	components: {

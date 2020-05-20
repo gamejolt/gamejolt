@@ -6,12 +6,12 @@ import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/
 import { WithRouteStore } from '../../../../../_common/route/route-store';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Translate } from '../../../../../_common/translate/translate.service';
-import { store } from '../../../../store';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
 import AppPageHeader from '../../../../components/page-header/page-header.vue';
+import { store } from '../../../../store';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './manage.store';
 
 @Component({

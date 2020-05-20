@@ -6,7 +6,7 @@ import { number } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import AppPopper from '../../../../_common/popper/popper.vue';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
 import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
 import { Store } from '../../../store/index';

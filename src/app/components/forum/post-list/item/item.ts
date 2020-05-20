@@ -19,7 +19,7 @@ import AppPopper from '../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../_common/report/modal/modal.service';
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../../store/index';
 import FormForumPost from '../../../forms/forum/post/post.vue';
 

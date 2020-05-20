@@ -9,7 +9,7 @@ import { Geo, Region } from '../../../../_common/geo/geo.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Order } from '../../../../_common/order/order.model';
 import { AppStore } from '../../../../_common/store/app-store';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 
 @Component({
 	components: {
