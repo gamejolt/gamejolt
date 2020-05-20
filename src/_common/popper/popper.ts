@@ -1,5 +1,6 @@
 import arrow, { ArrowModifier } from '@popperjs/core/lib/modifiers/arrow';
 import flip from '@popperjs/core/lib/modifiers/flip';
+import hide from '@popperjs/core/lib/modifiers/hide';
 import preventOverflow, {
 	PreventOverflowModifier,
 } from '@popperjs/core/lib/modifiers/preventOverflow';
@@ -26,7 +27,7 @@ const modifiers = [
 	flip,
 	preventOverflow,
 	arrow,
-	// @CHECK, Want to figure out how to hide poppers if trigger is not visible
+	hide,
 	{
 		// padding between popper and viewport
 		name: 'preventOverflow',

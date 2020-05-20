@@ -8,8 +8,7 @@ $-transition-time = 200ms
 	display: inline-block
 
 .popper.-block
-	&, .trigger
-		display: block !important
+	display: block !important
 
 .popper-wrapper
 	z-index: $zindex-popover
@@ -34,12 +33,12 @@ $-transition-time = 200ms
 		border-color: var(--theme-bg-subtle)
 		z-index: 1
 
-	/**
-	 * Need to figure out a good way to hide open poppers that could be in scrollable elements.
-	 * [data-popper-escaped] doesn't seem to work well with hover triggers, and
-	 * [data-popper-reference-hidden] triggers when we use a mobile backdrop.
-	 */
-	[data-popper-placement^='top']&
+	&[data-popper-reference-hidden][data-popper-escaped]
+		opacity: 0
+		visibility: hidden
+		pointer-events: none
+
+	&[data-popper-placement^='top']
 		padding-bottom: $popover-arrow-size * 1.5
 
 		.popper-arrow
@@ -49,7 +48,7 @@ $-transition-time = 200ms
 			border-bottom-color: transparent !important
 			bottom: $popover-arrow-size * 0.5
 
-	[data-popper-placement^='bottom']&
+	&[data-popper-placement^='bottom']
 		padding-top: $popover-arrow-size * 1.5
 
 		.popper-arrow
@@ -59,7 +58,7 @@ $-transition-time = 200ms
 			border-top-color: transparent !important
 			top: $popover-arrow-size * 0.5
 
-	[data-popper-placement^='right']&
+	&[data-popper-placement^='right']
 		padding-left: $popover-arrow-size * 1.5
 
 		.popper-arrow
@@ -69,7 +68,7 @@ $-transition-time = 200ms
 			border-bottom-color: transparent !important
 			left: $popover-arrow-size * 0.5
 
-	[data-popper-placement^='left']&
+	&[data-popper-placement^='left']
 		padding-right: $popover-arrow-size * 1.5
 
 		.popper-arrow
