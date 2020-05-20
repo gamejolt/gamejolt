@@ -1,27 +1,44 @@
-import { Placement } from '@popperjs/core/lib';
 import flip from '@popperjs/core/lib/modifiers/flip';
 import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
 import { createPopper, Instance, Options } from '@popperjs/core/lib/popper-lite';
 import { DirectiveOptions } from 'vue';
 import { DirectiveBinding } from 'vue/types/options';
-import AppTooltipVue from './tooltip.vue';
+import AppTooltip from './tooltip.vue';
 
 let TooltipElement: Vue | null = null;
-let PopperElement: Instance | null = null;
+let PopperInstance: Instance | null = null;
+
 let state = new WeakMap<HTMLElement, Tooltip>();
 
-const getOptions = (modifiers: any) => {
-	let placement: Placement = 'top';
+// Same thing as Placement (from @popperjs) or TooltipPlacement
+let allowedPlacements: Array<string> = [
+	'auto',
+	'auto-start',
+	'auto-end',
+	'top',
+	'top-start',
+	'top-end',
+	'right',
+	'right-start',
+	'right-end',
+	'bottom',
+	'bottom-start',
+	'bottom-end',
+	'left',
+	'left-start',
+	'left-end',
+];
 
-	// @REVIEW
-	// how do better??? 'binding.modifiers' is an object like { right: true }.
-	// We should only be getting one value through it for placement.
+const getOptions = (modifiers: any) => {
+	// TS freaks out if we try to define this as either Placement (from @popperjs) or TooltipPlacement types.
+	let placement: any = 'top';
+
 	if (modifiers instanceof Object) {
-		placement = Object.entries(modifiers)[0][0] as Placement;
+		placement = Object.keys(modifiers).find(i => allowedPlacements.includes(i));
 	}
 
 	const options: Options = {
-		placement: placement,
+		placement,
 		modifiers: [flip, preventOverflow],
 		strategy: 'absolute',
 	};
@@ -40,54 +57,61 @@ const hideTooltip = () => {
 };
 
 const createTooltip = (trigger: HTMLElement, binding: DirectiveBinding) => {
-	TooltipElement = new AppTooltipVue({
-		props: {
-			// I don't know why the prop in tooltip.ts isn't working
-			tooltipText: {
-				type: String,
+	if (!TooltipElement) {
+		TooltipElement = new AppTooltip({
+			props: {
+				// I don't know why the prop in tooltip.ts isn't working
+				tooltipText: {
+					type: String,
+				},
 			},
-		},
-		propsData: {
-			tooltipText: binding.value,
-		},
-	});
+			propsData: {
+				tooltipText: binding.value,
+			},
+		});
 
-	if (TooltipElement) {
 		const elem = document.createElement('div');
 		document.body.appendChild(elem);
 		TooltipElement.$mount(elem);
+	}
 
-		PopperElement = createPopper(
+	// We only want to make a popper instance if we have something to show.
+	if (!PopperInstance && binding.value) {
+		PopperInstance = createPopper(
 			trigger,
 			TooltipElement.$el as HTMLElement,
 			getOptions(binding.modifiers)
 		);
 	}
-
-	return TooltipElement;
 };
 
 const updateTooltip = (trigger: HTMLElement, binding: DirectiveBinding) => {
-	if (!TooltipElement || !PopperElement) {
+	if (!TooltipElement || !PopperInstance) {
 		return;
 	}
 
-	PopperElement.state.elements.reference = trigger;
-	PopperElement.state.options = getOptions(binding.modifiers);
+	PopperInstance.state.elements.reference = trigger;
+	PopperInstance.state.options = getOptions(binding.modifiers);
 
 	// updates to the old value, displaying "Liked" when you unlike a post - but state.get(trigger).binding.value has the correct value
 	TooltipElement.$props.tooltipText = binding.value;
 
-	console.log('updating', PopperElement, state.get(trigger));
+	console.log('updating', PopperInstance, state.get(trigger));
 
 	// Update the position of the popper to track the proper trigger
-	PopperElement.update();
+	PopperInstance.update();
 };
 
 const onMouseEnter = (trigger: HTMLElement, binding: DirectiveBinding) => {
-	if (!TooltipElement) {
+	if (!TooltipElement || !PopperInstance) {
 		console.log('creating Popper and Tooltip instance');
 		return createTooltip(trigger, binding);
+	}
+
+	if (!binding.value) {
+		PopperInstance.destroy();
+		PopperInstance = null;
+		return;
 	}
 
 	// update tooltip state for current trigger
@@ -96,12 +120,19 @@ const onMouseEnter = (trigger: HTMLElement, binding: DirectiveBinding) => {
 };
 
 const onMouseUp = async (trigger: HTMLElement, binding: DirectiveBinding) => {
+	if (!PopperInstance) {
+		return;
+	}
+
 	hideTooltip();
-	// await sleep(0);
 	updateTooltip(trigger, binding);
 };
 
 const onMouseLeave = () => {
+	if (!PopperInstance) {
+		return;
+	}
+
 	hideTooltip();
 };
 
@@ -134,8 +165,6 @@ class Tooltip {
 const TooltipDirective: DirectiveOptions = {
 	bind(el, binding) {
 		state.set(el, new Tooltip(el, binding));
-		// console.log(el, state);
-		// el._tooltip = new Tooltip(el, binding);
 	},
 	componentUpdated(el, binding) {
 		state.get(el)?.destroy();
@@ -145,10 +174,24 @@ const TooltipDirective: DirectiveOptions = {
 	unbind(el) {
 		state.get(el)?.destroy();
 		state.delete(el);
-		// state = undefined;
-		// el._tooltip.destroy();
-		// el._tooltip = undefined;
 	},
 };
+
+export type TooltipPlacement =
+	| 'auto'
+	| 'auto-start'
+	| 'auto-end'
+	| 'top'
+	| 'top-start'
+	| 'top-end'
+	| 'right'
+	| 'right-start'
+	| 'right-end'
+	| 'bottom'
+	| 'bottom-start'
+	| 'bottom-end'
+	| 'left'
+	| 'left-start'
+	| 'left-end';
 
 export { TooltipDirective as AppTooltip };
