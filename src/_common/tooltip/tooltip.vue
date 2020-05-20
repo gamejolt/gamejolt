@@ -13,6 +13,7 @@
 @require '~styles-lib/mixins'
 
 .tooltip
+	position: absolute
 	display: block !important
 	padding: 4px
 	font-size: $tooltip-font-size

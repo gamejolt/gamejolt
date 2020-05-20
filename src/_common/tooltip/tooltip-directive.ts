@@ -7,6 +7,7 @@ import AppTooltip from './tooltip.vue';
 
 let TooltipElement: Vue | null = null;
 let PopperInstance: Instance | null = null;
+let popperTimout: NodeJS.Timer | null = null;
 
 let state = new WeakMap<HTMLElement, Tooltip>();
 
@@ -29,12 +30,15 @@ let allowedPlacements: Array<string> = [
 	'left-end',
 ];
 
-const getOptions = (modifiers: any) => {
+const getOptions = (binding: DirectiveBinding) => {
 	// TS freaks out if we try to define this as either Placement (from @popperjs) or TooltipPlacement types.
 	let placement: any = 'top';
 
-	if (modifiers instanceof Object) {
-		placement = Object.keys(modifiers).find(i => allowedPlacements.includes(i));
+	// The placement for poppers can be added as a modifier or in the binding.value as { content: string, placement: string}.
+	if (binding.modifiers instanceof Object) {
+		placement = Object.keys(binding.modifiers).find(i => allowedPlacements.includes(i));
+	} else if (binding.value.placement) {
+		placement = binding.value.placement;
 	}
 
 	const options: Options = {
@@ -46,6 +50,20 @@ const getOptions = (modifiers: any) => {
 	return options;
 };
 
+const clearPopperTimeout = () => {
+	if (popperTimout) {
+		clearTimeout(popperTimout);
+		popperTimout = null;
+	}
+};
+
+const destroyPopper = () => {
+	if (PopperInstance) {
+		PopperInstance.destroy();
+		PopperInstance = null;
+	}
+};
+
 const hideTooltip = () => {
 	if (!TooltipElement) {
 		return;
@@ -53,6 +71,18 @@ const hideTooltip = () => {
 
 	if (!TooltipElement.$el.classList.contains('-hide')) {
 		TooltipElement.$el.classList.add('-hide');
+	}
+
+	popperTimout = setTimeout(() => destroyPopper(), 1000);
+};
+
+const showTooltip = () => {
+	if (!TooltipElement) {
+		return;
+	}
+
+	if (TooltipElement.$el.classList.contains('-hide')) {
+		TooltipElement.$el.classList.remove('-hide');
 	}
 };
 
@@ -66,7 +96,7 @@ const createTooltip = (trigger: HTMLElement, binding: DirectiveBinding) => {
 				},
 			},
 			propsData: {
-				tooltipText: binding.value,
+				tooltipText: binding.value.content || binding.value,
 			},
 		});
 
@@ -80,8 +110,10 @@ const createTooltip = (trigger: HTMLElement, binding: DirectiveBinding) => {
 		PopperInstance = createPopper(
 			trigger,
 			TooltipElement.$el as HTMLElement,
-			getOptions(binding.modifiers)
+			getOptions(binding)
 		);
+
+		showTooltip();
 	}
 };
 
@@ -91,10 +123,10 @@ const updateTooltip = (trigger: HTMLElement, binding: DirectiveBinding) => {
 	}
 
 	PopperInstance.state.elements.reference = trigger;
-	PopperInstance.state.options = getOptions(binding.modifiers);
+	PopperInstance.state.options = getOptions(binding);
 
-	// updates to the old value, displaying "Liked" when you unlike a post - but state.get(trigger).binding.value has the correct value
-	TooltipElement.$props.tooltipText = binding.value;
+	// binding.value can return a string or an object as { conteont: string, placement: string }.
+	TooltipElement.$props.tooltipText = binding.value.content || binding.value;
 
 	console.log('updating', PopperInstance, state.get(trigger));
 
@@ -109,14 +141,13 @@ const onMouseEnter = (trigger: HTMLElement, binding: DirectiveBinding) => {
 	}
 
 	if (!binding.value) {
-		PopperInstance.destroy();
-		PopperInstance = null;
-		return;
+		return destroyPopper();
 	}
 
 	// update tooltip state for current trigger
 	updateTooltip(trigger, binding);
-	TooltipElement.$el.classList.remove('-hide');
+	clearPopperTimeout();
+	showTooltip();
 };
 
 const onMouseUp = async (trigger: HTMLElement, binding: DirectiveBinding) => {
