@@ -14,6 +14,7 @@
 
 .tooltip
 	position: absolute
+	top: 0
 	display: block !important
 	padding: 4px
 	font-size: $tooltip-font-size
