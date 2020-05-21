@@ -57,6 +57,11 @@ export default class AppTooltip extends Vue {
 	}
 
 	private scheduleDestroy() {
+		// We want to update the popper positioning in case text changes before hiding.
+		if (this._popperInstance) {
+			this._popperInstance.update();
+		}
+
 		// Schedule to destroy the popper so that we don't keep checking scroll
 		// position if not needed. Needs to be longer than our transition speed.
 		if (!this._popperTimeout) {
