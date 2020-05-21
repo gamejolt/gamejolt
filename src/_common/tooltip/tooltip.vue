@@ -1,6 +1,6 @@
 <template>
-	<div v-if="tooltip" class="tooltip" :class="{ '-hide': !tooltip.isActive }">
-		<div class="tooltip-inner">
+	<div v-if="tooltip" class="tooltip" :class="{ '-hide': !tooltip.isActive || !tooltip.text }">
+		<div v-if="tooltip.text" class="tooltip-inner">
 			{{ tooltip.text }}
 		</div>
 	</div>

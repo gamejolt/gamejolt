@@ -15,33 +15,24 @@ export default class AppTooltip extends Vue {
 	private _popperInstance: null | Instance = null;
 	private _popperTimeout: null | NodeJS.Timer = null;
 
-	// mounted() {
-	// 	this.check(this.tooltip);
-	// }
+	beforeDestroy() {
+		this.destroyPopper();
+	}
 
-	// beforeDestroy() {
-	// 	this.destroyPopper();
-	// }
-
+	// We need to watch for changes of the tooltip instance and its data.
 	@Watch('tooltip')
+	@Watch('tooltip.text')
+	@Watch('tooltip.isActive')
+	@Watch('tooltip.placement')
 	async check() {
 		// Wait for the tooltip to be mounted.
 		await this.$nextTick();
 
-		console.log('tooltip changed');
-		if (this.tooltip) {
-			this.show();
+		if (!this.tooltip || !this.tooltip.text || !this.tooltip.isActive) {
+			return this.scheduleDestroy();
 		}
 
-		// if (tooltip !== oldTooltip) {
-		// 	this.destroyPopper();
-		// }
-
-		// if (tooltip && tooltip.isActive && !!tooltip.text) {
-		// 	this.show();
-		// } else {
-		// 	this.scheduleDestroy();
-		// }
+		this.show();
 	}
 
 	private show() {
@@ -60,15 +51,17 @@ export default class AppTooltip extends Vue {
 		} else {
 			this.clearPopperTimeout();
 			this._popperInstance.setOptions(options);
-			// TODO: needed?
-			this._popperInstance.update();
+			// Set the popper reference element to the new tooltip element.
+			this._popperInstance.state.elements.reference = this.tooltip.el;
 		}
 	}
 
 	private scheduleDestroy() {
 		// Schedule to destroy the popper so that we don't keep checking scroll
-		// position if not needed.
-		this._popperTimeout = setTimeout(() => this.destroyPopper(), 1000);
+		// position if not needed. Needs to be longer than our transition speed.
+		if (!this._popperTimeout) {
+			this._popperTimeout = setTimeout(() => this.destroyPopper(), 300);
+		}
 	}
 
 	private clearPopperTimeout() {
