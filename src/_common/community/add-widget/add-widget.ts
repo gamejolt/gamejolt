@@ -2,7 +2,8 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Growls } from '../../growls/growls.service';
 import { AppState, AppStore } from '../../store/app-store';
-import { AppTooltip, TooltipPlacement } from '../../tooltip/tooltip-directive';
+import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { TooltipPlacement } from '../../tooltip/tooltip-model';
 
 @Component({
 	directives: {

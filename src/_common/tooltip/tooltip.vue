@@ -1,7 +1,7 @@
 <template>
-	<div class="tooltip">
+	<div v-if="tooltip" class="tooltip" :class="{ '-hide': !tooltip.isActive }">
 		<div class="tooltip-inner">
-			{{ text }}
+			{{ tooltip.text }}
 		</div>
 	</div>
 </template>
@@ -21,7 +21,7 @@
 	z-index: $zindex-tooltip
 	pointer-events: none
 
-	.tooltip-inner
+	&-inner
 		rounded-corners()
 		max-width: $tooltip-max-width
 		padding: 5px 8px
