@@ -114,6 +114,10 @@ export default class AppGameFollowWidget extends Vue {
 				);
 			}
 		} else {
+			if (this.isShowingFollowPopover) {
+				this.onFollowPopoverDismissed();
+			}
+
 			try {
 				await this.game.$unfollow();
 			} catch (e) {

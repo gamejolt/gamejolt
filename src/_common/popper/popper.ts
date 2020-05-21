@@ -122,11 +122,13 @@ export default class AppPopper extends Vue {
 	private showDelayTimer?: NodeJS.Timer;
 	private mobileBackdrop: AppBackdrop | null = null;
 
-	@Emit('click-away') emitClickAway(_event: MouseEvent) {}
 	@Emit('trigger-clicked') emitTriggerClicked(_event: MouseEvent) {}
 	@Emit('context-menu') emitContextMenu(_event: MouseEvent) {}
 	@Emit('mouse-enter') emitMouseEnter(_event: MouseEvent) {}
 	@Emit('mouse-leave') emitMouseLeave(_event: MouseEvent) {}
+	@Emit('click-away') emitClickAway(_event: MouseEvent) {}
+	@Emit('show') emitShow() {}
+	@Emit('hide') emitHide() {}
 
 	get maxHeight() {
 		return Screen.height - 100 + 'px';
@@ -174,6 +176,12 @@ export default class AppPopper extends Vue {
 		}
 	}
 
+	onDimensionsChanged() {
+		if (this.popperInstance) {
+			this.popperInstance.update();
+		}
+	}
+
 	onTriggerClicked(event: MouseEvent) {
 		this.emitTriggerClicked(event);
 
@@ -205,19 +213,6 @@ export default class AppPopper extends Vue {
 
 		Popper.hideAll();
 		this.show();
-	}
-
-	private onClickAway(event: MouseEvent) {
-		if (this.$refs.popper.contains(event.target) || this.$refs.trigger.contains(event.target)) {
-			return;
-		}
-
-		this.emitClickAway(event);
-
-		if (this.trigger === 'click' || this.trigger === 'right-click') {
-			this.hide();
-			document.removeEventListener('click', this.onClickAway, true);
-		}
 	}
 
 	onMouseEnter(event: MouseEvent) {
@@ -263,13 +258,20 @@ export default class AppPopper extends Vue {
 		this.hide();
 	}
 
-	onDimensionsChanged() {
-		if (this.popperInstance) {
-			this.popperInstance.update();
+	private onClickAway(event: MouseEvent) {
+		if (this.$refs.popper.contains(event.target) || this.$refs.trigger.contains(event.target)) {
+			return;
+		}
+
+		this.emitClickAway(event);
+
+		if (this.trigger === 'click' || this.trigger === 'right-click') {
+			this.hide();
+			document.removeEventListener('click', this.onClickAway, true);
 		}
 	}
 
-	async createPopper() {
+	private async createPopper() {
 		this.isVisible = true;
 		await this.$nextTick();
 
@@ -279,8 +281,8 @@ export default class AppPopper extends Vue {
 		document.addEventListener('click', this.onClickAway, true);
 	}
 
-	@Emit('show')
-	show() {
+	private show() {
+		this.emitShow();
 		this.clearHideTimeout();
 		this.createPopper();
 
@@ -305,7 +307,7 @@ export default class AppPopper extends Vue {
 		this.addBackdrop();
 	}
 
-	hide() {
+	private hide() {
 		// In case a popper was hidden from something other than a click,
 		// like right-clicking a cbar item or Popover.hideAll() being triggered.
 		document.removeEventListener('click', this.onClickAway, true);
@@ -316,8 +318,9 @@ export default class AppPopper extends Vue {
 		this.removeBackdrop();
 	}
 
-	@Emit('hide')
 	private hideDone() {
+		this.emitHide();
+
 		// Making sure that popper doesn't keep tracking positioning
 		if (this.popperInstance) {
 			this.popperInstance.destroy();

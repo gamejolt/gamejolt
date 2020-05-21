@@ -6,9 +6,8 @@
 		track-trigger-width
 		:manual-show="isShowingFollowPopover"
 		:block="block"
-		@hide="onFollowPopoverDismissed"
+		@click-away="onFollowPopoverDismissed"
 	>
-		<!-- @CHECK -->
 		<app-button
 			:id="widgetId"
 			primary

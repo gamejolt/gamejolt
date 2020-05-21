@@ -25,7 +25,6 @@
 					track-trigger-width
 					:manual-show="isShowingAutocomplete"
 				>
-					<!-- @CHECK -->
 					<app-search-input
 						:id="`search-input-${id}`"
 						ref="searchInput"
