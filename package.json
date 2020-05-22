@@ -20,6 +20,7 @@
 	},
 	"devDependencies": {
 		"@intervolga/optimize-cssnano-plugin": "1.0.6",
+		"@popperjs/core": "2.4.0",
 		"@types/autosize": "3.0.6",
 		"@types/chart.js": "2.9.19",
 		"@types/codemirror": "0.0.91",
@@ -156,7 +157,6 @@
 		"appdmg": "0.5.2"
 	},
 	"dependencies": {
-		"@popperjs/core": "^2.4.0",
 		"axios": "0.19.2",
 		"client-voodoo": "2.5.3",
 		"fs-extra": "7.0.0",
