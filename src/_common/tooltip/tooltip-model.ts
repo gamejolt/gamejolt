@@ -41,13 +41,27 @@ export type TooltipPlacement =
 export class TooltipModel {
 	text = '';
 	placement: TooltipPlacement = 'top';
-	isActive = true;
+	isActive = false;
+	touchable = false;
 
 	constructor(public el: HTMLElement, binding: DirectiveBinding) {
-		el.addEventListener('mouseup', this.onMouseUp);
-		el.addEventListener('mouseenter', this.onMouseEnter);
-		el.addEventListener('mouseleave', this.onMouseLeave);
+		const { modifiers } = binding;
+		if (modifiers instanceof Object) {
+			const keys = Object.keys(binding.modifiers) as any[];
+			this.touchable = keys.includes('touchable');
+		}
 
+		if (this.touchable) {
+			el.tabIndex = el.tabIndex ?? -1;
+			el.style.outline = 'none';
+		}
+
+		el.addEventListener('pointerup', this.onPointerUp);
+		el.addEventListener('pointerenter', this.onPointerEnter);
+		el.addEventListener('pointerleave', this.onLeaveTrigger);
+		el.addEventListener('focusout', this.onLeaveTrigger);
+		// TODO: Add some kind of clickAway listener/handler
+		// to hide tooltip on mobile scroll.
 		this.update(binding);
 	}
 
@@ -59,8 +73,10 @@ export class TooltipModel {
 		let placement: TooltipPlacement = 'top';
 		if (modifiers instanceof Object) {
 			const keys = Object.keys(modifiers) as any[];
-			placement = keys.find(i => TooltipAllowedPlacements.includes(i));
-		} else if (value?.placement) {
+			placement = keys.find(i => TooltipAllowedPlacements.includes(i)) ?? 'top';
+		}
+
+		if (value?.placement) {
 			placement = value.placement;
 		}
 
@@ -68,25 +84,44 @@ export class TooltipModel {
 		this.text = binding.value?.content || binding.value;
 	}
 
-	private onMouseUp = () => {
-		this.isActive = false;
+	private onPointerUp = (event: PointerEvent) => {
+		// Mobile should use tooltip triggers as toggles,
+		// but mouse events should only hide tooltips.
+		if (event.pointerType === 'touch' && this.touchable) {
+			this.isActive = !this.isActive;
+		} else {
+			this.isActive = false;
+		}
+
 		assignActiveTooltip(this);
 	};
 
-	private onMouseEnter = () => {
+	private onPointerEnter = (event: PointerEvent) => {
+		// We don't need this for touch
+		if (event.pointerType === 'touch') {
+			return;
+		}
+
 		this.isActive = true;
 		assignActiveTooltip(this);
 	};
 
-	private onMouseLeave = () => {
+	private onLeaveTrigger = (event: PointerEvent) => {
+		// This stops the event in 'pointerleave' on mobile,
+		// but will still work during 'focusout'.
+		if (event.pointerType === 'touch') {
+			return;
+		}
+
 		this.isActive = false;
 		assignActiveTooltip(this);
 	};
 
 	destroy() {
-		this.el.removeEventListener('mouseup', this.onMouseUp);
-		this.el.removeEventListener('mouseenter', this.onMouseEnter);
-		this.el.removeEventListener('mouseleave', this.onMouseLeave);
+		this.el.removeEventListener('pointerup', this.onPointerUp);
+		this.el.removeEventListener('pointerenter', this.onPointerEnter);
+		this.el.removeEventListener('pointerleave', this.onLeaveTrigger);
+		this.el.removeEventListener('focusout', this.onLeaveTrigger);
 	}
 }
 

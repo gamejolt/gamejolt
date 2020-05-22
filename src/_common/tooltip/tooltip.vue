@@ -21,6 +21,7 @@
 	line-height: 1.4
 	z-index: $zindex-tooltip
 	pointer-events: none
+	transition: opacity 200ms, visibility 200ms
 
 	&-inner
 		rounded-corners()
@@ -30,8 +31,7 @@
 		color: $tooltip-color
 		background-color: $tooltip-bg
 
-	&.-hide
+	&.-hide, &[data-popper-reference-hidden]
 		opacity: 0
 		visibility: hidden
-		transition: opacity 200ms, visibility 200ms
 </style>
