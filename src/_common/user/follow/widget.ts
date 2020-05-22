@@ -6,8 +6,7 @@ import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { number } from '../../filters/number';
 import { Growls } from '../../growls/growls.service';
 import { AppStore } from '../../store/app-store';
-import { findTooltipContainer } from '../../tooltip/container/container';
-import { AppTooltip } from '../../tooltip/tooltip';
+import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { User } from '../user.model';
 
 @Component({
@@ -61,10 +60,6 @@ export default class AppUserFollowWidget extends Vue {
 		return !this.circle && !this.hideCount && this.user.follower_count
 			? number(this.user.follower_count)
 			: '';
-	}
-
-	get tooltipContainer() {
-		return findTooltipContainer(this);
 	}
 
 	get tooltip() {

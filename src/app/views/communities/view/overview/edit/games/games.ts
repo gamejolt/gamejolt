@@ -12,7 +12,7 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityLinkGameModal } from '../../../../../../components/community/link-game-modal/link-game-modal.service';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import { RouteStore, RouteStoreModule } from '../edit.store';

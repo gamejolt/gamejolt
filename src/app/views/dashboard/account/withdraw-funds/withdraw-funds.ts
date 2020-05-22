@@ -6,7 +6,7 @@ import { number } from '../../../../../_common/filters/number';
 import { Growls } from '../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Translate } from '../../../../../_common/translate/translate.service';
 import { User } from '../../../../../_common/user/user.model';
 import FormWithdrawFunds from '../../../../components/forms/withdraw-funds/withdraw-funds.vue';

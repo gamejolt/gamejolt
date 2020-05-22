@@ -6,7 +6,7 @@ import AppPopper from '../../../popper/popper.vue';
 import AppThemeBubble from '../../../theme/bubble/bubble.vue';
 import { ThemePreset } from '../../../theme/preset/preset.model';
 import { makeThemeFromColor, makeThemeFromPreset, Theme } from '../../../theme/theme.model';
-import { AppTooltip } from '../../../tooltip/tooltip';
+import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import BaseFormControl from '../base';
 
 interface VueColor {

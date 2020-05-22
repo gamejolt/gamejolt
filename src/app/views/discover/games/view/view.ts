@@ -18,7 +18,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/
 import { WithRouteStore } from '../../../../../_common/route/route-store';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Translate } from '../../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';

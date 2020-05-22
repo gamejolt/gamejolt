@@ -7,7 +7,7 @@ import { AppObserveDimensions } from '../../../../_common/observe-dimensions/obs
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
 import { ChatClient } from '../../chat/client';
 import AppSearch from '../../search/search.vue';

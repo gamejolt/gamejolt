@@ -16,7 +16,7 @@ import {
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import FormGameKeyGroupAddKeys from '../../../../../../components/forms/game/key-group/add-keys/add-keys.vue';
 import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/key-group.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';

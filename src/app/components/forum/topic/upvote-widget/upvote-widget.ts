@@ -4,7 +4,7 @@ import { AppAuthRequired } from '../../../../../_common/auth/auth-required-direc
 import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { number } from '../../../../../_common/filters/number';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
 @Component({
 	directives: {

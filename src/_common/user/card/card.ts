@@ -5,8 +5,7 @@ import { number } from '../../filters/number';
 import AppLoading from '../../loading/loading.vue';
 import { AppStore } from '../../store/app-store';
 import { AppTheme } from '../../theme/theme';
-import { AppTooltipContainer } from '../../tooltip/container/container';
-import { AppTooltip } from '../../tooltip/tooltip';
+import { AppTooltip } from '../../tooltip/tooltip-directive';
 import AppUserFollowWidget from '../follow/widget.vue';
 import AppUserAvatarImg from '../user-avatar/img/img.vue';
 import { User } from '../user.model';
@@ -18,7 +17,6 @@ import './card-global.styl';
 		AppUserAvatarImg,
 		AppUserFollowWidget,
 		AppTheme,
-		AppTooltipContainer,
 		AppLoading,
 		AppUserVerifiedTick,
 	},

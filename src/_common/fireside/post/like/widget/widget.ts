@@ -9,7 +9,7 @@ import { Growls } from '../../../../growls/growls.service';
 import { LikersModal } from '../../../../likers/modal.service';
 import { Screen } from '../../../../screen/screen-service';
 import { handleNewStickerNotification } from '../../../../sticker/sticker.model';
-import { AppTooltip } from '../../../../tooltip/tooltip';
+import { AppTooltip } from '../../../../tooltip/tooltip-directive';
 import AppUserFollowWidget from '../../../../user/follow/widget.vue';
 import { FiresidePost } from '../../post-model';
 import { FiresidePostLike } from '../like-model';

@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { AppStore } from '../../../store/app-store';
-import { AppTooltip } from '../../../tooltip/tooltip';
+import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import AppUserCardHover from '../../../user/card/hover/hover.vue';
 import AppUserAvatar from '../../../user/user-avatar/user-avatar.vue';
 import { CommentVideoModal } from '../modal/modal.service';

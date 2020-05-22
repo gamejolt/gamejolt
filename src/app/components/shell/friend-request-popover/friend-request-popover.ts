@@ -5,7 +5,7 @@ import { Connection } from '../../../../_common/connection/connection-service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { Store } from '../../../store';
 import { UserFriendshipHelper } from '../../user/friendships-helper/friendship-helper.service';

@@ -10,7 +10,7 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../../_common/route/route-component';
-import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import FormGameScoreTable from '../../../../../../../components/forms/game/score-table/score-table.vue';
 import { RouteStore, RouteStoreModule } from '../../../manage.store';
 

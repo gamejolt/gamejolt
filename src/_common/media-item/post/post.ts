@@ -7,7 +7,7 @@ import {
 	AppResponsiveDimensionsChangeEvent,
 } from '../../responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../screen/screen-service';
-import { AppTooltip } from '../../tooltip/tooltip';
+import { AppTooltip } from '../../tooltip/tooltip-directive';
 import AppVideo from '../../video/video.vue';
 import AppMediaItemBackdrop from '../backdrop/backdrop.vue';
 import { MediaItem } from '../media-item-model';

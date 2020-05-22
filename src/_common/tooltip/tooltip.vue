@@ -1,7 +1,20 @@
+<template>
+	<div v-if="tooltip" class="tooltip" :class="{ '-hide': !tooltip.isActive || !tooltip.text }">
+		<div v-if="tooltip.text" class="tooltip-inner">
+			{{ tooltip.text }}
+		</div>
+	</div>
+</template>
+
+<script lang="ts" src="./tooltip"></script>
+
+<style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
 .tooltip
+	position: absolute
+	top: 0
 	display: block !important
 	padding: 4px
 	font-size: $tooltip-font-size
@@ -9,7 +22,7 @@
 	z-index: $zindex-tooltip
 	pointer-events: none
 
-	.tooltip-inner
+	&-inner
 		rounded-corners()
 		max-width: $tooltip-max-width
 		padding: 5px 8px
@@ -17,16 +30,8 @@
 		color: $tooltip-color
 		background-color: $tooltip-bg
 
-	.tooltip-arrow
-		display: none
-
-	&[aria-hidden='true']
-		visibility: hidden
+	&.-hide
 		opacity: 0
+		visibility: hidden
 		transition: opacity 200ms, visibility 200ms
-
-	&[aria-hidden='false']
-		visibility: visible
-		opacity: 1
-		// Instant in.
-		transition: none
+</style>
