@@ -13,7 +13,7 @@
 		<div
 			v-if="isVisible"
 			class="popper-wrapper"
-			:class="{ '-hide': isHiding, '-ssr': GJ_IS_SSR }"
+			:class="{ '-hide': isHiding, '-menu': Screen.isXs, '-ssr': GJ_IS_SSR }"
 			ref="popper"
 			@mouseenter="onMouseEnter"
 			@mouseleave="onMouseLeave"

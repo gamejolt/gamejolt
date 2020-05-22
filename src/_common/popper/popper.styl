@@ -7,6 +7,9 @@ $-transition-time = 200ms
 .popper
 	display: inline-block
 
+	&-backdrop
+		z-index: $zindex-popover - 1 !important
+
 .popper.-block
 	display: block !important
 
@@ -19,9 +22,6 @@ $-transition-time = 200ms
 	// styling since it tries to fit the container into the page.
 	&.-ssr
 		display: none !important
-
-	&-backdrop
-		z-index: $zindex-popover - 1 !important
 
 	&.-hide
 		opacity: 0
@@ -84,6 +84,7 @@ $-transition-time = 200ms
 	change-bg('bg-offset')
 	theme-prop('border-color', 'bg-subtle')
 	overflow: hidden
+	max-height: 45vh
 	max-width: $popover-size
 	min-width: 200px
 	border-width: $border-width-base

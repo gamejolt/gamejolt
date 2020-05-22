@@ -131,7 +131,11 @@ export default class AppPopper extends Vue {
 	@Emit('hide') emitHide() {}
 
 	get maxHeight() {
-		return Screen.height - 100 + 'px';
+		// We limit max-height to 45vh in case of any overflow issues, but we
+		// still want nav (fixed) items to span the whole screen if they can.
+		if (this.fixed) {
+			return Screen.height - 100 + 'px';
+		}
 	}
 
 	get popperId() {
@@ -342,7 +346,7 @@ export default class AppPopper extends Vue {
 	}
 
 	private removeBackdrop() {
-		if (Screen.isXs && this.mobileBackdrop) {
+		if (this.mobileBackdrop) {
 			Backdrop.remove(this.mobileBackdrop);
 			this.mobileBackdrop = null;
 		}
