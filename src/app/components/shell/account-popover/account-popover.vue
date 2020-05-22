@@ -2,6 +2,7 @@
 	<app-popper
 		popover-class="fill-darkest"
 		fixed
+		full-height
 		hide-on-state-change
 		@show="onShow()"
 		@hide="onHide()"

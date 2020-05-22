@@ -89,6 +89,10 @@ export default class AppPopper extends Vue {
 	@Prop(propOptional(Boolean, false))
 	forceMaxWidth!: boolean;
 
+	// For poppers we allow to expand to near the full screen height.
+	@Prop(propOptional(Boolean, false))
+	fullHeight!: boolean;
+
 	// We set a watch on this prop so we know when to display 'manual' triggers.
 	@Prop(propOptional(Boolean, false))
 	manualShow!: boolean;
@@ -131,9 +135,7 @@ export default class AppPopper extends Vue {
 	@Emit('hide') emitHide() {}
 
 	get maxHeight() {
-		// We limit max-height to 45vh in case of any overflow issues, but we
-		// still want nav (fixed) items to span the whole screen if they can.
-		if (this.fixed) {
+		if (this.fullHeight) {
 			return Screen.height - 100 + 'px';
 		}
 	}

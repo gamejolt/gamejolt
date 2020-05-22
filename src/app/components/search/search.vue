@@ -21,6 +21,7 @@
 					trigger="manual"
 					block
 					fixed
+					full-height
 					hide-on-state-change
 					track-trigger-width
 					:manual-show="isShowingAutocomplete"

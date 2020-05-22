@@ -3,6 +3,7 @@
 		v-if="!Connection.isClientOffline"
 		popover-class="fill-dark"
 		fixed
+		full-height
 		hide-on-state-change
 		force-max-width
 		@show="onShow()"
