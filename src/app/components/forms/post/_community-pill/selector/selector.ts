@@ -29,7 +29,7 @@ export default class AppFormPostCommunityPillSelector extends Vue {
 	@Emit('select') emitSelect(_community: Community, _channel: CommunityChannel) {}
 
 	get channels() {
-		return this.selectedCommunity?.channels;
+		return this.selectedCommunity?.postableChannels;
 	}
 
 	created() {

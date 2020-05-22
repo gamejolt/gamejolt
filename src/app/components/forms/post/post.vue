@@ -499,14 +499,15 @@
 		</template>
 
 		<!-- Communities -->
-		<div class="-communities">
-			<transition-group name="-community-list" tag="span">
+		<app-scroll-scroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
+			<transition-group class="-communities-list" name="-communities-list" tag="div">
 				<app-form-post-community-pill
 					class="-community-pill"
 					v-for="{ community, channel } of attachedCommunities"
 					:key="community.id"
 					:community="community"
 					:channel="channel"
+					:removable="!wasPublished"
 					@remove="removeCommunity(community)"
 				/>
 
@@ -519,11 +520,7 @@
 					/>
 				</template>
 			</transition-group>
-
-			<!-- <a v-if="wasPublished && selectedChannel" class="badge -current-channel">
-				{{ selectedChannel.title }}
-			</a> -->
-		</div>
+		</app-scroll-scroller>
 
 		<!-- <template v-if="!wasPublished">
 			<app-community-channel-select

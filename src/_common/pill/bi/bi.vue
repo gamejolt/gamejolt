@@ -4,7 +4,7 @@
 			:is="leftComponent"
 			class="-left"
 			:class="{ '-no-hover': noHover }"
-			:to="toLeft"
+			:to="leftTo"
 			@click="onClickLeft"
 		>
 			<span class="-content">
@@ -32,7 +32,7 @@
 			:is="rightComponent"
 			class="-right"
 			:class="{ '-no-hover': noHover }"
-			:to="toRight"
+			:to="rightTo"
 			@click="onClickRight"
 		>
 			<slot name="right" />

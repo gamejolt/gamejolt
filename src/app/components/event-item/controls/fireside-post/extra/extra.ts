@@ -186,26 +186,36 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 		}
 	}
 
-	getPinTargetModel() {
+	private _getPinTarget() {
 		const pinContext = this.post.getPinContextFor(this.$route);
+
+		let resourceName: string;
 		if (pinContext instanceof Game) {
-			return 'Game';
+			resourceName = 'Game';
 		} else if (pinContext instanceof FiresidePostCommunity) {
-			return 'Community_Channel';
+			resourceName = 'Community_Channel';
 		} else if (pinContext instanceof User) {
-			return 'User';
+			resourceName = 'User';
+		} else {
+			throw new Error('Post is not pinnable in this context');
 		}
 
-		throw new Error('Post is not pinnable in this context');
+		return {
+			resourceName: resourceName,
+			resourceId: pinContext.id,
+		};
 	}
 
-	async pin() {
-		await this.post.$pin(this.getPinTargetModel());
-		this.emitPin();
-	}
+	async togglePin() {
+		const wasPinned = this.post.is_pinned;
 
-	async unpin() {
-		await this.post.$unpin(this.getPinTargetModel());
-		this.emitUnpin();
+		const { resourceName, resourceId } = this._getPinTarget();
+		await this.post.$togglePin(resourceName, resourceId);
+
+		if (wasPinned) {
+			this.emitUnpin();
+		} else {
+			this.emitPin();
+		}
 	}
 }

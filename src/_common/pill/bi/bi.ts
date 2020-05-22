@@ -6,10 +6,10 @@ import { propOptional } from '../../../utils/vue';
 @Component({})
 export default class AppPillBi extends Vue {
 	@Prop(propOptional(Object))
-	toLeft?: string | Location;
+	leftTo?: string | Location;
 
 	@Prop(propOptional(Object))
-	toRight?: string | Location;
+	rightTo?: string | Location;
 
 	@Prop(propOptional(Boolean, false))
 	noHover!: boolean;
@@ -18,7 +18,7 @@ export default class AppPillBi extends Vue {
 	@Emit('click-right') emitClickRight(_e: MouseEvent) {}
 
 	get leftComponent() {
-		if (this.toLeft) {
+		if (this.leftTo) {
 			return 'router-link';
 		}
 
@@ -34,7 +34,7 @@ export default class AppPillBi extends Vue {
 	}
 
 	get rightComponent() {
-		if (this.toRight) {
+		if (this.rightTo) {
 			return 'router-link';
 		}
 

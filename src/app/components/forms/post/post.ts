@@ -1,9 +1,9 @@
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../utils/array';
+import { propOptional } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
-import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../../../_common/community/channel/channel-permissions';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import AppCommunityChannelSelect from '../../../../_common/community/channel/select/select.vue';
 import { Community } from '../../../../_common/community/community.model';
@@ -11,6 +11,7 @@ import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { ContentDocument } from '../../../../_common/content/content-document';
 import { ContentWriter } from '../../../../_common/content/content-writer';
 import AppExpand from '../../../../_common/expand/expand.vue';
+import { FiresidePostCommunity } from '../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import {
 	AppFormAutosize,
@@ -40,6 +41,7 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import {
 	getSketchfabIdFromInput,
 	SKETCHFAB_FIELD_VALIDATION_REGEX,
@@ -60,8 +62,7 @@ type FormPostModel = FiresidePost & {
 	key_group_ids: number[];
 	video_url: string;
 	sketchfab_id: string;
-	community_id: number;
-	channel_id: number;
+	attached_communities: { community_id: number; channel_id: number }[];
 
 	poll_item_count: number;
 	poll_duration: number;
@@ -100,6 +101,7 @@ type FormPostModel = FiresidePost & {
 		AppCommunityChannelSelect,
 		AppFormControlContent,
 		AppExpand,
+		AppScrollScroller,
 	},
 	directives: {
 		AppFocusWhen,
@@ -114,11 +116,11 @@ export default class FormPost extends BaseForm<FormPostModel>
 	@AppState
 	user!: AppStore['user'];
 
-	@Prop(Community)
-	defaultCommunity?: Community;
+	@Prop(propOptional(Community, null))
+	defaultCommunity!: Community | null;
 
-	@Prop(CommunityChannel)
-	defaultChannel?: CommunityChannel;
+	@Prop(propOptional(CommunityChannel, null))
+	defaultChannel!: CommunityChannel | null;
 
 	$refs!: {
 		form: AppForm;
@@ -148,11 +150,9 @@ export default class FormPost extends BaseForm<FormPostModel>
 	isSavedDraftPost = false;
 	leadLengthLimit = 255;
 	isUploadingPastedImage = false;
-	communityChannels: CommunityChannel[] = [];
 	maxCommunities = 0;
 	attachedCommunities: { community: Community; channel: CommunityChannel }[] = [];
 	targetableCommunities: Community[] = [];
-	selectedChannel: CommunityChannel | null = null;
 
 	private updateAutosize?: () => void;
 
@@ -160,11 +160,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 	readonly Screen = Screen;
 
 	get loadUrl() {
-		let url = `/web/posts/manage/save/${this.model!.id}`;
-		if (this.defaultCommunity instanceof Community) {
-			url += '?communityId=' + this.defaultCommunity.id;
-		}
-		return url;
+		return `/web/posts/manage/save/${this.model!.id}`;
 	}
 
 	get shortLabel() {
@@ -307,34 +303,11 @@ export default class FormPost extends BaseForm<FormPostModel>
 			});
 	}
 
-	get communities() {
-		if (this.model) {
-			if (this.model.communities.length) {
-				return this.model.communities.map(i => i.community);
-			}
-
-			if (this.defaultCommunity) {
-				return [this.defaultCommunity];
-			}
-		}
-
-		return [];
-	}
-
 	get canAddCommunity() {
 		return (
 			this.attachedCommunities.length < this.maxCommunities &&
 			this.possibleCommunities.length > 0
 		);
-	}
-
-	@Watch('selectedChannel')
-	validateSelectedChannel() {
-		if (this.selectedChannel) {
-			this.clearCustomError('channel');
-		} else if (this.communities.length > 0) {
-			this.setCustomError('channel');
-		}
 	}
 
 	get hasChannelError() {
@@ -348,6 +321,10 @@ export default class FormPost extends BaseForm<FormPostModel>
 		);
 	}
 
+	get shouldShowCommunities() {
+		return this.attachedCommunities.length > 0 || this.possibleCommunities.length > 0;
+	}
+
 	async onInit() {
 		const model = this.model!;
 
@@ -358,25 +335,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
 
-		if (model.communities.length > 0) {
-			this.setField('community_id', model.communities[0].community.id);
-			this.selectedChannel = model.communities[0].channel || null;
-		} else if (this.defaultCommunity) {
-			this.setField('community_id', this.defaultCommunity.id);
-		}
-
-		if (!this.selectedChannel) {
-			this.selectedChannel = this.defaultChannel || null;
-		}
-		if (
-			!this.selectedChannel?.permissions.canPerform(
-				COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING
-			)
-		) {
-			this.selectedChannel = null;
-		}
-
-		this.validateSelectedChannel();
+		this.setField('attached_communities', []);
 
 		if (model.videos.length) {
 			this.setField(
@@ -431,25 +390,27 @@ export default class FormPost extends BaseForm<FormPostModel>
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
 		this.leadLengthLimit = payload.leadLengthLimit;
-
-		if (payload.channels) {
-			this.communityChannels = CommunityChannel.populate(payload.channels);
-		}
-
 		this.maxCommunities = payload.maxCommunities;
 
 		if (payload.attachedCommunities) {
-			this.attachedCommunities = [];
-			for (let { community, channel } of payload.attachedCommunities) {
-				this.attachedCommunities.push({
-					community: new Community(community),
-					channel: new CommunityChannel(channel),
-				});
-			}
+			this.attachedCommunities = FiresidePostCommunity.populate(
+				payload.attachedCommunities
+			).map((fpc: FiresidePostCommunity) => {
+				return {
+					community: fpc.community,
+					channel: fpc.channel!,
+				};
+			});
 		}
 
 		if (payload.targetableCommunities) {
 			this.targetableCommunities = Community.populate(payload.targetableCommunities);
+
+			// Filter out communities the user is blocked from,
+			// and communities who don't have channels the current user can post to.
+			this.targetableCommunities = this.targetableCommunities.filter(
+				community => !community.isBlocked && community.postableChannels.length > 0
+			);
 		}
 
 		this.linkedAccounts = LinkedAccount.populate(payload.linkedAccounts);
@@ -460,10 +421,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 				this.setField(`linked_account_${accountId}` as any, true);
 			}
 		}
-	}
-
-	selectChannel(channelId: number) {
-		this.setField('channel_id', channelId);
 	}
 
 	attachCommunity(community: Community, channel: CommunityChannel) {
@@ -490,7 +447,15 @@ export default class FormPost extends BaseForm<FormPostModel>
 			this.setField('status', FiresidePost.STATUS_DRAFT);
 		}
 
-		this.setField('channel_id', this.selectedChannel ? this.selectedChannel.id : 0);
+		this.setField(
+			'attached_communities',
+			this.attachedCommunities.map(({ community, channel }) => {
+				return {
+					community_id: community.id,
+					channel_id: channel.id,
+				};
+			})
+		);
 
 		// Set or clear attachments as needed
 		if (this.attachmentType === FiresidePost.TYPE_MEDIA && this.formModel.media) {

@@ -10,7 +10,9 @@
 		<span class="-channel" slot="right">
 			{{ channel ? channel.title : '???' }}
 
-			<a class="-remove text-muted" @click="emitRemove"><app-jolticon icon="remove"/></a>
+			<a v-if="removable" class="-remove text-muted" @click="emitRemove">
+				<app-jolticon icon="remove" />
+			</a>
 		</span>
 	</app-pill-bi>
 </template>

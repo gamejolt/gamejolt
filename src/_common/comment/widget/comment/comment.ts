@@ -139,11 +139,7 @@ export default class AppCommentWidgetComment extends Vue {
 			);
 
 			if (collaborator instanceof Collaborator) {
-				if (
-					collaborator.perms.includes('all') ||
-					collaborator.perms.includes('comments') ||
-					collaborator.perms.includes('community-posts')
-				) {
+				if (collaborator.perms.includes('all') || collaborator.perms.includes('comments')) {
 					return true;
 				}
 			}

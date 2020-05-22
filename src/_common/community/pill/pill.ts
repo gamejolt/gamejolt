@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { propOptional, propRequired } from '../../../utils/vue';
 import AppPillBi from '../../pill/bi/bi.vue';
 import AppPill from '../../pill/pill.vue';
 import { CommunityChannel } from '../channel/channel.model';
@@ -16,14 +17,14 @@ import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 	},
 })
 export default class AppCommunityPill extends Vue {
-	@Prop(Community)
+	@Prop(propRequired(Community))
 	community!: Community;
 
-	@Prop(CommunityChannel)
+	@Prop(propOptional(CommunityChannel))
 	channel?: CommunityChannel;
 
-	@Prop(Boolean)
-	noLinks?: boolean;
+	@Prop(propOptional(Boolean, false))
+	noLinks!: boolean;
 
 	get toCommunity() {
 		if (this.noLinks) {

@@ -64,16 +64,14 @@
 					</template>
 
 					<template v-if="communities.length">
-						<div
-							class="-community-row"
-							v-for="postCommunity of communities"
-							:key="postCommunity.id"
-						>
+						<app-scroll-scroller class="-communities" horizontal thin>
 							<app-community-pill
+								v-for="postCommunity of communities"
+								:key="postCommunity.id"
 								:community="postCommunity.community"
 								:channel="postCommunity.channel"
 							/>
-						</div>
+						</app-scroll-scroller>
 
 						<template v-if="shouldShowCommunityPublishError">
 							<br />
@@ -125,9 +123,8 @@
 >>> .mention-avatar-img
 	border-radius: 50% !important
 
-.-community-row
-	display: flex
-	align-items: center
+.-communities
+	white-space: nowrap
 </style>
 
 <script lang="ts" src="./view"></script>

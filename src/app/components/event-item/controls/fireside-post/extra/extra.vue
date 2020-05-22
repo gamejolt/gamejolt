@@ -34,13 +34,11 @@
 				</a>
 
 				<template v-if="shouldShowPins">
-					<a class="list-group-item has-icon" v-if="post.is_pinned" @click="unpin">
+					<a class="list-group-item has-icon" @click="togglePin">
 						<app-jolticon icon="thumbtack" />
-						<translate>Unpin</translate>
-					</a>
-					<a class="list-group-item has-icon" v-else @click="pin">
-						<app-jolticon icon="thumbtack" />
-						<translate>Pin</translate>
+
+						<translate v-if="post.is_pinned">Unpin</translate>
+						<translate v-else>Pin</translate>
 					</a>
 				</template>
 
