@@ -32,6 +32,6 @@
 
 	&.-hide
 		opacity: 0
-		visibility: none
+		visibility: hidden
 		transition: opacity 200ms, visibility 200ms
 </style>

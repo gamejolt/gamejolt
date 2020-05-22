@@ -33,11 +33,6 @@ $-transition-time = 200ms
 		border-color: var(--theme-bg-subtle)
 		z-index: 1
 
-	&[data-popper-reference-hidden][data-popper-escaped]
-		opacity: 0
-		visibility: hidden
-		pointer-events: none
-
 	&[data-popper-placement^='top']
 		padding-bottom: $popover-arrow-size * 1.5
 
@@ -78,13 +73,17 @@ $-transition-time = 200ms
 			border-bottom-color: transparent !important
 			right: $popover-arrow-size * 0.5
 
+	&[data-popper-reference-hidden][data-popper-escaped]
+		opacity: 0
+		visibility: hidden
+		pointer-events: none
+
 .popper-content
 	elevate-2()
 	rounded-corners-lg()
 	change-bg('bg-offset')
 	theme-prop('border-color', 'bg-subtle')
 	overflow: hidden
-	max-height: 40vh
 	max-width: $popover-size
 	min-width: 200px
 	border-width: $border-width-base

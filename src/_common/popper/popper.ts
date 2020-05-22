@@ -1,5 +1,5 @@
 import arrow, { ArrowModifier } from '@popperjs/core/lib/modifiers/arrow';
-import flip from '@popperjs/core/lib/modifiers/flip';
+import flip, { FlipModifier } from '@popperjs/core/lib/modifiers/flip';
 import hide from '@popperjs/core/lib/modifiers/hide';
 import preventOverflow, {
 	PreventOverflowModifier,
@@ -42,6 +42,21 @@ const modifiers = [
 			padding: 8,
 		},
 	} as ArrowModifier,
+	{
+		name: 'flip',
+		options: {
+			fallbackPlacements: ['top', 'bottom', 'right', 'left'],
+			// This will allow us to slightly overflow the viewport horizontally
+			// without leaving our default placement. We seem to need some top/buttom
+			// padding to prevent flickering.
+			padding: {
+				top: 20,
+				bottom: 20,
+				right: -20,
+				left: -20,
+			},
+		},
+	} as FlipModifier,
 ];
 
 @Component({
@@ -89,10 +104,6 @@ export default class AppPopper extends Vue {
 	@Prop(propOptional(Boolean, false))
 	forceMaxWidth!: boolean;
 
-	// For poppers we allow to expand to near the full screen height.
-	@Prop(propOptional(Boolean, false))
-	fullHeight!: boolean;
-
 	// We set a watch on this prop so we know when to display 'manual' triggers.
 	@Prop(propOptional(Boolean, false))
 	manualShow!: boolean;
@@ -135,9 +146,7 @@ export default class AppPopper extends Vue {
 	@Emit('hide') emitHide() {}
 
 	get maxHeight() {
-		if (this.fullHeight) {
-			return Screen.height - 100 + 'px';
-		}
+		return Screen.height - 100 + 'px';
 	}
 
 	get popperId() {
