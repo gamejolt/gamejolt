@@ -5,6 +5,7 @@ import { enforceLocation } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
+import AppCommunityCard from '../../../../_common/community/card/card.vue';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityJoinWidget from '../../../../_common/community/join-widget/join-widget.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
@@ -16,6 +17,7 @@ import { Growls } from '../../../../_common/growls/growls.service';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -26,10 +28,14 @@ import { CommunityHeaderModal } from '../../../components/forms/community/header
 import { CommunityThumbnailModal } from '../../../components/forms/community/thumbnail/modal/modal.service';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { Store } from '../../../store/index';
+import { getChannelFromRoute } from './overview/overview';
+import AppCommunitiesViewOverviewNavEdit from './overview/_nav/edit/edit.vue';
+import AppCommunitiesViewOverviewNav from './overview/_nav/nav.vue';
 
 @Component({
 	name: 'RouteCommunitiesView',
 	components: {
+		AppScrollScroller,
 		AppPageHeader,
 		AppCommunityThumbnailImg,
 		AppCommunityJoinWidget,
@@ -37,6 +43,9 @@ import { Store } from '../../../store/index';
 		AppCommunityPerms,
 		AppPopper,
 		AppCommunityVerifiedTick,
+		AppCommunitiesViewOverviewNav,
+		AppCommunitiesViewOverviewNavEdit,
+		AppCommunityCard,
 	},
 	directives: {
 		AppTooltip,
@@ -87,6 +96,10 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	readonly Environment = Environment;
 	readonly Screen = Screen;
+
+	get channel() {
+		return getChannelFromRoute(this.$route);
+	}
 
 	get isEditing() {
 		return !!this.$route.name && this.$route.name.includes('communities.view.overview.edit');

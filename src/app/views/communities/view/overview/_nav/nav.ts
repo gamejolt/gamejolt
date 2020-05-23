@@ -5,7 +5,6 @@ import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../../../../../
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
 import { Screen } from '../../../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../../../_common/scroll/scroller/scroller.vue';
 import { AppStore } from '../../../../../../_common/store/app-store';
 import AppCommunityChannelCard from '../../../../../components/community/channel/card/card.vue';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
@@ -15,7 +14,6 @@ import { Store } from '../../../../../store/index';
 	components: {
 		AppCommunityPerms,
 		AppCommunityChannelCard,
-		AppScrollScroller,
 	},
 })
 export default class AppCommunitiesViewOverviewNav extends Vue {

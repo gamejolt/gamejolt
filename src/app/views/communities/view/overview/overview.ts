@@ -13,6 +13,8 @@ import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../../_common/game/game.model';
+import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
+import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
 import { Meta } from '../../../../../_common/meta/meta-service';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
@@ -31,9 +33,8 @@ import AppPageContainer from '../../../../components/page-container/page-contain
 import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
 import { Store } from '../../../../store/index';
 import AppCommunitiesViewOverviewNavEdit from './_nav/edit/edit.vue';
-import AppCommunitiesViewOverviewNav from './_nav/nav.vue';
 
-function getChannel(route: Route) {
+export function getChannelFromRoute(route: Route) {
 	return (
 		route.params.channel ||
 		CommunityPresetChannelType.FEATURED ||
@@ -46,7 +47,7 @@ function getSort(route: Route) {
 }
 
 function getFetchUrl(route: Route) {
-	const channel = getChannel(route);
+	const channel = getChannelFromRoute(route);
 	const sort = getSort(route);
 	const channels: string[] = [sort];
 
@@ -66,7 +67,6 @@ function getFetchUrl(route: Route) {
 	components: {
 		AppPageContainer,
 		AppScrollAffix,
-		AppCommunitiesViewOverviewNav,
 		AppPostAddButton,
 		AppActivityFeed,
 		AppActivityFeedPlaceholder,
@@ -77,6 +77,8 @@ function getFetchUrl(route: Route) {
 		AppCommunitySidebar,
 		AppCommunityThumbnailImg,
 		AppTimeAgo,
+		AppMediaItemBackdrop,
+		AppImgResponsive,
 	},
 })
 @RouteResolver({
@@ -87,7 +89,7 @@ function getFetchUrl(route: Route) {
 		query: ['sort', 'feed_last_id'],
 	},
 	resolver: ({ route }) => {
-		const channel = getChannel(route);
+		const channel = getChannelFromRoute(route);
 		const sort = getSort(route);
 
 		let apiOverviewUrl = `/web/communities/overview/${route.params.path}/${channel}?sort=${sort}`;
@@ -182,7 +184,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get channel() {
-		return getChannel(this.$route);
+		return getChannelFromRoute(this.$route);
 	}
 
 	get communityChannel() {

@@ -2,33 +2,6 @@
 @require '~styles-lib/mixins'
 @require '../../../../../components/community/channel/card/variables'
 
-.scroll-scroller
-	// bleed left
-	@media $media-lg-up
-		margin-left: -($grid-gutter-width / 2)
-
-	// The nav shifts to the right side of the screen on MD size specifially.
-	// Add some spacing between the content below, and allow content to bleed-right.
-	@media $media-md
-		margin-right: -($grid-gutter-width / 2)
-		margin-bottom: $line-height-computed
-
-	@media $media-mobile
-		margin-bottom: 8px
-
-	.-inner
-		@media $media-lg-up
-			display: flex
-			flex-direction: column
-			align-items: flex-end
-
-		@media $media-mobile
-			display: flex
-
-			.community-channel-card
-				margin-right: 8px
-				width: 200px
-
 .-channels-header
 	margin-top: 10px
 	// Force h5 to become the width of a card to align the text with the start of cards
