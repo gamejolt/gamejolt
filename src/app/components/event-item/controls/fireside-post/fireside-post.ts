@@ -70,7 +70,7 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	emitMoveChannel(_movedTo: CommunityChannel) {}
 
 	@Emit('reject')
-	emitReject() {}
+	emitReject(_community: Community) {}
 
 	@Emit('pin')
 	emitPin() {}

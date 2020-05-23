@@ -5,6 +5,7 @@ import { Api } from '../../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
+import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
 import { Environment } from '../../../../../../_common/environment/environment.service';
 import { FiresidePostCommunity } from '../../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
@@ -23,6 +24,7 @@ import { AppCommunityPerms } from '../../../../community/perms/perms';
 	components: {
 		AppPopper,
 		AppCommunityPerms,
+		AppCommunityThumbnailImg,
 	},
 })
 export default class AppEventItemControlsFiresidePostExtra extends Vue {
