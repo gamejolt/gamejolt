@@ -501,6 +501,15 @@
 		<!-- Communities -->
 		<app-scroll-scroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
 			<transition-group class="-communities-list" name="-communities-list" tag="div">
+				<app-form-post-community-pill-incomplete
+					v-if="incompleteDefaultCommunity"
+					class="-community-pill"
+					key="incomplete"
+					:communities="possibleCommunities"
+					:community="incompleteDefaultCommunity"
+					@add="attachIncompleteCommunity"
+				/>
+
 				<app-form-post-community-pill
 					class="-community-pill"
 					v-for="{ community, channel } of attachedCommunities"
@@ -522,14 +531,7 @@
 			</transition-group>
 		</app-scroll-scroller>
 
-		<!-- <template v-if="!wasPublished">
-			<app-community-channel-select
-				v-if="communityChannels.length"
-				class="-channels"
-				v-model="selectedChannel"
-				:channels="communityChannels"
-			/>
-
+		<template v-if="!wasPublished">
 			<app-expand :when="hasChannelError">
 				<div class="-channel-error alert alert-notice">
 					<translate>
@@ -537,7 +539,7 @@
 					</translate>
 				</div>
 			</app-expand>
-		</template> -->
+		</template>
 
 		<!-- Controls -->
 		<div class="-controls">

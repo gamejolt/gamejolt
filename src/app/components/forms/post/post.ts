@@ -1,6 +1,6 @@
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../utils/array';
 import { propOptional } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
@@ -54,6 +54,7 @@ import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
 import AppFormPostCommunityPillAdd from './_community-pill/add/add.vue';
 import AppFormPostCommunityPill from './_community-pill/community-pill.vue';
+import AppFormPostCommunityPillIncomplete from './_community-pill/incomplete/incomplete.vue';
 import AppFormPostMedia from './_media/media.vue';
 
 type FormPostModel = FiresidePost & {
@@ -97,6 +98,7 @@ type FormPostModel = FiresidePost & {
 		AppFormPostMedia,
 		AppFormPostCommunityPill,
 		AppFormPostCommunityPillAdd,
+		AppFormPostCommunityPillIncomplete,
 		AppCommunityPill,
 		AppCommunityChannelSelect,
 		AppFormControlContent,
@@ -316,13 +318,38 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	get possibleCommunities() {
 		// Difference between targetable and attached communities.
-		return this.targetableCommunities.filter(
-			c1 => !this.attachedCommunities.find(c2 => c1.id === c2.community.id)
-		);
+		return this.targetableCommunities.filter(c1 => {
+			// Also exclude the default community. If it is specified,
+			// it'll be force-added through the pill-incomplete component.
+			if (c1.id === this.defaultCommunity?.id) {
+				return false;
+			}
+
+			return !this.attachedCommunities.find(c2 => c1.id === c2.community.id);
+		});
 	}
 
 	get shouldShowCommunities() {
 		return this.attachedCommunities.length > 0 || this.possibleCommunities.length > 0;
+	}
+
+	get incompleteDefaultCommunity() {
+		// The default community is considered incomplete if the channel for it
+		// needs to be selected (default channel is null or the community is not attached to the post).
+
+		if (!(this.defaultCommunity instanceof Community)) {
+			return null;
+		}
+
+		const matchingAttachedCommunity = this.attachedCommunities.find(
+			i => i.community.id === this.defaultCommunity!.id
+		);
+
+		if (matchingAttachedCommunity) {
+			return null;
+		}
+
+		return this.defaultCommunity;
 	}
 
 	async onInit() {
@@ -403,6 +430,13 @@ export default class FormPost extends BaseForm<FormPostModel>
 			});
 		}
 
+		if (
+			this.defaultCommunity instanceof Community &&
+			this.defaultChannel instanceof CommunityChannel
+		) {
+			this.attachCommunity(this.defaultCommunity, this.defaultChannel);
+		}
+
 		if (payload.targetableCommunities) {
 			this.targetableCommunities = Community.populate(payload.targetableCommunities);
 
@@ -423,8 +457,30 @@ export default class FormPost extends BaseForm<FormPostModel>
 		}
 	}
 
-	attachCommunity(community: Community, channel: CommunityChannel) {
-		this.attachedCommunities.push({ community, channel });
+	@Watch('incompleteDefaultCommunity')
+	onIncompleteDefaultCommunityChanged() {
+		if (this.incompleteDefaultCommunity) {
+			this.setCustomError('channel');
+		} else {
+			this.clearCustomError('channel');
+		}
+	}
+
+	attachIncompleteCommunity(community: Community, channel: CommunityChannel) {
+		this.attachCommunity(community, channel, false);
+	}
+
+	attachCommunity(community: Community, channel: CommunityChannel, append = true) {
+		// Do nothing if that community is already attached.
+		if (this.attachedCommunities.find(i => i.community.id === community.id)) {
+			return;
+		}
+
+		if (append) {
+			this.attachedCommunities.push({ community, channel });
+		} else {
+			this.attachedCommunities.unshift({ community, channel });
+		}
 	}
 
 	removeCommunity(community: Community) {
