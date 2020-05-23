@@ -1,6 +1,6 @@
 <template>
 	<div v-if="community">
-		<app-scroll-scroller thin class="-sidebar fill-darker">
+		<app-scroll-scroller thin class="-sidebar fill-offset">
 			<div class="-card">
 				<app-community-card :community="community" />
 			</div>
