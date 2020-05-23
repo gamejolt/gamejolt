@@ -58,10 +58,9 @@ export class TooltipModel {
 
 		el.addEventListener('pointerup', this.onPointerUp);
 		el.addEventListener('pointerenter', this.onPointerEnter);
-		el.addEventListener('pointerleave', this.onLeaveTrigger);
-		el.addEventListener('focusout', this.onLeaveTrigger);
-		// TODO: Add some kind of clickAway listener/handler
-		// to hide tooltip on mobile scroll.
+		el.addEventListener('pointerleave', this.onPointerLeave);
+		el.addEventListener('focusout', this.onFocusOut);
+		// TODO: Add some kind of clickAway listener/handler to hide tooltip on mobile scroll.
 		this.update(binding);
 	}
 
@@ -85,7 +84,7 @@ export class TooltipModel {
 	}
 
 	private onPointerUp = (event: PointerEvent) => {
-		// Mobile should use tooltip triggers as toggles,
+		// Touch should use tooltip triggers as toggles,
 		// but mouse events should only hide tooltips.
 		if (event.pointerType === 'touch' && this.touchable) {
 			this.isActive = !this.isActive;
@@ -97,7 +96,7 @@ export class TooltipModel {
 	};
 
 	private onPointerEnter = (event: PointerEvent) => {
-		// We don't need this for touch
+		// We don't want to check for mouseenter on touch.
 		if (event.pointerType === 'touch') {
 			return;
 		}
@@ -106,9 +105,9 @@ export class TooltipModel {
 		assignActiveTooltip(this);
 	};
 
-	private onLeaveTrigger = (event: PointerEvent) => {
-		// This stops the event in 'pointerleave' on mobile,
-		// but will still work during 'focusout'.
+	private onPointerLeave = (event: PointerEvent) => {
+		// This stops the event from 'pointerleave'
+		// triggering on tap for touch.
 		if (event.pointerType === 'touch') {
 			return;
 		}
@@ -117,11 +116,15 @@ export class TooltipModel {
 		assignActiveTooltip(this);
 	};
 
+	private onFocusOut = () => {
+		this.isActive = false;
+	};
+
 	destroy() {
 		this.el.removeEventListener('pointerup', this.onPointerUp);
 		this.el.removeEventListener('pointerenter', this.onPointerEnter);
-		this.el.removeEventListener('pointerleave', this.onLeaveTrigger);
-		this.el.removeEventListener('focusout', this.onLeaveTrigger);
+		this.el.removeEventListener('pointerleave', this.onPointerLeave);
+		this.el.removeEventListener('focusout', this.onFocusOut);
 	}
 }
 
