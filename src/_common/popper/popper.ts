@@ -183,6 +183,13 @@ export default class AppPopper extends Vue {
 		Popper.registerPopper(this.$router, this);
 	}
 
+	beforeDestroy() {
+		// We have to remove open poppers if their reference gets destroyed.
+		if (this.isVisible) {
+			document.body.removeChild(this.$refs.popper);
+		}
+	}
+
 	destroyed() {
 		Popper.deregisterPopper(this);
 		this.clearHideTimeout();
@@ -326,7 +333,7 @@ export default class AppPopper extends Vue {
 		this.addBackdrop();
 	}
 
-	private hide() {
+	hide() {
 		// In case a popper was hidden from something other than a click,
 		// like right-clicking a cbar item or Popover.hideAll() being triggered.
 		document.removeEventListener('click', this.onClickAway, true);
