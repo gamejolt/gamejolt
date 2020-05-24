@@ -116,7 +116,8 @@
 							<app-jolticon
 								class="pull-right"
 								icon="help-circle"
-								v-app-tooltip="
+								@touchend.native.prevent
+								v-app-tooltip.touchable="
 									$gettext(`These are your available funds to either buy games with or withdraw.`)
 								"
 							/>

@@ -45,12 +45,25 @@ export class TooltipModel {
 	touchable = false;
 
 	constructor(public el: HTMLElement, binding: DirectiveBinding) {
+		/**
+		 * @tutorial
+		 * If using 'touchable' modifier on 'AppJolticon', you much attach
+		 * the following to 'AppJolticon' itself - not an element wrapping it:
+		 *
+		 * @touchend.native.prevent		// if there is a router-link or <a> parent to stop the route change
+		 * v-app-tooltip.touchable=""	// allow touch events to trigger tooltips
+		 *
+		 * If we put these on a wrapping element instead of AppJolticon itself,
+		 * the 'focus' and 'pointerup' events won't properly trigger and we
+		 * can end up clicking the link behind the jolticon.
+		 */
 		const { modifiers } = binding;
 		if (modifiers instanceof Object) {
 			const keys = Object.keys(binding.modifiers) as any[];
 			this.touchable = keys.includes('touchable');
 		}
 
+		// Give the element a negative tabindex, or use its own, allowing focus events to work.
 		if (this.touchable) {
 			el.tabIndex = el.tabIndex ?? -1;
 			el.style.outline = 'none';
@@ -60,7 +73,6 @@ export class TooltipModel {
 		el.addEventListener('pointerenter', this.onPointerEnter);
 		el.addEventListener('pointerleave', this.onPointerLeave);
 		el.addEventListener('focusout', this.onFocusOut);
-		// TODO: Add some kind of clickAway listener/handler to hide tooltip on mobile scroll.
 		this.update(binding);
 	}
 
@@ -84,10 +96,14 @@ export class TooltipModel {
 	}
 
 	private onPointerUp = (event: PointerEvent) => {
-		// Touch should use tooltip triggers as toggles,
+		// Touch uses tooltip triggers as toggles,
 		// but mouse events should only hide tooltips.
 		if (event.pointerType === 'touch' && this.touchable) {
 			this.isActive = !this.isActive;
+
+			// If the direct parent of the directive is a router-link or <a>,
+			// we need to manually set the focus for 'focusout' to work properly.
+			this.el.focus();
 		} else {
 			this.isActive = false;
 		}
@@ -106,8 +122,8 @@ export class TooltipModel {
 	};
 
 	private onPointerLeave = (event: PointerEvent) => {
-		// This stops the event from 'pointerleave'
-		// triggering on tap for touch.
+		// This normally triggers when a 'touchend' would,
+		// but we want to hide tooltips on 'focusout' for touch events.
 		if (event.pointerType === 'touch') {
 			return;
 		}

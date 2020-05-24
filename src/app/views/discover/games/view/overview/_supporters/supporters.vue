@@ -5,7 +5,7 @@
 			<app-jolticon
 				class="text-muted"
 				icon="help-circle"
-				v-app-tooltip="
+				v-app-tooltip.touchable="
 					$gettext(
 						`The kind people that supported by paying more than the minimum. Sorted by amount contributed.`
 					)
