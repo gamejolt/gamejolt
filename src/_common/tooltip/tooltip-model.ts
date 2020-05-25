@@ -102,7 +102,7 @@ export class TooltipModel {
 
 			// If the direct parent of the directive is a router-link or <a>,
 			// we need to manually set the focus for 'focusout' to work properly.
-			// this.el.focus();
+			this.el.focus();
 			assignActiveTooltip(this);
 		}
 	};
