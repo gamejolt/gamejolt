@@ -45,22 +45,9 @@ export class TooltipModel {
 	touchable = false;
 
 	constructor(public el: HTMLElement, binding: DirectiveBinding) {
-		/**
-		 * @tutorial
-		 * If using 'touchable' modifier on 'AppJolticon', you much attach
-		 * the following to 'AppJolticon' itself - not an element wrapping it:
-		 *
-		 * @touchend.native.prevent		// if there is a router-link or <a> parent to stop the route change
-		 * v-app-tooltip.touchable=""	// allow touch events to trigger tooltips
-		 *
-		 * If we put these on a wrapping element instead of AppJolticon itself,
-		 * the 'focus' and 'pointerup' events won't properly trigger and we
-		 * can end up clicking the link behind the jolticon.
-		 */
 		const { modifiers } = binding;
-		if (modifiers instanceof Object) {
-			const keys = Object.keys(binding.modifiers) as any[];
-			this.touchable = keys.includes('touchable');
+		if (modifiers instanceof Object && 'touchable' in binding.modifiers) {
+			this.touchable = true;
 		}
 
 		// Give the element a negative tabindex, or use its own, allowing focus events to work.
@@ -69,10 +56,10 @@ export class TooltipModel {
 			el.style.outline = 'none';
 		}
 
-		el.addEventListener('touchend', this.onTouchEnd);
 		el.addEventListener('pointerup', this.onPointerUp);
-		el.addEventListener('pointerenter', this.onPointerEnter);
-		el.addEventListener('pointerleave', this.onPointerLeave);
+		el.addEventListener('pointerenter', this.onMouseEnter);
+		el.addEventListener('pointerleave', this.onMouseLeave);
+		el.addEventListener('click', this.onTriggerClicked);
 		el.addEventListener('focusout', this.onFocusOut);
 		this.update(binding);
 	}
@@ -96,31 +83,27 @@ export class TooltipModel {
 		this.text = binding.value?.content || binding.value;
 	}
 
-	private onTouchEnd = () => {
-		if (this.touchable) {
-			this.isActive = !this.isActive;
-
+	private onPointerUp = (event: PointerEvent) => {
+		// Touch uses tooltip triggers as toggles,
+		// but mouse events should only hide tooltips.
+		if (
+			(event.pointerType === 'touch' && this.touchable) ||
+			(event.pointerType === 'pen' && this.touchable)
+		) {
 			// If the direct parent of the directive is a router-link or <a>,
 			// we need to manually set the focus for 'focusout' to work properly.
 			this.el.focus();
+			this.isActive = !this.isActive;
+			assignActiveTooltip(this);
+		} else {
+			this.isActive = false;
 			assignActiveTooltip(this);
 		}
 	};
 
-	private onPointerUp = (event: PointerEvent) => {
-		// Touch uses tooltip triggers as toggles,
-		// but mouse events should only hide tooltips.
-		if (event.pointerType === 'touch') {
-			return;
-		}
-
-		this.isActive = false;
-		assignActiveTooltip(this);
-	};
-
-	private onPointerEnter = (event: PointerEvent) => {
+	private onMouseEnter = (event: PointerEvent) => {
 		// We don't want to check for mouseenter on touch.
-		if (event.pointerType === 'touch') {
+		if (event.pointerType === 'touch' || event.pointerType === 'pen') {
 			return;
 		}
 
@@ -128,10 +111,10 @@ export class TooltipModel {
 		assignActiveTooltip(this);
 	};
 
-	private onPointerLeave = (event: PointerEvent) => {
+	private onMouseLeave = (event: PointerEvent) => {
 		// This normally triggers when a 'touchend' would,
 		// but we want to hide tooltips on 'focusout' for touch events.
-		if (event.pointerType === 'touch') {
+		if (event.pointerType === 'touch' || event.pointerType === 'pen') {
 			return;
 		}
 
@@ -143,11 +126,17 @@ export class TooltipModel {
 		this.isActive = false;
 	};
 
+	private onTriggerClicked = (event: TouchEvent) => {
+		if (this.touchable) {
+			event.preventDefault();
+		}
+	};
+
 	destroy() {
-		this.el.removeEventListener('touchend', this.onTouchEnd);
 		this.el.removeEventListener('pointerup', this.onPointerUp);
-		this.el.removeEventListener('pointerenter', this.onPointerEnter);
-		this.el.removeEventListener('pointerleave', this.onPointerLeave);
+		this.el.removeEventListener('pointerenter', this.onMouseEnter);
+		this.el.removeEventListener('pointerleave', this.onMouseLeave);
+		this.el.removeEventListener('click', this.onTriggerClicked);
 		this.el.removeEventListener('focusout', this.onFocusOut);
 	}
 }
