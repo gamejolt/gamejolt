@@ -69,6 +69,7 @@ export class TooltipModel {
 			el.style.outline = 'none';
 		}
 
+		el.addEventListener('touchend', this.onTouchEnd);
 		el.addEventListener('pointerup', this.onPointerUp);
 		el.addEventListener('pointerenter', this.onPointerEnter);
 		el.addEventListener('pointerleave', this.onPointerLeave);
@@ -95,19 +96,25 @@ export class TooltipModel {
 		this.text = binding.value?.content || binding.value;
 	}
 
-	private onPointerUp = (event: PointerEvent) => {
-		// Touch uses tooltip triggers as toggles,
-		// but mouse events should only hide tooltips.
-		if (event.pointerType === 'touch' && this.touchable) {
+	private onTouchEnd = () => {
+		if (this.touchable) {
 			this.isActive = !this.isActive;
 
 			// If the direct parent of the directive is a router-link or <a>,
 			// we need to manually set the focus for 'focusout' to work properly.
-			this.el.focus();
-		} else {
-			this.isActive = false;
+			// this.el.focus();
+			assignActiveTooltip(this);
+		}
+	};
+
+	private onPointerUp = (event: PointerEvent) => {
+		// Touch uses tooltip triggers as toggles,
+		// but mouse events should only hide tooltips.
+		if (event.pointerType === 'touch') {
+			return;
 		}
 
+		this.isActive = false;
 		assignActiveTooltip(this);
 	};
 
@@ -137,6 +144,7 @@ export class TooltipModel {
 	};
 
 	destroy() {
+		this.el.removeEventListener('touchend', this.onTouchEnd);
 		this.el.removeEventListener('pointerup', this.onPointerUp);
 		this.el.removeEventListener('pointerenter', this.onPointerEnter);
 		this.el.removeEventListener('pointerleave', this.onPointerLeave);
