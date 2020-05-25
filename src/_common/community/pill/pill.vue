@@ -15,6 +15,13 @@
 
 		<template slot="right">
 			{{ channel.title }}
+
+			<app-jolticon
+				v-if="communityLink.isFeatured"
+				class="-featured"
+				icon="bolt-filled"
+				v-app-tooltip="$gettext(`Featured`)"
+			/>
 		</template>
 	</app-pill-bi>
 </template>
@@ -22,6 +29,10 @@
 <style lang="stylus" scoped>
 .-tick
 	margin-left: 5px
+
+.-featured
+	margin: 0 0 0 5px
+	font-size: 12px
 </style>
 
 <script lang="ts" src="./pill"></script>

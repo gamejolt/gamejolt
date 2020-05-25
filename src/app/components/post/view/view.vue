@@ -68,8 +68,7 @@
 							<app-community-pill
 								v-for="postCommunity of communities"
 								:key="postCommunity.id"
-								:community="postCommunity.community"
-								:channel="postCommunity.channel"
+								:community-link="postCommunity"
 							/>
 						</app-scroll-scroller>
 

@@ -149,6 +149,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 	publishToPlatforms: number[] | null = null;
 	isShowingMorePollOptions = false;
 	accessPermissionsEnabled = false;
+	gameOptionsEnabled = false;
 	isSavedDraftPost = false;
 	leadLengthLimit = 255;
 	isUploadingPastedImage = false;
@@ -405,6 +406,10 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 		if (model.hasArticle) {
 			this.longEnabled = true;
+		}
+
+		if (model.post_to_user_profile || model.as_game_owner) {
+			this.gameOptionsEnabled = true;
 		}
 
 		await this.fetchTimezones();
@@ -761,6 +766,14 @@ export default class FormPost extends BaseForm<FormPostModel>
 			`Your post can't be published to the platforms you've selected. Error: %{ error }`,
 			{ error: restriction }
 		);
+	}
+
+	enableGameOptions() {
+		this.gameOptionsEnabled = true;
+	}
+
+	disableGameOptions() {
+		this.gameOptionsEnabled = false;
 	}
 
 	timezoneByName(timezone: string) {

@@ -56,6 +56,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	user!: User;
 	game!: Game;
 	as_game_owner!: boolean;
+	post_to_user_profile!: boolean;
 	slug!: string;
 	subline!: string;
 	url!: string;

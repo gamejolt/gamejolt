@@ -356,6 +356,59 @@
 			</fieldset>
 		</div>
 
+		<!-- Access permissions -->
+		<template v-if="accessPermissionsEnabled">
+			<div class="well fill-offset full-bleed" v-if="!wasPublished">
+				<fieldset>
+					<app-form-legend compact deletable @delete="disableAccessPermissions()">
+						<translate>Access permissions</translate>
+					</app-form-legend>
+
+					<app-form-group name="key_group_ids" :label="$gettext(`Access Permissions`)" hide-label>
+						<div class="alert" v-if="!keyGroups.length">
+							<translate>
+								You can make this post available to only the users within a key group. For example,
+								this is useful for sending news updates to testers. You can create a user key group
+								through the "Keys/Access" page.
+							</translate>
+						</div>
+						<div v-else>
+							<p class="help-block">
+								<translate>
+									You can make this post available to only the users within a key group. For
+									example, this is useful for sending news updates to testers. Only User-type key
+									groups can be selected.
+								</translate>
+							</p>
+
+							<div class="checkbox" v-for="keyGroup of keyGroups" :key="keyGroup.id">
+								<label>
+									<app-form-control-checkbox :value="keyGroup.id" />
+									{{ keyGroup.name }}
+								</label>
+							</div>
+						</div>
+					</app-form-group>
+				</fieldset>
+			</div>
+			<div class="form-group well fill-offset full-bleed" v-else>
+				<label class="control-label">
+					<translate>Access Permissions</translate>
+				</label>
+				<div class="alert">
+					<translate>
+						The below key groups have access to this post. You can't edit who has access after
+						posting since notifications have already gone out.
+					</translate>
+				</div>
+				<div>
+					<span class="tag" v-for="keyGroup of model.key_groups" :key="keyGroup.id">
+						{{ keyGroup.name }}
+					</span>
+				</div>
+			</div>
+		</template>
+
 		<div class="well fill-offset full-bleed" v-if="isPublishingToPlatforms">
 			<fieldset>
 				<app-form-legend compact deletable @delete="removePublishingToPlatforms()">
@@ -410,81 +463,54 @@
 			</translate>
 		</div>
 
-		<!-- Access permissions -->
-		<template v-if="accessPermissionsEnabled">
-			<div class="well fill-offset full-bleed" v-if="!wasPublished">
+		<!-- Game options -->
+		<template v-if="gameOptionsEnabled && model.game">
+			<div class="well fill-offset full-bleed">
 				<fieldset>
-					<app-form-legend compact deletable @delete="disableAccessPermissions()">
-						<translate>Access permissions</translate>
+					<app-form-legend compact deletable @delete="disableGameOptions()">
+						<translate>Game Options</translate>
 					</app-form-legend>
 
-					<app-form-group name="key_group_ids" :label="$gettext(`Access Permissions`)" hide-label>
-						<div class="alert" v-if="!keyGroups.length">
-							<translate>
-								You can make this post available to only the users within a key group. For example,
-								this is useful for sending news updates to testers. You can create a user key group
-								through the "Keys/Access" page.
-							</translate>
-						</div>
-						<div v-else>
-							<p class="help-block">
-								<translate>
-									You can make this post available to only the users within a key group. For
-									example, this is useful for sending news updates to testers. Only User-type key
-									groups can be selected.
-								</translate>
-							</p>
-
-							<div class="checkbox" v-for="keyGroup of keyGroups" :key="keyGroup.id">
-								<label>
-									<app-form-control-checkbox :value="keyGroup.id" />
-									{{ keyGroup.name }}
-								</label>
+					<!-- Post as game owner -->
+					<app-form-group
+						name="as_game_owner"
+						v-if="user && user.id != model.game.developer.id"
+						:label="$gettext(`Post as Game Owner`)"
+					>
+						<p class="help-block">
+							This will show the game owner as the user that posted instead of you.
+						</p>
+						<div class="-as-owner">
+							<div class="-as-owner-item">
+								<app-form-control-toggle />
+							</div>
+							<div
+								class="-as-owner-item -as-owner-avatar"
+								v-if="formModel.as_game_owner"
+								v-app-tooltip="
+									model.game.developer.display_name + ` (@${model.game.developer.username})`
+								"
+							>
+								<app-user-avatar-img :user="model.game.developer" />
 							</div>
 						</div>
 					</app-form-group>
+
+					<!-- Post to profile -->
+					<app-form-group
+						name="post_to_user_profile"
+						v-if="user"
+						:label="$gettext(`Post to Profile`)"
+					>
+						<p class="help-block">
+							This will make the post show up on your profile too and not just the game page.
+						</p>
+
+						<app-form-control-toggle />
+					</app-form-group>
 				</fieldset>
 			</div>
-			<div class="form-group well fill-offset full-bleed" v-else>
-				<label class="control-label">
-					<translate>Access Permissions</translate>
-				</label>
-				<div class="alert">
-					<translate>
-						The below key groups have access to this post. You can't edit who has access after
-						posting since notifications have already gone out.
-					</translate>
-				</div>
-				<div>
-					<span class="tag" v-for="keyGroup of model.key_groups" :key="keyGroup.id">
-						{{ keyGroup.name }}
-					</span>
-				</div>
-			</div>
 		</template>
-
-		<!-- Post as game owner -->
-		<app-form-group
-			name="as_game_owner"
-			v-if="user && model.game && user.id != model.game.developer.id"
-			:label="$gettext(`Post as Game Owner`)"
-		>
-			<p class="help-block">
-				This will show the game owner as the user that posted instead of you.
-			</p>
-			<div class="-as-owner">
-				<div class="-as-owner-item">
-					<app-form-control-toggle />
-				</div>
-				<div
-					class="-as-owner-item -as-owner-avatar"
-					v-if="formModel.as_game_owner"
-					v-app-tooltip="model.game.developer.display_name + ` (@${model.game.developer.username})`"
-				>
-					<app-user-avatar-img :user="model.game.developer" />
-				</div>
-			</div>
-		</app-form-group>
 
 		<template v-if="platformRestrictions.length">
 			<div
@@ -592,6 +618,16 @@
 					icon="share-airplane"
 					v-app-tooltip="$gettext(`Publish to Other Platforms`)"
 					@click="addPublishingToPlatforms()"
+				/>
+
+				<app-button
+					v-if="!gameOptionsEnabled && model.game"
+					sparse
+					trans
+					circle
+					icon="game"
+					v-app-tooltip="$gettext(`Game Options`)"
+					@click="enableGameOptions()"
 				/>
 			</div>
 
