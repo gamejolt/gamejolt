@@ -38,6 +38,8 @@ export type TooltipPlacement =
 	| 'left-start'
 	| 'left-end';
 
+const TouchablePointerTypes = ['touch', 'pen'];
+
 export class TooltipModel {
 	text = '';
 	placement: TooltipPlacement = 'top';
@@ -56,10 +58,9 @@ export class TooltipModel {
 			el.style.outline = 'none';
 		}
 
-		el.addEventListener('pointerup', this.onPointerUp);
 		el.addEventListener('pointerenter', this.onMouseEnter);
 		el.addEventListener('pointerleave', this.onMouseLeave);
-		el.addEventListener('click', this.onTriggerClicked);
+		el.addEventListener('click', this.onClick);
 		el.addEventListener('focusout', this.onFocusOut);
 		this.update(binding);
 	}
@@ -83,27 +84,9 @@ export class TooltipModel {
 		this.text = binding.value?.content || binding.value;
 	}
 
-	private onPointerUp = (event: PointerEvent) => {
-		// Touch uses tooltip triggers as toggles,
-		// but mouse events should only hide tooltips.
-		if (
-			(event.pointerType === 'touch' && this.touchable) ||
-			(event.pointerType === 'pen' && this.touchable)
-		) {
-			// If the direct parent of the directive is a router-link or <a>,
-			// we need to manually set the focus for 'focusout' to work properly.
-			this.el.focus();
-			this.isActive = !this.isActive;
-			assignActiveTooltip(this);
-		} else {
-			this.isActive = false;
-			assignActiveTooltip(this);
-		}
-	};
-
 	private onMouseEnter = (event: PointerEvent) => {
-		// We don't want to check for mouseenter on touch.
-		if (event.pointerType === 'touch' || event.pointerType === 'pen') {
+		// We never want this to trigger on 'touch' or 'pen' inputs.
+		if (TouchablePointerTypes.includes(event.pointerType)) {
 			return;
 		}
 
@@ -112,9 +95,8 @@ export class TooltipModel {
 	};
 
 	private onMouseLeave = (event: PointerEvent) => {
-		// This normally triggers when a 'touchend' would,
-		// but we want to hide tooltips on 'focusout' for touch events.
-		if (event.pointerType === 'touch' || event.pointerType === 'pen') {
+		// We never want this to trigger on 'touch' or 'pen' inputs.
+		if (TouchablePointerTypes.includes(event.pointerType)) {
 			return;
 		}
 
@@ -122,21 +104,28 @@ export class TooltipModel {
 		assignActiveTooltip(this);
 	};
 
+	private onClick = (event: Event) => {
+		if (this.touchable) {
+			this.isActive = !this.isActive;
+			// Prevent 'AppShellAccountPopover' from opening wallet balance link.
+			event.preventDefault();
+			// Prevent 'AppEventItemControlsFiresidePostStats' from opening post view.
+			event.stopPropagation();
+		} else {
+			this.isActive = false;
+		}
+
+		assignActiveTooltip(this);
+	};
+
 	private onFocusOut = () => {
 		this.isActive = false;
 	};
 
-	private onTriggerClicked = (event: TouchEvent) => {
-		if (this.touchable) {
-			event.preventDefault();
-		}
-	};
-
 	destroy() {
-		this.el.removeEventListener('pointerup', this.onPointerUp);
 		this.el.removeEventListener('pointerenter', this.onMouseEnter);
 		this.el.removeEventListener('pointerleave', this.onMouseLeave);
-		this.el.removeEventListener('click', this.onTriggerClicked);
+		this.el.removeEventListener('click', this.onClick);
 		this.el.removeEventListener('focusout', this.onFocusOut);
 	}
 }
