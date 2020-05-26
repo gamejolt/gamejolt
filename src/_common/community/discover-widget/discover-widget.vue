@@ -13,7 +13,7 @@
 	display: flex
 	justify-content: center
 	align-items: center
-	border: $border-width-base dashed
+	border: $border-width-large dashed
 	border-radius: 100%
 	cursor: pointer
 	position: absolute
@@ -25,8 +25,8 @@
 	color: var(--theme-fg-muted)
 
 	&:hover
-			border-color: var(--theme-highlight)
-			color: var(--theme-highlight)
+		border-color: var(--theme-highlight)
+		color: var(--theme-highlight)
 
 .jolticon
 	margin: 0 3px

@@ -1,4 +1,4 @@
-import { Location } from 'vue-router';
+import type { Location, Route } from 'vue-router';
 import { Api } from '../api/api.service';
 import { Collaboratable, Perm } from '../collaborator/collaboratable';
 import { Game } from '../game/game.model';
@@ -62,6 +62,10 @@ export async function $leaveCommunity(community: Community) {
 export const enum CommunityPresetChannelType {
 	FEATURED = 'featured',
 	ALL = 'all',
+}
+
+export function isEditingCommunity(route: Route) {
+	return !!route.name && route.name.startsWith('communities.view.edit.');
 }
 
 export class Community extends Collaboratable(Model) {
@@ -140,7 +144,7 @@ export class Community extends Collaboratable(Model) {
 
 	get routeEditLocation(): Location {
 		return {
-			name: 'communities.view.overview.edit.details',
+			name: 'communities.view.edit.details',
 			params: {
 				path: this.path,
 				id: this.id + '',

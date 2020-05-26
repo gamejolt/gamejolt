@@ -1,27 +1,16 @@
 <template>
-	<div v-if="community">
+	<div v-if="community" class="-page">
 		<app-scroll-scroller thin class="-sidebar fill-offset">
 			<div class="-card">
 				<app-community-card :community="community" />
 			</div>
 
-			<app-communities-view-overview-nav
-				v-if="!isEditing"
-				class="-nav"
-				:community="community"
-				:active-channel-title="channel"
-			/>
-			<!--
-				We put some extra spacing in here because of the affixed header
-				nav.
-			-->
-			<app-scroll-affix v-else :scroll-offset="80" :disabled="!Screen.isLg">
-				<app-communities-view-overview-nav-edit class="-nav" :community="community" />
-			</app-scroll-affix>
+			<app-communities-view-nav v-if="!isEditing" />
+			<app-communities-view-nav-edit v-else />
 		</app-scroll-scroller>
 
 		<div class="-content fill-backdrop">
-			<router-view :community="community" :is-editing="isEditing" :sidebar-data="sidebarData" />
+			<router-view />
 		</div>
 	</div>
 </template>
@@ -34,12 +23,15 @@
 $-sidebar-padding = 12px
 $-sidebar-width = $card-width + $-sidebar-padding * 2
 
+.-page
+	--route-communities-view-sidebar-width: $-sidebar-width
+
 .-sidebar
 	position: fixed
 	left: $shell-cbar-width
 	top: $shell-top-nav-height
 	bottom: 0
-	width: $-sidebar-width + $-sidebar-padding - 4px
+	width: $-sidebar-width
 	padding: $-sidebar-padding
 
 .-content

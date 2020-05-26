@@ -18,6 +18,7 @@ export default class AppCommunityAddWidget extends Vue {
 	tooltipPlacement!: TooltipPlacement;
 
 	get canCreate() {
+		return false;
 		return this.user && !!this.user.can_create_communities;
 	}
 

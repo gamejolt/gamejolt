@@ -1,11 +1,12 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { propRequired } from '../../../utils/vue';
 import { number } from '../../filters/number';
 import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
 import { AppStore } from '../../store/app-store';
 import { AppTheme } from '../../theme/theme';
-import { Community } from '../community.model';
+import { Community, isEditingCommunity } from '../community.model';
 import AppCommunityJoinWidget from '../join-widget/join-widget.vue';
 import AppCommunityThumbnailImg from '../thumbnail/img/img.vue';
 import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
@@ -20,11 +21,9 @@ import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 	},
 })
 export default class AppCommunityCard extends Vue {
-	@Prop(Community)
-	community!: Community;
+	@Prop(propRequired(Community)) community!: Community;
 
-	@State
-	app!: AppStore;
+	@State app!: AppStore;
 
 	readonly number = number;
 
@@ -36,5 +35,9 @@ export default class AppCommunityCard extends Vue {
 		return this.community.header
 			? `url('${this.community.header.mediaserver_url}')`
 			: undefined;
+	}
+
+	get isEditing() {
+		return isEditingCommunity(this.$route);
 	}
 }

@@ -37,8 +37,17 @@
 					</router-link>
 				</div>
 
-				<div class="-join" v-if="app.user">
+				<div class="-join">
+					<template v-if="community.hasPerms()">
+						<app-button v-if="!isEditing" primary block :to="community.routeEditLocation">
+							<translate>Edit Community</translate>
+						</app-button>
+						<app-button v-else primary block :to="community.routeLocation">
+							<translate>View Community</translate>
+						</app-button>
+					</template>
 					<app-community-join-widget
+						v-else
 						:community="community"
 						block
 						hide-count
