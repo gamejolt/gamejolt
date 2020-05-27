@@ -6,8 +6,8 @@
 		ref="trigger"
 		@click="onTriggerClicked"
 		@contextmenu="onContextMenu"
-		@mouseenter="onMouseEnter"
-		@mouseleave="onMouseLeave"
+		@pointerenter="onMouseEnter"
+		@pointerleave="onMouseLeave"
 	>
 		<slot />
 		<div
