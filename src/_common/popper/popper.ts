@@ -23,6 +23,8 @@ let PopperIndex = 0;
 
 type ActualTrigger = 'click' | 'hover' | 'manual';
 
+const TouchablePointerTypes = ['touch', 'pen'];
+
 const modifiers = [
 	flip,
 	preventOverflow,
@@ -232,7 +234,12 @@ export default class AppPopper extends Vue {
 		this.show();
 	}
 
-	onMouseEnter(event: MouseEvent) {
+	onMouseEnter(event: PointerEvent) {
+		// We never want this to trigger on 'touch' or 'pen' inputs.
+		if (TouchablePointerTypes.includes(event.pointerType)) {
+			return;
+		}
+
 		this.emitMouseEnter(event);
 
 		if (this.trigger !== 'hover') {
@@ -256,7 +263,12 @@ export default class AppPopper extends Vue {
 		this.showDelayTimer = setTimeout(() => this.show(), this.showDelay);
 	}
 
-	onMouseLeave(event: MouseEvent) {
+	onMouseLeave(event: PointerEvent) {
+		// We never want this to trigger on 'touch' or 'pen' inputs.
+		if (TouchablePointerTypes.includes(event.pointerType)) {
+			return;
+		}
+
 		this.emitMouseLeave(event);
 
 		if (this.trigger !== 'hover') {
