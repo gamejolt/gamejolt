@@ -4,6 +4,10 @@ import { TooltipModel } from './tooltip-model';
 let state = new WeakMap<HTMLElement, TooltipModel>();
 
 const TooltipDirective: DirectiveOptions = {
+	/**
+	 * Never attach a 'touchable' modifier to a link.
+	 * It will stop the link from working.
+	 */
 	bind(el, binding) {
 		let tooltip = new TooltipModel(el, binding);
 		state.set(el, tooltip);

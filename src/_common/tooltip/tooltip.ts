@@ -1,4 +1,5 @@
 import flip from '@popperjs/core/lib/modifiers/flip';
+import hide from '@popperjs/core/lib/modifiers/hide';
 import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
 import { createPopper, Instance, Options } from '@popperjs/core/lib/popper-lite';
 import Vue from 'vue';
@@ -42,7 +43,7 @@ export default class AppTooltip extends Vue {
 
 		const options: Options = {
 			placement: this.tooltip.placement,
-			modifiers: [flip, preventOverflow],
+			modifiers: [flip, preventOverflow, hide],
 			strategy: 'absolute',
 		};
 

@@ -18,16 +18,15 @@
 			%{ count } expand
 		</translate>
 
-		<span
+		<app-jolticon
 			class="hidden-xs"
-			v-app-tooltip="
+			icon="help-circle"
+			v-app-tooltip.touchable="
 				$gettext(
 					'An expand is some sort of interaction with your post. For example, playing a video post, or clicking into your post.'
 				)
 			"
-		>
-			<app-jolticon icon="help-circle" />
-		</span>
+		/>
 	</div>
 </template>
 
