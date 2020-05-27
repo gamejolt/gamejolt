@@ -130,7 +130,7 @@ export default class AppPopper extends Vue {
 	maxWidth = '';
 	popperIndex = PopperIndex++;
 
-	popperInstance!: Instance | null;
+	popperInstance: null | Instance = null;
 
 	$el!: HTMLDivElement;
 	private hideTimeout?: NodeJS.Timer;
@@ -184,22 +184,13 @@ export default class AppPopper extends Vue {
 	}
 
 	beforeDestroy() {
-		// We have to remove open poppers if their reference gets destroyed.
-		if (this.isVisible) {
-			document.body.removeChild(this.$refs.popper);
-		}
+		// Destroy the popper instance and element before we lose our $refs.
+		this.destroyPopper();
 	}
 
 	destroyed() {
 		Popper.deregisterPopper(this);
-		this.clearHideTimeout();
 		this.removeBackdrop();
-
-		// Destroy any poppers that had their trigger element removed
-		if (this.popperInstance) {
-			this.popperInstance.destroy();
-			this.popperInstance = null;
-		}
 	}
 
 	onDimensionsChanged() {
@@ -307,6 +298,23 @@ export default class AppPopper extends Vue {
 		document.addEventListener('click', this.onClickAway, true);
 	}
 
+	private destroyPopper() {
+		this.clearHideTimeout();
+
+		// Clean up any remaining popper elements and instances
+		if (document.body.contains(this.$refs.popper)) {
+			document.body.removeChild(this.$refs.popper);
+		}
+
+		if (this.popperInstance) {
+			this.popperInstance.destroy();
+			this.popperInstance = null;
+		}
+
+		this.isVisible = false;
+		this.isHiding = false;
+	}
+
 	private show() {
 		this.emitShow();
 		this.clearHideTimeout();
@@ -346,15 +354,7 @@ export default class AppPopper extends Vue {
 
 	private hideDone() {
 		this.emitHide();
-
-		// Making sure that popper doesn't keep tracking positioning
-		if (this.popperInstance) {
-			this.popperInstance.destroy();
-			this.popperInstance = null;
-		}
-
-		this.isVisible = false;
-		this.isHiding = false;
+		this.destroyPopper();
 	}
 
 	private addBackdrop() {
