@@ -44,13 +44,11 @@
 
 				<!-- Community feature/unfeature, move to channel and eject -->
 				<template v-if="shouldShowManageCommunities">
-					<span v-for="i of post.manageableCommunities" :key="i.id">
-						<div class="-community-header list-group-item has-icon">
-							<h5 class="list-group-item-heading">
-								<app-community-thumbnail-img :community="i.community" />
-								{{ i.community.name }}
-							</h5>
-						</div>
+					<div class="-community-section" v-for="i of post.manageableCommunities" :key="i.id">
+						<h5 class="-community-header list-group-item has-icon">
+							<app-community-thumbnail-img :community="i.community" />
+							{{ i.community.name }}
+						</h5>
 						<div class="-community-items">
 							<app-community-perms :community="i.community" required="community-features">
 								<a class="list-group-item has-icon" @click.stop="toggleFeatured(i)">
@@ -103,7 +101,7 @@
 								</a>
 							</app-community-perms>
 						</div>
-					</span>
+					</div>
 				</template>
 
 				<!-- User reports -->
@@ -136,18 +134,28 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 
-.-community-header img
-	width: $list-group-icon-width * 0.8
-	height: $list-group-icon-width * 0.8
-	border-radius: 50%
-	display: inline-block
-	position: relative
-	left: -($list-group-icon-width - 1px)
-	top: -2px
-	margin-right: -($list-group-icon-width - 5px)
+.-community-section
+	margin: $font-size-base 0
 
-.-community-items a
-	padding-left: $list-group-icon-width * 2
+.-community-header
+	font-family: $font-family-heading
+	font-size: $font-size-tiny
+	font-weight: normal
+	letter-spacing: 0.1em
+	line-height: 1
+	text-transform: uppercase
+	margin-top: 0
+	margin-bottom: 0
+
+	img
+		width: $list-group-icon-width * 0.8
+		height: $list-group-icon-width * 0.8
+		border-radius: 50%
+		display: inline-block
+		position: relative
+		left: -($list-group-icon-width - 1px)
+		top: -2px
+		margin-right: -($list-group-icon-width - 5px)
 
 </style>
 

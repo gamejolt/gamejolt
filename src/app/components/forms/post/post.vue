@@ -464,21 +464,28 @@
 		</div>
 
 		<!-- Game options -->
-		<template v-if="gameOptionsEnabled && model.game">
+		<template v-if="authorOptionsEnabled">
 			<div class="well fill-offset full-bleed">
 				<fieldset>
-					<app-form-legend compact deletable @delete="disableGameOptions()">
-						<translate>Game Options</translate>
+					<app-form-legend compact deletable @delete="disableAuthorOptions()">
+						<translate>Author Options</translate>
 					</app-form-legend>
 
 					<!-- Post as game owner -->
 					<app-form-group
 						name="as_game_owner"
-						v-if="user && user.id != model.game.developer.id"
+						v-if="model.user.id != model.game.developer.id"
 						:label="$gettext(`Post as Game Owner`)"
 					>
 						<p class="help-block">
-							This will show the game owner as the user that posted instead of you.
+							<translate
+								:translate-params="{
+									owner: `@${model.user.username}`,
+									author: `@${model.game.developer.username}`,
+								}"
+							>
+								This will show %{ owner } as the user that posted instead of %{ author }.
+							</translate>
 						</p>
 						<div class="-as-owner">
 							<div class="-as-owner-item">
@@ -499,7 +506,7 @@
 					<!-- Post to profile -->
 					<app-form-group
 						name="post_to_user_profile"
-						v-if="user"
+						v-if="user && user.id == model.user.id"
 						:label="$gettext(`Post to Profile`)"
 					>
 						<p class="help-block">
@@ -525,47 +532,61 @@
 		</template>
 
 		<!-- Communities -->
-		<app-scroll-scroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
-			<transition-group class="-communities-list" name="-communities-list" tag="div">
-				<app-form-post-community-pill-incomplete
-					v-if="incompleteDefaultCommunity"
-					class="-community-pill"
-					key="incomplete"
-					:communities="possibleCommunities"
-					:community="incompleteDefaultCommunity"
-					@add="attachIncompleteCommunity"
-				/>
-
-				<app-form-post-community-pill
-					class="-community-pill"
-					v-for="{ community, channel } of attachedCommunities"
-					:key="community.id"
-					:community="community"
-					:channel="channel"
-					:removable="!wasPublished"
-					@remove="removeCommunity(community)"
-				/>
-
-				<template v-if="!wasPublished && canAddCommunity">
-					<app-form-post-community-pill-add
+		<template v-if="isLoaded">
+			<app-scroll-scroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
+				<transition-group class="-communities-list" name="-communities-list" tag="div">
+					<app-form-post-community-pill-incomplete
+						v-if="incompleteDefaultCommunity"
 						class="-community-pill"
-						key="add"
+						key="incomplete"
 						:communities="possibleCommunities"
-						@add="attachCommunity"
+						:community="incompleteDefaultCommunity"
+						@add="attachIncompleteCommunity"
 					/>
-				</template>
-			</transition-group>
-		</app-scroll-scroller>
 
-		<template v-if="!wasPublished">
-			<app-expand :when="hasChannelError">
-				<div class="-channel-error alert alert-notice">
-					<translate>
-						Choose a channel to post to.
-					</translate>
-				</div>
-			</app-expand>
+					<app-form-post-community-pill
+						class="-community-pill"
+						v-for="{ community, channel } of attachedCommunities"
+						:key="community.id"
+						:community="community"
+						:channel="channel"
+						:removable="!wasPublished"
+						@remove="removeCommunity(community)"
+					/>
+
+					<template v-if="!wasPublished && canAddCommunity">
+						<app-form-post-community-pill-add
+							class="-community-pill"
+							key="add"
+							:communities="possibleCommunities"
+							@add="attachCommunity"
+						/>
+					</template>
+				</transition-group>
+			</app-scroll-scroller>
+			<p v-else-if="!wasPublished" class="help-block">
+				<translate>Join some communities to post to them.</translate>
+				<span v-app-tooltip="$gettext(`Go to the explore page and find some!`)">
+					<app-jolticon class="text-muted" icon="help-circle" />
+				</span>
+			</p>
 		</template>
+
+		<app-expand v-if="!wasPublished" :when="hasChannelError">
+			<div class="-error alert alert-notice">
+				<translate>
+					Choose a channel to post to.
+				</translate>
+			</div>
+		</app-expand>
+
+		<app-expand :when="hasAuthorOptionsError">
+			<div class="-error alert alert-notice">
+				<translate>
+					Choose either posting as the game owner or sharing to your profile. Can't do both.
+				</translate>
+			</div>
+		</app-expand>
 
 		<!-- Controls -->
 		<div class="-controls">
@@ -621,13 +642,13 @@
 				/>
 
 				<app-button
-					v-if="!gameOptionsEnabled && model.game"
+					v-if="!authorOptionsEnabled && shouldShowAuthorOptions"
 					sparse
 					trans
 					circle
-					icon="game"
-					v-app-tooltip="$gettext(`Game Options`)"
-					@click="enableGameOptions()"
+					icon="user"
+					v-app-tooltip="$gettext(`Author Options`)"
+					@click="enableAuthorOptions()"
 				/>
 			</div>
 

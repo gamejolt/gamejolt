@@ -192,20 +192,22 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 		const pinContext = this.post.getPinContextFor(this.$route);
 
 		let resourceName: string;
+		let resourceId: number;
+
 		if (pinContext instanceof Game) {
 			resourceName = 'Game';
+			resourceId = pinContext.id;
 		} else if (pinContext instanceof FiresidePostCommunity) {
 			resourceName = 'Community_Channel';
+			resourceId = pinContext.channel!.id;
 		} else if (pinContext instanceof User) {
 			resourceName = 'User';
+			resourceId = pinContext.id;
 		} else {
 			throw new Error('Post is not pinnable in this context');
 		}
 
-		return {
-			resourceName: resourceName,
-			resourceId: pinContext.id,
-		};
+		return { resourceName, resourceId };
 	}
 
 	async togglePin() {

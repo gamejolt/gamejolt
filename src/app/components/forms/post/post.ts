@@ -149,7 +149,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 	publishToPlatforms: number[] | null = null;
 	isShowingMorePollOptions = false;
 	accessPermissionsEnabled = false;
-	gameOptionsEnabled = false;
+	authorOptionsEnabled = false;
 	isSavedDraftPost = false;
 	leadLengthLimit = 255;
 	isUploadingPastedImage = false;
@@ -317,6 +317,10 @@ export default class FormPost extends BaseForm<FormPostModel>
 		return this.hasCustomError('channel');
 	}
 
+	get hasAuthorOptionsError() {
+		return this.hasCustomError('author-options-conflict');
+	}
+
 	get possibleCommunities() {
 		// Difference between targetable and attached communities.
 		return this.targetableCommunities.filter(c1 => {
@@ -351,6 +355,23 @@ export default class FormPost extends BaseForm<FormPostModel>
 		}
 
 		return this.defaultCommunity;
+	}
+
+	get shouldShowAuthorOptions() {
+		if (!this.model?.game || !this.user) {
+			return false;
+		}
+
+		// Original post authors can always choose whether to share the post on their profile.
+		if (this.user.id === this.model.user.id) {
+			return true;
+		}
+
+		// Otherwise it means we're the resource owner the post was posted on.
+		// We can't toggle on sharing the post to profile because its not our post.
+		// We can only toggle "as game owner" if the post isn't already shared
+		// on the author's profile.
+		return !this.model.post_to_user_profile;
 	}
 
 	async onInit() {
@@ -408,8 +429,8 @@ export default class FormPost extends BaseForm<FormPostModel>
 			this.longEnabled = true;
 		}
 
-		if (model.post_to_user_profile || model.as_game_owner) {
-			this.gameOptionsEnabled = true;
+		if (this.shouldShowAuthorOptions && (model.post_to_user_profile || model.as_game_owner)) {
+			this.authorOptionsEnabled = true;
 		}
 
 		await this.fetchTimezones();
@@ -468,6 +489,16 @@ export default class FormPost extends BaseForm<FormPostModel>
 			this.setCustomError('channel');
 		} else {
 			this.clearCustomError('channel');
+		}
+	}
+
+	@Watch('formModel.as_game_owner')
+	@Watch('formModel.post_to_user_profile')
+	validateAuthorOptions() {
+		if (this.formModel.as_game_owner && this.formModel.post_to_user_profile) {
+			this.setCustomError('author-options-conflict');
+		} else {
+			this.clearCustomError('author-options-conflict');
 		}
 	}
 
@@ -768,12 +799,12 @@ export default class FormPost extends BaseForm<FormPostModel>
 		);
 	}
 
-	enableGameOptions() {
-		this.gameOptionsEnabled = true;
+	enableAuthorOptions() {
+		this.authorOptionsEnabled = true;
 	}
 
-	disableGameOptions() {
-		this.gameOptionsEnabled = false;
+	disableAuthorOptions() {
+		this.authorOptionsEnabled = false;
 	}
 
 	timezoneByName(timezone: string) {
