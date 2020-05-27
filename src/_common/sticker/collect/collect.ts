@@ -5,7 +5,7 @@ import { sleep } from '../../../utils/utils';
 import { propRequired } from '../../../utils/vue';
 import { Api } from '../../api/api.service';
 import { Growls } from '../../growls/growls.service';
-import { AppTooltip } from '../../tooltip/tooltip';
+import { AppTooltip } from '../../tooltip/tooltip-directive';
 import AppStickerCard from '../card/card.vue';
 import AppStickerCardHidden from '../card/hidden/hidden.vue';
 import { Sticker } from '../sticker.model';

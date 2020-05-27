@@ -1,4 +1,8 @@
 import * as fs from 'fs';
+import * as path from 'path';
+import Vue from 'vue';
+import { Component, Prop, Watch } from 'vue-property-decorator';
+import { arrayGroupBy } from '../../../../utils/array';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Device } from '../../../../_common/device/device.service';
@@ -7,11 +11,7 @@ import { GamePackagePayloadModel } from '../../../../_common/game/package/packag
 import { GamePackagePurchaseModal } from '../../../../_common/game/package/purchase-modal/purchase-modal.service';
 import { Popper } from '../../../../_common/popper/popper.service';
 import AppPopper from '../../../../_common/popper/popper.vue';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip';
-import { arrayGroupBy } from '../../../../utils/array';
-import * as path from 'path';
-import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import {
 	ClientLibraryAction,
 	ClientLibraryState,

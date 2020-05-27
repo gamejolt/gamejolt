@@ -8,7 +8,7 @@ import { number } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import AppShortkey from '../../../../_common/shortkey/shortkey.vue';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
 import { LibraryModule, LibraryStore } from '../../../store/library';
 import AppShellSidebarCollectionList from './collection-list.vue';

@@ -7,7 +7,7 @@ import AppGameThumbnailImg from '../../../../_common/game/thumbnail-img/thumbnai
 import { Growls } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 
 @Component({
 	components: {

@@ -1,7 +1,7 @@
 import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { AppTooltip } from '../../../../tooltip/tooltip';
+import { AppTooltip } from '../../../../tooltip/tooltip-directive';
 import { ContentEditorSchema } from '../../schemas/content-editor-schema';
 import { GJ_EMOJIS } from '../../schemas/specs/nodes/gj-emoji-nodespec';
 

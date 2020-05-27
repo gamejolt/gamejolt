@@ -49,7 +49,7 @@ import {
 import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.service';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
 import AppFormPostCommunityPillAdd from './_community-pill/add/add.vue';

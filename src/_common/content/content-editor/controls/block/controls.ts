@@ -5,7 +5,7 @@ import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { Growls } from '../../../../growls/growls.service';
 import { Screen } from '../../../../screen/screen-service';
-import { AppTooltip } from '../../../../tooltip/tooltip';
+import { AppTooltip } from '../../../../tooltip/tooltip-directive';
 import { ContextCapabilities } from '../../../content-context';
 import { ContentEditorService } from '../../content-editor.service';
 import { ContentEditorSchema } from '../../schemas/content-editor-schema';

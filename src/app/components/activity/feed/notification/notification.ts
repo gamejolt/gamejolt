@@ -12,7 +12,7 @@ import {
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { BaseTrophy } from '../../../../../_common/trophy/base-trophy.model';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';

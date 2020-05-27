@@ -7,7 +7,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { SiteTrophy } from '../../../../_common/site/trophy/trophy.model';
 import { AppStore } from '../../../../_common/store/app-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import { UserGameTrophy } from '../../../../_common/user/trophy/game-trophy.model';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';

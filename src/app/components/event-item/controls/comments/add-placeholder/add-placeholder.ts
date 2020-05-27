@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { GJ_EMOJIS } from '../../../../../../_common/content/content-editor/schemas/specs/nodes/gj-emoji-nodespec';
-import { AppTooltip } from '../../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 
 @Component({
 	directives: {

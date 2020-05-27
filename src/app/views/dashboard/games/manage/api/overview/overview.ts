@@ -1,12 +1,12 @@
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
+import { duration } from '../../../../../../../_common/filters/duration';
+import { number } from '../../../../../../../_common/filters/number';
 import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
-import { duration } from '../../../../../../../_common/filters/duration';
-import { number } from '../../../../../../../_common/filters/number';
-import { Component } from 'vue-property-decorator';
+import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @Component({

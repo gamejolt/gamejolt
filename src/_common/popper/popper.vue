@@ -1,65 +1,55 @@
 <template>
-	<v-popover
+	<div
 		:id="popperId"
-		ref="popover"
-		:class="{
-			'-block': block,
-			'-ssr': GJ_IS_SSR,
-		}"
-		popover-base-class="popper"
-		popover-wrapper-class="popper-wrapper"
-		popover-arrow-class="popper-arrow"
-		:popover-inner-class="popoverInnerClass"
-		:placement="placement"
-		:trigger="actualTrigger"
-		:delay="delay"
-		:disabled="disabled"
-		:open="show"
-		:auto-hide="autoHide"
-		:open-group="openGroup"
-		@apply-show="onShow"
-		@apply-hide="onHide"
-		@auto-hide="onAutoHide"
-		@contextmenu.native="onContextMenu"
+		class="popper"
+		:class="{ '-block': block }"
+		ref="trigger"
+		@click="onTriggerClicked"
+		@contextmenu="onContextMenu"
+		@mouseenter="onMouseEnter"
+		@mouseleave="onMouseLeave"
 	>
 		<slot />
 		<div
 			v-if="isVisible"
-			slot="popover"
-			class="-container"
-			:class="popoverClass"
-			:style="{
-				maxHeight,
-				width,
-				maxWidth,
-			}"
+			class="popper-wrapper"
+			:class="{ '-hide': isHiding, '-ssr': GJ_IS_SSR }"
+			ref="popper"
+			@mouseenter="onMouseEnter"
+			@mouseleave="onMouseLeave"
+			v-app-observe-dimensions="onDimensionsChanged"
 		>
-			<div class="-header">
-				<slot name="header" />
-			</div>
-			<app-scroll-scroller ref="scroller" class="-main" thin>
-				<slot name="popover" />
-			</app-scroll-scroller>
-			<div class="-footer">
-				<slot name="footer" />
+			<div class="popper-arrow" data-popper-arrow />
+			<div
+				class="popper-content"
+				:class="contentClass"
+				:style="{
+					maxHeight,
+					width,
+					maxWidth,
+				}"
+			>
+				<div class="-header">
+					<slot name="header" />
+				</div>
+				<app-scroll-scroller ref="scroller" class="-main" thin>
+					<slot name="popover" />
+				</app-scroll-scroller>
+				<div class="-footer">
+					<slot name="footer" />
+				</div>
 			</div>
 		</div>
-	</v-popover>
+	</div>
 </template>
 
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-.-container
+.popper-content
 	display: flex
 	flex-direction: column
-
-.-header, .-footer
-	flex: none
-
-.-main
-	flex: auto
 </style>
 
 <script lang="ts" src="./popper"></script>

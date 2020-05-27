@@ -7,7 +7,7 @@ import { date } from '../../../../../_common/filters/date';
 import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { Meta } from '../../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import {
 	checkGameFilteringRoute,
 	GameFilteringContainer,
