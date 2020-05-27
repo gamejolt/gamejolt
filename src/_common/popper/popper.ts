@@ -302,8 +302,8 @@ export default class AppPopper extends Vue {
 		this.clearHideTimeout();
 
 		// Clean up any remaining popper elements and instances
-		if (document.body.contains(this.$refs.popper)) {
-			document.body.removeChild(this.$refs.popper);
+		if (this.$refs.popper) {
+			this.$refs.popper.remove();
 		}
 
 		if (this.popperInstance) {
