@@ -468,7 +468,7 @@ module.exports = function(config) {
 					: noop,
 				devNoop || new webpack.HashedModuleIdsPlugin(),
 				config.write ? new WriteFilePlugin() : noop,
-				config.analyze ? new BundleAnalyzerPlugin() : noop,
+				config.analyzeBundle ? new BundleAnalyzerPlugin({ openAnalyzer: true }) : noop,
 			],
 		};
 

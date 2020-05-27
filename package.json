@@ -16,7 +16,8 @@
 		"ssr-server": "gulp --ssr server",
 		"ssr-client": "gulp --ssr client",
 		"ssr": "cd src && node server.js",
-		"check": "tsc --noEmit"
+		"check": "tsc --noEmit",
+		"analyze-bundle": "gulp --analyze-bundle"
 	},
 	"devDependencies": {
 		"@intervolga/optimize-cssnano-plugin": "1.0.6",
