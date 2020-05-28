@@ -7,7 +7,7 @@
 		<section class="section">
 			<div class="container-xl">
 				<app-discover-home-communities
-					v-if="featuredCommunities.length > 0"
+					:is-loading="!isRouteBootstrapped"
 					:communities="featuredCommunities"
 				/>
 
