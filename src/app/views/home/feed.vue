@@ -74,10 +74,6 @@
 			<template v-if="Screen.isXs">
 				<h6 class="-communities-heading">
 					<translate>Communities</translate>
-					<button
-						@click="isRouteBootstrapped = !isRouteBootstrapped"
-						style="height: 10px; width: 30px"
-					/>
 				</h6>
 
 				<app-community-slider-placeholder v-if="!isRouteBootstrapped" :num="1" />
