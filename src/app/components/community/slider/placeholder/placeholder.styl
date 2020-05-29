@@ -1,25 +1,7 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
+@require '../slider.styl'
 @require '../common.styl'
-
-.-list
-	full-bleed()
-	white-space: nowrap
-	padding-left: $grid-gutter-width-xs * 0.5
-	padding-right: $grid-gutter-width-xs * 0.5
-	margin-bottom: $line-height-computed
-
-	@media $media-sm-up
-		padding-left: $grid-gutter-width * 0.5
-		padding-right: $grid-gutter-width * 0.5
-
-.-scroller
-	clearfix()
-	padding-bottom: 8px
-	overflow: hidden
-
-	@media $media-xs
-		padding-bottom: 4px
 
 .-container
 	display: inline-block
@@ -41,7 +23,7 @@
 	.-text
 		lazy-placeholder-block()
 		change-bg('bg-subtle')
-		margin: 15px 0 0 10px
+		margin: 15px 0 4px 10px
 		width: 80px
 		height: $font-size-small
 		display: none
