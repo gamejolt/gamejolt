@@ -4,7 +4,7 @@ import { propOptional, propRequired } from '../../../utils/vue';
 import { FiresidePostCommunity } from '../../fireside/post/community/community.model';
 import AppPillBi from '../../pill/bi/bi.vue';
 import AppPill from '../../pill/pill.vue';
-import { AppTooltip } from '../../tooltip/tooltip';
+import { AppTooltip } from '../../tooltip/tooltip-directive';
 import AppCommunityThumbnailImg from '../thumbnail/img/img.vue';
 import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 
