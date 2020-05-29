@@ -71,12 +71,17 @@
 
 			<app-post-add-button @add="onPostAdded" />
 
-			<template v-if="Screen.isXs && communities.length > 0">
+			<template v-if="Screen.isXs">
 				<h6 class="-communities-heading">
 					<translate>Communities</translate>
+					<button
+						@click="isRouteBootstrapped = !isRouteBootstrapped"
+						style="height: 10px; width: 30px"
+					/>
 				</h6>
 
-				<app-community-slider :communities="communities" />
+				<app-community-slider-placeholder v-if="!isRouteBootstrapped" :num="1" />
+				<app-community-slider v-else :communities="communities" with-add-button />
 			</template>
 
 			<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />

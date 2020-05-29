@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { propOptional } from '../../../../../utils/vue';
+import { propOptional, propRequired } from '../../../../../utils/vue';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 
 @Component({
@@ -9,10 +9,8 @@ import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.v
 	},
 })
 export default class AppCommunitySliderPlaceholder extends Vue {
-	/**
-	 * 10 seems to be the max that 'xs' can see in feed view.
-	 */
-	@Prop(propOptional(Number, 10))
+	// How many community placeholders we want, not including Add or Discover.
+	@Prop(propRequired(Number))
 	num!: number;
 
 	/**
