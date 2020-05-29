@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<app-discover-home-banner v-if="featuredItem" :item="featuredItem" />
+		<app-discover-home-banner :is-loading="!isRouteBootstrapped" :item="featuredItem" />
 
 		<app-discover-home-tags />
 

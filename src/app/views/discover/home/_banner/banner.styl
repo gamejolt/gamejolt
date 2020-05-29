@@ -1,4 +1,5 @@
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
 -gutter()
 	padding-left: ($grid-gutter-width-xs / 2)
@@ -8,11 +9,28 @@
 		padding-left: ($grid-gutter-width / 2)
 		padding-right: ($grid-gutter-width / 2)
 
+.-backdrop, .-banner, .-placeholder
+	height: 500px
+
+.-placeholder
+	change-bg('bg-subtle')
+
+.-backdrop
+	change-bg('bg-offset')
+	background-image: url('../../../../components/shell/shell-bg.png')
+	background-repeat: repeat
+
 .-banner
 	position: relative
+	display: flex
+	align-items: flex-start
+	width: 100%
 	background-repeat: no-repeat
 	background-position: 50% 50%
 	background-size: cover
+
+	@media $media-sm-up
+		align-items: center
 
 .-click
 	position: absolute
@@ -38,8 +56,14 @@
 	-gutter()
 	text-align: center
 
+	.-img
+		height: 250px
+
 	@media $media-sm-up
 		width: 60%
+
+		.-img
+			max-height: 400px
 
 .-info
 	-gutter()
