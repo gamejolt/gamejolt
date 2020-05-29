@@ -40,7 +40,7 @@ export class Environment {
 	static apiHost = 'https://gamejolt.com';
 	static gameserverApiHost = 'https://gamejolt.net';
 	static activityStreamHost = 'https://activity.gamejolt.com';
-	static chatHost = 'wss://chat.gamejolt.com';
+	static chatHost = 'wss://chatex.gamejolt.com';
 	static widgetHost = 'https://widgets.gamejolt.com';
 	static gridHost = 'https://grid.gamejolt.com/grid/host';
 	static recaptchaSiteKey = '6Led_UAUAAAAAB_ptIOOlAF5DFK9YM7Qi_7z8iKk';
