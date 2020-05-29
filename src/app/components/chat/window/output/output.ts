@@ -31,19 +31,8 @@ export default class AppChatWindowOutput extends Vue {
 	@State
 	chat!: ChatClient;
 
-	get hasMoreMessages() {
-		const roomId = this.chat.room?.id;
-		const pagination = this.chat.pagination;
-
-		if (roomId) {
-			return pagination[roomId].totalPages > pagination[roomId].pageNumber;
-		}
-
-		return false;
-	}
-
 	get shouldShowLoadMore() {
-		return !this.chat.loadingOlderMessages && this.hasMoreMessages;
+		return !this.chat.loadingOlderMessages;
 	}
 
 	private shouldScroll = true;

@@ -19,13 +19,6 @@ export interface ChatNewMessageEvent {
 	message: ChatMessage;
 }
 
-interface Pagination {
-	pageNumber: number;
-	pageSize: number;
-	totalEntries: number;
-	totalPages: number;
-}
-
 /**
  * Polls a request until it returns a result, increases the delay time between requests after each failed attempt.
  * @param context Context for logging
@@ -71,7 +64,6 @@ export class ChatClient {
 	// The following are indexed by room ID.
 	roomChannels: { [k: string]: RoomChannel } = {};
 	messages: { [k: string]: ChatMessage[] } = {};
-	pagination: { [k: string]: Pagination } = {};
 	usersOnline: { [k: string]: ChatUserCollection } = {};
 	notifications: { [k: string]: number } = {};
 	isFocused = true;
@@ -238,7 +230,6 @@ export class ChatClient {
 						.receive('error', reject)
 						.receive('ok', response => {
 							this.roomChannels[roomId] = channel;
-							this.pagination[roomId] = response.pagination;
 							channel.room = new ChatRoom(response.room);
 							const messages = response.messages.map(
 								(msg: ChatMessage) => new ChatMessage(msg)
@@ -555,7 +546,6 @@ export class ChatClient {
 			.receive('ok', data => {
 				const oldMessages = data.messages.map((msg: ChatMessage) => new ChatMessage(msg));
 				const messages = [...oldMessages.reverse(), ...this.messages[roomId]];
-				this.pagination[roomId] = data.pagination;
 				this.messages[roomId] = [];
 				this.loadingOlderMessages = false;
 
