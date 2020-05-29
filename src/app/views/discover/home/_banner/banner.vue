@@ -3,7 +3,7 @@
 	<app-theme v-else :theme="theme">
 		<app-media-item-backdrop class="-backdrop" :media-item="bannerMediaItem">
 			<section
-				class="-banner section landing-header"
+				class="-banner landing-header"
 				:style="{
 					'background-image': `url('${item.back_url}')`,
 				}"
