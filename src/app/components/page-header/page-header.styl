@@ -3,6 +3,24 @@
 
 $-cover-buttons-height = $button-md-line-height + 20px
 
+.-index
+	.-controls, .-nav
+		padding: 0 20px
+
+	@media $media-xs
+		.-controls, .-nav
+			padding: 0 15px
+
+	@media $media-lg-up
+		display: flex
+		flex-direction: row-reverse
+		justify-content: flex-end
+
+		.-controls
+			max-width: 33.333333%
+			flex: auto
+			margin-left: auto
+
 .page-header
 	// Bootstrap has styling on .page-header.
 	// Gotta override.
