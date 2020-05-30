@@ -10,7 +10,13 @@
 			</translate>
 		</p>
 
-		<app-community-slider :communities="communities" with-add-button event-cat="home" />
+		<app-community-slider-placeholder v-if="isLoading" :num="10" with-add-button />
+		<app-community-slider
+			v-else-if="communities.length"
+			:communities="communities"
+			with-add-button
+			event-cat="home"
+		/>
 	</div>
 </template>
 
