@@ -112,7 +112,7 @@
 							<translate>dash.games.api.overview.trophies_exp_label</translate>
 							<app-jolticon
 								icon="help-circle"
-								v-app-tooltip="$gettext(`dash.games.api.overview.trophies_exp_tooltip`)"
+								v-app-tooltip.touchable="$gettext(`dash.games.api.overview.trophies_exp_tooltip`)"
 							/>
 						</div>
 						<div class="stat-big-digit">
@@ -163,7 +163,7 @@
 							<translate>dash.games.api.overview.scores_label</translate>
 							<app-jolticon
 								icon="help-circle"
-								v-app-tooltip="$gettext(`dash.games.api.overview.scores_tooltip`)"
+								v-app-tooltip.touchable="$gettext(`dash.games.api.overview.scores_tooltip`)"
 							/>
 						</div>
 						<div class="stat-big-digit">
@@ -177,7 +177,7 @@
 							<translate>dash.games.api.overview.scores_users_label</translate>
 							<app-jolticon
 								icon="help-circle"
-								v-app-tooltip="$gettext(`dash.games.api.overview.scores_users_tooltip`)"
+								v-app-tooltip.touchable="$gettext(`dash.games.api.overview.scores_users_tooltip`)"
 							/>
 						</div>
 						<div class="stat-big-digit">
@@ -205,7 +205,7 @@
 							<translate>dash.games.api.overview.data_items_label</translate>
 							<app-jolticon
 								icon="help-circle"
-								v-app-tooltip="$gettext(`dash.games.api.overview.data_items_tooltip`)"
+								v-app-tooltip.touchable="$gettext(`dash.games.api.overview.data_items_tooltip`)"
 							/>
 						</div>
 						<div class="stat-big-digit">

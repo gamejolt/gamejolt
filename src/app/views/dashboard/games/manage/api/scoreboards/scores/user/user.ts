@@ -7,7 +7,7 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../../../_common/route/route-component';
-import { AppTooltip } from '../../../../../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
 import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
 import { User } from '../../../../../../../../../_common/user/user.model';
 import { RouteStore, RouteStoreModule } from '../../../../manage.store';

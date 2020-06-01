@@ -10,7 +10,7 @@ import {
 } from '../../../../../../../_common/community/community.model';
 import { Growls } from '../../../../../../../_common/growls/growls.service';
 import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import AppCommunityChannelPresetListItem from '../../../../../../components/community/channel/preset-list-item/preset-list-item.vue';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import { CommunityRemoveChannelModal } from '../../../../../../components/community/remove-channel/modal/modal.service';

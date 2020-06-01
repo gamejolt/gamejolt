@@ -10,7 +10,7 @@ import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { ThemeState, ThemeStore } from '../../../../../_common/theme/theme.store';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../../store';
 import { AppCommunityPerms } from '../../../community/perms/perms';
 

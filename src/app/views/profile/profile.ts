@@ -13,7 +13,7 @@ import { WithRouteStore } from '../../../_common/route/route-store';
 import { Screen } from '../../../_common/screen/screen-service';
 import { ThemeMutation, ThemeStore } from '../../../_common/theme/theme.store';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { Translate } from '../../../_common/translate/translate.service';
 import AppUserFollowWidget from '../../../_common/user/follow/widget.vue';
 import { UserFriendship } from '../../../_common/user/friendship/friendship.model';

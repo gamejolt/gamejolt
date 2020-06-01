@@ -4,7 +4,7 @@ import { AppAuthRequired } from '../../../auth/auth-required-directive';
 import { fuzzynumber } from '../../../filters/fuzzynumber';
 import { number } from '../../../filters/number';
 import { LikersModal } from '../../../likers/modal.service';
-import { AppTooltip } from '../../../tooltip/tooltip';
+import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import { CommentVote } from '../../vote/vote-model';
 import { CommentVideo } from '../video-model';
 

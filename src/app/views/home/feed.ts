@@ -16,6 +16,7 @@ import AppActivityFeed from '../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import AppBroadcastCard from '../../components/broadcast-card/broadcast-card.vue';
+import AppCommunitySliderPlaceholder from '../../components/community/slider/placeholder/placeholder.vue';
 import AppCommunitySlider from '../../components/community/slider/slider.vue';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
@@ -39,6 +40,7 @@ class DashGame {
 		AppActivityFeedPlaceholder,
 		AppBroadcastCard,
 		AppCommunitySlider,
+		AppCommunitySliderPlaceholder,
 		AppPostAddButton,
 		AppUserCard,
 		AppScrollAffix,

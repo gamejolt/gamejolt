@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 
 @Component({
 	directives: {

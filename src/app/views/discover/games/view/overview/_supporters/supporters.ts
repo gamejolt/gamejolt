@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarImg from '../../../../../../../_common/user/user-avatar/img/img.vue';
 import { User } from '../../../../../../../_common/user/user.model';

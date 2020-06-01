@@ -20,11 +20,10 @@
 					popover-class="fill-darkest"
 					trigger="manual"
 					block
+					fixed
 					hide-on-state-change
 					track-trigger-width
-					:show="isShowingAutocomplete"
-					:disabled="autocompleteDisabled"
-					:auto-hide="false"
+					:manual-show="isShowingAutocomplete"
 				>
 					<app-search-input
 						:id="`search-input-${id}`"

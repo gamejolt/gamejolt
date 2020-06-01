@@ -18,7 +18,7 @@ import { LinkedAccount, Provider } from '../../../../_common/linked-account/link
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import { User } from '../../../../_common/user/user.model';

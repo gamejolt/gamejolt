@@ -4,7 +4,7 @@ import AppExpand from '../../../../_common/expand/expand.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/control/toggle/toggle.vue';
 import { BaseForm, FormOnInit, FormOnLoad } from '../../../../_common/form-vue/form.service';
 import { Game } from '../../../../_common/game/game.model';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
 import AppGameDevStageSelector from './dev-stage-selector/dev-stage-selector.vue';
 import AppDashGameWizardControls from './wizard-controls/wizard-controls.vue';

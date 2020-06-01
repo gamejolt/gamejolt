@@ -6,7 +6,7 @@ import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
 import { handleNewStickerNotification } from '../../sticker/sticker.model';
-import { AppTooltip } from '../../tooltip/tooltip';
+import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { Comment } from '../comment-model';
 import { CommentThreadModal } from '../thread/modal.service';
 import { CommentVote } from '../vote/vote-model';

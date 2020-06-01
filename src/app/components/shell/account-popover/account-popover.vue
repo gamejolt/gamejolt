@@ -1,6 +1,7 @@
 <template>
 	<app-popper
 		popover-class="fill-darkest"
+		fixed
 		hide-on-state-change
 		@show="onShow()"
 		@hide="onHide()"
@@ -115,7 +116,7 @@
 							<app-jolticon
 								class="pull-right"
 								icon="help-circle"
-								v-app-tooltip="
+								v-app-tooltip.touchable="
 									$gettext(`These are your available funds to either buy games with or withdraw.`)
 								"
 							/>

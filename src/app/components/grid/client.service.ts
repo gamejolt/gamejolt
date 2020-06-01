@@ -278,8 +278,12 @@ export class GridClient {
 			// error
 			console.log(`[Grid] Failed to fetch notification count bootstrap (${payload.body}).`);
 
-			this.bootstrapDelay = Math.min(30, this.bootstrapDelay * 2);
-			this.restart(this.bootstrapDelay * 1000);
+			const delay = Math.min(30000, Math.random() * this.bootstrapDelay * 2000 + 1000);
+			this.bootstrapDelay++;
+
+			console.log(`[Grid] Reconnect in ${delay}ms...`);
+
+			this.restart(delay);
 		}
 	}
 

@@ -1,9 +1,7 @@
-import { Model } from '../model/model.service';
-import { Environment } from '../environment/environment.service';
 import { Api } from '../api/api.service';
+import { Environment } from '../environment/environment.service';
+import { Model } from '../model/model.service';
 import { JamOrganizer } from './organizer/organizer.model';
-
-const moment = require('moment');
 
 export class Jam extends Model {
 	url!: string;
@@ -89,27 +87,21 @@ export class Jam extends Model {
 	 * Get what period the jam is currently in at this exact moment.
 	 */
 	getPeriod() {
-		const now = moment();
+		const now = Date.now();
 
 		// Are we in a pre-jam state?
-		const startMoment = moment(this.start_date);
-		if (now.isBefore(startMoment)) {
+		if (now < this.start_date) {
 			return Jam.PERIOD_PREJAM;
 		}
 
 		// Is the jam currently running?
-		const endMoment = moment(this.end_date);
-		if (now.isBefore(endMoment)) {
+		if (now < this.end_date) {
 			return Jam.PERIOD_RUNNING;
 		}
 
 		// Are we in a voting period?
-		if (this.voting_enabled) {
-			const votingEndMoment = moment(this.voting_end_date);
-
-			if (now.isBefore(votingEndMoment)) {
-				return Jam.PERIOD_VOTING;
-			}
+		if (this.voting_enabled && now < this.voting_end_date) {
+			return Jam.PERIOD_VOTING;
 		}
 
 		// If all previous checks failed, then our jam is over.

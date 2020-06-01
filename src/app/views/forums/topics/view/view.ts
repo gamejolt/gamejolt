@@ -22,7 +22,7 @@ import AppScrollAffix from '../../../../../_common/scroll/affix/affix.vue';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { AppScrollTo } from '../../../../../_common/scroll/to/to.directive';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
