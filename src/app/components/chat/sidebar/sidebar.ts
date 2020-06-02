@@ -1,9 +1,8 @@
 import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { Component, InjectReactive } from 'vue-property-decorator';
 import { number } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { ChatClient } from '../client';
+import { ChatClient, ChatKey, enterChatRoom } from '../client';
 import AppChatUserList from '../user-list/user-list.vue';
 
 @Component({
@@ -15,8 +14,7 @@ import AppChatUserList from '../user-list/user-list.vue';
 	},
 })
 export default class AppChatSidebar extends Vue {
-	@State
-	chat!: ChatClient;
+	@InjectReactive(ChatKey) chat!: ChatClient;
 
 	friendsTab: 'all' | 'online' = 'all';
 
@@ -33,6 +31,6 @@ export default class AppChatSidebar extends Vue {
 	}
 
 	onPublicRoomClicked(roomId: number) {
-		this.chat.enterRoom(roomId);
+		enterChatRoom(this.chat, roomId);
 	}
 }

@@ -50,7 +50,6 @@ textarea
 	change-bg('dark')
 	padding: 8px
 	resize: none
-	font-size: $font-size-small
 	border: 0
 	color: $white
 

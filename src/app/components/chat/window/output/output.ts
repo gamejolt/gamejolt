@@ -1,12 +1,12 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { Component, InjectReactive, Prop } from 'vue-property-decorator';
 import { EventSubscription } from '../../../../../system/event/event-topic';
+import { propRequired } from '../../../../../utils/vue';
 import { date } from '../../../../../_common/filters/date';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
-import { ChatClient } from '../../client';
+import { ChatClient, ChatKey, loadOlderChatMessages } from '../../client';
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
 import AppChatWindowOutputItem from './item/item.vue';
@@ -22,14 +22,10 @@ import AppChatWindowOutputItem from './item/item.vue';
 	},
 })
 export default class AppChatWindowOutput extends Vue {
-	@Prop(ChatRoom)
-	room!: ChatRoom;
+	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+	@Prop(propRequired(Array)) messages!: ChatMessage[];
 
-	@Prop(Array)
-	messages!: ChatMessage[];
-
-	@State
-	chat!: ChatClient;
+	@InjectReactive(ChatKey) chat!: ChatClient;
 
 	get shouldShowLoadMore() {
 		return !this.chat.loadingOlderMessages;
@@ -79,7 +75,7 @@ export default class AppChatWindowOutput extends Vue {
 	loadMore() {
 		const roomId = this.chat.room?.id;
 		if (roomId) {
-			this.chat.loadOlderMessages(roomId);
+			loadOlderChatMessages(this.chat, roomId);
 		}
 	}
 

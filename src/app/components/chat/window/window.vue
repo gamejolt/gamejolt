@@ -2,9 +2,9 @@
 	<div class="chat-window-wrap">
 		<!-- We sadly need the chat close thing twice. It takes up the empty
 		background space so you can click that to close chat. -->
-		<div class="chat-window-back-close" @click="closeChat"></div>
+		<div class="chat-window-back-close" @click="close"></div>
 		<div class="chat-window">
-			<div class="chat-window-back-close" @click="closeChat"></div>
+			<div class="chat-window-back-close" @click="close"></div>
 
 			<!-- Room Users -->
 			<app-scroll-scroller
@@ -112,10 +112,7 @@
 									@require-change="isDescriptionCollapsed = $event"
 								>
 									<div class="chat-window-header-room-description chat-compiled-room-description">
-										<div
-											class="anim-fade-in no-animate-xs"
-											v-html="room.description"
-										></div>
+										<div class="anim-fade-in no-animate-xs" v-html="room.description"></div>
 									</div>
 								</app-fade-collapse>
 
