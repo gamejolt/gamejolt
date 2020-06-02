@@ -1,22 +1,24 @@
 import { Channel, Presence, Socket } from 'phoenix';
 import Vue from 'vue';
-import { ChatClient } from './client';
+import { ChatClient, isInChatRoom, processNewChatOutput, setChatRoom } from './client';
 import { ChatMessage } from './message';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
 import { ChatUserCollection } from './user-collection';
 
-export class RoomChannel extends Channel {
+export class ChatRoomChannel extends Channel {
 	room!: ChatRoom;
 	roomId: number;
 	readonly client: ChatClient;
 	readonly socket: Socket;
 
 	constructor(roomId: number, client: ChatClient, params?: object) {
-		super('room:' + roomId, params, client.socket as Socket);
+		const socket = client.socket!;
+
+		super('room:' + roomId, params, socket);
 		this.client = client;
 		this.roomId = roomId;
-		this.socket = client.socket as Socket;
+		this.socket = socket;
 		(this.socket as any).channels.push(this);
 
 		this.setupPresence();
@@ -26,8 +28,8 @@ export class RoomChannel extends Channel {
 		this.on('user_updated', this.onUserUpdated.bind(this));
 
 		this.onClose(() => {
-			if (this.client.isInRoom(roomId)) {
-				this.client.setRoom(undefined);
+			if (isInChatRoom(this.client, roomId)) {
+				setChatRoom(this.client, undefined);
 
 				// Reset the room we were in
 				Vue.delete(this.client.usersOnline, roomId);
@@ -48,7 +50,7 @@ export class RoomChannel extends Channel {
 		}
 
 		const message = new ChatMessage(data);
-		this.client.processNewOutput([message], false);
+		processNewChatOutput(this.client, [message], false);
 
 		const friend = this.client.friendsList.getByRoom(message.roomId);
 		if (friend) {
@@ -58,13 +60,13 @@ export class RoomChannel extends Channel {
 	}
 
 	private onClearNotifications(data: any) {
-		if (this.client.isInRoom(data.room_id)) {
+		if (isInChatRoom(this.client, data.room_id)) {
 			Vue.delete(this.client.notifications, '' + data.room_id);
 		}
 	}
 
 	private onUserUpdated(data: any) {
-		if (this.room && this.client.isInRoom(this.roomId) && this.room.isGroupRoom) {
+		if (this.room && isInChatRoom(this.client, this.roomId) && this.room.isGroupRoom) {
 			this.client.usersOnline[this.roomId].update(data);
 		}
 	}

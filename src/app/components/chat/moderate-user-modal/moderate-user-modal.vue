@@ -15,7 +15,7 @@
 
 		<div class="modal-body">
 			<template v-if="canModerate">
-				<template v-if="chat.canModerate(room, user, 'mute')">
+				<template v-if="canMute">
 					<app-button v-if="!user.isMutedRoom" type="span" @click="mute">
 						<translate>Mute</translate>
 					</app-button>
@@ -24,11 +24,10 @@
 					</app-button>
 				</template>
 
-				<template v-if="chat.canModerate(room, user, 'mod')">
+				<template v-if="canMakeMod">
 					<app-button v-if="!user.isMod" type="span" @click="mod">
 						<translate>Mod</translate>
 					</app-button>
-
 					<app-button v-else type="span" @click="demod">
 						<translate>Demod</translate>
 					</app-button>

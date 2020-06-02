@@ -1,10 +1,15 @@
 import { Channel, Presence, Socket } from 'phoenix';
-import { ChatClient } from './client';
+import {
+	ChatClient,
+	isInChatRoom,
+	leaveChatRoom,
+	newChatNotification,
+	onChatNotification,
+} from './client';
 import { ChatMessage } from './message';
-import { ChatNotification } from './notification/notification.service';
 import { ChatUser } from './user';
 
-export class UserChannel extends Channel {
+export class ChatUserChannel extends Channel {
 	readonly client: ChatClient;
 	readonly socket: Socket;
 
@@ -59,8 +64,8 @@ export class UserChannel extends Channel {
 		const userId = data.user_id;
 		const friend = this.client.friendsList.get(userId);
 
-		if (friend && this.client.isInRoom(friend.roomId)) {
-			this.client.leaveRoom();
+		if (friend && isInChatRoom(this.client, friend.roomId)) {
+			leaveChatRoom(this.client);
 		}
 
 		this.client.friendsList.remove(userId);
@@ -81,16 +86,15 @@ export class UserChannel extends Channel {
 
 		// We got a notification for some room.
 		// If the notification key is null, set it to 1.
-		this.client.newNotification(message.roomId);
+		newChatNotification(this.client, message.roomId);
 
 		const friend = this.client.friendsList.getByRoom(message.roomId);
 		if (friend) {
 			friend.lastMessageOn = message.loggedOn.getTime();
-			console.log('Updated friend timestamp to ' + friend.lastMessageOn);
 			this.client.friendsList.update(friend);
 		}
 
-		ChatNotification.notification(message);
+		onChatNotification(this.client, message);
 	}
 
 	private onYouUpdated(data: Partial<ChatUser>) {

@@ -1,46 +1,66 @@
-import { Component, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../utils/vue';
 import { BaseModal } from '../../../../_common/modal/base';
-import { ChatClient } from '../client';
+import {
+	canModerateChatUser,
+	ChatClient,
+	ChatKey,
+	demodChatUser,
+	modChatUser,
+	muteChatUser,
+	unmuteChatUser,
+} from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 
 @Component({})
 export default class AppChatModerateUserModal extends BaseModal {
-	@Prop(ChatRoom) room!: ChatRoom;
-	@Prop(ChatUser) user!: ChatUser;
+	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+	@Prop(propRequired(ChatUser)) user!: ChatUser;
 
-	@State chat!: ChatClient;
+	@InjectReactive(ChatKey) chat!: ChatClient;
 
 	get canModerate() {
-		return this.chat.canModerate(this.room, this.user);
+		return this.canPerformAction();
+	}
+
+	get canMute() {
+		return this.canPerformAction('mute');
+	}
+
+	get canMakeMod() {
+		return this.canPerformAction('mod');
+	}
+
+	private canPerformAction(action?: string) {
+		return canModerateChatUser(this.chat, this.room, this.user, action);
 	}
 
 	mod() {
 		if (!this.canModerate) {
 			return;
 		}
-		this.chat.mod(this.user.id, this.room!.id);
+		modChatUser(this.chat, this.user.id, this.room.id);
 	}
 
 	demod() {
 		if (!this.canModerate) {
 			return;
 		}
-		this.chat.demod(this.user.id, this.room!.id);
+		demodChatUser(this.chat, this.user.id, this.room.id);
 	}
 
 	mute() {
 		if (!this.canModerate) {
 			return;
 		}
-		this.chat.mute(this.user.id, this.room!.id);
+		muteChatUser(this.chat, this.user.id, this.room.id);
 	}
 
 	unmute() {
 		if (!this.canModerate) {
 			return;
 		}
-		this.chat.unmute(this.user.id, this.room!.id);
+		unmuteChatUser(this.chat, this.user.id, this.room.id);
 	}
 }

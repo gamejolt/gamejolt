@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Component, InjectReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
@@ -23,7 +23,7 @@ import { UserFriendship } from '../../../../_common/user/friendship/friendship.m
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import { User } from '../../../../_common/user/user.model';
 import { YoutubeChannel } from '../../../../_common/youtube/channel/channel-model';
-import { ChatClient } from '../../../components/chat/client';
+import { ChatClient, ChatKey, enterChatRoom, isInChatRoom } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/overview/overview.vue';
 import AppGameList from '../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
@@ -64,6 +64,8 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 	resolver: ({ route }) => Api.sendRequest('/web/profile/overview/@' + route.params.username),
 })
 export default class RouteProfileOverview extends BaseRouteComponent {
+	@InjectReactive(ChatKey) chat?: ChatClient;
+
 	@State
 	app!: Store['app'];
 
@@ -114,9 +116,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	@Action
 	toggleRightPane!: Store['toggleRightPane'];
-
-	@State
-	chat?: ChatClient;
 
 	showFullDescription = false;
 	canToggleDescription = false;
@@ -344,10 +343,10 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		if (this.user && this.chat) {
 			const chatUser = this.chat.friendsList.collection.find(u => u.id === this.user!.id);
 			if (chatUser) {
-				if (this.chat.isInRoom(chatUser.roomId)) {
+				if (isInChatRoom(this.chat, chatUser.roomId)) {
 					this.toggleRightPane();
 				} else {
-					this.chat.enterRoom(chatUser.roomId);
+					enterChatRoom(this.chat, chatUser.roomId);
 				}
 			}
 		}

@@ -1,10 +1,16 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { propOptional, propRequired } from '../../../../../utils/vue';
 import { number } from '../../../../../_common/filters/number';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
-import { ChatClient, ChatSiteModPermission } from '../../client';
+import {
+	canModerateChatUser,
+	ChatClient,
+	ChatKey,
+	ChatSiteModPermission,
+	enterChatRoom,
+} from '../../client';
 import { ChatModerateUserModal } from '../../moderate-user-modal/moderate-user-modal.service';
 import { ChatRoom } from '../../room';
 import { ChatUser } from '../../user';
@@ -18,12 +24,12 @@ import { ChatUser } from '../../user';
 	},
 })
 export default class AppChatUserListItem extends Vue {
-	@Prop(ChatUser) user!: ChatUser;
-	@Prop(ChatRoom) room?: ChatRoom;
-	@Prop(Boolean) showPm?: boolean;
-	@Prop(Boolean) showModTools?: boolean;
+	@Prop(propRequired(ChatUser)) user!: ChatUser;
+	@Prop(propOptional(ChatRoom)) room?: ChatRoom;
+	@Prop(propOptional(Boolean, false)) showPm!: boolean;
+	@Prop(propOptional(Boolean, false)) showModTools!: boolean;
 
-	@State chat!: ChatClient;
+	@InjectReactive(ChatKey) chat!: ChatClient;
 
 	isInview = false;
 
@@ -35,7 +41,7 @@ export default class AppChatUserListItem extends Vue {
 			return false;
 		}
 
-		return this.chat.canModerate(this.room, this.user);
+		return canModerateChatUser(this.chat, this.room, this.user);
 	}
 
 	onUserClick(e: Event) {
@@ -43,7 +49,7 @@ export default class AppChatUserListItem extends Vue {
 			return;
 		}
 
-		this.chat.enterRoom(this.user.roomId);
+		enterChatRoom(this.chat, this.user.roomId);
 		e.preventDefault();
 	}
 

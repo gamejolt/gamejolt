@@ -1,7 +1,3 @@
-export async function ChatClientLazy() {
-	return (await import(/* webpackChunkName: "chat" */ './chat/client')).ChatClient;
-}
-
 export async function GridClientLazy() {
 	return (await import(/* webpackChunkName: "grid" */ './grid/client.service')).GridClient;
 }
