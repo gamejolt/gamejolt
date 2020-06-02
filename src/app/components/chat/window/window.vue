@@ -44,7 +44,7 @@
 					:room="room"
 					:users="users.collection"
 					:show-mod-tools="room.isMod"
-				></app-chat-user-list>
+				/>
 			</app-scroll-scroller>
 
 			<div class="chat-window-main">
@@ -84,7 +84,7 @@
 						<div class="chat-window-header-content" v-for="room of [room]" :key="room.id">
 							<router-link
 								class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
-								v-if="room.isPmRoom"
+								v-if="room.isPmRoom && room.user"
 								:to="room.user.url"
 							>
 								<img :src="room.user.imgAvatar" alt="" />
@@ -94,7 +94,7 @@
 								{{ room.title }}
 							</h3>
 							<h3
-								v-else
+								v-else-if="room.user"
 								class="anim-fade-in-right no-animate-xs"
 								:title="`${room.user.displayName} (@${room.user.username})`"
 							>

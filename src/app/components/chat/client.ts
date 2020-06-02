@@ -224,7 +224,7 @@ async function joinUserChannel(chat: ChatClient, userId: number) {
 						chat.friendsPopulated = true;
 						chat.notifications = response.notifications;
 						chat.publicRooms = response.public_rooms.map(
-							(room: any) => new ChatRoom(room)
+							(room: any) => new ChatRoom(chat, room)
 						);
 						resolve();
 					});
@@ -244,7 +244,7 @@ async function joinRoomChannel(chat: ChatClient, roomId: number) {
 					.receive('error', reject)
 					.receive('ok', response => {
 						chat.roomChannels[roomId] = channel;
-						channel.room = new ChatRoom(response.room);
+						channel.room = new ChatRoom(chat, response.room);
 						const messages = response.messages.map(
 							(msg: ChatMessage) => new ChatMessage(msg)
 						);

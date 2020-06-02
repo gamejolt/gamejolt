@@ -1,6 +1,5 @@
+import { ChatClient, ChatSiteModPermission } from './client';
 import { ChatUser } from './user';
-import { store } from '../../store/index';
-import { ChatSiteModPermission } from './client';
 
 export type ChatRoomType = 'pm' | 'open_group' | 'closed_group' | 'viral_group';
 
@@ -22,11 +21,7 @@ export class ChatRoom {
 		userId: number;
 	}[];
 
-	get chat() {
-		return store.state.chat!;
-	}
-
-	constructor(data: Partial<ChatRoom> = {}) {
+	constructor(private chat: ChatClient, data: Partial<ChatRoom> = {}) {
 		Object.assign(this, data);
 	}
 
@@ -52,7 +47,10 @@ export class ChatRoom {
 		}
 
 		// If they're a global site mod, then they can mod this room.
-		if (this.chat.currentUser && this.chat.currentUser.permissionLevel >= ChatSiteModPermission) {
+		if (
+			this.chat.currentUser &&
+			this.chat.currentUser.permissionLevel >= ChatSiteModPermission
+		) {
 			return true;
 		}
 
