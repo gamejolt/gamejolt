@@ -1,5 +1,5 @@
 <template>
-	<div v-if="community" class="-page">
+	<div v-if="community">
 		<app-scroll-scroller thin class="-channel-sidebar fill-offset" v-if="Screen.isLg">
 			<div class="-card">
 				<app-community-card :community="community" />
@@ -18,30 +18,25 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
-@require '../../../components/community/channel/card/variables'
-
-$-sidebar-padding = 12px
-$-sidebar-width = $card-width + $-sidebar-padding * 2
-
-.-page
-	--route-communities-view-sidebar-width: $-sidebar-width
+@require './variables'
 
 .-channel-sidebar
 	position: fixed
 	left: $shell-cbar-width
 	top: $shell-top-nav-height
 	bottom: 0
-	width: $-sidebar-width
-	padding: $-sidebar-padding
+	width: $sidebar-width
+	padding: $sidebar-padding
 
-	@media $media-md-down // prevent shifting when v-if="Screen.isSize" removes the element
+	// Prevent shifting when v-if="Screen.isSize" removes the element.
+	@media $media-md-down
 		display: none
 
 .-content
 	min-height: 'calc(100vh - %s)' % $shell-top-nav-height
 
 	@media $media-lg
-		padding-left: $-sidebar-width
+		padding-left: $sidebar-width
 </style>
 
 <script lang="ts" src="./view"></script>

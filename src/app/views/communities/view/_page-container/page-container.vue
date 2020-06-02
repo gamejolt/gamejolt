@@ -1,6 +1,6 @@
 <template>
 	<div class="-container">
-		<div v-if="Screen.isLg" class="-offset"></div>
+		<div v-if="Screen.isLg" class="-offset" />
 		<div class="-content">
 			<slot />
 		</div>
@@ -13,6 +13,7 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
+@require '../variables'
 
 $-gutter = $grid-gutter-width / 2
 
@@ -27,22 +28,25 @@ $-gutter = $grid-gutter-width / 2
 
 .-offset
 	flex: 1
-	max-width: 40px // roughly how much offset we need to center on the search bar
-	z-index: -1 // only included this to hide it from the element selector, not needed otherwise
+	// Roughly how much offset we need to center the content to the search bar.
+	max-width: 40px
+	// Hiding from the element selector, not needed otherwise.
+	z-index: -1
 
-	@media $media-md-down // prevent shifting when v-if="Screen.isSize" removes the element
+	// Prevent shifting when v-if="Screen.isSize" removes the element.
+	@media $media-md-down
 		display: none
 
 .-content
-	// Need a flex-basis the same as the max-width so we collapse .-offset first
+	// Need a flex-basis the same as the max-width so we collapse .-offset first.
 	flex: 2 1 650px
 	max-width: 650px
 	min-width: 0
 
 .-sidebar
-	// Need a flex-basis the same as the max-width so we collapse .-offset first
-	flex: 1 2 var(--route-communities-view-sidebar-width)
-	max-width: var(--route-communities-view-sidebar-width)
+	// Need a flex-basis the same as the max-width so we collapse .-offset first.
+	flex: 1 2 $sidebar-width
+	max-width: $sidebar-width
 
 	&.-none
 		// Shrink at a very high number so that .-content doesn't shrink.
