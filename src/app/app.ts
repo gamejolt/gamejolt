@@ -58,7 +58,7 @@ export default class App extends Vue {
 	/**
 	 * When the user changes, we need to change our global app state.
 	 */
-	@Watch('user.id')
+	@Watch('user.id', { immediate: true })
 	onUserChange(userId?: number) {
 		const isLoggedIn = !!userId;
 

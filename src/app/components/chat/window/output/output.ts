@@ -27,8 +27,12 @@ export default class AppChatWindowOutput extends Vue {
 
 	@InjectReactive(ChatKey) chat!: ChatClient;
 
-	get shouldShowLoadMore() {
-		return !this.chat.loadingOlderMessages;
+	/** Whether or not we reached the end of the historical messages. */
+	reachedEnd = false;
+	isLoadingOlder = false;
+
+	get canLoadOlder() {
+		return !this.reachedEnd && !this.isLoadingOlder;
 	}
 
 	private shouldScroll = true;
@@ -55,6 +59,11 @@ export default class AppChatWindowOutput extends Vue {
 	 * they scroll back to the bottom.
 	 */
 	onScroll() {
+		if (this.canLoadOlder && this.$el.scrollTop === 0) {
+			this.loadOlder();
+			return;
+		}
+
 		// We skip checking the scroll if the element isn't scrollable yet.
 		// This'll be the case if the height of the element is less than its
 		// scroll height.
@@ -72,11 +81,35 @@ export default class AppChatWindowOutput extends Vue {
 		}
 	}
 
-	loadMore() {
-		const roomId = this.chat.room?.id;
-		if (roomId) {
-			loadOlderChatMessages(this.chat, roomId);
+	async loadOlder() {
+		this.isLoadingOlder = true;
+		await this.$nextTick();
+
+		// Pulling the height after showing the loading allows us to scroll back
+		// without it looking like it jumps.
+		const startHeight = this.$el.scrollHeight;
+		const firstMessage = this.messages[0];
+
+		try {
+			await loadOlderChatMessages(this.chat, this.room.id);
+		} catch (e) {
+			console.error(e);
 		}
+
+		this.isLoadingOlder = false;
+		await this.$nextTick();
+
+		// If the oldest message is the same, we need to mark that we reached
+		// the end of the history so we don't continue loading more.
+		if (this.messages[0].id === firstMessage.id) {
+			this.reachedEnd = true;
+			return;
+		}
+
+		// After loading new messages we have to shift the scroll back down to
+		// where we weren in the previous view of message history.
+		const diff = this.$el.scrollHeight - startHeight;
+		this.$el.scrollTop = diff;
 	}
 
 	async onMessageTransition() {
