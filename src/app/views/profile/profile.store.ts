@@ -120,7 +120,10 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	@VuexMutation
 	bootstrapUser(username: RouteMutations['bootstrapUser']) {
 		const prevId = this.user && this.user.id;
-		const user = Registry.find<User>('User', i => i.username === username);
+		const user = Registry.find<User>(
+			'User',
+			i => i.username.toLowerCase() === username.toLowerCase()
+		);
 		this.user = updateUser(this.user, user);
 
 		if ((this.user && this.user.id) !== prevId) {

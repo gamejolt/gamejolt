@@ -353,13 +353,13 @@
 							<p v-if="calculatedAddressTax && addressTaxAmount > 0" class="anim-fade-in small">
 								+{{ addressTaxAmount | currency }}
 								<translate>tax</translate>
-								<span
-									v-app-tooltip="
+								<app-jolticon
+									class="text-muted"
+									icon="help-circle"
+									v-app-tooltip.touchable="
 										$gettext(`We are required to collect taxes on orders for certain regions.`)
 									"
-								>
-									<app-jolticon class="text-muted" icon="help-circle" />
-								</span>
+								/>
 							</p>
 
 							<div v-if="!hasSufficientWalletFunds" class="alert">

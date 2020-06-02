@@ -24,7 +24,7 @@ module.exports = (config, projectBase) => {
 	config.production = argv.production || false;
 	config.watching = argv._.indexOf('watch') !== -1 ? 'initial' : false;
 	config.write = argv.fs || false;
-	config.analyze = argv.analyze || false;
+	config.analyzeBundle = argv['analyze-bundle'] || false;
 	config.ssr = argv.ssr || false; // 'client' | 'server' | false
 	config.client = argv.client || false;
 
