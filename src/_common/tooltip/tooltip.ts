@@ -58,8 +58,10 @@ export default class AppTooltip extends Vue {
 	}
 
 	private scheduleDestroy() {
-		// We want to update the popper positioning in case text changes before hiding.
-		if (this._popperInstance) {
+		// Making sure the popper is positioned where it should be if the text
+		// content changes. We only want to do this if the tooltip is active though,
+		// otherwise we might update positioning to a non-existant reference element.
+		if (this._popperInstance && this.tooltip && this.tooltip.isActive) {
 			this._popperInstance.update();
 		}
 
