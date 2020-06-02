@@ -58,7 +58,6 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	placeholderCommunitiesCount = 0;
 	videosCount = 0;
 	trophyCount = 0;
-	isOnline = false;
 	userFriendship: UserFriendship | null = null;
 	previewTrophies: UserBaseTrophy[] | null = null;
 
@@ -128,7 +127,6 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 			this.gamesCount = 0;
 			this.communitiesCount = 0;
 			this.placeholderCommunitiesCount = 0;
-			this.isOnline = false;
 			this.videosCount = 0;
 			this.trophyCount = 0;
 			this.userFriendship = null;
@@ -144,7 +142,6 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 		this.gamesCount = $payload.gamesCount || 0;
 		this.communitiesCount = $payload.communitiesCount || 0;
 		this.placeholderCommunitiesCount = $payload.placeholderCommunitiesCount || 0;
-		this.isOnline = $payload.isOnline || false;
 		this.videosCount = $payload.videosCount || 0;
 		this.trophyCount = $payload.trophyCount || 0;
 

@@ -11,8 +11,6 @@ import { ChatClient, ChatKey } from './components/chat/client';
 import AppShell from './components/shell/shell.vue';
 import { Store } from './store';
 
-export const ChatDestroyKey = Symbol('ChatDestroy');
-
 @Component({
 	components: {
 		AppCommonShell,
