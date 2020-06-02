@@ -18,7 +18,6 @@ export const ChatKey = Symbol('Chat');
 export const ChatSiteModPermission = 2;
 
 export interface ChatNewMessageEvent {
-	isPrimer: boolean;
 	message: ChatMessage;
 }
 
@@ -63,7 +62,6 @@ export class ChatClient {
 	currentUser: ChatUser | null = null;
 	friendsList: ChatUserCollection = null as any;
 	friendsPopulated = false;
-	loadingOlderMessages = false;
 
 	room: ChatRoom | null = null;
 
@@ -359,43 +357,45 @@ function outputMessage(
 	roomId: number,
 	type: ChatMessageType,
 	message: ChatMessage,
-	isPrimer: boolean
+	isHistorical: boolean
 ) {
-	if (chat.room && isInChatRoom(chat, roomId)) {
-		message.type = type;
-		message.loggedOn = new Date(message.loggedOn);
-		message.combine = false;
-		message.dateSplit = false;
-
-		if (chat.messages[roomId].length) {
-			const latestMessage = chat.messages[roomId][chat.messages[roomId].length - 1];
-
-			// Combine if the same user and within 5 minutes of their previous message.
-			if (
-				message.user.id === latestMessage.user.id &&
-				message.loggedOn.getTime() - latestMessage.loggedOn.getTime() <= 5 * 60 * 1000
-			) {
-				message.combine = true;
-			}
-
-			// If the date is different than the date for the previous
-			// message, we want to split it in the view.
-			if (message.loggedOn.toDateString() !== latestMessage.loggedOn.toDateString()) {
-				message.dateSplit = true;
-				message.combine = false;
-			}
-		} else {
-			// First message should show date.
-			message.dateSplit = true;
-		}
-
-		if (!chat.room.isPrivateRoom && !isPrimer) {
-			newChatNotification(chat, roomId);
-		}
-
-		// Push it into the room's message list.
-		chat.messages[roomId].push(message);
+	if (!chat.room || !isInChatRoom(chat, roomId)) {
+		return;
 	}
+
+	message.type = type;
+	message.loggedOn = new Date(message.loggedOn);
+	message.combine = false;
+	message.dateSplit = false;
+
+	if (chat.messages[roomId].length) {
+		const latestMessage = chat.messages[roomId][chat.messages[roomId].length - 1];
+
+		// Combine if the same user and within 5 minutes of their previous message.
+		if (
+			message.user.id === latestMessage.user.id &&
+			message.loggedOn.getTime() - latestMessage.loggedOn.getTime() <= 5 * 60 * 1000
+		) {
+			message.combine = true;
+		}
+
+		// If the date is different than the date for the previous
+		// message, we want to split it in the view.
+		if (message.loggedOn.toDateString() !== latestMessage.loggedOn.toDateString()) {
+			message.dateSplit = true;
+			message.combine = false;
+		}
+	} else {
+		// First message should show date.
+		message.dateSplit = true;
+	}
+
+	if (!chat.room.isPrivateRoom && !isHistorical) {
+		newChatNotification(chat, roomId);
+	}
+
+	// Push it into the room's message list.
+	chat.messages[roomId].push(message);
 }
 
 function setupRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
@@ -448,19 +448,24 @@ export function resendChatMessage(chat: ChatClient, message: ChatMessage) {
 	queueChatMessage(chat, message.content, message.roomId);
 }
 
-export function processNewChatOutput(chat: ChatClient, messages: ChatMessage[], isPrimer: boolean) {
+export function processNewChatOutput(
+	chat: ChatClient,
+	messages: ChatMessage[],
+	isHistorical: boolean
+) {
 	if (!messages.length) {
 		return;
 	}
 
 	messages.forEach(message => {
-		outputMessage(chat, message.roomId, ChatMessage.TypeNormal, message, isPrimer);
+		outputMessage(chat, message.roomId, ChatMessage.TypeNormal, message, isHistorical);
 
-		// Emit an event that we've sent out a new message.
-		EventBus.emit('Chat.newMessage', <ChatNewMessageEvent>{
-			message,
-			isPrimer,
-		});
+		if (!isHistorical) {
+			// Emit an event that we've sent out a new message.
+			EventBus.emit('Chat.newMessage', <ChatNewMessageEvent>{
+				message,
+			});
+		}
 	});
 }
 
@@ -527,19 +532,32 @@ function sendRoboJolt(chat: ChatClient, roomId: number, content: string) {
 }
 
 export function loadOlderChatMessages(chat: ChatClient, roomId: number) {
-	chat.loadingOlderMessages = true;
-	chat.roomChannels[roomId]
-		.push('load_messages', { before_id: chat.messages[roomId][0].id })
-		.receive('ok', data => {
-			const oldMessages = data.messages.map((msg: ChatMessage) => new ChatMessage(msg));
-			const messages = [...oldMessages.reverse(), ...chat.messages[roomId]];
-			chat.messages[roomId] = [];
-			chat.loadingOlderMessages = false;
+	return new Promise<void>((resolve, reject) => {
+		const onLoadFailed = () => reject(new Error(`Failed to load messages.`));
 
-			processNewChatOutput(chat, messages, false);
-		})
-		.receive('error', () => (chat.loadingOlderMessages = false))
-		.receive('timeout', () => (chat.loadingOlderMessages = false));
+		const onLoadMessages = (data: any) => {
+			const oldMessages = data.messages.map((i: any) => new ChatMessage(i));
+
+			// If no older messages, we reached the end of the history.
+			if (oldMessages.length > 0) {
+				const messages = [...oldMessages.reverse(), ...chat.messages[roomId]];
+
+				// We have to clear out all messages and add them again so that we
+				// calculate proper date splits and what not.
+				chat.messages[roomId] = [];
+				processNewChatOutput(chat, messages, false);
+			}
+
+			resolve();
+		};
+
+		const firstMessage = chat.messages[roomId][0];
+		chat.roomChannels[roomId]
+			.push('load_messages', { before_id: firstMessage.id })
+			.receive('ok', onLoadMessages)
+			.receive('error', onLoadFailed)
+			.receive('timeout', onLoadFailed);
+	});
 }
 
 export function canModerateChatUser(

@@ -128,7 +128,6 @@ export default class AppShell extends Vue {
 				!ContentFocus.isWindowFocused &&
 				this.chat &&
 				this.chat.room &&
-				!event.isPrimer &&
 				event.message &&
 				event.message.roomId === this.chat.room.id
 			) {
