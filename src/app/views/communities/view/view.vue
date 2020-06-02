@@ -1,6 +1,6 @@
 <template>
 	<div v-if="community" class="-page">
-		<app-scroll-scroller thin class="-sidebar fill-offset">
+		<app-scroll-scroller thin class="-channel-sidebar fill-offset" v-if="Screen.isLg">
 			<div class="-card">
 				<app-community-card :community="community" />
 			</div>
@@ -26,7 +26,7 @@ $-sidebar-width = $card-width + $-sidebar-padding * 2
 .-page
 	--route-communities-view-sidebar-width: $-sidebar-width
 
-.-sidebar
+.-channel-sidebar
 	position: fixed
 	left: $shell-cbar-width
 	top: $shell-top-nav-height
@@ -34,9 +34,14 @@ $-sidebar-width = $card-width + $-sidebar-padding * 2
 	width: $-sidebar-width
 	padding: $-sidebar-padding
 
+	@media $media-md-down // prevent shifting when v-if="Screen.isSize" removes the element
+		display: none
+
 .-content
-	padding-left: $-sidebar-width
 	min-height: 'calc(100vh - %s)' % $shell-top-nav-height
+
+	@media $media-lg
+		padding-left: $-sidebar-width
 </style>
 
 <script lang="ts" src="./view"></script>
