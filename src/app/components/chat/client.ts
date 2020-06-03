@@ -328,7 +328,6 @@ export function queueChatMessage(chat: ChatClient, content: string, roomId: numb
 		type: ChatMessage.TypeNormal,
 		userId: chat.currentUser.id,
 		user: chat.currentUser,
-		state: ChatMessage.StatePending,
 		roomId,
 		content,
 		loggedOn: new Date(),
@@ -402,14 +401,6 @@ function setupRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
 	}
 }
 
-export function resendChatMessage(chat: ChatClient, message: ChatMessage) {
-	chat.messages[message.roomId] = chat.messages[message.roomId].filter(
-		msg => msg.objectId !== message.objectId
-	);
-
-	queueChatMessage(chat, message.content, message.roomId);
-}
-
 export function processNewChatOutput(
 	chat: ChatClient,
 	messages: ChatMessage[],
@@ -442,25 +433,11 @@ function sendNextMessage(chat: ChatClient) {
 		return;
 	}
 
-	outputMessage(chat, message.roomId, ChatMessage.TypeNormal, message, false);
 	sendChatMessage(chat, message);
 }
 
 function sendChatMessage(chat: ChatClient, message: ChatMessage) {
-	chat.roomChannels[message.roomId]
-		.push('message', {
-			content: message.content,
-		})
-		.receive('ok', data => {
-			message.id = data.id;
-			message.state = ChatMessage.StateSent;
-		})
-		.receive('error', () => {
-			message.state = ChatMessage.StateFailed;
-		})
-		.receive('timeout', () => {
-			message.state = ChatMessage.StateFailed;
-		});
+	chat.roomChannels[message.roomId].push('message', { content: message.content });
 }
 
 export function loadOlderChatMessages(chat: ChatClient, roomId: number) {

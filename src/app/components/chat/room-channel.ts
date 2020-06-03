@@ -45,10 +45,6 @@ export class ChatRoomChannel extends Channel {
 	}
 
 	private onMsg(data: any) {
-		if (this.client.currentUser && data.user.id === this.client.currentUser.id) {
-			return;
-		}
-
 		const message = new ChatMessage(data);
 		processNewChatOutput(this.client, [message], false);
 

@@ -2,11 +2,7 @@ import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
 import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
 import { date } from '../../../../../../_common/filters/date';
-import {
-	ChatClient,
-	ChatKey,
-	resendChatMessage,
-} from '../../../client';
+import { ChatClient, ChatKey } from '../../../client';
 import { ChatMessage } from '../../../message';
 import { ChatRoom } from '../../../room';
 import './item-content.styl';
@@ -37,9 +33,5 @@ export default class AppChatWindowOutputItem extends Vue {
 
 	get loggedOn() {
 		return date(this.message.loggedOn, 'medium');
-	}
-
-	resendMessage(message: ChatMessage) {
-		resendChatMessage(this.chat, message);
 	}
 }
