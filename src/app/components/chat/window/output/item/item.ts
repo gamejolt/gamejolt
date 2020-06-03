@@ -32,6 +32,6 @@ export default class AppChatWindowOutputItem extends Vue {
 	}
 
 	get loggedOn() {
-		return date(this.message.loggedOn, 'medium');
+		return date(this.message.logged_on, 'medium');
 	}
 }

@@ -48,9 +48,9 @@ export class ChatRoomChannel extends Channel {
 		const message = new ChatMessage(data);
 		processNewChatOutput(this.client, [message], false);
 
-		const friend = this.client.friendsList.getByRoom(message.roomId);
+		const friend = this.client.friendsList.getByRoom(message.room_id);
 		if (friend) {
-			friend.lastMessageOn = message.loggedOn.getTime();
+			friend.last_message_on = message.logged_on.getTime();
 			this.client.friendsList.update(friend);
 		}
 	}

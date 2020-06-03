@@ -32,7 +32,7 @@ export class ChatUserCollection {
 
 	getByRoom(input: number | ChatRoom) {
 		const roomId = typeof input === 'number' ? input : input.id;
-		return this.collection.find(user => user.roomId === roomId);
+		return this.collection.find(user => user.room_id === roomId);
 	}
 
 	has(input: number | ChatUser) {
@@ -118,16 +118,16 @@ export class ChatUserCollection {
 	sort() {
 		if (this.type === ChatUserCollection.TYPE_FRIEND) {
 			this.collection.sort((a, b) => {
-				return b.lastMessageOn - a.lastMessageOn;
+				return b.last_message_on - a.last_message_on;
 			});
 
 			return;
 		}
 
 		this.collection.sort((a, b) => {
-			if (a.displayName.toLowerCase() > b.displayName.toLowerCase()) {
+			if (a.display_name.toLowerCase() > b.display_name.toLowerCase()) {
 				return 1;
-			} else if (a.displayName.toLowerCase() < b.displayName.toLowerCase()) {
+			} else if (a.display_name.toLowerCase() < b.display_name.toLowerCase()) {
 				return -1;
 			}
 

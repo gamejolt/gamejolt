@@ -76,7 +76,7 @@
 								v-if="room.isPmRoom && room.user"
 								:to="room.user.url"
 							>
-								<img :src="room.user.imgAvatar" alt="" />
+								<img :src="room.user.img_avatar" alt="" />
 							</router-link>
 
 							<h3 v-if="!room.isPmRoom" class="anim-fade-in-right no-animate-xs">
@@ -85,10 +85,10 @@
 							<h3
 								v-else-if="room.user"
 								class="anim-fade-in-right no-animate-xs"
-								:title="`${room.user.displayName} (@${room.user.username})`"
+								:title="`${room.user.display_name} (@${room.user.username})`"
 							>
 								<router-link class="link-unstyled" :to="room.user.url">
-									{{ room.user.displayName }}
+									{{ room.user.display_name }}
 								</router-link>
 								<br />
 								<small>@{{ room.user.username }}</small>

@@ -10,21 +10,21 @@
 			<router-link
 				:to="user.url"
 				:class="{
-					active: showPm && chat.room && chat.room.id === user.roomId,
+					active: showPm && chat.room && chat.room.id === user.room_id,
 				}"
-				:title="`${user.displayName} (@${user.username})`"
+				:title="`${user.display_name} (@${user.username})`"
 				@click.native.capture="onUserClick"
 			>
 				<span
 					class="tag tag-highlight notifications-tag"
-					v-if="chat.notifications[user.roomId] || 0"
+					v-if="chat.notifications[user.room_id] || 0"
 				>
-					{{ chat.notifications[user.roomId] || 0 | number }}
+					{{ chat.notifications[user.room_id] || 0 | number }}
 				</span>
 
 				<div class="shell-nav-icon">
 					<div class="user-avatar">
-						<img :src="user.imgAvatar" />
+						<img :src="user.img_avatar" />
 
 						<span
 							class="chat-user-status"
@@ -38,7 +38,7 @@
 				</div>
 
 				<div class="shell-nav-label">
-					{{ user.displayName }}
+					{{ user.display_name }}
 					<span class="tiny">@{{ user.username }}</span>
 
 					<!--<div class="chat-user-list-meta">

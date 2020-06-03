@@ -64,7 +64,7 @@ export class ChatUserChannel extends Channel {
 		const userId = data.user_id;
 		const friend = this.client.friendsList.get(userId);
 
-		if (friend && isInChatRoom(this.client, friend.roomId)) {
+		if (friend && isInChatRoom(this.client, friend.room_id)) {
 			leaveChatRoom(this.client);
 		}
 
@@ -86,11 +86,11 @@ export class ChatUserChannel extends Channel {
 
 		// We got a notification for some room.
 		// If the notification key is null, set it to 1.
-		newChatNotification(this.client, message.roomId);
+		newChatNotification(this.client, message.room_id);
 
-		const friend = this.client.friendsList.getByRoom(message.roomId);
+		const friend = this.client.friendsList.getByRoom(message.room_id);
 		if (friend) {
-			friend.lastMessageOn = message.loggedOn.getTime();
+			friend.last_message_on = message.logged_on.getTime();
 			this.client.friendsList.update(friend);
 		}
 

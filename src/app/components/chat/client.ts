@@ -326,11 +326,11 @@ export function queueChatMessage(chat: ChatClient, content: string, roomId: numb
 	const message = new ChatMessage({
 		id: tempId,
 		type: ChatMessage.TypeNormal,
-		userId: chat.currentUser.id,
+		user_id: chat.currentUser.id,
 		user: chat.currentUser,
-		roomId,
+		room_id: roomId,
 		content,
-		loggedOn: new Date(),
+		logged_on: new Date(),
 	});
 
 	chat.messageQueue.push(message);
@@ -350,7 +350,7 @@ function outputMessage(
 	}
 
 	message.type = type;
-	message.loggedOn = new Date(message.loggedOn);
+	message.logged_on = new Date(message.logged_on);
 	message.combine = false;
 	message.dateSplit = false;
 
@@ -360,14 +360,14 @@ function outputMessage(
 		// Combine if the same user and within 5 minutes of their previous message.
 		if (
 			message.user.id === latestMessage.user.id &&
-			message.loggedOn.getTime() - latestMessage.loggedOn.getTime() <= 5 * 60 * 1000
+			message.logged_on.getTime() - latestMessage.logged_on.getTime() <= 5 * 60 * 1000
 		) {
 			message.combine = true;
 		}
 
 		// If the date is different than the date for the previous
 		// message, we want to split it in the view.
-		if (message.loggedOn.toDateString() !== latestMessage.loggedOn.toDateString()) {
+		if (message.logged_on.toDateString() !== latestMessage.logged_on.toDateString()) {
 			message.dateSplit = true;
 			message.combine = false;
 		}
@@ -411,7 +411,7 @@ export function processNewChatOutput(
 	}
 
 	messages.forEach(message => {
-		outputMessage(chat, message.roomId, ChatMessage.TypeNormal, message, isHistorical);
+		outputMessage(chat, message.room_id, ChatMessage.TypeNormal, message, isHistorical);
 
 		if (!isHistorical) {
 			// Emit an event that we've sent out a new message.
@@ -437,7 +437,7 @@ function sendNextMessage(chat: ChatClient) {
 }
 
 function sendChatMessage(chat: ChatClient, message: ChatMessage) {
-	chat.roomChannels[message.roomId].push('message', { content: message.content });
+	chat.roomChannels[message.room_id].push('message', { content: message.content });
 }
 
 export function loadOlderChatMessages(chat: ChatClient, roomId: number) {
@@ -498,15 +498,15 @@ export function isInChatRoom(chat: ChatClient, roomId?: number) {
 
 export function onChatNotification(chat: ChatClient, message: ChatMessage) {
 	// Skip if already in the room.
-	if (isInChatRoom(chat, message.roomId)) {
+	if (isInChatRoom(chat, message.room_id)) {
 		return;
 	}
 
 	Growls.info({
-		title: message.user.displayName,
+		title: message.user.display_name,
 		message: message.content,
-		icon: message.user.imgAvatar,
-		onclick: () => enterChatRoom(chat, message.roomId),
+		icon: message.user.img_avatar,
+		onclick: () => enterChatRoom(chat, message.room_id),
 		system: true,
 	});
 }
