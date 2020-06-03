@@ -114,13 +114,6 @@ export class ChatClient {
 	}
 
 	constructor() {
-		this.init();
-	}
-
-	private async init() {
-		// Initialize after we've been created. This allows the chat to get
-		// attached to the store before initializing all models within.
-		await Vue.nextTick();
 		reset(this);
 		connect(this);
 	}
@@ -558,6 +551,13 @@ export function loadOlderChatMessages(chat: ChatClient, roomId: number) {
 			.receive('error', onLoadFailed)
 			.receive('timeout', onLoadFailed);
 	});
+}
+
+/**
+ * Will return null if the user is not their friend.
+ */
+export function isUserOnline(chat: ChatClient, userId: number): null | boolean {
+	return chat.friendsList.get(userId)?.isOnline ?? null;
 }
 
 export function canModerateChatUser(
