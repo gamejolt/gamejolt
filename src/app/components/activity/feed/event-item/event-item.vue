@@ -136,10 +136,7 @@
 						:animate="false"
 						@require-change="canToggleLeadChanged"
 					>
-						<app-content-viewer
-							class="fireside-post-lead"
-							:source="post.lead_content"
-						/>
+						<app-content-viewer class="fireside-post-lead" :source="post.lead_content" />
 					</app-fade-collapse>
 				</app-sticker-target>
 
@@ -157,22 +154,13 @@
 					<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 				</div>
 
-				<div class="-communities" v-if="shouldShowCommunities">
-					<div
-						class="-community-row"
+				<app-scroll-scroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
+					<app-community-pill
 						v-for="postCommunity of communities"
 						:key="postCommunity.id"
-					>
-						<app-community-pill
-							v-if="!feed.hideCommunity"
-							:community="postCommunity.community"
-							:channel="feed.hideCommunityChannel ? undefined : postCommunity.channel"
-						/>
-						<app-pill v-else :to="getChannelRoute(postCommunity)">
-							{{ getChannelTitle(postCommunity) }}
-						</app-pill>
-					</div>
-				</div>
+						:community-link="postCommunity"
+					/>
+				</app-scroll-scroller>
 			</template>
 
 			<app-event-item-controls

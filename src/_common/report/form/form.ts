@@ -119,11 +119,16 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 
 				// For a devlog post of a game that is maturity restricted, we don't want to show the "explicit" report option.
 				// Those devlog posts can be explicit, and we don't want to encourage false reports.
-				if (
+				const isAdultGamePost =
 					this.resource instanceof FiresidePost &&
 					this.resource.game instanceof Game &&
-					this.resource.game.tigrs_age === 3
-				) {
+					this.resource.game.tigrs_age === 3;
+
+				// However, in cases where the post may be shown outside of the game page, we won't disable reporting.
+				const onlyShowsOnGame =
+					!this.resource.post_to_user_profile && this.resource.communities.length === 0;
+
+				if (isAdultGamePost && onlyShowsOnGame) {
 					arrayRemove(reasons, i => i.radioValue === 'explicit');
 				}
 
