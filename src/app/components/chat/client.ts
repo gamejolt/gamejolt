@@ -53,7 +53,6 @@ async function pollRequest(context: string, requestGetter: () => Promise<any>): 
 
 export class ChatClient {
 	connected = false;
-	publicRooms: ChatRoom[] = [];
 	socket: Socket | null = null;
 	userChannel: ChatUserChannel | null = null;
 
@@ -212,9 +211,6 @@ async function joinUserChannel(chat: ChatClient, userId: number) {
 						chat.friendsList = friendsList;
 						chat.friendsPopulated = true;
 						chat.notifications = response.notifications;
-						chat.publicRooms = response.public_rooms.map(
-							(room: any) => new ChatRoom(chat, room)
-						);
 						resolve();
 					});
 			})
