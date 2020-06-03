@@ -1,5 +1,5 @@
-import { ChatUser } from './user';
 import { ChatRoom } from './room';
+import { ChatUser } from './user';
 
 export class ChatUserCollection {
 	static readonly TYPE_FRIEND = 'friend';
@@ -83,6 +83,36 @@ export class ChatUserCollection {
 		}
 
 		this.sort();
+	}
+
+	online(input: number | ChatUser) {
+		const user = this.get(input);
+		if (!user) {
+			return;
+		}
+
+		// Were they previously offline?
+		if (!user.isOnline) {
+			--this.offlineCount;
+			++this.onlineCount;
+		}
+
+		user.isOnline = true;
+	}
+
+	offline(input: number | ChatUser) {
+		const user = this.get(input);
+		if (!user) {
+			return;
+		}
+
+		// Were they previously online?
+		if (user.isOnline) {
+			++this.offlineCount;
+			--this.onlineCount;
+		}
+
+		user.isOnline = false;
 	}
 
 	sort() {
