@@ -19,7 +19,7 @@
 			<app-jolticon
 				v-if="communityLink.isFeatured"
 				class="-featured"
-				icon="bolt-filled"
+				icon="fireside"
 				v-app-tooltip="$gettext(`Featured`)"
 			/>
 		</template>
