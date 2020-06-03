@@ -15,7 +15,6 @@ export default class AppChatUserList extends Vue {
 	@Prop(propRequired(Array)) users!: ChatUser[];
 	@Prop(propOptional(ChatRoom)) room?: ChatRoom;
 	@Prop(propOptional(Boolean, false)) showPm!: boolean;
-	@Prop(propOptional(Boolean, false)) showModTools!: boolean;
 
 	filterQuery = '';
 

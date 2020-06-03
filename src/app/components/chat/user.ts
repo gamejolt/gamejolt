@@ -7,9 +7,6 @@ export class ChatUser {
 	imgAvatar!: string;
 
 	isOnline = false;
-	isMutedRoom!: boolean;
-	isMutedGlobal!: boolean;
-	isMod: 'owner' | 'moderator' | false = false;
 	permissionLevel!: number;
 
 	constructor(data: Partial<ChatUser> = {}) {

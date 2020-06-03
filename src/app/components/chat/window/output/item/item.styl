@@ -55,21 +55,6 @@ $-avatar-size = 32px
 			theme-prop('background', 'darker', true)
 			max-height: 4px !important
 
-	&-mod-tools
-		display: none
-
-		// Only show mod tools on larger screens
-		@media $media-sm-up
-			change-bg('darker')
-			position: absolute
-			top: 0
-			right: 0
-			padding: 4px
-			z-index: 2
-
-			../:hover &
-				display: block
-
 	&-retry
 		font-size: $font-size-tiny
 

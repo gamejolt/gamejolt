@@ -5,8 +5,7 @@
 			'chat-msg-type-normal': message.type === ChatMessage.TypeNormal,
 			'chat-msg-type-system': message.type === ChatMessage.TypeSystem,
 			'chat-window-message-not-combined': !message.combine,
-			'chat-window-message-combined': message.combine,
-			'chat-window-message-can-mod': canModerate,
+			'chat-window-message-combined': message.combine
 		}"
 	>
 		<router-link v-if="!message.combine" class="chat-window-message-avatar" :to="message.user.url">
@@ -24,12 +23,6 @@
 						{{ message.loggedOn | date('shortTime') }}
 					</span>
 				</span>
-			</div>
-
-			<div v-if="canModerate" class="chat-window-message-mod-tools">
-				<a class="link-muted" @click="muteUser" :title="$gettext('Mute User')">
-					<app-jolticon icon="friend-remove-1" />
-				</a>
 			</div>
 
 			<div class="chat-window-message-content-wrap">

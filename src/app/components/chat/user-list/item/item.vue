@@ -22,12 +22,6 @@
 					{{ chat.notifications[user.roomId] || 0 | number }}
 				</span>
 
-				<div class="chat-user-moderate" v-if="showModTools">
-					<span class="chat-user-moderate-action" @click.stop.prevent="openModTools">
-						<app-jolticon icon="cog" />
-					</span>
-				</div>
-
 				<div class="shell-nav-icon">
 					<div class="user-avatar">
 						<img :src="user.imgAvatar" />
@@ -44,38 +38,6 @@
 				</div>
 
 				<div class="shell-nav-label">
-					<!-- Only show tags in room user lists -->
-					<template v-if="room">
-						<span
-							class="chat-user-role tag tag-highlight"
-							v-if="user.isMod === 'owner'"
-							:title="$gettext(`Room Admin`)"
-						>
-							A
-						</span>
-						<span
-							class="chat-user-role tag tag-highlight"
-							v-if="user.isMod === 'moderator'"
-							:title="$gettext(`Room Moderator`)"
-						>
-							M
-						</span>
-						<span
-							class="chat-user-role tag tag-highlight"
-							v-if="user.permissionLevel >= ChatSiteModPermission"
-							:title="$gettext(`Site Moderator`)"
-						>
-							S
-						</span>
-						<span
-							class="chat-user-role tag tag-notice"
-							v-if="showModTools && (user.isMutedRoom || user.isMutedGlobal)"
-							:title="$gettext(`Muted`)"
-						>
-							X
-						</span>
-					</template>
-
 					{{ user.displayName }}
 					<span class="tiny">@{{ user.username }}</span>
 

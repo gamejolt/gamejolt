@@ -15,8 +15,6 @@ import { ChatUserCollection } from './user-collection';
 
 export const ChatKey = Symbol('Chat');
 
-export const ChatSiteModPermission = 2;
-
 export interface ChatNewMessageEvent {
 	message: ChatMessage;
 }
@@ -235,7 +233,7 @@ async function joinRoomChannel(chat: ChatClient, roomId: number) {
 					.receive('error', reject)
 					.receive('ok', response => {
 						chat.roomChannels[roomId] = channel;
-						channel.room = new ChatRoom(chat, response.room);
+						channel.room = new ChatRoom(response.room);
 						const messages = response.messages.map(
 							(msg: ChatMessage) => new ChatMessage(msg)
 						);
@@ -408,31 +406,6 @@ function setupRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
 	}
 }
 
-export function modChatUser(_chat: ChatClient, userId: number, roomId: number) {
-	// TODO: Implement.
-	console.log('Mod action', userId, roomId);
-}
-
-export function demodChatUser(_chat: ChatClient, userId: number, roomId: number) {
-	// TODO: Implement.
-	console.log('Demod action', userId, roomId);
-}
-
-export function muteChatUser(_chat: ChatClient, userId: number, roomId: number) {
-	// TODO: Implement.
-	console.log('Mute action', userId, roomId);
-}
-
-export function unmuteChatUser(_chat: ChatClient, userId: number, roomId: number) {
-	// TODO: Implement.
-	console.log('Unmute action', userId, roomId);
-}
-
-export function removeChatMessage(_chat: ChatClient, msgId: number, roomId: number) {
-	// TODO: Implement.
-	console.log('Message remove', msgId, roomId);
-}
-
 export function resendChatMessage(chat: ChatClient, message: ChatMessage) {
 	chat.messages[message.roomId] = chat.messages[message.roomId].filter(
 		msg => msg.objectId !== message.objectId
@@ -473,16 +446,6 @@ function sendNextMessage(chat: ChatClient) {
 		return;
 	}
 
-	if (chat.room.isMuted) {
-		sendRoboJolt(
-			chat,
-			chat.room.id,
-			// tslint:disable-next-line:max-line-length
-			`Beep boop bop. You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. Bzzzzzzzzt.`
-		);
-		return;
-	}
-
 	outputMessage(chat, message.roomId, ChatMessage.TypeNormal, message, false);
 	sendChatMessage(chat, message);
 }
@@ -502,26 +465,6 @@ function sendChatMessage(chat: ChatClient, message: ChatMessage) {
 		.receive('timeout', () => {
 			message.state = ChatMessage.StateFailed;
 		});
-}
-
-function sendRoboJolt(chat: ChatClient, roomId: number, content: string) {
-	const message = new ChatMessage({
-		id: Math.random(),
-		type: ChatMessage.TypeSystem,
-		userId: 192757,
-		user: new ChatUser({
-			id: 192757,
-			username: 'robo-jolt-2000',
-			displayName: 'RoboJolt 2000',
-			// tslint:disable-next-line:max-line-length
-			imgAvatar: `https://secure.gravatar.com/avatar/eff6eb6a79a34774e8f94400931ce6c9?s=200&r=pg&d=https%3A%2F%2Fs.gjcdn.net%2Fimg%2Fno-avatar-3.png`,
-		}),
-		roomId,
-		content,
-		loggedOn: new Date(),
-	});
-
-	outputMessage(chat, roomId, ChatMessage.TypeSystem, message, false);
 }
 
 export function loadOlderChatMessages(chat: ChatClient, roomId: number) {
@@ -558,46 +501,6 @@ export function loadOlderChatMessages(chat: ChatClient, roomId: number) {
  */
 export function isUserOnline(chat: ChatClient, userId: number): null | boolean {
 	return chat.friendsList.get(userId)?.isOnline ?? null;
-}
-
-export function canModerateChatUser(
-	chat: ChatClient,
-	room: ChatRoom,
-	targetUser: ChatUser,
-	action = ''
-) {
-	if (!chat.currentUser || room.type === 'pm') {
-		return false;
-	}
-
-	// No one can moderate site mods.
-	if (targetUser.permissionLevel >= ChatSiteModPermission) {
-		return false;
-	}
-
-	// Site mods can moderate everyone else.
-	if (chat.currentUser.permissionLevel >= ChatSiteModPermission) {
-		return true;
-	}
-
-	if (!room.isMod) {
-		return false;
-	}
-
-	if (room.isMod === 'owner' && targetUser.isMod !== 'owner') {
-		return true;
-	}
-
-	// Must be an owner or higher to mod someone else.
-	if (action === 'mod') {
-		return false;
-	}
-
-	if (room.isMod === 'moderator' && !targetUser.isMod) {
-		return true;
-	}
-
-	return false;
 }
 
 export function setChatFocused(chat: ChatClient, focused: boolean) {

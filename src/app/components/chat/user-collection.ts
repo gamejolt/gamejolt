@@ -1,6 +1,5 @@
 import { ChatUser } from './user';
 import { ChatRoom } from './room';
-import { ChatSiteModPermission } from './client';
 
 export class ChatUserCollection {
 	static readonly TYPE_FRIEND = 'friend';
@@ -86,80 +85,6 @@ export class ChatUserCollection {
 		this.sort();
 	}
 
-	online(input: number | ChatUser) {
-		const user = this.get(input);
-		if (!user) {
-			return;
-		}
-
-		// Were they previously offline?
-		if (!user.isOnline) {
-			--this.offlineCount;
-			++this.onlineCount;
-		}
-
-		user.isOnline = true;
-	}
-
-	offline(input: number | ChatUser) {
-		const user = this.get(input);
-		if (!user) {
-			return;
-		}
-
-		// Were they previously online?
-		if (user.isOnline) {
-			++this.offlineCount;
-			--this.onlineCount;
-		}
-
-		user.isOnline = false;
-	}
-
-	mute(input: number | ChatUser, isGlobal: boolean) {
-		const user = this.get(input);
-		if (!user) {
-			return;
-		}
-
-		if (isGlobal) {
-			user.isMutedGlobal = true;
-		} else {
-			user.isMutedRoom = true;
-		}
-	}
-
-	unmute(input: number | ChatUser, isGlobal: boolean) {
-		const user = this.get(input);
-		if (!user) {
-			return;
-		}
-
-		if (isGlobal) {
-			user.isMutedGlobal = false;
-		} else {
-			user.isMutedRoom = false;
-		}
-	}
-
-	mod(input: number | ChatUser) {
-		const user = this.get(input);
-		if (!user) {
-			return;
-		}
-
-		user.isMod = 'moderator';
-	}
-
-	demod(input: number | ChatUser) {
-		const user = this.get(input);
-		if (!user) {
-			return;
-		}
-
-		user.isMod = false;
-	}
-
 	sort() {
 		if (this.type === ChatUserCollection.TYPE_FRIEND) {
 			this.collection.sort((a, b) => {
@@ -170,16 +95,6 @@ export class ChatUserCollection {
 		}
 
 		this.collection.sort((a, b) => {
-			// We group users into different areas.
-			// The grouped sort val takes precedence.
-			const aSort = this.getSortVal(a);
-			const bSort = this.getSortVal(b);
-			if (aSort > bSort) {
-				return 1;
-			} else if (aSort < bSort) {
-				return -1;
-			}
-
 			if (a.displayName.toLowerCase() > b.displayName.toLowerCase()) {
 				return 1;
 			} else if (a.displayName.toLowerCase() < b.displayName.toLowerCase()) {
@@ -188,25 +103,5 @@ export class ChatUserCollection {
 
 			return 0;
 		});
-	}
-
-	private getSortVal(user: ChatUser) {
-		if (this.type === ChatUserCollection.TYPE_ROOM) {
-			// We sort muted users to the bottom of the list.
-			if (user.isMutedRoom || user.isMutedGlobal) {
-				return 4;
-			}
-
-			// Sort mods to top of room lists.
-			if (user.isMod === 'owner') {
-				return 0;
-			} else if (user.isMod === 'moderator') {
-				return 1;
-			} else if (user.permissionLevel >= ChatSiteModPermission) {
-				return 2;
-			}
-		}
-
-		return 3;
 	}
 }

@@ -43,7 +43,6 @@
 					v-if="users"
 					:room="room"
 					:users="users.collection"
-					:show-mod-tools="room.isMod"
 				/>
 			</app-scroll-scroller>
 
@@ -59,16 +58,6 @@
 								icon="users"
 								class="anim-fade-in"
 								@click="toggleUsers"
-							/>
-
-							<app-button
-								v-if="room.isMod"
-								circle
-								trans
-								icon="edit"
-								class="anim-fade-in"
-								@click="showEditRoomModal"
-								:title="$gettext('Edit Room Details')"
 							/>
 
 							<app-button
