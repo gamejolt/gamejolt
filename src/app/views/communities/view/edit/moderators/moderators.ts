@@ -11,10 +11,12 @@ import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-se
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import FormCommunityCollaborator from '../../../../../components/forms/community/collaborator/collaborator.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
+import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 
 @Component({
 	name: 'RouteCommunitiesViewEditModerators',
 	components: {
+		AppCommunitiesViewPageContainer,
 		AppCardList,
 		AppCardListItem,
 		AppCardListAdd,

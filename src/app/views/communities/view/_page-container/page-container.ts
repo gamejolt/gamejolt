@@ -9,4 +9,8 @@ export default class AppCommunitiesViewPageContainer extends Vue {
 	get sidebarHasContent() {
 		return this.$slots.sidebar;
 	}
+
+	get shouldShowSidebar() {
+		return Screen.isLg || (Screen.isMd && this.sidebarHasContent);
+	}
 }

@@ -13,10 +13,12 @@ import AppUserCardHover from '../../../../../../_common/user/card/hover/hover.vu
 import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/img/img.vue';
 import FormCommunityBlock from '../../../../../components/forms/community/ban/block.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
+import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 
 @Component({
 	name: 'RouteCommunitiesViewEditBlocks',
 	components: {
+		AppCommunitiesViewPageContainer,
 		FormCommunityBlock,
 		AppCardListAdd,
 		AppCardList,
@@ -38,8 +40,8 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
 	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
 
-	isBlocking = false;
-	blocks: UserBlock[] | null = null;
+	isAdding = false;
+	blocks: UserBlock[] = [];
 	totalCount = 0;
 	perPage = 0;
 
@@ -69,24 +71,21 @@ export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
 	}
 
 	get hasBlocks() {
-		return this.blocks && this.blocks.length > 0;
+		return this.blocks.length > 0;
 	}
 
 	routeResolved($payload: any) {
-		if ($payload.blocks) {
-			this.blocks = UserBlock.populate($payload.blocks);
-		}
-
+		this.blocks = UserBlock.populate($payload.blocks);
 		this.totalCount = $payload.totalCount;
 		this.perPage = $payload.perPage;
 
-		if (!this.blocks || this.blocks.length === 0) {
-			this.isBlocking = true;
+		if (this.blocks.length === 0) {
+			this.isAdding = true;
 		}
 	}
 
 	onBlockSubmit() {
-		this.isBlocking = false;
+		this.isAdding = false;
 		this.page = 1;
 		this.refetch();
 	}

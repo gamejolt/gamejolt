@@ -7,7 +7,10 @@ import { BaseRouteComponent } from '../../../../../../_common/route/route-compon
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import FormCommunity from '../../../../../components/forms/community/community.vue';
+import FormCommunityDescription from '../../../../../components/forms/community/description/description.vue';
+import { CommunityHeaderModal } from '../../../../../components/forms/community/header/modal/modal.service';
 import { CommunityThumbnailModal } from '../../../../../components/forms/community/thumbnail/modal/modal.service';
+import AppPageHeader from '../../../../../components/page-header/page-header.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 
@@ -16,9 +19,11 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 	components: {
 		AppCommunitiesViewPageContainer,
 		AppCommunityPerms,
+		AppPageHeader,
 		AppEditableOverlay,
 		AppCommunityThumbnailImg,
 		FormCommunity,
+		FormCommunityDescription,
 	},
 })
 export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent {
@@ -59,8 +64,16 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 		return this.community.hasPerms('community-media');
 	}
 
+	get canEditDescription() {
+		return this.community.hasPerms('community-description');
+	}
+
 	showEditAvatar() {
 		CommunityThumbnailModal.show(this.community);
+	}
+
+	showEditHeader() {
+		CommunityHeaderModal.show(this.community);
 	}
 
 	onDetailsChange() {

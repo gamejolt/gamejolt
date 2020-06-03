@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<app-communities-view-page-container>
 		<h2 class="section-header">
 			<translate>Blocked Users</translate>
 		</h2>
@@ -12,8 +12,8 @@
 			</p>
 		</div>
 
-		<app-card-list :is-adding="isBlocking">
-			<app-card-list-add :label="$gettext('Block User')" @toggle="isBlocking = !isBlocking">
+		<app-card-list :is-adding="isAdding">
+			<app-card-list-add :label="$gettext('Block User')" @toggle="isAdding = !isAdding">
 				<form-community-block :community="community" @submit="onBlockSubmit" />
 			</app-card-list-add>
 		</app-card-list>
@@ -111,7 +111,7 @@
 			prevent-url-change
 			@pagechange="onPageChanged"
 		/>
-	</div>
+	</app-communities-view-page-container>
 </template>
 
 <style lang="stylus" scoped>

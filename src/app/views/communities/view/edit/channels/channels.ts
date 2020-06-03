@@ -17,10 +17,12 @@ import { CommunityRemoveChannelModal } from '../../../../../components/community
 import FormCommunityChannel from '../../../../../components/forms/community/channel/channel.vue';
 import FormCommunityChannelEdit from '../../../../../components/forms/community/channel/edit/edit.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
+import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 
 @Component({
 	name: 'RouteCommunitiesViewEditChannels',
 	components: {
+		AppCommunitiesViewPageContainer,
 		AppCommunityPerms,
 		FormCommunityChannel,
 		AppCardList,

@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<app-communities-view-page-container>
 		<app-community-perms :community="community" required="community-channels">
 			<h2 class="section-header">
 				<translate>Channels</translate>
@@ -82,7 +82,7 @@
 				</app-card-list-draggable>
 			</app-card-list>
 		</app-community-perms>
-	</div>
+	</app-communities-view-page-container>
 </template>
 
 <style lang="stylus" scoped>

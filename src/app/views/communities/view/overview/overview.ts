@@ -4,7 +4,6 @@ import { CommunityChannel } from '../../../../../_common/community/channel/chann
 import {
 	Community,
 	CommunityPresetChannelType,
-	isEditingCommunity,
 } from '../../../../../_common/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../../_common/game/game.model';
@@ -80,10 +79,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return this.routeStore.channelPath;
 	}
 
-	get isEditing() {
-		return isEditingCommunity(this.$route);
-	}
-
 	get sidebarData() {
 		return this.routeStore.sidebarData;
 	}
@@ -97,12 +92,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	get routeTitle() {
 		if (!this.community) {
 			return null;
-		}
-
-		if (this.isEditing) {
-			return this.$gettextInterpolate(`Edit Community %{ community }`, {
-				community: this.community.name,
-			});
 		}
 
 		let title = this.$gettextInterpolate(

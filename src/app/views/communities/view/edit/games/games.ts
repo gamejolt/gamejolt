@@ -13,10 +13,12 @@ import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive'
 import { CommunityLinkGameModal } from '../../../../../components/community/link-game-modal/link-game-modal.service';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
+import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 
 @Component({
 	name: 'RouteCommunitiesViewEditGames',
 	components: {
+		AppCommunitiesViewPageContainer,
 		AppCommunityPerms,
 		AppCardList,
 		AppCardListDraggable,

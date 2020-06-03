@@ -66,6 +66,17 @@ $-separator-overlap = 2px
 			width: 100%
 			height: 100%
 
+.-blah
+	position: relative
+	display: inline-block
+	width: $-separator-width
+	height: 100%
+
+	svg
+		position: absolute
+		width: 100%
+		height: 100%
+
 // Basic button stuff common to both left and right sides.
 .-left, .-right
 	theme-prop('color', 'fg')
@@ -77,10 +88,16 @@ $-separator-overlap = 2px
 		theme-prop('fill', 'bi-bg')
 		theme-prop('color', 'bi-fg')
 
+.-img-outline
+	img-circle()
+	overflow: hidden
+	padding: 2px
+	margin-right: 4px
+	border: $border-width solid var(--theme-bi-fg)
+
 .-img
 	img-circle()
 	overflow: hidden
-	margin-right: 4px
 	width: 16px
 	height: 16px
 

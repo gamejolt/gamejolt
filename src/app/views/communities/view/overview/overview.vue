@@ -100,7 +100,7 @@
 				<app-communities-view-feed :feed="feed" @add-post="onPostAdded" />
 			</template>
 			<template #sidebar v-if="!Screen.isMobile && sidebarData && channel === 'featured'">
-				<app-community-sidebar :is-editing="isEditing" :data="sidebarData" :community="community" />
+				<app-community-sidebar :data="sidebarData" :community="community" />
 			</template>
 		</app-communities-view-page-container>
 

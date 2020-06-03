@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<app-communities-view-page-container>
 		<h2 class="section-header">
 			<translate>Moderators</translate>
 		</h2>
@@ -67,7 +67,7 @@
 				<form-community-collaborator :community="community" @submit="onAddedCollaborator" />
 			</app-card-list-add>
 		</app-card-list>
-	</div>
+	</app-communities-view-page-container>
 </template>
 
 <script lang="ts" src="./moderators"></script>

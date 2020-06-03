@@ -1,37 +1,5 @@
 <template>
 	<div>
-		<app-expand :when="shouldShowHeader">
-			<app-page-header
-				:cover-media-item="community.header"
-				:cover-editable="canEditMedia"
-				@edit-cover="showEditHeader()"
-			>
-				<!--  -->
-				<!-- @edit-cover="showEditHeader()" -->
-				<span slot="cover-edit-buttons">
-					<translate v-if="!community.header">Upload Header</translate>
-					<translate v-else>Change Header</translate>
-				</span>
-
-				<!-- <h1>
-				<router-link :to="{ name: 'communities.view.overview' }">
-					{{ community.name }}
-				</router-link>
-				<app-community-verified-tick :community="community" big />
-			</h1> -->
-
-				<!-- v-if="isEditing && canEditMedia" -->
-				<!-- @click="showEditAvatar()" -->
-				<!-- <app-editable-overlay slot="spotlight" v-if="false" class="-fill">
-				<translate slot="overlay">Change</translate>
-				<app-community-thumbnail-img :community="community" />
-			</app-editable-overlay>
-			<router-link v-else :to="{ name: 'communities.view.overview' }" slot="spotlight">
-				<app-community-thumbnail-img :community="community" />
-			</router-link> -->
-			</app-page-header>
-		</app-expand>
-
 		<app-alert-dismissable
 			v-if="isOwner"
 			alert-type="info"

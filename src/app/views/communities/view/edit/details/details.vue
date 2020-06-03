@@ -1,75 +1,113 @@
 <template>
 	<div>
+		<app-page-header
+			:cover-media-item="community.header"
+			:cover-editable="canEditMedia"
+			@edit-cover="showEditHeader()"
+		>
+			<span slot="cover-edit-buttons">
+				<translate v-if="!community.header">Upload Header</translate>
+				<translate v-else>Change Header</translate>
+			</span>
+
+			<!-- <h1>
+				<router-link :to="{ name: 'communities.view.overview' }">
+					{{ community.name }}
+				</router-link>
+				<app-community-verified-tick :community="community" big />
+			</h1> -->
+
+			<!-- v-if="isEditing && canEditMedia" -->
+			<!-- @click="showEditAvatar()" -->
+			<!-- <app-editable-overlay slot="spotlight" v-if="false" class="-fill">
+				<translate slot="overlay">Change</translate>
+				<app-community-thumbnail-img :community="community" />
+			</app-editable-overlay>
+			<router-link v-else :to="{ name: 'communities.view.overview' }" slot="spotlight">
+				<app-community-thumbnail-img :community="community" />
+			</router-link> -->
+		</app-page-header>
+
 		<app-communities-view-page-container>
-			<!--
-				Thumbnail
-				This only shows here on mobile, on desktop the thumbnail can be edited through the
-				spotlight slot in the page header.
-			-->
-			<template v-if="shouldShowThumbnail">
-				<app-community-perms :community="community" required="community-media">
+			<template #default>
+				<!--
+					Thumbnail
+					This only shows here on mobile, on desktop the thumbnail can be edited through the
+					spotlight slot in the page header.
+				-->
+				<template v-if="shouldShowThumbnail">
+					<app-community-perms :community="community" required="community-media">
+						<h2 class="section-header">
+							<translate>Thumbnail</translate>
+						</h2>
+
+						<app-editable-overlay class="-edit-thumbnail" @click="showEditAvatar()">
+							<translate slot="overlay">Change</translate>
+							<app-community-thumbnail-img :community="community" />
+						</app-editable-overlay>
+
+						<div class="-spacer"></div>
+					</app-community-perms>
+				</template>
+
+				<!-- Details -->
+				<app-community-perms :community="community" required="community-details">
 					<h2 class="section-header">
-						<translate>Thumbnail</translate>
+						<translate>Details</translate>
 					</h2>
 
-					<app-editable-overlay class="-edit-thumbnail" @click="showEditAvatar()">
-						<translate slot="overlay">Change</translate>
-						<app-community-thumbnail-img :community="community" />
-					</app-editable-overlay>
+					<form-community :model="community" @submit="onDetailsChange" />
 
 					<div class="-spacer"></div>
 				</app-community-perms>
+
+				<!-- Leave/Remove Community -->
+				<div class="-danger-zone well fill-offset">
+					<template v-if="isOwner">
+						<h2>
+							<translate>Remove Community</translate>
+						</h2>
+
+						<div class="page-help">
+							<p v-translate>
+								Removing your community will remove it from the site completely.
+								<b>This is permanent!</b>
+							</p>
+						</div>
+
+						<app-button @click="removeCommunity()">
+							<translate>Remove Community</translate>
+						</app-button>
+					</template>
+
+					<template v-else>
+						<h2>
+							<translate>Leave Community</translate>
+						</h2>
+
+						<div class="page-help">
+							<p>
+								<translate>
+									You are currently a collaborator on this community. Leaving the community will
+									revoke all of your moderation permissions.
+								</translate>
+							</p>
+						</div>
+
+						<app-button @click="leaveCommunity()">
+							<translate>Leave Community</translate>
+						</app-button>
+					</template>
+				</div>
 			</template>
 
-			<!-- Details -->
-			<app-community-perms :community="community" required="community-details">
+			<template #sidebar v-if="canEditDescription">
 				<h2 class="section-header">
-					<translate>Details</translate>
+					<translate>Edit Description</translate>
 				</h2>
 
-				<form-community :model="community" @submit="onDetailsChange" />
-
-				<div class="-spacer"></div>
-			</app-community-perms>
-
-			<!-- Leave/Remove Community -->
-			<div class="-danger-zone well fill-offset">
-				<template v-if="isOwner">
-					<h2>
-						<translate>Remove Community</translate>
-					</h2>
-
-					<div class="page-help">
-						<p v-translate>
-							Removing your community will remove it from the site completely.
-							<b>This is permanent!</b>
-						</p>
-					</div>
-
-					<app-button @click="removeCommunity()">
-						<translate>Remove Community</translate>
-					</app-button>
-				</template>
-
-				<template v-else>
-					<h2>
-						<translate>Leave Community</translate>
-					</h2>
-
-					<div class="page-help">
-						<p>
-							<translate>
-								You are currently a collaborator on this community. Leaving the community will
-								revoke all of your moderation permissions.
-							</translate>
-						</p>
-					</div>
-
-					<app-button @click="leaveCommunity()">
-						<translate>Leave Community</translate>
-					</app-button>
-				</template>
-			</div>
+				<form-community-description :model="community" />
+			</template>
 		</app-communities-view-page-container>
 	</div>
 </template>

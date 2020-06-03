@@ -4,7 +4,7 @@
 		<div class="-content">
 			<slot />
 		</div>
-		<div v-if="Screen.isDesktop" class="-sidebar" :class="{ '-none': !sidebarHasContent }">
+		<div v-if="shouldShowSidebar" class="-sidebar" :class="{ '-none': !sidebarHasContent }">
 			<slot name="sidebar" />
 		</div>
 	</div>
@@ -15,16 +15,19 @@
 @require '~styles-lib/mixins'
 @require '../variables'
 
-$-gutter = $grid-gutter-width / 2
-
 .-container
 	display: flex
 	justify-content: center
 	padding: $grid-gutter-width 0
 
+
 .-content, .-sidebar
-	margin-left: $-gutter
-	margin-right: $-gutter
+	margin-left: ($grid-gutter-width-xs / 2)
+	margin-right: ($grid-gutter-width-xs / 2)
+
+	@media $media-sm-up
+		margin-left: ($grid-gutter-width / 2)
+		margin-right: ($grid-gutter-width / 2)
 
 .-offset
 	flex: 1
@@ -42,6 +45,10 @@ $-gutter = $grid-gutter-width / 2
 	flex: 2 1 650px
 	max-width: 650px
 	min-width: 0
+
+	@media $media-xs
+		max-width: none
+		flex-basis: none
 
 .-sidebar
 	// Need a flex-basis the same as the max-width so we collapse .-offset first.

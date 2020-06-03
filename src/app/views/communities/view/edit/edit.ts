@@ -5,27 +5,17 @@ import AppAlertDismissable from '../../../../../_common/alert/dismissable/dismis
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
-import AppExpand from '../../../../../_common/expand/expand.vue';
 import { Game } from '../../../../../_common/game/game.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { CommunityHeaderModal } from '../../../../components/forms/community/header/modal/modal.service';
-import AppPageHeader from '../../../../components/page-header/page-header.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 
 @Component({
 	name: 'RouteCommunitiesViewEdit',
 	components: {
 		AppAlertDismissable,
-		AppPageHeader,
-		AppExpand,
 	},
 })
-// @WithRouteStore({
-// 	store,
-// 	routeStoreName: RouteStoreName,
-// 	routeStoreClass: RouteStore,
-// })
 @RouteResolver({
 	deps: { params: ['id'] },
 	async resolver({ route }) {
@@ -57,6 +47,12 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 
+	get routeTitle() {
+		return this.$gettextInterpolate(`Edit Community %{ community }`, {
+			community: this.community.name,
+		});
+	}
+
 	get community() {
 		return this.routeStore.community;
 	}
@@ -71,18 +67,10 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 		return this.community.hasPerms('community-media');
 	}
 
-	get shouldShowHeader() {
-		return this.$route.name === 'communities.view.edit.details';
-	}
-
 	routeResolved($payload: any) {
 		this.routeStore.updateCommunity($payload.community);
 		// this.community = new Community(payload.community);
 		// this.collaboration = payload.collaboration ? new Collaborator(payload.collaboration) : null;
-	}
-
-	showEditHeader() {
-		CommunityHeaderModal.show(this.community);
 	}
 
 	onDetailsChange(community: Community) {
