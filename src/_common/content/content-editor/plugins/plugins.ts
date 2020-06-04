@@ -33,8 +33,8 @@ export function createPlugins(editor: AppContentEditor, schema: ContentEditorSch
 	const ourKeymap = getContentEditorKeymap(editor, schema);
 
 	const plugins = [
-		keymap(baseKeymap),
 		keymap(ourKeymap),
+		keymap(baseKeymap),
 		history(),
 		incrementerPlugin,
 		isEmptyPlugin,
