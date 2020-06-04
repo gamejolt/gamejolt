@@ -2,15 +2,13 @@
 @require '~styles-lib/mixins'
 
 .-container
-	change-bg('bg')
-	max-height: 300px
-	width: 300px
+	max-width: 300px
 
 	@media $media-xs
-		max-height: 200px
-		width: 250px
-
-	overflow-x: hidden
+		// AppPopper seems really glitchy for this use case for some reason.
+		// Using 45vh only for mobile until I can figure it out.
+		max-height: 45vh
+		max-width: 250px
 
 .-slider
 	position: relative
@@ -18,25 +16,19 @@
 	display: flex
 	width: 200%
 	left: 0
+	transition: left 300ms $strong-ease-out
 
 // Schooch!
 .-slide-to-channels
 	left: -100%
-	transition: left 300ms $strong-ease-out
 
 .-communities, .-channels
 	display: inline-block
 	vertical-align: top
 	// Each section takes 50% of parent slider, which would be equal to the -container size.
 	width: 50%
-	// border settings make it look nicer when one list is
-	// shorter than the other while sliding over.
+	// Use no border-radius to make it look nicer while sliding over.
 	border-radius: 0
-	border-right: 0
-	border-left: 0
-	border-bottom: 0
-	overflow-y: auto
-	overflow-x: hidden
 	white-space: nowrap
 	margin-bottom: 0
 
@@ -44,11 +36,38 @@
 	display: flex
 	align-items: center
 
-.-community-img
+	.-text
+		text-overflow()
+
+.-selected
+	change-bg('bg-offset')
+
+	&.-initial
+		color: currentColor
+		cursor: default
+
+	&:hover
+		.-back
+			opacity: 1
+			transition: opacity 300ms $strong-ease-out
+
+	.-back
+		position: relative
+		bottom: 32px
+		display: flex
+		align-items: center
+		justify-content: center
+		margin: 0
+		background-color: var(--theme-bi-bg)
+		color: var(--theme-bi-fg)
+		opacity: 0
+
+.-community-img, .-back
 	img-circle()
+	overflow: hidden
 	width: 32px
 	height: 32px
-	margin-right: 5px
+	margin-right: 8px
 
 .-tick
-	margin-left: 5px
+	margin-left: 4px
