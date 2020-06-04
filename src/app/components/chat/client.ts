@@ -504,7 +504,7 @@ export function onChatNotification(chat: ChatClient, message: ChatMessage) {
 
 	Growls.info({
 		title: message.user.display_name,
-		message: message.content,
+		message: message.content_raw,
 		icon: message.user.img_avatar,
 		onclick: () => enterChatRoom(chat, message.room_id),
 		system: true,

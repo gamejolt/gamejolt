@@ -28,7 +28,10 @@ export default class AppChatWindowOutputItem extends Vue {
 	readonly ChatMessage = ChatMessage;
 
 	get shouldFadeCollapse() {
-		return this.message.content.split('\n').length > 6 || this.message.content.length >= 500;
+		return (
+			this.message.content_raw.split('\n').length > 6 ||
+			this.message.content_raw.length >= 500
+		);
 	}
 
 	get loggedOn() {

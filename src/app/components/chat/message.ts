@@ -12,6 +12,7 @@ export class ChatMessage {
 	user!: ChatUser;
 	room_id!: number;
 	content!: string;
+	content_raw!: string;
 	logged_on!: Date;
 
 	combine?: boolean;
