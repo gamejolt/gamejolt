@@ -63,7 +63,7 @@ export class ContentEditorService {
 	}
 
 	/**
-	 * Returns a list of all applied to any node within the selection
+	 * Returns a list of all marks applied to any node within the selection
 	 */
 	public static getSelectionMarks(state: EditorState<ContentEditorSchema>) {
 		const markTypes: Mark<ContentEditorSchema>[] = [];
