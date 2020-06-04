@@ -25,7 +25,7 @@
 		</a>
 
 		<div slot="popover" class="-container">
-			<div v-if="!selectedCommunity" slot="popover" class="-communities list-group">
+			<div v-if="!selectedCommunity" class="-communities list-group">
 				<a
 					class="-community-item list-group-item"
 					v-for="community of communities"
@@ -41,7 +41,7 @@
 				</a>
 			</div>
 
-			<div v-else slot="popover" class="-channels list-group">
+			<div v-else class="-channels list-group">
 				<template v-if="channels">
 					<a
 						class="-channel-item list-group-item"
