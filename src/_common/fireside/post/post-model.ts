@@ -56,6 +56,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	user!: User;
 	game!: Game;
 	as_game_owner!: boolean;
+	post_to_user_profile!: boolean;
 	slug!: string;
 	subline!: string;
 	url!: string;
@@ -287,8 +288,9 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			return this.game;
 		}
 
-		if (this.isInCommunityPinContext(route)) {
-			return this.communities[0];
+		const fpc = this.getCommunityPinContext(route);
+		if (fpc !== null) {
+			return fpc;
 		}
 
 		if (this.isInUserPinContext(route)) {
@@ -314,7 +316,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return true;
 	}
 
-	private isInCommunityPinContext(route: Route) {
+	private getCommunityPinContext(route: Route) {
 		// A post can be pinned to a community if:
 		// 1. viewing the community feed.
 		// 2. the post was published to the community.
@@ -322,18 +324,19 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		// NOTE: this means posts cannot be pinned to meta channels like 'featured' and 'all posts'
 
 		if (route.name !== 'communities.view.overview') {
-			return false;
+			return null;
 		}
 
-		if (this.communities.length === 0) {
-			return false;
+		for (let communityLink of this.communities) {
+			const community = communityLink.community;
+			const channelTitle = communityLink.channel!.title;
+
+			if (route.params.path === community.path && route.params.channel === channelTitle) {
+				return communityLink;
+			}
 		}
 
-		const communityLink = this.communities[0];
-		const community = communityLink.community;
-		const channelTitle = communityLink.channel!.title;
-
-		return route.params.path === community.path && route.params.channel === channelTitle;
+		return null;
 	}
 
 	private isInGamePinContext(route: Route) {
@@ -387,7 +390,12 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 		const options: ModelSaveRequestOptions = {
 			data: Object.assign({}, this),
-			allowComplexData: ['keyGroups', 'mediaItemIds', 'publishToPlatforms'],
+			allowComplexData: [
+				'attached_communities',
+				'keyGroups',
+				'mediaItemIds',
+				'publishToPlatforms',
+			],
 		};
 
 		if (this.game) {
@@ -477,12 +485,11 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return this.$_save(`/web/posts/manage/publish/${this.id}`, 'firesidePost');
 	}
 
-	$pin(targetModel: string) {
-		return this.$_save(`/web/posts/manage/toggle-pin/${this.id}/${targetModel}`, 'post');
-	}
-
-	$unpin(targetModel: string) {
-		return this.$_save(`/web/posts/manage/toggle-pin/${this.id}/${targetModel}`, 'post');
+	$togglePin(targetModel: string, targetId: number) {
+		return this.$_save(
+			`/web/posts/manage/toggle-pin/${this.id}/${targetModel}/${targetId}`,
+			'post'
+		);
 	}
 
 	async remove() {

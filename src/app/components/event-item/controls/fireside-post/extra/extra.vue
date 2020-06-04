@@ -34,70 +34,74 @@
 				</a>
 
 				<template v-if="shouldShowPins">
-					<a class="list-group-item has-icon" v-if="post.is_pinned" @click="unpin">
+					<a class="list-group-item has-icon" @click="togglePin">
 						<app-jolticon icon="thumbtack" />
-						<translate>Unpin</translate>
-					</a>
-					<a class="list-group-item has-icon" v-else @click="pin">
-						<app-jolticon icon="thumbtack" />
-						<translate>Pin</translate>
+
+						<translate v-if="post.is_pinned">Unpin</translate>
+						<translate v-else>Pin</translate>
 					</a>
 				</template>
 
 				<!-- Community feature/unfeature, move to channel and eject -->
 				<template v-if="shouldShowManageCommunities">
-					<span v-for="i of post.manageableCommunities" :key="i.id">
-						<app-community-perms :community="i.community" required="community-features">
-							<a class="list-group-item has-icon" @click.stop="toggleFeatured(i)">
-								<app-jolticon icon="tag" />
-								<template v-if="i.isFeatured">
-									<template v-if="shouldDisplayCommunityName(i.community)">
-										<translate :translate-params="{ community: i.community.name }">
-											Unfeature from %{ community }
-										</translate>
+					<div class="-community-section" v-for="i of post.manageableCommunities" :key="i.id">
+						<h5 class="-community-header list-group-item has-icon">
+							<app-community-thumbnail-img :community="i.community" />
+							{{ i.community.name }}
+						</h5>
+						<div class="-community-items">
+							<app-community-perms :community="i.community" required="community-features">
+								<a class="list-group-item has-icon" @click.stop="toggleFeatured(i)">
+									<app-jolticon icon="tag" />
+									<template v-if="i.isFeatured">
+										<template v-if="shouldDisplayCommunityName(i.community)">
+											<translate :translate-params="{ community: i.community.name }">
+												Unfeature from %{ community }
+											</translate>
+										</template>
+										<template v-else>
+											<translate>
+												Unfeature
+											</translate>
+										</template>
 									</template>
 									<template v-else>
-										<translate>
-											Unfeature
-										</translate>
+										<template v-if="shouldDisplayCommunityName(i.community)">
+											<translate :translate-params="{ community: i.community.name }">
+												Feature in %{ community }
+											</translate>
+										</template>
+										<template v-else>
+											<translate>
+												Feature
+											</translate>
+										</template>
 									</template>
-								</template>
-								<template v-else>
-									<template v-if="shouldDisplayCommunityName(i.community)">
-										<translate :translate-params="{ community: i.community.name }">
-											Feature in %{ community }
-										</translate>
-									</template>
-									<template v-else>
-										<translate>
-											Feature
-										</translate>
-									</template>
-								</template>
-							</a>
-						</app-community-perms>
+								</a>
+							</app-community-perms>
 
-						<app-community-perms :community="i.community" required="community-posts">
-							<a class="list-group-item has-icon" @click.stop="movePostFromCommunityChannel(i)">
-								<app-jolticon icon="arrow-forward" />
-								<translate>Move to a different channel</translate>
-							</a>
+							<app-community-perms :community="i.community" required="community-posts">
+								<a class="list-group-item has-icon" @click.stop="movePostFromCommunityChannel(i)">
+									<app-jolticon icon="arrow-forward" />
+									<translate>Move to a different channel</translate>
+								</a>
 
-							<a class="list-group-item has-icon" @click.stop="rejectFromCommunity(i)">
-								<app-jolticon icon="remove" />
+								<a class="list-group-item has-icon" @click.stop="rejectFromCommunity(i)">
+									<app-jolticon icon="remove" />
 
-								<translate :translate-params="{ community: i.community.name }">
-									Eject
-									<template v-if="shouldDisplayCommunityName(i.community)">
-										from %{ community }
-									</template>
-									<template v-else>
-										from this community
-									</template>
-								</translate>
-							</a>
-						</app-community-perms>
-					</span>
+									<translate :translate-params="{ community: i.community.name }">
+										Eject
+										<template v-if="shouldDisplayCommunityName(i.community)">
+											from %{ community }
+										</template>
+										<template v-else>
+											from this community
+										</template>
+									</translate>
+								</a>
+							</app-community-perms>
+						</div>
+					</div>
 				</template>
 
 				<!-- User reports -->
@@ -126,5 +130,33 @@
 		</div>
 	</app-popper>
 </template>
+
+<style lang="stylus" scoped>
+@require '~styles/variables'
+
+.-community-section
+	margin: $font-size-base 0
+
+.-community-header
+	font-family: $font-family-heading
+	font-size: $font-size-tiny
+	font-weight: normal
+	letter-spacing: 0.1em
+	line-height: 1
+	text-transform: uppercase
+	margin-top: 0
+	margin-bottom: 0
+
+	img
+		width: $list-group-icon-width * 0.8
+		height: $list-group-icon-width * 0.8
+		border-radius: 50%
+		display: inline-block
+		position: relative
+		left: -($list-group-icon-width - 1px)
+		top: -2px
+		margin-right: -($list-group-icon-width - 5px)
+
+</style>
 
 <script lang="ts" src="./extra"></script>

@@ -1,4 +1,4 @@
-import { RawLocation } from 'vue-router';
+import { Location } from 'vue-router';
 import { Route } from 'vue-router/types/router';
 import { arrayRemove } from '../../../../utils/array';
 import { CommentVideo } from '../../../../_common/comment/video/video-model';
@@ -90,18 +90,31 @@ export class ActivityFeedService {
 	/**
 	 * Determines if we are in the correct managing route for the post.
 	 * Does NOT check if we are in the correct feed on that route.
+	 *
+	 * Note: game posts may now be managed through the author's user profile
+	 * as well as the game's dashboard.
 	 */
 	private static isInCorrectManageRoute(post: FiresidePost, route: Route) {
-		if (post.game instanceof Game) {
-			return (
-				route.name === 'dash.games.manage.devlog' &&
-				route.params.id.toString() === post.game.id.toString()
-			);
-		} else {
-			return (
-				route.name === 'profile.overview' && route.params.username === post.user.username
-			);
+		if (post.post_to_user_profile && this.isInCorrectUserManageRoute(post, route)) {
+			return true;
 		}
+
+		if (post.game instanceof Game) {
+			return this.isInCorrectGameManageRoute(post, route);
+		}
+
+		return this.isInCorrectUserManageRoute(post, route);
+	}
+
+	private static isInCorrectGameManageRoute(post: FiresidePost, route: Route) {
+		return (
+			route.name === 'dash.games.manage.devlog' &&
+			route.params.id.toString() === post.game.id.toString()
+		);
+	}
+
+	private static isInCorrectUserManageRoute(post: FiresidePost, route: Route) {
+		return route.name === 'profile.overview' && route.params.username === post.user.username;
 	}
 
 	/**
@@ -143,18 +156,22 @@ export class ActivityFeedService {
 	 * Returns the correct location for a post's manage feed.
 	 * Assumes the route name/params are already correct.
 	 */
-	private static getCorrectManageFeedLocation(post: FiresidePost, route: Route): RawLocation {
+	private static getCorrectManageFeedLocation(post: FiresidePost, route: Route): Location {
 		const location = {
 			name: route.name,
 			params: route.params,
 		} as any;
 
+		this.applyCorrectManageFeedLocation(post, location);
+
+		return location;
+	}
+
+	private static applyCorrectManageFeedLocation(post: FiresidePost, location: Location) {
 		let tab = getTabForPost(post);
 		if (tab !== 'active') {
 			location.query = { tab };
 		}
-
-		return location;
 	}
 
 	static onPostAdded(
@@ -210,6 +227,19 @@ export class ActivityFeedService {
 				// Means we had a scheduled post that remained a scheduled post and it got changed in another way.
 				// Since we cannot make sure its position within the feed is still valid, we reload.
 				routeComponent.reloadRoute();
+			}
+		} else {
+			// If we just toggled off post_to_user_profile on a game post while
+			// viewing it in the user's feed, we should redirect to the game's feed.
+			if (!post.post_to_user_profile && this.isInCorrectUserManageRoute(post, route)) {
+				const location: Location = {
+					name: 'dash.games.manage.devlog',
+					params: {
+						id: post.game.id.toString(),
+					},
+				};
+				this.applyCorrectManageFeedLocation(post, location);
+				routeComponent.$router.push(location);
 			}
 		}
 	}

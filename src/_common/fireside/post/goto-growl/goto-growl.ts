@@ -40,8 +40,8 @@ export default class AppFiresidePostGotoGrowl extends Vue {
 		return this.getFeedLocation('scheduled');
 	}
 
-	get isCommunityPost() {
-		return this.post.communities.length > 0;
+	get hasOneCommunity() {
+		return this.post.communities.length === 1;
 	}
 
 	get communityLocation() {
@@ -57,7 +57,7 @@ export default class AppFiresidePostGotoGrowl extends Vue {
 	}
 
 	get shouldShowCommunityRedirect() {
-		if (!this.isCommunityPost) {
+		if (!this.hasOneCommunity) {
 			return false;
 		}
 

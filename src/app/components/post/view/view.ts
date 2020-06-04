@@ -16,6 +16,7 @@ import { AppResponsiveDimensions } from '../../../../_common/responsive-dimensio
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
+import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { Settings } from '../../../../_common/settings/settings.service';
 import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
 import AppStickerTargetTS from '../../../../_common/sticker/target/target';
@@ -45,6 +46,7 @@ import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 		AppContentViewer,
 		AppStickerTarget,
 		AppMediaItemPost,
+		AppScrollScroller,
 	},
 	directives: {
 		AppScrollWhen,

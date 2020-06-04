@@ -1,42 +1,5 @@
 <template>
 	<app-form v-if="model" name="postForm" ref="form">
-		<!-- Communities -->
-		<template v-if="communities.length">
-			<div class="-communities">
-				<div class="-communities-label">
-					<translate>Community</translate>
-				</div>
-				<div class="-communities-list">
-					<app-community-pill
-						v-for="community of communities"
-						:key="community.id"
-						:community="community"
-						no-links
-					/>
-				</div>
-				<a v-if="wasPublished && selectedChannel" class="badge -current-channel">
-					{{ selectedChannel.title }}
-				</a>
-			</div>
-
-			<template v-if="!wasPublished">
-				<app-community-channel-select
-					v-if="communityChannels.length"
-					class="-channels"
-					v-model="selectedChannel"
-					:channels="communityChannels"
-				/>
-
-				<app-expand :when="hasChannelError">
-					<div class="-channel-error alert alert-notice">
-						<translate>
-							Choose a channel to post to.
-						</translate>
-					</div>
-				</app-expand>
-			</template>
-		</template>
-
 		<!-- Attachments -->
 		<div class="-attachment-controls" v-if="!enabledAttachments">
 			<app-button
@@ -393,6 +356,59 @@
 			</fieldset>
 		</div>
 
+		<!-- Access permissions -->
+		<template v-if="accessPermissionsEnabled">
+			<div class="well fill-offset full-bleed" v-if="!wasPublished">
+				<fieldset>
+					<app-form-legend compact deletable @delete="disableAccessPermissions()">
+						<translate>Access permissions</translate>
+					</app-form-legend>
+
+					<app-form-group name="key_group_ids" :label="$gettext(`Access Permissions`)" hide-label>
+						<div class="alert" v-if="!keyGroups.length">
+							<translate>
+								You can make this post available to only the users within a key group. For example,
+								this is useful for sending news updates to testers. You can create a user key group
+								through the "Keys/Access" page.
+							</translate>
+						</div>
+						<div v-else>
+							<p class="help-block">
+								<translate>
+									You can make this post available to only the users within a key group. For
+									example, this is useful for sending news updates to testers. Only User-type key
+									groups can be selected.
+								</translate>
+							</p>
+
+							<div class="checkbox" v-for="keyGroup of keyGroups" :key="keyGroup.id">
+								<label>
+									<app-form-control-checkbox :value="keyGroup.id" />
+									{{ keyGroup.name }}
+								</label>
+							</div>
+						</div>
+					</app-form-group>
+				</fieldset>
+			</div>
+			<div class="form-group well fill-offset full-bleed" v-else>
+				<label class="control-label">
+					<translate>Access Permissions</translate>
+				</label>
+				<div class="alert">
+					<translate>
+						The below key groups have access to this post. You can't edit who has access after
+						posting since notifications have already gone out.
+					</translate>
+				</div>
+				<div>
+					<span class="tag" v-for="keyGroup of model.key_groups" :key="keyGroup.id">
+						{{ keyGroup.name }}
+					</span>
+				</div>
+			</div>
+		</template>
+
 		<div class="well fill-offset full-bleed" v-if="isPublishingToPlatforms">
 			<fieldset>
 				<app-form-legend compact deletable @delete="removePublishingToPlatforms()">
@@ -447,81 +463,61 @@
 			</translate>
 		</div>
 
-		<!-- Access permissions -->
-		<template v-if="accessPermissionsEnabled">
-			<div class="well fill-offset full-bleed" v-if="!wasPublished">
+		<!-- Game options -->
+		<template v-if="authorOptionsEnabled">
+			<div class="well fill-offset full-bleed">
 				<fieldset>
-					<app-form-legend compact deletable @delete="disableAccessPermissions()">
-						<translate>Access permissions</translate>
+					<app-form-legend compact deletable @delete="disableAuthorOptions()">
+						<translate>Author Options</translate>
 					</app-form-legend>
 
-					<app-form-group name="key_group_ids" :label="$gettext(`Access Permissions`)" hide-label>
-						<div class="alert" v-if="!keyGroups.length">
-							<translate>
-								You can make this post available to only the users within a key group. For example,
-								this is useful for sending news updates to testers. You can create a user key group
-								through the "Keys/Access" page.
+					<!-- Post as game owner -->
+					<app-form-group
+						name="as_game_owner"
+						v-if="model.user.id != model.game.developer.id"
+						:label="$gettext(`Post as Game Owner`)"
+					>
+						<p class="help-block">
+							<translate
+								:translate-params="{
+									owner: `@${model.user.username}`,
+									author: `@${model.game.developer.username}`,
+								}"
+							>
+								This will show %{ owner } as the user that posted instead of %{ author }.
 							</translate>
-						</div>
-						<div v-else>
-							<p class="help-block">
-								<translate>
-									You can make this post available to only the users within a key group. For
-									example, this is useful for sending news updates to testers. Only User-type key
-									groups can be selected.
-								</translate>
-							</p>
-
-							<div class="checkbox" v-for="keyGroup of keyGroups" :key="keyGroup.id">
-								<label>
-									<app-form-control-checkbox :value="keyGroup.id" />
-									{{ keyGroup.name }}
-								</label>
+						</p>
+						<div class="-as-owner">
+							<div class="-as-owner-item">
+								<app-form-control-toggle />
+							</div>
+							<div
+								class="-as-owner-item -as-owner-avatar"
+								v-if="formModel.as_game_owner"
+								v-app-tooltip="
+									model.game.developer.display_name + ` (@${model.game.developer.username})`
+								"
+							>
+								<app-user-avatar-img :user="model.game.developer" />
 							</div>
 						</div>
 					</app-form-group>
+
+					<!-- Post to profile -->
+					<app-form-group
+						name="post_to_user_profile"
+						v-if="user && user.id == model.user.id"
+						:label="$gettext(`Post to Profile`)"
+					>
+						<p class="help-block">
+							This will make the post show up on your profile too and not just the game page.
+						</p>
+
+						<app-form-control-toggle />
+					</app-form-group>
 				</fieldset>
 			</div>
-			<div class="form-group well fill-offset full-bleed" v-else>
-				<label class="control-label">
-					<translate>Access Permissions</translate>
-				</label>
-				<div class="alert">
-					<translate>
-						The below key groups have access to this post. You can't edit who has access after
-						posting since notifications have already gone out.
-					</translate>
-				</div>
-				<div>
-					<span class="tag" v-for="keyGroup of model.key_groups" :key="keyGroup.id">
-						{{ keyGroup.name }}
-					</span>
-				</div>
-			</div>
 		</template>
-
-		<!-- Post as game owner -->
-		<app-form-group
-			name="as_game_owner"
-			v-if="user && model.game && user.id != model.game.developer.id"
-			:label="$gettext(`Post as Game Owner`)"
-		>
-			<p class="help-block">
-				This will show the game owner as the user that posted instead of you.
-			</p>
-			<div class="-as-owner">
-				<div class="-as-owner-item">
-					<app-form-control-toggle />
-				</div>
-				<div
-					class="-as-owner-item -as-owner-avatar"
-					v-if="formModel.as_game_owner"
-					v-app-tooltip="model.game.developer.display_name + ` (@${model.game.developer.username})`"
-				>
-					<app-user-avatar-img :user="model.game.developer" />
-				</div>
-			</div>
-		</app-form-group>
 
 		<template v-if="platformRestrictions.length">
 			<div
@@ -534,6 +530,63 @@
 				</strong>
 			</div>
 		</template>
+
+		<!-- Communities -->
+		<template v-if="isLoaded">
+			<app-scroll-scroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
+				<transition-group class="-communities-list" name="-communities-list" tag="div">
+					<app-form-post-community-pill-incomplete
+						v-if="incompleteDefaultCommunity"
+						class="-community-pill"
+						key="incomplete"
+						:communities="possibleCommunities"
+						:community="incompleteDefaultCommunity"
+						@add="attachIncompleteCommunity"
+					/>
+
+					<app-form-post-community-pill
+						class="-community-pill"
+						v-for="{ community, channel } of attachedCommunities"
+						:key="community.id"
+						:community="community"
+						:channel="channel"
+						:removable="!wasPublished"
+						@remove="removeCommunity(community)"
+					/>
+
+					<template v-if="!wasPublished && canAddCommunity">
+						<app-form-post-community-pill-add
+							class="-community-pill"
+							key="add"
+							:communities="possibleCommunities"
+							@add="attachCommunity"
+						/>
+					</template>
+				</transition-group>
+			</app-scroll-scroller>
+			<p v-else-if="!wasPublished" class="help-block">
+				<translate>Join some communities to post to them.</translate>
+				<span v-app-tooltip="$gettext(`Go to the explore page and find some!`)">
+					<app-jolticon class="text-muted" icon="help-circle" />
+				</span>
+			</p>
+		</template>
+
+		<app-expand v-if="!wasPublished" :when="hasChannelError">
+			<div class="-error alert alert-notice">
+				<translate>
+					Choose a channel to post to.
+				</translate>
+			</div>
+		</app-expand>
+
+		<app-expand :when="hasAuthorOptionsError">
+			<div class="-error alert alert-notice">
+				<translate>
+					Choose either posting as the game owner or sharing to your profile. Can't do both.
+				</translate>
+			</div>
+		</app-expand>
 
 		<!-- Controls -->
 		<div class="-controls">
@@ -586,6 +639,16 @@
 					icon="share-airplane"
 					v-app-tooltip="$gettext(`Publish to Other Platforms`)"
 					@click="addPublishingToPlatforms()"
+				/>
+
+				<app-button
+					v-if="!authorOptionsEnabled && shouldShowAuthorOptions"
+					sparse
+					trans
+					circle
+					icon="user"
+					v-app-tooltip="$gettext(`Author Options`)"
+					@click="enableAuthorOptions()"
 				/>
 			</div>
 

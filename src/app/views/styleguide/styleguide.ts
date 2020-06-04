@@ -1,3 +1,4 @@
+import { Component } from 'vue-property-decorator';
 import AppButtonStyleguide from '../../../_common/button/button-styleguide.vue';
 import AppJolticonsStyleguide from '../../../_common/jolticons/jolticons-styleguide.vue';
 import AppListGroupStyleguide from '../../../_common/list-group/list-group-styleguide.vue';
@@ -6,7 +7,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
 import { AppScrollTo } from '../../../_common/scroll/to/to.directive';
 import { User } from '../../../_common/user/user.model';
-import { Component } from 'vue-property-decorator';
+import AppStyleguideColor from './color/color.vue';
 
 @Component({
 	name: 'RouteStyleguide',
@@ -16,6 +17,7 @@ import { Component } from 'vue-property-decorator';
 		AppListGroupStyleguide,
 		AppProgressBarStyleguide,
 		AppJolticonsStyleguide,
+		AppStyleguideColor,
 	},
 	directives: {
 		AppScrollTo,
@@ -35,6 +37,7 @@ export default class RouteStyleguide extends BaseRouteComponent {
 			buttons: 'Buttons',
 			'list-groups': 'List Groups',
 			'progress-bars': 'Progress Bars',
+			colors: 'Colors',
 			jolticons: 'Jolticons',
 		};
 	}
@@ -44,6 +47,7 @@ export default class RouteStyleguide extends BaseRouteComponent {
 			AppButtonStyleguide,
 			AppListGroupStyleguide,
 			AppProgressBarStyleguide,
+			AppStyleguideColor,
 			AppJolticonsStyleguide,
 		];
 	}

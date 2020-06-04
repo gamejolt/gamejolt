@@ -5,6 +5,7 @@ import { Api } from '../../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
+import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
 import { Environment } from '../../../../../../_common/environment/environment.service';
 import { FiresidePostCommunity } from '../../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
@@ -23,6 +24,7 @@ import { AppCommunityPerms } from '../../../../community/perms/perms';
 	components: {
 		AppPopper,
 		AppCommunityPerms,
+		AppCommunityThumbnailImg,
 	},
 })
 export default class AppEventItemControlsFiresidePostExtra extends Vue {
@@ -186,26 +188,38 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 		}
 	}
 
-	getPinTargetModel() {
+	private _getPinTarget() {
 		const pinContext = this.post.getPinContextFor(this.$route);
+
+		let resourceName: string;
+		let resourceId: number;
+
 		if (pinContext instanceof Game) {
-			return 'Game';
+			resourceName = 'Game';
+			resourceId = pinContext.id;
 		} else if (pinContext instanceof FiresidePostCommunity) {
-			return 'Community_Channel';
+			resourceName = 'Community_Channel';
+			resourceId = pinContext.channel!.id;
 		} else if (pinContext instanceof User) {
-			return 'User';
+			resourceName = 'User';
+			resourceId = pinContext.id;
+		} else {
+			throw new Error('Post is not pinnable in this context');
 		}
 
-		throw new Error('Post is not pinnable in this context');
+		return { resourceName, resourceId };
 	}
 
-	async pin() {
-		await this.post.$pin(this.getPinTargetModel());
-		this.emitPin();
-	}
+	async togglePin() {
+		const wasPinned = this.post.is_pinned;
 
-	async unpin() {
-		await this.post.$unpin(this.getPinTargetModel());
-		this.emitUnpin();
+		const { resourceName, resourceId } = this._getPinTarget();
+		await this.post.$togglePin(resourceName, resourceId);
+
+		if (wasPinned) {
+			this.emitUnpin();
+		} else {
+			this.emitPin();
+		}
 	}
 }

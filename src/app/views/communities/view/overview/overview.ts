@@ -312,10 +312,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			{
 				type: 'EventItem',
 				url: getFetchUrl(this.$route),
-				hideCommunity: true,
-				hideCommunityChannel:
-					this.channel !== CommunityPresetChannelType.FEATURED &&
-					this.channel !== CommunityPresetChannelType.ALL,
+				mainCommunity: this.community,
 				shouldShowFollow: true,
 				notificationWatermark: $payload.unreadWatermark,
 			},
@@ -386,6 +383,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	onPostMovedChannel(eventItem: EventItem, movedTo: CommunityChannel) {
 		if (
 			this.feed &&
+			this.community.id === movedTo.community_id &&
 			this.channel !== CommunityPresetChannelType.FEATURED &&
 			this.channel !== CommunityPresetChannelType.ALL &&
 			this.channel !== movedTo.title
