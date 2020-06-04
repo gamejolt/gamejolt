@@ -5,32 +5,7 @@
 	max-width: 300px
 
 	@media $media-xs
-		// AppPopper seems really glitchy for this use case for some reason.
-		// Using 45vh only for mobile until I can figure it out.
-		max-height: 45vh
 		max-width: 250px
-
-.-slider
-	position: relative
-	// Fit two sections in the slider (communities and channels)
-	display: flex
-	width: 200%
-	left: 0
-	transition: left 300ms $strong-ease-out
-
-// Schooch!
-.-slide-to-channels
-	left: -100%
-
-.-communities, .-channels
-	display: inline-block
-	vertical-align: top
-	// Each section takes 50% of parent slider, which would be equal to the -container size.
-	width: 50%
-	// Use no border-radius to make it look nicer while sliding over.
-	border-radius: 0
-	white-space: nowrap
-	margin-bottom: 0
 
 .-community-item, .-channel-item
 	display: flex
@@ -49,7 +24,6 @@
 	&:hover
 		.-back
 			opacity: 1
-			transition: opacity 300ms $strong-ease-out
 
 	.-back
 		position: relative
@@ -61,6 +35,7 @@
 		background-color: var(--theme-bi-bg)
 		color: var(--theme-bi-fg)
 		opacity: 0
+		transition: opacity 300ms $strong-ease-out
 
 .-community-img, .-back
 	img-circle()

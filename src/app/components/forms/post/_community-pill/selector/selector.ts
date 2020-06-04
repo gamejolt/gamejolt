@@ -24,12 +24,6 @@ export default class AppFormPostCommunityPillSelector extends Vue {
 	@Prop(propOptional(Community, null))
 	initialCommunity!: Community | null;
 
-	$refs!: {
-		header: HTMLElement;
-	};
-
-	// State for what page to be on
-	selectingChannel = true;
 	selectedCommunity: Community | null = null;
 
 	@Emit('select-community') emitSelectCommunity(_community: Community) {}
@@ -48,34 +42,17 @@ export default class AppFormPostCommunityPillSelector extends Vue {
 		this.resetSelections();
 	}
 
-	async scrollToHeader() {
-		await this.$nextTick();
-		// const parent = findVueParent(this, AppScrollScroller);
-		// parent?.$el.scrollTo({
-		// 	top: -500,
-		// 	behavior: 'smooth',
-		// });
-		this.$refs.header.scrollIntoView(
-			false
-			// 	{
-			// 	behavior: 'smooth',
-			// }
-		);
-	}
-
 	unselectCommunity() {
 		if (this.selectedCommunity === this.initialCommunity) {
 			return;
 		}
 
-		this.selectingChannel = false;
+		this.selectedCommunity = null;
 	}
 
 	selectCommunity(community: Community) {
-		this.selectingChannel = true;
 		this.selectedCommunity = community;
 		this.emitSelectCommunity(community);
-		this.scrollToHeader();
 	}
 
 	selectChannel(channel: CommunityChannel) {

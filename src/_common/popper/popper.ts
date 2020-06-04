@@ -121,6 +121,10 @@ export default class AppPopper extends Vue {
 	@Prop(propOptional(String, null))
 	popoverClass!: null | string;
 
+	// For popovers that need a specific max-height, header and footer included.
+	@Prop(propOptional(String, null))
+	setHeight?: string;
+
 	$refs!: {
 		trigger: any;
 		popper: any;
@@ -148,6 +152,10 @@ export default class AppPopper extends Vue {
 	@Emit('hide') emitHide() {}
 
 	get maxHeight() {
+		if (this.setHeight) {
+			return this.setHeight;
+		}
+
 		return Screen.height - 100 + 'px';
 	}
 

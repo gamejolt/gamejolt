@@ -545,7 +545,7 @@
 					/>
 
 					<app-form-post-community-pill
-						class="-community-pill"
+						class="-community-pill anim-fade-in-enlarge"
 						v-for="{ community, channel } of attachedCommunities"
 						:key="community.id"
 						:community="community"
@@ -560,25 +560,18 @@
 							key="add"
 							:communities="possibleCommunities"
 							@add="attachCommunity"
+							v-app-scroll-when="scrollingKey"
 						/>
 					</template>
 				</transition-group>
 			</app-scroll-scroller>
 			<p v-else-if="!wasPublished" class="help-block">
 				<translate>Join some communities to post to them.</translate>
-				<span v-app-tooltip="$gettext(`Go to the explore page and find some!`)">
+				<span v-app-tooltip.touchable="$gettext(`Go to the explore page and find some!`)">
 					<app-jolticon class="text-muted" icon="help-circle" />
 				</span>
 			</p>
 		</template>
-
-		<app-expand v-if="!wasPublished" :when="hasChannelError">
-			<div class="-error alert alert-notice">
-				<translate>
-					Choose a channel to post to.
-				</translate>
-			</div>
-		</app-expand>
 
 		<app-expand :when="hasAuthorOptionsError">
 			<div class="-error alert alert-notice">
