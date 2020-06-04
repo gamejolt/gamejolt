@@ -8,6 +8,7 @@ import AppCommunityVerifiedTick from '../../../../../../_common/community/verifi
 import AppJolticon from '../../../../../../_common/jolticon/jolticon.vue';
 import { Popper } from '../../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
+import AppScrollHelper from './scroll/scroll.vue';
 
 @Component({
 	components: {
@@ -15,6 +16,7 @@ import AppPopper from '../../../../../../_common/popper/popper.vue';
 		AppCommunityThumbnailImg,
 		AppCommunityVerifiedTick,
 		AppJolticon,
+		AppScrollHelper,
 	},
 })
 export default class AppFormPostCommunityPillSelector extends Vue {

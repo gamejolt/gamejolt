@@ -123,7 +123,7 @@ export default class AppPopper extends Vue {
 
 	// For popovers that need a specific max-height, header and footer included.
 	@Prop(propOptional(String, null))
-	setHeight?: string;
+	setHeight!: string;
 
 	$refs!: {
 		trigger: any;

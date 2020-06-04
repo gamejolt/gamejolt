@@ -25,6 +25,7 @@
 		</a>
 
 		<div slot="popover" class="-container">
+			<app-scroll-helper :when="!!selectedCommunity" />
 			<div v-if="!selectedCommunity" class="-communities list-group">
 				<a
 					class="-community-item list-group-item"
