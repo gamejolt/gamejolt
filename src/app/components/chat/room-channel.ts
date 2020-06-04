@@ -6,6 +6,15 @@ import { ChatRoom } from './room';
 import { ChatUser } from './user';
 import { ChatUserCollection } from './user-collection';
 
+interface RoomPresence {
+	metas: { phx_ref: string }[];
+	user: ChatUser;
+}
+
+interface ClearNotificationsPayload {
+	room_id: number;
+}
+
 export class ChatRoomChannel extends Channel {
 	room!: ChatRoom;
 	roomId: number;
@@ -44,7 +53,7 @@ export class ChatRoomChannel extends Channel {
 		presence.onSync(() => this.syncPresentUsers(presence, this.room));
 	}
 
-	private onMsg(data: any) {
+	private onMsg(data: Partial<ChatMessage>) {
 		const message = new ChatMessage(data);
 		processNewChatOutput(this.client, [message], false);
 
@@ -55,22 +64,23 @@ export class ChatRoomChannel extends Channel {
 		}
 	}
 
-	private onClearNotifications(data: any) {
+	private onClearNotifications(data: ClearNotificationsPayload) {
 		if (isInChatRoom(this.client, data.room_id)) {
 			Vue.delete(this.client.notifications, '' + data.room_id);
 		}
 	}
 
-	private onUserUpdated(data: any) {
+	private onUserUpdated(data: Partial<ChatUser>) {
+		const updatedUser = new ChatUser(data);
 		if (this.room && isInChatRoom(this.client, this.roomId) && this.room.isGroupRoom) {
-			this.client.usersOnline[this.roomId].update(data);
+			this.client.usersOnline[this.roomId].update(updatedUser);
 		}
 	}
 
-	private syncPresentUsers(presence: any, room: ChatRoom) {
+	private syncPresentUsers(presence: Presence, room: ChatRoom) {
 		const presentUsers: ChatUser[] = [];
-		presence.list((_id: number, pres: any) => {
-			const user = new ChatUser(pres.user);
+		presence.list((_id: string, roomPresence: RoomPresence) => {
+			const user = new ChatUser(roomPresence.user);
 			user.isOnline = true;
 			presentUsers.push(user);
 		});

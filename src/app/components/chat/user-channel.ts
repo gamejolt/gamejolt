@@ -9,6 +9,14 @@ import {
 import { ChatMessage } from './message';
 import { ChatUser } from './user';
 
+interface UserPresence {
+	metas: { phx_ref: string }[];
+}
+
+interface FriendRemovePayload {
+	user_id: number;
+}
+
 export class ChatUserChannel extends Channel {
 	readonly client: ChatClient;
 	readonly socket: Socket;
@@ -34,13 +42,13 @@ export class ChatUserChannel extends Channel {
 		presence.onJoin(this.onFriendJoin.bind(this));
 		presence.onLeave(this.onFriendLeave.bind(this));
 		presence.onSync(() =>
-			presence.list((id, _user) => {
+			presence.list((id: string, _presence: UserPresence) => {
 				this.client.friendsList.online(+id);
 			})
 		);
 	}
 
-	private onFriendJoin(presenceId: string, currentPresence: any) {
+	private onFriendJoin(presenceId: string, currentPresence: UserPresence | undefined) {
 		// If this is the first user presence from a device.
 		if (!currentPresence) {
 			const userId = +presenceId;
@@ -48,7 +56,7 @@ export class ChatUserChannel extends Channel {
 		}
 	}
 
-	private onFriendLeave(presenceId: string, currentPresence: any) {
+	private onFriendLeave(presenceId: string, currentPresence: UserPresence | undefined) {
 		// If the user has left all devices.
 		if (currentPresence && currentPresence.metas.length === 0) {
 			const userId = +presenceId;
@@ -57,10 +65,11 @@ export class ChatUserChannel extends Channel {
 	}
 
 	private onFriendAdd(data: Partial<ChatUser>) {
-		this.client.friendsList.add(new ChatUser(data));
+		const newFriend = new ChatUser(data);
+		this.client.friendsList.add(newFriend);
 	}
 
-	private onFriendRemove(data: { user_id: number }) {
+	private onFriendRemove(data: FriendRemovePayload) {
 		const userId = data.user_id;
 		const friend = this.client.friendsList.get(userId);
 
