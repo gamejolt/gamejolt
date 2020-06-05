@@ -26,7 +26,7 @@ export default class AppChatUserList extends Vue {
 		const filter = this.filterQuery.toLowerCase();
 		return this.users.filter(
 			i =>
-				fuzzysearch(filter, i.displayName.toLowerCase()) ||
+				fuzzysearch(filter, i.display_name.toLowerCase()) ||
 				fuzzysearch(filter, i.username.toLowerCase())
 		);
 	}
