@@ -1,3 +1,4 @@
+import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
 import Vue from 'vue';
 import { EventBus } from '../../../system/event/event-bus.service';
@@ -156,13 +157,21 @@ function reset(chat: ChatClient) {
 }
 
 async function connect(chat: ChatClient) {
-	const host = `${Environment.chatHost}/socket`;
 	const frontend = await getCookie('frontend');
 	const user = store.state.app.user;
 
 	if (user === null || frontend === undefined) {
 		return;
 	}
+
+	// get hostname from loadbalancer first
+	const hostResult = await pollRequest('Select server', () =>
+		Axios.get(Environment.chatHost, { ignoreLoadingBar: true })
+	);
+
+	const host = `${hostResult.data}`;
+
+	console.log('[Chat] Server selected:', host);
 
 	// heartbeat is 30 seconds, backend disconnects after 40 seconds
 	chat.socket = new Socket(host, {
