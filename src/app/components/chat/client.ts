@@ -166,7 +166,7 @@ async function connect(chat: ChatClient) {
 
 	// get hostname from loadbalancer first
 	const hostResult = await pollRequest('Select server', () =>
-		Axios.get(Environment.chatHost, { ignoreLoadingBar: true })
+		Axios.get(Environment.chatHost, { ignoreLoadingBar: true, timeout: 3000 })
 	);
 
 	const host = `${hostResult.data}`;
