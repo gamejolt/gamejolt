@@ -1,7 +1,7 @@
 <template>
 	<!--
-	Can currently only have one window open at a time.
--->
+		Can currently only have one window open at a time.
+	-->
 	<app-chat-window
 		v-if="chat.room && isRightPaneVisible"
 		:room="chat.room"

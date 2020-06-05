@@ -1,9 +1,8 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { Component, InjectReactive, Prop } from 'vue-property-decorator';
 import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
 import { date } from '../../../../../../_common/filters/date';
-import { ChatClient } from '../../../client';
+import { ChatClient, ChatKey } from '../../../client';
 import { ChatMessage } from '../../../message';
 import { ChatRoom } from '../../../room';
 import './item-content.styl';
@@ -20,7 +19,7 @@ export default class AppChatWindowOutputItem extends Vue {
 	@Prop(ChatMessage) message!: ChatMessage;
 	@Prop(ChatRoom) room!: ChatRoom;
 
-	@State chat!: ChatClient;
+	@InjectReactive(ChatKey) chat!: ChatClient;
 
 	isExpanded = false;
 	isCollapsable = false;
@@ -30,23 +29,12 @@ export default class AppChatWindowOutputItem extends Vue {
 
 	get shouldFadeCollapse() {
 		return (
-			this.message.contentRaw.split('\n').length > 6 || this.message.contentRaw.length >= 500
+			this.message.content_raw.split('\n').length > 6 ||
+			this.message.content_raw.length >= 500
 		);
 	}
 
-	get canModerate() {
-		return this.chat.canModerate(this.room, this.message.user);
-	}
-
 	get loggedOn() {
-		return date(this.message.loggedOn, 'medium');
-	}
-
-	muteUser() {
-		this.chat.mute(this.message.user.id, this.room.id);
-	}
-
-	removeMessage(msgId: number) {
-		this.chat.removeMessage(msgId, this.room.id);
+		return date(this.message.logged_on, 'medium');
 	}
 }

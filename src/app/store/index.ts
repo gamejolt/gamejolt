@@ -30,9 +30,8 @@ import { ThemeActions, ThemeMutations, ThemeStore } from '../../_common/theme/th
 import { Translate } from '../../_common/translate/translate.service';
 import { ActivityFeedState } from '../components/activity/feed/state';
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
-import { ChatClient } from '../components/chat/client';
 import { GridClient } from '../components/grid/client.service';
-import { ChatClientLazy, GridClientLazy } from '../components/lazy';
+import { GridClientLazy } from '../components/lazy';
 import { router } from '../views';
 import { BannerActions, BannerMutations, BannerStore } from './banner';
 import * as _ClientLibraryMod from './client-library';
@@ -51,8 +50,6 @@ export type Actions = AppActions &
 		bootstrap: void;
 		logout: void;
 		clear: void;
-		loadChat: void;
-		clearChat: void;
 		loadGrid: void;
 		clearGrid: void;
 		loadNotificationState: void;
@@ -116,7 +113,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	// From the vuex-router-sync.
 	route!: Route;
 
-	chat: ChatClient | null = null;
 	grid: GridClient | null = null;
 
 	isBootstrapped = false;
@@ -218,22 +214,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	async clear() {
 		tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
 		this.commit('library/clear');
-	}
-
-	@VuexAction
-	async loadChat() {
-		const ChatClient_ = await ChatClientLazy();
-		this._setChat(new ChatClient_());
-	}
-
-	@VuexAction
-	async clearChat() {
-		// Log out of chat. This will notify other tabs to disconnect from the server too.
-		if (this.chat) {
-			this.chat.logout();
-		}
-
-		this._setChat(null);
 	}
 
 	@VuexAction
@@ -443,11 +423,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	private _setChat(chat: ChatClient | null) {
-		this.chat = chat;
-	}
-
-	@VuexMutation
 	private _setGrid(grid: GridClient | null) {
 		this.grid = grid;
 	}
@@ -517,32 +492,6 @@ sync(store, router, { moduleName: 'route' });
 // Sync with the ContentFocus service.
 ContentFocus.registerWatcher(
 	() => !store.state.isLeftPaneOverlayed && !store.state.isRightPaneOverlayed
-);
-
-// Bootstrap/clear the app when user changes.
-store.watch(
-	state => state.app.user && state.app.user.id,
-	userId => {
-		const isLoggedIn = !!userId;
-
-		if (isLoggedIn) {
-			store.dispatch('bootstrap');
-			if (!GJ_IS_SSR) {
-				store.dispatch('loadChat');
-				store.dispatch('loadGrid');
-				store.dispatch('loadNotificationState');
-			}
-
-			if (GJ_IS_CLIENT) {
-				store.dispatch('clientLibrary/bootstrap');
-			}
-		} else {
-			store.dispatch('clear');
-			store.dispatch('clearChat');
-			store.dispatch('clearGrid');
-			store.dispatch('clearNotificationState');
-		}
-	}
 );
 
 // If we were offline, but we're online now, make sure our library is bootstrapped. Remember we
