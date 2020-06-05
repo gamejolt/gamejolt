@@ -1,6 +1,10 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+$-avatar-margin = 8px
+$-toggle-width = $input-height-base * 2
+$-toggle-area-width = $-avatar-margin + $input-height-base + $-toggle-width
+
 .form-group:last-child
 	margin-bottom: 10px
 
@@ -49,15 +53,29 @@
 .-channels, .-error, .-community-message
 	margin-bottom: 10px
 
+.-content
+	display: flex
+	justify-content: space-between
+
+	.help-block
+		margin-top: 0
+
 .-as-owner
 	clearfix()
-
-	&-item
-		float: left
-		margin-right: 10px
+	margin-left: $-avatar-margin
+	// Move the toggle into the upper-right corner of its container
+	position: relative
+	bottom: 31px
 
 	&-avatar
 		width: $input-height-base
+		margin-right: $-avatar-margin
+
+	&.-extra
+		flex: none
+		display: flex
+		justify-content: flex-end
+		width: $-toggle-area-width
 
 .-poll-option
 	display: flex
