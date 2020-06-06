@@ -616,6 +616,32 @@ export default class FormPost extends BaseForm<FormPostModel>
 		this.setField('media', newMedia);
 	}
 
+	onMediaUploadFailed(reason: string) {
+		let message = this.$gettext(
+			'Something went wrong while we tried uploading your media. Maybe try again?'
+		);
+		switch (reason) {
+			case 'no-dimensions':
+				message = this.$gettext('We failed to analyze your media.');
+				break;
+			case 'no-image-video':
+				message = this.$gettext(
+					'Looks like the file you uploaded is not an image or video we recognize.'
+				);
+				break;
+			case 'no-extension':
+				message = this.$gettext('We could not determine the file type of your media.');
+				break;
+			case 'invalid-mime-type':
+				message = this.$gettext(
+					'We currently do not support the format of your uploaded media. Try exporting it to a different format.'
+				);
+				break;
+		}
+
+		Growls.error(message, this.$gettext('Failed to upload your media.'));
+	}
+
 	onMediaSort(mediaItems: MediaItem[]) {
 		this.setField('media', mediaItems);
 	}
@@ -882,13 +908,18 @@ export default class FormPost extends BaseForm<FormPostModel>
 			{
 				file: files,
 				progress: e2 => this.setField('_progress', e2),
+				noErrorRedirect: true,
 			}
 		);
 
 		this.isUploadingPastedImage = false;
 
-		// Apply returned media items.
-		const mediaItems = MediaItem.populate($payload.mediaItems);
-		this.onMediaUploaded(mediaItems);
+		if ($payload.success) {
+			// Apply returned media items.
+			const mediaItems = MediaItem.populate($payload.mediaItems);
+			this.onMediaUploaded(mediaItems);
+		} else {
+			this.onMediaUploadFailed($payload.reason);
+		}
 	}
 }

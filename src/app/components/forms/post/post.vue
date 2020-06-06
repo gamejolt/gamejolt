@@ -47,6 +47,7 @@
 					:max-height="maxHeight"
 					:loading="isUploadingPastedImage"
 					@upload="onMediaUploaded($event)"
+					@error="onMediaUploadFailed($event)"
 					@remove="removeMediaItem($event)"
 					@sort="onMediaSort($event)"
 				/>
