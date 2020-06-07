@@ -4,11 +4,11 @@ import { Api } from '../../../_common/api/api.service';
 import { HistoryCache } from '../../../_common/history/cache/cache.service';
 import { Notification } from '../../../_common/notification/notification-model';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
-import { Store, store } from '../../store';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import AppActivityFeed from '../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../components/activity/feed/view';
+import { Store, store } from '../../store';
 
 const HistoryCacheFeedTag = 'notifications-feed';
 
@@ -66,7 +66,7 @@ export default class RouteNotifications extends BaseRouteComponent {
 	@Watch('notificationState', { immediate: true })
 	onNotificationStateChange(state: Store['notificationState']) {
 		if (state) {
-			this.feed = new ActivityFeedView(state);
+			this.feed = new ActivityFeedView(state, { itemsPerPage: 15 });
 		} else {
 			this.feed = null;
 		}
