@@ -11,12 +11,13 @@ import { ActivityFeedState } from './state';
  * The number of times we should do an auto-load of items before stopping and requiring them to do
  * it manually.
  */
-const LoadMoreTimes = 3;
+const LoadMoreTimes = 5;
 
 /**
  * The items we expect per page of a feed.
+ * The default for most event item feeds is this const, but can be set in the ctor of the view.
  */
-const ItemsPerPage = 15;
+const ItemsPerPage = 10;
 
 const ScrollDirectionFrom = 'from';
 const ScrollDirectionTo = 'to';
@@ -39,6 +40,7 @@ export interface ActivityFeedViewOptions {
 	hideGameInfo?: boolean;
 	shouldShowUserCards?: boolean;
 	shouldShowFollow?: boolean;
+	itemsPerPage?: number;
 }
 
 export class ActivityFeedView {
@@ -58,6 +60,7 @@ export class ActivityFeedView {
 	mainCommunity: Community | null = null;
 	shouldShowUserCards = true;
 	shouldShowFollow = false;
+	itemsPerPage = 0;
 
 	get isBootstrapped() {
 		return this.state.isBootstrapped;
@@ -105,6 +108,7 @@ export class ActivityFeedView {
 			mainCommunity = null,
 			shouldShowUserCards = true,
 			shouldShowFollow = false,
+			itemsPerPage = ItemsPerPage,
 		}: ActivityFeedViewOptions = {}
 	) {
 		this.state = state;
@@ -114,6 +118,7 @@ export class ActivityFeedView {
 		this.mainCommunity = mainCommunity;
 		this.shouldShowUserCards = shouldShowUserCards;
 		this.shouldShowFollow = shouldShowFollow;
+		this.itemsPerPage = slice ?? itemsPerPage;
 	}
 
 	clear() {
@@ -284,7 +289,7 @@ export class ActivityFeedView {
 
 		// If the new count is greater than the amount we show on a page, then
 		// we want to refresh the whole thing so that we don't have gaps.
-		const clearOld = newCount > ItemsPerPage;
+		const clearOld = newCount > this.itemsPerPage;
 
 		const response = await Api.sendRequest(this.state.loadMoreUrl, {
 			scrollId: this.state.startScrollId,
