@@ -409,6 +409,7 @@
 			</div>
 		</template>
 
+		<!-- Other platforms -->
 		<div class="well fill-offset full-bleed" v-if="isPublishingToPlatforms">
 			<fieldset>
 				<app-form-legend compact deletable @delete="removePublishingToPlatforms()">
@@ -516,7 +517,7 @@
 			</p>
 		</template>
 
-		<!-- Game options -->
+		<!-- Author options -->
 		<template v-if="shouldShowAuthorOptions">
 			<fieldset>
 				<!-- Post as game owner -->
@@ -526,30 +527,26 @@
 					v-if="model.user.id != model.game.developer.id"
 					:label="$gettext(`Post as Game Owner`)"
 				>
-					<div class="-content">
-						<p class="help-block">
-							<translate
-								:translate-params="{
-									owner: `@${model.game.developer.username}`,
-									author: `@${model.user.username}`,
-								}"
-							>
-								This will show %{ owner } as the user that posted.
-							</translate>
-						</p>
-						<div class="-as-owner -extra">
-							<div
-								class="-as-owner-avatar"
-								v-if="formModel.as_game_owner"
-								v-app-tooltip.touchable="
-									model.game.developer.display_name + ` (@${model.game.developer.username})`
-								"
-							>
-								<app-user-avatar-img :user="model.game.developer" />
-							</div>
-							<app-form-control-toggle :disabled="formModel.post_to_user_profile" />
-						</div>
+					<app-form-control-toggle class="pull-right" :disabled="formModel.post_to_user_profile" />
+					<div
+						v-if="formModel.as_game_owner"
+						class="-author-avatar pull-right"
+						v-app-tooltip.touchable="
+							model.game.developer.display_name + ` (@${model.game.developer.username})`
+						"
+					>
+						<app-user-avatar-img :user="model.game.developer" />
 					</div>
+					<p class="help-block">
+						<translate
+							:translate-params="{
+								owner: `@${model.game.developer.username}`,
+								author: `@${model.user.username}`,
+							}"
+						>
+							This will show %{ owner } as the user that posted.
+						</translate>
+					</p>
 				</app-form-group>
 
 				<!-- Post to profile -->
@@ -558,15 +555,10 @@
 					v-if="user && user.id == model.user.id"
 					:label="$gettext(`Post to Profile`)"
 				>
-					<div class="-content">
-						<p class="help-block">
-							This will post to your profile as well as the game page.
-						</p>
-
-						<div class="-as-owner">
-							<app-form-control-toggle :disabled="formModel.as_game_owner" />
-						</div>
-					</div>
+					<app-form-control-toggle class="pull-right" :disabled="formModel.as_game_owner" />
+					<p class="help-block">
+						This will post to your profile as well as the game page.
+					</p>
 				</app-form-group>
 			</fieldset>
 		</template>
