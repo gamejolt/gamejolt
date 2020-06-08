@@ -105,15 +105,15 @@
 					<div class="container">
 						<div class="row">
 							<div :class="colClasses">
-								<div class="row">
-									<div v-if="hasControls" class="col-lg-4 col-lg-push-8">
+								<div class="-index row">
+									<div v-if="hasControls" class="-controls">
 										<div class="page-header-controls">
 											<slot name="controls" />
 										</div>
 									</div>
 									<div
+										class="-nav"
 										:class="{
-											'col-lg-8 col-lg-pull-4': hasControls,
 											'col-xs-12': !hasControls,
 										}"
 									>
