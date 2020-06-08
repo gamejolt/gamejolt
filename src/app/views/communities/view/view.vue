@@ -1,6 +1,6 @@
 <template>
 	<div v-if="community">
-		<app-scroll-scroller thin class="-channel-sidebar fill-offset" v-if="Screen.isLg">
+		<app-scroll-scroller v-if="Screen.isLg" thin class="-channel-sidebar fill-offset">
 			<div class="-card">
 				<app-communities-view-card :community="community" />
 			</div>
@@ -22,17 +22,23 @@
 
 .-channel-sidebar
 	position: fixed
-	left: $shell-cbar-width
 	top: $shell-top-nav-height
 	bottom: 0
 	width: $sidebar-width
 	padding: $sidebar-padding
+
+	#shell.has-cbar &
+		left: $shell-cbar-width
+
+	#shell.has-banner &
+		top: $shell-top-nav-height * 2
 
 	// Prevent shifting when v-if="Screen.isSize" removes the element.
 	@media $media-md-down
 		display: none
 
 .-content
+	// Make it full-size height at least, so that the footer doesn't cut things off weird.
 	min-height: 'calc(100vh - %s)' % $shell-top-nav-height
 
 	@media $media-lg

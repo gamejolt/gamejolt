@@ -2,9 +2,6 @@
 	<div id="shell-cbar">
 		<app-scroll-scroller class="-scroller" hide-scrollbar>
 			<div class="-inner">
-				<app-shell-cbar-item>
-					<app-jolticon icon="gamejolt" />
-				</app-shell-cbar-item>
 				<transition-group name="-communities">
 					<app-shell-cbar-community
 						v-for="community of communities"
