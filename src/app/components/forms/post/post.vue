@@ -534,10 +534,10 @@
 		<!-- Communities -->
 		<template v-if="isLoaded">
 			<app-scroll-scroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
-				<transition-group class="-communities-list" name="-communities-list" tag="div">
+				<transition-group class="-communities-list" tag="div">
 					<app-form-post-community-pill-incomplete
 						v-if="incompleteDefaultCommunity"
-						class="-community-pill"
+						class="-community-pill anim-fade-in-enlarge no-animate-leave"
 						key="incomplete"
 						:communities="possibleCommunities"
 						:community="incompleteDefaultCommunity"
@@ -545,7 +545,7 @@
 					/>
 
 					<app-form-post-community-pill
-						class="-community-pill anim-fade-in-enlarge"
+						class="-community-pill anim-fade-in-enlarge no-animate-leave"
 						v-for="{ community, channel } of attachedCommunities"
 						:key="community.id"
 						:community="community"
@@ -556,7 +556,7 @@
 
 					<template v-if="!wasPublished && canAddCommunity">
 						<app-form-post-community-pill-add
-							class="-community-pill"
+							class="-community-pill anim-fade-in-enlarge no-animate-leave"
 							key="add"
 							:communities="possibleCommunities"
 							@add="attachCommunity"

@@ -104,17 +104,11 @@
 		align-items: center
 		margin-bottom: 4px
 
-		&-leave-active
-			animation-duration: 0s !important
-			transition-duration: 0s !important
-
-		&-enter-active
-			transition: opacity 300ms $strong-ease-out
-
-		&-enter
+		.v-enter
 			opacity: 0
 
-		&-leave
+		.v-leave
+			display: none
 			position: absolute
 
 .-community-pill

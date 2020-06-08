@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue, { CreateElement } from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { findRequiredVueParent, propOptional } from '../../../../../../../utils/vue';
 import AppScrollScrollerTS from '../../../../../../../_common/scroll/scroller/scroller';
@@ -18,5 +18,9 @@ export default class AppScrollHelper extends Vue {
 	@Watch('when')
 	onContentChange() {
 		this.scrollParent.scrollTo(0);
+	}
+
+	render(h: CreateElement) {
+		return h('div');
 	}
 }
