@@ -9,7 +9,7 @@
 			:class="{ '-initial': isInitial }"
 			@click="unselectCommunity"
 		>
-			<div slot="img" class="-community-img">
+			<div class="-community-img">
 				<app-community-thumbnail-img :community="selectedCommunity" />
 				<app-jolticon v-if="!isInitial" class="-back" icon="arrow-left" />
 			</div>
@@ -28,7 +28,7 @@
 					:key="community.id"
 					@click="selectCommunity(community)"
 				>
-					<app-community-thumbnail-img slot="img" class="-community-img" :community="community" />
+					<app-community-thumbnail-img class="-community-img" :community="community" />
 
 					<span class="-text">
 						{{ community.name }}
