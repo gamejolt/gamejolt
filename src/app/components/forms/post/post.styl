@@ -49,16 +49,6 @@
 .-channels, .-error, .-community-message
 	margin-bottom: 10px
 
-.-as-owner
-	clearfix()
-
-	&-item
-		float: left
-		margin-right: 10px
-
-	&-avatar
-		width: $input-height-base
-
 .-poll-option
 	display: flex
 
@@ -117,6 +107,10 @@
 	&, >>> .button
 		height: 28px
 		margin-bottom: 0
+
+.-author-avatar
+	width: $input-height-base
+	margin-right: 8px
 
 @media $media-xs
 	.-controls
