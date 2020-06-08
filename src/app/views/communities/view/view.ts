@@ -4,7 +4,6 @@ import { enforceLocation } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
-import AppCommunityCard from '../../../../_common/community/card/card.vue';
 import { Community, isEditingCommunity } from '../../../../_common/community/community.model';
 import AppCommunityJoinWidget from '../../../../_common/community/join-widget/join-widget.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
@@ -22,9 +21,9 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { AppCommunityPerms } from '../../../components/community/perms/perms';
 import { CommunitySidebarModal } from '../../../components/community/sidebar/modal/modal.service';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
-import { CommunityThumbnailModal } from '../../../components/forms/community/thumbnail/modal/modal.service';
 import { Store } from '../../../store/index';
 import { CommunityRouteStore, CommunityRouteStoreKey } from './view.store';
+import AppCommunitiesViewCard from './_card/card.vue';
 import AppCommunitiesViewNavEdit from './_nav-edit/nav-edit.vue';
 import AppCommunitiesViewNav from './_nav/nav.vue';
 
@@ -40,7 +39,7 @@ import AppCommunitiesViewNav from './_nav/nav.vue';
 		AppCommunityVerifiedTick,
 		AppCommunitiesViewNav,
 		AppCommunitiesViewNavEdit,
-		AppCommunityCard,
+		AppCommunitiesViewCard,
 	},
 	directives: {
 		AppTooltip,
@@ -141,10 +140,6 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	onLeave() {
 		this.leaveCommunity(this.routeStore.community);
-	}
-
-	showEditAvatar() {
-		CommunityThumbnailModal.show(this.routeStore.community);
 	}
 
 	copyShareUrl() {

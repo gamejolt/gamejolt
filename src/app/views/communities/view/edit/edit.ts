@@ -63,10 +63,6 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 		// return this.collaboration === null;
 	}
 
-	get canEditMedia() {
-		return this.community.hasPerms('community-media');
-	}
-
 	routeResolved($payload: any) {
 		this.routeStore.updateCommunity($payload.community);
 		// this.community = new Community(payload.community);

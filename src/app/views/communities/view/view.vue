@@ -2,7 +2,7 @@
 	<div v-if="community">
 		<app-scroll-scroller thin class="-channel-sidebar fill-offset" v-if="Screen.isLg">
 			<div class="-card">
-				<app-community-card :community="community" />
+				<app-communities-view-card :community="community" />
 			</div>
 
 			<app-communities-view-nav v-if="!isEditing" />
