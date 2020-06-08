@@ -14,6 +14,8 @@
 	justify-content: center
 	align-items: center
 	border: $border-width-large dashed
+	border-color: var(--theme-fg-muted)
+	color: var(--theme-fg-muted)
 	border-radius: 100%
 	cursor: pointer
 	position: absolute
@@ -21,12 +23,9 @@
 	height: 100%
 	outline: 0
 
-	border-color: var(--theme-fg-muted)
-	color: var(--theme-fg-muted)
-
 	&:hover
-		border-color: var(--theme-highlight)
-		color: var(--theme-highlight)
+		border-color: var(--theme-link)
+		color: var(--theme-link)
 
 .jolticon
 	margin: 0 3px

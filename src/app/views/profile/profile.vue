@@ -55,22 +55,24 @@
 							</span>
 
 							<!-- Online status -->
-							<span
-								v-if="!isOnline"
-								class="tag"
-								v-app-tooltip="$gettext('profile.offline_tooltip')"
-							>
-								<app-jolticon icon="chat-offline" />
-								<translate>profile.offline_tag</translate>
-							</span>
-							<span
-								v-else
-								class="tag tag-highlight"
-								v-app-tooltip="$gettext('profile.online_tooltip')"
-							>
-								<app-jolticon icon="chat-online" />
-								<translate>profile.online_tag</translate>
-							</span>
+							<template v-if="isOnline !== null">
+								<span
+									v-if="isOnline === false"
+									class="tag"
+									v-app-tooltip="$gettext('profile.offline_tooltip')"
+								>
+									<app-jolticon icon="chat-offline" />
+									<translate>profile.offline_tag</translate>
+								</span>
+								<span
+									v-else
+									class="tag tag-highlight"
+									v-app-tooltip="$gettext('profile.online_tooltip')"
+								>
+									<app-jolticon icon="chat-online" />
+									<translate>profile.online_tag</translate>
+								</span>
+							</template>
 
 							<!-- Following status -->
 							<span

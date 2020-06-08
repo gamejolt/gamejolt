@@ -2,9 +2,9 @@
 	<div class="chat-window-wrap">
 		<!-- We sadly need the chat close thing twice. It takes up the empty
 		background space so you can click that to close chat. -->
-		<div class="chat-window-back-close" @click="closeChat"></div>
+		<div class="chat-window-back-close" @click="close"></div>
 		<div class="chat-window">
-			<div class="chat-window-back-close" @click="closeChat"></div>
+			<div class="chat-window-back-close" @click="close"></div>
 
 			<!-- Room Users -->
 			<app-scroll-scroller
@@ -27,7 +27,7 @@
 
 					<div class="nav-well">
 						<div class="chat-compiled-room-description">
-							<div v-html="room.description_compiled"></div>
+							<div v-html="room.description"></div>
 						</div>
 					</div>
 				</template>
@@ -43,8 +43,7 @@
 					v-if="users"
 					:room="room"
 					:users="users.collection"
-					:show-mod-tools="room.isMod"
-				></app-chat-user-list>
+				/>
 			</app-scroll-scroller>
 
 			<div class="chat-window-main">
@@ -62,16 +61,6 @@
 							/>
 
 							<app-button
-								v-if="room.isMod"
-								circle
-								trans
-								icon="edit"
-								class="anim-fade-in"
-								@click="showEditRoomModal"
-								:title="$gettext('Edit Room Details')"
-							/>
-
-							<app-button
 								circle
 								trans
 								icon="remove"
@@ -84,22 +73,22 @@
 						<div class="chat-window-header-content" v-for="room of [room]" :key="room.id">
 							<router-link
 								class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
-								v-if="room.isPmRoom"
+								v-if="room.isPmRoom && room.user"
 								:to="room.user.url"
 							>
-								<img :src="room.user.imgAvatar" alt="" />
+								<img :src="room.user.img_avatar" alt="" />
 							</router-link>
 
 							<h3 v-if="!room.isPmRoom" class="anim-fade-in-right no-animate-xs">
 								{{ room.title }}
 							</h3>
 							<h3
-								v-else
+								v-else-if="room.user"
 								class="anim-fade-in-right no-animate-xs"
-								:title="`${room.user.displayName} (@${room.user.username})`"
+								:title="`${room.user.display_name} (@${room.user.username})`"
 							>
 								<router-link class="link-unstyled" :to="room.user.url">
-									{{ room.user.displayName }}
+									{{ room.user.display_name }}
 								</router-link>
 								<br />
 								<small>@{{ room.user.username }}</small>
@@ -112,10 +101,7 @@
 									@require-change="isDescriptionCollapsed = $event"
 								>
 									<div class="chat-window-header-room-description chat-compiled-room-description">
-										<div
-											class="anim-fade-in no-animate-xs"
-											v-html="room.description_compiled"
-										></div>
+										<div class="anim-fade-in no-animate-xs" v-html="room.description"></div>
 									</div>
 								</app-fade-collapse>
 

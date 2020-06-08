@@ -6,6 +6,7 @@ import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { Theme } from '../theme/theme.model';
 import { UserBlock } from '../user/block/block.model';
+import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from './channel/channel-permissions';
 import { CommunityChannel } from './channel/channel.model';
 
 export async function $joinCommunity(community: Community) {
@@ -154,6 +155,16 @@ export class Community extends Collaboratable(Model) {
 
 	get isBlocked() {
 		return this.user_block instanceof UserBlock;
+	}
+
+	get postableChannels() {
+		if (!this.channels) {
+			return [];
+		}
+
+		return this.channels?.filter(channel =>
+			channel.permissions.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING)
+		);
 	}
 
 	channelRouteLocation(channel: CommunityChannel): Location {

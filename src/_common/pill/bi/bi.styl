@@ -6,7 +6,7 @@ $-separator-width = 20px
 // with the separator.
 $-separator-overlap = 2px
 
-.-pill-bi
+.pill-bi
 	display: inline-flex
 	align-items: stretch
 	font-size: $font-size-small
@@ -15,7 +15,7 @@ $-separator-overlap = 2px
 	margin-right: 4px
 	margin-bottom: 4px
 	border: $border-width-base solid
-	theme-prop('border-color', 'bg-subtle')
+	border-color: var(--theme-bg-subtle)
 	border-radius: $border-radius-base
 	overflow: hidden
 
@@ -25,7 +25,7 @@ $-separator-overlap = 2px
 
 .-left
 	change-bg('bg-offset')
-	theme-prop('fill', 'bg-offset')
+	fill: var(--theme-bg-offset)
 	// Needed to make sure -sep takes the full height of the left side.
 	// padding for the content itself is done in the nested -container
 	display: inline-flex
@@ -61,7 +61,9 @@ $-separator-overlap = 2px
 		width: $-separator-width
 		height: 100%
 
-		svg
+		// Apparently it's slow applying css to svg elements directly, but on class names its fine?
+		// Thank you css, very cool.
+		.-svg
 			position: absolute
 			width: 100%
 			height: 100%
@@ -79,14 +81,16 @@ $-separator-overlap = 2px
 
 // Basic button stuff common to both left and right sides.
 .-left, .-right
-	theme-prop('color', 'fg')
-	pressy()
-	cursor: pointer
+	color: var(--theme-fg)
 
-	&:hover
-		change-bg('bi-bg')
-		theme-prop('fill', 'bi-bg')
-		theme-prop('color', 'bi-fg')
+	&:not(.-no-hover)
+		pressy()
+		cursor: pointer
+
+		&:hover
+			change-bg('bi-bg')
+			fill: var(--theme-bi-bg)
+			color: var(--theme-bi-fg)
 
 .-img-outline
 	img-circle()
@@ -100,6 +104,3 @@ $-separator-overlap = 2px
 	overflow: hidden
 	width: 16px
 	height: 16px
-
-.-tick
-	margin-left: 5px

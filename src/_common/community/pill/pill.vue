@@ -5,36 +5,34 @@
 		{{ community.name }}
 		<app-community-verified-tick class="-tick" :community="community" small />
 	</app-pill>
-	<span class="-pill-bi" v-else>
-		<router-link class="-left" :to="toCommunity">
-			<span class="-content">
-				<span class="-img">
-					<app-community-thumbnail-img :community="community" />
-				</span>
-				{{ community.name }}
-				<app-community-verified-tick class="-tick" :community="community" small />
-			</span>
+	<app-pill-bi v-else :left-to="toCommunity" :right-to="toChannel">
+		<app-community-thumbnail-img slot="img" :community="community" />
 
-			<span class="-sep">
-				<span class="-container">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						version="1.1"
-						viewBox="0 0 100 100"
-						preserveAspectRatio="none"
-					>
-						<polygon points="0,0 100,0 0,100" />
-					</svg>
-				</span>
-			</span>
-		</router-link>
+		<template slot="left">
+			{{ community.name }}
+			<app-community-verified-tick class="-tick" :community="community" small />
+		</template>
 
-		<router-link class="-right" :to="toChannel">
+		<template slot="right">
 			{{ channel.title }}
-		</router-link>
-	</span>
+
+			<app-jolticon
+				v-if="communityLink.isFeatured"
+				class="-featured"
+				icon="fireside"
+				v-app-tooltip="$gettext(`Featured`)"
+			/>
+		</template>
+	</app-pill-bi>
 </template>
 
-<style lang="stylus" src="./pill.styl" scoped></style>
+<style lang="stylus" scoped>
+.-tick
+	margin-left: 5px
+
+.-featured
+	margin: 0 0 0 5px
+	font-size: 12px
+</style>
 
 <script lang="ts" src="./pill"></script>

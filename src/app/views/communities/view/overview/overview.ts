@@ -178,7 +178,13 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {
-		this.feed = resolveFeedChannelPayload(this.feed, this.$route, $payload, fromCache);
+		this.feed = resolveFeedChannelPayload(
+			this.feed,
+			this.community,
+			this.$route,
+			$payload,
+			fromCache
+		);
 
 		Meta.description = this.$gettextInterpolate(
 			// tslint:disable-next-line:max-line-length
