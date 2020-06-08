@@ -2,7 +2,7 @@
 	<app-form-post-community-pill-selector :communities="communities" @select="emitAdd">
 		<app-pill class="-add">
 			<app-jolticon slot="img" icon="add" />
-			Add Community
+			<translate>Add Community</translate>
 		</app-pill>
 	</app-form-post-community-pill-selector>
 </template>

@@ -13,7 +13,7 @@
 			</template>
 
 			<span class="-channel" slot="right">
-				Select Channel
+				<translate>Select Channel</translate>
 			</span>
 		</app-pill-bi>
 	</app-form-post-community-pill-selector>
