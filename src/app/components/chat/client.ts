@@ -115,29 +115,6 @@ export class ChatClient {
 		reset(this);
 		connect(this);
 	}
-
-	destroy() {
-		if (!this.connected) {
-			return;
-		}
-
-		reset(this);
-
-		if (this.userChannel) {
-			leaveChannel(this, this.userChannel);
-			this.userChannel = null;
-		}
-
-		Object.keys(this.roomChannels).forEach(roomId => {
-			leaveChannel(this, this.roomChannels[roomId]);
-		});
-		this.roomChannels = {};
-
-		if (this.socket) {
-			this.socket.disconnect();
-			this.socket = null;
-		}
-	}
 }
 
 function reset(chat: ChatClient) {
@@ -205,6 +182,29 @@ async function connect(chat: ChatClient) {
 	);
 
 	joinUserChannel(chat, user.id);
+}
+
+export function destroy(chat: ChatClient) {
+	if (!chat.connected) {
+		return;
+	}
+
+	reset(chat);
+
+	if (chat.userChannel) {
+		leaveChannel(chat, chat.userChannel);
+		chat.userChannel = null;
+	}
+
+	Object.keys(chat.roomChannels).forEach(roomId => {
+		leaveChannel(chat, chat.roomChannels[roomId]);
+	});
+	chat.roomChannels = {};
+
+	if (chat.socket) {
+		chat.socket.disconnect();
+		chat.socket = null;
+	}
 }
 
 async function joinUserChannel(chat: ChatClient, userId: number) {
