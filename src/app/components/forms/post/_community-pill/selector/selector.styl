@@ -18,7 +18,6 @@
 	change-bg('bg-offset')
 
 	&.-initial
-		color: currentColor
 		cursor: default
 
 	&:hover
@@ -26,8 +25,7 @@
 			opacity: 1
 
 	.-back
-		position: relative
-		bottom: 32px
+		position: absolute
 		display: flex
 		align-items: center
 		justify-content: center
@@ -37,12 +35,16 @@
 		opacity: 0
 		transition: opacity 300ms $strong-ease-out
 
-.-community-img, .-back
-	img-circle()
+.-community-img
+	display: flex
+	align-items: center
 	overflow: hidden
-	width: 32px
-	height: 32px
 	margin-right: 8px
+
+	&, .-back
+		img-circle()
+		width: 32px
+		height: 32px
 
 .-tick
 	margin-left: 4px
