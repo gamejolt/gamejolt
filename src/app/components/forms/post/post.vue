@@ -537,7 +537,7 @@
 					>
 						<app-user-avatar-img :user="model.game.developer" />
 					</div>
-					<p class="help-block">
+					<p class="help-block sans-margin-top">
 						<translate
 							:translate-params="{
 								owner: `@${model.game.developer.username}`,
@@ -556,7 +556,7 @@
 					:label="$gettext(`Post to Profile`)"
 				>
 					<app-form-control-toggle class="pull-right" :disabled="formModel.as_game_owner" />
-					<p class="help-block">
+					<p class="help-block sans-margin-top">
 						This will post to your profile as well as the game page.
 					</p>
 				</app-form-group>
