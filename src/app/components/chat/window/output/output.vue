@@ -1,10 +1,12 @@
 <template>
 	<app-scroll-scroller @scroll.native="onScroll">
 		<div class="-container">
+			<app-loading v-if="isLoadingOlder" class="loading-centered" />
+
 			<transition-group @enter="onMessageTransition">
 				<div class="anim-fade-in no-animate-leave" v-for="message of messages" :key="message.id">
 					<div class="-date-split" v-if="message.dateSplit">
-						<span class="-inner">{{ message.loggedOn | date('mediumDate') }}</span>
+						<span class="-inner">{{ message.logged_on | date('mediumDate') }}</span>
 					</div>
 
 					<hr class="-hr" v-if="!message.dateSplit && !message.combine" />

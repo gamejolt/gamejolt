@@ -151,7 +151,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 	publishToPlatforms: number[] | null = null;
 	isShowingMorePollOptions = false;
 	accessPermissionsEnabled = false;
-	authorOptionsEnabled = false;
 	isSavedDraftPost = false;
 	leadLengthLimit = 255;
 	isUploadingPastedImage = false;
@@ -320,10 +319,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 		return this.hasCustomError('channel');
 	}
 
-	get hasAuthorOptionsError() {
-		return this.hasCustomError('author-options-conflict');
-	}
-
 	get possibleCommunities() {
 		// Difference between targetable and attached communities.
 		return this.targetableCommunities.filter(c1 => {
@@ -432,10 +427,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 			this.longEnabled = true;
 		}
 
-		if (this.shouldShowAuthorOptions && (model.post_to_user_profile || model.as_game_owner)) {
-			this.authorOptionsEnabled = true;
-		}
-
 		await this.fetchTimezones();
 	}
 
@@ -492,16 +483,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 			this.setCustomError('channel');
 		} else {
 			this.clearCustomError('channel');
-		}
-	}
-
-	@Watch('formModel.as_game_owner')
-	@Watch('formModel.post_to_user_profile')
-	validateAuthorOptions() {
-		if (this.formModel.as_game_owner && this.formModel.post_to_user_profile) {
-			this.setCustomError('author-options-conflict');
-		} else {
-			this.clearCustomError('author-options-conflict');
 		}
 	}
 
@@ -808,14 +789,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 			`Your post can't be published to the platforms you've selected. Error: %{ error }`,
 			{ error: restriction }
 		);
-	}
-
-	enableAuthorOptions() {
-		this.authorOptionsEnabled = true;
-	}
-
-	disableAuthorOptions() {
-		this.authorOptionsEnabled = false;
 	}
 
 	timezoneByName(timezone: string) {

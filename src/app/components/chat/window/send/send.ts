@@ -1,9 +1,8 @@
 import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { Component, InjectReactive } from 'vue-property-decorator';
 import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { ChatClient } from '../../client';
+import { ChatClient, ChatKey, queueChatMessage } from '../../client';
 
 @Component({
 	directives: {
@@ -11,7 +10,7 @@ import { ChatClient } from '../../client';
 	},
 })
 export default class AppChatWindowSend extends Vue {
-	@State chat!: ChatClient;
+	@InjectReactive(ChatKey) chat!: ChatClient;
 
 	message = '';
 	multiLineMode = false;
@@ -63,7 +62,11 @@ export default class AppChatWindowSend extends Vue {
 
 	sendMessage() {
 		const message = this.message;
-		this.chat.queueMessage(message);
+		const room = this.chat.room;
+
+		if (room) {
+			queueChatMessage(this.chat, message, room.id);
+		}
 
 		this.message = '';
 		this.multiLineMode = false;

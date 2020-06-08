@@ -179,6 +179,10 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 								text: this.$gettext('Games'),
 							},
 							{
+								checkValue: 'user/chat',
+								text: this.$gettext('Chat Messages'),
+							},
+							{
 								checkValue: 'user/bio',
 								text: this.$gettext('Bio'),
 							},
@@ -219,6 +223,10 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 								text: this.$gettext('Comments'),
 							},
 							{
+								checkValue: 'user/chat',
+								text: this.$gettext('Chat Messages'),
+							},
+							{
 								checkValue: 'user/bio',
 								text: this.$gettext('Bio'),
 							},
@@ -243,6 +251,10 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 							{
 								checkValue: 'user/comments',
 								text: this.$gettext('Comments'),
+							},
+							{
+								checkValue: 'user/chat',
+								text: this.$gettext('Chat Messages'),
 							},
 							{
 								checkValue: 'user/bio',
