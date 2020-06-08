@@ -22,7 +22,7 @@ $-size-default = 10px
 $-size-thin = 6px
 $-thumb-default = var(--theme-light)
 $-track-default = transparent
-$-thumb-modal = var(--dark-theme-bg-subtle)
+$-thumb-modal = var(--theme-gray-subtle)
 $-track-modal = var(--theme-bg)
 
 .scroll-scroller
@@ -52,6 +52,11 @@ $-track-modal = var(--theme-bg)
 				background-color: $-thumb-default
 				border-radius: $-size-default
 
+				&:hover
+					// Firefox darkens to this color on hover,
+					// so we want to do the same for webkit browsers.
+					box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.22)
+
 		&.-thin
 			scrollbar-width: thin
 
@@ -72,6 +77,11 @@ $-track-modal = var(--theme-bg)
 
 				&-thumb
 					background-color: $-thumb-modal
+
+					&:hover
+						// Firefox lightens to this color on hover,
+						// so we want to do the same for webkit browsers.
+						box-shadow: inset 0 0 100px rgba(255, 255, 255, 0.1)
 </style>
 
 <script lang="ts" src="./scroller"></script>
