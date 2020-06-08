@@ -21,10 +21,10 @@
 
 <style lang="stylus" scoped>
 @require '~styles/variables'
-@require '~styles-lib/mixins'
+@require '../variables.styl'
 
 .-pill
-	height: 28px
+	height: $pill-height
 	border-color: var(--theme-notice)
 	cursor: pointer
 	transition: border-color 300ms $strong-ease-out

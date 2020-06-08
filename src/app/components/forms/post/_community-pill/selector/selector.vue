@@ -1,10 +1,5 @@
 <template>
-	<app-popper
-		popover-class="fill-bg"
-		set-height="45vh"
-		hide-on-state-change
-		@hide="resetSelections"
-	>
+	<app-popper popover-class="fill-bg" height="45vh" hide-on-state-change @hide="resetSelections">
 		<slot />
 
 		<a

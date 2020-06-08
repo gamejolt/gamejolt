@@ -9,11 +9,12 @@
 
 <style lang="stylus" scoped>
 @require '~styles/variables'
+@require '../variables.styl'
 
 .-add
 	cursor: pointer
-	height: 28px
-	border: 1.5px solid var(--theme-bg-subtle)
+	height: $pill-height
+	border: $border-width-base solid var(--theme-bg-subtle)
 	transition: border-color 300ms $strong-ease-out
 
 	&:hover
