@@ -10,7 +10,6 @@ import { Community } from '../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { ContentDocument } from '../../../../_common/content/content-document';
 import { ContentWriter } from '../../../../_common/content/content-writer';
-import AppExpand from '../../../../_common/expand/expand.vue';
 import { FiresidePostCommunity } from '../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import {
@@ -103,7 +102,6 @@ type FormPostModel = FiresidePost & {
 		AppCommunityPill,
 		AppCommunityChannelSelect,
 		AppFormControlContent,
-		AppExpand,
 		AppScrollScroller,
 	},
 	directives: {
