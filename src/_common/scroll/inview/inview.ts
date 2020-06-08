@@ -1,5 +1,5 @@
 import Vue, { CreateElement } from 'vue';
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { Component, Emit, Prop } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../../utils/vue';
 import { AppScrollInviewParent } from './parent';
 
@@ -33,7 +33,7 @@ export class AppScrollInview extends Vue {
 
 	// This will get set by AppScrollInviewContainer as this element goes into
 	// and out of view.
-	inView = false;
+	inView: null | boolean = null;
 
 	// This is the initial value of the margin prop.
 	// The margin prop cannot be reactive because we can't easily
@@ -48,17 +48,9 @@ export class AppScrollInview extends Vue {
 		return this.parent.getContainer(this.initMargin);
 	}
 
+	// These will get called by ScrollInviewContainer.
 	@Emit('inview') emitInView() {}
 	@Emit('outview') emitOutView() {}
-
-	@Watch('inView')
-	inViewChanged() {
-		if (this.inView) {
-			this.emitInView();
-		} else {
-			this.emitOutView();
-		}
-	}
 
 	mounted() {
 		this.initMargin = this.margin;
