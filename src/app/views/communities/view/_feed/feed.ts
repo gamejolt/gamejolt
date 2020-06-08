@@ -172,6 +172,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 	onPostMovedChannel(eventItem: EventItem, movedTo: CommunityChannel) {
 		if (
 			this.feed &&
+			this.community.id === movedTo.community_id &&
 			!this.routeStore.isVirtualChannel(this.channel) &&
 			this.channel.title !== movedTo.title
 		) {

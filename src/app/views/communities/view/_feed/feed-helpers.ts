@@ -1,6 +1,9 @@
 import { Route } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
-import { CommunityPresetChannelType } from '../../../../../_common/community/community.model';
+import {
+	Community,
+	CommunityPresetChannelType,
+} from '../../../../../_common/community/community.model';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { getChannelPathFromRoute } from '../view.store';
@@ -21,6 +24,7 @@ export function doFeedChannelPayload(route: Route) {
  */
 export function resolveFeedChannelPayload(
 	feed: null | ActivityFeedView,
+	mainCommunity: Community,
 	route: Route,
 	payload: any,
 	fromCache: boolean
@@ -30,6 +34,7 @@ export function resolveFeedChannelPayload(
 		{
 			type: 'EventItem',
 			url: getFeedChannelFetchUrl(route),
+			mainCommunity,
 			shouldShowFollow: true,
 			notificationWatermark: payload.unreadWatermark,
 		},
