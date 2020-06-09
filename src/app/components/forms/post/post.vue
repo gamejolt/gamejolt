@@ -479,10 +479,10 @@
 		<!-- Communities -->
 		<template v-if="isLoaded">
 			<app-scroll-scroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
-				<transition-group class="-communities-list" name="-communities-list" tag="div">
+				<transition-group class="-communities-list" tag="div">
 					<app-form-post-community-pill-incomplete
 						v-if="incompleteDefaultCommunity"
-						class="-community-pill"
+						class="-community-pill anim-fade-in-enlarge no-animate-leave"
 						key="incomplete"
 						:communities="possibleCommunities"
 						:community="incompleteDefaultCommunity"
@@ -490,7 +490,7 @@
 					/>
 
 					<app-form-post-community-pill
-						class="-community-pill"
+						class="-community-pill anim-fade-in-enlarge no-animate-leave"
 						v-for="{ community, channel } of attachedCommunities"
 						:key="community.id"
 						:community="community"
@@ -501,17 +501,18 @@
 
 					<template v-if="!wasPublished && canAddCommunity">
 						<app-form-post-community-pill-add
-							class="-community-pill"
+							class="-community-pill anim-fade-in-enlarge no-animate-leave"
 							key="add"
 							:communities="possibleCommunities"
 							@add="attachCommunity"
+							v-app-scroll-when="scrollingKey"
 						/>
 					</template>
 				</transition-group>
 			</app-scroll-scroller>
 			<p v-else-if="!wasPublished" class="help-block">
 				<translate>Join some communities to post to them.</translate>
-				<span v-app-tooltip="$gettext(`Go to the explore page and find some!`)">
+				<span v-app-tooltip.touchable="$gettext(`Go to the explore page and find some!`)">
 					<app-jolticon class="text-muted" icon="help-circle" />
 				</span>
 			</p>
@@ -562,14 +563,6 @@
 				</app-form-group>
 			</fieldset>
 		</template>
-
-		<app-expand v-if="!wasPublished" :when="hasChannelError">
-			<div class="-error alert alert-notice">
-				<translate>
-					Choose a channel to post to.
-				</translate>
-			</div>
-		</app-expand>
 
 		<!-- Controls -->
 		<div class="-controls">
