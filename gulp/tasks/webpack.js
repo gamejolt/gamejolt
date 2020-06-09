@@ -71,18 +71,13 @@ module.exports = function(config) {
 		libraryTarget = 'commonjs2';
 	}
 
-	// In prod and ssr we use source-map
-	let devtool = 'source-map';
+	let devtool = 'eval-source-map';
 
-	// In prod client we disable the devtool.
-	if (config.production && config.client) {
+	// In production, we never want to include source maps.
+	if (config.production) {
 		devtool = false;
-	}
-
-	// When watching for changes (in development and not doing ssr)
-	// we want the fastest which seems to be this.
-	if (!config.production && !config.ssr) {
-		devtool = 'eval-source-map';
+	} else if (config.ssr) {
+		devtool = 'source-map';
 	}
 
 	function stylesLoader(withStylusLoader) {

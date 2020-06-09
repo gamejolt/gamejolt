@@ -129,38 +129,6 @@ export class ChatClient {
 		reset(this);
 		connect(this);
 	}
-
-	destroy() {
-		console.log('[Chat] Destroying client');
-
-		if (!this.connected) {
-			return;
-		}
-
-		reset(this);
-
-		if (this.userChannel) {
-			leaveChannel(this, this.userChannel);
-			this.userChannel = null;
-		}
-
-		Object.keys(this.roomChannels).forEach(roomId => {
-			leaveChannel(this, this.roomChannels[roomId]);
-		});
-		this.roomChannels = {};
-
-		if (this.socket) {
-			console.log('[Chat] Disconnecting socket');
-			// TODO(chatex) might need to dispose of socket only after it is fully disconnected.
-			this.socket.disconnect();
-			this.socket = null;
-		}
-	}
-
-	reconnect() {
-		this.destroy();
-		connect(this);
-	}
 }
 
 function reset(chat: ChatClient) {
@@ -179,6 +147,11 @@ function reset(chat: ChatClient) {
 	chat.isFocused = true;
 
 	chat.messageQueue = [];
+}
+
+function reconnect(chat: ChatClient) {
+	destroy(chat);
+	connect(chat);
 }
 
 async function connect(chat: ChatClient) {
@@ -232,12 +205,12 @@ async function connect(chat: ChatClient) {
 	chat.socket.onError((e: any) => {
 		console.warn('[Chat] Got error from socket');
 		console.warn(e);
-		chat.reconnect();
+		reconnect(chat);
 	});
 
 	chat.socket.onClose(() => {
 		console.warn('[Chat] Socket closed unexpectedly');
-		chat.reconnect();
+		reconnect(chat);
 	});
 
 	await pollRequest(
@@ -257,6 +230,33 @@ async function connect(chat: ChatClient) {
 	}
 
 	joinUserChannel(chat, user.id);
+}
+
+export function destroy(chat: ChatClient) {
+	console.log('[Chat] Destroying client');
+
+	if (!chat.connected) {
+		return;
+	}
+
+	reset(chat);
+
+	if (chat.userChannel) {
+		leaveChannel(chat, chat.userChannel);
+		chat.userChannel = null;
+	}
+
+	Object.keys(chat.roomChannels).forEach(roomId => {
+		leaveChannel(chat, chat.roomChannels[roomId]);
+	});
+	chat.roomChannels = {};
+
+	if (chat.socket) {
+		console.log('[Chat] Disconnecting socket');
+		// TODO(chatex) might need to dispose of socket only after it is fully disconnected.
+		chat.socket.disconnect();
+		chat.socket = null;
+	}
 }
 
 async function joinUserChannel(chat: ChatClient, userId: number) {
