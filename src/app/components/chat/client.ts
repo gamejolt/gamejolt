@@ -28,7 +28,13 @@ export interface ChatNewMessageEvent {
  * @param requestGetter Function that generates a promise that represents the
  * request
  */
-async function pollRequest(context: string, requestGetter: () => Promise<any>): Promise<any> {
+async function pollRequest(
+	chat: ChatClient,
+	context: string,
+	requestGetter: () => Promise<any>
+): Promise<any> {
+	const chatId = chat.id;
+
 	let result = null;
 	let finished = false;
 	let delay = 0;
@@ -36,6 +42,11 @@ async function pollRequest(context: string, requestGetter: () => Promise<any>): 
 	console.log(`[Chat] ${context}`);
 
 	while (!finished) {
+		// Abort if our chat server changed.
+		if (chat.id !== chatId) {
+			return null;
+		}
+
 		try {
 			const promise = requestGetter();
 			result = await promise;
@@ -53,6 +64,9 @@ async function pollRequest(context: string, requestGetter: () => Promise<any>): 
 }
 
 export class ChatClient {
+	static nextId = 1;
+
+	id = -1;
 	connected = false;
 	socket: Socket | null = null;
 	userChannel: ChatUserChannel | null = null;
@@ -118,6 +132,8 @@ export class ChatClient {
 }
 
 function reset(chat: ChatClient) {
+	chat.id = -1;
+	chat.connected = false;
 	chat.currentUser = null;
 	chat.friendsList = new ChatUserCollection(ChatUserCollection.TYPE_FRIEND);
 	chat.friendsPopulated = false;
@@ -133,18 +149,33 @@ function reset(chat: ChatClient) {
 	chat.messageQueue = [];
 }
 
+function reconnect(chat: ChatClient) {
+	destroy(chat);
+	connect(chat);
+}
+
 async function connect(chat: ChatClient) {
+	const chatId = ChatClient.nextId++;
+	chat.id = chatId;
+
 	const frontend = await getCookie('frontend');
 	const user = store.state.app.user;
 
 	if (user === null || frontend === undefined) {
+		// not properly logged in
 		return;
 	}
 
+	console.log('[Chat] Connecting...');
+
 	// get hostname from loadbalancer first
-	const hostResult = await pollRequest('Select server', () =>
+	const hostResult = await pollRequest(chat, 'Select server', () =>
 		Axios.get(Environment.chatHost, { ignoreLoadingBar: true, timeout: 3000 })
 	);
+
+	if (chatId !== chat.id) {
+		return;
+	}
 
 	const host = `${hostResult.data}`;
 
@@ -170,7 +201,19 @@ async function connect(chat: ChatClient) {
 		setChatRoom(chat, undefined);
 	});
 
+	chat.socket.onError((e: any) => {
+		console.warn('[Chat] Got error from socket');
+		console.warn(e);
+		reconnect(chat);
+	});
+
+	chat.socket.onClose(() => {
+		console.warn('[Chat] Socket closed unexpectedly');
+		reconnect(chat);
+	});
+
 	await pollRequest(
+		chat,
 		'Connect to socket',
 		() =>
 			new Promise(resolve => {
@@ -181,10 +224,16 @@ async function connect(chat: ChatClient) {
 			})
 	);
 
+	if (chatId !== chat.id) {
+		return;
+	}
+
 	joinUserChannel(chat, user.id);
 }
 
 export function destroy(chat: ChatClient) {
+	console.log('[Chat] Destroying client');
+
 	if (!chat.connected) {
 		return;
 	}
@@ -202,6 +251,8 @@ export function destroy(chat: ChatClient) {
 	chat.roomChannels = {};
 
 	if (chat.socket) {
+		console.log('[Chat] Disconnecting socket');
+		// TODO(chatex) might need to dispose of socket only after it is fully disconnected.
 		chat.socket.disconnect();
 		chat.socket = null;
 	}
@@ -212,6 +263,7 @@ async function joinUserChannel(chat: ChatClient, userId: number) {
 	const request = `Join user channel ${userId}`;
 
 	await pollRequest(
+		chat,
 		request,
 		() =>
 			new Promise((resolve, reject) => {
@@ -239,6 +291,7 @@ async function joinRoomChannel(chat: ChatClient, roomId: number) {
 	const channel = new ChatRoomChannel(roomId, chat);
 
 	await pollRequest(
+		chat,
 		`Join room channel: ${roomId}`,
 		() =>
 			new Promise((resolve, reject) => {
@@ -314,6 +367,7 @@ export function enterChatRoom(chat: ChatClient, roomId: number) {
 }
 
 function leaveChannel(chat: ChatClient, channel: Channel) {
+	// TODO(chatex) might need to await this.
 	channel.leave();
 	if (chat.socket !== null) {
 		chat.socket.remove(channel);
