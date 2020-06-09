@@ -113,7 +113,6 @@ export default class AppLightbox extends Vue {
 
 	panStart() {
 		this.isDragging = true;
-		this.$el.classList.add('dragging');
 	}
 
 	pan(event: HammerInput) {
@@ -141,8 +140,6 @@ export default class AppLightbox extends Vue {
 
 	panEnd(event: HammerInput) {
 		this.isDragging = false;
-
-		this.$el.classList.remove('dragging');
 
 		// Make sure we moved at a high enough velocity and distance to register the "swipe".
 		const velocity = event.velocityX;
