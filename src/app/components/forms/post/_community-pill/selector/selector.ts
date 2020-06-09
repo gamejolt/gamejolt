@@ -8,7 +8,7 @@ import AppCommunityVerifiedTick from '../../../../../../_common/community/verifi
 import AppJolticon from '../../../../../../_common/jolticon/jolticon.vue';
 import { Popper } from '../../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
-import AppScrollHelper from './scroll-helper/scroll-helper';
+import { AppScrollHelper } from './scroll-helper/scroll-helper';
 
 @Component({
 	components: {

@@ -5,7 +5,7 @@ import AppScrollScrollerTS from '../../../../../../../_common/scroll/scroller/sc
 import AppScrollScroller from '../../../../../../../_common/scroll/scroller/scroller.vue';
 
 @Component({})
-export default class AppScrollHelper extends Vue {
+export class AppScrollHelper extends Vue {
 	@Prop(propOptional(Boolean, false))
 	when!: boolean;
 

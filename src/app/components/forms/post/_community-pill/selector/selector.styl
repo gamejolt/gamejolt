@@ -24,27 +24,25 @@
 		.-back
 			opacity: 1
 
-	.-back
-		position: absolute
-		display: flex
-		align-items: center
-		justify-content: center
-		margin: 0
-		background-color: var(--theme-bi-bg)
-		color: var(--theme-bi-fg)
-		opacity: 0
-		transition: opacity 300ms $strong-ease-out
-
-.-community-img
+.-community-img, .-back
+	img-circle()
 	display: flex
 	align-items: center
+	width: 32px
+	height: 32px
+
+.-community-img
 	overflow: hidden
 	margin-right: 8px
 
-	&, .-back
-		img-circle()
-		width: 32px
-		height: 32px
+.-back
+	position: absolute
+	justify-content: center
+	margin: 0
+	background-color: var(--theme-bi-bg)
+	color: var(--theme-bi-fg)
+	opacity: 0
+	transition: opacity 300ms $strong-ease-out
 
 .-tick
 	margin-left: 4px
