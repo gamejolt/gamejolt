@@ -9,8 +9,8 @@
 				<app-communities-view-card :community="community" />
 			</div>
 
-			<app-communities-view-nav v-if="!isEditing" />
-			<app-communities-view-nav-edit v-else />
+			<app-nav-channels v-if="!isEditing" />
+			<app-nav-edit v-else />
 		</app-scroll-scroller>
 
 		<div class="-content fill-backdrop">
@@ -117,8 +117,8 @@
 					</template>
 				</app-page-header>
 
-				<app-communities-view-nav-inline v-if="!isEditing" />
-				<!-- <app-communities-view-nav-edit v-else /> -->
+				<app-nav-channels-inline v-if="!isEditing" />
+				<app-nav-edit v-else />
 			</template>
 
 			<router-view />

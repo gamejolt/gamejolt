@@ -25,9 +25,9 @@ import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { Store } from '../../../store/index';
 import { CommunityRouteStore, CommunityRouteStoreKey } from './view.store';
 import AppCommunitiesViewCard from './_card/card.vue';
-import AppCommunitiesViewNavEdit from './_nav-edit/nav-edit.vue';
-import AppCommunitiesViewNavInline from './_nav-inline/nav-inline.vue';
-import AppCommunitiesViewNav from './_nav/nav.vue';
+import AppNavChannelsInline from './_nav/channels/channels-inline.vue';
+import AppNavChannels from './_nav/channels/channels.vue';
+import AppNavEdit from './_nav/edit/edit.vue';
 
 @Component({
 	name: 'RouteCommunitiesView',
@@ -40,10 +40,10 @@ import AppCommunitiesViewNav from './_nav/nav.vue';
 		AppCommunityPerms,
 		AppPopper,
 		AppCommunityVerifiedTick,
-		AppCommunitiesViewNav,
-		AppCommunitiesViewNavInline,
-		AppCommunitiesViewNavEdit,
 		AppCommunitiesViewCard,
+		AppNavChannels,
+		AppNavChannelsInline,
+		AppNavEdit,
 	},
 	directives: {
 		AppTooltip,

@@ -1,16 +1,18 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Inject } from 'vue-property-decorator';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import { AppCommunityPerms } from '../../../../components/community/perms/perms';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
+import AppNavTabList from '../../../../../../_common/nav/tab-list/tab-list.vue';
+import { Screen } from '../../../../../../_common/screen/screen-service';
+import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 
 @Component({
 	components: {
 		AppCommunityPerms,
+		AppNavTabList,
 	},
 })
-export default class AppCommunitiesViewNavEdit extends Vue {
+export default class AppNavEdit extends Vue {
 	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
 
 	isNavExpanded = false;

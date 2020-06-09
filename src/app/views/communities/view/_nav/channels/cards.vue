@@ -1,5 +1,5 @@
 <template>
-	<div class="-inner">
+	<div>
 		<app-community-channel-card
 			:community="community"
 			:path="frontpageChannel.title"
@@ -19,7 +19,7 @@
 			:is-unread="isChannelUnread(allChannel)"
 		/>
 
-		<h5 v-if="Screen.isDesktop" class="-heading">
+		<h5 class="-heading">
 			<translate>Channels</translate>
 		</h5>
 
@@ -41,7 +41,11 @@
 
 <style lang="stylus" scoped>
 .-heading
-	margin-top: 24px
+	display: none
+
+	@media $media-lg-up
+		display: block
+		margin-top: 24px
 </style>
 
-<script lang="ts" src="./nav"></script>
+<script lang="ts" src="./cards"></script>

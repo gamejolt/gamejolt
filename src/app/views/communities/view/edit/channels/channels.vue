@@ -8,12 +8,8 @@
 			<div class="page-help">
 				<p>
 					<translate>
-						Channels make it easier for your community members to organize their posts into groups.
-					</translate>
-				</p>
-				<p>
-					<translate>
-						Create new channels or edit the below channels for your community.
+						Channels make it easy for your community members to organize their posts into indvidual
+						sub-topics.
 					</translate>
 				</p>
 			</div>

@@ -1,30 +1,31 @@
 import Vue from 'vue';
 import { Component, Inject } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../../../../_common/community/channel/channel-permissions';
-import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../../_common/community/community.model';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
-import AppCommunityChannelCard from '../../../../components/community/channel/card/card.vue';
-import { AppCommunityPerms } from '../../../../components/community/perms/perms';
-import { Store } from '../../../../store/index';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
+import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../../../../../_common/community/channel/channel-permissions';
+import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
+import { Community } from '../../../../../../_common/community/community.model';
+import { AppState, AppStore } from '../../../../../../_common/store/app-store';
+import AppCommunityChannelCard from '../../../../../components/community/channel/card/card.vue';
+import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
+import { Store } from '../../../../../store';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 
+/**
+ * Base cards list that gets wrapped depending on how we want to display the
+ * channels.
+ */
 @Component({
 	components: {
 		AppCommunityPerms,
 		AppCommunityChannelCard,
 	},
 })
-export default class AppCommunitiesViewNav extends Vue {
+export default class AppNavChannelCards extends Vue {
 	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
 
 	@State communities!: Store['communities'];
 	@State communityStates!: Store['communityStates'];
 	@AppState user!: AppStore['user'];
-
-	readonly Screen = Screen;
 
 	get community() {
 		return this.routeStore.community;
@@ -36,10 +37,6 @@ export default class AppCommunitiesViewNav extends Vue {
 
 	get allChannel() {
 		return this.routeStore.allChannel;
-	}
-
-	get channelPath() {
-		return this.routeStore.channelPath;
 	}
 
 	get activeChannel() {
