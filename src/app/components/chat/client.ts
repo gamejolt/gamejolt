@@ -480,7 +480,7 @@ export function loadOlderChatMessages(chat: ChatClient, roomId: number) {
 
 		const firstMessage = chat.messages[roomId][0];
 		chat.roomChannels[roomId]
-			.push('load_messages', { before: firstMessage.logged_on })
+			.push('load_messages', { before_date: firstMessage.logged_on })
 			.receive('ok', onLoadMessages)
 			.receive('error', onLoadFailed)
 			.receive('timeout', onLoadFailed);
