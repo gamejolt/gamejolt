@@ -18,8 +18,7 @@
 .-container
 	display: flex
 	justify-content: center
-	padding: $grid-gutter-width 0
-
+	padding: ($grid-gutter-width / 2) 0
 
 .-content, .-sidebar
 	margin-left: ($grid-gutter-width-xs / 2)
@@ -42,8 +41,8 @@
 
 .-content
 	// Need a flex-basis the same as the max-width so we collapse .-offset first.
-	flex: 2 1 650px
-	max-width: 650px
+	flex: 2 1 620px
+	max-width: 620px
 	min-width: 0
 
 	@media $media-xs

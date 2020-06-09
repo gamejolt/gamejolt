@@ -22,31 +22,25 @@
 			}"
 		>
 			<ol>
-				<app-community-perms
-					:community="community"
-					required="community-media,community-details"
-					either
-				>
-					<li>
-						<router-link
-							class="-item"
-							:to="{
-								name: 'communities.view.edit.details',
-								params: {
-									id: community.id,
-								},
-							}"
-							active-class="active"
-							exact
-							block
-							@click.native="isNavExpanded = false"
-						>
-							<span class="-label">
-								<translate>Details</translate>
-							</span>
-						</router-link>
-					</li>
-				</app-community-perms>
+				<li>
+					<router-link
+						class="-item"
+						:to="{
+							name: 'communities.view.edit.details',
+							params: {
+								id: community.id,
+							},
+						}"
+						active-class="active"
+						exact
+						block
+						@click.native="isNavExpanded = false"
+					>
+						<span class="-label">
+							<translate>Details</translate>
+						</span>
+					</router-link>
+				</li>
 				<app-community-perms :community="community" required="community-channels">
 					<li>
 						<router-link

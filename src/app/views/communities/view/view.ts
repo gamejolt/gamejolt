@@ -21,15 +21,18 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { AppCommunityPerms } from '../../../components/community/perms/perms';
 import { CommunitySidebarModal } from '../../../components/community/sidebar/modal/modal.service';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
+import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { Store } from '../../../store/index';
 import { CommunityRouteStore, CommunityRouteStoreKey } from './view.store';
 import AppCommunitiesViewCard from './_card/card.vue';
 import AppCommunitiesViewNavEdit from './_nav-edit/nav-edit.vue';
+import AppCommunitiesViewNavInline from './_nav-inline/nav-inline.vue';
 import AppCommunitiesViewNav from './_nav/nav.vue';
 
 @Component({
 	name: 'RouteCommunitiesView',
 	components: {
+		AppPageHeader,
 		AppScrollScroller,
 		AppCommunityThumbnailImg,
 		AppCommunityJoinWidget,
@@ -38,6 +41,7 @@ import AppCommunitiesViewNav from './_nav/nav.vue';
 		AppPopper,
 		AppCommunityVerifiedTick,
 		AppCommunitiesViewNav,
+		AppCommunitiesViewNavInline,
 		AppCommunitiesViewNavEdit,
 		AppCommunitiesViewCard,
 	},

@@ -2,7 +2,11 @@ import Vue from 'vue';
 import { Route } from 'vue-router';
 import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
-import { Community, CommunityPresetChannelType } from '../../../../_common/community/community.model';
+import {
+	Community,
+	CommunityPresetChannelType,
+} from '../../../../_common/community/community.model';
+import { Screen } from '../../../../_common/screen/screen-service';
 import { User } from '../../../../_common/user/user.model';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
 
@@ -26,8 +30,12 @@ export class CommunityRouteStore {
 		return channels.find(i => i.title === this.channelPath) || null;
 	}
 
-	get canEditMedia() {
-		return this.community.hasPerms('community-media');
+	// get canEditMedia() {
+	// 	return this.community.hasPerms('community-media');
+	// }
+
+	get isShowingSidebar() {
+		return Screen.isLg;
 	}
 
 	setCommunity(community: Community) {
