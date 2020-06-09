@@ -240,8 +240,6 @@ async function connect(chat: ChatClient) {
 		chat.reconnect();
 	});
 
-	chat.socket.sendHeartbeat();
-
 	await pollRequest(
 		chat,
 		'Connect to socket',
