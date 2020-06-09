@@ -157,7 +157,7 @@ function reconnect(chat: ChatClient) {
 async function connect(chat: ChatClient) {
 	const chatId = ChatClient.nextId;
 	chat.id = chatId;
-	ChatClient.nextId = (ChatClient.nextId + 1) % 100;
+	ChatClient.nextId = ChatClient.nextId++ % 100;
 
 	const frontend = await getCookie('frontend');
 	const user = store.state.app.user;
