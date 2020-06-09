@@ -12,24 +12,37 @@
 				<app-community-verified-tick class="-tick" :community="community" small />
 			</template>
 
-			<span class="-channel text-muted" slot="right">
-				<span class="-channel-name-placeholder"></span>
+			<span class="-channel" slot="right">
+				<translate>Select Channel</translate>
 			</span>
 		</app-pill-bi>
 	</app-form-post-community-pill-selector>
 </template>
 
 <style lang="stylus" scoped>
+@require '~styles/variables'
+@require '../variables.styl'
+
 .-pill
+	height: $pill-height
 	border-color: var(--theme-notice)
 	cursor: pointer
+	transition: border-color 300ms $strong-ease-out
+
+	.-channel
+		color: var(--theme-notice)
+		transition: color 300ms $strong-ease-out
+		font-weight: bold
+
+	&:hover
+		border-color: var(--theme-link-hover)
+
+		.-channel
+			color: var(--theme-link-hover)
 
 .-tick
 	margin-left: 5px
 
-.-channel-name-placeholder
-	display: inline-block
-	width: 40px
 </style>
 
 <script lang="ts" src="./incomplete"></script>

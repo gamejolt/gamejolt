@@ -1,41 +1,55 @@
 <template>
-	<app-popper hide-on-state-change @hide="resetSelections">
+	<app-popper popover-class="fill-bg" height="45vh" hide-on-state-change @hide="resetSelections">
 		<slot />
 
-		<div slot="popover">
-			<div class="-container">
-				<div class="-slider" :class="{ '-slide-to-channels': !!selectedCommunity }">
-					<div class="-communities list-group">
-						<a
-							class="-community-item list-group-item"
-							v-for="community of communities"
-							:key="community.id"
-							@click="selectCommunity(community)"
-						>
-							<app-community-thumbnail-img
-								slot="img"
-								class="-community-img"
-								:community="community"
-							/>
+		<a
+			v-if="selectedCommunity"
+			slot="header"
+			class="-community-item -selected list-group-item"
+			:class="{ '-initial': isInitial }"
+			@click="unselectCommunity"
+		>
+			<div class="-community-img">
+				<app-community-thumbnail-img :community="selectedCommunity" />
+				<app-jolticon v-if="!isInitial" class="-back" icon="arrow-left" />
+			</div>
+			<span class="-text">
+				{{ selectedCommunity.name }}
+			</span>
+			<app-community-verified-tick class="-tick" :community="selectedCommunity" small />
+		</a>
 
-							{{ community.name }}
-							<app-community-verified-tick class="-tick" :community="community" small />
-						</a>
-					</div>
+		<div slot="popover" class="-container">
+			<app-scroll-helper :when="!!selectedCommunity" />
+			<div v-if="!selectedCommunity" class="-communities list-group">
+				<a
+					class="-community-item list-group-item"
+					v-for="community of communities"
+					:key="community.id"
+					@click="selectCommunity(community)"
+				>
+					<app-community-thumbnail-img class="-community-img" :community="community" />
 
-					<div class="-channels list-group">
-						<template v-if="channels">
-							<a
-								class="-channel-item list-group-item"
-								v-for="channel of channels"
-								:key="channel.id"
-								@click="selectChannel(channel)"
-							>
-								{{ channel.title }}
-							</a>
-						</template>
-					</div>
-				</div>
+					<span class="-text">
+						{{ community.name }}
+					</span>
+					<app-community-verified-tick class="-tick" :community="community" small />
+				</a>
+			</div>
+
+			<div v-else class="-channels list-group">
+				<template v-if="channels">
+					<a
+						class="-channel-item list-group-item"
+						v-for="channel of channels"
+						:key="channel.id"
+						@click="selectChannel(channel)"
+					>
+						<span class="-text">
+							{{ channel.title }}
+						</span>
+					</a>
+				</template>
 			</div>
 		</div>
 	</app-popper>
