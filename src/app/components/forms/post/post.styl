@@ -94,6 +94,9 @@
 		align-items: center
 		margin-bottom: 4px
 
+		&-placeholder
+			margin: 10px 0 14px
+
 		&-leave-active
 			transition-duration: 0 !important
 			opacity: 0
@@ -102,6 +105,12 @@
 .-community-pill
 	transition: all 300ms $strong-ease-out
 	flex-shrink: 0
+
+	&-placeholder
+		change-bg('bg-subtle')
+		rounded-corners()
+		width: 138px
+		height: 28px
 
 	// Need to apply to the button inside the pill add component too
 	&, >>> .button

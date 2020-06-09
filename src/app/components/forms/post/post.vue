@@ -516,6 +516,11 @@
 				</span>
 			</p>
 		</template>
+		<template v-else>
+			<div class="-communities-list-placeholder">
+				<div class="-community-pill-placeholder" />
+			</div>
+		</template>
 
 		<!-- Author options -->
 		<template v-if="shouldShowAuthorOptions">

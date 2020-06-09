@@ -10,6 +10,17 @@
 		<!-- Post title (short) -->
 		<div class="form-group -lead-form-group">
 			<div class="form-control"></div>
+
+			<!-- HP -->
+			<div class="-hp">
+				<div class="-hp-text" />
+				<div class="-hp-bar" />
+			</div>
+		</div>
+
+		<!-- Communities -->
+		<div class="-community">
+			<div class="-community-pill" />
 		</div>
 
 		<!-- Controls -->
@@ -34,6 +45,35 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
+.-hp
+	display: flex
+	align-items: center
+	height: 18px
+	margin-top: 5px
+
+	&-text
+		change-bg('bg-subtle')
+		rounded-corners()
+		width: 18px
+		height: 18px
+		margin-right: 10px
+
+	&-bar
+		change-bg('bg-subtle')
+		rounded-corners()
+		width: 100%
+		height: 5px
+
+.-community
+	height: 32px
+	margin: 10px 0
+
+	&-pill
+		change-bg('bg-subtle')
+		rounded-corners()
+		height: 28px
+		width: 138px
+
 .-button
 	lazy-placeholder-inline()
 	height: 36px
@@ -53,11 +93,10 @@
 .-lead-form-group
 	cursor: text
 	color: var(--theme-fg-muted)
-	change-bg('bg-offset')
-	margin-bottom: 30px
+	margin-bottom: 10px
 
 	.form-control
-		height: 84px
+		height: 95px
 
 .-controls-attachments
 	.-button
@@ -87,7 +126,8 @@
 
 		&-submit-button
 			float: right
-			width: 155px
+			width: 50%
+			padding-left: 10px
 
 			.-button
 				width: 100%
@@ -102,7 +142,6 @@
 
 		&-submit
 			flex: none
-
 </style>
 
 <script lang="ts" src="./add-placeholder"></script>
