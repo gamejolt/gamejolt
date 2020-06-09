@@ -21,6 +21,7 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { AppCommunityPerms } from '../../../components/community/perms/perms';
 import { CommunitySidebarModal } from '../../../components/community/sidebar/modal/modal.service';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
+import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { Store } from '../../../store/index';
 import {
@@ -38,6 +39,7 @@ import AppNavEdit from './_nav/edit/edit.vue';
 	name: 'RouteCommunitiesView',
 	components: {
 		AppPageHeader,
+		AppPageHeaderControls,
 		AppScrollScroller,
 		AppCommunityThumbnailImg,
 		AppCommunityJoinWidget,

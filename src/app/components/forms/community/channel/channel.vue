@@ -1,7 +1,13 @@
 <template>
 	<app-form name="communityChannelForm">
 		<div class="-form">
-			<app-form-group name="title" :label="$gettext(`Title`)" hide-label optional>
+			<app-form-group
+				name="title"
+				class="-form-input"
+				:label="$gettext(`Title`)"
+				hide-label
+				optional
+			>
 				<app-form-control
 					type="text"
 					:rules="{
@@ -48,6 +54,9 @@
 .-form
 	display: flex
 	align-items: flex-start
+
+	&-input
+		flex: auto
 
 	button
 		margin-left: 5px

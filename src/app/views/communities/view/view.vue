@@ -85,7 +85,7 @@
 						</nav>
 					</template>
 
-					<template #controls v-if="!community.isBlocked">
+					<app-page-header-controls slot="controls" v-if="!community.isBlocked">
 						<template v-if="community.hasPerms()">
 							<app-community-perms :community="community">
 								<app-button v-if="!isEditing" primary block :to="community.routeEditLocation">
@@ -114,7 +114,7 @@
 							@leave="onLeave"
 							block
 						/>
-					</template>
+					</app-page-header-controls>
 				</app-page-header>
 
 				<app-nav-channels-inline v-if="!isEditing" />
