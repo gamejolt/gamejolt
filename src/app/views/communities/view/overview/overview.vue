@@ -79,50 +79,7 @@
 				<app-community-sidebar :data="sidebarData" :community="community" />
 			</template>
 		</app-communities-view-page-container>
-
-		<!-- <div slot="right" >
-
-				</div> -->
-
-		<!-- If we are editing, we are showing the subroute's <edit> view here. Otherwise display feed stuff. -->
-		<!-- <template v-if="isEditing">
-					<router-view
-						@details-change="onDetailsChanged"
-						@channels-change="onChannelsChanged"
-						@games-change="onGamesChanged"
-					/>
-				</template>
-				<template v-else> </template> -->
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-@require '~styles/variables'
-
-.-header
-	padding-top: 12px
-
-// .-container
-// 	display: flex
-// 	justify-content: center
-
-// .-content
-// 	width: 650px
-
-// .-sidebar
-// 	// flex: 0 1
-// 	width: 300px
-// 	margin-left: $grid-gutter-width
-
-.-mobile-info-btn
-	margin-top: -10px
-	margin-bottom: 10px
-
-	&-img
-		width: 24px
-		margin-right: 10px
-		display: inline-block
-		border-radius: 50%
-</style>
 
 <script lang="ts" src="./overview"></script>

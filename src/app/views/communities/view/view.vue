@@ -48,11 +48,11 @@
 										</span>
 									</router-link>
 								</li>
-								<!-- <li v-if="Screen.isMobile && sidebarData">
+								<li v-if="Screen.isMobile && routeStore.sidebarData">
 									<a @click="onClickAbout">
 										<translate>About</translate>
 									</a>
-								</li> -->
+								</li>
 
 								<li>
 									<app-popper popover-class="fill-darkest">

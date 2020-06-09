@@ -1,18 +1,12 @@
 import { Component, Inject } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
-import {
-	Community,
-	CommunityPresetChannelType,
-} from '../../../../../_common/community/community.model';
+import { CommunityPresetChannelType } from '../../../../../_common/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import { Game } from '../../../../../_common/game/game.model';
 import { Growls } from '../../../../../_common/growls/growls.service';
 import { Meta } from '../../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
-import { ThemeMutation, ThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
@@ -39,10 +33,7 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 	components: {
 		AppPageHeader,
 		AppCommunitiesViewPageContainer,
-		// AppNavTabList,
-		// AppCommunitiesViewOverviewNavEdit,
 		AppCommunitySidebar,
-		// AppCommunityThumbnailImg,
 		AppTimeAgo,
 		AppCommunitiesViewFeed,
 	},
@@ -60,7 +51,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	@State communities!: Store['communities'];
 	@State communityStates!: Store['communityStates'];
 	@Action joinCommunity!: Store['joinCommunity'];
-	@ThemeMutation setPageTheme!: ThemeStore['setPageTheme'];
 
 	feed: ActivityFeedView | null = null;
 	finishedLoading = false;
@@ -212,19 +202,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	onPostAdded(post: FiresidePost) {
 		ActivityFeedService.onPostAdded(this.feed!, post, this);
-	}
-
-	onChannelsChanged(channels: CommunityChannel[]) {
-		this.community.channels = channels;
-	}
-
-	onGamesChanged(games: Game[]) {
-		this.community.games = games;
-	}
-
-	onDetailsChanged(community: Community) {
-		this.community.assign(community);
-		this.setPageTheme(community.theme || null);
 	}
 
 	async acceptCollaboration() {

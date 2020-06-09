@@ -16,7 +16,7 @@ import AppActivityFeedPlaceholder from '../../../../components/activity/feed/pla
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
 import { Store } from '../../../../store';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
+import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '../view.store';
 
 @Component({
 	components: {
@@ -61,7 +61,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 			return true;
 		}
 
-		if (this.routeStore.isVirtualChannel(this.channel)) {
+		if (isVirtualChannel(this.routeStore, this.channel)) {
 			// Only show the post add if we have at least one target channel to
 			// post to.
 			if (this.community.channels) {
@@ -113,7 +113,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 			return true;
 		}
 
-		if (this.routeStore.isVirtualChannel(this.channel)) {
+		if (isVirtualChannel(this.routeStore, this.channel)) {
 			return false;
 		}
 
@@ -134,7 +134,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 			// many.
 			loadNewCount = this.communityState.unreadFeatureCount;
 			this.communityState.unreadFeatureCount = 0; // Set to read.
-		} else if (!this.routeStore.isVirtualChannel(this.channel)) {
+		} else if (!isVirtualChannel(this.routeStore, this.channel)) {
 			this.communityState.markChannelRead(this.channel.id);
 		}
 
@@ -173,7 +173,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 		if (
 			this.feed &&
 			this.community.id === movedTo.community_id &&
-			!this.routeStore.isVirtualChannel(this.channel) &&
+			!isVirtualChannel(this.routeStore, this.channel) &&
 			this.channel.title !== movedTo.title
 		) {
 			this.feed.remove([eventItem]);

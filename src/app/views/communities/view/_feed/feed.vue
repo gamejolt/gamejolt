@@ -20,7 +20,6 @@
 						}"
 						active-class="active"
 						exact
-						block
 					>
 						<translate>New</translate>
 					</router-link>
@@ -38,7 +37,6 @@
 						}"
 						active-class="active"
 						exact
-						block
 					>
 						<translate>Hot</translate>
 					</router-link>
@@ -78,7 +76,3 @@
 </template>
 
 <script lang="ts" src="./feed"></script>
-
-<style lang="stylus" scoped>
-
-</style>

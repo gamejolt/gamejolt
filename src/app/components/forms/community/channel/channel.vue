@@ -5,7 +5,7 @@
 				<app-form-control
 					type="text"
 					:rules="{
-						pattern: /^[a-z0-9_]{3,30}$/i,
+						pattern: /^[a-z0-9_]$/i,
 						min: 3,
 						max: 30,
 						availability: {
@@ -18,17 +18,21 @@
 				<app-form-control-errors>
 					<app-form-control-error
 						when="too_many_channels"
-						:message="$gettext('Too many channels')"
+						:message="
+							$gettext('This community already has the maximum number of channels allowed.')
+						"
 					/>
 
 					<app-form-control-error
 						when="availability"
-						:message="$gettext('A channel with that name already exists')"
+						:message="$gettext('A channel with that name already exists.')"
 					/>
 
 					<app-form-control-error
 						when="pattern"
-						:message="$gettext('Channel names must not contain special characters or spaces')"
+						:message="
+							$gettext('Channel names can only contain numbers, letters, and underscores (_).')
+						"
 					/>
 				</app-form-control-errors>
 			</app-form-group>

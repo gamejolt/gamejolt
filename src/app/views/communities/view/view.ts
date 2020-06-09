@@ -23,7 +23,12 @@ import { CommunitySidebarModal } from '../../../components/community/sidebar/mod
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { Store } from '../../../store/index';
-import { CommunityRouteStore, CommunityRouteStoreKey } from './view.store';
+import {
+	CommunityRouteStore,
+	CommunityRouteStoreKey,
+	setChannelPathFromRoute,
+	setCommunity,
+} from './view.store';
 import AppCommunitiesViewCard from './_card/card.vue';
 import AppNavChannelsInline from './_nav/channels/channels-inline.vue';
 import AppNavChannels from './_nav/channels/channels.vue';
@@ -77,16 +82,10 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	@Mutation viewCommunity!: Store['viewCommunity'];
 	@State communityStates!: Store['communityStates'];
 
-	// community: Community = null as any;
 	collaboratorInvite: Collaborator | null = null;
-	// sidebarData: CommunitySidebarData | null = null;
 
 	readonly Environment = Environment;
 	readonly Screen = Screen;
-
-	// get channel() {
-	// 	return getChannelFromRoute(this.$route);
-	// }
 
 	get community() {
 		return this.routeStore.community;
@@ -96,23 +95,19 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 		return isEditingCommunity(this.$route);
 	}
 
-	// get canEditMedia() {
-	// 	return this.community.hasPerms('community-media');
-	// }
-
 	get shouldShowModTools() {
 		return this.user && this.user.isMod;
 	}
 
 	@Watch('$route', { immediate: true })
 	onRouteChange() {
-		this.routeStore.setChannelPathFromRoute(this.$route);
+		setChannelPathFromRoute(this.routeStore, this.$route);
 	}
 
 	routeResolved($payload: any) {
 		const { routeStore } = this;
 		const community = new Community($payload.community);
-		routeStore.setCommunity(community);
+		setCommunity(routeStore, community);
 		routeStore.sidebarData = new CommunitySidebarData($payload);
 		routeStore.collaborator = $payload.invite ? new Collaborator($payload.invite) : null;
 
@@ -158,7 +153,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 			CommunitySidebarModal.show({
 				isEditing: this.isEditing,
 				data: sidebarData,
-				community: community,
+				community,
 			});
 		}
 	}

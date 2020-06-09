@@ -3,7 +3,7 @@
 		<template #thumbnail>
 			<app-editable-overlay
 				class="-fill"
-				v-if="isEditing && canEditMedia"
+				v-if="isEditing && routeStore.canEditMedia"
 				@click="showEditAvatar()"
 			>
 				<translate slot="overlay">Change</translate>

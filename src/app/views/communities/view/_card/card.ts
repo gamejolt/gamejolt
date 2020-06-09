@@ -27,10 +27,6 @@ export default class AppCommunitiesViewCard extends Vue {
 		return isEditingCommunity(this.$route);
 	}
 
-	get canEditMedia() {
-		return this.community.hasPerms('community-media');
-	}
-
 	showEditAvatar() {
 		CommunityThumbnailModal.show(this.routeStore.community);
 	}

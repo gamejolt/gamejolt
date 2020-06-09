@@ -5,7 +5,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { Store } from '../../../../store';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
+import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '../view.store';
 import { doFeedChannelPayload, resolveFeedChannelPayload } from '../_feed/feed-helpers';
 import AppCommunitiesViewFeed from '../_feed/feed.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
@@ -94,7 +94,7 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 		// };
 
 		// if (this.channel !== CommunityPresetChannelType.ALL) {
-		if (!this.routeStore.isVirtualChannel(this.channel)) {
+		if (!isVirtualChannel(this.routeStore, this.channel)) {
 			this.communityState.markChannelRead(this.channel.id);
 		}
 	}

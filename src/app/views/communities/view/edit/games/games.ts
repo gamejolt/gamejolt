@@ -1,5 +1,5 @@
 import Component from 'vue-class-component';
-import { Emit, Inject } from 'vue-property-decorator';
+import { Inject } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCardListAdd from '../../../../../../_common/card/list/add/add.vue';
 import AppCardListDraggable from '../../../../../../_common/card/list/draggable/draggable.vue';
@@ -54,9 +54,6 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 		return this.community.games && this.community.games.length < this.maxLinkedGames;
 	}
 
-	@Emit('games-change')
-	emitGamesChanged(_games: Game[]) {}
-
 	routeResolved($payload: any) {
 		this.hasMoreGamesToLink = !!$payload.hasMoreGamesToLink;
 		this.maxLinkedGames = $payload.maxLinkedGames;
@@ -67,11 +64,7 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 		this.community.games!.splice(0, this.community.games!.length, ...sortedGames);
 
 		try {
-			const payload = await this.community.saveGameSort();
-
-			if (payload.success) {
-				this.emitGamesChanged(this.community.games!);
-			}
+			await this.community.saveGameSort();
 		} catch (e) {
 			console.error(e);
 			Growls.error(this.$gettext(`Could not save game arrangement.`));
@@ -96,7 +89,6 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 
 			if (payload.success) {
 				this.community.games = Game.populate(payload.community.games);
-				this.emitGamesChanged(this.community.games);
 			}
 		} catch (e) {
 			console.error(e);
@@ -117,8 +109,8 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 
 			if (payload.success) {
 				this.community.games = Game.populate(payload.community.games);
-				this.emitGamesChanged(this.community.games!);
-				// After unlinking a game, there is a free slot and at least one more game to link.
+				// After unlinking a game, there is a free slot and at least one
+				// more game to link.
 				this.hasMoreGamesToLink = true;
 			}
 		} catch (e) {

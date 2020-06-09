@@ -30,47 +30,51 @@ export class CommunityRouteStore {
 		return channels.find(i => i.title === this.channelPath) || null;
 	}
 
-	// get canEditMedia() {
-	// 	return this.community.hasPerms('community-media');
-	// }
+	get canEditMedia() {
+		return this.community.hasPerms('community-media');
+	}
+
+	get canEditDescription() {
+		return this.community.hasPerms('community-description');
+	}
 
 	get isShowingSidebar() {
 		return Screen.isLg;
 	}
+}
 
-	setCommunity(community: Community) {
-		this.community = community;
+export function setCommunity(store: CommunityRouteStore, community: Community) {
+	store.community = community;
 
-		// Generated channels.
-		const commonFields = {
-			community_id: community.id,
-			added_on: community.added_on,
-			sort: 0,
-			permissions: true,
-		};
-		this.frontpageChannel = new CommunityChannel({
-			title: CommunityPresetChannelType.FEATURED,
-			background: community.featured_background,
-			...commonFields,
-		});
-		this.allChannel = new CommunityChannel({
-			title: CommunityPresetChannelType.ALL,
-			background: community.all_background,
-			...commonFields,
-		});
-	}
+	// Generated channels.
+	const commonFields = {
+		community_id: community.id,
+		added_on: community.added_on,
+		sort: 0,
+		permissions: true,
+	};
+	store.frontpageChannel = new CommunityChannel({
+		title: CommunityPresetChannelType.FEATURED,
+		background: community.featured_background,
+		...commonFields,
+	});
+	store.allChannel = new CommunityChannel({
+		title: CommunityPresetChannelType.ALL,
+		background: community.all_background,
+		...commonFields,
+	});
+}
 
-	updateCommunity(community: any) {
-		this.community.assign(community);
-	}
+export function updateCommunity(store: CommunityRouteStore, community: any) {
+	store.community.assign(community);
+}
 
-	setChannelPathFromRoute(route: Route) {
-		this.channelPath = getChannelPathFromRoute(route);
-	}
+export function setChannelPathFromRoute(store: CommunityRouteStore, route: Route) {
+	store.channelPath = getChannelPathFromRoute(route);
+}
 
-	isVirtualChannel(channel: CommunityChannel) {
-		return [this.frontpageChannel, this.allChannel].includes(channel);
-	}
+export function isVirtualChannel(store: CommunityRouteStore, channel: CommunityChannel) {
+	return [store.frontpageChannel, store.allChannel].includes(channel);
 }
 
 export async function acceptCollaboration(store: CommunityRouteStore, currentUser: User) {

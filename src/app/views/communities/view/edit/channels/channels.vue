@@ -30,7 +30,6 @@
 					:key="presetType"
 					:community="community"
 					:preset-type="presetType"
-					@edit="presetBackgroundEdited"
 				/>
 			</app-card-list>
 
@@ -67,12 +66,7 @@
 						</div>
 
 						<template slot="body">
-							<form-community-channel-edit
-								:community="community"
-								:model="channel"
-								@save="onChannelEdited"
-								@clear="onChannelEdited"
-							/>
+							<form-community-channel-edit :community="community" :model="channel" />
 						</template>
 					</app-card-list-item>
 				</app-card-list-draggable>

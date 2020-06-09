@@ -1,5 +1,5 @@
 import Component from 'vue-class-component';
-import { Emit, Inject } from 'vue-property-decorator';
+import { Inject } from 'vue-property-decorator';
 import AppCardListDraggable from '../../../../../../_common/card/list/draggable/draggable.vue';
 import AppCardListItem from '../../../../../../_common/card/list/item/item.vue';
 import AppCardList from '../../../../../../_common/card/list/list.vue';
@@ -56,12 +56,6 @@ export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent
 		return [CommunityPresetChannelType.FEATURED, CommunityPresetChannelType.ALL];
 	}
 
-	@Emit('channels-change')
-	emitChannelsChange(_channels: CommunityChannel[] | undefined | null) {}
-
-	@Emit('details-change')
-	emitDetailsChange(_community: Community) {}
-
 	async saveChannelSort(sortedChannels: CommunityChannel[]) {
 		// Reorder the channels to see the result of the ordering right away.
 		this.community.channels!.splice(0, this.community.channels!.length, ...sortedChannels);
@@ -69,7 +63,6 @@ export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent
 		const sortedIds = sortedChannels.map(i => i.id);
 		try {
 			await CommunityChannel.$saveSort(this.community.id, sortedIds);
-			this.emitChannelsChange(this.community.channels);
 		} catch (e) {
 			console.error(e);
 			Growls.error('Could not save channel arrangement.');
@@ -78,7 +71,6 @@ export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent
 
 	onChannelAdded(channel: CommunityChannel) {
 		this.community.channels!.push(channel);
-		this.emitChannelsChange(this.community.channels);
 	}
 
 	async onClickRemoveChannel(channel: CommunityChannel) {
@@ -86,15 +78,6 @@ export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent
 
 		if (channel._removed) {
 			this.community.channels = this.community.channels!.filter(i => i.id !== channel.id);
-			this.emitChannelsChange(this.community.channels);
 		}
-	}
-
-	onChannelEdited() {
-		this.emitChannelsChange(this.community.channels);
-	}
-
-	presetBackgroundEdited() {
-		this.emitDetailsChange(this.community);
 	}
 }
