@@ -1,15 +1,5 @@
 <template>
-	<component
-		:is="Screen.isLg ? 'nav' : 'app-nav-tab-list'"
-		:class="Screen.isLg ? 'platform-list' : '-nav-inline'"
-		v-bind="
-			Screen.isLg
-				? {}
-				: {
-						center: true,
-				  }
-		"
-	>
+	<component :is="component" :class="classes" v-bind="props">
 		<ul>
 			<li>
 				<router-link
@@ -21,11 +11,8 @@
 					}"
 					active-class="active"
 					exact
-					@click.native="isNavExpanded = false"
 				>
-					<span class="-label">
-						<translate>Details</translate>
-					</span>
+					<translate>Details</translate>
 				</router-link>
 			</li>
 			<app-community-perms tag="li" :community="community" required="community-channels">
@@ -37,11 +24,8 @@
 						},
 					}"
 					active-class="active"
-					@click.native="isNavExpanded = false"
 				>
-					<span class="-label">
-						<translate>Channels</translate>
-					</span>
+					<translate>Channels</translate>
 				</router-link>
 			</app-community-perms>
 			<app-community-perms tag="li" :community="community" required="community-games">
@@ -53,11 +37,8 @@
 						},
 					}"
 					active-class="active"
-					@click.native="isNavExpanded = false"
 				>
-					<span class="-label">
-						<translate>Games</translate>
-					</span>
+					<translate>Games</translate>
 				</router-link>
 			</app-community-perms>
 			<app-community-perms tag="li" :community="community" required="community-moderators">
@@ -69,11 +50,8 @@
 						},
 					}"
 					active-class="active"
-					@click.native="isNavExpanded = false"
 				>
-					<span class="-label">
-						<translate>Moderators</translate>
-					</span>
+					<translate>Moderators</translate>
 				</router-link>
 			</app-community-perms>
 			<app-community-perms tag="li" :community="community" required="community-blocks">
@@ -85,11 +63,8 @@
 						},
 					}"
 					active-class="active"
-					@click.native="isNavExpanded = false"
 				>
-					<span class="-label">
-						<translate>Blocked Users</translate>
-					</span>
+					<translate>Blocked Users</translate>
 				</router-link>
 			</app-community-perms>
 		</ul>

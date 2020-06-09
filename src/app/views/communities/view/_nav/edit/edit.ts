@@ -9,33 +9,29 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 @Component({
 	components: {
 		AppCommunityPerms,
-		AppNavTabList,
 	},
 })
 export default class AppNavEdit extends Vue {
 	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
 
-	isNavExpanded = false;
-
-	readonly Screen = Screen;
-
 	get community() {
 		return this.routeStore.community;
 	}
 
-	get activeItem() {
-		switch (this.$route.name) {
-			case 'communities.view.edit.details':
-				return this.$gettext('Details');
-			case 'communities.view.edit.channels':
-				return this.$gettext('Channels');
-			case 'communities.view.edit.games':
-				return this.$gettext('Games');
-			case 'communities.view.edit.moderators':
-				return this.$gettext('Moderators');
-			case 'communities.view.edit.blocks':
-				return this.$gettext('Blocks');
-		}
-		return '<Invalid Item>';
+	/** Inline means in the page vs in the sidebar */
+	get isInline() {
+		return !Screen.isLg;
+	}
+
+	get component() {
+		return this.isInline ? AppNavTabList : 'nav';
+	}
+
+	get classes() {
+		return this.isInline ? '-nav-inline' : 'platform-list';
+	}
+
+	get props() {
+		return this.isInline ? { center: true } : {};
 	}
 }
