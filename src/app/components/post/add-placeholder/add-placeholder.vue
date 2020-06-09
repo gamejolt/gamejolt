@@ -44,6 +44,7 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
+@require '../../forms/post/_community-pill/variables.styl'
 
 .-hp
 	display: flex
@@ -71,7 +72,7 @@
 	&-pill
 		change-bg('bg-subtle')
 		rounded-corners()
-		height: 28px
+		height: $pill-height
 		width: 138px
 
 .-button
