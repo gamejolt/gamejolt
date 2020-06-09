@@ -50,7 +50,7 @@ export default class AppMediaItemPost extends Vue {
 	emitFullscreen(_mediaItem: MediaItem) {}
 
 	get shouldShowFullscreen() {
-		return this.deviceMaxHeight && this.mediaItem.height > this.deviceMaxHeight;
+		return !!this.deviceMaxHeight && this.mediaItem.height > this.deviceMaxHeight;
 	}
 
 	get shouldVideoPlay() {
