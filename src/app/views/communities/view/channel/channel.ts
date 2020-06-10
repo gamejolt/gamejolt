@@ -5,13 +5,22 @@ import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { Store } from '../../../../store';
-import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '../view.store';
-import { doFeedChannelPayload, resolveFeedChannelPayload } from '../_feed/feed-helpers';
+import {
+	CommunityRouteStore,
+	CommunityRouteStoreKey,
+	isVirtualChannel,
+	setCommunityMeta,
+} from '../view.store';
+import {
+	doFeedChannelPayload,
+	getFeedChannelSort,
+	resolveFeedChannelPayload,
+} from '../_feed/feed-helpers';
 import AppCommunitiesViewFeed from '../_feed/feed.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 
 /**
- * Route ependencies for channel-type pages.
+ * Route dependencies for channel-type pages.
  */
 export const CommunitiesViewChannelDeps = {
 	params: ['path', 'channel'],
@@ -55,9 +64,44 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 		return this.routeStore.channelPath;
 	}
 
+	get sort() {
+		return getFeedChannelSort(this.$route);
+	}
+
 	get routeTitle() {
-		// TODO
-		return 'hi';
+		this.disableRouteTitleSuffix = true;
+
+		let title = this.$gettextInterpolate(`%{ name } Community on Game Jolt`, {
+			name: this.community.name,
+		});
+
+		const prefixWith = (prefix: string) => `${prefix} - ${title}`;
+
+		if (this.channel === this.routeStore.allChannel) {
+			switch (this.sort) {
+				case 'hot':
+					return prefixWith(this.$gettext('Hot posts'));
+				case 'new':
+					return prefixWith(this.$gettext('New posts'));
+			}
+		}
+
+		switch (this.sort) {
+			case 'hot':
+				return prefixWith(
+					this.$gettextInterpolate('Hot %{ tag } posts', {
+						tag: this.channel,
+					})
+				);
+			case 'new':
+				return prefixWith(
+					this.$gettextInterpolate('New %{ tag } posts', {
+						tag: this.channel,
+					})
+				);
+		}
+
+		return title;
 	}
 
 	routeCreated() {
@@ -73,29 +117,12 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 			fromCache
 		);
 
-		// Meta.description = this.$gettextInterpolate(
-		// 	// tslint:disable-next-line:max-line-length
-		// 	`Welcome to the %{ name } community on Game Jolt! Find and explore %{ name } fan art, lets plays and catch up on the latest news and theories!`,
-		// 	{ name: this.community.name }
-		// );
-
-		// Meta.fb = {
-		// 	type: 'website',
-		// 	title: this.routeTitle,
-		// 	description: Meta.description,
-		// 	image: this.community.header ? this.community.header!.mediaserver_url : null,
-		// };
-
-		// Meta.twitter = {
-		// 	card: 'summary_large_image',
-		// 	title: this.routeTitle,
-		// 	description: Meta.description,
-		// 	image: this.community.header ? this.community.header!.mediaserver_url : null,
-		// };
-
-		// if (this.channel !== CommunityPresetChannelType.ALL) {
 		if (!isVirtualChannel(this.routeStore, this.channel)) {
 			this.communityState.markChannelRead(this.channel.id);
+		}
+
+		if (this.routeTitle) {
+			setCommunityMeta(this.community, this.routeTitle);
 		}
 	}
 

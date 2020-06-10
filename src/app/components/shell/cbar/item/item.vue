@@ -20,8 +20,8 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
-@require '../variables'
 
+$-item-size = $shell-cbar-width - $cbar-h-padding * 2
 $-blip-size = 10px
 $-blip-left = (-($cbar-h-padding + $-blip-size * 0.5))
 $-blip-top = $-item-size * 0.5 - $-blip-size * 0.5

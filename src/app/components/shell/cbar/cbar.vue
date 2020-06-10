@@ -23,7 +23,6 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
-@require './variables'
 
 #shell-cbar
 	change-bg('darkest')

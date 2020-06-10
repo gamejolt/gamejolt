@@ -15,7 +15,11 @@
 
 		<div class="-content fill-backdrop">
 			<template v-if="!routeStore.isShowingSidebar">
-				<app-page-header :cover-media-item="community.header">
+				<app-page-header
+					:cover-media-item="community.header"
+					:cover-editable="routeStore.canEditMedia"
+					@edit-cover="showEditHeader()"
+				>
 					<h1>
 						<router-link :to="{ name: 'communities.view.overview' }">
 							{{ community.name }}
@@ -24,9 +28,12 @@
 					</h1>
 
 					<template #spotlight>
-						<router-link :to="{ name: 'communities.view.overview' }" slot="spotlight">
-							<app-community-thumbnail-img :community="community" />
-						</router-link>
+						<app-editable-thumbnail />
+					</template>
+
+					<template #cover-edit-buttons>
+						<translate v-if="!community.header">Upload Header</translate>
+						<translate v-else>Change Header</translate>
 					</template>
 
 					<template #nav>
@@ -85,36 +92,32 @@
 						</nav>
 					</template>
 
-					<app-page-header-controls slot="controls" v-if="!community.isBlocked">
-						<template v-if="community.hasPerms()">
-							<app-community-perms :community="community">
-								<app-button v-if="!isEditing" primary block :to="community.routeEditLocation">
-									<app-jolticon icon="edit" class="middle" />
-									<translate>Edit Community</translate>
-								</app-button>
-								<app-button
-									v-else
-									primary
-									block
-									:to="{
-										name: 'communities.view.overview',
-										params: {
-											path: community.path,
-										},
-									}"
-								>
-									<translate>View Community</translate>
-								</app-button>
-							</app-community-perms>
-						</template>
-						<app-community-join-widget
-							v-else
-							:community="community"
-							@join="onJoin"
-							@leave="onLeave"
-							block
-						/>
-					</app-page-header-controls>
+					<template #controls v-if="!community.isBlocked">
+						<app-page-header-controls>
+							<template v-if="community.hasPerms()">
+								<app-community-perms :community="community">
+									<app-button v-if="!isEditing" primary block :to="community.routeEditLocation">
+										<app-jolticon icon="edit" class="middle" />
+										<translate>Edit Community</translate>
+									</app-button>
+									<app-button
+										v-else
+										primary
+										block
+										:to="{
+											name: 'communities.view.overview',
+											params: {
+												path: community.path,
+											},
+										}"
+									>
+										<translate>View Community</translate>
+									</app-button>
+								</app-community-perms>
+							</template>
+							<app-community-join-widget v-else :community="community" block />
+						</app-page-header-controls>
+					</template>
 				</app-page-header>
 
 				<app-nav-channels-inline v-if="!isEditing" />

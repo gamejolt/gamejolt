@@ -4,7 +4,7 @@
 			v-if="shouldShowPostAdd"
 			:community="community"
 			:channel="channel"
-			@add="onPostAdded"
+			@add="emitAddPost"
 			:placeholder="placeholderText"
 		/>
 

@@ -40,8 +40,8 @@
 					</router-link>
 				</app-community-perms>
 				<a class="list-group-item has-icon" v-if="shouldShowLeave" @click="onLeaveCommunityClick">
-					<app-jolticon icon="remove" />
-					<translate class="-notice">Leave Community</translate>
+					<app-jolticon icon="remove" notice />
+					<translate>Leave Community</translate>
 				</a>
 				<a v-if="shouldShowModerate" class="list-group-item has-icon" @click="gotoModerate">
 					<app-jolticon icon="cog" />
@@ -52,6 +52,26 @@
 	</app-popper>
 </template>
 
-<style lang="stylus" src="./community.styl" scoped></style>
+<style lang="stylus"scoped>
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.-community
+	pressy()
+
+.-backdrop
+	change-bg('dark')
+
+.-thumb
+	width: 100%
+	height: 100%
+
+	>>> img
+		width: calc(100% - 2px)
+		height: calc(100% - 2px)
+
+.-notice
+	theme-prop('color', 'notice')
+</style>
 
 <script lang="ts" src="./community"></script>

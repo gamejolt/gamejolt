@@ -40,6 +40,8 @@
 </template>
 
 <style lang="stylus" scoped>
+@require '~styles/variables'
+
 .-heading
 	display: none
 

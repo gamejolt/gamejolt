@@ -6,7 +6,9 @@ import {
 	Community,
 	CommunityPresetChannelType,
 } from '../../../../_common/community/community.model';
+import { Meta } from '../../../../_common/meta/meta-service';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { Translate } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
 
@@ -121,4 +123,32 @@ export async function declineCollaboration(store: CommunityRouteStore) {
 
 export function getChannelPathFromRoute(route: Route) {
 	return route.params.channel || CommunityPresetChannelType.FEATURED;
+}
+
+/**
+ * Initializes the route metadata for a community page.
+ */
+export function setCommunityMeta(community: Community, title: string) {
+	const description = Translate.$gettextInterpolate(
+		// tslint:disable-next-line:max-line-length
+		`Welcome to the %{ name } community on Game Jolt! Find and explore %{ name } fan art, lets plays and catch up on the latest news and theories!`,
+		{ name: community.name }
+	);
+	const image = community.header?.mediaserver_url;
+
+	Meta.description = description;
+
+	Meta.fb = {
+		type: 'website',
+		title,
+		description,
+		image,
+	};
+
+	Meta.twitter = {
+		card: 'summary_large_image',
+		title,
+		description,
+		image,
+	};
 }

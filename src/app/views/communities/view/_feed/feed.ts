@@ -179,8 +179,4 @@ export default class AppCommunitiesViewFeed extends Vue {
 			this.feed.remove([eventItem]);
 		}
 	}
-
-	onPostAdded(post: FiresidePost) {
-		this.emitAddPost(post);
-	}
 }

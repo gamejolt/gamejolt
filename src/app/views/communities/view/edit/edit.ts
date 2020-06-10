@@ -31,7 +31,7 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 	readonly Screen = Screen;
 
 	get routeTitle() {
-		return this.$gettextInterpolate(`Edit Community %{ community }`, {
+		return this.$gettextInterpolate(`Edit Community - %{ community }`, {
 			community: this.community.name,
 		});
 	}

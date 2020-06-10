@@ -6,10 +6,10 @@
 			:cover-media-item="community.header"
 			@edit-cover="showEditHeader()"
 		>
-			<span slot="cover-edit-buttons">
+			<template #cover-edit-buttons>
 				<translate v-if="!community.header">Upload Header</translate>
 				<translate v-else>Change Header</translate>
-			</span>
+			</template>
 		</app-page-header>
 
 		<app-communities-view-page-container>

@@ -1,5 +1,5 @@
 import { Component, Provide, Watch } from 'vue-property-decorator';
-import { Action, Mutation, State } from 'vuex-class';
+import { Mutation, State } from 'vuex-class';
 import { enforceLocation } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
@@ -8,7 +8,6 @@ import { Community, isEditingCommunity } from '../../../../_common/community/com
 import AppCommunityJoinWidget from '../../../../_common/community/join-widget/join-widget.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
-import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { number } from '../../../../_common/filters/number';
 import AppPopper from '../../../../_common/popper/popper.vue';
@@ -17,10 +16,10 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { AppCommunityPerms } from '../../../components/community/perms/perms';
 import { CommunitySidebarModal } from '../../../components/community/sidebar/modal/modal.service';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
+import { CommunityHeaderModal } from '../../../components/forms/community/header/modal/modal.service';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { Store } from '../../../store/index';
@@ -31,6 +30,7 @@ import {
 	setCommunity,
 } from './view.store';
 import AppCommunitiesViewCard from './_card/card.vue';
+import AppEditableThumbnail from './_editable-thumbnail/editable-thumbnail.vue';
 import AppNavChannelsInline from './_nav/channels/channels-inline.vue';
 import AppNavChannels from './_nav/channels/channels.vue';
 import AppNavEdit from './_nav/edit/edit.vue';
@@ -43,7 +43,6 @@ import AppNavEdit from './_nav/edit/edit.vue';
 		AppScrollScroller,
 		AppCommunityThumbnailImg,
 		AppCommunityJoinWidget,
-		AppEditableOverlay,
 		AppCommunityPerms,
 		AppPopper,
 		AppCommunityVerifiedTick,
@@ -51,9 +50,7 @@ import AppNavEdit from './_nav/edit/edit.vue';
 		AppNavChannels,
 		AppNavChannelsInline,
 		AppNavEdit,
-	},
-	directives: {
-		AppTooltip,
+		AppEditableThumbnail,
 	},
 	filters: {
 		number,
@@ -80,11 +77,8 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	@AppState user!: AppStore['user'];
 	@ThemeMutation setPageTheme!: ThemeStore['setPageTheme'];
-	@Action leaveCommunity!: Store['leaveCommunity'];
 	@Mutation viewCommunity!: Store['viewCommunity'];
 	@State communityStates!: Store['communityStates'];
-
-	collaboratorInvite: Collaborator | null = null;
 
 	readonly Environment = Environment;
 	readonly Screen = Screen;
@@ -134,13 +128,8 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 		this.setPageTheme(null);
 	}
 
-	onJoin() {
-		// TODO
-		// this.joinCommunity(this.routeStore.community);
-	}
-
-	onLeave() {
-		this.leaveCommunity(this.routeStore.community);
+	showEditHeader() {
+		CommunityHeaderModal.show(this.community);
 	}
 
 	copyShareUrl() {

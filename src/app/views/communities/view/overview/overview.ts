@@ -1,9 +1,7 @@
 import { Component, Inject } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { CommunityPresetChannelType } from '../../../../../_common/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Growls } from '../../../../../_common/growls/growls.service';
-import { Meta } from '../../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
@@ -19,12 +17,9 @@ import {
 	CommunityRouteStore,
 	CommunityRouteStoreKey,
 	declineCollaboration,
+	setCommunityMeta,
 } from '../view.store';
-import {
-	doFeedChannelPayload,
-	getFeedChannelSort,
-	resolveFeedChannelPayload,
-} from '../_feed/feed-helpers';
+import { doFeedChannelPayload, resolveFeedChannelPayload } from '../_feed/feed-helpers';
 import AppCommunitiesViewFeed from '../_feed/feed.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 
@@ -65,7 +60,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return this.communityStates.getCommunityState(this.community);
 	}
 
-	get channel() {
+	get channelPath() {
 		return this.routeStore.channelPath;
 	}
 
@@ -75,8 +70,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	get collaboratorInvite() {
 		// Just return the collaborator as an "invite" if it's not accepted yet.
-		const collab = this.routeStore.collaborator;
-		return collab && !collab.isAccepted ? collab : null;
+		const { collaborator } = this.routeStore;
+		return collaborator && !collaborator.isAccepted ? collaborator : null;
 	}
 
 	get routeTitle() {
@@ -84,52 +79,12 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			return null;
 		}
 
-		let title = this.$gettextInterpolate(
+		return this.$gettextInterpolate(
 			`%{ name } Community - Fan art, videos, guides, polls and more`,
 			{
 				name: this.community.name,
 			}
 		);
-
-		if (
-			this.channel === CommunityPresetChannelType.FEATURED ||
-			(this.sort !== 'hot' && this.sort !== 'new')
-		) {
-			return title;
-		}
-
-		if (this.channel === CommunityPresetChannelType.ALL) {
-			switch (this.sort) {
-				case 'hot':
-					title = this.$gettext('Hot posts');
-					break;
-				case 'new':
-					title = this.$gettext('New posts');
-					break;
-			}
-		} else {
-			switch (this.sort) {
-				case 'hot':
-					title = this.$gettextInterpolate('Hot %{ tag } posts', {
-						tag: this.channel,
-					});
-					break;
-				case 'new':
-					title = this.$gettextInterpolate('New %{ tag } posts', {
-						tag: this.channel,
-					});
-					break;
-			}
-		}
-
-		title +=
-			' - ' +
-			this.$gettextInterpolate(`%{ name } Community on Game Jolt`, {
-				name: this.community.name,
-			});
-
-		this.disableRouteTitleSuffix = true;
-		return title;
 	}
 
 	get communityBlockReason() {
@@ -150,16 +105,12 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return reason;
 	}
 
-	get sort() {
-		return getFeedChannelSort(this.$route);
-	}
-
 	get canAcceptCollaboration() {
-		return this.routeStore.community.is_member || (this.user && this.user.can_join_communities);
+		return this.community.is_member || (this.user && this.user.can_join_communities);
 	}
 
 	get acceptCollaborationTooltip() {
-		return this.canAcceptCollaboration ? '' : this.$gettext(`You are in too many communities`);
+		return this.canAcceptCollaboration ? '' : this.$gettext(`You are in too many communities.`);
 	}
 
 	routeCreated() {
@@ -176,28 +127,12 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			fromCache
 		);
 
-		Meta.description = this.$gettextInterpolate(
-			// tslint:disable-next-line:max-line-length
-			`Welcome to the %{ name } community on Game Jolt! Find and explore %{ name } fan art, lets plays and catch up on the latest news and theories!`,
-			{ name: this.community.name }
-		);
-
-		Meta.fb = {
-			type: 'website',
-			title: this.routeTitle,
-			description: Meta.description,
-			image: this.community.header ? this.community.header!.mediaserver_url : null,
-		};
-
-		Meta.twitter = {
-			card: 'summary_large_image',
-			title: this.routeTitle,
-			description: Meta.description,
-			image: this.community.header ? this.community.header!.mediaserver_url : null,
-		};
-
 		this.communityState.unreadFeatureCount = 0;
 		this.finishedLoading = true;
+
+		if (this.routeTitle) {
+			setCommunityMeta(this.community, this.routeTitle);
+		}
 	}
 
 	onPostAdded(post: FiresidePost) {

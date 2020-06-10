@@ -28,23 +28,13 @@ import AppShellCbarItem from '../item/item.vue';
 	},
 })
 export default class AppShellCbarCommunity extends Vue {
-	@Prop(Community)
-	community!: Community;
+	@Prop(Community) community!: Community;
 
-	@AppState
-	user!: AppStore['user'];
-
-	@State
-	grid!: Store['grid'];
-
-	@Action
-	leaveCommunity!: Store['leaveCommunity'];
-
-	@State
-	communityStates!: Store['communityStates'];
-
-	@ThemeState
-	userTheme!: ThemeStore['userTheme'];
+	@AppState user!: AppStore['user'];
+	@State grid!: Store['grid'];
+	@Action leaveCommunity!: Store['leaveCommunity'];
+	@State communityStates!: Store['communityStates'];
+	@ThemeState userTheme!: ThemeStore['userTheme'];
 
 	popperVisible = false;
 
@@ -102,13 +92,11 @@ export default class AppShellCbarCommunity extends Vue {
 
 	async onLeaveCommunityClick() {
 		Popper.hideAll();
-
 		await this.leaveCommunity(this.community);
 	}
 
 	gotoModerate() {
 		Popper.hideAll();
-
 		Navigate.newWindow(Environment.baseUrl + `/moderate/communities/view/${this.community.id}`);
 	}
 }
