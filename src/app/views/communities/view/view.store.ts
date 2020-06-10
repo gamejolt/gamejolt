@@ -11,6 +11,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { Translate } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
+import { routeCommunitiesViewOverview } from './overview/overview.route';
 
 export const CommunityRouteStoreKey = Symbol('community-route');
 
@@ -122,7 +123,10 @@ export async function declineCollaboration(store: CommunityRouteStore) {
 }
 
 export function getChannelPathFromRoute(route: Route) {
-	return route.params.channel || CommunityPresetChannelType.FEATURED;
+	if (route.name === routeCommunitiesViewOverview.name) {
+		return CommunityPresetChannelType.FEATURED;
+	}
+	return route.params.channel || null;
 }
 
 /**

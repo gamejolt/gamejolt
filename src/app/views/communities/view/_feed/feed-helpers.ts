@@ -48,7 +48,7 @@ export function getFeedChannelSort(route: Route) {
 }
 
 export function getFeedChannelFetchUrl(route: Route) {
-	const channel = getChannelPathFromRoute(route);
+	const channel = getChannelPathFromRoute(route)!;
 	const sort = getFeedChannelSort(route);
 	const channels: string[] = [sort];
 
