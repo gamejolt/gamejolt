@@ -160,6 +160,9 @@
 
 	@media $media-lg
 		padding-left: $sidebar-width
+
+.platform-list
+	margin-left: 12px
 </style>
 
 <script lang="ts" src="./view"></script>
