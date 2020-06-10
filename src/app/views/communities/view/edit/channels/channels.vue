@@ -1,5 +1,5 @@
 <template>
-	<app-communities-view-page-container full>
+	<app-communities-view-page-container>
 		<app-community-perms :community="community" required="community-channels">
 			<h2 class="section-header">
 				<translate>Channels</translate>

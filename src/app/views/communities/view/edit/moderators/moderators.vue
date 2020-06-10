@@ -1,5 +1,5 @@
 <template>
-	<app-communities-view-page-container full>
+	<app-communities-view-page-container>
 		<h2 class="section-header">
 			<translate>Moderators</translate>
 		</h2>
