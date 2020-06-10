@@ -450,7 +450,10 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 		if (
 			this.defaultCommunity instanceof Community &&
-			this.defaultChannel instanceof CommunityChannel
+			this.defaultChannel instanceof CommunityChannel &&
+			this.defaultCommunity.postableChannels.some(
+				channel => channel.title === this.defaultChannel!.title
+			)
 		) {
 			this.attachCommunity(this.defaultCommunity, this.defaultChannel);
 		}
