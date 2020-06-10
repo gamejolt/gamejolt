@@ -1,7 +1,9 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../utils/vue';
+import { Environment } from '../../environment/environment.service';
 import { number } from '../../filters/number';
+import { AppState, AppStore } from '../../store/app-store';
 import { AppTheme } from '../../theme/theme';
 import { Community, isEditingCommunity } from '../community.model';
 import AppCommunityJoinWidget from '../join-widget/join-widget.vue';
@@ -20,8 +22,10 @@ import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 })
 export default class AppCommunityCardBase extends Vue {
 	@Prop(propRequired(Community)) community!: Community;
+	@AppState user!: AppStore['user'];
 
 	readonly number = number;
+	readonly Environment = Environment;
 
 	get memberCount() {
 		return this.community.member_count || 0;
@@ -35,5 +39,9 @@ export default class AppCommunityCardBase extends Vue {
 
 	get isEditing() {
 		return isEditingCommunity(this.$route);
+	}
+
+	get shouldShowModTools() {
+		return this.user && this.user.isMod;
 	}
 }

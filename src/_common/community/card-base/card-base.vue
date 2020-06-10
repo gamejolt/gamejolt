@@ -51,6 +51,14 @@
 						hide-count
 						event-label="community-card"
 					/>
+					<app-button
+						v-if="shouldShowModTools"
+						class="-moderate"
+						:href="Environment.baseUrl + `/moderate/communities/view/${community.id}`"
+						icon="ellipsis-v"
+						circle
+						trans
+					/>
 				</div>
 			</div>
 		</div>
