@@ -5,6 +5,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/
 import { User } from '../../../../../_common/user/user.model';
 import AppFollowerList from '../../../../components/follower/list/list.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
+import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 
 function getFetchUrl(route: Route) {
 	return `/web/communities/members/${route.params.path}`;
@@ -14,6 +15,7 @@ function getFetchUrl(route: Route) {
 	name: 'RouteCommunitiesViewMembers',
 	components: {
 		AppFollowerList,
+		AppCommunitiesViewPageContainer,
 	},
 })
 @RouteResolver({

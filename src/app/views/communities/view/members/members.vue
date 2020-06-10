@@ -1,5 +1,5 @@
 <template>
-	<section class="section fill-backdrop">
+	<app-communities-view-page-container full>
 		<div class="container">
 			<div class="alert alert-info" v-if="!community.member_count">
 				<translate>
@@ -13,7 +13,7 @@
 				:count="community.member_count || 0"
 			/>
 		</div>
-	</section>
+	</app-communities-view-page-container>
 </template>
 
 <script lang="ts" src="./members"></script>
