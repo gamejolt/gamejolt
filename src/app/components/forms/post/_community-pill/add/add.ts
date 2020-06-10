@@ -3,13 +3,15 @@ import { Component, Emit, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
-import AppPillBi from '../../../../../../_common/pill/bi/bi.vue';
+import AppJolticon from '../../../../../../_common/jolticon/jolticon.vue';
+import AppPill from '../../../../../../_common/pill/pill.vue';
 import AppFormPostCommunityPillSelector from '../selector/selector.vue';
 
 @Component({
 	components: {
 		AppFormPostCommunityPillSelector,
-		AppPillBi,
+		AppPill,
+		AppJolticon,
 	},
 })
 export default class AppFormPostCommunityPillAdd extends Vue {

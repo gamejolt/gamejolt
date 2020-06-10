@@ -10,7 +10,6 @@ import { Community } from '../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { ContentDocument } from '../../../../_common/content/content-document';
 import { ContentWriter } from '../../../../_common/content/content-writer';
-import AppExpand from '../../../../_common/expand/expand.vue';
 import { FiresidePostCommunity } from '../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import {
@@ -41,6 +40,7 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { AppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import {
 	getSketchfabIdFromInput,
@@ -102,11 +102,11 @@ type FormPostModel = FiresidePost & {
 		AppCommunityPill,
 		AppCommunityChannelSelect,
 		AppFormControlContent,
-		AppExpand,
 		AppScrollScroller,
 	},
 	directives: {
 		AppFocusWhen,
+		AppScrollWhen,
 		AppTooltip,
 		AppFormAutosize,
 	},
@@ -155,6 +155,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 	maxCommunities = 0;
 	attachedCommunities: { community: Community; channel: CommunityChannel }[] = [];
 	targetableCommunities: Community[] = [];
+	scrollingKey = 1;
 
 	private updateAutosize?: () => void;
 
@@ -495,9 +496,17 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 		if (append) {
 			this.attachedCommunities.push({ community, channel });
+			this.scrollToAdd();
 		} else {
 			this.attachedCommunities.unshift({ community, channel });
 		}
+	}
+
+	async scrollToAdd() {
+		// Wait for the DOM to update
+		await this.$nextTick();
+		// Change our scrolling key so AppScrollWhen will bring the 'Add Community' button inview.
+		this.scrollingKey *= -1;
 	}
 
 	removeCommunity(community: Community) {

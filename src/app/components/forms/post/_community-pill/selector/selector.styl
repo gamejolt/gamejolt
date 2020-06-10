@@ -2,53 +2,47 @@
 @require '~styles-lib/mixins'
 
 .-container
-	change-bg('bg')
-	max-height: 300px
-	width: 300px
+	max-width: 300px
 
 	@media $media-xs
-		max-height: 200px
-		width: 250px
-
-	overflow-x: hidden
-
-.-slider
-	position: relative
-	// Fit two sections in the slider (communities and channels)
-	display: flex
-	width: 200%
-	left: 0
-
-// Schooch!
-.-slide-to-channels
-	left: -100%
-	transition: left 300ms $strong-ease-out
-
-.-communities, .-channels
-	display: inline-block
-	vertical-align: top
-	// Each section takes 50% of parent slider, which would be equal to the -container size.
-	width: 50%
-	// border settings make it look nicer when one list is
-	// shorter than the other while sliding over.
-	border-radius: 0
-	border-right: 0
-	border-left: 0
-	border-bottom: 0
-	overflow-y: auto
-	overflow-x: hidden
-	white-space: nowrap
-	margin-bottom: 0
+		max-width: 250px
 
 .-community-item, .-channel-item
 	display: flex
 	align-items: center
 
-.-community-img
+	.-text
+		text-overflow()
+
+.-selected
+	change-bg('bg-offset')
+
+	&.-initial
+		cursor: default
+
+	&:hover
+		.-back
+			opacity: 1
+
+.-community-img, .-back
 	img-circle()
+	display: flex
+	align-items: center
 	width: 32px
 	height: 32px
-	margin-right: 5px
+
+.-community-img
+	overflow: hidden
+	margin-right: 8px
+
+.-back
+	position: absolute
+	justify-content: center
+	margin: 0
+	background-color: var(--theme-bi-bg)
+	color: var(--theme-bi-fg)
+	opacity: 0
+	transition: opacity 300ms $strong-ease-out
 
 .-tick
-	margin-left: 5px
+	margin-left: 4px
