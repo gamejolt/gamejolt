@@ -138,7 +138,7 @@
 	position: fixed
 	top: $shell-top-nav-height
 	bottom: 0
-	width: $sidebar-width
+	width: $channel-sidebar-width
 	padding: $sidebar-padding
 
 	#shell.has-cbar &
@@ -159,7 +159,7 @@
 	min-height: 'calc(100vh - %s)' % $shell-top-nav-height
 
 	@media $media-lg
-		padding-left: $sidebar-width
+		padding-left: $channel-sidebar-width
 
 .platform-list
 	margin-left: 12px

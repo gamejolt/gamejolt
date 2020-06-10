@@ -1,10 +1,17 @@
 <template>
 	<div class="-container">
 		<div v-if="Screen.isLg" class="-offset" />
-		<div class="-content">
+		<div
+			class="-content"
+			:class="{ '-single': !sidebarHasContent, '-full': full && !sidebarHasContent }"
+		>
 			<slot />
 		</div>
-		<div v-if="shouldShowSidebar" class="-sidebar" :class="{ '-none': !sidebarHasContent }">
+		<div
+			v-if="shouldShowSidebar"
+			class="-sidebar"
+			:class="{ '-empty': !sidebarHasContent, '-none': full && !sidebarHasContent }"
+		>
 			<slot name="sidebar" />
 		</div>
 	</div>
@@ -31,7 +38,7 @@
 .-offset
 	flex: 1
 	// Roughly how much offset we need to center the content to the search bar.
-	max-width: 40px
+	max-width: $offset-width
 	// Hiding from the element selector, not needed otherwise.
 	z-index: -1
 
@@ -41,9 +48,15 @@
 
 .-content
 	// Need a flex-basis the same as the max-width so we collapse .-offset first.
-	flex: 2 1 620px
-	max-width: 620px
+	flex: 2 1 $content-basis
+	max-width: $content-width
 	min-width: 0
+
+	&.-single
+		flex-basis: 100%
+
+		&.-full
+			max-width: none
 
 	@media $media-xs
 		max-width: none
@@ -51,12 +64,16 @@
 
 .-sidebar
 	// Need a flex-basis the same as the max-width so we collapse .-offset first.
-	flex: 1 2 $sidebar-width
+	flex: 1 2 $sidebar-basis
 	max-width: $sidebar-width
+	min-width: 0
 
-	&.-none
+	&.-empty
 		// Shrink at a very high number so that .-content doesn't shrink.
 		flex-shrink: 1000
+
+		&.-none
+			margin: 0
 </style>
 
 <script lang="ts" src="./page-container"></script>

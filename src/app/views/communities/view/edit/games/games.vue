@@ -1,5 +1,5 @@
 <template>
-	<app-communities-view-page-container>
+	<app-communities-view-page-container full>
 		<app-community-perms :community="community" required="community-channels">
 			<h2 class="section-header">
 				<translate>Linked Games</translate>
