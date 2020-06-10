@@ -89,14 +89,14 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 		switch (this.sort) {
 			case 'hot':
 				return prefixWith(
-					this.$gettextInterpolate('Hot %{ tag } posts', {
-						tag: this.channel,
+					this.$gettextInterpolate('Hot posts in %{ channel }', {
+						channel: this.channelPath,
 					})
 				);
 			case 'new':
 				return prefixWith(
-					this.$gettextInterpolate('New %{ tag } posts', {
-						tag: this.channel,
+					this.$gettextInterpolate('New posts in %{ channel }', {
+						channel: this.channelPath,
 					})
 				);
 		}
