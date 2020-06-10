@@ -168,9 +168,13 @@ export class Community extends Collaboratable(Model) {
 	}
 
 	channelRouteLocation(channel: CommunityChannel): Location {
-		const communityLocation = this.routeLocation;
-		communityLocation.params!.channel = channel.title;
-		return communityLocation;
+		return {
+			name: 'communities.view.channel',
+			params: {
+				path: this.path,
+				channel: channel.title,
+			}
+		} as Location
 	}
 
 	$save() {
