@@ -89,7 +89,7 @@
 				@require-change="canToggleDescription = $event"
 				@expand="showFullDescription = true"
 			>
-				<div v-html="package.description" />
+				<div>{{ package.description }}</div>
 			</app-fade-collapse>
 
 			<a
@@ -127,7 +127,9 @@
 				<template v-if="isPartner && sellable.type === 'paid' && !isOwned">
 					<br />
 					<div class="alert">
-						<translate>You get access to this package because you're a partner.</translate>
+						<translate
+							>You get access to this package because you're a partner.</translate
+						>
 					</div>
 					<hr />
 				</template>
@@ -184,7 +186,10 @@
 					{{ build.primary_file.filename }}
 					<small class="text-muted">({{ build.primary_file.filesize | filesize }})</small>
 
-					<span class="package-card-well-os" v-for="os of ['windows', 'mac', 'linux', 'other']">
+					<span
+						class="package-card-well-os"
+						v-for="os of ['windows', 'mac', 'linux', 'other']"
+					>
 						<template v-if="build['os_' + os] || build['os_' + os + '_64']">
 							{{ card.platformSupportInfo[os].tooltip }}
 						</template>
@@ -202,7 +207,9 @@
 				<br />
 
 				<small>
-					<translate>And really warm feelings for supporting an indie developer!</translate>
+					<translate
+						>And really warm feelings for supporting an indie developer!</translate
+					>
 				</small>
 			</div>
 		</app-expand>
