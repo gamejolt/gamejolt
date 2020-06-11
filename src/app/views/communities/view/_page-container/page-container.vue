@@ -5,7 +5,9 @@
 			class="-content"
 			:class="{ '-single': !sidebarHasContent, '-full': full && !sidebarHasContent }"
 		>
-			<slot />
+			<div :class="{ container: full && !sidebarHasContent }">
+				<slot />
+			</div>
 		</div>
 		<div
 			v-if="shouldShowSidebar"
@@ -65,9 +67,12 @@ $-sidebar-basis = $-sidebar-width - $-offset-width
 		&.-full
 			max-width: none
 
+			@media $media-xs
+				margin-left: 0
+				margin-right: 0
+
 	@media $media-xs
 		max-width: none
-		flex-basis: none
 
 .-sidebar
 	// Need a flex-basis the same as the max-width so we collapse .-offset first.
