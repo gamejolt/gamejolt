@@ -7,7 +7,7 @@
 		>
 			<slot name="sidebar" />
 		</app-scroll-scroller>
-		<div class="content-with-sidebar--content">
+		<div class="content-with-sidebar--content fill-backdrop">
 			<slot />
 		</div>
 	</div>
