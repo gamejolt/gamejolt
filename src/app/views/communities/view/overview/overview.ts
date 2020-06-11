@@ -5,7 +5,6 @@ import { Growls } from '../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
-import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
@@ -29,7 +28,6 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 		AppPageHeader,
 		AppCommunitiesViewPageContainer,
 		AppCommunitySidebar,
-		AppTimeAgo,
 		AppCommunitiesViewFeed,
 	},
 })
@@ -85,24 +83,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 				name: this.community.name,
 			}
 		);
-	}
-
-	get communityBlockReason() {
-		if (!this.community.user_block) {
-			return '';
-		}
-
-		const reason = this.community.user_block.reason;
-		const reasons = {
-			spam: this.$gettext('Spam'),
-			'off-topic': this.$gettext('Off Topic'),
-			abuse: this.$gettext('Offensive or insulting'),
-			other: this.$gettext('Other'),
-		} as { [reason: string]: string };
-		if (reasons[reason]) {
-			return reasons[reason];
-		}
-		return reason;
 	}
 
 	get canAcceptCollaboration() {

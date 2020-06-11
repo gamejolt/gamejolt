@@ -1,5 +1,7 @@
 <template>
 	<div>
+		<app-blocked-notice :community="community" />
+
 		<app-post-add-button
 			v-if="shouldShowPostAdd"
 			:community="community"

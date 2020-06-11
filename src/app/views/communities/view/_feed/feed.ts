@@ -17,6 +17,7 @@ import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
 import { Store } from '../../../../store';
 import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '../view.store';
+import AppBlockedNotice from '../_blocked-notice/blocked-notice.vue';
 
 @Component({
 	components: {
@@ -25,6 +26,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '.
 		AppActivityFeedPlaceholder,
 		AppActivityFeedNewButton,
 		AppNavTabList,
+		AppBlockedNotice,
 	},
 })
 export default class AppCommunitiesViewFeed extends Vue {
