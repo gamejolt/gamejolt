@@ -19,7 +19,10 @@
 			</div>
 		</section>
 
-		<app-page-header v-if="routeStore.isShowingSidebar" :cover-media-item="community.header" />
+		<app-page-header
+			v-if="routeStore.isShowingSidebar && !!community.header"
+			:cover-media-item="community.header"
+		/>
 
 		<app-communities-view-page-container>
 			<template #default>
