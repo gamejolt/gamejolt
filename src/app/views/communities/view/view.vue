@@ -1,19 +1,15 @@
 <template>
-	<div v-if="community">
-		<app-scroll-scroller
-			v-if="routeStore.isShowingSidebar"
-			thin
-			class="-channel-sidebar fill-offset"
-		>
+	<app-shell-content-with-sidebar v-if="community">
+		<template #sidebar>
 			<div class="-card">
 				<app-communities-view-card :community="community" />
 			</div>
 
 			<app-nav-channels v-if="!isEditing" />
 			<app-nav-edit v-else />
-		</app-scroll-scroller>
+		</template>
 
-		<div class="-content fill-backdrop">
+		<template #default>
 			<template v-if="!routeStore.isShowingSidebar">
 				<app-page-header
 					:cover-media-item="community.header"
@@ -125,44 +121,17 @@
 			</template>
 
 			<router-view />
-		</div>
-	</div>
+		</template>
+	</app-shell-content-with-sidebar>
 </template>
 
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
-@require './variables'
-
-.-channel-sidebar
-	position: fixed
-	top: $shell-top-nav-height
-	bottom: 0
-	width: $channel-sidebar-width
-	padding: $sidebar-padding
-
-	#shell.has-cbar &
-		left: $shell-cbar-width
-
-	#shell.has-banner &
-		top: $shell-top-nav-height * 2
-
-	// Prevent shifting when v-if="Screen.isSize" removes the element.
-	@media $media-md-down
-		display: none
+@require '../../../components/community/channel/card/variables'
 
 .-card
 	width: $card-width
-
-.-content
-	// Make it full-size height at least, so that the footer doesn't cut things off weird.
-	min-height: 'calc(100vh - %s)' % $shell-top-nav-height
-
-	@media $media-lg
-		padding-left: $channel-sidebar-width
-
-.platform-list
-	margin-left: 12px
 </style>
 
 <script lang="ts" src="./view"></script>

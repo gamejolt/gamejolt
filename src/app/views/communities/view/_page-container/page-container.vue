@@ -20,7 +20,14 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
-@require '../variables'
+
+$-offset-width = 110px
+$-content-width = 650px
+// Subtracting 31px gives us the exact content
+// width we previously had on all breakpoints.
+$-content-basis = $-content-width - $-offset-width - 31px
+$-sidebar-width = 365px
+$-sidebar-basis = $-sidebar-width - $-offset-width
 
 .-container
 	display: flex
@@ -38,7 +45,7 @@
 .-offset
 	flex: 1
 	// Roughly how much offset we need to center the content to the search bar.
-	max-width: $offset-width
+	max-width: $-offset-width
 	// Hiding from the element selector, not needed otherwise.
 	z-index: -1
 
@@ -48,8 +55,8 @@
 
 .-content
 	// Need a flex-basis the same as the max-width so we collapse .-offset first.
-	flex: 2 1 $content-basis
-	max-width: $content-width
+	flex: 2 1 $-content-basis
+	max-width: $-content-width
 	min-width: 0
 
 	&.-single
@@ -64,8 +71,8 @@
 
 .-sidebar
 	// Need a flex-basis the same as the max-width so we collapse .-offset first.
-	flex: 1 2 $sidebar-basis
-	max-width: $sidebar-width
+	flex: 1 2 $-sidebar-basis
+	max-width: $-sidebar-width
 	min-width: 0
 
 	&.-empty

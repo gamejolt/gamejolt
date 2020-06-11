@@ -74,6 +74,9 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 
+.platform-list
+	margin-left: 12px
+
 .-nav-inline
 	margin-top: ($grid-gutter-width-xs / 2)
 

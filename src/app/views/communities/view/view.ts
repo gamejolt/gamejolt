@@ -13,7 +13,6 @@ import { number } from '../../../../_common/filters/number';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
 import { AppCommunityPerms } from '../../../components/community/perms/perms';
@@ -22,6 +21,7 @@ import { CommunitySidebarData } from '../../../components/community/sidebar/side
 import { CommunityHeaderModal } from '../../../components/forms/community/header/modal/modal.service';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
+import AppShellContentWithSidebar from '../../../components/shell/content-with-sidebar/content-with-sidebar.vue';
 import { Store } from '../../../store/index';
 import {
 	CommunityRouteStore,
@@ -38,9 +38,9 @@ import AppNavEdit from './_nav/edit/edit.vue';
 @Component({
 	name: 'RouteCommunitiesView',
 	components: {
+		AppShellContentWithSidebar,
 		AppPageHeader,
 		AppPageHeaderControls,
-		AppScrollScroller,
 		AppCommunityThumbnailImg,
 		AppCommunityJoinWidget,
 		AppCommunityPerms,
