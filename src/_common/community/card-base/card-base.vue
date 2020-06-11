@@ -55,7 +55,7 @@
 						v-if="shouldShowModTools"
 						class="-moderate"
 						:href="Environment.baseUrl + `/moderate/communities/view/${community.id}`"
-						icon="ellipsis-v"
+						icon="cog"
 						circle
 						trans
 					/>
