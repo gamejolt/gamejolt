@@ -47,6 +47,7 @@
 					<app-community-join-widget
 						v-else
 						:community="community"
+						:disabled="!!community.user_block"
 						block
 						hide-count
 						event-label="community-card"
