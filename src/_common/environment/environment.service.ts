@@ -41,6 +41,7 @@ export class Environment {
 	static gameserverApiHost = 'https://gamejolt.net';
 	static activityStreamHost = 'https://activity.gamejolt.com';
 	static chatHost = 'https://chatex.gamejolt.com/chatex/host';
+	static chatToken = 'https://chatex.gamejolt.com/chatex/token';
 	static widgetHost = 'https://widgets.gamejolt.com';
 	static gridHost = 'https://grid.gamejolt.com/grid/host';
 	static recaptchaSiteKey = '6Led_UAUAAAAAB_ptIOOlAF5DFK9YM7Qi_7z8iKk';
@@ -65,6 +66,7 @@ if (GJ_ENVIRONMENT === 'development') {
 	Environment.gameserverApiHost = 'http://development.gamejolt.com';
 	Environment.activityStreamHost = 'http://activity.development.gamejolt.com';
 	Environment.chatHost = 'http://chat.development.gamejolt.com/chatex/host';
+	Environment.chatToken = 'http://chat.development.gamejolt.com/chatex/token';
 	Environment.widgetHost = 'http://localhost:8086';
 	Environment.gridHost = 'http://grid.development.gamejolt.com/grid/host';
 	Environment.recaptchaSiteKey = '6LcwTkEUAAAAAHTT67TB8gkM0ft5hUzz_r_tFFaT';
