@@ -2,7 +2,7 @@
 	<app-shell-content-with-sidebar v-if="community">
 		<template #sidebar>
 			<div class="-card">
-				<app-communities-view-card :community="community" />
+				<app-communities-view-card :community="community" overflow />
 			</div>
 
 			<app-nav-channels v-if="!isEditing" />

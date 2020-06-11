@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { propRequired } from '../../../utils/vue';
+import { propOptional, propRequired } from '../../../utils/vue';
 import { Environment } from '../../environment/environment.service';
 import { number } from '../../filters/number';
 import { AppState, AppStore } from '../../store/app-store';
@@ -22,6 +22,7 @@ import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 })
 export default class AppCommunityCardBase extends Vue {
 	@Prop(propRequired(Community)) community!: Community;
+	@Prop(propOptional(Boolean, false)) overflow!: boolean;
 	@AppState user!: AppStore['user'];
 
 	readonly number = number;

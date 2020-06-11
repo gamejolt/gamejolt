@@ -13,7 +13,7 @@
 			</div>
 
 			<div class="-well fill-bg">
-				<div class="-name">
+				<div class="-name" :class="{ '-overflow': overflow }">
 					<router-link :to="community.routeLocation" class="link-unstyled">
 						{{ community.name }}
 						<app-community-verified-tick :community="community" />

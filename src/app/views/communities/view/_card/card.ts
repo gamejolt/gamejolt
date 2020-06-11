@@ -1,5 +1,6 @@
 import Vue from 'vue';
-import { Component, Inject } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
+import { propOptional } from '../../../../../utils/vue';
 import AppCommunityCardBase from '../../../../../_common/community/card-base/card-base.vue';
 import { isEditingCommunity } from '../../../../../_common/community/community.model';
 import { CommunityThumbnailModal } from '../../../../components/forms/community/thumbnail/modal/modal.service';
@@ -14,6 +15,7 @@ import AppEditableThumbnail from '../_editable-thumbnail/editable-thumbnail.vue'
 })
 export default class AppCommunitiesViewCard extends Vue {
 	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
+	@Prop(propOptional(Boolean, false)) overflow!: boolean;
 
 	get community() {
 		return this.routeStore.community;

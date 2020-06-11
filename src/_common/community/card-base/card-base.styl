@@ -39,9 +39,15 @@
 	z-index: 2
 
 .-name
-	text-overflow()
 	font-weight: bold
 	font-size: $font-size-large
+
+	&:not(.-overflow)
+		text-overflow()
+
+	&.-overflow
+		overflow-wrap: break-word
+		word-wrap: break-word
 
 .-controls
 	clear: both

@@ -1,5 +1,5 @@
 <template>
-	<app-community-card-base :community="community">
+	<app-community-card-base :community="community" :overflow="overflow">
 		<template #thumbnail>
 			<app-editable-thumbnail />
 		</template>
