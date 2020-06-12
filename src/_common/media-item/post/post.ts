@@ -52,8 +52,8 @@ export default class AppMediaItemPost extends Vue {
 	get shouldShowFullscreenOption() {
 		return (
 			this.restrictDeviceMaxHeight &&
-			this.mediaItem.height >= 150 &&
-			this.mediaItem.width >= 150
+			this.mediaItem.height >= 100 &&
+			this.mediaItem.width >= 100
 		);
 	}
 
