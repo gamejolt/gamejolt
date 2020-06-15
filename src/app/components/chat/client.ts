@@ -170,7 +170,16 @@ async function connect(chat: ChatClient) {
 
 	// get hostname from loadbalancer first
 	const hostResult = await pollRequest(chat, 'Select server', () =>
-		Axios.get(Environment.chatHost, { ignoreLoadingBar: true, timeout: 3000 })
+		Axios.get(`${Environment.chat}/host`, { ignoreLoadingBar: true, timeout: 3000 })
+	);
+
+	// Fetch auth token for chat.
+	const tokenResult = await pollRequest(chat, 'Fetch auth token', () =>
+		Axios.post(
+			`${Environment.chat}/token`,
+			{ frontend },
+			{ ignoreLoadingBar: true, timeout: 3000 }
+		)
 	);
 
 	if (chatId !== chat.id) {
@@ -178,13 +187,14 @@ async function connect(chat: ChatClient) {
 	}
 
 	const host = `${hostResult.data}`;
+	const token = tokenResult.data.token;
 
 	console.log('[Chat] Server selected:', host);
 
 	// heartbeat is 30 seconds, backend disconnects after 40 seconds
 	chat.socket = new Socket(host, {
 		heartbeatIntervalMs: 30000,
-		params: { frontend },
+		params: { token },
 	});
 
 	// HACK
