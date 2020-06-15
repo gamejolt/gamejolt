@@ -168,19 +168,16 @@ async function connect(chat: ChatClient) {
 
 	console.log('[Chat] Connecting...');
 
-	// get hostname from loadbalancer first
-	const hostResult = await pollRequest(chat, 'Select server', () =>
-		Axios.get(`${Environment.chat}/host`, { ignoreLoadingBar: true, timeout: 3000 })
-	);
-
-	// Fetch auth token for chat.
-	const tokenResult = await pollRequest(chat, 'Fetch auth token', () =>
-		Axios.post(
-			`${Environment.chat}/token`,
-			{ frontend },
-			{ ignoreLoadingBar: true, timeout: 3000 }
-		)
-	);
+	const [hostResult, tokenResult] = await pollRequest(chat, 'Auth to server', () => {
+		return Promise.all([
+			Axios.get(`${Environment.chat}/host`, { ignoreLoadingBar: true, timeout: 3000 }),
+			Axios.post(
+				`${Environment.chat}/token`,
+				{ frontend },
+				{ ignoreLoadingBar: true, timeout: 3000 }
+			),
+		]);
+	});
 
 	if (chatId !== chat.id) {
 		return;
