@@ -42,7 +42,7 @@ export default class AppCommunityChannelPresetListItem extends Vue {
 			case CommunityPresetChannelType.ALL:
 				return this.$gettext(`All Posts`);
 			case CommunityPresetChannelType.FEATURED:
-				return this.$gettext(`Featured`);
+				return this.$gettext(`Frontpage`);
 		}
 
 		assertNever(this.presetType);
