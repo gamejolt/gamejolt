@@ -2,6 +2,7 @@ import { Component, Inject } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { Screen } from '../../../../../_common/screen/screen-service';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { Store } from '../../../../store';
@@ -47,6 +48,8 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 	@State communityStates!: Store['communityStates'];
 
 	feed: ActivityFeedView | null = null;
+
+	readonly Screen = Screen;
 
 	get community() {
 		return this.routeStore.community;
