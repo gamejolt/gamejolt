@@ -13,7 +13,7 @@
 			<template v-if="!routeStore.isShowingSidebar">
 				<app-page-header
 					:cover-media-item="community.header"
-					:cover-editable="routeStore.canEditMedia"
+					:cover-editable="isEditing && routeStore.canEditMedia"
 					@edit-cover="showEditHeader()"
 				>
 					<h1>
