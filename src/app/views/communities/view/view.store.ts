@@ -89,7 +89,7 @@ export async function acceptCollaboration(store: CommunityRouteStore, currentUse
 	await invite.$accept();
 	const { community, sidebarData } = store;
 
-	// Accepting the collaboration also automatically follows you to the
+	// Accepting the collaboration also automatically follow you to the
 	// community. To avoid sending the api request needlessly we update the
 	// community model before calling joinCommunity.
 
@@ -97,8 +97,6 @@ export async function acceptCollaboration(store: CommunityRouteStore, currentUse
 	// in the model.
 	Vue.set(community, 'perms', invite.perms);
 	Vue.set(community, 'is_member', true);
-
-	store.collaborator = null;
 
 	// Add the user to the list of collaborators.
 	if (currentUser && sidebarData) {
