@@ -30,6 +30,7 @@
 					:key="presetType"
 					:community="community"
 					:preset-type="presetType"
+					@edit="onPresetListItemSaved"
 				/>
 			</app-card-list>
 

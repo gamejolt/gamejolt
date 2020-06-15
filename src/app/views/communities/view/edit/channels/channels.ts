@@ -16,7 +16,7 @@ import { AppCommunityPerms } from '../../../../../components/community/perms/per
 import { CommunityRemoveChannelModal } from '../../../../../components/community/remove-channel/modal/modal.service';
 import FormCommunityChannel from '../../../../../components/forms/community/channel/channel.vue';
 import FormCommunityChannelEdit from '../../../../../components/forms/community/channel/edit/edit.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
+import { CommunityRouteStore, CommunityRouteStoreKey, updateCommunity } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 
 @Component({
@@ -71,6 +71,12 @@ export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent
 
 	onChannelAdded(channel: CommunityChannel) {
 		this.community.channels!.push(channel);
+	}
+
+	onPresetListItemSaved(community: Community) {
+		// Since the preset channels are stored on the community, we have to let
+		// the routeStore know to update the community with the new information.
+		updateCommunity(this.routeStore, community);
 	}
 
 	async onClickRemoveChannel(channel: CommunityChannel) {

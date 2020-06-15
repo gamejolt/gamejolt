@@ -48,7 +48,20 @@ export class CommunityRouteStore {
 
 export function setCommunity(store: CommunityRouteStore, community: Community) {
 	store.community = community;
+	_updateChannels(store);
+}
 
+export function updateCommunity(store: CommunityRouteStore, community: any) {
+	store.community.assign(community);
+	_updateChannels(store);
+}
+
+/**
+ * The preset channels are fake channels created from the community and have to
+ * be refreshed anytime the community is modified.
+ */
+function _updateChannels(store: CommunityRouteStore) {
+	const { community } = store;
 	// Generated channels.
 	const commonFields = {
 		community_id: community.id,
@@ -66,10 +79,6 @@ export function setCommunity(store: CommunityRouteStore, community: Community) {
 		background: community.all_background,
 		...commonFields,
 	});
-}
-
-export function updateCommunity(store: CommunityRouteStore, community: any) {
-	store.community.assign(community);
 }
 
 export function setChannelPathFromRoute(store: CommunityRouteStore, route: Route) {

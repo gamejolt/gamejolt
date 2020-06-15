@@ -6,14 +6,14 @@
 					<b><translate>You've been invited to collaborate on this community.</translate></b>
 				</p>
 				<app-button
-					primary
+					solid
 					:disabled="!canAcceptCollaboration"
 					v-app-tooltip.bottom="acceptCollaborationTooltip"
 					@click="acceptCollaboration()"
 				>
 					<translate>Accept</translate>
 				</app-button>
-				<app-button trans @click="declineCollaboration()">
+				<app-button solid @click="declineCollaboration()">
 					<translate>Decline</translate>
 				</app-button>
 			</div>
