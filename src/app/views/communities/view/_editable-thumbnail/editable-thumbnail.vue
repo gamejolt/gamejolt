@@ -10,9 +10,11 @@
 				<app-community-thumbnail-img :community="community" />
 			</app-media-item-backdrop>
 		</app-editable-overlay>
-		<app-media-item-backdrop v-else :media-item="community.thumbnail">
-			<app-community-thumbnail-img :community="community" />
-		</app-media-item-backdrop>
+		<router-link v-else :to="community.routeLocation">
+			<app-media-item-backdrop :media-item="community.thumbnail">
+				<app-community-thumbnail-img :community="community" />
+			</app-media-item-backdrop>
+		</router-link>
 	</div>
 </template>
 
