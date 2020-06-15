@@ -11,7 +11,12 @@
 		@hide="popperVisible = false"
 	>
 		<template #default>
-			<app-shell-cbar-item :is-active="isActive" :is-unread="isUnread" :highlight="highlight">
+			<app-shell-cbar-item
+				:is-active="isActive"
+				:is-unread="isUnread"
+				:highlight="highlight"
+				:notification-count="featureCount"
+			>
 				<router-link
 					class="-link link-unstyled"
 					:to="{
