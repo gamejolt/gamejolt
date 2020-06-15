@@ -9,7 +9,8 @@ export type ContentContext =
 	| 'user-comment'
 	| 'user-bio'
 	| 'forum-post'
-	| 'community-description';
+	| 'community-description'
+	| 'chat-message';
 
 enum ContextCapabilityType {
 	TextBold,
@@ -212,6 +213,23 @@ export class ContextCapabilities {
 					ContextCapabilityType.Gif,
 				]);
 			case 'user-bio':
+				return new ContextCapabilities([
+					ContextCapabilityType.TextBold,
+					ContextCapabilityType.TextItalic,
+					ContextCapabilityType.TextLink,
+					ContextCapabilityType.TextCode,
+					ContextCapabilityType.TextStrike,
+					ContextCapabilityType.CustomLink,
+					ContextCapabilityType.CodeBlock,
+					ContextCapabilityType.Blockquote,
+					ContextCapabilityType.Emoji,
+					ContextCapabilityType.List,
+					ContextCapabilityType.HorizontalRule,
+					ContextCapabilityType.Spoiler,
+					ContextCapabilityType.Tag,
+					ContextCapabilityType.Mention,
+				]);
+			case 'chat-message':
 				return new ContextCapabilities([
 					ContextCapabilityType.TextBold,
 					ContextCapabilityType.TextItalic,
