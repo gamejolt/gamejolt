@@ -1,5 +1,5 @@
 <template>
-	<div id="shell-cbar">
+	<div id="shell-cbar" class="theme-dark">
 		<app-scroll-scroller class="-scroller" hide-scrollbar>
 			<div class="-inner">
 				<transition-group name="-communities">
