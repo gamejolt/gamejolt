@@ -323,7 +323,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		// 3. viewing the channel the post was published to.
 		// NOTE: this means posts cannot be pinned to meta channels like 'featured' and 'all posts'
 
-		if (route.name !== 'communities.view.overview') {
+		if (route.name !== 'communities.view.channel') {
 			return null;
 		}
 

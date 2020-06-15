@@ -57,6 +57,10 @@ export class Collaborator extends Model {
 		}
 	}
 
+	get isAccepted() {
+		return !!this.accepted_on;
+	}
+
 	$invite() {
 		let url = '';
 		if (this.resource === 'Game') {

@@ -2,16 +2,19 @@
 	<div id="shell-cbar">
 		<app-scroll-scroller class="-scroller" hide-scrollbar>
 			<div class="-inner">
-				<transition-group name="-items">
-					<app-shell-cbar-item
+				<transition-group name="-communities">
+					<app-shell-cbar-community
 						v-for="community of communities"
 						:key="community.id"
 						:community="community"
 					/>
-
-					<app-shell-cbar-discover-item key="discover" />
-					<app-shell-cbar-add-item key="add" />
 				</transition-group>
+				<app-shell-cbar-item>
+					<app-community-discover-widget tooltip-placement="right" @contextmenu.native.prevent />
+				</app-shell-cbar-item>
+				<app-shell-cbar-item>
+					<app-community-add-widget tooltip-placement="right" @contextmenu.native.prevent />
+				</app-shell-cbar-item>
 			</div>
 		</app-scroll-scroller>
 	</div>
@@ -20,14 +23,13 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
-@require './common';
 
 #shell-cbar
 	change-bg('darkest')
 	position: fixed
 	width: $shell-cbar-width
 
-.-items-move
+.-communities-move
 	transition: transform 0.3s
 	transition-timing-function: $ease-out-back
 
