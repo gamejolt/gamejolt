@@ -396,6 +396,8 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 		this.setField('attached_communities', []);
 
+		this.setField('post_to_user_profile', true);
+
 		if (model.videos.length) {
 			this.setField(
 				'video_url',
