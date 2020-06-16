@@ -3,38 +3,49 @@
 		<div class="-reveal">
 			<div v-if="!canReveal">
 				<app-sticker-card-hidden
-					v-app-tooltip="$gettext(`Not enough progress to unlock sticker`)"
+					v-app-tooltip.touchable="$gettext(`Not enough progress to unlock sticker`)"
 				/>
 			</div>
 			<div v-else-if="isRevealing" class="-card-revealing-outer">
 				<app-sticker-card-hidden class="-card-revealing" />
 			</div>
-			<template v-else-if="isRevealed && purchasedSticker">
+			<template v-else-if="isRevealed && !!purchasedStickers.length">
 				<div class="-card-revealed-container">
-					<app-sticker-card
-						class="-card-revealed"
-						:sticker="purchasedSticker"
-						label="+1"
-					/>
-					<div
-						v-if="purchasedSticker.rarity > 0"
-						class="-card-revealed-effect"
-						:class="{
-							'-card-revealed-effect-uncommon': purchasedSticker.rarity === 1,
-							'-card-revealed-effect-rare': purchasedSticker.rarity === 2,
-							'-card-revealed-effect-epic': purchasedSticker.rarity === 3,
-						}"
-					/>
+					<div v-for="sticker of purchasedStickers" :key="sticker.id">
+						<app-sticker-card
+							class="-card-revealed"
+							:sticker="sticker"
+							:label="`+${sticker.count || 1}`"
+						>
+							<template v-if="shouldAnimateRarity">
+								<div
+									v-if="sticker.rarity > 0"
+									class="-card-revealed-effect"
+									:class="{
+										'-card-revealed-effect-uncommon': sticker.rarity === 1,
+										'-card-revealed-effect-rare': sticker.rarity === 2,
+										'-card-revealed-effect-epic': sticker.rarity === 3,
+									}"
+								/>
+							</template>
+						</app-sticker-card>
+					</div>
 				</div>
 				<div v-if="showCollectControls" class="-revealed-controls anim-fade-in">
-					<app-button primary @click="onClickCollect">
+					<app-button primary @click="onClickCollect(purchasedStickersCount)">
 						<translate>Collect</translate>
 					</app-button>
 				</div>
 			</template>
 			<template v-else>
-				<div>
-					<app-sticker-card-hidden @click.native="onBuySticker" class="-card-hidden" />
+				<div class="-collect">
+					<app-sticker-card-hidden class="-card-hidden" :count="1" @click.native="onBuySticker" />
+					<app-sticker-card-hidden
+						v-if="canBuyMultipleAmount > 1"
+						class="-card-hidden"
+						:count="canBuyMultipleAmount"
+						@click.native="onBuyMultiple(canBuyMultipleAmount)"
+					/>
 				</div>
 				<hr class="underbar underbar-center" />
 				<div class="-collect-flavor-text">
@@ -56,8 +67,8 @@
 			<div class="page-cut"></div>
 			<p>
 				<translate>
-					You do not have enough points to unlock more stickers. Use Game Jolt, like some
-					posts, you might get some more.
+					You do not have enough points to unlock more stickers. Use Game Jolt, like some posts, you
+					might get some more.
 				</translate>
 			</p>
 			<app-button :to="{ name: 'dash.stickers.overview' }">
@@ -70,6 +81,7 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
+@require '../card/variables.styl'
 
 .-sticker-amount
 	margin-top: 4px
@@ -87,6 +99,11 @@
 	position: relative
 	padding-top: 100px
 	padding-bottom: 120px
+
+.-collect
+	display: flex
+	justify-content: space-evenly
+	width: 100%
 
 .-card-hidden
 	cursor: pointer
@@ -111,6 +128,11 @@
 	overflow: hidden
 	rounded-corners-lg()
 	animation: card-revealed 0.5s linear 1 normal forwards
+	width: 100%
+	display: grid
+	grid-template-columns: repeat(auto-fit, $card-width)
+	justify-content: center
+	grid-gap: $card-margin * 2
 
 .-card-revealed-effect
 	position: absolute

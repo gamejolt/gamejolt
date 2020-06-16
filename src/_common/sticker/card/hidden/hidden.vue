@@ -4,7 +4,7 @@
 			<app-jolticon class="-icon jolticon-3x" icon="sticker" />
 		</div>
 		<div class="-pocket fill-darkest">
-			<translate>Unlock</translate>
+			<translate>Unlock {{ count || null }}</translate>
 		</div>
 	</div>
 </template>

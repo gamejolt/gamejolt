@@ -28,6 +28,7 @@ export class Sticker extends Model {
 
 	rarity!: number;
 	img_url!: string;
+	count!: number;
 
 	constructor(data: any = {}) {
 		super(data);
