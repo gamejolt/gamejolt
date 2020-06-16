@@ -90,7 +90,9 @@ export default class AppFormPostMedia extends BaseForm<FormModel>
 	}
 
 	mediaSelected() {
-		this.$refs.form.submit();
+		if (this.formModel.image !== null) {
+			this.$refs.form.submit();
+		}
 	}
 
 	showSelectMedia() {
