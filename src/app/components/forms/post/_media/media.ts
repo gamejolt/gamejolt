@@ -1,3 +1,4 @@
+import { Component, Emit, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppFormControlUploadTS from '../../../../../_common/form-vue/control/upload/upload';
@@ -6,13 +7,13 @@ import AppForm from '../../../../../_common/form-vue/form';
 import {
 	BaseForm,
 	FormOnSubmit,
+	FormOnSubmitError,
 	FormOnSubmitSuccess,
 } from '../../../../../_common/form-vue/form.service';
 import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
 import AppLoadingFade from '../../../../../_common/loading/fade/fade.vue';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
 import AppFormPostMediaItem from './item/item.vue';
 
 const draggable = require('vuedraggable');
@@ -33,7 +34,7 @@ interface FormModel {
 	},
 })
 export default class AppFormPostMedia extends BaseForm<FormModel>
-	implements FormOnSubmit, FormOnSubmitSuccess {
+	implements FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError {
 	@Prop(FiresidePost)
 	post!: FiresidePost;
 
@@ -62,6 +63,9 @@ export default class AppFormPostMedia extends BaseForm<FormModel>
 
 	@Emit('upload')
 	emitUpload(_newMediaItems: MediaItem[]) {}
+
+	@Emit('error')
+	emitError(_reason: string) {}
 
 	@Emit('sort')
 	emitSort(_mediaItems: MediaItem[]) {}
@@ -140,5 +144,9 @@ export default class AppFormPostMedia extends BaseForm<FormModel>
 
 	onSubmitSuccess(response: any) {
 		this.emitUpload(MediaItem.populate(response.mediaItems));
+	}
+
+	onSubmitError(response: any) {
+		this.emitError(response.reason);
 	}
 }
