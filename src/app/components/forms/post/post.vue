@@ -528,7 +528,7 @@
 					v-if="model.user.id != model.game.developer.id"
 					:label="$gettext(`Post as Game Owner`)"
 				>
-					<app-form-control-toggle class="pull-right" :disabled="formModel.post_to_user_profile" />
+					<app-form-control-toggle class="pull-right" />
 					<div
 						v-if="formModel.as_game_owner"
 						class="-author-avatar pull-right"
@@ -556,7 +556,7 @@
 					v-if="user && user.id == model.user.id"
 					:label="$gettext(`Post to Profile`)"
 				>
-					<app-form-control-toggle class="pull-right" :disabled="formModel.as_game_owner" />
+					<app-form-control-toggle class="pull-right" />
 					<p class="help-block sans-margin-top">
 						This will post to your profile as well as the game page.
 					</p>

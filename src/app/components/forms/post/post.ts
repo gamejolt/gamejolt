@@ -353,6 +353,20 @@ export default class FormPost extends BaseForm<FormPostModel>
 		return this.defaultCommunity;
 	}
 
+	@Watch('formModel.post_to_user_profile')
+	onPostToUserProfileToggle(event: boolean) {
+		if (event) {
+			this.setField('as_game_owner', false);
+		}
+	}
+
+	@Watch('formModel.as_game_owner')
+	onPostAsGameOwnerToggle(event: boolean) {
+		if (event) {
+			this.setField('post_to_user_profile', false);
+		}
+	}
+
 	get shouldShowAuthorOptions() {
 		if (!this.model?.game || !this.user) {
 			return false;
