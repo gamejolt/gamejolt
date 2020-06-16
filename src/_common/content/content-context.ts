@@ -265,6 +265,8 @@ export function getMediaItemTypeForContext(context: ContentContext) {
 			return MediaItem.TYPE_FORUM_POST;
 		case 'community-description':
 			return MediaItem.TYPE_COMMUNITY_DESCRIPTION;
+		case 'chat-message':
+			return MediaItem.TYPE_CHAT_MESSAGE;
 	}
 	throw new Error('There is no matching media item type for the context ' + context);
 }
