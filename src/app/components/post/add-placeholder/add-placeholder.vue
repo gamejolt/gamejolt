@@ -44,7 +44,7 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
-@require '../../forms/post/_community-pill/variables.styl'
+@require '../../forms/post/_community-pill/variables'
 
 .-hp
 	display: flex
