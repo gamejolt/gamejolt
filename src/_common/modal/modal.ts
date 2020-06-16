@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Emit, Prop } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../utils/vue';
 import AppBackdrop from '../backdrop/backdrop';
 import { Backdrop } from '../backdrop/backdrop.service';
@@ -39,6 +39,8 @@ export default class AppModal extends Vue {
 	$refs!: {
 		scroller: AppScrollScrollerTS;
 	};
+
+	@Emit('click-away') emitClickAway() {}
 
 	get zIndex() {
 		return 1050 + this.modal.index;
@@ -107,6 +109,7 @@ export default class AppModal extends Vue {
 	}
 
 	dismiss() {
+		this.emitClickAway();
 		this.modal.dismiss();
 	}
 

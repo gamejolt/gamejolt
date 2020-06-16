@@ -1,5 +1,5 @@
 <template>
-	<app-modal>
+	<app-modal @click-away="onClose">
 		<div class="modal-controls">
 			<app-button @click="onClose">
 				<translate>Close</translate>
