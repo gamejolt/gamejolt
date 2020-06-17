@@ -2,7 +2,6 @@
 	<div>
 		<v-touch
 			class="media-bar-lightbox theme-dark"
-			:class="{ dragging: isDragging }"
 			@panstart="panStart"
 			@panmove="pan"
 			@panend="panEnd"
