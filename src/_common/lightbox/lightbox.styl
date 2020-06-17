@@ -6,8 +6,11 @@ $-button-size = 90px
 $-controls-padding = 10px
 
 .media-bar-lightbox
-	&.dragging
+	.dragging &
 		cursor: grabbing
+
+		>>> iframe
+			pointer-events: none
 
 .-inner
 	display: flex
