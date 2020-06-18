@@ -1,10 +1,16 @@
 import Vue from 'vue';
 import { Component, InjectReactive } from 'vue-property-decorator';
+import { ContentContext } from '../../../../../_common/content/content-context';
+import { ContentDocument } from '../../../../../_common/content/content-document';
+import AppContentEditor from '../../../../../_common/content/content-editor/content-editor.vue';
 import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { ChatClient, ChatKey, queueChatMessage } from '../../client';
 
 @Component({
+	components: {
+		AppContentEditor,
+	},
 	directives: {
 		AppFocusWhen,
 	},
@@ -14,6 +20,7 @@ export default class AppChatWindowSend extends Vue {
 
 	message = '';
 	multiLineMode = false;
+	contentContext: ContentContext = 'chat-message';
 
 	$refs!: {
 		input: HTMLTextAreaElement;
@@ -26,7 +33,9 @@ export default class AppChatWindowSend extends Vue {
 	// event handler already.
 	private handledEvent = false;
 
-	onChange() {
+	onChange(source: string) {
+		this.message = source;
+
 		// If they remove whole message, remove multi-line mode.
 		if (this.multiLineMode && this.message.length === 0) {
 			this.multiLineMode = false;
@@ -61,11 +70,13 @@ export default class AppChatWindowSend extends Vue {
 	}
 
 	sendMessage() {
-		const message = this.message;
-		const room = this.chat.room;
-
-		if (room) {
-			queueChatMessage(this.chat, message, room.id);
+		const doc = ContentDocument.fromJson(this.message);
+		if (doc instanceof ContentDocument) {
+			const contentJson = doc.toJson();
+			const room = this.chat.room;
+			if (room) {
+				queueChatMessage(this.chat, contentJson, room.id);
+			}
 		}
 
 		this.message = '';

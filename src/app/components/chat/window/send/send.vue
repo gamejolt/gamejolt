@@ -11,25 +11,15 @@
 		</div>
 
 		<div class="-container">
-			<div class="-button" @click="sendClicked()">
-				<app-jolticon icon="add-comment" />
-			</div>
-			<!-- ctrl+enter sends key code 10 on Chrome. Yeah. binding the :key
-			allows it to refocus each time the room changes -->
-			<textarea
-				ref="input"
-				:key="chat.room.id"
-				class="form-control"
-				placeholder="Enter message..."
-				:rows="Screen.isXs ? 1 : 2"
-				v-app-focus-when
-				v-model="message"
-				@change="onChange"
-				@keydown.shift.enter="shiftEnter"
-				@keydown.ctrl.enter.prevent="ctrlEnter"
-				@keydown.ctrl.10.prevent="ctrlEnter"
-				@keydown.enter="enter"
+			<app-content-editor
+				class="fill-bg form-control content-editor-form-control"
+				:value="message"
+				:content-context="contentContext"
+				@input="onChange"
 			/>
+			<app-button primary solid @click="sendMessage">
+				<translate>Send</translate>
+			</app-button>
 		</div>
 	</div>
 </template>
@@ -66,6 +56,15 @@ textarea
 		position: absolute
 		top: 10px
 		right: 6px
+
+.content-editor-form-control
+	height: auto
+	resize: vertical
+
+.content-editor-form-control:focus-within
+	theme-prop('border-color', 'fg-muted')
+	box-shadow: none
+	outline: 0
 </style>
 
 <script lang="ts" src="./send"></script>
