@@ -121,39 +121,32 @@
 @require '~styles-lib/mixins'
 
 .pagination
-	clearfix()
-	display: inline-block
-	padding-left: 0
-	margin-bottom: $line-height-computed
+	display: inline-flex
 	user-select: none
+	flex-wrap: wrap
+	justify-content: center
+	margin-bottom: $line-height-computed
 
 	&-item
-		float: left
 		margin-right: 3px
 
 .pager
-	clearfix()
-	padding-left: 0
-	margin: $line-height-computed 0
-	list-style: none
-	text-align: center
+	display: inline-flex
 	user-select: none
+	flex-wrap: wrap
+	justify-content: space-between
+	padding: $line-height-computed ($grid-gutter-width-xs / 2)
+	width: 100%
 
-	.pagination-item
-		float: none
-
-		&.next
-			float: right
-
-		&.previous
-			float: left
+	&:not(.reverse)
+		.pagination-item:last-child
+			margin-right: 0
 
 	&.reverse
-		.pagination-item.next
-			float: left
+		flex-direction: row-reverse
 
-		.pagination-item.previous
-			float: right
+		.pagination-item:first-child
+			margin-right: 0
 </style>
 
 <script lang="ts" src="./pagination"></script>

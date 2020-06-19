@@ -48,9 +48,14 @@ export class ScrollInviewContainer {
 					? entry.intersectionRatio === 1
 					: entry.isIntersecting;
 
-			if (isInView !== item.inView) {
-				this.queueChange(() => (item.inView = isInView));
-			}
+			this.queueChange(() => {
+				item.inView = isInView;
+				if (isInView) {
+					item.emitInView();
+				} else {
+					item.emitOutView();
+				}
+			});
 		}
 	};
 

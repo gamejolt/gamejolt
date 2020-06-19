@@ -38,7 +38,7 @@
 										</translate>
 									</p>
 								</template>
-								<template v-else>
+								<template v-else-if="user">
 									<h1>
 										<translate>Games Followed</translate>
 									</h1>
@@ -78,7 +78,7 @@
 										</translate>
 									</p>
 								</template>
-								<template v-else>
+								<template v-else-if="user">
 									<h1>
 										<translate>Games</translate>
 									</h1>
@@ -112,7 +112,7 @@
 										<translate>These are all the games you own.</translate>
 									</p>
 								</template>
-								<template v-else>
+								<template v-else-if="user">
 									<h1>
 										<translate>Games Owned</translate>
 									</h1>
@@ -148,7 +148,7 @@
 										</translate>
 									</p>
 								</template>
-								<template v-else>
+								<template v-else-if="user">
 									<h1>
 										<translate>Daily Mix</translate>
 									</h1>
@@ -168,7 +168,7 @@
 							<!--
 								Playlist
 							-->
-							<template v-else-if="type === 'playlist'">
+							<template v-else-if="type === 'playlist' && playlist">
 								<h1>
 									{{ playlist.name }}
 								</h1>
@@ -188,7 +188,7 @@
 							<!--
 								Bundle
 							-->
-							<template v-else-if="type === 'bundle'">
+							<template v-else-if="type === 'bundle' && bundle">
 								<h1>{{ bundle.title }}</h1>
 								<p class="text-muted small">{{ bundle.description }}</p>
 							</template>
@@ -196,7 +196,7 @@
 							<!--
 								Jam
 							-->
-							<template v-else-if="type === 'jam'">
+							<template v-else-if="type === 'jam' && jam">
 								<h1>{{ jam.name }}</h1>
 								<p class="text-muted small">
 									<translate :translate-params="{ jam: jam.name }">
@@ -214,7 +214,7 @@
 				</div>
 			</div>
 
-			<template slot="nav">
+			<template slot="nav" v-if="listing">
 				<ul class="stat-list">
 					<li class="stat-big stat-big-smaller" v-if="shouldShowFollowers">
 						<div class="stat-big-label">

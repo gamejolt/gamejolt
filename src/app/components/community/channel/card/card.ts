@@ -1,7 +1,10 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
-import { Community } from '../../../../../_common/community/community.model';
+import {
+	Community,
+	CommunityPresetChannelType,
+} from '../../../../../_common/community/community.model';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -25,12 +28,15 @@ export default class AppCommunityChannelCard extends Vue {
 	@Prop(propOptional(Boolean, false)) isLocked!: boolean;
 
 	get linkTo() {
-		const link = { name: 'communities.view.overview' } as any;
-		if (this.path === 'featured') {
-			return link;
+		if (this.path === CommunityPresetChannelType.FEATURED) {
+			return { name: 'communities.view.overview' };
 		}
 
-		link.params = { path: this.community.path, channel: this.path };
+		const link = {
+			name: 'communities.view.channel',
+			params: { path: this.community.path, channel: this.path },
+		} as any;
+
 		if (this.sort) {
 			link.query = { sort: this.sort };
 		}

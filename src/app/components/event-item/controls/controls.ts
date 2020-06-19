@@ -70,7 +70,7 @@ export default class AppEventItemControls extends Vue {
 	emitPostMoveChannel(_movedTo: CommunityChannel) {}
 
 	@Emit('post-reject')
-	emitPostReject() {}
+	emitPostReject(_community: Community) {}
 
 	@Emit('post-pin')
 	emitPostPin() {}

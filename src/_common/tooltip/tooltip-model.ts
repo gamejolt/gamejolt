@@ -127,6 +127,7 @@ export class TooltipModel {
 		this.el.removeEventListener('pointerleave', this.onMouseLeave);
 		this.el.removeEventListener('click', this.onClick);
 		this.el.removeEventListener('focusout', this.onFocusOut);
+		this.isActive = false;
 	}
 }
 

@@ -1,6 +1,6 @@
 <template>
 	<div class="list-group">
-		<app-popper block track-trigger-width hide-on-state-change>
+		<app-popper popover-class="fill-bg" block track-trigger-width hide-on-state-change>
 			<a class="list-group-item has-addon">
 				<div class="list-group-item-addon">
 					<app-jolticon icon="chevron-down" />

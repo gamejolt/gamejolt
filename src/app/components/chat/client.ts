@@ -1,33 +1,75 @@
+import Axios from 'axios';
+import { Channel, Socket } from 'phoenix';
 import Vue from 'vue';
 import { EventBus } from '../../../system/event/event-bus.service';
-import { Analytics } from '../../../_common/analytics/analytics.service';
+import { sleep } from '../../../utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
-import { Primus } from '../../../_common/primus/primus.service';
-import { store } from '../../store/index';
+import { Growls } from '../../../_common/growls/growls.service';
+import { store } from '../../store';
 import { ChatMessage, ChatMessageType } from './message';
-import { ChatNotification } from './notification/notification.service';
 import { ChatRoom } from './room';
+import { ChatRoomChannel } from './room-channel';
 import { ChatUser } from './user';
+import { ChatUserChannel } from './user-channel';
 import { ChatUserCollection } from './user-collection';
 
-export const ChatMaxNumMessages = 200;
-export const ChatSiteModPermission = 2;
-
-interface PrimusChatEvent {
-	event: string;
-	data: any;
-}
+export const ChatKey = Symbol('Chat');
 
 export interface ChatNewMessageEvent {
-	isPrimer: boolean;
 	message: ChatMessage;
 }
 
+/**
+ * Polls a request until it returns a result, increases the delay time between
+ * requests after each failed attempt.
+ *
+ * @param context Context for logging
+ * @param requestGetter Function that generates a promise that represents the
+ * request
+ */
+async function pollRequest(
+	chat: ChatClient,
+	context: string,
+	requestGetter: () => Promise<any>
+): Promise<any> {
+	const chatId = chat.id;
+
+	let result = null;
+	let finished = false;
+	let delay = 0;
+
+	console.log(`[Chat] ${context}`);
+
+	while (!finished) {
+		// Abort if our chat server changed.
+		if (chat.id !== chatId) {
+			return null;
+		}
+
+		try {
+			const promise = requestGetter();
+			result = await promise;
+			finished = true;
+		} catch (e) {
+			const sleepMs = Math.min(30000, Math.random() * delay * 1000 + 1000);
+			console.log(`[Chat] Failed request [${context}]. Reattempt in ${sleepMs} ms.`);
+			await sleep(sleepMs);
+		}
+
+		delay++;
+	}
+
+	return result;
+}
+
 export class ChatClient {
+	static nextId = 1;
+
+	id = -1;
 	connected = false;
-	allCount = 0;
-	publicRooms: ChatRoom[] = [];
+	socket: Socket | null = null;
+	userChannel: ChatUserChannel | null = null;
 
 	currentUser: ChatUser | null = null;
 	friendsList: ChatUserCollection = null as any;
@@ -36,17 +78,13 @@ export class ChatClient {
 	room: ChatRoom | null = null;
 
 	// The following are indexed by room ID.
+	roomChannels: { [k: string]: ChatRoomChannel } = {};
 	messages: { [k: string]: ChatMessage[] } = {};
 	usersOnline: { [k: string]: ChatUserCollection } = {};
 	notifications: { [k: string]: number } = {};
 	isFocused = true;
 
-	private messageQueue: string[] = [];
-	private sendingMessage = false;
-
-	private spark: any = null;
-	private primus: any = null;
-	private startTime = 0;
+	messageQueue: ChatMessage[] = [];
 
 	/**
 	 * The session room is stored within their local session. It's their last active room. We reopen
@@ -88,585 +126,466 @@ export class ChatClient {
 	}
 
 	constructor() {
-		this._init();
+		reset(this);
+		connect(this);
+	}
+}
+
+function reset(chat: ChatClient) {
+	chat.id = -1;
+	chat.connected = false;
+	chat.currentUser = null;
+	chat.friendsList = new ChatUserCollection(ChatUserCollection.TYPE_FRIEND);
+	chat.friendsPopulated = false;
+
+	chat.room = null;
+
+	// The following are indexed by roomId
+	chat.messages = {};
+	chat.usersOnline = {};
+	chat.notifications = {};
+	chat.isFocused = true;
+
+	chat.messageQueue = [];
+}
+
+function reconnect(chat: ChatClient) {
+	destroy(chat);
+	connect(chat);
+}
+
+async function connect(chat: ChatClient) {
+	const chatId = ChatClient.nextId++;
+	chat.id = chatId;
+
+	const frontend = await getCookie('frontend');
+	const user = store.state.app.user;
+
+	if (user === null || frontend === undefined) {
+		// not properly logged in
+		return;
 	}
 
-	private async _init() {
-		if (GJ_IS_SSR) {
-			return;
+	console.log('[Chat] Connecting...');
+
+	const [hostResult, tokenResult] = await pollRequest(chat, 'Auth to server', () => {
+		return Promise.all([
+			Axios.get(`${Environment.chat}/host`, { ignoreLoadingBar: true, timeout: 3000 }),
+			Axios.post(
+				`${Environment.chat}/token`,
+				{ frontend },
+				{ ignoreLoadingBar: true, timeout: 3000 }
+			),
+		]);
+	});
+
+	if (chatId !== chat.id) {
+		return;
+	}
+
+	const host = `${hostResult.data}`;
+	const token = tokenResult.data.token;
+
+	console.log('[Chat] Server selected:', host);
+
+	// heartbeat is 30 seconds, backend disconnects after 40 seconds
+	chat.socket = new Socket(host, {
+		heartbeatIntervalMs: 30000,
+		params: { token },
+	});
+
+	// HACK
+	// there is no built in way to stop a Phoenix socket from attempting to reconnect on its own after it got disconnected.
+	// this replaces the socket's "reconnectTimer" property with an empty object that matches the Phoenix "Timer" signature
+	// The 'reconnectTimer' usually restarts the connection after a delay, this prevents that from happening
+	let socketAny: any = chat.socket;
+	if (socketAny.hasOwnProperty('reconnectTimer')) {
+		socketAny.reconnectTimer = { scheduleTimeout: () => {}, reset: () => {} };
+	}
+
+	chat.socket.onOpen(() => {
+		chat.connected = true;
+		setChatRoom(chat, undefined);
+	});
+
+	chat.socket.onError((e: any) => {
+		console.warn('[Chat] Got error from socket');
+		console.warn(e);
+		reconnect(chat);
+	});
+
+	chat.socket.onClose(() => {
+		console.warn('[Chat] Socket closed unexpectedly');
+		reconnect(chat);
+	});
+
+	await pollRequest(
+		chat,
+		'Connect to socket',
+		() =>
+			new Promise(resolve => {
+				if (chat.socket !== null) {
+					chat.socket.connect();
+				}
+				resolve();
+			})
+	);
+
+	if (chatId !== chat.id) {
+		return;
+	}
+
+	joinUserChannel(chat, user.id);
+}
+
+export function destroy(chat: ChatClient) {
+	console.log('[Chat] Destroying client');
+
+	if (!chat.connected) {
+		return;
+	}
+
+	reset(chat);
+
+	if (chat.userChannel) {
+		leaveChannel(chat, chat.userChannel);
+		chat.userChannel = null;
+	}
+
+	Object.keys(chat.roomChannels).forEach(roomId => {
+		leaveChannel(chat, chat.roomChannels[roomId]);
+	});
+	chat.roomChannels = {};
+
+	if (chat.socket) {
+		console.log('[Chat] Disconnecting socket');
+		// TODO(chatex) might need to dispose of socket only after it is fully disconnected.
+		chat.socket.disconnect();
+		chat.socket = null;
+	}
+}
+
+async function joinUserChannel(chat: ChatClient, userId: number) {
+	const channel = new ChatUserChannel(userId, chat);
+	const request = `Join user channel ${userId}`;
+
+	await pollRequest(
+		chat,
+		request,
+		() =>
+			new Promise((resolve, reject) => {
+				channel
+					.join()
+					.receive('error', reject)
+					.receive('ok', response => {
+						const currentUser = new ChatUser(response.user);
+						const friendsList = new ChatUserCollection(
+							ChatUserCollection.TYPE_FRIEND,
+							response.friends || []
+						);
+						chat.userChannel = channel;
+						chat.currentUser = currentUser;
+						chat.friendsList = friendsList;
+						chat.friendsPopulated = true;
+						chat.notifications = response.notifications;
+						resolve();
+					});
+			})
+	);
+}
+
+async function joinRoomChannel(chat: ChatClient, roomId: number) {
+	const channel = new ChatRoomChannel(roomId, chat);
+
+	await pollRequest(
+		chat,
+		`Join room channel: ${roomId}`,
+		() =>
+			new Promise((resolve, reject) => {
+				channel
+					.join()
+					.receive('error', reject)
+					.receive('ok', response => {
+						chat.roomChannels[roomId] = channel;
+						channel.room = new ChatRoom(response.room);
+						const messages = response.messages.map(
+							(msg: ChatMessage) => new ChatMessage(msg)
+						);
+						messages.reverse();
+						setupRoom(chat, channel.room, messages);
+						resolve();
+					});
+			})
+	);
+}
+
+export function setChatRoom(chat: ChatClient, newRoom: ChatRoom | undefined) {
+	// In single-room mode, if there is a currently active room, we always want
+	// to clear it out. Whether we're setting to null or a new room.
+	leaveChatRoom(chat);
+
+	if (newRoom) {
+		if (chat.currentUser) {
+			chat.roomChannels[newRoom.id].push('focus', { roomId: newRoom.id });
 		}
 
-		// Initialize after we've been created. This allows the chat to get
-		// attached to the store before initializing all models within.
-		await Vue.nextTick();
-		this.reset();
-		this.initPrimus();
-	}
-
-	private reset() {
-		this.startTime = Date.now();
-
-		this.currentUser = null;
-		this.friendsList = new ChatUserCollection(ChatUserCollection.TYPE_FRIEND);
-		this.friendsPopulated = false;
-
-		this.room = null;
-
-		// The following are indexed by roomId
-		this.messages = {};
-		this.usersOnline = {};
-		this.notifications = {};
-		this.isFocused = true;
-
-		this.messageQueue = [];
-		this.sendingMessage = false;
-	}
-
-	private reconnect() {
-		this.reset();
-
-		if (this.spark) {
-			// This disconnects but tells primus to allow the reconnect behavior to kick in.
-			this.spark.end(undefined, { reconnect: true });
-		}
-	}
-
-	logout() {
-		this.reconnect();
-	}
-
-	/**
-	 * Initializes Primus and sets up our event watching.
-	 */
-	private async initPrimus() {
-		this.primus = await Primus.createConnection(Environment.chatHost);
-
-		// On new connection or reconnection.
-		this.primus.on('open', async (spark: any) => {
-			// Cap it at a max of 60s.
-			const ms = Date.now() - this.startTime;
-			Analytics.trackTiming('chat', 'spark-open', Math.min(ms, 60000));
-
-			this.spark = spark;
-
-			// We also need to reset all the chat stuff, in case there was a disconnect
-			// We need to split this up, because rooms can be rejoined and we don't want to stop that.
-			// this._reset();
-
-			// We set the cookie. This will kick the server to get the information we need for chatting as this user.
-			const cookie = await getCookie('frontend');
-			this.primus.write({ event: 'set-cookie', cookie: cookie });
-		});
-
-		// On any message...
-		this.primus.on('data', (msg: any) => this._processMessage(msg));
-	}
-
-	private setRoom(newRoom: ChatRoom | undefined) {
-		// In single-room mode, if there is a currently active room, we always want
-		// to clear it out. Whether we're setting to null or a new room.
-		this.leaveRoom();
-
-		if (newRoom) {
-			if (this.currentUser) {
-				this.primus.write({ event: 'room-focus', roomId: newRoom.id });
-			}
-
-			if (newRoom.isGroupRoom) {
-				Vue.delete(this.notifications, '' + newRoom.id);
-			}
-
-			this.sessionRoomId = newRoom.id;
+		if (newRoom.isGroupRoom) {
+			Vue.delete(chat.notifications, '' + newRoom.id);
 		}
 
-		this.room = newRoom || null;
+		chat.sessionRoomId = newRoom.id;
 	}
 
-	private newNotification(roomId: number) {
-		if (this.isInRoom(roomId) && this.isFocused) {
+	chat.room = newRoom || null;
+}
+
+export function newChatNotification(chat: ChatClient, roomId: number) {
+	if (isInChatRoom(chat, roomId) && chat.isFocused) {
+	} else {
+		if (chat.notifications[roomId]) {
+			chat.notifications[roomId] = chat.notifications[roomId] + 1;
 		} else {
-			if (this.notifications[roomId]) {
-				this.notifications[roomId] = this.notifications[roomId] + 1;
-			} else {
-				Vue.set(this.notifications, '' + roomId, 1);
-			}
+			Vue.set(chat.notifications, '' + roomId, 1);
 		}
 	}
+}
 
-	/**
-	 * Call this to open a room. It'll do the correct thing to either open the chat if closed, or
-	 * enter the room.
-	 */
-	enterRoom(roomId: number) {
-		if (this.isInRoom(roomId)) {
+/**
+ * Call this to open a room. It'll do the correct thing to either open the chat if closed, or
+ * enter the room.
+ */
+export function enterChatRoom(chat: ChatClient, roomId: number) {
+	if (isInChatRoom(chat, roomId)) {
+		return;
+	}
+
+	// If the chat isn't visible yet, set the session room to this new room and open it. That
+	// will in turn do the entry. Otherwise we want to just switch rooms.
+	if (!store.state.isRightPaneVisible) {
+		chat.sessionRoomId = roomId;
+		store.dispatch('toggleRightPane');
+	} else {
+		if (!chat.socket) {
 			return;
 		}
 
-		// If the chat isn't visible yet, set the session room to this new room and open it. That
-		// will in turn do the entry. Otherwise we want to just switch rooms.
-		if (!store.state.isRightPaneVisible) {
-			this.sessionRoomId = roomId;
-			store.dispatch('toggleRightPane');
-		} else {
-			this.primus.write({
-				event: 'enter-room',
-				roomId: roomId,
-				// isSource was when you could be in multiple rooms at a time.
-				// It's no longer used.
-				isSource: true,
-			});
-		}
+		joinRoomChannel(chat, roomId);
+	}
+}
+
+function leaveChannel(chat: ChatClient, channel: Channel) {
+	// TODO(chatex) might need to await this.
+	channel.leave();
+	if (chat.socket !== null) {
+		chat.socket.remove(channel);
+	}
+}
+
+export function leaveChatRoom(chat: ChatClient) {
+	if (!chat.room) {
+		return;
 	}
 
-	/**
-	 * Call this to close the chat completely. It will hide the right sidebar.
-	 */
-	closeChat() {
-		// Make sure the right pane is hidden. This will eventually leave the room.
-		if (store.state.isRightPaneVisible) {
-			store.dispatch('toggleRightPane');
-		}
+	const channel = chat.roomChannels[chat.room.id];
+	if (channel) {
+		delete chat.roomChannels[chat.room.id];
+		leaveChannel(chat, channel);
+	}
+}
+
+export function queueChatMessage(chat: ChatClient, content: string, roomId: number) {
+	// Trim the message of whitespace.
+	content = content.replace(/^\s+/, '').replace(/\s+$/, '');
+
+	if (content === '' || chat.currentUser === null) {
+		return;
 	}
 
-	/**
-	 * Call this to simply leave the current room. Usually you should call "closeChat" instead. But
-	 * if you want to not touch the sidebar and just leave the room, you can use this.
-	 */
-	leaveRoom() {
-		if (!this.room) {
-			return;
-		}
+	const tempId = Math.floor(Math.random() * Date.now());
+	const message = new ChatMessage({
+		id: tempId,
+		type: ChatMessage.TypeNormal,
+		user_id: chat.currentUser.id,
+		user: chat.currentUser,
+		room_id: roomId,
+		content,
+		logged_on: new Date(),
+	});
 
-		this.primus.write({
-			event: 'leave-room',
-			roomId: this.room.id,
-		});
+	chat.messageQueue.push(message);
+
+	sendNextMessage(chat);
+}
+
+function outputMessage(
+	chat: ChatClient,
+	roomId: number,
+	type: ChatMessageType,
+	message: ChatMessage,
+	isHistorical: boolean
+) {
+	if (!chat.room || !isInChatRoom(chat, roomId)) {
+		return;
 	}
 
-	queueMessage(message: string) {
-		// Trim the message of whitespace.
-		message = message.replace(/^\s+/, '').replace(/\s+$/, '');
+	message.type = type;
+	message.logged_on = new Date(message.logged_on);
+	message.combine = false;
+	message.dateSplit = false;
 
-		if (message === '') {
-			return;
+	if (chat.messages[roomId].length) {
+		const latestMessage = chat.messages[roomId][chat.messages[roomId].length - 1];
+
+		// Combine if the same user and within 5 minutes of their previous message.
+		if (
+			message.user.id === latestMessage.user.id &&
+			message.logged_on.getTime() - latestMessage.logged_on.getTime() <= 5 * 60 * 1000
+		) {
+			message.combine = true;
 		}
 
-		this.messageQueue.push(message);
-		this._sendNextMessage();
-	}
-
-	private outputMessage(
-		roomId: number,
-		type: ChatMessageType,
-		message: ChatMessage,
-		isPrimer: boolean
-	) {
-		if (this.room && this.isInRoom(roomId)) {
-			message.type = type;
-			message.loggedOn = new Date(message.loggedOn);
+		// If the date is different than the date for the previous
+		// message, we want to split it in the view.
+		if (message.logged_on.toDateString() !== latestMessage.logged_on.toDateString()) {
+			message.dateSplit = true;
 			message.combine = false;
-			message.dateSplit = false;
-
-			if (this.messages[roomId].length) {
-				const latestMessage = this.messages[roomId][this.messages[roomId].length - 1];
-
-				// Combine if the same user and within 5 minutes of their previous message.
-				if (
-					message.userId === latestMessage.userId &&
-					message.loggedOn.getTime() - latestMessage.loggedOn.getTime() <= 5 * 60 * 1000
-				) {
-					message.combine = true;
-				}
-
-				// If the date is different than the date for the previous
-				// message, we want to split it in the view.
-				if (message.loggedOn.toDateString() !== latestMessage.loggedOn.toDateString()) {
-					message.dateSplit = true;
-					message.combine = false;
-				}
-			} else {
-				// First message should show date.
-				message.dateSplit = true;
-			}
-
-			if (!this.room.isPrivateRoom && !isPrimer) {
-				this.newNotification(roomId);
-			}
-
-			// Push it into the room's message list.
-			this.messages[roomId].push(message);
-
-			// If we are over our max message count, then remove older messages.
-			if (this.messages[roomId].length > ChatMaxNumMessages) {
-				this.messages[roomId].splice(0, 1); // Just remove the oldest.
-			}
 		}
+	} else {
+		// First message should show date.
+		message.dateSplit = true;
 	}
 
-	private _processMessage(msg: PrimusChatEvent) {
-		if (msg.event === 'connected') {
-			// Cap it at a max of 60s.
-			const ms = Date.now() - this.startTime;
-			Analytics.trackTiming('chat', 'connected', Math.min(ms, 60000));
+	if (!chat.room.isPrivateRoom && !isHistorical) {
+		newChatNotification(chat, roomId);
+	}
 
-			this.currentUser = msg.data.user ? new ChatUser(msg.data.user) : null;
-			this.connected = true;
+	// Push it into the room's message list.
+	chat.messages[roomId].push(message);
+}
 
-			this.setRoom(undefined);
-		} else if (msg.event === 'friends-list') {
-			const friendsList = msg.data.friendsList;
-			if (friendsList) {
-				this.friendsList = new ChatUserCollection(
-					ChatUserCollection.TYPE_FRIEND,
-					friendsList
-				);
-				this.friendsPopulated = true;
-			}
-		} else if (msg.event === 'public-rooms') {
-			this.publicRooms = msg.data.rooms.map((r: any) => new ChatRoom(r));
-		} else if (msg.event === 'notifications') {
-			this.notifications = msg.data.notifications;
-		} else if (msg.event === 'message') {
-			const message = new ChatMessage(msg.data.message);
-
-			this._processNewOutput([message], false);
-
-			const friend = this.friendsList.getByRoom(message.roomId);
+function setupRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
+	if (!isInChatRoom(chat, room.id)) {
+		if (room.type === ChatRoom.ROOM_PM) {
+			// We need to rename the room to the username
+			const friend = chat.friendsList.getByRoom(room.id);
 			if (friend) {
-				friend.lastMessageOn = message.loggedOn.getTime();
-				this.friendsList.update(friend);
+				room.user = friend;
 			}
-
-			// TODO: Old functionality, change this later on. This was for checking if the message was sent successfully or not.
-			this.sendingMessage = false;
-
-			// You would have to receive confirmation that your last message was sent before sending your new one.
-			if (this.messageQueue.length) {
-				this._sendNextMessage();
-			}
-		} else if (msg.event === 'message-removed') {
-			const id = msg.data.id;
-			const roomId = msg.data.roomId;
-
-			if (this.messages[roomId].length) {
-				const index = this.messages[roomId].findIndex(message => message.id === id);
-				if (index !== -1) {
-					this.messages[roomId].splice(index, 1);
-				}
-			}
-		} else if (msg.event === 'notification') {
-			const message = new ChatMessage(msg.data.message);
-
-			// We got a notification for some room.
-			// If the notification key is null, set it to 1.
-			this.newNotification(message.roomId);
-
-			const friend = this.friendsList.getByRoom(message.roomId);
-			if (friend) {
-				console.log(message);
-				friend.lastMessageOn = message.loggedOn.getTime();
-				console.log('Updated friend timestamp to ' + friend.lastMessageOn);
-				this.friendsList.update(friend);
-			}
-
-			ChatNotification.notification(message);
-		} else if (msg.event === 'clear-notifications') {
-			const roomId = msg.data.roomId;
-
-			if (this.isInRoom(roomId)) {
-				Vue.delete(this.notifications, '' + roomId);
-			}
-		} else if (msg.event === 'user-enter-room') {
-			const user = new ChatUser(msg.data.user);
-			const roomId = msg.data.roomId;
-
-			if (this.room && this.isInRoom(roomId) && this.room.isGroupRoom) {
-				this.usersOnline[roomId].add(user);
-			}
-		} else if (msg.event === 'user-leave-room') {
-			const userId = msg.data.userId;
-			const roomId = msg.data.roomId;
-
-			if (this.room && this.isInRoom(roomId) && this.room.isGroupRoom) {
-				this.usersOnline[roomId].remove(userId);
-			}
-		} else if (msg.event === 'user-muted') {
-			const userId = msg.data.userId;
-			const roomId = msg.data.roomId;
-			const isGlobal = msg.data.isGlobal;
-
-			if (this.room && this.room.isGroupRoom) {
-				// Remove their messages from view.
-				if (this.messages[roomId].length) {
-					this.messages[roomId] = this.messages[roomId].filter(
-						message => message.userId !== userId
-					);
-				}
-
-				// Mark that they're muted in the user list of the room.
-				if (this.usersOnline[roomId]) {
-					this.usersOnline[roomId].mute(userId, isGlobal);
-				}
-			}
-		} else if (msg.event === 'user-unmuted') {
-			const userId = msg.data.userId;
-			const roomId = msg.data.roomId;
-			const isGlobal = msg.data.isGlobal;
-
-			if (this.room && this.room.isGroupRoom) {
-				// Mark that they're unmuted in the user list of the room.
-				if (this.usersOnline[roomId]) {
-					this.usersOnline[roomId].unmute(userId, isGlobal);
-				}
-			}
-		} else if (msg.event === 'role-set') {
-			const userId = msg.data.userId;
-			const roomId = msg.data.roomId;
-			const action = msg.data.action;
-
-			if (this.room && this.room.isGroupRoom && this.usersOnline[roomId]) {
-				if (action === 'mod') {
-					this.usersOnline[roomId].mod(userId);
-				} else if (action === 'demod') {
-					this.usersOnline[roomId].demod(userId);
-				}
-			}
-		} else if (msg.event === 'message-cleared') {
-			// const messageId = msg.data.messageId;
-			// const roomId = msg.data.roomId;
-			// TODO
-		} else if (msg.event === 'room-cleared') {
-			// const roomId = msg.data.roomId;
-			// TODO
-		} else if (msg.event === 'prime-chatroom') {
-			const room = new ChatRoom(msg.data.room);
-			const messages = msg.data.messages.map((m: any) => new ChatMessage(m));
-			const users = msg.data.users;
-
-			// Primed messages are loaded in descending order w.r.t. id, lets make that ascending
-			messages.reverse();
-			this._joinRoom(room, messages, users);
-		} else if (msg.event === 'room-updated') {
-			// const room = msg.data.room;
-			// TODO
-		} else if (msg.event === 'you-updated') {
-			const newUser = new ChatUser(msg.data.user);
-			this.currentUser = newUser;
-		} else if (msg.event === 'user-updated') {
-			const roomId = msg.data.roomId;
-			const user = new ChatUser(msg.data.user);
-
-			if (this.room && this.isInRoom(roomId) && this.room.isGroupRoom) {
-				this.usersOnline[roomId].update(user);
-			}
-		} else if (msg.event === 'friend-updated') {
-			const user = new ChatUser(msg.data.user);
-			this.friendsList.update(user);
-		} else if (msg.event === 'friend-add') {
-			const user = new ChatUser(msg.data.user);
-			this.friendsList.add(user);
-		} else if (msg.event === 'friend-remove') {
-			const userId = msg.data.userId;
-
-			const friend = this.friendsList.get(userId);
-			if (friend && this.isInRoom(friend.roomId)) {
-				this.leaveRoom();
-			}
-
-			this.friendsList.remove(userId);
-		} else if (msg.event === 'friend-online') {
-			const user = new ChatUser(msg.data.user);
-			this.friendsList.online(user);
-		} else if (msg.event === 'friend-offline') {
-			const userId = msg.data.userId;
-			this.friendsList.offline(userId);
-		} else if (msg.event === 'you-leave-room') {
-			const roomId = msg.data.roomId;
-
-			if (this.isInRoom(roomId)) {
-				this.setRoom(undefined);
-
-				// Reset the room we were in
-				Vue.delete(this.usersOnline, roomId);
-				Vue.delete(this.messages, roomId);
-			}
-		} else if (msg.event === 'online-count') {
-			this.allCount = msg.data.onlineCount;
 		}
+		// Set the room info
+		Vue.set(chat.messages, '' + room.id, []);
+
+		setChatRoom(chat, room);
+		processNewChatOutput(chat, messages, true);
+	}
+}
+
+export function processNewChatOutput(
+	chat: ChatClient,
+	messages: ChatMessage[],
+	isHistorical: boolean
+) {
+	if (!messages.length) {
+		return;
 	}
 
-	private _joinRoom(room: ChatRoom, messages: ChatMessage[], users: any[]) {
-		if (!this.isInRoom(room.id)) {
-			if (room.type === ChatRoom.ROOM_PM) {
-				// We need to rename the room to the username
-				const friend = this.friendsList.getByRoom(room.id);
-				if (friend) {
-					room.user = friend;
-				}
-			}
+	messages.forEach(message => {
+		outputMessage(chat, message.room_id, ChatMessage.TypeNormal, message, isHistorical);
 
-			// Set the room info
-			Vue.set(this.messages, '' + room.id, []);
-
-			if (room.isGroupRoom) {
-				Vue.set(
-					this.usersOnline,
-					'' + room.id,
-					new ChatUserCollection(ChatUserCollection.TYPE_ROOM, users)
-				);
-			}
-
-			this.setRoom(room);
-			this._processNewOutput(messages, true);
-		}
-	}
-
-	mod(userId: number, roomId: number) {
-		this.primus.write({ event: 'user-mod', userId: userId, roomId: roomId });
-	}
-
-	demod(userId: number, roomId: number) {
-		this.primus.write({ event: 'user-demod', userId: userId, roomId: roomId });
-	}
-
-	mute(userId: number, roomId: number) {
-		this.primus.write({ event: 'user-mute', userId: userId, roomId: roomId });
-	}
-
-	unmute(userId: number, roomId: number) {
-		this.primus.write({ event: 'user-unmute', userId: userId, roomId: roomId });
-	}
-
-	removeMessage(msgId: number, roomId: number) {
-		this.primus.write({
-			event: 'message-remove',
-			msgId: msgId,
-			roomId: roomId,
-		});
-	}
-
-	private _processNewOutput(messages: ChatMessage[], isPrimer: boolean) {
-		if (!messages.length) {
-			return;
-		}
-
-		messages.forEach(message => {
-			this.outputMessage(message.roomId, ChatMessage.TypeNormal, message, isPrimer);
-
+		if (!isHistorical) {
 			// Emit an event that we've sent out a new message.
 			EventBus.emit('Chat.newMessage', <ChatNewMessageEvent>{
 				message,
-				isPrimer,
 			});
-		});
+		}
+	});
+}
+
+function sendNextMessage(chat: ChatClient) {
+	if (!chat.room) {
+		return;
 	}
 
-	private _sendNextMessage() {
-		if (this.sendingMessage || !this.room) {
-			return;
-		}
+	const message = chat.messageQueue.shift();
 
-		this.sendingMessage = true;
-		const message = this.messageQueue.shift();
-
-		if (!message) {
-			this.sendingMessage = false;
-			return;
-		}
-
-		if (this.room.isMuted) {
-			this.sendRoboJolt(
-				this.room.id,
-				// tslint:disable-next-line:max-line-length
-				`*Beep boop bop.* You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. *Bzzzzzzzzt.*`,
-				// tslint:disable-next-line:max-line-length
-				`<p><em>Beep boop bop.</em> You are muted and cannot talk. Please read the chat rules for every room you enter so you may avoid this in the future. <em>Bzzzzzzzzt.</em></p>`
-			);
-			this.sendingMessage = false;
-			return;
-		}
-
-		// Send the message to the server. The server will send a callback response on whether or not it was successful.
-		this.primus.write({
-			event: 'message',
-			content: message,
-			roomId: this.room.id,
-		});
+	if (!message) {
+		return;
 	}
 
-	private sendRoboJolt(roomId: number, contentRaw: string, content: string) {
-		const message = new ChatMessage({
-			id: Math.random(),
-			type: ChatMessage.TypeSystem,
-			userId: 192757,
-			user: new ChatUser({
-				id: 192757,
-				username: 'robo-jolt-2000',
-				displayName: 'RoboJolt 2000',
-				// tslint:disable-next-line:max-line-length
-				imgAvatar: `https://secure.gravatar.com/avatar/eff6eb6a79a34774e8f94400931ce6c9?s=200&r=pg&d=https%3A%2F%2Fs.gjcdn.net%2Fimg%2Fno-avatar-3.png`,
-			}),
-			roomId,
-			contentRaw,
-			content,
-			loggedOn: new Date(),
-		});
+	sendChatMessage(chat, message);
+}
 
-		this.outputMessage(roomId, ChatMessage.TypeSystem, message, false);
-	}
+function sendChatMessage(chat: ChatClient, message: ChatMessage) {
+	chat.roomChannels[message.room_id].push('message', { content: message.content });
+}
 
-	canModerate(room: ChatRoom, targetUser: ChatUser, action = '') {
-		if (!this.currentUser || room.type === 'pm') {
-			return false;
-		}
+export function loadOlderChatMessages(chat: ChatClient, roomId: number) {
+	return new Promise<void>((resolve, reject) => {
+		const onLoadFailed = () => reject(new Error(`Failed to load messages.`));
 
-		// No one can moderate site mods.
-		if (targetUser.permissionLevel >= ChatSiteModPermission) {
-			return false;
-		}
+		const onLoadMessages = (data: any) => {
+			const oldMessages = data.messages.map((i: any) => new ChatMessage(i));
 
-		// Site mods can moderate everyone else.
-		if (this.currentUser.permissionLevel >= ChatSiteModPermission) {
-			return true;
-		}
+			// If no older messages, we reached the end of the history.
+			if (oldMessages.length > 0) {
+				const messages = [...oldMessages.reverse(), ...chat.messages[roomId]];
 
-		if (!room.isMod) {
-			return false;
-		}
-
-		if (room.isMod === 'owner' && targetUser.isMod !== 'owner') {
-			return true;
-		}
-
-		// Must be an owner or higher to mod someone else.
-		if (action === 'mod') {
-			return false;
-		}
-
-		if (room.isMod === 'moderator' && !targetUser.isMod) {
-			return true;
-		}
-
-		return false;
-	}
-
-	setFocused(focused: boolean) {
-		this.isFocused = focused;
-
-		if (this.room && this.currentUser) {
-			if (this.isFocused) {
-				this.primus.write({ event: 'room-focus', roomId: this.room.id });
-			} else {
-				this.primus.write({ event: 'room-unfocus', roomId: this.room.id });
+				// We have to clear out all messages and add them again so that we
+				// calculate proper date splits and what not.
+				chat.messages[roomId] = [];
+				processNewChatOutput(chat, messages, false);
 			}
+
+			resolve();
+		};
+
+		const firstMessage = chat.messages[roomId][0];
+		chat.roomChannels[roomId]
+			.push('load_messages', { before_date: firstMessage.logged_on })
+			.receive('ok', onLoadMessages)
+			.receive('error', onLoadFailed)
+			.receive('timeout', onLoadFailed);
+	});
+}
+
+/**
+ * Will return null if the user is not their friend.
+ */
+export function isUserOnline(chat: ChatClient, userId: number): null | boolean {
+	return chat.friendsList.get(userId)?.isOnline ?? null;
+}
+
+export function setChatFocused(chat: ChatClient, focused: boolean) {
+	chat.isFocused = focused;
+
+	if (chat.room && chat.currentUser) {
+		if (chat.isFocused) {
+			chat.roomChannels[chat.room.id].push('focus', { roomId: chat.room.id });
+		} else {
+			chat.roomChannels[chat.room.id].push('unfocus', { roomId: chat.room.id });
 		}
 	}
+}
 
-	isInRoom(roomId?: number) {
-		if (!roomId) {
-			return !!this.room;
-		}
-
-		return this.room ? this.room.id === roomId : false;
+export function isInChatRoom(chat: ChatClient, roomId?: number) {
+	if (!roomId) {
+		return !!chat.room;
 	}
+
+	return chat.room ? chat.room.id === roomId : false;
+}
+
+export function onChatNotification(chat: ChatClient, message: ChatMessage) {
+	// Skip if already in the room.
+	if (isInChatRoom(chat, message.room_id)) {
+		return;
+	}
+
+	Growls.info({
+		title: message.user.display_name,
+		message: message.content_raw,
+		icon: message.user.img_avatar,
+		onclick: () => enterChatRoom(chat, message.room_id),
+		system: true,
+	});
 }
