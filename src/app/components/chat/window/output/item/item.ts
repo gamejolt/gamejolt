@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
 import { date } from '../../../../../../_common/filters/date';
 import { ChatClient, ChatKey } from '../../../client';
@@ -9,6 +10,7 @@ import './item-content.styl';
 
 @Component({
 	components: {
+		AppContentViewer,
 		AppFadeCollapse,
 	},
 	filters: {

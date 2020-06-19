@@ -27,7 +27,7 @@
 
 			<div class="chat-window-message-content-wrap">
 				<template v-if="!shouldFadeCollapse">
-					<div class="chat-window-message-content" lang="en" v-html="message.content"></div>
+					<app-content-viewer :source="message.content" />
 				</template>
 				<template v-else>
 					<app-fade-collapse
@@ -36,7 +36,7 @@
 						@require-change="isCollapsable = $event"
 						@expand="isExpanded = true"
 					>
-						<div class="chat-window-message-content" lang="en" v-html="message.content"></div>
+						<app-content-viewer :source="message.content" />
 					</app-fade-collapse>
 
 					<p v-if="isCollapsable">
