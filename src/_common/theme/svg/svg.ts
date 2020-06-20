@@ -3,18 +3,26 @@ import { darken, lighten, parseToHsl } from 'polished';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { CreateElement } from 'vue/types/vue';
+import { arrayUnique } from '../../../utils/array';
+import { propOptional } from '../../../utils/vue';
+import { Theme } from '../theme.model';
 import { ThemeState, ThemeStore } from '../theme.store';
+
+const SvgGraysRegex: RegExp = /#([a-f\d]{1,2})\1{2}\b/gi;
 
 @Component({})
 export class AppThemeSvg extends Vue {
-	@Prop(String)
-	src!: string;
+	@Prop(propOptional(String, '')) src!: string;
+	@Prop(propOptional(Theme, null)) theme!: null | Theme;
 
-	@ThemeState
-	theme!: ThemeStore['theme'];
+	@ThemeState('theme') storeTheme!: ThemeStore['theme'];
 
 	rawSvg = '';
 	request?: Promise<any>;
+
+	get actualTheme() {
+		return this.theme || this.storeTheme;
+	}
 
 	get processedSvg() {
 		if (GJ_IS_SSR) {
@@ -23,13 +31,13 @@ export class AppThemeSvg extends Vue {
 
 		let svgData = this.rawSvg;
 
-		if (this.theme) {
-			let highlight = '#' + this.theme.highlight;
-			let backlight = '#' + this.theme.backlight;
-			let notice = '#' + this.theme.notice;
+		if (this.actualTheme) {
+			let highlight = '#' + this.actualTheme.highlight;
+			let backlight = '#' + this.actualTheme.backlight;
+			let notice = '#' + this.actualTheme.notice;
 
-			if (this.theme.custom) {
-				const highlight_ = '#' + this.theme.highlight_;
+			if (this.actualTheme.custom) {
+				const highlight_ = '#' + this.actualTheme.highlight_;
 				const hsl = parseToHsl(highlight_);
 				if (hsl.lightness < 0.4) {
 					highlight = lighten(0.3, highlight_);
@@ -41,7 +49,21 @@ export class AppThemeSvg extends Vue {
 				notice = highlight;
 			}
 
-			svgData = svgData
+			// Process svgData as a String so we don't throw errors in the
+			// ThemeSvg styleguide if the custom svg string is a number.
+			let grays = String(svgData).match(SvgGraysRegex);
+
+			if (grays) {
+				grays = arrayUnique(grays);
+
+				for (const gray of grays) {
+					svgData = svgData.replace(gray, '#' + this.actualTheme.tintColor(gray, 0.04));
+				}
+			}
+
+			// Same as above, need to convert svgData to a string in case
+			// the custom svg input from the ThemeSvg styleguide is a number.
+			svgData = String(svgData)
 				.replace(/\#ccff00/gi, highlight)
 				.replace(/\#cf0/gi, highlight)
 				.replace(/\#2f7f6f/gi, backlight)
