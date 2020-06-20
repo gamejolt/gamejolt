@@ -322,7 +322,7 @@ export class Theme extends Model {
 		return getReadableCustom(this.custom, 'light');
 	}
 
-	private tintColor(color: string, amount: number) {
+	tintColor(color: string, amount: number) {
 		return (this.tint_ ? mix(amount, '#' + this.tint_, color) : color).substr(1);
 	}
 }
