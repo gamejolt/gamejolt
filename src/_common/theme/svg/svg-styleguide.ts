@@ -14,24 +14,12 @@ interface VueColor {
 	hex: string | null;
 }
 
-const SvgList = [
-	require('../../../app/img/game-jolt-logo.svg'),
-	require('../../../app/img/game-jolt-client-logo.svg'),
-	require('../../../app/img/jolt.svg'),
-];
-
-const FillList = [
-	'fill-offset',
-	'fill-backdrop',
-	'fill-bg',
-	'fill-highlight',
-	'fill-notice',
-	'fill-gray',
-	'fill-dark',
-	'fill-darker',
-	'fill-darkest',
-	'fill-black',
-];
+interface FormModel {
+	file?: string;
+	color?: string;
+	theme?: null | Theme;
+	custom?: string;
+}
 
 @Component({
 	components: {
@@ -44,38 +32,53 @@ const FillList = [
 		AppFormControlTextarea,
 	},
 })
-export default class AppThemeSvgStyleguide extends BaseForm<any> {
-	@ThemeState
-	theme!: ThemeStore['theme'];
+export default class AppThemeSvgStyleguide extends BaseForm<FormModel> {
+	@ThemeState('theme')
+	storeTheme!: ThemeStore['theme'];
 
 	customSvg = '';
 	customSelection: VueColor = { hex: null };
 
-	readonly SvgList = SvgList;
-	readonly FillList = FillList;
+	readonly SvgList = [
+		require('../../../app/img/game-jolt-logo.svg'),
+		require('../../../app/img/game-jolt-client-logo.svg'),
+		require('../../../app/img/jolt.svg'),
+	];
+	readonly FillList = [
+		'fill-offset',
+		'fill-backdrop',
+		'fill-bg',
+		'fill-highlight',
+		'fill-notice',
+		'fill-gray',
+		'fill-dark',
+		'fill-darker',
+		'fill-darkest',
+		'fill-black',
+	];
 
-	get formFile(): string {
+	get file() {
 		return this.formModel.file || 'custom';
 	}
 
-	get formBgColor(): string {
+	get bgColor() {
 		return this.formModel.color || 'fill-offset';
 	}
 
-	get formTheme(): Theme | null {
-		return this.formModel.theme || this.theme;
+	get theme() {
+		return this.formModel.theme || this.storeTheme;
 	}
 
-	get formCustomFile(): string {
+	get customFile() {
 		return this.formModel.custom || '';
 	}
 
 	mounted() {
 		// Initialize the form fields
-		this.setField('file', this.formFile);
-		this.setField('color', this.formBgColor);
-		this.setField('theme', this.formTheme);
-		this.setField('custom', this.formCustomFile);
+		this.setField('file', this.file);
+		this.setField('color', this.bgColor);
+		this.setField('theme', this.theme);
+		this.setField('custom', this.customFile);
 	}
 
 	parseSvgName(name: string) {
@@ -88,15 +91,15 @@ export default class AppThemeSvgStyleguide extends BaseForm<any> {
 		}
 	}
 
-	@Watch('formCustomFile')
+	@Watch('customFile')
 	onCustomSvgChange() {
 		// Reset and return if the textarea is empty.
-		if (!this.formCustomFile.length) {
+		if (!this.customFile.length) {
 			return;
 		}
 
-		// Trim the satrt of the SVG string, otherwise we could have issues processing it.
-		const svgString = this.formCustomFile.trimStart();
+		// Trim the start of the SVG string, otherwise we could have issues processing it.
+		const svgString = this.customFile.trimLeft();
 
 		// Parse the pasted SVG XML into a format that we can pass to AppThemeSvg.
 		this.customSvg = 'data:image/svg+xml;utf8,' + encodeURIComponent(svgString);

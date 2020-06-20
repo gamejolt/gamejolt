@@ -12,20 +12,16 @@ const SvgGraysRegex: RegExp = /#([a-f\d]{1,2})\1{2}\b/gi;
 
 @Component({})
 export class AppThemeSvg extends Vue {
-	@Prop(String)
-	src!: string;
+	@Prop(propOptional(String, '')) src!: string;
+	@Prop(propOptional(Theme, null)) theme!: null | Theme;
 
-	@Prop(propOptional(Theme, null))
-	theme!: null | Theme;
-
-	@ThemeState('theme')
-	defaultTheme!: ThemeStore['theme'];
+	@ThemeState('theme') storeTheme!: ThemeStore['theme'];
 
 	rawSvg = '';
 	request?: Promise<any>;
 
 	get actualTheme() {
-		return this.theme || this.defaultTheme;
+		return this.theme || this.storeTheme;
 	}
 
 	get processedSvg() {
