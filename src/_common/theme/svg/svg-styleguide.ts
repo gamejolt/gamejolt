@@ -2,6 +2,7 @@ import { Component, Watch } from 'vue-property-decorator';
 import AppFormControlSelect from '../../form-vue/control/select/select.vue';
 import AppFormControlTextarea from '../../form-vue/control/textarea/textarea.vue';
 import AppFormControlTheme from '../../form-vue/control/theme/theme.vue';
+import AppFormControlToggle from '../../form-vue/control/toggle/toggle.vue';
 import { BaseForm } from '../../form-vue/form.service';
 import AppForm from '../../form-vue/form.vue';
 import AppFormGroup from '../../form-vue/group/group.vue';
@@ -19,6 +20,7 @@ interface FormModel {
 	color?: string;
 	theme?: null | Theme;
 	custom?: string;
+	strictColors?: boolean;
 }
 
 @Component({
@@ -28,6 +30,7 @@ interface FormModel {
 		AppForm,
 		AppFormGroup,
 		AppFormControlSelect,
+		AppFormControlToggle,
 		AppFormControlTheme,
 		AppFormControlTextarea,
 	},
@@ -73,12 +76,17 @@ export default class AppThemeSvgStyleguide extends BaseForm<FormModel> {
 		return this.formModel.custom || '';
 	}
 
+	get strictColors() {
+		return !!this.formModel.strictColors;
+	}
+
 	mounted() {
 		// Initialize the form fields
 		this.setField('file', this.file);
 		this.setField('color', this.bgColor);
 		this.setField('theme', this.theme);
 		this.setField('custom', this.customFile);
+		this.setField('strictColors', false);
 	}
 
 	parseSvgName(name: string) {

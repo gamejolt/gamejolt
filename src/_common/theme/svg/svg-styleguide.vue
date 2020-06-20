@@ -32,6 +32,10 @@
 						</app-form-control-select>
 					</app-form-group>
 
+					<app-form-group name="strictColors" class="-selectors-item" label="Strict Colors?">
+						<app-form-control-toggle />
+					</app-form-group>
+
 					<!-- Theme Selector -->
 					<app-form-group name="theme" class="-selectors-item" label="Select Theme">
 						<app-form-control-theme class="-selectors-item-theme" />
@@ -50,7 +54,7 @@
 				<!-- Output Area -->
 				<div class="-output-area" :class="bgColor">
 					<template v-if="file !== 'custom'">
-						<app-theme-svg :src="file" :theme="theme" inpage />
+						<app-theme-svg :src="file" :theme="theme" :strict-colors="strictColors" />
 					</template>
 					<template v-else-if="!customFile.length">
 						<span class="text-muted">
@@ -58,7 +62,7 @@
 						</span>
 					</template>
 					<template v-else>
-						<app-theme-svg :src="customSvg" :theme="theme" inpage />
+						<app-theme-svg :src="customSvg" :theme="theme" :strict-colors="strictColors" />
 					</template>
 				</div>
 			</app-form>

@@ -9,7 +9,11 @@
 							:to="{ name: 'landing.client' }"
 							v-app-track-event="`footer:client-promo`"
 						>
-							<app-theme-svg src="~img/game-jolt-client-logo.svg" alt="Game Jolt Client" />
+							<app-theme-svg
+								src="~img/game-jolt-client-logo.svg"
+								alt="Game Jolt Client"
+								strict-colors
+							/>
 						</router-link>
 						<app-button solid primary :to="{ name: 'landing.client' }">
 							<translate>Get It Now</translate>
@@ -130,7 +134,7 @@
 			<div class="clearfix">
 				<div class="footer-jolt" v-if="!Screen.isXs">
 					<router-link :to="{ name: 'home' }">
-						<app-theme-svg src="~img/jolt.svg" alt="" width="68" height="72" />
+						<app-theme-svg src="~img/jolt.svg" alt="" width="68" height="72" strict-colors />
 					</router-link>
 				</div>
 				<div class="footer-meta">

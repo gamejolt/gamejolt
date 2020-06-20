@@ -15,7 +15,16 @@ export class AppThemeSvg extends Vue {
 	@Prop(propOptional(String, '')) src!: string;
 	@Prop(propOptional(Theme, null)) theme!: null | Theme;
 
+	/**
+	 * Whether or not we should change colors depending on the light/dark mode
+	 * chosen to make sure the colors will always show on the background. True
+	 * means that we should leave the colors as is, and false means we'll change
+	 * depending on mode.
+	 */
+	@Prop(propOptional(Boolean, false)) strictColors!: boolean;
+
 	@ThemeState('theme') storeTheme!: ThemeStore['theme'];
+	@ThemeState isDark!: ThemeStore['isDark'];
 
 	rawSvg = '';
 	request?: Promise<any>;
@@ -66,9 +75,9 @@ export class AppThemeSvg extends Vue {
 			svgData = String(svgData)
 				.replace(/\#ccff00/gi, highlight)
 				.replace(/\#cf0/gi, highlight)
-				.replace(/\#2f7f6f/gi, backlight)
+				.replace(/\#2f7f6f/gi, !this.strictColors && this.isDark ? highlight : backlight)
 				.replace(/\#ff3fac/gi, notice)
-				.replace(/\#31d6ff/gi, backlight);
+				.replace(/\#31d6ff/gi, !this.strictColors && this.isDark ? highlight : backlight);
 		}
 
 		return 'data:image/svg+xml;utf8,' + encodeURIComponent(svgData);

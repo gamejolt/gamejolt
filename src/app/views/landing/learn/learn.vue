@@ -8,6 +8,7 @@
 						src="~img/jolt.svg"
 						alt=""
 						tooltip="This is a lightning bolt."
+						strict-colors
 					/>
 				</h1>
 

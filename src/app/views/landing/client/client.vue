@@ -16,7 +16,7 @@
 				<div class="row">
 					<div class="col-lg-6 col-centered">
 						<h1>
-							<app-theme-svg class="bolt" src="~img/jolt.svg" alt="" />
+							<app-theme-svg class="bolt" src="~img/jolt.svg" alt="" strict-colors />
 							Client
 							<sup>PREVIEW</sup>
 						</h1>
