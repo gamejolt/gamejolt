@@ -143,6 +143,18 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		if (this.capabilities) {
 			return this.capabilities.emoji;
 		}
+		return false;
+	}
+
+	get couldShowGifPanel() {
+		if (this.capabilities) {
+			return this.capabilities.gif;
+		}
+		return false;
+	}
+
+	get editorGutterSize() {
+		return [this.couldShowEmojiPanel, this.couldShowGifPanel].filter(i => !!i).length;
 	}
 
 	get shouldShowPlaceholder() {
@@ -414,5 +426,10 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	onInsertMention() {
 		this.highlightCurrentSelection();
 		this.canShowMentionSuggestions = 0; // Hide control
+	}
+
+	onScroll() {
+		// When the doc scroller gets scrolled, we want to make sure we position the controls appropriately.
+		this.stateCounter++;
 	}
 }

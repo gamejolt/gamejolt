@@ -4,13 +4,14 @@
 			class="content-container"
 			:class="{
 				disabled: disabled,
-				'content-container-with-gutter': couldShowEmojiPanel,
+				'content-container-with-gutter-1': editorGutterSize === 1,
+				'content-container-with-gutter-2': editorGutterSize === 2,
 			}"
 			:style="{
 				minHeight: containerMinHeight,
 			}"
 		>
-			<app-scroll-scroller>
+			<app-scroll-scroller @scroll.native="onScroll">
 				<div
 					class="-doc"
 					:style="{ 'max-height': maxHeight > 0 ? maxHeight + 'px' : 'auto' }"

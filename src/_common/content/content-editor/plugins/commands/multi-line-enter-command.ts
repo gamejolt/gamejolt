@@ -10,7 +10,11 @@ export function multiLineEnter(editor: AppContentEditor) {
 			return true;
 		} else {
 			// Insert new paragraph at cursor position.
-			dispatch(state.tr.replaceSelectionWith(state.schema.nodes.paragraph.create()));
+			dispatch(
+				state.tr
+					.replaceSelectionWith(state.schema.nodes.paragraph.create())
+					.scrollIntoView()
+			);
 		}
 
 		return false;

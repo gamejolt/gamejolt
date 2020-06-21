@@ -30,14 +30,19 @@ export default class AppContentEditorBlockControls extends Vue {
 	@Prop(propRequired(Object)) editor!: AppContentEditorTS;
 
 	visible = false;
-	top = '0px';
-	left = '0px';
+	top = 0;
+	left = 0;
+	boxHeight = 100;
 
 	readonly Screen = Screen;
 
 	$refs!: {
 		container: HTMLElement;
 	};
+
+	get shouldShow() {
+		return this.visible && this.top > -24 && this.boxHeight - this.top > 24;
+	}
 
 	mounted() {
 		this.update();
@@ -65,8 +70,10 @@ export default class AppContentEditorBlockControls extends Vue {
 				}
 
 				const box = this.$refs.container.offsetParent.getBoundingClientRect();
-				this.top = start.top - box.top - 8 + 'px';
-				this.left = '-32px';
+				this.boxHeight = box.height;
+
+				this.top = start.top - box.top - 8;
+				this.left = -32;
 
 				return;
 			}
