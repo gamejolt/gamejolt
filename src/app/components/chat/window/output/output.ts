@@ -1,12 +1,14 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
+import { EventBus } from '../../../../../system/event/event-bus.service';
 import { EventSubscription } from '../../../../../system/event/event-topic';
 import { propRequired } from '../../../../../utils/vue';
 import { date } from '../../../../../_common/filters/date';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
-import { ChatClient, ChatKey, loadOlderChatMessages } from '../../client';
+import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { ChatClient, ChatKey, ChatNewMessageEvent, loadOlderChatMessages } from '../../client';
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
 import AppChatWindowOutputItem from './item/item.vue';
@@ -27,6 +29,9 @@ export default class AppChatWindowOutput extends Vue {
 	@Prop(propRequired(Array)) queuedMessages!: ChatMessage[];
 
 	@InjectReactive(ChatKey) chat!: ChatClient;
+
+	@AppState
+	user!: AppStore['user'];
 
 	/** Whether or not we reached the end of the historical messages. */
 	reachedEnd = false;
@@ -81,6 +86,13 @@ export default class AppChatWindowOutput extends Vue {
 			() => this.messages.length + this.queuedMessages.length,
 			this.onMessagesLengthChange
 		);
+
+		EventBus.on('Chat.newMessage', (event: ChatNewMessageEvent) => {
+			// When the user sent a message, we want the chat to scroll all the way down to show that message.
+			if (this.user && event.message.user.id === this.user.id) {
+				this.autoscroll();
+			}
+		});
 	}
 
 	destroyed() {
