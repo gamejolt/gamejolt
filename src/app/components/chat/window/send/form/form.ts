@@ -12,6 +12,7 @@ import { BaseForm } from '../../../../../../_common/form-vue/form.service';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { ChatClient, ChatKey } from '../../../client';
+import { CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../../message';
 
 export type FormModel = {
 	content: string;
@@ -65,6 +66,28 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		return Screen.isMobile && this.isEditorFocused;
 	}
 
+	get hasContent() {
+		if (!this.formModel.content) {
+			return false;
+		}
+
+		const doc = ContentDocument.fromJson(this.formModel.content);
+		return doc.hasContent;
+	}
+
+	get isSendButtonSolid() {
+		// Show a solid send button on mobile when there's content in the form,
+		// because that button is the only way to send the message on mobile.
+		if (!Screen.isMobile) {
+			return false;
+		}
+		return this.hasContent;
+	}
+
+	get maxContentLength() {
+		return [CHAT_MESSAGE_MAX_CONTENT_LENGTH];
+	}
+
 	mounted() {
 		this.resizeObserver = new ResizeObserver(() => {
 			EventBus.emit('Chat.inputResize');
@@ -80,7 +103,15 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	}
 
 	async submitMessage() {
-		const doc = ContentDocument.fromJson(this.formModel.content);
+		let doc;
+
+		try {
+			doc = ContentDocument.fromJson(this.formModel.content);
+		} catch (error) {
+			// Tried submitting empty doc.
+			return;
+		}
+
 		if (doc.hasContent) {
 			this.emitSubmit(this.formModel.content);
 			this.setField('content', '');

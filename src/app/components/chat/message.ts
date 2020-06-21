@@ -2,6 +2,8 @@ import { ChatUser } from './user';
 
 export type ChatMessageType = 0 | 1;
 
+export const CHAT_MESSAGE_MAX_CONTENT_LENGTH = 1000;
+
 export class ChatMessage {
 	static readonly TypeNormal = 0;
 	static readonly TypeSystem = 1;

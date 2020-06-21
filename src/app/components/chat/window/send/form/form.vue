@@ -14,7 +14,7 @@
 					:placeholder="placeholder"
 					:single-line-mode="singleLineMode"
 					:rules="{
-						max_content_length: [500],
+						max_content_length: maxContentLength,
 					}"
 					:max-height="160"
 					@submit="onEditorSubmit"
@@ -31,8 +31,10 @@
 				v-app-tooltip="$gettext(`Send message`)"
 				class="-send-button"
 				sparse
-				trans
 				icon="share-airplane"
+				:primary="isSendButtonSolid"
+				:trans="!isSendButtonSolid"
+				:solid="isSendButtonSolid"
 				@click="onClickSubmit"
 			/>
 		</app-form-group>
