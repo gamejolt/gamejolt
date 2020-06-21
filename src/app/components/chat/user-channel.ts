@@ -1,12 +1,7 @@
 import { Channel, Presence, Socket } from 'phoenix';
-import {
-	ChatClient,
-	isInChatRoom,
-	leaveChatRoom,
-	newChatNotification,
-	onChatNotification,
-} from './client';
+import { ChatClient, isInChatRoom, leaveChatRoom, newChatNotification } from './client';
 import { ChatMessage } from './message';
+import { ChatNotificationGrowl } from './notification-growl/notification-growl.service';
 import { ChatUser } from './user';
 
 interface UserPresence {
@@ -103,7 +98,7 @@ export class ChatUserChannel extends Channel {
 			this.client.friendsList.update(friend);
 		}
 
-		onChatNotification(this.client, message);
+		ChatNotificationGrowl.show(this.client, message);
 	}
 
 	private onYouUpdated(data: Partial<ChatUser>) {

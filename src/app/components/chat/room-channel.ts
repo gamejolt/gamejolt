@@ -55,6 +55,19 @@ export class ChatRoomChannel extends Channel {
 
 	private onMsg(data: Partial<ChatMessage>) {
 		const message = new ChatMessage(data);
+
+		// If we receive a message from the currently logged in user on this room channel,
+		// we ignore it.
+		// We handle this message as incoming in the chat client as a response to sending the message.
+		// So as to not duplicate the message in the room, ignore it here.
+		if (this.client.currentUser && this.client.currentUser.id === message.user.id) {
+			return;
+		}
+
+		this.processNewRoomMessage(message);
+	}
+
+	processNewRoomMessage(message: ChatMessage) {
 		processNewChatOutput(this.client, [message], false);
 
 		const friend = this.client.friendsList.getByRoom(message.room_id);

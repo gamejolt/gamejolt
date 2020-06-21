@@ -13,7 +13,7 @@
 	text-align: center
 
 	&::before
-		theme-prop('border-bottom-color', 'gray')
+		border-bottom-color: var(--theme-bg-offset)
 		content: ''
 		position: absolute
 		left: 0
@@ -26,15 +26,27 @@
 		z-index: 0
 
 	& > .-inner
-		change-bg('darker')
+		change-bg('bg-offset')
+		color: var(--theme-fg-muted)
 		position: relative
 		padding-left: 8px
 		padding-right: 8px
 		font-weight: bold
+		font-size: $font-size-small
 		z-index: 1
+		rounded-corners()
 
 .-hr
 	margin-top: 0
 	margin-bottom: 0
 	border: none
 	height: $line-height-computed
+
+.-intro
+	margin-top: 8px
+	margin-left: 64px
+	margin-right: 64px
+	change-bg('bg-offset')
+	padding: 8px
+	rounded-corners-lg()
+	display: flex

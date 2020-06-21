@@ -1,6 +1,6 @@
 <template>
 	<!-- Message Sending -->
-	<div class="chat-window-send fill-darker">
+	<div class="chat-window-send fill-backdrop">
 		<div class="-multiline-notice anim-fade-in no-animate-leave" v-if="multiLineMode">
 			<app-jolticon icon="notice" />
 			<span v-translate>
@@ -11,15 +11,11 @@
 		</div>
 
 		<div class="-container">
-			<app-content-editor
-				class="fill-bg form-control content-editor-form-control"
-				:value="message"
-				:content-context="contentContext"
-				@input="onChange"
+			<app-chat-window-send-form
+				:multi-line-mode="multiLineMode"
+				@submit="sendMessage($event)"
+				@multi-line-mode-change="onMultiLineModeChanged($event)"
 			/>
-			<app-button primary solid @click="sendMessage">
-				<translate>Send</translate>
-			</app-button>
 		</div>
 	</div>
 </template>

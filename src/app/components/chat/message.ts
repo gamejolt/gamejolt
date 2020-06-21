@@ -12,7 +12,6 @@ export class ChatMessage {
 	user!: ChatUser;
 	room_id!: number;
 	content!: string;
-	content_raw!: string;
 	logged_on!: Date;
 
 	combine?: boolean;
@@ -21,6 +20,9 @@ export class ChatMessage {
 	// Used for rendering.
 	_collapsable = false;
 	_expanded = false;
+	_isQueued = false;
+	_showAsQueued = false; // Only after some time do we show a message as queued. Before that, we pretend like it went through.
+	_isProcessing = false;
 
 	constructor(data: Partial<ChatMessage> = {}) {
 		Object.assign(this, data);

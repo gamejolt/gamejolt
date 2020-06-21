@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
 import { EventSubscription } from '../../../../../system/event/event-topic';
 import { propRequired } from '../../../../../utils/vue';
 import { date } from '../../../../../_common/filters/date';
@@ -24,15 +24,53 @@ import AppChatWindowOutputItem from './item/item.vue';
 export default class AppChatWindowOutput extends Vue {
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 	@Prop(propRequired(Array)) messages!: ChatMessage[];
+	@Prop(propRequired(Array)) queuedMessages!: ChatMessage[];
 
 	@InjectReactive(ChatKey) chat!: ChatClient;
 
 	/** Whether or not we reached the end of the historical messages. */
 	reachedEnd = false;
 	isLoadingOlder = false;
+	hasLoadedOlder = false;
+
+	private checkQueuedTimeout?: NodeJS.Timer;
+	private _introEmoji?: string;
+
+	get allMessages() {
+		return this.messages.concat(this.queuedMessages);
+	}
 
 	get canLoadOlder() {
 		return !this.reachedEnd && !this.isLoadingOlder;
+	}
+
+	get shouldShowIntro() {
+		if (!this.room.isPmRoom || this.isLoadingOlder) {
+			return false;
+		}
+
+		if (this.reachedEnd || this.allMessages.length === 0) {
+			return true;
+		}
+
+		return !this.hasLoadedOlder;
+	}
+
+	get introEmoji() {
+		if (this._introEmoji === undefined) {
+			const emojis = ['ohyou', 'smile', 'bucktooth', 'mah', 'grin', 'psychotic'];
+			let emojiIndex = 0;
+
+			if (this.room.user) {
+				emojiIndex = this.room.user.id % emojis.length;
+			} else {
+				emojiIndex = Math.floor(Math.random() * emojis.length);
+			}
+
+			this._introEmoji = emojis[emojiIndex];
+		}
+
+		return this._introEmoji;
 	}
 
 	private shouldScroll = true;
@@ -44,12 +82,33 @@ export default class AppChatWindowOutput extends Vue {
 		// Give it some time to render.
 		await this.$nextTick();
 		this.autoscroll();
+
+		// Check every 100ms for which queued messages we should show.
+		this.checkQueuedTimeout = setInterval(this.updateVisibleQueuedMessages, 100);
+
+		this.$watch(
+			() => this.messages.length + this.queuedMessages.length,
+			this.onMessagesLengthChange
+		);
 	}
 
 	destroyed() {
 		if (this.resize$) {
 			this.resize$.unsubscribe();
 			this.resize$ = undefined;
+		}
+
+		if (this.checkQueuedTimeout) {
+			clearTimeout(this.checkQueuedTimeout);
+			this.checkQueuedTimeout = undefined;
+		}
+	}
+
+	@Watch('queuedMessages')
+	updateVisibleQueuedMessages() {
+		// Display queued messages as queued that take longer than a certain amount of ms for the server to reply to.
+		for (const message of this.queuedMessages) {
+			message._showAsQueued = Date.now() - message.logged_on.getTime() > 1250;
 		}
 	}
 
@@ -96,6 +155,7 @@ export default class AppChatWindowOutput extends Vue {
 			console.error(e);
 		}
 
+		this.hasLoadedOlder = true;
 		this.isLoadingOlder = false;
 		await this.$nextTick();
 
@@ -112,7 +172,7 @@ export default class AppChatWindowOutput extends Vue {
 		this.$el.scrollTop = diff;
 	}
 
-	async onMessageTransition() {
+	private onMessagesLengthChange() {
 		if (this.shouldScroll) {
 			this.autoscroll();
 		}

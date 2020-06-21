@@ -1,19 +1,34 @@
 <template>
 	<app-scroll-scroller @scroll.native="onScroll">
-		<div class="-container">
+		<div class="-container anim-fade-in no-animate-leave">
+			<div v-if="shouldShowIntro" class="-intro">
+				<app-jolticon icon="user-messages" big />
+				<div>
+					<div>
+						<translate>This is the beginning of your conversation with</translate>
+						<router-link :to="room.user.url"> @{{ room.user.username }} </router-link>
+					</div>
+					<div>
+						Say hello
+						<span
+							:class="'emoji emoji-' + introEmoji"
+							:title="':' + introEmoji + ':'"
+						></span>
+					</div>
+				</div>
+			</div>
+
 			<app-loading v-if="isLoadingOlder" class="loading-centered" />
 
-			<transition-group @enter="onMessageTransition">
-				<div class="anim-fade-in no-animate-leave" v-for="message of messages" :key="message.id">
-					<div class="-date-split" v-if="message.dateSplit">
-						<span class="-inner">{{ message.logged_on | date('mediumDate') }}</span>
-					</div>
-
-					<hr class="-hr" v-if="!message.dateSplit && !message.combine" />
-
-					<app-chat-window-output-item :message="message" :room="room" />
+			<div v-for="message of allMessages" :key="message.id">
+				<div class="-date-split" v-if="message.dateSplit">
+					<span class="-inner">{{ message.logged_on | date('mediumDate') }}</span>
 				</div>
-			</transition-group>
+
+				<hr class="-hr" v-if="!message.dateSplit && !message.combine" />
+
+				<app-chat-window-output-item :message="message" :room="room" />
+			</div>
 		</div>
 	</app-scroll-scroller>
 </template>

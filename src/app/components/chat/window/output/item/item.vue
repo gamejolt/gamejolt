@@ -6,9 +6,14 @@
 			'chat-msg-type-system': message.type === ChatMessage.TypeSystem,
 			'chat-window-message-not-combined': !message.combine,
 			'chat-window-message-combined': message.combine,
+			'-chat-message-queued': message._showAsQueued,
 		}"
 	>
-		<router-link v-if="!message.combine" class="chat-window-message-avatar" :to="message.user.url">
+		<router-link
+			v-if="!message.combine"
+			class="chat-window-message-avatar"
+			:to="message.user.url"
+		>
 			<img class="img-responsive" :src="message.user.img_avatar" alt="" />
 		</router-link>
 
@@ -19,30 +24,22 @@
 				</router-link>
 				<span class="chat-window-message-username">@{{ message.user.username }}</span>
 				<span class="chat-window-message-time">
-					<span :title="loggedOn">
+					<span v-app-tooltip="loggedOn">
 						{{ message.logged_on | date('shortTime') }}
 					</span>
 				</span>
 			</div>
 
 			<div class="chat-window-message-content-wrap">
-				<template v-if="!shouldFadeCollapse">
-					<app-content-viewer :source="message.content" />
-				</template>
-				<template v-else>
-					<app-fade-collapse
-						:collapse-height="138"
-						:is-open="isExpanded"
-						@require-change="isCollapsable = $event"
-						@expand="isExpanded = true"
-					>
-						<app-content-viewer :source="message.content" />
-					</app-fade-collapse>
+				<span
+					v-if="message.combine"
+					class="chat-window-message-small-time"
+					v-app-tooltip="loggedOn"
+				>
+					{{ message.logged_on | date('shortTime') }}
+				</span>
 
-					<p v-if="isCollapsable">
-						<a class="hidden-text-expander" @click="isExpanded = !isExpanded"></a>
-					</p>
-				</template>
+				<app-content-viewer :source="message.content" />
 			</div>
 		</div>
 	</div>

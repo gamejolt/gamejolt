@@ -39,17 +39,13 @@
 					</span>
 				</div>
 
-				<app-chat-user-list
-					v-if="users"
-					:room="room"
-					:users="users.collection"
-				/>
+				<app-chat-user-list v-if="users" :room="room" :users="users.collection" />
 			</app-scroll-scroller>
 
 			<div class="chat-window-main">
 				<!-- Window Header -->
 				<div class="chat-window-header-wrap">
-					<div class="chat-window-header fill-darkest">
+					<div class="chat-window-header fill-offset">
 						<div class="chat-window-header-controls">
 							<app-button
 								v-if="!room.isPmRoom"
@@ -65,7 +61,7 @@
 								trans
 								icon="remove"
 								@click="close"
-								:title="$gettext('Close Room')"
+								v-app-tooltip="$gettext('Close Room')"
 							/>
 						</div>
 
@@ -120,12 +116,13 @@
 
 				<!-- The v-for is a hack to make sure we destroy/recreate each
 				time the room changes. -->
-				<div class="chat-window-output fill-darker">
+				<div class="chat-window-output fill-backdrop">
 					<app-chat-window-output
 						v-for="room of [room]"
 						:key="room.id"
 						:room="room"
 						:messages="messages"
+						:queued-messages="queuedMessages"
 					/>
 				</div>
 

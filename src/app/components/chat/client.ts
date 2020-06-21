@@ -2,10 +2,10 @@ import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
 import Vue from 'vue';
 import { EventBus } from '../../../system/event/event-bus.service';
+import { arrayRemove } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
-import { Growls } from '../../../_common/growls/growls.service';
 import { store } from '../../store';
 import { ChatMessage, ChatMessageType } from './message';
 import { ChatRoom } from './room';
@@ -387,10 +387,7 @@ export function leaveChatRoom(chat: ChatClient) {
 }
 
 export function queueChatMessage(chat: ChatClient, content: string, roomId: number) {
-	// Trim the message of whitespace.
-	content = content.replace(/^\s+/, '').replace(/\s+$/, '');
-
-	if (content === '' || chat.currentUser === null) {
+	if (chat.currentUser === null) {
 		return;
 	}
 
@@ -403,26 +400,17 @@ export function queueChatMessage(chat: ChatClient, content: string, roomId: numb
 		room_id: roomId,
 		content,
 		logged_on: new Date(),
+		_isQueued: true,
 	});
+
+	setTimeSplit(chat, roomId, message);
 
 	chat.messageQueue.push(message);
 
 	sendNextMessage(chat);
 }
 
-function outputMessage(
-	chat: ChatClient,
-	roomId: number,
-	type: ChatMessageType,
-	message: ChatMessage,
-	isHistorical: boolean
-) {
-	if (!chat.room || !isInChatRoom(chat, roomId)) {
-		return;
-	}
-
-	message.type = type;
-	message.logged_on = new Date(message.logged_on);
+function setTimeSplit(chat: ChatClient, roomId: number, message: ChatMessage) {
 	message.combine = false;
 	message.dateSplit = false;
 
@@ -447,6 +435,22 @@ function outputMessage(
 		// First message should show date.
 		message.dateSplit = true;
 	}
+}
+
+function outputMessage(
+	chat: ChatClient,
+	roomId: number,
+	type: ChatMessageType,
+	message: ChatMessage,
+	isHistorical: boolean
+) {
+	if (!chat.room || !isInChatRoom(chat, roomId)) {
+		return;
+	}
+
+	message.type = type;
+	message.logged_on = new Date(message.logged_on);
+	setTimeSplit(chat, roomId, message);
 
 	if (!chat.room.isPrivateRoom && !isHistorical) {
 		newChatNotification(chat, roomId);
@@ -499,7 +503,7 @@ function sendNextMessage(chat: ChatClient) {
 		return;
 	}
 
-	const message = chat.messageQueue.shift();
+	const message = chat.messageQueue.find(i => !i._isProcessing);
 
 	if (!message) {
 		return;
@@ -509,7 +513,20 @@ function sendNextMessage(chat: ChatClient) {
 }
 
 function sendChatMessage(chat: ChatClient, message: ChatMessage) {
-	chat.roomChannels[message.room_id].push('message', { content: message.content });
+	message._isProcessing = true;
+	chat.roomChannels[message.room_id]
+		.push('message', { content: message.content })
+		.receive('ok', data => {
+			// Upon receiving confirmation from the server, remove the message from the queue and add
+			// the received message to the list.
+			// We do this here because we display the queued message in the window until we wait for this confirmation.
+			// We have to do this swap at the same time so it seems like the message gets replaced seamlessly,
+			// instead of having a very slight (but noticable) delay between adding the new message and removing the queued one.
+			arrayRemove(chat.messageQueue, i => i.id === message.id);
+
+			const newMessage = new ChatMessage(data);
+			chat.roomChannels[message.room_id].processNewRoomMessage(newMessage);
+		});
 }
 
 export function loadOlderChatMessages(chat: ChatClient, roomId: number) {
@@ -566,19 +583,4 @@ export function isInChatRoom(chat: ChatClient, roomId?: number) {
 	}
 
 	return chat.room ? chat.room.id === roomId : false;
-}
-
-export function onChatNotification(chat: ChatClient, message: ChatMessage) {
-	// Skip if already in the room.
-	if (isInChatRoom(chat, message.room_id)) {
-		return;
-	}
-
-	Growls.info({
-		title: message.user.display_name,
-		message: message.content_raw,
-		icon: message.user.img_avatar,
-		onclick: () => enterChatRoom(chat, message.room_id),
-		system: true,
-	});
 }
