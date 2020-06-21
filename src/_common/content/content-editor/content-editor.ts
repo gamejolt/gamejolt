@@ -117,7 +117,9 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	};
 
 	@Emit('submit')
-	emitSubmit() {}
+	emitSubmit() {
+		this.stateCounter++;
+	}
 
 	@Emit('insert-block-node')
 	emitInsertBlockNode(_nodeType: string) {}
@@ -273,8 +275,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		this.focusWatcher.start();
 
 		if (this.view instanceof EditorView && this.autofocus) {
-			this.$refs.editor.focus();
-			this.view.focus();
+			this.focus();
 		}
 	}
 
@@ -430,6 +431,15 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 	onScroll() {
 		// When the doc scroller gets scrolled, we want to make sure we position the controls appropriately.
+		this.stateCounter++;
+	}
+
+	public focus() {
+		this.$refs.editor.focus();
+		if (this.view) {
+			this.view.focus();
+		}
+
 		this.stateCounter++;
 	}
 }

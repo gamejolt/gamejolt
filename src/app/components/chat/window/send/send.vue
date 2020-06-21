@@ -18,6 +18,7 @@
 		<div class="-container">
 			<app-chat-window-send-form
 				:single-line-mode="isSingleLineMode"
+				:room="room"
 				@submit="sendMessage($event)"
 				@single-line-mode-change="onSingleLineModeChanged($event)"
 			/>

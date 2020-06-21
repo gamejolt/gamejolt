@@ -17,7 +17,8 @@
 						max_content_length: maxContentLength,
 					}"
 					:max-height="160"
-					@submit="onEditorSubmit"
+					autofocus
+					@submit="onSubmit"
 					@insert-block-node="onEditorInsertBlockNode"
 					@focus="onFocusEditor"
 					@blur="onBlurEditor"
@@ -35,7 +36,7 @@
 				:primary="isSendButtonSolid"
 				:trans="!isSendButtonSolid"
 				:solid="isSendButtonSolid"
-				@click="onClickSubmit"
+				@click="onSubmit"
 			/>
 		</app-form-group>
 	</app-form>

@@ -6,6 +6,7 @@
 		-->
 		<app-content-editor
 			class="fill-bg form-control content-editor-form-control"
+			ref="editor"
 			:name="group.name"
 			:id="id"
 			:content-context="contentContext"

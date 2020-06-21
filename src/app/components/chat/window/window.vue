@@ -140,7 +140,7 @@
 				</div>
 
 				<div class="chat-window-send-container" v-if="chat.currentUser">
-					<app-chat-window-send />
+					<app-chat-window-send :room="room" />
 				</div>
 			</div>
 		</div>

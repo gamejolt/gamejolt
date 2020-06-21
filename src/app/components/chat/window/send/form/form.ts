@@ -1,6 +1,6 @@
 import ResizeObserver from 'resize-observer-polyfill';
 import Component from 'vue-class-component';
-import { Emit, InjectReactive, Prop } from 'vue-property-decorator';
+import { Emit, InjectReactive, Prop, Watch } from 'vue-property-decorator';
 import { EventBus } from '../../../../../../system/event/event-bus.service';
 import { propRequired } from '../../../../../../utils/vue';
 import { ContentContext } from '../../../../../../_common/content/content-context';
@@ -13,6 +13,7 @@ import { Screen } from '../../../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { ChatClient, ChatKey } from '../../../client';
 import { CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../../message';
+import { ChatRoom } from '../../../room';
 
 export type FormModel = {
 	content: string;
@@ -29,6 +30,7 @@ export type FormModel = {
 export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	@InjectReactive(ChatKey) chat!: ChatClient;
 	@Prop(propRequired(Boolean)) singleLineMode!: boolean;
+	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 
 	contentContext: ContentContext = 'chat-message';
 	resizeObserver?: ResizeObserver;
@@ -122,14 +124,17 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		}
 	}
 
-	onClickSubmit() {
-		this.submitMessage();
-	}
-
-	async onEditorSubmit() {
+	async onSubmit() {
 		await this.submitMessage();
 
-		// TODO: refocus editor
+		// Refocus editor after submitting message with enter.
+		this.$refs.editor.focus();
+	}
+
+	@Watch('room.id')
+	onRoomChanged() {
+		// Focus editor when entering a new room.
+		this.$refs.editor.focus();
 	}
 
 	onEditorInsertBlockNode(nodeType: string) {
