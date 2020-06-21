@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
-import { EventBus } from '../../../../../system/event/event-bus.service';
+import { EventBus, EventBusDeregister } from '../../../../../system/event/event-bus.service';
 import { EventSubscription } from '../../../../../system/event/event-topic';
 import { propRequired } from '../../../../../utils/vue';
 import { date } from '../../../../../_common/filters/date';
@@ -39,6 +39,8 @@ export default class AppChatWindowOutput extends Vue {
 
 	private checkQueuedTimeout?: NodeJS.Timer;
 	private _introEmoji?: string;
+	private newMessageDeregister?: EventBusDeregister;
+	private inputResizeDeregister?: EventBusDeregister;
 
 	get allMessages() {
 		return this.messages.concat(this.queuedMessages);
@@ -87,9 +89,16 @@ export default class AppChatWindowOutput extends Vue {
 			this.onMessagesLengthChange
 		);
 
-		EventBus.on('Chat.newMessage', (event: ChatNewMessageEvent) => {
+		this.newMessageDeregister = EventBus.on('Chat.newMessage', (event: ChatNewMessageEvent) => {
 			// When the user sent a message, we want the chat to scroll all the way down to show that message.
 			if (this.user && event.message.user.id === this.user.id) {
+				this.autoscroll();
+			}
+		});
+
+		this.inputResizeDeregister = EventBus.on('Chat.inputResize', () => {
+			// When the chat's input size changes, we want to scroll to the bottom, so the input doesn't start to cover the message list.
+			if (this.shouldScroll) {
 				this.autoscroll();
 			}
 		});
@@ -104,6 +113,16 @@ export default class AppChatWindowOutput extends Vue {
 		if (this.checkQueuedTimeout) {
 			clearTimeout(this.checkQueuedTimeout);
 			this.checkQueuedTimeout = undefined;
+		}
+
+		if (this.newMessageDeregister) {
+			this.newMessageDeregister();
+			this.newMessageDeregister = undefined;
+		}
+
+		if (this.inputResizeDeregister) {
+			this.inputResizeDeregister();
+			this.inputResizeDeregister = undefined;
 		}
 	}
 

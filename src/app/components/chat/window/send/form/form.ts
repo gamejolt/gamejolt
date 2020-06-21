@@ -1,5 +1,7 @@
+import ResizeObserver from 'resize-observer-polyfill';
 import Component from 'vue-class-component';
 import { Emit, InjectReactive, Prop } from 'vue-property-decorator';
+import { EventBus } from '../../../../../../system/event/event-bus.service';
 import { propRequired } from '../../../../../../utils/vue';
 import { ContentContext } from '../../../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../../../_common/content/content-document';
@@ -27,6 +29,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	@Prop(propRequired(Boolean)) multiLineMode!: boolean;
 
 	contentContext: ContentContext = 'chat-message';
+	resizeObserver?: ResizeObserver;
 
 	$refs!: {
 		form: AppForm;
@@ -56,6 +59,21 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		return this.$gettext('Send a message...');
 	}
 
+	mounted() {
+		this.resizeObserver = new ResizeObserver(() => {
+			console.log('emit input resize');
+			EventBus.emit('Chat.inputResize');
+		});
+		this.resizeObserver.observe(this.$refs.editor.$el);
+	}
+
+	destroyed() {
+		if (this.resizeObserver) {
+			this.resizeObserver.disconnect();
+			this.resizeObserver = undefined;
+		}
+	}
+
 	async submitMessage() {
 		const doc = ContentDocument.fromJson(this.formModel.content);
 		if (doc.hasContent) {
@@ -79,7 +97,6 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	}
 
 	onEditorInsertBlockNode(nodeType: string) {
-		console.log(nodeType);
 		this.emitMultiLineModeChange(true);
 	}
 }

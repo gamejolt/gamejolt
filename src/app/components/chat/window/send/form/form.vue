@@ -11,7 +11,7 @@
 					:rules="{
 						max_content_length: [500],
 					}"
-					:max-height="140"
+					:max-height="160"
 					@submit="onEditorSubmit"
 					@insert-block-node="onEditorInsertBlockNode"
 				/>
