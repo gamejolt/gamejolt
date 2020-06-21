@@ -236,6 +236,7 @@ export class ContextCapabilities {
 					ContextCapabilityType.TextLink,
 					ContextCapabilityType.TextCode,
 					ContextCapabilityType.TextStrike,
+					ContextCapabilityType.Media,
 					ContextCapabilityType.CodeBlock,
 					ContextCapabilityType.Blockquote,
 					ContextCapabilityType.Emoji,
@@ -243,6 +244,7 @@ export class ContextCapabilities {
 					ContextCapabilityType.Spoiler,
 					ContextCapabilityType.Tag,
 					ContextCapabilityType.Mention,
+					ContextCapabilityType.Gif,
 				]);
 		}
 		throw new Error('Context capabilities undefined for context ' + context);
