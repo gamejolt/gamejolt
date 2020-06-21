@@ -31,7 +31,6 @@ export default class AppChatWindowOutput extends Vue {
 	/** Whether or not we reached the end of the historical messages. */
 	reachedEnd = false;
 	isLoadingOlder = false;
-	hasLoadedOlder = false;
 
 	private checkQueuedTimeout?: NodeJS.Timer;
 	private _introEmoji?: string;
@@ -45,15 +44,7 @@ export default class AppChatWindowOutput extends Vue {
 	}
 
 	get shouldShowIntro() {
-		if (!this.room.isPmRoom || this.isLoadingOlder) {
-			return false;
-		}
-
-		if (this.reachedEnd || this.allMessages.length === 0) {
-			return true;
-		}
-
-		return !this.hasLoadedOlder;
+		return this.room.isPmRoom && this.allMessages.length === 0;
 	}
 
 	get introEmoji() {
@@ -155,7 +146,6 @@ export default class AppChatWindowOutput extends Vue {
 			console.error(e);
 		}
 
-		this.hasLoadedOlder = true;
 		this.isLoadingOlder = false;
 		await this.$nextTick();
 
@@ -180,5 +170,15 @@ export default class AppChatWindowOutput extends Vue {
 
 	private autoscroll() {
 		this.$el.scrollTop = this.$el.scrollHeight + 10000;
+	}
+
+	isNewMessage(message: ChatMessage) {
+		const newCount = this.chat.notifications[this.room.id];
+		if (newCount === 0) {
+			return false;
+		}
+
+		const position = this.allMessages.indexOf(message);
+		return this.allMessages.length - position === this.chat.notifications[this.room.id];
 	}
 }

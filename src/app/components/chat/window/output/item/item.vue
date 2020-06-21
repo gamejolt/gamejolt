@@ -7,6 +7,7 @@
 			'chat-window-message-not-combined': !message.combine,
 			'chat-window-message-combined': message.combine,
 			'-chat-message-queued': message._showAsQueued,
+			'-chat-message-new': isNew,
 		}"
 	>
 		<router-link

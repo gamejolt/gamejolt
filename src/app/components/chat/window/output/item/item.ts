@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../../../utils/vue';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import { date } from '../../../../../../_common/filters/date';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
@@ -21,6 +22,7 @@ import { ChatRoom } from '../../../room';
 export default class AppChatWindowOutputItem extends Vue {
 	@Prop(ChatMessage) message!: ChatMessage;
 	@Prop(ChatRoom) room!: ChatRoom;
+	@Prop(propRequired(Boolean)) isNew!: boolean;
 
 	@InjectReactive(ChatKey) chat!: ChatClient;
 

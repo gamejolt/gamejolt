@@ -9,7 +9,7 @@
 						<router-link :to="room.user.url"> @{{ room.user.username }} </router-link>
 					</div>
 					<div>
-						Say hello
+						<translate>Say hello</translate>
 						<span
 							:class="'emoji emoji-' + introEmoji"
 							:title="':' + introEmoji + ':'"
@@ -27,7 +27,11 @@
 
 				<hr class="-hr" v-if="!message.dateSplit && !message.combine" />
 
-				<app-chat-window-output-item :message="message" :room="room" />
+				<app-chat-window-output-item
+					:message="message"
+					:room="room"
+					:is-new="isNewMessage(message)"
+				/>
 			</div>
 		</div>
 	</app-scroll-scroller>
