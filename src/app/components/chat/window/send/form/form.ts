@@ -9,6 +9,7 @@ import AppFormControlContentTS from '../../../../../../_common/form-vue/control/
 import AppFormControlContent from '../../../../../../_common/form-vue/control/content/content.vue';
 import AppForm from '../../../../../../_common/form-vue/form';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
+import { Screen } from '../../../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { ChatClient, ChatKey } from '../../../client';
 
@@ -26,10 +27,11 @@ export type FormModel = {
 })
 export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	@InjectReactive(ChatKey) chat!: ChatClient;
-	@Prop(propRequired(Boolean)) multiLineMode!: boolean;
+	@Prop(propRequired(Boolean)) singleLineMode!: boolean;
 
 	contentContext: ContentContext = 'chat-message';
 	resizeObserver?: ResizeObserver;
+	isEditorFocused = false;
 
 	$refs!: {
 		form: AppForm;
@@ -39,8 +41,8 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	@Emit('submit')
 	emitSubmit(_content: string) {}
 
-	@Emit('multi-line-mode-change')
-	emitMultiLineModeChange(_multiLine: boolean) {}
+	@Emit('single-line-mode-change')
+	emitSingleLineModeChange(_singleLine: boolean) {}
 
 	get contentEditorTempResourceContextData() {
 		if (this.chat && this.chat.room) {
@@ -59,9 +61,12 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		return this.$gettext('Send a message...');
 	}
 
+	get shouldShiftEditor() {
+		return Screen.isMobile && this.isEditorFocused;
+	}
+
 	mounted() {
 		this.resizeObserver = new ResizeObserver(() => {
-			console.log('emit input resize');
 			EventBus.emit('Chat.inputResize');
 		});
 		this.resizeObserver.observe(this.$refs.editor.$el);
@@ -97,6 +102,23 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	}
 
 	onEditorInsertBlockNode(nodeType: string) {
-		this.emitMultiLineModeChange(true);
+		this.emitSingleLineModeChange(false);
+	}
+
+	async onFocusEditor() {
+		const wasShifted = this.shouldShiftEditor;
+
+		this.isEditorFocused = true;
+
+		// Wait until the editor controls are visible.
+		await this.$nextTick();
+		if (!wasShifted && this.shouldShiftEditor) {
+			// We want to emit this event here too, to make sure we scroll down when the controls pop up on mobile.
+			EventBus.emit('Chat.inputResize');
+		}
+	}
+
+	onBlurEditor() {
+		this.isEditorFocused = false;
 	}
 }

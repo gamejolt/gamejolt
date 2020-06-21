@@ -19,9 +19,24 @@ import AppChatWindowSendForm from './form/form.vue';
 export default class AppChatWindowSend extends Vue {
 	@InjectReactive(ChatKey) chat!: ChatClient;
 
-	multiLineMode = false;
+	singleLineMode = true;
 
 	readonly Screen = Screen;
+
+	get isSingleLineMode() {
+		// We always want to be in multiline mode for phones:
+		// It's expected behavior to create a new line with the "Enter" key on the virtual keyboard,
+		// and send the message with a "send message" button.
+		if (Screen.isMobile) {
+			return false;
+		}
+
+		return this.singleLineMode;
+	}
+
+	get showMultiLineNotice() {
+		return !this.isSingleLineMode && !Screen.isMobile;
+	}
 
 	sendMessage(message: string) {
 		const doc = ContentDocument.fromJson(message);
@@ -33,10 +48,10 @@ export default class AppChatWindowSend extends Vue {
 			}
 		}
 
-		this.multiLineMode = false;
+		this.singleLineMode = true;
 	}
 
-	onMultiLineModeChanged(multiLineMode: boolean) {
-		this.multiLineMode = multiLineMode;
+	onSingleLineModeChanged(singleLineMode: boolean) {
+		this.singleLineMode = singleLineMode;
 	}
 }
