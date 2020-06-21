@@ -10,7 +10,14 @@
 				minHeight: containerMinHeight,
 			}"
 		>
-			<div class="-doc" :class="editorStyleClass" ref="doc" />
+			<app-scroll-scroller>
+				<div
+					class="-doc"
+					:style="{ 'max-height': maxHeight > 0 ? maxHeight + 'px' : 'auto' }"
+					:class="editorStyleClass"
+					ref="doc"
+				/>
+			</app-scroll-scroller>
 			<transition name="fade">
 				<span
 					v-if="shouldShowPlaceholder"

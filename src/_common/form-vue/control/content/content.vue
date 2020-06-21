@@ -18,6 +18,7 @@
 			:startup-activity="startupActivity"
 			:temp-resource-context-data="tempResourceContextData"
 			:single-line-mode="singleLineMode"
+			:max-height="maxHeight"
 			v-validate="{ rules: validationRules }"
 			@input="onChange"
 			@editor-focus="onFocus"

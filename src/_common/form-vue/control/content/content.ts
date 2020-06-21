@@ -35,6 +35,8 @@ export default class AppFormControlContent extends BaseFormControlTS {
 
 	@Prop(propOptional(Boolean, false)) singleLineMode!: boolean;
 
+	@Prop(propOptional(Number, 200)) maxHeight!: number;
+
 	controlVal = '';
 
 	onChange(source: string) {

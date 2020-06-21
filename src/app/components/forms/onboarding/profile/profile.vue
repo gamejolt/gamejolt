@@ -49,6 +49,7 @@
 						:disabled="!allowBioChange"
 						:model-id="user.id"
 						:placeholder="$gettext(`Tell people about yourself`)"
+						:max-height="0"
 					/>
 				</app-form-group>
 			</section>

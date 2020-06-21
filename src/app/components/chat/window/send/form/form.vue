@@ -11,6 +11,7 @@
 					:rules="{
 						max_content_length: [500],
 					}"
+					:max-height="140"
 					@submit="onEditorSubmit"
 					@insert-block-node="onEditorInsertBlockNode"
 				/>
@@ -34,18 +35,21 @@
 <style lang="stylus" scoped>
 @require '../../variables'
 
+$-button-padding = 48px
+
 .-form
-	margin-bottom: 8px
+	margin-bottom: 16px
+	display: flex
+	position: relative
+	align-items: center
 
 .-input
 	margin-right: 8px
 	margin-left: $left-gutter-size + $avatar-size
-	width: calc(100% - 35px - 8px - 4px - 64px)
-	display: inline-block
+	width: "calc(100% - %s)" % ($left-gutter-size + $avatar-size + $-button-padding)
 
 .-send-button
 	width: 35px
-	display: inline-block
 </style>
 
 <script lang="ts" src="./form"></script>

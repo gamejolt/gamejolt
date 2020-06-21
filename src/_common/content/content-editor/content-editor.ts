@@ -6,6 +6,7 @@ import ResizeObserver from 'resize-observer-polyfill';
 import Vue from 'vue';
 import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
+import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format-adapter';
@@ -37,6 +38,7 @@ import { ContentEditorSchema, generateSchema } from './schemas/content-editor-sc
 		AppContentEditorControlsGifControls,
 		AppContentEditorControlsInsetContainer,
 		AppContentEditorControlsMentionAutocompleteControls,
+		AppScrollScroller,
 	},
 })
 export default class AppContentEditor extends Vue implements ContentOwner {
@@ -78,6 +80,9 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	 * Mod + Enter inserts a new paragraph instead.
 	 */
 	@Prop(propOptional(Boolean, false)) singleLineMode!: boolean;
+
+	/** Sets the max height of the editor before it starts scrolling. Passing 0 or a negative value will unrestrict the height. */
+	@Prop(propOptional(Number, 200)) maxHeight!: number;
 
 	$_veeValidate = {
 		value: () => this.value,
@@ -219,12 +224,18 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		this.isEmpty = true;
 	}
 
-	mounted() {
+	async mounted() {
 		this.capabilities = ContextCapabilities.getForContext(this.contentContext);
 		this.hydrator = new ContentHydrator();
 
 		this.schema = generateSchema(this.capabilities);
 		this.plugins = createPlugins(this, this.schema);
+
+		// We have to wait a frame here before we can start using the $refs.doc variable.
+		// Due to the scroller around it also initializing on mounted, we have to wait for it to finish.
+		// The scroller v-ifs the slot element away until it's fully mounted.
+		// The next frame after that we have our doc ref available.
+		await this.$nextTick();
 
 		if (this.value) {
 			const doc = ContentDocument.fromJson(this.value);
