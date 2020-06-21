@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, InjectReactive } from 'vue-property-decorator';
+import { isMac } from '../../../../../utils/utils';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import AppContentEditor from '../../../../../_common/content/content-editor/content-editor.vue';
 import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
@@ -36,6 +37,10 @@ export default class AppChatWindowSend extends Vue {
 
 	get showMultiLineNotice() {
 		return !this.isSingleLineMode && !Screen.isMobile;
+	}
+
+	get isMac() {
+		return isMac();
 	}
 
 	sendMessage(message: string) {

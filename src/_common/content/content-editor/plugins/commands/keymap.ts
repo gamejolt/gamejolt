@@ -2,6 +2,7 @@ import { chainCommands, exitCode, toggleMark } from 'prosemirror-commands';
 import { redo, undo } from 'prosemirror-history';
 import { sinkListItem, splitListItem } from 'prosemirror-schema-list';
 import { EditorState, Transaction } from 'prosemirror-state';
+import { isMac } from '../../../../../utils/utils';
 import AppContentEditor from '../../content-editor';
 import { ContentListService } from '../../content-list.service';
 import { ContentEditorSchema } from '../../schemas/content-editor-schema';
@@ -19,8 +20,6 @@ export type PMKeymapCommand = (
 ) => boolean;
 
 export function getContentEditorKeymap(editor: AppContentEditor, schema: ContentEditorSchema) {
-	const isMac = typeof navigator != 'undefined' ? /Mac/.test(navigator.platform) : false;
-
 	const keymap = {
 		'Mod-z': undo,
 		'Shift-Mod-z': redo,
@@ -55,7 +54,7 @@ export function getContentEditorKeymap(editor: AppContentEditor, schema: Content
 
 	keymap['Enter'] = chainCommands(...enterCommands);
 
-	if (!isMac) {
+	if (!isMac()) {
 		keymap['Mod-y'] = redo;
 	}
 
