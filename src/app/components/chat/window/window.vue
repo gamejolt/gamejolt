@@ -34,7 +34,10 @@
 
 				<div class="nav-heading">
 					<translate>Room Users</translate>
-					<span class="badge" :class="{ 'badge-highlight': users && users.onlineCount > 0 }">
+					<span
+						class="badge"
+						:class="{ 'badge-highlight': users && users.onlineCount > 0 }"
+					>
 						{{ users ? users.onlineCount : 0 | number }}
 					</span>
 				</div>
@@ -66,7 +69,11 @@
 						</div>
 
 						<!-- Animation scope. -->
-						<div class="chat-window-header-content" v-for="room of [room]" :key="room.id">
+						<div
+							class="chat-window-header-content"
+							v-for="room of [room]"
+							:key="room.id"
+						>
 							<router-link
 								class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
 								v-if="room.isPmRoom && room.user"
@@ -96,8 +103,13 @@
 									:collapse-height="60"
 									@require-change="isDescriptionCollapsed = $event"
 								>
-									<div class="chat-window-header-room-description chat-compiled-room-description">
-										<div class="anim-fade-in no-animate-xs" v-html="room.description"></div>
+									<div
+										class="chat-window-header-room-description chat-compiled-room-description"
+									>
+										<div
+											class="anim-fade-in no-animate-xs"
+											v-html="room.description"
+										></div>
 									</div>
 								</app-fade-collapse>
 
@@ -120,6 +132,7 @@
 					<app-chat-window-output
 						v-for="room of [room]"
 						:key="room.id"
+						class="chat-window-output-inner"
 						:room="room"
 						:messages="messages"
 						:queued-messages="queuedMessages"
