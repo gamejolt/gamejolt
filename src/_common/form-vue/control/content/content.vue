@@ -16,10 +16,14 @@
 			:value="controlVal"
 			:min-height="minHeight"
 			:startup-activity="startupActivity"
+			:temp-resource-context-data="tempResourceContextData"
+			:single-line-mode="singleLineMode"
 			v-validate="{ rules: validationRules }"
 			@input="onChange"
 			@editor-focus="onFocus"
 			@editor-blur="onBlur"
+			@submit="onSubmit"
+			@insert-block-node="onInsertBlockNode"
 		/>
 	</div>
 </template>

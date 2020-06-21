@@ -4,7 +4,8 @@ import { EditorView } from 'prosemirror-view';
 import 'prosemirror-view/style/prosemirror.css';
 import ResizeObserver from 'resize-observer-polyfill';
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { propOptional } from '../../../utils/vue';
 import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format-adapter';
@@ -66,6 +67,18 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	@Prop(String)
 	startupActivity?: string;
 
+	/**
+	 * Used to send more information with the create temp resource request.
+	 * Passed in object is directly handed to the Api. By default `undefined`, resulting in a GET request.
+	 */
+	@Prop(Object) tempResourceContextData?: Object;
+
+	/**
+	 * In single line mode the editor emits an event on enter and does not insert a new paragraph.
+	 * Mod + Enter inserts a new paragraph instead.
+	 */
+	@Prop(propOptional(Boolean, false)) singleLineMode!: boolean;
+
 	$_veeValidate = {
 		value: () => this.value,
 		name: () => 'app-content-editor',
@@ -97,6 +110,12 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		doc: HTMLElement;
 		emojiPanel: AppContentEditorControlsEmojiPanelTS;
 	};
+
+	@Emit('submit')
+	emitSubmit() {}
+
+	@Emit('insert-block-node')
+	emitInsertBlockNode(_nodeType: string) {}
 
 	get shouldShowControls() {
 		return !this.disabled && this.isFocused && this.capabilities.hasAnyBlock;
@@ -159,7 +178,10 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	async getModelId() {
 		if (this.modelId === null) {
 			if (!this._tempModelId) {
-				this._tempModelId = await ContentTempResource.getTempModelId(this.contentContext);
+				this._tempModelId = await ContentTempResource.getTempModelId(
+					this.contentContext,
+					this.tempResourceContextData
+				);
 			}
 			return this._tempModelId;
 		} else {

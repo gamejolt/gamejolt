@@ -50,6 +50,7 @@
 				v-if="shouldShowControls"
 				:capabilities="capabilities"
 				:view="view"
+				:editor="this"
 				:state-counter="stateCounter"
 				:collapsed="controlsCollapsed"
 				@collapsedChanged="onControlsCollapsedChanged"

@@ -1,4 +1,5 @@
 import { Component, Emit, Prop } from 'vue-property-decorator';
+import { propOptional } from '../../../../utils/vue';
 import { ContentContext } from '../../../content/content-context';
 import { AppContentEditorLazy } from '../../../content/content-editor/content-editor-lazy';
 import BaseFormControlTS from '../base';
@@ -30,6 +31,10 @@ export default class AppFormControlContent extends BaseFormControlTS {
 	@Prop(String)
 	startupActivity?: string;
 
+	@Prop(Object) tempResourceContextData?: Object;
+
+	@Prop(propOptional(Boolean, false)) singleLineMode!: boolean;
+
 	controlVal = '';
 
 	onChange(source: string) {
@@ -41,4 +46,10 @@ export default class AppFormControlContent extends BaseFormControlTS {
 
 	@Emit('blur')
 	onBlur() {}
+
+	@Emit('submit')
+	onSubmit() {}
+
+	@Emit('insert-block-node')
+	onInsertBlockNode(_nodeType: string) {}
 }
