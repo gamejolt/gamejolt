@@ -6,6 +6,10 @@
 	position: relative
 	margin-bottom: 4px
 	line-height: $font-size-base * 1.25
+	// This is so no height change occurs when the "NEW" indicator line appears
+	border-top-width: 1px
+	border-top-style: solid
+	border-top-color: transparent
 
 	@media $media-xs
 		font-size: $font-size-small
@@ -114,15 +118,13 @@
 
 .-chat-message-new
 		border-top-color: var(--theme-notice)
-		border-top-width: 1px
-		border-top-style: solid
 
 		&::before
 			content: 'new'
 			position: absolute
 			z-index: 2
 			right: 0
-			top: -8px
+			top: -10px
 			font-size: $font-size-tiny
 			change-bg('notice')
 			color: var(--theme-white)
