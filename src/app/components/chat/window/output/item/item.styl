@@ -22,6 +22,10 @@
 		width: $avatar-size
 		z-index: 1
 
+		@media $media-xs
+			// On small screens, reduce the left side margin to make more space for the actual messages.
+			left: 4px
+
 		& > img
 			img-circle()
 
@@ -33,6 +37,10 @@
 		padding-left: 4px
 		padding-right: 4px
 		padding-bottom: 2px
+
+		@media $media-xs
+			// On small screens, reduce the left side margin to make more space for the actual messages.
+			margin-left: $avatar-size + 12px
 
 		&:hover
 			background-color: var(--theme-bg-offset)
