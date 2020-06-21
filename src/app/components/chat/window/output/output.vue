@@ -33,6 +33,14 @@
 					:is-new="isNewMessage(message)"
 				/>
 			</div>
+
+			<transition name="fade">
+				<div
+					v-if="!shouldScroll"
+					class="-container-scroll-down-indicator"
+					:class="{ '-container-scroll-down-indicator-new': hasNewMessages }"
+				></div>
+			</transition>
 		</div>
 	</app-scroll-scroller>
 </template>

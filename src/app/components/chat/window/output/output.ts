@@ -71,6 +71,10 @@ export default class AppChatWindowOutput extends Vue {
 		return this._introEmoji;
 	}
 
+	get hasNewMessages() {
+		return this.chat.notifications[this.room.id] > 0;
+	}
+
 	private shouldScroll = true;
 	private resize$: EventSubscription | undefined;
 
@@ -210,6 +214,6 @@ export default class AppChatWindowOutput extends Vue {
 		}
 
 		const position = this.allMessages.indexOf(message);
-		return this.allMessages.length - position === this.chat.notifications[this.room.id];
+		return this.allMessages.length - position === newCount;
 	}
 }
