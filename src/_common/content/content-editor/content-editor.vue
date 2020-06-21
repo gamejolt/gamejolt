@@ -79,6 +79,7 @@
 				:view="view"
 				:state-counter="stateCounter"
 				@insert="onInsertMention"
+				@users-change="onMentionUsersChange"
 			/>
 		</transition>
 	</div>

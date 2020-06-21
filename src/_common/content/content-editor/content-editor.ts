@@ -105,6 +105,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	isEmpty = true; // Gets updated through the update-is-empty-plugin
 	openedStartup = false; // When the gif or emoji panel opened on startup. Prevents them from opening again.
 	canShowMentionSuggestions = 0; // Indicates whether we want to currently show the mention suggestion panel. Values > 0 indicate true.
+	mentionUserCount = 0;
 
 	_tempModelId: number | null = null; // If no model id if gets passed in, we store a temp model's id here
 	// Keep a copy of the json version of the doc, to only set the content if the external source changed.
@@ -427,6 +428,10 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	onInsertMention() {
 		this.highlightCurrentSelection();
 		this.canShowMentionSuggestions = 0; // Hide control
+	}
+
+	onMentionUsersChange(num: number) {
+		this.mentionUserCount = num;
 	}
 
 	onScroll() {
