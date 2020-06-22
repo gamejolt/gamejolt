@@ -1,5 +1,6 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
+@require './_community-pill/variables'
 
 .form-group:last-child
 	margin-bottom: 10px
@@ -94,12 +95,21 @@
 		align-items: center
 		margin-bottom: 4px
 
+		&-placeholder
+			margin: 10px 0 14px
+
 		.v-leave
 			display: none
 			position: absolute
 
 .-community-pill
 	flex-shrink: 0
+
+	&-placeholder
+		change-bg('bg-subtle')
+		rounded-corners()
+		width: 138px
+		height: $pill-height
 
 	// Need to apply to the button inside the pill add component too
 	&, >>> .button
