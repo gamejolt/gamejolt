@@ -11,6 +11,7 @@ import AppFormControlContent from '../../../../../../_common/form-vue/control/co
 import AppForm from '../../../../../../_common/form-vue/form';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
 import { Screen } from '../../../../../../_common/screen/screen-service';
+import AppShortkey from '../../../../../../_common/shortkey/shortkey.vue';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { ChatClient, ChatKey } from '../../../client';
 import { CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../../message';
@@ -23,6 +24,7 @@ export type FormModel = {
 @Component({
 	components: {
 		AppFormControlContent,
+		AppShortkey,
 	},
 	directives: {
 		AppTooltip,
@@ -160,5 +162,11 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 	onBlurEditor() {
 		this.isEditorFocused = false;
+	}
+
+	onTabKeyPressed() {
+		if (!this.isEditorFocused) {
+			this.$refs.editor.focus();
+		}
 	}
 }

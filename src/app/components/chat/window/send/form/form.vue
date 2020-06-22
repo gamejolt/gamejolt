@@ -1,5 +1,7 @@
 <template>
 	<app-form name="chat-send-form" ref="form">
+		<app-shortkey shortkey="tab" @press="onTabKeyPressed" />
+
 		<app-form-group
 			name="content"
 			hide-label
