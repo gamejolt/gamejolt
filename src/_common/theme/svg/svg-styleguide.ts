@@ -1,4 +1,5 @@
 import { Component, Watch } from 'vue-property-decorator';
+import { importContext } from '../../../utils/utils';
 import AppFormControlSelect from '../../form-vue/control/select/select.vue';
 import AppFormControlTextarea from '../../form-vue/control/textarea/textarea.vue';
 import AppFormControlTheme from '../../form-vue/control/theme/theme.vue';
@@ -46,6 +47,7 @@ export default class AppThemeSvgStyleguide extends BaseForm<FormModel> {
 		require('../../../app/img/game-jolt-logo.svg'),
 		require('../../../app/img/game-jolt-client-logo.svg'),
 		require('../../../app/img/jolt.svg'),
+		...Object.values(importContext(require.context('../../../app/img/ill/', true, /\.svg$/))),
 	];
 	readonly FillList = [
 		'fill-offset',

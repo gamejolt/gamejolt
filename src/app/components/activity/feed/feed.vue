@@ -53,11 +53,20 @@
 
 			<app-loading v-if="feed.isLoadingMore" class="-bottom-loading loading-centered" />
 
-			<div class="alert full-bleed-xs" v-if="feed.reachedEnd">
-				<translate>
-					A wild Snorlax blocks your path. Looks like it's the end of this feed.
-				</translate>
-			</div>
+			<app-illustration v-if="feed.reachedEnd" src="~img/ill/end-of-feed.svg">
+				<p>
+					<translate>
+						You've found a clearing at the end of this feed. Should you set up camp?
+					</translate>
+				</p>
+				<p>
+					<app-jolticon icon="arrow-right" />
+					<b><translate>Yes</translate></b>
+					<app-jolticon icon="arrow-left" />
+					<br />
+					<translate>No</translate>
+				</p>
+			</app-illustration>
 		</app-scroll-inview>
 	</div>
 </template>

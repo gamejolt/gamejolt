@@ -253,6 +253,7 @@ module.exports = function(config) {
 							transformAssetUrls: {
 								img: 'src',
 								'app-theme-svg': 'src',
+								'app-illustration': 'src',
 							},
 						},
 					},
