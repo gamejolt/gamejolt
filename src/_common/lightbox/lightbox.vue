@@ -5,7 +5,7 @@
 			@panstart="panStart"
 			@panmove="pan"
 			@panend="panEnd"
-			:pan-options="{ direction: 'horizontal' }"
+			:pan-options="{ threshold: 0 }"
 		>
 			<app-shortkey shortkey="arrowleft" @press="goPrev" />
 			<app-shortkey shortkey="arrowright" @press="goNext" />
