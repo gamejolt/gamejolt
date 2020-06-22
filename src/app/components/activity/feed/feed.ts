@@ -8,11 +8,11 @@ import { EventItem } from '../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../_common/expand/expand.vue';
 import { number } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import AppIllustration from '../../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppScrollInview } from '../../../../_common/scroll/inview/inview';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
-import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import AppActivityFeedItem from './item/item.vue';
 import AppActivityFeedNewButton from './new-button/new-button.vue';
 import { ActivityFeedView } from './view';
@@ -25,7 +25,7 @@ import { ActivityFeedView } from './view';
 		AppAdWidget,
 		AppExpand,
 		AppScrollInview,
-		AppThemeSvg,
+		AppIllustration,
 	},
 })
 export default class AppActivityFeed extends Vue {
