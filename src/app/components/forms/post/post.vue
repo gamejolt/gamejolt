@@ -521,11 +521,23 @@
 		<!-- Author options -->
 		<template v-if="shouldShowAuthorOptions">
 			<fieldset>
+				<!-- Post to profile -->
+				<app-form-group
+					v-if="user && user.id == model.user.id"
+					name="post_to_user_profile"
+					class="sans-margin-bottom"
+					:label="$gettext(`Post to Profile`)"
+				>
+					<app-form-control-toggle class="pull-right" />
+					<p class="help-block sans-margin-top">
+						This will post to your profile as well as the game page.
+					</p>
+				</app-form-group>
+
 				<!-- Post as game owner -->
 				<app-form-group
-					name="as_game_owner"
-					class="sans-margin-bottom"
 					v-if="model.user.id != model.game.developer.id"
+					name="as_game_owner"
 					:label="$gettext(`Post as Game Owner`)"
 				>
 					<app-form-control-toggle class="pull-right" />
@@ -547,18 +559,6 @@
 						>
 							This will show %{ owner } as the user that posted.
 						</translate>
-					</p>
-				</app-form-group>
-
-				<!-- Post to profile -->
-				<app-form-group
-					name="post_to_user_profile"
-					v-if="user && user.id == model.user.id"
-					:label="$gettext(`Post to Profile`)"
-				>
-					<app-form-control-toggle class="pull-right" />
-					<p class="help-block sans-margin-top">
-						This will post to your profile as well as the game page.
 					</p>
 				</app-form-group>
 			</fieldset>
