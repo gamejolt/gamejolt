@@ -353,6 +353,20 @@ export default class FormPost extends BaseForm<FormPostModel>
 		return this.defaultCommunity;
 	}
 
+	@Watch('formModel.post_to_user_profile')
+	onPostToUserProfileToggle() {
+		if (!!this.formModel.post_to_user_profile) {
+			this.setField('as_game_owner', false);
+		}
+	}
+
+	@Watch('formModel.as_game_owner')
+	onPostAsGameOwnerToggle() {
+		if (!!this.formModel.as_game_owner) {
+			this.setField('post_to_user_profile', false);
+		}
+	}
+
 	get shouldShowAuthorOptions() {
 		if (!this.model?.game || !this.user) {
 			return false;
@@ -381,6 +395,8 @@ export default class FormPost extends BaseForm<FormPostModel>
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
 
 		this.setField('attached_communities', []);
+
+		this.setField('post_to_user_profile', true);
 
 		if (model.videos.length) {
 			this.setField(
