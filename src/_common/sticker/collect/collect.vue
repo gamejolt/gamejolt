@@ -10,41 +10,62 @@
 				<app-sticker-card-hidden class="-card-revealing" />
 			</div>
 			<template v-else-if="isRevealed && !!purchasedStickers.length">
+				<div
+					v-if="showCollectControls && !!canBuyStickerAmount"
+					class="-revealed-controls-top anim-fade-in"
+				>
+					<app-button primary @click="onClickRepeat(canBuyMultipleAmount)">
+						<translate>Unlock</translate>
+						{{ canBuyMultipleAmount }}
+						<translate>More</translate>
+					</app-button>
+				</div>
+				<div v-else class="-revealed-controls-placeholder" />
+
 				<div class="-card-revealed-container">
-					<div v-for="sticker of purchasedStickers" :key="sticker.id">
-						<app-sticker-card
-							class="-card-revealed"
-							:sticker="sticker"
-							:label="`+${sticker.count || 1}`"
-						>
-							<template v-if="shouldAnimateRarity">
-								<div
-									v-if="sticker.rarity > 0"
-									class="-card-revealed-effect"
-									:class="{
-										'-card-revealed-effect-uncommon': sticker.rarity === 1,
-										'-card-revealed-effect-rare': sticker.rarity === 2,
-										'-card-revealed-effect-epic': sticker.rarity === 3,
-									}"
-								/>
-							</template>
+					<div v-for="{ sticker, sticker_id, count } of limitedStickerDisplay" :key="sticker_id">
+						<app-sticker-card class="-card-revealed" :sticker="sticker" :label="`+${count}`">
+							<div
+								v-if="sticker.rarity > 0"
+								class="-card-revealed-effect"
+								:class="{
+									'-card-revealed-effect-uncommon': sticker.rarity === 1,
+									'-card-revealed-effect-rare': sticker.rarity === 2,
+									'-card-revealed-effect-epic': sticker.rarity === 3,
+								}"
+							/>
 						</app-sticker-card>
 					</div>
 				</div>
+
+				<div
+					v-if="limitedStickerDisplay.length < purchasedStickers.length"
+					class="-revealed-controls-load page-cut"
+				>
+					<app-button trans @click="shownRows++">
+						<translate>Load More</translate>
+					</app-button>
+				</div>
+
 				<div v-if="showCollectControls" class="-revealed-controls anim-fade-in">
-					<app-button primary @click="onClickCollect(purchasedStickersCount)">
+					<app-button primary @click="onClickCollect()">
 						<translate>Collect</translate>
 					</app-button>
 				</div>
+				<div v-else class="-revealed-controls-placeholder" />
 			</template>
 			<template v-else>
 				<div class="-collect">
-					<app-sticker-card-hidden class="-card-hidden" :count="1" @click.native="onBuySticker" />
+					<app-sticker-card-hidden
+						class="-card-hidden"
+						:count="1"
+						@click.native="onBuyStickers(1)"
+					/>
 					<app-sticker-card-hidden
 						v-if="canBuyMultipleAmount > 1"
 						class="-card-hidden"
 						:count="canBuyMultipleAmount"
-						@click.native="onBuyMultiple(canBuyMultipleAmount)"
+						@click.native="onBuyStickers(canBuyMultipleAmount)"
 					/>
 				</div>
 				<hr class="underbar underbar-center" />
@@ -133,6 +154,7 @@
 	grid-template-columns: repeat(auto-fit, $card-width)
 	justify-content: center
 	grid-gap: $card-margin * 2
+	z-index: 1
 
 .-card-revealed-effect
 	position: absolute
@@ -150,6 +172,20 @@
 
 .-revealed-controls
 	margin-top: 20px
+
+	&, &-load, &-top, &-placeholder
+		z-index: 0
+
+	&-load
+		margin-top: 20px
+		width: 100%
+
+	&-top
+		margin-bottom: 20px
+
+	&-placeholder
+		margin: 10px 0
+		height: 36px
 
 $-hidden-card-color-shadow-small = 10px
 $-hidden-card-color-shadow-large = 20px

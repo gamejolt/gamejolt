@@ -24,8 +24,11 @@ export default class AppStickerCollectModal extends BaseModal {
 		this.isLoading = false;
 	}
 
-	onCollected(count = 1) {
+	onRedeemed(count = 1) {
 		this.balance -= this.stickerCost * count;
+	}
+
+	onCollected() {
 		if (this.balance < this.stickerCost) {
 			this.modal.resolve(this.balance);
 		}

@@ -1,22 +1,22 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit, Prop } from 'vue-property-decorator';
+import { StickerCount } from '../../../app/views/dashboard/stickers/stickers';
+import { numberSort } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
 import { propRequired } from '../../../utils/vue';
 import { Api } from '../../api/api.service';
 import { Growls } from '../../growls/growls.service';
+import { Ruler } from '../../ruler/ruler-service';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import AppStickerCard from '../card/card.vue';
 import AppStickerCardHidden from '../card/hidden/hidden.vue';
 import { Sticker } from '../sticker.model';
 
-// Using for testing
-type StickerType = {
-	id: number;
-	rarity: number;
-	img_url: string;
-	count: number;
-};
+// Sync these up with '../card/variables.styl' - needed to calculate
+// how many cards to show per row when redeeming multiple stickers.
+const CardWidth = 150;
+const CardMargin = 8;
 
 @Component({
 	components: {
@@ -31,19 +31,27 @@ export default class AppStickerCollect extends Vue {
 	@Prop(propRequired(Number)) balance!: number;
 	@Prop(propRequired(Number)) stickerCost!: number;
 
-	// Need the total count of the stickers for balance deduction?
-	purchasedStickersCount = 0;
-	// Array of unique stickers that were purchased, with counts for duplicates.
-	purchasedStickers: Sticker[] = [];
-	// An array of the sticker IDs we already have in our purchasedStickers list.
-	private uniqueStickers: Number[] = [];
+	purchasedStickers: StickerCount[] = [];
+	stickersPerRow = 5;
+	shownRows = 1;
 
 	isRevealing = false;
 	isRevealed = false;
 	showCollectControls = false;
 
+	@Emit('redeem') emitRedeem(_count: number) {}
+	@Emit('collect') emitCollect() {}
+
+	mounted() {
+		// Returns the amount of stickers to display per row so we don't have weird row wrapping.
+		this.stickersPerRow = Math.floor(
+			Ruler.width(this.$el as HTMLElement) / (CardWidth + CardMargin * 2)
+		);
+	}
+
 	get canReveal() {
-		return this.balance >= this.stickerCost;
+		// Returns 'false' if unable to purchase more and the user is not currently looking at purchased cards.
+		return this.balance >= this.stickerCost || this.isRevealing || this.isRevealed;
 	}
 
 	get canBuyStickerAmount() {
@@ -51,19 +59,16 @@ export default class AppStickerCollect extends Vue {
 	}
 
 	get canBuyMultipleAmount() {
-		// Capped at 20 cards for testing
+		// Capped at 20 stickers to limit requests.
 		return Math.min(this.canBuyStickerAmount, 20);
 	}
 
-	get shouldAnimateRarity() {
-		// Don't want to make things laggy by playing too many animations.
-		return this.uniqueStickers.length <= 8;
+	get limitedStickerDisplay() {
+		// Limits the sticker display by rows of stickers.
+		return this.purchasedStickers.slice(0, this.stickersPerRow * this.shownRows);
 	}
 
-	@Emit('collect')
-	emitCollect(_count: number) {}
-
-	async onBuySticker() {
+	async onBuyStickers(count = 1) {
 		this.isRevealing = true;
 
 		let failed = false;
@@ -74,17 +79,37 @@ export default class AppStickerCollect extends Vue {
 			new Promise(async resolve => {
 				try {
 					const payload = await Api.sendRequest(
-						'/web/stickers/acquire-sticker',
+						`/web/stickers/acquire-stickers/${count}`,
 						{},
 						{ detach: true }
 					);
+
 					if (!payload || !payload.stickers || !payload.stickers.length) {
-						throw new Error('Failed to purchase sticker.');
+						throw new Error('Failed to purchase stickers.');
 					}
-					const stickerData = payload.stickers[0];
-					this.purchasedStickersCount = payload.stickers.length;
 
-					this.purchasedStickers.push(new Sticker(stickerData));
+					this.purchasedStickers = [];
+					for (const stickerCountPayload of payload.stickerCounts) {
+						const stickerData = payload.stickers.find(
+							(i: Sticker) => i.id === stickerCountPayload.sticker_id
+						);
+
+						const stickerCount: StickerCount = {
+							count: stickerCountPayload.count,
+							sticker_id: stickerCountPayload.sticker_id,
+							sticker: new Sticker(stickerData),
+						};
+
+						this.purchasedStickers.push(stickerCount);
+					}
+
+					this.purchasedStickers.sort((a, b) =>
+						numberSort(b.sticker.rarity, a.sticker.rarity)
+					);
+
+					// Emit the count that was redeemed to update the 'balance'
+					// prop, ensuring that canBuyMultipleAmount is accurate.
+					this.emitRedeem(count);
 				} catch (error) {
 					failed = true;
 				}
@@ -95,124 +120,31 @@ export default class AppStickerCollect extends Vue {
 		]);
 
 		if (failed) {
-			Growls.error(this.$gettext(`Failed to purchase sticker.`));
+			Growls.error(this.$gettext(`Failed to purchase stickers.`));
 		} else {
 			this.isRevealed = true;
 
 			setTimeout(() => {
 				this.showCollectControls = true;
-			}, 400 * (this.purchasedStickers[0].rarity + 1));
+			}, 400 * (this.purchasedStickers[0].sticker.rarity + 1));
 		}
 
 		this.isRevealing = false;
 	}
 
-	// Can probably consolidate this and the above into one.
-	async onBuyMultiple(count: number) {
-		/**
-		 * Not sure how we'll do the API call for redeeming multiple.
-		 *
-		 * Maybe something like this?
-		 * this.onBuySticker(this.canBuyMultipleAmount)
-		 */
-
-		this.isRevealing = true;
-
-		let failed = false;
-
-		await Promise.all([
-			new Promise(async resolve => {
-				try {
-					// API related things
-					// get the payload, currently treating as an array
-					const payload = this._testingRandomizeStickers(count);
-					this.purchasedStickersCount = payload.length;
-
-					payload.forEach(sticker => {
-						this._testingUpdateStickers(sticker);
-					});
-				} catch (error) {
-					failed = true;
-				}
-				resolve();
-			}),
-			// Wait the 2s of the css animation +500ms just to have the shake animation go on for a little longer
-			sleep(2500),
-		]);
-
-		if (failed) {
-			Growls.error(this.$gettext(`Failed to purchase sticker.`));
-		} else {
-			this.isRevealed = true;
-
-			setTimeout(() => {
-				this.showCollectControls = true;
-				// Should probably figure out the highest rarity card and set the delay to that.
-				// Manually setting delay to assume at least one card is 'Epic'.
-			}, 400 * 4);
-		}
-
-		this.isRevealing = false;
+	onClickRepeat(count: number) {
+		this.onClickCollect();
+		this.onBuyStickers(count);
 	}
 
-	_testingUpdateStickers(sticker: StickerType) {
-		// Ran for every sticker in the payload to
-		// correctly get the counts for each sticker.
-		if (!this.uniqueStickers.includes(sticker.id)) {
-			this.uniqueStickers.push(sticker.id);
-			return this.purchasedStickers.push(new Sticker(sticker));
-		}
-
-		this.purchasedStickers.find(item => {
-			if (item.id === sticker.id) {
-				return item.count++;
-			}
-		});
-	}
-
-	_testingRandomizeStickers(count: number) {
-		// Create random stickers using consistent images, rarity, and id.
-		let stickers: StickerType[] = [];
-
-		for (let i = 0; i < count; i++) {
-			const id = Math.round(Math.random() * 9);
-			const rarity = Math.round(id / 3);
-			const img_url = this._testingPotentialImages[id];
-
-			stickers.push({
-				id,
-				rarity,
-				img_url,
-				count: 1,
-			});
-		}
-
-		return stickers;
-	}
-
-	get _testingPotentialImages() {
-		// Random sticker images for testing
-		return [
-			'https://m.gjcdn.net/sticker/200/16-tue43zip-v4.png',
-			'https://m.gjcdn.net/sticker/200/6-hhjsbeah-v4.png',
-			'https://m.gjcdn.net/sticker/200/14-ywzaei7i-v4.png',
-			'https://m.gjcdn.net/sticker/200/18-ui4resdn-v4.png',
-			'https://m.gjcdn.net/sticker/200/22-pn7sa8ws-v4.png',
-			'https://m.gjcdn.net/sticker/200/4-xzt3d5as-v4.png',
-			'https://m.gjcdn.net/sticker/200/8-btxgfvks-v4.png',
-			'https://m.gjcdn.net/sticker/200/11-h7dti3rb-v4.png',
-			'https://m.gjcdn.net/sticker/200/19-hjig7t4h-v4.png',
-			'https://m.gjcdn.net/sticker/200/15-zvr4xpje-v4.png',
-		];
-	}
-
-	onClickCollect(count: number) {
+	onClickCollect() {
 		// Reset state
 		this.isRevealed = false;
 		this.isRevealing = false;
 		this.showCollectControls = false;
 		this.purchasedStickers = [];
+		this.shownRows = 1;
 
-		this.emitCollect(count);
+		this.emitCollect();
 	}
 }

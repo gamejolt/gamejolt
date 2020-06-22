@@ -17,6 +17,7 @@
 				:balance="balance"
 				:sticker-cost="stickerCost"
 				@collect="onCollected"
+				@redeem="onRedeemed"
 			/>
 		</div>
 	</app-modal>
