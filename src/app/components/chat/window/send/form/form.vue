@@ -17,6 +17,7 @@
 						max_content_length: maxContentLength,
 					}"
 					:max-height="160"
+					:display-rules="displayRules"
 					autofocus
 					@submit="onSubmit"
 					@insert-block-node="onEditorInsertBlockNode"

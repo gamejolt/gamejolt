@@ -40,7 +40,7 @@
 					{{ message.logged_on | date('shortTime') }}
 				</span>
 
-				<app-content-viewer :source="message.content" />
+				<app-content-viewer :source="message.content" :display-rules="displayRules" />
 			</div>
 		</div>
 	</div>

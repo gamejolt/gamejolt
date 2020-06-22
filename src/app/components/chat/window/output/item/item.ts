@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
+import { ContentRules } from '../../../../../../_common/content/content-editor/content-rules';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import { date } from '../../../../../../_common/filters/date';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
@@ -28,6 +29,7 @@ export default class AppChatWindowOutputItem extends Vue {
 
 	readonly date = date;
 	readonly ChatMessage = ChatMessage;
+	readonly displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
 
 	get loggedOn() {
 		return date(this.message.logged_on, 'medium');

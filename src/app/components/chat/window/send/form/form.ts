@@ -5,6 +5,7 @@ import { EventBus } from '../../../../../../system/event/event-bus.service';
 import { propRequired } from '../../../../../../utils/vue';
 import { ContentContext } from '../../../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../../../_common/content/content-document';
+import { ContentRules } from '../../../../../../_common/content/content-editor/content-rules';
 import AppFormControlContentTS from '../../../../../../_common/form-vue/control/content/content';
 import AppFormControlContent from '../../../../../../_common/form-vue/control/content/content.vue';
 import AppForm from '../../../../../../_common/form-vue/form';
@@ -32,7 +33,10 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	@Prop(propRequired(Boolean)) singleLineMode!: boolean;
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 
-	contentContext: ContentContext = 'chat-message';
+	readonly contentContext: ContentContext = 'chat-message';
+	// Allow images to be up to 100px in height so that image and a chat message fit into the editor without scrolling.
+	readonly displayRules = new ContentRules({ maxMediaWidth: 125, maxMediaHeight: 100 });
+
 	resizeObserver?: ResizeObserver;
 	isEditorFocused = false;
 

@@ -3,6 +3,7 @@ import { propOptional } from '../../../../utils/vue';
 import { ContentContext } from '../../../content/content-context';
 import AppContentEditorTS from '../../../content/content-editor/content-editor';
 import { AppContentEditorLazy } from '../../../content/content-editor/content-editor-lazy';
+import { ContentRules } from '../../../content/content-editor/content-rules';
 import BaseFormControlTS from '../base';
 
 @Component({
@@ -37,6 +38,8 @@ export default class AppFormControlContent extends BaseFormControlTS {
 	@Prop(propOptional(Boolean, false)) singleLineMode!: boolean;
 
 	@Prop(propOptional(Number, 200)) maxHeight!: number;
+
+	@Prop(propOptional(ContentRules)) displayRules?: ContentRules;
 
 	$refs!: {
 		editor: AppContentEditorTS;

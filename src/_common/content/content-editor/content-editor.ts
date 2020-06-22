@@ -13,6 +13,7 @@ import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format
 import { ContentHydrator } from '../content-hydrator';
 import { ContentOwner } from '../content-owner';
 import { ContentEditorService } from './content-editor.service';
+import { ContentRules } from './content-rules';
 import { ContentTempResource } from './content-temp-resource.service';
 import AppContentEditorBlockControls from './controls/block/controls.vue';
 import AppContentEditorControlsEmojiPanelTS from './controls/emoji/panel';
@@ -83,6 +84,8 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 	/** Sets the max height of the editor before it starts scrolling. Passing 0 or a negative value will unrestrict the height. */
 	@Prop(propOptional(Number, 200)) maxHeight!: number;
+
+	@Prop(propOptional(ContentRules)) displayRules?: ContentRules;
 
 	$_veeValidate = {
 		value: () => this.value,
@@ -446,5 +449,14 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		}
 
 		this.stateCounter++;
+	}
+
+	getContentRules() {
+		if (this.displayRules) {
+			return this.displayRules;
+		}
+
+		// Return default values.
+		return new ContentRules();
 	}
 }

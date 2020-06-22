@@ -52,6 +52,7 @@ export default class AppContentMediaItem extends Vue {
 	mediaItem: MediaItem | null = null;
 	hasError = false;
 	resizeObserver!: ResizeObserver;
+	computedWidth = this.mediaItemWidth;
 	computedHeight = this.mediaItemHeight;
 	imageLoaded = false;
 
@@ -90,7 +91,7 @@ export default class AppContentMediaItem extends Vue {
 		if (GJ_IS_SSR) {
 			return '100%';
 		}
-		return this.mediaItemWidth > 0 ? this.mediaItemWidth + 'px' : 'auto';
+		return this.computedWidth > 0 ? this.computedWidth + 'px' : 'auto';
 	}
 
 	get containerHeight() {
@@ -154,9 +155,10 @@ export default class AppContentMediaItem extends Vue {
 		// Observe the change to the width property, the be able to instantly recompute the height.
 		// We compute the height property of the element based on the computed width to be able to set a proper placeholder.
 		this.resizeObserver = new ResizeObserver(() => {
-			this.setHeight();
+			this.computeSize();
 		});
 		this.resizeObserver.observe(this.$refs.container);
+		this.computeSize();
 	}
 
 	onRemoved() {
@@ -182,10 +184,18 @@ export default class AppContentMediaItem extends Vue {
 		this.resizeObserver.disconnect();
 	}
 
-	setHeight() {
-		const width = this.$refs.container.clientWidth;
-		const relWidth = width / this.mediaItemWidth;
-		this.computedHeight = this.mediaItemHeight * relWidth;
+	computeSize() {
+		const maxContainerWidth = this.$refs.container.getBoundingClientRect().width;
+		let maxWidth = this.owner.getContentRules().maxMediaWidth;
+		if (maxWidth === null || maxWidth > maxContainerWidth) {
+			maxWidth = maxContainerWidth;
+		}
+		const maxHeight = this.owner.getContentRules().maxMediaHeight;
+
+		const size = computeSize(this.mediaItemWidth, this.mediaItemHeight, maxWidth, maxHeight);
+
+		this.computedWidth = size.width;
+		this.computedHeight = size.height;
 	}
 
 	onImageLoad() {
@@ -195,4 +205,55 @@ export default class AppContentMediaItem extends Vue {
 	destroyed() {
 		this.resizeObserver.disconnect();
 	}
+}
+
+/**
+ * Function that computes an output size (width/height) given the input parameters.
+ * Base width/height are the actual width/height of the object to be displayed.
+ * Max width/height are the maximum allowed width/height of the object.
+ */
+export function computeSize(
+	baseWidth: number,
+	baseHeight: number,
+	maxWidth: number | null,
+	maxHeight: number | null
+) {
+	let width = baseWidth;
+	let height = baseHeight;
+
+	let relativeWidth = null;
+	let relativeHeight = null;
+
+	if (maxWidth !== null && width > maxWidth) {
+		width = maxWidth;
+		relativeWidth = width / baseWidth;
+	}
+	if (maxHeight !== null && height > maxHeight) {
+		height = maxHeight;
+		relativeHeight = height / baseHeight;
+	}
+
+	if (relativeWidth !== null && relativeHeight !== null) {
+		// Object is larger than both max width and max height.
+		const scaledWidth = baseWidth * (maxHeight! / baseHeight);
+		const scaledHeight = baseHeight * (maxWidth! / baseWidth);
+		if (scaledWidth > scaledHeight) {
+			width = maxWidth!;
+			height = scaledHeight;
+		} else {
+			width = scaledWidth;
+			height = maxHeight!;
+		}
+	} else if (relativeWidth !== null) {
+		// Object is only larger than max width.
+		height *= relativeWidth;
+	} else if (relativeHeight !== null) {
+		// Object is only larger than max height.
+		width *= relativeHeight;
+	}
+
+	return {
+		width,
+		height,
+	};
 }
