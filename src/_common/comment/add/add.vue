@@ -16,6 +16,8 @@
 				}"
 				:validate-on="['blur']"
 				:startup-activity="editorStartupActivity"
+				:max-height="maxHeight"
+				:display-rules="displayRules"
 				@focus="onFocusEditor"
 				@blur="onBlurEditor"
 			/>
