@@ -8,6 +8,9 @@
 	>
 		<div
 			class="media-item"
+			:class="{
+				'media-item-editing': isEditing,
+			}"
 			:style="{
 				'align-items': itemAlignment,
 			}"
@@ -87,7 +90,9 @@
 	flex-direction: column
 	margin-bottom: $line-height-computed
 	cursor: default
-	min-height: 44px // make sure the X button fits properly, usually not a problem unless the image is super wide
+
+	&-editing
+		min-height: 44px // Make sure the X button fits properly, usually not a problem unless the image is super wide
 
 .media-item-container
 	display: flex
