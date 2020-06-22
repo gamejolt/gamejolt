@@ -93,16 +93,21 @@ export default class AppChatWindowOutput extends Vue {
 			this.onMessagesLengthChange
 		);
 
-		this.newMessageDeregister = EventBus.on('Chat.newMessage', (event: ChatNewMessageEvent) => {
-			// When the user sent a message, we want the chat to scroll all the way down to show that message.
-			if (this.user && event.message.user.id === this.user.id) {
-				this.autoscroll();
+		this.newMessageDeregister = EventBus.on(
+			'Chat.newMessage',
+			async (event: ChatNewMessageEvent) => {
+				// When the user sent a message, we want the chat to scroll all the way down to show that message.
+				if (this.user && event.message.user.id === this.user.id) {
+					await this.$nextTick();
+					this.autoscroll();
+				}
 			}
-		});
+		);
 
-		this.inputResizeDeregister = EventBus.on('Chat.inputResize', () => {
+		this.inputResizeDeregister = EventBus.on('Chat.inputResize', async () => {
 			// When the chat's input size changes, we want to scroll to the bottom, so the input doesn't start to cover the message list.
 			if (this.shouldScroll) {
+				await this.$nextTick();
 				this.autoscroll();
 			}
 		});
