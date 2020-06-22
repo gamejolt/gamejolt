@@ -53,7 +53,7 @@ async function pollRequest(
 			finished = true;
 		} catch (e) {
 			const sleepMs = Math.min(30000, Math.random() * delay * 1000 + 1000);
-			console.log(`[Chat] Failed request [${context}]. Reattempt in ${sleepMs} ms.`);
+			console.error(`[Chat] Failed request [${context}]. Reattempt in ${sleepMs} ms.`);
 			await sleep(sleepMs);
 		}
 
