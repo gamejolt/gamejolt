@@ -68,7 +68,7 @@ export class ChatRoomChannel extends Channel {
 	}
 
 	processNewRoomMessage(message: ChatMessage) {
-		processNewChatOutput(this.client, [message], false);
+		processNewChatOutput(this.client, this.roomId, [message], false);
 
 		const friend = this.client.friendsList.getByRoom(message.room_id);
 		if (friend) {

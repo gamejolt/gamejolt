@@ -3,6 +3,7 @@ import { ChatUser } from './user';
 export type ChatMessageType = 0 | 1;
 
 export const CHAT_MESSAGE_MAX_CONTENT_LENGTH = 1000;
+export const TIMEOUT_CONSIDER_QUEUED = 1500; // Time in ms until a queued message should be displayed as such.
 
 export class ChatMessage {
 	static readonly TypeNormal = 0;
@@ -25,6 +26,7 @@ export class ChatMessage {
 	_isQueued = false;
 	_showAsQueued = false; // Only after some time do we show a message as queued. Before that, we pretend like it went through.
 	_isProcessing = false;
+	_error = false; // When an error was received trying to send the message.
 
 	constructor(data: Partial<ChatMessage> = {}) {
 		Object.assign(this, data);

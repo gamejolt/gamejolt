@@ -9,7 +9,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { ChatClient, ChatKey, ChatNewMessageEvent, loadOlderChatMessages } from '../../client';
-import { ChatMessage } from '../../message';
+import { ChatMessage, TIMEOUT_CONSIDER_QUEUED } from '../../message';
 import { ChatRoom } from '../../room';
 import AppChatWindowOutputItem from './item/item.vue';
 
@@ -139,7 +139,8 @@ export default class AppChatWindowOutput extends Vue {
 	updateVisibleQueuedMessages() {
 		// Display queued messages as queued that take longer than a certain amount of ms for the server to reply to.
 		for (const message of this.queuedMessages) {
-			message._showAsQueued = Date.now() - message.logged_on.getTime() > 1250;
+			message._showAsQueued =
+				Date.now() - message.logged_on.getTime() > TIMEOUT_CONSIDER_QUEUED;
 		}
 	}
 
@@ -218,7 +219,8 @@ export default class AppChatWindowOutput extends Vue {
 			return false;
 		}
 
-		const position = this.allMessages.indexOf(message);
-		return this.allMessages.length - position === newCount;
+		// Use messages, don't consider queued messages here.
+		const position = this.messages.indexOf(message);
+		return this.messages.length - position === newCount;
 	}
 }

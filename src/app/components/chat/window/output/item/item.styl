@@ -53,7 +53,7 @@
 	&-small-time
 		position: absolute
 		left: -($avatar-size) - ($left-gutter-size * 0.75)
-		top: 8px
+		top: 6px
 		font-size: $font-size-tiny
 		theme-prop('color', 'fg-muted')
 		opacity: 0
@@ -63,6 +63,32 @@
 		// Never show this on small devices. It's probably a phone anyway, and touch can't activate this.
 		@media $media-xs
 			display: none
+
+	&-byline-error
+		cursor: pointer
+		vertical-align: middle
+
+	&-byline-notice
+		vertical-align: middle
+
+	&-queue-error
+		position: absolute
+		left: -($avatar-size) - ($left-gutter-size * 0.5)
+		top: 6px
+		user-select: none
+		cursor: pointer
+
+		@media $media-xs
+			left: -($left-gutter-size)
+
+	&-queue-notice
+		position: absolute
+		left: -($avatar-size) - ($left-gutter-size * 0.5)
+		top: 6px
+		user-select: none
+
+		@media $media-xs
+			left: -($left-gutter-size)
 
 	&-byline
 		margin-bottom: 4px
@@ -122,11 +148,17 @@
 .-chat-message-queued
 	color: var(--theme-fg-muted)
 
-	// .chat-window-message-content-wrap
-	// 	filter: grayscale(0.5) brightness(0.5)
-
 	.chat-window-message-avatar
-		filter: grayscale(0.5) brightness(0.5)
+		filter: grayscale(0.75) brightness(0.9)
+
+	>>> .content-image
+		filter: grayscale(0.75) brightness(0.9)
+
+	>>> .emoji
+		filter: grayscale(1) brightness(0.9)
+
+	>>> .gif-outer
+		filter: grayscale(0.75) brightness(0.9)
 
 .-chat-message-new
 		border-top-color: var(--theme-notice)

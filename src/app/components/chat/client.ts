@@ -2,7 +2,7 @@ import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
 import Vue from 'vue';
 import { EventBus } from '../../../system/event/event-bus.service';
-import { arrayRemove } from '../../../utils/array';
+import { arrayRemove, numberSort } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -407,27 +407,42 @@ export function queueChatMessage(chat: ChatClient, content: string, roomId: numb
 
 	chat.messageQueue.push(message);
 
-	sendNextMessage(chat);
+	sendChatMessage(chat, message);
 }
 
 function setTimeSplit(chat: ChatClient, roomId: number, message: ChatMessage) {
 	message.combine = false;
 	message.dateSplit = false;
 
-	if (chat.messages[roomId].length) {
-		const latestMessage = chat.messages[roomId][chat.messages[roomId].length - 1];
+	let messages = chat.messages[roomId];
+
+	// For queued messages, we also factor in the other queued messages.
+	if (message._isQueued) {
+		messages = messages.concat(chat.messageQueue.filter(i => i.room_id === roomId));
+	}
+
+	// Find the message preceeding this one.
+	// If we can't locate the message in the list, we assume it's not in the list yet and about to be added to the end.
+	// Therefore, we use the last message in the list as previous and pretend this message is at the end of the list.
+	let messageIndex = messages.findIndex(i => i.id === message.id);
+	if (messageIndex === -1 && messages.length > 0) {
+		messageIndex = messages.length;
+	}
+
+	if (messageIndex > 0) {
+		const previousMessage = messages[messageIndex - 1];
 
 		// Combine if the same user and within 5 minutes of their previous message.
 		if (
-			message.user.id === latestMessage.user.id &&
-			message.logged_on.getTime() - latestMessage.logged_on.getTime() <= 5 * 60 * 1000
+			message.user.id === previousMessage.user.id &&
+			message.logged_on.getTime() - previousMessage.logged_on.getTime() <= 5 * 60 * 1000
 		) {
 			message.combine = true;
 		}
 
 		// If the date is different than the date for the previous
 		// message, we want to split it in the view.
-		if (message.logged_on.toDateString() !== latestMessage.logged_on.toDateString()) {
+		if (message.logged_on.toDateString() !== previousMessage.logged_on.toDateString()) {
 			message.dateSplit = true;
 			message.combine = false;
 		}
@@ -473,12 +488,13 @@ function setupRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
 		Vue.set(chat.messages, '' + room.id, []);
 
 		setChatRoom(chat, room);
-		processNewChatOutput(chat, messages, true);
+		processNewChatOutput(chat, room.id, messages, true);
 	}
 }
 
 export function processNewChatOutput(
 	chat: ChatClient,
+	roomId: number,
 	messages: ChatMessage[],
 	isHistorical: boolean
 ) {
@@ -496,23 +512,13 @@ export function processNewChatOutput(
 			});
 		}
 	});
-}
 
-function sendNextMessage(chat: ChatClient) {
-	if (!chat.room) {
-		return;
-	}
-
-	const message = chat.messageQueue.find(i => !i._isProcessing);
-
-	if (!message) {
-		return;
-	}
-
-	sendChatMessage(chat, message);
+	// After we received and output the message(s), update the time split for queued messages.
+	chat.messageQueue.filter(i => i.room_id === roomId).forEach(i => setTimeSplit(chat, roomId, i));
 }
 
 function sendChatMessage(chat: ChatClient, message: ChatMessage) {
+	message._error = false;
 	message._isProcessing = true;
 	chat.roomChannels[message.room_id]
 		.push('message', { content: message.content })
@@ -526,7 +532,34 @@ function sendChatMessage(chat: ChatClient, message: ChatMessage) {
 
 			const newMessage = new ChatMessage(data);
 			chat.roomChannels[message.room_id].processNewRoomMessage(newMessage);
+		})
+		.receive('error', response => {
+			console.error('[Chat] Received error sending message', response);
+			message._error = true;
+			message._isProcessing = false;
 		});
+}
+
+export function retryFailedQueuedMessage(chat: ChatClient, message: ChatMessage) {
+	if (!message._isQueued || !message._error) {
+		return;
+	}
+
+	// Assign new logged on time and order queued messages by date.
+	message.logged_on = new Date();
+
+	const roomQueuedMessages = arrayRemove(chat.messageQueue, i => i.room_id === message.room_id);
+	if (roomQueuedMessages) {
+		roomQueuedMessages.sort((a, b) => numberSort(a.logged_on.getTime(), b.logged_on.getTime()));
+		chat.messageQueue.push(...roomQueuedMessages);
+	}
+
+	// After that, update the timesplit of those queued messages to make sure it's still correct after reordering.
+	chat.messageQueue
+		.filter(i => i.room_id === message.room_id)
+		.forEach(i => setTimeSplit(chat, message.room_id, i));
+
+	sendChatMessage(chat, message);
 }
 
 export function loadOlderChatMessages(chat: ChatClient, roomId: number) {
@@ -543,7 +576,7 @@ export function loadOlderChatMessages(chat: ChatClient, roomId: number) {
 				// We have to clear out all messages and add them again so that we
 				// calculate proper date splits and what not.
 				chat.messages[roomId] = [];
-				processNewChatOutput(chat, messages, false);
+				processNewChatOutput(chat, roomId, messages, false);
 			}
 
 			resolve();

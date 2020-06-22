@@ -5,7 +5,7 @@ import { ContentRules } from '../../../../../../_common/content/content-editor/c
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import { date } from '../../../../../../_common/filters/date';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { ChatClient, ChatKey } from '../../../client';
+import { ChatClient, ChatKey, retryFailedQueuedMessage } from '../../../client';
 import { ChatMessage } from '../../../message';
 import { ChatRoom } from '../../../room';
 
@@ -33,5 +33,9 @@ export default class AppChatWindowOutputItem extends Vue {
 
 	get loggedOn() {
 		return date(this.message.logged_on, 'medium');
+	}
+
+	onClickResend() {
+		retryFailedQueuedMessage(this.chat, this.message);
 	}
 }

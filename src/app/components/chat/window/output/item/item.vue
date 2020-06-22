@@ -20,20 +20,52 @@
 					{{ message.user.display_name }} </router-link
 				><span class="chat-window-message-username"> @{{ message.user.username }}</span
 				><span class="chat-window-message-time">
-					<span v-app-tooltip="loggedOn">
+					<span v-if="!message._showAsQueued" v-app-tooltip="loggedOn">
 						{{ message.logged_on | date('shortTime') }}
+					</span>
+					<span
+						v-else-if="message._error"
+						class="chat-window-message-byline-error"
+						v-app-tooltip="$gettext(`Failed to send. Press to retry`)"
+						@click="onClickResend"
+					>
+						<app-jolticon icon="notice" notice />
+					</span>
+					<span
+						v-else
+						class="chat-window-message-byline-notice"
+						v-app-tooltip="$gettext(`Sending...`)"
+					>
+						<app-jolticon icon="broadcast" />
 					</span>
 				</span>
 			</div>
 
 			<div class="chat-window-message-content-wrap">
-				<span
-					v-if="message.combine"
-					class="chat-window-message-small-time"
-					v-app-tooltip="loggedOn"
-				>
-					{{ message.logged_on | date('shortTime') }}
-				</span>
+				<template v-if="message.combine">
+					<span
+						v-if="!message._showAsQueued"
+						class="chat-window-message-small-time"
+						v-app-tooltip="loggedOn"
+					>
+						{{ message.logged_on | date('shortTime') }}
+					</span>
+					<span
+						v-else-if="message._error"
+						class="chat-window-message-queue-error"
+						v-app-tooltip="$gettext(`Failed to send. Press to retry`)"
+						@click="onClickResend"
+					>
+						<app-jolticon icon="notice" notice />
+					</span>
+					<span
+						v-else
+						class="chat-window-message-queue-notice"
+						v-app-tooltip="$gettext(`Sending...`)"
+					>
+						<app-jolticon icon="broadcast" />
+					</span>
+				</template>
 
 				<app-content-viewer :source="message.content" :display-rules="displayRules" />
 			</div>
