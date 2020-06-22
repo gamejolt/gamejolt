@@ -53,12 +53,16 @@
 	&-small-time
 		position: absolute
 		left: -($avatar-size) - ($left-gutter-size * 0.75)
-		top: 6px
+		top: 8px
 		font-size: $font-size-tiny
 		theme-prop('color', 'fg-muted')
 		opacity: 0
 		transition: opacity 0.1s ease
 		user-select: none
+
+		// Never show this on small devices. It's probably a phone anyway, and touch can't activate this.
+		@media $media-xs
+			display: none
 
 	&-byline
 		margin-bottom: 4px
