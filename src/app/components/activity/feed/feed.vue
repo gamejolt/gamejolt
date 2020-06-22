@@ -53,10 +53,16 @@
 
 			<app-loading v-if="feed.isLoadingMore" class="-bottom-loading loading-centered" />
 
-			<div class="alert full-bleed-xs" v-if="feed.reachedEnd">
-				<translate>
-					A wild Snorlax blocks your path. Looks like it's the end of this feed.
-				</translate>
+			<div class="-no-posts full-bleed-xs text-center" v-if="feed.reachedEnd">
+				<app-theme-svg src="~img/no-posts.svg" />
+				<div class="-no-posts-spacing lead text-muted">
+					<div>
+						<translate>A wild Snorlax blocks your path.</translate>
+					</div>
+					<div>
+						<translate>Looks like it's the end of this feed.</translate>
+					</div>
+				</div>
 			</div>
 		</app-scroll-inview>
 	</div>

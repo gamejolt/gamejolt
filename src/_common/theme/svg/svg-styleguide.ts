@@ -46,6 +46,7 @@ export default class AppThemeSvgStyleguide extends BaseForm<FormModel> {
 		require('../../../app/img/game-jolt-logo.svg'),
 		require('../../../app/img/game-jolt-client-logo.svg'),
 		require('../../../app/img/jolt.svg'),
+		require('../../../app/img/no-posts.svg'),
 	];
 	readonly FillList = [
 		'fill-offset',

@@ -12,6 +12,7 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppScrollInview } from '../../../../_common/scroll/inview/inview';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
+import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import AppActivityFeedItem from './item/item.vue';
 import AppActivityFeedNewButton from './new-button/new-button.vue';
 import { ActivityFeedView } from './view';
@@ -24,6 +25,7 @@ import { ActivityFeedView } from './view';
 		AppAdWidget,
 		AppExpand,
 		AppScrollInview,
+		AppThemeSvg,
 	},
 })
 export default class AppActivityFeed extends Vue {
