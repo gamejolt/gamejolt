@@ -30,9 +30,16 @@
 					:autoscroll-anchor-key="autoscrollAnchorKey"
 				>
 					<h1>
-						{{ user.display_name }}
-						<app-user-verified-tick :user="user" big />
-						<small>@{{ user.username }}</small>
+						<router-link
+							:to="{
+								name: 'profile.overview',
+								params: { username: user.username },
+							}"
+						>
+							{{ user.display_name }}
+							<app-user-verified-tick :user="user" big />
+							<small>@{{ user.username }}</small>
+						</router-link>
 					</h1>
 					<div class="small text-muted">
 						<!-- Joined on -->
