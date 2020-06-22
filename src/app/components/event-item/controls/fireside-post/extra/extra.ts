@@ -175,6 +175,7 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 			await this.post.$reject(postCommunity.community);
 			this.emitReject(postCommunity.community);
 		} catch (err) {
+			console.warn('Failed to eject post');
 			return;
 		}
 	}
