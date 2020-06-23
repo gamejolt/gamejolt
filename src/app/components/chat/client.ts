@@ -76,6 +76,11 @@ export class ChatClient {
 	friendsPopulated = false;
 
 	room: ChatRoom | null = null;
+	/**
+	 * Used to check which room is currently being polled.
+	 * We are only allowing polling of one room simultaneously
+	 */
+	pollingRoomId = -1;
 
 	// The following are indexed by room ID.
 	roomChannels: { [k: string]: ChatRoomChannel } = {};
@@ -290,11 +295,24 @@ async function joinUserChannel(chat: ChatClient, userId: number) {
 async function joinRoomChannel(chat: ChatClient, roomId: number) {
 	const channel = new ChatRoomChannel(roomId, chat);
 
+	if (chat.pollingRoomId === roomId) {
+		console.log('[Chat] Do not attempt to join the same room twice.', roomId);
+		return;
+	}
+
+	chat.pollingRoomId = roomId;
+
 	await pollRequest(
 		chat,
 		`Join room channel: ${roomId}`,
 		() =>
 			new Promise((resolve, reject) => {
+				// If the client started polling a different room, stop polling this one.
+				if (chat.pollingRoomId !== roomId) {
+					console.log('[Chat] Stop joining room', roomId);
+					resolve();
+				}
+
 				channel
 					.join()
 					.receive('error', reject)
