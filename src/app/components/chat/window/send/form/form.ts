@@ -130,6 +130,10 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 			// Wait for errors, then clear them.
 			await this.$nextTick();
 			this.$refs.form.clearErrors();
+		} else {
+			// When the user tried to submit an empty doc and is in multi line mode, reset to single line.
+			// They are probably trying to exit that mode, since submitting an empty message is nonsense.
+			this.emitSingleLineModeChange(true);
 		}
 	}
 
