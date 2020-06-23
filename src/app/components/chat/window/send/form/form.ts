@@ -42,6 +42,9 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	resizeObserver?: ResizeObserver;
 	isEditorFocused = false;
 
+	// Don't show "Do you want to save" when dismissing the form.
+	warnOnDiscard = false;
+
 	$refs!: {
 		form: AppForm;
 		editor: AppFormControlContentTS;
