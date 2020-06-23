@@ -29,7 +29,7 @@ $-button-size = 60px
 	white-space: nowrap
 	transition: transform 300ms $strong-ease-out
 
-.-next, .-prev
+.-prev, .-next
 	rounded-corners-lg()
 	visibility: hidden
 	opacity: 0
@@ -37,11 +37,11 @@ $-button-size = 60px
 	top: 50%
 	width: $-button-size
 	height: $-button-size
-	line-height: $-button-size
+	line-height: @height
 	margin-top: -(@height / 2)
+	text-align: center
 	z-index: 2
 	background-color: rgba($black, 0.25)
-	text-align: center
 	transition: opacity 0.2s ease
 
 	// Hide and disable slider controls for mobile devices
@@ -56,16 +56,15 @@ $-button-size = 60px
 	&:hover
 		background-color: rgba($black, 0.5)
 
+.-prev
+	left: -($-item-padding-container)
+	border-top-left-radius: 0
+	border-bottom-left-radius: 0
+
 .-next
 	right: -($-item-padding-container)
 	border-top-right-radius: 0
 	border-bottom-right-radius: 0
-
-.-prev
-	// left: 0
-	left: -($-item-padding-container)
-	border-top-left-radius: 0
-	border-bottom-left-radius: 0
 
 .-indicator
 	margin-top: 10px
