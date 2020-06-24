@@ -61,7 +61,18 @@ export class ChatRoomChannel extends Channel {
 		// We handle this message as incoming in the chat client as a response to sending the message.
 		// So as to not duplicate the message in the room, ignore it here.
 		if (this.client.currentUser && this.client.currentUser.id === message.user.id) {
-			return;
+			// The only exception is if that message was not already received, and the client is not having any messages queued.
+			// This is so when a user has the same room open in two windows, and they send a message in one, they receive it in the other.
+			// We can safely assume that they wouldn't try and use two windows to send messages in the same room at the same time.
+			const hasQueuedMessages = this.client.messageQueue.some(
+				i => i.room_id === message.room_id
+			);
+			const hasReceivedMessage = this.client.messages[message.room_id].some(
+				i => i.id === message.id
+			);
+			if (hasQueuedMessages || hasReceivedMessage) {
+				return;
+			}
 		}
 
 		this.processNewRoomMessage(message);
