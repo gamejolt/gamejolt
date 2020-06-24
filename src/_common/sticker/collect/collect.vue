@@ -3,7 +3,7 @@
 		<div class="-reveal">
 			<div v-if="!canReveal">
 				<app-sticker-card-hidden
-					v-app-tooltip.touchable="$gettext(`Not enough progress to unlock sticker`)"
+					v-app-tooltip.touchable="$gettext(`Not enough progress to unlock stickers`)"
 				/>
 			</div>
 			<div v-else-if="isRevealing" class="-card-revealing-outer">
@@ -12,7 +12,7 @@
 			<template v-else-if="isRevealed && !!purchasedStickers.length">
 				<div
 					v-if="showCollectControls && !!canBuyStickerAmount"
-					class="-revealed-controls-top anim-fade-in"
+					class="-revealed-controls-above anim-fade-in"
 				>
 					<app-button primary @click="onClickRepeat(canBuyMultipleAmount)">
 						<translate :translate-params="{ count: canBuyMultipleAmount }">
@@ -40,7 +40,7 @@
 
 				<div
 					v-if="limitedStickerDisplay.length < purchasedStickers.length"
-					class="-revealed-controls-load page-cut"
+					class="-revealed-controls-load-more page-cut"
 				>
 					<app-button trans @click="shownRows++">
 						<translate>Load More</translate>
@@ -173,15 +173,15 @@
 .-revealed-controls
 	margin-top: 20px
 
-	&, &-load, &-top, &-placeholder
+	&, &-above, &-load-more, &-placeholder
 		z-index: 0
 
-	&-load
+	&-above
+		margin-bottom: 20px
+
+	&-load-more
 		margin-top: 20px
 		width: 100%
-
-	&-top
-		margin-bottom: 20px
 
 	&-placeholder
 		margin: 10px 0

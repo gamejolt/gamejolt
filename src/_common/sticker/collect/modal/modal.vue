@@ -7,7 +7,7 @@
 		</div>
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Unlock Sticker</translate>
+				<translate>Unlock Stickers</translate>
 			</h2>
 		</div>
 		<div class="modal-body">
