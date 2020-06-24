@@ -11,20 +11,4 @@
 	/>
 </template>
 
-<style lang="stylus" scoped>
-@require '~styles/variables'
-
-/**
- * This gives the chat windows something to anchor to in the hot-bottom.
- */
-.chat-windows
-	position: relative
-	height: 1px
-	margin-bottom: 10px
-	margin-right: $shell-pane-width
-	display: flex
-	justify-content: center
-	align-items: flex-end
-</style>
-
 <script lang="ts" src="./windows"></script>
