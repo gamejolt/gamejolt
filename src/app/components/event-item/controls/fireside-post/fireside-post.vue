@@ -1,6 +1,7 @@
 <template>
 	<div class="event-item-controls-fireside-post">
 		<div class="-row">
+			<div class="-row-overlay" />
 			<div v-if="showUserControls" class="-row">
 				<app-fireside-post-like-widget :post="post" trans @change="emitLikeChange" />
 
@@ -100,6 +101,7 @@
 @require '~styles-lib/mixins'
 
 .event-item-controls-fireside-post
+	position: relative
 	display: flex
 	flex-direction: column
 	flex-grow: 1
@@ -107,6 +109,22 @@
 	.-row
 		display: flex
 		align-items: center
+		// Needs to be higher than the z-index of AppStickerTarget
+		z-index: 1
+
+		&-overlay
+			change-bg('bg')
+			position: absolute
+			top: -4px
+			right: 0
+			bottom: 0
+			left: 0
+			opacity: 0.9
+			z-index: -1
+			// This lets the overlay get as close as it can
+			// to the post border without overlapping it.
+			margin-left: -($grid-gutter-width / 2) + 2px
+			margin-right: -($grid-gutter-width / 2) + 2px
 
 	.-inline-button
 		display: inline-flex
