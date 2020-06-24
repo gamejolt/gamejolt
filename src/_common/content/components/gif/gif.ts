@@ -1,7 +1,7 @@
-import ResizeObserver from 'resize-observer-polyfill';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
+import { AppObserveDimensions } from '../../../observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../screen/screen-service';
 import { AppScrollInview } from '../../../scroll/inview/inview';
 import { ContentOwner } from '../../content-owner';
@@ -13,7 +13,9 @@ import { computeSize } from '../media-item/media-item';
 		AppBaseContentComponent,
 		AppScrollInview,
 	},
-	directives: {},
+	directives: {
+		AppObserveDimensions,
+	},
 })
 export default class AppContentGif extends Vue {
 	@Prop(String)
@@ -44,7 +46,6 @@ export default class AppContentGif extends Vue {
 		container: HTMLElement;
 	};
 
-	resizeObserver!: ResizeObserver;
 	computedHeight = this.height;
 	computedWidth = this.width;
 	isInview = false;
@@ -65,14 +66,7 @@ export default class AppContentGif extends Vue {
 		return this.computedHeight > 0 ? this.computedHeight + 'px' : 'auto';
 	}
 
-	async mounted() {
-		// Observe the change to the width property, the be able to instantly recompute the height.
-		// We compute the height property of the element based on the computed width to be able to set a proper placeholder.
-		this.resizeObserver = new ResizeObserver(() => {
-			this.computeSize();
-		});
-		this.resizeObserver.observe(this.$refs.container);
-
+	mounted() {
 		this.computeSize();
 	}
 
@@ -92,10 +86,6 @@ export default class AppContentGif extends Vue {
 
 	onRemoved() {
 		this.$emit('removed');
-	}
-
-	destroyed() {
-		this.resizeObserver.disconnect();
 	}
 
 	onInviewChange(inview: boolean) {

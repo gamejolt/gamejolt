@@ -1,4 +1,3 @@
-import ResizeObserver from 'resize-observer-polyfill';
 import Component from 'vue-class-component';
 import { Emit, InjectReactive, Prop, Watch } from 'vue-property-decorator';
 import { EventBus } from '../../../../../../system/event/event-bus.service';
@@ -10,6 +9,7 @@ import AppFormControlContentTS from '../../../../../../_common/form-vue/control/
 import AppFormControlContent from '../../../../../../_common/form-vue/control/content/content.vue';
 import AppForm from '../../../../../../_common/form-vue/form';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
+import { AppObserveDimensions } from '../../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../../_common/shortkey/shortkey.vue';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
@@ -28,6 +28,7 @@ export type FormModel = {
 	},
 	directives: {
 		AppTooltip,
+		AppObserveDimensions,
 	},
 })
 export default class AppChatWindowSendForm extends BaseForm<FormModel> {
@@ -39,7 +40,6 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	// Allow images to be up to 100px in height so that image and a chat message fit into the editor without scrolling.
 	readonly displayRules = new ContentRules({ maxMediaWidth: 125, maxMediaHeight: 100 });
 
-	resizeObserver?: ResizeObserver;
 	isEditorFocused = false;
 
 	// Don't show "Do you want to save" when dismissing the form.
@@ -99,26 +99,12 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		return [CHAT_MESSAGE_MAX_CONTENT_LENGTH];
 	}
 
-	mounted() {
-		this.resizeObserver = new ResizeObserver(() => {
-			EventBus.emit('Chat.inputResize');
-		});
-		this.resizeObserver.observe(this.$refs.editor.$el);
-	}
-
-	destroyed() {
-		if (this.resizeObserver) {
-			this.resizeObserver.disconnect();
-			this.resizeObserver = undefined;
-		}
-	}
-
 	async submitMessage() {
 		let doc;
 
 		try {
 			doc = ContentDocument.fromJson(this.formModel.content);
-		} catch (error) {
+		} catch {
 			// Tried submitting empty doc.
 			return;
 		}
@@ -154,7 +140,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		this.$refs.editor.focus();
 	}
 
-	onEditorInsertBlockNode(nodeType: string) {
+	onEditorInsertBlockNode(_nodeType: string) {
 		this.emitSingleLineModeChange(false);
 	}
 
@@ -167,7 +153,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		await this.$nextTick();
 		if (!wasShifted && this.shouldShiftEditor) {
 			// We want to emit this event here too, to make sure we scroll down when the controls pop up on mobile.
-			EventBus.emit('Chat.inputResize');
+			this.onInputResize();
 		}
 	}
 
@@ -179,5 +165,9 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		if (!this.isEditorFocused) {
 			this.$refs.editor.focus();
 		}
+	}
+
+	onInputResize() {
+		EventBus.emit('Chat.inputResize');
 	}
 }

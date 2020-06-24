@@ -11,7 +11,7 @@
 				minHeight: containerMinHeight,
 			}"
 		>
-			<app-scroll-scroller @scroll.native="onScroll">
+			<app-scroll-scroller @scroll.native="onScroll" thin>
 				<div
 					class="-doc"
 					:style="{ 'max-height': maxHeight > 0 ? maxHeight + 'px' : 'auto' }"

@@ -20,7 +20,7 @@ export default class AppContentEditorControlsInsetContainer extends Vue {
 	};
 
 	get shouldShow() {
-		return this.visible && this.top > 8 && this.boxHeight - this.top > 12;
+		return this.visible && this.top > -8 && this.boxHeight - this.top > 12;
 	}
 
 	@Watch('stateCounter')

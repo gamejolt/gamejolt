@@ -11,6 +11,7 @@
 			<div class="-input">
 				<app-form-control-content
 					ref="editor"
+					v-app-observe-dimensions="onInputResize"
 					:content-context="contentContext"
 					:temp-resource-context-data="contentEditorTempResourceContextData"
 					:placeholder="placeholder"

@@ -11,7 +11,7 @@
 				<app-content-viewer :source="message.content" />
 			</app-fade-collapse>
 
-			<!-- Used to block any interaction with the content inside the viewer. -->
+			<!-- Block any interaction with the content inside the viewer. -->
 			<div class="-content-overlay"></div>
 		</div>
 	</div>
@@ -31,6 +31,7 @@
 
 .-content
 	position: relative
+	// Used to make text-overflow work with this flex item.
 	min-width: 0
 	width: 100%
 

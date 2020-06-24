@@ -1,10 +1,10 @@
-import ResizeObserver from 'resize-observer-polyfill';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { AppImgResponsive } from '../../../img/responsive/responsive';
 import AppLoading from '../../../loading/loading.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../media-item/media-item-model';
+import { AppObserveDimensions } from '../../../observe-dimensions/observe-dimensions.directive';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import { ContentEditorLinkModal } from '../../content-editor/modals/link/link-modal.service';
 import { ContentOwner } from '../../content-owner';
@@ -19,6 +19,7 @@ import AppBaseContentComponent from '../base/base-content-component.vue';
 	},
 	directives: {
 		AppTooltip,
+		AppObserveDimensions,
 	},
 })
 export default class AppContentMediaItem extends Vue {
@@ -51,7 +52,6 @@ export default class AppContentMediaItem extends Vue {
 
 	mediaItem: MediaItem | null = null;
 	hasError = false;
-	resizeObserver!: ResizeObserver;
 	computedWidth = this.mediaItemWidth;
 	computedHeight = this.mediaItemHeight;
 	imageLoaded = false;
@@ -151,13 +151,7 @@ export default class AppContentMediaItem extends Vue {
 		});
 	}
 
-	async mounted() {
-		// Observe the change to the width property, the be able to instantly recompute the height.
-		// We compute the height property of the element based on the computed width to be able to set a proper placeholder.
-		this.resizeObserver = new ResizeObserver(() => {
-			this.computeSize();
-		});
-		this.resizeObserver.observe(this.$refs.container);
+	mounted() {
 		this.computeSize();
 	}
 
@@ -180,10 +174,6 @@ export default class AppContentMediaItem extends Vue {
 		this.$emit('updateAttrs', { href: '' });
 	}
 
-	beforeDestroy() {
-		this.resizeObserver.disconnect();
-	}
-
 	computeSize() {
 		const maxContainerWidth = this.$refs.container.getBoundingClientRect().width;
 		let maxWidth = this.owner.getContentRules().maxMediaWidth;
@@ -200,10 +190,6 @@ export default class AppContentMediaItem extends Vue {
 
 	onImageLoad() {
 		this.imageLoaded = true;
-	}
-
-	destroyed() {
-		this.resizeObserver.disconnect();
 	}
 }
 

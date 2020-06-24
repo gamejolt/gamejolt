@@ -4,7 +4,6 @@ import { isMac } from '../../../../../utils/utils';
 import { propRequired } from '../../../../../utils/vue';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import AppContentEditor from '../../../../../_common/content/content-editor/content-editor.vue';
-import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { ChatClient, ChatKey, queueChatMessage } from '../../client';
 import { ChatRoom } from '../../room';
@@ -14,9 +13,6 @@ import AppChatWindowSendForm from './form/form.vue';
 	components: {
 		AppContentEditor,
 		AppChatWindowSendForm,
-	},
-	directives: {
-		AppFocusWhen,
 	},
 })
 export default class AppChatWindowSend extends Vue {

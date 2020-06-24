@@ -18,6 +18,7 @@
 			<div
 				class="media-item-container"
 				ref="container"
+				v-app-observe-dimensions="computeSize"
 				:style="{
 					width: containerWidth,
 					height: containerHeight,
@@ -92,7 +93,8 @@
 	cursor: default
 
 	&-editing
-		min-height: 44px // Make sure the X button fits properly, usually not a problem unless the image is super wide
+		// Make sure the X button fits properly, usually not a problem unless the image is super wide.
+		min-height: 44px
 
 .media-item-container
 	display: flex

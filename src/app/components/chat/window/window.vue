@@ -27,6 +27,7 @@
 
 					<div class="nav-well">
 						<div class="chat-compiled-room-description">
+							<!-- TODO: Remove -->
 							<div v-html="room.description"></div>
 						</div>
 					</div>
@@ -106,6 +107,7 @@
 									<div
 										class="chat-window-header-room-description chat-compiled-room-description"
 									>
+										<!-- TODO: Remove -->
 										<div
 											class="anim-fade-in no-animate-xs"
 											v-html="room.description"
