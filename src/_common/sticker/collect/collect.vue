@@ -15,9 +15,9 @@
 					class="-revealed-controls-top anim-fade-in"
 				>
 					<app-button primary @click="onClickRepeat(canBuyMultipleAmount)">
-						<translate>Unlock</translate>
-						{{ canBuyMultipleAmount }}
-						<translate>More</translate>
+						<translate :translate-params="{ count: canBuyMultipleAmount }">
+							Unlock %{count} More
+						</translate>
 					</app-button>
 				</div>
 				<div v-else class="-revealed-controls-placeholder" />
