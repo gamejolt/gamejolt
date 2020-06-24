@@ -88,11 +88,6 @@ export default class AppChatWindowOutput extends Vue {
 		// Check every 100ms for which queued messages we should show.
 		this.checkQueuedTimeout = setInterval(this.updateVisibleQueuedMessages, 100);
 
-		this.$watch(
-			() => this.messages.length + this.queuedMessages.length,
-			this.onMessagesLengthChange
-		);
-
 		this.newMessageDeregister = EventBus.on(
 			'Chat.newMessage',
 			async (event: ChatNewMessageEvent) => {
@@ -203,7 +198,9 @@ export default class AppChatWindowOutput extends Vue {
 		this.$el.scrollTop = diff;
 	}
 
-	private onMessagesLengthChange() {
+	@Watch('messages.length')
+	@Watch('queuedMessages.length')
+	onMessagesLengthChange() {
 		if (this.shouldScroll) {
 			this.autoscroll();
 		}
