@@ -142,6 +142,7 @@ function reset(chat: ChatClient) {
 	chat.currentUser = null;
 	chat.friendsList = new ChatUserCollection(ChatUserCollection.TYPE_FRIEND);
 	chat.friendsPopulated = false;
+	chat.pollingRoomId = -1;
 
 	chat.room = null;
 
@@ -401,6 +402,7 @@ export function leaveChatRoom(chat: ChatClient) {
 	if (channel) {
 		delete chat.roomChannels[chat.room.id];
 		leaveChannel(chat, channel);
+		chat.pollingRoomId = -1;
 	}
 }
 
