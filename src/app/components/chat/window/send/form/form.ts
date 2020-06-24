@@ -138,6 +138,10 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	}
 
 	async onSubmit() {
+		if (this.hasFormErrors) {
+			return;
+		}
+
 		await this.submitMessage();
 
 		// Refocus editor after submitting message with enter.
