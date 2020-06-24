@@ -318,6 +318,7 @@ async function joinRoomChannel(chat: ChatClient, roomId: number) {
 					.join()
 					.receive('error', reject)
 					.receive('ok', response => {
+						chat.pollingRoomId = -1;
 						chat.roomChannels[roomId] = channel;
 						channel.room = new ChatRoom(response.room);
 						const messages = response.messages.map(
