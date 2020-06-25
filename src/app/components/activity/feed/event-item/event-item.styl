@@ -1,4 +1,5 @@
 @require '../variables'
+@require '~styles/variables'
 @require '~styles-lib/mixins'
 
 .-container
@@ -73,11 +74,36 @@
 	@media $media-sm-up
 		margin-top: $-item-padding-v
 
-.-poll, .-manage, .-communities, .fireside-post-lead
+.-poll, .-manage, .fireside-post-lead
 	margin-bottom: $-item-padding-xs-v
 
 	@media $media-sm-up
 		margin-bottom: $-item-padding-v
 
 .-communities
-	white-space: nowrap
+	padding-bottom: $-item-padding-xs-v
+
+	@media $media-sm-up
+		padding-bottom: $-item-padding-v
+
+.-communities
+	position: relative
+	// Needs to be higher than the z-index of AppStickerTarget
+	z-index: 1
+
+	&-list
+		white-space: nowrap
+
+	&-overlay
+		change-bg('bg')
+		position: absolute
+		top: -4px
+		right: 0
+		bottom: 4px
+		left: 0
+		opacity: 0.9
+		z-index: -1
+		// This lets the overlay get as close as it can
+		// to the post border without overlapping it.
+		margin-left: -($grid-gutter-width / 2) + 2px
+		margin-right: -($grid-gutter-width / 2) + 2px

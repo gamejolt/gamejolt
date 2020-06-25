@@ -17,7 +17,7 @@
 <style lang="stylus" scoped>
 .-sticker-target
 	position: relative
-	// Needs to be lower than the z-index of AppEventItemControlsFiresidePost
+	// Needs to be lower than the z-index of elements we want above the stickers.
 	z-index: 0
 
 .-sticker-animate
