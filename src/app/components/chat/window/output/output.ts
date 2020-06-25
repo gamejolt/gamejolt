@@ -106,6 +106,14 @@ export default class AppChatWindowOutput extends Vue {
 				this.autoscroll();
 			}
 		});
+
+		// When the total count (messages and queuedMessages) changes, scroll down.
+		// This is not a @Watch decorator, because we don't want to react to just one of them changing
+		// An example of when this can happen is when a queued message gets moved to the messages array.
+		this.$watch(
+			() => this.messages.length + this.queuedMessages.length,
+			this.onMessagesLengthChange
+		);
 	}
 
 	destroyed() {
@@ -198,8 +206,6 @@ export default class AppChatWindowOutput extends Vue {
 		this.$el.scrollTop = diff;
 	}
 
-	@Watch('messages.length')
-	@Watch('queuedMessages.length')
 	onMessagesLengthChange() {
 		if (this.shouldScroll) {
 			this.autoscroll();
