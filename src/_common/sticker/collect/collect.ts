@@ -15,8 +15,8 @@ import { Sticker } from '../sticker.model';
 
 // Sync these up with '../card/variables.styl' - needed to calculate
 // how many cards to show per row when redeeming multiple stickers.
-const CardWidth = 150;
-const CardMargin = 8;
+const CARD_WIDTH = 150;
+const CARD_MARGIN = 8;
 
 @Component({
 	components: {
@@ -33,7 +33,7 @@ export default class AppStickerCollect extends Vue {
 
 	purchasedStickers: StickerCount[] = [];
 	stickersPerRow = 5;
-	shownRows = 1;
+	showAll = false;
 
 	isRevealing = false;
 	isRevealed = false;
@@ -45,7 +45,7 @@ export default class AppStickerCollect extends Vue {
 	mounted() {
 		// Returns the amount of stickers to display per row so we don't have weird row wrapping.
 		this.stickersPerRow = Math.floor(
-			Ruler.width(this.$el as HTMLElement) / (CardWidth + CardMargin * 2)
+			Ruler.width(this.$el as HTMLElement) / (CARD_WIDTH + CARD_MARGIN * 2)
 		);
 	}
 
@@ -63,9 +63,13 @@ export default class AppStickerCollect extends Vue {
 		return Math.min(this.canBuyStickerAmount, 20);
 	}
 
-	get limitedStickerDisplay() {
-		// Limits the sticker display by rows of stickers.
-		return this.purchasedStickers.slice(0, this.stickersPerRow * this.shownRows);
+	get shownStickers() {
+		if (this.showAll) {
+			return this.purchasedStickers;
+		}
+
+		// Limit the shown stickers to a single row.
+		return this.purchasedStickers.slice(0, this.stickersPerRow);
 	}
 
 	async onBuyStickers(count = 1) {
@@ -143,7 +147,7 @@ export default class AppStickerCollect extends Vue {
 		this.isRevealing = false;
 		this.showCollectControls = false;
 		this.purchasedStickers = [];
-		this.shownRows = 1;
+		this.showAll = false;
 
 		this.emitCollect();
 	}

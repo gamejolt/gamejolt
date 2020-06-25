@@ -23,7 +23,7 @@
 				<div v-else class="-revealed-controls-placeholder" />
 
 				<div class="-card-revealed-container">
-					<div v-for="{ sticker, sticker_id, count } of limitedStickerDisplay" :key="sticker_id">
+					<div v-for="{ sticker, sticker_id, count } of shownStickers" :key="sticker_id">
 						<app-sticker-card class="-card-revealed" :sticker="sticker" :label="`+${count}`">
 							<div
 								v-if="sticker.rarity > 0"
@@ -39,11 +39,11 @@
 				</div>
 
 				<div
-					v-if="limitedStickerDisplay.length < purchasedStickers.length"
+					v-if="shownStickers.length < purchasedStickers.length"
 					class="-revealed-controls-load-more page-cut"
 				>
-					<app-button trans @click="shownRows++">
-						<translate>Load More</translate>
+					<app-button trans @click="showAll = true">
+						<translate>Show All</translate>
 					</app-button>
 				</div>
 

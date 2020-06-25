@@ -40,7 +40,7 @@ export default class AppModal extends Vue {
 		scroller: AppScrollScrollerTS;
 	};
 
-	@Emit('click-away') emitClickAway() {}
+	@Emit('close') emitClose() {}
 
 	get zIndex() {
 		return 1050 + this.modal.index;
@@ -109,7 +109,7 @@ export default class AppModal extends Vue {
 	}
 
 	dismiss() {
-		this.emitClickAway();
+		this.emitClose();
 		this.modal.dismiss();
 	}
 
