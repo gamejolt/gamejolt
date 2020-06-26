@@ -70,7 +70,7 @@
 							Everyone else seems to be in sleep mode, why don't you start the conversation?
 						</translate>
 						<translate v-else>
-							You're not able to comment on this.
+							Everyone else seems to be in sleep mode.
 						</translate>
 					</p>
 				</app-illustration>
