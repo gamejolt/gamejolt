@@ -67,7 +67,7 @@
 				<app-illustration src="~img/ill/no-comments.svg">
 					<p>
 						<translate v-if="shouldShowAdd">
-							It's feeling a bit empty in here. Start talking!
+							Everyone else seems to be in sleep mode, why don't you start the conversation?
 						</translate>
 						<translate v-else>
 							You're not able to comment on this.
