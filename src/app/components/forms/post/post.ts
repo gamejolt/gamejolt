@@ -353,6 +353,20 @@ export default class FormPost extends BaseForm<FormPostModel>
 		return this.defaultCommunity;
 	}
 
+	@Watch('formModel.post_to_user_profile')
+	onPostToUserProfileToggle() {
+		if (!!this.formModel.post_to_user_profile) {
+			this.setField('as_game_owner', false);
+		}
+	}
+
+	@Watch('formModel.as_game_owner')
+	onPostAsGameOwnerToggle() {
+		if (!!this.formModel.as_game_owner) {
+			this.setField('post_to_user_profile', false);
+		}
+	}
+
 	get shouldShowAuthorOptions() {
 		if (!this.model?.game || !this.user) {
 			return false;
@@ -381,6 +395,8 @@ export default class FormPost extends BaseForm<FormPostModel>
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
 
 		this.setField('attached_communities', []);
+
+		this.setField('post_to_user_profile', true);
 
 		if (model.videos.length) {
 			this.setField(
@@ -450,7 +466,10 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 		if (
 			this.defaultCommunity instanceof Community &&
-			this.defaultChannel instanceof CommunityChannel
+			this.defaultChannel instanceof CommunityChannel &&
+			this.defaultCommunity.postableChannels.some(
+				channel => channel.title === this.defaultChannel!.title
+			)
 		) {
 			this.attachCommunity(this.defaultCommunity, this.defaultChannel);
 		}
@@ -604,6 +623,32 @@ export default class FormPost extends BaseForm<FormPostModel>
 	onMediaUploaded(mediaItems: MediaItem[]) {
 		const newMedia = mediaItems.concat(this.formModel.media);
 		this.setField('media', newMedia);
+	}
+
+	onMediaUploadFailed(reason: string) {
+		let message = this.$gettext(
+			'Something went wrong while we tried uploading your media. Maybe try again?'
+		);
+		switch (reason) {
+			case 'no-dimensions':
+				message = this.$gettext('We failed to analyze your media.');
+				break;
+			case 'no-image-video':
+				message = this.$gettext(
+					'Looks like the file you uploaded is not an image or video we recognize.'
+				);
+				break;
+			case 'no-extension':
+				message = this.$gettext('We could not determine the file type of your media.');
+				break;
+			case 'invalid-mime-type':
+				message = this.$gettext(
+					'We currently do not support the format of your uploaded media. Try exporting it to a different format.'
+				);
+				break;
+		}
+
+		Growls.error(message, this.$gettext('Failed to upload your media.'));
 	}
 
 	onMediaSort(mediaItems: MediaItem[]) {
@@ -864,13 +909,18 @@ export default class FormPost extends BaseForm<FormPostModel>
 			{
 				file: files,
 				progress: e2 => this.setField('_progress', e2),
+				noErrorRedirect: true,
 			}
 		);
 
 		this.isUploadingPastedImage = false;
 
-		// Apply returned media items.
-		const mediaItems = MediaItem.populate($payload.mediaItems);
-		this.onMediaUploaded(mediaItems);
+		if ($payload.success) {
+			// Apply returned media items.
+			const mediaItems = MediaItem.populate($payload.mediaItems);
+			this.onMediaUploaded(mediaItems);
+		} else {
+			this.onMediaUploadFailed($payload.reason);
+		}
 	}
 }

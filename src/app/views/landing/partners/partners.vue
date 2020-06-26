@@ -3,7 +3,7 @@
 		<section class="section landing-header text-center">
 			<div class="container">
 				<h1>
-					<app-theme-svg class="bolt" src="~img/jolt.svg" alt="" />
+					<app-theme-svg class="bolt" src="~img/jolt.svg" alt="" strict-colors />
 					Partners
 				</h1>
 

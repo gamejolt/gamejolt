@@ -21,7 +21,7 @@
 	display: flex
 	justify-content: center
 	align-items: center
-	border: $border-width-base dashed
+	border: $border-width-large dashed
 	border-color: var(--theme-fg-muted)
 	color: var(--theme-fg-muted)
 	border-radius: 100%

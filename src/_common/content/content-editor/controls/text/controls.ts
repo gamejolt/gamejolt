@@ -2,7 +2,7 @@ import { lift, toggleMark, wrapIn } from 'prosemirror-commands';
 import { Mark, MarkType, Node } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import { MouseState } from '../../../../../utils/mouse';
 import { Screen } from '../../../../screen/screen-service';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
@@ -46,9 +46,6 @@ export default class AppContentEditorTextControls extends Vue {
 	get shouldShowHeading() {
 		return this.capabilities.heading && (this.isInHeading || this.testWrapInHeading());
 	}
-
-	@Emit('click')
-	emitClicked() {}
 
 	mounted() {
 		this.mouse = new MouseState();
@@ -134,7 +131,7 @@ export default class AppContentEditorTextControls extends Vue {
 		const { from, to } = this.view.state.selection;
 		const start = this.view.coordsAtPos(from);
 		const end = this.view.coordsAtPos(to);
-		const box = this.$refs.container.offsetParent.getBoundingClientRect();
+		const box = this.$refs.container.offsetParent!.getBoundingClientRect();
 
 		const left =
 			Math.max((start.left + end.left) / 2, start.left + 3) -
@@ -157,22 +154,18 @@ export default class AppContentEditorTextControls extends Vue {
 
 	onClickBold() {
 		this.dispatchMark(this.view.state.schema.marks.strong);
-		this.emitClicked();
 	}
 
 	onClickItalic() {
 		this.dispatchMark(this.view.state.schema.marks.em);
-		this.emitClicked();
 	}
 
 	onClickStrikethrough() {
 		this.dispatchMark(this.view.state.schema.marks.strike);
-		this.emitClicked();
 	}
 
 	onClickCode() {
 		this.dispatchMark(this.view.state.schema.marks.code);
-		this.emitClicked();
 	}
 
 	async onClickLink() {
@@ -189,7 +182,6 @@ export default class AppContentEditorTextControls extends Vue {
 				});
 			}
 		}
-		this.emitClicked();
 	}
 
 	testWrapInHeading() {
@@ -215,7 +207,6 @@ export default class AppContentEditorTextControls extends Vue {
 				lifted = lift(this.view.state, this.view.dispatch);
 			} while (lifted && this.testIsInHeading(node));
 		}
-		this.emitClicked();
 	}
 
 	doWrapInHeading(level: number) {
@@ -247,7 +238,5 @@ export default class AppContentEditorTextControls extends Vue {
 		} else {
 			this.doWrapInHeading(level);
 		}
-
-		this.emitClicked();
 	}
 }

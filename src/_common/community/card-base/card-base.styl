@@ -1,0 +1,58 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+.community-card
+	rounded-corners-lg()
+	margin-bottom: $line-height-computed
+	overflow: hidden
+
+.popper-wrapper .community-card
+	min-width: 300px
+
+.-well
+	position: relative
+	padding: 10px
+
+.-info
+	change-bg('bg')
+	text-align: center
+
+.-header
+	change-bg('link')
+	height: 100px
+	background-repeat: no-repeat
+	background-position: center center
+	background-size: cover
+
+.-thumbnail
+	change-bg('bg')
+	img-circle()
+	position: relative
+	display: block
+	width: 100px
+	height: 100px
+	margin-top: -(@width * (1 - 0.618))
+	margin-left: auto
+	margin-right: auto
+	border: 4px solid var(--theme-bg-actual)
+	overflow: hidden
+	z-index: 2
+
+.-name
+	font-weight: bold
+	font-size: $font-size-large
+
+	&:not(.-overflow)
+		text-overflow()
+
+	&.-overflow
+		overflow-wrap: break-word
+		word-wrap: break-word
+
+.-controls
+	clear: both
+	margin-top: $line-height-computed
+	display: flex
+
+.-moderate
+	margin-left: 8px

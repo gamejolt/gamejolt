@@ -7,10 +7,10 @@
 						<b>@%{ username }</b>
 						has invited you to collaborate on this game.
 					</p>
-					<app-button primary @click="acceptCollaboration()">
+					<app-button solid @click="acceptCollaboration()">
 						<translate>Accept</translate>
 					</app-button>
-					<app-button trans @click="declineCollaboration()">
+					<app-button solid @click="declineCollaboration()">
 						<translate>Decline</translate>
 					</app-button>
 				</div>

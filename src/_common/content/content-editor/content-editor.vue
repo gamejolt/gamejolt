@@ -70,7 +70,6 @@
 				:capabilities="capabilities"
 				:view="view"
 				:state-counter="stateCounter"
-				@click="onTextControlClicked"
 			/>
 		</transition>
 		<transition name="fade">

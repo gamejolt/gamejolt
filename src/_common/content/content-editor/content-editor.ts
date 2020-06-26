@@ -398,10 +398,6 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		this.stateCounter++;
 	}
 
-	onTextControlClicked() {
-		this.highlightCurrentSelection();
-	}
-
 	public showEmojiPanel() {
 		if (this.$refs.emojiPanel instanceof AppContentEditorControlsEmojiPanel) {
 			this.$refs.emojiPanel.show();

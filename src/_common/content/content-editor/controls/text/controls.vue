@@ -17,6 +17,7 @@
 					v-if="capabilities.textBold && !isInHeading"
 					class="control-button"
 					@click.prevent="onClickBold"
+					@mousedown.prevent
 					:class="{
 						'control-button-active': hasMark('strong'),
 					}"
@@ -28,6 +29,7 @@
 					v-if="capabilities.textItalic"
 					class="control-button"
 					@click.prevent="onClickItalic"
+					@mousedown.prevent
 					:class="{
 						'control-button-active': hasMark('em'),
 					}"
@@ -39,6 +41,7 @@
 					v-if="capabilities.textStrike"
 					class="control-button"
 					@click.prevent="onClickStrikethrough"
+					@mousedown.prevent
 					:class="{
 						'control-button-active': hasMark('strike'),
 					}"
@@ -50,6 +53,7 @@
 					v-if="capabilities.textCode"
 					class="control-button"
 					@click.prevent="onClickCode"
+					@mousedown.prevent
 					:class="{
 						'control-button-active': hasMark('code'),
 					}"
@@ -61,6 +65,7 @@
 					v-if="capabilities.textLink && capabilities.customLink"
 					class="control-button"
 					@click.prevent="onClickLink"
+					@mousedown.prevent
 					:class="{
 						'control-button-active': hasMark('link'),
 					}"
@@ -74,6 +79,7 @@
 					<button
 						class="control-button"
 						@click.prevent="onClickHeading(1)"
+						@mousedown.prevent
 						:class="{
 							'control-button-active': headingLevel === 1,
 						}"
@@ -84,6 +90,7 @@
 					<button
 						class="control-button"
 						@click.prevent="onClickHeading(2)"
+						@mousedown.prevent
 						:class="{
 							'control-button-active': headingLevel === 2,
 						}"
