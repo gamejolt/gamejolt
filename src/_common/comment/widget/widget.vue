@@ -64,14 +64,16 @@
 
 			<app-loading v-if="isLoading" class="loading-centered" />
 			<div v-else-if="shouldShowEmptyMessage">
-				<div class="alert alert-info">
-					<template v-if="shouldShowAdd">
-						<translate>It's feeling a bit empty in here. Start talking!</translate>
-					</template>
-					<template v-else>
-						<translate>There are no comments here...</translate>
-					</template>
-				</div>
+				<app-illustration src="~img/ill/no-comments.svg">
+					<p>
+						<translate v-if="shouldShowAdd">
+							Everyone else seems to be in sleep mode, why don't you start the conversation?
+						</translate>
+						<translate v-else>
+							Everyone seems to be in sleep mode.
+						</translate>
+					</p>
+				</app-illustration>
 			</div>
 		</div>
 	</div>
