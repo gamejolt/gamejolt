@@ -5,6 +5,8 @@
 </template>
 
 <style lang="stylus" scoped>
+@require '~styles/variables'
+
 .inset-controls-container
 	position: absolute
 	display: flex
