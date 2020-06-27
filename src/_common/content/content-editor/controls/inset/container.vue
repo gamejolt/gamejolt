@@ -7,9 +7,10 @@
 <style lang="stylus" scoped>
 .inset-controls-container
 	position: absolute
-	right: 0
 	display: flex
 	align-items: center
+	// Offset for the '.form-control' padding
+	right: $padding-base-horizontal
 
 	& >>> .inset-container-controls
 		display: block

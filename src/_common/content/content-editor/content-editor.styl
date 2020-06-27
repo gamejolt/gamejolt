@@ -4,17 +4,24 @@
 .content-container
 	position: relative
 
-// Gutter space to not overlay potential content or the scroller scrollbar with the emoji/gif buttons
-.content-container-with-gutter-1
-	padding-right: 32px
+	&-scroller
+		// Spacing for the scrollbar side
+		margin-right: 4px
+		// Add extra padding to get total spacing equal to '.form-control' padding.
+		padding-right: $padding-base-horizontal - @margin-right
 
-.content-container-with-gutter-2
-	padding-right: 64px
+	// Gutter space to not overlay potential content
+	&-gutter-1
+		padding-right: 32px
+
+	&-gutter-2
+		padding-right: 64px
 
 .content-editor
 	position: relative
 	padding-top: 0
 	padding-bottom: 0
+	padding-right: 0
 
 .content-placeholder
 	top: 10px
