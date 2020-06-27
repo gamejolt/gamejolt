@@ -135,8 +135,17 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	}
 
 	@Watch('room.id')
-	onRoomChanged() {
-		// Focus editor when entering a new room.
+	async onRoomChanged() {
+		if (this.formModel.content !== '') {
+			// Clear out the editor when entering a new room.
+			this.setField('content', '');
+
+			// Wait for errors, then clear them.
+			await this.$nextTick();
+			this.$refs.form.clearErrors();
+		}
+
+		// Then focus it.
 		this.$refs.editor.focus();
 	}
 
