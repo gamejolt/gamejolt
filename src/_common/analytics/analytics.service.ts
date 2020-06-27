@@ -71,6 +71,13 @@ export class Analytics {
 		return true;
 	}
 
+	private static get commonOptions() {
+		return {
+			// Whether or not logged in.
+			dimension1: this.appUser ? 'user' : 'guest',
+		};
+	}
+
 	private static ga(...args: any[]) {
 		if (GJ_IS_SSR) {
 			return;
@@ -154,6 +161,7 @@ export class Analytics {
 		const title = window.document.title;
 
 		const options = {
+			...this.commonOptions,
 			page: path,
 			title: title,
 		};
@@ -180,6 +188,7 @@ export class Analytics {
 			);
 		} else {
 			const options = {
+				...this.commonOptions,
 				nonInteraction: 1,
 				hitCallback: true,
 			};
@@ -201,7 +210,8 @@ export class Analytics {
 		if (Environment.buildType === 'development') {
 			console.log(`Track social event: ${network}:${action}:${target}`);
 		} else {
-			this.ga('send', 'social', network, action, target, {
+			await this.ga('send', 'social', network, action, target, {
+				...this.commonOptions,
 				hitCallback: true,
 			});
 		}
@@ -216,7 +226,8 @@ export class Analytics {
 		console.info(`Timing (${category}${label ? ':' + label : ''}) ${timingVar} = ${value}`);
 
 		if (Environment.buildType === 'production') {
-			this.ga('send', 'timing', category, timingVar, value, label, {
+			await this.ga('send', 'timing', category, timingVar, value, label, {
+				...this.commonOptions,
 				hitCallback: true,
 			});
 		}
