@@ -47,6 +47,7 @@
 					:max-height="maxHeight"
 					:loading="isUploadingPastedImage"
 					@upload="onMediaUploaded($event)"
+					@error="onMediaUploadFailed($event)"
 					@remove="removeMediaItem($event)"
 					@sort="onMediaSort($event)"
 				/>
@@ -409,6 +410,7 @@
 			</div>
 		</template>
 
+		<!-- Other platforms -->
 		<div class="well fill-offset full-bleed" v-if="isPublishingToPlatforms">
 			<fieldset>
 				<app-form-legend compact deletable @delete="removePublishingToPlatforms()">
@@ -463,62 +465,6 @@
 			</translate>
 		</div>
 
-		<!-- Game options -->
-		<template v-if="authorOptionsEnabled">
-			<div class="well fill-offset full-bleed">
-				<fieldset>
-					<app-form-legend compact deletable @delete="disableAuthorOptions()">
-						<translate>Author Options</translate>
-					</app-form-legend>
-
-					<!-- Post as game owner -->
-					<app-form-group
-						name="as_game_owner"
-						v-if="model.user.id != model.game.developer.id"
-						:label="$gettext(`Post as Game Owner`)"
-					>
-						<p class="help-block">
-							<translate
-								:translate-params="{
-									owner: `@${model.user.username}`,
-									author: `@${model.game.developer.username}`,
-								}"
-							>
-								This will show %{ owner } as the user that posted instead of %{ author }.
-							</translate>
-						</p>
-						<div class="-as-owner">
-							<div class="-as-owner-item">
-								<app-form-control-toggle />
-							</div>
-							<div
-								class="-as-owner-item -as-owner-avatar"
-								v-if="formModel.as_game_owner"
-								v-app-tooltip="
-									model.game.developer.display_name + ` (@${model.game.developer.username})`
-								"
-							>
-								<app-user-avatar-img :user="model.game.developer" />
-							</div>
-						</div>
-					</app-form-group>
-
-					<!-- Post to profile -->
-					<app-form-group
-						name="post_to_user_profile"
-						v-if="user && user.id == model.user.id"
-						:label="$gettext(`Post to Profile`)"
-					>
-						<p class="help-block">
-							This will make the post show up on your profile too and not just the game page.
-						</p>
-
-						<app-form-control-toggle />
-					</app-form-group>
-				</fieldset>
-			</div>
-		</template>
-
 		<template v-if="platformRestrictions.length">
 			<div
 				v-for="restriction of platformRestrictions"
@@ -534,10 +480,10 @@
 		<!-- Communities -->
 		<template v-if="isLoaded">
 			<app-scroll-scroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
-				<transition-group class="-communities-list" name="-communities-list" tag="div">
+				<transition-group class="-communities-list" tag="div">
 					<app-form-post-community-pill-incomplete
 						v-if="incompleteDefaultCommunity"
-						class="-community-pill"
+						class="-community-pill anim-fade-in-enlarge no-animate-leave"
 						key="incomplete"
 						:communities="possibleCommunities"
 						:community="incompleteDefaultCommunity"
@@ -545,7 +491,7 @@
 					/>
 
 					<app-form-post-community-pill
-						class="-community-pill"
+						class="-community-pill anim-fade-in-enlarge no-animate-leave"
 						v-for="{ community, channel } of attachedCommunities"
 						:key="community.id"
 						:community="community"
@@ -556,37 +502,73 @@
 
 					<template v-if="!wasPublished && canAddCommunity">
 						<app-form-post-community-pill-add
-							class="-community-pill"
+							class="-community-pill anim-fade-in-enlarge no-animate-leave"
 							key="add"
 							:communities="possibleCommunities"
 							@add="attachCommunity"
+							v-app-scroll-when="scrollingKey"
 						/>
 					</template>
 				</transition-group>
 			</app-scroll-scroller>
 			<p v-else-if="!wasPublished" class="help-block">
 				<translate>Join some communities to post to them.</translate>
-				<span v-app-tooltip="$gettext(`Go to the explore page and find some!`)">
+				<span v-app-tooltip.touchable="$gettext(`Go to the explore page and find some!`)">
 					<app-jolticon class="text-muted" icon="help-circle" />
 				</span>
 			</p>
 		</template>
-
-		<app-expand v-if="!wasPublished" :when="hasChannelError">
-			<div class="-error alert alert-notice">
-				<translate>
-					Choose a channel to post to.
-				</translate>
+		<template v-else>
+			<div class="-communities-list-placeholder">
+				<div class="-community-pill-placeholder" />
 			</div>
-		</app-expand>
+		</template>
 
-		<app-expand :when="hasAuthorOptionsError">
-			<div class="-error alert alert-notice">
-				<translate>
-					Choose either posting as the game owner or sharing to your profile. Can't do both.
-				</translate>
-			</div>
-		</app-expand>
+		<!-- Author options -->
+		<template v-if="shouldShowAuthorOptions">
+			<fieldset>
+				<!-- Post to profile -->
+				<app-form-group
+					v-if="user && user.id == model.user.id"
+					name="post_to_user_profile"
+					class="sans-margin-bottom"
+					:label="$gettext(`Post to Profile`)"
+				>
+					<app-form-control-toggle class="pull-right" />
+					<p class="help-block sans-margin-top">
+						This will post to your profile as well as the game page.
+					</p>
+				</app-form-group>
+
+				<!-- Post as game owner -->
+				<app-form-group
+					v-if="model.user.id != model.game.developer.id"
+					name="as_game_owner"
+					:label="$gettext(`Post as Game Owner`)"
+				>
+					<app-form-control-toggle class="pull-right" />
+					<div
+						v-if="formModel.as_game_owner"
+						class="-author-avatar pull-right"
+						v-app-tooltip.touchable="
+							model.game.developer.display_name + ` (@${model.game.developer.username})`
+						"
+					>
+						<app-user-avatar-img :user="model.game.developer" />
+					</div>
+					<p class="help-block sans-margin-top">
+						<translate
+							:translate-params="{
+								owner: `@${model.game.developer.username}`,
+								author: `@${model.user.username}`,
+							}"
+						>
+							This will show %{ owner } as the user that posted.
+						</translate>
+					</p>
+				</app-form-group>
+			</fieldset>
+		</template>
 
 		<!-- Controls -->
 		<div class="-controls">
@@ -639,16 +621,6 @@
 					icon="share-airplane"
 					v-app-tooltip="$gettext(`Publish to Other Platforms`)"
 					@click="addPublishingToPlatforms()"
-				/>
-
-				<app-button
-					v-if="!authorOptionsEnabled && shouldShowAuthorOptions"
-					sparse
-					trans
-					circle
-					icon="user"
-					v-app-tooltip="$gettext(`Author Options`)"
-					@click="enableAuthorOptions()"
 				/>
 			</div>
 

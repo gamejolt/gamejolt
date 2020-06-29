@@ -5,14 +5,18 @@ import { CommunityChannel } from '../../../../../../_common/community/channel/ch
 import { Community } from '../../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
 import AppCommunityVerifiedTick from '../../../../../../_common/community/verified-tick/verified-tick.vue';
+import AppJolticon from '../../../../../../_common/jolticon/jolticon.vue';
 import { Popper } from '../../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
+import { AppScrollHelper } from './scroll-helper/scroll-helper';
 
 @Component({
 	components: {
 		AppPopper,
 		AppCommunityThumbnailImg,
 		AppCommunityVerifiedTick,
+		AppJolticon,
+		AppScrollHelper,
 	},
 })
 export default class AppFormPostCommunityPillSelector extends Vue {
@@ -32,8 +36,20 @@ export default class AppFormPostCommunityPillSelector extends Vue {
 		return this.selectedCommunity?.postableChannels;
 	}
 
+	get isInitial() {
+		return this.selectedCommunity === this.initialCommunity;
+	}
+
 	created() {
 		this.resetSelections();
+	}
+
+	unselectCommunity() {
+		if (this.isInitial) {
+			return;
+		}
+
+		this.selectedCommunity = null;
 	}
 
 	selectCommunity(community: Community) {

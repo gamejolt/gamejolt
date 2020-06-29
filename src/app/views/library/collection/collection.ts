@@ -25,7 +25,7 @@ import { GameListingContainer } from '../../../components/game/listing/listing-c
 import AppGameListing from '../../../components/game/listing/listing.vue';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
-import { store, Store, tillStoreBootstrapped } from '../../../store/index';
+import { Store, tillStoreBootstrapped } from '../../../store/index';
 import { LibraryModule, LibraryStore } from '../../../store/library';
 
 const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
@@ -80,12 +80,6 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 			}
 		}
 
-		// We await a user touch in the parent so this should be correct by the
-		// time we get here.
-		if (store.state.app.user) {
-			await tillStoreBootstrapped;
-		}
-
 		return payload;
 	},
 })
@@ -114,7 +108,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	type = '';
 	followerCount = 0;
 
-	collection: GameCollection | null = null;
+	collection: GameCollection = null as any;
 	bundle: GameBundle | null = null;
 	playlist: GamePlaylist | null = null;
 	jam: Jam | null = null;
@@ -195,7 +189,13 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		return null;
 	}
 
-	routeResolved($payload: any) {
+	async routeResolved($payload: any) {
+		// We await a user touch in the parent so this should be correct by the
+		// time we get here. We need to wait till they have their library loaded in.
+		if (this.app.user) {
+			await tillStoreBootstrapped;
+		}
+
 		if (!this.listing || !this.filtering) {
 			this.filtering = new GameFilteringContainer(this.$route);
 			this.listing = new GameListingContainer(this.filtering);
@@ -206,20 +206,21 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 		this.type = this.$route.meta.collectionType;
 
-		// We try pulling a populated collection from the registry.
-		// This will be the case if it's in their library.
-		// When they don't have it registered in their library, we just make an instance of a new one.
-		this.collection =
+		// We try pulling a populated collection from the registry. This will be
+		// the case if it's in their library. When they don't have it registered
+		// in their library, we just make an instance of a new one.
+		let collection =
 			this.collections.find(
 				item => item.type === this.type && (item as any).id === this.processedId
 			) || null;
 
-		if (!this.collection) {
-			this.collection = new GameCollection($payload.collection);
+		if (!collection) {
+			collection = new GameCollection($payload.collection);
 			this.playlist = $payload.playlist ? new GamePlaylist($payload.playlist) : null;
 		} else {
-			this.playlist = this.collection.playlist || null;
+			this.playlist = collection.playlist || null;
 		}
+		this.collection = collection;
 
 		this.followerCount = $payload.followerCount || 0;
 		this.bundle = $payload.bundle ? new GameBundle($payload.bundle) : null;
@@ -314,7 +315,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	}
 
 	async removeFromPlaylist(game: Game) {
-		const playlist = this.collection!.playlist!;
+		const playlist = this.collection.playlist!;
 		if (await this.removeGameFromPlaylist({ playlist, game, shouldConfirm: true })) {
 			this.reloadRoute();
 		}

@@ -12,7 +12,7 @@
 					<div>
 						<app-jolticon icon="add" big />
 						<br />
-						<b>
+						<b class="-label">
 							<translate>Add Media</translate>
 						</b>
 					</div>

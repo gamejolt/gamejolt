@@ -1,4 +1,4 @@
-import { Location } from 'vue-router';
+import type { Location, Route } from 'vue-router';
 import { Api } from '../api/api.service';
 import { Collaboratable, Perm } from '../collaborator/collaboratable';
 import { Game } from '../game/game.model';
@@ -8,62 +8,6 @@ import { Theme } from '../theme/theme.model';
 import { UserBlock } from '../user/block/block.model';
 import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from './channel/channel-permissions';
 import { CommunityChannel } from './channel/channel.model';
-
-export async function $joinCommunity(community: Community) {
-	community.is_member = true;
-	++community.member_count;
-
-	let success = false;
-	try {
-		const response = await Api.sendRequest(
-			'/web/communities/join/' + community.path,
-			{},
-			// Normally we would call the request with detach,
-			// but in this specific case we want to process the updates
-			// to the user to see if they just went over the join limit
-			{ ignoreLoadingBar: true, noErrorRedirect: true }
-		);
-
-		success = !!response.success;
-
-		if (!success) {
-			if (response) {
-				throw response;
-			}
-			throw new Error('Empty response');
-		}
-	} finally {
-		if (!success) {
-			community.is_member = false;
-			--community.member_count;
-		}
-	}
-}
-
-export async function $leaveCommunity(community: Community) {
-	community.is_member = false;
-	--community.member_count;
-
-	try {
-		await Api.sendRequest(
-			'/web/communities/leave/' + community.path,
-			{},
-			// We use these options for the request for the same reason
-			// commented in the $joinCommunity function, only to update
-			// when the user goes under the join limit.
-			{ ignoreLoadingBar: true, noErrorRedirect: true }
-		);
-	} catch (e) {
-		community.is_member = false;
-		++community.member_count;
-		throw e;
-	}
-}
-
-export const enum CommunityPresetChannelType {
-	FEATURED = 'featured',
-	ALL = 'all',
-}
 
 export class Community extends Collaboratable(Model) {
 	name!: string;
@@ -141,7 +85,7 @@ export class Community extends Collaboratable(Model) {
 
 	get routeEditLocation(): Location {
 		return {
-			name: 'communities.view.overview.edit.details',
+			name: 'communities.view.edit.details',
 			params: {
 				path: this.path,
 				id: this.id + '',
@@ -164,9 +108,13 @@ export class Community extends Collaboratable(Model) {
 	}
 
 	channelRouteLocation(channel: CommunityChannel): Location {
-		const communityLocation = this.routeLocation;
-		communityLocation.params!.channel = channel.title;
-		return communityLocation;
+		return {
+			name: 'communities.view.channel',
+			params: {
+				path: this.path,
+				channel: channel.title,
+			}
+		} as Location
 	}
 
 	$save() {
@@ -240,3 +188,63 @@ export class Community extends Collaboratable(Model) {
 }
 
 Model.create(Community);
+
+export async function $joinCommunity(community: Community) {
+	community.is_member = true;
+	++community.member_count;
+
+	let success = false;
+	try {
+		const response = await Api.sendRequest(
+			'/web/communities/join/' + community.path,
+			{},
+			// Normally we would call the request with detach,
+			// but in this specific case we want to process the updates
+			// to the user to see if they just went over the join limit
+			{ ignoreLoadingBar: true, noErrorRedirect: true }
+		);
+
+		success = !!response.success;
+
+		if (!success) {
+			if (response) {
+				throw response;
+			}
+			throw new Error('Empty response');
+		}
+	} finally {
+		if (!success) {
+			community.is_member = false;
+			--community.member_count;
+		}
+	}
+}
+
+export async function $leaveCommunity(community: Community) {
+	community.is_member = false;
+	--community.member_count;
+
+	try {
+		await Api.sendRequest(
+			'/web/communities/leave/' + community.path,
+			{},
+			// We use these options for the request for the same reason
+			// commented in the $joinCommunity function, only to update
+			// when the user goes under the join limit.
+			{ ignoreLoadingBar: true, noErrorRedirect: true }
+		);
+	} catch (e) {
+		community.is_member = false;
+		++community.member_count;
+		throw e;
+	}
+}
+
+export const enum CommunityPresetChannelType {
+	FEATURED = 'featured',
+	ALL = 'all',
+}
+
+export function isEditingCommunity(route: Route) {
+	return !!route.name && route.name.startsWith('communities.view.edit.');
+}

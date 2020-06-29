@@ -1,5 +1,6 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
+@require './_community-pill/variables'
 
 .form-group:last-child
 	margin-bottom: 10px
@@ -49,16 +50,6 @@
 .-channels, .-error, .-community-message
 	margin-bottom: 10px
 
-.-as-owner
-	clearfix()
-
-	&-item
-		float: left
-		margin-right: 10px
-
-	&-avatar
-		width: $input-height-base
-
 .-poll-option
 	display: flex
 
@@ -104,19 +95,30 @@
 		align-items: center
 		margin-bottom: 4px
 
-		&-leave-active
-			transition-duration: 0 !important
-			opacity: 0
+		&-placeholder
+			margin: 10px 0 14px
+
+		.v-leave
+			display: none
 			position: absolute
 
 .-community-pill
-	transition: all 300ms $strong-ease-out
 	flex-shrink: 0
+
+	&-placeholder
+		change-bg('bg-subtle')
+		rounded-corners()
+		width: 138px
+		height: $pill-height
 
 	// Need to apply to the button inside the pill add component too
 	&, >>> .button
 		height: 28px
 		margin-bottom: 0
+
+.-author-avatar
+	width: $input-height-base
+	margin-right: 8px
 
 @media $media-xs
 	.-controls

@@ -19,12 +19,9 @@
 					>
 						<app-img-responsive
 							v-if="!mediaItem.is_animated || !shouldVideoPlay"
+							class="-img"
 							:src="item.img_thumbnail"
 							:alt="item.caption"
-							:style="{
-								width: 'inherit',
-								height: 'inherit',
-							}"
 						/>
 						<app-video
 							v-else

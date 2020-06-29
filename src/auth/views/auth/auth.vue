@@ -22,6 +22,7 @@
 						height="18"
 						alt=""
 						class="visible-xs"
+						strict-colors
 					/>
 					<app-theme-svg
 						src="~img/game-jolt-logo.svg"
@@ -29,6 +30,7 @@
 						height="36"
 						alt=""
 						class="hidden-xs"
+						strict-colors
 					/>
 				</a>
 			</div>

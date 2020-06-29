@@ -1,8 +1,15 @@
 <template>
 	<div class="game-ogrs-tag theme-dark">
-		<app-theme-svg class="-tag" :src="imgTagUrl" width="80" height="16" :alt="imgTag" />
+		<app-theme-svg
+			class="-tag"
+			:src="imgTagUrl"
+			width="80"
+			height="16"
+			:alt="imgTag"
+			strict-colors
+		/>
 		<template v-if="full">
-			<app-theme-svg class="-face" :src="imgUrl" width="80" height="80" alt="" />
+			<app-theme-svg class="-face" :src="imgUrl" width="80" height="80" alt="" strict-colors />
 			<img class="-logo" src="./ogrs-logo.svg" width="76" height="8" alt="OGRS" />
 		</template>
 	</div>

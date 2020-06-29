@@ -10,7 +10,6 @@ import { Community } from '../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { ContentDocument } from '../../../../_common/content/content-document';
 import { ContentWriter } from '../../../../_common/content/content-writer';
-import AppExpand from '../../../../_common/expand/expand.vue';
 import { FiresidePostCommunity } from '../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import {
@@ -41,6 +40,7 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { AppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import {
 	getSketchfabIdFromInput,
@@ -102,11 +102,11 @@ type FormPostModel = FiresidePost & {
 		AppCommunityPill,
 		AppCommunityChannelSelect,
 		AppFormControlContent,
-		AppExpand,
 		AppScrollScroller,
 	},
 	directives: {
 		AppFocusWhen,
+		AppScrollWhen,
 		AppTooltip,
 		AppFormAutosize,
 	},
@@ -149,13 +149,13 @@ export default class FormPost extends BaseForm<FormPostModel>
 	publishToPlatforms: number[] | null = null;
 	isShowingMorePollOptions = false;
 	accessPermissionsEnabled = false;
-	authorOptionsEnabled = false;
 	isSavedDraftPost = false;
 	leadLengthLimit = 255;
 	isUploadingPastedImage = false;
 	maxCommunities = 0;
 	attachedCommunities: { community: Community; channel: CommunityChannel }[] = [];
 	targetableCommunities: Community[] = [];
+	scrollingKey = 1;
 
 	private updateAutosize?: () => void;
 
@@ -317,10 +317,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 		return this.hasCustomError('channel');
 	}
 
-	get hasAuthorOptionsError() {
-		return this.hasCustomError('author-options-conflict');
-	}
-
 	get possibleCommunities() {
 		// Difference between targetable and attached communities.
 		return this.targetableCommunities.filter(c1 => {
@@ -357,6 +353,20 @@ export default class FormPost extends BaseForm<FormPostModel>
 		return this.defaultCommunity;
 	}
 
+	@Watch('formModel.post_to_user_profile')
+	onPostToUserProfileToggle() {
+		if (!!this.formModel.post_to_user_profile) {
+			this.setField('as_game_owner', false);
+		}
+	}
+
+	@Watch('formModel.as_game_owner')
+	onPostAsGameOwnerToggle() {
+		if (!!this.formModel.as_game_owner) {
+			this.setField('post_to_user_profile', false);
+		}
+	}
+
 	get shouldShowAuthorOptions() {
 		if (!this.model?.game || !this.user) {
 			return false;
@@ -385,6 +395,8 @@ export default class FormPost extends BaseForm<FormPostModel>
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
 
 		this.setField('attached_communities', []);
+
+		this.setField('post_to_user_profile', true);
 
 		if (model.videos.length) {
 			this.setField(
@@ -429,10 +441,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 			this.longEnabled = true;
 		}
 
-		if (this.shouldShowAuthorOptions && (model.post_to_user_profile || model.as_game_owner)) {
-			this.authorOptionsEnabled = true;
-		}
-
 		await this.fetchTimezones();
 	}
 
@@ -458,7 +466,10 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 		if (
 			this.defaultCommunity instanceof Community &&
-			this.defaultChannel instanceof CommunityChannel
+			this.defaultChannel instanceof CommunityChannel &&
+			this.defaultCommunity.postableChannels.some(
+				channel => channel.title === this.defaultChannel!.title
+			)
 		) {
 			this.attachCommunity(this.defaultCommunity, this.defaultChannel);
 		}
@@ -492,16 +503,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 		}
 	}
 
-	@Watch('formModel.as_game_owner')
-	@Watch('formModel.post_to_user_profile')
-	validateAuthorOptions() {
-		if (this.formModel.as_game_owner && this.formModel.post_to_user_profile) {
-			this.setCustomError('author-options-conflict');
-		} else {
-			this.clearCustomError('author-options-conflict');
-		}
-	}
-
 	attachIncompleteCommunity(community: Community, channel: CommunityChannel) {
 		this.attachCommunity(community, channel, false);
 	}
@@ -514,9 +515,17 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 		if (append) {
 			this.attachedCommunities.push({ community, channel });
+			this.scrollToAdd();
 		} else {
 			this.attachedCommunities.unshift({ community, channel });
 		}
+	}
+
+	async scrollToAdd() {
+		// Wait for the DOM to update
+		await this.$nextTick();
+		// Change our scrolling key so AppScrollWhen will bring the 'Add Community' button inview.
+		this.scrollingKey *= -1;
 	}
 
 	removeCommunity(community: Community) {
@@ -614,6 +623,32 @@ export default class FormPost extends BaseForm<FormPostModel>
 	onMediaUploaded(mediaItems: MediaItem[]) {
 		const newMedia = mediaItems.concat(this.formModel.media);
 		this.setField('media', newMedia);
+	}
+
+	onMediaUploadFailed(reason: string) {
+		let message = this.$gettext(
+			'Something went wrong while we tried uploading your media. Maybe try again?'
+		);
+		switch (reason) {
+			case 'no-dimensions':
+				message = this.$gettext('We failed to analyze your media.');
+				break;
+			case 'no-image-video':
+				message = this.$gettext(
+					'Looks like the file you uploaded is not an image or video we recognize.'
+				);
+				break;
+			case 'no-extension':
+				message = this.$gettext('We could not determine the file type of your media.');
+				break;
+			case 'invalid-mime-type':
+				message = this.$gettext(
+					'We currently do not support the format of your uploaded media. Try exporting it to a different format.'
+				);
+				break;
+		}
+
+		Growls.error(message, this.$gettext('Failed to upload your media.'));
 	}
 
 	onMediaSort(mediaItems: MediaItem[]) {
@@ -799,14 +834,6 @@ export default class FormPost extends BaseForm<FormPostModel>
 		);
 	}
 
-	enableAuthorOptions() {
-		this.authorOptionsEnabled = true;
-	}
-
-	disableAuthorOptions() {
-		this.authorOptionsEnabled = false;
-	}
-
 	timezoneByName(timezone: string) {
 		for (let region in this.timezones) {
 			const tz = this.timezones[region].find(_tz => _tz.i === timezone);
@@ -882,13 +909,18 @@ export default class FormPost extends BaseForm<FormPostModel>
 			{
 				file: files,
 				progress: e2 => this.setField('_progress', e2),
+				noErrorRedirect: true,
 			}
 		);
 
 		this.isUploadingPastedImage = false;
 
-		// Apply returned media items.
-		const mediaItems = MediaItem.populate($payload.mediaItems);
-		this.onMediaUploaded(mediaItems);
+		if ($payload.success) {
+			// Apply returned media items.
+			const mediaItems = MediaItem.populate($payload.mediaItems);
+			this.onMediaUploaded(mediaItems);
+		} else {
+			this.onMediaUploadFailed($payload.reason);
+		}
 	}
 }

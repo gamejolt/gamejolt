@@ -7,11 +7,9 @@
 		</div>
 
 		<div class="modal-header">
-			<h2 class="modal-title" v-if="!collection">
-				<translate>library.playlists.save_modal.add_heading</translate>
-			</h2>
-			<h2 class="modal-title" v-if="collection">
-				<translate>library.playlists.save_modal.edit_heading</translate>
+			<h2 class="modal-title">
+				<translate v-if="!collection">library.playlists.save_modal.add_heading</translate>
+				<translate v-else>library.playlists.save_modal.edit_heading</translate>
 			</h2>
 		</div>
 

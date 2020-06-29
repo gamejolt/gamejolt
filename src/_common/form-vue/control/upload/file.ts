@@ -6,7 +6,7 @@ import { propOptional } from '../../../../utils/vue';
 export default class AppFormControlUploadFile extends Vue {
 	@Prop() id!: any;
 	@Prop() name!: any;
-	@Prop({ type: File }) value!: File | File[] | null;
+	@Prop() value!: File | File[] | null;
 	@Prop(propOptional(Boolean)) multiple?: boolean;
 	@Prop(propOptional(String)) accept?: string;
 

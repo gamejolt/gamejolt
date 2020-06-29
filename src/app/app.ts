@@ -8,6 +8,7 @@ import AppCommonShell from '../_common/shell/shell.vue';
 import { AppState, AppStore } from '../_common/store/app-store';
 import { getTranslationLang } from '../_common/translate/translate.service';
 import { ChatClient, ChatKey } from './components/chat/client';
+import { ChatClientLazy } from './components/lazy';
 import AppShell from './components/shell/shell.vue';
 import { Store } from './store';
 
@@ -80,19 +81,17 @@ export default class App extends Vue {
 	}
 
 	private async initChat() {
-		const ChatClient_ = (
-			await import(/* webpackChunkName: "chat" */ './components/chat/client')
-		).ChatClient;
-
+		const { ChatClient: ChatClient_ } = await ChatClientLazy();
 		this.chat = new ChatClient_();
 	}
 
-	private clearChat() {
+	private async clearChat() {
 		if (!this.chat) {
 			return;
 		}
 
-		this.chat.destroy();
+		const { destroy } = await ChatClientLazy();
+		destroy(this.chat);
 		this.chat = null;
 	}
 }

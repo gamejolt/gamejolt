@@ -25,8 +25,13 @@
 					:to="{ name: 'home' }"
 					v-app-track-event="`top-nav:main-menu:home`"
 				>
-					<app-theme-svg v-if="!Screen.isMobile" src="~img/game-jolt-logo.svg" alt="" />
-					<app-theme-svg v-else src="~img/jolt.svg" alt="" />
+					<app-theme-svg
+						v-if="!Screen.isMobile"
+						src="~img/game-jolt-logo.svg"
+						alt=""
+						strict-colors
+					/>
+					<app-theme-svg v-else src="~img/jolt.svg" alt="" strict-colors />
 					<span
 						class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
 						v-if="unreadActivityCount > 0"

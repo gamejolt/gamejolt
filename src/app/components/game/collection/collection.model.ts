@@ -2,8 +2,8 @@ import { Api } from '../../../../_common/api/api.service';
 import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
 import { Jam } from '../../../../_common/jam/jam.model';
 import { Model } from '../../../../_common/model/model.service';
-import { User } from '../../../../_common/user/user.model';
 import { appStore } from '../../../../_common/store/app-store';
+import { User } from '../../../../_common/user/user.model';
 
 export class GameCollection extends Model {
 	static readonly TYPE_FOLLOWED = 'followed';
@@ -53,9 +53,17 @@ export class GameCollection extends Model {
 	}
 
 	get routeLocation() {
+		let id = '' + this.id;
+		if (id[0] === '@') {
+			id = id.substring(1);
+		}
+
 		return {
-			name: this.getSref(),
-			params: this.getSrefParams(),
+			name: 'library.collection.' + this.type,
+			params: {
+				slug: this.slug,
+				id,
+			},
 		};
 	}
 
@@ -70,28 +78,6 @@ export class GameCollection extends Model {
 			title += ' - @' + this.owner.username;
 		}
 		return title;
-	}
-
-	getSref(includeParams?: boolean) {
-		let sref = 'library.collection.' + this.type;
-
-		if (includeParams) {
-			sref += '(' + JSON.stringify(this.getSrefParams()) + ')';
-		}
-
-		return sref;
-	}
-
-	getSrefParams() {
-		let id = '' + this.id;
-		if (id[0] === '@') {
-			id = id.substring(1);
-		}
-
-		return {
-			slug: this.slug,
-			id: id,
-		};
 	}
 
 	$follow() {
