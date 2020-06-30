@@ -30,6 +30,8 @@ export class AppThemeSvg extends Vue {
 	request?: Promise<any>;
 
 	get actualTheme() {
+		// 1. Use the theme we get through a prop, if there is one.
+		// 2. Check the ThemeStore for a form/page/user theme.
 		return this.theme || this.storeTheme;
 	}
 
@@ -78,6 +80,15 @@ export class AppThemeSvg extends Vue {
 				.replace(/\#2f7f6f/gi, !this.strictColors && this.isDark ? highlight : backlight)
 				.replace(/\#ff3fac/gi, notice)
 				.replace(/\#31d6ff/gi, !this.strictColors && this.isDark ? highlight : backlight);
+		} else if (!this.strictColors) {
+			// If we have no theme from the prop or the ThemeStore,
+			// that means we're using the default theme colors and
+			// only need to replace our highlight/backlight colors.
+			const { highlight, backlight } = new Theme(null);
+
+			svgData = String(svgData)
+				.replace(/\#2f7f6f/gi, this.isDark ? '#' + highlight : '#' + backlight)
+				.replace(/\#31d6ff/gi, this.isDark ? '#' + highlight : '#' + backlight);
 		}
 
 		return 'data:image/svg+xml;utf8,' + encodeURIComponent(svgData);
