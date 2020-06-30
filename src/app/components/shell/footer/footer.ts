@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
+import AppContactLink from '../../../../_common/contact-link/contact-link.vue';
 import { date } from '../../../../_common/filters/date';
-import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import AppTranslateLangSelector from '../../../../_common/translate/lang-selector/lang-selector.vue';
@@ -16,6 +16,7 @@ if (GJ_IS_CLIENT) {
 	components: {
 		AppTranslateLangSelector,
 		AppThemeSvg,
+		AppContactLink,
 	},
 	filters: {
 		date,
@@ -33,12 +34,5 @@ export default class AppShellFooter extends Vue {
 		if (ClientSystemReportModalMod) {
 			ClientSystemReportModalMod.ClientSystemReportModal.show();
 		}
-	}
-
-	onClickEmail() {
-		// If the <a> tag has the mailto in its href attribute,
-		// on certain pages the Vue router replaces part of the url with the email address,
-		// instead of redirecting to the mailto application.
-		Navigate.goto('mailto:contact@gamejolt.com');
 	}
 }
