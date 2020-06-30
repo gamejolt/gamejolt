@@ -45,7 +45,7 @@
 						'-icon-other': color !== 'notice' && color !== 'theme',
 					}"
 				>
-					<app-jolticon v-if="icon" :icon="icon" />
+					<app-jolticon v-if="shouldShowIcon" :icon="icon" />
 				</span>
 
 				<div class="-action">
@@ -101,24 +101,41 @@
 						<em>Removed</em> a %{ role } from this community.
 					</span>
 
-					<span v-else-if="item.type === 'block/user'">
+					<span v-else-if="item.type === 'block/user'" v-translate>
 						<em>Blocked</em> a user from this community.
 					</span>
 
-					<span v-else-if="item.type === 'edit/description'">
+					<span v-else-if="item.type === 'edit/description'" v-translate>
 						<em>Edited</em> the description of this community.
 					</span>
-					<span v-else-if="item.type === 'edit/thumbnail'">
+					<span v-else-if="item.type === 'edit/thumbnail'" v-translate>
 						<em>Changed</em> the thumbnail of this community.
 					</span>
-					<span v-else-if="item.type === 'edit/header'">
+					<span v-else-if="item.type === 'edit/header'" v-translate>
 						<em>Changed</em> the header of this community.
 					</span>
-					<span v-else-if="item.type === 'edit/details'">
+					<span v-else-if="item.type === 'edit/details'" v-translate>
 						<em>Edited</em> the details of this community.
 					</span>
-					<span v-else-if="item.type === 'edit/header/remove'">
+					<span v-else-if="item.type === 'edit/header/remove'" v-translate>
 						<em>Removed</em> the header of this community.
+					</span>
+
+					<span v-else-if="item.type === 'channel/add'" v-translate>
+						<em>Added</em> a new channel to this community.
+					</span>
+					<span v-else-if="item.type === 'channel/remove'" v-translate>
+						<em>Removed</em> a channel from this community.
+					</span>
+					<span v-else-if="item.type === 'channel/edit'" v-translate>
+						<em>Edited</em> a channel in this community.
+					</span>
+
+					<span v-else-if="item.type === 'game/link'" v-translate>
+						<em>Linked</em> a game to this community.
+					</span>
+					<span v-else-if="item.type === 'game/unlink'" v-translate>
+						<em>Unlinked</em> a game from this community.
 					</span>
 
 					<template v-if="shouldShowActionSecondLine">
@@ -214,6 +231,7 @@ $-avatar-size = 40px
 	margin-left: 12px
 	// Visually aligns better with the text.
 	margin-top: -1px
+	width: 20px
 
 	& *
 		vertical-align: middle

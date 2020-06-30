@@ -5,12 +5,14 @@ import { RawLocation } from 'vue-router';
 import { propRequired } from '../../../utils/vue';
 import { date } from '../../filters/date';
 import { FiresidePost } from '../../fireside/post/post-model';
+import { Game } from '../../game/game.model';
 import { Screen } from '../../screen/screen-service';
 import { AppTimeAgo } from '../../time/ago/ago';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { UserBlock } from '../../user/block/block.model';
 import AppUserAvatar from '../../user/user-avatar/user-avatar.vue';
 import { User } from '../../user/user.model';
+import { CommunityChannel } from '../channel/channel.model';
 import { CommunityActivityItem } from './activity-item.model';
 
 @Component({
@@ -28,12 +30,17 @@ import { CommunityActivityItem } from './activity-item.model';
 export default class AppCommunityActivityItem extends Vue {
 	@Prop(propRequired(CommunityActivityItem)) item!: CommunityActivityItem;
 	@Prop(propRequired(Boolean)) usersplit!: boolean;
+	@Prop(propRequired(Boolean)) showIcon!: boolean;
 
 	readonly Screen = Screen;
 	readonly date = date;
 
 	get loggedOn() {
 		return date(this.item.added_on, 'medium');
+	}
+
+	get shouldShowIcon() {
+		return !!this.icon && this.showIcon;
 	}
 
 	get icon() {
@@ -68,6 +75,15 @@ export default class AppCommunityActivityItem extends Vue {
 			return this.item.action_resource.url;
 		} else if (this.item.action_resource instanceof UserBlock) {
 			return this.item.action_resource.user.url;
+		} else if (this.item.action_resource instanceof CommunityChannel) {
+			return {
+				name: 'communities.view.channel',
+				params: {
+					channel: this.item.action_resource.title,
+				},
+			};
+		} else if (this.item.action_resource instanceof Game) {
+			return this.item.action_resource.routeLocation;
 		}
 	}
 
@@ -81,6 +97,10 @@ export default class AppCommunityActivityItem extends Vue {
 				username: this.item.action_resource.user.username,
 				reason: this.item.action_resource.reason,
 			});
+		} else if (this.item.action_resource instanceof CommunityChannel) {
+			return '#' + this.item.action_resource.title;
+		} else if (this.item.action_resource instanceof Game) {
+			return this.item.action_resource.title;
 		}
 	}
 

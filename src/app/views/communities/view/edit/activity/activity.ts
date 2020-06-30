@@ -11,6 +11,7 @@ type ActivityItem = {
 	item: CommunityActivityItem;
 	timesplit: boolean;
 	usersplit: boolean;
+	showIcon: boolean;
 };
 
 @Component({
@@ -32,21 +33,45 @@ type ActivityItem = {
 export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent {
 	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
 
-	perPage = 50;
-	itemsPerDay: Map<string, CommunityActivityItem[]> = new Map<string, CommunityActivityItem[]>();
-
 	items: ActivityItem[] = [];
+	isAtEnd = false;
 
 	routeResolved($payload: any) {
-		this.perPage = $payload.perPage;
 		const items = CommunityActivityItem.populate($payload.items) as CommunityActivityItem[];
 
 		this.addItems(items);
 	}
 
+	async loadMore() {
+		const payload = await Api.sendRequest(
+			'/web/dash/communities/activity/' + this.routeStore.community.id,
+			{
+				from: this.items[this.items.length - 1].item.added_on,
+			},
+			{
+				detach: true,
+			}
+		);
+		const items = CommunityActivityItem.populate(payload.items) as CommunityActivityItem[];
+		const perPage = payload.perPage;
+
+		if (items.length > 0) {
+			this.addItems(items);
+		}
+
+		if (items.length < perPage) {
+			this.isAtEnd = true;
+		}
+	}
+
 	private addItems(items: CommunityActivityItem[]) {
 		for (const item of items) {
-			const newItem = { item, timesplit: false, usersplit: false } as ActivityItem;
+			const newItem = {
+				item,
+				timesplit: false,
+				usersplit: false,
+				showIcon: true,
+			} as ActivityItem;
 
 			if (
 				this.items.length === 0 ||
@@ -68,6 +93,18 @@ export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent
 					lastItem.user.id !== item.user.id
 				) {
 					newItem.usersplit = true;
+				}
+
+				// Don't show the icon twice in a row if it's the same.
+				if (!newItem.usersplit && !newItem.timesplit) {
+					const lastItemTypeIcon = lastItem.getTypeIcon();
+					const newItemTypeIcon = item.getTypeIcon();
+					if (
+						lastItemTypeIcon?.color === newItemTypeIcon?.color &&
+						lastItemTypeIcon?.icon === newItemTypeIcon?.icon
+					) {
+						newItem.showIcon = false;
+					}
 				}
 			}
 

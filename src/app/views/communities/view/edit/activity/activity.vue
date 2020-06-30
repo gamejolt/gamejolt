@@ -18,8 +18,18 @@
 					<span class="-inner">{{ item.item.added_on | date('mediumDate') }}</span>
 				</div>
 
-				<app-community-activity-item :item="item.item" :usersplit="item.usersplit" />
+				<app-community-activity-item
+					:item="item.item"
+					:usersplit="item.usersplit"
+					:show-icon="item.showIcon"
+				/>
 			</div>
+		</div>
+
+		<div v-if="!isAtEnd" class="page-cut -more">
+			<app-button trans @click="loadMore" v-app-track-event="`community-edit-activity:more`">
+				<translate>Load More</translate>
+			</app-button>
 		</div>
 	</app-communities-view-page-container>
 </template>
@@ -60,6 +70,9 @@
 		font-size: $font-size-small
 		z-index: 1
 		rounded-corners()
+
+.-more
+	margin-top: 12px
 </style>
 
 <script lang="ts" src="./activity"></script>
