@@ -20,6 +20,10 @@ const GrayDarker = '#1f1f1f';
 const GrayDark = '#292929';
 const Gray = '#363636';
 const GraySubtle = '#444444';
+// The value that FireFox scrollbars change to on hover
+const GraySubtleHover = '#565656';
+// The value that FireFox scrollbars change to on hover
+const GrayLightHover = '#656565';
 const GrayLight = '#7e7e7e';
 const GrayLighter = '#d1d1d1';
 const GrayLightest = '#f0f0f0';
@@ -300,6 +304,14 @@ export class Theme extends Model {
 
 	get graySubtle_() {
 		return this.tintColor(GraySubtle, 0.04);
+	}
+
+	get graySubtleHover_() {
+		return this.tintColor(GraySubtleHover, 0.04);
+	}
+
+	get lightHover_() {
+		return this.tintColor(GrayLightHover, 0.04);
 	}
 
 	get light_() {

@@ -20,8 +20,10 @@
 // 6px appears to be the width for the 'thin' scrollbar on Firefox
 $-size-default = 10px
 $-size-thin = 6px
+$-thumb-default-hover = var(--theme-light-hover)
 $-thumb-default = var(--theme-light)
 $-track-default = transparent
+$-thumb-modal-hover = var(--theme-gray-subtle-hover)
 $-thumb-modal = var(--theme-gray-subtle)
 $-track-modal = var(--theme-bg)
 
@@ -53,9 +55,7 @@ $-track-modal = var(--theme-bg)
 				border-radius: $-size-default
 
 				&:hover
-					// Firefox darkens to this color on hover,
-					// so we want to do the same for webkit browsers.
-					box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.22)
+					background-color: $-thumb-default-hover
 
 		&.-thin
 			scrollbar-width: thin
@@ -79,9 +79,7 @@ $-track-modal = var(--theme-bg)
 					background-color: $-thumb-modal
 
 					&:hover
-						// Firefox lightens to this color on hover,
-						// so we want to do the same for webkit browsers.
-						box-shadow: inset 0 0 100px rgba(255, 255, 255, 0.1)
+						background-color: $-thumb-modal-hover
 </style>
 
 <script lang="ts" src="./scroller"></script>
