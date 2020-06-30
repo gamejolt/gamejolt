@@ -129,7 +129,7 @@ export default class AppShell extends Vue {
 				this.chat &&
 				this.chat.room &&
 				event.message &&
-				event.message.roomId === this.chat.room.id
+				event.message.room_id === this.chat.room.id
 			) {
 				++this.unfocusedChatNotificationsCount;
 			}

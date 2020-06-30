@@ -1,7 +1,9 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import { propOptional } from '../../../utils/vue';
 import { ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
+import { ContentRules } from '../content-editor/content-rules';
 import { ContentHydrator } from '../content-hydrator';
 import { ContentOwner } from '../content-owner';
 import { AppContentViewerBaseComponent } from './components/base-component';
@@ -14,6 +16,8 @@ import { AppContentViewerBaseComponent } from './components/base-component';
 export default class AppContentViewer extends Vue implements ContentOwner {
 	@Prop(String)
 	source!: string;
+	@Prop(propOptional(ContentRules))
+	displayRules?: ContentRules;
 
 	data: ContentDocument | null = null;
 	hydrator: ContentHydrator = new ContentHydrator();
@@ -57,6 +61,15 @@ export default class AppContentViewer extends Vue implements ContentOwner {
 
 	getContent() {
 		return this.data;
+	}
+
+	getContentRules() {
+		if (this.displayRules) {
+			return this.displayRules;
+		}
+
+		// Return default values.
+		return new ContentRules();
 	}
 
 	async getModelId() {

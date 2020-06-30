@@ -1,7 +1,12 @@
 <template>
 	<div class="media-upload-container">
 		<div class="media-upload">
-			<img v-if="src" :src="src" class="-placeholder" />
+			<img
+				v-if="src"
+				:src="src"
+				class="-placeholder"
+				:style="{ 'max-height': placeholderMaxHeight + 'px' }"
+			/>
 			<app-loading v-else centered />
 			<div class="-progress-container">
 				<app-progress-bar
@@ -35,7 +40,6 @@
 .-placeholder
 	margin: auto
 	max-width: 95%
-	max-height: 260px
 	filter: grayscale(80%) contrast(50%)
 	display: block
 

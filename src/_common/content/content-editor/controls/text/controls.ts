@@ -138,7 +138,8 @@ export default class AppContentEditorTextControls extends Vue {
 			this.$refs.container.clientWidth / 2;
 
 		this.left = left - box.left + 'px';
-		this.bottom = box.bottom - start.top + 16 + 'px';
+		// max/min are used to constrain the controls within the scrolling view.
+		this.bottom = Math.max(0, Math.min(box.height, box.bottom - start.top)) + 16 + 'px';
 	}
 
 	private hasMark(markType: string) {

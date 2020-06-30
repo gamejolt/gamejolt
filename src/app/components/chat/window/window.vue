@@ -27,6 +27,7 @@
 
 					<div class="nav-well">
 						<div class="chat-compiled-room-description">
+							<!-- TODO: Remove -->
 							<div v-html="room.description"></div>
 						</div>
 					</div>
@@ -34,22 +35,21 @@
 
 				<div class="nav-heading">
 					<translate>Room Users</translate>
-					<span class="badge" :class="{ 'badge-highlight': users && users.onlineCount > 0 }">
+					<span
+						class="badge"
+						:class="{ 'badge-highlight': users && users.onlineCount > 0 }"
+					>
 						{{ users ? users.onlineCount : 0 | number }}
 					</span>
 				</div>
 
-				<app-chat-user-list
-					v-if="users"
-					:room="room"
-					:users="users.collection"
-				/>
+				<app-chat-user-list v-if="users" :room="room" :users="users.collection" />
 			</app-scroll-scroller>
 
 			<div class="chat-window-main">
 				<!-- Window Header -->
 				<div class="chat-window-header-wrap">
-					<div class="chat-window-header fill-darkest">
+					<div class="chat-window-header fill-offset">
 						<div class="chat-window-header-controls">
 							<app-button
 								v-if="!room.isPmRoom"
@@ -65,12 +65,16 @@
 								trans
 								icon="remove"
 								@click="close"
-								:title="$gettext('Close Room')"
+								v-app-tooltip="$gettext('Close Room')"
 							/>
 						</div>
 
 						<!-- Animation scope. -->
-						<div class="chat-window-header-content" v-for="room of [room]" :key="room.id">
+						<div
+							class="chat-window-header-content"
+							v-for="room of [room]"
+							:key="room.id"
+						>
 							<router-link
 								class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
 								v-if="room.isPmRoom && room.user"
@@ -100,8 +104,14 @@
 									:collapse-height="60"
 									@require-change="isDescriptionCollapsed = $event"
 								>
-									<div class="chat-window-header-room-description chat-compiled-room-description">
-										<div class="anim-fade-in no-animate-xs" v-html="room.description"></div>
+									<div
+										class="chat-window-header-room-description chat-compiled-room-description"
+									>
+										<!-- TODO: Remove -->
+										<div
+											class="anim-fade-in no-animate-xs"
+											v-html="room.description"
+										></div>
 									</div>
 								</app-fade-collapse>
 
@@ -120,17 +130,19 @@
 
 				<!-- The v-for is a hack to make sure we destroy/recreate each
 				time the room changes. -->
-				<div class="chat-window-output fill-darker">
+				<div class="chat-window-output fill-backdrop">
 					<app-chat-window-output
 						v-for="room of [room]"
 						:key="room.id"
+						class="chat-window-output-inner"
 						:room="room"
 						:messages="messages"
+						:queued-messages="queuedMessages"
 					/>
 				</div>
 
 				<div class="chat-window-send-container" v-if="chat.currentUser">
-					<app-chat-window-send />
+					<app-chat-window-send :room="room" />
 				</div>
 			</div>
 		</div>
