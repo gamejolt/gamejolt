@@ -121,10 +121,13 @@
 			left: 0
 			opacity: 0.9
 			z-index: -1
-			// This lets the overlay get as close as it can
-			// to the post border without overlapping it.
-			margin-left: -($grid-gutter-width / 2) + 2px
-			margin-right: -($grid-gutter-width / 2) + 2px
+			// We want to expand the overlay out to the edges of the post container.
+			margin-left: -($grid-gutter-width-xs / 2)
+			margin-right: -($grid-gutter-width-xs / 2)
+
+			@media $media-sm-up
+				margin-left: -($grid-gutter-width / 2) + $border-width-base
+				margin-right: -($grid-gutter-width / 2) + $border-width-base
 
 	.-inline-button
 		display: inline-flex
