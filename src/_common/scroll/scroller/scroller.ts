@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
-import { Theme } from '../../theme/theme.model';
 import { ThemeState, ThemeStore } from '../../theme/theme.store';
 import { AppScrollInviewParent } from '../inview/parent';
 
@@ -25,19 +24,15 @@ export default class AppScrollScroller extends Vue {
 	isMounted = GJ_IS_SSR;
 	scrollElement: HTMLElement | null = null;
 
-	get actualTheme() {
-		return this.theme || new Theme(null);
-	}
-
 	get hoverColors() {
-		if (!!this.theme) {
-			return {
-				'--modal-hover': `#${this.actualTheme.tintColor(HOVER_GRAY_SUBTLE, 0.04)}`,
-				'--default-hover': `#${this.actualTheme.tintColor(HOVER_GRAY_LIGHT, 0.04)}`,
-			};
+		if (!this.theme) {
+			return null;
 		}
 
-		return {};
+		return {
+			'--modal-hover': `#${this.theme.tintColor(HOVER_GRAY_SUBTLE, 0.04)}`,
+			'--default-hover': `#${this.theme.tintColor(HOVER_GRAY_LIGHT, 0.04)}`,
+		};
 	}
 
 	mounted() {
