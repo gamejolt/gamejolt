@@ -41,7 +41,10 @@
 				</span>
 			</div>
 
-			<div class="chat-window-message-options">
+			<div
+				v-if="chat.currentUser && chat.currentUser.id === message.user.id"
+				class="chat-window-message-options"
+			>
 				<app-popper popover-class="fill-darkest">
 					<a class="link-muted" v-app-tooltip="$gettext('More Options')">
 						<app-jolticon icon="ellipsis-v" class="middle" />
@@ -53,7 +56,7 @@
 							<translate>Edit Message</translate>
 						</a>
 
-						<a class="list-group-item has-icon" @click="onRemove">
+						<a class="list-group-item has-icon" @click="removeMessage">
 							<app-jolticon icon="remove" notice />
 							<translate>Remove Message</translate>
 						</a>
