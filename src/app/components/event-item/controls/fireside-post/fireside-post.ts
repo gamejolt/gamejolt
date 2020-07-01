@@ -8,7 +8,6 @@ import { CommunityChannel } from '../../../../../_common/community/channel/chann
 import { Community } from '../../../../../_common/community/community.model';
 import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { number } from '../../../../../_common/filters/number';
-import AppFiresidePostControlsOverlay from '../../../../../_common/fireside/post/controls-overlay/controls-overlay.vue';
 import AppFiresidePostLikeWidget from '../../../../../_common/fireside/post/like/widget/widget.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -30,7 +29,6 @@ import AppEventItemControlsFiresidePostStats from './stats/stats.vue';
 		AppCommentVideoLikeWidget,
 		AppEventItemControlsFiresidePostStats,
 		AppEventItemControlsFiresidePostExtra,
-		AppFiresidePostControlsOverlay,
 	},
 	directives: {
 		AppTooltip,

@@ -150,11 +150,11 @@
 					@content-bootstrapped="onContentBootstrapped"
 				/>
 
-				<div class="-poll" v-if="post.hasPoll" @click.stop>
+				<app-event-item-controls-overlay v-if="post.hasPoll" class="-poll" @click.stop>
 					<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
-				</div>
+				</app-event-item-controls-overlay>
 
-				<app-fireside-post-controls-overlay v-if="shouldShowCommunities" class="-communities">
+				<app-event-item-controls-overlay v-if="shouldShowCommunities" class="-communities">
 					<app-scroll-scroller class="-communities-list" horizontal>
 						<app-community-pill
 							v-for="postCommunity of communities"
@@ -162,7 +162,7 @@
 							:community-link="postCommunity"
 						/>
 					</app-scroll-scroller>
-				</app-fireside-post-controls-overlay>
+				</app-event-item-controls-overlay>
 			</template>
 
 			<app-event-item-controls
