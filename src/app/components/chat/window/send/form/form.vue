@@ -32,7 +32,7 @@
 			</div>
 
 			<app-button
-				:disabled="!valid"
+				:disabled="isSendButtonDisabled"
 				v-app-tooltip="$gettext(`Send message`)"
 				class="-send-button"
 				sparse

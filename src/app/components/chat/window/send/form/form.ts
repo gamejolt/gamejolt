@@ -9,6 +9,7 @@ import AppFormControlContentTS from '../../../../../../_common/form-vue/control/
 import AppFormControlContent from '../../../../../../_common/form-vue/control/content/content.vue';
 import AppForm from '../../../../../../_common/form-vue/form';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
+import { FormValidatorContentNoMediaUpload } from '../../../../../../_common/form-vue/validators/content_no_media_upload';
 import { AppObserveDimensions } from '../../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../../_common/shortkey/shortkey.vue';
@@ -99,6 +100,14 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		return [CHAT_MESSAGE_MAX_CONTENT_LENGTH];
 	}
 
+	get isSendButtonDisabled() {
+		if (!this.valid) {
+			return false;
+		}
+
+		return !FormValidatorContentNoMediaUpload(this.formModel.content ?? '');
+	}
+
 	async submitMessage() {
 		let doc;
 
@@ -125,6 +134,13 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 	async onSubmit() {
 		if (this.hasFormErrors) {
+			return;
+		}
+
+		// Manually check for if media is uploading here.
+		// We don't want to put the rule directly on the form cause showing form errors
+		// for the media upload is sort of disruptive for chat messages.
+		if (!FormValidatorContentNoMediaUpload(this.formModel.content)) {
 			return;
 		}
 
