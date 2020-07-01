@@ -64,13 +64,15 @@
 					</template>
 
 					<template v-if="communities.length">
-						<app-scroll-scroller class="-communities" horizontal thin>
-							<app-community-pill
-								v-for="postCommunity of communities"
-								:key="postCommunity.id"
-								:community-link="postCommunity"
-							/>
-						</app-scroll-scroller>
+						<app-fireside-post-controls-overlay>
+							<app-scroll-scroller class="-communities" horizontal thin>
+								<app-community-pill
+									v-for="postCommunity of communities"
+									:key="postCommunity.id"
+									:community-link="postCommunity"
+								/>
+							</app-scroll-scroller>
+						</app-fireside-post-controls-overlay>
 
 						<template v-if="shouldShowCommunityPublishError">
 							<br />

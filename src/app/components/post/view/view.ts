@@ -4,6 +4,7 @@ import { State } from 'vuex-class';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import AppFiresidePostControlsOverlay from '../../../../_common/fireside/post/controls-overlay/controls-overlay.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
@@ -47,6 +48,7 @@ import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 		AppStickerTarget,
 		AppMediaItemPost,
 		AppScrollScroller,
+		AppFiresidePostControlsOverlay,
 	},
 	directives: {
 		AppScrollWhen,
