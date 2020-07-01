@@ -4,14 +4,16 @@ import { propRequired } from '../../../../../../utils/vue';
 import { ContentRules } from '../../../../../../_common/content/content-editor/content-rules';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import { date } from '../../../../../../_common/filters/date';
+import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { ChatClient, ChatKey, retryFailedQueuedMessage } from '../../../client';
+import { ChatClient, ChatKey, retryFailedQueuedMessage, removeMessage } from '../../../client';
 import { ChatMessage } from '../../../message';
 import { ChatRoom } from '../../../room';
 
 @Component({
 	components: {
 		AppContentViewer,
+		AppPopper,
 	},
 	directives: {
 		AppTooltip,
@@ -37,5 +39,9 @@ export default class AppChatWindowOutputItem extends Vue {
 
 	onClickResend() {
 		retryFailedQueuedMessage(this.chat, this.message);
+	}
+
+	onRemove() {
+		removeMessage(this.chat, this.message.id);
 	}
 }

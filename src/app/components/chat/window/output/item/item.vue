@@ -41,6 +41,26 @@
 				</span>
 			</div>
 
+			<div class="chat-window-message-options">
+				<app-popper popover-class="fill-darkest">
+					<a class="link-muted" v-app-tooltip="$gettext('More Options')">
+						<app-jolticon icon="ellipsis-v" class="middle" />
+					</a>
+
+					<div slot="popover" class="list-group list-group-dark">
+						<a class="list-group-item has-icon">
+							<app-jolticon icon="edit" />
+							<translate>Edit Message</translate>
+						</a>
+
+						<a class="list-group-item has-icon" @click="onRemove">
+							<app-jolticon icon="remove" notice />
+							<translate>Remove Message</translate>
+						</a>
+					</div>
+				</app-popper>
+			</div>
+
 			<div class="chat-window-message-content-wrap">
 				<template v-if="message.combine">
 					<span
