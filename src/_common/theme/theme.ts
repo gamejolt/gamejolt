@@ -106,11 +106,6 @@ export class AppTheme extends Vue {
 				${genDarkVar('link', theme.darkHighlight_)}
 				${copyDarkVar('link-hover', 'white')}
 			}
-
-			.scroll-scroller {
-				${genVar('gray-subtle-hover', theme.graySubtleHover_)}
-				${genVar('light-hover', theme.lightHover_)}
-			}
 		`;
 
 		function darkVar(varname: string) {
