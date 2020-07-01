@@ -37,9 +37,7 @@ export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent
 	isAtEnd = false;
 
 	routeResolved($payload: any) {
-		const items = CommunityActivityItem.populate($payload.items) as CommunityActivityItem[];
-
-		this.addItems(items);
+		this.handlePayload($payload);
 	}
 
 	async loadMore() {
@@ -52,6 +50,11 @@ export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent
 				detach: true,
 			}
 		);
+
+		this.handlePayload(payload);
+	}
+
+	private handlePayload(payload: any) {
 		const items = CommunityActivityItem.populate(payload.items) as CommunityActivityItem[];
 		const perPage = payload.perPage;
 
