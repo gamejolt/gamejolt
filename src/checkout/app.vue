@@ -25,7 +25,7 @@
 				<div class="row">
 					<div class="col-sm-6">
 						<p class="footer-links">
-							<a href="mailto:contact@gamejolt.com">Contact Game Jolt</a>
+							<app-contact-link email="contact@gamejolt.com">Contact Game Jolt</app-contact-link>
 							&nbsp; | &nbsp;
 							<a :href="Environment.baseUrl + '/terms'" target="_blank">Terms</a>
 							&nbsp; | &nbsp;

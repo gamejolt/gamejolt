@@ -155,7 +155,7 @@
 				</div>
 
 				<app-fireside-post-controls-overlay v-if="shouldShowCommunities" class="-communities">
-					<app-scroll-scroller class="-communities-list" horizontal thin>
+					<app-scroll-scroller class="-communities-list" horizontal>
 						<app-community-pill
 							v-for="postCommunity of communities"
 							:key="postCommunity.id"

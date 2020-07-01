@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { loadCurrentLanguage } from '../utils/translations';
+import AppContactLink from '../_common/contact-link/contact-link.vue';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
 import { Environment } from '../_common/environment/environment.service';
 import AppErrorPage from '../_common/error/page/page.vue';
@@ -17,6 +18,7 @@ import { Store } from './store/index';
 		AppErrorPage,
 		AppUserBar,
 		AppCookieBanner,
+		AppContactLink,
 	},
 	filters: {
 		date,

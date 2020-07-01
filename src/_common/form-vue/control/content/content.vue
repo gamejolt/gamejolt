@@ -6,6 +6,7 @@
 		-->
 		<app-content-editor
 			class="fill-bg form-control content-editor-form-control"
+			ref="editor"
 			:name="group.name"
 			:id="id"
 			:content-context="contentContext"
@@ -16,10 +17,16 @@
 			:value="controlVal"
 			:min-height="minHeight"
 			:startup-activity="startupActivity"
+			:temp-resource-context-data="tempResourceContextData"
+			:single-line-mode="singleLineMode"
+			:max-height="maxHeight"
+			:display-rules="displayRules"
 			v-validate="{ rules: validationRules }"
 			@input="onChange"
 			@editor-focus="onFocus"
 			@editor-blur="onBlur"
+			@submit="onSubmit"
+			@insert-block-node="onInsertBlockNode"
 		/>
 	</div>
 </template>

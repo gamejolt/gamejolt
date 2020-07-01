@@ -104,9 +104,9 @@
 						<div class="col-xs-4 col-sm-3">
 							<ol class="list-unstyled footer-link-list">
 								<li>
-									<a @click="onClickEmail" title="contact@gamejolt.com">
+									<app-contact-link email="contact@gamejolt.com">
 										<translate>footer.contact</translate>
-									</a>
+									</app-contact-link>
 								</li>
 								<li>
 									<router-link :to="{ name: 'legal.terms' }">

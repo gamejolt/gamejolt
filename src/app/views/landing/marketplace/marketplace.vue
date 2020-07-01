@@ -219,7 +219,9 @@
 
 							<p class="text-muted text-center">
 								Or
-								<a href="mailto:contact@gamejolt.com">contact us</a>
+								<app-contact-link email="contact@gamejolt.com">
+									contact us
+								</app-contact-link>
 								if you have questions!
 							</p>
 						</div>

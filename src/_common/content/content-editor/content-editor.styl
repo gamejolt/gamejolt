@@ -4,21 +4,32 @@
 .content-container
 	position: relative
 
-// Added to the content container dom when the emoji panel is available.
-.content-container-with-gutter
-	padding-right: 32px
+	&-scroller
+		// Spacing for the scrollbar side
+		margin-right: 4px
+		// Add extra padding to get total spacing equal to '.form-control' padding.
+		padding-right: $padding-base-horizontal - @margin-right
+
+	// Gutter space to not overlay potential content
+	&-gutter-1
+		padding-right: 32px
+
+	&-gutter-2
+		padding-right: 64px
 
 .content-editor
 	position: relative
-	padding-top: 0
-	padding-bottom: 0
+	padding-top: 8px
+	padding-bottom: 8px
+	padding-right: 0
 
 .content-placeholder
-	top: 0
+	top: 4px
 	left: 4px
 	position: absolute
 	font-style: italic
 	pointer-events: none
+	user-select: none
 
 .disabled
 	theme-prop('color', 'fg-muted')
@@ -51,9 +62,15 @@
 >>> .content-editor-spoiler:after
 	content: none
 
+// Give each paragraph a 10px margin, except the first and last.
 >>> p
 	margin-top: 10px
 	margin-bottom: 10px
+
+	&:first-child
+		margin-top: 4px
+	&:last-child
+		margin-bottom: 4px
 
 >>> code
 	white-space: pre-wrap
@@ -123,3 +140,6 @@
 // Add a minimal margin to media items so they don't directly border the top of the editor
 >>> .media-item
 	margin-top: ($line-height-computed / 3)
+
+>>> img.emoji
+	border-radius: 0

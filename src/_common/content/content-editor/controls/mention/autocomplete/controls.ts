@@ -1,6 +1,6 @@
 import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../../api/api.service';
 import AppLoading from '../../../../../loading/loading.vue';
 import { Screen } from '../../../../../screen/screen-service';
@@ -57,6 +57,9 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 	get showControl() {
 		return this.visible && (this.isLoading || this.users.length > 0);
 	}
+
+	@Emit('users-change')
+	emitUsersChange(_num: number) {}
 
 	mounted() {
 		this.update();
@@ -171,7 +174,7 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 
 	private async handleInverted() {
 		// If we are inverted, scroll the container down.
-		if (this.isInverted) {
+		if (this.isInverted && this.$refs.list) {
 			await this.$nextTick(); // Need to wait here for the list to get bootstrapped before scrolling it.
 			this.$refs.list.scrollTop = this.$refs.list.scrollHeight;
 		}
@@ -182,7 +185,7 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 	}
 
 	async onKeyDown(e: KeyboardEvent) {
-		if (this.visible) {
+		if (this.visible && this.users.length > 0) {
 			let direction = '';
 			if (e.key === 'ArrowDown') {
 				direction = this.isInverted ? 'up' : 'down';
@@ -211,6 +214,11 @@ export default class AppContentEditorControlsMentionAutocompleteControls extends
 
 	onClickInsert(user: User) {
 		this.insertUser(user);
+	}
+
+	@Watch('users.length')
+	onUserLengthChange() {
+		this.emitUsersChange(this.users.length);
 	}
 
 	insertUser(user: User) {

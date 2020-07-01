@@ -1,85 +1,61 @@
 import Vue from 'vue';
-import { Component, InjectReactive } from 'vue-property-decorator';
-import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
+import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { isMac } from '../../../../../utils/utils';
+import { propRequired } from '../../../../../utils/vue';
+import { ContentDocument } from '../../../../../_common/content/content-document';
+import AppContentEditor from '../../../../../_common/content/content-editor/content-editor.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { ChatClient, ChatKey, queueChatMessage } from '../../client';
+import { ChatRoom } from '../../room';
+import AppChatWindowSendForm from './form/form.vue';
 
 @Component({
-	directives: {
-		AppFocusWhen,
+	components: {
+		AppContentEditor,
+		AppChatWindowSendForm,
 	},
 })
 export default class AppChatWindowSend extends Vue {
 	@InjectReactive(ChatKey) chat!: ChatClient;
+	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 
-	message = '';
-	multiLineMode = false;
-
-	$refs!: {
-		input: HTMLTextAreaElement;
-	};
+	singleLineMode = true;
 
 	readonly Screen = Screen;
 
-	// Vue will trigger all events that match, which means the "enter" event
-	// always fires. We use this to know if we handled the event in another
-	// event handler already.
-	private handledEvent = false;
-
-	onChange() {
-		// If they remove whole message, remove multi-line mode.
-		if (this.multiLineMode && this.message.length === 0) {
-			this.multiLineMode = false;
-		}
-	}
-
-	async shiftEnter() {
-		this.multiLineMode = true;
-		this.eventHandled();
-	}
-
-	async ctrlEnter() {
-		this.sendMessage();
-		this.eventHandled();
-	}
-
-	enter(event: Event) {
-		if (this.handledEvent) {
-			return;
+	get isSingleLineMode() {
+		// We always want to be in multiline mode for phones:
+		// It's expected behavior to create a new line with the "Enter" key on the virtual keyboard,
+		// and send the message with a "send message" button.
+		if (Screen.isMobile) {
+			return false;
 		}
 
-		if (!this.multiLineMode) {
-			this.sendMessage();
-			event.preventDefault();
-			return;
+		return this.singleLineMode;
+	}
+
+	get showMultiLineNotice() {
+		return !this.isSingleLineMode && !Screen.isMobile;
+	}
+
+	get isMac() {
+		return isMac();
+	}
+
+	sendMessage(message: string) {
+		const doc = ContentDocument.fromJson(message);
+		if (doc instanceof ContentDocument) {
+			const contentJson = doc.toJson();
+			const room = this.chat.room;
+			if (room) {
+				queueChatMessage(this.chat, contentJson, room.id);
+			}
 		}
+
+		this.singleLineMode = true;
 	}
 
-	sendClicked() {
-		this.$refs.input.focus();
-		this.sendMessage();
-	}
-
-	sendMessage() {
-		const message = this.message;
-		const room = this.chat.room;
-
-		if (room) {
-			queueChatMessage(this.chat, message, room.id);
-		}
-
-		this.message = '';
-		this.multiLineMode = false;
-	}
-
-	/**
-	 * Marks that the event has been handled since the `enter` event always gets
-	 * called. This way `enter` will know now to do anything since the event was
-	 * already handled in another handler.
-	 */
-	private async eventHandled() {
-		this.handledEvent = true;
-		await this.$nextTick();
-		this.handledEvent = false;
+	onSingleLineModeChanged(singleLineMode: boolean) {
+		this.singleLineMode = singleLineMode;
 	}
 }

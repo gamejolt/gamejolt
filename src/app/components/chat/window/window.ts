@@ -6,6 +6,7 @@ import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue
 import { number } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
 import { ChatClient, ChatKey, leaveChatRoom } from '../client';
 import { ChatMessage } from '../message';
@@ -23,6 +24,9 @@ import AppChatWindowSend from './send/send.vue';
 		AppChatWindowOutput,
 		AppFadeCollapse,
 	},
+	directives: {
+		AppTooltip,
+	},
 	filters: {
 		number,
 	},
@@ -31,6 +35,7 @@ export default class AppChatWindow extends Vue {
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 	@Prop(propRequired(Array)) messages!: ChatMessage[];
 	@Prop(propOptional(ChatUserCollection)) users?: ChatUserCollection;
+	@Prop(propRequired(Array)) queuedMessages!: ChatMessage[];
 
 	@InjectReactive(ChatKey) chat!: ChatClient;
 

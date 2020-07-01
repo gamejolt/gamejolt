@@ -69,7 +69,6 @@
  * Chat Window Header
  */
 .chat-window-header-wrap
-	theme-prop('color', 'light')
 	flex: none
 	width: 100%
 	font-size: 14px
@@ -115,6 +114,10 @@
 	display: flex
 	height: 100%
 
+	&-inner
+		// Allows the scroll bar some breathing room
+		margin-right: 4px
+
 	> .scroll-scroller
 		position: absolute
 		top: 0
@@ -123,7 +126,10 @@
 		left: 0
 
 .chat-window-send-container
-	change-bg('darker')
+	change-bg('bg-backdrop')
 	width: 100%
 	flex: none
 	padding: $chat-room-window-padding
+
+	@media $media-xs
+		padding: $chat-room-window-padding * 0.5
