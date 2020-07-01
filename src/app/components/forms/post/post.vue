@@ -132,7 +132,9 @@
 				content-context="fireside-post-lead"
 				autofocus
 				:placeholder="
-					!longEnabled ? $gettext(`What's new?`) : $gettext(`Write a summary for your article...`)
+					!longEnabled
+						? $gettext(`What's new?`)
+						: $gettext(`Write a summary for your article...`)
 				"
 				:model-id="model.id"
 				:min-height="72"
@@ -147,7 +149,11 @@
 			<div class="-hp">
 				<div class="-hp-label">HP</div>
 				<div class="-hp-bar">
-					<app-progress-bar thin :percent="leadLengthPercent" :animate="false"></app-progress-bar>
+					<app-progress-bar
+						thin
+						:percent="leadLengthPercent"
+						:animate="false"
+					></app-progress-bar>
 				</div>
 				<div class="-hp-count" v-if="leadLengthPercent <= 10">
 					{{ leadLengthLimit - formModel.leadLength }}
@@ -177,6 +183,7 @@
 						:rules="{
 							content_no_media_uploads: true,
 						}"
+						:max-height="0"
 					/>
 
 					<app-form-control-errors />
@@ -285,10 +292,14 @@
 				</div>
 
 				<p v-if="pollDuration < MIN_POLL_DURATION" class="help-block error">
-					<translate>Too short! Polls must be between 5 minutes and 14 days long.</translate>
+					<translate
+						>Too short! Polls must be between 5 minutes and 14 days long.</translate
+					>
 				</p>
 				<p v-else-if="pollDuration > MAX_POLL_DURATION" class="help-block error">
-					<translate>Too long! Polls must be between 5 minutes and 14 days long.</translate>
+					<translate
+						>Too long! Polls must be between 5 minutes and 14 days long.</translate
+					>
 				</p>
 				<br v-else />
 			</fieldset>
@@ -307,7 +318,10 @@
 					<app-form-group name="poll_is_private" :label="$gettext(`Private results?`)">
 						<app-form-control-toggle class="pull-right" />
 						<p class="help-block sans-margin-top">
-							<translate>The poll's results will be kept hidden if this is turned on.</translate>
+							<translate
+								>The poll's results will be kept hidden if this is turned
+								on.</translate
+							>
 						</p>
 					</app-form-group>
 				</div>
@@ -335,8 +349,16 @@
 					</p>
 
 					<app-form-control-select>
-						<optgroup v-for="(timezones, region) of timezones" :label="region" :key="region">
-							<option v-for="timezone of timezones" :value="timezone.i" :key="timezone.i">
+						<optgroup
+							v-for="(timezones, region) of timezones"
+							:label="region"
+							:key="region"
+						>
+							<option
+								v-for="timezone of timezones"
+								:value="timezone.i"
+								:key="timezone.i"
+							>
 								{{ timezone.label }}
 							</option>
 						</optgroup>
@@ -365,20 +387,25 @@
 						<translate>Access permissions</translate>
 					</app-form-legend>
 
-					<app-form-group name="key_group_ids" :label="$gettext(`Access Permissions`)" hide-label>
+					<app-form-group
+						name="key_group_ids"
+						:label="$gettext(`Access Permissions`)"
+						hide-label
+					>
 						<div class="alert" v-if="!keyGroups.length">
 							<translate>
-								You can make this post available to only the users within a key group. For example,
-								this is useful for sending news updates to testers. You can create a user key group
-								through the "Keys/Access" page.
+								You can make this post available to only the users within a key
+								group. For example, this is useful for sending news updates to
+								testers. You can create a user key group through the "Keys/Access"
+								page.
 							</translate>
 						</div>
 						<div v-else>
 							<p class="help-block">
 								<translate>
-									You can make this post available to only the users within a key group. For
-									example, this is useful for sending news updates to testers. Only User-type key
-									groups can be selected.
+									You can make this post available to only the users within a key
+									group. For example, this is useful for sending news updates to
+									testers. Only User-type key groups can be selected.
 								</translate>
 							</p>
 
@@ -398,8 +425,8 @@
 				</label>
 				<div class="alert">
 					<translate>
-						The below key groups have access to this post. You can't edit who has access after
-						posting since notifications have already gone out.
+						The below key groups have access to this post. You can't edit who has access
+						after posting since notifications have already gone out.
 					</translate>
 				</div>
 				<div>
@@ -423,7 +450,8 @@
 						Set up your linked accounts in your user account.
 					</translate>
 					<translate v-else>
-						Set up your linked accounts either in your game dashboard, or your user account.
+						Set up your linked accounts either in your game dashboard, or your user
+						account.
 					</translate>
 				</div>
 				<div class="-linked-accounts" v-else>
@@ -448,7 +476,9 @@
 							</div>
 
 							<div class="-linked-account-toggle">
-								<app-form-control-toggle @changed="changeLinkedAccount(account.id)" />
+								<app-form-control-toggle
+									@changed="changeLinkedAccount(account.id)"
+								/>
 							</div>
 						</div>
 					</app-form-group>
@@ -551,7 +581,8 @@
 						v-if="formModel.as_game_owner"
 						class="-author-avatar pull-right"
 						v-app-tooltip.touchable="
-							model.game.developer.display_name + ` (@${model.game.developer.username})`
+							model.game.developer.display_name +
+								` (@${model.game.developer.username})`
 						"
 					>
 						<app-user-avatar-img :user="model.game.developer" />

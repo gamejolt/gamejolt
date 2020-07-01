@@ -1,8 +1,8 @@
-import { ContentEditorService } from '../content-editor.service';
 import AppContentGif from '../../components/gif/gif.vue';
-import { BaseNodeView } from './base';
+import { ContentEditorService } from '../content-editor.service';
+import { HydratableNodeView } from './hydratable';
 
-export class GifNodeView extends BaseNodeView {
+export class GifNodeView extends HydratableNodeView {
 	mounted() {
 		const vm = new AppContentGif({
 			propsData: {
@@ -12,6 +12,7 @@ export class GifNodeView extends BaseNodeView {
 				service: this.node.attrs.service,
 				media: this.node.attrs.media,
 				url: this.node.attrs.url,
+				owner: this.owner,
 				isDisabled: ContentEditorService.isDisabled(this.view),
 			},
 		});

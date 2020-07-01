@@ -1,13 +1,15 @@
+import { Component } from 'vue-property-decorator';
+import { importContext } from '../../../../utils/utils';
+import AppContactLink from '../../../../_common/contact-link/contact-link.vue';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
-import { importContext } from '../../../../utils/utils';
-import { Component } from 'vue-property-decorator';
 
 @Component({
 	name: 'RouteLandingAbout',
 	components: {
 		AppThemeSvg,
+		AppContactLink,
 	},
 })
 export default class RouteLandingAbout extends BaseRouteComponent {

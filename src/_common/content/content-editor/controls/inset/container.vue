@@ -1,21 +1,22 @@
 <template>
-	<div class="inset-controls-container" ref="container" :style="{ top: this.top }">
-		<slot />
+	<div class="inset-controls-container" ref="container" :style="{ top: this.top + 'px' }">
+		<slot v-if="shouldShow" />
 	</div>
 </template>
 
 <style lang="stylus" scoped>
+@require '~styles/variables'
+
 .inset-controls-container
 	position: absolute
-	right: 0
-	transition: top 0.05s ease-in-out
 	display: flex
 	align-items: center
+	// Offset for the '.form-control' padding
+	right: $padding-base-horizontal
 
 	& >>> .inset-container-controls
 		display: block
 		margin-left: 8px
-
 </style>
 
 <script lang="ts" src="./container"></script>

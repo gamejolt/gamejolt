@@ -33,6 +33,9 @@ $-blip-top = $-item-size * 0.5 - $-blip-size * 0.5
 	width: $-item-size - 2px
 	height: $-item-size - 2px
 
+.-blip, .-notification-count
+	pointer-events: none
+
 .-blip
 	position: absolute
 	width: $-blip-size
