@@ -1,85 +1,86 @@
 <template>
 	<div class="event-item-controls-fireside-post">
-		<div class="-row">
-			<div class="-row-overlay" />
-			<div v-if="showUserControls" class="-row">
-				<app-fireside-post-like-widget :post="post" trans @change="emitLikeChange" />
+		<app-fireside-post-controls-overlay end>
+			<div class="-row">
+				<div v-if="showUserControls" class="-row">
+					<app-fireside-post-like-widget :post="post" trans @change="emitLikeChange" />
 
-				<div v-if="shouldShowCommentsButton" class="-inline-button">
-					<app-button
-						icon="comment"
-						circle
-						trans
-						@click="openComments()"
-						v-app-tooltip="$gettext('View Comments')"
-					/>
+					<div v-if="shouldShowCommentsButton" class="-inline-button">
+						<app-button
+							icon="comment"
+							circle
+							trans
+							@click="openComments()"
+							v-app-tooltip="$gettext('View Comments')"
+						/>
 
-					<a
-						v-if="commentsCount > 0"
-						class="blip"
-						:class="{ mobile: Screen.isXs }"
-						@click="openComments()"
+						<a
+							v-if="commentsCount > 0"
+							class="blip"
+							:class="{ mobile: Screen.isXs }"
+							@click="openComments()"
+						>
+							{{ commentsCount | fuzzynumber }}
+						</a>
+						<span v-else class="blip-missing" />
+					</div>
+
+					<template v-if="shouldShowStickersButton">
+						<app-button
+							icon="sticker"
+							circle
+							trans
+							@click="placeSticker()"
+							v-app-tooltip="$gettext('Place Sticker')"
+							v-app-auth-required
+						/>
+
+						&nbsp;
+					</template>
+
+					<div
+						v-if="shouldShowStickersBar"
+						class="-stickers"
+						:class="{ '-showing': showStickers }"
+						@click.stop="onClickShowStickers"
+						v-app-tooltip="$gettext(`Toggle Stickers`)"
 					>
-						{{ commentsCount | fuzzynumber }}
-					</a>
-					<span v-else class="blip-missing" />
+						<span class="-caret"></span>
+
+						<span v-for="sticker of previewStickers" :key="sticker.id" class="-sticker">
+							<img :src="sticker.img_url" />
+						</span>
+
+						<small class="-stickers-count text-muted">
+							{{ post.stickers.length | number }}
+						</small>
+					</div>
 				</div>
+				<span v-if="shouldShowExtra" class="-extra">
+					<span v-if="shouldShowEdit && !showUserControls" class="-extra">
+						<app-button v-if="canPublish" class="-inline-button" primary @click="publish()">
+							<translate>Publish</translate>
+						</app-button>
+						<app-button class="-inline-button" @click="openEdit()">
+							<translate>Edit</translate>
+						</app-button>
 
-				<template v-if="shouldShowStickersButton">
-					<app-button
-						icon="sticker"
-						circle
-						trans
-						@click="placeSticker()"
-						v-app-tooltip="$gettext('Place Sticker')"
-						v-app-auth-required
-					/>
-
-					&nbsp;
-				</template>
-
-				<div
-					v-if="shouldShowStickersBar"
-					class="-stickers"
-					:class="{ '-showing': showStickers }"
-					@click.stop="onClickShowStickers"
-					v-app-tooltip="$gettext(`Toggle Stickers`)"
-				>
-					<span class="-caret"></span>
-
-					<span v-for="sticker of previewStickers" :key="sticker.id" class="-sticker">
-						<img :src="sticker.img_url" />
+						<span class="-spacing-right" />
 					</span>
 
-					<small class="-stickers-count text-muted">
-						{{ post.stickers.length | number }}
-					</small>
-				</div>
-			</div>
-			<span v-if="shouldShowExtra" class="-extra">
-				<span v-if="shouldShowEdit && !showUserControls" class="-extra">
-					<app-button v-if="canPublish" class="-inline-button" primary @click="publish()">
-						<translate>Publish</translate>
-					</app-button>
-					<app-button class="-inline-button" @click="openEdit()">
-						<translate>Edit</translate>
-					</app-button>
-
-					<span class="-spacing-right" />
+					<app-event-item-controls-fireside-post-extra
+						:post="post"
+						@remove="emitRemove"
+						@feature="emitFeature"
+						@unfeature="emitUnfeature"
+						@move-channel="emitMoveChannel"
+						@reject="emitReject"
+						@pin="emitPin"
+						@unpin="emitUnpin"
+					/>
 				</span>
-
-				<app-event-item-controls-fireside-post-extra
-					:post="post"
-					@remove="emitRemove"
-					@feature="emitFeature"
-					@unfeature="emitUnfeature"
-					@move-channel="emitMoveChannel"
-					@reject="emitReject"
-					@pin="emitPin"
-					@unpin="emitUnpin"
-				/>
-			</span>
-		</div>
+			</div>
+		</app-fireside-post-controls-overlay>
 
 		<div class="-row small" :class="{ '-spacing-top': shouldShowEdit, tiny: Screen.isXs }">
 			<app-event-item-controls-fireside-post-stats :key="'stats'" class="text-muted" :post="post" />
@@ -101,7 +102,6 @@
 @require '~styles-lib/mixins'
 
 .event-item-controls-fireside-post
-	position: relative
 	display: flex
 	flex-direction: column
 	flex-grow: 1
@@ -109,25 +109,6 @@
 	.-row
 		display: flex
 		align-items: center
-		// Needs to be higher than the z-index of AppStickerTarget
-		z-index: 1
-
-		&-overlay
-			change-bg('bg')
-			position: absolute
-			top: -4px
-			right: 0
-			bottom: 0
-			left: 0
-			opacity: 0.9
-			z-index: -1
-			// We want to expand the overlay out to the edges of the post container.
-			margin-left: -($grid-gutter-width-xs / 2)
-			margin-right: -($grid-gutter-width-xs / 2)
-
-			@media $media-sm-up
-				margin-left: -($grid-gutter-width / 2) + $border-width-base
-				margin-right: -($grid-gutter-width / 2) + $border-width-base
 
 	.-inline-button
 		display: inline-flex

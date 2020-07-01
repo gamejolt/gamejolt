@@ -83,30 +83,8 @@
 .-communities
 	padding-bottom: $-item-padding-xs-v
 
-	@media $media-sm-up
-		padding-bottom: $-item-padding-v
-
-.-communities
-	position: relative
-	// Needs to be higher than the z-index of AppStickerTarget
-	z-index: 1
-
 	&-list
 		white-space: nowrap
 
-	&-overlay
-		change-bg('bg')
-		position: absolute
-		top: -4px
-		right: 0
-		bottom: 4px
-		left: 0
-		opacity: 0.9
-		z-index: -1
-		// We want to expand the overlay out to the edges of the post container.
-		margin-left: -($grid-gutter-width-xs / 2)
-		margin-right: -($grid-gutter-width-xs / 2)
-
-		@media $media-sm-up
-			margin-left: -($grid-gutter-width / 2) + $border-width-base
-			margin-right: -($grid-gutter-width / 2) + $border-width-base
+	@media $media-sm-up
+		padding-bottom: $-item-padding-v

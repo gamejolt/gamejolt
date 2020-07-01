@@ -154,21 +154,15 @@
 					<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 				</div>
 
-				<div class="-communities">
-					<div class="-communities-overlay" />
-					<app-scroll-scroller
-						v-if="shouldShowCommunities"
-						class="-communities-list"
-						horizontal
-						thin
-					>
+				<app-fireside-post-controls-overlay v-if="shouldShowCommunities" class="-communities">
+					<app-scroll-scroller class="-communities-list" horizontal thin>
 						<app-community-pill
 							v-for="postCommunity of communities"
 							:key="postCommunity.id"
 							:community-link="postCommunity"
 						/>
 					</app-scroll-scroller>
-				</div>
+				</app-fireside-post-controls-overlay>
 			</template>
 
 			<app-event-item-controls
