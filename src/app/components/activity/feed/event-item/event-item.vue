@@ -154,7 +154,7 @@
 					<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 				</div>
 
-				<app-scroll-scroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
+				<app-scroll-scroller v-if="shouldShowCommunities" class="-communities" horizontal>
 					<app-community-pill
 						v-for="postCommunity of communities"
 						:key="postCommunity.id"

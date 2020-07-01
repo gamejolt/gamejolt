@@ -13,4 +13,8 @@ import AppChatWindow from '../window/window.vue';
 export default class AppChatWindows extends Vue {
 	@InjectReactive(ChatKey) chat!: ChatClient;
 	@State isRightPaneVisible!: Store['isRightPaneVisible'];
+
+	getRoomQueuedMessages(roomId: number) {
+		return this.chat.messageQueue.filter(i => i.room_id === roomId);
+	}
 }

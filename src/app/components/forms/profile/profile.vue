@@ -4,8 +4,8 @@
 			<app-form-control-theme class="pull-right" @changed="onThemeChanged()" />
 			<p class="help-block">
 				<translate>
-					Setting a theme will change how Game Jolt looks for you. When other people view your
-					profile, they'll also be switched to your theme.
+					Setting a theme will change how Game Jolt looks for you. When other people view
+					your profile, they'll also be switched to your theme.
 				</translate>
 			</p>
 		</app-form-group>
@@ -42,8 +42,9 @@
 			<app-expand :when="formModel.username !== model.username">
 				<div class="alert">
 					<translate>
-						Changing your username will change your public profile URL. Any current links to your
-						old profile URL will not automatically redirect to your new profile URL.
+						Changing your username will change your public profile URL. Any current
+						links to your old profile URL will not automatically redirect to your new
+						profile URL.
 					</translate>
 				</div>
 			</app-expand>
@@ -84,8 +85,9 @@
 
 			<p class="help-block">
 				<translate>
-					Your display name is an optional personal identifier (such as a company name or real
-					name). Unlike usernames, display names can contain spaces and special characters.
+					Your display name is an optional personal identifier (such as a company name or
+					real name). Unlike usernames, display names can contain spaces and special
+					characters.
 				</translate>
 			</p>
 		</app-form-group>
@@ -113,6 +115,7 @@
 				content-context="user-bio"
 				:disabled="isBioLocked"
 				:model-id="model.id"
+				:max-height="0"
 			/>
 
 			<app-form-control-errors />
@@ -129,8 +132,8 @@
 
 			<p class="help-block">
 				<translate>
-					Will let people post short comments on your profile page. Turning this off will hide any
-					shouts already on the page.
+					Will let people post short comments on your profile page. Turning this off will
+					hide any shouts already on the page.
 				</translate>
 			</p>
 		</app-form-group>
@@ -140,9 +143,9 @@
 
 			<p class="help-block">
 				<translate>
-					Allows people to send you friend requests. Friends can use the private chat feature to
-					send messages to each other. With this feature turned off, you will still be able to send
-					friend requests to other users.
+					Allows people to send you friend requests. Friends can use the private chat
+					feature to send messages to each other. With this feature turned off, you will
+					still be able to send friend requests to other users.
 				</translate>
 			</p>
 		</app-form-group>

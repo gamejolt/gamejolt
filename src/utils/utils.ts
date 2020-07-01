@@ -79,3 +79,7 @@ export function isPromise(obj: any) {
 		typeof obj.then === 'function'
 	);
 }
+
+export function isMac() {
+	return typeof navigator != 'undefined' ? /Mac/.test(navigator.platform) : false;
+}

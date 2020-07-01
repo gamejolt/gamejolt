@@ -19,8 +19,8 @@
 @require '~styles-lib/mixins'
 
 // 6px appears to be the width for the 'thin' scrollbar on Firefox
-$-size-default = 10px
-$-size-thin = 6px
+$-size-default = 9px
+$-size-thin = 7px
 $-thumb-default-hover = var(--default-hover)
 $-thumb-default = var(--theme-light)
 $-track-default = transparent
