@@ -1,12 +1,10 @@
+import { darken, lighten } from 'polished';
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
+import { GrayLight, GraySubtle, Theme } from '../../theme/theme.model';
 import { ThemeState, ThemeStore } from '../../theme/theme.store';
 import { AppScrollInviewParent } from '../inview/parent';
-
-// The values that FireFox scrollbars change to with no theme.
-const HOVER_GRAY_SUBTLE = '#565656';
-const HOVER_GRAY_LIGHT = '#656565';
 
 @Component({
 	components: {
@@ -24,14 +22,15 @@ export default class AppScrollScroller extends Vue {
 	isMounted = GJ_IS_SSR;
 	scrollElement: HTMLElement | null = null;
 
-	get hoverColors() {
-		if (!this.theme) {
-			return null;
-		}
+	get actualTheme() {
+		// Use the form/page/user theme, or the default theme if none exist.
+		return this.theme || new Theme(null);
+	}
 
+	get hoverColors() {
 		return {
-			'--modal-hover': `#${this.theme.tintColor(HOVER_GRAY_SUBTLE, 0.04)}`,
-			'--default-hover': `#${this.theme.tintColor(HOVER_GRAY_LIGHT, 0.04)}`,
+			'--default-hover': `#${this.actualTheme.tintColor(darken(0.2, GrayLight), 0.04)}`,
+			'--modal-hover': `#${this.actualTheme.tintColor(lighten(0.15, GraySubtle), 0.04)}`,
 		};
 	}
 
