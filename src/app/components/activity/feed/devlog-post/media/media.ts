@@ -132,10 +132,16 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 	panEnd(event: HammerInput) {
 		this.isDragging = false;
 
-		// Make sure we moved at a high enough velocity and distance to register the "swipe".
-		const velocity = event.velocityX;
-		if (Math.abs(velocity) > 0.65 && event.distance > 10) {
-			if (velocity > 0) {
+		// Make sure we moved at a high enough velocity and/or distance to register the "swipe".
+		const { velocityX, deltaX } = event;
+
+		if (
+			// Check if it was a fast flick,
+			(Math.abs(velocityX) > 0.55 && event.distance > 10) ||
+			// or if the pan distance was at least ~1/3 of the content area.
+			Math.abs(deltaX) >= this.$el.clientWidth / 3
+		) {
+			if (velocityX > 0 || deltaX > 0) {
 				this.goPrev();
 			} else {
 				this.goNext();
