@@ -36,24 +36,9 @@ export class NotificationText {
 		return '';
 	}
 
-	/**
-	 * Replaces essential html entities with their safe variants,
-	 * for when we want to render the translation values (subject/object)
-	 * directly into html.
-	 *
-	 * This makes sure that post leads such as "<> &" etc are not breaking the output.
-	 */
-	private static encodeTranslationValue(str: string): string {
-		return str
-			.replace(/&/g, '&amp;')
-			.replace(/</g, '&lt;')
-			.replace(/>/g, '&gt;')
-			.replace(/"/g, '&quot;');
-	}
-
-	private static getTranslationValues(notification: Notification, plaintext: boolean) {
+	private static getTranslationValues(notification: Notification) {
 		const subject = this.getSubjectTranslationValue(notification);
-		let output = { subject: plaintext ? subject : this.encodeTranslationValue(subject) } as any;
+		let output = { subject } as any;
 
 		if (notification.to_model instanceof Game || notification.to_model instanceof ForumTopic) {
 			output.object = notification.to_model.title;
@@ -74,10 +59,6 @@ export class NotificationText {
 					notification.to_model.username +
 					')';
 			}
-		}
-
-		if (!plaintext && output.object) {
-			output.object = this.encodeTranslationValue(output.object);
 		}
 
 		return output;
@@ -177,14 +158,14 @@ export class NotificationText {
 					return _process(
 						Translate.$gettextInterpolate(
 							`<em>%{ subject }</em> shouted at you!`,
-							this.getTranslationValues(notification, plaintext)
+							this.getTranslationValues(notification)
 						)
 					);
 				} else {
 					return _process(
 						Translate.$gettextInterpolate(
 							`<em>%{ subject }</em> commented on <b>%{ object }</b>.`,
-							this.getTranslationValues(notification, plaintext)
+							this.getTranslationValues(notification)
 						)
 					);
 				}
@@ -195,14 +176,14 @@ export class NotificationText {
 					return _process(
 						Translate.$gettextInterpolate(
 							`<em>%{ subject }</em> replied to your shout to <b>%{ object }</b>.`,
-							this.getTranslationValues(notification, plaintext)
+							this.getTranslationValues(notification)
 						)
 					);
 				} else {
 					return _process(
 						Translate.$gettextInterpolate(
 							`<em>%{ subject }</em> replied to your comment on <b>%{ object }</b>.`,
-							this.getTranslationValues(notification, plaintext)
+							this.getTranslationValues(notification)
 						)
 					);
 				}
@@ -212,7 +193,7 @@ export class NotificationText {
 				return _process(
 					Translate.$gettextInterpolate(
 						`<em>%{ subject }</em> posted a new forum post to <b>%{ object }</b>.`,
-						this.getTranslationValues(notification, plaintext)
+						this.getTranslationValues(notification)
 					)
 				);
 			}
@@ -221,7 +202,7 @@ export class NotificationText {
 				return _process(
 					Translate.$gettextInterpolate(
 						`<em>%{ subject }</em> sent you a friend request.`,
-						this.getTranslationValues(notification, plaintext)
+						this.getTranslationValues(notification)
 					)
 				);
 			}
@@ -230,7 +211,7 @@ export class NotificationText {
 				return _process(
 					Translate.$gettextInterpolate(
 						`<em>%{ subject }</em> accepted your friend request.`,
-						this.getTranslationValues(notification, plaintext)
+						this.getTranslationValues(notification)
 					)
 				);
 			}
@@ -239,7 +220,7 @@ export class NotificationText {
 				return _process(
 					Translate.$gettextInterpolate(
 						`<em>%{ subject }</em> liked <b>%{ object }</b>.`,
-						this.getTranslationValues(notification, plaintext)
+						this.getTranslationValues(notification)
 					)
 				);
 			}
@@ -248,7 +229,7 @@ export class NotificationText {
 				return _process(
 					Translate.$gettextInterpolate(
 						`<em>%{ subject }</em> followed <b>%{ object }</b>.`,
-						this.getTranslationValues(notification, plaintext)
+						this.getTranslationValues(notification)
 					)
 				);
 			}
@@ -274,7 +255,7 @@ export class NotificationText {
 				return _process(
 					Translate.$gettextInterpolate(
 						`<em>%{ subject }</em> followed you.`,
-						this.getTranslationValues(notification, plaintext)
+						this.getTranslationValues(notification)
 					)
 				);
 			}
@@ -285,14 +266,14 @@ export class NotificationText {
 						return _process(
 							Translate.$gettextInterpolate(
 								`<em>%{ subject }</em> invited you to collaborate on the game <b>%{ object }</b>.`,
-								this.getTranslationValues(notification, plaintext)
+								this.getTranslationValues(notification)
 							)
 						);
 					case 'Community':
 						return _process(
 							Translate.$gettextInterpolate(
 								`<em>%{ subject }</em> invited you to collaborate on the <b>%{ object }</b> community.`,
-								this.getTranslationValues(notification, plaintext)
+								this.getTranslationValues(notification)
 							)
 						);
 				}
@@ -354,7 +335,7 @@ export class NotificationText {
 						return _process(
 							Translate.$gettextInterpolate(
 								`<em>%{ subject }</em> mentioned you in their user bio.`,
-								this.getTranslationValues(notification, plaintext)
+								this.getTranslationValues(notification)
 							)
 						);
 					}

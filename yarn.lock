@@ -12283,7 +12283,7 @@ vue-color@2.7.1:
 
 "vue-gettext@github:gamejolt/vue-gettext#lazy":
   version "2.0.23"
-  resolved "https://codeload.github.com/gamejolt/vue-gettext/tar.gz/a5f7b1ff2997ca70d406abdfa131cb9fb8fc8214"
+  resolved "https://codeload.github.com/gamejolt/vue-gettext/tar.gz/37356758f8f1515337107aef7c720c5d0e52eaea"
 
 vue-hot-reload-api@^2.3.0:
   version "2.3.1"
