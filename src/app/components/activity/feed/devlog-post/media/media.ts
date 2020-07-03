@@ -133,11 +133,11 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 		this.isDragging = false;
 
 		// Make sure we moved at a high enough velocity and/or distance to register the "swipe".
-		const { velocityX, deltaX } = event;
+		const { velocityX, deltaX, distance } = event;
 
 		if (
 			// Check if it was a fast flick,
-			(Math.abs(velocityX) > 0.55 && event.distance > 10) ||
+			(Math.abs(velocityX) > 0.55 && distance > 10) ||
 			// or if the pan distance was at least ~1/3 of the content area.
 			Math.abs(deltaX) >= this.$el.clientWidth / 3
 		) {
