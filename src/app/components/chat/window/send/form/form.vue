@@ -32,14 +32,14 @@
 			</div>
 
 			<app-button
-				:disabled="!valid"
+				:disabled="!valid || !hasContent"
 				v-app-tooltip="$gettext(`Send message`)"
 				class="-send-button"
 				sparse
 				icon="share-airplane"
-				:primary="isSendButtonSolid"
-				:trans="!isSendButtonSolid"
-				:solid="isSendButtonSolid"
+				:primary="hasContent"
+				:trans="!hasContent"
+				:solid="hasContent"
 				@click="onSubmit"
 			/>
 		</app-form-group>
@@ -56,7 +56,6 @@ $-button-padding = 48px
 .-form
 	display: flex
 	position: relative
-	align-items: center
 	margin-bottom: 16px
 
 	@media $media-xs
@@ -75,7 +74,17 @@ $-button-padding = 48px
 		width: "calc(100% - %s)" % ($left-gutter-size + $avatar-size + $-button-padding)
 
 .-send-button
-	width: 35px
+	display: flex
+	align-items: center
+	justify-content: center
+	width: 40px
+	transition: color 0.3s, background-color 0.3s
+
+	&.-disabled
+		&:hover
+			color: var(--theme-fg) !important
+			background-color: transparent !important
+			border-color: transparent !important
 </style>
 
 <script lang="ts" src="./form"></script>
