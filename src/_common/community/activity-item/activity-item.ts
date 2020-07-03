@@ -89,7 +89,7 @@ export default class AppCommunityActivityItem extends Vue {
 
 	get actionText() {
 		if (this.item.action_resource instanceof FiresidePost) {
-			return this.item.action_resource.lead_snippet;
+			return this.item.action_resource.getShortLead();
 		} else if (this.item.action_resource instanceof User) {
 			return '@' + this.item.action_resource.username;
 		} else if (this.item.action_resource instanceof UserBlock) {
