@@ -1,15 +1,18 @@
 import { Component } from 'vue-property-decorator';
-import AppLoading from '../../../../loading/loading.vue';
 import { Api } from '../../../../api/api.service';
+import AppLoading from '../../../../loading/loading.vue';
 import { BaseModal } from '../../../../modal/base';
 import AppModalTS from '../../../../modal/modal';
 import { Ruler } from '../../../../ruler/ruler-service';
 import { Screen } from '../../../../screen/screen-service';
+import AppScrollScrollerTS from '../../../../scroll/scroller/scroller';
+import AppScrollScroller from '../../../../scroll/scroller/scroller.vue';
 import { Category, ContentEditorGifModal, SearchResult } from './gif-modal.service';
 
 @Component({
 	components: {
 		AppLoading,
+		AppScrollScroller,
 	},
 })
 export default class AppContentEditorGifModal extends BaseModal {
@@ -29,7 +32,7 @@ export default class AppContentEditorGifModal extends BaseModal {
 	readonly Screen = Screen;
 
 	$refs!: {
-		contentScroller: HTMLElement;
+		contentScroller: AppScrollScrollerTS;
 		modal: AppModalTS;
 	};
 
@@ -79,7 +82,10 @@ export default class AppContentEditorGifModal extends BaseModal {
 		const term = this.searchValue;
 		this.currentSearchTerm = term;
 		const url =
-			'/web/content/tenor/search?q=' + encodeURIComponent(term) + '&page=' + this.currentSearchPage;
+			'/web/content/tenor/search?q=' +
+			encodeURIComponent(term) +
+			'&page=' +
+			this.currentSearchPage;
 
 		try {
 			const payload = await Api.sendRequest(url, undefined, { detach: true });
@@ -167,15 +173,15 @@ export default class AppContentEditorGifModal extends BaseModal {
 
 	scrollToTop() {
 		// This has a v-if around it when loading, so it may not be in the DOM.
-		if (this.$refs.contentScroller) {
-			this.$refs.contentScroller.scrollTop = 0;
+		if (this.$refs.contentScroller.$el) {
+			this.$refs.contentScroller.$el.scrollTop = 0;
 		}
 		this.$refs.modal.scrollTo(0);
 	}
 
 	onContainerScroll() {
 		if (!this.isLoading && this.searchValue.length > 0 && !this.reachedLastPage) {
-			const container = this.$refs.contentScroller;
+			const container = this.$refs.contentScroller.$el as HTMLElement;
 			if (container) {
 				const height = Ruler.height(container);
 				if (container.scrollHeight < container.scrollTop + height + 100) {

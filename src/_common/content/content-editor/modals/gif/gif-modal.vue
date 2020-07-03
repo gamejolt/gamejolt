@@ -39,14 +39,14 @@
 				<div v-if="loadingCategories" class="loading-categories">
 					<app-loading centered big />
 				</div>
-				<div
+				<app-scroll-scroller
 					v-else
 					ref="contentScroller"
 					class="gif-content"
 					:class="{
 						'gif-content-noscroll': isLoading && searchResults.length === 0,
 					}"
-					@scroll="onContainerScroll"
+					@scroll.native="onContainerScroll"
 				>
 					<div v-if="shouldShowCategories" class="-grid">
 						<div
@@ -106,7 +106,7 @@
 							<app-button @click="loadNextPage">More</app-button>
 						</div>
 					</div>
-				</div>
+				</app-scroll-scroller>
 			</template>
 		</div>
 	</app-modal>
