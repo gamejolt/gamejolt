@@ -60,7 +60,7 @@ export class NotificationText {
 		} else if (notification.to_model instanceof Community) {
 			output.object = notification.to_model.name;
 		} else if (notification.to_model instanceof FiresidePost) {
-			output.object = notification.to_model.lead_snippet;
+			output.object = notification.to_model.getShortLead();
 		} else if (notification.to_model instanceof User) {
 			if (
 				notification.from_model instanceof User &&
@@ -109,7 +109,7 @@ export class NotificationText {
 					gameTitle = notification.to_model.title + ' - ';
 				}
 				if (notification.action_model instanceof FiresidePost) {
-					postTitle = notification.action_model.lead_snippet;
+					postTitle = notification.action_model.getShortLead();
 				}
 				return gameTitle + postTitle;
 			}
@@ -319,7 +319,7 @@ export class NotificationText {
 								Translate.$gettextInterpolate(
 									`<em>%{ subject }</em> mentioned you in a comment on the post <b>%{ object }</b>.`,
 									{
-										object: notification.to_model.lead_snippet,
+										object: notification.to_model.getShortLead(),
 										subject: this.getSubjectTranslationValue(notification),
 									}
 								)
@@ -364,7 +364,7 @@ export class NotificationText {
 							Translate.$gettextInterpolate(
 								`<em>%{ subject }</em> mentioned you in the post <b>%{ object }</b>.`,
 								{
-									object: (notification.to_model as FiresidePost).lead_snippet,
+									object: (notification.to_model as FiresidePost).getShortLead(),
 									subject: this.getSubjectTranslationValue(notification),
 								}
 							)

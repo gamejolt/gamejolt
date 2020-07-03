@@ -75,7 +75,7 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		}
 
 		return this.$gettextInterpolate(
-			`${this.post.lead_snippet} - ${this.game.title} by %{ user }`,
+			`${this.post.getShortLead()} - ${this.game.title} by %{ user }`,
 			{
 				user: this.post.user.display_name,
 			}

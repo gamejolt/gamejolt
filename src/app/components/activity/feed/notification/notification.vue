@@ -14,7 +14,9 @@
 						</div>
 						<div
 							slot="bubble"
-							v-else-if="notification.type === Notification.TYPE_POST_FEATURED_IN_COMMUNITY"
+							v-else-if="
+								notification.type === Notification.TYPE_POST_FEATURED_IN_COMMUNITY
+							"
 						>
 							<div class="-community-thumb">
 								<app-community-thumbnail-img
@@ -54,25 +56,34 @@
 											<app-content-viewer
 												v-if="
 													notification.type === 'comment-add' ||
-														notification.type === 'comment-add-object-owner'
+														notification.type ===
+															'comment-add-object-owner'
 												"
 												:source="notification.action_model.comment_content"
 											/>
 											<app-content-viewer
 												v-else-if="notification.type === 'mention'"
-												:source="notification.action_model.comment.comment_content"
+												:source="
+													notification.action_model.comment
+														.comment_content
+												"
 											/>
 											<span
 												v-else-if="
-													notification.type === Notification.TYPE_POST_FEATURED_IN_COMMUNITY
+													notification.type ===
+														Notification.TYPE_POST_FEATURED_IN_COMMUNITY
 												"
 											>
-												{{ notification.action_model.fireside_post.lead_snippet }}
+												{{
+													notification.action_model.fireside_post.getShortLead()
+												}}
 											</span>
 											<span
 												v-else-if="
-													notification.type === Notification.TYPE_GAME_TROPHY_ACHIEVED ||
-														notification.type === Notification.TYPE_SITE_TROPHY_ACHIEVED
+													notification.type ===
+														Notification.TYPE_GAME_TROPHY_ACHIEVED ||
+														notification.type ===
+															Notification.TYPE_SITE_TROPHY_ACHIEVED
 												"
 											>
 												{{ notification.action_model.trophy.description }}
@@ -143,7 +154,6 @@
 	display: block
 	width: 100%
 	height: 100%
-
 </style>
 
 <script lang="ts" src="./notification"></script>
