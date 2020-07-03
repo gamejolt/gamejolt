@@ -1,6 +1,6 @@
 <template>
-	<div class="-controls">
-		<div class="-controls-overlay" :class="{ '-end': end }" />
+	<div class="event-item-controls-overlay">
+		<div class="-overlay" :class="{ '-end': end }" />
 		<slot />
 	</div>
 </template>
@@ -11,12 +11,12 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-.-controls
+.event-item-controls-overlay
 	position: relative
 	// Needs to be higher than the z-index of AppStickerTarget
 	z-index: 1
 
-	&-overlay
+	.-overlay
 		change-bg('bg')
 		position: absolute
 		top: -4px
