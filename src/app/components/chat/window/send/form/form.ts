@@ -86,15 +86,6 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		return doc.hasContent;
 	}
 
-	get isSendButtonSolid() {
-		// Show a solid send button on mobile when there's content in the form,
-		// because that button is the only way to send the message on mobile.
-		if (!Screen.isMobile) {
-			return false;
-		}
-		return this.hasContent;
-	}
-
 	get maxContentLength() {
 		return [CHAT_MESSAGE_MAX_CONTENT_LENGTH];
 	}

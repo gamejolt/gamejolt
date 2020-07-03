@@ -17,9 +17,10 @@
 		<div class="chat-window-message-container">
 			<div class="chat-window-message-byline" v-if="!message.combine">
 				<router-link class="chat-window-message-user link-unstyled" :to="message.user.url">
-					{{ message.user.display_name }} </router-link
-				><span class="chat-window-message-username"> @{{ message.user.username }}</span
-				><span class="chat-window-message-time">
+					{{ message.user.display_name }}
+				</router-link>
+				<span class="chat-window-message-username"> @{{ message.user.username }} </span>
+				<span class="chat-window-message-time">
 					<span v-if="!message._showAsQueued" v-app-tooltip="loggedOn">
 						{{ message.logged_on | date('shortTime') }}
 					</span>

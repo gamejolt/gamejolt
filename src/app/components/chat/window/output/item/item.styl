@@ -5,6 +5,7 @@
 .chat-window-message
 	position: relative
 	margin-bottom: 4px
+	padding-left: $chat-room-window-padding
 	line-height: $font-size-base * 1.25
 	// This is so no height change occurs when the "NEW" indicator line appears
 	border-top-width: 1px
@@ -15,16 +16,22 @@
 		font-size: $font-size-small
 		line-height: $font-size-small * 1.25
 
+	&:hover
+		background-color: var(--theme-bg-offset)
+
+		.chat-window-message-small-time
+			opacity: 1
+
 	&-avatar
 		position: absolute
-		left: ($left-gutter-size * 0.25)
+		left: ($left-gutter-size * 0.25) + $chat-room-window-padding
 		top: 4px
 		width: $avatar-size
 		z-index: 1
 
 		@media $media-xs
 			// On small screens, reduce the left side margin to make more space for the actual messages.
-			left: 4px
+			left: 4px + $chat-room-window-padding
 
 		& > img
 			img-circle()
@@ -32,7 +39,6 @@
 	&-container
 		margin-left: $avatar-size + $left-gutter-size
 		position: relative
-		transition: background-color 0.1s ease
 		padding-top: 4px
 		padding-left: 4px
 		padding-right: 4px
@@ -42,14 +48,6 @@
 			// On small screens, reduce the left side margin to make more space for the actual messages.
 			margin-left: $avatar-size + 12px
 
-		&:hover
-			background-color: var(--theme-bg-offset)
-			rounded-corners()
-
-			.chat-window-message-small-time
-				opacity: 1
-
-
 	&-small-time
 		position: absolute
 		left: -($avatar-size) - ($left-gutter-size * 0.75)
@@ -57,7 +55,6 @@
 		font-size: $font-size-tiny
 		theme-prop('color', 'fg-muted')
 		opacity: 0
-		transition: opacity 0.1s ease
 		user-select: none
 
 		// Never show this on small devices. It's probably a phone anyway, and touch can't activate this.
@@ -161,19 +158,19 @@
 		filter: grayscale(0.75) brightness(0.9)
 
 .-chat-message-new
-		border-top-color: var(--theme-notice)
+	border-top-color: var(--theme-notice)
 
-		&::before
-			content: 'NEW'
-			position: absolute
-			z-index: 2
-			right: 0
-			top: -7px
-			font-size: 9px
-			font-weight: bolder
-			change-bg('notice')
-			color: var(--theme-white)
-			padding-left: 4px
-			padding-right: 4px
-			rounded-corners()
-			line-height: 14px
+	&::before
+		content: 'NEW'
+		position: absolute
+		z-index: 2
+		right: 0
+		top: -7px
+		font-size: 9px
+		font-weight: bolder
+		change-bg('notice')
+		color: var(--theme-white)
+		padding-left: 4px
+		padding-right: 4px
+		rounded-corners()
+		line-height: 14px
