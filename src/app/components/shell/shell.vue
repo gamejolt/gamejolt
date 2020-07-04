@@ -3,8 +3,8 @@
 		id="shell"
 		:class="{
 			'is-client-offline': Connection.isClientOffline,
-			'left-pane-visible': isLeftPaneVisible,
-			'right-pane-visible': isRightPaneVisible,
+			'left-pane-visible': !!visibleLeftPane,
+			'right-pane-visible': !!visibleRightPane,
 			'has-cbar': hasCbar,
 			'has-banner': hasBanner && !isShellHidden,
 		}"
@@ -29,7 +29,7 @@
 		</div>
 
 		<app-shell-hot-bottom>
-			<app-minbar v-show="!isRightPaneVisible" />
+			<app-minbar v-show="!visibleRightPane" />
 			<app-client-status-bar v-if="GJ_IS_CLIENT" key="shell-client-status-bar" />
 		</app-shell-hot-bottom>
 	</div>

@@ -39,7 +39,7 @@ export default class AppChatWindow extends Vue {
 
 	@InjectReactive(ChatKey) chat!: ChatClient;
 
-	@Action toggleRightPane!: Store['toggleRightPane'];
+	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
 	isShowingUsers = false;
 	isDescriptionCollapsed = false;
@@ -53,12 +53,9 @@ export default class AppChatWindow extends Vue {
 		if (Screen.isXs) {
 			leaveChatRoom(this.chat);
 		} else {
-			this.toggleRightPane();
+			// Passing an empty string will close all left-pane menus.
+			this.toggleLeftPane('');
 		}
-	}
-
-	showEditRoomModal() {
-		// Chat_SaveRoomModal.show( this.room );
 	}
 
 	toggleUsers() {

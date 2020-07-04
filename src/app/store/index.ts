@@ -57,6 +57,7 @@ export type Actions = AppActions &
 		markNotificationsAsRead: void;
 		toggleLeftPane: void;
 		toggleRightPane: void;
+		toggleChatPane: void;
 		clearPanes: void;
 		joinCommunity: Community;
 		leaveCommunity: Community;
@@ -126,8 +127,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	friendRequestCount = 0;
 	notificationState: ActivityFeedState | null = null;
 
-	isLeftPaneOverlayed = false;
-	isRightPaneOverlayed = false;
+	overlayedLeftPane = '';
+	overlayedRightPane = '';
 	hasContentSidebar = false;
 
 	communities: Community[] = [];
@@ -145,12 +146,12 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		return !this.isShellHidden && !Screen.isXs && this.communities.length && !!this.app.user;
 	}
 
-	get isLeftPaneVisible() {
-		return this.isLeftPaneOverlayed;
+	get visibleLeftPane() {
+		return this.overlayedLeftPane;
 	}
 
-	get isRightPaneVisible() {
-		return this.isRightPaneOverlayed;
+	get visibleRightPane() {
+		return this.overlayedRightPane;
 	}
 
 	get notificationCount() {
@@ -260,14 +261,20 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexAction
-	async toggleLeftPane() {
-		this._toggleLeftPane();
+	async toggleLeftPane(type: string) {
+		this._toggleLeftPane(type);
 		this._checkBackdrop();
 	}
 
 	@VuexAction
-	async toggleRightPane() {
-		this._toggleRightPane();
+	async toggleRightPane(type: string) {
+		this._toggleRightPane(type);
+		this._checkBackdrop();
+	}
+
+	@VuexAction
+	async toggleChatPane() {
+		this._toggleLeftPane('chat');
 		this._checkBackdrop();
 	}
 
@@ -279,7 +286,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	private async _checkBackdrop() {
-		if (this.isRightPaneOverlayed || this.isLeftPaneOverlayed) {
+		if (!!this.overlayedRightPane || !!this.overlayedLeftPane) {
 			if (backdrop) {
 				return;
 			}
@@ -449,26 +456,36 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	private _toggleLeftPane() {
+	private _toggleLeftPane(type: string) {
 		if (!this.hasSidebar) {
-			this.isLeftPaneOverlayed = false;
+			this.overlayedLeftPane = '';
 			return;
 		}
 
-		this.isLeftPaneOverlayed = !this.isLeftPaneOverlayed;
-		this.isRightPaneOverlayed = false;
+		if (this.overlayedLeftPane === type) {
+			this.overlayedLeftPane = '';
+		} else {
+			this.overlayedLeftPane = type;
+		}
+
+		this.overlayedRightPane = '';
 	}
 
 	@VuexMutation
-	private _toggleRightPane() {
-		this.isRightPaneOverlayed = !this.isRightPaneOverlayed;
-		this.isLeftPaneOverlayed = false;
+	private _toggleRightPane(type: string) {
+		if (this.overlayedRightPane === type) {
+			this.overlayedRightPane = '';
+		} else {
+			this.overlayedRightPane = type;
+		}
+
+		this.overlayedLeftPane = '';
 	}
 
 	@VuexMutation
 	private _clearPanes() {
-		this.isRightPaneOverlayed = false;
-		this.isLeftPaneOverlayed = false;
+		this.overlayedRightPane = '';
+		this.overlayedLeftPane = '';
 	}
 
 	@VuexMutation
@@ -498,7 +515,7 @@ sync(store, router, { moduleName: 'route' });
 
 // Sync with the ContentFocus service.
 ContentFocus.registerWatcher(
-	() => !store.state.isLeftPaneOverlayed && !store.state.isRightPaneOverlayed
+	() => !store.state.overlayedLeftPane && !store.state.overlayedRightPane
 );
 
 // If we were offline, but we're online now, make sure our library is bootstrapped. Remember we

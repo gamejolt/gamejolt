@@ -1,14 +1,14 @@
 <template>
 	<div>
-		<app-shortkey shortkey="c" @press="showChatPane" />
+		<app-shortkey shortkey="c" @press="toggleLeftPane('chat')" />
 
 		<app-scroll-scroller
 			id="shell-chat-pane"
-			class="shell-pane shell-pane-right"
-			:class="{ visible: isRightPaneVisible }"
+			class="shell-pane shell-pane-left"
+			:class="{ visible: visibleLeftPane === 'chat' }"
 			thin
 		>
-			<app-chat-sidebar v-if="isRightPaneVisible" />
+			<app-chat-sidebar v-if="visibleLeftPane === 'chat'" />
 		</app-scroll-scroller>
 		<app-chat-windows />
 	</div>

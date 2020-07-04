@@ -2,17 +2,23 @@
 	<nav id="shell-top-nav" class="navbar backdrop-affected">
 		<div ref="left" class="navbar-left" :style="{ 'min-width': minColWidth }">
 			<div class="-col" v-app-observe-dimensions="checkColWidths">
+				<!-- TODO:
+						Re-purpose this button on Desktop to a context-menu,
+						allowing us to do things like hide the community channels for desktop view.
+				 -->
 				<a
 					v-if="hasSidebar"
 					class="navbar-item"
 					:class="{
 						'-menu-toggle': hasCbar,
-						active: isLeftPaneVisible,
+						'no-bar': !!visibleLeftPane,
+						active: !visibleContextPane,
 					}"
-					@click="toggleLeftPane"
-					v-app-tooltip.bottom-end="$gettext(`Playlists (m)`)"
-					v-app-track-event="`top-nav:main-menu:toggle`"
+					@click="onContextButtonClicked"
+					v-app-tooltip.bottom-end="contextButtonText"
 				>
+					<!-- TODO: Might need to change this event tracking? -->
+					<!-- v-app-track-event="`top-nav:main-menu:toggle`" -->
 					<app-jolticon icon="menu" />
 				</a>
 
@@ -125,24 +131,6 @@
 
 					<!-- Friend Requests -->
 					<app-shell-friend-request-popover />
-
-					<!-- Chat -->
-					<a
-						v-if="chat"
-						class="navbar-item"
-						:class="{ active: isRightPaneVisible }"
-						@click="toggleRightPane"
-						v-app-tooltip.bottom="$gettext(`Chat and Friends List (c)`)"
-						v-app-track-event="`top-nav:chat:toggle`"
-					>
-						<span
-							class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
-							v-if="chat.friendNotificationsCount"
-						>
-							{{ chat.friendNotificationsCount }}
-						</span>
-						<app-jolticon icon="user-messages" />
-					</a>
 
 					<!-- Connection Status -->
 					<span

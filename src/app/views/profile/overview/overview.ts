@@ -115,7 +115,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	trophyCount!: RouteStore['trophyCount'];
 
 	@Action
-	toggleRightPane!: Store['toggleRightPane'];
+	toggleLeftPane!: Store['toggleLeftPane'];
 
 	showFullDescription = false;
 	canToggleDescription = false;
@@ -344,7 +344,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			const chatUser = this.chat.friendsList.collection.find(u => u.id === this.user!.id);
 			if (chatUser) {
 				if (isInChatRoom(this.chat, chatUser.room_id)) {
-					this.toggleRightPane();
+					this.toggleLeftPane('chat');
 				} else {
 					enterChatRoom(this.chat, chatUser.room_id);
 				}

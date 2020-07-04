@@ -24,10 +24,10 @@ export default class AppShellChat extends Vue {
 	@InjectReactive(ChatKey) chat!: ChatClient;
 
 	@State
-	isRightPaneVisible!: Store['isRightPaneVisible'];
+	visibleLeftPane!: Store['visibleLeftPane'];
 
 	@Action
-	toggleRightPane!: Store['toggleRightPane'];
+	toggleLeftPane!: Store['toggleLeftPane'];
 
 	private escapeCallback?: Function;
 
@@ -43,21 +43,15 @@ export default class AppShellChat extends Vue {
 		}
 	}
 
-	showChatPane() {
-		if (!this.isRightPaneVisible) {
-			this.toggleRightPane();
-		}
-	}
-
 	hideChatPane() {
-		if (this.isRightPaneVisible) {
-			this.toggleRightPane();
+		if (this.visibleLeftPane === 'chat') {
+			this.toggleLeftPane('chat');
 		}
 	}
 
-	@Watch('isRightPaneVisible')
-	onRightPaneChange(isVisible: boolean) {
-		if (isVisible) {
+	@Watch('visibleLeftPane')
+	onLeftPaneChange(pane: string) {
+		if (pane === 'chat') {
 			// xs size needs to show the friends list
 			if (this.chat.sessionRoomId && !Screen.isXs) {
 				enterChatRoom(this.chat, this.chat.sessionRoomId);

@@ -1,6 +1,6 @@
 import Vue from 'vue';
-import { Component, InjectReactive } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
+import { Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
@@ -9,7 +9,6 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
-import { ChatClient, ChatKey } from '../../chat/client';
 import AppSearch from '../../search/search.vue';
 import AppShellAccountPopover from '../account-popover/account-popover.vue';
 import AppShellFriendRequestPopover from '../friend-request-popover/friend-request-popover.vue';
@@ -36,8 +35,6 @@ if (GJ_IS_CLIENT) {
 	},
 })
 export default class AppShellTopNav extends Vue {
-	@InjectReactive(ChatKey) chat?: ChatClient;
-
 	@State
 	app!: Store['app'];
 
@@ -48,22 +45,22 @@ export default class AppShellTopNav extends Vue {
 	hasCbar!: Store['hasCbar'];
 
 	@State
-	isLeftPaneVisible!: Store['isLeftPaneVisible'];
+	visibleLeftPane!: Store['visibleLeftPane'];
 
-	@State
-	isRightPaneVisible!: Store['isRightPaneVisible'];
+	/* TODO: Implement functionality */
+	// @State
+	// contextPaneVisible!: Store['contextPaneVisible'];
 
-	@Action
-	toggleRightPane!: Store['toggleRightPane'];
-
-	@Action
-	toggleLeftPane!: Store['toggleLeftPane'];
+	/* TODO: Implement context-menu features for hamburger top-nav item, e.g. hiding community channel menu */
+	// @Action
+	// toggleContextPane!: Store['toggleContextPane']
 
 	@State
 	unreadActivityCount!: Store['unreadActivityCount'];
 
 	moreMenuShowing = false;
 	baseMinColWidth: number | null = null;
+	visibleContextPane = true;
 
 	$refs!: {
 		left: HTMLDivElement;
@@ -73,6 +70,42 @@ export default class AppShellTopNav extends Vue {
 	readonly Environment = Environment;
 	readonly Screen = Screen;
 	readonly Connection = Connection;
+
+	/* TODO: Remove */
+	toggleCbar() {
+		console.warn('cbar toggled for mobile - not set up yet');
+	}
+	/* TODO: Set up to either show the context pane or show cbar, depending on screen size */
+	toggleContextPane() {
+		console.warn('trigger this.toggleContextPane() - not set up yet');
+	}
+
+	onContextButtonClicked() {
+		/* TODO: Instead of toggling locally, have whatever uses this use the Store data */
+		if (!!this.visibleLeftPane) {
+			return;
+		}
+
+		this.visibleContextPane = !this.visibleContextPane;
+
+		if (Screen.isMobile) {
+			return this.toggleCbar();
+		}
+
+		this.toggleContextPane();
+	}
+
+	get contextButtonText() {
+		if (!!this.visibleLeftPane /* || Screen.isMobile */) {
+			return null;
+		}
+
+		if (this.visibleContextPane) {
+			return this.$gettext(`Hide context menu`);
+		}
+
+		return this.$gettext('Show context menu');
+	}
 
 	get shouldShowSearch() {
 		return !Screen.isXs && this.$route.name !== 'discover.communities';

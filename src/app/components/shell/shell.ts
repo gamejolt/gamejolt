@@ -55,10 +55,10 @@ export default class AppShell extends Vue {
 	hasCbar!: Store['hasCbar'];
 
 	@State
-	isLeftPaneVisible!: Store['isLeftPaneVisible'];
+	visibleLeftPane!: Store['visibleLeftPane'];
 
 	@State
-	isRightPaneVisible!: Store['isRightPaneVisible'];
+	visibleRightPane!: Store['visibleRightPane'];
 
 	@State
 	unreadActivityCount!: Store['unreadActivityCount'];

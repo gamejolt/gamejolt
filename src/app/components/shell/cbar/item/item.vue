@@ -1,5 +1,5 @@
 <template>
-	<div class="-item">
+	<div class="-item" :class="{ '-control': isControl }">
 		<slot />
 		<div
 			class="-blip"
@@ -32,6 +32,17 @@ $-blip-top = $-item-size * 0.5 - $-blip-size * 0.5
 	margin-bottom: 8px
 	width: $-item-size - 2px
 	height: $-item-size - 2px
+
+	&.-control
+		pressy()
+		img-circle()
+		background-color: var(--theme-bg-offset)
+		display: flex
+		justify-content: center
+		align-items: center
+
+		>>> .jolticon
+			color: var(--theme-lighter)
 
 .-blip, .-notification-count
 	pointer-events: none

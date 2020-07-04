@@ -35,7 +35,7 @@ export default class AppShellSidebar extends Vue {
 	isLibraryBootstrapped!: Store['isLibraryBootstrapped'];
 
 	@State
-	isLeftPaneVisible!: Store['isLeftPaneVisible'];
+	visibleLeftPane!: Store['visibleLeftPane'];
 
 	@LibraryModule.State
 	bundleCollections!: LibraryStore['bundleCollections'];

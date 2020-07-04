@@ -381,9 +381,9 @@ export function enterChatRoom(chat: ChatClient, roomId: number) {
 
 	// If the chat isn't visible yet, set the session room to this new room and open it. That
 	// will in turn do the entry. Otherwise we want to just switch rooms.
-	if (!store.state.isRightPaneVisible) {
+	if (store.state.visibleLeftPane !== 'chat') {
 		chat.sessionRoomId = roomId;
-		store.dispatch('toggleRightPane');
+		store.dispatch('toggleChatPane');
 	} else {
 		if (!chat.socket) {
 			return;

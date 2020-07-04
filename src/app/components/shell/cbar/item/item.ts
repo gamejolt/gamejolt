@@ -7,6 +7,7 @@ import { number } from '../../../../../_common/filters/number';
 export default class AppShellCbarItem extends Vue {
 	@Prop(propOptional(Boolean, false)) isActive!: boolean;
 	@Prop(propOptional(Boolean, false)) isUnread!: boolean;
+	@Prop(propOptional(Boolean, false)) isControl!: boolean;
 	@Prop(propOptional(String)) highlight?: string;
 	@Prop(propOptional(Number, 0)) notificationCount!: number;
 
