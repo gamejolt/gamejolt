@@ -8,27 +8,27 @@
 					is-control
 				>
 					<a
-						v-if="chat"
-						class="navbar-item no-bar"
+						class="-control navbar-item no-bar"
 						:class="{ active: visibleLeftPane === 'chat' }"
 						@click="toggleLeftPane('chat')"
 						v-app-tooltip.right="$gettext(`Chat and Friends List (c)`)"
 					>
 						<!-- TODO: Event changed from 'top-nav' to 'cbar', gotta make sure that's appropriate. -->
 						<!-- v-app-track-event="`cbar:chat:toggle`" -->
-						<app-jolticon icon="user-messages" />
+						<app-jolticon class="-control-icon" icon="user-messages" />
 					</a>
 				</app-shell-cbar-item>
 
 				<app-shell-cbar-item is-control v-app-tooltip.right="$gettext(`Playlists (m)`)">
 					<a
-						class="navbar-item no-bar"
+						class="-control navbar-item no-bar"
+						:class="{ active: visibleLeftPane === 'playlists' }"
 						@click="toggleLeftPane('playlists')"
 						v-app-tooltip.right="$gettext(`Playlists (m)`)"
 					>
 						<!-- TODO: Event changed from 'top-nav:main-menu' to 'cbar:playlists', gotta make sure that's appropriate. -->
 						<!-- v-app-track-event="`cbar:playlists:toggle`" -->
-						<app-jolticon icon="playlist" />
+						<app-jolticon class="-control-icon" icon="playlist" />
 					</a>
 				</app-shell-cbar-item>
 
@@ -61,6 +61,15 @@
 	position: fixed
 	width: $shell-cbar-width
 	z-index: $zindex-cbar
+
+	.-control
+		display: flex
+		justify-content: center
+		align-items: center
+
+		&.active
+			.-control-icon
+				color: var(--theme-link)
 
 	.-hr
 		width: 50%

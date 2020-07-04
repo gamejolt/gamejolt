@@ -37,9 +37,6 @@ $-blip-top = $-item-size * 0.5 - $-blip-size * 0.5
 		pressy()
 		img-circle()
 		background-color: var(--theme-bg-offset)
-		display: flex
-		justify-content: center
-		align-items: center
 
 		>>> .jolticon
 			color: var(--theme-lighter)
