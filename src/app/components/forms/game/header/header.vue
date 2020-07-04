@@ -34,7 +34,7 @@
 					min_img_dimensions: [minWidth, minHeight],
 					max_img_dimensions: [maxWidth, maxHeight],
 				}"
-				accept=".png,.jpg,.jpeg"
+				accept=".png,.jpg,.jpeg,.webp"
 				@changed="headerSelected()"
 			/>
 
