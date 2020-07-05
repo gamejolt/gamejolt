@@ -42,7 +42,7 @@ export class Environment {
 	static activityStreamHost = 'https://activity.gamejolt.com';
 	static chat = 'https://chatex.gamejolt.com/chatex';
 	static widgetHost = 'https://widgets.gamejolt.com';
-	static gridHost = 'https://grid.gamejolt.com/grid/host';
+	static gridHost = 'https://grid-a.gamejolt.com/grid/host';
 	static recaptchaSiteKey = '6Led_UAUAAAAAB_ptIOOlAF5DFK9YM7Qi_7z8iKk';
 }
 
