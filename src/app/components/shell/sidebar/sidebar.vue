@@ -2,11 +2,11 @@
 	<div
 		id="shell-sidebar"
 		class="shell-pane shell-pane-left"
-		:class="{ visible: visibleLeftPane === 'playlists' }"
+		:class="{ visible: visibleLeftPane === 'library' }"
 	>
-		<app-shortkey shortkey="m" @press="toggleLeftPane('playlists')" />
+		<app-shortkey shortkey="m" @press="toggleLeftPane('library')" />
 
-		<app-scroll-scroller v-if="visibleLeftPane === 'playlists'" class="-content fill-darkest" thin>
+		<app-scroll-scroller v-if="visibleLeftPane === 'library'" class="-content fill-darkest" thin>
 			<ul v-if="Screen.isXs" class="shell-nav">
 				<li v-if="app.user" class="offline-disable">
 					<router-link
