@@ -18,7 +18,7 @@
 					min_img_dimensions: [minSize, minSize],
 					max_img_dimensions: [maxSize, maxSize],
 				}"
-				accept=".png,.jpg,.jpeg"
+				accept=".png,.jpg,.jpeg,.webp"
 				@changed="avatarSelected()"
 			/>
 

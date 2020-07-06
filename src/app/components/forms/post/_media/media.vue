@@ -54,7 +54,7 @@
 						filesize: maxFilesize,
 						max_img_dimensions: [maxWidth, maxHeight],
 					}"
-					accept=".png,.jpg,.jpeg,.gif"
+					accept=".png,.jpg,.jpeg,.gif,.webp"
 					multiple
 					@changed="mediaSelected()"
 				/>

@@ -6,11 +6,11 @@
 	theme-prop('color', 'bg-offset')
 	change-bg('bg-offset')
 	rounded-corners-lg()
+	border: $border-width-small dashed var(--theme-bg-subtle)
 	position: relative
 	transition: color $fade-out-time $easing
 	// Clear inherited values from blockquote
 	font-size: $font-size-base
-	border-left: 0
 
 	&::before
 		theme-prop('color', 'fg-muted')
@@ -21,7 +21,7 @@
 		font-size: $font-size-tiny
 		text-transform: uppercase
 
-	a, img, .emoji, code, pre, .media-item-backdrop
+	> *
 		opacity: 0
 		transition: opacity $fade-out-time $easing
 
@@ -30,7 +30,7 @@
 		transition-duration: $fade-in-time
 		transition-delay: $fade-in-delay
 
-		a, img, .emoji, code, pre, .media-item-backdrop
+		> *
 			opacity: 1
 			transition-duration: $fade-in-time
 			transition-delay: $fade-in-delay

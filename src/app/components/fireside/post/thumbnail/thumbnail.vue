@@ -11,7 +11,7 @@
 
 		<h5 class="fireside-post-thumbnail-heading">
 			<a class="link-unstyled" :href="post.url" target="_blank">
-				{{ post.lead_snippet }}
+				{{ post.getShortLead() }}
 			</a>
 		</h5>
 

@@ -9,6 +9,7 @@ import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../../_common/community/pill/pill.vue';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
+import AppEventItemControlsOverlay from '../../../../../_common/event-item/controls-overlay/controls-overlay.vue';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { number } from '../../../../../_common/filters/number';
@@ -55,6 +56,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppActivityFeedDevlogPostSketchfab,
 		AppActivityFeedDevlogPostVideo,
 		AppEventItemControls,
+		AppEventItemControlsOverlay,
 		AppPollVoting,
 		AppUserCardHover,
 		AppFadeCollapse,
