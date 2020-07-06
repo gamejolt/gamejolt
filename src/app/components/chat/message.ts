@@ -1,3 +1,4 @@
+import { Model } from '../../../_common/model/model.service';
 import { ChatUser } from './user';
 
 export type ChatMessageType = 0 | 1;
@@ -5,7 +6,7 @@ export type ChatMessageType = 0 | 1;
 export const CHAT_MESSAGE_MAX_CONTENT_LENGTH = 1000;
 export const TIMEOUT_CONSIDER_QUEUED = 1500; // Time in ms until a queued message should be displayed as such.
 
-export class ChatMessage {
+export class ChatMessage extends Model {
 	static readonly TypeNormal = 0;
 	static readonly TypeSystem = 1;
 
@@ -29,7 +30,7 @@ export class ChatMessage {
 	_error = false; // When an error was received trying to send the message.
 
 	constructor(data: Partial<ChatMessage> = {}) {
-		Object.assign(this, data);
+		super(data);
 
 		if (typeof this.logged_on === 'number' || typeof this.logged_on === 'string') {
 			this.logged_on = new Date(this.logged_on);
@@ -40,3 +41,5 @@ export class ChatMessage {
 		}
 	}
 }
+
+Model.create(ChatMessage);
