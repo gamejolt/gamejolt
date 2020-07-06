@@ -647,6 +647,18 @@ export function removeMessage(chat: ChatClient, msgId: number) {
 	}
 }
 
+export function editMessage(chat: ChatClient, message: ChatMessage) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id]
+			.push('message_update', { content: message.content, id: message.id })
+			.receive('ok', () => {
+				const index = chat.messages[room.id].findIndex(msg => msg.id === message.id);
+				chat.messages[room.id][index].content = message.content;
+			});
+	}
+}
+
 export function isInChatRoom(chat: ChatClient, roomId?: number) {
 	if (!roomId) {
 		return !!chat.room;
