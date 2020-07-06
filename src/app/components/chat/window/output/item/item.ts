@@ -7,13 +7,22 @@ import { date } from '../../../../../../_common/filters/date';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { Popper } from '../../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
+import { Screen } from '../../../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { ChatClient, ChatKey, removeMessage, retryFailedQueuedMessage } from '../../../client';
+import {
+	ChatClient,
+	ChatKey,
+	editMessage,
+	removeMessage,
+	retryFailedQueuedMessage,
+} from '../../../client';
 import { ChatMessage } from '../../../message';
 import { ChatRoom } from '../../../room';
+import AppChatWindowOutputItemForm from './form/form.vue';
 
 @Component({
 	components: {
+		AppChatWindowOutputItemForm,
 		AppContentViewer,
 		AppPopper,
 	},
@@ -36,12 +45,41 @@ export default class AppChatWindowOutputItem extends Vue {
 	readonly displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
 	isEditing = false;
 
+	singleLineMode = true;
+
+	readonly Screen = Screen;
+
+	get isSingleLineMode() {
+		// We always want to be in multiline mode for phones:
+		// It's expected behavior to create a new line with the "Enter" key on the virtual keyboard,
+		// and send the message with a "send message" button.
+		if (Screen.isMobile) {
+			return false;
+		}
+
+		return this.singleLineMode;
+	}
+
 	get loggedOn() {
 		return date(this.message.logged_on, 'medium');
 	}
 
+	startEdit() {
+		this.isEditing = true;
+		Popper.hideAll();
+	}
+
+	async onMessageEdit(message: ChatMessage) {
+		this.isEditing = false;
+		editMessage(this.chat, message);
+	}
+
 	onClickResend() {
 		retryFailedQueuedMessage(this.chat, this.message);
+	}
+
+	onSingleLineModeChanged(singleLineMode: boolean) {
+		this.singleLineMode = singleLineMode;
 	}
 
 	async removeMessage() {

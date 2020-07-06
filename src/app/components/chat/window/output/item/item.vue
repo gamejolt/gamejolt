@@ -43,7 +43,7 @@
 			</div>
 
 			<div
-				v-if="chat.currentUser && chat.currentUser.id === message.user.id"
+				v-if="chat.currentUser && chat.currentUser.id === message.user.id && !isEditing"
 				class="chat-window-message-options"
 			>
 				<app-popper popover-class="fill-darkest">
@@ -52,7 +52,7 @@
 					</a>
 
 					<div slot="popover" class="list-group list-group-dark">
-						<a class="list-group-item has-icon">
+						<a class="list-group-item has-icon" @click="startEdit">
 							<app-jolticon icon="edit" />
 							<translate>Edit Message</translate>
 						</a>
@@ -91,7 +91,19 @@
 					</span>
 				</template>
 
-				<app-content-viewer :source="message.content" :display-rules="displayRules" />
+				<template v-if="!isEditing">
+					<app-content-viewer :source="message.content" :display-rules="displayRules" />
+				</template>
+				<template v-else>
+					<app-chat-window-output-item-form
+						:model="message"
+						:single-line-mode="isSingleLineMode"
+						:room="room"
+						@single-line-mode-change="onSingleLineModeChanged($event)"
+						@submit="onMessageEdit($event)"
+						@cancel="isEditing = false"
+					/>
+				</template>
 			</div>
 		</div>
 	</div>
