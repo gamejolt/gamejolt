@@ -23,13 +23,13 @@
 				</div>
 			</div>
 
-			<a class="-prev" v-if="page > 1" @click.stop="goPrev">
+			<app-button class="-prev" v-if="page > 1" overlay trans @click="goPrev">
 				<app-jolticon icon="chevron-left" />
-			</a>
+			</app-button>
 
-			<a class="-next" v-if="page < post.media.length" @click.stop="goNext">
+			<app-button class="-next" v-if="page < post.media.length" overlay trans @click="goNext">
 				<app-jolticon icon="chevron-right" />
-			</a>
+			</app-button>
 		</v-touch>
 
 		<app-event-item-media-indicator
