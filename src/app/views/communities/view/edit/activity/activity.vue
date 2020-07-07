@@ -26,7 +26,10 @@
 			</div>
 		</div>
 
-		<div v-if="!isAtEnd" class="page-cut -more">
+		<template v-if="isLoading">
+			<app-loading centered />
+		</template>
+		<div v-else-if="!isAtEnd" class="page-cut -more">
 			<app-button trans @click="loadMore" v-app-track-event="`community-edit-activity:more`">
 				<translate>Load More</translate>
 			</app-button>

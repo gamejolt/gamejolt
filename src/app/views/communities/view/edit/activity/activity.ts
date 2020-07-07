@@ -3,6 +3,7 @@ import { Api } from '../../../../../../_common/api/api.service';
 import { CommunityActivityItem } from '../../../../../../_common/community/activity-item/activity-item.model';
 import AppCommunityActivityItem from '../../../../../../_common/community/activity-item/activity-item.vue';
 import { date } from '../../../../../../_common/filters/date';
+import AppLoading from '../../../../../../_common/loading/loading.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
@@ -19,6 +20,7 @@ type ActivityItem = {
 	components: {
 		AppCommunitiesViewPageContainer,
 		AppCommunityActivityItem,
+		AppLoading,
 	},
 	filters: {
 		date,
@@ -35,12 +37,14 @@ export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent
 
 	items: ActivityItem[] = [];
 	isAtEnd = false;
+	isLoading = false;
 
 	routeResolved($payload: any) {
 		this.handlePayload($payload);
 	}
 
 	async loadMore() {
+		this.isLoading = true;
 		const payload = await Api.sendRequest(
 			'/web/dash/communities/activity/' + this.routeStore.community.id,
 			{
@@ -50,6 +54,7 @@ export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent
 				detach: true,
 			}
 		);
+		this.isLoading = false;
 
 		this.handlePayload(payload);
 	}
