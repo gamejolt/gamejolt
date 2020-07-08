@@ -27,7 +27,13 @@
 				<app-jolticon icon="chevron-left" />
 			</app-button>
 
-			<app-button class="-next" v-if="page < post.media.length" overlay trans @click.stop="goNext">
+			<app-button
+				class="-next"
+				v-if="page < post.media.length"
+				overlay
+				trans
+				@click.stop="goNext"
+			>
 				<app-jolticon icon="chevron-right" />
 			</app-button>
 		</v-touch>
