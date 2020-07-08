@@ -61,10 +61,6 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 		return this.getAccount(LinkedAccount.PROVIDER_TUMBLR);
 	}
 
-	get mixerAccount() {
-		return this.getAccount(LinkedAccount.PROVIDER_MIXER);
-	}
-
 	getAccount(provider: string) {
 		if (this.accounts) {
 			for (const account of this.accounts) {
@@ -87,7 +83,12 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 
 	async onLink(provider: Provider) {
 		this.loading = true;
-		await LinkedAccounts.link(this.$router, provider, '/web/dash/linked-accounts/link/', 'User');
+		await LinkedAccounts.link(
+			this.$router,
+			provider,
+			'/web/dash/linked-accounts/link/',
+			'User'
+		);
 	}
 
 	async onUnlink(provider: Provider) {
@@ -166,9 +167,12 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 			this.channels = YoutubeChannel.populate(payload.channels);
 		} else {
 			Growls.error(
-				this.$gettextInterpolate('Failed to remove YouTube channel %{ title } form Game Jolt.', {
-					title: channel.title,
-				})
+				this.$gettextInterpolate(
+					'Failed to remove YouTube channel %{ title } form Game Jolt.',
+					{
+						title: channel.title,
+					}
+				)
 			);
 		}
 	}
@@ -202,7 +206,9 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 			);
 		} else {
 			Growls.error(
-				this.$gettext('Failed to change to new Tumblr blog. Maybe try to sync your Tumblr account.')
+				this.$gettext(
+					'Failed to change to new Tumblr blog. Maybe try to sync your Tumblr account.'
+				)
 			);
 		}
 
@@ -219,7 +225,9 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 		const tempBlogTitle = this.tumblrAccount.tumblrSelectedBlog.title;
 
 		const payload = await Api.sendRequest(
-			'/web/dash/linked-accounts/unlink-tumblr-blog/' + this.tumblrAccount.id + '?resource=User'
+			'/web/dash/linked-accounts/unlink-tumblr-blog/' +
+				this.tumblrAccount.id +
+				'?resource=User'
 		);
 
 		if (payload.success) {
