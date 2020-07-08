@@ -273,7 +273,7 @@ export class GridClient {
 			this.bootstrapDelay = 1;
 		} else {
 			// error
-			console.log(`[Grid] Failed to fetch notification count bootstrap (${payload.body}).`);
+			console.error(`[Grid] Failed to fetch notification count bootstrap (${payload.body}).`);
 
 			const delay = Math.min(30000, Math.random() * this.bootstrapDelay * 2000 + 1000);
 			this.bootstrapDelay++;
