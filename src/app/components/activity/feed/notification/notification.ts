@@ -5,10 +5,8 @@ import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { Mention } from '../../../../../_common/mention/mention.model';
-import {
-	getNotificationText,
-	Notification,
-} from '../../../../../_common/notification/notification-model';
+import { Notification } from '../../../../../_common/notification/notification-model';
+import { NotificationText } from '../../../../../_common/notification/notification-text.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
@@ -54,7 +52,7 @@ export default class AppActivityFeedNotification extends Vue {
 	}
 
 	get titleText() {
-		return getNotificationText(this.notification);
+		return NotificationText.getText(this.notification, false);
 	}
 
 	get hasDetails() {

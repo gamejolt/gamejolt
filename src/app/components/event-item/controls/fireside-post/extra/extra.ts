@@ -12,6 +12,7 @@ import { FiresidePost } from '../../../../../../_common/fireside/post/post-model
 import { Game } from '../../../../../../_common/game/game.model';
 import { Growls } from '../../../../../../_common/growls/growls.service';
 import { getLinkedAccountPlatformIcon } from '../../../../../../_common/linked-account/linked-account.model';
+import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../../_common/report/modal/modal.service';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
@@ -105,18 +106,6 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 		return false;
 	}
 
-	shouldDisplayCommunityName(community: Community) {
-		// If we are in the community in question and it's the only community option available
-		return (
-			this.post.manageableCommunities.length === 1 &&
-			!(
-				this.$route.name &&
-				this.$route.name.includes('communities.view') &&
-				this.$route.params.path === community.path
-			)
-		);
-	}
-
 	getProviderIcon(provider: string) {
 		return getLinkedAccountPlatformIcon(provider);
 	}
@@ -170,8 +159,25 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 	}
 
 	async rejectFromCommunity(postCommunity: FiresidePostCommunity) {
-		await this.post.$reject(postCommunity.community);
-		this.emitReject(postCommunity.community);
+		const result = await ModalConfirm.show(
+			this.$gettext(
+				`Are you sure you want to eject this post from ${postCommunity.community.name}?`
+			),
+			undefined,
+			'yes'
+		);
+
+		if (!result) {
+			return;
+		}
+
+		try {
+			await this.post.$reject(postCommunity.community);
+			this.emitReject(postCommunity.community);
+		} catch (err) {
+			console.warn('Failed to eject post');
+			return;
+		}
 	}
 
 	copyShareUrl() {

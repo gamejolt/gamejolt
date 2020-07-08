@@ -15,18 +15,19 @@ import { Model } from '../model/model.service';
 import { ThemePreset } from './preset/preset.model';
 
 // Sync with variables in stylus.
-const GrayDarkest = '#111111';
-const GrayDarker = '#1f1f1f';
-const GrayDark = '#292929';
-const Gray = '#363636';
-const GraySubtle = '#444444';
-const GrayLight = '#7e7e7e';
-const GrayLighter = '#d1d1d1';
-const GrayLightest = '#f0f0f0';
-const BgBackdropLight = '#fafafa';
-const BgBackdropLightXs = '#f8f8f8';
-const BgBackdropDark = '#252525';
-const BgBackdropDarkXs = '#222222';
+
+export const GrayDarkest = '#111111';
+export const GrayDarker = '#1f1f1f';
+export const GrayDark = '#292929';
+export const Gray = '#363636';
+export const GraySubtle = '#444444';
+export const GrayLight = '#7e7e7e';
+export const GrayLighter = '#d1d1d1';
+export const GrayLightest = '#f0f0f0';
+export const BgBackdropLight = '#fafafa';
+export const BgBackdropLightXs = '#f8f8f8';
+export const BgBackdropDark = '#252525';
+export const BgBackdropDarkXs = '#222222';
 
 // For clamping custom colors.
 //   ("MinLitBase" is summed with a variable portion of BlueBoost for MinLitFinal.)
@@ -322,7 +323,7 @@ export class Theme extends Model {
 		return getReadableCustom(this.custom, 'light');
 	}
 
-	private tintColor(color: string, amount: number) {
+	tintColor(color: string, amount: number) {
 		return (this.tint_ ? mix(amount, '#' + this.tint_, color) : color).substr(1);
 	}
 }

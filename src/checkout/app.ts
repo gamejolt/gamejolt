@@ -4,6 +4,7 @@ import { State } from 'vuex-class';
 import { loadCurrentLanguage } from '../utils/translations';
 import * as _ClientHistoryNavigatorMod from '../_common/client/history-navigator/history-navigator.service';
 import { Connection } from '../_common/connection/connection-service';
+import AppContactLink from '../_common/contact-link/contact-link.vue';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
 import { Environment } from '../_common/environment/environment.service';
 import AppErrorPage from '../_common/error/page/page.vue';
@@ -18,6 +19,7 @@ let components: any = {
 	AppErrorPage,
 	AppUserBar,
 	AppCookieBanner,
+	AppContactLink,
 };
 
 let ClientHistoryNavigatorMod: typeof _ClientHistoryNavigatorMod | undefined;

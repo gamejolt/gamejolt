@@ -21,8 +21,8 @@
 			<form-community-channel-edit-preset
 				:model="community"
 				:preset-type="presetType"
-				@save="emitEdited"
-				@clear="emitEdited"
+				@save="emitEdit"
+				@clear="emitEdit"
 			/>
 		</template>
 	</app-card-list-item>

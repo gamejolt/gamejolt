@@ -3,10 +3,12 @@ import { Selection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import { propRequired } from '../../../../../utils/vue';
 import { Growls } from '../../../../growls/growls.service';
 import { Screen } from '../../../../screen/screen-service';
 import { AppTooltip } from '../../../../tooltip/tooltip-directive';
 import { ContextCapabilities } from '../../../content-context';
+import AppContentEditorTS from '../../content-editor';
 import { ContentEditorService } from '../../content-editor.service';
 import { ContentEditorSchema } from '../../schemas/content-editor-schema';
 
@@ -25,16 +27,22 @@ export default class AppContentEditorBlockControls extends Vue {
 	capabilities!: ContextCapabilities;
 	@Prop(Boolean)
 	collapsed!: boolean;
+	@Prop(propRequired(Object)) editor!: AppContentEditorTS;
 
 	visible = false;
-	top = '0px';
-	left = '0px';
+	top = 0;
+	left = 0;
+	boxHeight = 100;
 
 	readonly Screen = Screen;
 
 	$refs!: {
 		container: HTMLElement;
 	};
+
+	get shouldShow() {
+		return this.visible && this.top > -24 && this.boxHeight - this.top > 24;
+	}
 
 	mounted() {
 		this.update();
@@ -61,9 +69,11 @@ export default class AppContentEditorBlockControls extends Vue {
 					}
 				}
 
-				const box = this.$refs.container.offsetParent.getBoundingClientRect();
-				this.top = start.top - box.top - 8 + 'px';
-				this.left = '-32px';
+				const box = this.$refs.container.offsetParent!.getBoundingClientRect();
+				this.boxHeight = box.height;
+
+				this.top = start.top - box.top - 8;
+				this.left = -32;
 
 				return;
 			}
@@ -111,12 +121,14 @@ export default class AppContentEditorBlockControls extends Vue {
 		this.view.dispatch(tr);
 
 		this.setCollapsed(true);
+
+		this.editor.emitInsertBlockNode(newNode.type.name);
 	}
 
 	onClickMedia() {
 		const input = document.createElement('input');
 		input.type = 'file';
-		input.accept = '.png,.jpg,.jpeg,.gif,.bmp';
+		input.accept = '.png,.jpg,.jpeg,.gif,.bmp,.webp';
 		input.multiple = true;
 
 		input.onchange = e => {

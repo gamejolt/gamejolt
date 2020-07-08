@@ -34,14 +34,14 @@ interface FiresidePostPublishedPlatform {
 }
 
 export class FiresidePost extends Model implements ContentContainerModel, CommentableModel {
-	static TYPE_TEXT = 'text';
-	static TYPE_MEDIA = 'media';
-	static TYPE_VIDEO = 'video';
-	static TYPE_SKETCHFAB = 'sketchfab';
+	static readonly TYPE_TEXT = 'text';
+	static readonly TYPE_MEDIA = 'media';
+	static readonly TYPE_VIDEO = 'video';
+	static readonly TYPE_SKETCHFAB = 'sketchfab';
 
-	static STATUS_DRAFT = 'draft';
-	static STATUS_ACTIVE = 'active';
-	static STATUS_REMOVED = 'removed';
+	static readonly STATUS_DRAFT = 'draft';
+	static readonly STATUS_ACTIVE = 'active';
+	static readonly STATUS_REMOVED = 'removed';
 
 	type!: 'text' | 'media' | 'video' | 'sketchfab' | 'comment-video';
 	hash!: string;
@@ -64,7 +64,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	expand_count?: number;
 	is_pinned!: boolean;
 
-	lead_snippet!: string;
 	lead_content!: string;
 	leadStr!: string;
 	article_content!: string;
@@ -316,6 +315,17 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return true;
 	}
 
+	getShortLead(length = 70) {
+		let lead = this.leadStr
+			.replace('\r\n', ' ')
+			.replace('\r', ' ')
+			.replace('\n', ' ');
+		if (lead.length > length) {
+			lead = lead.substr(0, length - 3).trim() + '...';
+		}
+		return lead;
+	}
+
 	private getCommunityPinContext(route: Route) {
 		// A post can be pinned to a community if:
 		// 1. viewing the community feed.
@@ -323,7 +333,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		// 3. viewing the channel the post was published to.
 		// NOTE: this means posts cannot be pinned to meta channels like 'featured' and 'all posts'
 
-		if (route.name !== 'communities.view.overview') {
+		if (route.name !== 'communities.view.channel') {
 			return null;
 		}
 

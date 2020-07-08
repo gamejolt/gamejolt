@@ -1,15 +1,20 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
-import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
+import { propRequired } from '../../../../../../utils/vue';
+import { ContentRules } from '../../../../../../_common/content/content-editor/content-rules';
+import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import { date } from '../../../../../../_common/filters/date';
-import { ChatClient, ChatKey } from '../../../client';
+import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
+import { ChatClient, ChatKey, retryFailedQueuedMessage } from '../../../client';
 import { ChatMessage } from '../../../message';
 import { ChatRoom } from '../../../room';
-import './item-content.styl';
 
 @Component({
 	components: {
-		AppFadeCollapse,
+		AppContentViewer,
+	},
+	directives: {
+		AppTooltip,
 	},
 	filters: {
 		date,
@@ -18,23 +23,19 @@ import './item-content.styl';
 export default class AppChatWindowOutputItem extends Vue {
 	@Prop(ChatMessage) message!: ChatMessage;
 	@Prop(ChatRoom) room!: ChatRoom;
+	@Prop(propRequired(Boolean)) isNew!: boolean;
 
 	@InjectReactive(ChatKey) chat!: ChatClient;
 
-	isExpanded = false;
-	isCollapsable = false;
-
 	readonly date = date;
 	readonly ChatMessage = ChatMessage;
-
-	get shouldFadeCollapse() {
-		return (
-			this.message.content_raw.split('\n').length > 6 ||
-			this.message.content_raw.length >= 500
-		);
-	}
+	readonly displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
 
 	get loggedOn() {
 		return date(this.message.logged_on, 'medium');
+	}
+
+	onClickResend() {
+		retryFailedQueuedMessage(this.chat, this.message);
 	}
 }

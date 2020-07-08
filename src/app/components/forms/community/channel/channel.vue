@@ -1,7 +1,13 @@
 <template>
 	<app-form name="communityChannelForm">
 		<div class="-form">
-			<app-form-group name="title" :label="$gettext(`Title`)" hide-label optional>
+			<app-form-group
+				name="title"
+				class="-form-input"
+				:label="$gettext(`Title`)"
+				hide-label
+				optional
+			>
 				<app-form-control
 					type="text"
 					:rules="{
@@ -18,17 +24,21 @@
 				<app-form-control-errors>
 					<app-form-control-error
 						when="too_many_channels"
-						:message="$gettext('Too many channels')"
+						:message="
+							$gettext('This community already has the maximum number of channels allowed.')
+						"
 					/>
 
 					<app-form-control-error
 						when="availability"
-						:message="$gettext('A channel with that name already exists')"
+						:message="$gettext('A channel with that name already exists.')"
 					/>
 
 					<app-form-control-error
 						when="pattern"
-						:message="$gettext('Channel names must not contain special characters or spaces')"
+						:message="
+							$gettext('Channel names can only contain numbers, letters, and underscores (_).')
+						"
 					/>
 				</app-form-control-errors>
 			</app-form-group>
@@ -44,6 +54,9 @@
 .-form
 	display: flex
 	align-items: flex-start
+
+	&-input
+		flex: auto
 
 	button
 		margin-left: 5px

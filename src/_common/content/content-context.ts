@@ -9,7 +9,8 @@ export type ContentContext =
 	| 'user-comment'
 	| 'user-bio'
 	| 'forum-post'
-	| 'community-description';
+	| 'community-description'
+	| 'chat-message';
 
 enum ContextCapabilityType {
 	TextBold,
@@ -228,6 +229,23 @@ export class ContextCapabilities {
 					ContextCapabilityType.Tag,
 					ContextCapabilityType.Mention,
 				]);
+			case 'chat-message':
+				return new ContextCapabilities([
+					ContextCapabilityType.TextBold,
+					ContextCapabilityType.TextItalic,
+					ContextCapabilityType.TextLink,
+					ContextCapabilityType.TextCode,
+					ContextCapabilityType.TextStrike,
+					ContextCapabilityType.Media,
+					ContextCapabilityType.CodeBlock,
+					ContextCapabilityType.Blockquote,
+					ContextCapabilityType.Emoji,
+					ContextCapabilityType.List,
+					ContextCapabilityType.Spoiler,
+					ContextCapabilityType.Tag,
+					ContextCapabilityType.Mention,
+					ContextCapabilityType.Gif,
+				]);
 		}
 		throw new Error('Context capabilities undefined for context ' + context);
 	}
@@ -247,6 +265,8 @@ export function getMediaItemTypeForContext(context: ContentContext) {
 			return MediaItem.TYPE_FORUM_POST;
 		case 'community-description':
 			return MediaItem.TYPE_COMMUNITY_DESCRIPTION;
+		case 'chat-message':
+			return MediaItem.TYPE_CHAT_MESSAGE;
 	}
 	throw new Error('There is no matching media item type for the context ' + context);
 }

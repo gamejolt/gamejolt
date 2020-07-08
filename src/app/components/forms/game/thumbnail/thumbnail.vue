@@ -32,7 +32,7 @@
 					min_img_dimensions: [minWidth, minHeight],
 					max_img_dimensions: [maxWidth, maxHeight],
 				}"
-				accept=".png,.jpg,.jpeg,.gif"
+				accept=".png,.jpg,.jpeg,.gif,.webp"
 				@changed="thumbSelected()"
 			/>
 

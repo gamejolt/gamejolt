@@ -25,3 +25,7 @@ export async function FormCommentLazy() {
 export async function AppActivityFeedLazy() {
 	return await import(/* webpackChunkName: "activityFeed" */ './activity/feed/feed.vue');
 }
+
+export async function ChatClientLazy() {
+	return await import(/* webpackChunkName: "chat" */ './chat/client');
+}

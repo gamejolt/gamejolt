@@ -1,7 +1,8 @@
 import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { Component, Prop } from 'vue-property-decorator';
+import { Action, State } from 'vuex-class';
 import { GridClient } from '../../../app/components/grid/client.service';
+import { Store } from '../../../app/store';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { number } from '../../filters/number';
 import { Growls } from '../../growls/growls.service';
@@ -16,34 +17,19 @@ import { $joinCommunity, $leaveCommunity, Community } from '../community.model';
 	},
 })
 export default class AppCommunityJoinWidget extends Vue {
-	@Prop(Community)
-	community!: Community;
-
-	@Prop(Boolean)
-	block?: boolean;
-
-	@Prop(Boolean)
-	hideCount?: boolean;
-
+	@Prop(Community) community!: Community;
+	@Prop(Boolean) block?: boolean;
+	@Prop(Boolean) hideCount?: boolean;
 	@Prop({ type: String, required: false, default: 'global' })
 	eventLabel!: string;
+	@Prop(Boolean) solid?: boolean;
 
-	@Prop(Boolean)
-	solid?: boolean;
-
-	@State
-	app!: AppStore;
-
-	@State
-	grid!: GridClient;
+	@State app!: AppStore;
+	@State grid!: GridClient;
+	@Action joinCommunity!: Store['joinCommunity'];
+	@Action leaveCommunity!: Store['leaveCommunity'];
 
 	isProcessing = false;
-
-	@Emit('join')
-	join(_community: Community) {}
-
-	@Emit('leave')
-	leave(_community: Community) {}
 
 	get badge() {
 		return !this.hideCount && this.community.member_count
@@ -80,8 +66,8 @@ export default class AppCommunityJoinWidget extends Vue {
 		if (!this.community.is_member) {
 			try {
 				await $joinCommunity(this.community);
+				this.joinCommunity(this.community);
 				this.grid.joinCommunity(this.community);
-				this.join(this.community);
 			} catch (e) {
 				console.log(e);
 				let message = this.$gettext(
@@ -96,8 +82,8 @@ export default class AppCommunityJoinWidget extends Vue {
 		} else {
 			try {
 				await $leaveCommunity(this.community);
+				this.leaveCommunity(this.community);
 				this.grid.leaveCommunity(this.community);
-				this.leave(this.community);
 			} catch (e) {
 				Growls.error(this.$gettext(`For some reason we couldn't leave this community.`));
 			}

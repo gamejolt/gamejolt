@@ -70,6 +70,7 @@ export type Mutations = AppMutations &
 	_ClientLibraryMod.Mutations & {
 		showShell: void;
 		hideShell: void;
+		setHasContentSidebar: boolean;
 		setNotificationCount: { type: UnreadItemType; count: number };
 		incrementNotificationCount: { type: UnreadItemType; count: number };
 		setFriendRequestCount: number;
@@ -127,6 +128,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	isLeftPaneOverlayed = false;
 	isRightPaneOverlayed = false;
+	hasContentSidebar = false;
 
 	communities: Community[] = [];
 	communityStates: CommunityStates = new CommunityStates();
@@ -300,6 +302,11 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexMutation
 	showShell() {
 		this.isShellHidden = false;
+	}
+
+	@VuexMutation
+	setHasContentSidebar(isShowing: Mutations['setHasContentSidebar']) {
+		this.hasContentSidebar = isShowing;
 	}
 
 	@VuexMutation

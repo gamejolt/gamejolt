@@ -3,10 +3,15 @@ import { EditorView } from 'prosemirror-view';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop, Watch } from 'vue-property-decorator';
+import { AppTooltip } from '../../../../tooltip/tooltip-directive';
 import { ContentEditorService } from '../../content-editor.service';
 import { ContentEditorGifModal } from '../../modals/gif/gif-modal.service';
 
-@Component({})
+@Component({
+	directives: {
+		AppTooltip,
+	},
+})
 export default class AppContentEditorControlsGifControls extends Vue {
 	@Prop(EditorView)
 	view!: EditorView;

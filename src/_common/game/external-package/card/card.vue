@@ -22,7 +22,7 @@
 				@require-change="canToggleDescription = $event"
 				@expand="showFullDescription = true"
 			>
-				<div v-html="package.description" />
+				<div>{{ package.description }}</div>
 			</app-fade-collapse>
 
 			<a

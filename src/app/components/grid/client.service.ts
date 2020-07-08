@@ -9,10 +9,8 @@ import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { GameTrophy } from '../../../_common/game/trophy/trophy.model';
 import { Growls } from '../../../_common/growls/growls.service';
-import {
-	getNotificationText,
-	Notification,
-} from '../../../_common/notification/notification-model';
+import { Notification } from '../../../_common/notification/notification-model';
+import { NotificationText } from '../../../_common/notification/notification-text.service';
 import { Settings } from '../../../_common/settings/settings.service';
 import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
 import { Translate } from '../../../_common/translate/translate.service';
@@ -71,8 +69,7 @@ async function pollRequest(context: string, requestGetter: () => Promise<any>): 
 			finished = true;
 		} catch (e) {
 			const sleepMs = Math.min(30000, Math.random() * delay * 1000 + 1000);
-			console.error(e);
-			console.log(`[Grid] Failed request [${context}]. Reattempt in ${sleepMs} ms.`);
+			console.error(`[Grid] Failed request [${context}]. Reattempt in ${sleepMs} ms.`);
 			await sleep(sleepMs);
 		}
 
@@ -300,7 +297,7 @@ export class GridClient {
 			return;
 		}
 
-		let message = getNotificationText(notification, true);
+		let message = NotificationText.getText(notification, true);
 		let icon = notification.from_model === undefined ? '' : notification.from_model.img_avatar;
 
 		if (message !== undefined) {

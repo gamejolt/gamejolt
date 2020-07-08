@@ -8,6 +8,7 @@
 						src="~img/jolt.svg"
 						alt=""
 						tooltip="This is a lightning bolt."
+						strict-colors
 					/>
 				</h1>
 
@@ -79,14 +80,18 @@
 								, check out the
 								<router-link :to="{ name: 'forums.landing.overview' }">forums</router-link>
 								or email us at
-								<a href="mailto:contact@gamejolt.com">contact@gamejolt.com</a>
+								<app-contact-link email="contact@gamejolt.com">
+									contact@gamejolt.com
+								</app-contact-link>
 								.
 							</p>
 
 							<p>
 								<strong>Press/business inquiries</strong>
 								email Yaprak DeCarmine at
-								<a href="mailto:yaprak@gamejolt.com">yaprak@gamejolt.com</a>
+								<app-contact-link email="yaprak@gamejolt.com">
+									yaprak@gamejolt.com
+								</app-contact-link>
 								.
 							</p>
 						</div>

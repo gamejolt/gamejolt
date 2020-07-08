@@ -1,17 +1,24 @@
 <template>
 	<app-form-post-community-pill-selector :communities="communities" @select="emitAdd">
-		<app-button icon="add" sm trans>
-			Add Community
-		</app-button>
+		<app-pill class="-add">
+			<app-jolticon slot="img" icon="add" />
+			<translate>Add Community</translate>
+		</app-pill>
 	</app-form-post-community-pill-selector>
 </template>
 
 <style lang="stylus" scoped>
 @require '~styles/variables'
+@require '../variables.styl'
 
-.button
-	color: var(--theme-fg-muted)
-	font-weight: bold
+.-add
+	cursor: pointer
+	height: $pill-height
+	border: $border-width-base solid var(--theme-bg-subtle)
+	transition: border-color 300ms $strong-ease-out
+
+	&:hover
+		border-color: var(--theme-link-hover)
 </style>
 
 <script lang="ts" src="./add"></script>

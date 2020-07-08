@@ -78,7 +78,7 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 
 		return this.$gettextInterpolate('%{ user } on Game Jolt: "%{ post }"', {
 			user: this.post.user.display_name,
-			post: this.post.lead_snippet,
+			post: this.post.getShortLead(),
 		});
 	}
 

@@ -1,60 +1,77 @@
 <template>
-	<app-popper
-		popover-class="fill-darkest"
-		trigger="right-click"
-		placement="right"
-		fixed
-		block
-		hide-on-state-change
-		@show="popperVisible = true"
-		@hide="popperVisible = false"
-	>
-		<router-link
-			class="-item link-unstyled"
-			:to="{
-				name: 'communities.view.overview',
-				params: { path: community.path },
+	<div class="-item">
+		<slot />
+		<div
+			class="-blip"
+			:class="{
+				'-blip-unread': isUnread,
+				'-blip-active': isActive,
 			}"
-			v-app-tooltip.right="tooltip"
-		>
-			<app-media-item-backdrop class="-backdrop" :media-item="community.thumbnail" radius="full">
-				<app-community-thumbnail-img class="-thumb" :community="community" />
-			</app-media-item-backdrop>
-			<div
-				class="-blip"
-				:class="{
-					'-blip-unread': isUnread,
-					'-blip-active': isActive,
-				}"
-				:style="{
-					'background-color': highlight,
-				}"
-			/>
-
-			<div v-if="featureCount > 0" class="-feature-counter">
-				{{ featureCountText }}
-			</div>
-		</router-link>
-
-		<div slot="popover" class="list-group list-group-dark">
-			<app-community-perms :community="community" tag="span">
-				<router-link class="list-group-item has-icon" :to="community.routeEditLocation">
-					<app-jolticon icon="edit" />
-					<translate>Edit Community</translate>
-				</router-link>
-			</app-community-perms>
-			<a class="list-group-item has-icon" v-if="shouldShowLeave" @click="onLeaveCommunityClick">
-				<app-jolticon icon="remove" />
-				<translate class="-notice">Leave Community</translate>
-			</a>
-			<a v-if="shouldShowModerate" class="list-group-item has-icon" @click="gotoModerate">
-				<app-jolticon icon="cog" />
-				<translate>Moderate Community</translate>
-			</a>
+			:style="{
+				'background-color': highlight,
+			}"
+		/>
+		<div v-if="notificationCount > 0" class="-notification-count">
+			{{ notificationCountText }}
 		</div>
-	</app-popper>
+	</div>
 </template>
 
-<style lang="stylus" src="./item.styl" scoped></style>
+<style lang="stylus" scoped>
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+
+$-item-size = $shell-cbar-width - $cbar-h-padding * 2
+$-blip-size = 10px
+$-blip-left = (-($cbar-h-padding + $-blip-size * 0.5))
+$-blip-top = $-item-size * 0.5 - $-blip-size * 0.5
+
+.-item
+	display: block
+	position: relative
+	margin-bottom: 8px
+	width: $-item-size - 2px
+	height: $-item-size - 2px
+
+.-blip, .-notification-count
+	pointer-events: none
+
+.-blip
+	position: absolute
+	width: $-blip-size
+	height: $-blip-size
+	top: $-blip-top
+	left: -($-blip-size * 2)
+	background-color: var(--theme-lighter)
+	border-radius: 50%
+	will-change: height, top, left
+	z-index: 2
+	transition: height 300ms $ease-in-out-back, top 300ms $ease-in-out-back, left 300ms $ease-in-out-back, background-color 300ms
+
+.-blip-unread
+	left: $-blip-left
+
+.-blip-active
+	top: 0
+	left: $-blip-left
+	height: $-item-size
+
+.-notification-count
+	position: absolute
+	right: -2px
+	bottom: -2px
+	z-index: 2
+	border-radius: 10px
+	border-color: var(--theme-darkest)
+	border-width: 3px
+	border-style: solid
+	padding-left: 4px
+	padding-right: 4px
+	font-size: $font-size-tiny
+	text-align: center
+	font-weight: bolder
+	color: var(--theme-highlight-fg)
+	background-color: var(--theme-highlight)
+</style>
 
 <script lang="ts" src="./item"></script>

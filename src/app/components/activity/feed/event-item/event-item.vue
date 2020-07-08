@@ -142,25 +142,29 @@
 
 				<a class="hidden-text-expander" v-if="canToggleLead" @click="toggleLead()"></a>
 
-				<app-activity-feed-devlog-post-text
-					v-if="post.hasArticle"
-					:item="item"
-					:post="post"
-					@expanded="onExpand"
-					@content-bootstrapped="onContentBootstrapped"
-				/>
-
-				<div class="-poll" v-if="post.hasPoll" @click.stop>
-					<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
-				</div>
-
-				<app-scroll-scroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
-					<app-community-pill
-						v-for="postCommunity of communities"
-						:key="postCommunity.id"
-						:community-link="postCommunity"
+				<app-event-item-controls-overlay>
+					<app-activity-feed-devlog-post-text
+						v-if="post.hasArticle"
+						:item="item"
+						:post="post"
+						@expanded="onExpand"
+						@content-bootstrapped="onContentBootstrapped"
 					/>
-				</app-scroll-scroller>
+
+					<div v-if="post.hasPoll" class="-poll" @click.stop>
+						<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
+					</div>
+
+					<div v-if="shouldShowCommunities" class="-communities">
+						<app-scroll-scroller class="-communities-list" horizontal>
+							<app-community-pill
+								v-for="postCommunity of communities"
+								:key="postCommunity.id"
+								:community-link="postCommunity"
+							/>
+						</app-scroll-scroller>
+					</div>
+				</app-event-item-controls-overlay>
 			</template>
 
 			<app-event-item-controls

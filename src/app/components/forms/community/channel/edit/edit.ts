@@ -56,7 +56,7 @@ export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 
 	async clearBackground() {
 		const result = await ModalConfirm.show(
-			this.$gettext("Do you really want to remove this channel's background image?")
+			this.$gettext(`Do you really want to remove this channel's background image?`)
 		);
 
 		if (!result) {

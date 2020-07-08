@@ -3,8 +3,8 @@
 		ref="container"
 		class="content-editor-controls"
 		:style="{
-			top: this.top,
-			left: this.left,
+			top: this.top + 'px',
+			left: this.left + 'px',
 		}"
 		:class="{
 			'controls-desktop': !Screen.isXs,
@@ -15,7 +15,7 @@
 		<!-- ^ Tab index is 0 so that the main content editor does not focus when clicking the buttons -->
 		<!-- When adding new buttons here, make sure they are added in both mobile and desktop views -->
 		<transition name="fade">
-			<div v-if="visible">
+			<div v-if="shouldShow">
 				<template v-if="Screen.isXs">
 					<button
 						v-if="capabilities.media"
