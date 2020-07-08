@@ -34,6 +34,7 @@ export default class AppCommunityActivityItem extends Vue {
 
 	readonly Screen = Screen;
 	readonly date = date;
+	readonly CommunityActivityItem = CommunityActivityItem;
 
 	get loggedOn() {
 		return date(this.item.added_on, 'medium');

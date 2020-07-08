@@ -49,24 +49,27 @@
 				</span>
 
 				<div class="-action">
-					<span v-if="item.type === 'community/created'" v-translate>
+					<span
+						v-if="item.type === CommunityActivityItem.TYPE_COMMUNITY_CREATED"
+						v-translate
+					>
 						<em>Created</em> this awesome community.
 					</span>
 
 					<span
-						v-if="item.type === 'post/feature'"
+						v-if="item.type === CommunityActivityItem.TYPE_POST_FEATURE"
 						v-translate="{ channel: getExtraData('in-channel') }"
 					>
 						<em>Featured</em> a post in the channel #%{ channel }.
 					</span>
 					<span
-						v-else-if="item.type === 'post/unfeature'"
+						v-else-if="item.type === CommunityActivityItem.TYPE_POST_UNFEATURE"
 						v-translate="{ channel: getExtraData('in-channel') }"
 					>
 						<em>Unfeatured</em> a post in the channel #%{ channel }.
 					</span>
 					<span
-						v-else-if="item.type === 'post/move'"
+						v-else-if="item.type === CommunityActivityItem.TYPE_POST_MOVE"
 						v-translate="{
 							fromChannel: getExtraData('from-channel'),
 							toChannel: getExtraData('to-channel'),
@@ -76,65 +79,107 @@
 						toChannel }.
 					</span>
 					<span
-						v-else-if="item.type === 'post/eject'"
+						v-else-if="item.type === CommunityActivityItem.TYPE_POST_EJECT"
 						v-translate="{ channel: getExtraData('in-channel') }"
 					>
 						<em>Ejected</em> a post from the channel #%{ channel }.
 					</span>
 
 					<span
-						v-else-if="item.type === 'mod/invite'"
+						v-else-if="item.type === CommunityActivityItem.TYPE_MOD_INVITE"
 						v-translate="{ role: getExtraData('role') }"
 					>
 						<em>Invited</em> a user to become a %{ role }.
 					</span>
 					<span
-						v-else-if="item.type === 'mod/accept'"
+						v-else-if="item.type === CommunityActivityItem.TYPE_MOD_ACCEPT"
 						v-translate="{ role: getExtraData('role') }"
 					>
 						<em>Joined</em> this community as a %{ role }.
 					</span>
 					<span
-						v-else-if="item.type === 'mod/remove'"
+						v-else-if="item.type === CommunityActivityItem.TYPE_MOD_REMOVE"
 						v-translate="{ role: getExtraData('role') }"
 					>
 						<em>Removed</em> a %{ role } from this community.
 					</span>
 
-					<span v-else-if="item.type === 'block/user'" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_BLOCK_USER"
+						v-translate
+					>
 						<em>Blocked</em> a user from this community.
 					</span>
 
-					<span v-else-if="item.type === 'edit/description'" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_EDIT_DESCRIPTION"
+						v-translate
+					>
 						<em>Edited</em> the description of this community.
 					</span>
-					<span v-else-if="item.type === 'edit/thumbnail'" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_EDIT_THUMBNAIL"
+						v-translate
+					>
 						<em>Changed</em> the thumbnail of this community.
 					</span>
-					<span v-else-if="item.type === 'edit/header'" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_EDIT_HEADER"
+						v-translate
+					>
 						<em>Changed</em> the header of this community.
 					</span>
-					<span v-else-if="item.type === 'edit/details'" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_EDIT_DETAILS"
+						v-translate
+					>
 						<em>Edited</em> the details of this community.
 					</span>
-					<span v-else-if="item.type === 'edit/header/remove'" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_EDIT_HEADER_REMOVE"
+						v-translate
+					>
 						<em>Removed</em> the header of this community.
 					</span>
 
-					<span v-else-if="item.type === 'channel/add'" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_CHANNEL_ADD"
+						v-translate
+					>
 						<em>Added</em> a new channel to this community.
 					</span>
-					<span v-else-if="item.type === 'channel/remove'" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_CHANNEL_REMOVE"
+						v-translate
+					>
 						<em>Removed</em> a channel from this community.
 					</span>
-					<span v-else-if="item.type === 'channel/edit'" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_CHANNEL_EDIT"
+						v-translate
+					>
 						<em>Edited</em> a channel in this community.
 					</span>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_CHANNEL_RENAME"
+						v-translate="{
+							oldName: getExtraData('old-name'),
+							newName: getExtraData('new-name'),
+						}"
+					>
+						<em>Renamed</em> a channel from #%{ oldName } to #%{ newName }.
+					</span>
 
-					<span v-else-if="item.type === 'game/link'" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_GAME_LINK"
+						v-translate
+					>
 						<em>Linked</em> a game to this community.
 					</span>
-					<span v-else-if="item.type === 'game/unlink'" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItem.TYPE_GAME_UNLINK"
+						v-translate
+					>
 						<em>Unlinked</em> a game from this community.
 					</span>
 
