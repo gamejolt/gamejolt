@@ -69,6 +69,8 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 
 	post: FiresidePost | null = null;
 
+	permalinkWatcher?: Function;
+
 	get routeTitle() {
 		if (!this.post) {
 			return null;
@@ -96,6 +98,11 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 		}
 
 		CommentThreadModal.showFromPermalink(this.$router, this.post, 'comments');
+		this.permalinkWatcher = CommentThreadModal.watchForPermalink(
+			this.$router,
+			this.post,
+			'comments'
+		);
 
 		this.post.$viewed();
 		this.post.$expanded();
@@ -103,6 +110,12 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;
+	}
+
+	destroyed() {
+		if (this.permalinkWatcher) {
+			this.permalinkWatcher = undefined;
+		}
 	}
 
 	render(h: CreateElement) {

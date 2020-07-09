@@ -184,6 +184,8 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	feed: ActivityFeedView | null = null;
 
+	permalinkWatcher?: Function;
+
 	readonly Screen = Screen;
 	readonly Environment = Environment;
 
@@ -246,6 +248,11 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 		if (this.game) {
 			CommentThreadModal.showFromPermalink(this.$router, this.game, 'comments');
+			this.permalinkWatcher = CommentThreadModal.watchForPermalink(
+				this.$router,
+				this.game,
+				'comments'
+			);
 		}
 
 		this.feed = ActivityFeedService.routed(
@@ -258,6 +265,12 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 			$payload.posts,
 			fromCache
 		);
+	}
+
+	destroyed() {
+		if (this.permalinkWatcher) {
+			this.permalinkWatcher = undefined;
+		}
 	}
 
 	copyPartnerLink() {
