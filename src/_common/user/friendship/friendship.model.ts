@@ -1,4 +1,3 @@
-import { Api } from '../../api/api.service';
 import { Model } from '../../model/model.service';
 import { User } from '../user.model';
 
@@ -27,17 +26,6 @@ export class UserFriendship extends Model {
 		if (data.target_user) {
 			this.target_user = new User(data.target_user);
 		}
-	}
-
-	static async fetchRequests() {
-		const response: any = await Api.sendRequest('/web/dash/friends/requests', null, {
-			detach: true,
-		});
-
-		return {
-			requests: UserFriendship.populate(response.requests) as UserFriendship[],
-			pending: UserFriendship.populate(response.pending) as UserFriendship[],
-		};
 	}
 
 	getThem(us: User) {
