@@ -28,26 +28,28 @@
 				<nav class="-nav platform-list inline nav-justified">
 					<ul>
 						<li>
-							<a :class="{ active: activeTab === 'requests' }" @click="setActiveTab('requests')">
+							<a
+								:class="{ active: activeTab === 'requests' }"
+								@click="setActiveTab('requests')"
+							>
 								<translate>Friend Requests</translate>
 								<span class="badge">{{ friendRequestCount }}</span>
 							</a>
 						</li>
-						<li v-if="outgoing.length">
-							<a :class="{ active: activeTab === 'pending' }" @click="setActiveTab('pending')">
+						<li v-if="pendingCount">
+							<a
+								:class="{ active: activeTab === 'pending' }"
+								@click="setActiveTab('pending')"
+							>
 								<translate>Sent Requests</translate>
-								<span class="badge">{{ outgoing.length }}</span>
+								<span class="badge">{{ pendingCount }}</span>
 							</a>
 						</li>
 					</ul>
 				</nav>
 			</div>
 			<div class="shell-card-popover" slot="popover">
-				<template v-if="isLoading">
-					<br />
-					<app-loading centered />
-				</template>
-				<div v-else-if="requests.length">
+				<div v-if="requests.length">
 					<app-shell-friend-request-popover-item
 						v-for="request of requests"
 						:key="request.id"
@@ -57,8 +59,17 @@
 						@cancel="cancelRequest(request)"
 					/>
 				</div>
-				<div class="alert" v-else>
+				<template v-if="isLoading">
+					<br />
+					<app-loading centered />
+				</template>
+				<div class="alert" v-else-if="!requests.length">
 					<translate>No friend requests right now.</translate>
+				</div>
+				<div v-else-if="!isAtEnd" class="page-cut -load-more">
+					<app-button trans @click="loadTab" v-app-track-event="`friend-requests:more`">
+						<translate>Load More</translate>
+					</app-button>
 				</div>
 			</div>
 		</template>
@@ -71,6 +82,10 @@
 .-nav
 	margin-bottom: 0
 	padding-top: ($line-height-computed / 2)
+
+.-load-more
+	margin-top: 4px
+	margin-bottom: 4px
 </style>
 
 <script lang="ts" src="./friend-request-popover"></script>
