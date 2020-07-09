@@ -4,8 +4,8 @@
 	position: fixed
 	top: $shell-top-nav-height
 	bottom: 0
-	width: $percentage-10
-	transition: transform 300ms $weak-ease-out
+	width: $shell-content-sidebar-width
+	transition: transform 300ms $weak-ease-out, left 300ms $weak-ease-out
 	will-change: transform
 	// If a second left-pane opens while another is already open,
 	// put the closing pane behind the opening pane.
@@ -14,12 +14,15 @@
 	&.visible
 		z-index: $zindex-shell-pane
 
-	@media $media-sm-up
-		width: $shell-content-sidebar-width
-
 .shell-pane-left
 	left: 0
 	right: auto
+
+	// Span the remaining width on xs devices
+	@media $media-xs
+		width: unset
+		max-width: $shell-content-sidebar-width
+		right: 0
 
 .shell-pane-right
 	left: auto
@@ -41,9 +44,6 @@
 	&.visible
 		.left-pane-visible &
 			transform: translateX(0)
-
-		.left-pane-visible.has-cbar &
-			transform: translateX($shell-cbar-width)
 
 .shell-pane-right
 	transform: translateX(100%)

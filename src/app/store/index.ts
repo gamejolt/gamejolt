@@ -55,6 +55,7 @@ export type Actions = AppActions &
 		loadNotificationState: void;
 		clearNotificationState: void;
 		markNotificationsAsRead: void;
+		toggleCbarMenu: void;
 		toggleLeftPane: void;
 		toggleRightPane: void;
 		toggleChatPane: void;
@@ -127,6 +128,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	friendRequestCount = 0;
 	notificationState: ActivityFeedState | null = null;
 
+	mobileCbarShowing = false;
+	overlayedContextPane = ''; // hidden by default for breakpoints other than Lg
 	overlayedLeftPane = '';
 	overlayedRightPane = '';
 	hasContentSidebar = false;
@@ -143,7 +146,16 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	get hasCbar() {
-		return !this.isShellHidden && !Screen.isXs && this.communities.length && !!this.app.user;
+		return !this.isShellHidden && !!this.app.user && (this.mobileCbarShowing || !Screen.isXs);
+	}
+
+	// Not sure if this is needed yet.
+	get hasMobileContext() {
+		return !this.isShellHidden && this.mobileCbarShowing && !!this.visibleContextPane;
+	}
+
+	get visibleContextPane() {
+		return this.overlayedContextPane;
 	}
 
 	get visibleLeftPane() {
@@ -261,13 +273,27 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexAction
-	async toggleLeftPane(type: string) {
+	async toggleCbarMenu(type?: string) {
+		this._toggleCbarMenu();
+		this._toggleContextPane(type);
+		this._checkBackdrop();
+	}
+
+	// JODO: Make
+	@VuexAction
+	async toggleContextPane(type?: string) {
+		this._toggleContextPane(type);
+		this._checkBackdrop();
+	}
+
+	@VuexAction
+	async toggleLeftPane(type?: string) {
 		this._toggleLeftPane(type);
 		this._checkBackdrop();
 	}
 
 	@VuexAction
-	async toggleRightPane(type: string) {
+	async toggleRightPane(type?: string) {
 		this._toggleRightPane(type);
 		this._checkBackdrop();
 	}
@@ -284,9 +310,18 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		this._checkBackdrop();
 	}
 
+	// JODO: Make this work properly for the following breakpoints:
+	// Lg: currently working as intended - only needs to worry about left and right panes.
+	// Md && Sm: should add a backdrop when context pane is opened - cbar state doesn't matter.
+	// Xs: should add a backdrop when cbar is opened
 	@VuexAction
 	private async _checkBackdrop() {
-		if (!!this.overlayedRightPane || !!this.overlayedLeftPane) {
+		if (
+			!!this.overlayedRightPane ||
+			!!this.overlayedLeftPane
+
+			/* || (Screen.isXs && this.mobileCbarShowing) */
+		) {
 			if (backdrop) {
 				return;
 			}
@@ -456,7 +491,30 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	private _toggleLeftPane(type: string) {
+	private _toggleCbarMenu() {
+		if (this.mobileCbarShowing) {
+			this.mobileCbarShowing = false;
+			this.overlayedLeftPane = '';
+			this.overlayedRightPane = '';
+			return;
+		}
+
+		this.mobileCbarShowing = true;
+	}
+
+	@VuexMutation
+	private _toggleContextPane(type = this.route.meta.contextPane || '') {
+		if (this.overlayedContextPane === type) {
+			this.overlayedContextPane = '';
+		} else {
+			this.overlayedContextPane = type;
+		}
+
+		this.overlayedLeftPane = '';
+	}
+
+	@VuexMutation
+	private _toggleLeftPane(type = '') {
 		if (!this.hasSidebar) {
 			this.overlayedLeftPane = '';
 			return;
@@ -472,7 +530,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	private _toggleRightPane(type: string) {
+	private _toggleRightPane(type = '') {
 		if (this.overlayedRightPane === type) {
 			this.overlayedRightPane = '';
 		} else {
@@ -486,6 +544,13 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	private _clearPanes() {
 		this.overlayedRightPane = '';
 		this.overlayedLeftPane = '';
+		this.overlayedContextPane = '';
+
+		// CHECK:: We want to remove backdrops when panes are cleared for mobile
+		if (backdrop) {
+			Backdrop.remove(backdrop);
+			backdrop = null;
+		}
 	}
 
 	@VuexMutation

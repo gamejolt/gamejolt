@@ -5,13 +5,14 @@
 			'is-client-offline': Connection.isClientOffline,
 			'left-pane-visible': !!visibleLeftPane,
 			'right-pane-visible': !!visibleRightPane,
-			'has-cbar': hasCbar,
+			'has-cbar': hasCbar && !Screen.isXs,
+			'has-cbar-mobile': hasCbar && Screen.isXs,
 			'has-banner': hasBanner && !isShellHidden,
 		}"
 	>
 		<app-shell-banner v-if="!isShellHidden" />
 		<app-shell-top-nav v-if="hasTopBar" />
-		<app-shell-cbar v-if="hasCbar" />
+		<app-shell-cbar />
 		<app-shell-sidebar v-if="hasSidebar" />
 
 		<template v-if="isShellHidden">

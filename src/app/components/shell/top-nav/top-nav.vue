@@ -2,22 +2,16 @@
 	<nav id="shell-top-nav" class="navbar backdrop-affected">
 		<div ref="left" class="navbar-left" :style="{ 'min-width': minColWidth }">
 			<div class="-col" v-app-observe-dimensions="checkColWidths">
-				<!-- TODO:
-						Re-purpose this button on Desktop to a context-menu,
-						allowing us to do things like hide the community channels for desktop view.
-				 -->
 				<a
-					v-if="hasSidebar"
-					class="navbar-item"
+					v-if="shouldShowContextButton"
+					class="-menu-toggle navbar-item"
 					:class="{
-						'-menu-toggle': hasCbar,
-						'no-bar': !!visibleLeftPane,
-						active: !visibleContextPane,
+						active: !!visibleContextPane,
 					}"
 					@click="onContextButtonClicked"
 					v-app-tooltip.bottom-end="contextButtonText"
 				>
-					<!-- TODO: Might need to change this event tracking? -->
+					<!-- JODO: Might need to change this event tracking? -->
 					<!-- v-app-track-event="`top-nav:main-menu:toggle`" -->
 					<app-jolticon icon="menu" />
 				</a>
@@ -136,7 +130,9 @@
 					<span
 						v-if="Connection.isOffline"
 						class="navbar-item disconnected-icon"
-						v-app-tooltip.left="$gettext(`We're having trouble connecting to Game Jolt.`)"
+						v-app-tooltip.left="
+							$gettext(`We're having trouble connecting to Game Jolt.`)
+						"
 					>
 						<app-jolticon icon="offline" />
 					</span>
@@ -157,7 +153,10 @@
 							</a>
 						</li>
 						<li>
-							<a :href="Environment.authBaseUrl + '/join'" v-app-track-event="`top-nav:join:click`">
+							<a
+								:href="Environment.authBaseUrl + '/join'"
+								v-app-track-event="`top-nav:join:click`"
+							>
 								<translate>Sign Up</translate>
 							</a>
 						</li>
@@ -183,10 +182,9 @@
 			cursor: help
 
 // We want to make this the same width as the cbar, so that it aligns.
-@media $media-sm-up
-	.-menu-toggle
-		width: $shell-cbar-width
-		text-align: center
+.-menu-toggle
+	width: $shell-cbar-width
+	text-align: center
 
 .-explore-icon
 	position: relative

@@ -33,6 +33,9 @@ export default class AppShellCbar extends Vue {
 	@State
 	visibleLeftPane!: Store['visibleLeftPane'];
 
+	@State
+	hasCbar!: Store['hasCbar'];
+
 	@Action
 	toggleLeftPane!: Store['toggleLeftPane'];
 }

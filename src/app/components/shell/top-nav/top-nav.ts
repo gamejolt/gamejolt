@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { Action, State } from 'vuex-class';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
@@ -35,32 +35,20 @@ if (GJ_IS_CLIENT) {
 	},
 })
 export default class AppShellTopNav extends Vue {
-	@State
-	app!: Store['app'];
+	@State app!: Store['app'];
 
-	@State
-	hasSidebar!: Store['hasSidebar'];
+	@State visibleContextPane!: Store['visibleContextPane'];
+	@State visibleLeftPane!: Store['visibleLeftPane'];
+	@State hasSidebar!: Store['hasSidebar'];
+	@State hasCbar!: Store['hasCbar'];
+	@State unreadActivityCount!: Store['unreadActivityCount'];
 
-	@State
-	hasCbar!: Store['hasCbar'];
-
-	@State
-	visibleLeftPane!: Store['visibleLeftPane'];
-
-	/* TODO: Implement functionality */
-	// @State
-	// contextPaneVisible!: Store['contextPaneVisible'];
-
-	/* TODO: Implement context-menu features for hamburger top-nav item, e.g. hiding community channel menu */
-	// @Action
-	// toggleContextPane!: Store['toggleContextPane']
-
-	@State
-	unreadActivityCount!: Store['unreadActivityCount'];
+	@Action toggleCbarMenu!: Store['toggleCbarMenu'];
+	@Action toggleContextPane!: Store['toggleContextPane'];
+	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
 	moreMenuShowing = false;
 	baseMinColWidth: number | null = null;
-	visibleContextPane = true;
 
 	$refs!: {
 		left: HTMLDivElement;
@@ -71,40 +59,61 @@ export default class AppShellTopNav extends Vue {
 	readonly Screen = Screen;
 	readonly Connection = Connection;
 
-	/* TODO: Remove */
-	toggleCbar() {
-		console.warn('cbar toggled for mobile - not set up yet');
-	}
-	/* TODO: Set up to either show the context pane or show cbar, depending on screen size */
-	toggleContextPane() {
-		console.warn('trigger this.toggleContextPane() - not set up yet');
-	}
-
 	onContextButtonClicked() {
-		/* TODO: Instead of toggling locally, have whatever uses this use the Store data */
-		if (!!this.visibleLeftPane) {
-			return;
+		// Toggle the cbar and context panes for mobile.
+		if (Screen.isXs) {
+			// JODO: This should toggle the entire to-be-made cbar/context pane component
+			return this.toggleCbarMenu();
 		}
 
-		this.visibleContextPane = !this.visibleContextPane;
-
-		if (Screen.isMobile) {
-			return this.toggleCbar();
+		// If we're showing a left-pane, just clear the left pane and don't open a context pane.
+		if (!!this.visibleLeftPane && !this.visibleContextPane) {
+			// Passing no value will close any open left-panes.
+			return this.toggleLeftPane();
 		}
 
 		this.toggleContextPane();
 	}
 
+	get contextPane() {
+		return this.$route.meta.contextPane || 'context';
+	}
+
+	get shouldShowContextButton() {
+		// We always want the context pane/sidebar showing on this breakpoint, so we don't need the button.
+		if (Screen.isLg) {
+			return false;
+		}
+
+		// Md and Sm breakpoints always show cbar when logged in,
+		// so in this case we only care about the context pane of the route.
+		if (!Screen.isXs) {
+			return !!this.$route.meta.contextPane;
+		}
+
+		// Cbar doesn't show on Xs devices, so we want to show the button if there's either a
+		// user logged in or a route context we can use so it works properly when not signed in.
+		return !!this.$route.meta.contextPane || !!this.app.user;
+	}
+
 	get contextButtonText() {
-		if (!!this.visibleLeftPane /* || Screen.isMobile */) {
-			return null;
+		// JODO: For some reason, currently doesn't show properly since tooltip directive
+		// is currently hiding tooltips that have their reference obscures.
+		if (!!this.visibleLeftPane && !!this.visibleContextPane) {
+			return this.$gettext(`Hide ${this.visibleLeftPane} and ${this.contextPane}`);
 		}
 
-		if (this.visibleContextPane) {
-			return this.$gettext(`Hide context menu`);
+		// 'Hide chat', 'Hide library'
+		if (!!this.visibleLeftPane) {
+			return this.$gettext(`Hide ${this.visibleLeftPane}`);
 		}
 
-		return this.$gettext('Show context menu');
+		// 'Hide channels'
+		if (!!this.visibleContextPane) {
+			return this.$gettext(`Hide ${this.contextPane}`);
+		}
+
+		return this.$gettext(`Show ${this.contextPane}`);
 	}
 
 	get shouldShowSearch() {

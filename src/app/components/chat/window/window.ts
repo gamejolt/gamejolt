@@ -53,8 +53,8 @@ export default class AppChatWindow extends Vue {
 		if (Screen.isXs) {
 			leaveChatRoom(this.chat);
 		} else {
-			// Passing an empty string will close all left-pane menus.
-			this.toggleLeftPane('');
+			// Passing no value will close any open left-panes.
+			this.toggleLeftPane();
 		}
 	}
 

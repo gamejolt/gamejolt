@@ -95,24 +95,23 @@ $navbar-height = $shell-top-nav-height is defined ? $shell-top-nav-height : 50px
 .navbar-items > li > a, .navbar-item, .navbar-avatar
 	position: relative
 
-	&:not(.no-bar)
-		&:hover
-			&::before
-				transform: translate(0, 0)
+	&::before
+		change-bg('gray')
+		position: absolute
+		content: ''
+		right: 0
+		left: 0
+		bottom: 0
+		height: 3px
+		transform: translate(0, 4px)
+		transition: transform 300ms $strong-ease-out, background-color 200ms linear
 
-		&.active
-			&, &:hover
-				&::before
-					change-bg('highlight')
-					transform: translate(0, 0)
-
+	&:hover
 		&::before
-			change-bg('gray')
-			position: absolute
-			content: ''
-			right: 0
-			left: 0
-			bottom: 0
-			height: 3px
-			transform: translate(0, 4px)
-			transition: transform 300ms $strong-ease-out, background-color 200ms linear
+			transform: translate(0, 0)
+
+	&.active
+		&, &:hover
+			&::before
+				change-bg('highlight')
+				transform: translate(0, 0)

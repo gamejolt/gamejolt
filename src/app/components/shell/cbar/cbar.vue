@@ -1,6 +1,6 @@
 <template>
 	<div id="shell-cbar" class="theme-dark">
-		<app-scroll-scroller class="-scroller" hide-scrollbar>
+		<app-scroll-scroller v-if="hasCbar" class="-scroller" hide-scrollbar>
 			<div class="-inner">
 				<app-shell-cbar-item
 					v-if="chat"
@@ -13,7 +13,7 @@
 						@click="toggleLeftPane('chat')"
 						v-app-tooltip.right="$gettext(`Chat and Friends List (c)`)"
 					>
-						<!-- TODO: Event changed from 'top-nav' to 'cbar', gotta make sure that's appropriate. -->
+						<!-- JODO: Event changed from 'top-nav' to 'cbar', gotta make sure that's appropriate. -->
 						<!-- v-app-track-event="`cbar:chat:toggle`" -->
 						<app-jolticon class="-control-icon" icon="user-messages" />
 					</a>
@@ -25,7 +25,7 @@
 						@click="toggleLeftPane('library')"
 						v-app-tooltip.right="$gettext(`Game Library (m)`)"
 					>
-						<!-- TODO: Event changed from 'top-nav:main-menu' to 'cbar:playlists', gotta make sure that's appropriate. -->
+						<!-- JODO: Event changed from 'top-nav:main-menu' to 'cbar:playlists', gotta make sure that's appropriate. -->
 						<!-- v-app-track-event="`cbar:playlists:toggle`" -->
 						<app-jolticon class="-control-icon" icon="books" />
 					</a>
@@ -41,10 +41,16 @@
 					/>
 				</transition-group>
 				<app-shell-cbar-item>
-					<app-community-discover-widget tooltip-placement="right" @contextmenu.native.prevent />
+					<app-community-discover-widget
+						tooltip-placement="right"
+						@contextmenu.native.prevent
+					/>
 				</app-shell-cbar-item>
 				<app-shell-cbar-item>
-					<app-community-add-widget tooltip-placement="right" @contextmenu.native.prevent />
+					<app-community-add-widget
+						tooltip-placement="right"
+						@contextmenu.native.prevent
+					/>
 				</app-shell-cbar-item>
 			</div>
 		</app-scroll-scroller>
@@ -61,6 +67,8 @@
 	position: fixed
 	width: $shell-cbar-width
 	z-index: $zindex-cbar
+	transform: translateX(-($shell-cbar-width))
+	transition: transform 300ms $weak-ease-out
 
 	.-control
 		display: flex
