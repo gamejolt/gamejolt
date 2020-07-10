@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { stringSort } from '../../../../utils/array';
-import { GameCollection } from '../../game/collection/collection.model';
+import { stringSort } from '../../../../../utils/array';
+import { GameCollection } from '../../../game/collection/collection.model';
 
 @Component({})
 export default class AppShellSidebarCollectionList extends Vue {

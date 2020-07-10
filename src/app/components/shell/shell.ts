@@ -9,6 +9,7 @@ import AppMinbar from '../../../_common/minbar/minbar.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import { BannerModule, BannerStore, Store } from '../../store/index';
 import { ChatClient, ChatKey, ChatNewMessageEvent, setChatFocused } from '../chat/client';
+import AppChatWindows from '../chat/windows/windows.vue';
 import AppShellBody from './body/body.vue';
 import AppShellCbar from './cbar/cbar.vue';
 import AppShellHotBottom from './hot-bottom/hot-bottom.vue';
@@ -24,7 +25,7 @@ let components: any = {
 	AppShellCbar,
 	AppMinbar,
 	AppShellBanner: () => import(/* webpackChunkName: "shell" */ './banner/banner.vue'),
-	AppShellChat: () => import(/* webpackChunkName: "chat" */ './chat/chat.vue'),
+	AppChatWindows,
 };
 
 if (GJ_IS_CLIENT) {
@@ -88,7 +89,21 @@ export default class AppShell extends Vue {
 	mounted() {
 		// When changing routes, hide all overlays.
 		this.$router.beforeEach((_to, _from, next) => {
-			this.clearPanes();
+			if (
+				this.visibleLeftPane === 'context' &&
+				_to.meta.contextPane === _from.meta.contextPane
+			) {
+				console.log('clearing some');
+				/**
+				 * JODO:
+				 * Clean this up - not happy with how I did the clearPanes function with the direction the panes are going.
+				 */
+				this.clearPanes('some');
+			} else {
+				console.log('clearing all');
+				this.clearPanes();
+			}
+
 			next();
 		});
 

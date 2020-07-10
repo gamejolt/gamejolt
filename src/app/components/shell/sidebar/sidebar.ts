@@ -1,93 +1,24 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { stringSort } from '../../../../utils/array';
-import { Environment } from '../../../../_common/environment/environment.service';
-import AppExpand from '../../../../_common/expand/expand.vue';
-import { number } from '../../../../_common/filters/number';
-import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import AppShortkey from '../../../../_common/shortkey/shortkey.vue';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { Store } from '../../../store/index';
-import { LibraryModule, LibraryStore } from '../../../store/library';
-import AppShellSidebarCollectionList from './collection-list.vue';
+import { Store } from '../../../store';
+import AppShellSidebarContext from './context/context.vue';
+import AppShellSidebarLibrary from './library/library.vue';
+
+let components: any = {
+	AppScrollScroller,
+	AppShortkey,
+	AppShellSidebarChat: () => import(/* webpackChunkName: "chat" */ './chat/chat.vue'),
+	AppShellSidebarLibrary,
+	AppShellSidebarContext,
+};
 
 @Component({
-	components: {
-		AppShellSidebarCollectionList,
-		AppExpand,
-		AppScrollScroller,
-		AppShortkey,
-	},
-	directives: {
-		AppTooltip,
-	},
-	filters: {
-		number,
-	},
+	components,
 })
 export default class AppShellSidebar extends Vue {
-	@State
-	app!: Store['app'];
-
-	@State
-	isLibraryBootstrapped!: Store['isLibraryBootstrapped'];
-
-	@State
-	visibleLeftPane!: Store['visibleLeftPane'];
-
-	@LibraryModule.State
-	bundleCollections!: LibraryStore['bundleCollections'];
-
-	@LibraryModule.State
-	developerCollection!: LibraryStore['developerCollection'];
-
-	@LibraryModule.State
-	followedCollection!: LibraryStore['followedCollection'];
-
-	@LibraryModule.State
-	ownedCollection!: LibraryStore['ownedCollection'];
-
-	@LibraryModule.State
-	collections!: LibraryStore['collections'];
-
-	@LibraryModule.State
-	playlistFolders!: LibraryStore['playlistFolders'];
-
-	@Action
-	toggleLeftPane!: Store['toggleLeftPane'];
-
-	@LibraryModule.Action
-	newPlaylist!: LibraryStore['newPlaylist'];
-
-	playlistFilterQuery = '';
-	openFolders: string[] = [];
-
-	readonly Environment = Environment;
-	readonly Screen = Screen;
-
-	get filteredBundleCollections() {
-		return this.bundleCollections.sort((a, b) => stringSort(a.name, b.name));
-	}
-
-	get playlistFoldersToDisplay() {
-		return Object.keys(this.playlistFolders).filter(folder => folder !== 'main');
-	}
-
-	toggleFolder(key: string) {
-		const index = this.openFolders.indexOf(key);
-		if (index === -1) {
-			this.openFolders.push(key);
-		} else {
-			this.openFolders.splice(index, 1);
-		}
-	}
-
-	async showAddPlaylistModal() {
-		const collection = await this.newPlaylist();
-		if (collection) {
-			this.$router.push(collection.routeLocation);
-		}
-	}
+	@State visibleLeftPane!: Store['visibleLeftPane'];
+	@Action toggleLeftPane!: Store['toggleLeftPane'];
 }

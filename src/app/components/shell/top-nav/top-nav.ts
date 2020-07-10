@@ -60,6 +60,11 @@ export default class AppShellTopNav extends Vue {
 	readonly Connection = Connection;
 
 	onContextButtonClicked() {
+		/*
+		JODO:
+			The plan for this button is that it will only show on Xs devices.
+			Other devices should click on an active cbar item to show the context for that page.
+
 		// Toggle the cbar and context panes for mobile.
 		if (Screen.isXs) {
 			// JODO: This should toggle the entire to-be-made cbar/context pane component
@@ -73,13 +78,25 @@ export default class AppShellTopNav extends Vue {
 		}
 
 		this.toggleContextPane();
+		*/
+
+		/**
+		 * JODO:
+		 * Since we'll only show this button for Xs devices we instead want to toggle the cbar,
+		 * which should open either the 'context' left-pane or the 'main'/'library' pane.
+		 */
+		this.toggleLeftPane('context');
 	}
 
+	/* JODO: Won't be needed once mobile button functionality is in place. */
 	get contextPane() {
 		return this.$route.meta.contextPane || 'context';
 	}
 
 	get shouldShowContextButton() {
+		/*
+		JODO:
+			Won't be needed once mobile button functionality is in place.
 		// We always want the context pane/sidebar showing on this breakpoint, so we don't need the button.
 		if (Screen.isLg) {
 			return false;
@@ -93,12 +110,12 @@ export default class AppShellTopNav extends Vue {
 
 		// Cbar doesn't show on Xs devices, so we want to show the button if there's either a
 		// user logged in or a route context we can use so it works properly when not signed in.
-		return !!this.$route.meta.contextPane || !!this.app.user;
+		*/
+		return /* Screen.isXs && ( */ !!this.$route.meta.contextPane || !!this.app.user;
 	}
 
+	// JODO: Remove
 	get contextButtonText() {
-		// JODO: For some reason, currently doesn't show properly since tooltip directive
-		// is currently hiding tooltips that have their reference obscures.
 		if (!!this.visibleLeftPane && !!this.visibleContextPane) {
 			return this.$gettext(`Hide ${this.visibleLeftPane} and ${this.contextPane}`);
 		}

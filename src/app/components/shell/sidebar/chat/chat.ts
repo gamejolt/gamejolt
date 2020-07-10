@@ -1,35 +1,45 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { EscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
-import AppShortkey from '../../../../_common/shortkey/shortkey.vue';
-import { Store } from '../../../store/index';
-import { ChatClient, ChatKey, enterChatRoom, leaveChatRoom } from '../../chat/client';
-import AppChatSidebar from '../../chat/sidebar/sidebar.vue';
-import AppChatWindows from '../../chat/windows/windows.vue';
+import { EscapeStack } from '../../../../../_common/escape-stack/escape-stack.service';
+import { number } from '../../../../../_common/filters/number';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import { Store } from '../../../../store';
+import { ChatClient, ChatKey, enterChatRoom, leaveChatRoom } from '../../../chat/client';
+import AppChatUserList from '../../../chat/user-list/user-list.vue';
+import AppChatWindows from '../../../chat/windows/windows.vue';
 
 @Component({
 	components: {
-		AppScrollScroller,
-		AppChatSidebar,
+		AppChatUserList,
 		AppChatWindows,
-		AppShortkey,
+	},
+	filters: {
+		number,
 	},
 })
-export default class AppShellChat extends Vue {
+export default class AppShellSidebarChat extends Vue {
 	// Chat should be available since we only include in DOM if chat is
 	// bootstrapped.
 	@InjectReactive(ChatKey) chat!: ChatClient;
 
-	@State
-	visibleLeftPane!: Store['visibleLeftPane'];
+	@State visibleLeftPane!: Store['visibleLeftPane'];
+	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
-	@Action
-	toggleLeftPane!: Store['toggleLeftPane'];
-
+	friendsTab: 'all' | 'online' = 'all';
 	private escapeCallback?: Function;
+
+	readonly Screen = Screen;
+
+	get friends() {
+		return this.friendsTab === 'online'
+			? this.chat.friendsList.collection.filter(i => i.isOnline)
+			: this.chat.friendsList.collection;
+	}
+
+	onPublicRoomClicked(roomId: number) {
+		enterChatRoom(this.chat, roomId);
+	}
 
 	mounted() {
 		this.escapeCallback = () => this.hideChatPane();

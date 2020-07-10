@@ -7,16 +7,7 @@
 	width: $shell-content-sidebar-width
 	transition: transform 300ms $weak-ease-out, left 300ms $weak-ease-out
 	will-change: transform
-	// If a second left-pane opens while another is already open,
-	// put the closing pane behind the opening pane.
-	/* * JODO:
-	 * Consolidate all left-panes (chat, library, context-pane) and just
-	 * swap the content instead of transitioning slides between them.
-	 */
 	z-index: $zindex-shell-pane
-
-	&.visible
-		z-index: $zindex-shell-pane
 
 .shell-pane-left
 	left: 0
@@ -45,9 +36,8 @@
 .shell-pane-left
 	transform: translateX(-100%)
 
-	&.visible
-		.left-pane-visible &
-			transform: translateX(0)
+	.left-pane-visible &
+		transform: translateX(0)
 
 .shell-pane-right
 	transform: translateX(100%)

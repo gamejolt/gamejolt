@@ -22,7 +22,7 @@
 			<slot />
 		</app-shell-body>
 
-		<app-shell-chat v-if="chat" key="shell-chat" />
+		<app-chat-windows v-if="chat" />
 
 		<div v-if="GJ_IS_CLIENT" key="shell-client">
 			<app-client-base />

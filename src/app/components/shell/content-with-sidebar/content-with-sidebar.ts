@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class';
-import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { Store } from '../../../store/index';
 
@@ -24,21 +23,33 @@ export default class AppShellContentWithSidebar extends Vue {
 		sidebar: any;
 	};
 
+	get hasRouteContext() {
+		return this.$route.meta.contextPane;
+	}
+
 	get isShowingSidebar() {
-		if (Screen.isLg) {
-			return true;
-		}
+		/**
+		 * JODO:
+		 * Implement sidebar functionality between context and other pane options.
+		 * The left-sidebar should always be showing if Screen.isLg and the route has a contextPane meta.
+		 * For all other breakpoints,
+		 */
+		return this.visibleLeftPane === 'context';
 
-		if (!Screen.isXs) {
-			return !!this.visibleContextPane;
-		}
+		// if (Screen.isLg) {
+		// 	return true;
+		// }
 
-		return this.hasCbar;
+		// if (!Screen.isXs) {
+		// 	return !!this.visibleContextPane;
+		// }
+
+		// return this.hasCbar;
 	}
 
 	// JODO: remove - context/sidebar will probably be in a component with cbar, but this will let us test in the meantime
 	mounted() {
-		document.getElementById('shell')?.appendChild(this.$refs.sidebar);
+		document.getElementById('shell-sidebar')?.appendChild(this.$refs.sidebar);
 	}
 
 	/**
