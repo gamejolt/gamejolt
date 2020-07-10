@@ -67,7 +67,7 @@
 					<translate>No friend requests right now.</translate>
 				</div>
 				<div v-else-if="!isAtEnd" class="page-cut -load-more">
-					<app-button trans @click="loadTab" v-app-track-event="`friend-requests:more`">
+					<app-button trans @click="loadMore" v-app-track-event="`friend-requests:more`">
 						<translate>Load More</translate>
 					</app-button>
 				</div>

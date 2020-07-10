@@ -83,7 +83,7 @@ export default class AppShellFriendRequestPopover extends Vue {
 			this.setFriendRequestCount(this.requestCount);
 		}
 
-		this.loadTab();
+		await this.loadTab();
 
 		this.isLoading = false;
 	}
@@ -106,18 +106,30 @@ export default class AppShellFriendRequestPopover extends Vue {
 		this.isShowing = false;
 	}
 
-	setActiveTab(tab: Tab) {
+	async setActiveTab(tab: Tab) {
 		this.activeTab = tab;
 
 		// Load tab the first time it's opened.
 		if (this.requests.length === 0) {
-			this.loadTab();
+			const count = this.activeTab === 'pending' ? this.pendingCount : this.requestCount;
+			if (count > 0) {
+				this.isLoading = true;
+				await this.loadTab();
+				this.isLoading = false;
+			}
 		}
+	}
+
+	async loadMore() {
+		this.isLoading = true;
+		await this.loadTab();
+		this.isLoading = false;
 	}
 
 	async acceptRequest(request: UserFriendship) {
 		await UserFriendshipHelper.acceptRequest(request);
 		this.removeRequest(request);
+		this.requestCount--;
 	}
 
 	async rejectRequest(request: UserFriendship) {
@@ -125,6 +137,7 @@ export default class AppShellFriendRequestPopover extends Vue {
 			return;
 		}
 		this.removeRequest(request);
+		this.requestCount--;
 	}
 
 	async cancelRequest(request: UserFriendship) {
@@ -132,6 +145,7 @@ export default class AppShellFriendRequestPopover extends Vue {
 			return;
 		}
 		this.removeRequest(request);
+		this.pendingCount--;
 	}
 
 	private removeRequest(request: UserFriendship) {
