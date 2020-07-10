@@ -9,7 +9,11 @@
 	will-change: transform
 	// If a second left-pane opens while another is already open,
 	// put the closing pane behind the opening pane.
-	z-index: $zindex-shell-pane-under
+	/* * JODO:
+	 * Consolidate all left-panes (chat, library, context-pane) and just
+	 * swap the content instead of transitioning slides between them.
+	 */
+	z-index: $zindex-shell-pane
 
 	&.visible
 		z-index: $zindex-shell-pane

@@ -12,7 +12,6 @@
 				<slot v-if="isShowingSidebar" name="sidebar" />
 			</app-scroll-scroller>
 		</div>
-		<!-- </div> -->
 		<div class="content-with-sidebar--content fill-backdrop">
 			<slot />
 		</div>
@@ -25,15 +24,24 @@
 
 // JODO: Will probably want to replace all '.content-with-sidebar--sidebar' cases with the shell id
 // depends on new component structure.
+// JODO: We should consolidate left-pane items (chat, library, context)
+// into one component that swaps out the content depending on store information.
 #shell-context-pane
 	position: fixed
 	top: $shell-top-nav-height
 	bottom: 0
 	width: $shell-content-sidebar-width
 	padding: $shell-content-sidebar-padding
-	z-index: $zindex-shell-pane-under
+	z-index: $zindex-shell-pane
 	transform: translateX(-($shell-content-sidebar-width))
 	transition: transform 300ms $weak-ease-out
+
+	#shell.left-pane-visible &, #shell.right-pane-visible &
+		z-index: $zindex-shell-pane-under
+
+	@media $media-lg
+		z-index: $zindex-shell-pane-under
+		transition: none
 
 	&.-visible
 		transform: translateX(0)

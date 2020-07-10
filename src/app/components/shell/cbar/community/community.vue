@@ -11,31 +11,29 @@
 		@hide="popperVisible = false"
 	>
 		<template #default>
-			<div @click="clearPanes()">
-				<app-shell-cbar-item
-					:is-active="isActive"
-					:is-unread="isUnread"
-					:highlight="highlight"
-					:notification-count="featureCount"
+			<app-shell-cbar-item
+				:is-active="isActive"
+				:is-unread="isUnread"
+				:highlight="highlight"
+				:notification-count="featureCount"
+			>
+				<router-link
+					class="-link link-unstyled"
+					:to="{
+						name: 'communities.view.overview',
+						params: { path: community.path },
+					}"
+					v-app-tooltip.right="tooltip"
 				>
-					<router-link
-						class="-link link-unstyled"
-						:to="{
-							name: 'communities.view.overview',
-							params: { path: community.path },
-						}"
-						v-app-tooltip.right="tooltip"
+					<app-media-item-backdrop
+						class="-backdrop"
+						:media-item="community.thumbnail"
+						radius="full"
 					>
-						<app-media-item-backdrop
-							class="-backdrop"
-							:media-item="community.thumbnail"
-							radius="full"
-						>
-							<app-community-thumbnail-img class="-thumb" :community="community" />
-						</app-media-item-backdrop>
-					</router-link>
-				</app-shell-cbar-item>
-			</div>
+						<app-community-thumbnail-img class="-thumb" :community="community" />
+					</app-media-item-backdrop>
+				</router-link>
+			</app-shell-cbar-item>
 		</template>
 
 		<template #popover>
@@ -46,7 +44,11 @@
 						<translate>Edit Community</translate>
 					</router-link>
 				</app-community-perms>
-				<a class="list-group-item has-icon" v-if="shouldShowLeave" @click="onLeaveCommunityClick">
+				<a
+					v-if="shouldShowLeave"
+					class="list-group-item has-icon"
+					@click="onLeaveCommunityClick"
+				>
 					<app-jolticon icon="remove" notice />
 					<translate>Leave Community</translate>
 				</a>
@@ -59,7 +61,7 @@
 	</app-popper>
 </template>
 
-<style lang="stylus"scoped>
+<style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 

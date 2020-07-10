@@ -31,12 +31,11 @@ export default class AppShellCbarCommunity extends Vue {
 	@Prop(Community) community!: Community;
 
 	@AppState user!: AppStore['user'];
-	@State grid!: Store['grid'];
-	@Action leaveCommunity!: Store['leaveCommunity'];
-	@State communityStates!: Store['communityStates'];
 	@ThemeState userTheme!: ThemeStore['userTheme'];
+	@State grid!: Store['grid'];
+	@State communityStates!: Store['communityStates'];
 	@State visibleLeftPane!: Store['visibleLeftPane'];
-	@Action clearPanes!: Store['clearPanes'];
+	@Action leaveCommunity!: Store['leaveCommunity'];
 
 	popperVisible = false;
 

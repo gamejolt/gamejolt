@@ -279,7 +279,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		this._checkBackdrop();
 	}
 
-	// JODO: Make
+	/**
+	 * JODO: Not sure if we need the string or not,
+	 * but we could potentially force a different context than the routes if we do it this way.
+	 */
 	@VuexAction
 	async toggleContextPane(type?: string) {
 		this._toggleContextPane(type);
@@ -305,22 +308,26 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexAction
-	async clearPanes() {
-		this._clearPanes();
+	async clearPanes(amount = 'all') {
+		this._clearPanes(amount);
 		this._checkBackdrop();
 	}
 
-	// JODO: Make this work properly for the following breakpoints:
-	// Lg: currently working as intended - only needs to worry about left and right panes.
-	// Md && Sm: should add a backdrop when context pane is opened - cbar state doesn't matter.
-	// Xs: should add a backdrop when cbar is opened
+	/**
+	 * JODO: Make this work properly for the following breakpoints:
+	 * Lg: currently working as intended - only needs to worry about left and right panes.
+	 * Md && Sm: should add a backdrop when context pane is opened - cbar state doesn't matter.
+	 * Xs: should add a backdrop when cbar is opened
+	 */
 	@VuexAction
 	private async _checkBackdrop() {
 		if (
+			// Check if there's a top-level pane overlapping for either side
 			!!this.overlayedRightPane ||
-			!!this.overlayedLeftPane
-
-			/* || (Screen.isXs && this.mobileCbarShowing) */
+			!!this.overlayedLeftPane ||
+			// The above panes are the only proper overlays for Lg, so for other breakpoints
+			// we want to check for either the context pane (Md/Sm), or just the Cbar (Xs).
+			(!Screen.isLg && (this.overlayedContextPane || this.mobileCbarShowing))
 		) {
 			if (backdrop) {
 				return;
@@ -348,7 +355,16 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexMutation
 	setHasContentSidebar(isShowing: Mutations['setHasContentSidebar']) {
-		this.hasContentSidebar = isShowing;
+		/**
+		 *  JODO: Make sure this works when switching between breakpoints.
+		 */
+		// We use this to scooch the footer over to make room for the sidebar content, but we only care about
+		// that when the sidebar isn't behaving as an overlay - which is currently only on the Lg breakpoint.
+		if (Screen.isLg) {
+			this.hasContentSidebar = isShowing;
+		} else {
+			this.hasContentSidebar = false;
+		}
 	}
 
 	@VuexMutation
@@ -541,15 +557,18 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	private _clearPanes() {
+	private _clearPanes(amount = 'all') {
 		this.overlayedRightPane = '';
 		this.overlayedLeftPane = '';
-		this.overlayedContextPane = '';
 
-		// CHECK:: We want to remove backdrops when panes are cleared for mobile
-		if (backdrop) {
-			Backdrop.remove(backdrop);
-			backdrop = null;
+		/**
+		 * JODO: Make sure this works as intended - maybe change the way we default the value or something.
+		 * */
+		// This allows us to keep context panes and cbar visible for state changes that have the same type of context,
+		// so we can move from one community to another and still show the 'channels' context.
+		if (amount === 'all') {
+			this.overlayedContextPane = '';
+			this.mobileCbarShowing = false;
 		}
 	}
 

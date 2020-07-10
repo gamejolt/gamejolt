@@ -14,9 +14,10 @@ import { Store } from '../../../store/index';
 	},
 })
 export default class AppShellContentWithSidebar extends Vue {
-	@Mutation setHasContentSidebar!: Store['setHasContentSidebar'];
-	@State visibleContextPane!: Store['visibleContextPane'];
 	@State hasCbar!: Store['hasCbar'];
+	@State visibleContextPane!: Store['visibleContextPane'];
+	@State visibleLeftPane!: Store['visibleLeftPane'];
+	@Mutation setHasContentSidebar!: Store['setHasContentSidebar'];
 
 	// JODO: remove
 	$refs!: {
@@ -35,7 +36,7 @@ export default class AppShellContentWithSidebar extends Vue {
 		return this.hasCbar;
 	}
 
-	// JODO: remove
+	// JODO: remove - context/sidebar will probably be in a component with cbar, but this will let us test in the meantime
 	mounted() {
 		document.getElementById('shell')?.appendChild(this.$refs.sidebar);
 	}
