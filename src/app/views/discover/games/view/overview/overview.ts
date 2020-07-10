@@ -269,6 +269,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	destroyed() {
 		if (this.permalinkWatcher) {
+			this.permalinkWatcher();
 			this.permalinkWatcher = undefined;
 		}
 	}

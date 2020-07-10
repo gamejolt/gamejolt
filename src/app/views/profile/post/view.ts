@@ -114,6 +114,7 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 
 	destroyed() {
 		if (this.permalinkWatcher) {
+			this.permalinkWatcher();
 			this.permalinkWatcher = undefined;
 		}
 	}
