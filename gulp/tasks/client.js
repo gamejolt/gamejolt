@@ -59,7 +59,7 @@ module.exports = config => {
 			gjGameInstallerPackageId = 428840;
 		}
 	}
-	const nwjsVersion = '0.35.5';
+	const nwjsVersion = '0.46.4';
 
 	const clientVoodooDir = path.join(config.buildDir, 'node_modules', 'client-voodoo');
 	const trashDir = path.join(config.clientBuildDir, '.trash');
