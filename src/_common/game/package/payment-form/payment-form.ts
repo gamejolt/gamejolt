@@ -258,7 +258,7 @@ export default class FormGamePackagePayment extends BaseForm<any>
 		});
 
 		this.calculatedAddressTax = true;
-		this.addressTaxAmount = response.amount;
+		this.addressTaxAmount = parseFloat(response.amount);
 	}
 
 	checkoutCard() {
