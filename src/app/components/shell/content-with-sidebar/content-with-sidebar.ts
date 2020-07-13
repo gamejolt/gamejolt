@@ -14,43 +14,30 @@ import { Store } from '../../../store/index';
 })
 export default class AppShellContentWithSidebar extends Vue {
 	@State hasCbar!: Store['hasCbar'];
-	@State visibleContextPane!: Store['visibleContextPane'];
 	@State visibleLeftPane!: Store['visibleLeftPane'];
 	@Mutation setHasContentSidebar!: Store['setHasContentSidebar'];
-
-	// JODO: remove
-	$refs!: {
-		sidebar: any;
-	};
 
 	get hasRouteContext() {
 		return this.$route.meta.contextPane;
 	}
 
+	// JODO: Remove everything from this comment...
+	$refs!: {
+		sidebar: any;
+	};
+
 	get isShowingSidebar() {
-		/**
-		 * JODO:
-		 * Implement sidebar functionality between context and other pane options.
-		 * The left-sidebar should always be showing if Screen.isLg and the route has a contextPane meta.
-		 * For all other breakpoints,
-		 */
 		return this.visibleLeftPane === 'context';
-
-		// if (Screen.isLg) {
-		// 	return true;
-		// }
-
-		// if (!Screen.isXs) {
-		// 	return !!this.visibleContextPane;
-		// }
-
-		// return this.hasCbar;
 	}
 
-	// JODO: remove - context/sidebar will probably be in a component with cbar, but this will let us test in the meantime
 	mounted() {
 		document.getElementById('shell-sidebar')?.appendChild(this.$refs.sidebar);
 	}
+
+	destroyed() {
+		document.getElementById('shell-context-pane')?.remove();
+	}
+	// ...to this comment, once this sidebar is moved to a proper sidebar component.
 
 	/**
 	 * Sync into the store so that the AppShellBody can style appropriately.

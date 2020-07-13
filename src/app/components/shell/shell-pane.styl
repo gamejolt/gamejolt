@@ -5,9 +5,11 @@
 	top: $shell-top-nav-height
 	bottom: 0
 	width: $shell-content-sidebar-width
-	transition: transform 300ms $weak-ease-out, left 300ms $weak-ease-out
 	will-change: transform
 	z-index: $zindex-shell-pane
+	// The 'left' transition needs to happen a little quicker to
+	// be sure there's no gap when hiding both a pane and the cbar.
+	transition: transform 300ms $weak-ease-out
 
 .shell-pane-left
 	left: 0

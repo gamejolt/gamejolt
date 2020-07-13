@@ -37,14 +37,12 @@ if (GJ_IS_CLIENT) {
 export default class AppShellTopNav extends Vue {
 	@State app!: Store['app'];
 
-	@State visibleContextPane!: Store['visibleContextPane'];
 	@State visibleLeftPane!: Store['visibleLeftPane'];
 	@State hasSidebar!: Store['hasSidebar'];
 	@State hasCbar!: Store['hasCbar'];
 	@State unreadActivityCount!: Store['unreadActivityCount'];
 
 	@Action toggleCbarMenu!: Store['toggleCbarMenu'];
-	@Action toggleContextPane!: Store['toggleContextPane'];
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
 	moreMenuShowing = false;
@@ -59,78 +57,10 @@ export default class AppShellTopNav extends Vue {
 	readonly Screen = Screen;
 	readonly Connection = Connection;
 
-	onContextButtonClicked() {
-		/*
-		JODO:
-			The plan for this button is that it will only show on Xs devices.
-			Other devices should click on an active cbar item to show the context for that page.
-
-		// Toggle the cbar and context panes for mobile.
-		if (Screen.isXs) {
-			// JODO: This should toggle the entire to-be-made cbar/context pane component
-			return this.toggleCbarMenu();
-		}
-
-		// If we're showing a left-pane, just clear the left pane and don't open a context pane.
-		if (!!this.visibleLeftPane && !this.visibleContextPane) {
-			// Passing no value will close any open left-panes.
-			return this.toggleLeftPane();
-		}
-
-		this.toggleContextPane();
-		*/
-
-		/**
-		 * JODO:
-		 * Since we'll only show this button for Xs devices we instead want to toggle the cbar,
-		 * which should open either the 'context' left-pane or the 'main'/'library' pane.
-		 */
-		this.toggleLeftPane('context');
-	}
-
-	/* JODO: Won't be needed once mobile button functionality is in place. */
-	get contextPane() {
-		return this.$route.meta.contextPane || 'context';
-	}
-
 	get shouldShowContextButton() {
-		/*
-		JODO:
-			Won't be needed once mobile button functionality is in place.
-		// We always want the context pane/sidebar showing on this breakpoint, so we don't need the button.
-		if (Screen.isLg) {
-			return false;
-		}
-
-		// Md and Sm breakpoints always show cbar when logged in,
-		// so in this case we only care about the context pane of the route.
-		if (!Screen.isXs) {
-			return !!this.$route.meta.contextPane;
-		}
-
-		// Cbar doesn't show on Xs devices, so we want to show the button if there's either a
-		// user logged in or a route context we can use so it works properly when not signed in.
-		*/
-		return /* Screen.isXs && ( */ !!this.$route.meta.contextPane || !!this.app.user;
-	}
-
-	// JODO: Remove
-	get contextButtonText() {
-		if (!!this.visibleLeftPane && !!this.visibleContextPane) {
-			return this.$gettext(`Hide ${this.visibleLeftPane} and ${this.contextPane}`);
-		}
-
-		// 'Hide chat', 'Hide library'
-		if (!!this.visibleLeftPane) {
-			return this.$gettext(`Hide ${this.visibleLeftPane}`);
-		}
-
-		// 'Hide channels'
-		if (!!this.visibleContextPane) {
-			return this.$gettext(`Hide ${this.contextPane}`);
-		}
-
-		return this.$gettext(`Show ${this.contextPane}`);
+		// Cbar doesn't normally show on Xs devices, so we want to show the toggle button if
+		// there's either a user logged in or if the route has an available context pane.
+		return Screen.isXs && (!!this.$route.meta.contextPane || !!this.app.user);
 	}
 
 	get shouldShowSearch() {

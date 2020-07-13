@@ -6,10 +6,9 @@
 					v-if="shouldShowContextButton"
 					class="-menu-toggle navbar-item"
 					:class="{
-						active: !!visibleContextPane,
+						active: !!visibleLeftPane,
 					}"
-					@click="onContextButtonClicked"
-					v-app-tooltip.bottom-end="contextButtonText"
+					@click="toggleCbarMenu"
 				>
 					<!-- JODO: Might need to change this event tracking? -->
 					<!-- v-app-track-event="`top-nav:main-menu:toggle`" -->

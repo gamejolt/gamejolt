@@ -1,5 +1,5 @@
 <template>
-	<div class="-item" :class="{ '-control': isControl }">
+	<div class="-item">
 		<slot />
 		<div
 			class="-blip"
@@ -28,17 +28,6 @@
 	margin-bottom: $cbar-item-spacing
 	width: $cbar-item-size - 2px
 	height: $cbar-item-size - 2px
-
-	&.-control
-		pressy()
-		img-circle()
-		background-color: var(--theme-bg-offset)
-
-		.-blip
-			background-color: var(--theme-highlight)
-
-		>>> .jolticon
-			color: var(--theme-lighter)
 
 .-blip, .-notification-count
 	pointer-events: none

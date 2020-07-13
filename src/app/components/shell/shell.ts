@@ -71,6 +71,9 @@ export default class AppShell extends Vue {
 	hasBanner!: BannerStore['hasBanner'];
 
 	@Action
+	toggleLeftPane!: Store['toggleLeftPane'];
+
+	@Action
 	clearPanes!: Store['clearPanes'];
 
 	private unfocusedChatNotificationsCount = 0;
@@ -89,21 +92,16 @@ export default class AppShell extends Vue {
 	mounted() {
 		// When changing routes, hide all overlays.
 		this.$router.beforeEach((_to, _from, next) => {
-			if (
-				this.visibleLeftPane === 'context' &&
-				_to.meta.contextPane === _from.meta.contextPane
-			) {
-				console.log('clearing some');
-				/**
-				 * JODO:
-				 * Clean this up - not happy with how I did the clearPanes function with the direction the panes are going.
-				 */
-				this.clearPanes('some');
+			if (_to.meta.contextPane === 'channels' || _to.meta.contextPane === 'context') {
+				// If the target route has a context pane and we're not currently showing one,
+				// toggle the left-pane as 'context' to show it.
+				if (this.visibleLeftPane !== 'context') {
+					this.toggleLeftPane('context');
+				}
 			} else {
-				console.log('clearing all');
-				this.clearPanes();
+				// Otherwise, if the target route has no context pane available, we want to hide all panes.
+				this.toggleLeftPane();
 			}
-
 			next();
 		});
 

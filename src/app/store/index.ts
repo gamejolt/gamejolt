@@ -129,7 +129,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	notificationState: ActivityFeedState | null = null;
 
 	mobileCbarShowing = false;
-	overlayedContextPane = ''; // hidden by default for breakpoints other than Lg
 	overlayedLeftPane = '';
 	overlayedRightPane = '';
 	hasContentSidebar = false;
@@ -149,16 +148,12 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		return !this.isShellHidden && !!this.app.user && (this.mobileCbarShowing || !Screen.isXs);
 	}
 
-	// Not sure if this is needed yet.
-	get hasMobileContext() {
-		return !this.isShellHidden && this.mobileCbarShowing && !!this.visibleContextPane;
-	}
-
-	get visibleContextPane() {
-		return this.overlayedContextPane;
-	}
-
 	get visibleLeftPane() {
+		// If there's no other left-pane pane opened, Large breakpoint should always show the 'context' pane if the route has context.
+		if (Screen.isLg && !!this.route.meta.contextPane && !this.overlayedLeftPane) {
+			return 'context';
+		}
+
 		return this.overlayedLeftPane;
 	}
 
@@ -272,20 +267,18 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		await Api.sendRequest('/web/dash/activity/mark-all-read', {});
 	}
 
+	// This Action is only used for the 'Xs' breakpoint.
 	@VuexAction
-	async toggleCbarMenu(type?: string) {
+	async toggleCbarMenu() {
 		this._toggleCbarMenu();
-		this._toggleContextPane(type);
-		this._checkBackdrop();
-	}
+		if (!!this.visibleLeftPane) {
+			// Close the left-pane if the cbar is also closing.
+			this._toggleLeftPane();
+		} else {
+			// Open the left pane depending on the route context when the cbar shows.
+			this._toggleLeftPane(!!this.route.meta.contextPane ? 'context' : 'library');
+		}
 
-	/**
-	 * JODO: Not sure if we need the string or not,
-	 * but we could potentially force a different context than the routes if we do it this way.
-	 */
-	@VuexAction
-	async toggleContextPane(type?: string) {
-		this._toggleContextPane(type);
 		this._checkBackdrop();
 	}
 
@@ -308,8 +301,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexAction
-	async clearPanes(amount = 'all') {
-		this._clearPanes(amount);
+	async clearPanes() {
+		this._clearPanes();
 		this._checkBackdrop();
 	}
 
@@ -322,12 +315,9 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexAction
 	private async _checkBackdrop() {
 		if (
-			// Check if there's a top-level pane overlapping for either side
-			!!this.overlayedRightPane ||
-			!!this.overlayedLeftPane ||
-			// The above panes are the only proper overlays for Lg, so for other breakpoints
-			// we want to check for either the context pane (Md/Sm), or just the Cbar (Xs).
-			(!Screen.isLg && (this.overlayedContextPane || this.mobileCbarShowing))
+			(!!this.overlayedRightPane || !!this.overlayedLeftPane) &&
+			// We only want backdrops on the Lg breakpoint if the pane isn't context.
+			!(Screen.isLg && this.overlayedLeftPane === 'context')
 		) {
 			if (backdrop) {
 				return;
@@ -508,30 +498,12 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexMutation
 	private _toggleCbarMenu() {
-		if (this.mobileCbarShowing) {
-			this.mobileCbarShowing = false;
-			this.overlayedLeftPane = '';
-			this.overlayedRightPane = '';
-			return;
-		}
-
-		this.mobileCbarShowing = true;
-	}
-
-	@VuexMutation
-	private _toggleContextPane(type = this.route.meta.contextPane || '') {
-		if (this.overlayedContextPane === type) {
-			this.overlayedContextPane = '';
-		} else {
-			this.overlayedContextPane = type;
-		}
-
-		this.overlayedLeftPane = '';
+		this.mobileCbarShowing = !this.mobileCbarShowing;
 	}
 
 	@VuexMutation
 	private _toggleLeftPane(type = '') {
-		if (!this.hasSidebar) {
+		if (!this.hasSidebar || (!this.mobileCbarShowing && Screen.isXs)) {
 			this.overlayedLeftPane = '';
 			return;
 		}
@@ -557,19 +529,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	private _clearPanes(amount = 'all') {
+	private _clearPanes() {
 		this.overlayedRightPane = '';
 		this.overlayedLeftPane = '';
-
-		/**
-		 * JODO: Make sure this works as intended - maybe change the way we default the value or something.
-		 * */
-		// This allows us to keep context panes and cbar visible for state changes that have the same type of context,
-		// so we can move from one community to another and still show the 'channels' context.
-		if (amount === 'all') {
-			this.overlayedContextPane = '';
-			this.mobileCbarShowing = false;
-		}
+		this.mobileCbarShowing = false;
 	}
 
 	@VuexMutation

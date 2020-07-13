@@ -1,12 +1,13 @@
 <template>
 	<div class="shell-cbar-controls">
+		<!-- Library - Screen.isXs -->
 		<app-shell-cbar-item
 			v-if="Screen.isXs"
+			class="-control"
 			:is-active="visibleLeftPane === 'library'"
-			is-control
 		>
 			<a
-				class="-control"
+				class="-control-item"
 				@click="toggleLeftPane('library')"
 				v-app-tooltip.right="$gettext(`Game Library (m)`)"
 			>
@@ -16,14 +17,16 @@
 			</a>
 		</app-shell-cbar-item>
 
+		<!-- Chat -->
 		<app-shell-cbar-item
 			v-if="chat"
+			class="-control"
 			:notification-count="chat.friendNotificationsCount"
 			:is-active="visibleLeftPane === 'chat'"
 			is-control
 		>
 			<a
-				class="-control"
+				class="-control-item"
 				@click="toggleLeftPane('chat')"
 				v-app-tooltip.right="$gettext(`Chat and Friends List (c)`)"
 			>
@@ -33,13 +36,15 @@
 			</a>
 		</app-shell-cbar-item>
 
+		<!-- Library - !Screen.isXs -->
 		<app-shell-cbar-item
 			v-if="!Screen.isXs"
+			class="-control"
 			:is-active="visibleLeftPane === 'library'"
 			is-control
 		>
 			<a
-				class="-control"
+				class="-control-item"
 				@click="toggleLeftPane('library')"
 				v-app-tooltip.right="$gettext(`Game Library (m)`)"
 			>
@@ -57,15 +62,27 @@
 
 <style lang="stylus" scoped>
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 @require '../variables'
 
 .shell-cbar-controls
 	.-control
-		display: flex
-		justify-content: center
-		align-items: center
-		width: $cbar-item-size
-		height: $cbar-item-size
+		pressy()
+		img-circle()
+		background-color: var(--theme-bg-offset)
+
+		>>> .-blip
+			background-color: var(--theme-highlight)
+
+		>>> .jolticon
+			color: var(--theme-lighter)
+
+		&-item
+			display: flex
+			justify-content: center
+			align-items: center
+			width: $cbar-item-size
+			height: $cbar-item-size
 
 		&-icon
 			font-size: $jolticon-size * 1.5
