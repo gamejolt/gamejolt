@@ -1,5 +1,10 @@
 <template>
-	<app-scroll-scroller id="shell-sidebar" class="shell-pane shell-pane-left" thin>
+	<app-scroll-scroller
+		id="shell-sidebar"
+		class="shell-pane shell-pane-left"
+		:class="{ '-lighter': visibleLeftPane === 'context' }"
+		thin
+	>
 		<app-shortkey shortkey="c" @press="toggleLeftPane('chat')" />
 		<app-shortkey shortkey="m" @press="toggleLeftPane('library')" />
 		<!-- JODO: Better shortkey for this? -->
@@ -17,6 +22,12 @@
 @require '~styles-lib/mixins'
 
 #shell-sidebar
+	display: flex
+	flex-direction: column
+
+	&.-lighter
+		background-color: var(--theme-bg-offset)
+
 	hr
 		margin: $line-height-computed 15px
 

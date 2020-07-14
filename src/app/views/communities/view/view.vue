@@ -38,13 +38,18 @@
 								<li>
 									<router-link
 										:to="{ name: 'communities.view.overview' }"
-										:class="{ active: $route.name === 'communities.view.overview' }"
+										:class="{
+											active: $route.name === 'communities.view.overview',
+										}"
 									>
 										<translate>Overview</translate>
 									</router-link>
 								</li>
 								<li>
-									<router-link :to="{ name: 'communities.view.members' }" active-class="active">
+									<router-link
+										:to="{ name: 'communities.view.members' }"
+										active-class="active"
+									>
 										<translate>Members</translate>
 										<span class="badge" v-if="community.member_count">
 											{{ community.member_count | number }}
@@ -75,7 +80,10 @@
 											<a
 												v-if="shouldShowModTools"
 												class="list-group-item has-icon"
-												:href="Environment.baseUrl + `/moderate/communities/view/${community.id}`"
+												:href="
+													Environment.baseUrl +
+														`/moderate/communities/view/${community.id}`
+												"
 												target="_blank"
 											>
 												<app-jolticon icon="cog" />
@@ -92,7 +100,12 @@
 						<app-page-header-controls>
 							<template v-if="community.hasPerms()">
 								<app-community-perms :community="community">
-									<app-button v-if="!isEditing" primary block :to="community.routeEditLocation">
+									<app-button
+										v-if="!isEditing"
+										primary
+										block
+										:to="community.routeEditLocation"
+									>
 										<app-jolticon icon="edit" class="middle" />
 										<translate>Edit Community</translate>
 									</app-button>
@@ -131,7 +144,7 @@
 @require '../../../components/community/channel/card/variables'
 
 .-card
-	width: $card-width
+	max-width: $card-width
 </style>
 
 <script lang="ts" src="./view"></script>

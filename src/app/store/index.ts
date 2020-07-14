@@ -296,6 +296,9 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async toggleChatPane() {
+		if (!this.mobileCbarShowing) {
+			this._toggleCbarMenu();
+		}
 		this._toggleLeftPane('chat');
 		this._checkBackdrop();
 	}

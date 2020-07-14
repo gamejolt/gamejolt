@@ -4,6 +4,8 @@
 		:class="{ '-active': isActive, 'theme-dark': backgroundItem }"
 		:to="linkTo"
 		:title="label"
+		:style="{ height }"
+		v-app-observe-dimensions="updateCardHeight"
 	>
 		<div class="-card-bg" v-if="backgroundItem">
 			<app-media-item-backdrop :media-item="backgroundItem">
@@ -22,7 +24,9 @@
 				<app-jolticon
 					v-if="isLocked"
 					icon="lock"
-					v-app-tooltip.left="$gettext(`You do not have permissions to post to this channel.`)"
+					v-app-tooltip.left="
+						$gettext(`You do not have permissions to post to this channel.`)
+					"
 				/>
 				{{ label }}
 			</div>

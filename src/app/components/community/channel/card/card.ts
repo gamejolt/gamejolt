@@ -7,7 +7,12 @@ import {
 } from '../../../../../_common/community/community.model';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
+import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+
+// Sync up with the './variables' file.
+const CARD_HEIGHT = 68;
+const CARD_WIDTH = 260;
 
 @Component({
 	components: {
@@ -15,6 +20,7 @@ import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 	},
 	directives: {
 		AppTooltip,
+		AppObserveDimensions,
 	},
 })
 export default class AppCommunityChannelCard extends Vue {
@@ -26,6 +32,19 @@ export default class AppCommunityChannelCard extends Vue {
 	@Prop(propOptional(Boolean, false)) isUnread!: boolean;
 	@Prop(propOptional(String)) sort!: string;
 	@Prop(propOptional(Boolean, false)) isLocked!: boolean;
+
+	cardHeight = CARD_HEIGHT;
+
+	$el!: HTMLElement;
+
+	mounted() {
+		// Initialize cardHeight to be based off the card width, maintaining aspect ratio.
+		this.updateCardHeight();
+	}
+
+	get height() {
+		return this.cardHeight + 'px';
+	}
 
 	get linkTo() {
 		if (this.path === CommunityPresetChannelType.FEATURED) {
@@ -42,5 +61,10 @@ export default class AppCommunityChannelCard extends Vue {
 		}
 
 		return link;
+	}
+
+	updateCardHeight() {
+		// This gets triggered when the card resizes, setting the new card height appropriately.
+		this.cardHeight = (this.$el.offsetWidth / CARD_WIDTH) * CARD_HEIGHT;
 	}
 }
