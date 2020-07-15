@@ -21,6 +21,7 @@
 				:single-line-mode="isSingleLineMode"
 				:room="room"
 				@submit="submit($event)"
+				@cancel="isEditing = false"
 				@single-line-mode-change="onSingleLineModeChanged($event)"
 			/>
 		</div>

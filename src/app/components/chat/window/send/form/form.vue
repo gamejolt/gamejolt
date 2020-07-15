@@ -2,6 +2,11 @@
 	<app-form name="chat-send-form" ref="form">
 		<app-shortkey shortkey="tab" @press="onTabKeyPressed" />
 
+		<div class="-editing-message" v-if="isEditing">
+			Editing Message
+			<a class="-editing-message-cancel" @click="cancel">Cancel</a>
+		</div>
+
 		<app-form-group
 			name="content"
 			hide-label
@@ -63,6 +68,19 @@ $-button-padding = 48px
 
 	&-shifted
 		margin-bottom: 52px
+
+.-editing-message
+	position: relative
+	display: flex
+	margin-bottom: 8px
+	padding: 4px 16px 4px
+	background-color: var(--theme-bg-offset)
+	font-size: $font-size-small
+
+	&-cancel
+		position: absolute
+		right: 0
+		padding-right: 16px
 
 .-input
 	margin-right: 4px

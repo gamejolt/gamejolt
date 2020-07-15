@@ -20,7 +20,7 @@ import { ChatMessageEditEvent } from '../../output/item/item';
 
 export type FormModel = {
 	content: string;
-	id: number;
+	id?: number;
 };
 
 @Component({
@@ -129,12 +129,13 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		}
 
 		if (doc.hasContent) {
-			this.emitSubmit({ content: this.formModel.content, id: this.formModel.id });
-			this.setField('content', '');
+			const submit: FormModel = { content: this.formModel.content };
+			if (this.isEditing) {
+				submit.id = this.formModel.id;
+			}
 
-			// Wait for errors, then clear them.
-			await this.$nextTick();
-			this.$refs.form.clearErrors();
+			this.emitSubmit(submit);
+			this.clearMsg();
 		} else {
 			// When the user tried to submit an empty doc and is in multi line mode, reset to single line.
 			// They are probably trying to exit that mode, since submitting an empty message is nonsense.
@@ -197,5 +198,20 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 	onInputResize() {
 		EventBus.emit('Chat.inputResize');
+	}
+
+	async cancel() {
+		this.$emit('cancel');
+		this.isEditing = false;
+		this.clearMsg();
+	}
+
+	private async clearMsg() {
+		this.setField('content', '');
+		this.setField('id', undefined);
+
+		// Wait for errors, then clear them.
+		await this.$nextTick();
+		this.$refs.form.clearErrors();
 	}
 }
