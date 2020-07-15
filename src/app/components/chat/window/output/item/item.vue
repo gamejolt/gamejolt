@@ -43,7 +43,7 @@
 			</div>
 
 			<div
-				v-if="chat.currentUser && chat.currentUser.id === message.user.id && !isEditing"
+				v-if="chat.currentUser && chat.currentUser.id === message.user.id"
 				class="chat-window-message-options"
 			>
 				<app-popper popover-class="fill-darkest">
@@ -91,19 +91,7 @@
 					</span>
 				</template>
 
-				<template v-if="!isEditing">
-					<app-content-viewer :source="message.content" :display-rules="displayRules" />
-				</template>
-				<template v-else>
-					<app-chat-window-output-item-form
-						:model="message"
-						:single-line-mode="isSingleLineMode"
-						:room="room"
-						@single-line-mode-change="onSingleLineModeChanged($event)"
-						@submit="onMessageEdit($event)"
-						@cancel="isEditing = false"
-					/>
-				</template>
+				<app-content-viewer :source="message.content" :display-rules="displayRules" />
 			</div>
 		</div>
 	</div>

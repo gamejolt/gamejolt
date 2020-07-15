@@ -1,6 +1,6 @@
 import Component from 'vue-class-component';
 import { Emit, InjectReactive, Prop, Watch } from 'vue-property-decorator';
-import { EventBus } from '../../../../../../system/event/event-bus.service';
+import { EventBus, EventBusDeregister } from '../../../../../../system/event/event-bus.service';
 import { propRequired } from '../../../../../../utils/vue';
 import { ContentContext } from '../../../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../../../_common/content/content-document';
@@ -16,9 +16,11 @@ import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive'
 import { ChatClient, ChatKey } from '../../../client';
 import { CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../../message';
 import { ChatRoom } from '../../../room';
+import { ChatMessageEditEvent } from '../../output/item/item';
 
 export type FormModel = {
 	content: string;
+	id: number;
 };
 
 @Component({
@@ -35,6 +37,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	@InjectReactive(ChatKey) chat!: ChatClient;
 	@Prop(propRequired(Boolean)) singleLineMode!: boolean;
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+	@Prop(Boolean) isEditing!: boolean;
 
 	readonly contentContext: ContentContext = 'chat-message';
 	// Allow images to be up to 100px in height so that image and a chat message fit into the editor without scrolling.
@@ -50,8 +53,10 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		editor: AppFormControlContentTS;
 	};
 
+	private editMessageDeregister?: EventBusDeregister;
+
 	@Emit('submit')
-	emitSubmit(_content: string) {}
+	emitSubmit(_content: FormModel) {}
 
 	@Emit('single-line-mode-change')
 	emitSingleLineModeChange(_singleLine: boolean) {}
@@ -90,6 +95,29 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		return [CHAT_MESSAGE_MAX_CONTENT_LENGTH];
 	}
 
+	async mounted() {
+		this.editMessageDeregister = EventBus.on(
+			'Chat.editMessage',
+			async (event: ChatMessageEditEvent) => {
+				this.setField('content', event.message.content);
+				this.setField('id', event.message.id);
+
+				await this.$nextTick();
+
+				if (!this.isEditorFocused) {
+					this.$refs.editor.focus();
+				}
+			}
+		);
+	}
+
+	destroyed() {
+		if (this.editMessageDeregister) {
+			this.editMessageDeregister();
+			this.editMessageDeregister = undefined;
+		}
+	}
+
 	async submitMessage() {
 		let doc;
 
@@ -101,7 +129,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		}
 
 		if (doc.hasContent) {
-			this.emitSubmit(this.formModel.content);
+			this.emitSubmit({ content: this.formModel.content, id: this.formModel.id });
 			this.setField('content', '');
 
 			// Wait for errors, then clear them.

@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { EventBus } from '../../../../../../system/event/event-bus.service';
 import { propRequired } from '../../../../../../utils/vue';
 import { ContentRules } from '../../../../../../_common/content/content-editor/content-rules';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
@@ -9,20 +10,16 @@ import { Popper } from '../../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import {
-	ChatClient,
-	ChatKey,
-	editMessage,
-	removeMessage,
-	retryFailedQueuedMessage,
-} from '../../../client';
+import { ChatClient, ChatKey, removeMessage, retryFailedQueuedMessage } from '../../../client';
 import { ChatMessage } from '../../../message';
 import { ChatRoom } from '../../../room';
-import AppChatWindowOutputItemForm from './form/form.vue';
+
+export interface ChatMessageEditEvent {
+	message: ChatMessage;
+}
 
 @Component({
 	components: {
-		AppChatWindowOutputItemForm,
 		AppContentViewer,
 		AppPopper,
 	},
@@ -43,8 +40,8 @@ export default class AppChatWindowOutputItem extends Vue {
 	readonly date = date;
 	readonly ChatMessage = ChatMessage;
 	readonly displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
-	isEditing = false;
 
+	isEditing = false;
 	singleLineMode = true;
 
 	readonly Screen = Screen;
@@ -66,12 +63,14 @@ export default class AppChatWindowOutputItem extends Vue {
 
 	startEdit() {
 		this.isEditing = true;
+		EventBus.emit('Chat.editMessage', <ChatMessageEditEvent>{
+			message: this.message,
+		});
 		Popper.hideAll();
 	}
 
-	async onMessageEdit(message: ChatMessage) {
+	onMessageEdit() {
 		this.isEditing = false;
-		editMessage(this.chat, message);
 	}
 
 	onClickResend() {
