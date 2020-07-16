@@ -158,11 +158,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	async onRoomChanged() {
 		if (this.formModel.content !== '') {
 			// Clear out the editor when entering a new room.
-			this.setField('content', '');
-
-			// Wait for errors, then clear them.
-			await this.$nextTick();
-			this.$refs.form.clearErrors();
+			this.clearMsg();
 		}
 
 		// Then focus it.
@@ -213,5 +209,22 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		// Wait for errors, then clear them.
 		await this.$nextTick();
 		this.$refs.form.clearErrors();
+	}
+
+	onUpKeyPressed() {
+		if (!this.isEditing) {
+			// Find the last message sent by the current user.
+			const userMessages = this.chat.messages[this.room.id].filter(
+				msg => msg.user.id === this.chat.currentUser?.id
+			);
+			const lastMessage = userMessages[userMessages.length - 1];
+
+			if (lastMessage) {
+				this.isEditing = true;
+				EventBus.emit('Chat.editMessage', <ChatMessageEditEvent>{
+					message: lastMessage,
+				});
+			}
+		}
 	}
 }

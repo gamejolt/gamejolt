@@ -31,6 +31,7 @@
 					@insert-block-node="onEditorInsertBlockNode"
 					@focus="onFocusEditor"
 					@blur="onBlurEditor"
+					@keydown.native.up="onUpKeyPressed"
 				/>
 
 				<app-form-control-errors label="message" />
