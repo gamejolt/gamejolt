@@ -11,6 +11,9 @@
 				'background-color': highlight,
 			}"
 		/>
+		<div v-if="showContextIndicator" class="-context-indicator">
+			<app-jolticon icon="menu" />
+		</div>
 		<div v-if="notificationCount > 0" class="-notification-count">
 			{{ notificationCountText }}
 		</div>
@@ -52,22 +55,34 @@
 	left: $cbar-blip-left
 	height: $cbar-item-size
 
-.-notification-count
+.-notification-count, .-context-indicator
 	position: absolute
 	right: -2px
-	bottom: -2px
 	z-index: 2
 	border-radius: 10px
 	border-color: var(--theme-darkest)
 	border-width: 3px
 	border-style: solid
-	padding-left: 4px
-	padding-right: 4px
 	font-size: $font-size-tiny
 	text-align: center
+
+.-notification-count
+	bottom: -2px
+	padding-left: 4px
+	padding-right: 4px
 	font-weight: bolder
 	color: var(--theme-highlight-fg)
 	background-color: var(--theme-highlight)
+
+.-context-indicator
+	cursor: pointer
+	top: -2px
+	color: var(--theme-lighter)
+	background-color: var(--theme-darker)
+
+	>>> .jolticon
+		font-size: $font-size-tiny
+		vertical-align: middle
 </style>
 
 <script lang="ts" src="./item"></script>

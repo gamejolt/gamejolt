@@ -1,6 +1,6 @@
 <template>
 	<div id="shell-chat-pane">
-		<div class="chat-sidebar fill-darkest">
+		<div class="chat-sidebar">
 			<!-- Friends List -->
 			<!-- Only include if not a guest -->
 			<div class="chat-friends-list" v-if="chat.currentUser && chat.friendsPopulated">
@@ -47,5 +47,3 @@
 </template>
 
 <script lang="ts" src="./chat"></script>
-
-<style lang="stylus" scoped></style>

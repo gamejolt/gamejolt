@@ -26,11 +26,10 @@ export default class AppShellCbarItem extends Vue {
 		return this.isActive && this.visibleLeftPane === 'context';
 	}
 
-	get isInactive() {
-		return !!this.visibleLeftPane && !this.isActive && !Screen.isLg && !this.isControl;
-	}
-
-	get isSelectedCommunity() {
-		return this.isActive && !Screen.isLg && !this.isControl;
+	// JODO: This should never show on Lg since the context pane should always be open.
+	// For Sm and Md, this should show on the community with the active route, probably when it's not showing the context pane.
+	// Xs, I'm not sure yet if we should show or not.
+	get showContextIndicator() {
+		return this.isActive && !this.isControl && (Screen.isSm || Screen.isMd);
 	}
 }
