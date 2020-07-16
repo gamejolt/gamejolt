@@ -8,7 +8,7 @@
 						src="~img/jolt.svg"
 						alt=""
 						strict-colors
-						v-app-tooltip="`This is a lightning bolt.`"
+						v-app-tooltip="$gettext('This is a lightning bolt.')"
 					/>
 				</h1>
 
