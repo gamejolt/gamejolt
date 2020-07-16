@@ -5,6 +5,7 @@
 			v-if="Screen.isXs"
 			class="-control"
 			:is-active="visibleLeftPane === 'library'"
+			is-control
 		>
 			<a
 				class="-control-item"

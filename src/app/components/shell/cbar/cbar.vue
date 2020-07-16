@@ -4,11 +4,6 @@
 			<div class="-inner">
 				<app-shell-cbar-controls />
 
-				<!-- JODO:
-						Need to change the way we toggle channels context pane for Sm and Md breakpoints.
-						We should be able to click on the cbar item (community bubble) a second time to open
-						the context pane.
-				 -->
 				<transition-group name="-communities">
 					<app-shell-cbar-community
 						v-for="community of communities"

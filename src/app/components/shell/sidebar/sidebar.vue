@@ -7,13 +7,17 @@
 	>
 		<app-shortkey shortkey="c" @press="toggleLeftPane('chat')" />
 		<app-shortkey shortkey="m" @press="toggleLeftPane('library')" />
-		<!-- JODO: Better shortkey for this? -->
 		<app-shortkey shortkey="y" @press="toggleLeftPane('context')" />
 
 		<app-shell-sidebar-chat v-if="visibleLeftPane === 'chat'" />
 		<app-shell-sidebar-library v-if="visibleLeftPane === 'library'" />
 		<!-- JODO: Move context sidebar into below context component -->
 		<!-- <app-shell-sidebar-context v-if="visibleLeftPane === 'context'" /> -->
+		<!-- JODO:
+			Store the sidebar context information in a new SidebarStore,
+			swapping out the props and component depending on the route information.
+		-->
+		<!-- <component :is="sidebarComponent" v-bind="sidebarProps" /> -->
 	</app-scroll-scroller>
 </template>
 

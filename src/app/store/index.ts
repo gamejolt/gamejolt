@@ -296,9 +296,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexAction
 	async toggleChatPane() {
-		if (!this.mobileCbarShowing) {
-			this._toggleCbarMenu();
-		}
 		this._toggleLeftPane('chat');
 		this._checkBackdrop();
 	}
@@ -506,7 +503,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexMutation
 	private _toggleLeftPane(type = '') {
-		if (!this.hasSidebar || (!this.mobileCbarShowing && Screen.isXs)) {
+		if (!this.hasSidebar) {
 			this.overlayedLeftPane = '';
 			return;
 		}
@@ -516,6 +513,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		} else {
 			this.overlayedLeftPane = type;
 		}
+
+		this.mobileCbarShowing = !!this.overlayedLeftPane;
 
 		this.overlayedRightPane = '';
 	}

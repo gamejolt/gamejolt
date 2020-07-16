@@ -2,7 +2,7 @@
 	<div>
 		<!-- JODO: Move this into a shared component with cbar for better context transitions and zindexing -->
 		<!-- Remove the ref - only needed for testing -->
-		<div ref="sidebar" id="shell-context-pane">
+		<div ref="sidebar" id="shell-context-pane" :class="{ '-visible': isShowingSidebar }">
 			<slot v-if="isShowingSidebar" name="sidebar" />
 		</div>
 		<div
@@ -19,9 +19,11 @@
 @require '~styles-lib/mixins'
 
 #shell-context-pane
-	padding: $shell-content-sidebar-padding
 	// JODO: Not sure if this should have a different background-color than other sidebars or not.
 	background-color: var(--theme-bg-offset)
+
+	&.-visible
+		padding: $shell-content-sidebar-padding
 
 .content-with-sidebar--content
 	// Make it full-size height at least, so that the footer doesn't cut things off weird.

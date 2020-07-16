@@ -35,6 +35,7 @@ export default class AppShellCbarCommunity extends Vue {
 	@State grid!: Store['grid'];
 	@State communityStates!: Store['communityStates'];
 	@State visibleLeftPane!: Store['visibleLeftPane'];
+	@Action toggleLeftPane!: Store['toggleLeftPane'];
 	@Action leaveCommunity!: Store['leaveCommunity'];
 
 	popperVisible = false;
@@ -58,7 +59,7 @@ export default class AppShellCbarCommunity extends Vue {
 			this.$route.name &&
 			this.$route.name.indexOf('communities.view') === 0 &&
 			this.$route.params.path === this.community!.path &&
-			!this.visibleLeftPane
+			(!this.visibleLeftPane || this.visibleLeftPane === 'context')
 		);
 	}
 
@@ -88,6 +89,12 @@ export default class AppShellCbarCommunity extends Vue {
 	async onLeaveCommunityClick() {
 		Popper.hideAll();
 		await this.leaveCommunity(this.community);
+	}
+
+	onCommunityClick() {
+		if (this.$route.params.path === this.community.path) {
+			this.toggleLeftPane('context');
+		}
 	}
 
 	gotoModerate() {
