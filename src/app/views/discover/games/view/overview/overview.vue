@@ -45,7 +45,6 @@
 					<app-comment-overview
 						:comments="overviewComments"
 						:model="game"
-						:loading="!isRouteBootstrapped"
 						display-mode="comments"
 						@reload-comments="reloadPreviewComments"
 					/>

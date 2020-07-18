@@ -30,7 +30,7 @@
 			</div>
 		</div>
 	</div>
-	<app-illustration v-else-if="!loading" src="~img/ill/no-comments-small.svg" sm>
+	<app-illustration v-else-if="!hasComments" src="~img/ill/no-comments-small.svg" sm>
 		<translate v-if="displayMode === 'comments'">No comments yet.</translate>
 		<translate v-else-if="displayMode === 'shouts'">No shouts yet.</translate>
 	</app-illustration>

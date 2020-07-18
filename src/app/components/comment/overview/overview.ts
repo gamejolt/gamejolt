@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { propOptional } from '../../../../utils/vue';
 import {
 	Comment,
 	getCommentBlockReason,
@@ -41,14 +40,20 @@ export default class AppCommentOverview extends Vue {
 	@Prop(String)
 	displayMode!: DisplayMode;
 
-	@Prop(propOptional(Boolean, true))
-	loading!: boolean;
-
 	@CommentState
 	getCommentStore!: CommentStore['getCommentStore'];
 
 	get displayComments() {
 		return this.comments.filter(c => getCommentBlockReason(c) === false);
+	}
+
+	get hasComments() {
+		const store = this.getCommentStore(getCommentModelResourceName(this.model), this.model.id);
+		if (store instanceof CommentStoreModel) {
+			return store.totalCount > 0;
+		}
+		// If we didn't get the store information yet, treat this as if it's loading in.
+		return true;
 	}
 
 	get commentStoreDirtyState() {
