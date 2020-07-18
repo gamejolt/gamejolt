@@ -58,8 +58,7 @@ export default class AppShellCbarCommunity extends Vue {
 		return (
 			this.$route.name &&
 			this.$route.name.indexOf('communities.view') === 0 &&
-			this.$route.params.path === this.community!.path &&
-			(!this.visibleLeftPane || this.visibleLeftPane === 'context')
+			this.$route.params.path === this.community!.path
 		);
 	}
 

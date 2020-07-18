@@ -22,14 +22,25 @@ export default class AppShellCbarItem extends Vue {
 		return this.notificationCount > 99 ? '99+' : number(this.notificationCount);
 	}
 
-	get isShowingContext() {
-		return this.isActive && this.visibleLeftPane === 'context';
+	get backgroundColor() {
+		return this.showAsActive ? this.highlight : null;
 	}
 
-	// JODO: This should never show on Lg since the context pane should always be open.
-	// For Sm and Md, this should show on the community with the active route, probably when it's not showing the context pane.
-	// Xs, I'm not sure yet if we should show or not.
-	get showContextIndicator() {
+	// We want a context indicator only for non-control items that are the current active item.
+	get hasContextIndicator() {
 		return this.isActive && !this.isControl && (Screen.isSm || Screen.isMd);
+	}
+
+	// We want to use this instead of the 'isActive' prop so that we only show one 'active' item at a time.
+	// Otherwise, cbar control items could show as active along with an active community.
+	get showAsActive() {
+		return (
+			this.isActive &&
+			(!this.visibleLeftPane || this.visibleLeftPane === 'context' || this.isControl)
+		);
+	}
+
+	get isContextShowing() {
+		return this.showAsActive && this.visibleLeftPane === 'context';
 	}
 }

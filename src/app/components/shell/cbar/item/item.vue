@@ -5,13 +5,17 @@
 			class="-blip"
 			:class="{
 				'-blip-unread': isUnread,
-				'-blip-active': isActive,
+				'-blip-active': showAsActive,
 			}"
 			:style="{
-				'background-color': highlight,
+				backgroundColor,
 			}"
 		/>
-		<div v-if="showContextIndicator" class="-context-indicator">
+		<div
+			v-if="hasContextIndicator"
+			class="-context-indicator"
+			:class="{ '-showing': isContextShowing }"
+		>
 			<app-jolticon icon="menu" />
 		</div>
 		<div v-if="notificationCount > 0" class="-notification-count">
@@ -79,10 +83,17 @@
 	top: -2px
 	color: var(--theme-lighter)
 	background-color: var(--theme-darker)
+	transition: opacity 300ms, visibility 300ms
+	transition-timing-function: $strong-ease-out
 
 	>>> .jolticon
 		font-size: $font-size-tiny
 		vertical-align: middle
+
+	&.-showing
+		opacity: 0
+		visibility: hidden
+		transition-timing-function: $ease
 </style>
 
 <script lang="ts" src="./item"></script>
