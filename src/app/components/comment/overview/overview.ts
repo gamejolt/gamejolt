@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import { propOptional } from '../../../../utils/vue';
 import {
 	Comment,
 	getCommentBlockReason,
@@ -39,6 +40,9 @@ export default class AppCommentOverview extends Vue {
 
 	@Prop(String)
 	displayMode!: DisplayMode;
+
+	@Prop(propOptional(Boolean, true))
+	loading!: boolean;
 
 	@CommentState
 	getCommentStore!: CommentStore['getCommentStore'];
