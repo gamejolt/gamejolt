@@ -45,7 +45,7 @@
 					<app-comment-overview
 						:comments="overviewComments"
 						:model="game"
-						displayMode="comments"
+						display-mode="comments"
 						@reload-comments="reloadPreviewComments"
 					/>
 				</div>

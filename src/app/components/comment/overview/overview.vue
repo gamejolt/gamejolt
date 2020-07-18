@@ -30,6 +30,10 @@
 			</div>
 		</div>
 	</div>
+	<app-illustration v-else src="~img/ill/no-comments-small.svg" sm>
+		<translate v-if="displayMode === 'comments'">No comments yet.</translate>
+		<translate v-else-if="displayMode === 'shouts'">No shouts yet.</translate>
+	</app-illustration>
 </template>
 
 <style lang="stylus" scoped>
