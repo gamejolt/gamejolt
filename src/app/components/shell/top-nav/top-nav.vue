@@ -18,10 +18,6 @@
 				<!-- History Navigator (for desktop client) -->
 				<app-client-history-navigator v-if="GJ_IS_CLIENT" />
 
-				<!-- JODO:
-						Possibly remove the '-menu-toggle' class below. I think it looks good this way,
-						it's just a matter of whether or not we should always have this styling for the small icon.
-				-->
 				<router-link
 					class="navbar-item"
 					:class="{

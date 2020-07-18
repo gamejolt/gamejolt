@@ -342,9 +342,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexMutation
 	setHasContentSidebar(isShowing: Mutations['setHasContentSidebar']) {
-		/**
-		 *  JODO: Make sure this works when switching between breakpoints.
-		 */
 		// We use this to scooch the footer over to make room for the sidebar content, but we only care about
 		// that when the sidebar isn't behaving as an overlay - which is currently only on the Lg breakpoint.
 		if (Screen.isLg) {

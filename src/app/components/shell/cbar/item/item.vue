@@ -93,7 +93,6 @@
 	&.-showing
 		opacity: 0
 		visibility: hidden
-		transition-timing-function: $ease
 </style>
 
 <script lang="ts" src="./item"></script>

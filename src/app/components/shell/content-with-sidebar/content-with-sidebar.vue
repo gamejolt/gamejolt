@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<!-- JODO: Move this into a shared component with cbar for better context transitions and zindexing -->
+		<!-- JODO: Move this into a proper sidebar component -->
 		<!-- Remove the ref - only needed for testing -->
 		<div ref="sidebar" id="shell-context-pane" :class="{ '-visible': isShowingSidebar }">
 			<slot v-if="isShowingSidebar" name="sidebar" />
@@ -19,9 +19,6 @@
 @require '~styles-lib/mixins'
 
 #shell-context-pane
-	// JODO: Not sure if this should have a different background-color than other sidebars or not.
-	background-color: var(--theme-bg-offset)
-
 	&.-visible
 		padding: $shell-content-sidebar-padding
 

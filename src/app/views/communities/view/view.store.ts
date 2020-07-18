@@ -41,7 +41,6 @@ export class CommunityRouteStore {
 		return this.community.hasPerms('community-description');
 	}
 
-	// JODO: Not sure if this needs to be modified.
 	get isShowingSidebar() {
 		return Screen.isLg;
 	}
