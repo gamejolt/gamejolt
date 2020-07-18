@@ -26,13 +26,13 @@ export default class AppShellCbarItem extends Vue {
 		return this.showAsActive ? this.highlight : null;
 	}
 
-	// We want a context indicator only for non-control items that are the current active item.
+	// We want a context indicator only for non-control items that are the current active item (selected or active route).
 	get hasContextIndicator() {
-		return this.isActive && !this.isControl && (Screen.isSm || Screen.isMd);
+		return this.isActive && !this.isControl;
 	}
 
-	// We want to use this instead of the 'isActive' prop so that we only show one 'active' item at a time.
-	// Otherwise, cbar control items could show as active along with an active community.
+	// There can be two active items between the cbar controls and normal cbar items,
+	// so we check the pane information to figure out what should be the active item visually.
 	get showAsActive() {
 		return (
 			this.isActive &&
@@ -40,7 +40,8 @@ export default class AppShellCbarItem extends Vue {
 		);
 	}
 
-	get isContextShowing() {
-		return this.showAsActive && this.visibleLeftPane === 'context';
+	// Check what the actual active item is and if it's showing a pane.
+	get isShowingPane() {
+		return this.showAsActive && !!this.visibleLeftPane;
 	}
 }

@@ -14,7 +14,7 @@
 		<div
 			v-if="hasContextIndicator"
 			class="-context-indicator"
-			:class="{ '-showing': isContextShowing }"
+			:class="{ '-showing': isShowingPane }"
 		>
 			<app-jolticon icon="menu" />
 		</div>

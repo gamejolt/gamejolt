@@ -279,41 +279,38 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			this._toggleLeftPane(!!this.route.meta.contextPane ? 'context' : 'library');
 		}
 
-		this._checkBackdrop();
+		this.checkBackdrop();
 	}
 
 	@VuexAction
 	async toggleLeftPane(type?: string) {
 		this._toggleLeftPane(type);
-		this._checkBackdrop();
+		this.checkBackdrop();
 	}
 
 	@VuexAction
 	async toggleRightPane(type?: string) {
 		this._toggleRightPane(type);
-		this._checkBackdrop();
+		this.checkBackdrop();
 	}
 
 	@VuexAction
 	async toggleChatPane() {
 		this._toggleLeftPane('chat');
-		this._checkBackdrop();
+		this.checkBackdrop();
 	}
 
 	@VuexAction
 	async clearPanes() {
 		this._clearPanes();
-		this._checkBackdrop();
+		this.checkBackdrop();
 	}
 
 	/**
-	 * JODO: Make this work properly for the following breakpoints:
-	 * Lg: currently working as intended - only needs to worry about left and right panes.
-	 * Md && Sm: should add a backdrop when context pane is opened - cbar state doesn't matter.
-	 * Xs: should add a backdrop when cbar is opened
+	 * Using this will add or remove backdrops for overlaying panes.
 	 */
 	@VuexAction
-	private async _checkBackdrop() {
+	async checkBackdrop() {
 		if (
 			(!!this.overlayedRightPane || !!this.overlayedLeftPane) &&
 			// We only want backdrops on the Lg breakpoint if the pane isn't context.
@@ -326,7 +323,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			this._addBackdrop();
 			backdrop!.$on('clicked', () => {
 				this._clearPanes();
-				this._checkBackdrop();
+				this.checkBackdrop();
 			});
 		} else if (backdrop) {
 			this._removeBackdrop();
