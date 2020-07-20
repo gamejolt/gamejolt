@@ -26,8 +26,10 @@
 	user-select: none
 	z-index: $zindex-backdrop
 	opacity: 0
-	transition: opacity 300ms
+	transition: opacity 300ms, backdrop-filter 300ms
 	will-change: opacity
+	backdrop-filter: blur(2px)
+	-webkit-backdrop-filter: blur(2px)
 
 	&.active
 		opacity: 1

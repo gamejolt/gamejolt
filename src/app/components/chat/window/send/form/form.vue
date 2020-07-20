@@ -3,8 +3,10 @@
 		<app-shortkey shortkey="tab" @press="onTabKeyPressed" />
 
 		<div class="-editing-message" v-if="isEditing">
-			Editing Message
-			<a class="-editing-message-cancel" @click="cancel">Cancel</a>
+			<translate>Editing Message</translate>
+			<a class="-editing-message-cancel" @click="cancel">
+				<translate>Cancel</translate>
+			</a>
 		</div>
 
 		<app-form-group
@@ -39,10 +41,10 @@
 
 			<app-button
 				:disabled="!valid || !hasContent"
-				v-app-tooltip="$gettext(`Send message`)"
+				v-app-tooltip="isEditing ? $gettext(`Edit message`) : $gettext(`Send message`)"
 				class="-send-button"
 				sparse
-				icon="share-airplane"
+				:icon="isEditing ? 'edit' : 'share-airplane'"
 				:primary="hasContent"
 				:trans="!hasContent"
 				:solid="hasContent"
@@ -74,14 +76,22 @@ $-button-padding = 48px
 	position: relative
 	display: flex
 	margin-bottom: 8px
-	padding: 4px 16px 4px
+	padding-top: 4px
+	padding-bottom: 4px
+	padding-left: $left-gutter-size + $avatar-size
 	background-color: var(--theme-bg-offset)
 	font-size: $font-size-small
+	border-top-left-radius: $border-radius-base
+	border-top-right-radius: $border-radius-base
+
+	@media $media-xs
+		padding-left: 4px
 
 	&-cancel
 		position: absolute
-		right: 0
-		padding-right: 16px
+		right: 4px
+		@media $media-md-up
+			padding-right: 12px
 
 .-input
 	margin-right: 4px
