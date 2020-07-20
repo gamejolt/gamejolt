@@ -19,7 +19,7 @@
 					filesize: maxFilesize,
 					max_img_dimensions: [maxWidth, maxHeight],
 				}"
-				accept=".png,.jpg,.jpeg"
+				accept=".png,.jpg,.jpeg,.webp"
 				:multiple="true"
 				@changed="imagesSelected()"
 			/>

@@ -10,8 +10,8 @@
 				<div class="row">
 					<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 						<p class="lead">
-							Promote indie games on your YouTube, Twitch and Mixer channels and earn revenue when
-							people buy the game!
+							Promote indie games on your YouTube and Twitch channels and earn revenue
+							when people buy the game!
 						</p>
 
 						<app-button
@@ -38,9 +38,9 @@
 							<h4 class="text-center">Indies supporting indies</h4>
 
 							<p>
-								When you promote games from your favorite indie game developers on your YouTube,
-								Twitch or Mixer channels, they’ll support you right back! Feel that indie
-								fellowship.
+								When you promote games from your favorite indie game developers on
+								your YouTube or Twitch channels, they’ll support you right back!
+								Feel that indie fellowship.
 							</p>
 						</div>
 
@@ -52,9 +52,10 @@
 							<h4 class="text-center">Revenue Share</h4>
 
 							<p>
-								Developers in the program will show appreciation for your hard work by sharing 10%
-								of revenue with you on sales resulting from your videos/streams! Mmm, 10% profit
-								spells “pumpkin spice latte”, and it has your name on it.
+								Developers in the program will show appreciation for your hard work
+								by sharing 10% of revenue with you on sales resulting from your
+								videos/streams! Mmm, 10% profit spells “pumpkin spice latte”, and it
+								has your name on it.
 							</p>
 						</div>
 
@@ -68,8 +69,9 @@
 							<h4 class="text-center">Access any game</h4>
 
 							<p>
-								No need to purchase games or ask for keys -- all games in the program have been
-								willingly provided by their owners! No really, we didn’t force them or anything.
+								No need to purchase games or ask for keys -- all games in the
+								program have been willingly provided by their owners! No really, we
+								didn’t force them or anything.
 							</p>
 						</div>
 					</div>
@@ -86,15 +88,17 @@
 							<h3>How does it work?</h3>
 
 							<p>
-								As a partner, you will be able to generate a referral link for any paid game in the
-								partner program. Simply use that link in your video description, or while streaming.
-								Any purchase resulting from that link gives you 10% of the sale.
+								As a partner, you will be able to generate a referral link for any
+								paid game in the partner program. Simply use that link in your video
+								description, or while streaming. Any purchase resulting from that
+								link gives you 10% of the sale.
 							</p>
 
 							<p>
-								Gamers will be presented with a message prior to their purchase letting them know
-								the game is part of the Game Jolt Partner Program. They will be aware that a portion
-								of the revenue will go to you as a partner, as well as the developer.
+								Gamers will be presented with a message prior to their purchase
+								letting them know the game is part of the Game Jolt Partner Program.
+								They will be aware that a portion of the revenue will go to you as a
+								partner, as well as the developer.
 							</p>
 
 							<h3>Who should sign up?</h3>
@@ -102,40 +106,37 @@
 							<p>
 								<app-jolticon icon="youtube" />
 								<strong>YouTubers</strong>
-								must have at least 50,000 subs and an average of 3,000 views per video.
+								must have at least 50,000 subs and an average of 3,000 views per
+								video.
 							</p>
 
 							<p>
 								<app-jolticon icon="twitch" />
 								<strong>Twitch streamers</strong>
-								must have at least 3,000 followers. If you're a Twitch partner, we'll automatically
-								make you a Game Jolt partner.
+								must have at least 3,000 followers. If you're a Twitch partner,
+								we'll automatically make you a Game Jolt partner.
 							</p>
 
 							<p>
-								<app-jolticon icon="mixer" />
-								<strong>Mixer streamers</strong>
-								must have at least 3,000 followers. If you're a Mixer partner, we'll automatically
-								make you a Game Jolt partner.
-							</p>
-
-							<p>
-								If you don't meet these requirements, but would like to be considered, apply anyway!
+								If you don't meet these requirements, but would like to be
+								considered, apply anyway!
 							</p>
 
 							<h3>I'm a dev. How do I add my game to the program?</h3>
 
 							<p>
-								If it's a new game, you will be presented with the option to include it when you add
-								your game to the site.
+								If it's a new game, you will be presented with the option to include
+								it when you add your game to the site.
 							</p>
 
 							<p>
-								If it's an existing game, you will have to opt it in. Simply go to your
+								If it's an existing game, you will have to opt it in. Simply go to
+								your
 								<router-link :to="{ name: 'home' }">Dashboard</router-link>
 								, click to manage your game, click
 								<strong>Details</strong>
-								on the left, and you will see the option to include your game into the program.
+								on the left, and you will see the option to include your game into
+								the program.
 							</p>
 
 							<app-button
