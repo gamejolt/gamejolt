@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
 import { EventBus, EventBusDeregister } from '../../../../../system/event/event-bus.service';
 import { isMac } from '../../../../../utils/utils';
 import { propRequired } from '../../../../../utils/vue';
@@ -92,5 +92,10 @@ export default class AppChatWindowSend extends Vue {
 
 	onSingleLineModeChanged(singleLineMode: boolean) {
 		this.singleLineMode = singleLineMode;
+	}
+
+	@Watch('room.id')
+	async onRoomChanged() {
+		this.isEditing = false;
 	}
 }
