@@ -18,44 +18,46 @@
 			</a>
 		</app-shell-cbar-item>
 
-		<!-- Chat -->
-		<app-shell-cbar-item
-			v-if="chat"
-			class="-control"
-			:notification-count="chat.friendNotificationsCount"
-			:is-active="visibleLeftPane === 'chat'"
-			is-control
-		>
-			<a
-				class="-control-item"
-				@click="toggleLeftPane('chat')"
-				v-app-tooltip.right="$gettext(`Chat and Friends List (c)`)"
+		<template v-if="user">
+			<!-- Chat -->
+			<app-shell-cbar-item
+				v-if="chat"
+				class="-control"
+				:notification-count="chat.friendNotificationsCount"
+				:is-active="visibleLeftPane === 'chat'"
+				is-control
 			>
-				<!-- JODO: Event changed from 'top-nav' to 'cbar', gotta make sure that's appropriate. -->
-				<!-- v-app-track-event="`cbar:chat:toggle`" -->
-				<app-jolticon class="-control-icon" icon="user-messages" />
-			</a>
-		</app-shell-cbar-item>
+				<a
+					class="-control-item"
+					@click="toggleLeftPane('chat')"
+					v-app-tooltip.right="$gettext(`Chat and Friends List (c)`)"
+				>
+					<!-- JODO: Event changed from 'top-nav' to 'cbar', gotta make sure that's appropriate. -->
+					<!-- v-app-track-event="`cbar:chat:toggle`" -->
+					<app-jolticon class="-control-icon" icon="user-messages" />
+				</a>
+			</app-shell-cbar-item>
 
-		<!-- Library - !Screen.isXs -->
-		<app-shell-cbar-item
-			v-if="!Screen.isXs"
-			class="-control"
-			:is-active="visibleLeftPane === 'library'"
-			is-control
-		>
-			<a
-				class="-control-item"
-				@click="toggleLeftPane('library')"
-				v-app-tooltip.right="$gettext(`Game Library (m)`)"
+			<!-- Library - !Screen.isXs -->
+			<app-shell-cbar-item
+				v-if="!Screen.isXs"
+				class="-control"
+				:is-active="visibleLeftPane === 'library'"
+				is-control
 			>
-				<!-- JODO: Event changed from 'top-nav:main-menu' to 'cbar:playlists', gotta make sure that's appropriate. -->
-				<!-- v-app-track-event="`cbar:playlists:toggle`" -->
-				<app-jolticon class="-control-icon" icon="books" />
-			</a>
-		</app-shell-cbar-item>
+				<a
+					class="-control-item"
+					@click="toggleLeftPane('library')"
+					v-app-tooltip.right="$gettext(`Game Library (m)`)"
+				>
+					<!-- JODO: Event changed from 'top-nav:main-menu' to 'cbar:playlists', gotta make sure that's appropriate. -->
+					<!-- v-app-track-event="`cbar:playlists:toggle`" -->
+					<app-jolticon class="-control-icon" icon="books" />
+				</a>
+			</app-shell-cbar-item>
+		</template>
 
-		<hr class="-hr" />
+		<hr v-if="Screen.isXs || user" class="-hr" />
 	</div>
 </template>
 

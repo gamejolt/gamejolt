@@ -57,12 +57,6 @@ export default class AppShellTopNav extends Vue {
 	readonly Screen = Screen;
 	readonly Connection = Connection;
 
-	get shouldShowContextButton() {
-		// Cbar doesn't normally show on Xs devices, so we want to show the toggle button if
-		// there's either a user logged in or if the route has an available context pane.
-		return Screen.isXs && (!!this.$route.meta.contextPane || !!this.app.user);
-	}
-
 	get shouldShowSearch() {
 		return !Screen.isXs && this.$route.name !== 'discover.communities';
 	}

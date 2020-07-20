@@ -92,15 +92,12 @@ export default class AppShell extends Vue {
 	mounted() {
 		// When changing routes, hide all overlays.
 		this.$router.beforeEach((_to, _from, next) => {
-			if (_to.meta.contextPane === 'channels' || _to.meta.contextPane === 'context') {
-				// If the target route has a context pane and we're not currently showing one,
-				// toggle the left-pane as 'context' to show it.
-				if (this.visibleLeftPane !== 'context') {
-					this.toggleLeftPane('context');
-				}
-			} else {
-				// Otherwise, if the target route has no context pane available, we want to hide all panes.
+			if (!_to.meta.contextPane) {
+				// We want to close all panes if there's no context pane available from the next route.
 				this.toggleLeftPane();
+			} else if (this.visibleLeftPane !== 'context') {
+				// Open the context pane if it's not already open and the next route has one available.
+				this.toggleLeftPane('context');
 			}
 			next();
 		});

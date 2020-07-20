@@ -145,7 +145,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	get hasCbar() {
-		return !this.isShellHidden && !!this.app.user && (this.mobileCbarShowing || !Screen.isXs);
+		return !this.isShellHidden && (this.mobileCbarShowing || !Screen.isXs);
 	}
 
 	get visibleLeftPane() {
@@ -282,6 +282,9 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		this.checkBackdrop();
 	}
 
+	/**
+	 * Passing no value will close any open left-panes.
+	 */
 	@VuexAction
 	async toggleLeftPane(type?: string) {
 		this._toggleLeftPane(type);
@@ -509,7 +512,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		}
 
 		this.mobileCbarShowing = !!this.overlayedLeftPane;
-
 		this.overlayedRightPane = '';
 	}
 

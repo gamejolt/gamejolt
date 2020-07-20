@@ -129,8 +129,7 @@
 					</template>
 				</app-page-header>
 
-				<app-nav-channels-inline v-if="!isEditing" />
-				<app-nav-edit v-else />
+				<app-nav-edit v-if="isEditing" />
 			</template>
 
 			<router-view />

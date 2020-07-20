@@ -31,7 +31,6 @@ import {
 } from './view.store';
 import AppCommunitiesViewCard from './_card/card.vue';
 import AppEditableThumbnail from './_editable-thumbnail/editable-thumbnail.vue';
-import AppNavChannelsInline from './_nav/channels/channels-inline.vue';
 import AppNavChannels from './_nav/channels/channels.vue';
 import AppNavEdit from './_nav/edit/edit.vue';
 
@@ -48,7 +47,6 @@ import AppNavEdit from './_nav/edit/edit.vue';
 		AppCommunityVerifiedTick,
 		AppCommunitiesViewCard,
 		AppNavChannels,
-		AppNavChannelsInline,
 		AppNavEdit,
 		AppEditableThumbnail,
 	},

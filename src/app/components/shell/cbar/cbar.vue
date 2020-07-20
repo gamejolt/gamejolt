@@ -17,7 +17,7 @@
 						@contextmenu.native.prevent
 					/>
 				</app-shell-cbar-item>
-				<app-shell-cbar-item>
+				<app-shell-cbar-item v-if="user">
 					<app-community-add-widget
 						tooltip-placement="right"
 						@contextmenu.native.prevent

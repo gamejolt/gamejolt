@@ -3,7 +3,7 @@
 		<div ref="left" class="navbar-left" :style="{ 'min-width': minColWidth }">
 			<div class="-col" v-app-observe-dimensions="checkColWidths">
 				<a
-					v-if="shouldShowContextButton"
+					v-if="Screen.isXs"
 					class="-menu-toggle navbar-item"
 					:class="{
 						active: !!visibleLeftPane,
@@ -22,7 +22,7 @@
 					class="navbar-item"
 					:class="{
 						active: $route.name === 'home',
-						'-menu-toggle': !shouldShowContextButton && Screen.isMobile,
+						'-menu-toggle': Screen.isSm,
 					}"
 					:to="{ name: 'home' }"
 					v-app-track-event="`top-nav:main-menu:home`"
