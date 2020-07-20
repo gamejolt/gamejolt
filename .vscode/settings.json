@@ -51,7 +51,7 @@
 	"stylusSupremacy.insertNewLineAroundProperties": false,
 	"stylusSupremacy.insertNewLineAroundOthers": false,
 	"stylusSupremacy.alwaysUseZeroWithoutUnit": false,
-	"stylusSupremacy.preserveNewLinesBetweenPropertyValues": false,
+	"stylusSupremacy.preserveNewLinesBetweenPropertyValues": true,
 	"stylusSupremacy.insertParenthesisAfterNegation": true,
 	"stylusSupremacy.insertParenthesisAroundIfCondition": true,
 	"stylusSupremacy.insertNewLineBeforeElse": false,
