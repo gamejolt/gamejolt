@@ -6,6 +6,7 @@
 		-->
 		<app-content-editor
 			class="fill-bg form-control content-editor-form-control"
+			:class="{ '-sleek': sleek }"
 			ref="editor"
 			:name="group.name"
 			:id="id"
@@ -46,6 +47,12 @@
 .content-editor-form-control
 	height: auto
 	resize: vertical
+
+	&.-sleek
+		border-color: transparent !important
+
+		@media $media-xs
+			border-radius: 0 $border-radius-base 0 0
 
 .content-editor-form-control:focus-within
 	theme-prop('border-color', 'fg-muted')

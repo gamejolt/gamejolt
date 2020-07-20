@@ -21,6 +21,7 @@
 					}"
 					:max-height="160"
 					:display-rules="displayRules"
+					:sleek="Screen.isXs"
 					autofocus
 					@submit="onSubmit"
 					@insert-block-node="onEditorInsertBlockNode"
@@ -57,20 +58,22 @@ $-button-padding = 48px
 	display: flex
 	position: relative
 	margin-bottom: 16px
+	padding-top: 8px
 
 	@media $media-xs
 		margin-bottom: 2px
+		padding-top: 4px
 
 	&-shifted
-		margin-bottom: 52px
+		margin-bottom: 54px
 
 .-input
-	margin-right: 4px
 	width: "calc(100% + 4px - %s)" % ($-button-padding)
 
-	@media $media-md-up
-		margin-right: 8px
+	@media $media-sm-up
 		margin-left: $left-gutter-size + $avatar-size
+
+	@media $media-md-up
 		width: "calc(100% - %s)" % ($left-gutter-size + $avatar-size + $-button-padding)
 
 .-send-button
@@ -78,7 +81,14 @@ $-button-padding = 48px
 	align-items: center
 	justify-content: center
 	width: 40px
+	height: $-button-padding
+	margin: 0 4px
+	flex: none
+	align-self: flex-end
 	transition: color 0.3s, background-color 0.3s
+
+	@media $media-sm-up
+		margin-right: 8px
 
 	&.-disabled
 		&:hover

@@ -36,6 +36,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	@Prop(propRequired(Boolean)) singleLineMode!: boolean;
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 
+	readonly Screen = Screen;
 	readonly contentContext: ContentContext = 'chat-message';
 	// Allow images to be up to 100px in height so that image and a chat message fit into the editor without scrolling.
 	readonly displayRules = new ContentRules({ maxMediaWidth: 125, maxMediaHeight: 100 });
@@ -74,7 +75,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	}
 
 	get shouldShiftEditor() {
-		return Screen.isMobile && this.isEditorFocused;
+		return Screen.isXs && this.isEditorFocused;
 	}
 
 	get hasContent() {
