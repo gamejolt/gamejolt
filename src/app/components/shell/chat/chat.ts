@@ -2,7 +2,6 @@ import Vue from 'vue';
 import { Component, InjectReactive, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { EscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
-import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import AppShortkey from '../../../../_common/shortkey/shortkey.vue';
 import { Store } from '../../../store/index';
@@ -58,8 +57,7 @@ export default class AppShellChat extends Vue {
 	@Watch('isRightPaneVisible')
 	onRightPaneChange(isVisible: boolean) {
 		if (isVisible) {
-			// xs size needs to show the friends list
-			if (this.chat.sessionRoomId && !Screen.isXs) {
+			if (this.chat.sessionRoomId) {
 				enterChatRoom(this.chat, this.chat.sessionRoomId);
 			}
 		} else {
