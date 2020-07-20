@@ -10,7 +10,11 @@
 			'-chat-message-new': isNew,
 		}"
 	>
-		<router-link v-if="!message.combine" class="chat-window-message-avatar" :to="message.user.url">
+		<router-link
+			v-if="!message.combine"
+			class="chat-window-message-avatar"
+			:to="message.user.url"
+		>
 			<img class="img-responsive" :src="message.user.img_avatar" alt="" />
 		</router-link>
 
@@ -92,6 +96,10 @@
 				</template>
 
 				<app-content-viewer :source="message.content" :display-rules="displayRules" />
+
+				<div v-if="message.edited_on" class="-edited text-muted">
+					<translate>(edited)</translate>
+				</div>
 			</div>
 		</div>
 	</div>
