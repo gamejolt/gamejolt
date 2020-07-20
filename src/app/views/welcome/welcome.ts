@@ -36,12 +36,7 @@ export default class RouteWelcome extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		// Since the app section and auth section may run on different ports
-		// the local storage key used to start the onboarding flow might not be available.
-		// This allows us to test in dev.
-		if (GJ_ENVIRONMENT === 'development') {
-			Onboarding.start();
-		}
+		Onboarding.start();
 
 		if (!Onboarding.isOnboarding) {
 			this.$router.push({ name: 'home' });
