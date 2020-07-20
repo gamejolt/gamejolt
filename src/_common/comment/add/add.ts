@@ -64,6 +64,10 @@ export default class FormComment extends BaseForm<Comment> implements FormOnInit
 		}
 	}
 
+	get shouldShowGuidelines() {
+		return !this.formModel.comment_content && !this.changed && this.method !== 'edit';
+	}
+
 	async onInit() {
 		if (!this.model) {
 			this.setField('comment_content', '');
