@@ -9,9 +9,23 @@
 
 		<div class="-main">
 			<div v-if="usersplit" class="-usersplit">
-				{{ item.user.display_name }}
+				<template v-if="item.user">
+					{{ item.user.display_name }}
+				</template>
+				<!-- This is for when the user that took the action is not available anymore. -->
+				<template v-else>
+					<span class="text-muted">
+						<translate>Someone</translate>
+						<app-jolticon
+							icon="help-circle"
+							v-app-tooltip="$gettext(`This user is no longer active.`)"
+						/>
+					</span>
+				</template>
 				<span class="-user-sub">
-					<template v-if="!Screen.isXs"> @{{ item.user.username }} </template>
+					<template v-if="item.user && !Screen.isXs">
+						@{{ item.user.username }}
+					</template>
 					<span
 						class="-user-sub-date"
 						v-app-tooltip="
@@ -155,8 +169,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 $-left-size = 54px
 $-avatar-size = 40px
