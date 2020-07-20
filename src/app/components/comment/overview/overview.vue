@@ -37,8 +37,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .comment-overview .-comment-container:not(:last-child)
 	border-bottom-width: $border-width-small
@@ -49,6 +49,7 @@
 	.-comment
 		border-bottom-left-radius: $border-radius-large
 		border-bottom-right-radius: $border-radius-large
+
 .-comment-container:first-child
 	.-comment
 		border-top-left-radius: $border-radius-large
