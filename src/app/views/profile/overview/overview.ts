@@ -130,7 +130,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	knownFollowers: User[] = [];
 	knownFollowerCount = 0;
 
-	permalinkWatcher?: Function;
+	permalinkWatchDeregister?: Function;
 
 	readonly User = User;
 	readonly UserFriendship = UserFriendship;
@@ -316,7 +316,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 		if (this.user) {
 			CommentThreadModal.showFromPermalink(this.$router, this.user, 'shouts');
-			this.permalinkWatcher = CommentThreadModal.watchForPermalink(
+			this.permalinkWatchDeregister = CommentThreadModal.watchForPermalink(
 				this.$router,
 				this.user,
 				'shouts'
@@ -334,9 +334,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	destroyed() {
-		if (this.permalinkWatcher) {
-			this.permalinkWatcher();
-			this.permalinkWatcher = undefined;
+		if (this.permalinkWatchDeregister) {
+			this.permalinkWatchDeregister();
+			this.permalinkWatchDeregister = undefined;
 		}
 	}
 

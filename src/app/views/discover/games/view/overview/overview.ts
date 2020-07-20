@@ -184,7 +184,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	feed: ActivityFeedView | null = null;
 
-	permalinkWatcher?: Function;
+	permalinkWatchDeregister?: Function;
 
 	readonly Screen = Screen;
 	readonly Environment = Environment;
@@ -248,7 +248,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 		if (this.game) {
 			CommentThreadModal.showFromPermalink(this.$router, this.game, 'comments');
-			this.permalinkWatcher = CommentThreadModal.watchForPermalink(
+			this.permalinkWatchDeregister = CommentThreadModal.watchForPermalink(
 				this.$router,
 				this.game,
 				'comments'
@@ -268,9 +268,9 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	destroyed() {
-		if (this.permalinkWatcher) {
-			this.permalinkWatcher();
-			this.permalinkWatcher = undefined;
+		if (this.permalinkWatchDeregister) {
+			this.permalinkWatchDeregister();
+			this.permalinkWatchDeregister = undefined;
 		}
 	}
 
