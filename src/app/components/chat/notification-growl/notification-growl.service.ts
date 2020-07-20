@@ -1,13 +1,12 @@
 import { ContentDocument } from '../../../../_common/content/content-document';
 import { Growls } from '../../../../_common/growls/growls.service';
-import { ChatClient, enterChatRoom, isInChatRoom } from '../client';
+import { ChatClient, enterChatRoom } from '../client';
 import { ChatMessage } from '../message';
 import AppChatNotificationGrowl from './notification-growl.vue';
 
 export class ChatNotificationGrowl {
 	static async show(chat: ChatClient, message: ChatMessage) {
-		// Skip if already in the room.
-		if (isInChatRoom(chat, message.room_id)) {
+		if (chat.isFocused) {
 			return;
 		}
 
