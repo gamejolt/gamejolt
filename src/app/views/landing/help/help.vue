@@ -19,7 +19,7 @@
 			</div>
 		</section>
 
-		<section class="section">
+		<section class="section -content">
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-1"></div>
@@ -33,3 +33,10 @@
 </template>
 
 <script lang="ts" src="./help"></script>
+
+<style lang="stylus" scoped>
+// Get rid of the top margin that headings produce from the compiled markdown.
+.-content >>>
+	& h1:first-child
+		margin-top: 0
+</style>
