@@ -32,7 +32,7 @@
 			</div>
 
 			<app-button
-				:disabled="!valid || !hasContent"
+				:disabled="isSendButtonDisabled"
 				v-app-tooltip="$gettext(`Send message`)"
 				class="-send-button"
 				sparse
@@ -47,9 +47,9 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '../../variables'
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '../../variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 $-button-padding = 48px
 
@@ -66,12 +66,12 @@ $-button-padding = 48px
 
 .-input
 	margin-right: 4px
-	width: "calc(100% + 4px - %s)" % ($-button-padding)
+	width: 'calc(100% + 4px - %s)' % $-button-padding
 
 	@media $media-md-up
 		margin-right: 8px
 		margin-left: $left-gutter-size + $avatar-size
-		width: "calc(100% - %s)" % ($left-gutter-size + $avatar-size + $-button-padding)
+		width: 'calc(100% - %s)' % ($left-gutter-size + $avatar-size + $-button-padding)
 
 .-send-button
 	display: flex
