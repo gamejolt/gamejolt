@@ -111,11 +111,13 @@ export class ChatRoomChannel extends Channel {
 	}
 
 	private onUpdateMsg(data: Partial<ChatMessage>) {
-		const message = new ChatMessage(data);
+		const edited = new ChatMessage(data);
 		if (this.room) {
 			const index = this.client.messages[this.roomId].findIndex(msg => msg.id === data.id);
+			const message = this.client.messages[this.roomId][index];
 
-			this.client.messages[this.roomId][index].content = message.content;
+			message.content = edited.content;
+			message.edited_on = edited.edited_on;
 		}
 	}
 
