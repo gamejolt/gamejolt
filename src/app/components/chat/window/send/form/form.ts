@@ -92,7 +92,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	}
 
 	get isSendButtonDisabled() {
-		if (!this.valid) {
+		if (!this.valid || !this.hasContent) {
 			return false;
 		}
 
