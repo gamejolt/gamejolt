@@ -8,7 +8,7 @@ import { propOptional } from '../../utils/vue';
 import { TooltipModel } from './tooltip-model';
 
 @Component({})
-export default class AppTooltip extends Vue {
+export default class TooltipComponent extends Vue {
 	@Prop(propOptional(TooltipModel)) tooltip?: TooltipModel;
 
 	$el!: HTMLDivElement;

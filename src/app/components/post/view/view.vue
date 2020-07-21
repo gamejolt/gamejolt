@@ -57,13 +57,13 @@
 						</div>
 					</div>
 
-					<template v-if="post.hasPoll">
+					<app-event-item-controls-overlay v-if="post.hasPoll">
 						<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 
 						<br />
-					</template>
+					</app-event-item-controls-overlay>
 
-					<template v-if="communities.length">
+					<app-event-item-controls-overlay v-if="communities.length">
 						<app-scroll-scroller class="-communities" horizontal thin>
 							<app-community-pill
 								v-for="postCommunity of communities"
@@ -87,7 +87,7 @@
 						</template>
 
 						<br />
-					</template>
+					</app-event-item-controls-overlay>
 
 					<app-event-item-controls
 						:post="post"

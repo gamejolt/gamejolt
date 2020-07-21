@@ -32,14 +32,14 @@
 			</div>
 
 			<app-button
-				:disabled="isSendButtonDisabled"
+				:disabled="!valid || !hasContent"
 				v-app-tooltip="$gettext(`Send message`)"
 				class="-send-button"
 				sparse
 				icon="share-airplane"
-				:primary="isSendButtonSolid"
-				:trans="!isSendButtonSolid"
-				:solid="isSendButtonSolid"
+				:primary="hasContent"
+				:trans="!hasContent"
+				:solid="hasContent"
 				@click="onSubmit"
 			/>
 		</app-form-group>
@@ -47,16 +47,15 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '../../variables'
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '../../variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 $-button-padding = 48px
 
 .-form
 	display: flex
 	position: relative
-	align-items: center
 	margin-bottom: 16px
 
 	@media $media-xs
@@ -67,15 +66,25 @@ $-button-padding = 48px
 
 .-input
 	margin-right: 4px
-	width: "calc(100% + 4px - %s)" % ($-button-padding)
+	width: 'calc(100% + 4px - %s)' % $-button-padding
 
 	@media $media-md-up
 		margin-right: 8px
 		margin-left: $left-gutter-size + $avatar-size
-		width: "calc(100% - %s)" % ($left-gutter-size + $avatar-size + $-button-padding)
+		width: 'calc(100% - %s)' % ($left-gutter-size + $avatar-size + $-button-padding)
 
 .-send-button
-	width: 35px
+	display: flex
+	align-items: center
+	justify-content: center
+	width: 40px
+	transition: color 0.3s, background-color 0.3s
+
+	&.-disabled
+		&:hover
+			color: var(--theme-fg) !important
+			background-color: transparent !important
+			border-color: transparent !important
 </style>
 
 <script lang="ts" src="./form"></script>

@@ -49,7 +49,7 @@
 					filesize: maxFilesize,
 					max_img_dimensions: [maxWidth, maxHeight],
 				}"
-				accept=".png,.jpg,.jpeg"
+				accept=".png,.jpg,.jpeg,.webp"
 			/>
 
 			<app-form-control-errors />

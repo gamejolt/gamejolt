@@ -5,7 +5,7 @@
 				<div class="clearfix">
 					<app-jolticon class="-icon" icon="broadcast" big />
 					<div class="-content">
-						{{ post.lead_snippet }}
+						{{ post.getShortLead() }}
 					</div>
 				</div>
 			</app-card>

@@ -1,12 +1,19 @@
 @require '../../variables'
 @require '~styles-lib/mixins'
 
+$-button-size = 60px
+
 .devlog-post-media
 	margin-top: $-item-padding-xs-v
 	position: relative
 
 	@media $media-sm-up
 		margin-top: $-item-padding-v
+
+	&:hover
+		.-next, .-prev
+			visibility: visible
+			opacity: 1
 
 .-container
 	display: block
@@ -23,34 +30,36 @@
 	transition: transform 300ms $strong-ease-out
 
 .-prev, .-next
-	change-bg('bg-subtle')
-	theme-prop('color', 'fg')
-	display: none
+	rounded-corners-lg()
+	visibility: hidden
+	opacity: 0
 	position: absolute
 	top: 50%
-	height: 80px
-	width: $grid-gutter-width * 0.75
+	width: $-button-size
+	height: $-button-size
 	line-height: @height
 	margin-top: -(@height / 2)
 	text-align: center
 	z-index: 2
-	user-select: none
+	transition: opacity 0.2s ease
 
-	&:hover
-		theme-prop('color', 'link')
+	// Hide and disable slider controls for mobile devices
+	@media screen and (pointer: coarse)
+		display: none
 
-	@media $media-sm-up
-		display: block
+	> .jolticon
+		vertical-align: middle
+		font-size: ($-button-size / 2)
 
 .-prev
-	left: -($-item-padding-container + $grid-gutter-width * 0.75 + $-border-width)
-	border-top-left-radius: $border-radius-large
-	border-bottom-left-radius: $border-radius-large
+	left: -($-item-padding-container)
+	border-top-left-radius: 0
+	border-bottom-left-radius: 0
 
 .-next
-	right: -($-item-padding-container + $grid-gutter-width * 0.75 + $-border-width)
-	border-top-right-radius: $border-radius-large
-	border-bottom-right-radius: $border-radius-large
+	right: -($-item-padding-container)
+	border-top-right-radius: 0
+	border-bottom-right-radius: 0
 
 .-indicator
 	margin-top: 10px
