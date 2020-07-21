@@ -10,6 +10,7 @@
 		"pmneo.tsimporter",
 		"octref.vetur",
 		"thisismanta.stylus-supremacy",
-		"rebornix.project-snippets"
+		"rebornix.project-snippets",
+		"dbaeumer.vscode-eslint"
 	]
 }
