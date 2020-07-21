@@ -58,15 +58,15 @@ $-button-padding = 48px
 .-form
 	display: flex
 	position: relative
-	padding-top: 4px
 	margin-top: 8px
 	margin-bottom: 16px
-	border-top: $border-width-base solid var(--theme-light)
+	padding-top: 4px
 
 	@media $media-xs
-		padding-top: 1px
 		margin-top: 4px
-		margin-bottom: 2px
+		margin-bottom: 0
+		border-top: $border-width-base solid var(--theme-bg-subtle)
+		padding-top: 1px
 
 	&-shifted
 		margin-bottom: 52px
