@@ -641,9 +641,7 @@ export function setChatFocused(chat: ChatClient, focused: boolean) {
 export function removeMessage(chat: ChatClient, msgId: number) {
 	const room = chat.room;
 	if (room) {
-		chat.roomChannels[room.id].push('message_remove', { id: msgId }).receive('ok', () => {
-			arrayRemove(chat.messages[room.id], i => i.id === msgId);
-		});
+		chat.roomChannels[room.id].push('message_remove', { id: msgId });
 	}
 }
 
