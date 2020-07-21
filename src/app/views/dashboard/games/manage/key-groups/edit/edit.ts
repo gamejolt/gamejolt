@@ -100,7 +100,6 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 	async removeGroup(keyGroup: KeyGroup) {
 		const resolved = await ModalConfirm.show(
 			this.$gettext(
-				// tslint:disable-next-line:max-line-length
 				'Are you sure you want to remove this key group? All keys within this key group will be invalidated. Any access that users may have gained from these keys will be revoked. This can not be reversed.'
 			),
 			this.$gettext('Remove key group?')
@@ -130,7 +129,6 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 	async removeKey(key: Key) {
 		const resolved = await ModalConfirm.show(
 			this.$gettext(
-				// tslint:disable-next-line:max-line-length
 				`Are you sure you want to remove this key? This will revoke this key's access, or anyone that has claimed this key. This can not be reversed.`
 			),
 			this.$gettext('Remove key?')

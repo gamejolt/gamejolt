@@ -7,8 +7,8 @@
 						class="bolt anim-fade-in-down"
 						src="~img/jolt.svg"
 						alt=""
-						tooltip="This is a lightning bolt."
 						strict-colors
+						v-app-tooltip="$gettext('This is a lightning bolt.')"
 					/>
 				</h1>
 
@@ -17,8 +17,8 @@
 				<div class="row anim-fade-in-up stagger">
 					<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 						<p class="lead">
-							Millions of gamers, let's players, and indie developers visit Game Jolt each month to
-							get their indie gaming fix.
+							Millions of gamers, let's players, and indie developers visit Game Jolt
+							each month to get their indie gaming fix.
 						</p>
 					</div>
 				</div>
@@ -38,30 +38,33 @@
 					<div class="row">
 						<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 							<p>
-								Game Jolt is run by me, David DeCarmine, and Yaprak DeCarmine, plus the help of the
-								millions of indie developers and gamers on Game Jolt. Together, our mission is to
-								grow indie gaming!
+								Game Jolt is run by me, David DeCarmine, and Yaprak DeCarmine, plus
+								the help of the millions of indie developers and gamers on Game
+								Jolt. Together, our mission is to grow indie gaming!
 							</p>
 
 							<p>
 								In 2002, at the age of 14, I came up with the idea of a platform for
-								indies&mdash;for hobbyists that were creating games for the love of it. Something
-								more personal, more collaborative, and more indie. Where anyone can create a game,
-								show it off, and build an audience. It was kind of crazy. This was way before the
-								existence of current platforms, and before indie gaming became as big as it has.
+								indies&mdash;for hobbyists that were creating games for the love of
+								it. Something more personal, more collaborative, and more indie.
+								Where anyone can create a game, show it off, and build an audience.
+								It was kind of crazy. This was way before the existence of current
+								platforms, and before indie gaming became as big as it has.
 							</p>
 
 							<p>
-								Game Jolt has come a long way since then. After I revamped the site in 2008 it
-								became one of the biggest indie gaming platforms in existence. Today, millions of
-								gamers, let's players, and indie developers visit Game Jolt each month to get their
-								indie gaming fix, and to explore over 100,000 games.
+								Game Jolt has come a long way since then. After I revamped the site
+								in 2008 it became one of the biggest indie gaming platforms in
+								existence. Today, millions of gamers, let's players, and indie
+								developers visit Game Jolt each month to get their indie gaming fix,
+								and to explore over 100,000 games.
 							</p>
 
 							<p>
-								I believe there's power in community. Gamers, let's players, developers, reviewers,
-								journalists: let’s grow this amazing and weird thing that is indie gaming, and
-								celebrate making games for the love of it.
+								I believe there's power in community. Gamers, let's players,
+								developers, reviewers, journalists: let’s grow this amazing and
+								weird thing that is indie gaming, and celebrate making games for the
+								love of it.
 							</p>
 						</div>
 					</div>
@@ -78,7 +81,9 @@
 							<p>
 								<strong>For support</strong>
 								, check out the
-								<router-link :to="{ name: 'forums.landing.overview' }">forums</router-link>
+								<router-link :to="{ name: 'forums.landing.overview' }"
+									>forums</router-link
+								>
 								or email us at
 								<app-contact-link email="contact@gamejolt.com">
 									contact@gamejolt.com
@@ -107,9 +112,9 @@
 					<div class="row">
 						<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 							<p>
-								Please do not modify, recolor, or distort our logo. When resizing please attempt to
-								use multiples: 2x, 4x, etc. Do not use filtering while resizing. Retain the crisp
-								pixel look. It's a pain, we know.
+								Please do not modify, recolor, or distort our logo. When resizing
+								please attempt to use multiples: 2x, 4x, etc. Do not use filtering
+								while resizing. Retain the crisp pixel look. It's a pain, we know.
 							</p>
 
 							<div class="well fill-darkest">
@@ -120,17 +125,28 @@
 								<br />
 
 								<div class="visible-xs text-center">
-									<img src="./gamejolt-logo-dark-1x.png" alt="Game Jolt Logo Dark" />
+									<img
+										src="./gamejolt-logo-dark-1x.png"
+										alt="Game Jolt Logo Dark"
+									/>
 								</div>
 								<div class="hidden-xs text-center">
-									<img src="./gamejolt-logo-dark-2x.png" alt="Game Jolt Logo Dark" />
+									<img
+										src="./gamejolt-logo-dark-2x.png"
+										alt="Game Jolt Logo Dark"
+									/>
 								</div>
 
 								<br />
 
 								<div class="text-right">
 									<span v-for="(size, i) of ['1x', '2x', '3x', '4x']">
-										<a :href="assetUrls['./gamejolt-logo-dark-' + size + '.png']" target="_blank">
+										<a
+											:href="
+												assetUrls['./gamejolt-logo-dark-' + size + '.png']
+											"
+											target="_blank"
+										>
 											{{ size }}
 										</a>
 										<span v-if="i !== 3" class="dot-separator"></span>
@@ -146,17 +162,28 @@
 								<br />
 
 								<div class="visible-xs text-center">
-									<img src="./gamejolt-logo-light-1x.png" alt="Game Jolt Logo Light" />
+									<img
+										src="./gamejolt-logo-light-1x.png"
+										alt="Game Jolt Logo Light"
+									/>
 								</div>
 								<div class="hidden-xs text-center">
-									<img src="./gamejolt-logo-light-2x.png" alt="Game Jolt Logo Light" />
+									<img
+										src="./gamejolt-logo-light-2x.png"
+										alt="Game Jolt Logo Light"
+									/>
 								</div>
 
 								<br />
 
 								<div class="text-right">
 									<span v-for="(size, i) of ['1x', '2x', '3x', '4x']">
-										<a :href="assetUrls['./gamejolt-logo-light-' + size + '.png']" target="_blank">
+										<a
+											:href="
+												assetUrls['./gamejolt-logo-light-' + size + '.png']
+											"
+											target="_blank"
+										>
 											{{ size }}
 										</a>
 										<span v-if="i !== 3" class="dot-separator"></span>
@@ -174,7 +201,10 @@
 										<br />
 
 										<div class="text-center">
-											<img src="./gamejolt-bolt-dark-2x.png" alt="Game Jolt Bolt Dark" />
+											<img
+												src="./gamejolt-bolt-dark-2x.png"
+												alt="Game Jolt Bolt Dark"
+											/>
 										</div>
 
 										<br />
@@ -182,7 +212,11 @@
 										<div class="text-right">
 											<span v-for="(size, i) of ['1x', '2x', '3x', '4x']">
 												<a
-													:href="assetUrls['./gamejolt-bolt-dark-' + size + '.png']"
+													:href="
+														assetUrls[
+															'./gamejolt-bolt-dark-' + size + '.png'
+														]
+													"
 													target="_blank"
 												>
 													{{ size }}
@@ -201,7 +235,10 @@
 										<br />
 
 										<div class="text-center">
-											<img src="./gamejolt-bolt-light-2x.png" alt="Game Jolt Bolt Light" />
+											<img
+												src="./gamejolt-bolt-light-2x.png"
+												alt="Game Jolt Bolt Light"
+											/>
 										</div>
 
 										<br />
@@ -209,7 +246,11 @@
 										<div class="text-right">
 											<span v-for="(size, i) of ['1x', '2x', '3x', '4x']">
 												<a
-													:href="assetUrls['./gamejolt-bolt-light-' + size + '.png']"
+													:href="
+														assetUrls[
+															'./gamejolt-bolt-light-' + size + '.png'
+														]
+													"
 													target="_blank"
 												>
 													{{ size }}
@@ -222,8 +263,9 @@
 							</div>
 
 							<p>
-								The below images should only be used when you are going for a no-color look. Only
-								use straight white, or straight black. Don't recolor them.
+								The below images should only be used when you are going for a
+								no-color look. Only use straight white, or straight black. Don't
+								recolor them.
 							</p>
 
 							<div class="row">
@@ -236,7 +278,10 @@
 										<br />
 
 										<div class="text-center">
-											<img src="./gamejolt-bolt-white-2x.png" alt="Game Jolt Bolt White" />
+											<img
+												src="./gamejolt-bolt-white-2x.png"
+												alt="Game Jolt Bolt White"
+											/>
 										</div>
 
 										<br />
@@ -244,7 +289,11 @@
 										<div class="text-right">
 											<span v-for="(size, i) of ['1x', '2x', '3x', '4x']">
 												<a
-													:href="assetUrls['./gamejolt-bolt-white-' + size + '.png']"
+													:href="
+														assetUrls[
+															'./gamejolt-bolt-white-' + size + '.png'
+														]
+													"
 													target="_blank"
 												>
 													{{ size }}
@@ -263,7 +312,10 @@
 										<br />
 
 										<div class="text-center">
-											<img src="./gamejolt-bolt-black-2x.png" alt="Game Jolt Bolt Black" />
+											<img
+												src="./gamejolt-bolt-black-2x.png"
+												alt="Game Jolt Bolt Black"
+											/>
 										</div>
 
 										<br />
@@ -271,7 +323,11 @@
 										<div class="text-right">
 											<span v-for="(size, i) of ['1x', '2x', '3x', '4x']">
 												<a
-													:href="assetUrls['./gamejolt-bolt-black-' + size + '.png']"
+													:href="
+														assetUrls[
+															'./gamejolt-bolt-black-' + size + '.png'
+														]
+													"
 													target="_blank"
 												>
 													{{ size }}

@@ -38,7 +38,6 @@ export function createLightbox(mediaSource: LightboxMediaSource) {
 	const elem = document.createElement('div');
 	window.document.body.appendChild(elem);
 
-	// tslint:disable-next-line: no-use-before-declare
 	const lightbox = new AppLightbox({
 		propsData: {
 			mediaSource,

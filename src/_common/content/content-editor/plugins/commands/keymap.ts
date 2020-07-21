@@ -7,6 +7,7 @@ import AppContentEditor from '../../content-editor';
 import { ContentListService } from '../../content-list.service';
 import { ContentEditorSchema } from '../../schemas/content-editor-schema';
 import { exitCodeStart } from './exit-code-start-command';
+import { exitInlineCode } from './exit-inline-code-command';
 import { insertHardBreak } from './insert-hard-break-command';
 import { showLinkModal } from './link-modal-command';
 import { multiLineEnter } from './multi-line-enter-command';
@@ -37,6 +38,8 @@ export function getContentEditorKeymap(editor: AppContentEditor, schema: Content
 		},
 		// Add/remove link
 		'Mod-k': showLinkModal(editor.capabilities, schema),
+		ArrowRight: exitInlineCode(editor.capabilities, schema, false),
+		Space: exitInlineCode(editor.capabilities, schema, true),
 	} as { [k: string]: any };
 
 	const enterCommands = [] as PMKeymapCommand[];

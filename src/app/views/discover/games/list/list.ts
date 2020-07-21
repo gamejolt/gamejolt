@@ -199,11 +199,9 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 				}
 			);
 		} else if (this.section === 'new') {
-			return this.$gettextInterpolate(
-				// tslint:disable-next-line:max-line-length
-				`Find the newest %{ gamesType } on Game Jolt.`,
-				{ gamesType: this.displayGamesType }
-			);
+			return this.$gettextInterpolate(`Find the newest %{ gamesType } on Game Jolt.`, {
+				gamesType: this.displayGamesType,
+			});
 		} else if (this.section === 'featured') {
 			return this.$gettextInterpolate(
 				`Browse our featured list of %{ gamesType }, currated by Game Jolt.`,
