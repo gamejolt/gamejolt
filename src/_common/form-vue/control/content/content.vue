@@ -6,7 +6,7 @@
 		-->
 		<app-content-editor
 			class="fill-bg form-control content-editor-form-control"
-			:class="{ '-sleek': sleek }"
+			:class="{ '-compact': compact }"
 			ref="editor"
 			:name="group.name"
 			:id="id"
@@ -48,7 +48,7 @@
 	height: auto
 	resize: vertical
 
-	&.-sleek
+	&.-compact
 		border-color: transparent !important
 		border-radius: 0
 

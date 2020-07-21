@@ -21,7 +21,7 @@
 					}"
 					:max-height="160"
 					:display-rules="displayRules"
-					:sleek="Screen.isXs"
+					:compact="Screen.isXs"
 					autofocus
 					@submit="onSubmit"
 					@insert-block-node="onEditorInsertBlockNode"
@@ -33,7 +33,6 @@
 			</div>
 
 			<app-button
-				:class="{ '-sleek': Screen.isXs }"
 				:disabled="!valid || !hasContent"
 				v-app-tooltip="$gettext(`Send message`)"
 				class="-send-button"

@@ -35,7 +35,7 @@ export default class AppFormControlContent extends BaseFormControlTS {
 
 	@Prop(Object) tempResourceContextData?: Object;
 
-	@Prop(propOptional(Boolean, false)) sleek!: boolean;
+	@Prop(propOptional(Boolean, false)) compact!: boolean;
 
 	@Prop(propOptional(Boolean, false)) singleLineMode!: boolean;
 
