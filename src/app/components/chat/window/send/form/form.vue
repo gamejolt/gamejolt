@@ -33,6 +33,7 @@
 			</div>
 
 			<app-button
+				:class="{ '-sleek': Screen.isXs }"
 				:disabled="!valid || !hasContent"
 				v-app-tooltip="$gettext(`Send message`)"
 				class="-send-button"
@@ -48,47 +49,54 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '../../variables'
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '../../variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 $-button-padding = 48px
 
 .-form
 	display: flex
 	position: relative
+	padding-top: 4px
+	margin-top: 8px
 	margin-bottom: 16px
-	padding-top: 8px
+	border-top: $border-width-base solid var(--theme-light)
 
 	@media $media-xs
+		padding-top: 1px
+		margin-top: 4px
 		margin-bottom: 2px
-		padding-top: 4px
 
 	&-shifted
-		margin-bottom: 54px
+		margin-bottom: 52px
 
 .-input
-	width: "calc(100% + 4px - %s)" % ($-button-padding)
+	width: 'calc(100% + 4px - %s)' % $-button-padding
 
 	@media $media-sm-up
 		margin-left: $left-gutter-size + $avatar-size
 
 	@media $media-md-up
-		width: "calc(100% - %s)" % ($left-gutter-size + $avatar-size + $-button-padding)
+		width: 'calc(100% - %s)' % ($left-gutter-size + $avatar-size + $-button-padding)
 
 .-send-button
 	display: flex
 	align-items: center
 	justify-content: center
-	width: 40px
+	width: $-button-padding
 	height: $-button-padding
-	margin: 0 4px
+	margin: 0
 	flex: none
 	align-self: flex-end
 	transition: color 0.3s, background-color 0.3s
 
+	@media $media-xs
+		border-radius: 0
+
 	@media $media-sm-up
-		margin-right: 8px
+		width: 40px
+		margin: 0 8px 0 4px
 
 	&.-disabled
 		&:hover

@@ -1,6 +1,6 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require '../variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import '../variables'
 
 .content-editor-controls
 	position: absolute
@@ -15,10 +15,12 @@
 .-add-button-rotated
 	transform: rotate(-45deg)
 
-.fade-enter-active, .fade-leave-active
+.fade-enter-active
+.fade-leave-active
 	transition: opacity 0.2s
 
-.fade-enter, .fade-leave-to
+.fade-enter
+.fade-leave-to
 	opacity: 0
 
 .controls-mobile
@@ -36,6 +38,10 @@
 		theme-prop('border-color', 'bg-subtle')
 		padding-left: 4px
 		padding-right: 4px
+
+		& > .control-button
+			padding-top: 0
+			padding-bottom: 0
 
 		& > .control-button > span
 			margin: $controls-margin-vertical $controls-margin-horizontal

@@ -33,8 +33,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .content-control
 	cursor: text
@@ -50,9 +50,7 @@
 
 	&.-sleek
 		border-color: transparent !important
-
-		@media $media-xs
-			border-radius: 0 $border-radius-base 0 0
+		border-radius: 0
 
 .content-editor-form-control:focus-within
 	theme-prop('border-color', 'fg-muted')
