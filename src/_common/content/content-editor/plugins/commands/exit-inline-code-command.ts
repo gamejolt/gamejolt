@@ -45,12 +45,18 @@ export function exitInlineCode(
 			if (!text || !text.endsWith(' ')) {
 				return false;
 			}
-		}
 
-		// Move space at the end of the inline code outside.
-		const tr = state.tr;
-		tr.removeMark(state.selection.from - 1, state.selection.from, schema.marks.code);
-		dispatch(tr);
+			// Move space at the end of the inline code outside.
+			const tr = state.tr;
+			tr.removeMark(state.selection.from - 1, state.selection.from, schema.marks.code);
+			dispatch(tr);
+		} else {
+			// Insert a space at the end of the current block.
+			const tr = state.tr;
+			tr.insertText(' ', state.selection.from);
+			tr.removeMark(state.selection.from, state.selection.from + 1, schema.marks.code);
+			dispatch(tr);
+		}
 
 		// Ignore original input.
 		return true;
