@@ -1,5 +1,5 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .chat-window-wrap
 	position: fixed
@@ -79,7 +79,8 @@
 	border-top-left-radius: $border-radius-base
 	border-top-right-radius: $border-radius-base
 
-	h2, h3
+	h2
+	h3
 		text-overflow()
 		margin: 0
 		line-height: 1
