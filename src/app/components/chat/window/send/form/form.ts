@@ -93,7 +93,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 	get isSendButtonDisabled() {
 		if (!this.valid || !this.hasContent) {
-			return false;
+			return true;
 		}
 
 		return !FormValidatorContentNoMediaUpload(this.formModel.content ?? '');
