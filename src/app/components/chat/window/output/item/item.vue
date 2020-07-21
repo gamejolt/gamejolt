@@ -97,9 +97,9 @@
 
 				<app-content-viewer :source="message.content" :display-rules="displayRules" />
 
-				<div v-if="message.edited_on" class="-edited text-muted">
+				<span v-if="message.edited_on" v-app-tooltip="editedOn" class="-edited text-muted">
 					<translate>(edited)</translate>
-				</div>
+				</span>
 			</div>
 		</div>
 	</div>

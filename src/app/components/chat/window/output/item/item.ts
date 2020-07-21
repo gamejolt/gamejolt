@@ -61,6 +61,10 @@ export default class AppChatWindowOutputItem extends Vue {
 		return date(this.message.logged_on, 'medium');
 	}
 
+	get editedOn() {
+		return date(this.message.edited_on!, 'medium');
+	}
+
 	startEdit() {
 		this.isEditing = true;
 		EventBus.emit('Chat.editMessage', <ChatMessageEditEvent>{
