@@ -1,7 +1,6 @@
 import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { GameBuild } from '../../../../../../../../../_common/game/build/build.model';
-// tslint:disable-next-line:max-line-length
 import { GameBuildLaunchOption } from '../../../../../../../../../_common/game/build/launch-option/launch-option.model';
 import { GamePackage } from '../../../../../../../../../_common/game/package/package.model';
 import { GameRelease } from '../../../../../../../../../_common/game/release/release.model';
@@ -47,11 +46,14 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 
 	get routeTitle() {
 		if (this.game && this.package && this.release) {
-			return this.$gettextInterpolate('Edit Release %{ release } - %{ package } - %{ game }', {
-				game: this.game.title,
-				package: this.package.title || this.game.title,
-				release: this.release.version_number,
-			});
+			return this.$gettextInterpolate(
+				'Edit Release %{ release } - %{ package } - %{ game }',
+				{
+					game: this.game.title,
+					package: this.package.title || this.game.title,
+					release: this.release.version_number,
+				}
+			);
 		}
 		return null;
 	}
