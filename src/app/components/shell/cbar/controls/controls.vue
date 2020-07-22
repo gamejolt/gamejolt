@@ -4,6 +4,7 @@
 		<app-shell-cbar-item
 			v-if="Screen.isXs"
 			class="-control"
+			:highlight="highlight"
 			:is-active="visibleLeftPane === 'library'"
 			is-control
 		>
@@ -23,6 +24,7 @@
 			<app-shell-cbar-item
 				v-if="chat"
 				class="-control"
+				:highlight="highlight"
 				:notification-count="chat.friendNotificationsCount"
 				:is-active="visibleLeftPane === 'chat'"
 				is-control
@@ -42,6 +44,7 @@
 			<app-shell-cbar-item
 				v-if="!Screen.isXs"
 				class="-control"
+				:highlight="highlight"
 				:is-active="visibleLeftPane === 'library'"
 				is-control
 			>
@@ -64,18 +67,15 @@
 <script lang="ts" src="./controls"></script>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require '../variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import '../variables'
 
 .shell-cbar-controls
 	.-control
 		pressy()
 		img-circle()
 		background-color: var(--theme-bg-offset)
-
-		>>> .-blip
-			background-color: var(--theme-highlight)
 
 		>>> .jolticon
 			color: var(--theme-lighter)
@@ -90,7 +90,7 @@
 		&-icon
 			font-size: $jolticon-size * 1.5
 
-	.-hr
+	> .-hr
 		width: 50%
 		margin: ($grid-gutter-width-xs / 2) auto
 </style>

@@ -2,7 +2,7 @@
 	<div id="shell-cbar" class="theme-dark">
 		<app-scroll-scroller v-if="hasCbar" class="-scroller" hide-scrollbar>
 			<div class="-inner">
-				<app-shell-cbar-controls />
+				<app-shell-cbar-controls :community-theme="communities[0].theme" />
 
 				<transition-group name="-communities">
 					<app-shell-cbar-community
@@ -29,16 +29,16 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require './variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import './variables'
 
 #shell-cbar
 	change-bg('darkest')
 	position: fixed
 	width: $shell-cbar-width
 	z-index: $zindex-cbar
-	transform: translateX(-($shell-cbar-width))
+	transform: translateX((-($shell-cbar-width)))
 	transition: transform 300ms $weak-ease-out
 
 .-communities-move
