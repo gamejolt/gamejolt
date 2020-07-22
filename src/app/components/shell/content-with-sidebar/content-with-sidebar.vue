@@ -1,10 +1,5 @@
 <template>
 	<div>
-		<!-- JODO: Move this into a proper sidebar component -->
-		<!-- Remove the ref - only needed for testing -->
-		<div ref="sidebar" id="shell-context-pane" :class="{ '-visible': isShowingSidebar }">
-			<slot v-if="isShowingSidebar" name="sidebar" />
-		</div>
 		<div
 			class="content-with-sidebar--content fill-backdrop"
 			:class="{ '-context-available': hasRouteContext }"
@@ -14,13 +9,11 @@
 	</div>
 </template>
 
-<style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+<script lang="ts" src="./content-with-sidebar"></script>
 
-#shell-context-pane
-	&.-visible
-		padding: $shell-content-sidebar-padding
+<style lang="stylus" scoped>
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .content-with-sidebar--content
 	// Make it full-size height at least, so that the footer doesn't cut things off weird.
@@ -32,5 +25,3 @@
 		@media $media-lg
 			padding-left: $shell-content-sidebar-width
 </style>
-
-<script lang="ts" src="./content-with-sidebar"></script>

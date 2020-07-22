@@ -6,19 +6,15 @@
 
 		<app-shell-sidebar-chat v-if="visibleLeftPane === 'chat'" />
 		<app-shell-sidebar-library v-if="visibleLeftPane === 'library'" />
-		<!-- JODO: Move context sidebar into below context component -->
-		<!-- <app-shell-sidebar-context v-if="visibleLeftPane === 'context'" /> -->
-		<!-- JODO:
-			Store the sidebar context information in a new SidebarStore,
-			swapping out the props and component depending on the route information.
-		-->
-		<!-- <component :is="sidebarComponent" v-bind="sidebarProps" /> -->
+		<app-shell-sidebar-context v-if="visibleLeftPane === 'context'" />
 	</app-scroll-scroller>
 </template>
 
+<script lang="ts" src="./sidebar"></script>
+
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 #shell-sidebar
 	display: flex
@@ -41,5 +37,3 @@
 	left: 0
 	padding: $line-height-computed 0
 </style>
-
-<script lang="ts" src="./sidebar"></script>

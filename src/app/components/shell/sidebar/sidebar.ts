@@ -8,7 +8,7 @@ import { Store } from '../../../store';
 import AppShellSidebarContext from './context/context.vue';
 import AppShellSidebarLibrary from './library/library.vue';
 
-let components: any = {
+const components = {
 	AppScrollScroller,
 	AppShortkey,
 	AppShellSidebarChat: () => import(/* webpackChunkName: "chat" */ './chat/chat.vue'),

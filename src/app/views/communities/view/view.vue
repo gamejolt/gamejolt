@@ -1,14 +1,9 @@
 <template>
-	<app-shell-content-with-sidebar v-if="community">
-		<template #sidebar>
-			<div class="-card">
-				<app-communities-view-card :community="community" overflow />
-			</div>
-
-			<app-nav-channels v-if="!isEditing" />
-			<app-nav-edit v-else />
-		</template>
-
+	<app-shell-content-with-sidebar
+		v-if="community"
+		:context-component="sidebarComponent"
+		:context-props="sidebarProps"
+	>
 		<template #default>
 			<template v-if="!routeStore.isShowingSidebar">
 				<app-page-header
@@ -136,14 +131,5 @@
 		</template>
 	</app-shell-content-with-sidebar>
 </template>
-
-<style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require '../../../components/community/channel/card/variables'
-
-.-card
-	max-width: $card-width
-</style>
 
 <script lang="ts" src="./view"></script>

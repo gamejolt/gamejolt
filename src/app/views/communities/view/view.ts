@@ -22,6 +22,7 @@ import { CommunityHeaderModal } from '../../../components/forms/community/header
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import AppShellContentWithSidebar from '../../../components/shell/content-with-sidebar/content-with-sidebar.vue';
+import AppShellSidebarContextChannels from '../../../components/shell/sidebar/context/channels/channels.vue';
 import { Store } from '../../../store/index';
 import {
 	CommunityRouteStore,
@@ -80,6 +81,15 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	readonly Environment = Environment;
 	readonly Screen = Screen;
+	readonly sidebarComponent = AppShellSidebarContextChannels;
+
+	get sidebarProps() {
+		return {
+			community: this.community,
+			isEditing: this.isEditing,
+			routeStore: this.routeStore,
+		};
+	}
 
 	get community() {
 		return this.routeStore.community;

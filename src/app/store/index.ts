@@ -21,6 +21,11 @@ import { Growls } from '../../_common/growls/growls.service';
 import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../_common/screen/screen-service';
 import {
+	SidebarActions,
+	SidebarMutations,
+	SidebarStore,
+} from '../../_common/sidebar/sidebar.store';
+import {
 	Actions as AppActions,
 	AppStore,
 	appStore,
@@ -46,6 +51,7 @@ export type Actions = AppActions &
 	LibraryActions &
 	BannerActions &
 	CommentActions &
+	SidebarActions &
 	_ClientLibraryMod.Actions & {
 		bootstrap: void;
 		logout: void;
@@ -69,6 +75,7 @@ export type Mutations = AppMutations &
 	LibraryMutations &
 	BannerMutations &
 	CommentMutations &
+	SidebarMutations &
 	_ClientLibraryMod.Mutations & {
 		showShell: void;
 		hideShell: void;
@@ -91,6 +98,7 @@ const modules: any = {
 	library: new LibraryStore(),
 	banner: new BannerStore(),
 	comment: new CommentStore(),
+	sidebar: new SidebarStore(),
 };
 
 if (GJ_IS_CLIENT) {
@@ -271,12 +279,12 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexAction
 	async toggleCbarMenu() {
 		this._toggleCbarMenu();
-		if (!!this.visibleLeftPane) {
+		if (this.visibleLeftPane) {
 			// Close the left-pane if the cbar is also closing.
 			this._toggleLeftPane();
 		} else {
 			// Open the left pane depending on the route context when the cbar shows.
-			this._toggleLeftPane(!!this.route.meta.contextPane ? 'context' : 'library');
+			this._toggleLeftPane(this.route.meta.contextPane ? 'context' : 'library');
 		}
 
 		this.checkBackdrop();
