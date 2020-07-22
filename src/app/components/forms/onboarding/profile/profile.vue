@@ -44,13 +44,15 @@
 			<section class="-bio">
 				<app-form-group name="bio" optional hide-label>
 					<app-form-control-content
-						style="text-align: left;"
+						v-if="isLoaded"
+						class="-bio-input anim-fade-in"
 						content-context="user-bio"
 						:disabled="!allowBioChange"
 						:model-id="user.id"
 						:placeholder="$gettext(`Tell people about yourself`)"
 						:max-height="0"
 					/>
+					<div v-else class="-bio-input-placeholder" />
 				</app-form-group>
 			</section>
 

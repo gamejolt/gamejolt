@@ -57,5 +57,8 @@
 	"stylusSupremacy.insertNewLineBeforeElse": false,
 	"stylusSupremacy.selectorSeparator": "\n",
 	"stylusSupremacy.alwaysUseImport": true,
-	"stylusSupremacy.alwaysUseNot": false
+	"stylusSupremacy.alwaysUseNot": false,
+	"eslint.validate": ["javascript", "typescript", "vue"],
+	// eslint will do the template validation instead.
+	"vetur.validation.template": false
 }

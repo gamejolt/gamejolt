@@ -39,7 +39,11 @@
 							</div>
 						</a>
 
-						<draggable style="display: inline-flex" v-model="internalItems">
+						<draggable
+							style="display: inline-flex"
+							v-model="internalItems"
+							:options="{ delay: 100, delayOnTouchOnly: true }"
+						>
 							<div class="-item" v-for="item of internalItems" :key="item.id">
 								<app-form-post-media-item :item="item" @remove="emitRemove(item)" />
 							</div>

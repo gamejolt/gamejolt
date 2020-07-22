@@ -69,6 +69,8 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 
 	post: FiresidePost | null = null;
 
+	permalinkWatchDeregister?: Function;
+
 	get routeTitle() {
 		if (!this.post || !this.game) {
 			return null;
@@ -103,6 +105,19 @@ export default class RouteDiscoverGamesViewDevlogView extends BaseRouteComponent
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;
+
+		this.permalinkWatchDeregister = CommentThreadModal.watchForPermalink(
+			this.$router,
+			this.post,
+			'comments'
+		);
+	}
+
+	destroyed() {
+		if (this.permalinkWatchDeregister) {
+			this.permalinkWatchDeregister();
+			this.permalinkWatchDeregister = undefined;
+		}
 	}
 
 	render(h: CreateElement) {

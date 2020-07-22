@@ -32,7 +32,6 @@ export default class AppMediaItemCover extends Vue {
 	mounted() {
 		this.recalcHeight();
 
-		// tslint:disable-next-line:no-unused-expression
 		new ResizeSensor(this.$el, () => this.recalcHeight());
 	}
 
