@@ -23,7 +23,7 @@ import { UserFriendship } from '../../../../_common/user/friendship/friendship.m
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import { User } from '../../../../_common/user/user.model';
 import { YoutubeChannel } from '../../../../_common/youtube/channel/channel-model';
-import { ChatClient, ChatKey, enterChatRoom, isInChatRoom } from '../../../components/chat/client';
+import { ChatClient, ChatKey, enterChatRoom } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/overview/overview.vue';
 import AppGameList from '../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
@@ -339,10 +339,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		if (this.user && this.chat) {
 			const chatUser = this.chat.friendsList.collection.find(u => u.id === this.user!.id);
 			if (chatUser) {
-				if (isInChatRoom(this.chat, chatUser.room_id)) {
-					this.toggleRightPane();
-				} else {
-					enterChatRoom(this.chat, chatUser.room_id);
+				this.toggleRightPane();
+				if (this.chat.sessionRoomId) {
+					enterChatRoom(this.chat, this.chat.sessionRoomId);
 				}
 			}
 		}
