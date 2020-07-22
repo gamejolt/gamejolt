@@ -47,4 +47,13 @@ export class CommentThreadModal {
 
 		CommentThreadModal.show({ commentId: id, model, displayMode });
 	}
+
+	static watchForPermalink(router: VueRouter, model: Model, displayMode: DisplayMode) {
+		const checkPath = router.currentRoute.path;
+		return router.afterEach((to, _from) => {
+			if (checkPath === to.path && !!to.hash) {
+				this.showFromPermalink(router, model, displayMode);
+			}
+		});
+	}
 }
