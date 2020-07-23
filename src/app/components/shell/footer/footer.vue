@@ -84,18 +84,25 @@
 								</li>
 								<li>
 									<router-link
-										:to="{ name: 'forums.channels.view', params: { name: 'gj-improve' } }"
+										:to="{
+											name: 'forums.channels.view',
+											params: { name: 'gj-improve' },
+										}"
 									>
 										<translate>Feature Requests</translate>
 									</router-link>
 								</li>
 								<li>
-									<app-link-external href="https://github.com/gamejolt/issue-tracker">
+									<app-link-external
+										href="https://github.com/gamejolt/issue-tracker"
+									>
 										<translate>Bug Tracker</translate>
 									</app-link-external>
 								</li>
 								<li>
-									<app-link-external href="https://www.redbubble.com/people/gamejolt/shop">
+									<app-link-external
+										href="https://www.redbubble.com/people/gamejolt/shop"
+									>
 										<translate>Merch</translate>
 									</app-link-external>
 								</li>
@@ -103,6 +110,16 @@
 						</div>
 						<div class="col-xs-4 col-sm-3">
 							<ol class="list-unstyled footer-link-list">
+								<li>
+									<router-link
+										:to="{
+											name: 'landing.help',
+											params: { path: 'guidelines' },
+										}"
+									>
+										<translate>Site Guidelines</translate>
+									</router-link>
+								</li>
 								<li>
 									<app-contact-link email="contact@gamejolt.com">
 										<translate>footer.contact</translate>
@@ -134,7 +151,13 @@
 			<div class="clearfix">
 				<div class="footer-jolt" v-if="!Screen.isXs">
 					<router-link :to="{ name: 'home' }">
-						<app-theme-svg src="~img/jolt.svg" alt="" width="68" height="72" strict-colors />
+						<app-theme-svg
+							src="~img/jolt.svg"
+							alt=""
+							width="68"
+							height="72"
+							strict-colors
+						/>
 					</router-link>
 				</div>
 				<div class="footer-meta">

@@ -5,6 +5,7 @@ import { Game } from '../../../../../_common/game/game.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { WithRouteStore } from '../../../../../_common/route/route-store';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
+import { ThemeMutation, ThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Translate } from '../../../../../_common/translate/translate.service';
@@ -62,7 +63,14 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 	@RouteStoreModule.Mutation
 	populate!: RouteStore['populate'];
 
+	@ThemeMutation
+	setPageTheme!: ThemeStore['setPageTheme'];
+
 	readonly Game = Game;
+
+	routeResolved() {
+		this.setPageTheme(this.game.theme || null);
+	}
 
 	routeDestroyed() {
 		store.commit('theme/setPageTheme', null);

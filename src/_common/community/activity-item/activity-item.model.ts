@@ -42,7 +42,7 @@ export class CommunityActivityItem extends Model {
 	added_on!: number;
 	extra_data!: string;
 
-	user!: User;
+	user?: User;
 
 	action_resource?: FiresidePost | User | CommunityChannel | UserBlock | Game;
 

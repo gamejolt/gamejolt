@@ -1,7 +1,7 @@
 <template>
 	<app-communities-view-page-container full>
 		<h2 class="section-header">
-			<translate>Activity</translate>
+			<translate>Audit Log</translate>
 		</h2>
 
 		<div class="page-help">
@@ -38,8 +38,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-date-split
 	position: relative

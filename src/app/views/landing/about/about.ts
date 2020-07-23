@@ -4,12 +4,16 @@ import AppContactLink from '../../../../_common/contact-link/contact-link.vue';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 
 @Component({
 	name: 'RouteLandingAbout',
 	components: {
 		AppThemeSvg,
 		AppContactLink,
+	},
+	directives: {
+		AppTooltip,
 	},
 })
 export default class RouteLandingAbout extends BaseRouteComponent {

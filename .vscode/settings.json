@@ -10,7 +10,55 @@
 	"editor.codeActionsOnSave": {
 		"source.organizeImports": true
 	},
-	"vetur.format.defaultFormatter.html": "prettier",
+	"[html]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[javascript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[json]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[vue]": {
+		"editor.defaultFormatter": "octref.vetur"
+	},
 	"vetur.experimental.templateInterpolationService": true,
-	"vetur.format.defaultFormatter.stylus": "none"
+	"vetur.format.options.useTabs": true,
+	"vetur.format.options.tabSize": 4,
+	"vetur.format.defaultFormatter.html": "prettier",
+	"vetur.format.defaultFormatter.js": "prettier",
+	"vetur.format.defaultFormatter.ts": "prettier",
+	"vetur.format.defaultFormatter.stylus": "stylus-supremacy",
+	"stylusSupremacy.alwaysUseAtBlock": false,
+	"stylusSupremacy.insertBraces": false,
+	"stylusSupremacy.insertColons": true,
+	"stylusSupremacy.insertSemicolons": false,
+	"stylusSupremacy.insertSpaceAfterComma": true,
+	"stylusSupremacy.insertSpaceBeforeComment": true,
+	"stylusSupremacy.insertSpaceAfterComment": true,
+	"stylusSupremacy.reduceMarginAndPaddingValues": false,
+	"stylusSupremacy.alwaysUseExtends": false,
+	"stylusSupremacy.insertLeadingZeroBeforeFraction": true,
+	"stylusSupremacy.alwaysUseNoneOverZero": false,
+	"stylusSupremacy.insertSpaceInsideParenthesis": false,
+	"stylusSupremacy.quoteChar": "'",
+	"stylusSupremacy.sortProperties": false,
+	"stylusSupremacy.insertNewLineAroundImports": "root",
+	"stylusSupremacy.insertNewLineAroundBlocks": true,
+	"stylusSupremacy.insertNewLineAroundProperties": false,
+	"stylusSupremacy.insertNewLineAroundOthers": false,
+	"stylusSupremacy.alwaysUseZeroWithoutUnit": false,
+	"stylusSupremacy.preserveNewLinesBetweenPropertyValues": true,
+	"stylusSupremacy.insertParenthesisAfterNegation": true,
+	"stylusSupremacy.insertParenthesisAroundIfCondition": true,
+	"stylusSupremacy.insertNewLineBeforeElse": false,
+	"stylusSupremacy.selectorSeparator": "\n",
+	"stylusSupremacy.alwaysUseImport": true,
+	"stylusSupremacy.alwaysUseNot": false,
+	"eslint.validate": ["javascript", "typescript", "vue"],
+	// eslint will do the template validation instead.
+	"vetur.validation.template": false
 }

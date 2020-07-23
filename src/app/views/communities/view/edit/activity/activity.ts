@@ -91,16 +91,29 @@ export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent
 			} else {
 				// Compare to the last item in the list.
 				// When it's a different day, have a full split (user and time).
-				// When the difference in time is more than 20 minutes or it's a different user, have a user split.
 				const lastItem = this.items[this.items.length - 1].item;
 				if (date(lastItem.added_on, 'mediumDate') !== date(item.added_on, 'mediumDate')) {
 					newItem.timesplit = true;
 					newItem.usersplit = true;
-				} else if (
-					Math.abs(lastItem.added_on - item.added_on) > 1000 * 30 * 60 ||
-					lastItem.user.id !== item.user.id
-				) {
-					newItem.usersplit = true;
+				} else {
+					// When the difference in time is more than 30 minutes, have a user split.
+					if (Math.abs(lastItem.added_on - item.added_on) > 1000 * 30 * 60) {
+						newItem.usersplit = true;
+					}
+
+					// We may not have a user attached to the item at all.
+					// If we have a difference between having a user and not having a user, split.
+					// We group all items by "not a user" together.
+					const newItemUser = !!item.user;
+					const lastItemUser = !!lastItem.user;
+					if (newItemUser !== lastItemUser) {
+						newItem.usersplit = true;
+					}
+
+					// Have a user split when it's a different user from the last item.
+					if (item.user && lastItem.user && lastItem.user.id !== item.user.id) {
+						newItem.usersplit = true;
+					}
 				}
 
 				// Don't show the icon twice in a row if it's the same.

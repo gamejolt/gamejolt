@@ -1,22 +1,42 @@
 <template>
 	<div class="-item" :class="{ '-item-usersplit': usersplit }">
 		<span v-if="!Screen.isXs" class="-left">
-			<app-user-avatar class="-avatar" v-if="usersplit" :user="item.user" />
-			<span v-else class="-time">
+			<app-user-avatar v-if="usersplit" class="-avatar" :user="item.user" />
+			<span
+				v-else
+				v-app-tooltip="
+					date(item.added_on, 'fullDate') + ' ' + date(item.added_on, 'shortTime')
+				"
+				class="-time"
+			>
 				{{ item.added_on | date('shortTime') }}
 			</span>
 		</span>
 
 		<div class="-main">
 			<div v-if="usersplit" class="-usersplit">
-				{{ item.user.display_name }}
+				<template v-if="item.user">
+					{{ item.user.display_name }}
+				</template>
+				<!-- This is for when the user that took the action is not available anymore. -->
+				<template v-else>
+					<span class="text-muted">
+						<translate>Someone</translate>
+						<app-jolticon
+							v-app-tooltip="$gettext(`This user is no longer active.`)"
+							icon="help-circle"
+						/>
+					</span>
+				</template>
 				<span class="-user-sub">
-					<template v-if="!Screen.isXs"> @{{ item.user.username }} </template>
+					<template v-if="item.user && !Screen.isXs">
+						@{{ item.user.username }}
+					</template>
 					<span
-						class="-user-sub-date"
 						v-app-tooltip="
 							date(item.added_on, 'fullDate') + ' ' + date(item.added_on, 'shortTime')
 						"
+						class="-user-sub-date"
 					>
 						<span v-if="isToday">
 							<translate>Today</translate>
@@ -60,13 +80,13 @@
 						v-if="item.type === CommunityActivityItem.TYPE_POST_FEATURE"
 						v-translate="{ channel: getExtraData('in-channel') }"
 					>
-						<em>Featured</em> a post in the channel #%{ channel }.
+						<em>Featured</em> a post in the channel <i>%{ channel }</i>.
 					</span>
 					<span
 						v-else-if="item.type === CommunityActivityItem.TYPE_POST_UNFEATURE"
 						v-translate="{ channel: getExtraData('in-channel') }"
 					>
-						<em>Unfeatured</em> a post in the channel #%{ channel }.
+						<em>Unfeatured</em> a post in the channel <i>%{ channel }</i>.
 					</span>
 					<span
 						v-else-if="item.type === CommunityActivityItem.TYPE_POST_MOVE"
@@ -75,33 +95,34 @@
 							toChannel: getExtraData('to-channel'),
 						}"
 					>
-						<em>Moved</em> a post from the channel #%{ fromChannel } to the channel #%{
-						toChannel }.
+						<em>Moved</em> a post from the channel <i>%{ fromChannel }</i> to the
+						channel <i>%{ toChannel }</i>.
 					</span>
 					<span
 						v-else-if="item.type === CommunityActivityItem.TYPE_POST_EJECT"
 						v-translate="{ channel: getExtraData('in-channel') }"
 					>
-						<em>Ejected</em> a post from the channel #%{ channel }.
+						<em>Ejected</em> a post from the channel <i>%{ channel }</i>.
 					</span>
 
 					<span
 						v-else-if="item.type === CommunityActivityItem.TYPE_MOD_INVITE"
 						v-translate="{ role: getExtraData('role') }"
 					>
-						<em>Invited</em> a user to become a %{ role }.
+						<em>Invited</em> a user with the role <i>%{ role }</i>.
 					</span>
 					<span
 						v-else-if="item.type === CommunityActivityItem.TYPE_MOD_ACCEPT"
 						v-translate="{ role: getExtraData('role') }"
 					>
-						<em>Joined</em> this community as a %{ role }.
+						<em>Joined</em> this community with the role <i>%{ role }</i>.
 					</span>
 					<span
 						v-else-if="item.type === CommunityActivityItem.TYPE_MOD_REMOVE"
 						v-translate="{ role: getExtraData('role') }"
 					>
-						<em>Removed</em> a %{ role } from this community.
+						<em>Removed</em> a moderater with the role <i>%{ role }</i> from this
+						community.
 					</span>
 
 					<span
@@ -200,8 +221,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 $-left-size = 54px
 $-avatar-size = 40px
