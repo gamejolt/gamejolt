@@ -1,8 +1,14 @@
 <template>
 	<div class="-item" :class="{ '-item-usersplit': usersplit }">
 		<span v-if="!Screen.isXs" class="-left">
-			<app-user-avatar class="-avatar" v-if="usersplit" :user="item.user" />
-			<span v-else class="-time">
+			<app-user-avatar v-if="usersplit" class="-avatar" :user="item.user" />
+			<span
+				v-else
+				v-app-tooltip="
+					date(item.added_on, 'fullDate') + ' ' + date(item.added_on, 'shortTime')
+				"
+				class="-time"
+			>
 				{{ item.added_on | date('shortTime') }}
 			</span>
 		</span>
@@ -17,8 +23,8 @@
 					<span class="text-muted">
 						<translate>Someone</translate>
 						<app-jolticon
-							icon="help-circle"
 							v-app-tooltip="$gettext(`This user is no longer active.`)"
+							icon="help-circle"
 						/>
 					</span>
 				</template>
@@ -27,10 +33,10 @@
 						@{{ item.user.username }}
 					</template>
 					<span
-						class="-user-sub-date"
 						v-app-tooltip="
 							date(item.added_on, 'fullDate') + ' ' + date(item.added_on, 'shortTime')
 						"
+						class="-user-sub-date"
 					>
 						<span v-if="isToday">
 							<translate>Today</translate>
@@ -71,13 +77,13 @@
 						v-if="item.type === 'post/feature'"
 						v-translate="{ channel: getExtraData('in-channel') }"
 					>
-						<em>Featured</em> a post in the channel #%{ channel }.
+						<em>Featured</em> a post in the channel <i>%{ channel }</i>.
 					</span>
 					<span
 						v-else-if="item.type === 'post/unfeature'"
 						v-translate="{ channel: getExtraData('in-channel') }"
 					>
-						<em>Unfeatured</em> a post in the channel #%{ channel }.
+						<em>Unfeatured</em> a post in the channel <i>%{ channel }</i>.
 					</span>
 					<span
 						v-else-if="item.type === 'post/move'"
@@ -86,33 +92,34 @@
 							toChannel: getExtraData('to-channel'),
 						}"
 					>
-						<em>Moved</em> a post from the channel #%{ fromChannel } to the channel #%{
-						toChannel }.
+						<em>Moved</em> a post from the channel <i>%{ fromChannel }</i> to the
+						channel <i>%{ toChannel }</i>.
 					</span>
 					<span
 						v-else-if="item.type === 'post/eject'"
 						v-translate="{ channel: getExtraData('in-channel') }"
 					>
-						<em>Ejected</em> a post from the channel #%{ channel }.
+						<em>Ejected</em> a post from the channel <i>%{ channel }</i>.
 					</span>
 
 					<span
 						v-else-if="item.type === 'mod/invite'"
 						v-translate="{ role: getExtraData('role') }"
 					>
-						<em>Invited</em> a user to become a %{ role }.
+						<em>Invited</em> a user with the role <i>%{ role }</i>.
 					</span>
 					<span
 						v-else-if="item.type === 'mod/accept'"
 						v-translate="{ role: getExtraData('role') }"
 					>
-						<em>Joined</em> this community as a %{ role }.
+						<em>Joined</em> this community with the role <i>%{ role }</i>.
 					</span>
 					<span
 						v-else-if="item.type === 'mod/remove'"
 						v-translate="{ role: getExtraData('role') }"
 					>
-						<em>Removed</em> a %{ role } from this community.
+						<em>Removed</em> a moderater with the role <i>%{ role }</i> from this
+						community.
 					</span>
 
 					<span v-else-if="item.type === 'block/user'" v-translate>
