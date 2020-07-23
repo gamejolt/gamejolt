@@ -7,12 +7,12 @@ export const { State: SidebarState, Action: SidebarAction, Mutation: SidebarMuta
 );
 
 export type SidebarActions = {
-	clearSidebarContext: void;
+	'sidebar/clearSidebarContext': void;
 };
 
 export type SidebarMutations = {
-	setSidebarComponent: Vue | null;
-	setSidebarProps: Record<string, unknown> | null;
+	'sidebar/setSidebarComponent': Vue | null;
+	'sidebar/setSidebarProps': Record<string, unknown> | null;
 };
 
 @VuexModule()
@@ -35,12 +35,12 @@ export class SidebarStore extends VuexStore<SidebarStore, SidebarActions, Sideba
 	}
 
 	@VuexMutation
-	setSidebarComponent(component: SidebarMutations['setSidebarComponent']) {
+	setSidebarComponent(component: SidebarMutations['sidebar/setSidebarComponent']) {
 		this._sidebarComponent = component;
 	}
 
 	@VuexMutation
-	setSidebarProps(props: SidebarMutations['setSidebarProps']) {
+	setSidebarProps(props: SidebarMutations['sidebar/setSidebarProps']) {
 		this._sidebarProps = props;
 	}
 }

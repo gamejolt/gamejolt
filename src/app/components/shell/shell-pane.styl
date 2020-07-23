@@ -4,22 +4,20 @@
 	position: fixed
 	top: $shell-top-nav-height
 	bottom: 0
-	width: $shell-content-sidebar-width
-	will-change: transform
 	z-index: $zindex-shell-pane
-	// The 'left' transition needs to happen a little quicker to
-	// be sure there's no gap when hiding both a pane and the cbar.
+	width: $shell-content-sidebar-width
 	transition: transform 300ms $weak-ease-out
+	will-change: transform
 
 .shell-pane-left
 	left: 0
 	right: auto
 
-	// Span the remaining width on xs devices
+	// Span the remaining width on xs devices, leaving a 50px buffer to allow clicking the backdrop.
 	@media $media-xs
 		width: unset
 		max-width: $shell-content-sidebar-width
-		right: 0
+		right: 50px
 
 .shell-pane-right
 	left: auto
@@ -31,7 +29,8 @@
 // When we are hiding the pane and showing the content again, we want to also
 // keep it visible during this time.
 // To do that, we hook into the main shell removal animation.
-#shell.left-pane-visible-remove .shell-pane, #shell.right-pane-visible-remove .shell-pane
+#shell.left-pane-visible-remove .shell-pane
+#shell.right-pane-visible-remove .shell-pane
 	display: block
 
 // Pane slide transitions

@@ -22,10 +22,6 @@ export default class AppShellCbarItem extends Vue {
 		return this.notificationCount > 99 ? '99+' : number(this.notificationCount);
 	}
 
-	get backgroundColor() {
-		return this.showAsActive ? this.highlight : null;
-	}
-
 	// We want a context indicator only for non-control items that are the current active item (selected or active route).
 	get hasContextIndicator() {
 		return this.isActive && !this.isControl;

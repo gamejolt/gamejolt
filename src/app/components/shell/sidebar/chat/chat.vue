@@ -3,7 +3,7 @@
 		<div class="chat-sidebar">
 			<!-- Friends List -->
 			<!-- Only include if not a guest -->
-			<div class="chat-friends-list" v-if="chat.currentUser && chat.friendsPopulated">
+			<div v-if="chat.currentUser && chat.friendsPopulated" class="chat-friends-list">
 				<div class="nav-heading">
 					<translate>Friends</translate>
 				</div>
@@ -16,7 +16,7 @@
 							>
 								<translate>All</translate>
 								<span class="badge">
-									{{ chat.friendsList.collection.length | number }}
+									{{ friendsCountAll }}
 								</span>
 							</a>
 						</li>
@@ -27,17 +27,17 @@
 							>
 								<translate>Online</translate>
 								<span class="badge">
-									{{ chat.friendsList.onlineCount | number }}
+									{{ friendsCountOnline }}
 								</span>
 							</a>
 						</li>
 					</ul>
 				</nav>
 
-				<div class="alert" v-if="friendsTab === 'all' && !friends">
+				<div v-if="friendsTab === 'all' && !friends" class="alert">
 					<translate>No friends yet.</translate>
 				</div>
-				<div class="alert" v-else-if="friendsTab === 'online' && !friends">
+				<div v-else-if="friendsTab === 'online' && !friends" class="alert">
 					<translate>No friends are online.</translate>
 				</div>
 				<app-chat-user-list v-else :users="friends" :show-pm="true" />

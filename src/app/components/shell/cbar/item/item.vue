@@ -8,7 +8,7 @@
 				'-blip-active': showAsActive,
 			}"
 			:style="{
-				backgroundColor,
+				'background-color': highlight,
 			}"
 		/>
 		<div
@@ -24,10 +24,12 @@
 	</div>
 </template>
 
+<script lang="ts" src="./item"></script>
+
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require '../variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import '../variables'
 
 .-item
 	display: block
@@ -36,7 +38,8 @@
 	width: $cbar-item-size - 2px
 	height: $cbar-item-size - 2px
 
-.-blip, .-notification-count
+.-blip
+.-notification-count
 	pointer-events: none
 
 .-blip
@@ -59,7 +62,8 @@
 	left: $cbar-blip-left
 	height: $cbar-item-size
 
-.-notification-count, .-context-indicator
+.-notification-count
+.-context-indicator
 	position: absolute
 	right: -2px
 	z-index: 2
@@ -94,5 +98,3 @@
 		opacity: 0
 		visibility: hidden
 </style>
-
-<script lang="ts" src="./item"></script>

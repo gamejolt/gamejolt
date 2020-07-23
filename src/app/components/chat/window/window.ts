@@ -53,7 +53,6 @@ export default class AppChatWindow extends Vue {
 		if (Screen.isXs) {
 			leaveChatRoom(this.chat);
 		} else {
-			// Passing no value will close any open left-panes.
 			this.toggleLeftPane();
 		}
 	}

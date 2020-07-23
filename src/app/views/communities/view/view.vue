@@ -46,8 +46,8 @@
 										active-class="active"
 									>
 										<translate>Members</translate>
-										<span class="badge" v-if="community.member_count">
-											{{ community.member_count | number }}
+										<span v-if="community.member_count" class="badge">
+											{{ communityMemberCount }}
 										</span>
 									</router-link>
 								</li>
@@ -63,35 +63,37 @@
 											<app-jolticon icon="ellipsis-v" />
 										</a>
 
-										<div slot="popover" class="list-group list-group-dark">
-											<a
-												class="list-group-item has-icon"
-												@click="copyShareUrl"
-												v-app-track-event="`copy-link:community`"
-											>
-												<app-jolticon icon="link" />
-												<translate>Copy link to community</translate>
-											</a>
-											<a
-												v-if="shouldShowModTools"
-												class="list-group-item has-icon"
-												:href="
-													Environment.baseUrl +
-														`/moderate/communities/view/${community.id}`
-												"
-												target="_blank"
-											>
-												<app-jolticon icon="cog" />
-												<span>Moderate Community</span>
-											</a>
-										</div>
+										<template #popover>
+											<div class="list-group list-group-dark">
+												<a
+													v-app-track-event="`copy-link:community`"
+													class="list-group-item has-icon"
+													@click="copyShareUrl"
+												>
+													<app-jolticon icon="link" />
+													<translate>Copy link to community</translate>
+												</a>
+												<a
+													v-if="shouldShowModTools"
+													class="list-group-item has-icon"
+													:href="
+														Environment.baseUrl +
+															`/moderate/communities/view/${community.id}`
+													"
+													target="_blank"
+												>
+													<app-jolticon icon="cog" />
+													<span>Moderate Community</span>
+												</a>
+											</div>
+										</template>
 									</app-popper>
 								</li>
 							</ul>
 						</nav>
 					</template>
 
-					<template #controls v-if="!community.isBlocked">
+					<template v-if="!community.isBlocked" #controls>
 						<app-page-header-controls>
 							<template v-if="community.hasPerms()">
 								<app-community-perms :community="community">

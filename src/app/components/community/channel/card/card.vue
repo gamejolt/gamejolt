@@ -1,13 +1,13 @@
 <template>
 	<router-link
+		v-app-observe-dimensions="updateCardHeight"
 		class="community-channel-card sheet sheet-no-full-bleed sheet-full"
 		:class="{ '-active': isActive, 'theme-dark': backgroundItem }"
 		:to="linkTo"
 		:title="label"
 		:style="{ height }"
-		v-app-observe-dimensions="updateCardHeight"
 	>
-		<div class="-card-bg" v-if="backgroundItem">
+		<div v-if="backgroundItem" class="-card-bg">
 			<app-media-item-backdrop :media-item="backgroundItem">
 				<div
 					class="-card-bg-img"
@@ -23,23 +23,23 @@
 			<div class="-card-content-title">
 				<app-jolticon
 					v-if="isLocked"
-					icon="lock"
 					v-app-tooltip.left="
 						$gettext(`You do not have permissions to post to this channel.`)
 					"
+					icon="lock"
 				/>
 				{{ label }}
 			</div>
 
 			<div
 				v-if="isUnread"
-				class="-card-content-unread"
 				v-app-tooltip="$gettext(`There are new posts since you last viewed this channel`)"
-			></div>
+				class="-card-content-unread"
+			/>
 		</div>
 	</router-link>
 </template>
 
-<style lang="stylus" src="./card.styl" scoped></style>
-
 <script lang="ts" src="./card"></script>
+
+<style lang="stylus" src="./card.styl" scoped></style>

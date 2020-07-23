@@ -28,12 +28,4 @@
 
 	.alert
 		border-radius: 0
-
-.-content
-	position: absolute
-	top: 0
-	right: 0
-	bottom: 0
-	left: 0
-	padding: $line-height-computed 0
 </style>

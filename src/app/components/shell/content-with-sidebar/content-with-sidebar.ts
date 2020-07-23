@@ -24,7 +24,6 @@ export default class AppShellContentWithSidebar extends Vue {
 	@Prop({ default: null }) contextComponent!: Vue | null;
 	@Prop(propOptional(Object, null)) contextProps!: Record<string, unknown> | null;
 
-	@State hasCbar!: Store['hasCbar'];
 	@State visibleLeftPane!: Store['visibleLeftPane'];
 	@Mutation setHasContentSidebar!: Store['setHasContentSidebar'];
 	@SidebarMutation setSidebarComponent!: SidebarStore['setSidebarComponent'];
@@ -44,21 +43,17 @@ export default class AppShellContentWithSidebar extends Vue {
 		this.setSidebarProps(this.contextProps);
 	}
 
+	beforeDestroy() {
+		this.setHasContentSidebar(false);
+		this.clearSidebarContext();
+	}
+
 	/**
 	 * Sync into the store so that the AppShellBody can style appropriately.
 	 */
 	@Watch('isShowingSidebar', { immediate: true })
 	onSidebarChange() {
 		this.setHasContentSidebar(this.isShowingSidebar);
-	}
-
-	beforeDestroy() {
-		this.setHasContentSidebar(false);
-		this.clearSidebarContext();
-	}
-
-	get contextPropsTest() {
-		return this.contextProps;
 	}
 
 	@Watch('contextComponent')
@@ -68,7 +63,6 @@ export default class AppShellContentWithSidebar extends Vue {
 
 	@Watch('contextProps')
 	onContextPropsChange(props: Record<string, unknown>) {
-		console.warn('f');
 		this.setSidebarProps(props);
 	}
 }

@@ -19,7 +19,7 @@
 	// Make it full-size height at least, so that the footer doesn't cut things off weird.
 	min-height: 'calc(100vh - %s)' % $shell-top-nav-height
 
-	// We want to make room for the sidebar on large screens if the route has a contextPane available.
+	// Make room for the sidebar on large screens if the route has a contextPane available.
 	// All other breakpoints should instead overlay their content.
 	&.-context-available
 		@media $media-lg

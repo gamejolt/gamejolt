@@ -23,9 +23,6 @@ import AppShellSidebarCollectionList from './collection-list.vue';
 	directives: {
 		AppTooltip,
 	},
-	filters: {
-		number,
-	},
 })
 export default class AppShellSidebarLibrary extends Vue {
 	@State app!: Store['app'];
@@ -44,6 +41,14 @@ export default class AppShellSidebarLibrary extends Vue {
 
 	readonly Environment = Environment;
 	readonly Screen = Screen;
+
+	get collectionsLength() {
+		return number(this.collections.length);
+	}
+
+	get bundleCollectionsLength() {
+		return number(this.bundleCollections.length);
+	}
 
 	get filteredBundleCollections() {
 		return this.bundleCollections.sort((a, b) => stringSort(a.name, b.name));

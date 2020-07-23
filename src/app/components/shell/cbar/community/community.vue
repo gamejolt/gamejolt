@@ -19,12 +19,12 @@
 					:notification-count="featureCount"
 				>
 					<router-link
+						v-app-tooltip.right="tooltip"
 						class="-link link-unstyled"
 						:to="{
 							name: 'communities.view.overview',
 							params: { path: community.path },
 						}"
-						v-app-tooltip.right="tooltip"
 					>
 						<app-media-item-backdrop
 							class="-backdrop"
@@ -63,9 +63,11 @@
 	</app-popper>
 </template>
 
+<script lang="ts" src="./community"></script>
+
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-community
 	pressy()
@@ -84,5 +86,3 @@
 .-notice
 	theme-prop('color', 'notice')
 </style>
-
-<script lang="ts" src="./community"></script>

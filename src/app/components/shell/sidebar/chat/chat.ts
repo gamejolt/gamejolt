@@ -14,13 +14,8 @@ import AppChatWindows from '../../../chat/windows/windows.vue';
 		AppChatUserList,
 		AppChatWindows,
 	},
-	filters: {
-		number,
-	},
 })
 export default class AppShellSidebarChat extends Vue {
-	// Chat should be available since we only include in DOM if chat is
-	// bootstrapped.
 	@InjectReactive(ChatKey) chat!: ChatClient;
 
 	@State visibleLeftPane!: Store['visibleLeftPane'];
@@ -35,6 +30,14 @@ export default class AppShellSidebarChat extends Vue {
 		return this.friendsTab === 'online'
 			? this.chat.friendsList.collection.filter(i => i.isOnline)
 			: this.chat.friendsList.collection;
+	}
+
+	get friendsCountAll() {
+		return number(this.chat.friendsList.collection.length);
+	}
+
+	get friendsCountOnline() {
+		return number(this.chat.friendsList.onlineCount);
 	}
 
 	onPublicRoomClicked(roomId: number) {

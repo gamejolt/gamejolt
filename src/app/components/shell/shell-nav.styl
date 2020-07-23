@@ -10,7 +10,8 @@ ul.shell-nav
 	font-size: 15px // Stupid custom size!
 	margin-bottom: 0
 
-	.tag, .badge
+	.tag
+	.badge
 		float: right
 		margin-left: 5px
 		margin-top: 15px
@@ -42,7 +43,9 @@ ul.shell-nav
 		.jolticon
 			vertical-align: text-bottom
 
-	.tag, .badge, .jolticon
+	.tag
+	.badge
+	.jolticon
 		position: relative
 		z-index: 1
 
@@ -70,7 +73,8 @@ ul.shell-nav
 				padding-left: 15px
 
 			&.active
-				&, &:hover
+				&
+				&:hover
 					theme-prop('color', 'highlight')
 
 					.jolticon
@@ -163,5 +167,6 @@ ul.shell-nav ul
 .nav-controls
 	padding: 0 15px 0 15px
 
-	& > .form-control, & > .button
+	& > .form-control
+	& > .button
 		margin-bottom: $font-size-base

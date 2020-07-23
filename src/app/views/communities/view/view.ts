@@ -51,9 +51,6 @@ import AppNavEdit from './_nav/edit/edit.vue';
 		AppNavEdit,
 		AppEditableThumbnail,
 	},
-	filters: {
-		number,
-	},
 })
 @RouteResolver({
 	cache: true,
@@ -93,6 +90,10 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	get community() {
 		return this.routeStore.community;
+	}
+
+	get communityMemberCount() {
+		return number(this.community.member_count);
 	}
 
 	get isEditing() {

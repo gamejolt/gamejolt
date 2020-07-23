@@ -3,9 +3,9 @@
 		<ul v-if="Screen.isXs" class="shell-nav">
 			<li v-if="app.user" class="offline-disable">
 				<router-link
+					v-app-track-event="`sidebar:discover`"
 					:to="{ name: 'discover.home' }"
 					active-class="active"
-					v-app-track-event="`sidebar:discover`"
 				>
 					<span class="shell-nav-icon">
 						<app-jolticon icon="compass-needle" />
@@ -18,9 +18,9 @@
 
 			<li class="offline-disable">
 				<router-link
+					v-app-track-event="`sidebar:search`"
 					:to="{ name: 'search.results' }"
 					:class="{ active: $route.name.indexOf('search') === 0 }"
-					v-app-track-event="`sidebar:search`"
 				>
 					<span class="shell-nav-icon">
 						<app-jolticon icon="search" />
@@ -35,9 +35,9 @@
 		<ul v-if="app.user" class="shell-nav">
 			<li v-if="GJ_IS_CLIENT">
 				<router-link
+					v-app-track-event="`sidebar:collection:installed`"
 					:to="{ name: 'library.installed' }"
 					active-class="active"
-					v-app-track-event="`sidebar:collection:installed`"
 				>
 					<span class="shell-nav-icon">
 						<app-jolticon icon="download-box" />
@@ -48,11 +48,11 @@
 				</router-link>
 			</li>
 
-			<li class="offline-disable" v-if="developerCollection">
+			<li v-if="developerCollection" class="offline-disable">
 				<router-link
+					v-app-track-event="`sidebar:collection:developer`"
 					:to="developerCollection.routeLocation"
 					active-class="active"
-					v-app-track-event="`sidebar:collection:developer`"
 				>
 					<span class="shell-nav-icon">
 						<app-jolticon icon="user" />
@@ -63,11 +63,11 @@
 				</router-link>
 			</li>
 
-			<li class="offline-disable" v-if="followedCollection && !Screen.isXs">
+			<li v-if="followedCollection && !Screen.isXs" class="offline-disable">
 				<router-link
+					v-app-track-event="`sidebar:collection:followed`"
 					:to="followedCollection.routeLocation"
 					active-class="active"
-					v-app-track-event="`sidebar:collection:followed`"
 				>
 					<span class="shell-nav-icon">
 						<app-jolticon icon="subscribe" />
@@ -78,11 +78,11 @@
 				</router-link>
 			</li>
 
-			<li class="offline-disable" v-if="ownedCollection && !Screen.isXs">
+			<li v-if="ownedCollection && !Screen.isXs" class="offline-disable">
 				<router-link
+					v-app-track-event="`sidebar:collection:owned`"
 					:to="ownedCollection.routeLocation"
 					active-class="active"
-					v-app-track-event="`sidebar:collection:owned`"
 				>
 					<span class="shell-nav-icon">
 						<app-jolticon icon="heart-filled" />
@@ -97,9 +97,9 @@
 		<ul v-if="Screen.isXs" class="shell-nav">
 			<li class="offline-disable">
 				<router-link
+					v-app-track-event="`sidebar:forums`"
 					:to="{ name: 'forums.landing.overview' }"
 					:class="{ active: $route.name.indexOf('forums') === 0 }"
-					v-app-track-event="`sidebar:forums`"
 				>
 					<span class="shell-nav-icon">
 						<app-jolticon icon="forums" />
@@ -112,9 +112,9 @@
 
 			<li class="offline-disable">
 				<a
+					v-app-track-event="`sidebar:jams`"
 					:href="Environment.jamsBaseUrl"
 					target="_blank"
-					v-app-track-event="`sidebar:jams`"
 				>
 					<span class="shell-nav-icon">
 						<app-jolticon icon="jams" />
@@ -131,20 +131,20 @@
 				<div class="nav-heading">
 					<translate>library.nav.bundles</translate>
 					<span class="badge">
-						{{ bundleCollections.length | number }}
+						{{ bundleCollectionsLength }}
 					</span>
 				</div>
 
 				<ul class="shell-nav">
 					<li
-						class="offline-disable"
 						v-for="bundleCollection of filteredBundleCollections"
 						:key="bundleCollection._id"
+						class="offline-disable"
 					>
 						<router-link
+							v-app-track-event="`sidebar:collection:bundle`"
 							:to="bundleCollection.routeLocation"
 							active-class="active"
-							v-app-track-event="`sidebar:collection:bundle`"
 							:title="bundleCollection.name"
 						>
 							<span class="shell-nav-icon">
@@ -165,31 +165,31 @@
 				<div class="nav-heading" :title="$gettext(`library.nav.playlists`)">
 					<translate>library.nav.playlists</translate>
 					<span class="badge">
-						{{ collections.length | number }}
+						{{ collectionsLength }}
 					</span>
 				</div>
 
 				<div class="nav-controls">
 					<app-button
+						v-app-track-event="`sidebar:playlist-add`"
 						primary
 						block
 						class="offline-disable"
 						@click="showAddPlaylistModal"
-						v-app-track-event="`sidebar:playlist-add`"
 					>
 						<translate>library.nav.new_playlist_button</translate>
 					</app-button>
 				</div>
 
-				<div class="nav-controls" v-if="collections.length > 0">
+				<div v-if="collections.length > 0" class="nav-controls">
 					<input
+						v-model="playlistFilterQuery"
 						type="search"
 						class="form-control"
 						:placeholder="$gettext(`library.nav.filter_playlists_placeholder`)"
-						v-model="playlistFilterQuery"
 					/>
 				</div>
-				<div class="-lighter alert" v-else>
+				<div v-else class="-lighter alert">
 					<div v-translate>library.nav.no_playlists_html</div>
 				</div>
 

@@ -14,7 +14,7 @@ import AppShellAccountPopover from '../account-popover/account-popover.vue';
 import AppShellFriendRequestPopover from '../friend-request-popover/friend-request-popover.vue';
 import AppShellNotificationPopover from '../notification-popover/notification-popover.vue';
 
-let components: any = {
+const components: any = {
 	AppPopper,
 	AppShellAccountPopover,
 	AppShellFriendRequestPopover,

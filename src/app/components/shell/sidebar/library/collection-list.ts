@@ -27,7 +27,7 @@ export default class AppShellSidebarCollectionList extends Vue {
 	 */
 	filterComparator(item: GameCollection) {
 		let actual: string;
-		let expected = this.filter.toLowerCase();
+		const expected = this.filter.toLowerCase();
 
 		actual = item.name.toLowerCase();
 		if (actual.indexOf(expected) !== -1) {

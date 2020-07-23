@@ -20,7 +20,7 @@ import AppShellCbarItem from '../item/item.vue';
 })
 export default class AppShellCbarControls extends Vue {
 	@InjectReactive(ChatKey) chat?: ChatClient;
-	@Prop(propOptional(Theme, null)) communityTheme!: Theme;
+	@Prop(propOptional(Theme, null)) communityTheme!: Theme | null;
 
 	@AppState user!: AppStore['user'];
 	@State visibleLeftPane!: Store['visibleLeftPane'];

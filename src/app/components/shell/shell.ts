@@ -17,7 +17,7 @@ import './shell.styl';
 import AppShellSidebar from './sidebar/sidebar.vue';
 import AppShellTopNav from './top-nav/top-nav.vue';
 
-let components: any = {
+const components: any = {
 	AppShellTopNav,
 	AppShellBody,
 	AppShellSidebar,
