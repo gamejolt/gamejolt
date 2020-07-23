@@ -78,7 +78,7 @@ export default class AppGameFollowWidget extends Vue {
 		return !this.game.is_following
 			? this.$gettext(
 					`Follow this game to add it to your Library and be notified when new posts are added.`
-					// tslint:disable-next-line:indent
+					// eslint-disable-next-line no-mixed-spaces-and-tabs
 			  )
 			: undefined;
 	}

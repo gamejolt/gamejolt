@@ -1,14 +1,14 @@
 <template>
 	<div class="-container">
 		<app-theme-svg class="-ill" :src="src" />
-		<div class="-text" v-if="hasContent">
+		<div class="-text" :class="{ '-sm': sm }" v-if="hasContent">
 			<slot />
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 $-font-size-xs = 16px
 $-font-size = 19px
@@ -29,7 +29,8 @@ $-font-size = 19px
 	max-width: 500px
 
 	@media $media-sm-up
-		font-size: $-font-size
+		&:not(.-sm)
+			font-size: $-font-size
 </style>
 
 <script lang="ts" src="./illustration"></script>
