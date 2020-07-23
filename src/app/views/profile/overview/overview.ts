@@ -340,8 +340,8 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			const chatUser = this.chat.friendsList.collection.find(u => u.id === this.user!.id);
 			if (chatUser) {
 				this.toggleRightPane();
-				if (this.chat.sessionRoomId) {
-					enterChatRoom(this.chat, this.chat.sessionRoomId);
+				if (chatUser.room_id) {
+					enterChatRoom(this.chat, chatUser.room_id);
 				}
 			}
 		}
