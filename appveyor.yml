@@ -6,7 +6,7 @@ image: Visual Studio 2015
 environment:
   GOPATH: C:\gopath
   GOROOT: C:\go110-x86
-  nodejs_version: '10.13.0'
+  nodejs_version: '12.18.0'
 
 stack: go 1.10
 
@@ -16,7 +16,7 @@ branches:
 
 install:
   # Software we need - provided by Appveyor's VS2015 image:
-  # Node 10.13.0
+  # Node 12.18.0
   # Yarn 1.9.4
   # Go 1.10.8
   # InnoSetup 5.x Unicode
@@ -36,6 +36,8 @@ install:
   # Make InnoSetup and MinGW tools accessible from path
   - set PATH=C:\Program Files (x86)\Inno Setup 5;C:\MinGW\bin;%GOROOT%\bin;%GOPATH%\bin;%PATH%
   - echo %PATH%
+
+  - dir C:\avvm\node
 
   - node --version
   - yarn --version
