@@ -16,7 +16,6 @@ branches:
 
 install:
   # Software we need - provided by Appveyor's VS2015 image:
-  # Node 12.18.0
   # Yarn 1.9.4
   # Go 1.10.8
   # InnoSetup 5.x Unicode
@@ -37,7 +36,10 @@ install:
   - set PATH=C:\Program Files (x86)\Inno Setup 5;C:\MinGW\bin;%GOROOT%\bin;%GOPATH%\bin;%PATH%
   - echo %PATH%
 
-  - dir C:\avvm\node
+  # Install Node 12.18.0
+  # As of time of writing, appveyor provides 12.14.1 at the latest.
+  - echo %nodejs_version%
+  - Update-NodeJsInstallation %nodejs_version%
 
   - node --version
   - yarn --version

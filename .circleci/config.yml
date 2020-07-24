@@ -19,14 +19,16 @@ jobs:
             echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin' >> $BASH_ENV
 
       - run:
-          name: Get NodeJS 12.18.0
+          # At the time of writing this resolves to 12.18.3
+          name: Get NodeJS 12.x
           command: |
             which node
             node --version
+            brew update
             brew search node
             brew unlink node
-            brew install node@12.18.0
-            brew link node@12.18.0
+            brew install node@12
+            brew link node@12
             node --version
 
       - run: yarn
