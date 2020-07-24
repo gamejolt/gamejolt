@@ -18,19 +18,6 @@ jobs:
             echo 'export GOPATH=$HOME/go' >> $BASH_ENV
             echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin' >> $BASH_ENV
 
-      - run:
-          # At the time of writing this resolves to 12.18.3
-          name: Get NodeJS 12.x
-          command: |
-            which node
-            node --version
-            brew update
-            brew search node
-            brew unlink node
-            brew install node@12
-            brew link node@12
-            node --version
-
       - run: yarn
 
       - run: yarn run client-build-osx
@@ -44,7 +31,7 @@ jobs:
 
   build-linux:
     docker:
-      - image: circleci/node:12.18.0
+      - image: circleci/node:10.13.0
     steps:
       - checkout
       - run:
