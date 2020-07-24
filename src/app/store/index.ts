@@ -149,7 +149,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	get hasSidebar() {
-		return !this.isShellHidden && (Screen.isXs || !!this.app.user);
+		return !this.isShellHidden;
 	}
 
 	get hasCbar() {
