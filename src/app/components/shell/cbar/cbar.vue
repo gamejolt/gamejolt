@@ -2,7 +2,7 @@
 	<div id="shell-cbar" class="theme-dark">
 		<app-scroll-scroller v-if="hasCbar" class="-scroller" hide-scrollbar>
 			<div class="-inner">
-				<app-shell-cbar-controls :community-theme="activeCommunityTheme" />
+				<app-shell-cbar-controls />
 
 				<transition-group name="-communities">
 					<app-shell-cbar-community
