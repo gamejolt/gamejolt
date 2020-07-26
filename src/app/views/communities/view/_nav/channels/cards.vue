@@ -7,6 +7,7 @@
 			:background-item="frontpageChannel.background"
 			:is-active="activeChannel === frontpageChannel"
 			:is-unread="isChannelUnread(frontpageChannel)"
+			@click-channel="onChannelClick"
 		/>
 
 		<app-community-channel-card
@@ -17,6 +18,7 @@
 			:background-item="allChannel.background"
 			:is-active="activeChannel === allChannel"
 			:is-unread="isChannelUnread(allChannel)"
+			@click-channel="onChannelClick"
 		/>
 
 		<h5 class="-heading">
@@ -34,13 +36,16 @@
 				:is-active="activeChannel === channel"
 				:is-unread="isChannelUnread(channel)"
 				:is-locked="isChannelLocked(channel)"
+				@click-channel="onChannelClick"
 			/>
 		</template>
 	</div>
 </template>
 
+<script lang="ts" src="./cards"></script>
+
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .-heading
 	display: none
@@ -49,5 +54,3 @@
 		display: block
 		margin-top: 24px
 </style>
-
-<script lang="ts" src="./cards"></script>

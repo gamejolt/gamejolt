@@ -11,31 +11,30 @@
 		@hide="popperVisible = false"
 	>
 		<template #default>
-			<div @click.capture="onCommunityClick">
-				<app-shell-cbar-item
-					:is-active="isActive"
-					:is-unread="isUnread"
-					:highlight="highlight"
-					:notification-count="featureCount"
+			<app-shell-cbar-item
+				:is-active="isActive"
+				:is-unread="isUnread"
+				:highlight="highlight"
+				:notification-count="featureCount"
+				@click.native.capture="onCommunityClick"
+			>
+				<router-link
+					v-app-tooltip.right="tooltip"
+					class="-link link-unstyled"
+					:to="{
+						name: 'communities.view.overview',
+						params: { path: community.path },
+					}"
 				>
-					<router-link
-						v-app-tooltip.right="tooltip"
-						class="-link link-unstyled"
-						:to="{
-							name: 'communities.view.overview',
-							params: { path: community.path },
-						}"
+					<app-media-item-backdrop
+						class="-backdrop"
+						:media-item="community.thumbnail"
+						radius="full"
 					>
-						<app-media-item-backdrop
-							class="-backdrop"
-							:media-item="community.thumbnail"
-							radius="full"
-						>
-							<app-community-thumbnail-img class="-thumb" :community="community" />
-						</app-media-item-backdrop>
-					</router-link>
-				</app-shell-cbar-item>
-			</div>
+						<app-community-thumbnail-img class="-thumb" :community="community" />
+					</app-media-item-backdrop>
+				</router-link>
+			</app-shell-cbar-item>
 		</template>
 
 		<template #popover>

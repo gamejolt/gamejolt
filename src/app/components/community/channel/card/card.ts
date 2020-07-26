@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Emit, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
 import {
 	Community,
@@ -37,6 +37,8 @@ export default class AppCommunityChannelCard extends Vue {
 
 	$el!: HTMLElement;
 
+	@Emit('click-channel') emitChannelClick(_channelPath: string) {}
+
 	mounted() {
 		// Initialize cardHeight to be based off the card width, maintaining aspect ratio.
 		this.updateCardHeight();
@@ -66,5 +68,9 @@ export default class AppCommunityChannelCard extends Vue {
 	updateCardHeight() {
 		// This gets triggered when the card resizes, setting the new card height appropriately.
 		this.cardHeight = (this.$el.offsetWidth / CARD_WIDTH) * CARD_HEIGHT;
+	}
+
+	onChannelClick() {
+		this.emitChannelClick(this.path);
 	}
 }

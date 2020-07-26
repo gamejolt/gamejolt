@@ -90,9 +90,12 @@ export default class AppShellCbarCommunity extends Vue {
 		await this.leaveCommunity(this.community);
 	}
 
-	onCommunityClick() {
-		if (this.$route.params.path === this.community.path) {
+	onCommunityClick(event: Event) {
+		if (this.isActive) {
+			// Toggle the left-pane as context if we're currently on the route of the item that was clicked.
 			this.toggleLeftPane('context');
+			// Prevent the click from triggering a route change.
+			event.preventDefault();
 		}
 	}
 

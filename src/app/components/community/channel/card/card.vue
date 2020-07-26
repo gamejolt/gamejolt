@@ -6,6 +6,7 @@
 		:to="linkTo"
 		:title="label"
 		:style="{ height }"
+		@click.native.capture="onChannelClick"
 	>
 		<div v-if="backgroundItem" class="-card-bg">
 			<app-media-item-backdrop :media-item="backgroundItem">
