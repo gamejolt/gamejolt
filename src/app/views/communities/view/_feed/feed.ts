@@ -150,7 +150,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 		// Mark the community/channel as read after loading new posts.
 		Api.sendRequest(
 			`/web/communities/mark-as-read/${this.community.path}/${this.channel.title}`,
-			undefined,
+			{},
 			{ detach: true }
 		);
 	}

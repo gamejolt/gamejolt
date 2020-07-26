@@ -97,8 +97,8 @@ export async function getCommentUrl(commentId: number): Promise<string> {
 		detach: true,
 	});
 
-	if (!response || response.error) {
-		return Promise.reject(response.error);
+	if (!response || response.errors) {
+		return Promise.reject(response.errors);
 	}
 
 	return response.url;

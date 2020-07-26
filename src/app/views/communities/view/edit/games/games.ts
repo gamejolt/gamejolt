@@ -33,7 +33,7 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 @RouteResolver({
 	deps: { params: ['id'] },
 	resolver({ route }) {
-		return Api.sendRequest('/web/dash/communities/games/' + route.params.id, {});
+		return Api.sendRequest('/web/dash/communities/games/' + route.params.id);
 	},
 })
 export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
