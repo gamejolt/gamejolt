@@ -8,6 +8,7 @@
 					<app-shell-cbar-community
 						v-for="community of communities"
 						:key="community.id"
+						class="-community-item"
 						:community="community"
 					/>
 				</transition-group>
@@ -43,9 +44,16 @@
 	transform: translateX((-($shell-cbar-width)))
 	transition: transform 300ms $weak-ease-out
 
-.-communities-move
-	transition: transform 0.3s
-	transition-timing-function: $ease-out-back
+.-community-item
+	transition: transform 300ms $ease-out-back, opacity 150ms
+
+.-communities
+	&-enter
+	&-leave-to
+		opacity: 0
+
+	&-leave-active
+		position: absolute
 
 .-scroller
 	position: relative

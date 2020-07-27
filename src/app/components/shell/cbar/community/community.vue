@@ -68,9 +68,6 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
-.-community
-	pressy()
-
 .-backdrop
 	change-bg('dark')
 
