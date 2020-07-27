@@ -61,18 +61,6 @@
 		</template>
 
 		<hr v-if="Screen.isXs || user" class="-hr" />
-
-		<!-- <app-expand class="-expand" :when="shouldShowCommunity">
-			<transition name="-community">
-				<div v-if="shouldShowCommunity">
-					<app-shell-cbar-community
-						:key="community.id"
-						class="anim-fade-in"
-						:community="community"
-					/>
-				</div>
-			</transition>
-		</app-expand> -->
 	</div>
 </template>
 
@@ -106,22 +94,4 @@
 		border-top-width: $border-width-large
 		width: 50%
 		margin: ($grid-gutter-width-xs / 2) auto
-
-	// AppExpand has 'overflow: hidden', so we need to shift
-	// the slot content to allow the cbar item blip to be visible.
-	> .-expand
-		width: $cbar-item-size + $cbar-blip-size
-		padding-left: $cbar-blip-size
-		margin-left: -($cbar-blip-size)
-
-// Transition for when the unjoined community is leaving.
-// Since the <transition> tag is nested within AppExpand, it will disappear shortly after the 'when' prop is false,
-// causing it to be unable to add transitions to the unjoined community once it reenters the DOM.
-.-community
-	&-leave-active
-		transition: opacity 0.3s
-		transition-timing-function: $strong-ease-out
-
-	&-leave-to
-		opacity: 0
 </style>
