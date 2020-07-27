@@ -24,7 +24,7 @@ export default class AppShellCbarItem extends Vue {
 
 	// We want a context indicator only for non-control items that are the current active item (selected or active route).
 	get hasContextIndicator() {
-		return this.isActive && !this.isControl;
+		return !Screen.isLg && this.isActive && !this.isControl;
 	}
 
 	// There can be two active items between the cbar controls and normal cbar items,
