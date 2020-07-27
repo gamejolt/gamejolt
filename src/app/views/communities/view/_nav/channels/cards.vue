@@ -48,9 +48,5 @@
 @import '~styles/variables'
 
 .-heading
-	display: none
-
-	@media $media-lg-up
-		display: block
-		margin-top: 24px
+	margin-top: 24px
 </style>

@@ -5,10 +5,3 @@
 </template>
 
 <script lang="ts" src="./context"></script>
-
-<style lang="stylus" scoped>
-@import '~styles/variables'
-
-#shell-sidebar-context
-	padding: $shell-content-sidebar-padding
-</style>

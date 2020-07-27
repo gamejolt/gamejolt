@@ -17,6 +17,11 @@
 @import '../../../../community/channel/card/variables'
 
 .sidebar-context-channels
+	padding: $shell-content-sidebar-padding
+
+	@media $media-sm-up
+		padding-right: 0
+
 	> .-card
 		max-width: $card-width
 </style>
