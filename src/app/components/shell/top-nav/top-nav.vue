@@ -4,7 +4,7 @@
 			<div v-app-observe-dimensions="checkColWidths" class="-col">
 				<a
 					v-if="Screen.isXs"
-					class="-menu-toggle navbar-item"
+					class="-small-cbar navbar-item"
 					:class="{
 						active: !!visibleLeftPane,
 					}"
@@ -23,7 +23,7 @@
 					class="navbar-item"
 					:class="{
 						active: $route.name === 'home',
-						'-menu-toggle': Screen.isSm,
+						'-small-home': Screen.isSm,
 					}"
 					:to="{ name: 'home' }"
 				>
@@ -186,10 +186,19 @@
 		.jolticon
 			cursor: help
 
-// We want to make this the same width as the cbar, so that it aligns.
-.-menu-toggle
-	width: $shell-cbar-width
-	text-align: center
+// Make the small top-nav items the same width as the cbar while the cbar is showing.
+.-small
+	&-home
+		width: $shell-cbar-width
+
+	// Transition the width of the cbar toggle to better match up with the cbar.
+	&-cbar
+		text-align: center
+		min-width: 40px
+		transition: min-width 300ms $weak-ease-out
+
+		&.active
+			min-width: $shell-cbar-width
 
 .-explore-icon
 	position: relative
