@@ -51,6 +51,7 @@
 	&-enter
 	&-leave-to
 		opacity: 0
+		transform: translateY(-15px)
 
 	&-leave-active
 		position: absolute

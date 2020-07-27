@@ -11,30 +11,32 @@
 		@hide="popperVisible = false"
 	>
 		<template #default>
-			<app-shell-cbar-item
-				:is-active="isActive"
-				:is-unread="isUnread"
-				:highlight="highlight"
-				:notification-count="featureCount"
-				@click.native.capture="onCommunityClick"
-			>
-				<router-link
-					v-app-tooltip.right="tooltip"
-					class="-link link-unstyled"
-					:to="{
-						name: 'communities.view.overview',
-						params: { path: community.path },
-					}"
+			<div class="-community">
+				<app-shell-cbar-item
+					:is-active="isActive"
+					:is-unread="isUnread"
+					:highlight="highlight"
+					:notification-count="featureCount"
+					@click.native.capture="onCommunityClick"
 				>
-					<app-media-item-backdrop
-						class="-backdrop"
-						:media-item="community.thumbnail"
-						radius="full"
+					<router-link
+						v-app-tooltip.right="tooltip"
+						class="-link link-unstyled"
+						:to="{
+							name: 'communities.view.overview',
+							params: { path: community.path },
+						}"
 					>
-						<app-community-thumbnail-img class="-thumb" :community="community" />
-					</app-media-item-backdrop>
-				</router-link>
-			</app-shell-cbar-item>
+						<app-media-item-backdrop
+							class="-backdrop"
+							:media-item="community.thumbnail"
+							radius="full"
+						>
+							<app-community-thumbnail-img class="-thumb" :community="community" />
+						</app-media-item-backdrop>
+					</router-link>
+				</app-shell-cbar-item>
+			</div>
 		</template>
 
 		<template #popover>
@@ -67,6 +69,9 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 @import '~styles-lib/mixins'
+
+.-community
+	pressy()
 
 .-backdrop
 	change-bg('dark')
