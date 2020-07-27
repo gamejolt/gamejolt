@@ -17,16 +17,8 @@ export type SidebarMutations = {
 
 @VuexModule()
 export class SidebarStore extends VuexStore<SidebarStore, SidebarActions, SidebarMutations> {
-	_sidebarComponent: Vue | null = null;
-	_sidebarProps: Record<string, any> | null = null;
-
-	get sidebarProps() {
-		return this._sidebarProps;
-	}
-
-	get sidebarComponent() {
-		return this._sidebarComponent;
-	}
+	sidebarComponent: Vue | null = null;
+	sidebarProps: Record<string, any> | null = null;
 
 	@VuexAction
 	async clearSidebarContext() {
@@ -36,11 +28,11 @@ export class SidebarStore extends VuexStore<SidebarStore, SidebarActions, Sideba
 
 	@VuexMutation
 	setSidebarComponent(component: SidebarMutations['sidebar/setSidebarComponent']) {
-		this._sidebarComponent = component;
+		this.sidebarComponent = component;
 	}
 
 	@VuexMutation
 	setSidebarProps(props: SidebarMutations['sidebar/setSidebarProps']) {
-		this._sidebarProps = props;
+		this.sidebarProps = props;
 	}
 }
