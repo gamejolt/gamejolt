@@ -67,7 +67,6 @@
 	position: absolute
 	right: -2px
 	z-index: 2
-	border-radius: 10px
 	border-color: var(--theme-darkest)
 	border-width: 3px
 	border-style: solid
@@ -75,6 +74,7 @@
 	text-align: center
 
 .-notification-count
+	border-radius: 10px
 	bottom: -2px
 	padding-left: 4px
 	padding-right: 4px
@@ -83,10 +83,12 @@
 	background-color: var(--theme-highlight)
 
 .-context-indicator
+	img-circle()
 	cursor: pointer
 	top: -2px
+	padding: 2px
 	color: var(--theme-lighter)
-	background-color: var(--theme-darker)
+	background-color: var(--theme-dark)
 	transition: opacity 300ms, visibility 300ms
 	transition-timing-function: $strong-ease-out
 
