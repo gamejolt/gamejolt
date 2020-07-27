@@ -32,10 +32,8 @@ export default class AppShellCbarCommunity extends Vue {
 
 	@AppState user!: AppStore['user'];
 	@ThemeState userTheme!: ThemeStore['userTheme'];
-	@State grid!: Store['grid'];
 	@State activeCommunity!: Store['activeCommunity'];
 	@State communityStates!: Store['communityStates'];
-	@State visibleLeftPane!: Store['visibleLeftPane'];
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
 	@Action leaveCommunity!: Store['leaveCommunity'];
 

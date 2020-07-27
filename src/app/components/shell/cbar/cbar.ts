@@ -22,6 +22,17 @@ import AppShellCbarItem from './item/item.vue';
 })
 export default class AppShellCbar extends Vue {
 	@AppState user!: AppStore['user'];
-	@State communities!: Store['communities'];
 	@State hasCbar!: Store['hasCbar'];
+	@State activeCommunity!: Store['activeCommunity'];
+	@State('communities') joinedCommunities!: Store['communities'];
+
+	get communities() {
+		const communities = [...this.joinedCommunities];
+
+		if (this.activeCommunity && !communities.find(i => i.id === this.activeCommunity!.id)) {
+			communities.unshift(this.activeCommunity);
+		}
+
+		return communities;
+	}
 }

@@ -62,7 +62,7 @@
 
 		<hr v-if="Screen.isXs || user" class="-hr" />
 
-		<app-expand class="-expand" :when="shouldShowCommunity">
+		<!-- <app-expand class="-expand" :when="shouldShowCommunity">
 			<transition name="-community">
 				<div v-if="shouldShowCommunity">
 					<app-shell-cbar-community
@@ -72,7 +72,7 @@
 					/>
 				</div>
 			</transition>
-		</app-expand>
+		</app-expand> -->
 	</div>
 </template>
 
