@@ -4,7 +4,6 @@ import { Action, State } from 'vuex-class';
 import { Community } from '../../../../../_common/community/community.model';
 import AppExpand from '../../../../../_common/expand/expand.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { SidebarState, SidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../../store/index';
@@ -26,7 +25,7 @@ export default class AppShellCbarControls extends Vue {
 	@InjectReactive(ChatKey) chat?: ChatClient;
 
 	@AppState user!: AppStore['user'];
-	@SidebarState sidebarProps!: SidebarStore['sidebarProps'];
+	@State activeCommunity!: Store['activeCommunity'];
 	@State visibleLeftPane!: Store['visibleLeftPane'];
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
@@ -42,8 +41,8 @@ export default class AppShellCbarControls extends Vue {
 	}
 
 	get community(): Community | null {
-		if (this.sidebarProps && this.sidebarProps.community) {
-			return this.sidebarProps.community;
+		if (this.activeCommunity) {
+			return this.activeCommunity;
 		}
 
 		return null;

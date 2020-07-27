@@ -73,6 +73,8 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	@AppState user!: AppStore['user'];
 	@ThemeMutation setPageTheme!: ThemeStore['setPageTheme'];
+	@Mutation setActiveCommunity!: Store['setActiveCommunity'];
+	@Mutation clearActiveCommunity!: Store['clearActiveCommunity'];
 	@Mutation viewCommunity!: Store['viewCommunity'];
 	@State communityStates!: Store['communityStates'];
 
@@ -129,11 +131,13 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 			}
 		}
 
+		this.setActiveCommunity(community);
 		this.setPageTheme(community.theme || null);
 		this.viewCommunity(community);
 	}
 
 	routeDestroyed() {
+		this.clearActiveCommunity();
 		this.setPageTheme(null);
 	}
 

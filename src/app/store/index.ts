@@ -84,11 +84,13 @@ export type Mutations = AppMutations &
 		incrementNotificationCount: { type: UnreadItemType; count: number };
 		setFriendRequestCount: number;
 		changeFriendRequestCount: number;
+		setActiveCommunity: Community;
+		clearActiveCommunity: void;
 		viewCommunity: Community;
 		featuredPost: FiresidePost;
 	};
 
-let bootstrapResolver: Function | null = null;
+let bootstrapResolver: (() => void) | null = null;
 let backdrop: AppBackdrop | null = null;
 export let tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
 
@@ -121,7 +123,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	comment!: CommentStore;
 	clientLibrary!: _ClientLibraryMod.ClientLibraryStore;
 
-	// From the vuex-router-sync.
+	/** From the vuex-router-sync. */
 	route!: Route;
 
 	grid: GridClient | null = null;
@@ -131,8 +133,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	isShellBootstrapped = false;
 	isShellHidden = false;
 
-	unreadActivityCount = 0; // unread items in the activity feed
-	unreadNotificationsCount = 0; // unread items in the notification feed
+	/** Unread items in the activity feed. */
+	unreadActivityCount = 0;
+	/** Unread items in the notification feed. */
+	unreadNotificationsCount = 0;
 	friendRequestCount = 0;
 	notificationState: ActivityFeedState | null = null;
 
@@ -141,6 +145,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	overlayedRightPane = '';
 	hasContentSidebar = false;
 
+	/** Will be set to the community they're currently viewing (if any). */
+	activeCommunity: null | Community = null;
 	communities: Community[] = [];
 	communityStates: CommunityStates = new CommunityStates();
 
@@ -459,6 +465,16 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		}
 
 		this.communities.splice(idx, 1);
+	}
+
+	@VuexMutation
+	setActiveCommunity(community: Mutations['setActiveCommunity']) {
+		this.activeCommunity = community;
+	}
+
+	@VuexMutation
+	clearActiveCommunity() {
+		this.activeCommunity = null;
 	}
 
 	@VuexMutation

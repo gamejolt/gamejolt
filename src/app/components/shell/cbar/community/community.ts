@@ -33,6 +33,7 @@ export default class AppShellCbarCommunity extends Vue {
 	@AppState user!: AppStore['user'];
 	@ThemeState userTheme!: ThemeStore['userTheme'];
 	@State grid!: Store['grid'];
+	@State activeCommunity!: Store['activeCommunity'];
 	@State communityStates!: Store['communityStates'];
 	@State visibleLeftPane!: Store['visibleLeftPane'];
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
@@ -55,11 +56,7 @@ export default class AppShellCbarCommunity extends Vue {
 	}
 
 	get isActive() {
-		return (
-			this.$route.name &&
-			this.$route.name.indexOf('communities.view') === 0 &&
-			this.$route.params.path === this.community!.path
-		);
+		return this.activeCommunity?.id === this.community.id;
 	}
 
 	get highlight() {
