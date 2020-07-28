@@ -189,7 +189,7 @@
 						:placeholder="$gettext(`library.nav.filter_playlists_placeholder`)"
 					/>
 				</div>
-				<div v-else class="-lighter alert">
+				<div v-else class="-no-playlists alert">
 					<div v-translate>library.nav.no_playlists_html</div>
 				</div>
 
@@ -237,9 +237,13 @@
 <script lang="ts" src="./library"></script>
 
 <style lang="stylus" scoped>
+@import '~styles/variables'
+
 #shell-sidebar-library
 	padding-top: 16px
 
-	.-lighter
-		background-color: var(--theme-gray)
+	.-no-playlists
+		margin-left: ($grid-gutter-width-xs / 2)
+		margin-right: ($grid-gutter-width-xs / 2)
+		background-color: var(--theme-bg-subtle)
 </style>
