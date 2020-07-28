@@ -6,6 +6,7 @@ import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue'
 import {
 	SidebarAction,
 	SidebarMutation,
+	SidebarState,
 	SidebarStore,
 } from '../../../../_common/sidebar/sidebar.store';
 import { Store } from '../../../store/index';
@@ -26,12 +27,13 @@ export default class AppShellContentWithSidebar extends Vue {
 
 	@State visibleLeftPane!: Store['visibleLeftPane'];
 	@Mutation setHasContentSidebar!: Store['setHasContentSidebar'];
+	@SidebarState sidebarComponent!: SidebarStore['sidebarComponent'];
 	@SidebarMutation setSidebarComponent!: SidebarStore['setSidebarComponent'];
 	@SidebarMutation setSidebarProps!: SidebarStore['setSidebarProps'];
 	@SidebarAction clearSidebarContext!: SidebarStore['clearSidebarContext'];
 
-	get hasRouteContext() {
-		return this.$route.meta.contextPane;
+	get hasContext() {
+		return !!this.sidebarComponent;
 	}
 
 	get isShowingSidebar() {

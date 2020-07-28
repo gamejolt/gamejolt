@@ -121,6 +121,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	library!: LibraryStore;
 	banner!: BannerStore;
 	comment!: CommentStore;
+	sidebar!: SidebarStore;
 	clientLibrary!: _ClientLibraryMod.ClientLibraryStore;
 
 	/** From the vuex-router-sync. */
@@ -163,8 +164,9 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	get visibleLeftPane() {
-		// If there's no other left-pane pane opened, Large breakpoint should always show the 'context' pane if the route has context.
-		if (Screen.isLg && !!this.route.meta.contextPane && !this.overlayedLeftPane) {
+		// If there's no other left-pane pane opened, Large breakpoint should
+		// always show the 'context' pane if there is a context component set.
+		if (Screen.isLg && this.sidebar.sidebarComponent && !this.overlayedLeftPane) {
 			return 'context';
 		}
 
@@ -289,8 +291,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			// Close the left-pane if the cbar is also closing.
 			this._toggleLeftPane();
 		} else {
-			// Open the left pane depending on the route context when the cbar shows.
-			this._toggleLeftPane(this.route.meta.contextPane ? 'context' : 'library');
+			// Open the left-pane depending on the SidebarStore information when the cbar shows.
+			this._toggleLeftPane(this.sidebar.sidebarComponent ? 'context' : 'library');
 		}
 
 		this.checkBackdrop();

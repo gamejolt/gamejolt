@@ -5,7 +5,4 @@ export const routeCommunitiesViewOverview: RouteConfig = {
 	path: '/c/:path',
 	component: () =>
 		import(/* webpackChunkName: "routeCommunitiesViewOverview" */ './overview.vue'),
-	meta: {
-		contextPane: 'channels',
-	},
 };
