@@ -1,14 +1,16 @@
+<script lang="ts" src="./backdrop"></script>
+
 <template>
 	<div
 		class="backdrop"
 		:class="[className, { active }]"
 		@click="_clicked"
 		@transitionend="_transitionend"
-	></div>
+	/>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .backdrop
 	position: absolute
@@ -26,13 +28,10 @@
 	user-select: none
 	z-index: $zindex-backdrop
 	opacity: 0
-	transition: opacity 300ms, backdrop-filter 300ms
+	transition: opacity 300ms
 	will-change: opacity
-	backdrop-filter: blur(2px)
-	-webkit-backdrop-filter: blur(2px)
 
 	&.active
 		opacity: 1
 </style>
 
-<script lang="ts" src="./backdrop"></script>
