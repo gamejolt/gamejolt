@@ -1,3 +1,5 @@
+<script lang="ts" src="./form"></script>
+
 <template>
 	<app-form ref="form" name="chat-send-form">
 		<app-shortkey shortkey="tab" @press="onTabKeyPressed" />
@@ -46,8 +48,6 @@
 		</app-form-group>
 	</app-form>
 </template>
-
-<script lang="ts" src="./form"></script>
 
 <style lang="stylus" scoped>
 @import '../../variables'
