@@ -33,6 +33,11 @@
 			</router-link>
 		</li>
 		<li>
+			<router-link :to="{ name: 'dash.games.manage.api.mods' }" active-class="active">
+				<translate>Mod Support</translate>
+			</router-link>
+		</li>
+		<li>
 			<router-link :to="{ name: 'dash.games.manage.api.settings' }" active-class="active">
 				<translate>API Settings</translate>
 			</router-link>
