@@ -33,7 +33,6 @@ import {
 import AppCommunitiesViewCard from './_card/card.vue';
 import AppEditableThumbnail from './_editable-thumbnail/editable-thumbnail.vue';
 import AppNavChannels from './_nav/channels/channels.vue';
-import AppNavEdit from './_nav/edit/edit.vue';
 
 @Component({
 	name: 'RouteCommunitiesView',
@@ -48,7 +47,6 @@ import AppNavEdit from './_nav/edit/edit.vue';
 		AppCommunityVerifiedTick,
 		AppCommunitiesViewCard,
 		AppNavChannels,
-		AppNavEdit,
 		AppEditableThumbnail,
 	},
 })

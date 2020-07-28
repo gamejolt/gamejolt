@@ -1,5 +1,5 @@
 <template>
-	<component :is="component" :class="classes" v-bind="props">
+	<nav class="platform-list">
 		<ul>
 			<li>
 				<router-link
@@ -68,20 +68,14 @@
 				</router-link>
 			</app-community-perms>
 		</ul>
-	</component>
+	</nav>
 </template>
 
+<script lang="ts" src="./edit"></script>
+
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .platform-list
 	margin-left: 12px
-
-.-nav-inline
-	margin-top: ($grid-gutter-width-xs / 2)
-
-	@media $media-sm-up
-		margin-top: ($grid-gutter-width / 2)
 </style>
-
-<script lang="ts" src="./edit"></script>

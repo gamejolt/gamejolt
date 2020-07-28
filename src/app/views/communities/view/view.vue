@@ -125,8 +125,6 @@
 						</app-page-header-controls>
 					</template>
 				</app-page-header>
-
-				<app-nav-edit v-if="isEditing" />
 			</template>
 
 			<router-view />
