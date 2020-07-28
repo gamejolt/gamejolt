@@ -189,6 +189,7 @@
 // Make the small top-nav items the same width as the cbar while the cbar is showing.
 .-small
 	&-home
+		text-align: center
 		width: $shell-cbar-width
 
 	// Transition the width of the cbar toggle to better match up with the cbar.
