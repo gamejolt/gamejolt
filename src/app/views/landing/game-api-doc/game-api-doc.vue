@@ -70,7 +70,7 @@
 @import '~styles-lib/tables'
 
 .-content >>>
-	h1
+	h1:first-child
 		margin-top: 0
 
 	table
