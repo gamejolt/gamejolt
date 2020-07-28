@@ -1,5 +1,5 @@
 <template>
-	<app-form name="chat-send-form" ref="form">
+	<app-form ref="form" name="chat-send-form">
 		<app-shortkey shortkey="tab" @press="onTabKeyPressed" />
 
 		<app-form-group
@@ -22,7 +22,7 @@
 					:max-height="160"
 					:display-rules="displayRules"
 					:compact="Screen.isXs"
-					autofocus
+					:autofocus="!Screen.isMobile"
 					@submit="onSubmit"
 					@insert-block-node="onEditorInsertBlockNode"
 					@focus="onFocusEditor"
@@ -33,8 +33,8 @@
 			</div>
 
 			<app-button
-				:disabled="isSendButtonDisabled"
 				v-app-tooltip="$gettext(`Send message`)"
+				:disabled="isSendButtonDisabled"
 				class="-send-button"
 				sparse
 				icon="share-airplane"
@@ -46,6 +46,8 @@
 		</app-form-group>
 	</app-form>
 </template>
+
+<script lang="ts" src="./form"></script>
 
 <style lang="stylus" scoped>
 @import '../../variables'
@@ -103,5 +105,3 @@ $-button-padding = 48px
 			background-color: transparent !important
 			border-color: transparent !important
 </style>
-
-<script lang="ts" src="./form"></script>
