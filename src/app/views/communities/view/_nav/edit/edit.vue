@@ -67,6 +67,19 @@
 					<translate>Blocked Users</translate>
 				</router-link>
 			</app-community-perms>
+			<app-community-perms tag="li" :community="community" required="community-activity">
+				<router-link
+					:to="{
+						name: 'communities.view.edit.activity',
+						params: {
+							id: community.id,
+						},
+					}"
+					active-class="active"
+				>
+					<translate>Audit Log</translate>
+				</router-link>
+			</app-community-perms>
 		</ul>
 	</nav>
 </template>
