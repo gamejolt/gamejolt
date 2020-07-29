@@ -1,5 +1,7 @@
+<script lang="ts" src="./form"></script>
+
 <template>
-	<app-form name="chat-send-form" ref="form">
+	<app-form ref="form" name="chat-send-form">
 		<app-shortkey shortkey="tab" @press="onTabKeyPressed" />
 
 		<div class="-editing-message" v-if="isEditing">
@@ -29,7 +31,7 @@
 					:max-height="160"
 					:display-rules="displayRules"
 					:compact="Screen.isXs"
-					autofocus
+					:autofocus="!Screen.isMobile"
 					@submit="onSubmit"
 					@insert-block-node="onEditorInsertBlockNode"
 					@focus="onFocusEditor"
@@ -133,5 +135,3 @@ $-button-padding = 48px
 			background-color: transparent !important
 			border-color: transparent !important
 </style>
-
-<script lang="ts" src="./form"></script>
