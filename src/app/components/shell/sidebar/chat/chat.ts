@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Watch } from 'vue-property-decorator';
+import { Component, InjectReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { EscapeStack } from '../../../../../_common/escape-stack/escape-stack.service';
 import { number } from '../../../../../_common/filters/number';
@@ -22,7 +22,7 @@ export default class AppShellSidebarChat extends Vue {
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
 	friendsTab: 'all' | 'online' = 'all';
-	private escapeCallback?: Function;
+	private escapeCallback?: () => void;
 
 	readonly Screen = Screen;
 
@@ -45,6 +45,11 @@ export default class AppShellSidebarChat extends Vue {
 	}
 
 	mounted() {
+		// xs size needs to show the friends list
+		if (this.chat.sessionRoomId && !Screen.isXs) {
+			enterChatRoom(this.chat, this.chat.sessionRoomId);
+		}
+
 		this.escapeCallback = () => this.hideChatPane();
 		EscapeStack.register(this.escapeCallback);
 	}
@@ -54,23 +59,13 @@ export default class AppShellSidebarChat extends Vue {
 			EscapeStack.deregister(this.escapeCallback);
 			this.escapeCallback = undefined;
 		}
+
+		leaveChatRoom(this.chat);
 	}
 
 	hideChatPane() {
 		if (this.visibleLeftPane === 'chat') {
 			this.toggleLeftPane('chat');
-		}
-	}
-
-	@Watch('visibleLeftPane')
-	onLeftPaneChange(pane: string) {
-		if (pane === 'chat') {
-			// xs size needs to show the friends list
-			if (this.chat.sessionRoomId && !Screen.isXs) {
-				enterChatRoom(this.chat, this.chat.sessionRoomId);
-			}
-		} else {
-			leaveChatRoom(this.chat);
 		}
 	}
 }
