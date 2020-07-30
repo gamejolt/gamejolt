@@ -386,7 +386,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			url += '/' + gameId;
 		}
 
-		const response = await Api.sendRequest(url);
+		const response = await Api.sendRequest(url, {});
 		await FiresidePost.processCreate(response, 'post');
 		return new FiresidePost(response.post);
 	}
