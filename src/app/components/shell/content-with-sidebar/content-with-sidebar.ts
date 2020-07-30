@@ -1,14 +1,8 @@
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class';
-import { propOptional } from '../../../../utils/vue';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
-import {
-	SidebarAction,
-	SidebarMutation,
-	SidebarState,
-	SidebarStore,
-} from '../../../../_common/sidebar/sidebar.store';
+import { SidebarState, SidebarStore } from '../../../../_common/sidebar/sidebar.store';
 import { Store } from '../../../store/index';
 
 /**
@@ -22,32 +16,20 @@ import { Store } from '../../../store/index';
 	},
 })
 export default class AppShellContentWithSidebar extends Vue {
-	@Prop({ default: null }) contextComponent!: Vue | null;
-	@Prop(propOptional(Object, null)) contextProps!: Record<string, unknown> | null;
-
+	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
 	@State visibleLeftPane!: Store['visibleLeftPane'];
 	@Mutation setHasContentSidebar!: Store['setHasContentSidebar'];
-	@SidebarState sidebarComponent!: SidebarStore['sidebarComponent'];
-	@SidebarMutation setSidebarComponent!: SidebarStore['setSidebarComponent'];
-	@SidebarMutation setSidebarProps!: SidebarStore['setSidebarProps'];
-	@SidebarAction clearSidebarContext!: SidebarStore['clearSidebarContext'];
 
 	get hasContext() {
-		return !!this.sidebarComponent;
+		return !!this.activeContextPane;
 	}
 
 	get isShowingSidebar() {
 		return this.visibleLeftPane === 'context';
 	}
 
-	mounted() {
-		this.setSidebarComponent(this.contextComponent);
-		this.setSidebarProps(this.contextProps);
-	}
-
 	beforeDestroy() {
 		this.setHasContentSidebar(false);
-		this.clearSidebarContext();
 	}
 
 	/**
@@ -56,15 +38,5 @@ export default class AppShellContentWithSidebar extends Vue {
 	@Watch('isShowingSidebar', { immediate: true })
 	onSidebarChange() {
 		this.setHasContentSidebar(this.isShowingSidebar);
-	}
-
-	@Watch('contextComponent')
-	onContextComponentChange(component: Vue) {
-		this.setSidebarComponent(component);
-	}
-
-	@Watch('contextProps')
-	onContextPropsChange(props: Record<string, unknown>) {
-		this.setSidebarProps(props);
 	}
 }

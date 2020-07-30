@@ -1,6 +1,10 @@
 <template>
-	<div id="shell-sidebar-context" class="fill-offset" thin>
-		<component :is="sidebarComponent" v-bind="sidebarProps" />
+	<div id="shell-sidebar-context">
+		<component
+			:is="activeContextPane.component"
+			v-if="activeContextPane"
+			v-bind="activeContextPane.props"
+		/>
 	</div>
 </template>
 

@@ -1,7 +1,7 @@
 <template>
 	<nav class="platform-list">
 		<ul>
-			<li>
+			<li @click.capture="onChangeSection('communities.view.edit.details')">
 				<router-link
 					:to="{
 						name: 'communities.view.edit.details',
@@ -15,7 +15,12 @@
 					<translate>Details</translate>
 				</router-link>
 			</li>
-			<app-community-perms tag="li" :community="community" required="community-channels">
+			<app-community-perms
+				tag="li"
+				:community="community"
+				required="community-channels"
+				@click.native.capture="onChangeSection('communities.view.edit.channels')"
+			>
 				<router-link
 					:to="{
 						name: 'communities.view.edit.channels',
@@ -28,7 +33,12 @@
 					<translate>Channels</translate>
 				</router-link>
 			</app-community-perms>
-			<app-community-perms tag="li" :community="community" required="community-games">
+			<app-community-perms
+				tag="li"
+				:community="community"
+				required="community-games"
+				@click.native.capture="onChangeSection('communities.view.edit.games')"
+			>
 				<router-link
 					:to="{
 						name: 'communities.view.edit.games',
@@ -41,7 +51,12 @@
 					<translate>Games</translate>
 				</router-link>
 			</app-community-perms>
-			<app-community-perms tag="li" :community="community" required="community-moderators">
+			<app-community-perms
+				tag="li"
+				:community="community"
+				required="community-moderators"
+				@click.native.capture="onChangeSection('communities.view.edit.moderators')"
+			>
 				<router-link
 					:to="{
 						name: 'communities.view.edit.moderators',
@@ -54,7 +69,12 @@
 					<translate>Moderators</translate>
 				</router-link>
 			</app-community-perms>
-			<app-community-perms tag="li" :community="community" required="community-blocks">
+			<app-community-perms
+				tag="li"
+				:community="community"
+				required="community-blocks"
+				@click.native.capture="onChangeSection('communities.view.edit.blocks')"
+			>
 				<router-link
 					:to="{
 						name: 'communities.view.edit.blocks',

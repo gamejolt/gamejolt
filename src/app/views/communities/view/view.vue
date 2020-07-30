@@ -1,9 +1,5 @@
 <template>
-	<app-shell-content-with-sidebar
-		v-if="community"
-		:context-component="sidebarComponent"
-		:context-props="sidebarProps"
-	>
+	<app-shell-content-with-sidebar v-if="community">
 		<template #default>
 			<template v-if="!routeStore.isShowingSidebar">
 				<app-page-header

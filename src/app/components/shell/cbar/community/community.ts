@@ -8,6 +8,7 @@ import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/bac
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
+import { SidebarMutation, SidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { ThemeState, ThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -34,8 +35,9 @@ export default class AppShellCbarCommunity extends Vue {
 	@ThemeState userTheme!: ThemeStore['userTheme'];
 	@State activeCommunity!: Store['activeCommunity'];
 	@State communityStates!: Store['communityStates'];
-	@Action toggleLeftPane!: Store['toggleLeftPane'];
 	@Action leaveCommunity!: Store['leaveCommunity'];
+	@Action toggleLeftPane!: Store['toggleLeftPane'];
+	@SidebarMutation showContextOnRouteChange!: SidebarStore['showContextOnRouteChange'];
 
 	popperVisible = false;
 
@@ -87,10 +89,11 @@ export default class AppShellCbarCommunity extends Vue {
 
 	onCommunityClick(event: Event) {
 		if (this.isActive) {
-			// Toggle the left-pane as context if we're currently on the route of the item that was clicked.
 			this.toggleLeftPane('context');
 			// Prevent the click from triggering a route change.
 			event.preventDefault();
+		} else {
+			this.showContextOnRouteChange(true);
 		}
 	}
 

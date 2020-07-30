@@ -4,6 +4,7 @@ import { State } from 'vuex-class';
 import { propOptional } from '../../../../../utils/vue';
 import { number } from '../../../../../_common/filters/number';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import { SidebarState, SidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { Store } from '../../../../store/index';
 
 @Component({})
@@ -14,6 +15,7 @@ export default class AppShellCbarItem extends Vue {
 	@Prop(propOptional(String)) highlight?: string;
 	@Prop(propOptional(Number, 0)) notificationCount!: number;
 
+	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
 	@State visibleLeftPane!: Store['visibleLeftPane'];
 
 	readonly Screen = Screen;
@@ -24,7 +26,7 @@ export default class AppShellCbarItem extends Vue {
 
 	// We want a context indicator only for non-control items that are the current active item (selected or active route).
 	get hasContextIndicator() {
-		return !Screen.isLg && this.isActive && !this.isControl;
+		return !Screen.isLg && this.isActive && !this.isControl && this.activeContextPane;
 	}
 
 	// There can be two active items between the cbar controls and normal cbar items,

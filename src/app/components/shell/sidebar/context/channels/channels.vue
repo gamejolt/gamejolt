@@ -1,11 +1,11 @@
 <template>
-	<div class="sidebar-context-channels">
+	<div v-if="!isLoading" class="sidebar-context-channels">
 		<div class="-card">
-			<app-communities-view-card :community="community" overflow />
+			<app-communities-view-card overflow />
 		</div>
 
 		<app-nav-channels v-if="!isEditing" />
-		<app-nav-edit v-else />
+		<app-nav-edit v-else @change-section="onChangeSection" />
 	</div>
 </template>
 

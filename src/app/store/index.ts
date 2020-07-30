@@ -110,6 +110,7 @@ if (GJ_IS_CLIENT) {
 
 // the two types an event notification can assume, either "activity" for the post activity feed or "notifications"
 export type UnreadItemType = 'activity' | 'notifications';
+export type TogglableLeftPanes = '' | 'chat' | 'context' | 'library';
 
 @VuexModule({
 	store: true,
@@ -142,8 +143,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	notificationState: ActivityFeedState | null = null;
 
 	mobileCbarShowing = false;
-	overlayedLeftPane = '';
-	overlayedRightPane = '';
+	private overlayedLeftPane: TogglableLeftPanes = '';
+	private overlayedRightPane = '';
 	hasContentSidebar = false;
 
 	/** Will be set to the community they're currently viewing (if any). */
@@ -163,10 +164,15 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		return !this.isShellHidden && (this.mobileCbarShowing || !Screen.isXs);
 	}
 
-	get visibleLeftPane() {
+	/**
+	 * Returns the current overlaying pane if there is one.
+	 *
+	 * Large breakpoint defaults to 'context' on applicable routes.
+	 * */
+	get visibleLeftPane(): '' | 'chat' | 'context' | 'library' {
 		// If there's no other left-pane pane opened, Large breakpoint should
 		// always show the 'context' pane if there is a context component set.
-		if (Screen.isLg && this.sidebar.sidebarComponent && !this.overlayedLeftPane) {
+		if (Screen.isLg && this.sidebar.activeContextPane && !this.overlayedLeftPane) {
 			return 'context';
 		}
 
@@ -292,17 +298,29 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			this._toggleLeftPane();
 		} else {
 			// Open the left-pane depending on the SidebarStore information when the cbar shows.
-			this._toggleLeftPane(this.sidebar.sidebarComponent ? 'context' : 'library');
+			this._toggleLeftPane(this.sidebar.activeContextPane ? 'context' : 'library');
 		}
 
 		this.checkBackdrop();
 	}
 
-	/**
-	 * Passing no value will close any open left-panes.
-	 */
+	/** Show the context pane if there's one available. */
 	@VuexAction
-	async toggleLeftPane(type?: string) {
+	async showContextPane() {
+		if (this.visibleLeftPane !== 'context' && this.sidebar.activeContextPane) {
+			this.toggleLeftPane('context');
+		}
+	}
+
+	/** Passing no value will close any open left-panes. */
+	@VuexAction
+	async toggleLeftPane(type?: TogglableLeftPanes) {
+		if (type === 'context' && !this.sidebar.activeContextPane) {
+			// Don't show the context pane if the SidebarStore has no context to show.
+			this._toggleLeftPane();
+			return;
+		}
+
 		this._toggleLeftPane(type);
 		this.checkBackdrop();
 	}
@@ -325,9 +343,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		this.checkBackdrop();
 	}
 
-	/**
-	 * Using this will add or remove backdrops for overlaying panes.
-	 */
+	/** Using this will add or remove backdrops as needed for overlaying panes. */
 	@VuexAction
 	async checkBackdrop() {
 		if (
@@ -525,7 +541,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	private _toggleLeftPane(type = '') {
+	private _toggleLeftPane(type: TogglableLeftPanes = '') {
 		if (!this.hasSidebar) {
 			this.overlayedLeftPane = '';
 			return;
@@ -585,9 +601,7 @@ export const store = new Store();
 sync(store, router, { moduleName: 'route' });
 
 // Sync with the ContentFocus service.
-ContentFocus.registerWatcher(
-	() => !store.state.overlayedLeftPane && !store.state.overlayedRightPane
-);
+ContentFocus.registerWatcher(() => !store.state.visibleLeftPane && !store.state.visibleRightPane);
 
 // If we were offline, but we're online now, make sure our library is bootstrapped. Remember we
 // always have an app user even if we were offline.

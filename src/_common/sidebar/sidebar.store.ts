@@ -1,38 +1,87 @@
+import Vue from 'vue';
 import { namespace } from 'vuex-class';
-import { VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
+import { arrayRemove } from '../../utils/array';
+import { VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 
 export const SidebarStoreNamespace = 'sidebar';
 export const { State: SidebarState, Action: SidebarAction, Mutation: SidebarMutation } = namespace(
 	SidebarStoreNamespace
 );
 
-export type SidebarActions = {
-	'sidebar/clearSidebarContext': void;
-};
+export type SidebarActions = {};
 
 export type SidebarMutations = {
-	'sidebar/setSidebarComponent': Vue | null;
-	'sidebar/setSidebarProps': Record<string, unknown> | null;
+	'sidebar/addContextPane': typeof Vue;
+	'sidebar/removeContextPane': ContextPane | null;
+	'sidebar/showContextOnRouteChange': boolean;
 };
+
+export class ContextPane {
+	constructor(public readonly component: typeof Vue, public props: Record<string, any> = {}) {}
+}
 
 @VuexModule()
 export class SidebarStore extends VuexStore<SidebarStore, SidebarActions, SidebarMutations> {
-	sidebarComponent: Vue | null = null;
-	sidebarProps: Record<string, any> | null = null;
+	private _contextPanes: ContextPane[] = [];
+	/** Whether or not we should hide any panes automatically */
+	hideOnRouteChange = true;
+	/** Whether or not we should show any panes automatically */
+	showOnRouteChange = false;
 
-	@VuexAction
-	async clearSidebarContext() {
-		this.setSidebarComponent(null);
-		this.setSidebarProps(null);
+	/** The most recently set context pane */
+	get activeContextPane() {
+		if (this._contextPanes.length > 0) {
+			return this._contextPanes[this._contextPanes.length - 1];
+		}
+
+		return null;
 	}
 
+	/**
+	 * 1. Initialize what we need for the context pane:
+	 *   - readonly sidebarComponent = /* the Vue component to use *\/
+	 *   - contextPane: null | ContextPane = null
+	 *
+	 * 2. routeCreated() - 'if (!this.contextPane)':
+	 *   - this.addContextPane(this.sidebarComponent)
+	 *   - this.contextPane = this.activeContextPane
+	 *
+	 * 3. If the context component needs any props:
+	 *   - this.contextPane.props = { /* required props *\/ };
+	 *
+	 * 4. routeDestroyed() - Panes will hide if there's no activeContextPane:
+	 *   - this.removeContextPane(this.contextPane)
+	 */
 	@VuexMutation
-	setSidebarComponent(component: SidebarMutations['sidebar/setSidebarComponent']) {
-		this.sidebarComponent = component;
+	addContextPane(
+		component?: SidebarMutations['sidebar/addContextPane'],
+		props?: Record<string, any>
+	) {
+		if (component) {
+			const pane = new ContextPane(component, props);
+			this._contextPanes.push(pane);
+		}
+		this.hideOnRouteChange = false;
 	}
 
+	/**
+	 * Pass the local 'contextPane' variable to remove the contextPane from the store.
+	 *
+	 * This should generally be triggered within routeDestroyed().
+	 */
 	@VuexMutation
-	setSidebarProps(props: SidebarMutations['sidebar/setSidebarProps']) {
-		this.sidebarProps = props;
+	removeContextPane(pane?: SidebarMutations['sidebar/removeContextPane']) {
+		if (pane) {
+			arrayRemove(this._contextPanes, i => i === pane);
+		}
+		this.hideOnRouteChange = true;
+	}
+
+	/**
+	 * Whether or not to show the context pane after the route changes - resets to 'false' after route changes.
+	 */
+	@VuexMutation
+	showContextOnRouteChange(shouldShow: SidebarMutations['sidebar/showContextOnRouteChange']) {
+		this.showOnRouteChange = shouldShow;
 	}
 }

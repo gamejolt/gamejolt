@@ -1,7 +1,9 @@
 import Vue from 'vue';
 import { Component, Prop, Provide } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../../../utils/vue';
-import { Community } from '../../../../../../_common/community/community.model';
+import { Action } from 'vuex-class';
+import { propRequired } from '../../../../../../utils/vue';
+import { isEditingCommunity } from '../../../../../../_common/community/community.model';
+import { Store } from '../../../../../store';
 import {
 	CommunityRouteStore,
 	CommunityRouteStoreKey,
@@ -22,6 +24,24 @@ export default class AppShellSidebarContextChannels extends Vue {
 	@Prop(propRequired(CommunityRouteStore))
 	routeStore!: CommunityRouteStore;
 
-	@Prop(propOptional(Community, null)) community!: Community | null;
-	@Prop(propOptional(Boolean, false)) isEditing!: boolean;
+	@Action toggleLeftPane!: Store['toggleLeftPane'];
+
+	// All context panes with required props should need this - otherwise it could
+	// cause issues when transitioning between panes with different props.
+	isLoading = true;
+	async mounted() {
+		await this.$nextTick();
+		this.isLoading = false;
+	}
+
+	get isEditing() {
+		return isEditingCommunity(this.$route);
+	}
+
+	onChangeSection(path: string) {
+		// If changing channels, hide the left pane/context sidebar.
+		if (this.$route.path !== path) {
+			this.toggleLeftPane();
+		}
+	}
 }

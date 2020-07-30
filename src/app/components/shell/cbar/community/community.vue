@@ -11,13 +11,12 @@
 		@hide="popperVisible = false"
 	>
 		<template #default>
-			<div class="-community">
+			<div class="-community" @click.capture="onCommunityClick">
 				<app-shell-cbar-item
 					:is-active="isActive"
 					:is-unread="isUnread"
 					:highlight="highlight"
 					:notification-count="featureCount"
-					@click.native.capture="onCommunityClick"
 				>
 					<router-link
 						v-app-tooltip.right="tooltip"

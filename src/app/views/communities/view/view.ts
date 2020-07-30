@@ -1,5 +1,5 @@
 import { Component, Provide, Watch } from 'vue-property-decorator';
-import { Mutation, State } from 'vuex-class';
+import { Action, Mutation, State } from 'vuex-class';
 import { enforceLocation } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
@@ -13,6 +13,12 @@ import { number } from '../../../../_common/filters/number';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import {
+	ContextPane,
+	SidebarMutation,
+	SidebarState,
+	SidebarStore,
+} from '../../../../_common/sidebar/sidebar.store';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
 import { AppCommunityPerms } from '../../../components/community/perms/perms';
@@ -76,17 +82,16 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	@Mutation viewCommunity!: Store['viewCommunity'];
 	@State communityStates!: Store['communityStates'];
 
+	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
+	@SidebarMutation addContextPane!: SidebarStore['addContextPane'];
+	@SidebarMutation removeContextPane!: SidebarStore['removeContextPane'];
+	@Action showContextPane!: Store['showContextPane'];
+
 	readonly Environment = Environment;
 	readonly Screen = Screen;
 	readonly sidebarComponent = AppShellSidebarContextChannels;
 
-	get sidebarProps() {
-		return {
-			community: this.community,
-			isEditing: this.isEditing,
-			routeStore: this.routeStore,
-		};
-	}
+	contextPane: null | ContextPane = null;
 
 	get community() {
 		return this.routeStore.community;
@@ -107,6 +112,19 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	@Watch('$route', { immediate: true })
 	onRouteChange() {
 		setChannelPathFromRoute(this.routeStore, this.$route);
+	}
+
+	routeCreated() {
+		// Add a new context pane if we haven't already.
+		if (!this.contextPane) {
+			this.addContextPane(this.sidebarComponent);
+			this.contextPane = this.activeContextPane;
+		}
+
+		// Assign the props required for 'this.sidebarComponent'.
+		if (this.contextPane) {
+			this.contextPane.props = { routeStore: this.routeStore };
+		}
 	}
 
 	routeResolved($payload: any) {
@@ -135,6 +153,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	}
 
 	routeDestroyed() {
+		this.removeContextPane(this.contextPane);
 		this.clearActiveCommunity();
 		this.setPageTheme(null);
 	}

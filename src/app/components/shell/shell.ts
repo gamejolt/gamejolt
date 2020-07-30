@@ -7,7 +7,11 @@ import { ContentFocus } from '../../../_common/content-focus/content-focus.servi
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMinbar from '../../../_common/minbar/minbar.vue';
 import { Screen } from '../../../_common/screen/screen-service';
-import { SidebarState, SidebarStore } from '../../../_common/sidebar/sidebar.store';
+import {
+	SidebarMutation,
+	SidebarState,
+	SidebarStore,
+} from '../../../_common/sidebar/sidebar.store';
 import { BannerModule, BannerStore, Store } from '../../store/index';
 import { ChatClient, ChatKey, ChatNewMessageEvent, setChatFocused } from '../chat/client';
 import AppChatWindows from '../chat/windows/windows.vue';
@@ -72,10 +76,19 @@ export default class AppShell extends Vue {
 	hasBanner!: BannerStore['hasBanner'];
 
 	@SidebarState
-	sidebarComponent!: SidebarStore['sidebarComponent'];
+	activeContextPane!: SidebarStore['activeContextPane'];
+
+	@SidebarState
+	hideOnRouteChange!: SidebarStore['hideOnRouteChange'];
+
+	@SidebarState
+	showOnRouteChange!: SidebarStore['showOnRouteChange'];
+
+	@SidebarMutation
+	showContextOnRouteChange!: SidebarStore['showContextOnRouteChange'];
 
 	@Action
-	toggleLeftPane!: Store['toggleLeftPane'];
+	showContextPane!: Store['showContextPane'];
 
 	@Action
 	clearPanes!: Store['clearPanes'];
@@ -94,16 +107,21 @@ export default class AppShell extends Vue {
 	}
 
 	mounted() {
-		// When changing routes, hide all overlays.
-		this.$router.beforeEach((_to, _from, next) => {
-			if (!this.sidebarComponent) {
-				// We want to close all panes if there's no context pane available from the next route.
-				this.toggleLeftPane();
-			} else if (this.visibleLeftPane !== 'context') {
-				// Open the context pane if it's not already open and the next route has one available.
-				this.toggleLeftPane('context');
+		this.$router.afterEach(async () => {
+			// Wait for any contextPane state to be changed.
+			await this.$nextTick();
+
+			// Show any conext panes that are set to show on route change.
+			if (this.showOnRouteChange) {
+				this.showContextPane();
+				this.showContextOnRouteChange(false);
+				return;
 			}
-			next();
+
+			// Hide all panes if we aren't showing one on route change.
+			if (this.hideOnRouteChange) {
+				this.clearPanes();
+			}
 		});
 
 		this.$watch(

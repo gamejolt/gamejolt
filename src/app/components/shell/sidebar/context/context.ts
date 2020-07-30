@@ -11,8 +11,7 @@ import { Store } from '../../../../store/index';
 	},
 })
 export default class AppShellSidebarContext extends Vue {
-	@SidebarState sidebarComponent!: SidebarStore['sidebarComponent'];
-	@SidebarState sidebarProps!: SidebarStore['sidebarProps'];
+	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
 
 	@State hasCbar!: Store['hasCbar'];
 	@State visibleLeftPane!: Store['visibleLeftPane'];
