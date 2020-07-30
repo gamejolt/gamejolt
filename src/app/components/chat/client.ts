@@ -166,8 +166,9 @@ async function connect(chat: ChatClient) {
 
 	const frontend = await getCookie('frontend');
 	const user = store.state.app.user;
+	const timedOut = store.state.app.isUserTimedOut;
 
-	if (user === null || frontend === undefined) {
+	if (user === null || frontend === undefined || timedOut) {
 		// not properly logged in
 		return;
 	}
