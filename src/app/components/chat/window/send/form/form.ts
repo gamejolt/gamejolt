@@ -9,6 +9,7 @@ import AppFormControlContentTS from '../../../../../../_common/form-vue/control/
 import AppFormControlContent from '../../../../../../_common/form-vue/control/content/content.vue';
 import AppForm from '../../../../../../_common/form-vue/form';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
+import { FormValidatorContentNoMediaUpload } from '../../../../../../_common/form-vue/validators/content_no_media_upload';
 import { AppObserveDimensions } from '../../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../../_common/shortkey/shortkey.vue';
@@ -36,6 +37,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	@Prop(propRequired(Boolean)) singleLineMode!: boolean;
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 
+	readonly Screen = Screen;
 	readonly contentContext: ContentContext = 'chat-message';
 	// Allow images to be up to 100px in height so that image and a chat message fit into the editor without scrolling.
 	readonly displayRules = new ContentRules({ maxMediaWidth: 125, maxMediaHeight: 100 });
@@ -74,7 +76,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	}
 
 	get shouldShiftEditor() {
-		return Screen.isMobile && this.isEditorFocused;
+		return Screen.isXs && this.isEditorFocused;
 	}
 
 	get hasContent() {
@@ -88,6 +90,14 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 	get maxContentLength() {
 		return [CHAT_MESSAGE_MAX_CONTENT_LENGTH];
+	}
+
+	get isSendButtonDisabled() {
+		if (!this.valid || !this.hasContent) {
+			return true;
+		}
+
+		return !FormValidatorContentNoMediaUpload(this.formModel.content ?? '');
 	}
 
 	async submitMessage() {
@@ -116,6 +126,13 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 	async onSubmit() {
 		if (this.hasFormErrors) {
+			return;
+		}
+
+		// Manually check for if media is uploading here.
+		// We don't want to put the rule directly on the form cause showing form errors
+		// for the media upload is sort of disruptive for chat messages.
+		if (!FormValidatorContentNoMediaUpload(this.formModel.content)) {
 			return;
 		}
 

@@ -1,4 +1,11 @@
-export const imageMimeTypes = ['image/jpg', 'image/png', 'image/jpeg', 'image/bmp', 'image/gif'];
+export const imageMimeTypes = [
+	'image/jpg',
+	'image/png',
+	'image/jpeg',
+	'image/bmp',
+	'image/gif',
+	'image/webp',
+];
 
 export function isImage(file: File) {
 	const type = file.type.slice(file.type.lastIndexOf('/') + 1);

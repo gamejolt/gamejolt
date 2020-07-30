@@ -34,7 +34,10 @@
 					</span>
 				</transition>
 
-				<app-content-editor-controls-inset-container :view="view" :state-counter="stateCounter">
+				<app-content-editor-controls-inset-container
+					:view="view"
+					:state-counter="stateCounter"
+				>
 					<transition name="fade">
 						<app-content-editor-controls-gif-controls
 							v-if="shouldShowGifButton"

@@ -11,6 +11,7 @@
 				:primary="liked"
 				:solid="liked"
 				v-app-tooltip="tooltip"
+				v-app-track-event="`fireside-post-like-widget:click`"
 				v-app-auth-required
 				@click="toggleLike"
 			/>
@@ -29,13 +30,13 @@
 		</span>
 
 		<a
-			v-if="blip"
+			v-if="post.like_count > 0"
 			class="blip"
 			:class="{ 'blip-active': liked, mobile: Screen.isXs }"
 			@click="showLikers()"
 			v-app-tooltip="$gettext(`View all people that liked this post`)"
 		>
-			{{ blip | fuzzynumber }}
+			{{ likeCount }}
 		</a>
 		<span v-else class="blip-missing" />
 	</span>
@@ -100,14 +101,13 @@
 		transform: scale(6)
 		opacity: 0
 
-
 @keyframes dislike-anim-left
 	0%
 		transform: scale(1)
 		opacity: 1
 
 	100%
-		transform: scale(2)  rotate(-45deg) translate(-6px, -6px)
+		transform: scale(2) rotate(-45deg) translate(-6px, -6px)
 		opacity: 0
 
 @keyframes dislike-anim-right

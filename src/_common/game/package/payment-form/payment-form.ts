@@ -119,7 +119,6 @@ export default class FormGamePackagePayment extends BaseForm<any>
 
 	get minOrderMessage() {
 		return this.$gettextInterpolate(
-			// tslint:disable-next-line:max-line-length
 			`Because of payment processing fees, we are not able to sell this game for less than %{ amount }. You can click the link below to grab the download for free, though!`,
 			{ amount: currency(this.minOrderAmount) }
 		);

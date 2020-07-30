@@ -141,7 +141,6 @@ export function getChannelPathFromRoute(route: Route) {
  */
 export function setCommunityMeta(community: Community, title: string) {
 	const description = Translate.$gettextInterpolate(
-		// tslint:disable-next-line:max-line-length
 		`Welcome to the %{ name } community on Game Jolt! Find and explore %{ name } fan art, lets plays and catch up on the latest news and theories!`,
 		{ name: community.name }
 	);

@@ -7,8 +7,7 @@ export type Provider =
 	| 'google'
 	| 'tumblr'
 	| 'discord'
-	| 'youtube'
-	| 'mixer';
+	| 'youtube';
 
 export interface FacebookPage {
 	id: number;
@@ -35,8 +34,6 @@ export function getLinkedAccountPlatformIcon(provider: string) {
 			return 'tumblr';
 		case LinkedAccount.PROVIDER_DISCORD:
 			return 'radio';
-		case LinkedAccount.PROVIDER_MIXER:
-			return 'mixer';
 	}
 	return 'remove'; // invalid provider
 }
@@ -55,8 +52,6 @@ export function getLinkedAccountProviderDisplayName(provider: string) {
 			return 'Tumblr';
 		case LinkedAccount.PROVIDER_DISCORD:
 			return 'Discord';
-		case LinkedAccount.PROVIDER_MIXER:
-			return 'Mixer';
 	}
 	return 'Invalid provider';
 }
@@ -70,7 +65,6 @@ export class LinkedAccount extends Model {
 	static readonly PROVIDER_YOUTUBE: Provider = 'youtube';
 	static readonly PROVIDER_YOUTUBE_CHANNEL = 'youtube-channel';
 	static readonly PROVIDER_DISCORD: Provider = 'discord';
-	static readonly PROVIDER_MIXER: Provider = 'mixer';
 
 	game_id!: number;
 	provider!: string;
@@ -100,8 +94,6 @@ export class LinkedAccount extends Model {
 				return null; // tumblr users don't have a page associated with them that we can show
 			case LinkedAccount.PROVIDER_DISCORD:
 				return null; // discord users don't have a page associated with them
-			case LinkedAccount.PROVIDER_MIXER:
-				return `https://mixer.com/${this.name}`;
 		}
 		return 'Invalid provider';
 	}

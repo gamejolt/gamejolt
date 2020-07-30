@@ -1,5 +1,7 @@
+<script lang="ts" src="./form"></script>
+
 <template>
-	<app-form name="chat-send-form" ref="form">
+	<app-form ref="form" name="chat-send-form">
 		<app-shortkey shortkey="tab" @press="onTabKeyPressed" />
 
 		<app-form-group
@@ -21,7 +23,8 @@
 					}"
 					:max-height="160"
 					:display-rules="displayRules"
-					autofocus
+					:compact="Screen.isXs"
+					:autofocus="!Screen.isMobile"
 					@submit="onSubmit"
 					@insert-block-node="onEditorInsertBlockNode"
 					@focus="onFocusEditor"
@@ -32,8 +35,8 @@
 			</div>
 
 			<app-button
-				:disabled="!valid || !hasContent"
 				v-app-tooltip="$gettext(`Send message`)"
+				:disabled="isSendButtonDisabled"
 				class="-send-button"
 				sparse
 				icon="share-airplane"
@@ -47,38 +50,54 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '../../variables'
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '../../variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 $-button-padding = 48px
 
 .-form
 	display: flex
 	position: relative
+	margin-top: 8px
 	margin-bottom: 16px
+	padding-top: 4px
 
 	@media $media-xs
-		margin-bottom: 2px
+		margin-top: 4px
+		margin-bottom: 0
+		border-top: $border-width-base solid var(--theme-bg-subtle)
+		padding-top: 1px
 
 	&-shifted
 		margin-bottom: 52px
 
 .-input
-	margin-right: 4px
-	width: "calc(100% + 4px - %s)" % ($-button-padding)
+	width: 'calc(100% + 4px - %s)' % $-button-padding
+
+	@media $media-sm-up
+		margin-left: $left-gutter-size + $avatar-size
 
 	@media $media-md-up
-		margin-right: 8px
-		margin-left: $left-gutter-size + $avatar-size
-		width: "calc(100% - %s)" % ($left-gutter-size + $avatar-size + $-button-padding)
+		width: 'calc(100% - %s)' % ($left-gutter-size + $avatar-size + $-button-padding)
 
 .-send-button
 	display: flex
 	align-items: center
 	justify-content: center
-	width: 40px
+	width: $-button-padding
+	height: $-button-padding
+	margin: 0
+	flex: none
+	align-self: flex-end
 	transition: color 0.3s, background-color 0.3s
+
+	@media $media-xs
+		border-radius: 0
+
+	@media $media-sm-up
+		width: 40px
+		margin: 0 8px 0 4px
 
 	&.-disabled
 		&:hover
@@ -86,5 +105,3 @@ $-button-padding = 48px
 			background-color: transparent !important
 			border-color: transparent !important
 </style>
-
-<script lang="ts" src="./form"></script>

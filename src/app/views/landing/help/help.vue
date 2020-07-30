@@ -19,10 +19,10 @@
 			</div>
 		</section>
 
-		<section class="section">
+		<section class="section -content">
 			<div class="container">
 				<div class="row">
-					<div class="col-lg-1"></div>
+					<div class="col-lg-1" />
 					<div class="col-sm-9 col-lg-7">
 						<router-view />
 					</div>
@@ -33,3 +33,10 @@
 </template>
 
 <script lang="ts" src="./help"></script>
+
+<style lang="stylus" scoped>
+.-content >>>
+	// Get rid of the top margin that headings produce from the compiled markdown.
+	h1:first-child
+		margin-top: 0
+</style>

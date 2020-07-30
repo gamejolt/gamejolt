@@ -7,7 +7,7 @@ import AppChatNotificationGrowl from './notification-growl.vue';
 export class ChatNotificationGrowl {
 	static async show(chat: ChatClient, message: ChatMessage) {
 		// Skip if already in the room.
-		if (isInChatRoom(chat, message.room_id)) {
+		if (isInChatRoom(chat, message.room_id) && chat.isFocused) {
 			return;
 		}
 
