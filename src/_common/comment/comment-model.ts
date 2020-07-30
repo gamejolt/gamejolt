@@ -87,7 +87,7 @@ export async function fetchComments(
 		query = '?page=' + page;
 	}
 
-	return Api.sendRequest(`/comments/${resource}/${resourceId}/${sort}${query}`, {
+	return Api.sendRequest(`/comments/${resource}/${resourceId}/${sort}${query}`, undefined, {
 		detach: true,
 	});
 }
