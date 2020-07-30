@@ -102,8 +102,9 @@ export class GridClient {
 	private async connect() {
 		const cookie = await getCookie('frontend');
 		const user = store.state.app.user;
+		const timedOut = store.state.app.isUserTimedOut;
 
-		if (user === null || cookie === undefined) {
+		if (user === null || cookie === undefined || timedOut) {
 			// not properly logged in
 			return;
 		}
