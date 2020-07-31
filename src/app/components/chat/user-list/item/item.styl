@@ -1,5 +1,5 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .chat-user
 	height: 50px
@@ -34,14 +34,21 @@
 			bottom: 8px
 			width: 12px
 			height: 12px
-			border: 2px solid rgb(25, 25, 25)
+			border: 2px solid
+			border-color: var(--theme-bg-actual)
 			border-radius: 100%
+			display: flex
+			justify-content: center
+			align-items: center
+
+			&-inner
+				width: 4px
+				height: 4px
+				background-color: var(--theme-bg-actual)
+				border-radius: 100%
 
 			&.online
-				change-bg('highlight')
-
-			&.in-game
-				change-bg('fg')
+				background-color: var(--theme-link)
 
 			&.offline
-				change-bg('bg-offset')
+				background-color: var(--theme-bg-subtle)

@@ -1,3 +1,5 @@
+<script lang="ts" src="./item"></script>
+
 <template>
 	<app-scroll-inview
 		tag="li"
@@ -19,7 +21,7 @@
 				v-if="chat.notifications[user.room_id] || 0"
 				class="tag tag-highlight notifications-tag"
 			>
-				{{ chat.notifications[user.room_id] || 0 | number }}
+				{{ chatNotificationsCount }}
 			</span>
 
 			<div class="shell-nav-icon">
@@ -27,13 +29,15 @@
 					<img :src="user.img_avatar" />
 
 					<span
-						class="chat-user-status"
 						v-if="typeof user.isOnline !== 'undefined'"
+						class="chat-user-status"
 						:class="{
 							offline: !user.isOnline,
 							'online active': user.isOnline,
 						}"
-					/>
+					>
+						<span v-if="!user.isOnline" class="chat-user-status-inner" />
+					</span>
 				</div>
 			</div>
 
@@ -46,5 +50,3 @@
 </template>
 
 <style lang="stylus" src="./item.styl" scoped></style>
-
-<script lang="ts" src="./item"></script>

@@ -73,12 +73,14 @@ ul.shell-nav
 				padding-left: 15px
 
 			&.active
+				background-color: var(--theme-bg-subtle)
+
 				&
 				&:hover
-					theme-prop('color', 'highlight')
+					theme-prop('color', 'bi-bg')
 
 					.jolticon
-						theme-prop('color', 'highlight')
+						theme-prop('color', 'bi-bg')
 
 					.tag
 						@extend .tag-highlight
