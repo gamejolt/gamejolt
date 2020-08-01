@@ -16,6 +16,7 @@ export class ChatMessage {
 	room_id!: number;
 	content!: string;
 	logged_on!: Date;
+	edited_on!: Date | null;
 
 	combine?: boolean;
 	dateSplit?: boolean;
@@ -33,6 +34,10 @@ export class ChatMessage {
 
 		if (typeof this.logged_on === 'number' || typeof this.logged_on === 'string') {
 			this.logged_on = new Date(this.logged_on);
+		}
+
+		if (typeof this.edited_on === 'number' || typeof this.edited_on === 'string') {
+			this.edited_on = new Date(this.edited_on);
 		}
 
 		if (data.user) {
