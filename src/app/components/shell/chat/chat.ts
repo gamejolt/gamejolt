@@ -1,7 +1,10 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { EscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
+import {
+	EscapeStack,
+	EscapeStackCallback,
+} from '../../../../_common/escape-stack/escape-stack.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import AppShortkey from '../../../../_common/shortkey/shortkey.vue';
@@ -29,7 +32,7 @@ export default class AppShellChat extends Vue {
 	@Action
 	toggleRightPane!: Store['toggleRightPane'];
 
-	private escapeCallback?: Function;
+	private escapeCallback?: EscapeStackCallback;
 
 	mounted() {
 		this.escapeCallback = () => this.hideChatPane();

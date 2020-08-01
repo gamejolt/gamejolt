@@ -1,15 +1,17 @@
 import { arrayRemove } from '../../utils/array';
 
+export type EscapeStackCallback = () => void;
+
 export class EscapeStack {
-	static stack: Function[] = [];
+	static stack: EscapeStackCallback[] = [];
 	private static initialized = false;
 
-	static register(cb: Function) {
+	static register(cb: EscapeStackCallback) {
 		this.stack.push(cb);
 		this.init();
 	}
 
-	static deregister(cb: Function) {
+	static deregister(cb: EscapeStackCallback) {
 		arrayRemove(this.stack, i => i === cb);
 	}
 

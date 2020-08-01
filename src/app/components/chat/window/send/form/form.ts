@@ -5,6 +5,10 @@ import { propRequired } from '../../../../../../utils/vue';
 import { ContentContext } from '../../../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../../../_common/content/content-document';
 import { ContentRules } from '../../../../../../_common/content/content-editor/content-rules';
+import {
+	EscapeStack,
+	EscapeStackCallback,
+} from '../../../../../../_common/escape-stack/escape-stack.service';
 import AppFormControlContentTS from '../../../../../../_common/form-vue/control/content/content';
 import AppFormControlContent from '../../../../../../_common/form-vue/control/content/content.vue';
 import AppForm from '../../../../../../_common/form-vue/form';
@@ -47,6 +51,8 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 	// Don't show "Do you want to save" when dismissing the form.
 	warnOnDiscard = false;
+
+	private escapeCallback?: EscapeStackCallback;
 
 	$refs!: {
 		form: AppForm;
@@ -121,7 +127,26 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 			// Hitting the 'up' arrow still seems to technically have focus on the editor,
 			// so we want to just force the focus event instead of checking for isEditorFocused.
 			this.$refs.editor.focus();
+
+			this.escapeCallback = () => this.cancelEditing();
+			EscapeStack.register(this.escapeCallback);
+		} else {
+			if (this.escapeCallback) {
+				EscapeStack.deregister(this.escapeCallback);
+				this.escapeCallback = undefined;
+			}
 		}
+	}
+
+	@Watch('room.id')
+	async onRoomChanged() {
+		if (this.formModel.content !== '') {
+			// Clear out the editor when entering a new room.
+			this.clearMsg();
+		}
+
+		// Then focus it.
+		this.$refs.editor.focus();
 	}
 
 	async submitMessage() {
@@ -167,17 +192,6 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		this.$refs.editor.focus();
 	}
 
-	@Watch('room.id')
-	async onRoomChanged() {
-		if (this.formModel.content !== '') {
-			// Clear out the editor when entering a new room.
-			this.clearMsg();
-		}
-
-		// Then focus it.
-		this.$refs.editor.focus();
-	}
-
 	onEditorInsertBlockNode(_nodeType: string) {
 		this.emitSingleLineModeChange(false);
 	}
@@ -209,21 +223,6 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		EventBus.emit('Chat.inputResize');
 	}
 
-	async cancel() {
-		this.emitCancel();
-		setMessageEditing(this.chat, null);
-		this.clearMsg();
-	}
-
-	private async clearMsg() {
-		this.setField('content', '');
-		this.setField('id', undefined);
-
-		// Wait for errors, then clear them.
-		await this.$nextTick();
-		this.$refs.form.clearErrors();
-	}
-
 	onUpKeyPressed() {
 		if (!this.isEditing) {
 			// Find the last message sent by the current user.
@@ -236,5 +235,20 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 				setMessageEditing(this.chat, lastMessage);
 			}
 		}
+	}
+
+	async cancelEditing() {
+		this.emitCancel();
+		setMessageEditing(this.chat, null);
+		this.clearMsg();
+	}
+
+	private async clearMsg() {
+		this.setField('content', '');
+		this.setField('id', undefined);
+
+		// Wait for errors, then clear them.
+		await this.$nextTick();
+		this.$refs.form.clearErrors();
 	}
 }

@@ -7,7 +7,7 @@
 		<div v-if="isEditing" class="-editing-message">
 			<app-jolticon icon="edit" />
 			<translate>Editing Message</translate>
-			<a class="-editing-message-cancel" @click="cancel">
+			<a class="-editing-message-cancel" @click="cancelEditing">
 				<translate>Cancel</translate>
 			</a>
 		</div>

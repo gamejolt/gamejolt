@@ -3,7 +3,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../utils/vue';
 import AppBackdrop from '../backdrop/backdrop';
 import { Backdrop } from '../backdrop/backdrop.service';
-import { EscapeStack } from '../escape-stack/escape-stack.service';
+import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';
 import AppScrollAffix from '../scroll/affix/affix.vue';
 import AppScrollScrollerTS from '../scroll/scroller/scroller';
@@ -32,7 +32,7 @@ export default class AppModal extends Vue {
 
 	private backdrop?: AppBackdrop;
 	private beforeEachDeregister?: Function;
-	private escapeCallback?: Function;
+	private escapeCallback?: EscapeStackCallback;
 
 	$el!: HTMLDivElement;
 
