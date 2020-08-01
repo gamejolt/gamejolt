@@ -1,12 +1,17 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
-import { EventBus, EventBusDeregister } from '../../../../../system/event/event-bus.service';
 import { isMac } from '../../../../../utils/utils';
 import { propRequired } from '../../../../../utils/vue';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import AppContentEditor from '../../../../../_common/content/content-editor/content-editor.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { ChatClient, ChatKey, editMessage, queueChatMessage } from '../../client';
+import {
+	ChatClient,
+	ChatKey,
+	editMessage,
+	queueChatMessage,
+	setMessageEditing,
+} from '../../client';
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
 import AppChatWindowSendForm from './form/form.vue';
@@ -21,12 +26,9 @@ export default class AppChatWindowSend extends Vue {
 	@InjectReactive(ChatKey) chat!: ChatClient;
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 
-	isEditing = false;
 	singleLineMode = true;
 
 	readonly Screen = Screen;
-
-	private editMessageDeregister?: EventBusDeregister;
 
 	get isSingleLineMode() {
 		// We always want to be in multiline mode for phones:
@@ -47,22 +49,8 @@ export default class AppChatWindowSend extends Vue {
 		return isMac();
 	}
 
-	async mounted() {
-		this.editMessageDeregister = EventBus.on(
-			'Chat.editMessage',
-			async () => (this.isEditing = true)
-		);
-	}
-
-	destroyed() {
-		if (this.editMessageDeregister) {
-			this.editMessageDeregister();
-			this.editMessageDeregister = undefined;
-		}
-	}
-
 	editMessage(message: ChatMessage) {
-		this.isEditing = false;
+		setMessageEditing(this.chat, null);
 
 		const doc = ContentDocument.fromJson(message.content);
 		if (doc instanceof ContentDocument) {
@@ -85,9 +73,13 @@ export default class AppChatWindowSend extends Vue {
 	}
 
 	submit(message: ChatMessage) {
-		!this.isEditing ? this.sendMessage(message) : this.editMessage(message);
+		this.chat.messageEditing ? this.editMessage(message) : this.sendMessage(message);
 
 		this.singleLineMode = true;
+	}
+
+	onFormCancel() {
+		setMessageEditing(this.chat, null);
 	}
 
 	onSingleLineModeChanged(singleLineMode: boolean) {
@@ -96,6 +88,6 @@ export default class AppChatWindowSend extends Vue {
 
 	@Watch('room.id')
 	async onRoomChanged() {
-		this.isEditing = false;
+		setMessageEditing(this.chat, null);
 	}
 }

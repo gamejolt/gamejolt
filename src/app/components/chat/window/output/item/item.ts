@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
-import { EventBus } from '../../../../../../system/event/event-bus.service';
 import { propRequired } from '../../../../../../utils/vue';
 import { ContentRules } from '../../../../../../_common/content/content-editor/content-rules';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
@@ -10,7 +9,13 @@ import { Popper } from '../../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { ChatClient, ChatKey, removeMessage, retryFailedQueuedMessage } from '../../../client';
+import {
+	ChatClient,
+	ChatKey,
+	removeMessage,
+	retryFailedQueuedMessage,
+	setMessageEditing,
+} from '../../../client';
 import { ChatMessage } from '../../../message';
 import { ChatRoom } from '../../../room';
 
@@ -41,7 +46,6 @@ export default class AppChatWindowOutputItem extends Vue {
 	readonly ChatMessage = ChatMessage;
 	readonly displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
 
-	isEditing = false;
 	singleLineMode = true;
 
 	readonly Screen = Screen;
@@ -65,16 +69,13 @@ export default class AppChatWindowOutputItem extends Vue {
 		return date(this.message.edited_on!, 'medium');
 	}
 
-	startEdit() {
-		this.isEditing = true;
-		EventBus.emit('Chat.editMessage', <ChatMessageEditEvent>{
-			message: this.message,
-		});
-		Popper.hideAll();
+	get isEditing() {
+		return this.chat.messageEditing === this.message;
 	}
 
-	onMessageEdit() {
-		this.isEditing = false;
+	startEdit() {
+		setMessageEditing(this.chat, this.message);
+		Popper.hideAll();
 	}
 
 	onClickResend() {
@@ -86,7 +87,6 @@ export default class AppChatWindowOutputItem extends Vue {
 	}
 
 	async removeMessage() {
-		this.isEditing = false;
 		Popper.hideAll();
 
 		const result = await ModalConfirm.show(
@@ -99,6 +99,7 @@ export default class AppChatWindowOutputItem extends Vue {
 			return;
 		}
 
+		setMessageEditing(this.chat, null);
 		removeMessage(this.chat, this.message.id);
 	}
 }

@@ -90,6 +90,7 @@ export class ChatClient {
 	isFocused = true;
 
 	messageQueue: ChatMessage[] = [];
+	messageEditing: null | ChatMessage = null;
 
 	/**
 	 * The session room is stored within their local session. It's their last active room. We reopen
@@ -361,12 +362,13 @@ export function setChatRoom(chat: ChatClient, newRoom: ChatRoom | undefined) {
 
 export function newChatNotification(chat: ChatClient, roomId: number) {
 	if (isInChatRoom(chat, roomId) && chat.isFocused) {
+		return;
+	}
+
+	if (chat.notifications[roomId]) {
+		chat.notifications[roomId] = chat.notifications[roomId] + 1;
 	} else {
-		if (chat.notifications[roomId]) {
-			chat.notifications[roomId] = chat.notifications[roomId] + 1;
-		} else {
-			Vue.set(chat.notifications, '' + roomId, 1);
-		}
+		Vue.set(chat.notifications, '' + roomId, 1);
 	}
 }
 
@@ -402,6 +404,10 @@ function leaveChannel(chat: ChatClient, channel: Channel) {
 }
 
 export function leaveChatRoom(chat: ChatClient) {
+	if (chat.messageEditing) {
+		setMessageEditing(chat, null);
+	}
+
 	if (!chat.room) {
 		return;
 	}
@@ -566,6 +572,11 @@ function sendChatMessage(chat: ChatClient, message: ChatMessage) {
 			message._error = true;
 			message._isProcessing = false;
 		});
+}
+
+/** Set the message that is currently being edited, or 'null' to clear the state. */
+export function setMessageEditing(chat: ChatClient, message: ChatMessage | null) {
+	chat.messageEditing = message;
 }
 
 export function retryFailedQueuedMessage(chat: ChatClient, message: ChatMessage) {

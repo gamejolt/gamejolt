@@ -17,11 +17,10 @@
 
 		<div class="-container">
 			<app-chat-window-send-form
-				:is-editing="isEditing"
 				:single-line-mode="isSingleLineMode"
 				:room="room"
 				@submit="submit($event)"
-				@cancel="isEditing = false"
+				@cancel="onFormCancel"
 				@single-line-mode-change="onSingleLineModeChanged($event)"
 			/>
 		</div>
@@ -29,9 +28,9 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require '../variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import '../variables'
 
 .-multiline-notice
 	theme-prop('color', 'light')

@@ -1,6 +1,6 @@
 import Component from 'vue-class-component';
 import { Emit, InjectReactive, Prop, Watch } from 'vue-property-decorator';
-import { EventBus, EventBusDeregister } from '../../../../../../system/event/event-bus.service';
+import { EventBus } from '../../../../../../system/event/event-bus.service';
 import { propRequired } from '../../../../../../utils/vue';
 import { ContentContext } from '../../../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../../../_common/content/content-document';
@@ -14,10 +14,9 @@ import { AppObserveDimensions } from '../../../../../../_common/observe-dimensio
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../../_common/shortkey/shortkey.vue';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { ChatClient, ChatKey } from '../../../client';
-import { CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../../message';
+import { ChatClient, ChatKey, setMessageEditing } from '../../../client';
+import { ChatMessage, CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../../message';
 import { ChatRoom } from '../../../room';
-import { ChatMessageEditEvent } from '../../output/item/item';
 
 export type FormModel = {
 	content: string;
@@ -38,7 +37,6 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	@InjectReactive(ChatKey) chat!: ChatClient;
 	@Prop(propRequired(Boolean)) singleLineMode!: boolean;
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
-	@Prop(Boolean) isEditing!: boolean;
 
 	readonly Screen = Screen;
 	readonly contentContext: ContentContext = 'chat-message';
@@ -55,10 +53,11 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		editor: AppFormControlContentTS;
 	};
 
-	private editMessageDeregister?: EventBusDeregister;
-
 	@Emit('submit')
 	emitSubmit(_content: FormModel) {}
+
+	@Emit('cancel')
+	emitCancel() {}
 
 	@Emit('single-line-mode-change')
 	emitSingleLineModeChange(_singleLine: boolean) {}
@@ -105,26 +104,19 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		return !FormValidatorContentNoMediaUpload(this.formModel.content ?? '');
 	}
 
-	async mounted() {
-		this.editMessageDeregister = EventBus.on(
-			'Chat.editMessage',
-			async (event: ChatMessageEditEvent) => {
-				this.setField('content', event.message.content);
-				this.setField('id', event.message.id);
-
-				await this.$nextTick();
-
-				if (!this.isEditorFocused) {
-					this.$refs.editor.focus();
-				}
-			}
-		);
+	get isEditing() {
+		return !!this.chat.messageEditing || false;
 	}
 
-	destroyed() {
-		if (this.editMessageDeregister) {
-			this.editMessageDeregister();
-			this.editMessageDeregister = undefined;
+	@Watch('chat.messageEditing')
+	onMessageEditing(message: ChatMessage | null) {
+		if (message) {
+			this.setField('content', message.content);
+			this.setField('id', message.id);
+
+			// Hitting the 'up' arrow still seems to technically have focus on the editor,
+			// so we want to just force the focus event instead of checking for isEditorFocused.
+			this.$refs.editor.focus();
 		}
 	}
 
@@ -214,8 +206,8 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	}
 
 	async cancel() {
-		this.$emit('cancel');
-		this.isEditing = false;
+		this.emitCancel();
+		setMessageEditing(this.chat, null);
 		this.clearMsg();
 	}
 
@@ -237,10 +229,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 			const lastMessage = userMessages[userMessages.length - 1];
 
 			if (lastMessage) {
-				this.isEditing = true;
-				EventBus.emit('Chat.editMessage', <ChatMessageEditEvent>{
-					message: lastMessage,
-				});
+				setMessageEditing(this.chat, lastMessage);
 			}
 		}
 	}
