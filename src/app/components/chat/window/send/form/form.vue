@@ -19,7 +19,6 @@
 			:class="{
 				'-form-shifted': shouldShiftEditor,
 				'-editing': isEditing,
-				'-multi-line': !singleLineMode,
 			}"
 		>
 			<div class="-input">
@@ -60,18 +59,20 @@
 			/>
 		</app-form-group>
 
-		<div v-if="showMultiLineNotice" class="-multiline-notice anim-fade-in no-animate-leave">
-			<app-jolticon icon="notice" />
-			<span v-if="isMac" v-translate>
-				You are in multi-line editing mode. Press
-				<code>cmd+enter</code>
-				to send.
-			</span>
-			<span v-else v-translate>
-				You are in multi-line editing mode. Press
-				<code>ctrl+enter</code>
-				to send.
-			</span>
+		<div v-if="!Screen.isXs" class="-multiline-notice anim-fade-in no-animate-leave">
+			<template v-if="showMultiLineNotice">
+				<app-jolticon icon="notice" />
+				<span v-if="isMac" v-translate>
+					You are in multi-line editing mode. Press
+					<code>cmd+enter</code>
+					to send.
+				</span>
+				<span v-else v-translate>
+					You are in multi-line editing mode. Press
+					<code>ctrl+enter</code>
+					to send.
+				</span>
+			</template>
 		</div>
 	</app-form>
 </template>
@@ -90,28 +91,27 @@ $-button-spacing-xs = $-button-height
 .-form
 	display: flex
 	position: relative
+	margin-bottom: 0
 
 	@media $media-xs
 		margin-top: 4px
-		margin-bottom: 0
 		border-top: $border-width-base solid var(--theme-bg-subtle)
 		padding-top: 1px
 
 	@media $media-sm-up
 		margin-top: 8px
-		margin-bottom: 16px
 
 	&-shifted
 		margin-bottom: 52px
 
 	&.-editing
-	&.-multi-line
 		margin-top: 0
 		padding-top: 1px
 		border-top: none
 
 .-multiline-notice
 .-editing-message
+	height: 28px
 	font-size: $font-size-small
 	color: var(--theme-light)
 	padding: 4px 0

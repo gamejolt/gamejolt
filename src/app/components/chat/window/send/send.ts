@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
-import { isMac } from '../../../../../utils/utils';
 import { propRequired } from '../../../../../utils/vue';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import AppContentEditor from '../../../../../_common/content/content-editor/content-editor.vue';
@@ -39,10 +38,6 @@ export default class AppChatWindowSend extends Vue {
 		}
 
 		return this.singleLineMode;
-	}
-
-	get isMac() {
-		return isMac();
 	}
 
 	editMessage(message: ChatMessage) {

@@ -1,6 +1,7 @@
 import Component from 'vue-class-component';
 import { Emit, InjectReactive, Prop, Watch } from 'vue-property-decorator';
 import { EventBus } from '../../../../../../system/event/event-bus.service';
+import { isMac } from '../../../../../../utils/utils';
 import { propRequired } from '../../../../../../utils/vue';
 import { ContentContext } from '../../../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../../../_common/content/content-document';
@@ -96,6 +97,10 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 		const doc = ContentDocument.fromJson(this.formModel.content);
 		return doc.hasContent;
+	}
+
+	get isMac() {
+		return isMac();
 	}
 
 	get showMultiLineNotice() {
