@@ -1,4 +1,4 @@
-import { darken, lighten, mix, parseToHsl } from 'polished';
+import { transparentize } from 'polished';
 import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
@@ -86,24 +86,11 @@ export default class AppChatWindowOutputItem extends Vue {
 			return null;
 		}
 
-		let highlight = '#' + this.actualTheme.highlight;
-		let backlight = '#' + this.actualTheme.backlight;
-
-		if (this.actualTheme.custom) {
-			const highlight_ =
-				'#' + (this.isDark ? this.actualTheme.darkHighlight_ : this.actualTheme.highlight_);
-			const hsl = parseToHsl(highlight_);
-			if (hsl.lightness < 0.4) {
-				highlight = lighten(0.3, highlight_);
-				backlight = highlight_;
-			} else {
-				highlight = highlight_;
-				backlight = darken(0.3, highlight_);
-			}
-		}
+		const highlight = '#' + this.actualTheme.highlight_;
+		const backlight = '#' + this.actualTheme.backlight_;
 
 		const tintColor = this.isDark ? highlight : backlight;
-		return mix(0.28, tintColor, 'rgba(0, 0, 0, 0)');
+		return transparentize(0.85, tintColor);
 	}
 
 	get editingState() {
