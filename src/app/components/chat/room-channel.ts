@@ -1,6 +1,7 @@
 import { Channel, Presence, Socket } from 'phoenix';
 import Vue from 'vue';
 import { arrayRemove } from '../../../utils/array';
+import { Analytics } from '../../../_common/analytics/analytics.service';
 import { ChatClient, isInChatRoom, processNewChatOutput, setChatRoom } from './client';
 import { ChatMessage } from './message';
 import { ChatRoom } from './room';
@@ -82,6 +83,14 @@ export class ChatRoomChannel extends Channel {
 	}
 
 	processNewRoomMessage(message: ChatMessage) {
+		const hasReceivedMessage = this.client.messages[message.room_id].some(
+			i => i.id === message.id
+		);
+		if (hasReceivedMessage) {
+			Analytics.trackEvent('chat', 'duplicate-message');
+			return;
+		}
+
 		processNewChatOutput(this.client, this.roomId, [message], false);
 
 		const friend = this.client.friendsList.getByRoom(message.room_id);
