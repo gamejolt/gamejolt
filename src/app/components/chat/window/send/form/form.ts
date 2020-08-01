@@ -119,13 +119,14 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	}
 
 	@Watch('chat.messageEditing')
-	onMessageEditing(message: ChatMessage | null) {
+	async onMessageEditing(message: ChatMessage | null) {
 		if (message) {
 			this.setField('content', message.content);
 			this.setField('id', message.id);
 
-			// Hitting the 'up' arrow still seems to technically have focus on the editor,
-			// so we want to just force the focus event instead of checking for isEditorFocused.
+			// Wait in case the editor loses focus
+			await this.$nextTick();
+			// Regain focus on the editor
 			this.$refs.editor.focus();
 
 			this.escapeCallback = () => this.cancelEditing();
