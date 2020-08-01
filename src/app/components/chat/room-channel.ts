@@ -22,7 +22,7 @@ export class ChatRoomChannel extends Channel {
 	readonly client: ChatClient;
 	readonly socket: Socket;
 
-	constructor(roomId: number, client: ChatClient, params?: object) {
+	constructor(roomId: number, client: ChatClient, params?: Record<string, any>) {
 		const socket = client.socket!;
 
 		super('room:' + roomId, params, socket);

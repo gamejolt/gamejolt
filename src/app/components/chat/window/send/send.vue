@@ -1,3 +1,5 @@
+<script lang="ts" src="./send"></script>
+
 <template>
 	<!-- Message Sending -->
 	<div class="chat-window-send fill-backdrop">
@@ -21,5 +23,3 @@
 .-container
 	position: relative
 </style>
-
-<script lang="ts" src="./send"></script>

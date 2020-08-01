@@ -73,7 +73,10 @@ export default class AppChatWindowOutputItem extends Vue {
 	}
 
 	get loggedOn() {
-		return date(this.message.logged_on, 'medium');
+		return {
+			template: date(this.message.logged_on, 'shortTime'),
+			tooltip: date(this.message.logged_on, 'medium'),
+		};
 	}
 
 	get isEditing() {

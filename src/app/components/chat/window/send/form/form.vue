@@ -4,7 +4,7 @@
 	<app-form ref="form" name="chat-send-form">
 		<app-shortkey shortkey="tab" @press="onTabKeyPressed" />
 
-		<div class="-editing-message" v-if="isEditing">
+		<div v-if="isEditing" class="-editing-message">
 			<app-jolticon icon="edit" />
 			<translate>Editing Message</translate>
 			<a class="-editing-message-cancel" @click="cancel">
@@ -48,8 +48,8 @@
 			</div>
 
 			<app-button
-				:disabled="isSendButtonDisabled"
 				v-app-tooltip="isEditing ? $gettext(`Edit message`) : $gettext(`Send message`)"
+				:disabled="isSendButtonDisabled"
 				class="-send-button"
 				sparse
 				:icon="isEditing ? 'check' : 'share-airplane'"
@@ -60,7 +60,7 @@
 			/>
 		</app-form-group>
 
-		<div class="-multiline-notice anim-fade-in no-animate-leave" v-if="showMultiLineNotice">
+		<div v-if="showMultiLineNotice" class="-multiline-notice anim-fade-in no-animate-leave">
 			<app-jolticon icon="notice" />
 			<span v-if="isMac" v-translate>
 				You are in multi-line editing mode. Press
