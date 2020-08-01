@@ -41,10 +41,6 @@ export default class AppChatWindowSend extends Vue {
 		return this.singleLineMode;
 	}
 
-	get showMultiLineNotice() {
-		return !this.isSingleLineMode && !Screen.isMobile;
-	}
-
 	get isMac() {
 		return isMac();
 	}

@@ -92,6 +92,10 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		return doc.hasContent;
 	}
 
+	get showMultiLineNotice() {
+		return !this.singleLineMode && !Screen.isMobile;
+	}
+
 	get maxContentLength() {
 		return [CHAT_MESSAGE_MAX_CONTENT_LENGTH];
 	}

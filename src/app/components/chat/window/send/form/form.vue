@@ -5,6 +5,7 @@
 		<app-shortkey shortkey="tab" @press="onTabKeyPressed" />
 
 		<div class="-editing-message" v-if="isEditing">
+			<app-jolticon icon="edit" />
 			<translate>Editing Message</translate>
 			<a class="-editing-message-cancel" @click="cancel">
 				<translate>Cancel</translate>
@@ -15,7 +16,11 @@
 			name="content"
 			hide-label
 			class="-form"
-			:class="{ '-form-shifted': shouldShiftEditor }"
+			:class="{
+				'-form-shifted': shouldShiftEditor,
+				'-editing': isEditing,
+				'-multi-line': !singleLineMode,
+			}"
 		>
 			<div class="-input">
 				<app-form-control-content
@@ -47,13 +52,27 @@
 				v-app-tooltip="isEditing ? $gettext(`Edit message`) : $gettext(`Send message`)"
 				class="-send-button"
 				sparse
-				:icon="isEditing ? 'edit' : 'share-airplane'"
+				:icon="isEditing ? 'check' : 'share-airplane'"
 				:primary="hasContent"
 				:trans="!hasContent"
 				:solid="hasContent"
 				@click="onSubmit"
 			/>
 		</app-form-group>
+
+		<div class="-multiline-notice anim-fade-in no-animate-leave" v-if="showMultiLineNotice">
+			<app-jolticon icon="notice" />
+			<span v-if="isMac" v-translate>
+				You are in multi-line editing mode. Press
+				<code>cmd+enter</code>
+				to send.
+			</span>
+			<span v-else v-translate>
+				You are in multi-line editing mode. Press
+				<code>ctrl+enter</code>
+				to send.
+			</span>
+		</div>
 	</app-form>
 </template>
 
@@ -62,14 +81,15 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
-$-button-padding = 48px
+$-button-height = 48px
+$-button-width = 40px
+$-button-margin = 4px
+$-button-spacing = $-button-width + ($-button-margin * 3)
+$-button-spacing-xs = $-button-height
 
 .-form
 	display: flex
 	position: relative
-	margin-top: 8px
-	margin-bottom: 16px
-	padding-top: 4px
 
 	@media $media-xs
 		margin-top: 4px
@@ -77,57 +97,70 @@ $-button-padding = 48px
 		border-top: $border-width-base solid var(--theme-bg-subtle)
 		padding-top: 1px
 
+	@media $media-sm-up
+		margin-top: 8px
+		margin-bottom: 16px
+
 	&-shifted
 		margin-bottom: 52px
 
+	&.-editing
+	&.-multi-line
+		margin-top: 0
+		padding-top: 1px
+		border-top: none
+
+.-multiline-notice
+.-editing-message
+	font-size: $font-size-small
+	color: var(--theme-light)
+	padding: 4px 0
+
+.-multiline-notice
+	margin-left: $left-gutter-size + $avatar-size
+
 .-editing-message
 	position: relative
-	display: flex
-	margin-bottom: 8px
-	padding-top: 4px
-	padding-bottom: 4px
-	padding-left: $left-gutter-size + $avatar-size
-	background-color: var(--theme-bg-offset)
-	font-size: $font-size-small
-	border-top-left-radius: $border-radius-base
-	border-top-right-radius: $border-radius-base
 
 	@media $media-xs
 		padding-left: 4px
-
-	&-cancel
-		position: absolute
-		right: 4px
-
-		@media $media-md-up
-			padding-right: 12px
-
-.-input
-	width: 'calc(100% + 4px - %s)' % $-button-padding
+		border-top: $border-width-base solid var(--theme-bg-subtle)
 
 	@media $media-sm-up
 		margin-left: $left-gutter-size + $avatar-size
+		margin-right: $-button-spacing
 
-	@media $media-md-up
-		width: 'calc(100% - %s)' % ($left-gutter-size + $avatar-size + $-button-padding)
+	&-cancel
+		position: absolute
+		right: 0
+
+		@media $media-xs
+			right: $-button-spacing-xs + 4px
+
+.-input
+	width: 'calc(100% - %s)' % $-button-spacing-xs
+
+	@media $media-sm-up
+		margin-left: $left-gutter-size + $avatar-size
+		width: 'calc(100% - %s)' % ($left-gutter-size + $avatar-size + $-button-spacing)
 
 .-send-button
 	display: flex
 	align-items: center
 	justify-content: center
-	width: $-button-padding
-	height: $-button-padding
+	height: $-button-height
 	margin: 0
 	flex: none
 	align-self: flex-end
 	transition: color 0.3s, background-color 0.3s
 
 	@media $media-xs
+		width: $-button-spacing-xs
 		border-radius: 0
 
 	@media $media-sm-up
-		width: 40px
-		margin: 0 8px 0 4px
+		width: $-button-width
+		margin: 0 ($-button-margin * 2) 0 $-button-margin
 
 	&.-disabled
 		&:hover

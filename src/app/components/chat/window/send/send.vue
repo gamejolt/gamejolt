@@ -1,20 +1,6 @@
 <template>
 	<!-- Message Sending -->
 	<div class="chat-window-send fill-backdrop">
-		<div class="-multiline-notice anim-fade-in no-animate-leave" v-if="showMultiLineNotice">
-			<app-jolticon icon="notice" />
-			<span v-if="isMac" v-translate>
-				You are in multi-line editing mode. Press
-				<code>cmd+enter</code>
-				to send.
-			</span>
-			<span v-else v-translate>
-				You are in multi-line editing mode. Press
-				<code>ctrl+enter</code>
-				to send.
-			</span>
-		</div>
-
 		<div class="-container">
 			<app-chat-window-send-form
 				:single-line-mode="isSingleLineMode"
@@ -31,12 +17,6 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 @import '../variables'
-
-.-multiline-notice
-	theme-prop('color', 'light')
-	margin-bottom: 4px
-	font-size: $font-size-small
-	margin-left: $left-gutter-size + $avatar-size
 
 .-container
 	position: relative

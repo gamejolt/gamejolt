@@ -1,3 +1,4 @@
+import { darken, lighten, mix, parseToHsl } from 'polished';
 import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../../utils/vue';
@@ -8,6 +9,8 @@ import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-se
 import { Popper } from '../../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
+import { Theme } from '../../../../../../_common/theme/theme.model';
+import { ThemeState, ThemeStore } from '../../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import {
 	ChatClient,
@@ -42,6 +45,9 @@ export default class AppChatWindowOutputItem extends Vue {
 
 	@InjectReactive(ChatKey) chat!: ChatClient;
 
+	@ThemeState theme?: ThemeStore['theme'];
+	@ThemeState isDark?: ThemeStore['isDark'];
+
 	readonly date = date;
 	readonly ChatMessage = ChatMessage;
 	readonly displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
@@ -49,6 +55,11 @@ export default class AppChatWindowOutputItem extends Vue {
 	singleLineMode = true;
 
 	readonly Screen = Screen;
+
+	get actualTheme() {
+		// Use the form/page/user theme, or the default theme if none exist.
+		return this.theme || new Theme(null);
+	}
 
 	get isSingleLineMode() {
 		// We always want to be in multiline mode for phones:
@@ -65,12 +76,54 @@ export default class AppChatWindowOutputItem extends Vue {
 		return date(this.message.logged_on, 'medium');
 	}
 
-	get editedOn() {
-		return date(this.message.edited_on!, 'medium');
-	}
-
 	get isEditing() {
 		return this.chat.messageEditing === this.message;
+	}
+
+	/** The background-color for chat items that are being edited. */
+	get isEditingColor() {
+		if (!this.isEditing) {
+			return null;
+		}
+
+		let highlight = '#' + this.actualTheme.highlight;
+		let backlight = '#' + this.actualTheme.backlight;
+
+		if (this.actualTheme.custom) {
+			const highlight_ =
+				'#' + (this.isDark ? this.actualTheme.darkHighlight_ : this.actualTheme.highlight_);
+			const hsl = parseToHsl(highlight_);
+			if (hsl.lightness < 0.4) {
+				highlight = lighten(0.3, highlight_);
+				backlight = highlight_;
+			} else {
+				highlight = highlight_;
+				backlight = darken(0.3, highlight_);
+			}
+		}
+
+		const tintColor = this.isDark ? highlight : backlight;
+		return mix(0.28, tintColor, 'rgba(0, 0, 0, 0)');
+	}
+
+	get editingState() {
+		if (this.isEditing) {
+			return {
+				/** The text to display in the comment */
+				display: '(editing...)',
+				/** The tooltip to display on hover or tap */
+				tooltip: '',
+			};
+		}
+
+		if (this.message.edited_on) {
+			return {
+				display: '(edited)',
+				tooltip: date(this.message.edited_on!, 'medium'),
+			};
+		}
+
+		return null;
 	}
 
 	startEdit() {

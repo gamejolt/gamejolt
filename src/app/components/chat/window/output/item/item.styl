@@ -1,6 +1,6 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require '../../variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import '../../variables'
 
 .chat-window-message
 	position: relative
@@ -120,7 +120,7 @@
 			max-height: 4px !important
 
 	&-options
-		display: none
+		visibility: hidden
 		position: absolute
 		top: 0
 		right: 0
@@ -128,7 +128,8 @@
 		z-index: 2
 
 		../:hover &
-			display: block
+		.chat-window-message-editing &
+			visibility: visible
 
 	&-retry
 		font-size: $font-size-tiny

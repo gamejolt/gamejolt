@@ -9,6 +9,7 @@
 			'-chat-message-queued': message._showAsQueued,
 			'-chat-message-new': isNew,
 		}"
+		:style="{ 'background-color': isEditingColor }"
 	>
 		<router-link
 			v-if="!message.combine"
@@ -50,12 +51,12 @@
 				v-if="chat.currentUser && chat.currentUser.id === message.user.id"
 				class="chat-window-message-options"
 			>
-				<app-popper popover-class="fill-darkest">
+				<app-popper>
 					<a class="link-muted" v-app-tooltip="$gettext('More Options')">
 						<app-jolticon icon="ellipsis-v" class="middle" />
 					</a>
 
-					<div slot="popover" class="list-group list-group-dark">
+					<div slot="popover" class="list-group">
 						<a class="list-group-item has-icon" @click="startEdit">
 							<app-jolticon icon="edit" />
 							<translate>Edit Message</translate>
@@ -97,8 +98,13 @@
 
 				<app-content-viewer :source="message.content" :display-rules="displayRules" />
 
-				<span v-if="message.edited_on" v-app-tooltip="editedOn" class="-edited text-muted">
-					<translate>(edited)</translate>
+				<span
+					v-if="editingState"
+					v-app-tooltip.touchable="editingState.tooltip"
+					class="-edited"
+					:class="{ 'text-muted': !isEditing }"
+				>
+					<translate>{{ editingState.display }}</translate>
 				</span>
 			</div>
 		</div>
