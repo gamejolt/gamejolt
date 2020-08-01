@@ -1,11 +1,17 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Prop } from 'vue-property-decorator';
-import { isMac } from '../../../../../utils/utils';
+import { Component, InjectReactive, Prop, Watch } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import AppContentEditor from '../../../../../_common/content/content-editor/content-editor.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { ChatClient, ChatKey, queueChatMessage } from '../../client';
+import {
+	ChatClient,
+	ChatKey,
+	editMessage,
+	queueChatMessage,
+	setMessageEditing,
+} from '../../client';
+import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
 import AppChatWindowSendForm from './form/form.vue';
 
@@ -34,16 +40,20 @@ export default class AppChatWindowSend extends Vue {
 		return this.singleLineMode;
 	}
 
-	get showMultiLineNotice() {
-		return !this.isSingleLineMode && !Screen.isMobile;
+	editMessage(message: ChatMessage) {
+		setMessageEditing(this.chat, null);
+
+		const doc = ContentDocument.fromJson(message.content);
+		if (doc instanceof ContentDocument) {
+			const contentJson = doc.toJson();
+			message.content = contentJson;
+		}
+
+		editMessage(this.chat, message);
 	}
 
-	get isMac() {
-		return isMac();
-	}
-
-	sendMessage(message: string) {
-		const doc = ContentDocument.fromJson(message);
+	sendMessage(message: ChatMessage) {
+		const doc = ContentDocument.fromJson(message.content);
 		if (doc instanceof ContentDocument) {
 			const contentJson = doc.toJson();
 			const room = this.chat.room;
@@ -51,11 +61,24 @@ export default class AppChatWindowSend extends Vue {
 				queueChatMessage(this.chat, contentJson, room.id);
 			}
 		}
+	}
+
+	submit(message: ChatMessage) {
+		this.chat.messageEditing ? this.editMessage(message) : this.sendMessage(message);
 
 		this.singleLineMode = true;
 	}
 
+	onFormCancel() {
+		setMessageEditing(this.chat, null);
+	}
+
 	onSingleLineModeChanged(singleLineMode: boolean) {
 		this.singleLineMode = singleLineMode;
+	}
+
+	@Watch('room.id')
+	async onRoomChanged() {
+		setMessageEditing(this.chat, null);
 	}
 }

@@ -4,7 +4,6 @@ import { State } from 'vuex-class';
 import { Store } from '../../../../../auth/store/index';
 import { AppAuthRequired } from '../../../../auth/auth-required-directive';
 import { fuzzynumber } from '../../../../filters/fuzzynumber';
-import { number } from '../../../../filters/number';
 import { Growls } from '../../../../growls/growls.service';
 import { LikersModal } from '../../../../likers/modal.service';
 import { Screen } from '../../../../screen/screen-service';
@@ -21,9 +20,6 @@ import { FiresidePostLike } from '../like-model';
 	directives: {
 		AppAuthRequired,
 		AppTooltip,
-	},
-	filters: {
-		fuzzynumber,
 	},
 })
 export default class AppFiresidePostLikeWidget extends Vue {
@@ -49,8 +45,8 @@ export default class AppFiresidePostLikeWidget extends Vue {
 	@Emit('change')
 	emitChange(_value: boolean) {}
 
-	get blip() {
-		return this.post.like_count ? number(this.post.like_count) : '';
+	get likeCount() {
+		return fuzzynumber(this.post.like_count);
 	}
 
 	get liked() {

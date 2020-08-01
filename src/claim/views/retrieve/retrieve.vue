@@ -17,11 +17,11 @@
 					<translate>Please enter your email address to retrieve your keys.</translate>
 				</template>
 				<template v-if="resourceTitle">
-					<translate :translate-params="{ resource: resourceTitle }">
+					<span v-translate="{ resource: resourceTitle }">
 						Please enter your email address to retrieve your keys for
 						<b>%{ resource }</b>
 						.
-					</translate>
+					</span>
 				</template>
 				<translate>We will email you a link to your download(s).</translate>
 			</p>

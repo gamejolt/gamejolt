@@ -1,5 +1,6 @@
 import { Channel, Presence, Socket } from 'phoenix';
 import Vue from 'vue';
+import { arrayRemove } from '../../../utils/array';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { ChatClient, isInChatRoom, processNewChatOutput, setChatRoom } from './client';
 import { ChatMessage } from './message';
@@ -22,7 +23,7 @@ export class ChatRoomChannel extends Channel {
 	readonly client: ChatClient;
 	readonly socket: Socket;
 
-	constructor(roomId: number, client: ChatClient, params?: object) {
+	constructor(roomId: number, client: ChatClient, params?: Record<string, any>) {
 		const socket = client.socket!;
 
 		super('room:' + roomId, params, socket);
@@ -36,6 +37,8 @@ export class ChatRoomChannel extends Channel {
 		this.on('message', this.onMsg.bind(this));
 		this.on('clear_notifications', this.onClearNotifications.bind(this));
 		this.on('user_updated', this.onUserUpdated.bind(this));
+		this.on('message_update', this.onUpdateMsg.bind(this));
+		this.on('message_remove', this.onRemoveMsg.bind(this));
 
 		this.onClose(() => {
 			if (isInChatRoom(this.client, roomId)) {
@@ -107,6 +110,23 @@ export class ChatRoomChannel extends Channel {
 		const updatedUser = new ChatUser(data);
 		if (this.room && isInChatRoom(this.client, this.roomId) && this.room.isGroupRoom) {
 			this.client.usersOnline[this.roomId].update(updatedUser);
+		}
+	}
+
+	private onRemoveMsg(data: { id: number }) {
+		if (this.room) {
+			arrayRemove(this.client.messages[this.roomId], i => i.id === data.id);
+		}
+	}
+
+	private onUpdateMsg(data: Partial<ChatMessage>) {
+		const edited = new ChatMessage(data);
+		if (this.room) {
+			const index = this.client.messages[this.roomId].findIndex(msg => msg.id === data.id);
+			const message = this.client.messages[this.roomId][index];
+
+			message.content = edited.content;
+			message.edited_on = edited.edited_on;
 		}
 	}
 
