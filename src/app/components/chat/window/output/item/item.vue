@@ -6,6 +6,7 @@
 			'chat-msg-type-system': message.type === ChatMessage.TypeSystem,
 			'chat-window-message-not-combined': !message.combine,
 			'chat-window-message-combined': message.combine,
+			'chat-window-message-editing': isEditing,
 			'-chat-message-queued': message._showAsQueued,
 			'-chat-message-new': isNew,
 		}"
