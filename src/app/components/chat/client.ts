@@ -90,6 +90,7 @@ export class ChatClient {
 	isFocused = true;
 
 	messageQueue: ChatMessage[] = [];
+	messageEditing: null | ChatMessage = null;
 
 	/**
 	 * The session room is stored within their local session. It's their last active room. We reopen
@@ -361,12 +362,13 @@ export function setChatRoom(chat: ChatClient, newRoom: ChatRoom | undefined) {
 
 export function newChatNotification(chat: ChatClient, roomId: number) {
 	if (isInChatRoom(chat, roomId) && chat.isFocused) {
+		return;
+	}
+
+	if (chat.notifications[roomId]) {
+		chat.notifications[roomId] = chat.notifications[roomId] + 1;
 	} else {
-		if (chat.notifications[roomId]) {
-			chat.notifications[roomId] = chat.notifications[roomId] + 1;
-		} else {
-			Vue.set(chat.notifications, '' + roomId, 1);
-		}
+		Vue.set(chat.notifications, '' + roomId, 1);
 	}
 }
 
@@ -402,6 +404,10 @@ function leaveChannel(chat: ChatClient, channel: Channel) {
 }
 
 export function leaveChatRoom(chat: ChatClient) {
+	if (chat.messageEditing) {
+		setMessageEditing(chat, null);
+	}
+
 	if (!chat.room) {
 		return;
 	}
@@ -568,6 +574,11 @@ function sendChatMessage(chat: ChatClient, message: ChatMessage) {
 		});
 }
 
+/** Set the message that is currently being edited, or 'null' to clear the state. */
+export function setMessageEditing(chat: ChatClient, message: ChatMessage | null) {
+	chat.messageEditing = message;
+}
+
 export function retryFailedQueuedMessage(chat: ChatClient, message: ChatMessage) {
 	if (!message._isQueued || !message._error) {
 		return;
@@ -635,6 +646,23 @@ export function setChatFocused(chat: ChatClient, focused: boolean) {
 		} else {
 			chat.roomChannels[chat.room.id].push('unfocus', { roomId: chat.room.id });
 		}
+	}
+}
+
+export function removeMessage(chat: ChatClient, msgId: number) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('message_remove', { id: msgId });
+	}
+}
+
+export function editMessage(chat: ChatClient, message: ChatMessage) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('message_update', {
+			content: message.content,
+			id: message.id,
+		});
 	}
 }
 
