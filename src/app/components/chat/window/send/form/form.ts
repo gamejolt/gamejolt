@@ -225,16 +225,18 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	}
 
 	onUpKeyPressed() {
-		if (!this.isEditing) {
-			// Find the last message sent by the current user.
-			const userMessages = this.chat.messages[this.room.id].filter(
-				msg => msg.user.id === this.chat.currentUser?.id
-			);
-			const lastMessage = userMessages[userMessages.length - 1];
+		if (this.isEditing || this.hasContent) {
+			return;
+		}
 
-			if (lastMessage) {
-				setMessageEditing(this.chat, lastMessage);
-			}
+		// Find the last message sent by the current user.
+		const userMessages = this.chat.messages[this.room.id].filter(
+			msg => msg.user.id === this.chat.currentUser?.id
+		);
+		const lastMessage = userMessages[userMessages.length - 1];
+
+		if (lastMessage) {
+			setMessageEditing(this.chat, lastMessage);
 		}
 	}
 
