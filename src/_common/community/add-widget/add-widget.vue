@@ -7,7 +7,14 @@
 	>
 		<app-jolticon icon="add" big />
 	</router-link>
-	<a v-else-if="user" v-app-tooltip="tooltip" class="-add -disabled" @click="showGrowl">
+	<a
+		v-else
+		v-app-auth-required
+		v-app-tooltip="tooltip"
+		class="-add"
+		:class="{ '-disabled': user }"
+		@click="showGrowl"
+	>
 		<app-jolticon icon="add" big />
 	</a>
 </template>
