@@ -15,7 +15,7 @@
 								@click="friendsTab = 'all'"
 							>
 								<translate>All</translate>
-								<span class="badge">
+								<span class="badge badge-subtle">
 									{{ friendsCountAll }}
 								</span>
 							</a>
@@ -26,7 +26,7 @@
 								@click="friendsTab = 'online'"
 							>
 								<translate>Online</translate>
-								<span class="badge">
+								<span class="badge badge-subtle">
 									{{ friendsCountOnline }}
 								</span>
 							</a>
