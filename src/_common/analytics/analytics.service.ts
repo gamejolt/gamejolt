@@ -55,7 +55,7 @@ export class Analytics {
 		EventBus.on('routeChangeAfter', () => {
 			// If the home route is being visited and the user is not signed in,
 			// we want to track the event as '/discover' instead of the user feed route.
-			if (router.currentRoute.fullPath === '/' && !this.appUser) {
+			if (router.currentRoute.path === '/' && !this.appUser) {
 				this.trackPageview(routeDiscoverHome.path);
 				return;
 			}
