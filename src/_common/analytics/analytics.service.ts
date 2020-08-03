@@ -1,5 +1,4 @@
 import VueRouter from 'vue-router';
-import { routeDiscoverHome } from '../../app/views/discover/home/home.route';
 import { EventBus } from '../../system/event/event-bus.service';
 import { arrayRemove } from '../../utils/array';
 import { Environment } from '../environment/environment.service';
@@ -53,10 +52,11 @@ export class Analytics {
 		});
 
 		EventBus.on('routeChangeAfter', () => {
-			// If the home route is being visited and the user is not signed in,
-			// we want to track the event as '/discover' instead of the user feed route.
-			if (router.currentRoute.path === '/' && !this.appUser) {
-				this.trackPageview(routeDiscoverHome.path);
+			const trackingPath = router.currentRoute.meta.trackingPath;
+
+			// Track the page view using the trackingPath if we have one assigned to the route meta.
+			if (trackingPath) {
+				this.trackPageview(trackingPath);
 				return;
 			}
 
