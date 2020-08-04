@@ -13,10 +13,6 @@ interface RoomPresence {
 	user: ChatUser;
 }
 
-interface ClearNotificationsPayload {
-	room_id: number;
-}
-
 export class ChatRoomChannel extends Channel {
 	room!: ChatRoom;
 	roomId: number;
@@ -35,7 +31,6 @@ export class ChatRoomChannel extends Channel {
 		this.setupPresence();
 
 		this.on('message', this.onMsg.bind(this));
-		this.on('clear_notifications', this.onClearNotifications.bind(this));
 		this.on('user_updated', this.onUserUpdated.bind(this));
 		this.on('message_update', this.onUpdateMsg.bind(this));
 		this.on('message_remove', this.onRemoveMsg.bind(this));
@@ -97,12 +92,6 @@ export class ChatRoomChannel extends Channel {
 		if (friend) {
 			friend.last_message_on = message.logged_on.getTime();
 			this.client.friendsList.update(friend);
-		}
-	}
-
-	private onClearNotifications(data: ClearNotificationsPayload) {
-		if (isInChatRoom(this.client, data.room_id)) {
-			Vue.delete(this.client.notifications, '' + data.room_id);
 		}
 	}
 
