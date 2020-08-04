@@ -1,14 +1,13 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { EventBus, EventBusDeregister } from '../../../system/event/event-bus.service';
 import { Connection } from '../../../_common/connection/connection-service';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMinbar from '../../../_common/minbar/minbar.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import { BannerModule, BannerStore, Store } from '../../store/index';
-import { ChatClient, ChatKey, ChatNewMessageEvent, setChatFocused } from '../chat/client';
+import { ChatClient, ChatKey, setChatFocused } from '../chat/client';
 import AppShellBody from './body/body.vue';
 import AppShellCbar from './cbar/cbar.vue';
 import AppShellHotBottom from './hot-bottom/hot-bottom.vue';
@@ -72,17 +71,11 @@ export default class AppShell extends Vue {
 	@Action
 	clearPanes!: Store['clearPanes'];
 
-	private unfocusedChatNotificationsCount = 0;
-	private newMessageDeregister?: EventBusDeregister;
-
 	readonly Connection = Connection;
 	readonly Screen = Screen;
 
 	get totalChatNotificationsCount() {
-		return (
-			(this.chat ? this.chat.roomNotificationsCount : 0) +
-			this.unfocusedChatNotificationsCount
-		);
+		return this.chat ? this.chat.roomNotificationsCount : 0;
 	}
 
 	mounted() {
@@ -106,41 +99,11 @@ export default class AppShell extends Vue {
 					// start accumulating notifications for the current room.
 					setChatFocused(this.chat, false);
 				} else {
-					// When we focus it back, clear out all accumulated
-					// notifications. Set that we're not longer focused, and
-					// clear out room notifications. The user has now "seen" the
-					// messages.
-					this.unfocusedChatNotificationsCount = 0;
-
 					// Notify the client that we aren't unfocused anymore.
 					setChatFocused(this.chat, true);
 				}
 			}
 		);
-
-		this.newMessageDeregister = EventBus.on('Chat.newMessage', (event: ChatNewMessageEvent) => {
-			// If we have a general room open, and our window is unfocused or
-			// minimized, then increment our room notifications count (since
-			// they haven't seen this message yet). Note that if these messages
-			// came in because we were priming output for a room with old
-			// messages, we don't want to increase notification counts.
-			if (
-				!ContentFocus.isWindowFocused &&
-				this.chat &&
-				this.chat.room &&
-				event.message &&
-				event.message.room_id === this.chat.room.id
-			) {
-				++this.unfocusedChatNotificationsCount;
-			}
-		});
-	}
-
-	destroyed() {
-		if (this.newMessageDeregister) {
-			this.newMessageDeregister();
-			this.newMessageDeregister = undefined;
-		}
 	}
 
 	// Since the cbar takes up width from the whole screen, we want to trigger a
