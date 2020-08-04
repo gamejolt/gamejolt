@@ -3,7 +3,7 @@
 		<div ref="left" class="navbar-left" :style="{ 'min-width': minColWidth }">
 			<div class="-col" v-app-observe-dimensions="checkColWidths">
 				<a
-					v-if="hasSidebar"
+					v-if="shouldShowMenu"
 					class="navbar-item"
 					:class="{
 						'-menu-toggle': hasCbar,
@@ -41,7 +41,7 @@
 				</router-link>
 
 				<router-link
-					v-if="!Screen.isXs && app.user"
+					v-if="shouldShowExplore"
 					class="-explore navbar-item"
 					:class="{ active: $route.name === 'discover.home' }"
 					:to="{ name: 'discover.home' }"
@@ -54,7 +54,7 @@
 				</router-link>
 
 				<app-popper
-					v-if="!Screen.isXs"
+					v-if="shouldShowMoreMenu"
 					popover-class="fill-darkest"
 					hide-on-state-change
 					fixed
@@ -114,7 +114,7 @@
 		-->
 		<div
 			ref="right"
-			v-if="app.userBootstrapped"
+			v-if="app.userBootstrapped && !isTimedOut"
 			class="navbar-right"
 			:style="{ 'min-width': minColWidth }"
 		>
@@ -148,7 +148,9 @@
 					<span
 						v-if="Connection.isOffline"
 						class="navbar-item disconnected-icon"
-						v-app-tooltip.left="$gettext(`We're having trouble connecting to Game Jolt.`)"
+						v-app-tooltip.left="
+							$gettext(`We're having trouble connecting to Game Jolt.`)
+						"
 					>
 						<app-jolticon icon="offline" />
 					</span>
@@ -169,7 +171,10 @@
 							</a>
 						</li>
 						<li>
-							<a :href="Environment.authBaseUrl + '/join'" v-app-track-event="`top-nav:join:click`">
+							<a
+								:href="Environment.authBaseUrl + '/join'"
+								v-app-track-event="`top-nav:join:click`"
+							>
 								<translate>Sign Up</translate>
 							</a>
 						</li>
@@ -181,8 +186,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 #shell-top-nav
 	position: fixed
@@ -191,7 +196,8 @@
 	.disconnected-icon
 		theme-prop('color', 'notice')
 
-		&, .jolticon
+		&
+		.jolticon
 			cursor: help
 
 // We want to make this the same width as the cbar, so that it aligns.
@@ -212,7 +218,8 @@
 	padding-right: 24px
 	max-width: 600px
 
-.navbar-left, .navbar-right
+.navbar-left
+.navbar-right
 	display: flex
 
 .navbar-right
