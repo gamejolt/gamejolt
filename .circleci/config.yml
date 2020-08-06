@@ -23,9 +23,9 @@ jobs:
       # TODO: fix this properly
       - run: yarn install --ignore-engines
 
-      - run: yarn run client-build-osx
+      # - run: yarn run client-build-osx
       # To make a test package, comment out the previous line and uncomment this line.
-      # - run: yarn run client-build-osx --useTestPackage
+      - run: yarn run client-build-osx --useTestPackage
 
       - store_artifacts:
           path: ./build/prod-client-build/osx64-package.tar.gz
@@ -57,9 +57,9 @@ jobs:
             echo 'export PATH=$PATH:$GOROOT/bin:$GOPATH/bin' >> $BASH_ENV
 
       - run: yarn install --ignore-engines
-      - run: yarn run client-build-linux64
+      # - run: yarn run client-build-linux64
       # To make a test package, comment out the previous line and uncomment this line.
-      # - run: yarn run client-build-linux64 --useTestPackage
+      - run: yarn run client-build-linux64 --useTestPackage
 
       - store_artifacts:
           path: ./build/prod-client-build/linux64-package.tar.gz
