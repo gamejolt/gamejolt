@@ -98,7 +98,9 @@ export class ChatUserChannel extends Channel {
 			this.client.friendsList.update(friend);
 		}
 
-		ChatNotificationGrowl.show(this.client, message);
+		if (this.client.notificationHandler.isMain) {
+			ChatNotificationGrowl.show(this.client, message);
+		}
 	}
 
 	private onYouUpdated(data: Partial<ChatUser>) {
