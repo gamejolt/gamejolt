@@ -20,7 +20,7 @@ export class NotificationHandler {
 				window.localStorage.removeItem(localStorageKey);
 				this.addTab(this.id);
 			}
-		}, 100);
+		}, 500);
 
 		window.addEventListener('beforeunload', _event => {
 			this.onClose();
