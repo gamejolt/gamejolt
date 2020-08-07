@@ -19,7 +19,7 @@ import { AppObserveDimensions } from '../../../../../../_common/observe-dimensio
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../../_common/shortkey/shortkey.vue';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { ChatClient, ChatKey, setMessageEditing } from '../../../client';
+import { ChatClient, ChatKey, setMessageEditing, startTyping, stopTyping } from '../../../client';
 import { ChatMessage, CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../../message';
 import { ChatRoom } from '../../../room';
 
@@ -53,7 +53,10 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	// Don't show "Do you want to save" when dismissing the form.
 	warnOnDiscard = false;
 
+	typing = false;
+
 	private escapeCallback?: EscapeStackCallback;
+	private timeout!: NodeJS.Timer;
 
 	$refs!: {
 		form: AppForm;
@@ -88,6 +91,14 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 	get shouldShiftEditor() {
 		return Screen.isXs && this.isEditorFocused;
+	}
+
+	get usersTyping() {
+		const typing = this.chat.typing[this.room.id] || [];
+
+		return typing
+			.filter(user => user.id !== this.chat.currentUser?.id)
+			.map(user => user.display_name);
 	}
 
 	get hasContent() {
@@ -198,6 +209,18 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		this.$refs.editor.focus();
 	}
 
+	onChange(_value: string) {
+		const interval = 3000;
+		if (!this.typing) {
+			this.typing = true;
+			startTyping(this.chat);
+			this.timeout = setTimeout(this.typingTimeout, interval);
+		} else {
+			clearTimeout(this.timeout);
+			this.timeout = setTimeout(this.typingTimeout, interval);
+		}
+	}
+
 	onEditorInsertBlockNode(_nodeType: string) {
 		this.emitSingleLineModeChange(false);
 	}
@@ -245,6 +268,20 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		}
 	}
 
+	printTyping() {
+		if (this.usersTyping.length > 3) {
+			return 'Several people are typing...';
+		}
+
+		let typing = [this.usersTyping.slice(0, -1).join(', '), this.usersTyping.slice(-1)[0]].join(
+			this.usersTyping.length < 2 ? '' : ' and '
+		);
+
+		typing += this.usersTyping.length < 2 ? ' is typing...' : ' are typing...';
+
+		return typing;
+	}
+
 	async cancelEditing() {
 		this.emitCancel();
 		setMessageEditing(this.chat, null);
@@ -258,5 +295,10 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		// Wait for errors, then clear them.
 		await this.$nextTick();
 		this.$refs.form.clearErrors();
+	}
+
+	private typingTimeout() {
+		this.typing = false;
+		stopTyping(this.chat);
 	}
 }

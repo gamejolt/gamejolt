@@ -87,6 +87,7 @@ export class ChatClient {
 	messages: { [k: string]: ChatMessage[] } = {};
 	usersOnline: { [k: string]: ChatUserCollection } = {};
 	notifications: { [k: string]: number } = {};
+	typing: { [k: string]: ChatUser[] } = {};
 	isFocused = true;
 
 	messageQueue: ChatMessage[] = [];
@@ -663,6 +664,20 @@ export function editMessage(chat: ChatClient, message: ChatMessage) {
 			content: message.content,
 			id: message.id,
 		});
+	}
+}
+
+export function startTyping(chat: ChatClient) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('start_typing', {});
+	}
+}
+
+export function stopTyping(chat: ChatClient) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('stop_typing', {});
 	}
 }
 

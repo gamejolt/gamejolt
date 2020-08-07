@@ -9,7 +9,7 @@ import { ChatUser } from './user';
 import { ChatUserCollection } from './user-collection';
 
 interface RoomPresence {
-	metas: { phx_ref: string }[];
+	metas: { phx_ref: string; typing: boolean }[];
 	user: ChatUser;
 }
 
@@ -19,6 +19,7 @@ interface ClearNotificationsPayload {
 
 export class ChatRoomChannel extends Channel {
 	room!: ChatRoom;
+	typing!: ChatUser[];
 	roomId: number;
 	readonly client: ChatClient;
 	readonly socket: Socket;
@@ -132,10 +133,16 @@ export class ChatRoomChannel extends Channel {
 
 	private syncPresentUsers(presence: Presence, room: ChatRoom) {
 		const presentUsers: ChatUser[] = [];
+		const typing: ChatUser[] = [];
+
 		presence.list((_id: string, roomPresence: RoomPresence) => {
 			const user = new ChatUser(roomPresence.user);
 			user.isOnline = true;
 			presentUsers.push(user);
+
+			if (roomPresence.metas.some(meta => meta.typing)) {
+				typing.push(user);
+			}
 		});
 
 		if (room.isGroupRoom) {
@@ -145,5 +152,6 @@ export class ChatRoomChannel extends Channel {
 				new ChatUserCollection(ChatUserCollection.TYPE_ROOM, presentUsers)
 			);
 		}
+		Vue.set(this.client.typing, '' + room.id, typing);
 	}
 }

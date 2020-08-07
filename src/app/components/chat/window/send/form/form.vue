@@ -41,6 +41,7 @@
 					@focus="onFocusEditor"
 					@blur="onBlurEditor"
 					@keydown.native.up="onUpKeyPressed"
+					@changed="onChange($event)"
 				/>
 
 				<app-form-control-errors label="message" />
@@ -58,6 +59,10 @@
 				@click="onSubmit"
 			/>
 		</app-form-group>
+
+		<span class="-typing" v-if="usersTyping.length > 0">
+			{{ printTyping() }}
+		</span>
 
 		<div v-if="!Screen.isXs" class="-multiline-notice anim-fade-in no-animate-leave">
 			<template v-if="showMultiLineNotice">
@@ -108,6 +113,18 @@ $-button-spacing-xs = $-button-height
 		margin-top: 0
 		padding-top: 1px
 		border-top: none
+
+.-typing
+	position: relative
+	font-size: $font-size-small
+	color: var(--theme-light)
+
+	@media $media-xs
+		padding-left: 4px
+
+	@media $media-sm-up
+		margin-left: $left-gutter-size + $avatar-size
+		margin-right: $-button-spacing
 
 .-multiline-notice
 .-editing-message
