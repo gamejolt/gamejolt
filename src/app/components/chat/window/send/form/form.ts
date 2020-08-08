@@ -207,6 +207,8 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 		await this.submitMessage();
 
+		this.typingTimeout();
+
 		// Refocus editor after submitting message with enter.
 		this.$refs.editor.focus();
 	}
