@@ -87,7 +87,6 @@ export class ChatClient {
 	messages: { [k: string]: ChatMessage[] } = {};
 	usersOnline: { [k: string]: ChatUserCollection } = {};
 	notifications: { [k: string]: number } = {};
-	typing: { [k: string]: ChatUser[] } = {};
 	isFocused = true;
 
 	messageQueue: ChatMessage[] = [];

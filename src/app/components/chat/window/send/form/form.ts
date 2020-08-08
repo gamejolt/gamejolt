@@ -22,6 +22,7 @@ import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive'
 import { ChatClient, ChatKey, setMessageEditing, startTyping, stopTyping } from '../../../client';
 import { ChatMessage, CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../../message';
 import { ChatRoom } from '../../../room';
+import { ChatUserCollection } from '../../../user-collection';
 
 export type FormModel = {
 	content: string;
@@ -94,9 +95,10 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	}
 
 	get usersTyping() {
-		const typing = this.chat.typing[this.room.id] || [];
+		const users = this.chat.usersOnline[this.room.id] || new ChatUserCollection('room');
 
-		return typing
+		return users.collection
+			.filter(user => user.typing)
 			.filter(user => user.id !== this.chat.currentUser?.id)
 			.map(user => user.display_name);
 	}
