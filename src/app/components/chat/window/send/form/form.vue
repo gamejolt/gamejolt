@@ -12,6 +12,22 @@
 			</a>
 		</div>
 
+		<div v-if="!Screen.isXs" class="-multiline-notice anim-fade-in no-animate-leave">
+			<template v-if="showMultiLineNotice">
+				<app-jolticon icon="notice" />
+				<span v-if="isMac" v-translate>
+					You are in multi-line editing mode. Press
+					<code>cmd+enter</code>
+					to send.
+				</span>
+				<span v-else v-translate>
+					You are in multi-line editing mode. Press
+					<code>ctrl+enter</code>
+					to send.
+				</span>
+			</template>
+		</div>
+
 		<app-form-group
 			name="content"
 			hide-label
@@ -60,24 +76,10 @@
 			/>
 		</app-form-group>
 
-		<span class="-typing" v-if="usersTyping.length > 0">
-			{{ printTyping() }}
-		</span>
-
-		<div v-if="!Screen.isXs" class="-multiline-notice anim-fade-in no-animate-leave">
-			<template v-if="showMultiLineNotice">
-				<app-jolticon icon="notice" />
-				<span v-if="isMac" v-translate>
-					You are in multi-line editing mode. Press
-					<code>cmd+enter</code>
-					to send.
-				</span>
-				<span v-else v-translate>
-					You are in multi-line editing mode. Press
-					<code>ctrl+enter</code>
-					to send.
-				</span>
-			</template>
+		<div class="-typing">
+			<div v-if="usersTyping.length > 0">
+				{{ printTyping() }}
+			</div>
 		</div>
 	</app-form>
 </template>
@@ -116,16 +118,16 @@ $-button-spacing-xs = $-button-height
 
 .-typing
 	position: relative
-	font-size: $font-size-small
-	color: var(--theme-light)
 
 	@media $media-xs
 		padding-left: 4px
+		margin-left: 4px
 
 	@media $media-sm-up
 		margin-left: $left-gutter-size + $avatar-size
 		margin-right: $-button-spacing
 
+.-typing
 .-multiline-notice
 .-editing-message
 	height: 28px
