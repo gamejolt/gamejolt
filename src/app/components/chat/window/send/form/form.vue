@@ -77,9 +77,7 @@
 		</app-form-group>
 
 		<div class="-typing">
-			<div v-if="usersTyping.length > 0">
-				{{ printTyping() }}
-			</div>
+			{{ getTypingText() }}
 		</div>
 	</app-form>
 </template>

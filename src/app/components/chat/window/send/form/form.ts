@@ -22,7 +22,8 @@ import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive'
 import { ChatClient, ChatKey, setMessageEditing, startTyping, stopTyping } from '../../../client';
 import { ChatMessage, CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../../message';
 import { ChatRoom } from '../../../room';
-import { ChatUserCollection } from '../../../user-collection';
+
+const TYPING_TIMEOUT_INTERVAL = 3000;
 
 export type FormModel = {
 	content: string;
@@ -57,7 +58,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	typing = false;
 
 	private escapeCallback?: EscapeStackCallback;
-	private timeout!: NodeJS.Timer;
+	private typingTimeout!: NodeJS.Timer;
 
 	$refs!: {
 		form: AppForm;
@@ -94,10 +95,13 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		return Screen.isXs && this.isEditorFocused;
 	}
 
-	get usersTyping() {
-		const users = this.chat.usersOnline[this.room.id] || new ChatUserCollection('room');
+	get typingDisplayNames() {
+		const usersOnline = this.chat.usersOnline[this.room.id];
+		if (!usersOnline || usersOnline.collection.length === 0) {
+			return [];
+		}
 
-		return users.collection
+		return usersOnline.collection
 			.filter(user => user.typing)
 			.filter(user => user.id !== this.chat.currentUser?.id)
 			.map(user => user.display_name);
@@ -207,22 +211,20 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 		await this.submitMessage();
 
-		this.typingTimeout();
+		this.disableTypingTimeout();
 
 		// Refocus editor after submitting message with enter.
 		this.$refs.editor.focus();
 	}
 
 	onChange(_value: string) {
-		const interval = 3000;
 		if (!this.typing) {
 			this.typing = true;
 			startTyping(this.chat);
-			this.timeout = setTimeout(this.typingTimeout, interval);
 		} else {
-			clearTimeout(this.timeout);
-			this.timeout = setTimeout(this.typingTimeout, interval);
+			clearTimeout(this.typingTimeout);
 		}
+		this.typingTimeout = setTimeout(this.disableTypingTimeout, TYPING_TIMEOUT_INTERVAL);
 	}
 
 	onEditorInsertBlockNode(_nodeType: string) {
@@ -272,18 +274,33 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		}
 	}
 
-	printTyping() {
-		if (this.usersTyping.length > 3) {
-			return 'Several people are typing...';
+	getTypingText() {
+		const displayNamePlaceholderValues = {
+			user1: this.typingDisplayNames[0],
+			user2: this.typingDisplayNames[1],
+			user3: this.typingDisplayNames[2],
+		};
+
+		if (this.typingDisplayNames.length > 3) {
+			return this.$gettext(`Several people are typing...`);
+		} else if (this.typingDisplayNames.length === 3) {
+			return this.$gettextInterpolate(
+				`%{ user1 }, %{ user2 } and %{ user3 } are typing...`,
+				displayNamePlaceholderValues
+			);
+		} else if (this.typingDisplayNames.length === 2) {
+			return this.$gettextInterpolate(
+				`%{ user1 } and %{ user2 } are typing...`,
+				displayNamePlaceholderValues
+			);
+		} else if (this.typingDisplayNames.length === 1) {
+			return this.$gettextInterpolate(
+				`%{ user1 } is typing...`,
+				displayNamePlaceholderValues
+			);
 		}
 
-		let typing = [this.usersTyping.slice(0, -1).join(', '), this.usersTyping.slice(-1)[0]].join(
-			this.usersTyping.length < 2 ? '' : ' and '
-		);
-
-		typing += this.usersTyping.length < 2 ? ' is typing...' : ' are typing...';
-
-		return typing;
+		return '';
 	}
 
 	async cancelEditing() {
@@ -301,7 +318,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		this.$refs.form.clearErrors();
 	}
 
-	private typingTimeout() {
+	private disableTypingTimeout() {
 		this.typing = false;
 		stopTyping(this.chat);
 	}

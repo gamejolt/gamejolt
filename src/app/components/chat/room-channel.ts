@@ -19,7 +19,6 @@ interface ClearNotificationsPayload {
 
 export class ChatRoomChannel extends Channel {
 	room!: ChatRoom;
-	typing!: ChatUser[];
 	roomId: number;
 	readonly client: ChatClient;
 	readonly socket: Socket;
