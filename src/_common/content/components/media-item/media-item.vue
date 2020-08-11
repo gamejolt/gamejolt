@@ -13,6 +13,7 @@
 			:class="{
 				'-editing': isEditing,
 				'-link': hasLink,
+				'-no-zoom': isNonLightbox,
 			}"
 			:style="{
 				'align-items': itemAlignment,
@@ -115,7 +116,7 @@
 			@media screen and (pointer: coarse)
 				margin-bottom: $line-height-computed + 20px
 
-		&:not(.-link)
+		&:not(.-link):not(.-no-zoom)
 			.media-item-container
 				cursor: zoom-in
 
