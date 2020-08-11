@@ -1,6 +1,8 @@
+<script lang="ts" src="./item"></script>
+
 <template>
 	<div class="media-bar-lightbox-item">
-		<div class="-inner" v-if="isActive || isNext || isPrev">
+		<div v-if="isActive || isNext || isPrev" class="-inner">
 			<!-- Image -->
 			<template v-if="mediaType === 'image'">
 				<div class="-embed">
@@ -34,17 +36,18 @@
 					</app-media-item-backdrop>
 				</div>
 
-				<div class="-caption" v-if="item.caption" ref="caption">
+				<div v-if="item.caption" ref="caption" class="-caption">
 					<h4>{{ item.caption }}</h4>
 				</div>
 			</template>
 
 			<!-- Video -->
 			<template v-else-if="mediaType === 'video'">
-				<div class="-embed" v-if="isActive">
+				<div v-if="isActive" class="-embed">
 					<!-- We want to wait until the size is properly calculated, otherwise the player won't size properly. -->
 					<app-video-embed
 						v-if="initialized"
+						class="-embed-iframe"
 						:video-provider="item.type"
 						:video-id="item.url"
 						:max-video-width="maxWidth"
@@ -53,16 +56,17 @@
 					/>
 				</div>
 
-				<div class="-caption" v-if="item.title || item.description" ref="caption">
+				<div v-if="item.title || item.description" ref="caption" class="-caption">
 					<h4>{{ item.title }}</h4>
-					<p v-if="item.description" v-text="item.description"></p>
+					<p v-if="item.description" v-text="item.description" />
 				</div>
 			</template>
 
 			<!-- Sketchfab -->
 			<template v-else-if="mediaType === 'sketchfab'">
-				<div class="-embed" v-if="isActive">
+				<div v-if="isActive" class="-embed">
 					<app-sketchfab-embed
+						class="-embed-iframe"
 						:sketchfab-id="item.sketchfab_id"
 						:max-width="maxWidth"
 						:max-height="maxHeight"
@@ -75,5 +79,3 @@
 </template>
 
 <style lang="stylus" src="./item.styl" scoped></style>
-
-<script lang="ts" src="./item"></script>

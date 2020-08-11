@@ -1,8 +1,7 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require 'variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import 'variables'
 
-$-button-size = 90px
 $-controls-padding = 10px
 
 .media-bar-lightbox
@@ -31,48 +30,69 @@ $-controls-padding = 10px
 		background-color: rgba(0, 0, 0, 0.85)
 
 .-controls
-	flex: 0 0 auto
-	height: $-controls-height
-	line-height: $-controls-height
-	text-align: center
+	z-index: 1
 
-	@media only screen and (orientation: landscape)
-		position: absolute
-		right: $-controls-padding
-		bottom: 0
-		z-index: 10
+	&-general
+		flex: 0 0 auto
+		height: $-controls-height
+		line-height: $-controls-height
+		text-align: center
+		transition: right 300ms ease
 
-	@media $media-sm-up
-		text-align: right
-		position: static
-		padding-right: $-controls-padding
+		@media only screen and (orientation: landscape)
+			position: absolute
+			right: $-controls-padding
+			bottom: 0
+			z-index: 10
 
-.-next, .-prev
-	rounded-corners-lg()
-	display: none
+			&.-slider-showing
+				right: $-controls-padding + 30px
+
+		@media $media-sm-up
+			text-align: right
+			position: static
+			padding-right: $-controls-padding
+
+	&-slider
+		transition: opacity 500ms
+		transition-timing-function: ease
+
+		&.-hide
+			opacity: 0
+			transition-timing-function: $strong-ease-out
+
+.-next
+.-prev
 	position: absolute
-	top: 50%
-	width: $-button-size
-	height: $-button-size
+	top: 0
+	width: $-button-size-xs
+	height: 100%
 	line-height: $-button-size
-	margin-top: -(@height / 2)
 	z-index: 1
 	background-color: rgba($black, 0.5)
-	text-align: center
+	display: flex
+	justify-content: center
+	align-items: center
 
 	@media $media-sm-up
-		display: block
-
-	> .jolticon
-		vertical-align: middle
-		font-size: 16px * 3
-		color: $white
-
-	&:hover
-		background-color: $white
+		rounded-corners-lg()
+		top: 50%
+		width: $-button-size
+		height: $-button-size
+		margin-top: -(@height / 2)
 
 		> .jolticon
-			color: $black
+			font-size: 16px * 3
+
+		&:hover
+			background-color: $white
+
+			> .jolticon
+				color: $black
+
+	> .jolticon
+		font-size: 16px * 2
+		color: $white
 
 .-next
 	right: 0

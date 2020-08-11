@@ -33,20 +33,12 @@ export default class AppLightbox extends Vue {
 	private resize$?: EventSubscription;
 	private escapeCallback?: EscapeStackCallback;
 
-	$refs!: {
-		item: AppLightboxItem[];
-	};
-
 	get items() {
 		return this.mediaSource.getItems();
 	}
 
 	get activeIndex() {
 		return this.mediaSource.getActiveIndex();
-	}
-
-	get activeItemComponent() {
-		return this.$refs.item[this.activeIndex].$el;
 	}
 
 	get hasNext() {
@@ -59,6 +51,12 @@ export default class AppLightbox extends Vue {
 
 	get activeMediaType() {
 		return this.mediaSource.getActiveItem().getMediaType();
+	}
+
+	// Iframe elements will break the usage of our 'vue-touch' events,
+	// so we need to make room to show slider controls for easier navigation.
+	get showSliderControls() {
+		return this.activeMediaType === 'video' || this.activeMediaType === 'sketchfab';
 	}
 
 	mounted() {

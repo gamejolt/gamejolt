@@ -49,6 +49,13 @@ img
 	width: 100%
 	position: relative
 
+	// Iframes mess up the vue-touch panning, so we need to make some room to show slider controls.
+	&-iframe
+		@media $media-xs
+			width: 'calc(100% - %s)' % ($-button-size-xs * 2)
+			margin-left: auto
+			margin-right: auto
+
 	>>>
 		.-img
 		iframe
