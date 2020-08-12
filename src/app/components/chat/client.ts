@@ -13,7 +13,6 @@ import { ChatRoomChannel } from './room-channel';
 import { ChatUser } from './user';
 import { ChatUserChannel } from './user-channel';
 import { ChatUserCollection } from './user-collection';
-import { NotificationHandler } from './notification-handler';
 
 export const ChatKey = Symbol('Chat');
 
@@ -92,7 +91,6 @@ export class ChatClient {
 
 	messageQueue: ChatMessage[] = [];
 	messageEditing: null | ChatMessage = null;
-	notificationHandler: NotificationHandler = new NotificationHandler();
 
 	/**
 	 * The session room is stored within their local session. It's their last active room. We reopen
