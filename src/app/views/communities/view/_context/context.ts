@@ -1,16 +1,13 @@
 import Vue from 'vue';
 import { Component, Prop, Provide } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
-import { propRequired } from '../../../../../../utils/vue';
-import { isEditingCommunity } from '../../../../../../_common/community/community.model';
-import { Store } from '../../../../../store';
-import {
-	CommunityRouteStore,
-	CommunityRouteStoreKey,
-} from '../../../../../views/communities/view/view.store';
-import AppCommunitiesViewCard from '../../../../../views/communities/view/_card/card.vue';
-import AppNavChannels from '../../../../../views/communities/view/_nav/channels/channels.vue';
-import AppNavEdit from '../../../../../views/communities/view/_nav/edit/edit.vue';
+import { propRequired } from '../../../../../utils/vue';
+import { isEditingCommunity } from '../../../../../_common/community/community.model';
+import { Store } from '../../../../store';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
+import AppCommunitiesViewCard from '../_card/card.vue';
+import AppNavChannels from '../_nav/channels/channels.vue';
+import AppNavEdit from '../_nav/edit/edit.vue';
 
 @Component({
 	components: {
@@ -19,7 +16,7 @@ import AppNavEdit from '../../../../../views/communities/view/_nav/edit/edit.vue
 		AppNavEdit,
 	},
 })
-export default class AppShellSidebarContextChannels extends Vue {
+export default class AppCommunitiesViewContext extends Vue {
 	@Provide(CommunityRouteStoreKey)
 	@Prop(propRequired(CommunityRouteStore))
 	routeStore!: CommunityRouteStore;

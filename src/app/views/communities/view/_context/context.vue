@@ -1,3 +1,5 @@
+<script lang="ts" src="./context"></script>
+
 <template>
 	<div v-if="!isLoading" class="sidebar-context-channels">
 		<div class="-card">
@@ -9,12 +11,10 @@
 	</div>
 </template>
 
-<script lang="ts" src="./channels"></script>
-
 <style lang="stylus" scoped>
 @import '~styles/variables'
 @import '~styles-lib/mixins'
-@import '../../../../community/channel/card/variables'
+@import '../../../../components/community/channel/card/variables'
 
 .sidebar-context-channels
 	padding: $shell-content-sidebar-padding
