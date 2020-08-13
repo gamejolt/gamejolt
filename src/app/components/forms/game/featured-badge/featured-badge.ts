@@ -2,7 +2,6 @@ import { Component, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../../../utils/vue';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import AppFormButton from '../../../../../_common/form-vue/button/button.vue';
 import AppFormControlRadio from '../../../../../_common/form-vue/control/radio/radio.vue';
 import AppFormControlTextarea from '../../../../../_common/form-vue/control/textarea/textarea.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
@@ -20,7 +19,6 @@ interface FormModel {
 		AppForm,
 		AppFormGroup,
 		AppFormControlRadio,
-		AppFormButton,
 		AppFormControlTextarea,
 	},
 })
