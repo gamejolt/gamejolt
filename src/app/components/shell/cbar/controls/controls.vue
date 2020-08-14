@@ -11,8 +11,7 @@
 			is-control
 		>
 			<a
-				v-app-tooltip.right="$gettext(`Game Library (m)`)"
-				v-app-track-event="`cbar:playlists:toggle`"
+				v-app-track-event="`cbar:menu:toggle`"
 				class="-control-item"
 				@click="toggleLeftPane('library')"
 			>
@@ -50,7 +49,7 @@
 			>
 				<a
 					v-app-tooltip.right="$gettext(`Game Library (m)`)"
-					v-app-track-event="`cbar:playlists:toggle`"
+					v-app-track-event="`cbar:library:toggle`"
 					class="-control-item"
 					@click="toggleLeftPane('library')"
 				>
