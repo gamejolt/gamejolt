@@ -12,11 +12,10 @@
 		>
 			<a
 				v-app-tooltip.right="$gettext(`Game Library (m)`)"
+				v-app-track-event="`cbar:playlists:toggle`"
 				class="-control-item"
 				@click="toggleLeftPane('library')"
 			>
-				<!-- JODO: Might want to use the same event here as the playlists icon, not sure yet. -->
-				<!-- v-app-track-event="`cbar:playlists:toggle`" -->
 				<app-jolticon class="-control-icon" icon="gamejolt" />
 			</a>
 		</app-shell-cbar-item>
@@ -33,11 +32,10 @@
 			>
 				<a
 					v-app-tooltip.right="$gettext(`Chat and Friends List (c)`)"
+					v-app-track-event="`cbar:chat:toggle`"
 					class="-control-item"
 					@click="toggleLeftPane('chat')"
 				>
-					<!-- JODO: Event changed from 'top-nav' to 'cbar', gotta make sure that's appropriate. -->
-					<!-- v-app-track-event="`cbar:chat:toggle`" -->
 					<app-jolticon class="-control-icon" icon="user-messages" />
 				</a>
 			</app-shell-cbar-item>
@@ -52,11 +50,10 @@
 			>
 				<a
 					v-app-tooltip.right="$gettext(`Game Library (m)`)"
+					v-app-track-event="`cbar:playlists:toggle`"
 					class="-control-item"
 					@click="toggleLeftPane('library')"
 				>
-					<!-- JODO: Event changed from 'top-nav:main-menu' to 'cbar:playlists', gotta make sure that's appropriate. -->
-					<!-- v-app-track-event="`cbar:playlists:toggle`" -->
 					<app-jolticon class="-control-icon" icon="books" />
 				</a>
 			</app-shell-cbar-item>

@@ -6,14 +6,13 @@
 			<div v-app-observe-dimensions="checkColWidths" class="-col">
 				<a
 					v-if="Screen.isXs"
+					v-app-track-event="`top-nav:cbar:toggle`"
 					class="-small-cbar navbar-item"
 					:class="{
 						active: !!visibleLeftPane,
 					}"
 					@click="toggleCbarMenu"
 				>
-					<!-- JODO: Might need to change this event tracking? -->
-					<!-- v-app-track-event="`top-nav:main-menu:toggle`" -->
 					<app-jolticon icon="menu" />
 				</a>
 

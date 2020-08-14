@@ -390,7 +390,7 @@ export function enterChatRoom(chat: ChatClient, roomId: number) {
 		if (!chat.socket) {
 			return;
 		}
-		// JODO: Make sure joining chat rooms through the [MESSAGE] button on profiles works.
+
 		joinRoomChannel(chat, roomId);
 	}
 }
