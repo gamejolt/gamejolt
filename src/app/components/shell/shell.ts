@@ -111,7 +111,7 @@ export default class AppShell extends Vue {
 			// Wait for any contextPane state to be changed.
 			await this.$nextTick();
 
-			// Show any conext panes that are set to show on route change.
+			// Show any context panes that are set to show on route change.
 			if (this.showOnRouteChange) {
 				this.showContextPane();
 				this.showContextOnRouteChange(false);

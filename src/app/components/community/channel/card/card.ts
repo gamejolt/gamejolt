@@ -37,7 +37,7 @@ export default class AppCommunityChannelCard extends Vue {
 
 	$el!: HTMLElement;
 
-	@Emit('change-channel') emitchangeChannel(_channelPath: string) {}
+	@Emit('change-channel') emitChangeChannel(_channelPath: string) {}
 
 	mounted() {
 		// Initialize cardHeight to be based off the card width, maintaining aspect ratio.
@@ -71,6 +71,6 @@ export default class AppCommunityChannelCard extends Vue {
 	}
 
 	onChangeChannel() {
-		this.emitchangeChannel(this.path);
+		this.emitChangeChannel(this.path);
 	}
 }

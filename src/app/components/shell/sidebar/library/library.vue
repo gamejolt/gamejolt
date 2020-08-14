@@ -158,9 +158,7 @@
 				</ul>
 			</template>
 
-			<!--
-					Playlists
-				-->
+			<!-- Playlists -->
 			<template v-if="isLibraryBootstrapped">
 				<div class="nav-heading" :title="$gettext(`library.nav.playlists`)">
 					<translate>library.nav.playlists</translate>
@@ -193,9 +191,7 @@
 					<div v-translate>library.nav.no_playlists_html</div>
 				</div>
 
-				<!--
-						Playlist Folders
-					-->
+				<!-- Playlist Folders -->
 				<div v-for="key of playlistFoldersToDisplay" :key="key">
 					<ul class="shell-nav">
 						<li class="offline-disable">
@@ -222,9 +218,7 @@
 					</ul>
 				</div>
 
-				<!--
-						Main Playlists (not in folders)
-					-->
+				<!-- Main Playlists (not in folders) -->
 				<app-shell-sidebar-collection-list
 					:collections="playlistFolders.main.collections"
 					:filter="playlistFilterQuery"

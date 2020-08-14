@@ -91,7 +91,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	readonly Screen = Screen;
 	readonly sidebarComponent = AppCommunitiesViewContext;
 
-	contextPane: null | ContextPane = null;
+	contextPane: ContextPane | null = null;
 
 	get community() {
 		return this.routeStore.community;

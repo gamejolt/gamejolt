@@ -3,12 +3,12 @@ import { namespace } from 'vuex-class';
 import { arrayRemove } from '../../utils/array';
 import { VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 
-export const SidebarStoreNamespace = 'sidebar';
+const SidebarStoreNamespace = 'sidebar';
 export const { State: SidebarState, Action: SidebarAction, Mutation: SidebarMutation } = namespace(
 	SidebarStoreNamespace
 );
 
-export type SidebarActions = {};
+export type SidebarActions = Record<string, any>;
 
 export type SidebarMutations = {
 	'sidebar/addContextPane': typeof Vue;
@@ -20,6 +20,21 @@ export class ContextPane {
 	constructor(public readonly component: typeof Vue, public props: Record<string, any> = {}) {}
 }
 
+/**
+ * 1. Initialize what we need for the context pane:
+ *   - readonly sidebarComponent = /* the Vue component to use *\/
+ *   - contextPane: null | ContextPane = null
+ *
+ * 2. routeCreated() - 'if (!this.contextPane)':
+ *   - this.addContextPane(this.sidebarComponent)
+ *   - this.contextPane = this.activeContextPane
+ *
+ * 3. If the context component needs any props:
+ *   - this.contextPane.props = { /* required props *\/ };
+ *
+ * 4. routeDestroyed() - Panes will hide if there's no activeContextPane:
+ *   - this.removeContextPane(this.contextPane)
+ */
 @VuexModule()
 export class SidebarStore extends VuexStore<SidebarStore, SidebarActions, SidebarMutations> {
 	private _contextPanes: ContextPane[] = [];
@@ -37,21 +52,6 @@ export class SidebarStore extends VuexStore<SidebarStore, SidebarActions, Sideba
 		return null;
 	}
 
-	/**
-	 * 1. Initialize what we need for the context pane:
-	 *   - readonly sidebarComponent = /* the Vue component to use *\/
-	 *   - contextPane: null | ContextPane = null
-	 *
-	 * 2. routeCreated() - 'if (!this.contextPane)':
-	 *   - this.addContextPane(this.sidebarComponent)
-	 *   - this.contextPane = this.activeContextPane
-	 *
-	 * 3. If the context component needs any props:
-	 *   - this.contextPane.props = { /* required props *\/ };
-	 *
-	 * 4. routeDestroyed() - Panes will hide if there's no activeContextPane:
-	 *   - this.removeContextPane(this.contextPane)
-	 */
 	@VuexMutation
 	addContextPane(
 		component?: SidebarMutations['sidebar/addContextPane'],

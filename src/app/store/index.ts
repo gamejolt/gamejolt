@@ -109,8 +109,8 @@ if (GJ_IS_CLIENT) {
 }
 
 // the two types an event notification can assume, either "activity" for the post activity feed or "notifications"
-export type UnreadItemType = 'activity' | 'notifications';
-export type TogglableLeftPanes = '' | 'chat' | 'context' | 'library';
+type UnreadItemType = 'activity' | 'notifications';
+type TogglableLeftPane = '' | 'chat' | 'context' | 'library';
 
 @VuexModule({
 	store: true,
@@ -143,7 +143,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	notificationState: ActivityFeedState | null = null;
 
 	mobileCbarShowing = false;
-	private overlayedLeftPane: TogglableLeftPanes = '';
+	private overlayedLeftPane: TogglableLeftPane = '';
 	private overlayedRightPane = '';
 	hasContentSidebar = false;
 
@@ -169,7 +169,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	 *
 	 * Large breakpoint defaults to 'context' on applicable routes.
 	 * */
-	get visibleLeftPane(): '' | 'chat' | 'context' | 'library' {
+	get visibleLeftPane(): TogglableLeftPane {
 		// If there's no other left-pane pane opened, Large breakpoint should
 		// always show the 'context' pane if there is a context component set.
 		if (Screen.isLg && this.sidebar.activeContextPane && !this.overlayedLeftPane) {
@@ -314,7 +314,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	/** Passing no value will close any open left-panes. */
 	@VuexAction
-	async toggleLeftPane(type?: TogglableLeftPanes) {
+	async toggleLeftPane(type?: TogglableLeftPane) {
 		if (type === 'context' && !this.sidebar.activeContextPane) {
 			// Don't show the context pane if the SidebarStore has no context to show.
 			this._toggleLeftPane();
@@ -541,7 +541,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	}
 
 	@VuexMutation
-	private _toggleLeftPane(type: TogglableLeftPanes = '') {
+	private _toggleLeftPane(type: TogglableLeftPane = '') {
 		if (!this.hasSidebar) {
 			this.overlayedLeftPane = '';
 			return;

@@ -1,7 +1,7 @@
 <template>
 	<app-scroll-scroller id="shell-sidebar" class="shell-pane shell-pane-left" thin>
-		<app-shortkey shortkey="c" @press="toggleLeftPane('chat')" />
-		<app-shortkey shortkey="m" @press="toggleLeftPane('library')" />
+		<app-shortkey v-if="user" shortkey="c" @press="toggleLeftPane('chat')" />
+		<app-shortkey v-if="user || Screen.isXs" shortkey="m" @press="toggleLeftPane('library')" />
 		<app-shortkey shortkey="y" @press="toggleLeftPane('context')" />
 
 		<app-shell-sidebar-chat v-if="visibleLeftPane === 'chat'" />
