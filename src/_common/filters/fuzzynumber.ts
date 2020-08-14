@@ -40,15 +40,15 @@ export function fuzzynumber(num: number) {
 	// number = 290000000;
 
 	if (num >= 1000000000) {
-		return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'g';
+		return Math.floor((num / 1000000000) * 10) / 10 + 'g';
 	}
 
 	if (num >= 1000000) {
-		return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'm';
+		return Math.floor((num / 1000000) * 10) / 10 + 'm';
 	}
 
 	if (num >= 1000) {
-		return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+		return Math.floor((num / 1000) * 10) / 10 + 'k';
 	}
 
 	return num;
