@@ -1,5 +1,5 @@
 <template>
-	<div @click.capture="onChangeChannel">
+	<div class="community-channel-card-container" @click.capture="onChangeChannel">
 		<router-link
 			v-app-observe-dimensions="updateCardHeight"
 			class="community-channel-card sheet sheet-no-full-bleed sheet-full"

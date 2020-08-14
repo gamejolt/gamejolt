@@ -7,7 +7,6 @@
 	position: relative
 	display: block
 	flex-shrink: 0
-	max-width: $card-width
 	max-height: $card-height
 	overflow: hidden
 	cursor: pointer
@@ -15,6 +14,9 @@
 	transition: border 200ms
 	// Overwrite sheet styling
 	margin-bottom: ($line-height-computed / 2)
+
+	&-container
+		max-width: $card-width
 
 	&:hover
 		theme-prop('border-color', 'link')

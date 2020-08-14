@@ -11,8 +11,8 @@ import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
 // Sync up with the './variables' file.
-const CARD_HEIGHT = 68;
-const CARD_WIDTH = 260;
+const CARD_WIDTH = 270;
+const CARD_HEIGHT = 70;
 
 @Component({
 	components: {
