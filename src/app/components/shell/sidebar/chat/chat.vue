@@ -1,3 +1,5 @@
+<script lang="ts" src="./chat"></script>
+
 <template>
 	<div id="shell-chat-pane">
 		<div class="chat-sidebar">
@@ -45,5 +47,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./chat"></script>

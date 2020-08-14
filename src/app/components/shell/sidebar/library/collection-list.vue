@@ -1,3 +1,5 @@
+<script lang="ts" src="./collection-list"></script>
+
 <template>
 	<ul class="shell-nav">
 		<li
@@ -16,14 +18,17 @@
 					<app-jolticon icon="playlist" />
 				</span>
 
-				<span v-if="collection.type === 'developer'" class="shell-nav-label">
+				<span
+					v-if="collection.owner && collection.type === 'developer'"
+					class="shell-nav-label"
+				>
 					@{{ collection.owner.username }}
 				</span>
 
 				<span v-else class="shell-nav-label">
 					{{ collection.name }}
 
-					<small v-if="collection.from_subscription && collection.owner">
+					<small v-if="collection.owner && collection.from_subscription">
 						<translate>library.by</translate>
 						@{{ collection.owner.username }}
 					</small>
@@ -32,5 +37,3 @@
 		</li>
 	</ul>
 </template>
-
-<script lang="ts" src="./collection-list"></script>

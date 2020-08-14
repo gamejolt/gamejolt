@@ -1,3 +1,5 @@
+<script lang="ts" src="./sidebar"></script>
+
 <template>
 	<app-scroll-scroller id="shell-sidebar" class="shell-pane shell-pane-left" thin>
 		<app-shortkey v-if="user" shortkey="c" @press="toggleLeftPane('chat')" />
@@ -9,8 +11,6 @@
 		<app-shell-sidebar-context v-if="visibleLeftPane === 'context'" />
 	</app-scroll-scroller>
 </template>
-
-<script lang="ts" src="./sidebar"></script>
 
 <style lang="stylus" scoped>
 @import '~styles/variables'

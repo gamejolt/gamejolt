@@ -1,3 +1,5 @@
+<script lang="ts" src="./windows"></script>
+
 <template>
 	<!--
 		Can currently only have one window open at a time.
@@ -10,5 +12,3 @@
 		:queued-messages="getRoomQueuedMessages(chat.room.id)"
 	/>
 </template>
-
-<script lang="ts" src="./windows"></script>

@@ -1,3 +1,5 @@
+<script lang="ts" src="./shell"></script>
+
 <template>
 	<div
 		id="shell"
@@ -35,5 +37,3 @@
 		</app-shell-hot-bottom>
 	</div>
 </template>
-
-<script lang="ts" src="./shell"></script>

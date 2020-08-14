@@ -1,3 +1,5 @@
+<script lang="ts" src="./context"></script>
+
 <template>
 	<div id="shell-sidebar-context">
 		<component
@@ -7,5 +9,3 @@
 		/>
 	</div>
 </template>
-
-<script lang="ts" src="./context"></script>

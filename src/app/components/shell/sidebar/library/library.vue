@@ -1,3 +1,5 @@
+<script lang="ts" src="./library"></script>
+
 <template>
 	<div id="shell-sidebar-library">
 		<ul v-if="Screen.isXs" class="shell-nav">
@@ -20,7 +22,7 @@
 				<router-link
 					v-app-track-event="`sidebar:search`"
 					:to="{ name: 'search.results' }"
-					:class="{ active: $route.name.indexOf('search') === 0 }"
+					:class="{ active: $route.name && $route.name.indexOf('search') === 0 }"
 				>
 					<span class="shell-nav-icon">
 						<app-jolticon icon="search" />
@@ -99,7 +101,7 @@
 				<router-link
 					v-app-track-event="`sidebar:forums`"
 					:to="{ name: 'forums.landing.overview' }"
-					:class="{ active: $route.name.indexOf('forums') === 0 }"
+					:class="{ active: $route.name && $route.name.indexOf('forums') === 0 }"
 				>
 					<span class="shell-nav-icon">
 						<app-jolticon icon="forums" />
@@ -227,8 +229,6 @@
 		</template>
 	</div>
 </template>
-
-<script lang="ts" src="./library"></script>
 
 <style lang="stylus" scoped>
 @import '~styles/variables'

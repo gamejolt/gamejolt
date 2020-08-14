@@ -1,3 +1,5 @@
+<script lang="ts" src="./content-with-sidebar"></script>
+
 <template>
 	<div>
 		<div
@@ -8,8 +10,6 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./content-with-sidebar"></script>
 
 <style lang="stylus" scoped>
 @import '~styles/variables'

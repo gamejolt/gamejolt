@@ -1,3 +1,5 @@
+<script lang="ts" src="./cards"></script>
+
 <template>
 	<div>
 		<app-community-channel-card
@@ -41,8 +43,6 @@
 		</template>
 	</div>
 </template>
-
-<script lang="ts" src="./cards"></script>
 
 <style lang="stylus" scoped>
 @import '~styles/variables'

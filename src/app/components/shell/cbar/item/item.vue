@@ -1,3 +1,5 @@
+<script lang="ts" src="./item"></script>
+
 <template>
 	<div class="-item">
 		<slot />
@@ -23,8 +25,6 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./item"></script>
 
 <style lang="stylus" scoped>
 @import '~styles/variables'

@@ -1,3 +1,5 @@
+<script lang="ts" src="./cbar"></script>
+
 <template>
 	<div id="shell-cbar" class="theme-dark">
 		<app-scroll-scroller v-if="hasCbar" class="-scroller" hide-scrollbar>
@@ -28,8 +30,6 @@
 		</app-scroll-scroller>
 	</div>
 </template>
-
-<script lang="ts" src="./cbar"></script>
 
 <style lang="stylus" scoped>
 @import '~styles/variables'

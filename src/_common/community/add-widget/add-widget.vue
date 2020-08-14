@@ -1,3 +1,5 @@
+<script lang="ts" src="./add-widget"></script>
+
 <template>
 	<router-link
 		v-if="canCreate"
@@ -18,8 +20,6 @@
 		<app-jolticon icon="add" big />
 	</a>
 </template>
-
-<script lang="ts" src="./add-widget"></script>
 
 <style lang="stylus" scoped>
 @import '~styles/variables'

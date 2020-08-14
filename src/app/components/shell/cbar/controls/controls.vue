@@ -1,3 +1,5 @@
+<script lang="ts" src="./controls"></script>
+
 <template>
 	<div class="shell-cbar-controls">
 		<!-- Library - Screen.isXs -->
@@ -63,8 +65,6 @@
 		<hr v-if="Screen.isXs || user" class="-hr" />
 	</div>
 </template>
-
-<script lang="ts" src="./controls"></script>
 
 <style lang="stylus" scoped>
 @import '~styles/variables'

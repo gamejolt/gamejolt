@@ -1,3 +1,5 @@
+<script lang="ts" src="./edit"></script>
+
 <template>
 	<nav class="platform-list">
 		<ul>
@@ -103,8 +105,6 @@
 		</ul>
 	</nav>
 </template>
-
-<script lang="ts" src="./edit"></script>
 
 <style lang="stylus" scoped>
 @import '~styles/variables'

@@ -1,3 +1,5 @@
+<script lang="ts" src="./view"></script>
+
 <template>
 	<app-shell-content-with-sidebar v-if="community">
 		<template #default>
@@ -127,5 +129,3 @@
 		</template>
 	</app-shell-content-with-sidebar>
 </template>
-
-<script lang="ts" src="./view"></script>

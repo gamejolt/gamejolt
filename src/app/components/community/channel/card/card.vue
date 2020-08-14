@@ -1,3 +1,5 @@
+<script lang="ts" src="./card"></script>
+
 <template>
 	<div class="community-channel-card-container" @click.capture="onChangeChannel">
 		<router-link
@@ -43,7 +45,5 @@
 		</router-link>
 	</div>
 </template>
-
-<script lang="ts" src="./card"></script>
 
 <style lang="stylus" src="./card.styl" scoped></style>

@@ -1,3 +1,5 @@
+<script lang="ts" src="./top-nav"></script>
+
 <template>
 	<nav id="shell-top-nav" class="navbar backdrop-affected">
 		<div ref="left" class="navbar-left" :style="{ 'min-width': minColWidth }">
@@ -168,8 +170,6 @@
 		</div>
 	</nav>
 </template>
-
-<script lang="ts" src="./top-nav"></script>
 
 <style lang="stylus" scoped>
 @import '~styles/variables'

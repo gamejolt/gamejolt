@@ -1,3 +1,5 @@
+<script lang="ts" src="./community"></script>
+
 <template>
 	<app-popper
 		class="-community"
@@ -62,8 +64,6 @@
 		</template>
 	</app-popper>
 </template>
-
-<script lang="ts" src="./community"></script>
 
 <style lang="stylus" scoped>
 @import '~styles/variables'
