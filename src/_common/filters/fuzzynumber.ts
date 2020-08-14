@@ -39,16 +39,20 @@ export function fuzzynumber(num: number) {
 	// number = 209000000;
 	// number = 290000000;
 
+	function fuzzNumber(count: number, divisor: number, character: string) {
+		return Math.floor((count / divisor) * 10) / 10 + character;
+	}
+
 	if (num >= 1000000000) {
-		return Math.floor((num / 1000000000) * 10) / 10 + 'g';
+		return fuzzNumber(num, 1000000000, 'g');
 	}
 
 	if (num >= 1000000) {
-		return Math.floor((num / 1000000) * 10) / 10 + 'm';
+		return fuzzNumber(num, 1000000, 'm');
 	}
 
 	if (num >= 1000) {
-		return Math.floor((num / 1000) * 10) / 10 + 'k';
+		return fuzzNumber(num, 1000, 'k');
 	}
 
 	return num;
