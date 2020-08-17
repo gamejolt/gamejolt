@@ -152,11 +152,6 @@ export default class AppContentMediaItem extends Vue {
 		return false;
 	}
 
-	// TODO: This should be removed when we can support uploaded gif filetypes.
-	get isNonLightbox() {
-		return !this.mediaItem || this.mediaItem.filetype === 'image/gif';
-	}
-
 	created() {
 		this.owner.getHydrator().useData('media-item-id', this.mediaItemId.toString(), data => {
 			if (data) {
@@ -210,7 +205,12 @@ export default class AppContentMediaItem extends Vue {
 	}
 
 	onItemFullscreen() {
-		if (this.contentViewerParent && !!this.mediaItem && !this.hasLink) {
+		if (
+			this.contentViewerParent &&
+			!!this.mediaItem &&
+			!this.hasLink
+			// && this.mediaItem.filetype === 'image'
+		) {
 			this.contentViewerParent.onItemFullscreen(this.mediaItem);
 		}
 	}

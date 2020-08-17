@@ -111,11 +111,6 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 					},
 				}).mediaItem;
 
-				// TODO: This seems to be needed until we can get '.gif' files working in lightbox.
-				if (_processedItem && _processedItem.filetype === 'image/gif') {
-					return;
-				}
-
 				processedItems.push(_processedItem);
 			}
 		});

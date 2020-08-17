@@ -25,6 +25,12 @@
 							:src="item.img_thumbnail"
 							:alt="item.caption"
 						/>
+						<img
+							v-else-if="isAnimatedGif"
+							class="img-responsive"
+							:src="mediaItem.img_url"
+							:alt="item.caption"
+						/>
 						<app-video
 							v-else
 							class="-video"
