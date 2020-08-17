@@ -254,6 +254,11 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		this.emitCancel();
 		setMessageEditing(this.chat, null);
 		this.clearMsg();
+
+		// Wait in case the editor loses focus
+		await this.$nextTick();
+		// Regain focus on the editor
+		this.$refs.editor.focus();
 	}
 
 	private async clearMsg() {
