@@ -3,7 +3,7 @@ import { ContentContext } from '../../content/content-context';
 import { ContentRules } from '../../content/content-editor/content-rules';
 import AppFormControlContent from '../../form-vue/control/content/content.vue';
 import AppForm from '../../form-vue/form';
-import { BaseForm, FormOnInit } from '../../form-vue/form.service';
+import { BaseForm, FormOnInit, FormOnLoad } from '../../form-vue/form.service';
 import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
 import { Comment, getCommentModelResourceName } from '../comment-model';
@@ -14,7 +14,7 @@ import '../comment.styl';
 		AppFormControlContent,
 	},
 })
-export default class FormComment extends BaseForm<Comment> implements FormOnInit {
+export default class FormComment extends BaseForm<Comment> implements FormOnInit, FormOnLoad {
 	@Prop(Model)
 	commentModel!: Model;
 
@@ -36,6 +36,11 @@ export default class FormComment extends BaseForm<Comment> implements FormOnInit
 
 	modelClass = Comment;
 	resetOnSubmit = true;
+	lengthLimit = 1000;
+
+	get loadUrl() {
+		return `/comments/save`;
+	}
 
 	get displayRules() {
 		if (Screen.isMobile) {
@@ -82,6 +87,10 @@ export default class FormComment extends BaseForm<Comment> implements FormOnInit
 			await this.$nextTick();
 			this.$refs.form.clearErrors();
 		}
+	}
+
+	onLoad(payload: any) {
+		this.lengthLimit = payload.lengthLimit;
 	}
 
 	@Emit('editor-focus')

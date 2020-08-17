@@ -151,6 +151,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 	accessPermissionsEnabled = false;
 	isSavedDraftPost = false;
 	leadLengthLimit = 255;
+	articleLengthLimit = 3000;
 	isUploadingPastedImage = false;
 	maxCommunities = 0;
 	attachedCommunities: { community: Community; channel: CommunityChannel }[] = [];
@@ -451,6 +452,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 		this.maxWidth = payload.maxWidth;
 		this.maxHeight = payload.maxHeight;
 		this.leadLengthLimit = payload.leadLengthLimit;
+		this.articleLengthLimit = payload.articleLengthLimit;
 		this.maxCommunities = payload.maxCommunities;
 
 		if (payload.attachedCommunities) {
