@@ -1,5 +1,5 @@
 import { DOMParser, Node } from 'prosemirror-model';
-import { EditorState, Plugin, Transaction } from 'prosemirror-state';
+import { EditorState, Plugin, Selection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import 'prosemirror-view/style/prosemirror.css';
 import ResizeObserver from 'resize-observer-polyfill';
@@ -323,6 +323,8 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 				this.view.dispatch(tr);
 			}
 		}
+
+		return this.view!;
 	}
 
 	public getContent() {
@@ -343,7 +345,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 			);
 		}
 		if (this.schema instanceof ContentEditorSchema) {
-			// Do this here so we don't fire an update direclty after populating.
+			// Do this here so we don't fire an update directly after populating.
 			doc.ensureEndParagraph();
 
 			this.hydrator = new ContentHydrator(doc.hydration);
@@ -352,7 +354,16 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 				doc: Node.fromJSON(this.schema, jsonObj),
 				plugins: this.plugins,
 			});
-			this.createView(state);
+
+			const view = this.createView(state);
+
+			// Set selection at the end of the document.
+			const tr = view.state.tr;
+			const selection = Selection.atEnd(view.state.doc);
+			tr.setSelection(selection);
+			view.dispatch(tr);
+
+			console.log('set content.');
 		}
 	}
 
