@@ -27,9 +27,6 @@ import AppChatWindowSend from './send/send.vue';
 	directives: {
 		AppTooltip,
 	},
-	filters: {
-		number,
-	},
 })
 export default class AppChatWindow extends Vue {
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
@@ -46,6 +43,10 @@ export default class AppChatWindow extends Vue {
 
 	readonly ChatRoom = ChatRoom;
 	readonly Screen = Screen;
+
+	get onlineUserCount() {
+		return number(this.users?.onlineCount || 0);
+	}
 
 	close() {
 		// xs size needs to show the friends list when closing the room.
