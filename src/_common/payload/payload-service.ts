@@ -217,7 +217,7 @@ export class Payload {
 		} else if (error.type === PayloadError.ERROR_NEW_CLIENT_VERSION) {
 			this.store.commit('app/redirect', Environment.clientSectionUrl + '/upgrade');
 		} else if (error.type === PayloadError.ERROR_TIMED_OUT) {
-			this.store.commit('app/redirect', Environment.baseUrl + '/timeout');
+			this.store.commit('app/redirect', Environment.wttfBaseUrl + '/timeout');
 		} else if (error.type === PayloadError.ERROR_INVALID) {
 			this.store.commit('app/setError', 500);
 		} else if (
