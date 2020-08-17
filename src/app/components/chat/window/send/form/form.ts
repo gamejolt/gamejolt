@@ -229,7 +229,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		EventBus.emit('Chat.inputResize');
 	}
 
-	onUpKeyPressed() {
+	onUpKeyPressed(event: KeyboardEvent) {
 		if (this.isEditing || this.hasContent) {
 			return;
 		}
@@ -241,6 +241,11 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		const lastMessage = userMessages[userMessages.length - 1];
 
 		if (lastMessage) {
+			// Prevent the "up" key press. This is to stop it from acting as a "go to beginning of line".
+			// The content editor is focused immediately after this, and we want the editor to focus the end
+			// of the content. This prevents it jump to the beginning of the line.
+			event.preventDefault();
+
 			setMessageEditing(this.chat, lastMessage);
 		}
 	}

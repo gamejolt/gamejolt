@@ -40,7 +40,7 @@
 					@insert-block-node="onEditorInsertBlockNode"
 					@focus="onFocusEditor"
 					@blur="onBlurEditor"
-					@keydown.native.up="onUpKeyPressed"
+					@keydown.native.up="onUpKeyPressed($event)"
 				/>
 
 				<app-form-control-errors label="message" />
