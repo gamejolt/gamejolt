@@ -2,6 +2,7 @@
 	<div class="video-embed">
 		<div class="video-embed-inner">
 			<iframe
+				v-if="videoProvider === 'youtube' && embedUrl"
 				nwdisable
 				nwfaketop
 				type="text/html"
@@ -9,20 +10,20 @@
 				webkitallowfullscreen
 				mozallowfullscreen
 				allowfullscreen
-				v-if="videoProvider === 'youtube' && embedUrl"
 				:width="width"
 				:height="height"
 				:src="embedUrl"
+				rel="0"
 			/>
 
 			<iframe
+				v-if="videoProvider === 'vimeo' && embedUrl"
 				nwdisable
 				nwfaketop
 				frameborder="0"
 				webkitallowfullscreen
 				mozallowfullscreen
 				allowfullscreen
-				v-if="videoProvider === 'vimeo' && embedUrl"
 				:width="width"
 				:height="height"
 				:src="embedUrl"
