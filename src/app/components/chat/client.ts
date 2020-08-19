@@ -74,6 +74,7 @@ export class ChatClient {
 	currentUser: ChatUser | null = null;
 	friendsList: ChatUserCollection = null as any;
 	friendsPopulated = false;
+	groupRooms: ChatRoom[] = [];
 
 	room: ChatRoom | null = null;
 	/**
@@ -295,6 +296,9 @@ async function joinUserChannel(chat: ChatClient, userId: number) {
 						chat.friendsList = friendsList;
 						chat.friendsPopulated = true;
 						chat.notifications = response.notifications;
+						chat.groupRooms = response.groups.map(
+							(room: ChatRoom) => new ChatRoom(room)
+						);
 						resolve();
 					});
 			})

@@ -26,7 +26,11 @@ export default class AppChatSidebar extends Vue {
 			: this.chat.friendsList.collection;
 	}
 
-	onPublicRoomClicked(roomId: number) {
+	get hasGroupRooms() {
+		return this.chat.groupRooms && this.chat.groupRooms.length > 0;
+	}
+
+	onRoomClicked(roomId: number) {
 		enterChatRoom(this.chat, roomId);
 	}
 }
