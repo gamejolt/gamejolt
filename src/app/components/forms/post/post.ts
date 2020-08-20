@@ -392,7 +392,7 @@ export default class FormPost extends BaseForm<FormPostModel>
 			this.isSavedDraftPost = true;
 		}
 
-		// If the post is not a draft, default to posting to their profile.
+		// Don't overwrite setting on a draft post because the user has already made a choice for this setting.
 		if (model.status !== FiresidePost.STATUS_DRAFT) {
 			this.setField('post_to_user_profile', true);
 		}
