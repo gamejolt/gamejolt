@@ -3,6 +3,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import AppLightboxTS from '../../lightbox/lightbox';
 import { createLightbox, LightboxMediaSource } from '../../lightbox/lightbox-helpers';
+import { MediaItem } from '../../media-item/media-item-model';
 import AppContentMediaItem from '../components/media-item/media-item';
 import { ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
@@ -124,13 +125,15 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 		}
 	}
 
-	setActiveItem(item: any) {
-		let index = item;
-		if (typeof item === 'object') {
+	setActiveItem(item: MediaItem) {
+		let index = -1;
+		if (item instanceof MediaItem) {
 			index = this.mediaItems.findIndex(_item => _item.id === item.id);
 		}
 
-		this.go(index);
+		if (index >= 0) {
+			this.go(index);
+		}
 	}
 
 	@Watch('source')
