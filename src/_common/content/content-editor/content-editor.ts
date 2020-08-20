@@ -361,9 +361,8 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 			const tr = view.state.tr;
 			const selection = Selection.atEnd(view.state.doc);
 			tr.setSelection(selection);
+			tr.scrollIntoView();
 			view.dispatch(tr);
-
-			console.log('set content.');
 		}
 	}
 
