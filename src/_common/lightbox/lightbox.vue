@@ -14,22 +14,15 @@
 
 			<div class="-inner">
 				<div class="-controls">
-					<div class="-controls-slider" :class="{ '-hide': !showSliderControls }">
-						<a v-if="activeIndex > 0" class="-prev" @mousedown="goPrev">
-							<app-jolticon icon="chevron-left" />
-						</a>
+					<a v-if="activeIndex > 0" class="-prev" @mousedown="goPrev">
+						<app-jolticon icon="chevron-left" />
+					</a>
 
-						<a v-if="hasNext" class="-next" @mousedown="goNext">
-							<app-jolticon icon="chevron-right" />
-						</a>
-					</div>
+					<a v-if="hasNext" class="-next" @mousedown="goNext">
+						<app-jolticon icon="chevron-right" />
+					</a>
 
-					<div
-						class="-controls-general"
-						:class="{
-							'-slider-showing': showSliderControls,
-						}"
-					>
+					<div class="-controls-general">
 						<app-button
 							v-if="activeMediaType === 'image'"
 							icon="download"

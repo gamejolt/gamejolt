@@ -53,12 +53,6 @@ export default class AppLightbox extends Vue {
 		return this.mediaSource.getActiveItem().getMediaType();
 	}
 
-	// Iframe elements will break the usage of our 'vue-touch' events,
-	// so we need to make room to show slider controls for easier navigation.
-	get showSliderControls() {
-		return this.activeMediaType === 'video' || this.activeMediaType === 'sketchfab';
-	}
-
 	mounted() {
 		document.body.classList.add('media-bar-lightbox-open');
 

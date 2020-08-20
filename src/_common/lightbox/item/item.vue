@@ -53,7 +53,6 @@
 					<!-- We want to wait until the size is properly calculated, otherwise the player won't size properly. -->
 					<app-video-embed
 						v-if="initialized"
-						class="-embed-iframe"
 						:video-provider="item.type"
 						:video-id="item.url"
 						:max-video-width="maxWidth"
@@ -72,7 +71,6 @@
 			<template v-else-if="mediaType === 'sketchfab'">
 				<div v-if="isActive" class="-embed">
 					<app-sketchfab-embed
-						class="-embed-iframe"
 						:sketchfab-id="item.sketchfab_id"
 						:max-width="maxWidth"
 						:max-height="maxHeight"

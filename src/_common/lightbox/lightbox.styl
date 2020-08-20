@@ -41,25 +41,14 @@ $-controls-padding = 10px
 
 		@media only screen and (orientation: landscape)
 			position: absolute
-			right: $-controls-padding
+			right: $-controls-padding + $-button-size-xs
 			bottom: 0
 			z-index: 10
-
-			&.-slider-showing
-				right: $-controls-padding + 30px
 
 		@media $media-sm-up
 			text-align: right
 			position: static
 			padding-right: $-controls-padding
-
-	&-slider
-		transition: opacity 500ms
-		transition-timing-function: ease
-
-		&.-hide
-			opacity: 0
-			transition-timing-function: $strong-ease-out
 
 .-next
 .-prev
