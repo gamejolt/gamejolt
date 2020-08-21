@@ -6,9 +6,7 @@
 			<!-- Image -->
 			<template v-if="mediaType === 'image'">
 				<div class="-embed">
-					<!--
-						The min/max will be the actual dimensions for the image thumbnail.
-					-->
+					<!-- The min/max will be the actual dimensions for the image thumbnail. -->
 					<app-media-item-backdrop
 						:media-item="mediaItem"
 						:style="{
@@ -16,6 +14,7 @@
 							height: maxHeight ? maxHeight + 'px' : undefined,
 							marginLeft: 'auto',
 							marginRight: 'auto',
+							maxWidth: `${mediaItem.width}px`,
 						}"
 						radius="lg"
 					>
