@@ -4,7 +4,7 @@ import { propOptional } from '../../../utils/vue';
 import AppLightboxTS from '../../lightbox/lightbox';
 import { createLightbox, LightboxMediaSource } from '../../lightbox/lightbox-helpers';
 import { MediaItem } from '../../media-item/media-item-model';
-import AppContentMediaItem from '../components/media-item/media-item';
+import { createMediaItem } from '../components/media-item/media-item';
 import { ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentRules } from '../content-editor/content-rules';
@@ -95,24 +95,16 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	setContent(content: ContentDocument) {
 		this.data = content;
 		this.hydrator = new ContentHydrator(content.hydration);
-		const processedItems: any[] = [];
+		const processedItems: MediaItem[] = [];
 
 		this.data.content.forEach(item => {
+			let _mediaItem = null;
 			if (item.type === 'mediaItem' && !item.attrs.href) {
-				processedItems.push(
-					new AppContentMediaItem({
-						propsData: {
-							mediaItemId: item.attrs.id,
-							mediaItemWidth: item.attrs.width,
-							mediaItemHeight: item.attrs.height,
-							caption: item.attrs.caption,
-							align: item.attrs.align,
-							href: item.attrs.href,
-							isEditing: false,
-							owner: this.owner,
-						},
-					}).mediaItem
-				);
+				_mediaItem = createMediaItem(this, item.attrs.id);
+			}
+
+			if (_mediaItem) {
+				processedItems.push(_mediaItem);
 			}
 		});
 

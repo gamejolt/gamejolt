@@ -13,6 +13,17 @@ import AppContentViewerTS from '../../content-viewer/content-viewer';
 import AppContentViewer from '../../content-viewer/content-viewer.vue';
 import AppBaseContentComponent from '../base/base-content-component.vue';
 
+export function createMediaItem(owner: ContentOwner, mediaItemId: number) {
+	let item = null;
+	owner.getHydrator().useData('media-item-id', mediaItemId.toString(), data => {
+		if (data) {
+			item = new MediaItem(data);
+		}
+	});
+
+	return item;
+}
+
 @Component({
 	components: {
 		AppBaseContentComponent,
@@ -156,13 +167,10 @@ export default class AppContentMediaItem extends Vue {
 	}
 
 	created() {
-		this.owner.getHydrator().useData('media-item-id', this.mediaItemId.toString(), data => {
-			if (data) {
-				this.mediaItem = new MediaItem(data);
-			} else {
-				this.hasError = true;
-			}
-		});
+		this.mediaItem = createMediaItem(this.owner, this.mediaItemId);
+		if (!this.mediaItem) {
+			this.hasError = true;
+		}
 	}
 
 	mounted() {
