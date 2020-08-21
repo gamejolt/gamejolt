@@ -123,6 +123,16 @@ export default class AppContentMediaItem extends Vue {
 		return typeof this.href === 'string' && this.href.length > 0;
 	}
 
+	get canFullscreenItem() {
+		if (!this.contentViewerParent || !this.mediaItem || this.hasLink) {
+			return false;
+		}
+
+		return !!this.contentViewerParent.mediaItems.find(
+			(item: MediaItem) => item.id === this.mediaItem!.id
+		);
+	}
+
 	get displayHref() {
 		let text = this.href;
 		if (text.startsWith('//')) {
@@ -198,9 +208,11 @@ export default class AppContentMediaItem extends Vue {
 	}
 
 	onItemFullscreen() {
-		if (this.contentViewerParent && !!this.mediaItem && !this.hasLink) {
-			this.contentViewerParent.onItemFullscreen(this.mediaItem);
+		if (!this.canFullscreenItem) {
+			return;
 		}
+
+		this.contentViewerParent!.onItemFullscreen(this.mediaItem);
 	}
 }
 

@@ -22,6 +22,7 @@
 				ref="container"
 				v-app-observe-dimensions="computeSize"
 				class="media-item-container"
+				:class="{ '-zoomable': canFullscreenItem }"
 				:style="{
 					width: containerWidth,
 					height: containerHeight,
@@ -115,16 +116,15 @@
 			@media screen and (pointer: coarse)
 				margin-bottom: $line-height-computed + 20px
 
-		&:not(.-link)
-			.media-item-container
-				cursor: zoom-in
-
 .media-item-container
 	display: flex
 	justify-content: center
 	align-items: center
 	max-width: 100%
 	position: relative
+
+	&.-zoomable
+		cursor: zoom-in
 
 	// While the image is still loading, we show a dimmed background as a fallback for app-media-item-backdrop
 	.-backdrop
