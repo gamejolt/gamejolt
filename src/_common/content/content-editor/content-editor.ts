@@ -257,7 +257,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 		if (this.value) {
 			const doc = ContentDocument.fromJson(this.value);
-			this.setContent(doc);
+			await this.setContent(doc);
 		} else {
 			const state = EditorState.create({
 				doc: DOMParser.fromSchema(this.schema).parse(this.$refs.doc),
@@ -338,7 +338,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		return null;
 	}
 
-	public setContent(doc: ContentDocument) {
+	public async setContent(doc: ContentDocument) {
 		if (doc.context !== this.contentContext) {
 			throw new Error(
 				`The passed in content context is invalid. ${doc.context} != ${this.contentContext}`
@@ -356,6 +356,10 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 			});
 
 			const view = this.createView(state);
+
+			// Wait here so images and other content can render in and scale properly.
+			// Otherwise the scroll at the end of the transaction below would not cover the entire doc.
+			await this.$nextTick();
 
 			// Set selection at the end of the document.
 			const tr = view.state.tr;
