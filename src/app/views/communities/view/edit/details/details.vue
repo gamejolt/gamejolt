@@ -1,3 +1,5 @@
+<script lang="ts" src="./details"></script>
+
 <template>
 	<div>
 		<app-page-header
@@ -19,7 +21,9 @@
 					alert-type="info"
 					:dismiss-key="`community-${community.id}.welcome-msg`"
 				>
-					<h2 class="section-header"><translate>Welcome to your new community! 🎉</translate></h2>
+					<h2 class="section-header">
+						<translate>Welcome to your new community! 🎉</translate>
+					</h2>
 
 					<ul>
 						<li>
@@ -36,13 +40,16 @@
 							<strong><translate>Customize the %$@#! out of it</translate></strong>
 							<br />
 							<translate>
-								You can edit every aspect of your community in this page. Set a description, upload
-								a thumbnail and header, customize your channels - make it real pretty!
+								You can edit every aspect of your community in this page. Set a
+								description, upload a thumbnail and header, customize your channels
+								- make it real pretty!
 							</translate>
 						</li>
 
 						<li>
-							<strong><translate>Assign moderators and collaborators</translate></strong>
+							<strong>
+								<translate>Assign moderators and collaborators</translate>
+							</strong>
 							<br />
 							<translate>
 								Invite others to help you moderate and contribute to your community.
@@ -53,33 +60,13 @@
 							<strong><translate>Get Featured</translate></strong>
 							<br />
 							<translate>
-								Share your community with your friends, post about it on Reddit, Facebook, Twitter
-								and Discord. Game Jolt staff will be looking for active communities to feature on
-								the home page.
+								Share your community with your friends, post about it on Reddit,
+								Facebook, Twitter and Discord. Game Jolt staff will be looking for
+								active communities to feature on the home page.
 							</translate>
 						</li>
 					</ul>
 				</app-alert-dismissable>
-
-				<!--
-					Thumbnail
-					This only shows here on mobile, on desktop the thumbnail can be edited through the
-					spotlight slot in the page header.
-				-->
-				<template v-if="shouldShowThumbnail">
-					<app-community-perms :community="community" required="community-media">
-						<h2 class="section-header">
-							<translate>Thumbnail</translate>
-						</h2>
-
-						<app-editable-overlay class="-edit-thumbnail" @click="showEditAvatar()">
-							<translate slot="overlay">Change</translate>
-							<app-community-thumbnail-img :community="community" />
-						</app-editable-overlay>
-
-						<div class="-spacer"></div>
-					</app-community-perms>
-				</template>
 
 				<!-- Details -->
 				<app-community-perms :community="community" required="community-details">
@@ -89,7 +76,7 @@
 
 					<form-community :model="community" @submit="onDetailsChange" />
 
-					<div class="-spacer"></div>
+					<div class="-spacer" />
 				</app-community-perms>
 
 				<!-- Leave/Remove Community -->
@@ -118,8 +105,8 @@
 						<div class="page-help">
 							<p>
 								<translate>
-									You are currently a collaborator on this community. Leaving the community will
-									revoke all of your moderation permissions.
+									You are currently a collaborator on this community. Leaving the
+									community will revoke all of your moderation permissions.
 								</translate>
 							</p>
 						</div>
@@ -131,7 +118,7 @@
 				</div>
 			</template>
 
-			<template #sidebar v-if="routeStore.canEditDescription">
+			<template v-if="routeStore.canEditDescription" #sidebar>
 				<h2 class="section-header">
 					<translate>Edit Description</translate>
 				</h2>
@@ -143,7 +130,7 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .-spacer
 	margin-top: $line-height-computed
@@ -160,5 +147,3 @@
 	h2:first-of-type
 		margin-top: 0
 </style>
-
-<script lang="ts" src="./details"></script>

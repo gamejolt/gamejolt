@@ -3,129 +3,59 @@
 <template>
 	<app-shell-content-with-sidebar v-if="community">
 		<template #default>
+			<!-- Community Header Image -->
+			<app-editable-overlay
+				v-if="coverEditable"
+				:class="{ '-cover-img': !!coverMediaItem }"
+				:disabled="!coverEditable"
+				@click="showEditHeader()"
+			>
+				<template #overlay>
+					<translate v-if="!coverMediaItem">Upload Header</translate>
+					<translate v-else>Change Header</translate>
+				</template>
+
+				<!-- If no cover media, reserve space with a min-height. -->
+				<template #default>
+					<div
+						class="fill-gray"
+						:style="{
+							'min-height': !coverMediaItem ? '200px' : '',
+						}"
+					>
+						<app-media-item-cover v-if="coverMediaItem" :media-item="coverMediaItem" />
+					</div>
+				</template>
+			</app-editable-overlay>
+			<div v-else-if="!!coverMediaItem && isFrontpage" class="-cover-img">
+				<app-media-item-cover :media-item="coverMediaItem" />
+			</div>
+
+			<!-- Inline Community Card - used as header/navigation -->
 			<template v-if="!routeStore.isShowingSidebar">
-				<app-page-header
-					:cover-media-item="community.header"
-					:cover-editable="isEditing && routeStore.canEditMedia"
-					@edit-cover="showEditHeader()"
-				>
-					<h1>
-						<router-link :to="{ name: 'communities.view.overview' }">
-							{{ community.name }}
-						</router-link>
-						<app-community-verified-tick :community="community" big />
-					</h1>
-
-					<template #spotlight>
-						<app-editable-thumbnail />
-					</template>
-
-					<template #cover-edit-buttons>
-						<translate v-if="!community.header">Upload Header</translate>
-						<translate v-else>Change Header</translate>
-					</template>
-
-					<template #nav>
-						<nav class="platform-list inline">
-							<ul>
-								<li>
-									<router-link
-										:to="{ name: 'communities.view.overview' }"
-										:class="{
-											active: $route.name === 'communities.view.overview',
-										}"
-									>
-										<translate>Overview</translate>
-									</router-link>
-								</li>
-								<li>
-									<router-link
-										:to="{ name: 'communities.view.members' }"
-										active-class="active"
-									>
-										<translate>Members</translate>
-										<span v-if="community.member_count" class="badge">
-											{{ communityMemberCount }}
-										</span>
-									</router-link>
-								</li>
-								<li v-if="Screen.isMobile && routeStore.sidebarData">
-									<a @click="onClickAbout">
-										<translate>About</translate>
-									</a>
-								</li>
-
-								<li>
-									<app-popper popover-class="fill-darkest">
-										<a>
-											<app-jolticon icon="ellipsis-v" />
-										</a>
-
-										<template #popover>
-											<div class="list-group list-group-dark">
-												<a
-													v-app-track-event="`copy-link:community`"
-													class="list-group-item has-icon"
-													@click="copyShareUrl"
-												>
-													<app-jolticon icon="link" />
-													<translate>Copy link to community</translate>
-												</a>
-												<a
-													v-if="shouldShowModTools"
-													class="list-group-item has-icon"
-													:href="
-														Environment.baseUrl +
-															`/moderate/communities/view/${community.id}`
-													"
-													target="_blank"
-												>
-													<app-jolticon icon="cog" />
-													<span>Moderate Community</span>
-												</a>
-											</div>
-										</template>
-									</app-popper>
-								</li>
-							</ul>
-						</nav>
-					</template>
-
-					<template v-if="!community.isBlocked" #controls>
-						<app-page-header-controls>
-							<template v-if="community.hasPerms()">
-								<app-community-perms :community="community">
-									<app-button
-										v-if="!isEditing"
-										primary
-										block
-										:to="community.routeEditLocation"
-									>
-										<app-jolticon icon="edit" class="middle" />
-										<translate>Edit Community</translate>
-									</app-button>
-									<app-button
-										v-else
-										primary
-										block
-										:to="{
-											name: 'communities.view.overview',
-											params: {
-												path: community.path,
-											},
-										}"
-									>
-										<translate>View Community</translate>
-									</app-button>
-								</app-community-perms>
-							</template>
-							<app-community-join-widget v-else :community="community" block />
-						</app-page-header-controls>
-					</template>
-				</app-page-header>
+				<app-communities-view-card overflow inline :as-header="!isShowingHeader" />
 			</template>
 
 			<router-view />
 		</template>
 	</app-shell-content-with-sidebar>
 </template>
+
+<style lang="stylus" scoped>
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+
+.-cover-img
+	position: relative
+
+	&::after
+		content: ''
+		position: absolute
+		bottom: 0
+		left: 0
+		right: 0
+		height: 150px
+		max-height: 50%
+		background-image: linear-gradient(to bottom, transparent 0, rgba($black, 0.3) 70%, rgba($black, 0.6) 100%)
+		z-index: 0
+</style>

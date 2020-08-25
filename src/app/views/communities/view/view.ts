@@ -8,8 +8,10 @@ import { Community, isEditingCommunity } from '../../../../_common/community/com
 import AppCommunityJoinWidget from '../../../../_common/community/join-widget/join-widget.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
+import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { number } from '../../../../_common/filters/number';
+import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -22,7 +24,6 @@ import {
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
 import { AppCommunityPerms } from '../../../components/community/perms/perms';
-import { CommunitySidebarModal } from '../../../components/community/sidebar/modal/modal.service';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
 import { CommunityHeaderModal } from '../../../components/forms/community/header/modal/modal.service';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
@@ -54,6 +55,8 @@ import AppNavChannels from './_nav/channels/channels.vue';
 		AppCommunitiesViewCard,
 		AppNavChannels,
 		AppEditableThumbnail,
+		AppEditableOverlay,
+		AppMediaItemCover,
 	},
 })
 @RouteResolver({
@@ -107,6 +110,22 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	get shouldShowModTools() {
 		return this.user && this.user.isMod;
+	}
+
+	get coverMediaItem() {
+		return this.community.header || null;
+	}
+
+	get coverEditable() {
+		return this.isEditing && this.routeStore.canEditMedia;
+	}
+
+	get isFrontpage() {
+		return this.routeStore.channelPath === this.routeStore.frontpageChannel.title;
+	}
+
+	get isShowingHeader() {
+		return (this.isFrontpage || this.isEditing) && this.coverMediaItem;
 	}
 
 	@Watch('$route', { immediate: true })
@@ -166,16 +185,5 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 		Clipboard.copy(
 			Environment.baseUrl + this.$router.resolve(this.routeStore.community.routeLocation).href
 		);
-	}
-
-	onClickAbout() {
-		const { sidebarData, community } = this.routeStore;
-		if (sidebarData) {
-			CommunitySidebarModal.show({
-				isEditing: this.isEditing,
-				data: sidebarData,
-				community,
-			});
-		}
 	}
 }
