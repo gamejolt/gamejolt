@@ -19,7 +19,7 @@
 						</p>
 						<p>
 							<app-button @click="onCollect">
-								<translate>Unlock a Sticker</translate>
+								<translate>Unlock Stickers</translate>
 							</app-button>
 						</p>
 						<br />
