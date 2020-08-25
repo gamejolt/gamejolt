@@ -8,7 +8,7 @@ import { propOptional } from '../../../utils/vue';
 import { Theme } from '../theme.model';
 import { ThemeState, ThemeStore } from '../theme.store';
 
-const SvgGraysRegex: RegExp = /#([a-f\d]{1,2})\1{2}\b/gi;
+const SvgGraysRegex = /#([a-f\d]{1,2})\1{2}\b/gi;
 
 @Component({})
 export class AppThemeSvg extends Vue {
@@ -46,7 +46,9 @@ export class AppThemeSvg extends Vue {
 			let notice = '#' + this.actualTheme.notice;
 
 			if (this.actualTheme.custom) {
-				const highlight_ = '#' + this.actualTheme.highlight_;
+				const highlight_ =
+					'#' +
+					(this.isDark ? this.actualTheme.darkHighlight_ : this.actualTheme.highlight_);
 				const hsl = parseToHsl(highlight_);
 				if (hsl.lightness < 0.4) {
 					highlight = lighten(0.3, highlight_);
@@ -73,11 +75,11 @@ export class AppThemeSvg extends Vue {
 			// Same as above, need to convert svgData to a string in case
 			// the custom svg input from the ThemeSvg styleguide is a number.
 			svgData = String(svgData)
-				.replace(/\#ccff00/gi, highlight)
-				.replace(/\#cf0/gi, highlight)
-				.replace(/\#2f7f6f/gi, !this.strictColors && this.isDark ? highlight : backlight)
-				.replace(/\#ff3fac/gi, notice)
-				.replace(/\#31d6ff/gi, !this.strictColors && this.isDark ? highlight : backlight);
+				.replace(/#ccff00/gi, highlight)
+				.replace(/#cf0/gi, highlight)
+				.replace(/#2f7f6f/gi, !this.strictColors && this.isDark ? highlight : backlight)
+				.replace(/#ff3fac/gi, notice)
+				.replace(/#31d6ff/gi, !this.strictColors && this.isDark ? highlight : backlight);
 		} else if (!this.strictColors) {
 			// If we have no theme from the prop or the ThemeStore, that means
 			// we're using the default theme colors and only need to replace our
@@ -85,8 +87,8 @@ export class AppThemeSvg extends Vue {
 			const { highlight, backlight } = new Theme();
 
 			svgData = String(svgData)
-				.replace(/\#2f7f6f/gi, this.isDark ? '#' + highlight : '#' + backlight)
-				.replace(/\#31d6ff/gi, this.isDark ? '#' + highlight : '#' + backlight);
+				.replace(/#2f7f6f/gi, this.isDark ? '#' + highlight : '#' + backlight)
+				.replace(/#31d6ff/gi, this.isDark ? '#' + highlight : '#' + backlight);
 		}
 
 		return 'data:image/svg+xml;utf8,' + encodeURIComponent(svgData);

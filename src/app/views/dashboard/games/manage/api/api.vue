@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="container" v-if="Screen.isMobile">
+		<div v-if="Screen.isMobile" class="container">
 			<br />
 			<app-nav-tab-list>
 				<app-manage-game-api-nav />
@@ -10,7 +10,7 @@
 		<section class="section">
 			<div class="container">
 				<div class="row">
-					<div class="col-md-2" v-if="Screen.isDesktop">
+					<div v-if="Screen.isDesktop" class="col-md-2">
 						<nav class="platform-list">
 							<app-manage-game-api-nav />
 						</nav>

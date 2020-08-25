@@ -11,6 +11,7 @@
 			:solid="voted"
 			:disabled="isProcessing"
 			@click="toggle"
+			v-app-track-event="`video-like-widget:click`"
 		/>
 		<a
 			v-if="blip"

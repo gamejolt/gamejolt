@@ -1,3 +1,5 @@
+<script lang="ts" src="./game-api-doc"></script>
+
 <template>
 	<div>
 		<section class="section landing-header">
@@ -25,7 +27,7 @@
 		<section class="section">
 			<div class="container">
 				<div class="row">
-					<div class="col-lg-1"></div>
+					<div class="col-lg-1" />
 					<div class="col-sm-3 col-sm-push-9 col-lg-3 col-lg-push-8">
 						<br />
 						<br />
@@ -39,12 +41,12 @@
 										{{ item.title }}
 									</router-link>
 									<ul v-if="item.nav && item.nav.length > 0 && inPath(item.url)">
-										<li v-for="item of item.nav" :key="item.url">
+										<li v-for="child of item.nav" :key="child.url">
 											<router-link
-												:to="`/game-api/doc${item.url}`"
-												:class="inPath(item.url, true) ? 'active' : ''"
+												:to="`/game-api/doc${child.url}`"
+												:class="inPath(child.url, true) ? 'active' : ''"
 											>
-												{{ item.title }}
+												{{ child.title }}
 											</router-link>
 										</li>
 									</ul>
@@ -54,7 +56,7 @@
 					</div>
 
 					<div class="col-sm-9 col-sm-pull-3 col-lg-7 col-lg-pull-3">
-						<router-view />
+						<router-view class="-content" />
 					</div>
 				</div>
 			</div>
@@ -63,11 +65,19 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/tables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import '~styles-lib/tables'
 
->>> table
-	@extend .table
+.-content >>>
+	h1:first-child
+		margin-top: 0
+
+	table
+		@extend .table
+
+	img
+		img-responsive()
+		rounded-corners-lg()
 </style>
 
-<script lang="ts" src="./game-api-doc"></script>

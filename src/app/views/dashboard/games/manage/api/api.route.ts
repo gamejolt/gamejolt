@@ -1,6 +1,7 @@
 import { RouteConfig } from 'vue-router';
 import { routeDashGamesManageApiDataStorageItemsList } from './data-storage/items/list/list.route';
 import { routeDashGamesManageApiDataStorageItemsView } from './data-storage/items/view/view.route';
+import { routeDashGamesManageApiMods } from './mods/mods.route';
 import { routeDashGamesManageApiOverview } from './overview/overview.route';
 import { routeDashGamesManageApiScoreboardsList } from './scoreboards/list/list.route';
 import { routeDashGamesManageApiScoreboardsScoresList } from './scoreboards/scores/list/list.route';
@@ -21,6 +22,7 @@ export const routeDashGamesManageApi: RouteConfig = {
 		routeDashGamesManageApiScoreboardsScoresList,
 		routeDashGamesManageApiScoreboardsScoresView,
 		routeDashGamesManageApiScoreboardsScoreUser,
+		routeDashGamesManageApiMods,
 		routeDashGamesManageApiSettings,
 	],
 };
