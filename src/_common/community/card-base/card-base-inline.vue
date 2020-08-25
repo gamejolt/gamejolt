@@ -38,7 +38,13 @@
 		<div class="-controls">
 			<!-- Context Menu -->
 			<div v-if="shouldShowChannelsMenu" class="-controls-item -menu">
-				<app-button icon="menu" trans :sparse="Screen.isXs" @click="onClickMenu">
+				<app-button
+					icon="menu"
+					trans
+					:sparse="Screen.isXs"
+					:circle="Screen.isXs"
+					@click="onClickMenu"
+				>
 					<translate v-if="!Screen.isXs">
 						Channels
 					</translate>
@@ -74,7 +80,7 @@
 
 			<!-- Popover Extras -->
 			<app-popper class="-controls-item -extra" popover-class="fill-darkest">
-				<app-button class="link-unstyled" icon="ellipsis-v" trans sparse />
+				<app-button class="link-unstyled" icon="ellipsis-v" trans sparse circle />
 
 				<template #popover>
 					<div class="list-group list-group-dark">
