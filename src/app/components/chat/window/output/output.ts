@@ -4,6 +4,7 @@ import { EventBus, EventBusDeregister } from '../../../../../system/event/event-
 import { EventSubscription } from '../../../../../system/event/event-topic';
 import { propRequired } from '../../../../../utils/vue';
 import { date } from '../../../../../_common/filters/date';
+import AppIllustration from '../../../../../_common/illustration/illustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
@@ -18,6 +19,7 @@ import AppChatWindowOutputItem from './item/item.vue';
 		AppLoading,
 		AppChatWindowOutputItem,
 		AppScrollScroller,
+		AppIllustration,
 	},
 	filters: {
 		date,

@@ -2,20 +2,11 @@
 	<app-scroll-scroller @scroll.native="onScroll">
 		<div class="-container anim-fade-in no-animate-leave">
 			<div v-if="shouldShowIntro" class="-intro">
-				<app-jolticon icon="user-messages" big />
-				<div>
-					<div>
-						<translate>This is the beginning of your conversation with</translate>
-						<router-link :to="room.user.url"> @{{ room.user.username }} </router-link>
-					</div>
-					<div>
-						<translate>Say hello</translate>
-						<span
-							:class="'emoji emoji-' + introEmoji"
-							:title="':' + introEmoji + ':'"
-						></span>
-					</div>
-				</div>
+				<app-illustration src="~img/ill/no-chat.svg">
+					<translate>
+						Your friend is still loading. Encourage them with a message!
+					</translate>
+				</app-illustration>
 			</div>
 
 			<app-loading v-if="isLoadingOlder" class="loading-centered" />

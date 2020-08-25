@@ -1,14 +1,16 @@
+<script lang="ts" src="./backdrop"></script>
+
 <template>
 	<div
 		class="backdrop"
 		:class="[className, { active }]"
 		@click="_clicked"
 		@transitionend="_transitionend"
-	></div>
+	/>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .backdrop
 	position: absolute
@@ -33,4 +35,3 @@
 		opacity: 1
 </style>
 
-<script lang="ts" src="./backdrop"></script>
