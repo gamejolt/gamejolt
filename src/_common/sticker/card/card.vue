@@ -13,6 +13,8 @@
 				{{ label }}
 			</div>
 		</div>
+
+		<slot />
 	</div>
 </template>
 
