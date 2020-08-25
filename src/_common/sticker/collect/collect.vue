@@ -3,38 +3,70 @@
 		<div class="-reveal">
 			<div v-if="!canReveal">
 				<app-sticker-card-hidden
-					v-app-tooltip="$gettext(`Not enough progress to unlock sticker`)"
+					v-app-tooltip.touchable="$gettext(`Not enough progress to unlock stickers`)"
 				/>
 			</div>
 			<div v-else-if="isRevealing" class="-card-revealing-outer">
 				<app-sticker-card-hidden class="-card-revealing" />
 			</div>
-			<template v-else-if="isRevealed && purchasedSticker">
-				<div class="-card-revealed-container">
-					<app-sticker-card
-						class="-card-revealed"
-						:sticker="purchasedSticker"
-						label="+1"
-					/>
-					<div
-						v-if="purchasedSticker.rarity > 0"
-						class="-card-revealed-effect"
-						:class="{
-							'-card-revealed-effect-uncommon': purchasedSticker.rarity === 1,
-							'-card-revealed-effect-rare': purchasedSticker.rarity === 2,
-							'-card-revealed-effect-epic': purchasedSticker.rarity === 3,
-						}"
-					/>
+			<template v-else-if="isRevealed && !!purchasedStickers.length">
+				<div
+					v-if="showCollectControls && !!canBuyStickerAmount"
+					class="-revealed-controls-above anim-fade-in"
+				>
+					<app-button primary @click="onClickRepeat(canBuyMultipleAmount)">
+						<translate :translate-params="{ count: canBuyMultipleAmount }">
+							Unlock %{count} More
+						</translate>
+					</app-button>
 				</div>
+				<div v-else class="-revealed-controls-placeholder" />
+
+				<div class="-card-revealed-container">
+					<div v-for="{ sticker, sticker_id, count } of shownStickers" :key="sticker_id">
+						<app-sticker-card class="-card-revealed" :sticker="sticker" :label="`+${count}`">
+							<div
+								v-if="sticker.rarity > 0"
+								class="-card-revealed-effect"
+								:class="{
+									'-card-revealed-effect-uncommon': sticker.rarity === 1,
+									'-card-revealed-effect-rare': sticker.rarity === 2,
+									'-card-revealed-effect-epic': sticker.rarity === 3,
+								}"
+							/>
+						</app-sticker-card>
+					</div>
+				</div>
+
+				<div
+					v-if="shownStickers.length < purchasedStickers.length"
+					class="-revealed-controls-load-more page-cut"
+				>
+					<app-button trans @click="showAll = true">
+						<translate>Show All</translate>
+					</app-button>
+				</div>
+
 				<div v-if="showCollectControls" class="-revealed-controls anim-fade-in">
-					<app-button primary @click="onClickCollect">
+					<app-button primary @click="onClickCollect()">
 						<translate>Collect</translate>
 					</app-button>
 				</div>
+				<div v-else class="-revealed-controls-placeholder" />
 			</template>
 			<template v-else>
-				<div>
-					<app-sticker-card-hidden @click.native="onBuySticker" class="-card-hidden" />
+				<div class="-collect">
+					<app-sticker-card-hidden
+						class="-card-hidden"
+						:count="1"
+						@click.native="onBuyStickers(1)"
+					/>
+					<app-sticker-card-hidden
+						v-if="canBuyMultipleAmount > 1"
+						class="-card-hidden"
+						:count="canBuyMultipleAmount"
+						@click.native="onBuyStickers(canBuyMultipleAmount)"
+					/>
 				</div>
 				<hr class="underbar underbar-center" />
 				<div class="-collect-flavor-text">
@@ -56,8 +88,8 @@
 			<div class="page-cut"></div>
 			<p>
 				<translate>
-					You do not have enough points to unlock more stickers. Use Game Jolt, like some
-					posts, you might get some more.
+					You do not have enough points to unlock more stickers. Use Game Jolt, like some posts, you
+					might get some more.
 				</translate>
 			</p>
 			<app-button :to="{ name: 'dash.stickers.overview' }">
@@ -70,6 +102,7 @@
 <style lang="stylus" scoped>
 @require '~styles/variables'
 @require '~styles-lib/mixins'
+@require '../card/variables.styl'
 
 .-sticker-amount
 	margin-top: 4px
@@ -87,6 +120,11 @@
 	position: relative
 	padding-top: 100px
 	padding-bottom: 120px
+
+.-collect
+	display: flex
+	justify-content: space-evenly
+	width: 100%
 
 .-card-hidden
 	cursor: pointer
@@ -111,6 +149,12 @@
 	overflow: hidden
 	rounded-corners-lg()
 	animation: card-revealed 0.5s linear 1 normal forwards
+	width: 100%
+	display: grid
+	grid-template-columns: repeat(auto-fit, $card-width)
+	justify-content: center
+	grid-gap: $card-margin * 2
+	z-index: 1
 
 .-card-revealed-effect
 	position: absolute
@@ -128,6 +172,20 @@
 
 .-revealed-controls
 	margin-top: 20px
+
+	&, &-above, &-load-more, &-placeholder
+		z-index: 0
+
+	&-above
+		margin-bottom: 20px
+
+	&-load-more
+		margin-top: 20px
+		width: 100%
+
+	&-placeholder
+		margin: 10px 0
+		height: 36px
 
 $-hidden-card-color-shadow-small = 10px
 $-hidden-card-color-shadow-large = 20px
