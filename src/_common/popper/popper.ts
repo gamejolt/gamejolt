@@ -23,6 +23,8 @@ let PopperIndex = 0;
 
 type ActualTrigger = 'click' | 'hover' | 'manual';
 
+const TouchablePointerTypes = ['touch', 'pen'];
+
 const modifiers = [
 	flip,
 	preventOverflow,
@@ -119,6 +121,10 @@ export default class AppPopper extends Vue {
 	@Prop(propOptional(String, null))
 	popoverClass!: null | string;
 
+	// For popovers that need a specific max-height, header and footer included.
+	@Prop(propOptional(String, null))
+	height!: string;
+
 	$refs!: {
 		trigger: any;
 		popper: any;
@@ -130,7 +136,7 @@ export default class AppPopper extends Vue {
 	maxWidth = '';
 	popperIndex = PopperIndex++;
 
-	popperInstance!: Instance | null;
+	popperInstance: null | Instance = null;
 
 	$el!: HTMLDivElement;
 	private hideTimeout?: NodeJS.Timer;
@@ -146,6 +152,10 @@ export default class AppPopper extends Vue {
 	@Emit('hide') emitHide() {}
 
 	get maxHeight() {
+		if (this.height) {
+			return this.height;
+		}
+
 		return Screen.height - 100 + 'px';
 	}
 
@@ -183,16 +193,14 @@ export default class AppPopper extends Vue {
 		Popper.registerPopper(this.$router, this);
 	}
 
+	beforeDestroy() {
+		// Destroy the popper instance and element before we lose our $refs.
+		this.destroyPopper();
+	}
+
 	destroyed() {
 		Popper.deregisterPopper(this);
-		this.clearHideTimeout();
 		this.removeBackdrop();
-
-		// Destroy any poppers that had their trigger element removed
-		if (this.popperInstance) {
-			this.popperInstance.destroy();
-			this.popperInstance = null;
-		}
 	}
 
 	onDimensionsChanged() {
@@ -234,7 +242,12 @@ export default class AppPopper extends Vue {
 		this.show();
 	}
 
-	onMouseEnter(event: MouseEvent) {
+	onMouseEnter(event: PointerEvent) {
+		// We never want this to trigger on 'touch' or 'pen' inputs.
+		if (TouchablePointerTypes.includes(event.pointerType)) {
+			return;
+		}
+
 		this.emitMouseEnter(event);
 
 		if (this.trigger !== 'hover') {
@@ -258,7 +271,12 @@ export default class AppPopper extends Vue {
 		this.showDelayTimer = setTimeout(() => this.show(), this.showDelay);
 	}
 
-	onMouseLeave(event: MouseEvent) {
+	onMouseLeave(event: PointerEvent) {
+		// We never want this to trigger on 'touch' or 'pen' inputs.
+		if (TouchablePointerTypes.includes(event.pointerType)) {
+			return;
+		}
+
 		this.emitMouseLeave(event);
 
 		if (this.trigger !== 'hover') {
@@ -300,6 +318,23 @@ export default class AppPopper extends Vue {
 		document.addEventListener('click', this.onClickAway, true);
 	}
 
+	private destroyPopper() {
+		this.clearHideTimeout();
+
+		// Clean up any remaining popper elements and instances
+		if (this.$refs.popper) {
+			this.$refs.popper.remove();
+		}
+
+		if (this.popperInstance) {
+			this.popperInstance.destroy();
+			this.popperInstance = null;
+		}
+
+		this.isVisible = false;
+		this.isHiding = false;
+	}
+
 	private show() {
 		this.emitShow();
 		this.clearHideTimeout();
@@ -326,7 +361,7 @@ export default class AppPopper extends Vue {
 		this.addBackdrop();
 	}
 
-	private hide() {
+	hide() {
 		// In case a popper was hidden from something other than a click,
 		// like right-clicking a cbar item or Popover.hideAll() being triggered.
 		document.removeEventListener('click', this.onClickAway, true);
@@ -339,15 +374,7 @@ export default class AppPopper extends Vue {
 
 	private hideDone() {
 		this.emitHide();
-
-		// Making sure that popper doesn't keep tracking positioning
-		if (this.popperInstance) {
-			this.popperInstance.destroy();
-			this.popperInstance = null;
-		}
-
-		this.isVisible = false;
-		this.isHiding = false;
+		this.destroyPopper();
 	}
 
 	private addBackdrop() {

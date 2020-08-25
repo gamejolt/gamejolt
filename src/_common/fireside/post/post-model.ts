@@ -34,14 +34,14 @@ interface FiresidePostPublishedPlatform {
 }
 
 export class FiresidePost extends Model implements ContentContainerModel, CommentableModel {
-	static TYPE_TEXT = 'text';
-	static TYPE_MEDIA = 'media';
-	static TYPE_VIDEO = 'video';
-	static TYPE_SKETCHFAB = 'sketchfab';
+	static readonly TYPE_TEXT = 'text';
+	static readonly TYPE_MEDIA = 'media';
+	static readonly TYPE_VIDEO = 'video';
+	static readonly TYPE_SKETCHFAB = 'sketchfab';
 
-	static STATUS_DRAFT = 'draft';
-	static STATUS_ACTIVE = 'active';
-	static STATUS_REMOVED = 'removed';
+	static readonly STATUS_DRAFT = 'draft';
+	static readonly STATUS_ACTIVE = 'active';
+	static readonly STATUS_REMOVED = 'removed';
 
 	type!: 'text' | 'media' | 'video' | 'sketchfab' | 'comment-video';
 	hash!: string;
@@ -56,6 +56,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	user!: User;
 	game!: Game;
 	as_game_owner!: boolean;
+	post_to_user_profile!: boolean;
 	slug!: string;
 	subline!: string;
 	url!: string;
@@ -63,7 +64,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	expand_count?: number;
 	is_pinned!: boolean;
 
-	lead_snippet!: string;
 	lead_content!: string;
 	leadStr!: string;
 	article_content!: string;
@@ -287,8 +287,9 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			return this.game;
 		}
 
-		if (this.isInCommunityPinContext(route)) {
-			return this.communities[0];
+		const fpc = this.getCommunityPinContext(route);
+		if (fpc !== null) {
+			return fpc;
 		}
 
 		if (this.isInUserPinContext(route)) {
@@ -314,26 +315,38 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return true;
 	}
 
-	private isInCommunityPinContext(route: Route) {
+	getShortLead(length = 70) {
+		let lead = this.leadStr
+			.replace('\r\n', ' ')
+			.replace('\r', ' ')
+			.replace('\n', ' ');
+		if (lead.length > length) {
+			lead = lead.substr(0, length - 3).trim() + '...';
+		}
+		return lead;
+	}
+
+	private getCommunityPinContext(route: Route) {
 		// A post can be pinned to a community if:
 		// 1. viewing the community feed.
 		// 2. the post was published to the community.
 		// 3. viewing the channel the post was published to.
 		// NOTE: this means posts cannot be pinned to meta channels like 'featured' and 'all posts'
 
-		if (route.name !== 'communities.view.overview') {
-			return false;
+		if (route.name !== 'communities.view.channel') {
+			return null;
 		}
 
-		if (this.communities.length === 0) {
-			return false;
+		for (let communityLink of this.communities) {
+			const community = communityLink.community;
+			const channelTitle = communityLink.channel!.title;
+
+			if (route.params.path === community.path && route.params.channel === channelTitle) {
+				return communityLink;
+			}
 		}
 
-		const communityLink = this.communities[0];
-		const community = communityLink.community;
-		const channelTitle = communityLink.channel!.title;
-
-		return route.params.path === community.path && route.params.channel === channelTitle;
+		return null;
 	}
 
 	private isInGamePinContext(route: Route) {
@@ -387,7 +400,12 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 		const options: ModelSaveRequestOptions = {
 			data: Object.assign({}, this),
-			allowComplexData: ['keyGroups', 'mediaItemIds', 'publishToPlatforms'],
+			allowComplexData: [
+				'attached_communities',
+				'keyGroups',
+				'mediaItemIds',
+				'publishToPlatforms',
+			],
 		};
 
 		if (this.game) {
@@ -477,12 +495,11 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return this.$_save(`/web/posts/manage/publish/${this.id}`, 'firesidePost');
 	}
 
-	$pin(targetModel: string) {
-		return this.$_save(`/web/posts/manage/toggle-pin/${this.id}/${targetModel}`, 'post');
-	}
-
-	$unpin(targetModel: string) {
-		return this.$_save(`/web/posts/manage/toggle-pin/${this.id}/${targetModel}`, 'post');
+	$togglePin(targetModel: string, targetId: number) {
+		return this.$_save(
+			`/web/posts/manage/toggle-pin/${this.id}/${targetModel}/${targetId}`,
+			'post'
+		);
 	}
 
 	async remove() {

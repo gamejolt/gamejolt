@@ -1,10 +1,9 @@
 import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Component, InjectReactive } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-
-import AppChatWindow from '../window/window.vue';
-import { ChatClient } from '../client';
 import { Store } from '../../../store/index';
+import { ChatClient, ChatKey } from '../client';
+import AppChatWindow from '../window/window.vue';
 
 @Component({
 	components: {
@@ -12,6 +11,10 @@ import { Store } from '../../../store/index';
 	},
 })
 export default class AppChatWindows extends Vue {
-	@State chat!: ChatClient;
+	@InjectReactive(ChatKey) chat!: ChatClient;
 	@State isRightPaneVisible!: Store['isRightPaneVisible'];
+
+	getRoomQueuedMessages(roomId: number) {
+		return this.chat.messageQueue.filter(i => i.room_id === roomId);
+	}
 }

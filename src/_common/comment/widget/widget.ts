@@ -5,6 +5,7 @@ import { Analytics } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { Collaborator } from '../../collaborator/collaborator.model';
 import { Environment } from '../../environment/environment.service';
+import AppIllustration from '../../illustration/illustration.vue';
 import AppLoading from '../../loading/loading.vue';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import AppMessageThreadContent from '../../message-thread/content/content.vue';
@@ -39,6 +40,7 @@ let incrementer = 0;
 		AppMessageThreadAdd,
 		AppMessageThreadContent,
 		AppCommentWidgetComment,
+		AppIllustration,
 		FormComment,
 	},
 	directives: {

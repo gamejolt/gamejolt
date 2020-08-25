@@ -28,16 +28,16 @@ export default class AppMediaItemPost extends Vue {
 	mediaItem!: MediaItem;
 
 	@Prop(propOptional(Boolean, true))
-	isPostHydrated?: boolean;
+	isPostHydrated!: boolean;
 
-	@Prop(propOptional(Boolean))
+	@Prop(propOptional(Boolean, false))
 	isActive!: boolean;
 
-	@Prop(propOptional(Boolean))
-	restrictDeviceMaxHeight?: boolean;
+	@Prop(propOptional(Boolean, false))
+	restrictDeviceMaxHeight!: boolean;
 
-	@Prop(propOptional(Boolean))
-	inline?: boolean;
+	@Prop(propOptional(Boolean, false))
+	inline!: boolean;
 
 	isFilled = false;
 
@@ -48,6 +48,14 @@ export default class AppMediaItemPost extends Vue {
 
 	@Emit('fullscreen')
 	emitFullscreen(_mediaItem: MediaItem) {}
+
+	get shouldShowFullscreenOption() {
+		return (
+			this.restrictDeviceMaxHeight &&
+			this.mediaItem.height >= 100 &&
+			this.mediaItem.width >= 100
+		);
+	}
 
 	get shouldVideoPlay() {
 		return this.isActive;

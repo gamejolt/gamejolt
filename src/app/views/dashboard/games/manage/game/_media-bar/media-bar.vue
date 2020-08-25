@@ -12,14 +12,18 @@
 					<div>
 						<app-jolticon icon="add" big />
 						<br />
-						<b>
+						<b class="-label">
 							<translate>Add Media</translate>
 						</b>
 					</div>
 				</div>
 			</a>
 
-			<draggable style="display: inline-flex" v-model="draggableItems">
+			<draggable
+				style="display: inline-flex"
+				v-model="draggableItems"
+				:options="{ delay: 100, delayOnTouchOnly: true }"
+			>
 				<div v-for="item of draggableItems" :key="item.id">
 					<app-game-media-bar-item class="-item" :item="item" @click.native="open(item)">
 						<app-editable-overlay class="-item-hover hidden-xs" @click="open(item)">

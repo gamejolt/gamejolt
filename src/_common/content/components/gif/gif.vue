@@ -8,6 +8,7 @@
 			<div
 				class="gif-container"
 				ref="container"
+				v-app-observe-dimensions="computeSize"
 				:style="{
 					width: containerWidth,
 					height: containerHeight,
@@ -73,7 +74,6 @@
 	width: 100%
 	height: 100%
 	rounded-corners-lg()
-
 </style>
 
 <script lang="ts" src="./gif"></script>

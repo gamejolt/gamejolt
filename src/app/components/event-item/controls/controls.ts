@@ -8,6 +8,7 @@ import AppCommentVideoLikeWidget from '../../../../_common/comment/video/like-wi
 import { CommentVideo } from '../../../../_common/comment/video/video-model';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
+import AppEventItemControlsOverlay from '../../../../_common/event-item/controls-overlay/controls-overlay.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
 import { ActivityFeedItem } from '../../activity/feed/item-service';
@@ -22,6 +23,7 @@ import AppEventItemControlsUserFollow from './user-follow/user-follow.vue';
 		AppEventItemControlsFiresidePost,
 		AppEventItemControlsComments,
 		AppEventItemControlsUserFollow,
+		AppEventItemControlsOverlay,
 	},
 })
 export default class AppEventItemControls extends Vue {
@@ -70,7 +72,7 @@ export default class AppEventItemControls extends Vue {
 	emitPostMoveChannel(_movedTo: CommunityChannel) {}
 
 	@Emit('post-reject')
-	emitPostReject() {}
+	emitPostReject(_community: Community) {}
 
 	@Emit('post-pin')
 	emitPostPin() {}

@@ -21,7 +21,9 @@
 	display: flex
 	justify-content: center
 	align-items: center
-	border: $border-width-base dashed
+	border: $border-width-large dashed
+	border-color: var(--theme-fg-muted)
+	color: var(--theme-fg-muted)
 	border-radius: 100%
 	cursor: pointer
 	position: absolute
@@ -29,12 +31,9 @@
 	height: 100%
 	outline: 0
 
-	theme-prop('border-color', 'fg-muted')
-	theme-prop('color', 'fg-muted')
-
 	&:not(.-disabled):hover
-			theme-prop('border-color', 'highlight')
-			theme-prop('color', 'highlight')
+		border-color: var(--theme-link)
+		color: var(--theme-link)
 
 .-disabled
 	unpressy()

@@ -43,7 +43,7 @@ install:
   - gcc -v
 
 build_script:
-  - yarn
+  - yarn install --ignore-engines
   - yarn run client-build-win
   # To make a test package, comment out the previous line and uncomment this line.
   # - yarn run client-build-win --useTestPackage

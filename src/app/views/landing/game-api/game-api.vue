@@ -3,7 +3,13 @@
 		<section class="section landing-header text-center">
 			<div class="container">
 				<h1>
-					<app-theme-svg src="~img/jolt.svg" alt="" :width="17 * 3" :height="18 * 3" />
+					<app-theme-svg
+						src="~img/jolt.svg"
+						alt=""
+						:width="17 * 3"
+						:height="18 * 3"
+						strict-colors
+					/>
 					Game API
 				</h1>
 

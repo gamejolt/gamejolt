@@ -1,5 +1,5 @@
-import 'core-js/modules/es7.object.entries';
-import 'core-js/modules/es7.object.values';
+import 'core-js/modules/es.object.entries';
+import 'core-js/modules/es.object.values';
 
 // Reflect attaches to global.Reflect if it's in node context, so we want to
 // also put it on Window.

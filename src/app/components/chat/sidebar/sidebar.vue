@@ -1,29 +1,5 @@
 <template>
 	<div class="chat-sidebar fill-darkest">
-		<!-- Public Chat Rooms -->
-		<div v-if="hasPublicRooms" class="chat-rooms-list">
-			<div class="nav-heading first">
-				<translate>Public Chat Rooms</translate>
-			</div>
-
-			<ul class="shell-nav">
-				<li v-for="room of chat.publicRooms" :key="room.id">
-					<a
-						@click="onPublicRoomClicked(room.id)"
-						:class="{ active: chat.room && chat.room.id === room.id }"
-						:title="room.title"
-					>
-						<span class="shell-nav-icon">
-							<app-jolticon icon="users" />
-						</span>
-						<span class="shell-nav-label">
-							{{ room.title }}
-						</span>
-					</a>
-				</li>
-			</ul>
-		</div>
-
 		<!-- Friends List -->
 		<!-- Only include if not a guest -->
 		<div class="chat-friends-list" v-if="chat.currentUser && chat.friendsPopulated">

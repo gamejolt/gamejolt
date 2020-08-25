@@ -1,19 +1,19 @@
 <template>
 	<div class="follower-list">
-		<div class="row" v-if="!users.length">
-			<div class="-item col-sm-6 col-md-4 col-lg-3" v-for="i of placeholderCount" :key="i">
+		<div v-if="!users.length" class="-list">
+			<div v-for="i of placeholderCount" :key="i">
 				<app-user-card-placeholder />
 			</div>
 		</div>
 		<template v-else>
-			<div class="row">
-				<div class="-item col-sm-6 col-md-4 col-lg-3" v-for="_user of users" :key="_user.id">
+			<div class="-list">
+				<div v-for="_user of users" :key="_user.id">
 					<app-user-card :user="_user" />
 				</div>
 			</div>
 
 			<app-loading v-if="isLoading" centered />
-			<div class="page-cut" v-else-if="shouldShowLoadMore">
+			<div v-else-if="shouldShowLoadMore" class="page-cut">
 				<app-button trans @click="loadMore()" v-app-track-event="`profile-followers:more`">
 					<translate>Load More</translate>
 				</app-button>
@@ -24,19 +24,12 @@
 
 <style lang="stylus" scoped>
 @require '~styles/variables'
+@require '~styles-lib/mixins'
 
-.-item
-	@media $media-sm
-		&:nth-child(2n+1)
-			clear: both
-
-	@media $media-md
-		&:nth-child(3n+1)
-			clear: both
-
-	@media $media-lg
-		&:nth-child(4n+1)
-			clear: both
+.-list
+	display: grid
+	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr))
+	grid-gap: 0px 16px
 </style>
 
 <script lang="ts" src="./list"></script>

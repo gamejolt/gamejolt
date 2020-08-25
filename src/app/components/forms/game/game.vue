@@ -106,7 +106,7 @@
 							<translate>dash.games.form.engine_other_help</translate>
 							<span
 								class="text-help"
-								v-app-tooltip="$gettext(`dash.games.form.engine_other_why_tooltip`)"
+								v-app-tooltip.touchable="$gettext(`dash.games.form.engine_other_why_tooltip`)"
 							>
 								<translate>dash.games.form.engine_other_why</translate>
 							</span>

@@ -1,5 +1,9 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
+@require './_community-pill/variables'
+
+.form-group:last-child
+	margin-bottom: 10px
 
 .-attachment-controls
 	margin-bottom: $line-height-computed
@@ -43,18 +47,8 @@
 .-channels
 	margin-top: 10px
 
-.-channels, .-channel-error, .-community-message
+.-channels, .-error, .-community-message
 	margin-bottom: 10px
-
-.-as-owner
-	clearfix()
-
-	&-item
-		float: left
-		margin-right: 10px
-
-	&-avatar
-		width: $input-height-base
 
 .-poll-option
 	display: flex
@@ -93,23 +87,38 @@
 		flex: none
 
 .-communities
-	margin-bottom: 10px
-	display: flex
-	align-items: center
+	margin: 10px 0
 
-.-communities-label
-	theme-prop('color', 'fg-muted')
-	flex: none
-	margin-right: 10px
-	font-size: $font-size-small
-	font-weight: bold
+	&-list
+		white-space: nowrap
+		display: flex
+		align-items: center
+		margin-bottom: 4px
 
-.-communities-list
-	flex: 0 auto
+		&-placeholder
+			margin: 10px 0 14px
 
-.-current-channel
-	pointer-events: none
-	user-select: none
+		.v-leave
+			display: none
+			position: absolute
+
+.-community-pill
+	flex-shrink: 0
+
+	&-placeholder
+		change-bg('bg-subtle')
+		rounded-corners()
+		width: 138px
+		height: $pill-height
+
+	// Need to apply to the button inside the pill add component too
+	&, >>> .button
+		height: 28px
+		margin-bottom: 0
+
+.-author-avatar
+	width: $input-height-base
+	margin-right: 8px
 
 @media $media-xs
 	.-controls

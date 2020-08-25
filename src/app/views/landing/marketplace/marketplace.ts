@@ -1,6 +1,7 @@
 import { Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
+import AppContactLink from '../../../../_common/contact-link/contact-link.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/thumbnail.vue';
@@ -17,6 +18,7 @@ import { Store } from '../../../store/index';
 		AppGameThumbnail,
 		AppAuthJoin: AppAuthJoinLazy,
 		AppThemeSvg,
+		AppContactLink,
 	},
 })
 @RouteResolver({

@@ -4,6 +4,7 @@ import { State } from 'vuex-class';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import AppEventItemControlsOverlay from '../../../../_common/event-item/controls-overlay/controls-overlay.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
@@ -16,6 +17,7 @@ import { AppResponsiveDimensions } from '../../../../_common/responsive-dimensio
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
+import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { Settings } from '../../../../_common/settings/settings.service';
 import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
 import AppStickerTargetTS from '../../../../_common/sticker/target/target';
@@ -39,12 +41,14 @@ import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 		AppVideoEmbed,
 		AppSketchfabEmbed,
 		AppEventItemControls,
+		AppEventItemControlsOverlay,
 		AppPollVoting,
 		AppAdWidget,
 		AppCommunityPill,
 		AppContentViewer,
 		AppStickerTarget,
 		AppMediaItemPost,
+		AppScrollScroller,
 	},
 	directives: {
 		AppScrollWhen,

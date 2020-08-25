@@ -10,7 +10,7 @@
 			:max-height="deviceMaxHeight"
 			@change="onDimensionsChange"
 		>
-			<div v-if="inline" class="-toolbar">
+			<div v-if="shouldShowFullscreenOption" class="-toolbar">
 				<app-button
 					@click="emitFullscreen(mediaItem)"
 					overlay

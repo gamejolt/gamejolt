@@ -6,6 +6,7 @@
 			'-horizontal': horizontal,
 			'-hide-scrollbar': hideScrollbar,
 		}"
+		:style="hoverColors"
 	>
 		<app-scroll-inview-parent v-if="isMounted" :scroller="scrollElement">
 			<slot />
@@ -18,11 +19,13 @@
 @require '~styles-lib/mixins'
 
 // 6px appears to be the width for the 'thin' scrollbar on Firefox
-$-size-default = 10px
-$-size-thin = 6px
+$-size-default = 9px
+$-size-thin = 7px
+$-thumb-default-hover = var(--default-hover)
 $-thumb-default = var(--theme-light)
 $-track-default = transparent
-$-thumb-modal = var(--dark-theme-bg-subtle)
+$-thumb-modal-hover = var(--modal-hover)
+$-thumb-modal = var(--theme-gray-subtle)
 $-track-modal = var(--theme-bg)
 
 .scroll-scroller
@@ -52,6 +55,9 @@ $-track-modal = var(--theme-bg)
 				background-color: $-thumb-default
 				border-radius: $-size-default
 
+				&:hover
+					background-color: $-thumb-default-hover
+
 		&.-thin
 			scrollbar-width: thin
 
@@ -72,6 +78,9 @@ $-track-modal = var(--theme-bg)
 
 				&-thumb
 					background-color: $-thumb-modal
+
+					&:hover
+						background-color: $-thumb-modal-hover
 </style>
 
 <script lang="ts" src="./scroller"></script>

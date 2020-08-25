@@ -1,5 +1,5 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .chat-window-wrap
 	position: fixed
@@ -69,7 +69,6 @@
  * Chat Window Header
  */
 .chat-window-header-wrap
-	theme-prop('color', 'light')
 	flex: none
 	width: 100%
 	font-size: 14px
@@ -80,7 +79,8 @@
 	border-top-left-radius: $border-radius-base
 	border-top-right-radius: $border-radius-base
 
-	h2, h3
+	h2
+	h3
 		text-overflow()
 		margin: 0
 		line-height: 1
@@ -115,6 +115,10 @@
 	display: flex
 	height: 100%
 
+	&-inner
+		// Allows the scroll bar some breathing room
+		margin-right: 4px
+
 	> .scroll-scroller
 		position: absolute
 		top: 0
@@ -123,7 +127,9 @@
 		left: 0
 
 .chat-window-send-container
-	change-bg('darker')
+	change-bg('bg-backdrop')
 	width: 100%
 	flex: none
-	padding: $chat-room-window-padding
+
+	@media $media-xs
+		change-bg('bg-backdrop-xs')

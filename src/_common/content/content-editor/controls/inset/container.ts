@@ -12,11 +12,16 @@ export default class AppContentEditorControlsInsetContainer extends Vue {
 	stateCounter!: number;
 
 	visible = false;
-	top = '0px';
+	top = 0;
+	boxHeight = 0;
 
 	$refs!: {
 		container: HTMLDivElement;
 	};
+
+	get shouldShow() {
+		return this.visible && this.top > -8 && this.boxHeight - this.top > 12;
+	}
 
 	@Watch('stateCounter')
 	update() {
@@ -24,7 +29,9 @@ export default class AppContentEditorControlsInsetContainer extends Vue {
 			const start = this.view.coordsAtPos(this.view.state.selection.from);
 
 			const box = this.$refs.container.offsetParent.getBoundingClientRect();
-			this.top = start.top - box.top + 'px';
+			this.boxHeight = box.height;
+			this.top = start.top - box.top;
+
 			this.visible = true;
 		} else {
 			this.visible = false;

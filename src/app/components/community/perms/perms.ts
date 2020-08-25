@@ -1,47 +1,23 @@
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import { propOptional, propRequired } from '../../../../utils/vue';
 import { Perm } from '../../../../_common/collaborator/collaboratable';
 import { Community } from '../../../../_common/community/community.model';
-import {
-	RouteStore,
-	RouteStoreName,
-} from '../../../views/communities/view/overview/edit/edit.store';
 
 @Component({})
 export class AppCommunityPerms extends Vue {
-	@Prop(Community)
-	community?: Community;
-
-	@Prop({ type: String, default: '' })
-	required!: string;
-
-	@Prop(Boolean)
-	either?: boolean;
-
-	@Prop({ type: String, default: 'span' })
-	tag!: string;
-
-	get targetCommunity() {
-		if (this.community) {
-			return this.community;
-		}
-
-		const store: RouteStore | null = this.$store.state[RouteStoreName];
-		if (store) {
-			return store.community;
-		}
-
-		return null;
-	}
+	@Prop(propRequired(Community)) community!: Community;
+	@Prop(propOptional(String, '')) required!: string;
+	@Prop(propOptional(Boolean, false)) either!: boolean;
+	@Prop(propOptional(String, 'span')) tag!: string;
 
 	get hasPerms() {
-		const perms: Perm[] = (this.required as any).split(',');
+		const perms = this.required.split(',') as Perm[];
 
-		if (!this.targetCommunity) {
-			throw new Error(`Target community doesn't exist for app-community-perms component.`);
-		}
-
-		return this.targetCommunity.hasPerms(perms.filter(perm => !!perm), this.either);
+		return this.community.hasPerms(
+			perms.filter(perm => !!perm),
+			this.either
+		);
 	}
 
 	render(h: CreateElement) {

@@ -14,8 +14,8 @@
 						<strong><translate>This user was your friend.</translate></strong>
 						<br />
 						<translate>
-							If you remove them from your friends list, you will no longer be able to access your
-							chat history with them.
+							If you remove them from your friends list, you will no longer be able to
+							access your chat history with them.
 						</translate>
 					</p>
 
@@ -47,22 +47,16 @@
 				<app-page-container xl order="left,main,right">
 					<div slot="left">
 						<!-- Bio -->
-						<div v-if="!isOverviewLoaded">
-							<span class="lazy-placeholder" />
-							<span class="lazy-placeholder" />
-							<span class="lazy-placeholder" />
-							<span class="lazy-placeholder" style="width: 40%" />
-						</div>
-						<div v-else-if="!user.hasBio" class="text-muted">
-							<p>
-								<em>
-									<translate>
-										This person doesn't have a bio yet, so use your imagination!
-									</translate>
-								</em>
-							</p>
-						</div>
-						<div v-else>
+						<template v-if="!isOverviewLoaded">
+							<div>
+								<span class="lazy-placeholder" />
+								<span class="lazy-placeholder" />
+								<span class="lazy-placeholder" />
+								<span class="lazy-placeholder" style="width: 40%" />
+							</div>
+							<br />
+						</template>
+						<template v-else-if="user.hasBio">
 							<!--
 								Set a :key to let vue know that it should update
 								this when the user changes.
@@ -85,12 +79,11 @@
 									@click="showFullDescription = !showFullDescription"
 								/>
 							</p>
-						</div>
+						</template>
 					</div>
 
 					<div slot="left-bottom">
 						<!-- Shouts -->
-						<br />
 						<template v-if="shouldShowShouts">
 							<div class="pull-right">
 								<app-button trans @click="showComments()">
@@ -113,7 +106,7 @@
 							<app-comment-overview
 								:comments="overviewComments"
 								:model="user"
-								displayMode="shouts"
+								display-mode="shouts"
 								@reload-comments="reloadPreviewComments"
 							/>
 						</template>
@@ -131,7 +124,12 @@
 							<app-button v-if="canAddAsFriend" block @click="sendFriendRequest()">
 								<translate>profile.friend_request_button</translate>
 							</app-button>
-							<app-button v-else-if="canMessage" block icon="user-messages" @click="openMessaging">
+							<app-button
+								v-else-if="canMessage"
+								block
+								icon="user-messages"
+								@click="openMessaging"
+							>
 								<translate>Message</translate>
 							</app-button>
 
@@ -147,7 +145,11 @@
 									{{ gamesCount | number }} Games
 								</app-button>
 
-								<app-button v-if="videosCount > 0" block :to="{ name: 'profile.videos' }">
+								<app-button
+									v-if="videosCount > 0"
+									block
+									:to="{ name: 'profile.videos' }"
+								>
 									{{ videosCount | number }} Videos
 								</app-button>
 							</template>
@@ -159,19 +161,19 @@
 						<template v-if="hasLinksSection">
 							<template v-if="linkedAccounts.length">
 								<div v-if="twitchAccount">
-									<app-link-external class="link-unstyled" :href="twitchAccount.platformLink">
+									<app-link-external
+										class="link-unstyled"
+										:href="twitchAccount.platformLink"
+									>
 										<app-jolticon :icon="twitchAccount.icon" />
 										{{ twitchAccount.name }}
 									</app-link-external>
 								</div>
-								<div v-if="mixerAccount">
-									<app-link-external class="link-unstyled" :href="mixerAccount.platformLink">
-										<app-jolticon :icon="mixerAccount.icon" />
-										{{ mixerAccount.name }}
-									</app-link-external>
-								</div>
 								<div v-if="twitterAccount">
-									<app-link-external class="link-unstyled" :href="twitterAccount.platformLink">
+									<app-link-external
+										class="link-unstyled"
+										:href="twitterAccount.platformLink"
+									>
 										<app-jolticon :icon="twitterAccount.icon" />
 										<span>@</span>
 										{{ twitterAccount.name }}
@@ -197,7 +199,9 @@
 								<div v-for="channel of youtubeChannels" :key="channel.id">
 									<app-link-external
 										class="link-unstyled"
-										:href="`https://www.youtube.com/channel/${channel.channel_id}`"
+										:href="
+											`https://www.youtube.com/channel/${channel.channel_id}`
+										"
 									>
 										<app-jolticon icon="youtube" />
 										{{ channel.title }}
@@ -247,7 +251,10 @@
 										}"
 										v-app-tooltip.bottom="community.name"
 									>
-										<app-community-thumbnail-img class="-community-thumb" :community="community" />
+										<app-community-thumbnail-img
+											class="-community-thumb"
+											:community="community"
+										/>
 										<app-community-verified-tick
 											class="-community-verified-tick"
 											:community="community"
@@ -282,7 +289,11 @@
 							</div>
 
 							<app-game-list-placeholder v-if="!isOverviewLoaded" :num="7" />
-							<app-game-list v-else-if="games.length" :games="games" event-label="profile" />
+							<app-game-list
+								v-else-if="games.length"
+								:games="games"
+								event-label="profile"
+							/>
 						</template>
 
 						<!-- Trophies -->
@@ -323,7 +334,8 @@
 								<app-jolticon icon="notice" notice />
 								<b><translate>This user blocked you.</translate></b>
 								<translate>
-									You are unable to shout at them or comment on their posts and games.
+									You are unable to shout at them or comment on their posts and
+									games.
 								</translate>
 							</p>
 						</div>
@@ -371,7 +383,9 @@
 								<app-button
 									trans
 									@click="rejectFriendRequest()"
-									v-app-tooltip="$gettext('profile.friend_request_decline_tooltip')"
+									v-app-tooltip="
+										$gettext('profile.friend_request_decline_tooltip')
+									"
 								>
 									<translate>profile.friend_request_decline</translate>
 								</app-button>
@@ -387,8 +401,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-banned-header
 	margin-top: 0

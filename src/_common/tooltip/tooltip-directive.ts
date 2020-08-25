@@ -3,7 +3,12 @@ import { TooltipModel } from './tooltip-model';
 
 let state = new WeakMap<HTMLElement, TooltipModel>();
 
-const TooltipDirective: DirectiveOptions = {
+/**
+ * Use the 'touchable' modifier to allow toggle usage for mobile.
+ * Never attach a 'touchable' modifier to a link.
+ * It will stop the link from working.
+ */
+export const AppTooltip: DirectiveOptions = {
 	bind(el, binding) {
 		let tooltip = new TooltipModel(el, binding);
 		state.set(el, tooltip);
@@ -16,5 +21,3 @@ const TooltipDirective: DirectiveOptions = {
 		state.delete(el);
 	},
 };
-
-export { TooltipDirective as AppTooltip };

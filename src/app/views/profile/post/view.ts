@@ -69,6 +69,8 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 
 	post: FiresidePost | null = null;
 
+	permalinkWatchDeregister?: Function;
+
 	get routeTitle() {
 		if (!this.post) {
 			return null;
@@ -78,7 +80,7 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 
 		return this.$gettextInterpolate('%{ user } on Game Jolt: "%{ post }"', {
 			user: this.post.user.display_name,
-			post: this.post.lead_snippet,
+			post: this.post.getShortLead(),
 		});
 	}
 
@@ -96,6 +98,11 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 		}
 
 		CommentThreadModal.showFromPermalink(this.$router, this.post, 'comments');
+		this.permalinkWatchDeregister = CommentThreadModal.watchForPermalink(
+			this.$router,
+			this.post,
+			'comments'
+		);
 
 		this.post.$viewed();
 		this.post.$expanded();
@@ -103,6 +110,13 @@ export default class RouteProfilePostView extends BaseRouteComponent {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;
+	}
+
+	destroyed() {
+		if (this.permalinkWatchDeregister) {
+			this.permalinkWatchDeregister();
+			this.permalinkWatchDeregister = undefined;
+		}
 	}
 
 	render(h: CreateElement) {

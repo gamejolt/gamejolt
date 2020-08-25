@@ -1,10 +1,10 @@
 <template>
 	<div class="editable-overlay">
-		<div v-if="!disabled" class="-overlay-container" @click.capture.stop="click">
-			<div class="-overlay"></div>
+		<div v-if="!disabled" class="-overlay-container theme-dark" @click.capture.stop="click">
+			<div class="-overlay" />
 			<div class="-overlay-content">
-				<app-jolticon icon="edit" />
-				<strong>
+				<app-jolticon class="-icon" icon="edit" />
+				<strong class="-label">
 					<slot name="overlay" />
 				</strong>
 			</div>
@@ -34,12 +34,21 @@
 	justify-content: center
 	z-index: 1000
 
-	&, .jolticon
-		cursor: pointer
+.-icon
+	font-size: $jolticon-size * 1.5
+
+.-label
+	display: block
+
+.-icon
+	color: var(--theme-link)
+
+.-overlay-container, .-icon
+	cursor: pointer
 
 .-overlay
 	change-bg('darkest')
-	opacity: 0.5
+	opacity: 0.7
 	z-index: 1
 
 	.-overlay-container:hover &
@@ -50,9 +59,6 @@
 	color: $white
 	text-align: center
 	z-index: 2
-
-	strong
-		display: block
 </style>
 
 <script lang="ts" src="./editable-overlay"></script>

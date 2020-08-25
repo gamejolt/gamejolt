@@ -30,9 +30,16 @@
 					:autoscroll-anchor-key="autoscrollAnchorKey"
 				>
 					<h1>
-						{{ user.display_name }}
-						<app-user-verified-tick :user="user" big />
-						<small>@{{ user.username }}</small>
+						<router-link
+							:to="{
+								name: 'profile.overview',
+								params: { username: user.username },
+							}"
+						>
+							{{ user.display_name }}
+							<app-user-verified-tick :user="user" big />
+							<small>@{{ user.username }}</small>
+						</router-link>
 					</h1>
 					<div class="small text-muted">
 						<!-- Joined on -->
@@ -55,22 +62,24 @@
 							</span>
 
 							<!-- Online status -->
-							<span
-								v-if="!isOnline"
-								class="tag"
-								v-app-tooltip="$gettext('profile.offline_tooltip')"
-							>
-								<app-jolticon icon="chat-offline" />
-								<translate>profile.offline_tag</translate>
-							</span>
-							<span
-								v-else
-								class="tag tag-highlight"
-								v-app-tooltip="$gettext('profile.online_tooltip')"
-							>
-								<app-jolticon icon="chat-online" />
-								<translate>profile.online_tag</translate>
-							</span>
+							<template v-if="isOnline !== null">
+								<span
+									v-if="isOnline === false"
+									class="tag"
+									v-app-tooltip="$gettext('profile.offline_tooltip')"
+								>
+									<app-jolticon icon="chat-offline" />
+									<translate>profile.offline_tag</translate>
+								</span>
+								<span
+									v-else
+									class="tag tag-highlight"
+									v-app-tooltip="$gettext('profile.online_tooltip')"
+								>
+									<app-jolticon icon="chat-online" />
+									<translate>profile.online_tag</translate>
+								</span>
+							</template>
 
 							<!-- Following status -->
 							<span

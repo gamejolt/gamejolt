@@ -57,23 +57,20 @@
 						</div>
 					</div>
 
-					<template v-if="post.hasPoll">
+					<app-event-item-controls-overlay v-if="post.hasPoll">
 						<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 
 						<br />
-					</template>
+					</app-event-item-controls-overlay>
 
-					<template v-if="communities.length">
-						<div
-							class="-community-row"
-							v-for="postCommunity of communities"
-							:key="postCommunity.id"
-						>
+					<app-event-item-controls-overlay v-if="communities.length">
+						<app-scroll-scroller class="-communities" horizontal thin>
 							<app-community-pill
-								:community="postCommunity.community"
-								:channel="postCommunity.channel"
+								v-for="postCommunity of communities"
+								:key="postCommunity.id"
+								:community-link="postCommunity"
 							/>
-						</div>
+						</app-scroll-scroller>
 
 						<template v-if="shouldShowCommunityPublishError">
 							<br />
@@ -90,7 +87,7 @@
 						</template>
 
 						<br />
-					</template>
+					</app-event-item-controls-overlay>
 
 					<app-event-item-controls
 						:post="post"
@@ -125,9 +122,8 @@
 >>> .mention-avatar-img
 	border-radius: 50% !important
 
-.-community-row
-	display: flex
-	align-items: center
+.-communities
+	white-space: nowrap
 </style>
 
 <script lang="ts" src="./view"></script>

@@ -31,6 +31,14 @@ export default class AppContentMediaUpload extends Vue {
 	uploadProgress = 0;
 	uploadProcessing = false;
 
+	get placeholderMaxHeight() {
+		const maxHeight = this.owner.getContentRules().maxMediaHeight;
+		if (maxHeight !== null) {
+			return maxHeight;
+		}
+		return 260;
+	}
+
 	async mounted() {
 		let file = ContentEditorService.UploadFileCache[this.uploadId]!;
 

@@ -1,3 +1,6 @@
+import { CreateElement } from 'vue';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import { Growls } from '../../../../../../_common/growls/growls.service';
 import {
@@ -5,11 +8,8 @@ import {
 	LinkedAccount,
 } from '../../../../../../_common/linked-account/linked-account.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
-import { YoutubeChannel } from '../../../../../../_common/youtube/channel/channel-model';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
+import { YoutubeChannel } from '../../../../../../_common/youtube/channel/channel-model';
 
 function constructUrl(baseUrl: string, route: Route) {
 	let url = baseUrl + route.params.provider;
@@ -76,7 +76,17 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 
 				case 'channel-taken':
 					Growls.error(
-						this.$gettext('This YouTube channel is already linked to another Game Jolt account.')
+						this.$gettext(
+							'This YouTube channel is already linked to another Game Jolt account.'
+						)
+					);
+					break;
+
+				case 'no-channel':
+					Growls.error(
+						this.$gettext(
+							'The selected Google account has no valid YouTube channel associated with it.'
+						)
 					);
 					break;
 
@@ -85,7 +95,9 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 					break;
 
 				case 'invalid-google-account':
-					Growls.error(this.$gettext('This Google account does not support Sign Up with Google.'));
+					Growls.error(
+						this.$gettext('This Google account does not support Sign Up with Google.')
+					);
 					break;
 
 				default:
@@ -102,10 +114,13 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 					{
 						const account = new LinkedAccount($payload.account);
 						Growls.success(
-							this.$gettextInterpolate('Your %{ provider } account (@%{ name }) has been linked.', {
-								name: account.name,
-								provider: providerName,
-							}),
+							this.$gettextInterpolate(
+								'Your %{ provider } account (@%{ name }) has been linked.',
+								{
+									name: account.name,
+									provider: providerName,
+								}
+							),
 							this.$gettext('Account Linked')
 						);
 					}
@@ -114,14 +129,16 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 				case LinkedAccount.PROVIDER_GOOGLE:
 				case LinkedAccount.PROVIDER_TWITCH:
 				case LinkedAccount.PROVIDER_TUMBLR:
-				case LinkedAccount.PROVIDER_MIXER:
 					{
 						const account = new LinkedAccount($payload.account);
 						Growls.success(
-							this.$gettextInterpolate('Your %{ provider } account (%{ name }) has been linked.', {
-								name: account.name,
-								provider: providerName,
-							}),
+							this.$gettextInterpolate(
+								'Your %{ provider } account (%{ name }) has been linked.',
+								{
+									name: account.name,
+									provider: providerName,
+								}
+							),
 							this.$gettext('Account Linked')
 						);
 					}
@@ -131,9 +148,12 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRout
 					{
 						const channel = new YoutubeChannel($payload.channel);
 						Growls.success(
-							this.$gettextInterpolate('Your YouTube channel (%{ title }) has been linked.', {
-								title: channel.title,
-							}),
+							this.$gettextInterpolate(
+								'Your YouTube channel (%{ title }) has been linked.',
+								{
+									title: channel.title,
+								}
+							),
 							this.$gettext('YouTube Channel Linked')
 						);
 					}

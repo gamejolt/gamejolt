@@ -1,17 +1,37 @@
 <template>
 	<app-scroll-scroller @scroll.native="onScroll">
-		<div class="-container">
-			<transition-group @enter="onMessageTransition">
-				<div class="anim-fade-in no-animate-leave" v-for="message of messages" :key="message.id">
-					<div class="-date-split" v-if="message.dateSplit">
-						<span class="-inner">{{ message.loggedOn | date('mediumDate') }}</span>
-					</div>
+		<div class="-container anim-fade-in no-animate-leave">
+			<div v-if="shouldShowIntro" class="-intro">
+				<app-illustration src="~img/ill/no-chat.svg">
+					<translate>
+						Your friend is still loading. Encourage them with a message!
+					</translate>
+				</app-illustration>
+			</div>
 
-					<hr class="-hr" v-if="!message.dateSplit && !message.combine" />
+			<app-loading v-if="isLoadingOlder" class="loading-centered" />
 
-					<app-chat-window-output-item :message="message" :room="room" />
+			<div v-for="message of allMessages" :key="message.id">
+				<div class="-date-split" v-if="message.dateSplit">
+					<span class="-inner">{{ message.logged_on | date('mediumDate') }}</span>
 				</div>
-			</transition-group>
+
+				<hr class="-hr" v-if="!message.dateSplit && !message.combine" />
+
+				<app-chat-window-output-item
+					:message="message"
+					:room="room"
+					:is-new="isNewMessage(message)"
+				/>
+			</div>
+
+			<transition name="fade">
+				<div
+					v-if="!shouldScroll"
+					class="-container-scroll-down-indicator"
+					:class="{ '-container-scroll-down-indicator-new': hasNewMessages }"
+				></div>
+			</transition>
 		</div>
 	</app-scroll-scroller>
 </template>

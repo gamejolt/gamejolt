@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Watch } from 'vue-property-decorator';
+import { Component, InjectReactive, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { EventBus, EventBusDeregister } from '../../../system/event/event-bus.service';
 import { Connection } from '../../../_common/connection/connection-service';
@@ -8,7 +8,7 @@ import { Meta } from '../../../_common/meta/meta-service';
 import AppMinbar from '../../../_common/minbar/minbar.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import { BannerModule, BannerStore, Store } from '../../store/index';
-import { ChatNewMessageEvent } from '../chat/client';
+import { ChatClient, ChatKey, ChatNewMessageEvent, setChatFocused } from '../chat/client';
 import AppShellBody from './body/body.vue';
 import AppShellCbar from './cbar/cbar.vue';
 import AppShellHotBottom from './hot-bottom/hot-bottom.vue';
@@ -37,11 +37,10 @@ if (GJ_IS_CLIENT) {
 	components,
 })
 export default class AppShell extends Vue {
-	@State
-	app!: Store['app'];
+	@InjectReactive(ChatKey) chat!: ChatClient;
 
 	@State
-	chat!: Store['chat'];
+	app!: Store['app'];
 
 	@State
 	isShellHidden!: Store['isShellHidden'];
@@ -105,7 +104,7 @@ export default class AppShell extends Vue {
 				if (!isFocused) {
 					// Notify the client that we are unfocused, so it should
 					// start accumulating notifications for the current room.
-					this.chat.setFocused(false);
+					setChatFocused(this.chat, false);
 				} else {
 					// When we focus it back, clear out all accumulated
 					// notifications. Set that we're not longer focused, and
@@ -114,7 +113,7 @@ export default class AppShell extends Vue {
 					this.unfocusedChatNotificationsCount = 0;
 
 					// Notify the client that we aren't unfocused anymore.
-					this.chat.setFocused(true);
+					setChatFocused(this.chat, true);
 				}
 			}
 		);
@@ -129,9 +128,8 @@ export default class AppShell extends Vue {
 				!ContentFocus.isWindowFocused &&
 				this.chat &&
 				this.chat.room &&
-				!event.isPrimer &&
 				event.message &&
-				event.message.roomId === this.chat.room.id
+				event.message.room_id === this.chat.room.id
 			) {
 				++this.unfocusedChatNotificationsCount;
 			}

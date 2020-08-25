@@ -8,6 +8,9 @@
 	>
 		<div
 			class="media-item"
+			:class="{
+				'media-item-editing': isEditing,
+			}"
 			:style="{
 				'align-items': itemAlignment,
 			}"
@@ -15,6 +18,7 @@
 			<div
 				class="media-item-container"
 				ref="container"
+				v-app-observe-dimensions="computeSize"
 				:style="{
 					width: containerWidth,
 					height: containerHeight,
@@ -87,7 +91,10 @@
 	flex-direction: column
 	margin-bottom: $line-height-computed
 	cursor: default
-	min-height: 44px // make sure the X button fits properly, usually not a problem unless the image is super wide
+
+	&-editing
+		// Make sure the X button fits properly, usually not a problem unless the image is super wide.
+		min-height: 44px
 
 .media-item-container
 	display: flex

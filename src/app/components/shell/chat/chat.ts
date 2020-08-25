@@ -1,12 +1,15 @@
 import Vue from 'vue';
-import { Component, Watch } from 'vue-property-decorator';
+import { Component, InjectReactive, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { EscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
+import {
+	EscapeStack,
+	EscapeStackCallback,
+} from '../../../../_common/escape-stack/escape-stack.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import AppShortkey from '../../../../_common/shortkey/shortkey.vue';
 import { Store } from '../../../store/index';
-import { ChatClient } from '../../chat/client';
+import { ChatClient, ChatKey, enterChatRoom, leaveChatRoom } from '../../chat/client';
 import AppChatSidebar from '../../chat/sidebar/sidebar.vue';
 import AppChatWindows from '../../chat/windows/windows.vue';
 
@@ -21,8 +24,7 @@ import AppChatWindows from '../../chat/windows/windows.vue';
 export default class AppShellChat extends Vue {
 	// Chat should be available since we only include in DOM if chat is
 	// bootstrapped.
-	@State
-	chat!: ChatClient;
+	@InjectReactive(ChatKey) chat!: ChatClient;
 
 	@State
 	isRightPaneVisible!: Store['isRightPaneVisible'];
@@ -30,7 +32,7 @@ export default class AppShellChat extends Vue {
 	@Action
 	toggleRightPane!: Store['toggleRightPane'];
 
-	private escapeCallback?: Function;
+	private escapeCallback?: EscapeStackCallback;
 
 	mounted() {
 		this.escapeCallback = () => this.hideChatPane();
@@ -61,10 +63,10 @@ export default class AppShellChat extends Vue {
 		if (isVisible) {
 			// xs size needs to show the friends list
 			if (this.chat.sessionRoomId && !Screen.isXs) {
-				this.chat.enterRoom(this.chat.sessionRoomId);
+				enterChatRoom(this.chat, this.chat.sessionRoomId);
 			}
 		} else {
-			this.chat.leaveRoom();
+			leaveChatRoom(this.chat);
 		}
 	}
 }

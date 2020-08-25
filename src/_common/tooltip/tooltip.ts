@@ -1,4 +1,5 @@
 import flip from '@popperjs/core/lib/modifiers/flip';
+import hide from '@popperjs/core/lib/modifiers/hide';
 import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
 import { createPopper, Instance, Options } from '@popperjs/core/lib/popper-lite';
 import Vue from 'vue';
@@ -7,7 +8,7 @@ import { propOptional } from '../../utils/vue';
 import { TooltipModel } from './tooltip-model';
 
 @Component({})
-export default class AppTooltip extends Vue {
+export default class TooltipComponent extends Vue {
 	@Prop(propOptional(TooltipModel)) tooltip?: TooltipModel;
 
 	$el!: HTMLDivElement;
@@ -42,7 +43,7 @@ export default class AppTooltip extends Vue {
 
 		const options: Options = {
 			placement: this.tooltip.placement,
-			modifiers: [flip, preventOverflow],
+			modifiers: [flip, preventOverflow, hide],
 			strategy: 'absolute',
 		};
 
@@ -57,8 +58,10 @@ export default class AppTooltip extends Vue {
 	}
 
 	private scheduleDestroy() {
-		// We want to update the popper positioning in case text changes before hiding.
-		if (this._popperInstance) {
+		// Making sure the popper is positioned where it should be if the text
+		// content changes. We only want to do this if the tooltip is active though,
+		// otherwise we might update positioning to a non-existant reference element.
+		if (this._popperInstance && this.tooltip && this.tooltip.isActive) {
 			this._popperInstance.update();
 		}
 
