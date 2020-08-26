@@ -666,6 +666,20 @@ export function editMessage(chat: ChatClient, message: ChatMessage) {
 	}
 }
 
+export function startTyping(chat: ChatClient) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('start_typing', {});
+	}
+}
+
+export function stopTyping(chat: ChatClient) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('stop_typing', {});
+	}
+}
+
 export function isInChatRoom(chat: ChatClient, roomId?: number) {
 	if (!roomId) {
 		return !!chat.room;

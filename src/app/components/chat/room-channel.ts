@@ -9,7 +9,7 @@ import { ChatUser } from './user';
 import { ChatUserCollection } from './user-collection';
 
 interface RoomPresence {
-	metas: { phx_ref: string }[];
+	metas: { phx_ref: string; typing: boolean }[];
 	user: ChatUser;
 }
 
@@ -132,18 +132,18 @@ export class ChatRoomChannel extends Channel {
 
 	private syncPresentUsers(presence: Presence, room: ChatRoom) {
 		const presentUsers: ChatUser[] = [];
+
 		presence.list((_id: string, roomPresence: RoomPresence) => {
 			const user = new ChatUser(roomPresence.user);
 			user.isOnline = true;
+			user.typing = roomPresence.metas.some(meta => meta.typing);
 			presentUsers.push(user);
 		});
 
-		if (room.isGroupRoom) {
-			Vue.set(
-				this.client.usersOnline,
-				'' + room.id,
-				new ChatUserCollection(ChatUserCollection.TYPE_ROOM, presentUsers)
-			);
-		}
+		Vue.set(
+			this.client.usersOnline,
+			'' + room.id,
+			new ChatUserCollection(ChatUserCollection.TYPE_ROOM, presentUsers)
+		);
 	}
 }
