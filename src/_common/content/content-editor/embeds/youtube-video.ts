@@ -1,7 +1,18 @@
+import { REGEX_YOUTUBE } from '../../../../utils/regex';
 import { ContextCapabilities } from '../../content-context';
 import { ContentHydrator } from '../../content-hydrator';
 import { EmbedType } from '../content-embed.service';
 import { EmbedSource } from './embed-source';
+
+function getYoutubeVideoId(path: string) {
+	const groupArray = REGEX_YOUTUBE.exec(path);
+
+	if (groupArray) {
+		return groupArray[groupArray.length - 1];
+	}
+
+	return null;
+}
 
 export class YouTubeVideoEmbed extends EmbedSource {
 	getEmbedType(): EmbedType {
@@ -18,8 +29,9 @@ export class YouTubeVideoEmbed extends EmbedSource {
 	}
 
 	// Support:
-	// youtube.com/watch -> v=id
-	// m.youtube.com/watch -> v=id
+	// youtube.com/watch?v=id
+	// m.youtube.com/watch?v=id
+	// youtu.be/id
 
 	async getLinkSource(
 		capabilities: ContextCapabilities,
@@ -30,23 +42,16 @@ export class YouTubeVideoEmbed extends EmbedSource {
 			return false;
 		}
 
-		const url = this.isValidLink(link);
-		if (url !== false && /(.+\.)?youtube\.com/i.test(url.hostname)) {
-			const videoId = url.searchParams.get('v');
-			if (videoId !== null && videoId.length === 11) {
-				return videoId;
-			}
-		}
-
-		return false;
+		return this.isValidLink(link);
 	}
 
 	isValidLink(link: string) {
-		try {
-			return new URL(link);
-		} catch (error) {
-			// Swallow error. new Url throws on invalid URLs, which can very well happen.
-			return false;
+		const results = getYoutubeVideoId(link) || false;
+
+		if (results && results.length === 11) {
+			return results;
 		}
+
+		return false;
 	}
 }

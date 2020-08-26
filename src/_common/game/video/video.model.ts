@@ -1,3 +1,4 @@
+import { REGEX_VIDEO, REGEX_VIMEO, REGEX_YOUTUBE } from '../../../utils/regex';
 import { LightboxMediaModel, LightboxMediaType } from '../../lightbox/lightbox-helpers';
 import { Model } from '../../model/model.service';
 import { Game } from '../game.model';
@@ -6,20 +7,10 @@ export class GameVideo extends Model implements LightboxMediaModel {
 	static readonly TYPE_YOUTUBE = 'youtube';
 	static readonly TYPE_VIMEO = 'vimeo';
 
-	// Examples...
-	// https://www.youtube.com/watch?v=DSvQAx5-PXU
-	// http://www.youtube.com/watch?v=DSvQAx5-PXU
-	// http://www.youtube.com/watch?v=DSvQAx5-PXU&bdfglkhdfg
-	// www.youtube.com/watch?v=DSvQAx5-PXU
-	// http://youtube.com/watch?v=DSvQAx5-PXU
-	// youtube.com/watch?v=DSvQAx5-PXU
-	// http://youtu.be/Y6lUVz1kdOk
-	// http://youtu.be/Y6lUVz1kdOk?testing
-	// http://vimeo.com/98hfg98dhfg
-	static readonly REGEX = {
-		VIDEO: /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|vimeo\.com\/)([a-zA-Z0-9_\-]+)(\S*)$/i,
-		YOUTUBE: /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_\-]+)(\S*)$/i,
-		VIMEO: /^(https?:\/\/)?(www\.)?(vimeo\.com\/)([a-zA-Z0-9_\-]+)(\S*)$/i,
+	readonly REGEX = {
+		VIDEO: REGEX_VIDEO,
+		YOUTUBE: REGEX_YOUTUBE,
+		VIMEO: REGEX_VIMEO,
 	};
 
 	media_type!: 'video';
