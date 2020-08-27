@@ -3,6 +3,7 @@
 <template>
 	<app-scroll-inview
 		tag="li"
+		class="chat-user-container"
 		:margin="`${Screen.height / 2}px`"
 		@inview="isInview = true"
 		@outview="isInview = false"
