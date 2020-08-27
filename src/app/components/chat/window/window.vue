@@ -21,7 +21,7 @@
 				</template>
 
 				<div class="nav-heading">
-					<translate>Room Users</translate>
+					<translate>Members</translate>
 					<span
 						class="badge"
 						:class="{ 'badge-highlight': users && users.onlineCount > 0 }"
@@ -71,7 +71,7 @@
 							</router-link>
 
 							<h3 v-if="!room.isPmRoom" class="anim-fade-in-right no-animate-xs">
-								{{ room.title }}
+								{{ room.getGroupTitle(chat) }}
 							</h3>
 							<h3
 								v-else-if="room.user"

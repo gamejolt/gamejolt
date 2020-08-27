@@ -9,14 +9,14 @@
 				<li v-for="room of chat.groupRooms" :key="room.id">
 					<a
 						:class="{ active: chat.room && chat.room.id === room.id }"
-						:title="room.title"
+						:title="room.getGroupTitle(chat)"
 						@click="onRoomClicked(room.id)"
 					>
 						<span class="shell-nav-icon">
 							<app-jolticon icon="users" />
 						</span>
 						<span class="shell-nav-label">
-							{{ room.title }}
+							{{ room.getGroupTitle(chat) }}
 						</span>
 					</a>
 				</li>

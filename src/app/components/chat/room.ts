@@ -1,3 +1,4 @@
+import { ChatClient } from './client';
 import { ChatUser } from './user';
 
 export type ChatRoomType = 'pm' | 'open_group' | 'closed_group' | 'viral_group';
@@ -17,10 +18,6 @@ export class ChatRoom {
 		Object.assign(this, data);
 	}
 
-	get title() {
-		return this.members.map(member => member.display_name).join(', ');
-	}
-
 	get isPmRoom() {
 		return this.type === ChatRoom.ROOM_PM;
 	}
@@ -35,5 +32,12 @@ export class ChatRoom {
 			this.type === ChatRoom.ROOM_CLOSED_GROUP ||
 			this.type === ChatRoom.ROOM_VIRAL_GROUP
 		);
+	}
+
+	getGroupTitle(chat: ChatClient) {
+		return this.members
+			.filter(member => member.id !== chat.currentUser?.id)
+			.map(member => member.display_name)
+			.join(', ');
 	}
 }
