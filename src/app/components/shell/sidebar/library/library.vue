@@ -3,7 +3,7 @@
 <template>
 	<div id="shell-sidebar-library">
 		<ul v-if="Screen.isXs" class="shell-nav">
-			<li v-if="app.user" class="offline-disable">
+			<li class="offline-disable">
 				<router-link
 					v-app-track-event="`sidebar:discover`"
 					:to="{ name: 'discover.home' }"
