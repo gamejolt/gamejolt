@@ -167,7 +167,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 		// The cbar is pretty empty without a user and active context pane,
 		// so we want to hide it if those conditions are met.
-		if (!this.app.user && !this.sidebar.activeContextPane) {
+		if (!this.app.user && !this.sidebar.activeContextPane && !Screen.isXs) {
 			return false;
 		}
 
