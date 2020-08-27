@@ -1,3 +1,5 @@
+<script lang="ts" src="./cards"></script>
+
 <template>
 	<div>
 		<app-community-channel-card
@@ -7,6 +9,7 @@
 			:background-item="frontpageChannel.background"
 			:is-active="activeChannel === frontpageChannel"
 			:is-unread="isChannelUnread(frontpageChannel)"
+			@change-channel="onChangeChannel"
 		/>
 
 		<app-community-channel-card
@@ -17,6 +20,7 @@
 			:background-item="allChannel.background"
 			:is-active="activeChannel === allChannel"
 			:is-unread="isChannelUnread(allChannel)"
+			@change-channel="onChangeChannel"
 		/>
 
 		<h5 class="-heading">
@@ -34,20 +38,15 @@
 				:is-active="activeChannel === channel"
 				:is-unread="isChannelUnread(channel)"
 				:is-locked="isChannelLocked(channel)"
+				@change-channel="onChangeChannel"
 			/>
 		</template>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .-heading
-	display: none
-
-	@media $media-lg-up
-		display: block
-		margin-top: 24px
+	margin-top: 24px
 </style>
-
-<script lang="ts" src="./cards"></script>

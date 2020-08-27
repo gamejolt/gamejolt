@@ -8,14 +8,10 @@ import AppEditableOverlay from '../../../../../../_common/editable-overlay/edita
 import { Growls } from '../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent } from '../../../../../../_common/route/route-component';
-import { Screen } from '../../../../../../_common/screen/screen-service';
 import { ThemeMutation, ThemeStore } from '../../../../../../_common/theme/theme.store';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import FormCommunity from '../../../../../components/forms/community/community.vue';
 import FormCommunityDescription from '../../../../../components/forms/community/description/description.vue';
-import { CommunityHeaderModal } from '../../../../../components/forms/community/header/modal/modal.service';
-import { CommunityThumbnailModal } from '../../../../../components/forms/community/thumbnail/modal/modal.service';
-import AppPageHeader from '../../../../../components/page-header/page-header.vue';
 import { Store } from '../../../../../store';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
@@ -25,7 +21,6 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 	components: {
 		AppCommunitiesViewPageContainer,
 		AppCommunityPerms,
-		AppPageHeader,
 		AppEditableOverlay,
 		AppCommunityThumbnailImg,
 		FormCommunity,
@@ -39,8 +34,6 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 	@ThemeMutation setPageTheme!: ThemeStore['setPageTheme'];
 	@Action('leaveCommunity') leaveCommunityAction!: Store['leaveCommunity'];
 
-	readonly Screen = Screen;
-
 	get community() {
 		return this.routeStore.community;
 	}
@@ -49,21 +42,9 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 		return this.routeStore.collaborator;
 	}
 
-	get shouldShowThumbnail() {
-		return Screen.isXs;
-	}
-
 	get isOwner() {
 		// The owner's collaboration is not returned from backend.
 		return this.collaborator === null;
-	}
-
-	showEditAvatar() {
-		CommunityThumbnailModal.show(this.community);
-	}
-
-	showEditHeader() {
-		CommunityHeaderModal.show(this.community);
 	}
 
 	onDetailsChange() {

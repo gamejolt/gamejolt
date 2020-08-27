@@ -1,5 +1,5 @@
 import { Component, Provide, Watch } from 'vue-property-decorator';
-import { Mutation, State } from 'vuex-class';
+import { Action, Mutation, State } from 'vuex-class';
 import { enforceLocation } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
@@ -8,15 +8,22 @@ import { Community, isEditingCommunity } from '../../../../_common/community/com
 import AppCommunityJoinWidget from '../../../../_common/community/join-widget/join-widget.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
+import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { number } from '../../../../_common/filters/number';
+import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import {
+	ContextPane,
+	SidebarMutation,
+	SidebarState,
+	SidebarStore,
+} from '../../../../_common/sidebar/sidebar.store';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { ThemeMutation, ThemeStore } from '../../../../_common/theme/theme.store';
 import { AppCommunityPerms } from '../../../components/community/perms/perms';
-import { CommunitySidebarModal } from '../../../components/community/sidebar/modal/modal.service';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
 import { CommunityHeaderModal } from '../../../components/forms/community/header/modal/modal.service';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
@@ -30,10 +37,9 @@ import {
 	setCommunity,
 } from './view.store';
 import AppCommunitiesViewCard from './_card/card.vue';
+import AppCommunitiesViewContext from './_context/context.vue';
 import AppEditableThumbnail from './_editable-thumbnail/editable-thumbnail.vue';
-import AppNavChannelsInline from './_nav/channels/channels-inline.vue';
 import AppNavChannels from './_nav/channels/channels.vue';
-import AppNavEdit from './_nav/edit/edit.vue';
 
 @Component({
 	name: 'RouteCommunitiesView',
@@ -48,12 +54,9 @@ import AppNavEdit from './_nav/edit/edit.vue';
 		AppCommunityVerifiedTick,
 		AppCommunitiesViewCard,
 		AppNavChannels,
-		AppNavChannelsInline,
-		AppNavEdit,
 		AppEditableThumbnail,
-	},
-	filters: {
-		number,
+		AppEditableOverlay,
+		AppMediaItemCover,
 	},
 })
 @RouteResolver({
@@ -77,14 +80,28 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	@AppState user!: AppStore['user'];
 	@ThemeMutation setPageTheme!: ThemeStore['setPageTheme'];
+	@Mutation setActiveCommunity!: Store['setActiveCommunity'];
+	@Mutation clearActiveCommunity!: Store['clearActiveCommunity'];
 	@Mutation viewCommunity!: Store['viewCommunity'];
 	@State communityStates!: Store['communityStates'];
 
+	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
+	@SidebarMutation addContextPane!: SidebarStore['addContextPane'];
+	@SidebarMutation removeContextPane!: SidebarStore['removeContextPane'];
+	@Action showContextPane!: Store['showContextPane'];
+
 	readonly Environment = Environment;
 	readonly Screen = Screen;
+	readonly sidebarComponent = AppCommunitiesViewContext;
+
+	contextPane: ContextPane | null = null;
 
 	get community() {
 		return this.routeStore.community;
+	}
+
+	get communityMemberCount() {
+		return number(this.community.member_count);
 	}
 
 	get isEditing() {
@@ -95,9 +112,38 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 		return this.user && this.user.isMod;
 	}
 
+	get coverMediaItem() {
+		return this.community.header || null;
+	}
+
+	get coverEditable() {
+		return this.isEditing && this.routeStore.canEditMedia;
+	}
+
+	get isFrontpage() {
+		return this.routeStore.channelPath === this.routeStore.frontpageChannel.title;
+	}
+
+	get isShowingHeader() {
+		return (this.isFrontpage || this.isEditing) && this.coverMediaItem;
+	}
+
 	@Watch('$route', { immediate: true })
 	onRouteChange() {
 		setChannelPathFromRoute(this.routeStore, this.$route);
+	}
+
+	routeCreated() {
+		// Add a new context pane if we haven't already.
+		if (!this.contextPane) {
+			this.addContextPane(this.sidebarComponent);
+			this.contextPane = this.activeContextPane;
+		}
+
+		// Assign the props required for 'this.sidebarComponent'.
+		if (this.contextPane) {
+			this.contextPane.props = { routeStore: this.routeStore };
+		}
 	}
 
 	routeResolved($payload: any) {
@@ -120,11 +166,14 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 			}
 		}
 
+		this.setActiveCommunity(community);
 		this.setPageTheme(community.theme || null);
 		this.viewCommunity(community);
 	}
 
 	routeDestroyed() {
+		this.removeContextPane(this.contextPane);
+		this.clearActiveCommunity();
 		this.setPageTheme(null);
 	}
 
@@ -136,16 +185,5 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 		Clipboard.copy(
 			Environment.baseUrl + this.$router.resolve(this.routeStore.community.routeLocation).href
 		);
-	}
-
-	onClickAbout() {
-		const { sidebarData, community } = this.routeStore;
-		if (sidebarData) {
-			CommunitySidebarModal.show({
-				isEditing: this.isEditing,
-				data: sidebarData,
-				community,
-			});
-		}
 	}
 }

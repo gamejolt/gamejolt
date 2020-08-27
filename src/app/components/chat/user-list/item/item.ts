@@ -4,20 +4,13 @@ import { propOptional, propRequired } from '../../../../../utils/vue';
 import { number } from '../../../../../_common/filters/number';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
-import {
-	ChatClient,
-	ChatKey,
-	enterChatRoom,
-} from '../../client';
+import { ChatClient, ChatKey, enterChatRoom } from '../../client';
 import { ChatRoom } from '../../room';
 import { ChatUser } from '../../user';
 
 @Component({
 	components: {
 		AppScrollInview,
-	},
-	filters: {
-		number,
 	},
 })
 export default class AppChatUserListItem extends Vue {
@@ -30,6 +23,10 @@ export default class AppChatUserListItem extends Vue {
 	isInview = false;
 
 	readonly Screen = Screen;
+
+	get chatNotificationsCount() {
+		return number(this.chat.notifications[this.user.room_id] || 0);
+	}
 
 	onUserClick(e: Event) {
 		if (!this.showPm) {

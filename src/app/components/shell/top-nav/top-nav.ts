@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, InjectReactive } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { Environment } from '../../../../_common/environment/environment.service';
@@ -9,13 +9,12 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
-import { ChatClient, ChatKey } from '../../chat/client';
 import AppSearch from '../../search/search.vue';
 import AppShellAccountPopover from '../account-popover/account-popover.vue';
 import AppShellFriendRequestPopover from '../friend-request-popover/friend-request-popover.vue';
 import AppShellNotificationPopover from '../notification-popover/notification-popover.vue';
 
-let components: any = {
+const components: any = {
 	AppPopper,
 	AppShellAccountPopover,
 	AppShellFriendRequestPopover,
@@ -36,31 +35,15 @@ if (GJ_IS_CLIENT) {
 	},
 })
 export default class AppShellTopNav extends Vue {
-	@InjectReactive(ChatKey) chat?: ChatClient;
+	@State app!: Store['app'];
 
-	@State
-	app!: Store['app'];
+	@State visibleLeftPane!: Store['visibleLeftPane'];
+	@State hasSidebar!: Store['hasSidebar'];
+	@State hasCbar!: Store['hasCbar'];
+	@State unreadActivityCount!: Store['unreadActivityCount'];
 
-	@State
-	hasSidebar!: Store['hasSidebar'];
-
-	@State
-	hasCbar!: Store['hasCbar'];
-
-	@State
-	isLeftPaneVisible!: Store['isLeftPaneVisible'];
-
-	@State
-	isRightPaneVisible!: Store['isRightPaneVisible'];
-
-	@Action
-	toggleRightPane!: Store['toggleRightPane'];
-
-	@Action
-	toggleLeftPane!: Store['toggleLeftPane'];
-
-	@State
-	unreadActivityCount!: Store['unreadActivityCount'];
+	@Action toggleCbarMenu!: Store['toggleCbarMenu'];
+	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
 	moreMenuShowing = false;
 	baseMinColWidth: number | null = null;

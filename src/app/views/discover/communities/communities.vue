@@ -1,16 +1,20 @@
+<script lang="ts" src="./communities"></script>
+
 <template>
 	<div>
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-					<h1 class="text-center"><translate>Find Communities on Game Jolt</translate></h1>
+					<h1 class="text-center">
+						<translate>Find Communities on Game Jolt</translate>
+					</h1>
 
 					<div class="-search">
 						<input
+							v-model="searchText"
 							type="text"
 							class="form-control"
 							:placeholder="$gettext(`Search...`)"
-							v-model="searchText"
 						/>
 						<app-jolticon
 							v-if="searchText"
@@ -26,9 +30,9 @@
 			<template v-else-if="communities.length">
 				<div class="row">
 					<div
-						class="-item col-sm-6 col-md-4 col-lg-3 anim-fade-in"
 						v-for="community of communities"
 						:key="community.id"
+						class="-item col-sm-6 col-md-4 col-lg-3 anim-fade-in"
 					>
 						<app-community-card :community="community" />
 					</div>
@@ -69,7 +73,7 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .-search
 	margin: ($line-height-computed * 2) 0
@@ -126,7 +130,4 @@
 		> *
 			position: relative
 			left: -50px
-
 </style>
-
-<script lang="ts" src="./communities"></script>
