@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
@@ -90,6 +91,8 @@ export default class AppShellCbarCommunity extends Vue {
 	onCommunityClick(event: Event) {
 		if (this.isActive) {
 			this.toggleLeftPane('context');
+			Analytics.trackEvent('cbar-community', 'toggle-context');
+
 			// Prevent the click from triggering a route change.
 			event.preventDefault();
 		} else {

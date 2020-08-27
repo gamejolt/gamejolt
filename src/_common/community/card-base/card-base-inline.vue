@@ -19,6 +19,7 @@
 
 				<div class="-members small">
 					<router-link
+						v-app-track-event="`community-card-inline:community-members`"
 						v-translate="{ count: number(memberCount) }"
 						:translate-n="memberCount"
 						translate-plural="<b>%{count}</b> members"
@@ -39,6 +40,7 @@
 			<!-- Context Menu -->
 			<div v-if="shouldShowChannelsMenu" class="-controls-item -menu">
 				<app-button
+					v-app-track-event="`community-card-inline:toggle-context`"
 					icon="menu"
 					trans
 					:sparse="Screen.isXs"
@@ -59,7 +61,15 @@
 			<!-- Join / Edit / View -->
 			<div class="-controls-item -controls-primary">
 				<template v-if="community.hasPerms()">
-					<app-button v-if="!isEditing" primary block :to="community.routeEditLocation">
+					<app-button
+						v-if="!isEditing"
+						v-app-track-event="`community-card-inline:community-edit`"
+						primary
+						block
+						:to="community.routeEditLocation"
+					>
+						<!-- `community-join:${eventLabel}:${!community.is_member ? 'join' : 'leave'}` -->
+
 						<translate>Edit Community</translate>
 					</app-button>
 					<app-button v-else primary block :to="community.routeLocation">
@@ -72,12 +82,16 @@
 					:disabled="!!community.user_block"
 					block
 					hide-count
-					event-label="community-card"
+					event-label="community-card-inline"
 				/>
 			</div>
 
 			<!-- About -->
-			<div v-if="shouldShowAbout" class="-controls-item -about">
+			<div
+				v-if="shouldShowAbout"
+				v-app-track-event="`community-card-inline:community-about`"
+				class="-controls-item -about"
+			>
 				<app-button trans @click="onClickAbout">
 					About
 				</app-button>
