@@ -5,6 +5,17 @@
 	height: 50px
 	overflow: hidden
 
+	&:hover
+	&.active
+		.chat-user-status
+			border-color: var(--theme-bg-subtle) !important
+
+			&.offline
+				background-color: var(--theme-fg-muted) !important
+
+			&-inner
+				background-color: var(--theme-bg-subtle) !important
+
 	&-list-meta
 		text-overflow()
 		theme-prop('color', 'fg-muted')

@@ -3,17 +3,17 @@
 <template>
 	<app-scroll-inview
 		tag="li"
-		class="chat-user"
 		:margin="`${Screen.height / 2}px`"
 		@inview="isInview = true"
 		@outview="isInview = false"
 	>
 		<router-link
 			v-if="isInview"
-			:to="user.url"
+			class="chat-user"
 			:class="{
 				active: showPm && chat.room && chat.room.id === user.room_id,
 			}"
+			:to="user.url"
 			:title="`${user.display_name} (@${user.username})`"
 			@click.native.capture="onUserClick"
 		>
