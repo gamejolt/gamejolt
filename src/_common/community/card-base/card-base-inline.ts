@@ -51,7 +51,7 @@ export default class AppCommunityCardBaseInline extends AppCommunityCardBase {
 	}
 
 	get shouldShowAbout() {
-		if (!this.hasCorrectRouteData) {
+		if (!this.hasCorrectRouteData || this.isEditing) {
 			return false;
 		}
 

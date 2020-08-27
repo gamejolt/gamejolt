@@ -2,18 +2,6 @@
 
 <template>
 	<div>
-		<app-page-header
-			v-if="routeStore.isShowingSidebar && routeStore.canEditMedia"
-			cover-editable
-			:cover-media-item="community.header"
-			@edit-cover="showEditHeader()"
-		>
-			<template #cover-edit-buttons>
-				<translate v-if="!community.header">Upload Header</translate>
-				<translate v-else>Change Header</translate>
-			</template>
-		</app-page-header>
-
 		<app-communities-view-page-container>
 			<template #default>
 				<app-alert-dismissable
@@ -137,11 +125,6 @@
 
 	@media $media-sm-up
 		margin-top: $line-height-computed * 2
-
-.-edit-thumbnail
-	width: 120px
-	border-radius: 50%
-	overflow: hidden
 
 .-danger-zone
 	h2:first-of-type
