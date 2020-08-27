@@ -121,7 +121,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	trophyCount!: RouteStore['trophyCount'];
 
 	@Action
-	toggleRightPane!: Store['toggleRightPane'];
+	toggleLeftPane!: Store['toggleLeftPane'];
 
 	@CommentAction
 	lockCommentStore!: CommentStore['lockCommentStore'];
@@ -389,7 +389,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			const chatUser = this.chat.friendsList.collection.find(u => u.id === this.user!.id);
 			if (chatUser) {
 				if (Screen.isXs) {
-					this.toggleRightPane();
+					this.toggleLeftPane('chat');
 				}
 				enterChatRoom(this.chat, chatUser.room_id);
 			}

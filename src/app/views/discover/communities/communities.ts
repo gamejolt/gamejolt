@@ -62,7 +62,7 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 	}
 
 	get showCreateCommunity() {
-		return this.app.user && !!this.app.user.can_create_communities && !this.hasMore;
+		return (!this.app.user || !!this.app.user.can_create_communities) && !this.hasMore;
 	}
 
 	routeCreated() {

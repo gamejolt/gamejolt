@@ -6,8 +6,14 @@ import { ContentFocus } from '../../../_common/content-focus/content-focus.servi
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMinbar from '../../../_common/minbar/minbar.vue';
 import { Screen } from '../../../_common/screen/screen-service';
+import {
+	SidebarMutation,
+	SidebarState,
+	SidebarStore,
+} from '../../../_common/sidebar/sidebar.store';
 import { BannerModule, BannerStore, Store } from '../../store/index';
 import { ChatClient, ChatKey, setChatFocused } from '../chat/client';
+import AppChatWindows from '../chat/windows/windows.vue';
 import AppShellBody from './body/body.vue';
 import AppShellCbar from './cbar/cbar.vue';
 import AppShellHotBottom from './hot-bottom/hot-bottom.vue';
@@ -15,7 +21,7 @@ import './shell.styl';
 import AppShellSidebar from './sidebar/sidebar.vue';
 import AppShellTopNav from './top-nav/top-nav.vue';
 
-let components: any = {
+const components: any = {
 	AppShellTopNav,
 	AppShellBody,
 	AppShellSidebar,
@@ -23,7 +29,7 @@ let components: any = {
 	AppShellCbar,
 	AppMinbar,
 	AppShellBanner: () => import(/* webpackChunkName: "shell" */ './banner/banner.vue'),
-	AppShellChat: () => import(/* webpackChunkName: "chat" */ './chat/chat.vue'),
+	AppChatWindows,
 };
 
 if (GJ_IS_CLIENT) {
@@ -54,10 +60,10 @@ export default class AppShell extends Vue {
 	hasCbar!: Store['hasCbar'];
 
 	@State
-	isLeftPaneVisible!: Store['isLeftPaneVisible'];
+	visibleLeftPane!: Store['visibleLeftPane'];
 
 	@State
-	isRightPaneVisible!: Store['isRightPaneVisible'];
+	visibleRightPane!: Store['visibleRightPane'];
 
 	@State
 	unreadActivityCount!: Store['unreadActivityCount'];
@@ -67,6 +73,21 @@ export default class AppShell extends Vue {
 
 	@BannerModule.State
 	hasBanner!: BannerStore['hasBanner'];
+
+	@SidebarState
+	activeContextPane!: SidebarStore['activeContextPane'];
+
+	@SidebarState
+	hideOnRouteChange!: SidebarStore['hideOnRouteChange'];
+
+	@SidebarState
+	showOnRouteChange!: SidebarStore['showOnRouteChange'];
+
+	@SidebarMutation
+	showContextOnRouteChange!: SidebarStore['showContextOnRouteChange'];
+
+	@Action
+	showContextPane!: Store['showContextPane'];
 
 	@Action
 	clearPanes!: Store['clearPanes'];
@@ -79,10 +100,21 @@ export default class AppShell extends Vue {
 	}
 
 	mounted() {
-		// When changing routes, hide all overlays.
-		this.$router.beforeEach((_to, _from, next) => {
-			this.clearPanes();
-			next();
+		this.$router.afterEach(async () => {
+			// Wait for any contextPane state to be changed.
+			await this.$nextTick();
+
+			// Show any context panes that are set to show on route change.
+			if (this.showOnRouteChange) {
+				this.showContextPane();
+				this.showContextOnRouteChange(false);
+				return;
+			}
+
+			// Hide all panes if we aren't showing one on route change.
+			if (this.hideOnRouteChange) {
+				this.clearPanes();
+			}
 		});
 
 		this.$watch(
