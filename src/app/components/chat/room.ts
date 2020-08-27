@@ -9,14 +9,16 @@ export class ChatRoom {
 	static readonly ROOM_VIRAL_GROUP = 'viral_group';
 
 	id!: number;
-	title!: string;
 	type!: ChatRoomType;
 	user?: ChatUser;
-
-	description!: string;
+	members!: ChatUser[];
 
 	constructor(data: Partial<ChatRoom> = {}) {
 		Object.assign(this, data);
+	}
+
+	get title() {
+		return this.members.map(member => member.display_name).join(', ');
 	}
 
 	get isPmRoom() {
