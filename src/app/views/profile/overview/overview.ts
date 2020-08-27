@@ -3,6 +3,12 @@ import { Action, State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
 import { Comment } from '../../../../_common/comment/comment-model';
+import {
+	CommentAction,
+	CommentMutation,
+	CommentStore,
+	CommentStoreModel,
+} from '../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../_common/comment/modal/modal.service';
 import { CommentThreadModal } from '../../../../_common/comment/thread/modal.service';
 import { Community } from '../../../../_common/community/community.model';
@@ -116,6 +122,17 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	@Action
 	toggleLeftPane!: Store['toggleLeftPane'];
+
+	@CommentAction
+	lockCommentStore!: CommentStore['lockCommentStore'];
+
+	@CommentMutation
+	releaseCommentStore!: CommentStore['releaseCommentStore'];
+
+	@CommentMutation
+	setCommentCount!: CommentStore['setCommentCount'];
+
+	commentStore: CommentStoreModel | null = null;
 
 	showFullDescription = false;
 	canToggleDescription = false;
@@ -298,12 +315,15 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		this.overviewComments = [];
 	}
 
-	routeResolved($payload: any) {
+	async routeResolved($payload: any) {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb || {};
 		Meta.fb.title = this.routeTitle;
 		Meta.twitter = $payload.twitter || {};
 		Meta.twitter.title = this.routeTitle;
+
+		// Release the CommentStore if there was one left over.
+		this.clearCommentStore();
 
 		this.showFullDescription = false;
 		this.showAllCommunities = false;
@@ -321,6 +341,13 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 				this.user,
 				'shouts'
 			);
+
+			// Initialize a CommentStore lock for profile shouts.
+			this.commentStore = await this.lockCommentStore({
+				resource: 'User',
+				resourceId: this.user.id,
+			});
+			this.setCommentCount({ store: this.commentStore, count: this.user.comment_count });
 		}
 
 		if ($payload.knownFollowers) {
@@ -334,9 +361,17 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	destroyed() {
+		this.clearCommentStore();
 		if (this.permalinkWatchDeregister) {
 			this.permalinkWatchDeregister();
 			this.permalinkWatchDeregister = undefined;
+		}
+	}
+
+	clearCommentStore() {
+		if (this.commentStore) {
+			this.releaseCommentStore(this.commentStore);
+			this.commentStore = null;
 		}
 	}
 
