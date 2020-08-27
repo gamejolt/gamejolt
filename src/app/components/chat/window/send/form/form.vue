@@ -4,28 +4,18 @@
 	<app-form ref="form" name="chat-send-form">
 		<app-shortkey shortkey="tab" @press="onTabKeyPressed" />
 
+		<div class="-top-indicators">
+			<span v-if="Screen.isXs && getTypingText().length > 0" class="-typing">
+				{{ getTypingText() }}
+			</span>
+		</div>
+
 		<div v-if="isEditing" class="-editing-message">
 			<app-jolticon icon="edit" />
 			<translate>Editing Message</translate>
 			<a class="-editing-message-cancel" @click="cancelEditing">
 				<translate>Cancel</translate>
 			</a>
-		</div>
-
-		<div v-if="!Screen.isXs" class="-multiline-notice anim-fade-in no-animate-leave">
-			<template v-if="showMultiLineNotice">
-				<app-jolticon icon="notice" />
-				<span v-if="isMac" v-translate>
-					You are in multi-line editing mode. Press
-					<code>cmd+enter</code>
-					to send.
-				</span>
-				<span v-else v-translate>
-					You are in multi-line editing mode. Press
-					<code>ctrl+enter</code>
-					to send.
-				</span>
-			</template>
 		</div>
 
 		<app-form-group
@@ -76,8 +66,26 @@
 			/>
 		</app-form-group>
 
-		<div class="-typing">
-			{{ getTypingText() }}
+		<div v-if="!Screen.isXs" class="-bottom-indicators anim-fade-in no-animate-leave">
+			<transition name="fade">
+				<span v-if="!Screen.isXs && getTypingText().length > 0" class="-typing">
+					{{ getTypingText() }}
+				</span>
+			</transition>
+
+			<span v-if="showMultiLineNotice" class="-multi-line">
+				<app-jolticon icon="notice" />
+				<span v-if="isMac" v-translate>
+					You are in multi-line editing mode. Press
+					<code>cmd+enter</code>
+					to send.
+				</span>
+				<span v-else v-translate>
+					You are in multi-line editing mode. Press
+					<code>ctrl+enter</code>
+					to send.
+				</span>
+			</span>
 		</div>
 	</app-form>
 </template>
@@ -114,27 +122,51 @@ $-button-spacing-xs = $-button-height
 		padding-top: 1px
 		border-top: none
 
-.-typing
-	position: relative
-
-	@media $media-xs
-		padding-left: 4px
-		margin-left: 4px
-
-	@media $media-sm-up
-		margin-left: $left-gutter-size + $avatar-size
-		margin-right: $-button-spacing
-
-.-typing
-.-multiline-notice
+.-bottom-indicators
 .-editing-message
 	height: 28px
-	font-size: $font-size-small
 	color: var(--theme-light)
 	padding: 4px 0
 
-.-multiline-notice
+.-top-indicators
+.-bottom-indicators
+	display: flex
+
+.-top-indicators
+	padding: 4px 4px 0 4px
+	color: var(--theme-light)
+
+.-bottom-indicators
+	align-items: center
 	margin-left: $left-gutter-size + $avatar-size
+	margin-right: $-button-spacing
+
+.-typing
+.-multi-line
+	&
+	.jolticon
+		font-size: $font-size-tiny
+
+.-typing
+	text-overflow()
+	margin-right: auto
+	transition-property: opacity
+	transition-duration: 500ms
+	transition-timing-function: $strong-ease-out
+
+	@media $media-sm-up
+		padding-right: 24px
+
+	&.fade-leave-active
+		transition-duration: 250ms
+
+	&.fade-enter
+	&.fade-leave-to
+		opacity: 0
+
+.-multi-line
+	flex: none
+	margin-left: auto
 
 .-editing-message
 	position: relative
