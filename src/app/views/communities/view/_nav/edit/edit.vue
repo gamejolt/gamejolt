@@ -98,6 +98,7 @@
 						},
 					}"
 					active-class="active"
+					@click.native.capture="onChangeSection('communities.view.edit.blocks')"
 				>
 					<translate>Audit Log</translate>
 				</router-link>
