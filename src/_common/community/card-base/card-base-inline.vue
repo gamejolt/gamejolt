@@ -38,16 +38,15 @@
 		<div class="-controls">
 			<!-- Context Menu -->
 			<div v-if="shouldShowChannelsMenu" class="-controls-item -menu">
-				<app-button
-					icon="menu"
-					trans
-					:sparse="Screen.isXs"
-					:circle="Screen.isXs"
-					@click="onClickMenu"
-				>
-					<translate v-if="!Screen.isXs">
-						Channels
-					</translate>
+				<app-button icon="menu" trans @click="onClickMenu">
+					<template v-if="!Screen.isXs">
+						<translate v-if="routeStore.ChannelPath">
+							Channels
+						</translate>
+						<translate v-else>
+							Menu
+						</translate>
+					</template>
 				</app-button>
 			</div>
 
