@@ -20,19 +20,6 @@
 					</div>
 				</template>
 
-				<template v-if="!room.isPmRoom">
-					<div class="nav-heading first">
-						<translate>Room Description</translate>
-					</div>
-
-					<div class="nav-well">
-						<div class="chat-compiled-room-description">
-							<!-- TODO: Remove -->
-							<div v-html="room.description"></div>
-						</div>
-					</div>
-				</template>
-
 				<div class="nav-heading">
 					<translate>Room Users</translate>
 					<span
@@ -97,33 +84,6 @@
 								<br />
 								<small>@{{ room.user.username }}</small>
 							</h3>
-
-							<template v-if="!room.isPmRoom && !Screen.isXs">
-								<app-fade-collapse
-									size="sm"
-									:collapse-height="60"
-									@require-change="isDescriptionCollapsed = $event"
-								>
-									<div
-										class="chat-window-header-room-description chat-compiled-room-description"
-									>
-										<!-- TODO: Remove -->
-										<div
-											class="anim-fade-in no-animate-xs"
-											v-html="room.description"
-										></div>
-									</div>
-								</app-fade-collapse>
-
-								<app-button
-									v-if="isDescriptionCollapsed && !isShowingUsers"
-									sm
-									class="anim-fade-in"
-									@click="toggleUsers"
-								>
-									<translate>more</translate>
-								</app-button>
-							</template>
 						</div>
 					</div>
 				</div>
