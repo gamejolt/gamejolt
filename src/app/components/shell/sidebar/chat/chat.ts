@@ -40,8 +40,8 @@ export default class AppShellSidebarChat extends Vue {
 		return number(this.chat.friendsList.onlineCount);
 	}
 
-	onPublicRoomClicked(roomId: number) {
-		enterChatRoom(this.chat, roomId);
+	get hasGroupRooms() {
+		return this.chat.groupRooms && this.chat.groupRooms.length > 0;
 	}
 
 	mounted() {
@@ -67,5 +67,9 @@ export default class AppShellSidebarChat extends Vue {
 		if (this.visibleLeftPane === 'chat') {
 			this.toggleLeftPane('chat');
 		}
+	}
+
+	onRoomClicked(roomId: number) {
+		enterChatRoom(this.chat, roomId);
 	}
 }

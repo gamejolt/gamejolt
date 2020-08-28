@@ -9,33 +9,6 @@
 		<div class="chat-window">
 			<div class="chat-window-back-close" @click="close" />
 
-			<!-- Room Users -->
-			<app-scroll-scroller
-				v-if="!room.isPmRoom && isShowingUsers"
-				class="fill-darkest chat-window-users"
-			>
-				<template v-if="Screen.isXs">
-					<br />
-					<div class="nav-controls">
-						<app-button block icon="chevron-left" @click="toggleUsers">
-							<translate>Back to Chat</translate>
-						</app-button>
-					</div>
-				</template>
-
-				<div class="nav-heading">
-					<translate>Members</translate>
-					<span
-						class="badge"
-						:class="{ 'badge-highlight': users && users.onlineCount > 0 }"
-					>
-						{{ onlineUserCount }}
-					</span>
-				</div>
-
-				<app-chat-user-list v-if="users" :room="room" :users="users.collection" />
-			</app-scroll-scroller>
-
 			<div class="chat-window-main">
 				<!-- Window Header -->
 				<div class="chat-window-header-wrap">
@@ -108,6 +81,33 @@
 					<app-chat-window-send :room="room" />
 				</div>
 			</div>
+
+			<!-- Room Users -->
+			<app-scroll-scroller
+				v-if="!room.isPmRoom && isShowingUsers"
+				class="fill-darkest chat-window-users"
+			>
+				<template v-if="Screen.isXs">
+					<br />
+					<div class="nav-controls">
+						<app-button block icon="chevron-left" @click="toggleUsers">
+							<translate>Back to Chat</translate>
+						</app-button>
+					</div>
+				</template>
+
+				<div class="nav-heading">
+					<translate>Members</translate>
+					<span
+						class="badge"
+						:class="{ 'badge-highlight': users && users.onlineCount > 0 }"
+					>
+						{{ onlineUserCount }}
+					</span>
+				</div>
+
+				<app-chat-user-list v-if="users" :room="room" :users="users.collection" />
+			</app-scroll-scroller>
 		</div>
 		<div class="-chat-window-offset-right" />
 	</div>
