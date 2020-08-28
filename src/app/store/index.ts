@@ -134,6 +134,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	notificationState: ActivityFeedState | null = null;
 
 	mobileCbarShowing = false;
+	lastOpenLeftPane: TogglableLeftPane = 'library';
 	private overlayedLeftPane: TogglableLeftPane = '';
 	private overlayedRightPane = '';
 	hasContentSidebar = false;
@@ -299,7 +300,9 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			this._toggleLeftPane();
 		} else {
 			// Open the left-pane depending on the SidebarStore information when the cbar shows.
-			this._toggleLeftPane(this.sidebar.activeContextPane ? 'context' : 'library');
+			this._toggleLeftPane(
+				this.sidebar.activeContextPane ? 'context' : this.lastOpenLeftPane
+			);
 		}
 
 		this.checkBackdrop();
@@ -552,6 +555,10 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			this.overlayedLeftPane = '';
 		} else {
 			this.overlayedLeftPane = type;
+		}
+
+		if (type.length > 0) {
+			this.lastOpenLeftPane = this.overlayedLeftPane;
 		}
 
 		this.mobileCbarShowing = !!this.overlayedLeftPane;
