@@ -87,6 +87,8 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 	@Prop(propOptional(ContentRules)) displayRules?: ContentRules;
 
+	@Prop(propOptional(Boolean, false)) focusEnd!: boolean;
+
 	$_veeValidate = {
 		value: () => this.value,
 		name: () => 'app-content-editor',
@@ -357,16 +359,18 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 
 			const view = this.createView(state);
 
-			// Wait here so images and other content can render in and scale properly.
-			// Otherwise the scroll at the end of the transaction below would not cover the entire doc.
-			await this.$nextTick();
+			if (this.focusEnd) {
+				// Wait here so images and other content can render in and scale properly.
+				// Otherwise the scroll at the end of the transaction below would not cover the entire doc.
+				await this.$nextTick();
 
-			// Set selection at the end of the document.
-			const tr = view.state.tr;
-			const selection = Selection.atEnd(view.state.doc);
-			tr.setSelection(selection);
-			tr.scrollIntoView();
-			view.dispatch(tr);
+				// Set selection at the end of the document.
+				const tr = view.state.tr;
+				const selection = Selection.atEnd(view.state.doc);
+				tr.setSelection(selection);
+				tr.scrollIntoView();
+				view.dispatch(tr);
+			}
 		}
 	}
 
