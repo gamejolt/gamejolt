@@ -9,12 +9,8 @@ import { ChatUser } from './user';
 import { ChatUserCollection } from './user-collection';
 
 interface RoomPresence {
-	metas: { phx_ref: string }[];
+	metas: { phx_ref: string; typing: boolean }[];
 	user: ChatUser;
-}
-
-interface ClearNotificationsPayload {
-	room_id: number;
 }
 
 export class ChatRoomChannel extends Channel {
@@ -35,7 +31,6 @@ export class ChatRoomChannel extends Channel {
 		this.setupPresence();
 
 		this.on('message', this.onMsg.bind(this));
-		this.on('clear_notifications', this.onClearNotifications.bind(this));
 		this.on('user_updated', this.onUserUpdated.bind(this));
 		this.on('message_update', this.onUpdateMsg.bind(this));
 		this.on('message_remove', this.onRemoveMsg.bind(this));
@@ -100,12 +95,6 @@ export class ChatRoomChannel extends Channel {
 		}
 	}
 
-	private onClearNotifications(data: ClearNotificationsPayload) {
-		if (isInChatRoom(this.client, data.room_id)) {
-			Vue.delete(this.client.notifications, '' + data.room_id);
-		}
-	}
-
 	private onUserUpdated(data: Partial<ChatUser>) {
 		const updatedUser = new ChatUser(data);
 		if (this.room && isInChatRoom(this.client, this.roomId) && this.room.isGroupRoom) {
@@ -132,18 +121,18 @@ export class ChatRoomChannel extends Channel {
 
 	private syncPresentUsers(presence: Presence, room: ChatRoom) {
 		const presentUsers: ChatUser[] = [];
+
 		presence.list((_id: string, roomPresence: RoomPresence) => {
 			const user = new ChatUser(roomPresence.user);
 			user.isOnline = true;
+			user.typing = roomPresence.metas.some(meta => meta.typing);
 			presentUsers.push(user);
 		});
 
-		if (room.isGroupRoom) {
-			Vue.set(
-				this.client.usersOnline,
-				'' + room.id,
-				new ChatUserCollection(ChatUserCollection.TYPE_ROOM, presentUsers)
-			);
-		}
+		Vue.set(
+			this.client.usersOnline,
+			'' + room.id,
+			new ChatUserCollection(ChatUserCollection.TYPE_ROOM, presentUsers)
+		);
 	}
 }

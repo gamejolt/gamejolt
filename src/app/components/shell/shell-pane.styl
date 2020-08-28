@@ -1,20 +1,23 @@
 .shell-pane
-	change-bg('darkest')
+	change-bg('bg-offset')
 	@extend .clearfix
 	position: fixed
 	top: $shell-top-nav-height
 	bottom: 0
 	z-index: $zindex-shell-pane
-	width: $percentage-10
+	width: $shell-content-sidebar-width
 	transition: transform 300ms $weak-ease-out
 	will-change: transform
-
-	@media $media-sm-up
-		width: $shell-pane-width
 
 .shell-pane-left
 	left: 0
 	right: auto
+
+	// Span the remaining width on xs devices, leaving a 50px buffer to allow clicking the backdrop.
+	@media $media-xs
+		width: unset
+		max-width: $shell-content-sidebar-width
+		right: 48px
 
 .shell-pane-right
 	left: auto
@@ -26,7 +29,8 @@
 // When we are hiding the pane and showing the content again, we want to also
 // keep it visible during this time.
 // To do that, we hook into the main shell removal animation.
-#shell.left-pane-visible-remove .shell-pane, #shell.right-pane-visible-remove .shell-pane
+#shell.left-pane-visible-remove .shell-pane
+#shell.right-pane-visible-remove .shell-pane
 	display: block
 
 // Pane slide transitions

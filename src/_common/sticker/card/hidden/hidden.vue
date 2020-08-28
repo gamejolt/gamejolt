@@ -4,7 +4,13 @@
 			<app-jolticon class="-icon jolticon-3x" icon="sticker" />
 		</div>
 		<div class="-pocket fill-darkest">
-			<translate>Unlock</translate>
+			<translate
+				:translate-n="count + 1"
+				:translate-params="{ count: count }"
+				translate-plural="Unlock %{count}"
+			>
+				Unlocking...
+			</translate>
 		</div>
 	</div>
 </template>

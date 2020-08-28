@@ -67,7 +67,6 @@ export default class AppCommunityJoinWidget extends Vue {
 			try {
 				await $joinCommunity(this.community);
 				this.joinCommunity(this.community);
-				this.grid.joinCommunity(this.community);
 			} catch (e) {
 				console.log(e);
 				let message = this.$gettext(
@@ -83,7 +82,6 @@ export default class AppCommunityJoinWidget extends Vue {
 			try {
 				await $leaveCommunity(this.community);
 				this.leaveCommunity(this.community);
-				this.grid.leaveCommunity(this.community);
 			} catch (e) {
 				Growls.error(this.$gettext(`For some reason we couldn't leave this community.`));
 			}

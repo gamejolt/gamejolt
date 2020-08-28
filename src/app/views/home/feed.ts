@@ -3,6 +3,7 @@ import { Mutation, State } from 'vuex-class';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
 import AppAdWidget from '../../../_common/ad/widget/widget.vue';
+import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Meta } from '../../../_common/meta/meta-service';
@@ -169,6 +170,10 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 
 	loadedNew() {
 		this.setNotificationCount({ type: 'activity', count: 0 });
+	}
+
+	onLoadMore() {
+		Analytics.trackPageview(undefined, true);
 	}
 
 	onPostAdded(post: FiresidePost) {

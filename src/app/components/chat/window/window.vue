@@ -1,10 +1,13 @@
+<script lang="ts" src="./window"></script>
+
 <template>
 	<div class="chat-window-wrap">
+		<div class="-chat-window-offset-left" />
 		<!-- We sadly need the chat close thing twice. It takes up the empty
 		background space so you can click that to close chat. -->
-		<div class="chat-window-back-close" @click="close"></div>
+		<div class="chat-window-back-close" @click="close" />
 		<div class="chat-window">
-			<div class="chat-window-back-close" @click="close"></div>
+			<div class="chat-window-back-close" @click="close" />
 
 			<!-- Room Users -->
 			<app-scroll-scroller
@@ -26,7 +29,7 @@
 						class="badge"
 						:class="{ 'badge-highlight': users && users.onlineCount > 0 }"
 					>
-						{{ users ? users.onlineCount : 0 | number }}
+						{{ onlineUserCount }}
 					</span>
 				</div>
 
@@ -48,23 +51,23 @@
 							/>
 
 							<app-button
+								v-app-tooltip="$gettext('Close Room')"
 								circle
 								trans
 								icon="remove"
 								@click="close"
-								v-app-tooltip="$gettext('Close Room')"
 							/>
 						</div>
 
 						<!-- Animation scope. -->
 						<div
-							class="chat-window-header-content"
 							v-for="room of [room]"
 							:key="room.id"
+							class="chat-window-header-content"
 						>
 							<router-link
-								class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
 								v-if="room.isPmRoom && room.user"
+								class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
 								:to="room.user.url"
 							>
 								<img :src="room.user.img_avatar" alt="" />
@@ -101,14 +104,13 @@
 					/>
 				</div>
 
-				<div class="chat-window-send-container" v-if="chat.currentUser">
+				<div v-if="chat.currentUser" class="chat-window-send-container">
 					<app-chat-window-send :room="room" />
 				</div>
 			</div>
 		</div>
+		<div class="-chat-window-offset-right" />
 	</div>
 </template>
 
 <style lang="stylus" src="./window.styl" scoped></style>
-
-<script lang="ts" src="./window"></script>

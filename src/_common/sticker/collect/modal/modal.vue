@@ -1,5 +1,5 @@
 <template>
-	<app-modal>
+	<app-modal @close="onClose">
 		<div class="modal-controls">
 			<app-button @click="onClose">
 				<translate>Close</translate>
@@ -7,7 +7,7 @@
 		</div>
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Unlock Sticker</translate>
+				<translate>Unlock Stickers</translate>
 			</h2>
 		</div>
 		<div class="modal-body">
@@ -17,6 +17,7 @@
 				:balance="balance"
 				:sticker-cost="stickerCost"
 				@collect="onCollected"
+				@redeem="onRedeemed"
 			/>
 		</div>
 	</app-modal>

@@ -1,20 +1,22 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require './variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import './variables'
 
 .community-channel-card
 	elevate-hover-1()
 	position: relative
 	display: block
 	flex-shrink: 0
-	width: $card-width
-	height: $card-height
+	max-height: $card-height
 	overflow: hidden
 	cursor: pointer
 	outline: none
 	transition: border 200ms
 	// Overwrite sheet styling
 	margin-bottom: ($line-height-computed / 2)
+
+	&-container
+		max-width: $card-width
 
 	&:hover
 		theme-prop('border-color', 'link')
