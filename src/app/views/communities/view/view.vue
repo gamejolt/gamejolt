@@ -27,7 +27,7 @@
 					</div>
 				</template>
 			</app-editable-overlay>
-			<div v-else-if="!!coverMediaItem && isFrontpage" class="-cover-img">
+			<div v-else-if="!!coverMediaItem && isShowingHeader" class="-cover-img">
 				<app-media-item-cover :media-item="coverMediaItem" />
 			</div>
 

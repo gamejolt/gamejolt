@@ -63,8 +63,16 @@
 					</h2>
 
 					<form-community :model="community" @submit="onDetailsChange" />
-
 					<div class="-spacer" />
+
+					<template v-if="routeStore.canEditDescription && Screen.isMobile">
+						<h2 class="section-header">
+							<translate>Edit Description</translate>
+						</h2>
+
+						<form-community-description :model="community" />
+						<div class="-spacer" />
+					</template>
 				</app-community-perms>
 
 				<!-- Leave/Remove Community -->
@@ -106,7 +114,7 @@
 				</div>
 			</template>
 
-			<template v-if="routeStore.canEditDescription" #sidebar>
+			<template v-if="routeStore.canEditDescription && !Screen.isMobile" #sidebar>
 				<h2 class="section-header">
 					<translate>Edit Description</translate>
 				</h2>

@@ -30,6 +30,7 @@ import AppPageHeaderControls from '../../../components/page-header/controls/cont
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import AppShellContentWithSidebar from '../../../components/shell/content-with-sidebar/content-with-sidebar.vue';
 import { Store } from '../../../store/index';
+import { routeCommunitiesViewEditDetails } from './edit/details/details.route';
 import {
 	CommunityRouteStore,
 	CommunityRouteStoreKey,
@@ -117,7 +118,11 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	}
 
 	get coverEditable() {
-		return this.isEditing && this.routeStore.canEditMedia;
+		return (
+			this.isEditing &&
+			this.routeStore.canEditMedia &&
+			this.$route.name === routeCommunitiesViewEditDetails.name
+		);
 	}
 
 	get isFrontpage() {
@@ -125,7 +130,15 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	}
 
 	get isShowingHeader() {
-		return (this.isFrontpage || this.isEditing) && this.coverMediaItem;
+		if (!this.coverMediaItem) {
+			return false;
+		}
+
+		if (this.isFrontpage) {
+			return true;
+		}
+
+		return this.isEditing && this.$route.name === routeCommunitiesViewEditDetails.name;
 	}
 
 	@Watch('$route', { immediate: true })

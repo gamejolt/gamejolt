@@ -14,6 +14,12 @@
 					@click="toggleCbarMenu"
 				>
 					<app-jolticon icon="menu" />
+					<div
+						v-if="chat && chat.friendNotificationsCount > 0"
+						class="-notification-chat notification-tag tag tag-highlight"
+					>
+						{{ chat.friendNotificationsCount }}
+					</div>
 				</a>
 
 				<!-- History Navigator (for desktop client) -->
@@ -199,6 +205,12 @@
 
 		&.active
 			min-width: $shell-cbar-width
+
+		.-notification-chat
+			pointer-events: none
+			position: absolute
+			top: 0
+			right: 0
 
 .-explore-icon
 	position: relative

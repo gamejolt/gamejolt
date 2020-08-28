@@ -8,6 +8,7 @@ import AppEditableOverlay from '../../../../../../_common/editable-overlay/edita
 import { Growls } from '../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent } from '../../../../../../_common/route/route-component';
+import { Screen } from '../../../../../../_common/screen/screen-service';
 import { ThemeMutation, ThemeStore } from '../../../../../../_common/theme/theme.store';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import FormCommunity from '../../../../../components/forms/community/community.vue';
@@ -33,6 +34,8 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 
 	@ThemeMutation setPageTheme!: ThemeStore['setPageTheme'];
 	@Action('leaveCommunity') leaveCommunityAction!: Store['leaveCommunity'];
+
+	readonly Screen = Screen;
 
 	get community() {
 		return this.routeStore.community;

@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Component, InjectReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { Environment } from '../../../../_common/environment/environment.service';
@@ -9,6 +9,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
+import { ChatClient, ChatKey } from '../../chat/client';
 import AppSearch from '../../search/search.vue';
 import AppShellAccountPopover from '../account-popover/account-popover.vue';
 import AppShellFriendRequestPopover from '../friend-request-popover/friend-request-popover.vue';
@@ -35,6 +36,8 @@ if (GJ_IS_CLIENT) {
 	},
 })
 export default class AppShellTopNav extends Vue {
+	@InjectReactive(ChatKey) chat!: ChatClient;
+
 	@State app!: Store['app'];
 
 	@State visibleLeftPane!: Store['visibleLeftPane'];
