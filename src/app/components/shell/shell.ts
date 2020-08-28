@@ -99,6 +99,10 @@ export default class AppShell extends Vue {
 		return this.chat ? this.chat.roomNotificationsCount : 0;
 	}
 
+	get ssrShouldShowSidebar() {
+		return GJ_IS_SSR && this.$route.name?.indexOf('communities.view') === 0;
+	}
+
 	mounted() {
 		this.$router.afterEach(async () => {
 			// Wait for any contextPane state to be changed.

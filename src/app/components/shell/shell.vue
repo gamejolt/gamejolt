@@ -5,24 +5,24 @@
 		id="shell"
 		:class="{
 			'is-client-offline': Connection.isClientOffline,
-			'left-pane-visible': !!visibleLeftPane,
+			'left-pane-visible': ssrShouldShowSidebar || !!visibleLeftPane,
 			'right-pane-visible': !!visibleRightPane,
-			'has-cbar': hasCbar && !Screen.isXs,
+			'has-cbar': ssrShouldShowSidebar || (hasCbar && !Screen.isXs),
 			'has-cbar-mobile': hasCbar && Screen.isXs,
 			'has-banner': hasBanner && !isShellHidden,
 		}"
 	>
-		<app-shell-banner v-if="!isShellHidden" />
-		<app-shell-top-nav v-if="hasTopBar" />
-		<app-shell-cbar />
-		<app-shell-sidebar v-if="hasSidebar" />
-
 		<template v-if="isShellHidden">
 			<slot />
 		</template>
 		<app-shell-body v-else>
 			<slot />
 		</app-shell-body>
+
+		<app-shell-top-nav v-if="hasTopBar" />
+		<app-shell-cbar />
+		<app-shell-sidebar v-if="hasSidebar" />
+		<app-shell-banner v-if="!isShellHidden" />
 
 		<app-chat-windows v-if="chat" />
 

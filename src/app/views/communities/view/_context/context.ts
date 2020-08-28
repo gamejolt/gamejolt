@@ -23,15 +23,6 @@ export default class AppCommunitiesViewContext extends Vue {
 
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
-	// All context panes with required props should need this - otherwise it could
-	// cause issues when transitioning between panes with different props.
-	isLoading = true;
-
-	async mounted() {
-		await this.$nextTick();
-		this.isLoading = false;
-	}
-
 	get isEditing() {
 		return isEditingCommunity(this.$route);
 	}
