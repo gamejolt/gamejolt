@@ -5,11 +5,6 @@ import { Api } from '../../_common/api/api.service';
 import { Backdrop } from '../../_common/backdrop/backdrop.service';
 import AppBackdrop from '../../_common/backdrop/backdrop.vue';
 import {
-	CommentActions,
-	CommentMutations,
-	CommentStore,
-} from '../../_common/comment/comment-store';
-import {
 	$joinCommunity,
 	$leaveCommunity,
 	Community,
@@ -50,7 +45,6 @@ export type Actions = AppActions &
 	ThemeActions &
 	LibraryActions &
 	BannerActions &
-	CommentActions &
 	SidebarActions &
 	_ClientLibraryMod.Actions & {
 		bootstrap: void;
@@ -74,7 +68,6 @@ export type Mutations = AppMutations &
 	ThemeMutations &
 	LibraryMutations &
 	BannerMutations &
-	CommentMutations &
 	SidebarMutations &
 	_ClientLibraryMod.Mutations & {
 		showShell: void;
@@ -99,7 +92,6 @@ const modules: any = {
 	theme: new ThemeStore(),
 	library: new LibraryStore(),
 	banner: new BannerStore(),
-	comment: new CommentStore(),
 	sidebar: new SidebarStore(),
 };
 
@@ -121,7 +113,6 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	theme!: ThemeStore;
 	library!: LibraryStore;
 	banner!: BannerStore;
-	comment!: CommentStore;
 	sidebar!: SidebarStore;
 	clientLibrary!: _ClientLibraryMod.ClientLibraryStore;
 

@@ -1,13 +1,15 @@
-import { Component, InjectReactive } from 'vue-property-decorator';
+import { Component, Inject, InjectReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
 import { Comment } from '../../../../_common/comment/comment-model';
 import {
-	CommentAction,
-	CommentMutation,
-	CommentStore,
+	CommentStoreManager,
+	CommentStoreManagerKey,
 	CommentStoreModel,
+	lockCommentStore,
+	releaseCommentStore,
+	setCommentCount,
 } from '../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../_common/comment/modal/modal.service';
 import { CommentThreadModal } from '../../../../_common/comment/thread/modal.service';
@@ -71,6 +73,7 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 })
 export default class RouteProfileOverview extends BaseRouteComponent {
 	@InjectReactive(ChatKey) chat?: ChatClient;
+	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
 
 	@State
 	app!: Store['app'];
@@ -122,15 +125,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	@Action
 	toggleLeftPane!: Store['toggleLeftPane'];
-
-	@CommentAction
-	lockCommentStore!: CommentStore['lockCommentStore'];
-
-	@CommentMutation
-	releaseCommentStore!: CommentStore['releaseCommentStore'];
-
-	@CommentMutation
-	setCommentCount!: CommentStore['setCommentCount'];
 
 	commentStore: CommentStoreModel | null = null;
 
@@ -315,7 +309,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		this.overviewComments = [];
 	}
 
-	async routeResolved($payload: any) {
+	routeResolved($payload: any) {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb || {};
 		Meta.fb.title = this.routeTitle;
@@ -343,11 +337,8 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			);
 
 			// Initialize a CommentStore lock for profile shouts.
-			this.commentStore = await this.lockCommentStore({
-				resource: 'User',
-				resourceId: this.user.id,
-			});
-			this.setCommentCount({ store: this.commentStore, count: this.user.comment_count });
+			this.commentStore = lockCommentStore(this.commentManager, 'User', this.user.id);
+			setCommentCount(this.commentStore, this.user.comment_count);
 		}
 
 		if ($payload.knownFollowers) {
@@ -370,7 +361,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	clearCommentStore() {
 		if (this.commentStore) {
-			this.releaseCommentStore(this.commentStore);
+			releaseCommentStore(this.commentManager, this.commentStore);
 			this.commentStore = null;
 		}
 	}
