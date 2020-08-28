@@ -107,7 +107,7 @@ export function releaseCommentStore(manager: CommentStoreManager, store: Comment
 	}
 }
 
-export async function fetchThread(store: CommentStoreModel, parentId: number) {
+export async function fetchCommentThread(store: CommentStoreModel, parentId: number) {
 	const response = await Api.sendRequest(`/comments/get-thread/${parentId}`, null, {
 		noErrorRedirect: true,
 	});
@@ -170,7 +170,7 @@ export async function pinComment(manager: CommentStoreManager, comment: Comment)
 	}
 }
 
-export function setSort(store: CommentStoreModel, sort: string) {
+export function setCommentSort(store: CommentStoreModel, sort: string) {
 	store.sort = sort;
 	// clear the store's comments and prepare for reload
 	store.clear();

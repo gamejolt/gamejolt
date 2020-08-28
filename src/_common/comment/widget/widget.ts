@@ -21,14 +21,14 @@ import {
 	CommentStoreManagerKey,
 	CommentStoreModel,
 	fetchStoreComments,
-	fetchThread,
+	fetchCommentThread,
 	lockCommentStore,
 	onCommentAdd,
 	onCommentEdit,
 	onCommentRemove,
 	pinComment,
 	releaseCommentStore,
-	setSort,
+	setCommentSort,
 } from '../comment-store';
 import {
 	CommentStoreSliceView,
@@ -209,7 +209,7 @@ export default class AppCommentWidget extends Vue {
 		// Filter comments based on the 'initialTab' prop. This allows us to set the comment
 		// sorting to the "You" tab when you leave a comment from an event item.
 		if (this.store && this.initialTab) {
-			setSort(this.store, this.initialTab);
+			setCommentSort(this.store, this.initialTab);
 		}
 
 		await this._fetchComments();
@@ -243,7 +243,7 @@ export default class AppCommentWidget extends Vue {
 		// comment widget. This way if you open up a new comment widget in the
 		// future, we'll correctly start at the "hot" sort.
 		if (metadata.widgetLocks === 0) {
-			setSort(this.store, Comment.SORT_HOT);
+			setCommentSort(this.store, Comment.SORT_HOT);
 		}
 
 		releaseCommentStore(this.commentManager, this.store);
@@ -260,7 +260,7 @@ export default class AppCommentWidget extends Vue {
 
 			let payload: any;
 			if (this.isThreadView && this.threadCommentId) {
-				payload = await fetchThread(this.store, this.threadCommentId);
+				payload = await fetchCommentThread(this.store, this.threadCommentId);
 				// It's possible that the thread comment is actually a child. In that case, update the view's parent id to the returned parent id
 				if (this.storeView instanceof CommentStoreThreadView) {
 					this.storeView.parentCommentId = new Comment(payload.parent).id;
@@ -344,7 +344,7 @@ export default class AppCommentWidget extends Vue {
 		}
 
 		this.currentPage = 1;
-		setSort(this.store, sort);
+		setCommentSort(this.store, sort);
 		this._fetchComments();
 	}
 
