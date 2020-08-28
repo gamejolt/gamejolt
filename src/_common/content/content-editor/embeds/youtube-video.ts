@@ -1,18 +1,9 @@
 import { REGEX_YOUTUBE } from '../../../../utils/regex';
+import { getYoutubeVideoId } from '../../../../utils/video';
 import { ContextCapabilities } from '../../content-context';
 import { ContentHydrator } from '../../content-hydrator';
 import { EmbedType } from '../content-embed.service';
 import { EmbedSource } from './embed-source';
-
-function getYoutubeVideoId(path: string) {
-	const groupArray = REGEX_YOUTUBE.exec(path);
-
-	if (groupArray) {
-		return groupArray[groupArray.length - 1];
-	}
-
-	return null;
-}
 
 export class YouTubeVideoEmbed extends EmbedSource {
 	getEmbedType(): EmbedType {
@@ -38,20 +29,16 @@ export class YouTubeVideoEmbed extends EmbedSource {
 		_hydrator: ContentHydrator,
 		link: string
 	) {
-		if (!capabilities.embedVideo) {
+		if (!capabilities.embedVideo || !this.isValidLink(link)) {
 			return false;
 		}
 
-		return this.isValidLink(link);
+		return getYoutubeVideoId(link) || false;
 	}
 
 	isValidLink(link: string) {
-		const results = getYoutubeVideoId(link) || false;
+		const results = REGEX_YOUTUBE.exec(link);
 
-		if (results && results.length === 11) {
-			return results;
-		}
-
-		return false;
+		return !!results;
 	}
 }
