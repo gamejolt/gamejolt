@@ -29,15 +29,18 @@ export default class FormGameVideo extends BaseForm<FormModel> implements FormOn
 
 	get videoData() {
 		const url = this.formModel._url;
-		if (url) {
-			const youtubeMatch = url.match(REGEX_YOUTUBE);
-			const vimeoMatch = url.match(REGEX_VIMEO);
+		if (!url) {
+			return null;
+		}
 
-			if (youtubeMatch) {
-				return { id: youtubeMatch[4], type: GameVideo.TYPE_YOUTUBE };
-			} else if (vimeoMatch) {
-				return { id: vimeoMatch[4], type: GameVideo.TYPE_VIMEO };
-			}
+		const youtubeMatch = url.match(REGEX_YOUTUBE);
+		if (youtubeMatch) {
+			return { id: youtubeMatch[youtubeMatch.length - 1], type: GameVideo.TYPE_YOUTUBE };
+		}
+
+		const vimeoMatch = url.match(REGEX_VIMEO);
+		if (vimeoMatch) {
+			return { id: vimeoMatch[vimeoMatch.length - 1], type: GameVideo.TYPE_VIMEO };
 		}
 	}
 
