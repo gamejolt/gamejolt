@@ -73,11 +73,4 @@ export default class AppNavChannelCards extends Vue {
 
 		return false;
 	}
-
-	onChangeChannel(path: string) {
-		// If changing channels, hide the left pane/context sidebar.
-		if (this.activeChannel && this.activeChannel.title !== path) {
-			this.toggleLeftPane();
-		}
-	}
 }

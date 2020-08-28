@@ -1,7 +1,7 @@
 <script lang="ts" src="./card"></script>
 
 <template>
-	<div class="community-channel-card-container" @click.capture="onChangeChannel">
+	<div class="community-channel-card-container">
 		<router-link
 			v-app-observe-dimensions="updateCardHeight"
 			class="community-channel-card sheet sheet-no-full-bleed sheet-full"
