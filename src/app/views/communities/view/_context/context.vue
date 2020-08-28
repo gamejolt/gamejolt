@@ -1,7 +1,7 @@
 <script lang="ts" src="./context"></script>
 
 <template>
-	<div v-if="!isLoading" class="sidebar-context-channels">
+	<div v-if="routeStore.isLoaded" class="sidebar-context-channels">
 		<div class="-card">
 			<app-communities-view-card overflow />
 		</div>
