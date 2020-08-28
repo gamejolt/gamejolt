@@ -558,7 +558,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		}
 
 		if (type.length > 0) {
-			this.lastOpenLeftPane = this.overlayedLeftPane;
+			this.lastOpenLeftPane = type;
 		}
 
 		this.mobileCbarShowing = !!this.overlayedLeftPane;
