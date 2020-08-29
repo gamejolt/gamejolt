@@ -134,7 +134,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	notificationState: ActivityFeedState | null = null;
 
 	mobileCbarShowing = false;
-	lastOpenLeftPane: TogglableLeftPane = 'library';
+	lastOpenLeftPane: Exclude<TogglableLeftPane, 'context'> = 'library';
 	private overlayedLeftPane: TogglableLeftPane = '';
 	private overlayedRightPane = '';
 	hasContentSidebar = false;
@@ -557,7 +557,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			this.overlayedLeftPane = type;
 		}
 
-		if (type) {
+		if (type && type !== 'context') {
 			this.lastOpenLeftPane = type;
 		}
 
