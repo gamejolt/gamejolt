@@ -195,8 +195,6 @@ function _setParentCommentCount(store: CommentStoreModel, count: number) {
 export function setCommentCount(store: CommentStoreModel, count: number) {
 	store.count = count;
 
-	// JODO: Check this out. It might have something to do with why removing
-	// a parent comment still lists the children in the count.
 	if (count) {
 		store.totalCount = count;
 	}

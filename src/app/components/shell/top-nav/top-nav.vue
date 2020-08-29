@@ -200,7 +200,7 @@
 	// Transition the width of the cbar toggle to better match up with the cbar.
 	&-cbar
 		text-align: center
-		min-width: 40px
+		min-width: 50px
 		transition: min-width 300ms $weak-ease-out
 
 		&.active
