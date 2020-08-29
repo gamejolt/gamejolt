@@ -557,7 +557,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 			this.overlayedLeftPane = type;
 		}
 
-		if (type.length > 0) {
+		if (type) {
 			this.lastOpenLeftPane = type;
 		}
 
