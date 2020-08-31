@@ -13,7 +13,7 @@ export class ChatNotificationGrowl {
 
 		Growls.info({
 			onclick: () => enterChatRoom(chat, message.room_id),
-			system: true,
+			system: chat.userChannel?.elector.isLeader,
 
 			title: `💬 ${message.user.display_name} (@${message.user.username})`,
 			message: this.generateSystemMessage(message),

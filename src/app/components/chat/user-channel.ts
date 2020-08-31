@@ -21,9 +21,9 @@ interface ClearNotificationsPayload {
 export class ChatUserChannel extends Channel {
 	readonly client: ChatClient;
 	readonly socket: Socket;
+	readonly elector: LeaderElector;
 
 	private notificationChannel: BroadcastChannel;
-	private elector: LeaderElector;
 
 	constructor(userId: number, client: ChatClient, params?: any) {
 		super('user:' + userId, params, client.socket as Socket);
@@ -118,9 +118,7 @@ export class ChatUserChannel extends Channel {
 			this.client.friendsList.update(friend);
 		}
 
-		if (this.elector.isLeader) {
-			ChatNotificationGrowl.show(this.client, message);
-		}
+		ChatNotificationGrowl.show(this.client, message);
 	}
 
 	private onYouUpdated(data: Partial<ChatUser>) {
