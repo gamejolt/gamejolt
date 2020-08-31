@@ -1,11 +1,12 @@
 <template>
 	<app-scroll-inview-parent>
 		<app-theme />
+
+		<slot />
+
 		<app-loading-bar />
 		<app-growls />
 		<app-modals />
-
-		<slot />
 	</app-scroll-inview-parent>
 </template>
 

@@ -133,3 +133,23 @@
 
 	@media $media-xs
 		change-bg('bg-backdrop-xs')
+
+// Center the chat window to the searchbar.
+.-chat-window-offset
+	&-left
+	&-right
+		// Chat takes up the whole screen on this breakpoint, so we can just hide the offsets.
+		@media $media-xs
+			display: none
+
+	// Push the chat window to the right - similar to doing 'margin-left: auto'.
+	&-left
+		flex: 1
+
+	&-right
+		flex-grow: 1
+		flex-shrink: 1000
+		// We want to grow equally when above and shrink immensely when below our
+		// flex-basis amount, relative to the other flex items. 320px seems to
+		// be the value needed for centering on the searchbar in this container.
+		flex-basis: 320px

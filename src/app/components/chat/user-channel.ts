@@ -1,5 +1,6 @@
 import { BroadcastChannel, createLeaderElection, LeaderElector } from 'broadcast-channel';
 import { Channel, Presence, Socket } from 'phoenix';
+import Vue from 'vue';
 import { ChatClient, isInChatRoom, leaveChatRoom, newChatNotification } from './client';
 import { ChatMessage } from './message';
 import { ChatNotificationGrowl } from './notification-growl/notification-growl.service';
@@ -11,6 +12,10 @@ interface UserPresence {
 
 interface FriendRemovePayload {
 	user_id: number;
+}
+
+interface ClearNotificationsPayload {
+	room_id: number;
 }
 
 export class ChatUserChannel extends Channel {
@@ -35,6 +40,7 @@ export class ChatUserChannel extends Channel {
 		this.on('friend_remove', this.onFriendRemove.bind(this));
 		this.on('notification', this.onNotification.bind(this));
 		this.on('you_updated', this.onYouUpdated.bind(this));
+		this.on('clear_notifications', this.onClearNotifications.bind(this));
 		this.onClose(() => {
 			this.notificationChannel.close();
 			this.elector.die();
@@ -120,5 +126,9 @@ export class ChatUserChannel extends Channel {
 	private onYouUpdated(data: Partial<ChatUser>) {
 		const newUser = new ChatUser(data);
 		this.client.currentUser = newUser;
+	}
+
+	private onClearNotifications(data: ClearNotificationsPayload) {
+		Vue.delete(this.client.notifications, '' + data.room_id);
 	}
 }

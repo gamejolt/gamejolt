@@ -1,8 +1,16 @@
-import { Component, InjectReactive } from 'vue-property-decorator';
+import { Component, Inject, InjectReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
 import { Comment } from '../../../../_common/comment/comment-model';
+import {
+	CommentStoreManager,
+	CommentStoreManagerKey,
+	CommentStoreModel,
+	lockCommentStore,
+	releaseCommentStore,
+	setCommentCount,
+} from '../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../_common/comment/modal/modal.service';
 import { CommentThreadModal } from '../../../../_common/comment/thread/modal.service';
 import { Community } from '../../../../_common/community/community.model';
@@ -65,6 +73,7 @@ import { RouteStore, RouteStoreModule } from '../profile.store';
 })
 export default class RouteProfileOverview extends BaseRouteComponent {
 	@InjectReactive(ChatKey) chat?: ChatClient;
+	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
 
 	@State
 	app!: Store['app'];
@@ -115,7 +124,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	trophyCount!: RouteStore['trophyCount'];
 
 	@Action
-	toggleRightPane!: Store['toggleRightPane'];
+	toggleLeftPane!: Store['toggleLeftPane'];
+
+	commentStore: CommentStoreModel | null = null;
 
 	showFullDescription = false;
 	canToggleDescription = false;
@@ -305,6 +316,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		Meta.twitter = $payload.twitter || {};
 		Meta.twitter.title = this.routeTitle;
 
+		// Release the CommentStore if there was one left over.
+		this.clearCommentStore();
+
 		this.showFullDescription = false;
 		this.showAllCommunities = false;
 		this.isLoadingAllCommunities = false;
@@ -321,6 +335,10 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 				this.user,
 				'shouts'
 			);
+
+			// Initialize a CommentStore lock for profile shouts.
+			this.commentStore = lockCommentStore(this.commentManager, 'User', this.user.id);
+			setCommentCount(this.commentStore, this.user.comment_count);
 		}
 
 		if ($payload.knownFollowers) {
@@ -334,9 +352,17 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	destroyed() {
+		this.clearCommentStore();
 		if (this.permalinkWatchDeregister) {
 			this.permalinkWatchDeregister();
 			this.permalinkWatchDeregister = undefined;
+		}
+	}
+
+	clearCommentStore() {
+		if (this.commentStore) {
+			releaseCommentStore(this.commentManager, this.commentStore);
+			this.commentStore = null;
 		}
 	}
 
@@ -354,7 +380,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			const chatUser = this.chat.friendsList.collection.find(u => u.id === this.user!.id);
 			if (chatUser) {
 				if (Screen.isXs) {
-					this.toggleRightPane();
+					this.toggleLeftPane('chat');
 				}
 				enterChatRoom(this.chat, chatUser.room_id);
 			}

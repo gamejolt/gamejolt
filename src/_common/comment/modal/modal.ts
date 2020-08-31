@@ -1,11 +1,11 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import { number } from '../../filters/number';
 import { BaseModal } from '../../modal/base';
 import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
 import { getCommentModelResourceName } from '../comment-model';
-import { CommentState, CommentStore } from '../comment-store';
+import { CommentStoreManager, CommentStoreManagerKey, getCommentStore } from '../comment-store';
 import AppCommentWidget from '../widget/widget.vue';
 import { DisplayMode } from './modal.service';
 
@@ -15,6 +15,8 @@ import { DisplayMode } from './modal.service';
 	},
 })
 export default class AppCommentModal extends BaseModal {
+	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
+
 	@Prop(String)
 	displayMode!: DisplayMode;
 
@@ -24,14 +26,15 @@ export default class AppCommentModal extends BaseModal {
 	@Prop(propOptional(String))
 	initialTab?: string;
 
-	@CommentState
-	getCommentStore!: CommentStore['getCommentStore'];
-
 	readonly number = number;
 	readonly Screen = Screen;
 
 	get commentsCount() {
-		const store = this.getCommentStore(getCommentModelResourceName(this.model), this.model.id);
+		const store = getCommentStore(
+			this.commentManager,
+			getCommentModelResourceName(this.model),
+			this.model.id
+		);
 		return store ? store.totalCount : 0;
 	}
 
@@ -51,6 +54,7 @@ export default class AppCommentModal extends BaseModal {
 			return;
 		}
 
+		// JODO: Not sure what's going on with this typing
 		this.$router.replace(Object.assign({}, this.$route, { hash: '' }));
 	}
 }

@@ -3,14 +3,15 @@
  */
 $shell-nav-item-spacing = 12px
 $shell-nav-item-height = 50px
-$shell-nav-item-color = $dark-theme-fg
+$shell-nav-item-color = var(--theme-fg)
 
 ul.shell-nav
 	@extend .list-unstyled
 	font-size: 15px // Stupid custom size!
 	margin-bottom: 0
 
-	.tag, .badge
+	.tag
+	.badge
 		float: right
 		margin-left: 5px
 		margin-top: 15px
@@ -42,12 +43,14 @@ ul.shell-nav
 		.jolticon
 			vertical-align: text-bottom
 
-	.tag, .badge, .jolticon
+	.tag
+	.badge
+	.jolticon
 		position: relative
 		z-index: 1
 
 	small
-		color: $dark-theme-fg-muted
+		color: var(--theme-fg-muted)
 
 	& > li
 		margin-bottom: 0
@@ -63,18 +66,21 @@ ul.shell-nav
 			line-height: $shell-nav-item-height
 
 			&:hover
-				change-bg('darker')
-				color: $dark-theme-link-hover
+				background-color: var(--theme-bg-subtle)
+				color: var(--theme-link-hover)
 
 			&.no-icon
 				padding-left: 15px
 
 			&.active
-				&, &:hover
-					theme-prop('color', 'highlight')
+				background-color: var(--theme-bg-subtle)
+
+				&
+				&:hover
+					theme-prop('color', 'bi-bg')
 
 					.jolticon
-						theme-prop('color', 'highlight')
+						theme-prop('color', 'bi-bg')
 
 					.tag
 						@extend .tag-highlight
@@ -118,7 +124,7 @@ ul.shell-nav ul
 	letter-spacing: 0.1em
 	line-height: 1
 	text-transform: uppercase
-	color: $dark-theme-fg
+	color: var(--theme-fg)
 	margin-top: $font-size-base * 2
 	margin-bottom: ($font-size-base / 2)
 	margin-left: 15px
@@ -129,7 +135,7 @@ ul.shell-nav ul
 
 	& > small
 		float: right
-		color: $dark-theme-fg-muted
+		color: var(--theme-fg-muted)
 		font-weight: normal
 
 	& > .badge
@@ -138,7 +144,7 @@ ul.shell-nav ul
 		margin-left: 5px
 
 	a&:hover
-		color: $dark-theme-link-hover
+		color: var(--theme-link-hover)
 		text-decoration: underline
 
 /**
@@ -163,5 +169,6 @@ ul.shell-nav ul
 .nav-controls
 	padding: 0 15px 0 15px
 
-	& > .form-control, & > .button
+	& > .form-control
+	& > .button
 		margin-bottom: $font-size-base
