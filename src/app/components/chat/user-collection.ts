@@ -47,7 +47,7 @@ export class ChatUserCollection {
 
 		if (user.isOnline) {
 			++this.onlineCount;
-		} else if (user.isOnline) {
+		} else {
 			++this.offlineCount;
 		}
 
