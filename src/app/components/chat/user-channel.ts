@@ -49,6 +49,11 @@ export class ChatUserChannel extends Channel {
 	}
 
 	private initLeader() {
+		// This function begins the process of attemping to become the leader.
+		// All tabs need this process to be active. This promise will resolve if
+		// this tab ever becomes the leader. It should fail if the tab loses
+		// leadership. When that happens we want to try just to become leader
+		// again.
 		this.elector.awaitLeadership().catch(() => this.initLeader());
 	}
 
