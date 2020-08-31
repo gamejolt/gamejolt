@@ -12815,7 +12815,7 @@ vue-eslint-parser@^7.1.0:
 
 "vue-gettext@github:gamejolt/vue-gettext#lazy":
   version "2.0.23"
-  resolved "https://codeload.github.com/gamejolt/vue-gettext/tar.gz/37356758f8f1515337107aef7c720c5d0e52eaea"
+  resolved "https://codeload.github.com/gamejolt/vue-gettext/tar.gz/52c706e8c51e570da250e455cfed35e39651826c"
 
 vue-hot-reload-api@^2.3.0:
   version "2.3.1"
