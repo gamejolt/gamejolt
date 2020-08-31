@@ -39,8 +39,10 @@ export class ChatUserChannel extends Channel {
 			this.notificationChannel.close();
 			this.elector.die();
 		});
+	}
 
-		this.elector.awaitLeadership();
+	async initLeader() {
+		await this.elector.awaitLeadership();
 	}
 
 	private setupPresence() {

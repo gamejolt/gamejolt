@@ -275,6 +275,7 @@ export function destroy(chat: ChatClient) {
 async function joinUserChannel(chat: ChatClient, userId: number) {
 	const channel = new ChatUserChannel(userId, chat);
 	const request = `Join user channel ${userId}`;
+	await channel.initLeader();
 
 	await pollRequest(
 		chat,
