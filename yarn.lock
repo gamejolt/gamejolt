@@ -1626,7 +1626,7 @@ braces@^3.0.1:
   dependencies:
     fill-range "^7.0.1"
 
-broadcast-channel@^3.1.0:
+broadcast-channel@3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/broadcast-channel/-/broadcast-channel-3.1.0.tgz#b4a6970fc72c4d68fc859321a6af850e66cb2dfa"
   integrity sha512-zrjTunJRva1aFW9UlLtoMnB05tu8hbb7qbv3PxXXGnxp3t9VA/KcTIwcC0+u7oLBdlXSnv0yy7pB+UemLjANyQ==
