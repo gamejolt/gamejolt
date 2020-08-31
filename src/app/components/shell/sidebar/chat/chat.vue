@@ -3,27 +3,35 @@
 <template>
 	<div id="shell-chat-pane">
 		<div class="chat-sidebar">
-			<div v-if="hasGroupRooms" class="chat-rooms-list">
+			<div v-if="chat.currentUser">
 				<div class="nav-heading first">
 					<translate>Group Chat Rooms</translate>
 				</div>
 
-				<ul class="shell-nav">
-					<li v-for="room of chat.groupRooms" :key="room.id">
-						<a
-							:class="{ active: chat.room && chat.room.id === room.id }"
-							:title="room.getGroupTitle(chat)"
-							@click="onRoomClicked(room.id)"
-						>
-							<span class="shell-nav-icon">
-								<app-jolticon icon="users" />
-							</span>
-							<span class="shell-nav-label">
-								{{ room.getGroupTitle(chat) }}
-							</span>
-						</a>
-					</li>
-				</ul>
+				<div class="nav-controls">
+					<app-button primary block class="offline-disable">
+						<translate>New Group Chat</translate>
+					</app-button>
+				</div>
+
+				<div v-if="hasGroupRooms" class="chat-rooms-list">
+					<ul class="shell-nav">
+						<li v-for="room of chat.groupRooms" :key="room.id">
+							<a
+								:class="{ active: chat.room && chat.room.id === room.id }"
+								:title="room.getGroupTitle(chat)"
+								@click="onRoomClicked(room.id)"
+							>
+								<span class="shell-nav-icon">
+									<app-jolticon icon="users" />
+								</span>
+								<span class="shell-nav-label">
+									{{ room.getGroupTitle(chat) }}
+								</span>
+							</a>
+						</li>
+					</ul>
+				</div>
 			</div>
 
 			<!-- Friends List -->
