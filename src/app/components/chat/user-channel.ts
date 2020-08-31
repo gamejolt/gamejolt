@@ -25,7 +25,7 @@ export class ChatUserChannel extends Channel {
 	private notificationChannel: BroadcastChannel;
 	private elector: LeaderElector;
 
-	constructor(userId: number, client: ChatClient, params?: object) {
+	constructor(userId: number, client: ChatClient, params?: any) {
 		super('user:' + userId, params, client.socket as Socket);
 		this.client = client;
 		this.socket = client.socket as Socket;
