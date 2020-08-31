@@ -22,8 +22,8 @@ export class ChatUserChannel extends Channel {
 	readonly client: ChatClient;
 	readonly socket: Socket;
 
-	private notificationChannel: BroadcastChannel;
-	private elector: LeaderElector;
+	private readonly notificationChannel: BroadcastChannel;
+	private readonly elector: LeaderElector;
 
 	constructor(userId: number, client: ChatClient, params?: any) {
 		super('user:' + userId, params, client.socket as Socket);
@@ -32,6 +32,7 @@ export class ChatUserChannel extends Channel {
 		(this.socket as any).channels.push(this);
 		this.notificationChannel = new BroadcastChannel('notification_channel');
 		this.elector = createLeaderElection(this.notificationChannel);
+		this.initLeader();
 
 		this.setupPresence();
 
@@ -47,8 +48,8 @@ export class ChatUserChannel extends Channel {
 		});
 	}
 
-	async initLeader() {
-		await this.elector.awaitLeadership();
+	private initLeader() {
+		this.elector.awaitLeadership().catch(() => this.initLeader());
 	}
 
 	private setupPresence() {
@@ -118,9 +119,7 @@ export class ChatUserChannel extends Channel {
 			this.client.friendsList.update(friend);
 		}
 
-		if (this.elector.isLeader) {
-			ChatNotificationGrowl.show(this.client, message);
-		}
+		ChatNotificationGrowl.show(this.client, message, this.elector.isLeader);
 	}
 
 	private onYouUpdated(data: Partial<ChatUser>) {
