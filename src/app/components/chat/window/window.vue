@@ -84,6 +84,16 @@
 								:to="room.user.url"
 							>
 								<img :src="room.user.img_avatar" alt="" />
+
+								<div
+									class="-user-status"
+									:class="{
+										'-online': room.user.isOnline,
+										'-offline': !room.user.isOnline,
+									}"
+								>
+									<div v-if="!room.user.isOnline" class="-user-status-inner" />
+								</div>
 							</router-link>
 
 							<h3 v-if="!room.isPmRoom" class="anim-fade-in-right no-animate-xs">
