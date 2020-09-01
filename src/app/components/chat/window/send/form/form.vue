@@ -1,12 +1,31 @@
+<script lang="ts" src="./form"></script>
+
 <template>
-	<app-form name="chat-send-form" ref="form">
+	<app-form ref="form" name="chat-send-form">
 		<app-shortkey shortkey="tab" @press="onTabKeyPressed" />
+
+		<div class="-top-indicators">
+			<span v-if="Screen.isXs && getTypingText().length > 0" class="-typing">
+				{{ getTypingText() }}
+			</span>
+		</div>
+
+		<div v-if="isEditing" class="-editing-message">
+			<app-jolticon icon="edit" />
+			<translate>Editing Message</translate>
+			<a class="-editing-message-cancel" @click="cancelEditing">
+				<translate>Cancel</translate>
+			</a>
+		</div>
 
 		<app-form-group
 			name="content"
 			hide-label
 			class="-form"
-			:class="{ '-form-shifted': shouldShiftEditor }"
+			:class="{
+				'-form-shifted': shouldShiftEditor,
+				'-editing': isEditing,
+			}"
 		>
 			<div class="-input">
 				<app-form-control-content
@@ -21,64 +40,177 @@
 					}"
 					:max-height="160"
 					:display-rules="displayRules"
-					autofocus
+					:compact="Screen.isXs"
+					:autofocus="!Screen.isMobile"
+					focus-end
 					@submit="onSubmit"
 					@insert-block-node="onEditorInsertBlockNode"
 					@focus="onFocusEditor"
 					@blur="onBlurEditor"
+					@keydown.native.up="onUpKeyPressed($event)"
+					@changed="onChange($event)"
 				/>
 
 				<app-form-control-errors label="message" />
 			</div>
 
 			<app-button
-				:disabled="!valid || !hasContent"
-				v-app-tooltip="$gettext(`Send message`)"
+				v-app-tooltip="isEditing ? $gettext(`Edit message`) : $gettext(`Send message`)"
+				:disabled="isSendButtonDisabled"
 				class="-send-button"
 				sparse
-				icon="share-airplane"
+				:icon="isEditing ? 'check' : 'share-airplane'"
 				:primary="hasContent"
 				:trans="!hasContent"
 				:solid="hasContent"
 				@click="onSubmit"
 			/>
 		</app-form-group>
+
+		<div v-if="!Screen.isXs" class="-bottom-indicators anim-fade-in no-animate-leave">
+			<transition name="fade">
+				<span v-if="!Screen.isXs && getTypingText().length > 0" class="-typing">
+					{{ getTypingText() }}
+				</span>
+			</transition>
+
+			<span v-if="showMultiLineNotice" class="-multi-line">
+				<app-jolticon icon="notice" />
+				<span v-if="isMac" v-translate>
+					You are in multi-line editing mode. Press
+					<code>cmd+enter</code>
+					to send.
+				</span>
+				<span v-else v-translate>
+					You are in multi-line editing mode. Press
+					<code>ctrl+enter</code>
+					to send.
+				</span>
+			</span>
+		</div>
 	</app-form>
 </template>
 
 <style lang="stylus" scoped>
-@require '../../variables'
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '../../variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
-$-button-padding = 48px
+$-button-height = 48px
+$-button-width = 40px
+$-button-margin = 4px
+$-button-spacing = $-button-width + ($-button-margin * 3)
+$-button-spacing-xs = $-button-height
 
 .-form
 	display: flex
 	position: relative
-	margin-bottom: 16px
+	margin-bottom: 0
 
 	@media $media-xs
-		margin-bottom: 2px
+		margin-top: 4px
+		border-top: $border-width-base solid var(--theme-bg-subtle)
+		padding-top: 1px
+
+	@media $media-sm-up
+		margin-top: 8px
 
 	&-shifted
 		margin-bottom: 52px
 
-.-input
-	margin-right: 4px
-	width: "calc(100% + 4px - %s)" % ($-button-padding)
+	&.-editing
+		margin-top: 0
+		padding-top: 1px
+		border-top: none
 
-	@media $media-md-up
-		margin-right: 8px
+.-bottom-indicators
+.-editing-message
+	height: 28px
+	color: var(--theme-light)
+	padding: 4px 0
+
+.-top-indicators
+.-bottom-indicators
+	display: flex
+
+.-top-indicators
+	padding: 4px 4px 0 4px
+	color: var(--theme-light)
+
+.-bottom-indicators
+	align-items: center
+	margin-left: $left-gutter-size + $avatar-size
+	margin-right: $-button-spacing
+
+.-typing
+.-multi-line
+	&
+	.jolticon
+		font-size: $font-size-tiny
+
+.-typing
+	text-overflow()
+	margin-right: auto
+	transition-property: opacity
+	transition-duration: 500ms
+	transition-timing-function: $strong-ease-out
+
+	@media $media-sm-up
+		padding-right: 24px
+
+	&.fade-leave-active
+		transition-duration: 250ms
+
+	&.fade-enter
+	&.fade-leave-to
+		opacity: 0
+
+.-multi-line
+	flex: none
+	margin-left: auto
+
+.-editing-message
+	position: relative
+
+	@media $media-xs
+		padding-left: 4px
+		border-top: $border-width-base solid var(--theme-bg-subtle)
+
+	@media $media-sm-up
 		margin-left: $left-gutter-size + $avatar-size
-		width: "calc(100% - %s)" % ($left-gutter-size + $avatar-size + $-button-padding)
+		margin-right: $-button-spacing
+
+	&-cancel
+		position: absolute
+		right: 0
+
+		@media $media-xs
+			right: $-button-spacing-xs + 4px
+
+.-input
+	width: 'calc(100% - %s)' % $-button-spacing-xs
+
+	@media $media-sm-up
+		margin-left: $left-gutter-size + $avatar-size
+		width: 'calc(100% - %s)' % ($left-gutter-size + $avatar-size + $-button-spacing)
 
 .-send-button
 	display: flex
 	align-items: center
 	justify-content: center
-	width: 40px
+	height: $-button-height
+	margin: 0
+	flex: none
+	align-self: flex-end
 	transition: color 0.3s, background-color 0.3s
+
+	@media $media-xs
+		width: $-button-spacing-xs
+		border-radius: 0
+
+	@media $media-sm-up
+		width: $-button-width
+		margin: 0 ($-button-margin * 2) 0 $-button-margin
 
 	&.-disabled
 		&:hover
@@ -86,5 +218,3 @@ $-button-padding = 48px
 			background-color: transparent !important
 			border-color: transparent !important
 </style>
-
-<script lang="ts" src="./form"></script>

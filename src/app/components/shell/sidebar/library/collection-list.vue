@@ -1,29 +1,34 @@
+<script lang="ts" src="./collection-list"></script>
+
 <template>
 	<ul class="shell-nav">
 		<li
-			class="offline-disable"
 			v-for="collection of filtered"
-			:key="collection._id"
 			v-show="!filter || filterComparator(collection)"
+			:key="collection._id"
+			class="offline-disable"
 		>
 			<router-link
+				v-app-track-event="`sidebar:collection:playlist`"
 				:to="collection.routeLocation"
 				active-class="active"
 				:title="collection.getTitle()"
-				v-app-track-event="`sidebar:collection:playlist`"
 			>
 				<span class="shell-nav-icon">
 					<app-jolticon icon="playlist" />
 				</span>
 
-				<span class="shell-nav-label" v-if="collection.type === 'developer'">
+				<span
+					v-if="collection.owner && collection.type === 'developer'"
+					class="shell-nav-label"
+				>
 					@{{ collection.owner.username }}
 				</span>
 
-				<span class="shell-nav-label" v-else>
+				<span v-else class="shell-nav-label">
 					{{ collection.name }}
 
-					<small v-if="collection.from_subscription && collection.owner">
+					<small v-if="collection.owner && collection.from_subscription">
 						<translate>library.by</translate>
 						@{{ collection.owner.username }}
 					</small>
@@ -32,5 +37,3 @@
 		</li>
 	</ul>
 </template>
-
-<script lang="ts" src="./collection-list"></script>

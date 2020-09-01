@@ -26,6 +26,7 @@
 			<app-button class="-prev" v-if="page > 1" overlay trans @click.stop="goPrev">
 				<app-jolticon icon="chevron-left" />
 			</app-button>
+			<div v-else-if="post.media.length > 1" class="-prev" @click.stop></div>
 
 			<app-button
 				class="-next"
@@ -36,6 +37,7 @@
 			>
 				<app-jolticon icon="chevron-right" />
 			</app-button>
+			<div v-else-if="post.media.length > 1" class="-next" @click.stop></div>
 		</v-touch>
 
 		<app-event-item-media-indicator

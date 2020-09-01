@@ -1,29 +1,38 @@
+<script lang="ts" src="./top-nav"></script>
+
 <template>
 	<nav id="shell-top-nav" class="navbar backdrop-affected">
 		<div ref="left" class="navbar-left" :style="{ 'min-width': minColWidth }">
-			<div class="-col" v-app-observe-dimensions="checkColWidths">
+			<div v-app-observe-dimensions="checkColWidths" class="-col">
 				<a
-					v-if="hasSidebar"
-					class="navbar-item"
+					v-if="Screen.isXs"
+					v-app-track-event="`top-nav:cbar:toggle`"
+					class="-small-cbar navbar-item"
 					:class="{
-						'-menu-toggle': hasCbar,
-						active: isLeftPaneVisible,
+						active: !!visibleLeftPane,
 					}"
-					@click="toggleLeftPane"
-					v-app-tooltip.bottom-end="$gettext(`Playlists (m)`)"
-					v-app-track-event="`top-nav:main-menu:toggle`"
+					@click="toggleCbarMenu"
 				>
 					<app-jolticon icon="menu" />
+					<div
+						v-if="chat && chat.friendNotificationsCount > 0"
+						class="-notification-chat notification-tag tag tag-highlight"
+					>
+						{{ chat.friendNotificationsCount }}
+					</div>
 				</a>
 
 				<!-- History Navigator (for desktop client) -->
 				<app-client-history-navigator v-if="GJ_IS_CLIENT" />
 
 				<router-link
-					class="navbar-item"
-					:class="{ active: $route.name === 'home' }"
-					:to="{ name: 'home' }"
 					v-app-track-event="`top-nav:main-menu:home`"
+					class="navbar-item"
+					:class="{
+						active: $route.name === 'home',
+						'-small-home': Screen.isSm,
+					}"
+					:to="{ name: 'home' }"
 				>
 					<app-theme-svg
 						v-if="!Screen.isMobile"
@@ -33,8 +42,8 @@
 					/>
 					<app-theme-svg v-else src="~img/jolt.svg" alt="" strict-colors />
 					<span
-						class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
 						v-if="unreadActivityCount > 0"
+						class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
 					>
 						{{ unreadActivityCount < 100 ? unreadActivityCount : '99+' }}
 					</span>
@@ -42,10 +51,10 @@
 
 				<router-link
 					v-if="!Screen.isXs && app.user"
+					v-app-track-event="`top-nav:main-menu:discover`"
 					class="-explore navbar-item"
 					:class="{ active: $route.name === 'discover.home' }"
 					:to="{ name: 'discover.home' }"
-					v-app-track-event="`top-nav:main-menu:discover`"
 				>
 					<app-jolticon icon="compass-needle" class="-explore-icon" />
 					<strong class="text-upper">
@@ -55,47 +64,47 @@
 
 				<app-popper
 					v-if="!Screen.isXs"
+					v-app-track-event="`top-nav:more-menu:toggle`"
 					popover-class="fill-darkest"
 					hide-on-state-change
 					fixed
 					@show="moreMenuShowing = true"
 					@hide="moreMenuShowing = false"
-					v-app-track-event="`top-nav:more-menu:toggle`"
 				>
 					<a class="navbar-item" :class="{ active: moreMenuShowing }">
 						<app-jolticon icon="ellipsis-v" />
 					</a>
 
-					<div slot="popover">
+					<template #popover>
 						<div class="list-group-dark">
 							<router-link
-								class="list-group-item has-icon offline-disable"
 								v-if="!GJ_IS_CLIENT && !Screen.isXs"
-								:to="{ name: 'landing.client' }"
 								v-app-track-event="`sidebar:client`"
+								class="list-group-item has-icon offline-disable"
+								:to="{ name: 'landing.client' }"
 							>
 								<app-jolticon icon="client" />
 								<translate>Client</translate>
 							</router-link>
 							<router-link
+								v-app-track-event="`sidebar:forums`"
 								class="list-group-item has-icon offline-disable"
 								:to="{ name: 'forums.landing.overview' }"
-								v-app-track-event="`sidebar:forums`"
 							>
 								<app-jolticon icon="forums" />
 								<translate>Forums</translate>
 							</router-link>
 							<a
+								v-app-track-event="`sidebar:jams`"
 								class="list-group-item has-icon offline-disable"
 								:href="Environment.jamsBaseUrl"
 								target="_blank"
-								v-app-track-event="`sidebar:jams`"
 							>
 								<app-jolticon icon="jams" />
 								<translate>Jams</translate>
 							</a>
 						</div>
-					</div>
+					</template>
 				</app-popper>
 			</div>
 		</div>
@@ -103,7 +112,7 @@
 		<div class="navbar-center">
 			<div class="-search">
 				<!-- Search Input -->
-				<app-search v-if="shouldShowSearch"></app-search>
+				<app-search v-if="shouldShowSearch" />
 			</div>
 		</div>
 
@@ -113,12 +122,12 @@
 			https://github.com/gamejolt/issue-tracker/issues/382
 		-->
 		<div
-			ref="right"
 			v-if="app.userBootstrapped"
+			ref="right"
 			class="navbar-right"
 			:style="{ 'min-width': minColWidth }"
 		>
-			<div class="-col" v-app-observe-dimensions="checkColWidths">
+			<div v-app-observe-dimensions="checkColWidths" class="-col">
 				<template v-if="app.user">
 					<!-- Notifications -->
 					<app-shell-notification-popover />
@@ -126,29 +135,13 @@
 					<!-- Friend Requests -->
 					<app-shell-friend-request-popover />
 
-					<!-- Chat -->
-					<a
-						v-if="chat"
-						class="navbar-item"
-						:class="{ active: isRightPaneVisible }"
-						@click="toggleRightPane"
-						v-app-tooltip.bottom="$gettext(`Chat and Friends List (c)`)"
-						v-app-track-event="`top-nav:chat:toggle`"
-					>
-						<span
-							class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
-							v-if="chat.friendNotificationsCount"
-						>
-							{{ chat.friendNotificationsCount }}
-						</span>
-						<app-jolticon icon="user-messages" />
-					</a>
-
 					<!-- Connection Status -->
 					<span
 						v-if="Connection.isOffline"
+						v-app-tooltip.left="
+							$gettext(`We're having trouble connecting to Game Jolt.`)
+						"
 						class="navbar-item disconnected-icon"
-						v-app-tooltip.left="$gettext(`We're having trouble connecting to Game Jolt.`)"
 					>
 						<app-jolticon icon="offline" />
 					</span>
@@ -162,14 +155,17 @@
 					<ul class="navbar-items">
 						<li>
 							<a
-								:href="Environment.authBaseUrl + '/login'"
 								v-app-track-event="`top-nav:login:click`"
+								:href="Environment.authBaseUrl + '/login'"
 							>
 								<translate>nav.login</translate>
 							</a>
 						</li>
 						<li>
-							<a :href="Environment.authBaseUrl + '/join'" v-app-track-event="`top-nav:join:click`">
+							<a
+								v-app-track-event="`top-nav:join:click`"
+								:href="Environment.authBaseUrl + '/join'"
+							>
 								<translate>Sign Up</translate>
 							</a>
 						</li>
@@ -181,8 +177,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 #shell-top-nav
 	position: fixed
@@ -191,14 +187,30 @@
 	.disconnected-icon
 		theme-prop('color', 'notice')
 
-		&, .jolticon
+		&
+		.jolticon
 			cursor: help
 
-// We want to make this the same width as the cbar, so that it aligns.
-@media $media-sm-up
-	.-menu-toggle
-		width: $shell-cbar-width
+// Make the small top-nav items the same width as the cbar while the cbar is showing.
+.-small
+	&-home
 		text-align: center
+		width: $shell-cbar-width
+
+	// Transition the width of the cbar toggle to better match up with the cbar.
+	&-cbar
+		text-align: center
+		min-width: 50px
+		transition: min-width 300ms $weak-ease-out
+
+		&.active
+			min-width: $shell-cbar-width
+
+		.-notification-chat
+			pointer-events: none
+			position: absolute
+			top: 0
+			right: 0
 
 .-explore-icon
 	position: relative
@@ -212,11 +224,10 @@
 	padding-right: 24px
 	max-width: 600px
 
-.navbar-left, .navbar-right
+.navbar-left
+.navbar-right
 	display: flex
 
 .navbar-right
 	justify-content: flex-end
 </style>
-
-<script lang="ts" src="./top-nav"></script>

@@ -90,6 +90,7 @@ export class ChatClient {
 	isFocused = true;
 
 	messageQueue: ChatMessage[] = [];
+	messageEditing: null | ChatMessage = null;
 
 	/**
 	 * The session room is stored within their local session. It's their last active room. We reopen
@@ -204,8 +205,8 @@ async function connect(chat: ChatClient) {
 	// there is no built in way to stop a Phoenix socket from attempting to reconnect on its own after it got disconnected.
 	// this replaces the socket's "reconnectTimer" property with an empty object that matches the Phoenix "Timer" signature
 	// The 'reconnectTimer' usually restarts the connection after a delay, this prevents that from happening
-	let socketAny: any = chat.socket;
-	if (socketAny.hasOwnProperty('reconnectTimer')) {
+	const socketAny: any = chat.socket;
+	if (Object.prototype.hasOwnProperty.call(socketAny, 'reconnectTimer')) {
 		socketAny.reconnectTimer = { scheduleTimeout: () => {}, reset: () => {} };
 	}
 
@@ -361,12 +362,13 @@ export function setChatRoom(chat: ChatClient, newRoom: ChatRoom | undefined) {
 
 export function newChatNotification(chat: ChatClient, roomId: number) {
 	if (isInChatRoom(chat, roomId) && chat.isFocused) {
+		return;
+	}
+
+	if (chat.notifications[roomId]) {
+		chat.notifications[roomId] = chat.notifications[roomId] + 1;
 	} else {
-		if (chat.notifications[roomId]) {
-			chat.notifications[roomId] = chat.notifications[roomId] + 1;
-		} else {
-			Vue.set(chat.notifications, '' + roomId, 1);
-		}
+		Vue.set(chat.notifications, '' + roomId, 1);
 	}
 }
 
@@ -381,9 +383,9 @@ export function enterChatRoom(chat: ChatClient, roomId: number) {
 
 	// If the chat isn't visible yet, set the session room to this new room and open it. That
 	// will in turn do the entry. Otherwise we want to just switch rooms.
-	if (!store.state.isRightPaneVisible) {
+	if (store.state.visibleLeftPane !== 'chat') {
 		chat.sessionRoomId = roomId;
-		store.dispatch('toggleRightPane');
+		store.dispatch('toggleChatPane');
 	} else {
 		if (!chat.socket) {
 			return;
@@ -402,6 +404,10 @@ function leaveChannel(chat: ChatClient, channel: Channel) {
 }
 
 export function leaveChatRoom(chat: ChatClient) {
+	if (chat.messageEditing) {
+		setMessageEditing(chat, null);
+	}
+
 	if (!chat.room) {
 		return;
 	}
@@ -568,6 +574,11 @@ function sendChatMessage(chat: ChatClient, message: ChatMessage) {
 		});
 }
 
+/** Set the message that is currently being edited, or 'null' to clear the state. */
+export function setMessageEditing(chat: ChatClient, message: ChatMessage | null) {
+	chat.messageEditing = message;
+}
+
 export function retryFailedQueuedMessage(chat: ChatClient, message: ChatMessage) {
 	if (!message._isQueued || !message._error) {
 		return;
@@ -635,6 +646,37 @@ export function setChatFocused(chat: ChatClient, focused: boolean) {
 		} else {
 			chat.roomChannels[chat.room.id].push('unfocus', { roomId: chat.room.id });
 		}
+	}
+}
+
+export function removeMessage(chat: ChatClient, msgId: number) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('message_remove', { id: msgId });
+	}
+}
+
+export function editMessage(chat: ChatClient, message: ChatMessage) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('message_update', {
+			content: message.content,
+			id: message.id,
+		});
+	}
+}
+
+export function startTyping(chat: ChatClient) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('start_typing', {});
+	}
+}
+
+export function stopTyping(chat: ChatClient) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('stop_typing', {});
 	}
 }
 

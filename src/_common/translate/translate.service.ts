@@ -156,7 +156,7 @@ export class Translate {
 		return translator.$gettext(msgid);
 	}
 
-	static $gettextInterpolate(msgid: string, context: any) {
-		return translator.$gettextInterpolate(msgid, context);
+	static $gettextInterpolate(msgid: string, context: any, enableHTMLEscaping = false) {
+		return translator.$gettextInterpolate(msgid, context, enableHTMLEscaping);
 	}
 }

@@ -1,9 +1,9 @@
+<script lang="ts" src="./card"></script>
+
 <template>
-	<app-community-card-base :community="community" :overflow="overflow">
+	<component :is="cardComponent" v-bind="cardProps">
 		<template #thumbnail>
 			<app-editable-thumbnail />
 		</template>
-	</app-community-card-base>
+	</component>
 </template>
-
-<script lang="ts" src="./card"></script>

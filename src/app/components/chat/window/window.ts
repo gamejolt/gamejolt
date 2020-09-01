@@ -27,9 +27,6 @@ import AppChatWindowSend from './send/send.vue';
 	directives: {
 		AppTooltip,
 	},
-	filters: {
-		number,
-	},
 })
 export default class AppChatWindow extends Vue {
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
@@ -39,7 +36,7 @@ export default class AppChatWindow extends Vue {
 
 	@InjectReactive(ChatKey) chat!: ChatClient;
 
-	@Action toggleRightPane!: Store['toggleRightPane'];
+	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
 	isShowingUsers = false;
 	isDescriptionCollapsed = false;
@@ -47,18 +44,18 @@ export default class AppChatWindow extends Vue {
 	readonly ChatRoom = ChatRoom;
 	readonly Screen = Screen;
 
+	get onlineUserCount() {
+		return number(this.users?.onlineCount || 0);
+	}
+
 	close() {
 		// xs size needs to show the friends list when closing the room.
 		// any other size can close the whole chat instead
 		if (Screen.isXs) {
 			leaveChatRoom(this.chat);
 		} else {
-			this.toggleRightPane();
+			this.toggleLeftPane();
 		}
-	}
-
-	showEditRoomModal() {
-		// Chat_SaveRoomModal.show( this.room );
 	}
 
 	toggleUsers() {

@@ -5,15 +5,15 @@ import { ChatMessage } from '../message';
 import AppChatNotificationGrowl from './notification-growl.vue';
 
 export class ChatNotificationGrowl {
-	static async show(chat: ChatClient, message: ChatMessage) {
+	static async show(chat: ChatClient, message: ChatMessage, system = true) {
 		// Skip if already in the room.
-		if (isInChatRoom(chat, message.room_id)) {
+		if (isInChatRoom(chat, message.room_id) && chat.isFocused) {
 			return;
 		}
 
 		Growls.info({
 			onclick: () => enterChatRoom(chat, message.room_id),
-			system: true,
+			system,
 
 			title: `💬 ${message.user.display_name} (@${message.user.username})`,
 			message: this.generateSystemMessage(message),

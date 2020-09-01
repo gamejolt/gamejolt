@@ -16,21 +16,25 @@ const paths = importContext(
 @RouteResolver({
 	async resolver({ route }) {
 		// First check the path as is, then check with "index".
-		let path = route.params.path;
+		const path = route.params.path;
 		if (!path) {
 			return new LocationRedirect({ name: 'home' });
 		}
 
 		if (paths[`./${path}.md`]) {
-			return (await import(
-				/* webpackChunkName: "helpContent" */
-				`../../../../lib/doc-help/src/${path}.md`
-			)).default;
+			return (
+				await import(
+					/* webpackChunkName: "helpContent" */
+					`../../../../lib/doc-help/src/${path}.md`
+				)
+			).default;
 		} else if (paths[`./${path}/index.md`]) {
-			return (await import(
-				/* webpackChunkName: "helpContent" */
-				`../../../../lib/doc-help/src/${path}/index.md`
-			)).default;
+			return (
+				await import(
+					/* webpackChunkName: "helpContent" */
+					`../../../../lib/doc-help/src/${path}/index.md`
+				)
+			).default;
 		}
 
 		return PayloadError.fromHttpError(404);

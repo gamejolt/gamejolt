@@ -16,6 +16,7 @@ import { routeCommunitiesViewOverview } from './overview/overview.route';
 export const CommunityRouteStoreKey = Symbol('community-route');
 
 export class CommunityRouteStore {
+	isLoaded = false;
 	community: Community = null as any;
 	frontpageChannel: CommunityChannel = null as any;
 	allChannel: CommunityChannel = null as any;
@@ -47,6 +48,7 @@ export class CommunityRouteStore {
 }
 
 export function setCommunity(store: CommunityRouteStore, community: Community) {
+	store.isLoaded = true;
 	store.community = community;
 	_updateChannels(store);
 }
@@ -141,7 +143,6 @@ export function getChannelPathFromRoute(route: Route) {
  */
 export function setCommunityMeta(community: Community, title: string) {
 	const description = Translate.$gettextInterpolate(
-		// tslint:disable-next-line:max-line-length
 		`Welcome to the %{ name } community on Game Jolt! Find and explore %{ name } fan art, lets plays and catch up on the latest news and theories!`,
 		{ name: community.name }
 	);

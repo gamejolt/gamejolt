@@ -1,20 +1,29 @@
+<script lang="ts" src="./add-widget"></script>
+
 <template>
 	<router-link
 		v-if="canCreate"
+		v-app-tooltip="tooltip"
 		class="-add"
 		:to="{ name: 'dash.communities.add' }"
-		v-app-tooltip="tooltip"
 	>
 		<app-jolticon icon="add" big />
 	</router-link>
-	<a v-else class="-add -disabled" v-app-tooltip="tooltip" @click="showGrowl">
+	<a
+		v-else
+		v-app-auth-required
+		v-app-tooltip="tooltip"
+		class="-add"
+		:class="{ '-disabled': user }"
+		@click="showGrowl"
+	>
 		<app-jolticon icon="add" big />
 	</a>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-add
 	pressy()
@@ -41,7 +50,4 @@
 
 	> *
 		pointer-events: none
-
 </style>
-
-<script lang="ts" src="./add-widget"></script>

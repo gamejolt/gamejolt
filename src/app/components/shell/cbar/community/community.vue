@@ -1,3 +1,5 @@
+<script lang="ts" src="./community"></script>
+
 <template>
 	<app-popper
 		class="-community"
@@ -11,29 +13,31 @@
 		@hide="popperVisible = false"
 	>
 		<template #default>
-			<app-shell-cbar-item
-				:is-active="isActive"
-				:is-unread="isUnread"
-				:highlight="highlight"
-				:notification-count="featureCount"
-			>
-				<router-link
-					class="-link link-unstyled"
-					:to="{
-						name: 'communities.view.overview',
-						params: { path: community.path },
-					}"
-					v-app-tooltip.right="tooltip"
+			<div class="-community" @click.capture="onCommunityClick">
+				<app-shell-cbar-item
+					:is-active="isActive"
+					:is-unread="isUnread"
+					:highlight="highlight"
+					:notification-count="featureCount"
 				>
-					<app-media-item-backdrop
-						class="-backdrop"
-						:media-item="community.thumbnail"
-						radius="full"
+					<router-link
+						v-app-tooltip.right="tooltip"
+						class="-link link-unstyled"
+						:to="{
+							name: 'communities.view.overview',
+							params: { path: community.path },
+						}"
 					>
-						<app-community-thumbnail-img class="-thumb" :community="community" />
-					</app-media-item-backdrop>
-				</router-link>
-			</app-shell-cbar-item>
+						<app-media-item-backdrop
+							class="-backdrop"
+							:media-item="community.thumbnail"
+							radius="full"
+						>
+							<app-community-thumbnail-img class="-thumb" :community="community" />
+						</app-media-item-backdrop>
+					</router-link>
+				</app-shell-cbar-item>
+			</div>
 		</template>
 
 		<template #popover>
@@ -44,7 +48,11 @@
 						<translate>Edit Community</translate>
 					</router-link>
 				</app-community-perms>
-				<a class="list-group-item has-icon" v-if="shouldShowLeave" @click="onLeaveCommunityClick">
+				<a
+					v-if="shouldShowLeave"
+					class="list-group-item has-icon"
+					@click="onLeaveCommunityClick"
+				>
 					<app-jolticon icon="remove" notice />
 					<translate>Leave Community</translate>
 				</a>
@@ -57,9 +65,9 @@
 	</app-popper>
 </template>
 
-<style lang="stylus"scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+<style lang="stylus" scoped>
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-community
 	pressy()
@@ -78,5 +86,3 @@
 .-notice
 	theme-prop('color', 'notice')
 </style>
-
-<script lang="ts" src="./community"></script>

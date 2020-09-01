@@ -1,19 +1,30 @@
+<script lang="ts" src="./cbar"></script>
+
 <template>
 	<div id="shell-cbar" class="theme-dark">
-		<app-scroll-scroller class="-scroller" hide-scrollbar>
+		<app-scroll-scroller v-if="hasCbar" class="-scroller" hide-scrollbar>
 			<div class="-inner">
+				<app-shell-cbar-controls />
+
 				<transition-group name="-communities">
 					<app-shell-cbar-community
 						v-for="community of communities"
 						:key="community.id"
+						class="-community-item"
 						:community="community"
 					/>
 				</transition-group>
 				<app-shell-cbar-item>
-					<app-community-discover-widget tooltip-placement="right" @contextmenu.native.prevent />
+					<app-community-discover-widget
+						tooltip-placement="right"
+						@contextmenu.native.prevent
+					/>
 				</app-shell-cbar-item>
 				<app-shell-cbar-item>
-					<app-community-add-widget tooltip-placement="right" @contextmenu.native.prevent />
+					<app-community-add-widget
+						tooltip-placement="right"
+						@contextmenu.native.prevent
+					/>
 				</app-shell-cbar-item>
 			</div>
 		</app-scroll-scroller>
@@ -21,17 +32,29 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import './variables'
 
 #shell-cbar
 	change-bg('darkest')
 	position: fixed
 	width: $shell-cbar-width
+	z-index: $zindex-cbar
+	transform: translateX((-($shell-cbar-width)))
+	transition: transform 300ms $weak-ease-out
 
-.-communities-move
-	transition: transform 0.3s
-	transition-timing-function: $ease-out-back
+.-community-item
+	transition: transform 300ms $ease-out-back, opacity 150ms
+
+.-communities
+	&-enter
+	&-leave-to
+		opacity: 0
+		transform: translateY(-15px)
+
+	&-leave-active
+		position: absolute
 
 .-scroller
 	position: relative
@@ -41,5 +64,3 @@
 .-inner
 	padding: 15px $cbar-h-padding
 </style>
-
-<script lang="ts" src="./cbar"></script>
