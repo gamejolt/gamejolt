@@ -58,7 +58,7 @@
 					filesize: maxFilesize,
 					max_img_dimensions: [maxWidth, maxHeight],
 				}"
-				accept=".png,.jpg,.jpeg"
+				accept=".png,.jpg,.jpeg,.webp"
 			/>
 
 			<app-form-control-errors :label="$gettext(`dash.games.trophies.form.image_error_label`)" />

@@ -52,7 +52,7 @@
 				</li>
 
 				<li>
-					<app-popper>
+					<app-popper popover-class="fill-darkest">
 						<a>
 							<app-jolticon icon="ellipsis-v" />
 						</a>

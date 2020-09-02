@@ -1,3 +1,5 @@
+<script lang="ts" src="./item"></script>
+
 <template>
 	<div
 		class="chat-window-message"
@@ -6,55 +8,114 @@
 			'chat-msg-type-system': message.type === ChatMessage.TypeSystem,
 			'chat-window-message-not-combined': !message.combine,
 			'chat-window-message-combined': message.combine,
-			'chat-window-message-can-mod': canModerate,
+			'chat-window-message-editing': isEditing,
+			'-chat-message-queued': message._showAsQueued,
+			'-chat-message-new': isNew,
 		}"
+		:style="{ 'background-color': isEditingColor }"
 	>
-		<router-link v-if="!message.combine" class="chat-window-message-avatar" :to="message.user.url">
-			<img class="img-responsive" :src="message.user.imgAvatar" alt="" />
+		<router-link
+			v-if="!message.combine"
+			class="chat-window-message-avatar"
+			:to="message.user.url"
+		>
+			<img class="img-responsive" :src="message.user.img_avatar" alt="" />
 		</router-link>
 
 		<div class="chat-window-message-container">
-			<div class="chat-window-message-byline" v-if="!message.combine">
+			<div v-if="!message.combine" class="chat-window-message-byline">
 				<router-link class="chat-window-message-user link-unstyled" :to="message.user.url">
-					{{ message.user.displayName }}
+					{{ message.user.display_name }}
 				</router-link>
-				<span class="chat-window-message-username">@{{ message.user.username }}</span>
+				<span class="chat-window-message-username"> @{{ message.user.username }} </span>
 				<span class="chat-window-message-time">
-					<span :title="loggedOn">
-						{{ message.loggedOn | date('shortTime') }}
+					<span v-if="!message._showAsQueued" v-app-tooltip="loggedOn.tooltip">
+						{{ loggedOn.template }}
+					</span>
+					<span
+						v-else-if="message._error"
+						v-app-tooltip="$gettext(`Failed to send. Press to retry`)"
+						class="chat-window-message-byline-error"
+						@click="onClickResend"
+					>
+						<app-jolticon icon="notice" notice />
+					</span>
+					<span
+						v-else
+						v-app-tooltip="$gettext(`Sending...`)"
+						class="chat-window-message-byline-notice"
+					>
+						<app-jolticon icon="broadcast" />
 					</span>
 				</span>
 			</div>
 
-			<div v-if="canModerate" class="chat-window-message-mod-tools">
-				<a class="link-muted" @click="muteUser" :title="$gettext('Mute User')">
-					<app-jolticon icon="friend-remove-1" />
-				</a>
+			<div
+				v-if="chat.currentUser && chat.currentUser.id === message.user.id"
+				class="chat-window-message-options"
+			>
+				<app-popper>
+					<template #default>
+						<a v-app-tooltip="$gettext('More Options')" class="link-muted">
+							<app-jolticon icon="ellipsis-v" class="middle" />
+						</a>
+					</template>
+
+					<template #popover>
+						<div class="list-group">
+							<a class="list-group-item has-icon" @click="startEdit">
+								<app-jolticon icon="edit" />
+								<translate>Edit Message</translate>
+							</a>
+
+							<a class="list-group-item has-icon" @click="removeMessage">
+								<app-jolticon icon="remove" notice />
+								<translate>Remove Message</translate>
+							</a>
+						</div>
+					</template>
+				</app-popper>
 			</div>
 
 			<div class="chat-window-message-content-wrap">
-				<template v-if="!shouldFadeCollapse">
-					<div class="chat-window-message-content" lang="en" v-html="message.content"></div>
-				</template>
-				<template v-else>
-					<app-fade-collapse
-						:collapse-height="138"
-						:is-open="isExpanded"
-						@require-change="isCollapsable = $event"
-						@expand="isExpanded = true"
+				<template v-if="message.combine">
+					<span
+						v-if="!message._showAsQueued"
+						v-app-tooltip="loggedOn.tooltip"
+						class="chat-window-message-small-time"
 					>
-						<div class="chat-window-message-content" lang="en" v-html="message.content"></div>
-					</app-fade-collapse>
-
-					<p v-if="isCollapsable">
-						<a class="hidden-text-expander" @click="isExpanded = !isExpanded"></a>
-					</p>
+						{{ loggedOn.template }}
+					</span>
+					<span
+						v-else-if="message._error"
+						v-app-tooltip="$gettext(`Failed to send. Press to retry`)"
+						class="chat-window-message-queue-error"
+						@click="onClickResend"
+					>
+						<app-jolticon icon="notice" notice />
+					</span>
+					<span
+						v-else
+						v-app-tooltip="$gettext(`Sending...`)"
+						class="chat-window-message-queue-notice"
+					>
+						<app-jolticon icon="broadcast" />
+					</span>
 				</template>
+
+				<app-content-viewer :source="message.content" :display-rules="displayRules" />
+
+				<span
+					v-if="editingState"
+					v-app-tooltip.touchable="editingState.tooltip"
+					class="-edited"
+					:class="{ 'text-muted': !isEditing }"
+				>
+					<translate>{{ editingState.display }}</translate>
+				</span>
 			</div>
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" src="./item.styl" scoped></style>
-
-<script lang="ts" src="./item"></script>

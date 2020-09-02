@@ -1,9 +1,9 @@
+import { Component } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
+import { number } from '../../../../_common/filters/number';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { AppThemeSvg } from '../../../../_common/theme/svg/svg';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip';
-import { number } from '../../../../_common/filters/number';
-import { Component } from 'vue-property-decorator';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 
 @Component({
 	name: 'RouteLandingGameApi',

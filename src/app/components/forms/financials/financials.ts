@@ -13,7 +13,7 @@ import {
 import { Growls } from '../../../../_common/growls/growls.service';
 import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { ReferralEntry } from '../../../../_common/referral-entry/referral-entry.model';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserStripeManagedAccount } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
 import { User } from '../../../../_common/user/user.model';
 import AppDeveloperTerms from './developer-terms/developer-terms.vue';

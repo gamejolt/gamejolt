@@ -1,6 +1,8 @@
 <template>
 	<app-popper
 		v-if="!Connection.isClientOffline"
+		popover-class="fill-dark"
+		fixed
 		hide-on-state-change
 		@show="onShow()"
 		@hide="onHide()"
@@ -24,7 +26,7 @@
 					<translate>Mark All as Read</translate>
 				</a>
 			</div>
-			<div class="shell-card-popover fill-dark" slot="popover">
+			<div class="shell-card-popover" slot="popover">
 				<template v-if="isLoading">
 					<br />
 					<app-loading centered />

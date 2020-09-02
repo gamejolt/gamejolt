@@ -2,20 +2,21 @@
 	<span v-app-auth-required>
 		<app-button
 			class="-like-button"
-			icon="heart"
+			:icon="!voted ? 'heart' : 'heart-filled'"
 			circle
 			:trans="trans"
 			:overlay="overlay"
 			:block="block"
-			:primary="!!comment.user_vote"
-			:solid="!!comment.user_vote"
+			:primary="voted"
+			:solid="voted"
 			:disabled="isProcessing"
 			@click="toggle"
+			v-app-track-event="`video-like-widget:click`"
 		/>
 		<a
 			v-if="blip"
 			class="blip"
-			:class="{ 'blip-active': !!comment.user_vote }"
+			:class="{ 'blip-active': voted }"
 			@click="showLikers()"
 			v-app-tooltip="$gettext(`View all people that liked this video`)"
 		>

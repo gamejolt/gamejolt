@@ -1,12 +1,15 @@
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { ContentObject } from '../../content-object';
 import AppContentGif from '../../components/gif/gif.vue';
+import { ContentObject } from '../../content-object';
+import { ContentOwner } from '../../content-owner';
 
 @Component({})
 export class AppContentViewerGif extends Vue {
 	@Prop(ContentObject)
 	data!: ContentObject;
+	@Prop(Object)
+	owner!: ContentOwner;
 
 	render(h: CreateElement) {
 		return h(AppContentGif, {
@@ -18,6 +21,7 @@ export class AppContentViewerGif extends Vue {
 				media: this.data.attrs.media,
 				url: this.data.attrs.url,
 				isEditing: false,
+				owner: this.owner,
 			},
 		});
 	}

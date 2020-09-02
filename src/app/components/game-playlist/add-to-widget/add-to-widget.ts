@@ -4,7 +4,7 @@ import { State } from 'vuex-class';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { Game } from '../../../../_common/game/game.model';
 import AppPopper from '../../../../_common/popper/popper.vue';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
 import AppGamePlaylistAddToPopover from '../add-to-popover/add-to-popover.vue';
 

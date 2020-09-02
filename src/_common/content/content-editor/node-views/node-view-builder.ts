@@ -36,7 +36,7 @@ export function buildNodeViews(owner: ContentOwner): NodeViewList {
 	}
 	if (capabilities.gif) {
 		nodeViews.gif = function(node, view, getPos) {
-			return new GifNodeView(node, view, getPos);
+			return new GifNodeView(node, view, getPos, owner);
 		};
 	}
 

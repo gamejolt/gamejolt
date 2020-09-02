@@ -1,112 +1,45 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
-import { Community } from '../../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
-import { Environment } from '../../../../../_common/environment/environment.service';
-import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
-import { Navigate } from '../../../../../_common/navigate/navigate.service';
-import { Popper } from '../../../../../_common/popper/popper.service';
-import AppPopper from '../../../../../_common/popper/popper.vue';
-import { AppState, AppStore } from '../../../../../_common/store/app-store';
-import { ThemeState, ThemeStore } from '../../../../../_common/theme/theme.store';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
-import { Store } from '../../../../store';
-import { AppCommunityPerms } from '../../../community/perms/perms';
+import { State } from 'vuex-class';
+import { propOptional } from '../../../../../utils/vue';
+import { number } from '../../../../../_common/filters/number';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import { SidebarState, SidebarStore } from '../../../../../_common/sidebar/sidebar.store';
+import { Store } from '../../../../store/index';
 
-@Component({
-	components: {
-		AppCommunityThumbnailImg,
-		AppPopper,
-		AppCommunityPerms,
-		AppMediaItemBackdrop,
-	},
-	directives: {
-		AppTooltip,
-	},
-})
+@Component({})
 export default class AppShellCbarItem extends Vue {
-	@Prop(Community)
-	community!: Community;
+	@Prop(propOptional(Boolean, false)) isControl!: boolean;
+	@Prop(propOptional(Boolean, false)) isActive!: boolean;
+	@Prop(propOptional(Boolean, false)) isUnread!: boolean;
+	@Prop(propOptional(String)) highlight?: string;
+	@Prop(propOptional(Number, 0)) notificationCount!: number;
 
-	@AppState
-	user!: AppStore['user'];
+	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
+	@State visibleLeftPane!: Store['visibleLeftPane'];
 
-	@State
-	grid!: Store['grid'];
+	readonly Screen = Screen;
 
-	@Action
-	leaveCommunity!: Store['leaveCommunity'];
-
-	@State
-	communityStates!: Store['communityStates'];
-
-	@ThemeState
-	userTheme!: ThemeStore['userTheme'];
-
-	popperVisible = false;
-
-	readonly Environment = Environment;
-
-	get communityState() {
-		return this.communityStates.getCommunityState(this.community);
+	get notificationCountText() {
+		return this.notificationCount > 99 ? '99+' : number(this.notificationCount);
 	}
 
-	get isUnread() {
-		return this.communityState.isUnread;
+	// We want a context indicator only for non-control items that are the current active item (selected or active route).
+	get hasContextIndicator() {
+		return !Screen.isLg && this.isActive && !this.isControl && this.activeContextPane;
 	}
 
-	get featureCount() {
-		return this.communityState.unreadFeatureCount;
-	}
-
-	get featureCountText() {
-		if (this.featureCount > 99) {
-			return '99+';
-		}
-		return this.featureCount.toString();
-	}
-
-	get isActive() {
+	// There can be two active items between the cbar controls and normal cbar items,
+	// so we check the pane information to figure out what should be the active item visually.
+	get showAsActive() {
 		return (
-			this.$route.name &&
-			this.$route.name.indexOf('communities.view') === 0 &&
-			this.$route.params.path === this.community!.path
+			this.isActive &&
+			(!this.visibleLeftPane || this.visibleLeftPane === 'context' || this.isControl)
 		);
 	}
 
-	get highlight() {
-		if (this.isActive) {
-			const theme = this.community.theme || this.userTheme;
-			if (theme) {
-				return '#' + theme.highlight_;
-			}
-		}
-		return null;
-	}
-
-	get tooltip() {
-		// Don't show the tooltip if the right click popper is visible.
-		return this.popperVisible ? '' : this.community.name;
-	}
-
-	get shouldShowModerate() {
-		return this.user && this.user.isMod;
-	}
-
-	get shouldShowLeave() {
-		return !this.community.hasPerms();
-	}
-
-	async onLeaveCommunityClick() {
-		Popper.hideAll();
-
-		await this.leaveCommunity(this.community);
-	}
-
-	gotoModerate() {
-		Popper.hideAll();
-
-		Navigate.newWindow(Environment.baseUrl + `/moderate/communities/view/${this.community.id}`);
+	// Check what the actual active item is and if it's showing a pane.
+	get isShowingPane() {
+		return this.showAsActive && !!this.visibleLeftPane;
 	}
 }

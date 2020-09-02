@@ -19,7 +19,9 @@ export type Perm =
 	| 'community-channels'
 	| 'community-description'
 	| 'community-moderators'
-	| 'community-blocks';
+	| 'community-blocks'
+	| 'community-games'
+	| 'community-activity';
 
 export const Collaboratable = <T extends new (...args: any[]) => Model>(Base: T) =>
 	class extends Base {

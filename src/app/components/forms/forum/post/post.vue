@@ -7,6 +7,7 @@
 					content_required: true,
 					content_no_media_uploads: true,
 				}"
+				:max-height="0"
 				:validate-on="['blur']"
 			/>
 

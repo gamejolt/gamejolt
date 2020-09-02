@@ -7,7 +7,7 @@ import { date } from '../../../../../_common/filters/date';
 import { fuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { Meta } from '../../../../../_common/meta/meta-service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import {
 	checkGameFilteringRoute,
 	GameFilteringContainer,
@@ -199,11 +199,9 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 				}
 			);
 		} else if (this.section === 'new') {
-			return this.$gettextInterpolate(
-				// tslint:disable-next-line:max-line-length
-				`Find the newest %{ gamesType } on Game Jolt.`,
-				{ gamesType: this.displayGamesType }
-			);
+			return this.$gettextInterpolate(`Find the newest %{ gamesType } on Game Jolt.`, {
+				gamesType: this.displayGamesType,
+			});
 		} else if (this.section === 'featured') {
 			return this.$gettextInterpolate(
 				`Browse our featured list of %{ gamesType }, currated by Game Jolt.`,

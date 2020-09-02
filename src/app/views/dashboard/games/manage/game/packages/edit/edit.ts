@@ -18,7 +18,7 @@ import {
 } from '../../../../../../../../_common/route/route-component';
 import { Sellable } from '../../../../../../../../_common/sellable/sellable.model';
 import { AppTimeAgo } from '../../../../../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
 import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
 import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
@@ -102,7 +102,10 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 		this.isLoadingPreview = true;
 
 		const response = await Api.sendRequest(
-			'/web/dash/developer/games/packages/preview/' + this.package.game_id + '/' + this.package.id,
+			'/web/dash/developer/games/packages/preview/' +
+				this.package.game_id +
+				'/' +
+				this.package.id,
 			null,
 			{ detach: true }
 		);

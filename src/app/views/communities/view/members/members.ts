@@ -1,10 +1,11 @@
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
-import { Community } from '../../../../../_common/community/community.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { User } from '../../../../../_common/user/user.model';
 import AppFollowerList from '../../../../components/follower/list/list.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
+import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 
 function getFetchUrl(route: Route) {
 	return `/web/communities/members/${route.params.path}`;
@@ -14,19 +15,25 @@ function getFetchUrl(route: Route) {
 	name: 'RouteCommunitiesViewMembers',
 	components: {
 		AppFollowerList,
+		AppCommunitiesViewPageContainer,
 	},
 })
 @RouteResolver({
 	cache: true,
 	lazy: true,
-	deps: {},
+	deps: {
+		params: ['path'],
+	},
 	resolver: ({ route }) => Api.sendRequest(getFetchUrl(route)),
 })
 export default class RouteCommunitiesViewMembers extends BaseRouteComponent {
-	@Prop(Community)
-	community!: Community;
+	@Inject(CommunityRouteStoreKey) routeStore!: CommunityRouteStore;
 
 	users: User[] = [];
+
+	get community() {
+		return this.routeStore.community;
+	}
 
 	get routeTitle() {
 		return this.community ? `Members of the ${this.community.name} Community` : null;

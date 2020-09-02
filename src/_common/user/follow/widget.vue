@@ -11,10 +11,7 @@
 		:solid="user.is_following"
 		:badge="badge"
 		v-app-auth-required
-		v-app-tooltip.bottom="{
-			content: tooltip,
-			container: tooltipContainer,
-		}"
+		v-app-tooltip.bottom="tooltip"
 		@click.stop="onClick"
 	>
 		<template v-if="!circle">

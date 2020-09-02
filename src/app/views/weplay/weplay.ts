@@ -2,7 +2,7 @@ import { Component } from 'vue-property-decorator';
 import AppCard from '../../../_common/card/card.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
-import { AppTooltip } from '../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { User } from '../../../_common/user/user.model';
 import AppWeplayLogo from '../../components/weplay/logo/logo.vue';
 

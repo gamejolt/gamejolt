@@ -24,7 +24,7 @@
 							<app-jolticon
 								class="text-muted"
 								icon="help-circle"
-								v-app-tooltip="
+								v-app-tooltip.touchable="
 									$gettext(
 										`To account for refunds, chargebacks, and fraud, we hold on to sales revenue for 7 days.`
 									)

@@ -74,31 +74,12 @@
 
 						<div v-if="post.hasMedia" class="full-bleed-xs">
 							<div v-for="item of post.media" :key="item.id">
-								<app-responsive-dimensions
+								<app-media-item-post
 									class="-media-item"
-									:ratio="item.width / item.height"
-									:max-width="item.width"
-								>
-									<app-event-item-media-tags :gif="item.is_animated" />
-									<app-media-item-backdrop :media-item="item" radius="lg">
-										<app-img-responsive
-											class="-img"
-											v-if="!item.is_animated"
-											:src="item.mediaserver_url"
-											alt=""
-										/>
-
-										<app-video
-											v-else
-											class="-video"
-											:poster="item.mediaserver_url"
-											:webm="item.mediaserver_url_webm"
-											:mp4="item.mediaserver_url_mp4"
-											show-loading
-										/>
-									</app-media-item-backdrop>
-								</app-responsive-dimensions>
-
+									:media-item="item"
+									is-active
+									@fullscreen="onClickFullscreen"
+								/>
 								<br />
 							</div>
 						</div>
@@ -137,23 +118,20 @@
 						</div>
 					</div>
 
-					<template v-if="post.hasPoll">
+					<app-event-item-controls-overlay v-if="post.hasPoll">
 						<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 
 						<br />
-					</template>
+					</app-event-item-controls-overlay>
 
-					<template v-if="communities.length">
-						<div
-							class="-community-row"
-							v-for="postCommunity of communities"
-							:key="postCommunity.id"
-						>
+					<app-event-item-controls-overlay v-if="communities.length">
+						<app-scroll-scroller class="-communities" horizontal thin>
 							<app-community-pill
-								:community="postCommunity.community"
-								:channel="postCommunity.channel"
+								v-for="postCommunity of communities"
+								:key="postCommunity.id"
+								:community-link="postCommunity"
 							/>
-						</div>
+						</app-scroll-scroller>
 
 						<template v-if="shouldShowCommunityPublishError">
 							<br />
@@ -170,7 +148,7 @@
 						</template>
 
 						<br />
-					</template>
+					</app-event-item-controls-overlay>
 
 					<app-event-item-controls
 						:post="post"
@@ -300,12 +278,14 @@ $-width = 320px
 		iframe
 			rounded-corners-lg()
 
+.-media-item
+	cursor: zoom-in
+
 >>> .mention-avatar-img
 	border-radius: 50% !important
 
-.-community-row
-	display: flex
-	align-items: center
+.-communities
+	white-space: nowrap
 </style>
 
 <script lang="ts" src="./view"></script>

@@ -1,8 +1,8 @@
-import AppPopper from '../../../_common/popper/popper.vue';
-import { arrayRemove } from '../../../utils/array';
-import AppShortkey from '../../../_common/shortkey/shortkey.vue';
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import { arrayRemove } from '../../../utils/array';
+import AppPopper from '../../../_common/popper/popper.vue';
+import AppShortkey from '../../../_common/shortkey/shortkey.vue';
 import AppSearchAutocomplete from './autocomplete/autocomplete.vue';
 import AppSearchInputTS from './input/input';
 import AppSearchInput from './input/input.vue';
@@ -117,11 +117,15 @@ export default class AppSearch extends Vue {
 
 	onFocus() {
 		this.isFocused = true;
-		this.isShowingAutocomplete = true;
+		if (!this.autocompleteDisabled) {
+			this.isShowingAutocomplete = true;
+		}
 	}
 
 	onBlur() {
 		this.isFocused = false;
-		this.isShowingAutocomplete = false;
+		if (!this.autocompleteDisabled) {
+			this.isShowingAutocomplete = false;
+		}
 	}
 }

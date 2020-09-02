@@ -6,7 +6,7 @@ declare module 'vue/types/vue' {
 		$pgettext: (context: string, msgid: string) => string;
 		$ngettext: (msgid: string, plural: string, n: number) => string;
 		$npgettext: (context: string, msgid: string, plural: string, n: number) => string;
-		$gettextInterpolate: (msgid: string, context: any) => string;
+		$gettextInterpolate: (msgid: string, context: any, enableHTMLEscaping = false) => string;
 		$language: {
 			current: string;
 			addTranslations: (translations: any) => void;

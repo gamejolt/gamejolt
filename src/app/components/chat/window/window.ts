@@ -1,12 +1,14 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
+import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { Action } from 'vuex-class';
+import { propOptional, propRequired } from '../../../../utils/vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import { number } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
-import { ChatClient } from '../client';
+import { ChatClient, ChatKey, leaveChatRoom } from '../client';
 import { ChatMessage } from '../message';
 import { ChatRoom } from '../room';
 import { ChatUserCollection } from '../user-collection';
@@ -22,18 +24,19 @@ import AppChatWindowSend from './send/send.vue';
 		AppChatWindowOutput,
 		AppFadeCollapse,
 	},
-	filters: {
-		number,
+	directives: {
+		AppTooltip,
 	},
 })
 export default class AppChatWindow extends Vue {
-	@Prop(ChatRoom) room!: ChatRoom;
-	@Prop(Array) messages!: ChatMessage[];
-	@Prop(ChatUserCollection) users?: ChatUserCollection;
+	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+	@Prop(propRequired(Array)) messages!: ChatMessage[];
+	@Prop(propOptional(ChatUserCollection)) users?: ChatUserCollection;
+	@Prop(propRequired(Array)) queuedMessages!: ChatMessage[];
 
-	@State chat!: ChatClient;
+	@InjectReactive(ChatKey) chat!: ChatClient;
 
-	@Action toggleRightPane!: Store['toggleRightPane'];
+	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
 	isShowingUsers = false;
 	isDescriptionCollapsed = false;
@@ -41,25 +44,18 @@ export default class AppChatWindow extends Vue {
 	readonly ChatRoom = ChatRoom;
 	readonly Screen = Screen;
 
+	get onlineUserCount() {
+		return number(this.users?.onlineCount || 0);
+	}
+
 	close() {
 		// xs size needs to show the friends list when closing the room.
 		// any other size can close the whole chat instead
 		if (Screen.isXs) {
-			this.chat.leaveRoom();
+			leaveChatRoom(this.chat);
 		} else {
-			this.chat.closeChat();
+			this.toggleLeftPane();
 		}
-	}
-
-	// Closes chat completely. When you click on the empty space behind the
-	// chat, we want to close the chat just like you would when clicking the
-	// normal backdrop.
-	closeChat() {
-		this.toggleRightPane();
-	}
-
-	showEditRoomModal() {
-		// Chat_SaveRoomModal.show( this.room );
 	}
 
 	toggleUsers() {

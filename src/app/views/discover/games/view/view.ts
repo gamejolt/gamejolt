@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-property-decorator';
 import { EventBus, EventBusDeregister } from '../../../../../system/event/event-bus.service';
 import { enforceLocation } from '../../../../../utils/router';
 import { AdSettingsContainer } from '../../../../../_common/ad/ad-store';
@@ -6,11 +6,12 @@ import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../_common/api/api.service';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
 import {
-	CommentAction,
-	CommentMutation,
-	CommentState,
-	CommentStore,
+	CommentStoreManager,
+	CommentStoreManagerKey,
 	CommentStoreModel,
+	lockCommentStore,
+	releaseCommentStore,
+	setCommentCount,
 } from '../../../../../_common/comment/comment-store';
 import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../_common/partner-referral/partner-referral-service';
@@ -18,7 +19,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/
 import { WithRouteStore } from '../../../../../_common/route/route-store';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Translate } from '../../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
@@ -100,6 +101,8 @@ import AppDiscoverGamesViewNav from './_nav/nav.vue';
 	},
 })
 export default class RouteDiscoverGamesView extends BaseRouteComponent {
+	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
+
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
@@ -144,18 +147,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 	@RouteStoreModule.Mutation
 	setUserRating!: RouteStore['setUserRating'];
-
-	@CommentState
-	getCommentStore!: CommentStore['getCommentStore'];
-
-	@CommentAction
-	lockCommentStore!: CommentStore['lockCommentStore'];
-
-	@CommentMutation
-	releaseCommentStore!: CommentStore['releaseCommentStore'];
-
-	@CommentMutation
-	setCommentCount!: CommentStore['setCommentCount'];
 
 	commentStore: CommentStoreModel | null = null;
 
@@ -228,7 +219,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		}
 	}
 
-	async routeResolved($payload: any) {
+	routeResolved($payload: any) {
 		this._setAdSettings();
 
 		// If the game has a GA tracking ID, then we attach it to this
@@ -239,14 +230,11 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		}
 
 		if (this.commentStore) {
-			this.releaseCommentStore(this.commentStore);
+			releaseCommentStore(this.commentManager, this.commentStore);
 			this.commentStore = null;
 		}
-		this.commentStore = await this.lockCommentStore({
-			resource: 'Game',
-			resourceId: this.game.id,
-		});
-		this.setCommentCount({ store: this.commentStore, count: $payload.commentsCount || 0 });
+		this.commentStore = lockCommentStore(this.commentManager, 'Game', this.game.id);
+		setCommentCount(this.commentStore, $payload.commentsCount || 0);
 	}
 
 	routeDestroyed() {
@@ -263,7 +251,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		}
 
 		if (this.commentStore) {
-			this.releaseCommentStore(this.commentStore);
+			releaseCommentStore(this.commentManager, this.commentStore);
 			this.commentStore = null;
 		}
 	}

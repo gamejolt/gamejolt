@@ -3,7 +3,7 @@
 		<section class="section landing-header text-center">
 			<div class="container">
 				<h1>
-					<app-theme-svg class="bolt" src="~img/jolt.svg" alt="" />
+					<app-theme-svg class="bolt" src="~img/jolt.svg" alt="" strict-colors />
 					Marketplace
 				</h1>
 
@@ -219,7 +219,9 @@
 
 							<p class="text-muted text-center">
 								Or
-								<a href="mailto:contact@gamejolt.com">contact us</a>
+								<app-contact-link email="contact@gamejolt.com">
+									contact us
+								</app-contact-link>
 								if you have questions!
 							</p>
 						</div>

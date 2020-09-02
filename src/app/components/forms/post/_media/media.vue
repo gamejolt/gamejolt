@@ -14,7 +14,7 @@
 					<b><translate>Animated GIFs are supported.</translate></b>
 				</p>
 
-				<app-scroll-scroller overlay horizontal>
+				<app-scroll-scroller horizontal thin>
 					<div
 						class="-items"
 						@dragover="onDragOver($event)"
@@ -39,7 +39,11 @@
 							</div>
 						</a>
 
-						<draggable style="display: inline-flex" v-model="internalItems">
+						<draggable
+							style="display: inline-flex"
+							v-model="internalItems"
+							:options="{ delay: 100, delayOnTouchOnly: true }"
+						>
 							<div class="-item" v-for="item of internalItems" :key="item.id">
 								<app-form-post-media-item :item="item" @remove="emitRemove(item)" />
 							</div>
@@ -54,7 +58,7 @@
 						filesize: maxFilesize,
 						max_img_dimensions: [maxWidth, maxHeight],
 					}"
-					accept=".png,.jpg,.jpeg,.gif"
+					accept=".png,.jpg,.jpeg,.gif,.webp"
 					multiple
 					@changed="mediaSelected()"
 				/>

@@ -2,25 +2,15 @@
 	<div
 		class="scroll-scroller"
 		:class="{
+			'-thin': thin,
 			'-horizontal': horizontal,
 			'-hide-scrollbar': hideScrollbar,
-			'-overlay': shouldOverlay,
 		}"
+		:style="hoverColors"
 	>
-		<template v-if="shouldOverlay">
-			<div class="simplebar-scroll-content">
-				<div class="simplebar-content">
-					<app-scroll-inview-parent v-if="isMounted" :scroller="this">
-						<slot />
-					</app-scroll-inview-parent>
-				</div>
-			</div>
-		</template>
-		<template v-else>
-			<app-scroll-inview-parent v-if="isMounted" :scroller="this">
-				<slot />
-			</app-scroll-inview-parent>
-		</template>
+		<app-scroll-inview-parent v-if="isMounted" :scroller="scrollElement">
+			<slot />
+		</app-scroll-inview-parent>
 	</div>
 </template>
 
@@ -28,35 +18,69 @@
 @require '~styles/variables'
 @require '~styles-lib/mixins'
 
-$-track-padding = 3px
-$-thumb-width = 9px
-$-track-width = $-thumb-width + ($-track-padding * 2)
-$-thumb-border-radius = $-track-width
+// 6px appears to be the width for the 'thin' scrollbar on Firefox
+$-size-default = 9px
+$-size-thin = 7px
+$-thumb-default-hover = var(--default-hover)
+$-thumb-default = var(--theme-light)
+$-track-default = transparent
+$-thumb-modal-hover = var(--modal-hover)
+$-thumb-modal = var(--theme-gray-subtle)
+$-track-modal = var(--theme-bg)
 
-// If we set the scroller to overlay, simplebar will set the overflow to hidden. By default we want
-// it scrollable.
 .scroll-scroller
 	scrollable()
 
 	&.-horizontal
 		scrollable-x()
 
-	>>>
-		.simplebar-scrollbar:before
-			change-bg('light')
+	&.-hide-scrollbar
+		// Firefox
+		scrollbar-width: none
 
-		// SUPER HACK!
-		// This is because simplebar sets the track to "visibility: hidden" in the
-		// style attribute if it shouldn't show the track at all, but it sets the scrollbar thumb to
-		// visible. According to CSS if you have a "visible" inside a "hidden" it will still show the
-		// inner one as visible.
-		// I believe when this is done (https://github.com/Grsmto/simplebar/issues/121) we can remove.
-		.simplebar-track[style*='hidden']
-			.simplebar-scrollbar
-				visibility: hidden !important
+		// Other browsers
+		&::-webkit-scrollbar
+			display: none
 
-.-hide-scrollbar >>> .simplebar-track
-	display: none
+	/* mouse, touch pad, and stylus-based screens */
+	@media not screen and (pointer: coarse)
+		scrollbar-color: $-thumb-default $-track-default
+
+		&::-webkit-scrollbar
+			background-color: $-track-default
+			width: $-size-default
+			height: $-size-default
+
+			&-thumb
+				background-color: $-thumb-default
+				border-radius: $-size-default
+
+				&:hover
+					background-color: $-thumb-default-hover
+
+		&.-thin
+			scrollbar-width: thin
+
+			&::-webkit-scrollbar
+				width: $-size-thin
+				height: $-size-thin
+
+				&-thumb
+					border-radius: $-size-thin
+
+		// Override colors so transparency doesn't look weird
+		// with body background or others in full-screen modals.
+		&.modal
+			scrollbar-color: $-thumb-modal $-track-modal
+
+			&::-webkit-scrollbar
+				background-color: $-track-modal
+
+				&-thumb
+					background-color: $-thumb-modal
+
+					&:hover
+						background-color: $-thumb-modal-hover
 </style>
 
 <script lang="ts" src="./scroller"></script>

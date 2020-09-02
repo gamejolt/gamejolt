@@ -1,27 +1,38 @@
+<script lang="ts" src="./add-widget"></script>
+
 <template>
 	<router-link
 		v-if="canCreate"
+		v-app-tooltip="tooltip"
 		class="-add"
 		:to="{ name: 'dash.communities.add' }"
-		v-app-tooltip="tooltip"
 	>
 		<app-jolticon icon="add" big />
 	</router-link>
-	<a v-else class="-add -disabled" v-app-tooltip="tooltip" @click="showGrowl">
+	<a
+		v-else
+		v-app-auth-required
+		v-app-tooltip="tooltip"
+		class="-add"
+		:class="{ '-disabled': user }"
+		@click="showGrowl"
+	>
 		<app-jolticon icon="add" big />
 	</a>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-add
 	pressy()
 	display: flex
 	justify-content: center
 	align-items: center
-	border: $border-width-base dashed
+	border: $border-width-large dashed
+	border-color: var(--theme-fg-muted)
+	color: var(--theme-fg-muted)
 	border-radius: 100%
 	cursor: pointer
 	position: absolute
@@ -29,12 +40,9 @@
 	height: 100%
 	outline: 0
 
-	theme-prop('border-color', 'fg-muted')
-	theme-prop('color', 'fg-muted')
-
 	&:not(.-disabled):hover
-			theme-prop('border-color', 'highlight')
-			theme-prop('color', 'highlight')
+		border-color: var(--theme-link)
+		color: var(--theme-link)
 
 .-disabled
 	unpressy()
@@ -42,7 +50,4 @@
 
 	> *
 		pointer-events: none
-
 </style>
-
-<script lang="ts" src="./add-widget"></script>

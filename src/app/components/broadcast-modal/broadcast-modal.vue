@@ -31,7 +31,7 @@
 							<h5 class="list-group-item-heading">
 								<app-jolticon v-if="post.id === _post.id" icon="chevron-right" />
 
-								{{ _post.lead_snippet }}
+								{{ _post.getShortLead() }}
 
 								<div class="tiny text-muted">
 									<app-time-ago :date="_post.published_on" />
@@ -47,8 +47,6 @@
 								class="-media-item"
 								:ratio="item.width / item.height"
 							>
-								<app-event-item-media-tags :gif="item.is_animated" />
-
 								<app-img-responsive
 									class="-img"
 									v-if="!item.is_animated"

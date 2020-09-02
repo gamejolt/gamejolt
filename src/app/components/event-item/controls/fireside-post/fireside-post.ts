@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../../../utils/vue';
+import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import { CommentModal } from '../../../../../_common/comment/modal/modal.service';
 import AppCommentVideoLikeWidget from '../../../../../_common/comment/video/like-widget/like-widget.vue';
@@ -15,7 +16,7 @@ import { StickerPlacementModal } from '../../../../../_common/sticker/placement/
 import { StickerSelectModal } from '../../../../../_common/sticker/select-modal.ts/select-modal.service';
 import { Sticker } from '../../../../../_common/sticker/sticker.model';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { User } from '../../../../../_common/user/user.model';
 import { AppCommentWidgetLazy } from '../../../lazy';
 import { PostEditModal } from '../../../post/edit-modal/edit-modal-service';
@@ -70,7 +71,7 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 	emitMoveChannel(_movedTo: CommunityChannel) {}
 
 	@Emit('reject')
-	emitReject() {}
+	emitReject(_community: Community) {}
 
 	@Emit('pin')
 	emitPin() {}
@@ -178,6 +179,7 @@ export default class AppEventItemControlsFiresidePost extends Vue {
 			if (post) {
 				Object.assign(this.post, post);
 				this.emitStickersVisibilityChange(true);
+				Analytics.trackEvent('stickers', 'place-sticker', 'fireside-post');
 			}
 		}
 	}

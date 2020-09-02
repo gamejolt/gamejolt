@@ -1,95 +1,53 @@
+<script lang="ts" src="./item"></script>
+
 <template>
 	<app-scroll-inview
 		tag="li"
-		class="chat-user"
+		class="chat-user-container"
 		:margin="`${Screen.height / 2}px`"
 		@inview="isInview = true"
 		@outview="isInview = false"
 	>
-		<template v-if="isInview">
-			<router-link
-				:to="user.url"
-				:class="{
-					active: showPm && chat.room && chat.room.id === user.roomId,
-				}"
-				:title="`${user.displayName} (@${user.username})`"
-				@click.native.capture="onUserClick"
+		<router-link
+			v-if="isInview"
+			class="chat-user"
+			:class="{
+				active: showPm && chat.room && chat.room.id === user.room_id,
+			}"
+			:to="user.url"
+			:title="`${user.display_name} (@${user.username})`"
+			@click.native.capture="onUserClick"
+		>
+			<span
+				v-if="chat.notifications[user.room_id] || 0"
+				class="tag tag-highlight notifications-tag"
 			>
-				<span
-					class="tag tag-highlight notifications-tag"
-					v-if="chat.notifications[user.roomId] || 0"
-				>
-					{{ chat.notifications[user.roomId] || 0 | number }}
-				</span>
+				{{ chatNotificationsCount }}
+			</span>
 
-				<div class="chat-user-moderate" v-if="showModTools">
-					<span class="chat-user-moderate-action" @click.stop.prevent="openModTools">
-						<app-jolticon icon="cog" />
+			<div class="shell-nav-icon">
+				<div class="user-avatar">
+					<img :src="user.img_avatar" />
+
+					<span
+						v-if="typeof user.isOnline !== 'undefined'"
+						class="chat-user-status"
+						:class="{
+							offline: !user.isOnline,
+							'online active': user.isOnline,
+						}"
+					>
+						<span v-if="!user.isOnline" class="chat-user-status-inner" />
 					</span>
 				</div>
+			</div>
 
-				<div class="shell-nav-icon">
-					<div class="user-avatar">
-						<img :src="user.imgAvatar" />
-
-						<span
-							class="chat-user-status"
-							v-if="typeof user.isOnline !== 'undefined'"
-							:class="{
-								offline: !user.isOnline,
-								'online active': user.isOnline,
-							}"
-						></span>
-					</div>
-				</div>
-
-				<div class="shell-nav-label">
-					<!-- Only show tags in room user lists -->
-					<template v-if="room">
-						<span
-							class="chat-user-role tag tag-highlight"
-							v-if="user.isMod === 'owner'"
-							:title="$gettext(`Room Admin`)"
-						>
-							A
-						</span>
-						<span
-							class="chat-user-role tag tag-highlight"
-							v-if="user.isMod === 'moderator'"
-							:title="$gettext(`Room Moderator`)"
-						>
-							M
-						</span>
-						<span
-							class="chat-user-role tag tag-highlight"
-							v-if="user.permissionLevel >= ChatSiteModPermission"
-							:title="$gettext(`Site Moderator`)"
-						>
-							S
-						</span>
-						<span
-							class="chat-user-role tag tag-notice"
-							v-if="showModTools && (user.isMutedRoom || user.isMutedGlobal)"
-							:title="$gettext(`Muted`)"
-						>
-							X
-						</span>
-					</template>
-
-					{{ user.displayName }}
-					<span class="tiny">@{{ user.username }}</span>
-
-					<!--<div class="chat-user-list-meta">
-					<template v-if="typeof user.currently_playing !== 'undefined' && user.currently_playing">
-						Playing <em>{{ user.currently_playing.game }}</em>
-					</template>
-				</div>-->
-				</div>
-			</router-link>
-		</template>
+			<div class="shell-nav-label">
+				{{ user.display_name }}
+				<span class="tiny">@{{ user.username }}</span>
+			</div>
+		</router-link>
 	</app-scroll-inview>
 </template>
 
 <style lang="stylus" src="./item.styl" scoped></style>
-
-<script lang="ts" src="./item"></script>

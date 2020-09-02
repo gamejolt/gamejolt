@@ -1,14 +1,19 @@
 import Vue from 'vue';
-import { Component, Watch } from 'vue-property-decorator';
+import { Component, InjectReactive, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { EventBus, EventBusDeregister } from '../../../system/event/event-bus.service';
 import { Connection } from '../../../_common/connection/connection-service';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMinbar from '../../../_common/minbar/minbar.vue';
 import { Screen } from '../../../_common/screen/screen-service';
+import {
+	SidebarMutation,
+	SidebarState,
+	SidebarStore,
+} from '../../../_common/sidebar/sidebar.store';
 import { BannerModule, BannerStore, Store } from '../../store/index';
-import { ChatNewMessageEvent } from '../chat/client';
+import { ChatClient, ChatKey, setChatFocused } from '../chat/client';
+import AppChatWindows from '../chat/windows/windows.vue';
 import AppShellBody from './body/body.vue';
 import AppShellCbar from './cbar/cbar.vue';
 import AppShellHotBottom from './hot-bottom/hot-bottom.vue';
@@ -16,7 +21,7 @@ import './shell.styl';
 import AppShellSidebar from './sidebar/sidebar.vue';
 import AppShellTopNav from './top-nav/top-nav.vue';
 
-let components: any = {
+const components: any = {
 	AppShellTopNav,
 	AppShellBody,
 	AppShellSidebar,
@@ -24,7 +29,7 @@ let components: any = {
 	AppShellCbar,
 	AppMinbar,
 	AppShellBanner: () => import(/* webpackChunkName: "shell" */ './banner/banner.vue'),
-	AppShellChat: () => import(/* webpackChunkName: "chat" */ './chat/chat.vue'),
+	AppChatWindows,
 };
 
 if (GJ_IS_CLIENT) {
@@ -37,11 +42,10 @@ if (GJ_IS_CLIENT) {
 	components,
 })
 export default class AppShell extends Vue {
-	@State
-	app!: Store['app'];
+	@InjectReactive(ChatKey) chat!: ChatClient;
 
 	@State
-	chat!: Store['chat'];
+	app!: Store['app'];
 
 	@State
 	isShellHidden!: Store['isShellHidden'];
@@ -56,10 +60,10 @@ export default class AppShell extends Vue {
 	hasCbar!: Store['hasCbar'];
 
 	@State
-	isLeftPaneVisible!: Store['isLeftPaneVisible'];
+	visibleLeftPane!: Store['visibleLeftPane'];
 
 	@State
-	isRightPaneVisible!: Store['isRightPaneVisible'];
+	visibleRightPane!: Store['visibleRightPane'];
 
 	@State
 	unreadActivityCount!: Store['unreadActivityCount'];
@@ -70,27 +74,51 @@ export default class AppShell extends Vue {
 	@BannerModule.State
 	hasBanner!: BannerStore['hasBanner'];
 
+	@SidebarState
+	activeContextPane!: SidebarStore['activeContextPane'];
+
+	@SidebarState
+	hideOnRouteChange!: SidebarStore['hideOnRouteChange'];
+
+	@SidebarState
+	showOnRouteChange!: SidebarStore['showOnRouteChange'];
+
+	@SidebarMutation
+	showContextOnRouteChange!: SidebarStore['showContextOnRouteChange'];
+
+	@Action
+	showContextPane!: Store['showContextPane'];
+
 	@Action
 	clearPanes!: Store['clearPanes'];
-
-	private unfocusedChatNotificationsCount = 0;
-	private newMessageDeregister?: EventBusDeregister;
 
 	readonly Connection = Connection;
 	readonly Screen = Screen;
 
 	get totalChatNotificationsCount() {
-		return (
-			(this.chat ? this.chat.roomNotificationsCount : 0) +
-			this.unfocusedChatNotificationsCount
-		);
+		return this.chat ? this.chat.roomNotificationsCount : 0;
+	}
+
+	get ssrShouldShowSidebar() {
+		return GJ_IS_SSR && this.$route.name?.indexOf('communities.view') === 0;
 	}
 
 	mounted() {
-		// When changing routes, hide all overlays.
-		this.$router.beforeEach((_to, _from, next) => {
-			this.clearPanes();
-			next();
+		this.$router.afterEach(async () => {
+			// Wait for any contextPane state to be changed.
+			await this.$nextTick();
+
+			// Show any context panes that are set to show on route change.
+			if (this.showOnRouteChange) {
+				this.showContextPane();
+				this.showContextOnRouteChange(false);
+				return;
+			}
+
+			// Hide all panes if we aren't showing one on route change.
+			if (this.hideOnRouteChange) {
+				this.clearPanes();
+			}
 		});
 
 		this.$watch(
@@ -105,44 +133,13 @@ export default class AppShell extends Vue {
 				if (!isFocused) {
 					// Notify the client that we are unfocused, so it should
 					// start accumulating notifications for the current room.
-					this.chat.setFocused(false);
+					setChatFocused(this.chat, false);
 				} else {
-					// When we focus it back, clear out all accumulated
-					// notifications. Set that we're not longer focused, and
-					// clear out room notifications. The user has now "seen" the
-					// messages.
-					this.unfocusedChatNotificationsCount = 0;
-
 					// Notify the client that we aren't unfocused anymore.
-					this.chat.setFocused(true);
+					setChatFocused(this.chat, true);
 				}
 			}
 		);
-
-		this.newMessageDeregister = EventBus.on('Chat.newMessage', (event: ChatNewMessageEvent) => {
-			// If we have a general room open, and our window is unfocused or
-			// minimized, then increment our room notifications count (since
-			// they haven't seen this message yet). Note that if these messages
-			// came in because we were priming output for a room with old
-			// messages, we don't want to increase notification counts.
-			if (
-				!ContentFocus.isWindowFocused &&
-				this.chat &&
-				this.chat.room &&
-				!event.isPrimer &&
-				event.message &&
-				event.message.roomId === this.chat.room.id
-			) {
-				++this.unfocusedChatNotificationsCount;
-			}
-		});
-	}
-
-	destroyed() {
-		if (this.newMessageDeregister) {
-			this.newMessageDeregister();
-			this.newMessageDeregister = undefined;
-		}
 	}
 
 	// Since the cbar takes up width from the whole screen, we want to trigger a

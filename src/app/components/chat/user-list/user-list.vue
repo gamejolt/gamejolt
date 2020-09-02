@@ -11,7 +11,6 @@
 				:user="user"
 				:room="room"
 				:show-pm="showPm"
-				:show-mod-tools="showModTools"
 			/>
 		</ul>
 	</div>

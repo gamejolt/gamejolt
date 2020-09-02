@@ -2,8 +2,10 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Location } from 'vue-router';
 import { State } from 'vuex-class';
+import { propOptional } from '../../../../../utils/vue';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
 import { Jam } from '../../../../../_common/jam/jam.model';
+import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppTheme } from '../../../../../_common/theme/theme';
 import { FeaturedItem } from '../../../../components/featured-item/featured-item.model';
@@ -15,11 +17,15 @@ import { Store } from '../../../../store/index';
 		AppGameFollowWidget,
 		AppTheme,
 		AppCommunityJoinWidget,
+		AppMediaItemBackdrop,
 	},
 })
 export default class AppDiscoverHomeBanner extends Vue {
 	@Prop(FeaturedItem)
 	item!: FeaturedItem;
+
+	@Prop(propOptional(Boolean, false))
+	isLoading!: boolean;
 
 	@State
 	app!: Store['app'];
@@ -96,5 +102,17 @@ export default class AppDiscoverHomeBanner extends Vue {
 		} else if (this.item.community) {
 			return this.item.community.theme;
 		}
+	}
+
+	get bannerMediaItem() {
+		if (this.item.game) {
+			return this.item.game.header_media_item;
+		}
+
+		if (this.item.community) {
+			return this.item.community.header;
+		}
+
+		return null;
 	}
 }

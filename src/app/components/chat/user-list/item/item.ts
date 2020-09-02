@@ -1,11 +1,10 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { Component, InjectReactive, Prop } from 'vue-property-decorator';
+import { propOptional, propRequired } from '../../../../../utils/vue';
 import { number } from '../../../../../_common/filters/number';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
-import { ChatClient, ChatSiteModPermission } from '../../client';
-import { ChatModerateUserModal } from '../../moderate-user-modal/moderate-user-modal.service';
+import { ChatClient, ChatKey, enterChatRoom } from '../../client';
 import { ChatRoom } from '../../room';
 import { ChatUser } from '../../user';
 
@@ -13,29 +12,20 @@ import { ChatUser } from '../../user';
 	components: {
 		AppScrollInview,
 	},
-	filters: {
-		number,
-	},
 })
 export default class AppChatUserListItem extends Vue {
-	@Prop(ChatUser) user!: ChatUser;
-	@Prop(ChatRoom) room?: ChatRoom;
-	@Prop(Boolean) showPm?: boolean;
-	@Prop(Boolean) showModTools?: boolean;
+	@Prop(propRequired(ChatUser)) user!: ChatUser;
+	@Prop(propOptional(ChatRoom)) room?: ChatRoom;
+	@Prop(propOptional(Boolean, false)) showPm!: boolean;
 
-	@State chat!: ChatClient;
+	@InjectReactive(ChatKey) chat!: ChatClient;
 
 	isInview = false;
 
-	readonly ChatSiteModPermission = ChatSiteModPermission;
 	readonly Screen = Screen;
 
-	get canModerate() {
-		if (!this.room || !this.showModTools) {
-			return false;
-		}
-
-		return this.chat.canModerate(this.room, this.user);
+	get chatNotificationsCount() {
+		return number(this.chat.notifications[this.user.room_id] || 0);
 	}
 
 	onUserClick(e: Event) {
@@ -43,13 +33,7 @@ export default class AppChatUserListItem extends Vue {
 			return;
 		}
 
-		this.chat.enterRoom(this.user.roomId);
+		enterChatRoom(this.chat, this.user.room_id);
 		e.preventDefault();
-	}
-
-	openModTools() {
-		if (this.room) {
-			ChatModerateUserModal.show(this.room, this.user);
-		}
 	}
 }

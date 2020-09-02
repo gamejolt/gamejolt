@@ -1,0 +1,104 @@
+@require '~styles/variables'
+@require '~styles-lib/mixins'
+@require 'variables'
+
+$-button-size = 90px
+$-controls-padding = 10px
+
+.media-bar-lightbox
+	.dragging &
+		cursor: grabbing
+
+		// iframe elements don't allow events to bubble back to the root document, so we need
+		// to prevent all pointer events while dragging to keep our cursor context in the root
+		// document - otherwise youtube and other iframe embeds will break the dragging.
+		>>> iframe
+			pointer-events: none
+
+.-inner
+	display: flex
+	flex-flow: column nowrap
+	position: fixed
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	z-index: $zindex-media-bar-lightbox
+	user-select: none
+	background-color: $black
+
+	@media $media-sm-up
+		background-color: rgba(0, 0, 0, 0.85)
+
+.-controls
+	flex: 0 0 auto
+	height: $-controls-height
+	line-height: $-controls-height
+	text-align: center
+
+	@media only screen and (orientation: landscape)
+		position: absolute
+		right: $-controls-padding
+		bottom: 0
+		z-index: 10
+
+	@media $media-sm-up
+		text-align: right
+		position: static
+		padding-right: $-controls-padding
+
+.-next, .-prev
+	rounded-corners-lg()
+	display: none
+	position: absolute
+	top: 50%
+	width: $-button-size
+	height: $-button-size
+	line-height: $-button-size
+	margin-top: -(@height / 2)
+	z-index: 1
+	background-color: rgba($black, 0.5)
+	text-align: center
+
+	@media $media-sm-up
+		display: block
+
+	> .jolticon
+		vertical-align: middle
+		font-size: 16px * 3
+		color: $white
+
+	&:hover
+		background-color: $white
+
+		> .jolticon
+			color: $black
+
+.-next
+	right: 0
+	border-top-right-radius: 0
+	border-bottom-right-radius: 0
+
+.-prev
+	left: 0
+	border-top-left-radius: 0
+	border-bottom-left-radius: 0
+
+// http://stackoverflow.com/questions/10269290/how-to-arrange-many-div-elements-side-by-side-with-no-wrap
+.-slider
+	height: 100%
+	flex: 1 0 auto
+	display: flex
+	align-items: flex-start
+	flex-flow: row nowrap
+	// Ease out so that with fast flicks it doesn't look like it slows down after letting go.
+	transition: transform 300ms $weak-ease-out
+
+	@media $media-sm-up
+		// Should take up the same amount of space on the bottom as the controls on top so
+		// everything is centered.
+		padding-bottom: $-controls-height
+
+	// We need manual control of styling when dragging.
+	.dragging &
+		transition: none

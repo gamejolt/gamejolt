@@ -1,16 +1,19 @@
 import { DOMParser, Node } from 'prosemirror-model';
-import { EditorState, Plugin, Transaction } from 'prosemirror-state';
+import { EditorState, Plugin, Selection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import 'prosemirror-view/style/prosemirror.css';
 import ResizeObserver from 'resize-observer-polyfill';
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { propOptional } from '../../../utils/vue';
+import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format-adapter';
 import { ContentHydrator } from '../content-hydrator';
 import { ContentOwner } from '../content-owner';
 import { ContentEditorService } from './content-editor.service';
+import { ContentRules } from './content-rules';
 import { ContentTempResource } from './content-temp-resource.service';
 import AppContentEditorBlockControls from './controls/block/controls.vue';
 import AppContentEditorControlsEmojiPanelTS from './controls/emoji/panel';
@@ -36,6 +39,7 @@ import { ContentEditorSchema, generateSchema } from './schemas/content-editor-sc
 		AppContentEditorControlsGifControls,
 		AppContentEditorControlsInsetContainer,
 		AppContentEditorControlsMentionAutocompleteControls,
+		AppScrollScroller,
 	},
 })
 export default class AppContentEditor extends Vue implements ContentOwner {
@@ -66,6 +70,25 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	@Prop(String)
 	startupActivity?: string;
 
+	/**
+	 * Used to send more information with the create temp resource request.
+	 * Passed in object is directly handed to the Api. By default `undefined`, resulting in a GET request.
+	 */
+	@Prop(Object) tempResourceContextData?: Object;
+
+	/**
+	 * In single line mode the editor emits an event on enter and does not insert a new paragraph.
+	 * Mod + Enter inserts a new paragraph instead.
+	 */
+	@Prop(propOptional(Boolean, false)) singleLineMode!: boolean;
+
+	/** Sets the max height of the editor before it starts scrolling. Passing 0 or a negative value will unrestrict the height. */
+	@Prop(propOptional(Number, 200)) maxHeight!: number;
+
+	@Prop(propOptional(ContentRules)) displayRules?: ContentRules;
+
+	@Prop(propOptional(Boolean, false)) focusEnd!: boolean;
+
 	$_veeValidate = {
 		value: () => this.value,
 		name: () => 'app-content-editor',
@@ -87,6 +110,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	isEmpty = true; // Gets updated through the update-is-empty-plugin
 	openedStartup = false; // When the gif or emoji panel opened on startup. Prevents them from opening again.
 	canShowMentionSuggestions = 0; // Indicates whether we want to currently show the mention suggestion panel. Values > 0 indicate true.
+	mentionUserCount = 0;
 
 	_tempModelId: number | null = null; // If no model id if gets passed in, we store a temp model's id here
 	// Keep a copy of the json version of the doc, to only set the content if the external source changed.
@@ -97,6 +121,14 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		doc: HTMLElement;
 		emojiPanel: AppContentEditorControlsEmojiPanelTS;
 	};
+
+	@Emit('submit')
+	emitSubmit() {
+		this.stateCounter++;
+	}
+
+	@Emit('insert-block-node')
+	emitInsertBlockNode(_nodeType: string) {}
 
 	get shouldShowControls() {
 		return !this.disabled && this.isFocused && this.capabilities.hasAnyBlock;
@@ -119,6 +151,18 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		if (this.capabilities) {
 			return this.capabilities.emoji;
 		}
+		return false;
+	}
+
+	get couldShowGifPanel() {
+		if (this.capabilities) {
+			return this.capabilities.gif;
+		}
+		return false;
+	}
+
+	get editorGutterSize() {
+		return [this.couldShowEmojiPanel, this.couldShowGifPanel].filter(i => !!i).length;
 	}
 
 	get shouldShowPlaceholder() {
@@ -159,7 +203,10 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	async getModelId() {
 		if (this.modelId === null) {
 			if (!this._tempModelId) {
-				this._tempModelId = await ContentTempResource.getTempModelId(this.contentContext);
+				this._tempModelId = await ContentTempResource.getTempModelId(
+					this.contentContext,
+					this.tempResourceContextData
+				);
 			}
 			return this._tempModelId;
 		} else {
@@ -197,16 +244,22 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		this.isEmpty = true;
 	}
 
-	mounted() {
+	async mounted() {
 		this.capabilities = ContextCapabilities.getForContext(this.contentContext);
 		this.hydrator = new ContentHydrator();
 
 		this.schema = generateSchema(this.capabilities);
 		this.plugins = createPlugins(this, this.schema);
 
+		// We have to wait a frame here before we can start using the $refs.doc variable.
+		// Due to the scroller around it also initializing on mounted, we have to wait for it to finish.
+		// The scroller v-ifs the slot element away until it's fully mounted.
+		// The next frame after that we have our doc ref available.
+		await this.$nextTick();
+
 		if (this.value) {
 			const doc = ContentDocument.fromJson(this.value);
-			this.setContent(doc);
+			await this.setContent(doc);
 		} else {
 			const state = EditorState.create({
 				doc: DOMParser.fromSchema(this.schema).parse(this.$refs.doc),
@@ -228,8 +281,7 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		this.focusWatcher.start();
 
 		if (this.view instanceof EditorView && this.autofocus) {
-			this.$refs.editor.focus();
-			this.view.focus();
+			this.focus();
 		}
 	}
 
@@ -273,6 +325,8 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 				this.view.dispatch(tr);
 			}
 		}
+
+		return this.view!;
 	}
 
 	public getContent() {
@@ -286,14 +340,14 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		return null;
 	}
 
-	public setContent(doc: ContentDocument) {
+	public async setContent(doc: ContentDocument) {
 		if (doc.context !== this.contentContext) {
 			throw new Error(
 				`The passed in content context is invalid. ${doc.context} != ${this.contentContext}`
 			);
 		}
 		if (this.schema instanceof ContentEditorSchema) {
-			// Do this here so we don't fire an update direclty after populating.
+			// Do this here so we don't fire an update directly after populating.
 			doc.ensureEndParagraph();
 
 			this.hydrator = new ContentHydrator(doc.hydration);
@@ -302,7 +356,21 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 				doc: Node.fromJSON(this.schema, jsonObj),
 				plugins: this.plugins,
 			});
-			this.createView(state);
+
+			const view = this.createView(state);
+
+			if (this.focusEnd) {
+				// Wait here so images and other content can render in and scale properly.
+				// Otherwise the scroll at the end of the transaction below would not cover the entire doc.
+				await this.$nextTick();
+
+				// Set selection at the end of the document.
+				const tr = view.state.tr;
+				const selection = Selection.atEnd(view.state.doc);
+				tr.setSelection(selection);
+				tr.scrollIntoView();
+				view.dispatch(tr);
+			}
 		}
 	}
 
@@ -348,10 +416,6 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 		this.stateCounter++;
 	}
 
-	onTextControlClicked() {
-		this.highlightCurrentSelection();
-	}
-
 	public showEmojiPanel() {
 		if (this.$refs.emojiPanel instanceof AppContentEditorControlsEmojiPanel) {
 			this.$refs.emojiPanel.show();
@@ -381,5 +445,32 @@ export default class AppContentEditor extends Vue implements ContentOwner {
 	onInsertMention() {
 		this.highlightCurrentSelection();
 		this.canShowMentionSuggestions = 0; // Hide control
+	}
+
+	onMentionUsersChange(num: number) {
+		this.mentionUserCount = num;
+	}
+
+	onScroll() {
+		// When the doc scroller gets scrolled, we want to make sure we position the controls appropriately.
+		this.stateCounter++;
+	}
+
+	public focus() {
+		this.$refs.editor.focus();
+		if (this.view) {
+			this.view.focus();
+		}
+
+		this.stateCounter++;
+	}
+
+	getContentRules() {
+		if (this.displayRules) {
+			return this.displayRules;
+		}
+
+		// Return default values.
+		return new ContentRules();
 	}
 }

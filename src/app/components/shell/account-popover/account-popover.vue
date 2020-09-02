@@ -1,5 +1,7 @@
 <template>
 	<app-popper
+		popover-class="fill-darkest"
+		fixed
 		hide-on-state-change
 		@show="onShow()"
 		@hide="onHide()"
@@ -52,8 +54,8 @@
 						:to="{ name: 'dash.stickers.overview' }"
 						v-app-track-event="`account-popover:stickers`"
 					>
-						<span v-if="shouldShowNewStickers" class="-new-tag -new-tag-list"></span>
 						<translate>Stickers</translate>
+						<span v-if="shouldShowNewStickers" class="-new-tag -new-tag-list"></span>
 					</router-link>
 					<a
 						class="list-group-item offline-disable"
@@ -114,7 +116,7 @@
 							<app-jolticon
 								class="pull-right"
 								icon="help-circle"
-								v-app-tooltip="
+								v-app-tooltip.touchable="
 									$gettext(`These are your available funds to either buy games with or withdraw.`)
 								"
 							/>
@@ -220,13 +222,16 @@
 
 	&-account
 		position: absolute
-		top: 4px
-		right: 4px
+		bottom: 8px
+		right: 8px
 		display: block
+		border-color: var(--theme-darkest)
+		border-width: 2px
+		border-style: solid
 
 	&-list
-		display: inline-block
-		margin-right: 8px
+		float: right
+		margin-top: 4px
 </style>
 
 <script lang="ts" src="./account-popover"></script>

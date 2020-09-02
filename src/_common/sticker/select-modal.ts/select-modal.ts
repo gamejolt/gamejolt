@@ -1,10 +1,10 @@
 import { Component, Prop } from 'vue-property-decorator';
 import { propRequired } from '../../../utils/vue';
-import { AppTooltip } from '../../../_common/tooltip/tooltip';
 import { Api } from '../../api/api.service';
 import AppLoading from '../../loading/loading.vue';
 import { BaseModal } from '../../modal/base';
 import { Model } from '../../model/model.service';
+import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { Sticker } from '../sticker.model';
 
 interface StickerCount {

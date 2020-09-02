@@ -13,7 +13,7 @@ import AppGamePackageCardMoreOptions from '../../../../../_common/game/package/c
 import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import {
 	ClientLibraryAction,
 	ClientLibraryState,

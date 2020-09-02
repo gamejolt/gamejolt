@@ -16,7 +16,7 @@ import {
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import FormGameKeyGroupAddKeys from '../../../../../../components/forms/game/key-group/add-keys/add-keys.vue';
 import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/key-group.vue';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
@@ -100,7 +100,6 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 	async removeGroup(keyGroup: KeyGroup) {
 		const resolved = await ModalConfirm.show(
 			this.$gettext(
-				// tslint:disable-next-line:max-line-length
 				'Are you sure you want to remove this key group? All keys within this key group will be invalidated. Any access that users may have gained from these keys will be revoked. This can not be reversed.'
 			),
 			this.$gettext('Remove key group?')
@@ -130,7 +129,6 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 	async removeKey(key: Key) {
 		const resolved = await ModalConfirm.show(
 			this.$gettext(
-				// tslint:disable-next-line:max-line-length
 				`Are you sure you want to remove this key? This will revoke this key's access, or anyone that has claimed this key. This can not be reversed.`
 			),
 			this.$gettext('Remove key?')

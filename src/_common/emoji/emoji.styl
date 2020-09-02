@@ -7,34 +7,34 @@
 	speak: none
 	cursor: default
 	background-repeat: no-repeat
+	image-rendering: pixelated
 
 	> span
 		display: none
 
 	$emojis = {
-		sleeping: 'sleeping'
-		bucktooth: 'bucktooth'
-		crossed: 'crossed'
-		crying: 'crying'
-		dizzy: 'dizzy'
-		grin: 'grin'
-		guh: 'guh'
-		huh: 'huh'
-		innocent: 'innocent'
-		mah: 'mah'
-		ninja: 'ninja'
-		ohyou: 'ohyou'
-		omg: 'omg'
-		ouch: 'ouch'
-		psychotic: 'psychotic'
-		sleeping: 'sleeping'
-		smile: 'smile'
-		snooty: 'snooty'
-		tongue: 'tongue'
-		wha: 'wha'
+		bucktooth: 'bucktooth',
+		crossed: 'crossed',
+		crying: 'crying',
+		dizzy: 'dizzy',
+		grin: 'grin',
+		guh: 'guh',
+		huh: 'huh',
+		innocent: 'innocent',
+		mah: 'mah',
+		ninja: 'ninja',
+		ohyou: 'ohyou',
+		omg: 'omg',
+		ouch: 'ouch',
+		psychotic: 'psychotic',
+		sleeping: 'sleeping',
+		smile: 'smile',
+		snooty: 'snooty',
+		tongue: 'tongue',
+		wha: 'wha',
 		yush: 'yush'
 	}
 
 	for key, val in $emojis
-		&-{ key }
+		&-{key}
 			background-image: url('./' + val + '.png')

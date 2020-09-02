@@ -61,7 +61,7 @@
 					<translate>Following</translate>
 				</app-button>
 
-				<app-popper v-if="app.user" slot="end">
+				<app-popper v-if="app.user" popover-class="fill-darkest" slot="end">
 					<app-button circle trans icon="ellipsis-v" />
 
 					<div slot="popover" class="list-group list-group-dark thin">
@@ -203,26 +203,6 @@
 								@submit="closeEditTopic"
 							/>
 						</template>
-
-						<p class="text-muted small" v-if="topic.main_post.modified_by">
-							Last modified on
-							<span :title="date(topic.main_post.modified_on, 'medium')">
-								{{ topic.main_post.modified_on | date }}
-							</span>
-							by
-							<router-link
-								class="link-unstyled"
-								:to="{
-									name: 'profile.overview',
-									params: { username: topic.main_post.modified_by_user.username },
-								}"
-							>
-								<strong>
-									{{ topic.main_post.modified_by_user.display_name }}
-								</strong>
-							</router-link>
-							<small>@{{ topic.main_post.modified_by_user.username }}</small>
-						</p>
 
 						<hr />
 

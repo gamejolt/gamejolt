@@ -1,37 +1,21 @@
-<template>
-	<div class="-list" v-if="communities.length || showAddButton">
-		<app-community-slider-item
-			v-for="community of communities"
-			:key="community.id"
-			:community="community"
-			:event-cat="eventCat"
-		/>
+<script lang="ts" src="./slider"></script>
 
-		<app-community-slider-discover-item key="discover" />
-		<app-community-slider-add-item key="add" v-if="showAddButton" />
+<template>
+	<div v-if="communities.length || withAddButton" class="-list">
+		<app-scroll-scroller class="-scroller" horizontal thin>
+			<div class="-flex">
+				<app-community-slider-item
+					v-for="community of communities"
+					:key="community.id"
+					:community="community"
+					:event-cat="eventCat"
+				/>
+
+				<app-community-slider-discover-item key="discover" />
+				<app-community-slider-add-item v-if="withAddButton" key="add" />
+			</div>
+		</app-scroll-scroller>
 	</div>
 </template>
 
-<style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
-.-list
-	full-bleed()
-	white-space: nowrap
-	padding-left: $grid-gutter-width-xs * 0.5
-	padding-right: $grid-gutter-width-xs * 0.5
-	padding-bottom: 8px
-	overflow-x: auto
-	overflow-y: hidden
-	margin-bottom: $line-height-computed
-
-	@media $media-sm-up
-		padding-left: $grid-gutter-width * 0.5
-		padding-right: $grid-gutter-width * 0.5
-
-	@media $media-md-up
-		padding-bottom: 0
-</style>
-
-<script lang="ts" src="./slider"></script>
+<style lang="stylus" src="./slider.styl" scoped></style>

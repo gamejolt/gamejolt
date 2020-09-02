@@ -6,6 +6,8 @@
 		-->
 		<app-content-editor
 			class="fill-bg form-control content-editor-form-control"
+			:class="{ '-compact': compact }"
+			ref="editor"
 			:name="group.name"
 			:id="id"
 			:content-context="contentContext"
@@ -16,17 +18,24 @@
 			:value="controlVal"
 			:min-height="minHeight"
 			:startup-activity="startupActivity"
+			:temp-resource-context-data="tempResourceContextData"
+			:single-line-mode="singleLineMode"
+			:max-height="maxHeight"
+			:display-rules="displayRules"
+			:focus-end="focusEnd"
 			v-validate="{ rules: validationRules }"
 			@input="onChange"
 			@editor-focus="onFocus"
 			@editor-blur="onBlur"
+			@submit="onSubmit"
+			@insert-block-node="onInsertBlockNode"
 		/>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .content-control
 	cursor: text
@@ -39,6 +48,10 @@
 .content-editor-form-control
 	height: auto
 	resize: vertical
+
+	&.-compact
+		border-color: transparent !important
+		border-radius: 0
 
 .content-editor-form-control:focus-within
 	theme-prop('border-color', 'fg-muted')

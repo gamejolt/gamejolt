@@ -1,125 +1,82 @@
 <template>
 	<app-form name="reportForm">
 		<app-form-group name="reason" :label="$gettext(`What's the reason?`)">
-			<div
-				class="radio"
-				v-if="
-					type === 'Game' ||
-						type === 'Fireside_Post' ||
-						type === 'Comment' ||
-						type === 'Forum_Topic' ||
-						type === 'Forum_Post'
-				"
-			>
-				<label>
-					<app-form-control-radio type="radio" value="spam" />
-					<translate>It is spam or unwanted commercial content</translate>
-				</label>
+			<div v-for="reason of reasons" :key="reason.radioValue">
+				<div class="radio">
+					<label>
+						<app-form-control-radio
+							type="radio"
+							:value="reason.radioValue"
+							@changed="onChangeReason"
+						/>
+						{{ reason.text }}
+					</label>
+				</div>
+
+				<div v-if="formModel.reason === reason.radioValue && !!reason.source">
+					<app-form-group name="source" hide-label>
+						<app-form-control
+							type="text"
+							:rules="{
+								max: maxLengthSource,
+							}"
+							:placeholder="reason.source.placeholder"
+						/>
+
+						<app-form-control-errors />
+					</app-form-group>
+				</div>
+
+				<div v-if="formModel.reason === reason.radioValue && !!reason.contexts" class="-context">
+					<app-form-group
+						name="context"
+						:label="$gettext(`Select one or more options that the report applies to`)"
+					>
+						<div class="checkbox" v-for="context of reason.contexts" :key="context.checkValue">
+							<label>
+								<app-form-control-checkbox :value="context.checkValue" @changed="onChangeContext" />
+
+								{{ context.text }}
+							</label>
+						</div>
+
+						<app-form-control-errors />
+					</app-form-group>
+				</div>
+
+				<div v-if="formModel.reason === reason.radioValue && !!reason.infoText">
+					<p class="help-block">
+						<app-jolticon icon="exclamation-circle" />
+						{{ reason.infoText }}
+					</p>
+				</div>
 			</div>
-			<template v-if="type === 'Game'">
-				<div class="radio">
-					<label>
-						<app-form-control-radio type="radio" value="abuse" />
-						<translate>Incorrect maturity rating for the content in the game</translate>
-					</label>
-				</div>
-				<div class="radio">
-					<label>
-						<app-form-control-radio type="radio" value="stolen" />
-						<translate>Game does not belong to this developer</translate>
-					</label>
-				</div>
-				<div class="radio">
-					<label>
-						<app-form-control-radio type="radio" value="no-info" />
-						<translate>
-							No information on game page (no screenshots, sparse description, placeholder page,
-							etc.)
-						</translate>
-					</label>
-				</div>
-				<div class="radio">
-					<label>
-						<app-form-control-radio type="radio" value="malware" />
-						<translate>Virus or other form of malware</translate>
-					</label>
-				</div>
-			</template>
-			<div
-				class="radio"
-				v-if="
-					type === 'Comment' ||
-						type === 'Fireside_Post' ||
-						type === 'Forum_Post' ||
-						type === 'Forum_Topic'
-				"
-			>
-				<label>
-					<app-form-control-radio type="radio" value="abuse" />
-					<translate>It is hate speech or contains graphic content</translate>
-				</label>
-			</div>
-			<div
-				class="radio"
-				v-if="
-					type === 'Comment' ||
-						type === 'Fireside_Post' ||
-						type === 'Forum_Topic' ||
-						type === 'Forum_Post'
-				"
-			>
-				<label>
-					<app-form-control-radio type="radio" value="explicit" />
-					<translate>It is pornographic or contains sexually explicit material</translate>
-				</label>
-			</div>
-			<div
-				class="radio"
-				v-if="
-					type === 'Comment' ||
-						type === 'Fireside_Post' ||
-						type === 'Forum_Topic' ||
-						type === 'Forum_Post'
-				"
-			>
-				<label>
-					<app-form-control-radio type="radio" value="harassment" />
-					<translate>It is harassment or bullying</translate>
-				</label>
-			</div>
-			<div class="radio" v-if="type === 'Comment'">
-				<label>
-					<app-form-control-radio type="radio" value="spoiler" />
-					<translate>It contains spoilers and doesn't use spoiler tags</translate>
-				</label>
-			</div>
-			<template v-if="type === 'User'">
-				<div class="radio">
-					<label>
-						<app-form-control-radio type="radio" value="spam" />
-						<translate>Spammer</translate>
-					</label>
-				</div>
-				<div class="radio">
-					<label>
-						<app-form-control-radio type="radio" value="vote-manip" />
-						<translate>Uprating / downrating</translate>
-					</label>
-				</div>
-				<div class="radio">
-					<label>
-						<app-form-control-radio type="radio" value="explicit" />
-						<translate>Profile or username contains explicit or sensitive material</translate>
-					</label>
-				</div>
-			</template>
-			<app-form-control-errors label="reason" />
 		</app-form-group>
 
-		<app-form-button>
+		<app-form-group
+			name="description"
+			:label="$gettext(`Describe your report`)"
+			:optional="isDescriptionOptional"
+		>
+			<app-form-control-textarea
+				type="text"
+				:rules="{
+					max: maxLengthDescription,
+				}"
+			/>
+
+			<app-form-control-errors :label="$gettext(`description`)" />
+		</app-form-group>
+
+		<app-form-button :disabled="!valid">
 			<translate>Send Report</translate>
 		</app-form-button>
 	</app-form>
 </template>
+
+<style lang="stylus" scoped>
+.-context
+	margin-left: 32px
+</style>
 
 <script lang="ts" src="./form"></script>

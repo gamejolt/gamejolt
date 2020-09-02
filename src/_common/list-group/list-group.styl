@@ -1,8 +1,4 @@
-$list-group-item-padding = 10px
-$list-group-item-padding-thin = 7px
-$list-group-icon-width = 30px
-$list-group-addon-width = 40px
-$list-group-drag-handle-width = 20px
+@require '~styles/variables'
 
 .list-group
 	rounded-corners-lg()
@@ -128,9 +124,11 @@ $list-group-drag-handle-width = 20px
 			top: -1px
 
 // When a list-group is inside a popover.
-// Darken the borders.
-.popover .list-group, .popper .list-group
+// Remove the borders.
+.popper .list-group, .popper-content .list-group
 	margin-bottom: $list-group-item-padding
+	border: 0
+	border-radius: 0
 
 	&:last-child
 		margin-bottom: 0

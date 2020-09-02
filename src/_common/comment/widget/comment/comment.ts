@@ -7,7 +7,6 @@ import { Collaborator } from '../../../collaborator/collaborator.model';
 import { Environment } from '../../../environment/environment.service';
 import AppExpand from '../../../expand/expand.vue';
 import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
-import { date } from '../../../filters/date';
 import { number } from '../../../filters/number';
 import AppMessageThreadAdd from '../../../message-thread/add/add.vue';
 import AppMessageThreadItem from '../../../message-thread/item/item.vue';
@@ -19,7 +18,7 @@ import AppPopper from '../../../popper/popper.vue';
 import { ReportModal } from '../../../report/modal/modal.service';
 import { AppState, AppStore } from '../../../store/app-store';
 import AppTimelineListItem from '../../../timeline-list/item/item.vue';
-import { AppTooltip } from '../../../tooltip/tooltip';
+import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import FormComment from '../../add/add.vue';
 import { Comment, getCommentBlockReason } from '../../comment-model';
 import AppCommentContent from '../../content/content.vue';
@@ -53,7 +52,6 @@ let CommentNum = 0;
 	},
 	filters: {
 		number,
-		date,
 	},
 })
 export default class AppCommentWidgetComment extends Vue {
@@ -78,7 +76,6 @@ export default class AppCommentWidgetComment extends Vue {
 		scrollTarget: HTMLDivElement;
 	};
 
-	readonly date = date;
 	readonly Environment = Environment;
 
 	created() {
@@ -142,11 +139,7 @@ export default class AppCommentWidgetComment extends Vue {
 			);
 
 			if (collaborator instanceof Collaborator) {
-				if (
-					collaborator.perms.includes('all') ||
-					collaborator.perms.includes('comments') ||
-					collaborator.perms.includes('community-posts')
-				) {
+				if (collaborator.perms.includes('all') || collaborator.perms.includes('comments')) {
 					return true;
 				}
 			}

@@ -1,7 +1,7 @@
 <template>
 	<div class="route-game-overview">
 		<!-- Media Bar -->
-		<app-media-bar v-if="game.media_count" :media-items="mediaItems" />
+		<app-game-media-bar v-if="game.media_count" :media-items="mediaItems" />
 
 		<section class="section section-thin fill-backdrop">
 			<app-ad-widget
@@ -45,7 +45,7 @@
 					<app-comment-overview
 						:comments="overviewComments"
 						:model="game"
-						displayMode="comments"
+						display-mode="comments"
 						@reload-comments="reloadPreviewComments"
 					/>
 				</div>
@@ -73,9 +73,15 @@
 					patched vnode not existing.
 				-->
 				<div v-if="customGameMessages.length">
-					<div key="wip" v-if="game.canceled" class="alert alert-notice full-bleed-xs" v-translate>
-						This game was canceled, so the current version might be buggy or incomplete. You can
-						still follow it if you'd like to be notified in the case that development continues.
+					<div
+						key="wip"
+						v-if="game.canceled"
+						class="alert alert-notice full-bleed-xs"
+						v-translate
+					>
+						This game was canceled, so the current version might be buggy or incomplete.
+						You can still follow it if you'd like to be notified in the case that
+						development continues.
 					</div>
 
 					<div
@@ -110,8 +116,12 @@
 						<app-card v-if="hasPartnerControls">
 							<div class="card-content">
 								<p>
-									<translate tag="strong">This game is part of the Partner system!</translate>
-									<translate>You can use this link for sharing the game.</translate>
+									<translate tag="strong"
+										>This game is part of the Partner system!</translate
+									>
+									<translate
+										>You can use this link for sharing the game.</translate
+									>
 								</p>
 								<input class="form-control" :value="partnerLink" />
 							</div>
@@ -134,12 +144,16 @@
 						<div v-if="shouldShowMultiplePackagesMessage" class="alert alert-notice">
 							<app-jolticon icon="notice" />
 							<translate>
-								There are multiple packages for your device. Please choose one below.
+								There are multiple packages for your device. Please choose one
+								below.
 							</translate>
 						</div>
 
 						<app-lazy-placeholder :when="isOverviewLoaded">
-							<div class="lazy-placeholder -package-placeholder" style="height: 135px"></div>
+							<div
+								class="lazy-placeholder -package-placeholder"
+								style="height: 135px"
+							></div>
 
 							<div v-if="externalPackages.length">
 								<app-game-external-package-card
@@ -242,7 +256,8 @@
 					<app-activity-feed v-if="feed.hasItems" :feed="feed" show-ads />
 					<div v-else class="alert">
 						<translate>
-							Nothing has been posted to this project page yet. Maybe check back later!
+							Nothing has been posted to this project page yet. Maybe check back
+							later!
 						</translate>
 					</div>
 				</template>
@@ -252,8 +267,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-leaderboard-ad
 	padding-bottom: 8px

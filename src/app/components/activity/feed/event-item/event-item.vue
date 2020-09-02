@@ -136,43 +136,35 @@
 						:animate="false"
 						@require-change="canToggleLeadChanged"
 					>
-						<app-content-viewer
-							class="fireside-post-lead"
-							:source="post.lead_content"
-						/>
+						<app-content-viewer class="fireside-post-lead" :source="post.lead_content" />
 					</app-fade-collapse>
 				</app-sticker-target>
 
 				<a class="hidden-text-expander" v-if="canToggleLead" @click="toggleLead()"></a>
 
-				<app-activity-feed-devlog-post-text
-					v-if="post.hasArticle"
-					:item="item"
-					:post="post"
-					@expanded="onExpand"
-					@content-bootstrapped="onContentBootstrapped"
-				/>
+				<app-event-item-controls-overlay>
+					<app-activity-feed-devlog-post-text
+						v-if="post.hasArticle"
+						:item="item"
+						:post="post"
+						@expanded="onExpand"
+						@content-bootstrapped="onContentBootstrapped"
+					/>
 
-				<div class="-poll" v-if="post.hasPoll" @click.stop>
-					<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
-				</div>
-
-				<div class="-communities" v-if="shouldShowCommunities">
-					<div
-						class="-community-row"
-						v-for="postCommunity of communities"
-						:key="postCommunity.id"
-					>
-						<app-community-pill
-							v-if="!feed.hideCommunity"
-							:community="postCommunity.community"
-							:channel="feed.hideCommunityChannel ? undefined : postCommunity.channel"
-						/>
-						<app-pill v-else :to="getChannelRoute(postCommunity)">
-							{{ getChannelTitle(postCommunity) }}
-						</app-pill>
+					<div v-if="post.hasPoll" class="-poll" @click.stop>
+						<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 					</div>
-				</div>
+
+					<div v-if="shouldShowCommunities" class="-communities">
+						<app-scroll-scroller class="-communities-list" horizontal>
+							<app-community-pill
+								v-for="postCommunity of communities"
+								:key="postCommunity.id"
+								:community-link="postCommunity"
+							/>
+						</app-scroll-scroller>
+					</div>
+				</app-event-item-controls-overlay>
 			</template>
 
 			<app-event-item-controls

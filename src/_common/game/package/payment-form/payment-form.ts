@@ -26,7 +26,7 @@ import AppPopper from '../../../popper/popper.vue';
 import { Screen } from '../../../screen/screen-service';
 import { Sellable } from '../../../sellable/sellable.model';
 import { AppStore } from '../../../store/app-store';
-import { AppTooltip } from '../../../tooltip/tooltip';
+import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import { User } from '../../../user/user.model';
 import { GameBuild } from '../../build/build.model';
 import { Game } from '../../game.model';
@@ -119,7 +119,6 @@ export default class FormGamePackagePayment extends BaseForm<any>
 
 	get minOrderMessage() {
 		return this.$gettextInterpolate(
-			// tslint:disable-next-line:max-line-length
 			`Because of payment processing fees, we are not able to sell this game for less than %{ amount }. You can click the link below to grab the download for free, though!`,
 			{ amount: currency(this.minOrderAmount) }
 		);
@@ -227,6 +226,7 @@ export default class FormGamePackagePayment extends BaseForm<any>
 		if (this.addresses.length) {
 			if (checkoutType === 'paypal') {
 				this.checkoutPaypal();
+				this.$refs.form.submit();
 				return;
 			} else if (checkoutType === 'wallet') {
 				this.checkoutWallet();

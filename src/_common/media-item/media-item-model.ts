@@ -1,6 +1,7 @@
+import { LightboxMediaModel, LightboxMediaType } from '../lightbox/lightbox-helpers';
 import { Model } from '../model/model.service';
 
-export class MediaItem extends Model {
+export class MediaItem extends Model implements LightboxMediaModel {
 	static readonly TYPE_GAME_THUMBNAIL = 'game-thumbnail';
 	static readonly TYPE_GAME_HEADER = 'game-header';
 	static readonly TYPE_GAME_SCREENSHOT = 'game-screenshot';
@@ -18,6 +19,8 @@ export class MediaItem extends Model {
 	static readonly TYPE_FORUM_POST = 'forum-post';
 
 	static readonly TYPE_COMMUNITY_DESCRIPTION = 'community-description';
+
+	static readonly TYPE_CHAT_MESSAGE = 'chat-message';
 
 	static readonly STATUS_ACTIVE = 'active';
 	static readonly STATUS_REMOVED = 'removed';
@@ -61,6 +64,27 @@ export class MediaItem extends Model {
 			return this.height;
 		}
 		return crop.y2 - crop.y;
+	}
+
+	// Needed for lightbox and other components that are used together with GameVideo.
+	get img_thumbnail() {
+		return this.mediaserver_url;
+	}
+
+	set img_thumbnail(img: string) {
+		this.mediaserver_url = img;
+	}
+
+	getModelId() {
+		return this.id;
+	}
+
+	getMediaType() {
+		return 'image' as LightboxMediaType;
+	}
+
+	getMediaItem() {
+		return this;
 	}
 
 	getDimensions(

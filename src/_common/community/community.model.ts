@@ -1,4 +1,4 @@
-import { Location } from 'vue-router';
+import type { Location, Route } from 'vue-router';
 import { Api } from '../api/api.service';
 import { Collaboratable, Perm } from '../collaborator/collaboratable';
 import { Game } from '../game/game.model';
@@ -6,7 +6,188 @@ import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { Theme } from '../theme/theme.model';
 import { UserBlock } from '../user/block/block.model';
+import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from './channel/channel-permissions';
 import { CommunityChannel } from './channel/channel.model';
+
+export class Community extends Collaboratable(Model) {
+	name!: string;
+	path!: string;
+	added_on!: number;
+	post_placeholder_text!: string | null;
+	description_content!: string;
+	is_verified!: boolean;
+
+	thumbnail?: MediaItem;
+	header?: MediaItem;
+	theme!: Theme | null;
+	games!: Game[] | null;
+	channels?: CommunityChannel[] | null;
+	featured_background?: MediaItem;
+	all_background?: MediaItem;
+	user_block?: UserBlock | null;
+
+	member_count!: number;
+	is_member?: boolean;
+
+	perms?: Perm[];
+
+	constructor(data: any = {}) {
+		super(data);
+
+		if (data.header) {
+			this.header = new MediaItem(data.header);
+		}
+
+		if (data.thumbnail) {
+			this.thumbnail = new MediaItem(data.thumbnail);
+		}
+
+		if (data.theme) {
+			this.theme = new Theme(data.theme);
+		}
+
+		if (data.games) {
+			this.games = Game.populate(data.games);
+		}
+
+		if (data.channels) {
+			this.channels = CommunityChannel.populate(data.channels);
+		}
+
+		if (data.featured_background) {
+			this.featured_background = new MediaItem(data.featured_background);
+		}
+
+		if (data.all_background) {
+			this.all_background = new MediaItem(data.all_background);
+		}
+
+		if (data.user_block) {
+			this.user_block = new UserBlock(data.user_block);
+		}
+	}
+
+	get img_thumbnail() {
+		if (this.thumbnail instanceof MediaItem) {
+			return this.thumbnail.mediaserver_url;
+		}
+		return require('./no-thumb.png');
+	}
+
+	get routeLocation(): Location {
+		return {
+			name: 'communities.view.overview',
+			params: {
+				path: this.path,
+			},
+		};
+	}
+
+	get routeEditLocation(): Location {
+		return {
+			name: 'communities.view.edit.details',
+			params: {
+				path: this.path,
+				id: this.id + '',
+			},
+		};
+	}
+
+	get isBlocked() {
+		return this.user_block instanceof UserBlock;
+	}
+
+	get postableChannels() {
+		if (!this.channels) {
+			return [];
+		}
+
+		return this.channels?.filter(channel =>
+			channel.permissions.canPerform(COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING)
+		);
+	}
+
+	channelRouteLocation(channel: CommunityChannel): Location {
+		return {
+			name: 'communities.view.channel',
+			params: {
+				path: this.path,
+				channel: channel.title,
+			}
+		} as Location
+	}
+
+	$save() {
+		if (this.id) {
+			return this.$_save('/web/dash/communities/save/' + this.id, 'community', {
+				allowComplexData: ['theme'],
+			});
+		} else {
+			return this.$_save('/web/dash/communities/save', 'community', {
+				allowComplexData: ['theme'],
+			});
+		}
+	}
+
+	$saveHeader() {
+		return this.$_save('/web/dash/communities/design/save-header/' + this.id, 'community', {
+			file: this.file,
+			allowComplexData: ['crop'],
+		});
+	}
+
+	async $clearHeader() {
+		return this.$_save('/web/dash/communities/design/clear-header/' + this.id, 'community');
+	}
+
+	$saveThumbnail() {
+		return this.$_save('/web/dash/communities/design/save-thumbnail/' + this.id, 'community', {
+			file: this.file,
+			allowComplexData: ['crop'],
+		});
+	}
+
+	$saveDescription() {
+		return this.$_save('/web/dash/communities/description/save/' + this.id, 'community');
+	}
+
+	$remove() {
+		return this.$_remove('/web/dash/communities/remove/' + this.id);
+	}
+
+	$savePresetChannelBackground(presetType: CommunityPresetChannelType) {
+		return this.$_save(
+			`/web/dash/communities/channels/save-preset-background/${this.id}/${presetType}`,
+			'community',
+			{
+				file: this.file,
+			}
+		);
+	}
+
+	$clearPresetChannelBackground(presetType: CommunityPresetChannelType) {
+		return this.$_save(
+			`/web/dash/communities/channels/clear-preset-background/${this.id}/${presetType}`,
+			'community'
+		);
+	}
+
+	async saveGameSort() {
+		const response = await Api.sendRequest(
+			`/web/dash/communities/games/save-sort/${this.id}`,
+			this.games!.map(i => i.id),
+			{
+				noErrorRedirect: true,
+			}
+		);
+		if (response.success) {
+			this.assign(response.community);
+		}
+		return response;
+	}
+}
+
+Model.create(Community);
 
 export async function $joinCommunity(community: Community) {
 	community.is_member = true;
@@ -59,145 +240,11 @@ export async function $leaveCommunity(community: Community) {
 	}
 }
 
-export class Community extends Collaboratable(Model) {
-	name!: string;
-	path!: string;
-	added_on!: number;
-	post_placeholder_text!: string | null;
-	description_content!: string;
-	is_verified!: boolean;
-
-	thumbnail?: MediaItem;
-	header?: MediaItem;
-	theme!: Theme | null;
-	game!: Game | null;
-	channels?: CommunityChannel[] | null;
-	featured_background?: MediaItem;
-	user_block?: UserBlock | null;
-
-	member_count!: number;
-	is_member?: boolean;
-
-	perms?: Perm[];
-
-	constructor(data: any = {}) {
-		super(data);
-
-		if (data.header) {
-			this.header = new MediaItem(data.header);
-		}
-
-		if (data.thumbnail) {
-			this.thumbnail = new MediaItem(data.thumbnail);
-		}
-
-		if (data.theme) {
-			this.theme = new Theme(data.theme);
-		}
-
-		if (data.game) {
-			this.game = new Game(data.game);
-		}
-
-		if (data.channels) {
-			this.channels = CommunityChannel.populate(data.channels);
-		}
-
-		if (data.featured_background) {
-			this.featured_background = new MediaItem(data.featured_background);
-		}
-
-		if (data.user_block) {
-			this.user_block = new UserBlock(data.user_block);
-		}
-	}
-
-	get img_thumbnail() {
-		if (this.thumbnail instanceof MediaItem) {
-			return this.thumbnail.mediaserver_url;
-		}
-		return require('./no-thumb.png');
-	}
-
-	get routeLocation(): Location {
-		return {
-			name: 'communities.view.overview',
-			params: {
-				path: this.path,
-			},
-		};
-	}
-
-	get routeEditLocation(): Location {
-		return {
-			name: 'communities.view.overview.edit.details',
-			params: {
-				path: this.path,
-				id: this.id + '',
-			},
-		};
-	}
-
-	get isBlocked() {
-		return this.user_block instanceof UserBlock;
-	}
-
-	channelRouteLocation(channel: CommunityChannel): Location {
-		const communityLocation = this.routeLocation;
-		communityLocation.params!.channel = channel.title;
-		return communityLocation;
-	}
-
-	$save() {
-		if (this.id) {
-			return this.$_save('/web/dash/communities/save/' + this.id, 'community', {
-				allowComplexData: ['theme'],
-			});
-		} else {
-			return this.$_save('/web/dash/communities/save', 'community', {
-				allowComplexData: ['theme'],
-			});
-		}
-	}
-
-	$saveHeader() {
-		return this.$_save('/web/dash/communities/design/save-header/' + this.id, 'community', {
-			file: this.file,
-			allowComplexData: ['crop'],
-		});
-	}
-
-	async $clearHeader() {
-		return this.$_save('/web/dash/communities/design/clear-header/' + this.id, 'community');
-	}
-
-	$saveThumbnail() {
-		return this.$_save('/web/dash/communities/design/save-thumbnail/' + this.id, 'community', {
-			file: this.file,
-			allowComplexData: ['crop'],
-		});
-	}
-
-	$saveDescription() {
-		return this.$_save('/web/dash/communities/description/save/' + this.id, 'community');
-	}
-
-	$remove() {
-		return this.$_remove('/web/dash/communities/remove/' + this.id);
-	}
-
-	$saveFeaturedBackground() {
-		return this.$_save('/web/dash/communities/channels/save-featured/' + this.id, 'community', {
-			file: this.file,
-		});
-	}
-
-	$clearFeaturedBackground() {
-		return this.$_save(
-			`/web/dash/communities/channels/clear-featured-background/${this.id}`,
-			'community'
-		);
-	}
+export const enum CommunityPresetChannelType {
+	FEATURED = 'featured',
+	ALL = 'all',
 }
 
-Model.create(Community);
+export function isEditingCommunity(route: Route) {
+	return !!route.name && route.name.startsWith('communities.view.edit.');
+}

@@ -6,7 +6,6 @@
 /// <reference path="./typings/router.d.ts" />
 /// <reference path="./typings/tooltip.d.ts" />
 /// <reference path="./typings/api.d.ts" />
-/// <reference path="./typings/simplebar.d.ts" />
 
 interface Window {
 	_gjStartTime: number;

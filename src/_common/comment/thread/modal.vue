@@ -28,7 +28,6 @@
 					:parent-id="parent.id"
 					:placeholder="$gettext(`Leave a reply...`)"
 					:autofocus="autofocus"
-					:max-height="Screen.isXs ? '110px' : '250px'"
 					@submit="_onCommentAdd"
 					@editor-focus="onEditorFocus"
 					@editor-blur="onEditorBlur"

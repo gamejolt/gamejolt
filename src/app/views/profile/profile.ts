@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Component, InjectReactive } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
 import { BlockModal } from '../../../_common/block/modal/modal.service';
@@ -13,12 +13,13 @@ import { WithRouteStore } from '../../../_common/route/route-store';
 import { Screen } from '../../../_common/screen/screen-service';
 import { ThemeMutation, ThemeStore } from '../../../_common/theme/theme.store';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../_common/tooltip/tooltip';
+import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { Translate } from '../../../_common/translate/translate.service';
 import AppUserFollowWidget from '../../../_common/user/follow/widget.vue';
 import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
 import AppUserAvatar from '../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../_common/user/verified-tick/verified-tick.vue';
+import { ChatClient, ChatKey, isUserOnline } from '../../components/chat/client';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPageHeaderControls from '../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../components/page-header/page-header.vue';
@@ -88,6 +89,8 @@ import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './prof
 	},
 })
 export default class RouteProfile extends BaseRouteComponent {
+	@InjectReactive(ChatKey) chat?: ChatClient;
+
 	@State
 	app!: Store['app'];
 
@@ -102,9 +105,6 @@ export default class RouteProfile extends BaseRouteComponent {
 
 	@RouteStoreModule.State
 	trophyCount!: RouteStore['trophyCount'];
-
-	@RouteStoreModule.State
-	isOnline!: RouteStore['isOnline'];
 
 	@RouteStoreModule.State
 	userFriendship!: RouteStore['userFriendship'];
@@ -160,6 +160,14 @@ export default class RouteProfile extends BaseRouteComponent {
 
 	get shouldShowEdit() {
 		return this.app.user && this.user && this.app.user.id === this.user.id;
+	}
+
+	get isOnline(): null | boolean {
+		if (!this.chat || !this.user) {
+			return null;
+		}
+
+		return isUserOnline(this.chat, this.user.id);
 	}
 
 	routeCreated() {

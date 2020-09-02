@@ -6,7 +6,7 @@
 				<br />
 				<strong>PNGs are highly recommended as they produce a lossless image.</strong>
 			</p>
-			<p class="help-block strong" v-translate="{ dimensions: '1000x1000' }">
+			<p class="help-block strong" v-translate="{ dimensions: '1000×1000' }">
 				The recommended size for an avatar is
 				<code>%{dimensions}</code>
 				.
@@ -18,7 +18,7 @@
 					min_img_dimensions: [minSize, minSize],
 					max_img_dimensions: [maxSize, maxSize],
 				}"
-				accept=".png,.jpg,.jpeg"
+				accept=".png,.jpg,.jpeg,.webp"
 				@changed="avatarSelected()"
 			/>
 

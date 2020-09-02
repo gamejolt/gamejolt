@@ -16,6 +16,7 @@
 					content_required: true,
 					content_no_media_uploads: true,
 				}"
+				:max-height="0"
 				:validate-on="['blur']"
 			/>
 
@@ -34,21 +35,31 @@
 			<div class="alert alert-notice">
 				<div v-translate>
 					<strong>
-						It appears that your game may be a Five Nights at Freddy's fan game, spinoff, or
-						unofficial sequel.
+						It appears that your game may be a Five Nights at Freddy's fan game,
+						spinoff, or unofficial sequel.
 					</strong>
 					Therefore, we have added the hashtag
 					<code>#fnaf</code>
-					to your game's description. We require this tag for all games derived from the Five Nights
-					at Freddy's series.
+					to your game's description. We require this tag for all games derived from the
+					Five Nights at Freddy's series.
 				</div>
 
 				<app-game-perms required="details" tag="div" class="alert-actions">
-					<app-form-button :solid="false" trans icon="tag" @before-submit="addAutotag('fnaf')">
+					<app-form-button
+						:solid="false"
+						trans
+						icon="tag"
+						@before-submit="addAutotag('fnaf')"
+					>
 						<translate>dash.games.add.fnaf_autotag_accept</translate>
 					</app-form-button>
 
-					<app-form-button :solid="false" :primary="false" trans @before-submit="skipAutotag()">
+					<app-form-button
+						:solid="false"
+						:primary="false"
+						trans
+						@before-submit="skipAutotag()"
+					>
 						<translate>dash.games.add.fnaf_autotag_reject</translate>
 					</app-form-button>
 				</app-game-perms>

@@ -1,12 +1,12 @@
 <template>
 	<app-popper
 		class="game-follow-widget"
+		popover-class="fill-darkest"
 		trigger="manual"
 		track-trigger-width
-		:show="isShowingFollowPopover"
+		:manual-show="isShowingFollowPopover"
 		:block="block"
-		@hide="isShowingFollowPopover = false"
-		@auto-hide="onFollowPopoverDismissed"
+		@click-away="onFollowPopoverDismissed"
 	>
 		<app-button
 			:id="widgetId"
@@ -33,7 +33,7 @@
 			</template>
 		</app-button>
 
-		<div slot="popover" class="well fill-darkest">
+		<div slot="popover" class="well">
 			<p class="small">
 				<translate>
 					Would you also like to follow this developer? You will get notified when they release new

@@ -1,11 +1,17 @@
 import { RouteConfig } from 'vue-router';
+import { routeCommunitiesViewChannel } from './channel/channel.route';
+import { routeCommunitiesViewEdit } from './edit/edit.route';
 import { routeCommunitiesViewMembers } from './members/members.route';
 import { routeCommunitiesViewOverview } from './overview/overview.route';
 
 export const routeCommunitiesView: RouteConfig = {
-	name: 'communities.view',
 	path: '/c/:path',
 	component: () => import(/* webpackChunkName: "routeCommunitiesView" */ './view.vue'),
-	// The order matters here.
-	children: [routeCommunitiesViewMembers, routeCommunitiesViewOverview],
+	// The order matters here since channels will take any URL path.
+	children: [
+		routeCommunitiesViewMembers,
+		routeCommunitiesViewOverview,
+		routeCommunitiesViewChannel,
+		routeCommunitiesViewEdit,
+	],
 };

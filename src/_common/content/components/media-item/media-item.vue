@@ -8,22 +8,27 @@
 	>
 		<div
 			class="media-item"
+			:class="{
+				'media-item-editing': isEditing,
+			}"
 			:style="{
 				'align-items': itemAlignment,
 			}"
 		>
 			<div
 				class="media-item-container"
-				:class="{
-					'media-item-container-placeholder': shouldShowPlaceholder,
-				}"
 				ref="container"
+				v-app-observe-dimensions="computeSize"
 				:style="{
 					width: containerWidth,
 					height: containerHeight,
 				}"
 			>
-				<app-media-item-backdrop :media-item="mediaItem" radius="lg">
+				<app-media-item-backdrop
+					:class="{ '-backdrop': shouldShowPlaceholder }"
+					:media-item="mediaItem"
+					radius="lg"
+				>
 					<template v-if="isHydrated">
 						<component
 							:is="hasLink && !isEditing ? 'a' : 'span'"
@@ -86,7 +91,10 @@
 	flex-direction: column
 	margin-bottom: $line-height-computed
 	cursor: default
-	min-height: 44px // make sure the X button fits properly, usually not a problem unless the image is super wide
+
+	&-editing
+		// Make sure the X button fits properly, usually not a problem unless the image is super wide.
+		min-height: 44px
 
 .media-item-container
 	display: flex
@@ -95,11 +103,10 @@
 	overflow: hidden
 	max-width: 100%
 	position: relative
-	transition: background-color 0.1s ease
 
-// While the image is still loading, we show a dimmed background to better indicate the size of the placeholder
-.media-item-container-placeholder
-	change-bg('bg-offset')
+	// While the image is still loading, we show a dimmed background as a fallback for app-media-item-backdrop
+	.-backdrop
+		change-bg('bg-offset')
 
 .link-overlay
 	position: absolute

@@ -1,12 +1,17 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
+import AppLightboxTS from '../../../../../../_common/lightbox/lightbox';
+import {
+	createLightbox,
+	LightboxMediaSource,
+} from '../../../../../../_common/lightbox/lightbox-helpers';
 import { MediaItem } from '../../../../../../_common/media-item/media-item-model';
+import AppMediaItemPost from '../../../../../../_common/media-item/post/post.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppEventItemMediaIndicator from '../../../../event-item/media-indicator/media-indicator.vue';
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedView } from '../../view';
-import AppActivityFeedDevlogPostMediaItem from './item/item.vue';
 
 if (!GJ_IS_SSR) {
 	const VueTouch = require('vue-touch');
@@ -15,11 +20,11 @@ if (!GJ_IS_SSR) {
 
 @Component({
 	components: {
-		AppActivityFeedDevlogPostMediaItem,
+		AppMediaItemPost,
 		AppEventItemMediaIndicator,
 	},
 })
-export default class AppActivityFeedDevlogPostMedia extends Vue {
+export default class AppActivityFeedDevlogPostMedia extends Vue implements LightboxMediaSource {
 	@Inject()
 	feed!: ActivityFeedView;
 
@@ -34,6 +39,7 @@ export default class AppActivityFeedDevlogPostMedia extends Vue {
 	isDragging = false;
 	isWaitingForFrame = false;
 	contentBootstrapped = false;
+	private lightbox?: AppLightboxTS;
 
 	readonly Screen = Screen;
 
@@ -45,14 +51,38 @@ export default class AppActivityFeedDevlogPostMedia extends Vue {
 		this.activeMediaItem = this.post.media[0];
 	}
 
-	next() {
+	destroyed() {
+		this.closeLightbox();
+	}
+
+	onLightboxClose() {
+		this.lightbox = undefined;
+	}
+
+	getActiveIndex() {
+		return this.page - 1;
+	}
+
+	getActiveItem() {
+		return this.activeMediaItem!;
+	}
+
+	getItemCount() {
+		return this.post.media.length;
+	}
+
+	getItems() {
+		return this.post.media;
+	}
+
+	goNext() {
 		this.page = Math.min(this.page + 1, this.post.media.length);
 		this.activeMediaItem = this.post.media[this.page - 1];
 		this._updateSliderOffset();
 		this.$emit('expanded');
 	}
 
-	prev() {
+	goPrev() {
 		this.page = Math.max(this.page - 1, 1);
 		this.activeMediaItem = this.post.media[this.page - 1];
 		this._updateSliderOffset();
@@ -66,6 +96,8 @@ export default class AppActivityFeedDevlogPostMedia extends Vue {
 			await this.$nextTick();
 			this.$emit('content-bootstrapped');
 		}
+
+		this._updateSliderOffset();
 	}
 
 	private _updateSliderOffset(extraOffsetPx = 0) {
@@ -100,13 +132,19 @@ export default class AppActivityFeedDevlogPostMedia extends Vue {
 	panEnd(event: HammerInput) {
 		this.isDragging = false;
 
-		// Make sure we moved at a high enough velocity and distance to register the "swipe".
-		const velocity = event.velocityX;
-		if (Math.abs(velocity) > 0.65 && event.distance > 10) {
-			if (velocity > 0) {
-				this.prev();
+		// Make sure we moved at a high enough velocity and/or distance to register the "swipe".
+		const { velocityX, deltaX, distance } = event;
+
+		if (
+			// Check if it was a fast flick,
+			(Math.abs(velocityX) > 0.55 && distance > 10) ||
+			// or if the pan distance was at least ~1/3 of the content area.
+			Math.abs(deltaX) >= this.$el.clientWidth / 3
+		) {
+			if (velocityX > 0 || deltaX > 0) {
+				this.goPrev();
 			} else {
-				this.next();
+				this.goNext();
 			}
 			return;
 		}
@@ -116,5 +154,24 @@ export default class AppActivityFeedDevlogPostMedia extends Vue {
 
 	getIsActiveMediaItem(item: MediaItem) {
 		return this.activeMediaItem?.id === item.id;
+	}
+
+	onClickFullscreen() {
+		this.createLightbox();
+	}
+
+	private createLightbox() {
+		if (this.lightbox) {
+			return;
+		}
+		this.lightbox = createLightbox(this);
+	}
+
+	private closeLightbox() {
+		if (!this.lightbox) {
+			return;
+		}
+		this.lightbox.close();
+		this.lightbox = undefined;
 	}
 }

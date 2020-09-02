@@ -51,6 +51,7 @@ export class AppImgResponsive extends Vue {
 
 	private async updateSrc() {
 		const containerWidth = Ruler.width(this.$el.parentNode as HTMLElement);
+		const containerHeight = Ruler.height(this.$el.parentNode as HTMLElement);
 
 		// Make sure we never do a 0 width, just in case.
 		// Seems to happen in some situations.
@@ -61,19 +62,20 @@ export class AppImgResponsive extends Vue {
 		// Update width in the URL.
 		// We keep width within 100px increment bounds.
 		let newSrc = this.src;
-		let mediaserverWidth = containerWidth;
+		let largerDimension = Math.max(containerWidth, containerHeight);
+
 		if (Screen.isHiDpi) {
 			// For high dpi, double the width.
-			mediaserverWidth = mediaserverWidth * 2;
-			mediaserverWidth = Math.ceil(mediaserverWidth / 100) * 100;
+			largerDimension = largerDimension * 2;
+			largerDimension = Math.ceil(largerDimension / 100) * 100;
 		} else {
-			mediaserverWidth = Math.ceil(mediaserverWidth / 100) * 100;
+			largerDimension = Math.ceil(largerDimension / 100) * 100;
 		}
 
 		if (newSrc.search(WIDTH_HEIGHT_REGEX) !== -1) {
-			newSrc = newSrc.replace(WIDTH_HEIGHT_REGEX, '/' + mediaserverWidth + 'x2000/');
+			newSrc = newSrc.replace(WIDTH_HEIGHT_REGEX, '/' + largerDimension + 'x2000/');
 		} else {
-			newSrc = newSrc.replace(WIDTH_REGEX, '/' + mediaserverWidth + '/');
+			newSrc = newSrc.replace(WIDTH_REGEX, '/' + largerDimension + '/');
 		}
 
 		// Only if the src changed from previous runs.

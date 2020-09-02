@@ -5,12 +5,14 @@ import { Api } from '../../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
+import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
 import { Environment } from '../../../../../../_common/environment/environment.service';
 import { FiresidePostCommunity } from '../../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../../../_common/game/game.model';
 import { Growls } from '../../../../../../_common/growls/growls.service';
 import { getLinkedAccountPlatformIcon } from '../../../../../../_common/linked-account/linked-account.model';
+import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../../_common/report/modal/modal.service';
 import { AppState, AppStore } from '../../../../../../_common/store/app-store';
@@ -23,6 +25,7 @@ import { AppCommunityPerms } from '../../../../community/perms/perms';
 	components: {
 		AppPopper,
 		AppCommunityPerms,
+		AppCommunityThumbnailImg,
 	},
 })
 export default class AppEventItemControlsFiresidePostExtra extends Vue {
@@ -103,18 +106,6 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 		return false;
 	}
 
-	shouldDisplayCommunityName(community: Community) {
-		// If we are in the community in question and it's the only community option available
-		return (
-			this.post.manageableCommunities.length === 1 &&
-			!(
-				this.$route.name &&
-				this.$route.name.includes('communities.view') &&
-				this.$route.params.path === community.path
-			)
-		);
-	}
-
 	getProviderIcon(provider: string) {
 		return getLinkedAccountPlatformIcon(provider);
 	}
@@ -168,8 +159,25 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 	}
 
 	async rejectFromCommunity(postCommunity: FiresidePostCommunity) {
-		await this.post.$reject(postCommunity.community);
-		this.emitReject(postCommunity.community);
+		const result = await ModalConfirm.show(
+			this.$gettext(
+				`Are you sure you want to eject this post from ${postCommunity.community.name}?`
+			),
+			undefined,
+			'yes'
+		);
+
+		if (!result) {
+			return;
+		}
+
+		try {
+			await this.post.$reject(postCommunity.community);
+			this.emitReject(postCommunity.community);
+		} catch (err) {
+			console.warn('Failed to eject post');
+			return;
+		}
 	}
 
 	copyShareUrl() {
@@ -186,26 +194,38 @@ export default class AppEventItemControlsFiresidePostExtra extends Vue {
 		}
 	}
 
-	getPinTargetModel() {
+	private _getPinTarget() {
 		const pinContext = this.post.getPinContextFor(this.$route);
+
+		let resourceName: string;
+		let resourceId: number;
+
 		if (pinContext instanceof Game) {
-			return 'Game';
+			resourceName = 'Game';
+			resourceId = pinContext.id;
 		} else if (pinContext instanceof FiresidePostCommunity) {
-			return 'Community_Channel';
+			resourceName = 'Community_Channel';
+			resourceId = pinContext.channel!.id;
 		} else if (pinContext instanceof User) {
-			return 'User';
+			resourceName = 'User';
+			resourceId = pinContext.id;
+		} else {
+			throw new Error('Post is not pinnable in this context');
 		}
 
-		throw new Error('Post is not pinnable in this context');
+		return { resourceName, resourceId };
 	}
 
-	async pin() {
-		await this.post.$pin(this.getPinTargetModel());
-		this.emitPin();
-	}
+	async togglePin() {
+		const wasPinned = this.post.is_pinned;
 
-	async unpin() {
-		await this.post.$unpin(this.getPinTargetModel());
-		this.emitUnpin();
+		const { resourceName, resourceId } = this._getPinTarget();
+		await this.post.$togglePin(resourceName, resourceId);
+
+		if (wasPinned) {
+			this.emitUnpin();
+		} else {
+			this.emitPin();
+		}
 	}
 }

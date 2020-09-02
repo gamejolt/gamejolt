@@ -3,6 +3,7 @@ import { Mutation, State } from 'vuex-class';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
 import AppAdWidget from '../../../_common/ad/widget/widget.vue';
+import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Meta } from '../../../_common/meta/meta-service';
@@ -16,6 +17,7 @@ import AppActivityFeed from '../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import AppBroadcastCard from '../../components/broadcast-card/broadcast-card.vue';
+import AppCommunitySliderPlaceholder from '../../components/community/slider/placeholder/placeholder.vue';
 import AppCommunitySlider from '../../components/community/slider/slider.vue';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
@@ -39,6 +41,7 @@ class DashGame {
 		AppActivityFeedPlaceholder,
 		AppBroadcastCard,
 		AppCommunitySlider,
+		AppCommunitySliderPlaceholder,
 		AppPostAddButton,
 		AppUserCard,
 		AppScrollAffix,
@@ -167,6 +170,10 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 
 	loadedNew() {
 		this.setNotificationCount({ type: 'activity', count: 0 });
+	}
+
+	onLoadMore() {
+		Analytics.trackPageview(undefined, true);
 	}
 
 	onPostAdded(post: FiresidePost) {

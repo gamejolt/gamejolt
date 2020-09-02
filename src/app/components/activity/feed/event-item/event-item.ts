@@ -9,6 +9,7 @@ import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../../_common/community/pill/pill.vue';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
+import AppEventItemControlsOverlay from '../../../../../_common/event-item/controls-overlay/controls-overlay.vue';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { number } from '../../../../../_common/filters/number';
@@ -18,6 +19,7 @@ import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import AppPill from '../../../../../_common/pill/pill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
+import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import { Settings } from '../../../../../_common/settings/settings.service';
 import AppStickerTargetTS from '../../../../../_common/sticker/target/target';
 import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
@@ -54,6 +56,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppActivityFeedDevlogPostSketchfab,
 		AppActivityFeedDevlogPostVideo,
 		AppEventItemControls,
+		AppEventItemControlsOverlay,
 		AppPollVoting,
 		AppUserCardHover,
 		AppFadeCollapse,
@@ -63,6 +66,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppUserVerifiedTick,
 		AppActivityFeedEventItemBlocked,
 		AppStickerTarget,
+		AppScrollScroller,
 	},
 	filters: {
 		number,
@@ -140,7 +144,16 @@ export default class AppActivityFeedEventItem extends Vue {
 	}
 
 	get communities() {
-		return (this.post && this.post.communities) || [];
+		const communities = this.post?.communities || [];
+
+		// Yoink the feed's main community to show first.
+		const idx = communities.findIndex(fpc => fpc.community.id === this.feed.mainCommunity?.id);
+		if (idx === -1) {
+			return communities;
+		}
+
+		communities.unshift(...communities.splice(idx, 1));
+		return communities;
 	}
 
 	get link() {
@@ -198,11 +211,7 @@ export default class AppActivityFeedEventItem extends Vue {
 	}
 
 	get shouldShowCommunities() {
-		if (!this.communities.length) {
-			return false;
-		}
-
-		return !this.feed.hideCommunity || !this.feed.hideCommunityChannel;
+		return this.communities.length > 0;
 	}
 
 	get shouldShowIsPinned() {

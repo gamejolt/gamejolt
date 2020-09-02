@@ -1,13 +1,13 @@
 <template>
 	<div>
-		<app-discover-home-banner v-if="featuredItem" :item="featuredItem" />
+		<app-discover-home-banner :is-loading="!isRouteBootstrapped" :item="featuredItem" />
 
 		<app-discover-home-tags />
 
 		<section class="section">
 			<div class="container-xl">
 				<app-discover-home-communities
-					v-if="featuredCommunities.length > 0"
+					:is-loading="!isRouteBootstrapped"
 					:communities="featuredCommunities"
 				/>
 

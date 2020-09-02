@@ -4,7 +4,7 @@ import AppCodemirror from '../../../codemirror/codemirror.vue';
 import { Environment } from '../../../environment/environment.service';
 import AppLoading from '../../../loading/loading.vue';
 import { Screen } from '../../../screen/screen-service';
-import { AppTooltip } from '../../../tooltip/tooltip';
+import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import { AppFormAutosize, AutosizeBootstrap } from '../../autosize.directive';
 import { AppFocusWhen } from '../../focus-when.directive';
 import BaseFormControl from '../base';

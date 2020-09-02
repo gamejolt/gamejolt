@@ -7,7 +7,8 @@
 						class="bolt anim-fade-in-down"
 						src="~img/jolt.svg"
 						alt=""
-						tooltip="This is a lightning bolt."
+						strict-colors
+						v-app-tooltip="$gettext('This is a lightning bolt.')"
 					/>
 				</h1>
 
@@ -40,8 +41,9 @@
 							<h4 class="text-center">Gamers</h4>
 
 							<p>
-								Millions of gamers visit to play over 100k (and counting) games! Game Jolt is
-								completely free to use so you'll be playing non-stop. Literally. Like, forever.
+								Millions of gamers visit to play over 100k (and counting) games!
+								Game Jolt is completely free to use so you'll be playing non-stop.
+								Literally. Like, forever.
 							</p>
 						</div>
 
@@ -53,8 +55,9 @@
 							<h4 class="text-center">Let's Players</h4>
 
 							<p>
-								Let's players and streamers have been a massive help in getting indie games
-								discovered! Link your channel to Game Jolt and post video comments.
+								Let's players and streamers have been a massive help in getting
+								indie games discovered! Link your channel to Game Jolt and post
+								video comments.
 							</p>
 						</div>
 
@@ -68,9 +71,9 @@
 							<h4 class="text-center">Indie Developers</h4>
 
 							<p>
-								Since starting in 2002, the goal of Game Jolt has always been to grow indie gaming.
-								We give you the tools to build an audience, distribute your games, and manage your
-								base of players.
+								Since starting in 2002, the goal of Game Jolt has always been to
+								grow indie gaming. We give you the tools to build an audience,
+								distribute your games, and manage your base of players.
 							</p>
 						</div>
 					</div>
@@ -88,19 +91,26 @@
 							<br />
 							<h4 class="sans-margin-top">Find New Games</h4>
 							<p>
-								Browse game listings to discover new and old gems created by independent developers!
+								Browse game listings to discover new and old gems created by
+								independent developers!
 							</p>
 
 							<p>
 								Get started now by browsing
 								<router-link
-									:to="{ name: 'discover.games.list._fetch', params: { section: 'featured' } }"
+									:to="{
+										name: 'discover.games.list._fetch',
+										params: { section: 'featured' },
+									}"
 								>
 									Featured
 								</router-link>
 								,
 								<router-link
-									:to="{ name: 'discover.games.list._fetch', params: { section: null } }"
+									:to="{
+										name: 'discover.games.list._fetch',
+										params: { section: null },
+									}"
 								>
 									Hot
 								</router-link>
@@ -140,8 +150,8 @@
 							<br />
 							<h4 class="sans-margin-top">Recommendations</h4>
 							<p>
-								Once you play, follow, and rate some games we'll start giving you personalized game
-								recommendations.
+								Once you play, follow, and rate some games we'll start giving you
+								personalized game recommendations.
 							</p>
 						</div>
 						<div class="col-md-1"></div>
@@ -170,23 +180,23 @@
 							<br />
 							<h4 class="sans-margin-top">Discuss</h4>
 							<p>
-								Ask questions, provide feedback, and discuss directly with developers by commenting
-								on their game pages.
+								Ask questions, provide feedback, and discuss directly with
+								developers by commenting on their game pages.
 							</p>
 
 							<br />
 							<h4 class="sans-margin-top">Rate games</h4>
 							<p>
-								You're in control of what becomes popular on Game Jolt and&mdash;for all we
-								know&mdash;the gaming industry. Rate games you love onto Game Jolt's home page and
-								the top of game listings.
+								You're in control of what becomes popular on Game Jolt and&mdash;for
+								all we know&mdash;the gaming industry. Rate games you love onto Game
+								Jolt's home page and the top of game listings.
 							</p>
 
 							<br />
 							<h4 class="sans-margin-top">Let's Players</h4>
 							<p>
-								If you're a Let's Player, link your YouTube or Twitch channel and post video
-								comments to the game page.
+								If you're a Let's Player, link your YouTube or Twitch channel and
+								post video comments to the game page.
 							</p>
 						</div>
 					</div>
@@ -204,16 +214,18 @@
 							<br />
 							<h4 class="sans-margin-top">Indie-Friendly</h4>
 							<p>
-								Be confident that the money you spend goes to the developer. We let developers
-								decide the percentage to give to Game Jolt! Every little bit counts!
+								Be confident that the money you spend goes to the developer. We let
+								developers decide the percentage to give to Game Jolt! Every little
+								bit counts!
 							</p>
 
 							<br />
 							<h4 class="sans-margin-top">Be a Supporter</h4>
 
 							<p>
-								We'll post your avatar as a supporter on the game's page when you pay more than the
-								developer's asking price. Lead by example and show your support!
+								We'll post your avatar as a supporter on the game's page when you
+								pay more than the developer's asking price. Lead by example and show
+								your support!
 							</p>
 						</div>
 						<div class="col-md-1"></div>
@@ -242,16 +254,17 @@
 							<br />
 							<h4 class="sans-margin-top">Early Access and In-Development</h4>
 							<p>
-								Discover your future favorite game from its early devlog stage or keep up to date
-								with early access games. Gain access before the rest of the world!
+								Discover your future favorite game from its early devlog stage or
+								keep up to date with early access games. Gain access before the rest
+								of the world!
 							</p>
 
 							<br />
 							<h4 class="sans-margin-top">Stay Updated</h4>
 							<p>
-								Be the first to know about new mechanics, concept art, releases and anything else
-								devs want to share with the world! Follow games to get notified when new posts are
-								added.
+								Be the first to know about new mechanics, concept art, releases and
+								anything else devs want to share with the world! Follow games to get
+								notified when new posts are added.
 							</p>
 
 							<p>
@@ -293,15 +306,16 @@
 							<br />
 							<h4 class="sans-margin-top">Playlists</h4>
 							<p>
-								Organize the way you follow games, devlogs and developers with ease! Others can
-								discover, follow, and share your playlists.
+								Organize the way you follow games, devlogs and developers with ease!
+								Others can discover, follow, and share your playlists.
 							</p>
 
 							<br />
 							<h4 class="sans-margin-top">Activity Feed</h4>
 							<p>
-								Any game you follow will show up in your Activity Feed. Keep track of what matters
-								to you, and stay updated with your slice of the indie world!
+								Any game you follow will show up in your Activity Feed. Keep track
+								of what matters to you, and stay updated with your slice of the
+								indie world!
 							</p>
 						</div>
 						<div class="col-md-1"></div>
@@ -330,15 +344,15 @@
 							<br />
 							<h4 class="sans-margin-top">Trophies</h4>
 							<p>
-								Hunt for trophies in games that implement the Game Jolt Game API. Gotta get to 100%
-								completion, eh?
+								Hunt for trophies in games that implement the Game Jolt Game API.
+								Gotta get to 100% completion, eh?
 							</p>
 
 							<br />
 							<h4 class="sans-margin-top">Scores</h4>
 							<p>
-								Battle to get the top scores in games. Never give up. Never let us down. Never run
-								around or desert us.
+								Battle to get the top scores in games. Never give up. Never let us
+								down. Never run around or desert us.
 							</p>
 						</div>
 					</div>
@@ -363,8 +377,9 @@
 							<h4 class="text-center">Friends</h4>
 
 							<p>
-								Become indie friends on Game Jolt and get notified when your friends are online,
-								when they're playing games, or send them game recommendations.
+								Become indie friends on Game Jolt and get notified when your friends
+								are online, when they're playing games, or send them game
+								recommendations.
 							</p>
 						</div>
 
@@ -376,8 +391,8 @@
 							<h4 class="text-center">Chat</h4>
 
 							<p>
-								Meet other indies, network and get help through private messaging and available chat
-								rooms.
+								Meet other indies, network and get help through private messaging
+								and available chat rooms.
 							</p>
 						</div>
 
@@ -391,9 +406,9 @@
 							<h4 class="text-center">Forums</h4>
 
 							<p>
-								Find developers looking for testers, discuss the industry, participate in existing
-								conversations with let's players and devs, or start your own topic! Haikus are
-								encouraged!
+								Find developers looking for testers, discuss the industry,
+								participate in existing conversations with let's players and devs,
+								or start your own topic! Haikus are encouraged!
 							</p>
 						</div>
 					</div>

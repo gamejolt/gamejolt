@@ -3,35 +3,40 @@
 		<span class="-like">
 			<app-button
 				class="-like-button"
-				icon="heart"
+				:icon="!liked ? 'heart' : 'heart-filled'"
 				circle
 				:trans="trans"
 				:overlay="overlay"
 				:block="block"
-				:primary="!!post.user_like"
-				:solid="!!post.user_like"
+				:primary="liked"
+				:solid="liked"
 				v-app-tooltip="tooltip"
+				v-app-track-event="`fireside-post-like-widget:click`"
 				v-app-auth-required
 				@click="toggleLike"
 			/>
 
 			<div v-if="showLikeAnim" class="-like-anim-container">
-				<app-jolticon class="-like-anim" icon="heart" notice />
+				<app-jolticon class="-like-anim" icon="heart-filled" notice />
 			</div>
 			<div v-if="showDislikeAnim" class="-like-anim-container">
-				<app-jolticon class="-dislike-anim -left" icon="heart" notice />
-				<app-jolticon class="-dislike-anim -right" icon="heart" notice />
+				<span class="-dislike-anim-piece">
+					<app-jolticon class="-dislike-anim -left" icon="heart-filled" notice />
+				</span>
+				<span class="-dislike-anim-piece">
+					<app-jolticon class="-dislike-anim -right" icon="heart-filled" notice />
+				</span>
 			</div>
 		</span>
 
 		<a
-			v-if="blip"
+			v-if="post.like_count > 0"
 			class="blip"
-			:class="{ 'blip-active': !!post.user_like, mobile: Screen.isXs }"
+			:class="{ 'blip-active': liked, mobile: Screen.isXs }"
 			@click="showLikers()"
 			v-app-tooltip="$gettext(`View all people that liked this post`)"
 		>
-			{{ blip | fuzzynumber }}
+			{{ likeCount }}
 		</a>
 		<span v-else class="blip-missing" />
 	</span>
@@ -66,9 +71,15 @@
 		animation-duration: 1s
 		animation-iteration-count: 1
 		animation-fill-mode: forwards
+		filter: drop-shadow(0 0 3px black)
+
+	// For dislike, we have to do each piece separate so we can put the drop-shadow around the
+	// individual piece after it's been clipped.
+	.-dislike-anim-piece
+		position: absolute
+		filter: drop-shadow(0 0 3px black)
 
 	.-dislike-anim
-		position: absolute
 		animation-duration: 1s
 		animation-iteration-count: 1
 		animation-fill-mode: forwards
@@ -90,14 +101,13 @@
 		transform: scale(6)
 		opacity: 0
 
-
 @keyframes dislike-anim-left
 	0%
 		transform: scale(1)
 		opacity: 1
 
 	100%
-		transform: scale(2)  rotate(-45deg) translate(-6px, -6px)
+		transform: scale(2) rotate(-45deg) translate(-6px, -6px)
 		opacity: 0
 
 @keyframes dislike-anim-right

@@ -47,22 +47,16 @@
 				<app-page-container xl order="left,main,right">
 					<div slot="left">
 						<!-- Bio -->
-						<div v-if="!isOverviewLoaded">
-							<span class="lazy-placeholder" />
-							<span class="lazy-placeholder" />
-							<span class="lazy-placeholder" />
-							<span class="lazy-placeholder" style="width: 40%" />
-						</div>
-						<div v-else-if="!user.hasBio" class="text-muted">
-							<p>
-								<em>
-									<translate>
-										This person doesn't have a bio yet, so use your imagination!
-									</translate>
-								</em>
-							</p>
-						</div>
-						<div v-else>
+						<template v-if="!isOverviewLoaded">
+							<div>
+								<span class="lazy-placeholder" />
+								<span class="lazy-placeholder" />
+								<span class="lazy-placeholder" />
+								<span class="lazy-placeholder" style="width: 40%" />
+							</div>
+							<br />
+						</template>
+						<template v-else-if="user.hasBio">
 							<!--
 								Set a :key to let vue know that it should update
 								this when the user changes.
@@ -85,12 +79,11 @@
 									@click="showFullDescription = !showFullDescription"
 								/>
 							</p>
-						</div>
+						</template>
 					</div>
 
 					<div slot="left-bottom">
 						<!-- Shouts -->
-						<br />
 						<template v-if="shouldShowShouts">
 							<div class="pull-right">
 								<app-button trans @click="showComments()">
@@ -113,7 +106,7 @@
 							<app-comment-overview
 								:comments="overviewComments"
 								:model="user"
-								displayMode="shouts"
+								display-mode="shouts"
 								@reload-comments="reloadPreviewComments"
 							/>
 						</template>
@@ -176,15 +169,6 @@
 										{{ twitchAccount.name }}
 									</app-link-external>
 								</div>
-								<div v-if="mixerAccount">
-									<app-link-external
-										class="link-unstyled"
-										:href="mixerAccount.platformLink"
-									>
-										<app-jolticon :icon="mixerAccount.icon" />
-										{{ mixerAccount.name }}
-									</app-link-external>
-								</div>
 								<div v-if="twitterAccount">
 									<app-link-external
 										class="link-unstyled"
@@ -202,15 +186,6 @@
 									>
 										<app-jolticon :icon="tumblrAccount.icon" />
 										{{ tumblrAccount.tumblrSelectedBlog.title }}
-									</app-link-external>
-								</div>
-								<div v-if="googleAccount">
-									<app-link-external
-										class="link-unstyled"
-										:href="googleAccount.platformLink"
-									>
-										<app-jolticon :icon="googleAccount.icon" />
-										{{ googleAccount.name }}
 									</app-link-external>
 								</div>
 							</template>
@@ -426,8 +401,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-banned-header
 	margin-top: 0

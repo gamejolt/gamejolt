@@ -1,9 +1,10 @@
 import { Api } from '../../api/api.service';
+import { LightboxMediaModel, LightboxMediaType } from '../../lightbox/lightbox-helpers';
 import { MediaItem } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
 import { Game } from '../game.model';
 
-export class GameScreenshot extends Model {
+export class GameScreenshot extends Model implements LightboxMediaModel {
 	media_type!: 'image';
 
 	game_id!: number;
@@ -27,6 +28,18 @@ export class GameScreenshot extends Model {
 		if (data.media_item) {
 			this.media_item = new MediaItem(data.media_item);
 		}
+	}
+
+	getModelId() {
+		return this.id;
+	}
+
+	getMediaType() {
+		return 'image' as LightboxMediaType;
+	}
+
+	getMediaItem() {
+		return this.media_item;
 	}
 
 	getUrl(game: Game) {

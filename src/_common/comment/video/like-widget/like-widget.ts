@@ -4,7 +4,7 @@ import { AppAuthRequired } from '../../../auth/auth-required-directive';
 import { fuzzynumber } from '../../../filters/fuzzynumber';
 import { number } from '../../../filters/number';
 import { LikersModal } from '../../../likers/modal.service';
-import { AppTooltip } from '../../../tooltip/tooltip';
+import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import { CommentVote } from '../../vote/vote-model';
 import { CommentVideo } from '../video-model';
 
@@ -38,6 +38,10 @@ export default class AppCommentVideoLikeWidget extends Vue {
 
 	get blip() {
 		return this.comment.votes ? number(this.comment.votes) : '';
+	}
+
+	get voted() {
+		return !!this.comment.user_vote;
 	}
 
 	async toggle() {

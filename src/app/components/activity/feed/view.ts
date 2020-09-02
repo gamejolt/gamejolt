@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
+import { Community } from '../../../../_common/community/community.model';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
 import { Notification } from '../../../../_common/notification/notification-model';
 import { ActivityFeedInput, ActivityFeedItem } from './item-service';
@@ -34,8 +35,7 @@ class ActivityFeedViewItemState {
 export interface ActivityFeedViewOptions {
 	slice?: number;
 	shouldScroll?: boolean;
-	hideCommunity?: boolean;
-	hideCommunityChannel?: boolean;
+	mainCommunity?: Community | null;
 	hideGameInfo?: boolean;
 	shouldShowUserCards?: boolean;
 	shouldShowFollow?: boolean;
@@ -55,8 +55,7 @@ export class ActivityFeedView {
 	scroll = 0;
 	shouldScroll = true;
 	hideGameInfo = false;
-	hideCommunity = false;
-	hideCommunityChannel = false;
+	mainCommunity: Community | null = null;
 	shouldShowUserCards = true;
 	shouldShowFollow = false;
 
@@ -103,8 +102,7 @@ export class ActivityFeedView {
 			slice,
 			shouldScroll = true,
 			hideGameInfo = false,
-			hideCommunity = false,
-			hideCommunityChannel = false,
+			mainCommunity = null,
 			shouldShowUserCards = true,
 			shouldShowFollow = false,
 		}: ActivityFeedViewOptions = {}
@@ -113,8 +111,7 @@ export class ActivityFeedView {
 		this.slice = slice || null;
 		this.shouldScroll = shouldScroll;
 		this.hideGameInfo = hideGameInfo;
-		this.hideCommunity = hideCommunity;
-		this.hideCommunityChannel = hideCommunityChannel;
+		this.mainCommunity = mainCommunity;
 		this.shouldShowUserCards = shouldShowUserCards;
 		this.shouldShowFollow = shouldShowFollow;
 	}
