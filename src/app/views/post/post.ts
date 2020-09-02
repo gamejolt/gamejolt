@@ -50,9 +50,18 @@ export default class RoutePost extends BaseRouteComponent {
 
 		this.disableRouteTitleSuffix = true;
 
+		if (this.post.game) {
+			return this.$gettextInterpolate(
+				`${this.post.getShortLead()} - ${this.post.game.title} by %{ user }`,
+				{
+					user: this.post.user.display_name,
+				}
+			);
+		}
+
 		return this.$gettextInterpolate('%{ user } on Game Jolt: "%{ post }"', {
 			user: this.post.user.display_name,
-			post: this.post.lead_snippet,
+			post: this.post.getShortLead(),
 		});
 	}
 
