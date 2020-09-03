@@ -37,8 +37,6 @@ export class YouTubeVideoEmbed extends EmbedSource {
 	}
 
 	isValidLink(link: string) {
-		const results = REGEX_YOUTUBE.exec(link);
-
-		return !!results;
+		return REGEX_YOUTUBE.test(link);
 	}
 }

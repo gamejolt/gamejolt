@@ -1,4 +1,3 @@
-import { REGEX_VIDEO, REGEX_VIMEO, REGEX_YOUTUBE } from '../../../utils/regex';
 import { LightboxMediaModel, LightboxMediaType } from '../../lightbox/lightbox-helpers';
 import { Model } from '../../model/model.service';
 import { Game } from '../game.model';
@@ -6,12 +5,6 @@ import { Game } from '../game.model';
 export class GameVideo extends Model implements LightboxMediaModel {
 	static readonly TYPE_YOUTUBE = 'youtube';
 	static readonly TYPE_VIMEO = 'vimeo';
-
-	readonly REGEX = {
-		VIDEO: REGEX_VIDEO,
-		YOUTUBE: REGEX_YOUTUBE,
-		VIMEO: REGEX_VIMEO,
-	};
 
 	media_type!: 'video';
 
