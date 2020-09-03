@@ -13,6 +13,7 @@ import { ChatMessage } from '../message';
 import { ChatRoom } from '../room';
 import { ChatUserCollection } from '../user-collection';
 import AppChatUserList from '../user-list/user-list.vue';
+import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
 import AppChatWindowOutput from './output/output.vue';
 import AppChatWindowSend from './send/send.vue';
 
@@ -20,6 +21,7 @@ import AppChatWindowSend from './send/send.vue';
 	components: {
 		AppScrollScroller,
 		AppChatUserList,
+		AppChatUserOnlineStatus,
 		AppChatWindowSend,
 		AppChatWindowOutput,
 		AppFadeCollapse,

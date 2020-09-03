@@ -87,44 +87,16 @@
 		margin-bottom: 4px
 
 	&-avatar
-		position: relative
 		float: left
 		margin-right: 16px
 		width: 48px
 		height: 48px
 
 		img
-		.-user-status
-		.-user-status-inner
 			img-circle()
-
-		img
 			display: block
 			width: 48px
 			height: 48px
-
-		.-user-status
-			position: absolute
-			right: -2px
-			bottom: @right
-			width: 16px
-			height: @width
-			border: $border-width-large solid
-			border-color: var(--theme-bg-actual)
-			display: flex
-			justify-content: center
-			align-items: center
-
-			&-inner
-				width: 6px
-				height: @width
-				background-color: var(--theme-bg-actual)
-
-			&.-online
-				background-color: var(--theme-link)
-
-			&.-offline
-				background-color: var(--theme-bg-subtle)
 
 .chat-window-header-controls
 	float: right
