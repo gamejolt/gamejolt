@@ -37,15 +37,6 @@
 	&-inner
 		border-radius: 100%
 
-	.active &
-	.chat-user:hover &
-		border-color: var(--theme-bg-subtle)
-
-		// &-inner
-		// background-color: var(--theme-bg-actual)
-		&.-offline
-			background-color: var(--theme-fg-muted)
-
 	&-inner
 		background-color: var(--theme-bg-actual)
 
@@ -53,5 +44,5 @@
 		background-color: var(--theme-link)
 
 	&.-offline
-		background-color: var(--theme-bg-subtle)
+		background-color: var(--theme-fg-muted)
 </style>
