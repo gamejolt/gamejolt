@@ -70,7 +70,7 @@ export default class AppContentMediaItem extends Vue {
 	computedHeight = this.mediaItemHeight;
 	imageLoaded = false;
 
-	contentViewerParent?: AppContentViewerTS;
+	contentViewerParent: AppContentViewerTS | null = null;
 
 	@Emit('removed') emitRemoved() {}
 	@Emit('update-attrs') emitUpdateAttrs(_attrs: Record<string, any>) {}
@@ -173,7 +173,8 @@ export default class AppContentMediaItem extends Vue {
 
 	mounted() {
 		this.computeSize();
-		this.contentViewerParent = findVueParent<AppContentViewerTS>(this, AppContentViewer);
+		this.contentViewerParent =
+			findVueParent<AppContentViewerTS>(this, AppContentViewer) || null;
 	}
 
 	onRemoved() {

@@ -30,13 +30,10 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	activeItem: any | null = null;
 	activeIndex: number | null = 0;
 
-	/**
-	 * When the lightbox is open and the media items change (removed, edited),
-	 * we store the new media items here so the open lightbox won't be affected.
-	 */
-	private mediaItemsTemp: any[] | null = null;
-	/** Media items that can be viewed in the lightbox. */
+	/** Media items that are children of the ContentOwner */
 	mediaItems: MediaItem[] = [];
+	/** Media items that are being viewed in the lightbox. */
+	lightboxMediaItems: MediaItem[] = [];
 
 	get owner() {
 		return this;
@@ -98,7 +95,7 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 		const processedItems: MediaItem[] = [];
 
 		this.data.content.forEach(item => {
-			let _mediaItem = null;
+			let _mediaItem: MediaItem | null = null;
 			if (item.type === 'mediaItem' && !item.attrs.href) {
 				_mediaItem = createMediaItemFromContentOwner(this, item.attrs.id);
 			}
@@ -108,24 +105,7 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 			}
 		});
 
-		if (this.lightbox) {
-			// Assign to the temp array if the user is currently looking at lightbox items.
-			this.mediaItemsTemp = processedItems;
-		} else {
-			this.mediaItems = processedItems;
-			this.mediaItemsTemp = null;
-		}
-	}
-
-	setActiveItem(item: MediaItem) {
-		let index = -1;
-		if (item instanceof MediaItem) {
-			index = this.mediaItems.findIndex(_item => _item.id === item.id);
-		}
-
-		if (index >= 0) {
-			this.go(index);
-		}
+		this.mediaItems = processedItems;
 	}
 
 	@Watch('source')
@@ -143,12 +123,24 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	}
 
 	// -- Lightbox stuff --
+	setActiveItem(item: MediaItem) {
+		let index = -1;
+		if (item instanceof MediaItem) {
+			index = this.lightboxMediaItems.findIndex(_item => _item.id === item.id);
+		}
+
+		if (index >= 0) {
+			this.go(index);
+		}
+	}
+
 	destroyed() {
 		this.closeLightbox();
 	}
 
 	onItemFullscreen(item: any) {
 		if (!this.lightbox) {
+			this.lightboxMediaItems = this.mediaItems;
 			this.setActiveItem(item);
 			this.createLightbox();
 		}
@@ -159,7 +151,7 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	}
 
 	getItemCount() {
-		return this.mediaItems.length;
+		return this.lightboxMediaItems.length;
 	}
 
 	getActiveItem() {
@@ -167,11 +159,11 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	}
 
 	getItems() {
-		return this.mediaItems;
+		return this.lightboxMediaItems;
 	}
 
 	goNext() {
-		if (this.activeIndex === null || this.activeIndex + 1 >= this.mediaItems.length) {
+		if (this.activeIndex === null || this.activeIndex + 1 >= this.lightboxMediaItems.length) {
 			return;
 		}
 
@@ -188,7 +180,7 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 
 	go(index: number) {
 		this.activeIndex = index;
-		this.activeItem = this.mediaItems[this.activeIndex];
+		this.activeItem = this.lightboxMediaItems[this.activeIndex];
 	}
 
 	createLightbox() {
@@ -199,12 +191,7 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	}
 
 	onLightboxClose() {
-		// Move the mediaItems from the temp array to our normal array.
-		if (this.mediaItemsTemp) {
-			this.mediaItems = this.mediaItemsTemp;
-			this.mediaItemsTemp = null;
-		}
-
+		this.lightboxMediaItems = [];
 		this.lightbox = undefined;
 		this.activeItem = null;
 		this.activeIndex = null;
@@ -215,11 +202,7 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 			return;
 		}
 
-		if (this.mediaItemsTemp) {
-			this.mediaItems = this.mediaItemsTemp;
-			this.mediaItemsTemp = null;
-		}
-
+		this.lightboxMediaItems = [];
 		this.lightbox.close();
 		this.lightbox = undefined;
 	}
