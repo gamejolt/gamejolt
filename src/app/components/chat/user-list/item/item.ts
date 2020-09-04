@@ -7,10 +7,12 @@ import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
 import { ChatClient, ChatKey, enterChatRoom } from '../../client';
 import { ChatRoom } from '../../room';
 import { ChatUser } from '../../user';
+import AppChatUserOnlineStatus from '../../user-online-status/user-online-status.vue';
 
 @Component({
 	components: {
 		AppScrollInview,
+		AppChatUserOnlineStatus,
 	},
 })
 export default class AppChatUserListItem extends Vue {

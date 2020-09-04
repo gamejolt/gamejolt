@@ -28,17 +28,11 @@
 			<div class="shell-nav-icon">
 				<div class="user-avatar">
 					<img :src="user.img_avatar" />
-
-					<span
-						v-if="typeof user.isOnline !== 'undefined'"
-						class="chat-user-status"
-						:class="{
-							offline: !user.isOnline,
-							'online active': user.isOnline,
-						}"
-					>
-						<span v-if="!user.isOnline" class="chat-user-status-inner" />
-					</span>
+					<app-chat-user-online-status
+						class="-status"
+						:is-online="user.isOnline"
+						:size="12"
+					/>
 				</div>
 			</div>
 
