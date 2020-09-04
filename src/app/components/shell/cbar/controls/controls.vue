@@ -66,6 +66,7 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 @import '../variables'
+@import '../common'
 
 .shell-cbar-controls
 	.-control
@@ -85,9 +86,4 @@
 
 		&-icon
 			font-size: $jolticon-size * 1.5
-
-	> .-hr
-		border-top-width: $border-width-large
-		width: 50%
-		margin: ($grid-gutter-width-xs / 2) auto
 </style>
