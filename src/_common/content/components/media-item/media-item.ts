@@ -70,7 +70,7 @@ export default class AppContentMediaItem extends Vue {
 	computedHeight = this.mediaItemHeight;
 	imageLoaded = false;
 
-	contentViewerParent: AppContentViewerTS | null = null;
+	contentViewerParent?: AppContentViewerTS;
 
 	@Emit('removed') emitRemoved() {}
 	@Emit('update-attrs') emitUpdateAttrs(_attrs: Record<string, any>) {}
@@ -139,9 +139,7 @@ export default class AppContentMediaItem extends Vue {
 			return false;
 		}
 
-		return !!this.contentViewerParent.mediaItems.find(
-			(i) => i.id === this.mediaItem!.id
-		);
+		return !!this.contentViewerParent.mediaItems.find(i => i.id === this.mediaItem!.id);
 	}
 
 	get displayHref() {
@@ -175,7 +173,7 @@ export default class AppContentMediaItem extends Vue {
 
 	mounted() {
 		this.computeSize();
-		this.contentViewerParent = findVueParent(this, AppContentViewer) as AppContentViewerTS;
+		this.contentViewerParent = findVueParent<AppContentViewerTS>(this, AppContentViewer);
 	}
 
 	onRemoved() {
