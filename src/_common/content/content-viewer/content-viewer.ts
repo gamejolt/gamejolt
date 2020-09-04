@@ -4,7 +4,7 @@ import { propOptional } from '../../../utils/vue';
 import AppLightboxTS from '../../lightbox/lightbox';
 import { createLightbox, LightboxMediaSource } from '../../lightbox/lightbox-helpers';
 import { MediaItem } from '../../media-item/media-item-model';
-import { createMediaItem } from '../components/media-item/media-item';
+import { createMediaItemFromContentOwner } from '../components/media-item/media-item';
 import { ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentRules } from '../content-editor/content-rules';
@@ -36,7 +36,7 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	 */
 	private mediaItemsTemp: any[] | null = null;
 	/** Media items that can be viewed in the lightbox. */
-	mediaItems: any[] = [];
+	mediaItems: MediaItem[] = [];
 
 	get owner() {
 		return this;
@@ -100,7 +100,7 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 		this.data.content.forEach(item => {
 			let _mediaItem = null;
 			if (item.type === 'mediaItem' && !item.attrs.href) {
-				_mediaItem = createMediaItem(this, item.attrs.id);
+				_mediaItem = createMediaItemFromContentOwner(this, item.attrs.id);
 			}
 
 			if (_mediaItem) {

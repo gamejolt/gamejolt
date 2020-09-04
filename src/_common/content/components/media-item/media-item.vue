@@ -33,7 +33,7 @@
 					:media-item="mediaItem"
 					radius="lg"
 				>
-					<template v-if="!!mediaItem">
+					<template v-if="mediaItem">
 						<component
 							:is="hasLink && !isEditing ? 'a' : 'span'"
 							:href="hasLink && !isEditing ? href : undefined"
@@ -68,7 +68,7 @@
 					</template>
 				</app-media-item-backdrop>
 				<div
-					v-if="!!mediaItem && hasLink"
+					v-if="mediaItem && hasLink"
 					class="-link-overlay"
 					:class="{ '-editing': isEditing }"
 				>
@@ -81,7 +81,7 @@
 					</small>
 				</div>
 			</div>
-			<span v-if="!!mediaItem && hasCaption" class="text-muted">
+			<span v-if="mediaItem && hasCaption" class="text-muted">
 				<em>{{ caption }}</em>
 			</span>
 		</div>

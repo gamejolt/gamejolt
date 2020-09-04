@@ -13,7 +13,7 @@ import AppContentViewerTS from '../../content-viewer/content-viewer';
 import AppContentViewer from '../../content-viewer/content-viewer.vue';
 import AppBaseContentComponent from '../base/base-content-component.vue';
 
-export function createMediaItem(owner: ContentOwner, mediaItemId: number) {
+export function createMediaItemFromContentOwner(owner: ContentOwner, mediaItemId: number) {
 	let item = null;
 	owner.getHydrator().useData('media-item-id', mediaItemId.toString(), data => {
 		if (data) {
@@ -80,10 +80,10 @@ export default class AppContentMediaItem extends Vue {
 	};
 
 	get title() {
-		if (!!this.mediaItem && this.hasCaption) {
+		if (this.mediaItem && this.hasCaption) {
 			return this.caption;
 		}
-		if (!!this.mediaItem && this.hasLink) {
+		if (this.mediaItem && this.hasLink) {
 			return this.displayHref;
 		}
 		if (this.mediaItem instanceof MediaItem) {
@@ -140,7 +140,7 @@ export default class AppContentMediaItem extends Vue {
 		}
 
 		return !!this.contentViewerParent.mediaItems.find(
-			(item: MediaItem) => item.id === this.mediaItem!.id
+			(i) => i.id === this.mediaItem!.id
 		);
 	}
 
@@ -167,7 +167,7 @@ export default class AppContentMediaItem extends Vue {
 	}
 
 	created() {
-		this.mediaItem = createMediaItem(this.owner, this.mediaItemId);
+		this.mediaItem = createMediaItemFromContentOwner(this.owner, this.mediaItemId);
 		if (!this.mediaItem) {
 			this.hasError = true;
 		}
