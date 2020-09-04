@@ -1,4 +1,5 @@
 $navbar-height = $shell-top-nav-height is defined ? $shell-top-nav-height : 56px
+$-navbar-item-padding = 15px
 
 .navbar
 	@extend .clearfix
@@ -30,13 +31,17 @@ $navbar-height = $shell-top-nav-height is defined ? $shell-top-nav-height : 56px
 
 .navbar-items > li > a
 .navbar-item
+.navbar-avatar
 	display: inline-block
 	vertical-align: top
 	overflow: hidden
 	height: $navbar-height
 	line-height: 26px
 	user-select: none
-	padding: 15px
+
+.navbar-items > li > a
+.navbar-item
+	padding: $-navbar-item-padding
 
 	> .notification-tag
 		position: absolute
@@ -56,14 +61,7 @@ $navbar-height = $shell-top-nav-height is defined ? $shell-top-nav-height : 56px
 	top: ($navbar-height - @height) * 0.5
 
 .navbar-avatar
-	display: inline-block
-	vertical-align: top
-	overflow: hidden
-	padding: 10px
-	line-height: 30px
-	width: 30px + (@padding * 2)
-	height: @width
-	user-select: none
+	padding: 13px $-navbar-item-padding
 
 	img
 		width: 30px
