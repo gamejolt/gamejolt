@@ -41,9 +41,8 @@
 	.chat-user:hover &
 		border-color: var(--theme-bg-subtle)
 
-		&-inner
-			background-color: var(--theme-bg-subtle)
-
+		// &-inner
+		// background-color: var(--theme-bg-actual)
 		&.-offline
 			background-color: var(--theme-fg-muted)
 
