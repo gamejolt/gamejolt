@@ -12,7 +12,7 @@
 			class="media-item"
 			:class="{
 				'-editing': isEditing,
-				'-link': hasLink,
+				'-link': hasLink && !isEditing,
 			}"
 			:style="{
 				'align-items': itemAlignment,
@@ -67,11 +67,7 @@
 						<app-loading />
 					</template>
 				</app-media-item-backdrop>
-				<div
-					v-if="mediaItem && hasLink"
-					class="-link-overlay"
-					:class="{ '-editing': isEditing }"
-				>
+				<div v-if="mediaItem && hasLink" class="-link-overlay">
 					<small>
 						<app-link-external class="-link-overlay-display" :href="href">
 							<app-jolticon class="-icon" icon="link" />
@@ -92,6 +88,29 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
+.-editing
+	// Make sure the X button fits properly, usually not a problem unless the image is super wide.
+	min-height: 44px
+
+	.-link-overlay
+		change-bg('bg-offset')
+		opacity: 0.7
+		padding: 2px
+		bottom: 4px
+		left: 4px
+
+.-link
+	// Mobile - styling for coarse pointers
+	@media screen and (pointer: coarse)
+		margin-bottom: $line-height-computed + 20px
+
+.-zoomable
+	cursor: zoom-in
+
+// While the image is still loading, we show a dimmed background as a fallback for app-media-item-backdrop
+.-backdrop
+	change-bg('bg-offset')
+
 .media-item
 	width: 100%
 	display: flex
@@ -99,36 +118,12 @@
 	margin-bottom: $line-height-computed
 	cursor: default
 
-	&.-editing
-		// Make sure the X button fits properly, usually not a problem unless the image is super wide.
-		min-height: 44px
-
-		.-link-overlay
-			change-bg('bg-offset')
-			opacity: 0.7
-			padding: 2px
-			bottom: 4px
-			left: 4px
-
-	&:not(.-editing)
-		&.-link
-			// Mobile - styling for coarse pointers
-			@media screen and (pointer: coarse)
-				margin-bottom: $line-height-computed + 20px
-
 .media-item-container
 	display: flex
 	justify-content: center
 	align-items: center
 	max-width: 100%
 	position: relative
-
-	&.-zoomable
-		cursor: zoom-in
-
-	// While the image is still loading, we show a dimmed background as a fallback for app-media-item-backdrop
-	.-backdrop
-		change-bg('bg-offset')
 
 	&:hover
 		.-link-overlay
