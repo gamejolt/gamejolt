@@ -25,7 +25,7 @@
 							:alt="item.caption"
 						/>
 						<img
-							v-else-if="isAnimatedGif"
+							v-else-if="isGifWithoutVideo"
 							class="img-responsive"
 							:src="mediaItem.img_url"
 							:alt="item.caption"

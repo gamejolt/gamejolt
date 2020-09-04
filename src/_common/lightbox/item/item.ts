@@ -46,7 +46,7 @@ export default class AppLightboxItem extends Vue {
 		return this.isActive;
 	}
 
-	get isAnimatedGif() {
+	get isGifWithoutVideo() {
 		return (
 			this.mediaItem.is_animated &&
 			!this.mediaItem.mediaserver_url_mp4 &&
