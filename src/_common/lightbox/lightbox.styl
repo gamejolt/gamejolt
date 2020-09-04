@@ -1,6 +1,6 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
-@import 'variables'
+@import './variables'
 
 $-controls-padding = 10px
 
@@ -31,31 +31,26 @@ $-controls-padding = 10px
 
 .-controls
 	z-index: 1
+	flex: 0 0 auto
+	height: $-controls-height
+	line-height: $-controls-height
+	transition: right 300ms ease
+	display: flex
+	align-items: center
+	justify-content: space-between
 
-	&-general
-		flex: 0 0 auto
-		height: $-controls-height
-		line-height: $-controls-height
-		text-align: center
-		transition: right 300ms ease
+	@media $media-xs
+		position: absolute
+		bottom: 0
+		left: 0
+		right: 0
 
-		@media only screen and (orientation: landscape)
-			position: absolute
-			right: $-controls-padding + $-button-size-xs
-			bottom: 0
-			z-index: 10
-
-		@media $media-sm-up
-			text-align: right
-			position: static
-			padding-right: $-controls-padding
+	@media $media-sm-up
+		justify-content: flex-end
+		padding-right: $-controls-padding
 
 .-next
 .-prev
-	position: absolute
-	top: 0
-	width: $-button-size-xs
-	height: 100%
 	line-height: $-button-size
 	z-index: 1
 	background-color: rgba($black, 0.5)
@@ -63,7 +58,12 @@ $-controls-padding = 10px
 	justify-content: center
 	align-items: center
 
+	@media $media-xs
+		flex: 1
+		height: 100%
+
 	@media $media-sm-up
+		position: absolute
 		rounded-corners-lg()
 		top: 50%
 		width: $-button-size
@@ -84,14 +84,22 @@ $-controls-padding = 10px
 		color: $white
 
 .-next
-	right: 0
-	border-top-right-radius: 0
-	border-bottom-right-radius: 0
+	@media $media-xs
+		margin-left: 16px
+
+	@media $media-sm-up
+		right: 0
+		border-top-right-radius: 0
+		border-bottom-right-radius: 0
 
 .-prev
-	left: 0
-	border-top-left-radius: 0
-	border-bottom-left-radius: 0
+	@media $media-xs
+		margin-right: 16px
+
+	@media $media-sm-up
+		left: 0
+		border-top-left-radius: 0
+		border-bottom-left-radius: 0
 
 // http://stackoverflow.com/questions/10269290/how-to-arrange-many-div-elements-side-by-side-with-no-wrap
 .-slider

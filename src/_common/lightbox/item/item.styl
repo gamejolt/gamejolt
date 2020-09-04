@@ -49,13 +49,6 @@ img
 	width: 100%
 	position: relative
 
-	// Make room for slider controls on Xs breakpoint - helps with issues like iframes
-	// breaking vue-touch and allows us to use arrows as an indication of more content.
-	@media $media-xs
-		width: 'calc(100% - %s)' % ($-button-size-xs * 2)
-		margin-left: auto
-		margin-right: auto
-
 	>>>
 		.-img
 		iframe

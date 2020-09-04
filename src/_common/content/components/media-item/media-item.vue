@@ -102,7 +102,7 @@
 .-link
 	// Mobile - styling for coarse pointers
 	@media screen and (pointer: coarse)
-		margin-bottom: $line-height-computed + 20px
+		margin-bottom: $line-height-computed + 20px !important
 
 .-zoomable
 	cursor: zoom-in

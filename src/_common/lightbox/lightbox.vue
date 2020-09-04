@@ -17,12 +17,9 @@
 					<a v-if="activeIndex > 0" class="-prev" @mousedown="goPrev">
 						<app-jolticon icon="chevron-left" />
 					</a>
+					<div v-else class="-prev" />
 
-					<a v-if="hasNext" class="-next" @mousedown="goNext">
-						<app-jolticon icon="chevron-right" />
-					</a>
-
-					<div class="-controls-general">
+					<div>
 						<app-button
 							v-if="activeMediaType === 'image'"
 							icon="download"
@@ -36,6 +33,11 @@
 							<translate>Close</translate>
 						</app-button>
 					</div>
+
+					<a v-if="hasNext" class="-next" @mousedown="goNext">
+						<app-jolticon icon="chevron-right" />
+					</a>
+					<div v-else class="-next" />
 				</div>
 
 				<app-lightbox-slider class="-slider">
