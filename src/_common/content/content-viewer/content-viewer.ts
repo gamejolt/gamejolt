@@ -94,10 +94,10 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 		this.hydrator = new ContentHydrator(content.hydration);
 		const processedItems: MediaItem[] = [];
 
-		this.data.content.forEach(item => {
+		this.data.content.forEach(async item => {
 			let _mediaItem: MediaItem | null = null;
 			if (item.type === 'mediaItem' && !item.attrs.href) {
-				_mediaItem = createMediaItemFromContentOwner(this, item.attrs.id);
+				_mediaItem = await createMediaItemFromContentOwner(this, item.attrs.id);
 			}
 
 			if (_mediaItem) {

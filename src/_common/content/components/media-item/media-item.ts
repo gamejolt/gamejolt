@@ -13,15 +13,19 @@ import AppContentViewerTS from '../../content-viewer/content-viewer';
 import AppContentViewer from '../../content-viewer/content-viewer.vue';
 import AppBaseContentComponent from '../base/base-content-component.vue';
 
-export function createMediaItemFromContentOwner(owner: ContentOwner, mediaItemId: number) {
-	let item = null;
-	owner.getHydrator().useData('media-item-id', mediaItemId.toString(), data => {
-		if (data) {
-			item = new MediaItem(data);
-		}
-	});
+export async function createMediaItemFromContentOwner(owner: ContentOwner, mediaItemId: number) {
+	let item: MediaItem | null = null;
 
-	return item;
+	return owner
+		.getHydrator()
+		.useData('media-item-id', mediaItemId.toString(), data => {
+			if (data) {
+				item = new MediaItem(data);
+			}
+		})
+		.then(() => {
+			return item;
+		});
 }
 
 @Component({
@@ -164,8 +168,9 @@ export default class AppContentMediaItem extends Vue {
 		return !this.mediaItem?.is_animated && !!this.mediaItem?.mediaserver_url;
 	}
 
-	created() {
-		this.mediaItem = createMediaItemFromContentOwner(this.owner, this.mediaItemId);
+	async created() {
+		this.mediaItem = await createMediaItemFromContentOwner(this.owner, this.mediaItemId);
+		console.log(12, this.mediaItem);
 		if (!this.mediaItem) {
 			this.hasError = true;
 		}
