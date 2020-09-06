@@ -170,7 +170,7 @@ export default class AppContentMediaItem extends Vue {
 
 	async created() {
 		this.mediaItem = await createMediaItemFromContentOwner(this.owner, this.mediaItemId);
-		console.log(12, this.mediaItem);
+
 		if (!this.mediaItem) {
 			this.hasError = true;
 		}
