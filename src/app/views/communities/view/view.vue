@@ -33,7 +33,12 @@
 
 			<!-- Inline Community Card - used as header/navigation -->
 			<template v-if="!routeStore.isShowingSidebar">
-				<app-communities-view-card overflow inline :as-header="!isShowingHeader" />
+				<app-communities-view-card
+					overflow
+					inline
+					:as-header="!isShowingHeader"
+					:has-unread="hasUnreadPosts"
+				/>
 			</template>
 
 			<router-view />

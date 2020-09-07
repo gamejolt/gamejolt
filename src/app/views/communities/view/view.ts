@@ -97,6 +97,10 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 
 	contextPane: ContextPane | null = null;
 
+	get hasUnreadPosts() {
+		return this.communityStates.getCommunityState(this.community).isUnread;
+	}
+
 	get community() {
 		return this.routeStore.community;
 	}
