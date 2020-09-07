@@ -92,20 +92,30 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	setContent(content: ContentDocument) {
 		this.data = content;
 		this.hydrator = new ContentHydrator(content.hydration);
+		this.mediaItems = this.getMediaItems(this.data);
+	}
+
+	getMediaItems(data: ContentDocument) {
+		const items = data.getChildrenByType('mediaItem');
+		if (!items.length) {
+			return [];
+		}
+
 		const processedItems: MediaItem[] = [];
 
-		this.data.content.forEach(async item => {
-			let _mediaItem: MediaItem | null = null;
-			if (item.type === 'mediaItem' && !item.attrs.href) {
-				_mediaItem = await createMediaItemFromContentOwner(this, item.attrs.id);
+		items.forEach(async item => {
+			if (item.attrs.href) {
+				return;
 			}
+
+			const _mediaItem = await createMediaItemFromContentOwner(this, item.attrs.id);
 
 			if (_mediaItem) {
 				processedItems.push(_mediaItem);
 			}
 		});
 
-		this.mediaItems = processedItems;
+		return processedItems;
 	}
 
 	@Watch('source')
