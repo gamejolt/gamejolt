@@ -17,7 +17,7 @@
 					<a v-if="activeIndex > 0" class="-prev" @mousedown="goPrev">
 						<app-jolticon icon="chevron-left" />
 					</a>
-					<div v-else class="-prev" />
+					<div v-else class="-prev -hideable" />
 
 					<div>
 						<app-button
@@ -37,7 +37,7 @@
 					<a v-if="hasNext" class="-next" @mousedown="goNext">
 						<app-jolticon icon="chevron-right" />
 					</a>
-					<div v-else class="-next" />
+					<div v-else class="-next -hideable" />
 				</div>
 
 				<app-lightbox-slider class="-slider">
