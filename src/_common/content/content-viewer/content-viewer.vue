@@ -1,10 +1,14 @@
+<script lang="ts" src="./content-viewer"></script>
+
 <template>
 	<div class="content-viewer" :class="viewerStyleClass">
-		<app-content-viewer-base-component
-			v-if="shouldShowContent"
-			:content="data.content"
-			:owner="owner"
-		/>
+		<app-scroll-inview @inview="onScrollInview" @outview="onScrollOutview">
+			<app-content-viewer-base-component
+				v-if="shouldShowContent"
+				:content="data.content"
+				:owner="owner"
+			/>
+		</app-scroll-inview>
 	</div>
 </template>
 
@@ -12,5 +16,3 @@
 >>> p > code
 	white-space: normal
 </style>
-
-<script lang="ts" src="./content-viewer"></script>

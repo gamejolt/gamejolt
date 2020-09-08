@@ -4,7 +4,7 @@ import { propOptional } from '../../../utils/vue';
 import AppLightboxTS from '../../lightbox/lightbox';
 import { createLightbox, LightboxMediaSource } from '../../lightbox/lightbox-helpers';
 import { MediaItem } from '../../media-item/media-item-model';
-import { createMediaItemFromContentOwner } from '../components/media-item/media-item';
+import { AppScrollInview } from '../../scroll/inview/inview';
 import { ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentRules } from '../content-editor/content-rules';
@@ -15,6 +15,7 @@ import { AppContentViewerBaseComponent } from './components/base-component';
 @Component({
 	components: {
 		AppContentViewerBaseComponent,
+		AppScrollInview,
 	},
 })
 export default class AppContentViewer extends Vue implements ContentOwner, LightboxMediaSource {
@@ -25,6 +26,9 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 
 	data: ContentDocument | null = null;
 	hydrator: ContentHydrator = new ContentHydrator();
+
+	isInview = GJ_IS_SSR;
+	mediaItemsNeedRefreshed = true;
 
 	private lightbox?: AppLightboxTS;
 	activeItem: any | null = null;
@@ -92,7 +96,26 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	setContent(content: ContentDocument) {
 		this.data = content;
 		this.hydrator = new ContentHydrator(content.hydration);
-		this.mediaItems = this.getMediaItems(this.data);
+
+		if (this.isInview) {
+			this.mediaItems = this.getMediaItems(this.data);
+			this.mediaItemsNeedRefreshed = false;
+			return;
+		}
+
+		this.mediaItemsNeedRefreshed = true;
+	}
+
+	onScrollInview() {
+		this.isInview = true;
+		if (this.mediaItemsNeedRefreshed && this.data) {
+			this.mediaItems = this.getMediaItems(this.data);
+			this.mediaItemsNeedRefreshed = false;
+		}
+	}
+
+	onScrollOutview() {
+		this.isInview = false;
 	}
 
 	getMediaItems(data: ContentDocument) {
@@ -103,12 +126,17 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 
 		const processedItems: MediaItem[] = [];
 
-		items.forEach(async item => {
+		items.forEach(item => {
 			if (item.attrs.href) {
 				return;
 			}
 
-			const _mediaItem = await createMediaItemFromContentOwner(this, item.attrs.id);
+			let _mediaItem: MediaItem | null = null;
+			this.owner.getHydrator().useData('media-item-id', item.attrs.id.toString(), data => {
+				if (data) {
+					_mediaItem = new MediaItem(data);
+				}
+			});
 
 			if (_mediaItem) {
 				processedItems.push(_mediaItem);
