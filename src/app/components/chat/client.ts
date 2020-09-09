@@ -653,6 +653,18 @@ export function setChatFocused(chat: ChatClient, focused: boolean) {
 	}
 }
 
+export function addGroupRoom(chat: ChatClient, members: number[]) {
+	return chat.userChannel?.push('group_add', { members }).receive('ok', response => {
+		const newGroupRoom = new ChatRoom(response.room);
+		chat.groupRooms.push(newGroupRoom);
+		enterChatRoom(chat, newGroupRoom.id);
+	});
+}
+
+export function addGroupMembers(chat: ChatClient, roomId: number, members: number[]) {
+	return chat.roomChannels[roomId].push('member_add', { room_id: roomId, members });
+}
+
 export function removeMessage(chat: ChatClient, msgId: number) {
 	const room = chat.room;
 	if (room) {
