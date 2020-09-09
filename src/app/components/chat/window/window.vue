@@ -15,6 +15,15 @@
 					<div class="chat-window-header fill-offset">
 						<div class="chat-window-header-controls">
 							<app-button
+								v-app-tooltip="$gettext('Add Friends')"
+								circle
+								trans
+								icon="friend-requests"
+								class="anim-fade-in"
+								@click="room.isPmRoom ? addGroup() : addMembers()"
+							/>
+
+							<app-button
 								v-if="!room.isPmRoom"
 								circle
 								trans

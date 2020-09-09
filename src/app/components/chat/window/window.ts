@@ -9,6 +9,7 @@ import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue'
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
 import { ChatClient, ChatKey, leaveChatRoom } from '../client';
+import { ChatInviteModal } from '../invite-modal/invite-modal.service';
 import { ChatMessage } from '../message';
 import { ChatRoom } from '../room';
 import { ChatUserCollection } from '../user-collection';
@@ -46,6 +47,23 @@ export default class AppChatWindow extends Vue {
 
 	get onlineUserCount() {
 		return number(this.users?.onlineCount || 0);
+	}
+
+	addGroup() {
+		// Filter out the friend in pm room because we add them automatically.
+		const invitableUsers = this.chat.friendsList.collection.filter(
+			friend => friend.id !== this.room.user?.id
+		);
+		ChatInviteModal.show(this.room, invitableUsers);
+	}
+
+	addMembers() {
+		// Filter out the room members as we don't want to add them again.
+		const members = this.room.members.map(member => member.id);
+		const invitableUsers = this.chat.friendsList.collection.filter(
+			({ id }) => !members.includes(id)
+		);
+		ChatInviteModal.show(this.room, invitableUsers);
 	}
 
 	close() {

@@ -4,6 +4,7 @@ import { ChatClient, isInChatRoom, leaveChatRoom, newChatNotification } from './
 import { ChatMessage } from './message';
 import { ChatNotificationGrowl } from './notification-growl/notification-growl.service';
 import { ChatUser } from './user';
+import { ChatRoom } from './room';
 
 interface UserPresence {
 	metas: { phx_ref: string }[];
@@ -35,6 +36,7 @@ export class ChatUserChannel extends Channel {
 		this.on('notification', this.onNotification.bind(this));
 		this.on('you_updated', this.onYouUpdated.bind(this));
 		this.on('clear_notifications', this.onClearNotifications.bind(this));
+		this.on('group_add', this.onGroupAdd.bind(this));
 	}
 
 	private setupPresence() {
@@ -114,5 +116,10 @@ export class ChatUserChannel extends Channel {
 
 	private onClearNotifications(data: ClearNotificationsPayload) {
 		Vue.delete(this.client.notifications, '' + data.room_id);
+	}
+
+	private onGroupAdd(data) {
+		const newGroup = new ChatRoom(data.room);
+		this.client.groupRooms.push(newGroup);
 	}
 }
