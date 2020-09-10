@@ -13,7 +13,6 @@
 				:width="width"
 				:height="height"
 				:src="embedUrl"
-				rel="0"
 			/>
 
 			<iframe
