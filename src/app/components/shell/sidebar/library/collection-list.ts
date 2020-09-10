@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { stringSort } from '../../../../utils/array';
-import { GameCollection } from '../../game/collection/collection.model';
+import { stringSort } from '../../../../../utils/array';
+import { GameCollection } from '../../../game/collection/collection.model';
 
 @Component({})
 export default class AppShellSidebarCollectionList extends Vue {
@@ -27,7 +27,7 @@ export default class AppShellSidebarCollectionList extends Vue {
 	 */
 	filterComparator(item: GameCollection) {
 		let actual: string;
-		let expected = this.filter.toLowerCase();
+		const expected = this.filter.toLowerCase();
 
 		actual = item.name.toLowerCase();
 		if (actual.indexOf(expected) !== -1) {

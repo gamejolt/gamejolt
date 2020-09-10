@@ -1,11 +1,15 @@
+<script lang="ts" src="./video"></script>
+
 <template>
 	<app-form name="mediaForm">
 		<app-form-group name="_url" :label="$gettext(`dash.games.media.video.form.url_label`)">
-			<app-form-control type="text" :rules="{ pattern: GameVideo.REGEX.VIDEO }" />
+			<app-form-control type="text" :rules="{ pattern: REGEX_VIDEO }" />
 
-			<app-form-control-errors :label="$gettext(`dash.games.media.video.form.url_error_label`)" />
+			<app-form-control-errors
+				:label="$gettext(`dash.games.media.video.form.url_error_label`)"
+			/>
 
-			<p class="help-block" v-translate>
+			<p v-translate class="help-block">
 				We currently only support videos from Vimeo or YouTube.
 				<br />
 				The URL should look something like:
@@ -42,5 +46,3 @@
 		</app-form-button>
 	</app-form>
 </template>
-
-<script lang="ts" src="./video"></script>

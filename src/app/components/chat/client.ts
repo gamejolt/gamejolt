@@ -205,8 +205,8 @@ async function connect(chat: ChatClient) {
 	// there is no built in way to stop a Phoenix socket from attempting to reconnect on its own after it got disconnected.
 	// this replaces the socket's "reconnectTimer" property with an empty object that matches the Phoenix "Timer" signature
 	// The 'reconnectTimer' usually restarts the connection after a delay, this prevents that from happening
-	let socketAny: any = chat.socket;
-	if (socketAny.hasOwnProperty('reconnectTimer')) {
+	const socketAny: any = chat.socket;
+	if (Object.prototype.hasOwnProperty.call(socketAny, 'reconnectTimer')) {
 		socketAny.reconnectTimer = { scheduleTimeout: () => {}, reset: () => {} };
 	}
 
@@ -383,9 +383,9 @@ export function enterChatRoom(chat: ChatClient, roomId: number) {
 
 	// If the chat isn't visible yet, set the session room to this new room and open it. That
 	// will in turn do the entry. Otherwise we want to just switch rooms.
-	if (!store.state.isRightPaneVisible) {
+	if (store.state.visibleLeftPane !== 'chat') {
 		chat.sessionRoomId = roomId;
-		store.dispatch('toggleRightPane');
+		store.dispatch('toggleChatPane');
 	} else {
 		if (!chat.socket) {
 			return;
@@ -663,6 +663,20 @@ export function editMessage(chat: ChatClient, message: ChatMessage) {
 			content: message.content,
 			id: message.id,
 		});
+	}
+}
+
+export function startTyping(chat: ChatClient) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('start_typing', {});
+	}
+}
+
+export function stopTyping(chat: ChatClient) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('stop_typing', {});
 	}
 }
 

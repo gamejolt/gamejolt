@@ -13,6 +13,7 @@ import { ChatMessage } from '../message';
 import { ChatRoom } from '../room';
 import { ChatUserCollection } from '../user-collection';
 import AppChatUserList from '../user-list/user-list.vue';
+import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
 import AppChatWindowOutput from './output/output.vue';
 import AppChatWindowSend from './send/send.vue';
 
@@ -20,15 +21,13 @@ import AppChatWindowSend from './send/send.vue';
 	components: {
 		AppScrollScroller,
 		AppChatUserList,
+		AppChatUserOnlineStatus,
 		AppChatWindowSend,
 		AppChatWindowOutput,
 		AppFadeCollapse,
 	},
 	directives: {
 		AppTooltip,
-	},
-	filters: {
-		number,
 	},
 })
 export default class AppChatWindow extends Vue {
@@ -39,7 +38,7 @@ export default class AppChatWindow extends Vue {
 
 	@InjectReactive(ChatKey) chat!: ChatClient;
 
-	@Action toggleRightPane!: Store['toggleRightPane'];
+	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
 	isShowingUsers = false;
 	isDescriptionCollapsed = false;
@@ -47,18 +46,18 @@ export default class AppChatWindow extends Vue {
 	readonly ChatRoom = ChatRoom;
 	readonly Screen = Screen;
 
+	get onlineUserCount() {
+		return number(this.users?.onlineCount || 0);
+	}
+
 	close() {
 		// xs size needs to show the friends list when closing the room.
 		// any other size can close the whole chat instead
 		if (Screen.isXs) {
 			leaveChatRoom(this.chat);
 		} else {
-			this.toggleRightPane();
+			this.toggleLeftPane();
 		}
-	}
-
-	showEditRoomModal() {
-		// Chat_SaveRoomModal.show( this.room );
 	}
 
 	toggleUsers() {

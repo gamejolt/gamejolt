@@ -1,7 +1,7 @@
 <template>
 	<section class="section fill-backdrop">
 		<app-page-container xl>
-			<div slot="left">
+			<template #left>
 				<app-user-card v-if="Screen.isDesktop" :user="app.user" />
 
 				<template v-if="hasGamesSection">
@@ -12,10 +12,10 @@
 					<template v-if="hasGameFilter">
 						<div>
 							<input
+								v-model="gameFilterQuery"
 								type="search"
 								class="form-control"
 								:placeholder="$gettext(`Filter games`)"
-								v-model="gameFilterQuery"
 							/>
 						</div>
 						<br />
@@ -25,12 +25,14 @@
 						<ul>
 							<li v-for="game of filteredGames" :key="game.id">
 								<router-link
+									v-app-track-event="`activity:quick-game`"
 									:to="{
 										name: 'dash.games.manage.game.overview',
 										params: { id: game.id },
 									}"
-									:title="(game.ownerName ? `@${game.ownerName}/` : '') + game.title"
-									v-app-track-event="`activity:quick-game`"
+									:title="
+										(game.ownerName ? `@${game.ownerName}/` : '') + game.title
+									"
 								>
 									<template v-if="game.ownerName">
 										<small>@{{ game.ownerName }}</small>
@@ -44,17 +46,17 @@
 
 					<p v-if="isShowAllGamesVisible">
 						<a
+							v-app-track-event="`activity:quick-game-all`"
 							class="link-muted"
 							@click="isShowingAllGames = !isShowingAllGames"
-							v-app-track-event="`activity:quick-game-all`"
 						>
 							<translate>Show all</translate>
 						</a>
 					</p>
 				</template>
-			</div>
+			</template>
 
-			<div slot="right" v-if="!Screen.isMobile">
+			<template v-if="!Screen.isMobile" #right>
 				<app-home-recommended
 					v-if="shouldShowRecommendedUsers"
 					:users="recommendedUsers"
@@ -67,7 +69,7 @@
 						<app-ad-widget size="video" placement="side" />
 					</div>
 				</app-scroll-affix>
-			</div>
+			</template>
 
 			<app-post-add-button @add="onPostAdded" />
 
@@ -85,16 +87,16 @@
 				<div v-if="!feed.hasItems" class="alert full-bleed-xs text-center">
 					<p class="lead">
 						<translate>
-							You don't have any activity yet. Follow games to stay up to date on their latest
-							development!
+							You don't have any activity yet. Follow games to stay up to date on
+							their latest development!
 						</translate>
 					</p>
 
 					<router-link
+						v-app-track-event="`activity:main-menu:discover`"
 						:to="{
 							name: 'discover.home',
 						}"
-						v-app-track-event="`activity:main-menu:discover`"
 					>
 						<app-button icon="compass-needle" solid lg>
 							<translate>Explore</translate>
@@ -107,15 +109,18 @@
 					show-ads
 					:new-count="unreadActivityCount"
 					@load-new="loadedNew()"
+					@load-more="onLoadMore"
 				/>
 			</template>
 		</app-page-container>
 	</section>
 </template>
 
+<script lang="ts" src="./feed"></script>
+
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-game-list
 	a
@@ -126,5 +131,3 @@
 	margin-top: 0
 	margin-bottom: 5px
 </style>
-
-<script lang="ts" src="./feed"></script>

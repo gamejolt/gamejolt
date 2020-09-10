@@ -355,14 +355,14 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	@Watch('formModel.post_to_user_profile')
 	onPostToUserProfileToggle() {
-		if (!!this.formModel.post_to_user_profile) {
+		if (this.formModel.post_to_user_profile) {
 			this.setField('as_game_owner', false);
 		}
 	}
 
 	@Watch('formModel.as_game_owner')
 	onPostAsGameOwnerToggle() {
-		if (!!this.formModel.as_game_owner) {
+		if (this.formModel.as_game_owner) {
 			this.setField('post_to_user_profile', false);
 		}
 	}
@@ -392,11 +392,14 @@ export default class FormPost extends BaseForm<FormPostModel>
 			this.isSavedDraftPost = true;
 		}
 
+		// Don't overwrite setting on a draft post because the user has already made a choice for this setting.
+		if (model.status !== FiresidePost.STATUS_DRAFT) {
+			this.setField('post_to_user_profile', true);
+		}
+
 		this.setField('status', FiresidePost.STATUS_ACTIVE);
 
 		this.setField('attached_communities', []);
-
-		this.setField('post_to_user_profile', true);
 
 		if (model.videos.length) {
 			this.setField(

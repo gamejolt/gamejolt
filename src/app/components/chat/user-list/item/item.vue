@@ -1,17 +1,20 @@
+<script lang="ts" src="./item"></script>
+
 <template>
 	<app-scroll-inview
 		tag="li"
-		class="chat-user"
+		class="chat-user-container"
 		:margin="`${Screen.height / 2}px`"
 		@inview="isInview = true"
 		@outview="isInview = false"
 	>
 		<router-link
 			v-if="isInview"
-			:to="user.url"
+			class="chat-user"
 			:class="{
 				active: showPm && chat.room && chat.room.id === user.room_id,
 			}"
+			:to="user.url"
 			:title="`${user.display_name} (@${user.username})`"
 			@click.native.capture="onUserClick"
 		>
@@ -19,20 +22,16 @@
 				v-if="chat.notifications[user.room_id] || 0"
 				class="tag tag-highlight notifications-tag"
 			>
-				{{ chat.notifications[user.room_id] || 0 | number }}
+				{{ chatNotificationsCount }}
 			</span>
 
 			<div class="shell-nav-icon">
 				<div class="user-avatar">
 					<img :src="user.img_avatar" />
-
-					<span
-						class="chat-user-status"
-						v-if="typeof user.isOnline !== 'undefined'"
-						:class="{
-							offline: !user.isOnline,
-							'online active': user.isOnline,
-						}"
+					<app-chat-user-online-status
+						class="-status"
+						:is-online="user.isOnline"
+						:size="12"
 					/>
 				</div>
 			</div>
@@ -46,5 +45,3 @@
 </template>
 
 <style lang="stylus" src="./item.styl" scoped></style>
-
-<script lang="ts" src="./item"></script>

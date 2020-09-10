@@ -1,4 +1,6 @@
+import { BroadcastChannel, createLeaderElection, LeaderElector } from 'broadcast-channel';
 import { Channel, Presence, Socket } from 'phoenix';
+import Vue from 'vue';
 import { ChatClient, isInChatRoom, leaveChatRoom, newChatNotification } from './client';
 import { ChatMessage } from './message';
 import { ChatNotificationGrowl } from './notification-growl/notification-growl.service';
@@ -12,15 +14,25 @@ interface FriendRemovePayload {
 	user_id: number;
 }
 
+interface ClearNotificationsPayload {
+	room_id: number;
+}
+
 export class ChatUserChannel extends Channel {
 	readonly client: ChatClient;
 	readonly socket: Socket;
 
-	constructor(userId: number, client: ChatClient, params?: object) {
+	private readonly notificationChannel: BroadcastChannel;
+	private readonly elector: LeaderElector;
+
+	constructor(userId: number, client: ChatClient, params?: any) {
 		super('user:' + userId, params, client.socket as Socket);
 		this.client = client;
 		this.socket = client.socket as Socket;
 		(this.socket as any).channels.push(this);
+		this.notificationChannel = new BroadcastChannel('notification_channel');
+		this.elector = createLeaderElection(this.notificationChannel);
+		this.initLeader();
 
 		this.setupPresence();
 
@@ -29,6 +41,20 @@ export class ChatUserChannel extends Channel {
 		this.on('friend_remove', this.onFriendRemove.bind(this));
 		this.on('notification', this.onNotification.bind(this));
 		this.on('you_updated', this.onYouUpdated.bind(this));
+		this.on('clear_notifications', this.onClearNotifications.bind(this));
+		this.onClose(() => {
+			this.notificationChannel.close();
+			this.elector.die();
+		});
+	}
+
+	private initLeader() {
+		// This function begins the process of attemping to become the leader.
+		// All tabs need this process to be active. This promise will resolve if
+		// this tab ever becomes the leader. It should fail if the tab loses
+		// leadership. When that happens we want to try just to become leader
+		// again.
+		this.elector.awaitLeadership().catch(() => this.initLeader());
 	}
 
 	private setupPresence() {
@@ -98,11 +124,15 @@ export class ChatUserChannel extends Channel {
 			this.client.friendsList.update(friend);
 		}
 
-		ChatNotificationGrowl.show(this.client, message);
+		ChatNotificationGrowl.show(this.client, message, this.elector.isLeader);
 	}
 
 	private onYouUpdated(data: Partial<ChatUser>) {
 		const newUser = new ChatUser(data);
 		this.client.currentUser = newUser;
+	}
+
+	private onClearNotifications(data: ClearNotificationsPayload) {
+		Vue.delete(this.client.notifications, '' + data.room_id);
 	}
 }

@@ -1,9 +1,10 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .chat-user
-	height: 50px
-	overflow: hidden
+	&-container
+		height: 50px
+		overflow: hidden
 
 	&-list-meta
 		text-overflow()
@@ -28,20 +29,6 @@
 			width: 24px
 			vertical-align: middle
 
-		.chat-user-status
-			position: absolute
-			right: 10px
-			bottom: 8px
-			width: 12px
-			height: 12px
-			border: 2px solid rgb(25, 25, 25)
-			border-radius: 100%
-
-			&.online
-				change-bg('highlight')
-
-			&.in-game
-				change-bg('fg')
-
-			&.offline
-				change-bg('bg-offset')
+		.-status
+			right: 12px
+			bottom: 10px

@@ -3,12 +3,10 @@ import { Action, State } from 'vuex-class';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Growls } from '../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
-import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
-import AppPageHeader from '../../../../components/page-header/page-header.vue';
 import { Store } from '../../../../store/index';
 import { CommunitiesViewChannelDeps } from '../channel/channel';
 import {
@@ -25,7 +23,6 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 @Component({
 	name: 'RouteCommunitiesViewOverview',
 	components: {
-		AppPageHeader,
 		AppCommunitiesViewPageContainer,
 		AppCommunitySidebar,
 		AppCommunitiesViewFeed,
@@ -48,18 +45,12 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	feed: ActivityFeedView | null = null;
 	finishedLoading = false;
 
-	readonly Screen = Screen;
-
 	get community() {
 		return this.routeStore.community;
 	}
 
 	get communityState() {
 		return this.communityStates.getCommunityState(this.community);
-	}
-
-	get channelPath() {
-		return this.routeStore.channelPath;
 	}
 
 	get sidebarData() {

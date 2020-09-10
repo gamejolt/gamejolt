@@ -1,10 +1,13 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .user-card
 	rounded-corners-lg()
 	margin-bottom: $line-height-computed
 	overflow: hidden
+
+	.popper-content &
+		border: 0
 
 .-well
 	position: relative

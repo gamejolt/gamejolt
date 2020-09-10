@@ -15,7 +15,7 @@ import AppShellAccountPopover from '../account-popover/account-popover.vue';
 import AppShellFriendRequestPopover from '../friend-request-popover/friend-request-popover.vue';
 import AppShellNotificationPopover from '../notification-popover/notification-popover.vue';
 
-let components: any = {
+const components: any = {
 	AppPopper,
 	AppShellAccountPopover,
 	AppShellFriendRequestPopover,
@@ -36,31 +36,17 @@ if (GJ_IS_CLIENT) {
 	},
 })
 export default class AppShellTopNav extends Vue {
-	@InjectReactive(ChatKey) chat?: ChatClient;
+	@InjectReactive(ChatKey) chat!: ChatClient;
 
-	@State
-	app!: Store['app'];
+	@State app!: Store['app'];
 
-	@State
-	hasSidebar!: Store['hasSidebar'];
+	@State visibleLeftPane!: Store['visibleLeftPane'];
+	@State hasSidebar!: Store['hasSidebar'];
+	@State hasCbar!: Store['hasCbar'];
+	@State unreadActivityCount!: Store['unreadActivityCount'];
 
-	@State
-	hasCbar!: Store['hasCbar'];
-
-	@State
-	isLeftPaneVisible!: Store['isLeftPaneVisible'];
-
-	@State
-	isRightPaneVisible!: Store['isRightPaneVisible'];
-
-	@Action
-	toggleRightPane!: Store['toggleRightPane'];
-
-	@Action
-	toggleLeftPane!: Store['toggleLeftPane'];
-
-	@State
-	unreadActivityCount!: Store['unreadActivityCount'];
+	@Action toggleCbarMenu!: Store['toggleCbarMenu'];
+	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
 	moreMenuShowing = false;
 	baseMinColWidth: number | null = null;
