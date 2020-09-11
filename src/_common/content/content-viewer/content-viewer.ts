@@ -9,7 +9,6 @@ import { ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentRules } from '../content-editor/content-rules';
 import { ContentHydrator } from '../content-hydrator';
-import { ContentObject } from '../content-object';
 import { ContentOwner } from '../content-owner';
 import { AppContentViewerBaseComponent } from './components/base-component';
 
@@ -97,20 +96,18 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	setContent(content: ContentDocument) {
 		this.data = content;
 		this.hydrator = new ContentHydrator(content.hydration);
-
-		this.mediaItemsResolved = false;
-		this._resolveMediaItems();
 	}
 
 	onScrollInview() {
 		this.isInview = true;
-		this._resolveMediaItems();
 	}
 
 	onScrollOutview() {
 		this.isInview = false;
 	}
 
+	@Watch('data', { immediate: true })
+	@Watch('isInview', { immediate: true })
 	private _resolveMediaItems() {
 		if (this.mediaItemsResolved) {
 			return;
@@ -119,40 +116,38 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 		const items = this.data?.getChildrenByType('mediaItem') || [];
 		if (!items.length) {
 			this.mediaItems = [];
+			this.mediaItemsResolved = true;
 			return;
 		}
 
 		if (this.isInview || GJ_IS_SSR) {
-			this.mediaItems = this.getMediaItems(this.owner, items);
+			items.forEach(item => {
+				if (item.attrs.href) {
+					return;
+				}
+
+				let processedItem: MediaItem | null = null;
+				this.owner
+					.getHydrator()
+					.useData('media-item-id', item.attrs.id.toString(), data => {
+						if (data) {
+							processedItem = new MediaItem(data);
+						}
+					});
+
+				if (processedItem) {
+					this.mediaItems.push(processedItem);
+				}
+			});
+
 			this.mediaItemsResolved = true;
 		}
 	}
 
-	getMediaItems(owner: ContentOwner, items: ContentObject[]) {
-		const processedItems: MediaItem[] = [];
-
-		items.forEach(item => {
-			if (item.attrs.href) {
-				return;
-			}
-
-			let processedItem: MediaItem | null = null;
-			owner.getHydrator().useData('media-item-id', item.attrs.id.toString(), data => {
-				if (data) {
-					processedItem = new MediaItem(data);
-				}
-			});
-
-			if (processedItem) {
-				processedItems.push(processedItem);
-			}
-		});
-
-		return processedItems;
-	}
-
 	@Watch('source')
 	updatedSource() {
+		this.mediaItemsResolved = false;
+
 		if (this.source) {
 			const sourceDoc = ContentDocument.fromJson(this.source);
 			this.setContent(sourceDoc);
