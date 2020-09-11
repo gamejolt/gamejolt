@@ -9,6 +9,7 @@ import { ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentRules } from '../content-editor/content-rules';
 import { ContentHydrator } from '../content-hydrator';
+import { ContentObject } from '../content-object';
 import { ContentOwner } from '../content-owner';
 import { AppContentViewerBaseComponent } from './components/base-component';
 
@@ -27,8 +28,8 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	data: ContentDocument | null = null;
 	hydrator: ContentHydrator = new ContentHydrator();
 
-	isInview = GJ_IS_SSR;
-	mediaItemsNeedRefreshed = true;
+	isInview = false;
+	mediaItemsResolved = false;
 
 	private lightbox?: AppLightboxTS;
 	activeItem: any | null = null;
@@ -97,33 +98,37 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 		this.data = content;
 		this.hydrator = new ContentHydrator(content.hydration);
 
-		if (this.isInview) {
-			this.mediaItems = this.getMediaItems(this.data);
-			this.mediaItemsNeedRefreshed = false;
-			return;
-		}
-
-		this.mediaItemsNeedRefreshed = true;
+		this.mediaItemsResolved = false;
+		this._resolveMediaItems();
 	}
 
 	onScrollInview() {
 		this.isInview = true;
-		if (this.mediaItemsNeedRefreshed && this.data) {
-			this.mediaItems = this.getMediaItems(this.data);
-			this.mediaItemsNeedRefreshed = false;
-		}
+		this._resolveMediaItems();
 	}
 
 	onScrollOutview() {
 		this.isInview = false;
 	}
 
-	getMediaItems(data: ContentDocument) {
-		const items = data.getChildrenByType('mediaItem');
-		if (!items.length) {
-			return [];
+	private _resolveMediaItems() {
+		if (this.mediaItemsResolved) {
+			return;
 		}
 
+		const items = this.data?.getChildrenByType('mediaItem') || [];
+		if (!items.length) {
+			this.mediaItems = [];
+			return;
+		}
+
+		if (this.isInview || GJ_IS_SSR) {
+			this.mediaItems = this.getMediaItems(this.owner, items);
+			this.mediaItemsResolved = true;
+		}
+	}
+
+	getMediaItems(owner: ContentOwner, items: ContentObject[]) {
 		const processedItems: MediaItem[] = [];
 
 		items.forEach(item => {
@@ -131,15 +136,15 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 				return;
 			}
 
-			let _mediaItem: MediaItem | null = null;
-			this.owner.getHydrator().useData('media-item-id', item.attrs.id.toString(), data => {
+			let processedItem: MediaItem | null = null;
+			owner.getHydrator().useData('media-item-id', item.attrs.id.toString(), data => {
 				if (data) {
-					_mediaItem = new MediaItem(data);
+					processedItem = new MediaItem(data);
 				}
 			});
 
-			if (_mediaItem) {
-				processedItems.push(_mediaItem);
+			if (processedItem) {
+				processedItems.push(processedItem);
 			}
 		});
 
