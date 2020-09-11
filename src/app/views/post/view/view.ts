@@ -30,6 +30,7 @@ import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue'
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
 import AppVideo from '../../../../_common/video/video.vue';
 import AppEventItemControls from '../../../components/event-item/controls/controls.vue';
+import AppGameBadge from '../../../components/game/badge/badge.vue';
 import AppGameListItem from '../../../components/game/list/item/item.vue';
 import AppPollVoting from '../../../components/poll/voting/voting.vue';
 import { Store } from '../../../store';
@@ -58,6 +59,7 @@ import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 		AppMediaItemBackdrop,
 		AppMediaItemPost,
 		AppScrollScroller,
+		AppGameBadge,
 	},
 	directives: {
 		AppScrollWhen,

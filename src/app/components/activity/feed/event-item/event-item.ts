@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { findRequiredVueParent } from '../../../../../utils/vue';
 import { CommentVideoModal } from '../../../../../_common/comment/video/modal/modal.service';
@@ -33,7 +33,6 @@ import AppPollVoting from '../../../poll/voting/voting.vue';
 import AppActivityFeedCommentVideo from '../comment-video/comment-video.vue';
 import AppActivityFeedDevlogPostMedia from '../devlog-post/media/media.vue';
 import AppActivityFeedDevlogPostSketchfab from '../devlog-post/sketchfab/sketchfab.vue';
-import AppActivityFeedDevlogPostText from '../devlog-post/text/text.vue';
 import AppActivityFeedDevlogPostVideo from '../devlog-post/video/video.vue';
 import AppActivityFeedTS from '../feed';
 import { feedShouldBlockPost, feedShouldBlockVideo } from '../feed-service';
@@ -51,7 +50,6 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppUserAvatar,
 		AppUserFollowWidget,
 		AppActivityFeedCommentVideo,
-		AppActivityFeedDevlogPostText,
 		AppActivityFeedDevlogPostMedia,
 		AppActivityFeedDevlogPostSketchfab,
 		AppActivityFeedDevlogPostVideo,
@@ -98,6 +96,10 @@ export default class AppActivityFeedEventItem extends Vue {
 	$refs!: {
 		stickerTarget: AppStickerTargetTS;
 	};
+
+	@Emit('resize') emitResize(_height: number) {}
+	@Emit('clicked') emitClicked() {}
+	@Emit('expanded') emitExpanded() {}
 
 	get isNew() {
 		return this.feed.isItemUnread(this.item);
@@ -247,6 +249,8 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	mounted() {
 		this.feedComponent = findRequiredVueParent(this, AppActivityFeed) as AppActivityFeedTS;
+
+		this.onContentBootstrapped();
 	}
 
 	destroyed() {
@@ -258,17 +262,15 @@ export default class AppActivityFeedEventItem extends Vue {
 	 * Callback for when the component's content has finished bootstrapping into
 	 * the DOM and we hopefully know the height and true content.
 	 */
-	onContentBootstrapped() {
-		this.$emit('resize', this.$el.offsetHeight);
+	async onContentBootstrapped() {
+		await this.$nextTick();
+		this.emitResize(this.$el.offsetHeight);
+
 		this.resizeSensor =
 			this.resizeSensor ||
 			new ResizeSensor(this.$el, () => {
-				this.$emit('resize', this.$el.offsetHeight);
+				this.emitResize(this.$el.offsetHeight);
 			});
-	}
-
-	onExpand() {
-		this.$emit('expanded');
 	}
 
 	/**
@@ -276,7 +278,7 @@ export default class AppActivityFeedEventItem extends Vue {
 	 * capture phase.
 	 */
 	onClickCapture() {
-		this.$emit('clicked');
+		this.emitClicked();
 	}
 
 	/**
@@ -333,7 +335,7 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	toggleLead() {
 		this.feed.toggleItemLeadOpen(this.item);
-		this.$emit('expanded');
+		this.emitExpanded();
 	}
 
 	canToggleLeadChanged(canToggle: boolean) {
