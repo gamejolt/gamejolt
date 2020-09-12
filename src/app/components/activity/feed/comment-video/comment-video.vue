@@ -4,17 +4,16 @@
 			:video-id="video.video_id"
 			:thumbnail="video.img_thumbnail"
 			:is-hydrated="isHydrated"
-			@bootstrap="$emit('content-bootstrapped')"
-			@play="$emit('expanded')"
+			@bootstrap="emitContentBootstrapped"
+			@play="emitExpanded"
 		/>
 
 		<br />
 
 		<app-fade-collapse
 			:collapse-height="200"
-			:is-open="isOpen"
-			@require-change="canToggleChanged"
-			@expand="toggleFull"
+			@require-change="bootstrapFadeCollapse"
+			@expand="emitExpanded"
 		>
 			<app-content-viewer :source="video.comment.comment_content" />
 		</app-fade-collapse>

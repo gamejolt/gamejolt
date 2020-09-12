@@ -1,8 +1,8 @@
+import Vue from 'vue';
+import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { CommentVideo } from '../../../../../_common/comment/video/video-model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
 import { ActivityFeedItem } from '../item-service';
 import { ActivityFeedView } from '../view';
 import AppActivityFeedVideo from '../_video/video.vue';
@@ -24,34 +24,25 @@ export default class AppActivityFeedCommentVideo extends Vue {
 	@Prop(CommentVideo)
 	video!: CommentVideo;
 
-	canToggleContent = false;
 	contentBootstrapped = false;
+
+	@Emit('expanded') emitExpanded() {}
+	@Emit('content-bootstrapped') emitContentBootstrapped() {}
 
 	get isHydrated() {
 		return this.feed.isItemHydrated(this.item);
 	}
 
-	get isOpen() {
-		return this.feed.isItemOpen(this.item);
-	}
-
-	toggleFull() {
-		this.feed.toggleItemOpen(this.item);
-		this.$emit('expanded');
-	}
-
 	// We wait for the fade collapse component to bootstrap in and potentially
 	// restrict the content size before saying we're bootstrapped.
-	async canToggleChanged(canToggle: boolean) {
-		this.canToggleContent = canToggle;
-
+	async bootstrapFadeCollapse() {
 		if (!this.contentBootstrapped) {
 			this.contentBootstrapped = true;
 
 			// Wait for the fade to restrict content now before emitting the
 			// event.
 			await this.$nextTick();
-			this.$emit('content-bootstrapped');
+			this.emitContentBootstrapped();
 		}
 	}
 }

@@ -80,7 +80,7 @@ export default class AppActivityFeedEventItem extends Vue {
 	@State
 	app!: Store['app'];
 
-	canToggleLead = false;
+	isLeadCropped = false;
 	hasBypassedBlock = false;
 	stickersVisible = false;
 	animateStickers = true;
@@ -111,10 +111,6 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	get eventItem() {
 		return this.item.feedItem as EventItem;
-	}
-
-	get isLeadOpen() {
-		return this.feed.isItemLeadOpen(this.item);
 	}
 
 	get post() {
@@ -333,13 +329,8 @@ export default class AppActivityFeedEventItem extends Vue {
 		this.hasBypassedBlock = true;
 	}
 
-	toggleLead() {
-		this.feed.toggleItemLeadOpen(this.item);
-		this.emitExpanded();
-	}
-
-	canToggleLeadChanged(canToggle: boolean) {
-		this.canToggleLead = canToggle;
+	changeIsLeadCropped(isCropped: boolean) {
+		this.isLeadCropped = isCropped;
 	}
 
 	onPostEdited(item: EventItem) {
