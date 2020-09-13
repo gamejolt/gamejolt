@@ -54,7 +54,6 @@ export default class AppCommentModal extends BaseModal {
 			return;
 		}
 
-		// JODO: Not sure what's going on with this typing
-		this.$router.replace(Object.assign({}, this.$route, { hash: '' }));
+		this.$router.replace(Object.assign({}, this.$route, { hash: '' }).path);
 	}
 }
