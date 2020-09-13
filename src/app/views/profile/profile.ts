@@ -122,8 +122,9 @@ export default class RouteProfile extends BaseRouteComponent {
 	readonly Environment = Environment;
 	readonly Screen = Screen;
 
+	// DODO: remove
 	get shouldShowFullCover() {
-		return Screen.isXs || this.$route.name !== 'profile.post.view';
+		return Screen.isXs || this.$route.name !== 'post';
 	}
 
 	/**

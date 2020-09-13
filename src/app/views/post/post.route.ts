@@ -1,7 +1,7 @@
 import { RouteConfig } from 'vue-router';
 
 export const routePostView: RouteConfig = {
-	name: 'post.view',
+	name: 'post',
 	path: '/post/:slug',
-	component: () => import(/* webpackChunkName: "routePostView" */ './post.vue'),
+	component: () => import(/* webpackChunkName: "routePost" */ './post.vue'),
 };

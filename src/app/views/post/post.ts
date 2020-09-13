@@ -1,19 +1,23 @@
 import { Component } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
-import { CommentThreadModal } from '../../../_common/comment/thread/modal.service';
+import {
+	CommentThreadModal,
+	CommentThreadModalPermalinkDeregister,
+} from '../../../_common/comment/thread/modal.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Meta } from '../../../_common/meta/meta-service';
 import { Registry } from '../../../_common/registry/registry.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Translate } from '../../../_common/translate/translate.service';
 import { IntentService } from '../../components/intent/intent.service';
-import { RouteStore, RouteStoreModule } from '../profile/profile.store';
-import AppPostView from './view/view.vue';
+import AppPostPagePlaceholder from './_page-placeholder/page-placeholder.vue';
+import AppPostPage from './_page/page.vue';
 
 @Component({
-	name: 'RoutePostView',
+	name: 'RoutePost',
 	components: {
-		AppPostView,
+		AppPostPage,
+		AppPostPagePlaceholder,
 	},
 })
 @RouteResolver({
@@ -36,12 +40,9 @@ import AppPostView from './view/view.vue';
 	},
 })
 export default class RoutePost extends BaseRouteComponent {
-	@RouteStoreModule.State
-	user!: RouteStore['user'];
-
 	post: FiresidePost | null = null;
 
-	permalinkWatchDeregister?: Function;
+	private permalinkWatchDeregister?: CommentThreadModalPermalinkDeregister;
 
 	get routeTitle() {
 		if (!this.post) {
@@ -50,18 +51,21 @@ export default class RoutePost extends BaseRouteComponent {
 
 		this.disableRouteTitleSuffix = true;
 
-		if (this.post.game) {
-			return this.$gettextInterpolate(
-				`${this.post.getShortLead()} - ${this.post.game.title} by %{ user }`,
-				{
-					user: this.post.user.display_name,
-				}
-			);
+		const lead = this.post.getShortLead();
+		const user = this.post.user.display_name;
+		const game = this.post.game?.title;
+
+		if (game) {
+			return this.$gettextInterpolate(`%{ lead } - %{ game } by %{ user }`, {
+				lead,
+				game,
+				user,
+			});
 		}
 
-		return this.$gettextInterpolate('%{ user } on Game Jolt: "%{ post }"', {
-			user: this.post.user.display_name,
-			post: this.post.getShortLead(),
+		return this.$gettextInterpolate('%{ user } on Game Jolt: "%{ lead }"', {
+			user,
+			lead,
 		});
 	}
 
@@ -93,7 +97,7 @@ export default class RoutePost extends BaseRouteComponent {
 		Meta.twitter = $payload.twitter;
 	}
 
-	destroyed() {
+	routeDestroyed() {
 		if (this.permalinkWatchDeregister) {
 			this.permalinkWatchDeregister();
 			this.permalinkWatchDeregister = undefined;
