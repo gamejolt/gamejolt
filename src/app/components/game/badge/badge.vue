@@ -95,6 +95,7 @@
 	z-index: 1
 
 .-details
+	min-width: 0
 	z-index: 1
 
 .tag
@@ -102,7 +103,7 @@
 	margin-left: -4px
 
 .-name
-	// JODO: This should ellipsis
+	text-overflow()
 	font-weight: bolder
 	font-size: $font-size-h4
 

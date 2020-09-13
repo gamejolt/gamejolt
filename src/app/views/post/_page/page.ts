@@ -34,11 +34,6 @@ import AppGameBadge from '../../../components/game/badge/badge.vue';
 import AppGameListItem from '../../../components/game/list/item/item.vue';
 import AppPollVoting from '../../../components/poll/voting/voting.vue';
 
-// JODO: For some reason the width isn't proper until fully loaded on mobile:
-// http://localhost:8080/post/epic-meme-on-meme-center-hmnemwhq
-
-// JODO: Get the theme stuff in here (game theme if game, user theme if user).
-
 @Component({
 	components: {
 		AppTimeAgo,

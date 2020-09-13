@@ -8,6 +8,7 @@ import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Meta } from '../../../_common/meta/meta-service';
 import { Registry } from '../../../_common/registry/registry.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { ThemeMutation, ThemeStore } from '../../../_common/theme/theme.store';
 import { Translate } from '../../../_common/translate/translate.service';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPostPagePlaceholder from './_page-placeholder/page-placeholder.vue';
@@ -40,9 +41,23 @@ import AppPostPage from './_page/page.vue';
 	},
 })
 export default class RoutePost extends BaseRouteComponent {
+	@ThemeMutation setPageTheme!: ThemeStore['setPageTheme'];
+
 	post: FiresidePost | null = null;
 
 	private permalinkWatchDeregister?: CommentThreadModalPermalinkDeregister;
+
+	get theme() {
+		if (this.post && this.post.game?.theme) {
+			return this.post.game.theme;
+		}
+
+		if (this.post && this.post.user.theme) {
+			return this.post.user.theme;
+		}
+
+		return null;
+	}
 
 	get routeTitle() {
 		if (!this.post) {
@@ -82,6 +97,8 @@ export default class RoutePost extends BaseRouteComponent {
 			this.post = post;
 		}
 
+		this.setPageTheme(this.theme);
+
 		CommentThreadModal.showFromPermalink(this.$router, this.post, 'comments');
 		this.permalinkWatchDeregister = CommentThreadModal.watchForPermalink(
 			this.$router,
@@ -102,5 +119,7 @@ export default class RoutePost extends BaseRouteComponent {
 			this.permalinkWatchDeregister();
 			this.permalinkWatchDeregister = undefined;
 		}
+
+		this.setPageTheme(null);
 	}
 }
