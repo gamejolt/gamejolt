@@ -1,10 +1,11 @@
+import Vue from 'vue';
+import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../../_common/scroll/scroll.service';
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedView } from '../../view';
 
@@ -49,11 +50,12 @@ export default class AppActivityFeedDevlogPostText extends Vue {
 		this.isToggling = true;
 		this.$emit('expanded');
 
-		// If we collapsed.
 		if (!this.isOpen) {
+			Analytics.trackEvent('activity-feed', 'article-open');
 			this.expand();
 		} else {
 			this.collapse();
+			Analytics.trackEvent('activity-feed', 'article-close');
 		}
 	}
 
