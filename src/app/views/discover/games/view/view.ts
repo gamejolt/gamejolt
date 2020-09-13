@@ -180,7 +180,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	}
 
 	get shouldShowFullCover() {
-		return Screen.isXs || this.$route.name !== 'discover.games.view.devlog.view';
+		return Screen.isXs;
 	}
 
 	/**

@@ -1,17 +1,15 @@
 <script lang="ts" src="./page"></script>
 
 <template>
-	<section v-if="post" class="section">
-		<div v-app-scroll-when="true" />
-
+	<section class="-section section-thin">
 		<div class="container-xl">
 			<div v-if="post.hasVideo" class="full-bleed-xs">
 				<app-video-embed
+					class="-video"
 					video-provider="youtube"
 					:video-id="post.videos[0].video_id"
 					autoplay
 				/>
-				<br />
 			</div>
 
 			<div class="-row">
@@ -21,6 +19,13 @@
 				<!-- Main Content -->
 				<div class="-content-main">
 					<div class="post-view">
+						<app-game-badge
+							v-if="post.game"
+							class="-game-badge"
+							:game="post.game"
+							full-bleed
+						/>
+
 						<div class="-header">
 							<!-- User Info -->
 							<div class="-user-info">
@@ -40,7 +45,7 @@
 									</span>
 								</router-link>
 
-								<div class="-controls social-widgets">
+								<div class="-controls">
 									<app-user-follow-widget
 										v-if="!user || displayUser.id !== user.id"
 										:user="displayUser"
@@ -50,6 +55,7 @@
 								</div>
 							</div>
 						</div>
+
 						<div v-if="post.hasMedia" class="full-bleed-xs">
 							<div v-for="item of post.media" :key="item.id">
 								<app-media-item-post
@@ -95,8 +101,6 @@
 						>
 							<app-content-viewer :source="post.lead_content" />
 						</app-sticker-target>
-
-						<app-game-badge v-if="post.game" :game="post.game" large />
 
 						<div v-if="post.hasArticle">
 							<div class="page-cut" />
@@ -161,8 +165,10 @@
 
 $-padding = 16px
 $-image-width = 100px
-$-spacing = 8px
-$-width = 320px
+
+.-section
+	@media $media-xs
+		padding-top: 0
 
 .-row
 	display: flex
@@ -185,16 +191,21 @@ $-width = 320px
 .-left-controls
 	transition: opacity 500ms $weak-ease-out
 
+.-game-badge
+	margin-top: $-padding
+	margin-bottom: 0
+
+	@media $media-sm-up
+		margin-bottom: $-padding
+
 .-header
-	display: flex
-	align-items: center
-	margin-bottom: $-spacing
-	overflow: hidden
+	@media $media-sm-up
+		margin-bottom: $-spacing
 
 .-user-info
 	clearfix()
-	display: inline-flex
-	flex: auto
+	display: flex
+	align-items: center
 	padding: $-padding 0
 	min-width: 0
 

@@ -16,7 +16,6 @@ import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
 import { AppResponsiveDimensions } from '../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { AppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { Settings } from '../../../../_common/settings/settings.service';
@@ -34,6 +33,11 @@ import AppEventItemControls from '../../../components/event-item/controls/contro
 import AppGameBadge from '../../../components/game/badge/badge.vue';
 import AppGameListItem from '../../../components/game/list/item/item.vue';
 import AppPollVoting from '../../../components/poll/voting/voting.vue';
+
+// JODO: For some reason the width isn't proper until fully loaded on mobile:
+// http://localhost:8080/post/epic-meme-on-meme-center-hmnemwhq
+
+// JODO: Get the theme stuff in here (game theme if game, user theme if user).
 
 @Component({
 	components: {
@@ -58,9 +62,6 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppMediaItemPost,
 		AppScrollScroller,
 		AppGameBadge,
-	},
-	directives: {
-		AppScrollWhen,
 	},
 })
 export default class AppPostPage extends Vue implements LightboxMediaSource {
