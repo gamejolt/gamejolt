@@ -182,6 +182,7 @@ $-image-width = 100px
 
 		@media $media-xs
 			margin: 0
+			flex: auto
 
 		@media $media-sm-up
 			margin: 0 $grid-gutter-width
