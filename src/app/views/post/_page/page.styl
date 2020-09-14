@@ -1,0 +1,107 @@
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+
+$-padding = 16px
+$-image-width = 100px
+
+.-section
+	@media $media-xs
+		padding-top: 0
+
+.-row
+	display: flex
+
+	.-content-left
+	.-content-right
+		flex: 1
+
+	.-content-main
+		min-width: 0
+
+		@media $media-xs
+			margin: 0
+			flex: auto
+
+		@media $media-sm-up
+			margin: 0 $grid-gutter-width
+			flex-shrink: 1
+			flex-basis: 650px
+
+.-left-controls
+	transition: opacity 500ms $weak-ease-out
+
+.-game-badge
+	margin-top: $-padding
+	margin-bottom: 0
+
+	@media $media-sm-up
+		margin-bottom: $-padding
+
+.-header
+	@media $media-sm-up
+		margin-bottom: $-spacing
+
+.-user-info
+	clearfix()
+	display: flex
+	align-items: center
+	padding: $-padding 0
+	min-width: 0
+
+	.-avatar
+		change-bg('bg-subtle')
+		img-circle()
+		flex: none
+		overflow: hidden
+		width: 50px
+		height: 50px
+
+	.-name
+		margin-right: auto
+		margin-left: 10px
+		min-width: 0
+
+		> *
+			text-overflow()
+			display: block
+
+		&:hover
+			text-decoration: none
+
+			strong
+				text-decoration: underline
+
+	.-controls
+		flex: none
+		margin-left: 12px
+
+.-circle-img >>>
+	img
+		border-radius: 50% !important
+
+.-backdrop
+	change-bg('bg-offset')
+
+.-media-item
+	position: relative
+	margin-left: auto
+	margin-right: auto
+
+.-img
+.-video
+	width: 100%
+	height: 100%
+
+@media $media-sm-up
+	.post-view >>>
+		iframe
+			rounded-corners-lg()
+
+.-media-item
+	cursor: zoom-in
+
+>>> .mention-avatar-img
+	border-radius: 50% !important
+
+.-communities
+	white-space: nowrap
