@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { findRequiredVueParent } from '../../../../../utils/vue';
+import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { CommentVideoModal } from '../../../../../_common/comment/video/modal/modal.service';
 import { CommentVideo } from '../../../../../_common/comment/video/video-model';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
@@ -313,12 +314,14 @@ export default class AppActivityFeedEventItem extends Vue {
 		}
 
 		if (this.video) {
+			Analytics.trackEvent('activity-feed', 'click');
 			CommentVideoModal.show(this.video);
 		} else {
 			if (!this.link) {
 				return;
 			}
 
+			Analytics.trackEvent('activity-feed', 'click');
 			if (e.ctrlKey || e.shiftKey) {
 				Navigate.newWindow(Environment.wttfBaseUrl + this.linkResolved);
 				return;
@@ -335,6 +338,7 @@ export default class AppActivityFeedEventItem extends Vue {
 	toggleLead() {
 		this.feed.toggleItemLeadOpen(this.item);
 		this.emitExpanded();
+		Analytics.trackEvent('activity-feed', 'toggle-lead');
 	}
 
 	canToggleLeadChanged(canToggle: boolean) {

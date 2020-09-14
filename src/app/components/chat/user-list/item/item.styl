@@ -6,17 +6,6 @@
 		height: 50px
 		overflow: hidden
 
-	&:hover
-	&.active
-		.chat-user-status
-			border-color: var(--theme-bg-subtle) !important
-
-			&.offline
-				background-color: var(--theme-fg-muted) !important
-
-			&-inner
-				background-color: var(--theme-bg-subtle) !important
-
 	&-list-meta
 		text-overflow()
 		theme-prop('color', 'fg-muted')
@@ -40,27 +29,6 @@
 			width: 24px
 			vertical-align: middle
 
-		.chat-user-status
-			position: absolute
-			right: 10px
-			bottom: 8px
-			width: 12px
-			height: 12px
-			border: 2px solid
-			border-color: var(--theme-bg-actual)
-			border-radius: 100%
-			display: flex
-			justify-content: center
-			align-items: center
-
-			&-inner
-				width: 4px
-				height: 4px
-				background-color: var(--theme-bg-actual)
-				border-radius: 100%
-
-			&.online
-				background-color: var(--theme-link)
-
-			&.offline
-				background-color: var(--theme-bg-subtle)
+		.-status
+			right: 12px
+			bottom: 10px
