@@ -56,7 +56,7 @@
 							</div>
 						</div>
 
-						<div v-if="post.hasMedia" class="full-bleed-xs">
+						<div v-if="post.hasMedia" class="-media-items full-bleed-xs">
 							<div v-for="item of post.media" :key="item.id">
 								<app-media-item-post
 									class="-media-item"
