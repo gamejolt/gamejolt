@@ -179,17 +179,13 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		);
 	}
 
-	get shouldShowFullCover() {
-		return Screen.isXs;
-	}
-
 	/**
 	 * The cover height changes when we switch to not showing the full cover, so
 	 * let's make sure we reset the autoscroll anchor so that it scrolls to the
 	 * top again.
 	 */
 	get autoscrollAnchorKey() {
-		return this.game.id + (this.shouldShowFullCover ? '-full' : '-collapsed');
+		return this.game.id;
 	}
 
 	routeCreated() {

@@ -122,17 +122,13 @@ export default class RouteProfile extends BaseRouteComponent {
 	readonly Environment = Environment;
 	readonly Screen = Screen;
 
-	get shouldShowFullCover() {
-		return Screen.isXs;
-	}
-
 	/**
 	 * The cover height changes when we switch to not showing the full cover, so
 	 * let's make sure we reset the autoscroll anchor so that it scrolls to the
 	 * top again.
 	 */
 	get autoscrollAnchorKey() {
-		return this.user!.id + (this.shouldShowFullCover ? '-full' : '-collapsed');
+		return this.user!.id;
 	}
 
 	get commentsCount() {
