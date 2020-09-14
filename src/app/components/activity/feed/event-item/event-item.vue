@@ -132,7 +132,12 @@
 						This shouldn't ever really show a collapser. It's for the jokers that think it would
 						be fun to make a post with a bunch of new lines.
 					-->
-					<app-fade-collapse :collapse-height="600" @require-change="changeIsLeadCropped">
+					<app-fade-collapse
+						:collapse-height="600"
+						:is-open="isLeadOpen"
+						:animate="false"
+						@require-change="canToggleLeadChanged"
+					>
 						<app-content-viewer
 							class="fireside-post-lead"
 							:source="post.lead_content"
@@ -140,11 +145,7 @@
 					</app-fade-collapse>
 				</app-sticker-target>
 
-				<div v-if="isLeadCropped" class="page-cut">
-					<app-button :to="link" trans @click="emitExpanded">
-						<translate>Read More</translate>
-					</app-button>
-				</div>
+				<a v-if="canToggleLead" class="hidden-text-expander" @click="toggleLead()" />
 
 				<app-event-item-controls-overlay>
 					<div v-if="post.hasArticle" class="page-cut">

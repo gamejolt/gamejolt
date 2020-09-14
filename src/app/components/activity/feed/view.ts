@@ -26,6 +26,8 @@ let globalIndex = 0;
 class ActivityFeedViewItemState {
 	isBootstrapped = true;
 	isHydrated = false;
+	isOpen = false;
+	isLeadOpen = false;
 	isShowingFollow = false;
 	height: string | null = null;
 }
@@ -183,6 +185,32 @@ export class ActivityFeedView {
 
 	getItemHeight(item: ActivityFeedItem) {
 		return this.getItemState(item).height;
+	}
+
+	setItemLeadOpen(item: ActivityFeedItem, open: boolean) {
+		this.getItemState(item).isLeadOpen = open;
+	}
+
+	toggleItemLeadOpen(item: ActivityFeedItem) {
+		const itemState = this.getItemState(item);
+		itemState.isLeadOpen = !itemState.isLeadOpen;
+	}
+
+	isItemLeadOpen(item: ActivityFeedItem) {
+		return this.getItemState(item).isLeadOpen;
+	}
+
+	setItemOpen(item: ActivityFeedItem, open: boolean) {
+		this.getItemState(item).isOpen = open;
+	}
+
+	toggleItemOpen(item: ActivityFeedItem) {
+		const itemState = this.getItemState(item);
+		itemState.isOpen = !!itemState.isOpen;
+	}
+
+	isItemOpen(item: ActivityFeedItem) {
+		return this.getItemState(item).isOpen;
 	}
 
 	setItemShowingFollow(item: ActivityFeedItem, showFollow: boolean) {
