@@ -51,9 +51,14 @@ export class Model {
 	 * Will handle the error response and return the newly created model.
 	 */
 	static processCreate(response: any, field: string): Promise<any> {
+		if (response.notProcessed) {
+			return Promise.resolve(response);
+		}
+
 		if (response.success && response[field]) {
 			return Promise.resolve(response);
 		}
+
 		return Promise.reject(response);
 	}
 
@@ -68,12 +73,17 @@ export class Model {
 	 * Will pull in the new values for the model as well as handling the error response.
 	 */
 	processUpdate(response: any, field: string): Promise<any> {
+		if (response.notProcessed) {
+			return Promise.resolve(response);
+		}
+
 		if (response.success) {
-			if (response[field] && !response.noop) {
+			if (response[field]) {
 				this.assign(response[field]);
 			}
 			return Promise.resolve(response);
 		}
+
 		return Promise.reject(response);
 	}
 
@@ -82,12 +92,15 @@ export class Model {
 	 * Will handle error codes.
 	 */
 	processRemove(response: any): Promise<any> {
-		if (response.success) {
-			if (!response.noop) {
-				this._removed = true;
-			}
+		if (response.notProcessed) {
 			return Promise.resolve(response);
 		}
+
+		if (response.success) {
+			this._removed = true;
+			return Promise.resolve(response);
+		}
+
 		return Promise.reject(response);
 	}
 

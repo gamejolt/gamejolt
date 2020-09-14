@@ -5,6 +5,8 @@ import { RequestOptions } from '../api/api.service';
 import { Environment } from '../environment/environment.service';
 import { Seo } from '../seo/seo.service';
 
+export type PayloadFormErrors = { [errorId: string]: boolean };
+
 export class PayloadError {
 	static readonly ERROR_NEW_VERSION = 'payload-new-version';
 	static readonly ERROR_NOT_LOGGED = 'payload-not-logged';
@@ -225,5 +227,20 @@ export class Payload {
 		}
 
 		return error;
+	}
+
+	static formErrors(payload: any): PayloadFormErrors | null {
+		const errors = payload?.errors;
+
+		if (typeof errors !== 'object' || Object.keys(errors).length === 0) {
+			return null;
+		}
+
+		return errors;
+	}
+
+	static hasFormError(payload: any, errorId: string): boolean {
+		const errors = this.formErrors(payload);
+		return !!errors?.[errorId];
 	}
 }

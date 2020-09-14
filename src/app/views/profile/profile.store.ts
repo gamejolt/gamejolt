@@ -76,12 +76,16 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	@VuexAction
 	async acceptFriendRequest() {
 		if (this.userFriendship) {
-			UserFriendshipHelper.acceptRequest(this.userFriendship);
-			this.setUserFriendship(this.userFriendship);
-			// We follow the user after accepting the friend request.
-			if (this.user && !this.user.is_following) {
-				this.user.is_following = true;
-				this.user.follower_count++;
+			const accepted = await UserFriendshipHelper.acceptRequest(this.userFriendship);
+			if (accepted) {
+				this.setUserFriendship(this.userFriendship);
+				// We follow the user after accepting the friend request.
+				if (this.user && !this.user.is_following) {
+					this.user.is_following = true;
+					this.user.follower_count++;
+				}
+			} else {
+				this.setUserFriendship(null);
 			}
 		}
 	}
