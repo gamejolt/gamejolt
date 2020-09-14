@@ -26,7 +26,7 @@
 							full-bleed
 						/>
 
-						<div class="-header">
+						<div>
 							<!-- User Info -->
 							<div class="-user-info">
 								<div class="-avatar">
@@ -56,7 +56,7 @@
 							</div>
 						</div>
 
-						<div v-if="post.hasMedia" class="-media-items full-bleed-xs">
+						<div v-if="post.hasMedia" class="-media-items">
 							<div v-for="item of post.media" :key="item.id">
 								<app-media-item-post
 									class="-media-item"
@@ -159,4 +159,94 @@
 	</section>
 </template>
 
-<style lang="stylus" src="./page.styl" scoped></style>
+<style lang="stylus" scoped>
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import '../variables'
+@import '../common'
+
+.-row
+	display: flex
+
+	.-content-left
+	.-content-right
+		flex: 1
+
+	.-content-main
+		min-width: 0
+
+		@media $media-xs
+			margin: 0
+			flex: auto
+
+		@media $media-sm-up
+			margin: 0 $grid-gutter-width
+			flex-shrink: 1
+			flex-basis: $-center-col-max-width
+
+.-left-controls
+	transition: opacity 500ms $weak-ease-out
+
+.-game-badge
+	margin-top: $-spacing
+	margin-bottom: 0
+
+	@media $media-sm-up
+		margin-bottom: $-spacing
+
+.-name
+	margin-right: auto
+	min-width: 0
+
+	> *
+		text-overflow()
+		display: block
+
+	&:hover
+		text-decoration: none
+
+		strong
+			text-decoration: underline
+
+.-controls
+	flex: none
+	margin-left: 12px
+
+.-circle-img >>>
+	img
+		border-radius: 50% !important
+
+.-backdrop
+	change-bg('bg-offset')
+
+.-media-items
+	full-bleed-xs()
+
+	@media $media-md-up
+		margin-left: -50px
+		margin-right: -50px
+
+.-media-item
+	position: relative
+	margin-left: auto
+	margin-right: auto
+
+.-img
+.-video
+	width: 100%
+	height: 100%
+
+@media $media-sm-up
+	.post-view >>>
+		iframe
+			rounded-corners-lg()
+
+.-media-item
+	cursor: zoom-in
+
+>>> .mention-avatar-img
+	border-radius: 50% !important
+
+.-communities
+	white-space: nowrap
+</style>

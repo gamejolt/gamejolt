@@ -3,17 +3,15 @@
 <template>
 	<section class="-section section-thin">
 		<div class="container-xl">
-			<div style="max-width: 650px; margin: 0 auto">
+			<div class="-col-primary">
 				<div class="-user-info">
 					<div class="-avatar" />
 					<div class="-name">
-						<div class="-top lazy-placeholder" />
-						<div class="-bottom lazy-placeholder" />
+						<div class="-name-top lazy-placeholder" />
+						<div class="-name-bottom lazy-placeholder" />
 					</div>
 
-					<div class="-controls">
-						<div class="-follow lazy-placeholder" />
-					</div>
+					<div class="-follow lazy-placeholder" />
 				</div>
 
 				<span class="lazy-placeholder" />
@@ -26,19 +24,26 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '../_page/page'
+@import '../variables'
+@import '../common'
 
-.-top
-	width: 80px
-	height: $font-size-small
-	margin-bottom: 4px
+.-col-primary
+	max-width: $-center-col-max-width
+	margin: 0 auto
 
-.-bottom
-	width: 64px
-	height: $font-size-tiny
+.-name
+	margin-right: auto
+
+	&-top
+		width: 80px
+		height: $font-size-small
+		margin-bottom: 4px
+
+	&-bottom
+		width: 64px
+		height: $font-size-tiny
 
 .-follow
 	width: 88px
 	height: 36px
-	margin-bottom: 0
 </style>
