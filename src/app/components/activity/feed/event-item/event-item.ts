@@ -33,6 +33,7 @@ import AppPollVoting from '../../../poll/voting/voting.vue';
 import AppActivityFeedCommentVideo from '../comment-video/comment-video.vue';
 import AppActivityFeedDevlogPostMedia from '../devlog-post/media/media.vue';
 import AppActivityFeedDevlogPostSketchfab from '../devlog-post/sketchfab/sketchfab.vue';
+import AppActivityFeedDevlogPostText from '../devlog-post/text/text.vue';
 import AppActivityFeedDevlogPostVideo from '../devlog-post/video/video.vue';
 import AppActivityFeedTS from '../feed';
 import { feedShouldBlockPost, feedShouldBlockVideo } from '../feed-service';
@@ -53,6 +54,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppActivityFeedDevlogPostMedia,
 		AppActivityFeedDevlogPostSketchfab,
 		AppActivityFeedDevlogPostVideo,
+		AppActivityFeedDevlogPostText,
 		AppEventItemControls,
 		AppEventItemControlsOverlay,
 		AppPollVoting,
@@ -249,8 +251,6 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	mounted() {
 		this.feedComponent = findRequiredVueParent(this, AppActivityFeed) as AppActivityFeedTS;
-
-		this.onContentBootstrapped();
 	}
 
 	destroyed() {
@@ -262,8 +262,7 @@ export default class AppActivityFeedEventItem extends Vue {
 	 * Callback for when the component's content has finished bootstrapping into
 	 * the DOM and we hopefully know the height and true content.
 	 */
-	async onContentBootstrapped() {
-		await this.$nextTick();
+	onContentBootstrapped() {
 		this.emitResize(this.$el.offsetHeight);
 
 		this.resizeSensor =

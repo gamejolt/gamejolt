@@ -148,11 +148,13 @@
 				<a v-if="canToggleLead" class="hidden-text-expander" @click="toggleLead()" />
 
 				<app-event-item-controls-overlay>
-					<div v-if="post.hasArticle" class="page-cut">
-						<app-button :to="link" trans>
-							<translate>Read Article</translate>
-						</app-button>
-					</div>
+					<app-activity-feed-devlog-post-text
+						v-if="post.hasArticle"
+						:item="item"
+						:post="post"
+						@expanded="emitExpanded"
+						@content-bootstrapped="onContentBootstrapped"
+					/>
 
 					<div v-if="post.hasPoll" class="-poll" @click.stop>
 						<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
