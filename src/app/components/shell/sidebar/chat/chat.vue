@@ -8,30 +8,10 @@
 					<translate>Group Chat Rooms</translate>
 				</div>
 
-				<div class="nav-controls">
-					<app-button primary block class="offline-disable">
-						<translate>New Group Chat</translate>
-					</app-button>
+				<div v-if="!hasGroupRooms" class="alert">
+					<translate>You are in no groups yet.</translate>
 				</div>
-
-				<div v-if="hasGroupRooms" class="chat-rooms-list">
-					<ul class="shell-nav">
-						<li v-for="room of chat.groupRooms" :key="room.id">
-							<a
-								:class="{ active: chat.room && chat.room.id === room.id }"
-								:title="room.getGroupTitle(chat)"
-								@click="onRoomClicked(room.id)"
-							>
-								<span class="shell-nav-icon">
-									<app-jolticon icon="users" />
-								</span>
-								<span class="shell-nav-label">
-									{{ room.getGroupTitle(chat) }}
-								</span>
-							</a>
-						</li>
-					</ul>
-				</div>
+				<app-chat-room-list v-else :rooms="chat.groupRooms" />
 			</div>
 
 			<!-- Friends List -->

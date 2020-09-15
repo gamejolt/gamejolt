@@ -6,11 +6,13 @@ import { number } from '../../../../../_common/filters/number';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Store } from '../../../../store';
 import { ChatClient, ChatKey, enterChatRoom, leaveChatRoom } from '../../../chat/client';
+import AppChatRoomList from '../../../chat/room-list/room-list.vue';
 import AppChatUserList from '../../../chat/user-list/user-list.vue';
 import AppChatWindows from '../../../chat/windows/windows.vue';
 
 @Component({
 	components: {
+		AppChatRoomList,
 		AppChatUserList,
 		AppChatWindows,
 	},
@@ -67,9 +69,5 @@ export default class AppShellSidebarChat extends Vue {
 		if (this.visibleLeftPane === 'chat') {
 			this.toggleLeftPane('chat');
 		}
-	}
-
-	onRoomClicked(roomId: number) {
-		enterChatRoom(this.chat, roomId);
 	}
 }
