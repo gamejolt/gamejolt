@@ -1,4 +1,5 @@
 import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Location } from 'vue-router';
 import { Analytics } from '../../analytics/analytics.service';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import { BaseModal } from '../../modal/base';
@@ -95,6 +96,16 @@ export default class AppCommentThreadModal extends BaseModal {
 		}
 
 		return this.user && !this.hasError;
+	}
+
+	destroyed() {
+		// If there was a permalink in the URL, we want to remove it when closing the comment modal.
+		const hash = this.$route.hash;
+		if (!hash || hash.indexOf('#comment-') !== 0) {
+			return;
+		}
+
+		this.$router.replace({ ...this.$route, hash: '' } as Location);
 	}
 
 	_onCommentAdd(comment: Comment) {
