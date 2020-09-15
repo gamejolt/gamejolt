@@ -81,7 +81,9 @@ const ProfileThemeKey = 'profile';
 		return Api.sendRequest('/web/profile/@' + route.params.username);
 	},
 	resolveStore({ payload }) {
-		routeStore.commit('profilePayload', payload);
+		if (payload.user) {
+			routeStore.commit('profilePayload', payload);
+		}
 	},
 })
 export default class RouteProfile extends BaseRouteComponent {
