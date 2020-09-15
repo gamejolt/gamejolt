@@ -1,9 +1,8 @@
 <template>
 	<app-scroll-inview-parent>
-		<app-theme />
-
 		<slot />
 
+		<app-theme />
 		<app-loading-bar />
 		<app-growls />
 		<app-modals />

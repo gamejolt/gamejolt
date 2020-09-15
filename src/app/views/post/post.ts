@@ -8,11 +8,13 @@ import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Meta } from '../../../_common/meta/meta-service';
 import { Registry } from '../../../_common/registry/registry.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
-import { ThemeMutation, ThemeStore } from '../../../_common/theme/theme.store';
 import { Translate } from '../../../_common/translate/translate.service';
 import { IntentService } from '../../components/intent/intent.service';
+import { store } from '../../store';
 import AppPostPagePlaceholder from './_page-placeholder/page-placeholder.vue';
 import AppPostPage from './_page/page.vue';
+
+const PostThemeKey = 'post';
 
 @Component({
 	name: 'RoutePost',
@@ -35,28 +37,20 @@ import AppPostPage from './_page/page.vue';
 		}
 
 		const postHash = FiresidePost.pullHashFromUrl(route.params.slug);
-		const payload = await Api.sendRequest('/web/posts/view/' + postHash);
-
-		return payload;
+		return Api.sendRequest('/web/posts/view/' + postHash);
 	},
 })
 export default class RoutePost extends BaseRouteComponent {
-	@ThemeMutation setPageTheme!: ThemeStore['setPageTheme'];
-
 	post: FiresidePost | null = null;
 
 	private permalinkWatchDeregister?: CommentThreadModalPermalinkDeregister;
 
 	get theme() {
-		if (this.post && this.post.game?.theme) {
-			return this.post.game.theme;
+		if (!this.post) {
+			return null;
 		}
 
-		if (this.post && this.post.user.theme) {
-			return this.post.user.theme;
-		}
-
-		return null;
+		return this.post.game?.theme ?? this.post.user.theme ?? null;
 	}
 
 	get routeTitle() {
@@ -87,6 +81,7 @@ export default class RoutePost extends BaseRouteComponent {
 	routeCreated() {
 		const hash = FiresidePost.pullHashFromUrl(this.$route.params.slug);
 		this.post = Registry.find<FiresidePost>('FiresidePost', i => i.hash === hash);
+		this.setPageTheme();
 	}
 
 	routeResolved($payload: any) {
@@ -97,7 +92,7 @@ export default class RoutePost extends BaseRouteComponent {
 			this.post = post;
 		}
 
-		this.setPageTheme(this.theme);
+		this.setPageTheme();
 
 		CommentThreadModal.showFromPermalink(this.$router, this.post, 'comments');
 		this.permalinkWatchDeregister = CommentThreadModal.watchForPermalink(
@@ -120,6 +115,11 @@ export default class RoutePost extends BaseRouteComponent {
 			this.permalinkWatchDeregister = undefined;
 		}
 
-		this.setPageTheme(null);
+		store.commit('theme/clearPageTheme', PostThemeKey);
+	}
+
+	private setPageTheme() {
+		const theme = this.post ? this.post.game?.theme ?? this.post.user.theme : null;
+		store.commit('theme/setPageTheme', { key: PostThemeKey, theme });
 	}
 }
