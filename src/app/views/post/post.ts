@@ -1,4 +1,5 @@
 import { Component } from 'vue-property-decorator';
+import { enforceLocation } from '../../../utils/router';
 import { Api } from '../../../_common/api/api.service';
 import {
 	CommentThreadModal,
@@ -37,7 +38,16 @@ const PostThemeKey = 'post';
 		}
 
 		const postHash = FiresidePost.pullHashFromUrl(route.params.slug);
-		return Api.sendRequest('/web/posts/view/' + postHash);
+		const payload = await Api.sendRequest('/web/posts/view/' + postHash);
+
+		if (payload?.post) {
+			const redirect = enforceLocation(route, { slug: payload.post.slug });
+			if (redirect) {
+				return redirect;
+			}
+		}
+
+		return payload;
 	},
 })
 export default class RoutePost extends BaseRouteComponent {
