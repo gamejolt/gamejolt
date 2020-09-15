@@ -24,6 +24,7 @@ import AppCommunityCardBase from './card-base';
 export default class AppCommunityCardBaseInline extends AppCommunityCardBase {
 	@Prop(propOptional(CommunityRouteStore, null)) routeStore!: CommunityRouteStore | null;
 	@Prop(propOptional(Boolean, false)) asHeader!: boolean;
+	@Prop(propOptional(Boolean, false)) hasUnread!: boolean;
 
 	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
 	@Action toggleLeftPane!: Store['toggleLeftPane'];

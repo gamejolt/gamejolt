@@ -47,6 +47,7 @@
 					:circle="Screen.isXs"
 					@click="onClickMenu"
 				>
+					<div v-if="hasUnread" class="-unread-blip" />
 					<template v-if="!Screen.isXs">
 						<translate v-if="routeStore && routeStore.channelPath">
 							Channels
