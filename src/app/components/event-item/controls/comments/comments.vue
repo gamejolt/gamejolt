@@ -1,5 +1,7 @@
+<script lang="ts" src="./comments"></script>
+
 <template>
-	<div v-if="shouldShowInlineComment" class="-add" v-app-auth-required>
+	<div v-if="shouldShowInlineComment" v-app-auth-required class="-add">
 		<app-event-item-controls-comments-add-placeholder
 			v-if="!clickedComment"
 			@click="onClickCommentAddPlaceholder"
@@ -17,7 +19,7 @@
 		<br />
 		<br />
 
-		<app-comment-widget :model="model" />
+		<app-comment-widget :model="model" display-mode="comments" />
 	</div>
 </template>
 
@@ -25,5 +27,3 @@
 .-add
 	margin-top: 20px
 </style>
-
-<script lang="ts" src="./comments"></script>
