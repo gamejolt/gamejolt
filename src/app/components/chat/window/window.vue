@@ -92,10 +92,8 @@
 			</div>
 
 			<!-- Room Users -->
-			<app-scroll-scroller
-				v-if="!room.isPmRoom && isShowingUsers"
-				class="fill-darkest chat-window-users"
-			>
+
+			<app-scroll-scroller v-if="!room.isPmRoom && isShowingUsers" class="chat-window-users">
 				<template v-if="Screen.isXs">
 					<br />
 					<div class="nav-controls">
