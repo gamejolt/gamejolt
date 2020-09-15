@@ -106,6 +106,7 @@
 	text-overflow()
 	font-weight: bolder
 	font-size: $font-size-h4
+	color: var(--dark-theme-fg)
 
 .-follow-button
 	margin-left: 16px
