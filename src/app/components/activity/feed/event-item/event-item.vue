@@ -1,3 +1,5 @@
+<script lang="ts" src="./event-item"></script>
+
 <template>
 	<div class="-container">
 		<app-activity-feed-event-item-blocked
@@ -14,7 +16,7 @@
 			@click.capture="onClickCapture"
 			@click="onClick"
 		>
-			<div class="-header" v-if="user">
+			<div v-if="user" class="-header">
 				<div class="-header-content">
 					<app-user-card-hover :user="user" :disabled="!feed.shouldShowUserCards">
 						<div class="-header-avatar">
@@ -52,7 +54,7 @@
 							</small>
 						</div>
 
-						<div class="-header-byline-game" v-if="game && !feed.hideGameInfo">
+						<div v-if="game && !feed.hideGameInfo" class="-header-byline-game">
 							<strong class="text-muted">
 								<router-link :to="gameUrl" class="link-unstyled">
 									{{ game.title }}
@@ -89,7 +91,7 @@
 				v-if="eventItem.type === EventItem.TYPE_COMMENT_VIDEO_ADD"
 				:item="item"
 				:video="video"
-				@expanded="onExpand"
+				@expanded="emitExpanded"
 				@content-bootstrapped="onContentBootstrapped"
 			/>
 			<template v-if="post">
@@ -98,7 +100,7 @@
 					:item="item"
 					:post="post"
 					@click.native.stop
-					@expanded="onExpand"
+					@expanded="emitExpanded"
 					@content-bootstrapped="onContentBootstrapped"
 				/>
 
@@ -107,7 +109,7 @@
 					:item="item"
 					:post="post"
 					@click.native.stop
-					@expanded="onExpand"
+					@expanded="emitExpanded"
 					@content-bootstrapped="onContentBootstrapped"
 				/>
 
@@ -115,15 +117,15 @@
 					v-if="post.hasMedia"
 					:item="item"
 					:post="post"
-					@expanded="onExpand"
+					@expanded="emitExpanded"
 					@content-bootstrapped="onContentBootstrapped"
 				/>
 
 				<app-sticker-target
+					ref="stickerTarget"
 					:stickers="post.stickers"
 					:show-stickers="stickersVisible"
 					:no-animate-in="!animateStickers"
-					ref="stickerTarget"
 					@hide-all="onAllStickersHidden"
 				>
 					<!--
@@ -136,18 +138,21 @@
 						:animate="false"
 						@require-change="canToggleLeadChanged"
 					>
-						<app-content-viewer class="fireside-post-lead" :source="post.lead_content" />
+						<app-content-viewer
+							class="fireside-post-lead"
+							:source="post.lead_content"
+						/>
 					</app-fade-collapse>
 				</app-sticker-target>
 
-				<a class="hidden-text-expander" v-if="canToggleLead" @click="toggleLead()"></a>
+				<a v-if="canToggleLead" class="hidden-text-expander" @click="toggleLead()" />
 
 				<app-event-item-controls-overlay>
 					<app-activity-feed-devlog-post-text
 						v-if="post.hasArticle"
 						:item="item"
 						:post="post"
-						@expanded="onExpand"
+						@expanded="emitExpanded"
 						@content-bootstrapped="onContentBootstrapped"
 					/>
 
@@ -194,5 +199,3 @@
 </template>
 
 <style lang="stylus" src="./event-item.styl" scoped></style>
-
-<script lang="ts" src="./event-item"></script>

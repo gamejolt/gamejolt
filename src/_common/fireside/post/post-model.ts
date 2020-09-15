@@ -54,7 +54,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	like_count!: number;
 	comment_count!: number;
 	user!: User;
-	game!: Game;
+	game?: Game;
 	as_game_owner!: boolean;
 	post_to_user_profile!: boolean;
 	slug!: string;
@@ -207,21 +207,9 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	}
 
 	get routeLocation(): RawLocation {
-		if (this.game) {
-			return {
-				name: 'discover.games.view.devlog.view',
-				params: {
-					slug: this.game.slug,
-					id: this.game.id + '',
-					postSlug: this.slug,
-				},
-			};
-		}
-
 		return {
-			name: 'profile.post.view',
+			name: 'post',
 			params: {
-				username: this.user.username,
 				slug: this.slug,
 			},
 		};
@@ -284,7 +272,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 	getPinContextFor(route: Route) {
 		if (this.isInGamePinContext(route)) {
-			return this.game;
+			return this.game!;
 		}
 
 		const fpc = this.getCommunityPinContext(route);
@@ -337,7 +325,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			return null;
 		}
 
-		for (let communityLink of this.communities) {
+		for (const communityLink of this.communities) {
 			const community = communityLink.community;
 			const channelTitle = communityLink.channel!.title;
 

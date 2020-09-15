@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { findRequiredVueParent } from '../../../../../utils/vue';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
@@ -52,10 +52,10 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppUserAvatar,
 		AppUserFollowWidget,
 		AppActivityFeedCommentVideo,
-		AppActivityFeedDevlogPostText,
 		AppActivityFeedDevlogPostMedia,
 		AppActivityFeedDevlogPostSketchfab,
 		AppActivityFeedDevlogPostVideo,
+		AppActivityFeedDevlogPostText,
 		AppEventItemControls,
 		AppEventItemControlsOverlay,
 		AppPollVoting,
@@ -99,6 +99,10 @@ export default class AppActivityFeedEventItem extends Vue {
 	$refs!: {
 		stickerTarget: AppStickerTargetTS;
 	};
+
+	@Emit('resize') emitResize(_height: number) {}
+	@Emit('clicked') emitClicked() {}
+	@Emit('expanded') emitExpanded() {}
 
 	get isNew() {
 		return this.feed.isItemUnread(this.item);
@@ -260,16 +264,13 @@ export default class AppActivityFeedEventItem extends Vue {
 	 * the DOM and we hopefully know the height and true content.
 	 */
 	onContentBootstrapped() {
-		this.$emit('resize', this.$el.offsetHeight);
+		this.emitResize(this.$el.offsetHeight);
+
 		this.resizeSensor =
 			this.resizeSensor ||
 			new ResizeSensor(this.$el, () => {
-				this.$emit('resize', this.$el.offsetHeight);
+				this.emitResize(this.$el.offsetHeight);
 			});
-	}
-
-	onExpand() {
-		this.$emit('expanded');
 	}
 
 	/**
@@ -277,7 +278,7 @@ export default class AppActivityFeedEventItem extends Vue {
 	 * capture phase.
 	 */
 	onClickCapture() {
-		this.$emit('clicked');
+		this.emitClicked();
 	}
 
 	/**
@@ -336,7 +337,7 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	toggleLead() {
 		this.feed.toggleItemLeadOpen(this.item);
-		this.$emit('expanded');
+		this.emitExpanded();
 		Analytics.trackEvent('activity-feed', 'toggle-lead');
 	}
 

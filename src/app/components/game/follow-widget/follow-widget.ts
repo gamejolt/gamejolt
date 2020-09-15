@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { propOptional } from '../../../../utils/vue';
 import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { number } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
@@ -46,6 +47,8 @@ export default class AppGameFollowWidget extends Vue {
 	@Prop(Boolean)
 	showUserFollow?: boolean;
 
+	@Prop(propOptional(Boolean, false)) hideCount!: boolean;
+
 	@State
 	app!: Store['app'];
 
@@ -71,7 +74,9 @@ export default class AppGameFollowWidget extends Vue {
 	}
 
 	get badge() {
-		return !this.circle && this.game.follower_count ? number(this.game.follower_count) : '';
+		return !this.circle && !this.hideCount && this.game.follower_count
+			? number(this.game.follower_count)
+			: '';
 	}
 
 	get tooltip() {

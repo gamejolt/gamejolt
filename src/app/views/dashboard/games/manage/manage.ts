@@ -5,7 +5,6 @@ import { Game } from '../../../../../_common/game/game.model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { WithRouteStore } from '../../../../../_common/route/route-store';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
-import { ThemeMutation, ThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Translate } from '../../../../../_common/translate/translate.service';
@@ -14,6 +13,8 @@ import { IntentService } from '../../../../components/intent/intent.service';
 import AppPageHeader from '../../../../components/page-header/page-header.vue';
 import { store } from '../../../../store';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './manage.store';
+
+export const ManageGameThemeKey = 'manage-game';
 
 @Component({
 	name: 'RouteDashGamesManage',
@@ -47,7 +48,6 @@ import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './mana
 	},
 	resolveStore({ payload }) {
 		routeStore.commit('populate', payload);
-		store.commit('theme/setPageTheme', routeStore.state.game.theme || null);
 	},
 })
 export default class RouteDashGamesManage extends BaseRouteComponent {
@@ -63,16 +63,21 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 	@RouteStoreModule.Mutation
 	populate!: RouteStore['populate'];
 
-	@ThemeMutation
-	setPageTheme!: ThemeStore['setPageTheme'];
-
 	readonly Game = Game;
 
 	routeResolved() {
-		this.setPageTheme(this.game.theme || null);
+		this.setPageTheme();
 	}
 
 	routeDestroyed() {
-		store.commit('theme/setPageTheme', null);
+		store.commit('theme/clearPageTheme', ManageGameThemeKey);
+	}
+
+	private setPageTheme() {
+		const theme = this.game?.theme ?? null;
+		store.commit('theme/setPageTheme', {
+			key: ManageGameThemeKey,
+			theme,
+		});
 	}
 }
