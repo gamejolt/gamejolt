@@ -1,3 +1,5 @@
+<script lang="ts" src="./text"></script>
+
 <template>
 	<div
 		class="devlog-post-text"
@@ -8,18 +10,18 @@
 		<template v-if="isOpen">
 			<div class="page-cut" />
 
-			<app-content-viewer
-				:source="post.article_content"
-				/>
+			<app-loading
+				v-if="!isLoaded"
+				class="sans-margin-bottom"
+				centered
+				hide-label
+				stationary
+			/>
+			<app-content-viewer v-else :source="post.article_content" />
 		</template>
 
 		<div class="page-cut">
-			<app-button
-				:trans="!isToggling"
-				:solid="isToggling"
-				:primary="isToggling"
-				@click.stop="toggleFull()"
-			>
+			<app-button trans @click.stop="toggleFull()">
 				<translate v-if="!isOpen">read article</translate>
 				<translate v-else>less</translate>
 			</app-button>
@@ -28,8 +30,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '../../variables'
-@require '~styles-lib/mixins'
+@import '../../variables'
+@import '~styles-lib/mixins'
 
 .page-cut
 	@media $media-sm-up
@@ -38,12 +40,12 @@
 
 .devlog-post-text
 	// Hide images and widgets until we are hydrated.
-	>>> img, >>> iframe
+	>>> img
+	>>> iframe
 		visibility: hidden
 
 	&.-hydrated
-		>>> img, >>> iframe
+		>>> img
+		>>> iframe
 			visibility: visible
 </style>
-
-<script lang="ts" src="./text"></script>

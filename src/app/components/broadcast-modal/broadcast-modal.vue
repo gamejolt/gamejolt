@@ -93,7 +93,7 @@
 						<app-content-viewer :source="post.lead_content" />
 					</app-sticker-target>
 
-					<div v-if="post.hasArticle">
+					<div v-if="post.has_article">
 						<div class="page-cut" />
 
 						<app-content-viewer :source="post.article_content" />

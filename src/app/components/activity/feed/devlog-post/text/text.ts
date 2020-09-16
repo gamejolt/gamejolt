@@ -1,9 +1,13 @@
 import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
-import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
+import {
+	FiresidePost,
+	loadArticleIntoPost,
+} from '../../../../../../_common/fireside/post/post-model';
+import AppLoading from '../../../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../../_common/scroll/scroll.service';
 import { ActivityFeedItem } from '../../item-service';
@@ -13,21 +17,21 @@ import { ActivityFeedView } from '../../view';
 	components: {
 		AppFadeCollapse,
 		AppContentViewer,
+		AppLoading,
 	},
 })
 export default class AppActivityFeedDevlogPostText extends Vue {
-	@Inject()
-	feed!: ActivityFeedView;
+	@Inject() feed!: ActivityFeedView;
 
-	@Prop(ActivityFeedItem)
-	item!: ActivityFeedItem;
+	@Prop(ActivityFeedItem) item!: ActivityFeedItem;
+	@Prop(FiresidePost) post!: FiresidePost;
 
-	@Prop(FiresidePost)
-	post!: FiresidePost;
-
-	isToggling = false;
+	isLoaded = !!this.post.article_content;
 
 	$el!: HTMLDivElement;
+
+	@Emit('content-bootstrapped') emitContentBootstrapped() {}
+	@Emit('expanded') emitExpanded() {}
 
 	get isHydrated() {
 		return this.feed.isItemHydrated(this.item);
@@ -39,16 +43,11 @@ export default class AppActivityFeedDevlogPostText extends Vue {
 
 	async mounted() {
 		await this.$nextTick();
-		this.$emit('content-bootstrapped');
+		this.emitContentBootstrapped();
 	}
 
-	async toggleFull() {
-		if (this.isToggling) {
-			return;
-		}
-
-		this.isToggling = true;
-		this.$emit('expanded');
+	toggleFull() {
+		this.emitExpanded();
 
 		if (!this.isOpen) {
 			Analytics.trackEvent('activity-feed', 'article-open');
@@ -59,9 +58,13 @@ export default class AppActivityFeedDevlogPostText extends Vue {
 		}
 	}
 
-	expand() {
+	async expand() {
 		this.feed.setItemOpen(this.item, true);
-		this.isToggling = false;
+
+		if (!this.isLoaded) {
+			await loadArticleIntoPost(this.post);
+			this.isLoaded = true;
+		}
 	}
 
 	collapse() {
@@ -76,9 +79,5 @@ export default class AppActivityFeedDevlogPostText extends Vue {
 		}
 
 		this.feed.setItemOpen(this.item, false);
-
-		setTimeout(() => {
-			this.isToggling = false;
-		}, 1000);
 	}
 }
