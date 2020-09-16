@@ -122,7 +122,7 @@ export class ChatRoomChannel extends Channel {
 
 	private onUserJoin(presenceId: string, currentPresence: RoomPresence | undefined) {
 		// If this is the first user presence from a device.
-		if (!currentPresence) {
+		if (!currentPresence && this.client.roomMembers[this.roomId]) {
 			const userId = +presenceId;
 			this.client.roomMembers[this.roomId].online(userId);
 		}
@@ -130,7 +130,11 @@ export class ChatRoomChannel extends Channel {
 
 	private onUserLeave(presenceId: string, currentPresence: RoomPresence | undefined) {
 		// If the user has left all devices.
-		if (currentPresence && currentPresence.metas.length === 0) {
+		if (
+			currentPresence &&
+			currentPresence.metas.length === 0 &&
+			this.client.roomMembers[this.roomId]
+		) {
 			const userId = +presenceId;
 			this.client.roomMembers[this.roomId].offline(userId);
 		}
