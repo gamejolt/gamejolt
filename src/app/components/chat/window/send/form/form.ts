@@ -96,7 +96,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	}
 
 	get typingDisplayNames() {
-		const usersOnline = this.chat.usersOnline[this.room.id];
+		const usersOnline = this.chat.roomMembers[this.room.id];
 		if (!usersOnline || usersOnline.collection.length === 0) {
 			return [];
 		}

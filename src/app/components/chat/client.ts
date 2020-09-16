@@ -87,6 +87,7 @@ export class ChatClient {
 	roomChannels: { [k: string]: ChatRoomChannel } = {};
 	messages: { [k: string]: ChatMessage[] } = {};
 	usersOnline: { [k: string]: ChatUserCollection } = {};
+	roomMembers: { [k: string]: ChatUserCollection } = {};
 	notifications: { [k: string]: number } = {};
 	isFocused = true;
 
@@ -151,6 +152,7 @@ function reset(chat: ChatClient) {
 	// The following are indexed by roomId
 	chat.messages = {};
 	chat.usersOnline = {};
+	chat.roomMembers = {};
 	chat.notifications = {};
 	chat.isFocused = true;
 
@@ -524,6 +526,11 @@ function setupRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
 		}
 		// Set the room info
 		Vue.set(chat.messages, '' + room.id, []);
+		Vue.set(
+			chat.roomMembers,
+			'' + room.id,
+			new ChatUserCollection(ChatUserCollection.TYPE_ROOM, room.members || [])
+		);
 
 		setChatRoom(chat, room);
 		processNewChatOutput(chat, room.id, messages, true);

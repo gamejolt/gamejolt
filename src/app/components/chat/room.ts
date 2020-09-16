@@ -16,6 +16,10 @@ export class ChatRoom {
 
 	constructor(data: Partial<ChatRoom> = {}) {
 		Object.assign(this, data);
+
+		if (data.members) {
+			this.members = data.members.map(member => new ChatUser(member));
+		}
 	}
 
 	get isPmRoom() {

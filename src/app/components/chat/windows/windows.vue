@@ -7,7 +7,6 @@
 	<app-chat-window
 		v-if="chat.room && visibleLeftPane === 'chat'"
 		:room="chat.room"
-		:users="chat.usersOnline[chat.room.id]"
 		:messages="chat.messages[chat.room.id]"
 		:queued-messages="getRoomQueuedMessages(chat.room.id)"
 	/>

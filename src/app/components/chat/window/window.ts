@@ -32,7 +32,6 @@ import AppChatWindowSend from './send/send.vue';
 export default class AppChatWindow extends Vue {
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 	@Prop(propRequired(Array)) messages!: ChatMessage[];
-	@Prop(propOptional(ChatUserCollection)) users?: ChatUserCollection;
 	@Prop(propRequired(Array)) queuedMessages!: ChatMessage[];
 
 	@InjectReactive(ChatKey) chat!: ChatClient;
@@ -44,6 +43,10 @@ export default class AppChatWindow extends Vue {
 
 	readonly ChatRoom = ChatRoom;
 	readonly Screen = Screen;
+
+	get users() {
+		return this.chat.roomMembers[this.room.id];
+	}
 
 	get onlineUserCount() {
 		return number(this.users?.onlineCount || 0);

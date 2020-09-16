@@ -6,7 +6,6 @@ import { ChatClient, isInChatRoom, processNewChatOutput, setChatRoom } from './c
 import { ChatMessage } from './message';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
-import { ChatUserCollection } from './user-collection';
 
 interface RoomPresence {
 	metas: { phx_ref: string; typing: boolean }[];
@@ -40,7 +39,7 @@ export class ChatRoomChannel extends Channel {
 				setChatRoom(this.client, undefined);
 
 				// Reset the room we were in
-				Vue.delete(this.client.usersOnline, roomId);
+				Vue.delete(this.client.roomMembers, roomId);
 				Vue.delete(this.client.messages, roomId);
 			}
 		});
@@ -49,6 +48,8 @@ export class ChatRoomChannel extends Channel {
 	private setupPresence() {
 		const presence = new Presence(this);
 
+		presence.onJoin(this.onUserJoin.bind(this));
+		presence.onLeave(this.onUserLeave.bind(this));
 		presence.onSync(() => this.syncPresentUsers(presence, this.room));
 	}
 
@@ -98,7 +99,7 @@ export class ChatRoomChannel extends Channel {
 	private onUserUpdated(data: Partial<ChatUser>) {
 		const updatedUser = new ChatUser(data);
 		if (this.room && isInChatRoom(this.client, this.roomId) && this.room.isGroupRoom) {
-			this.client.usersOnline[this.roomId].update(updatedUser);
+			this.client.roomMembers[this.roomId].update(updatedUser);
 		}
 	}
 
@@ -119,20 +120,28 @@ export class ChatRoomChannel extends Channel {
 		}
 	}
 
+	private onUserJoin(presenceId: string, currentPresence: RoomPresence | undefined) {
+		// If this is the first user presence from a device.
+		if (!currentPresence) {
+			const userId = +presenceId;
+			this.client.friendsList.online(userId);
+		}
+	}
+
+	private onUserLeave(presenceId: string, currentPresence: RoomPresence | undefined) {
+		// If the user has left all devices.
+		if (currentPresence && currentPresence.metas.length === 0) {
+			const userId = +presenceId;
+			this.client.friendsList.offline(userId);
+		}
+	}
+
 	private syncPresentUsers(presence: Presence, room: ChatRoom) {
-		const presentUsers: ChatUser[] = [];
-
-		presence.list((_id: string, roomPresence: RoomPresence) => {
+		presence.list((id: string, roomPresence: RoomPresence) => {
 			const user = new ChatUser(roomPresence.user);
-			user.isOnline = true;
 			user.typing = roomPresence.metas.some(meta => meta.typing);
-			presentUsers.push(user);
+			this.client.roomMembers[room.id].update(user);
+			this.client.roomMembers[room.id].online(+id);
 		});
-
-		Vue.set(
-			this.client.usersOnline,
-			'' + room.id,
-			new ChatUserCollection(ChatUserCollection.TYPE_ROOM, presentUsers)
-		);
 	}
 }
