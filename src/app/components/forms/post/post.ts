@@ -434,7 +434,8 @@ export default class FormPost extends BaseForm<FormPostModel>
 
 	onLoad(payload: any) {
 		// Pull any post information that may not already be loaded in.
-		this.formModel.assign(payload.post);
+		this.setField('article_content', payload.post.article_content);
+
 		this.keyGroups = KeyGroup.populate(payload.keyGroups);
 		this.wasPublished = payload.wasPublished;
 		this.maxFilesize = payload.maxFilesize;
