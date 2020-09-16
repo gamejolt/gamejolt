@@ -4,6 +4,7 @@ import { propOptional, propRequired } from '../../../../../utils/vue';
 import { number } from '../../../../../_common/filters/number';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ChatClient, ChatKey, enterChatRoom } from '../../client';
 import { ChatRoom } from '../../room';
 import { ChatUser } from '../../user';
@@ -13,6 +14,9 @@ import AppChatUserOnlineStatus from '../../user-online-status/user-online-status
 	components: {
 		AppScrollInview,
 		AppChatUserOnlineStatus,
+	},
+	directives: {
+		AppTooltip,
 	},
 })
 export default class AppChatUserListItem extends Vue {

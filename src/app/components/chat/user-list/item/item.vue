@@ -39,6 +39,11 @@
 			<div class="shell-nav-label">
 				{{ user.display_name }}
 				<span class="tiny">@{{ user.username }}</span>
+				<template v-if="room">
+					<span v-if="room.owner_id === user.id" v-app-tooltip="'Room Owner'">
+						👑
+					</span>
+				</template>
 			</div>
 		</router-link>
 	</app-scroll-inview>
