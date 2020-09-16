@@ -124,7 +124,7 @@ export class ChatRoomChannel extends Channel {
 		// If this is the first user presence from a device.
 		if (!currentPresence) {
 			const userId = +presenceId;
-			this.client.friendsList.online(userId);
+			this.client.roomMembers[this.roomId].online(userId);
 		}
 	}
 
@@ -132,16 +132,17 @@ export class ChatRoomChannel extends Channel {
 		// If the user has left all devices.
 		if (currentPresence && currentPresence.metas.length === 0) {
 			const userId = +presenceId;
-			this.client.friendsList.offline(userId);
+			this.client.roomMembers[this.roomId].offline(userId);
 		}
 	}
 
 	private syncPresentUsers(presence: Presence, room: ChatRoom) {
 		presence.list((id: string, roomPresence: RoomPresence) => {
-			const user = new ChatUser(roomPresence.user);
+			const roomMembers = this.client.roomMembers[room.id];
+			const user = roomMembers.get(+id) || new ChatUser(roomPresence.user);
 			user.typing = roomPresence.metas.some(meta => meta.typing);
-			this.client.roomMembers[room.id].update(user);
-			this.client.roomMembers[room.id].online(+id);
+			roomMembers.update(user);
+			roomMembers.online(+id);
 		});
 	}
 }
