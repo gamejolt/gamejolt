@@ -3,7 +3,7 @@
 <template>
 	<div class="comment-widget">
 		<div v-if="displayMode">
-			<h2 v-if="displayMode" class="sans-margin-top">
+			<h4 v-if="displayMode" class="sans-margin-top">
 				<translate
 					v-if="displayMode === 'comments'"
 					:translate-n="totalCommentsCount"
@@ -20,7 +20,7 @@
 				>
 					1 shout
 				</translate>
-			</h2>
+			</h4>
 		</div>
 
 		<app-loading v-if="!hasBootstrapped && !hasError" centered />
