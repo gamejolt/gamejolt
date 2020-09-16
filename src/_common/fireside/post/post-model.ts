@@ -64,6 +64,11 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	expand_count?: number;
 	is_pinned!: boolean;
 
+	/**
+	 * If the post has an article saved, whether or not it's loaded in yet.
+	 */
+	has_article!: boolean;
+
 	lead_content!: string;
 	leadStr!: string;
 	article_content!: string;
@@ -178,7 +183,11 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return this.videos.length > 0;
 	}
 
-	get hasArticle() {
+	/**
+	 * This differs from has_article in that it is purely a frontend check, so
+	 * it updates in realtime.
+	 */
+	get hasArticleContent() {
 		const cache = ContentSetCacheService.getCache(this, 'fireside-post-article');
 		return cache.hasContent;
 	}
@@ -511,3 +520,12 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 }
 
 Model.create(FiresidePost);
+
+/**
+ * Will load the article from the API and store it into the post model.
+ */
+export async function loadArticleIntoPost(post: FiresidePost) {
+	const payload = await Api.sendRequest(`/web/posts/article/${post.id}`);
+	post.article_content = payload.article;
+	return post;
+}
