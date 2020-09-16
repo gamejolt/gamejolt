@@ -1,5 +1,28 @@
+<script lang="ts" src="./widget"></script>
+
 <template>
 	<div class="comment-widget">
+		<div v-if="displayMode">
+			<h4 v-if="displayMode" class="sans-margin-top">
+				<translate
+					v-if="displayMode === 'comments'"
+					:translate-n="totalCommentsCount"
+					:translate-params="{ count: number(totalCommentsCount) }"
+					translate-plural="%{ count } comments"
+				>
+					1 comment
+				</translate>
+				<translate
+					v-else
+					:translate-n="totalCommentsCount"
+					:translate-params="{ count: number(totalCommentsCount) }"
+					translate-plural="%{ count } shouts"
+				>
+					1 shout
+				</translate>
+			</h4>
+		</div>
+
 		<app-loading v-if="!hasBootstrapped && !hasError" centered />
 		<div v-else-if="hasError" class="alert alert-notice">
 			<translate>Couldn't fetch comments.</translate>
@@ -7,7 +30,11 @@
 		<div v-else-if="hasBootstrapped">
 			<template v-if="shouldShowAdd">
 				<app-message-thread-add v-if="user" hide-message-split>
-					<form-comment :comment-model="model" :autofocus="autofocus" @submit="_onCommentAdd" />
+					<form-comment
+						:comment-model="model"
+						:autofocus="autofocus"
+						@submit="_onCommentAdd"
+					/>
 				</app-message-thread-add>
 				<div v-else class="alert">
 					<p>
@@ -22,22 +49,22 @@
 				<app-nav-tab-list>
 					<ul>
 						<li>
-							<a @click="sortHot()" :class="{ active: isSortHot }">
+							<a :class="{ active: isSortHot }" @click="sortHot()">
 								<translate>Hot</translate>
 							</a>
 						</li>
 						<li v-if="showTopSorting">
-							<a @click="sortTop()" :class="{ active: isSortTop }">
+							<a :class="{ active: isSortTop }" @click="sortTop()">
 								<translate>Top</translate>
 							</a>
 						</li>
 						<li>
-							<a @click="sortNew()" :class="{ active: isSortNew }">
+							<a :class="{ active: isSortNew }" @click="sortNew()">
 								<translate>New</translate>
 							</a>
 						</li>
 						<li>
-							<a @click="sortYou()" :class="{ active: isSortYou }">
+							<a :class="{ active: isSortYou }" @click="sortYou()">
 								<translate>You</translate>
 							</a>
 						</li>
@@ -57,7 +84,7 @@
 			</app-message-thread>
 
 			<div v-if="shouldShowLoadMore" class="page-cut">
-				<app-button trans @click="loadMore" v-app-track-event="`comment-widget:more`">
+				<app-button v-app-track-event="`comment-widget:more`" trans @click="loadMore">
 					<translate>Load More</translate>
 				</app-button>
 			</div>
@@ -67,7 +94,8 @@
 				<app-illustration src="~img/ill/no-comments.svg">
 					<p>
 						<translate v-if="shouldShowAdd">
-							Everyone else seems to be in sleep mode, why don't you start the conversation?
+							Everyone else seems to be in sleep mode, why don't you start the
+							conversation?
 						</translate>
 						<translate v-else>
 							Everyone seems to be in sleep mode.
@@ -78,5 +106,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./widget"></script>

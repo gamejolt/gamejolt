@@ -1,14 +1,15 @@
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Inject, Prop, Watch } from 'vue-property-decorator';
 import {
 	Comment,
 	getCommentBlockReason,
 	getCommentModelResourceName,
 } from '../../../../_common/comment/comment-model';
 import {
-	CommentState,
-	CommentStore,
+	CommentStoreManager,
+	CommentStoreManagerKey,
 	CommentStoreModel,
+	getCommentStore,
 } from '../../../../_common/comment/comment-store';
 import { DisplayMode } from '../../../../_common/comment/modal/modal.service';
 import { CommentThreadModal } from '../../../../_common/comment/thread/modal.service';
@@ -31,6 +32,8 @@ import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified
 	},
 })
 export default class AppCommentOverview extends Vue {
+	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
+
 	@Prop(Array)
 	comments!: Comment[];
 
@@ -40,15 +43,16 @@ export default class AppCommentOverview extends Vue {
 	@Prop(String)
 	displayMode!: DisplayMode;
 
-	@CommentState
-	getCommentStore!: CommentStore['getCommentStore'];
-
 	get displayComments() {
 		return this.comments.filter(c => getCommentBlockReason(c) === false);
 	}
 
 	get hasComments() {
-		const store = this.getCommentStore(getCommentModelResourceName(this.model), this.model.id);
+		const store = getCommentStore(
+			this.commentManager,
+			getCommentModelResourceName(this.model),
+			this.model.id
+		);
 		if (store instanceof CommentStoreModel) {
 			return store.totalCount > 0;
 		}
@@ -57,7 +61,11 @@ export default class AppCommentOverview extends Vue {
 	}
 
 	get commentStoreDirtyState() {
-		const store = this.getCommentStore(getCommentModelResourceName(this.model), this.model.id);
+		const store = getCommentStore(
+			this.commentManager,
+			getCommentModelResourceName(this.model),
+			this.model.id
+		);
 		if (store instanceof CommentStoreModel) {
 			return store.overviewNeedsRefresh;
 		}
@@ -67,7 +75,8 @@ export default class AppCommentOverview extends Vue {
 	@Watch('commentStoreDirtyState')
 	reloadComments() {
 		if (this.commentStoreDirtyState) {
-			const store = this.getCommentStore(
+			const store = getCommentStore(
+				this.commentManager,
 				getCommentModelResourceName(this.model),
 				this.model.id
 			);

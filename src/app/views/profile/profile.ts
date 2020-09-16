@@ -11,7 +11,6 @@ import { ReportModal } from '../../../_common/report/modal/modal.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { WithRouteStore } from '../../../_common/route/route-store';
 import { Screen } from '../../../_common/screen/screen-service';
-import { ThemeMutation, ThemeStore } from '../../../_common/theme/theme.store';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { Translate } from '../../../_common/translate/translate.service';
@@ -27,6 +26,8 @@ import AppUserBlockOverlay from '../../components/user/block-overlay/block-overl
 import AppUserDogtag from '../../components/user/dogtag/dogtag.vue';
 import { Store, store } from '../../store';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './profile.store';
+
+const ProfileThemeKey = 'profile';
 
 @Component({
 	name: 'RouteProfile',
@@ -81,11 +82,6 @@ import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './prof
 	},
 	resolveStore({ payload }) {
 		routeStore.commit('profilePayload', payload);
-
-		const user = routeStore.state.user;
-		if (user) {
-			store.commit('theme/setPageTheme', user.theme || null);
-		}
 	},
 })
 export default class RouteProfile extends BaseRouteComponent {
@@ -93,9 +89,6 @@ export default class RouteProfile extends BaseRouteComponent {
 
 	@State
 	app!: Store['app'];
-
-	@ThemeMutation
-	setPageTheme!: ThemeStore['setPageTheme'];
 
 	@RouteStoreModule.State
 	user!: RouteStore['user'];
@@ -122,17 +115,13 @@ export default class RouteProfile extends BaseRouteComponent {
 	readonly Environment = Environment;
 	readonly Screen = Screen;
 
-	get shouldShowFullCover() {
-		return Screen.isXs || this.$route.name !== 'profile.post.view';
-	}
-
 	/**
 	 * The cover height changes when we switch to not showing the full cover, so
 	 * let's make sure we reset the autoscroll anchor so that it scrolls to the
 	 * top again.
 	 */
 	get autoscrollAnchorKey() {
-		return this.user!.id + (this.shouldShowFullCover ? '-full' : '-collapsed');
+		return this.user!.id;
 	}
 
 	get commentsCount() {
@@ -173,10 +162,23 @@ export default class RouteProfile extends BaseRouteComponent {
 	routeCreated() {
 		// This isn't needed by SSR or anything, so it's fine to call it here.
 		this.bootstrapUser(this.$route.params.username);
+		this.setPageTheme();
+	}
+
+	routeResolved() {
+		this.setPageTheme();
 	}
 
 	routeDestroyed() {
-		this.setPageTheme(null);
+		store.commit('theme/clearPageTheme', ProfileThemeKey);
+	}
+
+	private setPageTheme() {
+		const theme = this.user?.theme ?? null;
+		store.commit('theme/setPageTheme', {
+			key: ProfileThemeKey,
+			theme,
+		});
 	}
 
 	showComments() {

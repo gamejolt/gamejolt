@@ -27,13 +27,18 @@
 					</div>
 				</template>
 			</app-editable-overlay>
-			<div v-else-if="!!coverMediaItem && isFrontpage" class="-cover-img">
+			<div v-else-if="!!coverMediaItem && isShowingHeader" class="-cover-img">
 				<app-media-item-cover :media-item="coverMediaItem" />
 			</div>
 
 			<!-- Inline Community Card - used as header/navigation -->
 			<template v-if="!routeStore.isShowingSidebar">
-				<app-communities-view-card overflow inline :as-header="!isShowingHeader" />
+				<app-communities-view-card
+					overflow
+					inline
+					:as-header="!isShowingHeader"
+					:has-unread="hasUnreadPosts"
+				/>
 			</template>
 
 			<router-view />

@@ -11,6 +11,7 @@ import { routeLanding } from './landing/landing.route';
 import { routeLegal } from './legal/legal.route';
 import { routeLibrary } from './library/library.route';
 import { routeNotifications } from './notifications/notifications.route';
+import { routePost } from './post/post.route';
 import { routeProfile } from './profile/profile.route';
 import { routeSearch } from './search/search.route';
 import { routeSettings } from './settings/settings.route';
@@ -24,6 +25,7 @@ const routes = [
 	routeCommunitiesView,
 	routeLanding,
 	routeSearch,
+	routePost,
 	routeProfile,
 	routeLibrary,
 	routeDash,

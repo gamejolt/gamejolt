@@ -9,7 +9,7 @@
 			:background-item="frontpageChannel.background"
 			:is-active="activeChannel === frontpageChannel"
 			:is-unread="isChannelUnread(frontpageChannel)"
-			@change-channel="onChangeChannel"
+			@click.native="toggleLeftPane()"
 		/>
 
 		<app-community-channel-card
@@ -20,7 +20,7 @@
 			:background-item="allChannel.background"
 			:is-active="activeChannel === allChannel"
 			:is-unread="isChannelUnread(allChannel)"
-			@change-channel="onChangeChannel"
+			@click.native="toggleLeftPane()"
 		/>
 
 		<h5 class="-heading">
@@ -38,7 +38,7 @@
 				:is-active="activeChannel === channel"
 				:is-unread="isChannelUnread(channel)"
 				:is-locked="isChannelLocked(channel)"
-				@change-channel="onChangeChannel"
+				@click.native="toggleLeftPane()"
 			/>
 		</template>
 	</div>

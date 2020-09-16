@@ -53,6 +53,10 @@
 								:to="room.user.url"
 							>
 								<img :src="room.user.img_avatar" alt="" />
+								<app-chat-user-online-status
+									:is-online="room.user.isOnline"
+									:size="16"
+								/>
 							</router-link>
 
 							<h3 v-if="!room.isPmRoom" class="anim-fade-in-right no-animate-xs">

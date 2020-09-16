@@ -1,3 +1,5 @@
+import { REGEX_YOUTUBE } from '../../../../utils/regex';
+import { getYoutubeVideoId } from '../../../../utils/video';
 import { ContextCapabilities } from '../../content-context';
 import { ContentHydrator } from '../../content-hydrator';
 import { EmbedType } from '../content-embed.service';
@@ -18,35 +20,23 @@ export class YouTubeVideoEmbed extends EmbedSource {
 	}
 
 	// Support:
-	// youtube.com/watch -> v=id
-	// m.youtube.com/watch -> v=id
+	// youtube.com/watch?v=id
+	// m.youtube.com/watch?v=id
+	// youtu.be/id
 
 	async getLinkSource(
 		capabilities: ContextCapabilities,
 		_hydrator: ContentHydrator,
 		link: string
 	) {
-		if (!capabilities.embedVideo) {
+		if (!capabilities.embedVideo || !this.isValidLink(link)) {
 			return false;
 		}
 
-		const url = this.isValidLink(link);
-		if (url !== false && /(.+\.)?youtube\.com/i.test(url.hostname)) {
-			const videoId = url.searchParams.get('v');
-			if (videoId !== null && videoId.length === 11) {
-				return videoId;
-			}
-		}
-
-		return false;
+		return getYoutubeVideoId(link) || false;
 	}
 
 	isValidLink(link: string) {
-		try {
-			return new URL(link);
-		} catch (error) {
-			// Swallow error. new Url throws on invalid URLs, which can very well happen.
-			return false;
-		}
+		return REGEX_YOUTUBE.test(link);
 	}
 }

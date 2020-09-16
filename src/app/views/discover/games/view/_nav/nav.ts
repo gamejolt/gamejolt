@@ -1,8 +1,12 @@
 import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
-import { CommentState, CommentStore } from '../../../../../../_common/comment/comment-store';
+import {
+	CommentStoreManager,
+	CommentStoreManagerKey,
+	getCommentStore,
+} from '../../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../../_common/comment/modal/modal.service';
 import { Environment } from '../../../../../../_common/environment/environment.service';
 import { number } from '../../../../../../_common/filters/number';
@@ -25,6 +29,8 @@ import { RouteStore, RouteStoreModule } from '../view.store';
 	},
 })
 export default class AppDiscoverGamesViewNav extends Vue {
+	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
+
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
@@ -40,9 +46,6 @@ export default class AppDiscoverGamesViewNav extends Vue {
 	@State
 	app!: Store['app'];
 
-	@CommentState
-	getCommentStore!: CommentStore['getCommentStore'];
-
 	readonly Screen = Screen;
 
 	get hasAnyPerms() {
@@ -55,7 +58,7 @@ export default class AppDiscoverGamesViewNav extends Vue {
 
 	get commentsCount() {
 		if (this.game) {
-			const store = this.getCommentStore('Game', this.game.id);
+			const store = getCommentStore(this.commentManager, 'Game', this.game.id);
 			return store ? store.totalCount : 0;
 		}
 		return 0;

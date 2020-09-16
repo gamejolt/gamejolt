@@ -2,7 +2,6 @@
 
 <template>
 	<app-popper
-		class="-community"
 		popover-class="fill-darkest"
 		trigger="right-click"
 		placement="right"
@@ -13,8 +12,9 @@
 		@hide="popperVisible = false"
 	>
 		<template #default>
-			<div class="-community" @click.capture="onCommunityClick">
+			<div @click.capture="onCommunityClick">
 				<app-shell-cbar-item
+					class="-community"
 					:is-active="isActive"
 					:is-unread="isUnread"
 					:highlight="highlight"
@@ -37,6 +37,8 @@
 						</app-media-item-backdrop>
 					</router-link>
 				</app-shell-cbar-item>
+
+				<hr v-if="!community.is_member" class="-hr" />
 			</div>
 		</template>
 
@@ -68,6 +70,7 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 @import '~styles-lib/mixins'
+@import '../common'
 
 .-community
 	pressy()
