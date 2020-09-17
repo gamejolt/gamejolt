@@ -38,7 +38,7 @@ export default class AppChatRoomListItem extends Vue {
 
 	async leaveRoom() {
 		const result = await ModalConfirm.show(
-			this.$gettext(`Are you sure you want to leave this group?`),
+			this.$gettext(`Are you sure you want to leave ${this.room.getGroupTitle(this.chat)}?`),
 			undefined,
 			'yes'
 		);
