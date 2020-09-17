@@ -1,5 +1,9 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+
+$page-cut-content
+	position: relative
+	z-index: 2
 
 .page-cut
 	--bg-save: var(--theme-bg-actual)
@@ -27,11 +31,16 @@
 			top: 0
 
 	.button
-		position: relative
-		z-index: 2
+		@extend $page-cut-content
 
 		&.-outline
 			background-color: var(--bg-save)
+
+.page-cut-content
+	@extend $page-cut-content
+	display: inline-block
+	padding: 0 8px
+	background-color: var(--bg-save)
 
 .page-cut-no-margin
 	margin-bottom: 0

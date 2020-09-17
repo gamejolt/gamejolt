@@ -26,6 +26,7 @@ export default class AppActivityFeedDevlogPostText extends Vue {
 	@Prop(ActivityFeedItem) item!: ActivityFeedItem;
 	@Prop(FiresidePost) post!: FiresidePost;
 
+	isToggling = false;
 	isLoaded = !!this.post.article_content;
 
 	$el!: HTMLDivElement;
@@ -37,6 +38,10 @@ export default class AppActivityFeedDevlogPostText extends Vue {
 		return this.feed.isItemHydrated(this.item);
 	}
 
+	get isLoading() {
+		return this.isToggling && !this.isLoaded;
+	}
+
 	get isOpen() {
 		return this.feed.isItemOpen(this.item);
 	}
@@ -46,28 +51,35 @@ export default class AppActivityFeedDevlogPostText extends Vue {
 		this.emitContentBootstrapped();
 	}
 
-	toggleFull() {
+	async toggleFull() {
+		if (this.isToggling) {
+			return;
+		}
+
+		this.isToggling = true;
 		this.emitExpanded();
 
 		if (!this.isOpen) {
 			Analytics.trackEvent('activity-feed', 'article-open');
-			this.expand();
+			await this.expand();
 		} else {
-			this.collapse();
 			Analytics.trackEvent('activity-feed', 'article-close');
+			await this.collapse();
 		}
+
+		this.isToggling = false;
 	}
 
 	async expand() {
-		this.feed.setItemOpen(this.item, true);
-
 		if (!this.isLoaded) {
 			await loadArticleIntoPost(this.post);
 			this.isLoaded = true;
 		}
+
+		this.feed.setItemOpen(this.item, true);
 	}
 
-	collapse() {
+	async collapse() {
 		// We will scroll to the bottom of the element minus some extra padding.
 		// This keeps the element in view a bit.
 		const elementOffset = Scroll.getElementOffsetTopFromContext(this.$el);
