@@ -17,7 +17,20 @@
 				<span class="lazy-placeholder" />
 				<span class="lazy-placeholder" />
 				<span class="lazy-placeholder" />
-				<span class="lazy-placeholder" style="width: 40%" />
+				<p>
+					<span class="lazy-placeholder" style="width: 40%" />
+				</p>
+
+				<div class="page-cut" />
+
+				<span class="lazy-placeholder" />
+				<span class="lazy-placeholder" />
+				<span class="lazy-placeholder" />
+				<span class="lazy-placeholder" />
+				<span class="lazy-placeholder" />
+				<p>
+					<span class="lazy-placeholder" style="width: 70%" />
+				</p>
 			</div>
 		</div>
 	</section>
