@@ -125,6 +125,14 @@ export class ChatUserCollection {
 		}
 
 		this.collection.sort((a, b) => {
+			const aSort = this.getSortVal(a);
+			const bSort = this.getSortVal(b);
+			if (aSort > bSort) {
+				return 1;
+			} else if (aSort < bSort) {
+				return -1;
+			}
+
 			if (a.display_name.toLowerCase() > b.display_name.toLowerCase()) {
 				return 1;
 			} else if (a.display_name.toLowerCase() < b.display_name.toLowerCase()) {
@@ -133,5 +141,15 @@ export class ChatUserCollection {
 
 			return 0;
 		});
+	}
+
+	private getSortVal(user: ChatUser) {
+		if (this.type === ChatUserCollection.TYPE_ROOM) {
+			if (user.isOnline) {
+				return 0;
+			}
+		}
+
+		return 1;
 	}
 }
