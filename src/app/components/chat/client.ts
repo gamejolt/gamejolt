@@ -672,6 +672,17 @@ export function addGroupMembers(chat: ChatClient, roomId: number, members: numbe
 	return chat.roomChannels[roomId].push('member_add', { room_id: roomId, members });
 }
 
+export function leaveGroupRoom(chat: ChatClient) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('group_leave', {}).receive('ok', _response => {
+			if (isInChatRoom(chat, room.id)) {
+				leaveChatRoom(chat);
+			}
+		});
+	}
+}
+
 export function removeMessage(chat: ChatClient, msgId: number) {
 	const room = chat.room;
 	if (room) {

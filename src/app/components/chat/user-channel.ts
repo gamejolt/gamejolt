@@ -4,8 +4,8 @@ import Vue from 'vue';
 import { ChatClient, isInChatRoom, leaveChatRoom, newChatNotification } from './client';
 import { ChatMessage } from './message';
 import { ChatNotificationGrowl } from './notification-growl/notification-growl.service';
-import { ChatUser } from './user';
 import { ChatRoom } from './room';
+import { ChatUser } from './user';
 
 interface UserPresence {
 	metas: { phx_ref: string }[];
@@ -44,6 +44,7 @@ export class ChatUserChannel extends Channel {
 		this.on('you_updated', this.onYouUpdated.bind(this));
 		this.on('clear_notifications', this.onClearNotifications.bind(this));
 		this.on('group_add', this.onGroupAdd.bind(this));
+		this.on('group_leave', this.onRoomLeave.bind(this));
 		this.onClose(() => {
 			this.notificationChannel.close();
 			this.elector.die();
@@ -110,6 +111,13 @@ export class ChatUserChannel extends Channel {
 			const friend = this.client.friendsList.get(userId);
 			data.isOnline = friend?.isOnline;
 			this.client.friendsList.update(new ChatUser(data));
+		}
+	}
+
+	private onRoomLeave(data: { room_id: number }) {
+		const index = this.client.groupRooms.findIndex(room => room.id === data.room_id);
+		if (index !== -1) {
+			this.client.groupRooms.splice(index, 1);
 		}
 	}
 

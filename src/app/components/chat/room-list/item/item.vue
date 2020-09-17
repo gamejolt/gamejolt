@@ -17,6 +17,12 @@
 			:title="room.getGroupTitle(chat)"
 			@click="onRoomClicked(room.id)"
 		>
+			<div class="chat-room-container-remove">
+				<span>
+					<app-button v-app-tooltip="$gettext('Leave Room')" circle trans icon="remove" @click="leaveRoom" />
+				</span>
+			</div>
+
 			<span
 				v-if="chat.notifications[room.id] || 0"
 				class="tag tag-highlight notifications-tag"
@@ -32,3 +38,16 @@
 		</a>
 	</app-scroll-inview>
 </template>
+
+<style lang="stylus" scoped>
+@import '~styles/variables'
+
+.chat-room-container
+	&-remove
+		visibility: hidden
+		display: inline-block
+		float: right
+
+		../:hover &
+			visibility: visible
+</style>

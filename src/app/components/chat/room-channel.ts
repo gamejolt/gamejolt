@@ -33,6 +33,7 @@ export class ChatRoomChannel extends Channel {
 		this.on('user_updated', this.onUserUpdated.bind(this));
 		this.on('message_update', this.onUpdateMsg.bind(this));
 		this.on('message_remove', this.onRemoveMsg.bind(this));
+		this.on('member_leave', this.onMemberLeave.bind(this));
 
 		this.onClose(() => {
 			if (isInChatRoom(this.client, roomId)) {
@@ -137,6 +138,14 @@ export class ChatRoomChannel extends Channel {
 		) {
 			const userId = +presenceId;
 			this.client.roomMembers[this.roomId].offline(userId);
+		}
+	}
+
+	private onMemberLeave(data: { user_id: number }) {
+		const roomMembers = this.client.roomMembers[this.roomId];
+
+		if (roomMembers) {
+			roomMembers.remove(data.user_id);
 		}
 	}
 
