@@ -669,7 +669,7 @@ export function addGroupRoom(chat: ChatClient, members: number[]) {
 }
 
 export function addGroupMembers(chat: ChatClient, roomId: number, members: number[]) {
-	return chat.roomChannels[roomId].push('member_add', { room_id: roomId, members });
+	return chat.roomChannels[roomId].push('member_add', { member_ids: members });
 }
 
 export function leaveGroupRoom(chat: ChatClient) {

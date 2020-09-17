@@ -12,6 +12,10 @@ interface RoomPresence {
 	user: ChatUser;
 }
 
+interface MemberAdd {
+	members: ChatUser[];
+}
+
 export class ChatRoomChannel extends Channel {
 	room!: ChatRoom;
 	roomId: number;
@@ -35,6 +39,7 @@ export class ChatRoomChannel extends Channel {
 		this.on('message_remove', this.onRemoveMsg.bind(this));
 		this.on('member_leave', this.onMemberLeave.bind(this));
 		this.on('owner_sync', this.onOwnerSync.bind(this));
+		this.on('member_add', this.onMemberAdd.bind(this));
 
 		this.onClose(() => {
 			if (isInChatRoom(this.client, roomId)) {
@@ -149,6 +154,16 @@ export class ChatRoomChannel extends Channel {
 			roomMembers.remove(data.user_id);
 		}
 		arrayRemove(this.room.members, i => i.id === data.user_id);
+	}
+
+	private onMemberAdd(data: MemberAdd) {
+		const roomMembers = this.client.roomMembers[this.roomId];
+
+		if (roomMembers) {
+			for (const member of data.members) {
+				roomMembers.add(new ChatUser(member));
+			}
+		}
 	}
 
 	private onOwnerSync(data: { owner_id: number }) {
