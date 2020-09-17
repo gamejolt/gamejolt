@@ -17,11 +17,11 @@
 			:title="room.getGroupTitle(chat)"
 			@click="onRoomClicked(room.id)"
 		>
-			<div class="chat-room-container-remove">
-				<span>
-					<app-button v-app-tooltip="$gettext('Leave Room')" circle trans icon="remove" @click="leaveRoom" />
-				</span>
-			</div>
+			<span class="chat-room-container-remove">
+				<a v-app-tooltip="$gettext('Leave Room')" class="link-muted" @click="leaveRoom">
+					<app-jolticon icon="remove" class="middle" />
+				</a>
+			</span>
 
 			<span
 				v-if="chat.notifications[room.id] || 0"
@@ -42,11 +42,18 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 
+.chat-room
+	padding-right: 0px
+
 .chat-room-container
+	height: 50px
+	overflow: hidden
+
 	&-remove
 		visibility: hidden
 		display: inline-block
 		float: right
+		padding-left: 8px
 
 		../:hover &
 			visibility: visible
