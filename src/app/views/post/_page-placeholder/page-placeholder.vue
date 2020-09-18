@@ -25,9 +25,6 @@
 
 				<span class="lazy-placeholder" />
 				<span class="lazy-placeholder" />
-				<span class="lazy-placeholder" />
-				<span class="lazy-placeholder" />
-				<span class="lazy-placeholder" />
 				<p>
 					<span class="lazy-placeholder" style="width: 70%" />
 				</p>
