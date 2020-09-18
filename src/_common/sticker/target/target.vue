@@ -10,7 +10,7 @@
 					:class="{ '-sticker-animate': !noAnimateIn }"
 					:style="{ 'animation-delay': getStickerAnimationDelay(sticker) }"
 					:sticker="sticker"
-					@remove-all="onStickersRemoved"
+					@click="onStickersRemoved"
 				/>
 			</div>
 		</transition>

@@ -7,15 +7,15 @@ import { StickerPlacement } from './placement/placement.model';
 @Component({})
 export default class AppSticker extends Vue {
 	@Prop(propRequired(StickerPlacement)) sticker!: StickerPlacement;
-	@Prop(propOptional(Boolean, true)) canRemove!: boolean;
+	@Prop(propOptional(Boolean, true)) isClickable!: boolean;
 
 	$refs!: {
 		outer: HTMLDivElement;
 		inner: HTMLImageElement;
 	};
 
-	@Emit('remove-all')
-	emitRemoveAll() {}
+	@Emit('click')
+	emitClick() {}
 
 	mounted() {
 		this.onUpdateStickerPlacement();
@@ -34,8 +34,8 @@ export default class AppSticker extends Vue {
 	}
 
 	onClickRemove() {
-		if (this.canRemove) {
-			this.emitRemoveAll();
+		if (this.isClickable) {
+			this.emitClick();
 		}
 	}
 }

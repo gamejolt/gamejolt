@@ -9,7 +9,7 @@
 			style="user-drag: none"
 			:src="sticker.sticker.img_url"
 			:class="{
-				'-removable': canRemove,
+				'-clickable': isClickable,
 			}"
 		/>
 	</div>
@@ -29,6 +29,6 @@
 		height: 100%
 		filter: drop-shadow(2px 2px 0 white) drop-shadow(-2px 2px 0 white) drop-shadow(2px -2px 0 white) drop-shadow(-2px -2px 0 white)
 
-.-removable
+.-clickable
 	cursor: pointer
 </style>
