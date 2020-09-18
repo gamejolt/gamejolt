@@ -159,10 +159,14 @@ export class ChatRoomChannel extends Channel {
 	private onMemberAdd(data: MemberAdd) {
 		const roomMembers = this.client.roomMembers[this.roomId];
 
-		if (roomMembers) {
-			for (const member of data.members) {
-				roomMembers.add(new ChatUser(member));
+		for (const member of data.members) {
+			const user = new ChatUser(member);
+
+			if (roomMembers) {
+				roomMembers.add(user);
 			}
+
+			this.room.members.push(user);
 		}
 	}
 
