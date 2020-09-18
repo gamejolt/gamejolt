@@ -20,6 +20,8 @@
 </template>
 
 <style lang="stylus" scoped>
+@import '~styles/variables'
+
 .-sticker-target
 	position: relative
 	// Needs to be lower than the z-index of elements we want above the stickers.
@@ -28,6 +30,7 @@
 .-sticker-animate
 	animation-name: sticker-animate-in
 	animation-duration: 0.5s
+	animation-timing-function: $strong-ease-out
 	animation-fill-mode: forwards
 	opacity: 0
 
@@ -40,8 +43,11 @@
 
 @keyframes sticker-animate-in
 	0%
-		transform: translateY(-8px)
+		transform: translateY(-16px)
 		opacity: 0
+
+	50%
+		opacity: 1
 
 	100%
 		transform: translateY(0)
