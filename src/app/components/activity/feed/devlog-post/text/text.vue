@@ -9,13 +9,13 @@
 	>
 		<template v-if="isOpen">
 			<div class="page-cut">
-				<div class="page-cut-content-placeholder" />
+				<div class="-page-cut-content-placeholder" />
 			</div>
 
 			<app-content-viewer :source="post.article_content" />
 		</template>
 
-		<div class="page-cut page-cut-bottom">
+		<div class="-page-cut-bottom page-cut">
 			<div class="page-cut-content">
 				<app-loading
 					v-if="isLoading"
@@ -43,16 +43,16 @@
 		margin-left: -($-item-padding-container)
 		margin-right: -($-item-padding-container)
 
-	&-bottom
-		margin-bottom: ($line-height-computed / 2)
+.-page-cut-bottom
+	margin-bottom: ($line-height-computed / 2)
 
 .page-cut-content
 	display: inline-block
 	overflow: hidden
 
-	&
-	&-placeholder
-		height: $button-md-line-height
+.page-cut-content
+.-page-cut-content-placeholder
+	height: $button-md-line-height
 
 .-loading
 	margin: 0
