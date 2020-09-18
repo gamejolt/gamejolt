@@ -21,4 +21,12 @@ export default class AppEventItemControlsUserFollow extends Vue {
 
 	@Emit('close')
 	emitClose() {}
+
+	get user() {
+		if (this.post.game && this.post.as_game_owner) {
+			return this.post.game.developer;
+		}
+
+		return this.post.user;
+	}
 }
