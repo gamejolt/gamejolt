@@ -661,7 +661,7 @@ export function setChatFocused(chat: ChatClient, focused: boolean) {
 }
 
 export function addGroupRoom(chat: ChatClient, members: number[]) {
-	return chat.userChannel?.push('group_add', { members }).receive('ok', response => {
+	return chat.userChannel?.push('group_add', { member_ids: members }).receive('ok', response => {
 		const newGroupRoom = new ChatRoom(response.room);
 		chat.groupRooms.push(newGroupRoom);
 		enterChatRoom(chat, newGroupRoom.id);
