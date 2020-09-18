@@ -1,6 +1,9 @@
+<script lang="ts" src="./sticker"></script>
+
 <template>
-	<div v-if="!isRemoved" class="-sticker" ref="sticker" @click.stop="onClickRemove">
+	<div ref="outer" class="-sticker" @click.stop="onClickRemove">
 		<img
+			ref="inner"
 			draggable="false"
 			onmousedown="return false"
 			style="user-drag: none"
@@ -29,5 +32,3 @@
 .-removable
 	cursor: pointer
 </style>
-
-<script lang="ts" src="./sticker"></script>
