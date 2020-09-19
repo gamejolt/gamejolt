@@ -15,7 +15,11 @@
 					<div class="chat-window-header fill-offset">
 						<div class="chat-window-header-controls">
 							<app-button
-								v-app-tooltip="$gettext('Add Friends')"
+								v-app-tooltip="
+									room.isPmRoom
+										? $gettext('Create Group Chat')
+										: $gettext('Add Friends')
+								"
 								circle
 								trans
 								icon="friend-requests"
@@ -25,6 +29,11 @@
 
 							<app-button
 								v-if="!room.isPmRoom"
+								v-app-tooltip="
+									isShowingUsers
+										? $gettext('Hide Members')
+										: $gettext('Show Members')
+								"
 								circle
 								trans
 								icon="users"
@@ -96,7 +105,6 @@
 			</div>
 
 			<!-- Room Users -->
-
 			<app-scroll-scroller v-if="!room.isPmRoom && isShowingUsers" class="chat-window-users">
 				<template v-if="Screen.isXs">
 					<br />
@@ -109,11 +117,8 @@
 
 				<div class="nav-heading">
 					<translate>Members</translate>
-					<span
-						class="badge"
-						:class="{ 'badge-highlight': users && users.onlineCount > 0 }"
-					>
-						{{ onlineUserCount }}
+					<span class="badge badge-subtle">
+						{{ membersCount }}
 					</span>
 				</div>
 

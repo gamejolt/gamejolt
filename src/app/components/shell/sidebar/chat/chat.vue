@@ -3,7 +3,7 @@
 <template>
 	<div id="shell-chat-pane">
 		<div class="chat-sidebar">
-			<div v-if="chat.currentUser">
+			<div v-if="chat.currentUser && chat.groupRooms.length > 0">
 				<div class="nav-heading first">
 					<translate>Group Chat Rooms</translate>
 				</div>

@@ -1,18 +1,18 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
-import { propOptional, propRequired } from '../../../../utils/vue';
+import { propRequired } from '../../../../utils/vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import { number } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import { Settings } from '../../../../_common/settings/settings.service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
 import { ChatClient, ChatKey, leaveChatRoom } from '../client';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
 import { ChatMessage } from '../message';
 import { ChatRoom } from '../room';
-import { ChatUserCollection } from '../user-collection';
 import AppChatUserList from '../user-list/user-list.vue';
 import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
 import AppChatWindowOutput from './output/output.vue';
@@ -40,18 +40,17 @@ export default class AppChatWindow extends Vue {
 
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
-	isShowingUsers = false;
+	isShowingUsers = Settings.get('chat-group-show-members');
 	isDescriptionCollapsed = false;
 
-	readonly ChatRoom = ChatRoom;
 	readonly Screen = Screen;
 
 	get users() {
 		return this.chat.roomMembers[this.room.id];
 	}
 
-	get onlineUserCount() {
-		return number(this.users?.onlineCount || 0);
+	get membersCount() {
+		return number(this.room.members.length);
 	}
 
 	addGroup() {
@@ -83,5 +82,6 @@ export default class AppChatWindow extends Vue {
 
 	toggleUsers() {
 		this.isShowingUsers = !this.isShowingUsers;
+		Settings.set('chat-group-show-members', this.isShowingUsers);
 	}
 }
