@@ -12,8 +12,16 @@ interface RoomPresence {
 	user: ChatUser;
 }
 
-interface MemberAdd {
+interface MemberAddPayload {
 	members: ChatUser[];
+}
+
+interface MemberLeavePayload {
+	user_id: number;
+}
+
+interface OwnerSyncPayload {
+	owner_id: number;
 }
 
 export class ChatRoomChannel extends Channel {
@@ -147,7 +155,7 @@ export class ChatRoomChannel extends Channel {
 		}
 	}
 
-	private onMemberLeave(data: { user_id: number }) {
+	private onMemberLeave(data: MemberLeavePayload) {
 		const roomMembers = this.client.roomMembers[this.roomId];
 
 		if (roomMembers) {
@@ -156,7 +164,7 @@ export class ChatRoomChannel extends Channel {
 		arrayRemove(this.room.members, i => i.id === data.user_id);
 	}
 
-	private onMemberAdd(data: MemberAdd) {
+	private onMemberAdd(data: MemberAddPayload) {
 		const roomMembers = this.client.roomMembers[this.roomId];
 
 		for (const member of data.members) {
@@ -170,7 +178,7 @@ export class ChatRoomChannel extends Channel {
 		}
 	}
 
-	private onOwnerSync(data: { owner_id: number }) {
+	private onOwnerSync(data: OwnerSyncPayload) {
 		this.room.owner_id = data.owner_id;
 	}
 

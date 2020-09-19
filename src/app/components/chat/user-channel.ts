@@ -15,7 +15,11 @@ interface FriendRemovePayload {
 	user_id: number;
 }
 
-interface ClearNotificationsPayload {
+interface GroupAddPayload {
+	room: Partial<ChatRoom>;
+}
+
+interface RoomIdPayload {
 	room_id: number;
 }
 
@@ -114,7 +118,7 @@ export class ChatUserChannel extends Channel {
 		}
 	}
 
-	private onRoomLeave(data: { room_id: number }) {
+	private onRoomLeave(data: RoomIdPayload) {
 		const index = this.client.groupRooms.findIndex(room => room.id === data.room_id);
 		if (index !== -1) {
 			this.client.groupRooms.splice(index, 1);
@@ -142,11 +146,11 @@ export class ChatUserChannel extends Channel {
 		this.client.currentUser = newUser;
 	}
 
-	private onClearNotifications(data: ClearNotificationsPayload) {
+	private onClearNotifications(data: RoomIdPayload) {
 		Vue.delete(this.client.notifications, '' + data.room_id);
 	}
 
-	private onGroupAdd(data) {
+	private onGroupAdd(data: GroupAddPayload) {
 		const newGroup = new ChatRoom(data.room);
 		this.client.groupRooms.push(newGroup);
 	}
