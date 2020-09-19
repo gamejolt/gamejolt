@@ -5,9 +5,41 @@ export class ChatUserCollection {
 	static readonly TYPE_FRIEND = 'friend';
 	static readonly TYPE_ROOM = 'room';
 
-	collection: ChatUser[] = [];
 	onlineCount = 0;
 	offlineCount = 0;
+
+	private collection_: ChatUser[] = [];
+
+	get collection() {
+		// Sorting is done inplace, so let's make a new wrapping array.
+		const collection = [...this.collection_];
+
+		if (this.type === ChatUserCollection.TYPE_FRIEND) {
+			collection.sort((a, b) => {
+				return b.last_message_on - a.last_message_on;
+			});
+		} else {
+			collection.sort((a, b) => {
+				const aSort = this.getSortVal(a);
+				const bSort = this.getSortVal(b);
+				if (aSort > bSort) {
+					return 1;
+				} else if (aSort < bSort) {
+					return -1;
+				}
+
+				if (a.display_name.toLowerCase() > b.display_name.toLowerCase()) {
+					return 1;
+				} else if (a.display_name.toLowerCase() < b.display_name.toLowerCase()) {
+					return -1;
+				}
+
+				return 0;
+			});
+		}
+
+		return collection;
+	}
 
 	constructor(public type: 'friend' | 'room', users: any[] = []) {
 		if (users && users.length) {
@@ -18,21 +50,19 @@ export class ChatUserCollection {
 					++this.offlineCount;
 				}
 
-				this.collection.push(new ChatUser(user));
+				this.collection_.push(new ChatUser(user));
 			}
 		}
-
-		this.sort();
 	}
 
 	get(input: number | ChatUser) {
 		const userId = typeof input === 'number' ? input : input.id;
-		return this.collection.find(user => user.id === userId);
+		return this.collection_.find(user => user.id === userId);
 	}
 
 	getByRoom(input: number | ChatRoom) {
 		const roomId = typeof input === 'number' ? input : input.id;
-		return this.collection.find(user => user.room_id === roomId);
+		return this.collection_.find(user => user.room_id === roomId);
 	}
 
 	has(input: number | ChatUser) {
@@ -51,16 +81,15 @@ export class ChatUserCollection {
 			++this.offlineCount;
 		}
 
-		this.collection.push(user);
-		this.sort();
+		this.collection_.push(user);
 	}
 
 	remove(input: number | ChatUser) {
 		const userId = typeof input === 'number' ? input : input.id;
-		const index = this.collection.findIndex(user => user.id === userId);
+		const index = this.collection_.findIndex(user => user.id === userId);
 
 		if (index !== -1) {
-			const user = this.collection[index];
+			const user = this.collection_[index];
 
 			if (user.isOnline) {
 				--this.onlineCount;
@@ -68,12 +97,10 @@ export class ChatUserCollection {
 				--this.offlineCount;
 			}
 
-			this.collection.splice(index, 1);
+			this.collection_.splice(index, 1);
 		} else {
 			return;
 		}
-
-		this.sort();
 	}
 
 	update(user: ChatUser) {
@@ -81,8 +108,6 @@ export class ChatUserCollection {
 		if (curUser) {
 			Object.assign(curUser, user);
 		}
-
-		this.sort();
 	}
 
 	online(input: number | ChatUser) {
@@ -113,34 +138,6 @@ export class ChatUserCollection {
 		}
 
 		user.isOnline = false;
-	}
-
-	sort() {
-		if (this.type === ChatUserCollection.TYPE_FRIEND) {
-			this.collection.sort((a, b) => {
-				return b.last_message_on - a.last_message_on;
-			});
-
-			return;
-		}
-
-		this.collection.sort((a, b) => {
-			const aSort = this.getSortVal(a);
-			const bSort = this.getSortVal(b);
-			if (aSort > bSort) {
-				return 1;
-			} else if (aSort < bSort) {
-				return -1;
-			}
-
-			if (a.display_name.toLowerCase() > b.display_name.toLowerCase()) {
-				return 1;
-			} else if (a.display_name.toLowerCase() < b.display_name.toLowerCase()) {
-				return -1;
-			}
-
-			return 0;
-		});
 	}
 
 	private getSortVal(user: ChatUser) {
