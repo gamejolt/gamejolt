@@ -5,7 +5,7 @@ import { number } from '../../../../../_common/filters/number';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppScrollInview } from '../../../../../_common/scroll/inview/inview';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { ChatClient, ChatKey, enterChatRoom } from '../../client';
+import { ChatClient, ChatKey, enterChatRoom, isUserOnline } from '../../client';
 import { ChatRoom } from '../../room';
 import { ChatUser } from '../../user';
 import AppChatUserOnlineStatus from '../../user-online-status/user-online-status.vue';
@@ -32,6 +32,14 @@ export default class AppChatUserListItem extends Vue {
 
 	get chatNotificationsCount() {
 		return number(this.chat.notifications[this.user.room_id] || 0);
+	}
+
+	get isOnline() {
+		if (!this.chat || !this.user) {
+			return null;
+		}
+
+		return isUserOnline(this.chat, this.user.id);
 	}
 
 	onUserClick(e: Event) {

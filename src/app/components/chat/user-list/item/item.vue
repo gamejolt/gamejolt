@@ -29,8 +29,9 @@
 				<div class="user-avatar">
 					<img :src="user.img_avatar" />
 					<app-chat-user-online-status
+						v-if="isOnline !== null"
 						class="-status"
-						:is-online="user.isOnline"
+						:is-online="isOnline"
 						:size="12"
 					/>
 				</div>

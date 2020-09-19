@@ -529,7 +529,7 @@ function setupRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
 		Vue.set(
 			chat.roomMembers,
 			'' + room.id,
-			new ChatUserCollection(ChatUserCollection.TYPE_ROOM, room.members || [])
+			new ChatUserCollection(ChatUserCollection.TYPE_ROOM, room.members || [], chat)
 		);
 
 		setChatRoom(chat, room);
@@ -645,6 +645,10 @@ export function loadOlderChatMessages(chat: ChatClient, roomId: number) {
  * Will return null if the user is not their friend.
  */
 export function isUserOnline(chat: ChatClient, userId: number): null | boolean {
+	if (chat.currentUser?.id === userId) {
+		return true;
+	}
+
 	return chat.friendsList.get(userId)?.isOnline ?? null;
 }
 

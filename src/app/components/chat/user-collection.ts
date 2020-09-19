@@ -1,3 +1,4 @@
+import { ChatClient, isUserOnline } from './client';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
 
@@ -5,6 +6,7 @@ export class ChatUserCollection {
 	static readonly TYPE_FRIEND = 'friend';
 	static readonly TYPE_ROOM = 'room';
 
+	chat: ChatClient | null = null;
 	onlineCount = 0;
 	offlineCount = 0;
 
@@ -41,7 +43,7 @@ export class ChatUserCollection {
 		return collection;
 	}
 
-	constructor(public type: 'friend' | 'room', users: any[] = []) {
+	constructor(public type: 'friend' | 'room', users: any[] = [], chatClient?: ChatClient) {
 		if (users && users.length) {
 			for (const user of users) {
 				if (user.isOnline) {
@@ -52,6 +54,10 @@ export class ChatUserCollection {
 
 				this.collection_.push(new ChatUser(user));
 			}
+		}
+
+		if (chatClient) {
+			this.chat = chatClient;
 		}
 	}
 
@@ -142,8 +148,29 @@ export class ChatUserCollection {
 
 	private getSortVal(user: ChatUser) {
 		if (this.type === ChatUserCollection.TYPE_ROOM) {
-			if (user.isOnline) {
+			// Move your own user to the top of lists
+			if (this.chat && this.chat.currentUser?.id === user.id) {
+				return -1;
+			}
+
+			let friendOnlineStatus = null;
+			if (this.chat) {
+				friendOnlineStatus = isUserOnline(this.chat, user.id);
+			}
+
+			// online
+			if (friendOnlineStatus) {
 				return 0;
+			}
+
+			// offline
+			if (friendOnlineStatus === false) {
+				return 1;
+			}
+
+			// not friends
+			if (friendOnlineStatus === null) {
+				return 2;
 			}
 		}
 
