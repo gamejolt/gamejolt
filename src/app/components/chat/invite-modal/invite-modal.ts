@@ -4,6 +4,7 @@ import { propRequired } from '../../../../utils/vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
 import { addGroupMembers, addGroupRoom, ChatClient, ChatKey } from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
@@ -12,6 +13,7 @@ import { ChatUser } from '../user';
 	components: {
 		AppScrollScroller,
 		AppUserAvatarImg,
+		AppUserAvatarList,
 	},
 })
 export default class AppChatInviteModal extends BaseModal {

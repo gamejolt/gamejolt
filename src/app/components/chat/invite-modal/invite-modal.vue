@@ -56,9 +56,21 @@
 		</template>
 
 		<template #footer>
-			<div class="-footer">
+			<div class="-bottom">
+				<app-user-avatar-list
+					v-if="selectedUsers.length > 0"
+					class="-selected-users"
+					:users="selectedUsers"
+					sm
+				/>
+
 				<app-button primary block :disabled="selectedUsers.length < 1" @click="invite">
-					<translate>Invite</translate>
+					<template v-if="room.isPmRoom">
+						<translate>Create Group</translate>
+					</template>
+					<template v-else>
+						<translate>Add To Group</translate>
+					</template>
 				</app-button>
 			</div>
 		</template>
