@@ -4,7 +4,7 @@ import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 
 export class ChatInviteModal {
-	static async show(room: ChatRoom, friends: ChatUser[]) {
+	static async show(room: ChatRoom, friends: ChatUser[], initialUser?: ChatUser) {
 		return await Modal.show({
 			modalId: 'ChatInvite',
 			size: 'sm',
@@ -12,7 +12,7 @@ export class ChatInviteModal {
 				asyncComponentLoader(
 					import(/* webpackChunkName: "ChatInviteModal" */ './invite-modal.vue')
 				),
-			props: { room, friends },
+			props: { room, friends, initialUser },
 		});
 	}
 }

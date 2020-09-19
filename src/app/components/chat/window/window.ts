@@ -32,11 +32,11 @@ import AppChatWindowSend from './send/send.vue';
 	},
 })
 export default class AppChatWindow extends Vue {
+	@InjectReactive(ChatKey) chat!: ChatClient;
+
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 	@Prop(propRequired(Array)) messages!: ChatMessage[];
 	@Prop(propRequired(Array)) queuedMessages!: ChatMessage[];
-
-	@InjectReactive(ChatKey) chat!: ChatClient;
 
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
@@ -54,11 +54,19 @@ export default class AppChatWindow extends Vue {
 	}
 
 	addGroup() {
-		// Filter out the friend in pm room because we add them automatically.
+		// When creating a group from a PM window,
+		// we want to put the room user at the top of the list
+		const initialUser = this.room.user;
 		const invitableUsers = this.chat.friendsList.collection.filter(
-			friend => friend.id !== this.room.user?.id
+			friend => friend.id !== initialUser?.id
 		);
-		ChatInviteModal.show(this.room, invitableUsers);
+
+		if (initialUser) {
+			invitableUsers.unshift(initialUser);
+		}
+
+		// Give the InviteModal the initialUser so it can set them as invited by default
+		ChatInviteModal.show(this.room, invitableUsers, initialUser);
 	}
 
 	addMembers() {

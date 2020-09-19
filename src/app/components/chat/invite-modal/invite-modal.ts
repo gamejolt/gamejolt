@@ -1,6 +1,6 @@
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
 import { fuzzysearch } from '../../../../utils/string';
-import { propRequired } from '../../../../utils/vue';
+import { propOptional, propRequired } from '../../../../utils/vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
@@ -17,12 +17,14 @@ import { ChatUser } from '../user';
 	},
 })
 export default class AppChatInviteModal extends BaseModal {
-	@Prop(propRequired(Array)) friends!: ChatUser[];
-	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 	@InjectReactive(ChatKey) chat!: ChatClient;
 
+	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
+	@Prop(propRequired(Array)) friends!: ChatUser[];
+	@Prop(propOptional(ChatUser, null)) initialUser!: ChatUser | null;
+
 	filterQuery = '';
-	selectedUsers: ChatUser[] = [];
+	selectedUsers: ChatUser[] = this.initialUser ? [this.initialUser] : [];
 
 	get filteredUsers() {
 		if (!this.filterQuery) {
