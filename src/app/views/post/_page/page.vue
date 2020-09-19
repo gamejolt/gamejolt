@@ -102,10 +102,17 @@
 							<app-content-viewer :source="post.lead_content" />
 						</app-sticker-target>
 
-						<div v-if="post.hasArticle">
+						<div v-if="post.has_article">
 							<div class="page-cut" />
 
-							<app-content-viewer :source="post.article_content" />
+							<template v-if="!post.hasArticleContent">
+								<span class="lazy-placeholder" />
+								<span class="lazy-placeholder" />
+								<p>
+									<span class="lazy-placeholder" style="width: 70%" />
+								</p>
+							</template>
+							<app-content-viewer v-else :source="post.article_content" />
 						</div>
 					</div>
 

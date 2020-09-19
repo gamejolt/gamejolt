@@ -1,3 +1,5 @@
+<script lang="ts" src="./text"></script>
+
 <template>
 	<div
 		class="devlog-post-text"
@@ -6,44 +8,64 @@
 		}"
 	>
 		<template v-if="isOpen">
-			<div class="page-cut" />
+			<div class="page-cut">
+				<div class="-page-cut-content-placeholder" />
+			</div>
 
-			<app-content-viewer
-				:source="post.article_content"
-				/>
+			<app-content-viewer :source="post.article_content" />
 		</template>
 
-		<div class="page-cut">
-			<app-button
-				:trans="!isToggling"
-				:solid="isToggling"
-				:primary="isToggling"
-				@click.stop="toggleFull()"
-			>
-				<translate v-if="!isOpen">read article</translate>
-				<translate v-else>less</translate>
-			</app-button>
+		<div class="-page-cut-bottom page-cut">
+			<div class="page-cut-content">
+				<app-loading
+					v-if="isLoading"
+					class="-loading"
+					centered
+					hide-label
+					stationary
+					@click.native.stop
+				/>
+				<app-button v-else trans @click.stop="toggleFull()">
+					<translate v-if="!isOpen">read article</translate>
+					<translate v-else>less</translate>
+				</app-button>
+			</div>
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '../../variables'
-@require '~styles-lib/mixins'
+@import '../../variables'
+@import '~styles-lib/mixins'
 
 .page-cut
 	@media $media-sm-up
 		margin-left: -($-item-padding-container)
 		margin-right: -($-item-padding-container)
 
+.-page-cut-bottom
+	margin-bottom: ($line-height-computed / 2)
+
+.page-cut-content
+	display: inline-block
+	overflow: hidden
+
+.page-cut-content
+.-page-cut-content-placeholder
+	height: $button-md-line-height
+
+.-loading
+	margin: 0
+	padding: 0 ($grid-gutter-width-xs / 2)
+
 .devlog-post-text
 	// Hide images and widgets until we are hydrated.
-	>>> img, >>> iframe
+	>>> img
+	>>> iframe
 		visibility: hidden
 
 	&.-hydrated
-		>>> img, >>> iframe
+		>>> img
+		>>> iframe
 			visibility: visible
 </style>
-
-<script lang="ts" src="./text"></script>

@@ -149,7 +149,7 @@
 
 				<app-event-item-controls-overlay>
 					<app-activity-feed-devlog-post-text
-						v-if="post.hasArticle"
+						v-if="post.has_article"
 						:item="item"
 						:post="post"
 						@expanded="emitExpanded"
