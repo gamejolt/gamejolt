@@ -87,11 +87,31 @@ export default class AppChatUserListItem extends Vue {
 		return this.currentRoom && this.user && this.currentRoom.owner_id === this.user.id;
 	}
 
-	onClick(e: Event) {
-		if (!this.showPm) {
-			return;
+	get component() {
+		return !this.showPm ? 'router-link' : 'a';
+	}
+
+	get componentProps() {
+		return !this.showPm ? { to: this.url } : {};
+	}
+
+	get componentEvents() {
+		const events: Record<string, any> = {};
+
+		// Only group chats have an action we need to show on hover.
+		if (!this.user) {
+			events.mouseenter = this.onMouseEnter;
+			events.mouseleave = this.onMouseLeave;
 		}
 
+		if (this.showPm) {
+			events.click = this.onClick;
+		}
+
+		return events;
+	}
+
+	onClick(e: Event) {
 		enterChatRoom(this.chat, this.roomId);
 		e.preventDefault();
 	}
