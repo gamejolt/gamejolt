@@ -8,24 +8,23 @@
 		@inview="isInview = true"
 		@outview="isInview = false"
 	>
-		<router-link
+		<component
+			:is="component"
 			v-if="isInview"
+			v-bind="componentProps"
 			class="-item"
 			:class="{
 				active: isActive,
 			}"
-			:to="url"
 			:title="hoverTitle"
-			@mouseenter.native="onMouseEnter"
-			@mouseleave.native="onMouseLeave"
-			@click.native.capture="onClick"
+			v-on="componentEvents"
 		>
 			<template v-if="!user">
 				<span
 					v-if="isHovered || Screen.isXs"
 					v-app-tooltip="$gettext('Leave Room')"
 					class="-action"
-					@click="leaveRoom"
+					@click.stop.prevent="leaveRoom"
 				>
 					<app-jolticon icon="remove" class="middle" />
 				</span>
@@ -56,7 +55,7 @@
 				{{ title }}
 				<span v-if="meta" class="tiny">{{ meta }}</span>
 			</div>
-		</router-link>
+		</component>
 	</app-scroll-inview>
 </template>
 
