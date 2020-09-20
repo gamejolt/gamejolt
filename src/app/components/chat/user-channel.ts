@@ -1,6 +1,7 @@
 import { BroadcastChannel, createLeaderElection, LeaderElector } from 'broadcast-channel';
 import { Channel, Presence, Socket } from 'phoenix';
 import Vue from 'vue';
+import { arrayRemove } from '../../../utils/array';
 import {
 	ChatClient,
 	isInChatRoom,
@@ -125,10 +126,7 @@ export class ChatUserChannel extends Channel {
 	}
 
 	private onRoomLeave(data: RoomIdPayload) {
-		const index = this.client.groupRooms.findIndex(room => room.id === data.room_id);
-		if (index !== -1) {
-			this.client.groupRooms.splice(index, 1);
-		}
+		arrayRemove(this.client.groupRooms, i => i.id === data.room_id);
 	}
 
 	private onNotification(data: Partial<ChatMessage>) {
