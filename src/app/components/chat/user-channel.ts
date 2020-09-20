@@ -137,7 +137,10 @@ export class ChatUserChannel extends Channel {
 		newChatNotification(this.client, message.room_id);
 		updateChatRoomLastMessageOn(this.client, message);
 
-		ChatNotificationGrowl.show(this.client, message, this.elector.isLeader);
+		const isPM = !!this.client.friendsList.getByRoom(message.room_id);
+		const system = this.elector.isLeader && isPM;
+
+		ChatNotificationGrowl.show(this.client, message, system);
 	}
 
 	private onYouUpdated(data: Partial<ChatUser>) {
