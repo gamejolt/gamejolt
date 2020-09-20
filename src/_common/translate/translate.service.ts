@@ -147,6 +147,11 @@ export const TranslationLangs = [
 		code: 'bg',
 		label: 'Български',
 	},
+	{
+		// Korean
+		code: 'ko',
+		label: '한국어',
+	}
 ];
 
 export const TranslationLangsByCode = arrayIndexBy(TranslationLangs, 'code');
