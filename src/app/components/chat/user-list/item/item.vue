@@ -90,7 +90,7 @@
 		background-color: var(--theme-backlight)
 
 		.jolticon
-			color: var(--theme-white) !important
+			color: var(--theme-backlight-fg) !important
 
 	&-status
 		right: 12px
