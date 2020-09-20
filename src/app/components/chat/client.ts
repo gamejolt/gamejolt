@@ -114,20 +114,6 @@ export class ChatClient {
 		}
 	}
 
-	get friendNotificationsCount() {
-		let count = 0;
-		for (const key of Object.keys(this.notifications)) {
-			const cur = this.notifications[key];
-
-			// Notifications for a room? Increment friend notifications.
-			if (this.friendsList.getByRoom(parseInt(key, 10))) {
-				count += cur || 0;
-			}
-		}
-
-		return count;
-	}
-
 	get roomNotificationsCount() {
 		let count = 0;
 		for (const val of Object.values(this.notifications)) {
