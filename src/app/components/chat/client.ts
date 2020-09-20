@@ -714,3 +714,20 @@ export function isInChatRoom(chat: ChatClient, roomId?: number) {
 
 	return chat.room ? chat.room.id === roomId : false;
 }
+
+export function updateChatRoomLastMessageOn(chat: ChatClient, message: ChatMessage) {
+	const time = message.logged_on.getTime();
+
+	// If it's a friend chat.
+	const friend = chat.friendsList.getByRoom(message.room_id);
+	if (friend) {
+		friend.last_message_on = time;
+		chat.friendsList.update(friend);
+	}
+
+	// If it's a group chat.
+	const groupRoom = chat.groupRooms.find(i => i.id === message.room_id);
+	if (groupRoom) {
+		groupRoom.last_message_on = time;
+	}
+}

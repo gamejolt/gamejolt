@@ -1,7 +1,13 @@
 import { BroadcastChannel, createLeaderElection, LeaderElector } from 'broadcast-channel';
 import { Channel, Presence, Socket } from 'phoenix';
 import Vue from 'vue';
-import { ChatClient, isInChatRoom, leaveChatRoom, newChatNotification } from './client';
+import {
+	ChatClient,
+	isInChatRoom,
+	leaveChatRoom,
+	newChatNotification,
+	updateChatRoomLastMessageOn,
+} from './client';
 import { ChatMessage } from './message';
 import { ChatNotificationGrowl } from './notification-growl/notification-growl.service';
 import { ChatRoom } from './room';
@@ -131,12 +137,7 @@ export class ChatUserChannel extends Channel {
 		// We got a notification for some room.
 		// If the notification key is null, set it to 1.
 		newChatNotification(this.client, message.room_id);
-
-		const friend = this.client.friendsList.getByRoom(message.room_id);
-		if (friend) {
-			friend.last_message_on = message.logged_on.getTime();
-			this.client.friendsList.update(friend);
-		}
+		updateChatRoomLastMessageOn(this.client, message);
 
 		ChatNotificationGrowl.show(this.client, message, this.elector.isLeader);
 	}

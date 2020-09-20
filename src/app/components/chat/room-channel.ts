@@ -2,7 +2,13 @@ import { Channel, Presence, Socket } from 'phoenix';
 import Vue from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { Analytics } from '../../../_common/analytics/analytics.service';
-import { ChatClient, isInChatRoom, processNewChatOutput, setChatRoom } from './client';
+import {
+	ChatClient,
+	isInChatRoom,
+	processNewChatOutput,
+	setChatRoom,
+	updateChatRoomLastMessageOn,
+} from './client';
 import { ChatMessage } from './message';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
@@ -94,21 +100,16 @@ export class ChatRoomChannel extends Channel {
 	}
 
 	processNewRoomMessage(message: ChatMessage) {
-		const hasReceivedMessage = this.client.messages[message.room_id].some(
+		const alreadyReceivedMessage = this.client.messages[message.room_id].some(
 			i => i.id === message.id
 		);
-		if (hasReceivedMessage) {
+		if (alreadyReceivedMessage) {
 			Analytics.trackEvent('chat', 'duplicate-message');
 			return;
 		}
 
 		processNewChatOutput(this.client, this.roomId, [message], false);
-
-		const friend = this.client.friendsList.getByRoom(message.room_id);
-		if (friend) {
-			friend.last_message_on = message.logged_on.getTime();
-			this.client.friendsList.update(friend);
-		}
+		updateChatRoomLastMessageOn(this.client, message);
 	}
 
 	private onUserUpdated(data: Partial<ChatUser>) {
