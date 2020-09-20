@@ -40,7 +40,7 @@ export default class AppChatWindow extends Vue {
 
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
-	isShowingUsers = Settings.get('chat-group-show-members');
+	isShowingUsers = Screen.isXs ? false : Settings.get('chat-group-show-members');
 	isDescriptionCollapsed = false;
 
 	readonly Screen = Screen;
@@ -96,6 +96,9 @@ export default class AppChatWindow extends Vue {
 
 	toggleUsers() {
 		this.isShowingUsers = !this.isShowingUsers;
-		Settings.set('chat-group-show-members', this.isShowingUsers);
+
+		if (!Screen.isXs) {
+			Settings.set('chat-group-show-members', this.isShowingUsers);
+		}
 	}
 }
