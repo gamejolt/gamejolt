@@ -6,13 +6,11 @@ import { number } from '../../../../../_common/filters/number';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Store } from '../../../../store';
 import { ChatClient, ChatKey, enterChatRoom, leaveChatRoom } from '../../../chat/client';
-import AppChatRoomList from '../../../chat/room-list/room-list.vue';
 import AppChatUserList from '../../../chat/user-list/user-list.vue';
 import AppChatWindows from '../../../chat/windows/windows.vue';
 
 @Component({
 	components: {
-		AppChatRoomList,
 		AppChatUserList,
 		AppChatWindows,
 	},
@@ -23,27 +21,29 @@ export default class AppShellSidebarChat extends Vue {
 	@State visibleLeftPane!: Store['visibleLeftPane'];
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
-	friendsTab: 'all' | 'online' = 'all';
+	tab: 'chats' | 'friends' = 'chats';
+
 	private escapeCallback?: () => void;
 
 	readonly Screen = Screen;
 
 	get friends() {
-		return this.friendsTab === 'online'
-			? this.chat.friendsList.collection.filter(i => i.isOnline)
-			: this.chat.friendsList.collection;
+		return this.chat.friendsList.collection;
 	}
 
-	get friendsCountAll() {
-		return number(this.chat.friendsList.collection.length);
+	get groups() {
+		return this.chat.groupRooms;
 	}
-
-	get friendsCountOnline() {
-		return number(this.chat.friendsList.onlineCount);
+	get chats() {
+		return [...this.groups, ...this.friends];
 	}
 
 	get hasGroupRooms() {
-		return this.chat.groupRooms && this.chat.groupRooms.length > 0;
+		return this.groups.length > 0;
+	}
+
+	get friendsCount() {
+		return number(this.chat.friendsList.collection.length);
 	}
 
 	mounted() {

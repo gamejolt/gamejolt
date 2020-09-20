@@ -38,11 +38,11 @@ export class ChatRoom {
 			this.type === ChatRoom.ROOM_VIRAL_GROUP
 		);
 	}
+}
 
-	getGroupTitle(chat: ChatClient) {
-		return this.members
-			.filter(member => member.id !== chat.currentUser?.id)
-			.map(member => member.display_name)
-			.join(', ');
-	}
+export function getChatRoomTitle(room: ChatRoom, chat: ChatClient) {
+	return room.members
+		.filter(member => member.id !== chat.currentUser?.id)
+		.map(member => member.display_name)
+		.join(', ');
 }

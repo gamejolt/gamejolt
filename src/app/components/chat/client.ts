@@ -71,9 +71,12 @@ export class ChatClient {
 	socket: Socket | null = null;
 	userChannel: ChatUserChannel | null = null;
 
+	/**
+	 * Whether or not the user's chat data is populated (friends, chats, etc.)
+	 */
+	populated = false;
 	currentUser: ChatUser | null = null;
 	friendsList: ChatUserCollection = null as any;
-	friendsPopulated = false;
 	groupRooms: ChatRoom[] = [];
 
 	room: ChatRoom | null = null;
@@ -144,7 +147,7 @@ function reset(chat: ChatClient) {
 	chat.connected = false;
 	chat.currentUser = null;
 	chat.friendsList = new ChatUserCollection(ChatUserCollection.TYPE_FRIEND);
-	chat.friendsPopulated = false;
+	chat.populated = false;
 	chat.pollingRoomId = -1;
 
 	chat.room = null;
@@ -296,11 +299,11 @@ async function joinUserChannel(chat: ChatClient, userId: number) {
 						chat.userChannel = channel;
 						chat.currentUser = currentUser;
 						chat.friendsList = friendsList;
-						chat.friendsPopulated = true;
 						chat.notifications = response.notifications;
 						chat.groupRooms = response.groups.map(
 							(room: ChatRoom) => new ChatRoom(room)
 						);
+						chat.populated = true;
 						resolve();
 					});
 			})

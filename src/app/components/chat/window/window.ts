@@ -12,7 +12,7 @@ import { Store } from '../../../store/index';
 import { ChatClient, ChatKey, leaveChatRoom } from '../client';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
 import { ChatMessage } from '../message';
-import { ChatRoom } from '../room';
+import { ChatRoom, getChatRoomTitle } from '../room';
 import AppChatUserList from '../user-list/user-list.vue';
 import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
 import AppChatWindowOutput from './output/output.vue';
@@ -47,6 +47,12 @@ export default class AppChatWindow extends Vue {
 
 	get users() {
 		return this.chat.roomMembers[this.room.id];
+	}
+
+	get roomTitle() {
+		return this.room.isGroupRoom
+			? getChatRoomTitle(this.room, this.chat)
+			: this.room.user?.display_name;
 	}
 
 	get membersCount() {

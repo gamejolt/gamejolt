@@ -69,7 +69,7 @@
 							</router-link>
 
 							<h3 v-if="!room.isPmRoom" class="anim-fade-in-right no-animate-xs">
-								{{ room.getGroupTitle(chat) }}
+								{{ roomTitle }}
 							</h3>
 							<h3
 								v-else-if="room.user"
@@ -77,7 +77,7 @@
 								:title="`${room.user.display_name} (@${room.user.username})`"
 							>
 								<router-link class="link-unstyled" :to="room.user.url">
-									{{ room.user.display_name }}
+									{{ roomTitle }}
 								</router-link>
 								<br />
 								<small>@{{ room.user.username }}</small>
@@ -122,7 +122,7 @@
 					</span>
 				</div>
 
-				<app-chat-user-list v-if="users" :room="room" :users="users.collection" />
+				<app-chat-user-list v-if="users" :current-room="room" :users="users.collection" />
 			</app-scroll-scroller>
 		</div>
 		<div class="-chat-window-offset-right" />

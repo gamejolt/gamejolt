@@ -3,51 +3,89 @@
 <template>
 	<app-scroll-inview
 		tag="li"
-		class="chat-user-container"
+		class="-container"
 		:margin="`${Screen.height / 2}px`"
 		@inview="isInview = true"
 		@outview="isInview = false"
 	>
 		<router-link
 			v-if="isInview"
-			class="chat-user"
+			class="-item"
 			:class="{
-				active: showPm && chat.room && chat.room.id === user.room_id,
+				active: isActive,
 			}"
-			:to="user.url"
-			:title="`${user.display_name} (@${user.username})`"
-			@click.native.capture="onUserClick"
+			:to="url"
+			@mouseenter.native="onMouseEnter"
+			@mouseleave.native="onMouseLeave"
+			@click.native.capture="onClick"
 		>
-			<span
-				v-if="chat.notifications[user.room_id] || 0"
-				class="tag tag-highlight notifications-tag"
-			>
-				{{ chatNotificationsCount }}
+			<template v-if="!user">
+				<span
+					v-if="isHovered || Screen.isXs"
+					v-app-tooltip="$gettext('Leave Room')"
+					class="-action"
+					@click="leaveRoom"
+				>
+					<app-jolticon icon="remove" class="middle" />
+				</span>
+			</template>
+
+			<span v-if="notificationsCount" class="tag tag-highlight notifications-tag">
+				{{ notificationsCountLocalized }}
 			</span>
 
 			<div class="shell-nav-icon">
-				<div class="user-avatar">
-					<img :src="user.img_avatar" />
-					<app-chat-user-online-status
-						v-if="isOnline !== null"
-						class="-status"
-						:is-online="isOnline"
-						:size="12"
-					/>
-				</div>
+				<template v-if="user">
+					<div class="-avatar">
+						<img :src="user.img_avatar" />
+						<app-chat-user-online-status
+							v-if="isOnline !== null"
+							class="-avatar-status"
+							:is-online="isOnline"
+							:size="12"
+						/>
+					</div>
+				</template>
 			</div>
 
 			<div class="shell-nav-label">
-				{{ user.display_name }}
-				<span class="tiny">@{{ user.username }}</span>
-				<template v-if="room">
-					<span v-if="room.owner_id === user.id" v-app-tooltip="'Room Owner'">
-						👑
-					</span>
-				</template>
+				<span v-if="isOwner" v-app-tooltip="`Room Owner`">
+					👑
+				</span>
+				{{ title }}
+				<span v-if="meta" class="tiny">{{ meta }}</span>
 			</div>
 		</router-link>
 	</app-scroll-inview>
 </template>
 
-<style lang="stylus" src="./item.styl" scoped></style>
+<style lang="stylus" scoped>
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+
+.-container
+	height: 50px
+	overflow: hidden
+
+.-avatar
+	position: relative
+
+	img
+		img-circle()
+		display: inline-block
+		width: 24px
+		vertical-align: middle
+
+	&-status
+		right: 12px
+		bottom: 10px
+
+.-action
+	display: inline-block
+	float: right
+	padding-left: 8px
+	color: var(--theme-fg-muted) !important
+
+	&:hover
+		color: var(--theme-fg) !important
+</style>
