@@ -42,6 +42,7 @@ export default class AppChatWindow extends Vue {
 
 	isShowingUsers = Screen.isXs ? false : Settings.get('chat-group-show-members');
 	isDescriptionCollapsed = false;
+	friendAddJolticonVersion = 1;
 
 	readonly Screen = Screen;
 

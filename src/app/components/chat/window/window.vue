@@ -14,18 +14,23 @@
 				<div class="chat-window-header-wrap">
 					<div class="chat-window-header fill-offset">
 						<div class="chat-window-header-controls">
-							<app-button
-								v-app-tooltip="
-									room.isPmRoom
-										? $gettext('Create Group Chat')
-										: $gettext('Add Friends')
-								"
-								circle
-								trans
-								icon="friend-requests"
-								class="anim-fade-in"
-								@click="room.isPmRoom ? addGroup() : addMembers()"
-							/>
+							<span
+								@mouseenter="friendAddJolticonVersion = 2"
+								@mouseleave="friendAddJolticonVersion = 1"
+							>
+								<app-button
+									v-app-tooltip="
+										room.isPmRoom
+											? $gettext('Create Group Chat')
+											: $gettext('Add Friends')
+									"
+									class="anim-fade-in"
+									circle
+									trans
+									:icon="'friend-add-' + friendAddJolticonVersion"
+									@click="room.isPmRoom ? addGroup() : addMembers()"
+								/>
+							</span>
 
 							<app-button
 								v-if="!room.isPmRoom"
