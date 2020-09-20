@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Emit, Prop } from 'vue-property-decorator';
 import { propOptional, propRequired } from '../../../utils/vue';
+import { ContentFocus } from '../../content-focus/content-focus.service';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import {
 	AppResponsiveDimensions,
@@ -58,7 +59,7 @@ export default class AppMediaItemPost extends Vue {
 	}
 
 	get shouldVideoPlay() {
-		return this.isActive;
+		return this.isActive && ContentFocus.hasFocus;
 	}
 
 	get itemRadius() {
@@ -70,7 +71,7 @@ export default class AppMediaItemPost extends Vue {
 	}
 
 	get itemStyling() {
-		let style = {};
+		const style: any = {};
 
 		if (!GJ_IS_SSR) {
 			Object.assign(style, {

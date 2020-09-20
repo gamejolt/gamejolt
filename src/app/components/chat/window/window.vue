@@ -9,53 +9,36 @@
 		<div class="chat-window">
 			<div class="chat-window-back-close" @click="close" />
 
-			<!-- Room Users -->
-			<app-scroll-scroller
-				v-if="!room.isPmRoom && isShowingUsers"
-				class="fill-darkest chat-window-users"
-			>
-				<template v-if="Screen.isXs">
-					<br />
-					<div class="nav-controls">
-						<app-button block icon="chevron-left" @click="toggleUsers">
-							<translate>Back to Chat</translate>
-						</app-button>
-					</div>
-				</template>
-
-				<template v-if="!room.isPmRoom">
-					<div class="nav-heading first">
-						<translate>Room Description</translate>
-					</div>
-
-					<div class="nav-well">
-						<div class="chat-compiled-room-description">
-							<!-- TODO: Remove -->
-							<div>{{ room.description }}</div>
-						</div>
-					</div>
-				</template>
-
-				<div class="nav-heading">
-					<translate>Room Users</translate>
-					<span
-						class="badge"
-						:class="{ 'badge-highlight': users && users.onlineCount > 0 }"
-					>
-						{{ onlineUserCount }}
-					</span>
-				</div>
-
-				<app-chat-user-list v-if="users" :room="room" :users="users.collection" />
-			</app-scroll-scroller>
-
 			<div class="chat-window-main">
 				<!-- Window Header -->
 				<div class="chat-window-header-wrap">
 					<div class="chat-window-header fill-offset">
 						<div class="chat-window-header-controls">
+							<span
+								@mouseenter="friendAddJolticonVersion = 2"
+								@mouseleave="friendAddJolticonVersion = 1"
+							>
+								<app-button
+									v-app-tooltip="
+										room.isPmRoom
+											? $gettext('Create Group Chat')
+											: $gettext('Add Friends')
+									"
+									class="anim-fade-in"
+									circle
+									trans
+									:icon="'friend-add-' + friendAddJolticonVersion"
+									@click="room.isPmRoom ? addGroup() : addMembers()"
+								/>
+							</span>
+
 							<app-button
 								v-if="!room.isPmRoom"
+								v-app-tooltip="
+									isShowingUsers
+										? $gettext('Hide Members')
+										: $gettext('Show Members')
+								"
 								circle
 								trans
 								icon="users"
@@ -78,12 +61,20 @@
 							:key="room.id"
 							class="chat-window-header-content"
 						>
+							<span
+								v-if="!room.isPmRoom"
+								class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
+							>
+								<div class="-icon">
+									<app-jolticon icon="users" />
+								</div>
+							</span>
 							<router-link
-								v-if="room.isPmRoom && room.user"
+								v-else-if="room.user"
 								class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
 								:to="room.user.url"
 							>
-								<img :src="room.user.img_avatar" alt="" />
+								<img class="-icon" :src="room.user.img_avatar" alt="" />
 								<app-chat-user-online-status
 									:is-online="room.user.isOnline"
 									:size="16"
@@ -91,7 +82,7 @@
 							</router-link>
 
 							<h3 v-if="!room.isPmRoom" class="anim-fade-in-right no-animate-xs">
-								{{ room.title }}
+								{{ roomTitle }}
 							</h3>
 							<h3
 								v-else-if="room.user"
@@ -99,37 +90,11 @@
 								:title="`${room.user.display_name} (@${room.user.username})`"
 							>
 								<router-link class="link-unstyled" :to="room.user.url">
-									{{ room.user.display_name }}
+									{{ roomTitle }}
 								</router-link>
 								<br />
 								<small>@{{ room.user.username }}</small>
 							</h3>
-
-							<template v-if="!room.isPmRoom && !Screen.isXs">
-								<app-fade-collapse
-									size="sm"
-									:collapse-height="60"
-									@require-change="isDescriptionCollapsed = $event"
-								>
-									<div
-										class="chat-window-header-room-description chat-compiled-room-description"
-									>
-										<!-- TODO: Remove -->
-										<div class="anim-fade-in no-animate-xs">
-											{{ room.description }}
-										</div>
-									</div>
-								</app-fade-collapse>
-
-								<app-button
-									v-if="isDescriptionCollapsed && !isShowingUsers"
-									sm
-									class="anim-fade-in"
-									@click="toggleUsers"
-								>
-									<translate>more</translate>
-								</app-button>
-							</template>
 						</div>
 					</div>
 				</div>
@@ -152,7 +117,39 @@
 				</div>
 			</div>
 		</div>
-		<div class="-chat-window-offset-right" />
+		<div
+			class="-chat-window-offset-right"
+			:class="{ '-has-content': !room.isPmRoom && isShowingUsers }"
+		>
+			<!-- Room Users -->
+			<div v-if="!room.isPmRoom && isShowingUsers" class="chat-window-users">
+				<div v-if="!Screen.isXs" class="chat-window-users-shadow" />
+
+				<app-scroll-scroller class="chat-window-users-scroller">
+					<template v-if="Screen.isXs">
+						<br />
+						<div class="nav-controls">
+							<app-button block icon="chevron-left" @click="toggleUsers">
+								<translate>Back to Chat</translate>
+							</app-button>
+						</div>
+					</template>
+
+					<div class="nav-heading">
+						<translate>Members</translate>
+						<span class="badge badge-subtle">
+							{{ membersCount }}
+						</span>
+					</div>
+
+					<app-chat-user-list
+						v-if="users"
+						:current-room="room"
+						:users="users.collection"
+					/>
+				</app-scroll-scroller>
+			</div>
+		</div>
 	</div>
 </template>
 

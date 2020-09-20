@@ -36,9 +36,7 @@ export default class AppGameThumbnailImg extends Vue {
 	}
 
 	get shouldPlayVideo() {
-		// When the window is not focused, or when we're scrolling, we don't want to play videos.
-		// This should speed up inactive tabs.
-		return this.hasVideo && ContentFocus.hasFocus && !Screen.isScrolling;
+		return this.hasVideo && ContentFocus.hasFocus;
 	}
 
 	imgLoadChange(isLoaded: boolean) {

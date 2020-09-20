@@ -1,17 +1,18 @@
 import Vue from 'vue';
 import { Component, InjectReactive, Prop } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
-import { propOptional, propRequired } from '../../../../utils/vue';
+import { propRequired } from '../../../../utils/vue';
 import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import { number } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
+import { Settings } from '../../../../_common/settings/settings.service';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store/index';
 import { ChatClient, ChatKey, leaveChatRoom } from '../client';
+import { ChatInviteModal } from '../invite-modal/invite-modal.service';
 import { ChatMessage } from '../message';
-import { ChatRoom } from '../room';
-import { ChatUserCollection } from '../user-collection';
+import { ChatRoom, getChatRoomTitle } from '../room';
 import AppChatUserList from '../user-list/user-list.vue';
 import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
 import AppChatWindowOutput from './output/output.vue';
@@ -31,23 +32,57 @@ import AppChatWindowSend from './send/send.vue';
 	},
 })
 export default class AppChatWindow extends Vue {
+	@InjectReactive(ChatKey) chat!: ChatClient;
+
 	@Prop(propRequired(ChatRoom)) room!: ChatRoom;
 	@Prop(propRequired(Array)) messages!: ChatMessage[];
-	@Prop(propOptional(ChatUserCollection)) users?: ChatUserCollection;
 	@Prop(propRequired(Array)) queuedMessages!: ChatMessage[];
-
-	@InjectReactive(ChatKey) chat!: ChatClient;
 
 	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
-	isShowingUsers = false;
+	isShowingUsers = Screen.isXs ? false : Settings.get('chat-group-show-members');
 	isDescriptionCollapsed = false;
+	friendAddJolticonVersion = 1;
 
-	readonly ChatRoom = ChatRoom;
 	readonly Screen = Screen;
 
-	get onlineUserCount() {
-		return number(this.users?.onlineCount || 0);
+	get users() {
+		return this.chat.roomMembers[this.room.id];
+	}
+
+	get roomTitle() {
+		return this.room.isGroupRoom
+			? getChatRoomTitle(this.room, this.chat)
+			: this.room.user?.display_name;
+	}
+
+	get membersCount() {
+		return number(this.room.members.length);
+	}
+
+	addGroup() {
+		// When creating a group from a PM window,
+		// we want to put the room user at the top of the list
+		const initialUser = this.room.user;
+		const invitableUsers = this.chat.friendsList.collection.filter(
+			friend => friend.id !== initialUser?.id
+		);
+
+		if (initialUser) {
+			invitableUsers.unshift(initialUser);
+		}
+
+		// Give the InviteModal the initialUser so it can set them as invited by default
+		ChatInviteModal.show(this.room, invitableUsers, initialUser);
+	}
+
+	addMembers() {
+		// Filter out the room members as we don't want to add them again.
+		const members = this.room.members.map(member => member.id);
+		const invitableUsers = this.chat.friendsList.collection.filter(
+			({ id }) => !members.includes(id)
+		);
+		ChatInviteModal.show(this.room, invitableUsers);
 	}
 
 	close() {
@@ -62,5 +97,9 @@ export default class AppChatWindow extends Vue {
 
 	toggleUsers() {
 		this.isShowingUsers = !this.isShowingUsers;
+
+		if (!Screen.isXs) {
+			Settings.set('chat-group-show-members', this.isShowingUsers);
+		}
 	}
 }
