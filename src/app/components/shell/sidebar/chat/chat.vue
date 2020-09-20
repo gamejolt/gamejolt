@@ -6,23 +6,29 @@
 			<template v-if="chat.populated">
 				<nav class="shell-nav-inline platform-list inline">
 					<ul>
-						<li>
+						<li v-if="chats.length > 0">
 							<a :class="{ active: tab === 'chats' }" @click="tab = 'chats'">
 								<translate>Chats</translate>
 							</a>
 						</li>
 						<li>
-							<a :class="{ active: tab === 'friends' }" @click="tab = 'friends'">
+							<a
+								:class="{ active: chats.length === 0 || tab === 'friends' }"
+								@click="tab = 'friends'"
+							>
 								<translate>Friends</translate>
 								<span class="badge badge-subtle">
-									{{ friendsCount }}
+									{{ friendsCountLocalized }}
 								</span>
 							</a>
 						</li>
 					</ul>
 				</nav>
 
-				<div v-if="!friends" class="alert">
+				<div
+					v-if="chats.length === 0 || (tab === 'friends' && !friends.length)"
+					class="nav-well"
+				>
 					<translate>No friends yet.</translate>
 				</div>
 				<app-chat-user-list v-else :users="tab === 'chats' ? chats : friends" show-pm />

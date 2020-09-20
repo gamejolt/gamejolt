@@ -34,6 +34,7 @@ export default class AppShellSidebarChat extends Vue {
 	get groups() {
 		return this.chat.groupRooms;
 	}
+
 	get chats() {
 		return [...this.groups, ...this.friends];
 	}
@@ -43,7 +44,11 @@ export default class AppShellSidebarChat extends Vue {
 	}
 
 	get friendsCount() {
-		return number(this.chat.friendsList.collection.length);
+		return this.chat.friendsList.collection.length;
+	}
+
+	get friendsCountLocalized() {
+		return number(this.friendsCount);
 	}
 
 	mounted() {
