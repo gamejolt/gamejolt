@@ -77,6 +77,7 @@ export class AppTheme extends Vue {
 				${genVar('highlight', theme.highlight_)}
 				${genVar('highlight-fg', theme.highlightFg_)}
 				${genVar('backlight', theme.backlight_)}
+				${genVar('backlight-fg', theme.backlightFg_)}
 				${genVar('notice', theme.notice_)}
 				${genVar('notice-fg', theme.noticeFg_)}
 				${genVar('bi-bg', theme.biBg_)}
