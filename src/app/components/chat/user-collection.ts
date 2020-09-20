@@ -17,11 +17,9 @@ export class ChatUserCollection {
 		const collection = [...this.collection_];
 
 		if (this.type === ChatUserCollection.TYPE_FRIEND) {
-			collection.sort((a, b) => {
-				return b.last_message_on - a.last_message_on;
-			});
+			return sortByLastMessageOn(collection);
 		} else {
-			collection.sort((a, b) => {
+			return collection.sort((a, b) => {
 				const aSort = this.getSortVal(a);
 				const bSort = this.getSortVal(b);
 				if (aSort > bSort) {
@@ -39,8 +37,6 @@ export class ChatUserCollection {
 				return 0;
 			});
 		}
-
-		return collection;
 	}
 
 	constructor(public type: 'friend' | 'room', users: any[] = [], chatClient?: ChatClient) {
@@ -176,4 +172,12 @@ export class ChatUserCollection {
 
 		return 1;
 	}
+}
+
+/**
+ * Sorts an array of users or rooms by the last time someone has made a message
+ * in the room.
+ */
+export function sortByLastMessageOn(items: (ChatUser | ChatRoom)[]) {
+	return items.sort((a, b) => b.last_message_on - a.last_message_on);
 }

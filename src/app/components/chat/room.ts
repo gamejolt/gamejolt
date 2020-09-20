@@ -14,6 +14,7 @@ export class ChatRoom {
 	user?: ChatUser;
 	members!: ChatUser[];
 	owner_id!: number;
+	last_message_on!: number;
 
 	constructor(data: Partial<ChatRoom> = {}) {
 		Object.assign(this, data);
