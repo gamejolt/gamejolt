@@ -35,8 +35,8 @@
 			</span>
 
 			<div class="shell-nav-icon">
-				<template v-if="user">
-					<div class="-avatar">
+				<div class="-avatar">
+					<template v-if="user">
 						<img :src="user.img_avatar" />
 						<app-chat-user-online-status
 							v-if="isOnline !== null"
@@ -44,8 +44,11 @@
 							:is-online="isOnline"
 							:size="12"
 						/>
+					</template>
+					<div v-else class="-group-icon">
+						<app-jolticon icon="users" />
 					</div>
-				</template>
+				</div>
 			</div>
 
 			<div class="shell-nav-label">
@@ -75,6 +78,19 @@
 		display: inline-block
 		width: 24px
 		vertical-align: middle
+
+	.-group-icon
+		img-circle()
+		display: inline-flex
+		align-items: center
+		justify-content: center
+		vertical-align: middle
+		width: 32px
+		height: 32px
+		background-color: var(--theme-backlight)
+
+		.jolticon
+			color: var(--theme-white) !important
 
 	&-status
 		right: 12px
