@@ -15,6 +15,7 @@
 				active: isActive,
 			}"
 			:to="url"
+			:title="hoverTitle"
 			@mouseenter.native="onMouseEnter"
 			@mouseleave.native="onMouseLeave"
 			@click.native.capture="onClick"

@@ -74,6 +74,15 @@ export default class AppChatUserListItem extends Vue {
 		return this.item instanceof ChatUser ? `@${this.item.username}` : null;
 	}
 
+	get hoverTitle() {
+		const parts = [this.title];
+		if (this.meta) {
+			parts.push(this.meta);
+		}
+
+		return parts.join(' ');
+	}
+
 	get isOwner() {
 		return this.currentRoom && this.user && this.currentRoom.owner_id === this.user.id;
 	}
