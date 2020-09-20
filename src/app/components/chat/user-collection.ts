@@ -178,6 +178,6 @@ export class ChatUserCollection {
  * Sorts an array of users or rooms by the last time someone has made a message
  * in the room.
  */
-export function sortByLastMessageOn(items: (ChatUser | ChatRoom)[]) {
+export function sortByLastMessageOn<T extends (ChatUser | ChatRoom)[]>(items: T): T {
 	return items.sort((a, b) => b.last_message_on - a.last_message_on);
 }
