@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
+import { propOptional, propRequired } from '../../utils/vue';
 import AppLoading from '../loading/loading.vue';
 
 // We have to not use Vue for video embed stuff!
@@ -12,20 +13,11 @@ import AppLoading from '../loading/loading.vue';
 	},
 })
 export default class AppVideo extends Vue {
-	@Prop(String)
-	poster!: string;
-
-	@Prop(String)
-	webm!: string;
-
-	@Prop(String)
-	mp4!: string;
-
-	@Prop({ type: Boolean, default: false })
-	showLoading!: boolean;
-
-	@Prop({ type: Boolean, default: true })
-	shouldPlay!: boolean;
+	@Prop(propRequired(String)) poster!: string;
+	@Prop(propRequired(String)) webm!: string;
+	@Prop(propRequired(String)) mp4!: string;
+	@Prop(propOptional(Boolean, false)) showLoading!: boolean;
+	@Prop(propOptional(Boolean, true)) shouldPlay!: boolean;
 
 	isLoaded = false;
 
@@ -63,15 +55,15 @@ export default class AppVideo extends Vue {
 
 		// This event continues to spawn.
 		// Gotta remove once it fires the first time.
-		let canplaythrough = () => {
+		const canplaythrough = () => {
 			this.isLoaded = true;
-			this.video.removeEventListener('canplaythrough', canplaythrough);
+			this.video.removeEventListener('canplay', canplaythrough);
 			if (this.shouldPlay) {
 				this.video.play();
 			}
 		};
 
-		this.video.addEventListener('canplaythrough', canplaythrough);
+		this.video.addEventListener('canplay', canplaythrough);
 
 		this.$el.appendChild(this.video);
 	}
