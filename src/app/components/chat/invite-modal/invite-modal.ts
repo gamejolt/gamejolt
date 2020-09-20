@@ -43,10 +43,6 @@ export default class AppChatInviteModal extends BaseModal {
 		const selectedUsers = this.selectedUsers.map(chatUser => chatUser.id);
 
 		if (this.room.isPmRoom) {
-			// Add the other pm user to invited members.
-			if (this.room.user) {
-				selectedUsers.push(this.room.user.id);
-			}
 			addGroupRoom(this.chat, selectedUsers);
 		} else {
 			addGroupMembers(this.chat, this.room.id, selectedUsers);
