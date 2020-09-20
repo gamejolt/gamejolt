@@ -1,9 +1,12 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
+import { propRequired } from '../../../../utils/vue';
+import { ContentFocus } from '../../../content-focus/content-focus.service';
 import { AppObserveDimensions } from '../../../observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../screen/screen-service';
 import { AppScrollInview } from '../../../scroll/inview/inview';
+import AppVideo from '../../../video/video.vue';
 import { ContentOwner } from '../../content-owner';
 import AppBaseContentComponent from '../base/base-content-component.vue';
 import { computeSize } from '../media-item/media-item';
@@ -12,35 +15,21 @@ import { computeSize } from '../media-item/media-item';
 	components: {
 		AppBaseContentComponent,
 		AppScrollInview,
+		AppVideo,
 	},
 	directives: {
 		AppObserveDimensions,
 	},
 })
 export default class AppContentGif extends Vue {
-	@Prop(String)
-	gifId!: string;
-
-	@Prop(Number)
-	width!: number;
-
-	@Prop(Number)
-	height!: number;
-
-	@Prop(String)
-	service!: string;
-
-	@Prop(Object)
-	media!: any;
-
-	@Prop(Object)
-	owner!: ContentOwner;
-
-	@Prop(Boolean)
-	isEditing!: boolean;
-
-	@Prop(Boolean)
-	isDisabled!: boolean;
+	@Prop(propRequired(String)) gifId!: string;
+	@Prop(propRequired(Number)) width!: number;
+	@Prop(propRequired(Number)) height!: number;
+	@Prop(propRequired(String)) service!: string;
+	@Prop(propRequired(Object)) media!: any;
+	@Prop(propRequired(Object)) owner!: ContentOwner;
+	@Prop(propRequired(Boolean)) isEditing!: boolean;
+	@Prop(propRequired(Boolean)) isDisabled!: boolean;
 
 	$refs!: {
 		container: HTMLElement;
@@ -64,6 +53,10 @@ export default class AppContentGif extends Vue {
 			return 'auto';
 		}
 		return this.computedHeight > 0 ? this.computedHeight + 'px' : 'auto';
+	}
+
+	get shouldPlay() {
+		return ContentFocus.isWindowFocused;
 	}
 
 	mounted() {
