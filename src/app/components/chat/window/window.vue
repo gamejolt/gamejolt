@@ -56,12 +56,20 @@
 							:key="room.id"
 							class="chat-window-header-content"
 						>
+							<span
+								v-if="!room.isPmRoom"
+								class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
+							>
+								<div class="-icon">
+									<app-jolticon icon="users" />
+								</div>
+							</span>
 							<router-link
-								v-if="room.isPmRoom && room.user"
+								v-else-if="room.user"
 								class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
 								:to="room.user.url"
 							>
-								<img :src="room.user.img_avatar" alt="" />
+								<img class="-icon" :src="room.user.img_avatar" alt="" />
 								<app-chat-user-online-status
 									:is-online="room.user.isOnline"
 									:size="16"
@@ -103,29 +111,36 @@
 					<app-chat-window-send :room="room" />
 				</div>
 			</div>
-
-			<!-- Room Users -->
-			<app-scroll-scroller v-if="!room.isPmRoom && isShowingUsers" class="chat-window-users">
-				<template v-if="Screen.isXs">
-					<br />
-					<div class="nav-controls">
-						<app-button block icon="chevron-left" @click="toggleUsers">
-							<translate>Back to Chat</translate>
-						</app-button>
-					</div>
-				</template>
-
-				<div class="nav-heading">
-					<translate>Members</translate>
-					<span class="badge badge-subtle">
-						{{ membersCount }}
-					</span>
-				</div>
-
-				<app-chat-user-list v-if="users" :current-room="room" :users="users.collection" />
-			</app-scroll-scroller>
 		</div>
-		<div class="-chat-window-offset-right" />
+		<div
+			class="-chat-window-offset-right"
+			:class="{ '-has-content': !room.isPmRoom && isShowingUsers }"
+		>
+			<!-- Room Users -->
+			<div v-if="!room.isPmRoom && isShowingUsers" class="chat-window-users">
+				<div v-if="!Screen.isXs" class="chat-window-users-shadow" />
+
+				<app-scroll-scroller class="chat-window-users-scroller">
+					<template v-if="Screen.isXs">
+						<br />
+						<div class="nav-controls">
+							<app-button block icon="chevron-left" @click="toggleUsers">
+								<translate>Back to Chat</translate>
+							</app-button>
+						</div>
+					</template>
+
+					<div class="nav-heading">
+						<translate>Members</translate>
+						<span class="badge badge-subtle">
+							{{ membersCount }}
+						</span>
+					</div>
+
+					<app-chat-user-list v-if="users" :room="room" :users="users.collection" />
+				</app-scroll-scroller>
+			</div>
+		</div>
 	</div>
 </template>
 
