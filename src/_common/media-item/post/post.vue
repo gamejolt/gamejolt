@@ -1,3 +1,5 @@
+<script lang="ts" src="./post"></script>
+
 <template>
 	<div class="media-item-post" :class="{ '-inline': inline }" @click="onClickImage">
 		<app-responsive-dimensions
@@ -12,12 +14,12 @@
 		>
 			<div v-if="shouldShowFullscreenOption" class="-toolbar">
 				<app-button
-					@click="emitFullscreen(mediaItem)"
+					v-app-tooltip="$gettext(`Fullscreen`)"
 					overlay
 					circle
 					trans
 					icon="fullscreen"
-					v-app-tooltip="$gettext(`Fullscreen`)"
+					@click="emitFullscreen(mediaItem)"
 				/>
 			</div>
 			<app-media-item-backdrop class="-backdrop" :media-item="mediaItem" :radius="itemRadius">
@@ -30,12 +32,13 @@
 					ondragstart="return false"
 				/>
 				<app-video
-					v-else-if="shouldVideoPlay"
+					v-else-if="isActive"
 					class="-video"
 					:style="itemStyling"
 					:poster="mediaItem.mediaserver_url"
 					:webm="mediaItem.mediaserver_url_webm"
 					:mp4="mediaItem.mediaserver_url_mp4"
+					:should-play="shouldVideoPlay"
 					show-loading
 				/>
 			</app-media-item-backdrop>
@@ -44,8 +47,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .media-item-post
 	position: relative
@@ -66,7 +69,8 @@
 
 	// Set the width to be what AppResponsiveDimensions gives us,
 	// so we don't overflow past what it sets.
-	.-img, .-video
+	.-img
+	.-video
 		width: 100%
 
 	.-toolbar
@@ -88,5 +92,3 @@
 		.-toolbar
 			opacity: 1
 </style>
-
-<script lang="ts" src="./post"></script>

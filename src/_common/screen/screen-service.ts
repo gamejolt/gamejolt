@@ -84,11 +84,6 @@ export class Screen {
 					'dpi)'
 		  ).matches;
 
-	/**
-	 * Whether or now the window is being scrolled. Gets updated by the Scroll service.
-	 */
-	static isScrolling = false;
-
 	static resizeChanges = new EventTopic<void>();
 
 	/**
