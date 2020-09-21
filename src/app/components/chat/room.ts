@@ -1,3 +1,4 @@
+import { ChatClient } from './client';
 import { ChatUser } from './user';
 
 export type ChatRoomType = 'pm' | 'open_group' | 'closed_group' | 'viral_group';
@@ -9,14 +10,18 @@ export class ChatRoom {
 	static readonly ROOM_VIRAL_GROUP = 'viral_group';
 
 	id!: number;
-	title!: string;
 	type!: ChatRoomType;
 	user?: ChatUser;
-
-	description!: string;
+	members!: ChatUser[];
+	owner_id!: number;
+	last_message_on!: number;
 
 	constructor(data: Partial<ChatRoom> = {}) {
 		Object.assign(this, data);
+
+		if (data.members) {
+			this.members = data.members.map(member => new ChatUser(member));
+		}
 	}
 
 	get isPmRoom() {
@@ -34,4 +39,11 @@ export class ChatRoom {
 			this.type === ChatRoom.ROOM_VIRAL_GROUP
 		);
 	}
+}
+
+export function getChatRoomTitle(room: ChatRoom, chat: ChatClient) {
+	return room.members
+		.filter(member => member.id !== chat.currentUser?.id)
+		.map(member => member.display_name)
+		.join(', ');
 }

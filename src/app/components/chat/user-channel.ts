@@ -1,7 +1,17 @@
+import { BroadcastChannel, createLeaderElection, LeaderElector } from 'broadcast-channel';
 import { Channel, Presence, Socket } from 'phoenix';
-import { ChatClient, isInChatRoom, leaveChatRoom, newChatNotification } from './client';
+import Vue from 'vue';
+import { arrayRemove } from '../../../utils/array';
+import {
+	ChatClient,
+	isInChatRoom,
+	leaveChatRoom,
+	newChatNotification,
+	updateChatRoomLastMessageOn,
+} from './client';
 import { ChatMessage } from './message';
 import { ChatNotificationGrowl } from './notification-growl/notification-growl.service';
+import { ChatRoom } from './room';
 import { ChatUser } from './user';
 
 interface UserPresence {
@@ -12,15 +22,29 @@ interface FriendRemovePayload {
 	user_id: number;
 }
 
+interface GroupAddPayload {
+	room: Partial<ChatRoom>;
+}
+
+interface RoomIdPayload {
+	room_id: number;
+}
+
 export class ChatUserChannel extends Channel {
 	readonly client: ChatClient;
 	readonly socket: Socket;
 
-	constructor(userId: number, client: ChatClient, params?: object) {
+	private readonly notificationChannel: BroadcastChannel;
+	private readonly elector: LeaderElector;
+
+	constructor(userId: number, client: ChatClient, params?: any) {
 		super('user:' + userId, params, client.socket as Socket);
 		this.client = client;
 		this.socket = client.socket as Socket;
 		(this.socket as any).channels.push(this);
+		this.notificationChannel = new BroadcastChannel('notification_channel');
+		this.elector = createLeaderElection(this.notificationChannel);
+		this.initLeader();
 
 		this.setupPresence();
 
@@ -29,6 +53,22 @@ export class ChatUserChannel extends Channel {
 		this.on('friend_remove', this.onFriendRemove.bind(this));
 		this.on('notification', this.onNotification.bind(this));
 		this.on('you_updated', this.onYouUpdated.bind(this));
+		this.on('clear_notifications', this.onClearNotifications.bind(this));
+		this.on('group_add', this.onGroupAdd.bind(this));
+		this.on('group_leave', this.onRoomLeave.bind(this));
+		this.onClose(() => {
+			this.notificationChannel.close();
+			this.elector.die();
+		});
+	}
+
+	private initLeader() {
+		// This function begins the process of attemping to become the leader.
+		// All tabs need this process to be active. This promise will resolve if
+		// this tab ever becomes the leader. It should fail if the tab loses
+		// leadership. When that happens we want to try just to become leader
+		// again.
+		this.elector.awaitLeadership().catch(() => this.initLeader());
 	}
 
 	private setupPresence() {
@@ -85,24 +125,38 @@ export class ChatUserChannel extends Channel {
 		}
 	}
 
+	private onRoomLeave(data: RoomIdPayload) {
+		arrayRemove(this.client.groupRooms, i => i.id === data.room_id);
+	}
+
 	private onNotification(data: Partial<ChatMessage>) {
 		const message = new ChatMessage(data);
 
 		// We got a notification for some room.
 		// If the notification key is null, set it to 1.
 		newChatNotification(this.client, message.room_id);
+		updateChatRoomLastMessageOn(this.client, message);
 
-		const friend = this.client.friendsList.getByRoom(message.room_id);
-		if (friend) {
-			friend.last_message_on = message.logged_on.getTime();
-			this.client.friendsList.update(friend);
+		// Don't show growls/system notifications unless it's a message from a
+		// friend for now.
+		if (!this.client.friendsList.getByRoom(message.room_id)) {
+			return;
 		}
 
-		ChatNotificationGrowl.show(this.client, message);
+		ChatNotificationGrowl.show(this.client, message, this.elector.isLeader);
 	}
 
 	private onYouUpdated(data: Partial<ChatUser>) {
 		const newUser = new ChatUser(data);
 		this.client.currentUser = newUser;
+	}
+
+	private onClearNotifications(data: RoomIdPayload) {
+		Vue.delete(this.client.notifications, '' + data.room_id);
+	}
+
+	private onGroupAdd(data: GroupAddPayload) {
+		const newGroup = new ChatRoom(data.room);
+		this.client.groupRooms.push(newGroup);
 	}
 }

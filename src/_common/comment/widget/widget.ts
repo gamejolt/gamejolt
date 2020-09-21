@@ -1,10 +1,11 @@
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Inject, Prop, Watch } from 'vue-property-decorator';
 import { propOptional } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { AppAuthRequired } from '../../auth/auth-required-directive';
 import { Collaborator } from '../../collaborator/collaborator.model';
 import { Environment } from '../../environment/environment.service';
+import { number } from '../../filters/number';
 import AppIllustration from '../../illustration/illustration.vue';
 import AppLoading from '../../loading/loading.vue';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
@@ -17,17 +18,25 @@ import { User } from '../../user/user.model';
 import FormComment from '../add/add.vue';
 import { Comment, getCanCommentOnModel, getCommentModelResourceName } from '../comment-model';
 import {
-	CommentAction,
-	CommentMutation,
-	CommentState,
-	CommentStore,
+	CommentStoreManager,
+	CommentStoreManagerKey,
 	CommentStoreModel,
+	fetchCommentThread,
+	fetchStoreComments,
+	lockCommentStore,
+	onCommentAdd,
+	onCommentEdit,
+	onCommentRemove,
+	pinComment,
+	releaseCommentStore,
+	setCommentSort,
 } from '../comment-store';
 import {
 	CommentStoreSliceView,
 	CommentStoreThreadView,
 	CommentStoreView,
 } from '../comment-store-view';
+import { DisplayMode } from '../modal/modal.service';
 import AppCommentWidgetComment from './comment/comment.vue';
 
 let incrementer = 0;
@@ -48,6 +57,8 @@ let incrementer = 0;
 	},
 })
 export default class AppCommentWidget extends Vue {
+	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
+
 	@Prop(Model)
 	model!: Model;
 
@@ -69,38 +80,11 @@ export default class AppCommentWidget extends Vue {
 	@Prop(propOptional(String))
 	initialTab?: string;
 
+	@Prop(propOptional(String, null))
+	displayMode!: DisplayMode | null;
+
 	@AppState
 	user!: AppStore['user'];
-
-	@CommentState
-	getCommentStore!: CommentStore['getCommentStore'];
-
-	@CommentAction
-	fetchComments!: CommentStore['fetchComments'];
-
-	@CommentAction
-	fetchThread!: CommentStore['fetchThread'];
-
-	@CommentAction
-	lockCommentStore!: CommentStore['lockCommentStore'];
-
-	@CommentAction
-	pinComment!: CommentStore['pinComment'];
-
-	@CommentAction
-	setSort!: CommentStore['setSort'];
-
-	@CommentMutation
-	releaseCommentStore!: CommentStore['releaseCommentStore'];
-
-	@CommentMutation
-	onCommentAdd!: CommentStore['onCommentAdd'];
-
-	@CommentMutation
-	onCommentEdit!: CommentStore['onCommentEdit'];
-
-	@CommentMutation
-	onCommentRemove!: CommentStore['onCommentRemove'];
 
 	store: CommentStoreModel | null = null;
 	storeView: CommentStoreView | null = null;
@@ -113,6 +97,8 @@ export default class AppCommentWidget extends Vue {
 	currentPage = 1;
 
 	collaborators: Collaborator[] = [];
+
+	readonly number = number;
 
 	get loginUrl() {
 		return (
@@ -216,10 +202,10 @@ export default class AppCommentWidget extends Vue {
 		this.hasError = false;
 
 		if (this.store) {
-			await this._releaseStore();
+			this._releaseStore();
 		}
 
-		await this._lockStore();
+		this._lockStore();
 
 		if (this.isThreadView && this.threadCommentId) {
 			this.storeView = new CommentStoreThreadView(this.threadCommentId);
@@ -230,16 +216,16 @@ export default class AppCommentWidget extends Vue {
 		// Filter comments based on the 'initialTab' prop. This allows us to set the comment
 		// sorting to the "You" tab when you leave a comment from an event item.
 		if (this.store && this.initialTab) {
-			this.setSort({ store: this.store, sort: this.initialTab });
+			setCommentSort(this.store, this.initialTab);
 		}
 
 		await this._fetchComments();
 	}
 
-	private async _lockStore() {
+	private _lockStore() {
 		const resource = getCommentModelResourceName(this.model);
 		const resourceId = this.model.id;
-		this.store = await this.lockCommentStore({ resource, resourceId });
+		this.store = lockCommentStore(this.commentManager, resource, resourceId);
 
 		// Keep track of how many comment widgets have a lock on this store. We
 		// need this data when closing the last widget to do some tear down
@@ -251,7 +237,7 @@ export default class AppCommentWidget extends Vue {
 		metadata.widgetLocks += 1;
 	}
 
-	private async _releaseStore() {
+	private _releaseStore() {
 		if (!this.store) {
 			return;
 		}
@@ -264,10 +250,10 @@ export default class AppCommentWidget extends Vue {
 		// comment widget. This way if you open up a new comment widget in the
 		// future, we'll correctly start at the "hot" sort.
 		if (metadata.widgetLocks === 0) {
-			this.setSort({ store: this.store, sort: Comment.SORT_HOT });
+			setCommentSort(this.store, Comment.SORT_HOT);
 		}
 
-		this.releaseCommentStore(this.store);
+		releaseCommentStore(this.commentManager, this.store);
 		this.store = null;
 	}
 
@@ -281,19 +267,13 @@ export default class AppCommentWidget extends Vue {
 
 			let payload: any;
 			if (this.isThreadView && this.threadCommentId) {
-				payload = await this.fetchThread({
-					store: this.store,
-					parentId: this.threadCommentId,
-				});
+				payload = await fetchCommentThread(this.store, this.threadCommentId);
 				// It's possible that the thread comment is actually a child. In that case, update the view's parent id to the returned parent id
 				if (this.storeView instanceof CommentStoreThreadView) {
 					this.storeView.parentCommentId = new Comment(payload.parent).id;
 				}
 			} else {
-				payload = await this.fetchComments({
-					store: this.store,
-					page: this.currentPage,
-				});
+				payload = await fetchStoreComments(this.store, this.currentPage);
 			}
 
 			this.isLoading = false;
@@ -320,7 +300,7 @@ export default class AppCommentWidget extends Vue {
 
 	_onCommentAdd(comment: Comment) {
 		Analytics.trackEvent('comment-widget', 'add');
-		this.onCommentAdd(comment);
+		onCommentAdd(this.commentManager, comment);
 		this.$emit('add', comment);
 		if (this.store) {
 			if (this.store.sort !== Comment.SORT_YOU) {
@@ -335,18 +315,18 @@ export default class AppCommentWidget extends Vue {
 
 	_onCommentEdit(comment: Comment) {
 		Analytics.trackEvent('comment-widget', 'edit');
-		this.onCommentEdit(comment);
+		onCommentEdit(this.commentManager, comment);
 		this.$emit('edit', comment);
 	}
 
 	_onCommentRemove(comment: Comment) {
 		Analytics.trackEvent('comment-widget', 'remove');
-		this.onCommentRemove(comment);
+		onCommentRemove(this.commentManager, comment);
 		this.$emit('remove', comment);
 	}
 
-	async _pinComment(comment: Comment) {
-		await this.pinComment({ comment });
+	_pinComment(comment: Comment) {
+		pinComment(this.commentManager, comment);
 	}
 
 	sortHot() {
@@ -371,7 +351,7 @@ export default class AppCommentWidget extends Vue {
 		}
 
 		this.currentPage = 1;
-		this.setSort({ store: this.store, sort: sort });
+		setCommentSort(this.store, sort);
 		this._fetchComments();
 	}
 

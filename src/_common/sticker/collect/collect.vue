@@ -1,3 +1,5 @@
+<script lang="ts" src="./collect"></script>
+
 <template>
 	<div>
 		<div class="-reveal">
@@ -24,7 +26,11 @@
 
 				<div class="-card-revealed-container">
 					<div v-for="{ sticker, sticker_id, count } of shownStickers" :key="sticker_id">
-						<app-sticker-card class="-card-revealed" :sticker="sticker" :label="`+${count}`">
+						<app-sticker-card
+							class="-card-revealed"
+							:sticker="sticker"
+							:label="`+${count}`"
+						>
 							<div
 								v-if="sticker.rarity > 0"
 								class="-card-revealed-effect"
@@ -85,11 +91,11 @@
 		</div>
 
 		<div v-if="!canReveal" class="text-center">
-			<div class="page-cut"></div>
+			<div class="page-cut" />
 			<p>
 				<translate>
-					You do not have enough points to unlock more stickers. Use Game Jolt, like some posts, you
-					might get some more.
+					You do not have enough points to unlock more stickers. Use Game Jolt, like some
+					posts, you might get some more.
 				</translate>
 			</p>
 			<app-button :to="{ name: 'dash.stickers.overview' }">
@@ -100,9 +106,9 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require '../card/variables.styl'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import '../card/variables.styl'
 
 .-sticker-amount
 	margin-top: 4px
@@ -131,23 +137,19 @@
 	margin-bottom: 24px
 
 	&:hover
-		animation: hidden-card-color 5s linear infinite alternate,
-				   hidden-card-shake 0.5s linear infinite
+		animation:
+			hidden-card-color 5s linear infinite alternate,
+			hidden-card-shake 0.5s linear infinite
 
 .-card-revealing
-	animation: hidden-card-shake 0.3s linear infinite,
-			   card-revealing 2s linear 1 normal forwards
+	animation:
+		hidden-card-shake 0.3s linear infinite,
+		card-revealing 2s linear 1 normal forwards
 
 .-card-revealing-outer
 	animation: card-outer-revealing 2s linear 1 normal forwards
 
-.-card-revealed-outer
-	position: relative
-
 .-card-revealed-container
-	position: relative
-	overflow: hidden
-	rounded-corners-lg()
 	animation: card-revealed 0.5s linear 1 normal forwards
 	width: 100%
 	display: grid
@@ -161,19 +163,24 @@
 	top: 0
 	width: 300%
 	height: 40px
-	background-color rgba(200, 200, 200, 0.5)
+	background-color: rgba(200, 200, 200, 0.5)
 
 	&-uncommon
 		animation: card-revealed-uncommon 0.5s linear 2 normal forwards
+
 	&-rare
 		animation: card-revealed-rare 0.5s linear 3 normal forwards
+
 	&-epic
 		animation: card-revealed-epic 0.5s linear 4 normal forwards
 
 .-revealed-controls
 	margin-top: 20px
 
-	&, &-above, &-load-more, &-placeholder
+	&
+	&-above
+	&-load-more
+	&-placeholder
 		z-index: 0
 
 	&-above
@@ -220,7 +227,6 @@ $-hidden-card-color-shadow-large = 20px
 
 	100%
 		filter: drop-shadow(0 0 $-hidden-card-color-shadow-large #b3b3b3)
-
 
 @keyframes hidden-card-shake
 	0%
@@ -298,5 +304,3 @@ $-hidden-card-color-shadow-large = 20px
 		filter: none
 		transform: rotate(-45deg) translateX(-150px) translateY(90px)
 </style>
-
-<script lang="ts" src="./collect"></script>

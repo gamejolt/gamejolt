@@ -19,9 +19,11 @@ import { AppObserveDimensions } from '../../../../../../_common/observe-dimensio
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../../_common/shortkey/shortkey.vue';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { ChatClient, ChatKey, setMessageEditing } from '../../../client';
+import { ChatClient, ChatKey, setMessageEditing, startTyping, stopTyping } from '../../../client';
 import { ChatMessage, CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../../message';
 import { ChatRoom } from '../../../room';
+
+const TYPING_TIMEOUT_INTERVAL = 3000;
 
 export type FormModel = {
 	content: string;
@@ -53,7 +55,10 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 	// Don't show "Do you want to save" when dismissing the form.
 	warnOnDiscard = false;
 
+	typing = false;
+
 	private escapeCallback?: EscapeStackCallback;
+	private typingTimeout!: NodeJS.Timer;
 
 	$refs!: {
 		form: AppForm;
@@ -88,6 +93,18 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 	get shouldShiftEditor() {
 		return Screen.isXs && this.isEditorFocused;
+	}
+
+	get typingDisplayNames() {
+		const usersOnline = this.chat.roomMembers[this.room.id];
+		if (!usersOnline || usersOnline.collection.length === 0) {
+			return [];
+		}
+
+		return usersOnline.collection
+			.filter(user => user.typing)
+			.filter(user => user.id !== this.chat.currentUser?.id)
+			.map(user => user.display_name);
 	}
 
 	get hasContent() {
@@ -194,8 +211,20 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 
 		await this.submitMessage();
 
+		this.disableTypingTimeout();
+
 		// Refocus editor after submitting message with enter.
 		this.$refs.editor.focus();
+	}
+
+	onChange(_value: string) {
+		if (!this.typing) {
+			this.typing = true;
+			startTyping(this.chat);
+		} else {
+			clearTimeout(this.typingTimeout);
+		}
+		this.typingTimeout = setTimeout(this.disableTypingTimeout, TYPING_TIMEOUT_INTERVAL);
 	}
 
 	onEditorInsertBlockNode(_nodeType: string) {
@@ -229,7 +258,7 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		EventBus.emit('Chat.inputResize');
 	}
 
-	onUpKeyPressed() {
+	onUpKeyPressed(event: KeyboardEvent) {
 		if (this.isEditing || this.hasContent) {
 			return;
 		}
@@ -241,14 +270,53 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		const lastMessage = userMessages[userMessages.length - 1];
 
 		if (lastMessage) {
+			// Prevent the "up" key press. This is to stop it from acting as a "go to beginning of line".
+			// The content editor is focused immediately after this, and we want the editor to focus the end
+			// of the content. This prevents it jump to the beginning of the line.
+			event.preventDefault();
+
 			setMessageEditing(this.chat, lastMessage);
 		}
+	}
+
+	getTypingText() {
+		const displayNamePlaceholderValues = {
+			user1: this.typingDisplayNames[0],
+			user2: this.typingDisplayNames[1],
+			user3: this.typingDisplayNames[2],
+		};
+
+		if (this.typingDisplayNames.length > 3) {
+			return this.$gettext(`Several people are typing...`);
+		} else if (this.typingDisplayNames.length === 3) {
+			return this.$gettextInterpolate(
+				`%{ user1 }, %{ user2 } and %{ user3 } are typing...`,
+				displayNamePlaceholderValues
+			);
+		} else if (this.typingDisplayNames.length === 2) {
+			return this.$gettextInterpolate(
+				`%{ user1 } and %{ user2 } are typing...`,
+				displayNamePlaceholderValues
+			);
+		} else if (this.typingDisplayNames.length === 1) {
+			return this.$gettextInterpolate(
+				`%{ user1 } is typing...`,
+				displayNamePlaceholderValues
+			);
+		}
+
+		return '';
 	}
 
 	async cancelEditing() {
 		this.emitCancel();
 		setMessageEditing(this.chat, null);
 		this.clearMsg();
+
+		// Wait in case the editor loses focus
+		await this.$nextTick();
+		// Regain focus on the editor
+		this.$refs.editor.focus();
 	}
 
 	private async clearMsg() {
@@ -258,5 +326,10 @@ export default class AppChatWindowSendForm extends BaseForm<FormModel> {
 		// Wait for errors, then clear them.
 		await this.$nextTick();
 		this.$refs.form.clearErrors();
+	}
+
+	private disableTypingTimeout() {
+		this.typing = false;
+		stopTyping(this.chat);
 	}
 }

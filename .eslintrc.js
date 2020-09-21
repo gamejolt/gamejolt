@@ -24,6 +24,12 @@ module.exports = {
 		'@typescript-eslint/no-unsafe-return': 'off',
 		'@typescript-eslint/no-unused-vars': 'off',
 		'@typescript-eslint/no-var-requires': 'off',
+		'vue/component-tags-order': [
+			'warn',
+			{
+				order: ['script', 'template', 'style'],
+			},
+		],
 		'vue/html-indent': ['error', 'tab'],
 		'vue/html-self-closing': [
 			'warn',

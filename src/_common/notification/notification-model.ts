@@ -35,7 +35,7 @@ function getRouteLocationForModel(model: Game | User | FiresidePost | Community)
 		return model.url;
 	} else if (model instanceof Game) {
 		return model.routeLocation;
-	} else if (model instanceof FiresidePost && !!model.game) {
+	} else if (model instanceof FiresidePost && model.game) {
 		return model.routeLocation;
 	} else if (model instanceof Community) {
 		return model.routeLocation;

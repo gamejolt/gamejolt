@@ -1,34 +1,11 @@
 import Vue from 'vue';
-import { Action, Mutation, namespace, State } from 'vuex-class';
 import { arrayGroupBy, arrayRemove, numberSort } from '../../utils/array';
-import { VuexAction, VuexGetter, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 import { Api } from '../api/api.service';
 import { Growls } from '../growls/growls.service';
 import { Translate } from '../translate/translate.service';
 import { Comment, fetchComments } from './comment-model';
 
-export const CommentStoreNamespace = 'comment';
-export const CommentState = namespace(CommentStoreNamespace, State);
-export const CommentAction = namespace(CommentStoreNamespace, Action);
-export const CommentMutation = namespace(CommentStoreNamespace, Mutation);
-
-export type CommentActions = {
-	'comment/lockCommentStore': { resource: string; resourceId: number };
-	'comment/fetchComments': { store: CommentStoreModel; page?: number; initialTab?: string };
-	'comment/pinComment': { comment: Comment };
-	'comment/setSort': { store: CommentStoreModel; sort: string };
-	'comment/fetchThread': { store: CommentStoreModel; parentId: number };
-};
-
-export type CommentMutations = {
-	'comment/releaseCommentStore': CommentStoreModel;
-	'comment/setCommentCount': { store: CommentStoreModel; count: number };
-	'comment/setParentCommentCount': { store: CommentStoreModel; count: number };
-	'comment/updateComment': { store: CommentStoreModel; commentId: number; data: any };
-	'comment/onCommentAdd': Comment;
-	'comment/onCommentEdit': Comment;
-	'comment/onCommentRemove': Comment;
-};
+export const CommentStoreManagerKey = Symbol('comment-store');
 
 export class CommentStoreModel {
 	totalCount = 0;
@@ -38,7 +15,7 @@ export class CommentStoreModel {
 	locks = 0;
 	sort = Comment.SORT_HOT;
 	// This flag gets set for every change (add/remove/update), that prompts the
-	// overview component owner to update the commment info
+	// overview component owner to update the comment info
 	overviewNeedsRefresh = false;
 
 	/**
@@ -86,224 +63,205 @@ export class CommentStoreModel {
 	}
 }
 
-@VuexModule()
-export class CommentStore extends VuexStore<CommentStore, CommentActions, CommentMutations> {
+/** Keeper of The Comment Stores (CommentStoreModel) */
+export class CommentStoreManager {
 	stores: { [k: string]: CommentStoreModel } = {};
+}
 
-	@VuexGetter
-	getCommentStore(resource: string, resourceId: number): CommentStoreModel | undefined {
-		const storeId = resource + '/' + resourceId;
-		return this.stores[storeId];
+export function getCommentStore(
+	manager: CommentStoreManager,
+	resource: string,
+	resourceId: number
+): CommentStoreModel | undefined {
+	const storeId = resource + '/' + resourceId;
+	return manager.stores[storeId];
+}
+
+export function lockCommentStore(
+	manager: CommentStoreManager,
+	resource: string,
+	resourceId: number
+) {
+	const storeId = resource + '/' + resourceId;
+
+	if (!manager.stores[storeId]) {
+		Vue.set(manager.stores, storeId, new CommentStoreModel(resource, resourceId));
 	}
 
-	@VuexAction
-	async lockCommentStore(payload: CommentActions['comment/lockCommentStore']) {
-		const { resource, resourceId } = payload;
-		const storeId = resource + '/' + resourceId;
-		this._ensureCommentStore(payload);
-		return this.stores[storeId];
-	}
+	++manager.stores[storeId].locks;
+	return manager.stores[storeId];
+}
 
-	@VuexMutation
-	private _ensureCommentStore(payload: { resource: string; resourceId: number }) {
-		const { resource, resourceId } = payload;
-		const storeId = resource + '/' + resourceId;
-
-		if (!this.stores[storeId]) {
-			Vue.set(this.stores, storeId, new CommentStoreModel(resource, resourceId));
-		}
-
-		++this.stores[storeId].locks;
-	}
-
-	@VuexMutation
-	releaseCommentStore(store: CommentMutations['comment/releaseCommentStore']) {
-		const storeId = store.resource + '/' + store.resourceId;
-		if (!this.stores[storeId]) {
-			console.warn(
-				`Tried releasing a comment store that doesn't exist: ${storeId} - most likely it was released twice`
-			);
-			return;
-		}
-
-		--this.stores[storeId].locks;
-		if (this.stores[storeId].locks <= 0) {
-			Vue.delete(this.stores, storeId);
-		}
-	}
-
-	@VuexAction
-	async fetchThread(payload: CommentActions['comment/fetchThread']) {
-		const { store, parentId } = payload;
-		const response = await Api.sendRequest(`/comments/get-thread/${parentId}`, null, {
-			noErrorRedirect: true,
-		});
-
-		const parent = new Comment(response.parent);
-		const children = Comment.populate(response.children);
-
-		const comments = children;
-		comments.push(parent);
-
-		this._addComments({ store, comments });
-
-		return response;
-	}
-
-	@VuexAction
-	async fetchComments(payload: CommentActions['comment/fetchComments']) {
-		const { store, page } = payload;
-		let response: any;
-
-		// 'new' and 'you' sort by last timestamp using scroll
-		if (store.sort === Comment.SORT_NEW || store.sort === Comment.SORT_YOU) {
-			// load comments after the last timestamp
-			const lastComment =
-				store.parentComments.length === 0
-					? null // no comments loaded
-					: store.parentComments[store.parentComments.length - 1];
-
-			// only use the last comment's timestamp if it's not pinned (pinned comment's dates are sorted differently)
-			const lastTimestamp =
-				lastComment !== null && !lastComment.is_pinned ? lastComment.posted_on : null;
-
-			response = await fetchComments(store.resource, store.resourceId, store.sort, {
-				scrollId: lastTimestamp,
-			});
-		} else {
-			// 'hot' and 'top' paginate
-			response = await fetchComments(store.resource, store.resourceId, store.sort, {
-				page: page || 1,
-			});
-		}
-
-		const count = response.count || 0;
-		const parentCount = response.parentCount || 0;
-		const comments = Comment.populate(response.comments).concat(
-			Comment.populate(response.childComments)
+export function releaseCommentStore(manager: CommentStoreManager, store: CommentStoreModel) {
+	const storeId = store.resource + '/' + store.resourceId;
+	if (!manager.stores[storeId]) {
+		console.warn(
+			`Tried releasing a comment store that doesn't exist: ${storeId} - most likely it was released twice`
 		);
-
-		this.setCommentCount({ store, count });
-		this.setParentCommentCount({ store, count: parentCount });
-		this._addComments({ store, comments });
-
-		return response;
+		return;
 	}
 
-	@VuexAction
-	async pinComment(payload: CommentActions['comment/pinComment']) {
-		const { comment } = payload;
-		await comment.$pin();
-		const store = this.getCommentStore(comment.resource, comment.resource_id);
-		if (store instanceof CommentStoreModel) {
-			store.afterModification();
+	--store.locks;
+	if (store.locks <= 0) {
+		Vue.delete(manager.stores, storeId);
+	}
+}
+
+export async function fetchCommentThread(store: CommentStoreModel, parentId: number) {
+	const response = await Api.sendRequest(`/comments/get-thread/${parentId}`, null, {
+		noErrorRedirect: true,
+	});
+
+	const parent = new Comment(response.parent);
+	const children = Comment.populate(response.children);
+
+	const comments = children;
+	comments.push(parent);
+
+	_addComments(store, comments);
+
+	return response;
+}
+
+export async function fetchStoreComments(store: CommentStoreModel, page?: number) {
+	let response: any;
+
+	// 'new' and 'you' sort by last timestamp using scroll
+	if (store.sort === Comment.SORT_NEW || store.sort === Comment.SORT_YOU) {
+		// load comments after the last timestamp
+		const lastComment =
+			store.parentComments.length === 0
+				? null // no comments loaded
+				: store.parentComments[store.parentComments.length - 1];
+
+		// only use the last comment's timestamp if it's not pinned (pinned comment's dates are sorted differently)
+		const lastTimestamp =
+			lastComment !== null && !lastComment.is_pinned ? lastComment.posted_on : null;
+
+		response = await fetchComments(store.resource, store.resourceId, store.sort, {
+			scrollId: lastTimestamp,
+		});
+	} else {
+		// 'hot' and 'top' paginate
+		response = await fetchComments(store.resource, store.resourceId, store.sort, {
+			page: page || 1,
+		});
+	}
+
+	const count = response.count || 0;
+	const parentCount = response.parentCount || 0;
+	const comments = Comment.populate(response.comments).concat(
+		Comment.populate(response.childComments)
+	);
+
+	setCommentCount(store, count);
+	_setParentCommentCount(store, parentCount);
+	_addComments(store, comments);
+
+	return response;
+}
+
+export async function pinComment(manager: CommentStoreManager, comment: Comment) {
+	await comment.$pin();
+
+	const store = getCommentStore(manager, comment.resource, comment.resource_id);
+	if (store instanceof CommentStoreModel) {
+		store.afterModification();
+	}
+}
+
+export function setCommentSort(store: CommentStoreModel, sort: string) {
+	store.sort = sort;
+	// clear the store's comments and prepare for reload
+	store.clear();
+}
+
+function _addComments(store: CommentStoreModel, comments: Comment[]) {
+	for (const comment of comments) {
+		// Replace an old instance of the comment in the store if it exists.
+		const index = store.comments.findIndex(c => c.id === comment.id);
+		if (index !== -1) {
+			Vue.set(store.comments, index, comment);
+		} else {
+			store.comments.push(comment);
 		}
 	}
+}
 
-	@VuexAction
-	async setSort(payload: CommentActions['comment/setSort']) {
-		const { store, sort } = payload;
-		store.sort = sort;
-		// clear the store's comments and prepare for reload
-		store.clear();
+function _setParentCommentCount(store: CommentStoreModel, count: number) {
+	store.parentCount = count;
+}
+
+export function setCommentCount(store: CommentStoreModel, count: number) {
+	store.count = count;
+
+	if (count) {
+		store.totalCount = count;
 	}
+}
 
-	@VuexMutation
-	private _addComments(payload: { store: CommentStoreModel; comments: Comment[] }) {
-		const { store, comments } = payload;
-		for (const comment of comments) {
-			// Replace an old instance of the comment in the store if it exists.
-			const index = store.comments.findIndex(c => c.id === comment.id);
-			if (index !== -1) {
-				Vue.set(store.comments, index, comment);
-			} else {
-				store.comments.push(comment);
-			}
-		}
+export function updateComment(store: CommentStoreModel, commentId: number, data: any) {
+	const comment = store.comments.find(i => i.id === commentId);
+	if (comment) {
+		comment.assign(data);
 	}
+}
 
-	@VuexMutation
-	private setParentCommentCount(payload: CommentMutations['comment/setParentCommentCount']) {
-		const { store, count } = payload;
-		store.parentCount = count;
-	}
+export function onCommentAdd(manager: CommentStoreManager, comment: Comment) {
+	const store = getCommentStore(manager, comment.resource, comment.resource_id);
 
-	@VuexMutation
-	setCommentCount(payload: CommentMutations['comment/setCommentCount']) {
-		const { store, count } = payload;
-		store.count = count;
-
-		if (count) {
-			store.totalCount = count;
-		}
-	}
-
-	@VuexMutation
-	updateComment(payload: CommentMutations['comment/updateComment']) {
-		const { store, commentId, data } = payload;
-
-		const comment = store.comments.find(i => i.id === commentId);
-		if (comment) {
-			comment.assign(data);
-		}
-	}
-
-	@VuexMutation
-	onCommentAdd(comment: CommentMutations['comment/onCommentAdd']) {
-		const store = this.getCommentStore(comment.resource, comment.resource_id);
-		if (comment.status === Comment.STATUS_SPAM) {
-			Growls.success(
-				Translate.$gettext(
-					'Your comment has been marked for review. Please allow some time for it to show on the site.'
-				),
-				Translate.$gettext('Almost there...')
-			);
-		} else if (store && !store.contains(comment)) {
-			// insert the new comment at the beginning
-			if (store.sort === Comment.SORT_YOU || comment.parent_id) {
-				++store.count;
-				store.comments.unshift(comment);
-				if (!comment.parent_id) {
-					++store.parentCount;
-				}
-			}
-			store.afterModification();
-		}
-	}
-
-	@VuexMutation
-	onCommentEdit(comment: CommentMutations['comment/onCommentEdit']) {
-		// Was it marked as possible spam?
-		if (comment.status === Comment.STATUS_SPAM) {
-			Growls.success(
-				Translate.$gettext(
-					'Your comment has been marked for review. Please allow some time for it to show on the site.'
-				),
-				Translate.$gettext('Almost there...')
-			);
-		}
-		const store = this.getCommentStore(comment.resource, comment.resource_id);
-		if (store instanceof CommentStoreModel) {
-			store.afterModification();
-		}
-	}
-
-	@VuexMutation
-	onCommentRemove(comment: CommentMutations['comment/onCommentRemove']) {
-		const store = this.getCommentStore(comment.resource, comment.resource_id);
-		if (store) {
+	if (comment.status === Comment.STATUS_SPAM) {
+		Growls.success(
+			Translate.$gettext(
+				'Your comment has been marked for review. Please allow some time for it to show on the site.'
+			),
+			Translate.$gettext('Almost there...')
+		);
+	} else if (store && !store.contains(comment)) {
+		// insert the new comment at the beginning
+		if (store.sort === Comment.SORT_YOU || comment.parent_id) {
+			++store.count;
+			store.comments.unshift(comment);
 			if (!comment.parent_id) {
-				--store.parentCount;
-				// reduce comment count by amount of child comments on this parent + 1 for the parent
-				const childAmount = store.comments.filter(c => c.parent_id === comment.id).length;
-				store.count -= childAmount + 1;
-				store.totalCount -= childAmount + 1;
-			} else {
-				--store.count;
-				--store.totalCount;
+				++store.parentCount;
 			}
-			arrayRemove(store.comments, i => i.id === comment.id);
-			store.afterModification();
 		}
+		store.afterModification();
 	}
+}
+
+export function onCommentEdit(manager: CommentStoreManager, comment: Comment) {
+	// Was it marked as possible spam?
+	if (comment.status === Comment.STATUS_SPAM) {
+		Growls.success(
+			Translate.$gettext(
+				'Your comment has been marked for review. Please allow some time for it to show on the site.'
+			),
+			Translate.$gettext('Almost there...')
+		);
+	}
+	const store = getCommentStore(manager, comment.resource, comment.resource_id);
+	if (store instanceof CommentStoreModel) {
+		store.afterModification();
+	}
+}
+
+export function onCommentRemove(manager: CommentStoreManager, comment: Comment) {
+	const store = getCommentStore(manager, comment.resource, comment.resource_id);
+	if (!store) {
+		return;
+	}
+
+	if (!comment.parent_id) {
+		--store.parentCount;
+		// reduce comment count by amount of child comments on this parent + 1 for the parent
+		const childAmount = store.comments.filter(c => c.parent_id === comment.id).length;
+		store.count -= childAmount + 1;
+		store.totalCount -= childAmount + 1;
+	} else {
+		--store.count;
+		--store.totalCount;
+	}
+	arrayRemove(store.comments, i => i.id === comment.id);
+	store.afterModification();
 }

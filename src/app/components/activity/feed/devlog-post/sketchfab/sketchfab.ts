@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import { AppResponsiveDimensions } from '../../../../../../_common/responsive-dimensions/responsive-dimensions';
 import AppSketchfabEmbed from '../../../../../../_common/sketchfab/embed/embed.vue';
@@ -45,5 +46,6 @@ export default class AppActivityFeedDevlogPostSketchfab extends Vue {
 	play() {
 		this.isShowing = true;
 		this.$emit('expanded');
+		Analytics.trackEvent('activity-feed', 'sketchfab-play');
 	}
 }

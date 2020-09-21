@@ -8,6 +8,7 @@ import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../_common/game/game.model';
 import { Notification } from '../../../../_common/notification/notification-model';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { User } from '../../../../_common/user/user.model';
 import { ActivityFeedInput } from './item-service';
 import { ActivityFeedState, ActivityFeedStateOptions } from './state';
 import { ActivityFeedView, ActivityFeedViewOptions } from './view';
@@ -95,26 +96,26 @@ export class ActivityFeedService {
 	 * as well as the game's dashboard.
 	 */
 	private static isInCorrectManageRoute(post: FiresidePost, route: Route) {
-		if (post.post_to_user_profile && this.isInCorrectUserManageRoute(post, route)) {
+		if (post.post_to_user_profile && this.isInCorrectUserManageRoute(post.user, route)) {
 			return true;
 		}
 
 		if (post.game instanceof Game) {
-			return this.isInCorrectGameManageRoute(post, route);
+			return this.isInCorrectGameManageRoute(post.game, route);
 		}
 
-		return this.isInCorrectUserManageRoute(post, route);
+		return this.isInCorrectUserManageRoute(post.user, route);
 	}
 
-	private static isInCorrectGameManageRoute(post: FiresidePost, route: Route) {
+	private static isInCorrectGameManageRoute(game: Game, route: Route) {
 		return (
 			route.name === 'dash.games.manage.devlog' &&
-			route.params.id.toString() === post.game.id.toString()
+			route.params.id.toString() === game.id.toString()
 		);
 	}
 
-	private static isInCorrectUserManageRoute(post: FiresidePost, route: Route) {
-		return route.name === 'profile.overview' && route.params.username === post.user.username;
+	private static isInCorrectUserManageRoute(user: User, route: Route) {
+		return route.name === 'profile.overview' && route.params.username === user.username;
 	}
 
 	/**
@@ -168,7 +169,7 @@ export class ActivityFeedService {
 	}
 
 	private static applyCorrectManageFeedLocation(post: FiresidePost, location: Location) {
-		let tab = getTabForPost(post);
+		const tab = getTabForPost(post);
 		if (tab !== 'active') {
 			location.query = { tab };
 		}
@@ -231,7 +232,11 @@ export class ActivityFeedService {
 		} else {
 			// If we just toggled off post_to_user_profile on a game post while
 			// viewing it in the user's feed, we should redirect to the game's feed.
-			if (!post.post_to_user_profile && this.isInCorrectUserManageRoute(post, route)) {
+			if (
+				!post.post_to_user_profile &&
+				this.isInCorrectUserManageRoute(post.user, route) &&
+				post.game
+			) {
 				const location: Location = {
 					name: 'dash.games.manage.devlog',
 					params: {

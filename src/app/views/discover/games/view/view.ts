@@ -1,4 +1,4 @@
-import { Component } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-property-decorator';
 import { EventBus, EventBusDeregister } from '../../../../../system/event/event-bus.service';
 import { enforceLocation } from '../../../../../utils/router';
 import { AdSettingsContainer } from '../../../../../_common/ad/ad-store';
@@ -6,11 +6,12 @@ import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../_common/api/api.service';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
 import {
-	CommentAction,
-	CommentMutation,
-	CommentState,
-	CommentStore,
+	CommentStoreManager,
+	CommentStoreManagerKey,
 	CommentStoreModel,
+	lockCommentStore,
+	releaseCommentStore,
+	setCommentCount,
 } from '../../../../../_common/comment/comment-store';
 import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
 import { PartnerReferral } from '../../../../../_common/partner-referral/partner-referral-service';
@@ -37,6 +38,8 @@ import './view-content.styl';
 import { RouteStore, routeStore, RouteStoreModule, RouteStoreName } from './view.store';
 import AppDiscoverGamesViewControls from './_controls/controls.vue';
 import AppDiscoverGamesViewNav from './_nav/nav.vue';
+
+const GameThemeKey = 'game';
 
 @Component({
 	name: 'RouteDiscoverGamesView',
@@ -96,10 +99,11 @@ import AppDiscoverGamesViewNav from './_nav/nav.vue';
 	},
 	resolveStore({ payload }) {
 		routeStore.commit('processPayload', payload);
-		store.commit('theme/setPageTheme', routeStore.state.game.theme || null);
 	},
 })
 export default class RouteDiscoverGamesView extends BaseRouteComponent {
+	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
+
 	@RouteStoreModule.State
 	game!: RouteStore['game'];
 
@@ -145,18 +149,6 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	@RouteStoreModule.Mutation
 	setUserRating!: RouteStore['setUserRating'];
 
-	@CommentState
-	getCommentStore!: CommentStore['getCommentStore'];
-
-	@CommentAction
-	lockCommentStore!: CommentStore['lockCommentStore'];
-
-	@CommentMutation
-	releaseCommentStore!: CommentStore['releaseCommentStore'];
-
-	@CommentMutation
-	setCommentCount!: CommentStore['setCommentCount'];
-
 	commentStore: CommentStoreModel | null = null;
 
 	readonly Screen = Screen;
@@ -188,22 +180,19 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		);
 	}
 
-	get shouldShowFullCover() {
-		return Screen.isXs || this.$route.name !== 'discover.games.view.devlog.view';
-	}
-
 	/**
 	 * The cover height changes when we switch to not showing the full cover, so
 	 * let's make sure we reset the autoscroll anchor so that it scrolls to the
 	 * top again.
 	 */
 	get autoscrollAnchorKey() {
-		return this.game.id + (this.shouldShowFullCover ? '-full' : '-collapsed');
+		return this.game.id;
 	}
 
 	routeCreated() {
 		// This isn't needed by SSR or anything, so it's fine to call it here.
 		this.bootstrapGame(parseInt(this.$route.params.id, 10));
+		this.setPageTheme();
 		this._setAdSettings();
 
 		// Any game rating change will broadcast this event. We catch it so we
@@ -228,7 +217,8 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		}
 	}
 
-	async routeResolved($payload: any) {
+	routeResolved($payload: any) {
+		this.setPageTheme();
 		this._setAdSettings();
 
 		// If the game has a GA tracking ID, then we attach it to this
@@ -239,18 +229,15 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		}
 
 		if (this.commentStore) {
-			this.releaseCommentStore(this.commentStore);
+			releaseCommentStore(this.commentManager, this.commentStore);
 			this.commentStore = null;
 		}
-		this.commentStore = await this.lockCommentStore({
-			resource: 'Game',
-			resourceId: this.game.id,
-		});
-		this.setCommentCount({ store: this.commentStore, count: $payload.commentsCount || 0 });
+		this.commentStore = lockCommentStore(this.commentManager, 'Game', this.game.id);
+		setCommentCount(this.commentStore, $payload.commentsCount || 0);
 	}
 
 	routeDestroyed() {
-		store.commit('theme/setPageTheme', null);
+		store.commit('theme/clearPageTheme', GameThemeKey);
 		this._releaseAdSettings();
 
 		if (this.ratingWatchDeregister) {
@@ -263,7 +250,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		}
 
 		if (this.commentStore) {
-			this.releaseCommentStore(this.commentStore);
+			releaseCommentStore(this.commentManager, this.commentStore);
 			this.commentStore = null;
 		}
 	}
@@ -281,6 +268,14 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	scrollToMultiplePackages() {
 		this.showMultiplePackagesMessage();
 		Scroll.to('game-releases');
+	}
+
+	private setPageTheme() {
+		const theme = this.game?.theme ?? null;
+		store.commit('theme/setPageTheme', {
+			key: GameThemeKey,
+			theme,
+		});
 	}
 
 	private _setAdSettings() {

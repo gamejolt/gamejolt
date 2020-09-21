@@ -1,8 +1,10 @@
+<script lang="ts" src="./video"></script>
+
 <template>
 	<div class="video">
 		<template v-if="!GJ_IS_SSR">
-			<div class="video-loader" v-if="!isLoaded && showLoading">
-				<app-loading :hide-label="true" :no-color="true" :stationary="true"></app-loading>
+			<div v-if="!isLoaded && showLoading" class="video-loader">
+				<app-loading :hide-label="true" :no-color="true" :stationary="true" />
 			</div>
 		</template>
 		<template v-else>
@@ -34,5 +36,3 @@
 		display: block
 		width: 100%
 </style>
-
-<script lang="ts" src="./video"></script>

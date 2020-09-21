@@ -13,6 +13,7 @@
 				:startup-activity="editorStartupActivity"
 				:max-height="maxHeight"
 				:display-rules="displayRules"
+				focus-end
 				@focus="onFocusEditor"
 				@blur="onBlurEditor"
 			/>

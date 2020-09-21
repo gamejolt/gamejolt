@@ -103,7 +103,8 @@ export class NotificationText {
 						`Your post in the <em>%{ community }</em> community has been featured!`,
 						{
 							community: postCommunity.community.name,
-						}
+						},
+						!plaintext
 					)
 				);
 			}
@@ -120,7 +121,8 @@ export class NotificationText {
 							{
 								trophyTitle: notification.action_model.trophy.title,
 								gameTitle: notification.action_model.game.title,
-							}
+							},
+							!plaintext
 						)
 					);
 				}
@@ -137,7 +139,8 @@ export class NotificationText {
 							`You achieved the Game Jolt Trophy <em>%{ trophyTitle }</em>!`,
 							{
 								trophyTitle: notification.action_model.trophy.title,
-							}
+							},
+							!plaintext
 						)
 					);
 				}
@@ -158,14 +161,16 @@ export class NotificationText {
 					return _process(
 						Translate.$gettextInterpolate(
 							`<em>%{ subject }</em> shouted at you!`,
-							this.getTranslationValues(notification)
+							this.getTranslationValues(notification),
+							!plaintext
 						)
 					);
 				} else {
 					return _process(
 						Translate.$gettextInterpolate(
 							`<em>%{ subject }</em> commented on <b>%{ object }</b>.`,
-							this.getTranslationValues(notification)
+							this.getTranslationValues(notification),
+							!plaintext
 						)
 					);
 				}
@@ -176,14 +181,16 @@ export class NotificationText {
 					return _process(
 						Translate.$gettextInterpolate(
 							`<em>%{ subject }</em> replied to your shout to <b>%{ object }</b>.`,
-							this.getTranslationValues(notification)
+							this.getTranslationValues(notification),
+							!plaintext
 						)
 					);
 				} else {
 					return _process(
 						Translate.$gettextInterpolate(
 							`<em>%{ subject }</em> replied to your comment on <b>%{ object }</b>.`,
-							this.getTranslationValues(notification)
+							this.getTranslationValues(notification),
+							!plaintext
 						)
 					);
 				}
@@ -193,7 +200,8 @@ export class NotificationText {
 				return _process(
 					Translate.$gettextInterpolate(
 						`<em>%{ subject }</em> posted a new forum post to <b>%{ object }</b>.`,
-						this.getTranslationValues(notification)
+						this.getTranslationValues(notification),
+						!plaintext
 					)
 				);
 			}
@@ -202,7 +210,8 @@ export class NotificationText {
 				return _process(
 					Translate.$gettextInterpolate(
 						`<em>%{ subject }</em> sent you a friend request.`,
-						this.getTranslationValues(notification)
+						this.getTranslationValues(notification),
+						!plaintext
 					)
 				);
 			}
@@ -211,7 +220,8 @@ export class NotificationText {
 				return _process(
 					Translate.$gettextInterpolate(
 						`<em>%{ subject }</em> accepted your friend request.`,
-						this.getTranslationValues(notification)
+						this.getTranslationValues(notification),
+						!plaintext
 					)
 				);
 			}
@@ -220,7 +230,8 @@ export class NotificationText {
 				return _process(
 					Translate.$gettextInterpolate(
 						`<em>%{ subject }</em> liked <b>%{ object }</b>.`,
-						this.getTranslationValues(notification)
+						this.getTranslationValues(notification),
+						!plaintext
 					)
 				);
 			}
@@ -229,7 +240,8 @@ export class NotificationText {
 				return _process(
 					Translate.$gettextInterpolate(
 						`<em>%{ subject }</em> followed <b>%{ object }</b>.`,
-						this.getTranslationValues(notification)
+						this.getTranslationValues(notification),
+						!plaintext
 					)
 				);
 			}
@@ -246,7 +258,8 @@ export class NotificationText {
 				return _process(
 					Translate.$gettextInterpolate(
 						`<em>%{ subject }</em> bought a package in <b>%{ object }</b> for %{ amount }.`,
-						translationValues
+						translationValues,
+						!plaintext
 					)
 				);
 			}
@@ -255,7 +268,8 @@ export class NotificationText {
 				return _process(
 					Translate.$gettextInterpolate(
 						`<em>%{ subject }</em> followed you.`,
-						this.getTranslationValues(notification)
+						this.getTranslationValues(notification),
+						!plaintext
 					)
 				);
 			}
@@ -266,14 +280,16 @@ export class NotificationText {
 						return _process(
 							Translate.$gettextInterpolate(
 								`<em>%{ subject }</em> invited you to collaborate on the game <b>%{ object }</b>.`,
-								this.getTranslationValues(notification)
+								this.getTranslationValues(notification),
+								!plaintext
 							)
 						);
 					case 'Community':
 						return _process(
 							Translate.$gettextInterpolate(
 								`<em>%{ subject }</em> invited you to collaborate on the <b>%{ object }</b> community.`,
-								this.getTranslationValues(notification)
+								this.getTranslationValues(notification),
+								!plaintext
 							)
 						);
 				}
@@ -292,7 +308,8 @@ export class NotificationText {
 									{
 										object: notification.to_model.title,
 										subject: this.getSubjectTranslationValue(notification),
-									}
+									},
+									!plaintext
 								)
 							);
 						} else if (notification.to_model instanceof FiresidePost) {
@@ -302,7 +319,8 @@ export class NotificationText {
 									{
 										object: notification.to_model.getShortLead(),
 										subject: this.getSubjectTranslationValue(notification),
-									}
+									},
+									!plaintext
 								)
 							);
 						} else if (notification.to_model instanceof User) {
@@ -312,7 +330,8 @@ export class NotificationText {
 									{
 										object: notification.to_model.username,
 										subject: this.getSubjectTranslationValue(notification),
-									}
+									},
+									!plaintext
 								)
 							);
 						}
@@ -326,7 +345,8 @@ export class NotificationText {
 								{
 									object: (notification.to_model as Game).title,
 									subject: this.getSubjectTranslationValue(notification),
-								}
+								},
+								!plaintext
 							)
 						);
 					}
@@ -335,7 +355,8 @@ export class NotificationText {
 						return _process(
 							Translate.$gettextInterpolate(
 								`<em>%{ subject }</em> mentioned you in their user bio.`,
-								this.getTranslationValues(notification)
+								this.getTranslationValues(notification),
+								!plaintext
 							)
 						);
 					}
@@ -347,7 +368,8 @@ export class NotificationText {
 								{
 									object: (notification.to_model as FiresidePost).getShortLead(),
 									subject: this.getSubjectTranslationValue(notification),
-								}
+								},
+								!plaintext
 							)
 						);
 					}
@@ -359,7 +381,8 @@ export class NotificationText {
 								{
 									object: (notification.to_model as ForumTopic).title,
 									subject: this.getSubjectTranslationValue(notification),
-								}
+								},
+								!plaintext
 							)
 						);
 					}

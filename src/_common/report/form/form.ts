@@ -82,7 +82,7 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 						text: this.$gettext('Other'),
 					},
 				];
-			case 'Fireside_Post':
+			case 'Fireside_Post': {
 				const reasons = [
 					{
 						radioValue: 'spam',
@@ -133,6 +133,7 @@ export default class AppReportForm extends BaseForm<FormModel> implements FormOn
 				}
 
 				return reasons;
+			}
 			case 'Comment':
 			case 'Forum_Topic':
 			case 'Forum_Post':

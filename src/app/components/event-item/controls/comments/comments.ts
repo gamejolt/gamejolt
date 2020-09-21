@@ -1,14 +1,16 @@
 import Vue from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Inject, Prop, Watch } from 'vue-property-decorator';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import FormComment from '../../../../../_common/comment/add/add.vue';
 import { Comment } from '../../../../../_common/comment/comment-model';
 import {
-	CommentAction,
-	CommentMutation,
-	CommentStore,
+	CommentStoreManager,
+	CommentStoreManagerKey,
 	CommentStoreModel,
+	lockCommentStore,
+	releaseCommentStore,
+	setCommentCount,
 } from '../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../_common/comment/modal/modal.service';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
@@ -27,20 +29,13 @@ import AppEventItemControlsCommentsAddPlaceholder from './add-placeholder/add-pl
 	},
 })
 export default class AppEventItemControlsComments extends Vue {
+	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
+
 	@Prop(Model)
 	model!: Model;
 
 	@Prop(Boolean)
 	showFeed?: boolean;
-
-	@CommentAction
-	lockCommentStore!: CommentStore['lockCommentStore'];
-
-	@CommentMutation
-	releaseCommentStore!: CommentStore['releaseCommentStore'];
-
-	@CommentMutation
-	setCommentCount!: CommentStore['setCommentCount'];
 
 	commentStore: CommentStoreModel | null = null;
 	clickedComment = false;
@@ -81,19 +76,16 @@ export default class AppEventItemControlsComments extends Vue {
 		return !this.showFeed;
 	}
 
-	async created() {
-		this.commentStore = await this.lockCommentStore({
-			resource: this.resource,
-			resourceId: this.resourceId,
-		});
+	created() {
+		this.commentStore = lockCommentStore(this.commentManager, this.resource, this.resourceId);
 
 		// Bootstrap it with the post comment count since that's all we have.
-		this.setCommentCount({ store: this.commentStore, count: this.resourceCommentCount });
+		setCommentCount(this.commentStore, this.resourceCommentCount);
 	}
 
 	destroyed() {
 		if (this.commentStore) {
-			this.releaseCommentStore(this.commentStore);
+			releaseCommentStore(this.commentManager, this.commentStore);
 			this.commentStore = null;
 		}
 	}

@@ -1,5 +1,5 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 $-scroll-affixed-spacing = ($grid-gutter-width / 2)
 
@@ -48,7 +48,7 @@ body
 
 	@media $media-sm-up
 		top: $shell-top-nav-height + 10px
-		right: $shell-pane-width + 10px
+		left: $shell-content-sidebar-width + $shell-cbar-width + 10px
 
 //
 // And now for the long list of positioning shell elements.
@@ -64,7 +64,8 @@ body
 		#shell-top-nav
 			top: $shell-top-nav-height
 
-		.shell-pane, #shell-cbar, .content-with-sidebar--sidebar
+		.shell-pane
+		#shell-cbar
 			top: $shell-top-nav-height * 2
 
 		#shell-body
@@ -81,14 +82,21 @@ body
 		#shell-body
 			margin-left: $shell-cbar-width
 
-		.content-with-sidebar--sidebar
+	&.has-cbar
+	&.has-cbar-mobile
+		.shell-pane-left
+		#shell-sidebar
 			left: $shell-cbar-width
+
+		#shell-cbar
+			transform: translateX(0)
 
 body.has-hot-bottom
 	#shell-body
 		margin-bottom: $status-bar-height
 
-	.shell-pane, #shell-cbar, .content-with-sidebar--sidebar
+	.shell-pane
+	#shell-cbar
 		bottom: $status-bar-height
 
 	.growl-container

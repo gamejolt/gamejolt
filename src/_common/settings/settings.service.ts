@@ -54,6 +54,10 @@ const defaultSettings: { [k: string]: Setting } = {
 		// We do notify by default in client.
 		val: () => (GJ_IS_CLIENT ? 1 : 0),
 	},
+	'chat-group-show-members': {
+		type: 'boolean',
+		val: 1,
+	},
 	'restricted-browsing': {
 		type: 'boolean',
 		val: 1,
