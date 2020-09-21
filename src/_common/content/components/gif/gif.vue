@@ -6,7 +6,7 @@
 		:is-disabled="isDisabled"
 		@removed="onRemoved"
 	>
-		<div class="-outer">
+		<div class="-outer content-gif">
 			<div
 				ref="container"
 				v-app-observe-dimensions="computeSize"
