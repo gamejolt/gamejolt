@@ -666,13 +666,15 @@ export function addGroupMembers(chat: ChatClient, roomId: number, members: numbe
 }
 
 export async function leaveGroupRoom(chat: ChatClient, room: ChatRoom) {
-	if (room.isGroupRoom) {
-		chat.userChannel?.push('group_leave', { room_id: room.id }).receive('ok', _response => {
-			if (isInChatRoom(chat, room.id)) {
-				leaveChatRoom(chat);
-			}
-		});
+	if (!room.isGroupRoom) {
+		throw new Error(`Can't leave non-group rooms.`);
 	}
+
+	chat.userChannel?.push('group_leave', { room_id: room.id }).receive('ok', _response => {
+		if (isInChatRoom(chat, room.id)) {
+			leaveChatRoom(chat);
+		}
+	});
 }
 
 export function removeMessage(chat: ChatClient, msgId: number) {
