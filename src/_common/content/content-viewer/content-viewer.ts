@@ -25,10 +25,7 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	hydrator: ContentHydrator = new ContentHydrator();
 
 	private lightbox?: AppLightboxTS;
-	activeItem: MediaItem | null = null;
-
-	/** The MediaItem being viewed in the lightbox. */
-	lightboxMediaItems: MediaItem[] = [];
+	lightboxMediaItem: MediaItem | null = null;
 
 	get owner() {
 		return this;
@@ -110,7 +107,7 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	// -- Lightbox stuff --
 	onItemFullscreen(item: MediaItem) {
 		if (!this.lightbox) {
-			this.activeItem = item;
+			this.lightboxMediaItem = item;
 			this.createLightbox();
 		}
 	}
@@ -120,15 +117,15 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	}
 
 	getItemCount() {
-		return this.activeItem ? 1 : 0;
+		return this.lightboxMediaItem ? 1 : 0;
 	}
 
 	getActiveItem(): any {
-		return this.activeItem;
+		return this.lightboxMediaItem;
 	}
 
 	getItems(): any[] {
-		return this.activeItem ? [this.activeItem] : [];
+		return this.lightboxMediaItem ? [this.lightboxMediaItem] : [];
 	}
 
 	// unused, needed for LightboxMediaSource
@@ -144,7 +141,7 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 
 	onLightboxClose() {
 		this.lightbox = undefined;
-		this.activeItem = null;
+		this.lightboxMediaItem = null;
 	}
 
 	private closeLightbox() {
