@@ -1,5 +1,6 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Emit, Prop } from 'vue-property-decorator';
+import { findVueParent } from '../../../../utils/vue';
 import { AppImgResponsive } from '../../../img/responsive/responsive';
 import AppLoading from '../../../loading/loading.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/backdrop.vue';
@@ -8,6 +9,8 @@ import { AppObserveDimensions } from '../../../observe-dimensions/observe-dimens
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import { ContentEditorLinkModal } from '../../content-editor/modals/link/link-modal.service';
 import { ContentOwner } from '../../content-owner';
+import AppContentViewerTS from '../../content-viewer/content-viewer';
+import AppContentViewer from '../../content-viewer/content-viewer.vue';
 import AppBaseContentComponent from '../base/base-content-component.vue';
 
 @Component({
@@ -56,15 +59,20 @@ export default class AppContentMediaItem extends Vue {
 	computedHeight = this.mediaItemHeight;
 	imageLoaded = false;
 
+	contentViewerParent: AppContentViewerTS | null = null;
+
+	@Emit('removed') emitRemoved() {}
+	@Emit('update-attrs') emitUpdateAttrs(_attrs: Record<string, any>) {}
+
 	$refs!: {
 		container: HTMLDivElement;
 	};
 
 	get title() {
-		if (this.isHydrated && this.hasCaption) {
+		if (this.mediaItem && this.hasCaption) {
 			return this.caption;
 		}
-		if (this.isHydrated && this.hasLink) {
+		if (this.mediaItem && this.hasLink) {
 			return this.displayHref;
 		}
 		if (this.mediaItem instanceof MediaItem) {
@@ -101,10 +109,6 @@ export default class AppContentMediaItem extends Vue {
 		return this.computedHeight > 0 ? this.computedHeight + 'px' : 'auto';
 	}
 
-	get isHydrated() {
-		return !!this.mediaItem;
-	}
-
 	get itemAlignment() {
 		switch (this.align) {
 			case 'left':
@@ -117,6 +121,14 @@ export default class AppContentMediaItem extends Vue {
 
 	get hasLink() {
 		return typeof this.href === 'string' && this.href.length > 0;
+	}
+
+	get canFullscreenItem() {
+		if (!this.contentViewerParent || !this.mediaItem || this.hasLink) {
+			return false;
+		}
+
+		return !this.contentViewerParent.disableLightbox;
 	}
 
 	get displayHref() {
@@ -153,10 +165,12 @@ export default class AppContentMediaItem extends Vue {
 
 	mounted() {
 		this.computeSize();
+		this.contentViewerParent =
+			findVueParent<AppContentViewerTS>(this, AppContentViewer) || null;
 	}
 
 	onRemoved() {
-		this.$emit('removed');
+		this.emitRemoved();
 	}
 
 	async onEdit() {
@@ -165,13 +179,13 @@ export default class AppContentMediaItem extends Vue {
 		} else {
 			const result = await ContentEditorLinkModal.show(this.href);
 			if (result !== undefined) {
-				this.$emit('updateAttrs', { href: result.href });
+				this.emitUpdateAttrs({ href: result.href });
 			}
 		}
 	}
 
 	removeLink() {
-		this.$emit('updateAttrs', { href: '' });
+		this.emitUpdateAttrs({ href: '' });
 	}
 
 	computeSize() {
@@ -190,6 +204,14 @@ export default class AppContentMediaItem extends Vue {
 
 	onImageLoad() {
 		this.imageLoaded = true;
+	}
+
+	onItemFullscreen() {
+		if (!this.canFullscreenItem) {
+			return;
+		}
+
+		this.contentViewerParent!.onItemFullscreen(this.mediaItem!);
 	}
 }
 

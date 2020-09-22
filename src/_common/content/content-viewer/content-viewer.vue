@@ -1,3 +1,5 @@
+<script lang="ts" src="./content-viewer"></script>
+
 <template>
 	<div class="content-viewer" :class="viewerStyleClass">
 		<app-content-viewer-base-component
@@ -12,5 +14,3 @@
 >>> p > code
 	white-space: normal
 </style>
-
-<script lang="ts" src="./content-viewer"></script>
