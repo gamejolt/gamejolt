@@ -32,7 +32,7 @@ export default class AppShellCbarControls extends Vue {
 	get highlight() {
 		const theme = this.activeCommunity?.theme || this.theme || new Theme(null);
 		if (theme) {
-			return '#' + theme.highlight_;
+			return '#' + theme.darkHighlight_;
 		}
 
 		return null;

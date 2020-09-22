@@ -64,7 +64,7 @@ export default class AppShellCbarCommunity extends Vue {
 		if (this.isActive) {
 			const theme = this.community.theme || this.userTheme;
 			if (theme) {
-				return '#' + theme.highlight_;
+				return '#' + theme.darkHighlight_;
 			}
 		}
 		return null;
