@@ -1,10 +1,9 @@
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { propOptional } from '../../../utils/vue';
+import { propOptional, propRequired } from '../../../utils/vue';
 import AppLightboxTS from '../../lightbox/lightbox';
 import { createLightbox, LightboxMediaSource } from '../../lightbox/lightbox-helpers';
 import { MediaItem } from '../../media-item/media-item-model';
-import { AppScrollInview } from '../../scroll/inview/inview';
 import { ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentRules } from '../content-editor/content-rules';
@@ -15,28 +14,20 @@ import { AppContentViewerBaseComponent } from './components/base-component';
 @Component({
 	components: {
 		AppContentViewerBaseComponent,
-		AppScrollInview,
 	},
 })
 export default class AppContentViewer extends Vue implements ContentOwner, LightboxMediaSource {
-	@Prop(String)
-	source!: string;
-	@Prop(propOptional(ContentRules))
-	displayRules?: ContentRules;
+	@Prop(propRequired(String)) source!: string;
+	@Prop(propOptional(Boolean, false)) disableLightbox!: boolean;
+	@Prop(propOptional(ContentRules)) displayRules?: ContentRules;
 
 	data: ContentDocument | null = null;
 	hydrator: ContentHydrator = new ContentHydrator();
 
-	isInview = false;
-	mediaItemsResolved = false;
-
 	private lightbox?: AppLightboxTS;
-	activeItem: any | null = null;
-	activeIndex: number | null = 0;
+	activeItem: MediaItem | null = null;
 
-	/** Media items that are children of the ContentOwner */
-	mediaItems: MediaItem[] = [];
-	/** Media items that are being viewed in the lightbox. */
+	/** The MediaItem being viewed in the lightbox. */
 	lightboxMediaItems: MediaItem[] = [];
 
 	get owner() {
@@ -56,6 +47,10 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 
 	created() {
 		this.updatedSource();
+	}
+
+	destroyed() {
+		this.closeLightbox();
 	}
 
 	getContext() {
@@ -98,56 +93,8 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 		this.hydrator = new ContentHydrator(content.hydration);
 	}
 
-	onScrollInview() {
-		this.isInview = true;
-	}
-
-	onScrollOutview() {
-		this.isInview = false;
-	}
-
-	@Watch('data', { immediate: true })
-	@Watch('isInview', { immediate: true })
-	private _resolveMediaItems() {
-		if (this.mediaItemsResolved) {
-			return;
-		}
-
-		const items = this.data?.getChildrenByType('mediaItem') || [];
-		if (!items.length) {
-			this.mediaItems = [];
-			this.mediaItemsResolved = true;
-			return;
-		}
-
-		if (this.isInview || GJ_IS_SSR) {
-			items.forEach(item => {
-				if (item.attrs.href) {
-					return;
-				}
-
-				let processedItem: MediaItem | null = null;
-				this.owner
-					.getHydrator()
-					.useData('media-item-id', item.attrs.id.toString(), data => {
-						if (data) {
-							processedItem = new MediaItem(data);
-						}
-					});
-
-				if (processedItem) {
-					this.mediaItems.push(processedItem);
-				}
-			});
-
-			this.mediaItemsResolved = true;
-		}
-	}
-
 	@Watch('source')
 	updatedSource() {
-		this.mediaItemsResolved = false;
-
 		if (this.source) {
 			const sourceDoc = ContentDocument.fromJson(this.source);
 			this.setContent(sourceDoc);
@@ -161,65 +108,32 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	}
 
 	// -- Lightbox stuff --
-	setActiveItem(item: MediaItem) {
-		let index = -1;
-		if (item instanceof MediaItem) {
-			index = this.lightboxMediaItems.findIndex(_item => _item.id === item.id);
-		}
-
-		if (index >= 0) {
-			this.go(index);
-		}
-	}
-
-	destroyed() {
-		this.closeLightbox();
-	}
-
-	onItemFullscreen(item: any) {
+	onItemFullscreen(item: MediaItem) {
 		if (!this.lightbox) {
-			this.lightboxMediaItems = this.mediaItems;
-			this.setActiveItem(item);
+			this.activeItem = item;
 			this.createLightbox();
 		}
 	}
 
 	getActiveIndex() {
-		return this.activeIndex!;
+		return 0;
 	}
 
 	getItemCount() {
-		return this.lightboxMediaItems.length;
+		return this.activeItem ? 1 : 0;
 	}
 
-	getActiveItem() {
+	getActiveItem(): any {
 		return this.activeItem;
 	}
 
-	getItems() {
-		return this.lightboxMediaItems;
+	getItems(): any[] {
+		return this.activeItem ? [this.activeItem] : [];
 	}
 
-	goNext() {
-		if (this.activeIndex === null || this.activeIndex + 1 >= this.lightboxMediaItems.length) {
-			return;
-		}
-
-		this.go(this.activeIndex + 1);
-	}
-
-	goPrev() {
-		if (this.activeIndex === null || this.activeIndex - 1 < 0) {
-			return;
-		}
-
-		this.go(this.activeIndex - 1);
-	}
-
-	go(index: number) {
-		this.activeIndex = index;
-		this.activeItem = this.lightboxMediaItems[this.activeIndex];
-	}
+	// unused, needed for LightboxMediaSource
+	goNext() {}
+	goPrev() {}
 
 	createLightbox() {
 		if (this.lightbox) {
@@ -229,10 +143,8 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 	}
 
 	onLightboxClose() {
-		this.lightboxMediaItems = [];
 		this.lightbox = undefined;
 		this.activeItem = null;
-		this.activeIndex = null;
 	}
 
 	private closeLightbox() {
@@ -240,8 +152,6 @@ export default class AppContentViewer extends Vue implements ContentOwner, Light
 			return;
 		}
 
-		this.lightboxMediaItems = [];
 		this.lightbox.close();
-		this.lightbox = undefined;
 	}
 }

@@ -128,7 +128,7 @@ export default class AppContentMediaItem extends Vue {
 			return false;
 		}
 
-		return !!this.contentViewerParent.mediaItems.find(i => i.id === this.mediaItem!.id);
+		return !this.contentViewerParent.disableLightbox;
 	}
 
 	get displayHref() {
@@ -211,7 +211,7 @@ export default class AppContentMediaItem extends Vue {
 			return;
 		}
 
-		this.contentViewerParent!.onItemFullscreen(this.mediaItem);
+		this.contentViewerParent!.onItemFullscreen(this.mediaItem!);
 	}
 }
 

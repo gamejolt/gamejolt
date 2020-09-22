@@ -12,7 +12,7 @@
 				<div class="-page-cut-content-placeholder" />
 			</div>
 
-			<app-content-viewer :source="post.article_content" />
+			<app-content-viewer :source="post.article_content" disable-lightbox />
 		</template>
 
 		<div class="-page-cut-bottom page-cut">

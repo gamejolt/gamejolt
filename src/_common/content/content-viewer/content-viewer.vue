@@ -2,13 +2,11 @@
 
 <template>
 	<div class="content-viewer" :class="viewerStyleClass">
-		<app-scroll-inview @inview="onScrollInview" @outview="onScrollOutview">
-			<app-content-viewer-base-component
-				v-if="shouldShowContent"
-				:content="data.content"
-				:owner="owner"
-			/>
-		</app-scroll-inview>
+		<app-content-viewer-base-component
+			v-if="shouldShowContent"
+			:content="data.content"
+			:owner="owner"
+		/>
 	</div>
 </template>
 
