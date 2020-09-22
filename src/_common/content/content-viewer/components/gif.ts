@@ -22,6 +22,7 @@ export class AppContentViewerGif extends Vue {
 				url: this.data.attrs.url,
 				isEditing: false,
 				owner: this.owner,
+				isDisabled: false,
 			},
 		});
 	}
