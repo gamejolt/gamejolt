@@ -116,7 +116,7 @@
 	display: flex
 	flex-direction: column
 	margin-bottom: $line-height-computed
-	cursor: default
+	cursor: inherit
 
 .media-item-container
 	display: flex
