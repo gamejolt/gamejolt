@@ -142,6 +142,6 @@ export default class AppChatUserListItem extends Vue {
 			return;
 		}
 
-		leaveGroupRoom(this.chat);
+		leaveGroupRoom(this.chat, this.item);
 	}
 }
