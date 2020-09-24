@@ -173,6 +173,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 			// now that we have the actual unread channels in this community.
 			// read comment in client service for more info.
 			communityState.hasUnreadPosts = false;
+			communityState.routeBootstrapped = true;
 
 			for (const channelId of $payload.unreadChannels as number[]) {
 				communityState.markChannelUnread(channelId);

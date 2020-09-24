@@ -33,6 +33,9 @@ export default class AppShellFriendRequestPopover extends Vue {
 	@AppState
 	user!: AppStore['user'];
 
+	@State
+	grid!: Store['grid'];
+
 	isShowing = false;
 	isLoading = false;
 
@@ -72,6 +75,7 @@ export default class AppShellFriendRequestPopover extends Vue {
 	async acceptRequest(request: UserFriendship) {
 		await UserFriendshipHelper.acceptRequest(request);
 		this.removeRequest(request);
+		this.grid?.pushViewNotifications('friend-requests');
 	}
 
 	async rejectRequest(request: UserFriendship) {
@@ -79,6 +83,7 @@ export default class AppShellFriendRequestPopover extends Vue {
 			return;
 		}
 		this.removeRequest(request);
+		this.grid?.pushViewNotifications('friend-requests');
 	}
 
 	async cancelRequest(request: UserFriendship) {

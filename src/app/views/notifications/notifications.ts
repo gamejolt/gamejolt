@@ -1,14 +1,16 @@
 import { Component, Watch } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
+import { EventBus, EventBusDeregister } from '../../../system/event/event-bus.service';
 import { Api } from '../../../_common/api/api.service';
 import { HistoryCache } from '../../../_common/history/cache/cache.service';
 import { Notification } from '../../../_common/notification/notification-model';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
-import { Store, store } from '../../store';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import AppActivityFeed from '../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../components/activity/feed/view';
+import { ClearNotificationsEventData } from '../../components/grid/client.service';
+import { Store, store } from '../../store';
 
 const HistoryCacheFeedTag = 'notifications-feed';
 
@@ -51,7 +53,11 @@ export default class RouteNotifications extends BaseRouteComponent {
 	@Action
 	markNotificationsAsRead!: Store['markNotificationsAsRead'];
 
+	@State
+	grid!: Store['grid'];
+
 	feed: ActivityFeedView | null = null;
+	clearNotificationsDeregister?: EventBusDeregister;
 
 	get routeTitle() {
 		return this.$gettext(`Your Notifications`);
@@ -82,9 +88,28 @@ export default class RouteNotifications extends BaseRouteComponent {
 			this.feed.append(Notification.populate($payload.items));
 			HistoryCache.store(this.$route, true, HistoryCacheFeedTag);
 		}
+
+		this.grid?.pushViewNotifications('notifications');
+
+		this.clearNotificationsDeregister = EventBus.on(
+			'grid-clear-notifications',
+			(data: ClearNotificationsEventData) => {
+				if (data.type === 'notifications') {
+					this.feed?.loadNew(data.currentCount);
+				}
+			}
+		);
+	}
+
+	routeDestroyed() {
+		if (this.clearNotificationsDeregister) {
+			this.clearNotificationsDeregister();
+			this.clearNotificationsDeregister = undefined;
+		}
 	}
 
 	loadedNew() {
 		this.setNotificationCount({ type: 'notifications', count: 0 });
+		this.grid?.pushViewNotifications('notifications');
 	}
 }

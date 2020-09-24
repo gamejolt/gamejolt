@@ -1,6 +1,6 @@
-import { BroadcastChannel, createLeaderElection, LeaderElector } from 'broadcast-channel';
 import { Channel, Presence, Socket } from 'phoenix';
 import Vue from 'vue';
+import { TabLeader } from '../../../utils/tab-leader';
 import { ChatClient, isInChatRoom, leaveChatRoom, newChatNotification } from './client';
 import { ChatMessage } from './message';
 import { ChatNotificationGrowl } from './notification-growl/notification-growl.service';
@@ -21,18 +21,15 @@ interface ClearNotificationsPayload {
 export class ChatUserChannel extends Channel {
 	readonly client: ChatClient;
 	readonly socket: Socket;
-
-	private readonly notificationChannel: BroadcastChannel;
-	private readonly elector: LeaderElector;
+	readonly tabLeader: TabLeader;
 
 	constructor(userId: number, client: ChatClient, params?: any) {
 		super('user:' + userId, params, client.socket as Socket);
 		this.client = client;
 		this.socket = client.socket as Socket;
 		(this.socket as any).channels.push(this);
-		this.notificationChannel = new BroadcastChannel('notification_channel');
-		this.elector = createLeaderElection(this.notificationChannel);
-		this.initLeader();
+		this.tabLeader = new TabLeader('chat_notification_channel');
+		this.tabLeader.init();
 
 		this.setupPresence();
 
@@ -43,18 +40,8 @@ export class ChatUserChannel extends Channel {
 		this.on('you_updated', this.onYouUpdated.bind(this));
 		this.on('clear_notifications', this.onClearNotifications.bind(this));
 		this.onClose(() => {
-			this.notificationChannel.close();
-			this.elector.die();
+			this.tabLeader.kill();
 		});
-	}
-
-	private initLeader() {
-		// This function begins the process of attemping to become the leader.
-		// All tabs need this process to be active. This promise will resolve if
-		// this tab ever becomes the leader. It should fail if the tab loses
-		// leadership. When that happens we want to try just to become leader
-		// again.
-		this.elector.awaitLeadership().catch(() => this.initLeader());
 	}
 
 	private setupPresence() {
@@ -124,7 +111,7 @@ export class ChatUserChannel extends Channel {
 			this.client.friendsList.update(friend);
 		}
 
-		ChatNotificationGrowl.show(this.client, message, this.elector.isLeader);
+		ChatNotificationGrowl.show(this.client, message, this.tabLeader.isLeader);
 	}
 
 	private onYouUpdated(data: Partial<ChatUser>) {

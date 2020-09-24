@@ -1,10 +1,15 @@
 import { Component, Inject } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { EventBus, EventBusDeregister } from '../../../../../system/event/event-bus.service';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
+import {
+	ClearNotificationsEventData,
+	GRID_CLEAR_NOTIFICATIONS_EVENT,
+} from '../../../../components/grid/client.service';
 import { Store } from '../../../../store';
 import {
 	CommunityRouteStore,
@@ -47,7 +52,11 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 
 	@State communityStates!: Store['communityStates'];
 
+	@State
+	grid!: Store['grid'];
+
 	feed: ActivityFeedView | null = null;
+	clearNotificationsDeregister?: EventBusDeregister;
 
 	readonly Screen = Screen;
 
@@ -122,10 +131,55 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 
 		if (!isVirtualChannel(this.routeStore, this.channel)) {
 			this.communityState.markChannelRead(this.channel.id);
+
+			this.pushViewToGrid();
+
+			this.clearNotificationsDeregister = EventBus.on(
+				GRID_CLEAR_NOTIFICATIONS_EVENT,
+				(data: ClearNotificationsEventData) => {
+					if (
+						data.type === 'community-channel' &&
+						data.data.communityId === this.community.id &&
+						data.data.channelId === this.channel.id
+					) {
+						this.feed?.loadNew(15);
+					}
+				}
+			);
 		}
 
 		if (this.routeTitle) {
 			setCommunityMeta(this.community, this.routeTitle);
+		}
+	}
+
+	routeDestroyed() {
+		if (this.clearNotificationsDeregister) {
+			this.clearNotificationsDeregister();
+			this.clearNotificationsDeregister = undefined;
+		}
+	}
+
+	loadedNew() {
+		if (!isVirtualChannel(this.routeStore, this.channel)) {
+			this.pushViewToGrid();
+		}
+	}
+
+	private pushViewToGrid() {
+		this.grid?.pushViewNotifications('community-channel', {
+			communityId: this.community.id,
+			channelId: this.channel.id,
+		});
+
+		// When the entire community has no unreads left, push that event to grid.
+		// Users that haven't looked at a community in their session yet will have the
+		// "hasUnreadPosts" bool set to true from the Grid bootstrap.
+		// To set it to false, we push this event through Grid.
+		if (!this.communityState.isUnread) {
+			this.grid?.pushViewNotifications('community-unread', {
+				communityId: this.community.id,
+			});
 		}
 	}
 

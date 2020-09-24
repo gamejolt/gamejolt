@@ -1,7 +1,10 @@
 import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
+import { EventBus } from '../../../system/event/event-bus.service';
 import { arrayRemove } from '../../../utils/array';
+import { TabLeader } from '../../../utils/tab-leader';
 import { sleep } from '../../../utils/utils';
+import { uuidv4 } from '../../../utils/uuid';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Community } from '../../../_common/community/community.model';
 import { getCookie } from '../../../_common/cookie/cookie.service';
@@ -49,6 +52,31 @@ interface BootstrapPayload {
 	};
 }
 
+type ClearNotificationsType =
+	// For the user's activity feed.
+	| 'activity'
+	// For the user's notification feed.
+	| 'notifications'
+	// For the "hasUnreadPosts" state in communities the user has not viewed yet.
+	| 'community-unread'
+	// For the frontpage of featured posts.
+	| 'community-featured'
+	// For an individual community channel.
+	| 'community-channel'
+	| 'friend-requests';
+
+interface ClearNotificationsPayload {
+	type: ClearNotificationsType;
+	data: any;
+	clientId: string;
+}
+
+export interface ClearNotificationsEventData extends ClearNotificationsPayload {
+	currentCount: number;
+}
+
+export const GRID_CLEAR_NOTIFICATIONS_EVENT = 'grid-clear-notifications';
+
 /**
  * Polls a request until it returns a result, increases the delay time between requests after each failed attempt.
  * @param context Context for logging
@@ -68,7 +96,10 @@ async function pollRequest(context: string, requestGetter: () => Promise<any>): 
 			result = await promise;
 			finished = true;
 		} catch (e) {
-			const sleepMs = Math.min(30000, Math.random() * delay * 1000 + 1000);
+			const sleepMs = Math.min(
+				30000 + Math.random() * 10000,
+				Math.random() * delay * 1000 + 1000
+			);
 			console.error(`[Grid] Failed request [${context}]. Reattempt in ${sleepMs} ms.`);
 			await sleep(sleepMs);
 		}
@@ -80,6 +111,9 @@ async function pollRequest(context: string, requestGetter: () => Promise<any>): 
 }
 
 export class GridClient {
+	// Stores a unique id that identifies this session when it pushes data to Grid.
+	readonly clientId = uuidv4();
+
 	connected = false;
 	socket: Socket | null = null;
 	channels: Channel[] = [];
@@ -87,6 +121,8 @@ export class GridClient {
 	bootstrapReceived = false;
 	bootstrapTimestamp = 0;
 	bootstrapDelay = 1;
+	notificationChannel: Channel | null = null;
+	tabLeader: TabLeader | null = null;
 
 	/**
 	 * Store ids of posts the user has featured.
@@ -118,8 +154,6 @@ export class GridClient {
 
 		console.log('[Grid] Server selected:', host);
 
-		const userId = user.id.toString();
-
 		// heartbeat is 30 seconds, backend disconnects after 40 seconds
 		this.socket = new Socket(host, {
 			heartbeatIntervalMs: 30000,
@@ -129,7 +163,7 @@ export class GridClient {
 		// there is no built in way to stop a Phoenix socket from attempting to reconnect on its own after it got disconnected.
 		// this replaces the socket's "reconnectTimer" property with an empty object that matches the Phoenix "Timer" signature
 		// The 'reconnectTimer' usually restarts the connection after a delay, this prevents that from happening
-		let socketAny: any = this.socket;
+		const socketAny: any = this.socket;
 		if (socketAny.hasOwnProperty('reconnectTimer')) {
 			socketAny.reconnectTimer = { scheduleTimeout: () => {}, reset: () => {} };
 		}
@@ -145,9 +179,11 @@ export class GridClient {
 				})
 		);
 
+		const userId = user.id.toString();
 		const channel = this.socket.channel('notifications:' + userId, {
 			frontend_cookie: cookie,
 		});
+		this.notificationChannel = channel;
 
 		await pollRequest(
 			'Join user notification channel',
@@ -159,10 +195,18 @@ export class GridClient {
 						.receive('ok', () => {
 							this.connected = true;
 							this.channels.push(channel);
+
 							resolve();
 						});
 				})
 		);
+
+		// After successfully connecting to the socket, elect leader.
+		if (this.tabLeader !== null) {
+			await this.tabLeader.kill();
+		}
+		this.tabLeader = new TabLeader('grid_notification_channel');
+		this.tabLeader.init();
 
 		channel.on('new-notification', (payload: NewNotificationPayload) =>
 			this.handleNotification(payload)
@@ -174,6 +218,10 @@ export class GridClient {
 
 		channel.push('request-bootstrap', { user_id: userId });
 
+		channel.on('clear-notifications', (payload: ClearNotificationsPayload) => {
+			this.handleClearNotifications(payload);
+		});
+
 		this.joinCommunities();
 	}
 
@@ -182,7 +230,7 @@ export class GridClient {
 		await sleep(sleepMs);
 		// teardown and try to reconnect
 		if (this.connected) {
-			this.disconnect();
+			await this.disconnect();
 			this.connect();
 		}
 	}
@@ -266,7 +314,9 @@ export class GridClient {
 			// for the channels are populated.
 			for (const communityId of payload.body.unreadCommunities) {
 				const communityState = store.state.communityStates.getCommunityState(communityId);
-				communityState.hasUnreadPosts = true;
+				if (!communityState.routeBootstrapped) {
+					communityState.hasUnreadPosts = true;
+				}
 			}
 
 			// Reset delay when the bootstrap went through successfully.
@@ -275,12 +325,95 @@ export class GridClient {
 			// error
 			console.log(`[Grid] Failed to fetch notification count bootstrap (${payload.body}).`);
 
-			const delay = Math.min(30000, Math.random() * this.bootstrapDelay * 2000 + 1000);
+			const delay = Math.min(
+				30000 + Math.random() * 10000,
+				Math.random() * this.bootstrapDelay * 2000 + 1000
+			);
 			this.bootstrapDelay++;
 
 			console.log(`[Grid] Reconnect in ${delay}ms...`);
 
 			this.restart(delay);
+		}
+	}
+
+	handleClearNotifications(payload: ClearNotificationsPayload) {
+		// Don't do anything when the notification originated from this client.
+		if (payload.clientId === this.clientId) {
+			return;
+		}
+
+		// Before any action is taken like clearing counts in stores,
+		// store in this var how many notifications there were.
+		// This can then be used in an event bus handler to load X new things.
+		let currentCount = 0;
+
+		switch (payload.type) {
+			case 'activity':
+				currentCount = store.state.unreadActivityCount;
+				store.commit('setNotificationCount', {
+					type: 'activity',
+					count: 0,
+				});
+				break;
+			case 'notifications':
+				currentCount = store.state.unreadNotificationsCount;
+				store.commit('setNotificationCount', {
+					type: 'notifications',
+					count: 0,
+				});
+				break;
+			case 'community-channel':
+				{
+					const communityChannelId = payload.data.channelId as number;
+					const communityId = payload.data.communityId as number;
+					const communityState = store.state.communityStates.getCommunityState(
+						communityId
+					);
+					// We don't store how many new posts there are for each channel, so the route
+					// takes care of figuring out how much new stuff to load.
+					currentCount = communityState.unreadChannels.includes(communityChannelId)
+						? 1
+						: 0;
+					communityState.markChannelRead(communityChannelId);
+				}
+				break;
+			case 'community-featured':
+				{
+					const communityId = payload.data.communityId as number;
+					const communityState = store.state.communityStates.getCommunityState(
+						communityId
+					);
+					currentCount = communityState.unreadFeatureCount;
+					communityState.unreadFeatureCount = 0;
+				}
+				break;
+			case 'community-unread':
+				{
+					const communityId = payload.data.communityId as number;
+					const communityState = store.state.communityStates.getCommunityState(
+						communityId
+					);
+					communityState.hasUnreadPosts = false;
+				}
+				break;
+			case 'friend-requests':
+				// This event gets fired every time the user accepts/rejects a friendship.
+				// The only action we need to take here is to decrease the global friendship number by 1.
+				// No component needs to react to this change currently, so there is no need for an event bus emit.
+				store.commit('changeFriendRequestCount', -1);
+				break;
+		}
+
+		// We only want to emit a clear event when the current data has uncleared notifications.
+		// That way the currently loaded route can take care of loading in new stuff based on how many
+		// notifications it had backlogged.
+		if (currentCount > 0) {
+			EventBus.emit(GRID_CLEAR_NOTIFICATIONS_EVENT, {
+				type: payload.type,
+				data: payload.data,
+				currentCount,
+			});
 		}
 	}
 
@@ -442,7 +575,7 @@ export class GridClient {
 		}
 	}
 
-	disconnect() {
+	async disconnect() {
 		if (this.connected) {
 			console.log('[Grid] Disconnecting...');
 
@@ -454,9 +587,14 @@ export class GridClient {
 				this.leaveChannel(channel);
 			});
 			this.channels = [];
+			this.notificationChannel = null;
 			if (this.socket !== null) {
 				this.socket.disconnect();
 				this.socket = null;
+			}
+
+			if (this.tabLeader !== null) {
+				await this.tabLeader.kill();
 			}
 		}
 	}
@@ -464,6 +602,29 @@ export class GridClient {
 	public recordFeaturedPost(post: FiresidePost) {
 		if (!this.featuredPostIds.has(post.id)) {
 			this.featuredPostIds.add(post.id);
+		}
+	}
+
+	public async pushViewNotifications(type: ClearNotificationsType, data: any = {}) {
+		// Don't do anything for guests, they aren't connected to Grid.
+		if (store.state.app.user === null) {
+			return;
+		}
+
+		// This can get invoked before grid is up and running, so wait here until it is.
+		// That can mainly happen when the route-resolve for a page clears notifications.
+		// For example: main feed page clears notifications in backend as the route loads,
+		// but grid is not loaded yet.
+		while (!this.connected) {
+			await sleep(250);
+		}
+
+		if (this.notificationChannel) {
+			this.notificationChannel.push('view-notifications', {
+				type,
+				data,
+				clientId: this.clientId,
+			});
 		}
 	}
 }
