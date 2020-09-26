@@ -25,12 +25,10 @@ export default class AppVideo extends Vue {
 
 	@Watch('shouldPlay')
 	onShouldPlayChange() {
-		if (this.isLoaded) {
-			if (this.shouldPlay) {
-				this.video.play();
-			} else {
-				this.video.pause();
-			}
+		if (this.shouldPlay) {
+			this.video.play();
+		} else {
+			this.video.pause();
 		}
 	}
 
@@ -49,22 +47,23 @@ export default class AppVideo extends Vue {
 		this.video.style.width = '100%';
 		this.video.poster = this.poster;
 		this.video.loop = true;
-
+		this.video.autoplay = this.shouldPlay;
+		this.video.muted = true;
 		this.video.appendChild(webm);
 		this.video.appendChild(mp4);
 
-		// This event continues to spawn.
-		// Gotta remove once it fires the first time.
-		const canplaythrough = () => {
+		// "play" event will get triggered as soon as it starts playing because
+		// of autoplay, or when switching from paused state to playing. We only
+		// use it to know if it's loaded in enough to begin the playing, so we
+		// can clear it after.
+		const onPlay = () => {
 			this.isLoaded = true;
-			this.video.removeEventListener('canplay', canplaythrough);
-			if (this.shouldPlay) {
-				this.video.play();
-			}
+			this.video.removeEventListener('play', onPlay);
 		};
+		this.video.addEventListener('play', onPlay);
 
-		this.video.addEventListener('canplay', canplaythrough);
-
+		// As soon as we append, it'll actually load into view and start
+		// playing.
 		this.$el.appendChild(this.video);
 	}
 
