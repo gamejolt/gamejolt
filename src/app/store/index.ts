@@ -135,8 +135,8 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	mobileCbarShowing = false;
 	lastOpenLeftPane: Exclude<TogglableLeftPane, 'context'> = 'library';
-	private overlayedLeftPane: TogglableLeftPane = '';
-	private overlayedRightPane = '';
+	overlayedLeftPane: TogglableLeftPane = '';
+	overlayedRightPane = '';
 	hasContentSidebar = false;
 
 	/** Will be set to the community they're currently viewing (if any). */
@@ -609,7 +609,12 @@ export const store = new Store();
 sync(store, router, { moduleName: 'route' });
 
 // Sync with the ContentFocus service.
-ContentFocus.registerWatcher(() => !store.state.visibleLeftPane && !store.state.visibleRightPane);
+ContentFocus.registerWatcher(
+	// We only care if the panes are overlaying, not if they're visible in the
+	// page without overlaying. Example is that context panes show in-page on
+	// large displays.
+	() => !store.state.overlayedLeftPane && !store.state.overlayedRightPane
+);
 
 // If we were offline, but we're online now, make sure our library is bootstrapped. Remember we
 // always have an app user even if we were offline.
