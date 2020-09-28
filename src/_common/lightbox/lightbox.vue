@@ -1,37 +1,43 @@
+<script lang="ts" src="./lightbox"></script>
+
 <template>
 	<div>
 		<v-touch
 			class="media-bar-lightbox theme-dark"
+			:pan-options="{ threshold: 0 }"
 			@panstart="panStart"
 			@panmove="pan"
 			@panend="panEnd"
-			:pan-options="{ threshold: 0 }"
 		>
 			<app-shortkey shortkey="arrowleft" @press="goPrev" />
 			<app-shortkey shortkey="arrowright" @press="goNext" />
 
 			<div class="-inner">
-				<a class="-prev" v-if="activeIndex > 0" @mousedown="goPrev">
-					<app-jolticon icon="chevron-left" />
-				</a>
-
-				<a class="-next" v-if="hasNext" @mousedown="goNext">
-					<app-jolticon icon="chevron-right" />
-				</a>
-
 				<div class="-controls">
-					<app-button
-						icon="download"
-						trans
-						v-if="activeMediaType === 'image'"
-						:href="activeMediaItem.img_url"
-						target="_blank"
-					>
-						<translate>Download</translate>
-					</app-button>
-					<app-button @click="close">
-						<translate>Close</translate>
-					</app-button>
+					<a v-if="activeIndex > 0" class="-prev" @mousedown="goPrev">
+						<app-jolticon icon="chevron-left" />
+					</a>
+					<div v-else class="-prev -hideable" />
+
+					<div>
+						<app-button
+							v-if="activeMediaType === 'image'"
+							icon="download"
+							trans
+							:href="activeMediaItem.img_url"
+							target="_blank"
+						>
+							<translate>Download</translate>
+						</app-button>
+						<app-button @click="close">
+							<translate>Close</translate>
+						</app-button>
+					</div>
+
+					<a v-if="hasNext" class="-next" @mousedown="goNext">
+						<app-jolticon icon="chevron-right" />
+					</a>
+					<div v-else class="-next -hideable" />
 				</div>
 
 				<app-lightbox-slider class="-slider">
@@ -50,5 +56,3 @@
 
 <style lang="stylus" src="./lightbox-global.styl"></style>
 <style lang="stylus" src="./lightbox.styl" scoped></style>
-
-<script lang="ts" src="./lightbox"></script>

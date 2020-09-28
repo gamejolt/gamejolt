@@ -1,10 +1,12 @@
+<script lang="ts" src="./embed"></script>
+
 <template>
 	<app-base-content-component
 		v-if="hasContent"
+		class="embed-main"
 		:is-editing="isEditing"
 		:is-disabled="isDisabled"
-		@removed="remove"
-		class="embed-main"
+		@removed="emitRemoved"
 	>
 		<div class="embed-container">
 			<div v-if="isEditing" class="embed-overlay-img" />
@@ -13,8 +15,14 @@
 				video-provider="youtube"
 				:video-id="source"
 			/>
-			<app-content-embed-soundcloud v-else-if="type === 'soundcloud-song'" :track-id="source" />
-			<app-content-embed-sketchfab v-else-if="type === 'sketchfab-model'" :model-id="source" />
+			<app-content-embed-soundcloud
+				v-else-if="type === 'soundcloud-song'"
+				:track-id="source"
+			/>
+			<app-content-embed-sketchfab
+				v-else-if="type === 'sketchfab-model'"
+				:model-id="source"
+			/>
 		</div>
 	</app-base-content-component>
 	<div v-else contenteditable="false" class="input-container">
@@ -43,9 +51,9 @@
 			type="text"
 			:value="source"
 			:disabled="loading || isDisabled"
+			:placeholder="$gettext(`Paste a link to what you want to embed`)"
 			@input="onInput"
 			@keydown="onKeydown"
-			:placeholder="$gettext(`Paste a link to what you want to embed`)"
 		/>
 		<div v-if="loading" class="input-overlay">
 			<app-loading hide-label />
@@ -54,5 +62,3 @@
 </template>
 
 <style lang="stylus" src="./embed.styl" scoped></style>
-
-<script lang="ts" src="./embed"></script>

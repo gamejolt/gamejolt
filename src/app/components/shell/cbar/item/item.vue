@@ -35,8 +35,8 @@
 	display: block
 	position: relative
 	margin-bottom: $cbar-item-spacing
-	width: $cbar-item-size - 2px
-	height: $cbar-item-size - 2px
+	width: $cbar-item-size
+	height: $cbar-item-size
 
 .-blip
 .-notification-count

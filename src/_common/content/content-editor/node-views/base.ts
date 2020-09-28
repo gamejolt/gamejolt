@@ -56,7 +56,7 @@ export abstract class BaseNodeView implements NodeView {
 		vm.$on('removed', () => {
 			this.removeMe();
 		});
-		vm.$on('updateAttrs', (attrs: object) => {
+		vm.$on('update-attrs', (attrs: Record<string, any>) => {
 			this.updateAttrs(attrs);
 		});
 	}

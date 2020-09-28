@@ -82,13 +82,10 @@ export class EventItem extends Model {
 				return (this.action as CommentVideo).comment.user;
 			case EventItem.TYPE_GAME_PUBLISH:
 				return (this.action as Game).developer;
-			case EventItem.TYPE_POST_ADD:
+			case EventItem.TYPE_POST_ADD: {
 				const post = this.action as FiresidePost;
-				if (post.game && post.as_game_owner) {
-					return post.game.developer;
-				}
-
-				return post.user;
+				return post.displayUser;
+			}
 		}
 	}
 

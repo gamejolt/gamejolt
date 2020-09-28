@@ -1,10 +1,11 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { propRequired } from '../../../../utils/vue';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import AppEventItemControlsOverlay from '../../../../_common/event-item/controls-overlay/controls-overlay.vue';
+import { number } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Growls } from '../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
@@ -15,28 +16,29 @@ import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
 import { AppResponsiveDimensions } from '../../../../_common/responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { AppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { Settings } from '../../../../_common/settings/settings.service';
 import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
 import AppStickerTargetTS from '../../../../_common/sticker/target/target';
 import AppStickerTarget from '../../../../_common/sticker/target/target.vue';
+import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
+import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
+import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
+import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
 import AppVideo from '../../../../_common/video/video.vue';
-import { Store } from '../../../store';
-import AppEventItemControls from '../../event-item/controls/controls.vue';
-import AppPollVoting from '../../poll/voting/voting.vue';
-import AppPostViewPlaceholder from './placeholder/placeholder.vue';
+import AppEventItemControls from '../../../components/event-item/controls/controls.vue';
+import AppGameBadge from '../../../components/game/badge/badge.vue';
+import AppGameListItem from '../../../components/game/list/item/item.vue';
+import AppPollVoting from '../../../components/poll/voting/voting.vue';
 
 @Component({
 	components: {
-		AppPostViewPlaceholder,
 		AppTimeAgo,
 		AppResponsiveDimensions,
 		AppImgResponsive,
-		AppMediaItemBackdrop,
 		AppVideo,
 		AppVideoEmbed,
 		AppSketchfabEmbed,
@@ -46,23 +48,21 @@ import AppPostViewPlaceholder from './placeholder/placeholder.vue';
 		AppAdWidget,
 		AppCommunityPill,
 		AppContentViewer,
+		AppUserCardHover,
+		AppUserAvatar,
+		AppUserFollowWidget,
+		AppGameListItem,
 		AppStickerTarget,
+		AppMediaItemBackdrop,
 		AppMediaItemPost,
 		AppScrollScroller,
-	},
-	directives: {
-		AppScrollWhen,
+		AppGameBadge,
 	},
 })
-export default class AppPostView extends Vue implements LightboxMediaSource {
-	@Prop(FiresidePost)
-	post!: FiresidePost;
+export default class AppPostPage extends Vue implements LightboxMediaSource {
+	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
 
-	@Prop(Boolean)
-	showGameInfo?: boolean;
-
-	@State
-	app!: Store['app'];
+	@AppState user!: AppStore['user'];
 
 	stickersVisible = false;
 	activeImageIndex = 0;
@@ -73,23 +73,18 @@ export default class AppPostView extends Vue implements LightboxMediaSource {
 	};
 
 	readonly Screen = Screen;
+	readonly number = number;
+
+	get displayUser() {
+		return this.post.displayUser;
+	}
 
 	get communities() {
-		return (this.post && this.post.communities) || [];
+		return this.post.communities || [];
 	}
 
 	get shouldShowManage() {
-		return (
-			(this.app.user && this.app.user.isMod) ||
-			(this.post && this.post.isManageableByUser(this.app.user))
-		);
-	}
-
-	get shouldShowAds() {
-		// Only show ads for game posts. The game will set the page settings for
-		// whether or not it should show an ad for this game page, so no need to
-		// do that here.
-		return this.post && this.post.game;
+		return this.user?.isMod || this.post.isManageableByUser(this.user);
 	}
 
 	get shouldShowCommunityPublishError() {

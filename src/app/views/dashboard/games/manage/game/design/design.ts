@@ -4,8 +4,9 @@ import {
 	BaseRouteComponent,
 	RouteResolver,
 } from '../../../../../../../_common/route/route-component';
-import { ThemeMutation, ThemeStore } from '../../../../../../../_common/theme/theme.store';
 import FormGameDesign from '../../../../../../components/forms/game/design/design.vue';
+import { store } from '../../../../../../store';
+import { ManageGameThemeKey } from '../../manage';
 import { RouteStore, RouteStoreModule } from '../../manage.store';
 
 @Component({
@@ -28,9 +29,6 @@ export default class RouteDashGamesManageGameDesign extends BaseRouteComponent {
 	@RouteStoreModule.Mutation
 	populateMedia!: RouteStore['populateMedia'];
 
-	@ThemeMutation
-	setPageTheme!: ThemeStore['setPageTheme'];
-
 	get routeTitle() {
 		if (this.game) {
 			return this.$gettextInterpolate(`Edit Design for %{ game }`, {
@@ -45,6 +43,9 @@ export default class RouteDashGamesManageGameDesign extends BaseRouteComponent {
 	}
 
 	onSubmit() {
-		this.setPageTheme(this.game.theme || null);
+		store.commit('theme/setPageTheme', {
+			key: ManageGameThemeKey,
+			theme: this.game.theme ?? null,
+		});
 	}
 }

@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import AppLightboxTS from '../../../../../../_common/lightbox/lightbox';
 import {
@@ -80,6 +81,7 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 		this.activeMediaItem = this.post.media[this.page - 1];
 		this._updateSliderOffset();
 		this.$emit('expanded');
+		Analytics.trackEvent('activity-feed', 'media-next');
 	}
 
 	goPrev() {
@@ -87,6 +89,7 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 		this.activeMediaItem = this.post.media[this.page - 1];
 		this._updateSliderOffset();
 		this.$emit('expanded');
+		Analytics.trackEvent('activity-feed', 'media-prev');
 	}
 
 	async onItemBootstrapped() {
@@ -158,6 +161,7 @@ export default class AppActivityFeedDevlogPostMedia extends Vue implements Light
 
 	onClickFullscreen() {
 		this.createLightbox();
+		Analytics.trackEvent('activity-feed', 'media-fullscreen');
 	}
 
 	private createLightbox() {

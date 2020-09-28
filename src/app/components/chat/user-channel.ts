@@ -1,9 +1,17 @@
 import { Channel, Presence, Socket } from 'phoenix';
 import Vue from 'vue';
+import { arrayRemove } from '../../../utils/array';
 import { TabLeader } from '../../../utils/tab-leader';
-import { ChatClient, isInChatRoom, leaveChatRoom, newChatNotification } from './client';
+import {
+	ChatClient,
+	isInChatRoom,
+	leaveChatRoom,
+	newChatNotification,
+	updateChatRoomLastMessageOn,
+} from './client';
 import { ChatMessage } from './message';
 import { ChatNotificationGrowl } from './notification-growl/notification-growl.service';
+import { ChatRoom } from './room';
 import { ChatUser } from './user';
 
 interface UserPresence {
@@ -14,7 +22,11 @@ interface FriendRemovePayload {
 	user_id: number;
 }
 
-interface ClearNotificationsPayload {
+interface GroupAddPayload {
+	room: Partial<ChatRoom>;
+}
+
+interface RoomIdPayload {
 	room_id: number;
 }
 
@@ -39,6 +51,8 @@ export class ChatUserChannel extends Channel {
 		this.on('notification', this.onNotification.bind(this));
 		this.on('you_updated', this.onYouUpdated.bind(this));
 		this.on('clear_notifications', this.onClearNotifications.bind(this));
+		this.on('group_add', this.onGroupAdd.bind(this));
+		this.on('group_leave', this.onRoomLeave.bind(this));
 		this.onClose(() => {
 			this.tabLeader.kill();
 		});
@@ -98,17 +112,22 @@ export class ChatUserChannel extends Channel {
 		}
 	}
 
+	private onRoomLeave(data: RoomIdPayload) {
+		arrayRemove(this.client.groupRooms, i => i.id === data.room_id);
+	}
+
 	private onNotification(data: Partial<ChatMessage>) {
 		const message = new ChatMessage(data);
 
 		// We got a notification for some room.
 		// If the notification key is null, set it to 1.
 		newChatNotification(this.client, message.room_id);
+		updateChatRoomLastMessageOn(this.client, message);
 
-		const friend = this.client.friendsList.getByRoom(message.room_id);
-		if (friend) {
-			friend.last_message_on = message.logged_on.getTime();
-			this.client.friendsList.update(friend);
+		// Don't show growls/system notifications unless it's a message from a
+		// friend for now.
+		if (!this.client.friendsList.getByRoom(message.room_id)) {
+			return;
 		}
 
 		ChatNotificationGrowl.show(this.client, message, this.tabLeader.isLeader);
@@ -119,7 +138,12 @@ export class ChatUserChannel extends Channel {
 		this.client.currentUser = newUser;
 	}
 
-	private onClearNotifications(data: ClearNotificationsPayload) {
+	private onClearNotifications(data: RoomIdPayload) {
 		Vue.delete(this.client.notifications, '' + data.room_id);
+	}
+
+	private onGroupAdd(data: GroupAddPayload) {
+		const newGroup = new ChatRoom(data.room);
+		this.client.groupRooms.push(newGroup);
 	}
 }

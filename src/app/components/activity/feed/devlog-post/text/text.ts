@@ -1,10 +1,15 @@
+import Vue from 'vue';
+import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
+import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
-import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
+import {
+	FiresidePost,
+	loadArticleIntoPost,
+} from '../../../../../../_common/fireside/post/post-model';
+import AppLoading from '../../../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../../_common/scroll/scroll.service';
-import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedView } from '../../view';
 
@@ -12,24 +17,29 @@ import { ActivityFeedView } from '../../view';
 	components: {
 		AppFadeCollapse,
 		AppContentViewer,
+		AppLoading,
 	},
 })
 export default class AppActivityFeedDevlogPostText extends Vue {
-	@Inject()
-	feed!: ActivityFeedView;
+	@Inject() feed!: ActivityFeedView;
 
-	@Prop(ActivityFeedItem)
-	item!: ActivityFeedItem;
-
-	@Prop(FiresidePost)
-	post!: FiresidePost;
+	@Prop(ActivityFeedItem) item!: ActivityFeedItem;
+	@Prop(FiresidePost) post!: FiresidePost;
 
 	isToggling = false;
+	isLoaded = !!this.post.article_content;
 
 	$el!: HTMLDivElement;
 
+	@Emit('content-bootstrapped') emitContentBootstrapped() {}
+	@Emit('expanded') emitExpanded() {}
+
 	get isHydrated() {
 		return this.feed.isItemHydrated(this.item);
+	}
+
+	get isLoading() {
+		return this.isToggling && !this.isLoaded;
 	}
 
 	get isOpen() {
@@ -38,7 +48,7 @@ export default class AppActivityFeedDevlogPostText extends Vue {
 
 	async mounted() {
 		await this.$nextTick();
-		this.$emit('content-bootstrapped');
+		this.emitContentBootstrapped();
 	}
 
 	async toggleFull() {
@@ -47,22 +57,29 @@ export default class AppActivityFeedDevlogPostText extends Vue {
 		}
 
 		this.isToggling = true;
-		this.$emit('expanded');
+		this.emitExpanded();
 
-		// If we collapsed.
 		if (!this.isOpen) {
-			this.expand();
+			Analytics.trackEvent('activity-feed', 'article-open');
+			await this.expand();
 		} else {
-			this.collapse();
+			Analytics.trackEvent('activity-feed', 'article-close');
+			await this.collapse();
 		}
-	}
 
-	expand() {
-		this.feed.setItemOpen(this.item, true);
 		this.isToggling = false;
 	}
 
-	collapse() {
+	async expand() {
+		if (!this.isLoaded) {
+			await loadArticleIntoPost(this.post);
+			this.isLoaded = true;
+		}
+
+		this.feed.setItemOpen(this.item, true);
+	}
+
+	async collapse() {
 		// We will scroll to the bottom of the element minus some extra padding.
 		// This keeps the element in view a bit.
 		const elementOffset = Scroll.getElementOffsetTopFromContext(this.$el);
@@ -74,9 +91,5 @@ export default class AppActivityFeedDevlogPostText extends Vue {
 		}
 
 		this.feed.setItemOpen(this.item, false);
-
-		setTimeout(() => {
-			this.isToggling = false;
-		}, 1000);
 	}
 }
