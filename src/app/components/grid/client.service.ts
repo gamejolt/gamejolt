@@ -11,7 +11,7 @@ import { GameTrophy } from '../../../_common/game/trophy/trophy.model';
 import { Growls } from '../../../_common/growls/growls.service';
 import { Notification } from '../../../_common/notification/notification-model';
 import { NotificationText } from '../../../_common/notification/notification-text.service';
-import { Settings } from '../../../_common/settings/settings.service';
+import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
 import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
 import { Translate } from '../../../_common/translate/translate.service';
 import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
@@ -293,7 +293,7 @@ export class GridClient {
 		// In Client when the feed notifications setting is disabled, don't show them notifications.
 		// On site we only use it to disable native browser notifications, but still try to show in
 		// the Growl.
-		if (GJ_IS_CLIENT && !Settings.get('feed-notifications')) {
+		if (GJ_IS_CLIENT && !SettingFeedNotifications.get()) {
 			return;
 		}
 

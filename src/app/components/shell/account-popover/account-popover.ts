@@ -7,7 +7,7 @@ import { Connection } from '../../../../_common/connection/connection-service';
 import { currency } from '../../../../_common/filters/currency';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { Settings } from '../../../../_common/settings/settings.service';
+import { SettingThemeDark } from '../../../../_common/settings/settings.service';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
 import { ThemeMutation, ThemeState, ThemeStore } from '../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -78,7 +78,7 @@ export default class AppShellAccountPopover extends Vue {
 	}
 
 	toggleDark() {
-		Settings.set('theme-dark', !this.isDark);
+		SettingThemeDark.set(!this.isDark);
 		this.setDark(!this.isDark);
 	}
 

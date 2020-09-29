@@ -9,7 +9,7 @@ import { currency } from '../../filters/currency';
 import AppPopper from '../../popper/popper.vue';
 import { Screen } from '../../screen/screen-service';
 import { AppScrollInview } from '../../scroll/inview/inview';
-import { Settings } from '../../settings/settings.service';
+import { SettingAnimatedThumbnails } from '../../settings/settings.service';
 import { AppStore } from '../../store/app-store';
 import AppUserCardHover from '../../user/card/hover/hover.vue';
 import AppUserAvatarImg from '../../user/user-avatar/img/img.vue';
@@ -59,7 +59,7 @@ export default class AppGameThumbnail extends Vue {
 	}
 
 	get shouldAnimate() {
-		return !!Settings.get('animated-thumbnails') && this.isHydrated;
+		return SettingAnimatedThumbnails.get() && this.isHydrated;
 	}
 
 	get url() {
