@@ -502,7 +502,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexMutation
 	viewCommunity(community: Mutations['viewCommunity']) {
 		const communityState = this.communityStates.getCommunityState(community);
-		communityState.unreadFeatureCount = 0;
+		communityState.hasUnreadFeaturedPosts = false;
 
 		const idx = this.communities.findIndex(c => c.id === community.id);
 		if (idx === -1) {

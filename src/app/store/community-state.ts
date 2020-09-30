@@ -7,17 +7,17 @@ export class CommunityState {
 	/** Ids of unread channels. */
 	public unreadChannels: number[] = [];
 	public hasUnreadPosts = false;
+	public hasUnreadFeaturedPosts = false;
 	// Stores whether this state has been bootstrapped with unread data from the associated
 	// community route. In case it has, the Grid bootstrap cannot overwrite data in this state.
 	public routeBootstrapped = false;
-	public unreadFeatureCount = 0;
 
 	constructor(communityId: number) {
 		this.communityId = communityId;
 	}
 
 	get isUnread() {
-		return this.hasUnreadPosts || this.unreadChannels.length > 0;
+		return this.hasUnreadPosts || this.unreadChannels.length > 0 || this.hasUnreadFeaturedPosts;
 	}
 
 	public markChannelUnread(channelId: number) {
@@ -41,7 +41,8 @@ export class CommunityState {
 	public reset() {
 		this.unreadChannels = [];
 		this.hasUnreadPosts = false;
-		this.unreadFeatureCount = 0;
+		this.hasUnreadFeaturedPosts = false;
+		this.routeBootstrapped = false;
 	}
 }
 

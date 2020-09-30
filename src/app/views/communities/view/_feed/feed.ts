@@ -113,7 +113,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 
 		if (
 			this.channel === this.routeStore.frontpageChannel &&
-			this.communityState.unreadFeatureCount > 0
+			this.communityState.hasUnreadFeaturedPosts
 		) {
 			return true;
 		}
@@ -133,22 +133,14 @@ export default class AppCommunitiesViewFeed extends Vue {
 	}
 
 	async loadNew() {
-		let loadNewCount = 0;
 		if (this.channel === this.routeStore.frontpageChannel) {
-			// For the featured view, we know how many posts are new. Load that
-			// many.
-			loadNewCount = this.communityState.unreadFeatureCount;
-			this.communityState.unreadFeatureCount = 0; // Set to read.
+			this.communityState.hasUnreadFeaturedPosts = false; // Set to read.
 		} else if (!isVirtualChannel(this.routeStore, this.channel)) {
 			this.communityState.markChannelRead(this.channel.id);
 		}
 
-		// If we are unable to acquire the count, use a default.
-		if (loadNewCount <= 0) {
-			loadNewCount = 15;
-		}
-
-		await this.feed!.loadNew(loadNewCount);
+		// Default page size is 15.
+		await this.feed!.loadNew(15);
 
 		// Mark the community/channel as read after loading new posts.
 		Api.sendRequest(

@@ -61,18 +61,11 @@ class DashGame {
 			Api.sendRequest('/web/dash/home'),
 		]),
 	resolveStore({ payload, fromCache }) {
-		const [feedPayload] = payload;
-
 		// Don't set if from cache, otherwise it could reset to the cached count
 		// when switching between tabs.
 		if (!fromCache) {
-			// We clear the notifications for the tab we are on, and load in
-			// counts for the other tab.
+			// We clear the notifications for the tab we are on.
 			store.commit('setNotificationCount', { type: 'activity', count: 0 });
-			store.commit('setNotificationCount', {
-				type: 'notifications',
-				count: feedPayload.notificationsUnreadCount,
-			});
 		}
 	},
 })

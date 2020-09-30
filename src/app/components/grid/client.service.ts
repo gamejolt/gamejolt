@@ -52,6 +52,15 @@ interface BootstrapPayload {
 	};
 }
 
+interface CommunityBootstrapPayload {
+	status: string;
+	community_id: string;
+	body: {
+		unreadChannels: number[];
+		unreadFeatured: boolean;
+	};
+}
+
 type ClearNotificationsType =
 	// For the user's activity feed.
 	| 'activity'
@@ -222,6 +231,10 @@ export class GridClient {
 			this.handleClearNotifications(payload);
 		});
 
+		channel.on('community-bootstrap', (payload: CommunityBootstrapPayload) => {
+			this.handleCommunityBootstrap(payload);
+		});
+
 		this.joinCommunities();
 	}
 
@@ -298,15 +311,6 @@ export class GridClient {
 			}
 			this.notificationBacklog = [];
 
-			// communities - unread featured counts
-			const unreadFeatured = payload.body.unreadFeaturedCommunities;
-			for (const communityIdStr in unreadFeatured) {
-				const communityId = parseInt(communityIdStr, 10);
-
-				const communityState = store.state.communityStates.getCommunityState(communityId);
-				communityState.unreadFeatureCount = unreadFeatured[communityId] || 0;
-			}
-
 			// communities - has unread posts?
 			// When bootstrapping grid, we only get a list of communities and we don't
 			// care which channels in them are unread, just if it has any unread posts in them.
@@ -334,6 +338,22 @@ export class GridClient {
 			console.log(`[Grid] Reconnect in ${delay}ms...`);
 
 			this.restart(delay);
+		}
+	}
+
+	handleCommunityBootstrap(payload: CommunityBootstrapPayload) {
+		const communityId = Number.parseInt(payload.community_id, 10);
+		const communityState = store.state.communityStates.getCommunityState(communityId);
+
+		// This flag was set to true in the main bootstrap and we need to unset it
+		// now that we have the actual unread channels in this community.
+		// read comment in client service for more info.
+		communityState.hasUnreadPosts = false;
+		communityState.routeBootstrapped = true;
+
+		communityState.hasUnreadFeaturedPosts = payload.body.unreadFeatured;
+		for (const channelId of payload.body.unreadChannels) {
+			communityState.markChannelUnread(channelId);
 		}
 	}
 
@@ -384,8 +404,8 @@ export class GridClient {
 					const communityState = store.state.communityStates.getCommunityState(
 						communityId
 					);
-					currentCount = communityState.unreadFeatureCount;
-					communityState.unreadFeatureCount = 0;
+					currentCount = communityState.hasUnreadFeaturedPosts ? 1 : 0;
+					communityState.hasUnreadFeaturedPosts = false;
 				}
 				break;
 			case 'community-unread':
@@ -433,6 +453,15 @@ export class GridClient {
 		let message = NotificationText.getText(notification, true);
 		let icon = notification.from_model === undefined ? '' : notification.from_model.img_avatar;
 
+		// When it's a game post as game owner, use the game owner's avatar instead.
+		if (
+			notification.action_model instanceof FiresidePost &&
+			notification.action_model.as_game_owner &&
+			!!notification.action_model.game
+		) {
+			icon = notification.action_model.game.developer.img_avatar;
+		}
+
 		if (message !== undefined) {
 			let title = Translate.$gettext('New Notification');
 			if (notification.type === Notification.TYPE_POST_ADD) {
@@ -479,10 +508,10 @@ export class GridClient {
 					Analytics.trackEvent('grid', 'notification-click', notification.type);
 					notification.go(router);
 				},
-				system: true,
+				system: this.tabLeader?.isLeader || true,
 			});
 		} else {
-			// received a notification that cannot be parsed properly...
+			// Received a notification that cannot be parsed properly...
 			Growls.info({
 				title: Translate.$gettext('New Notification'),
 				message: Translate.$gettext('You have a new notification.'),
@@ -491,7 +520,7 @@ export class GridClient {
 					Analytics.trackEvent('grid', 'notification-click', notification.type);
 					router.push('/notifications');
 				},
-				system: true,
+				system: this.tabLeader?.isLeader || true,
 			});
 		}
 	}
@@ -558,7 +587,8 @@ export class GridClient {
 		}
 
 		const communityState = store.state.communityStates.getCommunityState(communityId);
-		communityState.unreadFeatureCount++;
+		communityState.hasUnreadFeaturedPosts = true;
+
 		store.commit('incrementNotificationCount', { count: 1, type: 'activity' });
 	}
 
@@ -624,6 +654,24 @@ export class GridClient {
 				type,
 				data,
 				clientId: this.clientId,
+			});
+		}
+	}
+
+	public async queueRequestCommunityBootstrap(communityId: number) {
+		// Don't do anything for guests, they aren't connected to Grid.
+		if (store.state.app.user === null) {
+			return;
+		}
+
+		while (!this.connected) {
+			await sleep(250);
+		}
+
+		if (this.notificationChannel) {
+			this.notificationChannel.push('request-community-bootstrap', {
+				user_id: store.state.app.user.id.toString(),
+				community_id: communityId.toString(),
 			});
 		}
 	}

@@ -30,13 +30,8 @@ const HistoryCacheFeedTag = 'notifications-feed';
 		// Don't set if from cache, otherwise it could reset to the cached count
 		// when switching between tabs.
 		if (!fromCache) {
-			// We clear the notifications for the tab we are on, and load in
-			// counts for the other tab.
+			// We clear the notifications for the tab we are on.
 			store.commit('setNotificationCount', { type: 'notifications', count: 0 });
-			store.commit('setNotificationCount', {
-				type: 'activity',
-				count: payload.activityUnreadCount,
-			});
 		}
 	},
 })

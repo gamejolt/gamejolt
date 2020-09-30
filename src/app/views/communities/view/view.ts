@@ -1,6 +1,7 @@
 import { Component, Provide, Watch } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
 import { enforceLocation } from '../../../../utils/router';
+import { sleep } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
@@ -85,6 +86,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	@Mutation clearActiveCommunity!: Store['clearActiveCommunity'];
 	@Mutation viewCommunity!: Store['viewCommunity'];
 	@State communityStates!: Store['communityStates'];
+	@State grid!: Store['grid'];
 
 	@SidebarState activeContextPane!: SidebarStore['activeContextPane'];
 	@SidebarMutation addContextPane!: SidebarStore['addContextPane'];
@@ -166,27 +168,26 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	routeResolved($payload: any) {
 		const { routeStore } = this;
 		const community = new Community($payload.community);
+
 		setCommunity(routeStore, community);
 		routeStore.sidebarData = new CommunitySidebarData($payload);
 		routeStore.collaborator = $payload.invite ? new Collaborator($payload.invite) : null;
 
-		if ($payload.unreadChannels) {
-			const communityState = this.communityStates.getCommunityState(community);
-
-			// This flag was set to true in grid bootstrap and we need to unset it
-			// now that we have the actual unread channels in this community.
-			// read comment in client service for more info.
-			communityState.hasUnreadPosts = false;
-			communityState.routeBootstrapped = true;
-
-			for (const channelId of $payload.unreadChannels as number[]) {
-				communityState.markChannelUnread(channelId);
-			}
-		}
-
 		this.setActiveCommunity(community);
 		this.viewCommunity(community);
 		this.setPageTheme();
+
+		if (community.is_member) {
+			this.getCommunityBootstrap();
+		}
+	}
+
+	private async getCommunityBootstrap() {
+		// When this is the first route the user enters, grid might not be bootstrapped yet.
+		while (!this.grid) {
+			await sleep(250);
+		}
+		this.grid.queueRequestCommunityBootstrap(this.community.id);
 	}
 
 	routeDestroyed() {

@@ -105,7 +105,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			fromCache
 		);
 
-		this.communityState.unreadFeatureCount = 0;
+		this.communityState.hasUnreadFeaturedPosts = false;
 		this.finishedLoading = true;
 
 		if (this.routeTitle) {
