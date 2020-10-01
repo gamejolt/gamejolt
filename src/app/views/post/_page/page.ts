@@ -18,7 +18,7 @@ import { AppResponsiveDimensions } from '../../../../_common/responsive-dimensio
 import { Screen } from '../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
-import { Settings } from '../../../../_common/settings/settings.service';
+import { SettingAlwaysShowStickers } from '../../../../_common/settings/settings.service';
 import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
 import AppStickerTargetTS from '../../../../_common/sticker/target/target';
 import AppStickerTarget from '../../../../_common/sticker/target/target.vue';
@@ -95,7 +95,7 @@ export default class AppPostPage extends Vue implements LightboxMediaSource {
 
 	created() {
 		if (!GJ_IS_SSR) {
-			this.stickersVisible = Settings.get('always-show-stickers');
+			this.stickersVisible = SettingAlwaysShowStickers.get();
 		}
 	}
 

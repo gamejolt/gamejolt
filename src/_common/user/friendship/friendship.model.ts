@@ -1,6 +1,5 @@
 import { Model } from '../../model/model.service';
 import { User } from '../user.model';
-import { Api } from '../../api/api.service';
 
 export class UserFriendship extends Model {
 	static readonly STATE_NONE = 0;
@@ -29,29 +28,15 @@ export class UserFriendship extends Model {
 		}
 	}
 
-	static async fetchRequests() {
-		const response: any = await Api.sendRequest('/web/dash/friends/requests', null, {
-			detach: true,
-		});
-
-		return {
-			requests: UserFriendship.populate(response.requests) as UserFriendship[],
-			pending: UserFriendship.populate(response.pending) as UserFriendship[],
-		};
-	}
-
-	static fetchCount() {
-		return Api.sendRequest('/web/dash/friends/requests/count', null, {
-			detach: true,
-		});
-	}
-
 	getThem(us: User) {
 		return this.user_id !== us.id ? this.user : this.target_user;
 	}
 
 	$save() {
-		return this.$_save('/web/dash/friends/requests/add/' + this.target_user_id, 'userFriendship');
+		return this.$_save(
+			'/web/dash/friends/requests/add/' + this.target_user_id,
+			'userFriendship'
+		);
 	}
 
 	$accept() {

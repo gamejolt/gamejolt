@@ -21,7 +21,7 @@ import AppPill from '../../../../../_common/pill/pill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
-import { Settings } from '../../../../../_common/settings/settings.service';
+import { SettingAlwaysShowStickers } from '../../../../../_common/settings/settings.service';
 import AppStickerTargetTS from '../../../../../_common/sticker/target/target';
 import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
@@ -243,7 +243,7 @@ export default class AppActivityFeedEventItem extends Vue {
 
 	created() {
 		if (!GJ_IS_SSR) {
-			this.stickersVisible = Settings.get('always-show-stickers');
+			this.stickersVisible = SettingAlwaysShowStickers.get();
 			if (this.stickersVisible) {
 				this.animateStickers = false;
 			}
