@@ -1,6 +1,5 @@
-import { Component, Inject } from 'vue-property-decorator';
+import { Component, Inject, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import { EventBus, EventBusDeregister } from '../../../../../system/event/event-bus.service';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Growls } from '../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
@@ -8,10 +7,6 @@ import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
-import {
-	ClearNotificationsEventData,
-	GRID_CLEAR_NOTIFICATIONS_EVENT,
-} from '../../../../components/grid/client.service';
 import { Store } from '../../../../store/index';
 import { CommunitiesViewChannelDeps } from '../channel/channel';
 import {
@@ -50,7 +45,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	feed: ActivityFeedView | null = null;
 	finishedLoading = false;
-	clearNotificationsDeregister?: EventBusDeregister;
 
 	get community() {
 		return this.routeStore.community;
@@ -91,6 +85,13 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return this.canAcceptCollaboration ? '' : this.$gettext(`You are in too many communities.`);
 	}
 
+	@Watch('communityState.hasUnreadFeaturedPosts', { immediate: true })
+	onChannelUnreadChanged() {
+		if (this.feed && this.feed.newCount === 0 && this.communityState.hasUnreadFeaturedPosts) {
+			this.feed.newCount = 1;
+		}
+	}
+
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 		this.finishedLoading = false;
@@ -115,31 +116,15 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		this.grid?.pushViewNotifications('community-featured', {
 			communityId: this.community.id,
 		});
-
-		this.clearNotificationsDeregister = EventBus.on(
-			GRID_CLEAR_NOTIFICATIONS_EVENT,
-			(data: ClearNotificationsEventData) => {
-				if (
-					data.type === 'community-featured' &&
-					data.data.communityId === this.community.id
-				) {
-					this.feed?.loadNew(data.currentCount);
-				}
-			}
-		);
-	}
-
-	routeDestroyed() {
-		if (this.clearNotificationsDeregister) {
-			this.clearNotificationsDeregister();
-			this.clearNotificationsDeregister = undefined;
-		}
 	}
 
 	loadedNew() {
-		this.grid?.pushViewNotifications('community-featured', {
-			communityId: this.community.id,
-		});
+		if (this.communityState.hasUnreadFeaturedPosts) {
+			this.communityState.hasUnreadFeaturedPosts = false;
+			this.grid?.pushViewNotifications('community-featured', {
+				communityId: this.community.id,
+			});
+		}
 	}
 
 	onPostAdded(post: FiresidePost) {

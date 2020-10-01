@@ -106,42 +106,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 		return message;
 	}
 
-	get shouldShowLoadNew() {
-		if (!this.feed) {
-			return false;
-		}
-
-		if (
-			this.channel === this.routeStore.frontpageChannel &&
-			this.communityState.hasUnreadFeaturedPosts
-		) {
-			return true;
-		}
-
-		if (isVirtualChannel(this.routeStore, this.channel)) {
-			return false;
-		}
-
-		// Finished loading prevents the button from showing and quickly
-		// disappearing again because loading the route clears the unread state
-		// on this channel.
-		if (this.communityState.unreadChannels.includes(this.channel.id)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	async loadNew() {
-		if (this.channel === this.routeStore.frontpageChannel) {
-			this.communityState.hasUnreadFeaturedPosts = false; // Set to read.
-		} else if (!isVirtualChannel(this.routeStore, this.channel)) {
-			this.communityState.markChannelRead(this.channel.id);
-		}
-
-		// Default page size is 15.
-		await this.feed!.loadNew(15);
-
+	onLoadedNew() {
 		// Mark the community/channel as read after loading new posts.
 		Api.sendRequest(
 			`/web/communities/mark-as-read/${this.community.path}/${this.channel.title}`,

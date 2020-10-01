@@ -39,6 +39,7 @@ export interface ActivityFeedViewOptions {
 	hideGameInfo?: boolean;
 	shouldShowUserCards?: boolean;
 	shouldShowFollow?: boolean;
+	showNewCountNumber?: boolean;
 }
 
 export class ActivityFeedView {
@@ -58,6 +59,8 @@ export class ActivityFeedView {
 	mainCommunity: Community | null = null;
 	shouldShowUserCards = true;
 	shouldShowFollow = false;
+	newCount = 0;
+	showNewCountNumber = true;
 
 	get isBootstrapped() {
 		return this.state.isBootstrapped;
@@ -105,6 +108,7 @@ export class ActivityFeedView {
 			mainCommunity = null,
 			shouldShowUserCards = true,
 			shouldShowFollow = false,
+			showNewCountNumber = true,
 		}: ActivityFeedViewOptions = {}
 	) {
 		this.state = state;
@@ -114,6 +118,7 @@ export class ActivityFeedView {
 		this.mainCommunity = mainCommunity;
 		this.shouldShowUserCards = shouldShowUserCards;
 		this.shouldShowFollow = shouldShowFollow;
+		this.showNewCountNumber = showNewCountNumber;
 	}
 
 	clear() {
@@ -123,6 +128,7 @@ export class ActivityFeedView {
 		this.timesLoaded = 0;
 		this.totalTimesLoaded = 0;
 		this.scroll = 0;
+		this.newCount = 0;
 	}
 
 	prepend(input: ActivityFeedInput[]) {

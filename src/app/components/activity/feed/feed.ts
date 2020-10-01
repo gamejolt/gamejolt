@@ -33,7 +33,6 @@ export default class AppActivityFeed extends Vue {
 	@Prop(propRequired(ActivityFeedView))
 	feed!: ActivityFeedView;
 
-	@Prop(propOptional(Number, 0)) newCount!: number;
 	@Prop(propOptional(Boolean, false)) showAds!: boolean;
 
 	/**
@@ -130,6 +129,10 @@ export default class AppActivityFeed extends Vue {
 
 	get lastPostScrollId() {
 		return this.feed.state.endScrollId;
+	}
+
+	get newCount() {
+		return this.feed.newCount;
 	}
 
 	shouldShowAd(index: number) {
@@ -237,6 +240,7 @@ export default class AppActivityFeed extends Vue {
 		}
 
 		await this.feed.loadNew(this.newCount);
+		this.feed.newCount = 0;
 		this.emitLoadNew();
 		// Make sure this is after the emitter so we remove the button before resetting
 		this.isNewButtonInview = false;

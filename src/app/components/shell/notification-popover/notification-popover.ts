@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
-import { EventBus } from '../../../../system/event/event-bus.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
 import AppLoading from '../../../../_common/loading/loading.vue';
@@ -12,7 +11,6 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { Store } from '../../../store';
 import AppActivityFeed from '../../activity/feed/feed.vue';
 import { ActivityFeedView } from '../../activity/feed/view';
-import { ClearNotificationsEventData } from '../../grid/client.service';
 
 @Component({
 	components: {
@@ -43,7 +41,6 @@ export default class AppShellNotificationPopover extends Vue {
 	isShowing = false;
 	isLoading = true;
 	feed: ActivityFeedView | null = null;
-	clearNotificationsDeregister?: EventBusDeregister;
 
 	readonly Connection = Connection;
 
@@ -105,17 +102,9 @@ export default class AppShellNotificationPopover extends Vue {
 				await this.feed.loadNew(this.unreadNotificationsCount);
 			}
 
-			this.setNotificationCount({ type: 'notifications', count: 0 });
-			this.grid?.pushViewNotifications('notifications');
-			if (!this.clearNotificationsDeregister) {
-				this.clearNotificationsDeregister = EventBus.on(
-					'grid-clear-notifications',
-					(data: ClearNotificationsEventData) => {
-						if (data.type === 'notifications') {
-							this.reset();
-						}
-					}
-				);
+			if (this.unreadNotificationsCount > 0) {
+				this.setNotificationCount({ type: 'notifications', count: 0 });
+				this.grid?.pushViewNotifications('notifications');
 			}
 		}
 
@@ -129,12 +118,5 @@ export default class AppShellNotificationPopover extends Vue {
 	reset() {
 		this.feed?.clear();
 		this.isLoading = true;
-	}
-
-	destroyed() {
-		if (this.clearNotificationsDeregister) {
-			this.clearNotificationsDeregister();
-			this.clearNotificationsDeregister = undefined;
-		}
 	}
 }

@@ -1,6 +1,5 @@
 import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
-import { EventBus } from '../../../system/event/event-bus.service';
 import { arrayRemove } from '../../../utils/array';
 import { TabLeader } from '../../../utils/tab-leader';
 import { sleep } from '../../../utils/utils';
@@ -83,8 +82,6 @@ interface ClearNotificationsPayload {
 export interface ClearNotificationsEventData extends ClearNotificationsPayload {
 	currentCount: number;
 }
-
-export const GRID_CLEAR_NOTIFICATIONS_EVENT = 'grid-clear-notifications';
 
 /**
  * Polls a request until it returns a result, increases the delay time between requests after each failed attempt.
@@ -363,21 +360,14 @@ export class GridClient {
 			return;
 		}
 
-		// Before any action is taken like clearing counts in stores,
-		// store in this var how many notifications there were.
-		// This can then be used in an event bus handler to load X new things.
-		let currentCount = 0;
-
 		switch (payload.type) {
 			case 'activity':
-				currentCount = store.state.unreadActivityCount;
 				store.commit('setNotificationCount', {
 					type: 'activity',
 					count: 0,
 				});
 				break;
 			case 'notifications':
-				currentCount = store.state.unreadNotificationsCount;
 				store.commit('setNotificationCount', {
 					type: 'notifications',
 					count: 0,
@@ -390,11 +380,6 @@ export class GridClient {
 					const communityState = store.state.communityStates.getCommunityState(
 						communityId
 					);
-					// We don't store how many new posts there are for each channel, so the route
-					// takes care of figuring out how much new stuff to load.
-					currentCount = communityState.unreadChannels.includes(communityChannelId)
-						? 1
-						: 0;
 					communityState.markChannelRead(communityChannelId);
 				}
 				break;
@@ -404,7 +389,6 @@ export class GridClient {
 					const communityState = store.state.communityStates.getCommunityState(
 						communityId
 					);
-					currentCount = communityState.hasUnreadFeaturedPosts ? 1 : 0;
 					communityState.hasUnreadFeaturedPosts = false;
 				}
 				break;
@@ -423,17 +407,6 @@ export class GridClient {
 				// No component needs to react to this change currently, so there is no need for an event bus emit.
 				store.commit('changeFriendRequestCount', -1);
 				break;
-		}
-
-		// We only want to emit a clear event when the current data has uncleared notifications.
-		// That way the currently loaded route can take care of loading in new stuff based on how many
-		// notifications it had backlogged.
-		if (currentCount > 0) {
-			EventBus.emit(GRID_CLEAR_NOTIFICATIONS_EVENT, {
-				type: payload.type,
-				data: payload.data,
-				currentCount,
-			});
 		}
 	}
 

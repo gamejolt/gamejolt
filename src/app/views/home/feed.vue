@@ -1,3 +1,5 @@
+<script lang="ts" src="./feed"></script>
+
 <template>
 	<section class="section fill-backdrop">
 		<app-page-container xl>
@@ -107,16 +109,13 @@
 					v-else
 					:feed="feed"
 					show-ads
-					:new-count="unreadActivityCount"
-					@load-new="loadedNew()"
+					@load-new="onLoadedNew"
 					@load-more="onLoadMore"
 				/>
 			</template>
 		</app-page-container>
 	</section>
 </template>
-
-<script lang="ts" src="./feed"></script>
 
 <style lang="stylus" scoped>
 @import '~styles/variables'

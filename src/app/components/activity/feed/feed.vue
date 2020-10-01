@@ -1,15 +1,21 @@
+<script lang="ts" src="./feed"></script>
+
 <template>
 	<!--
 		We need to refresh the whole feed anytime it's cleared or massively changed.
 		Basically anytime the feed state's items are replaced so that the references
 		to them get picked up again.
 	-->
-	<div class="activity-feed" :key="feed.id">
+	<div :key="feed.id" class="activity-feed">
 		<template v-if="newCount > 0 || feed.isLoadingNew">
 			<app-scroll-inview :margin="`-${Scroll.offsetTop}px`" @inview="onNewButtonInview">
 				<app-expand v-if="!feed.isLoadingNew" :when="isNewButtonInview">
 					<app-activity-feed-new-button @click="loadNew()">
+						<translate v-if="!feed.showNewCountNumber">
+							Show new items
+						</translate>
 						<translate
+							v-else
 							:translate-n="newCount"
 							:translate-params="{ count: number(newCount) }"
 							translate-plural="%{count} new items"
@@ -24,14 +30,18 @@
 
 		<!-- Need the div so that we can target the last child in the container. -->
 		<div>
-			<div class="-item" v-for="(item, i) of feed.items" :key="item.id">
+			<div v-for="(item, i) of feed.items" :key="item.id" class="-item">
 				<app-activity-feed-item :item="item" />
 
 				<div
-					class="-ad-container well fill-offset full-bleed-xs text-center"
 					v-if="shouldShowAd(i)"
+					class="-ad-container well fill-offset full-bleed-xs text-center"
 				>
-					<app-ad-widget size="rectangle" placement="content" :meta="{ staticSize: true }" />
+					<app-ad-widget
+						size="rectangle"
+						placement="content"
+						:meta="{ staticSize: true }"
+					/>
 				</div>
 			</div>
 		</div>
@@ -42,10 +52,10 @@
 		<app-scroll-inview v-if="!feed.slice" :margin="loadMoreMargin" @inview="onScrollLoadMore">
 			<div v-if="shouldShowLoadMore" class="page-cut">
 				<app-button
+					v-app-track-event="`activity-feed:more`"
 					:to="GJ_IS_SSR ? { query: { feed_last_id: lastPostScrollId } } : undefined"
 					trans
 					@click="loadMoreButton"
-					v-app-track-event="`activity-feed:more`"
 				>
 					<translate>Load More</translate>
 				</app-button>
@@ -72,4 +82,3 @@
 </template>
 
 <style lang="stylus" scoped src="./feed.styl"></style>
-<script lang="ts" src="./feed"></script>

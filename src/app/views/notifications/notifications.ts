@@ -1,6 +1,5 @@
 import { Component, Watch } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
-import { EventBus, EventBusDeregister } from '../../../system/event/event-bus.service';
 import { Api } from '../../../_common/api/api.service';
 import { HistoryCache } from '../../../_common/history/cache/cache.service';
 import { Notification } from '../../../_common/notification/notification-model';
@@ -9,7 +8,6 @@ import { ActivityFeedService } from '../../components/activity/feed/feed-service
 import AppActivityFeed from '../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../components/activity/feed/view';
-import { ClearNotificationsEventData } from '../../components/grid/client.service';
 import { Store, store } from '../../store';
 
 const HistoryCacheFeedTag = 'notifications-feed';
@@ -52,7 +50,6 @@ export default class RouteNotifications extends BaseRouteComponent {
 	grid!: Store['grid'];
 
 	feed: ActivityFeedView | null = null;
-	clearNotificationsDeregister?: EventBusDeregister;
 
 	get routeTitle() {
 		return this.$gettext(`Your Notifications`);
@@ -73,6 +70,13 @@ export default class RouteNotifications extends BaseRouteComponent {
 		}
 	}
 
+	@Watch('unreadNotificationsCount', { immediate: true })
+	onUnreadNotificationsCountChange() {
+		if (this.feed && this.unreadNotificationsCount > this.feed.newCount) {
+			this.feed.newCount = this.unreadNotificationsCount;
+		}
+	}
+
 	routeResolved($payload: any) {
 		// We mark in the history cache whether this route is a historical view
 		// or a new view. If it's new, we want to load fresh. If it's old, we
@@ -85,26 +89,12 @@ export default class RouteNotifications extends BaseRouteComponent {
 		}
 
 		this.grid?.pushViewNotifications('notifications');
-
-		this.clearNotificationsDeregister = EventBus.on(
-			'grid-clear-notifications',
-			(data: ClearNotificationsEventData) => {
-				if (data.type === 'notifications') {
-					this.feed?.loadNew(data.currentCount);
-				}
-			}
-		);
 	}
 
-	routeDestroyed() {
-		if (this.clearNotificationsDeregister) {
-			this.clearNotificationsDeregister();
-			this.clearNotificationsDeregister = undefined;
+	onLoadedNew() {
+		if (this.unreadNotificationsCount > 0) {
+			this.setNotificationCount({ type: 'notifications', count: 0 });
+			this.grid?.pushViewNotifications('notifications');
 		}
-	}
-
-	loadedNew() {
-		this.setNotificationCount({ type: 'notifications', count: 0 });
-		this.grid?.pushViewNotifications('notifications');
 	}
 }

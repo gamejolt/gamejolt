@@ -1,15 +1,10 @@
-import { Component, Inject } from 'vue-property-decorator';
+import { Component, Inject, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { EventBus, EventBusDeregister } from '../../../../../system/event/event-bus.service';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
-import {
-	ClearNotificationsEventData,
-	GRID_CLEAR_NOTIFICATIONS_EVENT,
-} from '../../../../components/grid/client.service';
 import { Store } from '../../../../store';
 import {
 	CommunityRouteStore,
@@ -56,7 +51,6 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 	grid!: Store['grid'];
 
 	feed: ActivityFeedView | null = null;
-	clearNotificationsDeregister?: EventBusDeregister;
 
 	readonly Screen = Screen;
 
@@ -83,7 +77,7 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 	get routeTitle() {
 		this.disableRouteTitleSuffix = true;
 
-		let title = this.$gettextInterpolate(`%{ name } Community on Game Jolt`, {
+		const title = this.$gettextInterpolate(`%{ name } Community on Game Jolt`, {
 			name: this.community.name,
 		});
 
@@ -116,6 +110,17 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 		return title;
 	}
 
+	@Watch('communityState.unreadChannels', { immediate: true })
+	onChannelUnreadChanged() {
+		if (
+			this.feed &&
+			this.feed.newCount === 0 &&
+			this.communityState.unreadChannels.includes(this.channel.id)
+		) {
+			this.feed.newCount = 1;
+		}
+	}
+
 	routeCreated() {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
@@ -133,19 +138,6 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 			this.communityState.markChannelRead(this.channel.id);
 
 			this.pushViewToGrid();
-
-			this.clearNotificationsDeregister = EventBus.on(
-				GRID_CLEAR_NOTIFICATIONS_EVENT,
-				(data: ClearNotificationsEventData) => {
-					if (
-						data.type === 'community-channel' &&
-						data.data.communityId === this.community.id &&
-						data.data.channelId === this.channel.id
-					) {
-						this.feed?.loadNew(15);
-					}
-				}
-			);
 		}
 
 		if (this.routeTitle) {
@@ -153,15 +145,14 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 		}
 	}
 
-	routeDestroyed() {
-		if (this.clearNotificationsDeregister) {
-			this.clearNotificationsDeregister();
-			this.clearNotificationsDeregister = undefined;
-		}
-	}
-
 	loadedNew() {
-		if (!isVirtualChannel(this.routeStore, this.channel)) {
+		// Check that the channel is still unread after loading new posts.
+		// It might be read after posts have been loaded in a different client.
+		if (
+			!isVirtualChannel(this.routeStore, this.channel) &&
+			this.communityState.unreadChannels.includes(this.channel.id)
+		) {
+			this.communityState.markChannelRead(this.channel.id);
 			this.pushViewToGrid();
 		}
 	}

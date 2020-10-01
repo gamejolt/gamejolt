@@ -1,6 +1,5 @@
-import { Component } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-property-decorator';
 import { Mutation, State } from 'vuex-class';
-import { EventBus, EventBusDeregister } from '../../../system/event/event-bus.service';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
 import AppAdWidget from '../../../_common/ad/widget/widget.vue';
@@ -20,7 +19,6 @@ import { ActivityFeedView } from '../../components/activity/feed/view';
 import AppBroadcastCard from '../../components/broadcast-card/broadcast-card.vue';
 import AppCommunitySliderPlaceholder from '../../components/community/slider/placeholder/placeholder.vue';
 import AppCommunitySlider from '../../components/community/slider/slider.vue';
-import { ClearNotificationsEventData } from '../../components/grid/client.service';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import { Store, store } from '../../store';
@@ -91,7 +89,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	isShowingAllGames = false;
 	loadingRecommendedUsers = true;
 	recommendedUsers: User[] = [];
-	clearNotificationsDeregister?: EventBusDeregister;
 
 	readonly Screen = Screen;
 
@@ -118,6 +115,13 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 
 	get shouldShowRecommendedUsers() {
 		return this.loadingRecommendedUsers || this.recommendedUsers.length > 0;
+	}
+
+	@Watch('unreadActivityCount', { immediate: true })
+	onUnreadActivityCountChanged() {
+		if (this.feed && this.unreadActivityCount > this.feed.newCount) {
+			this.feed.newCount = this.unreadActivityCount;
+		}
 	}
 
 	private checkGameFilter(game: DashGame) {
@@ -163,31 +167,17 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			.reverse();
 
 		this.grid?.pushViewNotifications('activity');
-
-		this.clearNotificationsDeregister = EventBus.on(
-			'grid-clear-notifications',
-			(data: ClearNotificationsEventData) => {
-				if (data.type === 'activity') {
-					this.feed?.loadNew(data.currentCount);
-				}
-			}
-		);
 	}
 
 	mounted() {
 		this.loadRecommendedUsers();
 	}
 
-	routeDestroyed() {
-		if (this.clearNotificationsDeregister) {
-			this.clearNotificationsDeregister();
-			this.clearNotificationsDeregister = undefined;
+	onLoadedNew() {
+		if (this.unreadActivityCount > 0) {
+			this.setNotificationCount({ type: 'activity', count: 0 });
+			this.grid?.pushViewNotifications('activity');
 		}
-	}
-
-	loadedNew() {
-		this.setNotificationCount({ type: 'activity', count: 0 });
-		this.grid?.pushViewNotifications('activity');
 	}
 
 	onLoadMore() {
