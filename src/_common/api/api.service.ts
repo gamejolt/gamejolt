@@ -2,6 +2,18 @@ import Axios from 'axios';
 import { Environment } from '../environment/environment.service';
 import { Payload } from '../payload/payload-service';
 
+// TODO: We can test in SSR if the calling client has webp support and pass it
+// through here.
+const hasWebpSupport = GJ_IS_SSR
+	? Promise.resolve(false)
+	: new Promise<boolean>(resolve => {
+			const image = new Image();
+			image.onerror = () => resolve(false);
+			image.onload = () => resolve(image.width === 1);
+			image.src =
+				'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA=';
+	  }).catch(() => false);
+
 export interface RequestOptions {
 	/**
 	 * Files to upload can be passed in through here.
@@ -146,7 +158,12 @@ export class Api {
 		return Payload.processResponse(requestPromise, options);
 	}
 
-	private static createRequest(method: string, url: string, data: any, options: RequestOptions) {
+	private static async createRequest(
+		method: 'GET' | 'POST',
+		url: string,
+		data: any,
+		options: RequestOptions
+	) {
 		// For SSR we pass in the frontend cookie of "ssr" so that the server
 		// knows that this is an SSR request and shouldn't store session data.
 		const headers: any = {};
@@ -159,8 +176,12 @@ export class Api {
 			headers['x-gj-client-version'] = GJ_VERSION;
 		}
 
-		// An upload request.
+		if (await hasWebpSupport) {
+			headers['accept'] = 'image/webp,*/*';
+		}
+
 		if (options.file) {
+			// An upload request.
 			// We have to send it over as form data instead of JSON data.
 			data = { ...data, file: options.file };
 			const formData = new FormData();
@@ -174,7 +195,7 @@ export class Api {
 				}
 			}
 
-			const request = Axios({
+			return Axios({
 				method,
 				url,
 				data: formData,
@@ -194,8 +215,6 @@ export class Api {
 				}
 				return response;
 			});
-
-			return request;
 		}
 
 		return Axios({
