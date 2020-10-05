@@ -2,6 +2,8 @@
 
 <template>
 	<div class="video">
+		<app-video-player v-if="!disableControls && player" :player="player" />
+
 		<template v-if="!GJ_IS_SSR">
 			<div v-if="!isLoaded && showLoading" class="video-loader">
 				<app-loading :hide-label="true" :no-color="true" :stationary="true" />
@@ -17,6 +19,8 @@
 </template>
 
 <style lang="stylus" scoped>
+@import '~styles/variables'
+
 .video
 	position: relative
 
@@ -26,7 +30,7 @@
 		right: 0
 		bottom: 0
 		left: 0
-		background-color: rgba(black, 0.5)
+		background-color: rgba($black, 0.5)
 		z-index: 2
 		display: flex
 		align-items: center

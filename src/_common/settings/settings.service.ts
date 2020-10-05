@@ -50,7 +50,10 @@ class NumberSetting extends SettingBase<number> {
 
 	get() {
 		const val = this._get();
-		return typeof val === 'string' ? parseInt(val, 10) : val ?? 0;
+		// JODO: video players use their volume control with a decimal,
+		// so we probably need to change this to support float values
+		// (assuming that doesn't break anything)
+		return typeof val === 'string' ? parseFloat(val) : val ?? 0;
 	}
 }
 
@@ -83,3 +86,4 @@ export const SettingRestrictedBrowsing = new BooleanSetting('restricted-browsing
 export const SettingBroadcastModal = new BooleanSetting('broadcast-modal', true);
 export const SettingAnimatedThumbnails = new BooleanSetting('animated-thumbnails', true);
 export const SettingFeedNotifications = new BooleanSetting('feed-notifications', true);
+export const SettingVideoPlayerVolume = new NumberSetting('video-player-volume', 1);

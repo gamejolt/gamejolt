@@ -1,0 +1,24 @@
+@import '~styles/variables'
+
+$-control-size = 48px
+
+.player-control
+.player-control-button
+	cursor: pointer
+
+.player-control-button
+	height: $-control-size
+	width: $-control-size
+	display: inline-flex
+	justify-content: center
+	align-items: center
+
+	.jolticon
+		font-size: $jolticon-size * 1.25
+		color: $white
+		transition: transform 200ms, filter 200ms
+
+	&:hover
+		.jolticon
+			transform: scale(1.1)
+			filter: drop-shadow(0 0 6px $black)

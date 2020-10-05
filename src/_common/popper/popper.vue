@@ -1,9 +1,11 @@
+<script lang="ts" src="./popper"></script>
+
 <template>
 	<div
 		:id="popperId"
+		ref="trigger"
 		class="popper"
 		:class="{ '-block': block }"
-		ref="trigger"
 		@click="onTriggerClicked"
 		@contextmenu="onContextMenu"
 		@pointerenter="onMouseEnter"
@@ -12,14 +14,14 @@
 		<slot />
 		<div
 			v-if="isVisible"
+			ref="popper"
+			v-app-observe-dimensions="onDimensionsChanged"
 			class="popper-wrapper"
 			:class="{ '-hide': isHiding, '-ssr': GJ_IS_SSR }"
-			ref="popper"
 			@mouseenter="onMouseEnter"
 			@mouseleave="onMouseLeave"
-			v-app-observe-dimensions="onDimensionsChanged"
 		>
-			<div class="popper-arrow" data-popper-arrow />
+			<div v-if="!sansArrow" class="popper-arrow" data-popper-arrow />
 			<div
 				class="popper-content"
 				:class="contentClass"
@@ -44,12 +46,10 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .popper-content
 	display: flex
 	flex-direction: column
 </style>
-
-<script lang="ts" src="./popper"></script>
