@@ -338,8 +338,8 @@ export class GridClient {
 		}
 	}
 
-	handleCommunityBootstrap(payload: CommunityBootstrapPayload) {
-		const communityId = Number.parseInt(payload.community_id, 10);
+	handleCommunityBootstrap({ community_id, body }: CommunityBootstrapPayload) {
+		const communityId = Number.parseInt(community_id, 10);
 		const communityState = store.state.communityStates.getCommunityState(communityId);
 
 		// This flag was set to true in the main bootstrap and we need to unset it
@@ -348,19 +348,19 @@ export class GridClient {
 		communityState.hasUnreadPosts = false;
 		communityState.routeBootstrapped = true;
 
-		communityState.hasUnreadFeaturedPosts = payload.body.unreadFeatured;
-		for (const channelId of payload.body.unreadChannels) {
+		communityState.hasUnreadFeaturedPosts = body.unreadFeatured;
+		for (const channelId of body.unreadChannels) {
 			communityState.markChannelUnread(channelId);
 		}
 	}
 
-	handleClearNotifications(payload: ClearNotificationsPayload) {
+	handleClearNotifications({ clientId, type, data }: ClearNotificationsPayload) {
 		// Don't do anything when the notification originated from this client.
-		if (payload.clientId === this.clientId) {
+		if (clientId === this.clientId) {
 			return;
 		}
 
-		switch (payload.type) {
+		switch (type) {
 			case 'activity':
 				store.commit('setNotificationCount', {
 					type: 'activity',
@@ -375,8 +375,8 @@ export class GridClient {
 				break;
 			case 'community-channel':
 				{
-					const communityChannelId = payload.data.channelId as number;
-					const communityId = payload.data.communityId as number;
+					const communityChannelId = data.channelId as number;
+					const communityId = data.communityId as number;
 					const communityState = store.state.communityStates.getCommunityState(
 						communityId
 					);
@@ -385,7 +385,7 @@ export class GridClient {
 				break;
 			case 'community-featured':
 				{
-					const communityId = payload.data.communityId as number;
+					const communityId = data.communityId as number;
 					const communityState = store.state.communityStates.getCommunityState(
 						communityId
 					);
@@ -394,7 +394,7 @@ export class GridClient {
 				break;
 			case 'community-unread':
 				{
-					const communityId = payload.data.communityId as number;
+					const communityId = data.communityId as number;
 					const communityState = store.state.communityStates.getCommunityState(
 						communityId
 					);
