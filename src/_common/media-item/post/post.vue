@@ -1,7 +1,8 @@
 <script lang="ts" src="./post"></script>
 
 <template>
-	<div class="media-item-post" :class="{ '-inline': inline }" @click="onClickImage">
+	<!-- JODO: revert? removed functionality and indication of fullscreen gifs -->
+	<div class="media-item-post" :class="{ '-inline': inline }">
 		<app-responsive-dimensions
 			class="-media"
 			:class="{
@@ -30,6 +31,7 @@
 					:src="mediaItem.mediaserver_url"
 					alt=""
 					ondragstart="return false"
+					@click.native="onClickImage"
 				/>
 				<app-video
 					v-else-if="isActive"
@@ -59,6 +61,10 @@
 
 	&.-inline
 		display: inline-block
+
+	&:not(.-inline)
+		.-img
+			cursor: zoom-in
 
 	.-media
 		margin-left: auto

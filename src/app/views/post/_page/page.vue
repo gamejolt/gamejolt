@@ -248,9 +248,7 @@
 		iframe
 			rounded-corners-lg()
 
-.-media-item
-	cursor: zoom-in
-
+// JODO: revert file? removed functionality and indication of fullscreen gifs
 >>> .mention-avatar-img
 	border-radius: 50% !important
 
