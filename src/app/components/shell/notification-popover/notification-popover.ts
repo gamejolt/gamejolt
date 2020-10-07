@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
-import { Action, Mutation, State } from 'vuex-class';
+import { Action, State } from 'vuex-class';
 import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
 import AppLoading from '../../../../_common/loading/loading.vue';
@@ -28,9 +28,6 @@ export default class AppShellNotificationPopover extends Vue {
 
 	@State
 	unreadNotificationsCount!: Store['unreadNotificationsCount'];
-
-	@Mutation
-	setNotificationCount!: Store['setNotificationCount'];
 
 	@Action
 	markNotificationsAsRead!: Store['markNotificationsAsRead'];
@@ -103,7 +100,6 @@ export default class AppShellNotificationPopover extends Vue {
 			}
 
 			if (this.unreadNotificationsCount > 0) {
-				this.setNotificationCount({ type: 'notifications', count: 0 });
 				this.grid?.pushViewNotifications('notifications');
 			}
 		}

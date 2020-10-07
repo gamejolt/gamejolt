@@ -1,5 +1,5 @@
 import { Component, Watch } from 'vue-property-decorator';
-import { Action, Mutation, State } from 'vuex-class';
+import { Action, State } from 'vuex-class';
 import { Api } from '../../../_common/api/api.service';
 import { HistoryCache } from '../../../_common/history/cache/cache.service';
 import { Notification } from '../../../_common/notification/notification-model';
@@ -8,7 +8,7 @@ import { ActivityFeedService } from '../../components/activity/feed/feed-service
 import AppActivityFeed from '../../components/activity/feed/feed.vue';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../components/activity/feed/view';
-import { Store, store } from '../../store';
+import { Store } from '../../store';
 
 const HistoryCacheFeedTag = 'notifications-feed';
 
@@ -24,14 +24,6 @@ const HistoryCacheFeedTag = 'notifications-feed';
 	deps: { query: ['feed_last_id'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/notifications')),
-	resolveStore({ payload, fromCache }) {
-		// Don't set if from cache, otherwise it could reset to the cached count
-		// when switching between tabs.
-		if (!fromCache) {
-			// We clear the notifications for the tab we are on.
-			store.commit('setNotificationCount', { type: 'notifications', count: 0 });
-		}
-	},
 })
 export default class RouteNotifications extends BaseRouteComponent {
 	@State
@@ -39,9 +31,6 @@ export default class RouteNotifications extends BaseRouteComponent {
 
 	@State
 	unreadNotificationsCount!: Store['unreadNotificationsCount'];
-
-	@Mutation
-	setNotificationCount!: Store['setNotificationCount'];
 
 	@Action
 	markNotificationsAsRead!: Store['markNotificationsAsRead'];
@@ -77,7 +66,7 @@ export default class RouteNotifications extends BaseRouteComponent {
 		}
 	}
 
-	routeResolved($payload: any) {
+	routeResolved($payload: any, fromCache: boolean) {
 		// We mark in the history cache whether this route is a historical view
 		// or a new view. If it's new, we want to load fresh. If it's old, we
 		// want to use current feed data, just so we can try to go back to the
@@ -88,12 +77,13 @@ export default class RouteNotifications extends BaseRouteComponent {
 			HistoryCache.store(this.$route, true, HistoryCacheFeedTag);
 		}
 
-		this.grid?.pushViewNotifications('notifications');
+		if (!fromCache) {
+			this.grid?.pushViewNotifications('notifications');
+		}
 	}
 
 	onLoadedNew() {
 		if (this.unreadNotificationsCount > 0) {
-			this.setNotificationCount({ type: 'notifications', count: 0 });
 			this.grid?.pushViewNotifications('notifications');
 		}
 	}

@@ -135,8 +135,6 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 		);
 
 		if (this.user && !isVirtualChannel(this.routeStore, this.channel)) {
-			this.communityState.markChannelRead(this.channel.id);
-
 			this.pushViewToGrid();
 		}
 
@@ -149,14 +147,11 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 		// Check that the channel is still unread after loading new posts.
 		// It might be read after posts have been loaded in a different client.
 		if (
+			this.user &&
 			!isVirtualChannel(this.routeStore, this.channel) &&
 			this.communityState.unreadChannels.includes(this.channel.id)
 		) {
-			this.communityState.markChannelRead(this.channel.id);
-
-			if (this.user) {
-				this.pushViewToGrid();
-			}
+			this.pushViewToGrid();
 		}
 	}
 

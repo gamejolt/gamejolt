@@ -75,12 +75,61 @@ type ClearNotificationsType =
 
 interface ClearNotificationsPayload {
 	type: ClearNotificationsType;
-	data: any;
+	data: ClearNotificationsData;
 	clientId: string;
+}
+
+interface ClearNotificationsData {
+	channelId?: number;
+	communityId?: number;
 }
 
 export interface ClearNotificationsEventData extends ClearNotificationsPayload {
 	currentCount: number;
+}
+
+function clearNotifications(type: ClearNotificationsType, data: ClearNotificationsData = {}) {
+	switch (type) {
+		case 'activity':
+			store.commit('setNotificationCount', {
+				type: 'activity',
+				count: 0,
+			});
+			break;
+		case 'notifications':
+			store.commit('setNotificationCount', {
+				type: 'notifications',
+				count: 0,
+			});
+			break;
+		case 'community-channel':
+			{
+				const communityChannelId = data.channelId as number;
+				const communityId = data.communityId as number;
+				const communityState = store.state.communityStates.getCommunityState(communityId);
+				communityState.markChannelRead(communityChannelId);
+			}
+			break;
+		case 'community-featured':
+			{
+				const communityId = data.communityId as number;
+				const communityState = store.state.communityStates.getCommunityState(communityId);
+				communityState.hasUnreadFeaturedPosts = false;
+			}
+			break;
+		case 'community-unread':
+			{
+				const communityId = data.communityId as number;
+				const communityState = store.state.communityStates.getCommunityState(communityId);
+				communityState.hasUnreadPosts = false;
+			}
+			break;
+		case 'friend-requests':
+			// This event gets fired every time the user accepts/rejects a friendship.
+			// The only action we need to take here is to decrease the global friendship number by 1.
+			store.commit('changeFriendRequestCount', -1);
+			break;
+	}
 }
 
 /**
@@ -233,7 +282,7 @@ export class GridClient {
 		if (this.tabLeader !== null) {
 			await this.tabLeader.kill();
 		}
-		this.tabLeader = new TabLeader('grid_notification_channel');
+		this.tabLeader = new TabLeader('grid_notification_channel_' + user.id);
 		this.tabLeader.init();
 
 		channel.on('new-notification', (payload: NewNotificationPayload) =>
@@ -382,54 +431,7 @@ export class GridClient {
 			return;
 		}
 
-		switch (type) {
-			case 'activity':
-				store.commit('setNotificationCount', {
-					type: 'activity',
-					count: 0,
-				});
-				break;
-			case 'notifications':
-				store.commit('setNotificationCount', {
-					type: 'notifications',
-					count: 0,
-				});
-				break;
-			case 'community-channel':
-				{
-					const communityChannelId = data.channelId as number;
-					const communityId = data.communityId as number;
-					const communityState = store.state.communityStates.getCommunityState(
-						communityId
-					);
-					communityState.markChannelRead(communityChannelId);
-				}
-				break;
-			case 'community-featured':
-				{
-					const communityId = data.communityId as number;
-					const communityState = store.state.communityStates.getCommunityState(
-						communityId
-					);
-					communityState.hasUnreadFeaturedPosts = false;
-				}
-				break;
-			case 'community-unread':
-				{
-					const communityId = data.communityId as number;
-					const communityState = store.state.communityStates.getCommunityState(
-						communityId
-					);
-					communityState.hasUnreadPosts = false;
-				}
-				break;
-			case 'friend-requests':
-				// This event gets fired every time the user accepts/rejects a friendship.
-				// The only action we need to take here is to decrease the global friendship number by 1.
-				// No component needs to react to this change currently, so there is no need for an event bus emit.
-				store.commit('changeFriendRequestCount', -1);
-				break;
-		}
+		clearNotifications(type, data);
 	}
 
 	spawnNotification(notification: Notification) {
@@ -455,6 +457,11 @@ export class GridClient {
 			!!notification.action_model.game
 		) {
 			icon = notification.action_model.game.developer.img_avatar;
+		}
+
+		let isSystem = true;
+		if (this.tabLeader && !this.tabLeader.isLeader) {
+			isSystem = false;
 		}
 
 		if (message !== undefined) {
@@ -503,7 +510,7 @@ export class GridClient {
 					Analytics.trackEvent('grid', 'notification-click', notification.type);
 					notification.go(router);
 				},
-				system: this.tabLeader?.isLeader || true,
+				system: isSystem,
 			});
 		} else {
 			// Received a notification that cannot be parsed properly...
@@ -515,7 +522,7 @@ export class GridClient {
 					Analytics.trackEvent('grid', 'notification-click', notification.type);
 					router.push('/notifications');
 				},
-				system: this.tabLeader?.isLeader || true,
+				system: isSystem,
 			});
 		}
 	}
@@ -630,12 +637,21 @@ export class GridClient {
 		}
 	}
 
-	public async pushViewNotifications(type: ClearNotificationsType, data: any = {}) {
+	public async pushViewNotifications(
+		type: ClearNotificationsType,
+		data: ClearNotificationsData = {},
+		doClearNotifications = true
+	) {
 		// This can get invoked before grid is up and running, so wait here until it is.
 		// That can mainly happen when the route-resolve for a page clears notifications.
 		// For example: main feed page clears notifications in backend as the route loads,
 		// but grid is not loaded yet.
 		await tillConnection(this);
+
+		if (doClearNotifications) {
+			// Clear notifications on this client.
+			clearNotifications(type, data);
+		}
 
 		if (this.notificationChannel) {
 			this.notificationChannel.push('view-notifications', {

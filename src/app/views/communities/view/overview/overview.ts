@@ -106,7 +106,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			fromCache
 		);
 
-		this.communityState.hasUnreadFeaturedPosts = false;
 		this.finishedLoading = true;
 
 		if (this.routeTitle) {
@@ -121,14 +120,10 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	loadedNew() {
-		if (this.communityState.hasUnreadFeaturedPosts) {
-			this.communityState.hasUnreadFeaturedPosts = false;
-
-			if (this.user) {
-				this.grid?.pushViewNotifications('community-featured', {
-					communityId: this.community.id,
-				});
-			}
+		if (this.communityState.hasUnreadFeaturedPosts && this.user) {
+			this.grid?.pushViewNotifications('community-featured', {
+				communityId: this.community.id,
+			});
 		}
 	}
 
