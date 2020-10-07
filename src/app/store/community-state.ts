@@ -8,8 +8,11 @@ export class CommunityState {
 	public unreadChannels: number[] = [];
 	public hasUnreadPosts = false;
 	public hasUnreadFeaturedPosts = false;
-	// Stores whether this state has been bootstrapped with unread data from the associated
-	// community route. In case it has, the Grid bootstrap cannot overwrite data in this state.
+
+	/**
+	 * Stores whether this state has been bootstrapped with unread data from the associated
+	 * community route. In case it has, the Grid bootstrap cannot overwrite data in this state.
+	 */
 	public routeBootstrapped = false;
 
 	constructor(communityId: number) {

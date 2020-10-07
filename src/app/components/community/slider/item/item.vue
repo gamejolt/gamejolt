@@ -1,4 +1,3 @@
-
 <script lang="ts" src="./item"></script>
 
 <template>

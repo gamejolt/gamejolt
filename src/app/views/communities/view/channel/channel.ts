@@ -3,6 +3,7 @@ import { State } from 'vuex-class';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { Store } from '../../../../store';
@@ -45,10 +46,9 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 	@Inject(CommunityRouteStoreKey)
 	routeStore!: CommunityRouteStore;
 
+	@AppState user!: AppStore['user'];
 	@State communityStates!: Store['communityStates'];
-
-	@State
-	grid!: Store['grid'];
+	@State grid!: Store['grid'];
 
 	feed: ActivityFeedView | null = null;
 
@@ -134,7 +134,7 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 			fromCache
 		);
 
-		if (!isVirtualChannel(this.routeStore, this.channel)) {
+		if (this.user && !isVirtualChannel(this.routeStore, this.channel)) {
 			this.communityState.markChannelRead(this.channel.id);
 
 			this.pushViewToGrid();
@@ -153,7 +153,10 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 			this.communityState.unreadChannels.includes(this.channel.id)
 		) {
 			this.communityState.markChannelRead(this.channel.id);
-			this.pushViewToGrid();
+
+			if (this.user) {
+				this.pushViewToGrid();
+			}
 		}
 	}
 

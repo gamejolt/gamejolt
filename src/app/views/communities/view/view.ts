@@ -1,7 +1,6 @@
 import { Component, Provide, Watch } from 'vue-property-decorator';
 import { Action, Mutation, State } from 'vuex-class';
 import { enforceLocation } from '../../../../utils/router';
-import { sleep } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
@@ -29,7 +28,7 @@ import { CommunityHeaderModal } from '../../../components/forms/community/header
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import AppShellContentWithSidebar from '../../../components/shell/content-with-sidebar/content-with-sidebar.vue';
-import { store, Store } from '../../../store/index';
+import { store, Store, tillGridBootstrapped } from '../../../store/index';
 import { routeCommunitiesViewEditDetails } from './edit/details/details.route';
 import {
 	CommunityRouteStore,
@@ -177,17 +176,15 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 		this.viewCommunity(community);
 		this.setPageTheme();
 
-		if (community.is_member) {
+		if (this.user && community.is_member) {
 			this.getCommunityBootstrap();
 		}
 	}
 
 	private async getCommunityBootstrap() {
 		// When this is the first route the user enters, grid might not be bootstrapped yet.
-		while (!this.grid) {
-			await sleep(250);
-		}
-		this.grid.queueRequestCommunityBootstrap(this.community.id);
+		const grid = await tillGridBootstrapped();
+		grid.queueRequestCommunityBootstrap(this.community.id);
 	}
 
 	routeDestroyed() {

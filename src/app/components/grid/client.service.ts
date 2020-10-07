@@ -84,6 +84,24 @@ export interface ClearNotificationsEventData extends ClearNotificationsPayload {
 }
 
 /**
+ * List of resolvers waiting for grid to connect.
+ * These resolvers get resolved in the connect function once Grid connected.
+ */
+let connectionResolvers: (() => void)[] = [];
+/**
+ * Resolves once Grid is fully connected.
+ */
+function tillConnection(client: GridClient) {
+	return new Promise(resolve => {
+		if (client.connected) {
+			resolve();
+		} else {
+			connectionResolvers.push(resolve);
+		}
+	});
+}
+
+/**
  * Polls a request until it returns a result, increases the delay time between requests after each failed attempt.
  * @param context Context for logging
  * @param requestGetter Function that generates a promise that represents the request
@@ -103,8 +121,8 @@ async function pollRequest(context: string, requestGetter: () => Promise<any>): 
 			finished = true;
 		} catch (e) {
 			const sleepMs = Math.min(
-				30000 + Math.random() * 10000,
-				Math.random() * delay * 1000 + 1000
+				30_000 + Math.random() * 10_000,
+				Math.random() * delay * 1_000 + 1_000
 			);
 			console.error(`[Grid] Failed request [${context}]. Reattempt in ${sleepMs} ms.`);
 			await sleep(sleepMs);
@@ -154,7 +172,7 @@ export class GridClient {
 
 		// get hostname from loadbalancer first
 		const hostResult = await pollRequest('Select server', () =>
-			Axios.get(Environment.gridHost, { ignoreLoadingBar: true, timeout: 3000 })
+			Axios.get(Environment.gridHost, { ignoreLoadingBar: true, timeout: 3_000 })
 		);
 		const host = `${hostResult.data}/grid/socket`;
 
@@ -162,7 +180,7 @@ export class GridClient {
 
 		// heartbeat is 30 seconds, backend disconnects after 40 seconds
 		this.socket = new Socket(host, {
-			heartbeatIntervalMs: 30000,
+			heartbeatIntervalMs: 30_000,
 		});
 
 		// HACK
@@ -201,6 +219,10 @@ export class GridClient {
 						.receive('ok', () => {
 							this.connected = true;
 							this.channels.push(channel);
+							for (const resolver of connectionResolvers) {
+								resolver();
+							}
+							connectionResolvers = [];
 
 							resolve();
 						});
@@ -235,7 +257,7 @@ export class GridClient {
 		this.joinCommunities();
 	}
 
-	async restart(sleepMs = 2000) {
+	async restart(sleepMs = 2_000) {
 		// sleep a bit before trying to reconnect
 		await sleep(sleepMs);
 		// teardown and try to reconnect
@@ -327,8 +349,8 @@ export class GridClient {
 			console.log(`[Grid] Failed to fetch notification count bootstrap (${payload.body}).`);
 
 			const delay = Math.min(
-				30000 + Math.random() * 10000,
-				Math.random() * this.bootstrapDelay * 2000 + 1000
+				30_000 + Math.random() * 10_000,
+				Math.random() * this.bootstrapDelay * 2_000 + 1_000
 			);
 			this.bootstrapDelay++;
 
@@ -339,7 +361,7 @@ export class GridClient {
 	}
 
 	handleCommunityBootstrap({ community_id, body }: CommunityBootstrapPayload) {
-		const communityId = Number.parseInt(community_id, 10);
+		const communityId = parseInt(community_id, 10);
 		const communityState = store.state.communityStates.getCommunityState(communityId);
 
 		// This flag was set to true in the main bootstrap and we need to unset it
@@ -553,7 +575,7 @@ export class GridClient {
 	handleCommunityFeature(communityId: number, payload: CommunityFeaturePayload) {
 		// Suppress notification if the user featured that post.
 		if (payload.post_id) {
-			const postId = Number.parseInt(payload.post_id, 10);
+			const postId = parseInt(payload.post_id, 10);
 			if (this.featuredPostIds.has(postId)) {
 				return;
 			}
@@ -566,7 +588,7 @@ export class GridClient {
 	}
 
 	handleCommunityNewPost(communityId: number, payload: CommunityNewPostPayload) {
-		const channelId = Number.parseInt(payload.channel_id, 10);
+		const channelId = parseInt(payload.channel_id, 10);
 		const communityState = store.state.communityStates.getCommunityState(communityId);
 		communityState.markChannelUnread(channelId);
 	}
@@ -609,18 +631,11 @@ export class GridClient {
 	}
 
 	public async pushViewNotifications(type: ClearNotificationsType, data: any = {}) {
-		// Don't do anything for guests, they aren't connected to Grid.
-		if (store.state.app.user === null) {
-			return;
-		}
-
 		// This can get invoked before grid is up and running, so wait here until it is.
 		// That can mainly happen when the route-resolve for a page clears notifications.
 		// For example: main feed page clears notifications in backend as the route loads,
 		// but grid is not loaded yet.
-		while (!this.connected) {
-			await sleep(250);
-		}
+		await tillConnection(this);
 
 		if (this.notificationChannel) {
 			this.notificationChannel.push('view-notifications', {
@@ -632,18 +647,11 @@ export class GridClient {
 	}
 
 	public async queueRequestCommunityBootstrap(communityId: number) {
-		// Don't do anything for guests, they aren't connected to Grid.
-		if (store.state.app.user === null) {
-			return;
-		}
-
-		while (!this.connected) {
-			await sleep(250);
-		}
+		await tillConnection(this);
 
 		if (this.notificationChannel) {
 			this.notificationChannel.push('request-community-bootstrap', {
-				user_id: store.state.app.user.id.toString(),
+				user_id: store.state.app.user!.id.toString(),
 				community_id: communityId.toString(),
 			});
 		}

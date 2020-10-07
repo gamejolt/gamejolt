@@ -5,18 +5,18 @@ import { BroadcastChannel, createLeaderElection, LeaderElector } from 'broadcast
  * Continues to poll until this tab can become leader.
  */
 export class TabLeader {
-	private readonly _elector: LeaderElector;
-	private readonly _channel: BroadcastChannel;
+	private readonly elector: LeaderElector;
+	private readonly channel: BroadcastChannel;
 
-	private _isDead = false;
+	private isDead = false;
 
 	get isLeader() {
-		return this._elector.isLeader;
+		return this.elector.isLeader;
 	}
 
 	constructor(name: string) {
-		this._channel = new BroadcastChannel(name);
-		this._elector = createLeaderElection(this._channel);
+		this.channel = new BroadcastChannel(name);
+		this.elector = createLeaderElection(this.channel);
 	}
 
 	/**
@@ -25,20 +25,20 @@ export class TabLeader {
 	 */
 	public init() {
 		// Can only be used when not dead yet.
-		if (this._isDead) {
+		if (this.isDead) {
 			throw new Error('Tried using dead tab leader.');
 		}
 
 		// This promise will resolve if this tab ever becomes the leader.
 		// It should fail if the tab loses leadership.
 		// When that happens we want to try just to become leader again.
-		this._elector.awaitLeadership().catch(() => this.init());
+		this.elector.awaitLeadership().catch(() => this.init());
 	}
 
 	public async kill() {
-		this._isDead = true;
+		this.isDead = true;
 
-		await this._channel.close();
-		await this._elector.die();
+		await this.channel.close();
+		await this.elector.die();
 	}
 }

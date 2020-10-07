@@ -113,17 +113,22 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			setCommunityMeta(this.community, this.routeTitle);
 		}
 
-		this.grid?.pushViewNotifications('community-featured', {
-			communityId: this.community.id,
-		});
+		if (this.user) {
+			this.grid?.pushViewNotifications('community-featured', {
+				communityId: this.community.id,
+			});
+		}
 	}
 
 	loadedNew() {
 		if (this.communityState.hasUnreadFeaturedPosts) {
 			this.communityState.hasUnreadFeaturedPosts = false;
-			this.grid?.pushViewNotifications('community-featured', {
-				communityId: this.community.id,
-			});
+
+			if (this.user) {
+				this.grid?.pushViewNotifications('community-featured', {
+					communityId: this.community.id,
+				});
+			}
 		}
 	}
 
