@@ -459,7 +459,7 @@ export class GridClient {
 			icon = notification.action_model.game.developer.img_avatar;
 		}
 
-		let isSystem = true;
+		let isSystem = SettingFeedNotifications.get();
 		if (this.tabLeader && !this.tabLeader.isLeader) {
 			isSystem = false;
 		}
@@ -468,8 +468,19 @@ export class GridClient {
 			let title = Translate.$gettext('New Notification');
 			if (notification.type === Notification.TYPE_POST_ADD) {
 				if (notification.from_model instanceof User) {
+					let username = notification.from_model.username;
+
+					// When it's a game post as game owner, use the game owner's username instead.
+					if (
+						notification.action_model instanceof FiresidePost &&
+						notification.action_model.as_game_owner &&
+						!!notification.action_model.game
+					) {
+						username = notification.action_model.game.developer.username;
+					}
+
 					title = Translate.$gettextInterpolate(`New Post by @%{ username }`, {
-						username: notification.from_model.username,
+						username,
 					});
 				} else {
 					title = Translate.$gettext('New Post');
