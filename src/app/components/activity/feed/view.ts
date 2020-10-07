@@ -39,7 +39,6 @@ export interface ActivityFeedViewOptions {
 	hideGameInfo?: boolean;
 	shouldShowUserCards?: boolean;
 	shouldShowFollow?: boolean;
-	showNewCountNumber?: boolean;
 }
 
 export class ActivityFeedView {
@@ -60,7 +59,6 @@ export class ActivityFeedView {
 	shouldShowUserCards = true;
 	shouldShowFollow = false;
 	newCount = 0;
-	showNewCountNumber = true;
 
 	get isBootstrapped() {
 		return this.state.isBootstrapped;
@@ -108,7 +106,6 @@ export class ActivityFeedView {
 			mainCommunity = null,
 			shouldShowUserCards = true,
 			shouldShowFollow = false,
-			showNewCountNumber = true,
 		}: ActivityFeedViewOptions = {}
 	) {
 		this.state = state;
@@ -118,7 +115,6 @@ export class ActivityFeedView {
 		this.mainCommunity = mainCommunity;
 		this.shouldShowUserCards = shouldShowUserCards;
 		this.shouldShowFollow = shouldShowFollow;
-		this.showNewCountNumber = showNewCountNumber;
 	}
 
 	clear() {
@@ -281,7 +277,7 @@ export class ActivityFeedView {
 		Analytics.trackEvent('activity-feed', 'loaded-more', 'page-' + this.totalTimesLoaded);
 	}
 
-	async loadNew(newCount: number) {
+	async loadNew(newCount = ItemsPerPage) {
 		if (this.state.isLoadingNew || newCount < 1) {
 			return;
 		}
@@ -302,7 +298,9 @@ export class ActivityFeedView {
 			return;
 		}
 
-		if (clearOld) {
+		// If we received the amount of items per page (or more somehow),
+		// clear the feed to avoid gaps.
+		if (clearOld || response.items.length >= ItemsPerPage) {
 			this.clear();
 		}
 

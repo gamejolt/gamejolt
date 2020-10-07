@@ -37,8 +37,6 @@ export function resolveFeedChannelPayload(
 			mainCommunity,
 			shouldShowFollow: true,
 			notificationWatermark: payload.unreadWatermark,
-			// For community feeds, we never know how many new items we have, so we set the count to 1.
-			showNewCountNumber: false,
 		},
 		payload.items,
 		fromCache

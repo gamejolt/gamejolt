@@ -11,17 +11,7 @@
 			<app-scroll-inview :margin="`-${Scroll.offsetTop}px`" @inview="onNewButtonInview">
 				<app-expand v-if="!feed.isLoadingNew" :when="isNewButtonInview">
 					<app-activity-feed-new-button @click="loadNew()">
-						<translate v-if="!feed.showNewCountNumber">
-							Show new items
-						</translate>
-						<translate
-							v-else
-							:translate-n="newCount"
-							:translate-params="{ count: number(newCount) }"
-							translate-plural="%{count} new items"
-						>
-							1 new item
-						</translate>
+						<translate>Show new items</translate>
 					</app-activity-feed-new-button>
 				</app-expand>
 				<app-loading v-else class="loading-centered" />
