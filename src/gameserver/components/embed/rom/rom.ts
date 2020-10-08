@@ -59,15 +59,6 @@ export default class AppEmbedRom extends Vue {
 			case GameBuild.EMULATOR_MSX:
 				this.msx();
 				break;
-			case GameBuild.EMULATOR_GBC:
-				this.gbc();
-				break;
-			case GameBuild.EMULATOR_GBC:
-				this.gbc();
-				break;
-			case GameBuild.EMULATOR_GBC:
-				this.gbc();
-				break;
 		}
 	}
 
@@ -245,7 +236,7 @@ export default class AppEmbedRom extends Vue {
 
 		const filename = RetroJolt.getFilenameFromUrl(romFullPath);
 
-		let pieces = filename.split('.');
+		const pieces = filename.split('.');
 		pieces.pop();
 
 		const gameName = pieces.join('.');

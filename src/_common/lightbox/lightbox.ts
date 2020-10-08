@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { EventSubscription } from '../../system/event/event-topic';
 import { Analytics } from '../analytics/analytics.service';
-import { EscapeStack } from '../escape-stack/escape-stack.service';
+import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';
 import AppShortkey from '../shortkey/shortkey.vue';
 import AppLightboxItem from './item/item.vue';
@@ -31,7 +31,7 @@ export default class AppLightbox extends Vue {
 	waitingForFrame = false;
 
 	private resize$?: EventSubscription;
-	private escapeCallback?: Function;
+	private escapeCallback?: EscapeStackCallback;
 
 	get items() {
 		return this.mediaSource.getItems();
@@ -144,15 +144,21 @@ export default class AppLightbox extends Vue {
 
 		this.$el.classList.remove('dragging');
 
-		// Make sure we moved at a high enough velocity and distance to register the "swipe".
-		const velocity = event.velocityX;
-		if (Math.abs(velocity) > 0.65 && event.distance > 10) {
-			if (velocity < 0) {
-				this.goNext();
-				Analytics.trackEvent('media-bar', 'swiped-next');
-			} else {
+		// Make sure we moved at a high enough velocity and/or distance to register the "swipe".
+		const { velocityX, deltaX, distance } = event;
+
+		if (
+			// Check if it was a fast flick,
+			(Math.abs(velocityX) > 0.55 && distance > 10) ||
+			// or if the pan distance was at least ~1/3 of the content area.
+			Math.abs(deltaX) >= this.$el.clientWidth / 3
+		) {
+			if (velocityX > 0 || deltaX > 0) {
 				this.goPrev();
 				Analytics.trackEvent('media-bar', 'swiped-prev');
+			} else {
+				this.goNext();
+				Analytics.trackEvent('media-bar', 'swiped-next');
 			}
 			return;
 		}

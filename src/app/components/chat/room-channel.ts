@@ -1,18 +1,33 @@
 import { Channel, Presence, Socket } from 'phoenix';
 import Vue from 'vue';
-import { ChatClient, isInChatRoom, processNewChatOutput, setChatRoom } from './client';
+import { arrayRemove } from '../../../utils/array';
+import { Analytics } from '../../../_common/analytics/analytics.service';
+import {
+	ChatClient,
+	isInChatRoom,
+	processNewChatOutput,
+	setChatRoom,
+	updateChatRoomLastMessageOn,
+} from './client';
 import { ChatMessage } from './message';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
-import { ChatUserCollection } from './user-collection';
 
 interface RoomPresence {
-	metas: { phx_ref: string }[];
+	metas: { phx_ref: string; typing: boolean }[];
 	user: ChatUser;
 }
 
-interface ClearNotificationsPayload {
-	room_id: number;
+interface MemberAddPayload {
+	members: ChatUser[];
+}
+
+interface MemberLeavePayload {
+	user_id: number;
+}
+
+interface OwnerSyncPayload {
+	owner_id: number;
 }
 
 export class ChatRoomChannel extends Channel {
@@ -21,7 +36,7 @@ export class ChatRoomChannel extends Channel {
 	readonly client: ChatClient;
 	readonly socket: Socket;
 
-	constructor(roomId: number, client: ChatClient, params?: object) {
+	constructor(roomId: number, client: ChatClient, params?: Record<string, any>) {
 		const socket = client.socket!;
 
 		super('room:' + roomId, params, socket);
@@ -33,15 +48,19 @@ export class ChatRoomChannel extends Channel {
 		this.setupPresence();
 
 		this.on('message', this.onMsg.bind(this));
-		this.on('clear_notifications', this.onClearNotifications.bind(this));
 		this.on('user_updated', this.onUserUpdated.bind(this));
+		this.on('message_update', this.onUpdateMsg.bind(this));
+		this.on('message_remove', this.onRemoveMsg.bind(this));
+		this.on('member_leave', this.onMemberLeave.bind(this));
+		this.on('owner_sync', this.onOwnerSync.bind(this));
+		this.on('member_add', this.onMemberAdd.bind(this));
 
 		this.onClose(() => {
 			if (isInChatRoom(this.client, roomId)) {
 				setChatRoom(this.client, undefined);
 
 				// Reset the room we were in
-				Vue.delete(this.client.usersOnline, roomId);
+				Vue.delete(this.client.roomMembers, roomId);
 				Vue.delete(this.client.messages, roomId);
 			}
 		});
@@ -50,6 +69,8 @@ export class ChatRoomChannel extends Channel {
 	private setupPresence() {
 		const presence = new Presence(this);
 
+		presence.onJoin(this.onUserJoin.bind(this));
+		presence.onLeave(this.onUserLeave.bind(this));
 		presence.onSync(() => this.syncPresentUsers(presence, this.room));
 	}
 
@@ -79,42 +100,96 @@ export class ChatRoomChannel extends Channel {
 	}
 
 	processNewRoomMessage(message: ChatMessage) {
+		const alreadyReceivedMessage = this.client.messages[message.room_id].some(
+			i => i.id === message.id
+		);
+		if (alreadyReceivedMessage) {
+			Analytics.trackEvent('chat', 'duplicate-message');
+			return;
+		}
+
 		processNewChatOutput(this.client, this.roomId, [message], false);
-
-		const friend = this.client.friendsList.getByRoom(message.room_id);
-		if (friend) {
-			friend.last_message_on = message.logged_on.getTime();
-			this.client.friendsList.update(friend);
-		}
-	}
-
-	private onClearNotifications(data: ClearNotificationsPayload) {
-		if (isInChatRoom(this.client, data.room_id)) {
-			Vue.delete(this.client.notifications, '' + data.room_id);
-		}
+		updateChatRoomLastMessageOn(this.client, message);
 	}
 
 	private onUserUpdated(data: Partial<ChatUser>) {
 		const updatedUser = new ChatUser(data);
 		if (this.room && isInChatRoom(this.client, this.roomId) && this.room.isGroupRoom) {
-			this.client.usersOnline[this.roomId].update(updatedUser);
+			this.client.roomMembers[this.roomId].update(updatedUser);
 		}
 	}
 
-	private syncPresentUsers(presence: Presence, room: ChatRoom) {
-		const presentUsers: ChatUser[] = [];
-		presence.list((_id: string, roomPresence: RoomPresence) => {
-			const user = new ChatUser(roomPresence.user);
-			user.isOnline = true;
-			presentUsers.push(user);
-		});
-
-		if (room.isGroupRoom) {
-			Vue.set(
-				this.client.usersOnline,
-				'' + room.id,
-				new ChatUserCollection(ChatUserCollection.TYPE_ROOM, presentUsers)
-			);
+	private onRemoveMsg(data: { id: number }) {
+		if (this.room) {
+			arrayRemove(this.client.messages[this.roomId], i => i.id === data.id);
 		}
+	}
+
+	private onUpdateMsg(data: Partial<ChatMessage>) {
+		const edited = new ChatMessage(data);
+		if (this.room) {
+			const index = this.client.messages[this.roomId].findIndex(msg => msg.id === data.id);
+			const message = this.client.messages[this.roomId][index];
+
+			message.content = edited.content;
+			message.edited_on = edited.edited_on;
+		}
+	}
+
+	private onUserJoin(presenceId: string, currentPresence: RoomPresence | undefined) {
+		// If this is the first user presence from a device.
+		if (!currentPresence && this.client.roomMembers[this.roomId]) {
+			const userId = +presenceId;
+			this.client.roomMembers[this.roomId].online(userId);
+		}
+	}
+
+	private onUserLeave(presenceId: string, currentPresence: RoomPresence | undefined) {
+		// If the user has left all devices.
+		if (
+			currentPresence &&
+			currentPresence.metas.length === 0 &&
+			this.client.roomMembers[this.roomId]
+		) {
+			const userId = +presenceId;
+			this.client.roomMembers[this.roomId].offline(userId);
+		}
+	}
+
+	private onMemberLeave(data: MemberLeavePayload) {
+		const roomMembers = this.client.roomMembers[this.roomId];
+
+		if (roomMembers) {
+			roomMembers.remove(data.user_id);
+		}
+		arrayRemove(this.room.members, i => i.id === data.user_id);
+	}
+
+	private onMemberAdd(data: MemberAddPayload) {
+		const roomMembers = this.client.roomMembers[this.roomId];
+
+		for (const member of data.members) {
+			const user = new ChatUser(member);
+
+			if (roomMembers) {
+				roomMembers.add(user);
+			}
+
+			this.room.members.push(user);
+		}
+	}
+
+	private onOwnerSync(data: OwnerSyncPayload) {
+		this.room.owner_id = data.owner_id;
+	}
+
+	private syncPresentUsers(presence: Presence, room: ChatRoom) {
+		presence.list((id: string, roomPresence: RoomPresence) => {
+			const roomMembers = this.client.roomMembers[room.id];
+			const user = roomMembers.get(+id) || new ChatUser(roomPresence.user);
+			user.typing = roomPresence.metas.some(meta => meta.typing);
+			roomMembers.update(user);
+			roomMembers.online(+id);
+		});
 	}
 }

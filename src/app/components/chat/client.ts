@@ -71,9 +71,13 @@ export class ChatClient {
 	socket: Socket | null = null;
 	userChannel: ChatUserChannel | null = null;
 
+	/**
+	 * Whether or not the user's chat data is populated (friends, chats, etc.)
+	 */
+	populated = false;
 	currentUser: ChatUser | null = null;
 	friendsList: ChatUserCollection = null as any;
-	friendsPopulated = false;
+	groupRooms: ChatRoom[] = [];
 
 	room: ChatRoom | null = null;
 	/**
@@ -86,10 +90,12 @@ export class ChatClient {
 	roomChannels: { [k: string]: ChatRoomChannel } = {};
 	messages: { [k: string]: ChatMessage[] } = {};
 	usersOnline: { [k: string]: ChatUserCollection } = {};
+	roomMembers: { [k: string]: ChatUserCollection } = {};
 	notifications: { [k: string]: number } = {};
 	isFocused = true;
 
 	messageQueue: ChatMessage[] = [];
+	messageEditing: null | ChatMessage = null;
 
 	/**
 	 * The session room is stored within their local session. It's their last active room. We reopen
@@ -106,20 +112,6 @@ export class ChatClient {
 		} else {
 			sessionStorage.setItem('chat:room', roomId + '');
 		}
-	}
-
-	get friendNotificationsCount() {
-		let count = 0;
-		for (const key of Object.keys(this.notifications)) {
-			const cur = this.notifications[key];
-
-			// Notifications for a room? Increment friend notifications.
-			if (this.friendsList.getByRoom(parseInt(key, 10))) {
-				count += cur || 0;
-			}
-		}
-
-		return count;
 	}
 
 	get roomNotificationsCount() {
@@ -141,7 +133,7 @@ function reset(chat: ChatClient) {
 	chat.connected = false;
 	chat.currentUser = null;
 	chat.friendsList = new ChatUserCollection(ChatUserCollection.TYPE_FRIEND);
-	chat.friendsPopulated = false;
+	chat.populated = false;
 	chat.pollingRoomId = -1;
 
 	chat.room = null;
@@ -149,6 +141,7 @@ function reset(chat: ChatClient) {
 	// The following are indexed by roomId
 	chat.messages = {};
 	chat.usersOnline = {};
+	chat.roomMembers = {};
 	chat.notifications = {};
 	chat.isFocused = true;
 
@@ -204,8 +197,8 @@ async function connect(chat: ChatClient) {
 	// there is no built in way to stop a Phoenix socket from attempting to reconnect on its own after it got disconnected.
 	// this replaces the socket's "reconnectTimer" property with an empty object that matches the Phoenix "Timer" signature
 	// The 'reconnectTimer' usually restarts the connection after a delay, this prevents that from happening
-	let socketAny: any = chat.socket;
-	if (socketAny.hasOwnProperty('reconnectTimer')) {
+	const socketAny: any = chat.socket;
+	if (Object.prototype.hasOwnProperty.call(socketAny, 'reconnectTimer')) {
 		socketAny.reconnectTimer = { scheduleTimeout: () => {}, reset: () => {} };
 	}
 
@@ -292,8 +285,11 @@ async function joinUserChannel(chat: ChatClient, userId: number) {
 						chat.userChannel = channel;
 						chat.currentUser = currentUser;
 						chat.friendsList = friendsList;
-						chat.friendsPopulated = true;
 						chat.notifications = response.notifications;
+						chat.groupRooms = response.groups.map(
+							(room: ChatRoom) => new ChatRoom(room)
+						);
+						chat.populated = true;
 						resolve();
 					});
 			})
@@ -361,12 +357,13 @@ export function setChatRoom(chat: ChatClient, newRoom: ChatRoom | undefined) {
 
 export function newChatNotification(chat: ChatClient, roomId: number) {
 	if (isInChatRoom(chat, roomId) && chat.isFocused) {
+		return;
+	}
+
+	if (chat.notifications[roomId]) {
+		chat.notifications[roomId] = chat.notifications[roomId] + 1;
 	} else {
-		if (chat.notifications[roomId]) {
-			chat.notifications[roomId] = chat.notifications[roomId] + 1;
-		} else {
-			Vue.set(chat.notifications, '' + roomId, 1);
-		}
+		Vue.set(chat.notifications, '' + roomId, 1);
 	}
 }
 
@@ -381,9 +378,9 @@ export function enterChatRoom(chat: ChatClient, roomId: number) {
 
 	// If the chat isn't visible yet, set the session room to this new room and open it. That
 	// will in turn do the entry. Otherwise we want to just switch rooms.
-	if (!store.state.isRightPaneVisible) {
+	if (store.state.visibleLeftPane !== 'chat') {
 		chat.sessionRoomId = roomId;
-		store.dispatch('toggleRightPane');
+		store.dispatch('toggleChatPane');
 	} else {
 		if (!chat.socket) {
 			return;
@@ -402,6 +399,10 @@ function leaveChannel(chat: ChatClient, channel: Channel) {
 }
 
 export function leaveChatRoom(chat: ChatClient) {
+	if (chat.messageEditing) {
+		setMessageEditing(chat, null);
+	}
+
 	if (!chat.room) {
 		return;
 	}
@@ -514,6 +515,11 @@ function setupRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
 		}
 		// Set the room info
 		Vue.set(chat.messages, '' + room.id, []);
+		Vue.set(
+			chat.roomMembers,
+			'' + room.id,
+			new ChatUserCollection(ChatUserCollection.TYPE_ROOM, room.members || [], chat)
+		);
 
 		setChatRoom(chat, room);
 		processNewChatOutput(chat, room.id, messages, true);
@@ -566,6 +572,11 @@ function sendChatMessage(chat: ChatClient, message: ChatMessage) {
 			message._error = true;
 			message._isProcessing = false;
 		});
+}
+
+/** Set the message that is currently being edited, or 'null' to clear the state. */
+export function setMessageEditing(chat: ChatClient, message: ChatMessage | null) {
+	chat.messageEditing = message;
 }
 
 export function retryFailedQueuedMessage(chat: ChatClient, message: ChatMessage) {
@@ -623,6 +634,10 @@ export function loadOlderChatMessages(chat: ChatClient, roomId: number) {
  * Will return null if the user is not their friend.
  */
 export function isUserOnline(chat: ChatClient, userId: number): null | boolean {
+	if (chat.currentUser?.id === userId) {
+		return true;
+	}
+
 	return chat.friendsList.get(userId)?.isOnline ?? null;
 }
 
@@ -638,10 +653,82 @@ export function setChatFocused(chat: ChatClient, focused: boolean) {
 	}
 }
 
+export function addGroupRoom(chat: ChatClient, members: number[]) {
+	return chat.userChannel?.push('group_add', { member_ids: members }).receive('ok', response => {
+		const newGroupRoom = new ChatRoom(response.room);
+		chat.groupRooms.push(newGroupRoom);
+		enterChatRoom(chat, newGroupRoom.id);
+	});
+}
+
+export function addGroupMembers(chat: ChatClient, roomId: number, members: number[]) {
+	return chat.roomChannels[roomId].push('member_add', { member_ids: members });
+}
+
+export async function leaveGroupRoom(chat: ChatClient, room: ChatRoom) {
+	if (!room.isGroupRoom) {
+		throw new Error(`Can't leave non-group rooms.`);
+	}
+
+	chat.userChannel?.push('group_leave', { room_id: room.id }).receive('ok', _response => {
+		if (isInChatRoom(chat, room.id)) {
+			leaveChatRoom(chat);
+		}
+	});
+}
+
+export function removeMessage(chat: ChatClient, msgId: number) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('message_remove', { id: msgId });
+	}
+}
+
+export function editMessage(chat: ChatClient, message: ChatMessage) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('message_update', {
+			content: message.content,
+			id: message.id,
+		});
+	}
+}
+
+export function startTyping(chat: ChatClient) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('start_typing', {});
+	}
+}
+
+export function stopTyping(chat: ChatClient) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('stop_typing', {});
+	}
+}
+
 export function isInChatRoom(chat: ChatClient, roomId?: number) {
 	if (!roomId) {
 		return !!chat.room;
 	}
 
 	return chat.room ? chat.room.id === roomId : false;
+}
+
+export function updateChatRoomLastMessageOn(chat: ChatClient, message: ChatMessage) {
+	const time = message.logged_on.getTime();
+
+	// If it's a friend chat.
+	const friend = chat.friendsList.getByRoom(message.room_id);
+	if (friend) {
+		friend.last_message_on = time;
+		chat.friendsList.update(friend);
+	}
+
+	// If it's a group chat.
+	const groupRoom = chat.groupRooms.find(i => i.id === message.room_id);
+	if (groupRoom) {
+		groupRoom.last_message_on = time;
+	}
 }

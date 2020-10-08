@@ -1,11 +1,15 @@
-import { Component } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-property-decorator';
 import AppAdWidget from '../../../../../../_common/ad/widget/widget.vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../_common/card/card.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import AppCommentAddButton from '../../../../../../_common/comment/add-button/add-button.vue';
 import { Comment, getCanCommentOnModel } from '../../../../../../_common/comment/comment-model';
-import { CommentState, CommentStore } from '../../../../../../_common/comment/comment-store';
+import {
+	CommentStoreManager,
+	CommentStoreManagerKey,
+	getCommentStore,
+} from '../../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../../_common/comment/modal/modal.service';
 import { CommentThreadModal } from '../../../../../../_common/comment/thread/modal.service';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
@@ -101,6 +105,8 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 	},
 })
 export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
+	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
+
 	@RouteStoreModule.State
 	isOverviewLoaded!: RouteStore['isOverviewLoaded'];
 
@@ -179,9 +185,6 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	@RouteStoreModule.State
 	knownFollowerCount!: RouteStore['knownFollowerCount'];
 
-	@CommentState
-	getCommentStore!: CommentStore['getCommentStore'];
-
 	feed: ActivityFeedView | null = null;
 
 	permalinkWatchDeregister?: Function;
@@ -219,7 +222,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 	get commentsCount() {
 		if (this.game) {
-			const store = this.getCommentStore('Game', this.game.id);
+			const store = getCommentStore(this.commentManager, 'Game', this.game.id);
 			return store ? store.totalCount : 0;
 		}
 		return 0;
@@ -237,7 +240,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		this.feed = ActivityFeedService.routeInit(this);
 	}
 
-	async routeResolved($payload: any, fromCache: boolean) {
+	routeResolved($payload: any, fromCache: boolean) {
 		Meta.description = $payload.metaDescription;
 		Meta.fb = $payload.fb;
 		Meta.twitter = $payload.twitter;

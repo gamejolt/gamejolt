@@ -1,6 +1,6 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require '../../variables'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
+@import '../../variables'
 
 .chat-window-message
 	position: relative
@@ -119,6 +119,18 @@
 			theme-prop('background', 'darker', true)
 			max-height: 4px !important
 
+	&-options
+		visibility: hidden
+		position: absolute
+		top: 0
+		right: 0
+		padding: 4px
+		z-index: 2
+
+		../:hover &
+		.chat-window-message-editing &
+			visibility: visible
+
 	&-retry
 		font-size: $font-size-tiny
 
@@ -154,7 +166,7 @@
 	>>> .emoji
 		filter: grayscale(1) brightness(0.9)
 
-	>>> .gif-outer
+	>>> .content-gif
 		filter: grayscale(0.75) brightness(0.9)
 
 .-chat-message-new
@@ -174,3 +186,8 @@
 		padding-right: 4px
 		rounded-corners()
 		line-height: 14px
+
+.-edited
+	font-size: $font-size-tiny
+	cursor: default
+	user-select: none

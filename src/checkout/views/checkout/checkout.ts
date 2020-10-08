@@ -8,8 +8,10 @@ import { Navigate } from '../../../_common/navigate/navigate.service';
 import { Order } from '../../../_common/order/order.model';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
 import { Sellable } from '../../../_common/sellable/sellable.model';
-import { ThemeMutation, ThemeStore } from '../../../_common/theme/theme.store';
 import FormPayment from '../../components/forms/payment/payment.vue';
+import { store } from '../../store';
+
+const CheckoutThemeKey = 'checkout';
 
 @Component({
 	name: 'RouteCheckout',
@@ -22,9 +24,6 @@ import FormPayment from '../../components/forms/payment/payment.vue';
 	resolver: ({ route }) => Api.sendRequest('/web/checkout/' + route.params.orderId, {}),
 })
 export default class RouteCheckout extends BaseRouteComponent {
-	@ThemeMutation
-	setPageTheme!: ThemeStore['setPageTheme'];
-
 	cards!: any[];
 	sellable!: Sellable;
 	order!: Order;
@@ -46,9 +45,13 @@ export default class RouteCheckout extends BaseRouteComponent {
 		this.sellable = new Sellable($payload.sellable);
 		this.order = new Order($payload.order);
 		this.game = new Game($payload.game);
-		this.setPageTheme(this.game.theme || null);
+		this.setPageTheme();
 
 		window.Stripe.setPublishableKey($payload.stripePublishableKey);
+	}
+
+	routeDestroyed() {
+		store.commit('theme/clearPageTheme', CheckoutThemeKey);
 	}
 
 	onSubmit(_formModel: any, response: any) {
@@ -69,5 +72,13 @@ export default class RouteCheckout extends BaseRouteComponent {
 		}
 
 		Navigate.goto(redirect);
+	}
+
+	private setPageTheme() {
+		const theme = this.game.theme ?? null;
+		store.commit('theme/setPageTheme', {
+			key: CheckoutThemeKey,
+			theme,
+		});
 	}
 }

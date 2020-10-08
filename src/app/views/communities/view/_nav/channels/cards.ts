@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { Component, Inject } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { Action, State } from 'vuex-class';
 import { COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING } from '../../../../../../_common/community/channel/channel-permissions';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
@@ -26,6 +26,7 @@ export default class AppNavChannelCards extends Vue {
 	@State communities!: Store['communities'];
 	@State communityStates!: Store['communityStates'];
 	@AppState user!: AppStore['user'];
+	@Action toggleLeftPane!: Store['toggleLeftPane'];
 
 	get community() {
 		return this.routeStore.community;

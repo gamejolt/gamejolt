@@ -16,6 +16,7 @@ import { routeCommunitiesViewOverview } from './overview/overview.route';
 export const CommunityRouteStoreKey = Symbol('community-route');
 
 export class CommunityRouteStore {
+	isLoaded = false;
 	community: Community = null as any;
 	frontpageChannel: CommunityChannel = null as any;
 	allChannel: CommunityChannel = null as any;
@@ -47,6 +48,7 @@ export class CommunityRouteStore {
 }
 
 export function setCommunity(store: CommunityRouteStore, community: Community) {
+	store.isLoaded = true;
 	store.community = community;
 	_updateChannels(store);
 }

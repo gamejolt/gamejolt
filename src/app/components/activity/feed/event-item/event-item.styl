@@ -1,5 +1,10 @@
-@require '../variables'
-@require '~styles-lib/mixins'
+@import '../variables'
+@import '~styles-lib/mixins'
+
+.page-cut
+	@media $media-sm-up
+		margin-left: -($-item-padding-container)
+		margin-right: -($-item-padding-container)
 
 .-container
 	padding-bottom: $-item-padding-xs-v
@@ -48,7 +53,8 @@
 		flex-direction: column
 		overflow: hidden
 
-		&-name, &-game
+		&-name
+		&-game
 			text-overflow()
 
 	&-meta
@@ -67,13 +73,16 @@
 
 // We need to add some extra padding to just the comment-video controls since it
 // could fade-collapse before the controls, and we need the extra spacing.
-.fireside-post-lead, .-controls-comment-video
+.fireside-post-lead
+.-controls-comment-video
 	margin-top: $-item-padding-xs-v
 
 	@media $media-sm-up
 		margin-top: $-item-padding-v
 
-.-poll, .-manage, .fireside-post-lead
+.-poll
+.-manage
+.fireside-post-lead
 	margin-bottom: $-item-padding-xs-v
 
 	@media $media-sm-up

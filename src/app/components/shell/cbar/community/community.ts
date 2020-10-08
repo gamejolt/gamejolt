@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
@@ -8,6 +9,7 @@ import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/bac
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
+import { SidebarMutation, SidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { AppState, AppStore } from '../../../../../_common/store/app-store';
 import { ThemeState, ThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -31,10 +33,12 @@ export default class AppShellCbarCommunity extends Vue {
 	@Prop(Community) community!: Community;
 
 	@AppState user!: AppStore['user'];
-	@State grid!: Store['grid'];
-	@Action leaveCommunity!: Store['leaveCommunity'];
-	@State communityStates!: Store['communityStates'];
 	@ThemeState userTheme!: ThemeStore['userTheme'];
+	@State activeCommunity!: Store['activeCommunity'];
+	@State communityStates!: Store['communityStates'];
+	@Action leaveCommunity!: Store['leaveCommunity'];
+	@Action toggleLeftPane!: Store['toggleLeftPane'];
+	@SidebarMutation showContextOnRouteChange!: SidebarStore['showContextOnRouteChange'];
 
 	popperVisible = false;
 
@@ -53,18 +57,14 @@ export default class AppShellCbarCommunity extends Vue {
 	}
 
 	get isActive() {
-		return (
-			this.$route.name &&
-			this.$route.name.indexOf('communities.view') === 0 &&
-			this.$route.params.path === this.community!.path
-		);
+		return this.activeCommunity?.id === this.community.id;
 	}
 
 	get highlight() {
 		if (this.isActive) {
 			const theme = this.community.theme || this.userTheme;
 			if (theme) {
-				return '#' + theme.highlight_;
+				return '#' + theme.darkHighlight_;
 			}
 		}
 		return null;
@@ -86,6 +86,18 @@ export default class AppShellCbarCommunity extends Vue {
 	async onLeaveCommunityClick() {
 		Popper.hideAll();
 		await this.leaveCommunity(this.community);
+	}
+
+	onCommunityClick(event: Event) {
+		if (this.isActive) {
+			this.toggleLeftPane('context');
+			Analytics.trackEvent('cbar-community', 'toggle-context');
+
+			// Prevent the click from triggering a route change.
+			event.preventDefault();
+		} else {
+			this.showContextOnRouteChange(true);
+		}
 	}
 
 	gotoModerate() {

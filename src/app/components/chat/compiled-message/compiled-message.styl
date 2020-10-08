@@ -1,6 +1,8 @@
-@require '../../../../_styles/mixins/compiled-content'
+@import '../../../../_styles/mixins/compiled-content'
 
 .chat-message-content
+	margin-right: 10px
+	padding-right: 10px
 	compiled-content($font-size-base)
 
 	// Override media centering, we want images and gifs to always be aligned left in chat.
@@ -8,7 +10,7 @@
 		align-items: flex-start !important
 		margin-bottom: 4px
 
-	.gif-outer
+	.content-gif
 		align-items: flex-start !important
 		margin-bottom: 4px
 
@@ -18,7 +20,8 @@
 	p
 		margin-bottom: 4px
 
-	ul, ol
+	ul
+	ol
 		padding-left: 16px
 		margin-bottom: 4px
 

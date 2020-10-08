@@ -120,7 +120,7 @@ module.exports = config => {
 
 		const nw = new NwBuilder({
 			version: nwjsVersion,
-			flavor: config.production ? 'normal' : 'sdk',
+			flavor: config.production && !config.useTestPackage ? 'normal' : 'sdk',
 			files: config.buildDir + '/**/*',
 			buildDir: config.clientBuildDir,
 			cacheDir: config.clientBuildCacheDir,
