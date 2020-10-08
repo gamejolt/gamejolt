@@ -1,6 +1,6 @@
+import { asyncComponentLoader } from '../../../../../../utils/utils';
 import { Community } from '../../../../../../_common/community/community.model';
 import { Modal } from '../../../../../../_common/modal/modal.service';
-import { asyncComponentLoader } from '../../../../../../utils/utils';
 
 export class CommunityThumbnailModal {
 	static async show(community: Community) {
@@ -14,6 +14,7 @@ export class CommunityThumbnailModal {
 				community,
 			},
 			size: 'sm',
+			noBackdropClose: true,
 		});
 	}
 }
