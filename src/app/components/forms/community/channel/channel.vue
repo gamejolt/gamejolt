@@ -1,3 +1,5 @@
+<script lang="ts" src="./channel"></script>
+
 <template>
 	<app-form name="communityChannelForm">
 		<div class="-form">
@@ -45,6 +47,11 @@
 						"
 					/>
 				</app-form-control-errors>
+				<p class="help-block strong">
+					<translate>
+						Note: Renaming a channel will change the URL of that channel.
+					</translate>
+				</p>
 			</app-form-group>
 
 			<app-form-button :disabled="!isValid">
@@ -70,5 +77,3 @@
 	button
 		margin-left: 5px
 </style>
-
-<script lang="ts" src="./channel"></script>
