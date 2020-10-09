@@ -97,6 +97,9 @@ export default class AppShellNotificationPopover extends Vue {
 			// there is any.
 			else if (this.unreadNotificationsCount > 0) {
 				await this.feed.loadNew(this.unreadNotificationsCount);
+			}
+
+			if (this.unreadNotificationsCount > 0) {
 				this.grid?.pushViewNotifications('notifications');
 			}
 		}
