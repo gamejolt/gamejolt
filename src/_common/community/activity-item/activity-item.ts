@@ -109,8 +109,11 @@ export default class AppCommunityActivityItem extends Vue {
 		return !!this.actionTo || !!this.actionText;
 	}
 
+	get extraData(): Record<string, any> {
+		return JSON.parse(this.item.extra_data);
+	}
+
 	getExtraData(key: string) {
-		const data = JSON.parse(this.item.extra_data);
-		return data[key];
+		return this.extraData[key];
 	}
 }
