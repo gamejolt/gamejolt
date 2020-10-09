@@ -134,7 +134,7 @@ export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
 			fromCache
 		);
 
-		if (this.user && !isVirtualChannel(this.routeStore, this.channel)) {
+		if (!fromCache && this.user && !isVirtualChannel(this.routeStore, this.channel)) {
 			this.pushViewToGrid();
 		}
 

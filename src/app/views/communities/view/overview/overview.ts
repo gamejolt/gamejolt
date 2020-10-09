@@ -112,7 +112,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			setCommunityMeta(this.community, this.routeTitle);
 		}
 
-		if (this.user) {
+		if (!fromCache && this.user) {
 			this.grid?.pushViewNotifications('community-featured', {
 				communityId: this.community.id,
 			});
