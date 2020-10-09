@@ -83,6 +83,10 @@ export default class FormCommunityChannelEdit extends BaseForm<FormModel>
 		);
 
 		if (channel) {
+			// Overwrite the current form's model with the new title.
+			// Since the modal wasn't part of this form, it doesn't update automatically.
+			this.setField('title', channel.title);
+
 			Growls.success({
 				message: this.$gettextInterpolate(`Renamed channel to %{ title }.`, {
 					title: channel.title,
