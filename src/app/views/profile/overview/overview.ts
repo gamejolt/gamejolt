@@ -1,5 +1,6 @@
 import { Component, Inject, InjectReactive } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+import { Mutation } from 'vuex-class/lib/bindings';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
 import { Comment } from '../../../../_common/comment/comment-model';
@@ -77,6 +78,15 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	@State
 	app!: Store['app'];
+
+	@State
+	grid!: Store['grid'];
+
+	@State
+	friendRequestCount!: Store['friendRequestCount'];
+
+	@Mutation
+	setFriendRequestCount!: Store['setFriendRequestCount'];
 
 	@RouteStoreModule.State
 	user!: RouteStore['user'];
@@ -433,5 +443,19 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	onClickUnfollow() {
 		this.user?.$unfollow();
+	}
+
+	async onFriendRequestAccept() {
+		await this.acceptFriendRequest();
+
+		this.grid?.pushViewNotifications('friend-requests');
+	}
+
+	async onFriendRequestReject() {
+		const rejected = await this.rejectFriendRequest();
+
+		if (rejected) {
+			this.grid?.pushViewNotifications('friend-requests');
+		}
 	}
 }

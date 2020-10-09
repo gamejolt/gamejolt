@@ -90,20 +90,22 @@ export class RouteStore extends VuexStore<RouteStore, RouteActions, RouteMutatio
 	async cancelFriendRequest() {
 		if (this.userFriendship) {
 			if (!(await UserFriendshipHelper.cancelRequest(this.userFriendship))) {
-				return;
+				return false;
 			}
 		}
 		this.setUserFriendship(null);
+		return true;
 	}
 
 	@VuexAction
 	async rejectFriendRequest() {
 		if (this.userFriendship) {
 			if (!(await UserFriendshipHelper.rejectRequest(this.userFriendship))) {
-				return;
+				return false;
 			}
 		}
 		this.setUserFriendship(null);
+		return true;
 	}
 
 	@VuexAction

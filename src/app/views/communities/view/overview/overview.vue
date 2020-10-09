@@ -23,7 +23,11 @@
 
 		<app-communities-view-page-container>
 			<template #default>
-				<app-communities-view-feed :feed="feed" @add-post="onPostAdded" />
+				<app-communities-view-feed
+					:feed="feed"
+					@add-post="onPostAdded"
+					@load-new="loadedNew"
+				/>
 			</template>
 			<template #sidebar>
 				<app-community-sidebar :data="sidebarData" :community="community" />

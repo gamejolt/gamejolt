@@ -377,15 +377,15 @@
 										%{ username } would like to be your friend.
 									</translate>
 								</p>
-								<app-button primary solid @click="acceptFriendRequest()">
+								<app-button primary solid @click="onFriendRequestAccept">
 									<translate>profile.friend_request_accept</translate>
 								</app-button>
 								<app-button
-									trans
-									@click="rejectFriendRequest()"
 									v-app-tooltip="
 										$gettext('profile.friend_request_decline_tooltip')
 									"
+									trans
+									@click="onFriendRequestReject"
 								>
 									<translate>profile.friend_request_decline</translate>
 								</app-button>

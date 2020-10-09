@@ -1,5 +1,5 @@
-import { Component } from 'vue-property-decorator';
-import { Mutation, State } from 'vuex-class';
+import { Component, Watch } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
 import AppAdWidget from '../../../_common/ad/widget/widget.vue';
@@ -21,7 +21,7 @@ import AppCommunitySliderPlaceholder from '../../components/community/slider/pla
 import AppCommunitySlider from '../../components/community/slider/slider.vue';
 import AppPageContainer from '../../components/page-container/page-container.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
-import { Store, store } from '../../store';
+import { Store } from '../../store';
 import AppHomeRecommended from './_recommended/recommended.vue';
 
 class DashGame {
@@ -58,21 +58,6 @@ class DashGame {
 			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/activity')),
 			Api.sendRequest('/web/dash/home'),
 		]),
-	resolveStore({ payload, fromCache }) {
-		const [feedPayload] = payload;
-
-		// Don't set if from cache, otherwise it could reset to the cached count
-		// when switching between tabs.
-		if (!fromCache) {
-			// We clear the notifications for the tab we are on, and load in
-			// counts for the other tab.
-			store.commit('setNotificationCount', { type: 'activity', count: 0 });
-			store.commit('setNotificationCount', {
-				type: 'notifications',
-				count: feedPayload.notificationsUnreadCount,
-			});
-		}
-	},
 })
 export default class RouteActivityFeed extends BaseRouteComponent {
 	@State
@@ -84,8 +69,8 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	@State
 	unreadActivityCount!: Store['unreadActivityCount'];
 
-	@Mutation
-	setNotificationCount!: Store['setNotificationCount'];
+	@State
+	grid!: Store['grid'];
 
 	feed: ActivityFeedView | null = null;
 	games: DashGame[] = [];
@@ -119,6 +104,13 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 
 	get shouldShowRecommendedUsers() {
 		return this.loadingRecommendedUsers || this.recommendedUsers.length > 0;
+	}
+
+	@Watch('unreadActivityCount', { immediate: true })
+	onUnreadActivityCountChanged() {
+		if (this.feed && this.unreadActivityCount > this.feed.newCount) {
+			this.feed.newCount = this.unreadActivityCount;
+		}
 	}
 
 	private checkGameFilter(game: DashGame) {
@@ -162,14 +154,20 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			.map(i => new DashGame(i.id, i.title, i.ownerName, i.createdOn))
 			.sort((a, b) => numberSort(a.createdOn, b.createdOn))
 			.reverse();
+
+		if (!fromCache) {
+			this.grid?.pushViewNotifications('activity');
+		}
 	}
 
 	mounted() {
 		this.loadRecommendedUsers();
 	}
 
-	loadedNew() {
-		this.setNotificationCount({ type: 'activity', count: 0 });
+	onLoadedNew() {
+		if (this.unreadActivityCount > 0) {
+			this.grid?.pushViewNotifications('activity');
+		}
 	}
 
 	onLoadMore() {
