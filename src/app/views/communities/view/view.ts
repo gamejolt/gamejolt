@@ -191,6 +191,9 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 		this.removeContextPane(this.contextPane);
 		this.clearActiveCommunity();
 		store.commit('theme/clearPageTheme', CommunityThemeKey);
+		if (this.grid) {
+			this.grid.deregisterViewingCommunity(this.community.id);
+		}
 	}
 
 	private setPageTheme() {

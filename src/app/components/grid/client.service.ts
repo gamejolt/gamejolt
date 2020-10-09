@@ -196,6 +196,10 @@ export class GridClient {
 	bootstrapDelay = 1;
 	notificationChannel: Channel | null = null;
 	tabLeader: TabLeader | null = null;
+	/**
+	 * @see `deregisterViewingCommunity` doc-block for explanation.
+	 */
+	viewingCommunityId: number | null = null;
 
 	/**
 	 * Store ids of posts the user has featured.
@@ -393,6 +397,11 @@ export class GridClient {
 
 			// Reset delay when the bootstrap went through successfully.
 			this.bootstrapDelay = 1;
+
+			// If we are viewing a community, call its bootstrap as well:
+			if (this.viewingCommunityId) {
+				this.queueRequestCommunityBootstrap(this.viewingCommunityId);
+			}
 		} else {
 			// error
 			console.log(`[Grid] Failed to fetch notification count bootstrap (${payload.body}).`);
@@ -468,6 +477,12 @@ export class GridClient {
 			let title = Translate.$gettext('New Notification');
 			if (notification.type === Notification.TYPE_POST_ADD) {
 				if (notification.from_model instanceof User) {
+					// We send a notification to the author of the post.
+					// Do not show a notification in that case, the purpose is to increment the activity feed counter.
+					if (notification.from_model.id === store.state.app.user?.id) {
+						return;
+					}
+
 					let username = notification.from_model.username;
 
 					// When it's a game post as game owner, use the game owner's username instead.
@@ -674,13 +689,40 @@ export class GridClient {
 	}
 
 	public async queueRequestCommunityBootstrap(communityId: number) {
+		// Don't need to bootstrap twice.
+		if (this.viewingCommunityId === communityId) {
+			return;
+		}
+
 		await tillConnection(this);
 
 		if (this.notificationChannel) {
+			this.viewingCommunityId = communityId;
 			this.notificationChannel.push('request-community-bootstrap', {
 				user_id: store.state.app.user!.id.toString(),
 				community_id: communityId.toString(),
 			});
 		}
+	}
+
+	/**
+	 * When viewing a community, Grid calls in the community bootstrap (request-community-bootstrap).
+	 * In case Grid disconnects while the user is viewing the community, we want to rebootstrap
+	 * the community as well after the normal Grid bootstrap went through.
+	 *
+	 * Do keep track of which community the user is viewing, we register the community with Grid
+	 * when calling queueRequestCommunityBootstrap.
+	 *
+	 * When leaving the community page, deregister the community to avoid uselessly bootstrapping it.
+	 */
+	public deregisterViewingCommunity(communityId: number) {
+		if (this.viewingCommunityId !== communityId) {
+			console.warn(
+				'Deregistering a community id that did not match the currently registered one!',
+				communityId,
+				this.viewingCommunityId
+			);
+		}
+		this.viewingCommunityId = null;
 	}
 }
