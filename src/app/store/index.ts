@@ -88,6 +88,9 @@ let backdrop: AppBackdrop | null = null;
 export let tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
 
 let gridBootstrapResolvers: ((client: GridClient) => void)[] = [];
+/**
+ * Returns a promise that resolves once the Grid client is available.
+ */
 export function tillGridBootstrapped() {
 	return new Promise<GridClient>(resolve => {
 		if (store.state.grid) {

@@ -390,7 +390,7 @@ export class GridClient {
 			// for the channels are populated.
 			for (const communityId of payload.body.unreadCommunities) {
 				const communityState = store.state.communityStates.getCommunityState(communityId);
-				if (!communityState.routeBootstrapped) {
+				if (!communityState.dataBootstrapped) {
 					communityState.hasUnreadPosts = true;
 				}
 			}
@@ -400,7 +400,12 @@ export class GridClient {
 
 			// If we are viewing a community, call its bootstrap as well:
 			if (this.viewingCommunityId) {
-				this.queueRequestCommunityBootstrap(this.viewingCommunityId);
+				const communityState = store.state.communityStates.getCommunityState(
+					this.viewingCommunityId
+				);
+				if (!communityState || !communityState.dataBootstrapped) {
+					this.queueRequestCommunityBootstrap(this.viewingCommunityId);
+				}
 			}
 		} else {
 			// error
@@ -426,7 +431,7 @@ export class GridClient {
 		// now that we have the actual unread channels in this community.
 		// read comment in client service for more info.
 		communityState.hasUnreadPosts = false;
-		communityState.routeBootstrapped = true;
+		communityState.dataBootstrapped = true;
 
 		communityState.hasUnreadFeaturedPosts = body.unreadFeatured;
 		for (const channelId of body.unreadChannels) {
@@ -689,11 +694,6 @@ export class GridClient {
 	}
 
 	public async queueRequestCommunityBootstrap(communityId: number) {
-		// Don't need to bootstrap twice.
-		if (this.viewingCommunityId === communityId) {
-			return;
-		}
-
 		await tillConnection(this);
 
 		if (this.notificationChannel) {
