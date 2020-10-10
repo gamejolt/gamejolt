@@ -47,7 +47,7 @@
 						"
 					/>
 				</app-form-control-errors>
-				<p class="help-block strong">
+				<p v-if="isEditing" class="help-block strong">
 					<translate>
 						Note: Renaming a channel will change the URL of that channel.
 					</translate>
