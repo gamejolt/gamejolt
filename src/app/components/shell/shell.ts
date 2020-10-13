@@ -118,6 +118,9 @@ export default class AppShell extends Vue {
 
 	mounted() {
 		this.$router.afterEach(async () => {
+			/*
+				Sidebar/Context Panes
+			*/
 			// Wait for any contextPane state to be changed.
 			await this.$nextTick();
 
@@ -132,6 +135,11 @@ export default class AppShell extends Vue {
 			if (this.hideOnRouteChange) {
 				this.clearPanes();
 			}
+
+			/*
+				DrawerStore
+			*/
+			this.drawerStore.reset();
 		});
 
 		this.$watch(
