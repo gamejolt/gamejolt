@@ -8,6 +8,7 @@
 			style="user-drag: none"
 			:style="itemStyling"
 			:src="sticker.img_url"
+			@dragstart.prevent
 		/>
 	</div>
 </template>

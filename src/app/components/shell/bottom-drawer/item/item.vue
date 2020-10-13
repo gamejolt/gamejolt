@@ -12,6 +12,7 @@
 				@touchstart="onTouchStart"
 				@touchmove="onTouchMove"
 				@touchend="onTouchEnd"
+				@dragstart.prevent
 			/>
 		</div>
 

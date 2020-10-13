@@ -32,17 +32,16 @@
 
 .-drawer
 	elevate-2()
-	width: calc(100% - 32px)
+	change-bg('bg-offset')
+	width: 100%
 	margin: 0 auto
 	height: 100%
 	padding: 8px
 	border-top-left-radius: $border-radius-large
 	border-top-right-radius: $border-radius-large
-	border-width: 4px
-	border-style: solid
-	border-bottom: none
-	border-color: var(--theme-fg-muted)
-	background-color: $white
+
+	@media $media-sm-up
+		width: calc(100% - 32px)
 
 	&-inner
 		display: grid
@@ -57,8 +56,7 @@
 	right: 0
 	bottom: 0
 	z-index: $zindex-shell-drawer
-	// JODO: Better transition length and timing
-	transition: bottom 1s
+	transition: bottom 250ms $strong-ease-out
 	display: flex
 	justify-content: center
 </style>
