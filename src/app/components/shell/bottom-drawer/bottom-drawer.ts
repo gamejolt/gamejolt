@@ -30,10 +30,6 @@ export default class AppShellBottomDrawer extends Vue implements StickableTarget
 		return this.drawerStore.drawerItems;
 	}
 
-	mounted() {
-		this.placeholderHeight = window.innerHeight * 0.25;
-	}
-
 	get drawerStyling() {
 		return {
 			height: this.drawerHeight ? this.drawerHeight + 'px' : 'unset',
@@ -57,6 +53,10 @@ export default class AppShellBottomDrawer extends Vue implements StickableTarget
 		return 0;
 	}
 
+	mounted() {
+		this.placeholderHeight = window.innerHeight * 0.25;
+	}
+
 	onMouseUp() {
 		if (!this.drawerStore.isDragging || !this.drawerStore.sticker) {
 			return;
@@ -67,6 +67,10 @@ export default class AppShellBottomDrawer extends Vue implements StickableTarget
 
 	onRedeemSticker() {
 		// Not used here - only used in components that can redeem/claim stickers.
+	}
+
+	onClickCancel() {
+		this.drawerStore.reset();
 	}
 
 	@Watch('drawerStore.drawerItems.length')

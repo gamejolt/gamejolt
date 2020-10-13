@@ -64,8 +64,37 @@ export default class AppStickerTarget extends Vue implements StickableTarget {
 		assignDrawerStoreItem(this.drawerStore, stickerPlacement, this);
 	}
 
-	onRedeemSticker() {
+	async onRedeemSticker() {
+		const sticker = this.drawerStore.placedItem;
+
+		if (!sticker) {
+			return;
+		}
+
 		// JODO: Send Api request to add sticker to the model/resource
+		console.log('placing sticker!');
+
+		// const result = await Api.sendRequest(
+		// 	'/web/stickers/place',
+		// 	{
+		// 		stickerId: sticker.id,
+		// 		positionX: sticker.position_x,
+		// 		positionY: sticker.position_y,
+		// 		rotation: sticker.rotation,
+		// 		resource: 'Fireside_Post',
+		// 		resourceId: this.model.id,
+		// 	},
+		// 	{ detach: true }
+		// );
+
+		// if (result.success) {
+		// 	const post = new FiresidePost(result.post);
+		// 	Object.assign(this.post, post);
+		// 	this.emitStickersVisibilityChange(true);
+		// 	Analytics.trackEvent('stickers', 'place-sticker', 'fireside-post');
+		// } else {
+		// 	Growls.error(this.$gettext(`Failed to place sticker.`));
+		// }
 	}
 
 	getStickerAnimationDelay(placement: StickerPlacement) {

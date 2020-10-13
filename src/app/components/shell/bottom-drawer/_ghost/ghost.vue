@@ -1,26 +1,50 @@
 <script lang="ts" src="./ghost"></script>
 
 <template>
-	<div class="-ghost" :class="itemClasses" @mousedown="onStartDrag" @touchstart="onStartDrag">
-		<img
-			class="-img"
-			draggable="false"
-			style="user-drag: none"
-			:style="itemStyling"
-			:src="sticker.img_url"
-			@dragstart.prevent
-		/>
+	<div class="-ghost" :class="itemClasses" @click.stop>
+		<transition name="-fade">
+			<div v-if="shouldShowStickerControls" class="-controls" :style="controlsStyling">
+				<app-button icon="check" primary solid sparse @click.capture="onConfirmPlacement" />
+			</div>
+		</transition>
+		<div class="-img-outer" @mousedown="onStartDrag" @touchstart="onStartDrag">
+			<img
+				class="-img"
+				draggable="false"
+				style="user-drag: none"
+				:style="itemStyling"
+				:src="sticker.img_url"
+				@dragstart.prevent
+			/>
+		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
 @import '~styles/variables'
+@import '~styles-lib/mixins'
+
+.-fade
+	&-enter-active
+		transition: opacity 250ms $strong-ease-out
+
+	&-enter
+		opacity: 0
+
+	&-enter-to
+		opacity: 1
+
+.-controls
+	rounded-corners()
+	display: flex
+	justify-content: center
+	align-items: center
+	position: absolute
+	top: calc(100% + 8px)
 
 .-ghost
 	position: absolute
 	z-index: 2
-	width: 64px
-	height: 64px
 	cursor: pointer
 	z-index: $zindex-shell-pane-under
 	touch-action: none
@@ -42,12 +66,10 @@
 	z-index: $zindex-shell-drawer !important
 	cursor: grabbing
 
-.-invalid
-	filter: drop-shadow(4px 4px 5px red)
-
 // used to show that a sticker is outside of a sticker-target area
 .-faded
-	filter: grayscale(1) brightness(0.5)
+	.-img-outer
+		filter: grayscale(1) brightness(0.5)
 
 .-uncommitted
 	filter: drop-shadow(2px 2px 2.5px black)
