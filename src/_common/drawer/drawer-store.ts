@@ -1,5 +1,3 @@
-// import { StickerCount } from '../../../views/dashboard/stickers/stickers';
-// import AppShellBottomDrawerItem from '../../app/components/shell/bottom-drawer/item/item.vue';
 import ItemGhostTS from '../../app/components/shell/bottom-drawer/_ghost/ghost';
 import ItemGhost from '../../app/components/shell/bottom-drawer/_ghost/ghost.vue';
 import { StickerCount } from '../../app/views/dashboard/stickers/stickers';
@@ -13,7 +11,7 @@ export const DrawerStoreKey = Symbol('drawer-store');
 export interface StickableTarget {
 	/** DrawerStore will manually trigger a 'mouseup' event when there's a 'touchend' event that happens above applicable targets. */
 	onMouseUp(event?: any): void;
-	/** Function to redeem the sticker for placement through the 'targetComponent' in the store. */
+	/** Function to redeem the sticker for placement through the 'targetComponent' in the DrawerStore. */
 	onRedeemSticker(): void;
 }
 
