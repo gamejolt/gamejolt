@@ -12,6 +12,12 @@
 			'has-banner': hasBanner && !isShellHidden,
 		}"
 	>
+		<!-- JODO: Remove -->
+		<app-button
+			style="height: 50px; width: 50px; position: fixed; top: 54px; left: 70px; z-index: 5000;"
+			@click="testOpenDrawer()"
+		/>
+
 		<template v-if="isShellHidden">
 			<slot />
 		</template>
@@ -22,6 +28,7 @@
 		<app-shell-top-nav v-if="hasTopBar" />
 		<app-shell-cbar />
 		<app-shell-sidebar v-if="hasSidebar" />
+		<app-shell-bottom-drawer />
 		<app-shell-banner v-if="!isShellHidden" />
 
 		<app-chat-windows v-if="chat" />

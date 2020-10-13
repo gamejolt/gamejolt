@@ -1,8 +1,13 @@
 import Vue from 'vue';
-import { Component, InjectReactive, Watch } from 'vue-property-decorator';
+import { Component, Inject, InjectReactive, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
 import { Connection } from '../../../_common/connection/connection-service';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
+import {
+	DrawerStore,
+	DrawerStoreKey,
+	toggleShellDrawer,
+} from '../../../_common/drawer/drawer-store';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMinbar from '../../../_common/minbar/minbar.vue';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -15,6 +20,7 @@ import { BannerModule, BannerStore, Store } from '../../store/index';
 import { ChatClient, ChatKey, setChatFocused } from '../chat/client';
 import AppChatWindows from '../chat/windows/windows.vue';
 import AppShellBody from './body/body.vue';
+import AppShellBottomDrawer from './bottom-drawer/bottom-drawer.vue';
 import AppShellCbar from './cbar/cbar.vue';
 import AppShellHotBottom from './hot-bottom/hot-bottom.vue';
 import './shell.styl';
@@ -30,6 +36,7 @@ const components: any = {
 	AppMinbar,
 	AppShellBanner: () => import(/* webpackChunkName: "shell" */ './banner/banner.vue'),
 	AppChatWindows,
+	AppShellBottomDrawer,
 };
 
 if (GJ_IS_CLIENT) {
@@ -43,6 +50,7 @@ if (GJ_IS_CLIENT) {
 })
 export default class AppShell extends Vue {
 	@InjectReactive(ChatKey) chat!: ChatClient;
+	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 
 	@State
 	app!: Store['app'];
@@ -101,6 +109,11 @@ export default class AppShell extends Vue {
 
 	get ssrShouldShowSidebar() {
 		return GJ_IS_SSR && this.$route.name?.indexOf('communities.view') === 0;
+	}
+
+	// JODO: Remove
+	testOpenDrawer() {
+		toggleShellDrawer(this.drawerStore);
 	}
 
 	mounted() {
