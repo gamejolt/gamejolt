@@ -53,7 +53,7 @@ export default class AppShellBottomDrawerItem extends Vue {
 		this.touchTimer = setTimeout(() => {
 			setDrawerStoreActiveItem(this.drawerStore, this.sticker, event);
 			this.shouldUpdateScroll = false;
-		}, 750);
+		}, 333);
 	}
 
 	onTouchMove(event: TouchEvent) {
