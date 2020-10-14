@@ -25,7 +25,6 @@ import AppSticker from '../sticker.vue';
 export default class AppStickerTarget extends Vue implements StickableTarget {
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 	@Inject(StickerLayerKey) layer!: StickerLayerController;
-	// JODO: does this make sense?
 	@Prop(propOptional(Array, () => [])) stickers!: StickerPlacement[];
 	// JODO: make work
 	// @Prop(propRequired(Model)) model!: Model;

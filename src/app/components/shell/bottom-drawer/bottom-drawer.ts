@@ -40,12 +40,12 @@ export default class AppShellBottomDrawer extends Vue implements StickableTarget
 	}
 
 	private get drawerBottom() {
-		if (this.drawerStore.placedItem || !this.drawerStore.isDrawerOpen) {
+		if (!this.drawerStore.isDrawerOpen) {
 			// Drawer item is placed on a valid target - hide drawer.
 			return -this.drawerHeight;
 		}
 
-		if (this.drawerStore.isDragging) {
+		if (this.drawerStore.placedItem || this.drawerStore.isDragging) {
 			if (this.drawerStore.isHoveringDrawer) {
 				// Drawer item is being hovered over drawer - shift drawer up slightly higher.
 				return -this.drawerHeight + 64;
