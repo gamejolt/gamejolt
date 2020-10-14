@@ -56,6 +56,14 @@ export class DrawerStore {
 		// this._onPointerMove = null;
 		// this._onPointerUp = null;
 	}
+
+	commitPlacement() {
+		if (!this.placedItem || !this.targetComponent) {
+			return;
+		}
+
+		this.targetComponent.onRedeemSticker();
+	}
 }
 
 export function registerStickerLayer(store: DrawerStore, layer: StickerLayerController) {

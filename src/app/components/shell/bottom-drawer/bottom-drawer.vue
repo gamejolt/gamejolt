@@ -7,6 +7,16 @@
 		:style="drawerStyling"
 		@mouseup="onMouseUp"
 	>
+		<div v-if="drawerStore.isDrawerOpen" class="-controls">
+			<app-button
+				class="-controls-button"
+				icon="remove"
+				primary
+				solid
+				sparse
+				@click="onClickCancel"
+			/>
+		</div>
 		<div class="-drawer">
 			<app-scroll-scroller class="-scroller">
 				<div class="-drawer-inner">
@@ -26,6 +36,16 @@
 <style lang="stylus" scoped>
 @import '~styles/variables'
 @import '~styles-lib/mixins'
+
+.-controls
+	display: flex
+	position: absolute
+	left: 16px
+	bottom: calc(100% + 8px)
+
+	&-button
+		elevate-2()
+		margin-right: 8px
 
 .-scroller
 	height: 100%

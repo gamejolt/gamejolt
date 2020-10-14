@@ -12,6 +12,10 @@ export default class ItemGhost extends Vue {
 
 	$el!: HTMLDivElement;
 
+	get shouldShowStickerControls() {
+		return !!this.drawerStore.placedItem;
+	}
+
 	private get itemRotation() {
 		if (this.drawerStore.placedItem) {
 			return `rotate(${this.drawerStore.placedItem.rotation * 90 - 45}deg)`;
@@ -28,6 +32,15 @@ export default class ItemGhost extends Vue {
 		};
 	}
 
+	get controlsStyling() {
+		const controlSize = 32;
+		return {
+			left: this.size / 2 - controlSize / 2 + 'px',
+			width: controlSize + 'px',
+			height: controlSize + 'px',
+		};
+	}
+
 	get itemClasses() {
 		const classes = [];
 
@@ -38,11 +51,14 @@ export default class ItemGhost extends Vue {
 				classes.push('-uncommitted');
 			} else {
 				classes.push('-faded');
-				classes.push('-invalid');
 			}
 		}
 
 		return classes;
+	}
+
+	onConfirmPlacement() {
+		this.drawerStore.commitPlacement();
 	}
 
 	onStartDrag(event: MouseEvent | TouchEvent) {
