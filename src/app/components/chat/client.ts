@@ -692,6 +692,15 @@ export function editMessage(chat: ChatClient, message: ChatMessage) {
 	}
 }
 
+export function acceptInvite(chat: ChatClient, msgId: number) {
+	const room = chat.room;
+	if (room) {
+		chat.roomChannels[room.id].push('accept_invite', {
+			msg_id: msgId
+		});
+	}
+}
+
 export function startTyping(chat: ChatClient) {
 	const room = chat.room;
 	if (room) {

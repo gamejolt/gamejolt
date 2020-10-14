@@ -6,6 +6,7 @@
 		:class="{
 			'chat-msg-type-normal': message.type === ChatMessage.TypeNormal,
 			'chat-msg-type-system': message.type === ChatMessage.TypeSystem,
+			'chat-msg-type-invite': message.type === ChatMessage.TypeInvite,
 			'chat-window-message-not-combined': !message.combine,
 			'chat-window-message-combined': message.combine,
 			'chat-window-message-editing': isEditing,
@@ -63,7 +64,11 @@
 
 					<template #popover>
 						<div class="list-group">
-							<a class="list-group-item has-icon" @click="startEdit">
+							<a
+								v-if="message.type === ChatMessage.TypeNormal"
+								class="list-group-item has-icon"
+								@click="startEdit"
+							>
 								<app-jolticon icon="edit" />
 								<translate>Edit Message</translate>
 							</a>
@@ -103,7 +108,21 @@
 					</span>
 				</template>
 
-				<app-content-viewer :source="message.content" :display-rules="displayRules" />
+				<template v-if="message.type === ChatMessage.TypeNormal">
+					<app-content-viewer :source="message.content" :display-rules="displayRules" />
+				</template>
+				<template v-else-if="message.type === ChatMessage.TypeInvite">
+					<div class="alert">
+						<p>
+							<translate>
+								You have been invited to a group.
+							</translate>
+						</p>
+						<app-button primary solid @click="acceptInvite(message.id)">
+							<translate>Accept</translate>
+						</app-button>
+					</div>
+				</template>
 
 				<span
 					v-if="editingState"

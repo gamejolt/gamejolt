@@ -13,6 +13,7 @@ import { Theme } from '../../../../../../_common/theme/theme.model';
 import { ThemeState, ThemeStore } from '../../../../../../_common/theme/theme.store';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import {
+	acceptInvite,
 	ChatClient,
 	ChatKey,
 	removeMessage,
@@ -114,6 +115,10 @@ export default class AppChatWindowOutputItem extends Vue {
 		}
 
 		return null;
+	}
+
+	acceptInvite(msgId: number) {
+		acceptInvite(this.chat, msgId);
 	}
 
 	startEdit() {
