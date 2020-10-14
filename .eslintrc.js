@@ -14,6 +14,7 @@ module.exports = {
 		'no-empty': ['error', { allowEmptyCatch: true }],
 		'no-undef': 'off',
 		'no-unused-vars': 'off',
+		'no-mixed-spaces-and-tabs': 'off',
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		'@typescript-eslint/no-empty-function': 'off',
 		'@typescript-eslint/no-explicit-any': 'off',

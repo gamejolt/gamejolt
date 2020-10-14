@@ -62,7 +62,7 @@ export default class AppNavChannelCards extends Vue {
 		}
 
 		if (channel === this.frontpageChannel) {
-			return this.communityState.unreadFeatureCount > 0;
+			return this.communityState.hasUnreadFeaturedPosts;
 		}
 
 		// We need to access the reactive community from the Store here.

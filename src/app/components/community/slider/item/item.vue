@@ -1,5 +1,8 @@
+<script lang="ts" src="./item"></script>
+
 <template>
 	<router-link
+		v-app-track-event="event"
 		class="-item"
 		:class="{
 			'-unread': isUnread,
@@ -9,7 +12,6 @@
 			params: { path: community.path },
 		}"
 		:title="community.name"
-		v-app-track-event="event"
 	>
 		<div
 			class="-bubble"
@@ -17,12 +19,13 @@
 				'background-image': isUnread ? gradient : undefined,
 			}"
 		>
-			<app-media-item-backdrop class="-backdrop" :media-item="community.thumbnail" radius="full">
+			<app-media-item-backdrop
+				class="-backdrop"
+				:media-item="community.thumbnail"
+				radius="full"
+			>
 				<app-community-thumbnail-img class="-thumb" :community="community" />
 			</app-media-item-backdrop>
-			<div v-if="featureCount > 0" class="-feature-counter">
-				{{ featureCountText }}
-			</div>
 		</div>
 
 		<div class="-label">
@@ -32,5 +35,3 @@
 </template>
 
 <style lang="stylus" src="./item.styl" scoped></style>
-
-<script lang="ts" src="./item"></script>

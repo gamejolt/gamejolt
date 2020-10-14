@@ -87,6 +87,20 @@ let bootstrapResolver: (() => void) | null = null;
 let backdrop: AppBackdrop | null = null;
 export let tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
 
+let gridBootstrapResolvers: ((client: GridClient) => void)[] = [];
+/**
+ * Returns a promise that resolves once the Grid client is available.
+ */
+export function tillGridBootstrapped() {
+	return new Promise<GridClient>(resolve => {
+		if (store.state.grid) {
+			resolve(store.state.grid);
+		} else {
+			gridBootstrapResolvers.push(resolve);
+		}
+	});
+}
+
 const modules: any = {
 	app: appStore,
 	theme: new ThemeStore(),
@@ -502,7 +516,7 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 	@VuexMutation
 	viewCommunity(community: Mutations['viewCommunity']) {
 		const communityState = this.communityStates.getCommunityState(community);
-		communityState.unreadFeatureCount = 0;
+		communityState.hasUnreadFeaturedPosts = false;
 
 		const idx = this.communities.findIndex(c => c.id === community.id);
 		if (idx === -1) {
@@ -522,6 +536,13 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 
 	@VuexMutation
 	private _setGrid(grid: GridClient | null) {
+		if (grid !== null) {
+			for (const resolver of gridBootstrapResolvers) {
+				resolver(grid);
+			}
+			gridBootstrapResolvers = [];
+		}
+
 		this.grid = grid;
 	}
 
