@@ -26,7 +26,7 @@ export class DrawerStore {
 	isDrawerOpen = false;
 	isDragging = false;
 	hasValidTarget = false;
-	hoveringDrawer = false;
+	isHoveringDrawer = false;
 
 	_waitingForFrame = false;
 	_onPointerMove: ((event: MouseEvent | TouchEvent) => void) | null = null;
@@ -52,7 +52,7 @@ export class DrawerStore {
 		this.isDrawerOpen = false;
 		// this.isDragging = false;
 		this.hasValidTarget = false;
-		this.hoveringDrawer = false;
+		this.isHoveringDrawer = false;
 
 		this._waitingForFrame = false;
 		// this._onPointerMove = null;
@@ -246,9 +246,9 @@ function _updateGhostPosition(store: DrawerStore, event: MouseEvent | TouchEvent
 	store.ghost.style.top = `${requiredEvent.pageY - store.ghost.clientHeight / 2}px`;
 
 	if (requiredEvent.clientY > window.innerHeight - 64) {
-		store.hoveringDrawer = true;
+		store.isHoveringDrawer = true;
 	} else {
-		store.hoveringDrawer = false;
+		store.isHoveringDrawer = false;
 	}
 }
 
@@ -266,23 +266,47 @@ const _onDragItem = (store: DrawerStore) => (event: MouseEvent | TouchEvent) => 
  * 'Up' or 'End' events for both mouse and touch.
  */
 const _onPlaceItem = (store: DrawerStore) => (event: MouseEvent | TouchEvent) => {
-	if (event instanceof TouchEvent) {
-		// 'touchend' events don't trigger any events at the location that the 'touchend' is initiated,
-		// but we do have the x and y coordinates of the event through the TouchList in 'event.changedTouches[]'.
-		const { clientX, clientY } = event.changedTouches[0];
-		// Since we don't natively have the event target from the 'touchend' event,
-		// we need to get the elements from the coordinate point ...
-		const targetElement = document.elementsFromPoint(clientX, clientY);
-		// ... and then check if any of those elements are valid targets for our 'touchend' event.
-		const stickerTarget = targetElement.find(i =>
-			i.classList.contains('sticker-event-listening')
-		);
-
-		// If we found a valid target, then we can manually trigger a 'mouseup' event so the StickableTarget can handle behavior.
-		if (stickerTarget) {
-			stickerTarget.dispatchEvent(new MouseEvent('mouseup'));
-		}
+	if (store.isHoveringDrawer && store.sticker) {
+		alterDrawerStoreItemCount(store, store.sticker, true);
+		_removeEventListeners(store);
+		return;
 	}
+
+	let clientX: number | null = null;
+	let clientY: number | null = null;
+
+	if (event instanceof MouseEvent) {
+		clientX = event.clientX;
+		clientY = event.clientY;
+	}
+	if (event instanceof TouchEvent) {
+		clientX = event.changedTouches[0].clientX;
+		clientY = event.changedTouches[0].clientY;
+	}
+
+	if (clientX === null || clientY === null) {
+		return;
+	}
+
+	let shouldContinue = true;
+	store.activeLayer.targets.forEach(i => {
+		if (!shouldContinue) {
+			return;
+		}
+
+		// JODO: Make better
+		const { x, y, width, height } = i.$el.getBoundingClientRect();
+
+		if (
+			clientX! - x < width &&
+			clientY! - y < height &&
+			clientX! - x > 0 &&
+			clientY! - y > 0 //
+		) {
+			i.onMouseUp();
+			shouldContinue = false;
+		}
+	});
 
 	_removeEventListeners(store);
 };

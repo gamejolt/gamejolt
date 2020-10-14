@@ -1,12 +1,7 @@
 <script lang="ts" src="./bottom-drawer"></script>
 
 <template>
-	<div
-		id="shell-bottom-drawer"
-		class="sticker-event-listening"
-		:style="drawerStyling"
-		@mouseup="onMouseUp"
-	>
+	<div id="shell-bottom-drawer" class="sticker-event-listening" :style="drawerStyling">
 		<div v-if="drawerStore.isDrawerOpen" class="-controls">
 			<app-button
 				class="-controls-button"

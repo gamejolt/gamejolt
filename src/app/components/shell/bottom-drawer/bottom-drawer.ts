@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Component, Inject, Watch } from 'vue-property-decorator';
 import {
-	alterDrawerStoreItemCount,
 	DrawerStore,
 	DrawerStoreKey,
 	StickableTarget,
@@ -47,7 +46,7 @@ export default class AppShellBottomDrawer extends Vue implements StickableTarget
 		}
 
 		if (this.drawerStore.isDragging) {
-			if (this.drawerStore.hoveringDrawer) {
+			if (this.drawerStore.isHoveringDrawer) {
 				// Drawer item is being hovered over drawer - shift drawer up slightly higher.
 				return -this.drawerHeight + 64;
 			}
@@ -62,14 +61,6 @@ export default class AppShellBottomDrawer extends Vue implements StickableTarget
 
 	mounted() {
 		this.placeholderHeight = window.innerHeight * 0.25;
-	}
-
-	onMouseUp() {
-		if (!this.drawerStore.isDragging || !this.drawerStore.sticker) {
-			return;
-		}
-
-		alterDrawerStoreItemCount(this.drawerStore, this.drawerStore.sticker, true);
 	}
 
 	onRedeemSticker() {
@@ -91,5 +82,10 @@ export default class AppShellBottomDrawer extends Vue implements StickableTarget
 			// preventing drawer resizes when items disappear through closing the drawer.
 			this.placeholderHeight = this.$el.offsetHeight;
 		}
+	}
+
+	beforeDestroy() {
+		// JODO: Not sure if needed, but recompiling has been leaving lingering stickers sometimes.
+		this.drawerStore.reset();
 	}
 }
