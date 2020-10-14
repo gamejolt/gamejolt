@@ -3,6 +3,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import AppContentViewer from '../../content/content-viewer/content-viewer.vue';
 import AppFadeCollapse from '../../fade-collapse/fade-collapse.vue';
 import { date } from '../../filters/date';
+import AppStickerTarget from '../../sticker/target/target.vue';
 import { Comment } from '../comment-model';
 import '../comment.styl';
 import AppCommentVideoThumbnail from '../video/thumbnail/thumbnail.vue';
@@ -12,6 +13,7 @@ import AppCommentVideoThumbnail from '../video/thumbnail/thumbnail.vue';
 		AppFadeCollapse,
 		AppCommentVideoThumbnail,
 		AppContentViewer,
+		AppStickerTarget,
 	},
 	filters: {
 		date,

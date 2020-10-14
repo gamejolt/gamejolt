@@ -8,6 +8,7 @@ import { Screen } from '../screen/screen-service';
 import AppScrollAffix from '../scroll/affix/affix.vue';
 import AppScrollScrollerTS from '../scroll/scroller/scroller';
 import AppScrollScroller from '../scroll/scroller/scroller.vue';
+import AppStickerLayer from '../sticker/layer/layer.vue';
 import { AppTheme } from '../theme/theme';
 import { BaseModal } from './base';
 import './modal-global.styl';
@@ -18,6 +19,7 @@ import { Modal } from './modal.service';
 		AppTheme,
 		AppScrollScroller,
 		AppScrollAffix,
+		AppStickerLayer,
 	},
 })
 export default class AppModal extends Vue {

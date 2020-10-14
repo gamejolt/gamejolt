@@ -6,8 +6,6 @@
 		:class="{ 'sticker-event-listening': drawerStore.isDrawerOpen }"
 		@mouseup="onMouseUp"
 	>
-		<div class="sticker-target-border" />
-
 		<transition name="-fade">
 			<div v-if="showStickers">
 				<app-sticker
@@ -46,25 +44,9 @@
 		z-index: -1
 
 .sticker-event-listening
+	rounded-corners-lg()
 	// JODO: Probably only needs to be higher than 2, but I haven't checked.
 	z-index: 10
-
-	&
-	.sticker-target-border
-		rounded-corners-lg()
-
-	.sticker-target-border
-		elevate-2()
-		border-width: 4px
-		border-style: dashed
-		top: -(@border-width)
-		right: -(@border-width)
-		bottom: -(@border-width)
-		left: -(@border-width)
-		background-color: var(--theme-bg)
-		animation-name: sticker-border-animate
-		animation-duration: 1s
-		animation-iteration-count: infinite
 
 .-sticker-animate
 	animation-name: sticker-animate-in
@@ -91,14 +73,4 @@
 	100%
 		transform: translateY(0)
 		opacity: 1
-
-@keyframes sticker-border-animate
-	0%
-		border-color: #26ddb4
-
-	50%
-		border-color: #9e9efd
-
-	100%
-		border-color: #26ddb4
 </style>

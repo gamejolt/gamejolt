@@ -16,6 +16,7 @@ import {
 	SidebarState,
 	SidebarStore,
 } from '../../../_common/sidebar/sidebar.store';
+import AppStickerLayer from '../../../_common/sticker/layer/layer.vue';
 import { BannerModule, BannerStore, Store } from '../../store/index';
 import { ChatClient, ChatKey, setChatFocused } from '../chat/client';
 import AppChatWindows from '../chat/windows/windows.vue';
@@ -37,6 +38,7 @@ const components: any = {
 	AppShellBanner: () => import(/* webpackChunkName: "shell" */ './banner/banner.vue'),
 	AppChatWindows,
 	AppShellBottomDrawer,
+	AppStickerLayer,
 };
 
 if (GJ_IS_CLIENT) {

@@ -32,7 +32,7 @@
 
 .-drawer
 	elevate-2()
-	change-bg('bg-offset')
+	change-bg('bg')
 	width: 100%
 	margin: 0 auto
 	height: 100%

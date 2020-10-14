@@ -1,5 +1,7 @@
+<script lang="ts" src="./content"></script>
+
 <template>
-	<div>
+	<app-sticker-target :stickers="[]">
 		<app-fade-collapse
 			:collapse-height="375"
 			:is-open="showFullContent"
@@ -8,7 +10,7 @@
 		>
 			<app-content-viewer :source="content" />
 
-			<p class="text-muted small" v-if="comment.modified_on">
+			<p v-if="comment.modified_on" class="text-muted small">
 				<b><translate>Last modified on</translate></b>
 				<span :title="date(comment.modified_on, 'medium')">
 					{{ comment.modified_on | date('longDate') }}
@@ -17,18 +19,18 @@
 		</app-fade-collapse>
 
 		<a
-			class="hidden-text-expander"
 			v-if="canToggleContent"
-			@click="showFullContent = !showFullContent"
 			v-app-track-event="`comment-widget:toggle-full-content`"
-		></a>
+			class="hidden-text-expander"
+			@click="showFullContent = !showFullContent"
+		/>
 
-		<div class="-videos" v-if="comment.videos.length">
+		<div v-if="comment.videos.length" class="-videos">
 			<div class="row">
 				<div
-					class="col-xs-6 col-sm-4"
 					v-for="video of comment.videos.slice(0, showAllVideos ? 10 : 2)"
 					:key="video.id"
+					class="col-xs-6 col-sm-4"
 				>
 					<app-comment-video-thumbnail :video="video" />
 				</div>
@@ -36,9 +38,9 @@
 
 			<p v-if="comment.videos.length > 2 && !showAllVideos">
 				<a
+					v-app-track-event="`comment-widget:more-videos`"
 					class="small link-muted"
 					@click="showAllVideos = true"
-					v-app-track-event="`comment-widget:more-videos`"
 				>
 					<translate
 						:translate-n="comment.videos.length - 2"
@@ -50,12 +52,12 @@
 				</a>
 			</p>
 		</div>
-	</div>
+	</app-sticker-target>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .hidden-text-expander
 	margin-bottom: $font-size-base
@@ -66,5 +68,3 @@
 .comment-video-thumbnail
 	margin-bottom: $line-height-computed !important
 </style>
-
-<script lang="ts" src="./content"></script>

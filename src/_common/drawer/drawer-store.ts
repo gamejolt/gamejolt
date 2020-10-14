@@ -1,8 +1,9 @@
 import ItemGhostTS from '../../app/components/shell/bottom-drawer/_ghost/ghost';
 import ItemGhost from '../../app/components/shell/bottom-drawer/_ghost/ghost.vue';
 import { StickerCount } from '../../app/views/dashboard/stickers/stickers';
-import { numberSort } from '../../utils/array';
+import { arrayRemove, numberSort } from '../../utils/array';
 import { Api } from '../api/api.service';
+import { StickerLayerController } from '../sticker/layer/layer-controller';
 import { StickerPlacement } from '../sticker/placement/placement.model';
 import { Sticker } from '../sticker/sticker.model';
 
@@ -16,6 +17,7 @@ export interface StickableTarget {
 }
 
 export class DrawerStore {
+	layers: StickerLayerController[] = [];
 	drawerItems: StickerCount[] = [];
 	targetComponent: StickableTarget | null = null;
 	placedItem: StickerPlacement | null = null;
@@ -28,6 +30,11 @@ export class DrawerStore {
 	_waitingForFrame = false;
 	_onPointerMove: ((event: MouseEvent | TouchEvent) => void) | null = null;
 	_onPointerUp: ((event: MouseEvent | TouchEvent) => void) | null = null;
+
+	get activeLayer() {
+		// The active layer is always the last to be added to the stack.
+		return this.layers[this.layers.length - 1];
+	}
 
 	/** Reset the DrawerStore state to their initial values */
 	// commented out === handled by function calls
@@ -49,6 +56,14 @@ export class DrawerStore {
 		// this._onPointerMove = null;
 		// this._onPointerUp = null;
 	}
+}
+
+export function registerStickerLayer(store: DrawerStore, layer: StickerLayerController) {
+	store.layers.push(layer);
+}
+
+export function unregisterStickerLayer(store: DrawerStore, layer: StickerLayerController) {
+	arrayRemove(store.layers, i => i === layer);
 }
 
 /**

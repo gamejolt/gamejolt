@@ -9,6 +9,11 @@ import {
 	StickableTarget,
 } from '../../drawer/drawer-store';
 import { Ruler } from '../../ruler/ruler-service';
+import {
+	registerStickerTarget,
+	StickerLayerController,
+	StickerLayerKey,
+} from '../layer/layer-controller';
 import { StickerPlacement } from '../placement/placement.model';
 import AppSticker from '../sticker.vue';
 
@@ -19,6 +24,7 @@ import AppSticker from '../sticker.vue';
 })
 export default class AppStickerTarget extends Vue implements StickableTarget {
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
+	@Inject(StickerLayerKey) layer!: StickerLayerController;
 
 	@Prop(propRequired(Array)) stickers!: StickerPlacement[];
 	// JODO: make work
@@ -37,6 +43,14 @@ export default class AppStickerTarget extends Vue implements StickableTarget {
 	// Sort so that the newer stickers go on top of the older ones.
 	get sorted() {
 		return [...this.stickers].sort((a, b) => a.id - b.id);
+	}
+
+	created() {
+		registerStickerTarget(this.layer, this);
+	}
+
+	beforeDestroy() {
+		registerStickerTarget(this.layer, this);
 	}
 
 	onMouseUp() {
