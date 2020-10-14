@@ -7,7 +7,7 @@ import { sleep } from '../../../utils/utils';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { store } from '../../store';
-import { ChatMessage, ChatMessageType } from './message';
+import { ChatMessage } from './message';
 import { ChatRoom } from './room';
 import { ChatRoomChannel } from './room-channel';
 import { ChatUser } from './user';
@@ -484,7 +484,6 @@ function setTimeSplit(chat: ChatClient, roomId: number, message: ChatMessage) {
 function outputMessage(
 	chat: ChatClient,
 	roomId: number,
-	type: ChatMessageType,
 	message: ChatMessage,
 	isHistorical: boolean
 ) {
@@ -492,7 +491,6 @@ function outputMessage(
 		return;
 	}
 
-	message.type = type;
 	message.logged_on = new Date(message.logged_on);
 	setTimeSplit(chat, roomId, message);
 
@@ -537,7 +535,7 @@ export function processNewChatOutput(
 	}
 
 	messages.forEach(message => {
-		outputMessage(chat, message.room_id, ChatMessage.TypeNormal, message, isHistorical);
+		outputMessage(chat, message.room_id, message, isHistorical);
 
 		if (!isHistorical) {
 			// Emit an event that we've sent out a new message.
