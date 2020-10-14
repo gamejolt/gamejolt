@@ -3,16 +3,25 @@ import ItemGhost from '../../app/components/shell/bottom-drawer/_ghost/ghost.vue
 import { StickerCount } from '../../app/views/dashboard/stickers/stickers';
 import { arrayRemove, numberSort } from '../../utils/array';
 import { Api } from '../api/api.service';
-import { StickerLayerController } from '../sticker/layer/layer-controller';
+import {
+	getCollidingStickerTarget,
+	StickerLayerController,
+} from '../sticker/layer/layer-controller';
 import { StickerPlacement } from '../sticker/placement/placement.model';
 import { Sticker } from '../sticker/sticker.model';
 
 export const DrawerStoreKey = Symbol('drawer-store');
 
 export interface StickableTarget {
-	/** DrawerStore will manually trigger a 'mouseup' event when there's a 'touchend' event that happens above applicable targets. */
+	/**
+	 * DrawerStore will manually trigger a 'mouseup' event when there's a
+	 * 'touchend' event that happens above applicable targets.
+	 */
 	onMouseUp(event?: any): void;
-	/** Function to redeem the sticker for placement through the 'targetComponent' in the DrawerStore. */
+	/**
+	 * Function to redeem the sticker for placement through the
+	 * 'targetComponent' in the DrawerStore.
+	 */
 	onRedeemSticker(): void;
 }
 
@@ -101,7 +110,8 @@ async function _initializeDrawerContent(store: DrawerStore) {
 }
 
 /**
- * Toggle the shell drawer, initializing the state when opening or resetting it when closing.
+ * Toggle the shell drawer, initializing the state when opening or resetting it
+ * when closing.
  */
 export function toggleShellDrawer(store: DrawerStore) {
 	store.isDrawerOpen = !store.isDrawerOpen;
@@ -144,7 +154,8 @@ export function setDrawerStoreActiveItem(
 }
 
 /**
- * Removes and ghost elements from the document body, and sets 'store.placedItem' as the 'item' parameter.
+ * Removes and ghost elements from the document body, and sets
+ * 'store.placedItem' as the 'item' parameter.
  */
 export function assignDrawerStoreItem(
 	store: DrawerStore,
@@ -194,7 +205,8 @@ function _destroyDrawerStoreGhost(store: DrawerStore) {
 }
 
 /**
- * Create the ghost item and append it to the document body - updating dragging state and updating the ghost element position.
+ * Create the ghost item and append it to the document body - updating dragging
+ * state and updating the ghost element position.
  */
 function _createGhostSticker(store: DrawerStore, event: MouseEvent | TouchEvent) {
 	if (!store.sticker) {
@@ -220,7 +232,8 @@ function _createGhostSticker(store: DrawerStore, event: MouseEvent | TouchEvent)
 }
 
 /**
- * This gets triggered through '_onDragItem' to calculate the position of the ghost element.
+ * This gets triggered through '_onDragItem' to calculate the position of the
+ * ghost element.
  */
 function _updateGhostPosition(store: DrawerStore, event: MouseEvent | TouchEvent) {
 	store._waitingForFrame = false;
@@ -229,26 +242,26 @@ function _updateGhostPosition(store: DrawerStore, event: MouseEvent | TouchEvent
 		return;
 	}
 
-	let requiredEvent;
-	if (event instanceof MouseEvent) {
-		requiredEvent = event;
-	}
-
-	if (event instanceof TouchEvent) {
-		requiredEvent = event.changedTouches[0];
-	}
-
-	if (!requiredEvent) {
+	const pointer = _getPointerPosition(event);
+	if (!pointer) {
 		return;
 	}
 
-	store.ghost.style.left = `${requiredEvent.pageX - store.ghost.clientWidth / 2}px`;
-	store.ghost.style.top = `${requiredEvent.pageY - store.ghost.clientHeight / 2}px`;
+	store.ghost.style.left = `${pointer.x - store.ghost.clientWidth / 2}px`;
+	store.ghost.style.top = `${pointer.y - store.ghost.clientHeight / 2}px`;
 
-	if (requiredEvent.clientY > window.innerHeight - 64) {
+	if (pointer.clientY > window.innerHeight - 64) {
 		store.isHoveringDrawer = true;
 	} else {
 		store.isHoveringDrawer = false;
+	}
+
+	const layer = store.activeLayer;
+	const target = getCollidingStickerTarget(layer, pointer.x, pointer.y);
+	if (target && !store.isHoveringDrawer) {
+		layer.hoveredTarget = target;
+	} else if (layer.hoveredTarget) {
+		layer.hoveredTarget = null;
 	}
 }
 
@@ -272,47 +285,22 @@ const _onPlaceItem = (store: DrawerStore) => (event: MouseEvent | TouchEvent) =>
 		return;
 	}
 
-	let clientX: number | null = null;
-	let clientY: number | null = null;
-
-	if (event instanceof MouseEvent) {
-		clientX = event.clientX;
-		clientY = event.clientY;
-	}
-	if (event instanceof TouchEvent) {
-		clientX = event.changedTouches[0].clientX;
-		clientY = event.changedTouches[0].clientY;
-	}
-
-	if (clientX === null || clientY === null) {
+	const pointer = _getPointerPosition(event);
+	if (!pointer) {
 		return;
 	}
 
-	let shouldContinue = true;
-	store.activeLayer.targets.forEach(i => {
-		if (!shouldContinue) {
-			return;
-		}
-
-		// JODO: Make better
-		const { x, y, width, height } = i.$el.getBoundingClientRect();
-
-		if (
-			clientX! - x < width &&
-			clientY! - y < height &&
-			clientX! - x > 0 &&
-			clientY! - y > 0 //
-		) {
-			i.onMouseUp();
-			shouldContinue = false;
-		}
-	});
+	const target = getCollidingStickerTarget(store.activeLayer, pointer.x, pointer.y);
+	if (target) {
+		target.onMouseUp();
+	}
 
 	_removeEventListeners(store);
 };
 
 /**
- * Set the 'isDragging' field of the DrawerStore, as well as add/remove classes from the document body.
+ * Set the 'isDragging' field of the DrawerStore, as well as add/remove classes
+ * from the document body.
  */
 function _setDraggingState(store: DrawerStore, isDragging: boolean) {
 	if (!store.ghost) {
@@ -329,7 +317,8 @@ function _setDraggingState(store: DrawerStore, isDragging: boolean) {
 }
 
 /**
- * Add the required 'mouse[move/up]' and 'touch[move/end]' event listeners to the window to handle ghost element placement.
+ * Add the required 'mouse[move/up]' and 'touch[move/end]' event listeners to
+ * the window to handle ghost element placement.
  */
 function _addEventListeners(
 	store: DrawerStore,
@@ -354,7 +343,8 @@ function _addEventListeners(
 }
 
 /**
- * Remove any event listeners that were added to the window to handle the ghost element movement.
+ * Remove any event listeners that were added to the window to handle the ghost
+ * element movement.
  */
 function _removeEventListeners(store: DrawerStore) {
 	_setDraggingState(store, false);
@@ -379,4 +369,15 @@ function _removeEventListeners(store: DrawerStore) {
 
 	store._onPointerMove = null;
 	store._onPointerUp = null;
+}
+
+function _getPointerPosition(event: MouseEvent | TouchEvent) {
+	if (!(event instanceof MouseEvent) && !(event instanceof TouchEvent)) {
+		return null;
+	}
+
+	const eventPointer = event instanceof TouchEvent ? event.changedTouches[0] : event;
+	const { pageX, pageY, clientX, clientY } = eventPointer;
+
+	return { x: pageX, y: pageY, clientX, clientY };
 }

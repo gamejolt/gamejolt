@@ -2,7 +2,7 @@
 
 <template>
 	<div v-app-observe-dimensions="onDimensionsChange" class="-container">
-		<svg v-if="width > 0" :viewBox="viewbox" xmlns="http://www.w3.org/2000/svg">
+		<svg v-if="width > 0" :key="regenKey" :viewBox="viewbox" xmlns="http://www.w3.org/2000/svg">
 			<!--
 			This creates a mask that we use to punch out the targets from the
 			black overlay. We set the key to the "viewbox" so that we
@@ -10,16 +10,33 @@
 			the page change. Chances are that new content has loaded in or
 			shifted the targets around.
 			-->
-			<mask id="myMask" :key="viewbox">
+			<mask id="myMask">
 				<rect x="0" y="0" :width="width" :height="height" fill="white" />
 				<app-sticker-layer-placement-mask-item
 					v-for="(target, i) of layer.targets"
 					:key="i"
 					:target="target"
+					:layer="layer"
+					as-mask
 				/>
 			</mask>
 
-			<rect x="0" y="0" :width="width" :height="height" mask="url(#myMask)" fill="#888" />
+			<rect
+				x="0"
+				y="0"
+				:width="width"
+				:height="height"
+				mask="url(#myMask)"
+				fill="#888"
+				opacity="0.5"
+			/>
+
+			<app-sticker-layer-placement-mask-item
+				v-for="(target, i) of layer.targets"
+				:key="i"
+				:target="target"
+				:layer="layer"
+			/>
 		</svg>
 	</div>
 </template>
@@ -33,7 +50,6 @@
 	right: 0
 	bottom: 0
 	left: 0
-	opacity: 0.5
 	// DODO: JODO: Do better
 	z-index: $zindex-shell-drawer - 2
 </style>

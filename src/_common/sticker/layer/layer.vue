@@ -2,7 +2,7 @@
 
 <template>
 	<div class="-layer">
-		<app-sticker-layer-placement-mask v-if="isShowingMask" />
+		<app-sticker-layer-placement-mask v-if="isShowingMask" :layer="layer" />
 		<slot />
 	</div>
 </template>

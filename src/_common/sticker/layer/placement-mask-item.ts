@@ -1,10 +1,8 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { findVueParent, propRequired } from '../../../utils/vue';
-import { Scroll } from '../../scroll/scroll.service';
-import AppScrollScrollerTS from '../../scroll/scroller/scroller';
-import AppScrollScroller from '../../scroll/scroller/scroller.vue';
+import { propOptional, propRequired } from '../../../utils/vue';
 import AppStickerTarget from '../target/target';
+import { getRectForStickerTarget, StickerLayerController } from './layer-controller';
 
 // How much extra padding (in px) should we put around each target for the
 // cutout that we make?
@@ -14,31 +12,32 @@ const TargetHPadding = 8;
 @Component({})
 export default class AppStickerLayerPlacementMaskItem extends Vue {
 	@Prop(propRequired()) target!: AppStickerTarget;
+	@Prop(propRequired(StickerLayerController)) layer!: StickerLayerController;
+	@Prop(propOptional(Boolean, false)) asMask!: boolean;
 
 	x = 0;
 	y = 0;
 	width = 0;
 	height = 0;
 
+	get classes() {
+		return this.asMask
+			? ['-mask']
+			: ['-rect', this.layer.hoveredTarget === this.target && '-rect-hovered'];
+	}
+
 	created() {
-		// We only pull once and then cache. This should get recalculated when
-		// the dimensions of the whole placement-mask change.
-		const { x, y, width, height } = this.target.$el.getBoundingClientRect();
+		const rect = getRectForStickerTarget(this.layer, this.target);
+		if (!rect) {
+			if (GJ_BUILD_TYPE === 'development') {
+				console.error(`Couldn't find rect for target!`, this.target);
+			}
+			return;
+		}
 
-		// We want to pull scroll information from the scroller if this layer
-		// sits within one.
-		const scrollElement =
-			findVueParent<AppScrollScrollerTS>(this, AppScrollScroller)?.scrollElement ?? undefined;
-
-		// The scroll functions will either work on the scroller, or if
-		// undefined is passed in it will pull from the main document. We need
-		// to subtract this scroll distance since getBoundingClientRect()
-		// returns x/y from the left/top of the scroll context.
-		const xRemove = Scroll.getScrollLeft(scrollElement);
-		const yRemove = Scroll.getScrollTop(scrollElement);
-
-		this.x = x + xRemove - TargetHPadding;
-		this.y = y + yRemove - TargetVPadding;
+		const { x, y, width, height } = rect;
+		this.x = x - TargetHPadding;
+		this.y = y - TargetVPadding;
 		this.width = width + TargetHPadding * 2;
 		this.height = height + TargetVPadding * 2;
 	}

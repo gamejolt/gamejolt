@@ -4,7 +4,14 @@
 	<div class="-ghost" :class="itemClasses" @click.stop>
 		<transition name="-fade">
 			<div v-if="shouldShowStickerControls" class="-controls" :style="controlsStyling">
-				<app-button icon="check" primary solid sparse @click.capture="onConfirmPlacement" />
+				<app-button
+					icon="check"
+					primary
+					solid
+					sparse
+					circle
+					@click.capture="onConfirmPlacement"
+				/>
 			</div>
 		</transition>
 		<div class="-img-outer" @mousedown="onStartDrag" @touchstart="onStartDrag">

@@ -1,7 +1,11 @@
 import Vue from 'vue';
-import { Component, Inject } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
+import { findVueParent, propRequired } from '../../../utils/vue';
 import { AppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
-import { StickerLayerController, StickerLayerKey } from './layer-controller';
+import { Scroll } from '../../scroll/scroll.service';
+import AppScrollScrollerTS from '../../scroll/scroller/scroller';
+import AppScrollScroller from '../../scroll/scroller/scroller.vue';
+import { calculateStickerTargetRects, StickerLayerController } from './layer-controller';
 import AppStickerLayerPlacementMaskItem from './placement-mask-item.vue';
 
 @Component({
@@ -13,8 +17,9 @@ import AppStickerLayerPlacementMaskItem from './placement-mask-item.vue';
 	},
 })
 export default class AppStickerLayerPlacementMask extends Vue {
-	@Inject(StickerLayerKey) layer!: StickerLayerController;
+	@Prop(propRequired(StickerLayerController)) layer!: StickerLayerController;
 
+	regenKey = 0;
 	private width = 0;
 	private height = 0;
 
@@ -27,7 +32,23 @@ export default class AppStickerLayerPlacementMask extends Vue {
 			contentRect: { width, height },
 		},
 	]: ResizeObserverEntry[]) {
+		// When dimensions of the page change we want to recalculate everything.
+		// Incrementing the key will ensure that this component and all
+		// sub-components will properly rerender from new data.
+		++this.regenKey;
 		this.width = width;
 		this.height = height;
+
+		// We want to pull scroll information from the scroller if this layer
+		// sits within one.
+		const scrollElement =
+			findVueParent<AppScrollScrollerTS>(this, AppScrollScroller)?.scrollElement ?? undefined;
+
+		// The scroll functions will either work on the scroller, or if
+		// undefined is passed in it will pull from the main document.
+		const scrollLeft = Scroll.getScrollLeft(scrollElement);
+		const scrollTop = Scroll.getScrollTop(scrollElement);
+
+		calculateStickerTargetRects(this.layer, scrollLeft, scrollTop);
 	}
 }
