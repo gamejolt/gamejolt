@@ -67,7 +67,7 @@ export default class AppChatUserListItem extends Vue {
 	get title() {
 		return this.item instanceof ChatUser
 			? this.item.display_name
-			: getChatRoomTitle(this.item, this.chat);
+			: getChatRoomTitle(this.item);
 	}
 
 	get meta() {
