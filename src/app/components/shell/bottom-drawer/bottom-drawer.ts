@@ -13,7 +13,6 @@ import AppShellBottomDrawerItem from './item/item.vue';
 
 @Component({
 	components: {
-		// draggable,
 		AppScrollScroller,
 		AppStickerCard,
 		AppSticker,
@@ -43,13 +42,21 @@ export default class AppShellBottomDrawer extends Vue implements StickableTarget
 
 	private get drawerBottom() {
 		if (this.drawerStore.placedItem || !this.drawerStore.isDrawerOpen) {
+			// Drawer item is placed on a valid target - hide drawer.
 			return -this.drawerHeight;
 		}
 
 		if (this.drawerStore.isDragging) {
-			return -this.drawerHeight + 48;
+			if (this.drawerStore.hoveringDrawer) {
+				// Drawer item is being hovered over drawer - shift drawer up slightly higher.
+				return -this.drawerHeight + 64;
+			}
+
+			// Drawer item is being dragged away from the drawer - show top-half of first sticker row.
+			return -this.drawerHeight + 40;
 		}
 
+		// Fully show drawer.
 		return 0;
 	}
 

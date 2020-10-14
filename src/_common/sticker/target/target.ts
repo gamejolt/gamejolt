@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit, Inject, Prop } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../utils/vue';
+import { propOptional } from '../../../utils/vue';
 import {
 	assignDrawerStoreItem,
 	DrawerStore,
@@ -25,8 +25,8 @@ import AppSticker from '../sticker.vue';
 export default class AppStickerTarget extends Vue implements StickableTarget {
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 	@Inject(StickerLayerKey) layer!: StickerLayerController;
-
-	@Prop(propRequired(Array)) stickers!: StickerPlacement[];
+	// JODO: does this make sense?
+	@Prop(propOptional(Array, () => [])) stickers!: StickerPlacement[];
 	// JODO: make work
 	// @Prop(propRequired(Model)) model!: Model;
 	@Prop(propOptional(Boolean, false)) showStickers!: boolean;

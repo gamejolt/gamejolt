@@ -34,6 +34,6 @@
 	bottom: 0
 	left: 0
 	opacity: 0.5
-	// DODO: Do better
-	z-index: $zindex-shell-drawer - 1
+	// DODO: JODO: Do better
+	z-index: $zindex-shell-drawer - 2
 </style>

@@ -26,6 +26,7 @@ export class DrawerStore {
 	isDrawerOpen = false;
 	isDragging = false;
 	hasValidTarget = false;
+	hoveringDrawer = false;
 
 	_waitingForFrame = false;
 	_onPointerMove: ((event: MouseEvent | TouchEvent) => void) | null = null;
@@ -51,6 +52,7 @@ export class DrawerStore {
 		this.isDrawerOpen = false;
 		// this.isDragging = false;
 		this.hasValidTarget = false;
+		this.hoveringDrawer = false;
 
 		this._waitingForFrame = false;
 		// this._onPointerMove = null;
@@ -242,6 +244,12 @@ function _updateGhostPosition(store: DrawerStore, event: MouseEvent | TouchEvent
 
 	store.ghost.style.left = `${requiredEvent.pageX - store.ghost.clientWidth / 2}px`;
 	store.ghost.style.top = `${requiredEvent.pageY - store.ghost.clientHeight / 2}px`;
+
+	if (requiredEvent.clientY > window.innerHeight - 64) {
+		store.hoveringDrawer = true;
+	} else {
+		store.hoveringDrawer = false;
+	}
 }
 
 /**

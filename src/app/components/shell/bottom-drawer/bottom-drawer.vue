@@ -37,6 +37,11 @@
 @import '~styles/variables'
 @import '~styles-lib/mixins'
 
+$-item-size = 64px
+$-drawer-padding = 8px
+$-grid-margin = 4px
+$-min-drawer-height = ($-drawer-padding + $-grid-margin) * 2 + $-item-size
+
 .-controls
 	display: flex
 	position: absolute
@@ -56,7 +61,7 @@
 	width: 100%
 	margin: 0 auto
 	height: 100%
-	padding: 8px
+	padding: $-drawer-padding
 	border-top-left-radius: $border-radius-large
 	border-top-right-radius: $border-radius-large
 
@@ -65,13 +70,15 @@
 
 	&-inner
 		display: grid
-		grid-template-columns: repeat(auto-fill, minmax(64px, 1fr))
+		grid-template-columns: repeat(auto-fill, minmax($-item-size, 1fr))
 		grid-gap: 8px
 		justify-items: center
+		margin: $-grid-margin 0
 
 #shell-bottom-drawer
 	position: fixed
 	max-height: 25vh
+	min-height: $-min-drawer-height
 	left: 0
 	right: 0
 	bottom: 0
