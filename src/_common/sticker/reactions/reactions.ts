@@ -1,11 +1,11 @@
 import Vue from 'vue';
-import { Component, Inject, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop, Watch } from 'vue-property-decorator';
 import { numberSort } from '../../../utils/array';
 import { propRequired } from '../../../utils/vue';
 import { DrawerStore, DrawerStoreKey } from '../../drawer/drawer-store';
 import AppStickerReactionItem from './_item/item.vue';
 
-type StickerCount = {
+type ReactionCount = {
 	stickerId: number;
 	imgUrl: string;
 	count: number;
@@ -20,9 +20,15 @@ export default class AppStickerReactions extends Vue {
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 	@Prop(propRequired(Object)) referenceItem!: Record<'sticker_counts', string>;
 
-	reactionsList: StickerCount[] = [];
+	reactionsList: ReactionCount[] = [];
 
 	mounted() {
+		this.onStickersChange();
+	}
+
+	@Watch('stickers')
+	onStickersChange() {
+		this.reactionsList = [];
 		if (!this.referenceItem.sticker_counts) {
 			return;
 		}

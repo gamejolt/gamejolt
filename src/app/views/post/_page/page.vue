@@ -122,7 +122,9 @@
 						<br />
 					</app-event-item-controls-overlay>
 
-					<app-event-item-controls-overlay v-if="communities.length">
+					<app-event-item-controls-overlay
+						v-if="communities.length || post.sticker_counts"
+					>
 						<app-scroll-scroller class="-communities" horizontal thin>
 							<app-community-pill
 								v-for="postCommunity of communities"
@@ -145,7 +147,9 @@
 							</div>
 						</template>
 
-						<app-sticker-reactions :reference-item="post" />
+						<app-sticker-reactions v-if="post.sticker_counts" :reference-item="post" />
+
+						<br />
 					</app-event-item-controls-overlay>
 
 					<app-event-item-controls

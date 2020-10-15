@@ -16,5 +16,5 @@
 .sticker-reactions
 	display: flex
 	flex-wrap: wrap
-	margin-bottom: 4px
+	margin: 4px 0
 </style>

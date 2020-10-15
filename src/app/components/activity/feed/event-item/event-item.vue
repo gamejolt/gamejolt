@@ -160,7 +160,7 @@
 						<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
 					</div>
 
-					<div v-if="shouldShowCommunities">
+					<div v-if="shouldShowCommunities" class="-controls-buffer">
 						<app-scroll-scroller class="-communities" horizontal>
 							<app-community-pill
 								v-for="postCommunity of communities"
@@ -170,7 +170,11 @@
 						</app-scroll-scroller>
 					</div>
 
-					<app-sticker-reactions :reference-item="post" />
+					<app-sticker-reactions
+						v-if="post.sticker_counts"
+						class="-controls-buffer"
+						:reference-item="post"
+					/>
 				</app-event-item-controls-overlay>
 			</template>
 
