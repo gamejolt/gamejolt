@@ -22,6 +22,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
 import { SettingAlwaysShowStickers } from '../../../../../_common/settings/settings.service';
+import AppStickerReactions from '../../../../../_common/sticker/reactions/reactions.vue';
 import AppStickerTargetTS from '../../../../../_common/sticker/target/target';
 import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
@@ -67,6 +68,7 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 		AppUserVerifiedTick,
 		AppActivityFeedEventItemBlocked,
 		AppStickerTarget,
+		AppStickerReactions,
 		AppScrollScroller,
 	},
 	filters: {

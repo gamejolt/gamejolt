@@ -172,6 +172,8 @@
 				</app-event-item-controls-overlay>
 			</template>
 
+			<app-sticker-reactions :reference-item="post" />
+
 			<app-event-item-controls
 				class="-controls"
 				:class="{

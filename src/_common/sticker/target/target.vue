@@ -1,11 +1,7 @@
 <script lang="ts" src="./target"></script>
 
 <template>
-	<div
-		class="sticker-target"
-		:class="{ 'sticker-event-listening': drawerStore.isDrawerOpen }"
-		@mouseup="onMouseUp"
-	>
+	<div class="sticker-target" @mouseup="onMouseUp">
 		<transition name="-fade">
 			<div v-if="showStickers">
 				<app-sticker
@@ -42,11 +38,6 @@
 	&-border
 		position: absolute
 		z-index: -1
-
-.sticker-event-listening
-	rounded-corners-lg()
-	// JODO: Probably only needs to be higher than 2, but I haven't checked.
-	z-index: 10
 
 .-sticker-animate
 	animation-name: sticker-animate-in
