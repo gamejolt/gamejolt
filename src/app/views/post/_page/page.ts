@@ -20,6 +20,7 @@ import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import { SettingAlwaysShowStickers } from '../../../../_common/settings/settings.service';
 import AppSketchfabEmbed from '../../../../_common/sketchfab/embed/embed.vue';
+import AppStickerReactions from '../../../../_common/sticker/reactions/reactions.vue';
 import AppStickerTargetTS from '../../../../_common/sticker/target/target';
 import AppStickerTarget from '../../../../_common/sticker/target/target.vue';
 import { AppState, AppStore } from '../../../../_common/store/app-store';
@@ -53,6 +54,7 @@ import AppPollVoting from '../../../components/poll/voting/voting.vue';
 		AppUserFollowWidget,
 		AppGameListItem,
 		AppStickerTarget,
+		AppStickerReactions,
 		AppMediaItemBackdrop,
 		AppMediaItemPost,
 		AppScrollScroller,

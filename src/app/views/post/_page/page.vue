@@ -145,7 +145,7 @@
 							</div>
 						</template>
 
-						<br />
+						<app-sticker-reactions :reference-item="post" />
 					</app-event-item-controls-overlay>
 
 					<app-event-item-controls

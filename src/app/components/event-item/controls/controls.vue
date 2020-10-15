@@ -1,7 +1,11 @@
+<script lang="ts" src="./controls"></script>
+
 <template>
 	<div>
 		<app-event-item-controls-overlay class="event-item-controls" end>
 			<template v-if="post">
+				<div style="margin-top: 16px;" />
+
 				<app-event-item-controls-fireside-post
 					:post="post"
 					:show-comments-button="!showCommentFeed"
@@ -46,5 +50,3 @@
 		</span>
 	</div>
 </template>
-
-<script lang="ts" src="./controls"></script>

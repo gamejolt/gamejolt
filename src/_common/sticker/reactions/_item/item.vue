@@ -3,7 +3,7 @@
 <template>
 	<div class="-item">
 		<span class="-sticker">
-			<img :src="sticker.img_url" />
+			<img :src="sticker.img_url" @dragstart.prevent />
 		</span>
 		<span class="-count">
 			{{ displayCount }}
@@ -25,6 +25,7 @@
 	padding: 0px 4px
 	margin-right: 8px
 	margin-bottom: 4px
+	user-select: none
 
 .-sticker
 	width: 20px
