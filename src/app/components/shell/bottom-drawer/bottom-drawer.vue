@@ -45,9 +45,9 @@ $-min-drawer-height = ($-drawer-padding + $-grid-margin) * 2 + $-item-size
 
 	&-inner
 		display: grid
-		grid-template-columns: repeat(auto-fill, minmax($-item-size, 1fr))
+		grid-template-columns: repeat(auto-fit, $-item-size)
 		grid-gap: 8px
-		justify-items: center
+		justify-content: center
 		margin: $-grid-margin 0
 
 #shell-bottom-drawer
