@@ -6,12 +6,14 @@ import {
 	registerStickerLayer,
 	unregisterStickerLayer,
 } from '../../drawer/drawer-store';
+import AppStickerDrawer from '../drawer/drawer.vue';
 import { StickerLayerController, StickerLayerKey } from './layer-controller';
 import AppStickerLayerPlacementMask from './placement-mask.vue';
 
 @Component({
 	components: {
 		AppStickerLayerPlacementMask,
+		AppStickerDrawer,
 	},
 })
 export default class AppStickerLayer extends Vue {

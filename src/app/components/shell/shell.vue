@@ -30,7 +30,6 @@
 		<app-shell-top-nav v-if="hasTopBar" />
 		<app-shell-cbar />
 		<app-shell-sidebar v-if="hasSidebar" />
-		<app-shell-bottom-drawer />
 		<app-shell-banner v-if="!isShellHidden" />
 
 		<app-chat-windows v-if="chat" />

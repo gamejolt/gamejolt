@@ -1,7 +1,7 @@
-<script lang="ts" src="./bottom-drawer"></script>
+<script lang="ts" src="./drawer"></script>
 
 <template>
-	<div id="shell-bottom-drawer" :style="drawerStyling">
+	<div class="sticker-drawer" :style="drawerStyling">
 		<div class="-drawer">
 			<app-scroll-scroller class="-scroller">
 				<div class="-drawer-inner">
@@ -27,6 +27,18 @@ $-drawer-padding = 8px
 $-grid-margin = 4px
 $-min-drawer-height = ($-drawer-padding + $-grid-margin) * 2 + $-item-size
 
+.sticker-drawer
+	position: fixed
+	max-height: 25vh
+	min-height: $-min-drawer-height
+	left: 0
+	right: 0
+	bottom: 0
+	z-index: $zindex-shell-drawer
+	transition: bottom 250ms $strong-ease-out
+	display: flex
+	justify-content: center
+
 .-scroller
 	height: 100%
 
@@ -49,16 +61,4 @@ $-min-drawer-height = ($-drawer-padding + $-grid-margin) * 2 + $-item-size
 		grid-gap: 8px
 		justify-content: center
 		margin: $-grid-margin 0
-
-#shell-bottom-drawer
-	position: fixed
-	max-height: 25vh
-	min-height: $-min-drawer-height
-	left: 0
-	right: 0
-	bottom: 0
-	z-index: $zindex-shell-drawer
-	transition: bottom 250ms $strong-ease-out
-	display: flex
-	justify-content: center
 </style>

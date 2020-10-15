@@ -11,10 +11,6 @@ html
 body
 	change-bg('darkest', true)
 
-.grabbing
-	cursor: grabbing !important
-	user-select: none !important
-
 #shell-top-nav
 	top: 0
 	// If we used `right: 0` instead, the top nav would flex off the screen if
@@ -88,7 +84,7 @@ body
 		#shell-body
 			padding-left: $shell-cbar-width
 
-		#shell-bottom-drawer
+		.sticker-drawer
 			left: $shell-cbar-width
 
 	&.has-cbar

@@ -1,13 +1,9 @@
 import Vue from 'vue';
 import { Component, Inject, Watch } from 'vue-property-decorator';
-import {
-	DrawerStore,
-	DrawerStoreKey,
-	setDrawerStoreHeight,
-} from '../../../../_common/drawer/drawer-store';
-import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
-import AppStickerCard from '../../../../_common/sticker/card/card.vue';
-import AppSticker from '../../../../_common/sticker/sticker.vue';
+import { DrawerStore, DrawerStoreKey, setDrawerStoreHeight } from '../../drawer/drawer-store';
+import AppScrollScroller from '../../scroll/scroller/scroller.vue';
+import AppStickerCard from '../card/card.vue';
+import AppSticker from '../sticker.vue';
 import AppShellBottomDrawerItem from './item/item.vue';
 
 @Component({
@@ -18,7 +14,7 @@ import AppShellBottomDrawerItem from './item/item.vue';
 		AppShellBottomDrawerItem,
 	},
 })
-export default class AppShellBottomDrawer extends Vue {
+export default class AppStickerDrawer extends Vue {
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 	private placeholderHeight = 100;
 
@@ -60,6 +56,8 @@ export default class AppShellBottomDrawer extends Vue {
 	}
 
 	mounted() {
+		// JODO: I'm not sure I like how this looks. Thinking I should add circular placeholders for stickers
+		// and only have the drawer be 1 row high until we get the proper placeholder height.
 		this.placeholderHeight = window.innerHeight * 0.25;
 	}
 

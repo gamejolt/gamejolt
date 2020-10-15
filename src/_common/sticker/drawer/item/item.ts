@@ -1,17 +1,17 @@
 import Vue from 'vue';
 import { Component, Inject, Prop } from 'vue-property-decorator';
-import { findRequiredVueParent, propOptional, propRequired } from '../../../../../utils/vue';
+import { findRequiredVueParent, propOptional, propRequired } from '../../../../utils/vue';
 import {
 	DrawerStore,
 	DrawerStoreKey,
 	setDrawerStoreActiveItem,
-} from '../../../../../_common/drawer/drawer-store';
-import AppScrollScrollerTS from '../../../../../_common/scroll/scroller/scroller';
-import AppScrollScroller from '../../../../../_common/scroll/scroller/scroller.vue';
-import { Sticker } from '../../../../../_common/sticker/sticker.model';
+} from '../../../drawer/drawer-store';
+import AppScrollScrollerTS from '../../../scroll/scroller/scroller';
+import AppScrollScroller from '../../../scroll/scroller/scroller.vue';
+import { Sticker } from '../../../sticker/sticker.model';
 
 @Component({})
-export default class AppShellBottomDrawerItem extends Vue {
+export default class AppStickerDrawerItem extends Vue {
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 
 	@Prop(propRequired(Sticker)) sticker!: Sticker;

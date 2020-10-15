@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../../utils/vue';
-import { DrawerStore, setDrawerStoreActiveItem } from '../../../../../_common/drawer/drawer-store';
-import { Sticker } from '../../../../../_common/sticker/sticker.model';
+import { propOptional, propRequired } from '../../../../utils/vue';
+import { DrawerStore, setDrawerStoreActiveItem } from '../../../drawer/drawer-store';
+import { Sticker } from '../../../sticker/sticker.model';
 
 @Component({})
-export default class ItemGhost extends Vue {
+export default class AppStickerDrawerGhost extends Vue {
 	@Prop(propRequired(DrawerStore)) drawerStore!: DrawerStore;
 	@Prop(propRequired(Sticker)) sticker!: Sticker;
 	@Prop(propOptional(Number, 64)) size!: number;

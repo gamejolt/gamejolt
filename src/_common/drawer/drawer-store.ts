@@ -1,8 +1,8 @@
-import ItemGhostTS from '../../app/components/shell/bottom-drawer/_ghost/ghost';
-import ItemGhost from '../../app/components/shell/bottom-drawer/_ghost/ghost.vue';
 import { StickerCount } from '../../app/views/dashboard/stickers/stickers';
 import { arrayRemove, numberSort } from '../../utils/array';
 import { Api } from '../api/api.service';
+import AppStickerDrawerGhostTS from '../sticker/drawer/_ghost/ghost';
+import AppStickerDrawerGhost from '../sticker/drawer/_ghost/ghost.vue';
 import {
 	getCollidingStickerTarget,
 	StickerLayerController,
@@ -220,14 +220,15 @@ function _createGhostSticker(store: DrawerStore, event: MouseEvent | TouchEvent)
 	}
 
 	if (!store.ghost) {
-		const component = new ItemGhost({
+		const component = new AppStickerDrawerGhost({
 			propsData: {
 				drawerStore: store,
 				sticker: store.sticker,
 			},
-		}) as ItemGhostTS;
+		}) as AppStickerDrawerGhostTS;
 
 		const elem = document.createElement('div');
+		// JODO: Instead of appending to the body, we should have the ghost element be mounted to the active layer somehow.
 		document.body.appendChild(elem);
 		component.$mount(elem);
 		store.ghost = component.$el;
@@ -315,12 +316,6 @@ function _setDraggingState(store: DrawerStore, isDragging: boolean) {
 		store.isDragging = false;
 	} else {
 		store.isDragging = isDragging;
-	}
-
-	if (isDragging) {
-		document.body.classList.add('grabbing');
-	} else {
-		document.body.classList.remove('grabbing');
 	}
 }
 

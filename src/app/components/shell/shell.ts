@@ -21,7 +21,6 @@ import { BannerModule, BannerStore, Store } from '../../store/index';
 import { ChatClient, ChatKey, setChatFocused } from '../chat/client';
 import AppChatWindows from '../chat/windows/windows.vue';
 import AppShellBody from './body/body.vue';
-import AppShellBottomDrawer from './bottom-drawer/bottom-drawer.vue';
 import AppShellCbar from './cbar/cbar.vue';
 import AppShellHotBottom from './hot-bottom/hot-bottom.vue';
 import './shell.styl';
@@ -37,7 +36,6 @@ const components: any = {
 	AppMinbar,
 	AppShellBanner: () => import(/* webpackChunkName: "shell" */ './banner/banner.vue'),
 	AppChatWindows,
-	AppShellBottomDrawer,
 	AppStickerLayer,
 };
 
