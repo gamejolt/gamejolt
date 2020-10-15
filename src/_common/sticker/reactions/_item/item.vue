@@ -3,7 +3,7 @@
 <template>
 	<div class="-item">
 		<span class="-sticker">
-			<img :src="sticker.img_url" @dragstart.prevent />
+			<img :src="imgUrl" @dragstart.prevent />
 		</span>
 		<span class="-count">
 			{{ displayCount }}

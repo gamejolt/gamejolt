@@ -83,6 +83,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	poll!: Poll | null;
 	platforms_published_to: FiresidePostPublishedPlatform[] = [];
 	stickers: StickerPlacement[] = [];
+	sticker_counts!: string;
 
 	// Used for forms and saving.
 	key_group_ids: number[] = [];

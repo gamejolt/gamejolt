@@ -2,8 +2,12 @@
 
 <template>
 	<div class="sticker-reactions">
-		<template v-for="{ sticker, count } in reactionsList">
-			<app-sticker-reaction-item :key="sticker.id" :sticker="sticker" :count="count" />
+		<template v-for="reaction in reactionsList">
+			<app-sticker-reaction-item
+				:key="reaction.stickerId"
+				:img-url="reaction.imgUrl"
+				:count="reaction.count"
+			/>
 		</template>
 	</div>
 </template>
