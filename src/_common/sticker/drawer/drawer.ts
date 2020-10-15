@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import { Component, Inject, Watch } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import { Store } from '../../../app/store/index';
 import { DrawerStore, DrawerStoreKey, setDrawerStoreHeight } from '../../drawer/drawer-store';
 import AppScrollScroller from '../../scroll/scroller/scroller.vue';
 import AppStickerCard from '../card/card.vue';
@@ -16,6 +18,8 @@ import AppShellBottomDrawerItem from './item/item.vue';
 })
 export default class AppStickerDrawer extends Vue {
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
+	@State hasCbar!: Store['hasCbar'];
+
 	private placeholderHeight = 100;
 
 	$el!: HTMLDivElement;

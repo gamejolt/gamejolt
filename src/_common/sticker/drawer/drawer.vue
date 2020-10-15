@@ -1,8 +1,8 @@
 <script lang="ts" src="./drawer"></script>
 
 <template>
-	<div class="sticker-drawer" :style="drawerStyling">
-		<div class="-drawer">
+	<div class="sticker-drawer" :class="{ '-cbar-shifted': hasCbar }" :style="drawerStyling">
+		<div class="-drawer-outer">
 			<app-scroll-scroller class="-scroller">
 				<div class="-drawer-inner">
 					<app-shell-bottom-drawer-item
@@ -39,21 +39,25 @@ $-min-drawer-height = ($-drawer-padding + $-grid-margin) * 2 + $-item-size
 	display: flex
 	justify-content: center
 
+	&.-cbar-shifted
+		left: $shell-cbar-width
+
 .-scroller
 	height: 100%
 
 .-drawer
-	elevate-2()
-	change-bg('bg')
-	width: 100%
-	margin: 0 auto
-	height: 100%
-	padding: $-drawer-padding
-	border-top-left-radius: $border-radius-large
-	border-top-right-radius: $border-radius-large
+	&-outer
+		elevate-2()
+		change-bg('bg')
+		width: 100%
+		margin: 0 auto
+		height: 100%
+		padding: $-drawer-padding
+		border-top-left-radius: $border-radius-large
+		border-top-right-radius: $border-radius-large
 
-	@media $media-sm-up
-		width: calc(100% - 32px)
+		@media $media-sm-up
+			width: calc(100% - 32px)
 
 	&-inner
 		display: grid
