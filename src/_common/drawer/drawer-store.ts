@@ -299,6 +299,8 @@ const _onPlaceItem = (store: DrawerStore) => (event: MouseEvent | TouchEvent) =>
 	const target = getCollidingStickerTarget(store.activeLayer, pointer.x, pointer.y);
 	if (target) {
 		target.onPlaceDrawerSticker();
+	} else if (store.sticker) {
+		alterDrawerStoreItemCount(store, store.sticker, true);
 	}
 
 	_removeEventListeners(store);
