@@ -46,12 +46,10 @@ export default class ItemGhost extends Vue {
 
 		if (this.drawerStore.isDragging) {
 			classes.push('-dragging');
-		} else {
-			if (this.drawerStore.targetComponent) {
-				classes.push('-uncommitted');
-			} else {
-				classes.push('-faded');
-			}
+		}
+
+		if (this.drawerStore.targetComponent) {
+			classes.push('-uncommitted');
 		}
 
 		return classes;

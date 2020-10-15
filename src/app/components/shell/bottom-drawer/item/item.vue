@@ -39,6 +39,7 @@
 	user-drag: none
 	user-select: none
 	touch-action: none
+	cursor: grab
 
 .-out-of-stock
 	filter: contrast(0)

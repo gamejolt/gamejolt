@@ -2,6 +2,16 @@
 
 <template>
 	<div class="-ghost" :class="itemClasses" @click.stop>
+		<div class="-img-outer" @mousedown="onStartDrag" @touchstart="onStartDrag">
+			<img
+				class="-img"
+				draggable="false"
+				style="user-drag: none"
+				:style="itemStyling"
+				:src="sticker.img_url"
+				@dragstart.prevent
+			/>
+		</div>
 		<transition name="-fade">
 			<div v-if="shouldShowStickerControls" class="-controls" :style="controlsStyling">
 				<app-button
@@ -14,16 +24,6 @@
 				/>
 			</div>
 		</transition>
-		<div class="-img-outer" @mousedown="onStartDrag" @touchstart="onStartDrag">
-			<img
-				class="-img"
-				draggable="false"
-				style="user-drag: none"
-				:style="itemStyling"
-				:src="sticker.img_url"
-				@dragstart.prevent
-			/>
-		</div>
 	</div>
 </template>
 
@@ -48,11 +48,12 @@
 	align-items: center
 	position: absolute
 	top: calc(100% + 8px)
+	// JODO: z-index should be higher than ghost
 
 .-ghost
 	position: absolute
 	z-index: 2
-	cursor: pointer
+	cursor: grab
 	z-index: $zindex-shell-pane-under
 	touch-action: none
 
@@ -63,20 +64,16 @@
 		height: 100%
 		filter: drop-shadow(2px 2px 0 white) drop-shadow(-2px 2px 0 white) drop-shadow(2px -2px 0 white) drop-shadow(-2px -2px 0 white)
 
-// used for dragging stickers that are being placed through the drawer-store.
 .-dragging
 	filter: drop-shadow(4px 4px 5px black)
-	pointer-events: none
 	animation-name: sticker-dragging-rotate
 	animation-duration: 2s
 	animation-iteration-count: infinite
 	z-index: $zindex-shell-drawer !important
-	cursor: grabbing
 
-// used to show that a sticker is outside of a sticker-target area
-.-faded
-	.-img-outer
-		filter: grayscale(1) brightness(0.5)
+	// JODO: Doesn't work - browsers don't like when you try changing cursor styling during a drag.
+	&:hover
+		cursor: grabbing !important
 
 .-uncommitted
 	filter: drop-shadow(2px 2px 2.5px black)
