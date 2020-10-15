@@ -26,7 +26,7 @@ export default class AppStickerReactions extends Vue {
 		this.onStickersChange();
 	}
 
-	@Watch('stickers')
+	@Watch('referenceItem.sticker_counts')
 	onStickersChange() {
 		this.reactionsList = [];
 		if (!this.referenceItem.sticker_counts) {
