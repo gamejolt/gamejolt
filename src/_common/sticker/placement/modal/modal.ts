@@ -132,7 +132,7 @@ export default class AppStickerPlacementModal extends BaseModal {
 		);
 
 		if (result.success) {
-			const post = new FiresidePost(result.post);
+			const post = new FiresidePost(result.resource);
 			this.modal.resolve(post);
 		} else {
 			Growls.error(this.$gettext(`Failed to place sticker.`));
