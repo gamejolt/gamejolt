@@ -63,10 +63,6 @@ export default class AppShellBottomDrawer extends Vue {
 		this.placeholderHeight = window.innerHeight * 0.25;
 	}
 
-	onClickCancel() {
-		this.drawerStore.reset();
-	}
-
 	@Watch('drawerStore.drawerItems.length')
 	async onDrawerItemsChange() {
 		if (this.drawerStore.isDrawerOpen) {

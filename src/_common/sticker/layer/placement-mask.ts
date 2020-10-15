@@ -1,6 +1,7 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Inject, Prop } from 'vue-property-decorator';
 import { findVueParent, propRequired } from '../../../utils/vue';
+import { DrawerStore, DrawerStoreKey } from '../../drawer/drawer-store';
 import { AppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
 import { Scroll } from '../../scroll/scroll.service';
 import AppScrollScrollerTS from '../../scroll/scroller/scroller';
@@ -17,6 +18,7 @@ import AppStickerLayerPlacementMaskItem from './placement-mask-item.vue';
 	},
 })
 export default class AppStickerLayerPlacementMask extends Vue {
+	@Inject(DrawerStoreKey) drawer!: DrawerStore;
 	@Prop(propRequired(StickerLayerController)) layer!: StickerLayerController;
 
 	regenKey = 0;
@@ -34,7 +36,7 @@ export default class AppStickerLayerPlacementMask extends Vue {
 	]: ResizeObserverEntry[]) {
 		// When dimensions of the page change we want to recalculate everything.
 		// Incrementing the key will ensure that this component and all
-		// sub-components will properly rerender from new data.
+		// sub-components will properly re-render from new data.
 		++this.regenKey;
 		this.width = width;
 		this.height = height;
@@ -50,5 +52,9 @@ export default class AppStickerLayerPlacementMask extends Vue {
 		const scrollTop = Scroll.getScrollTop(scrollElement);
 
 		calculateStickerTargetRects(this.layer, scrollLeft, scrollTop);
+	}
+
+	onClickMask() {
+		this.drawer.reset();
 	}
 }
