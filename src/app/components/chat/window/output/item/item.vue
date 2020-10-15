@@ -118,7 +118,12 @@
 								You have been invited to a group.
 							</translate>
 						</p>
-						<app-button primary solid @click="acceptInvite(message.id)">
+						<app-button
+							:disabled="chat.currentUser && message.user.id === chat.currentUser.id"
+							primary
+							solid
+							@click="acceptInvite(message.id)"
+						>
 							<translate>Accept</translate>
 						</app-button>
 					</div>
