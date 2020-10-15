@@ -27,62 +27,30 @@ import AppEventItemControlsUserFollow from './user-follow/user-follow.vue';
 	},
 })
 export default class AppEventItemControls extends Vue {
-	@Prop(FiresidePost)
-	post?: FiresidePost;
-
-	@Prop(CommentVideo)
-	video?: CommentVideo;
-
-	@Prop(ActivityFeedView)
-	feed?: ActivityFeedView;
-
-	@Prop(ActivityFeedItem)
-	item?: ActivityFeedItem;
-
-	@Prop(Boolean)
-	shouldShowFollow?: boolean;
-
-	@Prop(Boolean)
-	showComments?: boolean;
-
+	@Prop(propOptional(FiresidePost)) post?: FiresidePost;
+	@Prop(propOptional(CommentVideo)) video?: CommentVideo;
+	@Prop(propOptional(ActivityFeedView)) feed?: ActivityFeedView;
+	@Prop(propOptional(ActivityFeedItem)) item?: ActivityFeedItem;
+	@Prop(propOptional(Boolean, false)) shouldShowFollow!: boolean;
+	@Prop(propOptional(Boolean, false)) showComments!: boolean;
 	@Prop(propOptional(Boolean, false)) showStickers!: boolean;
+	@Prop(propOptional(String, '')) eventLabel!: string;
 
-	@State
-	app!: Store['app'];
+	@State app!: Store['app'];
 
 	commentsCount = 0;
 	shouldShowFollowState = false;
 
-	@Emit('post-edit')
-	emitPostEdit() {}
-
-	@Emit('post-publish')
-	emitPostPublish() {}
-
-	@Emit('post-remove')
-	emitPostRemove() {}
-
-	@Emit('post-feature')
-	emitPostFeature(_community: Community) {}
-
-	@Emit('post-unfeature')
-	emitPostUnfeature(_community: Community) {}
-
-	@Emit('post-move-channel')
-	emitPostMoveChannel(_movedTo: CommunityChannel) {}
-
-	@Emit('post-reject')
-	emitPostReject(_community: Community) {}
-
-	@Emit('post-pin')
-	emitPostPin() {}
-
-	@Emit('post-unpin')
-	emitPostUnpin() {}
-
-	emitStickersVisibilityChange(visible: boolean) {
-		this.$emit('post-stickers-visibility-change', visible);
-	}
+	@Emit('post-edit') emitPostEdit() {}
+	@Emit('post-publish') emitPostPublish() {}
+	@Emit('post-remove') emitPostRemove() {}
+	@Emit('post-feature') emitPostFeature(_community: Community) {}
+	@Emit('post-unfeature') emitPostUnfeature(_community: Community) {}
+	@Emit('post-move-channel') emitPostMoveChannel(_movedTo: CommunityChannel) {}
+	@Emit('post-reject') emitPostReject(_community: Community) {}
+	@Emit('post-pin') emitPostPin() {}
+	@Emit('post-unpin') emitPostUnpin() {}
+	@Emit('post-stickers-visibility-change') emitStickersVisibilityChange(_visible: boolean) {}
 
 	created() {
 		// The 'feed' and 'item' props will be included when this is used in the

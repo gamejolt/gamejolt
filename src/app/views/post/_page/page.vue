@@ -153,6 +153,7 @@
 						show-comments
 						should-show-follow
 						:show-stickers="stickersVisible"
+						event-label="page"
 						@post-remove="onPostRemoved"
 						@post-publish="onPostPublished"
 						@post-stickers-visibility-change="onPostStickersVisibilityChange"

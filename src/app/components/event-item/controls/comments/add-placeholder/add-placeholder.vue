@@ -1,17 +1,19 @@
+<script lang="ts" src="./add-placeholder"></script>
+
 <template>
 	<div class="form-control -container" @click="onClick('')">
 		<div class="-placeholder">
 			<em>Leave a comment...</em>
 			<div class="-controls" @click.stop>
 				<app-jolticon
+					v-app-tooltip="$gettext('Insert GIF')"
 					class="-icon-btn"
 					icon="gif"
-					v-app-tooltip="$gettext('Insert Gif')"
 					@click.native="onClick('gif')"
 				/>
 				<span
-					:class="'emoji-button emoji emoji-' + emoji"
 					v-app-tooltip="$gettext('Insert Emoji')"
+					:class="'emoji-button emoji emoji-' + emoji"
 					@mouseenter="onMouseEnterEmoji"
 					@click="onClick('emoji')"
 				/>
@@ -21,8 +23,8 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-container
 	height: auto
@@ -36,7 +38,6 @@
 	white-space: nowrap
 	padding-bottom: ($grid-gutter-width / 10)
 	padding-top: ($grid-gutter-width / 10)
-
 	display: flex
 	align-items: center
 	justify-content: space-between
@@ -78,5 +79,3 @@
 	&:focus
 		outline: none
 </style>
-
-<script lang="ts" src="./add-placeholder"></script>

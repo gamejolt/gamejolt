@@ -1,3 +1,5 @@
+<script lang="ts" src="./stats"></script>
+
 <template>
 	<div v-if="shouldShowStats">
 		<translate
@@ -19,15 +21,13 @@
 		</translate>
 
 		<app-jolticon
-			class="hidden-xs"
-			icon="help-circle"
 			v-app-tooltip.touchable="
 				$gettext(
 					'An expand is some sort of interaction with your post. For example, playing a video post, or clicking into your post.'
 				)
 			"
+			class="hidden-xs"
+			icon="help-circle"
 		/>
 	</div>
 </template>
-
-<script lang="ts" src="./stats"></script>

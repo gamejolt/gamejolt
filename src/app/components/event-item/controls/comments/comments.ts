@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Component, Inject, Prop, Watch } from 'vue-property-decorator';
+import { propOptional, propRequired } from '../../../../../utils/vue';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import FormComment from '../../../../../_common/comment/add/add.vue';
@@ -16,6 +17,7 @@ import { CommentModal } from '../../../../../_common/comment/modal/modal.service
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Model } from '../../../../../_common/model/model.service';
 import { AppCommentWidgetLazy } from '../../../lazy';
+import { hasInlineCommentsSplitTest } from '../../../split-test/split-test-service';
 import AppEventItemControlsCommentsAddPlaceholder from './add-placeholder/add-placeholder.vue';
 
 @Component({
@@ -31,11 +33,9 @@ import AppEventItemControlsCommentsAddPlaceholder from './add-placeholder/add-pl
 export default class AppEventItemControlsComments extends Vue {
 	@Inject(CommentStoreManagerKey) commentManager!: CommentStoreManager;
 
-	@Prop(Model)
-	model!: Model;
-
-	@Prop(Boolean)
-	showFeed?: boolean;
+	@Prop(propRequired(Model)) model!: Model;
+	@Prop(propOptional(Boolean, false)) showFeed!: boolean;
+	@Prop(propRequired(String)) eventLabel!: string;
 
 	commentStore: CommentStoreModel | null = null;
 	clickedComment = false;
@@ -70,6 +70,9 @@ export default class AppEventItemControlsComments extends Vue {
 	}
 
 	get shouldShowInlineComment() {
+		if (!hasInlineCommentsSplitTest()) {
+			return false;
+		}
 		if (this.model instanceof FiresidePost && !this.model.canComment) {
 			return false;
 		}
@@ -104,12 +107,13 @@ export default class AppEventItemControlsComments extends Vue {
 	}
 
 	onClickCommentAddPlaceholder(type: string) {
-		Analytics.trackEvent('inline-comment-form', 'click', type);
+		Analytics.trackEvent('post-controls', `comment-${type ?? 'focus'}`, this.eventLabel);
 		this.clickedCommentType = type;
 		this.clickedComment = true;
 	}
 
 	onSubmitNewComment() {
+		Analytics.trackEvent('post-controls', 'comment-add', this.eventLabel);
 		this.clickedComment = false; // Unloading the editor after submitting
 		this.openComments();
 	}

@@ -1,3 +1,5 @@
+<script lang="ts" src="./controls"></script>
+
 <template>
 	<div>
 		<app-event-item-controls-overlay class="event-item-controls" end>
@@ -7,6 +9,7 @@
 					:show-comments-button="!showCommentFeed"
 					:comments-count="commentsCount"
 					:show-stickers="showStickers"
+					:event-label="eventLabel"
 					@edit="emitPostEdit"
 					@publish="emitPostPublish"
 					@remove="emitPostRemove"
@@ -41,10 +44,9 @@
 				v-if="post"
 				:model="post"
 				:show-feed="showCommentFeed"
+				:event-label="eventLabel"
 				@count="commentsCount = $event"
 			/>
 		</span>
 	</div>
 </template>
-
-<script lang="ts" src="./controls"></script>
