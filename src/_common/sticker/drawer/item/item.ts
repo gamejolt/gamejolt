@@ -37,6 +37,10 @@ export default class AppStickerDrawerItem extends Vue {
 		return this.drawerStore.isDrawerOpen && !this.drawerStore.sticker && this.count > 0;
 	}
 
+	get isPeeled() {
+		return this.drawerStore.sticker?.id === this.sticker.id || this.count < 1;
+	}
+
 	onMouseDown(event: MouseEvent) {
 		if (!this.canPeelSticker) {
 			return;

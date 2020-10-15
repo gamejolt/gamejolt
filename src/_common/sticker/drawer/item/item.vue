@@ -2,7 +2,7 @@
 
 <template>
 	<div class="-item" draggable="false" @contextmenu.prevent>
-		<div :class="{ '-out-of-stock': count === 0 }">
+		<div :class="{ '-peeled': isPeeled }">
 			<img
 				draggable="false"
 				class="-img"
@@ -40,7 +40,7 @@
 	user-select: none
 	touch-action: none
 
-.-out-of-stock
+.-peeled
 	filter: contrast(0)
 
 .-img
