@@ -1,7 +1,7 @@
 <script lang="ts" src="./item"></script>
 
 <template>
-	<div class="-item" draggable="false">
+	<div class="-item" draggable="false" @contextmenu.prevent>
 		<div :class="{ '-out-of-stock': count === 0 }">
 			<img
 				draggable="false"
@@ -39,7 +39,6 @@
 	user-drag: none
 	user-select: none
 	touch-action: none
-	cursor: grab
 
 .-out-of-stock
 	filter: contrast(0)
@@ -51,6 +50,7 @@
 	position: absolute
 	bottom: 0
 	right: 0
+	pointer-events: none
 
 .-rarity
 	font-weight: bold

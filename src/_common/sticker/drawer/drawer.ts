@@ -28,6 +28,7 @@ export default class AppStickerDrawer extends Vue {
 		return {
 			height: this.drawerHeight ? this.drawerHeight + 'px' : 'unset',
 			bottom: this.drawerBottom + 'px',
+			cursor: this.drawerStore.isDragging ? 'grabbing' : 'default',
 		};
 	}
 

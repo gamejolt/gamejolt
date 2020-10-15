@@ -1,7 +1,7 @@
 <script lang="ts" src="./ghost"></script>
 
 <template>
-	<div class="-ghost" :class="itemClasses" @click.stop>
+	<div class="-ghost" :class="itemClasses" @click.stop @contextmenu.prevent>
 		<div class="-img-outer" @mousedown="onStartDrag" @touchstart="onStartDrag">
 			<img
 				class="-img"
@@ -66,14 +66,11 @@
 
 .-dragging
 	filter: drop-shadow(4px 4px 5px black)
+	pointer-events: none
 	animation-name: sticker-dragging-rotate
 	animation-duration: 2s
 	animation-iteration-count: infinite
 	z-index: $zindex-shell-drawer !important
-
-	// JODO: Doesn't work - browsers don't like when you try changing cursor styling during a drag.
-	&:hover
-		cursor: grabbing !important
 
 .-uncommitted
 	filter: drop-shadow(2px 2px 2.5px black)
