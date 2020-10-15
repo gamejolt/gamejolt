@@ -52,7 +52,7 @@ export default class AppStickerTarget extends Vue implements StickableTarget {
 		registerStickerTarget(this.layer, this);
 	}
 
-	onMouseUp() {
+	onPlaceDrawerSticker() {
 		const { isDragging, sticker, ghost } = this.drawerStore;
 		if (!isDragging || !sticker || !ghost) {
 			return;

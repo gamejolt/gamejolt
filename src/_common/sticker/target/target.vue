@@ -1,7 +1,7 @@
 <script lang="ts" src="./target"></script>
 
 <template>
-	<div class="sticker-target" @mouseup="onMouseUp">
+	<div class="sticker-target">
 		<transition name="-fade">
 			<div v-if="showStickers">
 				<app-sticker

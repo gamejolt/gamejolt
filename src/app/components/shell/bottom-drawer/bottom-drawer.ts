@@ -3,7 +3,7 @@ import { Component, Inject, Watch } from 'vue-property-decorator';
 import {
 	DrawerStore,
 	DrawerStoreKey,
-	StickableTarget,
+	setDrawerStoreHeight,
 } from '../../../../_common/drawer/drawer-store';
 import AppScrollScroller from '../../../../_common/scroll/scroller/scroller.vue';
 import AppStickerCard from '../../../../_common/sticker/card/card.vue';
@@ -18,7 +18,7 @@ import AppShellBottomDrawerItem from './item/item.vue';
 		AppShellBottomDrawerItem,
 	},
 })
-export default class AppShellBottomDrawer extends Vue implements StickableTarget {
+export default class AppShellBottomDrawer extends Vue {
 	@Inject(DrawerStoreKey) drawerStore!: DrawerStore;
 	private placeholderHeight = 100;
 
@@ -47,8 +47,8 @@ export default class AppShellBottomDrawer extends Vue implements StickableTarget
 
 		if (this.drawerStore.placedItem || this.drawerStore.isDragging) {
 			if (this.drawerStore.isHoveringDrawer) {
-				// Drawer item is being hovered over drawer - shift drawer up slightly higher.
-				return -this.drawerHeight + 64;
+				// Drawer item is being hovered over drawer - show full drawer.
+				return 0;
 			}
 
 			// Drawer item is being dragged away from the drawer - show top-half of first sticker row.
@@ -61,10 +61,6 @@ export default class AppShellBottomDrawer extends Vue implements StickableTarget
 
 	mounted() {
 		this.placeholderHeight = window.innerHeight * 0.25;
-	}
-
-	onRedeemSticker() {
-		// Not used here - only used in components that can redeem/claim stickers.
 	}
 
 	onClickCancel() {
@@ -81,6 +77,7 @@ export default class AppShellBottomDrawer extends Vue implements StickableTarget
 			// Assign the container height to placeholderHeight,
 			// preventing drawer resizes when items disappear through closing the drawer.
 			this.placeholderHeight = this.$el.offsetHeight;
+			setDrawerStoreHeight(this.drawerStore, this.placeholderHeight);
 		}
 	}
 

@@ -17,7 +17,7 @@ export interface StickableTarget {
 	 * DrawerStore will manually trigger a 'mouseup' event when there's a
 	 * 'touchend' event that happens above applicable targets.
 	 */
-	onMouseUp(event?: any): void;
+	onPlaceDrawerSticker(event?: any): void;
 	/**
 	 * Function to redeem the sticker for placement through the
 	 * 'targetComponent' in the DrawerStore.
@@ -36,6 +36,7 @@ export class DrawerStore {
 	isDragging = false;
 	hasValidTarget = false;
 	isHoveringDrawer = false;
+	drawerHeight = 0;
 
 	_waitingForFrame = false;
 	_onPointerMove: ((event: MouseEvent | TouchEvent) => void) | null = null;
@@ -62,6 +63,7 @@ export class DrawerStore {
 		// this.isDragging = false;
 		this.hasValidTarget = false;
 		this.isHoveringDrawer = false;
+		this.drawerHeight = 0;
 
 		this._waitingForFrame = false;
 		// this._onPointerMove = null;
@@ -121,6 +123,10 @@ export function toggleShellDrawer(store: DrawerStore) {
 	} else {
 		store.reset();
 	}
+}
+
+export function setDrawerStoreHeight(store: DrawerStore, height: number) {
+	store.drawerHeight = height;
 }
 
 /**
@@ -250,7 +256,7 @@ function _updateGhostPosition(store: DrawerStore, event: MouseEvent | TouchEvent
 	store.ghost.style.left = `${pointer.x - store.ghost.clientWidth / 2}px`;
 	store.ghost.style.top = `${pointer.y - store.ghost.clientHeight / 2}px`;
 
-	if (pointer.clientY > window.innerHeight - 64) {
+	if (pointer.clientY > window.innerHeight - store.drawerHeight) {
 		store.isHoveringDrawer = true;
 	} else {
 		store.isHoveringDrawer = false;
@@ -292,7 +298,7 @@ const _onPlaceItem = (store: DrawerStore) => (event: MouseEvent | TouchEvent) =>
 
 	const target = getCollidingStickerTarget(store.activeLayer, pointer.x, pointer.y);
 	if (target) {
-		target.onMouseUp();
+		target.onPlaceDrawerSticker();
 	}
 
 	_removeEventListeners(store);
