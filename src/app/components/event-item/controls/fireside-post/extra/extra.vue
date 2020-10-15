@@ -1,13 +1,15 @@
+<script lang="ts" src="./extra"></script>
+
 <template>
 	<app-popper popover-class="fill-darkest">
 		<app-button sparse circle trans icon="ellipsis-v" />
 
-		<div slot="popover">
+		<template #popover>
 			<div class="list-group list-group-dark">
 				<a
+					v-app-track-event="`copy-link:post`"
 					class="list-group-item has-icon"
 					@click="copyShareUrl"
-					v-app-track-event="`copy-link:post`"
 				>
 					<app-jolticon icon="link" />
 					<translate>Copy link to post</translate>
@@ -23,7 +25,11 @@
 				</template>
 
 				<!-- User reports -->
-				<a class="list-group-item has-icon" v-if="user && user.id !== post.user.id" @click="report">
+				<a
+					v-if="user && user.id !== post.user.id"
+					class="list-group-item has-icon"
+					@click="report"
+				>
 					<app-jolticon icon="flag" />
 					<translate>Report post</translate>
 				</a>
@@ -87,12 +93,18 @@
 						</app-community-perms>
 
 						<app-community-perms :community="i.community" required="community-posts">
-							<a class="list-group-item has-icon" @click.stop="movePostFromCommunityChannel(i)">
+							<a
+								class="list-group-item has-icon"
+								@click.stop="movePostFromCommunityChannel(i)"
+							>
 								<app-jolticon icon="arrow-forward" />
 								<translate>Move to a different channel</translate>
 							</a>
 
-							<a class="list-group-item has-icon" @click.stop="rejectFromCommunity(i)">
+							<a
+								class="list-group-item has-icon"
+								@click.stop="rejectFromCommunity(i)"
+							>
 								<app-jolticon icon="remove" />
 
 								<translate :translate-params="{ community: i.community.name }">
@@ -103,12 +115,12 @@
 					</div>
 				</template>
 			</div>
-		</div>
+		</template>
 	</app-popper>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
+@import '~styles/variables'
 
 .-header
 	font-family: $font-family-heading
@@ -130,5 +142,3 @@
 		top: -2px
 		margin-right: -($list-group-icon-width - 5px)
 </style>
-
-<script lang="ts" src="./extra"></script>

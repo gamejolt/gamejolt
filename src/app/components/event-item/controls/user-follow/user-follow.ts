@@ -11,16 +11,12 @@ import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
 	},
 })
 export default class AppEventItemControlsUserFollow extends Vue {
-	@Prop(propRequired(FiresidePost))
-	post!: FiresidePost;
-
-	@Prop(propOptional(Boolean, false))
-	shouldShow!: boolean;
+	@Prop(propRequired(FiresidePost)) post!: FiresidePost;
+	@Prop(propOptional(Boolean, false)) shouldShow!: boolean;
 
 	readonly Screen = Screen;
 
-	@Emit('close')
-	emitClose() {}
+	@Emit('close') emitClose() {}
 
 	get user() {
 		if (this.post.game && this.post.as_game_owner) {
