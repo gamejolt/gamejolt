@@ -1,3 +1,5 @@
+<script lang="ts" src="./channel"></script>
+
 <template>
 	<app-form name="communityChannelForm">
 		<div class="-form">
@@ -25,7 +27,9 @@
 					<app-form-control-error
 						when="too_many_channels"
 						:message="
-							$gettext('This community already has the maximum number of channels allowed.')
+							$gettext(
+								'This community already has the maximum number of channels allowed.'
+							)
 						"
 					/>
 
@@ -37,14 +41,26 @@
 					<app-form-control-error
 						when="pattern"
 						:message="
-							$gettext('Channel names can only contain numbers, letters, and underscores (_).')
+							$gettext(
+								'Channel names can only contain numbers, letters, and underscores (_).'
+							)
 						"
 					/>
 				</app-form-control-errors>
+				<p v-if="isEditing" class="help-block strong">
+					<translate>
+						Note: Renaming a channel will change the URL of that channel.
+					</translate>
+				</p>
 			</app-form-group>
 
 			<app-form-button :disabled="!isValid">
-				<translate>Add</translate>
+				<template v-if="isEditing">
+					<translate>Rename</translate>
+				</template>
+				<template v-else>
+					<translate>Add</translate>
+				</template>
 			</app-form-button>
 		</div>
 	</app-form>
@@ -61,5 +77,3 @@
 	button
 		margin-left: 5px
 </style>
-
-<script lang="ts" src="./channel"></script>
