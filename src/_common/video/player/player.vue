@@ -74,6 +74,7 @@
 	display: flex
 	align-items: center
 	justify-content: center
+	text-shadow: 1px 1px 3px rgba($black, 0.5)
 
 	&-icon
 		color: white
