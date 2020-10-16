@@ -11,6 +11,8 @@ export class VideoPlayerController {
 	currentTime = 0;
 	queuedTimeChange: null | number = null;
 
+	bufferedTo = 0;
+
 	isFullscreen = false;
 	queuedFullScreenChange: null | boolean = null;
 

@@ -8,12 +8,27 @@
 		@mousemove="onMouseMove"
 		@keydown="onKeypress"
 	>
-		<div class="-video" @click="onVideoClick">
+		<div
+			class="-video"
+			:class="{
+				'-paused-cursor': player.state === 'paused',
+			}"
+			@click="onVideoClick"
+		>
 			<app-video-player-shaka :player="player" />
 		</div>
 
 		<transition>
-			<div v-if="shouldShowUI" class="-bottom -ui anim-fade-enter anim-fade-leave">
+			<div
+				v-if="player.state === 'paused' && !player.isScrubbing"
+				class="-paused-indicator anim-fade-enter-enlarge anim-fade-leave-shrink"
+			>
+				<app-jolticon class="-paused-indicator-icon" icon="play" />
+			</div>
+		</transition>
+
+		<transition>
+			<div v-if="shouldShowUI" class="-bottom -ui anim-fade-enter-up anim-fade-leave-down">
 				<div class="-bottom-gradient">
 					<div class="-bottom-controls">
 						<app-player-scrubber :player="player" />
@@ -43,8 +58,26 @@
 	position: relative
 	overflow: hidden
 
+.-paused-cursor
+	cursor: pointer
+
 .-ui
 	z-index: 1
+
+.-paused-indicator
+	pointer-events: none
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	display: flex
+	align-items: center
+	justify-content: center
+
+	&-icon
+		color: white
+		font-size: 60px
 
 .-bottom
 	position: absolute

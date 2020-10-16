@@ -33,12 +33,21 @@ export default class AppVideoPlayerScrubber extends Vue {
 		return (this.player.queuedTimeChange ?? this.player.currentTime) / this.player.duration;
 	}
 
-	get unfilledRight() {
+	get filledRight() {
 		if (!this.player.duration) {
 			return 'auto';
 		}
 
 		return 100 - this.currentPos * 100 + '%';
+	}
+
+	get bufferedRight() {
+		if (!this.player.bufferedTo) {
+			return 'auto';
+		}
+
+		const bufferedPos = this.player.bufferedTo / this.player.duration;
+		return 100 - bufferedPos * 100 + '%';
 	}
 
 	private _createReadableTimestamp(time: number) {

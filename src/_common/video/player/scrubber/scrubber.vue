@@ -14,11 +14,12 @@
 			<div
 				v-app-tooltip="readableScrubberTime"
 				class="-timebar-handle"
-				:style="{ right: unfilledRight }"
+				:style="{ right: filledRight }"
 			/>
 
 			<div class="-timebar-unfilled">
-				<div class="-timebar-filled" :style="{ right: unfilledRight }" />
+				<div class="-timebar-buffered" :style="{ right: bufferedRight }" />
+				<div class="-timebar-filled" :style="{ right: filledRight }" />
 			</div>
 		</div>
 	</v-touch>
@@ -41,7 +42,7 @@ $-handle-transition-base = width 200ms, height 200ms, margin-top 200ms, margin-r
 	position: relative
 
 	&-unfilled
-		change-bg('bg-subtle')
+		background-color: rgba($white, 0.4)
 		position: absolute
 		width: 100%
 		top: 50%
@@ -49,16 +50,23 @@ $-handle-transition-base = width 200ms, height 200ms, margin-top 200ms, margin-r
 		height: 5px
 		border-radius: @height
 		overflow: hidden
-		box-shadow: 0 0 2px var(--theme-light)
 
 	&-filled
-		change-bg('highlight')
+		background-color: var(--theme-highlight)
 		position: absolute
 		top: 0
 		left: 0
 		bottom: 0
 		right: 0
 		transition: $-transition-right
+
+	&-buffered
+		background-color: rgba($white, 0.2)
+		position: absolute
+		top: 0
+		left: 0
+		bottom: 0
+		right: 0
 
 	&-handle
 		position: absolute
