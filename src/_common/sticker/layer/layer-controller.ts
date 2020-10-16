@@ -73,7 +73,6 @@ export function getCollidingStickerTarget(
 		if (!rect) {
 			return false;
 		}
-		console.log(rect, pointerY);
 
 		const { x, y, width, height } = rect;
 
