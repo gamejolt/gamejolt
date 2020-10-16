@@ -1,7 +1,9 @@
 import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
 import { arrayRemove } from '../../../utils/array';
+import { TabLeader } from '../../../utils/tab-leader';
 import { sleep } from '../../../utils/utils';
+import { uuidv4 } from '../../../utils/uuid';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Community } from '../../../_common/community/community.model';
 import { getCookie } from '../../../_common/cookie/cookie.service';
@@ -49,6 +51,105 @@ interface BootstrapPayload {
 	};
 }
 
+interface CommunityBootstrapPayload {
+	status: string;
+	community_id: string;
+	body: {
+		unreadChannels: number[];
+		unreadFeatured: boolean;
+	};
+}
+
+type ClearNotificationsType =
+	// For the user's activity feed.
+	| 'activity'
+	// For the user's notification feed.
+	| 'notifications'
+	// For the "hasUnreadPosts" state in communities the user has not viewed yet.
+	| 'community-unread'
+	// For the frontpage of featured posts.
+	| 'community-featured'
+	// For an individual community channel.
+	| 'community-channel'
+	| 'friend-requests';
+
+interface ClearNotificationsPayload {
+	type: ClearNotificationsType;
+	data: ClearNotificationsData;
+	clientId: string;
+}
+
+interface ClearNotificationsData {
+	channelId?: number;
+	communityId?: number;
+}
+
+export interface ClearNotificationsEventData extends ClearNotificationsPayload {
+	currentCount: number;
+}
+
+function clearNotifications(type: ClearNotificationsType, data: ClearNotificationsData = {}) {
+	switch (type) {
+		case 'activity':
+			store.commit('setNotificationCount', {
+				type: 'activity',
+				count: 0,
+			});
+			break;
+		case 'notifications':
+			store.commit('setNotificationCount', {
+				type: 'notifications',
+				count: 0,
+			});
+			break;
+		case 'community-channel':
+			{
+				const communityChannelId = data.channelId as number;
+				const communityId = data.communityId as number;
+				const communityState = store.state.communityStates.getCommunityState(communityId);
+				communityState.markChannelRead(communityChannelId);
+			}
+			break;
+		case 'community-featured':
+			{
+				const communityId = data.communityId as number;
+				const communityState = store.state.communityStates.getCommunityState(communityId);
+				communityState.hasUnreadFeaturedPosts = false;
+			}
+			break;
+		case 'community-unread':
+			{
+				const communityId = data.communityId as number;
+				const communityState = store.state.communityStates.getCommunityState(communityId);
+				communityState.hasUnreadPosts = false;
+			}
+			break;
+		case 'friend-requests':
+			// This event gets fired every time the user accepts/rejects a friendship.
+			// The only action we need to take here is to decrease the global friendship number by 1.
+			store.commit('changeFriendRequestCount', -1);
+			break;
+	}
+}
+
+/**
+ * List of resolvers waiting for grid to connect.
+ * These resolvers get resolved in the connect function once Grid connected.
+ */
+let connectionResolvers: (() => void)[] = [];
+/**
+ * Resolves once Grid is fully connected.
+ */
+function tillConnection(client: GridClient) {
+	return new Promise(resolve => {
+		if (client.connected) {
+			resolve();
+		} else {
+			connectionResolvers.push(resolve);
+		}
+	});
+}
+
 /**
  * Polls a request until it returns a result, increases the delay time between requests after each failed attempt.
  * @param context Context for logging
@@ -68,7 +169,10 @@ async function pollRequest(context: string, requestGetter: () => Promise<any>): 
 			result = await promise;
 			finished = true;
 		} catch (e) {
-			const sleepMs = Math.min(30000, Math.random() * delay * 1000 + 1000);
+			const sleepMs = Math.min(
+				30_000 + Math.random() * 10_000,
+				Math.random() * delay * 1_000 + 1_000
+			);
 			console.error(`[Grid] Failed request [${context}]. Reattempt in ${sleepMs} ms.`);
 			await sleep(sleepMs);
 		}
@@ -80,6 +184,9 @@ async function pollRequest(context: string, requestGetter: () => Promise<any>): 
 }
 
 export class GridClient {
+	// Stores a unique id that identifies this session when it pushes data to Grid.
+	readonly clientId = uuidv4();
+
 	connected = false;
 	socket: Socket | null = null;
 	channels: Channel[] = [];
@@ -87,6 +194,12 @@ export class GridClient {
 	bootstrapReceived = false;
 	bootstrapTimestamp = 0;
 	bootstrapDelay = 1;
+	notificationChannel: Channel | null = null;
+	tabLeader: TabLeader | null = null;
+	/**
+	 * @see `deregisterViewingCommunity` doc-block for explanation.
+	 */
+	viewingCommunityId: number | null = null;
 
 	/**
 	 * Store ids of posts the user has featured.
@@ -112,24 +225,22 @@ export class GridClient {
 
 		// get hostname from loadbalancer first
 		const hostResult = await pollRequest('Select server', () =>
-			Axios.get(Environment.gridHost, { ignoreLoadingBar: true, timeout: 3000 })
+			Axios.get(Environment.gridHost, { ignoreLoadingBar: true, timeout: 3_000 })
 		);
 		const host = `${hostResult.data}/grid/socket`;
 
 		console.log('[Grid] Server selected:', host);
 
-		const userId = user.id.toString();
-
 		// heartbeat is 30 seconds, backend disconnects after 40 seconds
 		this.socket = new Socket(host, {
-			heartbeatIntervalMs: 30000,
+			heartbeatIntervalMs: 30_000,
 		});
 
 		// HACK
 		// there is no built in way to stop a Phoenix socket from attempting to reconnect on its own after it got disconnected.
 		// this replaces the socket's "reconnectTimer" property with an empty object that matches the Phoenix "Timer" signature
 		// The 'reconnectTimer' usually restarts the connection after a delay, this prevents that from happening
-		let socketAny: any = this.socket;
+		const socketAny: any = this.socket;
 		if (socketAny.hasOwnProperty('reconnectTimer')) {
 			socketAny.reconnectTimer = { scheduleTimeout: () => {}, reset: () => {} };
 		}
@@ -145,9 +256,11 @@ export class GridClient {
 				})
 		);
 
+		const userId = user.id.toString();
 		const channel = this.socket.channel('notifications:' + userId, {
 			frontend_cookie: cookie,
 		});
+		this.notificationChannel = channel;
 
 		await pollRequest(
 			'Join user notification channel',
@@ -159,10 +272,22 @@ export class GridClient {
 						.receive('ok', () => {
 							this.connected = true;
 							this.channels.push(channel);
+							for (const resolver of connectionResolvers) {
+								resolver();
+							}
+							connectionResolvers = [];
+
 							resolve();
 						});
 				})
 		);
+
+		// After successfully connecting to the socket, elect leader.
+		if (this.tabLeader !== null) {
+			await this.tabLeader.kill();
+		}
+		this.tabLeader = new TabLeader('grid_notification_channel_' + user.id);
+		this.tabLeader.init();
 
 		channel.on('new-notification', (payload: NewNotificationPayload) =>
 			this.handleNotification(payload)
@@ -174,15 +299,23 @@ export class GridClient {
 
 		channel.push('request-bootstrap', { user_id: userId });
 
+		channel.on('clear-notifications', (payload: ClearNotificationsPayload) => {
+			this.handleClearNotifications(payload);
+		});
+
+		channel.on('community-bootstrap', (payload: CommunityBootstrapPayload) => {
+			this.handleCommunityBootstrap(payload);
+		});
+
 		this.joinCommunities();
 	}
 
-	async restart(sleepMs = 2000) {
+	async restart(sleepMs = 2_000) {
 		// sleep a bit before trying to reconnect
 		await sleep(sleepMs);
 		// teardown and try to reconnect
 		if (this.connected) {
-			this.disconnect();
+			await this.disconnect();
 			this.connect();
 		}
 	}
@@ -250,15 +383,6 @@ export class GridClient {
 			}
 			this.notificationBacklog = [];
 
-			// communities - unread featured counts
-			const unreadFeatured = payload.body.unreadFeaturedCommunities;
-			for (const communityIdStr in unreadFeatured) {
-				const communityId = parseInt(communityIdStr, 10);
-
-				const communityState = store.state.communityStates.getCommunityState(communityId);
-				communityState.unreadFeatureCount = unreadFeatured[communityId] || 0;
-			}
-
 			// communities - has unread posts?
 			// When bootstrapping grid, we only get a list of communities and we don't
 			// care which channels in them are unread, just if it has any unread posts in them.
@@ -266,22 +390,62 @@ export class GridClient {
 			// for the channels are populated.
 			for (const communityId of payload.body.unreadCommunities) {
 				const communityState = store.state.communityStates.getCommunityState(communityId);
-				communityState.hasUnreadPosts = true;
+				if (!communityState.dataBootstrapped) {
+					communityState.hasUnreadPosts = true;
+				}
 			}
 
 			// Reset delay when the bootstrap went through successfully.
 			this.bootstrapDelay = 1;
+
+			// If we are viewing a community, call its bootstrap as well:
+			if (this.viewingCommunityId) {
+				const communityState = store.state.communityStates.getCommunityState(
+					this.viewingCommunityId
+				);
+				if (!communityState || !communityState.dataBootstrapped) {
+					this.queueRequestCommunityBootstrap(this.viewingCommunityId);
+				}
+			}
 		} else {
 			// error
 			console.log(`[Grid] Failed to fetch notification count bootstrap (${payload.body}).`);
 
-			const delay = Math.min(30000, Math.random() * this.bootstrapDelay * 2000 + 1000);
+			const delay = Math.min(
+				30_000 + Math.random() * 10_000,
+				Math.random() * this.bootstrapDelay * 2_000 + 1_000
+			);
 			this.bootstrapDelay++;
 
 			console.log(`[Grid] Reconnect in ${delay}ms...`);
 
 			this.restart(delay);
 		}
+	}
+
+	handleCommunityBootstrap({ community_id, body }: CommunityBootstrapPayload) {
+		const communityId = parseInt(community_id, 10);
+		const communityState = store.state.communityStates.getCommunityState(communityId);
+
+		// This flag was set to true in the main bootstrap and we need to unset it
+		// now that we have the actual unread channels in this community.
+		// read comment in client service for more info.
+		communityState.hasUnreadPosts = false;
+		communityState.dataBootstrapped = true;
+
+		communityState.hasUnreadFeaturedPosts = body.unreadFeatured;
+		for (const channelId of body.unreadChannels) {
+			communityState.markChannelUnread(channelId);
+		}
+	}
+
+	handleClearNotifications({ clientId, type, data }: ClearNotificationsPayload) {
+		// Don't do anything when the notification originated from this client.
+		if (clientId === this.clientId) {
+			return;
+		}
+
+		clearNotifications(type, data);
 	}
 
 	spawnNotification(notification: Notification) {
@@ -300,12 +464,43 @@ export class GridClient {
 		let message = NotificationText.getText(notification, true);
 		let icon = notification.from_model === undefined ? '' : notification.from_model.img_avatar;
 
+		// When it's a game post as game owner, use the game owner's avatar instead.
+		if (
+			notification.action_model instanceof FiresidePost &&
+			notification.action_model.as_game_owner &&
+			!!notification.action_model.game
+		) {
+			icon = notification.action_model.game.developer.img_avatar;
+		}
+
+		let isSystem = SettingFeedNotifications.get();
+		if (this.tabLeader && !this.tabLeader.isLeader) {
+			isSystem = false;
+		}
+
 		if (message !== undefined) {
 			let title = Translate.$gettext('New Notification');
 			if (notification.type === Notification.TYPE_POST_ADD) {
 				if (notification.from_model instanceof User) {
+					// We send a notification to the author of the post.
+					// Do not show a notification in that case, the purpose is to increment the activity feed counter.
+					if (notification.from_model.id === store.state.app.user?.id) {
+						return;
+					}
+
+					let username = notification.from_model.username;
+
+					// When it's a game post as game owner, use the game owner's username instead.
+					if (
+						notification.action_model instanceof FiresidePost &&
+						notification.action_model.as_game_owner &&
+						!!notification.action_model.game
+					) {
+						username = notification.action_model.game.developer.username;
+					}
+
 					title = Translate.$gettextInterpolate(`New Post by @%{ username }`, {
-						username: notification.from_model.username,
+						username,
 					});
 				} else {
 					title = Translate.$gettext('New Post');
@@ -346,10 +541,10 @@ export class GridClient {
 					Analytics.trackEvent('grid', 'notification-click', notification.type);
 					notification.go(router);
 				},
-				system: true,
+				system: isSystem,
 			});
 		} else {
-			// received a notification that cannot be parsed properly...
+			// Received a notification that cannot be parsed properly...
 			Growls.info({
 				title: Translate.$gettext('New Notification'),
 				message: Translate.$gettext('You have a new notification.'),
@@ -358,7 +553,7 @@ export class GridClient {
 					Analytics.trackEvent('grid', 'notification-click', notification.type);
 					router.push('/notifications');
 				},
-				system: true,
+				system: isSystem,
 			});
 		}
 	}
@@ -418,19 +613,20 @@ export class GridClient {
 	handleCommunityFeature(communityId: number, payload: CommunityFeaturePayload) {
 		// Suppress notification if the user featured that post.
 		if (payload.post_id) {
-			const postId = Number.parseInt(payload.post_id, 10);
+			const postId = parseInt(payload.post_id, 10);
 			if (this.featuredPostIds.has(postId)) {
 				return;
 			}
 		}
 
 		const communityState = store.state.communityStates.getCommunityState(communityId);
-		communityState.unreadFeatureCount++;
+		communityState.hasUnreadFeaturedPosts = true;
+
 		store.commit('incrementNotificationCount', { count: 1, type: 'activity' });
 	}
 
 	handleCommunityNewPost(communityId: number, payload: CommunityNewPostPayload) {
-		const channelId = Number.parseInt(payload.channel_id, 10);
+		const channelId = parseInt(payload.channel_id, 10);
 		const communityState = store.state.communityStates.getCommunityState(communityId);
 		communityState.markChannelUnread(channelId);
 	}
@@ -442,7 +638,7 @@ export class GridClient {
 		}
 	}
 
-	disconnect() {
+	async disconnect() {
 		if (this.connected) {
 			console.log('[Grid] Disconnecting...');
 
@@ -454,9 +650,14 @@ export class GridClient {
 				this.leaveChannel(channel);
 			});
 			this.channels = [];
+			this.notificationChannel = null;
 			if (this.socket !== null) {
 				this.socket.disconnect();
 				this.socket = null;
+			}
+
+			if (this.tabLeader !== null) {
+				await this.tabLeader.kill();
 			}
 		}
 	}
@@ -465,5 +666,63 @@ export class GridClient {
 		if (!this.featuredPostIds.has(post.id)) {
 			this.featuredPostIds.add(post.id);
 		}
+	}
+
+	public async pushViewNotifications(
+		type: ClearNotificationsType,
+		data: ClearNotificationsData = {},
+		doClearNotifications = true
+	) {
+		// This can get invoked before grid is up and running, so wait here until it is.
+		// That can mainly happen when the route-resolve for a page clears notifications.
+		// For example: main feed page clears notifications in backend as the route loads,
+		// but grid is not loaded yet.
+		await tillConnection(this);
+
+		if (doClearNotifications) {
+			// Clear notifications on this client.
+			clearNotifications(type, data);
+		}
+
+		if (this.notificationChannel) {
+			this.notificationChannel.push('view-notifications', {
+				type,
+				data,
+				clientId: this.clientId,
+			});
+		}
+	}
+
+	public async queueRequestCommunityBootstrap(communityId: number) {
+		await tillConnection(this);
+
+		if (this.notificationChannel) {
+			this.viewingCommunityId = communityId;
+			this.notificationChannel.push('request-community-bootstrap', {
+				user_id: store.state.app.user!.id.toString(),
+				community_id: communityId.toString(),
+			});
+		}
+	}
+
+	/**
+	 * When viewing a community, Grid calls in the community bootstrap (request-community-bootstrap).
+	 * In case Grid disconnects while the user is viewing the community, we want to rebootstrap
+	 * the community as well after the normal Grid bootstrap went through.
+	 *
+	 * Do keep track of which community the user is viewing, we register the community with Grid
+	 * when calling queueRequestCommunityBootstrap.
+	 *
+	 * When leaving the community page, deregister the community to avoid uselessly bootstrapping it.
+	 */
+	public deregisterViewingCommunity(communityId: number) {
+		if (this.viewingCommunityId !== communityId) {
+			console.warn(
+				'Deregistering a community id that did not match the currently registered one!',
+				communityId,
+				this.viewingCommunityId
+			);
+		}
+		this.viewingCommunityId = null;
 	}
 }

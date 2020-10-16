@@ -9,6 +9,7 @@
 					:show-comments-button="!showCommentFeed"
 					:comments-count="commentsCount"
 					:show-stickers="showStickers"
+					:event-label="eventLabel"
 					@edit="emitPostEdit"
 					@publish="emitPostPublish"
 					@remove="emitPostRemove"
@@ -43,6 +44,7 @@
 				v-if="post"
 				:model="post"
 				:show-feed="showCommentFeed"
+				:event-label="eventLabel"
 				@count="commentsCount = $event"
 			/>
 		</span>

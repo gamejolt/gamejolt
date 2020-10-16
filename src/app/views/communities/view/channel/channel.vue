@@ -6,15 +6,15 @@
 			<small v-if="Screen.isDesktop">in {{ community.name }}</small>
 		</h1>
 
-		<app-communities-view-feed :feed="feed" @add-post="onPostAdded" />
+		<app-communities-view-feed :feed="feed" @add-post="onPostAdded" @load-new="loadedNew" />
 	</app-communities-view-page-container>
 </template>
 
 <script lang="ts" src="./channel"></script>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
+@import '~styles/variables'
+@import '~styles-lib/mixins'
 
 .-text-overflow
 	text-overflow()
