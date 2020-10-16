@@ -7,7 +7,7 @@ import { FiresidePost } from '../../../fireside/post/post-model';
 import { Growls } from '../../../growls/growls.service';
 import { BaseModal } from '../../../modal/base';
 import { Model } from '../../../model/model.service';
-import { Sticker } from '../../sticker.model';
+import { handleNewStickerNotification, Sticker } from '../../sticker.model';
 import AppSticker from '../../sticker.vue';
 import AppStickerTarget from '../../target/target.vue';
 import { StickerPlacement } from '../placement.model';
@@ -118,7 +118,7 @@ export default class AppStickerPlacementModal extends BaseModal {
 	}
 
 	async onClickPlace() {
-		const result = await Api.sendRequest(
+		const payload = await Api.sendRequest(
 			'/web/stickers/place',
 			{
 				stickerId: this.sticker.id,
@@ -131,9 +131,17 @@ export default class AppStickerPlacementModal extends BaseModal {
 			{ detach: true }
 		);
 
-		if (result.success) {
-			const post = new FiresidePost(result.resource);
+		if (payload.success) {
+			const post = new FiresidePost(payload.resource);
 			this.modal.resolve(post);
+
+			if (payload.newSticker) {
+				handleNewStickerNotification(
+					this.$gettext(`You can unlock a new sticker!`),
+					this.$gettext(`Click this message to unlock right away.`),
+					this.$store
+				);
+			}
 		} else {
 			Growls.error(this.$gettext(`Failed to place sticker.`));
 			this.modal.dismiss();
