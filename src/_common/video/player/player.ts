@@ -6,7 +6,7 @@ import {
 	queueVideoTimeChange,
 	setVideoVolume,
 	toggleVideoPlayback,
-	VideoPlayerController
+	VideoPlayerController,
 } from './controller';
 import AppPlayerFullscreen from './fullscreen/fullscreen.vue';
 import AppPlayerPlayback from './playback/playback.vue';
@@ -16,6 +16,19 @@ import AppPlayerVolume from './volume/volume.vue';
 
 const KeyShortcutsList = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft', 'm', ' '];
 type KEY_SHORTCUTS = 'ArrowUp' | 'ArrowRight' | 'ArrowDown' | 'ArrowLeft' | 'm' | ' ';
+
+/**
+ * The amount of time to wait before hiding the UI after moving your mouse away
+ * from the player.
+ */
+const UIHideTimeout = 400;
+
+/**
+ * The amount of time to wait before hiding the UI after mouse movement on the
+ * player. We want the cursor to eventually hide away if they stop moving their
+ * mouse essentially.
+ */
+const UIHideTimeoutMovement = 1500;
 
 @Component({
 	components: {
@@ -31,10 +44,46 @@ export default class AppVideoPlayer extends Vue {
 	@Prop(propRequired(String)) poster!: string;
 	@Prop(propRequired(String)) manifest!: string;
 
+	isHovered = false;
+	private _hideUITimer?: NodeJS.Timer;
+
 	player = new VideoPlayerController(this.manifest, this.poster);
 
-	onFullscreenChange() {
-		this.player.isFullscreen = document.fullscreenElement === this.$el;
+	get shouldShowUI() {
+		return this.isHovered || this.player.state === 'paused';
+	}
+
+	onMouseOut() {
+		this.scheduleUIHide(UIHideTimeout);
+	}
+
+	onMouseMove() {
+		this.scheduleUIHide(UIHideTimeoutMovement);
+	}
+
+	private scheduleUIHide(delay: number) {
+		this.isHovered = true;
+		this.clearHideUITimer();
+		this._hideUITimer = setTimeout(() => {
+			this.isHovered = false;
+			this.clearHideUITimer();
+		}, delay);
+	}
+
+	private clearHideUITimer() {
+		if (!this._hideUITimer) {
+			return;
+		}
+
+		clearTimeout(this._hideUITimer);
+		this._hideUITimer = undefined;
+	}
+
+	onVideoClick() {
+		toggleVideoPlayback(this.player);
+		if (this.player.state === 'playing') {
+			this.scheduleUIHide(UIHideTimeout);
+		}
 	}
 
 	onKeypress(event: KeyboardEvent) {
@@ -87,6 +136,10 @@ export default class AppVideoPlayer extends Vue {
 
 	triggerVolumeUp() {
 		setVideoVolume(this.player, Math.round(Math.min(this.player.volume + 0.1, 1) * 100) / 100);
+	}
+
+	onFullscreenChange() {
+		this.player.isFullscreen = document.fullscreenElement === this.$el;
 	}
 
 	@Watch('player.queuedFullScreenChange')

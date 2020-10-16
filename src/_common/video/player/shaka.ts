@@ -18,7 +18,7 @@ export default class AppVideoPlayerShaka extends Vue {
 			this.initShaka();
 			this.syncWithState();
 		} else {
-			// TODO: Do something, ignore?
+			// DODO: Do something, ignore?
 			console.error('Browser not supported.');
 		}
 	}
@@ -46,8 +46,8 @@ export default class AppVideoPlayerShaka extends Vue {
 	private setupEvents() {
 		const { video } = this.$refs;
 
-		// video.addEventListener('play', () => (this.player.isPlaying = true));
-		video.addEventListener('pause', () => (this.player.isPaused = true));
+		video.addEventListener('play', () => (this.player.state = 'playing'));
+		video.addEventListener('pause', () => (this.player.state = 'paused'));
 		video.addEventListener('volumechange', () => (this.player.volume = video.volume));
 
 		video.addEventListener('durationchange', () => {
@@ -62,18 +62,16 @@ export default class AppVideoPlayerShaka extends Vue {
 		);
 	}
 
-	@Watch('player.isPaused')
+	@Watch('player.state')
 	@Watch('player.volume')
 	@Watch('player.queuedTimeChange')
 	syncWithState() {
 		const { video } = this.$refs;
 
-		if (this.player.isPaused !== video.paused) {
-			if (this.player.isPaused) {
-				video.pause();
-			} else {
-				video.play();
-			}
+		if (this.player.state === 'paused' && !video.paused) {
+			video.pause();
+		} else if (this.player.state === 'playing' && video.paused) {
+			video.play();
 		}
 
 		if (this.player.volume !== video.volume) {
@@ -82,10 +80,11 @@ export default class AppVideoPlayerShaka extends Vue {
 
 		if (this.player.queuedTimeChange !== null) {
 			const time = this.player.queuedTimeChange;
-			// We store in milliseconds, HTMLMediaElement works in seconds.
-			video.currentTime = time / 1000;
 			this.player.currentTime = time;
 			this.player.queuedTimeChange = null;
+
+			// We store in milliseconds, HTMLMediaElement works in seconds.
+			video.currentTime = time / 1000;
 		}
 	}
 }

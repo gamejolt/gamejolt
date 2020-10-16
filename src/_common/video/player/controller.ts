@@ -1,11 +1,11 @@
+import { assertNever } from '../../../utils/utils';
 import { SettingVideoPlayerVolume } from '../../settings/settings.service';
 
 export class VideoPlayerController {
 	shouldPlay = false;
 	volume = SettingVideoPlayerVolume.get();
 	duration = 0;
-	// isPlaying = false;
-	isPaused = false;
+	state: 'paused' | 'playing' = 'paused';
 	isScrubbing = false;
 
 	currentTime = 0;
@@ -18,7 +18,13 @@ export class VideoPlayerController {
 }
 
 export function toggleVideoPlayback(player: VideoPlayerController) {
-	player.isPaused = !player.isPaused;
+	if (player.state === 'playing') {
+		player.state = 'paused';
+	} else if (player.state === 'paused') {
+		player.state = 'playing';
+	} else {
+		assertNever(player.state);
+	}
 }
 
 export function setVideoVolume(player: VideoPlayerController, level: number) {
@@ -35,9 +41,8 @@ export function queueVideoTimeChange(player: VideoPlayerController, time: number
 export function scrubVideo(player: VideoPlayerController, position: number, isFinalized: boolean) {
 	player.isScrubbing = !isFinalized;
 
-	// Pause the video while scrubbing and unpause when finalized.
-	player.isPaused = !isFinalized;
-
+	// Pause the video while scrubbing and play when finalized.
+	player.state = isFinalized ? 'playing' : 'paused';
 	queueVideoTimeChange(player, position * player.duration);
 }
 
