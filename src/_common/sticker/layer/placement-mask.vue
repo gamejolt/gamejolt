@@ -1,24 +1,28 @@
 <script lang="ts" src="./placement-mask"></script>
 
 <template>
+	<!--
+	We set the keys below to the "viewbox" so that we recalculate all the
+	sticker targets/masks every time dimensions for the page change. Chances are
+	that new content has loaded in or shifted the targets around.
+	-->
 	<div v-app-observe-dimensions="onDimensionsChange" class="-container" @click.stop="onClickMask">
-		<svg v-if="width > 0" :key="regenKey" :viewBox="viewbox" xmlns="http://www.w3.org/2000/svg">
+		<svg v-if="width > 0" :viewBox="viewbox" xmlns="http://www.w3.org/2000/svg">
 			<!--
 			This creates a mask that we use to punch out the targets from the
-			black overlay. We set the key to the "viewbox" so that we
-			recalculate all the sticker target masks every time dimensions for
-			the page change. Chances are that new content has loaded in or
-			shifted the targets around.
+			black overlay.
 			-->
 			<mask id="myMask">
 				<rect x="0" y="0" :width="width" :height="height" fill="white" />
-				<app-sticker-layer-placement-mask-item
-					v-for="(target, i) of layer.targets"
-					:key="i"
-					:target="target"
-					:layer="layer"
-					as-mask
-				/>
+				<template v-if="hasCalculated">
+					<app-sticker-layer-placement-mask-item
+						v-for="(target, i) of layer.targets"
+						:key="`${viewbox}-${i}`"
+						:target="target"
+						:layer="layer"
+						as-mask
+					/>
+				</template>
 			</mask>
 
 			<rect
@@ -30,14 +34,16 @@
 				fill="#888"
 				opacity="0.5"
 			/>
+		</svg>
 
-			<app-sticker-layer-placement-mask-item
+		<template v-if="hasCalculated">
+			<app-sticker-layer-placement-mask-target
 				v-for="(target, i) of layer.targets"
-				:key="i"
+				:key="`${viewbox}-${i}`"
 				:target="target"
 				:layer="layer"
 			/>
-		</svg>
+		</template>
 	</div>
 </template>
 

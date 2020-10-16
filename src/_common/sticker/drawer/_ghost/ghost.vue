@@ -37,12 +37,11 @@
 .-dragging
 	filter: drop-shadow(4px 4px 5px black)
 	pointer-events: none
-	animation-name: sticker-dragging-rotate
-	animation-duration: 2s
-	animation-iteration-count: infinite
 
 .sticker-ghost
 	position: absolute
+	top: 0
+	left: 0
 	cursor: grab
 	touch-action: none
 
@@ -75,17 +74,4 @@
 	position: absolute
 	top: calc(100% + 8px)
 	z-index: 1
-
-@keyframes sticker-dragging-rotate
-	0%
-		transform: none
-
-	33%
-		transform: rotateZ(25deg)
-
-	66%
-		transform: rotateZ(-25deg)
-
-	100%
-		transform: none
 </style>

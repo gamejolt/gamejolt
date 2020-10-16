@@ -78,7 +78,6 @@ export default class AppStickerDrawerGhost extends Vue {
 
 		// JODO: Doesn't currently update the initial position properly. Works fine once the pointer is moved.
 
-		this.$el.style.left = left + 'px';
-		this.$el.style.top = top + 'px';
+		this.$el.style.transform = `translate3d(${left}px, ${top}px, 0)`;
 	}
 }

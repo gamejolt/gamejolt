@@ -7,10 +7,10 @@ export class StickerLayerController {
 	relativeScrollTop = 0;
 	targets: AppStickerTarget[] = [];
 	hoveredTarget: AppStickerTarget | null = null;
-	rects = new WeakMap<AppStickerTarget, TargetRect>();
+	rects = new WeakMap<AppStickerTarget, StickerLayerTargetRect>();
 }
 
-class TargetRect {
+export class StickerLayerTargetRect {
 	constructor(
 		public readonly x: number,
 		public readonly y: number,
@@ -51,7 +51,10 @@ export function calculateStickerTargetRects(
 			// returns x/y from the left/top of the window instead of the page.
 			// Return as an "entry" so that WeakMap will use target as key and
 			// rect as the value.
-			return [target, new TargetRect(x + scrollLeft, y + scrollTop, width, height)];
+			return [
+				target,
+				new StickerLayerTargetRect(x + scrollLeft, y + scrollTop, width, height),
+			];
 		})
 	);
 }
