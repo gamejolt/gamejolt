@@ -1,8 +1,9 @@
 import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
+import { Component, Emit, Inject, Prop } from 'vue-property-decorator';
 import { findRequiredVueParent } from '../../utils/vue';
 import AppBackdrop from '../backdrop/backdrop';
 import { Backdrop } from '../backdrop/backdrop.service';
+import { DrawerStore, DrawerStoreKey } from '../drawer/drawer-store';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';
 import AppScrollAffix from '../scroll/affix/affix.vue';
@@ -23,6 +24,7 @@ import { Modal } from './modal.service';
 	},
 })
 export default class AppModal extends Vue {
+	@Inject(DrawerStoreKey) drawer!: DrawerStore;
 	@Prop(Number)
 	index!: number;
 
@@ -104,7 +106,12 @@ export default class AppModal extends Vue {
 	}
 
 	dismissBackdrop() {
-		if (Screen.isMobile || this.modal.noBackdropClose || this.isHoveringContent) {
+		if (
+			Screen.isMobile ||
+			this.modal.noBackdropClose ||
+			this.isHoveringContent ||
+			this.drawer.isDrawerOpen
+		) {
 			return;
 		}
 		this.dismiss();

@@ -8,7 +8,8 @@
 			:layer="layer"
 		/>
 		<slot />
-		<app-sticker-drawer class="-sticker-drawer" />
+		<app-sticker-drawer-ghost v-if="isShowingMask && drawer.sticker" class="-ghost" />
+		<app-sticker-drawer v-if="isActiveLayer" class="-sticker-drawer" />
 	</div>
 </template>
 
@@ -21,9 +22,17 @@
 .-placement-mask
 	z-index: $zindex-sticker-layer-mask
 
-.-sticker-drawer
+.-ghost
+	// top and left get assigned through a DrawerStore callback.
+	position: absolute
 	z-index: $zindex-sticker-layer-mask + 1
+
+.-sticker-drawer
+	z-index: $zindex-sticker-layer-mask + 2
 
 .-dragging
 	cursor: grabbing !important
+
+	.-ghost
+		z-index: $zindex-sticker-layer-mask + 3
 </style>

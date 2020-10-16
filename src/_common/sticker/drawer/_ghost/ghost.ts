@@ -1,24 +1,30 @@
 import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../utils/vue';
-import { DrawerStore, setDrawerStoreActiveItem } from '../../../drawer/drawer-store';
-import { Sticker } from '../../../sticker/sticker.model';
+import { Component, Inject } from 'vue-property-decorator';
+import {
+	assignDrawerStoreGhostCallback as assignDrawerStoreMoveCallback,
+	commitDrawerStoreItemPlacement,
+	DrawerStore,
+	DrawerStoreKey,
+	setDrawerStoreActiveItem,
+} from '../../../drawer/drawer-store';
 
 @Component({})
 export default class AppStickerDrawerGhost extends Vue {
-	@Prop(propRequired(DrawerStore)) drawerStore!: DrawerStore;
-	@Prop(propRequired(Sticker)) sticker!: Sticker;
-	@Prop(propOptional(Number, 64)) size!: number;
+	@Inject(DrawerStoreKey) drawer!: DrawerStore;
 
 	$el!: HTMLDivElement;
 
+	get sticker() {
+		return this.drawer.sticker!;
+	}
+
 	get shouldShowStickerControls() {
-		return !!this.drawerStore.placedItem;
+		return !!this.drawer.placedItem;
 	}
 
 	private get itemRotation() {
-		if (this.drawerStore.placedItem) {
-			return `rotate(${this.drawerStore.placedItem.rotation * 90 - 45}deg)`;
+		if (this.drawer.placedItem) {
+			return `rotate(${this.drawer.placedItem.rotation * 90 - 45}deg)`;
 		} else {
 			return null;
 		}
@@ -27,15 +33,15 @@ export default class AppStickerDrawerGhost extends Vue {
 	get itemStyling() {
 		return {
 			transform: this.itemRotation,
-			width: this.size + 'px',
-			height: this.size + 'px',
+			width: this.drawer.stickerSize + 'px',
+			height: this.drawer.stickerSize + 'px',
 		};
 	}
 
 	get controlsStyling() {
 		const controlSize = 32;
 		return {
-			left: this.size / 2 - controlSize / 2 + 'px',
+			left: this.drawer.stickerSize / 2 - controlSize / 2 + 'px',
 			width: controlSize + 'px',
 			height: controlSize + 'px',
 		};
@@ -44,22 +50,35 @@ export default class AppStickerDrawerGhost extends Vue {
 	get itemClasses() {
 		const classes = [];
 
-		if (this.drawerStore.isDragging) {
+		if (this.drawer.isDragging) {
 			classes.push('-dragging');
 		}
 
-		if (this.drawerStore.targetComponent) {
+		if (this.drawer.targetComponent) {
 			classes.push('-uncommitted');
 		}
 
 		return classes;
 	}
 
+	mounted() {
+		assignDrawerStoreMoveCallback(this.drawer, this.updateGhostPosition);
+	}
+
 	onConfirmPlacement() {
-		this.drawerStore.commitPlacement();
+		commitDrawerStoreItemPlacement(this.drawer);
 	}
 
 	onStartDrag(event: MouseEvent | TouchEvent) {
-		setDrawerStoreActiveItem(this.drawerStore, this.sticker, event, true);
+		setDrawerStoreActiveItem(this.drawer, this.sticker, event, true);
+	}
+
+	updateGhostPosition(pos: { left: number; top: number }) {
+		const { left, top } = pos;
+
+		// JODO: Doesn't currently update the initial position properly. Works fine once the pointer is moved.
+
+		this.$el.style.left = left + 'px';
+		this.$el.style.top = top + 'px';
 	}
 }

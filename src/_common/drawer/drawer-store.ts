@@ -1,8 +1,6 @@
 import { StickerCount } from '../../app/views/dashboard/stickers/stickers';
 import { arrayRemove, numberSort } from '../../utils/array';
 import { Api } from '../api/api.service';
-import AppStickerDrawerGhostTS from '../sticker/drawer/_ghost/ghost';
-import AppStickerDrawerGhost from '../sticker/drawer/_ghost/ghost.vue';
 import {
 	getCollidingStickerTarget,
 	StickerLayerController,
@@ -18,6 +16,7 @@ export interface StickableTarget {
 	 * 'touchend' event that happens above applicable targets.
 	 */
 	onPlaceDrawerSticker(event?: any): void;
+
 	/**
 	 * Function to redeem the sticker for placement through the
 	 * 'targetComponent' in the DrawerStore.
@@ -31,16 +30,17 @@ export class DrawerStore {
 	targetComponent: StickableTarget | null = null;
 	placedItem: StickerPlacement | null = null;
 	sticker: Sticker | null = null;
-	ghost: HTMLDivElement | null = null;
 	isDrawerOpen = false;
 	isDragging = false;
 	hasValidTarget = false;
 	isHoveringDrawer = false;
 	drawerHeight = 0;
+	stickerSize = 64;
 
 	_waitingForFrame = false;
 	_onPointerMove: ((event: MouseEvent | TouchEvent) => void) | null = null;
 	_onPointerUp: ((event: MouseEvent | TouchEvent) => void) | null = null;
+	_updateGhostPosition: ((position: { left: number; top: number }) => void) | null = null;
 
 	get activeLayer() {
 		// The active layer is always the last to be added to the stack.
@@ -51,14 +51,13 @@ export class DrawerStore {
 	// commented out === handled by function calls
 	reset() {
 		_removeEventListeners(this);
-		_destroyDrawerStoreGhost(this);
+		_removeDrawerStoreActiveItem(this);
 		_setDraggingState(this, false);
 
 		this.drawerItems = [];
 		this.targetComponent = null;
 		this.placedItem = null;
 		// this.sticker = null;
-		// this.ghost = null;
 		this.isDrawerOpen = false;
 		// this.isDragging = false;
 		this.hasValidTarget = false;
@@ -68,15 +67,16 @@ export class DrawerStore {
 		this._waitingForFrame = false;
 		// this._onPointerMove = null;
 		// this._onPointerUp = null;
+		this._updateGhostPosition = null;
+	}
+}
+
+export function commitDrawerStoreItemPlacement(store: DrawerStore) {
+	if (!store.placedItem || !store.targetComponent) {
+		return;
 	}
 
-	commitPlacement() {
-		if (!this.placedItem || !this.targetComponent) {
-			return;
-		}
-
-		this.targetComponent.onRedeemSticker();
-	}
+	store.targetComponent.onRedeemSticker();
 }
 
 export function registerStickerLayer(store: DrawerStore, layer: StickerLayerController) {
@@ -129,6 +129,13 @@ export function setDrawerStoreHeight(store: DrawerStore, height: number) {
 	store.drawerHeight = height;
 }
 
+export function assignDrawerStoreGhostCallback(
+	store: DrawerStore,
+	callback: (pos: { left: number; top: number }) => void
+) {
+	store._updateGhostPosition = callback;
+}
+
 /**
  * Assign the drawer item that we want to use as a ghost item.
  */
@@ -155,13 +162,13 @@ export function setDrawerStoreActiveItem(
 		}
 	}
 
-	_createGhostSticker(store, event);
-	_addEventListeners(store, _onDragItem(store), _onPlaceItem(store));
+	_setDraggingState(store, true);
+	_onDragItem(store, event);
+	_addEventListeners(store, _onPointerMove(store), _onPointerUp(store));
 }
 
 /**
- * Removes and ghost elements from the document body, and sets
- * 'store.placedItem' as the 'item' parameter.
+ * Assigns the placed item and target component of the store.
  */
 export function assignDrawerStoreItem(
 	store: DrawerStore,
@@ -192,7 +199,7 @@ export function alterDrawerStoreItemCount(
 	if (returnToDrawer) {
 		drawerItem.count++;
 		assignDrawerStoreItem(store, null, null);
-		_destroyDrawerStoreGhost(store);
+		_removeDrawerStoreActiveItem(store);
 	} else {
 		drawerItem.count--;
 	}
@@ -201,61 +208,30 @@ export function alterDrawerStoreItemCount(
 /**
  * Remove the ghost element - triggered when returning an item to the drawer.
  */
-function _destroyDrawerStoreGhost(store: DrawerStore) {
-	if (store.ghost && document.body.contains(store.ghost)) {
-		document.body.removeChild(store.ghost);
-	}
-
+function _removeDrawerStoreActiveItem(store: DrawerStore) {
 	store.sticker = null;
-	store.ghost = null;
 }
 
 /**
- * Create the ghost item and append it to the document body - updating dragging
- * state and updating the ghost element position.
+ * This gets triggered through '_onPointerMove' to update ghost positioning through the store callback
+ * and set any hovering state.
  */
-function _createGhostSticker(store: DrawerStore, event: MouseEvent | TouchEvent) {
-	if (!store.sticker) {
-		return;
-	}
-
-	if (!store.ghost) {
-		const component = new AppStickerDrawerGhost({
-			propsData: {
-				drawerStore: store,
-				sticker: store.sticker,
-			},
-		}) as AppStickerDrawerGhostTS;
-
-		const elem = document.createElement('div');
-		// JODO: Instead of appending to the body, we should have the ghost element be mounted to the active layer somehow.
-		document.body.appendChild(elem);
-		component.$mount(elem);
-		store.ghost = component.$el;
-	}
-
-	_setDraggingState(store, true);
-	_updateGhostPosition(store, event);
-}
-
-/**
- * This gets triggered through '_onDragItem' to calculate the position of the
- * ghost element.
- */
-function _updateGhostPosition(store: DrawerStore, event: MouseEvent | TouchEvent) {
+function _onDragItem(store: DrawerStore, event: MouseEvent | TouchEvent) {
 	store._waitingForFrame = false;
 
-	if (!store.ghost) {
+	if (!store._updateGhostPosition) {
 		return;
 	}
 
-	const pointer = _getPointerPosition(event);
+	const pointer = getPointerPosition(event, store.activeLayer.relativeScrollTop);
 	if (!pointer) {
 		return;
 	}
 
-	store.ghost.style.left = `${pointer.x - store.ghost.clientWidth / 2}px`;
-	store.ghost.style.top = `${pointer.y - store.ghost.clientHeight / 2}px`;
+	store._updateGhostPosition({
+		left: pointer.x - store.stickerSize / 2,
+		top: pointer.y - store.stickerSize / 2,
+	});
 
 	if (pointer.clientY > window.innerHeight - store.drawerHeight) {
 		store.isHoveringDrawer = true;
@@ -275,31 +251,31 @@ function _updateGhostPosition(store: DrawerStore, event: MouseEvent | TouchEvent
 /**
  * 'Move' events for both mouse and touch.
  */
-const _onDragItem = (store: DrawerStore) => (event: MouseEvent | TouchEvent) => {
+const _onPointerMove = (store: DrawerStore) => (event: MouseEvent | TouchEvent) => {
 	if (!store._waitingForFrame) {
 		store._waitingForFrame = true;
-		window.requestAnimationFrame(() => _updateGhostPosition(store, event));
+		window.requestAnimationFrame(() => _onDragItem(store, event));
 	}
 };
 
 /**
  * 'Up' or 'End' events for both mouse and touch.
  */
-const _onPlaceItem = (store: DrawerStore) => (event: MouseEvent | TouchEvent) => {
+const _onPointerUp = (store: DrawerStore) => (event: MouseEvent | TouchEvent) => {
 	if (store.isHoveringDrawer && store.sticker) {
 		alterDrawerStoreItemCount(store, store.sticker, true);
 		_removeEventListeners(store);
 		return;
 	}
 
-	const pointer = _getPointerPosition(event);
+	const pointer = getPointerPosition(event, store.activeLayer.relativeScrollTop);
 	if (!pointer) {
 		return;
 	}
 
 	const target = getCollidingStickerTarget(store.activeLayer, pointer.x, pointer.y);
 	if (target) {
-		target.onPlaceDrawerSticker();
+		target.onPlaceDrawerSticker(event);
 	} else if (store.sticker) {
 		alterDrawerStoreItemCount(store, store.sticker, true);
 	}
@@ -312,7 +288,7 @@ const _onPlaceItem = (store: DrawerStore) => (event: MouseEvent | TouchEvent) =>
  * from the document body.
  */
 function _setDraggingState(store: DrawerStore, isDragging: boolean) {
-	if (!store.ghost) {
+	if (!store.sticker) {
 		store.isDragging = false;
 	} else {
 		store.isDragging = isDragging;
@@ -320,8 +296,7 @@ function _setDraggingState(store: DrawerStore, isDragging: boolean) {
 }
 
 /**
- * Add the required 'mouse[move/up]' and 'touch[move/end]' event listeners to
- * the window to handle ghost element placement.
+ * Add the required 'mouse[move/up]' and 'touch[move/end]' event listeners to the window.
  */
 function _addEventListeners(
 	store: DrawerStore,
@@ -331,50 +306,33 @@ function _addEventListeners(
 	store._onPointerMove = onPointerMove;
 	store._onPointerUp = onPointerUp;
 
-	window.addEventListener('mousemove', onPointerMove, {
-		capture: false,
-	});
-	window.addEventListener('mouseup', onPointerUp, {
-		capture: false,
-	});
-	window.addEventListener('touchmove', onPointerMove, {
-		capture: false,
-	});
-	window.addEventListener('touchend', onPointerUp, {
-		capture: false,
-	});
+	window.addEventListener('mousemove', onPointerMove);
+	window.addEventListener('mouseup', onPointerUp);
+	window.addEventListener('touchmove', onPointerMove);
+	window.addEventListener('touchend', onPointerUp);
 }
 
 /**
- * Remove any event listeners that were added to the window to handle the ghost
- * element movement.
+ * Remove any event listeners that were added to the window.
  */
 function _removeEventListeners(store: DrawerStore) {
 	_setDraggingState(store, false);
 
 	if (store._onPointerMove) {
-		window.removeEventListener('mousemove', store._onPointerMove, {
-			capture: false,
-		});
-		window.removeEventListener('touchmove', store._onPointerMove, {
-			capture: false,
-		});
+		window.removeEventListener('mousemove', store._onPointerMove);
+		window.removeEventListener('touchmove', store._onPointerMove);
 	}
 
 	if (store._onPointerUp) {
-		window.removeEventListener('mouseup', store._onPointerUp, {
-			capture: false,
-		});
-		window.removeEventListener('touchend', store._onPointerUp, {
-			capture: false,
-		});
+		window.removeEventListener('mouseup', store._onPointerUp);
+		window.removeEventListener('touchend', store._onPointerUp);
 	}
 
 	store._onPointerMove = null;
 	store._onPointerUp = null;
 }
 
-function _getPointerPosition(event: MouseEvent | TouchEvent) {
+export function getPointerPosition(event: MouseEvent | TouchEvent, relativeScrollTop = 0) {
 	if (!(event instanceof MouseEvent) && !(event instanceof TouchEvent)) {
 		return null;
 	}
@@ -382,5 +340,5 @@ function _getPointerPosition(event: MouseEvent | TouchEvent) {
 	const eventPointer = event instanceof TouchEvent ? event.changedTouches[0] : event;
 	const { pageX, pageY, clientX, clientY } = eventPointer;
 
-	return { x: pageX, y: pageY, clientX, clientY };
+	return { x: pageX, y: pageY - relativeScrollTop, clientX, clientY };
 }

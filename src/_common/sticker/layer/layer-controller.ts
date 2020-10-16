@@ -4,8 +4,9 @@ import AppStickerTarget from '../target/target';
 export const StickerLayerKey = Symbol('sticker-layer');
 
 export class StickerLayerController {
+	relativeScrollTop = 0;
 	targets: AppStickerTarget[] = [];
-	hoveredTarget: null | AppStickerTarget = null;
+	hoveredTarget: AppStickerTarget | null = null;
 	rects = new WeakMap<AppStickerTarget, TargetRect>();
 }
 
@@ -72,6 +73,7 @@ export function getCollidingStickerTarget(
 		if (!rect) {
 			return false;
 		}
+		console.log(rect, pointerY);
 
 		const { x, y, width, height } = rect;
 

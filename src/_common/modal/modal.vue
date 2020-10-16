@@ -20,7 +20,7 @@
 					'modal-full': modal.size === 'full',
 				}"
 			>
-				<app-sticker-layer class="modal-sticker-layer">
+				<app-sticker-layer class="modal-sticker-layer" has-fixed-parent>
 					<app-theme
 						class="modal-content"
 						:theme="theme"

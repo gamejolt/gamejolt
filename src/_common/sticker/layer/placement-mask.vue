@@ -1,7 +1,7 @@
 <script lang="ts" src="./placement-mask"></script>
 
 <template>
-	<div v-app-observe-dimensions="onDimensionsChange" class="-container" @click="onClickMask">
+	<div v-app-observe-dimensions="onDimensionsChange" class="-container" @click.stop="onClickMask">
 		<svg v-if="width > 0" :key="regenKey" :viewBox="viewbox" xmlns="http://www.w3.org/2000/svg">
 			<!--
 			This creates a mask that we use to punch out the targets from the
