@@ -1,6 +1,6 @@
-@require './bootstrap-variables'
-@require './functions'
-@require './zindex'
+@import './bootstrap-variables'
+@import './functions'
+@import './zindex'
 
 //
 // GJ Color Palette
@@ -76,8 +76,6 @@ $theme-bg-offset-trans = rgba($theme-bg-offset, 0)
 // Slightly lighter than the offset to be used to drop sheets on to
 $theme-bg-backdrop = $bg-backdrop-light
 $theme-bg-backdrop-trans = rgba($theme-bg-backdrop, 0)
-$theme-bg-backdrop-xs = $bg-backdrop-light-xs
-$theme-bg-backdrop-xs-trans = rgba($theme-bg-backdrop-xs, 0)
 // A bit darker than the offset color (used for separator lines)
 $theme-bg-subtle = $theme-lighter
 $theme-bg-subtle-trans = rgba($theme-bg-subtle, 0)
@@ -100,8 +98,6 @@ $dark-theme-bg-offset = $theme-darker
 $dark-theme-bg-offset-trans = $theme-darker-trans
 $dark-theme-bg-backdrop = $bg-backdrop-dark
 $dark-theme-bg-backdrop-trans = rgba($dark-theme-bg-backdrop, 0)
-$dark-theme-bg-backdrop-xs = $bg-backdrop-dark-xs
-$dark-theme-bg-backdrop-xs-trans = rgba($dark-theme-bg-backdrop-xs, 0)
 $dark-theme-bg-subtle = $theme-gray-subtle
 $dark-theme-bg-subtle-trans = $theme-gray-subtle-trans
 $dark-theme-fg = $theme-lightest
@@ -120,7 +116,7 @@ $dark-theme-bi-fg-trans = rgba($dark-theme-bi-fg, 0)
 // Base
 $border-radius-base = 4px
 $border-radius-small = 2px
-$border-radius-large = 8px
+$border-radius-large = 12px
 $border-width-small = 1px
 $border-width-base = 1.5px
 $border-width-large = 2px

@@ -1,4 +1,4 @@
-@require '~styles/variables'
+@import '~styles/variables'
 
 $-border-width = $border-width-base
 $-item-padding = ($grid-gutter-width / 2)
@@ -35,8 +35,8 @@ $-item-padding-container = $-item-padding - $-border-width
 		elevate-1()
 		margin-left: 0
 		margin-right: 0
-		border: $-border-width solid var(--theme-bg-subtle)
+		border: $-border-width solid transparent
 
 		&:hover
-			theme-prop('border-color', 'link')
+			border-color: var(--theme-link)
 			cursor: pointer
