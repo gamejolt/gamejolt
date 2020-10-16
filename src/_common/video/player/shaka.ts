@@ -48,6 +48,7 @@ export default class AppVideoPlayerShaka extends Vue {
 
 		// video.addEventListener('play', () => (this.player.isPlaying = true));
 		video.addEventListener('pause', () => (this.player.isPaused = true));
+		video.addEventListener('volumechange', () => (this.player.volume = video.volume));
 
 		video.addEventListener('durationchange', () => {
 			if (video.duration) {
